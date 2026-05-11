@@ -1,0 +1,105 @@
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+export const BASE_API_VERSION = `${BASE_URL}/api/v1`;
+
+const PROFESSIONALS_BASE_PATH = "/professionals";
+
+const BASE_PATHS = {
+	AUTH: `${PROFESSIONALS_BASE_PATH}/auth`,
+	USER: `${PROFESSIONALS_BASE_PATH}/user`,
+	SUBSCRIPTIONS: `${PROFESSIONALS_BASE_PATH}/subscriptions`,
+	CART: `${PROFESSIONALS_BASE_PATH}/cart`,
+	USER_CARDS: `${PROFESSIONALS_BASE_PATH}/user-cards`,
+	LOCATION: `/location`,
+	TEAMS: `/teams`,
+	COMPANIES: `/companies`,
+};
+
+export const API_PATH = {
+	AUTH: {
+		BASE: BASE_PATHS.AUTH,
+		LOGIN: `${BASE_PATHS.AUTH}/login`,
+		RESET_PASSWORD: `${BASE_PATHS.AUTH}/reset-password`,
+		VERIFY_EMAIL: `${BASE_PATHS.AUTH}/verify-email`,
+		VALIDATE_OTP: `${BASE_PATHS.AUTH}/validate-otp`,
+		FORGOT_PASSWORD: `${BASE_PATHS.AUTH}/forgot-password`,
+		LOGOUT: `${BASE_PATHS.AUTH}/logout`,
+		REGISTER: `${BASE_PATHS.AUTH}/register`,
+		GET_PROFILE: `${PROFESSIONALS_BASE_PATH}/profile/me`,
+		SET_PASSWORD: `${BASE_PATHS.AUTH}/set-password`,
+		COMPLETE_SUBSCRIPTION: `${BASE_PATHS.AUTH}/complete-subscription`,
+	},
+	SUBSCRIPTIONS: {
+		LIST: `${BASE_PATHS.SUBSCRIPTIONS}/list`,
+		CHECKOUT: `${BASE_PATHS.SUBSCRIPTIONS}/checkout`,
+	},
+	USER_CARDS: {
+		SETUP_INTENT: `${BASE_PATHS.USER_CARDS}/setup-intent`,
+		ATTACH_PAYMENT_METHOD: `${BASE_PATHS.USER_CARDS}/attach-payment-method`,
+		LIST: `${BASE_PATHS.USER_CARDS}/list`,
+	},
+	CART: {
+		ADD: `${BASE_PATHS.CART}/add`,
+		GET: `${BASE_PATHS.CART}/get`,
+		UPDATE: (cartItemId: string) => `${BASE_PATHS.CART}/${cartItemId}`,
+		CLEAR: `${BASE_PATHS.CART}/clear`,
+	},
+	LOCATION: {
+		COUNTRIES: `${BASE_PATHS.LOCATION}/countries`,
+		CITIES: `${BASE_PATHS.LOCATION}/cities`,
+
+	},
+	TEAMS: {
+		PROFESSIONAL_CATEGORIES_LIST: `${BASE_PATHS.TEAMS}/professionals/categories/list`,
+	},
+	COMPANIES: {
+		INVITATION_ACCEPT: `${BASE_PATHS.COMPANIES}/validate/token`,
+	},
+};
+
+export const appConstants = {
+	LOCAL_COOKIE_NAME: "CZWAuthToken",
+	LOCAL_REFRESH_COOKIE_NAME: "CZWREFRESHToken",
+	/** Readable by middleware: "1" = user must complete subscription (manage-plans / cart only). */
+	LOCAL_REQUIRES_SUBSCRIPTION_COOKIE_NAME: "CZWRequiresSubscription",
+	/** Readable by middleware: "1" = client has a session (tokens in localStorage). */
+	LOCAL_SESSION_HINT_COOKIE_NAME: "CZWHasSession",
+	LOCAL_USER_DATA: "user",
+	LOCAL_COMPANY_DATA: "company",
+	API_RESPONSES: {
+		SUCCESS: 200,
+		BAD_REQUEST: 400,
+		INTERNAL_SERVER_ERROR: 500,
+		FORBIDDEN: 403,
+		UNAUTHORIZED: 401,
+		INVALID_RESPONSE: 422,
+	},
+	INTERNAL_SERVER_ERROR_MESSAGE: "Internal Server Error",
+};
+
+// Error code mappings with user-friendly messages
+export const ERROR_CODES = {
+	SUC000: {
+		code: "SUC000",
+		message: "Success Code",
+		status: [200, 201],
+	},
+
+	AUTH001: {
+		code: "AUTH001",
+		message: "The email address or password provided is incorrect.",
+		status: [400],
+	},
+	AUTH002: {
+		code: "AUTH002",
+		message: "An account with this email address already exists.",
+		status: [409],
+	},
+} as const;
+
+// Helper function to get error message by code
+export const getErrorMessageByCode = (errorCode: string): string => {
+	const error = Object.values(ERROR_CODES).find(
+		(err) => err.code === errorCode,
+	);
+	return error?.message || "An error occurred. Please try again";
+};

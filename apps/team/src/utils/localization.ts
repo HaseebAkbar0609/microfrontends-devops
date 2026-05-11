@@ -1,0 +1,36 @@
+import { getUserLanguage, setUserLanguage } from "@/utils/userLanguage";
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import { en } from "./translation/en";
+import { swe } from "./translation/swe";
+
+const resources = {
+	en: {
+		translation: en,
+	},
+	swe: {
+		translation: swe,
+	},
+};
+
+i18n.use(initReactI18next).init({
+	resources,
+	lng: getUserLanguage(),
+	fallbackLng: "swe",
+	keySeparator: false,
+	interpolation: {
+		escapeValue: false,
+	},
+	react: {
+		useSuspense: false,
+	},
+});
+
+export default i18n;
+
+const refreshLanguage = (language: string) => {
+	setUserLanguage(language);
+	i18n.changeLanguage(language);
+};
+
+export { refreshLanguage };

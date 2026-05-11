@@ -1,0 +1,23 @@
+pipeline {
+  agent any
+  environment {
+    INSTANCE_IP = '16.16.102.253'
+  }
+  stages {
+    stage('Deploy Application on timeflow server'){
+            steps {
+                echo 'Deployment'
+                sshagent(credentials: ['jenkins-ssh-proxy']) {
+                  sh '''
+                    ssh -o StrictHostKeyChecking=no 'jenkins'@${INSTANCE_IP} sh apps/auto-deploy-timeflowsystem-landingpage.sh
+                  '''
+                }
+            }
+    }
+  }
+  post {
+        always {
+            cleanWs()
+        }
+    }
+}

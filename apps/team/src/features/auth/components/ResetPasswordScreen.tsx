@@ -1,0 +1,92 @@
+"use client";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+
+import { Form, FormInput } from "@/components/form";
+import { Button } from "@/components/ui/button";
+
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
+import { ResetPasswordFormValues } from "../types/resetPassword";
+import { RESET_PASSWORD_DEFAULT_VALUES } from "../constants/resetPassword";
+import { resetPasswordSchema } from "../schemas/resetPassword.schema";
+
+export type ResetPasswordScreenProps = {
+	isSubmitting?: boolean;
+	onSubmit: (data: ResetPasswordFormValues) => void | Promise<void>;
+};
+
+export function ResetPasswordScreen({
+	isSubmitting = false,
+	onSubmit,
+}: ResetPasswordScreenProps) {
+	const form = useForm<ResetPasswordFormValues>({
+		resolver: zodResolver(resetPasswordSchema),
+		defaultValues: RESET_PASSWORD_DEFAULT_VALUES,
+	});
+
+	return (
+		<div className="w-full 2xl:max-w-[600px] max-w-full mx-auto">
+			<h1 className="text-2xl font-bold text-gray-100 mb-2 tracking-tight">
+				<Translate text={localizationConstants.resetPasswordTitle} />
+			</h1>
+			<p className="text-[13px]text-gray-700 mb-8 tracking-wide">
+				<Translate text={localizationConstants.resetPasswordSubtitle} />
+			</p>
+
+			<Form {...form}>
+				<form
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="bg-white rounded-lg p-6 space-y-6"
+				>
+					<FormInput
+						control={form.control}
+						name="newPassword"
+						label={localizationConstants.newPassword}
+						placeholder={localizationConstants.newPassword}
+						type="password"
+					/>
+					<FormInput
+						control={form.control}
+						name="confirmPassword"
+						label={localizationConstants.confirmPassword}
+						placeholder={localizationConstants.confirmPassword}
+						type="password"
+					/>
+
+					<div className="flex justify-center pt-2 pb-1 my-3">
+						<Link
+							href="/login"
+							className="text-[13px] text-primary hover:underline font-medium"
+						>
+							<Translate
+								text={localizationConstants.otpBackToLogin}
+							/>
+						</Link>
+					</div>
+
+					<Button
+						type="submit"
+						variant="primary"
+						className="w-full"
+						disabled={isSubmitting}
+					>
+						<span className="flex items-center justify-center gap-2">
+							<ArrowRight className="h-4 w-4" aria-hidden />
+							<Translate
+								text={
+									isSubmitting
+										? localizationConstants.resetPasswordSubmitting
+										: localizationConstants.resetPasswordButtonText
+								}
+							/>
+						</span>
+					</Button>
+				</form>
+			</Form>
+		</div>
+	);
+}

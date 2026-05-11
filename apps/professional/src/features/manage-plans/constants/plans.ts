@@ -1,0 +1,25 @@
+export const PLAN_FEATURES = {
+  free: ["Create requests", "Track projects", "Communicate with companies"],
+  start: ["Quotes", "Invoicing", "B2B", "Customer & supplier registry"],
+  standard: [
+    "Everything in Basic Plan",
+    "Cost estimation",
+    "Orders & Projects",
+    "HSWQ (Health, Safety, Environment & Quality)",
+    "Finance & HR",
+    "Machinery & Inventory",
+    "Templates",
+    "Includes: Workspace Manager (App)",
+  ],
+  pro: [
+    "Everything in Standard",
+    "Purchasing",
+    "Forecasting",
+    "Legal & Debt Collection",
+    "Project Management",
+    "Marketing & Business Support",
+    "Data / IT",
+    "Includes: Workspace Manager (App)",
+  ],
+  worker: ["Time tracking", "Project updates", "Communication"],
+} as const;

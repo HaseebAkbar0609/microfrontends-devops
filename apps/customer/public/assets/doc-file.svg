@@ -1,0 +1,11 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M14 6C14 3.79086 15.7909 2 18 2H42L54 14V58C54 60.2091 52.2091 62 50 62H14V6Z" fill="white" stroke="#D1D5DB" stroke-width="2"/>
+  <path d="M42 2V14H54" stroke="#D1D5DB" stroke-width="2" stroke-linejoin="round"/>
+  
+  <line x1="24" y1="22" x2="44" y2="22" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  <line x1="24" y1="28" x2="44" y2="28" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+  <line x1="24" y1="34" x2="34" y2="34" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round"/>
+
+  <rect x="6" y="36" width="44" height="22" rx="4" fill="#3B82F6"/>
+  <text x="28" y="52" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle">DOC</text>
+</svg>

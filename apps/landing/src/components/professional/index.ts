@@ -1,0 +1,9 @@
+export { default as ProfessionalHero } from "./Hero";
+export { default as ProfessionalIntroduction } from "./Introduction";
+export { default as ProfessionalSmartFeatures } from "./SmartFeatures";
+export { default as TimeFlowWork } from "./TimeFlowWork";
+export { default as ProfessionalAdvantage } from "./Advantage";
+export { default as ProfessionalRating } from "./Rating";
+export { default as SuccessStory } from "./SuccessStory";
+export { default as SaveTime } from "./SaveTime";
+export { default as ProfessionalContactUs } from "./ContactUs";

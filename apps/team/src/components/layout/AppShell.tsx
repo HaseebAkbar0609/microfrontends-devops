@@ -1,0 +1,65 @@
+"use client";
+
+import { useEffect, useRef } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import Header from "./header/Header";
+import Sidebar from "./sidebar/Sidebar";
+import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
+import LeadsSubSidebar from "./sidebar/LeadsSubSidebar";
+import { useAuthStatus } from "@/context/AuthContext";
+import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
+interface AppShellProps {
+	children: React.ReactNode;
+}
+
+export function AppShell({ children }: AppShellProps) {
+	const pathname = usePathname();
+	const router = useRouter();
+	const { isAuthenticated, isReady } = useAuthStatus();
+	const didRedirect = useRef(false);
+
+	// This is for temporary purposes to hide the sidebar and header on auth routes to match the requirements of the project
+	const authRoutes = ["/login", "/register", "/forgot-password", "/my-companies", "/manage-plans"];
+	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
+	const hasFlyoutSubSidebar = !!flyoutSubSidebarConfig;
+	const isLeads = pathname.startsWith("/leads");
+	const hasSubSidebar = hasFlyoutSubSidebar || isLeads;
+
+	useEffect(() => {
+		if (!isReady || didRedirect.current) return;
+		if (!isAuthenticated && !isAuthRoute) {
+			didRedirect.current = true;
+			router.replace("/login");
+		}
+	}, [isReady, isAuthenticated, isAuthRoute, router]);
+
+	if (!isReady) return null;
+	if (!isAuthenticated && !isAuthRoute) return null;
+
+	if (isAuthRoute) {
+		return <>{children}</>;
+	}
+
+		return (
+			<div className="flex h-screen flex-1 overflow-hidden">
+				<Sidebar autoCollapse={hasSubSidebar} />
+				{flyoutSubSidebarConfig && (
+					<MyPagesSubSidebar
+						titleKey={flyoutSubSidebarConfig.titleKey}
+						items={flyoutSubSidebarConfig.items}
+					/>
+				)}
+				{isLeads && <LeadsSubSidebar />}
+				<div className="flex flex-1 flex-col overflow-hidden">
+				<Header />
+				<main
+					className={`flex flex-1 flex-col bg-white pb-6 ${hasFlyoutSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
+				>
+					{/* className="flex-1 overflow-auto bg-slate-50" */}
+					{children}
+				</main>
+			</div>
+		</div>
+	);
+}
