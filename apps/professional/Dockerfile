@@ -1,35 +1,38 @@
-# ---------- Stage 1: Builder ----------
-FROM node:20-alpine AS builder
-
+# Stage 1: Dependencies
+FROM node:20-alpine AS deps
 WORKDIR /app
+RUN apk add --no-cache git
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+COPY --from=lockfile pnpm-lock.yaml ./
+RUN pnpm fetch
+COPY package.json ./
+RUN pnpm install --prefer-offline
 
-# Install pnpm and git
-RUN apk add --no-cache git && npm install -g pnpm
-
-# Copy dependency files first
-COPY package.json pnpm-lock.yaml ./
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Copy the rest of the application
+# Stage 2: Builder
+FROM node:20-alpine AS builder
+WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-
-# Build the Next.js app
+ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
 
-
-# ---------- Stage 2: Production ----------
-FROM node:20-alpine
-
+# Stage 3: Runner
+FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Install pnpm
-RUN npm install -g pnpm
+ENV NODE_ENV=production
 
-# Copy built files
-COPY --from=builder /app ./
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
 
 EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
 
-CMD ["pnpm", "start"]
+CMD ["node", "server.js"]
