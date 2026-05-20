@@ -6,9 +6,9 @@ pipelines:
           script:
             - pipe: atlassian/ssh-run:0.8.1
               variables:
-                SSH_USER: 'ubuntu'
-                SERVER: 'timeflowsystem.se'
-                COMMAND: 'sh /var/www/html/timeflow-prod-landingpage/deployment.sh'
+                SSH_USER: $DEPLOY_USER
+                SERVER: $PROD_DEPLOY_HOST
+                COMMAND: $PROD_DEPLOY_SCRIPT_PATH
                 PORT: '22'
                 SSH_KEY: $SSH_PRIVATE_KEY
                 DEBUG: 'true'
@@ -33,9 +33,9 @@ pipelines:
           script:
             - pipe: atlassian/ssh-run:0.8.1
               variables:
-                SSH_USER: 'ubuntu'
-                SERVER: 'stage.timeflowsystem.se'
-                COMMAND: 'sh /var/www/html/timeflow-stage-landingpage/deployment.sh'
+                SSH_USER: $DEPLOY_USER
+                SERVER: $DEV_DEPLOY_HOST
+                COMMAND: $DEV_DEPLOY_SCRIPT_PATH
                 PORT: '22'
                 SSH_KEY: $SSH_PRIVATE_KEY
                 DEBUG: 'true'

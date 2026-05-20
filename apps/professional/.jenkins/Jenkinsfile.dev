@@ -1,15 +1,14 @@
 pipeline {
   agent any
-  environment {
-    INSTANCE_IP = '16.16.102.253'
-  }
   stages {
     stage('Deploy Application on Labe1 server'){
             steps {
                 echo 'Deployment'
                 sshagent(credentials: ['jenkins-ssh-proxy']) {
                   sh '''
-                    ssh -o StrictHostKeyChecking=no 'jenkins'@${INSTANCE_IP} sh apps/auto-deploy-timeflowsystem-frontend.sh
+                    mkdir -p ~/.ssh && chmod 700 ~/.ssh
+                    ssh-keyscan -H ${DEPLOY_HOST} >> ~/.ssh/known_hosts
+                    ssh ${DEPLOY_USER}@${DEPLOY_HOST} sh ${DEPLOY_SCRIPT_PATH}
                   '''
                 }
             }
