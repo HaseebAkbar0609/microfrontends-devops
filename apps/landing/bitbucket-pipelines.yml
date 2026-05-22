@@ -19,10 +19,10 @@ pipelines:
             - if [[ $BITBUCKET_EXIT_CODE -ne 0 ]]; then ALERT_TYPE="Failure" ; fi
             - pipe: atlassian/email-notify:0.13.1
               variables:
-                USERNAME: karan.ravat@rlogical.com
-                PASSWORD: $password
-                FROM: karan.ravat@rlogical.com
-                TO: shruti.solanki@rlogical.com, harnish.patel@rlogical.com, karan.ravat@rlogical.com
+                USERNAME: $NOTIFY_EMAIL_USERNAME
+                PASSWORD: $NOTIFY_EMAIL_PASSWORD
+                FROM: $NOTIFY_EMAIL_FROM
+                TO: $NOTIFY_EMAIL_TO
                 HOST: 'smtp.gmail.com'
                 PORT: 587
                 SUBJECT: '${ALERT_TYPE}:Bitbucket Pipeline Notification for repo ${BITBUCKET_REPO_FULL_NAME} branch ${BITBUCKET_BRANCH}'
@@ -46,10 +46,10 @@ pipelines:
             - if [[ $BITBUCKET_EXIT_CODE -ne 0 ]]; then ALERT_TYPE="Failure" ; fi
             - pipe: atlassian/email-notify:0.13.1
               variables:
-                USERNAME: karan.ravat@rlogical.com
-                PASSWORD: $password
-                FROM: karan.ravat@rlogical.com
-                TO: shruti.solanki@rlogical.com, harnish.patel@rlogical.com, karan.ravat@rlogical.com
+                USERNAME: $NOTIFY_EMAIL_USERNAME
+                PASSWORD: $NOTIFY_EMAIL_PASSWORD
+                FROM: $NOTIFY_EMAIL_FROM
+                TO: $NOTIFY_EMAIL_TO
                 HOST: 'smtp.gmail.com'
                 PORT: 587
                 SUBJECT: '${ALERT_TYPE}:Bitbucket Pipeline Notification for repo ${BITBUCKET_REPO_FULL_NAME} branch ${BITBUCKET_BRANCH}'
