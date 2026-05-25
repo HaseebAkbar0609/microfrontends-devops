@@ -12,9 +12,7 @@ pipelines:
                 PORT: '22'
                 SSH_KEY: $SSH_PRIVATE_KEY
                 DEBUG: 'true'
-      - step:
-          name: Send Notification
-          script:
+          after-script:
             - ALERT_TYPE="success"
             - if [[ $BITBUCKET_EXIT_CODE -ne 0 ]]; then ALERT_TYPE="Failure" ; fi
             - pipe: atlassian/email-notify:0.13.1
@@ -29,7 +27,7 @@ pipelines:
 
     dev_home_pages:
       - step:
-          name: Deploy and Run Commands on Production
+          name: Deploy and Run Commands on Staging
           script:
             - pipe: atlassian/ssh-run:0.8.1
               variables:
@@ -39,9 +37,7 @@ pipelines:
                 PORT: '22'
                 SSH_KEY: $SSH_PRIVATE_KEY
                 DEBUG: 'true'
-      - step:
-          name: Send Notification
-          script:
+          after-script:
             - ALERT_TYPE="success"
             - if [[ $BITBUCKET_EXIT_CODE -ne 0 ]]; then ALERT_TYPE="Failure" ; fi
             - pipe: atlassian/email-notify:0.13.1
