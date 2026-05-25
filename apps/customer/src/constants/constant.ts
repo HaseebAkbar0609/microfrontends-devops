@@ -19,6 +19,8 @@ export const MODAL_CONSTANTS = {
 	REJECT: "reject",
 	ARCHIVE: "archive",
 	DELETE: "delete",
+	ACTIVE: "active",
+	DEACTIVATE: "deactivate",
 } as const;
 
 export const OTP_TYPE = {

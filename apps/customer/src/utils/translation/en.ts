@@ -6,6 +6,7 @@ import {
 	HeaderTranslation,
 	AppLauncherTranslation,
 	DashboardText,
+	SettingModule,
 	OfferModule,
 } from "./constants";
 
@@ -20,6 +21,7 @@ export const enSidebar: SidebarTranslation = {
 	archivedprojects: "Archived Projects",
 	tools: "Tools",
 	setting: "Setting",
+	settings: "Settings",
 	suppliers: "Suppliers",
 	priceCalculator: "Cost Calculator",
 	rootRut: "ROT & RUT",
@@ -234,6 +236,29 @@ export const enDashboard: DashboardText = {
 	hi: "Hi",
 };
 
+export const enSettingModule: SettingModule = {
+	users: "Users",
+	edit: "Edit",
+	activateUser: "Activate user",
+	deactivateUser: "Deactivate user",
+
+	displayName: "Name",
+	dateCreated: "Created",
+	accountType: "Account Type",
+	lastLogin: "Last login",
+
+	userAccountAdmin: "Admin",
+	userAccountUsers: "Users",
+	userStatusActive: "Active",
+	userStatusDeactivated: "Deactivated",
+
+	noUsersFound: "No users found.",
+	activateUserConfirmTitle: "Activate User?",
+	activateUserConfirmDescription: "Are you sure you want to activate this user?",
+	deactivateUserConfirmTitle: "Deactivate User?",
+	deactivateUserConfirmDescription: "Are you sure you want to deactivate this user?",
+};
+
 export const enOfferModule: OfferModule = {
 	search: "Search",
 	createNewButtonText: "Create new",
@@ -413,5 +438,6 @@ export const en: Translation = {
 	...enCommonFiles,
 	...enAppLauncher,
 	...enDashboard,
+	...enSettingModule,
 	...enOfferModule,
 };

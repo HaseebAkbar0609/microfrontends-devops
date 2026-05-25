@@ -6,6 +6,7 @@ import {
 	HeaderTranslation,
 	AppLauncherTranslation,
 	DashboardText,
+	SettingModule,
 	OfferModule,
 } from "./constants";
 
@@ -183,6 +184,7 @@ export const svSidebar: SidebarTranslation = {
 	archivedprojects: "Arkiverade Projekt",
 	tools: "Verktyg",
 	setting: "Inställningar",
+	settings: "Inställningar",
 	suppliers: "Leverantörer",
 	priceCalculator: "Kostnadskalkylator",
 	rootRut: "ROT & RUT",
@@ -226,6 +228,29 @@ export const svDashboard: DashboardText = {
 	dashboard: "Instrumentpanel",
 	resourceLinksTitle: "Länk till guider och kunskapsdatabas",
 	hi: "Hej",
+};
+
+export const svSettingModule: SettingModule = {
+	users: "Users",
+	edit: "Edit",
+	activateUser: "Activate user",
+	deactivateUser: "Deactivate user",
+
+	displayName: "Name",
+	dateCreated: "Created",
+	accountType: "Account Type",
+	lastLogin: "Last login",
+
+	userAccountAdmin: "Admin",
+	userAccountUsers: "Users",
+	userStatusActive: "Active",
+	userStatusDeactivated: "Deactivated",
+
+	noUsersFound: "No users found.",
+	activateUserConfirmTitle: "Activate User?",
+	activateUserConfirmDescription: "Are you sure you want to activate this user?",
+	deactivateUserConfirmTitle: "Deactivate User?",
+	deactivateUserConfirmDescription: "Are you sure you want to deactivate this user?",
 };
 
 export const svOfferModule: OfferModule = {
@@ -408,5 +433,6 @@ export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
 	...svDashboard,
+	...svSettingModule,
 	...svOfferModule,
 };

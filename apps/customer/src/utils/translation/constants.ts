@@ -122,6 +122,7 @@ export type SidebarTranslation = {
 	archivedprojects: string;
 	tools: string;
 	setting: string;
+	settings: string;
 	suppliers: string;
 	priceCalculator: string;
 	rootRut: string;
@@ -214,6 +215,26 @@ export type DashboardText = {
 	resourceLinksTitle: string;
 	hi: string;
 };
+
+export type SettingModule = {
+	users: string,
+	edit: string,
+	deactivateUser: string,
+
+	displayName: string,
+	dateCreated: string,
+	accountType: string,
+	lastLogin: string,
+
+	userAccountAdmin: string,
+	userAccountUsers: string,
+	userStatusActive: string,
+	userStatusDeactivated: string,
+
+	noUsersFound: string,
+	deactivateUserConfirmTitle: string,
+	deactivateUserConfirmDescription: string,
+}
 
 export type OfferModule = {
 	search: string;
