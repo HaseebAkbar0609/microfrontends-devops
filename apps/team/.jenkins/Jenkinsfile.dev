@@ -1,7 +1,7 @@
 pipeline {
   agent any
   stages {
-    stage('Deploy Application on Labe1 server'){
+    stage('Deploy Application on Label1 server'){
             steps {
                 echo 'Deployment'
                 sshagent(credentials: ['jenkins-ssh-proxy']) {
