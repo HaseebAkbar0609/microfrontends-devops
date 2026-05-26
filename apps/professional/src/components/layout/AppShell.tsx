@@ -109,7 +109,7 @@ export function AppShell({ children }: AppShellProps) {
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{flyoutSubSidebarConfig && !isPublicPage && (
+			{flyoutSubSidebarConfig && !isPublicPage && flyoutSubSidebarConfig.displaySubSidebar && (
 				<MyPagesSubSidebar
 					titleKey={flyoutSubSidebarConfig.titleKey}
 					items={flyoutSubSidebarConfig.items}
