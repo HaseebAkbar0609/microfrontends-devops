@@ -396,6 +396,8 @@ export const svOfferModule: OfferModule = {
 	filterLabel: "Filtrera",
 	textLabel: "Text",
 	companySearchPlaceholder: "Sök efter företag...",
+	noSuppliersFound: "Inga leverantörer hittades.",
+	suppliersRowsPerPage: "Rader per sida",
 
 	dummyProjectDescription:
 		"Pelle Construction är glada att påbörja denna badrumsrenovering och förvandla den till en modern oas. Vårt team av skickliga hantverkare kommer att hantera allt från rivning till slutliga detaljer, vilket säkerställer en smidig och stressfri upplevelse. Vi kommer att arbeta nära dig för att välja högkvalitativa material och inredning som speglar din personliga stil. Projektet inkluderar uppdatering av VVS-, el- och ventilationssystem för att möta nuvarande standarder. Vi är fast beslutna att leverera exceptionella resultat som överträffar dina förväntningar och skapar ett badrum du kommer att älska i många år framöver.",

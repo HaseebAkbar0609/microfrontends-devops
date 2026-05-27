@@ -385,6 +385,8 @@ export type OfferModule = {
 	companySearchPlaceholder: string;
 	filterLabel: string;
 	textLabel: string;
+	noSuppliersFound: string;
+	suppliersRowsPerPage: string;
 };
 
 export type CommonFiles = {

@@ -404,6 +404,8 @@ export const enOfferModule: OfferModule = {
 	filterLabel: "Filter",
 	textLabel: "Text",
 	companySearchPlaceholder: "Search for companies...",
+	noSuppliersFound: "No suppliers found.",
+	suppliersRowsPerPage: "Rows per page",
 };
 
 export const en: Translation = {
