@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { LeadRequestDetails } from "@/features/leads/types";
 import { SortLabel } from "@/features/leads/management/components/LeadDetailShared";
+import { isSafeUrl } from "@/utils/urlValidator";
 import FilePreviewIcon from "@/features/leads/management/components/FilePreviewIcon";
 
 type LeadRequestTabProps = {
@@ -95,9 +96,9 @@ if (requestDetails) {
 														variant="outline"
 														size="sm"
 														className="rounded-md border-slate-300 bg-white px-5 text-slate-900 hover:bg-slate-50"
-														disabled={!document.url}
+														disabled={!document.url || !isSafeUrl(document.url)}
 														onClick={() => {
-															if (!document.url) return;
+															if (!document.url || !isSafeUrl(document.url)) return;
 															window.open(document.url, "_blank", "noopener,noreferrer");
 														}}
 													>
