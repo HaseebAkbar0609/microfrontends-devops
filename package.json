@@ -15,7 +15,11 @@
     "dev:professional": "turbo run dev --filter=@tfs/professional",
     "dev:team": "turbo run dev --filter=@tfs/team",
     "dev:landing": "turbo run dev --filter=@tfs/landing",
-    "prepare": "husky"
+    "prepare": "husky",
+    "docker:build:customer": "docker build --build-context lockfile=. -t tfs-customer apps/customer",
+    "docker:build:professional": "docker build --build-context lockfile=. -t tfs-professional apps/professional",
+    "docker:build:team": "docker build --build-context lockfile=. -t tfs-team apps/team",
+    "docker:build:landing": "docker build --build-context lockfile=. -t tfs-landing apps/landing"
   },
   "devDependencies": {
     "husky": "^9.1.7",
