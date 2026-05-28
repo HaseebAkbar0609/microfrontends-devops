@@ -50,14 +50,4 @@ pipelines:
                 SSH_USER: ubuntu
                 SERVER: $DEV_SERVER_IP
                 SSH_KEY: $DEV_SSH_KEY
-                MODE: 'script'
-                COMMAND: |
-                  set -e
-                  aws ecr get-login-password --region eu-north-1 | sudo docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-                  sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
-                  sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
-                  sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
-                  sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
-                  cd /home/ubuntu/timeflow
-                  sudo docker-compose -f docker-compose.dev.yml up -d timeflow-customer timeflow-professional timeflow-team timeflow-landing
-                  echo "✅ All frontends deployed!"
+                COMMAND: bash /home/ubuntu/deploy-frontend.sh
