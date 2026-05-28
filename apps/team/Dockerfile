@@ -3,7 +3,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 RUN apk add --no-cache git
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
-COPY --from=lockfile pnpm-lock.yaml ./
+COPY pnpm-lock.yaml ./
 RUN pnpm fetch
 COPY package.json ./
 RUN pnpm install --prefer-offline
