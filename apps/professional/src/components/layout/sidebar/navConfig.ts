@@ -246,7 +246,7 @@ export const navConfig: NavGroup[] = [
 						href: "/module/production/machine",
 					},
 					{
-						id: "machine",
+						id: "vehicle",
 						label: localizationConstants.vehicle,
 						href: "/module/production/vehicle",
 					},
@@ -337,13 +337,13 @@ export const navConfig: NavGroup[] = [
 		items: [
 			{
 				id: "admin-settings",
-				label: localizationConstants.admitSetting,
+				label: localizationConstants.adminSetting,
 				href: "/admin/settings",
 			},
 			{
-				id: "admin-intergration",
+				id: "admin-integration",
 				label: localizationConstants.adminIntegration,
-				href: "/admin/intergration",
+				href: "/admin/integration",
 			},
 			{
 				id: "admin-subscription",

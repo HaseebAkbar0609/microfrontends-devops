@@ -180,7 +180,7 @@ export type SidebarTranslation = {
 	moduleItem: string;
 	adminItem: string;
 	dashboard: string;
-	admitSetting: string;
+	adminSetting: string;
 	adminIntegration: string;
 	adminSubscription: string;
 	adminLicence: string;

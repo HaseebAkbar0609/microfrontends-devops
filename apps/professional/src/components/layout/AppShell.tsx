@@ -26,7 +26,9 @@ const AUTH_ROUTE_PREFIXES = [
 const PUBLIC_ROUTE_PREFIXES = ["/manage-plans", "/manage-cart"];
 
 function pathMatchesPrefixes(pathname: string, prefixes: string[]) {
-	return prefixes.some((prefix) => pathname.startsWith(prefix));
+	return prefixes.some(
+		(prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+	);
 }
 
 export function AppShell({ children }: AppShellProps) {
@@ -38,6 +40,10 @@ export function AppShell({ children }: AppShellProps) {
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
+	const showSubSidebar =
+		!!flyoutSubSidebarConfig &&
+		!isPublicPage &&
+		flyoutSubSidebarConfig.displaySubSidebar;
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -47,7 +53,6 @@ export function AppShell({ children }: AppShellProps) {
 			isPublicPage &&
 			!getRequiresSubscriptionFromBrowserCookie()
 		) {
-			setIsCheckingAuth(false);
 			router.replace("/dashboard");
 			return;
 		}
@@ -59,7 +64,6 @@ export function AppShell({ children }: AppShellProps) {
 				return;
 			}
 
-			setIsCheckingAuth(false);
 			const subscriptionRequired = getRequiresSubscriptionFromBrowserCookie();
 			const destination =
 				pathname === "/register" || subscriptionRequired
@@ -71,6 +75,7 @@ export function AppShell({ children }: AppShellProps) {
 
 		if (!isAuthenticated && !isAuthRoute && !isPublicPage) {
 			router.replace("/login");
+			return;
 		}
 
 		setIsCheckingAuth(false);
@@ -109,7 +114,7 @@ export function AppShell({ children }: AppShellProps) {
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{flyoutSubSidebarConfig && !isPublicPage && flyoutSubSidebarConfig.displaySubSidebar && (
+			{showSubSidebar && (
 				<MyPagesSubSidebar
 					titleKey={flyoutSubSidebarConfig.titleKey}
 					items={flyoutSubSidebarConfig.items}
