@@ -5,9 +5,9 @@ RUN apk add --no-cache git
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 COPY pnpm-lock.yaml ./
 RUN pnpm fetch
-COPY package.json ./
+COPY apps/customer/package.json ./package.json
 RUN pnpm install --prefer-offline
-COPY . .
+COPY apps/customer/. .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN pnpm build
 

@@ -15,22 +15,22 @@ pipelines:
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
 
             - echo "🏗️ Building customer..."
-            - docker build -t timeflow-customer ./apps/customer
+            - docker build -t timeflow-customer -f ./apps/customer/Dockerfile .
             - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
 
             - echo "🏗️ Building professional..."
-            - docker build -t timeflow-professional ./apps/professional
+            - docker build -t timeflow-professional -f ./apps/professional/Dockerfile .
             - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
 
             - echo "🏗️ Building team..."
-            - docker build -t timeflow-team ./apps/team
+            - docker build -t timeflow-team -f ./apps/team/Dockerfile .
             - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
 
             - echo "🏗️ Building landing..."
-            - docker build -t timeflow-landing-page ./apps/landing
+            - docker build -t timeflow-landing-page -f ./apps/landing/Dockerfile .
             - docker tag timeflow-landing-page:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
 
