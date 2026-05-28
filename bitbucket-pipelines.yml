@@ -8,35 +8,39 @@ pipelines:
           services:
             - docker
           script:
-            - apk add --no-cache aws-cli curl
-            - export AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-            - export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
-            - export AWS_DEFAULT_REGION=eu-north-1
-            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - apk add --no-cache curl
 
-            - echo "🏗️ Building customer..."
             - docker build -t timeflow-customer ./apps/customer
-            - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
-            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
-            - echo "✅ Customer pushed"
+            - pipe: atlassian/aws-ecr-push-image:2.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: eu-north-1
+                IMAGE_NAME: timeflow-customer
 
-            - echo "🏗️ Building professional..."
             - docker build -t timeflow-professional ./apps/professional
-            - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
-            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
-            - echo "✅ Professional pushed"
+            - pipe: atlassian/aws-ecr-push-image:2.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: eu-north-1
+                IMAGE_NAME: timeflow-professional
 
-            - echo "🏗️ Building team..."
             - docker build -t timeflow-team ./apps/team
-            - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
-            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
-            - echo "✅ Team pushed"
+            - pipe: atlassian/aws-ecr-push-image:2.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: eu-north-1
+                IMAGE_NAME: timeflow-team
 
-            - echo "🏗️ Building landing..."
             - docker build -t timeflow-landing-page ./apps/landing
-            - docker tag timeflow-landing-page:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
-            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
-            - echo "✅ Landing pushed"
+            - pipe: atlassian/aws-ecr-push-image:2.6.0
+              variables:
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION: eu-north-1
+                IMAGE_NAME: timeflow-landing-page
 
       - step:
           name: Deploy to Dev Server
@@ -49,14 +53,11 @@ pipelines:
                 MODE: 'script'
                 COMMAND: |
                   set -e
-                  echo "🔐 Logging into ECR..."
                   aws ecr get-login-password --region eu-north-1 | sudo docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-                  echo "⬇️ Pulling latest images..."
                   sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
                   sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
                   sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
                   sudo docker pull 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
-                  echo "🚀 Restarting frontend containers..."
                   cd /home/ubuntu/timeflow
                   sudo docker-compose -f docker-compose.dev.yml up -d timeflow-customer timeflow-professional timeflow-team timeflow-landing
-                  echo "✅ All frontends deployed successfully!"
+                  echo "✅ All frontends deployed!"
