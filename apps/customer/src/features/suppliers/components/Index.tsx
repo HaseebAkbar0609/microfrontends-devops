@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Printer, Plus, Filter } from "lucide-react";
+import { Loader2, Plus, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/common";
 import { Search } from "@/components/search/Search";
@@ -95,17 +95,7 @@ export default function SuppliersFeature() {
 					</Button>
 				</div>
 				<div className="flex items-center gap-2">
-					<Button
-						variant="outline"
-						size="icon"
-						className="h-10 w-10 border-slate-200 text-slate-600"
-					>
-						<Printer className="h-4 w-4" />
-						<span className="sr-only">
-							<Translate text={localizationConstants.print} />
-						</span>
-					</Button>
-					<Button
+<Button
 						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md"
 						onClick={() => setShowCreate(true)}
 					>

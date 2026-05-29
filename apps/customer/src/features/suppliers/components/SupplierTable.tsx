@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import {
 	ArrowUpDown,
 	ArrowUp,
@@ -9,12 +9,12 @@ import {
 	Eye,
 	Pencil,
 	Trash2,
-	Circle,
 	ChevronLeft,
 	ChevronRight,
 	ChevronsLeft,
 	ChevronsRight,
 } from "lucide-react";
+
 import {
 	Table,
 	TableBody,
@@ -30,7 +30,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Select,
 	SelectContent,
@@ -102,41 +101,10 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 	const page = Number(query.get("page") || "1");
 	const pageSize = Number(query.get("page_size") || "10");
 
-	const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-
 	const totalPages = useMemo(
 		() => Math.max(1, Math.ceil(totalItems / pageSize)),
 		[totalItems, pageSize],
 	);
-
-	const allSelected =
-		data.length > 0 && data.every((s) => selectedIds.has(s.id));
-	const someSelected = data.some((s) => selectedIds.has(s.id));
-
-	const toggleAll = () => {
-		if (allSelected) {
-			setSelectedIds((prev) => {
-				const next = new Set(prev);
-				data.forEach((s) => next.delete(s.id));
-				return next;
-			});
-		} else {
-			setSelectedIds((prev) => {
-				const next = new Set(prev);
-				data.forEach((s) => next.add(s.id));
-				return next;
-			});
-		}
-	};
-
-	const toggleRow = (id: string) => {
-		setSelectedIds((prev) => {
-			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
-			return next;
-		});
-	};
 
 	const handleSort = useCallback(
 		(field: SupplierColumnField) => {
@@ -175,20 +143,6 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 			case "actions":
 				return (
 					<div className="flex items-center gap-1 justify-end">
-						<Button
-							variant="ghost"
-							size="icon"
-							className="h-8 w-8 text-slate-400 hover:text-slate-600"
-						>
-							<Circle className="h-4 w-4" />
-						</Button>
-						<Button
-							variant="ghost"
-							size="icon"
-							className="h-8 w-8 text-slate-400 hover:text-slate-600"
-						>
-							<Circle className="h-4 w-4" />
-						</Button>
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button
@@ -226,7 +180,6 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 			<div className="w-full bg-white rounded-md border border-slate-200 overflow-hidden">
 				<Table className="w-full min-w-3xl table-auto">
 					<colgroup>
-						<col className="w-12" />
 						{SUPPLIER_COLUMNS.map((col) => (
 							<col
 								key={col.field}
@@ -236,18 +189,6 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 					</colgroup>
 					<TableHeader className="bg-slate-50/50">
 						<TableRow className="hover:bg-transparent border-slate-200">
-							<TableHead className="w-12 px-4 py-3.5 h-auto">
-								<Checkbox
-									checked={allSelected}
-									data-state={
-										someSelected && !allSelected
-											? "indeterminate"
-											: undefined
-									}
-									onCheckedChange={toggleAll}
-									aria-label="Select all"
-								/>
-							</TableHead>
 							{SUPPLIER_COLUMNS.map((col) => (
 								<TableHead
 									key={col.field}
@@ -285,13 +226,6 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 								key={supplier.id}
 								className="border-b border-slate-100 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"
 							>
-								<TableCell className="px-4 py-3.5 align-top">
-									<Checkbox
-										checked={selectedIds.has(supplier.id)}
-										onCheckedChange={() => toggleRow(supplier.id)}
-										aria-label={`Select ${supplier.companyName}`}
-									/>
-								</TableCell>
 								{SUPPLIER_COLUMNS.map((col) => (
 									<TableCell
 										key={`${supplier.id}-${col.field}`}
@@ -309,7 +243,7 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 						{data.length === 0 && (
 							<TableRow>
 								<TableCell
-									colSpan={SUPPLIER_COLUMNS.length + 1}
+									colSpan={SUPPLIER_COLUMNS.length}
 									className="h-32 text-center text-slate-500"
 								>
 									<Translate
@@ -323,10 +257,7 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 			</div>
 
 			{/* Pagination */}
-			<div className="flex items-center justify-between py-2 px-1">
-				<span className="text-sm text-slate-600">
-					{selectedIds.size} av {totalItems} rader valda
-				</span>
+			<div className="flex items-center justify-end py-2 px-1">
 				<div className="flex items-center gap-6">
 					<div className="flex items-center gap-2">
 						<span className="text-sm font-medium text-slate-700">
