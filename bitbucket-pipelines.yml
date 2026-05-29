@@ -76,7 +76,7 @@ pipelines:
           script:
             - apk add --no-cache openssh-client
             - mkdir -p ~/.ssh
-            - echo $DEV_SSH_KEY | base64 --decode > ~/.ssh/dev_key
+            - echo $DEV_SSH_KEY | base64 -d > ~/.ssh/dev_key
             - chmod 600 ~/.ssh/dev_key
             - ssh-keyscan -t rsa,ed25519 $DEV_SERVER_IP >> ~/.ssh/known_hosts
             - ssh -i ~/.ssh/dev_key ubuntu@$DEV_SERVER_IP "bash /home/ubuntu/deploy-frontend.sh"
