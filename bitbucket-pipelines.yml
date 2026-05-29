@@ -20,6 +20,7 @@ pipelines:
 
       - step:
           name: Build & Push Professional
+          size: 2x
           services:
             - docker
           script:
@@ -35,6 +36,7 @@ pipelines:
 
       - step:
           name: Build & Push Team
+          size: 2x
           services:
             - docker
           script:
@@ -64,7 +66,7 @@ pipelines:
             - echo "✅ Landing pushed"
 
       - step:
-          name: Deploy to Dev Server
+          name: Deploy All to Dev Server
           script:
             - apk add --no-cache openssh-client
             - mkdir -p ~/.ssh
