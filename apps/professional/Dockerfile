@@ -15,7 +15,6 @@ RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY apps/professional/. .
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_OPTIONS="--max-old-space-size=3072"
 RUN pnpm build
 
 # Stage 3: Runner

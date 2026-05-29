@@ -9,7 +9,6 @@ COPY apps/team/package.json ./package.json
 RUN pnpm install --prefer-offline
 COPY apps/team/. .
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV NODE_OPTIONS="--max-old-space-size=3072"
 RUN pnpm build
 
 # Stage 2: Runner
