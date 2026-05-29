@@ -1,4 +1,4 @@
-const BASE_URL = process.env.PUBLIC_API_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export const BASE_API_VERSION = `${BASE_URL}/v1`;
 
 const API_PREFIX = "/api/v1/customers";

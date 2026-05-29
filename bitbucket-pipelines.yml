@@ -1,0 +1,83 @@
+image: node:20-alpine
+
+definitions:
+  services:
+    docker-large:
+      type: docker
+      memory: 7128
+
+pipelines:
+  branches:
+    dev:
+      - step:
+          name: Build & Push Customer
+          services:
+            - docker
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-customer -f ./apps/customer/Dockerfile .
+            - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
+            - echo "✅ Customer pushed"
+
+      - step:
+          name: Build & Push Professional
+          size: 2x
+          services:
+            - docker-large
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-professional -f ./apps/professional/Dockerfile .
+            - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
+            - echo "✅ Professional pushed"
+
+      - step:
+          name: Build & Push Team
+          size: 2x
+          services:
+            - docker-large
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-team -f ./apps/team/Dockerfile .
+            - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
+            - echo "✅ Team pushed"
+
+      - step:
+          name: Build & Push Landing
+          services:
+            - docker
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-landing-page -f ./apps/landing/Dockerfile .
+            - docker tag timeflow-landing-page:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:latest
+            - echo "✅ Landing pushed"
+
+      - step:
+          name: Deploy All to Dev Server
+          script:
+            - apk add --no-cache openssh-client
+            - mkdir -p ~/.ssh
+            - echo $DEV_SSH_KEY | base64 -d > ~/.ssh/dev_key
+            - chmod 600 ~/.ssh/dev_key
+            - ssh-keyscan -t rsa,ed25519 $DEV_SERVER_IP >> ~/.ssh/known_hosts
+            - ssh -i ~/.ssh/dev_key ubuntu@$DEV_SERVER_IP "bash /home/ubuntu/deploy-frontend.sh"
+            - echo "✅ All frontends deployed!"
