@@ -28,3 +28,4 @@ export { getProfessionalsSubcategoriesListAPIAction } from "./category/professio
 export type { SaveProjectPayload, SaveProjectResponse, MediaUploadResponse } from "@/features/quote/types/api";
 export type { AuthResponseData } from "@/types/api";
 export { acceptInvitationAPIAction } from "./invitation/accept";
+export { activeInactiveCompanyUserAPIAction } from "./companies/users";

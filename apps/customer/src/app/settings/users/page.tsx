@@ -1,6 +1,6 @@
 import UsersFeature from "@/features/settings/users/components/Index";
 import { Metadata } from "next";
-export const dynamic = "force-dynamic";
+//export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
 	title: "Timeflow",

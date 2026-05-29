@@ -217,24 +217,28 @@ export type DashboardText = {
 };
 
 export type SettingModule = {
-	users: string,
-	edit: string,
-	deactivateUser: string,
+	users: string;
+	edit: string;
+	deactivateUser: string;
 
-	displayName: string,
-	dateCreated: string,
-	accountType: string,
-	lastLogin: string,
+	displayName: string;
+	dateCreated: string;
+	accountType: string;
+	lastLogin: string;
 
-	userAccountAdmin: string,
-	userAccountUsers: string,
-	userStatusActive: string,
-	userStatusDeactivated: string,
+	userAccountAdmin: string;
+	userAccountUsers: string;
+	userStatusActive: string;
+	userStatusDeactivated: string;
 
-	noUsersFound: string,
-	deactivateUserConfirmTitle: string,
-	deactivateUserConfirmDescription: string,
-}
+	noUsersFound: string;
+	deactivateUserConfirmTitle: string;
+	deactivateUserConfirmDescription: string;
+
+	activateUser: string;
+	activateUserConfirmTitle: string;
+	activateUserConfirmDescription: string;
+};
 
 export type OfferModule = {
 	search: string;
@@ -420,6 +424,7 @@ export type Translation = SidebarTranslation &
 	AppLauncherTranslation &
 	DashboardText &
 	OfferModule &
+	SettingModule &
 	HeaderTranslation;
 
 export type TranslationKeys = keyof Translation;

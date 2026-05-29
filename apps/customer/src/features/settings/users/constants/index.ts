@@ -1,19 +1,17 @@
 import { BreadcrumbItem } from "@/types/user";
-import {
-	// ChatCompany,
-	// ProjectDocument,
-	User,
-	// QuoteItem,
-	// QuoteStatus,
-	// ReferenceProject,
-} from "../types/types";
+import type { User, UserPermissions } from "../types/types";
 
 import localizationConstants from "@/utils/translation/constants";
 
-export const BREADCRUMBS: BreadcrumbItem[] = [
+/* export const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
 	{ label: localizationConstants.settings },
 	{ label: localizationConstants.users },
+]; */
+export const BREADCRUMBS: BreadcrumbItem[] = [
+	{ label: localizationConstants.home, href: "/home" },
+	{ label: localizationConstants.settings, href: "/settings" },
+	{ label: localizationConstants.users, href: "/settings/users" },
 ];
 
 export const USERS_COLUMNS = [
@@ -25,6 +23,33 @@ export const USERS_COLUMNS = [
 	{ label: localizationConstants.actions, field: "actions" },
 ] as const;
 
+export const USER_PERMISSION_OPTIONS = [
+	{ key: "viewProjects", label: "View projects" },
+	{ key: "createProjects", label: "Create projects" },
+	{ key: "editProjects", label: "Edit projects" },
+	{ key: "viewOffers", label: "View offers" },
+	{ key: "approveOffers", label: "Approve offers" },
+	{ key: "manageUsers", label: "Manage users" },
+] as const;
+
+export const DEFAULT_USER_PERMISSIONS: UserPermissions = {
+	viewProjects: true,
+	createProjects: false,
+	editProjects: false,
+	viewOffers: true,
+	approveOffers: false,
+	manageUsers: false,
+};
+
+const ADMIN_PERMISSIONS: UserPermissions = {
+	viewProjects: true,
+	createProjects: true,
+	editProjects: true,
+	viewOffers: true,
+	approveOffers: true,
+	manageUsers: true,
+};
+
 export const DUMMY_USERS: User[] = [
   {
     id: "1",
@@ -35,11 +60,12 @@ export const DUMMY_USERS: User[] = [
     address: "742 Evergreen Terrace",
     city: "Springfield",
     postal_code: "97477",
-    personnal_number: "SSN-987-65-4321",
+    personal_number: "19900101-1234",
     date_created: "2025-01-15",
-    account_type: "admin",
+    account_type: "users",
     last_login: "2026-05-24T14:22:15Z",
-    status: "active"
+    status: "active",
+    permissions: ADMIN_PERMISSIONS,
   },
   {
     id: "2",
@@ -50,11 +76,12 @@ export const DUMMY_USERS: User[] = [
     address: "221B Baker Street",
     city: "London",
     postal_code: "NW1 6XE",
-    personnal_number: "NINO-AB123456C",
+    personal_number: "19880518-5678",
     date_created: "2025-03-22",
     account_type: "users",
     last_login: "2026-05-25T01:10:00Z",
-    status: "active"
+    status: "active",
+    permissions: DEFAULT_USER_PERMISSIONS,
   },
   {
     id: "3",
@@ -65,11 +92,12 @@ export const DUMMY_USERS: User[] = [
     address: "1600 Amphitheatre Parkway",
     city: "Mountain View",
     postal_code: "94043",
-    personnal_number: "SSN-876-54-3210",
+    personal_number: "19791102-2468",
     date_created: "2025-06-05",
     account_type: "users",
     last_login: "2026-05-20T09:34:11Z",
-    status: "active"
+    status: "active",
+    permissions: DEFAULT_USER_PERMISSIONS,
   },
   {
     id: "4",
@@ -80,11 +108,12 @@ export const DUMMY_USERS: User[] = [
     address: "350 Fifth Avenue",
     city: "New York",
     postal_code: "10118",
-    personnal_number: "SSN-765-43-2109",
+    personal_number: "19951224-1357",
     date_created: "2025-09-12",
     account_type: "users",
     last_login: "2026-04-15T23:11:45Z",
-    status: "suspended"
+    status: "deactivated",
+    permissions: DEFAULT_USER_PERMISSIONS,
   },
   {
     id: "5",
@@ -95,14 +124,14 @@ export const DUMMY_USERS: User[] = [
     address: "410 Terry Ave N",
     city: "Seattle",
     postal_code: "98109",
-    personnal_number: "SSN-654-32-1098",
+    personal_number: "19830214-9753",
     date_created: "2025-12-01",
     account_type: "users",
     last_login: "2026-05-23T18:05:22Z",
-    status: "suspended"
+    status: "deactivated",
+    permissions: DEFAULT_USER_PERMISSIONS,
   }
 ];
-
 
 // export const COMPANIES: ChatCompany[] = [
 // 	{

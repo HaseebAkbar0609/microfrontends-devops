@@ -34,12 +34,15 @@ export default function UsersFeature() {
         setLoadError(null);
 
         // Test Data
-        setTimeout(() => {
+     /*    setTimeout(() => {
             setUsers(DUMMY_USERS);
             setTotalItems(DUMMY_USERS.length);
 
             setLoading(false);
-        }, 1e3)
+        }, 1e3) */
+        setUsers(DUMMY_USERS);
+        setTotalItems(DUMMY_USERS.length);
+        setLoading(false);
 
 
         // TODO: get user list action.

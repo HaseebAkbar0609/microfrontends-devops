@@ -19,6 +19,7 @@ export interface NavSubItem {
 	id: string;
 	label: string;
 	href: string;
+	icon?: LucideIcon;
 	flyoutItems?: NavFlyoutItem[];
 }
 

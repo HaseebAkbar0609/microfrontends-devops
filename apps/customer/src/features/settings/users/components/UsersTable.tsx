@@ -7,9 +7,8 @@ import {
 	ArrowDown,
 	MoreVertical,
 	Pencil,
-	Archive,
-	Trash2,
-	CircleMinus
+	CircleMinus,
+	RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
 import {
@@ -27,8 +26,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { formatDistanceToNow } from "date-fns";
-
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useQueryParams } from "@/hooks/useQueryParams";
@@ -41,11 +38,7 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import useModal from "@/features/auth/hooks/useModal";
 import { MODAL_CONSTANTS, ModalType } from "@/constants/constant";
-
-// import {
-// 	patchUserStatusAPIAction,
-// 	type UserStatusPatchValue,
-// } from "@/api-actions";
+import { activeInactiveCompanyUserAPIAction } from "@/api-actions";
 
 import {
 	AlertDialog,
@@ -58,8 +51,24 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-// Todo: move to User API action
-type UserStatusPatchValue = "active" | "deactivate";
+const formatDistanceToNow = (date: Date) => {
+	const diffMs = Date.now() - date.getTime();
+	const diffMinutes = Math.max(1, Math.round(diffMs / 60000));
+
+	if (diffMinutes < 60) return `${diffMinutes} minutes ago`;
+
+	const diffHours = Math.round(diffMinutes / 60);
+	if (diffHours < 24) return `${diffHours} hours ago`;
+
+	const diffDays = Math.round(diffHours / 24);
+	if (diffDays < 30) return `${diffDays} days ago`;
+
+	const diffMonths = Math.round(diffDays / 30);
+	if (diffMonths < 12) return `${diffMonths} months ago`;
+
+	const diffYears = Math.round(diffMonths / 12);
+	return `${diffYears} years ago`;
+};
 
 interface UsersTableProps {
 	data: User[];
@@ -140,36 +149,24 @@ const ActionsDropdown = ({
 	const [isPending, setIsPending] = useState(false);
 
 	const handleConfirm = async () => {
-
-		console.log('handleConfirm', type, modalId)
-
 		if (!type || !modalId) return;
-		const status: UserStatusPatchValue | null =
-			type === MODAL_CONSTANTS.ACTIVE
-				? "active"
-				: type === MODAL_CONSTANTS.DEACTIVATE
-					? "deactivate"
-					: null;
-		if (!status) return;
 
 		setIsPending(true);
 		try {
-			// TODO
-			// Call confirm user API action
-
-			// const result = await patchUserStatusAPIAction(modalId, status);
-			// if (result.success) {
+			const result = await activeInactiveCompanyUserAPIAction(modalId);
+			if (result.success) {
 				onRefresh?.();
 				closeModal();
-			// }
+			}
 		} finally {
 			setIsPending(false);
 		}
 	};
 
 	const isAdminUser = _user.account_type === 'admin'
-	const showActiveUser = !isAdminUser && _user.status !== 'active'
-	const showDeactivateUser = !isAdminUser && _user.status === 'active'
+	const showActiveUser = !isAdminUser && _user.status === "deactivated";
+	const showDeactivateUser = !isAdminUser && _user.status === "active";
+	const isActivating = type === MODAL_CONSTANTS.ACTIVE;
 
 	return (
 		<>
@@ -205,7 +202,7 @@ const ActionsDropdown = ({
 								openModal(MODAL_CONSTANTS.ACTIVE, _user.id)
 							}
 						>
-							<CircleMinus className="h-4 w-4 text-accent-foreground group-hover:text-accent-foreground transition-colors" />
+							<RotateCcw className="h-4 w-4 text-accent-foreground group-hover:text-accent-foreground transition-colors" />
 							<Translate text={localizationConstants.activateUser} />
 						</DropdownMenuItem>
 					)}
@@ -229,14 +226,18 @@ const ActionsDropdown = ({
 						<AlertDialogTitle className="text-lg font-semibold text-slate-800">
 							<Translate
 								text={
-									localizationConstants.deactivateUserConfirmTitle
+									isActivating
+										? localizationConstants.activateUserConfirmTitle
+										: localizationConstants.deactivateUserConfirmTitle
 								}
 							/>
 						</AlertDialogTitle>
 						<AlertDialogDescription className="text-sm text-slate-500">
 							<Translate
 								text={
-									localizationConstants.deactivateUserConfirmDescription
+									isActivating
+										? localizationConstants.activateUserConfirmDescription
+										: localizationConstants.deactivateUserConfirmDescription
 								}
 							/>
 						</AlertDialogDescription>
@@ -255,12 +256,16 @@ const ActionsDropdown = ({
 								void handleConfirm();
 							}}
 							className={`min-w-24 ${
-								"bg-red-600 hover:bg-red-700 text-white"
+								isActivating
+									? "bg-slate-900 hover:bg-slate-800 text-white"
+									: "bg-red-600 hover:bg-red-700 text-white"
 							}`}
 						>
 							<Translate
 								text={
-									localizationConstants.deactivateUser
+									isActivating
+										? localizationConstants.activateUser
+										: localizationConstants.deactivateUser
 								}
 							/>
 						</AlertDialogAction>
@@ -329,7 +334,7 @@ export function UsersTable({ data, totalItems, onRefresh }: UsersTableProps) {
 					const dateLastLogin = new Date(user[columnKey]);
 					return (
 						<span className="text-slate-600 block">
-							{formatDistanceToNow(dateLastLogin, { addSuffix: true })}
+							{formatDistanceToNow(dateLastLogin)}
 						</span>
 					);
 				case "status": {
