@@ -4,6 +4,9 @@ const nextConfig = {
 	images: {
 		domains: ["images.unsplash.com"],
 	},
+	experimental: {
+		cpus: 1,
+	},
 };
 
 module.exports = nextConfig;
