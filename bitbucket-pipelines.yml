@@ -1,5 +1,10 @@
 image: node:20-alpine
 
+definitions:
+  services:
+    docker:
+      memory: 7128
+
 pipelines:
   branches:
     dev:
