@@ -29,7 +29,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build --memory=6g --memory-swap=6g -t timeflow-professional -f ./apps/professional/Dockerfile .
+            - docker build -t timeflow-professional -f ./apps/professional/Dockerfile .
             - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
             - echo "✅ Professional pushed"
@@ -45,7 +45,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build --memory=6g --memory-swap=6g -t timeflow-team -f ./apps/team/Dockerfile .
+            - docker build -t timeflow-team -f ./apps/team/Dockerfile .
             - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
             - echo "✅ Team pushed"
