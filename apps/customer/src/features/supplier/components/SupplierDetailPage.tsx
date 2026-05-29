@@ -18,6 +18,7 @@ import {
 } from "../constants";
 import { SupplierProfileCard } from "./SupplierProfileCard";
 import { OverviewTab } from "./tabs/OverviewTab";
+import { ReviewsTab } from "./tabs/ReviewsTab";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
@@ -105,9 +106,7 @@ export function SupplierDetailPage({ supplierId }: { supplierId: string }) {
 							</TabsContent>
 
 							<TabsContent value="reviews" className="mt-0">
-								<div className="py-8 text-center text-sm text-slate-500">
-									Omdömen – Kommer snart
-								</div>
+								<ReviewsTab />
 							</TabsContent>
 						</div>
 					</Tabs>
