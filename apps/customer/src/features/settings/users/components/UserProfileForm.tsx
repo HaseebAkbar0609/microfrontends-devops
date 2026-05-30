@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, Trash2 } from "lucide-react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -35,6 +35,7 @@ export function UserProfileForm({
 }: Props) {
 	const { t } = useTranslation();
 	const isEdit = mode === "edit";
+	const [isSaved, setIsSaved] = useState(false);
 	const userProfileSchema = useMemo(
 		() =>
 			createUserProfileSchema({
@@ -73,10 +74,12 @@ export function UserProfileForm({
 		};
 
 		console.log("TODO save user", payload);
+		setIsSaved(true);
 		onSaved();
 	};
 
 	const personalNumberValue = form.watch("personal_number");
+	const shouldMaskPersonalNumber = isEdit || isSaved;
 
 	return (
 		<Form {...form}>
@@ -104,10 +107,10 @@ export function UserProfileForm({
 								name="personal_number"
 								label={t(localizationConstants.userFormPersonalNumberLabel)}
 								placeholder={t(localizationConstants.userFormPersonalNumberPlaceholder)}
-								disabled={readOnly || isEdit}
+								disabled={readOnly || shouldMaskPersonalNumber}
 								inputProps={{
-									value: isEdit ? maskPersonalNumber(personalNumberValue) : personalNumberValue,
-									onChange: isEdit ? undefined : form.register("personal_number").onChange,
+									value: shouldMaskPersonalNumber ? maskPersonalNumber(personalNumberValue) : personalNumberValue,
+									onChange: shouldMaskPersonalNumber ? undefined : form.register("personal_number").onChange,
 								}}
 							/>
 
