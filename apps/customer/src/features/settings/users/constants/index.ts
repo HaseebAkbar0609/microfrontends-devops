@@ -24,12 +24,12 @@ export const USERS_COLUMNS = [
 ] as const;
 
 export const USER_PERMISSION_OPTIONS = [
-	{ key: "viewProjects", label: "View projects" },
-	{ key: "createProjects", label: "Create projects" },
-	{ key: "editProjects", label: "Edit projects" },
-	{ key: "viewOffers", label: "View offers" },
-	{ key: "approveOffers", label: "Approve offers" },
-	{ key: "manageUsers", label: "Manage users" },
+	{ key: "viewProjects", label: localizationConstants.userFormPermissionViewProjects },
+	{ key: "createProjects", label: localizationConstants.userFormPermissionCreateProjects },
+	{ key: "editProjects", label: localizationConstants.userFormPermissionEditProjects },
+	{ key: "viewOffers", label: localizationConstants.userFormPermissionViewOffers },
+	{ key: "approveOffers", label: localizationConstants.userFormPermissionApproveOffers },
+	{ key: "manageUsers", label: localizationConstants.userFormPermissionManageUsers },
 ] as const;
 
 export const DEFAULT_USER_PERMISSIONS: UserPermissions = {

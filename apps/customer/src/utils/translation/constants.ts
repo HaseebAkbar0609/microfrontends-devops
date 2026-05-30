@@ -219,6 +219,8 @@ export type DashboardText = {
 export type SettingModule = {
 	users: string;
 	edit: string;
+	createUser: string;
+	editUser: string;
 	deactivateUser: string;
 
 	displayName: string;
@@ -238,6 +240,43 @@ export type SettingModule = {
 	activateUser: string;
 	activateUserConfirmTitle: string;
 	activateUserConfirmDescription: string;
+
+	userFormProfileTab: string;
+	userFormPermissionsTab: string;
+	userFormFirstNameLabel: string;
+	userFormFirstNamePlaceholder: string;
+	userFormLastNameLabel: string;
+	userFormLastNamePlaceholder: string;
+	userFormMobileNumberLabel: string;
+	userFormMobileNumberPlaceholder: string;
+	userFormPrivateEmailLabel: string;
+	userFormPrivateEmailPlaceholder: string;
+	userFormAddressLabel: string;
+	userFormAddressPlaceholder: string;
+	userFormCityLabel: string;
+	userFormCityPlaceholder: string;
+	userFormPostalCodeLabel: string;
+	userFormPostalCodePlaceholder: string;
+	userFormPersonalNumberLabel: string;
+	userFormPersonalNumberPlaceholder: string;
+	userFormUploadPhotoLabel: string;
+	userFormDeleteButton: string;
+	userFormCancelButton: string;
+	userFormSaveButton: string;
+	userFormPermissionViewProjects: string;
+	userFormPermissionCreateProjects: string;
+	userFormPermissionEditProjects: string;
+	userFormPermissionViewOffers: string;
+	userFormPermissionApproveOffers: string;
+	userFormPermissionManageUsers: string;
+	validationUserFirstNameRequired: string;
+	validationUserLastNameRequired: string;
+	validationUserMobileNumberRequired: string;
+	validationUserPrivateEmailInvalid: string;
+	validationUserAddressRequired: string;
+	validationUserCityRequired: string;
+	validationUserPostalCodeRequired: string;
+	validationUserPersonalNumberFormat: string;
 };
 
 export type OfferModule = {

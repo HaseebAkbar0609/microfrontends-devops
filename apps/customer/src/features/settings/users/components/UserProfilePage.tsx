@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
 import { PageHeader } from "@/components/common";
 import localizationConstants from "@/utils/translation/constants";
 import { BREADCRUMBS, DUMMY_USERS } from "../constants";
@@ -17,6 +18,7 @@ const CURRENT_USER_IS_MAIN = true;
 
 export default function UserProfilePage({ mode, userId }: Props) {
 	const router = useRouter();
+	const { t } = useTranslation();
 
 	const user = useMemo(() => {
 		if (mode === "create") return null;
@@ -25,14 +27,21 @@ export default function UserProfilePage({ mode, userId }: Props) {
 
 	const isOwnProfile = user?.id === CURRENT_USER_ID;
 	const readOnly = !CURRENT_USER_IS_MAIN;
+	const pageTitle =
+		mode === "create"
+			? localizationConstants.createUser
+			: localizationConstants.editUser;
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
 			<PageHeader
-				title={mode === "create" ? localizationConstants.createNewButtonText : localizationConstants.users}
+				title={t(pageTitle)}
 				breadcrumbs={[
-					...BREADCRUMBS,
-					{ label: mode === "create" ? localizationConstants.createNewButtonText : localizationConstants.edit },
+					...BREADCRUMBS.map((item) => ({
+						...item,
+						label: t(item.label),
+					})),
+					{ label: t(pageTitle) },
 				]}
 			/>
 

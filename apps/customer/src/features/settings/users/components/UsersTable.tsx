@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	ArrowUpDown,
 	ArrowUp,
@@ -145,6 +146,7 @@ const ActionsDropdown = ({
 	user: User;
 	onRefresh?: () => void;
 }) => {
+	const { t } = useTranslation();
 	const { isOpen, openModal, closeModal, type, modalId } = useModal<ModalType>();
 	const [isPending, setIsPending] = useState(false);
 
@@ -192,7 +194,7 @@ const ActionsDropdown = ({
 							className="flex items-center w-full"
 						>
 							<Pencil className="h-4 w-4 text-accent-foreground group-hover:text-accent-foreground transition-colors" />
-							<Translate text={localizationConstants.edit} />
+							{t(localizationConstants.edit)}
 						</Link>
 					</DropdownMenuItem>
 					{showActiveUser  && (
@@ -203,7 +205,7 @@ const ActionsDropdown = ({
 							}
 						>
 							<RotateCcw className="h-4 w-4 text-accent-foreground group-hover:text-accent-foreground transition-colors" />
-							<Translate text={localizationConstants.activateUser} />
+							{t(localizationConstants.activateUser)}
 						</DropdownMenuItem>
 					)}
 					{showDeactivateUser  && (
@@ -214,7 +216,7 @@ const ActionsDropdown = ({
 							}
 						>
 							<CircleMinus className="h-4 w-4 text-accent-foreground group-hover:text-accent-foreground transition-colors" />
-							<Translate text={localizationConstants.deactivateUser} />
+							{t(localizationConstants.deactivateUser)}
 						</DropdownMenuItem>
 					)}
 				</DropdownMenuContent>
@@ -224,22 +226,18 @@ const ActionsDropdown = ({
 				<AlertDialogContent className="max-w-md">
 					<AlertDialogHeader>
 						<AlertDialogTitle className="text-lg font-semibold text-slate-800">
-							<Translate
-								text={
-									isActivating
-										? localizationConstants.activateUserConfirmTitle
-										: localizationConstants.deactivateUserConfirmTitle
-								}
-							/>
+							{t(
+								isActivating
+									? localizationConstants.activateUserConfirmTitle
+									: localizationConstants.deactivateUserConfirmTitle,
+							)}
 						</AlertDialogTitle>
 						<AlertDialogDescription className="text-sm text-slate-500">
-							<Translate
-								text={
-									isActivating
-										? localizationConstants.activateUserConfirmDescription
-										: localizationConstants.deactivateUserConfirmDescription
-								}
-							/>
+							{t(
+								isActivating
+									? localizationConstants.activateUserConfirmDescription
+									: localizationConstants.deactivateUserConfirmDescription,
+							)}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter className="gap-2">
@@ -247,7 +245,7 @@ const ActionsDropdown = ({
 							onClick={closeModal}
 							className="min-w-24"
 						>
-							<Translate text={localizationConstants.cancel} />
+							{t(localizationConstants.cancel)}
 						</AlertDialogCancel>
 						<AlertDialogAction
 							disabled={isPending}
@@ -261,13 +259,11 @@ const ActionsDropdown = ({
 									: "bg-red-600 hover:bg-red-700 text-white"
 							}`}
 						>
-							<Translate
-								text={
-									isActivating
-										? localizationConstants.activateUser
-										: localizationConstants.deactivateUser
-								}
-							/>
+							{t(
+								isActivating
+									? localizationConstants.activateUser
+									: localizationConstants.deactivateUser,
+							)}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

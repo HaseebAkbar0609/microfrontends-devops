@@ -2,11 +2,15 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Save, Trash2 } from "lucide-react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Form, FormInput, FormFileUpload, FormCheckbox } from "@/components/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { userProfileSchema, UserProfileFormValues } from "../schemas/userProfile.schema";
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
+import { createUserProfileSchema, UserProfileFormValues } from "../schemas/userProfile.schema";
 import { DEFAULT_USER_PERMISSIONS, USER_PERMISSION_OPTIONS } from "../constants";
 
 import type { User } from "../types/types";
@@ -29,7 +33,22 @@ export function UserProfileForm({
 	onCancel,
 	onSaved,
 }: Props) {
+	const { t } = useTranslation();
 	const isEdit = mode === "edit";
+	const userProfileSchema = useMemo(
+		() =>
+			createUserProfileSchema({
+				firstNameRequired: t(localizationConstants.validationUserFirstNameRequired),
+				lastNameRequired: t(localizationConstants.validationUserLastNameRequired),
+				mobileNumberRequired: t(localizationConstants.validationUserMobileNumberRequired),
+				privateEmailInvalid: t(localizationConstants.validationUserPrivateEmailInvalid),
+				addressRequired: t(localizationConstants.validationUserAddressRequired),
+				cityRequired: t(localizationConstants.validationUserCityRequired),
+				postalCodeRequired: t(localizationConstants.validationUserPostalCodeRequired),
+				personalNumberFormat: t(localizationConstants.validationUserPersonalNumberFormat),
+			}),
+		[t],
+	);
 
 	const form = useForm<UserProfileFormValues>({
 		resolver: zodResolver(userProfileSchema),
@@ -65,25 +84,26 @@ export function UserProfileForm({
 				<Tabs defaultValue="profile" className="gap-0">
 					<div className="border-b border-slate-200 px-5 pt-4">
 						<TabsList variant="line">
-							<TabsTrigger value="profile">Profile</TabsTrigger>
-							<TabsTrigger value="permissions">Permissions</TabsTrigger>
+							<TabsTrigger value="profile">{t(localizationConstants.userFormProfileTab)}</TabsTrigger>
+							<TabsTrigger value="permissions">{t(localizationConstants.userFormPermissionsTab)}</TabsTrigger>
 						</TabsList>
 					</div>
 
 					<TabsContent value="profile" className="p-5">
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl">
-							<FormInput control={form.control} name="first_name" label="First name" disabled={readOnly} />
-							<FormInput control={form.control} name="last_name" label="Last name" disabled={readOnly} />
-							<FormInput control={form.control} name="mobile_number" label="Mobile number" disabled={readOnly} />
-							<FormInput control={form.control} name="private_email" label="Private email" type="email" disabled={readOnly} />
-							<FormInput control={form.control} name="address" label="Address" disabled={readOnly} />
-							<FormInput control={form.control} name="city" label="City" disabled={readOnly} />
-							<FormInput control={form.control} name="postal_code" label="Postal code" disabled={readOnly} />
+							<FormInput control={form.control} name="first_name" label={t(localizationConstants.userFormFirstNameLabel)} placeholder={t(localizationConstants.userFormFirstNamePlaceholder)} disabled={readOnly} />
+							<FormInput control={form.control} name="last_name" label={t(localizationConstants.userFormLastNameLabel)} placeholder={t(localizationConstants.userFormLastNamePlaceholder)} disabled={readOnly} />
+							<FormInput control={form.control} name="mobile_number" label={t(localizationConstants.userFormMobileNumberLabel)} placeholder={t(localizationConstants.userFormMobileNumberPlaceholder)} disabled={readOnly} />
+							<FormInput control={form.control} name="private_email" label={t(localizationConstants.userFormPrivateEmailLabel)} placeholder={t(localizationConstants.userFormPrivateEmailPlaceholder)} type="email" disabled={readOnly} />
+							<FormInput control={form.control} name="address" label={t(localizationConstants.userFormAddressLabel)} placeholder={t(localizationConstants.userFormAddressPlaceholder)} disabled={readOnly} />
+							<FormInput control={form.control} name="city" label={t(localizationConstants.userFormCityLabel)} placeholder={t(localizationConstants.userFormCityPlaceholder)} disabled={readOnly} />
+							<FormInput control={form.control} name="postal_code" label={t(localizationConstants.userFormPostalCodeLabel)} placeholder={t(localizationConstants.userFormPostalCodePlaceholder)} disabled={readOnly} />
 
 							<FormInput
 								control={form.control}
 								name="personal_number"
-								label="Personal number"
+								label={t(localizationConstants.userFormPersonalNumberLabel)}
+								placeholder={t(localizationConstants.userFormPersonalNumberPlaceholder)}
 								disabled={readOnly || isEdit}
 								inputProps={{
 									value: isEdit ? maskPersonalNumber(personalNumberValue) : personalNumberValue,
@@ -95,7 +115,9 @@ export function UserProfileForm({
 								<FormFileUpload
 									control={form.control}
 									name="profile_photo"
-									label="Upload photo"
+									label={t(localizationConstants.userFormUploadPhotoLabel)}
+									buttonLabel={t(localizationConstants.upload)}
+									placeholder={t(localizationConstants.noFileChosen)}
 									allowedTypes={["image/png", "image/jpeg"]}
 									showPreview
 									className="md:col-span-2"
@@ -111,7 +133,7 @@ export function UserProfileForm({
 									key={permission.key}
 									control={form.control}
 									name={`permissions.${permission.key}`}
-									label={permission.label}
+									label={<Translate text={permission.label} />}
 									disabled={readOnly}
 								/>
 							))}
@@ -132,20 +154,20 @@ export function UserProfileForm({
 								}}
 							>
 								<Trash2 className="h-4 w-4" />
-								Delete
+								{t(localizationConstants.userFormDeleteButton)}
 							</Button>
 						)}
 					</div>
 
 					<div className="flex items-center gap-3">
 						<Button type="button" variant="outline" onClick={onCancel}>
-							Cancel
+							{t(localizationConstants.userFormCancelButton)}
 						</Button>
 
 						{!readOnly && (
 							<Button type="submit" className="gap-2">
 								<Save className="h-4 w-4" />
-								Save
+								{t(localizationConstants.userFormSaveButton)}
 							</Button>
 						)}
 					</div>
