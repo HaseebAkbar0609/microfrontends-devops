@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { PageHeader } from "@/components/common";
 import { useQueryParams } from "@/hooks/useQueryParams";
@@ -16,21 +15,18 @@ import type { User } from "../types/types";
 // import { getUserListAPIAction } from "@/api-actions";
 
 export default function UsersFeature() {
-    const { search, changeQuery, query } = useQueryParams();
-    const router = useRouter();
+    const { query } = useQueryParams();
 
     const sortBy = query.get("sort_by") || "";
     const sortOrder = query.get("sort_order") || "";
-    const [users, setUsers] = useState<User[]>([]);
+    const [users, setUsers] = useState<User[]>(DUMMY_USERS);
 
-    const [totalItems, setTotalItems] = useState(0);
-    const [loading, setLoading] = useState(true);
+    const [totalItems, setTotalItems] = useState(DUMMY_USERS.length);
+    const [loading, setLoading] = useState(false);
     const [loadError, setLoadError] = useState<string | null>(null);
     const [listVersion, setListVersion] = useState(0);
 
     useEffect(() => {
-        let cancelled = false;
-        setLoading(true);
         setLoadError(null);
 
         // Test Data
@@ -45,7 +41,6 @@ export default function UsersFeature() {
         setLoading(false);
 
 
-        // TODO: get user list action.
         // void getUserListAPIAction({
         //     sortBy: sortBy || undefined,
         //     sortOrder: sortOrder || undefined,
@@ -62,9 +57,6 @@ export default function UsersFeature() {
         //     setLoading(false);
         // });
 
-        return () => {
-            cancelled = true;
-        };
     }, [
         sortBy,
         sortOrder,
@@ -78,7 +70,7 @@ export default function UsersFeature() {
                 breadcrumbs={BREADCRUMBS}
             />
             <UsersToolbar
-                onCreateClick={() => router.push("/settings/users/create")}
+                createHref="/settings/users/create"
             />
             <div className="p-5 flex-1">
                 {loading ? (

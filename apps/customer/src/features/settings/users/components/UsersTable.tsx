@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	ArrowUpDown,
@@ -12,6 +12,7 @@ import {
 	RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
 	Table,
 	TableBody,
@@ -274,11 +275,18 @@ const ActionsDropdown = ({
 
 export function UsersTable({ data, totalItems, onRefresh }: UsersTableProps) {
 	const { query, changeQueries } = useQueryParams();
+	const router = useRouter();
 
 	const sortBy = query.get("sort_by") || "";
 	const sortOrder = query.get("sort_order") || "";
 	// const page = Number(query.get("page") || "1");
 	// const pageSize = Number(query.get("page_size") || "10");
+
+	useEffect(() => {
+		data.forEach((user) => {
+			router.prefetch(`/settings/users/${user.id}`);
+		});
+	}, [data, router]);
 
 	const handleSort = useCallback(
 		(field: string) => {

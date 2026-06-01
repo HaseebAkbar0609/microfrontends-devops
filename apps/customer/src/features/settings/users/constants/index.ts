@@ -33,10 +33,10 @@ export const USER_PERMISSION_OPTIONS = [
 ] as const;
 
 export const DEFAULT_USER_PERMISSIONS: UserPermissions = {
-	viewProjects: true,
+	viewProjects: false,
 	createProjects: false,
 	editProjects: false,
-	viewOffers: true,
+	viewOffers: false,
 	approveOffers: false,
 	manageUsers: false,
 };
