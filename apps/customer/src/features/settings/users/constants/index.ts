@@ -3,11 +3,6 @@ import type { User, UserPermissions } from "../types/types";
 
 import localizationConstants from "@/utils/translation/constants";
 
-/* export const BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.settings },
-	{ label: localizationConstants.users },
-]; */
 export const BREADCRUMBS: BreadcrumbItem[] = [
   { label: localizationConstants.home, href: "/home" },
   { label: localizationConstants.settings, href: "/settings" },
@@ -25,9 +20,9 @@ export const USERS_COLUMNS = [
 
 export const USER_PERMISSION_OPTIONS = [
   { key: "viewProjects", label: localizationConstants.userFormPermissionViewProjects },
-  { key: "viewOffers", label: localizationConstants.userFormPermissionViewOffers },
   { key: "createProjects", label: localizationConstants.userFormPermissionCreateProjects },
   { key: "editProjects", label: localizationConstants.userFormPermissionEditProjects },
+  { key: "viewOffers", label: localizationConstants.userFormPermissionViewOffers },
   { key: "approveOffers", label: localizationConstants.userFormPermissionApproveOffers },
   { key: "manageUsers", label: localizationConstants.userFormPermissionManageUsers },
 ] as const;
@@ -50,6 +45,7 @@ const ADMIN_PERMISSIONS: UserPermissions = {
   manageUsers: true,
 };
 
+// Mocked until backend user list/create/update/delete endpoints are ready.
 export const DUMMY_USERS: User[] = [
   {
     id: "1",
@@ -132,223 +128,3 @@ export const DUMMY_USERS: User[] = [
     permissions: DEFAULT_USER_PERMISSIONS,
   },
 ];
-
-// export const COMPANIES: ChatCompany[] = [
-// 	{
-// 		id: "1",
-// 		name: "Pelle Bygg",
-// 		time: "10:24",
-// 		status: "Received Quote",
-// 		statusVariant: "success",
-// 		message: "We can come for a site visit on Thursda",
-// 		hasCalendar: true,
-// 		unread: 2,
-// 	},
-// 	{
-// 		id: "2",
-// 		name: "Målarfirman Solen AB",
-// 		time: "Yesterday",
-// 		status: "Pending",
-// 		statusVariant: "warning",
-// 		message: "Thank you for your inquiry, we will get back",
-// 		hasCalendar: false,
-// 		unread: 1,
-// 	},
-// 	{
-// 		id: "3",
-// 		name: "Bygg & Fix Stockholm",
-// 		time: "2 days ago",
-// 		status: "Estimated",
-// 		statusVariant: "info",
-// 		message: "Here is our price estimate...",
-// 		hasCalendar: false,
-// 		unread: 0,
-// 	},
-// 	{
-// 		id: "4",
-// 		name: "KakelProffsen",
-// 		time: "3 days ago",
-// 		status: "Received Quote",
-// 		statusVariant: "success",
-// 		message: "Material and timeline attached",
-// 		hasCalendar: false,
-// 		unread: 0,
-// 	},
-// 	{
-// 		id: "5",
-// 		name: "Snickare Stockholm AB",
-// 		time: "1 week ago",
-// 		status: "Under review",
-// 		statusVariant: "secondary",
-// 		message: "When is a good time for a site visit?",
-// 		hasCalendar: false,
-// 		unread: 0,
-// 	},
-// ];
-
-// /** Tabs for supplier quote detail (URL ?tab=…) */
-// export const SUPPLIER_QUOTE_DETAIL_TABS = [
-// 	"quote",
-// 	"company-info",
-// 	"reference",
-// 	"discussions",
-// ] as const;
-
-// export const SUPPLIER_QUOTE_DETAIL_DEFAULT_TAB = SUPPLIER_QUOTE_DETAIL_TABS[0];
-
-// export const detailTabTriggerClass =
-// 	"relative flex-none rounded-none border-0 bg-transparent px-0 py-2.5 text-sm shadow-none " +
-// 	"font-normal text-slate-500 transition-colors hover:text-slate-700 " +
-// 	"focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 " +
-// 	"border-b-2 border-transparent -mb-px after:hidden " +
-// 	"data-[state=active]:z-[1] data-[state=active]:bg-transparent data-[state=active]:font-semibold " +
-// 	"data-[state=active]:text-slate-900 data-[state=active]:shadow-none " +
-// 	"data-[state=active]:!border-b-2 data-[state=active]:!border-slate-900";
-
-// export const COMPANY_DESCRIPTION =
-// 	"Målarfirman Solen AB is a professional painting company based in Solna with over 15 years of experience in both interior and exterior painting. We specialize in high-quality bathroom repairs and renovations.";
-
-// export const DUMMY_CERTIFICATES = [
-// 	{
-// 		id: "1",
-// 		date: "2023-01-15",
-// 		name: "Safe Water Certificate",
-// 		text: "Authorized for water installations",
-// 	},
-// 	{
-// 		id: "2",
-// 		date: "2022-05-20",
-// 		name: "BKR Certificate",
-// 		text: "Quality assurance for wet rooms",
-// 	},
-// 	{
-// 		id: "3",
-// 		date: "2021-11-30",
-// 		name: "ISO 9001",
-// 		text: "Quality management system",
-// 	},
-// ];
-
-// export const DUMMY_PERSONNEL = [
-// 	{
-// 		id: "1",
-// 		name: "Anders Johansson",
-// 		position: "Site Manager",
-// 		certifications: "Safety, Wet Room Expert",
-// 	},
-// 	{
-// 		id: "2",
-// 		name: "Maria Svensson",
-// 		position: "Master Painter",
-// 		certifications: "BKR, Safe Water",
-// 	},
-// 	{
-// 		id: "3",
-// 		name: "Kalle Karlsson",
-// 		position: "Apprentice",
-// 		certifications: "Basic Safety",
-// 	},
-// ];
-
-// export const DUMMY_REVIEWS = [
-// 	{
-// 		id: "1",
-// 		name: "Anna Berg",
-// 		review: "Very professional and timely. The bathroom looks amazing!",
-// 		rating: 5,
-// 		date: "2023-11-20",
-// 		imageUrl: "/assets/images/profile1.png",
-// 	},
-// 	{
-// 		id: "2",
-// 		name: "Erik Nilsson",
-// 		review: "Great result, but a bit more expensive than others.",
-// 		rating: 4,
-// 		date: "2023-10-05",
-// 		imageUrl: "/assets/images/profile2.png",
-// 	},
-// 	{
-// 		id: "3",
-// 		name: "Sofie Lind",
-// 		review: "Fantastic communication throughout the project.",
-// 		rating: 5,
-// 		date: "2023-08-15",
-// 		imageUrl: "/assets/images/profile3.png",
-// 	},
-// ];
-
-// export const DUMMY_INSURANCE = [
-// 	{
-// 		id: "1",
-// 		projectName: "Bathroom Renovation",
-// 		contactPerson: "Peter Hansson",
-// 		municipality: "Solna",
-// 		date: "2024-01-10",
-// 		phone: "070-123 45 67",
-// 	},
-// 	{
-// 		id: "2",
-// 		projectName: "Kitchen Painting",
-// 		contactPerson: "Sara Ek",
-// 		municipality: "Stockholm",
-// 		date: "2023-12-15",
-// 		phone: "070-987 65 43",
-// 	},
-// ];
-
-// export const DUMMY_REFERENCE_PROJECTS: ReferenceProject[] = [
-// 	{
-// 		id: "1",
-// 		name: "Luxury Villa",
-// 		municipality: "Bromma",
-// 		year: "2023",
-// 		images: [
-// 			"/assets/images/bathroom_repair_intro.png",
-// 			"/assets/images/bathroom_repair_intro.png",
-// 		],
-// 	},
-// 	{
-// 		id: "2",
-// 		name: "Apartment complex",
-// 		municipality: "Solna",
-// 		year: "2022",
-// 		images: ["/assets/images/bathroom_repair_intro.png"],
-// 	},
-// ];
-
-// export const DUMMY_QUOTE_ITEMS = [
-// 	{
-// 		id: "1",
-// 		no: "1",
-// 		description: "Painting walls and ceiling",
-// 		amount: "15,000 SEK",
-// 	},
-// 	{
-// 		id: "2",
-// 		no: "2",
-// 		description: "Tiling bathroom floors",
-// 		amount: "45,000 SEK",
-// 	},
-// 	{
-// 		id: "3",
-// 		no: "3",
-// 		description: "Plumbing installations",
-// 		amount: "30,000 SEK",
-// 	},
-// ];
-
-// export const projectDetailTabTriggerClass =
-// 	"relative flex-none rounded-none border-0 bg-transparent px-0 py-2.5 text-sm shadow-none " +
-// 	"font-normal text-slate-500 transition-colors hover:text-slate-700 " +
-// 	"focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 " +
-// 	"border-b-2 border-transparent -mb-px after:hidden " +
-// 	"data-[state=active]:z-[1] data-[state=active]:bg-transparent data-[state=active]:font-semibold " +
-// 	"data-[state=active]:text-slate-900 data-[state=active]:shadow-none " +
-// 	"data-[state=active]:!border-b-2 data-[state=active]:!border-slate-900";
-
-// export function isValidProjectDetailTab(
-// 	value: string | null,
-// ): value is (typeof PROJECT_DETAIL_TABS)[number]["value"] {
-// 	if (!value) return false;
-// 	return PROJECT_DETAIL_TABS.some((t) => t.value === value);
-// }

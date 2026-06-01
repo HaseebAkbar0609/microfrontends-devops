@@ -74,7 +74,8 @@ export function UserProfileForm({
 			personal_number: isEdit && user ? user.personal_number : values.personal_number,
 		};
 
-		console.log("TODO save user", payload);
+		// API integration pending backend endpoint; save is mocked intentionally.
+		console.log("Mock save user", payload);
 		setIsSaved(true);
 		onSaved();
 	};
@@ -166,7 +167,8 @@ export function UserProfileForm({
 								variant="destructive"
 								className="gap-2"
 								onClick={() => {
-									console.log("TODO delete user", user?.id);
+									// API integration pending backend endpoint; delete is mocked intentionally.
+									console.log("Mock delete user", user?.id);
 									onSaved();
 								}}
 							>
