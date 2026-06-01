@@ -8,49 +8,38 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 interface UsersToolbarProps {
-	onCreateClick?: () => void;
-	createHref?: string;
-	createButtonLabel?: string;
-	className?: string;
+  onCreateClick?: () => void;
+  createHref?: string;
+  createButtonLabel?: string;
+  className?: string;
 }
 
 export function UsersToolbar({
-	onCreateClick,
-	createHref,
-	createButtonLabel = localizationConstants.createNewButtonText,
-	className,
+  onCreateClick,
+  createHref,
+  createButtonLabel = localizationConstants.createNewButtonText,
+  className,
 }: UsersToolbarProps) {
-	const buttonClassName =
-		"bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md transition-colors";
+  const buttonClassName =
+    "bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md transition-colors";
 
-	return (
-		<div
-			className={cn(
-				"flex items-center justify-between gap-4  px-5 py-6 ",
-				className,
-			)}
-		>
-			<div className="flex items-center gap-3 flex-1 max-w-2xl">
-			</div>
+  return (
+    <div className={cn("flex items-center justify-end gap-4 px-5 py-6", className)}>
+      {createHref && (
+        <Button asChild className={buttonClassName}>
+          <Link href={createHref}>
+            <Plus className="h-4 w-4" />
+            <Translate text={createButtonLabel} />
+          </Link>
+        </Button>
+      )}
 
-			{createHref && (
-				<Button asChild className={buttonClassName}>
-					<Link href={createHref}>
-						<Plus className="h-4 w-4" />
-						<Translate text={createButtonLabel} />
-					</Link>
-				</Button>
-			)}
-
-			{!createHref && onCreateClick && (
-				<Button
-					onClick={onCreateClick}
-					className={buttonClassName}
-				>
-					<Plus className="h-4 w-4" />
-					<Translate text={createButtonLabel} />
-				</Button>
-			)}
-		</div>
-	);
+      {!createHref && onCreateClick && (
+        <Button onClick={onCreateClick} className={buttonClassName}>
+          <Plus className="h-4 w-4" />
+          <Translate text={createButtonLabel} />
+        </Button>
+      )}
+    </div>
+  );
 }

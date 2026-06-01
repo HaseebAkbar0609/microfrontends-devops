@@ -9,45 +9,45 @@ import localizationConstants from "@/utils/translation/constants";
 	{ label: localizationConstants.users },
 ]; */
 export const BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.settings, href: "/settings" },
-	{ label: localizationConstants.users, href: "/settings/users" },
+  { label: localizationConstants.home, href: "/home" },
+  { label: localizationConstants.settings, href: "/settings" },
+  { label: localizationConstants.users, href: "/settings/users" },
 ];
 
 export const USERS_COLUMNS = [
-	{ label: localizationConstants.displayName, field: "first_name" },
-	{ label: localizationConstants.dateCreated, field: "date_created" },
-	{ label: localizationConstants.accountType, field: "account_type" },
-	{ label: localizationConstants.lastLogin, field: "last_login" },
-	{ label: localizationConstants.status, field: "status" },
-	{ label: localizationConstants.actions, field: "actions" },
+  { label: localizationConstants.displayName, field: "first_name" },
+  { label: localizationConstants.dateCreated, field: "date_created" },
+  { label: localizationConstants.accountType, field: "account_type" },
+  { label: localizationConstants.lastLogin, field: "last_login" },
+  { label: localizationConstants.status, field: "status" },
+  { label: localizationConstants.actions, field: "actions" },
 ] as const;
 
 export const USER_PERMISSION_OPTIONS = [
-	{ key: "viewProjects", label: localizationConstants.userFormPermissionViewProjects },
-	{ key: "createProjects", label: localizationConstants.userFormPermissionCreateProjects },
-	{ key: "editProjects", label: localizationConstants.userFormPermissionEditProjects },
-	{ key: "viewOffers", label: localizationConstants.userFormPermissionViewOffers },
-	{ key: "approveOffers", label: localizationConstants.userFormPermissionApproveOffers },
-	{ key: "manageUsers", label: localizationConstants.userFormPermissionManageUsers },
+  { key: "viewProjects", label: localizationConstants.userFormPermissionViewProjects },
+  { key: "createProjects", label: localizationConstants.userFormPermissionCreateProjects },
+  { key: "editProjects", label: localizationConstants.userFormPermissionEditProjects },
+  { key: "viewOffers", label: localizationConstants.userFormPermissionViewOffers },
+  { key: "approveOffers", label: localizationConstants.userFormPermissionApproveOffers },
+  { key: "manageUsers", label: localizationConstants.userFormPermissionManageUsers },
 ] as const;
 
 export const DEFAULT_USER_PERMISSIONS: UserPermissions = {
-	viewProjects: false,
-	createProjects: false,
-	editProjects: false,
-	viewOffers: false,
-	approveOffers: false,
-	manageUsers: false,
+  viewProjects: false,
+  createProjects: false,
+  editProjects: false,
+  viewOffers: false,
+  approveOffers: false,
+  manageUsers: false,
 };
 
 const ADMIN_PERMISSIONS: UserPermissions = {
-	viewProjects: true,
-	createProjects: true,
-	editProjects: true,
-	viewOffers: true,
-	approveOffers: true,
-	manageUsers: true,
+  viewProjects: true,
+  createProjects: true,
+  editProjects: true,
+  viewOffers: true,
+  approveOffers: true,
+  manageUsers: true,
 };
 
 export const DUMMY_USERS: User[] = [
@@ -130,7 +130,7 @@ export const DUMMY_USERS: User[] = [
     last_login: "2026-05-23T18:05:22Z",
     status: "deactivated",
     permissions: DEFAULT_USER_PERMISSIONS,
-  }
+  },
 ];
 
 // export const COMPANIES: ChatCompany[] = [
