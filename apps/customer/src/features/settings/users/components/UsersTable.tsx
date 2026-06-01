@@ -14,14 +14,6 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -30,6 +22,10 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  ResponsiveTable,
+  type ResponsiveTableColumn,
+} from "@/components/table/ResponsiveTable";
 import { useQueryParams } from "@/hooks/useQueryParams";
 
 import { User, UserColumnField } from "../types/types";
@@ -90,30 +86,35 @@ const getStatusVariant = (userStatus: string) => {
 /** Table columns only (not every `User` key such as `id` / `project_type`) */
 type UsersTableColumnField = (typeof USERS_COLUMNS)[number]["field"];
 
-/** Layout: avoid table-fixed equal columns + nowrap overflow into adjacent cells */
-const COLUMN_LAYOUT: Record<UsersTableColumnField, { head: string; cell: string }> = {
+const COLUMN_LAYOUT: Record<UsersTableColumnField, { head: string; cell: string; responsive: string }> = {
   first_name: {
-    head: "min-w-[12rem] w-[20%]",
-    cell: "min-w-[12rem] max-w-[28rem] whitespace-normal break-words align-top text-left leading-snug",
+    responsive: "table-cell",
+    head: "w-[55%] sm:w-[35%] lg:w-[20%]",
+    cell: "max-w-[14rem] whitespace-normal break-words align-top text-left leading-snug sm:max-w-[22rem]",
   },
   date_created: {
-    head: "w-[4.5rem] min-w-[4rem]",
+    responsive: "hidden lg:table-cell",
+    head: "w-[4.5rem]",
     cell: "whitespace-nowrap align-top",
   },
   account_type: {
-    head: "w-[4.5rem] min-w-[4rem]",
+    responsive: "hidden md:table-cell",
+    head: "w-[4.5rem]",
     cell: "whitespace-nowrap align-top",
   },
   last_login: {
-    head: "w-[4.5rem] min-w-[4rem]",
+    responsive: "hidden xl:table-cell",
+    head: "w-[4.5rem]",
     cell: "whitespace-nowrap align-top",
   },
   status: {
-    head: "w-[9.5rem] min-w-[8.5rem]",
+    responsive: "table-cell",
+    head: "w-[7rem] sm:w-[9.5rem]",
     cell: "whitespace-nowrap align-top",
   },
   actions: {
-    head: "w-20 min-w-[5rem]",
+    responsive: "table-cell",
+    head: "w-12 sm:w-20",
     cell: "whitespace-nowrap align-top",
   },
 };
@@ -328,76 +329,45 @@ export function UsersTable({ data, onRefresh }: UsersTableProps) {
     [onRefresh],
   );
 
+  const columns: ResponsiveTableColumn<User>[] = USERS_COLUMNS.map((col) => ({
+    id: col.field,
+    onHeaderClick: col.field === "actions" ? undefined : () => handleSort(col.field),
+    className: COLUMN_LAYOUT[col.field].responsive,
+    headerClassName: cn(
+      "h-auto px-3 py-3.5 text-left font-medium text-slate-500 sm:px-4",
+      COLUMN_LAYOUT[col.field].head,
+      col.field === "actions" && "cursor-default text-right",
+    ),
+    cellClassName: cn(
+      "px-3 py-3.5 sm:px-4",
+      COLUMN_LAYOUT[col.field].cell,
+      col.field === "actions" && "text-right",
+    ),
+    header: (
+      <div
+        className={cn(
+          "flex min-w-0 items-center gap-1",
+          col.field === "actions" && "justify-end",
+        )}
+      >
+        <Translate text={col.label} />
+        {col.field !== "actions" && (
+          <SortIconElement field={col.field} sortBy={sortBy} sortOrder={sortOrder} />
+        )}
+      </div>
+    ),
+    cell: (user) => renderCell(user, col.field),
+  }));
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="w-full bg-white rounded-md border border-slate-200 overflow-hidden">
-        <Table className="w-full min-w-[56rem] table-auto">
-          <colgroup>
-            {USERS_COLUMNS.map((col) => (
-              <col key={col.field} className={COLUMN_LAYOUT[col.field].head} />
-            ))}
-          </colgroup>
-          <TableHeader className="bg-slate-50/50">
-            <TableRow className="hover:bg-transparent border-slate-200">
-              {USERS_COLUMNS.map((col) => (
-                <TableHead
-                  key={col.field}
-                  className={cn(
-                    "cursor-pointer select-none text-slate-500 font-medium py-3.5 px-4 h-auto text-left",
-                    COLUMN_LAYOUT[col.field].head,
-                    col.field === "actions" && "cursor-default",
-                    "whitespace-nowrap",
-                  )}
-                  onClick={() => handleSort(col.field)}
-                >
-                  <div
-                    className={cn(
-                      "flex items-center gap-1 min-w-0",
-                      col.field === "actions" && "justify-end",
-                    )}
-                  >
-                    <Translate text={col.label} />
-                    {col.field !== "actions" && (
-                      <SortIconElement field={col.field} sortBy={sortBy} sortOrder={sortOrder} />
-                    )}
-                  </div>
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {data.map((user) => (
-              <TableRow
-                key={user.id}
-                className="border-b border-slate-100 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"
-              >
-                {USERS_COLUMNS.map((col) => (
-                  <TableCell
-                    key={`${user.id}-${col.field}`}
-                    className={cn(
-                      "py-3.5 px-4",
-                      COLUMN_LAYOUT[col.field].cell,
-                      col.field === "actions" && "text-right",
-                    )}
-                  >
-                    {renderCell(user, col.field)}
-                  </TableCell>
-                ))}
-              </TableRow>
-            ))}
-            {data.length === 0 && (
-              <TableRow>
-                <TableCell
-                  colSpan={USERS_COLUMNS.length}
-                  className="h-32 text-center text-slate-500"
-                >
-                  <Translate text={localizationConstants.noUsersFound} />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+      <ResponsiveTable
+        data={data}
+        columns={columns}
+        getRowKey={(user) => user.id}
+        headerClassName="bg-slate-50/50"
+        emptyContent={<Translate text={localizationConstants.noUsersFound} />}
+      />
     </div>
   );
 }
