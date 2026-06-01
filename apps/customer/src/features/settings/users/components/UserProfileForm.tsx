@@ -43,6 +43,7 @@ export function UserProfileForm({
 				firstNameRequired: t(localizationConstants.validationUserFirstNameRequired),
 				lastNameRequired: t(localizationConstants.validationUserLastNameRequired),
 				mobileNumberRequired: t(localizationConstants.validationUserMobileNumberRequired),
+				mobileNumberInvalid: t(localizationConstants.validationUserMobileNumberInvalid),
 				privateEmailInvalid: t(localizationConstants.validationUserPrivateEmailInvalid),
 				addressRequired: t(localizationConstants.validationUserAddressRequired),
 				cityRequired: t(localizationConstants.validationUserCityRequired),

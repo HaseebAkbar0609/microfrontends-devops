@@ -1,10 +1,14 @@
 import { z } from "zod";
-import { isPersonalNumberValid } from "../utils/userFormatters";
+import {
+	isPersonalNumberValid,
+	isSwedishPhoneNumberValid,
+} from "../utils/userFormatters";
 
 export type UserProfileValidationMessages = {
 	firstNameRequired: string;
 	lastNameRequired: string;
 	mobileNumberRequired: string;
+	mobileNumberInvalid: string;
 	privateEmailInvalid: string;
 	addressRequired: string;
 	cityRequired: string;
@@ -15,7 +19,12 @@ export type UserProfileValidationMessages = {
 export const createUserProfileSchema = (messages: UserProfileValidationMessages) => z.object({
 	first_name: z.string().min(1, messages.firstNameRequired),
 	last_name: z.string().min(1, messages.lastNameRequired),
-	mobile_number: z.string().min(1, messages.mobileNumberRequired),
+	mobile_number: z
+		.string()
+		.min(1, messages.mobileNumberRequired)
+		.refine(isSwedishPhoneNumberValid, {
+			message: messages.mobileNumberInvalid,
+		}),
 	private_email: z.string().email(messages.privateEmailInvalid),
 	address: z.string().min(1, messages.addressRequired),
 	city: z.string().min(1, messages.cityRequired),

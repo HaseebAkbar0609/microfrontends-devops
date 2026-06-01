@@ -292,6 +292,7 @@ export const enSettingModule: SettingModule = {
 	validationUserFirstNameRequired: "First name is required",
 	validationUserLastNameRequired: "Last name is required",
 	validationUserMobileNumberRequired: "Mobile number is required",
+	validationUserMobileNumberInvalid: "Enter a valid Swedish phone number",
 	validationUserPrivateEmailInvalid: "Valid email is required",
 	validationUserAddressRequired: "Address is required",
 	validationUserCityRequired: "City is required",

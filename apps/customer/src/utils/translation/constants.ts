@@ -274,6 +274,7 @@ export type SettingModule = {
 	validationUserFirstNameRequired: string;
 	validationUserLastNameRequired: string;
 	validationUserMobileNumberRequired: string;
+	validationUserMobileNumberInvalid: string;
 	validationUserPrivateEmailInvalid: string;
 	validationUserAddressRequired: string;
 	validationUserCityRequired: string;

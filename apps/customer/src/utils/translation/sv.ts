@@ -286,6 +286,7 @@ export const svSettingModule: SettingModule = {
 	validationUserFirstNameRequired: "Förnamn krävs",
 	validationUserLastNameRequired: "Efternamn krävs",
 	validationUserMobileNumberRequired: "Mobilnummer krävs",
+	validationUserMobileNumberInvalid: "Ange ett giltigt svenskt telefonnummer",
 	validationUserPrivateEmailInvalid: "Giltig e-post krävs",
 	validationUserAddressRequired: "Adress krävs",
 	validationUserCityRequired: "Stad krävs",
