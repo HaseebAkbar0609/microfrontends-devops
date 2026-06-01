@@ -31,22 +31,13 @@ export default function UsersFeature() {
   }, [sortBy, sortOrder, listVersion]);
 
   return (
-    <div className="flex flex-1 flex-col bg-blue-gray-50">
-      <PageHeader title={localizationConstants.users} breadcrumbs={BREADCRUMBS} />
-      <UsersToolbar createHref="/settings/users/create" />
-      <div className="p-5 flex-1">
-        {loading ? (
-          <div className="flex min-h-[240px] items-center justify-center text-slate-500">
-            <Loader2 className="h-8 w-8 animate-spin" aria-hidden />
-          </div>
-        ) : loadError ? (
-          <p className="text-sm text-red-600" role="alert">
-            {loadError}
-          </p>
-        ) : (
-          <UsersTable data={users} onRefresh={() => setListVersion((v) => v + 1)} />
-        )}
-      </div>
-    </div>
+  <div className="px-5 py-5 flex-1">
+  <UsersToolbar
+    createHref="/settings/users/create"
+    className="px-0 pt-0 pb-4"
+  />
+  <UsersTable data={users} onRefresh={() => setListVersion((v) => v + 1)} />
+</div>
+
   );
 }
