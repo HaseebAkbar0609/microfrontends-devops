@@ -12,8 +12,6 @@ import localizationConstants from "@/utils/translation/constants";
 import { BREADCRUMBS, DUMMY_USERS } from "../constants";
 import type { User } from "../types/types";
 
-// import { getUserListAPIAction } from "@/api-actions";
-
 export default function UsersFeature() {
   const { query } = useQueryParams();
 
@@ -27,28 +25,9 @@ export default function UsersFeature() {
   useEffect(() => {
     setLoadError(null);
 
-    // Test Data
-    /*    setTimeout(() => {
-            setUsers(DUMMY_USERS);
-
-            setLoading(false);
-        }, 1e3) */
+    // API integration pending backend endpoint; list data is mocked intentionally.
     setUsers(DUMMY_USERS);
     setLoading(false);
-
-    // void getUserListAPIAction({
-    //     sortBy: sortBy || undefined,
-    //     sortOrder: sortOrder || undefined,
-    // }).then((result) => {
-    //     if (cancelled) return;
-    //     if (result.success && result.data) {
-    //         setUsers(result.data.quotes);
-    //     } else {
-    //         setUsers([]);
-    //         setLoadError(result.error ?? null);
-    //     }
-    //     setLoading(false);
-    // });
   }, [sortBy, sortOrder, listVersion]);
 
   return (

@@ -20,9 +20,9 @@ export const USERS_COLUMNS = [
 
 export const USER_PERMISSION_OPTIONS = [
   { key: "viewProjects", label: localizationConstants.userFormPermissionViewProjects },
+  { key: "viewOffers", label: localizationConstants.userFormPermissionViewOffers },
   { key: "createProjects", label: localizationConstants.userFormPermissionCreateProjects },
   { key: "editProjects", label: localizationConstants.userFormPermissionEditProjects },
-  { key: "viewOffers", label: localizationConstants.userFormPermissionViewOffers },
   { key: "approveOffers", label: localizationConstants.userFormPermissionApproveOffers },
   { key: "manageUsers", label: localizationConstants.userFormPermissionManageUsers },
 ] as const;
