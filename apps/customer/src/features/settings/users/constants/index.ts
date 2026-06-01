@@ -58,7 +58,7 @@ export const DUMMY_USERS: User[] = [
     postal_code: "97477",
     personal_number: "19900101-1234",
     date_created: "2025-01-15",
-    account_type: "users",
+    account_type: "admin",
     last_login: "2026-05-24T14:22:15Z",
     status: "active",
     permissions: ADMIN_PERMISSIONS,
