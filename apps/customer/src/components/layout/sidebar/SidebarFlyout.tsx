@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { NavFlyoutItem } from "./navConfig";
 import { Translate } from "@/utils/translation/translate";
@@ -11,6 +10,8 @@ interface SidebarFlyoutProps {
 	items: NavFlyoutItem[];
 	anchorRect: DOMRect;
 	anchorEl?: HTMLElement | null;
+	pathname: string;
+	onPrefetch: (href: string) => void;
 	onClose: () => void;
 }
 
@@ -18,9 +19,10 @@ export function SidebarFlyout({
 	items,
 	anchorRect,
 	anchorEl,
+	pathname,
+	onPrefetch,
 	onClose,
 }: SidebarFlyoutProps) {
-	const pathname = usePathname();
 	const panelRef = useRef<HTMLDivElement>(null);
 
 	const top = anchorRect.top;
@@ -64,6 +66,9 @@ export function SidebarFlyout({
 					<Link
 						key={item.id}
 						href={item.href}
+						prefetch
+						onMouseEnter={() => onPrefetch(item.href)}
+						onFocus={() => onPrefetch(item.href)}
 						onClick={onClose}
 						className={cn(
 							"flex items-center gap-2 px-4 py-2.5 text-sm font-medium transition-colors duration-150",

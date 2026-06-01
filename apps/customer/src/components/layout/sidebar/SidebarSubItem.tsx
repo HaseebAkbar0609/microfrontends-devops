@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarFlyout } from "./SidebarFlyout";
@@ -11,10 +10,15 @@ import { Translate } from "@/utils/translation/translate";
 
 interface SidebarSubItemProps {
 	item: NavSubItem;
+	pathname: string;
+	onPrefetch: (href: string) => void;
 }
 
-export function SidebarSubItem({ item }: SidebarSubItemProps) {
-	const pathname = usePathname();
+function SidebarSubItemComponent({
+	item,
+	pathname,
+	onPrefetch,
+}: SidebarSubItemProps) {
 	const [flyoutOpen, setFlyoutOpen] = useState(false);
 	const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
 	const itemRef = useRef<HTMLButtonElement>(null);
@@ -50,6 +54,8 @@ export function SidebarSubItem({ item }: SidebarSubItemProps) {
 					ref={itemRef}
 					type="button"
 					onClick={handleClick}
+					onMouseEnter={() => onPrefetch(item.href)}
+					onFocus={() => onPrefetch(item.href)}
 					className={sharedClassName}
 				>
 					<span>
@@ -63,6 +69,8 @@ export function SidebarSubItem({ item }: SidebarSubItemProps) {
 						items={item.flyoutItems!}
 						anchorRect={anchorRect}
 						anchorEl={itemRef.current}
+						pathname={pathname}
+						onPrefetch={onPrefetch}
 						onClose={() => setFlyoutOpen(false)}
 					/>
 				)}
@@ -71,8 +79,16 @@ export function SidebarSubItem({ item }: SidebarSubItemProps) {
 	}
 
 	return (
-		<Link href={item.href} className={sharedClassName}>
+		<Link
+			href={item.href}
+			prefetch
+			onMouseEnter={() => onPrefetch(item.href)}
+			onFocus={() => onPrefetch(item.href)}
+			className={sharedClassName}
+		>
 			<Translate text={item.label} />
 		</Link>
 	);
 }
+
+export const SidebarSubItem = memo(SidebarSubItemComponent);

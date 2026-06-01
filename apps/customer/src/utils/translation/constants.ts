@@ -263,6 +263,8 @@ export type SettingModule = {
 	userFormDeleteButton: string;
 	userFormCancelButton: string;
 	userFormSaveButton: string;
+	userFormNextButton: string;
+	userFormDetailsHelp: string;
 	userFormPermissionViewProjects: string;
 	userFormPermissionCreateProjects: string;
 	userFormPermissionEditProjects: string;

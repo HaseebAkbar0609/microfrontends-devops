@@ -36,6 +36,7 @@ export default function UserProfilePage({ mode, userId }: Props) {
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
 			<PageHeader
 				title={t(pageTitle)}
+				className="gap-1 py-2"
 				breadcrumbs={[
 					...BREADCRUMBS.map((item) => ({
 						...item,
@@ -45,7 +46,12 @@ export default function UserProfilePage({ mode, userId }: Props) {
 				]}
 			/>
 
-			<div className="p-5">
+			<div className="px-5 py-2">
+				{mode === "create" && (
+					<p className="mb-2 text-sm text-slate-500">
+						{t(localizationConstants.userFormDetailsHelp)}
+					</p>
+				)}
 				<UserProfileForm
 					mode={mode}
 					user={user}

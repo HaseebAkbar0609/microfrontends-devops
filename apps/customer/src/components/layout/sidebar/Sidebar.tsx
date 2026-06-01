@@ -1,13 +1,23 @@
 "use client";
 
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { navConfig } from "./navConfig";
 import { SidebarNavGroup } from "./SidebarNavGroup";
 import { SLATE } from "@/constants/colors";
 
 export default function Sidebar() {
 	const [collapsed, setCollapsed] = useState(false);
+	const pathname = usePathname();
+	const router = useRouter();
+
+	const prefetchRoute = useCallback(
+		(href: string) => {
+			router.prefetch(href);
+		},
+		[router],
+	);
 
 	return (
 		<aside
@@ -77,6 +87,8 @@ export default function Sidebar() {
 								key={group.id}
 								group={group}
 								collapsed={collapsed}
+								pathname={pathname}
+								onPrefetch={prefetchRoute}
 							/>
 						))}
 					</div>

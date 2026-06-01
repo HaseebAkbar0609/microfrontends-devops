@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Save, Trash2 } from "lucide-react";
+import { ArrowRight, Save, Trash2 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -36,6 +36,7 @@ export function UserProfileForm({
 	const { t } = useTranslation();
 	const isEdit = mode === "edit";
 	const [isSaved, setIsSaved] = useState(false);
+	const [activeTab, setActiveTab] = useState("profile");
 	const userProfileSchema = useMemo(
 		() =>
 			createUserProfileSchema({
@@ -80,27 +81,33 @@ export function UserProfileForm({
 
 	const personalNumberValue = form.watch("personal_number");
 	const shouldMaskPersonalNumber = isEdit || isSaved;
+	const compactFieldClassName = "gap-1.5";
+	const compactInputProps = {
+		labelClassName: "text-sm font-medium leading-none",
+		inputClassName: "h-10 text-sm",
+		messageClassName: "text-xs",
+	} as const;
 
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className="bg-white border border-slate-200 rounded-md">
-				<Tabs defaultValue="profile" className="gap-0">
-					<div className="border-b border-slate-200 px-5 pt-4">
+				<Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0">
+					<div className="border-b border-slate-200 px-5 pt-2">
 						<TabsList variant="line">
 							<TabsTrigger value="profile">{t(localizationConstants.userFormProfileTab)}</TabsTrigger>
 							<TabsTrigger value="permissions">{t(localizationConstants.userFormPermissionsTab)}</TabsTrigger>
 						</TabsList>
 					</div>
 
-					<TabsContent value="profile" className="p-5">
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-5xl">
-							<FormInput control={form.control} name="first_name" label={t(localizationConstants.userFormFirstNameLabel)} placeholder={t(localizationConstants.userFormFirstNamePlaceholder)} disabled={readOnly} />
-							<FormInput control={form.control} name="last_name" label={t(localizationConstants.userFormLastNameLabel)} placeholder={t(localizationConstants.userFormLastNamePlaceholder)} disabled={readOnly} />
-							<FormInput control={form.control} name="mobile_number" label={t(localizationConstants.userFormMobileNumberLabel)} placeholder={t(localizationConstants.userFormMobileNumberPlaceholder)} disabled={readOnly} />
-							<FormInput control={form.control} name="private_email" label={t(localizationConstants.userFormPrivateEmailLabel)} placeholder={t(localizationConstants.userFormPrivateEmailPlaceholder)} type="email" disabled={readOnly} />
-							<FormInput control={form.control} name="address" label={t(localizationConstants.userFormAddressLabel)} placeholder={t(localizationConstants.userFormAddressPlaceholder)} disabled={readOnly} />
-							<FormInput control={form.control} name="city" label={t(localizationConstants.userFormCityLabel)} placeholder={t(localizationConstants.userFormCityPlaceholder)} disabled={readOnly} />
-							<FormInput control={form.control} name="postal_code" label={t(localizationConstants.userFormPostalCodeLabel)} placeholder={t(localizationConstants.userFormPostalCodePlaceholder)} disabled={readOnly} />
+					<TabsContent value="profile" className="px-5 py-3">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2.5 max-w-5xl">
+							<FormInput control={form.control} name="first_name" label={t(localizationConstants.userFormFirstNameLabel)} placeholder={t(localizationConstants.userFormFirstNamePlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
+							<FormInput control={form.control} name="last_name" label={t(localizationConstants.userFormLastNameLabel)} placeholder={t(localizationConstants.userFormLastNamePlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
+							<FormInput control={form.control} name="mobile_number" label={t(localizationConstants.userFormMobileNumberLabel)} placeholder={t(localizationConstants.userFormMobileNumberPlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
+							<FormInput control={form.control} name="private_email" label={t(localizationConstants.userFormPrivateEmailLabel)} placeholder={t(localizationConstants.userFormPrivateEmailPlaceholder)} type="email" disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
+							<FormInput control={form.control} name="address" label={t(localizationConstants.userFormAddressLabel)} placeholder={t(localizationConstants.userFormAddressPlaceholder)} disabled={readOnly} className={`md:col-span-2 ${compactFieldClassName}`} {...compactInputProps} />
+							<FormInput control={form.control} name="city" label={t(localizationConstants.userFormCityLabel)} placeholder={t(localizationConstants.userFormCityPlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
+							<FormInput control={form.control} name="postal_code" label={t(localizationConstants.userFormPostalCodeLabel)} placeholder={t(localizationConstants.userFormPostalCodePlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
 
 							<FormInput
 								control={form.control}
@@ -108,6 +115,8 @@ export function UserProfileForm({
 								label={t(localizationConstants.userFormPersonalNumberLabel)}
 								placeholder={t(localizationConstants.userFormPersonalNumberPlaceholder)}
 								disabled={readOnly || shouldMaskPersonalNumber}
+								className={compactFieldClassName}
+								{...compactInputProps}
 								inputProps={{
 									value: shouldMaskPersonalNumber ? maskPersonalNumber(personalNumberValue) : personalNumberValue,
 									onChange: shouldMaskPersonalNumber ? undefined : form.register("personal_number").onChange,
@@ -123,7 +132,12 @@ export function UserProfileForm({
 									placeholder={t(localizationConstants.noFileChosen)}
 									allowedTypes={["image/png", "image/jpeg"]}
 									showPreview
-									className="md:col-span-2"
+									className={`md:col-span-2 ${compactFieldClassName}`}
+									labelClassName={compactInputProps.labelClassName}
+									inputWrapperClassName="max-w-5xl"
+									inputClassName="h-10 rounded-md px-4 py-2 text-sm"
+									buttonClassName="h-10 px-4"
+									messageClassName="text-xs"
 								/>
 							)}
 						</div>
@@ -144,7 +158,7 @@ export function UserProfileForm({
 					</TabsContent>
 				</Tabs>
 
-				<div className="flex items-center justify-between border-t border-slate-200 p-5">
+				<div className="flex items-center justify-between border-t border-slate-200 px-5 py-3">
 					<div>
 						{isEdit && !isOwnProfile && !readOnly && (
 							<Button
@@ -171,6 +185,17 @@ export function UserProfileForm({
 							<Button type="submit" className="gap-2">
 								<Save className="h-4 w-4" />
 								{t(localizationConstants.userFormSaveButton)}
+							</Button>
+						)}
+
+						{!readOnly && activeTab === "profile" && (
+							<Button
+								type="button"
+								className="gap-2"
+								onClick={() => setActiveTab("permissions")}
+							>
+								{t(localizationConstants.userFormNextButton)}
+								<ArrowRight className="h-4 w-4" />
 							</Button>
 						)}
 					</div>
