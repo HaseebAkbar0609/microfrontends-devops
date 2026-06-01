@@ -101,8 +101,8 @@ export function UserProfileForm({
 						</TabsList>
 					</div>
 
-					<TabsContent value="profile" className="px-5 py-3">
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2.5 max-w-5xl">
+					<TabsContent value="profile" className="px-4 py-2">
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-x-3 gap-y-1.5 max-w-5xl">
 							<FormInput control={form.control} name="first_name" label={t(localizationConstants.userFormFirstNameLabel)} placeholder={t(localizationConstants.userFormFirstNamePlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
 							<FormInput control={form.control} name="last_name" label={t(localizationConstants.userFormLastNameLabel)} placeholder={t(localizationConstants.userFormLastNamePlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
 							<FormInput control={form.control} name="mobile_number" label={t(localizationConstants.userFormMobileNumberLabel)} placeholder={t(localizationConstants.userFormMobileNumberPlaceholder)} disabled={readOnly} className={compactFieldClassName} {...compactInputProps} />
