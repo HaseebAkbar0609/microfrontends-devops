@@ -393,13 +393,27 @@ export type CommonFiles = {
 	unsupportedFileType: string;
 };
 
+export type DiscountsModule = {
+	discountsAllTitle: string;
+	discountsSubtitle: string;
+	discountsFilterSupplierPlaceholder: string;
+	discountsAllSuppliers: string;
+	discountsFilterCategoryPlaceholder: string;
+	discountsAllCategories: string;
+	discountsLoading: string;
+	discountsNotFound: string;
+	discountsOff: string;
+	discountsViewOffer: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
 	AppLauncherTranslation &
 	DashboardText &
 	OfferModule &
-	HeaderTranslation;
+	HeaderTranslation &
+	DiscountsModule;
 
 export type TranslationKeys = keyof Translation;
 

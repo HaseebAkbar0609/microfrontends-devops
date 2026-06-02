@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardText,
 	OfferModule,
+	DiscountsModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -24,7 +25,7 @@ export const enSidebar: SidebarTranslation = {
 	priceCalculator: "Cost Calculator",
 	rootRut: "ROT & RUT",
 	inspiration: "Inspiration",
-	discounts: "Offers",
+	discounts: "Discounts",
 	questions: "Questions",
 	support: "Support",
 };
@@ -406,6 +407,19 @@ export const enOfferModule: OfferModule = {
 	companySearchPlaceholder: "Search for companies...",
 };
 
+export const enDiscounts: DiscountsModule = {
+	discountsAllTitle: "All discounts",
+	discountsSubtitle: "We have collaborated with suppliers to give you the best offers.",
+	discountsFilterSupplierPlaceholder: "Supplier",
+	discountsAllSuppliers: "All suppliers",
+	discountsFilterCategoryPlaceholder: "Category",
+	discountsAllCategories: "All categories",
+	discountsLoading: "Loading discounts...",
+	discountsNotFound: "No discounts found for the selected filter.",
+	discountsOff: "Off",
+	discountsViewOffer: "View offer",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -414,4 +428,5 @@ export const en: Translation = {
 	...enAppLauncher,
 	...enDashboard,
 	...enOfferModule,
+	...enDiscounts,
 };
