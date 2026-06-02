@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ArrowUpDown,
@@ -37,7 +37,7 @@ import localizationConstants from "@/utils/translation/constants";
 import useModal from "@/features/auth/hooks/useModal";
 import { MODAL_CONSTANTS, ModalType } from "@/constants/constant";
 import { activeInactiveCompanyUserAPIAction } from "@/api-actions";
-import { getUserManagementActions } from "../utils/userFormatters";
+import { getSortedUsers, getUserManagementActions } from "../utils/userFormatters";
 
 import {
   AlertDialog,
@@ -253,6 +253,10 @@ export function UsersTable({ data, onRefresh }: UsersTableProps) {
 
   const sortBy = query.get("sort_by") || "";
   const sortOrder = query.get("sort_order") || "";
+  const sortedUsers = useMemo(
+    () => getSortedUsers(data, sortBy, sortOrder),
+    [data, sortBy, sortOrder],
+  );
 
   useEffect(() => {
     data.forEach((user) => {
@@ -361,7 +365,7 @@ export function UsersTable({ data, onRefresh }: UsersTableProps) {
   return (
     <div className="flex flex-col gap-4">
       <ResponsiveTable
-        data={data}
+        data={sortedUsers}
         columns={columns}
         getRowKey={(user) => user.id}
         headerClassName="bg-slate-50/50"

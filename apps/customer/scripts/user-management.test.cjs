@@ -71,6 +71,7 @@ const {
 const {
 	getUserManagementActions,
 	getUserProfileActions,
+	getSortedUsers,
 	isPersonalNumberValid,
 	isSwedishPhoneNumberValid,
 	maskPersonalNumber,
@@ -247,6 +248,33 @@ test("detail page delete action is available for other users only", () => {
 			readOnly: true,
 		}),
 		{ canDeleteUser: false },
+	);
+});
+
+test("frontend sorting orders mock or API user data by selected column", () => {
+	assert.deepEqual(
+		getSortedUsers(DUMMY_USERS, "first_name", "asc").map((user) => user.first_name),
+		["David", "Emily", "Jane", "John", "Michael"],
+	);
+
+	assert.deepEqual(
+		getSortedUsers(DUMMY_USERS, "first_name", "desc").map((user) => user.first_name),
+		["Michael", "John", "Jane", "Emily", "David"],
+	);
+
+	assert.deepEqual(
+		getSortedUsers(DUMMY_USERS, "date_created", "asc").map((user) => user.id),
+		["1", "2", "3", "4", "5"],
+	);
+
+	assert.deepEqual(
+		getSortedUsers(DUMMY_USERS, "last_login", "desc").map((user) => user.id),
+		["2", "1", "5", "3", "4"],
+	);
+
+	assert.deepEqual(
+		getSortedUsers(DUMMY_USERS, "actions", "asc").map((user) => user.id),
+		DUMMY_USERS.map((user) => user.id),
 	);
 });
 
