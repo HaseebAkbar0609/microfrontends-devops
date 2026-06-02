@@ -7,7 +7,7 @@ import {
 	DashboardTranslation,
 	MyPagesTranslation,
 	ManagePlansTranslation,
-	AdminPageTranslations,
+	AdminPageTranslation,
 	OfferTranslation,
 	CommonTranslation,
 	ManageCartTranslation,
@@ -328,7 +328,7 @@ export const enMyPage: MyPagesTranslation = {
 	myPagesProfileSettings: "Profile Settings",
 	backToMainMenu: "Back to main menu",
 	contactInformation: "Contact Information",
-	banktab: "Bank",
+	bankTab: "Bank",
 	bank: "Bank",
 	taxTable: "Tax Table",
 	bankDetails: "Bank Details",
@@ -459,7 +459,7 @@ export const enDashboard: DashboardTranslation = {
 	confirmRemove: "Remove",
 };
 
-export const enAdminPage: AdminPageTranslations = {
+export const enAdminPage: AdminPageTranslation = {
 	companyGear: "Gear no",
 	companyPostNo: "Item no",
 	companyPlace: "Place",

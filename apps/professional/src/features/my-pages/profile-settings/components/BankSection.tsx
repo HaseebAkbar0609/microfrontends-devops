@@ -69,7 +69,7 @@ export default function BankSection() {
 						<FormSelect
 							control={form.control}
 							name="bank"
-							label={<Translate text={localizationConstants.banktab} />}
+							label={<Translate text={localizationConstants.bankTab} />}
 							placeholder={localizationConstants.selectField}
 							className="space-y-1"
 							labelClassName="text-sm font-medium"

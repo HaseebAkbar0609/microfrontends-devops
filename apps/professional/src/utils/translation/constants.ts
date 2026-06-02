@@ -210,7 +210,7 @@ export type MyPagesTranslation = {
 	backToMainMenu: string;
 	contactInformation: string;
 	bank: string;
-	banktab: string;
+	bankTab: string;
 	bankDetails: string;
 	taxTable: string;
 	bankAccountNumber: string;
@@ -443,7 +443,7 @@ export type DashboardTranslation = {
 	confirmRemove: string;
 };
 
-export type AdminPageTranslations = {
+export type AdminPageTranslation = {
 	companyGear: string;
 	companyPostNo: string;
 	companyPlace: string;
@@ -584,7 +584,7 @@ export type Translation = HeaderTranslation &
 	ManagePlansTranslation &
 	ManageCartTranslation &
 	DashboardTranslation &
-	AdminPageTranslations &
+	AdminPageTranslation &
 	MyPagesTranslation &
 	OfferTranslation &
 	CommonTranslation;

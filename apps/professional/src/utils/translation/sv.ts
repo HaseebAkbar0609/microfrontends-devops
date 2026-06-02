@@ -8,7 +8,7 @@ import {
 	DashboardTranslation,
 	ManagePlansTranslation,
 	ManageCartTranslation,
-	AdminPageTranslations,
+	AdminPageTranslation,
 	OfferTranslation,
 	CommonTranslation,
 } from "./constants";
@@ -519,7 +519,7 @@ export const svMyPage: MyPagesTranslation = {
 	backToMainMenu: "Tillbaka till huvudmeny",
 	contactInformation: "Kontaktinformation",
 	bank: "Bank",
-	banktab: "Bank",
+	bankTab: "Bank",
 	taxTable: "Skattetabell",
 	bankDetails: "Bankuppgifter",
 	bankAccountNumber: "Bankkonto",
@@ -615,7 +615,7 @@ export const svMyPage: MyPagesTranslation = {
 	confirmPassword: "Bekräfta lösenord",
 };
 
-export const svAdminPage: AdminPageTranslations = {
+export const svAdminPage: AdminPageTranslation = {
 	companyGear: "Växel nr",
 	companyPostNo: "Post nr",
 	companyPlace: "Ort",
