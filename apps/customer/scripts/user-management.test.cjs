@@ -70,6 +70,7 @@ const {
 } = require("../src/features/settings/users/constants");
 const {
 	getUserManagementActions,
+	getUserProfileActions,
 	isPersonalNumberValid,
 	isSwedishPhoneNumberValid,
 	maskPersonalNumber,
@@ -209,6 +210,44 @@ test("non-admin users expose deactivate or activate based on status", () => {
 		canActivate: true,
 		canDeactivate: false,
 	});
+});
+
+test("detail page delete action is available for other users only", () => {
+	assert.deepEqual(
+		getUserProfileActions({
+			mode: "edit",
+			isOwnProfile: false,
+			readOnly: false,
+		}),
+		{ canDeleteUser: true },
+	);
+
+	assert.deepEqual(
+		getUserProfileActions({
+			mode: "edit",
+			isOwnProfile: true,
+			readOnly: false,
+		}),
+		{ canDeleteUser: false },
+	);
+
+	assert.deepEqual(
+		getUserProfileActions({
+			mode: "create",
+			isOwnProfile: false,
+			readOnly: false,
+		}),
+		{ canDeleteUser: false },
+	);
+
+	assert.deepEqual(
+		getUserProfileActions({
+			mode: "edit",
+			isOwnProfile: false,
+			readOnly: true,
+		}),
+		{ canDeleteUser: false },
+	);
 });
 
 test("list columns and permission labels stay aligned with the approved Figma copy", () => {

@@ -23,3 +23,17 @@ export function getUserManagementActions(user: User) {
 		canDeactivate: !isAdminUser && user.status === "active",
 	};
 }
+
+export function getUserProfileActions({
+	mode,
+	isOwnProfile,
+	readOnly,
+}: {
+	mode: "create" | "edit";
+	isOwnProfile: boolean;
+	readOnly: boolean;
+}) {
+	return {
+		canDeleteUser: mode === "edit" && !isOwnProfile && !readOnly,
+	};
+}

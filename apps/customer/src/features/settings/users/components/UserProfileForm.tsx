@@ -14,7 +14,7 @@ import { createUserProfileSchema, UserProfileFormValues } from "../schemas/userP
 import { DEFAULT_USER_PERMISSIONS, USER_PERMISSION_OPTIONS } from "../constants";
 
 import type { User } from "../types/types";
-import { maskPersonalNumber } from "../utils/userFormatters";
+import { getUserProfileActions, maskPersonalNumber } from "../utils/userFormatters";
 
 type Props = {
 	mode: "create" | "edit";
@@ -91,6 +91,7 @@ export function UserProfileForm({
 		messageClassName: "text-xs",
 	} as const;
 	const isEditOverview = isEdit && !isEditingProfile;
+	const { canDeleteUser } = getUserProfileActions({ mode, isOwnProfile, readOnly });
 	const profileSummaryFields = [
 		{
 			label: t(localizationConstants.userFormFirstNameLabel),
@@ -244,8 +245,16 @@ export function UserProfileForm({
 				</Tabs>
 
 				<div className="mt-3 flex items-center justify-between border-t border-slate-200 bg-white px-5 py-3">
-					<div>
-						{isEdit && isEditingProfile && !isOwnProfile && !readOnly && (
+					<div />
+
+					<div className="flex items-center gap-3">
+						{!isEditOverview && (
+							<Button type="button" variant="outline" onClick={onCancel}>
+								{t(localizationConstants.userFormCancelButton)}
+							</Button>
+						)}
+
+						{canDeleteUser && (
 							<Button
 								type="button"
 								variant="destructive"
@@ -258,14 +267,6 @@ export function UserProfileForm({
 							>
 								<Trash2 className="h-4 w-4" />
 								{t(localizationConstants.userFormDeleteButton)}
-							</Button>
-						)}
-					</div>
-
-					<div className="flex items-center gap-3">
-						{!isEditOverview && (
-							<Button type="button" variant="outline" onClick={onCancel}>
-								{t(localizationConstants.userFormCancelButton)}
 							</Button>
 						)}
 
