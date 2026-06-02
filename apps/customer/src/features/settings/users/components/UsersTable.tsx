@@ -37,6 +37,7 @@ import localizationConstants from "@/utils/translation/constants";
 import useModal from "@/features/auth/hooks/useModal";
 import { MODAL_CONSTANTS, ModalType } from "@/constants/constant";
 import { activeInactiveCompanyUserAPIAction } from "@/api-actions";
+import { getUserManagementActions } from "../utils/userFormatters";
 
 import {
   AlertDialog,
@@ -156,9 +157,7 @@ const ActionsDropdown = ({ user: _user, onRefresh }: { user: User; onRefresh?: (
     }
   };
 
-  const isAdminUser = _user.account_type === "admin";
-  const showActiveUser = !isAdminUser && _user.status === "deactivated";
-  const showDeactivateUser = !isAdminUser && _user.status === "active";
+  const { canActivate, canDeactivate } = getUserManagementActions(_user);
   const isActivating = type === MODAL_CONSTANTS.ACTIVE;
 
   return (
@@ -180,7 +179,7 @@ const ActionsDropdown = ({ user: _user, onRefresh }: { user: User; onRefresh?: (
               {t(localizationConstants.edit)}
             </Link>
           </DropdownMenuItem>
-          {showActiveUser && (
+          {canActivate && (
             <DropdownMenuItem
               className="gap-2 cursor-pointer py-2 group"
               onClick={() => openModal(MODAL_CONSTANTS.ACTIVE, _user.id)}
@@ -189,7 +188,7 @@ const ActionsDropdown = ({ user: _user, onRefresh }: { user: User; onRefresh?: (
               {t(localizationConstants.activateUser)}
             </DropdownMenuItem>
           )}
-          {showDeactivateUser && (
+          {canDeactivate && (
             <DropdownMenuItem
               className="gap-2 cursor-pointer py-2 group"
               onClick={() => openModal(MODAL_CONSTANTS.DEACTIVATE, _user.id)}

@@ -243,6 +243,7 @@ export type SettingModule = {
 
 	userFormProfileTab: string;
 	userFormPermissionsTab: string;
+	userFormUserDetailsTitle: string;
 	userFormFirstNameLabel: string;
 	userFormFirstNamePlaceholder: string;
 	userFormLastNameLabel: string;

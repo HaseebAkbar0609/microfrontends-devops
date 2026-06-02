@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "test:user-management": "node scripts/user-management.test.cjs",
     "prepare": "husky"
   },
   "dependencies": {
