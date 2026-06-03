@@ -8,6 +8,7 @@ import {
 	DashboardText,
 	SettingModule,
 	OfferModule,
+	SupplierModule,
 } from "./constants";
 
 export const svAuth: AuthTranslation = {
@@ -463,9 +464,52 @@ export const svOfferModule: OfferModule = {
 	filterLabel: "Filtrera",
 	textLabel: "Text",
 	companySearchPlaceholder: "Sök efter företag...",
+	noSuppliersFound: "Inga leverantörer hittades.",
+	suppliersRowsPerPage: "Rader per sida",
 
 	dummyProjectDescription:
 		"Pelle Construction är glada att påbörja denna badrumsrenovering och förvandla den till en modern oas. Vårt team av skickliga hantverkare kommer att hantera allt från rivning till slutliga detaljer, vilket säkerställer en smidig och stressfri upplevelse. Vi kommer att arbeta nära dig för att välja högkvalitativa material och inredning som speglar din personliga stil. Projektet inkluderar uppdatering av VVS-, el- och ventilationssystem för att möta nuvarande standarder. Vi är fast beslutna att leverera exceptionella resultat som överträffar dina förväntningar och skapar ett badrum du kommer att älska i många år framöver.",
+};
+
+export const svSupplierModule: SupplierModule = {
+	supplierTabOverview: "Översikt",
+	supplierTabProjects: "Projekt",
+	supplierTabServices: "Tjänster",
+	supplierTabDocuments: "Dokument",
+	supplierTabReviews: "Omdömen",
+	supplierVerified: "Verifierad",
+	supplierTopSupplier: "Top Supplier",
+	supplierReviewCount: "recensioner",
+	supplierInviteToProject: "Bjud in till projekt",
+	supplierMessage: "Meddela",
+	supplierLabelPhone: "Telefon",
+	supplierLabelEmail: "Email",
+	supplierLabelWebsite: "Website",
+	supplierLabelLanguage: "Språk",
+	supplierLabelResponseTime: "Svarstid",
+	supplierLabelAvailability: "Tillgänglighet",
+	supplierCompletedProjects: "Genomförda",
+	supplierOngoingProjects: "Pågående",
+	supplierRotRut: "ROT/RUT",
+	supplierRotRutApproved: "✓ Ja, godkänd",
+	supplierLabelRating: "Betyg",
+	supplierLabelCertifications: "Certifieringar",
+	supplierLabelMunicipalities: "kommuner",
+	supplierAboutSection: "Om leverantören",
+	supplierReadMore: "Läs mer",
+	supplierProjectImagesSection: "Projektbilder / Projekt",
+	supplierSeeAll: "Se alla",
+	supplierServicesSection: "Tjänster som erbjuds",
+	supplierPopularBadge: "Populär",
+	supplierSortLabel: "Sortera:",
+	supplierSortLatest: "Senaste",
+	supplierSortHighestRating: "Högst betyg",
+	supplierRatingFilterLabel: "Betyg:",
+	supplierSearchReviewsPlaceholder: "Sök i recensioner...",
+	supplierNoReviewsFound: "Inga recensioner matchar din sökning.",
+	supplierSummaryTitle: "Sammanfattning",
+	supplierTotalReviews: "Totalt: {{count}} recensioner",
+	supplierPopularTagsTitle: "Populära taggar",
 };
 
 export const sv: Translation = {
@@ -477,4 +521,5 @@ export const sv: Translation = {
 	...svDashboard,
 	...svSettingModule,
 	...svOfferModule,
+	...svSupplierModule,
 };

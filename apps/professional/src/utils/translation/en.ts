@@ -7,7 +7,7 @@ import {
 	DashboardTranslation,
 	MyPagesTranslation,
 	ManagePlansTranslation,
-	AdminPageTranslations,
+	AdminPageTranslation,
 	OfferTranslation,
 	CommonTranslation,
 	ManageCartTranslation,
@@ -78,8 +78,8 @@ export const enSidebar: SidebarTranslation = {
 	moduleItem: "Module",
 	adminItem: "Admin",
 	dashboard: "Dashboard",
-	admitSetting: "Settings",
-	adminIntegration: "Intergration",
+	adminSetting: "Settings",
+	adminIntegration: "Integration",
 	adminSubscription: "Subscription",
 	adminLicence: "Licenses",
 	adminUser: "User",
@@ -328,7 +328,7 @@ export const enMyPage: MyPagesTranslation = {
 	myPagesProfileSettings: "Profile Settings",
 	backToMainMenu: "Back to main menu",
 	contactInformation: "Contact Information",
-	banktab: "Bank",
+	bankTab: "Bank",
 	bank: "Bank",
 	taxTable: "Tax Table",
 	bankDetails: "Bank Details",
@@ -459,7 +459,7 @@ export const enDashboard: DashboardTranslation = {
 	confirmRemove: "Remove",
 };
 
-export const enAdminPage: AdminPageTranslations = {
+export const enAdminPage: AdminPageTranslation = {
 	companyGear: "Gear no",
 	companyPostNo: "Item no",
 	companyPlace: "Place",
@@ -498,8 +498,8 @@ export const enOffer: OfferTranslation = {
 	jobsInPlanningPhase: "jobs in planning phase",
 	awaitingCustomerResponse: "awaiting customer response",
 	number: "Number",
-	offertSent: "skickad",
-	offertAwaitingResponse: "väntar svar",
+	offertSent: "sent",
+	offertAwaitingResponse: "awaiting response",
 	rearrange: "Rearrange",
 	throwAway: "Throw away",
 	offerDashboard: "Offer - Dashboard",

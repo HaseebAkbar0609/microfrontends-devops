@@ -8,7 +8,7 @@ import {
 	DashboardTranslation,
 	ManagePlansTranslation,
 	ManageCartTranslation,
-	AdminPageTranslations,
+	AdminPageTranslation,
 	OfferTranslation,
 	CommonTranslation,
 } from "./constants";
@@ -199,8 +199,8 @@ export const svSidebar: SidebarTranslation = {
 	moduleItem: "Modul",
 	adminItem: "Admin",
 	dashboard: "Översikt",
-	admitSetting: "Inställningar",
-	adminIntegration: "Intergration",
+	adminSetting: "Inställningar",
+	adminIntegration: "Integration",
 	adminSubscription: "Abonnemang",
 	adminLicence: "Licenser",
 	adminUser: "Användaren",
@@ -288,7 +288,7 @@ export const svManageCart: ManageCartTranslation = {
 	manageCartCheckoutPhonePlaceholder: "Telefon (valfritt)",
 
 	manageCartCheckoutPaymentOptionsTitle: "Betalningsalternativ",
-	manageCartCheckoutCardSectionTitle: "Credit/Debit Cards",
+	manageCartCheckoutCardSectionTitle: "Kredit-/betalkort",
 	manageCartCheckoutSecurePaymentText:
 		"Säker betalning med ett klick med Link",
 	manageCartCheckoutCardNumberPlaceholder: "Kortnummer",
@@ -302,7 +302,7 @@ export const svManageCart: ManageCartTranslation = {
 	manageCartCheckoutDiscountCodeTitle: "Lägg till en rabattkod",
 	manageCartCheckoutDiscountCodePlaceholder: "Rabattkod",
 	manageCartCheckoutPayButton: "Betala",
-	manageCartCheckoutAddOrderButton: "Add Order",
+	manageCartCheckoutAddOrderButton: "Lägg till order",
 
 	manageCartCheckoutSavedCardsTitle: "Sparade kort",
 	manageCartCheckoutAddNewCardButton: "Lägg till nytt kort",
@@ -348,7 +348,7 @@ export const svDashboard: DashboardTranslation = {
 	turnover90DaysTitle: "Omsättning 90 dagar",
 	personnel: "Personal",
 	placeHere: "Placera här",
-	quotes: "CITAT",
+	quotes: "OFFERTER",
 	replaceWidgetTitle: "Är du säker på att du vill ersätta den här widgeten?",
 	replaceWidgetDescription:
 		"Denna åtgärd kommer att ta bort den befintliga widgeten och ersätta den med",
@@ -430,7 +430,7 @@ export const svOffer: OfferTranslation = {
 	businessOfferModalSubtitle:
 		"Villkor för accepterade erbjudanden - B2C-ERBJUDANDE, B2B-ERBJUDANDE:",
 	businessOfferModalBullet1:
-		'Meddelanden kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppgift).',
+		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppgift).',
 	businessOfferModalBullet2:
 		"Kund- och projektinformation visas för den accepterade uppgiften.",
 	businessOfferModalBullet3:
@@ -453,7 +453,7 @@ export const svOffer: OfferTranslation = {
 	businessExpressModalSubtitleB2B:
 		"Villkor för accepterade citat - B2B-EXPRESS:",
 	businessExpressModalBullet1:
-		'Meddelanden kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppdrag).',
+		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppdrag).',
 	businessExpressModalBullet2:
 		"Kund- och projektinformation visas för det accepterade uppdraget.",
 	businessExpressModalBullet3:
@@ -469,7 +469,7 @@ export const svOffer: OfferTranslation = {
 	businessExpressModalConfirm: "Bekräfta",
 
 	// Business rent modal
-	businessRentModalTitle: "Är du säker på att du vill skicka detta offer?",
+	businessRentModalTitle: "Är du säker på att du vill skicka detta erbjudande?",
 	businessRentModalSubtitle:
 		"Villkor för accepterade citat - B2B - HYRA IN/UT:",
 	businessRentModalBullet1:
@@ -519,7 +519,7 @@ export const svMyPage: MyPagesTranslation = {
 	backToMainMenu: "Tillbaka till huvudmeny",
 	contactInformation: "Kontaktinformation",
 	bank: "Bank",
-	banktab: "Bank",
+	bankTab: "Bank",
 	taxTable: "Skattetabell",
 	bankDetails: "Bankuppgifter",
 	bankAccountNumber: "Bankkonto",
@@ -558,12 +558,12 @@ export const svMyPage: MyPagesTranslation = {
 	orgNumber: "Org. nr.",
 	vatNumber: "VAT:nr",
 	sniCode: "SNI-KOD",
-	postalAddress: "Post adress",
-	visitingAddress: "Besöks adress",
-	deliveryAddress: "Leverans adress",
-	outgoingEmail: "Mailadress för utskick",
-	supplierInvoiceEmail: "Mailadress för leverantörs fakturor",
-	smsNumber: "Mobil nummer för meddelande",
+	postalAddress: "Postadress",
+	visitingAddress: "Besöksadress",
+	deliveryAddress: "Leveransadress",
+	outgoingEmail: "E-postadress för utskick",
+	supplierInvoiceEmail: "E-postadress för leverantörsfakturor",
+	smsNumber: "Mobilnummer för meddelanden",
 
 	nextOfKin: "Anhörig",
 	nextOfKinName: "Namn",
@@ -602,7 +602,7 @@ export const svMyPage: MyPagesTranslation = {
 
 	save: "Spara",
 	cancel: "Avbryt",
-	selectField: "Välja",
+	selectField: "Välj",
 	profileUpdated: "Profilen har uppdaterats.",
 	profileUpdateFailed: "Det gick inte att uppdatera profilen. Försök igen.",
 
@@ -615,7 +615,7 @@ export const svMyPage: MyPagesTranslation = {
 	confirmPassword: "Bekräfta lösenord",
 };
 
-export const svAdminPage: AdminPageTranslations = {
+export const svAdminPage: AdminPageTranslation = {
 	companyGear: "Växel nr",
 	companyPostNo: "Post nr",
 	companyPlace: "Ort",
