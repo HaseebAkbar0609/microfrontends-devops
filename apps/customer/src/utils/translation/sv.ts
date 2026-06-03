@@ -9,6 +9,7 @@ import {
 	SettingModule,
 	OfferModule,
 	SupplierModule,
+	DiscountModule,
 } from "./constants";
 
 export const svAuth: AuthTranslation = {
@@ -512,6 +513,12 @@ export const svSupplierModule: SupplierModule = {
 	supplierPopularTagsTitle: "Populära taggar",
 };
 
+export const svDiscountModule: DiscountModule = {
+	discountDetailSubtitle:
+		"Vi har samarbetat med leverantörer för att ge dig bästa erbjudanden.",
+	discountOpenQR: "Öppna QR",
+};
+
 export const sv: Translation = {
 	...svSidebar,
 	...svAuth,
@@ -522,4 +529,5 @@ export const sv: Translation = {
 	...svSettingModule,
 	...svOfferModule,
 	...svSupplierModule,
+	...svDiscountModule,
 };

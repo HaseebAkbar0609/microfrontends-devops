@@ -9,6 +9,7 @@ import {
 	SettingModule,
 	OfferModule,
 	SupplierModule,
+	DiscountModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -517,6 +518,12 @@ export const enSupplierModule: SupplierModule = {
 	supplierPopularTagsTitle: "Popular tags",
 };
 
+export const enDiscountModule: DiscountModule = {
+	discountDetailSubtitle:
+		"We have collaborated with suppliers to get your best offers.",
+	discountOpenQR: "Open QR",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -527,4 +534,5 @@ export const en: Translation = {
 	...enSettingModule,
 	...enOfferModule,
 	...enSupplierModule,
+	...enDiscountModule,
 };

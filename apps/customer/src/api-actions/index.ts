@@ -34,3 +34,4 @@ export {
 	type GetSuppliersParams,
 	type SuppliersListPayload,
 } from "./supplier/list";
+export { getDiscountDetailAPIAction } from "./discount/getDetail";

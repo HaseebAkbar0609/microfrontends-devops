@@ -504,6 +504,11 @@ export type SupplierModule = {
 	supplierPopularTagsTitle: string;
 };
 
+export type DiscountModule = {
+	discountDetailSubtitle: string;
+	discountOpenQR: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
@@ -512,7 +517,8 @@ export type Translation = SidebarTranslation &
 	OfferModule &
 	HeaderTranslation &
 	SettingModule &
-	SupplierModule;
+	SupplierModule &
+	DiscountModule;
 
 export type TranslationKeys = keyof Translation;
 
