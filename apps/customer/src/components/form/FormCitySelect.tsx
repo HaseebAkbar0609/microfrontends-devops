@@ -76,8 +76,8 @@ export function FormCitySelect<
 	const selectedCityLabelRef = useRef<{ id: string; name: string } | null>(
 		null,
 	);
-const uniqueCitiesById = (list: City[]) =>
-	Array.from(new Map(list.map((city) => [city.id, city])).values());
+	const uniqueCitiesById = (list: City[]) =>
+		Array.from(new Map(list.map((city) => [city.id, city])).values());
 	useEffect(() => {
 		const id = typeof selectedCityId === "string" ? selectedCityId : "";
 		if (!id) {
@@ -164,8 +164,7 @@ const uniqueCitiesById = (list: City[]) =>
 			}
 
 			if (result.success && result.data) {
-			//	setCities(result.data.data ?? []);
-			setCities(uniqueCitiesById(result.data.data ?? []));
+				setCities(uniqueCitiesById(result.data.data ?? []));
 				setCityCurrentPage(result.data.current_page ?? 1);
 				setCityTotalPages(result.data.total_pages ?? 1);
 			}
@@ -199,8 +198,9 @@ const uniqueCitiesById = (list: City[]) =>
 
 		if (result.success && result.data) {
 			const responseData = result.data;
-			//setCities((prev) => [...prev, ...(responseData.data ?? [])]);
-			setCities((prev) => uniqueCitiesById([...prev, ...(responseData.data ?? [])]));
+			setCities((prev) =>
+				uniqueCitiesById([...prev, ...(responseData.data ?? [])]),
+			);
 			setCityCurrentPage(responseData.current_page ?? nextPage);
 			setCityTotalPages(responseData.total_pages ?? cityTotalPages);
 		}
@@ -286,7 +286,6 @@ const uniqueCitiesById = (list: City[]) =>
 				}
 
 				if (result.success && result.data) {
-					//setCities(result.data.data ?? []);
 					setCities(uniqueCitiesById(result.data.data ?? []));
 					setCityCurrentPage(result.data.current_page ?? 1);
 					setCityTotalPages(result.data.total_pages ?? 1);
@@ -349,16 +348,13 @@ const uniqueCitiesById = (list: City[]) =>
 				]
 			: mapped;
 
-/* 	const cityOptions = syntheticSelected
-		? [syntheticSelected, ...baseOptions]
-		: baseOptions; */
-		const cityOptions = Array.from(
-	new Map(
-		(syntheticSelected ? [syntheticSelected, ...baseOptions] : baseOptions).map(
-			(option) => [option.value, option],
-		),
-	).values(),
-);
+	const cityOptions = Array.from(
+		new Map(
+			(syntheticSelected ? [syntheticSelected, ...baseOptions] : baseOptions).map(
+				(option) => [option.value, option],
+			),
+		).values(),
+	);
 
 	return (
 		<FormSelect

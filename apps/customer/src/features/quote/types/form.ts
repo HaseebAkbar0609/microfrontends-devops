@@ -59,9 +59,10 @@ export const createOfferSchema = z.object({
 		.string()
 		.min(1, { message: localizationConstants.validationProjectNameRequired }),
 	isExpressJob: z.string(),
-	clientNo: z
+	/* clientNo: z
 		.string()
-		.min(1, { message: localizationConstants.validationClientNoRequired }),
+		.min(1, { message: localizationConstants.validationClientNoRequired }), */
+	clientNo: z.string(),
 	category: z
 		.array(z.string())
 		.min(1, { message: localizationConstants.validationCategoryRequired }),
