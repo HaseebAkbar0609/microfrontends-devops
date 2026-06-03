@@ -9,6 +9,7 @@ import { BreadcrumbItem } from "@/types/user";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { cn, isAllowedQueryValue } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 import {
 	SUPPLIER_DETAIL_TABS,
 	SUPPLIER_DETAIL_DEFAULT_TAB,
@@ -76,7 +77,7 @@ export function SupplierDetailPage({ supplierId }: { supplierId: string }) {
 											supplierDetailTabTriggerClass,
 										)}
 									>
-										{SUPPLIER_DETAIL_TAB_LABELS[tab]}
+										<Translate text={SUPPLIER_DETAIL_TAB_LABELS[tab]} />
 									</TabsTrigger>
 								))}
 							</TabsList>
@@ -89,19 +90,19 @@ export function SupplierDetailPage({ supplierId }: { supplierId: string }) {
 
 							<TabsContent value="projects" className="mt-0">
 								<div className="py-8 text-center text-sm text-slate-500">
-									Projekt – Kommer snart
+									<Translate text={localizationConstants.supplierTabProjects} /> – <Translate text={localizationConstants.comingSoon} />
 								</div>
 							</TabsContent>
 
 							<TabsContent value="services" className="mt-0">
 								<div className="py-8 text-center text-sm text-slate-500">
-									Tjänster – Kommer snart
+									<Translate text={localizationConstants.supplierTabServices} /> – <Translate text={localizationConstants.comingSoon} />
 								</div>
 							</TabsContent>
 
 							<TabsContent value="documents" className="mt-0">
 								<div className="py-8 text-center text-sm text-slate-500">
-									Dokument – Kommer snart
+									<Translate text={localizationConstants.supplierTabDocuments} /> – <Translate text={localizationConstants.comingSoon} />
 								</div>
 							</TabsContent>
 

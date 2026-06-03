@@ -1,5 +1,8 @@
+import type { ReactNode } from "react";
 import { Phone, Mail, Globe, Languages, Clock, Star, Bookmark } from "lucide-react";
 import type { Supplier } from "../constants";
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 
 interface SupplierProfileCardProps {
 	supplier: Supplier;
@@ -26,12 +29,12 @@ export function SupplierProfileCard({ supplier }: SupplierProfileCardProps) {
 				<div className="flex gap-1.5 flex-wrap">
 					{supplier.isVerified && (
 						<span className="px-2 py-0.5 text-xs font-medium text-[#008236] bg-[#F0FDF4] border border-[#B9F8CF] rounded-lg">
-							Verifierad
+							<Translate text={localizationConstants.supplierVerified} />
 						</span>
 					)}
 					{supplier.isTopSupplier && (
 						<span className="px-2 py-0.5 text-xs font-medium text-[#FF8100] bg-[rgba(255,129,0,0.1)] border border-[rgba(255,129,0,0.2)] rounded-lg">
-							Top Supplier
+							<Translate text={localizationConstants.supplierTopSupplier} />
 						</span>
 					)}
 				</div>
@@ -60,18 +63,18 @@ export function SupplierProfileCard({ supplier }: SupplierProfileCardProps) {
 						{supplier.rating.toFixed(1)}
 					</span>
 					<span className="text-sm text-slate-500">
-						({supplier.reviewCount} recensioner)
+						({supplier.reviewCount} <Translate text={localizationConstants.supplierReviewCount} />)
 					</span>
 				</div>
 
 				{/* Action buttons */}
 				<div className="flex flex-col gap-2">
 					<button className="w-full h-9 bg-[#1E293B] text-white rounded-lg text-sm font-medium hover:bg-slate-900 transition-colors">
-						Bjud in till projekt
+						<Translate text={localizationConstants.supplierInviteToProject} />
 					</button>
 					<div className="flex gap-2">
 						<button className="flex-1 h-9 bg-white border border-black/10 rounded-lg text-sm font-medium text-[#0A0A0A] hover:bg-slate-50 transition-colors">
-							Meddela
+							<Translate text={localizationConstants.supplierMessage} />
 						</button>
 						<button className="w-9 h-9 bg-white border border-black/10 rounded-lg flex items-center justify-center hover:bg-slate-50 transition-colors shrink-0">
 							<Bookmark className="w-4 h-4 text-[#0A0A0A]" />
@@ -84,28 +87,28 @@ export function SupplierProfileCard({ supplier }: SupplierProfileCardProps) {
 			<div className="flex flex-col gap-3 border-t border-slate-200 pt-6">
 				<ContactRow
 					icon={<Phone className="w-[18px] h-[18px] text-slate-400" />}
-					label="Telefon"
+					label={localizationConstants.supplierLabelPhone}
 					value={supplier.phone}
 				/>
 				<ContactRow
 					icon={<Mail className="w-[18px] h-[18px] text-slate-400" />}
-					label="Email"
+					label={localizationConstants.supplierLabelEmail}
 					value={supplier.email}
 				/>
 				<ContactRow
 					icon={<Globe className="w-[18px] h-[18px] text-slate-400" />}
-					label="Website"
+					label={localizationConstants.supplierLabelWebsite}
 					value={supplier.website}
 					isLink
 				/>
 				<ContactRow
 					icon={<Languages className="w-[18px] h-[18px] text-slate-400" />}
-					label="Språk"
+					label={localizationConstants.supplierLabelLanguage}
 					value={supplier.languages}
 				/>
 				<ContactRow
 					icon={<Clock className="w-[18px] h-[18px] text-slate-400" />}
-					label="Svarstid"
+					label={localizationConstants.supplierLabelResponseTime}
 					value={supplier.responseTime}
 				/>
 				<ContactRow
@@ -114,7 +117,7 @@ export function SupplierProfileCard({ supplier }: SupplierProfileCardProps) {
 							<div className="w-2.5 h-2.5 rounded-full bg-[#00C950]" />
 						</div>
 					}
-					label="Tillgänglighet"
+					label={localizationConstants.supplierLabelAvailability}
 					value={supplier.lastActive}
 				/>
 			</div>
@@ -126,20 +129,20 @@ export function SupplierProfileCard({ supplier }: SupplierProfileCardProps) {
 						<p className="text-xl font-semibold text-[#0A0A0A] tracking-tight">
 							{supplier.completedProjects}
 						</p>
-						<p className="text-xs text-slate-500">Genomförda</p>
+						<p className="text-xs text-slate-500"><Translate text={localizationConstants.supplierCompletedProjects} /></p>
 					</div>
 					<div className="bg-[#F7F8FA] rounded-lg p-3">
 						<p className="text-xl font-semibold text-[#0A0A0A] tracking-tight">
 							{supplier.ongoingProjects}
 						</p>
-						<p className="text-xs text-slate-500">Pågående</p>
+						<p className="text-xs text-slate-500"><Translate text={localizationConstants.supplierOngoingProjects} /></p>
 					</div>
 				</div>
 				{supplier.hasRotRut && (
 					<div className="bg-[#F7F8FA] rounded-lg p-3">
-						<p className="text-xs text-slate-500">ROT/RUT</p>
+						<p className="text-xs text-slate-500"><Translate text={localizationConstants.supplierRotRut} /></p>
 						<p className="text-sm font-medium text-[#00A63E]">
-							✓ Ja, godkänd
+							<Translate text={localizationConstants.supplierRotRutApproved} />
 						</p>
 					</div>
 				)}
@@ -154,7 +157,7 @@ function ContactRow({
 	value,
 	isLink = false,
 }: {
-	icon: React.ReactNode;
+	icon: ReactNode;
 	label: string;
 	value: string;
 	isLink?: boolean;
@@ -163,10 +166,10 @@ function ContactRow({
 		<div className="flex items-start gap-3">
 			<div className="shrink-0 mt-0.5">{icon}</div>
 			<div className="min-w-0">
-				<p className="text-xs text-slate-500">{label}</p>
+				<p className="text-xs text-slate-500"><Translate text={label} /></p>
 				{isLink ? (
 					<a
-						href={`https://${value}`}
+						href={/^https?:\/\//i.test(value) ? value : `https://${value}`}
 						className="text-sm text-[#FF8100] hover:underline break-all"
 						target="_blank"
 						rel="noopener noreferrer"

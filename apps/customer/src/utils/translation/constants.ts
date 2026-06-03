@@ -393,13 +393,55 @@ export type CommonFiles = {
 	unsupportedFileType: string;
 };
 
+export type SupplierModule = {
+	supplierTabOverview: string;
+	supplierTabProjects: string;
+	supplierTabServices: string;
+	supplierTabDocuments: string;
+	supplierTabReviews: string;
+	supplierVerified: string;
+	supplierTopSupplier: string;
+	supplierReviewCount: string;
+	supplierInviteToProject: string;
+	supplierMessage: string;
+	supplierLabelPhone: string;
+	supplierLabelEmail: string;
+	supplierLabelWebsite: string;
+	supplierLabelLanguage: string;
+	supplierLabelResponseTime: string;
+	supplierLabelAvailability: string;
+	supplierCompletedProjects: string;
+	supplierOngoingProjects: string;
+	supplierRotRut: string;
+	supplierRotRutApproved: string;
+	supplierLabelRating: string;
+	supplierLabelCertifications: string;
+	supplierLabelMunicipalities: string;
+	supplierAboutSection: string;
+	supplierReadMore: string;
+	supplierProjectImagesSection: string;
+	supplierSeeAll: string;
+	supplierServicesSection: string;
+	supplierPopularBadge: string;
+	supplierSortLabel: string;
+	supplierSortLatest: string;
+	supplierSortHighestRating: string;
+	supplierRatingFilterLabel: string;
+	supplierSearchReviewsPlaceholder: string;
+	supplierNoReviewsFound: string;
+	supplierSummaryTitle: string;
+	supplierTotalReviews: string;
+	supplierPopularTagsTitle: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
 	AppLauncherTranslation &
 	DashboardText &
 	OfferModule &
-	HeaderTranslation;
+	HeaderTranslation &
+	SupplierModule;
 
 export type TranslationKeys = keyof Translation;
 

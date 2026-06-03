@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardText,
 	OfferModule,
+	SupplierModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -406,6 +407,47 @@ export const enOfferModule: OfferModule = {
 	companySearchPlaceholder: "Search for companies...",
 };
 
+export const enSupplierModule: SupplierModule = {
+	supplierTabOverview: "Overview",
+	supplierTabProjects: "Projects",
+	supplierTabServices: "Services",
+	supplierTabDocuments: "Documents",
+	supplierTabReviews: "Reviews",
+	supplierVerified: "Verified",
+	supplierTopSupplier: "Top Supplier",
+	supplierReviewCount: "reviews",
+	supplierInviteToProject: "Invite to project",
+	supplierMessage: "Message",
+	supplierLabelPhone: "Phone",
+	supplierLabelEmail: "Email",
+	supplierLabelWebsite: "Website",
+	supplierLabelLanguage: "Language",
+	supplierLabelResponseTime: "Response time",
+	supplierLabelAvailability: "Availability",
+	supplierCompletedProjects: "Completed",
+	supplierOngoingProjects: "Ongoing",
+	supplierRotRut: "ROT/RUT",
+	supplierRotRutApproved: "✓ Yes, approved",
+	supplierLabelRating: "Rating",
+	supplierLabelCertifications: "Certifications",
+	supplierLabelMunicipalities: "municipalities",
+	supplierAboutSection: "About the supplier",
+	supplierReadMore: "Read more",
+	supplierProjectImagesSection: "Project images / Projects",
+	supplierSeeAll: "See all",
+	supplierServicesSection: "Services offered",
+	supplierPopularBadge: "Popular",
+	supplierSortLabel: "Sort:",
+	supplierSortLatest: "Latest",
+	supplierSortHighestRating: "Highest rating",
+	supplierRatingFilterLabel: "Rating:",
+	supplierSearchReviewsPlaceholder: "Search reviews...",
+	supplierNoReviewsFound: "No reviews match your search.",
+	supplierSummaryTitle: "Summary",
+	supplierTotalReviews: "Total: {{count}} reviews",
+	supplierPopularTagsTitle: "Popular tags",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -414,4 +456,5 @@ export const en: Translation = {
 	...enAppLauncher,
 	...enDashboard,
 	...enOfferModule,
+	...enSupplierModule,
 };

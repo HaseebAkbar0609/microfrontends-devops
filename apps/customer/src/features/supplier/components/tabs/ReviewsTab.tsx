@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Star, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
+import localizationConstants from "@/utils/translation/constants";
+import { useTranslate } from "@/utils/translation/translate";
 import {
 	DUMMY_REVIEWS,
 	DUMMY_STAR_BREAKDOWN,
@@ -13,9 +15,12 @@ type SortOption = "latest" | "highest";
 type RatingFilter = 1 | 2 | 3 | 4 | 5 | null;
 
 export function ReviewsTab() {
+	const t = useTranslate();
 	const [sort, setSort] = useState<SortOption>("latest");
 	const [ratingFilter, setRatingFilter] = useState<RatingFilter>(null);
 	const [searchQuery, setSearchQuery] = useState("");
+
+	const totalReviews = DUMMY_STAR_BREAKDOWN.reduce((sum, b) => sum + b.count, 0);
 
 	const filteredReviews = DUMMY_REVIEWS.filter((r) =>
 		ratingFilter ? r.rating === ratingFilter : true,
@@ -27,7 +32,7 @@ export function ReviewsTab() {
 				: true,
 		)
 		.sort((a, b) =>
-			sort === "highest" ? b.rating - a.rating : 0,
+			sort === "highest" ? b.rating - a.rating : b.timestamp - a.timestamp,
 		);
 
 	return (
@@ -39,7 +44,7 @@ export function ReviewsTab() {
 					{/* Sort + rating filter row */}
 					<div className="flex items-center flex-wrap gap-2">
 						<span className="text-sm text-slate-500 shrink-0">
-							Sortera:
+							{t(localizationConstants.supplierSortLabel)}
 						</span>
 						<button
 							onClick={() => setSort("latest")}
@@ -50,7 +55,7 @@ export function ReviewsTab() {
 									: "bg-[#F7F8FA] text-slate-500 hover:bg-slate-100",
 							)}
 						>
-							Senaste
+							{t(localizationConstants.supplierSortLatest)}
 						</button>
 						<button
 							onClick={() => setSort("highest")}
@@ -61,13 +66,13 @@ export function ReviewsTab() {
 									: "bg-[#F7F8FA] text-slate-500 hover:bg-slate-100",
 							)}
 						>
-							Högst betyg
+							{t(localizationConstants.supplierSortHighestRating)}
 						</button>
 
 						<div className="w-px h-6 bg-slate-200 mx-1 shrink-0" />
 
 						<span className="text-sm text-slate-500 shrink-0">
-							Betyg:
+							{t(localizationConstants.supplierRatingFilterLabel)}
 						</span>
 						{([5, 4, 3, 2, 1] as const).map((star) => (
 							<button
@@ -104,7 +109,7 @@ export function ReviewsTab() {
 							type="text"
 							value={searchQuery}
 							onChange={(e) => setSearchQuery(e.target.value)}
-							placeholder="Sök i recensioner..."
+							placeholder={t(localizationConstants.supplierSearchReviewsPlaceholder)}
 							className="w-full h-9 bg-[#F3F3F5] rounded-lg pl-9 pr-3 text-sm text-[#0A0A0A] placeholder:text-[#717182] border-0 outline-none focus:ring-2 focus:ring-slate-300 transition-shadow"
 						/>
 					</div>
@@ -114,7 +119,7 @@ export function ReviewsTab() {
 				<div className="flex flex-col gap-4">
 					{filteredReviews.length === 0 ? (
 						<div className="py-8 text-center text-sm text-slate-500">
-							Inga recensioner matchar din sökning.
+							{t(localizationConstants.supplierNoReviewsFound)}
 						</div>
 					) : (
 						filteredReviews.map((review) => (
@@ -188,7 +193,7 @@ export function ReviewsTab() {
 				{/* Header */}
 				<div className="px-6 pt-6 pb-0">
 					<h3 className="text-base font-semibold text-[#0A0A0A] tracking-tight">
-						Sammanfattning
+						{t(localizationConstants.supplierSummaryTitle)}
 					</h3>
 				</div>
 
@@ -207,7 +212,7 @@ export function ReviewsTab() {
 							))}
 						</div>
 						<span className="text-sm text-slate-500 tracking-tight">
-							Totalt: 48 recensioner
+							{t(localizationConstants.supplierTotalReviews, { count: totalReviews })}
 						</span>
 					</div>
 				</div>
@@ -241,7 +246,7 @@ export function ReviewsTab() {
 				{/* Popular tags */}
 				<div className="px-6 pt-5 pb-6 mt-3 border-t border-slate-200 flex flex-col gap-3">
 					<h4 className="text-sm font-semibold text-[#0A0A0A] tracking-tight">
-						Populära taggar
+						{t(localizationConstants.supplierPopularTagsTitle)}
 					</h4>
 					<div className="flex flex-wrap gap-1.5">
 						{DUMMY_POPULAR_TAGS.map(({ label, count, isPopular }) => (

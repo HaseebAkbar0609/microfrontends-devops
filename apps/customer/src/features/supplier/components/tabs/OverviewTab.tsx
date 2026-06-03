@@ -1,6 +1,9 @@
+import type { ReactNode } from "react";
 import { Star, Award, Clock, MapPin, ChevronRight, Wrench } from "lucide-react";
 import type { Supplier } from "../../constants";
 import { DUMMY_SERVICES } from "../../constants";
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 
 interface OverviewTabProps {
 	supplier: Supplier;
@@ -16,17 +19,17 @@ export function OverviewTab({ supplier }: OverviewTabProps) {
 						<Star className="w-6 h-6 fill-[#FFB800] text-[#FFB800]" />
 					}
 					value={supplier.rating.toFixed(1)}
-					label="Betyg"
+					label={localizationConstants.supplierLabelRating}
 				/>
 				<StatCard
 					icon={<Award className="w-6 h-6 text-slate-400" />}
 					value={String(supplier.certifications)}
-					label="Certifieringar"
+					label={localizationConstants.supplierLabelCertifications}
 				/>
 				<StatCard
 					icon={<Clock className="w-6 h-6 text-slate-400" />}
 					value="~2h"
-					label="Svarstid"
+					label={localizationConstants.supplierLabelResponseTime}
 				/>
 				<div className="border border-slate-200 rounded-lg p-4 flex flex-col items-center justify-center gap-1 text-center">
 					<MapPin className="w-6 h-6 text-slate-400" />
@@ -34,7 +37,7 @@ export function OverviewTab({ supplier }: OverviewTabProps) {
 						{supplier.mainMunicipality}
 					</p>
 					<p className="text-xs text-slate-500">
-						+{supplier.additionalMunicipalities} kommuner
+						+{supplier.additionalMunicipalities} <Translate text={localizationConstants.supplierLabelMunicipalities} />
 					</p>
 				</div>
 			</div>
@@ -42,13 +45,13 @@ export function OverviewTab({ supplier }: OverviewTabProps) {
 			{/* Om leverantören */}
 			<div className="border border-slate-200 rounded-lg p-5">
 				<h3 className="text-base font-semibold text-[#0A0A0A] tracking-tight mb-3">
-					Om leverantören
+					<Translate text={localizationConstants.supplierAboutSection} />
 				</h3>
 				<p className="text-sm text-slate-500 leading-relaxed line-clamp-4">
 					{supplier.description}
 				</p>
 				<button className="mt-3 text-sm font-medium text-[#FF8100] hover:underline flex items-center gap-0.5">
-					Läs mer <ChevronRight className="w-4 h-4" />
+					<Translate text={localizationConstants.supplierReadMore} /> <ChevronRight className="w-4 h-4" />
 				</button>
 			</div>
 
@@ -56,10 +59,10 @@ export function OverviewTab({ supplier }: OverviewTabProps) {
 			<div className="border border-slate-200 rounded-lg p-5">
 				<div className="flex items-center justify-between mb-4">
 					<h3 className="text-base font-semibold text-[#0A0A0A] tracking-tight">
-						Projektbilder / Projekt
+						<Translate text={localizationConstants.supplierProjectImagesSection} />
 					</h3>
 					<button className="text-sm font-medium text-[#FF8100] hover:underline flex items-center gap-0.5">
-						Se alla <ChevronRight className="w-4 h-4" />
+						<Translate text={localizationConstants.supplierSeeAll} /> <ChevronRight className="w-4 h-4" />
 					</button>
 				</div>
 				<div className="flex gap-2 h-48">
@@ -78,7 +81,7 @@ export function OverviewTab({ supplier }: OverviewTabProps) {
 			{/* Tjänster som erbjuds */}
 			<div className="border border-slate-200 rounded-lg p-5">
 				<h3 className="text-base font-semibold text-[#0A0A0A] tracking-tight mb-4">
-					Tjänster som erbjuds
+					<Translate text={localizationConstants.supplierServicesSection} />
 				</h3>
 				<div className="flex flex-col gap-1">
 					{DUMMY_SERVICES.map((service) => (
@@ -96,7 +99,7 @@ export function OverviewTab({ supplier }: OverviewTabProps) {
 							</div>
 							{service.isPopular && (
 								<span className="px-2 py-0.5 text-xs font-medium text-[#FF8100] bg-[rgba(255,129,0,0.1)] border border-[rgba(255,129,0,0.2)] rounded-lg shrink-0">
-									Populär
+									<Translate text={localizationConstants.supplierPopularBadge} />
 								</span>
 							)}
 						</div>
@@ -112,7 +115,7 @@ function StatCard({
 	value,
 	label,
 }: {
-	icon: React.ReactNode;
+	icon: ReactNode;
 	value: string;
 	label: string;
 }) {
@@ -122,7 +125,7 @@ function StatCard({
 			<p className="text-lg font-semibold text-[#0A0A0A] tracking-tight">
 				{value}
 			</p>
-			<p className="text-xs text-slate-500">{label}</p>
+			<p className="text-xs text-slate-500"><Translate text={label} /></p>
 		</div>
 	);
 }

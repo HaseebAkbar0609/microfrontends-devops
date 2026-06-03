@@ -11,11 +11,11 @@ export type SupplierDetailTabValue = (typeof SUPPLIER_DETAIL_TABS)[number];
 export const SUPPLIER_DETAIL_DEFAULT_TAB = SUPPLIER_DETAIL_TABS[0];
 
 export const SUPPLIER_DETAIL_TAB_LABELS: Record<string, string> = {
-	overview: "Översikt",
-	projects: "Projekt",
-	services: "Tjänster",
-	documents: "Dokument",
-	reviews: "Omdömen",
+	overview: "supplierTabOverview",
+	projects: "supplierTabProjects",
+	services: "supplierTabServices",
+	documents: "supplierTabDocuments",
+	reviews: "supplierTabReviews",
 };
 
 export interface Supplier {
@@ -91,6 +91,7 @@ export interface SupplierReview {
 	name: string;
 	initials: string;
 	date: string;
+	timestamp: number;
 	rating: number;
 	text: string;
 	tags: string[];
@@ -102,6 +103,7 @@ export const DUMMY_REVIEWS: SupplierReview[] = [
 		name: "Anna Svensson",
 		initials: "AS",
 		date: "2 dagar sedan",
+		timestamp: 5,
 		rating: 5,
 		text: "Mycket professionell och punktlig. Vårt badrum blev precis som vi ville ha det! Teamet var noga med att städa efter sig varje dag och resultatet överträffade våra förväntningar.",
 		tags: ["Badrumsrenovering", "Punktlig"],
@@ -111,6 +113,7 @@ export const DUMMY_REVIEWS: SupplierReview[] = [
 		name: "Erik Johansson",
 		initials: "EJ",
 		date: "1 vecka sedan",
+		timestamp: 4,
 		rating: 5,
 		text: "Fantastiskt arbete med vårt kök. Högt rekommenderad! Bra kommunikation under hela projektet och mycket flexibla när vi ville göra små ändringar.",
 		tags: ["Köksrenovering"],
@@ -120,8 +123,9 @@ export const DUMMY_REVIEWS: SupplierReview[] = [
 		name: "Maria Andersson",
 		initials: "MA",
 		date: "2 veckor sedan",
-		rating: 5,
-		text: "Professionellt team som levererade i tid och inom budget. Vi är mycket nöjda med resultatet och kan varmt rekommendera Pelle bygg till andra.",
+		timestamp: 3,
+		rating: 4,
+		text: "Professionellt team som levererade i tid och inom budget. Vi är nöjda med resultatet och kan rekommendera Pelle bygg till andra.",
 		tags: ["Renovering", "Bra kommunikation"],
 	},
 	{
@@ -129,8 +133,9 @@ export const DUMMY_REVIEWS: SupplierReview[] = [
 		name: "Johan Berg",
 		initials: "JB",
 		date: "3 veckor sedan",
-		rating: 5,
-		text: "Snabb offert och tydlig kommunikation. Arbetet utfördes professionellt och med hög kvalitet. Glad att vi valde Pelle bygg!",
+		timestamp: 2,
+		rating: 4,
+		text: "Snabb offert och tydlig kommunikation. Arbetet utfördes professionellt och med god kvalitet. Glad att vi valde Pelle bygg!",
 		tags: ["Målning", "Snabb"],
 	},
 	{
@@ -138,6 +143,7 @@ export const DUMMY_REVIEWS: SupplierReview[] = [
 		name: "Sofia Lindström",
 		initials: "SL",
 		date: "1 månad sedan",
+		timestamp: 1,
 		rating: 5,
 		text: "Mycket nöjd med renoveringen av vårt badrum. Teamet var artiga och lyhörda för våra önskemål. Rekommenderar starkt!",
 		tags: ["Badrumsrenovering"],
