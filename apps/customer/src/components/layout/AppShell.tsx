@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuthStatus } from "@/context/AuthContext";
 import { Loader } from "@/components/ui/loader";
@@ -21,6 +21,7 @@ export function AppShell({ children }: AppShellProps) {
 	const { isAuthenticated, isReady } = useAuthStatus();
 	const isMyPages = pathname.startsWith("/tools/my-pages");
 	const isAuthPage = AUTH_PAGES.includes(pathname);
+	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -28,14 +29,18 @@ export function AppShell({ children }: AppShellProps) {
 		if (isAuthPage) {
 			if (isAuthenticated) {
 				router.replace("/home");
+			} else {
+				setIsCheckingAuth(false);
 			}
 			return;
 		}
 
 		if (!isAuthenticated) {
 			router.replace("/login");
+		} else {
+			setIsCheckingAuth(false);
 		}
-	}, [isReady, isAuthenticated, isAuthPage, router]);
+	}, [isReady, isAuthenticated, isAuthPage, pathname, router]);
 
 	if (!isReady) {
 		return <Loader />;
@@ -48,7 +53,7 @@ export function AppShell({ children }: AppShellProps) {
 		return <>{children}</>;
 	}
 
-	if (!isAuthenticated) {
+	if (isCheckingAuth) {
 		return <Loader />;
 	}
 
