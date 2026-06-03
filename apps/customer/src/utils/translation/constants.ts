@@ -122,6 +122,7 @@ export type SidebarTranslation = {
 	archivedprojects: string;
 	tools: string;
 	setting: string;
+	settings: string;
 	suppliers: string;
 	priceCalculator: string;
 	rootRut: string;
@@ -213,6 +214,73 @@ export type DashboardText = {
 
 	resourceLinksTitle: string;
 	hi: string;
+};
+
+export type SettingModule = {
+	users: string;
+	edit: string;
+	createUser: string;
+	editUser: string;
+	deactivateUser: string;
+
+	displayName: string;
+	dateCreated: string;
+	accountType: string;
+	lastLogin: string;
+
+	userAccountAdmin: string;
+	userAccountUsers: string;
+	userStatusActive: string;
+	userStatusDeactivated: string;
+
+	noUsersFound: string;
+	deactivateUserConfirmTitle: string;
+	deactivateUserConfirmDescription: string;
+
+	activateUser: string;
+	activateUserConfirmTitle: string;
+	activateUserConfirmDescription: string;
+
+	userFormProfileTab: string;
+	userFormPermissionsTab: string;
+	userFormUserDetailsTitle: string;
+	userFormFirstNameLabel: string;
+	userFormFirstNamePlaceholder: string;
+	userFormLastNameLabel: string;
+	userFormLastNamePlaceholder: string;
+	userFormMobileNumberLabel: string;
+	userFormMobileNumberPlaceholder: string;
+	userFormPrivateEmailLabel: string;
+	userFormPrivateEmailPlaceholder: string;
+	userFormAddressLabel: string;
+	userFormAddressPlaceholder: string;
+	userFormCityLabel: string;
+	userFormCityPlaceholder: string;
+	userFormPostalCodeLabel: string;
+	userFormPostalCodePlaceholder: string;
+	userFormPersonalNumberLabel: string;
+	userFormPersonalNumberPlaceholder: string;
+	userFormUploadPhotoLabel: string;
+	userFormDeleteButton: string;
+	userFormCancelButton: string;
+	userFormSaveButton: string;
+	userFormNextButton: string;
+	userFormDetailsHelp: string;
+	userFormPermissionViewProjects: string;
+	userFormPermissionCreateProjects: string;
+	userFormPermissionEditProjects: string;
+	userFormPermissionViewOffers: string;
+	userFormPermissionApproveOffers: string;
+	userFormPermissionManageUsers: string;
+	validationUserFirstNameRequired: string;
+	validationUserLastNameRequired: string;
+	validationUserMobileNumberRequired: string;
+	validationUserMobileNumberInvalid: string;
+	validationUserPrivateEmailInvalid: string;
+	validationUserAddressRequired: string;
+	validationUserCityRequired: string;
+	validationUserPostalCodeRequired: string;
+	validationUserPersonalNumberFormat: string;
 };
 
 export type OfferModule = {
@@ -385,6 +453,8 @@ export type OfferModule = {
 	companySearchPlaceholder: string;
 	filterLabel: string;
 	textLabel: string;
+	noSuppliersFound: string;
+	suppliersRowsPerPage: string;
 };
 
 export type CommonFiles = {
@@ -406,6 +476,47 @@ export type DiscountsModule = {
 	discountsViewOffer: string;
 };
 
+export type SupplierModule = {
+	supplierTabOverview: string;
+	supplierTabProjects: string;
+	supplierTabServices: string;
+	supplierTabDocuments: string;
+	supplierTabReviews: string;
+	supplierVerified: string;
+	supplierTopSupplier: string;
+	supplierReviewCount: string;
+	supplierInviteToProject: string;
+	supplierMessage: string;
+	supplierLabelPhone: string;
+	supplierLabelEmail: string;
+	supplierLabelWebsite: string;
+	supplierLabelLanguage: string;
+	supplierLabelResponseTime: string;
+	supplierLabelAvailability: string;
+	supplierCompletedProjects: string;
+	supplierOngoingProjects: string;
+	supplierRotRut: string;
+	supplierRotRutApproved: string;
+	supplierLabelRating: string;
+	supplierLabelCertifications: string;
+	supplierLabelMunicipalities: string;
+	supplierAboutSection: string;
+	supplierReadMore: string;
+	supplierProjectImagesSection: string;
+	supplierSeeAll: string;
+	supplierServicesSection: string;
+	supplierPopularBadge: string;
+	supplierSortLabel: string;
+	supplierSortLatest: string;
+	supplierSortHighestRating: string;
+	supplierRatingFilterLabel: string;
+	supplierSearchReviewsPlaceholder: string;
+	supplierNoReviewsFound: string;
+	supplierSummaryTitle: string;
+	supplierTotalReviews: string;
+	supplierPopularTagsTitle: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
@@ -413,7 +524,8 @@ export type Translation = SidebarTranslation &
 	DashboardText &
 	OfferModule &
 	HeaderTranslation &
-	DiscountsModule;
+	DiscountsModule &
+	SupplierModule;
 
 export type TranslationKeys = keyof Translation;
 
