@@ -90,6 +90,12 @@ export function UserProfileForm({
 		inputClassName: "h-10 text-sm",
 		messageClassName: "text-xs",
 	} as const;
+	const primaryButtonClassName =
+		"bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 gap-2 rounded-md px-4 transition-colors";
+	const outlineButtonClassName =
+		"h-10 rounded-md border border-slate-200 bg-white px-4 text-slate-900 hover:bg-slate-50";
+	const deleteButtonClassName =
+		"h-10 gap-2 rounded-md bg-red-600 px-4 text-white hover:bg-red-700";
 	const isEditOverview = isEdit && !isEditingProfile;
 	const { canDeleteUser } = getUserProfileActions({ mode, isOwnProfile, readOnly });
 	const profileSummaryFields = [
@@ -249,7 +255,12 @@ export function UserProfileForm({
 
 					<div className="flex items-center gap-3">
 						{!isEditOverview && (
-							<Button type="button" variant="outline" onClick={onCancel}>
+							<Button
+								type="button"
+								variant="outline"
+								className={outlineButtonClassName}
+								onClick={onCancel}
+							>
 								{t(localizationConstants.userFormCancelButton)}
 							</Button>
 						)}
@@ -258,7 +269,7 @@ export function UserProfileForm({
 							<Button
 								type="button"
 								variant="destructive"
-								className="gap-2"
+								className={deleteButtonClassName}
 								onClick={() => {
 									// API integration pending backend endpoint; delete is mocked intentionally.
 									console.log("Mock delete user", user?.id);
@@ -271,7 +282,7 @@ export function UserProfileForm({
 						)}
 
 						{!readOnly && (
-							<Button type="submit" className="gap-2">
+							<Button type="submit" className={primaryButtonClassName}>
 								<Save className="h-4 w-4" />
 								{t(localizationConstants.userFormSaveButton)}
 							</Button>
@@ -280,7 +291,7 @@ export function UserProfileForm({
 						{!readOnly && !isEditOverview && activeTab === "profile" && (
 							<Button
 								type="button"
-								className="gap-2"
+								className={primaryButtonClassName}
 								onClick={() => setActiveTab("permissions")}
 							>
 								{t(localizationConstants.userFormNextButton)}

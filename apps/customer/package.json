@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test:user-management": "node scripts/user-management.test.cjs",
+    "test": "tsx src/tests/user-management.test.ts",
     "prepare": "husky"
   },
   "dependencies": {

@@ -1,84 +1,24 @@
-const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const Module = require("node:module");
-const path = require("node:path");
-const ts = require("typescript");
+import assert from "node:assert/strict";
 
-const appRoot = path.resolve(__dirname, "..");
-const sourceRoot = path.join(appRoot, "src");
-const originalResolveFilename = Module._resolveFilename;
-
-function resolveSourceModule(basePath, request) {
-	const target = path.resolve(basePath, request);
-	const candidates = [
-		target,
-		`${target}.ts`,
-		`${target}.tsx`,
-		`${target}.js`,
-		`${target}.jsx`,
-		path.join(target, "index.ts"),
-		path.join(target, "index.tsx"),
-		path.join(target, "index.js"),
-		path.join(target, "index.jsx"),
-	];
-
-	return candidates.find((candidate) => fs.existsSync(candidate) && fs.statSync(candidate).isFile());
-}
-
-Module._resolveFilename = function resolveFilename(request, parent, isMain, options) {
-	if (request.startsWith("@/")) {
-		const resolved = resolveSourceModule(sourceRoot, request.slice(2));
-		if (resolved) return resolved;
-	}
-
-	if (request.startsWith(".") && parent?.filename?.startsWith(appRoot)) {
-		const resolved = resolveSourceModule(path.dirname(parent.filename), request);
-		if (resolved) return resolved;
-	}
-
-	return originalResolveFilename.call(this, request, parent, isMain, options);
-};
-
-function registerTypeScriptExtension(extension) {
-	require.extensions[extension] = (module, filename) => {
-		const source = fs.readFileSync(filename, "utf8");
-		const { outputText } = ts.transpileModule(source, {
-			compilerOptions: {
-				module: ts.ModuleKind.CommonJS,
-				target: ts.ScriptTarget.ES2020,
-				jsx: ts.JsxEmit.ReactJSX,
-				esModuleInterop: true,
-			},
-			fileName: filename,
-		});
-
-		module._compile(outputText, filename);
-	};
-}
-
-registerTypeScriptExtension(".ts");
-registerTypeScriptExtension(".tsx");
-
-const localizationConstants = require("../src/utils/translation/constants").default;
-const { en } = require("../src/utils/translation/en");
-const { sv } = require("../src/utils/translation/sv");
-const {
+import {
 	DEFAULT_USER_PERMISSIONS,
 	DUMMY_USERS,
 	USER_PERMISSION_OPTIONS,
 	USERS_COLUMNS,
-} = require("../src/features/settings/users/constants");
-const {
+} from "@/features/settings/users/constants";
+import { createUserProfileSchema } from "@/features/settings/users/schemas/userProfile.schema";
+import type { User } from "@/features/settings/users/types/types";
+import {
+	getSortedUsers,
 	getUserManagementActions,
 	getUserProfileActions,
-	getSortedUsers,
 	isPersonalNumberValid,
 	isSwedishPhoneNumberValid,
 	maskPersonalNumber,
-} = require("../src/features/settings/users/utils/userFormatters");
-const {
-	createUserProfileSchema,
-} = require("../src/features/settings/users/schemas/userProfile.schema");
+} from "@/features/settings/users/utils/userFormatters";
+import localizationConstants from "@/utils/translation/constants";
+import { en } from "@/utils/translation/en";
+import { sv } from "@/utils/translation/sv";
 
 const validationMessages = {
 	firstNameRequired: "First name is required",
@@ -93,14 +33,13 @@ const validationMessages = {
 };
 
 const userSchema = createUserProfileSchema(validationMessages);
+const tests: Array<{ name: string; run: () => void }> = [];
 
-const tests = [];
-
-function test(name, run) {
+function test(name: string, run: () => void) {
 	tests.push({ name, run });
 }
 
-function toFormValues(user) {
+function toFormValues(user: User) {
 	return {
 		first_name: user.first_name,
 		last_name: user.last_name,
@@ -128,7 +67,7 @@ test("mock users satisfy the user management form contract", () => {
 });
 
 test("same validation works for API-shaped user data", () => {
-	const apiUser = {
+	const apiUser: User = {
 		id: "api-1",
 		first_name: "Lars",
 		last_name: "Andersson",
@@ -163,9 +102,18 @@ test("same validation works for API-shaped user data", () => {
 test("frontend validation rejects invalid email, phone, and personal number values", () => {
 	const validUser = toFormValues(DUMMY_USERS[0]);
 
-	assert.equal(userSchema.safeParse({ ...validUser, private_email: "invalid-email" }).success, false);
-	assert.equal(userSchema.safeParse({ ...validUser, mobile_number: "555-123-9999" }).success, false);
-	assert.equal(userSchema.safeParse({ ...validUser, personal_number: "199001011234" }).success, false);
+	assert.equal(
+		userSchema.safeParse({ ...validUser, private_email: "invalid-email" }).success,
+		false,
+	);
+	assert.equal(
+		userSchema.safeParse({ ...validUser, mobile_number: "555-123-9999" }).success,
+		false,
+	);
+	assert.equal(
+		userSchema.safeParse({ ...validUser, personal_number: "199001011234" }).success,
+		false,
+	);
 });
 
 test("Swedish phone and personal number helpers support the required formats", () => {
