@@ -9,6 +9,7 @@ const BASE_PATHS = {
 	PROJECT: "/api/v1/project",
 	LOCATION: "/api/v1/location",
 	TEAMS: "/api/v1/teams",
+	COMPANIES: "/api/v1/companies",
 };
 
 export const API_PATH = {
@@ -37,6 +38,10 @@ export const API_PATH = {
 	},
 	INVITATION: {
 		ACCEPT: "/api/v1/companies/invitation/accept",
+	},
+	COMPANIES: {
+		USER_ACTIVE_INACTIVE: (companyUserId: string) =>
+			`${BASE_PATHS.COMPANIES}/user/active-inactive/${companyUserId}`,
 	},
 	LOCATION: {
 		COUNTRIES: `${BASE_PATHS.LOCATION}/countries`,

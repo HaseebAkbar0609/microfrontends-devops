@@ -19,6 +19,7 @@ export interface NavSubItem {
 	id: string;
 	label: string;
 	href: string;
+	icon?: LucideIcon;
 	flyoutItems?: NavFlyoutItem[];
 }
 
@@ -118,10 +119,17 @@ export const navConfig: NavGroup[] = [
 		],
 	},
 	{
-		id: "setting",
-		label: localizationConstants.setting,
+		id: "settings",
+		label: localizationConstants.settings,
 		icon: Settings,
-		href: "/setting",
-		items: [],
+		items: [
+			{
+				id: "users",
+				label: localizationConstants.users,
+				href: "/settings/users",
+				icon: Settings,
+			},
+
+		],
 	},
 ];

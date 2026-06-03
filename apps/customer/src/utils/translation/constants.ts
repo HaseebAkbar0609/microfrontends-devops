@@ -122,6 +122,7 @@ export type SidebarTranslation = {
 	archivedprojects: string;
 	tools: string;
 	setting: string;
+	settings: string;
 	suppliers: string;
 	priceCalculator: string;
 	rootRut: string;
@@ -213,6 +214,73 @@ export type DashboardText = {
 
 	resourceLinksTitle: string;
 	hi: string;
+};
+
+export type SettingModule = {
+	users: string;
+	edit: string;
+	createUser: string;
+	editUser: string;
+	deactivateUser: string;
+
+	displayName: string;
+	dateCreated: string;
+	accountType: string;
+	lastLogin: string;
+
+	userAccountAdmin: string;
+	userAccountUsers: string;
+	userStatusActive: string;
+	userStatusDeactivated: string;
+
+	noUsersFound: string;
+	deactivateUserConfirmTitle: string;
+	deactivateUserConfirmDescription: string;
+
+	activateUser: string;
+	activateUserConfirmTitle: string;
+	activateUserConfirmDescription: string;
+
+	userFormProfileTab: string;
+	userFormPermissionsTab: string;
+	userFormUserDetailsTitle: string;
+	userFormFirstNameLabel: string;
+	userFormFirstNamePlaceholder: string;
+	userFormLastNameLabel: string;
+	userFormLastNamePlaceholder: string;
+	userFormMobileNumberLabel: string;
+	userFormMobileNumberPlaceholder: string;
+	userFormPrivateEmailLabel: string;
+	userFormPrivateEmailPlaceholder: string;
+	userFormAddressLabel: string;
+	userFormAddressPlaceholder: string;
+	userFormCityLabel: string;
+	userFormCityPlaceholder: string;
+	userFormPostalCodeLabel: string;
+	userFormPostalCodePlaceholder: string;
+	userFormPersonalNumberLabel: string;
+	userFormPersonalNumberPlaceholder: string;
+	userFormUploadPhotoLabel: string;
+	userFormDeleteButton: string;
+	userFormCancelButton: string;
+	userFormSaveButton: string;
+	userFormNextButton: string;
+	userFormDetailsHelp: string;
+	userFormPermissionViewProjects: string;
+	userFormPermissionCreateProjects: string;
+	userFormPermissionEditProjects: string;
+	userFormPermissionViewOffers: string;
+	userFormPermissionApproveOffers: string;
+	userFormPermissionManageUsers: string;
+	validationUserFirstNameRequired: string;
+	validationUserLastNameRequired: string;
+	validationUserMobileNumberRequired: string;
+	validationUserMobileNumberInvalid: string;
+	validationUserPrivateEmailInvalid: string;
+	validationUserAddressRequired: string;
+	validationUserCityRequired: string;
+	validationUserPostalCodeRequired: string;
+	validationUserPersonalNumberFormat: string;
 };
 
 export type OfferModule = {
