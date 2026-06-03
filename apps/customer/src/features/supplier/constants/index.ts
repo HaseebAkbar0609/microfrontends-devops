@@ -10,12 +10,14 @@ export type SupplierDetailTabValue = (typeof SUPPLIER_DETAIL_TABS)[number];
 
 export const SUPPLIER_DETAIL_DEFAULT_TAB = SUPPLIER_DETAIL_TABS[0];
 
+import localizationConstants from "@/utils/translation/constants";
+
 export const SUPPLIER_DETAIL_TAB_LABELS: Record<string, string> = {
-	overview: "supplierTabOverview",
-	projects: "supplierTabProjects",
-	services: "supplierTabServices",
-	documents: "supplierTabDocuments",
-	reviews: "supplierTabReviews",
+	overview: localizationConstants.supplierTabOverview,
+	projects: localizationConstants.supplierTabProjects,
+	services: localizationConstants.supplierTabServices,
+	documents: localizationConstants.supplierTabDocuments,
+	reviews: localizationConstants.supplierTabReviews,
 };
 
 export interface Supplier {

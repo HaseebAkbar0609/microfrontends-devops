@@ -1,15 +1,15 @@
 import type { ReactNode } from "react";
 import { Star, Award, Clock, MapPin, ChevronRight, Wrench } from "lucide-react";
-import type { Supplier } from "../../constants";
-import { DUMMY_SERVICES } from "../../constants";
+import type { Supplier, SupplierService } from "../../constants";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 interface OverviewTabProps {
 	supplier: Supplier;
+	services: SupplierService[];
 }
 
-export function OverviewTab({ supplier }: OverviewTabProps) {
+export function OverviewTab({ supplier, services }: OverviewTabProps) {
 	return (
 		<div className="flex flex-col gap-6">
 			{/* Summary stat cards */}
@@ -84,7 +84,7 @@ export function OverviewTab({ supplier }: OverviewTabProps) {
 					<Translate text={localizationConstants.supplierServicesSection} />
 				</h3>
 				<div className="flex flex-col gap-1">
-					{DUMMY_SERVICES.map((service) => (
+					{services.map((service) => (
 						<div
 							key={service.id}
 							className="flex items-center justify-between rounded-md px-3 py-3 hover:bg-slate-50 transition-colors"

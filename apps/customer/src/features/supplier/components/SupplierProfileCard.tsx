@@ -169,7 +169,7 @@ function ContactRow({
 				<p className="text-xs text-slate-500"><Translate text={label} /></p>
 				{isLink ? (
 					<a
-						href={/^https?:\/\//i.test(value) ? value : `https://${value}`}
+						href={value.includes("://") ? value : `//${value}`}
 						className="text-sm text-[#FF8100] hover:underline break-all"
 						target="_blank"
 						rel="noopener noreferrer"

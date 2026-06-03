@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -15,7 +15,16 @@ import {
 	SUPPLIER_DETAIL_DEFAULT_TAB,
 	SUPPLIER_DETAIL_TAB_LABELS,
 	DUMMY_SUPPLIER,
+	DUMMY_SERVICES,
+	DUMMY_REVIEWS,
+	DUMMY_STAR_BREAKDOWN,
+	DUMMY_POPULAR_TAGS,
 	supplierDetailTabTriggerClass,
+	type Supplier,
+	type SupplierService,
+	type SupplierReview,
+	type StarBreakdown,
+	type PopularTag,
 } from "../constants";
 import { SupplierProfileCard } from "./SupplierProfileCard";
 import { OverviewTab } from "./tabs/OverviewTab";
@@ -48,8 +57,20 @@ export function SupplierDetailPage({ supplierId }: { supplierId: string }) {
 		changeQueries({ tab: value });
 	};
 
-	// In production, fetch by supplierId; using dummy data for now
-	const supplier = DUMMY_SUPPLIER;
+	const [supplier, setSupplier] = useState<Supplier>(DUMMY_SUPPLIER);
+	const [services, setServices] = useState<SupplierService[]>([]);
+	const [reviews, setReviews] = useState<SupplierReview[]>([]);
+	const [starBreakdown, setStarBreakdown] = useState<StarBreakdown[]>([]);
+	const [popularTags, setPopularTags] = useState<PopularTag[]>([]);
+
+	useEffect(() => {
+		// TODO: replace with API calls using supplierId
+		setSupplier(DUMMY_SUPPLIER);
+		setServices(DUMMY_SERVICES);
+		setReviews(DUMMY_REVIEWS);
+		setStarBreakdown(DUMMY_STAR_BREAKDOWN);
+		setPopularTags(DUMMY_POPULAR_TAGS);
+	}, [supplierId]);
 
 	return (
 		<div className="flex flex-col flex-1">
@@ -85,7 +106,7 @@ export function SupplierDetailPage({ supplierId }: { supplierId: string }) {
 
 						<div className="bg-white rounded-b-xl shadow-sm p-6">
 							<TabsContent value="overview" className="mt-0">
-								<OverviewTab supplier={supplier} />
+								<OverviewTab supplier={supplier} services={services} />
 							</TabsContent>
 
 							<TabsContent value="projects" className="mt-0">
@@ -107,7 +128,11 @@ export function SupplierDetailPage({ supplierId }: { supplierId: string }) {
 							</TabsContent>
 
 							<TabsContent value="reviews" className="mt-0">
-								<ReviewsTab />
+								<ReviewsTab
+									reviews={reviews}
+									starBreakdown={starBreakdown}
+									popularTags={popularTags}
+								/>
 							</TabsContent>
 						</div>
 					</Tabs>

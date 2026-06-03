@@ -5,24 +5,30 @@ import { Star, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import {
-	DUMMY_REVIEWS,
-	DUMMY_STAR_BREAKDOWN,
-	DUMMY_POPULAR_TAGS,
+import type {
+	SupplierReview,
+	StarBreakdown,
+	PopularTag,
 } from "../../constants";
 
 type SortOption = "latest" | "highest";
 type RatingFilter = 1 | 2 | 3 | 4 | 5 | null;
 
-export function ReviewsTab() {
+interface ReviewsTabProps {
+	reviews: SupplierReview[];
+	starBreakdown: StarBreakdown[];
+	popularTags: PopularTag[];
+}
+
+export function ReviewsTab({ reviews, starBreakdown, popularTags }: ReviewsTabProps) {
 	const t = useTranslate();
 	const [sort, setSort] = useState<SortOption>("latest");
 	const [ratingFilter, setRatingFilter] = useState<RatingFilter>(null);
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const totalReviews = DUMMY_STAR_BREAKDOWN.reduce((sum, b) => sum + b.count, 0);
+	const totalReviews = starBreakdown.reduce((sum, b) => sum + b.count, 0);
 
-	const filteredReviews = DUMMY_REVIEWS.filter((r) =>
+	const filteredReviews = reviews.filter((r) =>
 		ratingFilter ? r.rating === ratingFilter : true,
 	)
 		.filter((r) =>
@@ -219,7 +225,7 @@ export function ReviewsTab() {
 
 				{/* Star breakdown bars */}
 				<div className="px-6 pt-5 flex flex-col gap-3">
-					{DUMMY_STAR_BREAKDOWN.map(({ stars, count, pct }) => (
+					{starBreakdown.map(({ stars, count, pct }) => (
 						<div
 							key={stars}
 							className="flex items-center gap-3 h-5"
@@ -249,7 +255,7 @@ export function ReviewsTab() {
 						{t(localizationConstants.supplierPopularTagsTitle)}
 					</h4>
 					<div className="flex flex-wrap gap-1.5">
-						{DUMMY_POPULAR_TAGS.map(({ label, count, isPopular }) => (
+						{popularTags.map(({ label, count, isPopular }) => (
 							<span
 								key={label}
 								className={cn(
