@@ -54,7 +54,6 @@ const CREATE_OFFER_STEP_VALIDATION_FIELDS: Record<
 	2: [
 		"projectName",
 		"isExpressJob",
-		//"clientNo",
 		"category",
 		"projectAddress",
 		"projectCity",

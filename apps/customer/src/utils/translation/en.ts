@@ -341,6 +341,7 @@ export const enOfferModule: OfferModule = {
 	validationFirstNameRequired: "First name is required",
 	validationLastNameRequired: "Last name is required",
 	validationMobileNumberRequired: "Mobile number is required",
+	validationMobileNumberInvalid: "Enter a valid phone number",
 	validationPersonalEmailRequired: "Personal email is required",
 	validationPersonalEmailInvalid: "Please enter a valid email address",
 	validationAddressRequired: "Address is required",

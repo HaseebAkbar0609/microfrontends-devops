@@ -323,6 +323,7 @@ export type OfferModule = {
 	validationFirstNameRequired: string;
 	validationLastNameRequired: string;
 	validationMobileNumberRequired: string;
+	validationMobileNumberInvalid: string;
 	validationPersonalEmailRequired: string;
 	validationPersonalEmailInvalid: string;
 	validationAddressRequired: string;

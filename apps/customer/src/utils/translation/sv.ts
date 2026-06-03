@@ -335,6 +335,7 @@ export const svOfferModule: OfferModule = {
 	validationFirstNameRequired: "Förnamn krävs",
 	validationLastNameRequired: "Efternamn krävs",
 	validationMobileNumberRequired: "Mobilnummer krävs",
+	validationMobileNumberInvalid: "Ange ett giltigt svenskt telefonnummer",
 	validationPersonalEmailRequired: "Personlig e-post krävs",
 	validationPersonalEmailInvalid: "Ange en giltig e-postadress",
 	validationAddressRequired: "Adress krävs",
