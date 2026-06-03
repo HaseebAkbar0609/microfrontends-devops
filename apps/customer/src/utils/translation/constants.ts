@@ -525,6 +525,7 @@ export type Translation = SidebarTranslation &
 	OfferModule &
 	HeaderTranslation &
 	DiscountsModule &
+	SettingModule &
 	SupplierModule;
 
 export type TranslationKeys = keyof Translation;
