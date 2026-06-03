@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 import { Discount } from "../constants";
 
 interface DiscountCardProps {
@@ -12,7 +13,7 @@ export function DiscountCard({ discount }: DiscountCardProps) {
       {/* Discount badge — absolute top-right of card, border-radius: 0 12px 0 12px */}
       <div className="absolute top-0 right-0 w-[93px] rounded-tr-[12px] rounded-bl-[12px] bg-[#FF8100] p-3 flex flex-col items-center">
         <span className="text-[30px] font-bold leading-none text-white">{discount.discountPct}%</span>
-        <span className="text-lg font-medium leading-none text-white">{localizationConstants.discountsOff}</span>
+        <span className="text-lg font-medium leading-none text-white"><Translate text={localizationConstants.discountsOff} /></span>
       </div>
 
       {/* Image area — 191×172px fixed per Figma, leaving space for the badge on the right */}
@@ -39,7 +40,7 @@ export function DiscountCard({ discount }: DiscountCardProps) {
       <Button
         className="w-fit h-9 px-4 py-2 bg-[#F4F4F5] text-[#09090B] hover:bg-[#E4E4E7] shadow-sm border-0 text-sm font-medium rounded-[6px]"
       >
-        {localizationConstants.discountsViewOffer}
+        <Translate text={localizationConstants.discountsViewOffer} />
       </Button>
     </div>
   );

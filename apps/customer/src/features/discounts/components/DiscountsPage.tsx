@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { BreadcrumbItem } from "@/types/user";
 import localizationConstants from "@/utils/translation/constants";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
   Select,
   SelectContent,
@@ -26,6 +27,7 @@ const BREADCRUMBS: BreadcrumbItem[] = [
 ];
 
 export function DiscountsPage() {
+  const t = useTranslate();
   const [supplier, setSupplier] = useState<string>("");
   const [category, setCategory] = useState<string>("");
   const [discounts, setDiscounts] = useState<Discount[]>([]);
@@ -60,10 +62,10 @@ export function DiscountsPage() {
           {/* Card header */}
           <div className="flex flex-col gap-1.5 pb-6 pl-5 pr-0 pt-0 mt-4">
             <h2 className="text-2xl font-semibold leading-none tracking-[-0.025em] text-[#020617]">
-              {localizationConstants.discountsAllTitle}
+              <Translate text={localizationConstants.discountsAllTitle} />
             </h2>
             <p className="text-sm leading-5 text-[#64748B]">
-              {localizationConstants.discountsSubtitle}
+              <Translate text={localizationConstants.discountsSubtitle} />
             </p>
           </div>
 
@@ -74,11 +76,11 @@ export function DiscountsPage() {
               onValueChange={(v) => setSupplier(v === ALL ? "" : v)}
             >
               <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
-                <SelectValue placeholder={localizationConstants.discountsFilterSupplierPlaceholder} />
+                <SelectValue placeholder={t(localizationConstants.discountsFilterSupplierPlaceholder)} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={ALL}>
-                  {localizationConstants.discountsAllSuppliers}
+                  <Translate text={localizationConstants.discountsAllSuppliers} />
                 </SelectItem>
                 {DISCOUNT_SUPPLIERS.map((s) => (
                   <SelectItem key={s} value={s}>
@@ -93,11 +95,11 @@ export function DiscountsPage() {
               onValueChange={(v) => setCategory(v === ALL ? "" : v)}
             >
               <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
-                <SelectValue placeholder={localizationConstants.discountsFilterCategoryPlaceholder} />
+                <SelectValue placeholder={t(localizationConstants.discountsFilterCategoryPlaceholder)} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={ALL}>
-                  {localizationConstants.discountsAllCategories}
+                  <Translate text={localizationConstants.discountsAllCategories} />
                 </SelectItem>
                 {DISCOUNT_CATEGORIES.map((c) => (
                   <SelectItem key={c} value={c}>
@@ -112,11 +114,11 @@ export function DiscountsPage() {
           <div className="p-5">
             {loading ? (
               <p className="py-12 text-center text-sm text-slate-400">
-                {localizationConstants.discountsLoading}
+                <Translate text={localizationConstants.discountsLoading} />
               </p>
             ) : discounts.length === 0 ? (
               <p className="py-12 text-center text-sm text-slate-400">
-                {localizationConstants.discountsNotFound}
+                <Translate text={localizationConstants.discountsNotFound} />
               </p>
             ) : (
               <div className="flex flex-wrap gap-4">

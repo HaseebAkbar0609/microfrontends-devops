@@ -411,7 +411,7 @@ export const svDiscounts: DiscountsModule = {
 	discountsAllCategories: "Alla kategorier",
 	discountsLoading: "Laddar rabatter...",
 	discountsNotFound: "Inga rabatter hittades för valt filter.",
-	discountsOff: "Off",
+	discountsOff: "Rabatt",
 	discountsViewOffer: "Se erbjudande",
 };
 
