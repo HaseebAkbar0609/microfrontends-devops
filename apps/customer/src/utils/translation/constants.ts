@@ -463,6 +463,21 @@ export type CommonFiles = {
 	unsupportedFileType: string;
 };
 
+export type DiscountsModule = {
+	discountsAllTitle: string;
+	discountsSubtitle: string;
+	discountsFilterSupplierPlaceholder: string;
+	discountsAllSuppliers: string;
+	discountsFilterCategoryPlaceholder: string;
+	discountsAllCategories: string;
+	discountsLoading: string;
+	discountsNotFound: string;
+	discountsOff: string;
+	discountsViewOffer: string;
+	discountDetailSubtitle: string;
+	discountOpenQR: string;
+};
+
 export type SupplierModule = {
 	supplierTabOverview: string;
 	supplierTabProjects: string;
@@ -504,11 +519,6 @@ export type SupplierModule = {
 	supplierPopularTagsTitle: string;
 };
 
-export type DiscountModule = {
-	discountDetailSubtitle: string;
-	discountOpenQR: string;
-};
-
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
@@ -516,9 +526,9 @@ export type Translation = SidebarTranslation &
 	DashboardText &
 	OfferModule &
 	HeaderTranslation &
+	DiscountsModule &
 	SettingModule &
-	SupplierModule &
-	DiscountModule;
+	SupplierModule;
 
 export type TranslationKeys = keyof Translation;
 

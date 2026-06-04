@@ -8,8 +8,8 @@ import {
 	DashboardText,
 	SettingModule,
 	OfferModule,
+	DiscountsModule,
 	SupplierModule,
-	DiscountModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -28,7 +28,7 @@ export const enSidebar: SidebarTranslation = {
 	priceCalculator: "Cost Calculator",
 	rootRut: "ROT & RUT",
 	inspiration: "Inspiration",
-	discounts: "Offers",
+	discounts: "Discounts",
 	questions: "Questions",
 	support: "Support",
 };
@@ -518,9 +518,18 @@ export const enSupplierModule: SupplierModule = {
 	supplierPopularTagsTitle: "Popular tags",
 };
 
-export const enDiscountModule: DiscountModule = {
-	discountDetailSubtitle:
-		"We have collaborated with suppliers to get your best offers.",
+export const enDiscounts: DiscountsModule = {
+	discountsAllTitle: "All discounts",
+	discountsSubtitle: "We have collaborated with suppliers to give you the best offers.",
+	discountsFilterSupplierPlaceholder: "Supplier",
+	discountsAllSuppliers: "All suppliers",
+	discountsFilterCategoryPlaceholder: "Category",
+	discountsAllCategories: "All categories",
+	discountsLoading: "Loading discounts...",
+	discountsNotFound: "No discounts found for the selected filter.",
+	discountsOff: "Off",
+	discountsViewOffer: "View offer",
+	discountDetailSubtitle: "We have collaborated with suppliers to get your best offers.",
 	discountOpenQR: "Open QR",
 };
 
@@ -533,6 +542,6 @@ export const en: Translation = {
 	...enDashboard,
 	...enSettingModule,
 	...enOfferModule,
+	...enDiscounts,
 	...enSupplierModule,
-	...enDiscountModule,
 };

@@ -8,8 +8,8 @@ import {
 	DashboardText,
 	SettingModule,
 	OfferModule,
+	DiscountsModule,
 	SupplierModule,
-	DiscountModule,
 } from "./constants";
 
 export const svAuth: AuthTranslation = {
@@ -191,7 +191,7 @@ export const svSidebar: SidebarTranslation = {
 	priceCalculator: "Kostnadskalkylator",
 	rootRut: "ROT & RUT",
 	inspiration: "Inspiration",
-	discounts: "Erbjudanden",
+	discounts: "Rabatter",
 	questions: "Frågor",
 	support: "Support",
 };
@@ -472,6 +472,21 @@ export const svOfferModule: OfferModule = {
 		"Pelle Construction är glada att påbörja denna badrumsrenovering och förvandla den till en modern oas. Vårt team av skickliga hantverkare kommer att hantera allt från rivning till slutliga detaljer, vilket säkerställer en smidig och stressfri upplevelse. Vi kommer att arbeta nära dig för att välja högkvalitativa material och inredning som speglar din personliga stil. Projektet inkluderar uppdatering av VVS-, el- och ventilationssystem för att möta nuvarande standarder. Vi är fast beslutna att leverera exceptionella resultat som överträffar dina förväntningar och skapar ett badrum du kommer att älska i många år framöver.",
 };
 
+export const svDiscounts: DiscountsModule = {
+	discountsAllTitle: "Alla rabatter",
+	discountsSubtitle: "Vi har samarbetat med leverantörer för att ge dig de bästa erbjudandena.",
+	discountsFilterSupplierPlaceholder: "Leverantör",
+	discountsAllSuppliers: "Alla leverantörer",
+	discountsFilterCategoryPlaceholder: "Kategori",
+	discountsAllCategories: "Alla kategorier",
+	discountsLoading: "Laddar rabatter...",
+	discountsNotFound: "Inga rabatter hittades för valt filter.",
+	discountsOff: "Rabatt",
+	discountsViewOffer: "Se erbjudande",
+	discountDetailSubtitle: "Vi har samarbetat med leverantörer för att ge dig bästa erbjudanden.",
+	discountOpenQR: "Öppna QR",
+};
+
 export const svSupplierModule: SupplierModule = {
 	supplierTabOverview: "Översikt",
 	supplierTabProjects: "Projekt",
@@ -513,12 +528,6 @@ export const svSupplierModule: SupplierModule = {
 	supplierPopularTagsTitle: "Populära taggar",
 };
 
-export const svDiscountModule: DiscountModule = {
-	discountDetailSubtitle:
-		"Vi har samarbetat med leverantörer för att ge dig bästa erbjudanden.",
-	discountOpenQR: "Öppna QR",
-};
-
 export const sv: Translation = {
 	...svSidebar,
 	...svAuth,
@@ -528,6 +537,6 @@ export const sv: Translation = {
 	...svDashboard,
 	...svSettingModule,
 	...svOfferModule,
+	...svDiscounts,
 	...svSupplierModule,
-	...svDiscountModule,
 };
