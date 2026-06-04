@@ -36,7 +36,6 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import useModal from "@/features/auth/hooks/useModal";
 import { MODAL_CONSTANTS, ModalType } from "@/constants/constant";
-import { activeInactiveCompanyUserAPIAction } from "@/api-actions";
 import { getSortedUsers, getUserManagementActions } from "../utils/userFormatters";
 
 import {
@@ -147,11 +146,9 @@ const ActionsDropdown = ({ user: _user, onRefresh }: { user: User; onRefresh?: (
 
     setIsPending(true);
     try {
-      const result = await activeInactiveCompanyUserAPIAction(modalId);
-      if (result.success) {
-        onRefresh?.();
-        closeModal();
-      }
+      // API integration pending backend endpoint; status change is mocked intentionally.
+      onRefresh?.();
+      closeModal();
     } finally {
       setIsPending(false);
     }
