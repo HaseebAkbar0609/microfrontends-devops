@@ -357,6 +357,18 @@ export type OfferModule = {
 	upload: string;
 	inviteSupplierSection: string;
 	selectedSuppliersLabel: string;
+	availableSuppliersLabel: string;
+	searchSuppliersPlaceholder: string;
+	searchLabel: string;
+	loadingLabel: string;
+	supplierSelectionTotalRecipientsLabel: string;
+	supplierSelectionLimitInfo: string;
+	supplierSelectionSummaryLabel: string;
+	supplierInternalRecipientsLabel: string;
+	supplierTotalRecipientsLabel: string;
+	supplierSelectedCountLabel: string;
+	supplierRecipientCountInfo: string;
+	supplierSelectionMaxExceeded: string;
 	newInvitationButton: string;
 	newInvitationTitle: string;
 	companyNameLabel: string;

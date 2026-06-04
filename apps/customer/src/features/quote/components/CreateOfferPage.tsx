@@ -3,7 +3,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Save, ArrowRight, Plus, Loader2 } from "lucide-react";
+import {
+	ArrowLeft,
+	Save,
+	ArrowRight,
+	Plus,
+	Loader2,
+	UsersRound,
+	Info,
+} from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -234,6 +242,11 @@ export default function CreateOfferPage() {
 		return Array.from(byId.values());
 	}, [customerCategoryRows, selectedCategoryIds]);
 
+	const invitedSuppliers = form.watch("invitedSuppliers") || [];
+	const internalSuppliers = form.watch("internalSuppliers") || [];
+	const supplierRecipientTotal =
+		invitedSuppliers.length + internalSuppliers.length;
+
 	useEffect(() => {
 		if (!resumeProjectId?.trim()) {
 			setResumeReady(true);
@@ -270,11 +283,23 @@ export default function CreateOfferPage() {
 	const onSubmit: SubmitHandler<CreateOfferFormValues> = async (_values) => {
 		setIsNextLoading(true);
 		try {
+			const values = form.getValues();
 			const payload: SaveProjectPayload = {
 				project_id: projectId,
 				step: 4,
 				is_send: true,
-				data: {},
+				data: {
+					suppliers:
+						values.invitedSuppliers?.map((supplier) => ({
+							company_name: supplier.companyName,
+							category: supplier.category || undefined,
+							organization_number: supplier.orgNumber,
+							first_name: supplier.contactFirstName,
+							last_name: supplier.contactLastName,
+							email: supplier.emailAddress,
+							mobile_number: supplier.mobileNumber,
+						})) ?? [],
+				},
 			};
 
 			const result = await saveProjectAPIAction(payload, {
@@ -346,7 +371,16 @@ export default function CreateOfferPage() {
 							};
 						case 4:
 							return {
-								
+								suppliers:
+									values.invitedSuppliers?.map((supplier) => ({
+										company_name: supplier.companyName,
+										category: supplier.category || undefined,
+										organization_number: supplier.orgNumber,
+										first_name: supplier.contactFirstName,
+										last_name: supplier.contactLastName,
+										email: supplier.emailAddress,
+										mobile_number: supplier.mobileNumber,
+									})) ?? [],
 							};
 						default:
 							return {};
@@ -439,7 +473,16 @@ export default function CreateOfferPage() {
 					};
 				case 4:
 					return {
-						
+						suppliers:
+							values.invitedSuppliers?.map((supplier) => ({
+								company_name: supplier.companyName,
+								category: supplier.category || undefined,
+								organization_number: supplier.orgNumber,
+								first_name: supplier.contactFirstName,
+								last_name: supplier.contactLastName,
+								email: supplier.emailAddress,
+								mobile_number: supplier.mobileNumber,
+							})) ?? [],
 					};
 				default:
 					return {};
@@ -566,7 +609,7 @@ export default function CreateOfferPage() {
 					{/* Progress Sidebar */}
 					{currentStep < 5 && (
 						<div className="w-full lg:w-80 shrink-0">
-							<Card className="sticky top-0 border shadow-sm p-0 bg-white">
+							<Card className="border shadow-sm p-0 bg-white">
 								<CardContent className="p-5 space-y-2">
 									<div className="flex items-center justify-between text-sm font-medium">
 										<span className="text-slate-900">
@@ -583,27 +626,21 @@ export default function CreateOfferPage() {
 											(currentStep / (totalSteps - 1)) *
 											100
 										}
-										className="h-2"
+										className="h-2 [&>div]:bg-slate-950"
 									/>
 								</CardContent>
 							</Card>
 							{currentStep === 4 && (
-								<div className="w-full md:w-[200px] shrink-0 mt-2.5">
+								<div className="mt-3 space-y-3">
 									<Button
 										type="button"
-										className="w-full bg-slate-900 text-white hover:bg-slate-800 gap-2"
+										className="h-11 w-full bg-slate-900 text-white hover:bg-slate-800 gap-2"
 										onClick={() =>
 											openModal(
 												MODAL_CONSTANTS.NEW_INVITATION,
 											)
 										}
-										disabled={
-											(
-												form.watch(
-													"invitedSuppliers",
-												) || []
-											).length >= 3
-										}
+										disabled={invitedSuppliers.length >= 3}
 									>
 										<Plus className="h-4 w-4" />
 										<Translate
@@ -612,6 +649,100 @@ export default function CreateOfferPage() {
 											}
 										/>
 									</Button>
+
+									<Card className="border shadow-sm p-0 bg-white">
+										<CardContent className="p-4">
+											<div className="flex items-start gap-3">
+												<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700">
+													<UsersRound className="h-5 w-5" />
+												</div>
+												<div className="min-w-0 flex-1">
+													<p className="text-sm font-semibold text-slate-900">
+														<Translate
+															text={
+																localizationConstants.supplierSelectionSummaryLabel
+															}
+														/>
+													</p>
+													<div className="mt-4 flex items-center gap-5">
+														<div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full border-[6px] border-slate-200 text-center">
+															<div>
+																<p className="text-lg font-semibold leading-none text-slate-900">
+																	{
+																		invitedSuppliers.length
+																	}
+																	/3
+																</p>
+																<p className="mt-1 text-[10px] font-medium text-slate-500">
+																	<Translate
+																		text={
+																			localizationConstants.supplierSelectedCountLabel
+																		}
+																	/>
+																</p>
+															</div>
+														</div>
+														<div className="flex-1 space-y-3 text-xs">
+															<div className="flex items-center justify-between gap-4">
+																<span className="text-slate-500">
+																	<Translate
+																		text={
+																			localizationConstants.selectedSuppliersLabel
+																		}
+																	/>
+																</span>
+																<span className="font-semibold text-slate-900">
+																	{
+																		invitedSuppliers.length
+																	}
+																</span>
+															</div>
+															<div className="flex items-center justify-between gap-4">
+																<span className="text-slate-500">
+																	<Translate
+																		text={
+																			localizationConstants.supplierInternalRecipientsLabel
+																		}
+																	/>
+																</span>
+																<span className="font-semibold text-slate-900">
+																	{
+																		internalSuppliers.length
+																	}
+																</span>
+															</div>
+															<div className="border-t border-slate-200 pt-3">
+																<div className="flex items-center justify-between gap-4">
+																	<span className="font-semibold text-slate-900">
+																		<Translate
+																			text={
+																				localizationConstants.supplierTotalRecipientsLabel
+																			}
+																		/>
+																	</span>
+																	<span className="font-semibold text-slate-900">
+																		{
+																			supplierRecipientTotal
+																		}
+																	</span>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div className="mt-4 flex gap-3 rounded-md border border-blue-100 bg-blue-50 p-3 text-xs leading-5 text-slate-700">
+														<Info className="mt-0.5 h-4 w-4 shrink-0 text-blue-700" />
+														<p>
+															<Translate
+																text={
+																	localizationConstants.supplierRecipientCountInfo
+																}
+															/>
+														</p>
+													</div>
+												</div>
+											</div>
+										</CardContent>
+									</Card>
 								</div>
 							)}
 						</div>
