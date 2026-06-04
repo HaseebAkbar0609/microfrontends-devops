@@ -9,7 +9,10 @@ import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscrip
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
-import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
+import {
+	getFlyoutSubSidebarConfigByPath,
+	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
+} from "./sidebar/navConfig";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -43,7 +46,7 @@ export function AppShell({ children }: AppShellProps) {
 	const showSubSidebar =
 		!!flyoutSubSidebarConfig &&
 		!isPublicPage &&
-		flyoutSubSidebarConfig.displaySubSidebar;
+		!pathMatchesPrefixes(pathname, HIDDEN_SUBSIDEBAR_PATH_PREFIXES);
 
 	useEffect(() => {
 		if (!isReady) return;

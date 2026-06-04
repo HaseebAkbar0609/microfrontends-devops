@@ -16,7 +16,6 @@ export interface NavFlyoutItem {
 	label: string;
 	href: string;
 	icon?: LucideIcon;
-	displaySubSidebar?: boolean;
 }
 
 export interface NavSubItem {
@@ -45,8 +44,13 @@ export interface FlyoutSubSidebarItem {
 export interface FlyoutSubSidebarConfig {
 	titleKey: string;
 	items: FlyoutSubSidebarItem[];
-	displaySubSidebar: boolean;
 }
+
+export const HIDDEN_SUBSIDEBAR_PATH_PREFIXES = [
+	"/module/business/offer/dashboard",
+	"/module/business/offer/list",
+	"/module/business/offer/archive",
+];
 
 export const navConfig: NavGroup[] = [
 	{
@@ -191,7 +195,6 @@ export const navConfig: NavGroup[] = [
 						id: "offer",
 						label: localizationConstants.offer,
 						href: "/module/business/offer/dashboard",
-						displaySubSidebar: false,
 					},
 					{
 						id: "b2b",
@@ -392,12 +395,6 @@ export function getFlyoutSubSidebarConfigByPath(
 
 			if (!isParentMatch && !isFlyoutMatch) continue;
 
-			const matchedFlyoutItem = item.flyoutItems.find(
-				(flyoutItem) =>
-					pathname === flyoutItem.href ||
-					pathname.startsWith(`${flyoutItem.href}/`),
-			);
-
 			return {
 				titleKey: item.label,
 				items: item.flyoutItems.map((flyoutItem) => ({
@@ -405,7 +402,6 @@ export function getFlyoutSubSidebarConfigByPath(
 					labelKey: flyoutItem.label,
 					href: flyoutItem.href,
 				})),
-				displaySubSidebar: matchedFlyoutItem?.displaySubSidebar ?? true,
 			};
 		}
 	}
