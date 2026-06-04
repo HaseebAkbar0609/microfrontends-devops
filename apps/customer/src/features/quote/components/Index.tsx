@@ -11,6 +11,8 @@ import localizationConstants from "@/utils/translation/constants";
 import { getProjectListAPIAction } from "@/api-actions";
 import type { Quote } from "../types/types";
 
+const SHOW_OFFER_DASHBOARD_FILTERS = false;
+
 export default function OfferFeature() {
 	const { search, changeQuery, query } = useQueryParams();
 	const router = useRouter();
@@ -31,9 +33,15 @@ export default function OfferFeature() {
 		void getProjectListAPIAction({
 			page: 1,
 			pageSize: 100,
-			search: search.trim() || undefined,
-			quote_status: quoteStatusFilter || undefined,
-			project_type: projectTypeFilter || undefined,
+			search: SHOW_OFFER_DASHBOARD_FILTERS
+				? search.trim() || undefined
+				: undefined,
+			quote_status: SHOW_OFFER_DASHBOARD_FILTERS
+				? quoteStatusFilter || undefined
+				: undefined,
+			project_type: SHOW_OFFER_DASHBOARD_FILTERS
+				? projectTypeFilter || undefined
+				: undefined,
 		}).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
@@ -65,6 +73,8 @@ export default function OfferFeature() {
 				searchValue={search}
 				onSearchChange={(val) => changeQuery("search", val)}
 				onCreateClick={() => router.push("/business/offer/create")}
+				showSearch={SHOW_OFFER_DASHBOARD_FILTERS}
+				showFilters={SHOW_OFFER_DASHBOARD_FILTERS}
 				filters={[
 					{
 						label: localizationConstants.status,
