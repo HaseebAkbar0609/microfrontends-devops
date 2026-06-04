@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import DynamicSubSidebar from "@/components/layout/sidebar/DynamicSubSidebar";
-import { offerSidebarItems, goToItems } from "@/features/offer/constants";
+import { offerSidebarItems } from "@/features/offer/constants";
 import localizationConstants from "@/utils/translation/constants";
 
 export default function OfferLayout({
@@ -22,10 +22,6 @@ export default function OfferLayout({
 			<DynamicSubSidebar
 				titleKey={localizationConstants.offer}
 				items={offerSidebarItems}
-				additionalSection={{
-					titleKey: localizationConstants.goTo,
-					items: goToItems,
-				}}
 			/>
 			<div className="flex-1 overflow-auto bg-white">{children}</div>
 		</div>
