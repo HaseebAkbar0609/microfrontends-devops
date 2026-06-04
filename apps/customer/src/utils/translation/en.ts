@@ -213,16 +213,9 @@ export const enDashboard: DashboardText = {
 	noticeAndNews: "Notices and News",
 	getAQuoteNow: "GET A QUOTE NOW FROM CRAFTSMAN",
 	createButtonName: "Go to Offer",
-	activeProjectsTitle: "My active projects",
-	activeProjectsValue: "3 active projects",
 	offerManagementTitle: "Offer management",
 	offerManagementValue: "3 quotes",
-	completedProjectsTitle: "Completed projects",
-	completedProjectsValue: "3 pieces",
-	newsTitle: "Karles Bygg AB is growing – opening a new office in Västerås",
-	newsTime: "2 hours ago",
-	newsDescription:
-		"Local construction company Karles Bygg AB announced today that they are opening a new office in Västerås. The company, previously based in Enköping, is expanding following increased demand for smaller renovation and new construction projects in the region.",
+	noNewsAvailable: "No news available.",
 
 	adviceLabel: "Advice & Inspiration",
 	guideLabel: "Guide & Support",

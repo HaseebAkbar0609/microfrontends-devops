@@ -191,17 +191,11 @@ export type DashboardText = {
 	createButtonName: string;
 
 	// Quick Stats
-	activeProjectsTitle: string;
-	activeProjectsValue: string;
 	offerManagementTitle: string;
 	offerManagementValue: string;
-	completedProjectsTitle: string;
-	completedProjectsValue: string;
 
 	//news
-	newsTitle: string;
-	newsTime: string;
-	newsDescription: string;
+	noNewsAvailable: string;
 
 	// Resource links
 	adviceLabel: string;
