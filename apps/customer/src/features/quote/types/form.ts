@@ -86,6 +86,7 @@ export const createOfferSchema = z.object({
 	description: z.string().optional(),
 	documents: z.array(DocumentSchema).optional(),
 	invitedSuppliers: z.array(SupplierSchema).optional(),
+	internalSuppliers: z.array(SupplierSchema).optional(),
 });
 
 export type QuoteDocument = z.infer<typeof DocumentSchema>;
@@ -117,4 +118,5 @@ export const DEFAULT_OFFER_FORM_VALUES: CreateOfferFormValues = {
 	description: "",
 	documents: [],
 	invitedSuppliers: [],
+	internalSuppliers: [],
 };
