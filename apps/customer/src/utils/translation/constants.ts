@@ -458,6 +458,19 @@ export type CommonFiles = {
 	unsupportedFileType: string;
 };
 
+export type DiscountsModule = {
+	discountsAllTitle: string;
+	discountsSubtitle: string;
+	discountsFilterSupplierPlaceholder: string;
+	discountsAllSuppliers: string;
+	discountsFilterCategoryPlaceholder: string;
+	discountsAllCategories: string;
+	discountsLoading: string;
+	discountsNotFound: string;
+	discountsOff: string;
+	discountsViewOffer: string;
+};
+
 export type SupplierModule = {
 	supplierTabOverview: string;
 	supplierTabProjects: string;
@@ -506,6 +519,8 @@ export type Translation = SidebarTranslation &
 	DashboardText &
 	OfferModule &
 	HeaderTranslation &
+	DiscountsModule &
+	SettingModule &
 	SupplierModule;
 
 export type TranslationKeys = keyof Translation;
