@@ -277,7 +277,9 @@ export default function CreateOfferPage() {
 				data: {},
 			};
 
-			const result = await saveProjectAPIAction(payload);
+			const result = await saveProjectAPIAction(payload, {
+				showSuccessToast: false,
+			});
 
 			if (result.success) {
 				router.push("/business/offer");
@@ -381,6 +383,10 @@ export default function CreateOfferPage() {
 		} else {
 			router.back();
 		}
+	};
+
+	const handleEditStep = (step: number) => {
+		setCurrentStep(step);
 	};
 
 	const handleSave = async () => {
@@ -553,6 +559,7 @@ export default function CreateOfferPage() {
 							categoryLoadingMore={customerCategoriesLoadingMore}
 							onCategoryLoadMore={handleCategoryLoadMore}
 							onCategorySearchChange={handleCategorySearchChange}
+							onEditStep={handleEditStep}
 						/>
 					</div>
 
