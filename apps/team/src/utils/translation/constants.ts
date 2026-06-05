@@ -455,13 +455,31 @@ export type LeadsTranslation = {
 	cancelLabel: string;
 };
 
+export type CustomersTranslation = {
+	activeCustomersTab: string;
+	pendingCustomersTab: string;
+	analyticsTab: string;
+	archivedCustomersTab: string;
+	customerNumberLabel: string;
+	activeRequestsLabel: string;
+	ongoingProjectsLabel: string;
+	lastActivityLabel: string;
+	deactivateLabel: string;
+	noCustomersFound: string;
+	deactivateCustomerTitle: string;
+	deactivateCustomerDescription: string;
+	deleteCustomerTitle: string;
+	deleteCustomerDescription: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	DashboardTranslation &
 	CommonFiles &
 	AppLauncherTranslation &
 	HeaderTranslation &
-	LeadsTranslation;
+	LeadsTranslation &
+	CustomersTranslation;
 
 export type TranslationKeys = keyof Translation;
 

@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardTranslation,
 	LeadsTranslation,
+	CustomersTranslation,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -477,6 +478,23 @@ export const enDashboard: DashboardTranslation = {
 	confirmClose: "Close",
 };
 
+export const enCustomers: CustomersTranslation = {
+	activeCustomersTab: "Active Customers",
+	pendingCustomersTab: "Pending Customers",
+	analyticsTab: "Analytics",
+	archivedCustomersTab: "Archived",
+	customerNumberLabel: "Customer No.",
+	activeRequestsLabel: "Active Requests",
+	ongoingProjectsLabel: "Ongoing Projects",
+	lastActivityLabel: "Last Activity",
+	deactivateLabel: "Deactivate",
+	noCustomersFound: "No customers match your search.",
+	deactivateCustomerTitle: "Deactivate customer?",
+	deactivateCustomerDescription: "The customer will no longer have access to the service.",
+	deleteCustomerTitle: "Delete customer?",
+	deleteCustomerDescription: "This will permanently remove the customer from the list.",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -485,4 +503,5 @@ export const en: Translation = {
 	...enAppLauncher,
 	...enDashboard,
 	...enLeads,
+	...enCustomers,
 };

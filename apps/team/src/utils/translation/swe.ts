@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardTranslation,
 	LeadsTranslation,
+	CustomersTranslation,
 } from "./constants";
 
 export const sweAuth: AuthTranslation = {
@@ -475,6 +476,23 @@ export const sweLeads: LeadsTranslation = {
 	cancelLabel: "Avbryt",
 };
 
+export const sweCustomers: CustomersTranslation = {
+	activeCustomersTab: "Aktiva kunder",
+	pendingCustomersTab: "Pending kunder",
+	analyticsTab: "Analytics",
+	archivedCustomersTab: "Arkiverade",
+	customerNumberLabel: "Kund nr.",
+	activeRequestsLabel: "Active Requests",
+	ongoingProjectsLabel: "Ongoing Projects",
+	lastActivityLabel: "Last Activity",
+	deactivateLabel: "Deactivate",
+	noCustomersFound: "Inga kunder matchar din sökning.",
+	deactivateCustomerTitle: "Deactivate kund?",
+	deactivateCustomerDescription: "Kunden kommer inte längre ha tillgång till tjänsten.",
+	deleteCustomerTitle: "Ta bort kund?",
+	deleteCustomerDescription: "Detta tar bort kunden permanent från listan.",
+};
+
 export const swe: Translation = {
 	...sweSidebar,
 	...sweAuth,
@@ -483,4 +501,5 @@ export const swe: Translation = {
 	...sweAppLauncher,
 	...sweDashboard,
 	...sweLeads,
+	...sweCustomers,
 };
