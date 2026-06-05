@@ -16,9 +16,10 @@ interface PageHeaderProps {
 	title: string;
 	breadcrumbs?: BreadcrumbItem[];
 	className?: string;
+	children?: React.ReactNode;
 }
 
-export function PageHeader({ title, breadcrumbs, className }: PageHeaderProps) {
+export function PageHeader({ title, breadcrumbs, className,children, }: PageHeaderProps) {
 	return (
 		<div
 			className={cn(
@@ -61,6 +62,7 @@ export function PageHeader({ title, breadcrumbs, className }: PageHeaderProps) {
 					</BreadcrumbList>
 				</Breadcrumb>
 			)}
+			{children}
 		</div>
 	);
 }
