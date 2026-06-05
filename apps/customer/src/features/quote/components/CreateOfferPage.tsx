@@ -247,6 +247,18 @@ export default function CreateOfferPage() {
 	const internalSuppliers = form.watch("internalSuppliers") || [];
 	const supplierRecipientTotal =
 		invitedSuppliers.length + internalSuppliers.length;
+	const getSupplierCategory = (supplier: QuoteSupplier) =>
+		supplier.category || professionalSubcategoryOptions[0]?.value || "";
+	const mapSuppliersForSave = (suppliers: QuoteSupplier[] | undefined) =>
+		suppliers?.map((supplier) => ({
+			company_name: supplier.companyName,
+			category: getSupplierCategory(supplier) || undefined,
+			organization_number: supplier.orgNumber,
+			first_name: supplier.contactFirstName,
+			last_name: supplier.contactLastName,
+			email: supplier.emailAddress,
+			mobile_number: supplier.mobileNumber,
+		})) ?? [];
 
 	useEffect(() => {
 		if (!resumeProjectId?.trim()) {
@@ -290,16 +302,7 @@ export default function CreateOfferPage() {
 				step: 4,
 				is_send: true,
 				data: {
-					suppliers:
-						values.invitedSuppliers?.map((supplier) => ({
-							company_name: supplier.companyName,
-							category: supplier.category || undefined,
-							organization_number: supplier.orgNumber,
-							first_name: supplier.contactFirstName,
-							last_name: supplier.contactLastName,
-							email: supplier.emailAddress,
-							mobile_number: supplier.mobileNumber,
-						})) ?? [],
+					suppliers: mapSuppliersForSave(values.invitedSuppliers),
 				},
 			};
 
@@ -370,16 +373,9 @@ export default function CreateOfferPage() {
 							};
 						case 4:
 							return {
-								suppliers:
-									values.invitedSuppliers?.map((supplier) => ({
-										company_name: supplier.companyName,
-										category: supplier.category || undefined,
-										organization_number: supplier.orgNumber,
-										first_name: supplier.contactFirstName,
-										last_name: supplier.contactLastName,
-										email: supplier.emailAddress,
-										mobile_number: supplier.mobileNumber,
-									})) ?? [],
+								suppliers: mapSuppliersForSave(
+									values.invitedSuppliers,
+								),
 							};
 						default:
 							return {};
@@ -468,16 +464,9 @@ export default function CreateOfferPage() {
 					};
 				case 4:
 					return {
-						suppliers:
-							values.invitedSuppliers?.map((supplier) => ({
-								company_name: supplier.companyName,
-								category: supplier.category || undefined,
-								organization_number: supplier.orgNumber,
-								first_name: supplier.contactFirstName,
-								last_name: supplier.contactLastName,
-								email: supplier.emailAddress,
-								mobile_number: supplier.mobileNumber,
-							})) ?? [],
+						suppliers: mapSuppliersForSave(
+							values.invitedSuppliers,
+						),
 					};
 				default:
 					return {};
