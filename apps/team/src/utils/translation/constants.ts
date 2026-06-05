@@ -470,6 +470,7 @@ export type CustomersTranslation = {
 	deactivateCustomerDescription: string;
 	deleteCustomerTitle: string;
 	deleteCustomerDescription: string;
+	waitingLabel: string;
 };
 
 export type Translation = SidebarTranslation &

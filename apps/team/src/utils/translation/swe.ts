@@ -491,6 +491,7 @@ export const sweCustomers: CustomersTranslation = {
 	deactivateCustomerDescription: "Kunden kommer inte längre ha tillgång till tjänsten.",
 	deleteCustomerTitle: "Ta bort kund?",
 	deleteCustomerDescription: "Detta tar bort kunden permanent från listan.",
+	waitingLabel: "Waiting",
 };
 
 export const swe: Translation = {
