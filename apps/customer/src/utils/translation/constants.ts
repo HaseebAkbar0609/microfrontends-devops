@@ -474,6 +474,8 @@ export type DiscountsModule = {
 	discountsNotFound: string;
 	discountsOff: string;
 	discountsViewOffer: string;
+	discountDetailSubtitle: string;
+	discountOpenQR: string;
 };
 
 export type SupplierModule = {

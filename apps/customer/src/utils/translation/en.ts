@@ -529,6 +529,8 @@ export const enDiscounts: DiscountsModule = {
 	discountsNotFound: "No discounts found for the selected filter.",
 	discountsOff: "Off",
 	discountsViewOffer: "View offer",
+	discountDetailSubtitle: "We have collaborated with suppliers to get your best offers.",
+	discountOpenQR: "Open QR",
 };
 
 export const en: Translation = {

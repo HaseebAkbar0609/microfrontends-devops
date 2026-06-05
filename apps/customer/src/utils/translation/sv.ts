@@ -483,6 +483,8 @@ export const svDiscounts: DiscountsModule = {
 	discountsNotFound: "Inga rabatter hittades för valt filter.",
 	discountsOff: "Rabatt",
 	discountsViewOffer: "Se erbjudande",
+	discountDetailSubtitle: "Vi har samarbetat med leverantörer för att ge dig bästa erbjudanden.",
+	discountOpenQR: "Öppna QR",
 };
 
 export const svSupplierModule: SupplierModule = {
