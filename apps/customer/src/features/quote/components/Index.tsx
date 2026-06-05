@@ -11,16 +11,19 @@ import localizationConstants from "@/utils/translation/constants";
 import { getProjectListAPIAction } from "@/api-actions";
 import type { Quote } from "../types/types";
 
-const SHOW_OFFER_DASHBOARD_FILTERS = false;
-
 export default function OfferFeature() {
 	const { search, changeQuery, query } = useQueryParams();
 	const router = useRouter();
 
+	const page = Number(query.get("page") || "1");
+	const pageSize = Number(query.get("page_size") || "10");
+	const sortBy = query.get("sort_by") || "";
+	const sortOrder = query.get("sort_order") || "";
 	const quoteStatusFilter = query.get("quote_status") || "";
 	const projectTypeFilter = query.get("project_type") || "";
 
 	const [quotes, setQuotes] = useState<Quote[]>([]);
+	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [listVersion, setListVersion] = useState(0);
@@ -31,23 +34,21 @@ export default function OfferFeature() {
 		setLoadError(null);
 
 		void getProjectListAPIAction({
-			page: 1,
-			pageSize: 100,
-			search: SHOW_OFFER_DASHBOARD_FILTERS
-				? search.trim() || undefined
-				: undefined,
-			quote_status: SHOW_OFFER_DASHBOARD_FILTERS
-				? quoteStatusFilter || undefined
-				: undefined,
-			project_type: SHOW_OFFER_DASHBOARD_FILTERS
-				? projectTypeFilter || undefined
-				: undefined,
+			page,
+			pageSize,
+			search: search.trim() || undefined,
+			sortBy: sortBy || undefined,
+			sortOrder: sortOrder || undefined,
+			quote_status: quoteStatusFilter || undefined,
+			project_type: projectTypeFilter || undefined,
 		}).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setQuotes(result.data.quotes);
+				setTotalItems(result.data.totalItems);
 			} else {
 				setQuotes([]);
+				setTotalItems(0);
 				setLoadError(result.error ?? null);
 			}
 			setLoading(false);
@@ -57,7 +58,11 @@ export default function OfferFeature() {
 			cancelled = true;
 		};
 	}, [
+		page,
+		pageSize,
 		search,
+		sortBy,
+		sortOrder,
 		quoteStatusFilter,
 		projectTypeFilter,
 		listVersion,
@@ -73,8 +78,6 @@ export default function OfferFeature() {
 				searchValue={search}
 				onSearchChange={(val) => changeQuery("search", val)}
 				onCreateClick={() => router.push("/business/offer/create")}
-				showSearch={SHOW_OFFER_DASHBOARD_FILTERS}
-				showFilters={SHOW_OFFER_DASHBOARD_FILTERS}
 				filters={[
 					{
 						label: localizationConstants.status,
@@ -109,6 +112,7 @@ export default function OfferFeature() {
 				) : (
 					<QuoteTable
 						data={quotes}
+						totalItems={totalItems}
 						onRefresh={() =>
 							setListVersion((v) => v + 1)
 						}
