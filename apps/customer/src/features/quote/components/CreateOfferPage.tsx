@@ -62,7 +62,6 @@ const CREATE_OFFER_STEP_VALIDATION_FIELDS: Record<
 	2: [
 		"projectName",
 		"isExpressJob",
-		"clientNo",
 		"category",
 		"projectAddress",
 		"projectCity",
@@ -247,18 +246,6 @@ export default function CreateOfferPage() {
 	const internalSuppliers = form.watch("internalSuppliers") || [];
 	const supplierRecipientTotal =
 		invitedSuppliers.length + internalSuppliers.length;
-	const getSupplierCategory = (supplier: QuoteSupplier) =>
-		supplier.category || professionalSubcategoryOptions[0]?.value || "";
-	const mapSuppliersForSave = (suppliers: QuoteSupplier[] | undefined) =>
-		suppliers?.map((supplier) => ({
-			company_name: supplier.companyName,
-			category: getSupplierCategory(supplier) || undefined,
-			organization_number: supplier.orgNumber,
-			first_name: supplier.contactFirstName,
-			last_name: supplier.contactLastName,
-			email: supplier.emailAddress,
-			mobile_number: supplier.mobileNumber,
-		})) ?? [];
 
 	useEffect(() => {
 		if (!resumeProjectId?.trim()) {
@@ -302,11 +289,22 @@ export default function CreateOfferPage() {
 				step: 4,
 				is_send: true,
 				data: {
-					suppliers: mapSuppliersForSave(values.invitedSuppliers),
+					suppliers:
+						values.invitedSuppliers?.map((supplier) => ({
+							company_name: supplier.companyName,
+							category: supplier.category || undefined,
+							organization_number: supplier.orgNumber,
+							first_name: supplier.contactFirstName,
+							last_name: supplier.contactLastName,
+							email: supplier.emailAddress,
+							mobile_number: supplier.mobileNumber,
+						})) ?? [],
 				},
 			};
 
-			const result = await saveProjectAPIAction(payload);
+			const result = await saveProjectAPIAction(payload, {
+				showSuccessToast: false,
+			});
 
 			if (result.success) {
 				router.push("/business/offer");
@@ -373,9 +371,16 @@ export default function CreateOfferPage() {
 							};
 						case 4:
 							return {
-								suppliers: mapSuppliersForSave(
-									values.invitedSuppliers,
-								),
+								suppliers:
+									values.invitedSuppliers?.map((supplier) => ({
+										company_name: supplier.companyName,
+										category: supplier.category || undefined,
+										organization_number: supplier.orgNumber,
+										first_name: supplier.contactFirstName,
+										last_name: supplier.contactLastName,
+										email: supplier.emailAddress,
+										mobile_number: supplier.mobileNumber,
+									})) ?? [],
 							};
 						default:
 							return {};
@@ -412,6 +417,10 @@ export default function CreateOfferPage() {
 		} else {
 			router.back();
 		}
+	};
+
+	const handleEditStep = (step: number) => {
+		setCurrentStep(step);
 	};
 
 	const handleSave = async () => {
@@ -464,9 +473,16 @@ export default function CreateOfferPage() {
 					};
 				case 4:
 					return {
-						suppliers: mapSuppliersForSave(
-							values.invitedSuppliers,
-						),
+						suppliers:
+							values.invitedSuppliers?.map((supplier) => ({
+								company_name: supplier.companyName,
+								category: supplier.category || undefined,
+								organization_number: supplier.orgNumber,
+								first_name: supplier.contactFirstName,
+								last_name: supplier.contactLastName,
+								email: supplier.emailAddress,
+								mobile_number: supplier.mobileNumber,
+							})) ?? [],
 					};
 				default:
 					return {};
@@ -586,6 +602,7 @@ export default function CreateOfferPage() {
 							categoryLoadingMore={customerCategoriesLoadingMore}
 							onCategoryLoadMore={handleCategoryLoadMore}
 							onCategorySearchChange={handleCategorySearchChange}
+							onEditStep={handleEditStep}
 						/>
 					</div>
 

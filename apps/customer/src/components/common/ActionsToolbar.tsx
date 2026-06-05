@@ -96,6 +96,8 @@ interface ActionsToolbarProps {
 	onCreateClick?: () => void;
 	createButtonLabel?: string;
 	className?: string;
+	showSearch?: boolean;
+	showFilters?: boolean;
 }
 
 export function ActionsToolbar({
@@ -106,6 +108,8 @@ export function ActionsToolbar({
 	onCreateClick,
 	createButtonLabel = localizationConstants.createNewButtonText,
 	className,
+	showSearch = true,
+	showFilters = true,
 }: ActionsToolbarProps) {
 	return (
 		<div
@@ -115,13 +119,15 @@ export function ActionsToolbar({
 			)}
 		>
 			<div className="flex items-center gap-3 flex-1 max-w-2xl">
-				<Search
-					value={searchValue}
-					onChange={onSearchChange}
-					placeholder={searchPlaceholder}
-					className="h-10 w-full max-w-[300px]"
-				/>
-				{filters?.map((filter, index) => (
+				{showSearch && (
+					<Search
+						value={searchValue}
+						onChange={onSearchChange}
+						placeholder={searchPlaceholder}
+						className="h-10 w-full max-w-[300px]"
+					/>
+				)}
+				{showFilters && filters?.map((filter, index) => (
 					<FilterDropdown key={index} filter={filter} />
 				))}
 			</div>
