@@ -18,7 +18,7 @@ export async function getDiscountDetailAPIAction(
 			},
 			error: null,
 		};
-	} catch (error) {
+	} catch (_error) {
 		return {
 			success: false,
 			data: null,
