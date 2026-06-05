@@ -484,9 +484,13 @@ export const sweProfessional: ProfessionalTranslation = {
 	professionalCreateButton: "Skapa Kund konto",
 	professionalColCustomerNo: "Kund nr.",
 	professionalStatusActive: "Active",
+	professionalStatusSent: "Sent",
+	professionalStatusAccepted: "Accepted",
+	professionalStatusPaid: "Paid",
 	professionalActionDeactivate: "Deactivate",
 	professionalActionActivate: "Aktivera",
 	professionalNoDataFound: "Inga professionella hittades.",
+	dueDateLabel: "Due Datum",
 };
 
 export const swe: Translation = {
