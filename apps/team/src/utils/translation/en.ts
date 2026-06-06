@@ -493,6 +493,17 @@ export const enCustomers: CustomersTranslation = {
 	deactivateCustomerDescription: "The customer will no longer have access to the service.",
 	deleteCustomerTitle: "Delete customer?",
 	deleteCustomerDescription: "This will permanently remove the customer from the list.",
+	createCustomerTitle: "Create Customer Account",
+	createCustomerSubtitle: "Add all information to create an account",
+	customerDetailsSection: "Customer Details",
+	firstNameLabel: "First Name",
+	lastNameLabel: "Last Name",
+	personalNumberLabel: "Personal Number",
+	privateEmailLabel: "Private Email",
+	ortLabel: "City",
+	postNrLabel: "Post No.",
+	customerCreatedSuccess: "Customer has been created.",
+	customerCreateError: "Failed to create the customer.",
 };
 
 export const en: Translation = {

@@ -470,6 +470,17 @@ export type CustomersTranslation = {
 	deactivateCustomerDescription: string;
 	deleteCustomerTitle: string;
 	deleteCustomerDescription: string;
+	createCustomerTitle: string;
+	createCustomerSubtitle: string;
+	customerDetailsSection: string;
+	firstNameLabel: string;
+	lastNameLabel: string;
+	personalNumberLabel: string;
+	privateEmailLabel: string;
+	ortLabel: string;
+	postNrLabel: string;
+	customerCreatedSuccess: string;
+	customerCreateError: string;
 };
 
 export type Translation = SidebarTranslation &

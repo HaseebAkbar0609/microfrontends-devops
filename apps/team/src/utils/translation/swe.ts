@@ -158,7 +158,7 @@ export const sweSidebar: SidebarTranslation = {
 	moduleGovernance: "Styrning",
 	customerUsers: "Användare",
 	customerPrivatePersons: "Privatpersoner",
-	professional: "Professionell",
+	professional: "Professional",
 	private: "Privat",
 	leadsManagement: "Leadshantering",
 	settings: "Inställningar",
@@ -491,6 +491,17 @@ export const sweCustomers: CustomersTranslation = {
 	deactivateCustomerDescription: "Kunden kommer inte längre ha tillgång till tjänsten.",
 	deleteCustomerTitle: "Ta bort kund?",
 	deleteCustomerDescription: "Detta tar bort kunden permanent från listan.",
+	createCustomerTitle: "Skapa Kund Konto",
+	createCustomerSubtitle: "Add all information to create an account",
+	customerDetailsSection: "Kunduppgifter",
+	firstNameLabel: "Förnamn",
+	lastNameLabel: "Efternamn",
+	personalNumberLabel: "Person nr",
+	privateEmailLabel: "Mail private",
+	ortLabel: "Ort",
+	postNrLabel: "Post nr",
+	customerCreatedSuccess: "Kunden har skapats.",
+	customerCreateError: "Det gick inte att skapa kunden.",
 };
 
 export const swe: Translation = {
