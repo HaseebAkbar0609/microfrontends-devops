@@ -1,5 +1,5 @@
-import { LeadSettingsPage } from "@/features/leads/settings/components/LeadSettingsPage";
+import { LeadSettingsTab } from "@/features/leads/settings/components/LeadSettingsTab";
 
 export default function Page() {
-  return <LeadSettingsPage />;
+  return <LeadSettingsTab />;
 }

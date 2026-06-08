@@ -1,20 +1,21 @@
 "use client";
 
 import { Plus, Trash2 } from "lucide-react";
-import { useTranslate } from "@/utils/translation/translate";
+import { useTranslate, Translate } from "@/utils/translation/translate";
 
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
 import { SettingsCard } from "@/features/leads/settings/components/common/SettingsCard";
 import { ToggleSwitch } from "@/features/leads/settings/components/common/ToggleSwitch";
 import { useState } from "react";
 import { categoryItems } from "@/features/leads/settings/constants";
 import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
+import { AddCategoryModal } from "@/features/leads/settings/components/AddCategoryModal";
 
 export function CategoriesSection() {
   const t = useTranslate();
   const [items, setItems] = useState(categoryItems);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const toggleItem = (id: string, next: boolean) => {
     setItems((prev) =>
@@ -24,12 +25,28 @@ export function CategoriesSection() {
     );
   };
 
+  const handleAddCategory = (name: string, _subCategoryName: string) => {
+    setItems((prev) => [
+      ...prev,
+      { id: `custom-${Date.now()}`, nameKey: name, isActive: true },
+    ]);
+  };
+
   return (
     <div className="mb-10">
+    <AddCategoryModal
+      open={modalOpen}
+      onOpenChange={setModalOpen}
+      onAdd={handleAddCategory}
+    />
     <SettingsCard
       titleKey={localizationConstants.workCategoriesTitle}
       action={
-        <Button size="sm" className="gap-2 bg-slate-900 text-white hover:bg-slate-800">
+        <Button
+          size="sm"
+          className="gap-2 bg-slate-900 text-white hover:bg-slate-800"
+          onClick={() => setModalOpen(true)}
+        >
           <Plus className="h-4 w-4" />
           <Translate text={localizationConstants.addCategoryLabel} />
         </Button>

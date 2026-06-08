@@ -27,7 +27,7 @@ export type StageSection = {
 
 export type CategoryItem = {
   id: string;
-  nameKey: TranslationKeys;
+  nameKey: string;
   isActive: boolean;
 };
 

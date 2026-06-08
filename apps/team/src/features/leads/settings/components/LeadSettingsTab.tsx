@@ -221,7 +221,7 @@ function mapFormToApi(form: LeadSettingsForm): LeadSettingsApiData {
 	};
 }
 
-export function LeadSettingsPage() {
+export function LeadSettingsTab() {
   const t = useTranslate();
   const [activeTab, setActiveTab] = useState<LeadSettingsTabValue>("pipeline");
   const [form, setForm] = useState<LeadSettingsForm>(() => buildDefaultForm());
