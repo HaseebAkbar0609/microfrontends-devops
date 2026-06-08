@@ -1,4 +1,4 @@
-import { swe } from "./swe";
+import { swe } from "./sv";
 
 export interface AuthTranslation {
 	addUser: string;

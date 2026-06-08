@@ -2,7 +2,7 @@ import { getUserLanguage, setUserLanguage } from "@/utils/userLanguage";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { en } from "./translation/en";
-import { swe } from "./translation/swe";
+import { swe } from "./translation/sv";
 
 const resources = {
 	en: {
