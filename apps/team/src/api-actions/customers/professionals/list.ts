@@ -1,8 +1,4 @@
-import axiosInstance from "@/lib/axiosInstance";
-
-const PROFESSIONALS_LIST_PATH = "/api/v1/teams/customers/professionals/list";
 const DEFAULT_PAGE_SIZE = 10;
-const MOCK_ENABLE = true;
 
 export type ProfessionalStatus = "active" | "inactive" | "pending";
 
@@ -34,15 +30,7 @@ export interface ProfessionalsListResult {
 	currentPage: number;
 }
 
-interface ProfessionalsListApiResponse {
-	data: ProfessionalRow[];
-	total_items: number;
-	total_pages: number;
-	current_page: number;
-	page_size: number;
-}
-
-// Mock data — remove when real API is available
+// Mock data — replace with real API call when endpoint is ready
 const MOCK_DATA: ProfessionalRow[] = [
 	{ id: "1",  customerNo: "2025-01", companyName: "Byggbolaget AB",       orgNo: "5595010-1002", category: "Bygg",      contactPerson: "Erik Andersson",  email: "erik@example.com",    phone: "940 987 6574", city: "Järfälla", status: "active" },
 	{ id: "2",  customerNo: "2025-02", companyName: "Måleri AB",            orgNo: "5595010-2003", category: "Målare",    contactPerson: "Sofia Vergara",   email: "sofia@example.com",   phone: "940 987 6574", city: "Järfälla", status: "active" },
@@ -106,31 +94,5 @@ function applyMockFilters(
 export async function listProfessionalsAPIAction(
 	params: ListProfessionalsParams = {},
 ): Promise<ProfessionalsListResult> {
-	const page = params.page ?? 1;
-	const pageSize = params.pageSize ?? DEFAULT_PAGE_SIZE;
-
-	if (MOCK_ENABLE) {
-		return applyMockFilters(params);
-	}
-
-	const response = await axiosInstance.get<ProfessionalsListApiResponse>(
-		PROFESSIONALS_LIST_PATH,
-		{
-			params: {
-				page,
-				page_size: pageSize,
-				search: params.search || undefined,
-				sort_by: params.sortBy || undefined,
-				sort_order: params.sortOrder || undefined,
-			},
-		},
-	);
-	const payload = response.data;
-
-	return {
-		items: payload.data ?? [],
-		totalItems: payload.total_items ?? 0,
-		totalPages: payload.total_pages ?? 1,
-		currentPage: payload.current_page ?? page,
-	};
+	return applyMockFilters(params);
 }
