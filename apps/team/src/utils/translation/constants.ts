@@ -470,6 +470,7 @@ export type ProfessionalTranslation = {
 	professionalActionActivate: string;
 	professionalNoDataFound: string;
 	dueDateLabel: string;
+	deleteCannotUndoneLabel: string;
 };
 
 export type Translation = SidebarTranslation &

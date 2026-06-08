@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { ArrowUpDown, ArrowUp, ArrowDown, Eye, EllipsisVertical, Trash2 } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown, Eye, EllipsisVertical, Loader2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -109,8 +109,10 @@ export function PendingProfessionalsTab({
 					<TableBody>
 						{isLoading && (
 							<TableRow>
-								<TableCell colSpan={columns.length} className="h-32 text-center text-sm text-slate-400">
-									Loading...
+								<TableCell colSpan={columns.length}>
+									<div className="flex min-h-[240px] items-center justify-center text-slate-500">
+										<Loader2 className="h-8 w-8 animate-spin" aria-hidden />
+									</div>
 								</TableCell>
 							</TableRow>
 						)}
@@ -153,7 +155,7 @@ export function PendingProfessionalsTab({
 												</DropdownMenuItem>
 												<ConfirmDialog
 													title={t(localizationConstants.delete) + "?"}
-													description="This action cannot be undone."
+													description={t(localizationConstants.deleteCannotUndoneLabel)}
 													onConfirm={() => onDelete(row.id)}
 													confirmText={t(localizationConstants.delete)}
 													cancelText={t(localizationConstants.cancelLabel)}

@@ -491,6 +491,7 @@ export const sweProfessional: ProfessionalTranslation = {
 	professionalActionActivate: "Aktivera",
 	professionalNoDataFound: "Inga professionella hittades.",
 	dueDateLabel: "Due Datum",
+	deleteCannotUndoneLabel: "Denna åtgärd kan inte ångras.",
 };
 
 export const swe: Translation = {

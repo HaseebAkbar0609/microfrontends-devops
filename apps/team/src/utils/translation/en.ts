@@ -493,6 +493,7 @@ export const enProfessional: ProfessionalTranslation = {
 	professionalActionActivate: "Activate",
 	professionalNoDataFound: "No professionals found.",
 	dueDateLabel: "Due Date",
+	deleteCannotUndoneLabel: "This action cannot be undone.",
 };
 
 export const en: Translation = {
