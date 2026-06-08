@@ -10,6 +10,7 @@ import {
 	OfferModule,
 	DiscountsModule,
 	SupplierModule,
+	PriceCalculatorModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -533,6 +534,82 @@ export const enDiscounts: DiscountsModule = {
 	discountOpenQR: "Open QR",
 };
 
+export const enPriceCalculatorModule: PriceCalculatorModule = {
+	priceCalculatorTabExamples: "Price examples",
+	priceCalculatorTabProducts: "Unit prices",
+	priceCalculatorTabHourly: "Hourly prices",
+	priceCalculatorExampleLabel: "Price example",
+	priceCalculatorNewVilla: "Villa - New villa",
+	priceCalculatorNewBathroom: "Bathroom - New bathroom",
+	priceCalculatorNewKitchen: "Kitchen - New kitchen",
+	priceCalculatorNewTerrace: "Terrace - New terrace",
+	priceCalculatorAdjustValues:
+		"Adjust the values to get an estimate. Final price may vary.",
+	priceCalculatorSquareMeters: "Area in square meters",
+	priceCalculatorRooms: "Number of rooms",
+	priceCalculatorTotal: "Total",
+	priceCalculatorMaterial: "Material",
+	priceCalculatorLabor: "Labor",
+	priceCalculatorEstimatedPrice: "Estimated price range",
+	priceCalculatorRotRutDeduction: "ROT/RUT deduction",
+	priceCalculatorRotRutNote: "ROT/RUT calculation coming soon.",
+	priceCalculatorDisclaimer:
+		"Prices are indicative and may vary depending on location, availability, and material choices. Contact a company for an exact quote.",
+	priceCalculatorProductSearchPlaceholder: "Search product or category...",
+	priceCalculatorHourlySearchPlaceholder: "Search profession or category...",
+	priceCalculatorProduct: "Product",
+	priceCalculatorCategory: "Category",
+	priceCalculatorPriceInterval: "Price interval",
+	priceCalculatorInstallation: "Installation",
+	priceCalculatorInstallationValue: "+ Labor",
+	priceCalculatorAction: "Action",
+	priceCalculatorAdd: "Add",
+	priceCalculatorRemove: "Remove",
+	priceCalculatorClear: "Clear",
+	priceCalculatorIncludedInstallation: "Incl. installation",
+	priceCalculatorGoods: "Goods",
+	priceCalculatorTotalPrice: "Total",
+	priceCalculatorAfterRotRut: "After ROT/RUT deduction (30%)",
+	priceCalculatorSaving: "Saving",
+	priceCalculatorHourlyInfoTitle: "What affects the price?",
+	priceCalculatorHourlyInfoMunicipality:
+		"Municipality: Prices vary between cities and regions depending on demand and living costs.",
+	priceCalculatorHourlyInfoComplexity:
+		"Complexity: Specialized work or hard-to-access places can mean a higher hourly price.",
+	priceCalculatorHourlyInfoAvailability:
+		"Availability: Evening, weekend, or short-notice work can cost more.",
+	priceCalculatorHourlyInfoJour:
+		"Emergency: Urgent assignments outside normal working hours often add 50-100%.",
+	priceCalculatorHourlyInfoNote:
+		"Note: Prices are indicative. Material and start fees are often added. Always get a written quote before work starts.",
+	priceCalculatorNoProductsFound: "No products found.",
+	priceCalculatorMyList: "My list",
+	priceCalculatorMyListEmpty: "Add products from the list.",
+	priceCalculatorProfession: "Profession",
+	priceCalculatorNoHourlyFound: "No hourly prices found.",
+	priceCalculatorCategoryBathroom: "Bathroom",
+	priceCalculatorCategoryBuild: "Build",
+	priceCalculatorCategoryKitchen: "Kitchen",
+	priceCalculatorCategoryElectrical: "Electrical",
+	priceCalculatorCategoryPlumbing: "Plumbing",
+	priceCalculatorCategoryPainting: "Painting",
+	priceCalculatorCategoryRoof: "Roof",
+	priceCalculatorProductToilet: "Toilet",
+	priceCalculatorProductShowerWall: "Shower wall",
+	priceCalculatorProductWindow: "Window",
+	priceCalculatorProductInnerDoor: "Inner door",
+	priceCalculatorProductKitchenFan: "Kitchen fan",
+	priceCalculatorProductTiles: "Tiles",
+	priceCalculatorProductCountertop: "Countertop",
+	priceCalculatorProductTap: "Tap",
+	priceCalculatorWorkElectrician: "Electrician",
+	priceCalculatorWorkPlumber: "Plumber",
+	priceCalculatorWorkCarpenter: "Carpenter",
+	priceCalculatorWorkPainter: "Painter",
+	priceCalculatorWorkTiler: "Tiler",
+	priceCalculatorWorkRoofer: "Roofer",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -544,4 +621,5 @@ export const en: Translation = {
 	...enOfferModule,
 	...enDiscounts,
 	...enSupplierModule,
+	...enPriceCalculatorModule,
 };
