@@ -13,3 +13,9 @@ export { listPrivateCustomersAPIAction } from "./customer/list";
 export { createPrivateCustomerAPIAction } from "./customer/create";
 export type { CreateCustomerResult } from "./customer/create";
 export type { AuthResponseData } from "@/types/api";
+export {
+	listProfessionalsAPIAction,
+	type ListProfessionalsParams,
+	type ProfessionalsListResult,
+	type ProfessionalRow,
+} from "./customers/professionals/list";

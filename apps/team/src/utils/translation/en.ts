@@ -8,6 +8,7 @@ import {
 	DashboardTranslation,
 	LeadsTranslation,
 	CustomersTranslation,
+	ProfessionalTranslation,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -504,6 +505,18 @@ export const enCustomers: CustomersTranslation = {
 	postNrLabel: "Post No.",
 	customerCreatedSuccess: "Customer has been created.",
 	customerCreateError: "Failed to create the customer.",
+}
+export const enProfessional: ProfessionalTranslation = {
+	professionalTabActive: "Active customers",
+	professionalTabPending: "Pending customers",
+	professionalTabAnalytics: "Analytics",
+	professionalTabArchived: "Archived",
+	professionalCreateButton: "Create Customer Account",
+	professionalColCustomerNo: "Customer No.",
+	professionalStatusActive: "Active",
+	professionalActionDeactivate: "Deactivate",
+	professionalActionActivate: "Activate",
+	professionalNoDataFound: "No professionals found.",
 };
 
 export const en: Translation = {
@@ -515,4 +528,5 @@ export const en: Translation = {
 	...enDashboard,
 	...enLeads,
 	...enCustomers,
+	...enProfessional,
 };

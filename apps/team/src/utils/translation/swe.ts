@@ -8,6 +8,7 @@ import {
 	DashboardTranslation,
 	LeadsTranslation,
 	CustomersTranslation,
+	ProfessionalTranslation,
 } from "./constants";
 
 export const sweAuth: AuthTranslation = {
@@ -502,6 +503,18 @@ export const sweCustomers: CustomersTranslation = {
 	postNrLabel: "Post nr",
 	customerCreatedSuccess: "Kunden har skapats.",
 	customerCreateError: "Det gick inte att skapa kunden.",
+}
+export const sweProfessional: ProfessionalTranslation = {
+	professionalTabActive: "Aktiva kunder",
+	professionalTabPending: "Pending kunder",
+	professionalTabAnalytics: "Analytics",
+	professionalTabArchived: "Arkiverade",
+	professionalCreateButton: "Skapa Kund konto",
+	professionalColCustomerNo: "Kund nr.",
+	professionalStatusActive: "Active",
+	professionalActionDeactivate: "Deactivate",
+	professionalActionActivate: "Aktivera",
+	professionalNoDataFound: "Inga professionella hittades.",
 };
 
 export const swe: Translation = {
@@ -513,4 +526,5 @@ export const swe: Translation = {
 	...sweDashboard,
 	...sweLeads,
 	...sweCustomers,
+	...sweProfessional,
 };

@@ -519,6 +519,75 @@ export type SupplierModule = {
 	supplierPopularTagsTitle: string;
 };
 
+export type PriceCalculatorModule = {
+	priceCalculatorTabExamples: string;
+	priceCalculatorTabProducts: string;
+	priceCalculatorTabHourly: string;
+	priceCalculatorExampleLabel: string;
+	priceCalculatorNewVilla: string;
+	priceCalculatorNewBathroom: string;
+	priceCalculatorNewKitchen: string;
+	priceCalculatorNewTerrace: string;
+	priceCalculatorAdjustValues: string;
+	priceCalculatorSquareMeters: string;
+	priceCalculatorRooms: string;
+	priceCalculatorTotal: string;
+	priceCalculatorMaterial: string;
+	priceCalculatorLabor: string;
+	priceCalculatorEstimatedPrice: string;
+	priceCalculatorRotRutDeduction: string;
+	priceCalculatorRotRutNote: string;
+	priceCalculatorDisclaimer: string;
+	priceCalculatorProductSearchPlaceholder: string;
+	priceCalculatorHourlySearchPlaceholder: string;
+	priceCalculatorProduct: string;
+	priceCalculatorCategory: string;
+	priceCalculatorPriceInterval: string;
+	priceCalculatorInstallation: string;
+	priceCalculatorInstallationValue: string;
+	priceCalculatorAction: string;
+	priceCalculatorAdd: string;
+	priceCalculatorRemove: string;
+	priceCalculatorClear: string;
+	priceCalculatorIncludedInstallation: string;
+	priceCalculatorGoods: string;
+	priceCalculatorTotalPrice: string;
+	priceCalculatorAfterRotRut: string;
+	priceCalculatorSaving: string;
+	priceCalculatorHourlyInfoTitle: string;
+	priceCalculatorHourlyInfoMunicipality: string;
+	priceCalculatorHourlyInfoComplexity: string;
+	priceCalculatorHourlyInfoAvailability: string;
+	priceCalculatorHourlyInfoJour: string;
+	priceCalculatorHourlyInfoNote: string;
+	priceCalculatorNoProductsFound: string;
+	priceCalculatorMyList: string;
+	priceCalculatorMyListEmpty: string;
+	priceCalculatorProfession: string;
+	priceCalculatorNoHourlyFound: string;
+	priceCalculatorCategoryBathroom: string;
+	priceCalculatorCategoryBuild: string;
+	priceCalculatorCategoryKitchen: string;
+	priceCalculatorCategoryElectrical: string;
+	priceCalculatorCategoryPlumbing: string;
+	priceCalculatorCategoryPainting: string;
+	priceCalculatorCategoryRoof: string;
+	priceCalculatorProductToilet: string;
+	priceCalculatorProductShowerWall: string;
+	priceCalculatorProductWindow: string;
+	priceCalculatorProductInnerDoor: string;
+	priceCalculatorProductKitchenFan: string;
+	priceCalculatorProductTiles: string;
+	priceCalculatorProductCountertop: string;
+	priceCalculatorProductTap: string;
+	priceCalculatorWorkElectrician: string;
+	priceCalculatorWorkPlumber: string;
+	priceCalculatorWorkCarpenter: string;
+	priceCalculatorWorkPainter: string;
+	priceCalculatorWorkTiler: string;
+	priceCalculatorWorkRoofer: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
@@ -528,7 +597,8 @@ export type Translation = SidebarTranslation &
 	HeaderTranslation &
 	DiscountsModule &
 	SettingModule &
-	SupplierModule;
+	SupplierModule &
+	PriceCalculatorModule;
 
 export type TranslationKeys = keyof Translation;
 
