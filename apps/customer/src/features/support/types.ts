@@ -1,4 +1,5 @@
 export interface GuideFolderItem {
+	id: string;
 	label: string;
 	count?: number;
 	active?: boolean;

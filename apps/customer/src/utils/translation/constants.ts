@@ -518,7 +518,76 @@ export type SupplierModule = {
 	supplierTotalReviews: string;
 	supplierPopularTagsTitle: string;
 };
-
+export type QuestionsModule = {
+  faqCategoryQuoteAndFindTradespeople: string;
+  faqCategoryFindConsultant: string;
+  faqCategoryActiveProjects: string;
+  faqCategoryArchivedProjects: string;
+  faqCategoryCostCalculator: string;
+  faqCategoryInspiration: string;
+  faqCategoryOffers: string;
+  faqCategorySecurityAccount: string;
+  faqWhatHappensWhenIAcceptAQuote: string;
+  faqWhenYouChooseATradespersonProjectMovesToActiveProjects: string;
+  faqWhatCanIDoInActiveProjects: string;
+  faqFollowSchedulesManageBudgetsApproveChanges: string;
+  faqCanIFollowTheProjectOnMobile: string;
+  faqTimeFlowHomeMobileAccess: string;
+  faqWhatIsAChangeOrder: string;
+  faqAtaStandsForChangesAdditionsAndDeductions: string;
+  faqWhatAreArchivedProjects: string;
+  faqCompletedProjectsMovedToArchive: string;
+  faqWhyArchiveProjects: string;
+  faqArchivedInformationUsefulForSalesAndInsurance: string;
+  faqHowLongAreProjectsStored: string;
+  faqProjectStorageGdprConfirmation: string;
+  faqWhatIsTheCostCalculator: string;
+  faqCostCalculatorHelpsEstimateCosts: string;
+  faqWhatProjectsCanIEstimate: string;
+  faqProjectEstimateExamples: string;
+  faqAreTheCalculationsExact: string;
+  faqCalculationsAreIndicative: string;
+  faqCanIUseItForBudgeting: string;
+  faqBudgetPlanningEstimate: string;
+  faqWhatIsInspiration: string;
+  faqInspirationArticlesGuidesIdeasAndTips: string;
+  faqDoesInspirationCostAnything: string;
+  faqInspirationFreeForRegisteredUsers: string;
+  faqCanIGetIdeasForMyProject: string;
+  faqInspirationHelpsDiscoverIdeas: string;
+  faqWhatAreOffers: string;
+  faqAccessToDiscountsAndOffers: string;
+  faqHowDoIUseTheDiscounts: string;
+  faqDiscountsRedeemedWithCodesOrQr: string;
+  faqWhatKindsOfOffersExist: string;
+  faqOfferExamplesMaterialsToolsInsurance: string;
+  faqWillMoreOffersBeAdded: string;
+  faqContinuouslyAddingNewOffers: string;
+  faqIsMyDataSecure: string;
+  faqSecurityAndPrivacyCorePartsOfTimeFlow: string;
+  faqWhereIsMyInformationStored: string;
+  faqInformationStoredInSecureDatacenters: string;
+  faqWhatHappensIfICloseMyAccount: string;
+  faqAccountInformationRetainedSixMonths: string;
+  faqCanIUseTimeFlowInOtherCountries: string;
+  faqTimeFlowFocusedOnSwedishMarket: string;
+  faqDoINeedToDownloadAnApp: string;
+  faqTimeFlowWorksInBrowserAndApp: string;
+};
+export type SupportModule = {
+  guideQuoteAndConsultants: string;
+  guideMyProjects: string;
+  guideServicesAndOffers: string;
+  guideSupportAndTools: string;
+  guideSettings: string;
+  guideQuote: string;
+  guideConsultant: string;
+  guideProjectManagement: string;
+  guideArchivedProjects: string;
+  guideSearchFoldersPlaceholder: string;
+  guideQuoteDescription: string;
+  guideConsultantDescription: string;
+};
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
@@ -528,7 +597,9 @@ export type Translation = SidebarTranslation &
 	HeaderTranslation &
 	DiscountsModule &
 	SettingModule &
-	SupplierModule;
+	SupplierModule &
+	QuestionsModule &
+	SupportModule;
 
 export type TranslationKeys = keyof Translation;
 

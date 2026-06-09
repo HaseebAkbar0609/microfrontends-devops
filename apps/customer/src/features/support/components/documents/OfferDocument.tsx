@@ -1,11 +1,16 @@
-export function OfferDocument() {
-	return (
-		<div>
-			<h1 className="text-3xl font-bold">Offert</h1>
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 
-			<p className="mt-4">
-				Här kommer information om offert...
-			</p>
-		</div>
-	);
+export function OfferDocument() {
+  return (
+    <div>
+      <h1 className="text-3xl font-bold">
+        <Translate text={localizationConstants.guideQuote} />
+      </h1>
+
+      <p className="mt-4">
+        <Translate text={localizationConstants.guideQuoteDescription} />
+      </p>
+    </div>
+  );
 }
