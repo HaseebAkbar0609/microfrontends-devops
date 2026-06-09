@@ -472,6 +472,19 @@ export type CustomersTranslation = {
 	deleteCustomerDescription: string;
 };
 
+export type ProfessionalTranslation = {
+	professionalTabActive: string;
+	professionalTabPending: string;
+	professionalTabAnalytics: string;
+	professionalTabArchived: string;
+	professionalCreateButton: string;
+	professionalColCustomerNo: string;
+	professionalStatusActive: string;
+	professionalActionDeactivate: string;
+	professionalActionActivate: string;
+	professionalNoDataFound: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	DashboardTranslation &
@@ -479,7 +492,8 @@ export type Translation = SidebarTranslation &
 	AppLauncherTranslation &
 	HeaderTranslation &
 	LeadsTranslation &
-	CustomersTranslation;
+	CustomersTranslation &
+	ProfessionalTranslation;
 
 export type TranslationKeys = keyof Translation;
 

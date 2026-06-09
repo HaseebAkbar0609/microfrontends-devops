@@ -8,6 +8,7 @@ import {
 	DashboardTranslation,
 	LeadsTranslation,
 	CustomersTranslation,
+	ProfessionalTranslation,
 } from "./constants";
 
 export const sweAuth: AuthTranslation = {
@@ -493,6 +494,19 @@ export const sweCustomers: CustomersTranslation = {
 	deleteCustomerDescription: "Detta tar bort kunden permanent från listan.",
 };
 
+export const sweProfessional: ProfessionalTranslation = {
+	professionalTabActive: "Aktiva kunder",
+	professionalTabPending: "Pending kunder",
+	professionalTabAnalytics: "Analytics",
+	professionalTabArchived: "Arkiverade",
+	professionalCreateButton: "Skapa Kund konto",
+	professionalColCustomerNo: "Kund nr.",
+	professionalStatusActive: "Active",
+	professionalActionDeactivate: "Deactivate",
+	professionalActionActivate: "Aktivera",
+	professionalNoDataFound: "Inga professionella hittades.",
+};
+
 export const swe: Translation = {
 	...sweSidebar,
 	...sweAuth,
@@ -502,4 +516,5 @@ export const swe: Translation = {
 	...sweDashboard,
 	...sweLeads,
 	...sweCustomers,
+	...sweProfessional,
 };
