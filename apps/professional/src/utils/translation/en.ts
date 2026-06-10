@@ -95,6 +95,21 @@ export const enSidebar: SidebarTranslation = {
 	orderList: "Order",
 	costCentre: "Cost Centre",
 	materialStorage: "Material Storage",
+	customerRegisterList: "Customer list",
+	customerRegisterCustomerNo: "customer no",
+	customerRegisterCustomer: "Customer",
+	customerRegisterRegNo: "Reg no:",
+	customerRegisterAddress: "Address",
+	customerRegisterPostcode: "Postcode",
+	customerRegisterCity: "City",
+	customerRegisterCountry: "Country",
+	customerRegisterPhone: "Phone",
+	customerRegisterEmail: "Email",
+	customerRegisterStatus: "Status",
+	customerRegisterSearch: "Search",
+	customerRegisterFilter: "Filter",
+	customerRegisterImportCustomer: "Import Customer",
+	customerRegisterRegisterNew: "Register new",
 };
 
 export const enManagePlans: ManagePlansTranslation = {
