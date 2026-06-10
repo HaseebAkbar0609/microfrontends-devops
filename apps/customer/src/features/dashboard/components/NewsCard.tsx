@@ -20,28 +20,22 @@ export function NewsCard() {
 					className="text-2xl font-semibold"
 					style={{ color: "var(--ui-text-primary)" }}
 				>
-					<Translate text={localizationConstants.noticeAndNews} />
+				<Translate text={localizationConstants.noticeAndNews}/>
 				</h2>
 			</div>
 
 			{/* News Items */}
 			<div className="flex flex-col pt-4">
-				{DASHBOARD_NEWS.length > 0 ? (
-					DASHBOARD_NEWS.map((item, index) => (
-						<div key={item.id}>
-							<div className="py-3">
-								<DashboardNewsItemCard item={item} />
-							</div>
-							{index < DASHBOARD_NEWS.length - 1 && (
-								<div className="h-px w-full bg-slate-200" />
-							)}
+				{DASHBOARD_NEWS.map((item, index) => (
+					<div key={item.id}>
+						<div className="py-3">
+							<DashboardNewsItemCard item={item} />
 						</div>
-					))
-				) : (
-					<p className="py-3 text-sm text-slate-500">
-						<Translate text={localizationConstants.noNewsAvailable} />
-					</p>
-				)}
+						{index < DASHBOARD_NEWS.length - 1 && (
+							<div className="h-px w-full bg-slate-200" />
+						)}
+					</div>
+				))}
 			</div>
 		</Card>
 	);

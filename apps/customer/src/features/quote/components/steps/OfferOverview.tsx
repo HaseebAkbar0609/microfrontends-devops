@@ -39,14 +39,9 @@ import { resolveCityNameById } from "../../utils/resolveCityName";
 interface OfferOverviewProps {
 	form: UseFormReturn<CreateOfferFormValues>;
 	categoryOptions: FormSelectOption[];
-	onEditStep?: (step: number) => void;
 }
 
-export function OfferOverview({
-	form,
-	categoryOptions,
-	onEditStep,
-}: OfferOverviewProps) {
+export function OfferOverview({ form, categoryOptions }: OfferOverviewProps) {
 	const { user } = useAuthStatus();
 	const values = form.watch();
 	const { t } = useTranslation();
@@ -103,7 +98,6 @@ export function OfferOverview({
 			<DetailCard
 				icon={FileText}
 				title={localizationConstants.personalInformationSection}
-				onEdit={() => onEditStep?.(1)}
 			>
 				<div className="grid grid-cols-2 gap-x-4 gap-y-6 ">
 					{infoSection(
@@ -143,7 +137,6 @@ export function OfferOverview({
 			<DetailCard
 				icon={Layout}
 				title={localizationConstants.projectInformationSection}
-				onEdit={() => onEditStep?.(2)}
 			>
 				<div className="grid grid-cols-2 gap-x-4 gap-y-6">
 					{infoSection(
@@ -196,7 +189,6 @@ export function OfferOverview({
 			<DetailCard
 				icon={ClipboardList}
 				title={localizationConstants.projectDescriptionSection}
-				onEdit={() => onEditStep?.(3)}
 			>
 				<div className="space-y-6 ">
 					<div className="space-y-1">
@@ -321,7 +313,6 @@ export function OfferOverview({
 			<DetailCard
 				icon={Mail}
 				title={localizationConstants.inviteSupplierSection}
-				onEdit={() => onEditStep?.(4)}
 			>
 				<div className="">
 					<div className="border rounded-md overflow-hidden">

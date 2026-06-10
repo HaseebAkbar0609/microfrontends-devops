@@ -19,7 +19,6 @@ export async function saveProjectDraftAPIAction(
 
 export const saveProjectAPIAction = async (
 	payload: SaveProjectPayload,
-	options: { showSuccessToast?: boolean } = {},
 ): Promise<ActionResult<SaveProjectResponse>> => {
 	try {
 		const response = await axiosInstance.post<
@@ -37,9 +36,7 @@ export const saveProjectAPIAction = async (
 			return { success: false, data: null, error: errorMsg };
 		}
 
-		if (options.showSuccessToast !== false) {
-			showToast("success", projectMessages.save.success);
-		}
+		showToast("success", projectMessages.save.success);
 		return { success: true, data: apiData, error: null };
 	} catch (error: unknown) {
 		const apiError = error as ApiError;

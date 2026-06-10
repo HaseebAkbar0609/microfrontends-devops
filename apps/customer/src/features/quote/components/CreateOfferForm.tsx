@@ -17,7 +17,6 @@ interface CreateOfferFormProps {
 	categoryLoadingMore?: boolean;
 	onCategoryLoadMore?: () => void | Promise<void>;
 	onCategorySearchChange?: (query: string) => void | Promise<void>;
-	onEditStep?: (step: number) => void;
 }
 
 /** Wizard body; validation timing is set on `useForm` in `CreateOfferPage` (`onSubmit` / `onBlur`). */
@@ -30,7 +29,6 @@ export function CreateOfferForm({
 	categoryLoadingMore = false,
 	onCategoryLoadMore,
 	onCategorySearchChange,
-	onEditStep,
 }: CreateOfferFormProps) {
 	const countryId = form.watch("country");
 
@@ -56,7 +54,6 @@ export function CreateOfferForm({
 					<OfferOverview
 						form={form}
 						categoryOptions={categoryOptions}
-						onEditStep={onEditStep}
 					/>
 				)}
 			</div>
