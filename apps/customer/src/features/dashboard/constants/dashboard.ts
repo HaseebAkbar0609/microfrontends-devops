@@ -1,7 +1,5 @@
 import {
-	DollarSign,
 	ShieldCheck,
-	UserRound,
 	Lightbulb,
 	BookOpen,
 	HelpCircle,
@@ -17,42 +15,15 @@ import localizationConstants from "@/utils/translation/constants";
 
 export const DASHBOARD_QUICK_STATS: QuickStat[] = [
 	{
-		id: "active-projects",
-		title: localizationConstants.activeProjectsTitle,
-		value: localizationConstants.activeProjectsValue,
-		href: "/projectmanagement",
-		icon: DollarSign,
-	},
-	{
 		id: "offer-management",
 		title: localizationConstants.offerManagementTitle,
 		value: localizationConstants.offerManagementValue,
 		href: "/quote",
 		icon: ShieldCheck,
 	},
-	{
-		id: "completed-projects",
-		title: localizationConstants.completedProjectsTitle,
-		value: localizationConstants.completedProjectsValue,
-		href: "/archivedprojects",
-		icon: UserRound,
-	},
 ];
 
-export const DASHBOARD_NEWS: DashboardNewsItem[] = [
-	{
-		id: "news-1",
-		title: localizationConstants.newsTitle,
-		time: localizationConstants.newsTime,
-		description: localizationConstants.newsDescription,
-	},
-	{
-		id: "news-2",
-		title: localizationConstants.newsTitle,
-		time: localizationConstants.newsTime,
-		description: localizationConstants.newsDescription,
-	},
-];
+export const DASHBOARD_NEWS: DashboardNewsItem[] = [];
 
 export const DASHBOARD_RESOURCE_LINKS: ResourceLink[] = [
 	{
@@ -75,7 +46,7 @@ export const DASHBOARD_RESOURCE_LINKS: ResourceLink[] = [
 	},
 	{
 		id: "calculator",
-		label: localizationConstants.calculation,
+		label: localizationConstants.costCalculatorLabel,
 		icon: Calculator,
 		href: "/priceCalculator",
 	},

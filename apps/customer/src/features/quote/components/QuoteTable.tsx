@@ -28,7 +28,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { TablePagination } from "../../../components/table/TablePagination";
 import { Quote, QuoteColumnField } from "../types/types";
 import { formatProjectTypeLabel } from "../utils/formatProjectType";
 import { QUOTE_COLUMNS, PROJECT_STATUS_VALUE_TO_LABEL_KEY } from "../constants";
@@ -54,7 +53,6 @@ import {
 
 interface QuoteTableProps {
 	data: Quote[];
-	totalItems: number;
 	/** Called after archive/delete succeeds so the list can reload */
 	onRefresh?: () => void;
 }
@@ -76,6 +74,19 @@ const getStatusVariant = (quoteStatus: string) => {
 			return "outline";
 		default:
 			return "outline";
+	}
+};
+
+const getSortableValue = (quote: Quote, field: string) => {
+	switch (field) {
+		case "type":
+			return quote.project_type ?? quote.type ?? "";
+		case "category":
+			return quote.category ?? "";
+		case "actions":
+			return "";
+		default:
+			return String(quote[field as keyof Quote] ?? "");
 	}
 };
 
@@ -291,13 +302,11 @@ const ActionsDropdown = ({
 	);
 };
 
-export function QuoteTable({ data, totalItems, onRefresh }: QuoteTableProps) {
+export function QuoteTable({ data, onRefresh }: QuoteTableProps) {
 	const { query, changeQueries } = useQueryParams();
 
 	const sortBy = query.get("sort_by") || "";
 	const sortOrder = query.get("sort_order") || "";
-	const page = Number(query.get("page") || "1");
-	const pageSize = Number(query.get("page_size") || "10");
 
 	const handleSort = useCallback(
 		(field: string) => {
@@ -318,6 +327,21 @@ export function QuoteTable({ data, totalItems, onRefresh }: QuoteTableProps) {
 		},
 		[sortBy, sortOrder, changeQueries],
 	);
+
+	const sortedData = useMemo(() => {
+		if (!sortBy || !sortOrder) return data;
+
+		return [...data].sort((left, right) => {
+			const leftValue = getSortableValue(left, sortBy);
+			const rightValue = getSortableValue(right, sortBy);
+			const result = leftValue.localeCompare(rightValue, undefined, {
+				numeric: true,
+				sensitivity: "base",
+			});
+
+			return sortOrder === "asc" ? result : -result;
+		});
+	}, [data, sortBy, sortOrder]);
 
 	const renderCell = useCallback(
 		(quote: Quote, columnKey: QuoteColumnField) => {
@@ -393,11 +417,6 @@ export function QuoteTable({ data, totalItems, onRefresh }: QuoteTableProps) {
 		[onRefresh],
 	);
 
-	const totalPages = useMemo(
-		() => Math.ceil(totalItems / pageSize),
-		[totalItems, pageSize],
-	);
-
 	return (
 		<div className="flex flex-col gap-4">
 			<div className="w-full bg-white rounded-md border border-slate-200 overflow-hidden">
@@ -446,7 +465,7 @@ export function QuoteTable({ data, totalItems, onRefresh }: QuoteTableProps) {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{data.map((quote) => (
+						{sortedData.map((quote) => (
 							<TableRow
 								key={quote.id}
 								className="border-b border-slate-100 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"
@@ -466,7 +485,7 @@ export function QuoteTable({ data, totalItems, onRefresh }: QuoteTableProps) {
 								))}
 							</TableRow>
 						))}
-						{data.length === 0 && (
+						{sortedData.length === 0 && (
 							<TableRow>
 								<TableCell
 									colSpan={QUOTE_COLUMNS.length}
@@ -483,18 +502,6 @@ export function QuoteTable({ data, totalItems, onRefresh }: QuoteTableProps) {
 					</TableBody>
 				</Table>
 			</div>
-
-			<TablePagination
-				currentPage={page}
-				totalPages={totalPages}
-				pageSize={pageSize}
-				onPageChange={(newPage) =>
-					changeQueries({ page: String(newPage) })
-				}
-				onPageSizeChange={(newSize) =>
-					changeQueries({ page: "1", page_size: String(newSize) })
-				}
-			/>
 		</div>
 	);
 }

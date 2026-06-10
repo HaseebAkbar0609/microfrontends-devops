@@ -206,7 +206,7 @@ export const svCommonFiles: CommonFiles = {
 export const svDashboard: DashboardText = {
   consultantTitle: "Prata med en konsult",
   consultantDescription:
-    "Det lokala byggföretaget Karles Bygg AB meddelade idag att de öppnar ett nytt kontor",
+    "Hitta rätt konsult för ditt projekt - snabbt, enkelt och tryggt. Genom TimeFlow får du direkt kontakt med kvalificerade konsulter som matchar dina behov och hjälper dig att ta projektet hela vägen i mål.",
   consultantButton: "Hitta en konsult",
   noticeAndNews: "Notiser och Nyheter",
   getAQuoteNow: "FÅ EN OFFERT NU FRÅN HANTVERKARE",

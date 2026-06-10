@@ -211,7 +211,7 @@ export const enHeader: HeaderTranslation = {
 export const enDashboard: DashboardText = {
   consultantTitle: "Talk to a consultant",
   consultantDescription:
-    "Local construction company Karles Bygg AB announced today that they are opening a new office",
+    "Find the right consultant for your project - quickly, easily, and securely. Through TimeFlow, you get direct access to qualified consultants who match your needs and help you take your project all the way to completion.",
   consultantButton: "Find a consultant",
   noticeAndNews: "Notices and News",
   getAQuoteNow: "GET A QUOTE NOW FROM CRAFTSMAN",
