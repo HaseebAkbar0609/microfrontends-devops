@@ -56,7 +56,7 @@ interface ProfessionalsListApiResponse {
 	page_size: number;
 }
 
-// Mock data — remove when real API is available
+// Mock data — replace with real API call when endpoint is ready
 const MOCK_DATA: ProfessionalRow[] = [
 	{ id: "1",  customerNo: "2025-01", companyName: "Byggbolaget AB",       orgNo: "5595010-1002", category: "Bygg",      contactPerson: "Erik Andersson",  email: "erik@example.com",    phone: "940 987 6574", city: "Järfälla", status: "active" },
 	{ id: "2",  customerNo: "2025-02", companyName: "Måleri AB",            orgNo: "5595010-2003", category: "Målare",    contactPerson: "Sofia Vergara",   email: "sofia@example.com",   phone: "940 987 6574", city: "Järfälla", status: "active" },

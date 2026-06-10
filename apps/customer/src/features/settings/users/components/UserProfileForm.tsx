@@ -11,7 +11,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { createUserProfileSchema, UserProfileFormValues } from "../schemas/userProfile.schema";
-import { DEFAULT_USER_PERMISSIONS, USER_PERMISSION_OPTIONS } from "../constants";
+import {
+	DEFAULT_USER_PERMISSIONS,
+	USER_PERMISSION_OPTIONS,
+	USER_PROFILE_TAB_TRIGGER_CLASS,
+	USER_PROFILE_TABS_LIST_CLASS,
+} from "../constants";
 
 import type { User } from "../types/types";
 import { getUserProfileActions, maskPersonalNumber } from "../utils/userFormatters";
@@ -138,9 +143,16 @@ export function UserProfileForm({
 			<form onSubmit={form.handleSubmit(onSubmit)}>
 				<Tabs value={activeTab} onValueChange={setActiveTab} className="gap-0">
 					<div className="px-5">
-						<TabsList variant="line">
-							<TabsTrigger value="profile">{t(localizationConstants.userFormProfileTab)}</TabsTrigger>
-							<TabsTrigger value="permissions">{t(localizationConstants.userFormPermissionsTab)}</TabsTrigger>
+						<TabsList
+							variant="line"
+							className={USER_PROFILE_TABS_LIST_CLASS}
+						>
+							<TabsTrigger value="profile" className={USER_PROFILE_TAB_TRIGGER_CLASS}>
+								{t(localizationConstants.userFormProfileTab)}
+							</TabsTrigger>
+							<TabsTrigger value="permissions" className={USER_PROFILE_TAB_TRIGGER_CLASS}>
+								{t(localizationConstants.userFormPermissionsTab)}
+							</TabsTrigger>
 						</TabsList>
 					</div>
 
@@ -244,6 +256,7 @@ export function UserProfileForm({
 									name={`permissions.${permission.key}`}
 									label={<Translate text={permission.label} />}
 									disabled={readOnly}
+									variant="secondary"
 								/>
 							))}
 						</div>
