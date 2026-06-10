@@ -12,7 +12,11 @@ export { updateLeadStatusAPIAction } from "./leads/update-status";
 export type { AuthResponseData } from "@/types/api";
 export {
 	listProfessionalsAPIAction,
+	listPendingProfessionalsAPIAction,
 	type ListProfessionalsParams,
 	type ProfessionalsListResult,
 	type ProfessionalRow,
+	type PendingProfessionalRow,
+	type PendingProfessionalStatus,
+	type PendingSortField,
 } from "./customers/professionals/list";

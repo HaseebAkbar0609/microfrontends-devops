@@ -463,9 +463,14 @@ export type ProfessionalTranslation = {
 	professionalCreateButton: string;
 	professionalColCustomerNo: string;
 	professionalStatusActive: string;
+	professionalStatusSent: string;
+	professionalStatusAccepted: string;
+	professionalStatusPaid: string;
 	professionalActionDeactivate: string;
 	professionalActionActivate: string;
 	professionalNoDataFound: string;
+	dueDateLabel: string;
+	deleteCannotUndoneLabel: string;
 };
 
 export type Translation = SidebarTranslation &

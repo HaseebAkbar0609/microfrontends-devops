@@ -486,9 +486,14 @@ export const enProfessional: ProfessionalTranslation = {
 	professionalCreateButton: "Create Customer Account",
 	professionalColCustomerNo: "Customer No.",
 	professionalStatusActive: "Active",
+	professionalStatusSent: "Sent",
+	professionalStatusAccepted: "Accepted",
+	professionalStatusPaid: "Paid",
 	professionalActionDeactivate: "Deactivate",
 	professionalActionActivate: "Activate",
 	professionalNoDataFound: "No professionals found.",
+	dueDateLabel: "Due Date",
+	deleteCannotUndoneLabel: "This action cannot be undone.",
 };
 
 export const en: Translation = {
