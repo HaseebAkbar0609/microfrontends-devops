@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardTranslation,
 	LeadsTranslation,
+	ProfessionalTranslation,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -477,6 +478,19 @@ export const enDashboard: DashboardTranslation = {
 	confirmClose: "Close",
 };
 
+export const enProfessional: ProfessionalTranslation = {
+	professionalTabActive: "Active customers",
+	professionalTabPending: "Pending customers",
+	professionalTabAnalytics: "Analytics",
+	professionalTabArchived: "Archived",
+	professionalCreateButton: "Create Customer Account",
+	professionalColCustomerNo: "Customer No.",
+	professionalStatusActive: "Active",
+	professionalActionDeactivate: "Deactivate",
+	professionalActionActivate: "Activate",
+	professionalNoDataFound: "No professionals found.",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -485,4 +499,5 @@ export const en: Translation = {
 	...enAppLauncher,
 	...enDashboard,
 	...enLeads,
+	...enProfessional,
 };
