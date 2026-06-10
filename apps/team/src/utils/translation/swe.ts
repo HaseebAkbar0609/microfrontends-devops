@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardTranslation,
 	LeadsTranslation,
+	ProfessionalTranslation,
 } from "./constants";
 
 export const sweAuth: AuthTranslation = {
@@ -475,6 +476,19 @@ export const sweLeads: LeadsTranslation = {
 	cancelLabel: "Avbryt",
 };
 
+export const sweProfessional: ProfessionalTranslation = {
+	professionalTabActive: "Aktiva kunder",
+	professionalTabPending: "Pending kunder",
+	professionalTabAnalytics: "Analytics",
+	professionalTabArchived: "Arkiverade",
+	professionalCreateButton: "Skapa Kund konto",
+	professionalColCustomerNo: "Kund nr.",
+	professionalStatusActive: "Active",
+	professionalActionDeactivate: "Deactivate",
+	professionalActionActivate: "Aktivera",
+	professionalNoDataFound: "Inga professionella hittades.",
+};
+
 export const swe: Translation = {
 	...sweSidebar,
 	...sweAuth,
@@ -483,4 +497,5 @@ export const swe: Translation = {
 	...sweAppLauncher,
 	...sweDashboard,
 	...sweLeads,
+	...sweProfessional,
 };

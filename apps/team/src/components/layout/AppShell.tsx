@@ -6,6 +6,7 @@ import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import LeadsSubSidebar from "./sidebar/LeadsSubSidebar";
+import CustomersSubSidebar from "./sidebar/CustomersSubSidebar";
 import { useAuthStatus } from "@/context/AuthContext";
 import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
 interface AppShellProps {
@@ -24,7 +25,8 @@ export function AppShell({ children }: AppShellProps) {
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const hasFlyoutSubSidebar = !!flyoutSubSidebarConfig;
 	const isLeads = pathname.startsWith("/leads");
-	const hasSubSidebar = hasFlyoutSubSidebar || isLeads;
+	const isCustomers = pathname.startsWith("/customers");
+	const hasSubSidebar = hasFlyoutSubSidebar || isLeads || isCustomers;
 
 	useEffect(() => {
 		if (!isReady || didRedirect.current) return;
@@ -51,6 +53,7 @@ export function AppShell({ children }: AppShellProps) {
 					/>
 				)}
 				{isLeads && <LeadsSubSidebar />}
+				{isCustomers && <CustomersSubSidebar />}
 				<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
 				<main
