@@ -455,13 +455,32 @@ export type LeadsTranslation = {
 	cancelLabel: string;
 };
 
+export type ProfessionalTranslation = {
+	professionalTabActive: string;
+	professionalTabPending: string;
+	professionalTabAnalytics: string;
+	professionalTabArchived: string;
+	professionalCreateButton: string;
+	professionalColCustomerNo: string;
+	professionalStatusActive: string;
+	professionalStatusSent: string;
+	professionalStatusAccepted: string;
+	professionalStatusPaid: string;
+	professionalActionDeactivate: string;
+	professionalActionActivate: string;
+	professionalNoDataFound: string;
+	dueDateLabel: string;
+	deleteCannotUndoneLabel: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	DashboardTranslation &
 	CommonFiles &
 	AppLauncherTranslation &
 	HeaderTranslation &
-	LeadsTranslation;
+	LeadsTranslation &
+	ProfessionalTranslation;
 
 export type TranslationKeys = keyof Translation;
 

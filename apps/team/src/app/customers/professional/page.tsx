@@ -1,6 +1,7 @@
-import ComingSoonPage from "@/components/common/ComingSoonPage";
-import localizationConstants from "@/utils/translation/constants";
+import { ProfessionalListPage } from "@/features/customers/professional/ProfessionalListPage";
+
+export const dynamic = "force-dynamic";
 
 export default function Page() {
-  return <ComingSoonPage titleKey={localizationConstants.professional} />;
+	return <ProfessionalListPage />;
 }

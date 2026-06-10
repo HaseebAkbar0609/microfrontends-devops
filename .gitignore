@@ -51,3 +51,8 @@ next-env.d.ts
 apps/*/pnpm-lock.yaml
 apps/*/package-lock.json
 apps/*/yarn.lock
+
+# Playwright MCP
+.playwright-mcp/
+.mcp.json
+.claude
