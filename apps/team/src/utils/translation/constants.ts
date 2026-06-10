@@ -460,6 +460,11 @@ export type LeadsTranslation = {
 	deleteCategoryTitle: string;
 	deleteCategoryDescription: string;
 	cancelLabel: string;
+	addNewSubCategoryTitle: string;
+	customersColumnTitle: string;
+	professionalsColumnTitle: string;
+	addGroupLabel: string;
+	addLabel: string;
 };
 
 export type ProfessionalTranslation = {

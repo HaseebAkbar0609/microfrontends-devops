@@ -1,5 +1,6 @@
 import localizationConstants from "@/utils/translation/constants";
 import type {
+  CategoryGroup,
   CategoryItem,
   LeadSettingsTabItem,
   PermissionRole,
@@ -64,6 +65,51 @@ export const reshipmentOptions = [
   { value: "7", labelKey: localizationConstants.daysOption7 },
   { value: "14", labelKey: localizationConstants.daysOption14 },
   { value: "21", labelKey: localizationConstants.daysOption21 },
+];
+
+export const customerCategoryGroups: CategoryGroup[] = [
+  {
+    id: "renovation",
+    name: "Renovation & Construction",
+    subCategories: [
+      { id: "bathroom", name: "Bathroom Renovation", isActive: true, count: 6, tags: ["Masonry", "Plastering", "Carpentry", "Tak"] },
+      { id: "kitchen", name: "Kitchen renovation", isActive: true, count: 4, tags: [] },
+      { id: "full", name: "Full renovation", isActive: true, count: 4, tags: [] },
+    ],
+  },
+  {
+    id: "surfaces",
+    name: "Surfaces & Interior",
+    subCategories: [],
+  },
+  {
+    id: "interior",
+    name: "Interior & Finishing",
+    subCategories: [],
+  },
+];
+
+export const professionalCategoryGroups: CategoryGroup[] = [
+  {
+    id: "construction",
+    name: "Construction & Renovation",
+    subCategories: [
+      { id: "carpentry", name: "Carpentry", isActive: true, count: 6, tags: ["Bathroom Renovation", "Full renovation", "Renovate house"] },
+      { id: "masonry", name: "Masonry", isActive: true, count: 4, tags: [] },
+      { id: "plastering", name: "Plastering", isActive: true, count: 4, tags: [] },
+      { id: "floor", name: "Floor leveling", isActive: false, count: 4, tags: [] },
+    ],
+  },
+  {
+    id: "electrical",
+    name: "Electrical",
+    subCategories: [],
+  },
+  {
+    id: "plumbing",
+    name: "Plumbing (HVAC)",
+    subCategories: [],
+  },
 ];
 
 export const permissionRoles: PermissionRole[] = [

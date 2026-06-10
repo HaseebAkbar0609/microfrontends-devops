@@ -368,6 +368,11 @@ export const enLeads: LeadsTranslation = {
 	deleteCategoryTitle: "Delete category?",
 	deleteCategoryDescription: "This will remove the category from the list.",
 	cancelLabel: "Cancel",
+	addNewSubCategoryTitle: "Add New Sub Category",
+	customersColumnTitle: "Customers",
+	professionalsColumnTitle: "Professionals",
+	addGroupLabel: "Add Group",
+	addLabel: "Add",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {

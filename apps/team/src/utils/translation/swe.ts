@@ -481,6 +481,11 @@ export const sweLeads: LeadsTranslation = {
 	deleteCategoryTitle: "Ta bort kategori?",
 	deleteCategoryDescription: "Detta tar bort kategorin från listan.",
 	cancelLabel: "Avbryt",
+	addNewSubCategoryTitle: "Lägg till ny underkategori",
+	customersColumnTitle: "Kunder",
+	professionalsColumnTitle: "Proffs",
+	addGroupLabel: "Lägg till grupp",
+	addLabel: "Lägg till",
 };
 
 export const sweProfessional: ProfessionalTranslation = {
