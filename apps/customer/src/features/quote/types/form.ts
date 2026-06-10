@@ -1,6 +1,6 @@
 import { z } from "zod";
 import localizationConstants from "@/utils/translation/constants";
-
+import { isSwedishPhoneNumberValid } from "@/features/settings/users/utils/userFormatters";
 export const DocumentSchema = z.object({
 	id: z.string(),
 	name: z.string(),
@@ -31,9 +31,16 @@ export const createOfferSchema = z.object({
 	lastName: z
 		.string()
 		.min(1, { message: localizationConstants.validationLastNameRequired }),
+	/* mobileNumber: z
+		.string()
+		.min(1, { message: localizationConstants.validationMobileNumberRequired }), */
+
 	mobileNumber: z
 		.string()
-		.min(1, { message: localizationConstants.validationMobileNumberRequired }),
+		.min(1, { message: localizationConstants.validationMobileNumberRequired })
+		.refine(isSwedishPhoneNumberValid, {
+			message: localizationConstants.validationMobileNumberInvalid,
+		}),
 	personalEmail: z
 		.string()
 		.min(1, {
@@ -59,9 +66,10 @@ export const createOfferSchema = z.object({
 		.string()
 		.min(1, { message: localizationConstants.validationProjectNameRequired }),
 	isExpressJob: z.string(),
-	clientNo: z
+	/* clientNo: z
 		.string()
-		.min(1, { message: localizationConstants.validationClientNoRequired }),
+		.min(1, { message: localizationConstants.validationClientNoRequired }), */
+	clientNo: z.string(),
 	category: z
 		.array(z.string())
 		.min(1, { message: localizationConstants.validationCategoryRequired }),

@@ -227,6 +227,7 @@ export const enDashboard: DashboardText = {
   newsDescription:
     "Local construction company Karles Bygg AB announced today that they are opening a new office in Västerås. The company, previously based in Enköping, is expanding following increased demand for smaller renovation and new construction projects in the region.",
 
+  noNewsAvailable: "No news available.",
   adviceLabel: "Advice & Inspiration",
   guideLabel: "Guide & Support",
   faqLabel: "Frequently Asked Questions",
@@ -346,6 +347,7 @@ export const enOfferModule: OfferModule = {
   validationFirstNameRequired: "First name is required",
   validationLastNameRequired: "Last name is required",
   validationMobileNumberRequired: "Mobile number is required",
+  validationMobileNumberInvalid: "Enter a valid phone number",
   validationPersonalEmailRequired: "Personal email is required",
   validationPersonalEmailInvalid: "Please enter a valid email address",
   validationAddressRequired: "Address is required",

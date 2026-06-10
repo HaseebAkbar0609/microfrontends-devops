@@ -202,6 +202,7 @@ export type DashboardText = {
   newsTitle: string;
   newsTime: string;
   newsDescription: string;
+  noNewsAvailable: string;
 
   // Resource links
   adviceLabel: string;
@@ -323,6 +324,7 @@ export type OfferModule = {
   validationFirstNameRequired: string;
   validationLastNameRequired: string;
   validationMobileNumberRequired: string;
+  validationMobileNumberInvalid: string;
   validationPersonalEmailRequired: string;
   validationPersonalEmailInvalid: string;
   validationAddressRequired: string;

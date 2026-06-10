@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
-import { LucideIcon } from "lucide-react";
+import { LucideIcon, Pencil } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
 
 interface DetailCardProps {
@@ -9,6 +10,7 @@ interface DetailCardProps {
 	children: ReactNode;
 	className?: string;
 	status?: boolean;
+	onEdit?: () => void;
 }
 
 export function DetailCard({
@@ -17,6 +19,7 @@ export function DetailCard({
 	children,
 	className,
 	status,
+	onEdit,
 }: DetailCardProps) {
 	return (
 		<Card
@@ -27,6 +30,18 @@ export function DetailCard({
 				<CardTitle className="text-lg font-semibold text-slate-900 flex-1">
 					<Translate text={title} />
 				</CardTitle>
+				{onEdit && (
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						className="gap-2"
+						onClick={onEdit}
+					>
+						<Pencil className="h-4 w-4" />
+						Edit
+					</Button>
+				)}
 				{status && (
 					<div className="flex items-center gap-1.5 bg-slate-900 rounded-lg px-2.5 py-1.5 ml-auto">
 						<div className={`w-5 h-5 rounded-full bg-[#f87171]`} />
