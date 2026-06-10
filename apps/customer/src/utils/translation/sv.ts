@@ -10,6 +10,7 @@ import {
 	OfferModule,
 	DiscountsModule,
 	SupplierModule,
+	PriceCalculatorModule,
 } from "./constants";
 
 export const svAuth: AuthTranslation = {
@@ -528,6 +529,82 @@ export const svSupplierModule: SupplierModule = {
 	supplierPopularTagsTitle: "Populära taggar",
 };
 
+export const svPriceCalculatorModule: PriceCalculatorModule = {
+	priceCalculatorTabExamples: "Pris exempel",
+	priceCalculatorTabProducts: "A-pris",
+	priceCalculatorTabHourly: "Tim-priser",
+	priceCalculatorExampleLabel: "Pris exempel",
+	priceCalculatorNewVilla: "Villa - Ny villa",
+	priceCalculatorNewBathroom: "Badrum - Nytt badrum",
+	priceCalculatorNewKitchen: "Kok - Nytt kok",
+	priceCalculatorNewTerrace: "Altan - Ny altan",
+	priceCalculatorAdjustValues:
+		"Justera vardena for att fa en uppskattning. Slutpris kan variera.",
+	priceCalculatorSquareMeters: "Yta i kvadratmeter",
+	priceCalculatorRooms: "Antal rum",
+	priceCalculatorTotal: "Totalt",
+	priceCalculatorMaterial: "Material",
+	priceCalculatorLabor: "Arbete",
+	priceCalculatorEstimatedPrice: "Uppskattat pris (spann)",
+	priceCalculatorRotRutDeduction: "ROT/RUT-avdrag",
+	priceCalculatorRotRutNote: "ROT/RUT-berakning kommer snart.",
+	priceCalculatorDisclaimer:
+		"Priserna ar indikativa och kan variera beroende pa plats, tillgang och materialval. Kontakta foretag for exakt offert.",
+	priceCalculatorProductSearchPlaceholder: "Sok produkt eller kategori...",
+	priceCalculatorHourlySearchPlaceholder: "Sok yrke eller kategori...",
+	priceCalculatorProduct: "Produkt",
+	priceCalculatorCategory: "Kategori",
+	priceCalculatorPriceInterval: "Prisintervall",
+	priceCalculatorInstallation: "Installation",
+	priceCalculatorInstallationValue: "+ Arbete",
+	priceCalculatorAction: "Atgard",
+	priceCalculatorAdd: "Lagg till",
+	priceCalculatorRemove: "Ta bort",
+	priceCalculatorClear: "Rensa",
+	priceCalculatorIncludedInstallation: "Inkl. installation",
+	priceCalculatorGoods: "Varor",
+	priceCalculatorTotalPrice: "Totalt",
+	priceCalculatorAfterRotRut: "Efter ROT/RUT-avdrag (30%)",
+	priceCalculatorSaving: "Besparing",
+	priceCalculatorHourlyInfoTitle: "Vad paverkar priset?",
+	priceCalculatorHourlyInfoMunicipality:
+		"Kommun: Priser varierar mellan stader och regioner beroende pa efterfragan och levnadskostnader.",
+	priceCalculatorHourlyInfoComplexity:
+		"Komplexitet: Specialiserade arbeten eller svaratkomliga platser kan innebara hogre timpris.",
+	priceCalculatorHourlyInfoAvailability:
+		"Tillganglighet: Arbete pa kvallar, helger eller med kort varsel kan kosta mer.",
+	priceCalculatorHourlyInfoJour:
+		"Jour: Akuta uppdrag utanfor ordinarie arbetstid tillkommer ofta 50-100% tillagg.",
+	priceCalculatorHourlyInfoNote:
+		"Obs: Priserna ar vagledande. Material och startavgifter tillkommer ofta. Be alltid om skriftlig offert innan arbete paborjas.",
+	priceCalculatorNoProductsFound: "Inga produkter hittades.",
+	priceCalculatorMyList: "Min lista",
+	priceCalculatorMyListEmpty: "Lagg till produkter fran listan.",
+	priceCalculatorProfession: "Yrke",
+	priceCalculatorNoHourlyFound: "Inga timpriser hittades.",
+	priceCalculatorCategoryBathroom: "Badrum",
+	priceCalculatorCategoryBuild: "Bygg",
+	priceCalculatorCategoryKitchen: "Kok",
+	priceCalculatorCategoryElectrical: "El",
+	priceCalculatorCategoryPlumbing: "VVS",
+	priceCalculatorCategoryPainting: "Maleri",
+	priceCalculatorCategoryRoof: "Tak",
+	priceCalculatorProductToilet: "WC-stol",
+	priceCalculatorProductShowerWall: "Duschvagg",
+	priceCalculatorProductWindow: "Fonster",
+	priceCalculatorProductInnerDoor: "Innerdorr",
+	priceCalculatorProductKitchenFan: "Koksflakt",
+	priceCalculatorProductTiles: "Kakel",
+	priceCalculatorProductCountertop: "Bankskiva",
+	priceCalculatorProductTap: "Kran",
+	priceCalculatorWorkElectrician: "Elektriker",
+	priceCalculatorWorkPlumber: "Rormokare",
+	priceCalculatorWorkCarpenter: "Snickare",
+	priceCalculatorWorkPainter: "Malare",
+	priceCalculatorWorkTiler: "Plattsattare",
+	priceCalculatorWorkRoofer: "Taklaggare",
+};
+
 export const sv: Translation = {
 	...svSidebar,
 	...svAuth,
@@ -539,4 +616,5 @@ export const sv: Translation = {
 	...svOfferModule,
 	...svDiscounts,
 	...svSupplierModule,
+	...svPriceCalculatorModule,
 };
