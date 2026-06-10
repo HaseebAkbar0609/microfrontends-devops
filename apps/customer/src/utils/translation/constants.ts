@@ -193,12 +193,8 @@ export type DashboardText = {
   // Quick Stats
   activeProjectsTitle: string;
   activeProjectsValue: string;
-  activeProjectsTitle: string;
-  activeProjectsValue: string;
   offerManagementTitle: string;
   offerManagementValue: string;
-  completedProjectsTitle: string;
-  completedProjectsValue: string;
   completedProjectsTitle: string;
   completedProjectsValue: string;
 
@@ -206,9 +202,7 @@ export type DashboardText = {
   newsTitle: string;
   newsTime: string;
   newsDescription: string;
-  newsTitle: string;
-  newsTime: string;
-  newsDescription: string;
+  noNewsAvailable: string;
 
   // Resource links
   adviceLabel: string;
@@ -370,6 +364,18 @@ export type OfferModule = {
   upload: string;
   inviteSupplierSection: string;
   selectedSuppliersLabel: string;
+  availableSuppliersLabel: string;
+  searchSuppliersPlaceholder: string;
+  supplierSelectionTotalRecipientsLabel: string;
+  supplierSelectionLimitInfo: string;
+  supplierSelectionSummaryLabel: string;
+  supplierInternalRecipientsLabel: string;
+  supplierTotalRecipientsLabel: string;
+  supplierSelectedCountLabel: string;
+  supplierRecipientCountInfo: string;
+  supplierSelectionMaxExceeded: string;
+  searchLabel: string;
+  loadingLabel: string;
   newInvitationButton: string;
   newInvitationTitle: string;
   companyNameLabel: string;
