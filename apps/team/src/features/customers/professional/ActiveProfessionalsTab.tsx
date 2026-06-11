@@ -41,6 +41,7 @@ interface ActiveProfessionalsTabProps {
 	readonly onPageSizeChange: (size: number) => void;
 	readonly onDelete: (id: string) => void;
 	readonly onToggleStatus: (id: string) => void;
+	readonly onCreateClick?: () => void;
 }
 
 export function ActiveProfessionalsTab({
@@ -58,6 +59,7 @@ export function ActiveProfessionalsTab({
 	onPageSizeChange,
 	onDelete,
 	onToggleStatus,
+	onCreateClick,
 }: ActiveProfessionalsTabProps) {
 	const t = useTranslate();
 
@@ -80,7 +82,7 @@ export function ActiveProfessionalsTab({
 				searchValue={searchInput}
 				onSearchChange={onSearchChange}
 				searchPlaceholder={localizationConstants.searchPlaceholder}
-				onCreateClick={() => {}}
+				onCreateClick={onCreateClick}
 				createButtonLabel={localizationConstants.professionalCreateButton}
 				className="px-0 py-4"
 			/>

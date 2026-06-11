@@ -373,6 +373,16 @@ export const enLeads: LeadsTranslation = {
 	professionalsColumnTitle: "Professionals",
 	addGroupLabel: "Add Group",
 	addLabel: "Add",
+	createCustomerAccountTitle: "Create customer account",
+	backLabel: "Back",
+	offerSectionTitle: "Offer",
+	reviewAndSendInvoiceTitle: "Review and send invoice",
+	planLabel: "Plan",
+	priceMonthlyLabel: "Price (SEK/month)",
+	discountPercentLabel: "Discount (%)",
+	startDateLabel: "Start date",
+	sendInvoiceLabel: "Send invoice",
+	invoiceNoteText: "An invoice will be generated and sent to the contact person. The customer will get status \"Pending\" until payment is confirmed.",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {

@@ -486,6 +486,16 @@ export const sweLeads: LeadsTranslation = {
 	professionalsColumnTitle: "Proffs",
 	addGroupLabel: "Lägg till grupp",
 	addLabel: "Lägg till",
+	createCustomerAccountTitle: "Skapa kund konto",
+	backLabel: "Tillbaka",
+	offerSectionTitle: "Erbjudande",
+	reviewAndSendInvoiceTitle: "Granska och skicka faktura",
+	planLabel: "Plan",
+	priceMonthlyLabel: "Pris (SEK/mån)",
+	discountPercentLabel: "Rabatt (%)",
+	startDateLabel: "Startdatum",
+	sendInvoiceLabel: "Skicka faktura",
+	invoiceNoteText: "En faktura kommer att genereras och skickas till kontaktpersonen. Kunden får status \"Pending\" tills betalning bekräftas.",
 };
 
 export const sweProfessional: ProfessionalTranslation = {
