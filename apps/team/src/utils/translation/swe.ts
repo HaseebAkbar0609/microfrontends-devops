@@ -428,7 +428,14 @@ export const sweLeads: LeadsTranslation = {
 	sundayLabel: "Söndag",
 	workCategoriesTitle: "Arbetskategorier",
 	addCategoryLabel: "Lägg till kategori",
+	addNewCategoryGroupTitle: "Lägg till ny kategorigrupp",
+	addNameLabel: "Lägg till namn",
+	addSubCategoryNameLabel: "Lägg till underkategorinamn",
 	createCategoryTitle: "Skapa kategori",
+	categoryGroupNameLabel: "Kategorigruppens namn",
+	categoryGroupNamePlaceholder: "Köksrenovering",
+	categoryGroupNameHint: "Det här är en hjälptext för att hjälpa användaren.",
+	nextLabel: "Nästa",
 	englishNameLabel: "Engelskt namn",
 	swedishNameLabel: "Svenskt namn",
 	noCategoriesLabel: "Inga kategorier hittades.",
@@ -474,6 +481,11 @@ export const sweLeads: LeadsTranslation = {
 	deleteCategoryTitle: "Ta bort kategori?",
 	deleteCategoryDescription: "Detta tar bort kategorin från listan.",
 	cancelLabel: "Avbryt",
+	addNewSubCategoryTitle: "Lägg till ny underkategori",
+	customersColumnTitle: "Kunder",
+	professionalsColumnTitle: "Proffs",
+	addGroupLabel: "Lägg till grupp",
+	addLabel: "Lägg till",
 };
 
 export const sweProfessional: ProfessionalTranslation = {

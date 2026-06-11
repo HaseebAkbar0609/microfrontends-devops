@@ -408,7 +408,14 @@ export type LeadsTranslation = {
 	sundayLabel: string;
 	workCategoriesTitle: string;
 	addCategoryLabel: string;
+	addNewCategoryGroupTitle: string;
+	addNameLabel: string;
+	addSubCategoryNameLabel: string;
 	createCategoryTitle: string;
+	categoryGroupNameLabel: string;
+	categoryGroupNamePlaceholder: string;
+	categoryGroupNameHint: string;
+	nextLabel: string;
 	englishNameLabel: string;
 	swedishNameLabel: string;
 	noCategoriesLabel: string;
@@ -453,6 +460,11 @@ export type LeadsTranslation = {
 	deleteCategoryTitle: string;
 	deleteCategoryDescription: string;
 	cancelLabel: string;
+	addNewSubCategoryTitle: string;
+	customersColumnTitle: string;
+	professionalsColumnTitle: string;
+	addGroupLabel: string;
+	addLabel: string;
 };
 
 export type ProfessionalTranslation = {

@@ -269,11 +269,6 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 					label: localizationConstants.leadsManagement,
 					href: "/leads/management",
 				},
-				{
-					id: "settings",
-					label: localizationConstants.settings,
-					href: "/leads/settings",
-				},
 			],
 		},
 		{

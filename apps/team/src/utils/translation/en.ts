@@ -315,7 +315,14 @@ export const enLeads: LeadsTranslation = {
 	sundayLabel: "Sunday",
 	workCategoriesTitle: "Work Categories",
 	addCategoryLabel: "Add Category",
+	addNewCategoryGroupTitle: "Add New Category Group",
+	addNameLabel: "Add Name",
+	addSubCategoryNameLabel: "Add Sub Category Name",
 	createCategoryTitle: "Create Category",
+	categoryGroupNameLabel: "Category Group Name",
+	categoryGroupNamePlaceholder: "Kitchen renovation",
+	categoryGroupNameHint: "This is a hint text to assist the user.",
+	nextLabel: "Next",
 	englishNameLabel: "English Name",
 	swedishNameLabel: "Swedish Name",
 	noCategoriesLabel: "No categories found.",
@@ -361,6 +368,11 @@ export const enLeads: LeadsTranslation = {
 	deleteCategoryTitle: "Delete category?",
 	deleteCategoryDescription: "This will remove the category from the list.",
 	cancelLabel: "Cancel",
+	addNewSubCategoryTitle: "Add New Sub Category",
+	customersColumnTitle: "Customers",
+	professionalsColumnTitle: "Professionals",
+	addGroupLabel: "Add Group",
+	addLabel: "Add",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {
