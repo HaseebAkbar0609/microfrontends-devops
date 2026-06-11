@@ -314,7 +314,9 @@ export type LeadsTranslation = {
 	fileTypeLabel: string;
 	fileLabel: string;
 	companyNameLabel: string;
+	companyNamePlaceholder: string;
 	orgNumberLabel: string;
+	orgNumberFullLabel: string;
 	contactPersonLabel: string;
 	seeFileLabel: string;
 	yesLabel: string;

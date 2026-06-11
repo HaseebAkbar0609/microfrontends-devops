@@ -100,12 +100,14 @@ function ProgressBar({ step }: { step: Step }) {
 function FieldGroup({
   label,
   children,
+  className,
 }: {
   label: React.ReactNode;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1${className ? ` ${className}` : ""}`}>
       <Label className="text-sm font-medium text-[#314158]">{label}</Label>
       {children}
     </div>
@@ -116,7 +118,7 @@ const inputClass =
   "h-[42px] rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-base text-[#0A0A0A] placeholder:text-[rgba(10,10,10,0.5)] focus-visible:ring-0 focus-visible:border-slate-400";
 
 const selectTriggerClass =
-  "h-[42px] rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-base text-[#0A0A0A] focus:ring-0 focus:border-slate-400";
+  "h-[42px] w-full rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-base text-[#0A0A0A] focus:ring-0 focus:border-slate-400";
 
 // ─── Step 1: Company details ────────────────────────────────────────────────────
 
@@ -137,13 +139,13 @@ function Step1({
         <FieldGroup label={<>{t(localizationConstants.companyNameLabel)} *</>}>
           <Input
             className={inputClass}
-            placeholder={t(localizationConstants.companyNameLabel)}
+            placeholder={t(localizationConstants.companyNamePlaceholder)}
             value={data.companyName}
             onChange={(e) => onChange({ companyName: e.target.value })}
           />
         </FieldGroup>
 
-        <FieldGroup label={<>{t(localizationConstants.orgNumberLabel)} *</>}>
+        <FieldGroup label={<>{t(localizationConstants.orgNumberFullLabel)} *</>}>
           <Input
             className={inputClass}
             placeholder="XXXXXX-XXXX"
@@ -153,7 +155,7 @@ function Step1({
         </FieldGroup>
 
         <div className="flex gap-4">
-          <FieldGroup label={<>{t(localizationConstants.categoryLabel)} *</>}>
+          <FieldGroup className="flex-1" label={<>{t(localizationConstants.categoryLabel)} *</>}>
             <Select value={data.category} onValueChange={(v) => onChange({ category: v })}>
               <SelectTrigger className={selectTriggerClass}>
                 <SelectValue placeholder={t(localizationConstants.categoryLabel)} />
@@ -166,7 +168,7 @@ function Step1({
             </Select>
           </FieldGroup>
 
-          <FieldGroup label={<>{t(localizationConstants.cityLabel)} *</>}>
+          <FieldGroup className="flex-1" label={<>{t(localizationConstants.cityLabel)} *</>}>
             <Select value={data.city} onValueChange={(v) => onChange({ city: v })}>
               <SelectTrigger className={selectTriggerClass}>
                 <SelectValue placeholder={t(localizationConstants.cityLabel)} />
@@ -263,7 +265,7 @@ function Step3({
         </FieldGroup>
 
         <div className="flex gap-4">
-          <FieldGroup label={<>{t(localizationConstants.priceMonthlyLabel)} *</>}>
+          <FieldGroup className="flex-1" label={<>{t(localizationConstants.priceMonthlyLabel)} *</>}>
             <Input
               type="number"
               className={inputClass}
@@ -273,7 +275,7 @@ function Step3({
             />
           </FieldGroup>
 
-          <FieldGroup label={t(localizationConstants.discountPercentLabel)}>
+          <FieldGroup className="flex-1" label={t(localizationConstants.discountPercentLabel)}>
             <Input
               type="number"
               className={inputClass}
