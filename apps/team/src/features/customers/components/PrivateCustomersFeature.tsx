@@ -7,6 +7,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { customerTabs, type CustomerTabValue } from "@/features/customers/constants";
 import { useQueryParams } from "@/components/hooks/useQueryParams";
 import { ActiveCustomersTab } from "./ActiveCustomersTab";
+import { PendingCustomersTab } from "./PendingCustomersTab";
 
 export default function PrivateCustomersFeature() {
   return (
@@ -49,10 +50,8 @@ function PrivateCustomersContent() {
           <ActiveCustomersTab />
         </TabsContent>
 
-        <TabsContent value="pending" className="mt-0 px-5 py-10">
-          <p className="text-sm text-slate-500">
-            <Translate text={localizationConstants.comingSoon} />
-          </p>
+        <TabsContent value="pending" className="mt-0">
+          <PendingCustomersTab />
         </TabsContent>
 
         <TabsContent value="analytics" className="mt-0 px-5 py-10">

@@ -13,11 +13,6 @@ const items = [
 		labelKey: "leadsManagement",
 		href: "/leads/management",
 	},
-	{
-		id: "leads-settings",
-		labelKey: "settings",
-		href: "/leads/settings",
-	},
 ];
 
 export default function LeadsSubSidebar() {

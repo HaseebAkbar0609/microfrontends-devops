@@ -331,7 +331,9 @@ export const sweLeads: LeadsTranslation = {
 	fileTypeLabel: "Filtyp",
 	fileLabel: "Fil",
 	companyNameLabel: "Företagsnamn",
+	companyNamePlaceholder: "Ange företagsnamn",
 	orgNumberLabel: "Org. nr",
+	orgNumberFullLabel: "Organisationsnummer",
 	contactPersonLabel: "Kontaktperson",
 	seeFileLabel: "Se fil",
 	yesLabel: "Ja",
@@ -376,7 +378,7 @@ export const sweLeads: LeadsTranslation = {
 		"Välkommen till Målarfirman Solen AB, din pålitliga expert på badrumsrenovering!",
 	companyOverviewDescription:
 		"Behöver ditt badrum lite omtanke? Oavsett om det gäller en läckande kran, skadade kakelplattor eller en komplett renovering är vi här för att hjälpa! På Målarfirman Solen AB är vi specialiserade på alla typer av badrumsreparationer och renoveringar och erbjuder expertlösningar som håller badrummet snyggt och funktionellt.",
-	companyDetailsTitle: "Företagsinformation",
+	companyDetailsTitle: "Företagsuppgifter",
 	creditInformationTitle: "Kreditupplysning",
 	creditAssessmentVerifiedBy: "Kreditbedömning är verifierad av",
 	registeredVatLabel: "Registrerad moms",
@@ -429,7 +431,14 @@ export const sweLeads: LeadsTranslation = {
 	sundayLabel: "Söndag",
 	workCategoriesTitle: "Arbetskategorier",
 	addCategoryLabel: "Lägg till kategori",
+	addNewCategoryGroupTitle: "Lägg till ny kategorigrupp",
+	addNameLabel: "Lägg till namn",
+	addSubCategoryNameLabel: "Lägg till underkategorinamn",
 	createCategoryTitle: "Skapa kategori",
+	categoryGroupNameLabel: "Kategorigruppens namn",
+	categoryGroupNamePlaceholder: "Köksrenovering",
+	categoryGroupNameHint: "Det här är en hjälptext för att hjälpa användaren.",
+	nextLabel: "Nästa",
 	englishNameLabel: "Engelskt namn",
 	swedishNameLabel: "Svenskt namn",
 	noCategoriesLabel: "Inga kategorier hittades.",
@@ -475,6 +484,21 @@ export const sweLeads: LeadsTranslation = {
 	deleteCategoryTitle: "Ta bort kategori?",
 	deleteCategoryDescription: "Detta tar bort kategorin från listan.",
 	cancelLabel: "Avbryt",
+	addNewSubCategoryTitle: "Lägg till ny underkategori",
+	customersColumnTitle: "Kunder",
+	professionalsColumnTitle: "Proffs",
+	addGroupLabel: "Lägg till grupp",
+	addLabel: "Lägg till",
+	createCustomerAccountTitle: "Skapa kund konto",
+	backLabel: "Tillbaka",
+	offerSectionTitle: "Erbjudande",
+	reviewAndSendInvoiceTitle: "Granska och skicka faktura",
+	planLabel: "Plan",
+	priceMonthlyLabel: "Pris (SEK/mån)",
+	discountPercentLabel: "Rabatt (%)",
+	startDateLabel: "Startdatum",
+	sendInvoiceLabel: "Skicka faktura",
+	invoiceNoteText: "En faktura kommer att genereras och skickas till kontaktpersonen. Kunden får status \"Pending\" tills betalning bekräftas.",
 };
 
 export const sweCustomers: CustomersTranslation = {
@@ -503,7 +527,8 @@ export const sweCustomers: CustomersTranslation = {
 	postNrLabel: "Post nr",
 	customerCreatedSuccess: "Kunden har skapats.",
 	customerCreateError: "Det gick inte att skapa kunden.",
-}
+	waitingLabel: "Waiting",
+};
 export const sweProfessional: ProfessionalTranslation = {
 	professionalTabActive: "Aktiva kunder",
 	professionalTabPending: "Pending kunder",
@@ -512,9 +537,14 @@ export const sweProfessional: ProfessionalTranslation = {
 	professionalCreateButton: "Skapa Kund konto",
 	professionalColCustomerNo: "Kund nr.",
 	professionalStatusActive: "Active",
+	professionalStatusSent: "Sent",
+	professionalStatusAccepted: "Accepted",
+	professionalStatusPaid: "Paid",
 	professionalActionDeactivate: "Deactivate",
 	professionalActionActivate: "Aktivera",
 	professionalNoDataFound: "Inga professionella hittades.",
+	dueDateLabel: "Due Datum",
+	deleteCannotUndoneLabel: "Denna åtgärd kan inte ångras.",
 };
 
 export const swe: Translation = {

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import localizationConstants from "@/utils/translation/constants";
+import { isSwedishPhoneNumberValid } from "@/features/settings/users/utils/userFormatters";
 
 export const DocumentSchema = z.object({
 	id: z.string(),
@@ -33,7 +34,10 @@ export const createOfferSchema = z.object({
 		.min(1, { message: localizationConstants.validationLastNameRequired }),
 	mobileNumber: z
 		.string()
-		.min(1, { message: localizationConstants.validationMobileNumberRequired }),
+		.min(1, { message: localizationConstants.validationMobileNumberRequired })
+		.refine(isSwedishPhoneNumberValid, {
+			message: localizationConstants.validationMobileNumberInvalid,
+		}),
 	personalEmail: z
 		.string()
 		.min(1, {
@@ -59,9 +63,7 @@ export const createOfferSchema = z.object({
 		.string()
 		.min(1, { message: localizationConstants.validationProjectNameRequired }),
 	isExpressJob: z.string(),
-	clientNo: z
-		.string()
-		.min(1, { message: localizationConstants.validationClientNoRequired }),
+	clientNo: z.string(),
 	category: z
 		.array(z.string())
 		.min(1, { message: localizationConstants.validationCategoryRequired }),
@@ -86,6 +88,7 @@ export const createOfferSchema = z.object({
 	description: z.string().optional(),
 	documents: z.array(DocumentSchema).optional(),
 	invitedSuppliers: z.array(SupplierSchema).optional(),
+	internalSuppliers: z.array(SupplierSchema).optional(),
 });
 
 export type QuoteDocument = z.infer<typeof DocumentSchema>;
@@ -117,4 +120,5 @@ export const DEFAULT_OFFER_FORM_VALUES: CreateOfferFormValues = {
 	description: "",
 	documents: [],
 	invitedSuppliers: [],
+	internalSuppliers: [],
 };

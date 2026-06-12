@@ -1,4 +1,4 @@
-export type CustomerStatus = "active" | "inactive";
+export type CustomerStatus = "active" | "inactive" | "pending";
 
 export interface PrivateCustomer {
   id: string;
@@ -13,8 +13,19 @@ export interface PrivateCustomer {
   status: CustomerStatus;
 }
 
-export interface CustomerListResult {
-  items: PrivateCustomer[];
+export interface PendingCustomer {
+  id: string;
+  customerNumber: string;
+  name: string;
+  email: string;
+  phone: string;
+  city: string;
+  lastActivity: string;
+  status: "pending";
+}
+
+export interface CustomerListResult<T = PrivateCustomer> {
+  items: T[];
   totalPages: number;
   totalItems: number;
   currentPage: number;

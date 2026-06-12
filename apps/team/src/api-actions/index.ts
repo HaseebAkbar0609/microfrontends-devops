@@ -12,10 +12,15 @@ export { updateLeadStatusAPIAction } from "./leads/update-status";
 export { listPrivateCustomersAPIAction } from "./customer/list";
 export { createPrivateCustomerAPIAction } from "./customer/create";
 export type { CreateCustomerResult } from "./customer/create";
+export { listPendingCustomersAPIAction } from "./customer/pending";
 export type { AuthResponseData } from "@/types/api";
 export {
 	listProfessionalsAPIAction,
+	listPendingProfessionalsAPIAction,
 	type ListProfessionalsParams,
 	type ProfessionalsListResult,
 	type ProfessionalRow,
+	type PendingProfessionalRow,
+	type PendingProfessionalStatus,
+	type PendingSortField,
 } from "./customers/professionals/list";
