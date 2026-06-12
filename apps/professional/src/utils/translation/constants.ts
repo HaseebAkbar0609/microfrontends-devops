@@ -197,6 +197,21 @@ export type SidebarTranslation = {
 	orderList: string;
 	costCentre: string;
 	materialStorage: string;
+	customerRegisterList: string;
+	customerRegisterCustomerNo: string;
+	customerRegisterCustomer: string;
+	customerRegisterRegNo: string;
+	customerRegisterAddress: string;
+	customerRegisterPostcode: string;
+	customerRegisterCity: string;
+	customerRegisterCountry: string;
+	customerRegisterPhone: string;
+	customerRegisterEmail: string;
+	customerRegisterStatus: string;
+	customerRegisterSearch: string;
+	customerRegisterFilter: string;
+	customerRegisterImportCustomer: string;
+	customerRegisterRegisterNew: string;
 };
 
 export type MyPagesTranslation = {

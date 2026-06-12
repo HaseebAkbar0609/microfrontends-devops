@@ -216,6 +216,21 @@ export const svSidebar: SidebarTranslation = {
 	orderList: "Order",
 	costCentre: "Kostnadsställe",
 	materialStorage: "Material-Lager",
+	customerRegisterList: "Kundlista",
+	customerRegisterCustomerNo: "kundnr",
+	customerRegisterCustomer: "Kund",
+	customerRegisterRegNo: "Reg nr:",
+	customerRegisterAddress: "Adress",
+	customerRegisterPostcode: "Postnummer",
+	customerRegisterCity: "Stad",
+	customerRegisterCountry: "Land",
+	customerRegisterPhone: "Telefon",
+	customerRegisterEmail: "E-post",
+	customerRegisterStatus: "Status",
+	customerRegisterSearch: "Sok",
+	customerRegisterFilter: "Filter",
+	customerRegisterImportCustomer: "Importera kund",
+	customerRegisterRegisterNew: "Registrera ny",
 };
 
 export const svManagePlans: ManagePlansTranslation = {
