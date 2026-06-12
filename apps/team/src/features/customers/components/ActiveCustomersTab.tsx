@@ -82,7 +82,7 @@ export function ActiveCustomersTab() {
             onFilterChange: () => {},
           },
         ]}
-        onCreateClick={() => {}}
+        onCreateClick={() => router.push("/customers/private/create")}
       />
       <CustomerTable
         customers={customers}

@@ -37,3 +37,13 @@ export interface CustomerListQueryParams {
   pageSize?: number;
   search?: string;
 }
+
+export interface CreateCustomerFormData {
+  firstName: string;
+  lastName: string;
+  personalNumber: string;
+  privateEmail: string;
+  address: string;
+  city: string;
+  postalCode: string;
+}

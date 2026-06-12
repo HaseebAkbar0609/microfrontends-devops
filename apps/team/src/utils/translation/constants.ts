@@ -494,9 +494,19 @@ export type CustomersTranslation = {
 	deactivateCustomerDescription: string;
 	deleteCustomerTitle: string;
 	deleteCustomerDescription: string;
+	createCustomerTitle: string;
+	createCustomerSubtitle: string;
+	customerDetailsSection: string;
+	firstNameLabel: string;
+	lastNameLabel: string;
+	personalNumberLabel: string;
+	privateEmailLabel: string;
+	ortLabel: string;
+	postNrLabel: string;
+	customerCreatedSuccess: string;
+	customerCreateError: string;
 	waitingLabel: string;
 };
-
 export type ProfessionalTranslation = {
 	professionalTabActive: string;
 	professionalTabPending: string;
