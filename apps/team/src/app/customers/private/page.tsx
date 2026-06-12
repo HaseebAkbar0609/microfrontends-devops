@@ -1,6 +1,5 @@
-import ComingSoonPage from "@/components/common/ComingSoonPage";
-import localizationConstants from "@/utils/translation/constants";
+import PrivateCustomersFeature from "@/features/customers/components/PrivateCustomersFeature";
 
 export default function Page() {
-  return <ComingSoonPage titleKey={localizationConstants.private} />;
+  return <PrivateCustomersFeature />;
 }

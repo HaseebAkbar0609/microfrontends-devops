@@ -479,6 +479,24 @@ export type LeadsTranslation = {
 	invoiceNoteText: string;
 };
 
+export type CustomersTranslation = {
+	activeCustomersTab: string;
+	pendingCustomersTab: string;
+	analyticsTab: string;
+	archivedCustomersTab: string;
+	customerNumberLabel: string;
+	activeRequestsLabel: string;
+	ongoingProjectsLabel: string;
+	lastActivityLabel: string;
+	deactivateLabel: string;
+	noCustomersFound: string;
+	deactivateCustomerTitle: string;
+	deactivateCustomerDescription: string;
+	deleteCustomerTitle: string;
+	deleteCustomerDescription: string;
+	waitingLabel: string;
+};
+
 export type ProfessionalTranslation = {
 	professionalTabActive: string;
 	professionalTabPending: string;
@@ -504,6 +522,7 @@ export type Translation = SidebarTranslation &
 	AppLauncherTranslation &
 	HeaderTranslation &
 	LeadsTranslation &
+	CustomersTranslation &
 	ProfessionalTranslation;
 
 export type TranslationKeys = keyof Translation;

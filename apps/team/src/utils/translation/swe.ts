@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardTranslation,
 	LeadsTranslation,
+	CustomersTranslation,
 	ProfessionalTranslation,
 } from "./constants";
 
@@ -500,6 +501,24 @@ export const sweLeads: LeadsTranslation = {
 	invoiceNoteText: "En faktura kommer att genereras och skickas till kontaktpersonen. Kunden får status \"Pending\" tills betalning bekräftas.",
 };
 
+export const sweCustomers: CustomersTranslation = {
+	activeCustomersTab: "Aktiva kunder",
+	pendingCustomersTab: "Pending kunder",
+	analyticsTab: "Analytics",
+	archivedCustomersTab: "Arkiverade",
+	customerNumberLabel: "Kund nr.",
+	activeRequestsLabel: "Active Requests",
+	ongoingProjectsLabel: "Ongoing Projects",
+	lastActivityLabel: "Last Activity",
+	deactivateLabel: "Deactivate",
+	noCustomersFound: "Inga kunder matchar din sökning.",
+	deactivateCustomerTitle: "Deactivate kund?",
+	deactivateCustomerDescription: "Kunden kommer inte längre ha tillgång till tjänsten.",
+	deleteCustomerTitle: "Ta bort kund?",
+	deleteCustomerDescription: "Detta tar bort kunden permanent från listan.",
+	waitingLabel: "Waiting",
+};
+
 export const sweProfessional: ProfessionalTranslation = {
 	professionalTabActive: "Aktiva kunder",
 	professionalTabPending: "Pending kunder",
@@ -526,5 +545,6 @@ export const swe: Translation = {
 	...sweAppLauncher,
 	...sweDashboard,
 	...sweLeads,
+	...sweCustomers,
 	...sweProfessional,
 };

@@ -7,6 +7,7 @@ import {
 	AppLauncherTranslation,
 	DashboardTranslation,
 	LeadsTranslation,
+	CustomersTranslation,
 	ProfessionalTranslation,
 } from "./constants";
 
@@ -502,6 +503,24 @@ export const enDashboard: DashboardTranslation = {
 	confirmClose: "Close",
 };
 
+export const enCustomers: CustomersTranslation = {
+	activeCustomersTab: "Active Customers",
+	pendingCustomersTab: "Pending Customers",
+	analyticsTab: "Analytics",
+	archivedCustomersTab: "Archived",
+	customerNumberLabel: "Customer No.",
+	activeRequestsLabel: "Active Requests",
+	ongoingProjectsLabel: "Ongoing Projects",
+	lastActivityLabel: "Last Activity",
+	deactivateLabel: "Deactivate",
+	noCustomersFound: "No customers match your search.",
+	deactivateCustomerTitle: "Deactivate customer?",
+	deactivateCustomerDescription: "The customer will no longer have access to the service.",
+	deleteCustomerTitle: "Delete customer?",
+	deleteCustomerDescription: "This will permanently remove the customer from the list.",
+	waitingLabel: "Waiting",
+};
+
 export const enProfessional: ProfessionalTranslation = {
 	professionalTabActive: "Active customers",
 	professionalTabPending: "Pending customers",
@@ -528,5 +547,6 @@ export const en: Translation = {
 	...enAppLauncher,
 	...enDashboard,
 	...enLeads,
+	...enCustomers,
 	...enProfessional,
 };
