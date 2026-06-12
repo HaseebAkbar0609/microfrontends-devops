@@ -27,8 +27,22 @@ export type StageSection = {
 
 export type CategoryItem = {
   id: string;
-  nameKey: TranslationKeys;
+  nameKey: string;
   isActive: boolean;
+};
+
+export type SubCategory = {
+  id: string;
+  name: string;
+  isActive: boolean;
+  count: number;
+  tags: string[];
+};
+
+export type CategoryGroup = {
+  id: string;
+  name: string;
+  subCategories: SubCategory[];
 };
 
 export type RoutingRule = {

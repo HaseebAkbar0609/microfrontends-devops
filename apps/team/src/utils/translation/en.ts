@@ -218,7 +218,9 @@ export const enLeads: LeadsTranslation = {
 	fileTypeLabel: "File type",
 	fileLabel: "File",
 	companyNameLabel: "Company name",
+	companyNamePlaceholder: "Enter company name",
 	orgNumberLabel: "Org. no.",
+	orgNumberFullLabel: "Organization number",
 	contactPersonLabel: "Contact person",
 	seeFileLabel: "See file",
 	yesLabel: "Yes",
@@ -316,7 +318,14 @@ export const enLeads: LeadsTranslation = {
 	sundayLabel: "Sunday",
 	workCategoriesTitle: "Work Categories",
 	addCategoryLabel: "Add Category",
+	addNewCategoryGroupTitle: "Add New Category Group",
+	addNameLabel: "Add Name",
+	addSubCategoryNameLabel: "Add Sub Category Name",
 	createCategoryTitle: "Create Category",
+	categoryGroupNameLabel: "Category Group Name",
+	categoryGroupNamePlaceholder: "Kitchen renovation",
+	categoryGroupNameHint: "This is a hint text to assist the user.",
+	nextLabel: "Next",
 	englishNameLabel: "English Name",
 	swedishNameLabel: "Swedish Name",
 	noCategoriesLabel: "No categories found.",
@@ -362,6 +371,21 @@ export const enLeads: LeadsTranslation = {
 	deleteCategoryTitle: "Delete category?",
 	deleteCategoryDescription: "This will remove the category from the list.",
 	cancelLabel: "Cancel",
+	addNewSubCategoryTitle: "Add New Sub Category",
+	customersColumnTitle: "Customers",
+	professionalsColumnTitle: "Professionals",
+	addGroupLabel: "Add Group",
+	addLabel: "Add",
+	createCustomerAccountTitle: "Create customer account",
+	backLabel: "Back",
+	offerSectionTitle: "Offer",
+	reviewAndSendInvoiceTitle: "Review and send invoice",
+	planLabel: "Plan",
+	priceMonthlyLabel: "Price (SEK/month)",
+	discountPercentLabel: "Discount (%)",
+	startDateLabel: "Start date",
+	sendInvoiceLabel: "Send invoice",
+	invoiceNoteText: "An invoice will be generated and sent to the contact person. The customer will get status \"Pending\" until payment is confirmed.",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {
@@ -494,6 +518,7 @@ export const enCustomers: CustomersTranslation = {
 	deactivateCustomerDescription: "The customer will no longer have access to the service.",
 	deleteCustomerTitle: "Delete customer?",
 	deleteCustomerDescription: "This will permanently remove the customer from the list.",
+	waitingLabel: "Waiting",
 };
 
 export const enProfessional: ProfessionalTranslation = {
@@ -504,9 +529,14 @@ export const enProfessional: ProfessionalTranslation = {
 	professionalCreateButton: "Create Customer Account",
 	professionalColCustomerNo: "Customer No.",
 	professionalStatusActive: "Active",
+	professionalStatusSent: "Sent",
+	professionalStatusAccepted: "Accepted",
+	professionalStatusPaid: "Paid",
 	professionalActionDeactivate: "Deactivate",
 	professionalActionActivate: "Activate",
 	professionalNoDataFound: "No professionals found.",
+	dueDateLabel: "Due Date",
+	deleteCannotUndoneLabel: "This action cannot be undone.",
 };
 
 export const en: Translation = {
