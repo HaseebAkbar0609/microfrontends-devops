@@ -10,6 +10,7 @@ import { listProfessionalsAPIAction, listPendingProfessionalsAPIAction } from "@
 import type { ProfessionalRow, PendingProfessionalRow, PendingSortField } from "@/api-actions/customers/professionals/list";
 import { ActiveProfessionalsTab } from "./ActiveProfessionalsTab";
 import { PendingProfessionalsTab } from "./PendingProfessionalsTab";
+import { CreateAccountWizard } from "@/features/customers/CreateAccountWizard";
 
 type ProfessionalTab = "active" | "pending" | "analytics" | "archived";
 type ActiveSortField = keyof Omit<ProfessionalRow, "id" | "status"> | null;
@@ -42,6 +43,7 @@ function ProfessionalListPageInner() {
 
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
+	const [wizardOpen, setWizardOpen] = useState(false);
 
 	const debouncedSearch = useDebounce(searchInput, 400);
 	const prevDebouncedSearch = useRef(debouncedSearch);
@@ -167,6 +169,7 @@ function ProfessionalListPageInner() {
 						onSort={handleActiveSort}
 						onDelete={handleActiveDelete}
 						onToggleStatus={handleToggleStatus}
+						onCreateClick={() => setWizardOpen(true)}
 						{...paginationProps}
 					/>
 				</TabsContent>
@@ -185,6 +188,11 @@ function ProfessionalListPageInner() {
 					/>
 				</TabsContent>
 			</Tabs>
+
+			<CreateAccountWizard
+				open={wizardOpen}
+				onOpenChange={setWizardOpen}
+			/>
 		</div>
 	);
 }

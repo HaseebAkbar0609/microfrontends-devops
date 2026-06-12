@@ -330,7 +330,9 @@ export const sweLeads: LeadsTranslation = {
 	fileTypeLabel: "Filtyp",
 	fileLabel: "Fil",
 	companyNameLabel: "Företagsnamn",
+	companyNamePlaceholder: "Ange företagsnamn",
 	orgNumberLabel: "Org. nr",
+	orgNumberFullLabel: "Organisationsnummer",
 	contactPersonLabel: "Kontaktperson",
 	seeFileLabel: "Se fil",
 	yesLabel: "Ja",
@@ -375,7 +377,7 @@ export const sweLeads: LeadsTranslation = {
 		"Välkommen till Målarfirman Solen AB, din pålitliga expert på badrumsrenovering!",
 	companyOverviewDescription:
 		"Behöver ditt badrum lite omtanke? Oavsett om det gäller en läckande kran, skadade kakelplattor eller en komplett renovering är vi här för att hjälpa! På Målarfirman Solen AB är vi specialiserade på alla typer av badrumsreparationer och renoveringar och erbjuder expertlösningar som håller badrummet snyggt och funktionellt.",
-	companyDetailsTitle: "Företagsinformation",
+	companyDetailsTitle: "Företagsuppgifter",
 	creditInformationTitle: "Kreditupplysning",
 	creditAssessmentVerifiedBy: "Kreditbedömning är verifierad av",
 	registeredVatLabel: "Registrerad moms",
@@ -486,6 +488,16 @@ export const sweLeads: LeadsTranslation = {
 	professionalsColumnTitle: "Proffs",
 	addGroupLabel: "Lägg till grupp",
 	addLabel: "Lägg till",
+	createCustomerAccountTitle: "Skapa kund konto",
+	backLabel: "Tillbaka",
+	offerSectionTitle: "Erbjudande",
+	reviewAndSendInvoiceTitle: "Granska och skicka faktura",
+	planLabel: "Plan",
+	priceMonthlyLabel: "Pris (SEK/mån)",
+	discountPercentLabel: "Rabatt (%)",
+	startDateLabel: "Startdatum",
+	sendInvoiceLabel: "Skicka faktura",
+	invoiceNoteText: "En faktura kommer att genereras och skickas till kontaktpersonen. Kunden får status \"Pending\" tills betalning bekräftas.",
 };
 
 export const sweProfessional: ProfessionalTranslation = {

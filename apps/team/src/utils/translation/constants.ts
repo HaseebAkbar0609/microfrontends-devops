@@ -314,7 +314,9 @@ export type LeadsTranslation = {
 	fileTypeLabel: string;
 	fileLabel: string;
 	companyNameLabel: string;
+	companyNamePlaceholder: string;
 	orgNumberLabel: string;
+	orgNumberFullLabel: string;
 	contactPersonLabel: string;
 	seeFileLabel: string;
 	yesLabel: string;
@@ -465,6 +467,16 @@ export type LeadsTranslation = {
 	professionalsColumnTitle: string;
 	addGroupLabel: string;
 	addLabel: string;
+	createCustomerAccountTitle: string;
+	backLabel: string;
+	offerSectionTitle: string;
+	reviewAndSendInvoiceTitle: string;
+	planLabel: string;
+	priceMonthlyLabel: string;
+	discountPercentLabel: string;
+	startDateLabel: string;
+	sendInvoiceLabel: string;
+	invoiceNoteText: string;
 };
 
 export type ProfessionalTranslation = {
