@@ -26,7 +26,7 @@ export async function getProfessionalCategoriesAPIAction(): Promise<SelectOption
 		});
 		return response.data?.data ?? [];
 	} catch (error: unknown) {
-		console.error("Failed to fetch professional categories", (error as ApiError).message);
+		console.error("Failed to fetch professional categories", (error as ApiError).response?.data?.message);
 		return [];
 	}
 }
@@ -38,7 +38,7 @@ export async function getCitiesAPIAction(): Promise<SelectOption[]> {
 		});
 		return response.data?.data ?? [];
 	} catch (error: unknown) {
-		console.error("Failed to fetch cities", (error as ApiError).message);
+		console.error("Failed to fetch cities", (error as ApiError).response?.data?.message);
 		return [];
 	}
 }
