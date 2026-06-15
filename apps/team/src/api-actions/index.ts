@@ -23,3 +23,13 @@ export {
 	type PendingProfessionalRow,
 	type PendingSortField,
 } from "./customers/professionals/list";
+export {
+	createProfessionalAPIAction,
+	type CreateProfessionalPayload,
+	type CreateProfessionalResult,
+} from "./customers/professionals/create";
+export {
+	getProfessionalCategoriesAPIAction,
+	getCitiesAPIAction,
+	type SelectOption,
+} from "./customers/professionals/options";

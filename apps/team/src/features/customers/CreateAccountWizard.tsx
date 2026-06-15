@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Loader2, X } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +16,12 @@ import {
 import { Translate } from "@/utils/translation/translate";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import {
+  createProfessionalAPIAction,
+  getProfessionalCategoriesAPIAction,
+  getCitiesAPIAction,
+} from "@/api-actions";
+import type { SelectOption } from "@/api-actions";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
@@ -25,8 +31,10 @@ interface FormData {
   // Step 1 — Company details
   companyName: string;
   orgNumber: string;
-  category: string;
-  city: string;
+  categoryId: string;
+  categoryName: string;
+  cityId: string;
+  cityName: string;
   // Step 2 — Contact person
   contactName: string;
   email: string;
@@ -41,8 +49,10 @@ interface FormData {
 const INITIAL_FORM: FormData = {
   companyName: "",
   orgNumber: "",
-  category: "",
-  city: "",
+  categoryId: "",
+  categoryName: "",
+  cityId: "",
+  cityName: "",
   contactName: "",
   email: "",
   phone: "",
@@ -51,31 +61,6 @@ const INITIAL_FORM: FormData = {
   discount: "",
   startDate: "",
 };
-
-const CATEGORY_OPTIONS = [
-  "Bygg",
-  "Elektriker",
-  "Målare",
-  "VVS",
-  "Tak",
-  "Städbolag",
-  "Golv",
-  "Fasad",
-];
-
-const CITY_OPTIONS = [
-  "Stockholm",
-  "Göteborg",
-  "Malmö",
-  "Uppsala",
-  "Solna",
-  "Järfälla",
-  "Täby",
-  "Linköping",
-  "Örebro",
-  "Västerås",
-  "Helsingborg",
-];
 
 const PLAN_OPTIONS = ["Basic", "Standard", "Premium"];
 
@@ -125,9 +110,13 @@ const selectTriggerClass =
 function Step1({
   data,
   onChange,
+  categories,
+  cities,
 }: {
   data: FormData;
   onChange: (patch: Partial<FormData>) => void;
+  categories: SelectOption[];
+  cities: SelectOption[];
 }) {
   const t = useTranslate();
   return (
@@ -156,26 +145,38 @@ function Step1({
 
         <div className="flex gap-4">
           <FieldGroup className="flex-1" label={<>{t(localizationConstants.categoryLabel)} *</>}>
-            <Select value={data.category} onValueChange={(v) => onChange({ category: v })}>
+            <Select
+              value={data.categoryId}
+              onValueChange={(id) => {
+                const opt = categories.find((c) => c.id === id);
+                onChange({ categoryId: id, categoryName: opt?.name ?? id });
+              }}
+            >
               <SelectTrigger className={selectTriggerClass}>
                 <SelectValue placeholder={t(localizationConstants.categoryLabel)} />
               </SelectTrigger>
               <SelectContent>
-                {CATEGORY_OPTIONS.map((opt) => (
-                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                {categories.map((opt) => (
+                  <SelectItem key={opt.id} value={opt.id}>{opt.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </FieldGroup>
 
           <FieldGroup className="flex-1" label={<>{t(localizationConstants.cityLabel)} *</>}>
-            <Select value={data.city} onValueChange={(v) => onChange({ city: v })}>
+            <Select
+              value={data.cityId}
+              onValueChange={(id) => {
+                const opt = cities.find((c) => c.id === id);
+                onChange({ cityId: id, cityName: opt?.name ?? id });
+              }}
+            >
               <SelectTrigger className={selectTriggerClass}>
                 <SelectValue placeholder={t(localizationConstants.cityLabel)} />
               </SelectTrigger>
               <SelectContent>
-                {CITY_OPTIONS.map((opt) => (
-                  <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                {cities.map((opt) => (
+                  <SelectItem key={opt.id} value={opt.id}>{opt.name}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -318,11 +319,10 @@ function Step4({ data }: { data: FormData }) {
         <Translate text={localizationConstants.reviewAndSendInvoiceTitle} />
       </h3>
 
-      {/* Summary card */}
       <div className="flex flex-col gap-3 rounded-[10px] bg-[#F8FAFC] px-4 pt-4 pb-0">
         <ReviewRow label={`${t(localizationConstants.companyLabel)}:`} value={data.companyName} />
         <ReviewRow label={`${t(localizationConstants.orgNumberLabel)}:`} value={data.orgNumber} />
-        <ReviewRow label={`${t(localizationConstants.categoryLabel)}:`} value={data.category} />
+        <ReviewRow label={`${t(localizationConstants.categoryLabel)}:`} value={data.categoryName} />
         <ReviewRow label={`${t(localizationConstants.contactPersonLabel)}:`} value={data.contactName} />
         <ReviewRow label={`${t(localizationConstants.emailLabel)}:`} value={data.email} />
 
@@ -338,7 +338,6 @@ function Step4({ data }: { data: FormData }) {
         </div>
       </div>
 
-      {/* Invoice note */}
       <div className="rounded-[10px] border border-[#BEDBFF] bg-[#EFF6FF] px-4 py-4">
         <p className="text-sm text-[#111721]">
           <Translate text={localizationConstants.invoiceNoteText} />
@@ -353,12 +352,21 @@ function Step4({ data }: { data: FormData }) {
 export type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit?: (data: FormData) => void;
+  onSuccess?: () => void;
 };
 
-export function CreateAccountWizard({ open, onOpenChange, onSubmit }: Props) {
+export function CreateAccountWizard({ open, onOpenChange, onSuccess }: Props) {
   const [step, setStep] = useState<Step>(1);
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [categories, setCategories] = useState<SelectOption[]>([]);
+  const [cities, setCities] = useState<SelectOption[]>([]);
+
+  useEffect(() => {
+    if (!open) return;
+    void getProfessionalCategoriesAPIAction().then(setCategories);
+    void getCitiesAPIAction().then(setCities);
+  }, [open]);
 
   const patch = (update: Partial<FormData>) =>
     setFormData((prev) => ({ ...prev, ...update }));
@@ -369,16 +377,33 @@ export function CreateAccountWizard({ open, onOpenChange, onSubmit }: Props) {
     onOpenChange(false);
   };
 
-  const handleNext = () => {
-    if (step < 4) setStep((s) => (s + 1) as Step);
-    else {
-      onSubmit?.(formData);
+  const handleNext = async () => {
+    if (step < 4) {
+      setStep((s) => (s + 1) as Step);
+      return;
+    }
+
+    setIsSubmitting(true);
+    const result = await createProfessionalAPIAction({
+      company_name: formData.companyName,
+      organization_number: formData.orgNumber,
+      company_category: formData.categoryId,
+      city: formData.cityId,
+      contact_name: formData.contactName,
+      email: formData.email,
+      phone: formData.phone,
+    });
+    setIsSubmitting(false);
+
+    if (result.success) {
+      onSuccess?.();
       handleClose();
     }
   };
 
   const isNextDisabled = () => {
-    if (step === 1) return !formData.companyName || !formData.orgNumber || !formData.category || !formData.city;
+    if (isSubmitting) return true;
+    if (step === 1) return !formData.companyName || !formData.orgNumber || !formData.categoryId || !formData.cityId;
     if (step === 2) return !formData.contactName || !formData.email || !formData.phone;
     if (step === 3) return !formData.plan || !formData.price || !formData.startDate;
     return false;
@@ -410,7 +435,7 @@ export function CreateAccountWizard({ open, onOpenChange, onSubmit }: Props) {
         <ProgressBar step={step} />
 
         {/* Step content */}
-        {step === 1 && <Step1 data={formData} onChange={patch} />}
+        {step === 1 && <Step1 data={formData} onChange={patch} categories={categories} cities={cities} />}
         {step === 2 && <Step2 data={formData} onChange={patch} />}
         {step === 3 && <Step3 data={formData} onChange={patch} />}
         {step === 4 && <Step4 data={formData} />}
@@ -421,6 +446,7 @@ export function CreateAccountWizard({ open, onOpenChange, onSubmit }: Props) {
             variant="outline"
             className="min-w-[85px] border-[#CAD5E2] text-[#0A0A0A] hover:bg-slate-50"
             onClick={step === 1 ? handleClose : () => setStep((s) => (s - 1) as Step)}
+            disabled={isSubmitting}
           >
             {step === 1
               ? <Translate text={localizationConstants.cancelLabel} />
@@ -428,12 +454,16 @@ export function CreateAccountWizard({ open, onOpenChange, onSubmit }: Props) {
           </Button>
           <Button
             className="min-w-[86px] bg-[#111721] text-white hover:bg-[#111721]/90"
-            onClick={handleNext}
+            onClick={() => { void handleNext(); }}
             disabled={isNextDisabled()}
           >
-            {step === 4
-              ? <Translate text={localizationConstants.sendInvoiceLabel} />
-              : <Translate text={localizationConstants.nextLabel} />}
+            {isSubmitting ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : step === 4 ? (
+              <Translate text={localizationConstants.sendInvoiceLabel} />
+            ) : (
+              <Translate text={localizationConstants.nextLabel} />
+            )}
           </Button>
         </div>
       </DialogContent>
