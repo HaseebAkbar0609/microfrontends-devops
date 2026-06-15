@@ -538,6 +538,7 @@ export const enProfessional: ProfessionalTranslation = {
 	professionalTabArchived: "Archived",
 	professionalCreateButton: "Create Customer Account",
 	professionalColCustomerNo: "Customer No.",
+	professionalColCompanyName: "Company",
 	professionalStatusActive: "Active",
 	professionalStatusSent: "Sent",
 	professionalStatusAccepted: "Accepted",

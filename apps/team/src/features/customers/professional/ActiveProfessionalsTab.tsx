@@ -64,8 +64,8 @@ export function ActiveProfessionalsTab({
 	const t = useTranslate();
 
 	const columns = useMemo(() => [
-		{ id: "customerNo",    key: "customerNo" as SortField,    label: localizationConstants.professionalColCustomerNo, sortable: true },
-		{ id: "companyName",   key: "companyName" as SortField,   label: localizationConstants.companyNameLabel,          sortable: true },
+		{ id: "contactUserId", key: "contactUserId" as SortField, label: localizationConstants.professionalColCustomerNo, sortable: true },
+		{ id: "companyName",   key: "companyName" as SortField,   label: localizationConstants.professionalColCompanyName, sortable: true },
 		{ id: "orgNo",         key: "orgNo" as SortField,         label: localizationConstants.orgNumberLabel,            sortable: true },
 		{ id: "category",      key: "category" as SortField,      label: localizationConstants.categoryLabel,             sortable: true },
 		{ id: "contactPerson", key: "contactPerson" as SortField, label: localizationConstants.contactPersonLabel,        sortable: true },
@@ -126,7 +126,7 @@ export function ActiveProfessionalsTab({
 						)}
 						{!isLoading && rows.map((row) => (
 							<TableRow key={row.id} className="hover:bg-slate-50/70 odd:bg-white even:bg-slate-50/40">
-								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.customerNo}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.contactUserId}</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.companyName}</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.orgNo}</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.category}</TableCell>

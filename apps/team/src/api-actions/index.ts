@@ -21,6 +21,5 @@ export {
 	type ProfessionalsListResult,
 	type ProfessionalRow,
 	type PendingProfessionalRow,
-	type PendingProfessionalStatus,
 	type PendingSortField,
 } from "./customers/professionals/list";
