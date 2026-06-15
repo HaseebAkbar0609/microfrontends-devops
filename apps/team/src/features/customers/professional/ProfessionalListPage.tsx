@@ -44,6 +44,7 @@ function ProfessionalListPageInner() {
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLoading, setIsLoading] = useState(true);
 	const [wizardOpen, setWizardOpen] = useState(false);
+	const [refreshKey, setRefreshKey] = useState(0);
 
 	const debouncedSearch = useDebounce(searchInput, 400);
 	const prevDebouncedSearch = useRef(debouncedSearch);
@@ -91,7 +92,7 @@ function ProfessionalListPageInner() {
 		}
 
 		return () => { cancelled = true; };
-	}, [page, pageSize, debouncedSearch, sortBy, sortOrder, pendingSortBy, pendingSortOrder, activeTab]);
+	}, [page, pageSize, debouncedSearch, sortBy, sortOrder, pendingSortBy, pendingSortOrder, activeTab, refreshKey]);
 
 	const handleTabChange = (tab: string) => {
 		setActiveTab(tab as ProfessionalTab);
@@ -192,6 +193,7 @@ function ProfessionalListPageInner() {
 			<CreateAccountWizard
 				open={wizardOpen}
 				onOpenChange={setWizardOpen}
+				onSuccess={() => { setRefreshKey((k) => k + 1); setPage(1); }}
 			/>
 		</div>
 	);

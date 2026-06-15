@@ -21,6 +21,15 @@ export {
 	type ProfessionalsListResult,
 	type ProfessionalRow,
 	type PendingProfessionalRow,
-	type PendingProfessionalStatus,
 	type PendingSortField,
 } from "./customers/professionals/list";
+export {
+	createProfessionalAPIAction,
+	type CreateProfessionalPayload,
+	type CreateProfessionalResult,
+} from "./customers/professionals/create";
+export {
+	getProfessionalCategoriesAPIAction,
+	getCitiesAPIAction,
+	type SelectOption,
+} from "./customers/professionals/options";

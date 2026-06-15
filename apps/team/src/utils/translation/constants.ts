@@ -514,6 +514,7 @@ export type ProfessionalTranslation = {
 	professionalTabArchived: string;
 	professionalCreateButton: string;
 	professionalColCustomerNo: string;
+	professionalColCompanyName: string;
 	professionalStatusActive: string;
 	professionalStatusSent: string;
 	professionalStatusAccepted: string;

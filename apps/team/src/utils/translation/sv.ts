@@ -536,6 +536,7 @@ export const sweProfessional: ProfessionalTranslation = {
 	professionalTabArchived: "Arkiverade",
 	professionalCreateButton: "Skapa Kund konto",
 	professionalColCustomerNo: "Kund nr.",
+	professionalColCompanyName: "Företag",
 	professionalStatusActive: "Active",
 	professionalStatusSent: "Sent",
 	professionalStatusAccepted: "Accepted",

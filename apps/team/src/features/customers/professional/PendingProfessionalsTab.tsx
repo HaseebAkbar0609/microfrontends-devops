@@ -10,13 +10,7 @@ import { TablePagination } from "@/components/table/TablePagination";
 import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { PendingProfessionalRow, PendingProfessionalStatus, PendingSortField } from "@/api-actions/customers/professionals/list";
-
-const STATUS_CONFIG: Record<PendingProfessionalStatus, { label: string; className: string }> = {
-	sent:     { label: localizationConstants.professionalStatusSent,     className: "bg-blue-100 text-blue-700" },
-	accepted: { label: localizationConstants.professionalStatusAccepted, className: "bg-yellow-100 text-yellow-700" },
-	paid:     { label: localizationConstants.professionalStatusPaid,     className: "bg-emerald-100 text-emerald-700" },
-};
+import type { PendingProfessionalRow, PendingSortField } from "@/api-actions/customers/professionals/list";
 
 interface SortIconProps {
 	readonly field: string;
@@ -64,15 +58,15 @@ export function PendingProfessionalsTab({
 	const t = useTranslate();
 
 	const columns = useMemo(() => [
-		{ id: "customerNo",    key: "customerNo" as PendingSortField,    label: localizationConstants.professionalColCustomerNo, sortable: true },
-		{ id: "companyName",   key: "companyName" as PendingSortField,   label: localizationConstants.companyNameLabel,          sortable: true },
-		{ id: "category",      key: "category" as PendingSortField,      label: localizationConstants.categoryLabel,             sortable: true },
-		{ id: "city",          key: "city" as PendingSortField,          label: localizationConstants.cityLabel,                 sortable: true },
-		{ id: "contactPerson", key: "contactPerson" as PendingSortField, label: localizationConstants.contactPersonLabel,        sortable: true },
-		{ id: "amount",        key: "amount" as PendingSortField,        label: localizationConstants.amountLabel,               sortable: true },
-		{ id: "dueDate",       key: "dueDate" as PendingSortField,       label: localizationConstants.dueDateLabel,              sortable: true },
-		{ id: "status",        key: null,                                label: localizationConstants.statusLabel,               sortable: false },
-		{ id: "actions",       key: null,                                label: "",                                              sortable: false },
+		{ id: "contactUserId", key: "contactUserId" as PendingSortField, label: localizationConstants.professionalColCustomerNo, sortable: true },
+		{ id: "companyName",   key: "companyName" as PendingSortField,   label: localizationConstants.professionalColCompanyName, sortable: true },
+		{ id: "orgNo",         key: "orgNo" as PendingSortField,         label: localizationConstants.orgNumberLabel,     sortable: true },
+		{ id: "category",      key: "category" as PendingSortField,      label: localizationConstants.categoryLabel,      sortable: true },
+		{ id: "contactPerson", key: "contactPerson" as PendingSortField, label: localizationConstants.contactPersonLabel, sortable: true },
+		{ id: "email",         key: "email" as PendingSortField,         label: localizationConstants.emailLabel,         sortable: true },
+		{ id: "phone",         key: "phone" as PendingSortField,         label: localizationConstants.phoneLabel,         sortable: true },
+		{ id: "city",          key: "city" as PendingSortField,          label: localizationConstants.cityLabel,          sortable: true },
+		{ id: "actions",       key: null,                                label: "",                                       sortable: false },
 	], []);
 
 	return (
@@ -123,56 +117,47 @@ export function PendingProfessionalsTab({
 								</TableCell>
 							</TableRow>
 						)}
-						{!isLoading && rows.map((row) => {
-							const statusCfg = STATUS_CONFIG[row.status];
-							return (
-								<TableRow key={row.id} className="hover:bg-slate-50/70 odd:bg-white even:bg-slate-50/40">
-									<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.customerNo}</TableCell>
-									<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.companyName}</TableCell>
-									<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.category}</TableCell>
-									<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.city}</TableCell>
-									<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.contactPerson}</TableCell>
-									<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">
-										{row.amount.toLocaleString("sv-SE")} kr
-									</TableCell>
-									<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.dueDate}</TableCell>
-									<TableCell className="whitespace-nowrap px-4 py-3.5">
-										<span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${statusCfg.className}`}>
-											<Translate text={statusCfg.label} />
-										</span>
-									</TableCell>
-									<TableCell className="border-l border-slate-200 px-4 py-3.5 text-center">
-										<DropdownMenu>
-											<DropdownMenuTrigger asChild>
-												<Button variant="ghost" size="icon" className="h-9 w-9 rounded-md bg-white text-slate-700 hover:bg-slate-100">
-													<EllipsisVertical className="h-4 w-4" />
-												</Button>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent align="end" className="min-w-37.5">
-												<DropdownMenuItem className="gap-2 cursor-pointer py-2">
-													<Eye className="h-4 w-4" />
-													<Translate text={localizationConstants.open} />
-												</DropdownMenuItem>
-												<ConfirmDialog
-													title={t(localizationConstants.delete) + "?"}
-													description={t(localizationConstants.deleteCannotUndoneLabel)}
-													onConfirm={() => onDelete(row.id)}
-													confirmText={t(localizationConstants.delete)}
-													cancelText={t(localizationConstants.cancelLabel)}
-													confirmClassName="bg-red-600 hover:bg-red-700"
-													trigger={
-														<DropdownMenuItem className="gap-2 cursor-pointer py-2 text-red-600 focus:text-red-700" onSelect={(e) => e.preventDefault()}>
-															<Trash2 className="h-4 w-4" />
-															<Translate text={localizationConstants.delete} />
-														</DropdownMenuItem>
-													}
-												/>
-											</DropdownMenuContent>
-										</DropdownMenu>
-									</TableCell>
-								</TableRow>
-							);
-						})}
+						{!isLoading && rows.map((row) => (
+							<TableRow key={row.id} className="hover:bg-slate-50/70 odd:bg-white even:bg-slate-50/40">
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.contactUserId}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.companyName}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.orgNo}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.category}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.contactPerson}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.email}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.phone}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.city}</TableCell>
+								<TableCell className="border-l border-slate-200 px-4 py-3.5 text-center">
+									<DropdownMenu>
+										<DropdownMenuTrigger asChild>
+											<Button variant="ghost" size="icon" className="h-9 w-9 rounded-md bg-white text-slate-700 hover:bg-slate-100">
+												<EllipsisVertical className="h-4 w-4" />
+											</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent align="end" className="min-w-37.5">
+											<DropdownMenuItem className="gap-2 cursor-pointer py-2">
+												<Eye className="h-4 w-4" />
+												<Translate text={localizationConstants.open} />
+											</DropdownMenuItem>
+											<ConfirmDialog
+												title={t(localizationConstants.delete) + "?"}
+												description={t(localizationConstants.deleteCannotUndoneLabel)}
+												onConfirm={() => onDelete(row.id)}
+												confirmText={t(localizationConstants.delete)}
+												cancelText={t(localizationConstants.cancelLabel)}
+												confirmClassName="bg-red-600 hover:bg-red-700"
+												trigger={
+													<DropdownMenuItem className="gap-2 cursor-pointer py-2 text-red-600 focus:text-red-700" onSelect={(e) => e.preventDefault()}>
+														<Trash2 className="h-4 w-4" />
+														<Translate text={localizationConstants.delete} />
+													</DropdownMenuItem>
+												}
+											/>
+										</DropdownMenuContent>
+									</DropdownMenu>
+								</TableCell>
+							</TableRow>
+						))}
 					</TableBody>
 				</Table>
 			</div>
