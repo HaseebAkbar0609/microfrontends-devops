@@ -1,7 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import type { ApiError } from "@/types/api";
 
-const CATEGORIES_PATH = "/api/v1/teams/professionals/categories/list";
+const CATEGORIES_PATH = "/api/v1/teams/professionals/subcategories/list";
 const CITIES_PATH = "/api/v1/location/cities";
 
 export interface SelectOption {
