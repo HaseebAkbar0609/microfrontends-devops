@@ -526,6 +526,16 @@ export type ProfessionalTranslation = {
 	deleteCannotUndoneLabel: string;
 };
 
+export type AdminTranslation = {
+	adminUsers: string;
+	adminUsersListTitle: string;
+	adminAccessCol: string;
+	adminGroupCol: string;
+	adminStatusClosed: string;
+	adminNoUsersFound: string;
+	adminCompanyInformation: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	DashboardTranslation &
@@ -534,7 +544,8 @@ export type Translation = SidebarTranslation &
 	HeaderTranslation &
 	LeadsTranslation &
 	CustomersTranslation &
-	ProfessionalTranslation;
+	ProfessionalTranslation &
+	AdminTranslation;
 
 export type TranslationKeys = keyof Translation;
 

@@ -40,24 +40,25 @@ export function AppShell({ children }: AppShellProps) {
 	}
 
 		return (
-			<div className="flex h-screen flex-1 overflow-hidden">
-				<Sidebar autoCollapse={hasSubSidebar} />
-				{flyoutSubSidebarConfig && (
-					<MyPagesSubSidebar
-						titleKey={flyoutSubSidebarConfig.titleKey}
-						items={flyoutSubSidebarConfig.items}
-					/>
-				)}
+			<div className="flex h-screen flex-1 flex-col overflow-hidden">
+				<div className="flex flex-1 overflow-hidden">
+					<Sidebar autoCollapse={hasSubSidebar} />
+					{flyoutSubSidebarConfig && (
+						<MyPagesSubSidebar
+							titleKey={flyoutSubSidebarConfig.titleKey}
+							items={flyoutSubSidebarConfig.items}
+						/>
+					)}
 
-				<div className="flex flex-1 flex-col overflow-hidden">
-				<Header />
-				<main
-					className={`flex flex-1 flex-col bg-white pb-6 ${hasFlyoutSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
-				>
-					{/* className="flex-1 overflow-auto bg-slate-50" */}
-					{children}
-				</main>
+					<div className="flex flex-1 flex-col overflow-hidden">
+						<Header />
+						<main
+							className={`flex flex-1 flex-col bg-white pb-6 ${hasFlyoutSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
+						>
+							{children}
+						</main>
+					</div>
+				</div>
 			</div>
-		</div>
-	);
+		);
 }
