@@ -9,6 +9,7 @@ import {
 	LeadsTranslation,
 	CustomersTranslation,
 	ProfessionalTranslation,
+	AdminTranslation,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -550,6 +551,16 @@ export const enProfessional: ProfessionalTranslation = {
 	deleteCannotUndoneLabel: "This action cannot be undone.",
 };
 
+export const enAdmin: AdminTranslation = {
+	adminUsers: "Users",
+	adminUsersListTitle: "Users list",
+	adminAccessCol: "Access",
+	adminGroupCol: "Group",
+	adminStatusClosed: "Closed",
+	adminNoUsersFound: "No users found",
+	adminCompanyInformation: "Company information",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -560,4 +571,5 @@ export const en: Translation = {
 	...enLeads,
 	...enCustomers,
 	...enProfessional,
+	...enAdmin,
 };

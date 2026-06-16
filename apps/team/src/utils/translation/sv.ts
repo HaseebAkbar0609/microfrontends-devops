@@ -9,6 +9,7 @@ import {
 	LeadsTranslation,
 	CustomersTranslation,
 	ProfessionalTranslation,
+	AdminTranslation,
 } from "./constants";
 
 export const sweAuth: AuthTranslation = {
@@ -548,6 +549,16 @@ export const sweProfessional: ProfessionalTranslation = {
 	deleteCannotUndoneLabel: "Denna åtgärd kan inte ångras.",
 };
 
+export const sweAdmin: AdminTranslation = {
+	adminUsers: "Användare",
+	adminUsersListTitle: "Användare lista",
+	adminAccessCol: "Access",
+	adminGroupCol: "Grupp",
+	adminStatusClosed: "Stängd",
+	adminNoUsersFound: "Inga användare hittades",
+	adminCompanyInformation: "Företagsuppgifter",
+};
+
 export const swe: Translation = {
 	...sweSidebar,
 	...sweAuth,
@@ -558,4 +569,5 @@ export const swe: Translation = {
 	...sweLeads,
 	...sweCustomers,
 	...sweProfessional,
+	...sweAdmin,
 };

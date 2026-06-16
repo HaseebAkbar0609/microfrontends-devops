@@ -311,8 +311,23 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			id: "admin",
 			label: localizationConstants.adminItem,
 			icon: ShieldUser,
-			href: "/admin",
-			items: [],
+			items: [
+				{
+					id: "admin-settings",
+					label: localizationConstants.settings,
+					href: "/admin",
+				},
+				{
+					id: "admin-users",
+					label: localizationConstants.adminUsers,
+					href: "/admin/users",
+				},
+				{
+					id: "admin-company-information",
+					label: localizationConstants.adminCompanyInformation,
+					href: "/admin/company-information",
+				},
+			],
 		},
 	];
 }
