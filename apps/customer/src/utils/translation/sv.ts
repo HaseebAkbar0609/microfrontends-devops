@@ -228,7 +228,7 @@ export const svDashboard: DashboardText = {
   costCalculatorLabel: "Kostnadskalkylator",
   userNameAnna: "Anna",
   welcomeText:
-    "Välkommen till Timelfow, ditt verktyg för att hantera projekt",
+    "Välkommen till Timeflow, ditt verktyg för att hantera projekt",
   dashboard: "Instrumentpanel",
   resourceLinksTitle: "Länk till guider och kunskapsdatabas",
   hi: "Hej",

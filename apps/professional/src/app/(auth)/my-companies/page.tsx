@@ -15,9 +15,7 @@ const MOCK_COMPANIES = [
 ] as const;
 
 export default function MyCompaniesPage() {
-  const handleCompanyLogin = (companyId: string) => {
-    console.log("Log in to company:", companyId);
-  };
+  const handleCompanyLogin = (_companyId: string) => {};
 
   return (
     <div className="w-full bg-background rounded-[10px] shadow-sm overflow-hidden flex flex-col md:flex-row flex-1 min-h-0">

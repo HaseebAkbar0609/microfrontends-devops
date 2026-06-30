@@ -21,9 +21,7 @@ export default function BankSection() {
 		
 	});
 
-	const onSubmit = (data: BankFormValues) => {
-		console.log(data);
-	};
+	const onSubmit = (_data: BankFormValues) => {};
 
 	return (
 		<Form {...form}>

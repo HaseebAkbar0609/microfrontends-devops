@@ -62,7 +62,7 @@ export const svAppLauncher: AppLauncherTranslation = {
 export const svAuth: AuthTranslation = {
 	addUser: "Lägg till användare",
 	loginWelcomeTitle: "Välkommen in på TimeFlow",
-	loginWelcomeSubtitle: "Logga in på kund- eller medlemskonto",
+	loginWelcomeSubtitle: "Logga in på professionellt konto",
 	loginTabPassword: "Lösenord",
 	loginTabBankId: "BankID",
 	loginEmailOrUsernameLabel: "E-post",

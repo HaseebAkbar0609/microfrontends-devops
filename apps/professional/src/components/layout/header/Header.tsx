@@ -2,7 +2,6 @@
 
 import { BellDot, Inbox } from "lucide-react";
 import CompanyLogo from "./CompanyLogo";
-// import { useCompanyInformation } from "@/features/admin/company-details/hooks/useCompanyInformation";
 import HeaderIconButton from "./HeaderIconButton";
 import UserAvatarButton from "./UserAvatarButton";
 import { SLATE } from "@/constants/colors";
@@ -18,11 +17,6 @@ import {
 
 const Header = () => {
 	const { user, company } = useAuthStatus() as { user: User; company: Company | null };
-	// const { data: companyInformation } = useCompanyInformation();
-	// const logoUrl =
-	// 	typeof companyInformation?.companyLogotype === "string"
-	// 		? companyInformation.companyLogotype
-	// 		: null;
 
 	return (
 		<header className="flex h-16 w-full items-center border-b border-slate-200 bg-white px-3 sm:px-5">
