@@ -1,124 +1,3 @@
-// "use client";
-
-// import { useState } from "react";
-// import type { Control, FieldPath, FieldValues } from "react-hook-form";
-// import { useTranslation } from "react-i18next";
-// import { Eye, EyeOff } from "lucide-react";
-
-// import {
-//   FormControl,
-//   FormField,
-//   FormItem,
-//   FormLabel,
-//   FormMessage,
-// } from "@/components/ui/form";
-// import { Input } from "@/components/ui/input";
-// import { cn } from "@/lib/utils";
-// import { Translate } from "@/utils/translation/translate";
-
-// export interface FormInputProps<
-//   TFieldValues extends FieldValues = FieldValues,
-//   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-// > {
-//   control: Control<TFieldValues>;
-//   name: TName;
-//   label?: React.ReactNode;
-//   placeholder?: string;
-//   type?: React.ComponentProps<"input">["type"];
-//   disabled?: boolean;
-//   className?: string;
-//   labelClassName?: string;
-//   inputClassName?: string;
-//   messageClassName?: string;
-//   translateError?: (message: string) => string;
-//   inputProps?: Omit<
-//     React.ComponentProps<"input">,
-//     "name" | "placeholder" | "type" | "disabled" | "className"
-//   >;
-// }
-
-// export function FormInput<
-//   TFieldValues extends FieldValues = FieldValues,
-//   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
-// >({
-//   control,
-//   name,
-//   label,
-//   placeholder,
-//   type = "text",
-//   disabled,
-//   className,
-//   labelClassName,
-//   inputClassName,
-//   messageClassName,
-//   translateError,
-//   inputProps,
-// }: FormInputProps<TFieldValues, TName>) {
-//   const { t } = useTranslation();
-
-//   // 👇 state for password toggle
-//   const [showPassword, setShowPassword] = useState(false);
-
-//   const resolvedPlaceholder =
-//     placeholder != null ? t(placeholder) : undefined;
-
-//   const resolvedLabel =
-//     typeof label === "string" ? <Translate text={label} /> : label;
-
-//   // 👇 determine input type
-//   const inputType =
-//     type === "password" ? (showPassword ? "text" : "password") : type;
-
-//   return (
-//     <FormField
-//       control={control}
-//       name={name}
-//       render={({ field }) => (
-//         <FormItem className={cn("grid gap-0", className)}>
-//           {label != null && (
-//             <FormLabel className={labelClassName}>
-//               {resolvedLabel}
-//             </FormLabel>
-//           )}
-
-//           <FormControl>
-//             <div className="relative">
-//               <Input
-//                 type={inputType}
-//                 placeholder={resolvedPlaceholder}
-//                 disabled={disabled}
-//                 className={cn("pr-10", inputClassName)}
-//                 {...field}
-//                 {...inputProps}
-//               />
-
-//               {/* 👇 Eye Icon */}
-//               {type === "password" && (
-//                 <button
-//                   type="button"
-//                   onClick={() => setShowPassword((prev) => !prev)}
-//                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-//                 >
-//                   {showPassword ? (
-//                     <EyeOff size={18} />
-//                   ) : (
-//                     <Eye size={18} />
-//                   )}
-//                 </button>
-//               )}
-//             </div>
-//           </FormControl>
-
-//           <FormMessage
-//             className={messageClassName}
-//             translate={translateError ?? t}
-//           />
-//         </FormItem>
-//       )}
-//     />
-//   );
-// }
-
 "use client";
 
 import { useState } from "react";
@@ -182,7 +61,6 @@ export function FormInput<
 }: FormInputProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 
-	// 👇 state for password toggle
 	const [showPassword, setShowPassword] = useState(false);
 
 	const resolvedPlaceholder =
@@ -191,7 +69,6 @@ export function FormInput<
 	const resolvedLabel =
 		typeof label === "string" ? <Translate text={label} /> : label;
 
-	// 👇 determine input type
 	const inputType =
 		type === "password" ? (showPassword ? "text" : "password") : type;
 
@@ -240,7 +117,6 @@ export function FormInput<
 									{...inputProps}
 								/>
 
-								{/* 👇 Eye Icon */}
 								{type === "password" && (
 									<button
 										type="button"

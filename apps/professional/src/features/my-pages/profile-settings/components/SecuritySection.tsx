@@ -15,9 +15,7 @@ export default function SecuritySection() {
 		resolver: zodResolver(securitySchema),
 	});
 
-	const onSubmit = (data: SecurityFormValues) => {
-		console.log(data);
-	};
+	const onSubmit = (_data: SecurityFormValues) => {};
 
 	return (
 		<Form {...form}>

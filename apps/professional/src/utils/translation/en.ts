@@ -216,7 +216,7 @@ export const enManageCart: ManageCartTranslation = {
 export const enAuth: AuthTranslation = {
 	addUser: "Add User",
 	loginWelcomeTitle: "Welcome to TimeFlow",
-	loginWelcomeSubtitle: "Log in to your customer or member account",
+	loginWelcomeSubtitle: "Log in to your professional account",
 	loginTabPassword: "Password",
 	loginTabBankId: "BankID",
 	loginEmailOrUsernameLabel: "Email",

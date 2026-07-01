@@ -22,7 +22,7 @@ export default function OfferList() {
         onSearchChange={(val) => changeQuery("search", val)}
         createButtonLabel="Favourite jobs"
         createButtonIcon={Heart}
-        onCreateClick={() => console.log("Favourite jobs")}
+        onCreateClick={() => {}}
       />
       <div className="p-5 flex-1">
         <OfferListTable data={DUMMY_DATA} totalItems={DUMMY_DATA.length} />

@@ -5,7 +5,6 @@ import { I18nextProvider } from "react-i18next";
 import { ReactNode } from "react";
 import i18n from "@/utils/localization";
 import { AuthProvider } from "@/context/AuthContext";
-// import { AuthGate } from "@/components/auth/AuthGate";
 
 const queryClient = new QueryClient();
 

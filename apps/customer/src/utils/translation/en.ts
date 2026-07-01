@@ -234,7 +234,7 @@ export const enDashboard: DashboardText = {
   costCalculatorLabel: "Cost calculator",
 
   userNameAnna: "Anna",
-  welcomeText: "Welcome to Timelfow, your tool for managing projects",
+  welcomeText: "Welcome to Timeflow, your tool for managing projects",
 
   dashboard: "Dashboard",
   resourceLinksTitle: "Link to guides and knowledge base",
