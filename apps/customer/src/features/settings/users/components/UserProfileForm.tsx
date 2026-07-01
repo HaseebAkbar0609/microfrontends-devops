@@ -76,13 +76,12 @@ export function UserProfileForm({
 	});
 
 	const onSubmit = async (values: UserProfileFormValues) => {
-		const payload = {
+		const _payload = {
 			...values,
 			personal_number: isEdit && user ? user.personal_number : values.personal_number,
 		};
 
 		// API integration pending backend endpoint; save is mocked intentionally.
-		console.log("Mock save user", payload);
 		setIsSaved(true);
 		onSaved();
 	};
@@ -285,7 +284,6 @@ export function UserProfileForm({
 								className={deleteButtonClassName}
 								onClick={() => {
 									// API integration pending backend endpoint; delete is mocked intentionally.
-									console.log("Mock delete user", user?.id);
 									onSaved();
 								}}
 							>
