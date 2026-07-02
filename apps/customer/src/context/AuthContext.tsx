@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { AuthUserInfo } from "@/types/api";
 
 import { authStorage } from "@/lib/authStorage";
+import { setSessionHintCookie } from "@/lib/sessionHintCookie";
 
 export type AuthContextType = {
 	accessToken: string | null;
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const hydrateFromStorage = () => {
 		const token = authStorage.getAccessToken();
 		const storedUser = authStorage.getUserData() as AuthUserInfo | null;
+		setSessionHintCookie(!!token);
 		setAccessTokenState(token);
 		if (storedUser) {
 			setUserState(storedUser);
