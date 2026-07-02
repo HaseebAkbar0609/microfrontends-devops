@@ -51,8 +51,7 @@ export const authStorage = {
 		const user = localStorage.getItem("user");
 		try {
 			return user ? JSON.parse(user) : null;
-		} catch (error) {
-			console.error("error", error);
+		} catch {
 			return null;
 		}
 	},

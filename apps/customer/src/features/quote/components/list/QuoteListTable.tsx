@@ -62,12 +62,6 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 	const id = params.id as string;
 	const { isOpen, openModal, closeModal } = useModal<ModalType>();
 
-	// const handleConfirm = () => {
-	// 	if (!type || !modalId) return;
-	// 	// Logic for approval or rejection goes here
-	// 	closeModal();
-	// };
-
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 overflow-hidden mt-2">
 			<Table>
