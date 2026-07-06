@@ -673,6 +673,64 @@ export type PriceCalculatorModule = {
   priceCalculatorWorkRoofer: string;
 };
 
+export type ProjectsModule = {
+  projectTabProject: string;
+  projectTabContract: string;
+  projectTabFinance: string;
+  projectTabQualityManagement: string;
+  projectSubTabPersonalInfo: string;
+  projectSubTabDocuments: string;
+  projectSubTabMeetingMinutes: string;
+  projectSubTabQA: string;
+  projectSubTabTimeline: string;
+  projectSubTabOrgPlan: string;
+  projectInfoTitle: string;
+  projectCompanyInfoTitle: string;
+  projectNameLabel: string;
+  projectReferenceNoLabel: string;
+  projectStartDateLabel: string;
+  projectClientNoLabel: string;
+  projectNoLabel: string;
+  projectEndDateLabel: string;
+  projectContactPersonNameLabel: string;
+  projectMobileNumberLabel: string;
+  projectEmailAddressLabel: string;
+  projectAddressLabel: string;
+  projectPostalCodeLabel: string;
+  projectCompanyNameLabel: string;
+  projectPersonalDocumentTitle: string;
+  projectDocNameLabel: string;
+  projectDocTypeLabel: string;
+  projectUploadFilesLabel: string;
+  projectAllowedFilesLabel: string;
+  projectSpecificationLabel: string;
+  projectFileDateLabel: string;
+  projectFileLabel: string;
+  projectViewFileLabel: string;
+  projectCreateNewLabel: string;
+  projectActionProtocolLabel: string;
+  projectProtocolGood: string;
+  projectProtocolBad: string;
+  projectProtocolModerate: string;
+  projectBookMeetingLabel: string;
+  projectViewOfferLabel: string;
+  projectCompanyInfoBtnLabel: string;
+  projectResponseTimeLabel: string;
+  projectContactPersonLabel: string;
+  projectSendLabel: string;
+  projectMessagePlaceholder: string;
+  projectAttachLabel: string;
+  projectCancelLabel: string;
+  projectEstTimeLabel: string;
+  projectLastUpdatedLabel: string;
+  projectOrgCompanyLabel: string;
+  projectOrgCategoryLabel: string;
+  projectOrgRoleLabel: string;
+  projectOrgPhoneLabel: string;
+  projectOrgMailLabel: string;
+  projectNoProjectsFound: string;
+};
+
 export type Translation = SidebarTranslation &
   AuthTranslation &
   CommonFiles &
@@ -685,7 +743,8 @@ export type Translation = SidebarTranslation &
   SupplierModule &
   QuestionsModule &
   SupportModule &
-  PriceCalculatorModule;
+  PriceCalculatorModule &
+  ProjectsModule;
 
 export type TranslationKeys = keyof Translation;
 
