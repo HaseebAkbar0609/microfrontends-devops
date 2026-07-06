@@ -4,6 +4,7 @@
  * Uses appConstants for token key so it stays in sync with the rest of the app.
  */
 import { appConstants } from "@/constants/api";
+import { setSessionHintCookie, clearSessionHintCookie } from "@/lib/sessionHintCookie";
 
 export const authStorage = {
 	getAccessToken(): string | null {
@@ -18,6 +19,7 @@ export const authStorage = {
 	setAuthData(accessToken: string) {
 		if (typeof window !== "undefined") {
 			localStorage.setItem(appConstants.LOCAL_COOKIE_NAME, accessToken);
+			setSessionHintCookie(true);
 		}
 	},
 	setRefreshToken(refreshToken: string) {
@@ -32,6 +34,7 @@ export const authStorage = {
 		if (typeof window === "undefined") return;
 		localStorage.removeItem(appConstants.LOCAL_COOKIE_NAME);
 		localStorage.removeItem(appConstants.LOCAL_REFRESH_COOKIE_NAME);
+		clearSessionHintCookie();
 	},
 	/** Clear tokens and cached user (full client sign-out). */
 	clearSession() {

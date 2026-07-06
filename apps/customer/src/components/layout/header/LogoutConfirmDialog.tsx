@@ -32,12 +32,11 @@ export function LogoutConfirmDialog({
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
 
 	const handleConfirm = async () => {
+		onOpenChange(false);
 		setIsLoggingOut(true);
 		try {
 			await logoutAPIAction({ clearSession });
-			onOpenChange(false);
 			router.replace("/login");
-			router.refresh();
 		} finally {
 			setIsLoggingOut(false);
 		}

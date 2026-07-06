@@ -56,6 +56,7 @@ export const API_PATH = {
 export const appConstants = {
 	LOCAL_COOKIE_NAME: "CZWAuthToken",
 	LOCAL_REFRESH_COOKIE_NAME: "CZWREFRESHToken",
+	LOCAL_SESSION_HINT_COOKIE_NAME: "czw_customer_session",
 	API_RESPONSES: {
 		SUCCESS: 200,
 		BAD_REQUEST: 400,
