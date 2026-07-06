@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LogIn } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -28,6 +28,9 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 export function LoginForm() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const rawNext = searchParams.get("next");
+	const redirectTo = rawNext?.startsWith("/") ? rawNext : "/home";
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isOtpVisible, setIsOtpVisible] = useState(false);
 	const [email, setEmail] = useState("");
@@ -49,7 +52,7 @@ export function LoginForm() {
 			{ setAccessToken, setUser },
 		);
 		if (result.success) {
-			router.push("/home");
+			router.push(redirectTo);
 		} else if (result.data?.is_verified === false) {
 			setEmail(result.data.email || data.email);
 			setIsOtpVisible(true);
@@ -70,12 +73,7 @@ export function LoginForm() {
 			{ setAccessToken, setUser },
 		);
 		if (result.success) {
-			// Redirect back to login tab or just refresh the page
-			// The user said "show this message in UI not code"
-			// But for OTP verification, we usually want to move forward.
-			// Letting it redirect to login is probably best.
-			setIsOtpVisible(false);
-			form.reset();
+			router.push(redirectTo);
 		}
 		setIsSubmitting(false);
 	};
