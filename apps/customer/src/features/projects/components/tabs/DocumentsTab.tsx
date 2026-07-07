@@ -140,7 +140,7 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
                   </span>
                 ))
               )}
-              <ChevronDown className="h-4 w-4 text-slate-400 ml-auto flex-shrink-0" />
+              <ChevronDown className="h-4 w-4 text-slate-400 ml-auto shrink-0" />
             </div>
 
             <Button
@@ -185,7 +185,7 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
                   className="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-700 text-left"
                 >
                   <Translate text={label} />
-                  <ArrowUpDown className="h-3 w-3 flex-shrink-0" />
+                  <ArrowUpDown className="h-3 w-3 shrink-0" />
                 </button>
               ))}
               <span />
@@ -211,7 +211,7 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
                         alt="PDF"
                         width={28}
                         height={28}
-                        className="flex-shrink-0"
+                        className="shrink-0"
                       />
                       <span className="text-sm text-slate-800 truncate font-medium">
                         {doc.name}
