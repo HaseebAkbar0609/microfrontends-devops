@@ -37,7 +37,7 @@ function ProjectCard({ project }: { project: ActiveProject }) {
       className="group block bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all p-5"
     >
       <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+        <div className="shrink-0 w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
           <FolderOpen className="h-5 w-5 text-slate-600" />
         </div>
 
@@ -51,7 +51,7 @@ function ProjectCard({ project }: { project: ActiveProject }) {
                 {project.referenceNo} · {project.category}
               </p>
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex items-center gap-2 shrink-0">
               <Badge
                 variant="outline"
                 className={cn(

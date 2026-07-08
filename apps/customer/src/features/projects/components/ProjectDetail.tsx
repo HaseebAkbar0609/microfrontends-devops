@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, Suspense } from "react";
+import { useEffect, useMemo, useState, Suspense } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQueryParams } from "@/hooks/useQueryParams";
@@ -25,6 +25,7 @@ import { MeetingMinutesTab } from "./tabs/MeetingMinutesTab";
 import { QuestionsTab } from "./tabs/QuestionsTab";
 import { TimelineTab } from "./tabs/TimelineTab";
 import { OrgPlanTab } from "./tabs/OrgPlanTab";
+import { ContractTab } from "./tabs/ContractTab";
 
 const subTabTriggerClass =
   "h-8 rounded-[6px] border-0 bg-transparent px-3 py-[6px] text-sm font-medium text-slate-500 shadow-none " +
@@ -68,6 +69,8 @@ function ProjectDetailInner() {
     }
   }, [searchParams, replaceQueries]);
 
+  const [contractFullscreen, setContractFullscreen] = useState(false);
+
   const project = useMemo(
     () => DUMMY_PROJECTS.find((p) => p.id === id) ?? DUMMY_PROJECTS[0],
     [id],
@@ -92,33 +95,36 @@ function ProjectDetailInner() {
 
   return (
     <div className="flex flex-col flex-1 bg-slate-50/50 min-h-screen">
-      <div className="bg-white border-b border-slate-200">
-        <PageHeader
-          title={project.name}
-          breadcrumbs={breadcrumbs}
-          className="border-none px-8 py-6"
-        />
+      <div className={cn("bg-white", !contractFullscreen && "border-b border-slate-200")}>
+        {!contractFullscreen && (
+          <PageHeader
+            title={project.name}
+            breadcrumbs={breadcrumbs}
+            className="border-none px-6 py-6"
+          />
+        )}
 
-        {/* Main tabs */}
-        <div className="px-5">
+        <div className={cn(!contractFullscreen && "px-5 ml-4")}>
           <Tabs
             value={activeTab}
             onValueChange={handleMainTabChange}
             className="w-full"
           >
-            <TabsList className="flex h-auto w-full flex-wrap justify-start gap-x-8 gap-y-1 rounded-none border-0 border-b border-slate-200 bg-transparent p-0 md:gap-x-10">
-              {ACTIVE_PROJECT_MAIN_TABS.map((tab) => (
-                <TabsTrigger
-                  key={tab.value}
-                  value={tab.value}
-                  className={cn(projectDetailTabTriggerClass)}
-                >
-                  <Translate text={tab.label} />
-                </TabsTrigger>
-              ))}
-            </TabsList>
+            {!contractFullscreen && (
+              <TabsList className="flex h-auto w-full flex-wrap justify-start gap-x-8 gap-y-1 rounded-none border-0 border-b border-slate-200 bg-transparent p-0 md:gap-x-10">
+                {ACTIVE_PROJECT_MAIN_TABS.map((tab) => (
+                  <TabsTrigger
+                    key={tab.value}
+                    value={tab.value}
+                    className={cn(projectDetailTabTriggerClass)}
+                  >
+                    <Translate text={tab.label} />
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            )}
 
-            <div className="mt-6 pb-0">
+            <div className={cn(!contractFullscreen && "mt-6 pb-0")}>
               <TabsContent value="project" className="mt-0">
                 {/* Sub-tabs — only shown under "project" tab */}
                 <Tabs
@@ -160,9 +166,7 @@ function ProjectDetailInner() {
               </TabsContent>
 
               <TabsContent value="contract" className="mt-0 px-0">
-                <div className="py-16 text-center text-slate-400 text-sm">
-                  <Translate text={localizationConstants.comingSoon} />
-                </div>
+                <ContractTab onFullscreenChange={setContractFullscreen} />
               </TabsContent>
 
               <TabsContent value="finance" className="mt-0 px-0">
