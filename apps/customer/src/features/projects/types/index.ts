@@ -13,6 +13,18 @@ export interface ActiveProject {
   postalCode: string;
   companyName: string;
   status: "active" | "on-hold" | "completed";
+  statusLabel?: string;
+  progressPercent?: number;
+  updatedAt?: string;
+  primaryContact?: {
+    id?: string;
+    name?: string;
+  };
+  summary?: {
+    openTasks?: number;
+    completedTasks?: number;
+    nextMilestone?: string;
+  };
   category: string;
   description?: string;
 }
