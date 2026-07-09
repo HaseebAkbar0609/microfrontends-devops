@@ -24,7 +24,7 @@ export default function MyCompaniesPage() {
       try {
         const result = await listProfessionalsAPIAction();
         setCompanies(result.items);
-      } catch (error) {
+      } catch {
         showToast("error", "Failed to load companies. Please try again.");
       } finally {
         setIsLoading(false);

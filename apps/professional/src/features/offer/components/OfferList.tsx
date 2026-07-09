@@ -37,7 +37,7 @@ export default function OfferList() {
         });
         setOffers(result.items);
         setTotalItems(result.totalItems);
-      } catch (error) {
+      } catch {
         showToast("error", "Failed to load offers. Please try again.");
       } finally {
         setIsLoading(false);

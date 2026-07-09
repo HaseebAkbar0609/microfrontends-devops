@@ -1,6 +1,5 @@
 import { BreadcrumbItem } from "@/types/common";
 import localizationConstants from "@/utils/translation/constants";
-import { OfferList } from "../types";
 
 export const BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
