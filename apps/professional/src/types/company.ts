@@ -31,6 +31,7 @@ export interface ProfessionalAccountItem {
 	phone?: string | null;
 	city?: string | null;
 	status?: string | null;
+	[key: string]: unknown;
 }
 
 export interface ProfessionalsListApiResponse {
