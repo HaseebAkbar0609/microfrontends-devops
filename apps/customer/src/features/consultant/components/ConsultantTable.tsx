@@ -32,10 +32,7 @@ import { cn, getInitials } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type {
-	Consultant,
-	ConsultantColumnField,
-} from "../types/consultant";
+import type { Consultant, ConsultantColumnField } from "../types/consultant";
 import {
 	CONSULTANT_COLUMNS,
 	CONSULTANT_STATUS_LABEL_KEY,
@@ -98,7 +95,6 @@ const SortIcon = ({
 
 const ConsultantActions = () => {
 	const t = useTranslate();
-	// Detail / message / engagement views do not exist yet — placeholder toast.
 	const notify = () => showToast("info", t(localizationConstants.comingSoon));
 
 	return (
@@ -118,7 +114,9 @@ const ConsultantActions = () => {
 					onClick={notify}
 				>
 					<UserRound className="h-4 w-4 text-accent-foreground" />
-					<Translate text={localizationConstants.consultantViewProfile} />
+					<Translate
+						text={localizationConstants.consultantViewProfile}
+					/>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					className="gap-2 cursor-pointer py-2"
@@ -189,7 +187,9 @@ export function ConsultantTable({ data, totalItems }: ConsultantTableProps) {
 					return (
 						<span className="text-slate-600">
 							<Translate
-								text={CONSULTANT_TYPE_LABEL_KEY[consultant.type]}
+								text={
+									CONSULTANT_TYPE_LABEL_KEY[consultant.type]
+								}
 							/>
 						</span>
 					);
