@@ -424,6 +424,8 @@ export const enMyPage: MyPagesTranslation = {
 	selectField: "Select",
 	profileUpdated: "Profile updated successfully.",
 	profileUpdateFailed: "Failed to update profile. Please try again.",
+	loadCountriesFailed: "Failed to load countries. Please try again.",
+	invalidCurrentPassword: "Current password is incorrect. Please try again.",
 
 	bankName: "Bank Name",
 	accountNumber: "Account Number",

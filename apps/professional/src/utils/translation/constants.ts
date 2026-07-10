@@ -312,6 +312,8 @@ export type MyPagesTranslation = {
 	selectField: string;
 	profileUpdated: string;
 	profileUpdateFailed: string;
+	loadCountriesFailed: string;
+	invalidCurrentPassword: string;
 
 	bankName: string;
 	accountNumber: string;
