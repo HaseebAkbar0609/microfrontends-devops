@@ -620,6 +620,8 @@ export const svMyPage: MyPagesTranslation = {
 	selectField: "Välj",
 	profileUpdated: "Profilen har uppdaterats.",
 	profileUpdateFailed: "Det gick inte att uppdatera profilen. Försök igen.",
+	loadCountriesFailed: "Det gick inte att läsa in länder. Försök igen.",
+	invalidCurrentPassword: "Det nuvarande lösenordet är felaktigt. Försök igen.",
 
 	bankName: "Banknamn",
 	accountNumber: "Kontonummer",
