@@ -9,6 +9,8 @@ import type { City } from "@/types/location";
 import { FormSelect } from "./FormSelect";
 import { getCitiesAPIAction } from "@/api-actions/location/cities";
 
+const MAX_AUTO_LOAD_MORE_PAGES = 80;
+
 export interface FormCitySelectProps<
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -72,7 +74,6 @@ export function FormCitySelect<
 	const [isCitySearchLoading, setIsCitySearchLoading] = useState(false);
 	const citySearchRequestId = useRef(0);
 	const autoLoadMoreCount = useRef(0);
-	const MAX_AUTO_LOAD_MORE_PAGES = 80;
 	/** Keeps label when the selected id is no longer in `cities` (e.g. after search clears and list resets to page 1). */
 	const selectedCityLabelRef = useRef<{ id: string; name: string } | null>(
 		null,
