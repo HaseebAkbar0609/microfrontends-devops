@@ -148,10 +148,10 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
         <div className="flex">
 
           {/* ── Left panel: 180px, sticky task labels ── */}
-          <div className="w-[180px] flex-shrink-0 border-r border-[#E2E8F0]">
+          <div className="w-45 shrink-0 border-r border-[#E2E8F0]">
 
             {/* Header — spans all 3 calendar header rows = 144px */}
-            <div className="h-[144px] border-b border-[#E2E8F0] px-4 flex items-center">
+            <div className="h-36 border-b border-[#E2E8F0] px-4 flex items-center">
               <span className="text-xl font-medium text-[#0A0A0A]">
                 {project.estimatedDays} days
               </span>
@@ -175,14 +175,14 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
                     <button
                       type="button"
                       onClick={() => toggle(task.id)}
-                      className="flex-shrink-0 text-[#1E293B] hover:text-[#0A0A0A]"
+                      className="shrink-0 text-[#1E293B] hover:text-[#0A0A0A]"
                     >
                       {task.isExpanded
                         ? <ChevronDown  className="h-4 w-4" />
                         : <ChevronRight className="h-4 w-4" />}
                     </button>
                   ) : (
-                    <span className="w-4 flex-shrink-0" />
+                    <span className="w-4 shrink-0" />
                   )}
                   <span className="text-sm font-medium text-[#020617] truncate">
                     {task.title}
@@ -194,7 +194,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
 
           {/* ── Right panel: scrollable calendar grid ── */}
           <div
-            className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:h-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full"
+            className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:h-0.75 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full"
           >
             {/* Month header — 48px */}
             <div className="flex h-12 border-b border-[#E2E8F0]">
@@ -202,7 +202,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
                 <div
                   key={m.label}
                   style={{ width: m.count * CELL_W, minWidth: m.count * CELL_W }}
-                  className="flex-shrink-0 flex items-center justify-center text-sm font-medium text-[#0A0A0A] border-r border-[#E2E8F0] last:border-0"
+                  className="shrink-0 flex items-center justify-center text-sm font-medium text-[#0A0A0A] border-r border-[#E2E8F0] last:border-0"
                 >
                   {m.label}
                 </div>
@@ -215,7 +215,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
                 <div
                   key={`wk-${w.weekNum}`}
                   style={{ width: w.days.length * CELL_W, minWidth: w.days.length * CELL_W }}
-                  className="flex-shrink-0 flex items-center justify-center text-sm font-medium text-[#0A0A0A] border-l border-[#E2E8F0] first:border-0"
+                  className="shrink-0 flex items-center justify-center text-sm font-medium text-[#0A0A0A] border-l border-[#E2E8F0] first:border-0"
                 >
                   Week {w.weekNum}
                 </div>
@@ -228,7 +228,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
                 <div
                   key={day.toISOString()}
                   style={{ width: CELL_W, minWidth: CELL_W }}
-                  className="flex-shrink-0 flex items-center justify-center text-sm font-medium text-[#0A0A0A] border-r border-[#F1F5F9] last:border-0"
+                  className="shrink-0 flex items-center justify-center text-sm font-medium text-[#0A0A0A] border-r border-[#F1F5F9] last:border-0"
                 >
                   {day.getDate()}
                 </div>
@@ -247,7 +247,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
                     <div
                       key={day.toISOString()}
                       style={{ width: CELL_W, minWidth: CELL_W }}
-                      className="flex-shrink-0 h-full"
+                      className="shrink-0 h-full"
                     >
                       {/* Inner wrapper: always bg-[#E2E8F0] with 8px vertical padding */}
                       <div className="flex h-full py-2 bg-[#E2E8F0]">

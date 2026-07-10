@@ -126,6 +126,10 @@ axiosInstance.interceptors.response.use(
     }
 
     if (originalRequest._retry) {
+      authStorage.clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
       return Promise.reject(error);
     }
     originalRequest._retry = true;
@@ -137,6 +141,9 @@ axiosInstance.interceptors.response.use(
       return axiosInstance(originalRequest);
     } catch {
       authStorage.clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
       return Promise.reject(error);
     }
   }

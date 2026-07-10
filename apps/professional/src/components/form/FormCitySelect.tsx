@@ -9,6 +9,8 @@ import type { City } from "@/types/location";
 import { FormSelect } from "./FormSelect";
 import { getCitiesAPIAction } from "@/api-actions/location/cities";
 
+const MAX_AUTO_LOAD_MORE_PAGES = 80;
+
 export interface FormCitySelectProps<
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -76,6 +78,10 @@ export function FormCitySelect<
 	const selectedCityLabelRef = useRef<{ id: string; name: string } | null>(
 		null,
 	);
+	const skipCityResetWhenValueRef = useRef(skipCityResetWhenValue);
+	const ensureOptionIfMissingRef = useRef(ensureOptionIfMissing);
+	skipCityResetWhenValueRef.current = skipCityResetWhenValue;
+	ensureOptionIfMissingRef.current = ensureOptionIfMissing;
 
 	useEffect(() => {
 		const id = typeof selectedCityId === "string" ? selectedCityId : "";
@@ -129,9 +135,11 @@ export function FormCitySelect<
 	useEffect(() => {
 		const fetchInitialCities = async () => {
 			const currentCity = getValues(name) as string;
+			const savedCityId =
+				skipCityResetWhenValueRef.current ?? ensureOptionIfMissingRef.current;
 			const preserve =
-				skipCityResetWhenValue !== undefined &&
-				currentCity === skipCityResetWhenValue;
+				savedCityId !== undefined &&
+				currentCity === savedCityId;
 
 			if (!preserve) {
 				setValue(name, "" as never);
@@ -171,7 +179,7 @@ export function FormCitySelect<
 		};
 
 		fetchInitialCities();
-	}, [countryId, getValues, name, setValue, skipCityResetWhenValue]);
+	}, [countryId, getValues, name, setValue]);
 
 	const hasMoreCities = countryId ? cityCurrentPage < cityTotalPages : false;
 
@@ -188,20 +196,23 @@ export function FormCitySelect<
 
 		setIsLoadingMoreCities(true);
 		const nextPage = cityCurrentPage + 1;
-		const result = await getCitiesAPIAction({
-			countryId,
-			page: nextPage,
-			pageSize: 50,
-			search: citySearchQuery || undefined,
-		});
+		try {
+			const result = await getCitiesAPIAction({
+				countryId,
+				page: nextPage,
+				pageSize: 50,
+				search: citySearchQuery || undefined,
+			});
 
-		if (result.success && result.data) {
-			const responseData = result.data;
-			setCities((prev) => [...prev, ...(responseData.data ?? [])]);
-			setCityCurrentPage(responseData.current_page ?? nextPage);
-			setCityTotalPages(responseData.total_pages ?? cityTotalPages);
+			if (result.success && result.data) {
+				const responseData = result.data;
+				setCities((prev) => [...prev, ...(responseData.data ?? [])]);
+				setCityCurrentPage(responseData.current_page ?? nextPage);
+				setCityTotalPages(responseData.total_pages ?? cityTotalPages);
+			}
+		} finally {
+			setIsLoadingMoreCities(false);
 		}
-		setIsLoadingMoreCities(false);
 	}, [
 		countryId,
 		hasMoreCities,
@@ -238,7 +249,7 @@ export function FormCitySelect<
 		) {
 			return;
 		}
-		if (autoLoadMoreCount.current >= 80) {
+		if (autoLoadMoreCount.current >= MAX_AUTO_LOAD_MORE_PAGES) {
 			return;
 		}
 		autoLoadMoreCount.current += 1;
@@ -345,9 +356,21 @@ export function FormCitySelect<
 			]
 			: mapped;
 
-	const cityOptions = syntheticSelected
+	const rawCityOptions = syntheticSelected
 		? [syntheticSelected, ...baseOptions]
 		: baseOptions;
+
+	// syntheticSelected and the ensureOptionIfMissing entry can both resolve to
+	// the same city id at once (e.g. a search temporarily drops the pre-filled
+	// city out of `mapped` while selectedCityLabelRef still remembers it) —
+	// dedupe by value, keeping the first occurrence since syntheticSelected
+	// (when present) carries the more accurate remembered label.
+	const seenCityIds = new Set<string>();
+	const cityOptions = rawCityOptions.filter((option) => {
+		if (seenCityIds.has(option.value)) return false;
+		seenCityIds.add(option.value);
+		return true;
+	});
 
 	return (
 		<FormSelect
