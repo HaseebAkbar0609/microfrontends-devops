@@ -57,6 +57,7 @@ export const API_PATH = {
 	// dummy data (see api-actions/consultant/types.ts).
 	CONSULTANT: {
 		TYPES: `${BASE_PATHS.CONSULTANT}/types`,
+		REQUESTS: `${BASE_PATHS.CONSULTANT}/requests`,
 	},
 };
 

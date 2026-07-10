@@ -1,6 +1,7 @@
 import { BreadcrumbItem } from "@/types/user";
 import localizationConstants from "@/utils/translation/constants";
 import type { ConsultantTypeItem } from "../types/consultantType";
+import type { ConsultantRequest } from "../types/consultantRequest";
 
 export const DIRECTORY_BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/home" },
@@ -10,6 +11,7 @@ export const DIRECTORY_BREADCRUMBS: BreadcrumbItem[] = [
 
 export const CONSULTANT_DIRECTORY_TABS = [
 	{ value: "type", label: localizationConstants.type },
+	{ value: "requests", label: localizationConstants.consultantRequestsTab },
 ] as const;
 
 export type ConsultantDirectoryTabValue =
@@ -21,6 +23,33 @@ export const CONSULTANT_DIRECTORY_TAB_VALUES = CONSULTANT_DIRECTORY_TABS.map(
 
 export const CONSULTANT_DIRECTORY_DEFAULT_TAB: ConsultantDirectoryTabValue =
 	"type";
+
+export const CONSULTANT_REQUEST_COLUMNS = [
+	{
+		label: localizationConstants.reqColProject,
+		field: "project",
+		sortable: true,
+	},
+	{
+		label: localizationConstants.reqColApplications,
+		field: "applications",
+		sortable: true,
+	},
+	{ label: localizationConstants.reqColDate, field: "date", sortable: true },
+	{
+		label: localizationConstants.reqColConsultant,
+		field: "consultant",
+		sortable: true,
+	},
+	{ label: localizationConstants.actions, field: "actions", sortable: false },
+] as const;
+
+export const CONSULTANT_REQUEST_FILTER_OPTIONS = [
+	{ label: "Architect", value: "Architect" },
+	{ label: "Construction Consultant", value: "Construction Consultant" },
+	{ label: "HVAC Consultant", value: "HVAC Consultant" },
+	{ label: "Electrical Consultant", value: "Electrical Consultant" },
+];
 
 export const DUMMY_CONSULTANT_TYPES: ConsultantTypeItem[] = [
 	{
@@ -171,5 +200,43 @@ export const DUMMY_CONSULTANT_TYPES: ConsultantTypeItem[] = [
 				],
 			},
 		],
+	},
+];
+
+export const DUMMY_CONSULTANT_REQUESTS: ConsultantRequest[] = [
+	{
+		id: "1",
+		project: "New Villa",
+		applications: 4,
+		date: "2025-06-10",
+		consultant: "Architect",
+	},
+	{
+		id: "2",
+		project: "Renovation",
+		applications: 2,
+		date: "2025-01-01",
+		consultant: "Construction Consultant",
+	},
+	{
+		id: "3",
+		project: "Office Fit-out",
+		applications: 5,
+		date: "2025-04-22",
+		consultant: "Interior Architect",
+	},
+	{
+		id: "4",
+		project: "Warehouse HVAC",
+		applications: 1,
+		date: "2025-03-14",
+		consultant: "HVAC Consultant",
+	},
+	{
+		id: "5",
+		project: "Rooftop Solar",
+		applications: 3,
+		date: "2025-05-02",
+		consultant: "Electrical Consultant",
 	},
 ];

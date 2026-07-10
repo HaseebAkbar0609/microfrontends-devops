@@ -956,6 +956,25 @@ export type ConsultantModule = {
   findMyConsultant: string;
   consultantTypeSearchPlaceholder: string;
   noConsultantsFound: string;
+  consultantRequestsTab: string;
+  noRequestsFound: string;
+  reqColProject: string;
+  reqColApplications: string;
+  reqColDate: string;
+  reqColConsultant: string;
+  addDetailedInformation: string;
+  consultantDetailsSection: string;
+  projectLabel: string;
+  typeOfConsultantLabel: string;
+  customerLabel: string;
+  validityLabel: string;
+  submitLabel: string;
+  noDocumentsUploaded: string;
+  consultantRequestSuccess: string;
+  validationProjectRequired: string;
+  validationConsultantTypeRequired: string;
+  validationCustomerRequired: string;
+  validationDescriptionRequired: string;
 };
 
 export type Translation = SidebarTranslation &
