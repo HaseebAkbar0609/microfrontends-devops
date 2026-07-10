@@ -24,6 +24,7 @@ export const API_PATH = {
 		PROFILE: `${BASE_PATHS.USER}/profile`,
 	},
 	PROJECT: {
+		ACTIVE: `${BASE_PATHS.PROJECT}/active`,
 		SAVE: `${BASE_PATHS.PROJECT}/save`,
 		LIST: `${BASE_PATHS.PROJECT}/list`,
 		/** GET /api/v1/project/:projectId */

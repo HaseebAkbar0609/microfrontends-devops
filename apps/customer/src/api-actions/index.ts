@@ -35,3 +35,5 @@ export {
 	type SuppliersListPayload,
 } from "./supplier/list";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
+
+export { getActiveProjectsAPIAction, type GetActiveProjectsParams, type ActiveProjectListPayload } from "./project/active";

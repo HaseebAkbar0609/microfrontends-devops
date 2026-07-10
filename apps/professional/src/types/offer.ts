@@ -3,12 +3,13 @@ export interface OfferApiResponseItem {
 	offer_id?: string;
 	project_code?: string;
 	project_title?: string;
+	title?: string;
 	created_at?: string | number;
 	project_type?: string;
 	status?: string;
 	city?: string;
 	category?: string;
-	[key: string]: any; // Allow other properties since backend schema is dynamic
+	[key: string]: unknown; // Allow other properties since backend schema is dynamic
 }
 
 export interface OffersListApiResponse {
