@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Loader2, Plus, Filter } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/common";
 import { Search } from "@/components/search/Search";
@@ -10,12 +11,12 @@ import { getSuppliersAPIAction } from "@/api-actions";
 import type { Supplier } from "../types/types";
 import { SUPPLIER_BREADCRUMBS } from "../constants";
 import { SupplierTable } from "./SupplierTable";
-import { CreateSupplierView } from "./CreateSupplierView";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 export default function SuppliersFeature() {
 	const { search, changeQuery, query } = useQueryParams();
+	const router = useRouter();
 
 	const page = Number(query.get("page") || "1");
 	const pageSize = Number(query.get("page_size") || "10");
@@ -26,7 +27,6 @@ export default function SuppliersFeature() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [showCreate, setShowCreate] = useState(false);
 	const [listVersion, setListVersion] = useState(0);
 
 	useEffect(() => {
@@ -58,18 +58,6 @@ export default function SuppliersFeature() {
 		};
 	}, [page, pageSize, search, sortBy, sortOrder, listVersion]);
 
-	if (showCreate) {
-		return (
-			<CreateSupplierView
-				onBack={() => setShowCreate(false)}
-				onSuccess={() => {
-					setShowCreate(false);
-					setListVersion((v) => v + 1);
-				}}
-			/>
-		);
-	}
-
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
 			<PageHeader
@@ -95,9 +83,9 @@ export default function SuppliersFeature() {
 					</Button>
 				</div>
 				<div className="flex items-center gap-2">
-<Button
+					<Button
 						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md"
-						onClick={() => setShowCreate(true)}
+						onClick={() => router.push("/suppliers/new")}
 					>
 						<Plus className="h-4 w-4" />
 						<Translate text={localizationConstants.createNewButtonText} />

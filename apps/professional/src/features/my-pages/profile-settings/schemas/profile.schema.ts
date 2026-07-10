@@ -4,7 +4,7 @@ const nextOfKinSchema = z.object({
 	name: z.string().optional(),
 	relation: z.string().optional(),
 	phone: z.string().optional(),
-	email: z.string().email().optional(),
+	email: z.string().email().or(z.literal("")).optional(),
 });
 
 export const contactSchema = z.object({
@@ -15,7 +15,8 @@ export const contactSchema = z.object({
 	phone: z.string().optional(),
 	streetAddress: z.string().optional(),
 	postalCode: z.string().optional(),
-	city: z.string().optional(),
+	countryId: z.string().optional(),
+	cityId: z.string().optional(),
 	nextOfKin: z.array(nextOfKinSchema).optional(),
 	employmentNumber: z.string().optional(),
 	position: z.string().optional(),

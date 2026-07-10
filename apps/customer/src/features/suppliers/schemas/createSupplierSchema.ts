@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createSupplierStep1Schema = z.object({
+export const createSupplierSchema = z.object({
 	companyName: z.string().min(1, "validationSupplierCompanyNameRequired"),
 	category: z.string().min(1, "validationSupplierCategoryRequired"),
 	orgNo: z.string().min(1, "validationSupplierOrgNoRequired"),
@@ -14,8 +14,7 @@ export const createSupplierStep1Schema = z.object({
 	contactLastName: z
 		.string()
 		.min(1, "validationRegisterContactLastNameRequired"),
+	mobileNo: z.string().min(1, "validationSupplierMobileNoRequired"),
 });
 
-export type CreateSupplierStep1Values = z.infer<typeof createSupplierStep1Schema>;
-
-export const TOTAL_STEPS = 3;
+export type CreateSupplierValues = z.infer<typeof createSupplierSchema>;

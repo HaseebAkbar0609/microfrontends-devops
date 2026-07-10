@@ -79,7 +79,7 @@ export function QuestionsTab() {
       {/* Contact header */}
       <div className="bg-white border border-[#E2E8F0] rounded-xl px-4 py-3 flex items-center gap-3">
         {/* Avatar */}
-        <div className="h-9 w-9 rounded-full bg-[#18181B] flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
+        <div className="h-9 w-9 rounded-full bg-[#18181B] flex items-center justify-center text-white text-xs font-semibold shrink-0">
           {QA_CONTACT.initials}
         </div>
 
@@ -100,7 +100,7 @@ export function QuestionsTab() {
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <Button
             type="button"
             size="sm"
@@ -139,13 +139,13 @@ export function QuestionsTab() {
       {/* Chat card */}
       <div className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden">
         {/* Messages */}
-        <div className="p-5 space-y-5 h-[360px] overflow-y-auto [&::-webkit-scrollbar]:w-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <div className="p-5 space-y-5 h-90 overflow-y-auto [&::-webkit-scrollbar]:w-0.75 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full">
           {messages.map((msg) =>
             msg.senderId === "other" ? (
               /* Left — professional */
               <div key={msg.id} className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2">
-                  <div className="h-7 w-7 rounded-full bg-[#E2E8F0] flex items-center justify-center text-[#475569] text-xs font-semibold flex-shrink-0">
+                  <div className="h-7 w-7 rounded-full bg-[#E2E8F0] flex items-center justify-center text-[#475569] text-xs font-semibold shrink-0">
                     {msg.senderInitials}
                   </div>
                   <span className="text-xs font-semibold text-[#09090B]">
@@ -166,7 +166,7 @@ export function QuestionsTab() {
                   <span className="text-xs font-semibold text-[#09090B]">
                     {msg.senderName}
                   </span>
-                  <div className="h-7 w-7 rounded-full bg-[#475569] flex items-center justify-center text-white text-xs font-semibold flex-shrink-0">
+                  <div className="h-7 w-7 rounded-full bg-[#475569] flex items-center justify-center text-white text-xs font-semibold shrink-0">
                     {msg.senderInitials}
                   </div>
                 </div>
