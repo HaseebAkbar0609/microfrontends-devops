@@ -865,7 +865,7 @@ export const svProjects: ProjectsModule = {
   financeSubTabBudget: "Budget",
   financeSubTabInvoices: "Fakturor",
   financeSubTabPaymentPlan: "Betalningsplan",
-  financeSubTabAddEat: "Tillägg / Äta",
+  financeSubTabAddEat: "ÄTA",
   financeCreateNewLabel: "Skapa ny",
   financeProjectNrLabel: "Projekt nr:",
   financeProjectNameCol: "Projektnamn",

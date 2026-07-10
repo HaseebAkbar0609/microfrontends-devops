@@ -868,7 +868,7 @@ export const enProjects: ProjectsModule = {
   financeSubTabBudget: "Budget",
   financeSubTabInvoices: "Invoices",
   financeSubTabPaymentPlan: "Payment Plan",
-  financeSubTabAddEat: "Add / Eat",
+  financeSubTabAddEat: "ÄTA",
   financeCreateNewLabel: "Create New",
   financeProjectNrLabel: "Project No:",
   financeProjectNameCol: "Project Name",

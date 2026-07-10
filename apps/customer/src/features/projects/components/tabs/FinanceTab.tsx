@@ -20,9 +20,9 @@ const FINANCE_SUB_TABS: { value: FinanceSubTab; label: string }[] = [
 ];
 
 const subTabTriggerClass =
-  "h-9 rounded-lg px-4 text-sm font-medium transition-colors text-[#64748B] hover:text-[#020617]";
+  "h-9 rounded-lg px-4 text-sm font-medium transition-colors text-[#64748B] hover:text-[#020617] cursor-pointer";
 const subTabActiveClass =
-  "h-9 rounded-lg px-4 text-sm font-medium bg-white text-[#0F172A] shadow-sm border border-[#E2E8F0]";
+  "h-9 rounded-lg px-4 text-sm font-medium bg-white text-[#0F172A] shadow-sm border border-[#E2E8F0] cursor-pointer";
 
 // ─── FinanceTab ───────────────────────────────────────────────────────────────
 
