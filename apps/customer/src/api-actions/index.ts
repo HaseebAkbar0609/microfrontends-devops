@@ -34,6 +34,10 @@ export {
 	type GetSuppliersParams,
 	type SuppliersListPayload,
 } from "./supplier/list";
+export {
+	createSupplierAPIAction,
+	type CreateSupplierPayload,
+} from "./supplier/create";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
 
 export { getActiveProjectsAPIAction, type GetActiveProjectsParams, type ActiveProjectListPayload } from "./project/active";

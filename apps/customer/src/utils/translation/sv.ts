@@ -546,6 +546,14 @@ export const svSupplierModule: SupplierModule = {
   supplierSummaryTitle: "Sammanfattning",
   supplierTotalReviews: "Totalt: {{count}} recensioner",
   supplierPopularTagsTitle: "Populära taggar",
+  // Create supplier form
+  supplierDetailsSection: "Supplier detaljer",
+  supplierCreateTitle: "Skapa ny",
+  supplierCreateSubtitle: "Lägg till detaljerad information",
+  validationSupplierCompanyNameRequired: "Företagsnamn krävs",
+  validationSupplierCategoryRequired: "Kategori krävs",
+  validationSupplierOrgNoRequired: "Organisationsnummer krävs",
+  validationSupplierMobileNoRequired: "Mobilnummer krävs",
 };
 export const svQuestions: QuestionsModule = {
   faqCategoryQuoteAndFindTradespeople: "Offert & Hitta Hantverkare",

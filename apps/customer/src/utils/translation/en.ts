@@ -535,6 +535,14 @@ export const enSupplierModule: SupplierModule = {
   supplierSummaryTitle: "Summary",
   supplierTotalReviews: "Total: {{count}} reviews",
   supplierPopularTagsTitle: "Popular tags",
+  // Create supplier form
+  supplierDetailsSection: "Supplier details",
+  supplierCreateTitle: "Create new",
+  supplierCreateSubtitle: "Add detailed information",
+  validationSupplierCompanyNameRequired: "Company name is required",
+  validationSupplierCategoryRequired: "Category is required",
+  validationSupplierOrgNoRequired: "Organisation number is required",
+  validationSupplierMobileNoRequired: "Mobile number is required",
 };
 
 export const enDiscounts: DiscountsModule = {
