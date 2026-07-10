@@ -1,7 +1,3 @@
-import type { SupplierDetail, ToolDetail } from "@/api-actions";
-
-export type { SupplierDetail, ToolDetail };
-
 export const SUPPLIER_DETAIL_TABS = [
   "overview",
   "projects",
@@ -11,6 +7,26 @@ export const SUPPLIER_DETAIL_TABS = [
 ] as const;
 
 export type SupplierDetailTabValue = (typeof SUPPLIER_DETAIL_TABS)[number];
+
+export interface ToolDetail {
+  type: "tool";
+  id: string;
+  name: string;
+  logoUrl: string;
+  status: "connected" | "disconnected" | "pending";
+  category: string;
+  description: string;
+  website: string;
+  apiKey?: string;
+  webhookUrl?: string;
+  syncFrequency?: "hourly" | "daily" | "weekly";
+  permissions: string[];
+  activityLogs: {
+    timestamp: string;
+    status: "success" | "failed";
+    message: string;
+  }[];
+}
 
 export interface Supplier {
   id: string;
@@ -36,6 +52,10 @@ export interface Supplier {
   certifications: number;
   mainMunicipality: string;
   additionalMunicipalities: number;
+}
+
+export interface SupplierDetail extends Supplier {
+  type: "supplier";
 }
 
 export interface SupplierService {

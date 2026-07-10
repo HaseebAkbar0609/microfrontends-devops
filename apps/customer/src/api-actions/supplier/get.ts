@@ -1,51 +1,6 @@
 import type { ActionResult } from "@/types/api";
-
-export interface SupplierDetail {
-	type: "supplier";
-	id: string;
-	initials: string;
-	name: string;
-	category: string;
-	location: string;
-	rating: number;
-	reviewCount: number;
-	isVerified: boolean;
-	isTopSupplier: boolean;
-	isOnline: boolean;
-	phone: string;
-	email: string;
-	website: string;
-	languages: string;
-	responseTime: string;
-	lastActive: string;
-	completedProjects: number;
-	ongoingProjects: number;
-	hasRotRut: boolean;
-	description: string;
-	certifications: number;
-	mainMunicipality: string;
-	additionalMunicipalities: number;
-}
-
-export interface ToolDetail {
-	type: "tool";
-	id: string;
-	name: string;
-	logoUrl: string;
-	status: "connected" | "disconnected" | "pending";
-	category: string;
-	description: string;
-	website: string;
-	apiKey?: string;
-	webhookUrl?: string;
-	syncFrequency?: "hourly" | "daily" | "weekly";
-	permissions: string[];
-	activityLogs: {
-		timestamp: string;
-		status: "success" | "failed";
-		message: string;
-	}[];
-}
+import type { SupplierDetail, ToolDetail } from "@/types/tools-suppliers";
+export type { SupplierDetail, ToolDetail };
 
 const MOCK_SUPPLIERS_DETAILS: Record<string, SupplierDetail> = {
 	"1": {

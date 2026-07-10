@@ -27,7 +27,7 @@ export function OverviewTab({ supplier, services }: OverviewTabProps) {
         />
         <StatCard
           icon={<Clock className="w-6 h-6 text-[#3B82F6]" />}
-          value="~2h"
+          value={supplier.responseTime}
           label={localizationConstants.supplierLabelResponseTime}
         />
         <div className="border border-slate-200 rounded-lg pt-[17px] pb-[17px] pl-[27px] pr-[16px] flex flex-col items-start justify-center gap-1.5 text-left bg-white h-full shadow-sm">

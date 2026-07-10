@@ -64,7 +64,7 @@ export function useSupplierDetail(supplierId: string) {
       if (result.success && result.data) {
         setDetail(result.data);
         if (result.data.type === "supplier") {
-          setSupplier(result.data as unknown as Supplier);
+          setSupplier(result.data);
           setServices(DUMMY_SERVICES);
           setReviews(DUMMY_REVIEWS);
           setStarBreakdown(DUMMY_STAR_BREAKDOWN);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Star, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,12 @@ export function ReviewsTab({
   const [searchQuery, setSearchQuery] = useState("");
 
   const totalReviews = starBreakdown.reduce((sum, b) => sum + b.count, 0);
+
+  const averageRating = useMemo(() => {
+    if (totalReviews === 0) return "0.0";
+    const totalStars = starBreakdown.reduce((sum, b) => sum + b.stars * b.count, 0);
+    return (totalStars / totalReviews).toFixed(1);
+  }, [starBreakdown, totalReviews]);
 
   const filteredReviews = reviews
     .filter((r) => (ratingFilter ? r.rating === ratingFilter : true))
@@ -209,15 +215,36 @@ export function ReviewsTab({
         <div className="px-6 pt-5">
           <div className="bg-[#F7F8FA] rounded-lg px-5 pt-5 pb-4 flex flex-col items-center gap-2">
             <span className="text-[48px] font-bold text-[#0A0A0A] leading-[48px]">
-              5.0
+              {averageRating}
             </span>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Star
-                  key={i}
-                  className="w-[18px] h-[18px] fill-[#FFB800] text-[#FFB800]"
-                />
-              ))}
+            <div className="flex items-center gap-0.5">
+              {Array.from({ length: 5 }).map((_, i) => {
+                const ratingVal = parseFloat(averageRating);
+                const isFilled = ratingVal >= i + 1;
+                const isPartial = !isFilled && ratingVal > i;
+                const partialPercentage = isPartial
+                  ? (ratingVal - i) * 100
+                  : 0;
+
+                return (
+                  <span key={i} className="relative block w-[18px] h-[18px] shrink-0">
+                    <Star
+                      className={cn(
+                        "w-[18px] h-[18px] text-[#FFB800] absolute inset-0",
+                        isFilled ? "fill-[#FFB800]" : "fill-transparent",
+                      )}
+                    />
+                    {isPartial && (
+                      <span
+                        className="absolute inset-y-0 left-0 overflow-hidden block"
+                        style={{ width: `${partialPercentage}%` }}
+                      >
+                        <Star className="w-[18px] h-[18px] text-[#FFB800] fill-[#FFB800] absolute inset-0" />
+                      </span>
+                    )}
+                  </span>
+                );
+              })}
             </div>
             <span className="text-sm text-slate-500 tracking-tight">
               {t(localizationConstants.supplierTotalReviews, {
