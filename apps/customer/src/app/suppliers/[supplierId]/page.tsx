@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { SupplierDetailPage } from "@/features/supplier/components/SupplierDetailPage";
+import { SupplierDetailPage } from "@/components/tools-suppliers/detail/SupplierDetailPage";
 
 export default function SupplierDetailRoute() {
 	const params = useParams();

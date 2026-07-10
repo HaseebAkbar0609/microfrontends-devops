@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import Link from "next/link";
 import {
 	ArrowUpDown,
 	ArrowUp,
@@ -142,28 +143,30 @@ export function SupplierTable({ data, totalItems }: SupplierTableProps) {
 				return <span className="text-slate-600">{supplier.email}</span>;
 			case "actions":
 				return (
-					<div className="flex items-center gap-1 justify-end">
+					<div className="flex items-center justify-center">
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
 								<Button
 									variant="ghost"
 									size="icon"
-									className="h-9 w-9 text-accent-foreground hover:text-accent-foreground bg-muted rounded-md"
+									className="h-8 w-8 text-slate-500 hover:text-slate-900 bg-transparent hover:bg-slate-100 rounded-md focus-visible:ring-0 focus-visible:ring-offset-0"
 								>
 									<MoreVertical className="h-4 w-4" />
 								</Button>
 							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end" className="w-35">
-								<DropdownMenuItem className="gap-2 cursor-pointer py-2 group">
-									<Eye className="h-4 w-4 text-accent-foreground" />
-									<Translate text={localizationConstants.viewLabel} />
+							<DropdownMenuContent align="end" className="w-[140px] border border-slate-200 bg-white shadow-md rounded-md p-1">
+								<DropdownMenuItem asChild className="gap-2 cursor-pointer px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:text-slate-900 rounded group transition-colors">
+									<Link href={`/suppliers/${supplier.id}`} className="flex items-center gap-2 w-full">
+										<Eye className="h-4 w-4 text-slate-500 group-hover:text-slate-700 transition-colors" />
+										<Translate text={localizationConstants.viewLabel} />
+									</Link>
 								</DropdownMenuItem>
-								<DropdownMenuItem className="gap-2 cursor-pointer py-2 group">
-									<Pencil className="h-4 w-4 text-accent-foreground" />
+								<DropdownMenuItem className="gap-2 cursor-pointer px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:text-slate-900 rounded group transition-colors">
+									<Pencil className="h-4 w-4 text-slate-500 group-hover:text-slate-700 transition-colors" />
 									<Translate text={localizationConstants.open} />
 								</DropdownMenuItem>
-								<DropdownMenuItem className="gap-2 cursor-pointer py-2 text-red-600 focus:text-red-700 group">
-									<Trash2 className="h-4 w-4" />
+								<DropdownMenuItem className="gap-2 cursor-pointer px-3 py-2 text-sm text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-700 rounded group transition-colors">
+									<Trash2 className="h-4 w-4 text-red-500 group-hover:text-red-600 transition-colors" />
 									<Translate text={localizationConstants.delete} />
 								</DropdownMenuItem>
 							</DropdownMenuContent>

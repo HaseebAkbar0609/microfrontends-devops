@@ -28,11 +28,11 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 border-b border-slate-200  px-5 py-3",
+        "flex flex-col gap-1 border-b border-slate-200 px-5 py-2",
         className,
       )}
     >
-      <h1 className="text-2xl font-semibold text-[#0A0A0A] leading-tight">
+      <h1 className="text-lg font-semibold text-[#0A0A0A] leading-tight">
         <Translate text={title} />
       </h1>
 
@@ -48,14 +48,14 @@ export function PageHeader({
                 >
                   {index !== 0 && <BreadcrumbSeparator />}
                   {isLast ? (
-                    <BreadcrumbPage className="text-sm font-medium text-[#020617]">
+                    <BreadcrumbPage className="text-xs font-medium text-[#020617]">
                       <Translate text={item.label} />
                     </BreadcrumbPage>
                   ) : (
                     <BreadcrumbLink asChild>
                       <Link
                         href={item.href || "#"}
-                        className="text-sm text-slate-500 hover:text-slate-900 transition-colors"
+                        className="text-xs text-slate-500 hover:text-slate-900 transition-colors"
                       >
                         <Translate text={item.label} />
                       </Link>
