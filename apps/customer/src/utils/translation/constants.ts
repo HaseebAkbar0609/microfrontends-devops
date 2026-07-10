@@ -731,6 +731,28 @@ export type ProjectsModule = {
   projectNoProjectsFound: string;
 };
 
+export type ConsultantModule = {
+  consultantListNav: string;
+  consultantsTitle: string;
+  consultantSearchPlaceholder: string;
+  noConsultantsFound: string;
+  consultantColName: string;
+  consultantColSpecialty: string;
+  consultantColProject: string;
+  consultantColContact: string;
+  consultantStatusActive: string;
+  consultantStatusPending: string;
+  consultantStatusCompleted: string;
+  consultantStatusPast: string;
+  consultantTypeArchitect: string;
+  consultantTypeElectrical: string;
+  consultantTypeStructural: string;
+  consultantTypePlumbing: string;
+  consultantViewProfile: string;
+  consultantMessage: string;
+  consultantManageEngagement: string;
+};
+
 export type Translation = SidebarTranslation &
   AuthTranslation &
   CommonFiles &
@@ -744,7 +766,8 @@ export type Translation = SidebarTranslation &
   QuestionsModule &
   SupportModule &
   PriceCalculatorModule &
-  ProjectsModule;
+  ProjectsModule &
+  ConsultantModule;
 
 export type TranslationKeys = keyof Translation;
 

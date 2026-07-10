@@ -14,6 +14,7 @@ import {
   SupportModule,
   PriceCalculatorModule,
   ProjectsModule,
+  ConsultantModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -781,6 +782,28 @@ export const enProjects: ProjectsModule = {
   projectNoProjectsFound: "No active projects found",
 };
 
+export const enConsultant: ConsultantModule = {
+  consultantListNav: "Consultant List",
+  consultantsTitle: "Consultants",
+  consultantSearchPlaceholder: "Search by name, specialty, or project",
+  noConsultantsFound: "No consultants found",
+  consultantColName: "Consultant",
+  consultantColSpecialty: "Specialty",
+  consultantColProject: "Project",
+  consultantColContact: "Contact",
+  consultantStatusActive: "Active",
+  consultantStatusPending: "Pending",
+  consultantStatusCompleted: "Completed",
+  consultantStatusPast: "Past",
+  consultantTypeArchitect: "Architect",
+  consultantTypeElectrical: "Electrical Consultant",
+  consultantTypeStructural: "Structural Engineer",
+  consultantTypePlumbing: "Plumbing Consultant",
+  consultantViewProfile: "View Profile",
+  consultantMessage: "Message",
+  consultantManageEngagement: "Manage Engagement",
+};
+
 export const en: Translation = {
   ...enSidebar,
   ...enAuth,
@@ -796,4 +819,5 @@ export const en: Translation = {
   ...enSupport,
   ...enPriceCalculatorModule,
   ...enProjects,
+  ...enConsultant,
 };
