@@ -43,7 +43,7 @@ export function MeetingMinutesTab() {
     <div className="pb-10">
       <div className="w-fit">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 mb-4 min-w-[608px]">
+      <div className="flex items-center gap-3 mb-4 min-w-152">
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />

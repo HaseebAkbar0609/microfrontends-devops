@@ -148,10 +148,10 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
         <div className="flex">
 
           {/* ── Left panel: 180px, sticky task labels ── */}
-          <div className="w-[180px] shrink-0 border-r border-[#E2E8F0]">
+          <div className="w-45 shrink-0 border-r border-[#E2E8F0]">
 
             {/* Header — spans all 3 calendar header rows = 144px */}
-            <div className="h-[144px] border-b border-[#E2E8F0] px-4 flex items-center">
+            <div className="h-36 border-b border-[#E2E8F0] px-4 flex items-center">
               <span className="text-xl font-medium text-[#0A0A0A]">
                 {project.estimatedDays} days
               </span>

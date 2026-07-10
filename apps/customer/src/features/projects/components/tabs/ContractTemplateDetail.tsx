@@ -192,8 +192,8 @@ function TemplateDetailView({
 
             {/* Document body — scrollable */}
             <div className="overflow-y-auto" style={{ maxHeight: 560 }}>
-              <div className="bg-slate-50 p-6 min-h-[480px]">
-                <div className="max-w-[600px] mx-auto bg-white shadow-sm rounded-sm px-12 py-10 text-sm text-[#09090B]">
+              <div className="bg-slate-50 p-6 min-h-120">
+                <div className="max-w-150 mx-auto bg-white shadow-sm rounded-sm px-12 py-10 text-sm text-[#09090B]">
                   <style>{`
                     .preview-doc h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
                     .preview-doc h2 { font-size: 1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.4rem; }
@@ -213,7 +213,7 @@ function TemplateDetailView({
         </div>
 
         {/* Right — Sidebar */}
-        <div className="w-[280px] shrink-0 bg-white border border-[#E2E8F0] rounded-xl overflow-hidden">
+        <div className="w-70 shrink-0 bg-white border border-[#E2E8F0] rounded-xl overflow-hidden">
           {/* Tab bar */}
           <div className="flex border-b border-[#E2E8F0]">
             <button

@@ -266,7 +266,7 @@ export function ContractDocumentEditor({
             <ChevronDown className="h-3.5 w-3.5" />
           </button>
           {showFormatMenu && (
-            <div className="absolute top-full left-0 mt-1 bg-white border border-[#E2E8F0] rounded-lg shadow-md z-50 py-1 min-w-[140px]">
+            <div className="absolute top-full left-0 mt-1 bg-white border border-[#E2E8F0] rounded-lg shadow-md z-50 py-1 min-w-35">
               {FORMATS.map((f) => (
                 <button
                   key={f.action}
@@ -407,7 +407,7 @@ export function ContractDocumentEditor({
         {/* Document area */}
         <div className="flex-1 overflow-y-auto pt-3 pl-9">
           <div className="px-[46.5px] pt-5 pb-8">
-            <div className="max-w-200 bg-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] rounded-[10px] px-12 pt-12 pb-12 min-h-[800px] text-sm text-[#09090B]">
+            <div className="max-w-200 bg-white shadow-[0px_10px_15px_-3px_rgba(0,0,0,0.1),0px_4px_6px_-4px_rgba(0,0,0,0.1)] rounded-[10px] px-12 pt-12 pb-12 min-h-200 text-sm text-[#09090B]">
               <EditorContent editor={editor} />
             </div>
           </div>

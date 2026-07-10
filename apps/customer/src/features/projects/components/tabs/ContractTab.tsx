@@ -243,16 +243,16 @@ function ContractList({
                       {contract.nr}
                     </td>
                     <td className="px-4 py-0 h-14 text-sm text-[#020617]">
-                      <span className="block truncate max-w-[160px]">{contract.contactPerson}</span>
+                      <span className="block truncate max-w-40">{contract.contactPerson}</span>
                     </td>
                     <td className="px-4 py-0 h-14 text-sm text-[#020617]">
-                      <span className="block truncate max-w-[160px]">{contract.project}</span>
+                      <span className="block truncate max-w-40">{contract.project}</span>
                     </td>
                     <td className="px-4 py-0 h-14 text-sm text-[#020617] whitespace-nowrap">
                       {contract.phone}
                     </td>
                     <td className="px-4 py-0 h-14 text-sm text-[#020617]">
-                      <span className="block truncate max-w-[200px]">{contract.email}</span>
+                      <span className="block truncate max-w-50">{contract.email}</span>
                     </td>
                     <td className="px-4 py-0 h-14 text-sm text-[#020617] whitespace-nowrap">
                       {contract.role}
@@ -394,7 +394,7 @@ function ContractDetail({ contract }: { contract: Contract }) {
                       href={clause.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center min-w-[64px] h-9 px-2 text-sm font-medium text-[#0F172A] bg-white border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors whitespace-nowrap"
+                      className="inline-flex items-center justify-center min-w-16 h-9 px-2 text-sm font-medium text-[#0F172A] bg-white border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors whitespace-nowrap"
                     >
                       <Translate text={localizationConstants.contractViewFileLabel} />
                     </a>
@@ -513,7 +513,7 @@ export function ContractTab({ onFullscreenChange }: { onFullscreenChange?: (v: b
   }, [view.kind, onFullscreenChange]);
 
   const subTabTriggerClass =
-    "h-8 rounded-[6px] border-0 bg-transparent px-3 py-[6px] text-sm font-medium text-slate-500 shadow-none " +
+    "h-8 rounded-[6px] border-0 bg-transparent px-3 py-1.5 text-sm font-medium text-slate-500 shadow-none " +
     "transition-all hover:text-slate-700 cursor-pointer select-none";
   const subTabActiveClass =
     "bg-white text-slate-900 shadow-[0px_1px_2px_rgba(0,0,0,0.05)]";

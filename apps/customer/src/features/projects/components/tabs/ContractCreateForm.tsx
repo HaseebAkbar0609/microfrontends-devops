@@ -75,7 +75,7 @@ function SectionHeader({
   title: string;
 }) {
   return (
-    <div className="flex items-center gap-2 px-4 py-[14px] border-b border-[#E4E4E7]">
+    <div className="flex items-center gap-2 px-4 py-3.5 border-b border-[#E4E4E7]">
       <Image src={iconSrc} alt="" width={20} height={20} className="shrink-0" />
       <h3 className="text-base font-medium text-[#09090B]">{title}</h3>
     </div>
@@ -460,7 +460,7 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 </p>
                 <div className="flex gap-2">
                   <div
-                    className="flex-1 flex items-center gap-2 flex-wrap border border-[#E4E4E7] rounded-md px-3 py-2 min-h-[36px] cursor-pointer hover:bg-slate-50 transition-colors shadow-[0px_1px_2px_rgba(16,24,40,0.05)]"
+                    className="flex-1 flex items-center gap-2 flex-wrap border border-[#E4E4E7] rounded-md px-3 py-2 min-h-9 cursor-pointer hover:bg-slate-50 transition-colors shadow-[0px_1px_2px_rgba(16,24,40,0.05)]"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     {stagedFiles.length === 0 ? (

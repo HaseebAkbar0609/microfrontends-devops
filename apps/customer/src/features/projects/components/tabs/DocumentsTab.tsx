@@ -113,7 +113,7 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
           <div className="flex gap-2 pt-2">
             {/* File chip input area */}
             <div
-              className="flex-1 flex items-center gap-2 flex-wrap border border-slate-200 rounded-lg px-3 py-2 min-h-[40px] cursor-pointer hover:bg-slate-50 transition-colors"
+              className="flex-1 flex items-center gap-2 flex-wrap border border-slate-200 rounded-lg px-3 py-2 min-h-10 cursor-pointer hover:bg-slate-50 transition-colors"
               onClick={handleAreaClick}
             >
               {stagedFiles.length === 0 ? (
