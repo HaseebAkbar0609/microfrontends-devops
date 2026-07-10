@@ -14,6 +14,7 @@ import {
   SupportModule,
   PriceCalculatorModule,
   ProjectsModule,
+  ConsultantModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -781,6 +782,14 @@ export const enProjects: ProjectsModule = {
   projectNoProjectsFound: "No active projects found",
 };
 
+export const enConsultant: ConsultantModule = {
+  consultantNav: "Consultant",
+  consultantDirectoryTitle: "Consultant",
+  findMyConsultant: "Find my consultant",
+  consultantTypeSearchPlaceholder: "Search consultant...",
+  noConsultantsFound: "No consultants found",
+};
+
 export const en: Translation = {
   ...enSidebar,
   ...enAuth,
@@ -796,4 +805,5 @@ export const en: Translation = {
   ...enSupport,
   ...enPriceCalculatorModule,
   ...enProjects,
+  ...enConsultant,
 };

@@ -35,3 +35,7 @@ export {
 	type SuppliersListPayload,
 } from "./supplier/list";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
+export {
+	getConsultantTypesAPIAction,
+	type GetConsultantTypesParams,
+} from "./consultant/types";
