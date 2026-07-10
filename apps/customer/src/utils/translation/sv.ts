@@ -546,6 +546,12 @@ export const svSupplierModule: SupplierModule = {
   supplierSummaryTitle: "Sammanfattning",
   supplierTotalReviews: "Totalt: {{count}} recensioner",
   supplierPopularTagsTitle: "Populära taggar",
+  supplierHeaderCompanyName: "Företagsnamn",
+  supplierHeaderOrgNo: "Org nr.",
+  supplierHeaderContactPerson: "Kontaktper. namn",
+  supplierHeaderMail: "Mail",
+  pageLabel: "Sida",
+  ofLabel: "av",
 };
 export const svQuestions: QuestionsModule = {
   faqCategoryQuoteAndFindTradespeople: "Offert & Hitta Hantverkare",

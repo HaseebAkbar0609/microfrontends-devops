@@ -531,6 +531,12 @@ export type SupplierModule = {
   supplierSummaryTitle: string;
   supplierTotalReviews: string;
   supplierPopularTagsTitle: string;
+  supplierHeaderCompanyName: string;
+  supplierHeaderOrgNo: string;
+  supplierHeaderContactPerson: string;
+  supplierHeaderMail: string;
+  pageLabel: string;
+  ofLabel: string;
 };
 
 export type QuestionsModule = {

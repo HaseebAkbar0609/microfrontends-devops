@@ -1,340 +1,128 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
-import {
-	ArrowUpDown,
-	ArrowUp,
-	ArrowDown,
-	MoreVertical,
-	Eye,
-	Pencil,
-	Trash2,
-	ChevronLeft,
-	ChevronRight,
-	ChevronsLeft,
-	ChevronsRight,
-} from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
-import { Translate } from "@/utils/translation/translate";
+import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
 import localizationConstants from "@/utils/translation/constants";
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { SUPPLIER_COLUMNS } from "../constants";
-import type { Supplier, SupplierColumnField } from "../types/types";
+import type { Supplier } from "../types/types";
 
 interface SupplierTableProps {
 	readonly data: Supplier[];
 	readonly totalItems: number;
+	readonly loading?: boolean;
 }
 
-const COLUMN_LAYOUT: Record<
-	SupplierColumnField,
-	{ head: string; cell: string }
-> = {
-	companyName: {
-		head: "min-w-[10rem] w-[22%]",
-		cell: "whitespace-nowrap align-top",
+const COLUMNS: DataTableColumn<Supplier>[] = [
+	{
+		key: "companyName",
+		label: localizationConstants.supplierHeaderCompanyName,
+		sortable: true,
+		headerClassName: "min-w-[10rem] w-[20%]",
+		cellClassName: "whitespace-nowrap align-top",
+		render: (row) => <span className="text-slate-950">{row.companyName}</span>,
 	},
-	orgNo: {
-		head: "w-[9rem] min-w-[8rem]",
-		cell: "whitespace-nowrap align-top",
+	{
+		key: "orgNo",
+		label: localizationConstants.supplierHeaderOrgNo,
+		sortable: true,
+		headerClassName: "w-[9rem] min-w-[8rem]",
+		cellClassName: "whitespace-nowrap align-top",
+		render: (row) => <span className="text-slate-600">{row.orgNo}</span>,
 	},
-	contactPersonName: {
-		head: "min-w-[10rem] w-[20%]",
-		cell: "whitespace-nowrap align-top",
+	{
+		key: "contactPersonName",
+		label: localizationConstants.supplierHeaderContactPerson,
+		sortable: true,
+		headerClassName: "min-w-[10rem] w-[18%]",
+		cellClassName: "whitespace-nowrap align-top",
+		render: (row) => (
+			<span className="text-slate-600">{row.contactPersonName}</span>
+		),
 	},
-	email: {
-		head: "min-w-[12rem] w-[24%]",
-		cell: "whitespace-nowrap align-top",
+	{
+		key: "email",
+		label: localizationConstants.supplierHeaderMail,
+		sortable: true,
+		headerClassName: "min-w-[12rem] w-[22%]",
+		cellClassName: "whitespace-nowrap align-top",
+		render: (row) => <span className="text-slate-600">{row.email}</span>,
 	},
-	actions: {
-		head: "w-32 min-w-[8rem]",
-		cell: "whitespace-nowrap align-top",
+	{
+		key: "mobileNumber",
+		label: localizationConstants.mobileNoLabel,
+		sortable: true,
+		headerClassName: "min-w-[10rem] w-[18%]",
+		cellClassName: "whitespace-nowrap align-top",
+		render: (row) => <span className="text-slate-600">{row.mobileNumber}</span>,
 	},
-};
+];
 
-const SortIcon = ({
-	field,
-	sortBy,
-	sortOrder,
-}: {
-	field: string;
-	sortBy: string;
-	sortOrder: string;
-}) => {
-	if (sortBy !== field)
-		return <ArrowUpDown className="ml-1 h-3.5 w-3.5 opacity-50" />;
-	return sortOrder === "asc" ? (
-		<ArrowUp className="ml-1 h-3.5 w-3.5 text-primary" />
-	) : (
-		<ArrowDown className="ml-1 h-3.5 w-3.5 text-primary" />
-	);
-};
-
-export function SupplierTable({ data, totalItems }: SupplierTableProps) {
+export function SupplierTable({
+	data,
+	totalItems,
+	loading = false,
+}: SupplierTableProps) {
 	const { query, changeQueries } = useQueryParams();
+	const router = useRouter();
 
-	const sortBy = query.get("sort_by") || "";
-	const sortOrder = query.get("sort_order") || "";
 	const page = Number(query.get("page") || "1");
 	const pageSize = Number(query.get("page_size") || "10");
-
-	const totalPages = useMemo(
-		() => Math.max(1, Math.ceil(totalItems / pageSize)),
-		[totalItems, pageSize],
-	);
+	const sortBy = query.get("sort_by") || "";
+	const sortOrder = query.get("sort_order") || "";
 
 	const handleSort = useCallback(
-		(field: SupplierColumnField) => {
-			if (field === "actions") return;
-			let nextOrder: string | null = "asc";
-			if (sortBy === field) {
-				if (sortOrder === "asc") nextOrder = "desc";
-				else if (sortOrder === "desc") nextOrder = null;
-			}
+		(field: string, nextOrder: "asc" | "desc" | null) => {
 			changeQueries({
 				sort_by: nextOrder ? field : null,
 				sort_order: nextOrder,
 			});
 		},
-		[sortBy, sortOrder, changeQueries],
+		[changeQueries],
 	);
 
-	const renderCell = useCallback((supplier: Supplier, field: SupplierColumnField) => {
-		switch (field) {
-			case "companyName":
-				return (
-					<span className="text-slate-950 font-medium">
-						{supplier.companyName}
-					</span>
-				);
-			case "orgNo":
-				return <span className="text-slate-600">{supplier.orgNo}</span>;
-			case "contactPersonName":
-				return (
-					<span className="text-slate-600">
-						{supplier.contactPersonName}
-					</span>
-				);
-			case "email":
-				return <span className="text-slate-600">{supplier.email}</span>;
-			case "actions":
-				return (
-					<div className="flex items-center gap-1 justify-end">
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="ghost"
-									size="icon"
-									className="h-9 w-9 text-accent-foreground hover:text-accent-foreground bg-muted rounded-md"
-								>
-									<MoreVertical className="h-4 w-4" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="end" className="w-35">
-								<DropdownMenuItem className="gap-2 cursor-pointer py-2 group">
-									<Eye className="h-4 w-4 text-accent-foreground" />
-									<Translate text={localizationConstants.viewLabel} />
-								</DropdownMenuItem>
-								<DropdownMenuItem className="gap-2 cursor-pointer py-2 group">
-									<Pencil className="h-4 w-4 text-accent-foreground" />
-									<Translate text={localizationConstants.open} />
-								</DropdownMenuItem>
-								<DropdownMenuItem className="gap-2 cursor-pointer py-2 text-red-600 focus:text-red-700 group">
-									<Trash2 className="h-4 w-4" />
-									<Translate text={localizationConstants.delete} />
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
-					</div>
-				);
-			default:
-				return null;
-		}
-	}, []);
+	const actions = useMemo<DataTableAction<Supplier>[]>(
+		() => [
+			{
+				label: localizationConstants.viewLabel,
+				icon: <Eye className="h-4 w-4" />,
+				onClick: (row) => router.push(`/suppliers/${row.id}`),
+			},
+			{
+				label: localizationConstants.open,
+				icon: <Pencil className="h-4 w-4" />,
+				onClick: (row) => router.push(`/suppliers/${row.id}/edit`),
+			},
+			{
+				label: localizationConstants.delete,
+				icon: <Trash2 className="h-4 w-4" />,
+				destructive: true,
+				onClick: (_row) => {
+					// TODO: trigger delete confirmation dialog
+				},
+			},
+		],
+		[router],
+	);
 
 	return (
-		<div className="flex flex-col gap-4">
-			<div className="w-full bg-white rounded-md border border-slate-200 overflow-hidden">
-				<Table className="w-full min-w-3xl table-auto">
-					<colgroup>
-						{SUPPLIER_COLUMNS.map((col) => (
-							<col
-								key={col.field}
-								className={COLUMN_LAYOUT[col.field].head}
-							/>
-						))}
-					</colgroup>
-					<TableHeader className="bg-slate-50/50">
-						<TableRow className="hover:bg-transparent border-slate-200">
-							{SUPPLIER_COLUMNS.map((col) => (
-								<TableHead
-									key={col.field}
-									className={cn(
-										"text-slate-500 font-medium py-3.5 px-4 h-auto text-left whitespace-nowrap",
-										col.sortable && "cursor-pointer select-none",
-										col.field === "actions" && "cursor-default",
-									)}
-									onClick={() =>
-										col.sortable && handleSort(col.field)
-									}
-								>
-									<div
-										className={cn(
-											"flex items-center gap-1 min-w-0",
-											col.field === "actions" && "justify-end",
-										)}
-									>
-										<Translate text={col.label} />
-										{col.sortable && (
-											<SortIcon
-												field={col.field}
-												sortBy={sortBy}
-												sortOrder={sortOrder}
-											/>
-										)}
-									</div>
-								</TableHead>
-							))}
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{data.map((supplier) => (
-							<TableRow
-								key={supplier.id}
-								className="border-b border-slate-100 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"
-							>
-								{SUPPLIER_COLUMNS.map((col) => (
-									<TableCell
-										key={`${supplier.id}-${col.field}`}
-										className={cn(
-											"py-3.5 px-4",
-											COLUMN_LAYOUT[col.field].cell,
-											col.field === "actions" && "text-right",
-										)}
-									>
-										{renderCell(supplier, col.field)}
-									</TableCell>
-								))}
-							</TableRow>
-						))}
-						{data.length === 0 && (
-							<TableRow>
-								<TableCell
-									colSpan={SUPPLIER_COLUMNS.length}
-									className="h-32 text-center text-slate-500"
-								>
-									<Translate
-										text={localizationConstants.noSuppliersFound}
-									/>
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
-			</div>
-
-			{/* Pagination */}
-			<div className="flex items-center justify-end py-2 px-1">
-				<div className="flex items-center gap-6">
-					<div className="flex items-center gap-2">
-						<span className="text-sm font-medium text-slate-700">
-							<Translate
-								text={localizationConstants.suppliersRowsPerPage}
-							/>
-						</span>
-						<Select
-							value={String(pageSize)}
-							onValueChange={(value) =>
-								changeQueries({
-									page: "1",
-									page_size: value,
-								})
-							}
-						>
-							<SelectTrigger className="h-9 w-17.5 border-slate-200 focus:ring-0">
-								<SelectValue placeholder={String(pageSize)} />
-							</SelectTrigger>
-							<SelectContent>
-								{[5, 10, 20, 30, 50].map((size) => (
-									<SelectItem key={size} value={String(size)}>
-										{size}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
-					<span className="text-sm font-medium text-slate-700">
-						Sida {page} av {totalPages}
-					</span>
-					<div className="flex items-center gap-1">
-						<Button
-							variant="outline"
-							size="icon"
-							className="h-9 w-9 border-slate-200"
-							onClick={() => changeQueries({ page: "1" })}
-							disabled={page <= 1}
-						>
-							<ChevronsLeft className="h-4 w-4" />
-						</Button>
-						<Button
-							variant="outline"
-							size="icon"
-							className="h-9 w-9 border-slate-200"
-							onClick={() =>
-								changeQueries({ page: String(page - 1) })
-							}
-							disabled={page <= 1}
-						>
-							<ChevronLeft className="h-4 w-4" />
-						</Button>
-						<Button
-							variant="outline"
-							size="icon"
-							className="h-9 w-9 border-slate-200"
-							onClick={() =>
-								changeQueries({ page: String(page + 1) })
-							}
-							disabled={page >= totalPages}
-						>
-							<ChevronRight className="h-4 w-4" />
-						</Button>
-						<Button
-							variant="outline"
-							size="icon"
-							className="h-9 w-9 border-slate-200"
-							onClick={() =>
-								changeQueries({ page: String(totalPages) })
-							}
-							disabled={page >= totalPages}
-						>
-							<ChevronsRight className="h-4 w-4" />
-						</Button>
-					</div>
-				</div>
-			</div>
-		</div>
+		<DataTable
+			data={data}
+			columns={COLUMNS}
+			rowKey={(row) => row.id}
+			actions={actions}
+			loading={loading}
+			emptyMessageKey={localizationConstants.noSuppliersFound}
+			pagination={{ page, pageSize, totalItems }}
+			onPageChange={(p) => changeQueries({ page: String(p) })}
+			onPageSizeChange={(size) =>
+				changeQueries({ page: "1", page_size: String(size) })
+			}
+			sortBy={sortBy}
+			sortOrder={sortOrder}
+			onSort={handleSort}
+		/>
 	);
 }
