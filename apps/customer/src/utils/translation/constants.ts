@@ -531,6 +531,14 @@ export type SupplierModule = {
   supplierSummaryTitle: string;
   supplierTotalReviews: string;
   supplierPopularTagsTitle: string;
+  // Create supplier form
+  supplierDetailsSection: string;
+  supplierCreateTitle: string;
+  supplierCreateSubtitle: string;
+  validationSupplierCompanyNameRequired: string;
+  validationSupplierCategoryRequired: string;
+  validationSupplierOrgNoRequired: string;
+  validationSupplierMobileNoRequired: string;
 };
 
 export type QuestionsModule = {
