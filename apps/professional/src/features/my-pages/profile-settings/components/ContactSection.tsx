@@ -1,12 +1,13 @@
 "use client";
 
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
 	BriefcaseBusiness,
+	Loader2,
 	MapPin,
 	Settings2,
 	Contact,
@@ -23,13 +24,17 @@ import {
 	FormCheckbox,
 	FormSelect,
 	FormFileUpload,
+	FormCitySelect,
 } from "@/components/form";
 import { showToast } from "@/lib/toast";
 import { CollapsibleSection } from "@/components/common/CollapsibleSection";
 import {
 	useProfileSettings,
 	useUpdateProfileSettings,
+	type ProfileSettingsData,
 } from "../hooks/useProfileSettings";
+import { getCountriesAction, type Country } from "@/api-actions";
+import { formatOptions } from "@/lib/utils";
 
 const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 	nextOfKin: [{ name: "", relation: "", phone: "", email: "" }],
@@ -40,34 +45,72 @@ const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 	},
 	firstName: "",
 	lastName: "",
-	email: ""
+	email: "",
+	countryId: "",
+	cityId: "",
+	personalId: "",
+	phone: "",
+	streetAddress: "",
+	postalCode: "",
+	employmentNumber: "",
+	position: "",
+	department: "",
+	languagePreference: "",
+	languageOther: "",
 };
 
 export default function ContactSection() {
-	const inputClassName = "";
 	const lastSavedRef = useRef<ContactFormValues | null>(null);
+	// Tracks the latest saved city so FormCitySelect can preserve and display it
+	// while its paginated options catch up.
+	const initialCityRef = useRef<{ id: string; name: string } | null>(null);
+
+	const [countries, setCountries] = useState<Country[]>([]);
+	const [isCountriesLoading, setIsCountriesLoading] = useState(false);
 
 	const form = useForm<ContactFormValues>({
 		resolver: zodResolver(contactSchema),
 		defaultValues: DEFAULT_CONTACT_VALUES,
 	});
-	const {
-		handleSubmit,
-		control,
-		watch,
-	} = form;
+	const { handleSubmit, control, watch } = form;
 
 	const profileSettingsQuery = useProfileSettings();
 	const updateProfileSettings = useUpdateProfileSettings();
 
-	const { fields, append } = useFieldArray({
-		control,
-		name: "nextOfKin",
-	});
+	const { fields, append } = useFieldArray({ control, name: "nextOfKin" });
+
+	const selectedCountryId = useWatch({ control, name: "countryId" });
+	const countryOptions = useMemo(() => formatOptions(countries), [countries]);
+
+	// Load country list once on mount
+	useEffect(() => {
+		const load = async () => {
+			setIsCountriesLoading(true);
+			try {
+				const result = await getCountriesAction();
+				if (result.success && result.data) setCountries(result.data);
+				else showToast("error", localizationConstants.loadCountriesFailed);
+			} catch {
+				showToast("error", localizationConstants.loadCountriesFailed);
+			} finally {
+				setIsCountriesLoading(false);
+			}
+		};
+		load();
+	}, []);
 
 	const onSubmit = async (data: ContactFormValues) => {
 		try {
 			await updateProfileSettings.mutateAsync(data);
+			initialCityRef.current = data.cityId
+				? {
+					id: data.cityId,
+					name:
+						initialCityRef.current?.id === data.cityId
+							? initialCityRef.current.name
+							: "",
+				}
+				: null;
 			lastSavedRef.current = data;
 			showToast("success", localizationConstants.profileUpdated);
 		} catch (_error) {
@@ -75,16 +118,16 @@ export default function ContactSection() {
 		}
 	};
 
-	useEffect(() => {
-		lastSavedRef.current = form.getValues();
-	}, [form]);
 
 	useEffect(() => {
-		if (!profileSettingsQuery.data) {
-			return;
-		}
+		if (!profileSettingsQuery.data) return;
 
-		const incoming = profileSettingsQuery.data as Partial<ContactFormValues>;
+		const incoming = profileSettingsQuery.data as ProfileSettingsData;
+
+		initialCityRef.current = incoming.cityId
+			? { id: incoming.cityId, name: incoming.cityName ?? "" }
+			: null;
+
 		const merged: ContactFormValues = {
 			...DEFAULT_CONTACT_VALUES,
 			...incoming,
@@ -123,7 +166,6 @@ export default function ContactSection() {
 									name="firstName"
 									label={localizationConstants.firstName}
 									placeholder={localizationConstants.firstName}
-									
 									messageClassName="text-xs text-red-600 mt-1"
 								/>
 								<FormInput
@@ -131,7 +173,6 @@ export default function ContactSection() {
 									name="lastName"
 									label={localizationConstants.lastName}
 									placeholder={localizationConstants.lastName}
-									
 									messageClassName="text-xs text-red-600 mt-1"
 								/>
 								<FormInput
@@ -139,7 +180,6 @@ export default function ContactSection() {
 									name="personalId"
 									label={localizationConstants.personalId}
 									placeholder="YYMMDD-XXXX"
-									
 								/>
 							</div>
 						</div>
@@ -159,7 +199,6 @@ export default function ContactSection() {
 									name="email"
 									label={localizationConstants.email}
 									placeholder={localizationConstants.email}
-									
 									messageClassName="text-xs text-red-600 mt-1"
 								/>
 								<FormInput
@@ -167,14 +206,12 @@ export default function ContactSection() {
 									name="phone"
 									label={localizationConstants.phone}
 									placeholder={localizationConstants.phone}
-								
 								/>
 								<FormInput
 									control={control}
 									name="streetAddress"
 									label={localizationConstants.streetAddress}
 									placeholder={localizationConstants.streetAddress}
-									
 								/>
 							</div>
 							<div className="grid grid-cols-3 gap-4 mt-4">
@@ -183,14 +220,27 @@ export default function ContactSection() {
 									name="postalCode"
 									label={localizationConstants.postalCode}
 									placeholder={localizationConstants.postalCode}
-									
 								/>
-								<FormInput
+								<FormSelect
 									control={control}
-									name="city"
-									label={localizationConstants.city}
-									placeholder={localizationConstants.city}
-									
+									name="countryId"
+									label={<Translate text={localizationConstants.registerCountryLabel} />}
+									placeholder={localizationConstants.registerCountryPlaceholder}
+									options={countryOptions}
+									disabled={isCountriesLoading}
+									triggerClassName="w-full"
+								/>
+								<FormCitySelect
+									name="cityId"
+									countryId={selectedCountryId || undefined}
+									label={<Translate text={localizationConstants.city} />}
+									placeholder={localizationConstants.registerCityPlaceholder}
+									disabled={!selectedCountryId}
+									disableWhileLoading
+									skipCityResetWhenValue={initialCityRef.current?.id}
+									ensureOptionIfMissing={initialCityRef.current?.id}
+									ensureOptionLabelIfMissing={initialCityRef.current?.name}
+									triggerClassName="w-full"
 								/>
 							</div>
 						</div>
@@ -211,15 +261,13 @@ export default function ContactSection() {
 										name={`nextOfKin.${idx}.name` as const}
 										label={localizationConstants.nextOfKinName}
 										placeholder={localizationConstants.nextOfKinName}
-										
 									/>
 									<FormSelect
 										control={control}
 										name={`nextOfKin.${idx}.relation` as const}
 										label={<Translate text={localizationConstants.relation} />}
 										placeholder={localizationConstants.relation}
-										
-										triggerClassName={`w-full ${inputClassName}`}
+										triggerClassName={`w-full`}
 										options={[
 											{
 												value: "parent",
@@ -244,25 +292,24 @@ export default function ContactSection() {
 										name={`nextOfKin.${idx}.phone` as const}
 										label={localizationConstants.nextOfKinPhone}
 										placeholder={localizationConstants.nextOfKinPhone}
-										
 									/>
 									<FormInput
 										control={control}
 										name={`nextOfKin.${idx}.email` as const}
 										label={localizationConstants.nextOfKinEmail}
 										placeholder={localizationConstants.nextOfKinEmail}
-										
 									/>
 									<div className="flex items-end">
-							<Button
-								type="button"
-								variant="outline"
-								className="border-0 w-[184px] h-10 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
-								onClick={() => append({ name: "", relation: "", phone: "", email: "" })}
-							>
-								<UserPlus size={16} />
-								<Translate text={localizationConstants.addRelatives} />
-							</Button></div>
+										<Button
+											type="button"
+											variant="outline"
+											className="border-0 w-[184px] h-10 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
+											onClick={() => append({ name: "", relation: "", phone: "", email: "" })}
+										>
+											<UserPlus size={16} />
+											<Translate text={localizationConstants.addRelatives} />
+										</Button>
+									</div>
 								</div>
 							))}
 						</div>
@@ -289,7 +336,7 @@ export default function ContactSection() {
 									name="position"
 									label={localizationConstants.position}
 									placeholder={localizationConstants.position}
-									inputClassName={`!bg-[#f4f4f5] ${inputClassName}`}
+									inputClassName="!bg-[#f4f4f5]"
 									inputProps={{ readOnly: true }}
 								/>
 								<FormInput
@@ -297,7 +344,7 @@ export default function ContactSection() {
 									name="department"
 									label={localizationConstants.department}
 									placeholder={localizationConstants.department}
-									inputClassName={`!bg-[#f4f4f5] ${inputClassName}`}
+									inputClassName="!bg-[#f4f4f5]"
 									inputProps={{ readOnly: true }}
 								/>
 							</div>
@@ -325,9 +372,7 @@ export default function ContactSection() {
 									<Translate text={localizationConstants.unsupportedFileType} />
 								}
 								buttonClassName="bg-slate-900 px-6 !text-white hover:bg-slate-900/90"
-								
 								showPreview
-								
 							/>
 
 							<div>
@@ -361,8 +406,8 @@ export default function ContactSection() {
 														<FormSelect
 															control={control}
 															name="languageOther"
-															placeholder={localizationConstants.languagePreference} 
-															triggerClassName={`w-full ${inputClassName}`}
+															placeholder={localizationConstants.languagePreference}
+															triggerClassName={`w-full`}
 															options={[
 																{
 																	value: "french",
@@ -428,18 +473,21 @@ export default function ContactSection() {
 							className="border border-slate-200 w-[204px] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
 							onClick={() => {
 								const lastSaved = lastSavedRef.current;
-								if (lastSaved) {
-									form.reset(lastSaved);
-								}
+								if (lastSaved) form.reset(lastSaved);
 							}}
 						>
 							<Translate text={localizationConstants.cancel} />
 						</Button>
 						<Button
 							type="submit"
+							disabled={updateProfileSettings.isPending}
 							className="w-[204px] bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)]"
 						>
-							<Save size={16} />
+							{updateProfileSettings.isPending ? (
+								<Loader2 size={16} className="animate-spin" />
+							) : (
+								<Save size={16} />
+							)}
 							<Translate text={localizationConstants.save} />
 						</Button>
 					</div>
