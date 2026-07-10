@@ -107,6 +107,8 @@ export interface DataTableProps<TData> {
   onSort?: (field: string, nextOrder: "asc" | "desc" | null) => void;
   /** Number of skeleton rows to render while loading. Defaults to 5. */
   skeletonRows?: number;
+  /** Custom translation key for the "Rows per page" label. */
+  rowsPerPageKey?: string;
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -152,9 +154,9 @@ function ActionsCell<TData>({
           align="end"
           className="w-[140px] border border-slate-200 bg-white shadow-md rounded-md p-1"
         >
-          {actions.map((action, i) => (
+          {actions.map((action) => (
             <DropdownMenuItem
-              key={i}
+              key={action.label}
               onClick={() => action.onClick(row)}
               className={cn(
                 "gap-2 cursor-pointer px-3 py-2 text-sm rounded group transition-colors",
@@ -222,12 +224,14 @@ function DataTablePagination({
   totalPages,
   onPageChange,
   onPageSizeChange,
+  rowsPerPageKey = localizationConstants.suppliersRowsPerPage,
 }: {
   page: number;
   pageSize: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  rowsPerPageKey?: string;
 }) {
   return (
     <div className="flex items-center justify-end py-2 px-1">
@@ -235,7 +239,7 @@ function DataTablePagination({
         {/* Rows per page */}
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-slate-700">
-            <Translate text={localizationConstants.suppliersRowsPerPage} />
+            <Translate text={rowsPerPageKey} />
           </span>
           <Select
             value={String(pageSize)}
@@ -331,6 +335,7 @@ export function DataTable<TData>({
   sortOrder = "",
   onSort,
   skeletonRows = 5,
+  rowsPerPageKey,
 }: DataTableProps<TData>) {
   const hasActions = Boolean(actions && actions.length > 0);
 
@@ -339,7 +344,7 @@ export function DataTable<TData>({
       pagination
         ? Math.max(1, Math.ceil(pagination.totalItems / pagination.pageSize))
         : 1,
-    [pagination],
+    [pagination?.totalItems, pagination?.pageSize],
   );
 
   const handleSort = useCallback(
@@ -465,6 +470,7 @@ export function DataTable<TData>({
           totalPages={totalPages}
           onPageChange={onPageChange}
           onPageSizeChange={onPageSizeChange}
+          rowsPerPageKey={rowsPerPageKey}
         />
       )}
     </div>
