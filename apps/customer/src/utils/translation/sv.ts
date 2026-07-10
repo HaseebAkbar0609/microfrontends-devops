@@ -14,6 +14,7 @@ import {
   SupportModule,
   PriceCalculatorModule,
   ProjectsModule,
+  ConsultantModule,
 } from "./constants";
 
 export const svAuth: AuthTranslation = {
@@ -990,6 +991,15 @@ export const svProjects: ProjectsModule = {
   financeATAAPriceUnitCol: "A-pris/enhet",
 };
 
+// NOTE: Swedish copy is a first pass — review with the client.
+export const svConsultant: ConsultantModule = {
+  consultantNav: "Konsult",
+  consultantDirectoryTitle: "Konsult",
+  findMyConsultant: "Hitta min konsult",
+  consultantTypeSearchPlaceholder: "Sök konsult...",
+  noConsultantsFound: "Inga konsulter hittades",
+};
+
 export const sv: Translation = {
   ...svSidebar,
   ...svAuth,
@@ -1005,4 +1015,5 @@ export const sv: Translation = {
   ...svSupport,
   ...svPriceCalculatorModule,
   ...svProjects,
+  ...svConsultant,
 };

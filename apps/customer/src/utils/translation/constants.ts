@@ -950,6 +950,14 @@ export type ProjectsModule = {
   financeATAAPriceUnitCol: string;
 };
 
+export type ConsultantModule = {
+  consultantNav: string;
+  consultantDirectoryTitle: string;
+  findMyConsultant: string;
+  consultantTypeSearchPlaceholder: string;
+  noConsultantsFound: string;
+};
+
 export type Translation = SidebarTranslation &
   AuthTranslation &
   CommonFiles &
@@ -963,7 +971,8 @@ export type Translation = SidebarTranslation &
   QuestionsModule &
   SupportModule &
   PriceCalculatorModule &
-  ProjectsModule;
+  ProjectsModule &
+  ConsultantModule;
 
 export type TranslationKeys = keyof Translation;
 

@@ -25,7 +25,11 @@ export { getCountriesAPIAction } from "./location/countries";
 export { getCitiesAPIAction } from "./location/cities";
 export { getCustomerCategoriesListAPIAction } from "./category/customer-categories-list";
 export { getProfessionalsSubcategoriesListAPIAction } from "./category/professionals-subcategories-list";
-export type { SaveProjectPayload, SaveProjectResponse, MediaUploadResponse } from "@/features/quote/types/api";
+export type {
+	SaveProjectPayload,
+	SaveProjectResponse,
+	MediaUploadResponse,
+} from "@/features/quote/types/api";
 export type { AuthResponseData } from "@/types/api";
 export { acceptInvitationAPIAction } from "./invitation/accept";
 export { activeInactiveCompanyUserAPIAction } from "./companies/users";
@@ -39,5 +43,13 @@ export {
 	type CreateSupplierPayload,
 } from "./supplier/create";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
+export {
+	getConsultantTypesAPIAction,
+	type GetConsultantTypesParams,
+} from "./consultant/types";
 
-export { getActiveProjectsAPIAction, type GetActiveProjectsParams, type ActiveProjectListPayload } from "./project/active";
+export {
+	getActiveProjectsAPIAction,
+	type GetActiveProjectsParams,
+	type ActiveProjectListPayload,
+} from "./project/active";
