@@ -792,6 +792,19 @@ export const svConsultant: ConsultantModule = {
   reqColApplications: "Ansökningar",
   reqColDate: "Datum",
   reqColConsultant: "Konsult",
+  addDetailedInformation: "Lägg till Detaljerad Information",
+  consultantDetailsSection: "Konsult detaljer",
+  projectLabel: "Projekt",
+  typeOfConsultantLabel: "Typ av konsult",
+  customerLabel: "Kund",
+  validityLabel: "Giltighet",
+  submitLabel: "Skicka in",
+  noDocumentsUploaded: "Inga dokument uppladdade",
+  consultantRequestSuccess: "Din konsultförfrågan har skickats",
+  validationProjectRequired: "Projekt krävs",
+  validationConsultantTypeRequired: "Typ av konsult krävs",
+  validationCustomerRequired: "Kundnamn krävs",
+  validationDescriptionRequired: "Beskrivning krävs",
 };
 
 export const sv: Translation = {
