@@ -39,3 +39,8 @@ export {
 	getConsultantTypesAPIAction,
 	type GetConsultantTypesParams,
 } from "./consultant/types";
+export {
+	getConsultantRequestsAPIAction,
+	type GetConsultantRequestsParams,
+	type ConsultantRequestsPayload,
+} from "./consultant/requests";

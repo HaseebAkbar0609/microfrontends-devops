@@ -18,6 +18,7 @@ import {
 	DIRECTORY_BREADCRUMBS,
 } from "../constants/directory";
 import { ConsultantTypePanel } from "./type/ConsultantTypePanel";
+import { ConsultantRequestsPanel } from "./requests/ConsultantRequestsPanel";
 
 export default function ConsultantDirectory() {
 	const { query, changeQuery } = useQueryParams();
@@ -58,6 +59,9 @@ export default function ConsultantDirectory() {
 
 				<TabsContent value="type" className="flex flex-col">
 					<ConsultantTypePanel />
+				</TabsContent>
+				<TabsContent value="requests">
+					<ConsultantRequestsPanel />
 				</TabsContent>
 			</Tabs>
 		</div>

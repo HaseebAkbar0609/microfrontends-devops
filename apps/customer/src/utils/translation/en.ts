@@ -788,6 +788,12 @@ export const enConsultant: ConsultantModule = {
   findMyConsultant: "Find my consultant",
   consultantTypeSearchPlaceholder: "Search consultant...",
   noConsultantsFound: "No consultants found",
+  consultantRequestsTab: "Requests",
+  noRequestsFound: "No requests found",
+  reqColProject: "Project",
+  reqColApplications: "Applications",
+  reqColDate: "Date",
+  reqColConsultant: "Consultant",
 };
 
 export const en: Translation = {

@@ -737,6 +737,12 @@ export type ConsultantModule = {
   findMyConsultant: string;
   consultantTypeSearchPlaceholder: string;
   noConsultantsFound: string;
+  consultantRequestsTab: string;
+  noRequestsFound: string;
+  reqColProject: string;
+  reqColApplications: string;
+  reqColDate: string;
+  reqColConsultant: string;
 };
 
 export type Translation = SidebarTranslation &

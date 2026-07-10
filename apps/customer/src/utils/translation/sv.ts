@@ -786,6 +786,12 @@ export const svConsultant: ConsultantModule = {
   findMyConsultant: "Hitta min konsult",
   consultantTypeSearchPlaceholder: "Sök konsult...",
   noConsultantsFound: "Inga konsulter hittades",
+  consultantRequestsTab: "Förfrågningar",
+  noRequestsFound: "Inga förfrågningar hittades",
+  reqColProject: "Projekt",
+  reqColApplications: "Ansökningar",
+  reqColDate: "Datum",
+  reqColConsultant: "Konsult",
 };
 
 export const sv: Translation = {
