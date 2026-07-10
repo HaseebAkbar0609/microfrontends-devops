@@ -139,7 +139,7 @@ export function QuestionsTab() {
       {/* Chat card */}
       <div className="bg-white border border-[#E2E8F0] rounded-xl overflow-hidden">
         {/* Messages */}
-        <div className="p-5 space-y-5 h-[360px] overflow-y-auto [&::-webkit-scrollbar]:w-[3px] [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full">
+        <div className="p-5 space-y-5 h-90 overflow-y-auto [&::-webkit-scrollbar]:w-0.75 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full">
           {messages.map((msg) =>
             msg.senderId === "other" ? (
               /* Left — professional */

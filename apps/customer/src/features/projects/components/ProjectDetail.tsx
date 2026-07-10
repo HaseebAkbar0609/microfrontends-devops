@@ -26,6 +26,7 @@ import { QuestionsTab } from "./tabs/QuestionsTab";
 import { TimelineTab } from "./tabs/TimelineTab";
 import { OrgPlanTab } from "./tabs/OrgPlanTab";
 import { ContractTab } from "./tabs/ContractTab";
+import { FinanceTab } from "./tabs/FinanceTab";
 
 const subTabTriggerClass =
   "h-8 rounded-[6px] border-0 bg-transparent px-3 py-[6px] text-sm font-medium text-slate-500 shadow-none " +
@@ -95,7 +96,7 @@ function ProjectDetailInner() {
 
   return (
     <div className="flex flex-col flex-1 bg-slate-50/50 min-h-screen">
-      <div className={cn("bg-white", !contractFullscreen && "border-b border-slate-200")}>
+      <div className={cn("bg-white flex-1", !contractFullscreen && "border-b border-slate-200")}>
         {!contractFullscreen && (
           <PageHeader
             title={project.name}
@@ -170,9 +171,7 @@ function ProjectDetailInner() {
               </TabsContent>
 
               <TabsContent value="finance" className="mt-0 px-0">
-                <div className="py-16 text-center text-slate-400 text-sm">
-                  <Translate text={localizationConstants.comingSoon} />
-                </div>
+                <FinanceTab />
               </TabsContent>
 
               <TabsContent value="quality" className="mt-0 px-0">
