@@ -48,6 +48,10 @@ export {
 	type GetConsultantListParams,
 	type ConsultantListPayload,
 } from "./consultant/list";
+export {
+	getConsultantTypesAPIAction,
+	type GetConsultantTypesParams,
+} from "./consultant/types";
 
 export {
 	getActiveProjectsAPIAction,

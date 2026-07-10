@@ -53,8 +53,11 @@ export const API_PATH = {
 		CUSTOMER_CATEGORIES_LIST: `${BASE_PATHS.TEAMS}/customers/categories/list`,
 		PROFESSIONALS_SUBCATEGORIES_LIST: `${BASE_PATHS.TEAMS}/professionals/subcategories/list`,
 	},
+	// NOTE: endpoints not live yet — consultant data currently comes from local
+	// dummy data (see api-actions/consultant/).
 	CONSULTANT: {
 		LIST: `${BASE_PATHS.CONSULTANT}/list`,
+		TYPES: `${BASE_PATHS.CONSULTANT}/types`,
 	},
 };
 
