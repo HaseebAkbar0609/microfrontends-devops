@@ -58,6 +58,7 @@ export const API_PATH = {
 	CONSULTANT: {
 		LIST: `${BASE_PATHS.CONSULTANT}/list`,
 		TYPES: `${BASE_PATHS.CONSULTANT}/types`,
+		REQUESTS: `${BASE_PATHS.CONSULTANT}/requests`,
 	},
 };
 
