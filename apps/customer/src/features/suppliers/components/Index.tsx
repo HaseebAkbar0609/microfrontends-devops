@@ -27,7 +27,6 @@ export default function SuppliersFeature() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [listVersion, setListVersion] = useState(0);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -56,7 +55,7 @@ export default function SuppliersFeature() {
 		return () => {
 			cancelled = true;
 		};
-	}, [page, pageSize, search, sortBy, sortOrder, listVersion]);
+	}, [page, pageSize, search, sortBy, sortOrder]);
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
@@ -88,7 +87,9 @@ export default function SuppliersFeature() {
 						onClick={() => router.push("/suppliers/new")}
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.createNewButtonText} />
+						<Translate
+							text={localizationConstants.createNewButtonText}
+						/>
 					</Button>
 				</div>
 			</div>
