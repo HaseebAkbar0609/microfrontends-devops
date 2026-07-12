@@ -44,6 +44,11 @@ export {
 } from "./supplier/create";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
 export {
+	getConsultantListAPIAction,
+	type GetConsultantListParams,
+	type ConsultantListPayload,
+} from "./consultant/list";
+export {
 	getConsultantTypesAPIAction,
 	type GetConsultantTypesParams,
 } from "./consultant/types";

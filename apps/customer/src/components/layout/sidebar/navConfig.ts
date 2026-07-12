@@ -57,6 +57,11 @@ export const navConfig: NavGroup[] = [
 				label: localizationConstants.consultantNav,
 				href: "/business/consultant",
 			},
+			{
+				id: "consultantList",
+				label: localizationConstants.consultantListNav,
+				href: "/business/consultant/list",
+			},
 		],
 	},
 	{
