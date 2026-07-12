@@ -1006,6 +1006,19 @@ export const enConsultant: ConsultantModule = {
   reqColApplications: "Applications",
   reqColDate: "Date",
   reqColConsultant: "Consultant",
+  addDetailedInformation: "Add Detailed Information",
+  consultantDetailsSection: "Consultant Details",
+  projectLabel: "Project",
+  typeOfConsultantLabel: "Type of Consultant",
+  customerLabel: "Customer",
+  validityLabel: "Validity",
+  submitLabel: "Submit",
+  noDocumentsUploaded: "No documents uploaded",
+  consultantRequestSuccess: "Your consultant request has been submitted",
+  validationProjectRequired: "Project is required",
+  validationConsultantTypeRequired: "Type of consultant is required",
+  validationCustomerRequired: "Customer name is required",
+  validationDescriptionRequired: "Description is required",
 };
 
 export const en: Translation = {

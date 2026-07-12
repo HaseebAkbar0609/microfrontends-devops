@@ -53,6 +53,11 @@ export {
 	type ConsultantRequestsPayload,
 } from "./consultant/requests";
 
+export {
+	createConsultantRequestAPIAction,
+	type CreateConsultantRequestPayload,
+	type CreateConsultantRequestResponse,
+} from "./consultant/create-request";
 //
 export {
 	getActiveProjectsAPIAction,
