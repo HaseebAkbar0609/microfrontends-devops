@@ -16,6 +16,7 @@ import {
 	InspirationModule,
 	ProjectsModule,
 	ConsultantModule,
+	RotRutModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -1126,6 +1127,39 @@ export const enConsultant: ConsultantModule = {
 	validationDescriptionRequired: "Description is required",
 };
 
+export const enRotRut: RotRutModule = {
+	rotRutTitle: "ROT - RUT",
+	rotTab: "ROT",
+	rutTab: "RUT",
+	createRotBtn: "Create ROT",
+	comingSoon: "Coming soon",
+	createNew: "Create new",
+	addDetailedInfo: "Add Detailed information",
+	rotSavedSuccess: "ROT details saved successfully!",
+	rotSavedError: "Failed to save ROT details.",
+	rotDetails: "ROT Details",
+	propertyIdLabel: "Property ID",
+	addressLabel: "Address",
+	registration: "Registration",
+	firstNameLabel: "First Name",
+	lastNameLabel: "Last Name",
+	sharePercentageLabel: "Share Percentage",
+	personalIdLabel: "Personal ID",
+	saving: "Saving...",
+	save: "Save",
+	ownerList: "Owner List",
+	name: "Name",
+	personalId: "Personal ID",
+	sharePercentage: "Share",
+	noOwnersAdded: "No owners added yet",
+	validationRegisterPropertyIdRequired: "Property ID is required",
+	validationRegisterAddressRequired: "Address is required",
+	validationRegisterFirstNameRequired: "First name is required",
+	validationRegisterLastNameRequired: "Last name is required",
+	validationRegisterSharePercentageRequired: "Share percentage is required",
+	validationInvalidFormat: "Invalid format",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -1143,4 +1177,5 @@ export const en: Translation = {
 	...enInspiration,
 	...enProjects,
 	...enConsultant,
+	...enRotRut,
 };
