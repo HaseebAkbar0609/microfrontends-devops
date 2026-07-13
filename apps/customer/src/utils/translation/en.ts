@@ -793,12 +793,12 @@ export const enPriceCalculatorModule: PriceCalculatorModule = {
 };
 
 export const enInspiration: InspirationModule = {
-  inspirationTabAdvice: "Advice",
-  inspirationTabInspiration: "Inspiration",
-  inspirationReadMore: "Read More",
-  inspirationCardTitle: "Prepare for the unexpected",
-  inspirationCardExcerpt:
-    "Expect the renovation to take longer and cost more than you initially thought. Plan a buffer for both time and money. If you have a deadline, start the renovation well in advance to avoid unnecessary stress.",
+	inspirationTabAdvice: "Advice",
+	inspirationTabInspiration: "Inspiration",
+	inspirationReadMore: "Read More",
+	inspirationCardTitle: "Prepare for the unexpected",
+	inspirationCardExcerpt:
+		"Expect the renovation to take longer and cost more than you initially thought. Plan a buffer for both time and money. If you have a deadline, start the renovation well in advance to avoid unnecessary stress.",
 };
 
 export const enProjects: ProjectsModule = {
@@ -857,6 +857,17 @@ export const enProjects: ProjectsModule = {
 	projectOrgPhoneLabel: "Phone",
 	projectOrgMailLabel: "Mail",
 	projectNoProjectsFound: "No active projects found",
+	projectNoArchivedProjectsFound: "No archived projects found",
+	projectOrderNoCol: "Order No",
+	projectQuoteRefNoCol: "Quote Reference No",
+	projectSupplierCol: "Supplier",
+	projectStatusArchived: "Archived",
+	projectActivateAction: "Activate",
+	deleteProjectConfirmTitle: "Delete project?",
+	deleteProjectConfirmDescription:
+		"Are you sure you want to delete this project? This action cannot be undone.",
+	projectActivatedSuccess: "Project activated successfully",
+	projectDeletedSuccess: "Project deleted successfully",
 	projectMyProjects: "My Projects",
 	projectNewOrderDirect: "New Order Direct",
 	projectNewProject: "New Project",

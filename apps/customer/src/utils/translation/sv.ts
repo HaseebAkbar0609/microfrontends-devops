@@ -789,12 +789,12 @@ export const svPriceCalculatorModule: PriceCalculatorModule = {
 };
 
 export const svInspiration: InspirationModule = {
-  inspirationTabAdvice: "Råd",
-  inspirationTabInspiration: "Inspiration",
-  inspirationReadMore: "Läs mer",
-  inspirationCardTitle: "Förbered dig på det oväntade",
-  inspirationCardExcerpt:
-    "Räkna med att renoveringen tar längre tid och kostar mer än du först trodde. Planera för en buffert för både tid och pengar. Om du har en deadline, påbörja renoveringen i god tid för att undvika onödig stress.",
+	inspirationTabAdvice: "Råd",
+	inspirationTabInspiration: "Inspiration",
+	inspirationReadMore: "Läs mer",
+	inspirationCardTitle: "Förbered dig på det oväntade",
+	inspirationCardExcerpt:
+		"Räkna med att renoveringen tar längre tid och kostar mer än du först trodde. Planera för en buffert för både tid och pengar. Om du har en deadline, påbörja renoveringen i god tid för att undvika onödig stress.",
 };
 
 export const svProjects: ProjectsModule = {
@@ -853,6 +853,17 @@ export const svProjects: ProjectsModule = {
 	projectOrgPhoneLabel: "Telefon",
 	projectOrgMailLabel: "E-post",
 	projectNoProjectsFound: "Inga aktiva projekt hittades",
+	projectNoArchivedProjectsFound: "Inga arkiverade projekt hittades",
+	projectOrderNoCol: "Ordernr",
+	projectQuoteRefNoCol: "Offertreferensnr",
+	projectSupplierCol: "Leverantör",
+	projectStatusArchived: "Arkiverad",
+	projectActivateAction: "Aktivera",
+	deleteProjectConfirmTitle: "Ta bort projekt?",
+	deleteProjectConfirmDescription:
+		"Är du säker på att du vill ta bort detta projekt? Åtgärden kan inte ångras.",
+	projectActivatedSuccess: "Projektet har aktiverats",
+	projectDeletedSuccess: "Projektet har tagits bort",
 	projectMyProjects: "Mina projekt",
 	projectNewOrderDirect: "Ny direktbeställning",
 	projectNewProject: "Nytt projekt",
