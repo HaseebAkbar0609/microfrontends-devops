@@ -106,7 +106,6 @@ export function useSupplierDetail(supplierId: string) {
     const parentHref = detail?.type === "tool" ? "#" : "/suppliers";
     return [
       { label: localizationConstants.home, href: "/home" },
-      { label: localizationConstants.tools, href: "#" },
       { label: parentLabel, href: parentHref },
       { label: name },
     ];

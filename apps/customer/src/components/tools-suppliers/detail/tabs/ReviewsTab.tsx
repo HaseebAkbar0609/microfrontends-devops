@@ -39,17 +39,19 @@ export function ReviewsTab({
     return (totalStars / totalReviews).toFixed(1);
   }, [starBreakdown, totalReviews]);
 
-  const filteredReviews = reviews
-    .filter((r) => (ratingFilter ? r.rating === ratingFilter : true))
-    .filter((r) =>
-      searchQuery
-        ? r.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          r.name.toLowerCase().includes(searchQuery.toLowerCase())
-        : true,
-    )
-    .sort((a, b) =>
-      sort === "highest" ? b.rating - a.rating : b.timestamp - a.timestamp,
-    );
+  const filteredReviews = useMemo(() => {
+    return reviews
+      .filter((r) => (ratingFilter ? r.rating === ratingFilter : true))
+      .filter((r) =>
+        searchQuery
+          ? r.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            r.name.toLowerCase().includes(searchQuery.toLowerCase())
+          : true,
+      )
+      .sort((a, b) =>
+        sort === "highest" ? b.rating - a.rating : b.timestamp - a.timestamp,
+      );
+  }, [reviews, ratingFilter, searchQuery, sort]);
 
   return (
     <div className="flex flex-col-reverse lg:flex-row gap-6">

@@ -165,11 +165,11 @@ export async function getSupplierOrToolByIdAPIAction(
 		}
 
 		// Fallback helper to search by name/partial matching if ID is not direct
-		const supplierByInitials = Object.values(MOCK_SUPPLIERS_DETAILS).find(
+		const supplierByNameOrId = Object.values(MOCK_SUPPLIERS_DETAILS).find(
 			(s) => s.id === id || s.name.toLowerCase().includes(lowerId)
 		);
-		if (supplierByInitials) {
-			return { success: true, data: supplierByInitials, error: null };
+		if (supplierByNameOrId) {
+			return { success: true, data: supplierByNameOrId, error: null };
 		}
 
 		return { success: false, data: null, error: "Kunde inte hitta verktyget eller leverantören." };
