@@ -2,12 +2,9 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { useTranslation } from "react-i18next";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import { RotList } from "@/features/rotRut/components/RotList";
 
 const rotRutTabTriggerClass =
 	"relative flex-none rounded-none border-0 bg-transparent px-4 py-2.5 text-sm shadow-none " +
@@ -19,7 +16,6 @@ const rotRutTabTriggerClass =
 	"data-[state=active]:!border-b-[3px] data-[state=active]:!border-slate-900";
 
 export default function RootRutOverviewPage() {
-	const { t } = useTranslation();
 
 	return (
 		<div className="flex flex-1 flex-col bg-white min-h-screen font-inter">
@@ -47,21 +43,7 @@ export default function RootRutOverviewPage() {
 				{/* Main Content */}
 				<div className="p-8">
 					<TabsContent value="rot" className="mt-0 flex flex-col">
-						{/* Toolbar */}
-						<div className="flex items-center justify-end gap-4 mb-6">
-							<div className="flex items-center gap-2">
-								<Link href="/rotRut/create">
-									<Button className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md">
-										<Plus className="h-4 w-4" />
-										{t(localizationConstants.createRotBtn)}
-									</Button>
-								</Link>
-							</div>
-						</div>
-
-						<div className="text-center text-slate-500 py-12 bg-white rounded-xl border border-slate-200">
-							<Translate text={localizationConstants.comingSoon} />
-						</div>
+						<RotList />
 					</TabsContent>
 
 					<TabsContent value="rut" className="mt-0">

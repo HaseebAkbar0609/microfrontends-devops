@@ -1155,6 +1155,8 @@ export const svRotRut: RotRutModule = {
 	validationRegisterLastNameRequired: "Efternamn krävs",
 	validationRegisterSharePercentageRequired: "Andel krävs",
 	validationInvalidFormat: "Ogiltigt format",
+	createdLabel: "Skapad",
+	noRotEntriesFound: "Inga ROT-poster hittades",
 };
 
 export const sv: Translation = {
