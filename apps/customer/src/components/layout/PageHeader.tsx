@@ -48,7 +48,7 @@ export function PageHeader({
                 >
                   {index !== 0 && <BreadcrumbSeparator />}
                   {isLast ? (
-                    <BreadcrumbPage className="text-xs font-medium text-slate-950">
+                    <BreadcrumbPage className="text-sm font-normal text-slate-800">
                       <Translate text={item.label} />
                     </BreadcrumbPage>
                   ) : (

@@ -11,27 +11,6 @@ const MOCK_SUPPLIERS: Supplier[] = [
 		mobileNumber: "070-123 45 61",
 	},
 	{
-		id: "jira",
-		companyName: "Jira",
-		orgNo: "Atlassian",
-		contactPersonName: "Integration",
-		email: "jira@integration.timeflow.com",
-	},
-	{
-		id: "slack",
-		companyName: "Slack",
-		orgNo: "Slack Integration",
-		contactPersonName: "Slack Support",
-		email: "slack@integration.timeflow.com",
-	},
-	{
-		id: "github",
-		companyName: "GitHub",
-		orgNo: "Microsoft",
-		contactPersonName: "GitHub Integration",
-		email: "github@integration.timeflow.com",
-	},
-	{
 		id: "2",
 		companyName: "Nisse bygg",
 		orgNo: "556234-5678",
