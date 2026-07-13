@@ -13,6 +13,7 @@ import {
 	QuestionsModule,
 	SupportModule,
 	PriceCalculatorModule,
+	InspirationModule,
 	ProjectsModule,
 	ConsultantModule,
 } from "./constants";
@@ -732,6 +733,15 @@ export const svPriceCalculatorModule: PriceCalculatorModule = {
 	priceCalculatorWorkRoofer: "Taklaggare",
 };
 
+export const svInspiration: InspirationModule = {
+  inspirationTabAdvice: "Råd",
+  inspirationTabInspiration: "Inspiration",
+  inspirationReadMore: "Läs mer",
+  inspirationCardTitle: "Förbered dig på det oväntade",
+  inspirationCardExcerpt:
+    "Räkna med att renoveringen tar längre tid och kostar mer än du först trodde. Planera för en buffert för både tid och pengar. Om du har en deadline, påbörja renoveringen i god tid för att undvika onödig stress.",
+};
+
 export const svProjects: ProjectsModule = {
 	projectTabProject: "Projekt",
 	projectTabContract: "Kontrakt",
@@ -1055,6 +1065,7 @@ export const sv: Translation = {
 	...svQuestions,
 	...svSupport,
 	...svPriceCalculatorModule,
+	...svInspiration,
 	...svProjects,
 	...svConsultant,
 };

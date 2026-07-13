@@ -13,6 +13,7 @@ import {
 	QuestionsModule,
 	SupportModule,
 	PriceCalculatorModule,
+	InspirationModule,
 	ProjectsModule,
 	ConsultantModule,
 } from "./constants";
@@ -735,6 +736,16 @@ export const enPriceCalculatorModule: PriceCalculatorModule = {
 	priceCalculatorWorkTiler: "Tiler",
 	priceCalculatorWorkRoofer: "Roofer",
 };
+
+export const enInspiration: InspirationModule = {
+  inspirationTabAdvice: "Advice",
+  inspirationTabInspiration: "Inspiration",
+  inspirationReadMore: "Read More",
+  inspirationCardTitle: "Prepare for the unexpected",
+  inspirationCardExcerpt:
+    "Expect the renovation to take longer and cost more than you initially thought. Plan a buffer for both time and money. If you have a deadline, start the renovation well in advance to avoid unnecessary stress.",
+};
+
 export const enProjects: ProjectsModule = {
 	projectTabProject: "Project",
 	projectTabContract: "Contract",
@@ -1057,6 +1068,7 @@ export const en: Translation = {
 	...enQuestions,
 	...enSupport,
 	...enPriceCalculatorModule,
+	...enInspiration,
 	...enProjects,
 	...enConsultant,
 };
