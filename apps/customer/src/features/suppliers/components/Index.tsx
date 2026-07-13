@@ -27,7 +27,6 @@ export default function SuppliersFeature() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-
 	useEffect(() => {
 		let cancelled = false;
 		setLoading(true);

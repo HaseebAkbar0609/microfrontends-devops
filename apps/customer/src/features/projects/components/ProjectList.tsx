@@ -1,194 +1,132 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import {
-  FolderOpen,
   Search,
-  CalendarDays,
+  Plus,
+  ArrowUpDown,
+  MoreVertical,
+  Pencil,
+  Archive,
+  Trash2,
+  ChevronLeft,
   ChevronRight,
-  FolderX,
-  Loader2,
+  ChevronDown,
+  Check,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { BreadcrumbItem } from "@/types/user";
+import type { BreadcrumbItem } from "@/types/user";
 import type { ActiveProject } from "../types";
 import { cn } from "@/lib/utils";
-import { getActiveProjectsAPIAction } from "@/api-actions/project/active";
-import type { ActiveProjectItem } from "@/api-actions/project/active";
-import { resolveCompanyName } from "../utils/activeProject";
-
-type SortOption = "updatedAt_desc" | "dueDate_asc" | "name_asc";
-
-type ApiActiveProject = ActiveProjectItem;
+import { DUMMY_PROJECTS } from "../constants";
+// TODO: re-enable when API integration is confirmed working
+// import { getActiveProjectsAPIAction } from "@/api-actions/project/active";
+// import type { ActiveProjectItem } from "@/api-actions/project/active";
+// import { resolveCompanyName } from "../utils/activeProject";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
   { label: localizationConstants.home, href: "/home" },
+  { label: localizationConstants.projectMyProjects },
   { label: localizationConstants.projectmanagement },
 ];
 
-const statusBadgeClass: Record<ActiveProject["status"], string> = {
-  active: "bg-green-50 text-green-700 border-green-200",
-  "on-hold": "bg-yellow-50 text-yellow-700 border-yellow-200",
-  completed: "bg-slate-100 text-slate-500 border-slate-200",
+const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
+  "received-quote": { bg: "bg-[#EFF6FF]", text: "text-[#2563EB]" },
+  "completed":      { bg: "bg-[#F0FDF4]", text: "text-[#047857]" },
+  "draft":          { bg: "bg-[#EFF6FF]", text: "text-[#2563EB]" },
+  "active":         { bg: "bg-[#F0FDF4]", text: "text-[#047857]" },
+  "on-hold":        { bg: "bg-yellow-50", text: "text-yellow-600" },
 };
 
-function mapApiActiveProjectToFrontend(item: ApiActiveProject): ActiveProject {
-  const statusValue = (item.status ?? "").toLowerCase();
-  const companyName = resolveCompanyName(item, item.id);
+const STATUS_OPTIONS = [
+  { value: "",               label: "All Statuses" },
+  { value: "received-quote", label: "Received Quote" },
+  { value: "completed",      label: "Completed" },
+  { value: "draft",          label: "Draft" },
+  { value: "active",         label: "Active" },
+  { value: "on-hold",        label: "On Hold" },
+];
 
-  return {
-    id: item.id,
-    name: item.name ?? "Unnamed project",
-    referenceNo: item.projectCode || item.id.substring(0, 8).toUpperCase(),
-    clientNo: "",
-    projectNo: "",
-    startDate: item.startDate || "-",
-    endDate: item.dueDate || "-",
-    contactPersonName: item.primaryContact?.name || "-",
-    mobileNumber: "",
-    email: "",
-    address: "",
-    postalCode: "",
-    companyName,
-    status:
-      statusValue === "active"
-        ? "active"
-        : statusValue === "on-hold"
-          ? "on-hold"
-          : "completed",
-    statusLabel: item.statusLabel,
-    progressPercent: item.progressPercent,
-    updatedAt: item.updatedAt,
-    primaryContact: item.primaryContact,
-    summary: item.summary,
-    category: "Construction",
-    description: "",
-  };
-}
+const ROWS_OPTIONS = [10, 25, 50];
 
-function ProjectCard({ project }: { project: ActiveProject }) {
-  return (
-    <Link
-      href={`/projectmanagement/${project.id}`}
-      className="group block bg-white rounded-xl border border-slate-200 hover:border-slate-300 hover:shadow-sm transition-all p-5"
-    >
-      <div className="flex items-start gap-4">
-        <div className="shrink-0 w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-          <FolderOpen className="h-5 w-5 text-slate-600" />
-        </div>
+type SortKey = "referenceNo" | "name" | "orderNo" | "quoteReferenceNo" | "companyName" | "status";
 
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-3">
-            <div className="min-w-0">
-              <h3 className="text-sm font-semibold text-slate-900 truncate group-hover:text-primary transition-colors">
-                {project.name}
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
-                REF- {project.referenceNo} · {project.category}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <Badge
-                variant="outline"
-                className={cn(
-                  "capitalize text-xs font-medium",
-                  statusBadgeClass[project.status],
-                )}
-              >
-                {project.statusLabel || project.status.replace("-", " ")}
-              </Badge>
-              <ChevronRight className="h-4 w-4 text-slate-300 group-hover:text-slate-500 transition-colors" />
-            </div>
-          </div>
-
-          {project.description && (
-            <p className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
-              {project.description}
-            </p>
-          )}
-
-          <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
-            <span className="flex items-center gap-1">
-              <CalendarDays className="h-3.5 w-3.5" />
-              {project.startDate}
-            </span>
-            <span>→</span>
-            <span>{project.endDate}</span>
-            <span className="ml-auto text-slate-400">
-              {project.companyName}
-            </span>
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
+// TODO: re-enable when API integration is confirmed working
+// function mapApiActiveProjectToFrontend(item: ApiActiveProject): ActiveProject { ... }
 
 export function ProjectList() {
-  const [search, setSearch] = useState("");
-  const [projects, setProjects] = useState<ActiveProject[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState(false);
-  const [sort, setSort] = useState<SortOption>("updatedAt_desc");
+  const [search, setSearch]           = useState("");
+  const [projects]                    = useState<ActiveProject[]>(DUMMY_PROJECTS);
+  const [sortKey, setSortKey]         = useState<SortKey>("referenceNo");
+  const [sortDir, setSortDir]         = useState<"asc" | "desc">("asc");
+  const [page, setPage]               = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [statusFilter, setStatusFilter] = useState("");
+  const [filterOpen, setFilterOpen]   = useState(false);
+  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
+  const [openMenu, setOpenMenu]       = useState<string | null>(null);
+  const [menuAnchor, setMenuAnchor]   = useState<{ top: number; right: number } | null>(null);
+  const filterBtnRef                  = useRef<HTMLButtonElement>(null);
 
-  const loadProjects = useCallback(
-    async (cursorVal: string | null = null, isReset = false) => {
-      if (isReset) {
-        setLoading(true);
-      } else {
-        setLoadingMore(true);
-      }
+  // TODO: re-enable when API integration is confirmed working
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
 
-      const res = await getActiveProjectsAPIAction({
-        limit: 30,
-        cursor: cursorVal || undefined,
-        sort: sort,
-      });
-
-      if (res.success && res.data) {
-        const mapped = res.data.data.map(mapApiActiveProjectToFrontend);
-        if (isReset) {
-          setProjects(mapped);
-        } else {
-          setProjects((prev) => [...prev, ...mapped]);
-        }
-        setNextCursor(res.data.pageInfo.nextCursor);
-        setHasNextPage(res.data.pageInfo.hasNextPage);
-        setError(null);
-      } else {
-        setError(res.error || "Failed to load projects");
-      }
-
-      setLoading(false);
-      setLoadingMore(false);
-    },
-    [sort],
-  );
-
+  // Close dropdowns on outside click
   useEffect(() => {
-    loadProjects(null, true);
-  }, [loadProjects]);
+    if (!openMenu && !filterOpen) return;
+    const close = () => {
+      setOpenMenu(null); setMenuAnchor(null);
+      setFilterOpen(false); setFilterAnchor(null);
+    };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [openMenu, filterOpen]);
 
-  const handleLoadMore = () => {
-    if (hasNextPage && nextCursor) {
-      loadProjects(nextCursor, false);
-    }
-  };
+  function handleMenuOpen(e: React.MouseEvent<HTMLButtonElement>, id: string) {
+    e.stopPropagation();
+    if (openMenu === id) { setOpenMenu(null); setMenuAnchor(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setOpenMenu(id);
+    setMenuAnchor({ top: rect.bottom + 4, right: window.innerWidth - rect.right });
+  }
 
-  const filtered = projects.filter(
-    (p) =>
+  function handleFilterToggle(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFilterOpen(true);
+    setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
+  }
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    else { setSortKey(key); setSortDir("asc"); }
+  }
+
+  const filtered = projects.filter((p) => {
+    const matchesSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.referenceNo.toLowerCase().includes(search.toLowerCase()) ||
-      p.category.toLowerCase().includes(search.toLowerCase()),
-  );
+      (p.companyName ?? "").toLowerCase().includes(search.toLowerCase());
+    const matchesStatus = statusFilter === "" || p.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
+
+  const sorted = [...filtered].sort((a, b) => {
+    const av = (a[sortKey] ?? "").toString();
+    const bv = (b[sortKey] ?? "").toString();
+    return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
+  });
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
+  const pageRows   = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+
+  const activeFilterLabel = STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All Statuses";
 
   return (
     <div className="flex flex-1 flex-col">
@@ -197,75 +135,267 @@ export function ProjectList() {
         breadcrumbs={BREADCRUMBS}
       />
 
-      <div className="p-6 space-y-4 flex-1">
-        {/* Filters bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          {/* Search */}
-          <div className="relative max-w-sm flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+      <div className="p-6 flex-1">
+        {/* Toolbar */}
+        <div className="flex items-center gap-3 mb-5">
+          <div className="relative max-w-64 flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search projects..."
-              className="pl-9 h-9 text-sm"
+              placeholder="Search"
+              className="pl-9 h-9 text-sm border-[#E2E8F0] bg-white"
             />
           </div>
 
-          {/* Sort selector */}
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-400 font-medium">Sort by:</span>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as SortOption)}
-              className="h-9 rounded-md border border-slate-200 bg-white px-3 py-1 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+          {/* Filter button */}
+          <button
+            ref={filterBtnRef}
+            type="button"
+            onClick={handleFilterToggle}
+            className={cn(
+              "h-9 px-4 flex items-center gap-2 text-sm font-medium border rounded-lg transition-colors",
+              statusFilter
+                ? "bg-blue-50 border-blue-200 text-blue-700"
+                : "bg-white border-[#E2E8F0] text-[#374151] hover:bg-slate-50",
+            )}
+          >
+            Filter
+            {statusFilter && (
+              <span className="text-xs font-normal">· {activeFilterLabel}</span>
+            )}
+            <ChevronDown className={cn("h-4 w-4 transition-transform", filterOpen && "rotate-180")} />
+          </button>
+
+          <div className="ml-auto flex items-center gap-3">
+            <Link
+              href="/business/offer/create"
+              className="h-9 px-4 flex items-center gap-1.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
             >
-              <option value="updatedAt_desc">Latest Updated</option>
-              <option value="name_asc">Name (A-Z)</option>
-              <option value="dueDate_asc">Due Date (Earliest)</option>
-            </select>
+              <Plus className="h-4 w-4" />
+              <Translate text={localizationConstants.projectNewOrderDirect} />
+            </Link>
+            <Link
+              href="/business/offer/create"
+              className="h-9 px-4 flex items-center gap-1.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
+            >
+              <Plus className="h-4 w-4" />
+              <Translate text={localizationConstants.projectNewProject} />
+            </Link>
           </div>
         </div>
 
-        {/* Project cards */}
-        {loading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+        {/* Table card */}
+        <div className="w-[90%] bg-white rounded-xl overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-175 text-sm">
+              <thead>
+                <tr className="border-b border-[#E2E8F0] bg-white">
+                  {(
+                    [
+                      { key: "referenceNo",      label: "Ref No" },
+                      { key: "name",             label: "Project Name" },
+                      { key: "orderNo",          label: "Order No" },
+                      { key: "quoteReferenceNo", label: "Quote Reference No" },
+                      { key: "companyName",      label: "Supplier" },
+                      { key: "status",           label: "Status" },
+                    ] as { key: SortKey; label: string }[]
+                  ).map(({ key, label }) => (
+                    <th
+                      key={key}
+                      className="px-4 py-3 text-left text-xs font-medium text-[#64748B] whitespace-nowrap cursor-pointer select-none"
+                      onClick={() => toggleSort(key)}
+                    >
+                      <span className="inline-flex items-center gap-1">
+                        {label}
+                        <ArrowUpDown
+                          className={cn(
+                            "h-3.5 w-3.5 transition-colors",
+                            sortKey === key ? "text-[#09090B]" : "text-[#CBD5E1]",
+                          )}
+                        />
+                      </span>
+                    </th>
+                  ))}
+                  <th className="px-4 py-3 w-10" />
+                </tr>
+              </thead>
+              <tbody>
+                {pageRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={7} className="px-4 py-16 text-center text-sm text-[#94A3B8]">
+                      <Translate text={localizationConstants.projectNoProjectsFound} />
+                    </td>
+                  </tr>
+                ) : (
+                  pageRows.map((project) => {
+                    const badge = STATUS_STYLE[project.status] ?? STATUS_STYLE["draft"];
+                    return (
+                      <tr
+                        key={project.id}
+                        className="border-b border-[#E2E8F0] last:border-0 hover:bg-slate-50/60 transition-colors"
+                      >
+                        <td className="px-4 py-3">
+                          <Link
+                            href={`/projectmanagement/${project.id}`}
+                            className="text-[#09090B] font-medium hover:underline"
+                          >
+                            {project.referenceNo}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3">
+                          <Link
+                            href={`/projectmanagement/${project.id}`}
+                            className="text-[#374151] hover:underline"
+                          >
+                            {project.name}
+                          </Link>
+                        </td>
+                        <td className="px-4 py-3 text-[#374151]">{project.orderNo ?? "—"}</td>
+                        <td className="px-4 py-3 text-[#374151]">{project.quoteReferenceNo ?? "—"}</td>
+                        <td className="px-4 py-3 text-[#374151]">{project.companyName}</td>
+                        <td className="px-4 py-3">
+                          <span
+                            className={cn(
+                              "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+                              badge.bg,
+                              badge.text,
+                            )}
+                          >
+                            {project.statusLabel ?? project.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <button
+                            type="button"
+                            onClick={(e) => handleMenuOpen(e, project.id)}
+                            className="p-1 rounded hover:bg-slate-100 text-[#94A3B8] transition-colors"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
-        ) : error ? (
-          <div className="flex flex-col items-center justify-center py-20 text-red-500">
-            <p className="text-sm font-medium">{error}</p>
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20 text-slate-400">
-            <FolderX className="h-12 w-12 mb-3 text-slate-200" />
-            <p className="text-sm">
-              <Translate text={localizationConstants.projectNoProjectsFound} />
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-              {filtered.map((project) => (
-                <ProjectCard key={project.id} project={project} />
-              ))}
-            </div>
+        </div>
 
-            {/* Pagination Load More Button */}
-            {hasNextPage && (
-              <div className="flex justify-center pt-4">
-                <button
-                  onClick={handleLoadMore}
-                  disabled={loadingMore}
-                  className="flex items-center gap-2 px-4 py-2 border border-slate-200 hover:border-slate-300 rounded-lg text-sm font-medium text-slate-600 bg-white hover:bg-slate-50 transition-colors disabled:opacity-60"
-                >
-                  {loadingMore && <Loader2 className="h-4 w-4 animate-spin text-slate-500" />}
-                  Load More Projects
-                </button>
-              </div>
-            )}
+        {/* Pagination — outside table card */}
+        <div className="w-[90%] flex items-center justify-center gap-6 px-4 py-3 mt-2 text-sm text-[#64748B]">
+          <div className="flex items-center gap-2">
+            <span>Rows per page</span>
+            <select
+              value={rowsPerPage}
+              onChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(1); }}
+              className="h-8 rounded-md border border-[#E2E8F0] bg-white px-2 text-sm text-[#374151] focus:outline-none"
+            >
+              {ROWS_OPTIONS.map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
           </div>
-        )}
+
+          <span>Page {page} of {totalPages}</span>
+
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              onClick={() => setPage(1)}
+              disabled={page === 1}
+              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronLeft className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setPage(totalPages)}
+              disabled={page === totalPages}
+              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            >
+              <ChevronRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Filter dropdown — fixed portal */}
+      {filterOpen && filterAnchor && (
+        <div
+          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+          className="w-48 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1.5 text-xs font-semibold text-[#94A3B8] uppercase tracking-wide">
+            Status
+          </p>
+          {STATUS_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => {
+                setStatusFilter(opt.value);
+                setPage(1);
+                setFilterOpen(false);
+                setFilterAnchor(null);
+              }}
+              className="w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
+            >
+              {opt.label}
+              {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Row actions dropdown — fixed portal */}
+      {openMenu && menuAnchor && (
+        <div
+          style={{ position: "fixed", top: menuAnchor.top, right: menuAnchor.right, zIndex: 9999 }}
+          className="w-36 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            type="button"
+            className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50"
+          >
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </button>
+          <button
+            type="button"
+            className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50"
+          >
+            <Archive className="h-3.5 w-3.5" />
+            Archive
+          </button>
+          <button
+            type="button"
+            className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50"
+          >
+            <Trash2 className="h-3.5 w-3.5" />
+            Delete
+          </button>
+        </div>
+      )}
     </div>
   );
 }

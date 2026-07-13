@@ -161,10 +161,10 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
             {visibleTasks.map((task) => (
               <div
                 key={task.id}
-                className="h-10 flex items-center border-b border-[#E2E8F0] last:border-0 pl-0 pr-0"
+                className="h-10 flex items-center border-b border-[#E2E8F0] last:border-0 bg-[#E2E8F0]"
               >
                 <div
-                  className="flex items-center gap-1 h-10 px-2 flex-1 min-w-0"
+                  className="flex items-center gap-1 h-full px-2 flex-1 min-w-0"
                   style={{
                     background: "#E2E8F0",
                     borderRadius: "4px 0px 0px 4px",
@@ -194,7 +194,8 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
 
           {/* ── Right panel: scrollable calendar grid ── */}
           <div
-            className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:h-0.75 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-slate-200 [&::-webkit-scrollbar-thumb]:rounded-full"
+            className="flex-1 overflow-x-auto [&::-webkit-scrollbar]:hidden"
+            style={{ scrollbarWidth: "none" }}
           >
             {/* Month header — 48px */}
             <div className="flex h-12 border-b border-[#E2E8F0]">
@@ -235,11 +236,11 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
               ))}
             </div>
 
-            {/* Task bar rows — 40px each (cell: 36×40, inner bg:#E2E8F0, bar h-6 with py-2) */}
+            {/* Task bar rows — 40px each (cell: 36×40, bar h-6 with py-2) */}
             {visibleTasks.map((task) => (
               <div
                 key={task.id}
-                className="flex h-10 border-b border-[#E2E8F0] last:border-0"
+                className="flex h-10 border-b border-[#E2E8F0] last:border-0 bg-[#E2E8F0]"
               >
                 {ALL_DAYS.map((day) => {
                   const active = taskActive(day, task);
@@ -249,8 +250,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
                       style={{ width: CELL_W, minWidth: CELL_W }}
                       className="shrink-0 h-full"
                     >
-                      {/* Inner wrapper: always bg-[#E2E8F0] with 8px vertical padding */}
-                      <div className="flex h-full py-2 bg-[#E2E8F0]">
+                      <div className="flex h-full py-2">
                         {active && (
                           <div className={`flex-1 ${BAR_COLOR[task.color]}`} />
                         )}

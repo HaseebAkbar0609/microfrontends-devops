@@ -751,6 +751,9 @@ export type ProjectsModule = {
 	projectOrgPhoneLabel: string;
 	projectOrgMailLabel: string;
 	projectNoProjectsFound: string;
+	projectMyProjects: string;
+	projectNewOrderDirect: string;
+	projectNewProject: string;
 	// Contract tab
 	contractSubTabList: string;
 	contractSubTabContract: string;

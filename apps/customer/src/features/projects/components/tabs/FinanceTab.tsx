@@ -92,6 +92,7 @@ export function FinanceTab() {
         <PaymentPlanCreate
           onBack={() => setView({ sub: "payment-plan", mode: "list" })}
           onCreate={handlePlanCreate}
+          plansCount={plans.length}
         />
       )}
       {view.sub === "payment-plan" && (view.mode === "view" || view.mode === "edit") && activePlan && (
