@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/common";
 import { Search } from "@/components/search/Search";
@@ -10,12 +11,12 @@ import { getSuppliersAPIAction } from "@/api-actions";
 import type { Supplier } from "../types/types";
 import { SUPPLIER_BREADCRUMBS } from "../constants";
 import { SupplierTable } from "./SupplierTable";
-import { CreateSupplierView } from "./CreateSupplierView";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 export default function SuppliersFeature() {
 	const { search, changeQuery, query } = useQueryParams();
+	const router = useRouter();
 
 	const page = Number(query.get("page") || "1");
 	const pageSize = Number(query.get("page_size") || "10");
@@ -26,8 +27,6 @@ export default function SuppliersFeature() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [showCreate, setShowCreate] = useState(false);
-	const [listVersion, setListVersion] = useState(0);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -56,19 +55,7 @@ export default function SuppliersFeature() {
 		return () => {
 			cancelled = true;
 		};
-	}, [page, pageSize, search, sortBy, sortOrder, listVersion]);
-
-	if (showCreate) {
-		return (
-			<CreateSupplierView
-				onBack={() => setShowCreate(false)}
-				onSuccess={() => {
-					setShowCreate(false);
-					setListVersion((v) => v + 1);
-				}}
-			/>
-		);
-	}
+	}, [page, pageSize, search, sortBy, sortOrder]);
 
 	return (
 		<div className="flex flex-1 flex-col bg-white">
@@ -98,10 +85,12 @@ export default function SuppliersFeature() {
 				<div className="w-full sm:w-auto flex">
 					<Button
 						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md w-full sm:w-auto justify-center"
-						onClick={() => setShowCreate(true)}
+						onClick={() => router.push("/suppliers/new")}
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.createNewButtonText} />
+						<Translate
+							text={localizationConstants.createNewButtonText}
+						/>
 					</Button>
 				</div>
 			</div>

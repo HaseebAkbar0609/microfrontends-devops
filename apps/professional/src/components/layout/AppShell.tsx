@@ -61,8 +61,8 @@ export function AppShell({ children }: AppShellProps) {
 		}
 
 		if (isAuthRoute && isAuthenticated) {
-			// Let users stay on /invitation?token=… to accept (even with an existing session).
-			if (pathname === "/invitation" || pathname.startsWith("/invitation/")) {
+			// Let users stay on /invitation or /my-companies even with an existing session.
+			if (pathname === "/invitation" || pathname.startsWith("/invitation/") || pathname === "/my-companies") {
 				setIsCheckingAuth(false);
 				return;
 			}
@@ -76,7 +76,12 @@ export function AppShell({ children }: AppShellProps) {
 			return;
 		}
 
-		if (!isAuthenticated && !isAuthRoute && !isPublicPage) {
+		if (!isAuthenticated && (!isAuthRoute && !isPublicPage)) {
+			router.replace("/login");
+			return;
+		}
+
+		if (!isAuthenticated && pathname === "/my-companies") {
 			router.replace("/login");
 			return;
 		}
@@ -96,13 +101,16 @@ export function AppShell({ children }: AppShellProps) {
 	}
 
 	if (isAuthRoute && isAuthenticated) {
-		if (pathname === "/invitation" || pathname.startsWith("/invitation/")) {
+		if (pathname === "/invitation" || pathname.startsWith("/invitation/") || pathname === "/my-companies") {
 			return <>{children}</>;
 		}
 		return <Loader />;
 	}
 
 	if (isAuthRoute) {
+		if (pathname === "/my-companies" && !isAuthenticated) {
+			return <Loader />;
+		}
 		return <>{children}</>;
 	}
 
