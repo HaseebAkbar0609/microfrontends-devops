@@ -731,11 +731,11 @@ export type PriceCalculatorModule = {
 };
 
 export type InspirationModule = {
-  inspirationTabAdvice: string;
-  inspirationTabInspiration: string;
-  inspirationReadMore: string;
-  inspirationCardTitle: string;
-  inspirationCardExcerpt: string;
+	inspirationTabAdvice: string;
+	inspirationTabInspiration: string;
+	inspirationReadMore: string;
+	inspirationCardTitle: string;
+	inspirationCardExcerpt: string;
 };
 
 export type ProjectsModule = {
@@ -794,6 +794,15 @@ export type ProjectsModule = {
 	projectOrgPhoneLabel: string;
 	projectOrgMailLabel: string;
 	projectNoProjectsFound: string;
+	projectOrderNoCol: string;
+	projectQuoteRefNoCol: string;
+	projectSupplierCol: string;
+	projectStatusArchived: string;
+	projectActivateAction: string;
+	deleteProjectConfirmTitle: string;
+	deleteProjectConfirmDescription: string;
+	projectActivatedSuccess: string;
+	projectDeletedSuccess: string;
 	projectMyProjects: string;
 	projectNewOrderDirect: string;
 	projectNewProject: string;
