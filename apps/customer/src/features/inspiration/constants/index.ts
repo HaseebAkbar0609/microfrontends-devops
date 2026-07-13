@@ -52,3 +52,48 @@ export const ADVICE_CARDS: AdviceCard[] = [
       "https://media.istockphoto.com/id/1336614770/photo/idyllic-winter-conditions.jpg?s=612x612&w=0&k=20&c=iSOS4l4y0-m5sTwoRNFAM_mgTmv6XREZfU3_sdkf1Gg=",
   },
 ];
+
+export const INSPIRATION_CARDS: AdviceCard[] = [
+  {
+    id: "i1",
+    title: localizationConstants.inspirationCardTitle,
+    excerpt: localizationConstants.inspirationCardExcerpt,
+    imageUrl:
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&h=400&fit=crop",
+  },
+  {
+    id: "i2",
+    title: localizationConstants.inspirationCardTitle,
+    excerpt: localizationConstants.inspirationCardExcerpt,
+    imageUrl:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop",
+  },
+  {
+    id: "i3",
+    title: localizationConstants.inspirationCardTitle,
+    excerpt: localizationConstants.inspirationCardExcerpt,
+    imageUrl:
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=600&h=400&fit=crop",
+  },
+  {
+    id: "i4",
+    title: localizationConstants.inspirationCardTitle,
+    excerpt: localizationConstants.inspirationCardExcerpt,
+    imageUrl:
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=600&h=400&fit=crop",
+  },
+  {
+    id: "i5",
+    title: localizationConstants.inspirationCardTitle,
+    excerpt: localizationConstants.inspirationCardExcerpt,
+    imageUrl:
+      "https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=600&h=400&fit=crop",
+  },
+  {
+    id: "i6",
+    title: localizationConstants.inspirationCardTitle,
+    excerpt: localizationConstants.inspirationCardExcerpt,
+    imageUrl:
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=600&h=400&fit=crop",
+  },
+];
