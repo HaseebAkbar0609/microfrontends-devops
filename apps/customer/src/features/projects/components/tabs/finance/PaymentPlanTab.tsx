@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { PaymentPlan, PaymentPlanRow, PaymentPlanStatus } from "./types";
-import { DUMMY_PAYMENT_PLANS } from "./data";
 import { fmtAmount, newRowId } from "./helpers";
 import { ToolbarSearch, FilterButton } from "./shared";
 
@@ -274,7 +273,7 @@ export function PaymentPlanList({
 
 // ─── Payment plan create ──────────────────────────────────────────────────────
 
-export function PaymentPlanCreate({ onBack, onCreate }: { onBack: () => void; onCreate: (plan: PaymentPlan) => void }) {
+export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: () => void; onCreate: (plan: PaymentPlan) => void; plansCount: number }) {
   const projectNo = "2024-01";
   const [rows, setRows] = useState<PaymentPlanRow[]>([
     { id: newRowId(), date: "", paymentItem: "", description: "", amount: 0, withheldFunds: 0, rgt: 0 },
@@ -406,8 +405,8 @@ export function PaymentPlanCreate({ onBack, onCreate }: { onBack: () => void; on
         </button>
         <Button onClick={() => onCreate({
           id: newRowId(),
-          idNo: String(DUMMY_PAYMENT_PLANS.length + 1).padStart(3, "0"),
-          designation: `Payment Plan ${DUMMY_PAYMENT_PLANS.length + 1}`,
+          idNo: String(plansCount + 1).padStart(3, "0"),
+          designation: `Payment Plan ${plansCount + 1}`,
           date: new Date().toISOString().slice(0, 10),
           projectNo, status: "draft", rows,
         })} className="h-9 px-5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">

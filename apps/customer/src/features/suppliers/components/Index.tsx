@@ -27,8 +27,6 @@ export default function SuppliersFeature() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [listVersion, setListVersion] = useState(0);
-
 	useEffect(() => {
 		let cancelled = false;
 		setLoading(true);
@@ -56,7 +54,7 @@ export default function SuppliersFeature() {
 		return () => {
 			cancelled = true;
 		};
-	}, [page, pageSize, search, sortBy, sortOrder, listVersion]);
+	}, [page, pageSize, search, sortBy, sortOrder]);
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">

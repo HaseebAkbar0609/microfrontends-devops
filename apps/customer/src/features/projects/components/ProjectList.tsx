@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   FolderOpen,
@@ -8,7 +8,7 @@ import {
   CalendarDays,
   ChevronRight,
   FolderX,
-  Loader2,
+  // Loader2, // TODO: re-enable when API integration is active
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -18,13 +18,16 @@ import localizationConstants from "@/utils/translation/constants";
 import { BreadcrumbItem } from "@/types/user";
 import type { ActiveProject } from "../types";
 import { cn } from "@/lib/utils";
-import { getActiveProjectsAPIAction } from "@/api-actions/project/active";
-import type { ActiveProjectItem } from "@/api-actions/project/active";
-import { resolveCompanyName } from "../utils/activeProject";
+import { DUMMY_PROJECTS } from "../constants";
+// TODO: re-enable when API integration is confirmed working
+// import { useEffect, useCallback } from "react";
+// import { getActiveProjectsAPIAction } from "@/api-actions/project/active";
+// import type { ActiveProjectItem } from "@/api-actions/project/active";
+// import { resolveCompanyName } from "../utils/activeProject";
 
 type SortOption = "updatedAt_desc" | "dueDate_asc" | "name_asc";
 
-type ApiActiveProject = ActiveProjectItem;
+// type ApiActiveProject = ActiveProjectItem; // TODO: re-enable with API integration
 
 const BREADCRUMBS: BreadcrumbItem[] = [
   { label: localizationConstants.home, href: "/home" },
@@ -37,39 +40,34 @@ const statusBadgeClass: Record<ActiveProject["status"], string> = {
   completed: "bg-slate-100 text-slate-500 border-slate-200",
 };
 
-function mapApiActiveProjectToFrontend(item: ApiActiveProject): ActiveProject {
-  const statusValue = (item.status ?? "").toLowerCase();
-  const companyName = resolveCompanyName(item, item.id);
-
-  return {
-    id: item.id,
-    name: item.name ?? "Unnamed project",
-    referenceNo: item.projectCode || item.id.substring(0, 8).toUpperCase(),
-    clientNo: "",
-    projectNo: "",
-    startDate: item.startDate || "-",
-    endDate: item.dueDate || "-",
-    contactPersonName: item.primaryContact?.name || "-",
-    mobileNumber: "",
-    email: "",
-    address: "",
-    postalCode: "",
-    companyName,
-    status:
-      statusValue === "active"
-        ? "active"
-        : statusValue === "on-hold"
-          ? "on-hold"
-          : "completed",
-    statusLabel: item.statusLabel,
-    progressPercent: item.progressPercent,
-    updatedAt: item.updatedAt,
-    primaryContact: item.primaryContact,
-    summary: item.summary,
-    category: "Construction",
-    description: "",
-  };
-}
+// TODO: re-enable when API integration is confirmed working
+// function mapApiActiveProjectToFrontend(item: ApiActiveProject): ActiveProject {
+//   const statusValue = (item.status ?? "").toLowerCase();
+//   const companyName = resolveCompanyName(item, item.id);
+//   return {
+//     id: item.id,
+//     name: item.name ?? "Unnamed project",
+//     referenceNo: item.projectCode || item.id.substring(0, 8).toUpperCase(),
+//     clientNo: "",
+//     projectNo: "",
+//     startDate: item.startDate || "-",
+//     endDate: item.dueDate || "-",
+//     contactPersonName: item.primaryContact?.name || "-",
+//     mobileNumber: "",
+//     email: "",
+//     address: "",
+//     postalCode: "",
+//     companyName,
+//     status: statusValue === "active" ? "active" : statusValue === "on-hold" ? "on-hold" : "completed",
+//     statusLabel: item.statusLabel,
+//     progressPercent: item.progressPercent,
+//     updatedAt: item.updatedAt,
+//     primaryContact: item.primaryContact,
+//     summary: item.summary,
+//     category: "Construction",
+//     description: "",
+//   };
+// }
 
 function ProjectCard({ project }: { project: ActiveProject }) {
   return (
@@ -129,59 +127,71 @@ function ProjectCard({ project }: { project: ActiveProject }) {
   );
 }
 
+// TODO: re-enable when API integration is confirmed working
+// function mapApiActiveProjectToFrontend(item: ApiActiveProject): ActiveProject {
+//   const statusValue = (item.status ?? "").toLowerCase();
+//   const companyName = resolveCompanyName(item, item.id);
+//   return {
+//     id: item.id,
+//     name: item.name ?? "Unnamed project",
+//     referenceNo: item.projectCode || item.id.substring(0, 8).toUpperCase(),
+//     clientNo: "",
+//     projectNo: "",
+//     startDate: item.startDate || "-",
+//     endDate: item.dueDate || "-",
+//     contactPersonName: item.primaryContact?.name || "-",
+//     mobileNumber: "",
+//     email: "",
+//     address: "",
+//     postalCode: "",
+//     companyName,
+//     status: statusValue === "active" ? "active" : statusValue === "on-hold" ? "on-hold" : "completed",
+//     statusLabel: item.statusLabel,
+//     progressPercent: item.progressPercent,
+//     updatedAt: item.updatedAt,
+//     primaryContact: item.primaryContact,
+//     summary: item.summary,
+//     category: "Construction",
+//     description: "",
+//   };
+// }
+
 export function ProjectList() {
   const [search, setSearch] = useState("");
-  const [projects, setProjects] = useState<ActiveProject[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [nextCursor, setNextCursor] = useState<string | null>(null);
-  const [hasNextPage, setHasNextPage] = useState(false);
+  const [projects] = useState<ActiveProject[]>(DUMMY_PROJECTS);
   const [sort, setSort] = useState<SortOption>("updatedAt_desc");
 
-  const loadProjects = useCallback(
-    async (cursorVal: string | null = null, isReset = false) => {
-      if (isReset) {
-        setLoading(true);
-      } else {
-        setLoadingMore(true);
-      }
-
-      const res = await getActiveProjectsAPIAction({
-        limit: 30,
-        cursor: cursorVal || undefined,
-        sort: sort,
-      });
-
-      if (res.success && res.data) {
-        const mapped = res.data.data.map(mapApiActiveProjectToFrontend);
-        if (isReset) {
-          setProjects(mapped);
-        } else {
-          setProjects((prev) => [...prev, ...mapped]);
-        }
-        setNextCursor(res.data.pageInfo.nextCursor);
-        setHasNextPage(res.data.pageInfo.hasNextPage);
-        setError(null);
-      } else {
-        setError(res.error || "Failed to load projects");
-      }
-
-      setLoading(false);
-      setLoadingMore(false);
-    },
-    [sort],
-  );
-
-  useEffect(() => {
-    loadProjects(null, true);
-  }, [loadProjects]);
-
-  const handleLoadMore = () => {
-    if (hasNextPage && nextCursor) {
-      loadProjects(nextCursor, false);
-    }
-  };
+  // TODO: re-enable when API integration is confirmed working
+  // const [loading, setLoading] = useState(true);
+  // const [loadingMore, setLoadingMore] = useState(false);
+  // const [error, setError] = useState<string | null>(null);
+  // const [nextCursor, setNextCursor] = useState<string | null>(null);
+  // const [hasNextPage, setHasNextPage] = useState(false);
+  //
+  // const loadProjects = useCallback(
+  //   async (cursorVal: string | null = null, isReset = false) => {
+  //     if (isReset) { setLoading(true); } else { setLoadingMore(true); }
+  //     const res = await getActiveProjectsAPIAction({ limit: 30, cursor: cursorVal || undefined, sort });
+  //     if (res.success && res.data) {
+  //       const mapped = res.data.data.map(mapApiActiveProjectToFrontend);
+  //       if (isReset) { setProjects(mapped); } else { setProjects((prev) => [...prev, ...mapped]); }
+  //       setNextCursor(res.data.pageInfo.nextCursor);
+  //       setHasNextPage(res.data.pageInfo.hasNextPage);
+  //       setError(null);
+  //     } else {
+  //       setError(res.error || "Failed to load projects");
+  //     }
+  //     setLoading(false);
+  //     setLoadingMore(false);
+  //   },
+  //   [sort],
+  // );
+  //
+  // useEffect(() => { loadProjects(null, true); }, [loadProjects]);
+  //
+  // const handleLoadMore = () => {
+  //   if (hasNextPage && nextCursor) { loadProjects(nextCursor, false); }
+  // };
 
   const filtered = projects.filter(
     (p) =>
@@ -227,6 +237,7 @@ export function ProjectList() {
         </div>
 
         {/* Project cards */}
+        {/* TODO: re-enable loading/error states when API integration is active
         {loading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
@@ -235,7 +246,8 @@ export function ProjectList() {
           <div className="flex flex-col items-center justify-center py-20 text-red-500">
             <p className="text-sm font-medium">{error}</p>
           </div>
-        ) : filtered.length === 0 ? (
+        ) : */}
+        {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-slate-400">
             <FolderX className="h-12 w-12 mb-3 text-slate-200" />
             <p className="text-sm">
@@ -250,7 +262,7 @@ export function ProjectList() {
               ))}
             </div>
 
-            {/* Pagination Load More Button */}
+            {/* TODO: re-enable when API pagination is active
             {hasNextPage && (
               <div className="flex justify-center pt-4">
                 <button
@@ -262,7 +274,7 @@ export function ProjectList() {
                   Load More Projects
                 </button>
               </div>
-            )}
+            )} */}
           </div>
         )}
       </div>
