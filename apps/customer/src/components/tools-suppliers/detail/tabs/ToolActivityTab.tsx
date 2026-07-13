@@ -27,7 +27,7 @@ export function ToolActivityTab({ tool }: ToolActivityTabProps) {
         <div className="flex flex-col gap-4">
           {logs.map((log, index) => (
             <div
-              key={index}
+              key={`${log.timestamp}-${log.status}-${index}`}
               className="flex items-start gap-3 border-b border-slate-100 pb-4 last:border-0 last:pb-0"
             >
               <div className="shrink-0 mt-0.5">

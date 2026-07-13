@@ -106,7 +106,7 @@ export function SupplierDetailPage({ supplierId }: { supplierId: string }) {
                     {detail.type === "tool"
                       ? t(
                           localizationConstants[
-                            `toolTab${tab.charAt(0).toUpperCase() + tab.slice(1)}` as keyof typeof localizationConstants
+                            `toolLabel${tab.charAt(0).toUpperCase() + tab.slice(1)}` as keyof typeof localizationConstants
                           ],
                         )
                       : t(

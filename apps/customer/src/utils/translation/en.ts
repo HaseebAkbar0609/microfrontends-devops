@@ -556,6 +556,8 @@ export const enSupplierModule: SupplierModule = {
 	toolSyncWeek: "Weekly",
 	toolSaveSettings: "Save Settings",
 	toolSaving: "Saving...",
+	toolSettingsSaved: "Settings saved!",
+	toolWebhookCopied: "Webhook URL copied!",
 	toolActivityTitle: "Activity logs & history",
 	toolNoActivity: "No activity has been logged yet.",
 	toolPermissionsTitle: "Permissions & data sharing",

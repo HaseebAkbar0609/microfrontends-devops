@@ -568,6 +568,8 @@ export const svSupplierModule: SupplierModule = {
 	toolSyncWeek: "Varje vecka",
 	toolSaveSettings: "Spara inställningar",
 	toolSaving: "Sparar...",
+	toolSettingsSaved: "Inställningar sparade!",
+	toolWebhookCopied: "Webhook-URL kopierad!",
 	toolActivityTitle: "Aktivitetsloggar & historik",
 	toolNoActivity: "Ingen aktivitet har registrerats än.",
 	toolPermissionsTitle: "Behörigheter & datadelning",

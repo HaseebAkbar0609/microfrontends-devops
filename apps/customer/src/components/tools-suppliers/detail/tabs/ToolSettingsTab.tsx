@@ -22,7 +22,7 @@ export function ToolSettingsTab({ tool }: ToolSettingsTabProps) {
     if (tool.webhookUrl) {
       void navigator.clipboard.writeText(tool.webhookUrl);
       setWebhookCopied(true);
-      toast.success("Webhook-URL kopierad!");
+      toast.success(t(localizationConstants.toolWebhookCopied));
       setTimeout(() => setWebhookCopied(false), 2000);
     }
   };
@@ -31,7 +31,7 @@ export function ToolSettingsTab({ tool }: ToolSettingsTabProps) {
     setSaving(true);
     setTimeout(() => {
       setSaving(false);
-      toast.success("Inställningar sparade!");
+      toast.success(t(localizationConstants.toolSettingsSaved));
     }, 600);
   };
 

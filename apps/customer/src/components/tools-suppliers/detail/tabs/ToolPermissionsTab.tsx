@@ -29,9 +29,9 @@ export function ToolPermissionsTab({ tool }: ToolPermissionsTabProps) {
             {t(localizationConstants.toolPermissionsDesc, { name: tool.name })}
           </p>
           <div className="flex flex-col gap-2">
-            {permissions.map((perm, index) => (
+            {permissions.map((perm) => (
               <div
-                key={index}
+                key={perm}
                 className="flex items-center gap-3 p-3 bg-slate-50/50 rounded-lg border border-slate-100"
               >
                 <BadgeCheck className="w-5 h-5 text-green-600 shrink-0" />

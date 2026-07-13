@@ -548,6 +548,8 @@ export type SupplierModule = {
 	toolSyncWeek: string;
 	toolSaveSettings: string;
 	toolSaving: string;
+	toolSettingsSaved: string;
+	toolWebhookCopied: string;
 	toolActivityTitle: string;
 	toolNoActivity: string;
 	toolPermissionsTitle: string;

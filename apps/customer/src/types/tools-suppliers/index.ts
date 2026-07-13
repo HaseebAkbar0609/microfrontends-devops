@@ -20,8 +20,8 @@ export interface ToolDetail {
   apiKey?: string;
   webhookUrl?: string;
   syncFrequency?: "hourly" | "daily" | "weekly";
-  permissions: string[];
-  activityLogs: {
+  permissions?: string[];
+  activityLogs?: {
     timestamp: string;
     status: "success" | "failed";
     message: string;
