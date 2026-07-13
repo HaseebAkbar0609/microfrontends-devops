@@ -798,6 +798,9 @@ export const svProjects: ProjectsModule = {
 	projectOrgPhoneLabel: "Telefon",
 	projectOrgMailLabel: "E-post",
 	projectNoProjectsFound: "Inga aktiva projekt hittades",
+	projectMyProjects: "Mina projekt",
+	projectNewOrderDirect: "Ny direktbeställning",
+	projectNewProject: "Nytt projekt",
 	// Contract tab
 	contractSubTabList: "Kontraktslista",
 	contractSubTabContract: "Kontrakt",

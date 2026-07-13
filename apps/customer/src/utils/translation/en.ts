@@ -802,6 +802,9 @@ export const enProjects: ProjectsModule = {
 	projectOrgPhoneLabel: "Phone",
 	projectOrgMailLabel: "Mail",
 	projectNoProjectsFound: "No active projects found",
+	projectMyProjects: "My Projects",
+	projectNewOrderDirect: "New Order Direct",
+	projectNewProject: "New Project",
 	// Contract tab
 	contractSubTabList: "Contract List",
 	contractSubTabContract: "Contract",
