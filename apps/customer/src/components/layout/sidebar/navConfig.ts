@@ -72,7 +72,7 @@ export const navConfig: NavGroup[] = [
 			{
 				id: "archivedprojects",
 				label: localizationConstants.archivedprojects,
-				href: "/archivedprojects",
+				href: "/projects/archived",
 			},
 		],
 	},
