@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Plus, Filter } from "lucide-react";
+import { Plus, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/common";
@@ -58,32 +58,33 @@ export default function SuppliersFeature() {
 	}, [page, pageSize, search, sortBy, sortOrder]);
 
 	return (
-		<div className="flex flex-1 flex-col bg-blue-gray-50">
+		<div className="flex flex-1 flex-col bg-white">
 			<PageHeader
 				title={localizationConstants.suppliers}
 				breadcrumbs={SUPPLIER_BREADCRUMBS}
 			/>
 
 			{/* Toolbar */}
-			<div className="flex items-center justify-between gap-4 px-5 py-6">
-				<div className="flex items-center gap-3">
+			<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between px-5 py-6">
+				<div className="flex flex-col gap-3 sm:flex-row sm:items-center w-full sm:w-auto">
 					<Search
 						value={search}
 						onChange={(val) => changeQuery("search", val)}
-						placeholder={localizationConstants.searchPlaceholder}
-						className="h-10 w-full max-w-[300px]"
+						placeholder={localizationConstants.search}
+						className="h-10 w-full"
+						wrapperClassName="w-full sm:w-[240px] md:w-[240px] lg:w-[300px]"
 					/>
 					<Button
 						variant="outline"
-						className="h-10 border-slate-200 text-slate-700 font-normal hover:bg-transparent gap-2"
+						className="h-10 border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-2 w-full sm:w-auto justify-center"
 					>
-						<Filter className="h-4 w-4" />
 						<Translate text={localizationConstants.filter} />
+						<ChevronDown className="h-4 w-4 text-slate-500" />
 					</Button>
 				</div>
-				<div className="flex items-center gap-2">
+				<div className="w-full sm:w-auto flex">
 					<Button
-						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md"
+						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md w-full sm:w-auto justify-center"
 						onClick={() => router.push("/suppliers/new")}
 					>
 						<Plus className="h-4 w-4" />
@@ -94,17 +95,17 @@ export default function SuppliersFeature() {
 				</div>
 			</div>
 
-			<div className="px-5 pb-5 flex-1">
-				{loading ? (
-					<div className="flex min-h-[240px] items-center justify-center text-slate-500">
-						<Loader2 className="h-8 w-8 animate-spin" aria-hidden />
-					</div>
-				) : loadError ? (
+			<div className="px-5 pb-5 flex-1 w-full lg:w-[65%]">
+				{loadError ? (
 					<p className="text-sm text-red-600" role="alert">
 						{loadError}
 					</p>
 				) : (
-					<SupplierTable data={suppliers} totalItems={totalItems} />
+					<SupplierTable
+						data={suppliers}
+						totalItems={totalItems}
+						loading={loading}
+					/>
 				)}
 			</div>
 		</div>

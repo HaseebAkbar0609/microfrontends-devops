@@ -539,6 +539,12 @@ export const enSupplierModule: SupplierModule = {
 	supplierSummaryTitle: "Summary",
 	supplierTotalReviews: "Total: {{count}} reviews",
 	supplierPopularTagsTitle: "Popular tags",
+	supplierHeaderCompanyName: "Company name",
+	supplierHeaderOrgNo: "Org no.",
+	supplierHeaderContactPerson: "Contact Person",
+	supplierHeaderMail: "Email",
+	pageLabel: "Page",
+	ofLabel: "of",
 	// Create supplier form
 	supplierDetailsSection: "Supplier details",
 	supplierCreateTitle: "Create new",
