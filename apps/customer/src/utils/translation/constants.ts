@@ -794,6 +794,7 @@ export type ProjectsModule = {
 	projectOrgPhoneLabel: string;
 	projectOrgMailLabel: string;
 	projectNoProjectsFound: string;
+	projectNoArchivedProjectsFound: string;
 	projectOrderNoCol: string;
 	projectQuoteRefNoCol: string;
 	projectSupplierCol: string;

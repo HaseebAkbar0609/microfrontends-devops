@@ -853,6 +853,7 @@ export const svProjects: ProjectsModule = {
 	projectOrgPhoneLabel: "Telefon",
 	projectOrgMailLabel: "E-post",
 	projectNoProjectsFound: "Inga aktiva projekt hittades",
+	projectNoArchivedProjectsFound: "Inga arkiverade projekt hittades",
 	projectOrderNoCol: "Ordernr",
 	projectQuoteRefNoCol: "Offertreferensnr",
 	projectSupplierCol: "Leverantör",

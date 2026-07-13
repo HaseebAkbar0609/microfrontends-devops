@@ -336,7 +336,7 @@ export function ArchivedProjectsTable({
 								>
 									<Translate
 										text={
-											localizationConstants.projectNoProjectsFound
+											localizationConstants.projectNoArchivedProjectsFound
 										}
 									/>
 								</TableCell>
