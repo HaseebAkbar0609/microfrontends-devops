@@ -1158,6 +1158,8 @@ export const enRotRut: RotRutModule = {
 	validationRegisterLastNameRequired: "Last name is required",
 	validationRegisterSharePercentageRequired: "Share percentage is required",
 	validationInvalidFormat: "Invalid format",
+	createdLabel: "Created",
+	noRotEntriesFound: "No ROT entries found",
 };
 
 export const en: Translation = {

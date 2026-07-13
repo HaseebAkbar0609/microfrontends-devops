@@ -1099,6 +1099,8 @@ export type RotRutModule = {
 	validationRegisterLastNameRequired: string;
 	validationRegisterSharePercentageRequired: string;
 	validationInvalidFormat: string;
+	createdLabel: string;
+	noRotEntriesFound: string;
 };
 
 export type Translation = SidebarTranslation &
