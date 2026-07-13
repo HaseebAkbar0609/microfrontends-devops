@@ -50,6 +50,27 @@ export {
 } from "./supplier/get";
 
 export {
+	getConsultantListAPIAction,
+	type GetConsultantListParams,
+	type ConsultantListPayload,
+} from "./consultant/list";
+export {
+	getConsultantTypesAPIAction,
+	type GetConsultantTypesParams,
+} from "./consultant/types";
+export {
+	getConsultantRequestsAPIAction,
+	type GetConsultantRequestsParams,
+	type ConsultantRequestsPayload,
+} from "./consultant/requests";
+
+export {
+	createConsultantRequestAPIAction,
+	type CreateConsultantRequestPayload,
+	type CreateConsultantRequestResponse,
+} from "./consultant/create-request";
+
+export {
   getActiveProjectsAPIAction,
   type GetActiveProjectsParams,
   type ActiveProjectListPayload,
