@@ -681,6 +681,14 @@ export type PriceCalculatorModule = {
 	priceCalculatorWorkRoofer: string;
 };
 
+export type InspirationModule = {
+  inspirationTabAdvice: string;
+  inspirationTabInspiration: string;
+  inspirationReadMore: string;
+  inspirationCardTitle: string;
+  inspirationCardExcerpt: string;
+};
+
 export type ProjectsModule = {
 	projectTabProject: string;
 	projectTabContract: string;
@@ -1008,6 +1016,7 @@ export type Translation = SidebarTranslation &
 	QuestionsModule &
 	SupportModule &
 	PriceCalculatorModule &
+	InspirationModule &
 	ProjectsModule &
 	ConsultantModule;
 
