@@ -86,7 +86,9 @@ export default function SuppliersFeature() {
 						onClick={() => router.push("/suppliers/new")}
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.createNewButtonText} />
+						<Translate
+							text={localizationConstants.createNewButtonText}
+						/>
 					</Button>
 				</div>
 			</div>

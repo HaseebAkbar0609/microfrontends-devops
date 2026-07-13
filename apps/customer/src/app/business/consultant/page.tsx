@@ -1,28 +1,13 @@
-"use client";
+import ConsultantDirectory from "@/features/consultant/components/ConsultantDirectory";
+import { Metadata } from "next";
 
-import { PageHeader } from "@/components/layout/PageHeader";
-import { BreadcrumbItem } from "@/types/user";
-import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+export const dynamic = "force-dynamic";
 
-const BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.business, href: "/business/consultant" },
-	{ label: localizationConstants.consultant },
-];
+export const metadata: Metadata = {
+	title: "Timeflow",
+	description: "Browse consultant types and manage your consulting requests.",
+};
 
-export default function ConsultantPage() {
-	return (
-		<div className="flex flex-1 flex-col">
-			<PageHeader
-				title={localizationConstants.consultant}
-				breadcrumbs={BREADCRUMBS}
-			/>
-			<div className="p-6">
-				<p className="text-slate-600">
-					<Translate text={localizationConstants.comingSoon} />
-				</p>
-			</div>
-		</div>
-	);
+export default function ConsultantDirectoryPage() {
+	return <ConsultantDirectory />;
 }

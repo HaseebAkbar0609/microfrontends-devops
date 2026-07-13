@@ -10,6 +10,7 @@ const BASE_PATHS = {
 	LOCATION: "/api/v1/location",
 	TEAMS: "/api/v1/teams",
 	COMPANIES: "/api/v1/companies",
+	CONSULTANT: `${API_PREFIX}/consultants`,
 };
 
 export const API_PATH = {
@@ -51,6 +52,13 @@ export const API_PATH = {
 	TEAMS: {
 		CUSTOMER_CATEGORIES_LIST: `${BASE_PATHS.TEAMS}/customers/categories/list`,
 		PROFESSIONALS_SUBCATEGORIES_LIST: `${BASE_PATHS.TEAMS}/professionals/subcategories/list`,
+	},
+	// NOTE: endpoints not live yet — consultant data currently comes from local
+	// dummy data (see api-actions/consultant/).
+	CONSULTANT: {
+		LIST: `${BASE_PATHS.CONSULTANT}/list`,
+		TYPES: `${BASE_PATHS.CONSULTANT}/types`,
+		REQUESTS: `${BASE_PATHS.CONSULTANT}/requests`,
 	},
 };
 
