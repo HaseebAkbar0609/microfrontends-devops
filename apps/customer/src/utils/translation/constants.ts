@@ -988,6 +988,9 @@ export type ConsultantModule = {
 	consultantTypeElectrical: string;
 	consultantTypeStructural: string;
 	consultantTypePlumbing: string;
+	consultantTypeHvac: string;
+	consultantTypeInterior: string;
+	consultantTypeConstruction: string;
 	consultantViewProfile: string;
 	consultantMessage: string;
 	consultantManageEngagement: string;
