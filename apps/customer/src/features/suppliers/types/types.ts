@@ -4,5 +4,5 @@ export interface Supplier {
 	orgNo: string;
 	contactPersonName: string;
 	email: string;
-	mobileNumber: string;
+	mobileNumber?: string;
 }
