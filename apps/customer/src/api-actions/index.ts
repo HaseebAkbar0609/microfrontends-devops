@@ -44,6 +44,11 @@ export {
 } from "./supplier/create";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
 export {
+	getSupplierOrToolByIdAPIAction,
+	type SupplierDetail,
+	type ToolDetail,
+} from "./supplier/get";
+export {
 	getConsultantListAPIAction,
 	type GetConsultantListParams,
 	type ConsultantListPayload,
@@ -57,13 +62,11 @@ export {
 	type GetConsultantRequestsParams,
 	type ConsultantRequestsPayload,
 } from "./consultant/requests";
-
 export {
 	createConsultantRequestAPIAction,
 	type CreateConsultantRequestPayload,
 	type CreateConsultantRequestResponse,
 } from "./consultant/create-request";
-//
 export {
 	getActiveProjectsAPIAction,
 	type GetActiveProjectsParams,
