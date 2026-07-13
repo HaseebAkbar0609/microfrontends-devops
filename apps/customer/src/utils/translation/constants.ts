@@ -1058,6 +1058,39 @@ export type ConsultantModule = {
 	validationDescriptionRequired: string;
 };
 
+export type RotRutModule = {
+	rotRutTitle: string;
+	rotTab: string;
+	rutTab: string;
+	createRotBtn: string;
+	comingSoon: string;
+	createNew: string;
+	addDetailedInfo: string;
+	rotSavedSuccess: string;
+	rotSavedError: string;
+	rotDetails: string;
+	propertyIdLabel: string;
+	addressLabel: string;
+	registration: string;
+	firstNameLabel: string;
+	lastNameLabel: string;
+	sharePercentageLabel: string;
+	personalIdLabel: string;
+	saving: string;
+	save: string;
+	ownerList: string;
+	name: string;
+	personalId: string;
+	sharePercentage: string;
+	noOwnersAdded: string;
+	validationRegisterPropertyIdRequired: string;
+	validationRegisterAddressRequired: string;
+	validationRegisterFirstNameRequired: string;
+	validationRegisterLastNameRequired: string;
+	validationRegisterSharePercentageRequired: string;
+	validationInvalidFormat: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
@@ -1073,7 +1106,8 @@ export type Translation = SidebarTranslation &
 	PriceCalculatorModule &
 	InspirationModule &
 	ProjectsModule &
-	ConsultantModule;
+	ConsultantModule &
+	RotRutModule;
 
 export type TranslationKeys = keyof Translation;
 

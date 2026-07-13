@@ -92,9 +92,9 @@ export const navConfig: NavGroup[] = [
 				href: "/priceCalculator",
 			},
 			{
-				id: "rootRut",
+				id: "rotRut",
 				label: localizationConstants.rootRut,
-				href: "/rootRut",
+				href: "/rotRut",
 			},
 			{
 				id: "inspiration",

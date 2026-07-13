@@ -16,6 +16,7 @@ import {
 	InspirationModule,
 	ProjectsModule,
 	ConsultantModule,
+	RotRutModule,
 } from "./constants";
 
 export const svAuth: AuthTranslation = {
@@ -1112,6 +1113,39 @@ export const svConsultant: ConsultantModule = {
 	validationDescriptionRequired: "Beskrivning krävs",
 };
 
+export const svRotRut: RotRutModule = {
+	rotRutTitle: "ROT - RUT",
+	rotTab: "ROT",
+	rutTab: "RUT",
+	createRotBtn: "Skapa ROT",
+	comingSoon: "Kommer snart",
+	createNew: "Skapa ny",
+	addDetailedInfo: "Lägg till detaljerad information",
+	rotSavedSuccess: "ROT-uppgifter sparade!",
+	rotSavedError: "Det gick inte att spara ROT-uppgifter.",
+	rotDetails: "ROT detaljer",
+	propertyIdLabel: "Fastighetsbeteckning",
+	addressLabel: "Adress",
+	registration: "Registrering",
+	firstNameLabel: "Förnamn",
+	lastNameLabel: "Efternamn",
+	sharePercentageLabel: "Andel",
+	personalIdLabel: "Personnummer",
+	saving: "Sparar...",
+	save: "Spara",
+	ownerList: "Ägarlista",
+	name: "Namn",
+	personalId: "Personnummer",
+	sharePercentage: "Andel",
+	noOwnersAdded: "Inga ägare tillagda ännu",
+	validationRegisterPropertyIdRequired: "Fastighetsbeteckning krävs",
+	validationRegisterAddressRequired: "Adress krävs",
+	validationRegisterFirstNameRequired: "Förnamn krävs",
+	validationRegisterLastNameRequired: "Efternamn krävs",
+	validationRegisterSharePercentageRequired: "Andel krävs",
+	validationInvalidFormat: "Ogiltigt format",
+};
+
 export const sv: Translation = {
 	...svSidebar,
 	...svAuth,
@@ -1129,4 +1163,5 @@ export const sv: Translation = {
 	...svInspiration,
 	...svProjects,
 	...svConsultant,
+	...svRotRut,
 };
