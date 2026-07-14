@@ -157,7 +157,7 @@ export const enSupport: SupportTranslation = {
 	contactUs: "Contact us",
 	phone: "Phone",
 	email: "Email",
-	contactPhone: "+46 070 - 426 10 92",
+	contactPhone: "+46 704261092",
 	contactEmail: "info@timeflowsystem.se",
 };
 
