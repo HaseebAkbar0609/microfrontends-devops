@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MoreVertical } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -15,7 +16,7 @@ interface StatItemProps {
 export function StatItem({
 	title,
 	value,
-	// icon: Icon,
+	icon: Icon,
 	href,
 	className,
 }: StatItemProps) {
@@ -23,18 +24,17 @@ export function StatItem({
 		<Link
 			href={href}
 			className={cn(
-				"flex flex-1 flex-col gap-4 rounded-xl bg-gray-100 p-4 transition-colors cursor-pointer",
+				"flex flex-1 flex-col gap-4 rounded-xl bg-gray-100 p-4 transition-colors cursor-pointer hover:bg-gray-200/70",
 				className,
 			)}
 		>
-			{/* Top row: icon left, ellipsis right */}
-			{/* <div className="flex items-center justify-between">
-				<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-white shadow-sm">
-					<Icon className="h-4.5 w-4.5 text-slate-600" />
+			<div className="flex items-center justify-between">
+				<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white shadow-sm">
+					<Icon className="h-5 w-5 text-slate-800" />
 				</div>
-			</div> */}
+				<MoreVertical className="h-4 w-4 text-slate-500" aria-hidden />
+			</div>
 
-			{/* Title and value */}
 			<div className="flex flex-col gap-1">
 				<span
 					className="text-base font-semibold leading-snug"

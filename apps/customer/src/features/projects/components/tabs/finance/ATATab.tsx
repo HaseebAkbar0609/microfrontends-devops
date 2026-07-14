@@ -18,10 +18,10 @@ const ATA_COLS = "grid-cols-[110px_120px_minmax(0,1fr)_minmax(0,1fr)_120px_140px
 
 type ATAStatusFilter = "" | ATAItem["status"];
 
-const ATA_STATUS_OPTIONS: { value: ATAStatusFilter; labelKey: string }[] = [
-  { value: "",        labelKey: localizationConstants.financeStatusAll },
-  { value: "godkand", labelKey: localizationConstants.financeStatusApproved },
-  { value: "granskning", labelKey: localizationConstants.financeStatusReview },
+const ATA_STATUS_OPTIONS: { value: ATAStatusFilter; label: string }[] = [
+  { value: "",        label: "All" },
+  { value: "godkand", label: "Approved" },
+  { value: "granskning", label: "Under Review" },
 ];
 
 export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
@@ -144,7 +144,7 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
               onClick={() => { setStatusFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
               className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
             >
-              <Translate text={opt.labelKey} />
+              {opt.label}
               {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
             </button>
           ))}

@@ -497,15 +497,15 @@ export const svOfferModule: OfferModule = {
 };
 
 export const svDiscounts: DiscountsModule = {
-	discountsAllTitle: "Alla rabatter",
+	discountsAllTitle: "Alla erbjudanden",
 	discountsSubtitle:
 		"Vi har samarbetat med leverantörer för att ge dig de bästa erbjudandena.",
 	discountsFilterSupplierPlaceholder: "Leverantör",
 	discountsAllSuppliers: "Alla leverantörer",
 	discountsFilterCategoryPlaceholder: "Kategori",
 	discountsAllCategories: "Alla kategorier",
-	discountsLoading: "Laddar rabatter...",
-	discountsNotFound: "Inga rabatter hittades för valt filter.",
+	discountsLoading: "Laddar erbjudanden...",
+	discountsNotFound: "Inga erbjudanden hittades för valt filter.",
 	discountsOff: "Rabatt",
 	discountsViewOffer: "Se erbjudande",
 	discountDetailSubtitle:
@@ -948,6 +948,12 @@ export const svProjects: ProjectsModule = {
 	projectQuoteRefNoCol: "Offertreferensnr",
 	projectSupplierCol: "Leverantör",
 	projectStatusArchived: "Arkiverad",
+	projectStatusActive: "Aktiv",
+	projectStatusOnHold: "Pausad",
+	projectStatusCompleted: "Slutförd",
+	projectStatusDraft: "Utkast",
+	projectStatusReceivedQuote: "Offert mottagen",
+	projectArchivedSuccess: "Projektet har arkiverats",
 	projectActivateAction: "Aktivera",
 	deleteProjectConfirmTitle: "Ta bort projekt?",
 	deleteProjectConfirmDescription:

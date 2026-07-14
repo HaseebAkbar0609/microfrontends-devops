@@ -952,6 +952,12 @@ export const enProjects: ProjectsModule = {
 	projectQuoteRefNoCol: "Quote Reference No",
 	projectSupplierCol: "Supplier",
 	projectStatusArchived: "Archived",
+	projectStatusActive: "Active",
+	projectStatusOnHold: "On Hold",
+	projectStatusCompleted: "Completed",
+	projectStatusDraft: "Draft",
+	projectStatusReceivedQuote: "Received Quote",
+	projectArchivedSuccess: "Project archived successfully",
 	projectActivateAction: "Activate",
 	deleteProjectConfirmTitle: "Delete project?",
 	deleteProjectConfirmDescription:

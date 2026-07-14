@@ -888,6 +888,12 @@ export type ProjectsModule = {
 	projectQuoteRefNoCol: string;
 	projectSupplierCol: string;
 	projectStatusArchived: string;
+	projectStatusActive: string;
+	projectStatusOnHold: string;
+	projectStatusCompleted: string;
+	projectStatusDraft: string;
+	projectStatusReceivedQuote: string;
+	projectArchivedSuccess: string;
 	projectActivateAction: string;
 	deleteProjectConfirmTitle: string;
 	deleteProjectConfirmDescription: string;
