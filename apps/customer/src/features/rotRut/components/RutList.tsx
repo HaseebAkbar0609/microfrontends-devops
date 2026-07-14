@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus, ChevronDown } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Search } from "@/components/search/Search";
 import { useQueryParams } from "@/hooks/useQueryParams";
@@ -14,6 +15,7 @@ import { useTranslation } from "react-i18next";
 export function RutList() {
 	const { t } = useTranslation();
 	const { search, changeQuery, query } = useQueryParams();
+	const router = useRouter();
 
 	const page = Number(query.get("page") || "1");
 	const pageSize = Number(query.get("page_size") || "10");
@@ -77,7 +79,7 @@ export function RutList() {
 				<div className="w-full sm:w-auto">
 					<Button
 						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md w-full sm:w-auto justify-center"
-						onClick={() => {}}
+						onClick={() => router.push("/rotRut/rut/create")}
 					>
 						<Plus className="h-4 w-4" />
 						<Translate text={localizationConstants.createRutBtn} />
