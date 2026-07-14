@@ -21,7 +21,7 @@ type ATAStatusFilter = "" | ATAItem["status"];
 const ATA_STATUS_OPTIONS: { value: ATAStatusFilter; label: string }[] = [
   { value: "",        label: "All" },
   { value: "godkand", label: "Approved" },
-  { value: "pending", label: "Pending" },
+  { value: "granskning", label: "Under Review" },
 ];
 
 export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
