@@ -19,17 +19,17 @@ export function PriceDonutChart({
 }: PriceDonutChartProps) {
 	const { t } = useTranslation();
 
-	const size = 120;
-	const strokeWidth = 14;
+	const size = 160;
+	const strokeWidth = 24;
 	const radius = (size - strokeWidth) / 2;
 	const circumference = 2 * Math.PI * radius;
 	const materialLength = (materialShare / 100) * circumference;
 	const laborLength = (laborShare / 100) * circumference;
 
 	return (
-		<div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
-			<div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-				<svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+		<div className="rounded-xl border border-slate-200 bg-slate-50/50 p-6 sm:p-8">
+			<div className="flex flex-col items-center justify-center gap-8 sm:flex-row sm:gap-12">
+				<svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="w-40 h-40 max-w-full">
 					<circle
 						cx={size / 2}
 						cy={size / 2}
@@ -57,14 +57,14 @@ export function PriceDonutChart({
 					<circle
 						cx={size / 2}
 						cy={size / 2}
-						r={size / 2 - strokeWidth - 8}
-						fill="#f8fafc"
+						r={size / 2 - strokeWidth}
+						fill="white"
 					/>
 					<text
 						x={size / 2}
 						y={size / 2 - 10}
 						textAnchor="middle"
-						className="fill-slate-500 text-[9px]"
+						className="fill-slate-500 text-[11px]"
 					>
 						{t(localizationConstants.priceCalculatorTotal)}
 					</text>
@@ -72,7 +72,7 @@ export function PriceDonutChart({
 						x={size / 2}
 						y={size / 2 + 10}
 						textAnchor="middle"
-						className="fill-slate-950 text-sm font-semibold"
+						className="fill-slate-950 text-base font-semibold"
 					>
 						{materialShare}%
 					</text>

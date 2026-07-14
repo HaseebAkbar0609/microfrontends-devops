@@ -24,7 +24,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 		const numericValue = typeof value === "number" ? value : Number(value);
 		return (
 			<div>
-				<div className="mb-2 flex items-center justify-between gap-4">
+				<div className="mb-2 flex items-center gap-4">
 					<div>
 						<label className="text-sm font-medium text-slate-700">
 							{t(field.labelKey)}
@@ -33,7 +33,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 							<p className="text-xs text-slate-400">{t(field.subtitleKey)}</p>
 						)}
 					</div>
-					<div className="flex w-[140px] items-center justify-end gap-2">
+					<div className="flex items-center gap-2">
 						<Input
 							type="number"
 							min={field.min}
@@ -42,7 +42,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 							onChange={(e) => onChange(Number(e.target.value))}
 							className="h-[31px] w-[80px] rounded-lg border border-slate-200 px-3 py-1 text-sm"
 						/>
-						<span className="w-[30px] text-right text-sm text-slate-500">{field.unit}</span>
+						<span className="text-sm text-slate-500">{field.unit}</span>
 					</div>
 				</div>
 				<style>{`
@@ -118,7 +118,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 		const numericValue = typeof value === "number" ? value : Number(value);
 		return (
 			<div>
-				<div className="mb-2 flex items-center justify-between gap-4">
+				<div className="mb-2 flex items-center gap-4">
 					<div>
 						<label className="text-sm font-medium text-slate-700">
 							{t(field.labelKey)}
@@ -127,7 +127,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 							<p className="text-xs text-slate-400">{t(field.subtitleKey)}</p>
 						)}
 					</div>
-					<div className="flex w-[140px] items-center justify-end gap-2">
+					<div className="flex items-center gap-2">
 						<Input
 							type="number"
 							min={field.min}
@@ -136,7 +136,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 							onChange={(e) => onChange(Number(e.target.value))}
 							className="h-[31px] w-[80px] rounded-lg border border-slate-200 px-3 py-1 text-sm"
 						/>
-						<span className="w-[30px] text-right text-sm text-slate-500">{field.unit}</span>
+						<span className="text-sm text-slate-500">{field.unit}</span>
 					</div>
 				</div>
 			</div>
@@ -151,7 +151,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 				{t(field.labelKey)}
 			</label>
 			<Select value={selectValue} onValueChange={onChange}>
-				<SelectTrigger className={`h-[31px] w-full rounded-lg border-0 bg-slate-100 px-3 py-1 ${field.selectWidth ?? "max-w-[240px]"}`}>
+				<SelectTrigger className="h-8 w-full sm:max-w-[320px] rounded-lg border-0 bg-slate-100 px-3 py-1">
 					<SelectValue />
 				</SelectTrigger>
 				<SelectContent>

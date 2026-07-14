@@ -31,7 +31,7 @@ import {
 import localizationConstants from "@/utils/translation/constants";
 
 import { BREADCRUMBS, PRICE_CALCULATOR_TABS_LIST_CLASS, PRICE_CALCULATOR_TAB_TRIGGER_CLASS, PROJECT_TYPES, PRODUCT_PRICES, HOURLY_PRICES } from "./constants";
-import { calculatePrice, formatCurrency } from "./utils";
+import { calculatePrice, formatCurrency, formatNumber } from "./utils";
 import { CalculatorField } from "./components/CalculatorField";
 import { PriceDonutChart } from "./components/PriceDonutChart";
 import { RotDeductionToggle } from "./components/RotDeductionToggle";
@@ -182,9 +182,9 @@ export default function PriceCalculatorPage() {
 					</TabsList>
 
 					<TabsContent value="examples" className="mt-6">
-						<div className="mb-4 flex items-center justify-between gap-4">
+						<div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 							<Select value={selectedExampleId} onValueChange={setSelectedExampleId}>
-								<SelectTrigger className="h-9 w-full max-w-[240px] border-0 bg-slate-100">
+								<SelectTrigger className="h-8 w-full sm:max-w-[320px] border-0 bg-slate-100">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -198,14 +198,14 @@ export default function PriceCalculatorPage() {
 							<Button
 								type="button"
 								variant="primary"
-								className="h-8 gap-2 bg-slate-900 text-white hover:bg-slate-800"
+								className="h-8 w-full sm:w-auto gap-2 bg-slate-900 text-white hover:bg-slate-800"
 								onClick={() => window.print()}
 							>
 								<Printer className="h-4 w-4" />
 								Print
 							</Button>
 						</div>
-						<div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_420px]">
+						<div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
 							<SectionCard className="p-6">
 								<div className="mb-6">
 									<h2 className="text-xl font-semibold text-slate-950">
@@ -246,8 +246,7 @@ export default function PriceCalculatorPage() {
 										{t(localizationConstants.priceCalculatorEstimatedPrice)}
 									</div>
 									<div className="mt-1 text-xl font-semibold text-slate-950">
-										{formatCurrency(estimate.low)} -{" "}
-										{formatCurrency(estimate.high)}
+										{formatNumber(estimate.low)} – {formatCurrency(estimate.high)}
 									</div>
 								</div>
 
@@ -258,7 +257,7 @@ export default function PriceCalculatorPage() {
 									priceAfterRot={priceAfterRot}
 								/>
 
-								<p className="mt-6 text-xs leading-5 text-slate-500">
+								<p className="mt-6 text-xs leading-5 text-slate-500 text-center">
 									{t(localizationConstants.priceCalculatorDisclaimer)}
 								</p>
 							</SectionCard>

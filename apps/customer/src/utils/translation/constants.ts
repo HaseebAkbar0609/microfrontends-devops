@@ -1007,6 +1007,7 @@ export type ProjectsModule = {
 	financeStatusUnpaid: string;
 	financeStatusApproved: string;
 	financeStatusReview: string;
+	financeStatusAll: string;
 	financeViewAction: string;
 	financeApproveAction: string;
 	financeRejectAction: string;

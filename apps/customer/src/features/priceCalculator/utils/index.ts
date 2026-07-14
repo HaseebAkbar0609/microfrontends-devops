@@ -127,3 +127,9 @@ export function formatCurrency(value: number): string {
 		currency: "SEK",
 	}).format(value);
 }
+
+export function formatNumber(value: number): string {
+	return new Intl.NumberFormat("sv-SE", {
+		maximumFractionDigits: 0,
+	}).format(value);
+}
