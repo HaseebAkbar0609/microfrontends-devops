@@ -198,7 +198,7 @@ export const svSidebar: SidebarTranslation = {
 	priceCalculator: "Kostnadskalkylator",
 	rootRut: "ROT & RUT",
 	inspiration: "Inspiration",
-	discounts: "Rabatter",
+	discounts: "Erbjudande",
 	questions: "Frågor",
 	support: "Support",
 };
