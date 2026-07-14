@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Search, ChevronDown, MoreVertical, Plus, ArrowUpDown } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, ChevronDown, MoreVertical, Plus, ArrowUpDown, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Translate } from "@/utils/translation/translate";
@@ -30,13 +30,38 @@ const ratingStyle: Record<
   },
 };
 
+const RATING_OPTIONS: { value: "" | MeetingMinute["rating"]; label: string }[] = [
+  { value: "",         label: "All" },
+  { value: "good",     label: "Good" },
+  { value: "moderate", label: "Moderate" },
+  { value: "bad",      label: "Bad" },
+];
+
 export function MeetingMinutesTab() {
   const [search, setSearch] = useState("");
+  const [ratingFilter, setRatingFilter] = useState<"" | MeetingMinute["rating"]>("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    const close = () => { setFilterOpen(false); setFilterAnchor(null); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [filterOpen]);
+
+  function toggleFilter(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFilterOpen(true);
+    setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
+  }
 
   const filtered = DUMMY_MEETING_MINUTES.filter(
     (m) =>
-      m.title.toLowerCase().includes(search.toLowerCase()) ||
-      m.date.includes(search),
+      (m.title.toLowerCase().includes(search.toLowerCase()) || m.date.includes(search)) &&
+      (ratingFilter === "" || m.rating === ratingFilter),
   );
 
   return (
@@ -56,15 +81,19 @@ export function MeetingMinutesTab() {
         </div>
 
         {/* Filter */}
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
-          className="h-9 gap-1.5 text-sm font-medium text-slate-700 border-slate-200"
+          onClick={toggleFilter}
+          className={`cursor-pointer h-9 px-3 flex items-center gap-1.5 text-sm font-medium border rounded-lg transition-colors ${
+            ratingFilter
+              ? "bg-blue-50 border-blue-200 text-blue-700"
+              : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+          }`}
         >
           Filter
+          {ratingFilter && <span className="text-xs font-normal">· {ratingFilter.charAt(0).toUpperCase() + ratingFilter.slice(1)}</span>}
           <ChevronDown className="h-4 w-4 text-slate-400" />
-        </Button>
+        </button>
 
         {/* Create New */}
         <Button
@@ -82,21 +111,21 @@ export function MeetingMinutesTab() {
         <div className="grid grid-cols-[143px_240px_179px_46px] border-b border-[#E2E8F0] bg-white">
           <button
             type="button"
-            className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+            className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
           >
             Date
             <ArrowUpDown className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
-            className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+            className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
           >
             Title
             <ArrowUpDown className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
-            className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+            className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
           >
             <Translate text={localizationConstants.projectActionProtocolLabel} />
             <ArrowUpDown className="h-3.5 w-3.5" />
@@ -132,7 +161,7 @@ export function MeetingMinutesTab() {
                   <div className="h-14 flex items-center justify-center border-l border-[#E2E8F0]">
                     <button
                       type="button"
-                      className="flex items-center justify-center h-9 w-9 rounded-[6px] text-[#18181B] hover:bg-slate-100 transition-colors"
+                      className="cursor-pointer flex items-center justify-center h-9 w-9 rounded-[6px] text-[#18181B] hover:bg-slate-100 transition-colors"
                       aria-label="Actions"
                     >
                       <MoreVertical className="h-4 w-4" />
@@ -145,6 +174,28 @@ export function MeetingMinutesTab() {
         )}
       </div>
       </div>
+
+      {/* Filter portal */}
+      {filterOpen && filterAnchor && (
+        <div
+          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+          className="w-40 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Rating</p>
+          {RATING_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => { setRatingFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
+              className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
+            >
+              {opt.label}
+              {ratingFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

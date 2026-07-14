@@ -135,7 +135,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
         <button
           type="button"
           onClick={onBack}
-          className="text-[#64748B] hover:text-[#09090B] transition-colors"
+          className="cursor-pointer text-[#64748B] hover:text-[#09090B] transition-colors"
           aria-label="Back"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -175,7 +175,7 @@ function GanttView({ project, onBack }: { project: TimelineProject; onBack: () =
                     <button
                       type="button"
                       onClick={() => toggle(task.id)}
-                      className="shrink-0 text-[#1E293B] hover:text-[#0A0A0A]"
+                      className="cursor-pointer shrink-0 text-[#1E293B] hover:text-[#0A0A0A]"
                     >
                       {task.isExpanded
                         ? <ChevronDown  className="h-4 w-4" />
@@ -320,20 +320,20 @@ export function TimelineTab() {
         <div className="grid grid-cols-[1fr_160px_180px_46px] border-b border-[#E2E8F0]">
           <button
             type="button"
-            className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+            className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
           >
             Title <ArrowUpDown className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
-            className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+            className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
           >
             <Translate text={localizationConstants.projectEstTimeLabel} />
             <ArrowUpDown className="h-3.5 w-3.5" />
           </button>
           <button
             type="button"
-            className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+            className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
           >
             <Translate text={localizationConstants.projectLastUpdatedLabel} />
             <ArrowUpDown className="h-3.5 w-3.5" />
@@ -358,7 +358,7 @@ export function TimelineTab() {
                 <button
                   type="button"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex items-center justify-center h-9 w-9 rounded-[6px] text-[#18181B] hover:bg-slate-100 transition-colors"
+                  className="cursor-pointer flex items-center justify-center h-9 w-9 rounded-[6px] text-[#18181B] hover:bg-slate-100 transition-colors"
                   aria-label="Actions"
                 >
                   <MoreVertical className="h-4 w-4" />

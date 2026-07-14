@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Search, ChevronDown, ChevronLeft, Plus, ArrowUpDown, MoreVertical } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, ChevronDown, ChevronLeft, Plus, ArrowUpDown, MoreVertical, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Translate } from "@/utils/translation/translate";
@@ -68,7 +68,7 @@ function CompanyDetail({ company, onBack }: { company: OrgCompany; onBack: () =>
         <button
           type="button"
           onClick={onBack}
-          className="text-[#64748B] hover:text-[#09090B] transition-colors"
+          className="cursor-pointer text-[#64748B] hover:text-[#09090B] transition-colors"
           aria-label="Back"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -89,7 +89,7 @@ function CompanyDetail({ company, onBack }: { company: OrgCompany; onBack: () =>
             <button
               key={key}
               type="button"
-              className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+              className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
             >
               <Translate text={key} />
               <ArrowUpDown className="h-3.5 w-3.5" />
@@ -116,14 +116,35 @@ function CompanyDetail({ company, onBack }: { company: OrgCompany; onBack: () =>
 
 // ─── List view ────────────────────────────────────────────────────────────────
 
+const ALL_CATEGORIES = Array.from(new Set(DUMMY_ORG_COMPANIES.map((c) => c.category)));
+
 export function OrgPlanTab() {
   const [selected, setSelected] = useState<OrgCompany | null>(null);
   const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    const close = () => { setFilterOpen(false); setFilterAnchor(null); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [filterOpen]);
+
+  function toggleFilter(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFilterOpen(true);
+    setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
+  }
 
   const filtered = DUMMY_ORG_COMPANIES.filter(
     (c) =>
-      c.company.toLowerCase().includes(search.toLowerCase()) ||
-      c.category.toLowerCase().includes(search.toLowerCase()),
+      (c.company.toLowerCase().includes(search.toLowerCase()) ||
+       c.category.toLowerCase().includes(search.toLowerCase())) &&
+      (categoryFilter === "" || c.category === categoryFilter),
   );
 
   if (selected) {
@@ -143,15 +164,19 @@ export function OrgPlanTab() {
             className="pl-9 h-9 w-48 text-sm border-[#E2E8F0]"
           />
         </div>
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
-          className="h-9 gap-1.5 text-sm font-medium text-slate-700 border-[#E2E8F0]"
+          onClick={toggleFilter}
+          className={`cursor-pointer h-9 px-3 flex items-center gap-1.5 text-sm font-medium border rounded-lg transition-colors ${
+            categoryFilter
+              ? "bg-blue-50 border-blue-200 text-blue-700"
+              : "bg-white border-[#E2E8F0] text-slate-700 hover:bg-slate-50"
+          }`}
         >
           Filter
+          {categoryFilter && <span className="text-xs font-normal">· {categoryFilter}</span>}
           <ChevronDown className="h-4 w-4 text-slate-400" />
-        </Button>
+        </button>
         <Button
           type="button"
           className="ml-auto h-9 gap-1.5 bg-[#18181B] hover:bg-[#18181B]/90 text-white text-sm font-medium px-4"
@@ -175,7 +200,7 @@ export function OrgPlanTab() {
             <button
               key={key}
               type="button"
-              className="flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
+              className="cursor-pointer flex items-center gap-1 h-12 px-4 text-sm font-medium text-[#64748B] hover:text-slate-700 text-left"
             >
               <Translate text={key} />
               <ArrowUpDown className="h-3.5 w-3.5" />
@@ -203,7 +228,7 @@ export function OrgPlanTab() {
                 <button
                   type="button"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex items-center justify-center h-9 w-9 rounded-[6px] text-[#18181B] hover:bg-slate-100 transition-colors"
+                  className="cursor-pointer flex items-center justify-center h-9 w-9 rounded-[6px] text-[#18181B] hover:bg-slate-100 transition-colors"
                   aria-label="Actions"
                 >
                   <MoreVertical className="h-4 w-4" />
@@ -213,6 +238,28 @@ export function OrgPlanTab() {
           ))
         )}
       </div>
+
+      {/* Filter portal */}
+      {filterOpen && filterAnchor && (
+        <div
+          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+          className="w-44 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Category</p>
+          {[{ value: "", label: "All" }, ...ALL_CATEGORIES.map((c) => ({ value: c, label: c }))].map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => { setCategoryFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
+              className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
+            >
+              {opt.label}
+              {categoryFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
