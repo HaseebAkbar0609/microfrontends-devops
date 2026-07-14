@@ -203,7 +203,7 @@ export const svSupport: SupportTranslation = {
 	contactUs: "Kontakta oss",
 	phone: "Telefon",
 	email: "E-post",
-	contactPhone: "+46 070 - 426 10 92",
+	contactPhone: "+46 704261092",
 	contactEmail: "info@timeflowsystem.se",
 };
 

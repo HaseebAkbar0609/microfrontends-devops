@@ -50,8 +50,8 @@ export default function SupportPage() {
 					<ContactCard
 						icon={<Phone className="h-5 w-5 text-orange-400" />}
 						titleKey={localizationConstants.phone}
-						detail="+46 070 - 426 10 92"
-						href="tel:+46070426 10 92"
+						detail="+46 704261092"
+						href="tel:+46704261092"
 					/>
 					<ContactCard
 						icon={<Mail className="h-5 w-5 text-orange-400" />}
