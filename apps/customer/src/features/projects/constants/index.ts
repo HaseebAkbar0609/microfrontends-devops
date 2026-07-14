@@ -287,6 +287,71 @@ export const DUMMY_ORG_MEMBERS: OrgMember[] = [
 	},
 ];
 
+export const ACTIVE_PROJECT_COLUMNS = [
+	{
+		label: localizationConstants.refNo,
+		field: "referenceNo",
+		sortable: true,
+	},
+	{ label: localizationConstants.projectName, field: "name", sortable: true },
+	{
+		label: localizationConstants.projectOrderNoCol,
+		field: "orderNo",
+		sortable: true,
+	},
+	{
+		label: localizationConstants.projectQuoteRefNoCol,
+		field: "quoteReferenceNo",
+		sortable: true,
+	},
+	{
+		label: localizationConstants.projectSupplierCol,
+		field: "companyName",
+		sortable: true,
+	},
+	{ label: localizationConstants.status, field: "status", sortable: true },
+	{ label: localizationConstants.actions, field: "actions", sortable: false },
+] as const;
+
+export const ACTIVE_PROJECT_STATUS_FILTER_OPTIONS: {
+	label: string;
+	value: ActiveProject["status"];
+}[] = [
+	{
+		label: localizationConstants.projectStatusReceivedQuote,
+		value: "received-quote",
+	},
+	{
+		label: localizationConstants.projectStatusCompleted,
+		value: "completed",
+	},
+	{ label: localizationConstants.projectStatusDraft, value: "draft" },
+	{ label: localizationConstants.projectStatusActive, value: "active" },
+	{ label: localizationConstants.projectStatusOnHold, value: "on-hold" },
+];
+
+export const ACTIVE_PROJECT_STATUS_LABEL_KEY: Record<
+	ActiveProject["status"],
+	string
+> = {
+	"received-quote": localizationConstants.projectStatusReceivedQuote,
+	completed: localizationConstants.projectStatusCompleted,
+	draft: localizationConstants.projectStatusDraft,
+	active: localizationConstants.projectStatusActive,
+	"on-hold": localizationConstants.projectStatusOnHold,
+};
+
+export const ACTIVE_PROJECT_STATUS_VARIANT: Record<
+	ActiveProject["status"],
+	"success" | "info" | "warning"
+> = {
+	"received-quote": "info",
+	completed: "success",
+	draft: "info",
+	active: "success",
+	"on-hold": "warning",
+};
+
 export const ARCHIVED_PROJECT_COLUMNS = [
 	{
 		label: localizationConstants.refNo,

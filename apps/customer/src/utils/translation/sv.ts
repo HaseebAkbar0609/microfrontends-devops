@@ -859,6 +859,12 @@ export const svProjects: ProjectsModule = {
 	projectQuoteRefNoCol: "Offertreferensnr",
 	projectSupplierCol: "Leverantör",
 	projectStatusArchived: "Arkiverad",
+	projectStatusActive: "Aktiv",
+	projectStatusOnHold: "Pausad",
+	projectStatusCompleted: "Slutförd",
+	projectStatusDraft: "Utkast",
+	projectStatusReceivedQuote: "Offert mottagen",
+	projectArchivedSuccess: "Projektet har arkiverats",
 	projectActivateAction: "Aktivera",
 	deleteProjectConfirmTitle: "Ta bort projekt?",
 	deleteProjectConfirmDescription:
