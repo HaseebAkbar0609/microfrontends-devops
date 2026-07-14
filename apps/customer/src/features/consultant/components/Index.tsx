@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { PageHeader, ActionsToolbar } from "@/components/common";
 import { useQueryParams } from "@/hooks/useQueryParams";
@@ -15,6 +16,7 @@ import {
 } from "../constants";
 
 export default function ConsultantListFeature() {
+	const router = useRouter();
 	const { search, changeQuery, query } = useQueryParams();
 
 	const page = Number(query.get("page") || "1");
@@ -65,6 +67,7 @@ export default function ConsultantListFeature() {
 			<PageHeader
 				title={localizationConstants.consultantsTitle}
 				breadcrumbs={BREADCRUMBS}
+				onBack={() => router.back()}
 			/>
 			<ActionsToolbar
 				searchValue={search}

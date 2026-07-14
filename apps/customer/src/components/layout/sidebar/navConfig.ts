@@ -57,11 +57,6 @@ export const navConfig: NavGroup[] = [
 				label: localizationConstants.consultantNav,
 				href: "/business/consultant",
 			},
-			{
-				id: "consultantList",
-				label: localizationConstants.consultantListNav,
-				href: "/business/consultant/list",
-			},
 		],
 	},
 	{
@@ -77,7 +72,7 @@ export const navConfig: NavGroup[] = [
 			{
 				id: "archivedprojects",
 				label: localizationConstants.archivedprojects,
-				href: "/archivedprojects",
+				href: "/projects/archived",
 			},
 		],
 	},
@@ -97,9 +92,9 @@ export const navConfig: NavGroup[] = [
 				href: "/priceCalculator",
 			},
 			{
-				id: "rootRut",
+				id: "rotRut",
 				label: localizationConstants.rootRut,
-				href: "/rootRut",
+				href: "/rotRut",
 			},
 			{
 				id: "inspiration",

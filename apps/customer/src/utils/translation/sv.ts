@@ -16,6 +16,7 @@ import {
 	InspirationModule,
 	ProjectsModule,
 	ConsultantModule,
+	RotRutModule,
 } from "./constants";
 
 export const svAuth: AuthTranslation = {
@@ -197,7 +198,7 @@ export const svSidebar: SidebarTranslation = {
 	priceCalculator: "Kostnadskalkylator",
 	rootRut: "ROT & RUT",
 	inspiration: "Inspiration",
-	discounts: "Rabatter",
+	discounts: "Erbjudande",
 	questions: "Frågor",
 	support: "Support",
 };
@@ -551,6 +552,61 @@ export const svSupplierModule: SupplierModule = {
 	supplierSummaryTitle: "Sammanfattning",
 	supplierTotalReviews: "Totalt: {{count}} recensioner",
 	supplierPopularTagsTitle: "Populära taggar",
+	toolLabelOverview: "Översikt",
+	toolLabelSettings: "Inställningar",
+	toolLabelActivity: "Aktivitet",
+	toolLabelPermissions: "Behörigheter",
+	toolAboutSection: "Om integrationen",
+	toolLinksSection: "Länkar och detaljer",
+	toolCategoryLabel: "Kategori",
+	toolWebsiteLabel: "Webbplats",
+	toolSettingsTitle: "Konfiguration & inställningar",
+	toolApiKeyLabel: "API-nyckel (Maskerad för säkerhet)",
+	toolWebhookLabel: "Webhook-URL (Läs-endast)",
+	toolSyncFreqLabel: "Synkroniseringsfrekvens",
+	toolSyncHour: "Varje timme",
+	toolSyncDay: "Varje dag",
+	toolSyncWeek: "Varje vecka",
+	toolSaveSettings: "Spara inställningar",
+	toolSaving: "Sparar...",
+	toolSettingsSaved: "Inställningar sparade!",
+	toolWebhookCopied: "Webhook-URL kopierad!",
+	toolActivityTitle: "Aktivitetsloggar & historik",
+	toolNoActivity: "Ingen aktivitet har registrerats än.",
+	toolPermissionsTitle: "Behörigheter & datadelning",
+	toolPermissionsDesc:
+		"Följande behörigheter är godkända för kopplingen mellan TimeFlow och verktyget. Du kan återkalla dessa när som helst genom att koppla bort verktyget.",
+	toolNoPermissions: "Inga specifika behörigheter har tilldelats.",
+	toolDisconnectTitle: "Koppla bort {{name}}?",
+	toolDisconnectDesc:
+		"Det här tar bort kopplingen mellan TimeFlow och {{name}}. Du kommer inte längre att kunna synka data eller loggar automatiskt.",
+	toolDisconnectAction: "Koppla bort",
+	toolDisconnectCancel: "Avbryt",
+	toolBadgeText: "Verktyg",
+	toolConnectedBadge: "Ansluten",
+	toolPendingBadge: "Väntar",
+	toolDisconnectedBadge: "Ej ansluten",
+	supplierNoProjectsTitle: "Inga pågående projekt",
+	supplierNoProjectsDesc:
+		"Det finns för närvarande inga aktiva projekt kopplade till denna leverantör.",
+	supplierNoServicesTitle: "Tjänster visas snart",
+	supplierNoServicesDesc:
+		"En komplett lista över alla erbjudna tjänster sammanställs just nu.",
+	supplierNoDocsTitle: "Inga dokument delade",
+	supplierNoDocsDesc:
+		"Inga avtal, SLA:er eller relaterade dokument har laddats upp ännu.",
+	toolDisconnectSuccess: "Koppling borttagen!",
+	errorTitle: "Ett fel uppstod",
+	errorDetailsFailed: "Kunde inte ladda detaljer",
+	errorDetailsDesc:
+		"Det gick inte att hämta informationen från servern. Kontrollera din anslutning.",
+	errorRetry: "Försök igen",
+	supplierHeaderCompanyName: "Företagsnamn",
+	supplierHeaderOrgNo: "Org nr.",
+	supplierHeaderContactPerson: "Kontaktper. namn",
+	supplierHeaderMail: "Mail",
+	pageLabel: "Sida",
+	ofLabel: "av",
 	// Create supplier form
 	supplierDetailsSection: "Supplier detaljer",
 	supplierCreateTitle: "Skapa ny",
@@ -734,12 +790,12 @@ export const svPriceCalculatorModule: PriceCalculatorModule = {
 };
 
 export const svInspiration: InspirationModule = {
-  inspirationTabAdvice: "Råd",
-  inspirationTabInspiration: "Inspiration",
-  inspirationReadMore: "Läs mer",
-  inspirationCardTitle: "Förbered dig på det oväntade",
-  inspirationCardExcerpt:
-    "Räkna med att renoveringen tar längre tid och kostar mer än du först trodde. Planera för en buffert för både tid och pengar. Om du har en deadline, påbörja renoveringen i god tid för att undvika onödig stress.",
+	inspirationTabAdvice: "Råd",
+	inspirationTabInspiration: "Inspiration",
+	inspirationReadMore: "Läs mer",
+	inspirationCardTitle: "Förbered dig på det oväntade",
+	inspirationCardExcerpt:
+		"Räkna med att renoveringen tar längre tid och kostar mer än du först trodde. Planera för en buffert för både tid och pengar. Om du har en deadline, påbörja renoveringen i god tid för att undvika onödig stress.",
 };
 
 export const svProjects: ProjectsModule = {
@@ -798,6 +854,17 @@ export const svProjects: ProjectsModule = {
 	projectOrgPhoneLabel: "Telefon",
 	projectOrgMailLabel: "E-post",
 	projectNoProjectsFound: "Inga aktiva projekt hittades",
+	projectNoArchivedProjectsFound: "Inga arkiverade projekt hittades",
+	projectOrderNoCol: "Ordernr",
+	projectQuoteRefNoCol: "Offertreferensnr",
+	projectSupplierCol: "Leverantör",
+	projectStatusArchived: "Arkiverad",
+	projectActivateAction: "Aktivera",
+	deleteProjectConfirmTitle: "Ta bort projekt?",
+	deleteProjectConfirmDescription:
+		"Är du säker på att du vill ta bort detta projekt? Åtgärden kan inte ångras.",
+	projectActivatedSuccess: "Projektet har aktiverats",
+	projectDeletedSuccess: "Projektet har tagits bort",
 	projectMyProjects: "Mina projekt",
 	projectNewOrderDirect: "Ny direktbeställning",
 	projectNewProject: "Nytt projekt",
@@ -1056,6 +1123,9 @@ export const svConsultant: ConsultantModule = {
 	consultantTypeElectrical: "Elkonsult",
 	consultantTypeStructural: "Byggnadsingenjör",
 	consultantTypePlumbing: "VVS-konsult",
+	consultantTypeHvac: "Ventilationskonsult",
+	consultantTypeInterior: "Inredningsarkitekt",
+	consultantTypeConstruction: "Byggkonsult",
 	consultantViewProfile: "Visa profil",
 	consultantMessage: "Meddelande",
 	consultantManageEngagement: "Hantera uppdrag",
@@ -1080,6 +1150,41 @@ export const svConsultant: ConsultantModule = {
 	validationDescriptionRequired: "Beskrivning krävs",
 };
 
+export const svRotRut: RotRutModule = {
+	rotRutTitle: "ROT - RUT",
+	rotTab: "ROT",
+	rutTab: "RUT",
+	createRotBtn: "Skapa ROT",
+	comingSoon: "Kommer snart",
+	createNew: "Skapa ny",
+	addDetailedInfo: "Lägg till detaljerad information",
+	rotSavedSuccess: "ROT-uppgifter sparade!",
+	rotSavedError: "Det gick inte att spara ROT-uppgifter.",
+	rotDetails: "ROT detaljer",
+	propertyIdLabel: "Fastighetsbeteckning",
+	addressLabel: "Adress",
+	registration: "Registrering",
+	firstNameLabel: "Förnamn",
+	lastNameLabel: "Efternamn",
+	sharePercentageLabel: "Andel",
+	personalIdLabel: "Personnummer",
+	saving: "Sparar...",
+	save: "Spara",
+	ownerList: "Ägarlista",
+	name: "Namn",
+	personalId: "Personnummer",
+	sharePercentage: "Andel",
+	noOwnersAdded: "Inga ägare tillagda ännu",
+	validationRegisterPropertyIdRequired: "Fastighetsbeteckning krävs",
+	validationRegisterAddressRequired: "Adress krävs",
+	validationRegisterFirstNameRequired: "Förnamn krävs",
+	validationRegisterLastNameRequired: "Efternamn krävs",
+	validationRegisterSharePercentageRequired: "Andel krävs",
+	validationInvalidFormat: "Ogiltigt format",
+	createdLabel: "Skapad",
+	noRotEntriesFound: "Inga ROT-poster hittades",
+};
+
 export const sv: Translation = {
 	...svSidebar,
 	...svAuth,
@@ -1097,4 +1202,5 @@ export const sv: Translation = {
 	...svInspiration,
 	...svProjects,
 	...svConsultant,
+	...svRotRut,
 };

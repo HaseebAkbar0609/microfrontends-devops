@@ -16,6 +16,7 @@ import {
 	InspirationModule,
 	ProjectsModule,
 	ConsultantModule,
+	RotRutModule,
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
@@ -539,6 +540,61 @@ export const enSupplierModule: SupplierModule = {
 	supplierSummaryTitle: "Summary",
 	supplierTotalReviews: "Total: {{count}} reviews",
 	supplierPopularTagsTitle: "Popular tags",
+	toolLabelOverview: "Overview",
+	toolLabelSettings: "Settings",
+	toolLabelActivity: "Activity",
+	toolLabelPermissions: "Permissions",
+	toolAboutSection: "About the integration",
+	toolLinksSection: "Links & details",
+	toolCategoryLabel: "Category",
+	toolWebsiteLabel: "Website",
+	toolSettingsTitle: "Configuration & settings",
+	toolApiKeyLabel: "API Key (Masked for security)",
+	toolWebhookLabel: "Webhook URL (Read-only)",
+	toolSyncFreqLabel: "Sync Frequency",
+	toolSyncHour: "Hourly",
+	toolSyncDay: "Daily",
+	toolSyncWeek: "Weekly",
+	toolSaveSettings: "Save Settings",
+	toolSaving: "Saving...",
+	toolSettingsSaved: "Settings saved!",
+	toolWebhookCopied: "Webhook URL copied!",
+	toolActivityTitle: "Activity logs & history",
+	toolNoActivity: "No activity has been logged yet.",
+	toolPermissionsTitle: "Permissions & data sharing",
+	toolPermissionsDesc:
+		"The following permissions are approved for the connection between TimeFlow and the tool. You can revoke these at any time by disconnecting the tool.",
+	toolNoPermissions: "No specific permissions have been assigned.",
+	toolDisconnectTitle: "Disconnect {{name}}?",
+	toolDisconnectDesc:
+		"This will remove the connection between TimeFlow and {{name}}. You will no longer be able to sync data or logs automatically.",
+	toolDisconnectAction: "Disconnect",
+	toolDisconnectCancel: "Cancel",
+	toolBadgeText: "Tool",
+	toolConnectedBadge: "Connected",
+	toolPendingBadge: "Pending",
+	toolDisconnectedBadge: "Disconnected",
+	supplierNoProjectsTitle: "No ongoing projects",
+	supplierNoProjectsDesc:
+		"There are currently no active projects linked to this supplier.",
+	supplierNoServicesTitle: "Services coming soon",
+	supplierNoServicesDesc:
+		"A complete list of offered services is currently being compiled.",
+	supplierNoDocsTitle: "No documents shared",
+	supplierNoDocsDesc:
+		"No contracts, SLAs or related documents have been uploaded yet.",
+	toolDisconnectSuccess: "Connection removed!",
+	errorTitle: "An error occurred",
+	errorDetailsFailed: "Could not load details",
+	errorDetailsDesc:
+		"Could not retrieve information from server. Please check your connection.",
+	errorRetry: "Try again",
+	supplierHeaderCompanyName: "Company name",
+	supplierHeaderOrgNo: "Org no.",
+	supplierHeaderContactPerson: "Contact Person",
+	supplierHeaderMail: "Email",
+	pageLabel: "Page",
+	ofLabel: "of",
 	// Create supplier form
 	supplierDetailsSection: "Supplier details",
 	supplierCreateTitle: "Create new",
@@ -738,12 +794,12 @@ export const enPriceCalculatorModule: PriceCalculatorModule = {
 };
 
 export const enInspiration: InspirationModule = {
-  inspirationTabAdvice: "Advice",
-  inspirationTabInspiration: "Inspiration",
-  inspirationReadMore: "Read More",
-  inspirationCardTitle: "Prepare for the unexpected",
-  inspirationCardExcerpt:
-    "Expect the renovation to take longer and cost more than you initially thought. Plan a buffer for both time and money. If you have a deadline, start the renovation well in advance to avoid unnecessary stress.",
+	inspirationTabAdvice: "Advice",
+	inspirationTabInspiration: "Inspiration",
+	inspirationReadMore: "Read More",
+	inspirationCardTitle: "Prepare for the unexpected",
+	inspirationCardExcerpt:
+		"Expect the renovation to take longer and cost more than you initially thought. Plan a buffer for both time and money. If you have a deadline, start the renovation well in advance to avoid unnecessary stress.",
 };
 
 export const enProjects: ProjectsModule = {
@@ -802,6 +858,17 @@ export const enProjects: ProjectsModule = {
 	projectOrgPhoneLabel: "Phone",
 	projectOrgMailLabel: "Mail",
 	projectNoProjectsFound: "No active projects found",
+	projectNoArchivedProjectsFound: "No archived projects found",
+	projectOrderNoCol: "Order No",
+	projectQuoteRefNoCol: "Quote Reference No",
+	projectSupplierCol: "Supplier",
+	projectStatusArchived: "Archived",
+	projectActivateAction: "Activate",
+	deleteProjectConfirmTitle: "Delete project?",
+	deleteProjectConfirmDescription:
+		"Are you sure you want to delete this project? This action cannot be undone.",
+	projectActivatedSuccess: "Project activated successfully",
+	projectDeletedSuccess: "Project deleted successfully",
 	projectMyProjects: "My Projects",
 	projectNewOrderDirect: "New Order Direct",
 	projectNewProject: "New Project",
@@ -1059,6 +1126,9 @@ export const enConsultant: ConsultantModule = {
 	consultantTypeElectrical: "Electrical Consultant",
 	consultantTypeStructural: "Structural Engineer",
 	consultantTypePlumbing: "Plumbing Consultant",
+	consultantTypeHvac: "HVAC Consultant",
+	consultantTypeInterior: "Interior Architect",
+	consultantTypeConstruction: "Construction Consultant",
 	consultantViewProfile: "View Profile",
 	consultantMessage: "Message",
 	consultantManageEngagement: "Manage Engagement",
@@ -1083,6 +1153,41 @@ export const enConsultant: ConsultantModule = {
 	validationDescriptionRequired: "Description is required",
 };
 
+export const enRotRut: RotRutModule = {
+	rotRutTitle: "ROT - RUT",
+	rotTab: "ROT",
+	rutTab: "RUT",
+	createRotBtn: "Create ROT",
+	comingSoon: "Coming soon",
+	createNew: "Create new",
+	addDetailedInfo: "Add Detailed information",
+	rotSavedSuccess: "ROT details saved successfully!",
+	rotSavedError: "Failed to save ROT details.",
+	rotDetails: "ROT Details",
+	propertyIdLabel: "Property ID",
+	addressLabel: "Address",
+	registration: "Registration",
+	firstNameLabel: "First Name",
+	lastNameLabel: "Last Name",
+	sharePercentageLabel: "Share Percentage",
+	personalIdLabel: "Personal ID",
+	saving: "Saving...",
+	save: "Save",
+	ownerList: "Owner List",
+	name: "Name",
+	personalId: "Personal ID",
+	sharePercentage: "Share",
+	noOwnersAdded: "No owners added yet",
+	validationRegisterPropertyIdRequired: "Property ID is required",
+	validationRegisterAddressRequired: "Address is required",
+	validationRegisterFirstNameRequired: "First name is required",
+	validationRegisterLastNameRequired: "Last name is required",
+	validationRegisterSharePercentageRequired: "Share percentage is required",
+	validationInvalidFormat: "Invalid format",
+	createdLabel: "Created",
+	noRotEntriesFound: "No ROT entries found",
+};
+
 export const en: Translation = {
 	...enSidebar,
 	...enAuth,
@@ -1100,4 +1205,5 @@ export const en: Translation = {
 	...enInspiration,
 	...enProjects,
 	...enConsultant,
+	...enRotRut,
 };

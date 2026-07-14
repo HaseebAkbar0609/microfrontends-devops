@@ -531,6 +531,55 @@ export type SupplierModule = {
 	supplierSummaryTitle: string;
 	supplierTotalReviews: string;
 	supplierPopularTagsTitle: string;
+	toolLabelOverview: string;
+	toolLabelSettings: string;
+	toolLabelActivity: string;
+	toolLabelPermissions: string;
+	toolAboutSection: string;
+	toolLinksSection: string;
+	toolCategoryLabel: string;
+	toolWebsiteLabel: string;
+	toolSettingsTitle: string;
+	toolApiKeyLabel: string;
+	toolWebhookLabel: string;
+	toolSyncFreqLabel: string;
+	toolSyncHour: string;
+	toolSyncDay: string;
+	toolSyncWeek: string;
+	toolSaveSettings: string;
+	toolSaving: string;
+	toolSettingsSaved: string;
+	toolWebhookCopied: string;
+	toolActivityTitle: string;
+	toolNoActivity: string;
+	toolPermissionsTitle: string;
+	toolPermissionsDesc: string;
+	toolNoPermissions: string;
+	toolDisconnectTitle: string;
+	toolDisconnectDesc: string;
+	toolDisconnectAction: string;
+	toolDisconnectCancel: string;
+	toolBadgeText: string;
+	toolConnectedBadge: string;
+	toolPendingBadge: string;
+	toolDisconnectedBadge: string;
+	supplierNoProjectsTitle: string;
+	supplierNoProjectsDesc: string;
+	supplierNoServicesTitle: string;
+	supplierNoServicesDesc: string;
+	supplierNoDocsTitle: string;
+	supplierNoDocsDesc: string;
+	toolDisconnectSuccess: string;
+	errorTitle: string;
+	errorDetailsFailed: string;
+	errorDetailsDesc: string;
+	errorRetry: string;
+	supplierHeaderCompanyName: string;
+	supplierHeaderOrgNo: string;
+	supplierHeaderContactPerson: string;
+	supplierHeaderMail: string;
+	pageLabel: string;
+	ofLabel: string;
 	// Create supplier form
 	supplierDetailsSection: string;
 	supplierCreateTitle: string;
@@ -682,11 +731,11 @@ export type PriceCalculatorModule = {
 };
 
 export type InspirationModule = {
-  inspirationTabAdvice: string;
-  inspirationTabInspiration: string;
-  inspirationReadMore: string;
-  inspirationCardTitle: string;
-  inspirationCardExcerpt: string;
+	inspirationTabAdvice: string;
+	inspirationTabInspiration: string;
+	inspirationReadMore: string;
+	inspirationCardTitle: string;
+	inspirationCardExcerpt: string;
 };
 
 export type ProjectsModule = {
@@ -745,6 +794,16 @@ export type ProjectsModule = {
 	projectOrgPhoneLabel: string;
 	projectOrgMailLabel: string;
 	projectNoProjectsFound: string;
+	projectNoArchivedProjectsFound: string;
+	projectOrderNoCol: string;
+	projectQuoteRefNoCol: string;
+	projectSupplierCol: string;
+	projectStatusArchived: string;
+	projectActivateAction: string;
+	deleteProjectConfirmTitle: string;
+	deleteProjectConfirmDescription: string;
+	projectActivatedSuccess: string;
+	projectDeletedSuccess: string;
 	projectMyProjects: string;
 	projectNewOrderDirect: string;
 	projectNewProject: string;
@@ -1008,6 +1067,9 @@ export type ConsultantModule = {
 	consultantTypeElectrical: string;
 	consultantTypeStructural: string;
 	consultantTypePlumbing: string;
+	consultantTypeHvac: string;
+	consultantTypeInterior: string;
+	consultantTypeConstruction: string;
 	consultantViewProfile: string;
 	consultantMessage: string;
 	consultantManageEngagement: string;
@@ -1032,6 +1094,41 @@ export type ConsultantModule = {
 	validationDescriptionRequired: string;
 };
 
+export type RotRutModule = {
+	rotRutTitle: string;
+	rotTab: string;
+	rutTab: string;
+	createRotBtn: string;
+	comingSoon: string;
+	createNew: string;
+	addDetailedInfo: string;
+	rotSavedSuccess: string;
+	rotSavedError: string;
+	rotDetails: string;
+	propertyIdLabel: string;
+	addressLabel: string;
+	registration: string;
+	firstNameLabel: string;
+	lastNameLabel: string;
+	sharePercentageLabel: string;
+	personalIdLabel: string;
+	saving: string;
+	save: string;
+	ownerList: string;
+	name: string;
+	personalId: string;
+	sharePercentage: string;
+	noOwnersAdded: string;
+	validationRegisterPropertyIdRequired: string;
+	validationRegisterAddressRequired: string;
+	validationRegisterFirstNameRequired: string;
+	validationRegisterLastNameRequired: string;
+	validationRegisterSharePercentageRequired: string;
+	validationInvalidFormat: string;
+	createdLabel: string;
+	noRotEntriesFound: string;
+};
+
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
@@ -1047,7 +1144,8 @@ export type Translation = SidebarTranslation &
 	PriceCalculatorModule &
 	InspirationModule &
 	ProjectsModule &
-	ConsultantModule;
+	ConsultantModule &
+	RotRutModule;
 
 export type TranslationKeys = keyof Translation;
 

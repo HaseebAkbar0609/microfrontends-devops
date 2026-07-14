@@ -65,7 +65,7 @@ export function AppShell({ children }: AppShellProps) {
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
 				<main
-					className={`flex flex-1 flex-col bg-slate-50 ${isMyPages ? "overflow-hidden" : "overflow-auto"}`}
+					className={`flex flex-1 flex-col bg-white ${isMyPages ? "overflow-hidden" : "overflow-auto"}`}
 				>
 					{children}
 				</main>

@@ -23,6 +23,7 @@ export async function createSupplierAPIAction(
 			orgNo: payload.orgNo,
 			contactPersonName: `${payload.contactFirstName} ${payload.contactLastName}`,
 			email: payload.email,
+			mobileNumber: payload.mobileNo,
 		};
 
 		return { success: true, data: newSupplier, error: null };

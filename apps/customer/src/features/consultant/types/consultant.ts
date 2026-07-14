@@ -1,7 +1,13 @@
 export type ConsultantStatus = "active" | "pending" | "completed" | "past";
 
 export type ConsultantType =
-	"architect" | "electrical" | "structural" | "plumbing";
+	| "architect"
+	| "electrical"
+	| "structural"
+	| "plumbing"
+	| "hvac"
+	| "interior"
+	| "construction";
 
 export interface Consultant {
 	id: string;

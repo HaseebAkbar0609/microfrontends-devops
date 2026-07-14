@@ -210,6 +210,7 @@ export const DUMMY_CONSULTANT_REQUESTS: ConsultantRequest[] = [
 		applications: 4,
 		date: "2025-06-10",
 		consultant: "Architect",
+		consultantType: "architect",
 	},
 	{
 		id: "2",
@@ -217,6 +218,7 @@ export const DUMMY_CONSULTANT_REQUESTS: ConsultantRequest[] = [
 		applications: 2,
 		date: "2025-01-01",
 		consultant: "Construction Consultant",
+		consultantType: "construction",
 	},
 	{
 		id: "3",
@@ -224,6 +226,7 @@ export const DUMMY_CONSULTANT_REQUESTS: ConsultantRequest[] = [
 		applications: 5,
 		date: "2025-04-22",
 		consultant: "Interior Architect",
+		consultantType: "interior",
 	},
 	{
 		id: "4",
@@ -231,6 +234,7 @@ export const DUMMY_CONSULTANT_REQUESTS: ConsultantRequest[] = [
 		applications: 1,
 		date: "2025-03-14",
 		consultant: "HVAC Consultant",
+		consultantType: "hvac",
 	},
 	{
 		id: "5",
@@ -238,5 +242,6 @@ export const DUMMY_CONSULTANT_REQUESTS: ConsultantRequest[] = [
 		applications: 3,
 		date: "2025-05-02",
 		consultant: "Electrical Consultant",
+		consultantType: "electrical",
 	},
 ];

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
 	ArrowUpDown,
 	ArrowUp,
@@ -132,6 +133,7 @@ export function ConsultantRequestsTable({
 	data,
 	totalItems,
 }: ConsultantRequestsTableProps) {
+	const router = useRouter();
 	const { query, changeQueries } = useQueryParams();
 
 	const sortBy = query.get("sort_by") || "";
@@ -260,11 +262,21 @@ export function ConsultantRequestsTable({
 						{data.map((request) => (
 							<TableRow
 								key={request.id}
-								className="border-b border-slate-100 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"
+								onClick={() =>
+									router.push(
+										`/business/consultant/list?type=${request.consultantType}`,
+									)
+								}
+								className="cursor-pointer border-b border-slate-100 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"
 							>
 								{CONSULTANT_REQUEST_COLUMNS.map((col) => (
 									<TableCell
 										key={`${request.id}-${col.field}`}
+										onClick={
+											col.field === "actions"
+												? (e) => e.stopPropagation()
+												: undefined
+										}
 										className={cn(
 											"py-3.5 px-4",
 											COLUMN_LAYOUT[col.field].cell,
