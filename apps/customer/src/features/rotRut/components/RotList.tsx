@@ -59,8 +59,8 @@ export function RotList() {
 	return (
 		<div className="flex flex-col flex-1 w-full bg-white">
 			{/* Toolbar */}
-			<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between py-6">
-				<div className="flex flex-col gap-3 sm:flex-row sm:items-center w-full sm:w-auto">
+			<div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between py-6">
+				<div className="flex flex-col gap-3 sm:flex-row sm:items-center w-full lg:w-auto">
 					<Search
 						value={search}
 						onChange={(val) => changeQuery("search", val)}
@@ -76,7 +76,7 @@ export function RotList() {
 						<ChevronDown className="h-4 w-4 text-slate-500" />
 					</Button>
 				</div>
-				<div className="w-full sm:w-auto flex">
+				<div className="w-full sm:w-auto">
 					<Button
 						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md w-full sm:w-auto justify-center"
 						onClick={() => router.push("/rotRut/create")}

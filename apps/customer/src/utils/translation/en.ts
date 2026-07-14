@@ -1254,6 +1254,7 @@ export const enRotRut: RotRutModule = {
 	rotTab: "ROT",
 	rutTab: "RUT",
 	createRotBtn: "Create ROT",
+	createRutBtn: "Create RUT",
 	comingSoon: "Coming soon",
 	createNew: "Create new",
 	addDetailedInfo: "Add Detailed information",
@@ -1283,6 +1284,7 @@ export const enRotRut: RotRutModule = {
 	validationInvalidFormat: "Invalid format",
 	createdLabel: "Created",
 	noRotEntriesFound: "No ROT entries found",
+	noRutEntriesFound: "No RUT entries found",
 };
 
 export const en: Translation = {

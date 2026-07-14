@@ -1195,6 +1195,7 @@ export type RotRutModule = {
 	rotTab: string;
 	rutTab: string;
 	createRotBtn: string;
+	createRutBtn: string;
 	comingSoon: string;
 	createNew: string;
 	addDetailedInfo: string;
@@ -1224,6 +1225,7 @@ export type RotRutModule = {
 	validationInvalidFormat: string;
 	createdLabel: string;
 	noRotEntriesFound: string;
+	noRutEntriesFound: string;
 };
 
 export type Translation = SidebarTranslation &
