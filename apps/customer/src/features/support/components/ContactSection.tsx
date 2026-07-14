@@ -1,20 +1,15 @@
-import { Mail, MessageCircle, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 const contacts = [
 	{
 		title: "Phone",
-		value: "076000000",
+		value: "+46 704261092",
 		icon: Phone,
 	},
 	{
 		title: "Email",
-		value: "info@hantverkshjalpen.com",
+		value: "info@timeflowsystem.se",
 		icon: Mail,
-	},
-	{
-		title: "Chat: Öppet",
-		value: "info@hantverkshjalpen.com",
-		icon: MessageCircle,
 	},
 ];
 
