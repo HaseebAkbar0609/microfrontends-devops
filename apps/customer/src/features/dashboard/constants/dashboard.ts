@@ -1,5 +1,7 @@
 import {
+	DollarSign,
 	ShieldCheck,
+	UserRound,
 	Lightbulb,
 	BookOpen,
 	HelpCircle,
@@ -15,11 +17,25 @@ import localizationConstants from "@/utils/translation/constants";
 
 export const DASHBOARD_QUICK_STATS: QuickStat[] = [
 	{
+		id: "active-projects",
+		title: localizationConstants.activeProjectsTitle,
+		value: localizationConstants.activeProjectsValue,
+		href: "/projectmanagement",
+		icon: DollarSign,
+	},
+	{
 		id: "offer-management",
 		title: localizationConstants.offerManagementTitle,
 		value: localizationConstants.offerManagementValue,
-		href: "/quote",
+		href: "/business/offer",
 		icon: ShieldCheck,
+	},
+	{
+		id: "completed-projects",
+		title: localizationConstants.completedProjectsTitle,
+		value: localizationConstants.completedProjectsValue,
+		href: "/projectmanagement",
+		icon: UserRound,
 	},
 ];
 
