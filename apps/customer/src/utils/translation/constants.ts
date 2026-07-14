@@ -1107,6 +1107,32 @@ export type ProjectsModule = {
 	financeATAFilCol: string;
 	financeATAInvoiceNrCol: string;
 	financeATAAPriceUnitCol: string;
+	// KMA (Quality Management) tab
+	kmaSubTabQualitySystem: string;
+	kmaSubTabEnvironment: string;
+	kmaSubTabWorkEnv: string;
+	kmaSubTabDeviations: string;
+	kmaViewControlPlan: string;
+	kmaViewRiskManagement: string;
+	kmaViewChecklist: string;
+	kmaViewEnvironmentalPlan: string;
+	kmaViewWorkEnvPlan: string;
+	kmaColDate: string;
+	kmaColDocumentName: string;
+	kmaColFile: string;
+	kmaColCreatedBy: string;
+	kmaColControl: string;
+	kmaColInspectionDate: string;
+	kmaColPerformedBy: string;
+	kmaAllChecks: string;
+	kmaCompletedChecksInfo: string;
+	kmaRowsPerPage: string;
+	kmaDetailPhoto: string;
+	kmaDetailDeviation: string;
+	kmaRegisteredInfo: string;
+	kmaFieldComment: string;
+	kmaNoPhotos: string;
+	kmaNoDeviations: string;
 };
 
 export type ConsultantModule = {

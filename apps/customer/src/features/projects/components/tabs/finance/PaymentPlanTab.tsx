@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { MoreVertical, Check, X, Plus, Trash2, Eye, ArrowUpDown  } from "lucide-react";
+import { MoreVertical, Check, X, Plus, Trash2, Eye, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -40,19 +40,19 @@ function PaymentPlanActionsMenu({
     <div className="relative flex items-center justify-center h-14">
       <button type="button"
         onClick={(e) => { e.stopPropagation(); onOpenChange(!open); }}
-        className="flex items-center justify-center h-9 w-9 rounded-[6px] text-[#64748B] hover:bg-slate-100 hover:text-[#18181B] transition-colors"
+        className="cursor-pointer flex items-center justify-center h-9 w-9 rounded-[6px] text-[#64748B] hover:bg-slate-100 hover:text-[#18181B] transition-colors"
         aria-label="Actions">
         <MoreVertical className="h-4 w-4" />
       </button>
       {open && (
         <div className="absolute right-0 top-10 z-20 bg-white border border-[#E2E8F0] rounded-lg shadow-md py-1 min-w-36">
           <button type="button" onClick={(e) => { e.stopPropagation(); onView(); onOpenChange(false); }}
-            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#374151] hover:bg-slate-50">
+            className="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-[#374151] hover:bg-slate-50">
             <Eye className="h-3.5 w-3.5 text-[#64748B]" /> View
           </button>
           {(status === "draft" || status === "pending") && (
             <button type="button" onClick={(e) => { e.stopPropagation(); onEdit(); onOpenChange(false); }}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#374151] hover:bg-slate-50">
+              className="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-[#374151] hover:bg-slate-50">
               <svg className="h-3.5 w-3.5 text-[#64748B]" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M11.333 2A1.886 1.886 0 0 1 14 4.667L5 13.667l-3.333.667.667-3.334L11.333 2Z" />
               </svg>
@@ -62,11 +62,11 @@ function PaymentPlanActionsMenu({
           {status === "pending" && (
             <>
               <button type="button" onClick={(e) => { e.stopPropagation(); onApprove(); onOpenChange(false); }}
-                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#16A34A] hover:bg-slate-50">
+                className="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-[#16A34A] hover:bg-slate-50">
                 <Check className="h-3.5 w-3.5" /> Approve
               </button>
               <button type="button" onClick={(e) => { e.stopPropagation(); onDecline(); onOpenChange(false); }}
-                className="flex items-center gap-2 w-full px-3 py-2 text-sm text-[#DC2626] hover:bg-slate-50">
+                className="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-[#DC2626] hover:bg-slate-50">
                 <X className="h-3.5 w-3.5" /> Decline
               </button>
             </>
@@ -134,7 +134,7 @@ function PaymentPlanTable({
             <tr className="border-b border-[#E2E8F0]">
               {PP_COL_HEADERS.map((key) => (
                 <th key={key} className="px-4 h-12 text-left text-sm font-medium text-[#64748B]">
-                  <button type="button" className="flex items-center gap-1 hover:text-slate-700 whitespace-nowrap">
+                  <button type="button" className="cursor-pointer flex items-center gap-1 hover:text-slate-700 whitespace-nowrap">
                     <Translate text={key} /> <ArrowUpDown className="h-3.5 w-3.5 shrink-0" />
                   </button>
                 </th>
@@ -171,7 +171,7 @@ function PaymentPlanTable({
                   {editable && (
                     <td className="py-2 h-12 w-10 text-center">
                       <button type="button" onClick={() => onDelete?.(row.id)}
-                        className="text-[#94A3B8] hover:text-[#DC2626] transition-colors">
+                        className="cursor-pointer text-[#94A3B8] hover:text-[#DC2626] transition-colors">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </td>
@@ -194,7 +194,7 @@ function PaymentPlanTable({
       </div>
       {onAddRow && (
         <button type="button" onClick={onAddRow}
-          className="w-full py-3 text-sm text-[#64748B] border-t border-[#E2E8F0] hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
+          className="cursor-pointer w-full py-3 text-sm text-[#64748B] border-t border-[#E2E8F0] hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
           <Plus className="h-3.5 w-3.5" />
           <Translate text={localizationConstants.financeNewLineLabel} />
         </button>
@@ -205,6 +205,14 @@ function PaymentPlanTable({
 
 // ─── Payment plan list ────────────────────────────────────────────────────────
 
+const PP_STATUS_OPTIONS: { value: "" | PaymentPlanStatus; label: string }[] = [
+  { value: "",         label: "All" },
+  { value: "draft",    label: "Draft" },
+  { value: "pending",  label: "Pending" },
+  { value: "approved", label: "Approved" },
+  { value: "declined", label: "Declined" },
+];
+
 export function PaymentPlanList({
   plans, onView, onEdit, onCreateNew, onStatusChange,
 }: {
@@ -213,6 +221,9 @@ export function PaymentPlanList({
 }) {
   const [search, setSearch] = useState("");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<"" | PaymentPlanStatus>("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
 
   useEffect(() => {
     if (!openMenuId) return;
@@ -221,15 +232,31 @@ export function PaymentPlanList({
     return () => document.removeEventListener("click", close);
   }, [openMenuId]);
 
+  useEffect(() => {
+    if (!filterOpen) return;
+    const close = () => { setFilterOpen(false); setFilterAnchor(null); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [filterOpen]);
+
+  function toggleFilter(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFilterOpen(true);
+    setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
+  }
+
   const filtered = plans.filter((p) =>
-    p.designation.toLowerCase().includes(search.toLowerCase()) || p.idNo.includes(search),
+    (p.designation.toLowerCase().includes(search.toLowerCase()) || p.idNo.includes(search)) &&
+    (statusFilter === "" || p.status === statusFilter),
   );
 
   return (
     <div>
       <div className="flex items-center gap-3 mb-4">
         <ToolbarSearch value={search} onChange={setSearch} />
-        <FilterButton />
+        <FilterButton onClick={toggleFilter} active={statusFilter !== ""} />
         <div className="flex-1" />
         <Button onClick={onCreateNew} className="h-9 px-4 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
           <Plus className="h-4 w-4" />
@@ -266,7 +293,32 @@ export function PaymentPlanList({
             </div>
           </div>
         ))}
+        {filtered.length === 0 && (
+          <div className="py-12 text-center text-sm text-[#94A3B8]">No payment plans match the filter.</div>
+        )}
       </div>
+
+      {/* Filter portal */}
+      {filterOpen && filterAnchor && (
+        <div
+          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+          className="w-36 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Status</p>
+          {PP_STATUS_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => { setStatusFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
+              className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
+            >
+              {opt.label}
+              {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -322,7 +374,7 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
     <div className="pb-10">
       <div className="flex items-center gap-2 mb-6">
         <button type="button" onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
+          className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
           <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
         </button>
         <h2 className="text-xl font-semibold text-[#020617]">New Payment Plan</h2>
@@ -343,7 +395,7 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
               <tr className="border-b border-[#E2E8F0]">
                 {colHeaders.map((key) => (
                   <th key={key} className="px-4 h-12 text-left text-sm font-medium text-[#64748B]">
-                    <button type="button" className="flex items-center gap-1 hover:text-slate-700 whitespace-nowrap">
+                    <button type="button" className="cursor-pointer flex items-center gap-1 hover:text-slate-700 whitespace-nowrap">
                       <Translate text={key} /> <ArrowUpDown className="h-3.5 w-3.5 shrink-0" />
                     </button>
                   </th>
@@ -369,7 +421,7 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
                     </td>
                     <td className="py-2 h-12 w-10 text-center">
                       <button type="button" onClick={() => deleteRow(row.id)}
-                        className="text-[#94A3B8] hover:text-[#DC2626] transition-colors">
+                        className="cursor-pointer text-[#94A3B8] hover:text-[#DC2626] transition-colors">
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </td>
@@ -392,7 +444,7 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
 
         {/* + New Line — inside container like budget's Ny rad */}
         <button type="button" onClick={addRow}
-          className="w-full py-3 text-sm text-[#64748B] border-t border-[#E2E8F0] hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
+          className="cursor-pointer w-full py-3 text-sm text-[#64748B] border-t border-[#E2E8F0] hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
           <Plus className="h-3.5 w-3.5" />
           <Translate text={localizationConstants.financeNewLineLabel} />
         </button>
@@ -400,7 +452,7 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
 
       <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[#E2E8F0]">
         <button type="button" onClick={onBack}
-          className="h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+          className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
         <Button onClick={() => onCreate({
@@ -446,7 +498,7 @@ export function PaymentPlanViewEdit({
     <div className="pb-10">
       <div className="flex items-center gap-3 mb-5">
         <button type="button" onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
+          className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
           <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
         </button>
         <div>
@@ -462,7 +514,7 @@ export function PaymentPlanViewEdit({
           <div className="ml-auto flex items-center gap-2">
             {(plan.status === "draft" || plan.status === "pending") && (
               <button type="button" onClick={onSwitchToEdit}
-                className="inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors">
+                className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors">
                 <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M11.333 2A1.886 1.886 0 0 1 14 4.667L5 13.667l-3.333.667.667-3.334L11.333 2Z" />
                 </svg>
@@ -472,11 +524,11 @@ export function PaymentPlanViewEdit({
             {plan.status === "pending" && (
               <>
                 <button type="button" onClick={() => onStatusChange("approved")}
-                  className="inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium text-[#16A34A] bg-[#DCFCE7] border border-[#BBF7D0] rounded-md hover:bg-[#BBFCD0] transition-colors">
+                  className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium text-[#16A34A] bg-[#DCFCE7] border border-[#BBF7D0] rounded-md hover:bg-[#BBFCD0] transition-colors">
                   <Check className="h-3.5 w-3.5" /> Approve
                 </button>
                 <button type="button" onClick={() => setShowDeclineDialog(true)}
-                  className="inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium text-[#DC2626] bg-[#FEE2E2] border border-[#FECACA] rounded-md hover:bg-[#FECACA] transition-colors">
+                  className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium text-[#DC2626] bg-[#FEE2E2] border border-[#FECACA] rounded-md hover:bg-[#FECACA] transition-colors">
                   <X className="h-3.5 w-3.5" /> Decline
                 </button>
               </>
@@ -497,7 +549,7 @@ export function PaymentPlanViewEdit({
       {mode === "edit" && (
         <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-[#E2E8F0]">
           <button type="button" onClick={onBack}
-            className="h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+            className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
             <Translate text={localizationConstants.financeCancelLabel} />
           </button>
           <Button onClick={() => onSave({ ...plan, rows })} className="h-9 px-5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
@@ -516,7 +568,7 @@ export function PaymentPlanViewEdit({
               className="w-full px-3 py-2 text-sm border border-[#E2E8F0] rounded-lg focus:outline-none focus:border-[#94A3B8] resize-none mb-4" />
             <div className="flex items-center justify-end gap-3">
               <button type="button" onClick={() => setShowDeclineDialog(false)}
-                className="h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+                className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
                 Cancel
               </button>
               <Button onClick={() => { onStatusChange("declined"); setShowDeclineDialog(false); }}

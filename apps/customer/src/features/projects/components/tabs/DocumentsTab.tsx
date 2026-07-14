@@ -133,7 +133,7 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
                         e.stopPropagation();
                         removeStaged(i);
                       }}
-                      className="text-slate-400 hover:text-slate-700 leading-none"
+                      className="cursor-pointer text-slate-400 hover:text-slate-700 leading-none"
                     >
                       ×
                     </button>
@@ -182,7 +182,7 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
                 <button
                   key={label}
                   type="button"
-                  className="flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-700 text-left"
+                  className="cursor-pointer flex items-center gap-1 text-xs font-medium text-slate-500 hover:text-slate-700 text-left"
                 >
                   <Translate text={label} />
                   <ArrowUpDown className="h-3 w-3 shrink-0" />
@@ -240,7 +240,7 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
                     <button
                       type="button"
                       onClick={() => handleDelete(doc.id)}
-                      className="text-slate-400 hover:text-red-500 transition-colors"
+                      className="cursor-pointer text-slate-400 hover:text-red-500 transition-colors"
                       aria-label="Delete"
                     >
                       <Trash2 className="h-4 w-4" />
