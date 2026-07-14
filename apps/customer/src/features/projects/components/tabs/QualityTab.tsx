@@ -327,32 +327,32 @@ function KMADocTable({ showCreateBtn = true }: { showCreateBtn?: boolean }) {
         )}
       </div>
 
-      <div className="bg-white rounded-xl overflow-hidden">
+      <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-[#E2E8F0]">
+              <tr className="border-b border-slate-200 bg-slate-50/50">
                 {[localizationConstants.kma, localizationConstants.kmaColDate, localizationConstants.kmaColDocumentName, localizationConstants.kmaColFile].map((col) => (
-                  <th key={col} className="px-4 py-3 text-left text-xs font-medium text-[#64748B] whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1">{t(col)} <ArrowUpDown className="h-3.5 w-3.5 text-[#CBD5E1]" /></span>
+                  <th key={col} className="px-4 py-3.5 text-left font-medium text-slate-500 whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1">{t(col)} <ArrowUpDown className="h-3.5 w-3.5 opacity-50" /></span>
                   </th>
                 ))}
-                <th className="px-4 py-3 w-10" />
+                <th className="px-4 py-3.5 w-10" />
               </tr>
             </thead>
             <tbody>
               {filtered.map((doc) => (
-                <tr key={doc.id} className="border-b border-[#E2E8F0] last:border-0 hover:bg-slate-50/60 transition-colors">
-                  <td className="px-4 py-3 text-[#374151]">{doc.kma}</td>
-                  <td className="px-4 py-3 text-[#374151]">{doc.date}</td>
-                  <td className="px-4 py-3">
+                <tr key={doc.id} className="border-b border-slate-100 last:border-0 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60 transition-colors">
+                  <td className="px-4 py-3.5 text-slate-600">{doc.kma}</td>
+                  <td className="px-4 py-3.5 text-slate-600">{doc.date}</td>
+                  <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2">
                       <Image src="/assets/icons/file-pdf-icon.svg" alt="PDF" width={24} height={24} className="shrink-0" />
-                      <span className="text-[#374151]">{doc.documentName}</span>
+                      <span className="text-slate-600">{doc.documentName}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-[#374151]">{doc.fileType}</td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-slate-600">{doc.fileType}</td>
+                  <td className="px-4 py-3.5 text-right">
                     <button type="button" onClick={(e) => handleOpen(e, doc.id)} className="cursor-pointer p-1 rounded hover:bg-slate-100 text-[#94A3B8] transition-colors">
                       <MoreVertical className="h-4 w-4" />
                     </button>
@@ -360,7 +360,7 @@ function KMADocTable({ showCreateBtn = true }: { showCreateBtn?: boolean }) {
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan={5} className="px-4 py-10 text-center text-sm text-[#94A3B8]">No documents match the filter.</td></tr>
+                <tr><td colSpan={5} className="px-4 py-10 text-center text-sm text-slate-500">No documents match the filter.</td></tr>
               )}
             </tbody>
           </table>
@@ -439,22 +439,22 @@ function ControlTableRows({ colName, onRowClick }: { colName: string; onRowClick
         </button>
       </div>
 
-      <div className="bg-white rounded-xl overflow-hidden">
+      <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-150 text-sm">
             <thead>
-              <tr className="border-b border-[#E2E8F0]">
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B]">
-                  <span className="inline-flex items-center gap-1">{colName} <ArrowUpDown className="h-3.5 w-3.5 text-[#CBD5E1]" /></span>
+              <tr className="border-b border-slate-200 bg-slate-50/50">
+                <th className="px-4 py-3.5 text-left font-medium text-slate-500">
+                  <span className="inline-flex items-center gap-1">{colName} <ArrowUpDown className="h-3.5 w-3.5 opacity-50" /></span>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B]">{t(localizationConstants.kmaColFile)}</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] whitespace-nowrap">
-                  <span className="inline-flex items-center gap-1">{t(localizationConstants.projectLastUpdatedLabel)}... <ArrowUpDown className="h-3.5 w-3.5 text-[#CBD5E1]" /></span>
+                <th className="px-4 py-3.5 text-left font-medium text-slate-500">{t(localizationConstants.kmaColFile)}</th>
+                <th className="px-4 py-3.5 text-left font-medium text-slate-500 whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1">{t(localizationConstants.projectLastUpdatedLabel)}... <ArrowUpDown className="h-3.5 w-3.5 opacity-50" /></span>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] whitespace-nowrap">
-                  <span className="inline-flex items-center gap-1">{t(localizationConstants.kmaColCreatedBy)} <ArrowUpDown className="h-3.5 w-3.5 text-[#CBD5E1]" /></span>
+                <th className="px-4 py-3.5 text-left font-medium text-slate-500 whitespace-nowrap">
+                  <span className="inline-flex items-center gap-1">{t(localizationConstants.kmaColCreatedBy)} <ArrowUpDown className="h-3.5 w-3.5 opacity-50" /></span>
                 </th>
-                <th className="px-4 py-3 w-10">
+                <th className="px-4 py-3.5 w-10">
                   <button type="button" className="cursor-pointer p-0.5 rounded hover:bg-slate-100 text-[#64748B] transition-colors">
                     <Plus className="h-4 w-4" />
                   </button>
@@ -467,17 +467,17 @@ function ControlTableRows({ colName, onRowClick }: { colName: string; onRowClick
                   key={control.id}
                   onClick={() => onRowClick?.(control)}
                   className={cn(
-                    "border-b border-[#E2E8F0] last:border-0 hover:bg-slate-50/60 transition-colors",
+                    "border-b border-slate-100 last:border-0 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60 transition-colors",
                     onRowClick && "cursor-pointer",
                   )}
                 >
-                  <td className="px-4 py-3 text-[#374151]">{control.kontroll}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 text-slate-600">{control.kontroll}</td>
+                  <td className="px-4 py-3.5">
                     <Image src="/assets/icons/file-pdf-icon.svg" alt="PDF" width={24} height={24} className="shrink-0" />
                   </td>
-                  <td className="px-4 py-3 text-[#374151] whitespace-nowrap">{control.lastUpdated}</td>
-                  <td className="px-4 py-3 text-[#374151] whitespace-nowrap">{control.createdBy}</td>
-                  <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                  <td className="px-4 py-3.5 text-slate-600 whitespace-nowrap">{control.lastUpdated}</td>
+                  <td className="px-4 py-3.5 text-slate-600 whitespace-nowrap">{control.createdBy}</td>
+                  <td className="px-4 py-3.5 text-right" onClick={(e) => e.stopPropagation()}>
                     <button type="button" onClick={(e) => handleOpen(e, control.id)} className="cursor-pointer p-1 rounded hover:bg-slate-100 text-[#94A3B8] transition-colors">
                       <MoreVertical className="h-4 w-4" />
                     </button>
@@ -485,7 +485,7 @@ function ControlTableRows({ colName, onRowClick }: { colName: string; onRowClick
                 </tr>
               ))}
               {filtered.length === 0 && (
-                <tr><td colSpan={5} className="px-4 py-10 text-center text-sm text-[#94A3B8]">No records match the filter.</td></tr>
+                <tr><td colSpan={5} className="px-4 py-10 text-center text-sm text-slate-500">No records match the filter.</td></tr>
               )}
             </tbody>
           </table>
@@ -834,11 +834,11 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl overflow-hidden">
+      <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-200 text-sm">
             <thead>
-              <tr className="border-b border-[#E2E8F0]">
+              <tr className="border-b border-slate-200 bg-slate-50/50">
                 {[
                   { label: "Nr", w: "w-16" },
                   { label: t(localizationConstants.kmaColControl) },
@@ -848,13 +848,13 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
                   { label: "Status" },
                   { label: t(localizationConstants.kmaColFile), noSort: true },
                 ].map(({ label, w, noSort }) => (
-                  <th key={label} className={cn("px-4 py-3 text-left text-xs font-medium text-[#64748B] whitespace-nowrap", w)}>
+                  <th key={label} className={cn("px-4 py-3.5 text-left font-medium text-slate-500 whitespace-nowrap", w)}>
                     {noSort ? label : (
-                      <span className="inline-flex items-center gap-1">{label} <ArrowUpDown className="h-3.5 w-3.5 text-[#CBD5E1]" /></span>
+                      <span className="inline-flex items-center gap-1">{label} <ArrowUpDown className="h-3.5 w-3.5 opacity-50" /></span>
                     )}
                   </th>
                 ))}
-                <th className="px-4 py-3 w-10">
+                <th className="px-4 py-3.5 w-10">
                   <button type="button" className="cursor-pointer p-0.5 rounded hover:bg-slate-100 text-[#64748B]">
                     <Plus className="h-4 w-4" />
                   </button>
@@ -868,22 +868,22 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
                   <tr
                     key={check.id}
                     onClick={() => onRowClick(check)}
-                    className="border-b border-[#E2E8F0] last:border-0 hover:bg-slate-50/60 transition-colors cursor-pointer"
+                    className="border-b border-slate-100 last:border-0 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60 transition-colors cursor-pointer"
                   >
-                    <td className="px-4 py-3 text-[#374151] font-medium">{check.nr}</td>
-                    <td className="px-4 py-3 text-[#374151]">{check.kontroll}</td>
-                    <td className="px-4 py-3 text-[#374151]">{check.source}</td>
-                    <td className="px-4 py-3 text-[#374151] whitespace-nowrap">{check.datumKontroll}</td>
-                    <td className="px-4 py-3 text-[#374151] whitespace-nowrap">{check.utfordAv}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5 font-medium text-slate-950">{check.nr}</td>
+                    <td className="px-4 py-3.5 text-slate-600">{check.kontroll}</td>
+                    <td className="px-4 py-3.5 text-slate-600">{check.source}</td>
+                    <td className="px-4 py-3.5 text-slate-600 whitespace-nowrap">{check.datumKontroll}</td>
+                    <td className="px-4 py-3.5 text-slate-600 whitespace-nowrap">{check.utfordAv}</td>
+                    <td className="px-4 py-3.5">
                       <span className={cn("inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium", style.bg, style.text)}>
                         {style.label}
                       </span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       <Image src="/assets/icons/file-pdf-icon.svg" alt="PDF" width={24} height={24} className="shrink-0" />
                     </td>
-                    <td className="px-4 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-4 py-3.5 text-right" onClick={(e) => e.stopPropagation()}>
                       <button type="button" onClick={(e) => handleOpen(e, check.id)} className="cursor-pointer p-1 rounded hover:bg-slate-100 text-[#94A3B8] transition-colors">
                         <MoreVertical className="h-4 w-4" />
                       </button>
@@ -892,7 +892,7 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
                 );
               })}
               {pageRows.length === 0 && (
-                <tr><td colSpan={8} className="px-4 py-10 text-center text-sm text-[#94A3B8]">No checks match the filter.</td></tr>
+                <tr><td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-500">No checks match the filter.</td></tr>
               )}
             </tbody>
           </table>
@@ -985,7 +985,7 @@ function KvalitetssystemSubTab() {
         <ViewDropdown value={view} options={KVAL_OPTIONS} onChange={setView} />
       </div>
       {view === "kvalitetssystem" ? (
-        <div className="w-[70%]"><KMADocTable /></div>
+        <KMADocTable />
       ) : (
         <SplitView
           colName={t(localizationConstants.kmaColControl)}
@@ -1014,7 +1014,7 @@ function MiljosystemSubTab() {
         <ViewDropdown value={view} options={MILJO_OPTIONS} onChange={setView} />
       </div>
       {view === "miljosystem" ? (
-        <div className="w-[70%]"><StandaloneControlView colName={t(localizationConstants.kmaSubTabEnvironment)} /></div>
+        <StandaloneControlView colName={t(localizationConstants.kmaSubTabEnvironment)} />
       ) : (
         <SplitView colName={t(localizationConstants.kmaSubTabEnvironment)} title={t(localizationConstants.kmaViewEnvironmentalPlan)} />
       )}
@@ -1039,7 +1039,7 @@ function ArbetsmiljoSubTab() {
         <ViewDropdown value={view} options={ARB_OPTIONS} onChange={setView} />
       </div>
       {view === "arbetsmiljo" ? (
-        <div className="w-[70%]"><KMADocTable /></div>
+        <KMADocTable />
       ) : (
         <SplitView colName={t(localizationConstants.kmaSubTabWorkEnv)} title={t(localizationConstants.kmaViewWorkEnvPlan)} />
       )}
