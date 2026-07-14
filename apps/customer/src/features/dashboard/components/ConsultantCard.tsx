@@ -40,7 +40,7 @@ export function ConsultantCard() {
 						variant="primary"
 						className="w-fit cursor-pointer gap-2 bg-gray-900 text-base text-white shadow-md hover:bg-gray-800 active:opacity-90"
 						size="lg"
-						onClick={() => router.push("/business/consultant/list")}
+						onClick={() => router.push("/business/consultant")}
 					>
 						<Plus className="h-5 w-5" />
 						<Translate
