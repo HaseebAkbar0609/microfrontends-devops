@@ -27,6 +27,7 @@ import { TimelineTab } from "./tabs/TimelineTab";
 import { OrgPlanTab } from "./tabs/OrgPlanTab";
 import { ContractTab } from "./tabs/ContractTab";
 import { FinanceTab } from "./tabs/FinanceTab";
+import { QualityTab } from "./tabs/QualityTab";
 
 const subTabTriggerClass =
   "h-8 rounded-[6px] border-0 bg-transparent px-3 py-[6px] text-sm font-medium text-slate-500 shadow-none " +
@@ -175,9 +176,7 @@ function ProjectDetailInner() {
               </TabsContent>
 
               <TabsContent value="quality" className="mt-0 px-0">
-                <div className="py-16 text-center text-slate-400 text-sm">
-                  <Translate text={localizationConstants.comingSoon} />
-                </div>
+                <QualityTab />
               </TabsContent>
             </div>
           </Tabs>

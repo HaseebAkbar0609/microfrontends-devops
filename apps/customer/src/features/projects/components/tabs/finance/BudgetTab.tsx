@@ -106,7 +106,7 @@ function BudgetSectionRow({
         {cell("aPris", "number")}
         {cell("palagg", "number")}
         <div className="text-xs text-[#374151] font-medium text-right">{ds > 0 ? fmtAmount(ds) : "0"}</div>
-        <button type="button" onClick={onDelete} className="flex items-center justify-center text-[#94A3B8] hover:text-[#DC2626] transition-colors">
+        <button type="button" onClick={onDelete} className="cursor-pointer flex items-center justify-center text-[#94A3B8] hover:text-[#DC2626] transition-colors">
           <Trash2 className="h-3.5 w-3.5" />
         </button>
       </div>
@@ -147,7 +147,7 @@ function BudgetStep2({ budgetName, sections, onBack, onSave }: {
     <div className="pb-24">
       <div className="flex items-center gap-2 mb-6">
         <button type="button" onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
+          className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
           <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
         </button>
         <h2 className="text-xl font-semibold text-[#020617]">Ny budget</h2>
@@ -198,7 +198,7 @@ function BudgetStep2({ budgetName, sections, onBack, onSave }: {
 
       <div className="sticky bottom-0 mt-6 flex items-center justify-end gap-3 px-0 py-3 bg-white border-t border-[#E2E8F0]">
         <button type="button" onClick={onBack}
-          className="h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors">
+          className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors">
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
         <Button onClick={onSave} className="h-9 px-5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
@@ -278,7 +278,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
     <div className="pb-16">
       <div className="flex items-center gap-2 mb-6">
         <button type="button" onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
+          className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
           <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
         </button>
         <h2 className="text-xl font-semibold text-[#020617]">Ny budget</h2>
@@ -306,7 +306,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
           <Translate text={localizationConstants.financeKalkylTitle} />
         </span>
         <button type="button" onClick={addSection}
-          className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
+          className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 text-xs font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
           <Plus className="h-3 w-3" />
           <Translate text={localizationConstants.financeNySektionLabel} />
         </button>
@@ -320,7 +320,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
           return (
             <div key={section.id} className="border border-[#E2E8F0] rounded-xl overflow-hidden">
               <button type="button" onClick={() => toggleCollapse(section.id)}
-                className="flex items-center justify-between w-full px-4 py-3 bg-white hover:bg-slate-100 transition-colors">
+                className="cursor-pointer flex items-center justify-between w-full px-4 py-3 bg-white hover:bg-slate-100 transition-colors">
                 <span className="text-sm font-semibold text-[#09090B]">{sectionLabels[section.type]}</span>
                 {section.collapsed
                   ? <ChevronRight className="h-4 w-4 text-[#64748B]" />
@@ -343,7 +343,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
                   ))}
 
                   <button type="button" onClick={() => addRow(section.id)}
-                    className="w-full py-2.5 border-t border-[#E2E8F0] text-xs font-medium text-[#64748B] bg-[#E2E8F0]/28  hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
+                    className="cursor-pointer w-full py-2.5 border-t border-[#E2E8F0] text-xs font-medium text-[#64748B] bg-[#E2E8F0]/28  hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5">
                     <Plus className="h-3.5 w-3.5" />
                     <Translate text={localizationConstants.financeNyRadLabel} />
                   </button>
@@ -358,7 +358,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
                       <span className="font-semibold text-[#020617]">{sum > 0 ? sum.toLocaleString("sv-SE") : "0"}</span>
                     </div>
                     <button type="button" onClick={() => deleteSection(section.id)}
-                      className="text-xs font-medium text-[#64748B] hover:text-[#DC2626] transition-colors border border-[#E2E8F0] rounded-md px-3 py-1.5 bg-white hover:border-[#FECACA]">
+                      className="cursor-pointer text-xs font-medium text-[#64748B] hover:text-[#DC2626] transition-colors border border-[#E2E8F0] rounded-md px-3 py-1.5 bg-white hover:border-[#FECACA]">
                       <Translate text={localizationConstants.financeDeleteSectionLabel} />
                     </button>
                   </div>
@@ -394,7 +394,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
       {/* Form actions */}
       <div className="sticky bottom-0 mt-6 flex items-center justify-end gap-3 py-3 bg-white border-t border-[#E2E8F0]">
         <button type="button" onClick={onBack}
-          className="h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors">
+          className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors">
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
         <Button onClick={() => setStep(2)} className="h-9 px-5 gap-1 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">

@@ -9,6 +9,7 @@ import {
   ArrowUpDown,
   MoreVertical,
   Pencil,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -152,6 +153,12 @@ function ContractEmptyState({ onCreate }: { onCreate: () => void }) {
 
 // ─── Contract list ────────────────────────────────────────────────────────────
 
+const CONTRACT_STATUS_OPTIONS: { value: "" | ContractStatus; label: string }[] = [
+  { value: "",           label: "All" },
+  { value: "signed",     label: "Signed" },
+  { value: "not-signed", label: "Not Signed" },
+];
+
 function ContractList({
   onSelect,
   onCreateNew,
@@ -161,12 +168,31 @@ function ContractList({
 }) {
   const t = useTranslate();
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState<"" | ContractStatus>("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+    const close = () => { setFilterOpen(false); setFilterAnchor(null); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [filterOpen]);
+
+  function toggleFilter(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFilterOpen(true);
+    setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
+  }
 
   const filtered = DUMMY_CONTRACTS.filter(
     (c) =>
-      c.contactPerson.toLowerCase().includes(search.toLowerCase()) ||
-      c.project.toLowerCase().includes(search.toLowerCase()) ||
-      c.nr.toLowerCase().includes(search.toLowerCase()),
+      (c.contactPerson.toLowerCase().includes(search.toLowerCase()) ||
+       c.project.toLowerCase().includes(search.toLowerCase()) ||
+       c.nr.toLowerCase().includes(search.toLowerCase())) &&
+      (statusFilter === "" || c.status === statusFilter),
   );
 
   return (
@@ -181,15 +207,19 @@ function ContractList({
             className="pl-9 h-9 w-48 text-sm border-[#E2E8F0]"
           />
         </div>
-        <Button
+        <button
           type="button"
-          variant="outline"
-          size="sm"
-          className="h-9 gap-1.5 text-sm font-medium text-slate-700 border-[#E2E8F0]"
+          onClick={toggleFilter}
+          className={`cursor-pointer h-9 px-3 flex items-center gap-1.5 text-sm font-medium border rounded-lg transition-colors ${
+            statusFilter
+              ? "bg-blue-50 border-blue-200 text-blue-700"
+              : "bg-white border-[#E2E8F0] text-slate-700 hover:bg-slate-50"
+          }`}
         >
           <Translate text={localizationConstants.contractFilterLabel} />
+          {statusFilter && <span className="text-xs font-normal">· {statusFilter === "signed" ? "Signed" : "Not Signed"}</span>}
           <ChevronDown className="h-4 w-4 text-slate-400" />
-        </Button>
+        </button>
         <Button
           type="button"
           onClick={onCreateNew}
@@ -209,7 +239,7 @@ function ContractList({
               <thead>
                 <tr className="border-b border-[#E2E8F0]">
                   <th className="px-4 h-12 text-left text-sm font-medium text-[#64748B] w-16">
-                    <button type="button" className="flex items-center gap-1 hover:text-slate-700">
+                    <button type="button" className="cursor-pointer flex items-center gap-1 hover:text-slate-700">
                       <Translate text={localizationConstants.contractNrLabel} />
                       <ArrowUpDown className="h-3.5 w-3.5 shrink-0" />
                     </button>
@@ -276,6 +306,28 @@ function ContractList({
           </div>
         )}
       </div>
+
+      {/* Filter portal */}
+      {filterOpen && filterAnchor && (
+        <div
+          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+          className="w-40 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Status</p>
+          {CONTRACT_STATUS_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => { setStatusFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
+              className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
+            >
+              {opt.label}
+              {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -357,7 +409,7 @@ function ContractDetail({ contract }: { contract: Contract }) {
                 <button
                   key={key}
                   type="button"
-                  className="flex items-center gap-1 h-12 px-3 text-sm font-medium text-[#64748B] hover:text-slate-700 whitespace-nowrap"
+                  className="cursor-pointer flex items-center gap-1 h-12 px-3 text-sm font-medium text-[#64748B] hover:text-slate-700 whitespace-nowrap"
                 >
                   <Translate text={key} />
                   <ArrowUpDown className="h-4 w-4 shrink-0" />

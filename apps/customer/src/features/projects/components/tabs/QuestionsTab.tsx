@@ -128,7 +128,7 @@ export function QuestionsTab() {
           </Button>
           <button
             type="button"
-            className="flex items-center justify-center h-8 w-8 rounded-md text-[#71717A] hover:bg-slate-100 transition-colors"
+            className="cursor-pointer flex items-center justify-center h-8 w-8 rounded-md text-[#71717A] hover:bg-slate-100 transition-colors"
             aria-label="More options"
           >
             <MoreVertical className="h-4 w-4" />
@@ -194,7 +194,7 @@ export function QuestionsTab() {
           <div className="flex items-center px-4 py-2 gap-2">
             <button
               type="button"
-              className="flex items-center gap-1.5 text-sm text-[#71717A] hover:text-[#09090B] transition-colors"
+              className="cursor-pointer flex items-center gap-1.5 text-sm text-[#71717A] hover:text-[#09090B] transition-colors"
             >
               <Paperclip className="h-4 w-4" />
               <Translate text={localizationConstants.projectAttachLabel} />

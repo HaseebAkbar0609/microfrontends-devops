@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, type ReactNode } from "react";
 import Image from "next/image";
-import { Plus, ChevronDown, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { Plus, ChevronDown, MoreVertical, Pencil, Trash2, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -16,10 +16,21 @@ import { SortableHeader, ToolbarSearch, FilterButton, ATAStatusBadge, ActionsMen
 
 const ATA_COLS = "grid-cols-[110px_120px_minmax(0,1fr)_minmax(0,1fr)_120px_140px_46px]";
 
+type ATAStatusFilter = "" | ATAItem["status"];
+
+const ATA_STATUS_OPTIONS: { value: ATAStatusFilter; label: string }[] = [
+  { value: "",        label: "All" },
+  { value: "godkand", label: "Approved" },
+  { value: "pending", label: "Pending" },
+];
+
 export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
   const [search, setSearch] = useState("");
   const [ataItems, setAtaItems] = useState<ATAItem[]>(DUMMY_ATA_ITEMS);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<ATAStatusFilter>("");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
 
   useEffect(() => {
     if (!openMenuId) return;
@@ -28,10 +39,26 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
     return () => document.removeEventListener("click", close);
   }, [openMenuId]);
 
+  useEffect(() => {
+    if (!filterOpen) return;
+    const close = () => { setFilterOpen(false); setFilterAnchor(null); };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [filterOpen]);
+
+  function toggleFilter(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
+    const rect = e.currentTarget.getBoundingClientRect();
+    setFilterOpen(true);
+    setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
+  }
+
   const filtered = ataItems.filter(
     (a) =>
-      a.benamning.toLowerCase().includes(search.toLowerCase()) ||
-      a.ataNr.toLowerCase().includes(search.toLowerCase()),
+      (a.benamning.toLowerCase().includes(search.toLowerCase()) ||
+       a.ataNr.toLowerCase().includes(search.toLowerCase())) &&
+      (statusFilter === "" || a.status === statusFilter),
   );
 
   const ataTotal = ataItems.reduce((a, i) => a + i.belopp, 0);
@@ -48,7 +75,7 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
     <div>
       <div className="flex items-center gap-3 mb-4">
         <ToolbarSearch value={search} onChange={setSearch} />
-        <FilterButton />
+        <FilterButton onClick={toggleFilter} active={statusFilter !== ""} />
         <div className="flex-1" />
         <Button onClick={onCreateNew} className="h-9 px-4 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
           <Plus className="h-4 w-4" />
@@ -101,6 +128,28 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
           <div className="h-12 col-span-2" />
         </div>
       </div>
+
+      {/* Filter portal */}
+      {filterOpen && filterAnchor && (
+        <div
+          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+          className="w-36 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Status</p>
+          {ATA_STATUS_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              type="button"
+              onClick={() => { setStatusFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
+              className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
+            >
+              {opt.label}
+              {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -150,7 +199,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
     <div className="pb-24 min-w-0 overflow-x-hidden">
       <div className="flex items-center gap-2 mb-6">
         <button type="button" onClick={onBack}
-          className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
+          className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
           <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
         </button>
         <h2 className="text-xl font-semibold text-[#020617]">
@@ -164,7 +213,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
           {/* Orderer section */}
           <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
             <button type="button" onClick={() => setBestallareOpen((v) => !v)}
-              className="w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
+              className="cursor-pointer w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
               <Image src="/assets/icons/users.svg" alt="" width={24} height={24} />
               <span className="text-base font-medium text-[#09090B]">
                 <Translate text={localizationConstants.financeATAOrdererTitle} />
@@ -186,7 +235,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
           {/* Order information section */}
           <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
             <button type="button" onClick={() => setOrderOpen((v) => !v)}
-              className="w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
+              className="cursor-pointer w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
               <Image src="/assets/icons/info.svg" alt="" width={24} height={24} />
               <span className="text-base font-medium text-[#09090B]">
                 <Translate text={localizationConstants.financeOrderInfoTitle} />
@@ -229,7 +278,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
               {/* Own personnel */}
               <div className="border-b border-[#E2E8F0]">
                 <button type="button" onClick={() => setPersonalOpen((v) => !v)}
-                  className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
+                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
                   <Image src="/assets/icons/personal-info.svg" alt="" width={15} height={15} />
                   <span className="text-sm font-medium text-[#374151]">
                     <Translate text={localizationConstants.financeEgenPersonalLabel} />
@@ -292,7 +341,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                         <Translate text={localizationConstants.financeATATotalOwnPersonnelLabel} />
                         <strong className="font-semibold">02</strong>
                       </span>
-                      <button type="button" className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
+                      <button type="button" className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
                         <Image src="/assets/icons/edit.svg" alt="" width={12} height={12} className="invert" />
                         <Translate text={localizationConstants.financeATAAmendLabel} />
                       </button>
@@ -304,7 +353,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
               {/* Material */}
               <div className="border-b border-[#E2E8F0]">
                 <button type="button" onClick={() => setMaterialOpen((v) => !v)}
-                  className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
+                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
                   <Image src="/assets/icons/container.svg" alt="" width={15} height={15} />
                   <span className="text-sm font-medium text-[#374151]">
                     <Translate text={localizationConstants.financeATAMaterialLabel} />
@@ -379,7 +428,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                           <span className="font-medium text-[#09090B]">23,0000</span>
                         </div>
                       </div>
-                      <button type="button" className="inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
+                      <button type="button" className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
                         <Image src="/assets/icons/edit.svg" alt="" width={12} height={12} className="invert" />
                         <Translate text={localizationConstants.financeATAAmendLabel} />
                       </button>
@@ -391,7 +440,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
               {/* Documents */}
               <div>
                 <button type="button" onClick={() => setDokumentOpen((v) => !v)}
-                  className="w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
+                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
                   <Image src="/assets/icons/file-plus.svg" alt="" width={15} height={15} />
                   <span className="text-sm font-medium text-[#374151]">
                     <Translate text={localizationConstants.financeDocumentLabel} />
@@ -412,7 +461,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                           <span className="text-xs text-[#374151]">file.txt</span>
                         </div>
                         <button type="button" onClick={() => fileInputRef.current?.click()}
-                          className="px-4 py-2 text-xs font-medium text-white bg-[#64748B] hover:bg-[#475569] transition-colors whitespace-nowrap">
+                          className="cursor-pointer px-4 py-2 text-xs font-medium text-white bg-[#64748B] hover:bg-[#475569] transition-colors whitespace-nowrap">
                           <Translate text={localizationConstants.financeUploadLabel} />
                         </button>
                         <input ref={fileInputRef} type="file" accept=".png,.jpg,.pdf" className="hidden" multiple />
@@ -431,7 +480,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                         <div className="flex flex-wrap items-center gap-1 px-2 py-1.5 min-h-8 border border-[#E2E8F0] rounded-md bg-white">
                           {["Invoice 001", "Invoice 002"].map((tag) => (
                             <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F1F5F9] text-[11px] text-[#374151] rounded">
-                              {tag} <button type="button" className="text-[#94A3B8] hover:text-[#374151] leading-none">×</button>
+                              {tag} <button type="button" className="cursor-pointer text-[#94A3B8] hover:text-[#374151] leading-none">×</button>
                             </span>
                           ))}
                           <ChevronDown className="ml-auto h-3.5 w-3.5 text-[#64748B] shrink-0" />
@@ -444,7 +493,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                         <div className="flex flex-wrap items-center gap-1 px-2 py-1.5 min-h-8 border border-[#E2E8F0] rounded-md bg-white">
                           {["Time rapport 01", "Time rapport 02"].map((tag) => (
                             <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F1F5F9] text-[11px] text-[#374151] rounded">
-                              {tag} <button type="button" className="text-[#94A3B8] hover:text-[#374151] leading-none">×</button>
+                              {tag} <button type="button" className="cursor-pointer text-[#94A3B8] hover:text-[#374151] leading-none">×</button>
                             </span>
                           ))}
                           <ChevronDown className="ml-auto h-3.5 w-3.5 text-[#64748B] shrink-0" />
@@ -508,7 +557,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                                             setOpenDocMenu(rowKey);
                                           }
                                         }}
-                                        className="p-1 rounded hover:bg-slate-100 text-[#64748B]">
+                                        className="cursor-pointer p-1 rounded hover:bg-slate-100 text-[#64748B]">
                                         <MoreVertical className="h-3.5 w-3.5" />
                                       </button>
                                     </div>
@@ -543,7 +592,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
               <span className="text-sm font-semibold text-[#020617]">
                 <Translate text={localizationConstants.financeATANrLabel} /> 1
               </span>
-              <button type="button" className="h-7 px-2.5 text-xs font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+              <button type="button" className="cursor-pointer h-7 px-2.5 text-xs font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
                 PRJ092
               </button>
             </div>
@@ -583,7 +632,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                 <span className="text-xs font-semibold text-[#020617]">312.000</span>
               </div>
               <button type="button"
-                className="w-full mt-2 inline-flex items-center justify-center gap-2 h-9 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
+                className="cursor-pointer w-full mt-2 inline-flex items-center justify-center gap-2 h-9 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
                 <Image src="/assets/icons/send.svg" alt="" width={14} height={14} />
                 <Translate text={localizationConstants.financeSendLabel} />
               </button>
@@ -598,11 +647,11 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
           style={{ position: "fixed", top: docMenuAnchor.top, right: docMenuAnchor.right, zIndex: 9999 }}
           className="w-32 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
         >
-          <button type="button" className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50">
+          <button type="button" className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50">
             <Pencil className="h-3 w-3" />
             <Translate text={localizationConstants.financeATAEditDocLabel} />
           </button>
-          <button type="button" className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50">
+          <button type="button" className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50">
             <Trash2 className="h-3 w-3" />
             <Translate text={localizationConstants.financeATADeleteLabel} />
           </button>
@@ -612,17 +661,17 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
       {/* Bottom action bar */}
       <div className="sticky bottom-0 mt-6 flex items-center gap-3 py-3 bg-white border-t border-[#E2E8F0] z-10">
         <button type="button"
-          className="inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
           <Image src="/assets/icons/arrow-left.svg" alt="" width={16} height={16} />
           <Translate text={localizationConstants.financeATABackToLabel} />
         </button>
         <div className="flex-1" />
         <button type="button" onClick={onBack}
-          className="h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+          className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
         <button type="button"
-          className="inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
+          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
           <Image src="/assets/icons/save.svg" alt="" width={15} height={15} className="" />
           <Translate text={localizationConstants.financeSaveLabel} />
         </button>
