@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { RotList } from "@/features/rotRut/components/RotList";
+import { RutList } from "@/features/rotRut/components/RutList";
 
 const rotRutTabTriggerClass =
 	"relative flex-none rounded-none border-0 bg-transparent px-4 py-2.5 text-sm shadow-none " +
@@ -41,15 +42,13 @@ export default function RootRutOverviewPage() {
 				</PageHeader>
 
 				{/* Main Content */}
-				<div className="p-8">
+				<div className="p-4 sm:p-8">
 					<TabsContent value="rot" className="mt-0 flex flex-col">
 						<RotList />
 					</TabsContent>
 
-					<TabsContent value="rut" className="mt-0">
-						<div className="text-center text-slate-500 py-12 bg-white rounded-xl border border-slate-200">
-							<Translate text={localizationConstants.comingSoon} />
-						</div>
+					<TabsContent value="rut" className="mt-0 flex flex-col">
+						<RutList />
 					</TabsContent>
 				</div>
 			</Tabs>

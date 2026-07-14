@@ -1251,6 +1251,7 @@ export const svRotRut: RotRutModule = {
 	rotTab: "ROT",
 	rutTab: "RUT",
 	createRotBtn: "Skapa ROT",
+	createRutBtn: "Skapa RUT",
 	comingSoon: "Kommer snart",
 	createNew: "Skapa ny",
 	addDetailedInfo: "Lägg till detaljerad information",
@@ -1280,6 +1281,7 @@ export const svRotRut: RotRutModule = {
 	validationInvalidFormat: "Ogiltigt format",
 	createdLabel: "Skapad",
 	noRotEntriesFound: "Inga ROT-poster hittades",
+	noRutEntriesFound: "Inga RUT-poster hittades",
 };
 
 export const sv: Translation = {
