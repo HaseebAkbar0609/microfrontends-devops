@@ -1260,6 +1260,7 @@ export const enRotRut: RotRutModule = {
 	rotSavedSuccess: "ROT details saved successfully!",
 	rotSavedError: "Failed to save ROT details.",
 	rotDetails: "ROT Details",
+	rotEdit: "Edit",
 	propertyIdLabel: "Property ID",
 	addressLabel: "Address",
 	registration: "Registration",

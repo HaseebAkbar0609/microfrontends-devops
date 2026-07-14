@@ -1257,6 +1257,7 @@ export const svRotRut: RotRutModule = {
 	rotSavedSuccess: "ROT-uppgifter sparade!",
 	rotSavedError: "Det gick inte att spara ROT-uppgifter.",
 	rotDetails: "ROT detaljer",
+	rotEdit: "Redigera",
 	propertyIdLabel: "Fastighetsbeteckning",
 	addressLabel: "Adress",
 	registration: "Registrering",
