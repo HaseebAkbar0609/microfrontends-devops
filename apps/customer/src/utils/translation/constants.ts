@@ -1201,6 +1201,7 @@ export type RotRutModule = {
 	rotSavedSuccess: string;
 	rotSavedError: string;
 	rotDetails: string;
+	rotEdit: string;
 	propertyIdLabel: string;
 	addressLabel: string;
 	registration: string;
