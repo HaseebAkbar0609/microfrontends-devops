@@ -931,6 +931,12 @@ export type ProjectsModule = {
 	projectActivateAction: string;
 	deleteProjectConfirmTitle: string;
 	deleteProjectConfirmDescription: string;
+	deleteTemplateConfirmTitle: string;
+	deleteTemplateConfirmDescription: string;
+	contractTemplateDeletedSuccess: string;
+	deleteContractConfirmTitle: string;
+	deleteContractConfirmDescription: string;
+	projectContractDeletedSuccess: string;
 	projectActivatedSuccess: string;
 	projectDeletedSuccess: string;
 	projectMyProjects: string;
