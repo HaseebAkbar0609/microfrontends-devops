@@ -711,6 +711,36 @@ export const svSupport: SupportModule = {
 	guideSearchFoldersPlaceholder: "Sök mappar...",
 	guideQuoteDescription: "Här kommer information om offert.",
 	guideConsultantDescription: "Här kommer information om konsult.",
+	guideContractNumber: "Avtalsnummer",
+	guideDate: "Datum",
+	guideSectionParties: "1. PARTER",
+	guideSectionPartiesIntro: 'Detta konsultavtal ("Avalet") har ingåtts mellan:',
+	guideSectionPartiesClient: "Uppdragsgivare:",
+	guideSectionPartiesClientOrg: "Organisationsnummer: [Org.nr]",
+	guideSectionPartiesClientAddress: "Adress: [Adress]",
+	guideSectionPartiesConsultant: "Konsult:",
+	guideSectionPartiesConsultantId: "Personnummer: [Personnummer]",
+	guideSectionPartiesConsultantAddress: "Address: [Adress]",
+	guideSectionScope: "2. UPPDRAGETS OMFATTNING",
+	guideSectionScopeDescription: "Konsulten åtar sig att utföra följande tjänster för Uppdragsgivaren:",
+	guideSectionScopeItem1: "Rådgivning och expertis inom [område]",
+	guideSectionScopeItem2: "Deltagande i projektmöten och workshops",
+	guideSectionScopeItem3: "Dokumentation och rapportering av utfört arbete",
+	guideSectionContractPeriod: "3. AVTALSTID",
+	guideSectionContractPeriodDescription:
+		"Avalet gäller från och med [startdatum] till och med [slutdatum], såvida det inte sägs upp eller förängs enligt punkterna i detta avtal.",
+	guideConsultantSectionTitle: "Konsultavtal",
+	guideConsultantSectionIntro:
+		"Detta avtal reglerar förhållandet mellan uppdragsgivaren och konsulten under projektets gång.",
+	guideConsultantSectionResponsibilities: "Konsultens åtaganden",
+	guideConsultantSectionResponsibilitiesDesc:
+		"Konsulten åtar sig att utföra sina uppgifter med professionell omsorg och i enlighet med gällande regler och standarder inom branschen.",
+	guideConsultantSectionDeliverables: "Leveranser",
+	guideConsultantSectionDeliverablesDesc:
+		"Konsulten ska leverera alla avtalade dokument och rapporter inom överenskomna tidsramar.",
+	guideConsultantSectionConfidentiality: "Konfidentialitet",
+	guideConsultantSectionConfidentialityDesc:
+		"Konsulten åtar sig att inte dela någon konfidentiell information med tredje part utan skriftligt godkännande från uppdragsgivaren.",
 };
 
 export const svPriceCalculatorModule: PriceCalculatorModule = {
