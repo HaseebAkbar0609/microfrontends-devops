@@ -894,6 +894,11 @@ export type ProjectsModule = {
 	projectStatusDraft: string;
 	projectStatusReceivedQuote: string;
 	projectArchivedSuccess: string;
+	projectTimelineCreatedSuccess: string;
+	projectTimelineDeletedSuccess: string;
+	deleteTimelineConfirmTitle: string;
+	deleteTimelineConfirmDescription: string;
+	projectTimelineTitleLabel: string;
 	projectActivateAction: string;
 	deleteProjectConfirmTitle: string;
 	deleteProjectConfirmDescription: string;
