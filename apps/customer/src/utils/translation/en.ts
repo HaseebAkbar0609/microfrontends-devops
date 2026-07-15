@@ -964,6 +964,11 @@ export const enProjects: ProjectsModule = {
 	deleteTimelineConfirmDescription:
 		"Are you sure you want to delete this timeline? This action cannot be undone.",
 	projectTimelineTitleLabel: "Title",
+	projectOrgCreatedSuccess: "Company added successfully",
+	projectOrgDeletedSuccess: "Company removed successfully",
+	deleteOrgConfirmTitle: "Remove company?",
+	deleteOrgConfirmDescription:
+		"Are you sure you want to remove this company from the organization plan? This action cannot be undone.",
 	projectActivateAction: "Activate",
 	deleteProjectConfirmTitle: "Delete project?",
 	deleteProjectConfirmDescription:
