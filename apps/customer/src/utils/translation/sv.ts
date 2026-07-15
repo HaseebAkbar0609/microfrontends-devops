@@ -960,6 +960,11 @@ export const svProjects: ProjectsModule = {
 	deleteTimelineConfirmDescription:
 		"Är du säker på att du vill ta bort denna tidsplan? Åtgärden kan inte ångras.",
 	projectTimelineTitleLabel: "Titel",
+	projectOrgCreatedSuccess: "Företaget har lagts till",
+	projectOrgDeletedSuccess: "Företaget har tagits bort",
+	deleteOrgConfirmTitle: "Ta bort företag?",
+	deleteOrgConfirmDescription:
+		"Är du säker på att du vill ta bort detta företag från organisationsplanen? Åtgärden kan inte ångras.",
 	projectActivateAction: "Aktivera",
 	deleteProjectConfirmTitle: "Ta bort projekt?",
 	deleteProjectConfirmDescription:

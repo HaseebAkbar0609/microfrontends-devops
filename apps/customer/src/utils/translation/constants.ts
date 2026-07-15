@@ -899,6 +899,10 @@ export type ProjectsModule = {
 	deleteTimelineConfirmTitle: string;
 	deleteTimelineConfirmDescription: string;
 	projectTimelineTitleLabel: string;
+	projectOrgCreatedSuccess: string;
+	projectOrgDeletedSuccess: string;
+	deleteOrgConfirmTitle: string;
+	deleteOrgConfirmDescription: string;
 	projectActivateAction: string;
 	deleteProjectConfirmTitle: string;
 	deleteProjectConfirmDescription: string;
