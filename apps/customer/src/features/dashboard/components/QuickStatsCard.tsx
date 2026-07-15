@@ -22,7 +22,7 @@ export function QuickStatsCard() {
 			</div>
 
 			{/* Stats row */}
-			<div className="flex gap-3 p-4">
+			<div className="flex gap-3 py-4">
 				{DASHBOARD_QUICK_STATS.map((stat) => (
 					<StatItem
 						key={stat.id}
