@@ -534,6 +534,37 @@ export type AdminTranslation = {
 	adminStatusClosed: string;
 	adminNoUsersFound: string;
 	adminCompanyInformation: string;
+	adminCompanyInfoTab: string;
+	adminBankTab: string;
+	adminOrganisationTab: string;
+	adminSniCodeLabel: string;
+	adminVatNumberLabel: string;
+	adminOrgNumberPlaceholder: string;
+	adminPostAddressLabel: string;
+	adminVisitAddressLabel: string;
+	adminDeliveryAddressLabel: string;
+	adminSwitchboardLabel: string;
+	adminHomepageLabel: string;
+	adminNewEmployeeLabel: string;
+	adminContactNoLabel: string;
+	adminPositionLabel: string;
+	adminIdNumberLabel: string;
+	adminLocationLabel: string;
+	adminViewProfileLabel: string;
+	adminStatusProbation: string;
+	adminStatusSickLeave: string;
+	adminStatusOnLeave: string;
+	adminStatusTermination: string;
+	adminFullTimeLabel: string;
+	adminPartTimeLabel: string;
+	adminBankDetailsTitle: string;
+	adminBankLabel: string;
+	adminAccountNoLabel: string;
+	adminBankgiroLabel: string;
+	adminPostgiroLabel: string;
+	adminIbanLabel: string;
+	adminBicLabel: string;
+	adminSwiftLabel: string;
 };
 
 export type Translation = SidebarTranslation &
