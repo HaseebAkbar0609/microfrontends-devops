@@ -964,6 +964,10 @@ export const svProjects: ProjectsModule = {
 	deleteProjectConfirmTitle: "Ta bort projekt?",
 	deleteProjectConfirmDescription:
 		"Är du säker på att du vill ta bort detta projekt? Åtgärden kan inte ångras.",
+	deleteTemplateConfirmTitle: "Ta bort mall?",
+	deleteTemplateConfirmDescription:
+		"Är du säker på att du vill ta bort denna mall? Åtgärden kan inte ångras.",
+	contractTemplateDeletedSuccess: "Mallen har tagits bort",
 	projectActivatedSuccess: "Projektet har aktiverats",
 	projectDeletedSuccess: "Projektet har tagits bort",
 	projectMyProjects: "Mina projekt",
