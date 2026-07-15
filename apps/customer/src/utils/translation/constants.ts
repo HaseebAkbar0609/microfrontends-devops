@@ -659,6 +659,31 @@ export type SupportModule = {
 	guideSearchFoldersPlaceholder: string;
 	guideQuoteDescription: string;
 	guideConsultantDescription: string;
+	guideContractNumber: string;
+	guideDate: string;
+	guideSectionParties: string;
+	guideSectionPartiesIntro: string;
+	guideSectionPartiesClient: string;
+	guideSectionPartiesClientOrg: string;
+	guideSectionPartiesClientAddress: string;
+	guideSectionPartiesConsultant: string;
+	guideSectionPartiesConsultantId: string;
+	guideSectionPartiesConsultantAddress: string;
+	guideSectionScope: string;
+	guideSectionScopeDescription: string;
+	guideSectionScopeItem1: string;
+	guideSectionScopeItem2: string;
+	guideSectionScopeItem3: string;
+	guideSectionContractPeriod: string;
+	guideSectionContractPeriodDescription: string;
+	guideConsultantSectionTitle: string;
+	guideConsultantSectionIntro: string;
+	guideConsultantSectionResponsibilities: string;
+	guideConsultantSectionResponsibilitiesDesc: string;
+	guideConsultantSectionDeliverables: string;
+	guideConsultantSectionDeliverablesDesc: string;
+	guideConsultantSectionConfidentiality: string;
+	guideConsultantSectionConfidentialityDesc: string;
 };
 
 export type PriceCalculatorModule = {

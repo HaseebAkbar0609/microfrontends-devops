@@ -715,6 +715,38 @@ export const enSupport: SupportModule = {
 	guideQuoteDescription: "Information about quotes will be displayed here.",
 	guideConsultantDescription:
 		"Information about consultants will be displayed here.",
+	guideContractNumber: "Contract number",
+	guideDate: "Date",
+	guideSectionParties: "1. PARTIES",
+	guideSectionPartiesIntro:
+		'This consultant agreement ("Agreement") has been entered into between:',
+	guideSectionPartiesClient: "Client:",
+	guideSectionPartiesClientOrg: "Organization number: [Org.no]",
+	guideSectionPartiesClientAddress: "Address: [Address]",
+	guideSectionPartiesConsultant: "Consultant:",
+	guideSectionPartiesConsultantId: "Personal number: [Personal number]",
+	guideSectionPartiesConsultantAddress: "Address: [Address]",
+	guideSectionScope: "2. SCOPE OF ASSIGNMENT",
+	guideSectionScopeDescription:
+		"The Consultant undertakes to perform the following services for the Client:",
+	guideSectionScopeItem1: "Advice and expertise within [area]",
+	guideSectionScopeItem2: "Participation in project meetings and workshops",
+	guideSectionScopeItem3: "Documentation and reporting of completed work",
+	guideSectionContractPeriod: "3. CONTRACT PERIOD",
+	guideSectionContractPeriodDescription:
+		"This Agreement is effective from [start date] to [end date], unless terminated or extended according to the terms herein.",
+	guideConsultantSectionTitle: "Consultant Agreement",
+	guideConsultantSectionIntro:
+		"This agreement governs the relationship between the client and the consultant during the project.",
+	guideConsultantSectionResponsibilities: "Consultant Obligations",
+	guideConsultantSectionResponsibilitiesDesc:
+		"The Consultant undertakes to perform their duties with professional care and in accordance with applicable rules and standards within the industry.",
+	guideConsultantSectionDeliverables: "Deliverables",
+	guideConsultantSectionDeliverablesDesc:
+		"The Consultant shall deliver all agreed documents and reports within the agreed timeframes.",
+	guideConsultantSectionConfidentiality: "Confidentiality",
+	guideConsultantSectionConfidentialityDesc:
+		"The Consultant undertakes not to share any confidential information with third parties without written approval from the Client.",
 };
 
 export const enPriceCalculatorModule: PriceCalculatorModule = {
