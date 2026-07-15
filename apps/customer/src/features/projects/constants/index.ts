@@ -65,7 +65,7 @@ export const ACTIVE_PROJECT_DEFAULT_SUB_TAB = ACTIVE_PROJECT_SUB_TABS[0].value;
 export const DUMMY_PROJECTS: ActiveProject[] = [
 	{
 		id: "1",
-		name: "Bathroom",
+		name: "Badrum",
 		referenceNo: "O101",
 		orderNo: "2024-01",
 		quoteReferenceNo: "1554601",
