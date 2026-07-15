@@ -960,6 +960,11 @@ export const svProjects: ProjectsModule = {
 	deleteTimelineConfirmDescription:
 		"Är du säker på att du vill ta bort denna tidsplan? Åtgärden kan inte ångras.",
 	projectTimelineTitleLabel: "Titel",
+	projectOrgCreatedSuccess: "Företaget har lagts till",
+	projectOrgDeletedSuccess: "Företaget har tagits bort",
+	deleteOrgConfirmTitle: "Ta bort företag?",
+	deleteOrgConfirmDescription:
+		"Är du säker på att du vill ta bort detta företag från organisationsplanen? Åtgärden kan inte ångras.",
 	projectActivateAction: "Aktivera",
 	deleteProjectConfirmTitle: "Ta bort projekt?",
 	deleteProjectConfirmDescription:
@@ -968,6 +973,10 @@ export const svProjects: ProjectsModule = {
 	deleteTemplateConfirmDescription:
 		"Är du säker på att du vill ta bort denna mall? Åtgärden kan inte ångras.",
 	contractTemplateDeletedSuccess: "Mallen har tagits bort",
+	deleteContractConfirmTitle: "Ta bort avtal?",
+	deleteContractConfirmDescription:
+		"Är du säker på att du vill ta bort detta avtal? Åtgärden kan inte ångras.",
+	projectContractDeletedSuccess: "Avtalet har tagits bort",
 	projectActivatedSuccess: "Projektet har aktiverats",
 	projectDeletedSuccess: "Projektet har tagits bort",
 	projectMyProjects: "Mina projekt",

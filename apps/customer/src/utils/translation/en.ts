@@ -964,6 +964,11 @@ export const enProjects: ProjectsModule = {
 	deleteTimelineConfirmDescription:
 		"Are you sure you want to delete this timeline? This action cannot be undone.",
 	projectTimelineTitleLabel: "Title",
+	projectOrgCreatedSuccess: "Company added successfully",
+	projectOrgDeletedSuccess: "Company removed successfully",
+	deleteOrgConfirmTitle: "Remove company?",
+	deleteOrgConfirmDescription:
+		"Are you sure you want to remove this company from the organization plan? This action cannot be undone.",
 	projectActivateAction: "Activate",
 	deleteProjectConfirmTitle: "Delete project?",
 	deleteProjectConfirmDescription:
@@ -972,6 +977,10 @@ export const enProjects: ProjectsModule = {
 	deleteTemplateConfirmDescription:
 		"Are you sure you want to delete this template? This action cannot be undone.",
 	contractTemplateDeletedSuccess: "Template deleted successfully",
+	deleteContractConfirmTitle: "Delete contract?",
+	deleteContractConfirmDescription:
+		"Are you sure you want to delete this contract? This action cannot be undone.",
+	projectContractDeletedSuccess: "Contract deleted successfully",
 	projectActivatedSuccess: "Project activated successfully",
 	projectDeletedSuccess: "Project deleted successfully",
 	projectMyProjects: "My Projects",
