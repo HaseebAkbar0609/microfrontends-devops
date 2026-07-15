@@ -143,7 +143,7 @@ export const CreateRotForm = () => {
 
 					{/* Scrollable content */}
 					<main className="flex-1 overflow-y-auto px-6 py-6 no-scrollbar">
-						<div className="w-full max-w-[732px] space-y-6 pb-8 ml-[44px]">
+						<div className="w-full md:w-[calc(100%-44px)] max-w-[732px] space-y-6 pb-8 md:ml-[44px]">
 							{/* Card 1: ROT details */}
 							<Card className="border border-slate-200 shadow-none rounded-lg py-0 gap-0">
 								<CardHeader className="border-b border-slate-200 px-6 h-14 flex items-center !py-0">
@@ -308,8 +308,8 @@ export const CreateRotForm = () => {
 										</CardTitle>
 									</div>
 								</CardHeader>
-								<CardContent className="p-0">
-									<Table>
+								<CardContent className="px-6 pb-4">
+									<Table className="border-b border-slate-200">
 										<TableHeader>
 											<TableRow className="border-b border-slate-200 hover:bg-transparent">
 												<TableHead className="text-slate-500 font-medium py-4 px-6 h-auto">

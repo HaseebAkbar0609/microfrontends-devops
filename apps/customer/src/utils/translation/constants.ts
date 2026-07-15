@@ -1226,6 +1226,10 @@ export type RotRutModule = {
 	createdLabel: string;
 	noRotEntriesFound: string;
 	noRutEntriesFound: string;
+	rutSavedSuccess: string;
+	rutSavedError: string;
+	rutDetails: string;
+	rutPropertyIdLabel: string;
 };
 
 export type Translation = SidebarTranslation &
