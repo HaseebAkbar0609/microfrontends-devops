@@ -98,7 +98,8 @@ export function DocumentsTab({ projectName }: DocumentsTabProps) {
             height={20}
           />
           <span className="text-sm font-semibold text-slate-900">
-            Documents — {projectName}
+            <Translate text={localizationConstants.projectSubTabDocuments} /> -{" "}
+            {projectName}
           </span>
         </div>
 
