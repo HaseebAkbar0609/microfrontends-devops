@@ -89,7 +89,7 @@ export const CreateRutForm = () => {
 		onSuccess: (data, variables) => {
 			toast.success(t(localizationConstants.rutSavedSuccess));
 			const newOwner: Owner = {
-				id: Math.random().toString(36).substring(2, 11),
+				id: crypto.randomUUID(),
 				name: `${variables.firstName} ${variables.lastName}`,
 				personalId: variables.personalId,
 				share: variables.sharePercentage,
