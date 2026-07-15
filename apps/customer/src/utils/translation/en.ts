@@ -968,6 +968,10 @@ export const enProjects: ProjectsModule = {
 	deleteProjectConfirmTitle: "Delete project?",
 	deleteProjectConfirmDescription:
 		"Are you sure you want to delete this project? This action cannot be undone.",
+	deleteContractConfirmTitle: "Delete contract?",
+	deleteContractConfirmDescription:
+		"Are you sure you want to delete this contract? This action cannot be undone.",
+	projectContractDeletedSuccess: "Contract deleted successfully",
 	projectActivatedSuccess: "Project activated successfully",
 	projectDeletedSuccess: "Project deleted successfully",
 	projectMyProjects: "My Projects",
