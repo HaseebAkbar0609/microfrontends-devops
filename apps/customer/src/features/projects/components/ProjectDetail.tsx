@@ -156,7 +156,7 @@ function ProjectDetailInner() {
                     <MeetingMinutesTab />
                   </TabsContent>
                   <TabsContent value="qa" className="mt-0 px-0">
-                    <QuestionsTab />
+                    <QuestionsTab projectId={project.id} />
                   </TabsContent>
                   <TabsContent value="timeline" className="mt-0 px-0">
                     <TimelineTab />
