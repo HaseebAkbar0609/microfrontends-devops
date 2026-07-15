@@ -1285,6 +1285,10 @@ export const enRotRut: RotRutModule = {
 	createdLabel: "Created",
 	noRotEntriesFound: "No ROT entries found",
 	noRutEntriesFound: "No RUT entries found",
+	rutSavedSuccess: "RUT details saved successfully!",
+	rutSavedError: "Failed to save RUT details.",
+	rutDetails: "RUT Details",
+	rutPropertyIdLabel: "E-Property designation for RUT",
 };
 
 export const en: Translation = {

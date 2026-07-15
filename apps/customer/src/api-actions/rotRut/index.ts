@@ -39,6 +39,10 @@ export const createRot = async (projectId: string, data: RotPayload) => {
 	return axiosInstance.post(`/projects/${projectId}/rot`, data);
 };
 
+export const createRut = async (projectId: string, data: RotPayload) => {
+	return axiosInstance.post(`/projects/${projectId}/rut`, data);
+};
+
 export * from "./getRotRutDetailsAPIAction";
 export * from "./deleteRotRutAPIAction";
 
