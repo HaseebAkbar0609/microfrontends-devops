@@ -1,13 +1,10 @@
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
-
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 
 interface StatItemProps {
 	title: string;
 	value: string;
-	icon?: LucideIcon;
 	href: string;
 	className?: string;
 }

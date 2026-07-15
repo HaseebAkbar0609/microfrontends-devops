@@ -28,7 +28,6 @@ export function QuickStatsCard() {
 						key={stat.id}
 						title={stat.title}
 						value={stat.value}
-						icon={stat.icon}
 						href={stat.href}
 					/>
 				))}
