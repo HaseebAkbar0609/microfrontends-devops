@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Paperclip, MoreVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -53,8 +54,13 @@ const DUMMY_MESSAGES: ChatMessage[] = [
   },
 ];
 
-export function QuestionsTab() {
+interface QuestionsTabProps {
+  projectId: string;
+}
+
+export function QuestionsTab({ projectId }: QuestionsTabProps) {
   const t = useTranslate();
+  const router = useRouter();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>(DUMMY_MESSAGES);
 
@@ -105,6 +111,9 @@ export function QuestionsTab() {
             type="button"
             size="sm"
             className="h-8 px-3 text-sm font-medium bg-[#18181B] hover:bg-[#18181B]/90 text-white"
+            onClick={() =>
+              router.push(`/business/offer/${projectId}?tab=chat`)
+            }
           >
             <Translate text={localizationConstants.projectBookMeetingLabel} />
           </Button>
@@ -113,6 +122,9 @@ export function QuestionsTab() {
             variant="outline"
             size="sm"
             className="h-8 px-3 text-sm font-medium border-[#E2E8F0] text-[#09090B]"
+            onClick={() =>
+              router.push(`/business/offer/${projectId}?tab=quote-list`)
+            }
           >
             <Translate text={localizationConstants.projectViewOfferLabel} />
           </Button>
@@ -121,6 +133,11 @@ export function QuestionsTab() {
             variant="outline"
             size="sm"
             className="h-8 px-3 text-sm font-medium border-[#E2E8F0] text-[#09090B]"
+            onClick={() =>
+              router.push(
+                `/business/offer/${projectId}/1?tab=company-info`,
+              )
+            }
           >
             <Translate
               text={localizationConstants.projectCompanyInfoBtnLabel}
