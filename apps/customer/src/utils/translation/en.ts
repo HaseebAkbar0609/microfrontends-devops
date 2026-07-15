@@ -958,6 +958,12 @@ export const enProjects: ProjectsModule = {
 	projectStatusDraft: "Draft",
 	projectStatusReceivedQuote: "Received Quote",
 	projectArchivedSuccess: "Project archived successfully",
+	projectTimelineCreatedSuccess: "Timeline created successfully",
+	projectTimelineDeletedSuccess: "Timeline deleted successfully",
+	deleteTimelineConfirmTitle: "Delete timeline?",
+	deleteTimelineConfirmDescription:
+		"Are you sure you want to delete this timeline? This action cannot be undone.",
+	projectTimelineTitleLabel: "Title",
 	projectActivateAction: "Activate",
 	deleteProjectConfirmTitle: "Delete project?",
 	deleteProjectConfirmDescription:

@@ -896,7 +896,7 @@ export const svProjects: ProjectsModule = {
 	projectSubTabDocuments: "Dokument",
 	projectSubTabMeetingMinutes: "Mötesprotokoll",
 	projectSubTabQA: "Frågor & svar",
-	projectSubTabTimeline: "Tidslinje",
+	projectSubTabTimeline: "Tidsplan",
 	projectSubTabOrgPlan: "Org. plan",
 	projectInfoTitle: "Projektinformation",
 	projectCompanyInfoTitle: "Företagsinformation",
@@ -954,6 +954,12 @@ export const svProjects: ProjectsModule = {
 	projectStatusDraft: "Utkast",
 	projectStatusReceivedQuote: "Offert mottagen",
 	projectArchivedSuccess: "Projektet har arkiverats",
+	projectTimelineCreatedSuccess: "Tidsplanen har skapats",
+	projectTimelineDeletedSuccess: "Tidsplanen har tagits bort",
+	deleteTimelineConfirmTitle: "Ta bort tidsplan?",
+	deleteTimelineConfirmDescription:
+		"Är du säker på att du vill ta bort denna tidsplan? Åtgärden kan inte ångras.",
+	projectTimelineTitleLabel: "Titel",
 	projectActivateAction: "Aktivera",
 	deleteProjectConfirmTitle: "Ta bort projekt?",
 	deleteProjectConfirmDescription:
