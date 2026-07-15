@@ -1286,6 +1286,7 @@ export const svRotRut: RotRutModule = {
 	rutSavedError: "Det gick inte att spara RUT-uppgifter.",
 	rutDetails: "RUT detaljer",
 	rutPropertyIdLabel: "E-Fastighetsbeteckning för RUT",
+	propertyDetails: "Fastighetsdetaljer",
 };
 
 export const sv: Translation = {

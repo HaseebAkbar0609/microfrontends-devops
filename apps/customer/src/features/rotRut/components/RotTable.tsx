@@ -45,12 +45,12 @@ export function RotTable({
 			{
 				label: t(localizationConstants.viewLabel),
 				icon: <Eye className="h-4 w-4" />,
-				onClick: (row) => router.push(`/rotRut/${row.id}`),
+				onClick: (row) => router.push(`/rotRut/${row.id}/edit?tab=rot`),
 			},
 			{
 				label: t(localizationConstants.open),
 				icon: <Pencil className="h-4 w-4" />,
-				onClick: (row) => router.push(`/rotRut/${row.id}/edit`),
+				onClick: (row) => router.push(`/rotRut/${row.id}/edit?tab=rot`),
 			},
 			{
 				label: t(localizationConstants.delete),
