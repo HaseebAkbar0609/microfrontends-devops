@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Trash2, Loader2, CircleUserRound, PencilLine, ArrowDownUp } from "lucide-react";
 
 import { PageHeader } from "@/components/common";
@@ -39,7 +39,11 @@ const rotRutTabTriggerClass =
 export default function RotRutOpenedPage() {
 	const params = useParams();
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const propertyId = params?.id as string;
+
+	const tabParam = searchParams?.get("tab") || "rot";
+	const [activeTab, setActiveTab] = useState(tabParam);
 
 	const [details, setDetails] = useState<RotDetails | null>(null);
 	const [loading, setLoading] = useState(true);
@@ -169,7 +173,7 @@ export default function RotRutOpenedPage() {
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen font-inter">
-			<Tabs defaultValue="rot" className="flex flex-1 flex-col">
+			<Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-1 flex-col">
 				<PageHeader
 					title={localizationConstants.rotRutTitle}
 					breadcrumbs={[
@@ -193,7 +197,7 @@ export default function RotRutOpenedPage() {
 					<TabsContent value="rot" className="mt-0 flex flex-col gap-6">
 						{/* Property Details Card */}
 						<div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-							<div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+							<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
 								<div className="flex items-center gap-2 text-slate-900 font-medium">
 									<CircleUserRound className="h-5 w-5 text-slate-700" />
 									<Translate text={localizationConstants.rotDetails} />
@@ -202,7 +206,7 @@ export default function RotRutOpenedPage() {
 									variant="secondary"
 									size="sm"
 									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
-									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal"
+									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
 								>
 									<PencilLine className="h-4 w-4 mr-2" />
 									<Translate text={localizationConstants.rotEdit} />
@@ -232,7 +236,7 @@ export default function RotRutOpenedPage() {
 
 						{/* Owner List Card */}
 						<div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-							<div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
+							<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
 								<div className="flex items-center gap-2 text-slate-900 font-medium">
 									<CircleUserRound className="h-5 w-5 text-slate-700" />
 									<Translate text={localizationConstants.ownerList} />
@@ -241,7 +245,7 @@ export default function RotRutOpenedPage() {
 									variant="secondary"
 									size="sm"
 									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
-									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal"
+									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
 								>
 									<PencilLine className="h-4 w-4 mr-2" />
 									<Translate text={localizationConstants.rotEdit} />
@@ -253,16 +257,81 @@ export default function RotRutOpenedPage() {
 									columns={columns}
 									getRowKey={(row) => row.id}
 									emptyContent="No owners found"
-									containerClassName="border-none"
+									containerClassName="border-0 border-b border-slate-200 rounded-none"
 									headerClassName="border-slate-200 bg-white"
 									rowClassName="border-slate-200 hover:bg-slate-50/50"
 								/>
 							</div>
 						</div>
 					</TabsContent>
-					<TabsContent value="rut" className="mt-0">
-						<div className="text-center text-slate-500 py-12 bg-white rounded-xl border border-slate-200">
-							<Translate text={localizationConstants.comingSoon} />
+					<TabsContent value="rut" className="mt-0 flex flex-col gap-6">
+						{/* Property Details Card */}
+						<div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+							<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
+								<div className="flex items-center gap-2 text-slate-900 font-medium">
+									<CircleUserRound className="h-5 w-5 text-slate-700" />
+									<Translate text={localizationConstants.propertyDetails} />
+								</div>
+								<Button
+									variant="secondary"
+									size="sm"
+									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
+									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
+								>
+									<PencilLine className="h-4 w-4 mr-2" />
+									<Translate text={localizationConstants.rotEdit} />
+								</Button>
+							</div>
+							<div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+								<div>
+									<p className="text-sm font-medium text-slate-900 mb-1">
+										<Translate text={localizationConstants.propertyIdLabel} />
+									</p>
+									<p className="text-sm text-[#71717A]">{details.designation}</p>
+								</div>
+								<div>
+									<p className="text-sm font-medium text-slate-900 mb-1">
+										<Translate text={localizationConstants.addressLabel} />
+									</p>
+									<p className="text-sm text-[#71717A]">{details.address}</p>
+								</div>
+								<div>
+									<p className="text-sm font-medium text-slate-900 mb-1">
+										<Translate text={localizationConstants.createdLabel} />
+									</p>
+									<p className="text-sm text-[#71717A]">{details.created}</p>
+								</div>
+							</div>
+						</div>
+
+						{/* Owner List Card */}
+						<div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
+							<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 border-b border-slate-100">
+								<div className="flex items-center gap-2 text-slate-900 font-medium">
+									<CircleUserRound className="h-5 w-5 text-slate-700" />
+									<Translate text={localizationConstants.ownerList} />
+								</div>
+								<Button
+									variant="secondary"
+									size="sm"
+									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
+									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
+								>
+									<PencilLine className="h-4 w-4 mr-2" />
+									<Translate text={localizationConstants.rotEdit} />
+								</Button>
+							</div>
+							<div className="p-6">
+								<ResponsiveTable
+									data={details.owners}
+									columns={columns}
+									getRowKey={(row) => row.id}
+									emptyContent="No owners found"
+									containerClassName="border-0 border-b border-slate-200 rounded-none"
+									headerClassName="border-slate-200 bg-white"
+									rowClassName="border-slate-200 hover:bg-slate-50/50"
+								/>
+							</div>
 						</div>
 					</TabsContent>
 				</div>

@@ -1289,6 +1289,7 @@ export const enRotRut: RotRutModule = {
 	rutSavedError: "Failed to save RUT details.",
 	rutDetails: "RUT Details",
 	rutPropertyIdLabel: "E-Property designation for RUT",
+	propertyDetails: "Property Details",
 };
 
 export const en: Translation = {

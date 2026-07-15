@@ -1230,6 +1230,7 @@ export type RotRutModule = {
 	rutSavedError: string;
 	rutDetails: string;
 	rutPropertyIdLabel: string;
+	propertyDetails: string;
 };
 
 export type Translation = SidebarTranslation &
