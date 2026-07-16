@@ -8,7 +8,8 @@ export function normalizeProjectStatus(raw?: string): ActiveProject["status"] {
   if (!raw) return "active";
   const s = raw.toLowerCase().trim().replace(/_/g, "-");
   
-  if (s.includes("recieved") || s.includes("received") || s.includes("under-review") || s.includes("waiting")) {
+  if (s === "under-review" || s.includes("under-review")) return "under-review";
+  if (s.includes("recieved") || s.includes("received") || s.includes("waiting")) {
     return "received-quote";
   }
   if (s === "in-progress" || s === "active") return "active";
