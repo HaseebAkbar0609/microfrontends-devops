@@ -91,7 +91,7 @@ export function SupplierTable({
 				onClick: (row) => router.push(`/suppliers/${row.id}`),
 			},
 			{
-				label: localizationConstants.open,
+				label: localizationConstants.edit,
 				icon: <Pencil className="h-4 w-4" />,
 				onClick: (row) => router.push(`/suppliers/${row.id}/edit`),
 			},
@@ -114,6 +114,7 @@ export function SupplierTable({
 			rowKey={(row) => row.id}
 			actions={actions}
 			loading={loading}
+			bordered
 			emptyMessageKey={localizationConstants.noSuppliersFound}
 			pagination={{ page, pageSize, totalItems }}
 			onPageChange={(p) => changeQueries({ page: String(p) })}
