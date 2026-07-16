@@ -485,6 +485,7 @@ export const enOfferModule: OfferModule = {
 	certificationsLabel: "Certifications",
 	certificateLabel: "Certificate",
 	customerReviewTitle: "Customer Reviews",
+	noCustomerReviewsYet: "No customer reviews yet.",
 	becameSinceLabel: "Became since",
 	companyInsuranceTitle: "Company insurance",
 	referenceImagesTitle: "Reference Images",

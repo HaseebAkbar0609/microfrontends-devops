@@ -25,6 +25,7 @@ export {
 	type UpdateProjectDetailsPayload,
 } from "./project/updateDetails";
 export { uploadMediaAPIAction } from "./media/upload";
+export { deleteMediaAPIAction } from "./media/delete";
 export { getCountriesAPIAction } from "./location/countries";
 export { getCitiesAPIAction } from "./location/cities";
 export { getCustomerCategoriesListAPIAction } from "./category/customer-categories-list";
@@ -79,12 +80,14 @@ export {
 export {
 	getProjectContractsAPIAction,
 	saveProjectContractAPIAction,
+	deleteProjectContractAPIAction,
 } from "./project/contracts";
 export {
 	getProjectATAsAPIAction,
 	saveProjectATAAPIAction,
 } from "./project/atas";
 export { approveQuoteAPIAction } from "./quote/approve";
+export { getQuoteDetailsAPIAction } from "./quote/details";
 export {
 	getProjectDocumentsAPIAction,
 	saveProjectDocumentAPIAction,

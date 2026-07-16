@@ -6,8 +6,8 @@ import type { ActiveProject } from "@/features/projects/types";
  */
 export function normalizeProjectStatus(raw?: string): ActiveProject["status"] {
   if (!raw) return "active";
-  const s = raw.toLowerCase().trim().replace(/_/g, "-");
-  
+  const s = raw.toLowerCase().trim().replace(/[\s_]+/g, "-");
+
   if (s === "under-review" || s.includes("under-review")) return "under-review";
   if (s.includes("recieved") || s.includes("received") || s.includes("waiting")) {
     return "received-quote";

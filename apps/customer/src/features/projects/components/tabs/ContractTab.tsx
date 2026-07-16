@@ -1,7 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
+import {
+	getProjectContractsAPIAction,
+	saveProjectContractAPIAction,
+	deleteProjectContractAPIAction,
+	uploadMediaAPIAction,
+	deleteMediaAPIAction,
+} from "@/api-actions";
 import {
 	Search,
 	ChevronDown,
@@ -154,10 +161,12 @@ function ContractList({
 	contracts,
 	onSelect,
 	onCreateNew,
+	onDelete,
 }: {
 	contracts: Contract[];
 	onSelect: (contract: Contract) => void;
 	onCreateNew: () => void;
+	onDelete?: (contract: Contract) => void;
 }) {
 	const t = useTranslate();
 	const [search, setSearch] = useState("");
@@ -168,7 +177,9 @@ function ContractList({
 
 	const handleDeleteConfirmed = () => {
 		if (!deleteTarget) return;
+		const target = deleteTarget;
 		setDeleteTarget(null);
+		onDelete?.(target);
 		showToast(
 			"success",
 			t(localizationConstants.projectContractDeletedSuccess),
@@ -733,11 +744,6 @@ function ContractDetail({ contract }: { contract?: Contract }) {
 
 // ─── Main export ─────────────────────────────────────────────────────────────
 
-import {
-	getProjectContractsAPIAction,
-	saveProjectContractAPIAction,
-} from "@/api-actions";
-
 interface ContractTabProps {
 	project?: ActiveProject;
 	onFullscreenChange?: (v: boolean) => void;
@@ -751,84 +757,186 @@ export function ContractTab({ project, onFullscreenChange }: ContractTabProps) {
 		documents?: StagedDocument[];
 	}>({});
 
-	useEffect(() => {
+	const [error, setError] = useState<string | null>(null);
+
+	const fetchContracts = useCallback(async (activeGuard?: { active: boolean; projectId?: string }) => {
 		if (!project?.id) return;
-		let cancelled = false;
-		async function loadContracts() {
-			if (!project?.id) return;
-			const res = await getProjectContractsAPIAction(project.id);
-			if (!cancelled && res.success && Array.isArray(res.data)) {
-				const mapped: Contract[] = res.data.map((item: {
-					id: string;
-					title?: string;
-					engagement?: {
-						contract_no?: string;
-						consultant_name?: string;
-						job_description?: string;
-						contract_status?: string;
-						contract_period_days?: number;
-						client_company_name?: string;
-						start_date?: string;
-						end_date?: string;
-						signed_date?: string;
-						job_level?: string;
-						expected_weekly_hours?: number;
-						offered_price?: number;
-						payment_terms?: string;
-						expense_submission_allowed?: boolean;
-						clauses?: Array<{ id: string; clause_date?: string; document_name: string }>;
-					};
-				}) => ({
-					id: item.id,
-					nr: item.engagement?.contract_no || `CN-${item.id.substring(0, 6).toUpperCase()}`,
-					contactPerson: item.engagement?.consultant_name || project?.contactPersonName || "Customer",
-					project: project?.name || item.title || "Project",
-					phone: project?.mobileNumber || "-",
-					email: project?.email || "-",
-					role: item.engagement?.job_description || "Contractor",
-					status: item.engagement?.contract_status === "signed" ? "signed" : "not-signed",
-					period: `${item.engagement?.contract_period_days || 365} Days`,
-					company: item.engagement?.client_company_name || project?.companyName || "Assigned Supplier",
-					startDate: item.engagement?.start_date ? new Date(item.engagement.start_date).toISOString().split("T")[0] : "-",
-					endDate: item.engagement?.end_date ? new Date(item.engagement.end_date).toISOString().split("T")[0] : "-",
-					signedDate: item.engagement?.signed_date ? new Date(item.engagement.signed_date).toISOString().split("T")[0] : "-",
-					nextReview: "-",
-					clauses: (item.engagement?.clauses || []).map((c) => ({
-						id: c.id,
-						date: c.clause_date ? new Date(c.clause_date).toISOString().split("T")[0] : "-",
-						name: c.document_name,
-						fileType: "PDF",
-					})),
-					jobDescription: item.engagement?.job_description || "Consultant",
-					jobLevel: item.engagement?.job_level || "Standard",
-					hoursPerWeek: item.engagement?.expected_weekly_hours ? String(item.engagement.expected_weekly_hours) : "40",
-					supervisor: "Supervisor",
-					offerPrice: item.engagement?.offered_price ? `${item.engagement.offered_price} SEK` : "-",
-					paymentTerms: item.engagement?.payment_terms || "30 Days Net",
-					paidUntil: "-",
-					expensesAllowed: item.engagement?.expense_submission_allowed ? "Yes" : "No",
-				}));
-				setContracts(mapped);
-			}
+		setError(null);
+		const currentProjectId = project.id;
+		const res = await getProjectContractsAPIAction(currentProjectId);
+		if (activeGuard && (!activeGuard.active || activeGuard.projectId !== currentProjectId)) return;
+		if (res.success && Array.isArray(res.data)) {
+			const mapped: Contract[] = res.data.map((item: {
+				id: string;
+				title?: string;
+				engagement?: {
+					contract_no?: string;
+					consultant_name?: string;
+					job_description?: string;
+					contract_status?: string;
+					contract_period_days?: number;
+					client_company_name?: string;
+					start_date?: string;
+					end_date?: string;
+					signed_date?: string;
+					job_level?: string;
+					expected_weekly_hours?: number;
+					offered_price?: number;
+					payment_terms?: string;
+					expense_submission_allowed?: boolean;
+					clauses?: Array<{ id: string; clause_date?: string; document_name: string }>;
+				};
+			}) => ({
+				id: item.id,
+				nr: item.engagement?.contract_no || `CN-${item.id.substring(0, 6).toUpperCase()}`,
+				contactPerson: item.engagement?.consultant_name || project?.contactPersonName || "Customer",
+				project: project?.name || item.title || "Project",
+				phone: project?.mobileNumber || "-",
+				email: project?.email || "-",
+				role: item.engagement?.job_description || "Contractor",
+				status: item.engagement?.contract_status === "signed" ? "signed" : "not-signed",
+				period: `${item.engagement?.contract_period_days || 365} Days`,
+				company: item.engagement?.client_company_name || project?.companyName || "Assigned Supplier",
+				startDate: item.engagement?.start_date ? new Date(item.engagement.start_date).toISOString().split("T")[0] : "-",
+				endDate: item.engagement?.end_date ? new Date(item.engagement.end_date).toISOString().split("T")[0] : "-",
+				signedDate: item.engagement?.signed_date ? new Date(item.engagement.signed_date).toISOString().split("T")[0] : "-",
+				nextReview: "-",
+				clauses: (item.engagement?.clauses || []).map((c) => ({
+					id: c.id,
+					date: c.clause_date ? new Date(c.clause_date).toISOString().split("T")[0] : "-",
+					name: c.document_name,
+					fileType: "PDF",
+				})),
+				jobDescription: item.engagement?.job_description || "Consultant",
+				jobLevel: item.engagement?.job_level || "Standard",
+				hoursPerWeek: item.engagement?.expected_weekly_hours ? String(item.engagement.expected_weekly_hours) : "40",
+				supervisor: "Supervisor",
+				offerPrice: item.engagement?.offered_price ? `${item.engagement.offered_price} SEK` : "-",
+				paymentTerms: item.engagement?.payment_terms || "30 Days Net",
+				paidUntil: "-",
+				expensesAllowed: item.engagement?.expense_submission_allowed ? "Yes" : "No",
+			}));
+			setContracts(mapped);
+		} else if (!res.success) {
+			setError(res.error || "Failed to load project contracts");
 		}
-		void loadContracts();
+	}, [project?.id, project?.contactPersonName, project?.name, project?.mobileNumber, project?.email, project?.companyName]);
+
+	useEffect(() => {
+		setContracts([]);
+		setError(null);
+		setView({ kind: "sub", tab: "list" });
+		setStagedData({});
+		if (!project?.id) return;
+		const guard = { active: true, projectId: project.id };
+		void fetchContracts(guard);
 		return () => {
-			cancelled = true;
+			guard.active = false;
 		};
-	}, [
-		project?.id,
-		project?.companyName,
-		project?.contactPersonName,
-		project?.email,
-		project?.mobileNumber,
-		project?.name,
-	]);
+	}, [project?.id, fetchContracts]);
 
 	useEffect(() => {
 		const isFullscreen =
 			view.kind === "create-form" || view.kind === "create-editor";
 		onFullscreenChange?.(isFullscreen);
 	}, [view.kind, onFullscreenChange]);
+
+	const handleDeleteContract = async (contract: Contract) => {
+		if (project?.id) {
+			await deleteProjectContractAPIAction(project.id, contract.id);
+		}
+		setContracts((prev) => prev.filter((c) => c.id !== contract.id));
+	};
+
+	const handleSaveContract = async () => {
+		if (stagedData.form && project?.id) {
+			const f = stagedData.form;
+			const docs = stagedData.documents || [];
+
+			const uploadedClauses: Array<{ document_name: string; media_id: string }> = [];
+			const newlyUploadedMediaIds: string[] = [];
+
+			for (const d of docs) {
+				let mediaId = d.id;
+				if (d.file) {
+					const uploadRes = await uploadMediaAPIAction(d.file);
+					if (uploadRes.success && uploadRes.data?.id) {
+						mediaId = uploadRes.data.id;
+						newlyUploadedMediaIds.push(mediaId);
+					} else {
+						for (const idToClean of newlyUploadedMediaIds) {
+							try { await deleteMediaAPIAction(idToClean); } catch {}
+						}
+						showToast("error", uploadRes.error || `Failed to upload ${d.name}`);
+						return;
+					}
+				}
+				if (mediaId && !mediaId.startsWith("new-") && !mediaId.startsWith("c-")) {
+					uploadedClauses.push({
+						document_name: d.name,
+						media_id: mediaId,
+					});
+				}
+			}
+
+			const payload = {
+				title: f.projectName || project.name,
+				client_company_name: f.supplier || project.companyName,
+				consultant_name: `${f.firstName} ${f.lastName}`.trim() || project.contactPersonName,
+				contract_period_days: 365,
+				job_description: f.category || "Consultant",
+				contract_status: "not_signed",
+				clauses: uploadedClauses,
+			};
+
+			const res = await saveProjectContractAPIAction(project.id, payload);
+
+			if (res.success && res.data) {
+				const serverData = res.data;
+				const newContract: Contract = {
+					id: serverData.id || `cnt-${Date.now()}`,
+					nr: serverData.contract_number || `KA-${new Date().getFullYear()}-${String(contracts.length + 1).padStart(3, "0")}`,
+					contactPerson: `${f.firstName} ${f.lastName}`.trim() || project?.contactPersonName || "Customer",
+					project: f.projectName || project?.name || "Project",
+					phone: f.mobile || project?.mobileNumber || "-",
+					email: f.privateEmail || project?.email || "-",
+					role: f.category || project?.category || "Contractor",
+					status: "not-signed",
+					period: "12 Months",
+					company: f.supplier || project?.companyName || "Assigned Supplier",
+					startDate: new Date().toISOString().split("T")[0],
+					endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+					signedDate: "-",
+					nextReview: "-",
+					clauses: docs.map((d, idx) => ({
+						id: d.id || `c-${idx}`,
+						date: d.validity || new Date().toISOString().split("T")[0],
+						name: d.name,
+						fileType: d.fileType || "PDF",
+					})),
+					jobDescription: f.category || "Consultant",
+					jobLevel: "Standard",
+					hoursPerWeek: "40",
+					supervisor: f.contactPerson || "Supervisor",
+					offerPrice: "-",
+					paymentTerms: "30 Days Net",
+					paidUntil: "-",
+					expensesAllowed: "No",
+				};
+
+				setContracts((prev) => [newContract, ...prev]);
+				setView({ kind: "contract-detail", contract: newContract });
+				setStagedData({});
+			} else {
+				for (const idToClean of newlyUploadedMediaIds) {
+					try { await deleteMediaAPIAction(idToClean); } catch {}
+				}
+				showToast("error", res.error || "Failed to save contract");
+			}
+		} else {
+			setView({ kind: "sub", tab: "list" });
+		}
+	};
 
 	const subTabTriggerClass =
 		"h-8 rounded-[6px] border-0 bg-transparent px-3 py-1.5 text-sm font-medium text-[#64748B] shadow-none " +
@@ -859,65 +967,6 @@ export function ContractTab({ project, onFullscreenChange }: ContractTabProps) {
 		setView({ kind: "sub", tab });
 	};
 
-	const handleSaveContract = async () => {
-		if (stagedData.form && project?.id) {
-			const f = stagedData.form;
-			const docs = stagedData.documents || [];
-
-			const payload = {
-				title: f.projectName || project.name,
-				client_company_name: f.supplier || project.companyName,
-				consultant_name: `${f.firstName} ${f.lastName}`.trim() || project.contactPersonName,
-				contract_period_days: 365,
-				job_description: f.category || "Consultant",
-				contract_status: "not_signed",
-				clauses: docs.map((d) => ({
-					document_name: d.name,
-					media_id: d.id,
-				})),
-			};
-
-			const newContract: Contract = {
-				id: `cnt-${Date.now()}`,
-				nr: `KA-${new Date().getFullYear()}-${String(contracts.length + 1).padStart(3, "0")}`,
-				contactPerson: `${f.firstName} ${f.lastName}`.trim() || project?.contactPersonName || "Customer",
-				project: f.projectName || project?.name || "Project",
-				phone: f.mobile || project?.mobileNumber || "-",
-				email: f.privateEmail || project?.email || "-",
-				role: f.category || project?.category || "Contractor",
-				status: "not-signed",
-				period: "12 Months",
-				company: f.supplier || project?.companyName || "Assigned Supplier",
-				startDate: new Date().toISOString().split("T")[0],
-				endDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-				signedDate: "-",
-				nextReview: "-",
-				clauses: docs.map((d, idx) => ({
-					id: d.id || `c-${idx}`,
-					date: d.validity || new Date().toISOString().split("T")[0],
-					name: d.name,
-					fileType: d.fileType || "PDF",
-				})),
-				jobDescription: f.category || "Consultant",
-				jobLevel: "Standard",
-				hoursPerWeek: "40",
-				supervisor: f.contactPerson || "Supervisor",
-				offerPrice: "-",
-				paymentTerms: "30 Days Net",
-				paidUntil: "-",
-				expensesAllowed: "No",
-			};
-
-			await saveProjectContractAPIAction(project.id, payload);
-
-			setContracts((prev) => [newContract, ...prev]);
-			setView({ kind: "contract-detail", contract: newContract });
-			setStagedData({});
-		} else {
-			setView({ kind: "sub", tab: "list" });
-		}
-	};
-
 	const showSubTabs = view.kind === "sub" || view.kind === "contract-detail";
 
 	return (
@@ -940,17 +989,35 @@ export function ContractTab({ project, onFullscreenChange }: ContractTabProps) {
 			{/* ── Views ── */}
 
 			{view.kind === "sub" && view.tab === "list" && (
-				<ContractList
-					contracts={contracts}
-					onSelect={(contract) =>
-						setView({ kind: "contract-detail", contract })
-					}
-					onCreateNew={() => setView({ kind: "create-form" })}
-				/>
+				error ? (
+					<div className="flex flex-col items-center justify-center p-8 gap-4 text-center">
+						<p className="text-red-600 text-sm font-medium">{error}</p>
+						<button
+							type="button"
+							onClick={() => void fetchContracts()}
+							className="px-4 py-2 bg-slate-800 text-white text-xs font-medium rounded-md hover:bg-slate-700"
+						>
+							Retry
+						</button>
+					</div>
+				) : (
+					<ContractList
+						contracts={contracts}
+						onSelect={(contract) =>
+							setView({ kind: "contract-detail", contract })
+						}
+						onCreateNew={() => setView({ kind: "create-form" })}
+						onDelete={handleDeleteContract}
+					/>
+				)
 			)}
 
 			{view.kind === "sub" && view.tab === "contract" && (
-				contracts[0] ? (
+				error ? (
+					<div className="flex flex-col items-center justify-center p-8 gap-4 text-center">
+						<p className="text-red-600 text-sm font-medium">{error}</p>
+					</div>
+				) : contracts[0] ? (
 					<ContractDetail contract={contracts[0]} />
 				) : (
 					<ContractEmptyState onCreate={() => setView({ kind: "create-form" })} />
@@ -970,6 +1037,8 @@ export function ContractTab({ project, onFullscreenChange }: ContractTabProps) {
 			{view.kind === "create-form" && (
 				<ContractCreateForm
 					project={project}
+					initialForm={stagedData.form}
+					initialDocuments={stagedData.documents}
 					onBack={() => setView({ kind: "sub", tab: "list" })}
 					onNext={(formData, docs) => {
 						setStagedData({ form: formData, documents: docs });

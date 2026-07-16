@@ -42,10 +42,13 @@ export interface StagedDocument {
   name: string;
   validity: string;
   fileType: string;
+  file?: File;
 }
 
 interface ContractCreateFormProps {
   project?: ActiveProject;
+  initialForm?: ContractFormData;
+  initialDocuments?: StagedDocument[];
   onBack: () => void;
   onNext: (formData?: ContractFormData, docs?: StagedDocument[]) => void;
 }
@@ -85,11 +88,18 @@ function SectionHeader({
   );
 }
 
-export function ContractCreateForm({ project, onBack, onNext }: ContractCreateFormProps) {
+export function ContractCreateForm({
+  project,
+  initialForm,
+  initialDocuments,
+  onBack,
+  onNext,
+}: ContractCreateFormProps) {
   const t = useTranslate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getInitialForm = (): ContractFormData => {
+    if (initialForm) return initialForm;
     const contactParts = project?.contactPersonName && project.contactPersonName !== "-"
       ? project.contactPersonName.split(" ")
       : [];
@@ -127,15 +137,15 @@ export function ContractCreateForm({ project, onBack, onNext }: ContractCreateFo
       supplierAddress: "",
       supplierPostalCode: "",
       supplierCity: "",
-      contactPerson: company ? (firstName ? `${firstName} ${lastName}`.trim() : "") : "",
-      contactMobile: company ? mobile : "",
-      contactEmail: company ? email : "",
+      contactPerson: "",
+      contactMobile: "",
+      contactEmail: "",
     };
   };
 
   const [form, setForm] = useState<ContractFormData>(getInitialForm);
 
-  const [documents, setDocuments] = useState<StagedDocument[]>([]);
+  const [documents, setDocuments] = useState<StagedDocument[]>(initialDocuments || []);
 
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
 
@@ -155,6 +165,7 @@ export function ContractCreateForm({ project, onBack, onNext }: ContractCreateFo
       name: f.name.replace(/\.[^.]+$/, ""),
       validity: "",
       fileType: (f.name.split(".").pop() ?? "FILE").toUpperCase(),
+      file: f,
     }));
     setDocuments((prev) => [...newDocs, ...prev]);
     setStagedFiles([]);

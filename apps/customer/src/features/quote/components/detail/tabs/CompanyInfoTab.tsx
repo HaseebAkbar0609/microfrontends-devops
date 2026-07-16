@@ -35,9 +35,9 @@ export function CompanyInfoTab({ supplier }: CompanyInfoTabProps) {
 					/>
 					<CreditInformationCard
 						companyName={name}
-						registeredFTax="YES"
-						registeredVat="YES"
-						boardInformation="NO"
+						registeredFTax="-"
+						registeredVat="-"
+						boardInformation="-"
 					/>
 				</div>
 

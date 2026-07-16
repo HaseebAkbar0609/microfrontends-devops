@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Plus,
   Loader2,
@@ -13,8 +14,6 @@ import {
   ChevronRight,
   Check,
   Pencil,
-  Archive,
-  Trash2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/common";
@@ -27,7 +26,6 @@ import { getActiveProjectsAPIAction, getProjectListAPIAction } from "@/api-actio
 import type { ActiveProjectItem } from "@/api-actions/project/active";
 import { resolveCompanyName } from "../utils/activeProject";
 import { normalizeProjectStatus } from "@/utils/statusNormalizer";
-import { MAX_PAGE_SIZE } from "@/constants/api";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
   { label: localizationConstants.home, href: "/home" },
@@ -56,11 +54,11 @@ const ROWS_OPTIONS = [10, 25, 50];
 
 type SortKey = "referenceNo" | "name" | "orderNo" | "quoteReferenceNo" | "companyName" | "status";
 
-function mapApiActiveProjectToFrontend(item: ActiveProjectItem): ActiveProject {
+function mapActiveProjectToFrontend(item: ActiveProjectItem): ActiveProject {
   const normStatus = normalizeProjectStatus(item.status);
   const rawItem = item as unknown as Record<string, unknown>;
   const rawOrderNo = (rawItem.orderNo || rawItem.order_no) as string | undefined;
-  const orderNo = (rawOrderNo && rawOrderNo !== "-") ? rawOrderNo : "2024-01";
+  const orderNo = (rawOrderNo && rawOrderNo !== "-") ? rawOrderNo : "—";
   return {
     id: item.id,
     name: item.name || "Untitled Project",
@@ -87,12 +85,12 @@ function mapApiActiveProjectToFrontend(item: ActiveProjectItem): ActiveProject {
 
 function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
   const projName = q.projectName || q.project_name || q.name || "Untitled Project";
-  const rawId = q.id || q.project_id || "";
+  const rawId = q.project_id || q.id || "";
   const rawRef = q.refNo || q.ref_no || q.project_code || q.projectCode;
   const refCode = (rawRef && rawRef !== "-") ? rawRef : (rawId ? rawId.substring(0, 8).toUpperCase() : "-");
   const normStatus = normalizeProjectStatus(q.quote_status || q.status);
   const rawOrderNo = q.orderNo || q.order_no;
-  const orderNo = (rawOrderNo && rawOrderNo !== "-") ? rawOrderNo : "2024-01";
+  const orderNo = (rawOrderNo && rawOrderNo !== "-") ? rawOrderNo : "—";
   return {
     id: rawId,
     name: projName,
@@ -117,6 +115,7 @@ function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
 }
 
 export function ProjectList() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
   const [projects, setProjects] = useState<ActiveProject[]>([]);
   const [loading, setLoading] = useState(true);
@@ -132,42 +131,61 @@ export function ProjectList() {
   const [menuAnchor, setMenuAnchor] = useState<{ top: number; right: number } | null>(null);
   const filterBtnRef = useRef<HTMLButtonElement>(null);
 
+  const [totalCount, setTotalCount] = useState(0);
+
   useEffect(() => {
     let cancelled = false;
     async function loadProjects() {
       setLoading(true);
       setError(null);
 
-      const [activeRes, listRes] = await Promise.all([
-        getActiveProjectsAPIAction({ limit: MAX_PAGE_SIZE }),
-        getProjectListAPIAction({ page: 1, pageSize: MAX_PAGE_SIZE }),
-      ]);
+      const combinedMap = new Map<string, ActiveProject>();
+
+      const activeRes = await getActiveProjectsAPIAction({ limit: rowsPerPage });
+      if (cancelled) return;
+
+      let hasError = false;
+      if (!activeRes.success) {
+        hasError = true;
+        setError(activeRes.error || "Failed to load active projects");
+      } else if (activeRes.data?.data) {
+        activeRes.data.data.forEach((item) => {
+          const mapped = mapActiveProjectToFrontend(item);
+          if (mapped.id) {
+            combinedMap.set(mapped.id, mapped);
+          }
+        });
+      }
+
+      if (!hasError) {
+        const listRes = await getProjectListAPIAction({
+          page,
+          pageSize: rowsPerPage,
+          search: search.trim() || undefined,
+          sortBy: sortKey || undefined,
+          sortOrder: sortDir || undefined,
+          quote_status: statusFilter || undefined,
+        });
+        if (cancelled) return;
+        if (listRes.success && listRes.data?.quotes) {
+          listRes.data.quotes.forEach((q: ApiQuoteItem) => {
+            const item = mapListProjectToFrontend(q);
+            if (item.id && !combinedMap.has(item.id)) {
+              combinedMap.set(item.id, item);
+            }
+          });
+          setTotalCount(listRes.data.totalItems ?? combinedMap.size);
+        } else {
+          hasError = true;
+          setError(listRes.error || "Failed to load projects list");
+        }
+      }
 
       if (cancelled) return;
 
-      const combinedMap = new Map<string, ActiveProject>();
-
-      if (activeRes.success && activeRes.data?.data) {
-        for (const item of activeRes.data.data) {
-          const mapped = mapApiActiveProjectToFrontend(item);
-          combinedMap.set(mapped.id, mapped);
-        }
+      if (!hasError) {
+        setProjects(Array.from(combinedMap.values()));
       }
-
-      if (listRes.success && listRes.data?.quotes) {
-        for (const q of listRes.data.quotes) {
-          const mapped = mapListProjectToFrontend(q);
-          if (!combinedMap.has(mapped.id)) {
-            combinedMap.set(mapped.id, mapped);
-          }
-        }
-      }
-
-      if (!activeRes.success && !listRes.success) {
-        setError(activeRes.error || listRes.error || "Failed to load projects");
-      }
-
-      setProjects(Array.from(combinedMap.values()));
       setLoading(false);
     }
 
@@ -175,9 +193,9 @@ export function ProjectList() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [page, rowsPerPage, search, sortKey, sortDir, statusFilter]);
 
-  // Close dropdowns on outside click
+  // Close dropdowns on outside click, resize, or scroll
   useEffect(() => {
     if (!openMenu && !filterOpen) return;
     const close = () => {
@@ -185,7 +203,13 @@ export function ProjectList() {
       setFilterOpen(false); setFilterAnchor(null);
     };
     document.addEventListener("click", close);
-    return () => document.removeEventListener("click", close);
+    window.addEventListener("resize", close);
+    window.addEventListener("scroll", close, true);
+    return () => {
+      document.removeEventListener("click", close);
+      window.removeEventListener("resize", close);
+      window.removeEventListener("scroll", close, true);
+    };
   }, [openMenu, filterOpen]);
 
   function handleMenuOpen(e: React.MouseEvent<HTMLButtonElement>, id: string) {
@@ -209,23 +233,8 @@ export function ProjectList() {
     else { setSortKey(key); setSortDir("asc"); }
   }
 
-  const filtered = projects.filter((p) => {
-    const matchesSearch =
-      p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.referenceNo.toLowerCase().includes(search.toLowerCase()) ||
-      (p.companyName ?? "").toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = statusFilter === "" || p.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
-
-  const sorted = [...filtered].sort((a, b) => {
-    const av = (a[sortKey] ?? "").toString();
-    const bv = (b[sortKey] ?? "").toString();
-    return sortDir === "asc" ? av.localeCompare(bv) : bv.localeCompare(av);
-  });
-
-  const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
-  const pageRows = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  const totalPages = Math.max(1, Math.ceil(totalCount / rowsPerPage));
+  const pageRows = projects;
 
   const activeFilterLabel = STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All Statuses";
 
@@ -243,7 +252,10 @@ export function ProjectList() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
             <Input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Search"
               className="pl-9 h-9 text-sm border-[#E2E8F0] bg-white"
             />
@@ -489,24 +501,15 @@ export function ProjectList() {
         >
           <button
             type="button"
+            onClick={() => {
+              const targetId = openMenu;
+              setOpenMenu(null);
+              router.push(`/projectmanagement/${targetId}`);
+            }}
             className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50"
           >
             <Pencil className="h-3.5 w-3.5" />
             Edit
-          </button>
-          <button
-            type="button"
-            className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50"
-          >
-            <Archive className="h-3.5 w-3.5" />
-            Archive
-          </button>
-          <button
-            type="button"
-            className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50"
-          >
-            <Trash2 className="h-3.5 w-3.5" />
-            Delete
           </button>
         </div>
       )}

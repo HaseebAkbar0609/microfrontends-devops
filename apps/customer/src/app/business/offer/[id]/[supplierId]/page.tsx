@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
@@ -15,25 +15,40 @@ export default function SupplierQuotePage() {
 	const supplierId = params.supplierId as string;
 
 	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 	const [projectData, setProjectData] = useState<Partial<CreateOfferFormValues>>({});
 
-	useEffect(() => {
-		let isMounted = true;
-		async function fetchProject() {
-			if (!id) return;
-			setLoading(true);
+	const fetchProject = useCallback(async (activeGuard?: { active: boolean }) => {
+		if (!id) return;
+		setLoading(true);
+		setError(null);
+		try {
 			const res = await getProjectByIdAPIAction(id);
-			if (isMounted && res.success && res.data) {
+			if (activeGuard && !activeGuard.active) return;
+			if (res.success && res.data) {
 				const hydration = mapProjectDetailToFormHydration(res.data);
 				setProjectData(hydration.values);
+			} else {
+				setError(res.error || "Failed to load project details");
 			}
-			if (isMounted) setLoading(false);
+		} catch (err: unknown) {
+			if (activeGuard && !activeGuard.active) return;
+			const msg = err instanceof Error ? err.message : "An unexpected error occurred";
+			setError(msg);
+		} finally {
+			if (!activeGuard || activeGuard.active) {
+				setLoading(false);
+			}
 		}
-		void fetchProject();
-		return () => {
-			isMounted = false;
-		};
 	}, [id]);
+
+	useEffect(() => {
+		const guard = { active: true };
+		void fetchProject(guard);
+		return () => {
+			guard.active = false;
+		};
+	}, [fetchProject]);
 
 	if (loading) {
 		return (
@@ -43,11 +58,39 @@ export default function SupplierQuotePage() {
 		);
 	}
 
+	if (error) {
+		return (
+			<div className="flex flex-col flex-1 items-center justify-center p-12 min-h-screen gap-4">
+				<p className="text-red-600 font-medium">{error}</p>
+				<button
+					type="button"
+					onClick={() => void fetchProject()}
+					className="px-4 py-2 bg-slate-800 text-white text-sm font-medium rounded-md hover:bg-slate-700"
+				>
+					Retry
+				</button>
+			</div>
+		);
+	}
+
 	const suppliers: QuoteSupplier[] = projectData.invitedSuppliers || [];
+	let decodedSupplierId = supplierId;
+	try {
+		decodedSupplierId = decodeURIComponent(supplierId);
+	} catch {
+		decodedSupplierId = supplierId;
+	}
 	const matchedSupplier =
-		suppliers.find((s) => s.id === supplierId || s.companyName === decodeURIComponent(supplierId)) ||
-		suppliers[0] ||
+		suppliers.find((s) => s.id === decodedSupplierId || s.companyName === decodedSupplierId) ||
 		null;
+
+	if (!matchedSupplier) {
+		return (
+			<div className="flex flex-1 items-center justify-center p-12 min-h-screen">
+				<p className="text-slate-500 text-base">Supplier quote not found.</p>
+			</div>
+		);
+	}
 
 	const projectName = projectData.projectName || "Project";
 

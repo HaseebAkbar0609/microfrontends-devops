@@ -28,7 +28,7 @@ interface QuoteItemsTableProps {
 	items: QuoteItem[];
 	quoteTotal: string;
 	vat: string;
-	rotDeduction: boolean;
+	rotDeduction: boolean | string;
 	finalTotal: string;
 	quoteId?: string;
 	onApprove?: () => void;
@@ -46,6 +46,11 @@ export function QuoteItemsTable({
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
+	/**
+	 * Handles quote approval. If a custom `onApprove` callback prop is passed,
+	 * it short-circuits the default API call and hands over handling to the parent component.
+	 * Otherwise, it falls back to calling `approveQuoteAPIAction(quoteId)` directly.
+	 */
 	const handleApprove = async () => {
 		if (onApprove) {
 			onApprove();
@@ -127,7 +132,7 @@ export function QuoteItemsTable({
 									{vat}
 								</span>
 							</div>
-							{rotDeduction && (
+							{Boolean(rotDeduction) && (
 								<div className="flex justify-end items-center gap-12">
 									<span className="text-xs text-slate-500 font-medium whitespace-nowrap">
 										<Translate
@@ -136,7 +141,9 @@ export function QuoteItemsTable({
 											}
 										/>
 									</span>
-									<div className="w-32" />
+									<span className="text-xs text-slate-500 font-medium w-32 text-right pr-2">
+										{typeof rotDeduction === "string" ? rotDeduction : "Ja"}
+									</span>
 								</div>
 							)}
 						</div>
@@ -164,7 +171,7 @@ export function QuoteItemsTable({
 				<Button
 					variant="ghost"
 					onClick={handleApprove}
-					disabled={isSubmitting}
+					disabled={isSubmitting || (!onApprove && !quoteId)}
 					className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 h-10 rounded-md"
 				>
 					{isSubmitting ? (

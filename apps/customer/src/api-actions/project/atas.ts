@@ -11,7 +11,6 @@ export interface ProjectATA {
   quality_status?: string;
   total_cost?: number;
   economic_status?: string;
-  [key: string]: unknown;
 }
 
 export async function getProjectATAsAPIAction(projectId: string): Promise<ActionResult<ProjectATA[]>> {
@@ -27,7 +26,17 @@ export async function getProjectATAsAPIAction(projectId: string): Promise<Action
   }
 }
 
-export async function saveProjectATAAPIAction(projectId: string, payload: unknown): Promise<ActionResult<ProjectATA>> {
+export interface SaveProjectATAPayload {
+  title?: string;
+  category?: string;
+  reason?: string;
+  quality_status?: string;
+  economic_status?: string;
+  total_cost?: number;
+  ata_no?: string;
+}
+
+export async function saveProjectATAAPIAction(projectId: string, payload: SaveProjectATAPayload): Promise<ActionResult<ProjectATA>> {
   try {
     const { data } = await axiosInstance.post(`/api/v1/project/${projectId}/atas`, payload);
     return {

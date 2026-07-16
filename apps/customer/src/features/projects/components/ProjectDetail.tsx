@@ -41,6 +41,37 @@ const subTabTriggerClass =
 
 import { getProjectByIdAPIAction } from "@/api-actions/project/get";
 
+const DEFAULT_PROJECT_DURATION_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
+
+function parseTimestampToMs(val: string | number | undefined | null): number | null {
+  if (!val || val === "-") return null;
+  let ms: number | null = null;
+  if (typeof val === "number" && isFinite(val) && val > 0) {
+    ms = val < 1e11 ? val * 1000 : val;
+  } else if (typeof val === "string") {
+    const parsed = Date.parse(val);
+    if (!isNaN(parsed) && isFinite(parsed) && parsed > 0) {
+      ms = parsed;
+    } else {
+      const num = Number(val);
+      if (!isNaN(num) && isFinite(num) && num > 0) {
+        ms = num < 1e11 ? num * 1000 : num;
+      }
+    }
+  }
+  return ms && !isNaN(ms) && ms > 0 ? ms : null;
+}
+
+function formatTimestamp(val: string | number | undefined | null): string | null {
+  const ms = parseTimestampToMs(val);
+  if (!ms) return null;
+  const date = new Date(ms);
+  if (isNaN(date.getTime())) return null;
+  const year = date.getUTCFullYear();
+  if (year < 1970 || year > 2100) return null;
+  return date.toISOString().split("T")[0];
+}
+
 function ProjectDetailInner() {
   const params = useParams();
   const searchParams = useSearchParams();
@@ -51,84 +82,90 @@ function ProjectDetailInner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchDetail = useCallback(async () => {
+  const fetchDetail = useCallback(async (activeGuard?: { active: boolean }) => {
     if (!id) return;
     setLoading(true);
     setError(null);
-    const res = await getProjectByIdAPIAction(id);
-    if (res.success && res.data) {
-      const p = res.data as unknown as ApiProjectDetailItem;
-      const fullName = [p.personal_information?.first_name, p.personal_information?.last_name]
-        .filter(Boolean)
-        .join(" ");
+    try {
+      const res = await getProjectByIdAPIAction(id);
+      if (activeGuard && !activeGuard.active) return;
+      if (res.success && res.data) {
+        const p = res.data as unknown as ApiProjectDetailItem;
+        const fullName = [p.personal_information?.first_name, p.personal_information?.last_name]
+          .filter(Boolean)
+          .join(" ");
 
-      const createdMs = p.created_at ? (typeof p.created_at === "number" ? p.created_at : Number(p.created_at)) : Date.now();
-      const defaultStart = new Date(createdMs).toISOString().split("T")[0];
-      const defaultEndMs = createdMs + 30 * 24 * 60 * 60 * 1000;
-      const defaultEnd = new Date(defaultEndMs).toISOString().split("T")[0];
+        const createdMs = parseTimestampToMs(p.created_at);
 
-      const formatTimestamp = (val: string | number | undefined | null) => {
-        if (!val || val === "-") return null;
-        const num = typeof val === "number" ? val : Number(val);
-        if (!isNaN(num) && num > 0) {
-          return new Date(num).toISOString().split("T")[0];
-        }
-        if (typeof val === "string" && val.includes("-")) return val;
-        return null;
-      };
+        const defaultStart = createdMs ? new Date(createdMs).toISOString().split("T")[0] : "-";
+        const defaultEnd = createdMs ? new Date(createdMs + DEFAULT_PROJECT_DURATION_MS).toISOString().split("T")[0] : "-";
 
-      const resolvedStart = formatTimestamp(p.project_details?.start_date || p.start_date) || defaultStart;
-      const resolvedEnd = formatTimestamp(p.project_details?.due_date || p.due_date) || defaultEnd;
+        const resolvedStart =
+          formatTimestamp(p.project_details?.start_date) ||
+          formatTimestamp(p.start_date) ||
+          defaultStart;
+        const resolvedEnd =
+          formatTimestamp(p.project_details?.due_date) ||
+          formatTimestamp(p.due_date) ||
+          defaultEnd;
 
-      const mapped: ActiveProject = {
-        id: p.id || id,
-        name: p.project_details?.project_name || p.projectName || p.name || "Project",
-        referenceNo:
-          p.project_details?.ref_no ||
-          p.ref_no ||
-          p.refNo ||
-          p.client_no ||
-          id.substring(0, 8).toUpperCase(),
-        clientNo: p.project_details?.client_no || p.client_no || "-",
-        projectNo: p.project_details?.ref_no || p.ref_no || "-",
-        startDate: resolvedStart,
-        endDate: resolvedEnd,
-        contactPersonName: fullName || p.contact_person || "-",
-        mobileNumber: p.personal_information?.mobile_number || p.contact_phone || "-",
-        email: p.personal_information?.personal_email || p.contact_email || "-",
-        address:
-          p.personal_information?.address ||
-          p.project_details?.project_address ||
-          p.address ||
-          "-",
-        postalCode:
-          p.personal_information?.postal_code ||
-          p.project_details?.postal_code ||
-          p.postal_code ||
-          "-",
-        companyName:
-          p.suppliers?.invited_suppliers?.[0]?.company_name ||
-          p.company_name ||
-          "Assigned Supplier",
-        status: normalizeProjectStatus(p.status || p.quote_status),
-        statusLabel: p.status || p.quote_status || "Active",
-        orderNo:
-          (p.project_details?.order_no || p.order_no) &&
-            (p.project_details?.order_no || p.order_no) !== "-"
-            ? p.project_details?.order_no || p.order_no
-            : "2024-01",
-        quoteReferenceNo: p.project_details?.ref_no || p.ref_no || "-",
-        category: p.category || "-",
-      };
-      setLiveProject(mapped);
-    } else {
-      setError(res.error || "Failed to load project details");
+        const mapped: ActiveProject = {
+          id: p.id || id,
+          name: p.project_details?.project_name || p.projectName || p.name || "Project",
+          referenceNo:
+            p.project_details?.ref_no ||
+            p.ref_no ||
+            p.refNo ||
+            p.client_no ||
+            id.substring(0, 8).toUpperCase(),
+          clientNo: p.project_details?.client_no || p.client_no || "-",
+          projectNo: p.project_details?.ref_no || p.ref_no || "-",
+          startDate: resolvedStart,
+          endDate: resolvedEnd,
+          contactPersonName: fullName || p.contact_person || "-",
+          mobileNumber: p.personal_information?.mobile_number || p.contact_phone || "-",
+          email: p.personal_information?.personal_email || p.contact_email || "-",
+          address:
+            p.personal_information?.address ||
+            p.project_details?.project_address ||
+            p.address ||
+            "-",
+          postalCode:
+            p.personal_information?.postal_code ||
+            p.project_details?.postal_code ||
+            p.postal_code ||
+            "-",
+          companyName:
+            p.suppliers?.invited_suppliers?.[0]?.company_name ||
+            p.company_name ||
+            "Assigned Supplier",
+          status: normalizeProjectStatus(p.status || p.quote_status),
+          statusLabel: p.status || p.quote_status || "Active",
+          orderNo:
+            (p.project_details?.order_no || p.order_no) &&
+              (p.project_details?.order_no || p.order_no) !== "-"
+              ? p.project_details?.order_no || p.order_no
+              : "—",
+          quoteReferenceNo: p.project_details?.ref_no || p.ref_no || "-",
+          category: p.category || "-",
+        };
+        if (!activeGuard || activeGuard.active) setLiveProject(mapped);
+      } else {
+        if (!activeGuard || activeGuard.active) setError(res.error || "Failed to load project details");
+      }
+    } catch (err: unknown) {
+      if (!activeGuard || activeGuard.active) setError(err instanceof Error ? err.message : "An unexpected error occurred");
+    } finally {
+      if (!activeGuard || activeGuard.active) setLoading(false);
     }
-    setLoading(false);
   }, [id]);
 
   useEffect(() => {
-    void fetchDetail();
+    const guard = { active: true };
+    void fetchDetail(guard);
+    return () => {
+      guard.active = false;
+    };
   }, [fetchDetail]);
 
   const activeTab = useMemo(() => {

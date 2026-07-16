@@ -11,7 +11,6 @@ export interface ApiTimelineTaskItem {
   endDate: string | number;
   color?: string;
   parentId?: string;
-  [key: string]: unknown;
 }
 
 export interface ApiTimelineProjectItem {
@@ -20,7 +19,6 @@ export interface ApiTimelineProjectItem {
   estimatedDays?: number;
   lastUpdated?: string;
   tasks?: ApiTimelineTaskItem[];
-  [key: string]: unknown;
 }
 
 export async function getProjectTimelinesAPIAction(projectId: string): Promise<ActionResult<ApiTimelineProjectItem[]>> {

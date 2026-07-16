@@ -19,7 +19,6 @@ export interface ApiOrgCompanyItem {
   phone: string;
   mail: string;
   contacts: ApiOrgContactItem[];
-  [key: string]: unknown;
 }
 
 export async function getProjectOrgPlanAPIAction(projectId: string): Promise<ActionResult<ApiOrgCompanyItem[]>> {

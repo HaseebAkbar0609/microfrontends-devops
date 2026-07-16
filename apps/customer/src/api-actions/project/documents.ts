@@ -10,7 +10,6 @@ export interface ApiProjectDocumentItem {
   type?: string;
   date?: string;
   fileUrl?: string;
-  [key: string]: unknown;
 }
 
 export async function getProjectDocumentsAPIAction(projectId: string): Promise<ActionResult<ApiProjectDocumentItem[]>> {

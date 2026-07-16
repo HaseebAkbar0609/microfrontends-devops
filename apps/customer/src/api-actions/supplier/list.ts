@@ -1,7 +1,8 @@
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
-import type { ActionResult, ApiError } from "@/types/api";
+import type { ActionResult } from "@/types/api";
 import type { Supplier } from "@/features/suppliers/types/types";
+import { handleApiError } from "@/utils/apiError";
 
 export interface GetSuppliersParams {
 	page?: number;
@@ -24,6 +25,9 @@ interface ApiSupplierItem {
 	first_name?: string;
 	last_name?: string;
 	email: string;
+	mobile_number?: string;
+	phone?: string;
+	mobileNumber?: string;
 }
 
 interface ApiSuppliersListResponse {
@@ -39,7 +43,7 @@ interface ApiSuppliersListResponse {
 export async function getSuppliersAPIAction(
 	params: GetSuppliersParams = {},
 ): Promise<ActionResult<SuppliersListPayload>> {
-	const { page = 1, pageSize = 10, search } = params;
+	const { page = 1, pageSize = 10, search, sortBy, sortOrder } = params;
 
 	const queryParams = new URLSearchParams();
 	queryParams.set("page", String(page));
@@ -47,13 +51,19 @@ export async function getSuppliersAPIAction(
 	if (search && search.trim()) {
 		queryParams.set("search", search.trim());
 	}
+	if (sortBy) {
+		queryParams.set("sort_by", sortBy);
+	}
+	if (sortOrder) {
+		queryParams.set("sort_order", sortOrder);
+	}
 
 	try {
 		const { data: res } = await axiosInstance.get<ApiSuppliersListResponse>(
 			`${API_PATH.SUPPLIER.LIST}?${queryParams.toString()}`,
 		);
 
-		if (!res || res.data == null || !Array.isArray(res.data)) {
+		if (!res || res.success === false || res.data == null || !Array.isArray(res.data)) {
 			return {
 				success: false,
 				data: null,
@@ -67,7 +77,7 @@ export async function getSuppliersAPIAction(
 			orgNo: item.organization_number,
 			contactPersonName: `${item.first_name || ""} ${item.last_name || ""}`.trim(),
 			email: item.email,
-			mobileNumber: "",
+			mobileNumber: item.mobile_number || item.phone || item.mobileNumber || "",
 		}));
 
 		return {
@@ -79,12 +89,6 @@ export async function getSuppliersAPIAction(
 			error: null,
 		};
 	} catch (error: unknown) {
-		const apiError = error as ApiError;
-		return {
-			success: false,
-			data: null,
-			error:
-				apiError.response?.data?.message || "Failed to load suppliers",
-		};
+		return handleApiError(error, "Failed to load suppliers");
 	}
 }

@@ -72,10 +72,9 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const handleConfirmApprove = async () => {
-		const targetId = modalId || id;
-		if (!targetId) return;
+		if (!modalId) return;
 		setIsSubmitting(true);
-		const res = await approveQuoteAPIAction(targetId);
+		const res = await approveQuoteAPIAction(modalId);
 		setIsSubmitting(false);
 		closeModal();
 		if (res.success) {

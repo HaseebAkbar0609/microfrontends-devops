@@ -455,6 +455,7 @@ export type OfferModule = {
 	certificationsLabel: string;
 	certificateLabel: string;
 	customerReviewTitle: string;
+	noCustomerReviewsYet: string;
 	becameSinceLabel: string;
 	companyInsuranceTitle: string;
 	referenceImagesTitle: string;

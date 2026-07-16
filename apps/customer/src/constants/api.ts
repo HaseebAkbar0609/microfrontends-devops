@@ -66,6 +66,8 @@ export const API_PATH = {
 			`/api/v1/quote/${encodeURIComponent(quoteId)}/approve`,
 		reject: (quoteId: string) =>
 			`/api/v1/quote/${encodeURIComponent(quoteId)}/reject`,
+		details: (quoteId: string) =>
+			`/api/v1/quote/${encodeURIComponent(quoteId)}/details`,
 	},
 	MEDIA: {
 		UPLOAD: "/api/v1/media/upload",

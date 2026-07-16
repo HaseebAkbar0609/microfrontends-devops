@@ -66,7 +66,7 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 					(item.emailAddress &&
 						supplier.emailAddress &&
 						item.emailAddress.toLowerCase() ===
-							supplier.emailAddress.toLowerCase()) ||
+						supplier.emailAddress.toLowerCase()) ||
 					(item.orgNumber &&
 						supplier.orgNumber &&
 						item.orgNumber === supplier.orgNumber),
@@ -81,14 +81,22 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 		const existingEmails = new Set(
 			list.map((s) => s.emailAddress?.toLowerCase()).filter(Boolean),
 		);
+		const existingOrgNumbers = new Set(
+			list.map((s) => s.orgNumber).filter(Boolean),
+		);
 
 		for (const invited of invitedSuppliers) {
 			const emailKey = invited.emailAddress?.toLowerCase();
 			const hasId = invited.id && existingIds.has(invited.id);
 			const hasEmail = emailKey && existingEmails.has(emailKey);
+			const hasOrgNumber =
+				invited.orgNumber && existingOrgNumbers.has(invited.orgNumber);
 
-			if (!hasId && !hasEmail) {
+			if (!hasId && !hasEmail && !hasOrgNumber) {
 				list.push(invited);
+				if (invited.id) existingIds.add(invited.id);
+				if (emailKey) existingEmails.add(emailKey);
+				if (invited.orgNumber) existingOrgNumbers.add(invited.orgNumber);
 			}
 		}
 		return list;
@@ -116,7 +124,7 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 
 	useEffect(() => {
 		void loadSuppliers();
-	}, [loadSuppliers, invitedSuppliers.length]);
+	}, [loadSuppliers]);
 
 	const handleToggleSupplier = (
 		supplier: QuoteSupplier,
@@ -146,7 +154,7 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 					(!item.emailAddress ||
 						!supplier.emailAddress ||
 						item.emailAddress.toLowerCase() !==
-							supplier.emailAddress.toLowerCase()) &&
+						supplier.emailAddress.toLowerCase()) &&
 					(!item.orgNumber ||
 						!supplier.orgNumber ||
 						item.orgNumber !== supplier.orgNumber),
@@ -285,7 +293,7 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 																	handleToggleSupplier(
 																		supplier,
 																		value ===
-																			true,
+																		true,
 																	)
 																}
 															/>

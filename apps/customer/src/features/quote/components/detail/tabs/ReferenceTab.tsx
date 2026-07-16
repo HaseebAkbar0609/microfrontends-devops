@@ -13,7 +13,7 @@ export function ReferenceTab() {
 						<Translate text={localizationConstants.customerReviewTitle} />
 					</h3>
 					<div className="text-center py-8 text-slate-400 text-sm border border-slate-200 rounded-lg bg-white">
-						No customer reviews yet.
+						<Translate text={localizationConstants.noCustomerReviewsYet} />
 					</div>
 				</div>
 

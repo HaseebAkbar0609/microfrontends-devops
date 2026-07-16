@@ -477,6 +477,7 @@ export const svOfferModule: OfferModule = {
 	certificationsLabel: "Certifieringar",
 	certificateLabel: "Certifikat",
 	customerReviewTitle: "Kundrecensioner",
+	noCustomerReviewsYet: "Inga kundrecensioner ännu.",
 	becameSinceLabel: "Blev sedan",
 	companyInsuranceTitle: "Företagscertifikat/ försäkring",
 	referenceImagesTitle: "Referensbilder",

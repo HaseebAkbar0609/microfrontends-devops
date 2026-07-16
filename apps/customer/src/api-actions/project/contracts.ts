@@ -9,7 +9,6 @@ export interface ProjectContract {
   file_url?: string;
   created_at?: string;
   contract_number?: string;
-  [key: string]: unknown;
 }
 
 export async function getProjectContractsAPIAction(projectId: string): Promise<ActionResult<ProjectContract[]>> {
@@ -37,3 +36,17 @@ export async function saveProjectContractAPIAction(projectId: string, payload: u
     return handleApiError(error, "Failed to save contract");
   }
 }
+
+export async function deleteProjectContractAPIAction(projectId: string, contractId: string): Promise<ActionResult<void>> {
+  try {
+    await axiosInstance.delete(`/api/v1/project/${projectId}/contracts/${contractId}`);
+    return {
+      success: true,
+      data: undefined,
+      error: null,
+    };
+  } catch (error: unknown) {
+    return handleApiError(error, "Failed to delete contract");
+  }
+}
+

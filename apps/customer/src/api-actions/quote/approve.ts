@@ -1,7 +1,8 @@
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import { showToast } from "@/lib/toast";
-import type { ActionResult, ApiError } from "@/types/api";
+import type { ActionResult } from "@/types/api";
+import { handleApiError } from "@/utils/apiError";
 
 export async function approveQuoteAPIAction(
 	quoteId: string,
@@ -15,10 +16,8 @@ export async function approveQuoteAPIAction(
 		showToast("success", "Quote approved successfully! Project is now active.");
 		return { success: true, data: null, error: null };
 	} catch (error: unknown) {
-		const apiError = error as ApiError;
-		const errorMessage =
-			apiError.response?.data?.message || "Failed to approve quote";
-		showToast("error", errorMessage);
-		return { success: false, data: null, error: errorMessage };
+		const result = handleApiError(error, "Failed to approve quote");
+		showToast("error", result.error || "Failed to approve quote");
+		return result;
 	}
 }

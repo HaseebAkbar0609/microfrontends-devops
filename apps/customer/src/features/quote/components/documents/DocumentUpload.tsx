@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTranslate, Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useState, useRef } from "react";
-import { uploadMediaAPIAction, saveProjectDocumentAPIAction } from "@/api-actions";
+import { uploadMediaAPIAction, saveProjectDocumentAPIAction, deleteMediaAPIAction } from "@/api-actions";
 import { showToast } from "@/lib/toast";
 
 interface DocumentUploadProps {
@@ -35,9 +35,11 @@ export function DocumentUpload({ projectId, onUploadSuccess }: DocumentUploadPro
 	const handleSave = async () => {
 		if (files.length === 0) return;
 		setUploading(true);
+		let hasAtLeastOneLinked = false;
 
 		try {
-			for (const file of files) {
+			const filesToProcess = [...files];
+			for (const file of filesToProcess) {
 				// 1. Upload to S3
 				const uploadRes = await uploadMediaAPIAction(file);
 				if (!uploadRes.success || !uploadRes.data?.id) {
@@ -51,16 +53,30 @@ export function DocumentUpload({ projectId, onUploadSuccess }: DocumentUploadPro
 					comments,
 				);
 				if (!linkRes.success) {
+					try {
+						const cleanupRes = await deleteMediaAPIAction(uploadRes.data.id);
+						if (!cleanupRes?.success) {
+							console.error("Cleanup failed for media ID:", uploadRes.data.id, cleanupRes?.error);
+						}
+					} catch (cleanupErr: unknown) {
+						console.error("Failed executing media cleanup for ID:", uploadRes.data.id, cleanupErr);
+					}
 					throw new Error(linkRes.error || "Failed to save document record");
 				}
+
+				hasAtLeastOneLinked = true;
+				// Immediately remove successfully uploaded & linked file from pending list
+				setFiles((prev) => prev.filter((item) => item !== file));
 			}
 
 			showToast("success", "Documents uploaded and saved successfully");
-			setFiles([]);
 			setComments("");
 			if (fileInputRef.current) fileInputRef.current.value = "";
 			onUploadSuccess();
 		} catch (err: unknown) {
+			if (hasAtLeastOneLinked) {
+				onUploadSuccess();
+			}
 			const error = err as Error;
 			showToast("error", error.message || "An error occurred during file upload");
 		} finally {

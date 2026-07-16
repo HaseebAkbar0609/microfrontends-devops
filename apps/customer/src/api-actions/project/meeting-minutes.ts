@@ -16,7 +16,6 @@ export interface ApiMeetingMinuteItem {
   meeting_date: string | number;
   action_protocol_status?: "good" | "moderate" | "bad";
   notes?: string;
-  [key: string]: unknown;
 }
 
 export async function getMeetingMinutesAPIAction(projectId: string): Promise<ActionResult<ApiMeetingMinuteItem[]>> {

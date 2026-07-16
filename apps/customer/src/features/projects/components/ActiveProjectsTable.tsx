@@ -219,7 +219,7 @@ export function ActiveProjectsTable({
 						<span className="text-slate-600">
 							{project.orderNo && project.orderNo !== "-"
 								? project.orderNo
-								: "2024-01"}
+								: "—"}
 						</span>
 					);
 				case "quoteReferenceNo":
