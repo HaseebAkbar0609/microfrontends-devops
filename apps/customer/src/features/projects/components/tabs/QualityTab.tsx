@@ -529,8 +529,8 @@ function ControlTableRows({ colName, onRowClick, showFilters = true }: { colName
 
 // ─── Standalone control table (no folder tree) ────────────────────────────────
 
-function StandaloneControlView({ colName }: { colName: string }) {
-  return <ControlTableRows colName={colName} />;
+function StandaloneControlView({ colName, showFilters = true }: { colName: string; showFilters?: boolean }) {
+  return <ControlTableRows colName={colName} showFilters={showFilters} />;
 }
 
 // ─── Split view (folder tree + control table) ─────────────────────────────────
@@ -1023,7 +1023,7 @@ function MiljosystemSubTab() {
         <ViewDropdown value={view} options={MILJO_OPTIONS} onChange={setView} />
       </div>
       {view === "miljosystem" ? (
-        <StandaloneControlView colName={t(localizationConstants.kmaSubTabEnvironment)} />
+        <StandaloneControlView colName={t(localizationConstants.kmaSubTabEnvironment)} showFilters={false} />
       ) : (
         <SplitView colName={t(localizationConstants.kmaSubTabEnvironment)} title={t(localizationConstants.kmaViewEnvironmentalPlan)} />
       )}
