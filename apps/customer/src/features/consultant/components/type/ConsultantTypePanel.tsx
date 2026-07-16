@@ -12,7 +12,6 @@ export function ConsultantTypePanel() {
 	const [types, setTypes] = useState<ConsultantTypeItem[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [search, setSearch] = useState("");
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -33,12 +32,6 @@ export function ConsultantTypePanel() {
 			cancelled = true;
 		};
 	}, []);
-
-	const filteredTypes = useMemo(() => {
-		const q = search.trim().toLowerCase();
-		if (!q) return types;
-		return types.filter((t) => t.name.toLowerCase().includes(q));
-	}, [types, search]);
 
 	const selectedType = useMemo(
 		() => types.find((t) => t.id === selectedId) ?? null,
@@ -65,11 +58,9 @@ export function ConsultantTypePanel() {
 		<div className="grid flex-1 grid-cols-1 bg-white md:grid-cols-[300px_1fr]">
 			<aside className="border-b border-slate-200 bg-slate-50 p-4 md:border-b-0 md:border-r">
 				<ConsultantTypeList
-					types={filteredTypes}
+					types={types}
 					selectedId={selectedId}
 					onSelect={setSelectedId}
-					search={search}
-					onSearchChange={setSearch}
 				/>
 			</aside>
 

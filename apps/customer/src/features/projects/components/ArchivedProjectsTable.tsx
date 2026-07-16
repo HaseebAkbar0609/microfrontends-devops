@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import Link from "next/link";
 import {
 	ArrowUpDown,
@@ -37,7 +37,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { TablePagination } from "@/components/table/TablePagination";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -49,7 +48,6 @@ type ArchivedProjectColumnField =
 
 interface ArchivedProjectsTableProps {
 	data: ArchivedProject[];
-	totalItems: number;
 	onActivate: (project: ArchivedProject) => void;
 	onDelete: (project: ArchivedProject) => void;
 }
@@ -146,7 +144,6 @@ const ArchivedProjectActions = ({
 
 export function ArchivedProjectsTable({
 	data,
-	totalItems,
 	onActivate,
 	onDelete,
 }: ArchivedProjectsTableProps) {
@@ -157,8 +154,6 @@ export function ArchivedProjectsTable({
 
 	const sortBy = query.get("sort_by") || "";
 	const sortOrder = query.get("sort_order") || "";
-	const page = Number(query.get("page") || "1");
-	const pageSize = Number(query.get("page_size") || "10");
 
 	const handleSort = useCallback(
 		(field: string, sortable: boolean) => {
@@ -173,7 +168,6 @@ export function ArchivedProjectsTable({
 			changeQueries({
 				sort_by: nextOrder ? field : null,
 				sort_order: nextOrder,
-				page: "1",
 			});
 		},
 		[sortBy, sortOrder, changeQueries],
@@ -244,11 +238,6 @@ export function ArchivedProjectsTable({
 			}
 		},
 		[onActivate],
-	);
-
-	const totalPages = useMemo(
-		() => Math.ceil(totalItems / pageSize),
-		[totalItems, pageSize],
 	);
 
 	return (
@@ -345,18 +334,6 @@ export function ArchivedProjectsTable({
 					</TableBody>
 				</Table>
 			</div>
-
-			<TablePagination
-				currentPage={page}
-				totalPages={totalPages}
-				pageSize={pageSize}
-				onPageChange={(newPage) =>
-					changeQueries({ page: String(newPage) })
-				}
-				onPageSizeChange={(newSize) =>
-					changeQueries({ page: "1", page_size: String(newSize) })
-				}
-			/>
 
 			<AlertDialog
 				open={!!deleteTarget}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Building2 } from "lucide-react";
+import { Translate } from "@/utils/translation/translate";
 import type { ConsultantTypeItem } from "../../types/consultantType";
 
 interface ConsultantTypeDetailProps {
@@ -15,7 +16,7 @@ export function ConsultantTypeDetail({ type }: ConsultantTypeDetailProps) {
 			<div className="flex flex-col gap-3">
 				<Building2 className="h-6 w-6 text-slate-700" aria-hidden />
 				<h2 className="text-2xl font-semibold text-slate-900">
-					{type.name}
+					<Translate text={type.name} />
 				</h2>
 			</div>
 
@@ -25,12 +26,12 @@ export function ConsultantTypeDetail({ type }: ConsultantTypeDetailProps) {
 					className="flex flex-col gap-2"
 				>
 					<h3 className="text-base font-semibold text-slate-900">
-						{section.title}:
+						<Translate text={section.title} />:
 					</h3>
 					<ul className="flex list-disc flex-col gap-1.5 pl-5 text-sm leading-relaxed text-slate-600">
 						{section.bullets.map((bullet, bulletIndex) => (
 							<li key={`${type.id}-bullet-${index}-${bulletIndex}`}>
-								{bullet}
+								<Translate text={bullet} />
 							</li>
 						))}
 					</ul>
