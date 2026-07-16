@@ -1293,6 +1293,80 @@ export const svConsultant: ConsultantModule = {
 	validationConsultantTypeRequired: "Typ av konsult krävs",
 	validationCustomerRequired: "Kundnamn krävs",
 	validationDescriptionRequired: "Beskrivning krävs",
+	ctTypeArchitectName: "Arkitekt",
+	ctTypeArchitectS1Title:
+		"Rita och planera nya byggnader eller ombyggnationer",
+	ctTypeArchitectS1B1:
+		"En arkitekt kan hjälpa dig att utveckla idéer för din drömvilla, ditt fritidshus, garage eller annan typ av byggnad.",
+	ctTypeArchitectS1B2:
+		"De tar fram ritningar och detaljer för bygget och säkerställer att alla relevanta byggregler och standarder följs.",
+	ctTypeArchitectS1B3:
+		"De samarbetar med dig för att välja material, inredning och andra detaljer.",
+	ctTypeArchitectS1B4:
+		"De hanterar bygglovsansökningar och kommunikation med myndigheter.",
+	ctTypeArchitectS2Title: "Förbättra befintliga byggnader",
+	ctTypeArchitectS2B1:
+		"En arkitekt kan ge dig råd om hur du kan förbättra funktion, estetik eller energieffektivitet i ditt hem.",
+	ctTypeArchitectS2B2:
+		"De tar fram ritningar för renoveringar eller tillbyggnader.",
+	ctTypeArchitectS2B3:
+		"De hjälper dig att välja rätt material och entreprenörer för jobbet.",
+	ctTypeInspectionName: "Besiktningsman",
+	ctTypeInspectionS1Title: "Oberoende besiktningar",
+	ctTypeInspectionS1B1:
+		"Granskar utfört arbete för att säkerställa att det uppfyller avtal och myndighetskrav.",
+	ctTypeInspectionS1B2:
+		"Dokumenterar fel och brister och upprättar ett formellt besiktningsutlåtande.",
+	ctTypeInspectionS1B3: "Ger råd om åtgärder och uppföljande besiktningar.",
+	ctTypeHvacName: "VVS-konsult",
+	ctTypeHvacS1Title: "Värme, ventilation och luftkonditionering",
+	ctTypeHvacS1B1:
+		"Utformar effektiva VVS-system anpassade till din fastighet.",
+	ctTypeHvacS1B2: "Beräknar kapacitet, luftflöden och energiprestanda.",
+	ctTypeHvacS1B3:
+		"Rekommenderar utrustning och hjälper till med regelefterlevnad.",
+	ctTypeElectricalName: "Elkonsult",
+	ctTypeElectricalS1Title: "Elprojektering och elsäkerhet",
+	ctTypeElectricalS1B1:
+		"Planerar elinstallationer, lastfördelning och belysning.",
+	ctTypeElectricalS1B2:
+		"Säkerställer att installationer uppfyller gällande elsäkerhetskrav.",
+	ctTypeElectricalS1B3:
+		"Granskar befintliga elinstallationer och rekommenderar uppgraderingar.",
+	ctTypeFireName: "Brandkonsult",
+	ctTypeFireS1Title: "Brandskydd och förebyggande arbete",
+	ctTypeFireS1B1: "Bedömer brandrisker och utformar skyddsåtgärder.",
+	ctTypeFireS1B2: "Tar fram brandskyddsdokumentation för bygglov.",
+	ctTypeFireS1B3: "Ger råd om utrymningsvägar, larm och materialval.",
+	ctTypeSiteDevName: "Markprojektering",
+	ctTypeSiteDevS1Title: "Mark- och tomtplanering",
+	ctTypeSiteDevS1B1: "Bedömer tomtens förutsättningar och begränsningar.",
+	ctTypeSiteDevS1B2: "Planerar tillfart, dränering och ledningar.",
+	ctTypeSiteDevS1B3:
+		"Samordnar med myndigheter kring detaljplan och tillstånd.",
+	ctTypeInteriorName: "Inredningsarkitekt",
+	ctTypeInteriorS1Title: "Inredning och materialval",
+	ctTypeInteriorS1B1: "Utformar funktionella och estetiska planlösningar.",
+	ctTypeInteriorS1B2: "Väljer ytskikt, belysning och inredning.",
+	ctTypeInteriorS1B3:
+		"Tar fram detaljerade inredningsritningar och specifikationer.",
+	ctTypeGeotechName: "Geotekniker",
+	ctTypeGeotechS1Title: "Mark- och grundläggningsbedömning",
+	ctTypeGeotechS1B1: "Undersöker markförhållanden och bärighet.",
+	ctTypeGeotechS1B2:
+		"Rekommenderar grundläggningslösningar för ditt projekt.",
+	ctTypeGeotechS1B3: "Bedömer risker som sättningar och grundvatten.",
+	ctTypeSurveyingName: "Mätteknik",
+	ctTypeSurveyingS1Title: "Mätning och kartering",
+	ctTypeSurveyingS1B1:
+		"Utför noggranna inmätningar och gränsutvisningar.",
+	ctTypeSurveyingS1B2: "Sätter ut referenspunkter inför byggnation.",
+	ctTypeSurveyingS1B3: "Levererar mätdata för projektering och tillstånd.",
+	ctTypePermitName: "Bygglov",
+	ctTypePermitS1Title: "Bygglovsansökningar och godkännanden",
+	ctTypePermitS1B1: "Upprättar och lämnar in bygglovsansökningar.",
+	ctTypePermitS1B2: "Sammanställer nödvändiga ritningar och handlingar.",
+	ctTypePermitS1B3: "Sköter kommunikationen med kommunen.",
 };
 
 export const svRotRut: RotRutModule = {

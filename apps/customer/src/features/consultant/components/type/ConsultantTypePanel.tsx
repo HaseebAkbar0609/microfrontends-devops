@@ -13,8 +13,8 @@ export function ConsultantTypePanel() {
 	const [types, setTypes] = useState<ConsultantTypeItem[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [search, setSearch] = useState("");
 	const [selectedId, setSelectedId] = useState<string | null>(null);
+	const [search] = useState("");
 
 	const debouncedSearch = useDebounce(search, 500);
 
@@ -26,7 +26,6 @@ export function ConsultantTypePanel() {
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setTypes(result.data);
-				// only select the first one if the currently selected one is not in the results
 				setSelectedId((prev) => {
 					if (prev && result.data?.find(t => t.id === prev)) {
 						return prev;
@@ -72,8 +71,6 @@ export function ConsultantTypePanel() {
 					types={types}
 					selectedId={selectedId}
 					onSelect={setSelectedId}
-					search={search}
-					onSearchChange={setSearch}
 				/>
 			</aside>
 
