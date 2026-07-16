@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { FinanceSubTab, FinanceView, PaymentPlan, PaymentPlanStatus } from "./finance/types";
-import { DUMMY_PAYMENT_PLANS } from "./finance/data";
+import { DUMMY_BUDGETS, DUMMY_PAYMENT_PLANS } from "./finance/data";
 import { BudgetList, BudgetCreateForm } from "./finance/BudgetTab";
 import { InvoiceList } from "./finance/InvoiceTab";
 import { PaymentPlanList, PaymentPlanCreate, PaymentPlanViewEdit } from "./finance/PaymentPlanTab";
@@ -71,10 +71,20 @@ export function FinanceTab() {
       )}
 
       {view.sub === "budget" && view.mode === "list" && (
-        <BudgetList onCreateNew={() => setView({ sub: "budget", mode: "create" })} />
+        <BudgetList
+          onCreateNew={() => setView({ sub: "budget", mode: "create" })}
+          onView={(id) => setView({ sub: "budget", mode: "view", budgetId: id })}
+        />
       )}
       {view.sub === "budget" && view.mode === "create" && (
         <BudgetCreateForm onBack={() => setView({ sub: "budget", mode: "list" })} />
+      )}
+      {view.sub === "budget" && view.mode === "view" && (
+        <BudgetCreateForm
+          key={view.budgetId}
+          budget={DUMMY_BUDGETS.find((b) => b.id === view.budgetId)}
+          onBack={() => setView({ sub: "budget", mode: "list" })}
+        />
       )}
 
       {view.sub === "invoices" && view.mode === "list" && <InvoiceList />}

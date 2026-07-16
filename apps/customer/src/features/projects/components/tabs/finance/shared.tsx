@@ -143,7 +143,7 @@ export function ActionsMenu({
   );
 }
 
-export function SimpleActionsMenu({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+export function SimpleActionsMenu({ open, onOpenChange, onView }: { open: boolean; onOpenChange: (v: boolean) => void; onView?: () => void }) {
   return (
     <div className="relative flex items-center justify-center h-14">
       <button
@@ -157,7 +157,7 @@ export function SimpleActionsMenu({ open, onOpenChange }: { open: boolean; onOpe
       {open && (
         <div className="absolute right-0 top-10 z-20 bg-white border border-[#E2E8F0] rounded-lg shadow-md py-1 min-w-36">
           <button type="button"
-            onClick={(e) => { e.stopPropagation(); onOpenChange(false); }}
+            onClick={(e) => { e.stopPropagation(); onView?.(); onOpenChange(false); }}
             className="cursor-pointer flex items-center gap-2 w-full px-3 py-2 text-sm text-[#374151] hover:bg-slate-50">
             <Eye className="h-3.5 w-3.5 text-[#64748B]" />
             <Translate text={localizationConstants.financeViewAction} />
