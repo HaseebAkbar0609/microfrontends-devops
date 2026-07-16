@@ -402,7 +402,7 @@ const CREATOR_OPTIONS = [
   { value: "Anna Svensson",  label: "Anna Svensson"  },
 ];
 
-function ControlTableRows({ colName, onRowClick }: { colName: string; onRowClick?: (c: KmaControl) => void }) {
+function ControlTableRows({ colName, onRowClick, showFilters = true }: { colName: string; onRowClick?: (c: KmaControl) => void; showFilters?: boolean }) {
   const t = useTranslate();
   const [search, setSearch]     = useState("");
   const [creator, setCreator]   = useState("");
@@ -419,25 +419,27 @@ function ControlTableRows({ colName, onRowClick }: { colName: string; onRowClick
 
   return (
     <>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
-          <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t(localizationConstants.search)} className="pl-9 h-9 w-44 text-sm border-[#E2E8F0] bg-white" />
-        </div>
+      {showFilters && (
+        <div className="flex items-center gap-3 mb-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t(localizationConstants.search)} className="pl-9 h-9 w-44 text-sm border-[#E2E8F0] bg-white" />
+          </div>
 
-        <button
-          type="button"
-          onClick={fToggle}
-          className={cn(
-            "cursor-pointer h-9 px-3 flex items-center gap-2 text-sm font-medium border rounded-lg transition-colors",
-            creator ? "bg-blue-50 border-blue-200 text-blue-700" : "bg-white border-[#E2E8F0] text-[#374151] hover:bg-slate-50",
-          )}
-        >
-          {t(localizationConstants.filter)}
-          {creator && <span className="text-xs font-normal">· {activeLabel}</span>}
-          <ChevronDown className={cn("h-4 w-4 transition-transform", fOpen && "rotate-180")} />
-        </button>
-      </div>
+          <button
+            type="button"
+            onClick={fToggle}
+            className={cn(
+              "cursor-pointer h-9 px-3 flex items-center gap-2 text-sm font-medium border rounded-lg transition-colors",
+              creator ? "bg-blue-50 border-blue-200 text-blue-700" : "bg-white border-[#E2E8F0] text-[#374151] hover:bg-slate-50",
+            )}
+          >
+            {t(localizationConstants.filter)}
+            {creator && <span className="text-xs font-normal">· {activeLabel}</span>}
+            <ChevronDown className={cn("h-4 w-4 transition-transform", fOpen && "rotate-180")} />
+          </button>
+        </div>
+      )}
 
       <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
@@ -521,8 +523,8 @@ function ControlTableRows({ colName, onRowClick }: { colName: string; onRowClick
 
 // ─── Standalone control table (no folder tree) ────────────────────────────────
 
-function StandaloneControlView({ colName }: { colName: string }) {
-  return <ControlTableRows colName={colName} />;
+function StandaloneControlView({ colName, showFilters = true }: { colName: string; showFilters?: boolean }) {
+  return <ControlTableRows colName={colName} showFilters={showFilters} />;
 }
 
 // ─── Split view (folder tree + control table) ─────────────────────────────────
@@ -1014,7 +1016,7 @@ function MiljosystemSubTab() {
         <ViewDropdown value={view} options={MILJO_OPTIONS} onChange={setView} />
       </div>
       {view === "miljosystem" ? (
-        <StandaloneControlView colName={t(localizationConstants.kmaSubTabEnvironment)} />
+        <StandaloneControlView colName={t(localizationConstants.kmaSubTabEnvironment)} showFilters={false} />
       ) : (
         <SplitView colName={t(localizationConstants.kmaSubTabEnvironment)} title={t(localizationConstants.kmaViewEnvironmentalPlan)} />
       )}
