@@ -40,8 +40,8 @@ export default function CompanyDetail() {
 	};
 
 	return (
-		<div className="flex min-h-[calc(100vh-64px)] flex-col gap-6 px-6 py-6">
-			<div>
+		<div className="flex h-[calc(100vh-64px)] flex-col px-6 pt-6">
+			<div className="shrink-0">
 				<h1 className="mb-2 text-2xl font-semibold text-slate-900">
 					<Translate text={localizationConstants.adminCompanyInformation} />
 				</h1>
@@ -53,8 +53,8 @@ export default function CompanyDetail() {
 				/>
 			</div>
 
-			<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-				<div className="border-b border-slate-200">
+			<Tabs value={activeTab} onValueChange={setActiveTab} className="flex min-h-0 flex-1 flex-col">
+				<div className="shrink-0 mt-6 border-b border-slate-200">
 					<TabsList variant="line" className="h-auto gap-6 rounded-none px-0 pb-1">
 						{TABS.map((tab) => (
 							<TabsTrigger
@@ -68,13 +68,13 @@ export default function CompanyDetail() {
 					</TabsList>
 				</div>
 
-				<TabsContent value="company" className="mt-6">
+				<TabsContent value="company" className="mt-6 min-h-0 flex-1">
 					<CompanyInformationTab form={form} onSubmit={onSubmit} lastSavedRef={lastSavedRef} />
 				</TabsContent>
-				<TabsContent value="bank" className="mt-6">
+				<TabsContent value="bank" className="mt-6 min-h-0 flex-1">
 					<BankTab />
 				</TabsContent>
-				<TabsContent value="organisation" className="mt-6">
+				<TabsContent value="organisation" className="mt-6 min-h-0 flex-1">
 					<OrganisationTab />
 				</TabsContent>
 			</Tabs>

@@ -34,7 +34,8 @@ export function BankTab() {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+			<form onSubmit={handleSubmit(onSubmit)} className="flex h-full min-h-0 flex-col">
+				<div className="min-h-0 flex-1 overflow-y-auto pb-1 pr-1">
 				<CollapsibleSection
 					className="rounded-md border border-slate-200 bg-white py-4 shadow-sm"
 					contentClassName="px-5"
@@ -87,30 +88,28 @@ export function BankTab() {
 						/>
 					</div>
 				</CollapsibleSection>
+				</div>
 
-				<div className="sticky bottom-0 mt-6 border-t border-slate-200 bg-white py-3 z-10">
-					<div className="flex justify-end gap-4">
-						<Button
-							variant="outline"
-							type="button"
-							className="border border-slate-200 bg-white hover:bg-slate-50"
-							onClick={() => {
-								const lastSaved = lastSavedRef.current;
-								if (lastSaved) {
-									form.reset(lastSaved);
-								}
-							}}
-						>
-							<Translate text={localizationConstants.cancelLabel} />
-						</Button>
-						<Button
-							type="submit"
-							className="bg-[#09090B] text-white hover:bg-[#09090B]/90"
-						>
-							<Save size={16} />
-							<Translate text={localizationConstants.save} />
-						</Button>
-					</div>
+				<div className="shrink-0 flex items-center justify-end gap-3 py-3 bg-white border-t border-[#E2E8F0]">
+					<button
+						type="button"
+						className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors"
+						onClick={() => {
+							const lastSaved = lastSavedRef.current;
+							if (lastSaved) {
+								form.reset(lastSaved);
+							}
+						}}
+					>
+						<Translate text={localizationConstants.cancelLabel} />
+					</button>
+					<Button
+						type="submit"
+						className="h-9 px-5 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]"
+					>
+						<Save size={16} />
+						<Translate text={localizationConstants.save} />
+					</Button>
 				</div>
 			</form>
 		</Form>

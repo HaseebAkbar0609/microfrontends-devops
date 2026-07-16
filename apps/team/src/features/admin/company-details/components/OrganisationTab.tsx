@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowUpDown, Edit, Eye, EllipsisVertical, UserX } from "lucide-react";
+import { ArrowUpDown, Edit, Eye, EllipsisVertical, Save, UserX } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -97,7 +97,9 @@ export function OrganisationTab() {
 	}, [members, search, statusFilter, sortKey, sortAsc]);
 
 	return (
-		<div className="flex flex-col rounded-md border border-slate-200 bg-white shadow-sm">
+		<div className="flex h-full min-h-0 flex-col">
+		<div className="flex min-h-0 flex-1 flex-col rounded-md border border-slate-200 bg-white shadow-sm">
+			<div className="shrink-0">
 			<ActionsToolbar
 				searchValue={search}
 				onSearchChange={setSearch}
@@ -115,8 +117,9 @@ export function OrganisationTab() {
 				onCreateClick={() => showToast("info", t(localizationConstants.adminNewEmployeeLabel))}
 				createButtonLabel={localizationConstants.adminNewEmployeeLabel}
 			/>
+			</div>
 
-			<div className="overflow-x-auto">
+			<div className="min-h-0 flex-1 overflow-auto">
 				<Table>
 					<TableHeader>
 						<TableRow className="border-slate-200 bg-slate-50">
@@ -206,20 +209,21 @@ export function OrganisationTab() {
 					</TableBody>
 				</Table>
 			</div>
+		</div>
 
-			<div className="sticky bottom-0 mt-2 flex justify-end gap-4 border-t border-slate-200 bg-white px-5 py-3 z-10">
-				<Button
-					variant="outline"
+			<div className="shrink-0 flex items-center justify-end gap-3 py-3 bg-white border-t border-[#E2E8F0]">
+				<button
 					type="button"
-					className="border border-slate-200 bg-white hover:bg-slate-50"
+					className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors"
 				>
 					<Translate text={localizationConstants.cancelLabel} />
-				</Button>
+				</button>
 				<Button
 					type="button"
-					className="bg-[#09090B] text-white hover:bg-[#09090B]/90"
+					className="h-9 px-5 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]"
 					onClick={() => showToast("success", t(localizationConstants.save))}
 				>
+					<Save size={16} />
 					<Translate text={localizationConstants.save} />
 				</Button>
 			</div>
