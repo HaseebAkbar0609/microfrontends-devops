@@ -28,13 +28,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import {
 	Card,
 	CardContent,
 	CardHeader,
@@ -92,7 +85,7 @@ export const CreateRotForm = () => {
 				id: crypto.randomUUID(),
 				name: `${variables.firstName} ${variables.lastName}`,
 				personalId: variables.personalId,
-				share: variables.sharePercentage,
+				share: `${variables.sharePercentage}%`,
 			};
 			setOwners((prev) => [...prev, newOwner]);
 
@@ -248,23 +241,21 @@ export const CreateRotForm = () => {
 													<FormLabel className="text-slate-700 font-semibold">
 														{t(localizationConstants.sharePercentageLabel)}
 													</FormLabel>
-													<Select
-														onValueChange={field.onChange}
-														defaultValue={field.value}
-														value={field.value}
-													>
-														<FormControl>
-															<SelectTrigger className="w-full h-10 border-slate-200 text-slate-600">
-																<SelectValue placeholder="50%" />
-															</SelectTrigger>
-														</FormControl>
-														<SelectContent>
-															<SelectItem value="25%">25%</SelectItem>
-															<SelectItem value="50%">50%</SelectItem>
-															<SelectItem value="75%">75%</SelectItem>
-															<SelectItem value="100%">100%</SelectItem>
-														</SelectContent>
-													</Select>
+													<FormControl>
+														<div className="relative">
+															<Input
+																type="number"
+																min={1}
+																max={100}
+																placeholder="50"
+																className="h-10 border-slate-200 pr-8"
+																{...field}
+															/>
+															<span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">
+																%
+															</span>
+														</div>
+													</FormControl>
 													<FormMessage />
 												</FormItem>
 											)}
