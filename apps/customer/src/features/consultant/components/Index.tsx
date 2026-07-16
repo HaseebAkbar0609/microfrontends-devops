@@ -6,13 +6,12 @@ import { Loader2 } from "lucide-react";
 import { PageHeader, ActionsToolbar } from "@/components/common";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import localizationConstants from "@/utils/translation/constants";
-import { getConsultantListAPIAction } from "@/api-actions";
+import { getConsultantListAPIAction, getConsultantTypesAPIAction } from "@/api-actions";
 import type { Consultant } from "../types/consultant";
 import { ConsultantTable } from "./ConsultantTable";
 import {
 	BREADCRUMBS,
 	CONSULTANT_STATUS_FILTER_OPTIONS,
-	CONSULTANT_TYPE_FILTER_OPTIONS,
 } from "../constants";
 
 export default function ConsultantListFeature() {
@@ -25,11 +24,31 @@ export default function ConsultantListFeature() {
 	const sortOrder = query.get("sort_order") || "";
 	const statusFilter = query.get("status") || "";
 	const typeFilter = query.get("type") || "";
+	const requestIdFilter = query.get("request_id") || "";
 
 	const [consultants, setConsultants] = useState<Consultant[]>([]);
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
+	const [typeOptions, setTypeOptions] = useState<{label: string; value: string}[]>([]);
+
+	useEffect(() => {
+		let cancelled = false;
+		void getConsultantTypesAPIAction().then((result) => {
+			if (cancelled) return;
+			if (result.success && result.data) {
+				setTypeOptions(
+					result.data.map((t) => ({
+						label: t.name,
+						value: t.id,
+					}))
+				);
+			}
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, []);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -44,6 +63,7 @@ export default function ConsultantListFeature() {
 			sortOrder: sortOrder || undefined,
 			status: statusFilter || undefined,
 			type: typeFilter || undefined,
+			requestId: requestIdFilter || undefined,
 		}).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
@@ -60,7 +80,7 @@ export default function ConsultantListFeature() {
 		return () => {
 			cancelled = true;
 		};
-	}, [page, pageSize, search, sortBy, sortOrder, statusFilter, typeFilter]);
+	}, [page, pageSize, search, sortBy, sortOrder, statusFilter, typeFilter, requestIdFilter]);
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
@@ -84,7 +104,7 @@ export default function ConsultantListFeature() {
 					},
 					{
 						label: localizationConstants.type,
-						options: [...CONSULTANT_TYPE_FILTER_OPTIONS],
+						options: typeOptions,
 						value: typeFilter || undefined,
 						onFilterChange: (val) => changeQuery("type", val),
 					},

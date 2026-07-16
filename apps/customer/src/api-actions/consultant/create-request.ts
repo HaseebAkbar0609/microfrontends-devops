@@ -1,7 +1,8 @@
+import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 
 export interface CreateConsultantRequestPayload {
-	project: string;
+	project_id: string;
 	consultant_type_id: string;
 	customer_name: string;
 	email: string;
@@ -19,23 +20,38 @@ export async function createConsultantRequestAPIAction(
 	payload: CreateConsultantRequestPayload,
 ): Promise<ActionResult<CreateConsultantRequestResponse>> {
 	try {
-		await new Promise((resolve) => setTimeout(resolve, 600));
+		const apiPayload = {
+			description: payload.description,
+			media_ids: payload.media_ids,
+			project_id: payload.project,
+			selected_options: {
+				consultant_type_id: payload.consultant_type_id,
+				customer_name: payload.customer_name,
+				email: payload.email,
+				mobile_number: payload.mobile_number,
+				city: payload.city,
+			},
+		};
 
-		void payload;
+		const response = await axiosInstance.post(
+			"/api/v1/customers/consultation/create",
+			apiPayload,
+		);
 
 		return {
 			success: true,
-			data: { request_id: `req-${Date.now()}` },
+			data: { request_id: response.data?.data?.id || "unknown" },
 			error: null,
 		};
-	} catch (error) {
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } }; message?: string };
 		return {
 			success: false,
 			data: null,
 			error:
-				error instanceof Error
-					? error.message
-					: "Failed to submit consultant request",
+				apiError.response?.data?.message ||
+				apiError.message ||
+				"Failed to submit consultant request",
 		};
 	}
 }

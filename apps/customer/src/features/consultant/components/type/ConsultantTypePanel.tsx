@@ -7,6 +7,7 @@ import type { ConsultantTypeItem } from "../../types/consultantType";
 import { ConsultantTypeList } from "./ConsultantTypeList";
 import { ConsultantTypeDetail } from "./ConsultantTypeDetail";
 import { FindMyConsultantButton } from "../FindMyConsultantButton";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function ConsultantTypePanel() {
 	const [types, setTypes] = useState<ConsultantTypeItem[]>([]);
@@ -15,14 +16,23 @@ export function ConsultantTypePanel() {
 	const [search, setSearch] = useState("");
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 
+	const debouncedSearch = useDebounce(search, 500);
+
 	useEffect(() => {
 		let cancelled = false;
+		setLoading(true);
 
-		void getConsultantTypesAPIAction({}).then((result) => {
+		void getConsultantTypesAPIAction({ search: debouncedSearch }).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setTypes(result.data);
-				setSelectedId((prev) => prev ?? result.data?.[0]?.id ?? null);
+				// only select the first one if the currently selected one is not in the results
+				setSelectedId((prev) => {
+					if (prev && result.data?.find(t => t.id === prev)) {
+						return prev;
+					}
+					return result.data?.[0]?.id ?? null;
+				});
 			} else {
 				setLoadError(result.error ?? null);
 			}
@@ -32,13 +42,7 @@ export function ConsultantTypePanel() {
 		return () => {
 			cancelled = true;
 		};
-	}, []);
-
-	const filteredTypes = useMemo(() => {
-		const q = search.trim().toLowerCase();
-		if (!q) return types;
-		return types.filter((t) => t.name.toLowerCase().includes(q));
-	}, [types, search]);
+	}, [debouncedSearch]);
 
 	const selectedType = useMemo(
 		() => types.find((t) => t.id === selectedId) ?? null,
@@ -65,7 +69,7 @@ export function ConsultantTypePanel() {
 		<div className="grid flex-1 grid-cols-1 bg-white md:grid-cols-[300px_1fr]">
 			<aside className="border-b border-slate-200 bg-slate-50 p-4 md:border-b-0 md:border-r">
 				<ConsultantTypeList
-					types={filteredTypes}
+					types={types}
 					selectedId={selectedId}
 					onSelect={setSelectedId}
 					search={search}
