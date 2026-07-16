@@ -1,7 +1,7 @@
 "use client";
 
-import { Folder } from "lucide-react";
-import { Search } from "@/components/search/Search";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronDown, Folder } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -11,28 +11,35 @@ interface ConsultantTypeListProps {
 	types: ConsultantTypeItem[];
 	selectedId: string | null;
 	onSelect: (id: string) => void;
-	search: string;
-	onSearchChange: (value: string) => void;
 }
 
 export function ConsultantTypeList({
 	types,
 	selectedId,
 	onSelect,
-	search,
-	onSearchChange,
 }: ConsultantTypeListProps) {
+	const listRef = useRef<HTMLUListElement>(null);
+	const [canScrollDown, setCanScrollDown] = useState(false);
+
+	const updateScrollHint = useCallback(() => {
+		const el = listRef.current;
+		if (!el) return;
+		setCanScrollDown(el.scrollHeight - el.scrollTop - el.clientHeight > 4);
+	}, []);
+
+	useEffect(() => {
+		updateScrollHint();
+		window.addEventListener("resize", updateScrollHint);
+		return () => window.removeEventListener("resize", updateScrollHint);
+	}, [updateScrollHint, types.length]);
+
 	return (
-		<div className="flex flex-col gap-3">
-			<Search
-				value={search}
-				onChange={onSearchChange}
-				placeholder={
-					localizationConstants.consultantTypeSearchPlaceholder
-				}
-				className="h-10 rounded-lg border border-slate-200 bg-white focus:border-slate-300"
-			/>
-			<ul className="flex max-h-[60vh] flex-col gap-1 overflow-y-auto pr-1">
+		<div className="relative">
+			<ul
+				ref={listRef}
+				onScroll={updateScrollHint}
+				className="flex max-h-[60vh] flex-col gap-1 overflow-y-auto pr-1"
+			>
 				{types.map((type) => {
 					const isActive = selectedId === type.id;
 					return (
@@ -49,7 +56,9 @@ export function ConsultantTypeList({
 								)}
 							>
 								<Folder className="h-4 w-4 shrink-0 text-slate-400" />
-								<span className="truncate">{type.name}</span>
+								<span className="truncate">
+									<Translate text={type.name} />
+								</span>
 							</button>
 						</li>
 					);
@@ -62,6 +71,14 @@ export function ConsultantTypeList({
 					</li>
 				)}
 			</ul>
+			{canScrollDown && (
+				<div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-12 items-end justify-center bg-gradient-to-t from-slate-50 to-transparent pb-1">
+					<ChevronDown
+						className="h-4 w-4 animate-bounce text-slate-400"
+						aria-hidden
+					/>
+				</div>
+			)}
 		</div>
 	);
 }

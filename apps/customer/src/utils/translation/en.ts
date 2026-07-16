@@ -1298,6 +1298,74 @@ export const enConsultant: ConsultantModule = {
 	validationConsultantTypeRequired: "Type of consultant is required",
 	validationCustomerRequired: "Customer name is required",
 	validationDescriptionRequired: "Description is required",
+	ctTypeArchitectName: "Architect",
+	ctTypeArchitectS1Title: "Design and plan new buildings or conversions",
+	ctTypeArchitectS1B1:
+		"An architect can help you develop ideas for your dream villa, holiday home, garage or other type of building.",
+	ctTypeArchitectS1B2:
+		"They create drawings and details for the construction and ensure all relevant building regulations and standards are met.",
+	ctTypeArchitectS1B3:
+		"They collaborate with you to choose materials, interior design and other details.",
+	ctTypeArchitectS1B4:
+		"They handle building permit applications and communication with authorities.",
+	ctTypeArchitectS2Title: "Improve existing buildings",
+	ctTypeArchitectS2B1:
+		"An architect can advise you on how to improve functionality, aesthetics or energy efficiency in your home.",
+	ctTypeArchitectS2B2: "They create drawings for renovations or extensions.",
+	ctTypeArchitectS2B3:
+		"They help you choose the right materials and contractors for the job.",
+	ctTypeInspectionName: "Inspection man",
+	ctTypeInspectionS1Title: "Independent inspections",
+	ctTypeInspectionS1B1:
+		"Reviews completed work to confirm it meets contract and regulatory requirements.",
+	ctTypeInspectionS1B2:
+		"Documents defects and produces a formal inspection report.",
+	ctTypeInspectionS1B3: "Advises on remediation and follow-up inspections.",
+	ctTypeHvacName: "HVAC Consultant",
+	ctTypeHvacS1Title: "Heating, ventilation and air conditioning",
+	ctTypeHvacS1B1: "Designs efficient HVAC systems tailored to your property.",
+	ctTypeHvacS1B2: "Calculates capacity, airflow and energy performance.",
+	ctTypeHvacS1B3: "Recommends equipment and helps with compliance.",
+	ctTypeElectricalName: "Electrical Consultant",
+	ctTypeElectricalS1Title: "Electrical design and safety",
+	ctTypeElectricalS1B1:
+		"Plans electrical layouts, load distribution and lighting.",
+	ctTypeElectricalS1B2:
+		"Ensures installations meet current electrical safety standards.",
+	ctTypeElectricalS1B3: "Reviews existing wiring and recommends upgrades.",
+	ctTypeFireName: "Fire Consultant",
+	ctTypeFireS1Title: "Fire safety and prevention",
+	ctTypeFireS1B1: "Assesses fire risks and designs mitigation measures.",
+	ctTypeFireS1B2: "Prepares fire protection documentation for permits.",
+	ctTypeFireS1B3: "Advises on escape routes, alarms and materials.",
+	ctTypeSiteDevName: "Site Development",
+	ctTypeSiteDevS1Title: "Land and site planning",
+	ctTypeSiteDevS1B1: "Evaluates site suitability and constraints.",
+	ctTypeSiteDevS1B2: "Plans access, drainage and utilities.",
+	ctTypeSiteDevS1B3: "Coordinates with authorities on zoning and permits.",
+	ctTypeInteriorName: "Interior Architect",
+	ctTypeInteriorS1Title: "Interior spaces and materials",
+	ctTypeInteriorS1B1: "Designs functional and aesthetic interior layouts.",
+	ctTypeInteriorS1B2: "Selects finishes, lighting and furnishings.",
+	ctTypeInteriorS1B3:
+		"Produces detailed interior drawings and specifications.",
+	ctTypeGeotechName: "Geotechnical Engineer",
+	ctTypeGeotechS1Title: "Ground and foundation assessment",
+	ctTypeGeotechS1B1:
+		"Investigates soil conditions and load-bearing capacity.",
+	ctTypeGeotechS1B2: "Recommends foundation solutions for your project.",
+	ctTypeGeotechS1B3: "Assesses risks such as settlement and groundwater.",
+	ctTypeSurveyingName: "Surveying",
+	ctTypeSurveyingS1Title: "Measurement and mapping",
+	ctTypeSurveyingS1B1:
+		"Provides accurate site measurements and boundary maps.",
+	ctTypeSurveyingS1B2: "Sets out reference points for construction.",
+	ctTypeSurveyingS1B3: "Delivers survey data for design and permits.",
+	ctTypePermitName: "Building Permit",
+	ctTypePermitS1Title: "Permit applications and approvals",
+	ctTypePermitS1B1: "Prepares and submits building permit applications.",
+	ctTypePermitS1B2: "Compiles the required drawings and documentation.",
+	ctTypePermitS1B3: "Manages communication with the municipality.",
 };
 
 export const enRotRut: RotRutModule = {
