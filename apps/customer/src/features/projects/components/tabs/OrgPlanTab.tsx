@@ -1,14 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import {
-	ChevronLeft,
-	Plus,
-	ArrowUpDown,
-	MoreVertical,
-	Pencil,
-	Trash2,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, ChevronDown, ChevronLeft, ArrowUpDown, MoreVertical, Check, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,10 +20,10 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ModalWrapper } from "@/components/modal";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { ActiveProject } from "../../types";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -63,34 +56,10 @@ const DUMMY_ORG_COMPANIES: OrgCompany[] = [
 		phone: "070-450 50 10",
 		mail: "pelle@pellebygg.se",
 		contacts: [
-			{
-				id: "c1",
-				name: "Kalle Andersson",
-				phone: "070-450 50 10",
-				mail: "pelle@pellebygg.se",
-				role: "Badrum Designer",
-			},
-			{
-				id: "c2",
-				name: "Stina Larsson",
-				phone: "070-450 50 10",
-				mail: "pelle@pellebygg.se",
-				role: "Electrician",
-			},
-			{
-				id: "c3",
-				name: "Sven Eriksson",
-				phone: "070-450 50 10",
-				mail: "pelle@pellebygg.se",
-				role: "Wall Painter",
-			},
-			{
-				id: "c4",
-				name: "Lars Gustavsson",
-				phone: "070-450 50 10",
-				mail: "pelle@pellebygg.se",
-				role: "Supervisor",
-			},
+			{ id: "c1", name: "Kalle Andersson", phone: "070-450 50 10", mail: "pelle@pellebygg.se", role: "Badrum Designer" },
+			{ id: "c2", name: "Stina Larsson", phone: "070-450 50 10", mail: "pelle@pellebygg.se", role: "Electrician" },
+			{ id: "c3", name: "Sven Eriksson", phone: "070-450 50 10", mail: "pelle@pellebygg.se", role: "Wall Painter" },
+			{ id: "c4", name: "Lars Gustavsson", phone: "070-450 50 10", mail: "pelle@pellebygg.se", role: "Supervisor" },
 		],
 	},
 	{
@@ -101,20 +70,8 @@ const DUMMY_ORG_COMPANIES: OrgCompany[] = [
 		phone: "070-450 50 10",
 		mail: "pelle@pellebygg.se",
 		contacts: [
-			{
-				id: "c5",
-				name: "Johan Holm",
-				phone: "070-450 50 10",
-				mail: "pelle@pellebygg.se",
-				role: "Lead Electrician",
-			},
-			{
-				id: "c6",
-				name: "Anna Berg",
-				phone: "070-450 50 10",
-				mail: "anna@pellebygg.se",
-				role: "Assistant",
-			},
+			{ id: "c5", name: "Johan Holm", phone: "070-450 50 10", mail: "pelle@pellebygg.se", role: "Lead Electrician" },
+			{ id: "c6", name: "Anna Berg", phone: "070-450 50 10", mail: "anna@pellebygg.se", role: "Assistant" },
 		],
 	},
 ];
@@ -189,52 +146,99 @@ function CompanyDetail({
 
 // ─── List view ────────────────────────────────────────────────────────────────
 
-const EMPTY_NEW_COMPANY = {
-	company: "",
-	category: "",
-	role: "",
-	phone: "",
-	mail: "",
-};
+import { getProjectOrgPlanAPIAction } from "@/api-actions/project/org-plan";
 
-export function OrgPlanTab() {
+interface OrgPlanTabProps {
+	project?: ActiveProject;
+}
+
+export function OrgPlanTab({ project }: OrgPlanTabProps) {
 	const t = useTranslate();
 	const [selected, setSelected] = useState<OrgCompany | null>(null);
-	const [companies, setCompanies] =
-		useState<OrgCompany[]>(DUMMY_ORG_COMPANIES);
-	const [createOpen, setCreateOpen] = useState(false);
-	const [newCompany, setNewCompany] = useState(EMPTY_NEW_COMPANY);
+	const [search, setSearch] = useState("");
+	const [categoryFilter, setCategoryFilter] = useState("");
+	const [filterOpen, setFilterOpen] = useState(false);
+	const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
+	const [apiOrgCompanies, setApiOrgCompanies] = useState<OrgCompany[]>([]);
 	const [deleteTarget, setDeleteTarget] = useState<OrgCompany | null>(null);
 
-	const setField = (field: keyof typeof EMPTY_NEW_COMPANY, value: string) =>
-		setNewCompany((prev) => ({ ...prev, [field]: value }));
-
-	const handleCreate = () => {
-		const company = newCompany.company.trim();
-		if (!company) return;
-		setCompanies((prev) => [
-			...prev,
-			{
-				id: String(Date.now()),
-				company,
-				category: newCompany.category.trim() || "-",
-				role: newCompany.role.trim() || "-",
-				phone: newCompany.phone.trim() || "-",
-				mail: newCompany.mail.trim() || "-",
-				contacts: [],
-			},
-		]);
-		setCreateOpen(false);
-		setNewCompany(EMPTY_NEW_COMPANY);
-		showToast("success", t(localizationConstants.projectOrgCreatedSuccess));
-	};
+	useEffect(() => {
+		if (!project?.id) return;
+		getProjectOrgPlanAPIAction(project.id).then((res) => {
+			if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+				setApiOrgCompanies(res.data);
+			}
+		});
+	}, [project?.id]);
 
 	const handleDeleteConfirmed = () => {
 		if (!deleteTarget) return;
-		setCompanies((prev) => prev.filter((c) => c.id !== deleteTarget.id));
+		setApiOrgCompanies((prev) => prev.filter((c) => c.id !== deleteTarget.id));
 		setDeleteTarget(null);
-		showToast("success", t(localizationConstants.projectOrgDeletedSuccess));
+		showToast(
+			"success",
+			t(localizationConstants.delete),
+		);
 	};
+
+	const awardedMember: OrgCompany | null =
+		project?.companyName && project.companyName !== "-"
+			? {
+				id: "awarded-company-1",
+				company: project.companyName,
+				category: project.category && project.category !== "-" ? project.category : "Målare",
+				role: "Huvudentreprenör",
+				phone: project.mobileNumber && project.mobileNumber !== "-" ? project.mobileNumber : "070-450 50 10",
+				mail: project.email && project.email !== "-" ? project.email : "pelle@pellebygg.se",
+				contacts: [
+					{
+						id: "c1",
+						name: project.contactPersonName && project.contactPersonName !== "-" ? project.contactPersonName : "Kalle Andersson",
+						phone: project.mobileNumber && project.mobileNumber !== "-" ? project.mobileNumber : "070-450 50 10",
+						mail: project.email && project.email !== "-" ? project.email : "pelle@pellebygg.se",
+						role: "Projektansvarig",
+					},
+				],
+			}
+			: null;
+
+	const fallbackCompanies: OrgCompany[] = awardedMember
+		? [awardedMember, ...DUMMY_ORG_COMPANIES]
+		: DUMMY_ORG_COMPANIES;
+
+	const companiesList: OrgCompany[] = apiOrgCompanies.length > 0 ? apiOrgCompanies : fallbackCompanies;
+
+	const allCategories = Array.from(new Set(companiesList.map((c) => c.category).filter(Boolean)));
+
+	const filtered = companiesList.filter((c) => {
+		const matchesSearch =
+			c.company.toLowerCase().includes(search.toLowerCase()) ||
+			c.category.toLowerCase().includes(search.toLowerCase());
+		const matchesCategory = categoryFilter === "" || c.category === categoryFilter;
+		return matchesSearch && matchesCategory;
+	});
+
+	useEffect(() => {
+		if (!filterOpen) return;
+		const close = () => {
+			setFilterOpen(false);
+			setFilterAnchor(null);
+		};
+		document.addEventListener("click", close);
+		return () => document.removeEventListener("click", close);
+	}, [filterOpen]);
+
+	function handleFilterToggle(e: React.MouseEvent<HTMLButtonElement>) {
+		e.stopPropagation();
+		if (filterOpen) {
+			setFilterOpen(false);
+			setFilterAnchor(null);
+			return;
+		}
+		const rect = e.currentTarget.getBoundingClientRect();
+		setFilterOpen(true);
+		setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
+	}
 
 	if (selected) {
 		return (
@@ -247,16 +251,27 @@ export function OrgPlanTab() {
 
 	return (
 		<div className="pb-10">
-			<div className="flex items-center mb-4">
+			{/* Toolbar */}
+			<div className="flex items-center gap-3 mb-4">
+				<div className="relative">
+					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+					<Input
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder="Search"
+						className="pl-9 h-9 w-48 text-sm border-[#E2E8F0]"
+					/>
+				</div>
 				<Button
 					type="button"
-					onClick={() => setCreateOpen(true)}
-					className="ml-auto h-9 gap-1.5 bg-[#18181B] hover:bg-[#18181B]/90 text-white text-sm font-medium px-4"
+					variant="outline"
+					size="sm"
+					onClick={handleFilterToggle}
+					className="h-9 gap-1.5 text-sm font-medium text-slate-700 border-[#E2E8F0]"
 				>
-					<Plus className="h-4 w-4" />
-					<Translate
-						text={localizationConstants.projectCreateNewLabel}
-					/>
+					Filter
+					{categoryFilter && <span className="text-xs font-normal">· {categoryFilter}</span>}
+					<ChevronDown className="h-4 w-4 text-slate-400" />
 				</Button>
 			</div>
 
@@ -284,12 +299,12 @@ export function OrgPlanTab() {
 				</div>
 
 				{/* Rows */}
-				{companies.length === 0 ? (
+				{filtered.length === 0 ? (
 					<div className="py-12 text-center text-sm text-slate-400">
 						No members found
 					</div>
 				) : (
-					companies.map((member) => (
+					filtered.map((member) => (
 						<div
 							key={member.id}
 							className="grid grid-cols-[1fr_140px_140px_160px_1fr_46px] items-center border-b border-[#E2E8F0] last:border-0 hover:bg-slate-50 transition-colors cursor-pointer"
@@ -360,84 +375,27 @@ export function OrgPlanTab() {
 				)}
 			</div>
 
-			<ModalWrapper
-				open={createOpen}
-				onOpenChange={(open) => {
-					setCreateOpen(open);
-					if (!open) setNewCompany(EMPTY_NEW_COMPANY);
-				}}
-				title={
-					<Translate
-						text={localizationConstants.projectCreateNewLabel}
-					/>
-				}
-				footer={
-					<div className="flex justify-end gap-2">
-						<Button
+			{/* Filter portal */}
+			{filterOpen && filterAnchor && (
+				<div
+					style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+					className="w-44 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
+					onClick={(e) => e.stopPropagation()}
+				>
+					<p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Category</p>
+					{[{ value: "", label: "All" }, ...allCategories.map((c) => ({ value: c, label: c }))].map((opt) => (
+						<button
+							key={opt.value}
 							type="button"
-							variant="outline"
-							className="min-w-24"
-							onClick={() => setCreateOpen(false)}
+							onClick={() => { setCategoryFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
+							className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
 						>
-							<Translate text={localizationConstants.cancel} />
-						</Button>
-						<Button
-							type="button"
-							className="min-w-24 bg-slate-900 hover:bg-slate-800 text-white"
-							disabled={!newCompany.company.trim()}
-							onClick={handleCreate}
-						>
-							<Translate text={localizationConstants.save} />
-						</Button>
-					</div>
-				}
-			>
-				<div className="space-y-4">
-					{(
-						[
-							{
-								field: "company",
-								label: localizationConstants.projectOrgCompanyLabel,
-								placeholder: "Pelle bygg",
-							},
-							{
-								field: "category",
-								label: localizationConstants.projectOrgCategoryLabel,
-								placeholder: "Målare",
-							},
-							{
-								field: "role",
-								label: localizationConstants.projectOrgRoleLabel,
-								placeholder: "Subcontractor",
-							},
-							{
-								field: "phone",
-								label: localizationConstants.projectOrgPhoneLabel,
-								placeholder: "070-450 50 10",
-							},
-							{
-								field: "mail",
-								label: localizationConstants.projectOrgMailLabel,
-								placeholder: "pelle@pellebygg.se",
-							},
-						] as const
-					).map(({ field, label, placeholder }) => (
-						<div key={field} className="space-y-1.5">
-							<label className="text-sm font-medium text-slate-700">
-								<Translate text={label} />
-							</label>
-							<Input
-								value={newCompany[field]}
-								onChange={(e) =>
-									setField(field, e.target.value)
-								}
-								placeholder={placeholder}
-								className="h-9 text-sm"
-							/>
-						</div>
+							{opt.label}
+							{categoryFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+						</button>
 					))}
 				</div>
-			</ModalWrapper>
+			)}
 
 			<AlertDialog
 				open={!!deleteTarget}
@@ -448,18 +406,10 @@ export function OrgPlanTab() {
 				<AlertDialogContent className="max-w-md">
 					<AlertDialogHeader>
 						<AlertDialogTitle className="text-lg font-semibold text-slate-800">
-							<Translate
-								text={
-									localizationConstants.deleteOrgConfirmTitle
-								}
-							/>
+							<Translate text={localizationConstants.delete} />
 						</AlertDialogTitle>
 						<AlertDialogDescription className="text-sm text-slate-500">
-							<Translate
-								text={
-									localizationConstants.deleteOrgConfirmDescription
-								}
-							/>
+							Are you sure you want to delete this member?
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter className="gap-2">

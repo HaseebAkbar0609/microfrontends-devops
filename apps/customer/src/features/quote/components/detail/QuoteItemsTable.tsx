@@ -19,12 +19,19 @@ interface QuoteItem {
 	amount: string;
 }
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { approveQuoteAPIAction } from "@/api-actions";
+import { Loader2 } from "lucide-react";
+
 interface QuoteItemsTableProps {
 	items: QuoteItem[];
 	quoteTotal: string;
 	vat: string;
 	rotDeduction: boolean;
 	finalTotal: string;
+	quoteId?: string;
+	onApprove?: () => void;
 }
 
 export function QuoteItemsTable({
@@ -33,7 +40,25 @@ export function QuoteItemsTable({
 	vat,
 	rotDeduction,
 	finalTotal,
+	quoteId,
+	onApprove,
 }: QuoteItemsTableProps) {
+	const router = useRouter();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const handleApprove = async () => {
+		if (onApprove) {
+			onApprove();
+			return;
+		}
+		if (!quoteId) return;
+		setIsSubmitting(true);
+		const res = await approveQuoteAPIAction(quoteId);
+		setIsSubmitting(false);
+		if (res.success) {
+			router.push("/projects");
+		}
+	};
 	return (
 		<DetailCard icon={Receipt} title={localizationConstants.quote}>
 			<div className="space-y-4">
@@ -138,9 +163,15 @@ export function QuoteItemsTable({
 				</Button>
 				<Button
 					variant="ghost"
+					onClick={handleApprove}
+					disabled={isSubmitting}
 					className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 h-10 rounded-md"
 				>
-					<Translate text={localizationConstants.approveLabel} />
+					{isSubmitting ? (
+						<Loader2 className="h-4 w-4 animate-spin" />
+					) : (
+						<Translate text={localizationConstants.approveLabel} />
+					)}
 				</Button>
 			</div>
 		</DetailCard>

@@ -1069,7 +1069,9 @@ function SecureCheckSubTab() {
 const subTabBase   = "cursor-pointer h-8 rounded-[6px] border-0 bg-transparent px-3 py-1.5 text-sm font-medium text-slate-500 shadow-none transition-all hover:text-slate-700 select-none whitespace-nowrap";
 const subTabActive = "bg-white text-slate-900 shadow-[0px_1px_2px_rgba(0,0,0,0.05)]";
 
-export function QualityTab() {
+import type { ActiveProject } from "../../types";
+
+export function QualityTab({ project: _project }: { project?: ActiveProject }) {
   const t = useTranslate();
   const [activeSubTab, setActiveSubTab] = useState<KmaSubTab>("kvalitetssystem");
 

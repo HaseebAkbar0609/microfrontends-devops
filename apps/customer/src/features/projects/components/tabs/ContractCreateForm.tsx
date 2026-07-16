@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
-interface ContractFormData {
+import type { ActiveProject } from "../../types";
+
+export interface ContractFormData {
   firstName: string;
   lastName: string;
   mobile: string;
@@ -35,7 +37,7 @@ interface ContractFormData {
   contactEmail: string;
 }
 
-interface StagedDocument {
+export interface StagedDocument {
   id: string;
   name: string;
   validity: string;
@@ -43,8 +45,9 @@ interface StagedDocument {
 }
 
 interface ContractCreateFormProps {
+  project?: ActiveProject;
   onBack: () => void;
-  onNext: () => void;
+  onNext: (formData?: ContractFormData, docs?: StagedDocument[]) => void;
 }
 
 function FormField({
@@ -82,41 +85,57 @@ function SectionHeader({
   );
 }
 
-export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) {
+export function ContractCreateForm({ project, onBack, onNext }: ContractCreateFormProps) {
   const t = useTranslate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [form, setForm] = useState<ContractFormData>({
-    firstName: "Anna",
-    lastName: "Andersson",
-    mobile: "070-560 50 50",
-    privateEmail: "anna@gmail.com",
-    address: "Stengatan 10",
-    city: "Solna",
-    postalCode: "171 63",
-    projectName: "Bathroom",
-    isExpress: false,
-    orderNumber: "0012",
-    category: "Painter",
-    sameAsContact: false,
-    projectAddress: "Stengatan 10",
-    projectCity: "Solna",
-    projectPostalCode: "171 63",
-    directions: "",
-    supplier: "Nolen Contractor",
-    orgNo: "556456357375",
-    supplierAddress: "Storgatan 115",
-    supplierPostalCode: "171 63",
-    supplierCity: "Solna",
-    contactPerson: "Peter Svensson",
-    contactMobile: "0730998800",
-    contactEmail: "pelle@gmail.com",
-  });
+  const getInitialForm = (): ContractFormData => {
+    const contactParts = project?.contactPersonName && project.contactPersonName !== "-"
+      ? project.contactPersonName.split(" ")
+      : [];
+    const firstName = contactParts[0] || "";
+    const lastName = contactParts.slice(1).join(" ") || "";
+    const mobile = project?.mobileNumber && project.mobileNumber !== "-" ? project.mobileNumber : "";
+    const email = project?.email && project.email !== "-" ? project.email : "";
+    const address = project?.address && project.address !== "-" ? project.address : "";
+    const city = project?.city && project.city !== "-" ? project.city : "";
+    const postalCode = project?.postalCode && project.postalCode !== "-" ? project.postalCode : "";
+    const name = project?.name && project.name !== "-" ? project.name : "";
+    const orderNo = project?.orderNo && project.orderNo !== "-" ? project.orderNo : project?.clientNo && project.clientNo !== "-" ? project.clientNo : "";
+    const category = project?.category && project.category !== "-" ? project.category : "";
+    const company = project?.companyName && project.companyName !== "-" ? project.companyName : "";
 
-  const [documents, setDocuments] = useState<StagedDocument[]>([
-    { id: "1", name: "MaNescriptive", validity: "2026-01-01", fileType: "PDF" },
-    { id: "2", name: "Policy", validity: "2026-08-04", fileType: "PDF" },
-  ]);
+    return {
+      firstName,
+      lastName,
+      mobile,
+      privateEmail: email,
+      address,
+      city,
+      postalCode,
+      projectName: name,
+      isExpress: false,
+      orderNumber: orderNo,
+      category,
+      sameAsContact: false,
+      projectAddress: address,
+      projectCity: city,
+      projectPostalCode: postalCode,
+      directions: "",
+      supplier: company,
+      orgNo: "",
+      supplierAddress: "",
+      supplierPostalCode: "",
+      supplierCity: "",
+      contactPerson: company ? (firstName ? `${firstName} ${lastName}`.trim() : "") : "",
+      contactMobile: company ? mobile : "",
+      contactEmail: company ? email : "",
+    };
+  };
+
+  const [form, setForm] = useState<ContractFormData>(getInitialForm);
+
+  const [documents, setDocuments] = useState<StagedDocument[]>([]);
 
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
 
@@ -187,7 +206,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.firstName}
                     onChange={(e) => set("firstName", e.target.value)}
-                    placeholder="Anna"
                     className={inputClass}
                   />
                 </FormField>
@@ -195,7 +213,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.lastName}
                     onChange={(e) => set("lastName", e.target.value)}
-                    placeholder="Andersson"
                     className={inputClass}
                   />
                 </FormField>
@@ -205,7 +222,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.mobile}
                     onChange={(e) => set("mobile", e.target.value)}
-                    placeholder="070-560 50 50"
                     className={inputClass}
                   />
                 </FormField>
@@ -213,7 +229,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.privateEmail}
                     onChange={(e) => set("privateEmail", e.target.value)}
-                    placeholder="anna@gmail.com"
                     className={inputClass}
                   />
                 </FormField>
@@ -222,7 +237,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 <Input
                   value={form.address}
                   onChange={(e) => set("address", e.target.value)}
-                  placeholder="Stengatan 10"
                   className={inputClass}
                 />
               </FormField>
@@ -232,7 +246,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                     <Input
                       value={form.city}
                       onChange={(e) => set("city", e.target.value)}
-                      placeholder="Solna"
                       className={`${inputClass} pr-8`}
                     />
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
@@ -242,7 +255,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.postalCode}
                     onChange={(e) => set("postalCode", e.target.value)}
-                    placeholder="171 63"
                     className={inputClass}
                   />
                 </FormField>
@@ -262,7 +274,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.projectName}
                     onChange={(e) => set("projectName", e.target.value)}
-                    placeholder="Bathroom"
                     className={inputClass}
                   />
                 </FormField>
@@ -291,7 +302,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.orderNumber}
                     onChange={(e) => set("orderNumber", e.target.value)}
-                    placeholder="0012"
                     className={inputClass}
                   />
                 </FormField>
@@ -299,7 +309,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.category}
                     onChange={(e) => set("category", e.target.value)}
-                    placeholder="Painter"
                     className={inputClass}
                   />
                 </FormField>
@@ -317,7 +326,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 <Input
                   value={form.projectAddress}
                   onChange={(e) => set("projectAddress", e.target.value)}
-                  placeholder="Stengatan 10"
                   className={inputClass}
                 />
               </FormField>
@@ -327,7 +335,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                     <Input
                       value={form.projectCity}
                       onChange={(e) => set("projectCity", e.target.value)}
-                      placeholder="Solna"
                       className={`${inputClass} pr-8`}
                     />
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
@@ -337,7 +344,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.projectPostalCode}
                     onChange={(e) => set("projectPostalCode", e.target.value)}
-                    placeholder="171 63"
                     className={inputClass}
                   />
                 </FormField>
@@ -346,7 +352,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 <textarea
                   value={form.directions}
                   onChange={(e) => set("directions", e.target.value)}
-                  placeholder="3rd street from the Ikea store"
                   rows={3}
                   className="w-full rounded-md border border-[#E4E4E7] bg-white px-3 py-2 text-sm shadow-[0px_1px_2px_rgba(16,24,40,0.05)] placeholder:text-[#A1A1AA] focus:outline-none focus:ring-1 focus:ring-slate-300 resize-none"
                 />
@@ -367,7 +372,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                     <Input
                       value={form.supplier}
                       onChange={(e) => set("supplier", e.target.value)}
-                      placeholder="Nolen Contractor"
                       className={`${inputClass} pr-8`}
                     />
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
@@ -377,7 +381,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.orgNo}
                     onChange={(e) => set("orgNo", e.target.value)}
-                    placeholder="556456357375"
                     className={inputClass}
                   />
                 </FormField>
@@ -387,7 +390,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.supplierAddress}
                     onChange={(e) => set("supplierAddress", e.target.value)}
-                    placeholder="Storgatan 115"
                     className={inputClass}
                   />
                 </FormField>
@@ -395,7 +397,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.supplierPostalCode}
                     onChange={(e) => set("supplierPostalCode", e.target.value)}
-                    placeholder="171 63"
                     className={inputClass}
                   />
                 </FormField>
@@ -404,7 +405,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 <Input
                   value={form.supplierCity}
                   onChange={(e) => set("supplierCity", e.target.value)}
-                  placeholder="Solna"
                   className={inputClass}
                 />
               </FormField>
@@ -413,7 +413,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.contactPerson}
                     onChange={(e) => set("contactPerson", e.target.value)}
-                    placeholder="Peter Svensson"
                     className={inputClass}
                   />
                 </FormField>
@@ -421,7 +420,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.contactMobile}
                     onChange={(e) => set("contactMobile", e.target.value)}
-                    placeholder="0730998800"
                     className={inputClass}
                   />
                 </FormField>
@@ -431,12 +429,11 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.contactEmail}
                     onChange={(e) => set("contactEmail", e.target.value)}
-                    placeholder="pelle@gmail.com"
                     className={inputClass}
                   />
                 </FormField>
                 <FormField label={`${t(localizationConstants.contractMobileLabel)} 2`}>
-                  <Input placeholder="0730998800" className={inputClass} />
+                  <Input className={inputClass} />
                 </FormField>
               </div>
             </div>
@@ -595,7 +592,7 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
           </Button>
           <Button
             type="button"
-            onClick={onNext}
+            onClick={() => onNext(form, documents)}
             className="h-9 px-5 text-sm font-medium bg-[#18181B] hover:bg-[#18181B]/90 text-white"
           >
             <Translate text={localizationConstants.contractNextStepLabel} />

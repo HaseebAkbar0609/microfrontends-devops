@@ -82,6 +82,8 @@ export const createOfferSchema = z.object({
 			message: localizationConstants.validationProjectPostalCodeRequired,
 		}),
 	directions: z.string().optional(),
+	orderNo: z.string().optional(),
+	objectNo: z.string().optional(),
 	/** Display-only: from GET project `project_details.city_name` or cities API */
 	projectCityName: z.string().optional(),
 	// Step 3
@@ -109,6 +111,8 @@ export const DEFAULT_OFFER_FORM_VALUES: CreateOfferFormValues = {
 	projectName: "",
 	isExpressJob: "b2c",
 	clientNo: "",
+	orderNo: "",
+	objectNo: "",
 	category: [],
 	sameAsContact: false,
 	projectAddress: "",

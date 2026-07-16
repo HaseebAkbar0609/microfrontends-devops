@@ -1,20 +1,25 @@
-import { ChevronDown, X } from "lucide-react";
+"use client";
+
+import { ChevronDown, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
 import { useTranslate, Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useState, useRef } from "react";
-import { ProjectDocument } from "../../types/types";
+import { uploadMediaAPIAction, saveProjectDocumentAPIAction } from "@/api-actions";
+import { showToast } from "@/lib/toast";
 
 interface DocumentUploadProps {
-	onUpload: (docs: ProjectDocument[]) => void;
+	projectId: string;
+	onUploadSuccess: () => void;
 }
 
-export function DocumentUpload({ onUpload }: DocumentUploadProps) {
+export function DocumentUpload({ projectId, onUploadSuccess }: DocumentUploadProps) {
 	const t = useTranslate();
 	const [files, setFiles] = useState<File[]>([]);
 	const [comments, setComments] = useState("");
+	const [uploading, setUploading] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,21 +32,40 @@ export function DocumentUpload({ onUpload }: DocumentUploadProps) {
 		setFiles((prev) => prev.filter((_, i) => i !== index));
 	};
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		if (files.length === 0) return;
+		setUploading(true);
 
-		const newDocs: ProjectDocument[] = files.map((file) => ({
-			id: Math.random().toString(36).substr(2, 9),
-			date: new Date().toISOString().split("T")[0],
-			name: file.name,
-			comments: comments,
-			fileType: file.name.split(".").pop()?.toUpperCase() || "FILE",
-		}));
+		try {
+			for (const file of files) {
+				// 1. Upload to S3
+				const uploadRes = await uploadMediaAPIAction(file);
+				if (!uploadRes.success || !uploadRes.data?.id) {
+					throw new Error(uploadRes.error || "Failed to upload file to storage");
+				}
 
-		onUpload(newDocs);
-		setFiles([]);
-		setComments("");
-		if (fileInputRef.current) fileInputRef.current.value = "";
+				// 2. Link document to the project in DB
+				const linkRes = await saveProjectDocumentAPIAction(
+					projectId,
+					uploadRes.data.id,
+					comments,
+				);
+				if (!linkRes.success) {
+					throw new Error(linkRes.error || "Failed to save document record");
+				}
+			}
+
+			showToast("success", "Documents uploaded and saved successfully");
+			setFiles([]);
+			setComments("");
+			if (fileInputRef.current) fileInputRef.current.value = "";
+			onUploadSuccess();
+		} catch (err: unknown) {
+			const error = err as Error;
+			showToast("error", error.message || "An error occurred during file upload");
+		} finally {
+			setUploading(false);
+		}
 	};
 
 	return (
@@ -64,10 +88,14 @@ export function DocumentUpload({ onUpload }: DocumentUploadProps) {
 					onChange={handleFileSelect}
 					className="hidden"
 					accept=".pdf,.png,.jpg,.jpeg"
+					disabled={uploading}
 				/>
 
 				{/* File Display Area */}
-				<div className="flex-1 flex items-center justify-between min-h-[44px] border border-slate-200 rounded-md px-3 bg-white">
+				<div
+					className="flex-1 flex items-center justify-between min-h-[44px] border border-slate-200 rounded-md px-3 bg-white cursor-pointer hover:bg-slate-50 transition-colors"
+					onClick={() => !uploading && fileInputRef.current?.click()}
+				>
 					<div className="flex flex-wrap gap-2 py-1.5">
 						{files.length > 0 ? (
 							files.map((file, index) => (
@@ -95,8 +123,10 @@ export function DocumentUpload({ onUpload }: DocumentUploadProps) {
 				</div>
 
 				<Button
+					type="button"
 					className="bg-slate-900 hover:bg-slate-800 text-white h-11 px-8 rounded-md font-medium"
 					onClick={() => fileInputRef.current?.click()}
+					disabled={uploading}
 				>
 					<Translate text={localizationConstants.upload} />
 				</Button>
@@ -111,15 +141,18 @@ export function DocumentUpload({ onUpload }: DocumentUploadProps) {
 					className="min-h-[100px] resize-none border-slate-200"
 					value={comments}
 					onChange={(e) => setComments(e.target.value)}
+					disabled={uploading}
 				/>
 			</div>
 
 			<div className="flex justify-end pt-2">
 				<Button
-					className="bg-slate-900 hover:bg-slate-800 text-white h-11 px-8 rounded-md font-medium"
+					type="button"
+					className="bg-slate-900 hover:bg-slate-800 text-white h-11 px-8 rounded-md font-medium gap-2"
 					onClick={handleSave}
-					disabled={files.length === 0}
+					disabled={files.length === 0 || uploading}
 				>
+					{uploading && <Loader2 className="h-4 w-4 animate-spin" />}
 					<Translate text={localizationConstants.save} />
 				</Button>
 			</div>

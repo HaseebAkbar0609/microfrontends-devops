@@ -12,6 +12,9 @@ import { fmtAmount } from "./helpers";
 import { SortableHeader, ToolbarSearch, FilterButton, ATAStatusBadge, ActionsMenu } from "./shared";
 
 
+import type { ActiveProject } from "../../../types";
+import { getProjectATAsAPIAction, saveProjectATAAPIAction } from "@/api-actions";
+
 // ─── ATA list ─────────────────────────────────────────────────────────────────
 
 const ATA_COLS = "grid-cols-[110px_120px_minmax(0,1fr)_minmax(0,1fr)_120px_140px_46px]";
@@ -24,13 +27,47 @@ const ATA_STATUS_OPTIONS: { value: ATAStatusFilter; label: string }[] = [
   { value: "granskning", label: "Under Review" },
 ];
 
-export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
+export function ATAList({ project, onCreateNew }: { project?: ActiveProject; onCreateNew: () => void }) {
   const [search, setSearch] = useState("");
   const [ataItems, setAtaItems] = useState<ATAItem[]>(DUMMY_ATA_ITEMS);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<ATAStatusFilter>("");
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
+
+  useEffect(() => {
+    if (!project?.id) return;
+    let cancelled = false;
+    async function loadATAs() {
+      if (!project?.id) return;
+      const res = await getProjectATAsAPIAction(project.id);
+      if (!cancelled && res.success && Array.isArray(res.data)) {
+        const mapped: ATAItem[] = res.data.map((item: {
+          id: string;
+          ata_no?: string;
+          created_at?: string;
+          title?: string;
+          reason?: string;
+          quality_status?: string;
+          total_cost?: number;
+          economic_status?: string;
+        }) => ({
+          id: item.id,
+          ataNr: item.ata_no || `ÄTA-${item.id.substring(0, 4).toUpperCase()}`,
+          datum: item.created_at ? new Date(item.created_at).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
+          benamning: item.title || item.reason || "Change Order",
+          source: item.quality_status || "ÄTA Report",
+          belopp: item.total_cost ?? 0,
+          status: item.economic_status === "approved" ? "godkand" : "granskning",
+        }));
+        setAtaItems(mapped);
+      }
+    }
+    void loadATAs();
+    return () => {
+      cancelled = true;
+    };
+  }, [project?.id]);
 
   useEffect(() => {
     if (!openMenuId) return;
@@ -178,7 +215,7 @@ const DOC_ROWS = [
   { datum: "2024-06-20", typ: "doc", namn: "El faktura",   filnr: "Fabrirs Electric box" },
 ];
 
-export function ATACreateForm({ onBack }: { onBack: () => void }) {
+export function ATACreateForm({ project, onBack }: { project?: ActiveProject; onBack: () => void }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [bestallareOpen, setBestallareOpen] = useState(true);
   const [orderOpen, setOrderOpen] = useState(true);
@@ -187,6 +224,24 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
   const [dokumentOpen, setDokumentOpen] = useState(true);
   const [openDocMenu, setOpenDocMenu] = useState<string | null>(null);
   const [docMenuAnchor, setDocMenuAnchor] = useState<{ top: number; right: number } | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSaveATA = async () => {
+    if (!project?.id) {
+      onBack();
+      return;
+    }
+    setSubmitting(true);
+    await saveProjectATAAPIAction(project.id, {
+      title: "Tilläggsarbete ÄTA",
+      category: "Kök",
+      reason: "Fle mätt på bänkskivan i köket",
+      quality_status: "Tilläggsarbete",
+      economic_status: "under_review",
+    });
+    setSubmitting(false);
+    onBack();
+  };
 
   useEffect(() => {
     if (!openDocMenu) return;
@@ -670,12 +725,12 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
           className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
-        <button type="button"
-          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
+        <button type="button" onClick={handleSaveATA} disabled={submitting}
+          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] disabled:opacity-50 transition-colors">
           <Image src="/assets/icons/save.svg" alt="" width={15} height={15} className="" />
           <Translate text={localizationConstants.financeSaveLabel} />
         </button>
-        <Button className="h-9 px-5 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
+        <Button onClick={handleSaveATA} disabled={submitting} className="h-9 px-5 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A] disabled:opacity-50">
           <Image src="/assets/icons/send.svg" alt="" width={15} height={15} className="" />
           <Translate text={localizationConstants.financeSendLabel} />
         </Button>

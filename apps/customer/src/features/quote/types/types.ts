@@ -67,6 +67,7 @@ export interface ProjectDocument {
 	name: string;
 	comments: string;
 	fileType: string;
+	url?: string;
 }
 
 export interface ChatCompany {

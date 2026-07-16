@@ -1,10 +1,28 @@
+import { useMemo } from "react";
 import { TabsContent } from "@/components/ui/tabs";
 import { OfferDetailsCard } from "../OfferDetailsCard";
 import { SpecificationTable } from "../SpecificationTable";
 import { QuoteItemsTable } from "../QuoteItemsTable";
-import { DUMMY_DOCUMENTS, DUMMY_QUOTE_ITEMS } from "../../../constants";
+import type { QuoteDocument, QuoteSupplier } from "../../../types/form";
+import type { SpecificationDocument } from "../../../types/types";
 
-export function QuoteTab() {
+interface QuoteTabProps {
+	supplier?: QuoteSupplier | null;
+	documents?: QuoteDocument[];
+}
+
+export function QuoteTab({ supplier, documents = [] }: QuoteTabProps) {
+	const specDocs: SpecificationDocument[] = useMemo(() => {
+		return documents.map((doc, idx) => ({
+			id: doc.id || String(idx),
+			date: doc.date || "-",
+			name: doc.name || "Specification Document",
+		}));
+	}, [documents]);
+
+	const contactName =
+		`${supplier?.contactFirstName || ""} ${supplier?.contactLastName || ""}`.trim() || "-";
+
 	return (
 		<TabsContent
 			value="quote"
@@ -13,28 +31,27 @@ export function QuoteTab() {
 			<div className="grid grid-cols-1 lg:grid-cols-5 gap-8 items-stretch">
 				<div className="lg:col-span-3">
 					<OfferDetailsCard
-						company="Pelle Construction"
-						orgNo="58858357375"
-						address="Storgatan 11B"
-						postalNo="171 63"
-						contactPerson="Peter Svensson"
-						mobile="070888888"
-						email="pelle@hotmail.com"
+						company={supplier?.companyName || "-"}
+						orgNo={supplier?.orgNumber || "-"}
+						address="-"
+						postalNo="-"
+						contactPerson={contactName}
+						mobile={supplier?.mobileNumber || "-"}
+						email={supplier?.emailAddress || "-"}
 					/>
 				</div>
 				<div className="lg:col-span-2">
-					<SpecificationTable
-						documents={DUMMY_DOCUMENTS}
-					/>
+					<SpecificationTable documents={specDocs} />
 				</div>
 			</div>
 
 			<QuoteItemsTable
-				items={DUMMY_QUOTE_ITEMS}
-				quoteTotal="1,250,000 SEK"
-				vat="75,000 SEK"
-				rotDeduction={true}
-				finalTotal="1,325,000 SEK"
+				quoteId={supplier?.id}
+				items={[]}
+				quoteTotal="0 SEK"
+				vat="0 SEK"
+				rotDeduction={false}
+				finalTotal="0 SEK"
 			/>
 		</TabsContent>
 	);

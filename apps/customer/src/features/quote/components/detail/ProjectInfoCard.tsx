@@ -7,9 +7,29 @@ interface ProjectInfoCardProps {
 	isExpressJob: boolean | string;
 	clientNo: string;
 	category: string;
+	address?: string;
+	city?: string;
+	postalCode?: string;
+	directions?: string;
 }
 
-export function ProjectInfoCard({ projectName, isExpressJob, clientNo, category }: ProjectInfoCardProps) {
+export function ProjectInfoCard({
+	projectName,
+	isExpressJob,
+	clientNo,
+	category,
+	address,
+	city,
+	postalCode,
+	directions,
+}: ProjectInfoCardProps) {
+	const expressValue =
+		typeof isExpressJob === "boolean"
+			? isExpressJob
+				? "Yes"
+				: "No"
+			: isExpressJob || "-";
+
 	return (
 		<DetailCard
 			icon={FileText}
@@ -19,38 +39,38 @@ export function ProjectInfoCard({ projectName, isExpressJob, clientNo, category 
 			<div className="grid grid-cols-2 gap-x-8 gap-y-6">
 				<InfoSection
 					label={localizationConstants.projectNameLabel}
-					value={projectName}
+					value={projectName || "-"}
 				/>
 				<InfoSection
 					label={localizationConstants.isExpressJobLabel}
-					value={isExpressJob}
+					value={expressValue}
 				/>
 				<InfoSection
 					label={localizationConstants.clientNoLabel}
-					value={clientNo}
+					value={clientNo || "-"}
 				/>
 				<InfoSection
 					label={localizationConstants.categoryLabel}
-					value={category}
+					value={category || "-"}
 				/>
 				<div className="col-span-2 border-t border-slate-100 pt-6">
 					<InfoSection
 						label={localizationConstants.projectAddressLabel}
-						value="Stengatan 10"
+						value={address || "-"}
 					/>
 				</div>
 				<InfoSection
 					label={localizationConstants.projectCityLabel}
-					value="Solna"
+					value={city || "-"}
 				/>
 				<InfoSection
 					label={localizationConstants.projectPostalCodeLabel}
-					value="171 63"
+					value={postalCode || "-"}
 				/>
 				<div className="col-span-2">
 					<InfoSection
 						label={localizationConstants.directionsLabel}
-						value="3rd street from the Ikea store"
+						value={directions || "-"}
 					/>
 				</div>
 			</div>

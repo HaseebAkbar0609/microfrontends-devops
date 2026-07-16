@@ -20,6 +20,10 @@ export {
 	patchProjectStatusAPIAction,
 	type ProjectStatusPatchValue,
 } from "./project/patch-status";
+export {
+	updateProjectDetailsAPIAction,
+	type UpdateProjectDetailsPayload,
+} from "./project/updateDetails";
 export { uploadMediaAPIAction } from "./media/upload";
 export { getCountriesAPIAction } from "./location/countries";
 export { getCitiesAPIAction } from "./location/cities";
@@ -72,3 +76,19 @@ export {
 	type GetActiveProjectsParams,
 	type ActiveProjectListPayload,
 } from "./project/active";
+export {
+	getProjectContractsAPIAction,
+	saveProjectContractAPIAction,
+} from "./project/contracts";
+export {
+	getProjectATAsAPIAction,
+	saveProjectATAAPIAction,
+} from "./project/atas";
+export { approveQuoteAPIAction } from "./quote/approve";
+export {
+	getProjectDocumentsAPIAction,
+	saveProjectDocumentAPIAction,
+	deleteProjectDocumentAPIAction,
+	type ApiProjectDocumentItem,
+} from "./project/documents";
+

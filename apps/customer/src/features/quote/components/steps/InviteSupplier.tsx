@@ -58,10 +58,41 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const selectedSupplierIds = useMemo(
-		() => new Set(invitedSuppliers.map((supplier) => supplier.id)),
+	const isSupplierSelected = useCallback(
+		(supplier: QuoteSupplier) => {
+			return invitedSuppliers.some(
+				(item) =>
+					(item.id && item.id === supplier.id) ||
+					(item.emailAddress &&
+						supplier.emailAddress &&
+						item.emailAddress.toLowerCase() ===
+							supplier.emailAddress.toLowerCase()) ||
+					(item.orgNumber &&
+						supplier.orgNumber &&
+						item.orgNumber === supplier.orgNumber),
+			);
+		},
 		[invitedSuppliers],
 	);
+
+	const displayAvailableSuppliers = useMemo(() => {
+		const list = [...availableSuppliers];
+		const existingIds = new Set(list.map((s) => s.id));
+		const existingEmails = new Set(
+			list.map((s) => s.emailAddress?.toLowerCase()).filter(Boolean),
+		);
+
+		for (const invited of invitedSuppliers) {
+			const emailKey = invited.emailAddress?.toLowerCase();
+			const hasId = invited.id && existingIds.has(invited.id);
+			const hasEmail = emailKey && existingEmails.has(emailKey);
+
+			if (!hasId && !hasEmail) {
+				list.push(invited);
+			}
+		}
+		return list;
+	}, [availableSuppliers, invitedSuppliers]);
 
 	const loadSuppliers = useCallback(async () => {
 		setLoading(true);
@@ -85,14 +116,14 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 
 	useEffect(() => {
 		void loadSuppliers();
-	}, [loadSuppliers]);
+	}, [loadSuppliers, invitedSuppliers.length]);
 
 	const handleToggleSupplier = (
 		supplier: QuoteSupplier,
 		checked: boolean,
 	) => {
 		if (checked) {
-			if (selectedSupplierIds.size >= SUPPLIER_SELECTION_LIMIT) {
+			if (invitedSuppliers.length >= SUPPLIER_SELECTION_LIMIT) {
 				showToast(
 					"error",
 					t(localizationConstants.supplierSelectionMaxExceeded),
@@ -100,14 +131,26 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 				return;
 			}
 
-			form.setValue("invitedSuppliers", [...invitedSuppliers, supplier]);
+			if (!isSupplierSelected(supplier)) {
+				form.setValue("invitedSuppliers", [...invitedSuppliers, supplier]);
+			}
 			setError(null);
 			return;
 		}
 
 		form.setValue(
 			"invitedSuppliers",
-			invitedSuppliers.filter((item) => item.id !== supplier.id),
+			invitedSuppliers.filter(
+				(item) =>
+					item.id !== supplier.id &&
+					(!item.emailAddress ||
+						!supplier.emailAddress ||
+						item.emailAddress.toLowerCase() !==
+							supplier.emailAddress.toLowerCase()) &&
+					(!item.orgNumber ||
+						!supplier.orgNumber ||
+						item.orgNumber !== supplier.orgNumber),
+			),
 		);
 		setError(null);
 	};
@@ -223,8 +266,8 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 													/>
 												</TableCell>
 											</TableRow>
-										) : availableSuppliers.length > 0 ? (
-											availableSuppliers.map(
+										) : displayAvailableSuppliers.length > 0 ? (
+											displayAvailableSuppliers.map(
 												(supplier) => (
 													<TableRow
 														key={supplier.id}
@@ -232,8 +275,8 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 													>
 														<TableCell className="px-3 py-3">
 															<Checkbox
-																checked={selectedSupplierIds.has(
-																	supplier.id,
+																checked={isSupplierSelected(
+																	supplier,
 																)}
 																className="data-[state=checked]:border-slate-950 data-[state=checked]:bg-slate-950 data-[state=checked]:text-white"
 																onCheckedChange={(

@@ -20,14 +20,18 @@ import {
 	detailTabTriggerClass,
 } from "../../constants";
 
+import type { QuoteDocument, QuoteSupplier } from "../../types/form";
+
 export function SupplierQuoteDetail({
 	projectName,
-	supplierName,
+	supplier,
 	supplierId,
+	documents = [],
 }: {
 	projectName: string;
-	supplierName: string;
+	supplier?: QuoteSupplier | null;
 	supplierId?: string;
+	documents?: QuoteDocument[];
 }) {
 	const searchParams = useSearchParams();
 	const { changeQueries, replaceQueries } = useQueryParams();
@@ -54,20 +58,21 @@ export function SupplierQuoteDetail({
 	);
 
 	const selectedCompany = COMPANIES.find((c) => c.id === selectedCompanyId);
+	const displaySupplierName = supplier?.companyName || "Supplier";
 
 	const breadcrumbs = [
 		{ label: localizationConstants.home, href: "/home" },
 		{ label: localizationConstants.business, href: "/business" },
-		{ label: localizationConstants.quote, href: "/business/quote" },
+		{ label: localizationConstants.quote, href: "/business/offer" },
 		{ label: projectName, href: "#" },
-		{ label: supplierName },
+		{ label: displaySupplierName },
 	];
 
 	return (
 		<div className="flex flex-col flex-1 bg-slate-50/50 min-h-screen pb-20">
 			<div className="bg-white border-b border-slate-200">
 				<PageHeader
-					title={`${projectName} / ${supplierName}`}
+					title={`${projectName} / ${displaySupplierName}`}
 					breadcrumbs={breadcrumbs}
 					className="border-none px-8 py-6"
 				/>
@@ -120,8 +125,8 @@ export function SupplierQuoteDetail({
 
 			<div className="px-5 py-6 mx-auto w-full">
 				<Tabs value={activeTab} className="w-full">
-					<QuoteTab />
-					<CompanyInfoTab />
+					<QuoteTab supplier={supplier} documents={documents} />
+					<CompanyInfoTab supplier={supplier} />
 					<ReferenceTab />
 					<DiscussionsTab
 						companies={COMPANIES}
