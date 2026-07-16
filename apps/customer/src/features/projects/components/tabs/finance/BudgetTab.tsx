@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { BudgetRow, BudgetSection, SectionType } from "./types";
+import type { BudgetItem, BudgetRow, BudgetSection, SectionType } from "./types";
 import { DEFAULT_BUDGET_SECTIONS, DUMMY_BUDGETS } from "./data";
 import { fmtAmount, delsumma, sectionSum, newRowId } from "./helpers";
-import { ToolbarSearch, FilterButton, SimpleActionsMenu, SortableHeader } from "./shared";
+import { SimpleActionsMenu, SortableHeader } from "./shared";
 import { useEffect } from "react";
 
 // ─── Translation hook for section labels ──────────────────────────────────────
@@ -211,9 +211,9 @@ function BudgetStep2({ budgetName, sections, onBack, onSave }: {
 
 // ─── Budget create form ───────────────────────────────────────────────────────
 
-export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
+export function BudgetCreateForm({ onBack, budget }: { onBack: () => void; budget?: BudgetItem }) {
   const [step, setStep] = useState(1);
-  const [budgetName, setBudgetName] = useState("Anna");
+  const [budgetName, setBudgetName] = useState(budget?.projectName ?? "Anna");
   const [sections, setSections] = useState<BudgetSection[]>(DEFAULT_BUDGET_SECTIONS);
   const sectionLabels = useSectionLabels();
 
@@ -281,7 +281,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
           className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
           <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
         </button>
-        <h2 className="text-xl font-semibold text-[#020617]">Ny budget</h2>
+        <h2 className="text-xl font-semibold text-[#020617]">{budget ? budget.projectName : "Ny budget"}</h2>
       </div>
 
       {/* Budget details */}
@@ -408,8 +408,7 @@ export function BudgetCreateForm({ onBack }: { onBack: () => void }) {
 
 // ─── Budget list ──────────────────────────────────────────────────────────────
 
-export function BudgetList({ onCreateNew }: { onCreateNew: () => void }) {
-  const [search, setSearch] = useState("");
+export function BudgetList({ onCreateNew, onView }: { onCreateNew: () => void; onView: (id: string) => void }) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -419,15 +418,9 @@ export function BudgetList({ onCreateNew }: { onCreateNew: () => void }) {
     return () => document.removeEventListener("click", close);
   }, [openMenuId]);
 
-  const filtered = DUMMY_BUDGETS.filter((b) =>
-    b.projectName.toLowerCase().includes(search.toLowerCase()),
-  );
-
   return (
     <div>
       <div className="flex items-center gap-3 mb-4">
-        <ToolbarSearch value={search} onChange={setSearch} />
-        <FilterButton />
         <div className="flex-1" />
         <Button onClick={onCreateNew} className="h-9 px-4 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
           <Plus className="h-4 w-4" />
@@ -441,14 +434,15 @@ export function BudgetList({ onCreateNew }: { onCreateNew: () => void }) {
           <SortableHeader><Translate text={localizationConstants.financeDateCol} /></SortableHeader>
           <div />
         </div>
-        {filtered.map((item, idx) => (
+        {DUMMY_BUDGETS.map((item, idx) => (
           <div key={item.id}
-            className={`grid grid-cols-[1fr_150px_46px] border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors ${idx === filtered.length - 1 ? "last:border-b-0 rounded-b-xl" : ""}`}>
+            className={`grid grid-cols-[1fr_150px_46px] border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors ${idx === DUMMY_BUDGETS.length - 1 ? "last:border-b-0 rounded-b-xl" : ""}`}>
             <div className="h-14 flex items-center px-4 text-sm text-[#020617] font-medium">{item.projectName}</div>
             <div className="h-14 flex items-center px-4 text-sm text-[#374151]">{item.date}</div>
             <SimpleActionsMenu
               open={openMenuId === item.id}
               onOpenChange={(v) => setOpenMenuId(v ? item.id : null)}
+              onView={() => onView(item.id)}
             />
           </div>
         ))}

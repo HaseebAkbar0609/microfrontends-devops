@@ -3,6 +3,7 @@ export type FinanceSubTab = "budget" | "invoices" | "payment-plan" | "add-eat";
 export type FinanceView =
   | { sub: "budget"; mode: "list" }
   | { sub: "budget"; mode: "create" }
+  | { sub: "budget"; mode: "view"; budgetId: string }
   | { sub: "invoices"; mode: "list" }
   | { sub: "payment-plan"; mode: "list" }
   | { sub: "payment-plan"; mode: "create" }
