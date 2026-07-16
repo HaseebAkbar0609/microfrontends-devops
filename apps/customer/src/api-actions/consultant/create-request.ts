@@ -23,7 +23,7 @@ export async function createConsultantRequestAPIAction(
 		const apiPayload = {
 			description: payload.description,
 			media_ids: payload.media_ids,
-			project_id: payload.project,
+            project_id: payload.project_id,
 			selected_options: {
 				consultant_type_id: payload.consultant_type_id,
 				customer_name: payload.customer_name,
