@@ -763,36 +763,17 @@ const STATUS_STYLE = {
   pending:   { bg: "bg-amber-50",  text: "text-amber-600",  label: "Pending"   },
 };
 
-const STATUS_FILTER_OPTIONS = [
-  { value: "",          label: "All Statuses" },
-  { value: "completed", label: "Completed"    },
-  { value: "pending",   label: "Pending"      },
-];
-
 function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) => void }) {
   const t = useTranslate();
-  const [search, setSearch]           = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
   const [page, setPage]               = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const { open: fOpen, anchor: fAnchor, toggle: fToggle, setOpen: fSetOpen, setAnchor: fSetAnchor } = useFilterBtn();
   const { openMenu, menuAnchor, handleOpen } = useRowMenu();
 
   const totalChecks     = DUMMY_SECURE_CHECKS.length;
   const completedChecks = DUMMY_SECURE_CHECKS.filter((c) => c.status === "completed").length;
 
-  const filtered = DUMMY_SECURE_CHECKS.filter((c) => {
-    const matchSearch = c.kontroll.toLowerCase().includes(search.toLowerCase()) ||
-      c.source.toLowerCase().includes(search.toLowerCase()) ||
-      c.utfordAv.toLowerCase().includes(search.toLowerCase());
-    const matchStatus = statusFilter === "" || c.status === statusFilter;
-    return matchSearch && matchStatus;
-  });
-
-  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
-  const pageRows   = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
-
-  const activeStatusLabel = STATUS_FILTER_OPTIONS.find((o) => o.value === statusFilter)?.label;
+  const totalPages = Math.max(1, Math.ceil(DUMMY_SECURE_CHECKS.length / rowsPerPage));
+  const pageRows   = DUMMY_SECURE_CHECKS.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
     <div>
@@ -810,27 +791,6 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
           <p className="text-[32px] font-semibold text-[#0A0A0A] leading-[48px]">{completedChecks}</p>
           <p className="text-xs text-[#64748B]">{t(localizationConstants.kmaCompletedChecksInfo)}</p>
         </div>
-      </div>
-
-      {/* Toolbar */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
-          <Input value={search} onChange={(e) => { setSearch(e.target.value); setPage(1); }} placeholder={t(localizationConstants.search)} className="pl-9 h-9 w-52 text-sm border-[#E2E8F0] bg-white" />
-        </div>
-
-        <button
-          type="button"
-          onClick={fToggle}
-          className={cn(
-            "cursor-pointer h-9 px-3 flex items-center gap-2 text-sm font-medium border rounded-lg transition-colors",
-            statusFilter ? "bg-blue-50 border-blue-200 text-blue-700" : "bg-white border-[#E2E8F0] text-[#374151] hover:bg-slate-50",
-          )}
-        >
-          {t(localizationConstants.filter)}
-          {statusFilter && <span className="text-xs font-normal">· {activeStatusLabel}</span>}
-          <ChevronDown className={cn("h-4 w-4 transition-transform", fOpen && "rotate-180")} />
-        </button>
       </div>
 
       {/* Table */}
@@ -921,28 +881,6 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
           </div>
         </div>
       </div>
-
-      {/* Filter portal */}
-      {fOpen && fAnchor && (
-        <div
-          style={{ position: "fixed", top: fAnchor.top, left: fAnchor.left, zIndex: 9999 }}
-          className="w-44 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Status</p>
-          {STATUS_FILTER_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => { setStatusFilter(opt.value); setPage(1); fSetOpen(false); fSetAnchor(null); }}
-              className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
-            >
-              {opt.label}
-              {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
-            </button>
-          ))}
-        </div>
-      )}
 
       {openMenu && <RowMenuPortal anchor={menuAnchor} />}
     </div>
