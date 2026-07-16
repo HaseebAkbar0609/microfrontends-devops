@@ -1048,7 +1048,7 @@ function ArbetsmiljoSubTab() {
         <ViewDropdown value={view} options={ARB_OPTIONS} onChange={setView} />
       </div>
       {view === "arbetsmiljo" ? (
-        <KMADocTable />
+        <KMADocTable showFilters={false} />
       ) : (
         <SplitView colName={t(localizationConstants.kmaSubTabWorkEnv)} title={t(localizationConstants.kmaViewWorkEnvPlan)} />
       )}
