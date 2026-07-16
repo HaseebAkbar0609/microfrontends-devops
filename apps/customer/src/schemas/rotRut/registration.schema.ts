@@ -26,7 +26,7 @@ export const getRegistrationSchema = (t: (key: string) => string) =>
 			.refine(
 				(val) => {
 					const num = Number(val);
-					return Number.isFinite(num) && num > 0 && num <= 100;
+                    return Number.isFinite(num) && Number.isInteger(num) && num > 0 && num <= 100;
 				},
 				{ message: t(localizationConstants.validationInvalidFormat) },
 			),
