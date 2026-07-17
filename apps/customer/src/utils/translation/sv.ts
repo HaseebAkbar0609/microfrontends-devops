@@ -700,6 +700,9 @@ export const svQuestions: QuestionsModule = {
 		"Nej. Du kan använda TimeFlow direkt i webbläsaren. För en ännu bättre upplevelse finns även appen TimeFlow Home.",
 };
 export const svSupport: SupportModule = {
+	supportContactUsTitle: "Kontakta oss",
+	supportContactPhone: "Telefon",
+	supportContactEmail: "Mail",
 	guideQuoteAndConsultants: "Offert & Konsulter",
 	guideMyProjects: "Mina Projekt",
 	guideServicesAndOffers: "Tjänster & Erbjudanden",

@@ -648,6 +648,9 @@ export type QuestionsModule = {
 	faqTimeFlowWorksInBrowserAndApp: string;
 };
 export type SupportModule = {
+	supportContactUsTitle: string;
+	supportContactPhone: string;
+	supportContactEmail: string;
 	guideQuoteAndConsultants: string;
 	guideMyProjects: string;
 	guideServicesAndOffers: string;

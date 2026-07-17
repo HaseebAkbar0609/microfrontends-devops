@@ -703,6 +703,9 @@ export const enQuestions: QuestionsModule = {
 		"No. TimeFlow works in the browser, but a mobile app is also available.",
 };
 export const enSupport: SupportModule = {
+	supportContactUsTitle: "Contact us",
+	supportContactPhone: "Phone",
+	supportContactEmail: "Email",
 	guideQuoteAndConsultants: "Quote & Consultants",
 	guideMyProjects: "My Projects",
 	guideServicesAndOffers: "Services & Offers",
