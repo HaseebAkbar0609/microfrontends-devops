@@ -90,7 +90,6 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
         const linkRes = await saveProjectDocumentAPIAction(
           projectId,
           uploadRes.data.id,
-          file.name || "Uploaded via documents tab",
         );
         if (!linkRes.success) {
           throw new Error(

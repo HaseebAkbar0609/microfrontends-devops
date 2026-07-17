@@ -50,13 +50,13 @@ export async function saveProjectDocumentAPIAction(
 export async function deleteProjectDocumentAPIAction(
   projectId: string,
   documentId: string,
-): Promise<ActionResult<ApiProjectDocumentItem>> {
+): Promise<ActionResult<void>> {
   try {
     const url = API_PATH.PROJECT.documentDetail(projectId, documentId);
-    const { data } = await axiosInstance.delete(url);
+    await axiosInstance.delete(url);
     return {
       success: true,
-      data: data?.data ?? data,
+      data: undefined,
       error: null,
     };
   } catch (error: unknown) {

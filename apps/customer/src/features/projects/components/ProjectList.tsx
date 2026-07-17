@@ -170,11 +170,20 @@ export function ProjectList() {
         if (listRes.success && listRes.data?.quotes) {
           listRes.data.quotes.forEach((q: ApiQuoteItem) => {
             const item = mapListProjectToFrontend(q);
-            if (item.id && !combinedMap.has(item.id)) {
-              combinedMap.set(item.id, item);
+            if (item.id) {
+              const existing = combinedMap.get(item.id);
+              combinedMap.set(item.id, existing
+                ? {
+                  ...existing,
+                  clientNo: existing.clientNo !== "-" ? existing.clientNo : item.clientNo,
+                  quoteReferenceNo:
+                    existing.quoteReferenceNo !== "-" ? existing.quoteReferenceNo : item.quoteReferenceNo,
+                  category: existing.category !== "-" ? existing.category : item.category,
+                }
+                : item);
             }
           });
-          setTotalCount(listRes.data.totalItems ?? combinedMap.size);
+          setTotalCount(listRes.data.totalItems ?? listRes.data.quotes.length);
         } else {
           hasError = true;
           setError(listRes.error || "Failed to load projects list");
