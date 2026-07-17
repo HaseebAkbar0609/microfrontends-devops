@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { ChevronDown, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -73,13 +73,7 @@ function FormField({
   );
 }
 
-function SectionHeader({
-  iconSrc,
-  title,
-}: {
-  iconSrc: string;
-  title: string;
-}) {
+function SectionHeader({ iconSrc, title }: { iconSrc: string; title: string }) {
   return (
     <div className="flex items-center gap-2 px-4 py-3.5 border-b border-[#E4E4E7]">
       <Image src={iconSrc} alt="" width={20} height={20} className="shrink-0" />
@@ -98,22 +92,39 @@ export function ContractCreateForm({
   const t = useTranslate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const getInitialForm = (): ContractFormData => {
+  const getInitialForm = useCallback((): ContractFormData => {
     if (initialForm) return initialForm;
-    const contactParts = project?.contactPersonName && project.contactPersonName !== "-"
-      ? project.contactPersonName.split(" ")
-      : [];
+    const contactParts =
+      project?.contactPersonName && project.contactPersonName !== "-"
+        ? project.contactPersonName.split(" ")
+        : [];
     const firstName = contactParts[0] || "";
     const lastName = contactParts.slice(1).join(" ") || "";
-    const mobile = project?.mobileNumber && project.mobileNumber !== "-" ? project.mobileNumber : "";
+    const mobile =
+      project?.mobileNumber && project.mobileNumber !== "-"
+        ? project.mobileNumber
+        : "";
     const email = project?.email && project.email !== "-" ? project.email : "";
-    const address = project?.address && project.address !== "-" ? project.address : "";
+    const address =
+      project?.address && project.address !== "-" ? project.address : "";
     const city = project?.city && project.city !== "-" ? project.city : "";
-    const postalCode = project?.postalCode && project.postalCode !== "-" ? project.postalCode : "";
+    const postalCode =
+      project?.postalCode && project.postalCode !== "-"
+        ? project.postalCode
+        : "";
     const name = project?.name && project.name !== "-" ? project.name : "";
-    const orderNo = project?.orderNo && project.orderNo !== "-" ? project.orderNo : project?.clientNo && project.clientNo !== "-" ? project.clientNo : "";
-    const category = project?.category && project.category !== "-" ? project.category : "";
-    const company = project?.companyName && project.companyName !== "-" ? project.companyName : "";
+    const orderNo =
+      project?.orderNo && project.orderNo !== "-"
+        ? project.orderNo
+        : project?.clientNo && project.clientNo !== "-"
+          ? project.clientNo
+          : "";
+    const category =
+      project?.category && project.category !== "-" ? project.category : "";
+    const company =
+      project?.companyName && project.companyName !== "-"
+        ? project.companyName
+        : "";
 
     return {
       firstName,
@@ -141,11 +152,17 @@ export function ContractCreateForm({
       contactMobile: "",
       contactEmail: "",
     };
-  };
+  }, [initialForm, project]);
 
   const [form, setForm] = useState<ContractFormData>(getInitialForm);
 
-  const [documents, setDocuments] = useState<StagedDocument[]>(initialDocuments || []);
+  useEffect(() => {
+    setForm(getInitialForm());
+  }, [getInitialForm]);
+
+  const [documents, setDocuments] = useState<StagedDocument[]>(
+    initialDocuments || [],
+  );
 
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
 
@@ -179,10 +196,8 @@ export function ContractCreateForm({
 
   return (
     <div className="flex items-start gap-5 pb-12 bg-[#F8FAFC] min-h-screen px-4 pt-6">
-
       {/* ── Left: main form column ── */}
       <div className="flex-1 min-w-0">
-
         {/* Page header */}
         <div className="flex items-start gap-3 mb-6">
           <button
@@ -191,7 +206,12 @@ export function ContractCreateForm({
             className="text-[#64748B] hover:text-[#09090B] mt-1 cursor-pointer transition-colors shrink-0"
             aria-label="Back"
           >
-            <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
+            <Image
+              src="/assets/icons/arrow-left.svg"
+              alt="Back"
+              width={20}
+              height={20}
+            />
           </button>
           <div>
             <h2 className="text-base font-semibold text-[#09090B]">
@@ -204,7 +224,6 @@ export function ContractCreateForm({
         </div>
 
         <div className="space-y-4">
-
           {/* ── Personal Details ── */}
           <div className="bg-white border border-[#E5E5E5] rounded-lg">
             <SectionHeader
@@ -213,14 +232,18 @@ export function ContractCreateForm({
             />
             <div className="p-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractFirstNameLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractFirstNameLabel)}
+                >
                   <Input
                     value={form.firstName}
                     onChange={(e) => set("firstName", e.target.value)}
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractLastNameLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractLastNameLabel)}
+                >
                   <Input
                     value={form.lastName}
                     onChange={(e) => set("lastName", e.target.value)}
@@ -236,7 +259,9 @@ export function ContractCreateForm({
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractPrivateEmailLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPrivateEmailLabel)}
+                >
                   <Input
                     value={form.privateEmail}
                     onChange={(e) => set("privateEmail", e.target.value)}
@@ -262,7 +287,9 @@ export function ContractCreateForm({
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
                   </div>
                 </FormField>
-                <FormField label={t(localizationConstants.contractPostalCodeLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPostalCodeLabel)}
+                >
                   <Input
                     value={form.postalCode}
                     onChange={(e) => set("postalCode", e.target.value)}
@@ -281,14 +308,18 @@ export function ContractCreateForm({
             />
             <div className="p-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractProjectNameLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractProjectNameLabel)}
+                >
                   <Input
                     value={form.projectName}
                     onChange={(e) => set("projectName", e.target.value)}
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractExpressJobLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractExpressJobLabel)}
+                >
                   <div className="flex items-center gap-6 h-9 pt-1">
                     {(["Yes", "No"] as const).map((opt) => (
                       <label
@@ -309,14 +340,18 @@ export function ContractCreateForm({
                 </FormField>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractOrderNumberLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractOrderNumberLabel)}
+                >
                   <Input
                     value={form.orderNumber}
                     onChange={(e) => set("orderNumber", e.target.value)}
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractCategoryLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractCategoryLabel)}
+                >
                   <Input
                     value={form.category}
                     onChange={(e) => set("category", e.target.value)}
@@ -331,9 +366,13 @@ export function ContractCreateForm({
                   onChange={(e) => set("sameAsContact", e.target.checked)}
                   className="rounded accent-[#18181B]"
                 />
-                <Translate text={localizationConstants.contractSameAsContactLabel} />
+                <Translate
+                  text={localizationConstants.contractSameAsContactLabel}
+                />
               </label>
-              <FormField label={t(localizationConstants.contractProjectAddressLabel)}>
+              <FormField
+                label={t(localizationConstants.contractProjectAddressLabel)}
+              >
                 <Input
                   value={form.projectAddress}
                   onChange={(e) => set("projectAddress", e.target.value)}
@@ -351,7 +390,9 @@ export function ContractCreateForm({
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
                   </div>
                 </FormField>
-                <FormField label={t(localizationConstants.contractPostalCodeLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPostalCodeLabel)}
+                >
                   <Input
                     value={form.projectPostalCode}
                     onChange={(e) => set("projectPostalCode", e.target.value)}
@@ -359,7 +400,10 @@ export function ContractCreateForm({
                   />
                 </FormField>
               </div>
-              <FormField label={t(localizationConstants.contractDirectionsLabel)} required>
+              <FormField
+                label={t(localizationConstants.contractDirectionsLabel)}
+                required
+              >
                 <textarea
                   value={form.directions}
                   onChange={(e) => set("directions", e.target.value)}
@@ -378,7 +422,13 @@ export function ContractCreateForm({
             />
             <div className="p-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractSupplierInfoTitle).split(" ")[0]}>
+                <FormField
+                  label={
+                    t(localizationConstants.contractSupplierInfoTitle).split(
+                      " ",
+                    )[0]
+                  }
+                >
                   <div className="relative">
                     <Input
                       value={form.supplier}
@@ -397,14 +447,18 @@ export function ContractCreateForm({
                 </FormField>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractAddressLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractAddressLabel)}
+                >
                   <Input
                     value={form.supplierAddress}
                     onChange={(e) => set("supplierAddress", e.target.value)}
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractPostalCodeLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPostalCodeLabel)}
+                >
                   <Input
                     value={form.supplierPostalCode}
                     onChange={(e) => set("supplierPostalCode", e.target.value)}
@@ -420,7 +474,9 @@ export function ContractCreateForm({
                 />
               </FormField>
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractContactPersonLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractContactPersonLabel)}
+                >
                   <Input
                     value={form.contactPerson}
                     onChange={(e) => set("contactPerson", e.target.value)}
@@ -443,7 +499,9 @@ export function ContractCreateForm({
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={`${t(localizationConstants.contractMobileLabel)} 2`}>
+                <FormField
+                  label={`${t(localizationConstants.contractMobileLabel)} 2`}
+                >
                   <Input className={inputClass} />
                 </FormField>
               </div>
@@ -461,7 +519,9 @@ export function ContractCreateForm({
               {/* Upload area */}
               <div>
                 <p className="text-sm font-medium text-[#09090B] mb-1">
-                  <Translate text={localizationConstants.projectUploadFilesLabel} />
+                  <Translate
+                    text={localizationConstants.projectUploadFilesLabel}
+                  />
                 </p>
                 <p className="text-xs text-[#A1A1AA] mb-3">
                   PNG-, JPG- och PDF-filer är tillåtna.
@@ -505,7 +565,9 @@ export function ContractCreateForm({
                     disabled={stagedFiles.length === 0}
                     className="bg-[#18181B] hover:bg-[#18181B]/90 text-white text-sm font-medium px-5 h-9 rounded-md"
                   >
-                    <Translate text={localizationConstants.projectUploadFilesLabel} />
+                    <Translate
+                      text={localizationConstants.projectUploadFilesLabel}
+                    />
                   </Button>
                   <input
                     ref={fileInputRef}
@@ -521,7 +583,9 @@ export function ContractCreateForm({
               {/* Specification table */}
               <div>
                 <p className="text-sm font-medium text-[#09090B] mb-3">
-                  <Translate text={localizationConstants.projectSpecificationLabel} />
+                  <Translate
+                    text={localizationConstants.projectSpecificationLabel}
+                  />
                 </p>
                 <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
                   <div className="grid grid-cols-[140px_1fr_140px_80px_40px] border-b border-[#E2E8F0]">
@@ -624,7 +688,6 @@ export function ContractCreateForm({
           </div>
         </div>
       </div>
-
     </div>
   );
 }

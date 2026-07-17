@@ -12,6 +12,7 @@ import {
   saveProjectDocumentAPIAction,
   deleteProjectDocumentAPIAction,
   uploadMediaAPIAction,
+  deleteMediaAPIAction,
   type ApiProjectDocumentItem,
 } from "@/api-actions";
 import { showToast } from "@/lib/toast";
@@ -35,18 +36,24 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
     setLoading(true);
     const res = await getProjectDocumentsAPIAction(projectId);
     if (res.success && res.data) {
-      const mapped: ProjectDocument[] = res.data.map((doc: ApiProjectDocumentItem) => {
-        const name = doc.name || "Document";
-        const ext = name.includes(".") ? name.split(".").pop() || "" : doc.type || "PDF";
-        return {
-          id: doc.id,
-          name: name,
-          specification: (doc.comment as string) || "No comments",
-          type: doc.type && doc.type !== "PDF" ? doc.type : ext.toUpperCase(),
-          date: doc.date ? new Date(doc.date).toISOString().split("T")[0] : "-",
-          fileUrl: doc.fileUrl,
-        };
-      });
+      const mapped: ProjectDocument[] = res.data.map(
+        (doc: ApiProjectDocumentItem) => {
+          const name = doc.name || "Document";
+          const ext = name.includes(".")
+            ? name.split(".").pop() || ""
+            : doc.type || "PDF";
+          return {
+            id: doc.id,
+            name: name,
+            specification: (doc.comment as string) || "No comments",
+            type: doc.type && doc.type !== "PDF" ? doc.type : ext.toUpperCase(),
+            date: doc.date
+              ? new Date(doc.date).toISOString().split("T")[0]
+              : "-",
+            fileUrl: doc.fileUrl,
+          };
+        },
+      );
       setDocuments(mapped);
     } else {
       showToast("error", res.error || "Failed to fetch project documents");
@@ -65,14 +72,19 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
   const processFiles = async (filesToUpload: File[]) => {
     if (!filesToUpload.length) return;
     setUploading(true);
+    const newlyUploadedMediaIds: string[] = [];
 
     try {
       for (const file of filesToUpload) {
         // 1. Upload to S3/Storage via media API
         const uploadRes = await uploadMediaAPIAction(file);
         if (!uploadRes.success || !uploadRes.data?.id) {
-          throw new Error(uploadRes.error || `Failed to upload file "${file.name}" to storage`);
+          throw new Error(
+            uploadRes.error ||
+              `Failed to upload file "${file.name}" to storage`,
+          );
         }
+        newlyUploadedMediaIds.push(uploadRes.data.id);
 
         // 2. Link document in DB
         const linkRes = await saveProjectDocumentAPIAction(
@@ -81,7 +93,10 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
           file.name || "Uploaded via documents tab",
         );
         if (!linkRes.success) {
-          throw new Error(linkRes.error || `Failed to save document record for "${file.name}"`);
+          throw new Error(
+            linkRes.error ||
+              `Failed to save document record for "${file.name}"`,
+          );
         }
       }
 
@@ -89,8 +104,26 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
       setStagedFiles([]);
       void fetchDocuments();
     } catch (err: unknown) {
+      let cleanupFailedMsg = "";
+      if (newlyUploadedMediaIds.length > 0) {
+        const cleanupResults = await Promise.allSettled(
+          newlyUploadedMediaIds.map((mId) => deleteMediaAPIAction(mId)),
+        );
+        const failedCleanups = cleanupResults.filter(
+          (r) =>
+            r.status === "rejected" ||
+            (r.status === "fulfilled" && !r.value.success),
+        );
+        if (failedCleanups.length > 0) {
+          cleanupFailedMsg = ` (Failed to clean up ${failedCleanups.length} file(s))`;
+        }
+      }
       const error = err as Error;
-      showToast("error", error.message || "An error occurred during file upload");
+      showToast(
+        "error",
+        (error.message || "An error occurred during file upload") +
+          cleanupFailedMsg,
+      );
     } finally {
       setUploading(false);
     }
@@ -136,7 +169,9 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
             height={20}
           />
           <span className="text-sm font-semibold text-slate-900">
-            <Translate text={localizationConstants.projectPersonalDocumentTitle} />
+            <Translate
+              text={localizationConstants.projectPersonalDocumentTitle}
+            />
           </span>
         </div>
         <div className="px-4">
@@ -314,7 +349,9 @@ export function DocumentsTab({ projectId, projectName }: DocumentsTabProps) {
                         rel="noopener noreferrer"
                         className="text-sm text-slate-700 hover:text-primary transition-colors font-medium"
                       >
-                        <Translate text={localizationConstants.projectViewFileLabel} />
+                        <Translate
+                          text={localizationConstants.projectViewFileLabel}
+                        />
                       </a>
                     ) : (
                       <span />
