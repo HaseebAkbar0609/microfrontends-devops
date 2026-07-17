@@ -124,7 +124,7 @@ const COLUMNS: PermissionColumn[] = [
 ];
 
 function ModuleIcon({ mod }: { mod: ModuleItem }) {
-  return <mod.icon className="h-4 w-4 text-slate-600 shrink-0" />;;
+  return <mod.icon className="h-4 w-4 text-slate-600 shrink-0" />;
 }
 
 function PermissionPanel({ col, form }: { col: PermissionColumn; form: UseFormReturn<UserDetailsFormValues> }) {
