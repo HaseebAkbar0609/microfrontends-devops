@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ShieldUser, UserCog, Users, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +15,8 @@ import {
 import { PageHeader } from "@/components/common/PageHeader";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import AddUserForm from "./components/AddUserForm";
+import { useTranslation } from "react-i18next";
 
 type UserAccess = "sys-admin" | "admin" | "user";
 type UserStatus = "active" | "closed";
@@ -68,99 +71,122 @@ function StatusBadge({ status }: { status: UserStatus }) {
 	);
 }
 
-export function AdminUsersPage() {
+function UsersTable({ onEdit }: { onEdit: (id: string) => void }) {
 	const [users] = useState<UserRow[]>(MOCK_USERS);
 
 	return (
-		<div className="flex h-full flex-col">
+		<Table>
+			<TableHeader>
+				<TableRow className="border-slate-200 hover:bg-transparent">
+					<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
+						<Translate text={localizationConstants.nameLabel} />
+					</TableHead>
+					<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
+						<Translate text={localizationConstants.personalNumberLabel} />
+					</TableHead>
+					<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
+						<Translate text={localizationConstants.adminAccessCol} />
+					</TableHead>
+					<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
+						<Translate text={localizationConstants.adminGroupCol} />
+					</TableHead>
+					<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
+						<Translate text={localizationConstants.roleLabel} />
+					</TableHead>
+					<TableHead className="w-[200px] px-4 py-3 text-sm font-medium text-slate-500">
+						<Translate text={localizationConstants.statusLabel} />
+					</TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{users.length === 0 && (
+					<TableRow>
+						<TableCell colSpan={6} className="h-32 text-center text-sm text-slate-500">
+							<Translate text={localizationConstants.adminNoUsersFound} />
+						</TableCell>
+					</TableRow>
+				)}
+				{users.map((user) => (
+					<TableRow key={user.id} className="border-slate-200 hover:bg-slate-50/70">
+						<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
+							{user.name}
+						</TableCell>
+						<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
+							{user.personNo}
+						</TableCell>
+						<TableCell className="px-4 py-3.5">
+							<AccessBadge access={user.access} />
+						</TableCell>
+						<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
+							{user.group}
+						</TableCell>
+						<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
+							{user.role}
+						</TableCell>
+						<TableCell className="w-[200px] px-4 py-3.5">
+							<div className="flex items-center gap-3">
+								<StatusBadge status={user.status} />
+								<Button
+									variant="outline"
+									size="sm"
+									className="h-8 rounded-md border-slate-200 bg-white px-3 text-xs font-medium text-[#0F172A] hover:bg-slate-50"
+									onClick={() => onEdit(user.id)}
+								>
+									<Translate text={localizationConstants.editLabel} />
+								</Button>
+							</div>
+						</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
+	);
+}
+
+export function AdminUsersPage() {
+	const router = useRouter();
+	const [showAddForm, setShowAddForm] = useState(false);
+	const { t } = useTranslation();
+
+	return (
+		<div className="flex h-full flex-col overflow-hidden">
 			<PageHeader
-				title="Användare"
+				title={t(localizationConstants.adminUsers)}
 				breadcrumbs={[
-					{ label: "Home", href: "/dashboard" },
-					{ label: "Användare" },
+					{ label: t(localizationConstants.breadcrumbHome), href: "/dashboard" },
+					{ label: t(localizationConstants.adminUsers) },
 				]}
 			/>
 
-			<div className="flex flex-col gap-6 px-8 pt-6 pb-8">
-				<div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white">
-					{/* Card header */}
-					<div className="flex min-h-[56px] items-center justify-between gap-4 border-b border-[#E4E4E7] bg-slate-200 px-4 py-2">
-						<h2 className="text-base font-medium text-[#09090B]">
-							<Translate text={localizationConstants.adminUsersListTitle} />
-						</h2>
-						<Button className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90">
-							<Plus className="h-4 w-4" />
-							<Translate text={localizationConstants.addUser} />
-						</Button>
-					</div>
+			{showAddForm ? (
+				<AddUserForm
+					onCancel={() => setShowAddForm(false)}
+					onSuccess={() => setShowAddForm(false)}
+				/>
+			) : (
+				<div className="flex-1 overflow-y-auto">
+					<div className="flex flex-col gap-6 px-8 pt-6 pb-8">
+						<div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white">
+							{/* Card header */}
+							<div className="flex min-h-[56px] items-center justify-between gap-4 border-b border-[#E4E4E7] bg-slate-200 px-4 py-2">
+								<h2 className="text-base font-medium text-[#09090B]">
+									<Translate text={localizationConstants.adminUsersListTitle} />
+								</h2>
+								<Button
+									className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90"
+									onClick={() => setShowAddForm(true)}
+								>
+									<Plus className="h-4 w-4" />
+									<Translate text={localizationConstants.addUser} />
+								</Button>
+							</div>
 
-					{/* Table */}
-					<Table>
-						<TableHeader>
-							<TableRow className="border-slate-200 hover:bg-transparent">
-								<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
-									<Translate text={localizationConstants.nameLabel} />
-								</TableHead>
-								<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
-									<Translate text={localizationConstants.personalNumberLabel} />
-								</TableHead>
-								<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
-									<Translate text={localizationConstants.adminAccessCol} />
-								</TableHead>
-								<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
-									<Translate text={localizationConstants.adminGroupCol} />
-								</TableHead>
-								<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
-									<Translate text={localizationConstants.roleLabel} />
-								</TableHead>
-								<TableHead className="w-[200px] px-4 py-3 text-sm font-medium text-slate-500">
-									<Translate text={localizationConstants.statusLabel} />
-								</TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{users.length === 0 && (
-								<TableRow>
-									<TableCell colSpan={6} className="h-32 text-center text-sm text-slate-500">
-										<Translate text={localizationConstants.adminNoUsersFound} />
-									</TableCell>
-								</TableRow>
-							)}
-							{users.map((user) => (
-								<TableRow key={user.id} className="border-slate-200 hover:bg-slate-50/70">
-									<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
-										{user.name}
-									</TableCell>
-									<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
-										{user.personNo}
-									</TableCell>
-									<TableCell className="px-4 py-3.5">
-										<AccessBadge access={user.access} />
-									</TableCell>
-									<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
-										{user.group}
-									</TableCell>
-									<TableCell className="px-4 py-3.5 text-sm text-[#020617]">
-										{user.role}
-									</TableCell>
-									<TableCell className="w-[200px] px-4 py-3.5">
-										<div className="flex items-center gap-3">
-											<StatusBadge status={user.status} />
-											<Button
-												variant="outline"
-												size="sm"
-												className="h-8 rounded-md border-slate-200 bg-white px-3 text-xs font-medium text-[#0F172A] hover:bg-slate-50"
-											>
-												<Translate text={localizationConstants.editLabel} />
-											</Button>
-										</div>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+							{/* Table */}
+							<UsersTable onEdit={() => router.push("/admin/users/user-settings")} />
+						</div>
+					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 }
