@@ -20,10 +20,11 @@ const BREADCRUMBS: BreadcrumbItem[] = [
   { label: localizationConstants.archivedprojects },
 ];
 
+const PAGE_SIZE = 10;
+
 export function ArchivedProjectList() {
   const t = useTranslate();
   const { query, search, changeQuery, page } = useQueryParams();
-  const pageSize = 10;
 
   const sortBy = query.get("sort_by") || "";
   const sortOrder = query.get("sort_order") || "";
@@ -40,7 +41,7 @@ export function ArchivedProjectList() {
       setError(null);
       const res = await getProjectListAPIAction({
         page,
-        pageSize,
+        pageSize: PAGE_SIZE,
         search: search.trim() || undefined,
         sortBy: sortBy || undefined,
         sortOrder: sortOrder || undefined,
@@ -82,7 +83,7 @@ export function ArchivedProjectList() {
     return () => {
       cancelled = true;
     };
-  }, [page, pageSize, search, sortBy, sortOrder, retryKey]);
+  }, [page, search, sortBy, sortOrder, retryKey]);
 
   const pageRows = projects;
 

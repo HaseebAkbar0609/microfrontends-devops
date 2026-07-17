@@ -161,6 +161,7 @@ export const enCommonFiles: CommonFiles = {
 	upload: "Upload",
 	noFileChosen: "No file chosen",
 	unsupportedFileType: "Only PNG and JPG files are allowed.",
+	partialUploadWarning: "Some files uploaded successfully, others failed. Please retry the remaining files.",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {

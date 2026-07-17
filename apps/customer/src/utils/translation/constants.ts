@@ -476,6 +476,7 @@ export type CommonFiles = {
 	upload: string;
 	noFileChosen: string;
 	unsupportedFileType: string;
+	partialUploadWarning: string;
 };
 
 export type DiscountsModule = {

@@ -74,11 +74,16 @@ export function DocumentUpload({ projectId, onUploadSuccess }: DocumentUploadPro
 			if (fileInputRef.current) fileInputRef.current.value = "";
 			onUploadSuccess();
 		} catch (err: unknown) {
+			const errorMessage =
+				err instanceof Error && err.message
+					? err.message
+					: "An error occurred during file upload";
 			if (hasAtLeastOneLinked) {
+				showToast("warning", t(localizationConstants.partialUploadWarning));
 				onUploadSuccess();
+			} else {
+				showToast("error", errorMessage);
 			}
-			const error = err as Error;
-			showToast("error", error.message || "An error occurred during file upload");
 		} finally {
 			setUploading(false);
 		}

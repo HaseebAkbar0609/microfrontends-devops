@@ -207,6 +207,7 @@ export const svCommonFiles: CommonFiles = {
 	upload: "Ladda upp",
 	noFileChosen: "Ingen fil vald",
 	unsupportedFileType: "Endast PNG- och JPG-filer är tillåtna.",
+	partialUploadWarning: "Vissa filer laddades upp, andra misslyckades. Försök igen med de återstående filerna.",
 };
 
 export const svDashboard: DashboardText = {
