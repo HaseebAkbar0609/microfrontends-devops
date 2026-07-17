@@ -95,25 +95,27 @@ export default function UserDetailsPage() {
           </Form>
         </div>
 
-        <footer className="h-16 flex items-center justify-end gap-4 border-t bg-white px-8 py-0 z-10 shrink-0">
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10! text-sm font-medium border-slate-200 text-slate-900 bg-transparent hover:bg-slate-100"
-            onClick={handleCancel}
-            disabled={isSubmitting}
-          >
-            <Translate text={localizationConstants.addUserCancel} />
-          </Button>
-          <Button
-            type="submit"
-            form="user-details-form"
-            className="h-10! text-sm font-medium bg-[#111721] text-white hover:bg-[#111721]/90"
-            disabled={isSubmitting}
-          >
-            <Save className="mr-2 h-4 w-4" />
-            <Translate text={localizationConstants.addUserSave} />
-          </Button>
+        <footer className="shrink-0 border-t bg-white px-6 py-4 z-10">
+          <div className="flex items-center justify-end gap-3">
+            <Button
+              type="button"
+              variant="outline"
+              className="min-w-[120px] border-slate-200 text-slate-600 h-10 bg-transparent hover:bg-slate-100"
+              onClick={handleCancel}
+              disabled={isSubmitting}
+            >
+              <Translate text={localizationConstants.addUserCancel} />
+            </Button>
+            <Button
+              type="submit"
+              form="user-details-form"
+              className="min-w-[120px] bg-slate-900 hover:bg-slate-800 text-white h-10 gap-2"
+              disabled={isSubmitting}
+            >
+              <Save className="h-4 w-4" />
+              <Translate text={localizationConstants.addUserSave} />
+            </Button>
+          </div>
         </footer>
       </div>
     </div>

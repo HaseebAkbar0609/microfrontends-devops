@@ -74,7 +74,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
 
   if (!isInline) {
     return (
-      <div className="flex h-full flex-col overflow-hidden bg-white">
+      <div className="flex h-full flex-col overflow-hidden bg-slate-50">
         <PageHeader
           title={t(localizationConstants.adminUsers)}
           breadcrumbs={[
@@ -111,25 +111,27 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
               </form>
             </Form>
           </div>
-          <footer className="h-16 flex items-center justify-end gap-3 border-t bg-white px-8 py-0 z-10 shrink-0">
-            <Button
-              type="button"
-              variant="outline"
-              className="h-10! text-sm font-medium border-slate-200 text-slate-900 bg-transparent hover:bg-slate-100"
-              onClick={handleCancel}
-              disabled={isSubmitting}
-            >
-              <Translate text={localizationConstants.addUserCancel} />
-            </Button>
-            <Button
-              type="submit"
-              form="add-user-form"
-              className="h-10! text-sm font-medium bg-[#111721] text-white hover:bg-[#111721]/90"
-              disabled={isSubmitting}
-            >
-              <Save className="mr-2 h-4 w-4" />
-              <Translate text={localizationConstants.addUserSave} />
-            </Button>
+          <footer className="shrink-0 border-t bg-white px-6 py-4 z-10">
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                className="min-w-[120px] border-slate-200 text-slate-600 h-10 bg-transparent hover:bg-slate-100"
+                onClick={handleCancel}
+                disabled={isSubmitting}
+              >
+                <Translate text={localizationConstants.addUserCancel} />
+              </Button>
+              <Button
+                type="submit"
+                form="add-user-form"
+                className="min-w-[120px] bg-slate-900 hover:bg-slate-800 text-white h-10 gap-2"
+                disabled={isSubmitting}
+              >
+                <Save className="h-4 w-4" />
+                <Translate text={localizationConstants.addUserSave} />
+              </Button>
+            </div>
           </footer>
         </div>
       </div>
@@ -137,7 +139,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
   }
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden bg-white">
+    <div className="flex flex-1 flex-col overflow-hidden bg-slate-50">
       <div className="flex-1 overflow-y-auto px-8 pt-4 pb-6 no-scrollbar">
         <div className="mb-4 flex items-center gap-3">
           <button
@@ -166,25 +168,27 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
           </form>
         </Form>
       </div>
-      <footer className="h-14 flex items-center justify-end gap-3 border-t bg-white px-8 py-0 z-10 shrink-0">
-        <Button
-          type="button"
-          variant="outline"
-          className="h-10! text-sm font-medium border-slate-200 text-slate-900 bg-transparent hover:bg-slate-100"
-          onClick={handleCancel}
-          disabled={isSubmitting}
-        >
-          <Translate text={localizationConstants.addUserCancel} />
-        </Button>
-        <Button
-          type="submit"
-          form="add-user-form"
-          className="h-10! text-sm font-medium bg-[#111721] text-white hover:bg-[#111721]/90"
-          disabled={isSubmitting}
-        >
-          <Save className="mr-2 h-4 w-4" />
-          <Translate text={localizationConstants.addUserSave} />
-        </Button>
+      <footer className="shrink-0 border-t bg-white px-6 py-4 z-10">
+        <div className="flex items-center justify-end gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            className="min-w-[120px] border-slate-200 text-slate-600 h-10 bg-transparent hover:bg-slate-100"
+            onClick={handleCancel}
+            disabled={isSubmitting}
+          >
+            <Translate text={localizationConstants.addUserCancel} />
+          </Button>
+          <Button
+            type="submit"
+            form="add-user-form"
+            className="min-w-[120px] bg-slate-900 hover:bg-slate-800 text-white h-10 gap-2"
+            disabled={isSubmitting}
+          >
+            <Save className="h-4 w-4" />
+            <Translate text={localizationConstants.addUserSave} />
+          </Button>
+        </div>
       </footer>
     </div>
   );
