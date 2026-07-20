@@ -711,8 +711,8 @@ export function CreateAccountWizard({ open, onOpenChange, onSuccess }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[min(92vw,680px)] lg:max-w-[720px] xl:max-w-[750px] rounded-[16px] overflow-hidden p-0 bg-white border border-slate-200 shadow-xl">
-        <div className="flex flex-col gap-1 bg-white px-8 pt-6 pb-4 border-b border-slate-200">
+      <DialogContent className="flex flex-col max-h-[calc(100vh-2rem)] sm:max-h-[90vh] max-w-[min(92vw,680px)] lg:max-w-[720px] xl:max-w-[750px] rounded-[16px] overflow-hidden p-0 bg-white border border-slate-200 shadow-xl">
+        <div className="flex shrink-0 flex-col gap-1 bg-white px-6 sm:px-8 pt-6 pb-4 border-b border-slate-200">
           <DialogTitle className="text-[20px] font-semibold text-slate-900 leading-[28px] tracking-[-0.45px]">
             <Translate text={localizationConstants.createCustomerAccountTitle} />
           </DialogTitle>
@@ -721,9 +721,11 @@ export function CreateAccountWizard({ open, onOpenChange, onSuccess }: Props) {
           </span>
         </div>
 
-        <ProgressBar step={step} />
+        <div className="shrink-0">
+          <ProgressBar step={step} />
+        </div>
 
-        <div className="max-h-[calc(100vh-230px)] overflow-y-auto bg-white px-8 py-5 flex flex-col gap-5">
+        <div className="flex-1 min-h-0 overflow-y-auto bg-white px-6 sm:px-8 py-5 flex flex-col gap-5">
           {step !== 3 && (
             <h3 className={stepTitleClass}>
               <Translate text={stepTitle} />
@@ -746,7 +748,7 @@ export function CreateAccountWizard({ open, onOpenChange, onSuccess }: Props) {
           {step === 4 && <Step4 data={formData} />}
         </div>
 
-        <div className="flex shrink-0 items-center justify-between bg-white px-8 py-4 border-t border-slate-200">
+        <div className="flex shrink-0 items-center justify-between bg-white px-6 sm:px-8 py-4 border-t border-slate-200">
           <Button
             type="button"
             variant="outline"
