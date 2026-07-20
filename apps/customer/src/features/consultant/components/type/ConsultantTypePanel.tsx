@@ -7,21 +7,31 @@ import type { ConsultantTypeItem } from "../../types/consultantType";
 import { ConsultantTypeList } from "./ConsultantTypeList";
 import { ConsultantTypeDetail } from "./ConsultantTypeDetail";
 import { FindMyConsultantButton } from "../FindMyConsultantButton";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export function ConsultantTypePanel() {
 	const [types, setTypes] = useState<ConsultantTypeItem[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
 	const [selectedId, setSelectedId] = useState<string | null>(null);
+	const [search] = useState("");
+
+	const debouncedSearch = useDebounce(search, 500);
 
 	useEffect(() => {
 		let cancelled = false;
+		setLoading(true);
 
-		void getConsultantTypesAPIAction({}).then((result) => {
+		void getConsultantTypesAPIAction({ search: debouncedSearch }).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setTypes(result.data);
-				setSelectedId((prev) => prev ?? result.data?.[0]?.id ?? null);
+				setSelectedId((prev) => {
+					if (prev && result.data?.find(t => t.id === prev)) {
+						return prev;
+					}
+					return result.data?.[0]?.id ?? null;
+				});
 			} else {
 				setLoadError(result.error ?? null);
 			}
@@ -31,7 +41,7 @@ export function ConsultantTypePanel() {
 		return () => {
 			cancelled = true;
 		};
-	}, []);
+	}, [debouncedSearch]);
 
 	const selectedType = useMemo(
 		() => types.find((t) => t.id === selectedId) ?? null,
