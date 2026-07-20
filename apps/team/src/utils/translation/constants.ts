@@ -301,6 +301,7 @@ export type LeadsTranslation = {
 	projectDocuments: string;
 	inviteSuppliers: string;
 	quoteListTab: string;
+	activityLogsTab: string;
 	monitorLabel: string;
 	activeLabel: string;
 	archiveLabel: string;
