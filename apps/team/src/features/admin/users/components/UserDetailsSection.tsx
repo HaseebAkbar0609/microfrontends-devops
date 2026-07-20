@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormSwitch } from "@/components/form/FormSwitch";
 import { FormCheckbox } from "@/components/form/FormCheckbox";
@@ -76,8 +77,6 @@ const TYPE_OPTIONS = [
   { value: "service", label: "Service" },
   { value: "admin", label: "Admin" },
 ];
-
-import { useSearchParams } from "next/navigation";
 
 interface ModuleItem {
   titleKey: string;
