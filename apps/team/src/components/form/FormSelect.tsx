@@ -33,6 +33,7 @@ export interface FormSelectProps<
   placeholder?: string;
   options: FormSelectOption[];
   disabled?: boolean;
+  leadingIcon?: React.ComponentType<{ className?: string }>;
   /** Class applied to the FormItem (root wrapper) */
   className?: string;
   /** Class applied to the FormLabel */
@@ -55,6 +56,7 @@ export function FormSelect<
   placeholder = "Select...",
   options,
   disabled,
+  leadingIcon: LeadingIcon,
   className,
   labelClassName,
   triggerClassName,
@@ -77,6 +79,7 @@ export function FormSelect<
           >
             <FormControl>
               <SelectTrigger className={triggerClassName}>
+                {LeadingIcon && <LeadingIcon className="h-4 w-4 shrink-0 text-slate-500 mr-2" />}
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
