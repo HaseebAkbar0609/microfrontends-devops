@@ -185,6 +185,7 @@ function ProfessionalListPageInner() {
 						onSearchChange={setSearchInput}
 						onSort={handlePendingSort}
 						onDelete={handlePendingDelete}
+						onCreateClick={() => setWizardOpen(true)}
 						{...paginationProps}
 					/>
 				</TabsContent>

@@ -524,6 +524,38 @@ export type ProfessionalTranslation = {
 	professionalNoDataFound: string;
 	dueDateLabel: string;
 	deleteCannotUndoneLabel: string;
+	stepOfLabel: string;
+	accountTypeSectionTitle: string;
+	companyDetailsSectionTitle: string;
+	contactInfoSectionTitle: string;
+	reviewSectionTitle: string;
+	statusLabel: string;
+	statusPendingLabel: string;
+	statusActiveLabel: string;
+	createAccountLabel: string;
+	companyInfoSectionTitle: string;
+	contactPersonSectionTitle: string;
+	choosePlanSectionTitle: string;
+	licensesLabel: string;
+	quantityLabel: string;
+	amountPerMonthLabel: string;
+	totalLabel: string;
+	testPeriodLabel: string;
+	startLabel: string;
+	endLabel: string;
+	validationOrgNumberInvalid: string;
+	validationContactNameRequired: string;
+	validationPlanRequired: string;
+	validationStatusRequired: string;
+	contactNamePlaceholder: string;
+	emailPlaceholder: string;
+	sekPerMonthLabel: string;
+	startTestPlanLabel: string;
+	phonePlaceholder: string;
+	companyNamePlaceholder: string;
+	categoryPlaceholder: string;
+	cityPlaceholder: string;
+	amountLabel: string;
 };
 
 export type AdminTranslation = {
