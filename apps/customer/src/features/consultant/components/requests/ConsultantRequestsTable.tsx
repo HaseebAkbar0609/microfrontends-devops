@@ -264,7 +264,7 @@ export function ConsultantRequestsTable({
 								key={request.id}
 								onClick={() =>
 									router.push(
-										`/business/consultant/list?project_id=${request.project_id}&type=${request.consultantType}`,
+										`/business/consultant/list?type=${request.consultantType}`,
 									)
 								}
 								className="cursor-pointer border-b border-slate-100 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"

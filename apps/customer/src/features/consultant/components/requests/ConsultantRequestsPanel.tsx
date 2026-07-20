@@ -6,12 +6,10 @@ import { Loader2 } from "lucide-react";
 import { ActionsToolbar } from "@/components/common";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import localizationConstants from "@/utils/translation/constants";
-import { 
-	getConsultantRequestsAPIAction,
-	getConsultantTypesAPIAction
-} from "@/api-actions";
+import { getConsultantRequestsAPIAction } from "@/api-actions";
 import type { ConsultantRequest } from "../../types/consultantRequest";
 import { ConsultantRequestsTable } from "./ConsultantRequestsTable";
+import { CONSULTANT_REQUEST_FILTER_OPTIONS } from "../../constants/directory";
 
 export function ConsultantRequestsPanel() {
 	const router = useRouter();
@@ -27,25 +25,6 @@ export function ConsultantRequestsPanel() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
-	const [filterOptions, setFilterOptions] = useState<{label: string; value: string}[]>([]);
-
-	useEffect(() => {
-		let cancelled = false;
-		void getConsultantTypesAPIAction().then((result) => {
-			if (cancelled) return;
-			if (result.success && result.data) {
-				setFilterOptions(
-					result.data.map((t) => ({
-						label: t.name,
-						value: t.id,
-					}))
-				);
-			}
-		});
-		return () => {
-			cancelled = true;
-		};
-	}, []);
 
 	useEffect(() => {
 		let cancelled = false;
@@ -85,7 +64,7 @@ export function ConsultantRequestsPanel() {
 				filters={[
 					{
 						label: localizationConstants.filter,
-						options: filterOptions,
+						options: CONSULTANT_REQUEST_FILTER_OPTIONS,
 						value: consultantFilter || undefined,
 						onFilterChange: (val) => changeQuery("consultant", val),
 					},

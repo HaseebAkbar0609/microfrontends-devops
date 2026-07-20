@@ -84,7 +84,7 @@ const LEAD_TABLE_CONFIG: Record<LeadStatus, LeadTableConfig> = {
 		columnCount: 10,
 		isSelectable: true,
 		showCreateButton: false,
-		showResendButton: false,
+		showResendButton: true,
 	},
 	accepterad: {
 		titleKey: localizationConstants.leadsAcceptedTitle,
@@ -136,7 +136,7 @@ const LEAD_TABLE_CONFIG: Record<LeadStatus, LeadTableConfig> = {
 		columnCount: 9,
 		isSelectable: true,
 		showCreateButton: true,
-		showResendButton: false,
+		showResendButton: true,
 	},
 };
 
@@ -243,8 +243,8 @@ export function getLeadRowCells(
 					value: handlingRow.matches,
 					suffixKey: localizationConstants.userLabel,
 				},
-				{ kind: "text", value: handlingRow.taken },
-				{ kind: "text", value: handlingRow.repeat },
+				{ kind: "pill", value: handlingRow.taken },
+				{ kind: "pill", value: handlingRow.repeat },
 			];
 		}
 		case "arkiv": {

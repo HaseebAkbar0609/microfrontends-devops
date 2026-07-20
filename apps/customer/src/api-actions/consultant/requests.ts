@@ -1,6 +1,6 @@
-import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 import type { ConsultantRequest } from "@/features/consultant/types/consultantRequest";
+import { DUMMY_CONSULTANT_REQUESTS } from "@/features/consultant/constants/directory";
 
 export interface GetConsultantRequestsParams {
   page?: number;
@@ -29,54 +29,43 @@ export async function getConsultantRequestsAPIAction(
   } = params;
 
   try {
-    const query = new URLSearchParams({
-      page: page.toString(),
-      page_size: pageSize.toString(),
-    });
+    let rows = [...DUMMY_CONSULTANT_REQUESTS];
 
-    if (search) query.append("search", search);
-    if (consultant) query.append("consultant", consultant);
-    if (sortBy) query.append("sort_by", sortBy);
-    if (sortOrder) query.append("sort_order", sortOrder);
-
-    const response = await axiosInstance.get(
-      `/api/v1/customers/consultation/list?${query.toString()}`,
-    );
-
-    const data = response.data?.data || [];
-    
-    // Map backend response to frontend ConsultantRequest interface
-    interface RequestItem {
-      id: string;
-      project_id?: string;
-      applications_count?: number;
-      created_at: number;
-      selected_options?: { project?: string; consultant_type_id?: string };
+    const q = search?.trim().toLowerCase();
+    if (q) {
+      rows = rows.filter(
+        (r) =>
+          r.project.toLowerCase().includes(q) ||
+          r.consultant.toLowerCase().includes(q),
+      );
     }
-    const requests: ConsultantRequest[] = (data as RequestItem[]).map((item) => ({
-      id: item.id,
-      project_id: item.project_id || "",
-      project: item.selected_options?.project || "Unknown Project",
-      applications: item.applications_count || 0,
-      date: new Date(item.created_at).toISOString().split("T")[0],
-      consultant: item.selected_options?.consultant_type_id || "Unknown",
-      consultantType: (item.selected_options?.consultant_type_id || "architect") as ConsultantRequest["consultantType"],
-    }));
 
-    return { 
-      success: true, 
-      data: { 
-        requests, 
-        totalItems: response.data?.meta?.total_items || requests.length 
-      }, 
-      error: null 
-    };
-  } catch (error: unknown) {
-    const apiError = error as { response?: { data?: { message?: string } }; message?: string };
+    if (consultant) {
+      rows = rows.filter((r) => r.consultant === consultant);
+    }
+
+    const dir = sortOrder === "desc" ? -1 : 1;
+    if (sortBy === "project" || sortBy === "consultant") {
+      rows.sort((a, b) => a[sortBy].localeCompare(b[sortBy]) * dir);
+    } else if (sortBy === "applications") {
+      rows.sort((a, b) => (a.applications - b.applications) * dir);
+    } else if (sortBy === "date") {
+      rows.sort((a, b) => (a.date < b.date ? -1 : 1) * dir);
+    } else {
+      // Default: newest first.
+      rows.sort((a, b) => (a.date < b.date ? 1 : -1));
+    }
+
+    const totalItems = rows.length;
+    const start = (page - 1) * pageSize;
+    const requests = rows.slice(start, start + pageSize);
+
+    return { success: true, data: { requests, totalItems }, error: null };
+  } catch (error) {
     return {
       success: false,
       data: null,
-      error: apiError.response?.data?.message || apiError.message || "Failed to load requests",
+      error: error instanceof Error ? error.message : "Failed to load requests",
     };
   }
 }

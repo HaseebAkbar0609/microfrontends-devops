@@ -1,7 +1,6 @@
 "use client";
 
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
-import type { LucideIcon } from "lucide-react";
 
 import {
   FormControl,
@@ -44,7 +43,6 @@ export interface FormSelectProps<
   contentClassName?: string;
   /** Class applied to the FormMessage (error text) */
   messageClassName?: string;
-  leadingIcon?: LucideIcon;
 }
 
 export function FormSelect<
@@ -62,7 +60,6 @@ export function FormSelect<
   triggerClassName,
   contentClassName,
   messageClassName,
-  leadingIcon: LeadingIcon,
 }: FormSelectProps<TFieldValues, TName>) {
   return (
     <FormField
@@ -79,13 +76,8 @@ export function FormSelect<
             disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger className={cn("gap-3", triggerClassName)}>
-                <span className="flex items-center gap-2">
-                  {LeadingIcon && (
-                    <LeadingIcon className="h-4 w-4 shrink-0 text-slate-700" />
-                  )}
-                  <SelectValue placeholder={placeholder} />
-                </span>
+              <SelectTrigger className={triggerClassName}>
+                <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>
             <SelectContent className={contentClassName}>

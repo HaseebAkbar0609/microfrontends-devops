@@ -26,15 +26,16 @@ export const API_PATH = {
 		PROFILE: `${BASE_PATHS.USER}/profile`,
 	},
 	PROFILE: {
-		ME: `${API_PREFIX}/profile/me`,
+		BASE: `${BASE_PATHS.USER}/profile`,
+		ME: `${BASE_PATHS.USER}/profile`,
+	},
+	SETTINGS: {
+		BASE: `${API_PREFIX}/settings`,
+		ME: `${API_PREFIX}/settings`,
 	},
 	USERS: {
 		BASE: `${API_PREFIX}/users`,
-		detail: (userId: string) =>
-			`${API_PREFIX}/users/${encodeURIComponent(userId)}`,
-	},
-	SETTINGS: {
-		ME: `${API_PREFIX}/settings/me`,
+		detail: (userId: string) => `${API_PREFIX}/users/${encodeURIComponent(userId)}`,
 	},
 	PROJECT: {
 		ACTIVE: `${BASE_PATHS.PROJECT}/active`,

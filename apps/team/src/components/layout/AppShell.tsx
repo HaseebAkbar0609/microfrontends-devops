@@ -53,7 +53,7 @@ export function AppShell({ children }: AppShellProps) {
 					<div className="flex flex-1 flex-col overflow-hidden">
 						<Header />
 						<main
-							className={`flex flex-1 flex-col bg-white overflow-hidden`}
+							className={`flex flex-1 flex-col bg-white pb-6 ${hasFlyoutSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
 						>
 							{children}
 						</main>
