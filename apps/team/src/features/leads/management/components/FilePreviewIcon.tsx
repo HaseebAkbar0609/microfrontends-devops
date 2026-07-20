@@ -19,7 +19,7 @@ export default function FilePreviewIcon({
 			<span className={className}>
 				<Image
 					alt="PDF file"
-					src="/images/File-icon.svg"
+					src="/assets/icons/file-pdf-icon.svg"
 					height={40}
 					width={40}
 				/>

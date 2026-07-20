@@ -37,6 +37,7 @@ import {
 	createConsultantRequestAPIAction,
 	getConsultantTypesAPIAction,
 	uploadMediaAPIAction,
+	getActiveProjectsAPIAction,
 } from "@/api-actions";
 import { getDocumentIconMeta } from "@/features/quote/utils/documentIcon";
 import {
@@ -55,6 +56,8 @@ export default function CreateConsultantRequestForm() {
 
 	const [typeOptions, setTypeOptions] = useState<FormSelectOption[]>([]);
 	const [typesLoading, setTypesLoading] = useState(true);
+	const [projectOptions, setProjectOptions] = useState<FormSelectOption[]>([]);
+	const [projectsLoading, setProjectsLoading] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const form = useForm<CreateConsultantRequestFormValues>({
@@ -85,6 +88,19 @@ export default function CreateConsultantRequestForm() {
 				);
 			}
 			setTypesLoading(false);
+		});
+
+		void getActiveProjectsAPIAction({ limit: 100 }).then((result) => {
+			if (cancelled) return;
+			if (result.success && result.data) {
+				setProjectOptions(
+					result.data.data.map((proj) => ({
+						value: proj.id,
+						label: proj.name,
+					})),
+				);
+			}
+			setProjectsLoading(false);
 		});
 
 		return () => {
@@ -139,7 +155,7 @@ export default function CreateConsultantRequestForm() {
 			}
 
 			const result = await createConsultantRequestAPIAction({
-				project: values.project,
+				project_id: values.project,
 				consultant_type_id: values.consultantType,
 				customer_name: values.customer,
 				email: values.email,
@@ -215,7 +231,7 @@ export default function CreateConsultantRequestForm() {
 							</CardHeader>
 							<CardContent className="p-5">
 								<div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-									<FormInput
+									<FormSelect
 										control={form.control}
 										name="project"
 										label={
@@ -226,6 +242,9 @@ export default function CreateConsultantRequestForm() {
 											/>
 										}
 										placeholder="Property 1"
+										options={projectOptions}
+										disabled={projectsLoading}
+										triggerClassName="w-full"
 									/>
 									<FormSelect
 										control={form.control}

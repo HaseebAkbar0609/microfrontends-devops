@@ -101,6 +101,7 @@ export function RutTable({
 			rowKey={(row) => row.id}
 			actions={actions}
 			loading={loading}
+			bordered
 			emptyMessageKey={localizationConstants.noRutEntriesFound}
 			pagination={{ page, pageSize, totalItems }}
 			onPageChange={(p) => changeQueries({ page: String(p) })}
