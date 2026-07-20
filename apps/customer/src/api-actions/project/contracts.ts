@@ -1,0 +1,52 @@
+import axiosInstance from "@/lib/axiosInstance";
+import type { ActionResult } from "@/types/api";
+import { handleApiError } from "@/utils/apiError";
+
+export interface ProjectContract {
+  id: string;
+  name?: string;
+  title?: string;
+  file_url?: string;
+  created_at?: string;
+  contract_number?: string;
+}
+
+export async function getProjectContractsAPIAction(projectId: string): Promise<ActionResult<ProjectContract[]>> {
+  try {
+    const { data } = await axiosInstance.get(`/api/v1/project/${projectId}/contracts`);
+    return {
+      success: true,
+      data: data?.data ?? data,
+      error: null,
+    };
+  } catch (error: unknown) {
+    return handleApiError(error, "Failed to fetch contracts");
+  }
+}
+
+export async function saveProjectContractAPIAction(projectId: string, payload: unknown): Promise<ActionResult<ProjectContract>> {
+  try {
+    const { data } = await axiosInstance.post(`/api/v1/project/${projectId}/contracts`, payload);
+    return {
+      success: true,
+      data: data?.data ?? data,
+      error: null,
+    };
+  } catch (error: unknown) {
+    return handleApiError(error, "Failed to save contract");
+  }
+}
+
+export async function deleteProjectContractAPIAction(projectId: string, contractId: string): Promise<ActionResult<void>> {
+  try {
+    await axiosInstance.delete(`/api/v1/project/${projectId}/contracts/${contractId}`);
+    return {
+      success: true,
+      data: undefined,
+      error: null,
+    };
+  } catch (error: unknown) {
+    return handleApiError(error, "Failed to delete contract");
+  }
+}
+

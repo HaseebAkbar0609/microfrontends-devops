@@ -11,7 +11,13 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
-export function InviteSuppliersCard() {
+import type { QuoteSupplier } from "../../types/form";
+
+interface InviteSuppliersCardProps {
+	suppliers?: QuoteSupplier[];
+}
+
+export function InviteSuppliersCard({ suppliers = [] }: InviteSuppliersCardProps) {
 	return (
 		<DetailCard
 			icon={MailPlus}
@@ -37,36 +43,28 @@ export function InviteSuppliersCard() {
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{[
-							{
-								name: "Pelle Construction",
-								org: "982 234 2341",
-								contact: "Peter Svensson",
-								email: "peter@pellebygg.se",
-							},
-							{
-								name: "Nisse Construction",
-								org: "982 234 2341",
-								contact: "Nisse Olsson",
-								email: "nisse@nissebygg.se",
-							},
-							{
-								name: "CL Construction",
-								org: "982 234 2341",
-								contact: "Conny Larson",
-								email: "conny@larson.se",
-							},
-						].map((supplier, idx) => (
-							<TableRow
-								key={idx}
-								className="border-slate-100 hover:bg-slate-50/30"
-							>
-								<TableCell className="text-sm py-4">{supplier.name}</TableCell>
-								<TableCell className="text-sm py-4">{supplier.org}</TableCell>
-								<TableCell className="text-sm py-4">{supplier.contact}</TableCell>
-								<TableCell className="text-sm py-4">{supplier.email}</TableCell>
+						{suppliers.length > 0 ? (
+							suppliers.map((supplier, idx) => {
+								const contactName = `${supplier.contactFirstName || ""} ${supplier.contactLastName || ""}`.trim() || "-";
+								return (
+									<TableRow
+										key={supplier.id || idx}
+										className="border-slate-100 hover:bg-slate-50/30"
+									>
+										<TableCell className="text-sm py-4">{supplier.companyName || "-"}</TableCell>
+										<TableCell className="text-sm py-4">{supplier.orgNumber || "-"}</TableCell>
+										<TableCell className="text-sm py-4">{contactName}</TableCell>
+										<TableCell className="text-sm py-4">{supplier.emailAddress || "-"}</TableCell>
+									</TableRow>
+								);
+							})
+						) : (
+							<TableRow>
+								<TableCell colSpan={4} className="text-center py-6 text-slate-400 text-sm">
+									No suppliers invited
+								</TableCell>
 							</TableRow>
-						))}
+						)}
 					</TableBody>
 				</Table>
 			</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { ChevronDown, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
-interface ContractFormData {
+import type { ActiveProject } from "../../types";
+
+export interface ContractFormData {
   firstName: string;
   lastName: string;
   mobile: string;
@@ -35,16 +37,20 @@ interface ContractFormData {
   contactEmail: string;
 }
 
-interface StagedDocument {
+export interface StagedDocument {
   id: string;
   name: string;
   validity: string;
   fileType: string;
+  file?: File;
 }
 
 interface ContractCreateFormProps {
+  project?: ActiveProject;
+  initialForm?: ContractFormData;
+  initialDocuments?: StagedDocument[];
   onBack: () => void;
-  onNext: () => void;
+  onNext: (formData?: ContractFormData, docs?: StagedDocument[]) => void;
 }
 
 function FormField({
@@ -67,13 +73,7 @@ function FormField({
   );
 }
 
-function SectionHeader({
-  iconSrc,
-  title,
-}: {
-  iconSrc: string;
-  title: string;
-}) {
+function SectionHeader({ iconSrc, title }: { iconSrc: string; title: string }) {
   return (
     <div className="flex items-center gap-2 px-4 py-3.5 border-b border-[#E4E4E7]">
       <Image src={iconSrc} alt="" width={20} height={20} className="shrink-0" />
@@ -82,41 +82,87 @@ function SectionHeader({
   );
 }
 
-export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) {
+export function ContractCreateForm({
+  project,
+  initialForm,
+  initialDocuments,
+  onBack,
+  onNext,
+}: ContractCreateFormProps) {
   const t = useTranslate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [form, setForm] = useState<ContractFormData>({
-    firstName: "Anna",
-    lastName: "Andersson",
-    mobile: "070-560 50 50",
-    privateEmail: "anna@gmail.com",
-    address: "Stengatan 10",
-    city: "Solna",
-    postalCode: "171 63",
-    projectName: "Bathroom",
-    isExpress: false,
-    orderNumber: "0012",
-    category: "Painter",
-    sameAsContact: false,
-    projectAddress: "Stengatan 10",
-    projectCity: "Solna",
-    projectPostalCode: "171 63",
-    directions: "",
-    supplier: "Nolen Contractor",
-    orgNo: "556456357375",
-    supplierAddress: "Storgatan 115",
-    supplierPostalCode: "171 63",
-    supplierCity: "Solna",
-    contactPerson: "Peter Svensson",
-    contactMobile: "0730998800",
-    contactEmail: "pelle@gmail.com",
-  });
+  const getInitialForm = useCallback((): ContractFormData => {
+    if (initialForm) return initialForm;
+    const contactParts =
+      project?.contactPersonName && project.contactPersonName !== "-"
+        ? project.contactPersonName.split(" ")
+        : [];
+    const firstName = contactParts[0] || "";
+    const lastName = contactParts.slice(1).join(" ") || "";
+    const mobile =
+      project?.mobileNumber && project.mobileNumber !== "-"
+        ? project.mobileNumber
+        : "";
+    const email = project?.email && project.email !== "-" ? project.email : "";
+    const address =
+      project?.address && project.address !== "-" ? project.address : "";
+    const city = project?.city && project.city !== "-" ? project.city : "";
+    const postalCode =
+      project?.postalCode && project.postalCode !== "-"
+        ? project.postalCode
+        : "";
+    const name = project?.name && project.name !== "-" ? project.name : "";
+    const orderNo =
+      project?.orderNo && project.orderNo !== "-"
+        ? project.orderNo
+        : project?.clientNo && project.clientNo !== "-"
+          ? project.clientNo
+          : "";
+    const category =
+      project?.category && project.category !== "-" ? project.category : "";
+    const company =
+      project?.companyName && project.companyName !== "-"
+        ? project.companyName
+        : "";
 
-  const [documents, setDocuments] = useState<StagedDocument[]>([
-    { id: "1", name: "MaNescriptive", validity: "2026-01-01", fileType: "PDF" },
-    { id: "2", name: "Policy", validity: "2026-08-04", fileType: "PDF" },
-  ]);
+    return {
+      firstName,
+      lastName,
+      mobile,
+      privateEmail: email,
+      address,
+      city,
+      postalCode,
+      projectName: name,
+      isExpress: false,
+      orderNumber: orderNo,
+      category,
+      sameAsContact: false,
+      projectAddress: address,
+      projectCity: city,
+      projectPostalCode: postalCode,
+      directions: "",
+      supplier: company,
+      orgNo: "",
+      supplierAddress: "",
+      supplierPostalCode: "",
+      supplierCity: "",
+      contactPerson: "",
+      contactMobile: "",
+      contactEmail: "",
+    };
+  }, [initialForm, project]);
+
+  const [form, setForm] = useState<ContractFormData>(getInitialForm);
+
+  useEffect(() => {
+    setForm(getInitialForm());
+  }, [getInitialForm]);
+
+  const [documents, setDocuments] = useState<StagedDocument[]>(
+    initialDocuments || [],
+  );
 
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
 
@@ -136,6 +182,7 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
       name: f.name.replace(/\.[^.]+$/, ""),
       validity: "",
       fileType: (f.name.split(".").pop() ?? "FILE").toUpperCase(),
+      file: f,
     }));
     setDocuments((prev) => [...newDocs, ...prev]);
     setStagedFiles([]);
@@ -149,10 +196,8 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
 
   return (
     <div className="flex items-start gap-5 pb-12 bg-[#F8FAFC] min-h-screen px-4 pt-6">
-
       {/* ── Left: main form column ── */}
       <div className="flex-1 min-w-0">
-
         {/* Page header */}
         <div className="flex items-start gap-3 mb-6">
           <button
@@ -161,7 +206,12 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
             className="text-[#64748B] hover:text-[#09090B] mt-1 cursor-pointer transition-colors shrink-0"
             aria-label="Back"
           >
-            <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
+            <Image
+              src="/assets/icons/arrow-left.svg"
+              alt="Back"
+              width={20}
+              height={20}
+            />
           </button>
           <div>
             <h2 className="text-base font-semibold text-[#09090B]">
@@ -174,7 +224,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
         </div>
 
         <div className="space-y-4">
-
           {/* ── Personal Details ── */}
           <div className="bg-white border border-[#E5E5E5] rounded-lg">
             <SectionHeader
@@ -183,19 +232,21 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
             />
             <div className="p-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractFirstNameLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractFirstNameLabel)}
+                >
                   <Input
                     value={form.firstName}
                     onChange={(e) => set("firstName", e.target.value)}
-                    placeholder="Anna"
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractLastNameLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractLastNameLabel)}
+                >
                   <Input
                     value={form.lastName}
                     onChange={(e) => set("lastName", e.target.value)}
-                    placeholder="Andersson"
                     className={inputClass}
                   />
                 </FormField>
@@ -205,15 +256,15 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.mobile}
                     onChange={(e) => set("mobile", e.target.value)}
-                    placeholder="070-560 50 50"
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractPrivateEmailLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPrivateEmailLabel)}
+                >
                   <Input
                     value={form.privateEmail}
                     onChange={(e) => set("privateEmail", e.target.value)}
-                    placeholder="anna@gmail.com"
                     className={inputClass}
                   />
                 </FormField>
@@ -222,7 +273,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 <Input
                   value={form.address}
                   onChange={(e) => set("address", e.target.value)}
-                  placeholder="Stengatan 10"
                   className={inputClass}
                 />
               </FormField>
@@ -232,17 +282,17 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                     <Input
                       value={form.city}
                       onChange={(e) => set("city", e.target.value)}
-                      placeholder="Solna"
                       className={`${inputClass} pr-8`}
                     />
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
                   </div>
                 </FormField>
-                <FormField label={t(localizationConstants.contractPostalCodeLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPostalCodeLabel)}
+                >
                   <Input
                     value={form.postalCode}
                     onChange={(e) => set("postalCode", e.target.value)}
-                    placeholder="171 63"
                     className={inputClass}
                   />
                 </FormField>
@@ -258,15 +308,18 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
             />
             <div className="p-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractProjectNameLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractProjectNameLabel)}
+                >
                   <Input
                     value={form.projectName}
                     onChange={(e) => set("projectName", e.target.value)}
-                    placeholder="Bathroom"
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractExpressJobLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractExpressJobLabel)}
+                >
                   <div className="flex items-center gap-6 h-9 pt-1">
                     {(["Yes", "No"] as const).map((opt) => (
                       <label
@@ -287,19 +340,21 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 </FormField>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractOrderNumberLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractOrderNumberLabel)}
+                >
                   <Input
                     value={form.orderNumber}
                     onChange={(e) => set("orderNumber", e.target.value)}
-                    placeholder="0012"
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractCategoryLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractCategoryLabel)}
+                >
                   <Input
                     value={form.category}
                     onChange={(e) => set("category", e.target.value)}
-                    placeholder="Painter"
                     className={inputClass}
                   />
                 </FormField>
@@ -311,13 +366,16 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   onChange={(e) => set("sameAsContact", e.target.checked)}
                   className="rounded accent-[#18181B]"
                 />
-                <Translate text={localizationConstants.contractSameAsContactLabel} />
+                <Translate
+                  text={localizationConstants.contractSameAsContactLabel}
+                />
               </label>
-              <FormField label={t(localizationConstants.contractProjectAddressLabel)}>
+              <FormField
+                label={t(localizationConstants.contractProjectAddressLabel)}
+              >
                 <Input
                   value={form.projectAddress}
                   onChange={(e) => set("projectAddress", e.target.value)}
-                  placeholder="Stengatan 10"
                   className={inputClass}
                 />
               </FormField>
@@ -327,26 +385,28 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                     <Input
                       value={form.projectCity}
                       onChange={(e) => set("projectCity", e.target.value)}
-                      placeholder="Solna"
                       className={`${inputClass} pr-8`}
                     />
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
                   </div>
                 </FormField>
-                <FormField label={t(localizationConstants.contractPostalCodeLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPostalCodeLabel)}
+                >
                   <Input
                     value={form.projectPostalCode}
                     onChange={(e) => set("projectPostalCode", e.target.value)}
-                    placeholder="171 63"
                     className={inputClass}
                   />
                 </FormField>
               </div>
-              <FormField label={t(localizationConstants.contractDirectionsLabel)} required>
+              <FormField
+                label={t(localizationConstants.contractDirectionsLabel)}
+                required
+              >
                 <textarea
                   value={form.directions}
                   onChange={(e) => set("directions", e.target.value)}
-                  placeholder="3rd street from the Ikea store"
                   rows={3}
                   className="w-full rounded-md border border-[#E4E4E7] bg-white px-3 py-2 text-sm shadow-[0px_1px_2px_rgba(16,24,40,0.05)] placeholder:text-[#A1A1AA] focus:outline-none focus:ring-1 focus:ring-slate-300 resize-none"
                 />
@@ -362,12 +422,17 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
             />
             <div className="p-4 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractSupplierInfoTitle).split(" ")[0]}>
+                <FormField
+                  label={
+                    t(localizationConstants.contractSupplierInfoTitle).split(
+                      " ",
+                    )[0]
+                  }
+                >
                   <div className="relative">
                     <Input
                       value={form.supplier}
                       onChange={(e) => set("supplier", e.target.value)}
-                      placeholder="Nolen Contractor"
                       className={`${inputClass} pr-8`}
                     />
                     <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-[#71717A] pointer-events-none" />
@@ -377,25 +442,26 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.orgNo}
                     onChange={(e) => set("orgNo", e.target.value)}
-                    placeholder="556456357375"
                     className={inputClass}
                   />
                 </FormField>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractAddressLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractAddressLabel)}
+                >
                   <Input
                     value={form.supplierAddress}
                     onChange={(e) => set("supplierAddress", e.target.value)}
-                    placeholder="Storgatan 115"
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={t(localizationConstants.contractPostalCodeLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractPostalCodeLabel)}
+                >
                   <Input
                     value={form.supplierPostalCode}
                     onChange={(e) => set("supplierPostalCode", e.target.value)}
-                    placeholder="171 63"
                     className={inputClass}
                   />
                 </FormField>
@@ -404,16 +470,16 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                 <Input
                   value={form.supplierCity}
                   onChange={(e) => set("supplierCity", e.target.value)}
-                  placeholder="Solna"
                   className={inputClass}
                 />
               </FormField>
               <div className="grid grid-cols-2 gap-4">
-                <FormField label={t(localizationConstants.contractContactPersonLabel)}>
+                <FormField
+                  label={t(localizationConstants.contractContactPersonLabel)}
+                >
                   <Input
                     value={form.contactPerson}
                     onChange={(e) => set("contactPerson", e.target.value)}
-                    placeholder="Peter Svensson"
                     className={inputClass}
                   />
                 </FormField>
@@ -421,7 +487,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.contactMobile}
                     onChange={(e) => set("contactMobile", e.target.value)}
-                    placeholder="0730998800"
                     className={inputClass}
                   />
                 </FormField>
@@ -431,12 +496,13 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                   <Input
                     value={form.contactEmail}
                     onChange={(e) => set("contactEmail", e.target.value)}
-                    placeholder="pelle@gmail.com"
                     className={inputClass}
                   />
                 </FormField>
-                <FormField label={`${t(localizationConstants.contractMobileLabel)} 2`}>
-                  <Input placeholder="0730998800" className={inputClass} />
+                <FormField
+                  label={`${t(localizationConstants.contractMobileLabel)} 2`}
+                >
+                  <Input className={inputClass} />
                 </FormField>
               </div>
             </div>
@@ -453,7 +519,9 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
               {/* Upload area */}
               <div>
                 <p className="text-sm font-medium text-[#09090B] mb-1">
-                  <Translate text={localizationConstants.projectUploadFilesLabel} />
+                  <Translate
+                    text={localizationConstants.projectUploadFilesLabel}
+                  />
                 </p>
                 <p className="text-xs text-[#A1A1AA] mb-3">
                   PNG-, JPG- och PDF-filer är tillåtna.
@@ -497,7 +565,9 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
                     disabled={stagedFiles.length === 0}
                     className="bg-[#18181B] hover:bg-[#18181B]/90 text-white text-sm font-medium px-5 h-9 rounded-md"
                   >
-                    <Translate text={localizationConstants.projectUploadFilesLabel} />
+                    <Translate
+                      text={localizationConstants.projectUploadFilesLabel}
+                    />
                   </Button>
                   <input
                     ref={fileInputRef}
@@ -513,7 +583,9 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
               {/* Specification table */}
               <div>
                 <p className="text-sm font-medium text-[#09090B] mb-3">
-                  <Translate text={localizationConstants.projectSpecificationLabel} />
+                  <Translate
+                    text={localizationConstants.projectSpecificationLabel}
+                  />
                 </p>
                 <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
                   <div className="grid grid-cols-[140px_1fr_140px_80px_40px] border-b border-[#E2E8F0]">
@@ -595,7 +667,7 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
           </Button>
           <Button
             type="button"
-            onClick={onNext}
+            onClick={() => onNext(form, documents)}
             className="h-9 px-5 text-sm font-medium bg-[#18181B] hover:bg-[#18181B]/90 text-white"
           >
             <Translate text={localizationConstants.contractNextStepLabel} />
@@ -616,7 +688,6 @@ export function ContractCreateForm({ onBack, onNext }: ContractCreateFormProps) 
           </div>
         </div>
       </div>
-
     </div>
   );
 }

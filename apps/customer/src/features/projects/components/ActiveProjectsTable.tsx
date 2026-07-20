@@ -217,7 +217,9 @@ export function ActiveProjectsTable({
 				case "orderNo":
 					return (
 						<span className="text-slate-600">
-							{project.orderNo ?? "—"}
+							{project.orderNo && project.orderNo !== "-"
+								? project.orderNo
+								: "—"}
 						</span>
 					);
 				case "quoteReferenceNo":

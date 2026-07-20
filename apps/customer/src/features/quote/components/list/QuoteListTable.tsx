@@ -5,7 +5,6 @@ import {
 	Pencil,
 	Check,
 	X,
-	Lock,
 } from "lucide-react";
 import {
 	Table,
@@ -57,10 +56,31 @@ interface QuoteListTableProps {
 	quotes: readonly QuoteItem[];
 }
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { approveQuoteAPIAction } from "@/api-actions";
+import { Loader2 } from "lucide-react";
+import {
+	AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
 export function QuoteListTable({ quotes }: QuoteListTableProps) {
 	const params = useParams();
+	const router = useRouter();
 	const id = params.id as string;
-	const { isOpen, openModal, closeModal } = useModal<ModalType>();
+	const { isOpen, openModal, closeModal, modalId } = useModal<ModalType>();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const handleConfirmApprove = async () => {
+		if (!modalId) return;
+		setIsSubmitting(true);
+		const res = await approveQuoteAPIAction(modalId);
+		setIsSubmitting(false);
+		closeModal();
+		if (res.success) {
+			router.push("/projects");
+		}
+	};
 
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 overflow-hidden mt-2">
@@ -109,7 +129,8 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{quotes.map((item) => (
+					{quotes.length > 0 ? (
+						quotes.map((item) => (
 						<TableRow
 							key={item.id}
 							className="border-b border-slate-100 hover:bg-slate-50/50"
@@ -217,7 +238,17 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 								</DropdownMenu>
 							</TableCell>
 						</TableRow>
-					))}
+					))
+				) : (
+					<TableRow>
+						<TableCell
+							colSpan={7}
+							className="text-center py-8 text-slate-400 text-sm"
+						>
+							No quotes or invited suppliers found
+						</TableCell>
+					</TableRow>
+				)}
 				</TableBody>
 			</Table>
 
@@ -227,25 +258,35 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 			>
 				<AlertDialogContent className="max-w-sm text-center">
 					<AlertDialogHeader className="items-center">
-						<div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
-							<Lock />
+						<div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
+							<Check className="h-6 w-6" />
 						</div>
 						<AlertDialogTitle className="text-center text-lg font-semibold text-slate-800">
-							<Translate
-								text={localizationConstants.comingSoon}
-							/>
+							<Translate text={localizationConstants.approveLabel} />
 						</AlertDialogTitle>
 						<AlertDialogDescription className="text-center text-sm text-slate-500">
-							This feature is not available yet. Stay tuned!
+							Are you sure you want to approve this quote? Approving will move this project directly to Active Projects.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
-					<AlertDialogFooter className="justify-center sm:justify-center">
+					<AlertDialogFooter className="justify-center sm:justify-center gap-2">
 						<AlertDialogCancel
 							onClick={closeModal}
 							className="min-w-24"
+							disabled={isSubmitting}
 						>
 							<Translate text={localizationConstants.cancel} />
 						</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={handleConfirmApprove}
+							disabled={isSubmitting}
+							className="min-w-24 bg-emerald-600 hover:bg-emerald-700 text-white"
+						>
+							{isSubmitting ? (
+								<Loader2 className="h-4 w-4 animate-spin" />
+							) : (
+								<Translate text={localizationConstants.approveLabel} />
+							)}
+						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
 			</AlertDialog>

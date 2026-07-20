@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useParams, useSearchParams } from "next/navigation";
+import { Loader2, AlertCircle, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
-	DUMMY_DATA,
 	PROJECT_DETAIL_DEFAULT_TAB,
 	PROJECT_DETAIL_TABS,
 	PROJECT_DETAIL_TAB_VALUES,
@@ -21,12 +22,21 @@ import { QuoteListTab } from "./QuoteListTab";
 import { ProjectDocumentsTab } from "./ProjectDocumentsTab";
 import { ProjectChatTab } from "./ProjectChatTab";
 import { ProjectOverviewTab } from "./detail/ProjectOverviewTab";
+import { getProjectByIdAPIAction } from "@/api-actions/project/get";
+import { mapProjectDetailToFormHydration } from "../utils/projectDetailToForm";
+import type { CreateOfferFormValues } from "../types/form";
 
 export default function ProjectDetailPage() {
 	const params = useParams();
 	const searchParams = useSearchParams();
 	const { changeQueries, replaceQueries } = useQueryParams();
 	const id = params.id as string;
+
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const [projectData, setProjectData] = useState<
+		Partial<CreateOfferFormValues> & { refNo?: string }
+	>({});
 
 	const activeTab = useMemo(() => {
 		const raw = searchParams.get("tab");
@@ -41,27 +51,73 @@ export default function ProjectDetailPage() {
 		}
 	}, [searchParams, replaceQueries]);
 
+	const fetchProject = useCallback(async () => {
+		if (!id) return;
+		setLoading(true);
+		setError(null);
+		const res = await getProjectByIdAPIAction(id);
+		if (res.success && res.data) {
+			const hydration = mapProjectDetailToFormHydration(res.data);
+			const rawRefNo =
+				(res.data.client_no as string) ||
+				(res.data.ref_no as string) ||
+				(res.data.refNo as string) ||
+				"";
+			setProjectData({
+				...hydration.values,
+				refNo: rawRefNo,
+			});
+		} else {
+			setError(res.error || "Failed to load quote project detail");
+		}
+		setLoading(false);
+	}, [id]);
+
+	useEffect(() => {
+		void fetchProject();
+	}, [fetchProject]);
+
 	const handleTabChange = (value: string) => {
 		changeQueries({ tab: value });
 	};
 
-	const project = useMemo(() => {
-		return DUMMY_DATA.find((q) => q.id === id) || DUMMY_DATA[0];
-	}, [id]);
+	const projectName = projectData.projectName || "Project";
 
 	const breadcrumbs: BreadcrumbItem[] = [
 		{ label: localizationConstants.home, href: "/home" },
 		{ label: localizationConstants.business, href: "/business" },
-		{ label: localizationConstants.quote, href: "/business/quote" },
-		{ label: project.projectName },
+		{ label: localizationConstants.quote, href: "/business/offer" },
+		{ label: projectName },
 	];
+
+	if (loading) {
+		return (
+			<div className="flex flex-1 items-center justify-center p-12 min-h-screen">
+				<Loader2 className="w-8 h-8 animate-spin text-slate-600" role="status" aria-label="Loading project detail" />
+			</div>
+		);
+	}
+
+	if (error || !projectData.projectName) {
+		return (
+			<div className="flex flex-1 flex-col items-center justify-center p-12 min-h-screen text-center bg-slate-50">
+				<AlertCircle className="w-12 h-12 text-red-500 mb-4" />
+				<h2 className="text-xl font-semibold text-slate-900 mb-2">Failed to Load Project</h2>
+				<p className="text-sm text-slate-500 max-w-md mb-6">{error || "The requested quote project details could not be found."}</p>
+				<Button onClick={() => void fetchProject()} className="gap-2 bg-slate-900 text-white hover:bg-slate-800">
+					<RefreshCw className="w-4 h-4" />
+					Retry
+				</Button>
+			</div>
+		);
+	}
 
 	return (
 		<div className="flex flex-col flex-1 bg-slate-50/50 min-h-screen">
 			{/* Header Section */}
 			<div className="bg-white  border-slate-200">
 				<PageHeader
-					title={project.projectName}
+					title={projectName}
 					breadcrumbs={breadcrumbs}
 					className="border-none px-8 py-6"
 				/>
@@ -87,15 +143,15 @@ export default function ProjectDetailPage() {
 
 						<div className="mt-6">
 							<TabsContent value="overview">
-								<ProjectOverviewTab project={project} />
+								<ProjectOverviewTab project={projectData} />
 							</TabsContent>
 
 							<TabsContent value="quote-list" className="mt-0">
-								<QuoteListTab />
+								<QuoteListTab suppliers={projectData.invitedSuppliers} />
 							</TabsContent>
 
 							<TabsContent value="documents" className="mt-0">
-								<ProjectDocumentsTab />
+								<ProjectDocumentsTab projectId={id} initialDocuments={projectData.documents} />
 							</TabsContent>
 
 							<TabsContent value="chat" className="mt-0">

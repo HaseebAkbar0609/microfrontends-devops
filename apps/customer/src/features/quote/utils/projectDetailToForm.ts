@@ -275,7 +275,7 @@ function suppliersFromRow(row: Record<string, unknown>): QuoteSupplier[] {
 		if (item == null || typeof item !== "object") continue;
 		const r = item as Record<string, unknown>;
 		out.push({
-			id: s(r.id) || Math.random().toString(36).slice(2),
+			id: s(r.company_id ?? r.id) || Math.random().toString(36).slice(2),
 			companyName: s(r.company_name ?? r.companyName),
 			category: s(r.category ?? r.subcategory_id ?? ""),
 			orgNumber: s(r.organization_number ?? r.orgNumber),
@@ -359,6 +359,8 @@ export function mapProjectDetailToFormHydration(
 		),
 		isExpressJob: expressFromRow(projectRowForStep2),
 		clientNo: s(projectDetails?.client_no ?? row.client_no),
+		orderNo: s(projectDetails?.order_no ?? row.order_no),
+		objectNo: s(projectDetails?.object_no ?? row.object_no),
 		category: categoryIdsFromRow(projectRowForStep2),
 		sameAsContact: Boolean(row.same_as_contact ?? row.sameAsContact),
 		projectAddress: s(
