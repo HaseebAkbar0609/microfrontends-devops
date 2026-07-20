@@ -182,7 +182,7 @@ export function AdminUsersPage() {
 							</div>
 
 							{/* Table */}
-							<UsersTable onEdit={() => router.push("/admin/users/user-settings")} />
+							<UsersTable onEdit={(id) => router.push(`/admin/users/user-settings?id=${encodeURIComponent(id)}`)} />
 						</div>
 					</div>
 				</div>

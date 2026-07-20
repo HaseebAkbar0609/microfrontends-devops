@@ -50,7 +50,15 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
   async function onSubmit(_values: AddUserFormValues) {
     setIsSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() < 0.05) {
+            reject(new Error("Mock API Error"));
+          } else {
+            resolve();
+          }
+        }, 1000);
+      });
       toast.success(t(localizationConstants.toastUserCreated));
       if (onSuccess) {
         onSuccess();

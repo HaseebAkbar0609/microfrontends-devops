@@ -52,7 +52,15 @@ export default function UserDetailsPage() {
   async function onSubmit(_values: UserDetailsFormValues) {
     setIsSubmitting(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+          if (Math.random() < 0.05) {
+            reject(new Error("Mock API Error"));
+          } else {
+            resolve();
+          }
+        }, 1000);
+      });
       toast.success(t(localizationConstants.toastUserUpdated));
       router.push("/admin/users");
     } catch {

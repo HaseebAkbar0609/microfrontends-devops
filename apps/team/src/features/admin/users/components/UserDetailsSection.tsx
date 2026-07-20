@@ -77,11 +77,12 @@ const TYPE_OPTIONS = [
   { value: "admin", label: "Admin" },
 ];
 
+import { useSearchParams } from "next/navigation";
+
 interface ModuleItem {
   titleKey: string;
   field: keyof UserDetailsFormValues;
   icon: React.ComponentType<{ className?: string }>;
-  checked: boolean;
 }
 
 interface PermissionColumn {
@@ -94,30 +95,30 @@ const COLUMNS: PermissionColumn[] = [
   {
     titleKey: "userDetailsSales",
     modules: [
-      { titleKey: "moduleSell", field: "permSalesSell", icon: BadgePercent, checked: false },
-      { titleKey: "moduleMarknad", field: "permSalesMarknad", icon: Blocks, checked: true },
+      { titleKey: "moduleSell", field: "permSalesSell", icon: BadgePercent },
+      { titleKey: "moduleMarknad", field: "permSalesMarknad", icon: Blocks },
     ],
     allField: "permSalesAll",
   },
   {
     titleKey: "userDetailsEconomy",
     modules: [
-      { titleKey: "moduleEkonomi", field: "permEconEkonomi", icon: ShoppingBag, checked: false },
-      { titleKey: "moduleFaktura", field: "permEconFaktura", icon: Table2, checked: true },
-      { titleKey: "modulePersonal", field: "permEconPersonal", icon: ShoppingCart, checked: false },
-      { titleKey: "moduleJuridik", field: "permEconJuridik", icon: ShieldCheck, checked: true },
-      { titleKey: "modulePrognoser", field: "permEconPrognoser", icon: Truck, checked: true },
+      { titleKey: "moduleEkonomi", field: "permEconEkonomi", icon: ShoppingBag },
+      { titleKey: "moduleFaktura", field: "permEconFaktura", icon: Table2 },
+      { titleKey: "modulePersonal", field: "permEconPersonal", icon: ShoppingCart },
+      { titleKey: "moduleJuridik", field: "permEconJuridik", icon: ShieldCheck },
+      { titleKey: "modulePrognoser", field: "permEconPrognoser", icon: Truck },
     ],
     allField: "permEconAll",
   },
   {
     titleKey: "userDetailsBusinessSupport",
     modules: [
-      { titleKey: "moduleAvtal", field: "permBizAvtal", icon: CircleDollarSign, checked: true },
-      { titleKey: "moduleDataIT", field: "permBizDataIT", icon: LayoutPanelLeft, checked: false },
-      { titleKey: "moduleKMA", field: "permBizKMA", icon: Diff, checked: true },
-      { titleKey: "moduleMailet", field: "permBizMailet", icon: ScrollText, checked: true },
-      { titleKey: "moduleLedningsstod", field: "permBizLedningsstod", icon: StickyNote, checked: false },
+      { titleKey: "moduleAvtal", field: "permBizAvtal", icon: CircleDollarSign },
+      { titleKey: "moduleDataIT", field: "permBizDataIT", icon: LayoutPanelLeft },
+      { titleKey: "moduleKMA", field: "permBizKMA", icon: Diff },
+      { titleKey: "moduleMailet", field: "permBizMailet", icon: ScrollText },
+      { titleKey: "moduleLedningsstod", field: "permBizLedningsstod", icon: StickyNote },
     ],
     allField: "permBizAll",
   },
@@ -224,7 +225,16 @@ interface UserDetailsSectionProps {
 }
 
 export function UserDetailsSection({ form, showDetails, onToggleDetails }: UserDetailsSectionProps) {
-  const [selectedUser, setSelectedUser] = useState(MOCK_USERS[0]);
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const initialUser = (() => {
+    if (id === "1") return MOCK_USERS.find(u => u.value === "kalle") || MOCK_USERS[0];
+    if (id === "2") return MOCK_USERS.find(u => u.value === "sten") || MOCK_USERS[0];
+    if (id === "3") return MOCK_USERS.find(u => u.value === "sture") || MOCK_USERS[0];
+    return MOCK_USERS[0];
+  })();
+
+  const [selectedUser, setSelectedUser] = useState(initialUser);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(true);
