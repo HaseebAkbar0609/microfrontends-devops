@@ -35,17 +35,17 @@ export type PersonnelRow = {
 export const companyHeroImage = "/images/company-info.png";
 
 export const getCompanyDetails = (detail: QuoteDetail): CompanyInfoItem[] => [
-  { labelKey: localizationConstants.companyLabel, value: detail.companyName },
+  { labelKey: localizationConstants.companyLabel, value: "Målarfirman Solen AB" },
   { labelKey: localizationConstants.websiteLabel, value: "www.malarfirman.se" },
   { labelKey: localizationConstants.addressLabel, value: detail.address },
   { labelKey: localizationConstants.cityLabel, value: "Solna" },
-  { labelKey: localizationConstants.companyNameLabel, value: "Pelle Construction" },
-  { labelKey: localizationConstants.mobilePhoneLabel, value: detail.mobilePhone },
-  { labelKey: localizationConstants.emailLabel, value: detail.email },
+  { labelKey: localizationConstants.companyNameLabel, value: detail.companyName },
+  { labelKey: localizationConstants.mobilePhoneLabel, value: "08-580 50 50" },
+  { labelKey: localizationConstants.emailLabel, value: "info@malarfirman.se" },
 ];
 
 export const getCreditInfo = (detail: QuoteDetail): CreditInfoItem[] => [
-  { labelKey: localizationConstants.companyLabel, value: detail.companyName },
+  { labelKey: localizationConstants.companyLabel, value: "Målarfirman Solen AB" },
   { labelKey: localizationConstants.registeredVatLabel, value: "YES" },
   { labelKey: localizationConstants.registeredFTaxLabel, value: "YES" },
   { labelKey: localizationConstants.boardInformationLabel, value: "NO" },

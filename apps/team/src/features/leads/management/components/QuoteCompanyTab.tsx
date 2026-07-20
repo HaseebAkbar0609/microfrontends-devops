@@ -17,7 +17,7 @@ export default function QuoteCompanyTab({ detail }: { detail: QuoteDetail }) {
   const [category, setCategory] = useState("");
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 mb-10">
       <QuoteCompanyHeroSection />
       <QuoteCompanyDetailsSection companyDetails={companyDetails} creditInfo={creditInfo} />
       <QuoteCompanyFiltersSection
