@@ -1,13 +1,17 @@
+"use client";
+
 import { Mail, Phone } from "lucide-react";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 const contacts = [
 	{
-		title: "Phone",
+		title: localizationConstants.supportContactPhone,
 		value: "+46 704261092",
 		icon: Phone,
 	},
 	{
-		title: "Email",
+		title: localizationConstants.supportContactEmail,
 		value: "info@timeflowsystem.se",
 		icon: Mail,
 	},
@@ -17,7 +21,7 @@ export function ContactSection() {
 	return (
 		<div className="mt-6">
 			<h2 className="mb-12 text-3xl font-bold text-slate-900">
-				Contact us
+				<Translate text={localizationConstants.supportContactUsTitle} />
 			</h2>
 
 			<div className="flex gap-4">
@@ -36,7 +40,7 @@ export function ContactSection() {
 
 								<div className="flex flex-col gap-2">
 									<h3 className="text-lg font-semibold text-slate-800">
-										{item.title}
+										<Translate text={item.title} />
 									</h3>
 
 									<p className="text-sm text-slate-600">

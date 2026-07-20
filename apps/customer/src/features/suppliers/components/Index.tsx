@@ -94,7 +94,7 @@ export default function SuppliersFeature() {
 				</div>
 			</div>
 
-			<div className="px-5 pb-5 flex-1 w-full lg:w-[65%]">
+			<div className="px-5 pb-5 flex-1 w-full">
 				{loadError ? (
 					<p className="text-sm text-red-600" role="alert">
 						{loadError}

@@ -16,9 +16,20 @@ export const getRegistrationSchema = (t: (key: string) => string) =>
 		lastName: z.string().min(1, {
 			message: t(localizationConstants.validationRegisterLastNameRequired),
 		}),
-		sharePercentage: z.string().min(1, {
-			message: t(localizationConstants.validationRegisterSharePercentageRequired),
-		}),
+		sharePercentage: z
+			.string()
+			.min(1, {
+				message: t(
+					localizationConstants.validationRegisterSharePercentageRequired,
+				),
+			})
+			.refine(
+				(val) => {
+					const num = Number(val);
+                    return Number.isFinite(num) && Number.isInteger(num) && num > 0 && num <= 100;
+				},
+				{ message: t(localizationConstants.validationInvalidFormat) },
+			),
 		personalId: z
 			.string()
 			.regex(/^\d+$/, { message: t(localizationConstants.validationInvalidFormat) })
