@@ -25,6 +25,7 @@ export default function ConsultantListFeature() {
 	const statusFilter = query.get("status") || "";
 	const typeFilter = query.get("type") || "";
 	const requestIdFilter = query.get("request_id") || "";
+	const projectIdFilter = query.get("project_id") || "";
 
 	const [consultants, setConsultants] = useState<Consultant[]>([]);
 	const [totalItems, setTotalItems] = useState(0);
@@ -64,6 +65,7 @@ export default function ConsultantListFeature() {
 			status: statusFilter || undefined,
 			type: typeFilter || undefined,
 			requestId: requestIdFilter || undefined,
+			projectId: projectIdFilter || undefined,
 		}).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
@@ -80,7 +82,7 @@ export default function ConsultantListFeature() {
 		return () => {
 			cancelled = true;
 		};
-	}, [page, pageSize, search, sortBy, sortOrder, statusFilter, typeFilter, requestIdFilter]);
+	}, [page, pageSize, search, sortBy, sortOrder, statusFilter, typeFilter, requestIdFilter, projectIdFilter]);
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">

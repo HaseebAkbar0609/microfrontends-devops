@@ -42,7 +42,7 @@ export async function getConsultantListAPIAction(
 
 		if (search) query.append("search", search);
 		if (status) query.append("status", status);
-		if (type) query.append("type", type);
+		if (type) query.append("consultant_type", type);
 		if (requestId) query.append("request_id", requestId);
 		if (projectId) query.append("project_id", projectId);
 		if (sortBy) query.append("sort_by", sortBy);
