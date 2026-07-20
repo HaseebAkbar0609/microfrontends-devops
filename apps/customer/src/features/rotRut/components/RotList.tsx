@@ -87,7 +87,7 @@ export function RotList() {
 				</div>
 			</div>
 
-			<div className="pb-5 flex-1 w-full lg:w-[75%]">
+			<div className="pb-5 flex-1 w-full">
 				{loadError ? (
 					<p className="text-sm text-red-600 font-medium" role="alert">
 						{loadError}
