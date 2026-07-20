@@ -25,6 +25,17 @@ export const API_PATH = {
 		VALIDATE_OTP: `${BASE_PATHS.AUTH}/validate-otp`,
 		PROFILE: `${BASE_PATHS.USER}/profile`,
 	},
+	PROFILE: {
+		ME: `${API_PREFIX}/profile/me`,
+	},
+	USERS: {
+		BASE: `${API_PREFIX}/users`,
+		detail: (userId: string) =>
+			`${API_PREFIX}/users/${encodeURIComponent(userId)}`,
+	},
+	SETTINGS: {
+		ME: `${API_PREFIX}/settings/me`,
+	},
 	PROJECT: {
 		ACTIVE: `${BASE_PATHS.PROJECT}/active`,
 		SAVE: `${BASE_PATHS.PROJECT}/save`,

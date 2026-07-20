@@ -785,17 +785,17 @@ export const svPriceCalculatorModule: PriceCalculatorModule = {
 	priceCalculatorTotalPrice: "Totalt",
 	priceCalculatorAfterRotRut: "Efter ROT-avdrag (30%)",
 	priceCalculatorSaving: "Besparing",
-	priceCalculatorHourlyInfoTitle: "Vad paverkar priset?",
+	priceCalculatorHourlyInfoTitle: "Vad påverkar priset?",
 	priceCalculatorHourlyInfoMunicipality:
-		"Kommun: Priser varierar mellan städer och regioner beroende på efterfrågan och levnadskostnader.",
+		"Kommun: Priserna varierar mellan städer och regioner beroende på efterfrågan och levnadskostnader.",
 	priceCalculatorHourlyInfoComplexity:
-		"Komplexitet: Specialiserade arbeten eller svåråtkomliga platser kan innebära högre timpris.",
+		"Komplexitet: Specialiserade arbeten eller svåråtkomliga platser kan innebära ett högre timpris.",
 	priceCalculatorHourlyInfoAvailability:
 		"Tillgänglighet: Arbete på kvällar, helger eller med kort varsel kan kosta mer.",
 	priceCalculatorHourlyInfoJour:
-		"Jour: Akuta uppdrag utanför ordinarie arbetstid tillkommer ofta 50-100% tillägg.",
+		"Jour: Vid akuta uppdrag utanför ordinarie arbetstid tillkommer ofta ett tillägg på 50–100 %.",
 	priceCalculatorHourlyInfoNote:
-		"Obs: Priserna är vägledande. Material och startavgifter tillkommer ofta. Be alltid om skriftlig offert innan arbete påbörjas.",
+		"Obs! Priserna är vägledande. Material och startavgifter tillkommer ofta. Be alltid om en skriftlig offert innan arbetet påbörjas.",
 	priceCalculatorNoProductsFound: "Inga produkter hittades.",
 	priceCalculatorMyList: "Min lista",
 	priceCalculatorMyListEmpty: "Lägg till produkter från listan.",
@@ -806,7 +806,7 @@ export const svPriceCalculatorModule: PriceCalculatorModule = {
 	priceCalculatorCategoryKitchen: "Kök",
 	priceCalculatorCategoryElectrical: "El",
 	priceCalculatorCategoryPlumbing: "VVS",
-	priceCalculatorCategoryPainting: "Maleri",
+	priceCalculatorCategoryPainting: "Måleri",
 	priceCalculatorCategoryRoof: "Tak",
 	priceCalculatorProductToilet: "WC-stol",
 	priceCalculatorProductShowerWall: "Duschvägg",

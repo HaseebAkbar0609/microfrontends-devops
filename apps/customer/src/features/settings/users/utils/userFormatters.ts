@@ -91,3 +91,70 @@ export function getSortedUsers(
 		return 0;
 	});
 }
+
+function parseSafeDate(val?: number | string | null): string {
+	if (!val) return new Date().toISOString().split("T")[0];
+	if (typeof val === "number") {
+		return new Date(val * 1000).toISOString().split("T")[0];
+	}
+	try {
+		return new Date(val).toISOString().split("T")[0];
+	} catch {
+		return new Date().toISOString().split("T")[0];
+	}
+}
+
+export function mapApiUserToUser(p: {
+	id: string;
+	email: string;
+	first_name?: string | null;
+	last_name?: string | null;
+	status?: string | null;
+	phone_number?: string | null;
+	postal_code?: string | null;
+	address?: string | null;
+	city_id?: string | null;
+	city_name?: string | null;
+	country_id?: string | null;
+	personal_id?: string | null;
+	profile_picture_url?: string | null;
+	created_at?: number | string | null;
+	created_by?: string | null;
+	permissions?: {
+		viewProjects?: boolean;
+		createProjects?: boolean;
+		editProjects?: boolean;
+		viewOffers?: boolean;
+		approveOffers?: boolean;
+		manageUsers?: boolean;
+	} | null;
+}, fallbackId?: string): User {
+	return {
+		id: p.id ?? fallbackId ?? "",
+		first_name: p.first_name ?? "",
+		last_name: p.last_name ?? "",
+		profile_photo: p.profile_picture_url ?? null,
+		mobile_number: p.phone_number ?? "",
+		private_email: p.email ?? "",
+		address: p.address ?? "",
+		city: p.city_name ?? p.city_id ?? "",
+		city_id: p.city_id ?? null,
+		country_id: p.country_id || "8d3b611b-6609-4302-b35c-9e42df7e8edb",
+		postal_code: p.postal_code ?? "",
+		personal_number: p.personal_id ?? "",
+		date_created: parseSafeDate(p.created_at),
+		account_type: p.created_by ? "users" : "admin",
+		last_login: "",
+		status: p.status === "inactive" || p.status === "deactivated" ? "deactivated" : "active",
+		permissions: {
+			viewProjects: p.permissions?.viewProjects ?? false,
+			createProjects: p.permissions?.createProjects ?? false,
+			editProjects: p.permissions?.editProjects ?? false,
+			viewOffers: p.permissions?.viewOffers ?? false,
+			approveOffers: p.permissions?.approveOffers ?? false,
+			manageUsers: p.permissions?.manageUsers ?? false,
+		},
+		created_by: p.created_by,
+	};
+}
+
