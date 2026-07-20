@@ -1,6 +1,6 @@
-import type { ActionResult } from "@/types/api";
+import axiosInstance from "@/lib/axiosInstance";
+import type { ActionResult, ApiError } from "@/types/api";
 import type { ConsultantTypeItem } from "@/features/consultant/types/consultantType";
-import { DUMMY_CONSULTANT_TYPES } from "@/features/consultant/constants/directory";
 
 export interface GetConsultantTypesParams {
   search?: string;
@@ -10,22 +10,20 @@ export async function getConsultantTypesAPIAction(
   params: GetConsultantTypesParams = {},
 ): Promise<ActionResult<ConsultantTypeItem[]>> {
   try {
-    let rows = [...DUMMY_CONSULTANT_TYPES];
+    const queryParams = params.search ? `?search=${encodeURIComponent(params.search)}` : "";
+    const response = await axiosInstance.get(`/api/v1/customers/consultation/types${queryParams}`);
 
-    const q = params.search?.trim().toLowerCase();
-    if (q) {
-      rows = rows.filter((t) => t.name.toLowerCase().includes(q));
-    }
-
-    return { success: true, data: rows, error: null };
+    return {
+      success: true,
+      data: response.data?.data || [],
+      error: null,
+    };
   } catch (error) {
+    const e = error as ApiError;
     return {
       success: false,
       data: null,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Failed to load consultant types",
+      error: e.response?.data?.message || "Failed to load consultant types",
     };
   }
 }
