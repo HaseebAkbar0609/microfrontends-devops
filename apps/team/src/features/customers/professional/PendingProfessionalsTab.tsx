@@ -38,6 +38,7 @@ interface PendingProfessionalsTabProps {
 	readonly onPageChange: (page: number) => void;
 	readonly onPageSizeChange: (size: number) => void;
 	readonly onDelete: (id: string) => void;
+	readonly onCreateClick?: () => void;
 }
 
 export function PendingProfessionalsTab({
@@ -54,6 +55,7 @@ export function PendingProfessionalsTab({
 	onPageChange,
 	onPageSizeChange,
 	onDelete,
+	onCreateClick,
 }: PendingProfessionalsTabProps) {
 	const t = useTranslate();
 
@@ -75,7 +77,7 @@ export function PendingProfessionalsTab({
 				searchValue={searchInput}
 				onSearchChange={onSearchChange}
 				searchPlaceholder={localizationConstants.searchPlaceholder}
-				onCreateClick={() => {}}
+				onCreateClick={onCreateClick ?? (() => {})}
 				createButtonLabel={localizationConstants.professionalCreateButton}
 				className="px-0 py-4"
 			/>
