@@ -580,6 +580,20 @@ export const sweProfessional: ProfessionalTranslation = {
 	categoryPlaceholder: "Ange kategori",
 	cityPlaceholder: "Ange stad",
 	amountLabel: "Belopp",
+	overviewTab: "Översikt",
+	companyTab: "Företag",
+	licensTab: "Licens",
+	leadsTab: "Leads",
+	invoicesTab: "Fakturor",
+	supportTab: "Support",
+	sendInvoiceButton: "Skicka faktura",
+	activeSeatsLabel: "Aktiva platser",
+	recentActivityTitle: "Senaste aktivitet",
+	kundNrLabel: "Kund nr",
+	activityCustomerLoggedIn: "Kunden loggade in",
+	activityInvoicePaid: "Faktura INV-001 betald",
+	activityFollowUpCall: "Uppföljningssamtal inplanerat",
+	activityAccountActivated: "Konto aktiverat",
 };
 
 export const sweAdmin: AdminTranslation = {

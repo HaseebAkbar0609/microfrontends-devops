@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Translate } from "@/utils/translation/translate";
@@ -23,6 +24,7 @@ const TABS: { key: ProfessionalTab; labelKey: string }[] = [
 ];
 
 function ProfessionalListPageInner() {
+	const router = useRouter();
 	const { search: searchParam, page, changeQueries, setPage, query } = useQueryParams();
 
 	const [activeTab, setActiveTab] = useState<ProfessionalTab>(
@@ -171,6 +173,7 @@ function ProfessionalListPageInner() {
 						onDelete={handleActiveDelete}
 						onToggleStatus={handleToggleStatus}
 						onCreateClick={() => setWizardOpen(true)}
+						onOpenClick={(id) => router.push(`/customers/professional/${id}`)}
 						{...paginationProps}
 					/>
 				</TabsContent>
@@ -186,6 +189,7 @@ function ProfessionalListPageInner() {
 						onSort={handlePendingSort}
 						onDelete={handlePendingDelete}
 						onCreateClick={() => setWizardOpen(true)}
+						onOpenClick={(id) => router.push(`/customers/professional/${id}`)}
 						{...paginationProps}
 					/>
 				</TabsContent>

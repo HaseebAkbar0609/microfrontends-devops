@@ -557,6 +557,20 @@ export type ProfessionalTranslation = {
 	categoryPlaceholder: string;
 	cityPlaceholder: string;
 	amountLabel: string;
+	overviewTab: string;
+	companyTab: string;
+	licensTab: string;
+	leadsTab: string;
+	invoicesTab: string;
+	supportTab: string;
+	sendInvoiceButton: string;
+	activeSeatsLabel: string;
+	recentActivityTitle: string;
+	kundNrLabel: string;
+	activityCustomerLoggedIn: string;
+	activityInvoicePaid: string;
+	activityFollowUpCall: string;
+	activityAccountActivated: string;
 };
 
 export type AdminTranslation = {
