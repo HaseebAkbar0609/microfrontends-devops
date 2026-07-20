@@ -455,6 +455,7 @@ export type OfferModule = {
 	certificationsLabel: string;
 	certificateLabel: string;
 	customerReviewTitle: string;
+	noCustomerReviewsYet: string;
 	becameSinceLabel: string;
 	companyInsuranceTitle: string;
 	referenceImagesTitle: string;
@@ -475,6 +476,7 @@ export type CommonFiles = {
 	upload: string;
 	noFileChosen: string;
 	unsupportedFileType: string;
+	partialUploadWarning: string;
 };
 
 export type DiscountsModule = {

@@ -161,6 +161,7 @@ export const enCommonFiles: CommonFiles = {
 	upload: "Upload",
 	noFileChosen: "No file chosen",
 	unsupportedFileType: "Only PNG and JPG files are allowed.",
+	partialUploadWarning: "Some files uploaded successfully, others failed. Please retry the remaining files.",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {
@@ -485,6 +486,7 @@ export const enOfferModule: OfferModule = {
 	certificationsLabel: "Certifications",
 	certificateLabel: "Certificate",
 	customerReviewTitle: "Customer Reviews",
+	noCustomerReviewsYet: "No customer reviews yet.",
 	becameSinceLabel: "Became since",
 	companyInsuranceTitle: "Company insurance",
 	referenceImagesTitle: "Reference Images",
@@ -1054,7 +1056,7 @@ export const enProjects: ProjectsModule = {
 	contractRoleLabel: "Role",
 	contractStatusLabel: "Status",
 	contractFilterLabel: "Filter",
-	contractEmptyTitle: "Waiting for the estimated offer",
+	contractEmptyTitle: "Wait for the estimated quote",
 	contractEmptySubtitle:
 		"This is placeholder text. Some contextual text will be placed here.",
 	contractCompanyLabel: "Company",

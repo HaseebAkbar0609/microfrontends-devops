@@ -1,74 +1,113 @@
 export { loginAPIAction, type LoginAPIPayload } from "./auth/login";
 export { registerAPIAction, type RegisterAPIPayload } from "./auth/register";
 export {
-	forgotPasswordAPIAction,
-	type ForgotPasswordAPIPayload,
-	type ForgotPasswordAPIResponse,
+  forgotPasswordAPIAction,
+  type ForgotPasswordAPIPayload,
+  type ForgotPasswordAPIResponse,
 } from "./auth/forgot-password";
 export { logoutAPIAction } from "./auth/logout";
 export {
-	saveProjectAPIAction,
-	saveProjectDraftAPIAction,
+  saveProjectAPIAction,
+  saveProjectDraftAPIAction,
 } from "./project/save";
 export {
-	getProjectListAPIAction,
-	type GetProjectListParams,
-	type ProjectListPayload,
+  getProjectListAPIAction,
+  type GetProjectListParams,
+  type ProjectListPayload,
 } from "./project/list";
 export { getProjectByIdAPIAction } from "./project/get";
 export {
-	patchProjectStatusAPIAction,
-	type ProjectStatusPatchValue,
+  patchProjectStatusAPIAction,
+  type ProjectStatusPatchValue,
 } from "./project/patch-status";
+export {
+  updateProjectDetailsAPIAction,
+  type UpdateProjectDetailsPayload,
+} from "./project/updateDetails";
 export { uploadMediaAPIAction } from "./media/upload";
+export { deleteMediaAPIAction } from "./media/delete";
 export { getCountriesAPIAction } from "./location/countries";
 export { getCitiesAPIAction } from "./location/cities";
 export { getCustomerCategoriesListAPIAction } from "./category/customer-categories-list";
 export { getProfessionalsSubcategoriesListAPIAction } from "./category/professionals-subcategories-list";
 export type {
-	SaveProjectPayload,
-	SaveProjectResponse,
-	MediaUploadResponse,
+  SaveProjectPayload,
+  SaveProjectResponse,
+  MediaUploadResponse,
 } from "@/features/quote/types/api";
 export type { AuthResponseData } from "@/types/api";
 export { acceptInvitationAPIAction } from "./invitation/accept";
 export { activeInactiveCompanyUserAPIAction } from "./companies/users";
 export {
-	getSuppliersAPIAction,
-	type GetSuppliersParams,
-	type SuppliersListPayload,
+  getSuppliersAPIAction,
+  type GetSuppliersParams,
+  type SuppliersListPayload,
 } from "./supplier/list";
 export {
-	createSupplierAPIAction,
-	type CreateSupplierPayload,
+  createSupplierAPIAction,
+  type CreateSupplierPayload,
 } from "./supplier/create";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
 export {
-	getSupplierOrToolByIdAPIAction,
-	type SupplierDetail,
-	type ToolDetail,
+  getSupplierOrToolByIdAPIAction,
+  type SupplierDetail,
+  type ToolDetail,
 } from "./supplier/get";
 export {
-	getConsultantListAPIAction,
-	type GetConsultantListParams,
-	type ConsultantListPayload,
+  getConsultantListAPIAction,
+  type GetConsultantListParams,
+  type ConsultantListPayload,
 } from "./consultant/list";
 export {
-	getConsultantTypesAPIAction,
-	type GetConsultantTypesParams,
+  getConsultantTypesAPIAction,
+  type GetConsultantTypesParams,
 } from "./consultant/types";
 export {
-	getConsultantRequestsAPIAction,
-	type GetConsultantRequestsParams,
-	type ConsultantRequestsPayload,
+  getConsultantRequestsAPIAction,
+  type GetConsultantRequestsParams,
+  type ConsultantRequestsPayload,
 } from "./consultant/requests";
 export {
-	createConsultantRequestAPIAction,
-	type CreateConsultantRequestPayload,
-	type CreateConsultantRequestResponse,
+  createConsultantRequestAPIAction,
+  type CreateConsultantRequestPayload,
+  type CreateConsultantRequestResponse,
 } from "./consultant/create-request";
 export {
-	getActiveProjectsAPIAction,
-	type GetActiveProjectsParams,
-	type ActiveProjectListPayload,
+  getActiveProjectsAPIAction,
+  type GetActiveProjectsParams,
+  type ActiveProjectListPayload,
 } from "./project/active";
+export {
+  getProjectContractsAPIAction,
+  saveProjectContractAPIAction,
+  deleteProjectContractAPIAction,
+} from "./project/contracts";
+export {
+  getProjectATAsAPIAction,
+  saveProjectATAAPIAction,
+} from "./project/atas";
+export { approveQuoteAPIAction } from "./quote/approve";
+export { getQuoteDetailsAPIAction } from "./quote/details";
+export {
+  getProjectDocumentsAPIAction,
+  saveProjectDocumentAPIAction,
+  deleteProjectDocumentAPIAction,
+  type ApiProjectDocumentItem,
+} from "./project/documents";
+export {
+  getMeetingMinutesAPIAction,
+  createMeetingMinuteAPIAction,
+  deleteMeetingMinuteAPIAction,
+  type ApiMeetingMinuteItem,
+  type CreateMeetingMinutePayload,
+} from "./project/meeting-minutes";
+export {
+  getProjectTimelinesAPIAction,
+  type ApiTimelineTaskItem,
+  type ApiTimelineProjectItem,
+} from "./project/timeline";
+export {
+  getProjectOrgPlanAPIAction,
+  type ApiOrgCompanyItem,
+  type ApiOrgContactItem,
+} from "./project/org-plan";

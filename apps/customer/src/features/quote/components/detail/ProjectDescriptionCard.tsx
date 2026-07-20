@@ -13,7 +13,17 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-export function ProjectDescriptionCard() {
+import type { QuoteDocument } from "../../types/form";
+
+interface ProjectDescriptionCardProps {
+	description?: string;
+	documents?: QuoteDocument[];
+}
+
+export function ProjectDescriptionCard({
+	description,
+	documents = [],
+}: ProjectDescriptionCardProps) {
 	return (
 		<DetailCard
 			icon={HardHat}
@@ -26,7 +36,11 @@ export function ProjectDescriptionCard() {
 						<Translate text={localizationConstants.descriptionLabel} />
 					</p>
 					<p className="text-sm text-slate-500 leading-relaxed font-normal">
-						<Translate text={localizationConstants.dummyProjectDescription} />
+						{description ? (
+							description
+						) : (
+							<Translate text={localizationConstants.dummyProjectDescription} />
+						)}
 					</p>
 				</div>
 
@@ -51,55 +65,63 @@ export function ProjectDescriptionCard() {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
-								{[
-									{
-										date: "2024-05-10",
-										name: "Work Description",
-										type: "PDF",
-									},
-									{
-										date: "2024-05-10",
-										name: "Policy",
-										type: "PDF",
-									},
-									{
-										date: "2024-05-10",
-										name: "Policy",
-										type: "PDF",
-									},
-								].map((doc, idx) => (
-									<TableRow
-										key={idx}
-										className="border-slate-100 hover:bg-slate-50/30"
-									>
-										<TableCell className="text-sm py-4">{doc.date}</TableCell>
-										<TableCell className="text-sm font-medium py-4">
-											<div className="flex items-center gap-3">
-												<div className=" text-red-600 p-1.5 rounded-md">
-													<Image
-														src="/assets/pdf.svg"
-														alt="PDF"
-														width={40}
-														height={40}
-													/>
+								{documents.length > 0 ? (
+									documents.map((doc, idx) => (
+										<TableRow
+											key={doc.id || idx}
+											className="border-slate-100 hover:bg-slate-50/30"
+										>
+											<TableCell className="text-sm py-4">{doc.date || "-"}</TableCell>
+											<TableCell className="text-sm font-medium py-4">
+												<div className="flex items-center gap-3">
+													<div className=" text-red-600 p-1.5 rounded-md">
+														<Image
+															src="/assets/pdf.svg"
+															alt="PDF"
+															width={40}
+															height={40}
+														/>
+													</div>
+													{doc.name}
 												</div>
-												{doc.name}
-											</div>
-										</TableCell>
-										<TableCell className="text-sm text-slate-500 py-4">
-											{doc.type}
-										</TableCell>
-										<TableCell className="py-4 text-right pr-4">
-											<Button
-												variant="outline"
-												size="sm"
-												className="h-9 px-4 bg-transparent rounded-lg font-medium border-slate-200 text-slate-700"
-											>
-												<Translate text={localizationConstants.viewFileButton} />
-											</Button>
+											</TableCell>
+											<TableCell className="text-sm text-slate-500 py-4">
+												{doc.type || "PDF"}
+											</TableCell>
+											<TableCell className="py-4 text-right pr-4">
+												{doc.url ? (
+													<a
+														href={doc.url}
+														target="_blank"
+														rel="noreferrer"
+													>
+														<Button
+															variant="outline"
+															size="sm"
+															className="h-9 px-4 bg-transparent rounded-lg font-medium border-slate-200 text-slate-700"
+														>
+															<Translate text={localizationConstants.viewFileButton} />
+														</Button>
+													</a>
+												) : (
+													<Button
+														variant="outline"
+														size="sm"
+														className="h-9 px-4 bg-transparent rounded-lg font-medium border-slate-200 text-slate-700"
+													>
+														<Translate text={localizationConstants.viewFileButton} />
+													</Button>
+												)}
+											</TableCell>
+										</TableRow>
+									))
+								) : (
+									<TableRow>
+										<TableCell colSpan={4} className="text-center py-6 text-slate-400 text-sm">
+											No documents uploaded
 										</TableCell>
 									</TableRow>
-								))}
+								)}
 							</TableBody>
 						</Table>
 					</div>

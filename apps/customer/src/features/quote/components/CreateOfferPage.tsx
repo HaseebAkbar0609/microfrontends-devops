@@ -248,16 +248,79 @@ export default function CreateOfferPage() {
 		invitedSuppliers.length + internalSuppliers.length;
 	const getSupplierCategory = (supplier: QuoteSupplier) =>
 		supplier.category || professionalSubcategoryOptions[0]?.value || "";
-	const mapSuppliersForSave = (suppliers: QuoteSupplier[] | undefined) =>
-		suppliers?.map((supplier) => ({
-			company_name: supplier.companyName,
-			category: getSupplierCategory(supplier) || undefined,
-			organization_number: supplier.orgNumber,
-			first_name: supplier.contactFirstName,
-			last_name: supplier.contactLastName,
-			email: supplier.emailAddress,
-			mobile_number: supplier.mobileNumber,
-		})) ?? [];
+	const mapSuppliersForSave = (suppliers: QuoteSupplier[] | undefined) => {
+		const selected_supplier_ids: string[] = [];
+		const newSuppliers: {
+			company_name: string;
+			category?: string;
+			organization_number: string;
+			first_name: string;
+			last_name: string;
+			email: string;
+			mobile_number: string;
+		}[] = [];
+		const uuidPattern =
+			/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+		const seenCompanyIds = new Set<string>();
+		const seenEmails = new Set<string>();
+		const seenOrgs = new Set<string>();
+
+		suppliers?.forEach((supplier) => {
+			if (uuidPattern.test(supplier.id)) {
+				if (!seenCompanyIds.has(supplier.id)) {
+					seenCompanyIds.add(supplier.id);
+					selected_supplier_ids.push(supplier.id);
+				}
+			} else {
+				const emailKey = supplier.emailAddress?.trim().toLowerCase();
+				const orgKey = supplier.orgNumber?.trim();
+
+				if (emailKey) {
+					if (!seenEmails.has(emailKey)) {
+						seenEmails.add(emailKey);
+						if (orgKey) seenOrgs.add(orgKey);
+						newSuppliers.push({
+							company_name: supplier.companyName,
+							category: getSupplierCategory(supplier) || undefined,
+							organization_number: supplier.orgNumber,
+							first_name: supplier.contactFirstName,
+							last_name: supplier.contactLastName,
+							email: supplier.emailAddress,
+							mobile_number: supplier.mobileNumber,
+						});
+					}
+				} else if (orgKey) {
+					if (!seenOrgs.has(orgKey)) {
+						seenOrgs.add(orgKey);
+						newSuppliers.push({
+							company_name: supplier.companyName,
+							category: getSupplierCategory(supplier) || undefined,
+							organization_number: supplier.orgNumber,
+							first_name: supplier.contactFirstName,
+							last_name: supplier.contactLastName,
+							email: supplier.emailAddress,
+							mobile_number: supplier.mobileNumber,
+						});
+					}
+				} else {
+					newSuppliers.push({
+						company_name: supplier.companyName,
+						category: getSupplierCategory(supplier) || undefined,
+						organization_number: supplier.orgNumber,
+						first_name: supplier.contactFirstName,
+						last_name: supplier.contactLastName,
+						email: supplier.emailAddress,
+						mobile_number: supplier.mobileNumber,
+					});
+				}
+			}
+		});
+
+		return {
+			selected_supplier_ids,
+			suppliers: newSuppliers,
+		};
+	};
 
 	useEffect(() => {
 		if (!resumeProjectId?.trim()) {
@@ -300,9 +363,7 @@ export default function CreateOfferPage() {
 				project_id: projectId,
 				step: 4,
 				is_send: true,
-				data: {
-					suppliers: mapSuppliersForSave(values.invitedSuppliers),
-				},
+				data: mapSuppliersForSave(values.invitedSuppliers),
 			};
 
 			const result = await saveProjectAPIAction(payload, {
@@ -355,7 +416,14 @@ export default function CreateOfferPage() {
 								project_name: values.projectName,
 								is_express: values.isExpressJob === "express",
 								client_no: values.clientNo,
-								category_ids: values.category ?? [],
+								order_no: values.orderNo || undefined,
+								object_no: values.objectNo || undefined,
+								creation_mode: "quote_first",
+								category_ids: Array.isArray(values.category)
+									? values.category
+									: values.category
+									? [values.category]
+									: [],
 								project_address: values.projectAddress,
 								project_contact_city: values.projectCity,
 								project_contact_postal_code:
@@ -373,11 +441,9 @@ export default function CreateOfferPage() {
 									.filter(Boolean),
 							};
 						case 4:
-							return {
-								suppliers: mapSuppliersForSave(
-									values.invitedSuppliers,
-								),
-							};
+							return mapSuppliersForSave(
+								values.invitedSuppliers,
+							);
 						default:
 							return {};
 					}
@@ -453,7 +519,14 @@ export default function CreateOfferPage() {
 						project_name: values.projectName,
 						is_express: values.isExpressJob === "express",
 						client_no: values.clientNo,
-						category_ids: values.category ?? [],
+						order_no: values.orderNo || undefined,
+						object_no: values.objectNo || undefined,
+						creation_mode: "quote_first",
+						category_ids: Array.isArray(values.category)
+							? values.category
+							: values.category
+							? [values.category]
+							: [],
 						project_address: values.projectAddress,
 						project_contact_city: values.projectCity,
 						project_contact_postal_code: values.projectPostalCode,
@@ -468,11 +541,9 @@ export default function CreateOfferPage() {
 							.filter(Boolean),
 					};
 				case 4:
-					return {
-						suppliers: mapSuppliersForSave(
-							values.invitedSuppliers,
-						),
-					};
+					return mapSuppliersForSave(
+						values.invitedSuppliers,
+					);
 				default:
 					return {};
 			}
@@ -528,8 +599,15 @@ export default function CreateOfferPage() {
 			const result = await saveProjectDraftAPIAction(payload);
 
 			if (result.success && result.data) {
-				setProjectId(result.data.project_id);
-				form.setValue("invitedSuppliers", updatedSuppliers);
+				const savedId = result.data.project_id;
+				setProjectId(savedId);
+				const freshProject = await getProjectByIdAPIAction(savedId);
+				if (freshProject.success && freshProject.data) {
+					const { values } = mapProjectDetailToFormHydration(freshProject.data);
+					form.setValue("invitedSuppliers", values.invitedSuppliers ?? updatedSuppliers);
+				} else {
+					form.setValue("invitedSuppliers", updatedSuppliers);
+				}
 				return true;
 			}
 			return false;
@@ -541,7 +619,7 @@ export default function CreateOfferPage() {
 	if (!resumeReady) {
 		return (
 			<div className="flex min-h-[50vh] flex-1 flex-col items-center justify-center bg-slate-50">
-				<Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+				<Loader2 className="h-8 w-8 animate-spin text-slate-400" role="status" aria-label="Loading offer data" />
 			</div>
 		);
 	}
