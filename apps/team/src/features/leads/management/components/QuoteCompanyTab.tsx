@@ -12,7 +12,7 @@ import { QuoteCompanyPersonnelSection } from "@/features/leads/management/compon
 
 export default function QuoteCompanyTab({ detail }: { detail: QuoteDetail }) {
   const companyDetails = useMemo(() => getCompanyDetails(detail), [detail]);
-  const creditInfo = useMemo(() => getCreditInfo(detail), [detail]);
+  const creditInfo = useMemo(() => getCreditInfo(), []);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 

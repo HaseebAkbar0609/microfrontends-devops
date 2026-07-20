@@ -44,7 +44,7 @@ export const getCompanyDetails = (detail: QuoteDetail): CompanyInfoItem[] => [
   { labelKey: localizationConstants.emailLabel, value: "info@malarfirman.se" },
 ];
 
-export const getCreditInfo = (detail: QuoteDetail): CreditInfoItem[] => [
+export const getCreditInfo = (): CreditInfoItem[] => [
   { labelKey: localizationConstants.companyLabel, value: "Målarfirman Solen AB" },
   { labelKey: localizationConstants.registeredVatLabel, value: "YES" },
   { labelKey: localizationConstants.registeredFTaxLabel, value: "YES" },
