@@ -319,6 +319,7 @@ export const sweLeads: LeadsTranslation = {
 	projectDocuments: "Projektdokument",
 	inviteSuppliers: "Bjud in leverantörer",
 	quoteListTab: "Offertlista",
+	activityLogsTab: "Aktivitetslogg",
 	monitorLabel: "Bevaka",
 	activeLabel: "Aktiv",
 	archiveLabel: "Arkivera",
