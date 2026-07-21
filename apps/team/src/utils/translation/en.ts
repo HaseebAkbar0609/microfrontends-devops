@@ -709,6 +709,14 @@ export const enAdmin: AdminTranslation = {
 	moduleKMA: "KMA",
 	moduleMailet: "Templates",
 	moduleLedningsstod: "Management Support",
+	partnerDashboardItem: "Partners Dashboard",
+	partnerAdminItem: "Partner Admin",
+	partnerDashboardTitle: "Partners - Dashboard",
+	companyProfileTab: "Company Profile",
+	partnerOfferTab: "Offering",
+	imageBankTab: "Image Bank",
+	logotypeTab: "Logotype",
+	storeLabel: "Store",
 };
 
 export const en: Translation = {
