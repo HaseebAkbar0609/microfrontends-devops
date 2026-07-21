@@ -60,11 +60,13 @@ export async function getCustomerUsersAPIAction(): Promise<
 > {
 	try {
 		const response = await axiosInstance.get<
-			ApiResponse<CustomerUserData[]> | { data: CustomerUserData[] }
+			ApiResponse<CustomerUserData[]> | CustomerUserData[]
 		>(API_PATH.USERS.BASE);
 
 		const data =
-			"data" in response.data ? response.data.data : response.data;
+			"data" in response.data && response.data.data !== undefined
+				? response.data.data
+				: (response.data as CustomerUserData[]);
 
 		return { success: true, data, error: null };
 	} catch (error: unknown) {
@@ -84,11 +86,13 @@ export async function getCustomerUserByIdAPIAction(
 ): Promise<ActionResult<CustomerUserData>> {
 	try {
 		const response = await axiosInstance.get<
-			ApiResponse<CustomerUserData> | { data: CustomerUserData }
+			ApiResponse<CustomerUserData> | CustomerUserData
 		>(API_PATH.USERS.detail(userId));
 
 		const data =
-			"data" in response.data ? response.data.data : response.data;
+			"data" in response.data && response.data.data !== undefined
+				? response.data.data
+				: (response.data as CustomerUserData);
 
 		return { success: true, data, error: null };
 	} catch (error: unknown) {
@@ -108,11 +112,13 @@ export async function createCustomerUserAPIAction(
 ): Promise<ActionResult<CustomerUserData>> {
 	try {
 		const response = await axiosInstance.post<
-			ApiResponse<CustomerUserData> | { data: CustomerUserData }
+			ApiResponse<CustomerUserData> | CustomerUserData
 		>(API_PATH.USERS.BASE, payload);
 
 		const data =
-			"data" in response.data ? response.data.data : response.data;
+			"data" in response.data && response.data.data !== undefined
+				? response.data.data
+				: (response.data as CustomerUserData);
 
 		return { success: true, data, error: null };
 	} catch (error: unknown) {
@@ -148,11 +154,13 @@ export async function updateCustomerUserAPIAction(
 			}
 		}
 		const response = await axiosInstance.patch<
-			ApiResponse<CustomerUserData> | { data: CustomerUserData }
+			ApiResponse<CustomerUserData> | CustomerUserData
 		>(API_PATH.USERS.detail(userId), requestPayload);
 
 		const data =
-			"data" in response.data ? response.data.data : response.data;
+			"data" in response.data && response.data.data !== undefined
+				? response.data.data
+				: (response.data as CustomerUserData);
 
 		if (omittedFields.length > 0) {
 			const warning = `User saved, but the following fields were not updated: ${omittedFields.join(", ")}`;

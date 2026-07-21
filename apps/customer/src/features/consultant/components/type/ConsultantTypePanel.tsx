@@ -24,7 +24,7 @@ export function ConsultantTypePanel() {
 	useEffect(() => {
 		let cancelled = false;
 
-		void getConsultantTypesAPIAction({}).then((result) => {
+		void getConsultantTypesAPIAction({ search: debouncedSearch || undefined }).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setTypes(result.data);
@@ -38,7 +38,7 @@ export function ConsultantTypePanel() {
 		return () => {
 			cancelled = true;
 		};
-	}, []);
+	}, [debouncedSearch]);
 
 	const selectedType = useMemo(
 		() => types.find((t) => t.id === selectedId) ?? null,

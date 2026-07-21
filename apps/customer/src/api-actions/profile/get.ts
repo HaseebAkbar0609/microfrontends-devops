@@ -40,11 +40,13 @@ export async function getCustomerProfileAPIAction(): Promise<
 > {
 	try {
 		const response = await axiosInstance.get<
-			ApiResponse<CustomerProfileData> | { data: CustomerProfileData }
+			ApiResponse<CustomerProfileData> | CustomerProfileData
 		>(API_PATH.PROFILE.ME);
 
 		const data =
-			"data" in response.data ? response.data.data : response.data;
+			"data" in response.data && response.data.data !== undefined
+				? response.data.data
+				: (response.data as CustomerProfileData);
 
 		return { success: true, data, error: null };
 	} catch (error: unknown) {
