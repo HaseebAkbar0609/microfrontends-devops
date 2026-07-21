@@ -9,6 +9,7 @@ import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscrip
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
+import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import {
 	getFlyoutSubSidebarConfigByPath,
 	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
@@ -122,15 +123,19 @@ export function AppShell({ children }: AppShellProps) {
 		return null;
 	}
 
+	const isRegisterPath = pathname.startsWith("/tools/register");
+
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{showSubSidebar && (
+			{isRegisterPath ? (
+				<InvoiceSubSidebar />
+			) : showSubSidebar ? (
 				<MyPagesSubSidebar
 					titleKey={flyoutSubSidebarConfig.titleKey}
 					items={flyoutSubSidebarConfig.items}
 				/>
-			)}
+			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
 				<main

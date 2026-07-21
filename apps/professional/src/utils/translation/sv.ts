@@ -10,6 +10,7 @@ import {
 	ManageCartTranslation,
 	AdminPageTranslation,
 	OfferTranslation,
+	RegisterTranslation,
 	CommonTranslation,
 } from "./constants";
 
@@ -638,6 +639,43 @@ export const svAdminPage: AdminPageTranslation = {
 	companyPlace: "Ort",
 };
 
+export const svRegister: RegisterTranslation = {
+	invoiceDashboard: "Faktura dashboard",
+	invoiceOverview: "Faktura översikt",
+	contractInvoicing: "Avtalsfakturering",
+	registerDropdownLabel: "Register",
+	customerListTab: "Kundlista",
+	importCustomer: "Importera Kund",
+	registerNew: "Registrera nytt",
+	customerNoHeader: "kund nr",
+	customerHeader: "Kund",
+	orgNoHeader: "Org nr:",
+	addressHeader: "Adress",
+	postNrHeader: "Post nr",
+	ortHeader: "Ort",
+	landHeader: "Land",
+	phoneHeader: "Telefon",
+	mailHeader: "Mail",
+	statusHeader: "Status",
+	activeStatus: "Aktive",
+	inactiveStatus: "Inaktiv",
+	allStatus: "Alla",
+	rowsPerPageLabel: "Rader per sida",
+	pageLabel: "Page",
+	ofLabel: "of",
+	pageOfLabel: "Page {page} of {total}",
+	customerOption: "Kund",
+	supplierOption: "Leverantör",
+	reportsItem: "Rapporter",
+	protocolsItem: "Protokoll",
+	documentCenterItem: "Dokumentcenter",
+	statisticsItem: "Statistik",
+	archiveItem: "Arkiv",
+	viewLabel: "Visa",
+	editLabel: "Redigera",
+	deleteLabel: "Ta bort",
+};
+
 export const svCommon: CommonTranslation = {
 	search: "Sök",
 	filter: "Filter",
@@ -655,5 +693,6 @@ export const sv: Translation = {
 	...svDashboard,
 	...svAdminPage,
 	...svOffer,
+	...svRegister,
 	...svCommon,
 };
