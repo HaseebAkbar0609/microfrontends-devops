@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
 import {
   Search,
@@ -442,11 +442,6 @@ function KMADocTable({
 
 // ─── Control table ────────────────────────────────────────────────────────────
 
-const CREATOR_OPTIONS = [
-  { value: "", label: "All" },
-  { value: "Lars Andersson", label: "Lars Andersson" },
-  { value: "Anna Svensson", label: "Anna Svensson" },
-];
 
 function ControlTableRows({
   projectId,
@@ -471,6 +466,7 @@ function ControlTableRows({
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [creator, setCreator] = useState("");
+  const [allCreators, setAllCreators] = useState<string[]>([]);
   const { open: fOpen, anchor: fAnchor, toggle: fToggle, setOpen: fSetOpen, setAnchor: fSetAnchor } = useFilterBtn();
   const { openMenu, menuAnchor, handleOpen, setOpenMenu } = useRowMenu();
 
@@ -497,6 +493,8 @@ function ControlTableRows({
       if (cancelled) return;
       if (res.success && res.data) {
         setControls(res.data);
+        const newCreators = res.data.map((c) => c.createdBy).filter(Boolean);
+        setAllCreators((prev) => Array.from(new Set([...prev, ...newCreators])));
       } else if (!res.success) {
         showToast("error", res.error || "Failed to load controls");
       }
@@ -507,6 +505,14 @@ function ControlTableRows({
       cancelled = true;
     };
   }, [projectId, subTab, viewType, folderId, debouncedSearch, creator]);
+
+  const creatorOptions: { value: string; label: string }[] = useMemo(
+    () => [
+      { value: "", label: "All" },
+      ...allCreators.map((c) => ({ value: c, label: c })),
+    ],
+    [allCreators]
+  );
 
   const handleDelete = async (controlId: string) => {
     if (!projectId) return;
@@ -522,7 +528,7 @@ function ControlTableRows({
     }
   };
 
-  const activeLabel = CREATOR_OPTIONS.find((o) => o.value === creator)?.label;
+  const activeLabel = creatorOptions.find((o) => o.value === creator)?.label;
 
   return (
     <>
@@ -618,7 +624,7 @@ function ControlTableRows({
           onClick={(e) => e.stopPropagation()}
         >
           <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Created by</p>
-          {CREATOR_OPTIONS.map((opt) => (
+          {creatorOptions.map((opt) => (
             <button
               key={opt.value}
               type="button"
