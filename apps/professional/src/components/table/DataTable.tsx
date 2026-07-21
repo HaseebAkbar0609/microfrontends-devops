@@ -1,241 +1,382 @@
-// components/DataTable.tsx
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+	ArrowUpDown,
+	ArrowUp,
+	ArrowDown,
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+	MoreVertical,
+} from "lucide-react";
+import { ReactNode } from "react";
+
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
 } from "@/components/ui/table";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { ChevronDown } from "@/components/icons";
-import * as React from "react";
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  searchableColumn?: keyof TData;
-  pageSizeOptions?: number[];
-  defaultPageSize?: number;
-  onRowSelectionChange?: (rows: TData[]) => void;
+// ─── Column definition ────────────────────────────────────────────────────────
+
+export interface DataTableColumn<TData> {
+	/** Unique key matching a key in TData (or "actions" for the action column). */
+	key: string;
+	/** Translation key used for the column header label. */
+	label: string;
+	/** Whether the column is sortable. Defaults to false. */
+	sortable?: boolean;
+	/** Tailwind classes applied to the <th> element. */
+	headerClassName?: string;
+	/** Tailwind classes applied to every <td> in this column. */
+	cellClassName?: string;
+	/** Custom render function for the cell content. */
+	render?: (row: TData) => ReactNode;
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-  searchableColumn,
-  pageSizeOptions = [5, 10, 20, 50],
-  defaultPageSize = 10,
-  onRowSelectionChange,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [pageSize, setPageSize] = React.useState(defaultPageSize);
+// ─── Row action definition ─────────────────────────────────────────────────────
 
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: (updater) => {
-      const updated =
-        typeof updater === "function" ? updater(rowSelection) : updater;
-      setRowSelection(updated);
-      if (onRowSelectionChange) {
-        const selectedRows = Object.keys(updated)
-          .map((id) => {
-            const row = table.getRowModel().rows.find((r) => r.id === id);
-            return row?.original;
-          })
-          .filter(Boolean) as TData[];
-        onRowSelectionChange(selectedRows);
-      }
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    manualPagination: false,
-  });
+export interface DataTableAction<TData> {
+	/** Translation key for the menu item label. */
+	label: string;
+	/** Icon element rendered left of the label. */
+	icon?: ReactNode;
+	/** Called when the user clicks this item. */
+	onClick: (row: TData) => void;
+	/** Whether the item should render in a destructive (red) style. */
+	destructive?: boolean;
+}
 
-  return (
-    <div className="w-full">
-      <div className="flex items-center py-4 gap-4 flex-wrap">
-        {searchableColumn && (
-          <Input
-            placeholder={`Search ${String(searchableColumn)}`}
-            value={
-              (table
-                .getColumn(searchableColumn as string)
-                ?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table
-                .getColumn(searchableColumn as string)
-                ?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-        )}
+// ─── Pagination ───────────────────────────────────────────────────────────────
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((col) => col.getCanHide())
-              .map((column) => (
-                <DropdownMenuCheckboxItem
-                  key={column.id}
-                  className="capitalize"
-                  checked={column.getIsVisible()}
-                  onCheckedChange={() => column.toggleVisibility()}
-                >
-                  {column.id}
-                </DropdownMenuCheckboxItem>
-              ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+export interface DataTablePaginationState {
+	page: number;
+	pageSize: number;
+	totalItems: number;
+}
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-center h-24"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+// ─── Props ────────────────────────────────────────────────────────────────────
 
-      <div className="flex items-center justify-between py-4 gap-2 flex-wrap">
-        <div className="text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+export interface DataTableProps<TData> {
+	/** Row data to render. */
+	data: TData[];
+	/** Column definitions. */
+	columns: DataTableColumn<TData>[];
+	/** Function that returns a unique key per row. */
+	rowKey: (row: TData) => string;
+	/** Row action items rendered in the ⋮ menu (omit to hide actions column). */
+	actions?: DataTableAction<TData>[];
+	/** Custom direct cell renderer for primary action icon (e.g. Eye icon). */
+	primaryAction?: (row: TData) => ReactNode;
+	/** Whether the table is in a loading state (shows skeleton rows). */
+	loading?: boolean;
+	/** Translation key for the empty-state message. Defaults to generic text. */
+	emptyMessageKey?: string;
+	/** Pagination state (controlled externally via URL params or local state). */
+	pagination?: DataTablePaginationState;
+	/** Called when the page changes. */
+	onPageChange?: (page: number) => void;
+	/** Called when the page size changes. */
+	onPageSizeChange?: (size: number) => void;
+	/** Current sort field key. */
+	sortBy?: string;
+	/** Current sort direction ("asc" | "desc"). */
+	sortOrder?: string;
+	/** Called when a sortable column header is clicked. */
+	onSort?: (field: string, nextOrder: "asc" | "desc" | null) => void;
+	/** Number of skeleton rows to render while loading. Defaults to 5. */
+	skeletonRows?: number;
+	/** Optional border wrapper. Defaults to false. */
+	bordered?: boolean;
+}
 
-        <div className="flex items-center gap-3">
-          <Select
-            value={String(pageSize)}
-            onValueChange={(value) => {
-              const size = Number(value);
-              setPageSize(size);
-              table.setPageSize(size);
-            }}
-          >
-            <SelectTrigger className="w-[110px]">
-              <SelectValue placeholder="Page Size" />
-            </SelectTrigger>
-            <SelectContent>
-              {pageSizeOptions.map((size) => (
-                <SelectItem key={size} value={String(size)}>
-                  Show {size}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+function SortIcon({
+	field,
+	sortBy,
+	sortOrder,
+}: {
+	field: string;
+	sortBy?: string;
+	sortOrder?: string;
+}) {
+	if (sortBy !== field)
+		return <ArrowUpDown className="ml-1 h-3.5 w-3.5 opacity-50 shrink-0" />;
+	return sortOrder === "asc" ? (
+		<ArrowUp className="ml-1 h-3.5 w-3.5 text-slate-900 shrink-0" />
+	) : (
+		<ArrowDown className="ml-1 h-3.5 w-3.5 text-slate-900 shrink-0" />
+	);
+}
+
+const ACTIONS_COLUMN_CLASS = {
+	head: "w-[50px] min-w-[50px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] z-20 text-center",
+	cell: "w-[50px] min-w-[50px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] transition-colors group-hover:bg-slate-50 z-10 text-center py-3.5 px-2",
+};
+
+export function DataTable<TData>({
+	data,
+	columns,
+	rowKey,
+	actions,
+	primaryAction,
+	loading = false,
+	emptyMessageKey,
+	pagination,
+	onPageChange,
+	onPageSizeChange,
+	sortBy,
+	sortOrder,
+	onSort,
+	skeletonRows = 5,
+	bordered = false,
+}: DataTableProps<TData>) {
+	const hasActions = Boolean((actions && actions.length > 0) || primaryAction);
+	const totalItems = pagination?.totalItems ?? data.length;
+	const pageSize = pagination?.pageSize ?? 10;
+	const page = pagination?.page ?? 1;
+	const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+	const handleHeaderClick = (col: DataTableColumn<TData>) => {
+		if (!col.sortable || !onSort) return;
+		let nextOrder: "asc" | "desc" | null = "asc";
+		if (sortBy === col.key) {
+			if (sortOrder === "asc") nextOrder = "desc";
+			else if (sortOrder === "desc") nextOrder = null;
+		}
+		onSort(col.key, nextOrder);
+	};
+
+	return (
+		<div className="w-full flex flex-col gap-4">
+			{/* Main Table Container (No outside border by default, matching Customer Dashboard) */}
+			<div
+				className={cn(
+					"w-full overflow-x-auto relative bg-white",
+					bordered && "rounded-lg border border-slate-200 shadow-2xs",
+				)}
+			>
+				<Table className="w-full min-w-4xl table-auto border-collapse">
+					<TableHeader>
+						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+							{columns.map((col) => (
+								<TableHead
+									key={col.key}
+									className={cn(
+										"py-3.5 px-4 text-xs font-semibold text-slate-600 transition-colors select-none whitespace-nowrap",
+										col.sortable && "cursor-pointer hover:text-slate-900",
+										col.headerClassName,
+									)}
+									onClick={() => handleHeaderClick(col)}
+								>
+									<div className="flex items-center gap-1">
+										<Translate text={col.label} />
+										{col.sortable && (
+											<SortIcon
+												field={col.key}
+												sortBy={sortBy}
+												sortOrder={sortOrder}
+											/>
+										)}
+									</div>
+								</TableHead>
+							))}
+							{hasActions && (
+								<TableHead className={ACTIONS_COLUMN_CLASS.head} aria-label="Actions" />
+							)}
+						</TableRow>
+					</TableHeader>
+
+					<TableBody>
+						{loading ? (
+							Array.from({ length: skeletonRows }).map((_, idx) => (
+								<TableRow key={`skeleton-${idx}`}>
+									{columns.map((col) => (
+										<TableCell key={col.key} className="px-4 py-3.5">
+											<Skeleton className="h-4 w-full" />
+										</TableCell>
+									))}
+									{hasActions && (
+										<TableCell className={ACTIONS_COLUMN_CLASS.cell}>
+											<Skeleton className="h-4 w-8 ml-auto" />
+										</TableCell>
+									)}
+								</TableRow>
+							))
+						) : data.length === 0 ? (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length + (hasActions ? 1 : 0)}
+									className="py-12 text-center text-sm text-slate-500"
+								>
+									<Translate text={emptyMessageKey || "noDataFound"} />
+								</TableCell>
+							</TableRow>
+						) : (
+							data.map((row) => (
+								<TableRow
+									key={rowKey(row)}
+									className="group border-b border-slate-100 hover:bg-slate-50/60 transition-colors"
+								>
+									{columns.map((col) => (
+										<TableCell
+											key={col.key}
+											className={cn(
+												"px-4 py-3.5 text-sm font-normal text-slate-700 whitespace-nowrap",
+												col.cellClassName,
+											)}
+										>
+											{col.render
+												? col.render(row)
+												: String((row as Record<string, unknown>)[col.key] ?? "")}
+										</TableCell>
+									))}
+
+									{hasActions && (
+										<TableCell className={ACTIONS_COLUMN_CLASS.cell}>
+											<div className="flex items-center justify-end gap-1">
+												{primaryAction?.(row)}
+												{actions && actions.length > 0 && (
+													<DropdownMenu>
+														<DropdownMenuTrigger asChild>
+															<Button
+																variant="ghost"
+																size="icon"
+																className="h-8 w-8 text-slate-500 hover:text-slate-900 rounded-md"
+															>
+																<MoreVertical className="h-4 w-4" />
+															</Button>
+														</DropdownMenuTrigger>
+														<DropdownMenuContent align="end" className="w-40 border border-slate-200 bg-white shadow-md rounded-md p-1">
+															{actions.map((act) => (
+																<DropdownMenuItem
+																	key={act.label}
+																	onClick={() => act.onClick(row)}
+																	className={cn(
+																		"gap-2 text-sm cursor-pointer px-3 py-2 rounded-md transition-colors",
+																		act.destructive
+																			? "text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-700"
+																			: "text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:text-slate-900",
+																	)}
+																>
+																	{act.icon}
+																	<Translate text={act.label} />
+																</DropdownMenuItem>
+															))}
+														</DropdownMenuContent>
+													</DropdownMenu>
+												)}
+											</div>
+										</TableCell>
+									)}
+								</TableRow>
+							))
+						)}
+					</TableBody>
+				</Table>
+			</div>
+
+			{/* Pagination Controls Bar matching Customer Dashboard */}
+			{pagination && (
+				<div className="flex items-center justify-center sm:justify-end gap-6 py-2 px-1 text-sm text-slate-600 flex-wrap">
+					{/* Rows per page selector */}
+					<div className="flex items-center gap-2">
+						<span className="text-sm font-medium text-slate-700">
+							<Translate text={localizationConstants.rowsPerPageLabel} />
+						</span>
+						<Select
+							value={String(pageSize)}
+							onValueChange={(val) => onPageSizeChange?.(Number(val))}
+						>
+							<SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0">
+								<SelectValue placeholder={String(pageSize)} />
+							</SelectTrigger>
+							<SelectContent>
+								{[5, 10, 20, 30, 50].map((size) => (
+									<SelectItem key={size} value={String(size)}>
+										{size}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					</div>
+
+					{/* Page 1 of X indicator */}
+					<div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+						<Translate text={localizationConstants.pageLabel} />
+						<span>{page}</span>
+						<Translate text={localizationConstants.ofLabel} />
+						<span>{totalPages}</span>
+					</div>
+
+					{/* Chevrons Pagination Buttons */}
+					<div className="flex items-center gap-1">
+						<Button
+							variant="outline"
+							size="icon"
+							className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+							disabled={page <= 1}
+							onClick={() => onPageChange?.(1)}
+						>
+							<ChevronsLeft className="h-4 w-4" />
+							<span className="sr-only">First page</span>
+						</Button>
+						<Button
+							variant="outline"
+							size="icon"
+							className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+							disabled={page <= 1}
+							onClick={() => onPageChange?.(page - 1)}
+						>
+							<ChevronLeft className="h-4 w-4" />
+							<span className="sr-only">Previous page</span>
+						</Button>
+						<Button
+							variant="outline"
+							size="icon"
+							className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+							disabled={page >= totalPages}
+							onClick={() => onPageChange?.(page + 1)}
+						>
+							<ChevronRight className="h-4 w-4" />
+							<span className="sr-only">Next page</span>
+						</Button>
+						<Button
+							variant="outline"
+							size="icon"
+							className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+							disabled={page >= totalPages}
+							onClick={() => onPageChange?.(totalPages)}
+						>
+							<ChevronsRight className="h-4 w-4" />
+							<span className="sr-only">Last page</span>
+						</Button>
+					</div>
+				</div>
+			)}
+		</div>
+	);
 }

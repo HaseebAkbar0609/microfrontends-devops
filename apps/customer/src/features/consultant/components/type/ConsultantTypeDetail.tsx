@@ -2,6 +2,7 @@
 
 import { Building2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
+import { consultantTypeNameKey } from "../../utils/typeName";
 import type { ConsultantTypeItem } from "../../types/consultantType";
 
 interface ConsultantTypeDetailProps {
@@ -16,7 +17,7 @@ export function ConsultantTypeDetail({ type }: ConsultantTypeDetailProps) {
 			<div className="flex flex-col gap-3">
 				<Building2 className="h-6 w-6 text-slate-700" aria-hidden />
 				<h2 className="text-2xl font-semibold text-slate-900">
-					<Translate text={type.name} />
+					<Translate text={consultantTypeNameKey(type.name)} />
 				</h2>
 			</div>
 

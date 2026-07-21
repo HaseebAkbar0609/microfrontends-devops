@@ -17,6 +17,15 @@ export interface ConsultantListPayload {
 	totalItems: number;
 }
 
+interface ApplicationItem {
+	id: string;
+	consultant_type_id?: string;
+	project_name?: string;
+	status: string;
+	created_at: number;
+	company?: { company_name?: string; email?: string; phone?: string };
+}
+
 export async function getConsultantListAPIAction(
 	params: GetConsultantListParams = {},
 ): Promise<ActionResult<ConsultantListPayload>> {
@@ -31,38 +40,35 @@ export async function getConsultantListAPIAction(
 	} = params;
 
 	try {
-		let rows = [...DUMMY_CONSULTANTS];
+		const query = new URLSearchParams({
+			page: page.toString(),
+			page_size: pageSize.toString(),
+		});
 
-		const q = search?.trim().toLowerCase();
-		if (q) {
-			rows = rows.filter(
-				(c) =>
-					c.name.toLowerCase().includes(q) ||
-					c.project.toLowerCase().includes(q) ||
-					c.type.toLowerCase().includes(q),
-			);
-		}
+		if (search) query.append("search", search);
+		if (status) query.append("status", status);
+		if (type) query.append("consultant_type", type);
+		if (requestId) query.append("request_id", requestId);
+		if (projectId) query.append("project_id", projectId);
+		if (sortBy) query.append("sort_by", sortBy);
+		if (sortOrder) query.append("sort_order", sortOrder);
 
-		if (status) {
-			rows = rows.filter((c) => c.status === status);
-		}
+		const response = await axiosInstance.get(
+			`/api/v1/customers/consultation/applications/list?${query.toString()}`,
+		);
 
-		if (type) {
-			rows = rows.filter((c) => c.type === type);
-		}
+		const data = response.data?.data || [];
 
-		const dir = sortOrder === "desc" ? -1 : 1;
-		if (sortBy === "name") {
-			rows.sort((a, b) => a.name.localeCompare(b.name) * dir);
-		} else if (sortBy === "updatedAt") {
-			rows.sort((a, b) => (a.updatedAt < b.updatedAt ? -1 : 1) * dir);
-		} else {
-			rows.sort((a, b) => (a.updatedAt < b.updatedAt ? 1 : -1));
-		}
-
-		const totalItems = rows.length;
-		const start = (page - 1) * pageSize;
-		const consultants = rows.slice(start, start + pageSize);
+		const consultants: Consultant[] = (data as ApplicationItem[]).map((item) => ({
+			id: item.id,
+			name: item.company?.company_name || "Unknown Company",
+			type: (item.consultant_type_id || "architect") as Consultant["type"],
+			project: item.project_name || "Unknown Project",
+			status: (item.status || "pending") as Consultant["status"],
+			email: item.company?.email || "",
+			phone: item.company?.phone || "",
+			updatedAt: new Date(item.created_at).toISOString().split("T")[0],
+		}));
 
 		return {
 			success: true,

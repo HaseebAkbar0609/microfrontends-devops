@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
 	ArrowUpDown,
@@ -27,7 +27,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { TablePagination } from "@/components/table/TablePagination";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -40,7 +39,6 @@ import { CONSULTANT_REQUEST_COLUMNS } from "../../constants/directory";
 
 interface ConsultantRequestsTableProps {
 	data: ConsultantRequest[];
-	totalItems: number;
 }
 
 const COLUMN_LAYOUT: Record<
@@ -131,15 +129,12 @@ const RequestActions = () => {
 
 export function ConsultantRequestsTable({
 	data,
-	totalItems,
 }: ConsultantRequestsTableProps) {
 	const router = useRouter();
 	const { query, changeQueries } = useQueryParams();
 
 	const sortBy = query.get("sort_by") || "";
 	const sortOrder = query.get("sort_order") || "";
-	const page = Number(query.get("page") || "1");
-	const pageSize = Number(query.get("page_size") || "10");
 
 	const handleSort = useCallback(
 		(field: string, sortable: boolean) => {
@@ -154,7 +149,6 @@ export function ConsultantRequestsTable({
 			changeQueries({
 				sort_by: nextOrder ? field : null,
 				sort_order: nextOrder,
-				page: "1",
 			});
 		},
 		[sortBy, sortOrder, changeQueries],
@@ -195,11 +189,6 @@ export function ConsultantRequestsTable({
 			}
 		},
 		[],
-	);
-
-	const totalPages = useMemo(
-		() => Math.ceil(totalItems / pageSize),
-		[totalItems, pageSize],
 	);
 
 	return (
@@ -306,18 +295,6 @@ export function ConsultantRequestsTable({
 					</TableBody>
 				</Table>
 			</div>
-
-			<TablePagination
-				currentPage={page}
-				totalPages={totalPages}
-				pageSize={pageSize}
-				onPageChange={(newPage) =>
-					changeQueries({ page: String(newPage) })
-				}
-				onPageSizeChange={(newSize) =>
-					changeQueries({ page: "1", page_size: String(newSize) })
-				}
-			/>
 		</div>
 	);
 }

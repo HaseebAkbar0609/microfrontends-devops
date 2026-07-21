@@ -16,6 +16,14 @@ export interface ConsultantRequestsPayload {
   totalItems: number;
 }
 
+interface RequestItem {
+  id: string;
+  project_id?: string;
+  applications_count?: number;
+  created_at: number;
+  selected_options?: { project?: string; consultant_type_id?: string };
+}
+
 export async function getConsultantRequestsAPIAction(
   params: GetConsultantRequestsParams = {},
 ): Promise<ActionResult<ConsultantRequestsPayload>> {

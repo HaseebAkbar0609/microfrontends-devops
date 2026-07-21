@@ -4,9 +4,9 @@ export const leadQuoteListByLeadId: Record<string, LeadQuoteRow[]> = {
 	"L-2025-001": [
 		{
 			id: "quote-1",
-			companyName: "Nisse Bygg",
-			contactPerson: "Nisse Olsson",
-			orgNumber: "982 234 2341",
+			companyName: "Pelle Construction",
+			contactPerson: "Peter Svensson",
+			orgNumber: "58858357375",
 			quotePrice: "57,000 SEK",
 			status: "received",
 		},
@@ -60,3 +60,7 @@ export const leadQuoteListByLeadId: Record<string, LeadQuoteRow[]> = {
 		},
 	],
 };
+
+// Alias for the preview lead (apps/team/.../constants/previewLead.ts), which uses the
+// "LEAD-2025-001" format shown in the Figma overview screenshot.
+leadQuoteListByLeadId["LEAD-2025-001"] = leadQuoteListByLeadId["L-2025-001"];
