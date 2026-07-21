@@ -16,6 +16,14 @@ export interface ConsultantRequestsPayload {
   totalItems: number;
 }
 
+interface RequestItem {
+  id: string;
+  project_id?: string;
+  applications_count?: number;
+  created_at: number;
+  selected_options?: { project?: string; consultant_type_id?: string };
+}
+
 export async function getConsultantRequestsAPIAction(
   params: GetConsultantRequestsParams = {},
 ): Promise<ActionResult<ConsultantRequestsPayload>> {
@@ -44,15 +52,8 @@ export async function getConsultantRequestsAPIAction(
     );
 
     const data = response.data?.data || [];
-    
+
     // Map backend response to frontend ConsultantRequest interface
-    interface RequestItem {
-      id: string;
-      project_id?: string;
-      applications_count?: number;
-      created_at: number;
-      selected_options?: { project?: string; consultant_type_id?: string };
-    }
     const requests: ConsultantRequest[] = (data as RequestItem[]).map((item) => ({
       id: item.id,
       project_id: item.project_id || "",
