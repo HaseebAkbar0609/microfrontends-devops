@@ -33,3 +33,8 @@ export {
 	getCitiesAPIAction,
 	type SelectOption,
 } from "./customers/professionals/options";
+export {
+	getProfessionalAPIAction,
+	type ProfessionalDetail,
+	type RecentActivityItem,
+} from "./customers/professionals/get";

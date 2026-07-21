@@ -2,53 +2,131 @@
 
 import { useState, useRef, useEffect, type ReactNode } from "react";
 import Image from "next/image";
-import { Plus, ChevronDown, MoreVertical, Pencil, Trash2, Check } from "lucide-react";
+import {
+  Plus,
+  ChevronDown,
+  MoreVertical,
+  Pencil,
+  Trash2,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { ATAItem } from "./types";
 import { DUMMY_ATA_ITEMS } from "./data";
 import { fmtAmount } from "./helpers";
-import { SortableHeader, ToolbarSearch, FilterButton, ATAStatusBadge, ActionsMenu } from "./shared";
+import {
+  SortableHeader,
+  ToolbarSearch,
+  FilterButton,
+  ATAStatusBadge,
+  ActionsMenu,
+} from "./shared";
 
+import type { ActiveProject } from "../../../types";
+import {
+  getProjectATAsAPIAction,
+  saveProjectATAAPIAction,
+} from "@/api-actions";
 
 // ─── ATA list ─────────────────────────────────────────────────────────────────
 
-const ATA_COLS = "grid-cols-[110px_120px_minmax(0,1fr)_minmax(0,1fr)_120px_140px_46px]";
+const ATA_COLS =
+  "grid-cols-[110px_120px_minmax(0,1fr)_minmax(0,1fr)_120px_140px_46px]";
 
 type ATAStatusFilter = "" | ATAItem["status"];
 
 const ATA_STATUS_OPTIONS: { value: ATAStatusFilter; label: string }[] = [
-  { value: "",        label: "All" },
+  { value: "", label: "All" },
   { value: "godkand", label: "Approved" },
   { value: "granskning", label: "Under Review" },
 ];
 
-export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
+export function ATAList({
+  project,
+  onCreateNew,
+}: {
+  project?: ActiveProject;
+  onCreateNew: () => void;
+}) {
   const [search, setSearch] = useState("");
   const [ataItems, setAtaItems] = useState<ATAItem[]>(DUMMY_ATA_ITEMS);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const [statusFilter, setStatusFilter] = useState<ATAStatusFilter>("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
+  const [filterAnchor, setFilterAnchor] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!project?.id) return;
+    let cancelled = false;
+    async function loadATAs() {
+      if (!project?.id) return;
+      const res = await getProjectATAsAPIAction(project.id);
+      if (!cancelled && res.success && Array.isArray(res.data)) {
+        const mapped: ATAItem[] = res.data.map(
+          (item: {
+            id: string;
+            ata_no?: string;
+            created_at?: string;
+            title?: string;
+            reason?: string;
+            quality_status?: string;
+            total_cost?: number;
+            economic_status?: string;
+          }) => ({
+            id: item.id,
+            ataNr:
+              item.ata_no || `ÄTA-${item.id.substring(0, 4).toUpperCase()}`,
+            datum: item.created_at
+              ? new Date(item.created_at).toISOString().split("T")[0]
+              : new Date().toISOString().split("T")[0],
+            benamning: item.title || item.reason || "Change Order",
+            source: item.quality_status || "ÄTA Report",
+            belopp: item.total_cost ?? 0,
+            status:
+              item.economic_status === "approved" ? "godkand" : "granskning",
+          }),
+        );
+        setAtaItems(mapped);
+      }
+    }
+    void loadATAs();
+    return () => {
+      cancelled = true;
+    };
+  }, [project?.id]);
 
   useEffect(() => {
     if (!openMenuId) return;
-    function close() { setOpenMenuId(null); }
+    function close() {
+      setOpenMenuId(null);
+    }
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, [openMenuId]);
 
   useEffect(() => {
     if (!filterOpen) return;
-    const close = () => { setFilterOpen(false); setFilterAnchor(null); };
+    const close = () => {
+      setFilterOpen(false);
+      setFilterAnchor(null);
+    };
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, [filterOpen]);
 
   function toggleFilter(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
-    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
+    if (filterOpen) {
+      setFilterOpen(false);
+      setFilterAnchor(null);
+      return;
+    }
     const rect = e.currentTarget.getBoundingClientRect();
     setFilterOpen(true);
     setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
@@ -57,14 +135,16 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
   const filtered = ataItems.filter(
     (a) =>
       (a.benamning.toLowerCase().includes(search.toLowerCase()) ||
-       a.ataNr.toLowerCase().includes(search.toLowerCase())) &&
+        a.ataNr.toLowerCase().includes(search.toLowerCase())) &&
       (statusFilter === "" || a.status === statusFilter),
   );
 
   const ataTotal = ataItems.reduce((a, i) => a + i.belopp, 0);
 
   function handleApprove(id: string) {
-    setAtaItems((prev) => prev.map((a) => (a.id === id ? { ...a, status: "godkand" } : a)));
+    setAtaItems((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, status: "godkand" } : a)),
+    );
   }
 
   function handleReject(id: string) {
@@ -77,7 +157,10 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
         <ToolbarSearch value={search} onChange={setSearch} />
         <FilterButton onClick={toggleFilter} active={statusFilter !== ""} />
         <div className="flex-1" />
-        <Button onClick={onCreateNew} className="h-9 px-4 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
+        <Button
+          onClick={onCreateNew}
+          className="h-9 px-4 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]"
+        >
           <Plus className="h-4 w-4" />
           <Translate text={localizationConstants.financeCreateNewLabel} />
         </Button>
@@ -91,25 +174,53 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
       </div>
 
       <div className="w-full border border-[#E2E8F0] rounded-xl">
-        <div className={`grid ${ATA_COLS} border-b border-[#E2E8F0] bg-[#F8FAFC] rounded-t-xl`}>
-          <SortableHeader><Translate text={localizationConstants.financeAtaNrCol} /></SortableHeader>
-          <SortableHeader><Translate text={localizationConstants.financeDateCol} /></SortableHeader>
-          <SortableHeader><Translate text={localizationConstants.financeBenamnCol} /></SortableHeader>
-          <SortableHeader><Translate text={localizationConstants.financeSourceCol} /></SortableHeader>
-          <SortableHeader><Translate text={localizationConstants.financeAmountCol} /></SortableHeader>
-          <SortableHeader><Translate text={localizationConstants.financeStatusCol} /></SortableHeader>
+        <div
+          className={`grid ${ATA_COLS} border-b border-[#E2E8F0] bg-[#F8FAFC] rounded-t-xl`}
+        >
+          <SortableHeader>
+            <Translate text={localizationConstants.financeAtaNrCol} />
+          </SortableHeader>
+          <SortableHeader>
+            <Translate text={localizationConstants.financeDateCol} />
+          </SortableHeader>
+          <SortableHeader>
+            <Translate text={localizationConstants.financeBenamnCol} />
+          </SortableHeader>
+          <SortableHeader>
+            <Translate text={localizationConstants.financeSourceCol} />
+          </SortableHeader>
+          <SortableHeader>
+            <Translate text={localizationConstants.financeAmountCol} />
+          </SortableHeader>
+          <SortableHeader>
+            <Translate text={localizationConstants.financeStatusCol} />
+          </SortableHeader>
           <div />
         </div>
 
         {filtered.map((item) => (
-          <div key={item.id}
-            className={`grid ${ATA_COLS} border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors`}>
-            <div className="h-14 flex items-center px-4 text-sm text-[#020617]">{item.ataNr}</div>
-            <div className="h-14 flex items-center px-4 text-sm text-[#374151]">{item.datum}</div>
-            <div className="h-14 flex items-center px-4 text-sm text-[#374151] truncate">{item.benamning}</div>
-            <div className="h-14 flex items-center px-4 text-sm text-[#374151] truncate">{item.source}</div>
-            <div className="h-14 flex items-center px-4 text-sm text-[#374151]">{fmtAmount(item.belopp)}</div>
-            <div className="h-14 flex items-center px-4"><ATAStatusBadge status={item.status} /></div>
+          <div
+            key={item.id}
+            className={`grid ${ATA_COLS} border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors`}
+          >
+            <div className="h-14 flex items-center px-4 text-sm text-[#020617]">
+              {item.ataNr}
+            </div>
+            <div className="h-14 flex items-center px-4 text-sm text-[#374151]">
+              {item.datum}
+            </div>
+            <div className="h-14 flex items-center px-4 text-sm text-[#374151] truncate">
+              {item.benamning}
+            </div>
+            <div className="h-14 flex items-center px-4 text-sm text-[#374151] truncate">
+              {item.source}
+            </div>
+            <div className="h-14 flex items-center px-4 text-sm text-[#374151]">
+              {fmtAmount(item.belopp)}
+            </div>
+            <div className="h-14 flex items-center px-4">
+              <ATAStatusBadge status={item.status} />
+            </div>
             <ActionsMenu
               open={openMenuId === item.id}
               onOpenChange={(v) => setOpenMenuId(v ? item.id : null)}
@@ -120,11 +231,15 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
           </div>
         ))}
 
-        <div className={`grid ${ATA_COLS} bg-[#F8FAFC] border-t border-[#E2E8F0] rounded-b-xl`}>
+        <div
+          className={`grid ${ATA_COLS} bg-[#F8FAFC] border-t border-[#E2E8F0] rounded-b-xl`}
+        >
           <div className="h-12 col-span-4 flex items-center px-4 text-sm font-bold text-[#020617]">
             <Translate text={localizationConstants.financeATASumLabel} />
           </div>
-          <div className="h-12 flex items-center px-4 text-sm font-bold text-[#020617]">{fmtAmount(ataTotal)}</div>
+          <div className="h-12 flex items-center px-4 text-sm font-bold text-[#020617]">
+            {fmtAmount(ataTotal)}
+          </div>
           <div className="h-12 col-span-2" />
         </div>
       </div>
@@ -132,20 +247,33 @@ export function ATAList({ onCreateNew }: { onCreateNew: () => void }) {
       {/* Filter portal */}
       {filterOpen && filterAnchor && (
         <div
-          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
+          style={{
+            position: "fixed",
+            top: filterAnchor.top,
+            left: filterAnchor.left,
+            zIndex: 9999,
+          }}
           className="w-36 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
           onClick={(e) => e.stopPropagation()}
         >
-          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Status</p>
+          <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">
+            Status
+          </p>
           {ATA_STATUS_OPTIONS.map((opt) => (
             <button
               key={opt.value}
               type="button"
-              onClick={() => { setStatusFilter(opt.value); setFilterOpen(false); setFilterAnchor(null); }}
+              onClick={() => {
+                setStatusFilter(opt.value);
+                setFilterOpen(false);
+                setFilterAnchor(null);
+              }}
               className="cursor-pointer w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
             >
               {opt.label}
-              {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
+              {statusFilter === opt.value && (
+                <Check className="h-3.5 w-3.5 text-blue-600" />
+              )}
             </button>
           ))}
         </div>
@@ -166,19 +294,45 @@ function LV({ label, value = "—" }: { label: ReactNode; value?: string }) {
 }
 
 const PERSONAL_ROWS = [
-  { datum: "2024/7/23",  projekt: "Alan Miller",   resurs: "00532", belopp: "156 900" },
-  { datum: "2024/12/01", projekt: "Kala Andersen", resurs: "00014", belopp: "140 833" },
+  {
+    datum: "2024/7/23",
+    projekt: "Alan Miller",
+    resurs: "00532",
+    belopp: "156 900",
+  },
+  {
+    datum: "2024/12/01",
+    projekt: "Kala Andersen",
+    resurs: "00014",
+    belopp: "140 833",
+  },
 ];
 const MATERIAL_ROWS = [
-  { datum: "2024/3/01", lev: "Input", resurs: "50/S2",  pris: "165 830" },
+  { datum: "2024/3/01", lev: "Input", resurs: "50/S2", pris: "165 830" },
   { datum: "2024/3/01", lev: "Input", resurs: "50/S37", pris: "140 830" },
 ];
 const DOC_ROWS = [
-  { datum: "2024-06-15", typ: "pdf", namn: "Transporter",  filnr: "Transporter" },
-  { datum: "2024-06-20", typ: "doc", namn: "El faktura",   filnr: "Fabrirs Electric box" },
+  {
+    datum: "2024-06-15",
+    typ: "pdf",
+    namn: "Transporter",
+    filnr: "Transporter",
+  },
+  {
+    datum: "2024-06-20",
+    typ: "doc",
+    namn: "El faktura",
+    filnr: "Fabrirs Electric box",
+  },
 ];
 
-export function ATACreateForm({ onBack }: { onBack: () => void }) {
+export function ATACreateForm({
+  project,
+  onBack,
+}: {
+  project?: ActiveProject;
+  onBack: () => void;
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [bestallareOpen, setBestallareOpen] = useState(true);
   const [orderOpen, setOrderOpen] = useState(true);
@@ -186,11 +340,43 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
   const [materialOpen, setMaterialOpen] = useState(true);
   const [dokumentOpen, setDokumentOpen] = useState(true);
   const [openDocMenu, setOpenDocMenu] = useState<string | null>(null);
-  const [docMenuAnchor, setDocMenuAnchor] = useState<{ top: number; right: number } | null>(null);
+  const [docMenuAnchor, setDocMenuAnchor] = useState<{
+    top: number;
+    right: number;
+  } | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [title, setTitle] = useState("Tilläggsarbete ÄTA");
+  const [category, setCategory] = useState("Kök");
+  const [reason, setReason] = useState("Fle mätt på bänkskivan i köket");
+  const [qualityStatus, setQualityStatus] = useState("Tilläggsarbete");
+  const [economicStatus, setEconomicStatus] = useState("under_review");
+  const [totalCost, setTotalCost] = useState<number | undefined>(undefined);
+
+  const handleSaveATA = async () => {
+    if (!project?.id) {
+      onBack();
+      return;
+    }
+    setSubmitting(true);
+    await saveProjectATAAPIAction(project.id, {
+      title: title.trim() || undefined,
+      category: category.trim() || undefined,
+      reason: reason.trim() || undefined,
+      quality_status: qualityStatus.trim() || undefined,
+      economic_status: economicStatus.trim() || undefined,
+      total_cost: totalCost,
+    });
+    setSubmitting(false);
+    onBack();
+  };
 
   useEffect(() => {
     if (!openDocMenu) return;
-    function close() { setOpenDocMenu(null); setDocMenuAnchor(null); }
+    function close() {
+      setOpenDocMenu(null);
+      setDocMenuAnchor(null);
+    }
     document.addEventListener("click", close);
     return () => document.removeEventListener("click", close);
   }, [openDocMenu]);
@@ -198,9 +384,18 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
   return (
     <div className="pb-24 min-w-0 overflow-x-hidden">
       <div className="flex items-center gap-2 mb-6">
-        <button type="button" onClick={onBack}
-          className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors" aria-label="Back">
-          <Image src="/assets/icons/arrow-left.svg" alt="Back" width={20} height={20} />
+        <button
+          type="button"
+          onClick={onBack}
+          className="cursor-pointer flex items-center justify-center w-8 h-8 rounded-lg hover:bg-slate-100 transition-colors"
+          aria-label="Back"
+        >
+          <Image
+            src="/assets/icons/arrow-left.svg"
+            alt="Back"
+            width={20}
+            height={20}
+          />
         </button>
         <h2 className="text-xl font-semibold text-[#020617]">
           <Translate text={localizationConstants.financeATATitle} />
@@ -209,57 +404,245 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
 
       <div className="flex gap-5 min-w-0">
         <div className="flex-1 min-w-0 space-y-4">
-
           {/* Orderer section */}
           <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
-            <button type="button" onClick={() => setBestallareOpen((v) => !v)}
-              className="cursor-pointer w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
-              <Image src="/assets/icons/users.svg" alt="" width={24} height={24} />
+            <button
+              type="button"
+              onClick={() => setBestallareOpen((v) => !v)}
+              className="cursor-pointer w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors"
+            >
+              <Image
+                src="/assets/icons/users.svg"
+                alt=""
+                width={24}
+                height={24}
+              />
               <span className="text-base font-medium text-[#09090B]">
-                <Translate text={localizationConstants.financeATAOrdererTitle} />
+                <Translate
+                  text={localizationConstants.financeATAOrdererTitle}
+                />
               </span>
-              <ChevronDown className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${bestallareOpen ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${bestallareOpen ? "rotate-180" : ""}`}
+              />
             </button>
             {bestallareOpen && (
               <div className="p-4 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-[#E4E4E7]">
-                <LV label={<Translate text={localizationConstants.financeATAOrdererLabel} />} value="Fastighetsbolaget AB" />
-                <LV label={<Translate text={localizationConstants.financeATANameLabel} />} value="Kalle Andersson" />
-                <LV label={<Translate text={localizationConstants.financeATAAddressLabel} />} value="Storgatan 10" />
-                <LV label={<Translate text={localizationConstants.financeATAZipCodeLabel} />} value="171 63" />
-                <LV label={<Translate text={localizationConstants.financeATACityLabel} />} value="Info" />
-                <LV label={<Translate text={localizationConstants.financeATAInfoLabel} />} />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATAOrdererLabel}
+                    />
+                  }
+                  value="Fastighetsbolaget AB"
+                />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATANameLabel}
+                    />
+                  }
+                  value="Kalle Andersson"
+                />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATAAddressLabel}
+                    />
+                  }
+                  value="Storgatan 10"
+                />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATAZipCodeLabel}
+                    />
+                  }
+                  value="171 63"
+                />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATACityLabel}
+                    />
+                  }
+                  value="Info"
+                />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATAInfoLabel}
+                    />
+                  }
+                />
               </div>
             )}
           </div>
 
           {/* Order information section */}
           <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
-            <button type="button" onClick={() => setOrderOpen((v) => !v)}
-              className="cursor-pointer w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors">
-              <Image src="/assets/icons/info.svg" alt="" width={24} height={24} />
+            <button
+              type="button"
+              onClick={() => setOrderOpen((v) => !v)}
+              className="cursor-pointer w-full flex items-center gap-4 p-4 hover:bg-slate-50 transition-colors"
+            >
+              <Image
+                src="/assets/icons/info.svg"
+                alt=""
+                width={24}
+                height={24}
+              />
               <span className="text-base font-medium text-[#09090B]">
                 <Translate text={localizationConstants.financeOrderInfoTitle} />
               </span>
-              <ChevronDown className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${orderOpen ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${orderOpen ? "rotate-180" : ""}`}
+              />
             </button>
             {orderOpen && (
               <div className="p-4 grid grid-cols-2 gap-x-4 gap-y-4 border-t border-[#E4E4E7]">
-                <LV label={<Translate text={localizationConstants.financeATAQualityStatusLabel} />} value="Tilläggsarbete" />
-                <LV label={<Translate text={localizationConstants.financeATAEconomicStatusLabel} />} value="Överlämnad" />
-                <LV label={<Translate text={localizationConstants.financeATAStageLabel} />} value="Kök" />
-                <LV label={<Translate text={localizationConstants.financeATAReasonLabel} />} value="Fle mätt på bänkskivan i köket" />
-                <LV label={<Translate text={localizationConstants.financeATACreatedByLabel} />} value="Kalle Andersson" />
-                <LV label="" value="" />
-                <LV label={<Translate text={localizationConstants.financeDateCol} />} value="2025-10-15" />
-                <LV label={<Translate text={localizationConstants.financeATARevisedDateLabel} />} value="Kalle Andersson" />
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="ata-title-input"
+                    className="text-xs font-medium text-[#09090B]"
+                  >
+                    <Translate text={localizationConstants.financeATATitle} />
+                  </label>
+                  <Input
+                    id="ata-title-input"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="ata-quality-status-input"
+                    className="text-xs font-medium text-[#09090B]"
+                  >
+                    <Translate
+                      text={localizationConstants.financeATAQualityStatusLabel}
+                    />
+                  </label>
+                  <Input
+                    id="ata-quality-status-input"
+                    value={qualityStatus}
+                    onChange={(e) => setQualityStatus(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="ata-economic-status-input"
+                    className="text-xs font-medium text-[#09090B]"
+                  >
+                    <Translate
+                      text={localizationConstants.financeATAEconomicStatusLabel}
+                    />
+                  </label>
+                  <Input
+                    id="ata-economic-status-input"
+                    value={economicStatus}
+                    onChange={(e) => setEconomicStatus(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="ata-category-input"
+                    className="text-xs font-medium text-[#09090B]"
+                  >
+                    <Translate
+                      text={localizationConstants.financeATAStageLabel}
+                    />
+                  </label>
+                  <Input
+                    id="ata-category-input"
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-1 col-span-2">
+                  <label
+                    htmlFor="ata-reason-input"
+                    className="text-xs font-medium text-[#09090B]"
+                  >
+                    <Translate
+                      text={localizationConstants.financeATAReasonLabel}
+                    />
+                  </label>
+                  <Input
+                    id="ata-reason-input"
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label
+                    htmlFor="ata-total-cost-input"
+                    className="text-xs font-medium text-[#09090B]"
+                  >
+                    <Translate text={localizationConstants.financeAmountCol} />
+                  </label>
+                  <Input
+                    id="ata-total-cost-input"
+                    type="number"
+                    value={totalCost ?? ""}
+                    onChange={(e) =>
+                      setTotalCost(
+                        e.target.value ? Number(e.target.value) : undefined,
+                      )
+                    }
+                    placeholder="0"
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATACreatedByLabel}
+                    />
+                  }
+                  value="Kalle Andersson"
+                />
+                <LV
+                  label={
+                    <Translate text={localizationConstants.financeDateCol} />
+                  }
+                  value="2025-10-15"
+                />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATARevisedDateLabel}
+                    />
+                  }
+                  value="Kalle Andersson"
+                />
                 <div className="col-span-2">
                   <p className="text-xs text-[#94A3B8] mb-0.5">
-                    <Translate text={localizationConstants.financeDescriptionCol} />
+                    <Translate
+                      text={localizationConstants.financeDescriptionCol}
+                    />
                   </p>
                   <p className="text-sm text-[#020617]">—</p>
                 </div>
-                <LV label={<Translate text={localizationConstants.financeATAProposedActionLabel} />} />
-                <LV label={<Translate text={localizationConstants.financeATAActionLabel} />} />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATAProposedActionLabel}
+                    />
+                  }
+                />
+                <LV
+                  label={
+                    <Translate
+                      text={localizationConstants.financeATAActionLabel}
+                    />
+                  }
+                />
               </div>
             )}
           </div>
@@ -267,23 +650,41 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
           {/* Detailed information — heading is OUTSIDE the box */}
           <div>
             <div className="flex items-center gap-3 mb-3">
-              <Image src="/assets/icons/project-info.svg" alt="" width={24} height={24} />
+              <Image
+                src="/assets/icons/project-info.svg"
+                alt=""
+                width={24}
+                height={24}
+              />
               <span className="text-2xl font-semibold tracking-tight text-[#020617]">
-                <Translate text={localizationConstants.financeDetailInfoTitle} />
+                <Translate
+                  text={localizationConstants.financeDetailInfoTitle}
+                />
               </span>
             </div>
 
             <div className="border border-[#E5E5E5] rounded-lg overflow-hidden">
-
               {/* Own personnel */}
               <div className="border-b border-[#E2E8F0]">
-                <button type="button" onClick={() => setPersonalOpen((v) => !v)}
-                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
-                  <Image src="/assets/icons/personal-info.svg" alt="" width={15} height={15} />
+                <button
+                  type="button"
+                  onClick={() => setPersonalOpen((v) => !v)}
+                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors"
+                >
+                  <Image
+                    src="/assets/icons/personal-info.svg"
+                    alt=""
+                    width={15}
+                    height={15}
+                  />
                   <span className="text-sm font-medium text-[#374151]">
-                    <Translate text={localizationConstants.financeEgenPersonalLabel} />
+                    <Translate
+                      text={localizationConstants.financeEgenPersonalLabel}
+                    />
                   </span>
-                  <ChevronDown className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${personalOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${personalOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
                 {personalOpen && (
                   <>
@@ -291,7 +692,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                       <table className="w-full text-xs">
                         <thead>
                           <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
-                            {([
+                            {[
                               localizationConstants.financeDateCol,
                               localizationConstants.financeATAProjectCol,
                               localizationConstants.financeATAResourceCol,
@@ -301,19 +702,27 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                               localizationConstants.financeATAUnitCol,
                               localizationConstants.financeATANetPriceCol,
                               localizationConstants.financeATANetSumCol,
-                            ]).map((key) => (
-                              <th key={key} className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                            ].map((key) => (
+                              <th
+                                key={key}
+                                className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap"
+                              >
                                 <Translate text={key} />
                               </th>
                             ))}
-                            <th className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">%</th>
-                            {([
+                            <th className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                              %
+                            </th>
+                            {[
                               localizationConstants.financeATAAProjectNoCol,
                               localizationConstants.financeATATotCol,
                               localizationConstants.financeATAActivityCol,
                               localizationConstants.financeATAStageLabel,
-                            ]).map((key) => (
-                              <th key={key} className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                            ].map((key) => (
+                              <th
+                                key={key}
+                                className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap"
+                              >
                                 <Translate text={key} />
                               </th>
                             ))}
@@ -321,14 +730,30 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                         </thead>
                         <tbody>
                           {PERSONAL_ROWS.map((r) => (
-                            <tr key={r.resurs} className="border-b border-[#E8EEF3] last:border-0">
-                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">{r.datum}</td>
-                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">{r.projekt}</td>
-                              <td className="px-3 py-2 text-[#374151]">{r.resurs}</td>
+                            <tr
+                              key={r.resurs}
+                              className="border-b border-[#E8EEF3] last:border-0"
+                            >
+                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">
+                                {r.datum}
+                              </td>
+                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">
+                                {r.projekt}
+                              </td>
+                              <td className="px-3 py-2 text-[#374151]">
+                                {r.resurs}
+                              </td>
                               <td className="px-3 py-2 text-[#94A3B8]">—</td>
-                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">{r.belopp}</td>
+                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">
+                                {r.belopp}
+                              </td>
                               {Array.from({ length: 9 }).map((_, j) => (
-                                <td key={j} className="px-3 py-2 text-[#94A3B8]">—</td>
+                                <td
+                                  key={j}
+                                  className="px-3 py-2 text-[#94A3B8]"
+                                >
+                                  —
+                                </td>
                               ))}
                             </tr>
                           ))}
@@ -338,12 +763,27 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                     <div className="flex items-center justify-between px-4 py-3 border-t border-[#E4E4E7] bg-white">
                       <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F1F5F9] text-sm font-medium text-[#09090B]">
                         <span className="font-bold text-[#374151]">Σ</span>
-                        <Translate text={localizationConstants.financeATATotalOwnPersonnelLabel} />
+                        <Translate
+                          text={
+                            localizationConstants.financeATATotalOwnPersonnelLabel
+                          }
+                        />
                         <strong className="font-semibold">02</strong>
                       </span>
-                      <button type="button" className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
-                        <Image src="/assets/icons/edit.svg" alt="" width={12} height={12} className="invert" />
-                        <Translate text={localizationConstants.financeATAAmendLabel} />
+                      <button
+                        type="button"
+                        className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors"
+                      >
+                        <Image
+                          src="/assets/icons/edit.svg"
+                          alt=""
+                          width={12}
+                          height={12}
+                          className="invert"
+                        />
+                        <Translate
+                          text={localizationConstants.financeATAAmendLabel}
+                        />
                       </button>
                     </div>
                   </>
@@ -352,13 +792,25 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
 
               {/* Material */}
               <div className="border-b border-[#E2E8F0]">
-                <button type="button" onClick={() => setMaterialOpen((v) => !v)}
-                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
-                  <Image src="/assets/icons/container.svg" alt="" width={15} height={15} />
+                <button
+                  type="button"
+                  onClick={() => setMaterialOpen((v) => !v)}
+                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors"
+                >
+                  <Image
+                    src="/assets/icons/container.svg"
+                    alt=""
+                    width={15}
+                    height={15}
+                  />
                   <span className="text-sm font-medium text-[#374151]">
-                    <Translate text={localizationConstants.financeATAMaterialLabel} />
+                    <Translate
+                      text={localizationConstants.financeATAMaterialLabel}
+                    />
                   </span>
-                  <ChevronDown className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${materialOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${materialOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
                 {materialOpen && (
                   <>
@@ -366,7 +818,7 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                       <table className="w-full text-xs">
                         <thead>
                           <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
-                            {([
+                            {[
                               localizationConstants.financeDateCol,
                               localizationConstants.financeATASupplierCol,
                               localizationConstants.financeATAResourceCol,
@@ -376,25 +828,38 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                               localizationConstants.financeATAUnitCol,
                               localizationConstants.financeATANetPriceCol,
                               localizationConstants.financeATANetSumCol,
-                            ]).map((key) => (
-                              <th key={key} className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                            ].map((key) => (
+                              <th
+                                key={key}
+                                className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap"
+                              >
                                 <Translate text={key} />
                               </th>
                             ))}
-                            <th className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">%</th>
-                            {([
+                            <th className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                              %
+                            </th>
+                            {[
                               localizationConstants.financeATAAPriceUnitCol,
-                            ]).map((key) => (
-                              <th key={key} className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                            ].map((key) => (
+                              <th
+                                key={key}
+                                className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap"
+                              >
                                 <Translate text={key} />
                               </th>
                             ))}
-                            <th className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">%2</th>
-                            {([
+                            <th className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                              %2
+                            </th>
+                            {[
                               localizationConstants.financeATAActivityCol,
                               localizationConstants.financeATAStageLabel,
-                            ]).map((key) => (
-                              <th key={key} className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap">
+                            ].map((key) => (
+                              <th
+                                key={key}
+                                className="px-3 py-2 text-left font-medium text-[#64748B] whitespace-nowrap"
+                              >
                                 <Translate text={key} />
                               </th>
                             ))}
@@ -402,14 +867,30 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                         </thead>
                         <tbody>
                           {MATERIAL_ROWS.map((r) => (
-                            <tr key={r.resurs} className="border-b border-[#E8EEF3] last:border-0">
-                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">{r.datum}</td>
-                              <td className="px-3 py-2 text-[#374151]">{r.lev}</td>
-                              <td className="px-3 py-2 text-[#374151]">{r.resurs}</td>
+                            <tr
+                              key={r.resurs}
+                              className="border-b border-[#E8EEF3] last:border-0"
+                            >
+                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">
+                                {r.datum}
+                              </td>
+                              <td className="px-3 py-2 text-[#374151]">
+                                {r.lev}
+                              </td>
+                              <td className="px-3 py-2 text-[#374151]">
+                                {r.resurs}
+                              </td>
                               <td className="px-3 py-2 text-[#94A3B8]">—</td>
-                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">{r.pris}</td>
+                              <td className="px-3 py-2 text-[#374151] whitespace-nowrap">
+                                {r.pris}
+                              </td>
                               {Array.from({ length: 9 }).map((_, j) => (
-                                <td key={j} className="px-3 py-2 text-[#94A3B8]">—</td>
+                                <td
+                                  key={j}
+                                  className="px-3 py-2 text-[#94A3B8]"
+                                >
+                                  —
+                                </td>
                               ))}
                             </tr>
                           ))}
@@ -420,17 +901,38 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                       <div className="space-y-1">
                         <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#F1F5F9] text-sm font-medium text-[#09090B]">
                           <span className="font-bold text-[#374151]">Σ</span>
-                          <Translate text={localizationConstants.financeATATotalMaterialLabel} />
+                          <Translate
+                            text={
+                              localizationConstants.financeATATotalMaterialLabel
+                            }
+                          />
                           <strong className="font-semibold">23,0000</strong>
                         </span>
                         <div className="text-sm text-[#71717A] flex items-center gap-2 px-1">
-                          <Translate text={localizationConstants.financeATAPricedItemsLabel} />
-                          <span className="font-medium text-[#09090B]">23,0000</span>
+                          <Translate
+                            text={
+                              localizationConstants.financeATAPricedItemsLabel
+                            }
+                          />
+                          <span className="font-medium text-[#09090B]">
+                            23,0000
+                          </span>
                         </div>
                       </div>
-                      <button type="button" className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
-                        <Image src="/assets/icons/edit.svg" alt="" width={12} height={12} className="invert" />
-                        <Translate text={localizationConstants.financeATAAmendLabel} />
+                      <button
+                        type="button"
+                        className="cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 text-xs font-semibold text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors"
+                      >
+                        <Image
+                          src="/assets/icons/edit.svg"
+                          alt=""
+                          width={12}
+                          height={12}
+                          className="invert"
+                        />
+                        <Translate
+                          text={localizationConstants.financeATAAmendLabel}
+                        />
                       </button>
                     </div>
                   </>
@@ -439,35 +941,75 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
 
               {/* Documents */}
               <div>
-                <button type="button" onClick={() => setDokumentOpen((v) => !v)}
-                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors">
-                  <Image src="/assets/icons/file-plus.svg" alt="" width={15} height={15} />
+                <button
+                  type="button"
+                  onClick={() => setDokumentOpen((v) => !v)}
+                  className="cursor-pointer w-full flex items-center gap-2 px-4 py-2.5 hover:bg-slate-50 transition-colors"
+                >
+                  <Image
+                    src="/assets/icons/file-plus.svg"
+                    alt=""
+                    width={15}
+                    height={15}
+                  />
                   <span className="text-sm font-medium text-[#374151]">
-                    <Translate text={localizationConstants.financeDocumentLabel} />
+                    <Translate
+                      text={localizationConstants.financeDocumentLabel}
+                    />
                   </span>
-                  <ChevronDown className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${dokumentOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`ml-auto h-4 w-4 text-[#64748B] transition-transform duration-200 ${dokumentOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
                 {dokumentOpen && (
                   <div className="border-t border-[#E2E8F0]">
                     {/* Upload row */}
                     <div className="px-4 pt-4 pb-3 border-b border-[#E2E8F0]">
                       <p className="text-xs font-medium text-[#374151] mb-2">
-                        <Translate text={localizationConstants.financeATAUploadFilesLabel} />
+                        <Translate
+                          text={
+                            localizationConstants.financeATAUploadFilesLabel
+                          }
+                        />
                       </p>
                       <div className="flex items-center border border-[#E2E8F0] rounded-lg overflow-hidden mb-1.5">
                         <div className="flex items-center gap-2 flex-1 px-3 py-2">
-                          <Image src="/assets/icons/file-plus.svg" alt="" width={13} height={13} />
-                          <span className="text-xs text-[#94A3B8]"><Translate text={localizationConstants.financeUploadLabel} /></span>
-                          <span className="text-xs text-[#374151]">file.txt</span>
+                          <Image
+                            src="/assets/icons/file-plus.svg"
+                            alt=""
+                            width={13}
+                            height={13}
+                          />
+                          <span className="text-xs text-[#94A3B8]">
+                            <Translate
+                              text={localizationConstants.financeUploadLabel}
+                            />
+                          </span>
+                          <span className="text-xs text-[#374151]">
+                            file.txt
+                          </span>
                         </div>
-                        <button type="button" onClick={() => fileInputRef.current?.click()}
-                          className="cursor-pointer px-4 py-2 text-xs font-medium text-white bg-[#64748B] hover:bg-[#475569] transition-colors whitespace-nowrap">
-                          <Translate text={localizationConstants.financeUploadLabel} />
+                        <button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="cursor-pointer px-4 py-2 text-xs font-medium text-white bg-[#64748B] hover:bg-[#475569] transition-colors whitespace-nowrap"
+                        >
+                          <Translate
+                            text={localizationConstants.financeUploadLabel}
+                          />
                         </button>
-                        <input ref={fileInputRef} type="file" accept=".png,.jpg,.pdf" className="hidden" multiple />
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".png,.jpg,.pdf"
+                          className="hidden"
+                          multiple
+                        />
                       </div>
                       <p className="text-[10px] text-[#3B82F6]">
-                        <Translate text={localizationConstants.financeATAUploadHintLabel} />
+                        <Translate
+                          text={localizationConstants.financeATAUploadHintLabel}
+                        />
                       </p>
                     </div>
 
@@ -475,12 +1017,25 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                     <div className="grid grid-cols-2 gap-3 px-4 py-3 border-b border-[#E2E8F0]">
                       <div>
                         <label className="block text-xs font-medium text-[#374151] mb-1">
-                          <Translate text={localizationConstants.financeATASupplierInvoiceLabel} />
+                          <Translate
+                            text={
+                              localizationConstants.financeATASupplierInvoiceLabel
+                            }
+                          />
                         </label>
                         <div className="flex flex-wrap items-center gap-1 px-2 py-1.5 min-h-8 border border-[#E2E8F0] rounded-md bg-white">
                           {["Invoice 001", "Invoice 002"].map((tag) => (
-                            <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F1F5F9] text-[11px] text-[#374151] rounded">
-                              {tag} <button type="button" className="cursor-pointer text-[#94A3B8] hover:text-[#374151] leading-none">×</button>
+                            <span
+                              key={tag}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F1F5F9] text-[11px] text-[#374151] rounded"
+                            >
+                              {tag}{" "}
+                              <button
+                                type="button"
+                                className="cursor-pointer text-[#94A3B8] hover:text-[#374151] leading-none"
+                              >
+                                ×
+                              </button>
                             </span>
                           ))}
                           <ChevronDown className="ml-auto h-3.5 w-3.5 text-[#64748B] shrink-0" />
@@ -488,12 +1043,25 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-[#374151] mb-1">
-                          <Translate text={localizationConstants.financeATATimeReportLabel} />
+                          <Translate
+                            text={
+                              localizationConstants.financeATATimeReportLabel
+                            }
+                          />
                         </label>
                         <div className="flex flex-wrap items-center gap-1 px-2 py-1.5 min-h-8 border border-[#E2E8F0] rounded-md bg-white">
                           {["Time rapport 01", "Time rapport 02"].map((tag) => (
-                            <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F1F5F9] text-[11px] text-[#374151] rounded">
-                              {tag} <button type="button" className="cursor-pointer text-[#94A3B8] hover:text-[#374151] leading-none">×</button>
+                            <span
+                              key={tag}
+                              className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#F1F5F9] text-[11px] text-[#374151] rounded"
+                            >
+                              {tag}{" "}
+                              <button
+                                type="button"
+                                className="cursor-pointer text-[#94A3B8] hover:text-[#374151] leading-none"
+                              >
+                                ×
+                              </button>
                             </span>
                           ))}
                           <ChevronDown className="ml-auto h-3.5 w-3.5 text-[#64748B] shrink-0" />
@@ -504,20 +1072,32 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                     {/* Attached invoices table */}
                     <div className="px-4 py-3">
                       <p className="text-xs font-semibold text-[#374151] mb-2">
-                        <Translate text={localizationConstants.financeATAAttachedInvoicesLabel} />
+                        <Translate
+                          text={
+                            localizationConstants.financeATAAttachedInvoicesLabel
+                          }
+                        />
                       </p>
                       <div className="border border-[#E2E8F0] rounded-lg overflow-hidden">
                         <table className="w-full text-xs">
                           <thead>
                             <tr className="bg-[#F1F5F9] border-b border-[#E2E8F0]">
                               <th className="px-3 py-2 text-left font-medium text-[#64748B]">
-                                <Translate text={localizationConstants.financeDateCol} />
+                                <Translate
+                                  text={localizationConstants.financeDateCol}
+                                />
                               </th>
                               <th className="px-3 py-2 text-left font-medium text-[#64748B]">
-                                <Translate text={localizationConstants.financeATADocumentNameCol} />
+                                <Translate
+                                  text={
+                                    localizationConstants.financeATADocumentNameCol
+                                  }
+                                />
                               </th>
                               <th className="px-3 py-2 text-left font-medium text-[#64748B]">
-                                <Translate text={localizationConstants.financeATAFilCol} />
+                                <Translate
+                                  text={localizationConstants.financeATAFilCol}
+                                />
                               </th>
                               <th className="w-10" />
                             </tr>
@@ -526,38 +1106,65 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                             {DOC_ROWS.map((doc) => {
                               const rowKey = doc.datum + doc.namn;
                               return (
-                                <tr key={rowKey} className="border-b border-[#E8EEF3] last:border-0">
-                                  <td className="px-3 py-2 text-[#374151] whitespace-nowrap">{doc.datum}</td>
-                                  <td className="px-3 py-2 text-[#374151]">{doc.namn}</td>
+                                <tr
+                                  key={rowKey}
+                                  className="border-b border-[#E8EEF3] last:border-0"
+                                >
+                                  <td className="px-3 py-2 text-[#374151] whitespace-nowrap">
+                                    {doc.datum}
+                                  </td>
+                                  <td className="px-3 py-2 text-[#374151]">
+                                    {doc.namn}
+                                  </td>
                                   <td className="px-3 py-2">
                                     <div className="flex items-center gap-1.5">
                                       {doc.typ === "pdf" ? (
                                         <span className="inline-flex items-center px-1 py-0.5 bg-red-50 rounded border border-red-100">
-                                          <Image src="/assets/icons/file-pdf-icon.svg" alt="PDF" width={16} height={16} />
+                                          <Image
+                                            src="/assets/icons/file-pdf-icon.svg"
+                                            alt="PDF"
+                                            width={16}
+                                            height={16}
+                                          />
                                         </span>
                                       ) : (
                                         <span className="inline-flex items-center px-1 py-0.5 bg-blue-50 rounded border border-blue-100">
-                                          <Image src="/assets/icons/doc-icon.svg" alt="DOC" width={16} height={16} />
+                                          <Image
+                                            src="/assets/icons/doc-icon.svg"
+                                            alt="DOC"
+                                            width={16}
+                                            height={16}
+                                          />
                                         </span>
                                       )}
-                                      <span className="text-[#374151]">{doc.filnr}</span>
+                                      <span className="text-[#374151]">
+                                        {doc.filnr}
+                                      </span>
                                     </div>
                                   </td>
                                   <td className="px-2 py-2">
                                     <div className="flex justify-end">
-                                      <button type="button"
+                                      <button
+                                        type="button"
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           if (openDocMenu === rowKey) {
                                             setOpenDocMenu(null);
                                             setDocMenuAnchor(null);
                                           } else {
-                                            const rect = (e.currentTarget as HTMLButtonElement).getBoundingClientRect();
-                                            setDocMenuAnchor({ top: rect.bottom + 4, right: window.innerWidth - rect.right });
+                                            const rect = (
+                                              e.currentTarget as HTMLButtonElement
+                                            ).getBoundingClientRect();
+                                            setDocMenuAnchor({
+                                              top: rect.bottom + 4,
+                                              right:
+                                                window.innerWidth - rect.right,
+                                            });
                                             setOpenDocMenu(rowKey);
                                           }
                                         }}
-                                        className="cursor-pointer p-1 rounded hover:bg-slate-100 text-[#64748B]">
+                                        className="cursor-pointer p-1 rounded hover:bg-slate-100 text-[#64748B]"
+                                      >
                                         <MoreVertical className="h-3.5 w-3.5" />
                                       </button>
                                     </div>
@@ -572,7 +1179,6 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
                   </div>
                 )}
               </div>
-
             </div>
           </div>
         </div>
@@ -583,7 +1189,8 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
             <div className="px-4 pt-3 pb-2.5 border-b border-[#E2E8F0]">
               <div className="flex items-center justify-between mb-1.5">
                 <span className="text-xs font-semibold text-[#020617]">
-                  <Translate text={localizationConstants.financeATAStepLabel} /> 2/2
+                  <Translate text={localizationConstants.financeATAStepLabel} />{" "}
+                  2/2
                 </span>
               </div>
               <div className="w-full h-1.5 bg-[#09090B] rounded-full" />
@@ -592,48 +1199,80 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
               <span className="text-sm font-semibold text-[#020617]">
                 <Translate text={localizationConstants.financeATANrLabel} /> 1
               </span>
-              <button type="button" className="cursor-pointer h-7 px-2.5 text-xs font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+              <button
+                type="button"
+                className="cursor-pointer h-7 px-2.5 text-xs font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50"
+              >
                 PRJ092
               </button>
             </div>
             <div className="px-4 py-3 space-y-2.5">
               <div className="flex gap-1.5 flex-wrap">
-                <span className="inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-semibold bg-[#DCFCE7] text-[#16A34A]">Stockholms</span>
-                <span className="inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-semibold bg-[#FEF3C7] text-[#D97706]">Javisste</span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-semibold bg-[#DCFCE7] text-[#16A34A]">
+                  Stockholms
+                </span>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-[6px] text-[10px] font-semibold bg-[#FEF3C7] text-[#D97706]">
+                  Javisste
+                </span>
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-[#64748B] shrink-0">
-                  <Translate text={localizationConstants.financeATAOwnPersonnelStat} />
+                  <Translate
+                    text={localizationConstants.financeATAOwnPersonnelStat}
+                  />
                 </span>
                 <span className="text-xs font-semibold text-[#020617]">02</span>
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-[#64748B] shrink-0">
-                  <Translate text={localizationConstants.financeATATotalMaterialLabel} />
+                  <Translate
+                    text={localizationConstants.financeATATotalMaterialLabel}
+                  />
                 </span>
-                <span className="text-xs font-semibold text-[#020617]">1.586.000</span>
+                <span className="text-xs font-semibold text-[#020617]">
+                  {totalCost !== undefined ? fmtAmount(totalCost) : "1.586.000"}
+                </span>
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-[#64748B] shrink-0">
-                  <Translate text={localizationConstants.financeATATotalMachineryLabel} />
+                  <Translate
+                    text={localizationConstants.financeATATotalMachineryLabel}
+                  />
                 </span>
-                <span className="text-xs font-semibold text-[#020617]">486.000</span>
+                <span className="text-xs font-semibold text-[#020617]">
+                  486.000
+                </span>
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-[#64748B] shrink-0">
-                  <Translate text={localizationConstants.financeATATotalUELabel} />
+                  <Translate
+                    text={localizationConstants.financeATATotalUELabel}
+                  />
                 </span>
-                <span className="text-xs font-semibold text-[#020617]">23.000</span>
+                <span className="text-xs font-semibold text-[#020617]">
+                  23.000
+                </span>
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="text-xs text-[#64748B] shrink-0">
-                  <Translate text={localizationConstants.financeATATotalSupplierLabel} />
+                  <Translate
+                    text={localizationConstants.financeATATotalSupplierLabel}
+                  />
                 </span>
-                <span className="text-xs font-semibold text-[#020617]">312.000</span>
+                <span className="text-xs font-semibold text-[#020617]">
+                  312.000
+                </span>
               </div>
-              <button type="button"
-                className="cursor-pointer w-full mt-2 inline-flex items-center justify-center gap-2 h-9 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
-                <Image src="/assets/icons/send.svg" alt="" width={14} height={14} />
+              <button
+                type="button"
+                className="cursor-pointer w-full mt-2 inline-flex items-center justify-center gap-2 h-9 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors"
+              >
+                <Image
+                  src="/assets/icons/send.svg"
+                  alt=""
+                  width={14}
+                  height={14}
+                />
                 <Translate text={localizationConstants.financeSendLabel} />
               </button>
             </div>
@@ -644,14 +1283,25 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
       {/* Doc row 3-dot dropdown — rendered outside overflow-hidden ancestors */}
       {openDocMenu && docMenuAnchor && (
         <div
-          style={{ position: "fixed", top: docMenuAnchor.top, right: docMenuAnchor.right, zIndex: 9999 }}
+          style={{
+            position: "fixed",
+            top: docMenuAnchor.top,
+            right: docMenuAnchor.right,
+            zIndex: 9999,
+          }}
           className="w-32 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
         >
-          <button type="button" className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50">
+          <button
+            type="button"
+            className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50"
+          >
             <Pencil className="h-3 w-3" />
             <Translate text={localizationConstants.financeATAEditDocLabel} />
           </button>
-          <button type="button" className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50">
+          <button
+            type="button"
+            className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50"
+          >
             <Trash2 className="h-3 w-3" />
             <Translate text={localizationConstants.financeATADeleteLabel} />
           </button>
@@ -660,23 +1310,53 @@ export function ATACreateForm({ onBack }: { onBack: () => void }) {
 
       {/* Bottom action bar */}
       <div className="sticky bottom-0 mt-6 flex items-center gap-3 py-3 bg-white border-t border-[#E2E8F0] z-10">
-        <button type="button"
-          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
-          <Image src="/assets/icons/arrow-left.svg" alt="" width={16} height={16} />
+        <button
+          type="button"
+          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50"
+        >
+          <Image
+            src="/assets/icons/arrow-left.svg"
+            alt=""
+            width={16}
+            height={16}
+          />
           <Translate text={localizationConstants.financeATABackToLabel} />
         </button>
         <div className="flex-1" />
-        <button type="button" onClick={onBack}
-          className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
+        <button
+          type="button"
+          onClick={onBack}
+          className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50"
+        >
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
-        <button type="button"
-          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] transition-colors">
-          <Image src="/assets/icons/save.svg" alt="" width={15} height={15} className="" />
+        <button
+          type="button"
+          onClick={handleSaveATA}
+          disabled={submitting}
+          className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-4 text-sm font-medium text-white bg-[#09090B] rounded-md hover:bg-[#27272A] disabled:opacity-50 transition-colors"
+        >
+          <Image
+            src="/assets/icons/save.svg"
+            alt=""
+            width={15}
+            height={15}
+            className=""
+          />
           <Translate text={localizationConstants.financeSaveLabel} />
         </button>
-        <Button className="h-9 px-5 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
-          <Image src="/assets/icons/send.svg" alt="" width={15} height={15} className="" />
+        <Button
+          onClick={handleSaveATA}
+          disabled={submitting}
+          className="h-9 px-5 gap-1.5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A] disabled:opacity-50"
+        >
+          <Image
+            src="/assets/icons/send.svg"
+            alt=""
+            width={15}
+            height={15}
+            className=""
+          />
           <Translate text={localizationConstants.financeSendLabel} />
         </Button>
       </div>

@@ -42,6 +42,7 @@ interface ActiveProfessionalsTabProps {
 	readonly onDelete: (id: string) => void;
 	readonly onToggleStatus: (id: string) => void;
 	readonly onCreateClick?: () => void;
+	readonly onOpenClick?: (id: string) => void;
 }
 
 export function ActiveProfessionalsTab({
@@ -60,6 +61,7 @@ export function ActiveProfessionalsTab({
 	onDelete,
 	onToggleStatus,
 	onCreateClick,
+	onOpenClick,
 }: ActiveProfessionalsTabProps) {
 	const t = useTranslate();
 
@@ -153,7 +155,10 @@ export function ActiveProfessionalsTab({
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end" className="min-w-37.5">
-											<DropdownMenuItem className="gap-2 cursor-pointer py-2">
+											<DropdownMenuItem
+												className="gap-2 cursor-pointer py-2"
+												onClick={() => onOpenClick?.(row.id)}
+											>
 												<Eye className="h-4 w-4" />
 												<Translate text={localizationConstants.open} />
 											</DropdownMenuItem>

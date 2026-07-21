@@ -100,17 +100,38 @@ export function DocumentList({ documents, onDelete }: DocumentListProps) {
 									</TableCell>
 									<TableCell className="py-4 text-right pr-4">
 										<div className="flex items-center justify-end gap-3">
-											<Button
-												variant="outline"
-												size="sm"
-												className="h-9 px-4 border-slate-200 text-slate-700 font-medium bg-transparent"
-											>
-												<Translate
-													text={
-														localizationConstants.viewFileButton
-													}
-												/>
-											</Button>
+											{doc.url ? (
+												<a
+													href={doc.url}
+													target="_blank"
+													rel="noopener noreferrer"
+												>
+													<Button
+														variant="outline"
+														size="sm"
+														className="h-9 px-4 border-slate-200 text-slate-700 font-medium bg-transparent"
+													>
+														<Translate
+															text={
+																localizationConstants.viewFileButton
+															}
+														/>
+													</Button>
+												</a>
+											) : (
+												<Button
+													variant="outline"
+													size="sm"
+													disabled
+													className="h-9 px-4 border-slate-200 text-slate-400 font-medium bg-transparent cursor-not-allowed"
+												>
+													<Translate
+														text={
+															localizationConstants.viewFileButton
+														}
+													/>
+												</Button>
+											)}
 											<button
 												className="text-gray-900 hover:text-gray-900 transition-colors"
 												onClick={() => onDelete(doc.id)}

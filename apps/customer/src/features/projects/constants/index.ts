@@ -62,73 +62,7 @@ export const ACTIVE_PROJECT_SUB_TAB_VALUES = ACTIVE_PROJECT_SUB_TABS.map(
 
 export const ACTIVE_PROJECT_DEFAULT_SUB_TAB = ACTIVE_PROJECT_SUB_TABS[0].value;
 
-export const DUMMY_PROJECTS: ActiveProject[] = [
-	{
-		id: "1",
-		name: "Badrum",
-		referenceNo: "O101",
-		orderNo: "2024-01",
-		quoteReferenceNo: "1554601",
-		clientNo: "CL-10023",
-		projectNo: "PRJ-2024-001",
-		startDate: "2024-03-01",
-		endDate: "2024-06-30",
-		contactPersonName: "Anna Andersson",
-		mobileNumber: "070-560 50 50",
-		email: "anna@example.com",
-		address: "Stengatan 10",
-		postalCode: "171 63",
-		companyName: "Karles bygg AB",
-		status: "received-quote",
-		statusLabel: "Received Quote",
-		category: "Bathroom",
-		description:
-			"Full bathroom renovation including new tiles, shower, and fixtures.",
-	},
-	{
-		id: "2",
-		name: "Kitchen",
-		referenceNo: "O02",
-		orderNo: "2024-02",
-		quoteReferenceNo: "1578601",
-		clientNo: "CL-10024",
-		projectNo: "PRJ-2024-002",
-		startDate: "2024-04-15",
-		endDate: "2024-08-15",
-		contactPersonName: "Erik Johansson",
-		mobileNumber: "073-123 45 67",
-		email: "erik@example.com",
-		address: "Bergsgatan 5",
-		postalCode: "113 25",
-		companyName: "Kökbygg AB",
-		status: "completed",
-		statusLabel: "Completed",
-		category: "Kitchen",
-		description:
-			"Complete kitchen remodel with new cabinets and countertops.",
-	},
-	{
-		id: "3",
-		name: "Kitchen",
-		referenceNo: "O03",
-		orderNo: "2024-02",
-		quoteReferenceNo: "1578601",
-		clientNo: "CL-10025",
-		projectNo: "PRJ-2024-003",
-		startDate: "2024-05-01",
-		endDate: "2024-07-01",
-		contactPersonName: "Maria Nilsson",
-		mobileNumber: "076-987 65 43",
-		email: "maria@example.com",
-		address: "Tallvägen 22",
-		postalCode: "182 31",
-		companyName: "Kökbygg AB",
-		status: "draft",
-		statusLabel: "Draft",
-		category: "Kitchen",
-		description: "Complete roof replacement with new insulation.",
-	},
-];
+export const DUMMY_PROJECTS: ActiveProject[] = [];
 
 export const DUMMY_PERSONAL_DOCUMENTS: PersonalDocument[] = [
 	{ id: "1", name: "Bathroom Renovation", type: "Architecture Drawing" },
@@ -317,18 +251,18 @@ export const ACTIVE_PROJECT_STATUS_FILTER_OPTIONS: {
 	label: string;
 	value: ActiveProject["status"];
 }[] = [
-	{
-		label: localizationConstants.projectStatusReceivedQuote,
-		value: "received-quote",
-	},
-	{
-		label: localizationConstants.projectStatusCompleted,
-		value: "completed",
-	},
-	{ label: localizationConstants.projectStatusDraft, value: "draft" },
-	{ label: localizationConstants.projectStatusActive, value: "active" },
-	{ label: localizationConstants.projectStatusOnHold, value: "on-hold" },
-];
+		{
+			label: localizationConstants.projectStatusReceivedQuote,
+			value: "received-quote",
+		},
+		{
+			label: localizationConstants.projectStatusCompleted,
+			value: "completed",
+		},
+		{ label: localizationConstants.projectStatusDraft, value: "draft" },
+		{ label: localizationConstants.projectStatusActive, value: "active" },
+		{ label: localizationConstants.projectStatusOnHold, value: "on-hold" },
+	];
 
 export const ACTIVE_PROJECT_STATUS_LABEL_KEY: Record<
 	ActiveProject["status"],
@@ -339,6 +273,7 @@ export const ACTIVE_PROJECT_STATUS_LABEL_KEY: Record<
 	draft: localizationConstants.projectStatusDraft,
 	active: localizationConstants.projectStatusActive,
 	"on-hold": localizationConstants.projectStatusOnHold,
+	"under-review": "Under Review",
 };
 
 export const ACTIVE_PROJECT_STATUS_VARIANT: Record<
@@ -350,6 +285,7 @@ export const ACTIVE_PROJECT_STATUS_VARIANT: Record<
 	draft: "info",
 	active: "success",
 	"on-hold": "warning",
+	"under-review": "info",
 };
 
 export const ARCHIVED_PROJECT_COLUMNS = [

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
+	Search,
 	ChevronDown,
 	ChevronRight,
 	ChevronLeft,
@@ -33,6 +34,9 @@ import { ModalWrapper } from "@/components/modal";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { ActiveProject } from "../../types";
+
+import { getProjectTimelinesAPIAction, type ApiTimelineTaskItem, type ApiTimelineProjectItem } from "@/api-actions/project/timeline";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -41,6 +45,7 @@ interface TimelineProject {
 	title: string;
 	estimatedDays: number;
 	lastUpdated: string;
+	tasks?: ApiTimelineTaskItem[];
 }
 
 interface GanttTask {
@@ -54,22 +59,7 @@ interface GanttTask {
 	parentId?: string;
 }
 
-// ─── Dummy data ───────────────────────────────────────────────────────────────
-
-const TIMELINE_PROJECTS: TimelineProject[] = [
-	{
-		id: "1",
-		title: "Children's Bathroom",
-		estimatedDays: 15,
-		lastUpdated: "2026-01-28",
-	},
-	{
-		id: "2",
-		title: "My Bathroom",
-		estimatedDays: 21,
-		lastUpdated: "2026-01-28",
-	},
-];
+// ─── Calendar helpers ─────────────────────────────────────────────────────────
 
 const D = (m: number, day: number) => new Date(2026, m - 1, day);
 
@@ -202,14 +192,22 @@ function taskActive(day: Date, task: GanttTask): boolean {
 
 // ─── Gantt view ───────────────────────────────────────────────────────────────
 
-function GanttView({
-	project,
-	onBack,
-}: {
-	project: TimelineProject;
-	onBack: () => void;
-}) {
-	const [tasks, setTasks] = useState<GanttTask[]>(INITIAL_TASKS);
+function GanttView({ project, onBack }: { project: TimelineProject; onBack: () => void }) {
+	const mappedApiTasks: GanttTask[] | null =
+		project.tasks && project.tasks.length > 0
+			? project.tasks.map((t: ApiTimelineTaskItem) => ({
+				id: t.id,
+				title: t.name || t.title || "Untitled Task",
+				startDate: new Date(Number(t.startDate) || t.startDate),
+				endDate: new Date(Number(t.endDate) || t.endDate),
+				color: (t.color as GanttTask["color"]) || "green",
+				isGroup: !t.parentId,
+				isExpanded: true,
+				parentId: t.parentId,
+			}))
+			: null;
+
+	const [tasks, setTasks] = useState<GanttTask[]>(mappedApiTasks || INITIAL_TASKS);
 
 	const visibleTasks = tasks.filter(
 		(t) =>
@@ -365,19 +363,57 @@ function GanttView({
 	);
 }
 
-// ─── List view ────────────────────────────────────────────────────────────────
+interface TimelineTabProps {
+	project?: ActiveProject;
+}
 
-export function TimelineTab() {
+export function TimelineTab({ project }: TimelineTabProps) {
 	const t = useTranslate();
 	const [view, setView] = useState<"list" | "gantt">("list");
 	const [selected, setSelected] = useState<TimelineProject | null>(null);
-	const [projects, setProjects] =
-		useState<TimelineProject[]>(TIMELINE_PROJECTS);
+	const [search, setSearch] = useState("");
+	const [apiTimelines, setApiTimelines] = useState<TimelineProject[]>([]);
 	const [createOpen, setCreateOpen] = useState(false);
 	const [newTitle, setNewTitle] = useState("");
 	const [newDays, setNewDays] = useState("");
-	const [deleteTarget, setDeleteTarget] = useState<TimelineProject | null>(
-		null,
+	const [deleteTarget, setDeleteTarget] = useState<TimelineProject | null>(null);
+
+	useEffect(() => {
+		if (!project?.id) return;
+		getProjectTimelinesAPIAction(project.id).then((res) => {
+			if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+				setApiTimelines(
+					res.data.map((t: ApiTimelineProjectItem) => ({
+						id: t.id,
+						title: t.title,
+						estimatedDays: t.estimatedDays || 30,
+						lastUpdated: t.lastUpdated ? t.lastUpdated.split("T")[0] : new Date().toISOString().split("T")[0],
+						tasks: t.tasks || [],
+					}))
+				);
+			}
+		});
+	}, [project?.id]);
+
+	const fallbackTimelines: TimelineProject[] = [
+		{
+			id: project?.id || "1",
+			title: project?.name && project.name !== "-" ? project.name : "Renovering Badrum & Kök",
+			estimatedDays: 30,
+			lastUpdated: project?.updatedAt && project.updatedAt !== "-" ? project.updatedAt.split("T")[0] : new Date().toISOString().split("T")[0],
+		},
+		{
+			id: "2",
+			title: "VVS & El Installationer",
+			estimatedDays: 14,
+			lastUpdated: project?.updatedAt && project.updatedAt !== "-" ? project.updatedAt.split("T")[0] : new Date().toISOString().split("T")[0],
+		},
+	];
+
+	const timelineList: TimelineProject[] = apiTimelines.length > 0 ? apiTimelines : fallbackTimelines;
+
+	const filtered = timelineList.filter((p) =>
+		p.title.toLowerCase().includes(search.toLowerCase()),
 	);
 
 	const openGantt = (p: TimelineProject) => {
@@ -389,7 +425,7 @@ export function TimelineTab() {
 		const title = newTitle.trim();
 		if (!title) return;
 		const days = Math.max(0, Number(newDays) || 0);
-		setProjects((prev) => [
+		setApiTimelines((prev) => [
 			...prev,
 			{
 				id: String(Date.now()),
@@ -409,7 +445,7 @@ export function TimelineTab() {
 
 	const handleDeleteConfirmed = () => {
 		if (!deleteTarget) return;
-		setProjects((prev) => prev.filter((p) => p.id !== deleteTarget.id));
+		setApiTimelines((prev) => prev.filter((p) => p.id !== deleteTarget.id));
 		setDeleteTarget(null);
 		showToast(
 			"success",
@@ -424,7 +460,16 @@ export function TimelineTab() {
 	return (
 		<div className="pb-10">
 			{/* Toolbar */}
-			<div className="flex items-center mb-4">
+			<div className="flex items-center gap-3 mb-4">
+				<div className="relative">
+					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+					<Input
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder="Search"
+						className="pl-9 h-9 w-48 text-sm border-[#E2E8F0]"
+					/>
+				</div>
 				<Button
 					type="button"
 					onClick={() => setCreateOpen(true)}
@@ -471,12 +516,12 @@ export function TimelineTab() {
 					<div className="border-l border-[#E2E8F0] h-12" />
 				</div>
 
-				{projects.length === 0 ? (
+				{filtered.length === 0 ? (
 					<div className="py-12 text-center text-sm text-slate-400">
 						No timelines found
 					</div>
 				) : (
-					projects.map((p) => (
+					filtered.map((p) => (
 						<div
 							key={p.id}
 							className="grid grid-cols-[1fr_160px_180px_46px] items-center hover:bg-slate-50 transition-colors cursor-pointer border-b border-[#E2E8F0] last:border-0"

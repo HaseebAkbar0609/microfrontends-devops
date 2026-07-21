@@ -101,6 +101,7 @@ export function RotTable({
 			rowKey={(row) => row.id}
 			actions={actions}
 			loading={loading}
+			bordered
 			emptyMessageKey={localizationConstants.noRotEntriesFound}
 			pagination={{ page, pageSize, totalItems }}
 			onPageChange={(p) => changeQueries({ page: String(p) })}

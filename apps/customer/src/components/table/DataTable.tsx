@@ -415,8 +415,8 @@ export function DataTable<TData>({
 										tableStyles.headerCell,
 										"py-3.5 px-4 h-auto text-left whitespace-nowrap",
 										col.sortable &&
-											onSort &&
-											"cursor-pointer select-none",
+										onSort &&
+										"cursor-pointer select-none",
 										col.headerClassName,
 									)}
 									onClick={() =>

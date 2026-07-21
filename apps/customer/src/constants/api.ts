@@ -11,6 +11,7 @@ const BASE_PATHS = {
 	TEAMS: "/api/v1/teams",
 	COMPANIES: "/api/v1/companies",
 	CONSULTANT: `${API_PREFIX}/consultants`,
+	SUPPLIER: `${API_PREFIX}/suppliers`,
 };
 
 export const API_PATH = {
@@ -34,6 +35,39 @@ export const API_PATH = {
 		/** PATCH /api/v1/project/:projectId/status */
 		status: (projectId: string) =>
 			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/status`,
+		/** PATCH /api/v1/project/:projectId/details */
+		details: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/details`,
+		/** GET/POST /api/v1/project/:projectId/documents */
+		documents: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/documents`,
+		/** DELETE /api/v1/project/:projectId/documents/:documentId */
+		documentDetail: (projectId: string, documentId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(
+				projectId,
+			)}/documents/${encodeURIComponent(documentId)}`,
+		/** GET/POST /api/v1/project/:projectId/meeting-minutes */
+		meetingMinutes: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/meeting-minutes`,
+		/** DELETE /api/v1/project/:projectId/meeting-minutes/:minuteId */
+		meetingMinuteDetail: (projectId: string, minuteId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(
+				projectId,
+			)}/meeting-minutes/${encodeURIComponent(minuteId)}`,
+		/** GET /api/v1/project/:projectId/timelines */
+		timelines: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/timelines`,
+		/** GET /api/v1/project/:projectId/org-plan */
+		orgPlan: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/org-plan`,
+	},
+	QUOTE: {
+		approve: (quoteId: string) =>
+			`/api/v1/quote/${encodeURIComponent(quoteId)}/approve`,
+		reject: (quoteId: string) =>
+			`/api/v1/quote/${encodeURIComponent(quoteId)}/reject`,
+		details: (quoteId: string) =>
+			`/api/v1/quote/${encodeURIComponent(quoteId)}/details`,
 	},
 	MEDIA: {
 		UPLOAD: "/api/v1/media/upload",
@@ -52,6 +86,9 @@ export const API_PATH = {
 	TEAMS: {
 		CUSTOMER_CATEGORIES_LIST: `${BASE_PATHS.TEAMS}/customers/categories/list`,
 		PROFESSIONALS_SUBCATEGORIES_LIST: `${BASE_PATHS.TEAMS}/professionals/subcategories/list`,
+	},
+	SUPPLIER: {
+		LIST: `${BASE_PATHS.SUPPLIER}/list`,
 	},
 	// NOTE: endpoints not live yet — consultant data currently comes from local
 	// dummy data (see api-actions/consultant/).
@@ -110,3 +147,7 @@ export const getErrorMessageByCode = (errorCode: string): string => {
 	);
 	return error?.message || "An error occurred. Please try again";
 };
+
+export const DEFAULT_PAGE_SIZE = 10;
+export const MAX_PAGE_SIZE = 100;
+

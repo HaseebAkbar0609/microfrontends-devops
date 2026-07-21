@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axiosInstance";
 
 const PROFESSIONALS_ACCOUNTS_PATH = "/api/v1/teams/professionals/accounts";
 const DEFAULT_PAGE_SIZE = 10;
-const MOCK_ENABLE = false;
+const MOCK_ENABLE = true;
 
 export type ProfessionalStatus = "active" | "inactive" | "pending" | "archived";
 export type PendingProfessionalStatus = ProfessionalStatus;
@@ -84,7 +84,7 @@ function mapItemToRow(item: ProfessionalAccountItem): ProfessionalRow {
 }
 
 // Mock data — disabled by default; set MOCK_ENABLE=true locally to use
-const MOCK_DATA: ProfessionalRow[] = [
+export const MOCK_DATA: ProfessionalRow[] = [
 	{ id: "1",  contactUserId: "2025-01", companyName: "Byggbolaget AB",       orgNo: "5595010-1002", category: "Bygg",       contactPerson: "Erik Andersson",  email: "erik@example.com",    phone: "940 987 6574", city: "Järfälla",  status: "active" },
 	{ id: "2",  contactUserId: "2025-02", companyName: "Måleri AB",            orgNo: "5595010-2003", category: "Målare",     contactPerson: "Sofia Vergara",   email: "sofia@example.com",   phone: "940 987 6574", city: "Järfälla",  status: "active" },
 	{ id: "3",  contactUserId: "2025-03", companyName: "Elektriker AB",        orgNo: "000000-0000",  category: "Elektriker", contactPerson: "Magnus Karlsson", email: "magnus@example.com",  phone: "940 987 6574", city: "Järfälla",  status: "active" },
