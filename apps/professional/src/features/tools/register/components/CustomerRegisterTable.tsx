@@ -24,12 +24,12 @@ export function CustomerRegisterTable() {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const initialPage = Number(searchParams.get("page")) || 1;
-	const initialLimit = Number(searchParams.get("limit")) || 10;
-	const initialSearch = searchParams.get("search") || "";
-	const initialStatus = (searchParams.get("status") as "all" | "active" | "inactive") || "all";
-	const initialSortBy = searchParams.get("sortBy") || undefined;
-	const initialSortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || undefined;
+	const initialPage = Number(searchParams.get("customer_page")) || 1;
+	const initialLimit = Number(searchParams.get("customer_limit")) || 10;
+	const initialSearch = searchParams.get("customer_search") || "";
+	const initialStatus = (searchParams.get("customer_status") as "all" | "active" | "inactive") || "all";
+	const initialSortBy = searchParams.get("customer_sortBy") || undefined;
+	const initialSortOrder = (searchParams.get("customer_sortOrder") as "asc" | "desc") || undefined;
 
 	const [data, setData] = useState<CustomerRegisterRow[]>([]);
 	const [totalItems, setTotalItems] = useState(0);
@@ -53,27 +53,27 @@ export function CustomerRegisterTable() {
 		}) => {
 			const params = new URLSearchParams(searchParams.toString());
 
-			if (newParams.page !== undefined) params.set("page", String(newParams.page));
-			if (newParams.limit !== undefined) params.set("limit", String(newParams.limit));
+			if (newParams.page !== undefined) params.set("customer_page", String(newParams.page));
+			if (newParams.limit !== undefined) params.set("customer_limit", String(newParams.limit));
 
 			if (newParams.search !== undefined) {
-				if (newParams.search) params.set("search", newParams.search);
-				else params.delete("search");
+				if (newParams.search) params.set("customer_search", newParams.search);
+				else params.delete("customer_search");
 			}
 
 			if (newParams.status !== undefined) {
-				if (newParams.status && newParams.status !== "all") params.set("status", newParams.status);
-				else params.delete("status");
+				if (newParams.status && newParams.status !== "all") params.set("customer_status", newParams.status);
+				else params.delete("customer_status");
 			}
 
 			if (newParams.sortBy !== undefined) {
-				if (newParams.sortBy) params.set("sortBy", newParams.sortBy);
-				else params.delete("sortBy");
+				if (newParams.sortBy) params.set("customer_sortBy", newParams.sortBy);
+				else params.delete("customer_sortBy");
 			}
 
 			if (newParams.sortOrder !== undefined) {
-				if (newParams.sortOrder) params.set("sortOrder", newParams.sortOrder);
-				else params.delete("sortOrder");
+				if (newParams.sortOrder) params.set("customer_sortOrder", newParams.sortOrder);
+				else params.delete("customer_sortOrder");
 			}
 
 			router.replace(`${pathname}?${params.toString()}`, { scroll: false });

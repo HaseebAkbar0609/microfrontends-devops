@@ -24,12 +24,12 @@ export function SupplierRegisterTable() {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const initialPage = Number(searchParams.get("page")) || 1;
-	const initialLimit = Number(searchParams.get("limit")) || 10;
-	const initialSearch = searchParams.get("search") || "";
-	const initialStatus = (searchParams.get("status") as "all" | "active" | "inactive") || "all";
-	const initialSortBy = searchParams.get("sortBy") || undefined;
-	const initialSortOrder = (searchParams.get("sortOrder") as "asc" | "desc") || undefined;
+	const initialPage = Number(searchParams.get("supplier_page")) || 1;
+	const initialLimit = Number(searchParams.get("supplier_limit")) || 10;
+	const initialSearch = searchParams.get("supplier_search") || "";
+	const initialStatus = (searchParams.get("supplier_status") as "all" | "active" | "inactive") || "all";
+	const initialSortBy = searchParams.get("supplier_sortBy") || undefined;
+	const initialSortOrder = (searchParams.get("supplier_sortOrder") as "asc" | "desc") || undefined;
 
 	const [data, setData] = useState<SupplierRegisterRow[]>([]);
 	const [totalItems, setTotalItems] = useState(0);
@@ -53,27 +53,27 @@ export function SupplierRegisterTable() {
 		}) => {
 			const params = new URLSearchParams(searchParams.toString());
 
-			if (newParams.page !== undefined) params.set("page", String(newParams.page));
-			if (newParams.limit !== undefined) params.set("limit", String(newParams.limit));
+			if (newParams.page !== undefined) params.set("supplier_page", String(newParams.page));
+			if (newParams.limit !== undefined) params.set("supplier_limit", String(newParams.limit));
 
 			if (newParams.search !== undefined) {
-				if (newParams.search) params.set("search", newParams.search);
-				else params.delete("search");
+				if (newParams.search) params.set("supplier_search", newParams.search);
+				else params.delete("supplier_search");
 			}
 
 			if (newParams.status !== undefined) {
-				if (newParams.status && newParams.status !== "all") params.set("status", newParams.status);
-				else params.delete("status");
+				if (newParams.status && newParams.status !== "all") params.set("supplier_status", newParams.status);
+				else params.delete("supplier_status");
 			}
 
 			if (newParams.sortBy !== undefined) {
-				if (newParams.sortBy) params.set("sortBy", newParams.sortBy);
-				else params.delete("sortBy");
+				if (newParams.sortBy) params.set("supplier_sortBy", newParams.sortBy);
+				else params.delete("supplier_sortBy");
 			}
 
 			if (newParams.sortOrder !== undefined) {
-				if (newParams.sortOrder) params.set("sortOrder", newParams.sortOrder);
-				else params.delete("sortOrder");
+				if (newParams.sortOrder) params.set("supplier_sortOrder", newParams.sortOrder);
+				else params.delete("supplier_sortOrder");
 			}
 
 			router.replace(`${pathname}?${params.toString()}`, { scroll: false });
