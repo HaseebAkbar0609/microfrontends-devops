@@ -3,6 +3,7 @@ export interface GuideFolderItem {
 	label: string;
 	count?: number;
 	active?: boolean;
+	href?: string;
 }
 
 export interface GuideFolder {
@@ -10,4 +11,5 @@ export interface GuideFolder {
 	count?: number;
 	defaultOpen?: boolean;
 	items?: GuideFolderItem[];
+	href?: string;
 }
