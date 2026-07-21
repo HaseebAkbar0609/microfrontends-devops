@@ -588,6 +588,43 @@ export type OfferTranslation = {
 	offerSendCreateCalculation: string;
 };
 
+export type RegisterTranslation = {
+	invoiceDashboard: string;
+	invoiceOverview: string;
+	contractInvoicing: string;
+	registerDropdownLabel: string;
+	customerListTab: string;
+	importCustomer: string;
+	registerNew: string;
+	customerNoHeader: string;
+	customerHeader: string;
+	orgNoHeader: string;
+	addressHeader: string;
+	postNrHeader: string;
+	ortHeader: string;
+	landHeader: string;
+	phoneHeader: string;
+	mailHeader: string;
+	statusHeader: string;
+	activeStatus: string;
+	inactiveStatus: string;
+	allStatus: string;
+	rowsPerPageLabel: string;
+	pageLabel: string;
+	ofLabel: string;
+	pageOfLabel: string;
+	customerOption: string;
+	supplierOption: string;
+	reportsItem: string;
+	protocolsItem: string;
+	documentCenterItem: string;
+	statisticsItem: string;
+	archiveItem: string;
+	viewLabel: string;
+	editLabel: string;
+	deleteLabel: string;
+};
+
 export type CommonTranslation = {
 	search: string;
 	filter: string;
@@ -604,6 +641,7 @@ export type Translation = HeaderTranslation &
 	AdminPageTranslation &
 	MyPagesTranslation &
 	OfferTranslation &
+	RegisterTranslation &
 	CommonTranslation;
 
 export type TranslationKeys = keyof Translation;
