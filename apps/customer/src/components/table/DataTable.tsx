@@ -370,16 +370,13 @@ export function DataTable<TData>({
 		? BORDERED_ACTIONS_COLUMN_CLASS
 		: ACTIONS_COLUMN_CLASS;
 
-	const totalPages = useMemo(
-		() =>
-			pagination
-				? Math.max(
-					1,
-					Math.ceil(pagination.totalItems / pagination.pageSize),
-				)
-				: 1,
-		[pagination?.totalItems, pagination?.pageSize],
-	);
+  const totalPages = useMemo(
+    () =>
+      pagination
+        ? Math.max(1, Math.ceil(pagination.totalItems / pagination.pageSize))
+        : 1,
+    [pagination],
+  );
 
 	const handleSort = useCallback(
 		(field: string) => {

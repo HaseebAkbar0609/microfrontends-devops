@@ -39,13 +39,13 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 		return [
 			leadDetailTabs[0],
 			leadDetailTabs[1],
-			{ value: "quote-list", labelKey: localizationConstants.quoteListTab },
+			leadDetailTabs[2],
 			{ value: "activity", labelKey: localizationConstants.activityLogsTab },
 		];
 	}, [isMonitoringView]);
 
 	return (
-		<div className="flex h-full flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+		<div className="flex flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
 			<div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 				<div className="flex flex-col gap-1">
 					<h1 className="text-2xl font-semibold text-slate-900">{title}</h1>
@@ -109,20 +109,13 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 					/>
 				</TabsContent>
 
-				{leadDetailTabs
-					.filter(
-						(
-							tab
-						): tab is (typeof leadDetailTabs)[number] =>
-							tab.value !== "overview" && tab.value !== "request"
-					)
-					.map((tab) => (
-						<TabsContent key={tab.value} value={tab.value} className="pt-6">
-							<div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500 ">
-								<Translate text={localizationConstants.comingSoon} />
-							</div>
-						</TabsContent>
-					))}
+				{["notes", "activity"].map((tabValue) => (
+					<TabsContent key={tabValue} value={tabValue} className="pt-6">
+						<div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500 ">
+							<Translate text={localizationConstants.comingSoon} />
+						</div>
+					</TabsContent>
+				))}
 			</Tabs>
 		</div>
 	);

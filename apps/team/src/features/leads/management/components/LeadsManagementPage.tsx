@@ -725,7 +725,18 @@ export function LeadsManagementPage() {
                     )}
 
                     {getLeadRowCells(activeTab, row).map((cell, index) => (
-                      <LeadRowCell key={`${row.id}-${index}`} cell={cell} />
+                      <LeadRowCell
+                        key={`${row.id}-${index}`}
+                        cell={cell}
+                        onClick={
+                          index === 2
+                            ? () => {
+                                const sourceParam = isMonitoring ? "?source=monitoring" : "";
+                                router.push(`/leads/management/${row.id}${sourceParam}`);
+                              }
+                            : undefined
+                        }
+                      />
                     ))}
 
                     <TableCell className="text-center">
@@ -882,7 +893,7 @@ export function LeadsManagementPage() {
   );
 }
 
-function LeadRowCell({ cell }: { cell: LeadTableCell }) {
+function LeadRowCell({ cell, onClick }: { cell: LeadTableCell; onClick?: () => void }) {
   if (cell.kind === "status") {
     return (
       <TableCell>
@@ -911,9 +922,10 @@ function LeadRowCell({ cell }: { cell: LeadTableCell }) {
 
   return (
     <TableCell
+      onClick={onClick}
       className={
         cell.kind === "strong"
-          ? "text-sm font-semibold text-slate-900"
+          ? `text-sm font-semibold text-slate-900${onClick ? " cursor-pointer hover:underline" : ""}`
           : "text-sm text-slate-700"
       }
     >
