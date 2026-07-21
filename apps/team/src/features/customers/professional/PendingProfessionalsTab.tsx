@@ -39,6 +39,7 @@ interface PendingProfessionalsTabProps {
 	readonly onPageSizeChange: (size: number) => void;
 	readonly onDelete: (id: string) => void;
 	readonly onCreateClick?: () => void;
+	readonly onOpenClick?: (id: string) => void;
 }
 
 export function PendingProfessionalsTab({
@@ -56,6 +57,7 @@ export function PendingProfessionalsTab({
 	onPageSizeChange,
 	onDelete,
 	onCreateClick,
+	onOpenClick,
 }: PendingProfessionalsTabProps) {
 	const t = useTranslate();
 
@@ -137,7 +139,10 @@ export function PendingProfessionalsTab({
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end" className="min-w-37.5">
-											<DropdownMenuItem className="gap-2 cursor-pointer py-2">
+											<DropdownMenuItem
+												className="gap-2 cursor-pointer py-2"
+												onClick={() => onOpenClick?.(row.id)}
+											>
 												<Eye className="h-4 w-4" />
 												<Translate text={localizationConstants.open} />
 											</DropdownMenuItem>
