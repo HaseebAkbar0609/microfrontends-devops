@@ -582,6 +582,20 @@ export const enProfessional: ProfessionalTranslation = {
 	categoryPlaceholder: "Enter category",
 	cityPlaceholder: "Enter city",
 	amountLabel: "Amount",
+	overviewTab: "Overview",
+	companyTab: "Company",
+	licensTab: "License",
+	leadsTab: "Leads",
+	invoicesTab: "Invoices",
+	supportTab: "Support",
+	sendInvoiceButton: "Send Invoice",
+	activeSeatsLabel: "Active Seats",
+	recentActivityTitle: "Recent Activity",
+	kundNrLabel: "Customer No.",
+	activityCustomerLoggedIn: "Customer logged in",
+	activityInvoicePaid: "Invoice INV-001 paid",
+	activityFollowUpCall: "Follow-up call scheduled",
+	activityAccountActivated: "Account activated",
 };
 
 export const enAdmin: AdminTranslation = {
