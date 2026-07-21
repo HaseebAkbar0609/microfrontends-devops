@@ -1,12 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { PageHeader } from "@/components/common";
 import localizationConstants from "@/utils/translation/constants";
-import { BREADCRUMBS, DUMMY_USERS } from "../constants";
+import { BREADCRUMBS } from "../constants";
 import { UserProfileForm } from "./UserProfileForm";
+import { UserFormSkeleton } from "./UserFormSkeleton";
+import { getCustomerUserByIdAPIAction } from "@/api-actions/users";
+import { mapApiUserToUser } from "../utils/userFormatters";
+import type { User } from "../types/types";
+import { showToast } from "@/lib/toast";
 
 type Props = {
 	mode: "create" | "edit";
@@ -20,9 +25,25 @@ export default function UserProfilePage({ mode, userId }: Props) {
 	const router = useRouter();
 	const { t } = useTranslation();
 
-	const user = useMemo(() => {
-		if (mode === "create") return null;
-		return DUMMY_USERS.find((item) => item.id === userId) ?? null;
+	const [user, setUser] = useState<User | null>(null);
+	const [isLoading, setIsLoading] = useState(mode === "edit");
+
+	useEffect(() => {
+		if (mode === "edit" && userId) {
+			setIsLoading(true);
+			getCustomerUserByIdAPIAction(userId)
+				.then((res) => {
+					if (res.success && res.data) {
+						setUser(mapApiUserToUser(res.data));
+					} else {
+						showToast("error", res.error || "Failed to load user details");
+						setUser(null);
+					}
+				})
+				.finally(() => {
+					setIsLoading(false);
+				});
+		}
 	}, [mode, userId]);
 
 	const isOwnProfile = user?.id === CURRENT_USER_ID;
@@ -52,14 +73,18 @@ export default function UserProfilePage({ mode, userId }: Props) {
 						{t(localizationConstants.userFormDetailsHelp)}
 					</p>
 				)}
-				<UserProfileForm
-					mode={mode}
-					user={user}
-					readOnly={readOnly}
-					isOwnProfile={isOwnProfile}
-					onCancel={() => router.push("/settings/users")}
-					onSaved={() => router.push("/settings/users")}
-				/>
+				{isLoading ? (
+					<UserFormSkeleton />
+				) : (
+					<UserProfileForm
+						mode={mode}
+						user={user}
+						readOnly={readOnly}
+						isOwnProfile={isOwnProfile}
+						onCancel={() => router.push("/settings/users")}
+						onSaved={() => router.push("/settings/users")}
+					/>
+				)}
 			</div>
 		</div>
 	);

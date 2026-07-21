@@ -26,11 +26,13 @@ export async function updateCustomerProfileAPIAction(
 ): Promise<ActionResult<CustomerProfileData>> {
 	try {
 		const response = await axiosInstance.patch<
-			ApiResponse<CustomerProfileData> | { data: CustomerProfileData }
+			ApiResponse<CustomerProfileData> | CustomerProfileData
 		>(API_PATH.PROFILE.ME, payload);
 
 		const data =
-			"data" in response.data ? response.data.data : response.data;
+			"data" in response.data && response.data.data !== undefined
+				? response.data.data
+				: (response.data as CustomerProfileData);
 
 		return { success: true, data, error: null };
 	} catch (error: unknown) {
