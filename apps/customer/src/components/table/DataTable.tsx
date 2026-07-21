@@ -375,7 +375,7 @@ export function DataTable<TData>({
       pagination
         ? Math.max(1, Math.ceil(pagination.totalItems / pagination.pageSize))
         : 1,
-    [pagination, pagination?.totalItems, pagination?.pageSize],
+    [pagination],
   );
 
 	const handleSort = useCallback(
