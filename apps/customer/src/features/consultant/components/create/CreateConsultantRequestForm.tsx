@@ -33,6 +33,7 @@ import type { FormSelectOption } from "@/components/form";
 import { showToast } from "@/lib/toast";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { consultantTypeNameKey } from "../../utils/typeName";
 import {
 	createConsultantRequestAPIAction,
 	getConsultantTypesAPIAction,
@@ -83,7 +84,7 @@ export default function CreateConsultantRequestForm() {
 				setTypeOptions(
 					result.data.map((type) => ({
 						value: type.id,
-						label: type.name,
+						label: consultantTypeNameKey(type.name),
 					})),
 				);
 			}
