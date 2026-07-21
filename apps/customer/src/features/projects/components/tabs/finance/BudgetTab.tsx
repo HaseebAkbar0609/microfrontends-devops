@@ -1,17 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 import { ChevronDown, ChevronRight, Plus, Check, Trash2, Sigma, CircleUserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { BudgetItem, BudgetRow, BudgetSection, SectionType } from "./types";
-import { DEFAULT_BUDGET_SECTIONS, DUMMY_BUDGETS } from "./data";
+import { DEFAULT_BUDGET_SECTIONS } from "./data";
 import { fmtAmount, delsumma, sectionSum, newRowId } from "./helpers";
 import { SimpleActionsMenu, SortableHeader } from "./shared";
-import { useEffect } from "react";
+import type { ActiveProject } from "../../../types";
+import { getProjectBudgetsAPIAction, saveProjectBudgetAPIAction } from "@/api-actions";
 
 // ─── Translation hook for section labels ──────────────────────────────────────
 
@@ -209,12 +211,13 @@ function BudgetStep2({ budgetName, sections, onBack, onSave }: {
   );
 }
 
-// ─── Budget create form ───────────────────────────────────────────────────────
-
-export function BudgetCreateForm({ onBack, budget }: { onBack: () => void; budget?: BudgetItem }) {
+export function BudgetCreateForm({ onBack, budget, project }: { onBack: () => void; budget?: BudgetItem; project?: ActiveProject }) {
   const [step, setStep] = useState(1);
-  const [budgetName, setBudgetName] = useState(budget?.projectName ?? "Anna");
-  const [sections, setSections] = useState<BudgetSection[]>(DEFAULT_BUDGET_SECTIONS);
+  const [budgetName, setBudgetName] = useState(budget?.projectName ?? "");
+  const [sections, setSections] = useState<BudgetSection[]>(
+    budget?.sections && budget.sections.length > 0 ? budget.sections : DEFAULT_BUDGET_SECTIONS
+  );
+  const [saving, setSaving] = useState(false);
   const sectionLabels = useSectionLabels();
 
   function updateSection(id: string, updater: (s: BudgetSection) => BudgetSection) {
@@ -263,13 +266,32 @@ export function BudgetCreateForm({ onBack, budget }: { onBack: () => void; budge
   };
   const grandTotal = Object.values(totals).reduce((a, v) => a + v, 0);
 
+  const handleSaveBudget = async () => {
+    if (project?.id) {
+      setSaving(true);
+      const res = await saveProjectBudgetAPIAction(project.id, {
+        id: budget?.id,
+        projectName: budgetName || "Ny budget",
+        date: budget?.date ?? new Date().toISOString().slice(0, 10),
+        totalAmount: grandTotal,
+        sections,
+      });
+      setSaving(false);
+      if (!res.success) {
+        toast.error(res.error || "Failed to save budget");
+        return;
+      }
+    }
+    onBack();
+  };
+
   if (step === 2) {
     return (
       <BudgetStep2
         budgetName={budgetName}
         sections={sections}
         onBack={() => setStep(1)}
-        onSave={onBack}
+        onSave={handleSaveBudget}
       />
     );
   }
@@ -397,7 +419,7 @@ export function BudgetCreateForm({ onBack, budget }: { onBack: () => void; budge
           className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50 transition-colors">
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
-        <Button onClick={() => setStep(2)} className="h-9 px-5 gap-1 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
+        <Button onClick={() => setStep(2)} disabled={saving} className="h-9 px-5 gap-1 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
           <Translate text={localizationConstants.financeNextLabel} />
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -408,8 +430,33 @@ export function BudgetCreateForm({ onBack, budget }: { onBack: () => void; budge
 
 // ─── Budget list ──────────────────────────────────────────────────────────────
 
-export function BudgetList({ onCreateNew, onView }: { onCreateNew: () => void; onView: (id: string) => void }) {
+export function BudgetList({
+  project,
+  onCreateNew,
+  onView,
+}: {
+  project?: ActiveProject;
+  onCreateNew: () => void;
+  onView: (budget: BudgetItem) => void;
+}) {
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [budgets, setBudgets] = useState<BudgetItem[]>([]);
+
+  useEffect(() => {
+    if (!project?.id) return;
+    let cancelled = false;
+    async function loadBudgets() {
+      if (!project?.id) return;
+      const res = await getProjectBudgetsAPIAction(project.id);
+      if (!cancelled && res.success && Array.isArray(res.data)) {
+        setBudgets(res.data as BudgetItem[]);
+      }
+    }
+    void loadBudgets();
+    return () => {
+      cancelled = true;
+    };
+  }, [project?.id]);
 
   useEffect(() => {
     if (!openMenuId) return;
@@ -434,15 +481,15 @@ export function BudgetList({ onCreateNew, onView }: { onCreateNew: () => void; o
           <SortableHeader><Translate text={localizationConstants.financeDateCol} /></SortableHeader>
           <div />
         </div>
-        {DUMMY_BUDGETS.map((item, idx) => (
+        {budgets.map((item, idx) => (
           <div key={item.id}
-            className={`grid grid-cols-[1fr_150px_46px] border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors ${idx === DUMMY_BUDGETS.length - 1 ? "last:border-b-0 rounded-b-xl" : ""}`}>
+            className={`grid grid-cols-[1fr_150px_46px] border-b border-[#E2E8F0] hover:bg-slate-50 transition-colors ${idx === budgets.length - 1 ? "last:border-b-0 rounded-b-xl" : ""}`}>
             <div className="h-14 flex items-center px-4 text-sm text-[#020617] font-medium">{item.projectName}</div>
             <div className="h-14 flex items-center px-4 text-sm text-[#374151]">{item.date}</div>
             <SimpleActionsMenu
               open={openMenuId === item.id}
               onOpenChange={(v) => setOpenMenuId(v ? item.id : null)}
-              onView={() => onView(item.id)}
+              onView={() => onView(item)}
             />
           </div>
         ))}
@@ -450,3 +497,4 @@ export function BudgetList({ onCreateNew, onView }: { onCreateNew: () => void; o
     </div>
   );
 }
+

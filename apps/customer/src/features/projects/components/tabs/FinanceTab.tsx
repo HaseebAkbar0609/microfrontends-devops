@@ -1,22 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { FinanceSubTab, FinanceView, PaymentPlan, PaymentPlanStatus } from "./finance/types";
-import { DUMMY_BUDGETS, DUMMY_PAYMENT_PLANS } from "./finance/data";
 import { BudgetList, BudgetCreateForm } from "./finance/BudgetTab";
 import { InvoiceList } from "./finance/InvoiceTab";
 import { PaymentPlanList, PaymentPlanCreate, PaymentPlanViewEdit } from "./finance/PaymentPlanTab";
 import { ATAList, ATACreateForm } from "./finance/ATATab";
+import type { ActiveProject } from "../../types";
+import { getProjectPaymentPlansAPIAction } from "@/api-actions";
 
 // ─── Sub-tab config ───────────────────────────────────────────────────────────
 
 const FINANCE_SUB_TABS: { value: FinanceSubTab; label: string }[] = [
-  { value: "budget",       label: localizationConstants.financeSubTabBudget },
-  { value: "invoices",     label: localizationConstants.financeSubTabInvoices },
+  { value: "budget", label: localizationConstants.financeSubTabBudget },
+  { value: "invoices", label: localizationConstants.financeSubTabInvoices },
   { value: "payment-plan", label: localizationConstants.financeSubTabPaymentPlan },
-  { value: "add-eat",      label: localizationConstants.financeSubTabAddEat },
+  { value: "add-eat", label: localizationConstants.financeSubTabAddEat },
 ];
 
 const subTabTriggerClass =
@@ -24,11 +25,35 @@ const subTabTriggerClass =
 const subTabActiveClass =
   "h-9 rounded-lg px-4 text-sm font-medium bg-white text-[#0F172A] shadow-sm border border-[#E2E8F0] cursor-pointer";
 
-import type { ActiveProject } from "../../types";
-
 export function FinanceTab({ project }: { project?: ActiveProject }) {
   const [view, setView] = useState<FinanceView>({ sub: "budget", mode: "list" });
-  const [plans, setPlans] = useState<PaymentPlan[]>(DUMMY_PAYMENT_PLANS);
+  const [plans, setPlans] = useState<PaymentPlan[]>([]);
+  const [isLoadingPlans, setIsLoadingPlans] = useState(false);
+
+  useEffect(() => {
+    setPlans([]);
+    if (!project?.id) {
+      setIsLoadingPlans(false);
+      return;
+    }
+    let cancelled = false;
+    async function loadPaymentPlans() {
+      if (!project?.id) return;
+      setIsLoadingPlans(true);
+      try {
+        const res = await getProjectPaymentPlansAPIAction(project.id);
+        if (!cancelled && res.success && Array.isArray(res.data)) {
+          setPlans(res.data as PaymentPlan[]);
+        }
+      } finally {
+        if (!cancelled) setIsLoadingPlans(false);
+      }
+    }
+    void loadPaymentPlans();
+    return () => {
+      cancelled = true;
+    };
+  }, [project?.id]);
 
   const activeSubTab = view.sub;
 
@@ -53,8 +78,8 @@ export function FinanceTab({ project }: { project?: ActiveProject }) {
   const showSubTabs = view.mode === "list";
 
   const activePlan =
-    view.sub === "payment-plan" && "planId" in view
-      ? plans.find((p) => p.id === view.planId)
+    view.sub === "payment-plan" && (view.mode === "view" || view.mode === "edit")
+      ? view.selectedPlan || plans.find((p) => p.id === view.planId)
       : undefined;
 
   return (
@@ -72,34 +97,39 @@ export function FinanceTab({ project }: { project?: ActiveProject }) {
 
       {view.sub === "budget" && view.mode === "list" && (
         <BudgetList
+          project={project}
           onCreateNew={() => setView({ sub: "budget", mode: "create" })}
-          onView={(id) => setView({ sub: "budget", mode: "view", budgetId: id })}
+          onView={(item) => setView({ sub: "budget", mode: "view", budgetId: item.id, selectedBudget: item })}
         />
       )}
       {view.sub === "budget" && view.mode === "create" && (
-        <BudgetCreateForm onBack={() => setView({ sub: "budget", mode: "list" })} />
+        <BudgetCreateForm project={project} onBack={() => setView({ sub: "budget", mode: "list" })} />
       )}
       {view.sub === "budget" && view.mode === "view" && (
         <BudgetCreateForm
           key={view.budgetId}
-          budget={DUMMY_BUDGETS.find((b) => b.id === view.budgetId)}
+          project={project}
+          budget={view.selectedBudget}
           onBack={() => setView({ sub: "budget", mode: "list" })}
         />
       )}
 
-      {view.sub === "invoices" && view.mode === "list" && <InvoiceList />}
+      {view.sub === "invoices" && view.mode === "list" && <InvoiceList project={project} />}
 
       {view.sub === "payment-plan" && view.mode === "list" && (
         <PaymentPlanList
+          project={project}
           plans={plans}
-          onView={(id) => setView({ sub: "payment-plan", mode: "view", planId: id })}
-          onEdit={(id) => setView({ sub: "payment-plan", mode: "edit", planId: id })}
+          loading={isLoadingPlans}
+          onView={(plan) => setView({ sub: "payment-plan", mode: "view", planId: plan.id, selectedPlan: plan })}
+          onEdit={(plan) => setView({ sub: "payment-plan", mode: "edit", planId: plan.id, selectedPlan: plan })}
           onCreateNew={() => setView({ sub: "payment-plan", mode: "create" })}
           onStatusChange={handlePlanStatusChange}
         />
       )}
       {view.sub === "payment-plan" && view.mode === "create" && (
         <PaymentPlanCreate
+          project={project}
           onBack={() => setView({ sub: "payment-plan", mode: "list" })}
           onCreate={handlePlanCreate}
           plansCount={plans.length}
@@ -108,6 +138,7 @@ export function FinanceTab({ project }: { project?: ActiveProject }) {
       {view.sub === "payment-plan" && (view.mode === "view" || view.mode === "edit") && activePlan && (
         <PaymentPlanViewEdit
           key={activePlan.id + view.mode}
+          project={project}
           plan={activePlan}
           mode={view.mode}
           onBack={() => setView({ sub: "payment-plan", mode: "list" })}
@@ -116,7 +147,7 @@ export function FinanceTab({ project }: { project?: ActiveProject }) {
             handlePlanStatusChange(activePlan.id, status);
             setView({ sub: "payment-plan", mode: "list" });
           }}
-          onSwitchToEdit={() => setView({ sub: "payment-plan", mode: "edit", planId: activePlan.id })}
+          onSwitchToEdit={() => setView({ sub: "payment-plan", mode: "edit", planId: activePlan.id, selectedPlan: activePlan })}
         />
       )}
 
