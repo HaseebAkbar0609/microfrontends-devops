@@ -13,14 +13,15 @@ import {
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { CustomerRegisterTable } from "./CustomerRegisterTable";
+import { SupplierRegisterTable } from "./SupplierRegisterTable";
 
 export function RegisterPage() {
 	const [selectedRegister, setSelectedRegister] = useState("kund");
 
 	return (
-		<div className="flex h-full flex-col gap-6 px-8 pt-6 pb-8 overflow-y-auto">
-			{/* Header & Breadcrumb Trail matching Figma */}
-			<div className="flex flex-col gap-1.5">
+		<div className="flex flex-col gap-6 p-6">
+			{/* Breadcrumbs & Page Header */}
+			<div className="flex flex-col gap-1">
 				<h1 className="text-2xl font-bold tracking-tight text-slate-900">
 					<Translate text={localizationConstants.registerDropdownLabel} />
 				</h1>
@@ -77,7 +78,11 @@ export function RegisterPage() {
 						type="button"
 						className="border-b-2 border-slate-900 pb-3 text-sm font-semibold text-slate-900"
 					>
-						<Translate text={localizationConstants.customerListTab} />
+						{selectedRegister === "kund" ? (
+							<Translate text={localizationConstants.customerListTab} />
+						) : (
+							<Translate text={localizationConstants.supplierListTab} />
+						)}
 					</button>
 				</div>
 			</div>
@@ -86,6 +91,11 @@ export function RegisterPage() {
 			{selectedRegister === "kund" && (
 				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Laddar...</div>}>
 					<CustomerRegisterTable />
+				</Suspense>
+			)}
+			{selectedRegister === "supplier" && (
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Laddar...</div>}>
+					<SupplierRegisterTable />
 				</Suspense>
 			)}
 		</div>

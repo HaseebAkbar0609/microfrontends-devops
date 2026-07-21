@@ -615,6 +615,10 @@ export type RegisterTranslation = {
 	pageOfLabel: string;
 	customerOption: string;
 	supplierOption: string;
+	supplierListTab: string;
+	importSupplier: string;
+	supplierNoHeader: string;
+	supplierHeader: string;
 	reportsItem: string;
 	protocolsItem: string;
 	documentCenterItem: string;
