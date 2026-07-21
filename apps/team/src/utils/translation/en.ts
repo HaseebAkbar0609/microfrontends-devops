@@ -717,6 +717,11 @@ export const enAdmin: AdminTranslation = {
 	imageBankTab: "Image Bank",
 	logotypeTab: "Logotype",
 	storeLabel: "Store",
+	companyLogotype: "Company Logotype",
+	uploadYourLogotype: "Upload your logotype",
+	logotypeFileTypesAllowed: "PNG, JPG and PDF files are allowed.",
+	logo: "Logo",
+	removeLogo: "Remove logo",
 };
 
 export const en: Translation = {
