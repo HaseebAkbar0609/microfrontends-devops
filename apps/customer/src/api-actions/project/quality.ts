@@ -39,6 +39,7 @@ export interface SecureCheck {
   source: string;
   datumKontroll: string;
   utfordAv: string;
+  lastUpdated?: string | null;
   status: "completed" | "pending";
   fileType?: string | null;
   categoryPath?: string[] | null;

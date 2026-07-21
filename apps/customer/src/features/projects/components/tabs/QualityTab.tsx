@@ -272,9 +272,15 @@ function KMADocTable({
   const [documents, setDocuments] = useState<KmaDoc[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [fileType, setFileType] = useState("");
   const { open: fOpen, anchor: fAnchor, toggle: fToggle, setOpen: fSetOpen, setAnchor: fSetAnchor } = useFilterBtn();
   const { openMenu, menuAnchor, handleOpen, setOpenMenu } = useRowMenu();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   useEffect(() => {
     let cancelled = false;
@@ -287,7 +293,7 @@ function KMADocTable({
       const res = await getProjectQualityDocumentsAPIAction(projectId, {
         kma: kmaCategory,
         file_type: fileType || undefined,
-        search: search || undefined,
+        search: debouncedSearch || undefined,
       });
       if (cancelled) return;
       if (res.success && res.data) {
@@ -301,7 +307,7 @@ function KMADocTable({
     return () => {
       cancelled = true;
     };
-  }, [projectId, kmaCategory, fileType, search]);
+  }, [projectId, kmaCategory, fileType, debouncedSearch]);
 
   const handleDelete = async (docId: string) => {
     setOpenMenu(null);
@@ -462,9 +468,15 @@ function ControlTableRows({
   const [controls, setControls] = useState<KmaControl[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [creator, setCreator] = useState("");
   const { open: fOpen, anchor: fAnchor, toggle: fToggle, setOpen: fSetOpen, setAnchor: fSetAnchor } = useFilterBtn();
   const { openMenu, menuAnchor, handleOpen, setOpenMenu } = useRowMenu();
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
   useEffect(() => {
     let cancelled = false;
@@ -478,7 +490,7 @@ function ControlTableRows({
         sub_tab: subTab,
         view_type: viewType,
         folder_id: folderId || undefined,
-        search: search || undefined,
+        search: debouncedSearch || undefined,
         created_by: creator || undefined,
       });
       if (cancelled) return;
@@ -493,7 +505,7 @@ function ControlTableRows({
     return () => {
       cancelled = true;
     };
-  }, [projectId, subTab, viewType, folderId, search, creator]);
+  }, [projectId, subTab, viewType, folderId, debouncedSearch, creator]);
 
   const handleDelete = async (controlId: string) => {
     setOpenMenu(null);
@@ -677,7 +689,13 @@ function SplitView({
   const [folders, setFolders] = useState<KmaFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [folderSearch, setFolderSearch] = useState("");
+  const [debouncedFolderSearch, setDebouncedFolderSearch] = useState("");
   const [loadingFolders, setLoadingFolders] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedFolderSearch(folderSearch), 300);
+    return () => clearTimeout(timer);
+  }, [folderSearch]);
 
   useEffect(() => {
     let cancelled = false;
@@ -688,13 +706,13 @@ function SplitView({
       }
       setLoadingFolders(true);
       const res = await getProjectQualityFoldersAPIAction(projectId, {
-        search: folderSearch || undefined,
+        search: debouncedFolderSearch || undefined,
       });
       if (cancelled) return;
       if (res.success && res.data) {
         setFolders(res.data);
         if (res.data.length > 0) {
-          setSelectedFolder((prev) => prev || (res.data && res.data.length > 0 ? res.data[0].id : null));
+          setSelectedFolder((prev) => prev || res.data?.[0]?.id || null);
         }
       } else if (!res.success) {
         showToast("error", res.error || "Failed to load folders");
@@ -705,7 +723,7 @@ function SplitView({
     return () => {
       cancelled = true;
     };
-  }, [projectId, folderSearch]);
+  }, [projectId, debouncedFolderSearch]);
 
   return (
     <div className="flex gap-4">
@@ -949,7 +967,7 @@ function SecureCheckDetail({
                 </div>
                 <div>
                   <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1">Last Updated</p>
-                  <p className="text-[#374151]">{currentCheck.datumKontroll || "2025-01-10"}</p>
+                  <p className="text-[#374151]">{currentCheck.lastUpdated || currentCheck.datumKontroll || "2025-01-10"}</p>
                 </div>
               </div>
               {currentCheck.registeredInfo && (
