@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import Image from "next/image";
 import {
   Search,
@@ -18,85 +18,42 @@ import {
   ZoomIn,
   Download,
   ChevronLeft,
+  Loader2,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { showToast } from "@/lib/toast";
+import {
+  getProjectQualityDocumentsAPIAction,
+  deleteProjectQualityDocumentAPIAction,
+  getProjectQualityFoldersAPIAction,
+  getProjectQualityControlsAPIAction,
+  deleteProjectQualityControlAPIAction,
+  getProjectSecureChecksAPIAction,
+  updateSecureCheckStatusAPIAction,
+  deleteProjectSecureCheckAPIAction,
+  getProjectQualityDeviationsAPIAction,
+  type KmaDoc,
+  type KmaFolder,
+  type KmaControl,
+  type SecureCheck,
+  type QualityDeviation,
+} from "@/api-actions";
+import type { ActiveProject } from "../../types";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type KmaSubTab = "kvalitetssystem" | "miljosystem" | "arbetsmiljo" | "securecheck" | "avvikelser";
-type KvalView  = "kvalitetssystem" | "kontrollplan" | "riskhantering" | "checklista";
+type KvalView = "kvalitetssystem" | "kontrollplan" | "riskhantering" | "checklista";
 type MiljoView = "miljosystem" | "miljoplan";
-type ArbView   = "arbetsmiljo" | "arbetsmiljoplan";
-
-interface KmaDoc {
-  id: string; kma: string; date: string; documentName: string; fileType: string;
-}
-
-interface KmaFolder {
-  id: string; name: string; count?: number; defaultOpen?: boolean; children?: KmaFolder[];
-}
-
-interface KmaControl {
-  id: string; kontroll: string; lastUpdated: string; createdBy: string;
-}
-
-interface SecureCheck {
-  id: string; nr: string; kontroll: string; source: string;
-  datumKontroll: string; utfordAv: string; status: "completed" | "pending";
-}
-
-// ─── Dummy data ───────────────────────────────────────────────────────────────
-
-const DUMMY_KMA_DOCS: KmaDoc[] = [
-  { id: "1", kma: "Quality System", date: "2026-01-21", documentName: "Kvalitetssystem", fileType: "PDF" },
-  { id: "2", kma: "Environment",    date: "2025-11-10", documentName: "Miljöplan v2",     fileType: "DOCX" },
-];
-
-const DUMMY_FOLDERS: KmaFolder[] = [
-  {
-    id: "10", name: "10.0 Styrande dokument", count: 5, defaultOpen: true,
-    children: [
-      { id: "10.1", name: "Consultancy agreement", count: 2 },
-      { id: "10.2", name: "Subcontractor agreement", count: 3 },
-    ],
-  },
-  {
-    id: "11", name: "11.0 RISK- OCH KONT...", count: 4, defaultOpen: true,
-    children: [
-      { id: "11.1", name: "Offer letter" },
-      { id: "11.2", name: "Employment confirmation", count: 5 },
-    ],
-  },
-  { id: "12", name: "12.0 Process- och pro..." },
-  { id: "13", name: "13.0 Kompetens och res..." },
-  { id: "14", name: "14.0 Uppföljning och förb..." },
-  { id: "m",  name: "Marketing" },
-  { id: "s",  name: "Support / IT" },
-  { id: "d",  name: "Debt collection" },
-  { id: "o",  name: "Other modules" },
-];
-
-const DUMMY_CONTROLS: KmaControl[] = [
-  { id: "1", kontroll: "10.1.1 Consultancy Agreement – Standard", lastUpdated: "2026-01-28", createdBy: "Lars Andersson" },
-  { id: "2", kontroll: "10.1.2 Consultancy Agreement – Standard", lastUpdated: "2025-01-08", createdBy: "Lars Andersson" },
-  { id: "3", kontroll: "10.1.3 Consultancy Agreement – Standard", lastUpdated: "2025-04-09", createdBy: "Anna Svensson" },
-  { id: "4", kontroll: "10.1.4 Consultancy Agreement – Standard", lastUpdated: "2025-04-09", createdBy: "Anna Svensson" },
-];
-
-const DUMMY_SECURE_CHECKS: SecureCheck[] = [
-  { id: "1", nr: "001", kontroll: "10.1.1 Consultancy Agreement – Standard", source: "Kontrollplan", datumKontroll: "2026-01-28", utfordAv: "Lars Andersson", status: "completed" },
-  { id: "2", nr: "002", kontroll: "10.1.2 Consultancy Agreement – Standard", source: "Kontrollplan", datumKontroll: "2025-01-08", utfordAv: "Lars Andersson", status: "completed" },
-  { id: "3", nr: "003", kontroll: "10.1.3 Consultancy Agreement – Standard", source: "Kontrollplan", datumKontroll: "2025-04-09", utfordAv: "Lars Andersson", status: "pending"   },
-  { id: "4", nr: "004", kontroll: "10.1.4 Consultancy Agreement – Standard", source: "Järnkolla",    datumKontroll: "2025-04-09", utfordAv: "—",             status: "completed" },
-];
+type ArbView = "arbetsmiljo" | "arbetsmiljoplan";
 
 // ─── Shared: row menu hook ────────────────────────────────────────────────────
 
 function useRowMenu() {
-  const [openMenu, setOpenMenu]     = useState<string | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<{ top: number; right: number } | null>(null);
 
   useEffect(() => {
@@ -114,13 +71,13 @@ function useRowMenu() {
     setMenuAnchor({ top: rect.bottom + 4, right: window.innerWidth - rect.right });
   }
 
-  return { openMenu, menuAnchor, handleOpen };
+  return { openMenu, menuAnchor, handleOpen, setOpenMenu };
 }
 
 // ─── Shared: filter button hook ───────────────────────────────────────────────
 
 function useFilterBtn() {
-  const [open, setOpen]     = useState(false);
+  const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState<{ top: number; left: number } | null>(null);
 
   useEffect(() => {
@@ -143,7 +100,15 @@ function useFilterBtn() {
 
 // ─── Shared: row menu portal ──────────────────────────────────────────────────
 
-function RowMenuPortal({ anchor }: { anchor: { top: number; right: number } | null }) {
+function RowMenuPortal({
+  anchor,
+  onDelete,
+  onEdit,
+}: {
+  anchor: { top: number; right: number } | null;
+  onDelete?: () => void;
+  onEdit?: () => void;
+}) {
   const t = useTranslate();
   if (!anchor) return null;
   return (
@@ -152,10 +117,18 @@ function RowMenuPortal({ anchor }: { anchor: { top: number; right: number } | nu
       className="w-36 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
       onClick={(e) => e.stopPropagation()}
     >
-      <button type="button" className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50">
+      <button
+        type="button"
+        onClick={onEdit}
+        className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50"
+      >
         <Pencil className="h-3.5 w-3.5" /> {t(localizationConstants.edit)}
       </button>
-      <button type="button" className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50">
+      <button
+        type="button"
+        onClick={onDelete}
+        className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#DC2626] hover:bg-red-50"
+      >
         <Trash2 className="h-3.5 w-3.5" /> {t(localizationConstants.delete)}
       </button>
       <button type="button" className="cursor-pointer w-full flex items-center gap-2 px-3 py-1.5 text-xs text-[#374151] hover:bg-slate-50">
@@ -186,7 +159,7 @@ function ViewDropdown<T extends string>({
     return () => document.removeEventListener("mousedown", close);
   }, [open]);
 
-  const current = options.find((o) => o.value === value)!;
+  const current = options.find((o) => o.value === value) || options[0];
 
   return (
     <div ref={ref} className="relative inline-block">
@@ -217,7 +190,7 @@ function ViewDropdown<T extends string>({
   );
 }
 
-// ─── Folder icon (inline SVG so stroke color can be controlled) ───────────────
+// ─── Folder icon ─────────────────────────────────────────────────────────────
 
 function FolderIcon({ hasChildren }: { hasChildren: boolean }) {
   const stroke = hasChildren ? "#F59E0B" : "#94A3B8";
@@ -276,26 +249,79 @@ function FolderNode({ folder, selectedId, onSelect, depth = 0 }: {
   );
 }
 
-// ─── KMA doc table (KMA / Date / Document name / File) ───────────────────────
+// ─── KMA doc table ────────────────────────────────────────────────────────────
 
 const FILE_TYPE_OPTIONS = [
-  { value: "",     label: "All Types" },
-  { value: "PDF",  label: "PDF"       },
-  { value: "DOCX", label: "DOCX"      },
+  { value: "", label: "All Types" },
+  { value: "PDF", label: "PDF" },
+  { value: "DOCX", label: "DOCX" },
 ];
 
-function KMADocTable({ showCreateBtn = true, showFilters = true }: { showCreateBtn?: boolean; showFilters?: boolean }) {
+function KMADocTable({
+  projectId,
+  kmaCategory,
+  showCreateBtn = true,
+  showFilters = true,
+}: {
+  projectId?: string;
+  kmaCategory?: string;
+  showCreateBtn?: boolean;
+  showFilters?: boolean;
+}) {
   const t = useTranslate();
-  const [search, setSearch]       = useState("");
-  const [fileType, setFileType]   = useState("");
+  const [documents, setDocuments] = useState<KmaDoc[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [fileType, setFileType] = useState("");
   const { open: fOpen, anchor: fAnchor, toggle: fToggle, setOpen: fSetOpen, setAnchor: fSetAnchor } = useFilterBtn();
-  const { openMenu, menuAnchor, handleOpen } = useRowMenu();
+  const { openMenu, menuAnchor, handleOpen, setOpenMenu } = useRowMenu();
 
-  const filtered = DUMMY_KMA_DOCS.filter((d) => {
-    const matchSearch = d.kma.toLowerCase().includes(search.toLowerCase()) || d.documentName.toLowerCase().includes(search.toLowerCase());
-    const matchType   = fileType === "" || d.fileType === fileType;
-    return matchSearch && matchType;
-  });
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!projectId) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+      setLoading(true);
+      const res = await getProjectQualityDocumentsAPIAction(projectId, {
+        kma: kmaCategory,
+        file_type: fileType || undefined,
+        search: debouncedSearch || undefined,
+      });
+      if (cancelled) return;
+      if (res.success && res.data) {
+        setDocuments(res.data);
+      } else if (!res.success) {
+        showToast("error", res.error || "Failed to load documents");
+      }
+      setLoading(false);
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId, kmaCategory, fileType, debouncedSearch]);
+
+  const handleDelete = async (docId: string) => {
+    if (!projectId) return;
+    setOpenMenu(null);
+    const prevDocs = documents;
+    setDocuments((prev) => prev.filter((d) => d.id !== docId));
+    const res = await deleteProjectQualityDocumentAPIAction(projectId, docId);
+    if (res.success) {
+      showToast("success", "Document deleted successfully");
+    } else {
+      setDocuments(prevDocs);
+      showToast("error", res.error || "Failed to delete document");
+    }
+  };
 
   const activeLabel = FILE_TYPE_OPTIONS.find((o) => o.value === fileType)?.label;
 
@@ -326,7 +352,10 @@ function KMADocTable({ showCreateBtn = true, showFilters = true }: { showCreateB
           )}
 
           {showCreateBtn && (
-            <button type="button" className="cursor-pointer ml-auto h-9 px-4 flex items-center gap-1.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
+            <button
+              type="button"
+              className="cursor-pointer ml-auto h-9 px-4 flex items-center gap-1.5 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
+            >
               <Plus className="h-4 w-4" /> {t(localizationConstants.createNewButtonText)}
             </button>
           )}
@@ -347,7 +376,13 @@ function KMADocTable({ showCreateBtn = true, showFilters = true }: { showCreateB
               </tr>
             </thead>
             <tbody>
-              {filtered.map((doc) => (
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-10 text-center text-sm text-slate-500">
+                    <Loader2 className="h-5 w-5 animate-spin mx-auto text-slate-400" />
+                  </td>
+                </tr>
+              ) : documents.map((doc) => (
                 <tr key={doc.id} className="border-b border-slate-100 last:border-0 odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60 transition-colors">
                   <td className="px-4 py-3.5 text-slate-600">{doc.kma}</td>
                   <td className="px-4 py-3.5 text-slate-600">{doc.date}</td>
@@ -365,7 +400,7 @@ function KMADocTable({ showCreateBtn = true, showFilters = true }: { showCreateB
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
+              {!loading && documents.length === 0 && (
                 <tr><td colSpan={5} className="px-4 py-10 text-center text-sm text-slate-500">No documents match the filter.</td></tr>
               )}
             </tbody>
@@ -395,33 +430,105 @@ function KMADocTable({ showCreateBtn = true, showFilters = true }: { showCreateB
         </div>
       )}
 
-      {openMenu && <RowMenuPortal anchor={menuAnchor} />}
+      {openMenu && (
+        <RowMenuPortal
+          anchor={menuAnchor}
+          onDelete={() => openMenu && handleDelete(openMenu)}
+        />
+      )}
     </div>
   );
 }
 
-// ─── Control table (colName / File / Last Updated / Created by) ───────────────
+// ─── Control table ────────────────────────────────────────────────────────────
 
-const CREATOR_OPTIONS = [
-  { value: "",               label: "All" },
-  { value: "Lars Andersson", label: "Lars Andersson" },
-  { value: "Anna Svensson",  label: "Anna Svensson"  },
-];
 
-function ControlTableRows({ colName, onRowClick, showFilters = true }: { colName: string; onRowClick?: (c: KmaControl) => void; showFilters?: boolean }) {
+function ControlTableRows({
+  projectId,
+  subTab,
+  viewType,
+  folderId,
+  colName,
+  onRowClick,
+  showFilters = true,
+}: {
+  projectId?: string;
+  subTab?: string;
+  viewType?: string;
+  folderId?: string | null;
+  colName: string;
+  onRowClick?: (c: KmaControl) => void;
+  showFilters?: boolean;
+}) {
   const t = useTranslate();
-  const [search, setSearch]     = useState("");
-  const [creator, setCreator]   = useState("");
+  const [controls, setControls] = useState<KmaControl[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [creator, setCreator] = useState("");
+  const [allCreators, setAllCreators] = useState<string[]>([]);
   const { open: fOpen, anchor: fAnchor, toggle: fToggle, setOpen: fSetOpen, setAnchor: fSetAnchor } = useFilterBtn();
-  const { openMenu, menuAnchor, handleOpen } = useRowMenu();
+  const { openMenu, menuAnchor, handleOpen, setOpenMenu } = useRowMenu();
 
-  const filtered = DUMMY_CONTROLS.filter((c) => {
-    const matchSearch  = c.kontroll.toLowerCase().includes(search.toLowerCase()) || c.createdBy.toLowerCase().includes(search.toLowerCase());
-    const matchCreator = creator === "" || c.createdBy === creator;
-    return matchSearch && matchCreator;
-  });
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
 
-  const activeLabel = CREATOR_OPTIONS.find((o) => o.value === creator)?.label;
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!projectId) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+      setLoading(true);
+      const res = await getProjectQualityControlsAPIAction(projectId, {
+        sub_tab: subTab,
+        view_type: viewType,
+        folder_id: folderId || undefined,
+        search: debouncedSearch || undefined,
+        created_by: creator || undefined,
+      });
+      if (cancelled) return;
+      if (res.success && res.data) {
+        setControls(res.data);
+        const newCreators = res.data.map((c) => c.createdBy).filter(Boolean);
+        setAllCreators((prev) => Array.from(new Set([...prev, ...newCreators])));
+      } else if (!res.success) {
+        showToast("error", res.error || "Failed to load controls");
+      }
+      setLoading(false);
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId, subTab, viewType, folderId, debouncedSearch, creator]);
+
+  const creatorOptions: { value: string; label: string }[] = useMemo(
+    () => [
+      { value: "", label: "All" },
+      ...allCreators.map((c) => ({ value: c, label: c })),
+    ],
+    [allCreators]
+  );
+
+  const handleDelete = async (controlId: string) => {
+    if (!projectId) return;
+    setOpenMenu(null);
+    const prevControls = controls;
+    setControls((prev) => prev.filter((c) => c.id !== controlId));
+    const res = await deleteProjectQualityControlAPIAction(projectId, controlId);
+    if (res.success) {
+      showToast("success", "Control deleted successfully");
+    } else {
+      setControls(prevControls);
+      showToast("error", res.error || "Failed to delete control");
+    }
+  };
+
+  const activeLabel = creatorOptions.find((o) => o.value === creator)?.label;
 
   return (
     <>
@@ -463,14 +570,23 @@ function ControlTableRows({ colName, onRowClick, showFilters = true }: { colName
                   <span className="inline-flex items-center gap-1">{t(localizationConstants.kmaColCreatedBy)} <ArrowUpDown className="h-3.5 w-3.5 opacity-50" /></span>
                 </th>
                 <th className="px-4 py-3.5 w-10">
-                  <button type="button" className="cursor-pointer p-0.5 rounded hover:bg-slate-100 text-[#64748B] transition-colors">
+                  <button
+                    type="button"
+                    className="cursor-pointer p-0.5 rounded hover:bg-slate-100 text-[#64748B] transition-colors"
+                  >
                     <Plus className="h-4 w-4" />
                   </button>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {filtered.map((control) => (
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-10 text-center text-sm text-slate-500">
+                    <Loader2 className="h-5 w-5 animate-spin mx-auto text-slate-400" />
+                  </td>
+                </tr>
+              ) : controls.map((control) => (
                 <tr
                   key={control.id}
                   onClick={() => onRowClick?.(control)}
@@ -492,7 +608,7 @@ function ControlTableRows({ colName, onRowClick, showFilters = true }: { colName
                   </td>
                 </tr>
               ))}
-              {filtered.length === 0 && (
+              {!loading && controls.length === 0 && (
                 <tr><td colSpan={5} className="px-4 py-10 text-center text-sm text-slate-500">No records match the filter.</td></tr>
               )}
             </tbody>
@@ -508,7 +624,7 @@ function ControlTableRows({ colName, onRowClick, showFilters = true }: { colName
           onClick={(e) => e.stopPropagation()}
         >
           <p className="px-3 py-1.5 text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide">Created by</p>
-          {CREATOR_OPTIONS.map((opt) => (
+          {creatorOptions.map((opt) => (
             <button
               key={opt.value}
               type="button"
@@ -522,27 +638,100 @@ function ControlTableRows({ colName, onRowClick, showFilters = true }: { colName
         </div>
       )}
 
-      {openMenu && <RowMenuPortal anchor={menuAnchor} />}
+      {openMenu && (
+        <RowMenuPortal
+          anchor={menuAnchor}
+          onDelete={() => openMenu && handleDelete(openMenu)}
+        />
+      )}
     </>
   );
 }
 
-// ─── Standalone control table (no folder tree) ────────────────────────────────
+// ─── Standalone control view ──────────────────────────────────────────────────
 
-function StandaloneControlView({ colName, showFilters = true }: { colName: string; showFilters?: boolean }) {
-  return <ControlTableRows colName={colName} showFilters={showFilters} />;
+function StandaloneControlView({
+  projectId,
+  subTab,
+  viewType,
+  colName,
+  showFilters = true,
+}: {
+  projectId?: string;
+  subTab?: string;
+  viewType?: string;
+  colName: string;
+  showFilters?: boolean;
+}) {
+  return (
+    <ControlTableRows
+      projectId={projectId}
+      subTab={subTab}
+      viewType={viewType}
+      colName={colName}
+      showFilters={showFilters}
+    />
+  );
 }
 
 // ─── Split view (folder tree + control table) ─────────────────────────────────
 
-function SplitView({ colName, title, onRowClick, showFilters = true }: { colName: string; title: string; onRowClick?: (c: KmaControl) => void; showFilters?: boolean }) {
+function SplitView({
+  projectId,
+  subTab,
+  viewType,
+  colName,
+  title,
+  onRowClick,
+  showFilters = true,
+}: {
+  projectId?: string;
+  subTab: string;
+  viewType: string;
+  colName: string;
+  title: string;
+  onRowClick?: (c: KmaControl) => void;
+  showFilters?: boolean;
+}) {
   const t = useTranslate();
-  const [selectedFolder, setSelectedFolder] = useState<string | null>("10.1");
-  const [folderSearch, setFolderSearch]     = useState("");
+  const [folders, setFolders] = useState<KmaFolder[]>([]);
+  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const [folderSearch, setFolderSearch] = useState("");
+  const [debouncedFolderSearch, setDebouncedFolderSearch] = useState("");
+  const [loadingFolders, setLoadingFolders] = useState(true);
 
-  const filteredFolders = folderSearch
-    ? DUMMY_FOLDERS.filter((f) => f.name.toLowerCase().includes(folderSearch.toLowerCase()))
-    : DUMMY_FOLDERS;
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedFolderSearch(folderSearch), 300);
+    return () => clearTimeout(timer);
+  }, [folderSearch]);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!projectId) {
+        if (!cancelled) setLoadingFolders(false);
+        return;
+      }
+      setLoadingFolders(true);
+      const res = await getProjectQualityFoldersAPIAction(projectId, {
+        search: debouncedFolderSearch || undefined,
+      });
+      if (cancelled) return;
+      if (res.success && res.data) {
+        setFolders(res.data);
+        if (res.data.length > 0) {
+          setSelectedFolder((prev) => prev || res.data?.[0]?.id || null);
+        }
+      } else if (!res.success) {
+        showToast("error", res.error || "Failed to load folders");
+      }
+      setLoadingFolders(false);
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId, debouncedFolderSearch]);
 
   return (
     <div className="flex gap-4">
@@ -557,15 +746,30 @@ function SplitView({ colName, title, onRowClick, showFilters = true }: { colName
           />
         </div>
         <div className="space-y-0.5">
-          {filteredFolders.map((folder) => (
+          {loadingFolders ? (
+            <div className="py-6 text-center text-xs text-slate-400">
+              <Loader2 className="h-4 w-4 animate-spin mx-auto" />
+            </div>
+          ) : folders.map((folder) => (
             <FolderNode key={folder.id} folder={folder} selectedId={selectedFolder} onSelect={setSelectedFolder} />
           ))}
+          {!loadingFolders && folders.length === 0 && (
+            <div className="py-4 text-center text-xs text-slate-400">No folders found</div>
+          )}
         </div>
       </div>
 
       <div className="flex-1 min-w-0">
         <h3 className="text-sm font-semibold text-[#0F172A] mb-3">{title}</h3>
-        <ControlTableRows colName={colName} onRowClick={onRowClick} showFilters={showFilters} />
+        <ControlTableRows
+          projectId={projectId}
+          subTab={subTab}
+          viewType={viewType}
+          folderId={selectedFolder}
+          colName={colName}
+          onRowClick={onRowClick}
+          showFilters={showFilters}
+        />
       </div>
     </div>
   );
@@ -575,13 +779,45 @@ function SplitView({ colName, title, onRowClick, showFilters = true }: { colName
 
 type DetailRightTab = "details" | "foto" | "avvikelse";
 
-function SecureCheckDetail({ check, onBack }: { check: SecureCheck; onBack: () => void }) {
+function SecureCheckDetail({
+  check,
+  projectId,
+  onBack,
+  onStatusChange,
+  isControl = false,
+}: {
+  check: SecureCheck;
+  projectId?: string;
+  onBack: () => void;
+  onStatusChange?: () => void;
+  isControl?: boolean;
+}) {
   const t = useTranslate();
   const [rightTab, setRightTab] = useState<DetailRightTab>("details");
+  const [updating, setUpdating] = useState(false);
+  const [currentCheck, setCurrentCheck] = useState<SecureCheck>(check);
+
+  const handleMarkDone = async () => {
+    if (isControl || !projectId) return;
+    const prevCheck = currentCheck;
+    const nextStatus = currentCheck.status === "completed" ? "pending" : "completed";
+    setCurrentCheck((prev) => ({ ...prev, status: nextStatus }));
+    setUpdating(true);
+    const res = await updateSecureCheckStatusAPIAction(projectId, currentCheck.id, nextStatus);
+    if (res.success && res.data) {
+      setCurrentCheck(res.data);
+      showToast("success", `Status updated to ${nextStatus}`);
+      onStatusChange?.();
+    } else {
+      setCurrentCheck(prevCheck);
+      showToast("error", res.error || "Failed to update status");
+    }
+    setUpdating(false);
+  };
 
   const rightTabs: { value: DetailRightTab; label: string }[] = [
-    { value: "details",   label: "Details" },
-    { value: "foto",      label: t(localizationConstants.kmaDetailPhoto) },
+    { value: "details", label: "Details" },
+    { value: "foto", label: t(localizationConstants.kmaDetailPhoto) },
     { value: "avvikelse", label: t(localizationConstants.kmaDetailDeviation) },
   ];
 
@@ -597,12 +833,20 @@ function SecureCheckDetail({ check, onBack }: { check: SecureCheck; onBack: () =
 
       <div className="flex items-start justify-between gap-4 mb-5">
         <div className="flex items-center gap-2">
-          <h2 className="text-xl font-semibold text-[#0F172A]">{check.kontroll}</h2>
+          <h2 className="text-xl font-semibold text-[#0F172A]">{currentCheck.kontroll}</h2>
           <Star className="h-5 w-5 fill-amber-400 text-amber-400 shrink-0" />
         </div>
-        <button type="button" className="cursor-pointer shrink-0 h-9 px-4 flex items-center gap-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
-          <Check className="h-4 w-4" /> Mark as done
-        </button>
+        {!isControl && (
+          <button
+            type="button"
+            onClick={handleMarkDone}
+            disabled={updating}
+            className="cursor-pointer shrink-0 h-9 px-4 flex items-center gap-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50"
+          >
+            {updating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+            {currentCheck.status === "completed" ? "Mark as pending" : "Mark as done"}
+          </button>
+        )}
       </div>
 
       <div className="flex gap-5">
@@ -619,7 +863,6 @@ function SecureCheckDetail({ check, onBack }: { check: SecureCheck; onBack: () =
           </div>
 
           <div className="bg-white border border-[#E2E8F0] rounded-xl p-8 min-h-96">
-            {/* Swedish document content — kept as-is (document data, not UI) */}
             <h3 className="text-lg font-bold text-[#0F172A] mb-3">Kontrollplan</h3>
             <p className="text-sm text-[#374151] mb-1">Kontroll nr: KA-2025-001</p>
             <p className="text-sm text-[#374151] mb-5">Datum: 2025-01-10</p>
@@ -694,69 +937,85 @@ function SecureCheckDetail({ check, onBack }: { check: SecureCheck; onBack: () =
               <div>
                 <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1.5">Category Path</p>
                 <div className="flex items-center gap-1 flex-wrap">
-                  <span className="inline-flex items-center px-2 py-0.5 bg-slate-100 rounded text-[#374151] text-[11px]">Agreements</span>
-                  <ChevronRight className="h-3 w-3 text-[#94A3B8]" />
-                  <span className="inline-flex items-center px-2 py-0.5 bg-slate-100 rounded text-[#374151] text-[11px]">Consultancy agreement</span>
+                  {(currentCheck.categoryPath || ["Agreements", "Consultancy agreement"]).map((cat, idx) => (
+                    <span key={idx} className="flex items-center gap-1">
+                      <span className="inline-flex items-center px-2 py-0.5 bg-slate-100 rounded text-[#374151] text-[11px]">{cat}</span>
+                      {idx < (currentCheck.categoryPath?.length || 2) - 1 && <ChevronRight className="h-3 w-3 text-[#94A3B8]" />}
+                    </span>
+                  ))}
                 </div>
               </div>
               <div>
                 <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1.5">Status</p>
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-600 border border-amber-200">
-                  Pending
+                <span className={cn(
+                  "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
+                  currentCheck.status === "completed"
+                    ? "bg-[#F0FDF4] text-[#047857] border-green-200"
+                    : "bg-amber-50 text-amber-600 border-amber-200"
+                )}>
+                  {currentCheck.status === "completed" ? "Completed" : "Pending"}
                 </span>
               </div>
               <div>
                 <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1.5">Tags</p>
                 <div className="flex flex-wrap gap-1">
-                  {["konsult", "avtal", "standard"].map((tag) => (
+                  {(currentCheck.tags || ["konsult", "avtal", "standard"]).map((tag) => (
                     <span key={tag} className="inline-flex items-center px-2 py-0.5 bg-slate-100 rounded-full text-[11px] text-[#374151]">{tag}</span>
                   ))}
                 </div>
               </div>
               <div>
                 <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1">Owner</p>
-                <p className="text-[#374151]">Anna Svensson</p>
+                <p className="text-[#374151]">{currentCheck.owner || currentCheck.utfordAv || "Anna Svensson"}</p>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1">Created</p>
-                  <p className="text-[#374151]">2024-01-15</p>
+                  <p className="text-[#374151]">{currentCheck.datumKontroll || "2024-01-15"}</p>
                 </div>
                 <div>
                   <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1">Last Updated</p>
-                  <p className="text-[#374151]">2025-01-10</p>
+                  <p className="text-[#374151]">{currentCheck.lastUpdated || currentCheck.datumKontroll || "2025-01-10"}</p>
                 </div>
               </div>
-              <div>
-                <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-1">Recent Activity</p>
-                <p className="text-[#374151]">Published by Anna Svensson • 2 days ago</p>
-              </div>
-              <div className="border-t border-[#E2E8F0]" />
-              <div>
-                <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-2">{t(localizationConstants.kmaRegisteredInfo)}</p>
-                <div className="space-y-2">
-                  <p className="text-[#374151] font-medium">Kalle Andersson</p>
+              {currentCheck.registeredInfo && (
+                <>
+                  <div className="border-t border-[#E2E8F0]" />
                   <div>
-                    <p className="text-[10px] text-[#94A3B8]">{t(localizationConstants.kmaColDate)}</p>
-                    <p className="text-[#374151]">2024-01-15</p>
+                    <p className="text-[10px] font-semibold text-[#94A3B8] uppercase tracking-wide mb-2">{t(localizationConstants.kmaRegisteredInfo)}</p>
+                    <div className="space-y-2">
+                      <p className="text-[#374151] font-medium">{currentCheck.registeredInfo.name || "Kalle Andersson"}</p>
+                      {currentCheck.registeredInfo.date && (
+                        <div>
+                          <p className="text-[10px] text-[#94A3B8]">{t(localizationConstants.kmaColDate)}</p>
+                          <p className="text-[#374151]">{currentCheck.registeredInfo.date}</p>
+                        </div>
+                      )}
+                      {currentCheck.registeredInfo.time && (
+                        <div>
+                          <p className="text-[10px] text-[#94A3B8]">Time</p>
+                          <p className="text-[#374151]">{currentCheck.registeredInfo.time}</p>
+                        </div>
+                      )}
+                      {currentCheck.registeredInfo.control && (
+                        <div>
+                          <p className="text-[10px] text-[#94A3B8]">{t(localizationConstants.kmaColControl)}</p>
+                          <p className="text-[#374151]">{currentCheck.registeredInfo.control}</p>
+                        </div>
+                      )}
+                      {currentCheck.registeredInfo.comment && (
+                        <div>
+                          <p className="text-[10px] text-[#94A3B8]">{t(localizationConstants.kmaFieldComment)}</p>
+                          <p className="text-[#374151]">{currentCheck.registeredInfo.comment}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-[#94A3B8]">Time</p>
-                    <p className="text-[#374151]">09:37</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-[#94A3B8]">{t(localizationConstants.kmaColControl)}</p>
-                    <p className="text-[#374151]">Bank-id (Timeflow-sign)</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-[#94A3B8]">{t(localizationConstants.kmaFieldComment)}</p>
-                    <p className="text-[#374151]">Vi kontrollerade golvet och det är perfekt för att lägga klinker.</p>
-                  </div>
-                </div>
-              </div>
+                </>
+              )}
             </div>
           )}
-          {rightTab === "foto"      && <div className="p-4 text-xs text-[#94A3B8] text-center py-12">{t(localizationConstants.kmaNoPhotos)}</div>}
+          {rightTab === "foto" && <div className="p-4 text-xs text-[#94A3B8] text-center py-12">{t(localizationConstants.kmaNoPhotos)}</div>}
           {rightTab === "avvikelse" && <div className="p-4 text-xs text-[#94A3B8] text-center py-12">{t(localizationConstants.kmaNoDeviations)}</div>}
         </div>
       </div>
@@ -768,20 +1027,66 @@ function SecureCheckDetail({ check, onBack }: { check: SecureCheck; onBack: () =
 
 const STATUS_STYLE = {
   completed: { bg: "bg-[#F0FDF4]", text: "text-[#047857]", label: "Completed" },
-  pending:   { bg: "bg-amber-50",  text: "text-amber-600",  label: "Pending"   },
+  pending: { bg: "bg-amber-50", text: "text-amber-600", label: "Pending" },
 };
 
-function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) => void }) {
+function SecureCheckListView({
+  projectId,
+  onRowClick,
+}: {
+  projectId?: string;
+  onRowClick: (check: SecureCheck) => void;
+}) {
   const t = useTranslate();
-  const [page, setPage]               = useState(1);
+  const [checks, setChecks] = useState<SecureCheck[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const { openMenu, menuAnchor, handleOpen } = useRowMenu();
 
-  const totalChecks     = DUMMY_SECURE_CHECKS.length;
-  const completedChecks = DUMMY_SECURE_CHECKS.filter((c) => c.status === "completed").length;
+  const { openMenu, menuAnchor, handleOpen, setOpenMenu } = useRowMenu();
 
-  const totalPages = Math.max(1, Math.ceil(DUMMY_SECURE_CHECKS.length / rowsPerPage));
-  const pageRows   = DUMMY_SECURE_CHECKS.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!projectId) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+      setLoading(true);
+      const res = await getProjectSecureChecksAPIAction(projectId);
+      if (cancelled) return;
+      if (res.success && res.data) {
+        setChecks(res.data);
+      } else if (!res.success) {
+        showToast("error", res.error || "Failed to load secure checks");
+      }
+      setLoading(false);
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId]);
+
+  const handleDelete = async (checkId: string) => {
+    if (!projectId) return;
+    setOpenMenu(null);
+    const prevChecks = checks;
+    setChecks((prev) => prev.filter((c) => c.id !== checkId));
+    const res = await deleteProjectSecureCheckAPIAction(projectId, checkId);
+    if (res.success) {
+      showToast("success", "Secure check deleted successfully");
+    } else {
+      setChecks(prevChecks);
+      showToast("error", res.error || "Failed to delete secure check");
+    }
+  };
+
+  const totalChecks = checks.length;
+  const completedChecks = checks.filter((c) => c.status === "completed").length;
+
+  const totalPages = Math.max(1, Math.ceil(checks.length / rowsPerPage));
+  const pageRows = checks.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
     <div>
@@ -830,8 +1135,14 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
               </tr>
             </thead>
             <tbody>
-              {pageRows.map((check) => {
-                const style = STATUS_STYLE[check.status];
+              {loading ? (
+                <tr>
+                  <td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-500">
+                    <Loader2 className="h-5 w-5 animate-spin mx-auto text-slate-400" />
+                  </td>
+                </tr>
+              ) : pageRows.map((check) => {
+                const style = STATUS_STYLE[check.status] || STATUS_STYLE.pending;
                 return (
                   <tr
                     key={check.id}
@@ -859,7 +1170,7 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
                   </tr>
                 );
               })}
-              {pageRows.length === 0 && (
+              {!loading && pageRows.length === 0 && (
                 <tr><td colSpan={8} className="px-4 py-10 text-center text-sm text-slate-500">No checks match the filter.</td></tr>
               )}
             </tbody>
@@ -890,30 +1201,35 @@ function SecureCheckListView({ onRowClick }: { onRowClick: (check: SecureCheck) 
         </div>
       </div>
 
-      {openMenu && <RowMenuPortal anchor={menuAnchor} />}
+      {openMenu && (
+        <RowMenuPortal
+          anchor={menuAnchor}
+          onDelete={() => openMenu && handleDelete(openMenu)}
+        />
+      )}
     </div>
   );
 }
 
 // ─── Sub-tab: Kvalitetssystem ─────────────────────────────────────────────────
 
-function KvalitetssystemSubTab() {
+function KvalitetssystemSubTab({ projectId }: { projectId?: string }) {
   const t = useTranslate();
-  const [view, setView]                       = useState<KvalView>("kvalitetssystem");
+  const [view, setView] = useState<KvalView>("kvalitetssystem");
   const [selectedControl, setSelectedControl] = useState<KmaControl | null>(null);
 
   const KVAL_OPTIONS: { value: KvalView; label: string }[] = [
     { value: "kvalitetssystem", label: t(localizationConstants.kmaSubTabQualitySystem) },
-    { value: "kontrollplan",    label: t(localizationConstants.kmaViewControlPlan)      },
-    { value: "riskhantering",   label: t(localizationConstants.kmaViewRiskManagement)   },
-    { value: "checklista",      label: t(localizationConstants.kmaViewChecklist)        },
+    { value: "kontrollplan", label: t(localizationConstants.kmaViewControlPlan) },
+    { value: "riskhantering", label: t(localizationConstants.kmaViewRiskManagement) },
+    { value: "checklista", label: t(localizationConstants.kmaViewChecklist) },
   ];
 
   const KVAL_SPLIT_TITLES: Record<KvalView, string> = {
     kvalitetssystem: "",
-    kontrollplan:    t(localizationConstants.kmaViewControlPlan),
-    riskhantering:   t(localizationConstants.kmaViewRiskManagement),
-    checklista:      t(localizationConstants.kmaViewChecklist),
+    kontrollplan: t(localizationConstants.kmaViewControlPlan),
+    riskhantering: t(localizationConstants.kmaViewRiskManagement),
+    checklista: t(localizationConstants.kmaViewChecklist),
   };
 
   if (selectedControl) {
@@ -922,7 +1238,14 @@ function KvalitetssystemSubTab() {
       source: "Kontrollplan", datumKontroll: selectedControl.lastUpdated,
       utfordAv: selectedControl.createdBy, status: "pending",
     };
-    return <SecureCheckDetail check={asCheck} onBack={() => setSelectedControl(null)} />;
+    return (
+      <SecureCheckDetail
+        check={asCheck}
+        projectId={projectId}
+        isControl={true}
+        onBack={() => setSelectedControl(null)}
+      />
+    );
   }
 
   return (
@@ -931,9 +1254,12 @@ function KvalitetssystemSubTab() {
         <ViewDropdown value={view} options={KVAL_OPTIONS} onChange={setView} />
       </div>
       {view === "kvalitetssystem" ? (
-        <KMADocTable showFilters={false} />
+        <KMADocTable projectId={projectId} kmaCategory="Quality System" showFilters={false} />
       ) : (
         <SplitView
+          projectId={projectId}
+          subTab="kvalitetssystem"
+          viewType={view}
           colName={t(localizationConstants.kmaColControl)}
           title={KVAL_SPLIT_TITLES[view]}
           onRowClick={setSelectedControl}
@@ -946,13 +1272,13 @@ function KvalitetssystemSubTab() {
 
 // ─── Sub-tab: Miljösystem ─────────────────────────────────────────────────────
 
-function MiljosystemSubTab() {
+function MiljosystemSubTab({ projectId }: { projectId?: string }) {
   const t = useTranslate();
   const [view, setView] = useState<MiljoView>("miljosystem");
 
   const MILJO_OPTIONS: { value: MiljoView; label: string }[] = [
-    { value: "miljosystem", label: t(localizationConstants.kmaSubTabEnvironment)    },
-    { value: "miljoplan",   label: t(localizationConstants.kmaViewEnvironmentalPlan) },
+    { value: "miljosystem", label: t(localizationConstants.kmaSubTabEnvironment) },
+    { value: "miljoplan", label: t(localizationConstants.kmaViewEnvironmentalPlan) },
   ];
 
   return (
@@ -961,9 +1287,21 @@ function MiljosystemSubTab() {
         <ViewDropdown value={view} options={MILJO_OPTIONS} onChange={setView} />
       </div>
       {view === "miljosystem" ? (
-        <StandaloneControlView colName={t(localizationConstants.kmaSubTabEnvironment)} showFilters={false} />
+        <StandaloneControlView
+          projectId={projectId}
+          subTab="miljosystem"
+          viewType="miljosystem"
+          colName={t(localizationConstants.kmaSubTabEnvironment)}
+          showFilters={false}
+        />
       ) : (
-        <SplitView colName={t(localizationConstants.kmaSubTabEnvironment)} title={t(localizationConstants.kmaViewEnvironmentalPlan)} />
+        <SplitView
+          projectId={projectId}
+          subTab="miljosystem"
+          viewType="miljoplan"
+          colName={t(localizationConstants.kmaSubTabEnvironment)}
+          title={t(localizationConstants.kmaViewEnvironmentalPlan)}
+        />
       )}
     </div>
   );
@@ -971,12 +1309,12 @@ function MiljosystemSubTab() {
 
 // ─── Sub-tab: Arbetsmiljö ─────────────────────────────────────────────────────
 
-function ArbetsmiljoSubTab() {
+function ArbetsmiljoSubTab({ projectId }: { projectId?: string }) {
   const t = useTranslate();
   const [view, setView] = useState<ArbView>("arbetsmiljo");
 
   const ARB_OPTIONS: { value: ArbView; label: string }[] = [
-    { value: "arbetsmiljo",     label: t(localizationConstants.kmaSubTabWorkEnv)  },
+    { value: "arbetsmiljo", label: t(localizationConstants.kmaSubTabWorkEnv) },
     { value: "arbetsmiljoplan", label: t(localizationConstants.kmaViewWorkEnvPlan) },
   ];
 
@@ -986,9 +1324,15 @@ function ArbetsmiljoSubTab() {
         <ViewDropdown value={view} options={ARB_OPTIONS} onChange={setView} />
       </div>
       {view === "arbetsmiljo" ? (
-        <KMADocTable showFilters={false} />
+        <KMADocTable projectId={projectId} kmaCategory="Work Environment" showFilters={false} />
       ) : (
-        <SplitView colName={t(localizationConstants.kmaSubTabWorkEnv)} title={t(localizationConstants.kmaViewWorkEnvPlan)} />
+        <SplitView
+          projectId={projectId}
+          subTab="arbetsmiljo"
+          viewType="arbetsmiljoplan"
+          colName={t(localizationConstants.kmaSubTabWorkEnv)}
+          title={t(localizationConstants.kmaViewWorkEnvPlan)}
+        />
       )}
     </div>
   );
@@ -996,32 +1340,114 @@ function ArbetsmiljoSubTab() {
 
 // ─── Sub-tab: SecureCheck ─────────────────────────────────────────────────────
 
-function SecureCheckSubTab() {
+function SecureCheckSubTab({ projectId }: { projectId?: string }) {
   const [selectedCheck, setSelectedCheck] = useState<SecureCheck | null>(null);
 
   if (selectedCheck) {
-    return <SecureCheckDetail check={selectedCheck} onBack={() => setSelectedCheck(null)} />;
+    return (
+      <SecureCheckDetail
+        check={selectedCheck}
+        projectId={projectId}
+        onBack={() => setSelectedCheck(null)}
+      />
+    );
   }
-  return <SecureCheckListView onRowClick={setSelectedCheck} />;
+  return <SecureCheckListView projectId={projectId} onRowClick={setSelectedCheck} />;
+}
+
+// ─── Sub-tab: Avvikelser (Deviations) ─────────────────────────────────────────
+
+function DeviationsSubTab({ projectId }: { projectId?: string }) {
+  const [deviations, setDeviations] = useState<QualityDeviation[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      if (!projectId) {
+        if (!cancelled) setLoading(false);
+        return;
+      }
+      setLoading(true);
+      const res = await getProjectQualityDeviationsAPIAction(projectId);
+      if (cancelled) return;
+      if (res.success && res.data) {
+        setDeviations(res.data);
+      } else if (!res.success) {
+        showToast("error", res.error || "Failed to load deviations");
+      }
+      setLoading(false);
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
+  }, [projectId]);
+
+  if (loading) {
+    return (
+      <div className="py-16 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
+        <Loader2 className="h-5 w-5 animate-spin" /> Loading deviations...
+      </div>
+    );
+  }
+
+  if (deviations.length === 0) {
+    return (
+      <div className="py-16 text-center text-slate-400 text-sm">
+        No deviations reported for this project.
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white rounded-md border border-slate-200 overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="border-b border-slate-200 bg-slate-50/50">
+              <th className="px-4 py-3.5 text-left font-medium text-slate-500">Title</th>
+              <th className="px-4 py-3.5 text-left font-medium text-slate-500">Reported By</th>
+              <th className="px-4 py-3.5 text-left font-medium text-slate-500">Date</th>
+              <th className="px-4 py-3.5 text-left font-medium text-slate-500">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {deviations.map((dev) => (
+              <tr key={dev.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+                <td className="px-4 py-3.5 font-medium text-slate-900">{dev.title}</td>
+                <td className="px-4 py-3.5 text-slate-600">{dev.reportedBy || "—"}</td>
+                <td className="px-4 py-3.5 text-slate-600">{dev.dateReported || "—"}</td>
+                <td className="px-4 py-3.5">
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-600 border border-amber-200">
+                    {dev.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
 }
 
 // ─── Main export ──────────────────────────────────────────────────────────────
 
-const subTabBase   = "cursor-pointer h-8 rounded-[6px] border-0 bg-transparent px-3 py-1.5 text-sm font-medium text-slate-500 shadow-none transition-all hover:text-slate-700 select-none whitespace-nowrap";
+const subTabBase = "cursor-pointer h-8 rounded-[6px] border-0 bg-transparent px-3 py-1.5 text-sm font-medium text-slate-500 shadow-none transition-all hover:text-slate-700 select-none whitespace-nowrap";
 const subTabActive = "bg-white text-slate-900 shadow-[0px_1px_2px_rgba(0,0,0,0.05)]";
 
-import type { ActiveProject } from "../../types";
-
-export function QualityTab({ project: _project }: { project?: ActiveProject }) {
+export function QualityTab({ project }: { project?: ActiveProject }) {
   const t = useTranslate();
   const [activeSubTab, setActiveSubTab] = useState<KmaSubTab>("kvalitetssystem");
+  const projectId = project?.id;
 
   const KMA_SUB_TABS: { value: KmaSubTab; label: string }[] = [
     { value: "kvalitetssystem", label: t(localizationConstants.kmaSubTabQualitySystem) },
-    { value: "miljosystem",     label: t(localizationConstants.kmaSubTabEnvironment)   },
-    { value: "arbetsmiljo",     label: t(localizationConstants.kmaSubTabWorkEnv)       },
-    { value: "securecheck",     label: "Secure Checks"                                 },
-    { value: "avvikelser",      label: t(localizationConstants.kmaSubTabDeviations)    },
+    { value: "miljosystem", label: t(localizationConstants.kmaSubTabEnvironment) },
+    { value: "arbetsmiljo", label: t(localizationConstants.kmaSubTabWorkEnv) },
+    { value: "securecheck", label: "Secure Checks" },
+    { value: "avvikelser", label: t(localizationConstants.kmaSubTabDeviations) },
   ];
 
   return (
@@ -1039,13 +1465,11 @@ export function QualityTab({ project: _project }: { project?: ActiveProject }) {
         ))}
       </div>
 
-      {activeSubTab === "kvalitetssystem" && <KvalitetssystemSubTab />}
-      {activeSubTab === "miljosystem"     && <MiljosystemSubTab />}
-      {activeSubTab === "arbetsmiljo"     && <ArbetsmiljoSubTab />}
-      {activeSubTab === "securecheck"     && <SecureCheckSubTab />}
-      {activeSubTab === "avvikelser"      && (
-        <div className="py-16 text-center text-slate-400 text-sm">Coming soon</div>
-      )}
+      {activeSubTab === "kvalitetssystem" && <KvalitetssystemSubTab projectId={projectId} />}
+      {activeSubTab === "miljosystem" && <MiljosystemSubTab projectId={projectId} />}
+      {activeSubTab === "arbetsmiljo" && <ArbetsmiljoSubTab projectId={projectId} />}
+      {activeSubTab === "securecheck" && <SecureCheckSubTab projectId={projectId} />}
+      {activeSubTab === "avvikelser" && <DeviationsSubTab projectId={projectId} />}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 import { MoreVertical, Check, X, Plus, Trash2, Eye, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
@@ -213,11 +214,18 @@ const PP_STATUS_OPTIONS: { value: "" | PaymentPlanStatus; label: string }[] = [
   { value: "declined", label: "Declined" },
 ];
 
+import type { ActiveProject } from "../../../types";
+import {
+  saveProjectPaymentPlanAPIAction,
+  updatePaymentPlanStatusAPIAction,
+} from "@/api-actions";
+
 export function PaymentPlanList({
-  plans, onView, onEdit, onCreateNew, onStatusChange,
+  plans, onView, onEdit, onCreateNew, onStatusChange, loading,
 }: {
-  plans: PaymentPlan[]; onView: (id: string) => void; onEdit: (id: string) => void;
+  plans: PaymentPlan[]; onView: (plan: PaymentPlan) => void; onEdit: (plan: PaymentPlan) => void;
   onCreateNew: () => void; onStatusChange: (id: string, status: PaymentPlanStatus) => void;
+  project?: ActiveProject; loading?: boolean;
 }) {
   const [search, setSearch] = useState("");
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
@@ -247,9 +255,14 @@ export function PaymentPlanList({
     setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
   }
 
-  const filtered = plans.filter((p) =>
-    (p.designation.toLowerCase().includes(search.toLowerCase()) || p.idNo.includes(search)) &&
-    (statusFilter === "" || p.status === statusFilter),
+  const filtered = useMemo(
+    () =>
+      plans.filter(
+        (p) =>
+          (p.designation.toLowerCase().includes(search.toLowerCase()) || p.idNo.includes(search)) &&
+          (statusFilter === "" || p.status === statusFilter),
+      ),
+    [plans, search, statusFilter],
   );
 
   return (
@@ -271,30 +284,33 @@ export function PaymentPlanList({
           <TableHeaderCell><Translate text={localizationConstants.financeDateCol} /></TableHeaderCell>
           <div />
         </div>
-        {filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-[#94A3B8]">No payment plans found</div>
-        )}
-        {filtered.map((plan) => (
-          <div key={plan.id} onClick={() => onView(plan.id)}
-            className="grid grid-cols-[100px_1fr_150px_46px] border-b border-[#E8EEF3] last:border-b-0 hover:bg-[#FAFAFA] transition-colors cursor-pointer">
-            <div className="h-14 flex items-center px-4 text-sm font-medium text-[#020617]">{plan.idNo}</div>
-            <div className="h-14 flex items-center px-4 text-sm text-[#374151]">{plan.designation}</div>
-            <div className="h-14 flex items-center px-4 text-sm text-[#64748B]">{plan.date}</div>
-            <div onClick={(e) => e.stopPropagation()}>
-              <PaymentPlanActionsMenu
-                open={openMenuId === plan.id}
-                onOpenChange={(v) => setOpenMenuId(v ? plan.id : null)}
-                status={plan.status}
-                onView={() => onView(plan.id)}
-                onEdit={() => onEdit(plan.id)}
-                onApprove={() => onStatusChange(plan.id, "approved")}
-                onDecline={() => onStatusChange(plan.id, "declined")}
-              />
-            </div>
-          </div>
-        ))}
-        {filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-[#94A3B8]">No payment plans match the filter.</div>
+        {loading ? (
+          <div className="py-12 text-center text-sm text-[#94A3B8]">Loading payment plans...</div>
+        ) : (
+          <>
+            {filtered.map((plan) => (
+              <div key={plan.id} onClick={() => onView(plan)}
+                className="grid grid-cols-[100px_1fr_150px_46px] border-b border-[#E8EEF3] last:border-b-0 hover:bg-[#FAFAFA] transition-colors cursor-pointer">
+                <div className="h-14 flex items-center px-4 text-sm font-medium text-[#020617]">{plan.idNo}</div>
+                <div className="h-14 flex items-center px-4 text-sm text-[#374151]">{plan.designation}</div>
+                <div className="h-14 flex items-center px-4 text-sm text-[#64748B]">{plan.date}</div>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <PaymentPlanActionsMenu
+                    open={openMenuId === plan.id}
+                    onOpenChange={(v) => setOpenMenuId(v ? plan.id : null)}
+                    status={plan.status}
+                    onView={() => onView(plan)}
+                    onEdit={() => onEdit(plan)}
+                    onApprove={() => onStatusChange(plan.id, "approved")}
+                    onDecline={() => onStatusChange(plan.id, "declined")}
+                  />
+                </div>
+              </div>
+            ))}
+            {filtered.length === 0 && (
+              <div className="py-12 text-center text-sm text-[#94A3B8]">No payment plans match the filter.</div>
+            )}
+          </>
         )}
       </div>
 
@@ -325,11 +341,16 @@ export function PaymentPlanList({
 
 // ─── Payment plan create ──────────────────────────────────────────────────────
 
-export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: () => void; onCreate: (plan: PaymentPlan) => void; plansCount: number }) {
-  const projectNo = "2024-01";
+export function PaymentPlanCreate({
+  onBack, onCreate, plansCount, project,
+}: {
+  onBack: () => void; onCreate: (plan: PaymentPlan) => void; plansCount: number; project?: ActiveProject;
+}) {
+  const projectNo = project?.projectNo || project?.clientNo || "2024-01";
   const [rows, setRows] = useState<PaymentPlanRow[]>([
     { id: newRowId(), date: "", paymentItem: "", description: "", amount: 0, withheldFunds: 0, rgt: 0 },
   ]);
+  const [saving, setSaving] = useState(false);
 
   function addRow() {
     setRows((prev) => [...prev, { id: newRowId(), date: "", paymentItem: "", description: "", amount: 0, withheldFunds: 0, rgt: 0 }]);
@@ -369,6 +390,37 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
     localizationConstants.financeRgtCol,
     localizationConstants.financeTotalCol,
   ];
+
+  const handleCreatePlan = async () => {
+    const newPlan: PaymentPlan = {
+      id: newRowId(),
+      idNo: String(plansCount + 1).padStart(3, "0"),
+      designation: `Payment Plan ${plansCount + 1}`,
+      date: new Date().toISOString().slice(0, 10),
+      projectNo,
+      status: "draft",
+      rows,
+    };
+
+    let planToCreate = newPlan;
+
+    if (project?.id) {
+      setSaving(true);
+      try {
+        const res = await saveProjectPaymentPlanAPIAction(project.id, newPlan);
+        if (!res?.success) {
+          toast.error(res?.error || "Failed to create payment plan");
+          return;
+        }
+        if (res.data) {
+          planToCreate = res.data as PaymentPlan;
+        }
+      } finally {
+        setSaving(false);
+      }
+    }
+    onCreate(planToCreate);
+  };
 
   return (
     <div className="pb-10">
@@ -455,13 +507,7 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
           className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
           <Translate text={localizationConstants.financeCancelLabel} />
         </button>
-        <Button onClick={() => onCreate({
-          id: newRowId(),
-          idNo: String(plansCount + 1).padStart(3, "0"),
-          designation: `Payment Plan ${plansCount + 1}`,
-          date: new Date().toISOString().slice(0, 10),
-          projectNo, status: "draft", rows,
-        })} className="h-9 px-5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
+        <Button onClick={handleCreatePlan} disabled={saving} className="h-9 px-5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
           <Translate text={localizationConstants.financeSaveLabel} />
         </Button>
       </div>
@@ -472,11 +518,11 @@ export function PaymentPlanCreate({ onBack, onCreate, plansCount }: { onBack: ()
 // ─── Payment plan view / edit ─────────────────────────────────────────────────
 
 export function PaymentPlanViewEdit({
-  plan, mode, onBack, onSave, onStatusChange, onSwitchToEdit,
+  plan, mode, onBack, onSave, onStatusChange, onSwitchToEdit, project,
 }: {
   plan: PaymentPlan; mode: "view" | "edit"; onBack: () => void;
   onSave: (updated: PaymentPlan) => void; onStatusChange: (status: PaymentPlanStatus) => void;
-  onSwitchToEdit: () => void;
+  onSwitchToEdit: () => void; project?: ActiveProject;
 }) {
   const [rows, setRows] = useState<PaymentPlanRow[]>(plan.rows);
   const [showDeclineDialog, setShowDeclineDialog] = useState(false);
@@ -493,6 +539,30 @@ export function PaymentPlanViewEdit({
   function addRow() {
     setRows((prev) => [...prev, { id: newRowId(), date: "", paymentItem: "", description: "", amount: 0, withheldFunds: 0, rgt: 0 }]);
   }
+
+  const handleStatusChangeInternal = async (status: PaymentPlanStatus, reason?: string) => {
+    if (project?.id) {
+      const res = await updatePaymentPlanStatusAPIAction(project.id, plan.id, status, reason);
+      if (!res?.success) {
+        toast.error(res?.error || "Failed to update status");
+        return false;
+      }
+    }
+    onStatusChange(status);
+    return true;
+  };
+
+  const handleSaveInternal = async (updated: PaymentPlan) => {
+    if (project?.id) {
+      const res = await saveProjectPaymentPlanAPIAction(project.id, updated);
+      if (!res?.success) {
+        toast.error(res?.error || "Failed to save payment plan");
+        return false;
+      }
+    }
+    onSave(updated);
+    return true;
+  };
 
   return (
     <div className="pb-10">
@@ -523,7 +593,7 @@ export function PaymentPlanViewEdit({
             )}
             {plan.status === "pending" && (
               <>
-                <button type="button" onClick={() => onStatusChange("approved")}
+                <button type="button" onClick={() => handleStatusChangeInternal("approved")}
                   className="cursor-pointer inline-flex items-center gap-1.5 h-9 px-3 text-sm font-medium text-[#16A34A] bg-[#DCFCE7] border border-[#BBF7D0] rounded-md hover:bg-[#BBFCD0] transition-colors">
                   <Check className="h-3.5 w-3.5" /> Approve
                 </button>
@@ -552,7 +622,7 @@ export function PaymentPlanViewEdit({
             className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
             <Translate text={localizationConstants.financeCancelLabel} />
           </button>
-          <Button onClick={() => onSave({ ...plan, rows })} className="h-9 px-5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
+          <Button onClick={() => handleSaveInternal({ ...plan, rows })} className="h-9 px-5 bg-[#09090B] text-white text-sm font-medium hover:bg-[#27272A]">
             <Translate text={localizationConstants.financeSaveLabel} />
           </Button>
         </div>
@@ -571,7 +641,10 @@ export function PaymentPlanViewEdit({
                 className="cursor-pointer h-9 px-4 text-sm font-medium text-[#374151] border border-[#E2E8F0] rounded-md hover:bg-slate-50">
                 Cancel
               </button>
-              <Button onClick={() => { onStatusChange("declined"); setShowDeclineDialog(false); }}
+              <Button onClick={async () => {
+                const success = await handleStatusChangeInternal("declined", declineReason.trim() || undefined);
+                if (success) setShowDeclineDialog(false);
+              }}
                 className="h-9 px-4 bg-[#DC2626] text-white text-sm font-medium hover:bg-[#B91C1C]">
                 Confirm Decline
               </Button>
@@ -582,3 +655,4 @@ export function PaymentPlanViewEdit({
     </div>
   );
 }
+
