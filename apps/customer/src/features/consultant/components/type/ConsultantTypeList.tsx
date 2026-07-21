@@ -5,6 +5,7 @@ import { ChevronDown, Folder } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { consultantTypeNameKey } from "../../utils/typeName";
 import type { ConsultantTypeItem } from "../../types/consultantType";
 
 interface ConsultantTypeListProps {
@@ -57,7 +58,9 @@ export function ConsultantTypeList({
 							>
 								<Folder className="h-4 w-4 shrink-0 text-slate-400" />
 								<span className="truncate">
-									<Translate text={type.name} />
+									<Translate
+										text={consultantTypeNameKey(type.name)}
+									/>
 								</span>
 							</button>
 						</li>

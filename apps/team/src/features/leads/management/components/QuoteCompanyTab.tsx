@@ -12,12 +12,12 @@ import { QuoteCompanyPersonnelSection } from "@/features/leads/management/compon
 
 export default function QuoteCompanyTab({ detail }: { detail: QuoteDetail }) {
   const companyDetails = useMemo(() => getCompanyDetails(detail), [detail]);
-  const creditInfo = useMemo(() => getCreditInfo(detail), [detail]);
+  const creditInfo = useMemo(() => getCreditInfo(), []);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 mb-10">
       <QuoteCompanyHeroSection />
       <QuoteCompanyDetailsSection companyDetails={companyDetails} creditInfo={creditInfo} />
       <QuoteCompanyFiltersSection

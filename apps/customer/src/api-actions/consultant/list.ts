@@ -19,6 +19,15 @@ export interface ConsultantListPayload {
 	totalItems: number;
 }
 
+interface ApplicationItem {
+	id: string;
+	consultant_type_id?: string;
+	project_name?: string;
+	status: string;
+	created_at: number;
+	company?: { company_name?: string; email?: string; phone?: string };
+}
+
 export async function getConsultantListAPIAction(
 	params: GetConsultantListParams = {},
 ): Promise<ActionResult<ConsultantListPayload>> {
@@ -53,15 +62,7 @@ export async function getConsultantListAPIAction(
 		);
 
 		const data = response.data?.data || [];
-		
-		interface ApplicationItem {
-			id: string;
-			consultant_type_id?: string;
-			project_name?: string;
-			status: string;
-			created_at: number;
-			company?: { company_name?: string; email?: string; phone?: string };
-		}
+
 		const consultants: Consultant[] = (data as ApplicationItem[]).map((item) => ({
 			id: item.id,
 			name: item.company?.company_name || "Unknown Company",

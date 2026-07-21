@@ -51,7 +51,7 @@ export default function LeadRequestTab({ requestDetails }: LeadRequestTabProps) 
 							<div className="text-sm font-semibold text-slate-900">
 								<Translate text={localizationConstants.projectDocuments} />
 							</div>
-							<div className="max-w-129">
+							<div className="max-w-129 [&>div]:scrollbar-thin [&>div::-webkit-scrollbar]:h-0.75 [&>div::-webkit-scrollbar-track]:bg-transparent [&>div::-webkit-scrollbar-thumb]:rounded-full [&>div::-webkit-scrollbar-thumb]:bg-slate-100">
 								<Table>
 									<TableHeader>
 										<TableRow className="h-12">
