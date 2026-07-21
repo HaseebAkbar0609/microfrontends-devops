@@ -263,7 +263,7 @@ function KMADocTable({
   showCreateBtn = true,
   showFilters = true,
 }: {
-  projectId: string;
+  projectId?: string;
   kmaCategory?: string;
   showCreateBtn?: boolean;
   showFilters?: boolean;
@@ -310,6 +310,7 @@ function KMADocTable({
   }, [projectId, kmaCategory, fileType, debouncedSearch]);
 
   const handleDelete = async (docId: string) => {
+    if (!projectId) return;
     setOpenMenu(null);
     const prevDocs = documents;
     setDocuments((prev) => prev.filter((d) => d.id !== docId));
@@ -456,7 +457,7 @@ function ControlTableRows({
   onRowClick,
   showFilters = true,
 }: {
-  projectId: string;
+  projectId?: string;
   subTab?: string;
   viewType?: string;
   folderId?: string | null;
@@ -508,6 +509,7 @@ function ControlTableRows({
   }, [projectId, subTab, viewType, folderId, debouncedSearch, creator]);
 
   const handleDelete = async (controlId: string) => {
+    if (!projectId) return;
     setOpenMenu(null);
     const prevControls = controls;
     setControls((prev) => prev.filter((c) => c.id !== controlId));
@@ -649,7 +651,7 @@ function StandaloneControlView({
   colName,
   showFilters = true,
 }: {
-  projectId: string;
+  projectId?: string;
   subTab?: string;
   viewType?: string;
   colName: string;
@@ -677,7 +679,7 @@ function SplitView({
   onRowClick,
   showFilters = true,
 }: {
-  projectId: string;
+  projectId?: string;
   subTab: string;
   viewType: string;
   colName: string;
@@ -779,7 +781,7 @@ function SecureCheckDetail({
   isControl = false,
 }: {
   check: SecureCheck;
-  projectId: string;
+  projectId?: string;
   onBack: () => void;
   onStatusChange?: () => void;
   isControl?: boolean;
@@ -790,7 +792,7 @@ function SecureCheckDetail({
   const [currentCheck, setCurrentCheck] = useState<SecureCheck>(check);
 
   const handleMarkDone = async () => {
-    if (isControl) return;
+    if (isControl || !projectId) return;
     const prevCheck = currentCheck;
     const nextStatus = currentCheck.status === "completed" ? "pending" : "completed";
     setCurrentCheck((prev) => ({ ...prev, status: nextStatus }));
@@ -1026,7 +1028,7 @@ function SecureCheckListView({
   projectId,
   onRowClick,
 }: {
-  projectId: string;
+  projectId?: string;
   onRowClick: (check: SecureCheck) => void;
 }) {
   const t = useTranslate();
@@ -1061,6 +1063,7 @@ function SecureCheckListView({
   }, [projectId]);
 
   const handleDelete = async (checkId: string) => {
+    if (!projectId) return;
     setOpenMenu(null);
     const prevChecks = checks;
     setChecks((prev) => prev.filter((c) => c.id !== checkId));
@@ -1204,7 +1207,7 @@ function SecureCheckListView({
 
 // ─── Sub-tab: Kvalitetssystem ─────────────────────────────────────────────────
 
-function KvalitetssystemSubTab({ projectId }: { projectId: string }) {
+function KvalitetssystemSubTab({ projectId }: { projectId?: string }) {
   const t = useTranslate();
   const [view, setView] = useState<KvalView>("kvalitetssystem");
   const [selectedControl, setSelectedControl] = useState<KmaControl | null>(null);
@@ -1263,7 +1266,7 @@ function KvalitetssystemSubTab({ projectId }: { projectId: string }) {
 
 // ─── Sub-tab: Miljösystem ─────────────────────────────────────────────────────
 
-function MiljosystemSubTab({ projectId }: { projectId: string }) {
+function MiljosystemSubTab({ projectId }: { projectId?: string }) {
   const t = useTranslate();
   const [view, setView] = useState<MiljoView>("miljosystem");
 
@@ -1300,7 +1303,7 @@ function MiljosystemSubTab({ projectId }: { projectId: string }) {
 
 // ─── Sub-tab: Arbetsmiljö ─────────────────────────────────────────────────────
 
-function ArbetsmiljoSubTab({ projectId }: { projectId: string }) {
+function ArbetsmiljoSubTab({ projectId }: { projectId?: string }) {
   const t = useTranslate();
   const [view, setView] = useState<ArbView>("arbetsmiljo");
 
@@ -1331,7 +1334,7 @@ function ArbetsmiljoSubTab({ projectId }: { projectId: string }) {
 
 // ─── Sub-tab: SecureCheck ─────────────────────────────────────────────────────
 
-function SecureCheckSubTab({ projectId }: { projectId: string }) {
+function SecureCheckSubTab({ projectId }: { projectId?: string }) {
   const [selectedCheck, setSelectedCheck] = useState<SecureCheck | null>(null);
 
   if (selectedCheck) {
@@ -1348,7 +1351,7 @@ function SecureCheckSubTab({ projectId }: { projectId: string }) {
 
 // ─── Sub-tab: Avvikelser (Deviations) ─────────────────────────────────────────
 
-function DeviationsSubTab({ projectId }: { projectId: string }) {
+function DeviationsSubTab({ projectId }: { projectId?: string }) {
   const [deviations, setDeviations] = useState<QualityDeviation[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -1431,7 +1434,7 @@ const subTabActive = "bg-white text-slate-900 shadow-[0px_1px_2px_rgba(0,0,0,0.0
 export function QualityTab({ project }: { project?: ActiveProject }) {
   const t = useTranslate();
   const [activeSubTab, setActiveSubTab] = useState<KmaSubTab>("kvalitetssystem");
-  const projectId = project?.id || "";
+  const projectId = project?.id;
 
   const KMA_SUB_TABS: { value: KmaSubTab; label: string }[] = [
     { value: "kvalitetssystem", label: t(localizationConstants.kmaSubTabQualitySystem) },
