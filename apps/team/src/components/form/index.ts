@@ -16,6 +16,3 @@ export type {
 
 export { FormFileUpload } from "./FormFileUpload";
 export type { FormFileUploadProps } from "./FormFileUpload";
-
-export { FormSwitch } from "./FormSwitch";
-export type { FormSwitchProps } from "./FormSwitch";

@@ -20,6 +20,8 @@ export interface User {
   private_email: string;
   address: string;
   city: string;
+  city_id?: string | null;
+  country_id?: string | null;
   postal_code: string;
   personal_number: string;
   profile_photo?: string | null;
@@ -28,6 +30,7 @@ export interface User {
   last_login: string;
   status: UserStatus;
   permissions: UserPermissions;
+  created_by?: string | null;
 }
 
 export type UserColumnField = keyof User | "actions";

@@ -9,6 +9,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { getConsultantRequestsAPIAction } from "@/api-actions";
 import type { ConsultantRequest } from "../../types/consultantRequest";
 import { ConsultantRequestsTable } from "./ConsultantRequestsTable";
+import { CONSULTANT_REQUEST_FILTER_OPTIONS } from "../../constants/directory";
 
 export function ConsultantRequestsPanel() {
 	const router = useRouter();
@@ -51,7 +52,7 @@ export function ConsultantRequestsPanel() {
 		<div className="flex flex-col">
 			<ActionsToolbar
 				searchValue=""
-				onSearchChange={() => {}}
+				onSearchChange={() => { }}
 				showSearch={false}
 				showFilters={false}
 				onCreateClick={() =>

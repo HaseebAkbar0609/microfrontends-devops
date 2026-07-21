@@ -18,6 +18,12 @@ import {
 	USER_PROFILE_TABS_LIST_CLASS,
 } from "../constants";
 
+import {
+	createCustomerUserAPIAction,
+	updateCustomerUserAPIAction,
+	deleteCustomerUserAPIAction,
+} from "@/api-actions/users";
+import { showToast } from "@/lib/toast";
 import type { User } from "../types/types";
 import { getUserProfileActions, maskPersonalNumber } from "../utils/userFormatters";
 
@@ -75,15 +81,66 @@ export function UserProfileForm({
 		},
 	});
 
-	const onSubmit = async (values: UserProfileFormValues) => {
-		const _payload = {
-			...values,
-			personal_number: isEdit && user ? user.personal_number : values.personal_number,
-		};
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-		// API integration pending backend endpoint; save is mocked intentionally.
-		setIsSaved(true);
-		onSaved();
+	const onSubmit = async (values: UserProfileFormValues) => {
+		try {
+			setIsSubmitting(true);
+			const payload = {
+				first_name: values.first_name,
+				last_name: values.last_name,
+				email: values.private_email,
+				phone_number: values.mobile_number,
+				address: values.address,
+				city_name: values.city,
+				city_id: user?.city_id ?? undefined,
+				country_id: user?.country_id ?? "8d3b611b-6609-4302-b35c-9e42df7e8edb",
+				postal_code: values.postal_code,
+				personal_id: isEdit && user ? user.personal_number : values.personal_number,
+				permissions: values.permissions,
+			};
+
+			let result;
+			if (isEdit && user?.id) {
+				result = await updateCustomerUserAPIAction(user.id, payload);
+			} else {
+				result = await createCustomerUserAPIAction(payload);
+			}
+
+			if (result.success) {
+				if (result.error) {
+					showToast("warning", result.error);
+				} else {
+					showToast("success", "User saved successfully");
+				}
+				setIsSaved(true);
+				onSaved();
+			} else {
+				showToast("error", result.error || "Failed to save user");
+			}
+		} catch {
+			showToast("error", "An error occurred while saving user");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	const handleDelete = async () => {
+		if (!user?.id) return;
+		try {
+			setIsSubmitting(true);
+			const result = await deleteCustomerUserAPIAction(user.id);
+			if (result.success) {
+				showToast("success", "User deleted successfully");
+				onSaved();
+			} else {
+				showToast("error", result.error || "Failed to delete user");
+			}
+		} catch {
+			showToast("error", "An error occurred while deleting user");
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	const personalNumberValue = form.watch("personal_number");
@@ -282,10 +339,8 @@ export function UserProfileForm({
 								type="button"
 								variant="destructive"
 								className={deleteButtonClassName}
-								onClick={() => {
-									// API integration pending backend endpoint; delete is mocked intentionally.
-									onSaved();
-								}}
+								disabled={isSubmitting}
+								onClick={handleDelete}
 							>
 								<Trash2 className="h-4 w-4" />
 								{t(localizationConstants.userFormDeleteButton)}
@@ -293,7 +348,7 @@ export function UserProfileForm({
 						)}
 
 						{!readOnly && (
-							<Button type="submit" className={primaryButtonClassName}>
+							<Button type="submit" className={primaryButtonClassName} disabled={isSubmitting}>
 								<Save className="h-4 w-4" />
 								{t(localizationConstants.userFormSaveButton)}
 							</Button>
