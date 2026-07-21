@@ -2,7 +2,25 @@ import { FileText } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { InfoSection, DetailCard } from "../shared";
 
-export function PersonalInfoCard() {
+interface PersonalInfoCardProps {
+	firstName?: string;
+	lastName?: string;
+	mobileNumber?: string;
+	email?: string;
+	address?: string;
+	city?: string;
+	postalCode?: string;
+}
+
+export function PersonalInfoCard({
+	firstName,
+	lastName,
+	mobileNumber,
+	email,
+	address,
+	city,
+	postalCode,
+}: PersonalInfoCardProps) {
 	return (
 		<DetailCard
 			icon={FileText}
@@ -12,33 +30,33 @@ export function PersonalInfoCard() {
 			<div className="grid grid-cols-2 gap-x-8 gap-y-6">
 				<InfoSection
 					label={localizationConstants.firstNameLabel}
-					value="Anna"
+					value={firstName || "-"}
 				/>
 				<InfoSection
 					label={localizationConstants.lastNameLabel}
-					value="Andersson"
+					value={lastName || "-"}
 				/>
 				<InfoSection
 					label={localizationConstants.mobileNumberLabel}
-					value="070-560 50 50"
+					value={mobileNumber || "-"}
 				/>
 				<InfoSection
 					label={localizationConstants.personalEmailLabel}
-					value="anna@gmail.com"
+					value={email || "-"}
 				/>
 				<div className="col-span-2">
 					<InfoSection
 						label={localizationConstants.addressLabel}
-						value="Stengatan 10"
+						value={address || "-"}
 					/>
 				</div>
 				<InfoSection
 					label={localizationConstants.cityLabel}
-					value="Solna"
+					value={city || "-"}
 				/>
 				<InfoSection
 					label={localizationConstants.postalcode}
-					value="171 63"
+					value={postalCode || "-"}
 				/>
 			</div>
 		</DetailCard>

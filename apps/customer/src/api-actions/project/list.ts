@@ -20,6 +20,7 @@ export interface GetProjectListParams {
 export interface ProjectListPayload {
 	quotes: Quote[];
 	totalItems: number;
+	totalPages?: number;
 }
 
 export async function getProjectListAPIAction(
@@ -35,9 +36,11 @@ export async function getProjectListAPIAction(
 		project_type,
 	} = params;
 
+	const normalizedPageSize = pageSize > 0 ? pageSize : 10;
+
 	const q = new URLSearchParams();
 	q.set("page", String(page));
-	q.set("page_size", String(pageSize));
+	q.set("page_size", String(normalizedPageSize));
 	if (search != null && String(search).trim() !== "") {
 		q.set("search", String(search).trim());
 	}
@@ -67,11 +70,15 @@ export async function getProjectListAPIAction(
 			.map(mapProjectRowToQuote)
 			.filter((row): row is Quote => row !== null);
 
+		const total = parsed.total ?? quotes.length;
+		const totalPages = Math.ceil(total / normalizedPageSize) || 1;
+
 		return {
 			success: true,
 			data: {
 				quotes,
-				totalItems: parsed.total || quotes.length,
+				totalItems: total,
+				totalPages,
 			},
 			error: null,
 		};

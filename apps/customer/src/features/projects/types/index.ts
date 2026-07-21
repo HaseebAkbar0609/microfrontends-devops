@@ -10,9 +10,10 @@ export interface ActiveProject {
 	mobileNumber: string;
 	email: string;
 	address: string;
+	city?: string;
 	postalCode: string;
 	companyName: string;
-	status: "active" | "on-hold" | "completed" | "received-quote" | "draft";
+	status: "active" | "on-hold" | "completed" | "received-quote" | "draft" | "under-review";
 	statusLabel?: string;
 	orderNo?: string;
 	quoteReferenceNo?: string;
@@ -60,7 +61,7 @@ export interface MeetingMinute {
 	title: string;
 	date: string;
 	rating: "good" | "moderate" | "bad";
-	description: string;
+	description?: string;
 }
 
 export interface ProjectQuestion {
@@ -88,3 +89,84 @@ export interface OrgMember {
 	phone: string;
 	mail: string;
 }
+
+export interface ApiQuoteItem {
+	id?: string;
+	project_id?: string;
+	project_name?: string;
+	projectName?: string;
+	name?: string;
+	company_name?: string;
+	companyName?: string;
+	ref_no?: string;
+	refNo?: string;
+	project_code?: string;
+	projectCode?: string;
+	quote_status?: string;
+	status?: string;
+	clientNo?: string;
+	client_no?: string;
+	orderNo?: string;
+	order_no?: string;
+	category?: string;
+	created_at?: string;
+}
+
+export interface ApiProjectDetailItem {
+	id: string;
+	project_id?: string;
+	current_step?: number;
+	is_completed?: boolean;
+	created_at?: string | number;
+	personal_information?: {
+		first_name?: string;
+		last_name?: string;
+		mobile_number?: string;
+		personal_email?: string;
+		address?: string;
+		city?: string;
+		city_name?: string;
+		postal_code?: string;
+	};
+	project_details?: {
+		project_name?: string;
+		ref_no?: string;
+		client_no?: string;
+		project_address?: string;
+		city?: string;
+		city_name?: string;
+		postal_code?: string;
+		directions?: string;
+		project_type?: string;
+		start_date?: string | number;
+		due_date?: string | number;
+		order_no?: string;
+	};
+	suppliers?: {
+		invited_suppliers?: Array<{
+			company_name?: string;
+			first_name?: string;
+			last_name?: string;
+			user_id?: string;
+			company_id?: string;
+		}>;
+	};
+	status?: string;
+	quote_status?: string;
+	projectName?: string;
+	name?: string;
+	ref_no?: string;
+	refNo?: string;
+	client_no?: string;
+	start_date?: string;
+	due_date?: string;
+	contact_person?: string;
+	contact_phone?: string;
+	contact_email?: string;
+	address?: string;
+	postal_code?: string;
+	company_name?: string;
+	order_no?: string;
+	category?: string;
+}
+

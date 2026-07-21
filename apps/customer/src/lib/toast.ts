@@ -2,7 +2,7 @@
 
 import { toast as sonnerToast } from "sonner";
 
-export type ToastType = "success" | "error" | "info";
+export type ToastType = "success" | "error" | "warning" | "info";
 
 export const showToast = (type: ToastType, message: string) => {
   if (type === "success") {
@@ -12,6 +12,11 @@ export const showToast = (type: ToastType, message: string) => {
 
   if (type === "error") {
     sonnerToast.error(message, { richColors: true });
+    return;
+  }
+
+  if (type === "warning") {
+    sonnerToast.warning(message, { richColors: true });
     return;
   }
 

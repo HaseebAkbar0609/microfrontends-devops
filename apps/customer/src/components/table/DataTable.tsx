@@ -370,13 +370,16 @@ export function DataTable<TData>({
 		? BORDERED_ACTIONS_COLUMN_CLASS
 		: ACTIONS_COLUMN_CLASS;
 
-  const totalPages = useMemo(
-    () =>
-      pagination
-        ? Math.max(1, Math.ceil(pagination.totalItems / pagination.pageSize))
-        : 1,
-    [pagination, pagination?.totalItems, pagination?.pageSize],
-  );
+	const totalPages = useMemo(
+		() =>
+			pagination
+				? Math.max(
+					1,
+					Math.ceil(pagination.totalItems / pagination.pageSize),
+				)
+				: 1,
+		[pagination?.totalItems, pagination?.pageSize],
+	);
 
 	const handleSort = useCallback(
 		(field: string) => {
@@ -415,8 +418,8 @@ export function DataTable<TData>({
 										tableStyles.headerCell,
 										"py-3.5 px-4 h-auto text-left whitespace-nowrap",
 										col.sortable &&
-											onSort &&
-											"cursor-pointer select-none",
+										onSort &&
+										"cursor-pointer select-none",
 										col.headerClassName,
 									)}
 									onClick={() =>

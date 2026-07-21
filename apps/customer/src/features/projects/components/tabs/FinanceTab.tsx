@@ -24,9 +24,9 @@ const subTabTriggerClass =
 const subTabActiveClass =
   "h-9 rounded-lg px-4 text-sm font-medium bg-white text-[#0F172A] shadow-sm border border-[#E2E8F0] cursor-pointer";
 
-// ─── FinanceTab ───────────────────────────────────────────────────────────────
+import type { ActiveProject } from "../../types";
 
-export function FinanceTab() {
+export function FinanceTab({ project }: { project?: ActiveProject }) {
   const [view, setView] = useState<FinanceView>({ sub: "budget", mode: "list" });
   const [plans, setPlans] = useState<PaymentPlan[]>(DUMMY_PAYMENT_PLANS);
 
@@ -121,10 +121,10 @@ export function FinanceTab() {
       )}
 
       {view.sub === "add-eat" && view.mode === "list" && (
-        <ATAList onCreateNew={() => setView({ sub: "add-eat", mode: "create" })} />
+        <ATAList project={project} onCreateNew={() => setView({ sub: "add-eat", mode: "create" })} />
       )}
       {view.sub === "add-eat" && view.mode === "create" && (
-        <ATACreateForm onBack={() => setView({ sub: "add-eat", mode: "list" })} />
+        <ATACreateForm project={project} onBack={() => setView({ sub: "add-eat", mode: "list" })} />
       )}
     </div>
   );

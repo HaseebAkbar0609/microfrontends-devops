@@ -33,7 +33,7 @@ export function CertificatesTable({ certificates }: CertificatesTableProps) {
 					<Search
 						placeholder={localizationConstants.searchPlaceholder}
 						wrapperClassName="w-full md:w-64"
-						// className="bg-white border-slate-200 h-9 text-sm rounded-md border"
+					// className="bg-white border-slate-200 h-9 text-sm rounded-md border"
 					/>
 					<Button
 						variant="outline"
