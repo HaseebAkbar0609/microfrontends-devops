@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -17,16 +18,26 @@ export function GuideFolderSection({
 	count,
 	defaultOpen = false,
 	items = [],
+	href,
 	selectedDocument,
 	onSelectDocument,
 }: GuideFolderSectionProps) {
+	const router = useRouter();
 	const [open, setOpen] = useState(defaultOpen);
+
+	const handleFolderClick = () => {
+		if (items.length > 0) {
+			setOpen(!open);
+		} else if (href) {
+			router.push(href);
+		}
+	};
 
 	return (
 		<div>
 			<button
 				type="button"
-				onClick={() => setOpen(!open)}
+				onClick={handleFolderClick}
 				className="flex w-full items-center rounded-md px-2 py-1.5 text-left transition-colors hover:bg-slate-100"
 			>
 				{open ? (
@@ -56,7 +67,11 @@ export function GuideFolderSection({
 						<button
 							type="button"
 							key={item.id}
-							onClick={() => onSelectDocument(item.id)}
+							onClick={() =>
+								item.href
+									? router.push(item.href)
+									: onSelectDocument(item.id)
+							}
 							className={cn(
 								"flex h-8 w-full items-center rounded-md pl-10 pr-2 text-left text-sm transition-colors",
 								selectedDocument === item.id
