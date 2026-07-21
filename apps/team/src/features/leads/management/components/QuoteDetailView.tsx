@@ -13,6 +13,7 @@ import QuoteItemsCard from "@/features/leads/management/components/QuoteItemsCar
 import QuoteReferencesTab from "@/features/leads/management/components/QuoteReferencesTab";
 import QuoteCompanyTab from "@/features/leads/management/components/QuoteCompanyTab";
 import { useLeadQuoteDetails } from "@/features/leads/queries/useLeadQuoteDetails";
+import { findDummyLeadByLeadNumber } from "@/features/leads/management/constants/dummyLeadLookup";
 
 type QuoteDetailViewProps = {
 	leadId: string;
@@ -32,7 +33,8 @@ export default function QuoteDetailView({ leadId, quoteId }: QuoteDetailViewProp
 	const quoteDetail = quoteDetailQuery.data;
 
 	const sourceParam = searchParams.get("source");
-	const backHref = `/leads/management/${leadId}?tab=quote-list${sourceParam ? `&source=${sourceParam}` : ""}`;
+	const resolvedLeadId = findDummyLeadByLeadNumber(leadId)?.id ?? leadId;
+	const backHref = `/leads/management/${resolvedLeadId}?tab=quote-list${sourceParam ? `&source=${sourceParam}` : ""}`;
 
 	if (!quoteDetail) {
 		return (

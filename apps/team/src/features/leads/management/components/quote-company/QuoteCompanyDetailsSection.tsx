@@ -38,12 +38,19 @@ export function QuoteCompanyDetailsSection({
       </div>
 
       <div className="rounded-2xl border border-slate-200 bg-white">
-        <div className="flex items-center gap-3 border-b border-slate-200 px-6 py-4">
-          <span className="flex items-center justify-center">
-            <FileText className="h-5 w-5" />
-          </span>
-          <div className="text-sm font-semibold text-slate-900">
-            <Translate text={localizationConstants.creditInformationTitle} />
+        <div className="flex items-center justify-between gap-3 border-b border-slate-200 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center justify-center">
+              <FileText className="h-5 w-5" />
+            </span>
+            <div className="text-sm font-semibold text-slate-900">
+              <Translate text={localizationConstants.creditInformationTitle} />
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
+            <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
+            <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
           </div>
         </div>
         <div className="px-6 py-5">

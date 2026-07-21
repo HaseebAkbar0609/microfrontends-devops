@@ -129,30 +129,6 @@
 		stroke: currentColor;
 	}
 }
-/* Custom Scrollbar Styles */
-::-webkit-scrollbar {
-	width: 8px;
-	height: 8px;
-}
-
-::-webkit-scrollbar-track {
-	background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-	background: var(--scrollbar-thumb, #e2e8f0);
-	border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-	background: #cbd5e1;
-}
-
-* {
-	scrollbar-width: thin;
-	scrollbar-color: #e2e8f0 transparent;
-}
-
 .hide-scrollbar {
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
