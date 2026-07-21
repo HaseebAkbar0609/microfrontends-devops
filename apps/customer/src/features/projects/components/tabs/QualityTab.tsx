@@ -693,8 +693,8 @@ function SplitView({
       if (cancelled) return;
       if (res.success && res.data) {
         setFolders(res.data);
-        if (res.data.length > 0 && !selectedFolder) {
-          setSelectedFolder(res.data[0].id);
+        if (res.data.length > 0) {
+          setSelectedFolder((prev) => prev || (res.data && res.data.length > 0 ? res.data[0].id : null));
         }
       } else if (!res.success) {
         showToast("error", res.error || "Failed to load folders");
@@ -705,7 +705,7 @@ function SplitView({
     return () => {
       cancelled = true;
     };
-  }, [projectId, folderSearch, selectedFolder]);
+  }, [projectId, folderSearch]);
 
   return (
     <div className="flex gap-4">
@@ -758,11 +758,13 @@ function SecureCheckDetail({
   projectId,
   onBack,
   onStatusChange,
+  isControl = false,
 }: {
   check: SecureCheck;
   projectId: string;
   onBack: () => void;
   onStatusChange?: () => void;
+  isControl?: boolean;
 }) {
   const t = useTranslate();
   const [rightTab, setRightTab] = useState<DetailRightTab>("details");
@@ -770,6 +772,7 @@ function SecureCheckDetail({
   const [currentCheck, setCurrentCheck] = useState<SecureCheck>(check);
 
   const handleMarkDone = async () => {
+    if (isControl) return;
     const prevCheck = currentCheck;
     const nextStatus = currentCheck.status === "completed" ? "pending" : "completed";
     setCurrentCheck((prev) => ({ ...prev, status: nextStatus }));
@@ -807,15 +810,17 @@ function SecureCheckDetail({
           <h2 className="text-xl font-semibold text-[#0F172A]">{currentCheck.kontroll}</h2>
           <Star className="h-5 w-5 fill-amber-400 text-amber-400 shrink-0" />
         </div>
-        <button
-          type="button"
-          onClick={handleMarkDone}
-          disabled={updating}
-          className="cursor-pointer shrink-0 h-9 px-4 flex items-center gap-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50"
-        >
-          {updating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
-          {currentCheck.status === "completed" ? "Mark as pending" : "Mark as done"}
-        </button>
+        {!isControl && (
+          <button
+            type="button"
+            onClick={handleMarkDone}
+            disabled={updating}
+            className="cursor-pointer shrink-0 h-9 px-4 flex items-center gap-2 text-sm font-medium text-white bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors disabled:opacity-50"
+          >
+            {updating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+            {currentCheck.status === "completed" ? "Mark as pending" : "Mark as done"}
+          </button>
+        )}
       </div>
 
       <div className="flex gap-5">
@@ -1210,6 +1215,7 @@ function KvalitetssystemSubTab({ projectId }: { projectId: string }) {
       <SecureCheckDetail
         check={asCheck}
         projectId={projectId}
+        isControl={true}
         onBack={() => setSelectedControl(null)}
       />
     );
