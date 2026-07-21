@@ -12,6 +12,8 @@ import type { BudgetItem, BudgetRow, BudgetSection, SectionType } from "./types"
 import { DEFAULT_BUDGET_SECTIONS } from "./data";
 import { fmtAmount, delsumma, sectionSum, newRowId } from "./helpers";
 import { SimpleActionsMenu, SortableHeader } from "./shared";
+import type { ActiveProject } from "../../../types";
+import { getProjectBudgetsAPIAction, saveProjectBudgetAPIAction } from "@/api-actions";
 
 // ─── Translation hook for section labels ──────────────────────────────────────
 
@@ -208,11 +210,6 @@ function BudgetStep2({ budgetName, sections, onBack, onSave }: {
     </div>
   );
 }
-
-// ─── Budget create form ───────────────────────────────────────────────────────
-
-import type { ActiveProject } from "../../../types";
-import { getProjectBudgetsAPIAction, saveProjectBudgetAPIAction } from "@/api-actions";
 
 export function BudgetCreateForm({ onBack, budget, project }: { onBack: () => void; budget?: BudgetItem; project?: ActiveProject }) {
   const [step, setStep] = useState(1);

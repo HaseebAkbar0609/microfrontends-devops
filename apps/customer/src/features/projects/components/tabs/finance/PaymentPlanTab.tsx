@@ -402,6 +402,8 @@ export function PaymentPlanCreate({
       rows,
     };
 
+    let planToCreate = newPlan;
+
     if (project?.id) {
       setSaving(true);
       try {
@@ -410,11 +412,14 @@ export function PaymentPlanCreate({
           toast.error(res?.error || "Failed to create payment plan");
           return;
         }
+        if (res.data) {
+          planToCreate = res.data as PaymentPlan;
+        }
       } finally {
         setSaving(false);
       }
     }
-    onCreate(newPlan);
+    onCreate(planToCreate);
   };
 
   return (
