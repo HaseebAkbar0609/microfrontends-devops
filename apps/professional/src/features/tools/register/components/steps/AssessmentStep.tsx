@@ -103,7 +103,7 @@ export function AssessmentStep({
 		return sorted;
 	}, [uploadedFiles, sortField, sortDir]);
 
-	const SortIcon = ({ field }: { readonly field: "date" | "name" | "type" }) => {
+	const renderSortIcon = (field: "date" | "name" | "type") => {
 		if (sortField !== field) return <ArrowUpDown className="h-3 w-3 text-slate-400" />;
 		return sortDir === "asc" ? (
 			<ArrowUp className="h-3 w-3 text-slate-600" />
@@ -269,7 +269,7 @@ export function AssessmentStep({
 											>
 												<span className="inline-flex items-center gap-1">
 													<Translate text={localizationConstants.columnDate} />{" "}
-													<SortIcon field="date" />
+													{renderSortIcon("date")}
 												</span>
 											</th>
 											<th
@@ -278,7 +278,7 @@ export function AssessmentStep({
 											>
 												<span className="inline-flex items-center gap-1">
 													<Translate text={localizationConstants.columnDocumentName} />{" "}
-													<SortIcon field="name" />
+													{renderSortIcon("name")}
 												</span>
 											</th>
 											<th
@@ -287,7 +287,7 @@ export function AssessmentStep({
 											>
 												<span className="inline-flex items-center gap-1">
 													<Translate text={localizationConstants.columnFile} />{" "}
-													<SortIcon field="type" />
+													{renderSortIcon("type")}
 												</span>
 											</th>
 											<th className="w-40 border-l border-slate-200 px-4 py-2.5 font-medium text-slate-500" />
