@@ -697,6 +697,15 @@ export type AdminTranslation = {
 	logotypeFileTypesAllowed: string;
 	logo: string;
 	removeLogo: string;
+	addOfferButton: string;
+	endDateLabel: string;
+	b2cColumnLabel: string;
+	discountLabel: string;
+	actionColumnLabel: string;
+	offerApprovedLabel: string;
+	offerPendingLabel: string;
+	offerCancelLabel: string;
+	notApplicableLabel: string;
 };
 
 export type Translation = SidebarTranslation &

@@ -11,6 +11,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 import { CompanyProfileDetailsTab } from "./CompanyProfileDetailsTab";
 import { LogotypeTab } from "./LogotypeTab";
+import { OfferTab } from "./OfferTab";
 import {
 	partnerCompanyProfileSchema,
 	type PartnerCompanyProfileFormValues,
@@ -53,7 +54,7 @@ export default function PartnerDashboard() {
 	};
 
 	return (
-		<div className="flex h-[calc(100vh-64px)] flex-col px-6 pt-6">
+		<div className="flex min-h-[calc(100vh-64px)] flex-col px-6 pt-6">
 			<div className="shrink-0">
 				<h1 className="mb-2 text-2xl font-semibold text-slate-900">
 					<Translate text={localizationConstants.partnerDashboardTitle} />
@@ -111,7 +112,7 @@ export default function PartnerDashboard() {
 				</TabsContent>
 
 				<TabsContent value="offer" className="mt-6 min-h-0 flex-1">
-					<ComingSoonPanel />
+					<OfferTab />
 				</TabsContent>
 				<TabsContent value="image-bank" className="mt-6 min-h-0 flex-1">
 					<ComingSoonPanel />

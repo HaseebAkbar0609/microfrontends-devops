@@ -720,6 +720,15 @@ export const sweAdmin: AdminTranslation = {
 	logotypeFileTypesAllowed: "PNG-, JPG- och PDF-filer är tillåtna.",
 	logo: "Logo",
 	removeLogo: "Ta bort logotyp",
+	addOfferButton: "Lägg till erbjudande",
+	endDateLabel: "Slut datum",
+	b2cColumnLabel: "B2C",
+	discountLabel: "Rabatt",
+	actionColumnLabel: "Action",
+	offerApprovedLabel: "Approved",
+	offerPendingLabel: "Pending",
+	offerCancelLabel: "Cancel",
+	notApplicableLabel: "N/A",
 };
 
 export const swe: Translation = {
