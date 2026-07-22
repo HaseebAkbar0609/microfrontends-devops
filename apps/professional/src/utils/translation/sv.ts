@@ -415,6 +415,7 @@ export const svOffer: OfferTranslation = {
 	rearrange: "Ordna om",
 	throwAway: "Kasta bort",
 	offerDashboard: "Offert - Översikt",
+	widgetPanelOpenClosed: "Öppen / Stängd",
 	// Offer - List
 	offerList: "Offertlista",
 	job: "Jobb",

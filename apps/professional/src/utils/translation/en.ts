@@ -521,6 +521,7 @@ export const enOffer: OfferTranslation = {
 	rearrange: "Rearrange",
 	throwAway: "Throw away",
 	offerDashboard: "Offer - Dashboard",
+	widgetPanelOpenClosed: "Open / Closed",
 	// Offer - List
 	offerList: "Offer list",
 	job: "Job",

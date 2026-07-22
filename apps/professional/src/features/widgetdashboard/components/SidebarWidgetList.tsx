@@ -12,6 +12,7 @@ interface SidebarWidgetListProps {
 	onDragEnd: () => void;
 	placedSidebarIds: string[];
 	sidebarItems?: WidgetItem[];
+	header?: React.ReactNode;
 }
 
 export const SidebarWidgetList = ({
@@ -23,8 +24,10 @@ export const SidebarWidgetList = ({
 	onDragEnd,
 	placedSidebarIds,
 	sidebarItems = SIDEBAR_ITEMS,
+	header,
 }: SidebarWidgetListProps) => (
 	<Card className="shadow-none p-6">
+		{header}
 		<CardContent className="p-0 py-2 space-y-1">
 			{sidebarItems.map((item) => (
 				<DraggableSidebarItem
