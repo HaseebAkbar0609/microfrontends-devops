@@ -50,6 +50,7 @@ export const HIDDEN_SUBSIDEBAR_PATH_PREFIXES = [
 	"/module/business/offer/dashboard",
 	"/module/business/offer/list",
 	"/module/business/offer/archive",
+	"/module/business/b2b",
 ];
 
 export const navConfig: NavGroup[] = [
