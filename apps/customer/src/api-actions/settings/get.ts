@@ -19,11 +19,13 @@ export async function getCustomerSettingsAPIAction(): Promise<
 > {
 	try {
 		const response = await axiosInstance.get<
-			ApiResponse<CustomerSettingsData> | { data: CustomerSettingsData }
+			ApiResponse<CustomerSettingsData> | CustomerSettingsData
 		>(API_PATH.SETTINGS.ME);
 
 		const data =
-			"data" in response.data ? response.data.data : response.data;
+			"data" in response.data && response.data.data !== undefined
+				? response.data.data
+				: (response.data as CustomerSettingsData);
 
 		return { success: true, data, error: null };
 	} catch (error: unknown) {

@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Pencil, Save, Trash2, UserRound } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -80,6 +80,23 @@ export function UserProfileForm({
 			permissions: user?.permissions ?? DEFAULT_USER_PERMISSIONS,
 		},
 	});
+
+	useEffect(() => {
+		if (user) {
+			form.reset({
+				first_name: user.first_name ?? "",
+				last_name: user.last_name ?? "",
+				mobile_number: user.mobile_number ?? "",
+				private_email: user.private_email ?? "",
+				address: user.address ?? "",
+				city: user.city ?? "",
+				postal_code: user.postal_code ?? "",
+				personal_number: user.personal_number ?? "",
+				profile_photo: null,
+				permissions: user.permissions ?? DEFAULT_USER_PERMISSIONS,
+			});
+		}
+	}, [user, form]);
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -264,10 +281,13 @@ export function UserProfileForm({
 										disabled={readOnly || shouldMaskPersonalNumber}
 										className={compactFieldClassName}
 										{...compactInputProps}
-										inputProps={{
-											value: shouldMaskPersonalNumber ? maskPersonalNumber(personalNumberValue) : personalNumberValue,
-											onChange: shouldMaskPersonalNumber ? undefined : form.register("personal_number").onChange,
-										}}
+										inputProps={
+											shouldMaskPersonalNumber
+												? {
+														value: maskPersonalNumber(personalNumberValue || ""),
+												  }
+												: undefined
+										}
 									/>
 
 									{!readOnly && (

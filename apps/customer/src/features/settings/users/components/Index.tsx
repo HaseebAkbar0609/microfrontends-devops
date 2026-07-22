@@ -1,30 +1,41 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { UsersToolbar } from "./UsersToolbar";
 import { UsersTable } from "./UsersTable";
-
-import { DUMMY_USERS } from "../constants";
+import { getCustomerUsersAPIAction } from "@/api-actions/users";
+import { mapApiUserToUser } from "../utils/userFormatters";
 import type { User } from "../types/types";
+import { showToast } from "@/lib/toast";
 
 export default function UsersFeature() {
-  const [users, setUsers] = useState<User[]>(DUMMY_USERS);
-  const [listVersion, setListVersion] = useState(0);
+	const [users, setUsers] = useState<User[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // API integration pending backend endpoint; list data is mocked intentionally.
-    setUsers(DUMMY_USERS);
-  }, [listVersion]);
+	const fetchUsers = useCallback(async () => {
+		setIsLoading(true);
+		const result = await getCustomerUsersAPIAction();
+		setIsLoading(false);
+		if (result.success && result.data) {
+			setUsers(result.data.map(mapApiUserToUser));
+		} else if (!result.success) {
+			showToast("error", result.error || "Failed to load users");
+			setUsers([]);
+		}
+	}, []);
 
-  return (
-  <div className="px-5 py-5 flex-1">
-  <UsersToolbar
-    createHref="/settings/users/create"
-    className="px-0 pt-0 pb-4"
-  />
-  <UsersTable data={users} onRefresh={() => setListVersion((v) => v + 1)} />
-</div>
+	useEffect(() => {
+		fetchUsers();
+	}, [fetchUsers]);
 
-  );
+	return (
+		<div className="flex flex-1 flex-col px-5 py-5">
+			<UsersToolbar
+				createHref="/settings/users/create"
+				className="px-0 pb-4 pt-0"
+			/>
+			<UsersTable data={users} isLoading={isLoading} onRefresh={fetchUsers} />
+		</div>
+	);
 }
