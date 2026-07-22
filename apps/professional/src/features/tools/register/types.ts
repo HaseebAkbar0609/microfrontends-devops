@@ -130,3 +130,63 @@ export interface GetCustomerRegisterListResponse {
 	limit: number;
 	totalPages: number;
 }
+
+// Article Register Types
+export interface ArticleRow {
+	id: string;
+	isFavorite: boolean;
+	articleNo: string;
+	description: string;
+	outPriceListA: string;
+	calculatedCost: string;
+	stock: number;
+	reserved: number;
+	available: number;
+	stockValue: string;
+	status: "active" | "inactive";
+}
+
+export interface GetArticleListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: "all" | "active" | "inactive";
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetArticleListResponse {
+	data: ArticleRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
+// Supplier Article Register Types
+export interface SupplierArticleRow {
+	id: string;
+	supplierArticleNo: string;
+	supplierName: string;
+	supplierDescription: string;
+	purchasePrice: string;
+	linkedToArticle: string;
+	status: "mapped" | "unmapped";
+}
+
+export interface GetSupplierArticleListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	supplier?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetSupplierArticleListResponse {
+	data: SupplierArticleRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
