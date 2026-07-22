@@ -722,6 +722,15 @@ export const enAdmin: AdminTranslation = {
 	logotypeFileTypesAllowed: "PNG, JPG and PDF files are allowed.",
 	logo: "Logo",
 	removeLogo: "Remove logo",
+	addOfferButton: "Add Offer",
+	endDateLabel: "End date",
+	b2cColumnLabel: "B2C",
+	discountLabel: "Discount",
+	actionColumnLabel: "Action",
+	offerApprovedLabel: "Approved",
+	offerPendingLabel: "Pending",
+    offerCancelLabel: "Cancelled",
+	notApplicableLabel: "N/A",
 };
 
 export const en: Translation = {
