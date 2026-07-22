@@ -505,6 +505,23 @@ export type OfferTranslation = {
 	throwAway: string;
 	offerDashboard: string;
 	widgetPanelOpenClosed: string;
+	// B2B - Dashboard
+	b2bOverview: string;
+	b2bProjectMarket: string;
+	b2bAvailableAssignments: string;
+	b2bMyAds: string;
+	b2bLatestActivity: string;
+	b2bCalendar: string;
+	b2bStatistics: string;
+	b2bRegion: string;
+	b2bAntal: string;
+	b2bPieces: string;
+	b2bActiveAds: string;
+	b2bCompletedAds: string;
+	b2bPausedAds: string;
+	b2bChartRequestsPerMonth: string;
+	b2bChartDaysToAccept: string;
+	b2bChartRequests: string;
 	// Offer - List
 	offerList: string;
 	job: string;
