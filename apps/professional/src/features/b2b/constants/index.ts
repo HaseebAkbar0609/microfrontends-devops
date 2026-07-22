@@ -26,6 +26,7 @@ export const b2bSidebarItems: DynamicSubSidebarItem[] = [
 		labelKey: localizationConstants.b2bOverview,
 		href: "/module/business/b2b",
 		icon: FileText,
+		exact: true,
 	},
 	{
 		id: "project-market",
