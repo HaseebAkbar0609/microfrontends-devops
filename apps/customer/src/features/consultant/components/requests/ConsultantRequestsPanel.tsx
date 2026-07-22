@@ -51,7 +51,7 @@ export function ConsultantRequestsPanel() {
 		<div className="flex flex-col">
 			<ActionsToolbar
 				searchValue=""
-				onSearchChange={() => {}}
+				onSearchChange={() => { }}
 				showSearch={false}
 				showFilters={false}
 				onCreateClick={() =>

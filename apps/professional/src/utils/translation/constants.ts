@@ -504,6 +504,7 @@ export type OfferTranslation = {
 	rearrange: string;
 	throwAway: string;
 	offerDashboard: string;
+	widgetPanelOpenClosed: string;
 	// Offer - List
 	offerList: string;
 	job: string;

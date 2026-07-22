@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
-import type { ActionResult } from "@/types/api";
+import type { ActionResult, ApiError } from "@/types/api";
 import type { Consultant } from "@/features/consultant/types/consultant";
 
 export interface GetConsultantListParams {
@@ -74,23 +74,30 @@ export async function getConsultantListAPIAction(
 			updatedAt: new Date(item.created_at).toISOString().split("T")[0],
 		}));
 
+		const totalItems =
+			typeof response.data?.meta?.total_items === "number"
+				? response.data.meta.total_items
+				: 0;
+
 		return {
 			success: true,
-			data: { 
-				consultants, 
-				totalItems: response.data?.meta?.total_items || consultants.length 
+			data: {
+				consultants,
+				totalItems,
 			},
 			error: null,
 		};
 	} catch (error: unknown) {
-		const apiError = error as { response?: { data?: { message?: string } }; message?: string };
+		const apiError = error as ApiError;
 		return {
 			success: false,
 			data: null,
 			error:
 				apiError.response?.data?.message ||
-				apiError.message ||
-				"Failed to load consultants",
+				(error instanceof Error
+					? error.message
+					: "Failed to load consultants"),
 		};
 	}
 }
+
