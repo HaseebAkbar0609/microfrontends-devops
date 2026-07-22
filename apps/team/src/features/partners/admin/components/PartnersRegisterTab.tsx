@@ -99,7 +99,7 @@ export function PartnersRegisterTab() {
 					</h2>
 					<Button className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90">
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.addUser} />
+						<Translate text={localizationConstants.addPartner} />
 					</Button>
 				</div>
 

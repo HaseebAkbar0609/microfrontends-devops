@@ -14,6 +14,7 @@ import {
 
 export const sweAuth: AuthTranslation = {
 	addUser: "Lägg till användare",
+	addPartner: "Lägg till partner",
 	loginWelcomeTitle: "Välkommen in på TimeFlow",
 	loginWelcomeSubtitle: "Logga in på Admin",
 	loginTabPassword: "Lösenord",
@@ -735,6 +736,12 @@ export const sweAdmin: AdminTranslation = {
 	partnerListTitle: "Partner - lista",
 	contactLabel: "Kontakt",
 	mobileLabel: "Mobil",
+	partnerSettingsTab: "Inställningar",
+	partnerActiveAdsTab: "Aktiva annonser",
+	partnerBusinessSettingsSectionTitle: "Inställningar",
+	partnerValidationOrgNumberInvalid: "Ogiltigt organisationsnummer (format: XXXXXX-XXXX)",
+	partnerValidationVatNumberInvalid: "Ogiltigt momsregistreringsnummer (format: SEXXXXXXXXXX01)",
+	partnerValidationWebsiteInvalid: "Ogiltig webbadress",
 };
 
 export const swe: Translation = {

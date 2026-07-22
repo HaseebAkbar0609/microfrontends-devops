@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import type { UseFormReturn } from "react-hook-form";
 import { Building2, MapPinned, Save, Store } from "lucide-react";
 
@@ -14,12 +15,14 @@ type CompanyProfileDetailsTabProps = {
 	form: UseFormReturn<PartnerCompanyProfileFormValues>;
 	onSubmit: (data: PartnerCompanyProfileFormValues) => Promise<void>;
 	lastSavedRef: { current: PartnerCompanyProfileFormValues | null };
+	beforeContent?: ReactNode;
 };
 
 export function CompanyProfileDetailsTab({
 	form,
 	onSubmit,
 	lastSavedRef,
+	beforeContent,
 }: CompanyProfileDetailsTabProps) {
 	const { handleSubmit, control } = form;
 
@@ -27,6 +30,7 @@ export function CompanyProfileDetailsTab({
 		<Form {...form}>
 			<form onSubmit={handleSubmit(onSubmit)} className="flex h-full min-h-0 flex-col">
 				<div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pb-1 pr-1 scrollbar-thin [&::-webkit-scrollbar]:w-0.75 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-100">
+					{beforeContent}
 					<CollapsibleSection
 						className="rounded-md border border-slate-200 bg-white py-4 shadow-sm"
 						contentClassName="px-5"

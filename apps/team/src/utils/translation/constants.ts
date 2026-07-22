@@ -2,6 +2,7 @@ import { swe } from "./sv";
 
 export interface AuthTranslation {
 	addUser: string;
+	addPartner: string;
 	loginWelcomeTitle: string;
 	loginWelcomeSubtitle: string;
 	loginTabPassword: string;
@@ -712,6 +713,12 @@ export type AdminTranslation = {
 	partnerListTitle: string;
 	contactLabel: string;
 	mobileLabel: string;
+	partnerSettingsTab: string;
+	partnerActiveAdsTab: string;
+	partnerBusinessSettingsSectionTitle: string;
+	partnerValidationOrgNumberInvalid: string;
+	partnerValidationVatNumberInvalid: string;
+	partnerValidationWebsiteInvalid: string;
 };
 
 export type Translation = SidebarTranslation &
