@@ -268,7 +268,7 @@ export const CALCULATION_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 					<Translate text={localizationConstants.b2bPieces} />
 				</div>
 				<div>
-					<Translate text={localizationConstants.calcLost} />. 28{" "}
+                    <Translate text={localizationConstants.calcLost} />: 28{" "}
 					<Translate text={localizationConstants.b2bPieces} />
 				</div>
 			</div>
