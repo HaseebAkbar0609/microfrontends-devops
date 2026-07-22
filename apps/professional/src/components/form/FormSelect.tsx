@@ -117,14 +117,17 @@ export function FormSelect<
     onSearchChange?.(val);
   };
 
+  const resolvedLabel =
+    typeof label === "string" ? <Translate text={label} /> : label;
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={cn("grid", className)}>
+        <FormItem className={cn("grid gap-1", className)}>
           {label && (
-            <FormLabel className={labelClassName}>{label}</FormLabel>
+            <FormLabel className={labelClassName}>{resolvedLabel}</FormLabel>
           )}
           <Select
             onValueChange={(value) => {

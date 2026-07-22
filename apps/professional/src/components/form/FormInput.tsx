@@ -77,7 +77,7 @@ export function FormInput<
 			control={control}
 			name={name}
 			render={({ field }) => (
-				<FormItem className={cn("grid gap-2 ", className)}>
+				<FormItem className={cn("grid gap-1", className)}>
 					{label != null && (
 						<FormLabel className={labelClassName}>
 							{resolvedLabel}

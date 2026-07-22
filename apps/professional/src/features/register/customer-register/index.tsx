@@ -15,6 +15,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import type { BreadcrumbItem } from "@/types/common";
@@ -104,10 +105,12 @@ export default function CustomerRegisterFeature() {
 							<Download className="h-4 w-4" />
 							<Translate text={localizationConstants.customerRegisterImportCustomer} />
 						</Button>
-						<Button variant="primary" size="sm" type="button">
-							<Plus className="h-4 w-4" />
-							<Translate text={localizationConstants.customerRegisterRegisterNew} />
-						</Button>
+						<Link href="/tools/register/create-customer">
+							<Button variant="primary" size="sm" type="button">
+								<Plus className="h-4 w-4" />
+								<Translate text={localizationConstants.customerRegisterRegisterNew} />
+							</Button>
+						</Link>
 					</div>
 				</div>
 

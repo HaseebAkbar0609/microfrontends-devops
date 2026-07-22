@@ -1,16 +1,4 @@
-export interface CustomerRegisterRow {
-	id: string;
-	customerNo: string;
-	name: string;
-	orgNo: string;
-	address: string;
-	postNr: string;
-	city: string;
-	country: string;
-	phone: string;
-	email: string;
-	status: "active" | "inactive";
-}
+import type { CustomerRegisterRow } from "../types";
 
 export const MOCK_CUSTOMER_REGISTER_DATA: CustomerRegisterRow[] = [
 	{

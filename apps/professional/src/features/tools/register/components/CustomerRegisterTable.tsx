@@ -14,6 +14,7 @@ import {
 import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import Link from "next/link";
 import {
 	type CustomerRegisterRow,
 	getCustomerRegisterListAPIAction,
@@ -284,12 +285,14 @@ export function CustomerRegisterTable() {
 						<Translate text={localizationConstants.importCustomer} />
 					</Button>
 
-					<Button
-						className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center"
-					>
-						<Plus className="h-4 w-4" aria-hidden />
-						<Translate text={localizationConstants.registerNew} />
-					</Button>
+					<Link href="/tools/register/create-customer">
+						<Button
+							className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center"
+						>
+							<Plus className="h-4 w-4" aria-hidden />
+							<Translate text={localizationConstants.registerNew} />
+						</Button>
+					</Link>
 				</div>
 			</div>
 
