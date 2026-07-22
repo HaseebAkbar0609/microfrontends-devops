@@ -77,7 +77,7 @@ export function AssessmentStep({
 		setUploadedFiles((prev) => prev.filter((f) => f.id !== id));
 	};
 
-	const handleSeFil = (file: UploadedFile) => {
+	const handleViewFile = (file: UploadedFile) => {
 		const url = URL.createObjectURL(file.file);
 		window.open(url, "_blank");
 	};
@@ -316,7 +316,7 @@ export function AssessmentStep({
 															variant="ghost"
 															size="sm"
 															className="h-7 rounded-sm border border-slate-300 px-3 text-xs font-medium text-slate-700 hover:bg-transparent hover:text-slate-900"
-															onClick={() => handleSeFil(file)}
+															onClick={() => handleViewFile(file)}
 														>
 															<Translate text={localizationConstants.viewFile} />
 														</Button>
