@@ -61,6 +61,12 @@ import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import { showToast } from "@/lib/toast";
 import { fetchLeadSettings } from "@/features/leads/settings/api/leadSettings";
 import { useLeadsList } from "@/features/leads/queries/useLeadsList";
+import { reviewLeadRows } from "@/features/leads/constants/review";
+import { monitoringLeadRows } from "@/features/leads/constants/monitoring";
+import { handlingLeadRows } from "@/features/leads/constants/handling";
+import { acceptedLeadRows, acceptedTotalCommission } from "@/features/leads/constants/accepted";
+import { paidLeadRows } from "@/features/leads/constants/paid";
+import { archiveLeadRows } from "@/features/leads/constants/archive";
 import {
   filterLeadRows,
   getLeadRowsForTab,
@@ -76,12 +82,12 @@ export function LeadsManagementPage() {
   const t = useTranslate();
   const router = useRouter();
   const { search: searchParam, page, changeQueries, setPage } = useQueryParams();
-  const [rows, setRows] = useState<LeadRow[]>([]);
-  const [monitoringRows, setMonitoringRows] = useState<MonitoringLeadRow[]>([]);
-  const [handlingRows, setHandlingRows] = useState<HandlingLeadRow[]>([]);
-  const [acceptedRows, setAcceptedRows] = useState<AcceptedLeadRow[]>([]);
-  const [paidRows, setPaidRows] = useState<PaidLeadRow[]>([]);
-  const [archiveRows, setArchiveRows] = useState<ArchiveLeadRow[]>([]);
+  const [rows, setRows] = useState<LeadRow[]>(reviewLeadRows);
+  const [monitoringRows, setMonitoringRows] = useState<MonitoringLeadRow[]>(monitoringLeadRows);
+  const [handlingRows, setHandlingRows] = useState<HandlingLeadRow[]>(handlingLeadRows);
+  const [acceptedRows, setAcceptedRows] = useState<AcceptedLeadRow[]>(acceptedLeadRows);
+  const [paidRows, setPaidRows] = useState<PaidLeadRow[]>(paidLeadRows);
+  const [archiveRows, setArchiveRows] = useState<ArchiveLeadRow[]>(archiveLeadRows);
   const [searchInput, setSearchInput] = useState(searchParam);
   const [activeTab, setActiveTab] = useState<LeadStatus | "settings">("granskning");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -128,64 +134,63 @@ export function LeadsManagementPage() {
     const reviewItems = items.filter((item) => item.status === "granskning");
     const reviewLeadIdSet = new Set(reviewItems.map((item) => item.id));
 
-    setRows(reviewItems);
-    setMonitoringRows(
-      items
-        .filter((item) => item.status === "bevakning")
-        .map((item) => ({
-          ...item,
-          tags: "0",
-        }))
-    );
-    setHandlingRows(
-      items
-        .filter((item) => item.status === "hantering")
-        .map((item) => ({
-          ...item,
-          taken: "0",
-          repeat: "1",
-        }))
-    );
-    setArchiveRows(
-      items
-        .filter((item) => item.status === "arkiv")
-        .map((item) => ({
-          ...item,
-          tags: "0",
-        }))
-    );
-    setAcceptedRows(
-      items
-        .filter((item) => item.status === "accepterad")
-        .map((item) => ({
-          id: item.id,
-          acceptedDate: item.date,
-          leadId: item.leadId,
-          customer: item.customer,
-          supplier: "-",
-          type: item.type,
-          category: item.category,
-          city: item.city,
-          offer: "-",
-          commission: "-",
-          reminder: "-",
-          status: "unpaid" as const,
-        }))
-    );
-    setPaidRows(
-      items
-        .filter((item) => item.status === "betalda")
-        .map((item) => ({
-          id: item.id,
-          acceptedDate: item.date,
-          leadId: item.leadId,
-          customer: item.customer,
-          supplier: "-",
-          city: item.city,
-          commission: "-",
-          paymentDate: "-",
-        }))
-    );
+    setRows(reviewItems.length > 0 ? reviewItems : reviewLeadRows);
+    const monitoringItems = items
+      .filter((item) => item.status === "bevakning")
+      .map((item) => ({
+        ...item,
+        tags: "0",
+      }));
+    setMonitoringRows(monitoringItems.length > 0 ? monitoringItems : monitoringLeadRows);
+
+    const handlingItems = items
+      .filter((item) => item.status === "hantering")
+      .map((item) => ({
+        ...item,
+        taken: "0",
+        repeat: "1",
+      }));
+    setHandlingRows(handlingItems.length > 0 ? handlingItems : handlingLeadRows);
+
+    const archiveItems = items
+      .filter((item) => item.status === "arkiv")
+      .map((item) => ({
+        ...item,
+        tags: "0",
+      }));
+    setArchiveRows(archiveItems.length > 0 ? archiveItems : archiveLeadRows);
+
+    const acceptedItems = items
+      .filter((item) => item.status === "accepterad")
+      .map((item) => ({
+        id: item.id,
+        acceptedDate: item.date,
+        leadId: item.leadId,
+        customer: item.customer,
+        supplier: "-",
+        type: item.type,
+        category: item.category,
+        city: item.city,
+        offer: "-",
+        commission: "-",
+        reminder: "-",
+        status: "unpaid" as const,
+      }));
+    setAcceptedRows(acceptedItems.length > 0 ? acceptedItems : acceptedLeadRows);
+
+    const paidItems = items
+      .filter((item) => item.status === "betalda")
+      .map((item) => ({
+        id: item.id,
+        acceptedDate: item.date,
+        leadId: item.leadId,
+        customer: item.customer,
+        supplier: "-",
+        city: item.city,
+        commission: "-",
+        paymentDate: "-",
+      }));
+    setPaidRows(paidItems.length > 0 ? paidItems : paidLeadRows);
 
     setReviewedAtByLeadId((prev) =>
       Object.fromEntries(
@@ -229,6 +234,9 @@ export function LeadsManagementPage() {
   );
   const isSelectable = tableConfig.isSelectable;
   const totalAcceptedCommission = useMemo(() => {
+    if (acceptedRows === acceptedLeadRows) {
+      return acceptedTotalCommission;
+    }
     const sum = acceptedRows.reduce((total, row) => {
       const numericValue = Number(row.commission.replace(/[^\d.-]/g, ""));
       return Number.isFinite(numericValue) ? total + numericValue : total;
@@ -669,24 +677,27 @@ export function LeadsManagementPage() {
             )}
           </div>
 
-          <div className="mt-6 overflow-hidden pb-6">
-            <Table key={`${activeTab}-${clampedPageIndex}`}>
+          <div className="mt-6 pb-6">
+            <Table
+              key={`${activeTab}-${clampedPageIndex}`}
+              containerClassName="rounded-xl border-[#E2E8F0]"
+            >
               <TableHeader>
-                <TableRow className="">
+                <TableRow>
                   {isSelectable && (
                     <TableHead className="w-10">
                       {/* Empty head cell for selection column */}
                     </TableHead>
                   )}
                   {tableConfig.headers.map((header) => (
-                    <TableHead key={header} className="text-sm font-medium capitalize tracking-wide text-slate-400">
+                    <TableHead key={header} className="text-sm font-medium capitalize tracking-wide text-slate-500">
                       <span className="inline-flex items-center gap-1">
                         {header}
                         <ArrowUpDown className="size-4 text-slate-400" />
                       </span>
                     </TableHead>
                   ))}
-                  <TableHead className="border-l items-center text-center text-slate-500 flex justify-center"><Plus size={20} /></TableHead>
+                  <TableHead className="items-center text-center text-slate-500 flex justify-center"><Plus size={20} /></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -728,14 +739,14 @@ export function LeadsManagementPage() {
                       />
                     ))}
 
-                    <TableCell className="text-center border-l">
+                    <TableCell className="text-center">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-9 w-9 rounded-md bg-white cursor-pointer text-slate-700 hover:bg-slate-200">
                             <EllipsisVertical className="size-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="min-w-[160px]">
+                        <DropdownMenuContent align="end" className="min-w-40">
                           <DropdownMenuItem
                             onClick={() => {
                               const sourceParam = isMonitoring ? "?source=monitoring" : "";
@@ -762,16 +773,6 @@ export function LeadsManagementPage() {
                               <Translate text={localizationConstants.moveToHandling} />
                             </DropdownMenuItem>
                           )}
-                          {activeTab === "granskning" && (
-                            <DropdownMenuItem
-                              onClick={() => {
-                                markLeadAsReviewed(row.id);
-                              }}
-                            >
-                              <Star className="size-4" />
-                              <Translate text={localizationConstants.markReviewed} />
-                            </DropdownMenuItem>
-                          )}
                           <ConfirmDialog
                             title="Delete lead?"
                             description="This will remove the lead from the list."
@@ -788,6 +789,16 @@ export function LeadsManagementPage() {
                               </DropdownMenuItem>
                             }
                           />
+                          {activeTab === "granskning" && (
+                            <DropdownMenuItem
+                              onClick={() => {
+                                markLeadAsReviewed(row.id);
+                              }}
+                            >
+                              <Star className="size-4" />
+                              <Translate text={localizationConstants.markReviewed} />
+                            </DropdownMenuItem>
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>

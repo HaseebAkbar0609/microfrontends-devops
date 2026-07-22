@@ -23,12 +23,18 @@ export function ConsultantTypePanel() {
 
 	useEffect(() => {
 		let cancelled = false;
+		setLoading(true);
 
 		void getConsultantTypesAPIAction({ search: debouncedSearch || undefined }).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setTypes(result.data);
-				setSelectedId((prev) => prev ?? result.data?.[0]?.id ?? null);
+				setSelectedId((prev) => {
+					if (prev && result.data?.find(t => t.id === prev)) {
+						return prev;
+					}
+					return result.data?.[0]?.id ?? null;
+				});
 			} else {
 				setLoadError(result.error ?? null);
 			}

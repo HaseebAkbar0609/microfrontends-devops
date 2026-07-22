@@ -372,7 +372,11 @@ export function DataTable<TData>({
 
 	const totalPages = useMemo(
 		() =>
-			pagination
+			pagination &&
+				Number.isFinite(pagination.totalItems) &&
+				pagination.totalItems >= 0 &&
+				Number.isFinite(pagination.pageSize) &&
+				pagination.pageSize > 0
 				? Math.max(
 					1,
 					Math.ceil(pagination.totalItems / pagination.pageSize),

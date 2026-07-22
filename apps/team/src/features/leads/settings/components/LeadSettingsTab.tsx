@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
@@ -307,10 +308,11 @@ export function LeadSettingsTab() {
         </h1>
         <Button
           type="button"
-          className="h-10 bg-slate-900 px-5 text-white hover:bg-slate-800"
+          className="h-10 gap-2 bg-slate-900 px-5 text-white hover:bg-slate-800"
           onClick={handleSave}
           disabled={updateMutation.isPending}
         >
+          <Image src="/assets/icons/save.svg" alt="" width={16} height={16} />
           <Translate text={localizationConstants.save} />
         </Button>
       </div>

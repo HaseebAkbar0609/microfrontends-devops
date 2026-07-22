@@ -113,7 +113,7 @@ export function UserProfileForm({
 				city_id: user?.city_id ?? undefined,
 				country_id: user?.country_id ?? "8d3b611b-6609-4302-b35c-9e42df7e8edb",
 				postal_code: values.postal_code,
-				personal_id: isEdit && user ? user.personal_number : values.personal_number,
+				personal_id: values.personal_number,
 				permissions: values.permissions,
 			};
 
@@ -161,7 +161,7 @@ export function UserProfileForm({
 	};
 
 	const personalNumberValue = form.watch("personal_number");
-	const shouldMaskPersonalNumber = isEdit || isSaved;
+	const shouldMaskPersonalNumber = (isEdit && !isEditingProfile) || isSaved;
 	const compactFieldClassName = "gap-1.5";
 	const compactInputProps = {
 		labelClassName: "text-sm font-medium leading-none",
