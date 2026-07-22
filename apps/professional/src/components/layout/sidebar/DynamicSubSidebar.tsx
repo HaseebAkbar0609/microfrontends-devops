@@ -13,6 +13,7 @@ export interface DynamicSubSidebarItem {
 	label?: string;
 	href: string;
 	icon?: React.ComponentType<{ size?: number; className?: string }>;
+	exact?: boolean;
 }
 
 interface DynamicSubSidebarProps {
@@ -59,9 +60,10 @@ export default function DynamicSubSidebar({
 
 			<nav className="flex flex-1 flex-col gap-2 px-3 py-4">
 				{items.map((item) => {
-					const isActive =
-						pathname === item.href ||
-						pathname.startsWith(item.href + "/");
+					const isActive = item.exact
+						? pathname === item.href
+						: pathname === item.href ||
+							pathname.startsWith(item.href + "/");
 					const Icon = item.icon;
 
 					return (
@@ -72,7 +74,7 @@ export default function DynamicSubSidebar({
 								"flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors",
 								isActive
 									? "bg-slate-900 text-white shadow-sm"
-									: "text-slate-600 hover:bg-slate-200"
+									: "text-slate-600 hover:bg-slate-200",
 							)}
 						>
 							{Icon && <Icon size={18} />}

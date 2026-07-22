@@ -522,6 +522,37 @@ export type OfferTranslation = {
 	b2bChartRequestsPerMonth: string;
 	b2bChartDaysToAccept: string;
 	b2bChartRequests: string;
+	// Calculation - Dashboard
+	calcOverview: string;
+	calcKalkyl: string;
+	calcStatistics: string;
+	calcStatus: string;
+	calcCalendarWidget: string;
+	calcCalendar: string;
+	calcWonLost: string;
+	calcTotalValue: string;
+	calcCostDistribution: string;
+	calcActive: string;
+	calcUpcoming: string;
+	calcCompleted: string;
+	calcWon: string;
+	calcLost: string;
+	calcNo: string;
+	calcInternalReviewDate: string;
+	calcApprovalDate: string;
+	calcLastOfferDate: string;
+	calcTotalSalesValue: string;
+	calcTotalCost: string;
+	calcTotalProfit: string;
+	calcValueThisMonth: string;
+	calcValueThisYear: string;
+	calcMaterialCost: string;
+	calcLaborCost: string;
+	calcSubcontractors: string;
+	calcMachines: string;
+	calcChartCostDistribution: string;
+	calcChartObjects: string;
+	calcChartPerCategory: string;
 	// Offer - List
 	offerList: string;
 	job: string;
