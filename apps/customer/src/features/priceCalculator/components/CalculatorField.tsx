@@ -51,7 +51,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 						appearance: none;
 						height: 8px;
 						border-radius: 4px;
-						background: linear-gradient(to right, #475569 0%, #475569 var(--slider-pct, 50%), #e2e8f0 var(--slider-pct, 50%), #e2e8f0 100%);
+						background: linear-gradient(to right, #475569 0%, #475569 calc(10px + var(--slider-ratio, 0.5) * (100% - 20px)), #e2e8f0 calc(10px + var(--slider-ratio, 0.5) * (100% - 20px)), #e2e8f0 100%);
 						border: none;
 						outline: none;
 					}
@@ -108,7 +108,7 @@ export function CalculatorField({ field, value, onChange }: CalculatorFieldProps
 					value={numericValue}
 					onChange={(e) => onChange(Number(e.target.value))}
 					className="calc-slider w-full cursor-pointer"
-					style={{ '--slider-pct': `${((numericValue - field.min) / (field.max - field.min)) * 100}%` } as React.CSSProperties}
+					style={{ '--slider-ratio': (numericValue - field.min) / (field.max - field.min) } as React.CSSProperties}
 				/>
 			</div>
 		);

@@ -12,6 +12,8 @@ const BASE_PATHS = {
 	COMPANIES: "/api/v1/companies",
 	CONSULTANT: `${API_PREFIX}/consultants`,
 	SUPPLIER: `${API_PREFIX}/suppliers`,
+	COST_CALCULATOR: "/api/v1/tools/cost-calculator",
+
 };
 
 export const API_PATH = {
@@ -109,6 +111,12 @@ export const API_PATH = {
 		TYPES: `${BASE_PATHS.CONSULTANT}/types`,
 		REQUESTS: `${BASE_PATHS.CONSULTANT}/requests`,
 	},
+	COST_CALCULATOR: {
+		CONFIG: `${BASE_PATHS.COST_CALCULATOR}/config`,
+		CALCULATE: `${BASE_PATHS.COST_CALCULATOR}/calculate`,
+		PRODUCTS: `${BASE_PATHS.COST_CALCULATOR}/products`,
+		HOURLY_RATES: `${BASE_PATHS.COST_CALCULATOR}/hourly-rates`,
+	}
 };
 
 export const appConstants = {
