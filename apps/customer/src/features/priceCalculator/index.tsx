@@ -30,11 +30,12 @@ import {
 } from "@/components/ui/select";
 import localizationConstants from "@/utils/translation/constants";
 
-import { BREADCRUMBS, PRICE_CALCULATOR_TABS_LIST_CLASS, PRICE_CALCULATOR_TAB_TRIGGER_CLASS, PROJECT_TYPES, PRODUCT_PRICES, HOURLY_PRICES } from "./constants";
-import { calculatePrice, formatCurrency, formatNumber } from "./utils";
+import { BREADCRUMBS, PRICE_CALCULATOR_TABS_LIST_CLASS, PRICE_CALCULATOR_TAB_TRIGGER_CLASS } from "./constants";
+import { formatCurrency, formatNumber } from "./utils";
 import { CalculatorField } from "./components/CalculatorField";
 import { PriceDonutChart } from "./components/PriceDonutChart";
 import { RotDeductionToggle } from "./components/RotDeductionToggle";
+import { getCostCalculatorConfigAPIAction, calculateEstimateAPIAction, getCostCalculatorProductsAPIAction, getCostCalculatorHourlyRatesAPIAction, mapConfigToProjectTypes, type ApiConfig, type MappedProjectType, type MappedField } from "@/api-actions/cost-calculator";
 
 function SectionCard({
 	children,
@@ -54,9 +55,7 @@ function SectionCard({
 
 export default function PriceCalculatorPage() {
 	const { t } = useTranslation();
-	const [selectedExampleId, setSelectedExampleId] = useState(
-		PROJECT_TYPES[0].id,
-	);
+	const [selectedExampleId, setSelectedExampleId] = useState("");
 	const [fieldValues, setFieldValues] = useState<Record<string, number | string>>({});
 	const [rotEnabled, setRotEnabled] = useState(false);
 	const [productSearch, setProductSearch] = useState("");
@@ -65,51 +64,158 @@ export default function PriceCalculatorPage() {
 	const [productQuantities, setProductQuantities] = useState<
 		Record<string, number>
 	>({});
+	const [projectTypes, setProjectTypes] = useState<MappedProjectType[]>([]);
+	const [apiConfigId, setApiConfigId] = useState("");
+	
+	const [estimate, setEstimate] = useState({
+		low: 0,
+		high: 0,
+		materialShare: 50,
+		laborShare: 50,
+		material: 0,
+		labor: 0
+	});
 
 	const selectedType = useMemo(() => {
-		return PROJECT_TYPES.find((type) => type.id === selectedExampleId) ?? PROJECT_TYPES[0];
-	}, [selectedExampleId]);
+		return projectTypes.find((type) => type.id === selectedExampleId) ?? projectTypes[0];
+	}, [selectedExampleId, projectTypes]);
 
-	// Reset field values when project type changes
+
 	useEffect(() => {
-		const initial: Record<string, number | string> = {};
-		for (const field of selectedType.fields) {
-			initial[field.id] = field.defaultValue;
+		let isMounted = true;
+		async function fetchAllConfigs() {
+			const res = await getCostCalculatorConfigAPIAction();
+			if (res.success && res.data && isMounted) {
+				const mappedTypes = mapConfigToProjectTypes(res.data as ApiConfig);
+				if (mappedTypes.length > 0) {
+					setProjectTypes(mappedTypes);
+					setSelectedExampleId((prev) => prev || mappedTypes[0].id);
+				}
+			}
 		}
-		setFieldValues(initial);
-	}, [selectedType]);
+		fetchAllConfigs();
+		return () => { isMounted = false; };
+	}, []);
 
-	const estimate = useMemo(() => {
-		return calculatePrice(selectedType, fieldValues);
-	}, [selectedType, fieldValues]);
+
+	useEffect(() => {
+		if (!selectedExampleId) return;
+		const typeInState = projectTypes.find(t => t.id === selectedExampleId);
+		if (typeInState && ('apiId' in typeInState)) {
+			setApiConfigId(typeInState.apiId);
+
+			const initial: Record<string, number | string> = {};
+			for (const field of typeInState.fields) {
+				initial[field.id] = field.defaultValue;
+			}
+			setFieldValues(initial);
+		}
+	}, [selectedExampleId, projectTypes]);
+
+
+	useEffect(() => {
+		if (!apiConfigId || !selectedType) return;
+		
+		const answers = Object.entries(fieldValues).map(([qId, val]) => {
+			const field = selectedType.fields.find((f: MappedField) => f.id === qId);
+			if (!field) return null;
+			if (field.type === 'select') {
+				return { question_id: qId, option_id: val as string };
+			}
+			return { question_id: qId, value: Number(val) };
+		}).filter(Boolean);
+
+		const timer = setTimeout(async () => {
+			const res = await calculateEstimateAPIAction({
+				category_id: apiConfigId,
+				answers: answers as { question_id: string; value?: number; option_id?: string }[],
+				apply_rot: rotEnabled
+			});
+			if (res.success && res.data) {
+				const resData = res.data as {
+					estimate_min: number;
+					estimate_max: number;
+					breakdown: {
+						material: { percentage: number; amount: number };
+						labor: { percentage: number; amount: number };
+					};
+				};
+				setEstimate({
+					low: resData.estimate_min,
+					high: resData.estimate_max,
+					materialShare: resData.breakdown.material.percentage,
+					laborShare: resData.breakdown.labor.percentage,
+					material: resData.breakdown.material.amount,
+					labor: resData.breakdown.labor.amount,
+				});
+			}
+		}, 300);
+
+		return () => clearTimeout(timer);
+	}, [apiConfigId, fieldValues, rotEnabled, selectedType]);
+
+	type ApiProduct = { id: string; productKey: string; categoryKey: string; priceInterval: string; unitPrice: number };
+	type ApiHourlyRate = { id: string; workTypeKey: string; categoryKey: string; priceInterval: string };
+
+	const [apiProducts, setApiProducts] = useState<ApiProduct[]>([]);
+	const [apiHourlyRates, setApiHourlyRates] = useState<ApiHourlyRate[]>([]);
+
+	useEffect(() => {
+		let isMounted = true;
+		async function fetchCatalog() {
+			const productsRes = await getCostCalculatorProductsAPIAction("", "", 1);
+			const productsData = productsRes.data as { results?: { id: string; name: string; category?: { name: string }; price_min: number; price_max: number }[] };
+			if (productsRes.success && productsData?.results && isMounted) {
+				setApiProducts(productsData.results.map((p) => ({
+					id: p.id,
+					productKey: p.name,
+					categoryKey: p.category?.name || "",
+					priceInterval: `${formatNumber(p.price_min)} - ${formatNumber(p.price_max)} kr`,
+					unitPrice: p.price_min
+				})));
+			}
+			const hourlyRes = await getCostCalculatorHourlyRatesAPIAction();
+			const hourlyData = hourlyRes.data as { rates?: { id: string; profession: string; category?: string; rate_min: number; rate_max: number }[] };
+			if (hourlyRes.success && hourlyData?.rates && isMounted) {
+				setApiHourlyRates(hourlyData.rates.map((r) => ({
+					id: r.id,
+					workTypeKey: r.profession,
+					categoryKey: r.category || "",
+					priceInterval: `${formatNumber(r.rate_min)} - ${formatNumber(r.rate_max)} kr/timme`
+				})));
+			}
+		}
+		fetchCatalog();
+		return () => { isMounted = false; };
+	}, []);
 
 	const filteredProducts = useMemo(() => {
 		const search = productSearch.trim().toLowerCase();
 
-		return PRODUCT_PRICES.filter((product) =>
+		return apiProducts.filter((product) =>
 			`${t(product.productKey)} ${t(product.categoryKey)}`
 				.toLowerCase()
 				.includes(search),
 		);
-	}, [productSearch, t]);
+	}, [productSearch, apiProducts, t]);
 
 	const filteredHourlyPrices = useMemo(() => {
 		const search = hourlySearch.trim().toLowerCase();
 
-		return HOURLY_PRICES.filter((price) =>
+		return apiHourlyRates.filter((price) =>
 			`${t(price.workTypeKey)} ${t(price.categoryKey)}`
 				.toLowerCase()
 				.includes(search),
 		).sort((first, second) =>
 			t(first.workTypeKey).localeCompare(t(second.workTypeKey), "sv"),
 		);
-	}, [hourlySearch, t]);
+	}, [hourlySearch, apiHourlyRates, t]);
 
 	const selectedProducts = useMemo(() => {
-		return PRODUCT_PRICES.filter((product) =>
+		return apiProducts.filter((product) =>
 			selectedProductIds.includes(product.id),
 		);
-	}, [selectedProductIds]);
+	}, [selectedProductIds, apiProducts]);
 
 	const toggleProduct = (productId: string) => {
 		setSelectedProductIds((current) =>
@@ -182,13 +288,19 @@ export default function PriceCalculatorPage() {
 					</TabsList>
 
 					<TabsContent value="examples" className="mt-6">
-						<div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+						{!selectedType ? (
+							<div className="flex items-center justify-center p-12">
+								<span className="text-slate-500">Loading configurations...</span>
+							</div>
+						) : (
+							<>
+								<div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 							<Select value={selectedExampleId} onValueChange={setSelectedExampleId}>
 								<SelectTrigger className="h-8 w-full sm:max-w-[320px] border-0 bg-slate-100">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
-									{PROJECT_TYPES.map((example) => (
+									{projectTypes.map((example) => (
 										<SelectItem key={example.id} value={example.id}>
 											{t(example.nameKey)}
 										</SelectItem>
@@ -217,10 +329,10 @@ export default function PriceCalculatorPage() {
 								</div>
 
 								<div className="space-y-6">
-									{selectedType.fields.map((field) => (
+									{selectedType.fields.map((field: MappedField) => (
 										<CalculatorField
 											key={field.id}
-											field={field}
+											field={field as unknown as React.ComponentProps<typeof CalculatorField>["field"]}
 											value={fieldValues[field.id] ?? field.defaultValue}
 											onChange={(val) => {
 												setFieldValues((prev) => ({
@@ -262,6 +374,8 @@ export default function PriceCalculatorPage() {
 								</p>
 							</SectionCard>
 						</div>
+						</>
+						)}
 					</TabsContent>
 
 					<TabsContent value="products" className="mt-6">
