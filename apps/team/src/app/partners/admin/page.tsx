@@ -1,6 +1,5 @@
-import ComingSoonPage from "@/components/common/ComingSoonPage";
-import localizationConstants from "@/utils/translation/constants";
+import PartnersAdminPage from "@/features/partners/admin/components/PartnersAdminPage";
 
 export default function Page() {
-	return <ComingSoonPage titleKey={localizationConstants.partnerAdminItem} />;
+	return <PartnersAdminPage />;
 }

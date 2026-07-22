@@ -1,6 +1,6 @@
 "use client";
 
-import type { UseFormReturn } from "react-hook-form";
+import { useWatch, type UseFormReturn } from "react-hook-form";
 import { Image as ImageUp, Save, Sparkle, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ type LogotypeTabProps = {
 export function LogotypeTab({ form, onSubmit, lastSavedRef }: LogotypeTabProps) {
 	const t = useTranslate();
 	const { handleSubmit, control } = form;
+	const companyLogotype = useWatch({ control, name: "companyLogotype" });
 
 	return (
 		<Form {...form}>
@@ -47,26 +48,29 @@ export function LogotypeTab({ form, onSubmit, lastSavedRef }: LogotypeTabProps) 
 								/>
 							</div>
 
-							<div className="w-96">
-								<p className="mb-2 text-sm font-medium text-[#020617]">
-									<Translate text={localizationConstants.logo} />
-								</p>
-								<div className="relative flex h-16 w-96 items-center justify-center rounded-lg border border-slate-200 bg-slate-50">
-									<div className="flex items-center gap-2">
-										<span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-violet-500 to-fuchsia-500">
-											<Sparkle size={16} className="text-white" />
-										</span>
-										<span className="text-sm font-medium text-slate-900">Logoipsum</span>
+							{companyLogotype && (
+								<div className="w-96">
+									<p className="mb-2 text-sm font-medium text-[#020617]">
+										<Translate text={localizationConstants.logo} />
+									</p>
+									<div className="relative flex h-16 w-96 items-center justify-center rounded-lg border border-slate-200 bg-slate-50">
+										<div className="flex items-center gap-2">
+											<span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-violet-500 to-fuchsia-500">
+												<Sparkle size={16} className="text-white" />
+											</span>
+											<span className="text-sm font-medium text-slate-900">Logoipsum</span>
+										</div>
+										<button
+											type="button"
+											aria-label={t(localizationConstants.removeLogo)}
+											className="absolute right-2 top-2 cursor-pointer rounded-full p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
+											onClick={() => form.setValue("companyLogotype", null)}
+										>
+											<X size={16} />
+										</button>
 									</div>
-									<button
-										type="button"
-										aria-label={t(localizationConstants.removeLogo)}
-										className="absolute right-2 top-2 cursor-pointer rounded-full p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
-									>
-										<X size={16} />
-									</button>
 								</div>
-							</div>
+							)}
 						</div>
 					</CollapsibleSection>
 				</div>
