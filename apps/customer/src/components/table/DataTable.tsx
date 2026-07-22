@@ -382,7 +382,8 @@ export function DataTable<TData>({
 					Math.ceil(pagination.totalItems / pagination.pageSize),
 				)
 				: 1,
-		[pagination],
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[pagination?.totalItems, pagination?.pageSize],
 	);
 
 	const handleSort = useCallback(

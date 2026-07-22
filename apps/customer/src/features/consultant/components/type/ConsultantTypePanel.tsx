@@ -25,7 +25,7 @@ export function ConsultantTypePanel() {
 		let cancelled = false;
 		setLoading(true);
 
-		void getConsultantTypesAPIAction({ search: debouncedSearch }).then((result) => {
+		void getConsultantTypesAPIAction({ search: debouncedSearch || undefined }).then((result) => {
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setTypes(result.data);

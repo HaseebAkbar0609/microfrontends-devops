@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Pencil, Save, Trash2, UserRound } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,12 @@ import {
 	USER_PROFILE_TABS_LIST_CLASS,
 } from "../constants";
 
+import {
+	createCustomerUserAPIAction,
+	updateCustomerUserAPIAction,
+	deleteCustomerUserAPIAction,
+} from "@/api-actions/users";
+import { showToast } from "@/lib/toast";
 import type { User } from "../types/types";
 import { getUserProfileActions, maskPersonalNumber } from "../utils/userFormatters";
 
@@ -75,19 +81,87 @@ export function UserProfileForm({
 		},
 	});
 
-	const onSubmit = async (values: UserProfileFormValues) => {
-		const _payload = {
-			...values,
-			personal_number: isEdit && user ? user.personal_number : values.personal_number,
-		};
+	useEffect(() => {
+		if (user) {
+			form.reset({
+				first_name: user.first_name ?? "",
+				last_name: user.last_name ?? "",
+				mobile_number: user.mobile_number ?? "",
+				private_email: user.private_email ?? "",
+				address: user.address ?? "",
+				city: user.city ?? "",
+				postal_code: user.postal_code ?? "",
+				personal_number: user.personal_number ?? "",
+				profile_photo: null,
+				permissions: user.permissions ?? DEFAULT_USER_PERMISSIONS,
+			});
+		}
+	}, [user, form]);
 
-		// API integration pending backend endpoint; save is mocked intentionally.
-		setIsSaved(true);
-		onSaved();
+	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	const onSubmit = async (values: UserProfileFormValues) => {
+		try {
+			setIsSubmitting(true);
+			const payload = {
+				first_name: values.first_name,
+				last_name: values.last_name,
+				email: values.private_email,
+				phone_number: values.mobile_number,
+				address: values.address,
+				city_name: values.city,
+				city_id: user?.city_id ?? undefined,
+				country_id: user?.country_id ?? "8d3b611b-6609-4302-b35c-9e42df7e8edb",
+				postal_code: values.postal_code,
+				personal_id: values.personal_number,
+				permissions: values.permissions,
+			};
+
+			let result;
+			if (isEdit && user?.id) {
+				result = await updateCustomerUserAPIAction(user.id, payload);
+			} else {
+				result = await createCustomerUserAPIAction(payload);
+			}
+
+			if (result.success) {
+				if (result.error) {
+					showToast("warning", result.error);
+				} else {
+					showToast("success", "User saved successfully");
+				}
+				setIsSaved(true);
+				onSaved();
+			} else {
+				showToast("error", result.error || "Failed to save user");
+			}
+		} catch {
+			showToast("error", "An error occurred while saving user");
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	const handleDelete = async () => {
+		if (!user?.id) return;
+		try {
+			setIsSubmitting(true);
+			const result = await deleteCustomerUserAPIAction(user.id);
+			if (result.success) {
+				showToast("success", "User deleted successfully");
+				onSaved();
+			} else {
+				showToast("error", result.error || "Failed to delete user");
+			}
+		} catch {
+			showToast("error", "An error occurred while deleting user");
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	const personalNumberValue = form.watch("personal_number");
-	const shouldMaskPersonalNumber = isEdit || isSaved;
+	const shouldMaskPersonalNumber = (isEdit && !isEditingProfile) || isSaved;
 	const compactFieldClassName = "gap-1.5";
 	const compactInputProps = {
 		labelClassName: "text-sm font-medium leading-none",
@@ -207,10 +281,13 @@ export function UserProfileForm({
 										disabled={readOnly || shouldMaskPersonalNumber}
 										className={compactFieldClassName}
 										{...compactInputProps}
-										inputProps={{
-											value: shouldMaskPersonalNumber ? maskPersonalNumber(personalNumberValue) : personalNumberValue,
-											onChange: shouldMaskPersonalNumber ? undefined : form.register("personal_number").onChange,
-										}}
+										inputProps={
+											shouldMaskPersonalNumber
+												? {
+														value: maskPersonalNumber(personalNumberValue || ""),
+												  }
+												: undefined
+										}
 									/>
 
 									{!readOnly && (
@@ -282,10 +359,8 @@ export function UserProfileForm({
 								type="button"
 								variant="destructive"
 								className={deleteButtonClassName}
-								onClick={() => {
-									// API integration pending backend endpoint; delete is mocked intentionally.
-									onSaved();
-								}}
+								disabled={isSubmitting}
+								onClick={handleDelete}
 							>
 								<Trash2 className="h-4 w-4" />
 								{t(localizationConstants.userFormDeleteButton)}
@@ -293,7 +368,7 @@ export function UserProfileForm({
 						)}
 
 						{!readOnly && (
-							<Button type="submit" className={primaryButtonClassName}>
+							<Button type="submit" className={primaryButtonClassName} disabled={isSubmitting}>
 								<Save className="h-4 w-4" />
 								{t(localizationConstants.userFormSaveButton)}
 							</Button>

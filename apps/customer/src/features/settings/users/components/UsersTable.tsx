@@ -68,8 +68,12 @@ const formatDistanceToNow = (date: Date) => {
   return `${diffYears} years ago`;
 };
 
+import { updateCustomerUserAPIAction } from "@/api-actions/users";
+import { showToast } from "@/lib/toast";
+
 interface UsersTableProps {
   data: User[];
+  isLoading?: boolean;
   /** Called after archive/delete succeeds so the list can reload */
   onRefresh?: () => void;
 }
@@ -141,21 +145,33 @@ const ActionsDropdown = ({ user: _user, onRefresh }: { user: User; onRefresh?: (
   const { isOpen, openModal, closeModal, type, modalId } = useModal<ModalType>();
   const [isPending, setIsPending] = useState(false);
 
+  const isActivating = type === MODAL_CONSTANTS.ACTIVE;
+
   const handleConfirm = async () => {
     if (!type || !modalId) return;
 
     setIsPending(true);
     try {
-      // API integration pending backend endpoint; status change is mocked intentionally.
-      onRefresh?.();
+      const newStatus = isActivating ? "active" : "inactive";
+      const result = await updateCustomerUserAPIAction(modalId, { status: newStatus });
+      if (result.success) {
+        showToast(
+          "success",
+          `User ${isActivating ? "activated" : "deactivated"} successfully`,
+        );
+        onRefresh?.();
+      } else {
+        showToast("error", result.error || "Failed to update user status");
+      }
       closeModal();
+    } catch {
+      showToast("error", "An error occurred while updating status");
     } finally {
       setIsPending(false);
     }
   };
 
   const { canActivate, canDeactivate } = getUserManagementActions(_user);
-  const isActivating = type === MODAL_CONSTANTS.ACTIVE;
 
   return (
     <>
@@ -244,7 +260,7 @@ const ActionsDropdown = ({ user: _user, onRefresh }: { user: User; onRefresh?: (
   );
 };
 
-export function UsersTable({ data, onRefresh }: UsersTableProps) {
+export function UsersTable({ data, isLoading, onRefresh }: UsersTableProps) {
   const { query, changeQueries } = useQueryParams();
   const router = useRouter();
 
@@ -366,7 +382,15 @@ export function UsersTable({ data, onRefresh }: UsersTableProps) {
         columns={columns}
         getRowKey={(user) => user.id}
         headerClassName="bg-slate-50/50"
-        emptyContent={<Translate text={localizationConstants.noUsersFound} />}
+        emptyContent={
+          isLoading ? (
+            <div className="py-4 text-center text-sm text-slate-500">
+              Loading users...
+            </div>
+          ) : (
+            <Translate text={localizationConstants.noUsersFound} />
+          )
+        }
       />
     </div>
   );
