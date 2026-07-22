@@ -1,6 +1,12 @@
-import ComingSoonPage from "@/components/common/ComingSoonPage";
-import localizationConstants from "@/utils/translation/constants";
+import { PartnerDetailPage } from "@/features/partners/admin/components/PartnerDetailPage";
 
-export default function Page() {
-	return <ComingSoonPage titleKey={localizationConstants.partnerAdminItem} />;
+export const dynamic = "force-dynamic";
+
+interface PageProps {
+	readonly params: Promise<{ id: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+	const { id } = await params;
+	return <PartnerDetailPage id={id} />;
 }

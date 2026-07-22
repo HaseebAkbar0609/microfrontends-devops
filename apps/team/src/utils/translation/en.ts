@@ -59,6 +59,7 @@ export const enSidebar: SidebarTranslation = {
 
 export const enAuth: AuthTranslation = {
 	addUser: "Add User",
+	addPartner: "Add Partner",
 	loginWelcomeTitle: "Welcome to TimeFlow",
 	loginWelcomeSubtitle: "Log in to your Admin account",
 	loginTabPassword: "Password",
@@ -737,6 +738,12 @@ export const enAdmin: AdminTranslation = {
 	partnerListTitle: "Partner - list",
 	contactLabel: "Contact",
 	mobileLabel: "Mobile",
+	partnerSettingsTab: "Settings",
+	partnerActiveAdsTab: "Active Ads",
+	partnerBusinessSettingsSectionTitle: "Settings",
+	partnerValidationOrgNumberInvalid: "Invalid organization number (format: XXXXXX-XXXX)",
+	partnerValidationVatNumberInvalid: "Invalid VAT number (format: SEXXXXXXXXXX01)",
+	partnerValidationWebsiteInvalid: "Invalid website URL",
 };
 
 export const en: Translation = {
