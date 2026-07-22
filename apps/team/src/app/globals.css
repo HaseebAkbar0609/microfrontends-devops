@@ -93,7 +93,6 @@
 	}
 	body {
 		@apply bg-background font-sans text-foreground;
-		overflow: hidden;
 	}
 
 	body.mypages-layout {

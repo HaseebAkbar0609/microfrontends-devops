@@ -131,9 +131,6 @@ axiosInstance.interceptors.response.use(
 			return axiosInstance(originalRequest);
 		} catch {
 			authStorage.clearAuth();
-			if (typeof window !== "undefined") {
-				window.location.href = "/auth/login";
-			}
 			return Promise.reject(error);
 		}
 	},
