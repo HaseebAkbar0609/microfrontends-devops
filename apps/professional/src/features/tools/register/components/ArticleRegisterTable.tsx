@@ -137,12 +137,12 @@ export function ArticleRegisterTable() {
 		});
 	};
 
-	const handleToggleFavorite = async (id: string) => {
+	const handleToggleFavorite = useCallback(async (id: string) => {
 		setData((prev) =>
 			prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
 		);
 		await toggleArticleFavoriteAPIAction(id);
-	};
+	}, []);
 
 	const columns: DataTableColumn<ArticleRow>[] = useMemo(
 		() => [
@@ -247,7 +247,7 @@ export function ArticleRegisterTable() {
 				),
 			},
 		],
-		[],
+		[handleToggleFavorite],
 	);
 
 	const actions: DataTableAction<ArticleRow>[] = useMemo(
