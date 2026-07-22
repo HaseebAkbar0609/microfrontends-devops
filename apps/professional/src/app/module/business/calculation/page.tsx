@@ -1,14 +1,18 @@
+import { PageHeader } from "@/components/layout/PageHeader";
+import CalculationDashboard from "@/features/calculation/components/CalculationDashboard";
+import { CALCULATION_DASHBOARD_BREADCRUMBS } from "@/features/calculation/constants";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-export default function Page() {
-	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold">
-				<Translate text={localizationConstants.calculation} />
-			</h1>
-			<p className="mt-2 text-sm text-slate-600">
-				<Translate text={localizationConstants.comingSoon} />{" "}
-			</p>
-		</div>
-	);
+
+export default function CalculationDashboardPage() {
+    return (
+        <div className="flex flex-1 flex-col bg-blue-gray-50">
+            <PageHeader
+                title={localizationConstants.calcOverview}
+                breadcrumbs={CALCULATION_DASHBOARD_BREADCRUMBS}
+            />
+            <div className="p-5 flex-1">
+                <CalculationDashboard />
+            </div>
+        </div>
+    );
 }
