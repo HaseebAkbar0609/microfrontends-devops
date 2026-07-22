@@ -56,3 +56,6 @@ apps/*/yarn.lock
 .playwright-mcp/
 .mcp.json
 .claude
+.agents/
+.cursorrules
+skills-lock.json
