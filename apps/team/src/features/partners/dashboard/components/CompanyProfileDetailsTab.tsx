@@ -26,7 +26,7 @@ export function CompanyProfileDetailsTab({
 	return (
 		<Form {...form}>
 			<form onSubmit={handleSubmit(onSubmit)} className="flex h-full min-h-0 flex-col">
-				<div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pb-1 pr-1">
+				<div className="flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto pb-1 pr-1 scrollbar-thin [&::-webkit-scrollbar]:w-0.75 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-slate-100">
 					<CollapsibleSection
 						className="rounded-md border border-slate-200 bg-white py-4 shadow-sm"
 						contentClassName="px-5"
