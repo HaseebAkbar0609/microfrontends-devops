@@ -710,7 +710,7 @@ export const enRegister: RegisterTranslation = {
 	websiteLabel: "Website",
 	contactPersonsSection: "Contact Persons",
 	addContactButton: "+ Add",
-	contactPersonLabel: "Contact Person 01",
+	contactPersonLabel: "Contact Person",
 	mobilePhoneLabel: "Mobile Phone",
 	roleLabel: "Role",
 	personalNoLabel: "Personal No:",

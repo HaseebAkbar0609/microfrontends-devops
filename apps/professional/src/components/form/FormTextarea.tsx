@@ -76,6 +76,7 @@ export function FormTextarea<
               rows={rows}
               className={textareaClassName}
               {...field}
+              value={field.value ?? ""}
               {...textareaProps}
             />
           </FormControl>

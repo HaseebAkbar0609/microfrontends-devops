@@ -719,7 +719,7 @@ export const svRegister: RegisterTranslation = {
 	websiteLabel: "Websida",
 	contactPersonsSection: "Kontaktpersoner",
 	addContactButton: "+ Lägga till",
-	contactPersonLabel: "Kontaktpersoner 01",
+	contactPersonLabel: "Kontaktperson",
 	mobilePhoneLabel: "Mobil telefon",
 	roleLabel: "Roll",
 	personalNoLabel: "Person nr:",

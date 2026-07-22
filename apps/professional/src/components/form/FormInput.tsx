@@ -100,6 +100,7 @@ export function FormInput<
 									inputClassName,
 								)}
 								{...field}
+								value={field.value ?? ""}
 								{...(inputProps as React.ComponentProps<"textarea">)}
 								ref={field.ref}
 							/>
@@ -114,6 +115,7 @@ export function FormInput<
 										inputClassName,
 									)}
 									{...field}
+									value={field.value ?? ""}
 									{...inputProps}
 								/>
 

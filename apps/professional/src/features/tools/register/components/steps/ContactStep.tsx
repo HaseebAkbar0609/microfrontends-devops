@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Control } from "react-hook-form";
+import { useFormContext, type Control } from "react-hook-form";
 import type { CreateCustomerFormData } from "../../types";
 import { FormInput, FormSelect } from "@/components/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,7 @@ const ROLE_OPTIONS = [
 
 export function ContactStep({ control }: ContactStepProps) {
 	const [contactCount, setContactCount] = useState(1);
+	const { setValue, getValues } = useFormContext<CreateCustomerFormData>();
 
 	const handleAddContact = () => {
 		if (contactCount < 5) {
@@ -30,10 +31,50 @@ export function ContactStep({ control }: ContactStepProps) {
 		}
 	};
 
-	const handleRemoveContact = () => {
-		if (contactCount > 1) {
-			setContactCount((prev) => prev - 1);
+	const handleRemoveContact = (removeIdx: number) => {
+		if (contactCount <= 1) return;
+
+		// Shift data up from removeIdx + 1 to contactCount - 1
+		for (let i = removeIdx + 1; i < contactCount; i++) {
+			const targetSlot = i; // 1-based index for target slot
+			const nextSlot = i + 1; // 1-based index for source slot
+
+			setValue(
+				`contactPerson${targetSlot}FirstName` as keyof CreateCustomerFormData,
+				getValues(`contactPerson${nextSlot}FirstName` as keyof CreateCustomerFormData) || "",
+			);
+			setValue(
+				`contactPerson${targetSlot}LastName` as keyof CreateCustomerFormData,
+				getValues(`contactPerson${nextSlot}LastName` as keyof CreateCustomerFormData) || "",
+			);
+			setValue(
+				`contactPerson${targetSlot}Mobile` as keyof CreateCustomerFormData,
+				getValues(`contactPerson${nextSlot}Mobile` as keyof CreateCustomerFormData) || "",
+			);
+			setValue(
+				`contactPerson${targetSlot}Email` as keyof CreateCustomerFormData,
+				getValues(`contactPerson${nextSlot}Email` as keyof CreateCustomerFormData) || "",
+			);
+			setValue(
+				`contactPerson${targetSlot}Role` as keyof CreateCustomerFormData,
+				getValues(`contactPerson${nextSlot}Role` as keyof CreateCustomerFormData) || "",
+			);
+			setValue(
+				`contactPerson${targetSlot}PersonalNo` as keyof CreateCustomerFormData,
+				getValues(`contactPerson${nextSlot}PersonalNo` as keyof CreateCustomerFormData) || "",
+			);
 		}
+
+		// Clear the last contact slot
+		const lastSlot = contactCount;
+		setValue(`contactPerson${lastSlot}FirstName` as keyof CreateCustomerFormData, "");
+		setValue(`contactPerson${lastSlot}LastName` as keyof CreateCustomerFormData, "");
+		setValue(`contactPerson${lastSlot}Mobile` as keyof CreateCustomerFormData, "");
+		setValue(`contactPerson${lastSlot}Email` as keyof CreateCustomerFormData, "");
+		setValue(`contactPerson${lastSlot}Role` as keyof CreateCustomerFormData, "");
+		setValue(`contactPerson${lastSlot}PersonalNo` as keyof CreateCustomerFormData, "");
+
+		setContactCount((prev) => prev - 1);
 	};
 
 	return (
@@ -105,7 +146,7 @@ export function ContactStep({ control }: ContactStepProps) {
 								{contactCount > 1 && (
 									<button
 										type="button"
-										onClick={handleRemoveContact}
+										onClick={() => handleRemoveContact(index)}
 										className="rounded p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
 									>
 										<Trash2 className="h-4 w-4" />
