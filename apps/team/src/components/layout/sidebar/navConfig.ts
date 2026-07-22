@@ -304,8 +304,18 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			id: "partners",
 			label: localizationConstants.partners,
 			icon: Handshake,
-			href: "/partners",
-			items: [],
+			items: [
+				{
+					id: "partners-dashboard",
+					label: localizationConstants.partnerDashboardItem,
+					href: "/partners/dashboard",
+				},
+				{
+					id: "partners-admin",
+					label: localizationConstants.partnerAdminItem,
+					href: "/partners/admin",
+				},
+			],
 		},
 		{
 			id: "admin",

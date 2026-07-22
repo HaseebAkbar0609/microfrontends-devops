@@ -684,6 +684,19 @@ export type AdminTranslation = {
 	moduleKMA: string;
 	moduleMailet: string;
 	moduleLedningsstod: string;
+	partnerDashboardItem: string;
+	partnerAdminItem: string;
+	partnerDashboardTitle: string;
+	companyProfileTab: string;
+	partnerOfferTab: string;
+	imageBankTab: string;
+	logotypeTab: string;
+	storeLabel: string;
+	companyLogotype: string;
+	uploadYourLogotype: string;
+	logotypeFileTypesAllowed: string;
+	logo: string;
+	removeLogo: string;
 };
 
 export type Translation = SidebarTranslation &

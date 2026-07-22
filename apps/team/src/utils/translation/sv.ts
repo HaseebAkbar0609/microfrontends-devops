@@ -707,6 +707,19 @@ export const sweAdmin: AdminTranslation = {
 	moduleKMA: "KMA",
 	moduleMailet: "Mallar",
 	moduleLedningsstod: "Ledningsstöd",
+	partnerDashboardItem: "Partners dashboard",
+	partnerAdminItem: "Partner Admin",
+	partnerDashboardTitle: "Partners - Dashboard",
+	companyProfileTab: "Företagsprofil",
+	partnerOfferTab: "Erbjudande",
+	imageBankTab: "Bild-Bank",
+	logotypeTab: "Logotype",
+	storeLabel: "Butik",
+	companyLogotype: "Företagslogotype",
+	uploadYourLogotype: "Ladda upp din logotype",
+	logotypeFileTypesAllowed: "PNG-, JPG- och PDF-filer är tillåtna.",
+	logo: "Logo",
+	removeLogo: "Ta bort logotyp",
 };
 
 export const swe: Translation = {
