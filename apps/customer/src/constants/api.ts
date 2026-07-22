@@ -12,6 +12,8 @@ const BASE_PATHS = {
 	COMPANIES: "/api/v1/companies",
 	CONSULTANT: `${API_PREFIX}/consultants`,
 	SUPPLIER: `${API_PREFIX}/suppliers`,
+	COST_CALCULATOR: "/api/v1/tools/cost-calculator",
+
 };
 
 export const API_PATH = {
@@ -24,6 +26,18 @@ export const API_PATH = {
 		VERIFY_EMAIL: `${BASE_PATHS.AUTH}/verify-email`,
 		VALIDATE_OTP: `${BASE_PATHS.AUTH}/validate-otp`,
 		PROFILE: `${BASE_PATHS.USER}/profile`,
+	},
+	PROFILE: {
+		BASE: `${BASE_PATHS.USER}/profile`,
+		ME: `${BASE_PATHS.USER}/profile`,
+	},
+	SETTINGS: {
+		BASE: `${API_PREFIX}/settings`,
+		ME: `${API_PREFIX}/settings`,
+	},
+	USERS: {
+		BASE: `${API_PREFIX}/users`,
+		detail: (userId: string) => `${API_PREFIX}/users/${encodeURIComponent(userId)}`,
 	},
 	PROJECT: {
 		ACTIVE: `${BASE_PATHS.PROJECT}/active`,
@@ -97,6 +111,12 @@ export const API_PATH = {
 		TYPES: `${BASE_PATHS.CONSULTANT}/types`,
 		REQUESTS: `${BASE_PATHS.CONSULTANT}/requests`,
 	},
+	COST_CALCULATOR: {
+		CONFIG: `${BASE_PATHS.COST_CALCULATOR}/config`,
+		CALCULATE: `${BASE_PATHS.COST_CALCULATOR}/calculate`,
+		PRODUCTS: `${BASE_PATHS.COST_CALCULATOR}/products`,
+		HOURLY_RATES: `${BASE_PATHS.COST_CALCULATOR}/hourly-rates`,
+	}
 };
 
 export const appConstants = {

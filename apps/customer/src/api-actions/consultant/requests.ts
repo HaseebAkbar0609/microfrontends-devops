@@ -2,6 +2,17 @@ import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 import type { ConsultantRequest } from "@/features/consultant/types/consultantRequest";
 
+export interface RequestItem {
+  id: string;
+  project_id?: string | null;
+  selected_options?: {
+    project?: string | null;
+    consultant_type_id?: string | null;
+  } | null;
+  applications_count?: number | null;
+  created_at: string | number | Date;
+}
+
 export interface GetConsultantRequestsParams {
   page?: number;
   pageSize?: number;
@@ -14,14 +25,6 @@ export interface GetConsultantRequestsParams {
 export interface ConsultantRequestsPayload {
   requests: ConsultantRequest[];
   totalItems: number;
-}
-
-interface RequestItem {
-  id: string;
-  project_id?: string;
-  applications_count?: number;
-  created_at: number;
-  selected_options?: { project?: string; consultant_type_id?: string };
 }
 
 export async function getConsultantRequestsAPIAction(

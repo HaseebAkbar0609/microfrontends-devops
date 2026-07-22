@@ -12,6 +12,7 @@ const BASE_PATHS = {
 	LOCATION: `/location`,
 	TEAMS: `/teams`,
 	COMPANIES: `/companies`,
+	CUSTOMERS: `${PROFESSIONALS_BASE_PATH}/customers`,
 };
 
 export const API_PATH = {
@@ -53,6 +54,14 @@ export const API_PATH = {
 	},
 	COMPANIES: {
 		INVITATION_ACCEPT: `${BASE_PATHS.COMPANIES}/validate/token`,
+	},
+	CUSTOMERS: {
+		LIST: BASE_PATHS.CUSTOMERS,
+		CREATE: BASE_PATHS.CUSTOMERS,
+		UPDATE: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
+		GET: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
+		SAVE_DRAFT: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}/draft`,
+		UPLOAD_FILE: `/media/upload`,
 	},
 };
 

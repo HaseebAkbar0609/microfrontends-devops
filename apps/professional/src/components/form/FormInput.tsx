@@ -77,7 +77,7 @@ export function FormInput<
 			control={control}
 			name={name}
 			render={({ field }) => (
-				<FormItem className={cn("grid gap-2 ", className)}>
+				<FormItem className={cn("grid gap-1", className)}>
 					{label != null && (
 						<FormLabel className={labelClassName}>
 							{resolvedLabel}
@@ -100,6 +100,7 @@ export function FormInput<
 									inputClassName,
 								)}
 								{...field}
+								value={field.value ?? ""}
 								{...(inputProps as React.ComponentProps<"textarea">)}
 								ref={field.ref}
 							/>
@@ -114,6 +115,7 @@ export function FormInput<
 										inputClassName,
 									)}
 									{...field}
+									value={field.value ?? ""}
 									{...inputProps}
 								/>
 
