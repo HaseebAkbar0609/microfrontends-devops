@@ -53,6 +53,9 @@ function SectionCard({
 	);
 }
 
+type ApiProduct = { id: string; productKey: string; categoryKey: string; priceInterval: string; unitPrice: number };
+type ApiHourlyRate = { id: string; workTypeKey: string; categoryKey: string; priceInterval: string };
+
 export default function PriceCalculatorPage() {
 	const { t } = useTranslation();
 	const [selectedExampleId, setSelectedExampleId] = useState("");
@@ -153,17 +156,17 @@ export default function PriceCalculatorPage() {
 
 		return () => clearTimeout(timer);
 	}, [apiConfigId, fieldValues, rotEnabled, selectedType]);
-
-	type ApiProduct = { id: string; productKey: string; categoryKey: string; priceInterval: string; unitPrice: number };
-	type ApiHourlyRate = { id: string; workTypeKey: string; categoryKey: string; priceInterval: string };
-
 	const [apiProducts, setApiProducts] = useState<ApiProduct[]>([]);
 	const [apiHourlyRates, setApiHourlyRates] = useState<ApiHourlyRate[]>([]);
 
 	useEffect(() => {
 		let isMounted = true;
 		async function fetchCatalog() {
-			const productsRes = await getCostCalculatorProductsAPIAction("", "", 1);
+			const [productsRes, hourlyRes] = await Promise.all([
+				getCostCalculatorProductsAPIAction("", "", 1),
+				getCostCalculatorHourlyRatesAPIAction()
+			]);
+
 			const productsData = productsRes.data as { results?: { id: string; name: string; category?: { name: string }; price_min: number; price_max: number }[] };
 			if (productsRes.success && productsData?.results && isMounted) {
 				setApiProducts(productsData.results.map((p) => ({
@@ -174,7 +177,6 @@ export default function PriceCalculatorPage() {
 					unitPrice: p.price_min
 				})));
 			}
-			const hourlyRes = await getCostCalculatorHourlyRatesAPIAction();
 			const hourlyData = hourlyRes.data as { rates?: { id: string; profession: string; category?: string; rate_min: number; rate_max: number }[] };
 			if (hourlyRes.success && hourlyData?.rates && isMounted) {
 				setApiHourlyRates(hourlyData.rates.map((r) => ({
