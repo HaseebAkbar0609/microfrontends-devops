@@ -706,6 +706,12 @@ export type AdminTranslation = {
 	offerPendingLabel: string;
 	offerCancelLabel: string;
 	notApplicableLabel: string;
+	partnersAdminTitle: string;
+	partnersRegisterTab: string;
+	approvalCenterTab: string;
+	partnerListTitle: string;
+	contactLabel: string;
+	mobileLabel: string;
 };
 
 export type Translation = SidebarTranslation &

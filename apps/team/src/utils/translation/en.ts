@@ -729,8 +729,14 @@ export const enAdmin: AdminTranslation = {
 	actionColumnLabel: "Action",
 	offerApprovedLabel: "Approved",
 	offerPendingLabel: "Pending",
-    offerCancelLabel: "Cancelled",
+	offerCancelLabel: "Cancelled",
 	notApplicableLabel: "N/A",
+	partnersAdminTitle: "Partners - admin",
+	partnersRegisterTab: "Partners - register",
+	approvalCenterTab: "Approval Center",
+	partnerListTitle: "Partner - list",
+	contactLabel: "Contact",
+	mobileLabel: "Mobile",
 };
 
 export const en: Translation = {

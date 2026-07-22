@@ -727,8 +727,14 @@ export const sweAdmin: AdminTranslation = {
 	actionColumnLabel: "Action",
 	offerApprovedLabel: "Approved",
 	offerPendingLabel: "Pending",
-	offerCancelLabel: "Cancel",
+	offerCancelLabel: "Cancelled",
 	notApplicableLabel: "N/A",
+	partnersAdminTitle: "Partners - admin",
+	partnersRegisterTab: "Partners - register",
+	approvalCenterTab: "Approval Center",
+	partnerListTitle: "Partner - lista",
+	contactLabel: "Kontakt",
+	mobileLabel: "Mobil",
 };
 
 export const swe: Translation = {

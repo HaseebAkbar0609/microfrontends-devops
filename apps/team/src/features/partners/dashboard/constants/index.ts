@@ -7,7 +7,7 @@ const stengatanAddress = {
 };
 
 export const DEFAULT_VALUES: PartnerCompanyProfileFormValues = {
-	companyLogotype: null,
+	companyLogotype: "logoipsum",
 	companyName: "Timeflowsystem Danmark Ltd",
 	orgNumber: "",
 	vatNumber: "SE560080100101",
