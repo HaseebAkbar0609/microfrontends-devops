@@ -9,6 +9,7 @@ const addressGroup = z.object({
 });
 
 export const partnerCompanyProfileSchema = z.object({
+	companyLogotype: z.any().nullable().optional(),
 	companyName: optionalString,
 	orgNumber: optionalString,
 	vatNumber: optionalString,

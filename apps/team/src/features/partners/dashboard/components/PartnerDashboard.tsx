@@ -10,6 +10,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 import { CompanyProfileDetailsTab } from "./CompanyProfileDetailsTab";
+import { LogotypeTab } from "./LogotypeTab";
 import {
 	partnerCompanyProfileSchema,
 	type PartnerCompanyProfileFormValues,
@@ -104,7 +105,7 @@ export default function PartnerDashboard() {
 							<CompanyProfileDetailsTab form={form} onSubmit={onSubmit} lastSavedRef={lastSavedRef} />
 						</TabsContent>
 						<TabsContent value="logotype" className="mt-6 min-h-0 flex-1">
-							<ComingSoonPanel />
+							<LogotypeTab form={form} onSubmit={onSubmit} lastSavedRef={lastSavedRef} />
 						</TabsContent>
 					</Tabs>
 				</TabsContent>

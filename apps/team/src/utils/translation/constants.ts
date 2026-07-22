@@ -692,6 +692,11 @@ export type AdminTranslation = {
 	imageBankTab: string;
 	logotypeTab: string;
 	storeLabel: string;
+	companyLogotype: string;
+	uploadYourLogotype: string;
+	logotypeFileTypesAllowed: string;
+	logo: string;
+	removeLogo: string;
 };
 
 export type Translation = SidebarTranslation &

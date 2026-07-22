@@ -715,6 +715,11 @@ export const sweAdmin: AdminTranslation = {
 	imageBankTab: "Bild-Bank",
 	logotypeTab: "Logotype",
 	storeLabel: "Butik",
+	companyLogotype: "Företagslogotype",
+	uploadYourLogotype: "Ladda upp din logotype",
+	logotypeFileTypesAllowed: "PNG-, JPG- och PDF-filer är tillåtna.",
+	logo: "Logo",
+	removeLogo: "Ta bort logotyp",
 };
 
 export const swe: Translation = {
