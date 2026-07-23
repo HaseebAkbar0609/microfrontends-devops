@@ -60,8 +60,16 @@ export const API_PATH = {
 		CREATE: BASE_PATHS.CUSTOMERS,
 		UPDATE: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
 		GET: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
-		SAVE_DRAFT: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}/draft`,
 		UPLOAD_FILE: `/media/upload`,
+	},
+	ARTICLES: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/articles`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/articles`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}`,
+		TOGGLE_FAVORITE: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}/favorite`,
+		IMPORT: `${PROFESSIONALS_BASE_PATH}/articles/import`,
+		SUPPLIER_ARTICLES_LIST: `${PROFESSIONALS_BASE_PATH}/supplier-articles`,
+		SUPPLIER_ARTICLES_UPDATE: `${PROFESSIONALS_BASE_PATH}/supplier-articles/update`,
 	},
 };
 
