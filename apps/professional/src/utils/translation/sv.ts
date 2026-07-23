@@ -923,12 +923,19 @@ export const svRegister: RegisterTranslation = {
 	allSuppliers: "Alla leverantörer",
 	selectSupplier: "Välj leverantör",
 	selectRegisterPlaceholder: "Välj register",
+	// Customer Detail Page Translations (TFS-431)
+	dateAddedHeader: "Tillagd",
+	detailTitle: "detaljer",
+	documentSection: "Dokument",
+	editComingSoon: "Redigeringsfunktion kommer snart",
+	documentNotAvailable: "Dokumentet är inte tillgängligt",
 };
 
 export const svCommon: CommonTranslation = {
 	search: "Sök",
 	filter: "Filter",
 	createNewButtonText: "Skapa ny",
+	noDataFound: "Inga data hittades",
 };
 
 export const sv: Translation = {

@@ -872,12 +872,19 @@ export type RegisterTranslation = {
 	allSuppliers: string;
 	selectSupplier: string;
 	selectRegisterPlaceholder: string;
+	// Customer Detail Page Translations (TFS-431)
+	dateAddedHeader: string;
+	detailTitle: string;
+	documentSection: string;
+	editComingSoon: string;
+	documentNotAvailable: string;
 };
 
 export type CommonTranslation = {
 	search: string;
 	filter: string;
 	createNewButtonText: string;
+	noDataFound: string;
 };
 
 export type Translation = HeaderTranslation &

@@ -2,11 +2,15 @@ import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import type {
 	CustomerRegisterRow,
+	CustomerDetail,
+	CustomerContact,
+	CustomerDocument,
 	CreateCustomerFullData,
 	GetCustomerRegisterListParams,
 	GetCustomerRegisterListResponse,
 } from "../types";
 import { MOCK_CUSTOMER_REGISTER_DATA } from "../mockdata/customers";
+import { MOCK_CUSTOMER_DETAIL } from "../mockdata/customerDetail";
 
 export type { CustomerRegisterRow };
 
@@ -22,6 +26,7 @@ const mapCustomerFromApi = (item: Record<string, unknown>): CustomerRegisterRow 
 	phone: String(item.phone ?? ""),
 	email: String(item.email ?? ""),
 	status: (item.status as "active" | "inactive") ?? "active",
+	dateAdded: String(item.date_added ?? item.dateAdded ?? "2024-01-15"),
 });
 
 const mapCustomerToApi = (data: CreateCustomerFullData): Record<string, unknown> => ({
@@ -259,4 +264,122 @@ export async function uploadCustomerFileAPIAction(
 			url: "",
 		};
 	}
+}
+
+export async function getCustomerDetailAPIAction(
+	id: string,
+): Promise<CustomerDetail> {
+	try {
+		const res = await axiosInstance.get(API_PATH.CUSTOMERS.GET(id));
+		const data = res.data?.data;
+		if (data) {
+			return mapCustomerDetailFromApi(data);
+		}
+	} catch {
+		// Fallback to mock data
+	}
+
+	const mock = MOCK_CUSTOMER_REGISTER_DATA.find((c) => c.id === id);
+	if (mock) {
+		return {
+			...MOCK_CUSTOMER_DETAIL,
+			id: mock.id,
+			customerNo: mock.customerNo,
+			companyName: mock.name,
+			orgNo: mock.orgNo,
+			status: mock.status,
+			phone: mock.phone,
+			email: mock.email,
+			visitingAddress: mock.address,
+			visitingPostalCode: mock.postNr,
+			visitingCity: mock.city,
+			invoiceAddress: mock.address,
+			invoicePostalCode: mock.postNr,
+			invoiceCity: mock.city,
+		};
+	}
+
+	return MOCK_CUSTOMER_DETAIL;
+}
+
+function mapCustomerDetailFromApi(data: Record<string, unknown>): CustomerDetail {
+	const rawContacts = Array.isArray(data.contact_persons) ? data.contact_persons : [];
+	const contacts: CustomerContact[] = rawContacts.map((c: Record<string, unknown>, idx: number) => ({
+		id: String(c.id ?? `c${idx + 1}`),
+		firstName: String(c.first_name ?? c.firstName ?? ""),
+		lastName: String(c.last_name ?? c.lastName ?? ""),
+		mobile: String(c.mobile ?? ""),
+		email: String(c.email ?? ""),
+		role: String(c.role ?? ""),
+		personalNo: String(c.personal_no ?? c.personalNo ?? ""),
+	}));
+
+	const rawDocs = Array.isArray(data.documents) ? data.documents : [];
+	const documents: CustomerDocument[] = rawDocs.map((d: Record<string, unknown>, idx: number) => ({
+		id: String(d.id ?? `d${idx + 1}`),
+		date: String(d.date ?? ""),
+		name: String(d.name ?? ""),
+		type: String(d.type ?? "PDF"),
+		url: String(d.url ?? ""),
+	}));
+
+	const rawRatings = (data.ratings as Record<string, number>) || {};
+
+	return {
+		id: String(data.id ?? ""),
+		customerNo: String(data.customer_no ?? data.customerNo ?? "#M101"),
+		companyName: String(data.company_name ?? data.name ?? ""),
+		orgNo: String(data.org_no ?? data.orgNo ?? ""),
+		status: (data.status as "active" | "inactive") ?? "active",
+		mainCategory: String(data.main_category ?? data.mainCategory ?? ""),
+		department: String(data.department ?? ""),
+		region: String(data.region ?? ""),
+		vatRegNo: String(data.vat_reg_no ?? data.vatRegNo ?? ""),
+		visitingAddress: String(data.visiting_address ?? data.visitingAddress ?? ""),
+		visitingPostalCode: String(data.visiting_postal_code ?? data.visitingPostalCode ?? ""),
+		visitingCity: String(data.visiting_city ?? data.visitingCity ?? ""),
+		invoiceAddress: String(data.invoice_address ?? data.invoiceAddress ?? ""),
+		invoicePostalCode: String(data.invoice_postal_code ?? data.invoicePostalCode ?? ""),
+		invoiceCity: String(data.invoice_city ?? data.invoiceCity ?? ""),
+		bankName: String(data.bank_name ?? data.bankName ?? ""),
+		bankAccount: String(data.bank_account ?? data.bankAccount ?? ""),
+		bankgiro: String(data.bankgiro ?? ""),
+		plusgiro: String(data.plusgiro ?? ""),
+		iban: String(data.iban ?? ""),
+		bic: String(data.bic ?? ""),
+		phone: String(data.phone ?? ""),
+		email: String(data.email ?? ""),
+		website: String(data.website ?? ""),
+		contactNotes: String(data.contact_notes ?? data.contactNotes ?? ""),
+		contacts: contacts.length > 0 ? contacts : MOCK_CUSTOMER_DETAIL.contacts,
+		ratings: {
+			economy: Number(rawRatings.economy ?? 4),
+			environment: Number(rawRatings.environment ?? 3),
+			quality: Number(rawRatings.quality ?? 5),
+			collaboration: Number(rawRatings.collaboration ?? 4),
+			punctuality: Number(rawRatings.punctuality ?? 3),
+			service: Number(rawRatings.service ?? 4),
+		},
+		documents: documents.length > 0 ? documents : MOCK_CUSTOMER_DETAIL.documents,
+		notes: String(data.notes ?? MOCK_CUSTOMER_DETAIL.notes),
+		paymentTerms: String(data.payment_terms ?? data.paymentTerms ?? "30 dagar"),
+		deliveryTerms: String(data.delivery_terms ?? data.deliveryTerms ?? "Ex Works (EXW)"),
+		deliveryMethod: String(data.delivery_method ?? data.deliveryMethod ?? "Email"),
+		interestInvoicing: String(data.interest_invoicing ?? data.interestInvoicing ?? "Ja"),
+		priceList: String(data.price_list ?? data.priceList ?? "Standard"),
+		currency: String(data.currency ?? "SEK"),
+		invoiceDiscount: String(data.invoice_discount ?? data.invoiceDiscount ?? ""),
+		invoiceFee: String(data.invoice_fee ?? data.invoiceFee ?? ""),
+		shippingFee: String(data.shipping_fee ?? data.shippingFee ?? ""),
+		pricesInclVat: String(data.prices_incl_vat ?? data.pricesInclVat ?? ""),
+		ourReference: String(data.our_reference ?? data.ourReference ?? "info"),
+		customerResponsible: String(data.customer_responsible ?? data.customerResponsible ?? "Anna Svensson"),
+		externalReference: String(data.external_reference ?? data.externalReference ?? ""),
+		yourReference: String(data.your_reference ?? data.yourReference ?? "Info (Default)"),
+		vatNumber: String(data.vat_number ?? data.vatNumber ?? ""),
+		vatType: String(data.vat_type ?? data.vatType ?? "Standard"),
+		salesAccount: String(data.sales_account ?? data.salesAccount ?? "info"),
+		costCenter: String(data.cost_center ?? data.costCenter ?? "Info"),
+		project: String(data.project ?? "info"),
+	};
 }
