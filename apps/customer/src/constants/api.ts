@@ -103,6 +103,11 @@ export const API_PATH = {
 	},
 	SUPPLIER: {
 		LIST: `${BASE_PATHS.SUPPLIER}/list`,
+		CREATE: `${BASE_PATHS.SUPPLIER}/create`,
+		detail: (id: string) => `${BASE_PATHS.SUPPLIER}/${encodeURIComponent(id)}`,
+		update: (id: string) => `${BASE_PATHS.SUPPLIER}/${encodeURIComponent(id)}`,
+		delete: (id: string) => `${BASE_PATHS.SUPPLIER}/${encodeURIComponent(id)}`,
+		TEST_CONNECTION: `${BASE_PATHS.SUPPLIER}/test-connection`,
 	},
 	// NOTE: endpoints not live yet — consultant data currently comes from local
 	// dummy data (see api-actions/consultant/).

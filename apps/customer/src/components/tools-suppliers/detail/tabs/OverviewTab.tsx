@@ -35,7 +35,7 @@ export function OverviewTab({ supplier, services }: OverviewTabProps) {
             <MapPin className="w-6 h-6 text-[#EF4444]" />
           </div>
           <p className="font-sans text-[18px] font-semibold text-[#0A0A0A] leading-[27px] tracking-[-0.44px] text-left truncate w-full">
-            {supplier.mainMunicipality}
+            {supplier.mainMunicipality || "-"}
           </p>
           <p className="font-sans text-[12px] font-normal text-slate-500 leading-[18px] text-left">
             +{supplier.additionalMunicipalities}{" "}
@@ -52,7 +52,7 @@ export function OverviewTab({ supplier, services }: OverviewTabProps) {
           <Translate text={localizationConstants.supplierAboutSection} />
         </h3>
         <p className="text-sm text-slate-500 leading-relaxed line-clamp-4">
-          {supplier.description}
+          {supplier.description || "-"}
         </p>
         <Button variant="link" size="sm" className="mt-3 text-sm font-medium text-[#FF8100] hover:underline p-0 h-auto flex items-center gap-1">
           <Translate text={localizationConstants.supplierReadMore} />

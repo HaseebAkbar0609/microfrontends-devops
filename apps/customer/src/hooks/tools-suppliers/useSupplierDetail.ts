@@ -10,17 +10,7 @@ import type {
   SupplierDetail,
   ToolDetail,
   Supplier,
-  SupplierService,
-  SupplierReview,
-  StarBreakdown,
-  PopularTag,
 } from "@/types/tools-suppliers";
-import {
-  DUMMY_SERVICES,
-  DUMMY_REVIEWS,
-  DUMMY_STAR_BREAKDOWN,
-  DUMMY_POPULAR_TAGS,
-} from "@/components/tools-suppliers/detail/constants";
 import { toast } from "sonner";
 
 export function useSupplierDetail(supplierId: string) {
@@ -36,10 +26,6 @@ export function useSupplierDetail(supplierId: string) {
 
   // Supplier-specific details
   const [supplier, setSupplier] = useState<Supplier | null>(null);
-  const [services, setServices] = useState<SupplierService[]>([]);
-  const [reviews, setReviews] = useState<SupplierReview[]>([]);
-  const [starBreakdown, setStarBreakdown] = useState<StarBreakdown[]>([]);
-  const [popularTags, setPopularTags] = useState<PopularTag[]>([]);
 
   const allowedTabs = useMemo(() => {
     if (detail?.type === "tool") {
@@ -65,10 +51,6 @@ export function useSupplierDetail(supplierId: string) {
         setDetail(result.data);
         if (result.data.type === "supplier") {
           setSupplier(result.data);
-          setServices(DUMMY_SERVICES);
-          setReviews(DUMMY_REVIEWS);
-          setStarBreakdown(DUMMY_STAR_BREAKDOWN);
-          setPopularTags(DUMMY_POPULAR_TAGS);
         }
       } else {
         setError(result.error || "Misslyckades att ladda information.");
@@ -116,10 +98,10 @@ export function useSupplierDetail(supplierId: string) {
     loading,
     error,
     supplier,
-    services,
-    reviews,
-    starBreakdown,
-    popularTags,
+    services: [],
+    reviews: [],
+    starBreakdown: [],
+    popularTags: [],
     allowedTabs,
     activeTab,
     breadcrumbs,

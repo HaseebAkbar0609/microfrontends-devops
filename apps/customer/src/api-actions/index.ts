@@ -47,11 +47,18 @@ export {
   createSupplierAPIAction,
   type CreateSupplierPayload,
 } from "./supplier/create";
+export {
+  updateSupplierAPIAction,
+  type UpdateSupplierPayload,
+} from "./supplier/update";
+export { deleteSupplierAPIAction } from "./supplier/delete";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
 export {
   getSupplierOrToolByIdAPIAction,
+  getSupplierByIdForEditAPIAction,
   type SupplierDetail,
   type ToolDetail,
+  type SupplierEditData,
 } from "./supplier/get";
 export {
   getConsultantListAPIAction,

@@ -597,14 +597,25 @@ export const enSupplierModule: SupplierModule = {
 	supplierHeaderMail: "Email",
 	pageLabel: "Page",
 	ofLabel: "of",
-	// Create supplier form
+	// Create/Edit supplier form
 	supplierDetailsSection: "Supplier details",
 	supplierCreateTitle: "Create new",
 	supplierCreateSubtitle: "Add detailed information",
+	supplierEditTitle: "Edit supplier",
+	supplierEditSubtitle: "Update detailed information",
+	supplierUpdatedSuccess: "Supplier updated successfully",
+	supplierUpdateError: "Failed to update supplier",
 	validationSupplierCompanyNameRequired: "Company name is required",
 	validationSupplierCategoryRequired: "Category is required",
 	validationSupplierOrgNoRequired: "Organisation number is required",
+	validationSupplierOrgNoInvalid: "Organisation number must be 10 digits (e.g. 556123-4567)",
 	validationSupplierMobileNoRequired: "Mobile number is required",
+	validationSupplierMobileNoInvalid: "Please enter a valid phone number",
+	validationRegisterContactFirstNameInvalid: "First name contains invalid characters",
+	validationRegisterContactLastNameInvalid: "Last name contains invalid characters",
+	deleteSupplierConfirm: "Are you sure you want to delete {{name}}?",
+	supplierDeletedSuccess: "Supplier deleted successfully",
+	supplierDeleteError: "Failed to delete supplier",
 };
 
 export const enDiscounts: DiscountsModule = {

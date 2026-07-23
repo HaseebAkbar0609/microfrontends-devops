@@ -177,9 +177,7 @@ export function NewInvitationForm({
 								control={form.control}
 								name="mobileNumber"
 								label={localizationConstants.mobileNoLabel}
-								placeholder={
-									localizationConstants.mobileNoLabel
-								}
+								placeholder="+46 70 123 45 67"
 							/>
 						</form>
 					</Form>

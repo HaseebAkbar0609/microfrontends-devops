@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save } from "lucide-react";
@@ -13,33 +13,12 @@ import { FormSelect } from "@/components/form/FormSelect";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { createSupplierAPIAction } from "@/api-actions";
+import { getProfessionalsSubcategoriesListAPIAction } from "@/api-actions/category/professionals-subcategories-list";
 import {
   createSupplierSchema,
   type CreateSupplierValues,
 } from "../schemas/createSupplierSchema";
-
-const CATEGORY_OPTIONS = [
-  { value: "bygg", label: "Bygg" },
-  { value: "el", label: "El" },
-  { value: "vvs", label: "VVS" },
-  { value: "maleri", label: "Måleri" },
-  { value: "mark", label: "Mark & Anläggning" },
-  { value: "tak", label: "Tak" },
-  { value: "golv", label: "Golv" },
-  { value: "ventilation", label: "Ventilation" },
-];
-
-const EMAIL_OPTIONS = [
-  { value: "nisse@gmail.com", label: "nisse@gmail.com" },
-  { value: "peter@pellebygg.se", label: "peter@pellebygg.se" },
-  { value: "conny@clbygg.se", label: "conny@clbygg.se" },
-];
-
-const MOBILE_OPTIONS = [
-  { value: "070-560 50 50", label: "070-560 50 50" },
-  { value: "070-123 45 67", label: "070-123 45 67" },
-  { value: "076-987 65 43", label: "076-987 65 43" },
-];
+import type { CustomerCategory } from "@/types/category";
 
 const LABEL_CLASS = "font-sans text-[14px] font-medium text-slate-700 leading-[20px] tracking-normal";
 const INPUT_HEIGHT_CLASS = "h-9 2xl:h-9 text-sm";
@@ -54,6 +33,20 @@ export function CreateSupplierView({
   onSuccess,
 }: CreateSupplierViewProps) {
   const [submitting, setSubmitting] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState<{ value: string; label: string }[]>([]);
+
+  useEffect(() => {
+    getProfessionalsSubcategoriesListAPIAction().then((result) => {
+      if (result.success && result.data) {
+        setCategoryOptions(
+          result.data.map((cat: CustomerCategory) => ({
+            value: cat.id,
+            label: cat.name,
+          })),
+        );
+      }
+    });
+  }, []);
 
   const form = useForm<CreateSupplierValues>({
     resolver: zodResolver(createSupplierSchema),
@@ -142,7 +135,7 @@ export function CreateSupplierView({
                     placeholder={
                       localizationConstants.registerCategoryPlaceholder
                     }
-                    options={CATEGORY_OPTIONS}
+                    options={categoryOptions}
                     className="gap-1"
                     labelClassName={LABEL_CLASS}
                     triggerClassName={INPUT_HEIGHT_CLASS}
@@ -159,16 +152,21 @@ export function CreateSupplierView({
                     className="gap-1"
                     labelClassName={LABEL_CLASS}
                     inputClassName={INPUT_HEIGHT_CLASS}
+                    inputProps={{
+                      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                        const val = e.target.value.replace(/[^0-9-]/g, "");
+                        form.setValue("orgNo", val, { shouldValidate: true });
+                      },
+                    }}
                   />
-                  <FormSelect
+                  <FormInput
                     control={form.control}
                     name="email"
                     label={localizationConstants.emailAddressLabel}
                     placeholder={localizationConstants.emailAddressLabel}
-                    options={EMAIL_OPTIONS}
                     className="gap-1"
                     labelClassName={LABEL_CLASS}
-                    triggerClassName={INPUT_HEIGHT_CLASS}
+                    inputClassName={INPUT_HEIGHT_CLASS}
                   />
                 </div>
 
@@ -182,6 +180,12 @@ export function CreateSupplierView({
                     className="gap-1"
                     labelClassName={LABEL_CLASS}
                     inputClassName={INPUT_HEIGHT_CLASS}
+                    inputProps={{
+                      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                        const val = e.target.value.replace(/[^a-zA-ZåäöÅÄÖ\s\-']/g, "");
+                        form.setValue("contactFirstName", val, { shouldValidate: true });
+                      },
+                    }}
                   />
                   <FormInput
                     control={form.control}
@@ -191,21 +195,32 @@ export function CreateSupplierView({
                     className="gap-1"
                     labelClassName={LABEL_CLASS}
                     inputClassName={INPUT_HEIGHT_CLASS}
+                    inputProps={{
+                      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                        const val = e.target.value.replace(/[^a-zA-ZåäöÅÄÖ\s\-']/g, "");
+                        form.setValue("contactLastName", val, { shouldValidate: true });
+                      },
+                    }}
                   />
                 </div>
 
                 {/* Row 4: Mobile number (right column only) */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
                   <div className="hidden lg:block" />
-                  <FormSelect
+                  <FormInput
                     control={form.control}
                     name="mobileNo"
                     label={localizationConstants.mobileNoLabel}
-                    placeholder={localizationConstants.mobileNoLabel}
-                    options={MOBILE_OPTIONS}
+                    placeholder="+46 70 123 45 67"
                     className="gap-1"
                     labelClassName={LABEL_CLASS}
-                    triggerClassName={INPUT_HEIGHT_CLASS}
+                    inputClassName={INPUT_HEIGHT_CLASS}
+                    inputProps={{
+                      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                        const val = e.target.value.replace(/[^0-9+\s-()]/g, "");
+                        form.setValue("mobileNo", val, { shouldValidate: true });
+                      },
+                    }}
                   />
                 </div>
               </div>

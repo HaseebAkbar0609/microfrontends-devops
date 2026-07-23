@@ -582,14 +582,25 @@ export type SupplierModule = {
 	supplierHeaderMail: string;
 	pageLabel: string;
 	ofLabel: string;
-	// Create supplier form
+	// Create/Edit supplier form
 	supplierDetailsSection: string;
 	supplierCreateTitle: string;
 	supplierCreateSubtitle: string;
+	supplierEditTitle: string;
+	supplierEditSubtitle: string;
+	supplierUpdatedSuccess: string;
+	supplierUpdateError: string;
 	validationSupplierCompanyNameRequired: string;
 	validationSupplierCategoryRequired: string;
 	validationSupplierOrgNoRequired: string;
+	validationSupplierOrgNoInvalid: string;
 	validationSupplierMobileNoRequired: string;
+	validationSupplierMobileNoInvalid: string;
+	validationRegisterContactFirstNameInvalid: string;
+	validationRegisterContactLastNameInvalid: string;
+	deleteSupplierConfirm: string;
+	supplierDeletedSuccess: string;
+	supplierDeleteError: string;
 };
 
 export type QuestionsModule = {

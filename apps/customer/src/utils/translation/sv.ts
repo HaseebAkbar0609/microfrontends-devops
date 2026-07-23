@@ -609,14 +609,25 @@ export const svSupplierModule: SupplierModule = {
 	supplierHeaderMail: "Mail",
 	pageLabel: "Sida",
 	ofLabel: "av",
-	// Create supplier form
+	// Create/Edit supplier form
 	supplierDetailsSection: "Supplier detaljer",
 	supplierCreateTitle: "Skapa ny",
 	supplierCreateSubtitle: "Lägg till detaljerad information",
+	supplierEditTitle: "Redigera leverantör",
+	supplierEditSubtitle: "Uppdatera detaljerad information",
+	supplierUpdatedSuccess: "Leverantören har uppdaterats",
+	supplierUpdateError: "Kunde inte uppdatera leverantören",
 	validationSupplierCompanyNameRequired: "Företagsnamn krävs",
 	validationSupplierCategoryRequired: "Kategori krävs",
 	validationSupplierOrgNoRequired: "Organisationsnummer krävs",
+	validationSupplierOrgNoInvalid: "Organisationsnummer måste vara 10 siffror (t.ex. 556123-4567)",
 	validationSupplierMobileNoRequired: "Mobilnummer krävs",
+	validationSupplierMobileNoInvalid: "Ange ett giltigt telefonnummer",
+	validationRegisterContactFirstNameInvalid: "Förnamnet innehåller ogiltiga tecken",
+	validationRegisterContactLastNameInvalid: "Efternamnet innehåller ogiltiga tecken",
+	deleteSupplierConfirm: "Är du säker på att du vill ta bort {{name}}?",
+	supplierDeletedSuccess: "Leverantören har tagits bort",
+	supplierDeleteError: "Kunde inte ta bort leverantören",
 };
 export const svQuestions: QuestionsModule = {
 	faqCategoryQuoteAndFindTradespeople: "Offert & Hitta Hantverkare",

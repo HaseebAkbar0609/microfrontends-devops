@@ -19,15 +19,11 @@ export interface SuppliersListPayload {
 
 interface ApiSupplierItem {
 	company_id: string;
-	user_id?: string;
 	company_name: string;
-	organization_number: string;
-	first_name?: string;
-	last_name?: string;
+	organization_number?: string;
+	contact_person_name?: string;
 	email: string;
-	mobile_number?: string;
-	phone?: string;
-	mobileNumber?: string;
+	mobile_no?: string;
 }
 
 interface ApiSuppliersListResponse {
@@ -74,10 +70,10 @@ export async function getSuppliersAPIAction(
 		const suppliers: Supplier[] = res.data.map((item) => ({
 			id: item.company_id,
 			companyName: item.company_name,
-			orgNo: item.organization_number,
-			contactPersonName: `${item.first_name || ""} ${item.last_name || ""}`.trim(),
+			orgNo: item.organization_number || "",
+			contactPersonName: item.contact_person_name || "",
 			email: item.email,
-			mobileNumber: item.mobile_number || item.phone || item.mobileNumber || "",
+			mobileNumber: item.mobile_no || "",
 		}));
 
 		return {

@@ -1,20 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Plus, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/common";
 import { Search } from "@/components/search/Search";
 import { useQueryParams } from "@/hooks/useQueryParams";
-import { getSuppliersAPIAction } from "@/api-actions";
+import { getSuppliersAPIAction, deleteSupplierAPIAction } from "@/api-actions";
 import type { Supplier } from "../types/types";
 import { SUPPLIER_BREADCRUMBS } from "../constants";
 import { SupplierTable } from "./SupplierTable";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
+import { toast } from "sonner";
 
 export default function SuppliersFeature() {
+	const t = useTranslate();
 	const { search, changeQuery, query } = useQueryParams();
 	const router = useRouter();
 
@@ -27,6 +29,29 @@ export default function SuppliersFeature() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
+
+	const handleDelete = useCallback(
+		async (supplier: Supplier) => {
+			const confirmed = window.confirm(
+				t(localizationConstants.deleteSupplierConfirm, {
+					name: supplier.companyName,
+				}),
+			);
+			if (!confirmed) return;
+
+			const result = await deleteSupplierAPIAction(supplier.id);
+			if (result.success) {
+				toast.success(t(localizationConstants.supplierDeletedSuccess));
+				setSuppliers((prev) => prev.filter((s) => s.id !== supplier.id));
+				setTotalItems((prev) => prev - 1);
+			} else {
+				toast.error(
+					result.error || t(localizationConstants.supplierDeleteError),
+				);
+			}
+		},
+		[t],
+	);
 	useEffect(() => {
 		let cancelled = false;
 		setLoading(true);
@@ -104,6 +129,7 @@ export default function SuppliersFeature() {
 						data={suppliers}
 						totalItems={totalItems}
 						loading={loading}
+						onDelete={handleDelete}
 					/>
 				)}
 			</div>
