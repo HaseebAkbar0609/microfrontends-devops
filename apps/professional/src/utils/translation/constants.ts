@@ -553,6 +553,30 @@ export type OfferTranslation = {
 	calcChartCostDistribution: string;
 	calcChartObjects: string;
 	calcChartPerCategory: string;
+	// Admin - Users
+	adminUsersTitle: string;
+	adminUsersTabGroups: string;
+	adminUsersModulesTitle: string;
+	adminUsersBuyLicenses: string;
+	adminUsersCancelLicense: string;
+	adminUsersLicenseCol: string;
+	adminUsersPurchasedCol: string;
+	adminUsersAllocatedCol: string;
+	adminUsersAvailableCol: string;
+	adminUsersListTitle: string;
+	adminUsersAddUser: string;
+	adminUsersColName: string;
+	adminUsersColPersonNo: string;
+	adminUsersColAccess: string;
+	adminUsersColAddons: string;
+	adminUsersColGroup: string;
+	adminUsersColRole: string;
+	adminUsersColType: string;
+	adminUsersColAction: string;
+	adminUsersOpen: string;
+	adminUsersEdit: string;
+	adminUsersNoUsersFound: string;
+	adminUsersFilterAll: string;
 	// Offer - List
 	offerList: string;
 	job: string;
