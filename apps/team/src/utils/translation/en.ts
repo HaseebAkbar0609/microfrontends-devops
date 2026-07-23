@@ -744,6 +744,8 @@ export const enAdmin: AdminTranslation = {
 	partnerValidationOrgNumberInvalid: "Invalid organization number (format: XXXXXX-XXXX)",
 	partnerValidationVatNumberInvalid: "Invalid VAT number (format: SEXXXXXXXXXX01)",
 	partnerValidationWebsiteInvalid: "Invalid website URL",
+	toastLogoUploaded: "Logo uploaded",
+	toastLogoRemoved: "Logo removed",
 };
 
 export const en: Translation = {
