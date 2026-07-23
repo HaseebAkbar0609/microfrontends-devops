@@ -226,3 +226,78 @@ export function addDummyAdminUser(user: Omit<AdminUser, "id">) {
 		id: String(DUMMY_ADMIN_USERS.length + 1),
 	});
 }
+
+export interface AdminGroup {
+	id: string;
+	name: string;
+	members: string[];
+	extraMembers: number;
+}
+
+export const DUMMY_ADMIN_GROUPS: AdminGroup[] = [
+	{
+		id: "project-development",
+		name: "Project development",
+		members: [
+			"Kalle Andersson",
+			"Sten Svensson",
+			"Sture Larsson",
+			"Stina Jonasson",
+			"Petra Karlsson",
+			"Uran Lindqvist",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "marketing",
+		name: "Marketing",
+		members: [
+			"Rachel Meyers",
+			"Anna Berg",
+			"Erik Nilsson",
+			"Maria Ek",
+			"Johan Palm",
+			"Lisa Dahl",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "project-planning",
+		name: "Project planning",
+		members: [
+			"Oscar Lind",
+			"Elin Holm",
+			"Nils Sand",
+			"Karin Frisk",
+			"Per Åström",
+			"Sara Vik",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "finance",
+		name: "Finance",
+		members: [
+			"Eva Lund",
+			"Mats Öberg",
+			"Ida Strand",
+			"Lars Björk",
+			"Nina Falk",
+			"Olof Hage",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "sale",
+		name: "Sale",
+		members: [
+			"Tove Ren",
+			"Axel Storm",
+			"Moa Lindgren",
+			"Hugo Bäck",
+			"Klara Näs",
+			"Emil Torp",
+		],
+		extraMembers: 5,
+	},
+];

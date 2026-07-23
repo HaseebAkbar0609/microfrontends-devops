@@ -629,6 +629,11 @@ export const enOffer: OfferTranslation = {
 	adminCreateValidationRequired: "This field is required",
 	adminCreateYes: "Yes",
 	adminCreateNo: "No",
+	// Admin - Groups
+	adminGroupsManagement: "User management",
+	adminGroupsCreate: "Create group",
+	adminGroupsOpen: "Open group",
+	adminGroupsNoGroupsFound: "No groups found",
 	// Offer - List
 	offerList: "Offer list",
 	job: "Job",

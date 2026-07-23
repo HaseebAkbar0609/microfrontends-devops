@@ -611,6 +611,11 @@ export type OfferTranslation = {
 	adminCreateValidationRequired: string;
 	adminCreateYes: string;
 	adminCreateNo: string;
+	// Admin - Groups
+	adminGroupsManagement: string;
+	adminGroupsCreate: string;
+	adminGroupsOpen: string;
+	adminGroupsNoGroupsFound: string;
 	// Offer - List
 	offerList: string;
 	job: string;

@@ -523,6 +523,11 @@ export const svOffer: OfferTranslation = {
 	adminCreateValidationRequired: "Detta fält är obligatoriskt",
 	adminCreateYes: "Ja",
 	adminCreateNo: "Nej",
+	// Admin - Groups
+	adminGroupsManagement: "Användarhantering",
+	adminGroupsCreate: "Skapa grupp",
+	adminGroupsOpen: "Öppen grupp",
+	adminGroupsNoGroupsFound: "Inga grupper hittades",
 	// Offer - List
 	offerList: "Offertlista",
 	job: "Jobb",

@@ -30,7 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DynamicBreadcrumb } from "@/components/common";
 import { Search } from "@/components/search/Search";
 import { TablePagination } from "@/components/table/TablePagination";
-import { ComingSoonTab } from "@/features/admin/company-details/components/ComingSoonTab";
+import GroupsTab from "./GroupsTab";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -147,7 +147,7 @@ export default function AdminUsers() {
 						</TabsTrigger>
 						<TabsTrigger
 							value="groups"
-							className="px-0 text-slate-400 data-[state=active]:px-5 data-[state=active]:text-slate-900"
+							className="px-0 text-slate-600 data-[state=active]:px-5 data-[state=active]:text-slate-900"
 						>
 							<Translate
 								text={localizationConstants.adminUsersTabGroups}
@@ -460,7 +460,7 @@ export default function AdminUsers() {
 				</TabsContent>
 
 				<TabsContent value="groups" className="mt-6">
-					<ComingSoonTab />
+					<GroupsTab />
 				</TabsContent>
 			</Tabs>
 		</div>
