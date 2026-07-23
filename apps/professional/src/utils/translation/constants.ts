@@ -577,6 +577,20 @@ export type OfferTranslation = {
 	adminUsersEdit: string;
 	adminUsersNoUsersFound: string;
 	adminUsersFilterAll: string;
+	// Admin - User settings (overview)
+	adminUserSettingsTitle: string;
+	adminUserSelectUser: string;
+	adminUserShowDetails: string;
+	adminUserInformation: string;
+	adminUserLabel: string;
+	adminUserAdminLabel: string;
+	adminUserYes: string;
+	adminUserNo: string;
+	adminUserReports: string;
+	adminUserRegisterOther: string;
+	adminUserStandardLicense: string;
+	adminUserPrograms: string;
+	adminUserModules: string;
 	// Offer - List
 	offerList: string;
 	job: string;
