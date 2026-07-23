@@ -112,6 +112,7 @@ export interface CustomerRegisterRow {
 	phone: string;
 	email: string;
 	status: "active" | "inactive";
+	dateAdded: string;
 }
 
 export interface GetCustomerRegisterListParams {
@@ -189,4 +190,82 @@ export interface GetSupplierArticleListResponse {
 	page: number;
 	limit: number;
 	totalPages: number;
+}
+
+// Customer Detail Types
+export interface CustomerContact {
+	id: string;
+	firstName: string;
+	lastName: string;
+	mobile: string;
+	email: string;
+	role: string;
+	personalNo: string;
+}
+
+export interface CustomerDocument {
+	id: string;
+	date: string;
+	name: string;
+	type: string;
+	url: string;
+}
+
+export interface CustomerDetail {
+	id: string;
+	customerNo: string;
+	companyName: string;
+	orgNo: string;
+	status: "active" | "inactive";
+	mainCategory: string;
+	department: string;
+	region: string;
+	vatRegNo: string;
+	// Addresses
+	visitingAddress: string;
+	visitingPostalCode: string;
+	visitingCity: string;
+	invoiceAddress: string;
+	invoicePostalCode: string;
+	invoiceCity: string;
+	// Bank
+	bankName: string;
+	bankAccount: string;
+	bankgiro: string;
+	plusgiro: string;
+	iban: string;
+	bic: string;
+	// Contact
+	phone: string;
+	email: string;
+	website: string;
+	contactNotes: string;
+	// Contacts
+	contacts: CustomerContact[];
+	// Assessment
+	ratings: Ratings;
+	documents: CustomerDocument[];
+	notes: string;
+	// Invoice
+	paymentTerms: string;
+	deliveryTerms: string;
+	deliveryMethod: string;
+	interestInvoicing: string;
+	priceList: string;
+	currency: string;
+	invoiceDiscount: string;
+	invoiceFee: string;
+	shippingFee: string;
+	pricesInclVat: string;
+	// References
+	ourReference: string;
+	customerResponsible: string;
+	externalReference: string;
+	yourReference: string;
+	// Accounting
+	vatNumber: string;
+	vatType: string;
+	salesAccount: string;
+	costCenter: string;
+	project: string;
 }

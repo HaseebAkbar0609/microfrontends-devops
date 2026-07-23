@@ -677,6 +677,7 @@ export const enCommon: CommonTranslation = {
 	search: "Search",
 	filter: "Filter",
 	createNewButtonText: "Create new",
+	noDataFound: "No data found",
 };
 
 export const enRegister: RegisterTranslation = {
@@ -914,6 +915,12 @@ export const enRegister: RegisterTranslation = {
 	allSuppliers: "All suppliers",
 	selectSupplier: "Select supplier",
 	selectRegisterPlaceholder: "Select register",
+	// Customer Detail Page Translations (TFS-431)
+	dateAddedHeader: "Date Added",
+	detailTitle: "details",
+	documentSection: "Document",
+	editComingSoon: "Edit function coming soon",
+	documentNotAvailable: "Document not available",
 };
 
 export const en: Translation = {
