@@ -742,6 +742,8 @@ export const sweAdmin: AdminTranslation = {
 	partnerValidationOrgNumberInvalid: "Ogiltigt organisationsnummer (format: XXXXXX-XXXX)",
 	partnerValidationVatNumberInvalid: "Ogiltigt momsregistreringsnummer (format: SEXXXXXXXXXX01)",
 	partnerValidationWebsiteInvalid: "Ogiltig webbadress",
+	toastLogoUploaded: "Logotyp uppladdad",
+	toastLogoRemoved: "Logotyp borttagen",
 };
 
 export const swe: Translation = {
