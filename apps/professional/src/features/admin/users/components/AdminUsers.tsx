@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
 	Check,
 	ChevronDown,
@@ -67,6 +68,7 @@ const USER_COLUMNS = [
 
 export default function AdminUsers() {
 	const t = useTranslate();
+	const router = useRouter();
 	const [activeTab, setActiveTab] = useState("users");
 	const [search, setSearch] = useState("");
 	const [accessFilter, setAccessFilter] = useState<AdminUserAccess | "">("");
@@ -394,8 +396,10 @@ export default function AdminUsers() {
 												<div className="flex items-center gap-2">
 													<Button
 														variant="secondary"
-														onClick={
-															notifyComingSoon
+														onClick={() =>
+															router.push(
+																"/admin/user/settings",
+															)
 														}
 														className="h-8 rounded-md bg-slate-100 px-3 text-sm font-medium text-slate-900 hover:bg-slate-200"
 													>
