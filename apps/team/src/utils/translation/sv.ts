@@ -744,6 +744,10 @@ export const sweAdmin: AdminTranslation = {
 	partnerValidationWebsiteInvalid: "Ogiltig webbadress",
 	toastLogoUploaded: "Logotyp uppladdad",
 	toastLogoRemoved: "Logotyp borttagen",
+	approvalStatusApproved: "Godkänd",
+	approvalStatusDeclined: "Avböjd",
+	approvalStatusPending: "Väntar",
+	approvalStatusArchived: "Arkiverad",
 };
 
 export const swe: Translation = {
