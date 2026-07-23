@@ -37,6 +37,50 @@ function ComingSoonPanel() {
 	);
 }
 
+type PartnerSettingsSectionProps = {
+	b2b: boolean;
+	onB2BChange: (value: boolean) => void;
+	b2c: boolean;
+	onB2CChange: (value: boolean) => void;
+};
+
+function PartnerSettingsSection({ b2b, onB2BChange, b2c, onB2CChange }: PartnerSettingsSectionProps) {
+	return (
+		<CollapsibleSection
+			className="rounded-md border border-slate-200 bg-white py-4 shadow-sm"
+			contentClassName="px-5"
+			icon={<SlidersHorizontal size={20} className="text-slate-700" />}
+			title={<Translate text={localizationConstants.partnerBusinessSettingsSectionTitle} />}
+			defaultOpen
+		>
+			<div className="flex items-center gap-10">
+				<div className="flex items-center gap-3">
+					<span className="text-sm font-medium text-slate-900">B2B</span>
+					<Switch
+						checked={b2b}
+						onCheckedChange={onB2BChange}
+						className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-slate-300"
+					/>
+					<span className="text-sm text-slate-600">
+						<Translate text={b2b ? localizationConstants.yesLabel : localizationConstants.noLabel} />
+					</span>
+				</div>
+				<div className="flex items-center gap-3">
+					<span className="text-sm font-medium text-slate-900">B2C</span>
+					<Switch
+						checked={b2c}
+						onCheckedChange={onB2CChange}
+						className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-slate-300"
+					/>
+					<span className="text-sm text-slate-600">
+						<Translate text={b2c ? localizationConstants.yesLabel : localizationConstants.noLabel} />
+					</span>
+				</div>
+			</div>
+		</CollapsibleSection>
+	);
+}
+
 interface PartnerDetailPageProps {
 	readonly id: string;
 }
@@ -109,38 +153,7 @@ export function PartnerDetailPage({ id }: PartnerDetailPageProps) {
 						onSubmit={onSubmit}
 						lastSavedRef={lastSavedRef}
 						beforeContent={
-							<CollapsibleSection
-								className="rounded-md border border-slate-200 bg-white py-4 shadow-sm"
-								contentClassName="px-5"
-								icon={<SlidersHorizontal size={20} className="text-slate-700" />}
-								title={<Translate text={localizationConstants.partnerBusinessSettingsSectionTitle} />}
-								defaultOpen
-							>
-								<div className="flex items-center gap-10">
-									<div className="flex items-center gap-3">
-										<span className="text-sm font-medium text-slate-900">B2B</span>
-										<Switch
-											checked={b2b}
-											onCheckedChange={setB2b}
-											className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-slate-300"
-										/>
-										<span className="text-sm text-slate-600">
-											<Translate text={b2b ? localizationConstants.yesLabel : localizationConstants.noLabel} />
-										</span>
-									</div>
-									<div className="flex items-center gap-3">
-										<span className="text-sm font-medium text-slate-900">B2C</span>
-										<Switch
-											checked={b2c}
-											onCheckedChange={setB2c}
-											className="data-[state=checked]:bg-green-500 data-[state=unchecked]:bg-slate-300"
-										/>
-										<span className="text-sm text-slate-600">
-											<Translate text={b2c ? localizationConstants.yesLabel : localizationConstants.noLabel} />
-										</span>
-									</div>
-								</div>
-							</CollapsibleSection>
+							<PartnerSettingsSection b2b={b2b} onB2BChange={setB2b} b2c={b2c} onB2CChange={setB2c} />
 						}
 					/>
 				</TabsContent>
@@ -148,7 +161,7 @@ export function PartnerDetailPage({ id }: PartnerDetailPageProps) {
 					<LogotypeTab form={form} onSubmit={onSubmit} lastSavedRef={lastSavedRef} />
 				</TabsContent>
 				<TabsContent value="settings" className="mt-6 min-h-0 flex-1">
-					<ComingSoonPanel />
+					<PartnerSettingsSection b2b={b2b} onB2BChange={setB2b} b2c={b2c} onB2CChange={setB2c} />
 				</TabsContent>
 				<TabsContent value="image-bank" className="mt-6 min-h-0 flex-1">
 					<ComingSoonPanel />
