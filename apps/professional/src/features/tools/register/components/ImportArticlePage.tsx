@@ -100,7 +100,6 @@ export function ImportArticlePage() {
 	const [mapping, setMapping] = useState<ArticleImportMapping>({});
 	const [isDragging, setIsDragging] = useState(false);
 	const [isImporting, setIsImporting] = useState(false);
-	const [, setUploadProgress] = useState(0);
 	const [importResult, setImportResult] = useState<{
 		success: boolean;
 		successCount: number;
@@ -118,32 +117,21 @@ export function ImportArticlePage() {
 
 		setSelectedFile(file);
 		setImportResult(null);
-		setUploadProgress(0);
 
 		try {
-			setUploadProgress(20);
-
 			if (ext === "csv") {
-				setUploadProgress(40);
 				const text = await file.text();
-				setUploadProgress(70);
 				const parsed = parseCSV(text);
-				setUploadProgress(100);
 				setParsedData(parsed);
 			} else {
-				setUploadProgress(40);
 				const arrayBuffer = await file.arrayBuffer();
-				setUploadProgress(60);
 				const workbook = XLSX.read(arrayBuffer, { type: "array" });
-				setUploadProgress(80);
 				const parsed = parseXLSX(workbook);
-				setUploadProgress(100);
 				setParsedData(parsed);
 			}
 		} catch {
 			showToast("error", t(localizationConstants.fileParseError));
 			setSelectedFile(null);
-			setUploadProgress(0);
 		}
 	}, [t]);
 
