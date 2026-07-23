@@ -328,7 +328,9 @@ export default function AdminUsers() {
 								/>
 							</span>
 							<Button
-								onClick={notifyComingSoon}
+								onClick={() =>
+									router.push("/admin/user/create")
+								}
 								className="h-9 gap-1.5 rounded-md bg-[#18181B] px-3 text-sm font-medium text-white hover:bg-[#18181B]/90"
 							>
 								<Plus className="h-4 w-4" />

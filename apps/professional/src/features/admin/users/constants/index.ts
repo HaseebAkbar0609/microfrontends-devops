@@ -219,3 +219,10 @@ export const PROGRAM_GROUPS: ProgramGroup[] = [
 		],
 	},
 ];
+
+export function addDummyAdminUser(user: Omit<AdminUser, "id">) {
+	DUMMY_ADMIN_USERS.push({
+		...user,
+		id: String(DUMMY_ADMIN_USERS.length + 1),
+	});
+}
