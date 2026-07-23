@@ -985,17 +985,29 @@ export function ImportArticlePage() {
 														>
 															<Translate text={field.labelKey} />
 														</label>
-														<input
-															type="text"
+														<Select
 															value={
 																mapping[field.key as keyof ArticleImportMapping] ?? ""
 															}
-															onChange={(e) =>
-																handleMappingChange(field.key, e.target.value)
+															onValueChange={(value) =>
+																handleMappingChange(field.key, value)
 															}
-															placeholder={t(localizationConstants.placeholderSelect)}
-															className="h-9 w-full border border-slate-200 bg-white rounded-md px-3 text-sm text-slate-900 shadow-xs focus:outline-none focus:ring-1 focus:ring-slate-300"
-														/>
+														>
+															<SelectTrigger className="h-9 w-full border-slate-200 bg-white text-sm text-slate-900 shadow-xs [&_svg]:text-[#737373] [&_svg]:opacity-100">
+																<SelectValue placeholder={t(localizationConstants.placeholderSelect)} />
+															</SelectTrigger>
+															<SelectContent className="bg-white border-slate-200 shadow-md py-1">
+																{parsedData?.columns.map((col) => (
+																	<SelectItem
+																		key={col}
+																		value={col}
+																		className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer text-sm"
+																	>
+																		{col}
+																	</SelectItem>
+																))}
+															</SelectContent>
+														</Select>
 													</div>
 												))}
 											</div>
@@ -1015,15 +1027,27 @@ export function ImportArticlePage() {
 													>
 														<Translate text={localizationConstants.materialLabel} />
 													</label>
-													<input
-														type="text"
+													<Select
 														value={mapping.material ?? ""}
-														onChange={(e) =>
-															handleMappingChange("material", e.target.value)
+														onValueChange={(value) =>
+															handleMappingChange("material", value)
 														}
-														placeholder={t(localizationConstants.placeholderSelect)}
-														className="h-9 w-full border border-slate-200 bg-white rounded-md px-3 text-sm text-slate-900 shadow-xs focus:outline-none focus:ring-1 focus:ring-slate-300"
-													/>
+													>
+														<SelectTrigger className="h-9 w-full border-slate-200 bg-white text-sm text-slate-900 shadow-xs [&_svg]:text-[#737373] [&_svg]:opacity-100">
+															<SelectValue placeholder={t(localizationConstants.placeholderSelect)} />
+														</SelectTrigger>
+														<SelectContent className="bg-white border-slate-200 shadow-md py-1">
+															{parsedData?.columns.map((col) => (
+																<SelectItem
+																	key={col}
+																	value={col}
+																	className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer text-sm"
+																>
+																	{col}
+																</SelectItem>
+															))}
+														</SelectContent>
+													</Select>
 												</div>
 											</div>
 										</div>
