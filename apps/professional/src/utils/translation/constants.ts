@@ -553,6 +553,44 @@ export type OfferTranslation = {
 	calcChartCostDistribution: string;
 	calcChartObjects: string;
 	calcChartPerCategory: string;
+	// Admin - Users
+	adminUsersTitle: string;
+	adminUsersTabGroups: string;
+	adminUsersModulesTitle: string;
+	adminUsersBuyLicenses: string;
+	adminUsersCancelLicense: string;
+	adminUsersLicenseCol: string;
+	adminUsersPurchasedCol: string;
+	adminUsersAllocatedCol: string;
+	adminUsersAvailableCol: string;
+	adminUsersListTitle: string;
+	adminUsersAddUser: string;
+	adminUsersColName: string;
+	adminUsersColPersonNo: string;
+	adminUsersColAccess: string;
+	adminUsersColAddons: string;
+	adminUsersColGroup: string;
+	adminUsersColRole: string;
+	adminUsersColType: string;
+	adminUsersColAction: string;
+	adminUsersOpen: string;
+	adminUsersEdit: string;
+	adminUsersNoUsersFound: string;
+	adminUsersFilterAll: string;
+	// Admin - User settings (overview)
+	adminUserSettingsTitle: string;
+	adminUserSelectUser: string;
+	adminUserShowDetails: string;
+	adminUserInformation: string;
+	adminUserLabel: string;
+	adminUserAdminLabel: string;
+	adminUserYes: string;
+	adminUserNo: string;
+	adminUserReports: string;
+	adminUserRegisterOther: string;
+	adminUserStandardLicense: string;
+	adminUserPrograms: string;
+	adminUserModules: string;
 	// Offer - List
 	offerList: string;
 	job: string;
@@ -849,12 +887,42 @@ export type RegisterTranslation = {
 	vatTypeZero: string;
 	placeholderPlusgiro: string;
 	placeholderSelectCustomerResponsible: string;
+	// Article Register Translations (TFS-435)
+	articleOption: string;
+	articleListTab: string;
+	supplierArticlesTab: string;
+	importArticles: string;
+	updateArticles: string;
+	articleNoHeader: string;
+	descriptionHeader: string;
+	outPriceListAHeader: string;
+	calculatedCostHeader: string;
+	stockHeader: string;
+	reservedHeader: string;
+	availableHeader: string;
+	stockValueHeader: string;
+	countryHeader: string;
+	supplierArticleNoHeader: string;
+	supplierDescriptionHeader: string;
+	purchasePriceHeader: string;
+	linkedToArticleHeader: string;
+	mappedStatus: string;
+	allSuppliers: string;
+	selectSupplier: string;
+	selectRegisterPlaceholder: string;
+	// Customer Detail Page Translations (TFS-431)
+	dateAddedHeader: string;
+	detailTitle: string;
+	documentSection: string;
+	editComingSoon: string;
+	documentNotAvailable: string;
 };
 
 export type CommonTranslation = {
 	search: string;
 	filter: string;
 	createNewButtonText: string;
+	noDataFound: string;
 };
 
 export type Translation = HeaderTranslation &
