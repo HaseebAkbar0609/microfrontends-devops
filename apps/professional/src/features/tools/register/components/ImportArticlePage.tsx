@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx";
 import {
@@ -230,7 +230,7 @@ export function ImportArticlePage() {
 		URL.revokeObjectURL(link.href);
 	}, []);
 
-	const getMappedColumns = useCallback((): ArticleImportColumn[] => {
+	const mappedColumns = useMemo((): ArticleImportColumn[] => {
 		if (!parsedData) return [];
 
 		return parsedData.columns.map((col) => ({
@@ -239,8 +239,6 @@ export function ImportArticlePage() {
 			mappedField: Object.entries(mapping).find(([, val]) => val === col)?.[0],
 		}));
 	}, [parsedData, mapping]);
-
-	const mappedColumns = getMappedColumns();
 
 	return (
 		<div className="flex flex-col flex-1 bg-slate-50">
