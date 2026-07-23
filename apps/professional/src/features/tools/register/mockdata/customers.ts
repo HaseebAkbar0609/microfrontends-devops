@@ -123,7 +123,7 @@ export const MOCK_CUSTOMER_REGISTER_DATA: CustomerRegisterRow[] = [
 		city: "Linköping",
 		country: "Sverige",
 		phone: "013-12 34 56",
-		email: "ritning@lkar kitekter.se",
+		email: "ritning@lkarkitekter.se",
 		status: "active",
 		dateAdded: "2024-03-10",
 	},
