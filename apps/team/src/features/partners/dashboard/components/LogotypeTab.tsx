@@ -8,6 +8,7 @@ import { Form, FormFileUpload } from "@/components/form";
 import { CollapsibleSection } from "@/components/common/CollapsibleSection";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { showToast } from "@/lib/toast";
 import type { PartnerCompanyProfileFormValues } from "../schemas/companyProfile.schema";
 
 type LogotypeTabProps = {
@@ -44,7 +45,8 @@ export function LogotypeTab({ form, onSubmit, lastSavedRef }: LogotypeTabProps) 
 									accept="image/png,image/jpeg,application/pdf"
 									allowedTypes={["image/png", "image/jpeg", "application/pdf"]}
 									showPreview={false}
-									buttonClassName="bg-[#09090B] text-white hover:bg-[#27272A]"
+									buttonClassName="bg-[#0F172A] text-[#F8FAFC] hover:bg-[#1E293B]"
+									onFileSelected={() => showToast("success", t(localizationConstants.toastLogoUploaded))}
 								/>
 							</div>
 
@@ -58,13 +60,18 @@ export function LogotypeTab({ form, onSubmit, lastSavedRef }: LogotypeTabProps) 
 											<span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-linear-to-br from-violet-500 to-fuchsia-500">
 												<Sparkle size={16} className="text-white" />
 											</span>
-											<span className="text-sm font-medium text-slate-900">Logoipsum</span>
+											<span className="text-sm font-medium text-slate-900">
+												{companyLogotype instanceof File ? companyLogotype.name : "Logoipsum"}
+											</span>
 										</div>
 										<button
 											type="button"
 											aria-label={t(localizationConstants.removeLogo)}
 											className="absolute right-2 top-2 cursor-pointer rounded-full p-1 text-slate-400 hover:bg-slate-200 hover:text-slate-600"
-											onClick={() => form.setValue("companyLogotype", null)}
+											onClick={() => {
+												form.setValue("companyLogotype", null);
+												showToast("success", t(localizationConstants.toastLogoRemoved));
+											}}
 										>
 											<X size={16} />
 										</button>

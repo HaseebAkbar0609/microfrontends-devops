@@ -719,6 +719,8 @@ export type AdminTranslation = {
 	partnerValidationOrgNumberInvalid: string;
 	partnerValidationVatNumberInvalid: string;
 	partnerValidationWebsiteInvalid: string;
+	toastLogoUploaded: string;
+	toastLogoRemoved: string;
 };
 
 export type Translation = SidebarTranslation &
