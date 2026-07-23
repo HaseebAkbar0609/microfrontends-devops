@@ -849,12 +849,42 @@ export type RegisterTranslation = {
 	vatTypeZero: string;
 	placeholderPlusgiro: string;
 	placeholderSelectCustomerResponsible: string;
+	// Article Register Translations (TFS-435)
+	articleOption: string;
+	articleListTab: string;
+	supplierArticlesTab: string;
+	importArticles: string;
+	updateArticles: string;
+	articleNoHeader: string;
+	descriptionHeader: string;
+	outPriceListAHeader: string;
+	calculatedCostHeader: string;
+	stockHeader: string;
+	reservedHeader: string;
+	availableHeader: string;
+	stockValueHeader: string;
+	countryHeader: string;
+	supplierArticleNoHeader: string;
+	supplierDescriptionHeader: string;
+	purchasePriceHeader: string;
+	linkedToArticleHeader: string;
+	mappedStatus: string;
+	allSuppliers: string;
+	selectSupplier: string;
+	selectRegisterPlaceholder: string;
+	// Customer Detail Page Translations (TFS-431)
+	dateAddedHeader: string;
+	detailTitle: string;
+	documentSection: string;
+	editComingSoon: string;
+	documentNotAvailable: string;
 };
 
 export type CommonTranslation = {
 	search: string;
 	filter: string;
 	createNewButtonText: string;
+	noDataFound: string;
 };
 
 export type Translation = HeaderTranslation &

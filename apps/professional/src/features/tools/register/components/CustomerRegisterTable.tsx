@@ -185,6 +185,12 @@ export function CustomerRegisterTable() {
 				sortable: true,
 			},
 			{
+				key: "dateAdded",
+				label: localizationConstants.dateAddedHeader,
+				sortable: true,
+				render: (row) => <span className="text-slate-700">{row.dateAdded}</span>,
+			},
+			{
 				key: "status",
 				label: localizationConstants.statusHeader,
 				sortable: true,
@@ -211,7 +217,7 @@ export function CustomerRegisterTable() {
 			{
 				label: localizationConstants.viewLabel,
 				icon: <Eye className="h-4 w-4" />,
-				onClick: (row) => void row,
+				onClick: (row) => router.push(`/tools/register/customer/${row.id}`),
 			},
 			{
 				label: localizationConstants.editLabel,
@@ -225,7 +231,7 @@ export function CustomerRegisterTable() {
 				onClick: (row) => void row,
 			},
 		],
-		[],
+		[router],
 	);
 
 	return (
@@ -246,7 +252,7 @@ export function CustomerRegisterTable() {
 						<DropdownMenuTrigger asChild>
 							<Button
 								variant="outline"
-								className="h-10 w-full sm:w-[75px] sm:min-w-[75px] border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between"
+								className="h-10 w-full sm:w-18.75 sm:min-w-18.75 border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between"
 							>
 								<Translate text={localizationConstants.filter} />
 								<ChevronDown className="h-3.5 w-3.5 text-slate-500 shrink-0" />

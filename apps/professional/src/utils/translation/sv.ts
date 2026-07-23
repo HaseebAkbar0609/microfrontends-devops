@@ -900,12 +900,42 @@ export const svRegister: RegisterTranslation = {
 	vatTypeZero: "Noll (0%)",
 	placeholderPlusgiro: "Ange plusgiro",
 	placeholderSelectCustomerResponsible: "Välj kundansvarig",
+	// Article Register Translations (TFS-435)
+	articleOption: "Artikel",
+	articleListTab: "Artikel",
+	supplierArticlesTab: "Leverantörs artiklar",
+	importArticles: "Importera artiklar",
+	updateArticles: "Uppdatera artiklar",
+	articleNoHeader: "Artikel nr",
+	descriptionHeader: "Benämning",
+	outPriceListAHeader: "Utprislista A",
+	calculatedCostHeader: "Kalkyl kostnad",
+	stockHeader: "Lager",
+	reservedHeader: "Reserverat",
+	availableHeader: "Disponibelt",
+	stockValueHeader: "Lagervärde",
+	countryHeader: "Land",
+	supplierArticleNoHeader: "Lev. artikelnr",
+	supplierDescriptionHeader: "Lev. benämning",
+	purchasePriceHeader: "Inköpspris",
+	linkedToArticleHeader: "Kopplad till artikel",
+	mappedStatus: "Mapped",
+	allSuppliers: "Alla leverantörer",
+	selectSupplier: "Välj leverantör",
+	selectRegisterPlaceholder: "Välj register",
+	// Customer Detail Page Translations (TFS-431)
+	dateAddedHeader: "Tillagd",
+	detailTitle: "detaljer",
+	documentSection: "Dokument",
+	editComingSoon: "Redigeringsfunktion kommer snart",
+	documentNotAvailable: "Dokumentet är inte tillgängligt",
 };
 
 export const svCommon: CommonTranslation = {
 	search: "Sök",
 	filter: "Filter",
 	createNewButtonText: "Skapa ny",
+	noDataFound: "Inga data hittades",
 };
 
 export const sv: Translation = {

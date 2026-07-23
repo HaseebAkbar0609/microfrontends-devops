@@ -677,6 +677,7 @@ export const enCommon: CommonTranslation = {
 	search: "Search",
 	filter: "Filter",
 	createNewButtonText: "Create new",
+	noDataFound: "No data found",
 };
 
 export const enRegister: RegisterTranslation = {
@@ -891,6 +892,35 @@ export const enRegister: RegisterTranslation = {
 	vatTypeZero: "Zero (0%)",
 	placeholderPlusgiro: "Enter plusgiro",
 	placeholderSelectCustomerResponsible: "Select customer responsible",
+	// Article Register Translations (TFS-435)
+	articleOption: "Article",
+	articleListTab: "Article",
+	supplierArticlesTab: "Supplier articles",
+	importArticles: "Import articles",
+	updateArticles: "Update articles",
+	articleNoHeader: "Article no",
+	descriptionHeader: "Description",
+	outPriceListAHeader: "Out price list A",
+	calculatedCostHeader: "Calculated cost",
+	stockHeader: "Stock",
+	reservedHeader: "Reserved",
+	availableHeader: "Available",
+	stockValueHeader: "Stock value",
+	countryHeader: "Status",
+	supplierArticleNoHeader: "Sup. article no",
+	supplierDescriptionHeader: "Sup. description",
+	purchasePriceHeader: "Purchase price",
+	linkedToArticleHeader: "Linked to article",
+	mappedStatus: "Mapped",
+	allSuppliers: "All suppliers",
+	selectSupplier: "Select supplier",
+	selectRegisterPlaceholder: "Select register",
+	// Customer Detail Page Translations (TFS-431)
+	dateAddedHeader: "Date Added",
+	detailTitle: "details",
+	documentSection: "Document",
+	editComingSoon: "Edit function coming soon",
+	documentNotAvailable: "Document not available",
 };
 
 export const en: Translation = {
