@@ -985,6 +985,26 @@ export const enRegister: RegisterTranslation = {
 	documentSection: "Document",
 	editComingSoon: "Edit function coming soon",
 	documentNotAvailable: "Document not available",
+	// Supplier Article Detail Page (TFS-436)
+	articleDetailTitle: "Supplier Article",
+	grundInformationSection: "Basic Information",
+	artikelInformationSection: "Article Information",
+	imagesSection: "Images",
+	articleNoLabel: "Article number",
+	supplierArticleNoLabel: "Supplier article no.",
+	supplierNameLabel: "Supplier name",
+	unitPriceLabel: "Unit price",
+	linkedArticleLabel: "Linked article",
+	articleDescriptionLabel: "Description",
+	weightLabel: "Weight",
+	lengthLabel: "Length",
+	widthLabel: "Width",
+	heightLabel: "Height",
+	materialLabel: "Material",
+	noImagesFound: "No images found",
+	notFoundTitle: "Supplier article not found",
+	notFoundDescription: "The requested supplier article could not be found.",
+	goBackButton: "Go back",
 };
 
 export const en: Translation = {

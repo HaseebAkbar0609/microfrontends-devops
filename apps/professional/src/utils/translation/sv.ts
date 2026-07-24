@@ -993,6 +993,26 @@ export const svRegister: RegisterTranslation = {
 	documentSection: "Dokument",
 	editComingSoon: "Redigeringsfunktion kommer snart",
 	documentNotAvailable: "Dokumentet är inte tillgängligt",
+	// Supplier Article Detail Page (TFS-436)
+	articleDetailTitle: "Leverantörsartikel",
+	grundInformationSection: "Grundinformation",
+	artikelInformationSection: "Artikelinformation",
+	imagesSection: "Bilder",
+	articleNoLabel: "Artikelnummer",
+	supplierArticleNoLabel: "Leverantörsartikelnr",
+	supplierNameLabel: "Leverantörsnamn",
+	unitPriceLabel: "A-pris",
+	linkedArticleLabel: "Kopplad artikel",
+	articleDescriptionLabel: "Benämning",
+	weightLabel: "Vikt",
+	lengthLabel: "Längd",
+	widthLabel: "Bredd",
+	heightLabel: "Höjd",
+	materialLabel: "Material",
+	noImagesFound: "Inga bilder hittades",
+	notFoundTitle: "Leverantörsartikel hittades inte",
+	notFoundDescription: "Den begärda leverantörsartikeln kunde inte hittas.",
+	goBackButton: "Gå tillbaka",
 };
 
 export const svCommon: CommonTranslation = {

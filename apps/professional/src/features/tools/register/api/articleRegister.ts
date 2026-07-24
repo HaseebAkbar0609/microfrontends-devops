@@ -5,8 +5,13 @@ import type {
 	GetArticleListResponse,
 	GetSupplierArticleListParams,
 	GetSupplierArticleListResponse,
+	SupplierArticleDetail,
 } from "../types";
-import { MOCK_ARTICLE_DATA, MOCK_SUPPLIER_ARTICLE_DATA } from "../mockdata/articles";
+import {
+	MOCK_ARTICLE_DATA,
+	MOCK_SUPPLIER_ARTICLE_DATA,
+	MOCK_SUPPLIER_ARTICLE_DETAIL,
+} from "../mockdata/articles";
 
 export async function getArticleListAPIAction(
 	params: GetArticleListParams = {},
@@ -157,3 +162,19 @@ export async function toggleArticleFavoriteAPIAction(id: string): Promise<boolea
 		return true;
 	}
 }
+
+export async function getSupplierArticleDetailAPIAction(
+	id: string,
+): Promise<SupplierArticleDetail | null> {
+	try {
+		const res = await axiosInstance.get(`${API_PATH.ARTICLES.SUPPLIER_ARTICLES_LIST}/${id}`);
+		if (res.data?.data) {
+			return res.data.data;
+		}
+	} catch {
+		// Fallback to mock data
+	}
+
+	return MOCK_SUPPLIER_ARTICLE_DETAIL[id] ?? null;
+}
+
