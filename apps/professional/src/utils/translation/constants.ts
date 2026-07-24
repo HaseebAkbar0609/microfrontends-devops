@@ -616,6 +616,25 @@ export type OfferTranslation = {
 	adminGroupsCreate: string;
 	adminGroupsOpen: string;
 	adminGroupsNoGroupsFound: string;
+	// Admin - Create group (2-step dialog)
+	adminGroupsNameLabel: string;
+	adminGroupsNamePlaceholder: string;
+	adminGroupsDescriptionLabel: string;
+	adminGroupsDescriptionPlaceholder: string;
+	adminGroupsPermissionsTitle: string;
+	adminGroupsStep2: string;
+	adminGroupsAddRole: string;
+	adminGroupsCreatedSuccess: string;
+	adminGroupsPermAll: string;
+	adminGroupsPermViewCompanies: string;
+	adminGroupsPermContactCompanies: string;
+	adminGroupsPermContractCompanies: string;
+	adminGroupsPermViewOffers: string;
+	adminGroupsPermMakeOffers: string;
+	adminGroupsPermSubcategory: string;
+	adminGroupsPermOffers: string;
+	adminGroupsPermProjectPlanning: string;
+	adminGroupsPermPurchase: string;
 	// Offer - List
 	offerList: string;
 	job: string;
