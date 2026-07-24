@@ -941,6 +941,17 @@ export type RegisterTranslation = {
 	documentSection: string;
 	editComingSoon: string;
 	documentNotAvailable: string;
+	// Supplier Article Detail Page (TFS-436)
+	articleDetailTitle: string;
+	grundInformationSection: string;
+	artikelInformationSection: string;
+	imagesSection: string;
+	articleNoLabel: string;
+	supplierArticleNoLabel: string;
+	supplierNameLabel: string;
+	unitPriceLabel: string;
+	linkedArticleLabel: string;
+	articleDescriptionLabel: string;
 	// Import Article Translations (TFS-437)
 	importFileTitle: string;
 	yourFileSection: string;
@@ -964,6 +975,10 @@ export type RegisterTranslation = {
 	widthLabel: string;
 	heightLabel: string;
 	materialLabel: string;
+	noImagesFound: string;
+	notFoundTitle: string;
+	notFoundDescription: string;
+	goBackButton: string;
 	filesSection: string;
 	documentLabel: string;
 	cancelButtonLabel: string;
