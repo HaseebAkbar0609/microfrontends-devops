@@ -8,6 +8,7 @@ import type {
 	SupplierArticleDetail,
 	ArticleImportMapping,
 	ArticleImportResult,
+	CreateArticleFormData,
 } from "../types";
 import {
 	MOCK_ARTICLE_DATA,
@@ -200,6 +201,17 @@ export async function importArticleAPIAction(
 		};
 	} catch {
 		return { successCount: 0, failureCount: 1, errors: [{ row: 0, message: "Import failed" }] };
+	}
+}
+
+export async function createArticleAPIAction(
+	data: CreateArticleFormData,
+): Promise<{ id: string }> {
+	try {
+		const res = await axiosInstance.post(API_PATH.ARTICLES.CREATE, data);
+		return { id: res.data?.id ?? res.data?.data?.id ?? "new-article" };
+	} catch {
+		return { id: "new-article" };
 	}
 }
 
