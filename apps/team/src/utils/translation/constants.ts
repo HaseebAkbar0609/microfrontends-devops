@@ -725,6 +725,7 @@ export type AdminTranslation = {
 	approvalStatusDeclined: string;
 	approvalStatusPending: string;
 	approvalStatusArchived: string;
+	partnerAddCategoryButton: string;
 };
 
 export type Translation = SidebarTranslation &

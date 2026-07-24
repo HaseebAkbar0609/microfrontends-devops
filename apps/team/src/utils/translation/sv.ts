@@ -748,6 +748,7 @@ export const sweAdmin: AdminTranslation = {
 	approvalStatusDeclined: "Avböjd",
 	approvalStatusPending: "Väntar",
 	approvalStatusArchived: "Arkiverad",
+	partnerAddCategoryButton: "Lägg till ny kategori",
 };
 
 export const swe: Translation = {

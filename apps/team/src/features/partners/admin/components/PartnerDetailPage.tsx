@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SlidersHorizontal } from "lucide-react";
+import { ChevronRight, SlidersHorizontal } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
@@ -124,6 +124,7 @@ export function PartnerDetailPage({ id }: PartnerDetailPageProps) {
 					{partner?.company ?? <Translate text={localizationConstants.partnerAdminItem} />}
 				</h1>
 				<DynamicBreadcrumb
+					separator={<ChevronRight className="h-3 w-3" />}
 					items={[
 						{ label: <Translate text={localizationConstants.partners} />, href: "/partners/admin" },
 						{ label: <Translate text={localizationConstants.partnerAdminItem} />, href: "/partners/admin" },

@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ChevronRight } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DynamicBreadcrumb } from "@/components/common";
@@ -46,6 +47,7 @@ export default function CompanyDetail() {
 					<Translate text={localizationConstants.adminCompanyInformation} />
 				</h1>
 				<DynamicBreadcrumb
+					separator={<ChevronRight className="h-3 w-3" />}
 					items={[
 						{ label: <Translate text={localizationConstants.adminItem} />, href: "/admin" },
 						{ label: <Translate text={localizationConstants.adminCompanyInformation} /> },
