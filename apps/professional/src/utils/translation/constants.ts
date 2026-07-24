@@ -952,6 +952,24 @@ export type RegisterTranslation = {
 	unitPriceLabel: string;
 	linkedArticleLabel: string;
 	articleDescriptionLabel: string;
+	// Import Article Translations (TFS-437)
+	importFileTitle: string;
+	yourFileSection: string;
+	columnHeader: string;
+	contentHeader: string;
+	basicInfoSection: string;
+	articleNumberLabel: string;
+	nameLabel: string;
+	unitLabel: string;
+	eanLabel: string;
+	manufacturerLabel: string;
+	manufacturerArticleNumberLabel: string;
+	descriptionLabel: string;
+	modelLabel: string;
+	articleTypeLabel: string;
+	activeLabel: string;
+	supplierNumberLabel: string;
+	measurementsSection: string;
 	weightLabel: string;
 	lengthLabel: string;
 	widthLabel: string;
@@ -961,6 +979,29 @@ export type RegisterTranslation = {
 	notFoundTitle: string;
 	notFoundDescription: string;
 	goBackButton: string;
+	filesSection: string;
+	documentLabel: string;
+	cancelButtonLabel: string;
+	importButtonLabel: string;
+	downloadTemplateLabel: string;
+	importInstructionsTitle: string;
+	importInstructionsText: string;
+	dropzoneText: string;
+	dropzoneSubtext: string;
+	supportedFormatsLabel: string;
+	fileSelectedLabel: string;
+	importingLabel: string;
+	importSuccessMessage: string;
+	importErrorMessage: string;
+	invalidFileFormatError: string;
+	missingRequiredColumnError: string;
+	filesImportedSuccessfully: string;
+	filesFailed: string;
+	processingFile: string;
+	rowsFound: string;
+	fileParseError: string;
+	emptyFileError: string;
+	noColumnsFoundError: string;
 };
 
 export type CommonTranslation = {

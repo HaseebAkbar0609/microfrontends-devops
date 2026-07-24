@@ -192,6 +192,38 @@ export interface GetSupplierArticleListResponse {
 	totalPages: number;
 }
 
+// Article Import Types
+export interface ArticleImportColumn {
+	fileColumn: string;
+	fileValue: string;
+	mappedField?: string;
+}
+
+export interface ArticleImportMapping {
+	articleNumber?: string;
+	name?: string;
+	unit?: string;
+	ean?: string;
+	manufacturer?: string;
+	manufacturerArticleNumber?: string;
+	description?: string;
+	model?: string;
+	articleType?: string;
+	active?: string;
+	supplierNumber?: string;
+	weight?: string;
+	length?: string;
+	width?: string;
+	height?: string;
+	material?: string;
+}
+
+export interface ArticleImportResult {
+	successCount: number;
+	failureCount: number;
+	errors?: Array<{ row: number; message: string }>;
+}
+
 // Customer Detail Types
 export interface CustomerContact {
 	id: string;
