@@ -133,7 +133,13 @@ export const API_PATH = {
 		CREATE: BASE_PATHS.QUESTIONS,
 		detail: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}`,
 		reply: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}/reply`,
-	}
+	},
+	DISCOUNT: {
+		LIST: "/api/v1/discounts",
+		FILTERS: "/api/v1/discounts/filters",
+		detail: (discountId: string) => `/api/v1/discounts/${encodeURIComponent(discountId)}`,
+		apply: (discountId: string) => `/api/v1/discounts/${encodeURIComponent(discountId)}/apply`,
+	},
 };
 
 export const appConstants = {

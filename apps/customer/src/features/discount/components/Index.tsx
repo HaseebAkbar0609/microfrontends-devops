@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { getDiscountDetailAPIAction } from "@/api-actions/discount/getDetail";
-import type { DiscountPartner, DiscountOffer } from "../types/types";
-import { DISCOUNT_DETAIL_BREADCRUMBS, DUMMY_DISCOUNT_PARTNER, DUMMY_DISCOUNT_OFFERS, DUMMY_BANNER_SLIDES } from "../constants";
+import type { DiscountPartner, DiscountOffer, BannerSlide } from "../types/types";
+import { DISCOUNT_DETAIL_BREADCRUMBS } from "../constants";
 import { DiscountPartnerCard } from "./DiscountPartnerCard";
 import { DiscountOfferCard } from "./DiscountOfferCard";
 import { DiscountBannerSlider } from "./DiscountBannerSlider";
@@ -19,16 +19,36 @@ interface DiscountDetailFeatureProps {
 
 export function DiscountDetailFeature({ partnerId }: DiscountDetailFeatureProps) {
 	const router = useRouter();
-	const [partner, setPartner] = useState<DiscountPartner>(DUMMY_DISCOUNT_PARTNER);
-	const [offers, setOffers] = useState<DiscountOffer[]>(DUMMY_DISCOUNT_OFFERS);
+	const [partner, setPartner] = useState<DiscountPartner | null>(null);
+	const [offers, setOffers] = useState<DiscountOffer[]>([]);
+	const [bannerSlides, setBannerSlides] = useState<BannerSlide[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
+		let isMounted = true;
+		setPartner(null);
+		setOffers([]);
+		setBannerSlides([]);
+		setError(null);
+		setLoading(true);
+
 		getDiscountDetailAPIAction(partnerId).then((result) => {
+			if (!isMounted) return;
 			if (result.success && result.data) {
-				setPartner(result.data.partner);
-				setOffers(result.data.offers);
+				setPartner(result.data.partner ?? null);
+				setOffers(result.data.offers ?? []);
+				setBannerSlides(result.data.bannerSlides ?? []);
+				setError(null);
+			} else {
+				setError(result.error || "Failed to load discount details");
 			}
+			setLoading(false);
 		});
+
+		return () => {
+			isMounted = false;
+		};
 	}, [partnerId]);
 
 	return (
@@ -49,7 +69,7 @@ export function DiscountDetailFeature({ partnerId }: DiscountDetailFeatureProps)
 					</button>
 					<div className="flex flex-col gap-1.5">
 						<h1 className="text-2xl font-semibold text-[#020617] leading-none tracking-tight">
-							{partner.name}
+							{partner?.name ?? ""}
 						</h1>
 						<p className="text-sm font-normal text-[#64748B] leading-5">
 							<Translate text={localizationConstants.discountDetailSubtitle} />
@@ -57,21 +77,31 @@ export function DiscountDetailFeature({ partnerId }: DiscountDetailFeatureProps)
 					</div>
 				</div>
 
-				{/* Two-column layout */}
-				<div className="flex flex-col xl:flex-row gap-6 items-start">
-					{/* Left column — partner profile card */}
-					<div className="w-full xl:w-90 xl:shrink-0 xl:sticky xl:top-6">
-						<DiscountPartnerCard partner={partner} />
+				{loading ? (
+					<p className="py-12 text-center text-sm text-slate-400">
+						<Translate text={localizationConstants.discountsLoading} />
+					</p>
+				) : error ? (
+					<p className="py-12 text-center text-sm text-red-500">
+						{error}
+					</p>
+				) : !partner ? (
+					<p className="py-12 text-center text-sm text-slate-400">
+						<Translate text={localizationConstants.discountsNotFound} />
+					</p>
+				) : (
+					<div className="flex flex-col xl:flex-row gap-6 items-start">
+						<div className="w-full xl:w-90 xl:shrink-0 xl:sticky xl:top-6">
+							<DiscountPartnerCard partner={partner} />
+						</div>
+						<div className="flex-1 min-w-0 flex flex-col gap-4">
+							{bannerSlides.length > 0 && <DiscountBannerSlider slides={bannerSlides} />}
+							{offers.map((offer) => (
+								<DiscountOfferCard key={offer.id} offer={offer} />
+							))}
+						</div>
 					</div>
-
-					{/* Right column — banner slider + offer cards */}
-					<div className="flex-1 min-w-0 flex flex-col gap-4">
-						<DiscountBannerSlider slides={DUMMY_BANNER_SLIDES} />
-						{offers.map((offer) => (
-							<DiscountOfferCard key={offer.id} offer={offer} />
-						))}
-					</div>
-				</div>
+				)}
 			</div>
 		</div>
 	);

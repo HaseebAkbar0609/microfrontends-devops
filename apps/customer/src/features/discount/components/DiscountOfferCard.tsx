@@ -1,5 +1,8 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { TicketPercent, BadgePercent } from "lucide-react";
+import { TicketPercent, BadgePercent, Check } from "lucide-react";
 import type { DiscountOffer } from "../types/types";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
@@ -10,6 +13,27 @@ interface DiscountOfferCardProps {
 
 export function DiscountOfferCard({ offer }: DiscountOfferCardProps) {
 	const images = offer.galleryImages ?? [];
+	const [copied, setCopied] = useState(false);
+	const hasDiscountCode = Boolean(offer.discountCode && offer.discountCode.trim());
+	const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+	useEffect(() => {
+		return () => {
+			if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+		};
+	}, []);
+
+	const handleCopy = async () => {
+		if (!hasDiscountCode || !offer.discountCode) return;
+		try {
+			await navigator.clipboard.writeText(offer.discountCode);
+			setCopied(true);
+			if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+			copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+		} catch {
+			// Fallback if clipboard API fails
+		}
+	};
 
 	return (
 		<div className="border border-[#E2E8F0] rounded-lg p-5 flex flex-col gap-4 bg-white">
@@ -32,19 +56,17 @@ export function DiscountOfferCard({ offer }: DiscountOfferCardProps) {
 					)}
 				</div>
 
-				{/* Small 2×2 grid — 3 filled, bottom-right empty */}
+				{/* Small 2×2 grid — up to 3 images, bottom-right empty */}
 				<div className="grid grid-cols-2 gap-x-3 gap-y-7.5 shrink-0">
-					{[1, 2, 3].map((i) => (
+					{images.slice(1, 4).map((src, i) => (
 						<div
 							key={i}
 							className="relative w-17.75 h-17.75 bg-[#F3F4F6] rounded-lg overflow-hidden"
 						>
-							{images[i] && (
-								<Image src={images[i]} alt="" fill className="object-cover" />
-							)}
+							<Image src={src} alt="" fill className="object-cover" />
 						</div>
 					))}
-					<div className="w-17.75 h-17.75" />
+					{images.length >= 2 && <div className="w-17.75 h-17.75" />}
 				</div>
 
 				{/* Description + discount code — fills remaining width, pinned to large image height */}
@@ -56,14 +78,25 @@ export function DiscountOfferCard({ offer }: DiscountOfferCardProps) {
 						<div className="flex items-center gap-2 flex-1 min-w-0">
 							<TicketPercent className="w-5 h-5 text-[#999DA2] shrink-0" />
 							<span className="text-sm font-semibold text-[#1E293B] truncate">
-								{offer.discountCode}
+								{offer.discountCode || "-"}
 							</span>
 						</div>
 						<button
-							className="flex items-center gap-2 bg-[#18181B] text-white text-sm font-medium px-4 h-9 rounded-md hover:bg-zinc-800 transition-colors shrink-0 shadow-sm"
+							onClick={handleCopy}
+							disabled={!hasDiscountCode}
+							className="flex items-center gap-2 bg-[#18181B] text-white text-sm font-medium px-4 h-9 rounded-md hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#18181B] transition-colors shrink-0 shadow-sm"
 						>
-							<BadgePercent className="w-4 h-4" />
-							<Translate text={localizationConstants.discountOpenQR} />
+							{copied ? (
+								<>
+									<Check className="w-4 h-4 text-green-400" />
+									<span>Copied</span>
+								</>
+							) : (
+								<>
+									<BadgePercent className="w-4 h-4" />
+									<Translate text={localizationConstants.discountOpenQR} />
+								</>
+							)}
 						</button>
 					</div>
 				</div>
