@@ -192,6 +192,38 @@ export interface GetSupplierArticleListResponse {
 	totalPages: number;
 }
 
+// Article Import Types
+export interface ArticleImportColumn {
+	fileColumn: string;
+	fileValue: string;
+	mappedField?: string;
+}
+
+export interface ArticleImportMapping {
+	articleNumber?: string;
+	name?: string;
+	unit?: string;
+	ean?: string;
+	manufacturer?: string;
+	manufacturerArticleNumber?: string;
+	description?: string;
+	model?: string;
+	articleType?: string;
+	active?: string;
+	supplierNumber?: string;
+	weight?: string;
+	length?: string;
+	width?: string;
+	height?: string;
+	material?: string;
+}
+
+export interface ArticleImportResult {
+	successCount: number;
+	failureCount: number;
+	errors?: Array<{ row: number; message: string }>;
+}
+
 // Customer Detail Types
 export interface CustomerContact {
 	id: string;
@@ -269,3 +301,32 @@ export interface CustomerDetail {
 	costCenter: string;
 	project: string;
 }
+
+// Supplier Article Detail Types (TFS-436)
+export interface SupplierArticleDetail {
+	id: string;
+	articleNo: string;
+	articleName: string;
+	articleDescription: string;
+	category: string;
+	unitPrice: string;
+	currency: string;
+	taxVat: string;
+	discountTiers: { minQty: string; discount: string }[];
+	supplierName: string;
+	supplierId: string;
+	supplierArticleNo: string;
+	supplierDescription: string;
+	purchasePrice: string;
+	leadTime: string;
+	status: "active" | "inactive" | "discontinued";
+	weight: string;
+	length: string;
+	width: string;
+	height: string;
+	material: string;
+	linkedArticleNo: string;
+	images: { id: string; url: string; name: string }[];
+	documents: { id: string; name: string; type: string; url: string }[];
+}
+

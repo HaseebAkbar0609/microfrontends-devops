@@ -289,7 +289,7 @@ export function ArticleRegisterTable() {
 						<DropdownMenuTrigger asChild>
 							<Button
 								variant="outline"
-								className="h-10 w-full sm:w-[75px] sm:min-w-[75px] border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between"
+								className="h-10 w-full sm:w-18.75 sm:min-w-18.75 border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between"
 							>
 								<Translate text={localizationConstants.filter} />
 								<ChevronDown className="h-3.5 w-3.5 opacity-50" />
@@ -324,6 +324,7 @@ export function ArticleRegisterTable() {
 				<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto justify-end">
 					<Button
 						variant="outline"
+						onClick={() => router.push("/tools/register/import-article")}
 						className="h-10 w-full sm:w-auto gap-2 border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50 shadow-2xs justify-center"
 					>
 						<Download className="h-4 w-4 text-slate-700" aria-hidden />

@@ -750,6 +750,7 @@ export const enAdmin: AdminTranslation = {
 	approvalStatusDeclined: "Declined",
 	approvalStatusPending: "Pending",
 	approvalStatusArchived: "Archived",
+	partnerAddCategoryButton: "Add New Category",
 };
 
 export const en: Translation = {

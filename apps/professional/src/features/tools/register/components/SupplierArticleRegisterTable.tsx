@@ -201,16 +201,16 @@ export function SupplierArticleRegisterTable() {
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
-							void row;
+							router.push(`/tools/register/supplier-articles/${row.id}`);
 						}}
-						className="inline-flex items-center justify-center p-1.5 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+						className="inline-flex items-center justify-center p-1.5 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
 					>
 						<Eye className="h-4 w-4" />
 					</button>
 				),
 			},
 		],
-		[],
+		[router],
 	);
 
 	const actions: DataTableAction<SupplierArticleRow>[] = useMemo(
@@ -218,7 +218,7 @@ export function SupplierArticleRegisterTable() {
 			{
 				label: localizationConstants.viewLabel,
 				icon: <Eye className="h-4 w-4" />,
-				onClick: (row) => void row,
+				onClick: (row) => router.push(`/tools/register/supplier-articles/${row.id}`),
 			},
 			{
 				label: localizationConstants.editLabel,
@@ -232,7 +232,7 @@ export function SupplierArticleRegisterTable() {
 				onClick: (row) => void row,
 			},
 		],
-		[],
+		[router],
 	);
 
 	return (
@@ -253,7 +253,7 @@ export function SupplierArticleRegisterTable() {
 							<DropdownMenuTrigger asChild>
 								<Button
 									variant="outline"
-									className="h-10 w-full sm:w-[75px] sm:min-w-[75px] border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between"
+									className="h-10 w-full sm:w-18.75 sm:min-w-18.75 border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between"
 								>
 									<Translate text={localizationConstants.filter} />
 									<ChevronDown className="h-3.5 w-3.5 opacity-50" />
