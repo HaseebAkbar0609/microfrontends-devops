@@ -7,6 +7,7 @@ import {
 	ArrowLeft,
 	PenLine,
 	UserPlus,
+	Package,
 	FilePlus,
 	ChevronUp,
 	ChevronDown,
@@ -204,7 +205,7 @@ export function SupplierArticleDetailPage() {
 				<Button
 					variant="ghost"
 					size="icon"
-					onClick={() => router.push("/tools/register")}
+					onClick={() => router.push("/tools/register/supplier-articles")}
 					className="h-8 w-8 shrink-0"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />
@@ -273,7 +274,7 @@ export function SupplierArticleDetailPage() {
 						</SectionCard>
 
 						<SectionCard
-							icon={<UserPlus className="h-5 w-5 sm:h-6 sm:w-6" />}
+							icon={<Package className="h-5 w-5 sm:h-6 sm:w-6" />}
 							title={localizationConstants.artikelInformationSection}
 							onEdit={() => {}}
 						>
