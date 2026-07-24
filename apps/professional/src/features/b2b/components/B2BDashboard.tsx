@@ -34,6 +34,25 @@ const B2BDashboard = () => {
 	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [panelOpen, setPanelOpen] = useState(true);
+	const [widgetsVisible, setWidgetsVisible] = useState(true);
+
+	const savedLayoutRef = useRef<PlacedWidgetEntry[] | null>(null);
+	const handleWidgetsToggle = () => {
+		if (widgetsVisible) {
+			savedLayoutRef.current = placedWidgets;
+			setPlacedWidgets((widgets) =>
+				widgets.map((widget) => ({
+					...widget,
+					sidebarId: "emptyPage",
+					widgetProps: B2B_SIDEBAR_WIDGET_MAP.emptyPage,
+				})),
+			);
+		} else if (savedLayoutRef.current) {
+			setPlacedWidgets(savedLayoutRef.current);
+			savedLayoutRef.current = null;
+		}
+		setWidgetsVisible((prev) => !prev);
+	};
 	const [highlightedWidgetUid, setHighlightedWidgetUid] = useState<
 		string | null
 	>(null);
@@ -51,7 +70,7 @@ const B2BDashboard = () => {
 		...placedWidgets
 			.map((w) => w.sidebarId)
 			.filter((id): id is string => !!id),
-		"image",
+		...(widgetsVisible ? ["image"] : []),
 	];
 
 	const dropZoneRef = useRef<HTMLDivElement>(null);
@@ -96,6 +115,10 @@ const B2BDashboard = () => {
 		});
 
 		if (dropIndex !== null) {
+			if (!widgetsVisible) {
+				savedLayoutRef.current = null;
+				setWidgetsVisible(true);
+			}
 			const targetWidget = placedWidgets[dropIndex];
 
 			if (targetWidget.sidebarId === "emptyPage") {
@@ -331,10 +354,12 @@ const B2BDashboard = () => {
 							))}
 						</div>
 
-						<DashboardImage
-							src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=2000"
-							alt="Construction workers"
-						/>
+						{widgetsVisible && (
+							<DashboardImage
+								src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&q=80&w=2000"
+								alt="Construction workers"
+							/>
+						)}
 					</Card>
 				</div>
 
@@ -356,14 +381,26 @@ const B2BDashboard = () => {
 									<button
 										type="button"
 										role="switch"
-										aria-checked={panelOpen}
+										aria-checked={widgetsVisible}
 										aria-label={t(
 											localizationConstants.widgetPanelOpenClosed,
 										)}
-										onClick={() => setPanelOpen(false)}
-										className="relative h-6 w-11 cursor-pointer rounded-full bg-blue-600 transition-colors"
+										onClick={handleWidgetsToggle}
+										className={cn(
+											"relative h-6 w-11 cursor-pointer rounded-full transition-colors",
+											widgetsVisible
+												? "bg-blue-600"
+												: "bg-slate-300",
+										)}
 									>
-										<span className="absolute top-0.5 left-[22px] h-5 w-5 rounded-full bg-white shadow transition-all" />
+										<span
+											className={cn(
+												"absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all",
+												widgetsVisible
+													? "left-[22px]"
+													: "left-0.5",
+											)}
+										/>
 									</button>
 								</div>
 							}
