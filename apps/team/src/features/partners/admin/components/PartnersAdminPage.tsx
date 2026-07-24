@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronRight } from "lucide-react";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DynamicBreadcrumb } from "@/components/common";
@@ -8,20 +9,13 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PartnersRegisterTab } from "./PartnersRegisterTab";
 import { ApprovalCenterTab } from "./ApprovalCenterTab";
+import { KategoriTab } from "./KategoriTab";
 
 const MAIN_TABS = [
 	{ value: "register", label: localizationConstants.partnersRegisterTab },
 	{ value: "approval-center", label: localizationConstants.approvalCenterTab },
 	{ value: "category", label: localizationConstants.categoryLabel },
 ];
-
-function ComingSoonPanel() {
-	return (
-		<div className="flex items-center justify-center rounded-md border border-slate-200 bg-white px-5 py-16 text-sm text-slate-500 shadow-sm">
-			<Translate text={localizationConstants.comingSoon} />
-		</div>
-	);
-}
 
 export default function PartnersAdminPage() {
 	const [activeTab, setActiveTab] = useState("register");
@@ -33,6 +27,7 @@ export default function PartnersAdminPage() {
 					<Translate text={localizationConstants.partnersAdminTitle} />
 				</h1>
 				<DynamicBreadcrumb
+					separator={<ChevronRight className="h-3 w-3" />}
 					items={[
 						{ label: <Translate text={localizationConstants.partners} />, href: "/partners/admin" },
 						{ label: <Translate text={localizationConstants.partnerAdminItem} /> },
@@ -62,7 +57,7 @@ export default function PartnersAdminPage() {
 					<ApprovalCenterTab />
 				</TabsContent>
 				<TabsContent value="category" className="mt-6">
-					<ComingSoonPanel />
+					<KategoriTab />
 				</TabsContent>
 			</Tabs>
 		</div>
