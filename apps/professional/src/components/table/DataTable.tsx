@@ -179,7 +179,7 @@ export function DataTable<TData>({
 					bordered && "rounded-lg border border-slate-200 shadow-2xs",
 				)}
 			>
-				<Table className="w-full min-w-4xl table-auto border-collapse">
+				<Table className="w-full min-w-[1000px] table-auto border-collapse">
 					<TableHeader>
 						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
 							{columns.map((col) => (

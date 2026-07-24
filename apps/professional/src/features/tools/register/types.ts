@@ -112,6 +112,7 @@ export interface CustomerRegisterRow {
 	phone: string;
 	email: string;
 	status: "active" | "inactive";
+	dateAdded: string;
 }
 
 export interface GetCustomerRegisterListParams {
@@ -130,3 +131,202 @@ export interface GetCustomerRegisterListResponse {
 	limit: number;
 	totalPages: number;
 }
+
+// Article Register Types
+export interface ArticleRow {
+	id: string;
+	isFavorite: boolean;
+	articleNo: string;
+	description: string;
+	outPriceListA: string;
+	calculatedCost: string;
+	stock: number;
+	reserved: number;
+	available: number;
+	stockValue: string;
+	status: "active" | "inactive";
+}
+
+export interface GetArticleListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: "all" | "active" | "inactive";
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetArticleListResponse {
+	data: ArticleRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
+// Supplier Article Register Types
+export interface SupplierArticleRow {
+	id: string;
+	supplierArticleNo: string;
+	supplierName: string;
+	supplierDescription: string;
+	purchasePrice: string;
+	linkedToArticle: string;
+	status: "mapped" | "unmapped";
+}
+
+export interface GetSupplierArticleListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	supplier?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetSupplierArticleListResponse {
+	data: SupplierArticleRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
+// Article Import Types
+export interface ArticleImportColumn {
+	fileColumn: string;
+	fileValue: string;
+	mappedField?: string;
+}
+
+export interface ArticleImportMapping {
+	articleNumber?: string;
+	name?: string;
+	unit?: string;
+	ean?: string;
+	manufacturer?: string;
+	manufacturerArticleNumber?: string;
+	description?: string;
+	model?: string;
+	articleType?: string;
+	active?: string;
+	supplierNumber?: string;
+	weight?: string;
+	length?: string;
+	width?: string;
+	height?: string;
+	material?: string;
+}
+
+export interface ArticleImportResult {
+	successCount: number;
+	failureCount: number;
+	errors?: Array<{ row: number; message: string }>;
+}
+
+// Customer Detail Types
+export interface CustomerContact {
+	id: string;
+	firstName: string;
+	lastName: string;
+	mobile: string;
+	email: string;
+	role: string;
+	personalNo: string;
+}
+
+export interface CustomerDocument {
+	id: string;
+	date: string;
+	name: string;
+	type: string;
+	url: string;
+}
+
+export interface CustomerDetail {
+	id: string;
+	customerNo: string;
+	companyName: string;
+	orgNo: string;
+	status: "active" | "inactive";
+	mainCategory: string;
+	department: string;
+	region: string;
+	vatRegNo: string;
+	// Addresses
+	visitingAddress: string;
+	visitingPostalCode: string;
+	visitingCity: string;
+	invoiceAddress: string;
+	invoicePostalCode: string;
+	invoiceCity: string;
+	// Bank
+	bankName: string;
+	bankAccount: string;
+	bankgiro: string;
+	plusgiro: string;
+	iban: string;
+	bic: string;
+	// Contact
+	phone: string;
+	email: string;
+	website: string;
+	contactNotes: string;
+	// Contacts
+	contacts: CustomerContact[];
+	// Assessment
+	ratings: Ratings;
+	documents: CustomerDocument[];
+	notes: string;
+	// Invoice
+	paymentTerms: string;
+	deliveryTerms: string;
+	deliveryMethod: string;
+	interestInvoicing: string;
+	priceList: string;
+	currency: string;
+	invoiceDiscount: string;
+	invoiceFee: string;
+	shippingFee: string;
+	pricesInclVat: string;
+	// References
+	ourReference: string;
+	customerResponsible: string;
+	externalReference: string;
+	yourReference: string;
+	// Accounting
+	vatNumber: string;
+	vatType: string;
+	salesAccount: string;
+	costCenter: string;
+	project: string;
+}
+
+// Supplier Article Detail Types (TFS-436)
+export interface SupplierArticleDetail {
+	id: string;
+	articleNo: string;
+	articleName: string;
+	articleDescription: string;
+	category: string;
+	unitPrice: string;
+	currency: string;
+	taxVat: string;
+	discountTiers: { minQty: string; discount: string }[];
+	supplierName: string;
+	supplierId: string;
+	supplierArticleNo: string;
+	supplierDescription: string;
+	purchasePrice: string;
+	leadTime: string;
+	status: "active" | "inactive" | "discontinued";
+	weight: string;
+	length: string;
+	width: string;
+	height: string;
+	material: string;
+	linkedArticleNo: string;
+	images: { id: string; url: string; name: string }[];
+	documents: { id: string; name: string; type: string; url: string }[];
+}
+
