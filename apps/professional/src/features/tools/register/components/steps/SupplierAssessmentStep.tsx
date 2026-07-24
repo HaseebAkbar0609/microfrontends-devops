@@ -80,6 +80,7 @@ export function SupplierAssessmentStep({
 	const handleViewFile = (file: UploadedFile) => {
 		const url = URL.createObjectURL(file.file);
 		window.open(url, "_blank");
+		setTimeout(() => URL.revokeObjectURL(url), 1000);
 	};
 
 	const handleSort = (field: "date" | "name" | "type") => {
