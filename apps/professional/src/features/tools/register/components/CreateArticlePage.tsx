@@ -26,6 +26,11 @@ const TABS = [
 
 const TOTAL_STEPS = 2;
 
+const STEP_FIELDS: Record<number, (keyof CreateArticleFormData)[]> = {
+	1: ["benamning", "leverantor", "enhet", "typAvArtikel", "forsaljning", "moms"],
+	2: ["forsaljningSESkattskyldighet"],
+};
+
 const DEFAULT_PRICE_LIST_ROWS: PriceListRow[] = [
 	{
 		id: "1",
@@ -110,11 +115,6 @@ export function CreateArticlePage() {
 	});
 
 	const control = methods.control;
-
-	const STEP_FIELDS: Record<number, (keyof CreateArticleFormData)[]> = {
-		1: ["benamning", "leverantor", "enhet", "typAvArtikel", "forsaljning", "moms"],
-		2: ["forsaljningSESkattskyldighet"],
-	};
 
 	const validateStep = async (step: number): Promise<boolean> => {
 		const fields = STEP_FIELDS[step];
