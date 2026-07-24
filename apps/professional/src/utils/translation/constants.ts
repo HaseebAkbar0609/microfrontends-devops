@@ -1021,6 +1021,24 @@ export type RegisterTranslation = {
 	fileParseError: string;
 	emptyFileError: string;
 	noColumnsFoundError: string;
+	// Create Supplier Translations (TFS-433)
+	createSupplierTitle: string;
+	createSupplierBasicInfoTab: string;
+	createSupplierContactTab: string;
+	createSupplierAssessmentTab: string;
+	createSupplierInvoiceTab: string;
+	supplierSection: string;
+	supplierNoLabel: string;
+	invoiceFeeLabelSupplier: string;
+	paymentTermsDaysLabel: string;
+	interestRateLabel: string;
+	collectionFeeLabel: string;
+	plusGiroStandard: string;
+	plusGiroForetag: string;
+	plusGiroDirekt: string;
+	createSupplierButton: string;
+	supplierCreatedSuccess: string;
+	supplierCreateError: string;
 };
 
 export type CommonTranslation = {

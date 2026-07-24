@@ -1065,6 +1065,24 @@ export const enRegister: RegisterTranslation = {
 	fileParseError: "Error parsing file. Please check the file format.",
 	emptyFileError: "File is empty. Please upload a file with data.",
 	noColumnsFoundError: "No columns found in the file.",
+	// Create Supplier Translations (TFS-433)
+	createSupplierTitle: "Create New Supplier",
+	createSupplierBasicInfoTab: "Basic Info",
+	createSupplierContactTab: "Contact",
+	createSupplierAssessmentTab: "Assessment",
+	createSupplierInvoiceTab: "Invoice",
+	supplierSection: "Suppliers",
+	supplierNoLabel: "Supplier No",
+	invoiceFeeLabelSupplier: "Invoice Fee",
+	paymentTermsDaysLabel: "Payment Terms (Days)",
+	interestRateLabel: "Interest Rate (%)",
+	collectionFeeLabel: "Collection Fee",
+	plusGiroStandard: "PlusGirot Standard",
+	plusGiroForetag: "PlusGirot Företag",
+	plusGiroDirekt: "PlusGirot Direkt",
+	createSupplierButton: "Create Supplier",
+	supplierCreatedSuccess: "Supplier created successfully!",
+	supplierCreateError: "Something went wrong. Please try again.",
 };
 
 export const en: Translation = {

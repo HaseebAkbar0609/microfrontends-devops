@@ -330,3 +330,75 @@ export interface SupplierArticleDetail {
 	documents: { id: string; name: string; type: string; url: string }[];
 }
 
+// Create Supplier Schema (TFS-433)
+export const createSupplierSchema = z.object({
+	// Step 1: GrundInfo
+	supplierNo: z.string().optional(),
+	status: z.string().min(1, "placeholderSelectStatus"),
+	companyName: z.string().min(1, "validationCompanyNameRequired"),
+	mainCategory: z.string().optional(),
+	department: z.string().optional(),
+	region: z.string().optional(),
+	orgNo: z.string().min(1, "validationOrgNoRequired"),
+	vatRegNo: z.string().optional(),
+	visitingAddress: z.string().min(1, "placeholderAddress"),
+	visitingPostalCode: z.string().min(1, "placeholderPostalCode"),
+	visitingCity: z.string().min(1, "placeholderCity"),
+	invoiceAddress: z.string().min(1, "placeholderAddress"),
+	invoicePostalCode: z.string().min(1, "placeholderPostalCode"),
+	invoiceCity: z.string().min(1, "placeholderCity"),
+	bankName: z.string().optional(),
+	bankAccount: z.string().optional(),
+	bankgiro: z.string().optional(),
+	plusgiro: z.string().optional(),
+	iban: z.string().optional(),
+	bic: z.string().optional(),
+	betalningsdagar: z.string().optional(),
+	ranta: z.string().optional(),
+	fakturaavgift: z.string().optional(),
+	inkasso: z.string().optional(),
+
+	// Step 2: Contact
+	phone: z.string().optional(),
+	email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	website: z.string().optional(),
+	contactNotes: z.string().optional(),
+	contactPerson1FirstName: z.string().optional(),
+	contactPerson1LastName: z.string().optional(),
+	contactPerson1Mobile: z.string().optional(),
+	contactPerson1Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson1Role: z.string().optional(),
+	contactPerson1PersonalNo: z.string().optional(),
+	contactPerson2FirstName: z.string().optional(),
+	contactPerson2LastName: z.string().optional(),
+	contactPerson2Mobile: z.string().optional(),
+	contactPerson2Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson2Role: z.string().optional(),
+	contactPerson2PersonalNo: z.string().optional(),
+	contactPerson3FirstName: z.string().optional(),
+	contactPerson3LastName: z.string().optional(),
+	contactPerson3Mobile: z.string().optional(),
+	contactPerson3Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson3Role: z.string().optional(),
+	contactPerson3PersonalNo: z.string().optional(),
+	contactPerson4FirstName: z.string().optional(),
+	contactPerson4LastName: z.string().optional(),
+	contactPerson4Mobile: z.string().optional(),
+	contactPerson4Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson4Role: z.string().optional(),
+	contactPerson4PersonalNo: z.string().optional(),
+	contactPerson5FirstName: z.string().optional(),
+	contactPerson5LastName: z.string().optional(),
+	contactPerson5Mobile: z.string().optional(),
+	contactPerson5Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson5Role: z.string().optional(),
+	contactPerson5PersonalNo: z.string().optional(),
+
+	// Step 3: Assessment
+	notes: z.string().optional(),
+});
+
+export type CreateSupplierFormData = z.infer<typeof createSupplierSchema>;
+
+export type CreateSupplierFullData = CreateSupplierFormData & { ratings: Ratings; id?: string | null };
+
