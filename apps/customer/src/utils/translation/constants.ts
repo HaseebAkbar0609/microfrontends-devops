@@ -658,6 +658,31 @@ export type QuestionsModule = {
 	faqTimeFlowFocusedOnSwedishMarket: string;
 	faqDoINeedToDownloadAnApp: string;
 	faqTimeFlowWorksInBrowserAndApp: string;
+	questionsSearchPlaceholder: string;
+	questionsFilterLabel: string;
+	questionsAskButton: string;
+	questionsNoQuestionsYet: string;
+	questionsAskFirstQuestion: string;
+	questionsNoResults: string;
+	questionsAskTitle: string;
+	questionsSubjectLabel: string;
+	questionsSubjectPlaceholder: string;
+	questionsMessageLabel: string;
+	questionsMessagePlaceholder: string;
+	questionsSubmitButton: string;
+	questionsSubmitting: string;
+	questionsSubmitSuccess: string;
+	questionsSubmitError: string;
+	questionsCancel: string;
+	questionsNoMessagesYet: string;
+	questionsReplyPlaceholder: string;
+	questionsSendReply: string;
+	questionsSending: string;
+	questionsFailedToSendReply: string;
+	questionsStatusOpen: string;
+	questionsStatusInProgress: string;
+	questionsStatusPendingResponse: string;
+	questionsStatusResolved: string;
 };
 export type SupportModule = {
 	supportContactUsTitle: string;
@@ -866,6 +891,10 @@ export type InspirationModule = {
 	inspirationReadMore: string;
 	inspirationCardTitle: string;
 	inspirationCardExcerpt: string;
+	inspirationNoContent: string;
+	inspirationErrorLoading: string;
+	inspirationLoading: string;
+	inspirationRetry: string;
 };
 
 export type ProjectsModule = {

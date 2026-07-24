@@ -710,6 +710,31 @@ export const svQuestions: QuestionsModule = {
 	faqDoINeedToDownloadAnApp: "Behöver jag ladda ner någon app?",
 	faqTimeFlowWorksInBrowserAndApp:
 		"Nej. Du kan använda TimeFlow direkt i webbläsaren. För en ännu bättre upplevelse finns även appen TimeFlow Home.",
+	questionsSearchPlaceholder: "Sök",
+	questionsFilterLabel: "Filter",
+	questionsAskButton: "Ställ en fråga",
+	questionsNoQuestionsYet: "Inga frågor än. Klicka på \"Ställ en fråga\" för att komma igång.",
+	questionsAskFirstQuestion: "Ställ en fråga för att komma igång",
+	questionsNoResults: "Inga resultat hittades.",
+	questionsAskTitle: "Ställ en fråga",
+	questionsSubjectLabel: "Ämne",
+	questionsSubjectPlaceholder: "t.ex. Hur använder jag kostnadskalkylatorn?",
+	questionsMessageLabel: "Meddelande",
+	questionsMessagePlaceholder: "Beskriv din fråga i detalj...",
+	questionsSubmitButton: "Skicka",
+	questionsSubmitting: "Skickar...",
+	questionsSubmitSuccess: "Frågan har skickats",
+	questionsSubmitError: "Kunde inte skicka frågan",
+	questionsCancel: "Avbryt",
+	questionsNoMessagesYet: "Inga meddelanden än",
+	questionsReplyPlaceholder: "Skriv ditt svar...",
+	questionsSendReply: "Skicka svar",
+	questionsSending: "Skickar...",
+	questionsFailedToSendReply: "Kunde inte skicka svar",
+	questionsStatusOpen: "Öppen",
+	questionsStatusInProgress: "Pågående",
+	questionsStatusPendingResponse: "Väntar på svar",
+	questionsStatusResolved: "Löst",
 };
 export const svSupport: SupportModule = {
 	supportContactUsTitle: "Kontakta oss",
@@ -931,6 +956,10 @@ export const svInspiration: InspirationModule = {
 	inspirationCardTitle: "Förbered dig på det oväntade",
 	inspirationCardExcerpt:
 		"Räkna med att renoveringen tar längre tid och kostar mer än du först trodde. Planera för en buffert för både tid och pengar. Om du har en deadline, påbörja renoveringen i god tid för att undvika onödig stress.",
+	inspirationNoContent: "Inget innehåll tillgängligt",
+	inspirationErrorLoading: "Kunde inte ladda innehåll",
+	inspirationLoading: "Laddar innehåll...",
+	inspirationRetry: "Försök igen",
 };
 
 export const svProjects: ProjectsModule = {

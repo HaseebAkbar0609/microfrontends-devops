@@ -713,6 +713,31 @@ export const enQuestions: QuestionsModule = {
 	faqDoINeedToDownloadAnApp: "Do I need to download an app?",
 	faqTimeFlowWorksInBrowserAndApp:
 		"No. TimeFlow works in the browser, but a mobile app is also available.",
+	questionsSearchPlaceholder: "Search",
+	questionsFilterLabel: "Filter",
+	questionsAskButton: "Ask a question",
+	questionsNoQuestionsYet: "No questions yet. Click \"Ask a question\" to get started.",
+	questionsAskFirstQuestion: "Ask a question to get started",
+	questionsNoResults: "No results found.",
+	questionsAskTitle: "Ask a Question",
+	questionsSubjectLabel: "Subject",
+	questionsSubjectPlaceholder: "e.g. How do I use the cost calculator?",
+	questionsMessageLabel: "Message",
+	questionsMessagePlaceholder: "Describe your question in detail...",
+	questionsSubmitButton: "Submit",
+	questionsSubmitting: "Submitting...",
+	questionsSubmitSuccess: "Question submitted successfully",
+	questionsSubmitError: "Failed to submit question",
+	questionsCancel: "Cancel",
+	questionsNoMessagesYet: "No messages yet",
+	questionsReplyPlaceholder: "Type your reply...",
+	questionsSendReply: "Send Reply",
+	questionsSending: "Sending...",
+	questionsFailedToSendReply: "Failed to send reply",
+	questionsStatusOpen: "Open",
+	questionsStatusInProgress: "In Progress",
+	questionsStatusPendingResponse: "Pending Response",
+	questionsStatusResolved: "Resolved",
 };
 export const enSupport: SupportModule = {
 	supportContactUsTitle: "Contact us",
@@ -937,6 +962,10 @@ export const enInspiration: InspirationModule = {
 	inspirationCardTitle: "Prepare for the unexpected",
 	inspirationCardExcerpt:
 		"Expect the renovation to take longer and cost more than you initially thought. Plan a buffer for both time and money. If you have a deadline, start the renovation well in advance to avoid unnecessary stress.",
+	inspirationNoContent: "No content available",
+	inspirationErrorLoading: "Failed to load content",
+	inspirationLoading: "Loading content...",
+	inspirationRetry: "Try again",
 };
 
 export const enProjects: ProjectsModule = {

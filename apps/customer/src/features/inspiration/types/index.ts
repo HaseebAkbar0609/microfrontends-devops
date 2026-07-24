@@ -1,6 +1,3 @@
-export interface AdviceCard {
-	id: string;
-	title: string;
-	excerpt: string;
-	imageUrl?: string;
-}
+import type { ContentItem } from "@/api-actions";
+
+export type AdviceCard = ContentItem;

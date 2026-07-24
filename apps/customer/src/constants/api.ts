@@ -13,6 +13,8 @@ const BASE_PATHS = {
 	CONSULTANT: `${API_PREFIX}/consultants`,
 	SUPPLIER: `${API_PREFIX}/suppliers`,
 	COST_CALCULATOR: "/api/v1/tools/cost-calculator",
+	CONTENT: "/api/v1/tools/content",
+	QUESTIONS: "/api/v1/tools/questions",
 
 };
 
@@ -121,6 +123,16 @@ export const API_PATH = {
 		CALCULATE: `${BASE_PATHS.COST_CALCULATOR}/calculate`,
 		PRODUCTS: `${BASE_PATHS.COST_CALCULATOR}/products`,
 		HOURLY_RATES: `${BASE_PATHS.COST_CALCULATOR}/hourly-rates`,
+	},
+	CONTENT: {
+		LIST: BASE_PATHS.CONTENT,
+		CATEGORIES: `${BASE_PATHS.CONTENT}/categories`,
+	},
+	QUESTIONS: {
+		LIST: BASE_PATHS.QUESTIONS,
+		CREATE: BASE_PATHS.QUESTIONS,
+		detail: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}`,
+		reply: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}/reply`,
 	}
 };
 
