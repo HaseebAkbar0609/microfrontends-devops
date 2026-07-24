@@ -15,6 +15,7 @@ import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { DUMMY_ADMIN_GROUPS, type AdminGroup } from "../constants";
+import CreateGroupDialog from "./CreateGroupDialog";
 
 const AVATAR_COLORS = [
 	"bg-orange-200 text-orange-800",
@@ -110,22 +111,36 @@ function GroupCard({
 
 export default function GroupsTab() {
 	const t = useTranslate();
+	const [groups, setGroups] = useState<AdminGroup[]>(DUMMY_ADMIN_GROUPS);
 	const [search, setSearch] = useState("");
 	const [groupFilter, setGroupFilter] = useState("");
+	const [createOpen, setCreateOpen] = useState(false);
 
 	const notifyComingSoon = () =>
 		showToast("info", t(localizationConstants.comingSoon));
 
+	const handleCreateGroup = (name: string) => {
+		setGroups((prev) => [
+			...prev,
+			{
+				id: `group-${prev.length + 1}`,
+				name,
+				members: [],
+				extraMembers: 0,
+			},
+		]);
+	};
+
 	const filteredGroups = useMemo(() => {
 		const q = search.trim().toLowerCase();
-		return DUMMY_ADMIN_GROUPS.filter((group) => {
+		return groups.filter((group) => {
 			const matchesSearch = !q || group.name.toLowerCase().includes(q);
 			const matchesFilter = !groupFilter || group.id === groupFilter;
 			return matchesSearch && matchesFilter;
 		});
-	}, [search, groupFilter]);
+	}, [groups, search, groupFilter]);
 
-	const activeFilterName = DUMMY_ADMIN_GROUPS.find(
+	const activeFilterName = groups.find(
 		(group) => group.id === groupFilter,
 	)?.name;
 
@@ -171,7 +186,7 @@ export default function GroupsTab() {
 								<Check className="h-3.5 w-3.5 text-blue-600" />
 							)}
 						</DropdownMenuItem>
-						{DUMMY_ADMIN_GROUPS.map((group) => (
+						{groups.map((group) => (
 							<DropdownMenuItem
 								key={group.id}
 								onClick={() => setGroupFilter(group.id)}
@@ -187,7 +202,7 @@ export default function GroupsTab() {
 				</DropdownMenu>
 				<div className="flex flex-1 justify-end">
 					<Button
-						onClick={notifyComingSoon}
+						onClick={() => setCreateOpen(true)}
 						className="h-10 gap-1.5 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white hover:bg-[#18181B]/90"
 					>
 						<Plus className="h-4 w-4" />
@@ -216,6 +231,12 @@ export default function GroupsTab() {
 					/>
 				</p>
 			)}
+
+			<CreateGroupDialog
+				open={createOpen}
+				onOpenChange={setCreateOpen}
+				onCreate={handleCreateGroup}
+			/>
 		</div>
 	);
 }

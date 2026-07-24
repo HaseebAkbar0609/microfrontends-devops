@@ -1,3 +1,5 @@
+import localizationConstants from "@/utils/translation/constants";
+
 export type AdminUserAccess = "sys-admin" | "admin" | "user";
 export type AdminUserLicense = "Standard" | "PRO";
 
@@ -299,5 +301,138 @@ export const DUMMY_ADMIN_GROUPS: AdminGroup[] = [
 			"Emil Torp",
 		],
 		extraMembers: 5,
+	},
+];
+
+export interface PermissionOption {
+	id: string;
+	label: string;
+	defaultChecked: boolean;
+}
+
+export interface PermissionSection {
+	id: string;
+	title: string;
+	options: PermissionOption[];
+}
+
+export interface PermissionTier {
+	id: string;
+	title: string;
+	sections: PermissionSection[];
+}
+
+const b2bSection = (checkedAll: boolean): PermissionSection => ({
+	id: "b2b",
+	title: "B2B",
+	options: [
+		{
+			id: "view-companies",
+			label: localizationConstants.adminGroupsPermViewCompanies,
+			defaultChecked: checkedAll,
+		},
+		{
+			id: "contact-companies",
+			label: localizationConstants.adminGroupsPermContactCompanies,
+			defaultChecked: checkedAll,
+		},
+		{
+			id: "contract-companies",
+			label: localizationConstants.adminGroupsPermContractCompanies,
+			defaultChecked: checkedAll,
+		},
+	],
+});
+
+const offersSection = (): PermissionSection => ({
+	id: "offers",
+	title: localizationConstants.adminGroupsPermOffers,
+	options: [
+		{
+			id: "view-offers",
+			label: localizationConstants.adminGroupsPermViewOffers,
+			defaultChecked: true,
+		},
+		{
+			id: "make-offers",
+			label: localizationConstants.adminGroupsPermMakeOffers,
+			defaultChecked: false,
+		},
+	],
+});
+
+const subcategorySection = (id: string, title: string): PermissionSection => ({
+	id,
+	title,
+	options: [
+		{
+			id: "sub-1",
+			label: localizationConstants.adminGroupsPermSubcategory,
+			defaultChecked: true,
+		},
+		{
+			id: "sub-2",
+			label: localizationConstants.adminGroupsPermSubcategory,
+			defaultChecked: false,
+		},
+		{
+			id: "sub-3",
+			label: localizationConstants.adminGroupsPermSubcategory,
+			defaultChecked: false,
+		},
+		{
+			id: "sub-4",
+			label: localizationConstants.adminGroupsPermSubcategory,
+			defaultChecked: false,
+		},
+	],
+});
+
+export const GROUP_PERMISSION_TIERS: PermissionTier[] = [
+	{
+		id: "start",
+		title: "Start",
+		sections: [
+			b2bSection(true),
+			offersSection(),
+			subcategorySection(
+				"project-planning",
+				localizationConstants.adminGroupsPermProjectPlanning,
+			),
+			subcategorySection(
+				"purchase",
+				localizationConstants.adminGroupsPermPurchase,
+			),
+		],
+	},
+	{
+		id: "standard",
+		title: "Standard",
+		sections: [
+			b2bSection(true),
+			offersSection(),
+			subcategorySection(
+				"project-planning",
+				localizationConstants.adminGroupsPermProjectPlanning,
+			),
+			subcategorySection(
+				"purchase",
+				localizationConstants.adminGroupsPermPurchase,
+			),
+		],
+	},
+	{
+		id: "pro",
+		title: "PRO",
+		sections: [
+			subcategorySection(
+				"project-planning",
+				localizationConstants.adminGroupsPermProjectPlanning,
+			),
+			subcategorySection(
+				"purchase",
+				localizationConstants.adminGroupsPermPurchase,
+			),
+		],
 	},
 ];
