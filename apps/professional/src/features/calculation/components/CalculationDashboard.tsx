@@ -16,7 +16,7 @@ import { DashboardWidget } from "@/features/widgetdashboard/components/Dashboard
 import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import { SidebarWidgetList } from "@/features/widgetdashboard/components/SidebarWidgetList";
-import { PlacedWidgetEntry } from "@/features/widgetdashboard/types/dashboard";
+import { useWidgetToggle } from "@/features/widgetdashboard/hooks/useWidgetToggle";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { cn } from "@/lib/utils";
@@ -34,25 +34,13 @@ const CalculationDashboard = () => {
 	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [panelOpen, setPanelOpen] = useState(true);
-	const [widgetsVisible, setWidgetsVisible] = useState(true);
-
-	const savedLayoutRef = useRef<PlacedWidgetEntry[] | null>(null);
-	const handleWidgetsToggle = () => {
-		if (widgetsVisible) {
-			savedLayoutRef.current = placedWidgets;
-			setPlacedWidgets((widgets) =>
-				widgets.map((widget) => ({
-					...widget,
-					sidebarId: "emptyPage",
-					widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.emptyPage,
-				})),
-			);
-		} else if (savedLayoutRef.current) {
-			setPlacedWidgets(savedLayoutRef.current);
-			savedLayoutRef.current = null;
-		}
-		setWidgetsVisible((prev) => !prev);
-	};
+	const {
+		placedWidgets,
+		setPlacedWidgets,
+		widgetsVisible,
+		handleWidgetsToggle,
+		resumeAfterDrop,
+	} = useWidgetToggle(CALCULATION_SIDEBAR_WIDGET_MAP, CALCULATION_INITIAL_WIDGETS);
 	const [highlightedWidgetUid, setHighlightedWidgetUid] = useState<
 		string | null
 	>(null);
@@ -63,9 +51,6 @@ const CalculationDashboard = () => {
 		index: number;
 	} | null>(null);
 
-	const [placedWidgets, setPlacedWidgets] = useState<PlacedWidgetEntry[]>(
-		CALCULATION_INITIAL_WIDGETS,
-	);
 
 	const placedSidebarIds = [
 		...placedWidgets
@@ -116,10 +101,7 @@ const CalculationDashboard = () => {
 		});
 
 		if (dropIndex !== null) {
-			if (!widgetsVisible) {
-				savedLayoutRef.current = null;
-				setWidgetsVisible(true);
-			}
+			resumeAfterDrop();
 			const targetWidget = placedWidgets[dropIndex];
 
 			if (targetWidget.sidebarId === "emptyPage") {
