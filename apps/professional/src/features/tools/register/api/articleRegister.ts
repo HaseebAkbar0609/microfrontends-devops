@@ -5,6 +5,8 @@ import type {
 	GetArticleListResponse,
 	GetSupplierArticleListParams,
 	GetSupplierArticleListResponse,
+	ArticleImportMapping,
+	ArticleImportResult,
 } from "../types";
 import { MOCK_ARTICLE_DATA, MOCK_SUPPLIER_ARTICLE_DATA } from "../mockdata/articles";
 
@@ -157,3 +159,27 @@ export async function toggleArticleFavoriteAPIAction(id: string): Promise<boolea
 		return true;
 	}
 }
+
+export async function importArticleAPIAction(
+	file: File,
+	mapping: ArticleImportMapping,
+): Promise<ArticleImportResult> {
+	try {
+		const formData = new FormData();
+		formData.append("file", file);
+		formData.append("mapping", JSON.stringify(mapping));
+
+		const res = await axiosInstance.post(API_PATH.ARTICLES.IMPORT, formData, {
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+
+		return {
+			successCount: res.data?.successCount ?? 0,
+			failureCount: res.data?.failureCount ?? 0,
+			errors: res.data?.errors ?? [],
+		};
+	} catch {
+		return { successCount: 0, failureCount: 1, errors: [{ row: 0, message: "Import failed" }] };
+	}
+}
+
