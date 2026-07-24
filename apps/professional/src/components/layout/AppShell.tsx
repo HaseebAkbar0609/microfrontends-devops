@@ -10,10 +10,14 @@ import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
+import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import {
 	getFlyoutSubSidebarConfigByPath,
 	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
 } from "./sidebar/navConfig";
+import { offerSidebarItems, goToItems } from "@/features/offer/constants";
+import localizationConstants from "@/utils/translation/constants";
+import { CircleDollarSign } from "lucide-react";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -43,6 +47,7 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
+	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const showSubSidebar =
 		!!flyoutSubSidebarConfig &&
@@ -130,6 +135,17 @@ export function AppShell({ children }: AppShellProps) {
 			{!isPublicPage && <Sidebar autoCollapse />}
 			{isRegisterPath ? (
 				<InvoiceSubSidebar />
+			) : isOfferModuleRoute ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.offer}
+					headerIcon={CircleDollarSign}
+					items={offerSidebarItems}
+					hideBack={true}
+					additionalSection={{
+						titleKey: localizationConstants.goTo,
+						items: goToItems,
+					}}
+				/>
 			) : showSubSidebar ? (
 				<MyPagesSubSidebar
 					titleKey={flyoutSubSidebarConfig.titleKey}
