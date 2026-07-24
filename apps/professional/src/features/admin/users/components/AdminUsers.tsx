@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
 	Check,
 	ChevronDown,
@@ -29,7 +30,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DynamicBreadcrumb } from "@/components/common";
 import { Search } from "@/components/search/Search";
 import { TablePagination } from "@/components/table/TablePagination";
-import { ComingSoonTab } from "@/features/admin/company-details/components/ComingSoonTab";
+import GroupsTab from "./GroupsTab";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -67,6 +68,7 @@ const USER_COLUMNS = [
 
 export default function AdminUsers() {
 	const t = useTranslate();
+	const router = useRouter();
 	const [activeTab, setActiveTab] = useState("users");
 	const [search, setSearch] = useState("");
 	const [accessFilter, setAccessFilter] = useState<AdminUserAccess | "">("");
@@ -145,7 +147,7 @@ export default function AdminUsers() {
 						</TabsTrigger>
 						<TabsTrigger
 							value="groups"
-							className="px-0 text-slate-400 data-[state=active]:px-5 data-[state=active]:text-slate-900"
+							className="px-0 text-slate-600 data-[state=active]:px-5 data-[state=active]:text-slate-900"
 						>
 							<Translate
 								text={localizationConstants.adminUsersTabGroups}
@@ -326,7 +328,9 @@ export default function AdminUsers() {
 								/>
 							</span>
 							<Button
-								onClick={notifyComingSoon}
+								onClick={() =>
+									router.push("/admin/user/create")
+								}
 								className="h-9 gap-1.5 rounded-md bg-[#18181B] px-3 text-sm font-medium text-white hover:bg-[#18181B]/90"
 							>
 								<Plus className="h-4 w-4" />
@@ -394,8 +398,10 @@ export default function AdminUsers() {
 												<div className="flex items-center gap-2">
 													<Button
 														variant="secondary"
-														onClick={
-															notifyComingSoon
+														onClick={() =>
+															router.push(
+																"/admin/user/settings",
+															)
 														}
 														className="h-8 rounded-md bg-slate-100 px-3 text-sm font-medium text-slate-900 hover:bg-slate-200"
 													>
@@ -454,7 +460,7 @@ export default function AdminUsers() {
 				</TabsContent>
 
 				<TabsContent value="groups" className="mt-6">
-					<ComingSoonTab />
+					<GroupsTab />
 				</TabsContent>
 			</Tabs>
 		</div>

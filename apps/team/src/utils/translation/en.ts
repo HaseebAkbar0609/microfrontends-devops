@@ -746,6 +746,10 @@ export const enAdmin: AdminTranslation = {
 	partnerValidationWebsiteInvalid: "Invalid website URL",
 	toastLogoUploaded: "Logo uploaded",
 	toastLogoRemoved: "Logo removed",
+	approvalStatusApproved: "Approved",
+	approvalStatusDeclined: "Declined",
+	approvalStatusPending: "Pending",
+	approvalStatusArchived: "Archived",
 };
 
 export const en: Translation = {

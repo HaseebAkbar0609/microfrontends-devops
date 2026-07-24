@@ -577,6 +577,45 @@ export type OfferTranslation = {
 	adminUsersEdit: string;
 	adminUsersNoUsersFound: string;
 	adminUsersFilterAll: string;
+	// Admin - User settings (overview)
+	adminUserSettingsTitle: string;
+	adminUserSelectUser: string;
+	adminUserShowDetails: string;
+	adminUserInformation: string;
+	adminUserLabel: string;
+	adminUserAdminLabel: string;
+	adminUserYes: string;
+	adminUserNo: string;
+	adminUserReports: string;
+	adminUserRegisterOther: string;
+	adminUserStandardLicense: string;
+	adminUserPrograms: string;
+	adminUserModules: string;
+	// Admin - Create user
+	adminCreateUserDetails: string;
+	adminCreateUsername: string;
+	adminCreateName: string;
+	adminCreateActive: string;
+	adminCreatePersonalNumber: string;
+	adminCreatePersonRegister: string;
+	adminCreatePersonRegisterPlaceholder: string;
+	adminCreatePassword: string;
+	adminCreateConfirmPassword: string;
+	adminCreateGenerateEmail: string;
+	adminCreateSmsAuth: string;
+	adminCreateMobile: string;
+	adminCreateSystemSettings: string;
+	adminCreateLanguage: string;
+	adminCreateAutoLogout: string;
+	adminCreateSuccess: string;
+	adminCreateValidationRequired: string;
+	adminCreateYes: string;
+	adminCreateNo: string;
+	// Admin - Groups
+	adminGroupsManagement: string;
+	adminGroupsCreate: string;
+	adminGroupsOpen: string;
+	adminGroupsNoGroupsFound: string;
 	// Offer - List
 	offerList: string;
 	job: string;

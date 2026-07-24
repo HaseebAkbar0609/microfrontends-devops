@@ -128,3 +128,176 @@ export const ACCESS_LABELS: Record<AdminUserAccess, string> = {
 	admin: "Admin",
 	user: "User",
 };
+
+// ─── User settings (overview) page — static data until the APIs are ready ────
+
+export interface SettingsUser {
+	id: string;
+	name: string;
+	handle: string;
+}
+
+export const SETTINGS_USERS: SettingsUser[] = [
+	{ id: "rachel", name: "Rachel Meyers", handle: "@rachel" },
+	{ id: "kalle", name: "Kalle Andersson", handle: "@kalle" },
+	{ id: "sten", name: "Sten Svensson", handle: "@sten" },
+	{ id: "stina", name: "Stina Jonasson", handle: "@stina" },
+];
+
+export const USER_GROUP_OPTIONS = [
+	"Ekonomi",
+	"Service",
+	"Overhead",
+	"Entreprenad",
+	"Kalkyl",
+	"Inköp",
+];
+
+export const USER_ROLE_OPTIONS = [
+	"Manager",
+	"Ekonomi",
+	"Service",
+	"Projektledare",
+];
+
+export const USER_TYPE_OPTIONS = [
+	"Arbetschef",
+	"VD",
+	"Platschef",
+	"Ekonom",
+	"Snickare",
+];
+
+export interface ProgramModule {
+	id: string;
+	name: string;
+	checked: boolean;
+}
+
+export interface ProgramGroup {
+	id: string;
+	title: string;
+	modules: ProgramModule[];
+}
+
+export const PROGRAM_GROUPS: ProgramGroup[] = [
+	{
+		id: "start",
+		title: "Start",
+		modules: [
+			{ id: "faktura", name: "Faktura", checked: false },
+			{ id: "prognos", name: "Prognos", checked: true },
+			{ id: "personal", name: "Personal", checked: false },
+			{ id: "inkasso", name: "Inkasso", checked: true },
+			{ id: "juridik", name: "Juridik", checked: true },
+		],
+	},
+	{
+		id: "standard",
+		title: "Standard",
+		modules: [
+			{ id: "order", name: "Order", checked: false },
+			{ id: "projekt", name: "Projekt", checked: true },
+			{ id: "inkop", name: "Inköp", checked: false },
+			{ id: "kma", name: "KMA", checked: true },
+			{ id: "maskin-fordon", name: "Maskin-Fordon", checked: true },
+			{ id: "projektering", name: "Projektering", checked: false },
+		],
+	},
+	{
+		id: "pro",
+		title: "Pro",
+		modules: [
+			{ id: "offert", name: "Offert", checked: true },
+			{ id: "b2b", name: "B2B", checked: false },
+			{ id: "kalkyl", name: "Kalkyl", checked: true },
+			{ id: "avtal", name: "Avtal", checked: true },
+			{ id: "mallar", name: "Mallar", checked: false },
+			{ id: "marknad-salj", name: "Marknad-Sälj", checked: true },
+			{ id: "data-it", name: "Data-IT", checked: true },
+			{ id: "ledningsstod", name: "Ledningsstöd", checked: true },
+		],
+	},
+];
+
+export function addDummyAdminUser(user: Omit<AdminUser, "id">) {
+	DUMMY_ADMIN_USERS.push({
+		...user,
+		id: String(DUMMY_ADMIN_USERS.length + 1),
+	});
+}
+
+export interface AdminGroup {
+	id: string;
+	name: string;
+	members: string[];
+	extraMembers: number;
+}
+
+export const DUMMY_ADMIN_GROUPS: AdminGroup[] = [
+	{
+		id: "project-development",
+		name: "Project development",
+		members: [
+			"Kalle Andersson",
+			"Sten Svensson",
+			"Sture Larsson",
+			"Stina Jonasson",
+			"Petra Karlsson",
+			"Uran Lindqvist",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "marketing",
+		name: "Marketing",
+		members: [
+			"Rachel Meyers",
+			"Anna Berg",
+			"Erik Nilsson",
+			"Maria Ek",
+			"Johan Palm",
+			"Lisa Dahl",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "project-planning",
+		name: "Project planning",
+		members: [
+			"Oscar Lind",
+			"Elin Holm",
+			"Nils Sand",
+			"Karin Frisk",
+			"Per Åström",
+			"Sara Vik",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "finance",
+		name: "Finance",
+		members: [
+			"Eva Lund",
+			"Mats Öberg",
+			"Ida Strand",
+			"Lars Björk",
+			"Nina Falk",
+			"Olof Hage",
+		],
+		extraMembers: 5,
+	},
+	{
+		id: "sale",
+		name: "Sale",
+		members: [
+			"Tove Ren",
+			"Axel Storm",
+			"Moa Lindgren",
+			"Hugo Bäck",
+			"Klara Näs",
+			"Emil Torp",
+		],
+		extraMembers: 5,
+	},
+];

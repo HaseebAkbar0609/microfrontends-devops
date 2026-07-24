@@ -721,6 +721,10 @@ export type AdminTranslation = {
 	partnerValidationWebsiteInvalid: string;
 	toastLogoUploaded: string;
 	toastLogoRemoved: string;
+	approvalStatusApproved: string;
+	approvalStatusDeclined: string;
+	approvalStatusPending: string;
+	approvalStatusArchived: string;
 };
 
 export type Translation = SidebarTranslation &

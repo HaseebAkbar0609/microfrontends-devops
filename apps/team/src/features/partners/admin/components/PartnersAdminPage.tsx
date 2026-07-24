@@ -7,6 +7,7 @@ import { DynamicBreadcrumb } from "@/components/common";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PartnersRegisterTab } from "./PartnersRegisterTab";
+import { ApprovalCenterTab } from "./ApprovalCenterTab";
 
 const MAIN_TABS = [
 	{ value: "register", label: localizationConstants.partnersRegisterTab },
@@ -58,7 +59,7 @@ export default function PartnersAdminPage() {
 					<PartnersRegisterTab />
 				</TabsContent>
 				<TabsContent value="approval-center" className="mt-6">
-					<ComingSoonPanel />
+					<ApprovalCenterTab />
 				</TabsContent>
 				<TabsContent value="category" className="mt-6">
 					<ComingSoonPanel />
