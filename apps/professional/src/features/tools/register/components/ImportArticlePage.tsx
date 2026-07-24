@@ -46,7 +46,7 @@ const MEASUREMENT_FIELDS = [
 ];
 
 function parseCSV(text: string): ParsedFileData {
-	const lines = text.split("\n").filter((line) => line.trim());
+	const lines = text.split(/\r?\n/).filter((line) => line.trim());
 	if (lines.length === 0) return { columns: [], rows: [], totalRows: 0 };
 
 	const delimiter = lines[0].includes(";") ? ";" : ",";
