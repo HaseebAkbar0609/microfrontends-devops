@@ -119,12 +119,13 @@ export default function GroupsTab() {
 	const notifyComingSoon = () =>
 		showToast("info", t(localizationConstants.comingSoon));
 
-	const handleCreateGroup = (name: string) => {
+	const handleCreateGroup = (name: string, description: string) => {
 		setGroups((prev) => [
 			...prev,
 			{
 				id: `group-${prev.length + 1}`,
 				name,
+				description: description || undefined,
 				members: [],
 				extraMembers: 0,
 			},

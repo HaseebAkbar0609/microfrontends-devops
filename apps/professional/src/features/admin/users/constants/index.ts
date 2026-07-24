@@ -232,6 +232,7 @@ export function addDummyAdminUser(user: Omit<AdminUser, "id">) {
 export interface AdminGroup {
 	id: string;
 	name: string;
+	description?: string;
 	members: string[];
 	extraMembers: number;
 }
