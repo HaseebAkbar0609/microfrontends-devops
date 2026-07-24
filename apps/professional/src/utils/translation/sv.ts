@@ -1034,7 +1034,6 @@ export const svRegister: RegisterTranslation = {
 	missingRequiredColumnError: "Saknar obligatorisk kolumn:",
 	filesImportedSuccessfully: "artiklar importerades",
 	filesFailed: "misslyckades",
-	columnMappingInstructions: "Välj hur informationen ska kopplas genom att dra innehållet i filen till rätt fält.",
 	processingFile: "Bearbetar fil...",
 	rowsFound: "rader hittades",
 	fileParseError: "Fel vid filtolkning. Kontrollera filformatet.",

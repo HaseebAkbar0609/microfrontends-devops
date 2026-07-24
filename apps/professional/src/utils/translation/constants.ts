@@ -982,7 +982,6 @@ export type RegisterTranslation = {
 	missingRequiredColumnError: string;
 	filesImportedSuccessfully: string;
 	filesFailed: string;
-	columnMappingInstructions: string;
 	processingFile: string;
 	rowsFound: string;
 	fileParseError: string;

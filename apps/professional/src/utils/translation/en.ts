@@ -1026,7 +1026,6 @@ export const enRegister: RegisterTranslation = {
 	missingRequiredColumnError: "Missing required column:",
 	filesImportedSuccessfully: "articles imported successfully",
 	filesFailed: "failed",
-	columnMappingInstructions: "Select how the information should be mapped by dragging the content in the file to the correct field.",
 	processingFile: "Processing file...",
 	rowsFound: "rows found",
 	fileParseError: "Error parsing file. Please check the file format.",
