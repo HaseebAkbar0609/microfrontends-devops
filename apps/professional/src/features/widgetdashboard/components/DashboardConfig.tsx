@@ -1,199 +1,533 @@
 import {
-	Folder,
-	DollarSign,
-	ShieldCheck,
-	PanelsTopLeft,
-	User,
-	Image as ImageIcon,
-	Newspaper,
-	CircleDollarSign,
-	Focus,
-	ArrowRight,
+	Bot,
+	Building2,
+	CalendarDays,
 	ClipboardList,
+	CircleDollarSign,
+	Globe,
+	HardHat,
+	Image as ImageIcon,
 	Layers,
+	Megaphone,
+	Newspaper,
+	Package,
+	PanelsTopLeft,
+	ShieldCheck,
+	Star,
+	Timer,
+	TrendingUp,
+	Truck,
 } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { PlacedWidgetEntry, WidgetProps } from "../types/dashboard";
 import React from "react";
 import { Translate } from "@/utils/translation/translate";
+import {
+	WidgetContent as Content,
+	WidgetMockTag as MockTag,
+	WidgetRow as Row,
+} from "./WidgetContent";
 
-/**
- * Maps a sidebar item id → widget render props (used when it is dropped into
- * the grid). Dropped widgets always use col-span-4.
- */
 export const SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 	emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
 
-	personnel: {
-		title: localizationConstants.personnel,
-		icon: User,
+	kpiDashboard: {
+		title: localizationConstants.homeKpiTitle,
+		icon: Star,
 		content: (
-			<div className="space-y-1 text-sm text-slate-500">
-				<div>
-					<Translate text={localizationConstants.activeLabel} /> : 10
-				</div>
-				<div>
-					<Translate text={localizationConstants.availableLabel} /> :
-					2
-				</div>
-			</div>
+			<Content>
+				<Row
+					label={localizationConstants.homeKpiActiveProjects}
+					value="12"
+				/>
+				<Row
+					label={localizationConstants.homeKpiOpenOrders}
+					value="34"
+				/>
+				<Row
+					label={localizationConstants.homeKpiMonthlyRevenue}
+					value="1 536 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.homeKpiPendingOffers}
+					value="7"
+				/>
+				<Row
+					label={localizationConstants.homeKpiOverdueTasks}
+					value="3"
+				/>
+				<MockTag />
+			</Content>
 		),
 	},
-	image: { title: localizationConstants.imageLabel, icon: ImageIcon },
-	newsLabel: { title: localizationConstants.newsLabel, icon: Newspaper },
-	turnOver: {
-		title: localizationConstants.turnover90DaysTitle,
-		icon: DollarSign,
-		content: <div className="text-sm text-slate-500"> 1, 536,000 SEK </div>,
-	},
-	orderLabel: {
-		title: localizationConstants.ordersLabel,
-		icon: ClipboardList,
-	},
-	projectLabel: {
-		title: localizationConstants.projectsLabel,
-		icon: PanelsTopLeft,
-		subtitle: (
-			<>
-				<Translate text={localizationConstants.activeOrders} />: 35{" "}
-				<Translate text={localizationConstants.itemsLabel} />
-			</>
-		),
-	},
-	kma: {
-		title: localizationConstants.kma,
-		icon: ShieldCheck,
+
+	aiAssistant: {
+		title: localizationConstants.homeAiTitle,
+		icon: Bot,
 		content: (
-			<div className="space-y-1 text-sm text-slate-500">
-				<div>
-					<Translate text={localizationConstants.activeProjects} /> :
-					5
-				</div>
-				<div>
-					<Translate text={localizationConstants.activeOrders} /> : 15
-				</div>
-				<div>
-					<Translate text={localizationConstants.completedChecks} /> :
-					45
-				</div>
-			</div>
+			<Content>
+				<p className="text-slate-700">
+					<Translate text={localizationConstants.homeAiGreeting} />
+				</p>
+				<p className="pt-1 font-medium text-slate-700">
+					<Translate text={localizationConstants.homeAiSuggested} />
+				</p>
+				<p>
+					•{" "}
+					<Translate
+						text={localizationConstants.homeAiRecommendation}
+					/>
+				</p>
+				<p>
+					•{" "}
+					<Translate text={localizationConstants.homeAiActionQuote} />
+				</p>
+				<MockTag />
+			</Content>
 		),
 	},
-	offer: {
-		title: localizationConstants.offer,
+
+	messagesNews: {
+		title: localizationConstants.homeMessagesTitle,
+		icon: Megaphone,
+		content: (
+			<Content>
+				<p className="font-medium text-slate-700">
+					<Translate
+						text={localizationConstants.homeMessagesAnnouncement}
+					/>
+				</p>
+				<p>
+					<Translate
+						text={
+							localizationConstants.homeMessagesAnnouncementText
+						}
+					/>
+				</p>
+				<p className="pt-1 font-medium text-slate-700">
+					<Translate
+						text={localizationConstants.homeMessagesUpdate}
+					/>
+				</p>
+				<p>
+					<Translate
+						text={localizationConstants.homeMessagesUpdateText}
+					/>
+				</p>
+				<Row
+					label={localizationConstants.homeMessagesUnread}
+					value="5"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	newsFeed: {
+		title: localizationConstants.homeNewsFeedTitle,
+		icon: Newspaper,
+		content: (
+			<Content>
+				<div>
+					<p className="text-slate-700">
+						<Translate text={localizationConstants.homeNewsPost1} />
+					</p>
+					<p className="text-xs text-slate-400">
+						<Translate text={localizationConstants.homeNewsTime1} />
+					</p>
+				</div>
+				<div>
+					<p className="text-slate-700">
+						<Translate text={localizationConstants.homeNewsPost2} />
+					</p>
+					<p className="text-xs text-slate-400">
+						<Translate text={localizationConstants.homeNewsTime2} />
+					</p>
+				</div>
+				<div>
+					<p className="text-slate-700">
+						<Translate text={localizationConstants.homeNewsPost3} />
+					</p>
+					<p className="text-xs text-slate-400">
+						<Translate text={localizationConstants.homeNewsTime3} />
+					</p>
+				</div>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	calendar: {
+		title: localizationConstants.homeCalendarTitle,
+		icon: CalendarDays,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homeCalendarSiteVisit}
+					value="2026-03-04 09:00"
+				/>
+				<Row
+					label={localizationConstants.homeCalendarDeadline}
+					value="2026-03-12"
+				/>
+				<Row
+					label={localizationConstants.homeCalendarMeeting}
+					value="Fre 14:00"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	staff: {
+		title: localizationConstants.homeStaffTitle,
+		icon: HardHat,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homeStaffAvailable}
+					value="6"
+				/>
+				<Row
+					label={localizationConstants.homeStaffAssigned}
+					value="18"
+				/>
+				<Row label={localizationConstants.homeStaffAbsence} value="2" />
+				<Row
+					label={localizationConstants.homeStaffRoles}
+					value={
+						<Translate
+							text={localizationConstants.homeStaffRolesValue}
+						/>
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	quotes: {
+		title: localizationConstants.homeQuotesTitle,
 		icon: CircleDollarSign,
 		content: (
-			<div className="space-y-1 text-sm text-slate-500">
-				<div>
-					<Translate text={localizationConstants.numberOfBids} /> : 7
-				</div>
-				<div>
-					<Translate text={localizationConstants.totalLabel} /> :
-					15,800,000
-				</div>
-			</div>
+			<Content>
+				<Row
+					label={localizationConstants.homeQuotesPending}
+					value="7"
+				/>
+				<Row
+					label={localizationConstants.homeQuotesAccepted}
+					value="3"
+				/>
+				<Row label={localizationConstants.homeQuotesDrafts} value="4" />
+				<Row
+					label={localizationConstants.homeQuotesTotalValue}
+					value="15 800 000 SEK"
+				/>
+				<MockTag />
+			</Content>
 		),
 	},
-	onGoingQuotes: {
-		title: localizationConstants.ongoingQuotesLabel,
-		icon: Focus,
+
+	orders: {
+		title: localizationConstants.homeOrdersTitle,
+		icon: ClipboardList,
 		content: (
-			<div className="text-sm text-slate-500">
-				<Translate text={localizationConstants.numberLabel} /> : 20
-			</div>
+			<Content>
+				<Row
+					label={localizationConstants.homeOrdersActive}
+					value="34"
+				/>
+				<Row
+					label={localizationConstants.homeOrdersInProduction}
+					value="21"
+				/>
+				<Row label={localizationConstants.homeOrdersRecent} value="5" />
+				<Row
+					label={localizationConstants.homeOrdersAttention}
+					value="2"
+				/>
+				<MockTag />
+			</Content>
 		),
 	},
-	availableLabel: {
-		title: localizationConstants.availableLabel,
-		icon: ArrowRight,
+
+	projects: {
+		title: localizationConstants.homeProjectsTitle,
+		icon: PanelsTopLeft,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homeKpiActiveProjects}
+					value="12"
+				/>
+				<Row
+					label={localizationConstants.homeProjectsProgress}
+					value="64 %"
+				/>
+				<Row
+					label={localizationConstants.homeProjectsRisks}
+					value="2"
+				/>
+				<Row
+					label={localizationConstants.homeProjectsDelayed}
+					value="1"
+				/>
+				<Row
+					label={localizationConstants.homeProjectsNextAction}
+					value={
+						<Translate
+							text={
+								localizationConstants.homeProjectsNextActionValue
+							}
+						/>
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	marketplace: {
+		title: localizationConstants.homeMarketplaceTitle,
+		icon: Globe,
+		content: (
+			<Content>
+				<p className="text-slate-700">
+					<Translate
+						text={localizationConstants.homeMarketplaceProject}
+					/>
+				</p>
+				<Row
+					label={localizationConstants.homeMarketplaceValue}
+					value="850 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.homeMarketplaceDeadline}
+					value="2026-03-20"
+				/>
+				<button
+					type="button"
+					className="mt-1 cursor-pointer rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white"
+				>
+					<Translate
+						text={localizationConstants.homeMarketplaceInterest}
+					/>
+				</button>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	timeReporting: {
+		title: localizationConstants.homeTimeReportTitle,
+		icon: Timer,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homeTimeReported}
+					value="128 h"
+				/>
+				<Row label={localizationConstants.homeTimeMissing} value="3" />
+				<Row label={localizationConstants.homeTimeApproval} value="6" />
+				<button
+					type="button"
+					className="mt-1 cursor-pointer rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white"
+				>
+					<Translate
+						text={localizationConstants.homeTimeReportAction}
+					/>
+				</button>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	kmaSecureCheck: {
+		title: localizationConstants.homeKmaTitle,
+		icon: ShieldCheck,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homeKmaSafetyChecks}
+					value="45"
+				/>
+				<Row
+					label={localizationConstants.homeKmaDeviations}
+					value="2"
+				/>
+				<Row label={localizationConstants.homeKmaIncidents} value="0" />
+				<Row label={localizationConstants.homeKmaOpenTasks} value="4" />
+				<Row
+					label={localizationConstants.homeKmaSecureCheck}
+					value={
+						<Translate
+							text={localizationConstants.homeKmaSecureCheckValue}
+						/>
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	purchasing: {
+		title: localizationConstants.homePurchaseTitle,
+		icon: Package,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homePurchaseRequests}
+					value="8"
+				/>
+				<Row
+					label={localizationConstants.homePurchaseApprovals}
+					value="3"
+				/>
+				<Row
+					label={localizationConstants.homePurchaseSupplierOrders}
+					value="12"
+				/>
+				<Row
+					label={localizationConstants.homePurchaseDelivery}
+					value="2"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	vehicles: {
+		title: localizationConstants.homeVehiclesTitle,
+		icon: Truck,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homeVehiclesAvailable}
+					value="4"
+				/>
+				<Row
+					label={localizationConstants.homeVehiclesService}
+					value="2"
+				/>
+				<Row
+					label={localizationConstants.homeVehiclesAssigned}
+					value="9"
+				/>
+				<Row
+					label={localizationConstants.homeVehiclesInspection}
+					value="1"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	economyForecast: {
+		title: localizationConstants.homeEconomyTitle,
+		icon: TrendingUp,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.homeEconomyForecast}
+					value="18 400 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.homeEconomyCosts}
+					value="12 100 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.homeEconomyMargin}
+					value="34 %"
+				/>
+				<Row
+					label={localizationConstants.homeEconomyUnpaid}
+					value="6"
+				/>
+				<Row
+					label={localizationConstants.homeEconomyDeviation}
+					value="-2 %"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	companyPresentation: {
+		title: localizationConstants.homeCompanyTitle,
+		icon: Building2,
+		content: (
+			<Content>
+				<p className="font-medium text-slate-700">Karles Bygg AB</p>
+				<Row
+					label={localizationConstants.homeCompanyServices}
+					value={
+						<Translate
+							text={
+								localizationConstants.homeCompanyServicesValue
+							}
+						/>
+					}
+				/>
+				<Row
+					label={localizationConstants.homeCompanyCertifications}
+					value="ID06, BF9K"
+				/>
+				<button
+					type="button"
+					className="mt-1 cursor-pointer rounded-md border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-700"
+				>
+					<Translate text={localizationConstants.homeCompanyEdit} />
+				</button>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	image: {
+		title: localizationConstants.homeImageTitle,
+		icon: ImageIcon,
+		content: (
+			<Content>
+				<div className="flex h-20 items-center justify-center rounded-md bg-slate-200/70 text-slate-400">
+					<ImageIcon size={24} />
+				</div>
+				<p>
+					<Translate
+						text={localizationConstants.homeImageDescription}
+					/>
+				</p>
+				<MockTag />
+			</Content>
+		),
 	},
 };
 
-/**
- * The 9 default widgets already shown in the UI on first load.
- */
-export const INITIAL_WIDGETS: PlacedWidgetEntry[] = [
-	{
-		uid: "init-karles",
-		sidebarId: "projectLabel",
-		colSpanClass: "col-span-12 md:col-span-4",
-		widgetProps: {
-			title: "Karles Bygg AB",
-			icon: Folder,
-			subtitle: (
-				<>
-					<Translate text={localizationConstants.activeOrders} />: 35{" "}
-					<Translate text={localizationConstants.itemsLabel} />
-				</>
-			),
-		},
-	},
-	{
-		uid: "init-bidders",
-		sidebarId: "offer",
-		colSpanClass: "col-span-12 md:col-span-8",
-		widgetProps: {
-			title: localizationConstants.biddersTitle,
-			icon: CircleDollarSign,
-			content: (
-				<div className="space-y-1 text-sm text-slate-500">
-					<div>
-						<Translate text={localizationConstants.numberOfBids} />{" "}
-						: 7
-					</div>
-					<div>
-						<Translate text={localizationConstants.totalLabel} /> :
-						15,800,000
-					</div>
-				</div>
-			),
-		},
-	},
-	{
-		uid: "init-personnel-2",
-		sidebarId: "personnel",
-		colSpanClass: "col-span-12 md:col-span-4",
-		widgetProps: {
-			title: "PERSONNEL",
-			icon: User,
-			subtitle: "Renovation Demolition",
-		},
-	},
+export const HOME_WIDGET_ORDER = [
+	"kpiDashboard",
+	"aiAssistant",
+	"messagesNews",
+	"newsFeed",
+	"calendar",
+	"staff",
+	"quotes",
+	"orders",
+	"projects",
+	"marketplace",
+	"timeReporting",
+	"kmaSecureCheck",
+	"purchasing",
+	"vehicles",
+	"economyForecast",
+	"companyPresentation",
+	"image",
+] as const;
 
-	{
-		uid: "empty-4",
-		sidebarId: "emptyPage",
-		colSpanClass: "col-span-12 md:col-span-4",
-		widgetProps: SIDEBAR_WIDGET_MAP.emptyPage,
-	},
-	{
-		uid: "empty-5",
-		sidebarId: "emptyPage",
-		colSpanClass: "col-span-12 md:col-span-4",
-		widgetProps: SIDEBAR_WIDGET_MAP.emptyPage,
-	},
-	{
-		uid: "empty-6",
-		sidebarId: "emptyPage",
-		colSpanClass: "col-span-12 md:col-span-8",
-		widgetProps: SIDEBAR_WIDGET_MAP.emptyPage,
-	},
-	{
-		uid: "empty-7",
-		sidebarId: "emptyPage",
-		colSpanClass: "col-span-12 md:col-span-4",
-		widgetProps: SIDEBAR_WIDGET_MAP.emptyPage,
-	},
-	{
-		uid: "empty-8",
-		sidebarId: "emptyPage",
-		colSpanClass: "col-span-12 md:col-span-4",
-		widgetProps: SIDEBAR_WIDGET_MAP.emptyPage,
-	},
-	{
-		uid: "empty-9",
-		sidebarId: "emptyPage",
-		colSpanClass: "col-span-12 md:col-span-8",
-		widgetProps: SIDEBAR_WIDGET_MAP.emptyPage,
-	},
-];
+export const INITIAL_WIDGETS: PlacedWidgetEntry[] = HOME_WIDGET_ORDER.map(
+	(id) => ({
+		uid: `home-${id}`,
+		sidebarId: id,
+		colSpanClass: "col-span-12 md:col-span-6 xl:col-span-4",
+		widgetProps: SIDEBAR_WIDGET_MAP[id],
+	}),
+);
