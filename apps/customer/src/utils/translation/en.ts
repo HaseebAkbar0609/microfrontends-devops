@@ -743,6 +743,12 @@ export const enSupport: SupportModule = {
 	supportContactUsTitle: "Contact us",
 	supportContactPhone: "Phone",
 	supportContactEmail: "Email",
+	supportLiveChat: "Live Chat",
+	supportOperatingHours: "Monday - Friday 09:00-15:00",
+	supportLoading: "Loading support information...",
+	supportNoContactInfo: "No contact information available.",
+	guideLoading: "Loading guide folders...",
+	guideNoFoldersFound: "No guide folders found.",
 	guideQuoteAndConsultants: "Quote & Consultants",
 	guideMyProjects: "My Projects",
 	guideServicesAndOffers: "Services & Offers",
@@ -762,9 +768,11 @@ export const enSupport: SupportModule = {
 	guideSectionPartiesIntro:
 		'This consultant agreement ("Agreement") has been entered into between:',
 	guideSectionPartiesClient: "Client:",
+	guideSectionPartiesClientName: "[Company Name]",
 	guideSectionPartiesClientOrg: "Organization number: [Org.no]",
 	guideSectionPartiesClientAddress: "Address: [Address]",
 	guideSectionPartiesConsultant: "Consultant:",
+	guideSectionPartiesConsultantName: "[Consultant's Name]",
 	guideSectionPartiesConsultantId: "Personal number: [Personal number]",
 	guideSectionPartiesConsultantAddress: "Address: [Address]",
 	guideSectionScope: "2. SCOPE OF ASSIGNMENT",
@@ -786,6 +794,9 @@ export const enSupport: SupportModule = {
 	guideConsultantSectionDeliverablesDesc:
 		"The Consultant shall deliver all agreed documents and reports within the agreed timeframes.",
 	guideConsultantSectionConfidentiality: "Confidentiality",
+	guideDocumentation: "Guide & Documentation",
+	guideAboutThisGuide: "About this guide",
+	guideWelcomeToSection: "Welcome to the guide section for",
 	guideConsultantSectionConfidentialityDesc:
 		"The Consultant undertakes not to share any confidential information with third parties without written approval from the Client.",
 };

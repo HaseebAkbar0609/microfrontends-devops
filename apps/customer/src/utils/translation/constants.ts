@@ -688,6 +688,12 @@ export type SupportModule = {
 	supportContactUsTitle: string;
 	supportContactPhone: string;
 	supportContactEmail: string;
+	supportLiveChat: string;
+	supportOperatingHours: string;
+	supportLoading: string;
+	supportNoContactInfo: string;
+	guideLoading: string;
+	guideNoFoldersFound: string;
 	guideQuoteAndConsultants: string;
 	guideMyProjects: string;
 	guideServicesAndOffers: string;
@@ -705,9 +711,11 @@ export type SupportModule = {
 	guideSectionParties: string;
 	guideSectionPartiesIntro: string;
 	guideSectionPartiesClient: string;
+	guideSectionPartiesClientName: string;
 	guideSectionPartiesClientOrg: string;
 	guideSectionPartiesClientAddress: string;
 	guideSectionPartiesConsultant: string;
+	guideSectionPartiesConsultantName: string;
 	guideSectionPartiesConsultantId: string;
 	guideSectionPartiesConsultantAddress: string;
 	guideSectionScope: string;
@@ -725,6 +733,9 @@ export type SupportModule = {
 	guideConsultantSectionDeliverablesDesc: string;
 	guideConsultantSectionConfidentiality: string;
 	guideConsultantSectionConfidentialityDesc: string;
+	guideDocumentation: string;
+	guideAboutThisGuide: string;
+	guideWelcomeToSection: string;
 };
 
 export type PriceCalculatorModule = {

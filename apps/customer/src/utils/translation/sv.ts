@@ -736,10 +736,17 @@ export const svQuestions: QuestionsModule = {
 	questionsStatusPendingResponse: "Väntar på svar",
 	questionsStatusResolved: "Löst",
 };
+
 export const svSupport: SupportModule = {
 	supportContactUsTitle: "Kontakta oss",
 	supportContactPhone: "Telefon",
 	supportContactEmail: "Mail",
+	supportLiveChat: "Livechatt",
+	supportOperatingHours: "Måndag - Fredag 09:00-15:00",
+	supportLoading: "Laddar supportinformation...",
+	supportNoContactInfo: "Ingen kontaktinformation tillgänglig.",
+	guideLoading: "Laddar guidemappar...",
+	guideNoFoldersFound: "Inga guidemappar hittades.",
 	guideQuoteAndConsultants: "Offert & Konsulter",
 	guideMyProjects: "Mina Projekt",
 	guideServicesAndOffers: "Tjänster & Erbjudanden",
@@ -755,13 +762,15 @@ export const svSupport: SupportModule = {
 	guideContractNumber: "Avtalsnummer",
 	guideDate: "Datum",
 	guideSectionParties: "1. PARTER",
-	guideSectionPartiesIntro: 'Detta konsultavtal ("Avalet") har ingåtts mellan:',
+	guideSectionPartiesIntro: 'Detta konsultavtal ("Avtalet") har denna dag ingåtts mellan:',
 	guideSectionPartiesClient: "Uppdragsgivare:",
+	guideSectionPartiesClientName: "[Företagsnamn]",
 	guideSectionPartiesClientOrg: "Organisationsnummer: [Org.nr]",
 	guideSectionPartiesClientAddress: "Adress: [Adress]",
 	guideSectionPartiesConsultant: "Konsult:",
+	guideSectionPartiesConsultantName: "[Konsultens namn]",
 	guideSectionPartiesConsultantId: "Personnummer: [Personnummer]",
-	guideSectionPartiesConsultantAddress: "Address: [Adress]",
+	guideSectionPartiesConsultantAddress: "Adress: [Adress]",
 	guideSectionScope: "2. UPPDRAGETS OMFATTNING",
 	guideSectionScopeDescription: "Konsulten åtar sig att utföra följande tjänster för Uppdragsgivaren:",
 	guideSectionScopeItem1: "Rådgivning och expertis inom [område]",
@@ -769,7 +778,7 @@ export const svSupport: SupportModule = {
 	guideSectionScopeItem3: "Dokumentation och rapportering av utfört arbete",
 	guideSectionContractPeriod: "3. AVTALSTID",
 	guideSectionContractPeriodDescription:
-		"Avalet gäller från och med [startdatum] till och med [slutdatum], såvida det inte sägs upp eller förängs enligt punkterna i detta avtal.",
+		'Avtalet gäller från och med [startdatum] till och med [slutdatum], såvida det inte sägs upp eller förlängs enligt punkterna i detta avtal.',
 	guideConsultantSectionTitle: "Konsultavtal",
 	guideConsultantSectionIntro:
 		"Detta avtal reglerar förhållandet mellan uppdragsgivaren och konsulten under projektets gång.",
@@ -780,6 +789,9 @@ export const svSupport: SupportModule = {
 	guideConsultantSectionDeliverablesDesc:
 		"Konsulten ska leverera alla avtalade dokument och rapporter inom överenskomna tidsramar.",
 	guideConsultantSectionConfidentiality: "Konfidentialitet",
+	guideDocumentation: "Guide & Dokumentation",
+	guideAboutThisGuide: "Om denna guide",
+	guideWelcomeToSection: "Välkommen till guidesektionen för",
 	guideConsultantSectionConfidentialityDesc:
 		"Konsulten åtar sig att inte dela någon konfidentiell information med tredje part utan skriftligt godkännande från uppdragsgivaren.",
 };

@@ -54,6 +54,12 @@ export {
 export { deleteSupplierAPIAction } from "./supplier/delete";
 export { getDiscountDetailAPIAction } from "./discount/getDetail";
 export {
+  getSupportConfigAPIAction,
+  getGuideFoldersAPIAction,
+  type SupportConfig,
+  type GuideFoldersData,
+} from "./support";
+export {
   getQuestionsListAPIAction,
   type QuestionsListPayload,
   type GetQuestionsListParams,

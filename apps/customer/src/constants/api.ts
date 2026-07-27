@@ -15,6 +15,7 @@ const BASE_PATHS = {
 	COST_CALCULATOR: "/api/v1/tools/cost-calculator",
 	CONTENT: "/api/v1/tools/content",
 	QUESTIONS: "/api/v1/tools/questions",
+	SUPPORT: "/api/v1/support",
 
 };
 
@@ -133,6 +134,10 @@ export const API_PATH = {
 		CREATE: BASE_PATHS.QUESTIONS,
 		detail: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}`,
 		reply: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}/reply`,
+	},
+	SUPPORT: {
+		CONFIG: `${BASE_PATHS.SUPPORT}/config`,
+		GUIDE_FOLDERS: `${BASE_PATHS.SUPPORT}/guides/folders`,
 	},
 	DISCOUNT: {
 		LIST: "/api/v1/discounts",
