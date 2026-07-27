@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import {
@@ -9,6 +9,9 @@ import {
 	UserPlus,
 	Star,
 	ArrowUpDown,
+	Tag,
+	FileText,
+	Warehouse,
 } from "lucide-react";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -94,18 +97,40 @@ function SectionCard({
 }
 
 function PriceListTable({ rows }: { rows: PriceListRow[] }) {
+	const [sortKey, setSortKey] = useState<keyof PriceListRow | null>(null);
+	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+
+	const handleSort = (key: keyof PriceListRow) => {
+		if (sortKey === key) {
+			setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+		} else {
+			setSortKey(key);
+			setSortOrder("asc");
+		}
+	};
+
+	const sortedRows = useMemo(() => {
+		if (!sortKey) return rows;
+		return [...rows].sort((a, b) => {
+			const aVal = a[sortKey] || "";
+			const bVal = b[sortKey] || "";
+			const cmp = aVal.localeCompare(bVal, undefined, { numeric: true });
+			return sortOrder === "asc" ? cmp : -cmp;
+		});
+	}, [rows, sortKey, sortOrder]);
+
 	return (
 		<table className="w-full min-w-[900px] text-sm">
 			<thead>
 				<tr className="border-b border-slate-200 text-left text-xs font-medium text-slate-500">
 					<th className="py-3 pr-2 w-10" />
-					<th className="py-3 px-5 whitespace-nowrap">
+					<th className="py-3 px-5 whitespace-nowrap cursor-pointer select-none" onClick={() => handleSort("priceList")}>
 						<span className="inline-flex items-center gap-2">
 							<Translate text={localizationConstants.articlePrislistaHeader} />
 							<ArrowUpDown className="h-3 w-3 text-slate-400" />
 						</span>
 					</th>
-					<th className="py-3 px-5 whitespace-nowrap">
+					<th className="py-3 px-5 whitespace-nowrap cursor-pointer select-none" onClick={() => handleSort("benamning")}>
 						<span className="inline-flex items-center gap-2">
 							<Translate text={localizationConstants.articleBenamningHeader} />
 							<ArrowUpDown className="h-3 w-3 text-slate-400" />
@@ -136,7 +161,7 @@ function PriceListTable({ rows }: { rows: PriceListRow[] }) {
 				</tr>
 			</thead>
 			<tbody>
-				{rows.map((row) => (
+				{sortedRows.map((row) => (
 					<tr key={row.id} className="border-b border-[#E2E8F0] rounded-md">
 						<td className="py-3 pl-2 pr-2 rounded-l-md">
 							<Star className="h-4 w-4 fill-[#111721] text-[#111721]" />
@@ -228,14 +253,16 @@ export function ArticleDetailPage() {
 				<h2 className="mb-2 text-lg font-semibold leading-7 text-zinc-950">
 					<Translate text={localizationConstants.noDataFound} />
 				</h2>
-				<Button onClick={() => router.back()}>
+				<Button onClick={() => router.push("/tools/register")}>
 					<Translate text={localizationConstants.goBackButton} />
 				</Button>
 			</div>
 		);
 	}
 
-	const handleEdit = () => {};
+	const handleEdit = () => {
+		router.push("/tools/register/create-article");
+	};
 
 	return (
 		<div className="flex flex-1 flex-col overflow-y-auto bg-slate-50 pt-4 pb-4 px-2 sm:px-2 md:px-2">
@@ -243,6 +270,7 @@ export function ArticleDetailPage() {
 				<Button
 					variant="ghost"
 					size="icon"
+					aria-label="Go back to register"
 					onClick={() => router.push("/tools/register")}
 					className="h-8 w-8 shrink-0"
 				>
@@ -342,9 +370,9 @@ export function ArticleDetailPage() {
 							</CardContent>
 						</SectionCard>
 
-						{/* Bokörings uppgifter */}
+						{/* Bokföringsuppgifter */}
 						<SectionCard
-							icon={<UserPlus className="h-5 w-5 sm:h-6 sm:w-6" />}
+							icon={<FileText className="h-5 w-5 sm:h-6 sm:w-6" />}
 							title={localizationConstants.articleBokoringsUppgifterSection}
 							onEdit={handleEdit}
 						>
@@ -392,7 +420,7 @@ export function ArticleDetailPage() {
 					<div className="flex flex-col gap-4">
 						{/* Priser */}
 						<SectionCard
-							icon={<UserPlus className="h-5 w-5 sm:h-6 sm:w-6" />}
+							icon={<Tag className="h-5 w-5 sm:h-6 sm:w-6" />}
 							title={localizationConstants.articlePriserSection}
 							onEdit={handleEdit}
 						>
@@ -418,9 +446,9 @@ export function ArticleDetailPage() {
 							</CardContent>
 						</SectionCard>
 
-						{/* Bokörings uppgifter + Lagerplats */}
+						{/* Bokföringsuppgifter + Lagerplats */}
 						<SectionCard
-							icon={<UserPlus className="h-5 w-5 sm:h-6 sm:w-6" />}
+							icon={<FileText className="h-5 w-5 sm:h-6 sm:w-6" />}
 							title={localizationConstants.articleBokoringsUppgifterSection}
 							onEdit={handleEdit}
 						>
@@ -442,7 +470,8 @@ export function ArticleDetailPage() {
 
 								{/* Lagerplats Sub-section */}
 								<div className="mt-4">
-									<h4 className="mb-3 border-b border-slate-200 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900">
+									<h4 className="mb-3 flex items-center gap-2 border-b border-slate-200 bg-slate-100 px-3 py-2 text-sm font-semibold text-slate-900">
+										<Warehouse className="h-4 w-4 text-slate-600" />
 										<Translate text={localizationConstants.articleLagerplatsSection} />
 									</h4>
 									<div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
@@ -473,7 +502,7 @@ export function ArticleDetailPage() {
 
 						{/* Bokföringsuppgifter */}
 						<SectionCard
-							icon={<UserPlus className="h-5 w-5 sm:h-6 sm:w-6" />}
+							icon={<FileText className="h-5 w-5 sm:h-6 sm:w-6" />}
 							title={localizationConstants.articleBokforingsuppgifterSection}
 							onEdit={handleEdit}
 						>

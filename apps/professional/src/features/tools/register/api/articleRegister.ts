@@ -225,8 +225,10 @@ export async function getArticleDetailAPIAction(
 		if (res.data?.data) {
 			return res.data.data;
 		}
-	} catch {
-		// Fallback to mock data
+	} catch (error) {
+		if (process.env.NODE_ENV !== "production") {
+			console.warn("[getArticleDetailAPIAction] API request failed, falling back to mock data:", error);
+		}
 	}
 
 	return MOCK_ARTICLE_DETAIL[id] ?? null;

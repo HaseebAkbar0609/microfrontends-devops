@@ -1353,7 +1353,7 @@ export const svRegister: RegisterTranslation = {
 	articleStruktureradInfoTab: "Strukturerad info",
 	articleKundSection: "Kund",
 	articlePriserSection: "Priser",
-	articleBokoringsUppgifterSection: "Bokörings uppgifter",
+	articleBokoringsUppgifterSection: "Bokföringsuppgifter",
 	articleBokforingsuppgifterSection: "Bokföringsuppgifter",
 	articleLagerplatsSection: "Lagerplats",
 };
