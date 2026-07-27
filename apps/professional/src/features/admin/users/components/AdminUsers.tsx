@@ -29,6 +29,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DynamicBreadcrumb } from "@/components/common";
 import { Search } from "@/components/search/Search";
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { TablePagination } from "@/components/table/TablePagination";
 import GroupsTab from "./GroupsTab";
 import { showToast } from "@/lib/toast";
@@ -69,7 +70,10 @@ const USER_COLUMNS = [
 export default function AdminUsers() {
 	const t = useTranslate();
 	const router = useRouter();
-	const [activeTab, setActiveTab] = useState("users");
+	const { query, changeQueries } = useQueryParams();
+	const activeTab = query.get("tab") === "groups" ? "groups" : "users";
+	const setActiveTab = (value: string) =>
+		changeQueries({ tab: value === "users" ? null : value });
 	const [search, setSearch] = useState("");
 	const [accessFilter, setAccessFilter] = useState<AdminUserAccess | "">("");
 	const [page, setPage] = useState(1);
