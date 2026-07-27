@@ -1176,7 +1176,6 @@ export const enRegister: RegisterTranslation = {
 	placeholderArticleHojd: "Enter height",
 	placeholderArticleMaterial: "Enter material",
 	placeholderArticleLagerforandring: "Enter inventory change",
->>>>>>> origin/dev
 };
 
 export const en: Translation = {

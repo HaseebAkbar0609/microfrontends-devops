@@ -1132,7 +1132,6 @@ export type RegisterTranslation = {
 	placeholderArticleHojd: string;
 	placeholderArticleMaterial: string;
 	placeholderArticleLagerforandring: string;
->>>>>>> origin/dev
 };
 
 export type CommonTranslation = {

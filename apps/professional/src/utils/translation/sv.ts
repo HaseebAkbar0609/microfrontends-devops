@@ -1184,7 +1184,6 @@ export const svRegister: RegisterTranslation = {
 	placeholderArticleHojd: "Ange höjd",
 	placeholderArticleMaterial: "Ange material",
 	placeholderArticleLagerforandring: "Ange lagerförändring",
->>>>>>> origin/dev
 };
 
 export const svCommon: CommonTranslation = {
