@@ -3,6 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 interface OfferDetailPageHeaderProps {
   title: string;
@@ -19,16 +21,16 @@ export function OfferDetailPageHeader({ title }: OfferDetailPageHeaderProps) {
           variant="ghost"
           onClick={() => router.back()}
           aria-label="Go back"
-          className="!p-0"
+          className="p-0!"
         >
-          <ArrowLeft className="!w-6 !h-6" />
+          <ArrowLeft className="w-6! h-6!" />
         </Button>
 
         <h1 className="text-2xl font-semibold leading-tight text-slate-900">
-          {`Project - ${title}`}
+          <Translate text={localizationConstants.project} />
+          {` - ${title}`}
         </h1>
       </div>
     </div>
   );
 }
-
