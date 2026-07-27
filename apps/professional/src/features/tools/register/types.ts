@@ -402,3 +402,77 @@ export type CreateSupplierFormData = z.infer<typeof createSupplierSchema>;
 
 export type CreateSupplierFullData = CreateSupplierFormData & { ratings: Ratings; id?: string | null };
 
+// Create Article Schema (TFS-438)
+export const createArticleSchema = z.object({
+	// Step 1: Grund information
+	articleNr: z.string().optional(),
+	benamning: z.string().min(1, "validationArticleNameRequired"),
+	ean: z.string().optional(),
+	leverantor: z.string().min(1, "validationArticleSupplierRequired"),
+	husarbete: z.string().optional(),
+	supplierArticleNo: z.string().optional(),
+	typHusarbete: z.string().optional(),
+	enhet: z.string().min(1, "validationArticleUnitRequired"),
+	typAvArtikel: z.string().min(1, "validationArticleTypeRequired"),
+	lagerVara: z.string().optional(),
+	// Prislista rows
+	priceListRows: z
+		.array(
+			z.object({
+				id: z.string(),
+				priceList: z.string(),
+				benamning: z.string(),
+				prisUt: z.string(),
+				prisKalkyl: z.string(),
+				tgProcent: z.string(),
+				tbSek: z.string(),
+				kostnad: z.string(),
+				andringsDatum: z.string(),
+			}),
+		)
+		.optional(),
+	// Bokörings uppgifter - Step 1
+	forsaljning: z.string().min(1, "validationArticleSalesRequired"),
+	moms: z.string().min(1, "validationArticleVatRequired"),
+	forsaljningSE: z.string().optional(),
+	forsaljningEU: z.string().optional(),
+	lagerkonto: z.string().optional(),
+	forsaljningEUMoms: z.string().optional(),
+	forsaljningExport: z.string().optional(),
+	inkop: z.string().optional(),
+	// Step 2: Strukturerad info - Priser
+	priserA: z.string().optional(),
+	europrislista: z.string().optional(),
+	kampanj: z.string().optional(),
+	vipPriser: z.string().optional(),
+	// Bokörings uppgifter - Step 2
+	kalkylkostnad: z.string().optional(),
+	bestallningspunkt: z.string().optional(),
+	iLager: z.string().optional(),
+	// Lagerplats
+	vikt: z.string().optional(),
+	langd: z.string().optional(),
+	bredd: z.string().optional(),
+	hojd: z.string().optional(),
+	material: z.string().optional(),
+	// Bokföringsuppgifter - Step 2
+	forsaljningSESkattskyldighet: z.string().min(1, "validationArticleSalesRequired"),
+	momsSESkattskyldighet: z.string().optional(),
+	forsaljningEUSkattskyldighet: z.string().optional(),
+	lagerforandring: z.string().optional(),
+});
+
+export type CreateArticleFormData = z.infer<typeof createArticleSchema>;
+
+export interface PriceListRow {
+	id: string;
+	priceList: string;
+	benamning: string;
+	prisUt: string;
+	prisKalkyl: string;
+	tgProcent: string;
+	tbSek: string;
+	kostnad: string;
+	andringsDatum: string;
+}
+
