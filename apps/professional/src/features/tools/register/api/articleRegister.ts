@@ -6,6 +6,7 @@ import type {
 	GetSupplierArticleListParams,
 	GetSupplierArticleListResponse,
 	SupplierArticleDetail,
+	ArticleDetail,
 	ArticleImportMapping,
 	ArticleImportResult,
 	CreateArticleFormData,
@@ -14,6 +15,7 @@ import {
 	MOCK_ARTICLE_DATA,
 	MOCK_SUPPLIER_ARTICLE_DATA,
 	MOCK_SUPPLIER_ARTICLE_DETAIL,
+	MOCK_ARTICLE_DETAIL,
 } from "../mockdata/articles";
 
 export async function getArticleListAPIAction(
@@ -213,5 +215,22 @@ export async function createArticleAPIAction(
 	} catch {
 		return { id: "new-article" };
 	}
+}
+
+export async function getArticleDetailAPIAction(
+	id: string,
+): Promise<ArticleDetail | null> {
+	try {
+		const res = await axiosInstance.get(API_PATH.ARTICLES.GET(id));
+		if (res.data?.data) {
+			return res.data.data;
+		}
+	} catch (error) {
+		if (process.env.NODE_ENV !== "production") {
+			console.warn("[getArticleDetailAPIAction] API request failed, falling back to mock data:", error);
+		}
+	}
+
+	return MOCK_ARTICLE_DETAIL[id] ?? null;
 }
 

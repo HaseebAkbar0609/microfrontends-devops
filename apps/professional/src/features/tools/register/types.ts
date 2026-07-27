@@ -537,3 +537,44 @@ export interface PriceListRow {
 	andringsDatum: string;
 }
 
+// Article Detail Types (TFS-439)
+export interface ArticleDetail {
+	id: string;
+	articleNo: string;
+	benamning: string;
+	ean: string;
+	leverantor: string;
+	leverantorId: string;
+	husarbete: string;
+	supplierArticleNo: string;
+	typHusarbete: string;
+	enhet: string;
+	typAvArtikel: string;
+	lagerVara: string;
+	priceListRows: PriceListRow[];
+	forsaljning: string;
+	moms: string;
+	forsaljningSE: string;
+	forsaljningEU: string;
+	lagerkonto: string;
+	forsaljningEUMoms: string;
+	forsaljningExport: string;
+	inkop: string;
+	priserA: string;
+	europrislista: string;
+	kampanj: string;
+	vipPriser: string;
+	kalkylkostnad: string;
+	bestallningspunkt: string;
+	iLager: string;
+	vikt: string;
+	langd: string;
+	bredd: string;
+	hojd: string;
+	material: string;
+	forsaljningSESkattskyldighet: string;
+	momsSESkattskyldighet: string;
+	forsaljningEUSkattskyldighet: string;
+	lagerforandring: string;
+}
+

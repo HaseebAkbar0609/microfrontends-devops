@@ -1295,6 +1295,15 @@ export type RegisterTranslation = {
 	placeholderArticleHojd: string;
 	placeholderArticleMaterial: string;
 	placeholderArticleLagerforandring: string;
+	// Article Detail Page Translations (TFS-439)
+	articleOverviewTitle: string;
+	articleGrundInfoTab: string;
+	articleStruktureradInfoTab: string;
+	articleKundSection: string;
+	articlePriserSection: string;
+	articleBokoringsUppgifterSection: string;
+	articleBokforingsuppgifterSection: string;
+	articleLagerplatsSection: string;
 };
 
 export type CommonTranslation = {
