@@ -71,6 +71,13 @@ export const API_PATH = {
 		SUPPLIER_ARTICLES_LIST: `${PROFESSIONALS_BASE_PATH}/supplier-articles`,
 		SUPPLIER_ARTICLES_UPDATE: `${PROFESSIONALS_BASE_PATH}/supplier-articles/update`,
 	},
+	SUPPLIERS: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/suppliers`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/suppliers`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
+		UPLOAD_FILE: `/media/upload`,
+	},
 };
 
 export const appConstants = {
