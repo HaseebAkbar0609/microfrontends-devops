@@ -3,8 +3,8 @@
 import axiosInstance from "@/lib/axiosInstance";
 import type { LeadSettingsApiData, LeadSettingsApiResponse } from "@/features/leads/settings/types/leadSettingsApi";
 
-const LEAD_SETTINGS_PATH = "/api/v1/lead-settings";
-const LEAD_SETTINGS_UPDATE_PATH = "/api/v1/lead-settings/update";
+const LEAD_SETTINGS_PATH = "/api/v1/teams/lead-settings";
+const LEAD_SETTINGS_UPDATE_PATH = "/api/v1/teams/lead-settings/update";
 
 function extractLeadSettingsData(payload: unknown): LeadSettingsApiData | null {
 	if (!payload || typeof payload !== "object") return null;

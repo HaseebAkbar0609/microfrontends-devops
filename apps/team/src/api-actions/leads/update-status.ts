@@ -9,7 +9,7 @@ export async function updateLeadStatusAPIAction(
 	payload: UpdateLeadStatusPayload
 ): Promise<UpdateLeadStatusApiResponse> {
 	const response = await axiosInstance.patch<UpdateLeadStatusApiResponse>(
-		`/api/v1/lead/${leadId}/status`,
+		`/api/v1/teams/lead/${leadId}/status`,
 		payload
 	);
 
