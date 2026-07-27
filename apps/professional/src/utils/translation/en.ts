@@ -1339,6 +1339,15 @@ export const enRegister: RegisterTranslation = {
 	placeholderArticleHojd: "Enter height",
 	placeholderArticleMaterial: "Enter material",
 	placeholderArticleLagerforandring: "Enter inventory change",
+	// Article Detail Page Translations (TFS-439)
+	articleOverviewTitle: "Article Overview",
+	articleGrundInfoTab: "Basic info.",
+	articleStruktureradInfoTab: "Structured info",
+	articleKundSection: "Customer",
+	articlePriserSection: "Prices",
+	articleBokoringsUppgifterSection: "Booking info",
+	articleBokforingsuppgifterSection: "Accounting info",
+	articleLagerplatsSection: "Storage location",
 };
 
 export const en: Translation = {
