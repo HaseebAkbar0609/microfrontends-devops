@@ -186,8 +186,8 @@ export const sweSidebar: SidebarTranslation = {
 
 export const sweDashboard: DashboardTranslation = {
 	dashboardTitle: "Hem",
-	breadcrumbHome: "Home",
-	breadcrumbFavorite: "Favorite",
+	breadcrumbHome: "Hem",
+	breadcrumbFavorite: "Favorit",
 	statsTitle: "Stats",
 	statsLineOne: "Antal nya kunder per månad",
 	statsLineTwo: "Antal intäkter per månad",
