@@ -1189,6 +1189,15 @@ export const svRegister: RegisterTranslation = {
 	placeholderArticleHojd: "Ange höjd",
 	placeholderArticleMaterial: "Ange material",
 	placeholderArticleLagerforandring: "Ange lagerförändring",
+	// Article Detail Page Translations (TFS-439)
+	articleOverviewTitle: "Artikelöversikt",
+	articleGrundInfoTab: "Grundläggande info.",
+	articleStruktureradInfoTab: "Strukturerad info",
+	articleKundSection: "Kund",
+	articlePriserSection: "Priser",
+	articleBokoringsUppgifterSection: "Bokörings uppgifter",
+	articleBokforingsuppgifterSection: "Bokföringsuppgifter",
+	articleLagerplatsSection: "Lagerplats",
 };
 
 export const svCommon: CommonTranslation = {

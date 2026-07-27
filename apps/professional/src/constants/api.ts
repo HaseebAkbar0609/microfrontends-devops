@@ -64,6 +64,7 @@ export const API_PATH = {
 	},
 	ARTICLES: {
 		LIST: `${PROFESSIONALS_BASE_PATH}/articles`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}`,
 		CREATE: `${PROFESSIONALS_BASE_PATH}/articles`,
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}`,
 		TOGGLE_FAVORITE: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}/favorite`,
