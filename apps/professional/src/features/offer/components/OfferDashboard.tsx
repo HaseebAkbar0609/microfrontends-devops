@@ -57,7 +57,6 @@ const OfferDashboard = () => {
 		...placedWidgets
 			.map((w) => w.sidebarId)
 			.filter((id): id is string => !!id),
-		...(widgetsVisible ? ["image"] : []),
 	];
 
 	// Sidebar → grid drop

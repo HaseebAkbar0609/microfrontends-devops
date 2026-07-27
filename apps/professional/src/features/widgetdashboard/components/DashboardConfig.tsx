@@ -22,25 +22,11 @@ import localizationConstants from "@/utils/translation/constants";
 import { PlacedWidgetEntry, WidgetProps } from "../types/dashboard";
 import React from "react";
 import { Translate } from "@/utils/translation/translate";
-
-const Row = ({ label, value }: { label: string; value: React.ReactNode }) => (
-	<div className="flex items-baseline justify-between gap-3">
-		<span className="truncate">
-			<Translate text={label} />
-		</span>
-		<span className="shrink-0 font-medium text-slate-700">{value}</span>
-	</div>
-);
-
-const Content = ({ children }: { children: React.ReactNode }) => (
-	<div className="space-y-1 text-sm text-slate-500">{children}</div>
-);
-
-const MockTag = () => (
-	<span className="mt-2 inline-flex rounded-[4px] bg-slate-200/70 px-1.5 py-0.5 text-[10px] font-medium text-slate-500">
-		<Translate text={localizationConstants.homeMockDataNote} />
-	</span>
-);
+import {
+	WidgetContent as Content,
+	WidgetMockTag as MockTag,
+	WidgetRow as Row,
+} from "./WidgetContent";
 
 export const SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 	emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
