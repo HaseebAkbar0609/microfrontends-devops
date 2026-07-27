@@ -302,6 +302,67 @@ export interface CustomerDetail {
 	project: string;
 }
 
+// Supplier Detail Types (TFS-434)
+export interface SupplierContact {
+	id: string;
+	firstName: string;
+	lastName: string;
+	mobile: string;
+	email: string;
+	role: string;
+	personalNo: string;
+}
+
+export interface SupplierDocument {
+	id: string;
+	date: string;
+	name: string;
+	type: string;
+	url: string;
+}
+
+export interface SupplierDetail {
+	id: string;
+	supplierNo: string;
+	companyName: string;
+	orgNo: string;
+	status: "active" | "inactive";
+	mainCategory: string;
+	department: string;
+	region: string;
+	vatRegNo: string;
+	// Addresses
+	visitingAddress: string;
+	visitingPostalCode: string;
+	visitingCity: string;
+	invoiceAddress: string;
+	invoicePostalCode: string;
+	invoiceCity: string;
+	// Bank
+	bankName: string;
+	bankAccount: string;
+	bankgiro: string;
+	plusgiro: string;
+	iban: string;
+	bic: string;
+	// Payment terms
+	betalningsdagar: string;
+	ranta: string;
+	fakturaavgift: string;
+	inkasso: string;
+	// Contact
+	phone: string;
+	email: string;
+	website: string;
+	contactNotes: string;
+	// Contacts
+	contacts: SupplierContact[];
+	// Assessment
+	ratings: Ratings;
+	documents: SupplierDocument[];
+	notes: string;
+}
+
 // Supplier Article Detail Types (TFS-436)
 export interface SupplierArticleDetail {
 	id: string;
