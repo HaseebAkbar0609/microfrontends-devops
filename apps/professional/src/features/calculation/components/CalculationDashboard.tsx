@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
 import useModal from "@/features/auth/hooks/useModal";
-import { DashboardImage } from "@/features/widgetdashboard/components/DashboardImage";
 import { DashboardWidget } from "@/features/widgetdashboard/components/DashboardWidget";
 import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
@@ -56,7 +55,6 @@ const CalculationDashboard = () => {
 		...placedWidgets
 			.map((w) => w.sidebarId)
 			.filter((id): id is string => !!id),
-		...(widgetsVisible ? ["image"] : []),
 	];
 
 	const dropZoneRef = useRef<HTMLDivElement>(null);
@@ -337,12 +335,6 @@ const CalculationDashboard = () => {
 							))}
 						</div>
 
-						{widgetsVisible && (
-							<DashboardImage
-								src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&q=80&w=2000"
-								alt="Drafting tools and blueprints"
-							/>
-						)}
 					</Card>
 				</div>
 

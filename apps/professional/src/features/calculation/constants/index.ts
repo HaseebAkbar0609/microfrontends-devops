@@ -2,13 +2,18 @@ import {
 	Archive,
 	ArrowRight,
 	BarChart3,
-	Battery,
+	Bell,
+	Bot,
 	CalendarDays,
 	CircleDollarSign,
-	Construction,
+	Clock,
 	FileText,
 	Image as ImageIcon,
+	Layers,
 	Newspaper,
+	PieChart,
+	Receipt,
+	TrafficCone,
 	Trophy,
 } from "lucide-react";
 import { BreadcrumbItem } from "@/types/common";
@@ -62,37 +67,71 @@ export const calculationGoToItems: DynamicSubSidebarItem[] = [
 	},
 ];
 
+/** Same 12 widgets as the calculation grid, in ticket order (plus the empty slot). */
 export const CALCULATION_SIDEBAR_ITEMS: WidgetItem[] = [
 	{
+		id: "emptyPage",
+		label: localizationConstants.emptyPageLabel,
+		icon: Layers,
+	},
+	{
+		id: "calcOverview",
+		label: localizationConstants.calcWidgetOverviewTitle,
+		icon: PieChart,
+	},
+	{
 		id: "calcStatus",
-		label: localizationConstants.calcStatus,
-		icon: Battery,
+		label: localizationConstants.calcWidgetStatusTitle,
+		icon: TrafficCone,
 	},
 	{
-		id: "calcCalendarWidget",
-		label: localizationConstants.calcCalendarWidget,
-		icon: CalendarDays,
-	},
-	{
-		id: "wonLost",
-		label: localizationConstants.calcWonLost,
-		icon: Trophy,
-	},
-	{
-		id: "totalValue",
-		label: localizationConstants.calcTotalValue,
+		id: "calcValue",
+		label: localizationConstants.calcWidgetValueTitle,
 		icon: CircleDollarSign,
 	},
 	{
-		id: "costDistribution",
-		label: localizationConstants.calcCostDistribution,
-		icon: Construction,
+		id: "calcCostDistribution",
+		label: localizationConstants.calcWidgetCostTitle,
+		icon: Receipt,
 	},
 	{
-		id: "statistics",
-		label: localizationConstants.calcStatistics,
+		id: "calcCalendar",
+		label: localizationConstants.calcWidgetCalendarTitle,
+		icon: CalendarDays,
+	},
+	{
+		id: "calcLatest",
+		label: localizationConstants.calcWidgetLatestTitle,
+		icon: Clock,
+	},
+	{
+		id: "calcRequiresAction",
+		label: localizationConstants.calcWidgetActionTitle,
+		icon: Bell,
+	},
+	{
+		id: "calcWonLost",
+		label: localizationConstants.calcWidgetWonLostTitle,
+		icon: Trophy,
+	},
+	{
+		id: "calcAiQuick",
+		label: localizationConstants.calcWidgetAiTitle,
+		icon: Bot,
+	},
+	{
+		id: "calcStatistics",
+		label: localizationConstants.calcWidgetStatsTitle,
 		icon: BarChart3,
 	},
-	{ id: "image", label: localizationConstants.imageLabel, icon: ImageIcon },
-	{ id: "news", label: localizationConstants.newsLabel, icon: Newspaper },
+	{
+		id: "calcNews",
+		label: localizationConstants.calcWidgetNewsTitle,
+		icon: Newspaper,
+	},
+	{
+		id: "image",
+		label: localizationConstants.calcWidgetImageTitle,
+		icon: ImageIcon,
+	},
 ];
