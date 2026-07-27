@@ -641,7 +641,7 @@ export type OfferTranslation = {
 	offerDetailDrawingTitle: string;
 	offerDetailPostedDateLabel: string;
 	offerManagement: string;
-	offerStatusInquiry: string;
+	offerStatusOverview: string;
 	offerStatusQuoted: string;
 	offerStatusAgreed: string;
 	offerStatusArchived: string;

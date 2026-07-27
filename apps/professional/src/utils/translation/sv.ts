@@ -553,7 +553,7 @@ export const svOffer: OfferTranslation = {
 	offerDetailDrawingTitle: "Ritning",
 	offerDetailPostedDateLabel: "Publicerad datum",
 	offerManagement: "Offert-hantering",
-	offerStatusInquiry: "Förfrågan",
+	offerStatusOverview: "Översikt",
 	offerStatusQuoted: "Offererad",
 	offerStatusAgreed: "Avtalad",
 	offerStatusArchived: "Arkiverad",

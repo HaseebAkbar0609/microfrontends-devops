@@ -659,7 +659,7 @@ export const enOffer: OfferTranslation = {
 	offerDetailDrawingTitle: "Drawing",
 	offerDetailPostedDateLabel: "Posted date",
 	offerManagement: "Offer management",
-	offerStatusInquiry: "Inquiry",
+	offerStatusOverview: "Overview",
 	offerStatusQuoted: "Quoted",
 	offerStatusAgreed: "Agreed",
 	offerStatusArchived: "Archived",

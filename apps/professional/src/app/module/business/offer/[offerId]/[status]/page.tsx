@@ -4,7 +4,7 @@ import { OfferDetailHeader } from "@/features/offer/components/OfferDetailHeader
 import { OfferDetailBody } from "@/features/offer/components/OfferDetailBody";
 import { DUMMY_OFFER_DETAIL } from "@/features/offer/constants/offerDetail";
 
-const VALID_STATUSES = ["inquiry", "quoted", "accepted", "agreed", "archived"];
+const VALID_STATUSES = ["overview", "quoted", "accepted", "agreed", "archived"];
 
 export default async function OfferStatusPage({
   params,
@@ -17,13 +17,13 @@ export default async function OfferStatusPage({
     notFound();
   }
 
-  const isInquiry = status === "inquiry";
+  const isOverview = status === "overview";
 
   return (
     <div className="flex flex-1 flex-col bg-slate-50">
       <OfferDetailPageHeader title={DUMMY_OFFER_DETAIL.titleKey} />
 
-      {isInquiry ? (
+      {isOverview ? (
         <div className="mr-auto w-full max-w-5xl px-6 pb-6 pt-4 space-y-0 ml-6">
           <OfferDetailHeader data={DUMMY_OFFER_DETAIL} />
           <OfferDetailBody data={DUMMY_OFFER_DETAIL} />

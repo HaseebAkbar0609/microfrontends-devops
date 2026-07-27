@@ -20,7 +20,7 @@ export function OfferDetailSubSidebar({ offerId }: OfferDetailSubSidebarProps) {
 	const base = `/module/business/offer/${offerId}`;
 
 	const STATUS_ITEMS = [
-		{ id: "inquiry", label: t(localizationConstants.offerStatusInquiry), href: `${base}/inquiry` },
+		{ id: "overview", label: t(localizationConstants.offerStatusOverview), href: `${base}/overview` },
 		{ id: "quoted", label: t(localizationConstants.offerStatusQuoted), href: `${base}/quoted` },
 		{ id: "accepted", label: t(localizationConstants.accepted), href: `${base}/accepted` },
 		{ id: "agreed", label: t(localizationConstants.offerStatusAgreed), href: `${base}/agreed` },
@@ -28,7 +28,7 @@ export function OfferDetailSubSidebar({ offerId }: OfferDetailSubSidebarProps) {
 	];
 
 	const currentStatus = pathname.split("/").at(-1);
-	const activeId = STATUS_ITEMS.find((item) => item.id === currentStatus)?.id ?? "inquiry";
+	const activeId = STATUS_ITEMS.find((item) => item.id === currentStatus)?.id ?? "overview";
 
 	return (
 		<aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-50">
