@@ -16,7 +16,7 @@ export default function Home() {
 		didRedirect.current = true;
 
 		if (isAuthenticated) {
-			router.replace("/dashboard");
+			router.replace("/home");
 		} else {
 			router.replace("/login");
 		}

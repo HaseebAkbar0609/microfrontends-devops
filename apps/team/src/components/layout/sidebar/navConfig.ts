@@ -172,7 +172,7 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			id: "dashboard",
 			label: localizationConstants.dashboard,
 			icon: Home,
-			href: "/dashboard",
+			href: "/home",
 			items: [],
 		},
 		{

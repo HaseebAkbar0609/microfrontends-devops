@@ -140,7 +140,7 @@ export const sweAppLauncher: AppLauncherTranslation = {
 };
 
 export const sweSidebar: SidebarTranslation = {
-	dashboard: "Dashboard",
+	dashboard: "Hem",
 	favorites: "Favoriter",
 	tools: "Verktyg",
 	toolsItem: "Verktyg",
@@ -185,7 +185,7 @@ export const sweSidebar: SidebarTranslation = {
 };
 
 export const sweDashboard: DashboardTranslation = {
-	dashboardTitle: "Dashboard",
+	dashboardTitle: "Hem",
 	breadcrumbHome: "Home",
 	breadcrumbFavorite: "Favorite",
 	statsTitle: "Stats",

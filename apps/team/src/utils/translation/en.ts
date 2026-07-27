@@ -13,7 +13,7 @@ import {
 } from "./constants";
 
 export const enSidebar: SidebarTranslation = {
-	dashboard: "Dashboard",
+	dashboard: "Home",
 	favorites: "Favorites",
 	tools: "Tools",
 	toolsItem: "Tools",
@@ -446,7 +446,7 @@ export const enHeader: HeaderTranslation = {
 };
 
 export const enDashboard: DashboardTranslation = {
-	dashboardTitle: "Dashboard",
+	dashboardTitle: "Home",
 	breadcrumbHome: "Home",
 	breadcrumbFavorite: "Favorite",
 	statsTitle: "Stats",
