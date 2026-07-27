@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "@/components/ui/card";
-import { Layers } from "lucide-react";
+import { Layers, LayoutGrid } from "lucide-react";
 import { useRef, useState } from "react";
 import { DashboardWidget } from "./DashboardWidget";
 
@@ -20,20 +20,29 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AvailableProjectsCard } from "./AvailableProjectsCard";
 import { INITIAL_WIDGETS, SIDEBAR_WIDGET_MAP } from "./DashboardConfig";
-import { DashboardImage } from "./DashboardImage";
 import { ModulesSection } from "./ModulesSection";
 import { SidebarActions } from "./SidebarActions";
 import { SidebarWidgetList } from "./SidebarWidgetList";
 
 import useModal from "@/features/auth/hooks/useModal";
+import { cn } from "@/lib/utils";
+import { useWidgetToggle } from "../hooks/useWidgetToggle";
 import localization from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-import { PlacedWidgetEntry } from "../types/dashboard";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
 
 const Dashboard = () => {
+	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
+	const [panelOpen, setPanelOpen] = useState(true);
+	const {
+		placedWidgets,
+		setPlacedWidgets,
+		widgetsVisible,
+		handleWidgetsToggle,
+		resumeAfterDrop,
+	} = useWidgetToggle(SIDEBAR_WIDGET_MAP, INITIAL_WIDGETS);
 
 	const [highlightedWidgetUid, setHighlightedWidgetUid] = useState<
 		string | null
@@ -46,16 +55,11 @@ const Dashboard = () => {
 		index: number;
 	} | null>(null);
 
-	// All grid widgets (initial defaults + sidebar-dropped ones)
-	const [placedWidgets, setPlacedWidgets] =
-		useState<PlacedWidgetEntry[]>(INITIAL_WIDGETS);
-
 	// Derived list of sidebar IDs that are already placed
 	const placedSidebarIds = [
 		...placedWidgets
 			.map((w) => w.sidebarId)
 			.filter((id): id is string => !!id),
-		"image", // Image is always present in the hardcoded DashboardImage component
 	];
 
 	// Sidebar → grid drop
@@ -106,6 +110,7 @@ const Dashboard = () => {
 		});
 
 		if (dropIndex !== null) {
+			resumeAfterDrop();
 			const targetWidget = placedWidgets[dropIndex];
 
 			if (targetWidget.sidebarId === "emptyPage") {
@@ -294,6 +299,22 @@ const Dashboard = () => {
 
 	return (
 		<div className="min-h-screen ">
+			<div className="flex justify-end px-4 pt-4">
+				<button
+					type="button"
+					onClick={() => setPanelOpen((prev) => !prev)}
+					aria-expanded={panelOpen}
+					aria-label={t(localization.widgetPanelOpenClosed)}
+					className={cn(
+						"flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border transition-colors",
+						panelOpen
+							? "border-blue-500 bg-white text-blue-600 hover:bg-blue-50"
+							: "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
+					)}
+				>
+					<LayoutGrid size={18} />
+				</button>
+			</div>
 			<div className="mx-auto flex flex-col gap-6 lg:flex-row p-4">
 				{/* ── Main Content ──────────────────────────────────────────── */}
 				<div className="flex-1 space-y-6 mb-6">
@@ -334,38 +355,70 @@ const Dashboard = () => {
 								</DraggableGridCard>
 							))}
 						</div>
-
-						<DashboardImage
-							src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80&w=2000"
-							alt="Modern Bathroom"
-						/>
 					</Card>
 
 					<ModulesSection />
 				</div>
 
 				{/* ── Right Sidebar ─────────────────────────────────────────── */}
-				<div
-					className="w-full space-y-6 lg:w-[400px] mb-6"
-					ref={sidebarRef}
-				>
-					<Card className="p-6 shadow-none gap-3">
-						<SidebarActions />
-						<AvailableProjectsCard />
-					</Card>
+				{panelOpen && (
+					<div
+						className="w-full space-y-6 lg:w-[400px] mb-6"
+						ref={sidebarRef}
+					>
+						<Card className="p-6 shadow-none gap-3">
+							<SidebarActions />
+							<AvailableProjectsCard />
+						</Card>
 
-					<SidebarWidgetList
-						selectedItem={selectedItem}
-						onSelectItem={handleSidebarItemClick}
-						onSidebarDrop={handleSidebarDrop}
-						dropZoneRef={dropZoneRef}
-						onSidebarDrag={handleSidebarDrag}
-						onDragEnd={() => {
-							setGridDragOverIndex(null);
-						}}
-						placedSidebarIds={placedSidebarIds}
-					/>
-				</div>
+						<SidebarWidgetList
+							header={
+								<div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+									<span className="text-sm font-medium text-slate-900">
+										<Translate
+											text={
+												localization.widgetPanelOpenClosed
+											}
+										/>
+									</span>
+									<button
+										type="button"
+										role="switch"
+										aria-checked={widgetsVisible}
+										aria-label={t(
+											localization.widgetPanelOpenClosed,
+										)}
+										onClick={handleWidgetsToggle}
+										className={cn(
+											"relative h-6 w-11 cursor-pointer rounded-full transition-colors",
+											widgetsVisible
+												? "bg-blue-600"
+												: "bg-slate-300",
+										)}
+									>
+										<span
+											className={cn(
+												"absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all",
+												widgetsVisible
+													? "left-[22px]"
+													: "left-0.5",
+											)}
+										/>
+									</button>
+								</div>
+							}
+							selectedItem={selectedItem}
+							onSelectItem={handleSidebarItemClick}
+							onSidebarDrop={handleSidebarDrop}
+							dropZoneRef={dropZoneRef}
+							onSidebarDrag={handleSidebarDrag}
+							onDragEnd={() => {
+								setGridDragOverIndex(null);
+							}}
+							placedSidebarIds={placedSidebarIds}
+						/>
+					</div>
+				)}
 			</div>
 
 			{/* Replacement Confirmation Modal */}
@@ -382,13 +435,17 @@ const Dashboard = () => {
 							<Translate text={localization.replaceWidgetTitle} />
 						</AlertDialogTitle>
 						<AlertDialogDescription>
-							<Translate text={localization.replaceWidgetDescription} />{" "}
+							<Translate
+								text={localization.replaceWidgetDescription}
+							/>{" "}
 							<strong>
 								<Translate
 									text={pendingReplacement?.item.label ?? ""}
 								/>
 							</strong>
-							<Translate text={localization.replaceWidgetUndone} />
+							<Translate
+								text={localization.replaceWidgetUndone}
+							/>
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -422,7 +479,9 @@ const Dashboard = () => {
 							<Translate text={localization.removeWidgetTitle} />
 						</AlertDialogTitle>
 						<AlertDialogDescription>
-							<Translate text={localization.removeWidgetDescription} />
+							<Translate
+								text={localization.removeWidgetDescription}
+							/>
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
