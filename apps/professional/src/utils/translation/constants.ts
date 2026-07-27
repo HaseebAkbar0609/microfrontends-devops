@@ -812,6 +812,11 @@ export type OfferTranslation = {
 	offerDetailDocumentTitle: string;
 	offerDetailDrawingTitle: string;
 	offerDetailPostedDateLabel: string;
+	offerManagement: string;
+	offerStatusOverview: string;
+	offerStatusQuoted: string;
+	offerStatusAgreed: string;
+	offerStatusArchived: string;
 
 	// Business offer modal
 	businessOfferModalTitle: string;
