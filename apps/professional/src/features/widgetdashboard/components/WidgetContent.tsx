@@ -51,6 +51,61 @@ export const WidgetAction = ({ label }: { label: string }) => (
 	</button>
 );
 
+/** A "label — percentage" row with a proportional bar. */
+export const WidgetBarRow = ({
+	label,
+	percent,
+	color = "bg-slate-500",
+}: {
+	label: string;
+	percent: number;
+	color?: string;
+}) => (
+	<div className="flex flex-col gap-0.5">
+		<div className="flex items-baseline justify-between gap-3">
+			<span className="truncate">
+				<Translate text={label} />
+			</span>
+			<span className="shrink-0 font-medium text-slate-700">
+				{percent} %
+			</span>
+		</div>
+		<div className="h-1.5 w-full rounded-full bg-slate-200">
+			<div
+				className={`h-1.5 rounded-full ${color}`}
+				style={{ width: `${percent}%` }}
+			/>
+		</div>
+	</div>
+);
+
+/** Shown when a widget has no data to display. */
+export const WidgetEmptyState = ({ message }: { message?: string }) => (
+	<p className="py-4 text-center text-sm text-slate-400">
+		<Translate text={message ?? localizationConstants.widgetNoData} />
+	</p>
+);
+
+/** Skeleton lines shown while a widget is loading. */
+export const WidgetLoadingState = ({ rows = 3 }: { rows?: number }) => (
+	<div className="space-y-2 py-1" aria-busy>
+		{Array.from({ length: rows }).map((_, index) => (
+			<div
+				key={index}
+				className="h-3 animate-pulse rounded bg-slate-200"
+				style={{ width: `${100 - index * 12}%` }}
+			/>
+		))}
+	</div>
+);
+
+/** Shown when widget data failed to load. */
+export const WidgetErrorState = ({ message }: { message: string }) => (
+	<p className="py-4 text-center text-sm text-red-600" role="alert">
+		<Translate text={message} />
+	</p>
+);
+
 export const WidgetImagePlaceholder = ({
 	description,
 }: {
