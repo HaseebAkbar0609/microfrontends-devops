@@ -3,7 +3,7 @@ import { OfferDetailData } from "../types";
 export const DUMMY_OFFER_DETAIL: OfferDetailData = {
   id: "1",
   postedDate: "18-12-2024",
-  titleKey: "Kitchen Renovation",
+  titleKey: "Kitchen Renovation Job",
   type: "Express",
   isExpress: true,
   locations: ["Stockholm", "Järfälla"],
@@ -14,8 +14,8 @@ export const DUMMY_OFFER_DETAIL: OfferDetailData = {
   ],
   extraImagesCount: 6,
   documents: [
-    { id: "doc-1", label: "Template #1.doc" },
-    { id: "doc-2", label: "Template #1.doc" },
+    { id: "doc-1", label: "Form Template #1.doc" },
+    { id: "doc-2", label: "Form Template #1.doc" },
     { id: "doc-3", label: "project.pdf" },
   ],
   drawings: [
