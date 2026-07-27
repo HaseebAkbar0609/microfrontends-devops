@@ -552,6 +552,11 @@ export const svOffer: OfferTranslation = {
 	offerDetailDocumentTitle: "Dokument",
 	offerDetailDrawingTitle: "Ritning",
 	offerDetailPostedDateLabel: "Publicerad datum",
+	offerManagement: "Offert-hantering",
+	offerStatusInquiry: "Förfrågan",
+	offerStatusQuoted: "Offererad",
+	offerStatusAgreed: "Avtalad",
+	offerStatusArchived: "Arkiverad",
 
 	// Business offer modal
 	businessOfferModalTitle:

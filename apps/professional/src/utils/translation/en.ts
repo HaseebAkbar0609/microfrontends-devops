@@ -658,6 +658,11 @@ export const enOffer: OfferTranslation = {
 	offerDetailDocumentTitle: "Document",
 	offerDetailDrawingTitle: "Drawing",
 	offerDetailPostedDateLabel: "Posted date",
+	offerManagement: "Offer management",
+	offerStatusInquiry: "Inquiry",
+	offerStatusQuoted: "Quoted",
+	offerStatusAgreed: "Agreed",
+	offerStatusArchived: "Archived",
 
 	// Business offer modal
 	businessOfferModalTitle: "Are you sure you want to send this Offer?",

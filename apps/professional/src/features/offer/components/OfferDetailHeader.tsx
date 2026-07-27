@@ -7,7 +7,7 @@ import { MODAL_CONSTANTS, type ModalType } from "@/constants/constant";
 import useModal from "@/features/auth/hooks/useModal";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { ArrowBigRightDash, Briefcase, Heart, MapPin } from "lucide-react";
+import { Briefcase, Heart, MapPin, Zap } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BusinessExpressModal } from "./BusinessExpressModal";
 import { BusinessOfferModal } from "./BusinessOfferModal";
@@ -28,7 +28,7 @@ export const OfferDetailHeader = ({ data }: OfferDetailHeaderProps) => {
           <h1 className="text-xl font-semibold text-secondary mb-1">
             {data.titleKey}
           </h1>
-          <p className="text-sm text-slate-500 mt-2 mb-2">
+          <p className="text-sm text-blue-600 mt-2 mb-2">
             <Translate text={localizationConstants.offerDetailPostedLabel} />:{" "}
             {data.postedDate}
           </p>
@@ -98,7 +98,7 @@ export const OfferDetailHeader = ({ data }: OfferDetailHeaderProps) => {
               openModal(MODAL_CONSTANTS.OFFER_CONFIRMATION, data.id);
             }}
           >
-             <ArrowBigRightDash />
+            <Zap className="h-4 w-4" />
             <Translate text={localizationConstants.offerDetailTakeJob} />
           </Button>
         </div>

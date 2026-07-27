@@ -640,6 +640,11 @@ export type OfferTranslation = {
 	offerDetailDocumentTitle: string;
 	offerDetailDrawingTitle: string;
 	offerDetailPostedDateLabel: string;
+	offerManagement: string;
+	offerStatusInquiry: string;
+	offerStatusQuoted: string;
+	offerStatusAgreed: string;
+	offerStatusArchived: string;
 
 	// Business offer modal
 	businessOfferModalTitle: string;
