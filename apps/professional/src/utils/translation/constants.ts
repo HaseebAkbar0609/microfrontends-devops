@@ -1033,6 +1033,11 @@ export type RegisterTranslation = {
 	paymentTermsDaysLabel: string;
 	interestRateLabel: string;
 	collectionFeeLabel: string;
+	betalningsvillkorTitle: string;
+	betalningsdagarLabel: string;
+	rantaLabel: string;
+	fakturaavgiftLabel: string;
+	inkassoLabel: string;
 	plusGiroStandard: string;
 	plusGiroForetag: string;
 	plusGiroDirekt: string;

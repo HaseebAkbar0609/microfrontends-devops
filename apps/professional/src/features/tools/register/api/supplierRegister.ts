@@ -1,7 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import { SupplierRegisterRow, MOCK_SUPPLIER_REGISTER_DATA } from "../mockdata/suppliers";
-import type { CreateSupplierFullData } from "../types";
+import type { CreateSupplierFullData, SupplierDetail } from "../types";
 
 export type { SupplierRegisterRow };
 
@@ -220,4 +220,19 @@ export async function uploadSupplierFileAPIAction(
 			url: "",
 		};
 	}
+}
+
+export async function getSupplierDetailAPIAction(
+	id: string,
+): Promise<SupplierDetail> {
+	try {
+		const res = await axiosInstance.get(API_PATH.SUPPLIERS.GET(id));
+		if (res.data?.data) {
+			return res.data.data as SupplierDetail;
+		}
+	} catch {
+		// Fallback to mock data on error or dev
+	}
+	const { MOCK_SUPPLIER_DETAIL } = await import("../mockdata/supplierDetail");
+	return { ...MOCK_SUPPLIER_DETAIL, id };
 }

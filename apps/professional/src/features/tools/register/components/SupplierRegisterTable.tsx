@@ -210,7 +210,7 @@ export function SupplierRegisterTable() {
 			{
 				label: localizationConstants.viewLabel,
 				icon: <Eye className="h-4 w-4" />,
-				onClick: (row) => void row,
+				onClick: (row) => router.push(`/tools/register/supplier/${row.id}`),
 			},
 			{
 				label: localizationConstants.editLabel,
@@ -224,7 +224,7 @@ export function SupplierRegisterTable() {
 				onClick: (row) => void row,
 			},
 		],
-		[],
+		[router],
 	);
 
 	return (
