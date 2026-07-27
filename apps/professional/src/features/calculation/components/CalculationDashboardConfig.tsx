@@ -1,451 +1,346 @@
 import {
 	BarChart3,
-	Battery,
+	Bell,
+	Bot,
 	CalendarDays,
-	ChevronDown,
-	ChevronLeft,
-	ChevronRight,
-	ChevronUp,
 	CircleDollarSign,
-	Construction,
+	Clock,
+	Image as ImageIcon,
 	Layers,
 	Newspaper,
+	PieChart,
+	Receipt,
+	TrafficCone,
 	Trophy,
 } from "lucide-react";
-import React from "react";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	PlacedWidgetEntry,
 	WidgetProps,
 } from "@/features/widgetdashboard/types/dashboard";
+import {
+	WidgetAction,
+	WidgetBarRow,
+	WidgetContent as Content,
+	WidgetImagePlaceholder,
+	WidgetListItem,
+	WidgetMockTag as MockTag,
+	WidgetRow as Row,
+} from "@/features/widgetdashboard/components/WidgetContent";
 import { Translate } from "@/utils/translation/translate";
 
-const MONTHS = ["Januari", "Februari", "Mars", "April"];
-
-const MiniPieChart = ({
-	title,
-	legend,
-}: {
-	title: string;
-	legend: { label: string; color: string }[];
-}) => (
-	<div className="flex flex-col gap-2 rounded-md border border-slate-200 bg-white p-3">
-		<p className="text-center text-[11px] font-medium text-slate-700">
-			<Translate text={title} />
-		</p>
-		<svg viewBox="0 0 32 32" className="mx-auto h-20 w-20 -rotate-90">
-			<circle
-				cx="16"
-				cy="16"
-				r="8"
-				fill="none"
-				strokeWidth="16"
-				stroke={legend[0]?.color}
-				strokeDasharray="20.1 50.27"
-			/>
-			<circle
-				cx="16"
-				cy="16"
-				r="8"
-				fill="none"
-				strokeWidth="16"
-				stroke={legend[1]?.color}
-				strokeDasharray="15.1 50.27"
-				strokeDashoffset="-20.1"
-			/>
-			<circle
-				cx="16"
-				cy="16"
-				r="8"
-				fill="none"
-				strokeWidth="16"
-				stroke={legend[2]?.color}
-				strokeDasharray="10.05 50.27"
-				strokeDashoffset="-35.2"
-			/>
-			<circle
-				cx="16"
-				cy="16"
-				r="8"
-				fill="none"
-				strokeWidth="16"
-				stroke={legend[3]?.color}
-				strokeDasharray="5.02 50.27"
-				strokeDashoffset="-45.25"
-			/>
-		</svg>
-		<div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
-			{legend.map((entry) => (
-				<span key={entry.label} className="flex items-center gap-1">
-					<span
-						className="h-2 w-2 rounded-[2px]"
-						style={{ backgroundColor: entry.color }}
-					/>
-					<span className="text-[9px] text-slate-500">
-						<Translate text={entry.label} />
-					</span>
-				</span>
-			))}
-		</div>
-	</div>
-);
-
-const MiniGroupedBarChart = ({
-	title,
-	legend,
-	values,
-}: {
-	title: string;
-	legend: { label: string; color: string }[];
-	values: number[][];
-}) => (
-	<div className="flex flex-col gap-2 rounded-md border border-slate-200 bg-white p-3">
-		<p className="text-center text-[11px] font-medium text-slate-700">
-			<Translate text={title} />
-		</p>
-		<div className="flex h-20 items-end justify-around gap-2">
-			{values.map((group, monthIndex) => (
-				<div
-					key={monthIndex}
-					className="flex flex-col items-center gap-1"
-				>
-					<div className="flex items-end gap-0.5">
-						{group.map((value, seriesIndex) => (
-							<div
-								key={seriesIndex}
-								className="w-2 rounded-sm"
-								style={{
-									height: `${value * 5}px`,
-									backgroundColor: legend[seriesIndex]?.color,
-								}}
-							/>
-						))}
-					</div>
-					<span className="text-[8px] text-slate-400">
-						{MONTHS[monthIndex]}
-					</span>
-				</div>
-			))}
-		</div>
-		<div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5">
-			{legend.map((entry) => (
-				<span key={entry.label} className="flex items-center gap-1">
-					<span
-						className="h-2 w-2 rounded-[2px]"
-						style={{ backgroundColor: entry.color }}
-					/>
-					<span className="text-[9px] text-slate-500">
-						<Translate text={entry.label} />
-					</span>
-				</span>
-			))}
-		</div>
-	</div>
-);
-
-const WEEK_DAYS = ["Mån", "Tis", "Ons", "Tor", "Fre", "Lör", "Sön"];
-const CALENDAR_DATES = [
-	{ label: "30", muted: true },
-	{ label: "1", muted: true },
-	{ label: "2" },
-	{ label: "3" },
-	{ label: "4" },
-	{ label: "5" },
-	{ label: "6" },
-	{ label: "7" },
-	{ label: "8" },
-	{ label: "9" },
-	{ label: "10" },
-	{ label: "11", active: true },
-	{ label: "12" },
-	{ label: "13" },
-];
-
-const MiniCalendar = () => (
-	<div className="rounded-md border border-slate-200 bg-white p-3">
-		<div className="mb-2 flex items-center justify-center gap-3">
-			<ChevronLeft size={14} className="text-slate-500" />
-			<span className="text-sm font-semibold text-slate-900">
-				<Translate text={localizationConstants.calcCalendar} />
-			</span>
-			<ChevronRight size={14} className="text-slate-500" />
-		</div>
-		<div className="grid grid-cols-7 gap-1 text-center">
-			{WEEK_DAYS.map((day) => (
-				<span
-					key={day}
-					className="text-[11px] font-semibold text-slate-700"
-				>
-					{day}
-				</span>
-			))}
-			{CALENDAR_DATES.map((date, index) => (
-				<span
-					key={`${date.label}-${index}`}
-					className={
-						date.active
-							? "flex h-7 w-7 items-center justify-center rounded-md bg-red-600 text-xs font-semibold text-white"
-							: date.muted
-								? "flex h-7 w-7 items-center justify-center rounded-md text-xs text-slate-300"
-								: "flex h-7 w-7 items-center justify-center rounded-md border border-slate-200 bg-white text-xs font-medium text-slate-900"
-					}
-				>
-					{date.label}
-				</span>
-			))}
-		</div>
-	</div>
-);
-
+/**
+ * Maps a sidebar item id → widget render props for the Calculation dashboard.
+ * Mock content only — replace with API data when available.
+ */
 export const CALCULATION_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 	emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
 
+	// 1. Kalkylöversikt
+	calcOverview: {
+		title: localizationConstants.calcWidgetOverviewTitle,
+		icon: PieChart,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.calcWidgetOverviewTotal}
+					value="128"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetOverviewOngoing}
+					value="34"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetOverviewCompleted}
+					value="82"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetOverviewCancelled}
+					value="12"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	// 2. Kalkylstatus
 	calcStatus: {
-		title: localizationConstants.calcStatus,
-		icon: Battery,
+		title: localizationConstants.calcWidgetStatusTitle,
+		icon: TrafficCone,
 		content: (
-			<div className="space-y-1 text-sm text-slate-500">
-				<div>
-					<Translate text={localizationConstants.calcActive} />: 5{" "}
-					<Translate text={localizationConstants.b2bPieces} />
-				</div>
-				<div>
-					<Translate text={localizationConstants.calcUpcoming} />: 4{" "}
-					<Translate text={localizationConstants.b2bPieces} />
-				</div>
-				<div>
-					<Translate text={localizationConstants.calcCompleted} />: 15{" "}
-					<Translate text={localizationConstants.b2bPieces} />
-				</div>
-			</div>
+			<Content>
+				<WidgetBarRow
+					label={localizationConstants.calcWidgetStatusGreen}
+					percent={58}
+					color="bg-green-500"
+				/>
+				<WidgetBarRow
+					label={localizationConstants.calcWidgetStatusYellow}
+					percent={27}
+					color="bg-amber-400"
+				/>
+				<WidgetBarRow
+					label={localizationConstants.calcWidgetStatusRed}
+					percent={15}
+					color="bg-red-500"
+				/>
+				<MockTag />
+			</Content>
 		),
 	},
 
-	calcCalendarWidget: {
-		title: localizationConstants.calcCalendarWidget,
-		icon: CalendarDays,
-		content: (
-			<div className="flex items-start gap-2 text-sm text-slate-500">
-				<div className="flex flex-col items-center gap-6 pt-1">
-					<ChevronUp size={14} className="text-slate-400" />
-					<ChevronDown size={14} className="text-slate-400" />
-				</div>
-				<div className="space-y-1">
-					<div>
-						<Translate text={localizationConstants.calcNo} />:
-						2026-004 - Ombyggnad badrum :
-					</div>
-					<div>
-						<Translate
-							text={localizationConstants.calcInternalReviewDate}
-						/>{" "}
-						: 2026-08-15
-					</div>
-					<div>
-						<Translate
-							text={localizationConstants.calcApprovalDate}
-						/>
-						: 2026-09-01
-					</div>
-					<div>
-						<Translate
-							text={localizationConstants.calcLastOfferDate}
-						/>
-						: 2026-09-10
-					</div>
-				</div>
-			</div>
-		),
-	},
-
-	wonLost: {
-		title: localizationConstants.calcWonLost,
-		icon: Trophy,
-		content: (
-			<div className="space-y-1 text-sm text-slate-500">
-				<div>
-					<Translate text={localizationConstants.calcWon} />: 8{" "}
-					<Translate text={localizationConstants.b2bPieces} />
-				</div>
-				<div>
-                    <Translate text={localizationConstants.calcLost} />: 28{" "}
-					<Translate text={localizationConstants.b2bPieces} />
-				</div>
-			</div>
-		),
-	},
-
-	calcCalendar: {
-		title: localizationConstants.calcCalendar,
-		icon: CalendarDays,
-		content: <MiniCalendar />,
-	},
-
-	totalValue: {
-		title: localizationConstants.calcTotalValue,
+	// 3. Kalkylvärde
+	calcValue: {
+		title: localizationConstants.calcWidgetValueTitle,
 		icon: CircleDollarSign,
 		content: (
-			<div className="space-y-1 text-sm text-slate-500">
-				<div>
-					<Translate
-						text={localizationConstants.calcTotalSalesValue}
-					/>
-				</div>
-				<div>
-					<Translate text={localizationConstants.calcTotalCost} />
-				</div>
-				<div>
-					<Translate text={localizationConstants.calcTotalProfit} />
-				</div>
-				<div>
-					<Translate
-						text={localizationConstants.calcValueThisMonth}
-					/>
-				</div>
-				<div>
-					<Translate text={localizationConstants.calcValueThisYear} />
-				</div>
-			</div>
+			<Content>
+				<Row
+					label={localizationConstants.calcWidgetValueTotal}
+					value="12,4 MSEK"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetValueAverage}
+					value="96 875 SEK"
+				/>
+				<MockTag />
+			</Content>
 		),
 	},
 
-	costDistribution: {
-		title: localizationConstants.calcCostDistribution,
-		icon: Construction,
+	// 4. Kostnadsfördelning
+	calcCostDistribution: {
+		title: localizationConstants.calcWidgetCostTitle,
+		icon: Receipt,
 		content: (
-			<div className="space-y-1 text-sm text-slate-500">
-				<div>
-					<Translate text={localizationConstants.calcMaterialCost} />
-				</div>
-				<div>
-					<Translate text={localizationConstants.calcLaborCost} />
-				</div>
-				<div>
-					<Translate
-						text={localizationConstants.calcSubcontractors}
-					/>
-				</div>
-				<div>
-					<Translate text={localizationConstants.calcMachines} />
-				</div>
-			</div>
+			<Content>
+				<WidgetBarRow
+					label={localizationConstants.calcWidgetCostMaterial}
+					percent={45}
+					color="bg-blue-600"
+				/>
+				<WidgetBarRow
+					label={localizationConstants.calcWidgetCostLabour}
+					percent={35}
+					color="bg-orange-500"
+				/>
+				<WidgetBarRow
+					label={localizationConstants.calcWidgetCostSubcontractors}
+					percent={15}
+					color="bg-emerald-500"
+				/>
+				<WidgetBarRow
+					label={localizationConstants.calcWidgetCostOther}
+					percent={5}
+					color="bg-slate-400"
+				/>
+				<MockTag />
+			</Content>
 		),
 	},
 
-	statistics: {
-		title: localizationConstants.calcStatistics,
+	// 5. Kalkylkalender
+	calcCalendar: {
+		title: localizationConstants.calcWidgetCalendarTitle,
+		icon: CalendarDays,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.calcWidgetCalendarUpcoming}
+					value="3"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetCalendarNext}
+					value={
+						<>
+							<Translate
+								text={localizationConstants.calcWidgetLatest1}
+							/>
+							, 2026-07-30
+						</>
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	// 6. Senaste Kalkyler
+	calcLatest: {
+		title: localizationConstants.calcWidgetLatestTitle,
+		icon: Clock,
+		content: (
+			<Content>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetLatest1}
+					meta="Teknik AB · 2026-07-24"
+				/>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetLatest2}
+					meta="ByggFix · 2026-07-23"
+				/>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetLatest3}
+					meta="FastighetCo · 2026-07-22"
+				/>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetLatest4}
+					meta="EntreprenadPro · 2026-07-20"
+				/>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetLatest5}
+					meta="IndustriPartner · 2026-07-18"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	// 7. Kalkyler som kräver åtgärd
+	calcRequiresAction: {
+		title: localizationConstants.calcWidgetActionTitle,
+		icon: Bell,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.calcWidgetActionTotal}
+					value="7"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetActionMissingCost}
+					value="2"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetActionAwaiting}
+					value="5"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	// 8. Vunna & Förlorade Kalkyler
+	calcWonLost: {
+		title: localizationConstants.calcWidgetWonLostTitle,
+		icon: Trophy,
+		content: (
+			<Content>
+				<Row label={localizationConstants.calcWidgetWon} value="24" />
+				<Row label={localizationConstants.calcWidgetLost} value="11" />
+				<Row
+					label={localizationConstants.calcWidgetWinRate}
+					value="69 %"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	// 9. AI Quick Calc
+	calcAiQuick: {
+		title: localizationConstants.calcWidgetAiTitle,
+		icon: Bot,
+		content: (
+			<Content>
+				<div className="rounded-md border border-slate-200 bg-white px-2.5 py-2 text-xs text-slate-400">
+					<Translate
+						text={localizationConstants.calcWidgetAiPrompt}
+					/>
+				</div>
+				<Row
+					label={localizationConstants.calcWidgetAiEstimate}
+					value="312 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.calcWidgetAiConfidence}
+					value="82 %"
+				/>
+				<WidgetAction label={localizationConstants.calcWidgetAiRun} />
+				<MockTag />
+			</Content>
+		),
+	},
+
+	// 10. Kalkylstatistik
+	calcStatistics: {
+		title: localizationConstants.calcWidgetStatsTitle,
 		icon: BarChart3,
 		content: (
-			<div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-				<MiniPieChart
-					title={localizationConstants.calcChartCostDistribution}
-					legend={[
-						{
-							label: localizationConstants.calcMaterialCost,
-							color: "#2563eb",
-						},
-						{
-							label: localizationConstants.calcLaborCost,
-							color: "#f97316",
-						},
-						{
-							label: localizationConstants.calcSubcontractors,
-							color: "#16a34a",
-						},
-						{
-							label: localizationConstants.calcMachines,
-							color: "#64748b",
-						},
-					]}
+			<Content>
+				<Row
+					label={localizationConstants.calcWidgetStatsCreated}
+					value="+18 %"
 				/>
-				<MiniGroupedBarChart
-					title={localizationConstants.calcChartObjects}
-					legend={[
-						{
-							label: localizationConstants.calcKalkyl,
-							color: "#2563eb",
-						},
-						{
-							label: localizationConstants.calcCompleted,
-							color: "#f97316",
-						},
-						{
-							label: localizationConstants.calcLost,
-							color: "#16a34a",
-						},
-					]}
-					values={[
-						[4, 3, 1],
-						[6, 4, 2],
-						[5, 6, 3],
-						[10, 7, 5],
-					]}
+				<Row
+					label={localizationConstants.calcWidgetStatsAverage}
+					value="+9 %"
 				/>
-				<MiniGroupedBarChart
-					title={localizationConstants.calcChartPerCategory}
-					legend={[
-						{ label: "B2B", color: "#2563eb" },
-						{ label: "B2C", color: "#f97316" },
-						{ label: "Express", color: "#16a34a" },
-					]}
-					values={[
-						[3, 4, 2],
-						[6, 5, 3],
-						[5, 6, 4],
-						[10, 8, 5],
-					]}
-				/>
-			</div>
+				<MockTag />
+			</Content>
 		),
 	},
 
-	news: {
-		title: localizationConstants.newsLabel,
+	// 11. Nyheter
+	calcNews: {
+		title: localizationConstants.calcWidgetNewsTitle,
 		icon: Newspaper,
+		content: (
+			<Content>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetNews1}
+					meta="2026-07-24"
+				/>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetNews2}
+					meta="2026-07-19"
+				/>
+				<WidgetListItem
+					title={localizationConstants.calcWidgetNews3}
+					meta="2026-07-12"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	// 12. Bild
+	image: {
+		title: localizationConstants.calcWidgetImageTitle,
+		icon: ImageIcon,
+		content: (
+			<Content>
+				<WidgetImagePlaceholder
+					description={
+						localizationConstants.calcWidgetImageDescription
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
 	},
 };
 
-export const CALCULATION_INITIAL_WIDGETS: PlacedWidgetEntry[] = [
-	{
-		uid: "calc-status",
-		sidebarId: "calcStatus",
-		colSpanClass: "col-span-12 md:col-span-5",
-		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.calcStatus,
-	},
-	{
-		uid: "calc-calendar-widget",
-		sidebarId: "calcCalendarWidget",
-		colSpanClass: "col-span-12 md:col-span-7",
-		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.calcCalendarWidget,
-	},
-	{
-		uid: "calc-won-lost",
-		sidebarId: "wonLost",
-		colSpanClass: "col-span-12 md:col-span-5",
-		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.wonLost,
-	},
-	{
-		uid: "calc-calendar",
-		sidebarId: "calcCalendar",
-		colSpanClass: "col-span-12 md:col-span-7",
-		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.calcCalendar,
-	},
-	{
-		uid: "calc-total-value",
-		sidebarId: "totalValue",
-		colSpanClass: "col-span-12 md:col-span-6",
-		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.totalValue,
-	},
-	{
-		uid: "calc-cost-distribution",
-		sidebarId: "costDistribution",
-		colSpanClass: "col-span-12 md:col-span-6",
-		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.costDistribution,
-	},
-	{
-		uid: "calc-statistics",
-		sidebarId: "statistics",
-		colSpanClass: "col-span-12",
-		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP.statistics,
-	},
-];
+/** Widget order defined by the calculation module widget structure ticket. */
+export const CALCULATION_WIDGET_ORDER = [
+	"calcOverview",
+	"calcStatus",
+	"calcValue",
+	"calcCostDistribution",
+	"calcCalendar",
+	"calcLatest",
+	"calcRequiresAction",
+	"calcWonLost",
+	"calcAiQuick",
+	"calcStatistics",
+	"calcNews",
+	"image",
+] as const;
+
+/** The 12 widgets shown on first load, in ticket order. */
+export const CALCULATION_INITIAL_WIDGETS: PlacedWidgetEntry[] =
+	CALCULATION_WIDGET_ORDER.map((id) => ({
+		uid: `calc-${id}`,
+		sidebarId: id,
+		colSpanClass: "col-span-12 md:col-span-6 xl:col-span-4",
+		widgetProps: CALCULATION_SIDEBAR_WIDGET_MAP[id],
+	}));
