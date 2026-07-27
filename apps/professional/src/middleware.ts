@@ -81,7 +81,7 @@ export function middleware(request: NextRequest) {
 	if (isSubscriptionFunnelPath(pathname)) {
 		const hasSession = request.cookies.get(SESSION_HINT_COOKIE)?.value === "1";
 		const url = request.nextUrl.clone();
-		url.pathname = hasSession ? "/dashboard" : "/login";
+		url.pathname = hasSession ? "/home" : "/login";
 		url.search = "";
 		return NextResponse.redirect(url);
 	}

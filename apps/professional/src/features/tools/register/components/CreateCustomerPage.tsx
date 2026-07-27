@@ -29,7 +29,7 @@ import {
 } from "../api/customerRegister";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/dashboard" },
+	{ label: localizationConstants.home, href: "/home" },
 	{ label: localizationConstants.tools, href: "/tools" },
 	{ label: localizationConstants.register, href: "/tools/register" },
 	{ label: localizationConstants.createCustomerTitle },

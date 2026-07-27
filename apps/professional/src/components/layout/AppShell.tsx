@@ -71,7 +71,7 @@ export function AppShell({ children }: AppShellProps) {
 			isPublicPage &&
 			!getRequiresSubscriptionFromBrowserCookie()
 		) {
-			router.replace("/dashboard");
+			router.replace("/home");
 			return;
 		}
 
@@ -86,7 +86,7 @@ export function AppShell({ children }: AppShellProps) {
 			const destination =
 				pathname === "/register" || subscriptionRequired
 					? "/manage-plans"
-					: "/dashboard";
+					: "/home";
 			router.replace(destination);
 			return;
 		}
