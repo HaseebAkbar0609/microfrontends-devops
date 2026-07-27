@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { LayoutList, ChevronRight, Layers, type LucideIcon } from "lucide-react";
+import { LayoutList, Layers, type LucideIcon } from "lucide-react";
 import DashboardInfoCard from "./components/DashboardInfoCard";
 import DashboardMenuCard from "./components/DashboardMenuCard";
 import DashboardNewsCard from "./components/DashboardNewsCard";
@@ -11,7 +11,6 @@ import { DraggableSidebarItem } from "./components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { Button } from "@/components/ui/button";
-import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
 import useModal from "@/features/auth/hooks/useModal";
 import {
 	AlertDialog,
@@ -24,7 +23,6 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-	dashboardBreadcrumbItems,
 	dashboardInfoCards,
 	dashboardMenuItems,
 	dashboardNewsItems,
@@ -216,14 +214,6 @@ export default function DashboardPage() {
 				<h1 className="text-2xl font-semibold text-slate-900">
 					<Translate text={localizationConstants.dashboardTitle} />
 				</h1>
-				<DynamicBreadcrumb
-					items={dashboardBreadcrumbItems.map((item) => ({
-						...item,
-						label: <Translate text={item.labelKey} />,
-					}))}
-					className="text-xs text-slate-500 [&_a]:text-slate-500 [&_a:hover]:text-slate-700 [&_span]:text-slate-800"
-					separator={<ChevronRight className="h-3 w-3" />}
-				/>
 			</div>
 
 			<div className="flex flex-col gap-6 xl:flex-row">
