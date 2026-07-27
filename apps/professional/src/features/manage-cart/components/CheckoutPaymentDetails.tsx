@@ -260,7 +260,7 @@ export function CheckoutPaymentDetails({
 			"success",
 			cartMessages.checkoutPayment.licensePurchasedSuccess,
 		);
-		router.replace("/dashboard");
+		router.replace("/home");
 		router.refresh();
 	}, [router, hydrateFromStorage]);
 

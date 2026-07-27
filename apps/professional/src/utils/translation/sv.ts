@@ -838,66 +838,66 @@ export const svOffer: OfferTranslation = {
 
 	// Business offer modal
 	businessOfferModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill skicka detta Erbjudandet?",
 	businessOfferModalSubtitle:
-		"Villkor för accepterade erbjudanden - B2C-ERBJUDANDE, B2B-ERBJUDANDE:",
+		"Villkor för Tagna Offerter – B2C-OFFERT, B2B-OFFERT:",
 	businessOfferModalBullet1:
-		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppgift).',
+		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
 	businessOfferModalBullet2:
-		"Kund- och projektinformation visas för den accepterade uppgiften.",
+		"Kunden och projektinformation visas vid taget uppdrag.",
 	businessOfferModalBullet3:
-		"Medlemmar måste skicka en offert via systemet för accepterade uppgifter.",
+		"Medlemmar måste skicka en offert via systemet på tagna uppdrag.",
 	businessOfferModalBullet4:
-		"Tre påminnelser skickas för saknade offerter, med en avgift på 500 SEK per uppgift som debiteras efter tre påminnelser.",
+		"Tre påminnelser skickas vid uteblivit offert, däri en avgift om 500 kr per uppdrag debiteras efter tre påminnelser.",
 	businessOfferModalBullet5:
-		"Kundinformation och projektinformation är synlig efter att uppgiften har accepterats.",
+		"Kundinformation och projektuppgifter syns efter att uppdraget är taget.",
 	businessOfferModalBullet6:
-		"En serviceavgift på 295 SEK + 3% av offertbeloppet debiteras när offerten accepteras av kunden. Debiteras via kreditkort.",
-	businessOfferModalCheckbox: "Jag accepterar villkoren.",
+		"Service avgift debiteras när offerten accepteras av kund på 295 kr + 3% av offertsumman. Debiteras via kreditkort.",
+	businessOfferModalCheckbox: "Jag accepterar villkoren",
 	businessOfferModalCancel: "Avbryt",
 	businessOfferModalConfirm: "Bekräfta",
 
 	// Business express modal
 	businessExpressModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill skicka detta Erbjudandet?",
 	businessExpressModalSubtitleB2C:
-		"Villkor för accepterade citat - B2C-EXPRESS:",
+		"Villkor för Tagna Offerter – B2C-EXPRESS:",
 	businessExpressModalSubtitleB2B:
-		"Villkor för accepterade citat - B2B-EXPRESS:",
+		"Villkor för Tagna Offerter – B2B-EXPRESS:",
 	businessExpressModalBullet1:
-		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppdrag).',
+		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
 	businessExpressModalBullet2:
-		"Kund- och projektinformation visas för det accepterade uppdraget.",
+		"Kunden och projektinformation visas vid taget uppdrag.",
 	businessExpressModalBullet3:
-		"Medlemmar måste skicka en offert via systemet för accepterade uppdrag.",
+		"Medlemmar måste skicka en offert via systemet på tagna uppdrag.",
 	businessExpressModalBullet4:
-		"Tre påminnelser skickas om en offert inte skickas, med en avgift på 500 SEK per uppdrag som debiteras efter tre påminnelser.",
+		"Tre påminnelser skickas vid uteblivit offert, däri en avgift om 500 kr per uppdrag debiteras efter tre påminnelser.",
 	businessExpressModalBullet5:
-		"Kundinformation och projektinformation är synlig efter att uppdraget har accepterats.",
+		"Kundinformation och projektuppgifter syns efter att uppdraget är taget.",
 	businessExpressModalBullet6:
-		"En serviceavgift på 295 SEK + 3% av offertbeloppet debiteras när offerten accepteras av kunden. Debiteras via kreditkort.",
-	businessExpressModalCheckbox: "Jag accepterar villkoren.",
+		"Service avgift debiteras när offerten accepteras av kund på 295 kr + 3% av offertsumman. Debiteras via kreditkort.",
+	businessExpressModalCheckbox: "Jag accepterar villkoren",
 	businessExpressModalCancel: "Avbryt",
 	businessExpressModalConfirm: "Bekräfta",
 
 	// Business rent modal
 	businessRentModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill skicka detta Erbjudandet?",
 	businessRentModalSubtitle:
-		"Villkor för accepterade citat - B2B - HYRA IN/UT:",
+		"Villkor för Tagna Offerter – B2B – HYRA IN/UT:",
 	businessRentModalBullet1:
-		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppgift).',
+		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
 	businessRentModalBullet2:
-		"Kund- och projektinformation visas för den accepterade uppgiften.",
+		"Kunden och projektinformation visas vid taget uppdrag.",
 	businessRentModalBullet3:
-		"Medlemmar måste skicka en offert via systemet för accepterade uppgifter.",
+		"Medlemmar måste skicka en offert via systemet på tagna uppdrag.",
 	businessRentModalBullet4:
-		"Tre påminnelser skickas för saknade offerter, med en avgift på 500 SEK per uppgift som debiteras efter tre påminnelser.",
+		"Tre påminnelser skickas vid uteblivit offert, däri en avgift om 500 kr per uppdrag debiteras efter tre påminnelser.",
 	businessRentModalBullet5:
-		"Kundinformation och projektinformation är synlig efter att uppgiften har accepterats.",
+		"Kundinformation och projektuppgifter syns efter att uppdraget är taget.",
 	businessRentModalBullet6:
-		"En serviceavgift på 1500 SEK debiteras när offerten accepteras av kunden. Debiteras via kreditkort.",
-	businessRentModalCheckbox: "Jag accepterar villkoren.",
+		"Service avgift debiteras när offerten accepteras av kund på 1500 kr. Debiteras via kreditkort.",
+	businessRentModalCheckbox: "Jag accepterar villkoren",
 	businessRentModalCancel: "Avbryt",
 	businessRentModalConfirm: "Bekräfta",
 

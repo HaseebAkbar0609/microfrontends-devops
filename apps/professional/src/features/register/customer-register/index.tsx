@@ -35,7 +35,7 @@ type CustomerRow = {
 };
 
 const BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/dashboard" },
+	{ label: localizationConstants.home, href: "/home" },
 	{ label: localizationConstants.moduleItem, href: "/module/financial-management" },
 	{ label: localizationConstants.invoice, href: "/module/financial-management/invoice" },
 	{ label: localizationConstants.register },

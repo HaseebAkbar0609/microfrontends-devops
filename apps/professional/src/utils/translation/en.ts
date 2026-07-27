@@ -984,7 +984,7 @@ export const enOffer: OfferTranslation = {
 
 	// Business rent modal
 	businessRentModalTitle: "Are you sure you want to send this offer?",
-	businessRentModalSubtitle: "Terms for Accepted Quotes - B2B- RENT IN/OUT:",
+	businessRentModalSubtitle: "Terms for Accepted Offers - B2B - RENT IN/OUT:",
 	businessRentModalBullet1:
 		'Members can take on tasks in the flow for new assignments, where the "first come, first served" principle applies (maximum five members per task).',
 	businessRentModalBullet2:
