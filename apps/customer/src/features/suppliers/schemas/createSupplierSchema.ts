@@ -1,20 +1,44 @@
 import { z } from "zod";
 
 export const createSupplierSchema = z.object({
-	companyName: z.string().min(1, "validationSupplierCompanyNameRequired"),
+	companyName: z
+		.string()
+		.trim()
+		.min(1, "validationSupplierCompanyNameRequired")
+		.max(255, "Company name cannot exceed 255 characters")
+		.regex(/^[^<>]+$/, "validationSupplierCompanyNameInvalid"),
 	category: z.string().min(1, "validationSupplierCategoryRequired"),
-	orgNo: z.string().min(1, "validationSupplierOrgNoRequired"),
+	orgNo: z
+		.string()
+		.trim()
+		.min(1, "validationSupplierOrgNoRequired")
+		.regex(
+			/^((16)?\d{6}-?\d{4}|\d{10}|\d{12})$/,
+			"validationSupplierOrgNoInvalid",
+		),
 	email: z
 		.string()
+		.trim()
 		.min(1, "validationRegisterEmailRequired")
 		.email("validationRegisterEmailInvalid"),
 	contactFirstName: z
 		.string()
-		.min(1, "validationRegisterContactFirstNameRequired"),
+		.trim()
+		.min(1, "validationRegisterContactFirstNameRequired")
+		.regex(/^[a-zA-ZåäöÅÄÖ\s\-']+$/, "validationRegisterContactFirstNameInvalid"),
 	contactLastName: z
 		.string()
-		.min(1, "validationRegisterContactLastNameRequired"),
-	mobileNo: z.string().min(1, "validationSupplierMobileNoRequired"),
+		.trim()
+		.min(1, "validationRegisterContactLastNameRequired")
+		.regex(/^[a-zA-ZåäöÅÄÖ\s\-']+$/, "validationRegisterContactLastNameInvalid"),
+	mobileNo: z
+		.string()
+		.trim()
+		.min(1, "validationSupplierMobileNoRequired")
+		.regex(
+			/^\+?[0-9\s\-()]{7,20}$/,
+			"validationSupplierMobileNoInvalid",
+		),
 });
 
 export type CreateSupplierValues = z.infer<typeof createSupplierSchema>;

@@ -32,19 +32,35 @@ export const getRegistrationSchema = (t: (key: string) => string) =>
 			),
 		personalId: z
 			.string()
-			.regex(/^\d+$/, { message: t(localizationConstants.validationInvalidFormat) })
-			.refine((val) => isValidSwedishPersonalNumber(val), {
-				message: t(localizationConstants.validationInvalidFormat),
-			}),
+			.min(1, { message: t(localizationConstants.validationInvalidFormat) })
+			.refine(
+				(val) => {
+					const clean = val.replace(/\D/g, "");
+					return (clean.length === 10 || clean.length === 12) && isValidSwedishPersonalNumber(clean);
+				},
+				{ message: t(localizationConstants.validationInvalidFormat) },
+			),
+		isCoOwner: z.boolean().optional().default(false),
+		coOwnerPersonalId: z
+			.string()
+			.optional()
+			.refine(
+				(val) => {
+					if (!val || val.trim() === "") return true;
+					const clean = val.replace(/\D/g, "");
+					return (clean.length === 10 || clean.length === 12) && isValidSwedishPersonalNumber(clean);
+				},
+				{ message: t(localizationConstants.validationInvalidFormat) },
+			),
+	})
+	.superRefine((data, ctx) => {
+		if (data.isCoOwner && !data.coOwnerPersonalId?.trim()) {
+			ctx.addIssue({
+				code: z.ZodIssueCode.custom,
+				path: ["coOwnerPersonalId"],
+				message: t(localizationConstants.validationRegisterCoOwnerPersonalIdRequired),
+			});
+		}
 	});
 
-const _baseSchema = z.object({
-	propertyId: z.string(),
-	address: z.string(),
-	firstName: z.string(),
-	lastName: z.string(),
-	sharePercentage: z.string(),
-	personalId: z.string(),
-});
-
-export type RegistrationSchemaType = z.infer<typeof _baseSchema>;
+export type RegistrationSchemaType = z.input<ReturnType<typeof getRegistrationSchema>>;

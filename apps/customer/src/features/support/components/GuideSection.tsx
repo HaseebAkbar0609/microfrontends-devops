@@ -5,9 +5,14 @@ import { Menu } from "lucide-react";
 import { GuideSidebar } from "./GuideSidebar";
 import { OfferDocument } from "./documents/OfferDocument";
 import { ConsultantDocument } from "./documents/ConsultantDocument";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 export function GuideSection() {
-	const [selectedDocument, setSelectedDocument] = useState("offert");
+	const [selectedDocument, setSelectedDocument] = useState<{
+		id: string;
+		label: string;
+	}>({ id: "offert", label: "" });
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 
 	return (
@@ -20,14 +25,13 @@ export function GuideSection() {
 			)}
 
 			<div
-				className={`fixed inset-y-0 left-0 z-40 w-[280px] shrink-0 border-r border-slate-200 bg-[#FAFAFA] transition-transform duration-200 lg:static lg:translate-x-0 ${
-					sidebarOpen ? "translate-x-0" : "-translate-x-full"
-				}`}
+				className={`fixed inset-y-0 left-0 z-40 w-[280px] shrink-0 border-r border-slate-200 bg-[#FAFAFA] transition-transform duration-200 lg:static lg:translate-x-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+					}`}
 			>
 				<GuideSidebar
-					selectedDocument={selectedDocument}
-					onSelectDocument={(doc) => {
-						setSelectedDocument(doc);
+					selectedDocument={selectedDocument.id}
+					onSelectDocument={(id, label) => {
+						setSelectedDocument({ id, label });
 						setSidebarOpen(false);
 					}}
 				/>
@@ -44,8 +48,29 @@ export function GuideSection() {
 				</button>
 
 				<div className="rounded-lg bg-white px-4 py-6 shadow-[4px_0_8px_-4px_rgba(0,0,0,0.06),-4px_0_8px_-4px_rgba(0,0,0,0.06)] sm:px-6 sm:py-7 lg:px-8 lg:py-8">
-					{selectedDocument === "offert" && <OfferDocument />}
-					{selectedDocument === "konsult" && <ConsultantDocument />}
+					{selectedDocument.id === "offert" && <OfferDocument />}
+					{selectedDocument.id === "konsult" && <ConsultantDocument />}
+					{selectedDocument.id !== "offert" && selectedDocument.id !== "konsult" && (
+						<div className="pr-0 lg:pr-8">
+							<h1 className="text-3xl font-bold text-slate-900">
+								<Translate text={selectedDocument.label} />
+							</h1>
+							<div className="mt-4 space-y-1 text-sm text-slate-600">
+								<p><Translate text={localizationConstants.guideDocumentation} /></p>
+							</div>
+							<div className="mt-8 space-y-6 text-sm text-slate-700">
+								<section>
+									<h2 className="text-lg font-bold text-slate-900">
+										<Translate text={localizationConstants.guideAboutThisGuide} />
+									</h2>
+									<p className="mt-2 leading-relaxed">
+										<Translate text={localizationConstants.guideWelcomeToSection} />{" "}
+										<Translate text={selectedDocument.label} />.
+									</p>
+								</section>
+							</div>
+						</div>
+					)}
 				</div>
 			</div>
 		</div>

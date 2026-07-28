@@ -13,12 +13,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { DiscountCard } from "./DiscountCard";
-import {
-  DISCOUNT_CATEGORIES,
-  DISCOUNT_SUPPLIERS,
-  type Discount,
-} from "../constants";
+import type { Discount } from "../constants";
 import { getDiscountsAPIAction } from "@/api-actions/discounts/list";
+import { getDiscountFiltersAPIAction } from "@/api-actions/discounts/filters";
+import { getSuppliersAPIAction } from "@/api-actions/supplier/list";
+import { getCustomerCategoriesListAPIAction } from "@/api-actions/category/customer-categories-list";
+import type { ActionResult } from "@/types/api";
+import type { DiscountFilters } from "@/api-actions/discounts/filters";
 
 const BREADCRUMBS: BreadcrumbItem[] = [
   { label: localizationConstants.home, href: "/home" },
@@ -26,10 +27,44 @@ const BREADCRUMBS: BreadcrumbItem[] = [
   { label: localizationConstants.discounts },
 ];
 
+async function fetchAllRegisteredSuppliers(): Promise<ActionResult<string[]>> {
+  let currentPage = 1;
+  const pageSize = 100;
+  let allNames: string[] = [];
+
+  while (true) {
+    const res = await getSuppliersAPIAction({ page: currentPage, pageSize });
+    if (!res.success || !res.data) {
+      if (currentPage === 1) {
+        return {
+          success: false,
+          data: null,
+          error: res?.error || "Failed to fetch suppliers",
+        };
+      }
+      break;
+    }
+    const names = res.data.suppliers.map((s) => s.companyName);
+    allNames = allNames.concat(names);
+    if (allNames.length >= res.data.totalItems || names.length === 0) {
+      break;
+    }
+    currentPage++;
+  }
+
+  return {
+    success: true,
+    data: allNames,
+    error: null,
+  };
+}
+
 export function DiscountsPage() {
   const t = useTranslate();
   const [supplier, setSupplier] = useState<string>("");
   const [category, setCategory] = useState<string>("");
+  const [filters, setFilters] = useState<DiscountFilters>({ suppliers: [], categories: [] });
+  const [filtersLoading, setFiltersLoading] = useState(true);
 
   const [discounts, setDiscounts] = useState<Discount[]>([]);
   const [page, setPage] = useState(1);
@@ -38,8 +73,80 @@ export function DiscountsPage() {
   const [loadingMore, setLoadingMore] = useState(false);
 
   const sentinelRef = useRef<HTMLDivElement>(null);
-  // Tracks whether a fetch is in-flight to prevent double-fetches
   const fetchingRef = useRef(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    Promise.allSettled([
+      getDiscountFiltersAPIAction(),
+      fetchAllRegisteredSuppliers(),
+      getCustomerCategoriesListAPIAction(),
+    ]).then(([filtersResult, suppliersResult, categoriesResult]) => {
+      if (!isMounted) return;
+
+      const filtersRes = filtersResult.status === "fulfilled" ? filtersResult.value : null;
+      const suppliersRes = suppliersResult.status === "fulfilled" ? suppliersResult.value : null;
+      const categoriesRes = categoriesResult.status === "fulfilled" ? categoriesResult.value : null;
+
+      if (
+        filtersResult.status === "rejected" ||
+        !filtersRes?.success ||
+        suppliersResult.status === "rejected" ||
+        !suppliersRes?.success ||
+        categoriesResult.status === "rejected" ||
+        !categoriesRes?.success
+      ) {
+        console.error("Discount filter loading encountered failures:", {
+          filters: filtersResult.status === "rejected" ? filtersResult.reason : (filtersRes?.success ? null : filtersRes?.error),
+          suppliers: suppliersResult.status === "rejected" ? suppliersResult.reason : (suppliersRes?.success ? null : suppliersRes?.error),
+          categories: categoriesResult.status === "rejected" ? categoriesResult.reason : (categoriesRes?.success ? null : categoriesRes?.error),
+        });
+      }
+
+      const filterSuppliers =
+        filtersRes?.success && filtersRes.data ? filtersRes.data.suppliers : [];
+
+      const filterCategories =
+        filtersRes?.success && filtersRes.data ? filtersRes.data.categories : [];
+
+      const registeredSuppliers =
+        suppliersRes?.success && suppliersRes.data ? suppliersRes.data : [];
+
+      const tradeCategories =
+        categoriesRes?.success && categoriesRes.data ? categoriesRes.data.map((c) => c.name) : [];
+
+      function dedupeCaseInsensitive(values: string[]): string[] {
+        const seen = new Set<string>();
+        const result: string[] = [];
+        for (const v of values) {
+          const key = v.toLowerCase();
+          if (!seen.has(key)) {
+            seen.add(key);
+            result.push(v);
+          }
+        }
+        return result;
+      }
+
+      const combinedSuppliers = Array.from(
+        dedupeCaseInsensitive([...filterSuppliers, ...registeredSuppliers].filter(Boolean)),
+      );
+
+      const combinedCategories = Array.from(
+        dedupeCaseInsensitive([...filterCategories, ...tradeCategories].filter(Boolean)),
+      );
+
+      setFilters({
+        suppliers: combinedSuppliers,
+        categories: combinedCategories,
+      });
+      setFiltersLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const fetchPage = useCallback(
     async (pageNum: number, isFirst: boolean) => {
@@ -86,7 +193,7 @@ export function DiscountsPage() {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore && !fetchingRef.current) {
+        if (entries[0].isIntersecting && hasMore && !fetchingRef.current && !initialLoading) {
           setPage((p) => p + 1);
         }
       },
@@ -95,7 +202,7 @@ export function DiscountsPage() {
 
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [hasMore]);
+  }, [hasMore, initialLoading]);
 
   const ALL = "__all__";
 
@@ -119,51 +226,67 @@ export function DiscountsPage() {
 
         {/* Filters */}
         <div className="flex items-center gap-4 px-5 py-3">
-          <Select
-            value={supplier || ALL}
-            onValueChange={(v) => setSupplier(v === ALL ? "" : v)}
-          >
-            <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
-              <SelectValue placeholder={t(localizationConstants.discountsFilterSupplierPlaceholder)} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL}>
-                <Translate text={localizationConstants.discountsAllSuppliers} />
-              </SelectItem>
-              {DISCOUNT_SUPPLIERS.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {filtersLoading ? (
+            <>
+              <div className="h-9 w-[200px] animate-pulse rounded-[6px] bg-[#F1F5F9]" />
+              <div className="h-9 w-[200px] animate-pulse rounded-[6px] bg-[#F1F5F9]" />
+            </>
+          ) : (
+            <>
+              <Select
+                disabled={filtersLoading}
+                value={supplier || ALL}
+                onValueChange={(v) => setSupplier(v === ALL ? "" : v)}
+              >
+                <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
+                  <SelectValue placeholder={t(localizationConstants.discountsFilterSupplierPlaceholder)} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL}>
+                    <Translate text={localizationConstants.discountsAllSuppliers} />
+                  </SelectItem>
+                  {filters.suppliers.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          <Select
-            value={category || ALL}
-            onValueChange={(v) => setCategory(v === ALL ? "" : v)}
-          >
-            <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
-              <SelectValue placeholder={t(localizationConstants.discountsFilterCategoryPlaceholder)} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL}>
-                <Translate text={localizationConstants.discountsAllCategories} />
-              </SelectItem>
-              {DISCOUNT_CATEGORIES.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <Select
+                disabled={filtersLoading}
+                value={category || ALL}
+                onValueChange={(v) => setCategory(v === ALL ? "" : v)}
+              >
+                <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
+                  <SelectValue placeholder={t(localizationConstants.discountsFilterCategoryPlaceholder)} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL}>
+                    <Translate text={localizationConstants.discountsAllCategories} />
+                  </SelectItem>
+                  {filters.categories.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
         </div>
 
         {/* Cards grid */}
         <div className="p-5">
           {initialLoading ? (
-            <p className="py-12 text-center text-sm text-slate-400">
-              <Translate text={localizationConstants.discountsLoading} />
-            </p>
+            <div className="flex flex-wrap gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-[220px] w-[300px] animate-pulse rounded-lg bg-[#F1F5F9]"
+                />
+              ))}
+            </div>
           ) : discounts.length === 0 ? (
             <p className="py-12 text-center text-sm text-slate-400">
               <Translate text={localizationConstants.discountsNotFound} />

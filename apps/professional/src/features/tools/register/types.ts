@@ -578,3 +578,32 @@ export interface ArticleDetail {
 	lagerforandring: string;
 }
 
+// Price List Types (TFS-440)
+export interface PriceListRegisterRow {
+	id: string;
+	isFavorite: boolean;
+	kod: string;
+	prislista: string;
+	kategori: string;
+	kopplad: number;
+	skapadAv: string;
+	datum: string;
+	senastUppdaterad: string;
+}
+
+export interface GetPriceListRegisterListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetPriceListRegisterListResponse {
+	data: PriceListRegisterRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+

@@ -234,7 +234,8 @@ export function ImportArticlePage() {
 			<div className="mb-1 flex items-center gap-2 ml-0 px-3 sm:px-4 md:px-6 pt-6">
 				<button
 					type="button"
-					onClick={() => router.push("/tools/register")}
+					aria-label="Go back to register"
+					onClick={() => router.push("/tools/register?tab=artikel&subtab=artikel")}
 					className="rounded-md p-1 hover:bg-slate-100 cursor-pointer"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />
@@ -1063,7 +1064,7 @@ export function ImportArticlePage() {
 			<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 px-3 sm:px-4 md:px-6 py-3 border-t border-slate-200 bg-white">
 				<Button
 					variant="outline"
-					onClick={() => router.push("/tools/register")}
+					onClick={() => router.push("/tools/register?tab=artikel&subtab=artikel")}
 					className="h-9 flex-1 sm:flex-none sm:min-w-30 px-8 border-slate-200 bg-white text-sm font-medium hover:bg-slate-50 cursor-pointer"
 					style={{
 						color: "#09090B",

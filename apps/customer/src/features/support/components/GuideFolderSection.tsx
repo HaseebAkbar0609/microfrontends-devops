@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import { ChevronDown, ChevronRight, Folder, FolderOpen } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { GuideFolder } from "../types";
+import type { GuideFolder } from "../types";
 import { Translate } from "@/utils/translation/translate";
 
 interface GuideFolderSectionProps extends GuideFolder {
 	selectedDocument: string;
-	onSelectDocument: (document: string) => void;
+	onSelectDocument: (id: string, label: string) => void;
 }
 
 export function GuideFolderSection({
@@ -28,8 +28,10 @@ export function GuideFolderSection({
 	const handleFolderClick = () => {
 		if (items.length > 0) {
 			setOpen(!open);
-		} else if (href) {
+		} else if (href && typeof window !== "undefined" && window.location.pathname !== href) {
 			router.push(href);
+		} else {
+			onSelectDocument(title, title);
 		}
 	};
 
@@ -38,26 +40,33 @@ export function GuideFolderSection({
 			<button
 				type="button"
 				onClick={handleFolderClick}
-				className="flex w-full items-center rounded-md px-2 py-1.5 text-left transition-colors hover:bg-slate-100"
+				className={cn(
+					"flex w-full items-center rounded-md px-2 py-1.5 text-left transition-colors hover:bg-slate-100/80",
+					items.length === 0 && selectedDocument === title && "bg-[#E2E8F0] font-medium text-slate-900",
+				)}
 			>
-				{open ? (
-					<ChevronDown className="h-4 w-4 shrink-0 text-slate-500" />
+				{items.length > 0 ? (
+					open ? (
+						<ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
+					) : (
+						<ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+					)
 				) : (
-					<ChevronRight className="h-4 w-4 shrink-0 text-slate-500" />
+					<ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
 				)}
 
-				{open ? (
-					<FolderOpen className="ml-1.5 h-4 w-4 shrink-0 text-orange-500" />
+				{open && items.length > 0 ? (
+					<FolderOpen className="ml-1.5 h-4 w-4 shrink-0 text-amber-500" />
 				) : (
 					<Folder className="ml-1.5 h-4 w-4 shrink-0 text-slate-400" />
 				)}
 
-				<span className="ml-2 flex-1 truncate text-sm font-medium text-slate-700">
+				<span className="ml-2 flex-1 truncate text-sm font-semibold text-slate-800">
 					<Translate text={title} />
 				</span>
 
 				{count !== undefined && (
-					<span className="ml-2 text-xs text-slate-400">{count}</span>
+					<span className="ml-2 text-xs font-normal text-slate-400">{count}</span>
 				)}
 			</button>
 
@@ -70,12 +79,12 @@ export function GuideFolderSection({
 							onClick={() =>
 								item.href
 									? router.push(item.href)
-									: onSelectDocument(item.id)
+									: onSelectDocument(item.id, item.label)
 							}
 							className={cn(
-								"flex h-8 w-full items-center rounded-md pl-10 pr-2 text-left text-sm transition-colors",
+								"flex h-8 w-full items-center rounded-md pl-10 pr-3 text-left text-sm transition-colors",
 								selectedDocument === item.id
-									? "bg-slate-200 text-slate-900"
+									? "bg-[#E2E8F0] font-medium text-slate-900"
 									: "text-slate-600 hover:bg-slate-100",
 							)}
 						>
@@ -84,7 +93,9 @@ export function GuideFolderSection({
 							</span>
 
 							{item.count !== undefined && (
-								<span className="ml-2 text-xs text-slate-400">{item.count}</span>
+								<span className="ml-2 text-xs font-normal text-slate-400">
+									{item.count}
+								</span>
 							)}
 						</button>
 					))}

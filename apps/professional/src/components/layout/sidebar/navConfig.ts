@@ -105,6 +105,12 @@ export const navConfig: NavGroup[] = [
 						icon: Briefcase,
 					},
 					{
+						id: "priceList",
+						label: localizationConstants.priceListOption,
+						href: "/tools/register/price-list",
+						icon: Briefcase,
+					},
+					{
 						id: "register",
 						label: localizationConstants.registerDropdownLabel,
 						href: "/tools/register",

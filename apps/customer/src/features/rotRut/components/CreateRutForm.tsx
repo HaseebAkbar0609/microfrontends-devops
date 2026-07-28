@@ -13,7 +13,7 @@ import {
 	getRegistrationSchema,
 	RegistrationSchemaType,
 } from "@/schemas/rotRut/registration.schema";
-import { createRut, getOwners, type Owner } from "@/api-actions/rotRut";
+import { createRut, getOwners, type Owner, type RotPayload } from "@/api-actions/rotRut";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 
@@ -42,21 +42,32 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
-export const CreateRutForm = () => {
+interface CreateRutFormProps {
+	projectId: string;
+}
+
+export const CreateRutForm = ({ projectId }: CreateRutFormProps) => {
 	const { t } = useTranslation();
 	const [owners, setOwners] = useState<Owner[]>([]);
 
 	useEffect(() => {
+		let cancelled = false;
 		const fetchOwners = async () => {
+			if (!projectId) return;
 			try {
-				const data = await getOwners("dummy-project-id");
+				const data = await getOwners(projectId, "rut");
+				if (cancelled) return;
 				setOwners(data);
 			} catch (_error) {
-				toast.error(t(localizationConstants.rutSavedError));
+				if (cancelled) return;
+				toast.error(t(localizationConstants.errorDetailsFailed));
 			}
 		};
-		fetchOwners();
-	}, [t]);
+		void fetchOwners();
+		return () => {
+			cancelled = true;
+		};
+	}, [projectId, t]);
 
 	const form = useForm<RegistrationSchemaType>({
 		resolver: zodResolver(getRegistrationSchema(t)),
@@ -67,23 +78,29 @@ export const CreateRutForm = () => {
 			lastName: "",
 			sharePercentage: "",
 			personalId: "",
+			isCoOwner: false,
+			coOwnerPersonalId: "",
 		},
 	});
 
 	const mutation = useMutation({
 		mutationFn: (data: RegistrationSchemaType) => {
-			const payload = {
+			const payload: RotPayload = {
 				propertyId: data.propertyId,
+				address: data.address,
+				ownerName: `${data.firstName} ${data.lastName}`.trim(),
+				sharePercentage: Number(data.sharePercentage),
 				personalId: data.personalId,
-				coOwner: owners.length > 0,
+				isCoOwner: Boolean(data.isCoOwner),
+				coOwnerPersonalId: data.isCoOwner && data.coOwnerPersonalId ? data.coOwnerPersonalId : undefined,
 			};
-			return createRut("dummy-project-id", payload);
+			return createRut(projectId, payload);
 		},
-		onSuccess: (data, variables) => {
+		onSuccess: (_data, variables) => {
 			toast.success(t(localizationConstants.rutSavedSuccess));
 			const newOwner: Owner = {
 				id: crypto.randomUUID(),
-				name: `${variables.firstName} ${variables.lastName}`,
+				name: `${variables.firstName} ${variables.lastName}`.trim(),
 				personalId: variables.personalId,
 				share: `${variables.sharePercentage}%`,
 			};
@@ -93,6 +110,8 @@ export const CreateRutForm = () => {
 			form.setValue("lastName", "");
 			form.setValue("sharePercentage", "");
 			form.setValue("personalId", "");
+			form.setValue("isCoOwner", false);
+			form.setValue("coOwnerPersonalId", "");
 		},
 		onError: () => {
 			toast.error(t(localizationConstants.rutSavedError));
@@ -119,7 +138,7 @@ export const CreateRutForm = () => {
 					<header className="px-6 pt-6 pb-2 flex flex-col gap-1 shrink-0 bg-slate-50">
 						<div className="flex items-center gap-3">
 							<Link
-								href="/rotRut"
+								href={projectId ? `/rotRut?projectId=${encodeURIComponent(projectId)}` : "/rotRut"}
 								className="shrink-0 h-8 w-8 p-0 hover:bg-slate-100 rounded-full flex items-center justify-center transition-colors"
 								aria-label="Back"
 							>
@@ -345,6 +364,7 @@ export const CreateRutForm = () => {
 														</TableCell>
 														<TableCell className="py-4 px-4 border-l border-slate-200 align-middle">
 															<Button
+																type="button"
 																variant="ghost"
 																size="icon"
 																className="h-8 w-8 bg-transparent hover:bg-slate-100 text-slate-600 rounded-md mx-auto flex"
@@ -365,7 +385,7 @@ export const CreateRutForm = () => {
 
 					<footer className="shrink-0 border-t border-slate-200 bg-white px-6 py-4 z-10">
 						<div className="flex items-center justify-end gap-3">
-							<Link href="/rotRut">
+							<Link href={projectId ? `/rotRut?projectId=${encodeURIComponent(projectId)}` : "/rotRut"}>
 								<Button
 									type="button"
 									variant="outline"
