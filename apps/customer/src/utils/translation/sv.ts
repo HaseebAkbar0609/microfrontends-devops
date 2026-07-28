@@ -1458,6 +1458,7 @@ export const svRotRut: RotRutModule = {
 	validationRegisterFirstNameRequired: "Förnamn krävs",
 	validationRegisterLastNameRequired: "Efternamn krävs",
 	validationRegisterSharePercentageRequired: "Andel krävs",
+	validationRegisterCoOwnerPersonalIdRequired: "Medägarens personnummer krävs",
 	validationInvalidFormat: "Ogiltigt format",
 	createdLabel: "Skapad",
 	noRotEntriesFound: "Inga ROT-poster hittades",
@@ -1467,6 +1468,23 @@ export const svRotRut: RotRutModule = {
 	rutDetails: "RUT detaljer",
 	rutPropertyIdLabel: "E-Fastighetsbeteckning för RUT",
 	propertyDetails: "Fastighetsdetaljer",
+	rotDeletedSuccess: "ROT-posten har raderats",
+	rotDeletedError: "Det gick inte att radera ROT-posten.",
+	deleteRotConfirmTitle: "Är du säker?",
+	deleteRotConfirmDescription: "Detta kommer permanent att radera denna ROT-post.",
+	rutDeletedSuccess: "RUT-posten har raderats",
+	rutDeletedError: "Det gick inte att radera RUT-posten.",
+	deleteRutConfirmTitle: "Är du säker?",
+	deleteRutConfirmDescription: "Detta kommer permanent att radera denna RUT-post.",
+	isCoOwnerLabel: "Är medägare",
+	coOwnerPersonalIdLabel: "Medägarens personnummer",
+	coOwnerRemovedSuccess: "Medägaren har tagits bort",
+	coOwnerRemovedError: "Det gick inte att ta bort medägaren",
+	removeCoOwnerConfirmDescription:
+		"Denna åtgärd kan inte ångras. Detta kommer permanent att ta bort medägaren och tilldela 100 % andel till den primära ägaren.",
+	deleteConfirmTitle: "Är du helt säker?",
+	cancelLabel: "Avbryt",
+	deleteLabel: "Radera",
 };
 
 export const sv: Translation = {

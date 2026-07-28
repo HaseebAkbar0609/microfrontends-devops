@@ -145,6 +145,18 @@ export const API_PATH = {
 		detail: (discountId: string) => `/api/v1/discounts/${encodeURIComponent(discountId)}`,
 		apply: (discountId: string) => `/api/v1/discounts/${encodeURIComponent(discountId)}/apply`,
 	},
+	ROT_RUT: {
+		list: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut`,
+		create: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut`,
+		detail: (projectId: string, deductionId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut/${encodeURIComponent(deductionId)}`,
+		update: (projectId: string, deductionId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut/${encodeURIComponent(deductionId)}`,
+		delete: (projectId: string, deductionId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut/${encodeURIComponent(deductionId)}`,
+	},
 };
 
 export const appConstants = {

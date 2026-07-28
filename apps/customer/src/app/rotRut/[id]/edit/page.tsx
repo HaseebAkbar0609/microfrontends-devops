@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Trash2, Loader2, CircleUserRound, PencilLine, ArrowDownUp } from "lucide-react";
 
@@ -10,12 +10,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ResponsiveTable, ResponsiveTableColumn } from "@/components/table/ResponsiveTable";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import {
 	getRotRutDetailsAPIAction,
 	deleteRotRutAPIAction,
+	updateRotRutOwnerAPIAction,
 	type RotDetails,
 	type RotOwner,
 } from "@/api-actions/rotRut";
+import { toast } from "sonner";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -36,11 +39,14 @@ const rotRutTabTriggerClass =
 	"data-[state=active]:text-slate-900 data-[state=active]:shadow-none " +
 	"data-[state=active]:!border-b-[3px] data-[state=active]:!border-slate-900";
 
-export default function RotRutOpenedPage() {
+function RotRutOpenedContent() {
+	const { t } = useTranslation();
 	const params = useParams();
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const propertyId = params?.id as string;
+	const deductionId = params?.id as string;
+	const queryProjectId = searchParams?.get("projectId") ?? "";
+	const [projectId, setProjectId] = useState<string>(queryProjectId);
 
 	const tabParam = searchParams?.get("tab") || "rot";
 	const [activeTab, setActiveTab] = useState(tabParam);
@@ -54,43 +60,111 @@ export default function RotRutOpenedPage() {
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	useEffect(() => {
-		if (!propertyId) return;
 		let cancelled = false;
 
-		setLoading(true);
-		void getRotRutDetailsAPIAction({ id: propertyId }).then((result) => {
+		const fetchDetails = async () => {
+			setError(null);
+			const pid = queryProjectId;
+			if (!pid) {
+				setError("Project ID is required");
+				setLoading(false);
+				return;
+			}
+			setProjectId(pid);
+
+			if (!deductionId) {
+				setLoading(false);
+				return;
+			}
+
+			setLoading(true);
+			const result = await getRotRutDetailsAPIAction({ projectId: pid, id: deductionId });
 			if (cancelled) return;
 			if (result.success && result.data) {
 				setDetails(result.data);
+				if (result.data.deductionType) {
+					setActiveTab(result.data.deductionType);
+				}
 			} else {
 				setError(result.error ?? "Failed to load details");
 			}
 			setLoading(false);
-		});
+		};
+
+		void fetchDetails();
 
 		return () => {
 			cancelled = true;
 		};
-	}, [propertyId]);
+	}, [deductionId, queryProjectId]);
+
+	const handleTabChange = (val: string) => {
+		setActiveTab(val);
+		router.replace(`/rotRut/${deductionId}/edit?projectId=${encodeURIComponent(projectId)}&tab=${encodeURIComponent(val)}`);
+	};
 
 	const handleDeleteOwner = async () => {
-		if (!ownerToDelete) return;
+		if (!ownerToDelete || !projectId || !details) return;
 
+		const targetOwner = details.owners.find((o) => o.id === ownerToDelete);
+		if (!targetOwner) {
+			toast.error(t(localizationConstants.coOwnerRemovedError));
+			setOwnerToDelete(null);
+			return;
+		}
 		setIsDeleting(true);
-		const result = await deleteRotRutAPIAction({ id: ownerToDelete });
-		setIsDeleting(false);
 
-		if (result.success) {
-			setIsDeleteDialogOpen(false);
-			setDetails((prev) => {
-				if (!prev) return prev;
-				return {
-					...prev,
-					owners: prev.owners.filter((o) => o.id !== ownerToDelete),
-				};
-			});
-		} else {
-			alert(result.error || "Failed to delete owner");
+		try {
+			if (targetOwner?.isCoOwner) {
+				const result = await updateRotRutOwnerAPIAction({
+					projectId,
+					id: deductionId,
+					isCoOwner: false,
+					coOwnerPersonalId: null,
+				});
+				if (result.success) {
+					setIsDeleteDialogOpen(false);
+					setOwnerToDelete(null);
+					toast.success(t(localizationConstants.coOwnerRemovedSuccess));
+					const updatedDetails = await getRotRutDetailsAPIAction({ projectId, id: deductionId });
+					if (updatedDetails.success && updatedDetails.data) {
+						setDetails(updatedDetails.data);
+					}
+				} else {
+					toast.error(result.error || t(localizationConstants.coOwnerRemovedError));
+				}
+			} else {
+				const result = await deleteRotRutAPIAction({ projectId, id: deductionId });
+				if (result.success) {
+					setIsDeleteDialogOpen(false);
+					setOwnerToDelete(null);
+					toast.success(
+						activeTab === "rut"
+							? t(localizationConstants.rutDeletedSuccess)
+							: t(localizationConstants.rotDeletedSuccess)
+					);
+					router.push(`/rotRut?projectId=${encodeURIComponent(projectId)}&tab=${activeTab}`);
+				} else {
+					toast.error(
+						result.error ||
+							(activeTab === "rut"
+								? t(localizationConstants.rutDeletedError)
+								: t(localizationConstants.rotDeletedError))
+					);
+				}
+			}
+		} catch (err: unknown) {
+			const message = err instanceof Error ? err.message : undefined;
+			toast.error(
+				message ||
+					(targetOwner?.isCoOwner
+						? t(localizationConstants.coOwnerRemovedError)
+						: activeTab === "rut"
+						? t(localizationConstants.rutDeletedError)
+						: t(localizationConstants.rotDeletedError))
+			);
+		} finally {
+			setIsDeleting(false);
 		}
 	};
 
@@ -98,6 +172,8 @@ export default function RotRutOpenedPage() {
 		setOwnerToDelete(id);
 		setIsDeleteDialogOpen(true);
 	};
+
+	const targetOwnerToDelete = details?.owners.find((o) => o.id === ownerToDelete);
 
 	const columns: ResponsiveTableColumn<RotOwner>[] = [
 		{
@@ -166,20 +242,20 @@ export default function RotRutOpenedPage() {
 		return (
 			<div className="flex flex-1 flex-col bg-white min-h-screen font-inter p-6">
 				<p className="text-red-600">{error || "Data not found"}</p>
-				<Button onClick={() => router.push("/rotRut")} className="mt-4 w-fit">Back to List</Button>
+				<Button onClick={() => router.push(projectId ? `/rotRut?projectId=${encodeURIComponent(projectId)}` : "/rotRut")} className="mt-4 w-fit">Back to List</Button>
 			</div>
 		);
 	}
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen font-inter">
-			<Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-1 flex-col">
+			<Tabs value={activeTab} onValueChange={handleTabChange} className="flex flex-1 flex-col">
 				<PageHeader
 					title={localizationConstants.rotRutTitle}
 					breadcrumbs={[
 						{ label: localizationConstants.home, href: "/home" },
 						{ label: localizationConstants.tools, href: "#" },
-						{ label: localizationConstants.rotRutTitle, href: "/rotRut" },
+						{ label: localizationConstants.rotRutTitle, href: projectId ? `/rotRut?projectId=${encodeURIComponent(projectId)}` : "/rotRut" },
 					]}
 					className="border-none pb-0"
 				>
@@ -205,7 +281,7 @@ export default function RotRutOpenedPage() {
 								<Button
 									variant="secondary"
 									size="sm"
-									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
+									onClick={() => router.push(`/rotRut/${deductionId}/edit?projectId=${encodeURIComponent(projectId)}`)}
 									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
 								>
 									<PencilLine className="h-4 w-4 mr-2" />
@@ -244,7 +320,7 @@ export default function RotRutOpenedPage() {
 								<Button
 									variant="secondary"
 									size="sm"
-									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
+									onClick={() => router.push(`/rotRut/${deductionId}/edit?projectId=${encodeURIComponent(projectId)}`)}
 									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
 								>
 									<PencilLine className="h-4 w-4 mr-2" />
@@ -275,7 +351,7 @@ export default function RotRutOpenedPage() {
 								<Button
 									variant="secondary"
 									size="sm"
-									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
+									onClick={() => router.push(`/rotRut/${deductionId}/edit?projectId=${encodeURIComponent(projectId)}`)}
 									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
 								>
 									<PencilLine className="h-4 w-4 mr-2" />
@@ -314,7 +390,7 @@ export default function RotRutOpenedPage() {
 								<Button
 									variant="secondary"
 									size="sm"
-									onClick={() => router.push(`/rotRut/${propertyId}/edit-form`)}
+									onClick={() => router.push(`/rotRut/${deductionId}/edit?projectId=${encodeURIComponent(projectId)}`)}
 									className="bg-zinc-100 hover:bg-zinc-100 text-zinc-950 h-9 px-4 rounded-md border border-zinc-200 font-normal w-full sm:w-auto justify-center"
 								>
 									<PencilLine className="h-4 w-4 mr-2" />
@@ -336,16 +412,35 @@ export default function RotRutOpenedPage() {
 					</TabsContent>
 				</div>
 
-				<AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+				<AlertDialog
+					open={isDeleteDialogOpen}
+					onOpenChange={(open) => {
+						setIsDeleteDialogOpen(open);
+						if (!open) setOwnerToDelete(null);
+					}}
+				>
 					<AlertDialogContent>
 						<AlertDialogHeader>
-							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogTitle>
+								<Translate text={localizationConstants.deleteConfirmTitle} />
+							</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete the owner entry.
+								{targetOwnerToDelete?.isCoOwner ? (
+									<Translate text={localizationConstants.removeCoOwnerConfirmDescription} />
+								) : activeTab === "rut" ? (
+									<Translate text={localizationConstants.deleteRutConfirmDescription} />
+								) : (
+									<Translate text={localizationConstants.deleteRotConfirmDescription} />
+								)}
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
-							<AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+							<AlertDialogCancel
+								disabled={isDeleting}
+								onClick={() => setOwnerToDelete(null)}
+							>
+								<Translate text={localizationConstants.cancelLabel} />
+							</AlertDialogCancel>
 							<AlertDialogAction
 								onClick={(e) => {
 									e.preventDefault();
@@ -355,12 +450,26 @@ export default function RotRutOpenedPage() {
 								className="bg-red-600 text-white hover:bg-red-700"
 							>
 								{isDeleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-								Delete
+								<Translate text={localizationConstants.deleteLabel} />
 							</AlertDialogAction>
 						</AlertDialogFooter>
 					</AlertDialogContent>
 				</AlertDialog>
 			</Tabs>
 		</div>
+	);
+}
+
+export default function RotRutOpenedPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="flex flex-1 items-center justify-center min-h-screen bg-white">
+					<Loader2 className="h-8 w-8 animate-spin text-slate-500" />
+				</div>
+			}
+		>
+			<RotRutOpenedContent />
+		</Suspense>
 	);
 }

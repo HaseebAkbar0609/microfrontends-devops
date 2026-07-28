@@ -13,7 +13,7 @@ import {
 	getRegistrationSchema,
 	RegistrationSchemaType,
 } from "@/schemas/rotRut/registration.schema";
-import { createRot, getOwners, type Owner } from "@/api-actions/rotRut";
+import { createRot, getOwners, type Owner, type RotPayload } from "@/api-actions/rotRut";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 
@@ -26,6 +26,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -42,21 +43,32 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 
-export const CreateRotForm = () => {
+interface CreateRotFormProps {
+	projectId: string;
+}
+
+export const CreateRotForm = ({ projectId }: CreateRotFormProps) => {
 	const { t } = useTranslation();
 	const [owners, setOwners] = useState<Owner[]>([]);
 
 	useEffect(() => {
+		let cancelled = false;
 		const fetchOwners = async () => {
+			if (!projectId) return;
 			try {
-				const data = await getOwners("dummy-project-id");
+				const data = await getOwners(projectId, "rot");
+				if (cancelled) return;
 				setOwners(data);
 			} catch (_error) {
-				toast.error(t(localizationConstants.rotSavedError));
+				if (cancelled) return;
+				toast.error(t(localizationConstants.errorDetailsFailed));
 			}
 		};
-		fetchOwners();
-	}, [t]);
+		void fetchOwners();
+		return () => {
+			cancelled = true;
+		};
+	}, [projectId, t]);
 
 	const form = useForm<RegistrationSchemaType>({
 		resolver: zodResolver(getRegistrationSchema(t)),
@@ -67,23 +79,29 @@ export const CreateRotForm = () => {
 			lastName: "",
 			sharePercentage: "",
 			personalId: "",
+			isCoOwner: false,
+			coOwnerPersonalId: "",
 		},
 	});
 
 	const mutation = useMutation({
 		mutationFn: (data: RegistrationSchemaType) => {
-			const payload = {
+			const payload: RotPayload = {
 				propertyId: data.propertyId,
+				address: data.address,
+				ownerName: `${data.firstName} ${data.lastName}`.trim(),
+				sharePercentage: Number(data.sharePercentage),
 				personalId: data.personalId,
-				coOwner: owners.length > 0,
+				isCoOwner: Boolean(data.isCoOwner),
+				coOwnerPersonalId: data.isCoOwner && data.coOwnerPersonalId ? data.coOwnerPersonalId : undefined,
 			};
-			return createRot("dummy-project-id", payload);
+			return createRot(projectId, payload);
 		},
-		onSuccess: (data, variables) => {
+		onSuccess: (_data, variables) => {
 			toast.success(t(localizationConstants.rotSavedSuccess));
 			const newOwner: Owner = {
 				id: crypto.randomUUID(),
-				name: `${variables.firstName} ${variables.lastName}`,
+				name: `${variables.firstName} ${variables.lastName}`.trim(),
 				personalId: variables.personalId,
 				share: `${variables.sharePercentage}%`,
 			};
@@ -93,6 +111,8 @@ export const CreateRotForm = () => {
 			form.setValue("lastName", "");
 			form.setValue("sharePercentage", "");
 			form.setValue("personalId", "");
+			form.setValue("isCoOwner", false);
+			form.setValue("coOwnerPersonalId", "");
 		},
 		onError: () => {
 			toast.error(t(localizationConstants.rotSavedError));
@@ -119,7 +139,7 @@ export const CreateRotForm = () => {
 					<header className="px-6 pt-6 pb-2 flex flex-col gap-1 shrink-0 bg-slate-50">
 						<div className="flex items-center gap-3">
 							<Link
-								href="/rotRut"
+								href={projectId ? `/rotRut?projectId=${encodeURIComponent(projectId)}` : "/rotRut"}
 								className="shrink-0 h-8 w-8 p-0 hover:bg-slate-100 rounded-full flex items-center justify-center transition-colors"
 								aria-label="Back"
 							>
@@ -275,6 +295,40 @@ export const CreateRotForm = () => {
 												</FormItem>
 											)}
 										/>
+										<FormField
+											control={form.control}
+											name="isCoOwner"
+											render={({ field }) => (
+												<FormItem className="flex flex-row items-center gap-2 space-y-0 pt-2 col-span-full">
+													<FormControl>
+														<Checkbox
+															checked={field.value}
+															onCheckedChange={field.onChange}
+														/>
+													</FormControl>
+													<FormLabel className="text-slate-700 font-semibold cursor-pointer">
+														{t(localizationConstants.isCoOwnerLabel)}
+													</FormLabel>
+												</FormItem>
+											)}
+										/>
+										{form.watch("isCoOwner") && (
+											<FormField
+												control={form.control}
+												name="coOwnerPersonalId"
+												render={({ field }) => (
+													<FormItem className="col-span-full md:col-span-1">
+														<FormLabel className="text-slate-700 font-semibold">
+															{t(localizationConstants.coOwnerPersonalIdLabel)}
+														</FormLabel>
+														<FormControl>
+															<Input placeholder="199001011234" className="h-10 border-slate-200" {...field} />
+														</FormControl>
+														<FormMessage />
+													</FormItem>
+												)}
+											/>
+										)}
 									</div>
 									<div className="flex justify-start pt-4">
 										<Button
@@ -345,6 +399,7 @@ export const CreateRotForm = () => {
 														</TableCell>
 														<TableCell className="py-4 px-4 border-l border-slate-200 align-middle">
 															<Button
+																type="button"
 																variant="ghost"
 																size="icon"
 																className="h-8 w-8 bg-transparent hover:bg-slate-100 text-slate-600 rounded-md mx-auto flex"
@@ -365,7 +420,7 @@ export const CreateRotForm = () => {
 
 					<footer className="shrink-0 border-t border-slate-200 bg-white px-6 py-4 z-10">
 						<div className="flex items-center justify-end gap-3">
-							<Link href="/rotRut">
+							<Link href={projectId ? `/rotRut?projectId=${encodeURIComponent(projectId)}` : "/rotRut"}>
 								<Button
 									type="button"
 									variant="outline"

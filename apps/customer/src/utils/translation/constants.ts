@@ -1373,6 +1373,7 @@ export type RotRutModule = {
 	validationRegisterFirstNameRequired: string;
 	validationRegisterLastNameRequired: string;
 	validationRegisterSharePercentageRequired: string;
+	validationRegisterCoOwnerPersonalIdRequired: string;
 	validationInvalidFormat: string;
 	createdLabel: string;
 	noRotEntriesFound: string;
@@ -1382,6 +1383,22 @@ export type RotRutModule = {
 	rutDetails: string;
 	rutPropertyIdLabel: string;
 	propertyDetails: string;
+	rotDeletedSuccess: string;
+	rotDeletedError: string;
+	deleteRotConfirmTitle: string;
+	deleteRotConfirmDescription: string;
+	rutDeletedSuccess: string;
+	rutDeletedError: string;
+	deleteRutConfirmTitle: string;
+	deleteRutConfirmDescription: string;
+	isCoOwnerLabel: string;
+	coOwnerPersonalIdLabel: string;
+	coOwnerRemovedSuccess: string;
+	coOwnerRemovedError: string;
+	removeCoOwnerConfirmDescription: string;
+	deleteConfirmTitle: string;
+	cancelLabel: string;
+	deleteLabel: string;
 };
 
 export type Translation = SidebarTranslation &

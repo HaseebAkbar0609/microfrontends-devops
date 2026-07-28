@@ -1456,6 +1456,7 @@ export const enRotRut: RotRutModule = {
 	validationRegisterFirstNameRequired: "First name is required",
 	validationRegisterLastNameRequired: "Last name is required",
 	validationRegisterSharePercentageRequired: "Share percentage is required",
+	validationRegisterCoOwnerPersonalIdRequired: "Co-owner personal number is required",
 	validationInvalidFormat: "Invalid format",
 	createdLabel: "Created",
 	noRotEntriesFound: "No ROT entries found",
@@ -1465,6 +1466,23 @@ export const enRotRut: RotRutModule = {
 	rutDetails: "RUT Details",
 	rutPropertyIdLabel: "E-Property designation for RUT",
 	propertyDetails: "Property Details",
+	rotDeletedSuccess: "ROT entry deleted successfully",
+	rotDeletedError: "Failed to delete ROT entry",
+	deleteRotConfirmTitle: "Are you sure?",
+	deleteRotConfirmDescription: "This will permanently delete this ROT entry.",
+	rutDeletedSuccess: "RUT entry deleted successfully",
+	rutDeletedError: "Failed to delete RUT entry",
+	deleteRutConfirmTitle: "Are you sure?",
+	deleteRutConfirmDescription: "This will permanently delete this RUT entry.",
+	isCoOwnerLabel: "Is co-owner",
+	coOwnerPersonalIdLabel: "Co-owner personal number",
+	coOwnerRemovedSuccess: "Co-owner removed successfully",
+	coOwnerRemovedError: "Failed to remove co-owner",
+	removeCoOwnerConfirmDescription:
+		"This action cannot be undone. This will permanently remove the co-owner and assign 100% share to the primary owner.",
+	deleteConfirmTitle: "Are you absolutely sure?",
+	cancelLabel: "Cancel",
+	deleteLabel: "Delete",
 };
 
 export const en: Translation = {
