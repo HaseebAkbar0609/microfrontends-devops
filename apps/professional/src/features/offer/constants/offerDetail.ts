@@ -1,6 +1,6 @@
 import { OfferDetailData } from "../types";
 
-export const OFFER_STATUSES = ["overview", "quoted", "accepted", "agreed", "archived"] as const;
+export const OFFER_STATUSES = ["request", "quoted", "accepted", "agreed", "archived"] as const;
 export type OfferStatus = (typeof OFFER_STATUSES)[number];
 
 const BASE_DETAIL = {
