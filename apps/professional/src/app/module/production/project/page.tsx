@@ -1,14 +1,18 @@
+import { PageHeader } from "@/components/layout/PageHeader";
+import ProjectDashboard from "@/features/project/components/ProjectDashboard";
+import { PROJECT_DASHBOARD_BREADCRUMBS } from "@/features/project/constants";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-export default function Page() {
+
+export default function ProjectDashboardPage() {
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold">
-				<Translate text={localizationConstants.project} />
-			</h1>
-			<p className="mt-2 text-sm text-slate-600">
-				<Translate text={localizationConstants.comingSoon} />{" "}
-			</p>
+		<div className="flex flex-1 flex-col bg-blue-gray-50">
+			<PageHeader
+				title={localizationConstants.projectDashboardTitle}
+				breadcrumbs={PROJECT_DASHBOARD_BREADCRUMBS}
+			/>
+			<div className="p-5 flex-1">
+				<ProjectDashboard />
+			</div>
 		</div>
 	);
 }

@@ -26,7 +26,7 @@ export const DashboardHeader = ({
         </CardTitle>
       </div>
       <CardAction className="border-gray-300 h-10 w-10 rounded-md border flex justify-center items-center">
-        <button>
+        <button type="button">
           <MoreVertical size={20} className="text-foreground" />
         </button>
       </CardAction>
