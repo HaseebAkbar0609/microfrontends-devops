@@ -437,7 +437,7 @@ export async function completeSubscriptionAction(
 			authStorage.setCompanyData(companyPayload);
 		}
 
-		// Finished subscription flow — clear gate so middleware allows /dashboard.
+		// Finished subscription flow — clear gate so middleware allows /home.
 		clearRequiresSubscriptionCookie();
 
 		return {

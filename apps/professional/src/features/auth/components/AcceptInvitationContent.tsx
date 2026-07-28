@@ -144,7 +144,7 @@ export function AcceptInvitationContent() {
 			});
 
 			router.replace(
-				requiresSubscription ? "/manage-plans" : "/dashboard",
+				requiresSubscription ? "/manage-plans" : "/home",
 			);
 			router.refresh();
 		}

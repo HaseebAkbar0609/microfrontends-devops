@@ -61,12 +61,7 @@ import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import { showToast } from "@/lib/toast";
 import { fetchLeadSettings } from "@/features/leads/settings/api/leadSettings";
 import { useLeadsList } from "@/features/leads/queries/useLeadsList";
-import { reviewLeadRows } from "@/features/leads/constants/review";
-import { monitoringLeadRows } from "@/features/leads/constants/monitoring";
-import { handlingLeadRows } from "@/features/leads/constants/handling";
-import { acceptedLeadRows, acceptedTotalCommission } from "@/features/leads/constants/accepted";
-import { paidLeadRows } from "@/features/leads/constants/paid";
-import { archiveLeadRows } from "@/features/leads/constants/archive";
+
 import {
   filterLeadRows,
   getLeadRowsForTab,
@@ -82,12 +77,12 @@ export function LeadsManagementPage() {
   const t = useTranslate();
   const router = useRouter();
   const { search: searchParam, page, changeQueries, setPage } = useQueryParams();
-  const [rows, setRows] = useState<LeadRow[]>(reviewLeadRows);
-  const [monitoringRows, setMonitoringRows] = useState<MonitoringLeadRow[]>(monitoringLeadRows);
-  const [handlingRows, setHandlingRows] = useState<HandlingLeadRow[]>(handlingLeadRows);
-  const [acceptedRows, setAcceptedRows] = useState<AcceptedLeadRow[]>(acceptedLeadRows);
-  const [paidRows, setPaidRows] = useState<PaidLeadRow[]>(paidLeadRows);
-  const [archiveRows, setArchiveRows] = useState<ArchiveLeadRow[]>(archiveLeadRows);
+  const [rows, setRows] = useState<LeadRow[]>([]);
+  const [monitoringRows, setMonitoringRows] = useState<MonitoringLeadRow[]>([]);
+  const [handlingRows, setHandlingRows] = useState<HandlingLeadRow[]>([]);
+  const [acceptedRows, setAcceptedRows] = useState<AcceptedLeadRow[]>([]);
+  const [paidRows, setPaidRows] = useState<PaidLeadRow[]>([]);
+  const [archiveRows, setArchiveRows] = useState<ArchiveLeadRow[]>([]);
   const [searchInput, setSearchInput] = useState(searchParam);
   const [activeTab, setActiveTab] = useState<LeadStatus | "settings">("granskning");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -134,14 +129,14 @@ export function LeadsManagementPage() {
     const reviewItems = items.filter((item) => item.status === "granskning");
     const reviewLeadIdSet = new Set(reviewItems.map((item) => item.id));
 
-    setRows(reviewItems.length > 0 ? reviewItems : reviewLeadRows);
+    setRows(reviewItems);
     const monitoringItems = items
       .filter((item) => item.status === "bevakning")
       .map((item) => ({
         ...item,
         tags: "0",
       }));
-    setMonitoringRows(monitoringItems.length > 0 ? monitoringItems : monitoringLeadRows);
+    setMonitoringRows(monitoringItems);
 
     const handlingItems = items
       .filter((item) => item.status === "hantering")
@@ -150,7 +145,7 @@ export function LeadsManagementPage() {
         taken: "0",
         repeat: "1",
       }));
-    setHandlingRows(handlingItems.length > 0 ? handlingItems : handlingLeadRows);
+    setHandlingRows(handlingItems);
 
     const archiveItems = items
       .filter((item) => item.status === "arkiv")
@@ -158,7 +153,7 @@ export function LeadsManagementPage() {
         ...item,
         tags: "0",
       }));
-    setArchiveRows(archiveItems.length > 0 ? archiveItems : archiveLeadRows);
+    setArchiveRows(archiveItems);
 
     const acceptedItems = items
       .filter((item) => item.status === "accepterad")
@@ -176,7 +171,7 @@ export function LeadsManagementPage() {
         reminder: "-",
         status: "unpaid" as const,
       }));
-    setAcceptedRows(acceptedItems.length > 0 ? acceptedItems : acceptedLeadRows);
+    setAcceptedRows(acceptedItems);
 
     const paidItems = items
       .filter((item) => item.status === "betalda")
@@ -190,7 +185,7 @@ export function LeadsManagementPage() {
         commission: "-",
         paymentDate: "-",
       }));
-    setPaidRows(paidItems.length > 0 ? paidItems : paidLeadRows);
+    setPaidRows(paidItems);
 
     setReviewedAtByLeadId((prev) =>
       Object.fromEntries(
@@ -234,8 +229,8 @@ export function LeadsManagementPage() {
   );
   const isSelectable = tableConfig.isSelectable;
   const totalAcceptedCommission = useMemo(() => {
-    if (acceptedRows === acceptedLeadRows) {
-      return acceptedTotalCommission;
+    if (acceptedRows.length === 0) {
+      return "0";
     }
     const sum = acceptedRows.reduce((total, row) => {
       const numericValue = Number(row.commission.replace(/[^\d.-]/g, ""));

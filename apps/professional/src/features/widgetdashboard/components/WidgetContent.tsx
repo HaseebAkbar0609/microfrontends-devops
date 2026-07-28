@@ -51,14 +51,15 @@ export const WidgetAction = ({ label }: { label: string }) => (
 	</button>
 );
 
-/** A "label — percentage" row with a proportional bar. */
 export const WidgetBarRow = ({
 	label,
 	percent,
+	value,
 	color = "bg-slate-500",
 }: {
 	label: string;
 	percent: number;
+	value?: React.ReactNode;
 	color?: string;
 }) => (
 	<div className="flex flex-col gap-0.5">
@@ -67,7 +68,7 @@ export const WidgetBarRow = ({
 				<Translate text={label} />
 			</span>
 			<span className="shrink-0 font-medium text-slate-700">
-				{percent} %
+				{value ?? `${percent} %`}
 			</span>
 		</div>
 		<div className="h-1.5 w-full rounded-full bg-slate-200">

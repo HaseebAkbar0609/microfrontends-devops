@@ -121,7 +121,7 @@ export default function AdminUsers() {
 					items={[
 						{
 							translationKey: localizationConstants.home,
-							href: "/dashboard",
+							href: "/home",
 						},
 						{
 							translationKey:

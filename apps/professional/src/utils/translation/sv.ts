@@ -654,6 +654,112 @@ export const svOffer: OfferTranslation = {
 	calcWidgetImageDescription:
 		"Platshållarbanner för kalkylmodulen – byt till egen media senare.",
 	widgetNoData: "Ingen data att visa ännu",
+	// Order - Dashboard widgets
+	orderWidgetOverviewTitle: "Orderöversikt",
+	orderWidgetOverviewTotal: "Totalt antal order",
+	orderWidgetOverviewActive: "Aktiva order",
+	orderWidgetOverviewCompleted: "Avslutade",
+	orderWidgetOverviewCancelled: "Avbrutna",
+	orderWidgetOverviewUpdated: "Senast uppdaterad",
+	orderWidgetOverviewUpdatedValue: "Idag 08:45",
+	orderWidgetStatusTitle: "Orderstatus",
+	orderWidgetStatusOngoing: "Pågående",
+	orderWidgetStatusWaitingMaterial: "Väntar på material",
+	orderWidgetStatusDelayed: "Försenade",
+	orderWidgetStatusNotStarted: "Ej startade",
+	orderWidgetStatusUpdated: "Status uppdaterad",
+	orderWidgetDirectTitle: "Order Direkt",
+	orderWidgetDirectNew: "Ny Order",
+	orderWidgetDirectSearch: "Sök",
+	orderWidgetDirectLatest: "Senaste",
+	orderWidgetDirectNotice: "order kräver omedelbar åtgärd",
+	orderWidgetTodayTitle: "Dagens Order",
+	orderWidgetTodayOrder1: "Order #1042 – Tak renovering",
+	orderWidgetTodayOrder2: "Order #1043 – Elinstallation",
+	orderWidgetTodayOrder3: "Order #1044 – VVS-arbete",
+	orderWidgetTodayStatusWaiting: "Väntar",
+	orderWidgetTodayTotal: "Totalt idag",
+	orderWidgetCalendarTitle: "Orderkalender",
+	orderWidgetCalendarWeek: "Vecka 30, 2026",
+	orderWidgetCalendarMonday: "Måndag",
+	orderWidgetCalendarTuesday: "Tisdag",
+	orderWidgetCalendarWednesday: "Onsdag",
+	orderWidgetCalendarThursday: "Torsdag",
+	orderWidgetCalendarFriday: "Fredag",
+	orderWidgetCalendarUpcoming: "Kommande nästa vecka",
+	orderWidgetValueTitle: "Ordervärde",
+	orderWidgetValueTotal: "Totalt ordervärde",
+	orderWidgetValueInvoiced: "Fakturerat",
+	orderWidgetValueNotInvoiced: "Ej fakturerat",
+	orderWidgetValueAverage: "Genomsnittligt ordervärde",
+	orderWidgetValueHighest: "Högsta order",
+	orderWidgetResourcesTitle: "Resursbeläggning",
+	orderWidgetResourcesTotal: "Totalt antal resurser",
+	orderWidgetResourcesBooked: "Belagda idag",
+	orderWidgetResourcesAvailable: "Tillgängliga",
+	orderWidgetResourcesOvertime: "Övertid registrerad",
+	orderWidgetResourcesNext: "Nästa tillgänglig resurs",
+	orderWidgetResourcesNextValue: "Imorgon 07:00",
+	orderWidgetTimeTitle: "Tidrapportering",
+	orderWidgetTimeToday: "Rapporterade timmar idag",
+	orderWidgetTimeApproved: "Godkända timmar",
+	orderWidgetTimeNotApproved: "Ej godkända",
+	orderWidgetTimeMostActive: "Mest aktiv",
+	orderWidgetTimeWeek: "Veckorapport",
+	orderWidgetAtaTitle: "ÄTA (Ändrings- och tilläggsarbeten)",
+	orderWidgetAtaActive: "Aktiva ÄTA",
+	orderWidgetAtaAwaiting: "Väntande godkännande",
+	orderWidgetAtaApproved: "Godkända ÄTA",
+	orderWidgetAtaRejected: "Avvisade",
+	orderWidgetAtaValue: "Totalt ÄTA-värde",
+	orderWidgetKmaTitle: "KMA & SecureCheck",
+	orderWidgetKmaLatest: "Senaste KMA-kontroll",
+	orderWidgetKmaApproved: "Godkända kontroller",
+	orderWidgetKmaDeviations: "Avvikelser",
+	orderWidgetKmaDeviationsValue: "2 (åtgärd krävs)",
+	orderWidgetKmaSecureCheck: "SecureCheck status",
+	orderWidgetKmaSecureCheckValue: "Aktiv",
+	orderWidgetKmaNext: "Nästa schemalagd kontroll",
+	orderWidgetActionTitle: "Order som kräver åtgärd",
+	orderWidgetAction1: "Order #1038 – Försenad leverans (2 dagar)",
+	orderWidgetAction2: "Order #1041 – Saknar resurstilldelning",
+	orderWidgetAction3: "Order #1039 – Väntar på kundgodkännande",
+	orderWidgetActionTotal: "Totalt order kräver åtgärd",
+	orderWidgetActionPriority: "Prioritet",
+	orderWidgetActionPriorityValue: "Hög",
+	orderWidgetAiTitle: "AI Order Assistant",
+	orderWidgetAiSuggestion:
+		"Order #1042 kan slutföras 2 dagar tidigare om resurs Johan A. omfördelas.",
+	orderWidgetAiForecast: "Ordervärde nästa månad estimeras till 1 100 000 kr",
+	orderWidgetAiWarning:
+		"2 order riskerar försening baserat på nuvarande tempo",
+	orderWidgetAiStatus: "AI-status",
+	orderWidgetAiStatusValue: "Aktiv | Senast analyserad: Idag 08:00",
+	orderWidgetActivityTitle: "Senaste aktiviteter",
+	orderWidgetActivity1: "Order #1044 skapad av Erik S.",
+	orderWidgetActivity2:
+		"Order #1042 uppdaterad – status ändrad till Pågående",
+	orderWidgetActivity3: "ÄTA godkänd för Order #1039",
+	orderWidgetActivity4: "Tidrapport inlämnad av Johan A.",
+	orderWidgetActivity5: "KMA-kontroll slutförd för Order #1038",
+	orderWidgetStatsTitle: "Orderstatistik",
+	orderWidgetStatsPerMonth: "Order per månad (senaste 6 mån)",
+	orderWidgetStatsLeadTime: "Genomsnittlig ledtid",
+	orderWidgetStatsLeadTimeValue: "8,5 dagar",
+	orderWidgetStatsCompletion: "Slutförandegrad",
+	orderWidgetStatsCategory: "Mest aktiv kategori",
+	orderWidgetStatsCategoryValue: "Bygg & Renovering (42 %)",
+	orderWidgetStatsGrowth: "Tillväxt jämfört med förra månaden",
+	orderWidgetNewsTitle: "Nyheter",
+	orderWidgetNews1: "Ny KMA-rutin gäller från 2026-08-01 – läs mer",
+	orderWidgetNews2: "Branschnyheter: Byggkonjunkturen stärks Q3 2026",
+	orderWidgetNews3:
+		"Intern uppdatering: Ny orderprocess lanseras nästa sprint",
+	orderWidgetNews4: "Systemunderhåll planerat: 2026-07-27 kl. 22:00–23:00",
+	orderWidgetImageTitle: "Bild",
+	orderWidgetImageDescription:
+		"Production Module – företags- eller projektbild, rekommenderat 800×400 px (JPG, PNG, WebP).",
+	orderDashboardTitle: "Order - Översikt",
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: "Offertöversikt",
 	offerWidgetOverviewTotal: "Totalt antal offerter",
@@ -838,66 +944,66 @@ export const svOffer: OfferTranslation = {
 
 	// Business offer modal
 	businessOfferModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill skicka detta Erbjudandet?",
 	businessOfferModalSubtitle:
-		"Villkor för accepterade erbjudanden - B2C-ERBJUDANDE, B2B-ERBJUDANDE:",
+		"Villkor för Tagna Offerter – B2C-OFFERT, B2B-OFFERT:",
 	businessOfferModalBullet1:
-		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppgift).',
+		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
 	businessOfferModalBullet2:
-		"Kund- och projektinformation visas för den accepterade uppgiften.",
+		"Kunden och projektinformation visas vid taget uppdrag.",
 	businessOfferModalBullet3:
-		"Medlemmar måste skicka en offert via systemet för accepterade uppgifter.",
+		"Medlemmar måste skicka en offert via systemet på tagna uppdrag.",
 	businessOfferModalBullet4:
-		"Tre påminnelser skickas för saknade offerter, med en avgift på 500 SEK per uppgift som debiteras efter tre påminnelser.",
+		"Tre påminnelser skickas vid uteblivit offert, däri en avgift om 500 kr per uppdrag debiteras efter tre påminnelser.",
 	businessOfferModalBullet5:
-		"Kundinformation och projektinformation är synlig efter att uppgiften har accepterats.",
+		"Kundinformation och projektuppgifter syns efter att uppdraget är taget.",
 	businessOfferModalBullet6:
-		"En serviceavgift på 295 SEK + 3% av offertbeloppet debiteras när offerten accepteras av kunden. Debiteras via kreditkort.",
-	businessOfferModalCheckbox: "Jag accepterar villkoren.",
+		"Service avgift debiteras när offerten accepteras av kund på 295 kr + 3% av offertsumman. Debiteras via kreditkort.",
+	businessOfferModalCheckbox: "Jag accepterar villkoren",
 	businessOfferModalCancel: "Avbryt",
 	businessOfferModalConfirm: "Bekräfta",
 
 	// Business express modal
 	businessExpressModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill skicka detta Erbjudandet?",
 	businessExpressModalSubtitleB2C:
-		"Villkor för accepterade citat - B2C-EXPRESS:",
+		"Villkor för Tagna Offerter – B2C-EXPRESS:",
 	businessExpressModalSubtitleB2B:
-		"Villkor för accepterade citat - B2B-EXPRESS:",
+		"Villkor för Tagna Offerter – B2B-EXPRESS:",
 	businessExpressModalBullet1:
-		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppdrag).',
+		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
 	businessExpressModalBullet2:
-		"Kund- och projektinformation visas för det accepterade uppdraget.",
+		"Kunden och projektinformation visas vid taget uppdrag.",
 	businessExpressModalBullet3:
-		"Medlemmar måste skicka en offert via systemet för accepterade uppdrag.",
+		"Medlemmar måste skicka en offert via systemet på tagna uppdrag.",
 	businessExpressModalBullet4:
-		"Tre påminnelser skickas om en offert inte skickas, med en avgift på 500 SEK per uppdrag som debiteras efter tre påminnelser.",
+		"Tre påminnelser skickas vid uteblivit offert, däri en avgift om 500 kr per uppdrag debiteras efter tre påminnelser.",
 	businessExpressModalBullet5:
-		"Kundinformation och projektinformation är synlig efter att uppdraget har accepterats.",
+		"Kundinformation och projektuppgifter syns efter att uppdraget är taget.",
 	businessExpressModalBullet6:
-		"En serviceavgift på 295 SEK + 3% av offertbeloppet debiteras när offerten accepteras av kunden. Debiteras via kreditkort.",
-	businessExpressModalCheckbox: "Jag accepterar villkoren.",
+		"Service avgift debiteras när offerten accepteras av kund på 295 kr + 3% av offertsumman. Debiteras via kreditkort.",
+	businessExpressModalCheckbox: "Jag accepterar villkoren",
 	businessExpressModalCancel: "Avbryt",
 	businessExpressModalConfirm: "Bekräfta",
 
 	// Business rent modal
 	businessRentModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill skicka detta Erbjudandet?",
 	businessRentModalSubtitle:
-		"Villkor för accepterade citat - B2B - HYRA IN/UT:",
+		"Villkor för Tagna Offerter – B2B – HYRA IN/UT:",
 	businessRentModalBullet1:
-		'Medlemmar kan ta sig an uppgifter i flödet för nya uppdrag, där principen "först till kvarn" gäller (max fem medlemmar per uppgift).',
+		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
 	businessRentModalBullet2:
-		"Kund- och projektinformation visas för den accepterade uppgiften.",
+		"Kunden och projektinformation visas vid taget uppdrag.",
 	businessRentModalBullet3:
-		"Medlemmar måste skicka en offert via systemet för accepterade uppgifter.",
+		"Medlemmar måste skicka en offert via systemet på tagna uppdrag.",
 	businessRentModalBullet4:
-		"Tre påminnelser skickas för saknade offerter, med en avgift på 500 SEK per uppgift som debiteras efter tre påminnelser.",
+		"Tre påminnelser skickas vid uteblivit offert, däri en avgift om 500 kr per uppdrag debiteras efter tre påminnelser.",
 	businessRentModalBullet5:
-		"Kundinformation och projektinformation är synlig efter att uppgiften har accepterats.",
+		"Kundinformation och projektuppgifter syns efter att uppdraget är taget.",
 	businessRentModalBullet6:
-		"En serviceavgift på 1500 SEK debiteras när offerten accepteras av kunden. Debiteras via kreditkort.",
-	businessRentModalCheckbox: "Jag accepterar villkoren.",
+		"Service avgift debiteras när offerten accepteras av kund på 1500 kr. Debiteras via kreditkort.",
+	businessRentModalCheckbox: "Jag accepterar villkoren",
 	businessRentModalCancel: "Avbryt",
 	businessRentModalConfirm: "Bekräfta",
 

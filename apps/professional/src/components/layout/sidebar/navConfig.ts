@@ -4,6 +4,7 @@ import {
 	Building2,
 	Headset,
 	Heart,
+	Home,
 	Package2,
 	Pickaxe,
 	UserCog,
@@ -55,6 +56,13 @@ export const HIDDEN_SUBSIDEBAR_PATH_PREFIXES = [
 ];
 
 export const navConfig: NavGroup[] = [
+	{
+		id: "home",
+		label: localizationConstants.home,
+		icon: Home,
+		href: "/home",
+		items: [],
+	},
 	{
 		id: "favorites",
 		label: localizationConstants.favorites,

@@ -69,6 +69,7 @@ export default function PriceCalculatorPage() {
 	>({});
 	const [projectTypes, setProjectTypes] = useState<MappedProjectType[]>([]);
 	const [apiConfigId, setApiConfigId] = useState("");
+	const [loadingConfigs, setLoadingConfigs] = useState(true);
 	
 	const [estimate, setEstimate] = useState({
 		low: 0,
@@ -87,6 +88,7 @@ export default function PriceCalculatorPage() {
 	useEffect(() => {
 		let isMounted = true;
 		async function fetchAllConfigs() {
+			setLoadingConfigs(true);
 			const res = await getCostCalculatorConfigAPIAction();
 			if (res.success && res.data && isMounted) {
 				const mappedTypes = mapConfigToProjectTypes(res.data as ApiConfig);
@@ -94,6 +96,9 @@ export default function PriceCalculatorPage() {
 					setProjectTypes(mappedTypes);
 					setSelectedExampleId((prev) => prev || mappedTypes[0].id);
 				}
+			}
+			if (isMounted) {
+				setLoadingConfigs(false);
 			}
 		}
 		fetchAllConfigs();
@@ -290,10 +295,14 @@ export default function PriceCalculatorPage() {
 					</TabsList>
 
 					<TabsContent value="examples" className="mt-6">
-						{!selectedType ? (
+						{loadingConfigs ? (
 							<div className="flex items-center justify-center p-12">
 								<span className="text-slate-500">Loading configurations...</span>
 							</div>
+						) : !selectedType ? (
+							<SectionCard className="p-12 text-center text-slate-500 font-medium">
+								{t(localizationConstants.priceCalculatorNoProductsFound) || "No configurations available."}
+							</SectionCard>
 						) : (
 							<>
 								<div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

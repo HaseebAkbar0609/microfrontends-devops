@@ -17,6 +17,7 @@ export type LeadSettingsApiData = {
 	reminder_after_hours?: number;
 	escalate_after_hours?: number;
 	is_active?: boolean;
+	permissions_matrix?: Record<string, unknown>[];
 };
 
 export type LeadSettingsApiResponse = {
