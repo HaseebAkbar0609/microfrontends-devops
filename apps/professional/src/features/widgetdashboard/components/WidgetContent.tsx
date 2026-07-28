@@ -1,6 +1,7 @@
 import React from "react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { cn } from "@/lib/utils";
 
 export const WidgetRow = ({
 	label,
@@ -42,14 +43,85 @@ export const WidgetMockTag = () => (
 	</span>
 );
 
-export const WidgetAction = ({ label }: { label: string }) => (
+export const WidgetAction = ({
+	label,
+	variant = "primary",
+}: {
+	label: string;
+	variant?: "primary" | "secondary";
+}) => (
 	<button
 		type="button"
-		className="mt-1 cursor-pointer rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white"
+		className={
+			variant === "primary"
+				? "cursor-pointer rounded-md bg-slate-900 px-3 py-1.5 text-xs font-medium text-white"
+				: "cursor-pointer rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700"
+		}
 	>
 		<Translate text={label} />
 	</button>
 );
+
+export const WidgetTag = ({
+	label,
+	color,
+}: {
+	label: string;
+	color: string;
+}) => (
+	<span
+		className={`rounded-[4px] px-1.5 py-0.5 text-[10px] font-semibold ${color}`}
+	>
+		<Translate text={label} />
+	</span>
+);
+
+export const WidgetActions = ({ children }: { children: React.ReactNode }) => (
+	<div className="mt-1 flex flex-wrap gap-1.5">{children}</div>
+);
+
+export const WidgetChip = ({
+	label,
+	active,
+}: {
+	label: string;
+	active?: boolean;
+}) => (
+	<span
+		className={
+			active
+				? "rounded-full bg-slate-900 px-2 py-0.5 text-[11px] font-medium text-white"
+				: "rounded-full border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-600"
+		}
+	>
+		<Translate text={label} />
+	</span>
+);
+
+export const WidgetChips = ({ children }: { children: React.ReactNode }) => (
+	<div className="flex flex-wrap gap-1.5">{children}</div>
+);
+
+export const WidgetSparkBars = ({
+	values,
+	color = "bg-blue-600",
+}: {
+	values: number[];
+	color?: string;
+}) => {
+	const max = Math.max(...values, 1);
+	return (
+		<div className="flex h-10 items-end gap-1">
+			{values.map((value, index) => (
+				<div
+					key={index}
+					className={`w-3 rounded-sm ${color}`}
+					style={{ height: `${Math.max((value / max) * 100, 6)}%` }}
+				/>
+			))}
+		</div>
+	);
+};
 
 export const WidgetBarRow = ({
 	label,
@@ -80,14 +152,12 @@ export const WidgetBarRow = ({
 	</div>
 );
 
-/** Shown when a widget has no data to display. */
 export const WidgetEmptyState = ({ message }: { message?: string }) => (
 	<p className="py-4 text-center text-sm text-slate-400">
 		<Translate text={message ?? localizationConstants.widgetNoData} />
 	</p>
 );
 
-/** Skeleton lines shown while a widget is loading. */
 export const WidgetLoadingState = ({ rows = 3 }: { rows?: number }) => (
 	<div className="space-y-2 py-1" aria-busy>
 		{Array.from({ length: rows }).map((_, index) => (
@@ -100,11 +170,90 @@ export const WidgetLoadingState = ({ rows = 3 }: { rows?: number }) => (
 	</div>
 );
 
-/** Shown when widget data failed to load. */
 export const WidgetErrorState = ({ message }: { message: string }) => (
 	<p className="py-4 text-center text-sm text-red-600" role="alert">
 		<Translate text={message} />
 	</p>
+);
+
+export interface WidgetCalendarWeekDay {
+	id: string;
+	label: string;
+}
+
+export type WidgetCalendarDay = number | null;
+
+const getCalendarDayClassName = (
+	day: WidgetCalendarDay,
+	highlights: Record<number, string>,
+) => {
+	const base = "flex h-6 items-center justify-center rounded text-[10px]";
+	if (day === null) return cn(base, "text-transparent");
+	const highlight = highlights[day];
+	if (highlight) return cn(base, highlight, "font-semibold text-white");
+	return cn(base, "text-slate-700");
+};
+
+export const WidgetCalendarPreview = ({
+	title,
+	weekDays,
+	days,
+	highlights = {},
+}: {
+	title?: string;
+	weekDays: WidgetCalendarWeekDay[];
+	days: WidgetCalendarDay[];
+	highlights?: Record<number, string>;
+}) => (
+	<div className="rounded-md border border-slate-200 bg-white p-2.5">
+		{title && (
+			<p className="mb-1.5 text-center text-[11px] font-medium text-slate-700">
+				<Translate text={title} />
+			</p>
+		)}
+		<div className="grid grid-cols-7 gap-0.5 text-center">
+			{weekDays.map((day) => (
+				<span
+					key={day.id}
+					className="text-[9px] font-semibold text-slate-500"
+				>
+					{day.label}
+				</span>
+			))}
+			{days.map((day, index) => (
+				<span
+					key={day === null ? `blank-${index}` : `day-${day}`}
+					className={getCalendarDayClassName(day, highlights)}
+				>
+					{day ?? "."}
+				</span>
+			))}
+		</div>
+	</div>
+);
+
+export interface WidgetMapPin {
+	id: string;
+	label: string;
+	color: string;
+	x: number;
+	y: number;
+}
+
+export const WidgetMapPreview = ({ pins }: { pins: WidgetMapPin[] }) => (
+	<div className="relative h-24 overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+		{pins.map((pin) => (
+			<span
+				key={pin.id}
+				title={pin.label}
+				className={cn(
+					"absolute h-2.5 w-2.5 rounded-full ring-2 ring-white",
+					pin.color,
+				)}
+				style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+			/>
+		))}
+	</div>
 );
 
 export const WidgetImagePlaceholder = ({
