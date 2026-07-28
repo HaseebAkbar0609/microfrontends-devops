@@ -1017,7 +1017,15 @@ export type OfferTranslation = {
 	offerDetailDrawingTitle: string;
 	offerDetailPostedDateLabel: string;
 	offerManagement: string;
-	offerStatusOverview: string;
+	offerStatusRequest: string;
+	offerRequestTrackingNumber: string;
+	offerRequestCustomerName: string;
+	offerRequestLatestOfferDate: string;
+	offerRequestPreliminaryBudget: string;
+	offerRequestAddNewProject: string;
+	offerRequestTotalBudget: string;
+	offerRequestAssignee: string;
+	clearFilters: string;
 	offerStatusQuoted: string;
 	offerStatusAgreed: string;
 	offerStatusArchived: string;
