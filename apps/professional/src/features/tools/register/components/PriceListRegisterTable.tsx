@@ -328,6 +328,7 @@ export function PriceListUpdatePanel() {
 	const [isEditOpen, setIsEditOpen] = useState(false);
 	const [calculation, setCalculation] = useState("procent");
 	const [rounding, setRounding] = useState("2decimal");
+	const [percentage, setPercentage] = useState("0");
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -575,7 +576,19 @@ export function PriceListUpdatePanel() {
 							<Label className="font-['Inter'] text-sm font-medium leading-5 tracking-normal text-zinc-950">
 								<Translate text={localizationConstants.priceListPercentageLabel} />
 							</Label>
-							<Input className="h-10 text-sm" defaultValue="0%" />
+							<Input
+								type="number"
+								min="0"
+								max="100"
+								step="any"
+								className="h-10 text-sm"
+								value={percentage}
+								onChange={(e) => {
+									const val = e.target.value.replace(/[^0-9.]/g, "");
+									setPercentage(val);
+								}}
+								placeholder="0"
+							/>
 						</div>
 					</div>
 					<DialogFooter className="px-4 sm:px-6 py-3 sm:py-4 shrink-0 border-t border-slate-200 flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">

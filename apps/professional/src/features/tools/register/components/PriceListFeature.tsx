@@ -20,9 +20,13 @@ export function PriceListFeature() {
 						<Translate text={localizationConstants.home} />
 					</Link>
 					<ChevronRight className="h-3.5 w-3.5 text-slate-400" aria-hidden />
-					<span><Translate text={localizationConstants.moduleItem} /></span>
+					<Link href="/tools" className="hover:text-slate-900 transition-colors">
+						<Translate text={localizationConstants.tools} />
+					</Link>
 					<ChevronRight className="h-3.5 w-3.5 text-slate-400" aria-hidden />
-					<span><Translate text={localizationConstants.invoice} /></span>
+					<Link href="/tools/register" className="hover:text-slate-900 transition-colors">
+						<Translate text={localizationConstants.register} />
+					</Link>
 					<ChevronRight className="h-3.5 w-3.5 text-slate-400" aria-hidden />
 					<span className="text-slate-900">
 						<Translate text={localizationConstants.priceListOption} />
