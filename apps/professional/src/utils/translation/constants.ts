@@ -1508,6 +1508,42 @@ export type RegisterTranslation = {
 	articleBokoringsUppgifterSection: string;
 	articleBokforingsuppgifterSection: string;
 	articleLagerplatsSection: string;
+	// Price List Translations (TFS-440)
+	priceListTab: string;
+	updatePriceListTab: string;
+	priceListOption: string;
+	priceListCodeHeader: string;
+	priceListNameHeader: string;
+	priceListCategoryHeader: string;
+	priceListLinkedHeader: string;
+	priceListCreatedByHeader: string;
+	priceListDateHeader: string;
+	priceListLastUpdatedHeader: string;
+	priceListUpdateTitle: string;
+	priceListEditButton: string;
+	priceListBaseCalculationLabel: string;
+	priceListUpdatePriceListLabel: string;
+	priceListCalculationLabel: string;
+	priceListRoundingLabel: string;
+	priceListIncreaseDecreaseLabel: string;
+	priceListPercentageLabel: string;
+	priceListInfoPlaceholder: string;
+	priceListAOption: string;
+	priceListBOption: string;
+	priceListCOption: string;
+	priceListCategoryFilterAll: string;
+	priceListCategoryFilterService: string;
+	priceListCategoryFilterPrivate: string;
+	priceListCloseButton: string;
+	priceListSaveButton: string;
+	priceListProcentOption: string;
+	priceListIndexOption: string;
+	priceListSekOption: string;
+	priceList2DecimalOption: string;
+	priceListHelKronaOption: string;
+	priceListOkaOption: string;
+	priceListMinskaOption: string;
+	genericLoading: string;
 };
 
 export type CommonTranslation = {

@@ -167,7 +167,7 @@ export function CreateSupplierPage() {
 			const result = await createSupplierAPIAction(fullData);
 			setSupplierId(result.id);
 			showToast("success", t(localizationConstants.supplierCreatedSuccess));
-			router.push("/tools/register");
+			router.push("/tools/register?tab=supplier");
 		} catch {
 			showToast("error", t(localizationConstants.supplierCreateError));
 		} finally {
@@ -176,7 +176,7 @@ export function CreateSupplierPage() {
 	});
 
 	const handleCancel = () => {
-		router.push("/tools/register");
+		router.push("/tools/register?tab=supplier");
 	};
 
 	const handleSaveDraft = async () => {
@@ -201,7 +201,8 @@ export function CreateSupplierPage() {
 				<div className="mb-2 flex items-center gap-2">
 					<button
 						type="button"
-						onClick={() => router.back()}
+						aria-label="Go back to register"
+						onClick={() => router.push("/tools/register?tab=supplier")}
 						className="rounded-md p-1 hover:bg-slate-100"
 					>
 						<ArrowLeft className="h-5 w-5 text-slate-700" />
