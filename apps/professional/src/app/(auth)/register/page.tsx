@@ -62,7 +62,7 @@ export default function RegisterPage() {
 		const needsSubscription = coerceRequiresSubscription(
 			verifyResult.data?.requires_subscription,
 		);
-		router.push(needsSubscription ? "/manage-plans" : "/dashboard");
+		router.push(needsSubscription ? "/manage-plans" : "/home");
 	};
 
 	return (

@@ -37,6 +37,7 @@ export type SubCategory = {
   isActive: boolean;
   count: number;
   tags: string[];
+  mappedTags?: { id: string; name: string }[];
 };
 
 export type CategoryGroup = {

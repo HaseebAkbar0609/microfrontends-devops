@@ -35,7 +35,7 @@ export default function MyCompaniesPage() {
 
   const handleCompanyLogin = (company: ProfessionalRow) => {
     authStorage.setCompanyData(company);
-    router.push("/dashboard");
+    router.push("/home");
   };
 
   return (

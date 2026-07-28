@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import type { LeadsListApiResponse, LeadsListQueryParams, LeadsListResult } from "@/features/leads/types";
 import { mapLeadListItemToRow } from "@/api-actions/leads/shared";
 
-const LEADS_LIST_PATH = "/api/v1/lead/list";
+const LEADS_LIST_PATH = "/api/v1/teams/lead/list";
 const DEFAULT_PAGE_SIZE = 10;
 
 export async function listLeadsAPIAction(

@@ -1,18 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Plus, ChevronDown, ArrowLeftRight, CirclePlus, X } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Translate } from "@/utils/translation/translate";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ToggleSwitch } from "@/features/leads/settings/components/common/ToggleSwitch";
 import { AddCategoryModal } from "@/features/leads/settings/components/AddCategoryModal";
+import { AddGroupModal } from "./AddGroupModal";
 import localizationConstants from "@/utils/translation/constants";
-import {
-  customerCategoryGroups,
-  professionalCategoryGroups,
-} from "@/features/leads/settings/constants";
+import { showToast } from "@/lib/toast";
 import type { CategoryGroup, SubCategory } from "@/features/leads/settings/types";
+import {
+  fetchCustomerCategories,
+  fetchProfessionalCategories,
+  toggleCustomerSubcategoryStatus,
+  toggleProfessionalSubcategoryStatus,
+  syncProfessionalSubcategories,
+  syncCustomerSubcategories,
+  createCustomerSubcategory,
+  createProfessionalSubcategory,
+} from "@/features/leads/settings/api/categoriesApi";
 
 type ModalTarget =
   | { panel: "customers" | "professionals"; groupId: string; subCatId?: string; initialTags: string[] }
@@ -191,7 +200,7 @@ function CategoryPanel({
   onAddGroup: () => void;
   borderClassName: string;
 }) {
-  const total = groups.reduce((sum, g) => sum + g.subCategories.length, 0);
+  const total = groups.length;
 
   return (
     <div className={cn("flex flex-1 flex-col overflow-hidden border border-slate-200 bg-white", borderClassName)}>
@@ -234,16 +243,56 @@ function CategoryPanel({
 
 // ─── Main section ──────────────────────────────────────────────────────────────
 
+function mapApiToCategoryGroups(apiData: Record<string, unknown>[]): CategoryGroup[] {
+  if (!Array.isArray(apiData)) return [];
+  return apiData.map((group: Record<string, unknown>) => ({
+    id: group.id as string,
+    name: group.name as string,
+    subCategories: ((group.subcategories as Record<string, unknown>[]) || []).map((sub: Record<string, unknown>) => {
+      const mapped = ((sub.mapped_categories as Record<string, unknown>[]) || []).map((m: Record<string, unknown>) => ({
+        id: m.id as string,
+        name: m.name as string,
+      }));
+      return {
+        id: sub.id as string,
+        name: sub.name as string,
+        isActive: (sub.is_active as boolean) ?? true,
+        count: mapped.length,
+        tags: mapped.map((m) => m.name),
+        mappedTags: mapped,
+      };
+    }),
+  }));
+}
+
 export function CategoriesSection() {
-  const [customers, setCustomers] = useState<CategoryGroup[]>(customerCategoryGroups);
-  const [professionals, setProfessionals] = useState<CategoryGroup[]>(professionalCategoryGroups);
-  const [openGroups, setOpenGroups] = useState<Set<string>>(
-    new Set(["renovation", "construction"])
-  );
-  const [openSubCats, setOpenSubCats] = useState<Set<string>>(
-    new Set(["bathroom", "carpentry"])
-  );
+  const queryClient = useQueryClient();
+
+  const { data: customerApiData } = useQuery({
+    queryKey: ["customer-categories"],
+    queryFn: fetchCustomerCategories,
+  });
+
+  const { data: professionalApiData } = useQuery({
+    queryKey: ["professional-categories"],
+    queryFn: fetchProfessionalCategories,
+  });
+
+  const customers = useMemo(() => mapApiToCategoryGroups(customerApiData || []), [customerApiData]);
+  const professionals = useMemo(() => mapApiToCategoryGroups(professionalApiData || []), [professionalApiData]);
+
+  // Expand the first group by default if it exists
+  const [openGroups, setOpenGroups] = useState<Set<string>>(new Set());
+  const [openSubCats, setOpenSubCats] = useState<Set<string>>(new Set());
   const [modal, setModal] = useState<ModalTarget>(null);
+  const [groupModalPanel, setGroupModalPanel] = useState<"customers" | "professionals" | null>(null);
+
+  // Initialize open groups once data loads
+  useEffect(() => {
+    if (customers.length > 0 && openGroups.size === 0) {
+      setOpenGroups(new Set([customers[0].id]));
+    }
+  }, [customers, openGroups.size]);
 
   const toggleGroup = (id: string) =>
     setOpenGroups((prev) => {
@@ -261,86 +310,146 @@ export function CategoriesSection() {
       return next;
     });
 
-  const getSetterFor = (panel: "customers" | "professionals") =>
-    panel === "customers" ? setCustomers : setProfessionals;
+  const toggleCustomerMutation = useMutation({
+    mutationFn: (data: { id: string; next: boolean }) => toggleCustomerSubcategoryStatus(data.id, data.next),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["customer-categories"] })
+  });
+
+  const toggleProfessionalMutation = useMutation({
+    mutationFn: (data: { id: string; next: boolean }) => toggleProfessionalSubcategoryStatus(data.id, data.next),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["professional-categories"] })
+  });
+
+  const syncCustomerMutation = useMutation({
+    mutationFn: (data: { professionalSubcategoryId: string; customerSubcategoryIds: string[] }) => 
+      syncCustomerSubcategories(data.professionalSubcategoryId, data.customerSubcategoryIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["professional-categories"] });
+      showToast("success", "Tags updated successfully");
+    }
+  });
+
+  const syncProfessionalMutation = useMutation({
+    mutationFn: (data: { customerSubcategoryId: string; professionalSubcategoryIds: string[] }) => 
+      syncProfessionalSubcategories(data.customerSubcategoryId, data.professionalSubcategoryIds),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customer-categories"] });
+      showToast("success", "Tags updated successfully");
+    }
+  });
+
+  const createCustomerSubMutation = useMutation({
+    mutationFn: (data: { categoryId: string; name: string }) => createCustomerSubcategory(data.categoryId, data.name),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["customer-categories"] });
+      showToast("success", "Subcategory created successfully");
+    }
+  });
+
+  const createProfessionalSubMutation = useMutation({
+    mutationFn: (data: { categoryId: string; name: string }) => createProfessionalSubcategory(data.categoryId, data.name),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["professional-categories"] });
+      showToast("success", "Subcategory created successfully");
+    }
+  });
 
   const toggleSubCatActive = (
     panel: "customers" | "professionals",
     groupId: string,
     subId: string,
     next: boolean
-  ) =>
-    getSetterFor(panel)((prev) =>
-      prev.map((g) =>
-        g.id !== groupId
-          ? g
-          : {
-              ...g,
-              subCategories: g.subCategories.map((s) =>
-                s.id !== subId ? s : { ...s, isActive: next }
-              ),
-            }
-      )
-    );
+  ) => {
+    if (panel === "customers") toggleCustomerMutation.mutate({ id: subId, next });
+    else toggleProfessionalMutation.mutate({ id: subId, next });
+  };
 
   const removeTag = (
     panel: "customers" | "professionals",
     groupId: string,
     subId: string,
-    tag: string
-  ) =>
-    getSetterFor(panel)((prev) =>
-      prev.map((g) =>
-        g.id !== groupId
-          ? g
-          : {
-              ...g,
-              subCategories: g.subCategories.map((s) =>
-                s.id !== subId ? s : { ...s, tags: s.tags.filter((t) => t !== tag) }
-              ),
-            }
-      )
-    );
+    tagToRemove: string
+  ) => {
+    const group = (panel === "customers" ? customers : professionals).find(g => g.id === groupId);
+    const sub = group?.subCategories.find(s => s.id === subId);
+    if (!sub) return;
+    
+    let remainingTargetIds: string[] = [];
+    if (sub.mappedTags && sub.mappedTags.length > 0) {
+      remainingTargetIds = sub.mappedTags
+        .filter(t => t.id !== tagToRemove && t.name !== tagToRemove)
+        .map(t => t.id);
+    } else {
+      const remainingNames = sub.tags.filter(t => t !== tagToRemove);
+      saveModalTagsForSubcategory(panel, subId, remainingNames);
+      return;
+    }
+
+    if (panel === "customers") {
+      syncProfessionalMutation.mutate({ customerSubcategoryId: subId, professionalSubcategoryIds: remainingTargetIds });
+    } else {
+      syncCustomerMutation.mutate({ professionalSubcategoryId: subId, customerSubcategoryIds: remainingTargetIds });
+    }
+  };
+
+  const saveModalTagsForSubcategory = (panel: "customers" | "professionals", subCatId: string, tagInputs: string[]) => {
+    const oppositeApiData = panel === "customers" ? professionalApiData : customerApiData;
+    
+    const subcategoryById = new Map<string, string>();
+    const subcategoryByName = new Map<string, string>();
+
+    for (const group of (oppositeApiData || [])) {
+      for (const sub of (group.subcategories || [])) {
+        if (sub.id && sub.name) {
+          subcategoryById.set(sub.id, sub.id);
+          subcategoryByName.set(sub.name.trim().toLowerCase(), sub.id);
+        }
+      }
+    }
+
+    const targetIds: string[] = [];
+    const missingTags: string[] = [];
+
+    for (const input of tagInputs) {
+      const cleanInput = input.trim();
+      if (!cleanInput) continue;
+
+      if (subcategoryById.has(cleanInput)) {
+        targetIds.push(cleanInput);
+      } else if (subcategoryByName.has(cleanInput.toLowerCase())) {
+        targetIds.push(subcategoryByName.get(cleanInput.toLowerCase())!);
+      } else {
+        missingTags.push(cleanInput);
+      }
+    }
+
+    if (missingTags.length > 0) {
+      showToast("error", `Could not add tags: ${missingTags.join(", ")}. They must match an existing Subcategory on the other panel.`);
+      return;
+    }
+
+    if (panel === "customers") {
+      syncProfessionalMutation.mutate({ customerSubcategoryId: subCatId, professionalSubcategoryIds: targetIds });
+    } else {
+      syncCustomerMutation.mutate({ professionalSubcategoryId: subCatId, customerSubcategoryIds: targetIds });
+    }
+  };
 
   const saveModalTags = (savedTags: string[]) => {
     if (!modal) return;
     const { panel, groupId, subCatId } = modal;
 
     if (subCatId) {
-      // Updating tags for an existing sub-category
-      getSetterFor(panel)((prev) =>
-        prev.map((g) =>
-          g.id !== groupId
-            ? g
-            : {
-                ...g,
-                subCategories: g.subCategories.map((s) =>
-                  s.id !== subCatId ? s : { ...s, tags: savedTags }
-                ),
-              }
-        )
-      );
+      saveModalTagsForSubcategory(panel, subCatId, savedTags);
     } else {
       // Adding new sub-categories to a group
-      getSetterFor(panel)((prev) =>
-        prev.map((g) =>
-          g.id !== groupId
-            ? g
-            : {
-                ...g,
-                subCategories: [
-                  ...g.subCategories,
-                  ...savedTags.map((name, i) => ({
-                    id: `${groupId}-${Date.now()}-${i}`,
-                    name,
-                    isActive: true,
-                    count: 0,
-                    tags: [],
-                  })),
-                ],
-              }
-        )
-      );
+      for (const name of savedTags) {
+        if (panel === "customers") {
+          createCustomerSubMutation.mutate({ categoryId: groupId, name });
+        } else {
+          createProfessionalSubMutation.mutate({ categoryId: groupId, name });
+        }
+      }
     }
   };
 
@@ -367,7 +476,7 @@ export function CategoriesSection() {
           onAddSubCategory={(groupId) =>
             setModal({ panel: "customers", groupId, initialTags: [] })
           }
-          onAddGroup={() => {}}
+          onAddGroup={() => setGroupModalPanel("customers")}
           borderClassName="rounded-[10px_0px_10px_10px]"
         />
 
@@ -396,7 +505,7 @@ export function CategoriesSection() {
           onAddSubCategory={(groupId) =>
             setModal({ panel: "professionals", groupId, initialTags: [] })
           }
-          onAddGroup={() => {}}
+          onAddGroup={() => setGroupModalPanel("professionals")}
           borderClassName="rounded-[0px_10px_10px_10px]"
         />
       </div>
@@ -409,6 +518,15 @@ export function CategoriesSection() {
         }}
         initialTags={modal?.initialTags ?? []}
         onSave={saveModalTags}
+      />
+
+      {/* Add Group Modal */}
+      <AddGroupModal
+        open={groupModalPanel !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) setGroupModalPanel(null);
+        }}
+        panel={groupModalPanel}
       />
     </div>
   );
