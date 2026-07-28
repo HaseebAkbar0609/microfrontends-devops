@@ -248,13 +248,20 @@ function mapApiToCategoryGroups(apiData: Record<string, unknown>[]): CategoryGro
   return apiData.map((group: Record<string, unknown>) => ({
     id: group.id as string,
     name: group.name as string,
-    subCategories: ((group.subcategories as Record<string, unknown>[]) || []).map((sub: Record<string, unknown>) => ({
-      id: sub.id as string,
-      name: sub.name as string,
-      isActive: (sub.is_active as boolean) ?? true,
-      count: ((sub.mapped_categories as Record<string, unknown>[]) || []).length,
-      tags: ((sub.mapped_categories as Record<string, unknown>[]) || []).map((m: Record<string, unknown>) => m.name as string),
-    })),
+    subCategories: ((group.subcategories as Record<string, unknown>[]) || []).map((sub: Record<string, unknown>) => {
+      const mapped = ((sub.mapped_categories as Record<string, unknown>[]) || []).map((m: Record<string, unknown>) => ({
+        id: m.id as string,
+        name: m.name as string,
+      }));
+      return {
+        id: sub.id as string,
+        name: sub.name as string,
+        isActive: (sub.is_active as boolean) ?? true,
+        count: mapped.length,
+        tags: mapped.map((m) => m.name),
+        mappedTags: mapped,
+      };
+    }),
   }));
 }
 
@@ -361,50 +368,66 @@ export function CategoriesSection() {
     panel: "customers" | "professionals",
     groupId: string,
     subId: string,
-    tag: string
+    tagToRemove: string
   ) => {
-    // When removing a tag, we just need to get the current tags, filter out this one, 
-    // and sync the remaining ones.
     const group = (panel === "customers" ? customers : professionals).find(g => g.id === groupId);
     const sub = group?.subCategories.find(s => s.id === subId);
     if (!sub) return;
     
-    const remainingTags = sub.tags.filter(t => t !== tag);
-    saveModalTagsForSubcategory(panel, subId, remainingTags);
+    let remainingTargetIds: string[] = [];
+    if (sub.mappedTags && sub.mappedTags.length > 0) {
+      remainingTargetIds = sub.mappedTags
+        .filter(t => t.id !== tagToRemove && t.name !== tagToRemove)
+        .map(t => t.id);
+    } else {
+      const remainingNames = sub.tags.filter(t => t !== tagToRemove);
+      saveModalTagsForSubcategory(panel, subId, remainingNames);
+      return;
+    }
+
+    if (panel === "customers") {
+      syncProfessionalMutation.mutate({ customerSubcategoryId: subId, professionalSubcategoryIds: remainingTargetIds });
+    } else {
+      syncCustomerMutation.mutate({ professionalSubcategoryId: subId, customerSubcategoryIds: remainingTargetIds });
+    }
   };
 
-  const saveModalTagsForSubcategory = (panel: "customers" | "professionals", subCatId: string, tagNames: string[]) => {
+  const saveModalTagsForSubcategory = (panel: "customers" | "professionals", subCatId: string, tagInputs: string[]) => {
     const oppositeApiData = panel === "customers" ? professionalApiData : customerApiData;
     
-    // Resolve names to UUIDs on the opposite panel
-    const targetIds: string[] = [];
-    const missingTags: string[] = [];
-    
-    for (const tagName of tagNames) {
-      const cleanName = tagName.trim();
-      if (!cleanName) continue;
-      
-      let foundId = null;
-      for (const group of (oppositeApiData || [])) {
-        const match = (group.subcategories || []).find((s: Record<string, unknown>) => (s.name as string).toLowerCase() === cleanName.toLowerCase());
-        if (match) {
-          foundId = match.id;
-          break;
+    const subcategoryById = new Map<string, string>();
+    const subcategoryByName = new Map<string, string>();
+
+    for (const group of (oppositeApiData || [])) {
+      for (const sub of (group.subcategories || [])) {
+        if (sub.id && sub.name) {
+          subcategoryById.set(sub.id, sub.id);
+          subcategoryByName.set(sub.name.trim().toLowerCase(), sub.id);
         }
       }
-      
-      if (foundId) {
-        targetIds.push(foundId);
+    }
+
+    const targetIds: string[] = [];
+    const missingTags: string[] = [];
+
+    for (const input of tagInputs) {
+      const cleanInput = input.trim();
+      if (!cleanInput) continue;
+
+      if (subcategoryById.has(cleanInput)) {
+        targetIds.push(cleanInput);
+      } else if (subcategoryByName.has(cleanInput.toLowerCase())) {
+        targetIds.push(subcategoryByName.get(cleanInput.toLowerCase())!);
       } else {
-        missingTags.push(cleanName);
+        missingTags.push(cleanInput);
       }
     }
-    
+
     if (missingTags.length > 0) {
-      showToast("error", `Could not add tags: ${missingTags.join(", ")}. They must exactly match an existing Subcategory (not a Group) on the other panel.`);
-      return; // Stop execution, do not sync or show success message
+      showToast("error", `Could not add tags: ${missingTags.join(", ")}. They must match an existing Subcategory on the other panel.`);
+      return;
     }
-    
+
     if (panel === "customers") {
       syncProfessionalMutation.mutate({ customerSubcategoryId: subCatId, professionalSubcategoryIds: targetIds });
     } else {

@@ -32,9 +32,9 @@ type LeadSettingsForm = {
 	isActive: boolean;
 };
 
-const DEFAULT_OWNER_EMAIL = "ava.wright@gmail.com";
-const DEFAULT_MAX_COMPANIES = 5;
-const DEFAULT_RESHIPMENT_DAYS = "14";
+const DEFAULT_OWNER_EMAIL = process.env.NEXT_PUBLIC_DEFAULT_OWNER_EMAIL || "ava.wright@gmail.com";
+const DEFAULT_MAX_COMPANIES = process.env.NEXT_PUBLIC_DEFAULT_MAX_COMPANIES ? Number(process.env.NEXT_PUBLIC_DEFAULT_MAX_COMPANIES) : 5;
+const DEFAULT_RESHIPMENT_DAYS = process.env.NEXT_PUBLIC_DEFAULT_RESHIPMENT_DAYS || "14";
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validateEmail(value: string, invalidMessage: string): string {

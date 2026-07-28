@@ -1,4 +1,18 @@
+import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
+
+export const RoutingRuleApiSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  description: z.string().optional().nullable(),
+  is_active: z.boolean().optional().default(true),
+  order_index: z.number().optional().default(0),
+  criteria: z.record(z.unknown()).optional().nullable(),
+});
+
+export const RoutingRulesResponseSchema = z.object({
+  data: z.array(RoutingRuleApiSchema).optional().default([]),
+});
 
 export interface RoutingRuleApiData {
   id: string;
@@ -10,10 +24,11 @@ export interface RoutingRuleApiData {
 }
 
 export const fetchRoutingRules = async (): Promise<RoutingRuleApiData[]> => {
-  const { data } = await axiosInstance.get<{ data: RoutingRuleApiData[] }>(
+  const { data } = await axiosInstance.get(
     "/api/v1/teams/leads/routing-rules"
   );
-  return data.data;
+  const parsed = RoutingRulesResponseSchema.parse(data);
+  return (parsed.data || []) as RoutingRuleApiData[];
 };
 
 export const createRoutingRule = async (

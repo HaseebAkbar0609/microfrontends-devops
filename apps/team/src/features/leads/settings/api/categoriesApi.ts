@@ -1,5 +1,4 @@
-"use client";
-
+import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 
 // Customer Category Endpoints
@@ -18,15 +17,41 @@ const CREATE_PROFESSIONAL_CATEGORY_PATH = "/api/v1/teams/professionals";
 const CREATE_CUSTOMER_SUBCATEGORY_PATH = "/api/v1/teams/customers/subcategories";
 const CREATE_PROFESSIONAL_SUBCATEGORY_PATH = "/api/v1/teams/professionals/subcategories";
 
+export const MappedCategorySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
 
-export async function fetchCustomerCategories() {
+export const SubCategoryApiSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  is_active: z.boolean().optional(),
+  mapped_categories: z.array(MappedCategorySchema).optional().nullable(),
+});
+
+export const CategoryGroupApiSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  subcategories: z.array(SubCategoryApiSchema).optional().nullable(),
+});
+
+export const CategoriesApiResponseSchema = z.object({
+  data: z.array(CategoryGroupApiSchema).optional().nullable(),
+});
+
+export type CategoryGroupApiData = z.infer<typeof CategoryGroupApiSchema>;
+export type SubCategoryApiData = z.infer<typeof SubCategoryApiSchema>;
+
+export async function fetchCustomerCategories(): Promise<CategoryGroupApiData[]> {
   const response = await axiosInstance.get(CUSTOMER_CATEGORIES_PATH);
-  return response.data?.data || [];
+  const parsed = CategoriesApiResponseSchema.parse(response.data);
+  return parsed.data || [];
 }
 
-export async function fetchProfessionalCategories() {
+export async function fetchProfessionalCategories(): Promise<CategoryGroupApiData[]> {
   const response = await axiosInstance.get(PROFESSIONAL_CATEGORIES_PATH);
-  return response.data?.data || [];
+  const parsed = CategoriesApiResponseSchema.parse(response.data);
+  return parsed.data || [];
 }
 
 export async function toggleCustomerSubcategoryStatus(id: string, isActive: boolean) {
