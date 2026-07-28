@@ -1361,7 +1361,6 @@ export const enOffer: OfferTranslation = {
 	offerSendCreateOffer: "Create Offer",
 	offerSendCreateCalculation: "Create calculation",
 	offerSendPreliminaryBudgetPlaceholder: "Enter preliminary budget price",
-	offerSendOfferDatePlaceholder: "Enter offer date latest",
 };
 
 export const enCommon: CommonTranslation = {

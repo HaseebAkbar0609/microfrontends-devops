@@ -54,8 +54,9 @@ export function OfferSendConfirmationPanel({
           </p>
           <Input
             value={budget}
-            onChange={(e) => setBudget(e.target.value)}
+            onChange={(e) => setBudget(e.target.value.replace(/[^0-9]/g, ""))}
             placeholder={t(localizationConstants.offerSendPreliminaryBudgetPlaceholder)}
+            inputMode="numeric"
             className="h-9 border-gray-200 bg-zinc-100 text-sm placeholder:text-zinc-400"
           />
         </div>
@@ -65,10 +66,10 @@ export function OfferSendConfirmationPanel({
             <Translate text={localizationConstants.offerSendOfferDateLabel} />
           </p>
           <Input
+            type="date"
             value={offerDate}
             onChange={(e) => setOfferDate(e.target.value)}
-            placeholder={t(localizationConstants.offerSendOfferDatePlaceholder)}
-            className="h-9 border-gray-200 bg-zinc-100 text-sm placeholder:text-zinc-400"
+            className="h-9 border-gray-200 bg-zinc-100 text-sm"
           />
         </div>
       </div>
