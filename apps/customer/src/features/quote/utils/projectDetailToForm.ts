@@ -368,15 +368,15 @@ export function mapProjectDetailToFormHydration(
 		),
 		projectCity: s(
 			projectDetails?.city ??
-				row.project_contact_city ??
-				row.project_city ??
-				row.contact_city,
+			row.project_contact_city ??
+			row.project_city ??
+			row.contact_city,
 		),
 		projectPostalCode: s(
 			projectDetails?.postal_code ??
-				row.project_contact_postal_code ??
-				row.project_postal_code ??
-				row.contact_postal_code,
+			row.project_contact_postal_code ??
+			row.project_postal_code ??
+			row.contact_postal_code,
 		),
 		directions: s(projectDetails?.directions ?? row.directions),
 		projectCityName: s(
