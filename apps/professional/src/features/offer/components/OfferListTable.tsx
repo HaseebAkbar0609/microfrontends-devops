@@ -140,7 +140,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 							<Button
 								variant="ghost"
 								className="h-10 px-4 bg-secondary-foreground font-medium text-secondary"
-								onClick={() => router.push(`${quote.id}`)}
+								onClick={() => router.push(`/module/business/offer/${quote.id}/request`)}
 							>
 								<Translate
 									text={localizationConstants.viewProject}

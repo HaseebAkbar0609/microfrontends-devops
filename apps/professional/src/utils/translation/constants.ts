@@ -1087,6 +1087,8 @@ export type OfferTranslation = {
 	offerSendSave: string;
 	offerSendCreateOffer: string;
 	offerSendCreateCalculation: string;
+	offerSendPreliminaryBudgetPlaceholder: string;
+	offerSendOfferDatePlaceholder: string;
 };
 
 export type RegisterTranslation = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { User, Info, FolderOpen } from "lucide-react";
+import Image from "next/image";
 
 import { OfferSendData } from "../types";
 import localizationConstants from "@/utils/translation/constants";
@@ -25,7 +25,7 @@ export function OfferSendPage({ data }: OfferSendPageProps) {
       />
 
       <div className="mr-auto w-[calc(100%-24px)] px-6 pb-6 pt-4 ml-6">
-        <div className="grid grid-cols-1 gap-6  lg:grid-cols-[1fr_350px] 2xl:grid-cols-[1fr_400px]">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_333px]">
           <div className="space-y-6">
             <OfferSendSection
               title={
@@ -33,7 +33,7 @@ export function OfferSendPage({ data }: OfferSendPageProps) {
                   text={localizationConstants.offerSendCustomerDetails}
                 />
               }
-              icon={<User className="h-4 w-4" />}
+              icon={<Image src="/assets/icons/personal-info.svg" alt="" width={20} height={20} />}
               defaultOpen
             >
               <OfferSendCustomerDetails customer={data.customer} />
@@ -43,7 +43,7 @@ export function OfferSendPage({ data }: OfferSendPageProps) {
               title={
                 <Translate text={localizationConstants.offerSendDescription} />
               }
-              icon={<Info className="h-4 w-4" />}
+              icon={<Image src="/assets/icons/info.svg" alt="" width={20} height={20} />}
               defaultOpen
             >
               <p className="whitespace-pre-line text-sm leading-relaxed text-slate-600">
@@ -57,7 +57,7 @@ export function OfferSendPage({ data }: OfferSendPageProps) {
                   text={localizationConstants.offerSendDocumentsAndImages}
                 />
               }
-              icon={<FolderOpen className="h-4 w-4" />}
+              icon={<Image src="/assets/icons/folders.svg" alt="" width={20} height={20} />}
               defaultOpen
             >
               <OfferSendDocumentsAndImages data={data} />

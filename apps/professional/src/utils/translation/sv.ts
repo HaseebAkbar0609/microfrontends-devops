@@ -1033,6 +1033,8 @@ export const svOffer: OfferTranslation = {
 	offerSendSave: "Spara",
 	offerSendCreateOffer: "Skapa offert",
 	offerSendCreateCalculation: "Skapa beräkning",
+	offerSendPreliminaryBudgetPlaceholder: "Ange preliminärt budgetpris",
+	offerSendOfferDatePlaceholder: "Ange senaste offertdatum",
 };
 
 export const svMyPage: MyPagesTranslation = {

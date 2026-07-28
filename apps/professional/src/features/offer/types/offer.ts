@@ -27,39 +27,6 @@ export type OfferConfirmationModalProps = {
   onConfirm?: () => void;
 };
 
-export interface OfferDetailHeaderProps {
-  data: OfferDetailData;
-}
-
-export type OfferDetailImage = {
-  id: string;
-  label: string;
-};
-
-export type OfferDetailFile = {
-  id: string;
-  label: string;
-};
-
-export type OfferDetailDrawing = {
-  id: string;
-  label: string;
-};
-
-export type OfferDetailData = {
-  id: string;
-  postedDate: string;
-  titleKey: string;
-  type: string;
-  isExpress: boolean;
-  locations: string[];
-  images: OfferDetailImage[];
-  extraImagesCount: number;
-  documents: OfferDetailFile[];
-  drawings: OfferDetailDrawing[];
-  description: string;
-};
-
 export interface OfferList {
   id: string;
   idNumber: string;
@@ -75,10 +42,6 @@ export interface OfferList {
 export interface OfferListColumn {
   label: string;
   field: string;
-}
-
-export interface OfferDetailBodyProps {
-  data: OfferDetailData;
 }
 
 export type OfferSendCustomer = {

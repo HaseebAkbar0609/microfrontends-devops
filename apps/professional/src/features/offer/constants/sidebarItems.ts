@@ -30,7 +30,7 @@ export const goToItems: DynamicSubSidebarItem[] = [
 	{
 		id: "quote-1001",
 		label: "Offert nr 1001",
-		href: "/module/business/offer/1001",
+		href: "/module/business/offer/1001/request",
 		icon: Folder,
 	},
 ];
