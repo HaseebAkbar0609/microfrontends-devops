@@ -1,6 +1,7 @@
 import React from "react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { cn } from "@/lib/utils";
 
 export const WidgetRow = ({
 	label,
@@ -105,6 +106,71 @@ export const WidgetErrorState = ({ message }: { message: string }) => (
 	<p className="py-4 text-center text-sm text-red-600" role="alert">
 		<Translate text={message} />
 	</p>
+);
+
+export const WidgetCalendarPreview = ({
+	title,
+	weekDays,
+	days,
+	highlights = {},
+}: {
+	title?: string;
+	weekDays: string[];
+	days: (number | null)[];
+	highlights?: Record<number, string>;
+}) => (
+	<div className="rounded-md border border-slate-200 bg-white p-2.5">
+		{title && (
+			<p className="mb-1.5 text-center text-[11px] font-medium text-slate-700">
+				<Translate text={title} />
+			</p>
+		)}
+		<div className="grid grid-cols-7 gap-0.5 text-center">
+			{weekDays.map((day, index) => (
+				<span
+					key={`${day}-${index}`}
+					className="text-[9px] font-semibold text-slate-500"
+				>
+					{day}
+				</span>
+			))}
+			{days.map((day, index) => (
+				<span
+					key={`${day ?? "blank"}-${index}`}
+					className={cn(
+						"flex h-6 items-center justify-center rounded text-[10px]",
+						day === null
+							? "text-transparent"
+							: highlights[day]
+								? `${highlights[day]} font-semibold text-white`
+								: "text-slate-700",
+					)}
+				>
+					{day ?? "."}
+				</span>
+			))}
+		</div>
+	</div>
+);
+
+export const WidgetMapPreview = ({
+	pins,
+}: {
+	pins: { id: string; label: string; color: string; x: number; y: number }[];
+}) => (
+	<div className="relative h-24 overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+		{pins.map((pin) => (
+			<span
+				key={pin.id}
+				title={pin.label}
+				className={cn(
+					"absolute h-2.5 w-2.5 rounded-full ring-2 ring-white",
+					pin.color,
+				)}
+				style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+			/>
+		))}
+	</div>
 );
 
 export const WidgetImagePlaceholder = ({
