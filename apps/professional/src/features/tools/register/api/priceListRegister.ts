@@ -4,8 +4,10 @@ import type {
 	PriceListRegisterRow,
 	GetPriceListRegisterListParams,
 	GetPriceListRegisterListResponse,
+	CreatePriceListFormData,
+	PriceListArticleRow,
 } from "../types";
-import { MOCK_PRICE_LIST_REGISTER_DATA } from "../mockdata/priceLists";
+import { MOCK_PRICE_LIST_REGISTER_DATA, MOCK_ARTICLE_DATA } from "../mockdata/priceLists";
 
 export type { PriceListRegisterRow };
 
@@ -146,4 +148,96 @@ export async function deletePriceListAPIAction(id: string): Promise<boolean> {
 		}
 		return false;
 	}
+}
+
+const mapPriceListToApi = (data: CreatePriceListFormData): Record<string, unknown> => ({
+	kod: data.kod || null,
+	name: data.benamning,
+	date: data.datum,
+	created_by: data.skapadAv,
+	comment: data.kommentar || null,
+	category: data.kategori,
+	unit: data.enhet,
+	customer: data.kund || null,
+	supplier: data.leverantor || null,
+});
+
+export async function createPriceListAPIAction(
+	data: CreatePriceListFormData,
+	selectedArticles: PriceListArticleRow[],
+): Promise<{ id: string }> {
+	const payload = {
+		...mapPriceListToApi(data),
+		articles: selectedArticles.map((a) => ({
+			article_id: a.id,
+			price: a.outPriceListA,
+		})),
+	};
+	try {
+		const res = await axiosInstance.post(API_PATH.PRICE_LISTS.CREATE, payload);
+		return { id: String(res.data?.data?.id ?? "") };
+	} catch (error) {
+		if (process.env.NODE_ENV !== "production") {
+			console.warn("[createPriceListAPIAction] API request failed:", error);
+		}
+		throw error;
+	}
+}
+
+const mapArticleFromApi = (item: Record<string, unknown>): PriceListArticleRow => ({
+	id: String(item.id ?? ""),
+	articleNo: String(item.article_no ?? item.articleNo ?? ""),
+	benamning: String(item.description ?? item.benamning ?? ""),
+	outPriceListA: String(item.out_price_list_a ?? item.outPriceListA ?? "0"),
+	calcCost: String(item.calculated_cost ?? item.calculatedCost ?? "0"),
+	stock: Number(item.stock ?? 0),
+	reserved: Number(item.reserved ?? 0),
+	selected: false,
+});
+
+export async function getAvailableArticlesAPIAction(params?: {
+	page?: number;
+	limit?: number;
+	search?: string;
+}): Promise<{ data: PriceListArticleRow[]; total: number; page: number; limit: number; totalPages: number }> {
+	try {
+		const res = await axiosInstance.get(API_PATH.ARTICLES.LIST, {
+			params: {
+				page: params?.page ?? 1,
+				limit: params?.limit ?? 50,
+				search: params?.search ?? "",
+			},
+		});
+		const items = res.data?.data?.items ?? res.data?.data;
+		if (Array.isArray(items)) {
+			return {
+				data: items.map(mapArticleFromApi),
+				total: res.data?.data?.total ?? items.length,
+				page: res.data?.data?.page ?? params?.page ?? 1,
+				limit: res.data?.data?.limit ?? params?.limit ?? 50,
+				totalPages: res.data?.data?.totalPages ?? 1,
+			};
+		}
+	} catch (error) {
+		if (process.env.NODE_ENV !== "production") {
+			console.warn("[getAvailableArticlesAPIAction] API request failed, falling back to mock data:", error);
+		}
+	}
+
+	const page = Math.max(1, params?.page ?? 1);
+	const limit = Math.max(1, params?.limit ?? 50);
+	const search = params?.search?.toLowerCase().trim();
+	let filtered = [...MOCK_ARTICLE_DATA];
+	if (search) {
+		filtered = filtered.filter(
+			(item) =>
+				item.articleNo.toLowerCase().includes(search) ||
+				item.benamning.toLowerCase().includes(search),
+		);
+	}
+	const total = filtered.length;
+	const totalPages = Math.ceil(total / limit) || 1;
+	const startIndex = (page - 1) * limit;
+	const paginatedData = filtered.slice(startIndex, startIndex + limit);
+	return { data: paginatedData, total, page, limit, totalPages };
 }

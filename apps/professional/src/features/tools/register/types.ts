@@ -607,3 +607,29 @@ export interface GetPriceListRegisterListResponse {
 	totalPages: number;
 }
 
+// Create Price List Schema (TFS-441)
+export const createPriceListSchema = z.object({
+	kod: z.string().optional(),
+	benamning: z.string().min(1, "validationPriceListNameRequired"),
+	datum: z.string().min(1, "validationPriceListDateRequired"),
+	skapadAv: z.string().min(1, "validationPriceListCreatedByRequired"),
+	kommentar: z.string().optional(),
+	kategori: z.string().min(1, "validationPriceListCategoryRequired"),
+	enhet: z.string().min(1, "validationPriceListUnitRequired"),
+	kund: z.string().optional(),
+	leverantor: z.string().optional(),
+});
+
+export type CreatePriceListFormData = z.infer<typeof createPriceListSchema>;
+
+export interface PriceListArticleRow {
+	id: string;
+	articleNo: string;
+	benamning: string;
+	outPriceListA: string;
+	calcCost: string;
+	stock: number;
+	reserved: number;
+	selected: boolean;
+}
+

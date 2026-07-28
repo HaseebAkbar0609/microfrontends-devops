@@ -12,6 +12,7 @@ import {
 	PenLine,
 	Save,
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -296,10 +297,12 @@ export function PriceListRegisterTable() {
 					</DropdownMenu>
 				</div>
 
-				<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
-					<Plus className="h-4 w-4" aria-hidden />
-					<Translate text={localizationConstants.registerNew} />
-				</Button>
+				<Link href="/tools/register/price-list/create-price-list" passHref>
+					<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
+						<Plus className="h-4 w-4" aria-hidden />
+						<Translate text={localizationConstants.registerNew} />
+					</Button>
+				</Link>
 			</div>
 
 			<DataTable
@@ -429,7 +432,7 @@ export function PriceListUpdatePanel() {
 			{/* Edit Dialog */}
 			<Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
 				<DialogContent
-					className="flex flex-col !left-[55%] !right-auto sm:!left-1/2 sm:!right-auto !top-1/2 !-translate-x-1/2 !-translate-y-1/2 w-[85vw] max-w-[340px] sm:w-full sm:max-w-[480px] md:max-w-[480px] lg:max-w-[480px] xl:max-w-[480px] bg-white h-[calc(100vh-2rem)] lg:h-auto xl:h-auto max-h-[calc(100vh-2rem)] lg:max-h-[90vh] xl:max-h-[85vh] p-0 gap-0 border-0 rounded-lg shadow-xl"
+					className="flex flex-col left-[55%]! right-auto! sm:left-1/2 sm:right-auto top-1/2 -translate-x-1/2! -translate-y-1/2! w-[85vw] max-w-340px sm:w-full sm:max-w-480px md:max-w-480px lg:max-w-480px xl:max-w-480px bg-white h-[calc(100vh-2rem)] lg:h-auto xl:h-auto max-h-[calc(100vh-2rem)] lg:max-h-[90vh] xl:max-h-[85vh] p-0 gap-0 border-0 rounded-lg shadow-xl"
 				>
 					<DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 shrink-0 border-b border-slate-100">
 						<DialogTitle className="flex items-center gap-2 text-base font-semibold text-zinc-950">
