@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { ModuleWidgetDashboard } from "@/features/widgetdashboard/components/ModuleWidgetDashboard";
 import {
 	PROJECT_INITIAL_WIDGETS,
@@ -7,12 +8,16 @@ import {
 } from "./ProjectDashboardConfig";
 import { PROJECT_SIDEBAR_ITEMS } from "../constants";
 
-const ProjectDashboard = () => (
-	<ModuleWidgetDashboard
-		widgetMap={PROJECT_SIDEBAR_WIDGET_MAP}
-		initialWidgets={PROJECT_INITIAL_WIDGETS}
-		sidebarItems={PROJECT_SIDEBAR_ITEMS}
-	/>
-);
+const ProjectDashboard = () => {
+	const initialWidgets = useMemo(() => PROJECT_INITIAL_WIDGETS, []);
+
+	return (
+		<ModuleWidgetDashboard
+			widgetMap={PROJECT_SIDEBAR_WIDGET_MAP}
+			initialWidgets={initialWidgets}
+			sidebarItems={PROJECT_SIDEBAR_ITEMS}
+		/>
+	);
+};
 
 export default ProjectDashboard;

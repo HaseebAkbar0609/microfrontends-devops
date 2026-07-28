@@ -108,6 +108,24 @@ export const WidgetErrorState = ({ message }: { message: string }) => (
 	</p>
 );
 
+export interface WidgetCalendarWeekDay {
+	id: string;
+	label: string;
+}
+
+export type WidgetCalendarDay = number | null;
+
+const getCalendarDayClassName = (
+	day: WidgetCalendarDay,
+	highlights: Record<number, string>,
+) => {
+	const base = "flex h-6 items-center justify-center rounded text-[10px]";
+	if (day === null) return cn(base, "text-transparent");
+	const highlight = highlights[day];
+	if (highlight) return cn(base, highlight, "font-semibold text-white");
+	return cn(base, "text-slate-700");
+};
+
 export const WidgetCalendarPreview = ({
 	title,
 	weekDays,
@@ -115,8 +133,8 @@ export const WidgetCalendarPreview = ({
 	highlights = {},
 }: {
 	title?: string;
-	weekDays: string[];
-	days: (number | null)[];
+	weekDays: WidgetCalendarWeekDay[];
+	days: WidgetCalendarDay[];
 	highlights?: Record<number, string>;
 }) => (
 	<div className="rounded-md border border-slate-200 bg-white p-2.5">
@@ -126,25 +144,18 @@ export const WidgetCalendarPreview = ({
 			</p>
 		)}
 		<div className="grid grid-cols-7 gap-0.5 text-center">
-			{weekDays.map((day, index) => (
+			{weekDays.map((day) => (
 				<span
-					key={`${day}-${index}`}
+					key={day.id}
 					className="text-[9px] font-semibold text-slate-500"
 				>
-					{day}
+					{day.label}
 				</span>
 			))}
 			{days.map((day, index) => (
 				<span
-					key={`${day ?? "blank"}-${index}`}
-					className={cn(
-						"flex h-6 items-center justify-center rounded text-[10px]",
-						day === null
-							? "text-transparent"
-							: highlights[day]
-								? `${highlights[day]} font-semibold text-white`
-								: "text-slate-700",
-					)}
+					key={day === null ? `blank-${index}` : `day-${day}`}
+					className={getCalendarDayClassName(day, highlights)}
 				>
 					{day ?? "."}
 				</span>
@@ -153,11 +164,15 @@ export const WidgetCalendarPreview = ({
 	</div>
 );
 
-export const WidgetMapPreview = ({
-	pins,
-}: {
-	pins: { id: string; label: string; color: string; x: number; y: number }[];
-}) => (
+export interface WidgetMapPin {
+	id: string;
+	label: string;
+	color: string;
+	x: number;
+	y: number;
+}
+
+export const WidgetMapPreview = ({ pins }: { pins: WidgetMapPin[] }) => (
 	<div className="relative h-24 overflow-hidden rounded-md border border-slate-200 bg-slate-100">
 		{pins.map((pin) => (
 			<span

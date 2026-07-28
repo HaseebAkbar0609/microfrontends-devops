@@ -39,7 +39,11 @@ export const DashboardWidget = ({
           <Icon size={20} className="text-foreground" />
         </div>
         <CardAction className="self-center">
-          <button onClick={onMenuClick} className="text-foreground">
+          <button
+            type="button"
+            onClick={onMenuClick}
+            className="text-foreground"
+          >
             <MoreVertical size={20} />
           </button>
         </CardAction>
