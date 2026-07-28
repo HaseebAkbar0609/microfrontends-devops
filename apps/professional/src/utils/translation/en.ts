@@ -1360,6 +1360,7 @@ export const enOffer: OfferTranslation = {
 	offerSendSave: "Save",
 	offerSendCreateOffer: "Create Offer",
 	offerSendCreateCalculation: "Create calculation",
+	offerSendPreliminaryBudgetPlaceholder: "Enter preliminary budget price",
 };
 
 export const enCommon: CommonTranslation = {
