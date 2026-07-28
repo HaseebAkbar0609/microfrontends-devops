@@ -194,7 +194,7 @@ export function CreateCustomerPage() {
 			const result = await createCustomerAPIAction(fullData);
 			setCustomerId(result.id);
 			showToast("success", t(localizationConstants.customerCreatedSuccess));
-			router.push("/tools/register");
+			router.push("/tools/register?tab=kund");
 		} catch {
 			showToast("error", t(localizationConstants.customerCreateError));
 		} finally {
@@ -203,7 +203,7 @@ export function CreateCustomerPage() {
 	});
 
 	const handleCancel = () => {
-		router.push("/tools/register");
+		router.push("/tools/register?tab=kund");
 	};
 
 	const handleSaveDraft = async () => {
@@ -233,7 +233,8 @@ export function CreateCustomerPage() {
 				<div className="mb-2 flex items-center gap-2">
 					<button
 						type="button"
-						onClick={() => router.back()}
+						aria-label="Go back to register"
+						onClick={() => router.push("/tools/register?tab=kund")}
 						className="rounded-md p-1 hover:bg-slate-100"
 					>
 						<ArrowLeft className="h-5 w-5 text-slate-700" />

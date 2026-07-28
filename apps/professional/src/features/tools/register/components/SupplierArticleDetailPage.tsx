@@ -205,7 +205,8 @@ export function SupplierArticleDetailPage() {
 				<Button
 					variant="ghost"
 					size="icon"
-					onClick={() => router.push("/tools/register/supplier-articles")}
+					aria-label="Go back to register"
+					onClick={() => router.push("/tools/register?tab=artikel&subtab=leverantorsArtiklar")}
 					className="h-8 w-8 shrink-0"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />

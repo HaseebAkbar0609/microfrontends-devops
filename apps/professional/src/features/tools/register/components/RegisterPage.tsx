@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { Suspense, useCallback } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import {
@@ -17,11 +18,41 @@ import { CustomerRegisterTable } from "./CustomerRegisterTable";
 import { SupplierRegisterTable } from "./SupplierRegisterTable";
 import { ArticleRegisterTable } from "./ArticleRegisterTable";
 import { SupplierArticleRegisterTable } from "./SupplierArticleRegisterTable";
+import { PriceListRegisterTable, PriceListUpdatePanel } from "./PriceListRegisterTable";
 
-export function RegisterPage() {
+function RegisterContent() {
 	const { t } = useTranslation();
-	const [selectedRegister, setSelectedRegister] = useState("kund");
-	const [articleSubTab, setArticleSubTab] = useState<"artikel" | "leverantorsArtiklar">("artikel");
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+
+	const selectedRegister = searchParams.get("tab") ?? "kund";
+	const articleSubTab = searchParams.get("subtab") ?? "artikel";
+	const priceListSubTab = searchParams.get("subtab") ?? "prislista";
+
+	const updateUrlTab = useCallback(
+		(newTab: string, newSubTab?: string) => {
+			const params = new URLSearchParams(searchParams.toString());
+			params.set("tab", newTab);
+			if (newSubTab) {
+				params.set("subtab", newSubTab);
+			} else {
+				params.delete("subtab");
+			}
+			router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+		},
+		[pathname, router, searchParams],
+	);
+
+	const handleRegisterChange = (value: string) => {
+		if (value === "artikel") {
+			updateUrlTab("artikel", "artikel");
+		} else if (value === "prislista") {
+			updateUrlTab("prislista", "prislista");
+		} else {
+			updateUrlTab(value);
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-6 p-6">
@@ -55,7 +86,7 @@ export function RegisterPage() {
 				<label className="text-xs font-medium text-slate-700">
 					<Translate text={localizationConstants.registerDropdownLabel} />
 				</label>
-				<Select value={selectedRegister} onValueChange={setSelectedRegister}>
+				<Select value={selectedRegister} onValueChange={handleRegisterChange}>
 					<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm text-slate-900 shadow-2xs">
 						<SelectValue placeholder={t(localizationConstants.selectRegisterPlaceholder)} />
 					</SelectTrigger>
@@ -78,6 +109,12 @@ export function RegisterPage() {
 						>
 							<Translate text={localizationConstants.articleOption} />
 						</SelectItem>
+						<SelectItem
+							value="prislista"
+							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
+						>
+							<Translate text={localizationConstants.priceListOption} />
+						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
@@ -89,7 +126,7 @@ export function RegisterPage() {
 						<>
 							<button
 								type="button"
-								onClick={() => setArticleSubTab("artikel")}
+								onClick={() => updateUrlTab("artikel", "artikel")}
 								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
 									articleSubTab === "artikel"
 										? "border-slate-900 text-slate-900"
@@ -100,7 +137,7 @@ export function RegisterPage() {
 							</button>
 							<button
 								type="button"
-								onClick={() => setArticleSubTab("leverantorsArtiklar")}
+								onClick={() => updateUrlTab("artikel", "leverantorsArtiklar")}
 								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
 									articleSubTab === "leverantorsArtiklar"
 										? "border-slate-900 text-slate-900"
@@ -108,6 +145,31 @@ export function RegisterPage() {
 								}`}
 							>
 								<Translate text={localizationConstants.supplierArticlesTab} />
+							</button>
+						</>
+					) : selectedRegister === "prislista" ? (
+						<>
+							<button
+								type="button"
+								onClick={() => updateUrlTab("prislista", "prislista")}
+								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
+									priceListSubTab === "prislista"
+										? "border-slate-900 text-slate-900"
+										: "border-transparent text-slate-500 hover:text-slate-700"
+								}`}
+							>
+								<Translate text={localizationConstants.priceListTab} />
+							</button>
+							<button
+								type="button"
+								onClick={() => updateUrlTab("prislista", "uppdatera")}
+								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
+									priceListSubTab === "uppdatera"
+										? "border-slate-900 text-slate-900"
+										: "border-transparent text-slate-500 hover:text-slate-700"
+								}`}
+							>
+								<Translate text={localizationConstants.updatePriceListTab} />
 							</button>
 						</>
 					) : (
@@ -127,25 +189,43 @@ export function RegisterPage() {
 
 			{/* Table Content */}
 			{selectedRegister === "kund" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Laddar...</div>}>
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 					<CustomerRegisterTable />
 				</Suspense>
 			)}
 			{selectedRegister === "supplier" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Laddar...</div>}>
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 					<SupplierRegisterTable />
 				</Suspense>
 			)}
 			{selectedRegister === "artikel" && articleSubTab === "artikel" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Laddar...</div>}>
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 					<ArticleRegisterTable />
 				</Suspense>
 			)}
 			{selectedRegister === "artikel" && articleSubTab === "leverantorsArtiklar" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500">Laddar...</div>}>
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 					<SupplierArticleRegisterTable />
 				</Suspense>
 			)}
+			{selectedRegister === "prislista" && priceListSubTab === "prislista" && (
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
+					<PriceListRegisterTable />
+				</Suspense>
+			)}
+			{selectedRegister === "prislista" && priceListSubTab === "uppdatera" && (
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
+					<PriceListUpdatePanel />
+				</Suspense>
+			)}
 		</div>
+	);
+}
+
+export function RegisterPage() {
+	return (
+		<Suspense fallback={<div className="p-6 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
+			<RegisterContent />
+		</Suspense>
 	);
 }

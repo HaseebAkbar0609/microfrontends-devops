@@ -81,7 +81,8 @@ export function SupplierDetailPage() {
 			<div className="mb-1 flex items-center gap-2 ml-0">
 				<button
 					type="button"
-					onClick={() => router.push("/tools/register")}
+					aria-label="Go back to register"
+					onClick={() => router.push("/tools/register?tab=supplier")}
 					className="rounded-md p-1 hover:bg-slate-100"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />
