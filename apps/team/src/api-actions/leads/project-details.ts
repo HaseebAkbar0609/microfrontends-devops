@@ -9,7 +9,7 @@ export async function getLeadProjectDetailsAPIAction(
 	leadId: string
 ): Promise<LeadRequestDetails | null> {
 	const response = await axiosInstance.get<LeadProjectDetailsApiResponse>(
-		`/api/v1/lead/${leadId}/project-details`
+		`/api/v1/teams/lead/${leadId}/project-details`
 	);
 	const payload = response.data.data;
 
