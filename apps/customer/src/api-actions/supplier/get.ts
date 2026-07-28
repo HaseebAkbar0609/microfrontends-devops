@@ -1,179 +1,144 @@
+import { API_PATH } from "@/constants/api";
+import axiosInstance from "@/lib/axiosInstance";
+import { getInitials } from "@/lib/utils";
 import type { ActionResult } from "@/types/api";
 import type { SupplierDetail, ToolDetail } from "@/types/tools-suppliers";
+import { handleApiError } from "@/utils/apiError";
 export type { SupplierDetail, ToolDetail };
-
-const MOCK_SUPPLIERS_DETAILS: Record<string, SupplierDetail> = {
-	"1": {
-		type: "supplier",
-		id: "1",
-		initials: "PB",
-		name: "Pelle bygg AB",
-		category: "Bygg & Renovering",
-		location: "Stockholm, Sweden",
-		rating: 5.0,
-		reviewCount: 48,
-		isVerified: true,
-		isTopSupplier: true,
-		isOnline: true,
-		phone: "08–580 50 50",
-		email: "info@pellebygg.se",
-		website: "www.pellebygg.se",
-		languages: "Svenska, English",
-		responseTime: "~2 timmar",
-		lastActive: "Aktiv senaste 2 dagar",
-		completedProjects: 124,
-		ongoingProjects: 6,
-		hasRotRut: true,
-		description:
-			"Pelle bygg AB är ett välrenommerat byggföretag med över 15 års erfarenhet av renovering och nybyggnation i Stockholmsområdet. Vi specialiserar oss på badrum och kök men erbjuder ett komplett utbud av byggtjänster.",
-		certifications: 3,
-		mainMunicipality: "Stockholm",
-		additionalMunicipalities: 2,
-	},
-	"2": {
-		type: "supplier",
-		id: "2",
-		initials: "NB",
-		name: "Nisse bygg AB",
-		category: "Bygg & Renovering",
-		location: "Göteborg, Sweden",
-		rating: 4.8,
-		reviewCount: 22,
-		isVerified: true,
-		isTopSupplier: false,
-		isOnline: false,
-		phone: "031–123 45 67",
-		email: "info@nissebygg.se",
-		website: "www.nissebygg.se",
-		languages: "Svenska",
-		responseTime: "~4 timmar",
-		lastActive: "Aktiv senaste vecka",
-		completedProjects: 85,
-		ongoingProjects: 3,
-		hasRotRut: true,
-		description:
-			"Nisse bygg AB erbjuder högkvalitativa renoveringstjänster med fokus på hållbarhet och noggrannhet. Vi har lång erfarenhet av både mindre reparationer och stora ombyggnationer.",
-		certifications: 2,
-		mainMunicipality: "Göteborg",
-		additionalMunicipalities: 1,
-	},
-	"3": {
-		type: "supplier",
-		id: "3",
-		initials: "CB",
-		name: "CL bygg",
-		category: "Måleri & Snickeri",
-		location: "Malmö, Sweden",
-		rating: 4.5,
-		reviewCount: 15,
-		isVerified: false,
-		isTopSupplier: false,
-		isOnline: true,
-		phone: "040–987 65 43",
-		email: "conny@clbygg.se",
-		website: "www.clbygg.se",
-		languages: "Svenska, English, Dansk",
-		responseTime: "~1 timme",
-		lastActive: "Aktiv nu",
-		completedProjects: 45,
-		ongoingProjects: 2,
-		hasRotRut: false,
-		description:
-			"CL bygg drivs av Conny Larson och fokuserar på personlig service och högsta hantverkskvalitet inom måleri, snickeri och golvläggning.",
-		certifications: 1,
-		mainMunicipality: "Malmö",
-		additionalMunicipalities: 3,
-	},
-};
-
-const MOCK_TOOLS_DETAILS: Record<string, ToolDetail> = {
-	"jira": {
-		type: "tool",
-		id: "jira",
-		name: "Jira",
-		logoUrl: "/images/logos/jira.svg",
-		status: "connected",
-		category: "Projektverktyg",
-		description: "Synka dina Jira-tickets och projekt direkt med TimeFlow för att spåra tid, resurser och framsteg automatiskt.",
-		website: "https://www.atlassian.com/software/jira",
-		apiKey: "••••••••••••••••••••••••••••",
-		webhookUrl: "https://api.timeflowsystem.com/webhooks/jira/12345",
-		syncFrequency: "hourly",
-		permissions: [
-			"Läs behörighet för projekt och ärenden",
-			"Skriv behörighet för tidrapporter",
-			"Läs användarprofiler och roller"
-		],
-		activityLogs: [
-			{ timestamp: "Idag, 14:32", status: "success", message: "Automatiskt synk slutförd. 12 ärenden uppdaterade." },
-			{ timestamp: "Igår, 14:32", status: "success", message: "Automatiskt synk slutförd. 8 ärenden uppdaterade." },
-			{ timestamp: "2026-07-06, 14:32", status: "failed", message: "Synk misslyckades: API-gräns uppnådd." }
-		]
-	},
-	"slack": {
-		type: "tool",
-		id: "slack",
-		name: "Slack",
-		logoUrl: "/images/logos/slack.svg",
-		status: "connected",
-		category: "Kommunikation",
-		description: "Få notifieringar om projektstatus, nya meddelanden och uppdateringar direkt i dina Slack-kanaler.",
-		website: "https://slack.com",
-		apiKey: "••••••••••••••••••••••••••••",
-		webhookUrl: "https://api.timeflowsystem.com/webhooks/slack/12345",
-		syncFrequency: "daily",
-		permissions: [
-			"Skicka meddelanden till valda kanaler",
-			"Läs kanalnamn och information"
-		],
-		activityLogs: [
-			{ timestamp: "Idag, 09:00", status: "success", message: "Daglig statusrapport skickad till #projektsynk." },
-			{ timestamp: "Igår, 09:00", status: "success", message: "Daglig statusrapport skickad till #projektsynk." }
-		]
-	},
-	"github": {
-		type: "tool",
-		id: "github",
-		name: "GitHub",
-		logoUrl: "/images/logos/github.svg",
-		status: "disconnected",
-		category: "Kod & Versionshantering",
-		description: "Koppla dina GitHub-repositories för att spåra commits, pull requests och länkade issues mot dina projekt.",
-		website: "https://github.com",
-		permissions: [
-			"Läs behörighet för publika och privata repositories",
-			"Läs commit-loggar och pull requests"
-		],
-		activityLogs: []
-	}
-};
 
 export async function getSupplierOrToolByIdAPIAction(
 	id: string,
 ): Promise<ActionResult<SupplierDetail | ToolDetail>> {
 	try {
-		// Simulate network latency
-		await new Promise((resolve) => setTimeout(resolve, 500));
+		const { data: res } = await axiosInstance.get<{
+			success: boolean;
+			message?: string;
+			data?: {
+				id: string;
+				company_name: string;
+				organization_number?: string;
+				company_category?: string;
+				created_at?: number;
+				updated_at?: number;
+				email?: string;
+				mobile_no?: string;
+				city?: string;
+				country?: string;
+				location?: string;
+				website?: string;
+				completed_projects?: number;
+				ongoing_projects?: number;
+			};
+		}>(API_PATH.SUPPLIER.detail(id));
 
-		const lowerId = id.toLowerCase();
-		if (lowerId in MOCK_TOOLS_DETAILS) {
-			return { success: true, data: MOCK_TOOLS_DETAILS[lowerId], error: null };
+		if (!res || res.success === false || !res.data) {
+			return {
+				success: false,
+				data: null,
+				error: res?.message || "Supplier not found",
+			};
 		}
 
-		if (id in MOCK_SUPPLIERS_DETAILS) {
-			return { success: true, data: MOCK_SUPPLIERS_DETAILS[id], error: null };
-		}
+		const supplier: SupplierDetail = {
+			type: "supplier",
+			id: res.data.id,
+			initials: getInitials(res.data.company_name || ""),
+			name: res.data.company_name,
+			category: res.data.company_category || "",
+			location: res.data.location || (res.data.city ? `${res.data.city}${res.data.country ? `, ${res.data.country}` : ''}` : ""),
+			rating: 0,
+			reviewCount: 0,
+			isVerified: false,
+			isTopSupplier: false,
+			isOnline: false,
+			phone: res.data.mobile_no || "",
+			email: res.data.email || "",
+			website: res.data.website || "",
+			languages: "",
+			responseTime: "",
+			lastActive: "",
+			completedProjects: res.data.completed_projects ?? 0,
+			ongoingProjects: res.data.ongoing_projects ?? 0,
+			hasRotRut: false,
+			description: "",
+			certifications: 0,
+			mainMunicipality: "",
+			additionalMunicipalities: 0,
+		};
 
-		// Fallback helper to search by name/partial matching if ID is not direct
-		const supplierByNameOrId = Object.values(MOCK_SUPPLIERS_DETAILS).find(
-			(s) => s.id === id || s.name.toLowerCase().includes(lowerId)
-		);
-		if (supplierByNameOrId) {
-			return { success: true, data: supplierByNameOrId, error: null };
-		}
-
-		return { success: false, data: null, error: "Kunde inte hitta verktyget eller leverantören." };
-	} catch {
-		return { success: false, data: null, error: "Ett fel uppstod vid hämtning av detaljer." };
+		return { success: true, data: supplier, error: null };
+	} catch (error: unknown) {
+		return handleApiError(error, "Failed to load supplier details");
 	}
 }
+
+export interface SupplierEditData {
+	id: string;
+	companyName: string;
+	category: string;
+	orgNo: string;
+	email: string;
+	contactFirstName: string;
+	contactLastName: string;
+	mobileNo: string;
+}
+
+export async function getSupplierByIdForEditAPIAction(
+	id: string,
+): Promise<ActionResult<SupplierEditData>> {
+	try {
+		const { data: res } = await axiosInstance.get<{
+			success: boolean;
+			message?: string;
+			data?: {
+				id: string;
+				company_name?: string;
+				organization_number?: string;
+				org_no?: string;
+				company_category?: string;
+				company_category_id?: string;
+				category?: string;
+				email?: string;
+				mobile_no?: string;
+				contact_first_name?: string;
+				contact_last_name?: string;
+			};
+		}>(API_PATH.SUPPLIER.detail(id));
+
+		if (!res || res.success === false || !res.data) {
+			return {
+				success: false,
+				data: null,
+				error: res?.message || "Supplier not found",
+			};
+		}
+
+		const d = res.data as Record<string, unknown>;
+		const categoryVal =
+			String(
+				d.company_category_id ||
+				d.category_id ||
+				d.company_category ||
+				d.category ||
+				d.company_category_name ||
+				""
+			);
+		return {
+			success: true,
+			data: {
+				id: String(d.id || ""),
+				companyName: String(d.company_name || ""),
+				category: categoryVal,
+				orgNo: String(d.organization_number || d.org_no || ""),
+				email: String(d.email || ""),
+				contactFirstName: String(d.contact_first_name || d.contact_person_name || ""),
+				contactLastName: String(d.contact_last_name || ""),
+				mobileNo: String(d.mobile_no || ""),
+			},
+			error: null,
+		};
+	} catch (error: unknown) {
+		return handleApiError(error, "Failed to load supplier for editing");
+	}
+}
+

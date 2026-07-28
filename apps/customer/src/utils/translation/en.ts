@@ -597,14 +597,25 @@ export const enSupplierModule: SupplierModule = {
 	supplierHeaderMail: "Email",
 	pageLabel: "Page",
 	ofLabel: "of",
-	// Create supplier form
+	// Create/Edit supplier form
 	supplierDetailsSection: "Supplier details",
 	supplierCreateTitle: "Create new",
 	supplierCreateSubtitle: "Add detailed information",
+	supplierEditTitle: "Edit supplier",
+	supplierEditSubtitle: "Update detailed information",
+	supplierUpdatedSuccess: "Supplier updated successfully",
+	supplierUpdateError: "Failed to update supplier",
 	validationSupplierCompanyNameRequired: "Company name is required",
 	validationSupplierCategoryRequired: "Category is required",
 	validationSupplierOrgNoRequired: "Organisation number is required",
+	validationSupplierOrgNoInvalid: "Organisation number must be 10 digits (e.g. 556123-4567)",
 	validationSupplierMobileNoRequired: "Mobile number is required",
+	validationSupplierMobileNoInvalid: "Please enter a valid phone number",
+	validationRegisterContactFirstNameInvalid: "First name contains invalid characters",
+	validationRegisterContactLastNameInvalid: "Last name contains invalid characters",
+	deleteSupplierConfirm: "Are you sure you want to delete {{name}}?",
+	supplierDeletedSuccess: "Supplier deleted successfully",
+	supplierDeleteError: "Failed to delete supplier",
 };
 
 export const enDiscounts: DiscountsModule = {
@@ -702,11 +713,42 @@ export const enQuestions: QuestionsModule = {
 	faqDoINeedToDownloadAnApp: "Do I need to download an app?",
 	faqTimeFlowWorksInBrowserAndApp:
 		"No. TimeFlow works in the browser, but a mobile app is also available.",
+	questionsSearchPlaceholder: "Search",
+	questionsFilterLabel: "Filter",
+	questionsAskButton: "Ask a question",
+	questionsNoQuestionsYet: "No questions yet. Click \"Ask a question\" to get started.",
+	questionsAskFirstQuestion: "Ask a question to get started",
+	questionsNoResults: "No results found.",
+	questionsAskTitle: "Ask a Question",
+	questionsSubjectLabel: "Subject",
+	questionsSubjectPlaceholder: "e.g. How do I use the cost calculator?",
+	questionsMessageLabel: "Message",
+	questionsMessagePlaceholder: "Describe your question in detail...",
+	questionsSubmitButton: "Submit",
+	questionsSubmitting: "Submitting...",
+	questionsSubmitSuccess: "Question submitted successfully",
+	questionsSubmitError: "Failed to submit question",
+	questionsCancel: "Cancel",
+	questionsNoMessagesYet: "No messages yet",
+	questionsReplyPlaceholder: "Type your reply...",
+	questionsSendReply: "Send Reply",
+	questionsSending: "Sending...",
+	questionsFailedToSendReply: "Failed to send reply",
+	questionsStatusOpen: "Open",
+	questionsStatusInProgress: "In Progress",
+	questionsStatusPendingResponse: "Pending Response",
+	questionsStatusResolved: "Resolved",
 };
 export const enSupport: SupportModule = {
 	supportContactUsTitle: "Contact us",
 	supportContactPhone: "Phone",
 	supportContactEmail: "Email",
+	supportLiveChat: "Live Chat",
+	supportOperatingHours: "Monday - Friday 09:00-15:00",
+	supportLoading: "Loading support information...",
+	supportNoContactInfo: "No contact information available.",
+	guideLoading: "Loading guide folders...",
+	guideNoFoldersFound: "No guide folders found.",
 	guideQuoteAndConsultants: "Quote & Consultants",
 	guideMyProjects: "My Projects",
 	guideServicesAndOffers: "Services & Offers",
@@ -726,9 +768,11 @@ export const enSupport: SupportModule = {
 	guideSectionPartiesIntro:
 		'This consultant agreement ("Agreement") has been entered into between:',
 	guideSectionPartiesClient: "Client:",
+	guideSectionPartiesClientName: "[Company Name]",
 	guideSectionPartiesClientOrg: "Organization number: [Org.no]",
 	guideSectionPartiesClientAddress: "Address: [Address]",
 	guideSectionPartiesConsultant: "Consultant:",
+	guideSectionPartiesConsultantName: "[Consultant's Name]",
 	guideSectionPartiesConsultantId: "Personal number: [Personal number]",
 	guideSectionPartiesConsultantAddress: "Address: [Address]",
 	guideSectionScope: "2. SCOPE OF ASSIGNMENT",
@@ -750,6 +794,9 @@ export const enSupport: SupportModule = {
 	guideConsultantSectionDeliverablesDesc:
 		"The Consultant shall deliver all agreed documents and reports within the agreed timeframes.",
 	guideConsultantSectionConfidentiality: "Confidentiality",
+	guideDocumentation: "Guide & Documentation",
+	guideAboutThisGuide: "About this guide",
+	guideWelcomeToSection: "Welcome to the guide section for",
 	guideConsultantSectionConfidentialityDesc:
 		"The Consultant undertakes not to share any confidential information with third parties without written approval from the Client.",
 };
@@ -926,6 +973,10 @@ export const enInspiration: InspirationModule = {
 	inspirationCardTitle: "Prepare for the unexpected",
 	inspirationCardExcerpt:
 		"Expect the renovation to take longer and cost more than you initially thought. Plan a buffer for both time and money. If you have a deadline, start the renovation well in advance to avoid unnecessary stress.",
+	inspirationNoContent: "No content available",
+	inspirationErrorLoading: "Failed to load content",
+	inspirationLoading: "Loading content...",
+	inspirationRetry: "Try again",
 };
 
 export const enProjects: ProjectsModule = {
@@ -1405,6 +1456,7 @@ export const enRotRut: RotRutModule = {
 	validationRegisterFirstNameRequired: "First name is required",
 	validationRegisterLastNameRequired: "Last name is required",
 	validationRegisterSharePercentageRequired: "Share percentage is required",
+	validationRegisterCoOwnerPersonalIdRequired: "Co-owner personal number is required",
 	validationInvalidFormat: "Invalid format",
 	createdLabel: "Created",
 	noRotEntriesFound: "No ROT entries found",
@@ -1414,6 +1466,23 @@ export const enRotRut: RotRutModule = {
 	rutDetails: "RUT Details",
 	rutPropertyIdLabel: "E-Property designation for RUT",
 	propertyDetails: "Property Details",
+	rotDeletedSuccess: "ROT entry deleted successfully",
+	rotDeletedError: "Failed to delete ROT entry",
+	deleteRotConfirmTitle: "Are you sure?",
+	deleteRotConfirmDescription: "This will permanently delete this ROT entry.",
+	rutDeletedSuccess: "RUT entry deleted successfully",
+	rutDeletedError: "Failed to delete RUT entry",
+	deleteRutConfirmTitle: "Are you sure?",
+	deleteRutConfirmDescription: "This will permanently delete this RUT entry.",
+	isCoOwnerLabel: "Is co-owner",
+	coOwnerPersonalIdLabel: "Co-owner personal number",
+	coOwnerRemovedSuccess: "Co-owner removed successfully",
+	coOwnerRemovedError: "Failed to remove co-owner",
+	removeCoOwnerConfirmDescription:
+		"This action cannot be undone. This will permanently remove the co-owner and assign 100% share to the primary owner.",
+	deleteConfirmTitle: "Are you absolutely sure?",
+	cancelLabel: "Cancel",
+	deleteLabel: "Delete",
 };
 
 export const en: Translation = {

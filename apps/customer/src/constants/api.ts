@@ -13,6 +13,9 @@ const BASE_PATHS = {
 	CONSULTANT: `${API_PREFIX}/consultants`,
 	SUPPLIER: `${API_PREFIX}/suppliers`,
 	COST_CALCULATOR: "/api/v1/tools/cost-calculator",
+	CONTENT: "/api/v1/tools/content",
+	QUESTIONS: "/api/v1/tools/questions",
+	SUPPORT: "/api/v1/support",
 
 };
 
@@ -103,6 +106,11 @@ export const API_PATH = {
 	},
 	SUPPLIER: {
 		LIST: `${BASE_PATHS.SUPPLIER}/list`,
+		CREATE: `${BASE_PATHS.SUPPLIER}/create`,
+		detail: (id: string) => `${BASE_PATHS.SUPPLIER}/${encodeURIComponent(id)}`,
+		update: (id: string) => `${BASE_PATHS.SUPPLIER}/${encodeURIComponent(id)}`,
+		delete: (id: string) => `${BASE_PATHS.SUPPLIER}/${encodeURIComponent(id)}`,
+		TEST_CONNECTION: `${BASE_PATHS.SUPPLIER}/test-connection`,
 	},
 	// NOTE: endpoints not live yet — consultant data currently comes from local
 	// dummy data (see api-actions/consultant/).
@@ -116,7 +124,39 @@ export const API_PATH = {
 		CALCULATE: `${BASE_PATHS.COST_CALCULATOR}/calculate`,
 		PRODUCTS: `${BASE_PATHS.COST_CALCULATOR}/products`,
 		HOURLY_RATES: `${BASE_PATHS.COST_CALCULATOR}/hourly-rates`,
-	}
+	},
+	CONTENT: {
+		LIST: BASE_PATHS.CONTENT,
+		CATEGORIES: `${BASE_PATHS.CONTENT}/categories`,
+	},
+	QUESTIONS: {
+		LIST: BASE_PATHS.QUESTIONS,
+		CREATE: BASE_PATHS.QUESTIONS,
+		detail: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}`,
+		reply: (ticketId: string) => `${BASE_PATHS.QUESTIONS}/${encodeURIComponent(ticketId)}/reply`,
+	},
+	SUPPORT: {
+		CONFIG: `${BASE_PATHS.SUPPORT}/config`,
+		GUIDE_FOLDERS: `${BASE_PATHS.SUPPORT}/guides/folders`,
+	},
+	DISCOUNT: {
+		LIST: "/api/v1/discounts",
+		FILTERS: "/api/v1/discounts/filters",
+		detail: (discountId: string) => `/api/v1/discounts/${encodeURIComponent(discountId)}`,
+		apply: (discountId: string) => `/api/v1/discounts/${encodeURIComponent(discountId)}/apply`,
+	},
+	ROT_RUT: {
+		list: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut`,
+		create: (projectId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut`,
+		detail: (projectId: string, deductionId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut/${encodeURIComponent(deductionId)}`,
+		update: (projectId: string, deductionId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut/${encodeURIComponent(deductionId)}`,
+		delete: (projectId: string, deductionId: string) =>
+			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/rot-rut/${encodeURIComponent(deductionId)}`,
+	},
 };
 
 export const appConstants = {

@@ -582,14 +582,25 @@ export type SupplierModule = {
 	supplierHeaderMail: string;
 	pageLabel: string;
 	ofLabel: string;
-	// Create supplier form
+	// Create/Edit supplier form
 	supplierDetailsSection: string;
 	supplierCreateTitle: string;
 	supplierCreateSubtitle: string;
+	supplierEditTitle: string;
+	supplierEditSubtitle: string;
+	supplierUpdatedSuccess: string;
+	supplierUpdateError: string;
 	validationSupplierCompanyNameRequired: string;
 	validationSupplierCategoryRequired: string;
 	validationSupplierOrgNoRequired: string;
+	validationSupplierOrgNoInvalid: string;
 	validationSupplierMobileNoRequired: string;
+	validationSupplierMobileNoInvalid: string;
+	validationRegisterContactFirstNameInvalid: string;
+	validationRegisterContactLastNameInvalid: string;
+	deleteSupplierConfirm: string;
+	supplierDeletedSuccess: string;
+	supplierDeleteError: string;
 };
 
 export type QuestionsModule = {
@@ -647,11 +658,42 @@ export type QuestionsModule = {
 	faqTimeFlowFocusedOnSwedishMarket: string;
 	faqDoINeedToDownloadAnApp: string;
 	faqTimeFlowWorksInBrowserAndApp: string;
+	questionsSearchPlaceholder: string;
+	questionsFilterLabel: string;
+	questionsAskButton: string;
+	questionsNoQuestionsYet: string;
+	questionsAskFirstQuestion: string;
+	questionsNoResults: string;
+	questionsAskTitle: string;
+	questionsSubjectLabel: string;
+	questionsSubjectPlaceholder: string;
+	questionsMessageLabel: string;
+	questionsMessagePlaceholder: string;
+	questionsSubmitButton: string;
+	questionsSubmitting: string;
+	questionsSubmitSuccess: string;
+	questionsSubmitError: string;
+	questionsCancel: string;
+	questionsNoMessagesYet: string;
+	questionsReplyPlaceholder: string;
+	questionsSendReply: string;
+	questionsSending: string;
+	questionsFailedToSendReply: string;
+	questionsStatusOpen: string;
+	questionsStatusInProgress: string;
+	questionsStatusPendingResponse: string;
+	questionsStatusResolved: string;
 };
 export type SupportModule = {
 	supportContactUsTitle: string;
 	supportContactPhone: string;
 	supportContactEmail: string;
+	supportLiveChat: string;
+	supportOperatingHours: string;
+	supportLoading: string;
+	supportNoContactInfo: string;
+	guideLoading: string;
+	guideNoFoldersFound: string;
 	guideQuoteAndConsultants: string;
 	guideMyProjects: string;
 	guideServicesAndOffers: string;
@@ -669,9 +711,11 @@ export type SupportModule = {
 	guideSectionParties: string;
 	guideSectionPartiesIntro: string;
 	guideSectionPartiesClient: string;
+	guideSectionPartiesClientName: string;
 	guideSectionPartiesClientOrg: string;
 	guideSectionPartiesClientAddress: string;
 	guideSectionPartiesConsultant: string;
+	guideSectionPartiesConsultantName: string;
 	guideSectionPartiesConsultantId: string;
 	guideSectionPartiesConsultantAddress: string;
 	guideSectionScope: string;
@@ -689,6 +733,9 @@ export type SupportModule = {
 	guideConsultantSectionDeliverablesDesc: string;
 	guideConsultantSectionConfidentiality: string;
 	guideConsultantSectionConfidentialityDesc: string;
+	guideDocumentation: string;
+	guideAboutThisGuide: string;
+	guideWelcomeToSection: string;
 };
 
 export type PriceCalculatorModule = {
@@ -855,6 +902,10 @@ export type InspirationModule = {
 	inspirationReadMore: string;
 	inspirationCardTitle: string;
 	inspirationCardExcerpt: string;
+	inspirationNoContent: string;
+	inspirationErrorLoading: string;
+	inspirationLoading: string;
+	inspirationRetry: string;
 };
 
 export type ProjectsModule = {
@@ -1322,6 +1373,7 @@ export type RotRutModule = {
 	validationRegisterFirstNameRequired: string;
 	validationRegisterLastNameRequired: string;
 	validationRegisterSharePercentageRequired: string;
+	validationRegisterCoOwnerPersonalIdRequired: string;
 	validationInvalidFormat: string;
 	createdLabel: string;
 	noRotEntriesFound: string;
@@ -1331,6 +1383,22 @@ export type RotRutModule = {
 	rutDetails: string;
 	rutPropertyIdLabel: string;
 	propertyDetails: string;
+	rotDeletedSuccess: string;
+	rotDeletedError: string;
+	deleteRotConfirmTitle: string;
+	deleteRotConfirmDescription: string;
+	rutDeletedSuccess: string;
+	rutDeletedError: string;
+	deleteRutConfirmTitle: string;
+	deleteRutConfirmDescription: string;
+	isCoOwnerLabel: string;
+	coOwnerPersonalIdLabel: string;
+	coOwnerRemovedSuccess: string;
+	coOwnerRemovedError: string;
+	removeCoOwnerConfirmDescription: string;
+	deleteConfirmTitle: string;
+	cancelLabel: string;
+	deleteLabel: string;
 };
 
 export type Translation = SidebarTranslation &

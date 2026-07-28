@@ -62,7 +62,7 @@ export function SupplierProfileCard({ supplier }: SupplierProfileCardProps) {
         {/* Non-centered section: category, location */}
         <div className="flex flex-col gap-2 w-full items-start text-left">
           <p className="text-xs text-slate-500 font-normal">
-            {supplier.category} • {supplier.location}
+            {supplier.category || "-"}{supplier.location ? ` • ${supplier.location}` : ""}
           </p>
 
           {/* Star rating - centered 5-stars layout */}
@@ -211,7 +211,7 @@ function ContactRow({
         <p className="text-[11px] font-normal leading-tight text-slate-500">
           <Translate text={label} />
         </p>
-        {isLink ? (
+        {isLink && value ? (
           <a
             href={value.includes("://") ? value : `//${value}`}
             className="text-sm font-medium text-[#FF8100] hover:underline break-all block leading-tight mt-0.5"
@@ -221,7 +221,7 @@ function ContactRow({
             {value}
           </a>
         ) : (
-          <p className="text-sm font-medium text-slate-900 break-all leading-tight mt-0.5">{value}</p>
+          <p className="text-sm font-medium text-slate-900 break-all leading-tight mt-0.5">{value || "-"}</p>
         )}
       </div>
     </div>

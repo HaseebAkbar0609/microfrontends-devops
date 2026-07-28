@@ -1,7 +1,8 @@
 import axiosInstance from "@/lib/axiosInstance";
-import type { ActionResult, ApiError } from "@/types/api";
+import type { ActionResult } from "@/types/api";
 import type { Discount } from "@/features/discounts/constants";
-import { DUMMY_DISCOUNTS } from "@/features/discounts/constants";
+import { API_PATH } from "@/constants/api";
+import { handleApiError } from "@/utils/apiError";
 
 export interface GetDiscountsParams {
   supplier?: string;
@@ -16,7 +17,6 @@ export interface DiscountsPage {
   total: number;
 }
 
-const USE_MOCK = true; // TODO: set to false when real API is available
 const DEFAULT_LIMIT = 6;
 
 export async function getDiscountsAPIAction(
@@ -29,34 +29,12 @@ export async function getDiscountsAPIAction(
   q.set("page", String(page));
   q.set("limit", String(limit));
 
-  if (USE_MOCK) {
-    // Simulate network delay for realistic infinite scroll feel
-    await new Promise((r) => setTimeout(r, 400));
-
-    const filtered = DUMMY_DISCOUNTS.filter((d) => {
-      const matchSupplier = !supplier || d.supplier === supplier;
-      const matchCategory = !category || d.category === category;
-      return matchSupplier && matchCategory;
-    });
-
-    const offset = (page - 1) * limit;
-    const items = filtered.slice(offset, offset + limit);
-    const hasMore = offset + limit < filtered.length;
-
-    return { success: true, data: { items, hasMore, total: filtered.length }, error: null };
-  }
-
   try {
     const { data: body } = await axiosInstance.get<{
       data: { items: Discount[]; hasMore: boolean; total: number };
-    }>(`/api/v1/discounts?${q.toString()}`);
+    }>(`${API_PATH.DISCOUNT.LIST}?${q.toString()}`);
     return { success: true, data: body.data, error: null };
   } catch (error: unknown) {
-    const apiError = error as ApiError;
-    return {
-      success: false,
-      data: null,
-      error: apiError.response?.data?.message || "Failed to load discounts",
-    };
+    return handleApiError(error, "Failed to load discounts");
   }
 }

@@ -25,30 +25,42 @@ export function OfferDocument() {
 					<p className="mt-2 text-sm text-slate-700">
 						<Translate text={localizationConstants.guideSectionPartiesIntro} />
 					</p>
-					<div className="mt-3 space-y-2 pl-4 text-sm text-slate-700">
-						<p>
-							<strong>
-								<Translate text={localizationConstants.guideSectionPartiesClient} />
-							</strong>
-						</p>
-						<p className="pl-4">
-							<Translate text={localizationConstants.guideSectionPartiesClientOrg} />
-						</p>
-						<p className="pl-4">
-							<Translate text={localizationConstants.guideSectionPartiesClientAddress} />
-						</p>
+					<div className="mt-4 space-y-4 text-sm text-slate-700">
+						<div>
+							<p className="font-bold text-slate-900">
+								<Translate text={localizationConstants.guideSectionPartiesClient} />{" "}
+								<span className="font-normal text-slate-700">
+									<Translate
+										text={localizationConstants.guideSectionPartiesClientName}
+									/>
+								</span>
+							</p>
+							<p className="text-slate-600">
+								<Translate text={localizationConstants.guideSectionPartiesClientOrg} />
+							</p>
+							<p className="text-slate-600">
+								<Translate text={localizationConstants.guideSectionPartiesClientAddress} />
+							</p>
+						</div>
 
-						<p className="mt-3">
-							<strong>
-								<Translate text={localizationConstants.guideSectionPartiesConsultant} />
-							</strong>
-						</p>
-						<p className="pl-4">
-							<Translate text={localizationConstants.guideSectionPartiesConsultantId} />
-						</p>
-						<p className="pl-4">
-							<Translate text={localizationConstants.guideSectionPartiesConsultantAddress} />
-						</p>
+						<div>
+							<p className="font-bold text-slate-900">
+								<Translate text={localizationConstants.guideSectionPartiesConsultant} />{" "}
+								<span className="font-normal text-slate-700">
+									<Translate
+										text={
+											localizationConstants.guideSectionPartiesConsultantName
+										}
+									/>
+								</span>
+							</p>
+							<p className="text-slate-600">
+								<Translate text={localizationConstants.guideSectionPartiesConsultantId} />
+							</p>
+							<p className="text-slate-600">
+								<Translate text={localizationConstants.guideSectionPartiesConsultantAddress} />
+							</p>
+						</div>
 					</div>
 				</section>
 

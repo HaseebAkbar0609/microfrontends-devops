@@ -13,6 +13,7 @@ interface SupplierTableProps {
 	readonly data: Supplier[];
 	readonly totalItems: number;
 	readonly loading?: boolean;
+	readonly onDelete?: (supplier: Supplier) => void;
 }
 
 const COLUMNS: DataTableColumn<Supplier>[] = [
@@ -64,6 +65,7 @@ export function SupplierTable({
 	data,
 	totalItems,
 	loading = false,
+	onDelete,
 }: SupplierTableProps) {
 	const { query, changeQueries } = useQueryParams();
 	const router = useRouter();
@@ -99,12 +101,12 @@ export function SupplierTable({
 				label: localizationConstants.delete,
 				icon: <Trash2 className="h-4 w-4" />,
 				destructive: true,
-				onClick: (_row) => {
-					// TODO: trigger delete confirmation dialog
+				onClick: (row) => {
+					onDelete?.(row);
 				},
 			},
 		],
-		[router],
+		[router, onDelete],
 	);
 
 	return (

@@ -1,20 +1,20 @@
 export interface DiscountPartner {
 	id: string;
-	avatarUrl?: string;
+	avatarUrl?: string | null;
 	initials: string;
 	name: string;
 	category: string;
-	location: string;
-	rating: number;
-	reviewCount: number;
-	isVerified: boolean;
-	isTopSupplier: boolean;
-	isOnline: boolean;
-	phone: string;
-	email: string;
-	website: string;
-	languages: string;
-	lastActive: string;
+	location?: string | null;
+	rating?: number | null;
+	reviewCount?: number | null;
+	isVerified?: boolean;
+	isTopSupplier?: boolean;
+	isOnline?: boolean;
+	phone?: string | null;
+	email?: string | null;
+	website?: string | null;
+	languages?: string | null;
+	lastActive?: string | null;
 }
 
 export interface DiscountOffer {
@@ -34,6 +34,7 @@ export interface BannerSlide {
 }
 
 export interface DiscountPartnerDetail {
-	partner: DiscountPartner;
+	partner: DiscountPartner | null;
 	offers: DiscountOffer[];
+	bannerSlides?: BannerSlide[];
 }

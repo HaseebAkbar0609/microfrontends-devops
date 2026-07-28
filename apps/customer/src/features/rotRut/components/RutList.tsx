@@ -12,7 +12,11 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { useTranslation } from "react-i18next";
 
-export function RutList() {
+interface RutListProps {
+	projectId: string;
+}
+
+export function RutList({ projectId }: RutListProps) {
 	const { t } = useTranslation();
 	const { search, changeQuery, query } = useQueryParams();
 	const router = useRouter();
@@ -26,13 +30,14 @@ export function RutList() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [loading, setLoading] = useState(true);
 	const [loadError, setLoadError] = useState<string | null>(null);
+	const [refreshCounter, setRefreshCounter] = useState(0);
 
 	useEffect(() => {
 		let cancelled = false;
 		setLoading(true);
 		setLoadError(null);
 
-		void getRutEntries("dummy-project-id", {
+		void getRutEntries(projectId, {
 			page,
 			pageSize,
 			search: search.trim() || undefined,
@@ -54,7 +59,7 @@ export function RutList() {
 		return () => {
 			cancelled = true;
 		};
-	}, [page, pageSize, search, sortBy, sortOrder]);
+	}, [projectId, page, pageSize, search, sortBy, sortOrder, refreshCounter]);
 
 	return (
 		<div className="flex flex-col flex-1 w-full bg-white">
@@ -79,7 +84,7 @@ export function RutList() {
 				<div className="w-full sm:w-auto">
 					<Button
 						className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md w-full sm:w-auto justify-center"
-						onClick={() => router.push("/rotRut/rut/create")}
+						onClick={() => router.push(`/rotRut/rut/create?projectId=${encodeURIComponent(projectId)}`)}
 					>
 						<Plus className="h-4 w-4" />
 						<Translate text={localizationConstants.createRutBtn} />
@@ -97,6 +102,8 @@ export function RutList() {
 						data={rutEntries}
 						totalItems={totalItems}
 						loading={loading}
+						projectId={projectId}
+						onDeleteSuccess={() => setRefreshCounter((c) => c + 1)}
 					/>
 				)}
 			</div>

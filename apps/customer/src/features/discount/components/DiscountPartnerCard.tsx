@@ -57,7 +57,7 @@ export function DiscountPartnerCard({ partner }: DiscountPartnerCardProps) {
 						{partner.name}
 					</h2>
 					<p className="text-sm text-slate-500">
-						{partner.category} • {partner.location}
+						{[partner.category, partner.location].filter(Boolean).join(" • ")}
 					</p>
 				</div>
 
@@ -69,10 +69,10 @@ export function DiscountPartnerCard({ partner }: DiscountPartnerCardProps) {
 						))}
 					</div>
 					<span className="text-sm font-semibold text-[#0A0A0A]">
-						{partner.rating.toFixed(1)}
+						{(partner.rating ?? 0).toFixed(1)}
 					</span>
 					<span className="text-sm text-slate-500">
-						({partner.reviewCount}{" "}
+						({partner.reviewCount ?? 0}{" "}
 						<Translate text={localizationConstants.supplierReviewCount} />)
 					</span>
 				</div>
@@ -130,9 +130,12 @@ function ContactRow({
 }: {
 	icon: ReactNode;
 	label: string;
-	value: string;
+	value?: string | null;
 	isLink?: boolean;
 }) {
+	const displayValue = value || "-";
+	const href = isLink && value ? (value.includes("://") || value.startsWith("//") ? value : `https://${value}`) : null;
+
 	return (
 		<div className="flex items-start gap-4.5">
 			<div className="shrink-0 mt-0.5">{icon}</div>
@@ -140,9 +143,9 @@ function ContactRow({
 				<p className="text-xs text-slate-500">
 					<Translate text={label} />
 				</p>
-				{isLink ? (
+				{href ? (
 					<a
-						href={value.includes("://") ? value : `//${value}`}
+						href={href}
 						className="text-sm text-[#FF8100] hover:underline break-all"
 						target="_blank"
 						rel="noopener noreferrer"
@@ -150,7 +153,7 @@ function ContactRow({
 						{value}
 					</a>
 				) : (
-					<p className="text-sm text-[#0A0A0A] break-all">{value}</p>
+					<p className="text-sm text-[#0A0A0A] break-all">{displayValue}</p>
 				)}
 			</div>
 		</div>
