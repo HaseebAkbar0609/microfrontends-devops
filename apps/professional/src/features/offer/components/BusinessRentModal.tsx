@@ -72,7 +72,7 @@ export function BusinessRentModal({
               onOpenChange(false);
             }}
           >
-            <Check className="mr-2 h-4 w-4" />
+            <Check className="mr-1 h-4 w-4" />
             <Translate text={localizationConstants.businessRentModalConfirm} />
           </Button>
         </div>
