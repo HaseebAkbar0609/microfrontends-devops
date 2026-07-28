@@ -253,7 +253,7 @@ export function ArticleDetailPage() {
 				<h2 className="mb-2 text-lg font-semibold leading-7 text-zinc-950">
 					<Translate text={localizationConstants.noDataFound} />
 				</h2>
-				<Button onClick={() => router.push("/tools/register")}>
+				<Button onClick={() => router.push("/tools/register?tab=artikel&subtab=artikel")}>
 					<Translate text={localizationConstants.goBackButton} />
 				</Button>
 			</div>
@@ -271,7 +271,7 @@ export function ArticleDetailPage() {
 					variant="ghost"
 					size="icon"
 					aria-label="Go back to register"
-					onClick={() => router.push("/tools/register")}
+					onClick={() => router.push("/tools/register?tab=artikel&subtab=artikel")}
 					className="h-8 w-8 shrink-0"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />

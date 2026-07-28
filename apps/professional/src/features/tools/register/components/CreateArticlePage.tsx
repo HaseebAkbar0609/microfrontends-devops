@@ -152,7 +152,7 @@ export function CreateArticlePage() {
 			const formData = { ...data, priceListRows };
 			await createArticleAPIAction(formData);
 			showToast("success", t(localizationConstants.articleCreatedSuccess));
-			router.push("/tools/register");
+			router.push("/tools/register?tab=artikel&subtab=artikel");
 		} catch {
 			showToast("error", t(localizationConstants.articleCreateError));
 		} finally {
@@ -161,7 +161,7 @@ export function CreateArticlePage() {
 	});
 
 	const handleCancel = () => {
-		router.push("/tools/register");
+		router.push("/tools/register?tab=artikel&subtab=artikel");
 	};
 
 	const handleAddPriceListRow = useCallback((newRow: PriceListRow) => {
@@ -179,7 +179,8 @@ export function CreateArticlePage() {
 				<div className="mb-4 flex items-center gap-2">
 					<button
 						type="button"
-						onClick={() => router.back()}
+						aria-label="Go back to register"
+						onClick={() => router.push("/tools/register?tab=artikel&subtab=artikel")}
 						className="rounded-md p-1 hover:bg-slate-100"
 					>
 						<ArrowLeft className="h-5 w-5 text-slate-700" />

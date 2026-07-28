@@ -79,6 +79,13 @@ export const API_PATH = {
 		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
+	PRICE_LISTS: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/pricelists`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}`,
+		TOGGLE_FAVORITE: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}/favorite`,
+	},
 };
 
 export const appConstants = {
