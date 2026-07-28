@@ -17,23 +17,18 @@ import {
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { DUMMY_OFFER_REQUESTS, OfferRequest } from "../constants/offerRequests";
+import { useDebounce } from "@/hooks/useDebounce";
+import { OfferRequest, OFFER_REQUEST_TYPE_BADGE_CLASSES } from "../constants/offerRequests";
 
 type SortField = keyof OfferRequest;
 type SortDir = "asc" | "desc" | null;
 
-const TYPE_BADGE_CLASSES: Record<string, string> = {
-	"B2C Offer": "bg-neutral-950 text-white",
-	"Express": "bg-neutral-950 text-white",
-	"B2B Rent OUT": "bg-neutral-950 text-white",
-	"B2B Rent IN": "bg-neutral-950 text-white",
-};
-
 interface Props {
 	offerId: string;
+	requests: OfferRequest[];
 }
 
-export function OfferRequestView({ offerId }: Props) {
+export function OfferRequestView({ offerId, requests }: Props) {
 	const t = useTranslate();
 	const router = useRouter();
 	const [search, setSearch] = useState("");
@@ -44,13 +39,15 @@ export function OfferRequestView({ offerId }: Props) {
 	const [page, setPage] = useState(1);
 	const [rowsPerPage] = useState(10);
 
-	const uniqueTypes = useMemo(() => [...new Set(DUMMY_OFFER_REQUESTS.map((r) => r.type))], []);
-	const uniqueMunicipalities = useMemo(() => [...new Set(DUMMY_OFFER_REQUESTS.map((r) => r.municipality))], []);
+	const debouncedSearch = useDebounce(search, 300);
+
+	const uniqueTypes = useMemo(() => [...new Set(requests.map((r) => r.type))], [requests]);
+	const uniqueMunicipalities = useMemo(() => [...new Set(requests.map((r) => r.municipality))], [requests]);
 	const activeFilterCount = selectedTypes.length + selectedMunicipalities.length;
 
 	const filtered = useMemo(() => {
-		const q = search.toLowerCase();
-		return DUMMY_OFFER_REQUESTS.filter((r) => {
+		const q = debouncedSearch.toLowerCase();
+		return requests.filter((r) => {
 			const matchesSearch =
 				r.trackingNumber.toLowerCase().includes(q) ||
 				r.jobName.toLowerCase().includes(q) ||
@@ -59,13 +56,13 @@ export function OfferRequestView({ offerId }: Props) {
 			const matchesMunicipality = selectedMunicipalities.length === 0 || selectedMunicipalities.includes(r.municipality);
 			return matchesSearch && matchesType && matchesMunicipality;
 		});
-	}, [search, selectedTypes, selectedMunicipalities]);
+	}, [debouncedSearch, selectedTypes, selectedMunicipalities, requests]);
 
 	const sorted = useMemo(() => {
 		if (!sortField || !sortDir) return filtered;
 		return [...filtered].sort((a, b) => {
-			const av = a[sortField];
-			const bv = b[sortField];
+			const av = a[sortField as keyof OfferRequest];
+			const bv = b[sortField as keyof OfferRequest];
 			if (typeof av === "number" && typeof bv === "number")
 				return sortDir === "asc" ? av - bv : bv - av;
 			return sortDir === "asc"
@@ -216,7 +213,6 @@ export function OfferRequestView({ offerId }: Props) {
 										</span>
 									</th>
 								))}
-								{/* Sticky actions header */}
 								<th className="sticky right-0 border-l border-slate-200 bg-white px-4 py-3" />
 							</tr>
 						</thead>
@@ -235,7 +231,7 @@ export function OfferRequestView({ offerId }: Props) {
 									<td className="whitespace-nowrap px-4 py-4">
 										<span className={cn(
 											"inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium",
-											TYPE_BADGE_CLASSES[row.type] ?? "bg-slate-100 text-slate-800",
+											OFFER_REQUEST_TYPE_BADGE_CLASSES[row.type] ?? "bg-slate-100 text-slate-800",
 										)}>
 											{row.type}
 										</span>
@@ -245,7 +241,6 @@ export function OfferRequestView({ offerId }: Props) {
 										{row.preliminaryBudget.toLocaleString()}
 									</td>
 									<td className="whitespace-nowrap px-4 py-4 text-slate-700">{row.assignee}</td>
-									{/* Sticky actions cell */}
 									<td className="sticky right-0 border-l border-slate-200 bg-white px-4 py-4 group-hover:bg-slate-50">
 										<div className="flex items-center gap-3">
 											<Button

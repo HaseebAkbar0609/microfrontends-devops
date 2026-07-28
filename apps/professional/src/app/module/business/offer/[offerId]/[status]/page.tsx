@@ -4,6 +4,7 @@ import { OfferDetailPageHeader } from "@/features/offer/components/OfferDetailPa
 import { OfferDetailHeader } from "@/features/offer/components/OfferDetailHeader";
 import { OfferRequestView } from "@/features/offer/components/OfferRequestView";
 import { getDummyOfferDetail, OFFER_STATUSES } from "@/features/offer/constants/offerDetail";
+import { DUMMY_OFFER_REQUESTS } from "@/features/offer/constants/offerRequests.mock";
 
 const statusSchema = z.enum(OFFER_STATUSES);
 
@@ -18,7 +19,7 @@ export default async function OfferStatusPage({
   if (!parsed.success) notFound();
 
   if (parsed.data === "request") {
-    return <OfferRequestView offerId={offerId} />;
+    return <OfferRequestView offerId={offerId} requests={DUMMY_OFFER_REQUESTS} />;
   }
 
   const offer = getDummyOfferDetail(offerId);
