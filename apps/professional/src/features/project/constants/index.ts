@@ -29,7 +29,6 @@ export const PROJECT_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.projectDashboardTitle },
 ];
 
-/** Same 19 widgets as the project grid, in ticket order (plus the empty slot). */
 export const PROJECT_SIDEBAR_ITEMS: WidgetItem[] = [
 	{
 		id: "emptyPage",
