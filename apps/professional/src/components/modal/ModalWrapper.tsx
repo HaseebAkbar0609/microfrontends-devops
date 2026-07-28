@@ -55,8 +55,8 @@ export function ModalWrapper({
               </DialogTitle>
             )}
             {description && (
-              <DialogDescription className="text-xs text-center py-3">
-                <span className="flex justify-center text-muted-foreground">{description}</span>
+              <DialogDescription asChild>
+                <div className="flex justify-center py-3 text-xs text-muted-foreground">{description}</div>
               </DialogDescription>
             )}
           </DialogHeader>

@@ -1,5 +1,8 @@
 import { OfferDetailData } from "../types";
 
+export const OFFER_STATUSES = ["overview", "quoted", "accepted", "agreed", "archived"] as const;
+export type OfferStatus = (typeof OFFER_STATUSES)[number];
+
 const BASE_DETAIL = {
   postedDate: "18-12-2024",
   locations: ["Stockholm", "Järfälla"],
