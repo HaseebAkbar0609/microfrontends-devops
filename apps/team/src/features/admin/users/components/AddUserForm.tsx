@@ -86,7 +86,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
         <PageHeader
           title={t(localizationConstants.adminUsers)}
           breadcrumbs={[
-            { label: t(localizationConstants.breadcrumbHome), href: "/dashboard" },
+            { label: t(localizationConstants.breadcrumbHome), href: "/home" },
             { label: t(localizationConstants.adminUsers) },
           ]}
         />

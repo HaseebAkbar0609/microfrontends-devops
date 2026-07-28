@@ -76,7 +76,7 @@ export function AdminUsersPage() {
 			<PageHeader
 				title="Användare"
 				breadcrumbs={[
-					{ label: "Home", href: "/dashboard" },
+					{ label: "Home", href: "/home" },
 					{ label: "Användare" },
 				]}
 			/>

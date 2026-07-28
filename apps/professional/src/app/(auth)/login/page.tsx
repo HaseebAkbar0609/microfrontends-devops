@@ -52,7 +52,7 @@ export default function LoginPage() {
       });
       const destination = getRequiresSubscriptionFromBrowserCookie()
         ? "/manage-plans"
-        : "/dashboard";
+        : "/home";
       router.push(destination);
     }
   };

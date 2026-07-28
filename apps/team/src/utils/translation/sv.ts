@@ -140,7 +140,7 @@ export const sweAppLauncher: AppLauncherTranslation = {
 };
 
 export const sweSidebar: SidebarTranslation = {
-	dashboard: "Dashboard",
+	dashboard: "Hem",
 	favorites: "Favoriter",
 	tools: "Verktyg",
 	toolsItem: "Verktyg",
@@ -185,9 +185,9 @@ export const sweSidebar: SidebarTranslation = {
 };
 
 export const sweDashboard: DashboardTranslation = {
-	dashboardTitle: "Dashboard",
-	breadcrumbHome: "Home",
-	breadcrumbFavorite: "Favorite",
+	dashboardTitle: "Hem",
+	breadcrumbHome: "Hem",
+	breadcrumbFavorite: "Favorit",
 	statsTitle: "Stats",
 	statsLineOne: "Antal nya kunder per månad",
 	statsLineTwo: "Antal intäkter per månad",

@@ -238,7 +238,7 @@ export function ArticleRegisterTable() {
 						type="button"
 						onClick={(e) => {
 							e.stopPropagation();
-							void row;
+							router.push(`/tools/register/articles/${row.id}`);
 						}}
 						className="inline-flex items-center justify-center p-1.5 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
 					>
@@ -247,7 +247,7 @@ export function ArticleRegisterTable() {
 				),
 			},
 		],
-		[handleToggleFavorite],
+		[handleToggleFavorite, router],
 	);
 
 	const actions: DataTableAction<ArticleRow>[] = useMemo(
@@ -255,7 +255,7 @@ export function ArticleRegisterTable() {
 			{
 				label: localizationConstants.viewLabel,
 				icon: <Eye className="h-4 w-4" />,
-				onClick: (row) => void row,
+				onClick: (row) => router.push(`/tools/register/articles/${row.id}`),
 			},
 			{
 				label: localizationConstants.editLabel,
@@ -269,7 +269,7 @@ export function ArticleRegisterTable() {
 				onClick: (row) => void row,
 			},
 		],
-		[],
+		[router],
 	);
 
 	return (

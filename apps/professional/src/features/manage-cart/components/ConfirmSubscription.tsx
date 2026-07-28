@@ -305,7 +305,7 @@ export function ConfirmSubscription({
 											cartMessages.checkoutPayment
 												.licensePurchasedSuccess,
 										);
-										router.replace("/dashboard");
+										router.replace("/home");
 										router.refresh();
 									} finally {
 										setIsSubmitting(false);

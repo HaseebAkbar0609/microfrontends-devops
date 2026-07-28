@@ -9,7 +9,7 @@ async function login(page: import("@playwright/test").Page) {
 	await page.getByPlaceholder("Ange användarnamn eller e-post").fill(ADMIN_EMAIL);
 	await page.getByPlaceholder("Ange ditt lösenord").fill(ADMIN_PASSWORD);
 	await page.getByRole("button", { name: "Logga in" }).click();
-	await page.waitForURL("**/dashboard");
+	await page.waitForURL("**/home");
 }
 
 async function selectRadixOption(

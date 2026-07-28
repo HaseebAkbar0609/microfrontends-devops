@@ -169,10 +169,10 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 
 	return [
 		{
-			id: "dashboard",
+			id: "home",
 			label: localizationConstants.dashboard,
 			icon: Home,
-			href: "/dashboard",
+			href: "/home",
 			items: [],
 		},
 		{

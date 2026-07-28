@@ -20,7 +20,7 @@ export default function Home() {
 			router.replace(
 				getRequiresSubscriptionFromBrowserCookie()
 					? "/manage-plans"
-					: "/dashboard",
+					: "/home",
 			);
 		} else {
 			router.replace("/login");
