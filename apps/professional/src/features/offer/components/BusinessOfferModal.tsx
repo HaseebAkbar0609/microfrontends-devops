@@ -50,9 +50,7 @@ export function BusinessOfferModal({
         <div className="w-full text-left">
           <div className="mt-4 h-px w-full bg-slate-200" />
           <p className="mt-4 text-base font-semibold leading-relaxed text-slate-700">
-            <Translate
-              text={localizationConstants.businessOfferModalSubtitle}
-            />
+            <Translate text={localizationConstants.businessOfferModalSubtitle} />
           </p>
         </div>
       }
@@ -74,7 +72,7 @@ export function BusinessOfferModal({
               onOpenChange(false);
             }}
           >
-            <Check className="mr-2 h-4 w-4" />
+            <Check className="mr-1 h-4 w-4" />
             <Translate text={localizationConstants.businessOfferModalConfirm} />
           </Button>
         </div>
