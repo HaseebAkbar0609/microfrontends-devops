@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
-import type { ActionResult, ApiError } from "@/types/api";
+import type { ActionResult } from "@/types/api";
 import { API_PATH } from "@/constants/api";
+import { handleApiError } from "@/utils/apiError";
 
 export interface SupportConfig {
   help_center_url: string | null;
@@ -19,11 +20,6 @@ export async function getSupportConfigAPIAction(): Promise<ActionResult<SupportC
     }>(API_PATH.SUPPORT.CONFIG);
     return { success: true, data: body.data, error: null };
   } catch (error: unknown) {
-    const apiError = error as ApiError;
-    return {
-      success: false,
-      data: null,
-      error: apiError.response?.data?.message || "Failed to load support config",
-    };
+    return handleApiError(error, "Failed to load support config");
   }
 }

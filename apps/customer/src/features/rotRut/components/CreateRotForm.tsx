@@ -26,7 +26,6 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -295,40 +294,6 @@ export const CreateRotForm = ({ projectId }: CreateRotFormProps) => {
 												</FormItem>
 											)}
 										/>
-										<FormField
-											control={form.control}
-											name="isCoOwner"
-											render={({ field }) => (
-												<FormItem className="flex flex-row items-center gap-2 space-y-0 pt-2 col-span-full">
-													<FormControl>
-														<Checkbox
-															checked={field.value}
-															onCheckedChange={field.onChange}
-														/>
-													</FormControl>
-													<FormLabel className="text-slate-700 font-semibold cursor-pointer">
-														{t(localizationConstants.isCoOwnerLabel)}
-													</FormLabel>
-												</FormItem>
-											)}
-										/>
-										{form.watch("isCoOwner") && (
-											<FormField
-												control={form.control}
-												name="coOwnerPersonalId"
-												render={({ field }) => (
-													<FormItem className="col-span-full md:col-span-1">
-														<FormLabel className="text-slate-700 font-semibold">
-															{t(localizationConstants.coOwnerPersonalIdLabel)}
-														</FormLabel>
-														<FormControl>
-															<Input placeholder="199001011234" className="h-10 border-slate-200" {...field} />
-														</FormControl>
-														<FormMessage />
-													</FormItem>
-												)}
-											/>
-										)}
 									</div>
 									<div className="flex justify-start pt-4">
 										<Button

@@ -103,6 +103,68 @@ function RotRutOpenedContent() {
 		router.replace(`/rotRut/${deductionId}/edit?projectId=${encodeURIComponent(projectId)}&tab=${encodeURIComponent(val)}`);
 	};
 
+	const handleRemoveCoOwner = async () => {
+		const result = await updateRotRutOwnerAPIAction({
+			projectId,
+			id: deductionId,
+			isCoOwner: false,
+			coOwnerPersonalId: null,
+		});
+		if (result.success) {
+			setIsDeleteDialogOpen(false);
+			setOwnerToDelete(null);
+			toast.success(t(localizationConstants.coOwnerRemovedSuccess));
+			const updatedDetails = await getRotRutDetailsAPIAction({ projectId, id: deductionId });
+			if (updatedDetails.success && updatedDetails.data) {
+				setDetails(updatedDetails.data);
+			}
+		} else {
+			toast.error(result.error || t(localizationConstants.coOwnerRemovedError));
+		}
+	};
+
+	const handleDeleteDeduction = async () => {
+		const deductionType = details?.deductionType || activeTab;
+		const result = await deleteRotRutAPIAction({ projectId, id: deductionId });
+		if (result.success) {
+			setIsDeleteDialogOpen(false);
+			setOwnerToDelete(null);
+			toast.success(
+				deductionType === "rut"
+					? t(localizationConstants.rutDeletedSuccess)
+					: t(localizationConstants.rotDeletedSuccess)
+			);
+			router.push(`/rotRut?projectId=${encodeURIComponent(projectId)}&tab=${deductionType}`);
+		} else {
+			toast.error(
+				result.error ||
+					(deductionType === "rut"
+						? t(localizationConstants.rutDeletedError)
+						: t(localizationConstants.rotDeletedError))
+			);
+		}
+	};
+
+	const getDeletionErrorMessage = (isCoOwner: boolean, deductionType: string, err?: unknown): string => {
+		if (err instanceof Error && err.message) {
+			return err.message;
+		}
+		if (isCoOwner) {
+			return t(localizationConstants.coOwnerRemovedError);
+		}
+		return deductionType === "rut"
+			? t(localizationConstants.rutDeletedError)
+			: t(localizationConstants.rotDeletedError);
+	};
+
+	const executeOwnerDeletion = async (targetOwner: { isCoOwner: boolean }) => {
+		if (targetOwner.isCoOwner) {
+			await handleRemoveCoOwner();
+		} else {
+			await handleDeleteDeduction();
+		}
+	};
+
 	const handleDeleteOwner = async () => {
 		if (!ownerToDelete || !projectId || !details) return;
 
@@ -112,57 +174,13 @@ function RotRutOpenedContent() {
 			setOwnerToDelete(null);
 			return;
 		}
-		setIsDeleting(true);
 
+		setIsDeleting(true);
 		try {
-			if (targetOwner?.isCoOwner) {
-				const result = await updateRotRutOwnerAPIAction({
-					projectId,
-					id: deductionId,
-					isCoOwner: false,
-					coOwnerPersonalId: null,
-				});
-				if (result.success) {
-					setIsDeleteDialogOpen(false);
-					setOwnerToDelete(null);
-					toast.success(t(localizationConstants.coOwnerRemovedSuccess));
-					const updatedDetails = await getRotRutDetailsAPIAction({ projectId, id: deductionId });
-					if (updatedDetails.success && updatedDetails.data) {
-						setDetails(updatedDetails.data);
-					}
-				} else {
-					toast.error(result.error || t(localizationConstants.coOwnerRemovedError));
-				}
-			} else {
-				const result = await deleteRotRutAPIAction({ projectId, id: deductionId });
-				if (result.success) {
-					setIsDeleteDialogOpen(false);
-					setOwnerToDelete(null);
-					toast.success(
-						activeTab === "rut"
-							? t(localizationConstants.rutDeletedSuccess)
-							: t(localizationConstants.rotDeletedSuccess)
-					);
-					router.push(`/rotRut?projectId=${encodeURIComponent(projectId)}&tab=${activeTab}`);
-				} else {
-					toast.error(
-						result.error ||
-							(activeTab === "rut"
-								? t(localizationConstants.rutDeletedError)
-								: t(localizationConstants.rotDeletedError))
-					);
-				}
-			}
+			await executeOwnerDeletion(targetOwner);
 		} catch (err: unknown) {
-			const message = err instanceof Error ? err.message : undefined;
-			toast.error(
-				message ||
-					(targetOwner?.isCoOwner
-						? t(localizationConstants.coOwnerRemovedError)
-						: activeTab === "rut"
-						? t(localizationConstants.rutDeletedError)
-						: t(localizationConstants.rotDeletedError))
-			);
+			const deductionType = details.deductionType || activeTab;
+			toast.error(getDeletionErrorMessage(targetOwner.isCoOwner, deductionType, err));
 		} finally {
 			setIsDeleting(false);
 		}

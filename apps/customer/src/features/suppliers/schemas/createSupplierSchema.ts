@@ -5,14 +5,15 @@ export const createSupplierSchema = z.object({
 		.string()
 		.trim()
 		.min(1, "validationSupplierCompanyNameRequired")
-		.max(255, "Company name cannot exceed 255 characters"),
+		.max(255, "Company name cannot exceed 255 characters")
+		.regex(/^[^<>]+$/, "validationSupplierCompanyNameInvalid"),
 	category: z.string().min(1, "validationSupplierCategoryRequired"),
 	orgNo: z
 		.string()
 		.trim()
 		.min(1, "validationSupplierOrgNoRequired")
 		.regex(
-			/^(\d{6}-\d{4}|\d{10})$/,
+			/^((16)?\d{6}-?\d{4}|\d{10}|\d{12})$/,
 			"validationSupplierOrgNoInvalid",
 		),
 	email: z

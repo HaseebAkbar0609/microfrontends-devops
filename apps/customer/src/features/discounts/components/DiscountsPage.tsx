@@ -28,32 +28,33 @@ const BREADCRUMBS: BreadcrumbItem[] = [
 ];
 
 async function fetchAllRegisteredSuppliers(): Promise<ActionResult<string[]>> {
-  const allSuppliers: string[] = [];
-  let page = 1;
+  let currentPage = 1;
   const pageSize = 100;
+  let allNames: string[] = [];
 
   while (true) {
-    const res = await getSuppliersAPIAction({ page, pageSize });
-    if (!res.success) {
-      return {
-        success: false,
-        data: null,
-        error: res.error || "Failed to fetch suppliers",
-      };
-    }
-    if (!res.data || !res.data.suppliers.length) {
+    const res = await getSuppliersAPIAction({ page: currentPage, pageSize });
+    if (!res.success || !res.data) {
+      if (currentPage === 1) {
+        return {
+          success: false,
+          data: null,
+          error: res?.error || "Failed to fetch suppliers",
+        };
+      }
       break;
     }
-    allSuppliers.push(...res.data.suppliers.map((s) => s.companyName));
-    if (allSuppliers.length >= res.data.totalItems || res.data.suppliers.length < pageSize) {
+    const names = res.data.suppliers.map((s) => s.companyName);
+    allNames = allNames.concat(names);
+    if (allNames.length >= res.data.totalItems || names.length === 0) {
       break;
     }
-    page++;
+    currentPage++;
   }
 
   return {
     success: true,
-    data: allSuppliers,
+    data: allNames,
     error: null,
   };
 }
@@ -225,53 +226,67 @@ export function DiscountsPage() {
 
         {/* Filters */}
         <div className="flex items-center gap-4 px-5 py-3">
-          <Select
-            disabled={filtersLoading}
-            value={supplier || ALL}
-            onValueChange={(v) => setSupplier(v === ALL ? "" : v)}
-          >
-            <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
-              <SelectValue placeholder={t(localizationConstants.discountsFilterSupplierPlaceholder)} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL}>
-                <Translate text={localizationConstants.discountsAllSuppliers} />
-              </SelectItem>
-              {filters.suppliers.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {s}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          {filtersLoading ? (
+            <>
+              <div className="h-9 w-[200px] animate-pulse rounded-[6px] bg-[#F1F5F9]" />
+              <div className="h-9 w-[200px] animate-pulse rounded-[6px] bg-[#F1F5F9]" />
+            </>
+          ) : (
+            <>
+              <Select
+                disabled={filtersLoading}
+                value={supplier || ALL}
+                onValueChange={(v) => setSupplier(v === ALL ? "" : v)}
+              >
+                <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
+                  <SelectValue placeholder={t(localizationConstants.discountsFilterSupplierPlaceholder)} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL}>
+                    <Translate text={localizationConstants.discountsAllSuppliers} />
+                  </SelectItem>
+                  {filters.suppliers.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-          <Select
-            disabled={filtersLoading}
-            value={category || ALL}
-            onValueChange={(v) => setCategory(v === ALL ? "" : v)}
-          >
-            <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
-              <SelectValue placeholder={t(localizationConstants.discountsFilterCategoryPlaceholder)} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={ALL}>
-                <Translate text={localizationConstants.discountsAllCategories} />
-              </SelectItem>
-              {filters.categories.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+              <Select
+                disabled={filtersLoading}
+                value={category || ALL}
+                onValueChange={(v) => setCategory(v === ALL ? "" : v)}
+              >
+                <SelectTrigger className="w-[200px] rounded-[6px] border-0 bg-[#F1F5F9] px-3 py-1.5 h-auto text-sm font-semibold text-[#0A0A0A] shadow-none">
+                  <SelectValue placeholder={t(localizationConstants.discountsFilterCategoryPlaceholder)} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL}>
+                    <Translate text={localizationConstants.discountsAllCategories} />
+                  </SelectItem>
+                  {filters.categories.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </>
+          )}
         </div>
 
         {/* Cards grid */}
         <div className="p-5">
           {initialLoading ? (
-            <p className="py-12 text-center text-sm text-slate-400">
-              <Translate text={localizationConstants.discountsLoading} />
-            </p>
+            <div className="flex flex-wrap gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-[220px] w-[300px] animate-pulse rounded-lg bg-[#F1F5F9]"
+                />
+              ))}
+            </div>
           ) : discounts.length === 0 ? (
             <p className="py-12 text-center text-sm text-slate-400">
               <Translate text={localizationConstants.discountsNotFound} />

@@ -1,8 +1,9 @@
 import axios from "axios";
 import axiosInstance from "@/lib/axiosInstance";
-import type { ActionResult, ApiError } from "@/types/api";
+import type { ActionResult } from "@/types/api";
 import type { DiscountPartnerDetail } from "@/features/discount/types/types";
 import { API_PATH } from "@/constants/api";
+import { handleApiError } from "@/utils/apiError";
 
 export async function getDiscountDetailAPIAction(
   partnerId: string,
@@ -20,11 +21,6 @@ export async function getDiscountDetailAPIAction(
         error: null,
       };
     }
-    const apiError = error as ApiError;
-    return {
-      success: false,
-      data: null,
-      error: apiError.response?.data?.message || "Failed to load discount details",
-    };
+    return handleApiError(error, "Failed to load discount details");
   }
 }

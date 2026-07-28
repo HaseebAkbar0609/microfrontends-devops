@@ -127,6 +127,12 @@ export function CreateSupplierView({
                     className="gap-1"
                     labelClassName={LABEL_CLASS}
                     inputClassName={INPUT_HEIGHT_CLASS}
+                    inputProps={{
+                      onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+                        const val = e.target.value.replace(/[<>]/g, "");
+                        form.setValue("companyName", val, { shouldValidate: true });
+                      },
+                    }}
                   />
                   <FormSelect
                     control={form.control}

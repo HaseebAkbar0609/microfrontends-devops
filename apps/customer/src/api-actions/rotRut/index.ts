@@ -127,7 +127,7 @@ const createRotRut = async (
 	payload: RotPayload
 ) => {
 	const normalizedCoOwnerId = digitsOnly(payload.coOwnerPersonalId ?? "") || undefined;
-	const isCoOwner = Boolean(payload.isCoOwner);
+	const isCoOwner = payload.isCoOwner;
 
 	return axiosInstance.post(API_PATH.ROT_RUT.create(projectId), {
 		deduction_type: deductionType,

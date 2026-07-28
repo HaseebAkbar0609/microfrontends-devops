@@ -41,6 +41,17 @@ function formatTimestamp(ts: number | string | null | undefined): string {
 	return `${year}-${month}-${day}`;
 }
 
+function maskPersonalNumber(pn?: string | null): string {
+	if (!pn) return "";
+	const cleaned = pn.replace(/\D/g, "");
+	if (cleaned.length === 12) {
+		return `${cleaned.slice(0, 8)}-****`;
+	} else if (cleaned.length === 10) {
+		return `${cleaned.slice(0, 6)}-****`;
+	}
+	return pn.length > 4 ? `${pn.slice(0, pn.length - 4)}****` : "****";
+}
+
 export async function getRotRutDetailsAPIAction(params: GetRotRutDetailsParams): Promise<GetRotRutDetailsResponse> {
 	try {
 		const { data: res } = await axiosInstance.get<{
@@ -61,18 +72,18 @@ export async function getRotRutDetailsAPIAction(params: GetRotRutDetailsParams):
 				id: `${item.id}-owner`,
 				isCoOwner: false,
 				name: item.owner_name ?? item.personnummer_masked,
-				personalNumber: item.personnummer ?? item.personnummer_masked,
+				personalNumber: item.personnummer_masked || maskPersonalNumber(item.personnummer),
 				sharePercentage: primaryShare,
 			},
 		];
 
-		if (item.is_co_owner && (item.co_owner_personnummer ?? item.co_owner_personnummer_masked)) {
+		if (item.is_co_owner && (item.co_owner_personnummer || item.co_owner_personnummer_masked)) {
 			const coOwnerShare = item.share_percentage != null ? Math.max(0, 100 - item.share_percentage) : 50;
 			owners.push({
 				id: `${item.id}-co-owner`,
 				isCoOwner: true,
 				name: item.co_owner_name ?? "Co-owner",
-				personalNumber: item.co_owner_personnummer ?? item.co_owner_personnummer_masked ?? "",
+				personalNumber: item.co_owner_personnummer_masked || maskPersonalNumber(item.co_owner_personnummer),
 				sharePercentage: coOwnerShare,
 			});
 		}

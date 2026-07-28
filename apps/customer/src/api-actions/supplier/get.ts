@@ -1,5 +1,6 @@
 import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
+import { getInitials } from "@/lib/utils";
 import type { ActionResult } from "@/types/api";
 import type { SupplierDetail, ToolDetail } from "@/types/tools-suppliers";
 import { handleApiError } from "@/utils/apiError";
@@ -41,7 +42,7 @@ export async function getSupplierOrToolByIdAPIAction(
 		const supplier: SupplierDetail = {
 			type: "supplier",
 			id: res.data.id,
-			initials: (res.data.company_name || "").split(" ").map((w: string) => w[0] || "").join("").toUpperCase().slice(0, 2) || "??",
+			initials: getInitials(res.data.company_name || ""),
 			name: res.data.company_name,
 			category: res.data.company_category || "",
 			location: res.data.location || (res.data.city ? `${res.data.city}${res.data.country ? `, ${res.data.country}` : ''}` : ""),
