@@ -1,11 +1,7 @@
 import { OfferDetailData } from "../types";
 
-export const DUMMY_OFFER_DETAIL: OfferDetailData = {
-  id: "1",
+const BASE_DETAIL = {
   postedDate: "18-12-2024",
-  titleKey: "Kitchen Renovation Job",
-  type: "Express",
-  isExpress: true,
   locations: ["Stockholm", "Järfälla"],
   images: [
     { id: "img-1", label: "Photo.img" },
@@ -27,3 +23,17 @@ export const DUMMY_OFFER_DETAIL: OfferDetailData = {
   description:
     "The company requires proven experience in kitchen renovation or interior design. A keen eye for design trends and a passion for creating stylish and functional spaces.",
 };
+
+const DUMMY_OFFER_DETAILS: Record<string, OfferDetailData> = {
+  "1001": { ...BASE_DETAIL, id: "1001", titleKey: "Bathroom Renovation Job", type: "B2C", isExpress: false },
+  "1002": { ...BASE_DETAIL, id: "1002", titleKey: "Kitchen Renovation Job", type: "Express", isExpress: true },
+  "1003": { ...BASE_DETAIL, id: "1003", titleKey: "Office Space Rental", type: "Rent", isExpress: false },
+  "1004": { ...BASE_DETAIL, id: "1004", titleKey: "Roof Repair Job", type: "B2C", isExpress: false },
+  "1005": { ...BASE_DETAIL, id: "1005", titleKey: "Facade Renovation", type: "Rent", isExpress: false },
+};
+
+export const DUMMY_OFFER_DETAIL = DUMMY_OFFER_DETAILS["1002"];
+
+export function getDummyOfferDetail(id: string): OfferDetailData {
+  return DUMMY_OFFER_DETAILS[id] ?? DUMMY_OFFER_DETAIL;
+}

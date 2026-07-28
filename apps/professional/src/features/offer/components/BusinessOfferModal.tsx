@@ -47,14 +47,12 @@ export function BusinessOfferModal({
         </div>
       }
       description={
-        <div className="w-full text-left">
-          <div className="mt-4 h-px w-full bg-slate-200" />
-          <p className="mt-4 text-base font-semibold leading-relaxed text-slate-700">
-            <Translate
-              text={localizationConstants.businessOfferModalSubtitle}
-            />
-          </p>
-        </div>
+        <span className="block w-full text-left">
+          <span className="mt-4 block h-px w-full bg-slate-200" />
+          <span className="mt-4 block text-base font-semibold leading-relaxed text-slate-700">
+            <Translate text={localizationConstants.businessOfferModalSubtitle} />
+          </span>
+        </span>
       }
       footer={
         <div className="flex w-full items-center justify-end gap-4 pt-4">
@@ -74,7 +72,7 @@ export function BusinessOfferModal({
               onOpenChange(false);
             }}
           >
-            <Check className="mr-2 h-4 w-4" />
+            <Check className="mr-1 h-4 w-4" />
             <Translate text={localizationConstants.businessOfferModalConfirm} />
           </Button>
         </div>
