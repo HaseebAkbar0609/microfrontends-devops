@@ -1,19 +1,21 @@
 "use client";
 
+import { useState } from "react";
 import { Calendar, CirclePlus, DollarSign, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-import { useTranslate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendConfirmationPanelProps } from "../types";
 
 export function OfferSendConfirmationPanel({
   data,
 }: OfferSendConfirmationPanelProps) {
   const t = useTranslate();
+  const [budget, setBudget] = useState("");
+  const [offerDate, setOfferDate] = useState("");
 
   return (
     <Card className="overflow-hidden rounded-lg border border-slate-200 bg-white p-0 shadow-sm">
@@ -51,6 +53,8 @@ export function OfferSendConfirmationPanel({
             <Translate text={localizationConstants.offerSendPreliminaryBudgetLabel} />
           </p>
           <Input
+            value={budget}
+            onChange={(e) => setBudget(e.target.value)}
             placeholder={t(localizationConstants.offerSendPreliminaryBudgetPlaceholder)}
             className="h-9 border-gray-200 bg-zinc-100 text-sm placeholder:text-zinc-400"
           />
@@ -61,6 +65,8 @@ export function OfferSendConfirmationPanel({
             <Translate text={localizationConstants.offerSendOfferDateLabel} />
           </p>
           <Input
+            value={offerDate}
+            onChange={(e) => setOfferDate(e.target.value)}
             placeholder={t(localizationConstants.offerSendOfferDatePlaceholder)}
             className="h-9 border-gray-200 bg-zinc-100 text-sm placeholder:text-zinc-400"
           />
