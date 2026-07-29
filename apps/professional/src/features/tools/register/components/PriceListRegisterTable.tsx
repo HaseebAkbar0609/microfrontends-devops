@@ -12,6 +12,7 @@ import {
 	PenLine,
 	Save,
 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -296,10 +297,12 @@ export function PriceListRegisterTable() {
 					</DropdownMenu>
 				</div>
 
-				<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
-					<Plus className="h-4 w-4" aria-hidden />
-					<Translate text={localizationConstants.registerNew} />
-				</Button>
+				<Link href="/tools/register/price-list/create-price-list" passHref>
+					<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
+						<Plus className="h-4 w-4" aria-hidden />
+						<Translate text={localizationConstants.registerNew} />
+					</Button>
+				</Link>
 			</div>
 
 			<DataTable

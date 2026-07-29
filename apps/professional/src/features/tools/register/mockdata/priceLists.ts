@@ -1,4 +1,4 @@
-import type { PriceListRegisterRow } from "../types";
+import type { PriceListRegisterRow, PriceListArticleRow } from "../types";
 
 export const MOCK_PRICE_LIST_REGISTER_DATA: PriceListRegisterRow[] = [
 	{
@@ -66,5 +66,58 @@ export const MOCK_PRICE_LIST_REGISTER_DATA: PriceListRegisterRow[] = [
 		skapadAv: "Sara Nilsson",
 		datum: "2025-06-01",
 		senastUppdaterad: "2025-07-10",
+	},
+];
+
+export const MOCK_ARTICLE_DATA: PriceListArticleRow[] = [
+	{
+		id: "art-1",
+		articleNo: "ART-001",
+		benamning: "Installation och Service",
+		outPriceListA: "1 250 kr",
+		calcCost: "850 kr",
+		stock: 120,
+		reserved: 10,
+		selected: false,
+	},
+	{
+		id: "art-2",
+		articleNo: "ART-002",
+		benamning: "Konsultation per timme",
+		outPriceListA: "950 kr",
+		calcCost: "600 kr",
+		stock: 0,
+		reserved: 0,
+		selected: false,
+	},
+	{
+		id: "art-3",
+		articleNo: "ART-003",
+		benamning: "Kabel Kat6 UTP 100m",
+		outPriceListA: "1 890 kr",
+		calcCost: "1 200 kr",
+		stock: 45,
+		reserved: 5,
+		selected: false,
+	},
+	{
+		id: "art-4",
+		articleNo: "ART-004",
+		benamning: "Vägguttag dubbel RJ45",
+		outPriceListA: "245 kr",
+		calcCost: "110 kr",
+		stock: 200,
+		reserved: 25,
+		selected: false,
+	},
+	{
+		id: "art-5",
+		articleNo: "ART-005",
+		benamning: "Patchpanel 24 portar Cat6",
+		outPriceListA: "1 450 kr",
+		calcCost: "900 kr",
+		stock: 15,
+		reserved: 2,
+		selected: false,
 	},
 ];
