@@ -8,15 +8,7 @@ import {
   ChevronsUpDown,
   ChevronUp,
   MoreVertical,
-  AtSign,
-  Circle,
 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,16 +20,28 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useDebounce } from "@/hooks/useDebounce";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { OfferQuotedItem } from "../types/offer";
+import { OfferQuotedTypeBadge } from "./OfferQuotedTypeBadge";
+import { OfferQuotedStatusBadge } from "./OfferQuotedStatusBadge";
+import { OfferQuotedContactCell } from "./OfferQuotedContactCell";
+import { OfferQuotedCommentModal } from "./OfferQuotedCommentModal";
+import { OfferQuotedAnswerModal } from "./OfferQuotedAnswerModal";
 
 type SortField = keyof Pick<
   OfferQuotedItem,
-  "offertNr" | "job" | "customerName" | "category" | "municipality" | "type" | "price" | "status" | "contactPerson"
+  | "offertNr"
+  | "job"
+  | "customerName"
+  | "category"
+  | "municipality"
+  | "type"
+  | "price"
+  | "status"
+  | "contactPerson"
 >;
 type SortDir = "asc" | "desc" | null;
 
@@ -57,6 +61,7 @@ interface Props {
 export function OfferQuotedView({ offerId, items }: Props) {
   const t = useTranslate();
   const router = useRouter();
+
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [sortField, setSortField] = useState<SortField | null>(null);
@@ -69,7 +74,6 @@ export function OfferQuotedView({ offerId, items }: Props) {
     offertNr: "",
     job: "",
   });
-  const [commentText, setCommentText] = useState("");
 
   const [answerModal, setAnswerModal] = useState<AnswerModal>({
     open: false,
@@ -142,7 +146,6 @@ export function OfferQuotedView({ offerId, items }: Props) {
   }
 
   function openCommentModal(item: OfferQuotedItem) {
-    setCommentText("");
     setCommentModal({ open: true, offertNr: item.offertNr, job: item.job });
   }
 
@@ -167,74 +170,6 @@ export function OfferQuotedView({ offerId, items }: Props) {
     { key: "status", label: t(localizationConstants.statusLabel) },
     { key: "contactPerson", label: t(localizationConstants.offerQuotedContactPerson) },
   ];
-
-  function TypeBadge({ type }: { type: string }) {
-    const lower = type.toLowerCase();
-    const isExpress = lower === "express";
-    const isB2C = lower === "b2c";
-    return (
-      <span
-        className={cn(
-          "inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium",
-          isExpress && "bg-slate-100 text-slate-700 ring-1 ring-slate-200",
-          isB2C && "bg-slate-800 text-white",
-          !isExpress && !isB2C && "bg-slate-50 text-slate-600 ring-1 ring-slate-200",
-        )}
-      >
-        {type}
-      </span>
-    );
-  }
-
-  function StatusBadge({ item }: { item: OfferQuotedItem }) {
-    const isOpened = item.status === "opened";
-    return (
-      <div className="group/status relative inline-block">
-        <span
-          className={cn(
-            "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium",
-            isOpened
-              ? "bg-green-50 text-green-700 ring-1 ring-green-200"
-              : "bg-orange-50 text-orange-600 ring-1 ring-orange-200",
-          )}
-        >
-          {isOpened ? (
-            <Circle className="h-2 w-2 fill-green-500 text-green-500" />
-          ) : (
-            <AtSign className="h-3 w-3" />
-          )}
-          {isOpened
-            ? t(localizationConstants.offerQuotedStatusOpened)
-            : t(localizationConstants.offerQuotedStatusNotReviewed)}
-        </span>
-        {isOpened && item.openedAt && (
-          <div className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 hidden min-w-max rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 shadow-md group-hover/status:block">
-            {t(localizationConstants.offerQuotedOpenedAt)} {item.openedAt}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  function ContactCell({ item }: { item: OfferQuotedItem }) {
-    const initials = item.contactPerson.name
-      .split(" ")
-      .map((n) => n[0])
-      .join(".")
-      .toUpperCase();
-
-    return (
-      <div className="group/contact relative">
-        <span className="cursor-default text-slate-600">{initials}</span>
-        <div className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 hidden min-w-max rounded-md border border-slate-200 bg-white px-3 py-2 shadow-md group-hover/contact:block">
-          <p className="text-xs font-medium text-slate-900">
-            {item.contactPerson.phone}
-          </p>
-          <p className="text-xs text-slate-500">{item.contactPerson.email}</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-1 flex-col bg-white">
@@ -312,12 +247,12 @@ export function OfferQuotedView({ offerId, items }: Props) {
         {/* Total sum */}
         <p className="text-base font-semibold text-slate-900">
           {t(localizationConstants.offerQuotedTotalLabel)}{" "}
-          {totalSum.toLocaleString("sv-SE")}
+          {formatCurrency(totalSum)}
         </p>
 
         {/* Table */}
         <div className="overflow-x-auto rounded-lg border border-slate-200">
-          <table className="w-full text-sm" style={{ minWidth: "1100px" }}>
+          <table className="min-w-275 w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-white">
                 {columns.map((col) => (
@@ -332,7 +267,6 @@ export function OfferQuotedView({ offerId, items }: Props) {
                     </span>
                   </th>
                 ))}
-                {/* Add column button */}
                 <th className="px-2 py-3 text-left">
                   <button
                     type="button"
@@ -367,20 +301,18 @@ export function OfferQuotedView({ offerId, items }: Props) {
                     {row.municipality}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
-                    <TypeBadge type={row.type} />
+                    <OfferQuotedTypeBadge type={row.type} />
                   </td>
                   <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900 tabular-nums">
-                    {row.price.toLocaleString("sv-SE")}
+                    {formatCurrency(row.price)}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
-                    <StatusBadge item={row} />
+                    <OfferQuotedStatusBadge item={row} />
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
-                    <ContactCell item={row} />
+                    <OfferQuotedContactCell item={row} />
                   </td>
-                  {/* Add column placeholder */}
                   <td className="px-2 py-3" />
-                  {/* Sticky actions */}
                   <td className="sticky right-0 border-l border-slate-200 bg-white px-4 py-3 group-hover:bg-slate-50">
                     <div className="flex items-center gap-2">
                       <Button
@@ -505,98 +437,28 @@ export function OfferQuotedView({ offerId, items }: Props) {
         </div>
       </div>
 
-      {/* Leave Comment Modal */}
-      <Dialog
+      <OfferQuotedCommentModal
         open={commentModal.open}
-        onOpenChange={(open) =>
-          setCommentModal((prev) => ({ ...prev, open }))
-        }
-      >
-        <DialogContent className="w-110 p-0">
-          <DialogHeader className="border-b border-slate-100 px-6 py-4">
-            <DialogTitle className="text-base font-semibold text-slate-900">
-              {t(localizationConstants.offerQuotedCommentTitle)}
-            </DialogTitle>
-            <p className="mt-0.5 text-sm text-slate-500">
-              {commentModal.job} – {commentModal.offertNr}
-            </p>
-          </DialogHeader>
-          <div className="px-6 py-4">
-            <Textarea
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              placeholder={t(localizationConstants.offerQuotedCommentPlaceholder)}
-              className="min-h-28 resize-none bg-white text-sm"
-            />
-          </div>
-          <div className="flex items-center justify-end gap-2 border-t border-slate-100 px-6 py-4">
-            <Button
-              variant="outline"
-              className="h-9 cursor-pointer px-5 text-sm"
-              onClick={() =>
-                setCommentModal((prev) => ({ ...prev, open: false }))
-              }
-            >
-              {t(localizationConstants.cancel)}
-            </Button>
-            <Button
-              className="h-9 cursor-pointer bg-neutral-950 px-5 text-sm text-white hover:bg-neutral-800"
-              onClick={() =>
-                setCommentModal((prev) => ({ ...prev, open: false }))
-              }
-            >
-              {t(localizationConstants.offerQuotedCommentSend)}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        offertNr={commentModal.offertNr}
+        job={commentModal.job}
+        onClose={() => setCommentModal((prev) => ({ ...prev, open: false }))}
+      />
 
-      {/* Customer's Answer Modal */}
-      <Dialog
+      <OfferQuotedAnswerModal
         open={answerModal.open}
-        onOpenChange={(open) =>
-          setAnswerModal((prev) => ({ ...prev, open }))
-        }
-      >
-        <DialogContent className="w-110 p-0">
-          <DialogHeader className="border-b border-slate-100 px-6 py-4">
-            <DialogTitle className="text-base font-semibold text-slate-900">
-              {t(localizationConstants.offerQuotedAnswerTitle)}
-            </DialogTitle>
-            <p className="mt-0.5 text-sm text-slate-500">
-              {answerModal.job} – {answerModal.offertNr}
-            </p>
-          </DialogHeader>
-          <div className="px-6 py-4">
-            <p className="text-sm text-slate-700">{answerModal.answer}</p>
-          </div>
-          <div className="flex items-center justify-between border-t border-slate-100 px-6 py-4">
-            <Button
-              variant="outline"
-              className="h-9 cursor-pointer px-5 text-sm"
-              onClick={() =>
-                setAnswerModal((prev) => ({ ...prev, open: false }))
-              }
-            >
-              {t(localizationConstants.offerQuotedAnswerBack)}
-            </Button>
-            <Button
-              className="h-9 cursor-pointer bg-neutral-950 px-5 text-sm text-white hover:bg-neutral-800"
-              onClick={() => {
-                setAnswerModal((prev) => ({ ...prev, open: false }));
-                setCommentModal({
-                  open: true,
-                  offertNr: answerModal.offertNr,
-                  job: answerModal.job,
-                });
-                setCommentText("");
-              }}
-            >
-              {t(localizationConstants.offerQuotedAnswerLeaveComment)}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+        offertNr={answerModal.offertNr}
+        job={answerModal.job}
+        answer={answerModal.answer}
+        onClose={() => setAnswerModal((prev) => ({ ...prev, open: false }))}
+        onLeaveComment={() => {
+          setAnswerModal((prev) => ({ ...prev, open: false }));
+          setCommentModal({
+            open: true,
+            offertNr: answerModal.offertNr,
+            job: answerModal.job,
+          });
+        }}
+      />
     </div>
   );
 }
