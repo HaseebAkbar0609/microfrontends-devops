@@ -46,6 +46,8 @@ export interface DataTableColumn<TData> {
 	key: string;
 	/** Translation key used for the column header label. */
 	label: string;
+	/** Custom header renderer for complex headers like checkboxes. */
+	headerRender?: (column: DataTableColumn<TData>) => ReactNode;
 	/** Whether the column is sortable. Defaults to false. */
 	sortable?: boolean;
 	/** Tailwind classes applied to the <th> element. */
@@ -212,8 +214,8 @@ export function DataTable<TData>({
 									)}
 									onClick={() => handleHeaderClick(col)}
 								>
-									<div className="flex items-center gap-1">
-										<Translate text={col.label} />
+									<div className={cn("flex items-center gap-1", col.headerClassName?.includes("text-center") && "justify-center")}>
+										{col.headerRender ? col.headerRender(col) : <Translate text={col.label} />}
 										{col.sortable && (
 											<SortIcon
 												field={col.key}

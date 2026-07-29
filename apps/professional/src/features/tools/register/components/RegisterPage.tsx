@@ -19,6 +19,7 @@ import { SupplierRegisterTable } from "./SupplierRegisterTable";
 import { ArticleRegisterTable } from "./ArticleRegisterTable";
 import { SupplierArticleRegisterTable } from "./SupplierArticleRegisterTable";
 import { PriceListRegisterTable, PriceListUpdatePanel } from "./PriceListRegisterTable";
+import { CostCenterRegisterTable } from "./CostCenterRegisterTable";
 
 function RegisterContent() {
 	const { t } = useTranslation();
@@ -115,6 +116,12 @@ function RegisterContent() {
 						>
 							<Translate text={localizationConstants.priceListOption} />
 						</SelectItem>
+						<SelectItem
+							value="kostnadsstalle"
+							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
+						>
+							<Translate text={localizationConstants.costCenterSubTitle} />
+						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
@@ -179,8 +186,10 @@ function RegisterContent() {
 						>
 							{selectedRegister === "kund" ? (
 								<Translate text={localizationConstants.customerListTab} />
-							) : (
+							) : selectedRegister === "supplier" ? (
 								<Translate text={localizationConstants.supplierListTab} />
+							) : (
+								<Translate text={localizationConstants.costCenterSubTitle} />
 							)}
 						</button>
 					)}
@@ -216,6 +225,11 @@ function RegisterContent() {
 			{selectedRegister === "prislista" && priceListSubTab === "uppdatera" && (
 				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 					<PriceListUpdatePanel />
+				</Suspense>
+			)}
+			{selectedRegister === "kostnadsstalle" && (
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
+					<CostCenterRegisterTable />
 				</Suspense>
 			)}
 		</div>

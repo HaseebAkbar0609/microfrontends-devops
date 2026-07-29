@@ -2093,6 +2093,21 @@ export const enRegister: RegisterTranslation = {
 	priceListStatusHeader: "Status",
 	priceListValidPeriodHeader: "Valid Period",
 	draftStatus: "Draft",
+
+	// Cost Center Register Translations (TFS-446)
+	costCenterTitle: "Chart of Accounts - Base",
+	costCenterSubTitle: "Cost Center",
+	createCostCenterButtonText: "Create Cost Center",
+	costCenterCodeHeader: "CODE",
+	costCenterNameHeader: "Name",
+	costCenterNotesHeader: "Notes",
+	inactivateButton: "Inactivate",
+	activateButton: "Activate",
+	markedCountText: "selected",
+	costCenterAllStatus: "All statuses",
+	costCenterActiveStatus: "Active",
+	costCenterInactiveStatus: "Inactive",
+	noCostCentersMessage: "No cost centers found.",
 };
 
 export const en: Translation = {

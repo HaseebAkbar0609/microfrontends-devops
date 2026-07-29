@@ -676,3 +676,30 @@ export interface PriceListDetailArticle {
 	status: "active" | "inactive";
 }
 
+// Cost Center Register Types (TFS-446)
+export interface CostCenterRegisterRow {
+	id: string;
+	kod: string;
+	benamning: string;
+	anteckningar: string;
+	status: "active" | "inactive";
+	selected?: boolean;
+}
+
+export interface GetCostCenterListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetCostCenterListResponse {
+	data: CostCenterRegisterRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
