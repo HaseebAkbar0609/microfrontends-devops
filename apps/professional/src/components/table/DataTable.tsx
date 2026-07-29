@@ -110,6 +110,8 @@ export interface DataTableProps<TData> {
 	skeletonRows?: number;
 	/** Optional border wrapper. Defaults to false. */
 	bordered?: boolean;
+
+	variant?: "default" | "striped";
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -153,8 +155,12 @@ export function DataTable<TData>({
 	onSort,
 	skeletonRows = 5,
 	bordered = false,
+	variant = "default",
 }: DataTableProps<TData>) {
-	const hasActions = Boolean((actions && actions.length > 0) || primaryAction);
+	const hasActions = Boolean(
+		(actions && actions.length > 0) || primaryAction,
+	);
+	const striped = variant === "striped";
 	const totalItems = pagination?.totalItems ?? data.length;
 	const pageSize = pagination?.pageSize ?? 10;
 	const page = pagination?.page ?? 1;
@@ -176,18 +182,32 @@ export function DataTable<TData>({
 			<div
 				className={cn(
 					"w-full overflow-x-auto relative bg-white",
-					bordered && "rounded-lg border border-slate-200 shadow-2xs",
+					bordered &&
+						(striped
+							? "rounded-md border border-slate-200"
+							: "rounded-lg border border-slate-200 shadow-2xs"),
 				)}
 			>
 				<Table className="w-full min-w-[1000px] table-auto border-collapse">
-					<TableHeader>
-						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+					<TableHeader className={cn(striped && "bg-slate-50/50")}>
+						<TableRow
+							className={cn(
+								"border-b border-slate-200",
+								striped
+									? "hover:bg-transparent"
+									: "bg-white hover:bg-white",
+							)}
+						>
 							{columns.map((col) => (
 								<TableHead
 									key={col.key}
 									className={cn(
-										"py-3.5 px-4 text-xs font-semibold text-slate-600 transition-colors select-none whitespace-nowrap",
-										col.sortable && "cursor-pointer hover:text-slate-900",
+										"py-3.5 px-4 transition-colors select-none whitespace-nowrap",
+										striped
+											? "h-auto text-left text-sm font-medium text-slate-500"
+											: "text-xs font-semibold text-slate-600",
+										col.sortable &&
+											"cursor-pointer hover:text-slate-900",
 										col.headerClassName,
 									)}
 									onClick={() => handleHeaderClick(col)}
@@ -205,90 +225,145 @@ export function DataTable<TData>({
 								</TableHead>
 							))}
 							{hasActions && (
-								<TableHead className={ACTIONS_COLUMN_CLASS.head} aria-label="Actions" />
+								<TableHead
+									className={ACTIONS_COLUMN_CLASS.head}
+									aria-label="Actions"
+								/>
 							)}
 						</TableRow>
 					</TableHeader>
 
 					<TableBody>
 						{loading ? (
-							Array.from({ length: skeletonRows }).map((_, idx) => (
-								<TableRow key={`skeleton-${idx}`}>
-									{columns.map((col) => (
-										<TableCell key={col.key} className="px-4 py-3.5">
-											<Skeleton className="h-4 w-full" />
-										</TableCell>
-									))}
-									{hasActions && (
-										<TableCell className={ACTIONS_COLUMN_CLASS.cell}>
-											<Skeleton className="h-4 w-8 ml-auto" />
-										</TableCell>
-									)}
-								</TableRow>
-							))
+							Array.from({ length: skeletonRows }).map(
+								(_, idx) => (
+									<TableRow key={`skeleton-${idx}`}>
+										{columns.map((col) => (
+											<TableCell
+												key={col.key}
+												className="px-4 py-3.5"
+											>
+												<Skeleton className="h-4 w-full" />
+											</TableCell>
+										))}
+										{hasActions && (
+											<TableCell
+												className={
+													ACTIONS_COLUMN_CLASS.cell
+												}
+											>
+												<Skeleton className="h-4 w-8 ml-auto" />
+											</TableCell>
+										)}
+									</TableRow>
+								),
+							)
 						) : data.length === 0 ? (
 							<TableRow>
 								<TableCell
-									colSpan={columns.length + (hasActions ? 1 : 0)}
+									colSpan={
+										columns.length + (hasActions ? 1 : 0)
+									}
 									className="py-12 text-center text-sm text-slate-500"
 								>
-									<Translate text={emptyMessageKey || "noDataFound"} />
+									<Translate
+										text={emptyMessageKey || "noDataFound"}
+									/>
 								</TableCell>
 							</TableRow>
 						) : (
 							data.map((row) => (
 								<TableRow
 									key={rowKey(row)}
-									className="group border-b border-slate-100 hover:bg-slate-50/60 transition-colors"
+									className={cn(
+										"group border-b border-slate-100 transition-colors",
+										striped
+											? "odd:bg-white even:bg-slate-50/40 hover:bg-slate-100/60"
+											: "hover:bg-slate-50/60",
+									)}
 								>
 									{columns.map((col) => (
 										<TableCell
 											key={col.key}
 											className={cn(
-												"px-4 py-3.5 text-sm font-normal text-slate-700 whitespace-nowrap",
+												"px-4 py-3.5 text-sm font-normal whitespace-nowrap",
+												striped
+													? "text-slate-600"
+													: "text-slate-700",
 												col.cellClassName,
 											)}
 										>
 											{col.render
 												? col.render(row)
-												: String((row as Record<string, unknown>)[col.key] ?? "")}
+												: String(
+														(
+															row as Record<
+																string,
+																unknown
+															>
+														)[col.key] ?? "",
+													)}
 										</TableCell>
 									))}
 
 									{hasActions && (
-										<TableCell className={ACTIONS_COLUMN_CLASS.cell}>
+										<TableCell
+											className={
+												ACTIONS_COLUMN_CLASS.cell
+											}
+										>
 											<div className="flex items-center justify-end gap-1">
 												{primaryAction?.(row)}
-												{actions && actions.length > 0 && (
-													<DropdownMenu>
-														<DropdownMenuTrigger asChild>
-															<Button
-																variant="ghost"
-																size="icon"
-																className="h-8 w-8 text-slate-500 hover:text-slate-900 rounded-md"
+												{actions &&
+													actions.length > 0 && (
+														<DropdownMenu>
+															<DropdownMenuTrigger
+																asChild
 															>
-																<MoreVertical className="h-4 w-4" />
-															</Button>
-														</DropdownMenuTrigger>
-														<DropdownMenuContent align="end" className="w-40 border border-slate-200 bg-white shadow-md rounded-md p-1">
-															{actions.map((act) => (
-																<DropdownMenuItem
-																	key={act.label}
-																	onClick={() => act.onClick(row)}
-																	className={cn(
-																		"gap-2 text-sm cursor-pointer px-3 py-2 rounded-md transition-colors",
-																		act.destructive
-																			? "text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-700"
-																			: "text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:text-slate-900",
-																	)}
+																<Button
+																	variant="ghost"
+																	size="icon"
+																	className="h-8 w-8 text-slate-500 hover:text-slate-900 rounded-md"
 																>
-																	{act.icon}
-																	<Translate text={act.label} />
-																</DropdownMenuItem>
-															))}
-														</DropdownMenuContent>
-													</DropdownMenu>
-												)}
+																	<MoreVertical className="h-4 w-4" />
+																</Button>
+															</DropdownMenuTrigger>
+															<DropdownMenuContent
+																align="end"
+																className="w-40 border border-slate-200 bg-white shadow-md rounded-md p-1"
+															>
+																{actions.map(
+																	(act) => (
+																		<DropdownMenuItem
+																			key={
+																				act.label
+																			}
+																			onClick={() =>
+																				act.onClick(
+																					row,
+																				)
+																			}
+																			className={cn(
+																				"gap-2 text-sm cursor-pointer px-3 py-2 rounded-md transition-colors",
+																				act.destructive
+																					? "text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-700"
+																					: "text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:text-slate-900",
+																			)}
+																		>
+																			{
+																				act.icon
+																			}
+																			<Translate
+																				text={
+																					act.label
+																				}
+																			/>
+																		</DropdownMenuItem>
+																	),
+																)}
+															</DropdownMenuContent>
+														</DropdownMenu>
+													)}
 											</div>
 										</TableCell>
 									)}
@@ -301,15 +376,26 @@ export function DataTable<TData>({
 
 			{/* Pagination Controls Bar matching Customer Dashboard */}
 			{pagination && (
-				<div className="flex items-center justify-center sm:justify-end gap-6 py-2 px-1 text-sm text-slate-600 flex-wrap">
+				<div
+					className={cn(
+						"flex items-center gap-6 text-sm text-slate-600 flex-wrap",
+						striped
+							? "justify-center py-4"
+							: "justify-center sm:justify-end py-2 px-1",
+					)}
+				>
 					{/* Rows per page selector */}
 					<div className="flex items-center gap-2">
 						<span className="text-sm font-medium text-slate-700">
-							<Translate text={localizationConstants.rowsPerPageLabel} />
+							<Translate
+								text={localizationConstants.rowsPerPageLabel}
+							/>
 						</span>
 						<Select
 							value={String(pageSize)}
-							onValueChange={(val) => onPageSizeChange?.(Number(val))}
+							onValueChange={(val) =>
+								onPageSizeChange?.(Number(val))
+							}
 						>
 							<SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0">
 								<SelectValue placeholder={String(pageSize)} />

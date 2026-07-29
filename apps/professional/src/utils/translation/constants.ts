@@ -637,6 +637,35 @@ export type OfferTranslation = {
 	adminGroupsPermPurchase: string;
 	// Home - Dashboard widgets
 	widgetMockDataNote: string;
+	// Admin - Economy invoices
+	economyInvoicesTitle: string;
+	economyInvoiceCol: string;
+	economyDateCol: string;
+	economyAmountCol: string;
+	economyActionCol: string;
+	economyOpenInvoice: string;
+	economyNoInvoices: string;
+	economyFilterAll: string;
+	economyFilterRecent: string;
+	economyFilterOlder: string;
+	invoicePreviewYourLogo: string;
+	invoicePreviewNoPrefix: string;
+	invoicePreviewTitle: string;
+	invoicePreviewDateLabel: string;
+	invoicePreviewBilledTo: string;
+	invoicePreviewFrom: string;
+	invoicePreviewItemCol: string;
+	invoicePreviewQuantityCol: string;
+	invoicePreviewPriceCol: string;
+	invoicePreviewAmountCol: string;
+	invoicePreviewTotal: string;
+	invoicePreviewPaymentMethod: string;
+	invoicePreviewNoteLabel: string;
+	invoicePreviewNoteText: string;
+	invoicePreviewBack: string;
+	invoicePreviewDownload: string;
+	invoicePreviewPrint: string;
+	invoicePreviewNotFound: string;
 	// Project - Dashboard widgets
 	projectDashboardTitle: string;
 	projWidgetOverviewTitle: string;
