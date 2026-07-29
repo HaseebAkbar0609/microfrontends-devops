@@ -81,6 +81,7 @@ export const API_PATH = {
 	},
 	PRICE_LISTS: {
 		LIST: `${PROFESSIONALS_BASE_PATH}/pricelists`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/pricelists`,
 		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}`,
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}`,
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}`,
