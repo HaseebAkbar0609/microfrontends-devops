@@ -133,35 +133,3 @@
 		overflow: hidden;
 	}
 }
-
-@media print {
-	@page {
-		margin: 0;
-	}
-
-	body {
-		overflow: visible;
-	}
-
-	body * {
-		visibility: hidden;
-	}
-
-	.invoice-print-area,
-	.invoice-print-area * {
-		visibility: visible;
-	}
-
-	.invoice-print-area {
-		position: absolute;
-		inset: 0 auto auto 50%;
-		transform: translateX(-50%);
-		width: 100%;
-		max-width: 44rem;
-		min-height: 100vh;
-		justify-content: space-between;
-		box-shadow: none;
-		print-color-adjust: exact;
-		-webkit-print-color-adjust: exact;
-	}
-}

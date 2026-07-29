@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { EconomyInvoice, getInvoiceLinesTotal } from "../constants/mockData";
+import "./invoice-print.css";
 
 const InvoiceWaves = () => (
 	<svg

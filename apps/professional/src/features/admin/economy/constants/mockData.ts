@@ -146,8 +146,5 @@ export const ECONOMY_MOCK_INVOICES: EconomyInvoice[] = [
 export const formatInvoiceDate = (isoDate: string): string =>
 	isoDate.split("-").reverse().join("-");
 
-export const getEconomyInvoiceById = (id: string): EconomyInvoice | undefined =>
-	ECONOMY_MOCK_INVOICES.find((invoice) => invoice.id === id);
-
 export const getInvoiceLinesTotal = (invoice: EconomyInvoice): number =>
 	invoice.lines.reduce((sum, line) => sum + line.quantity * line.price, 0);

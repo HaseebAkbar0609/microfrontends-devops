@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -13,69 +13,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { DynamicBreadcrumb } from "@/components/common";
 import { DataTable, DataTableColumn } from "@/components/table/DataTable";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
 import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
 	ECONOMY_INVOICE_COLUMNS,
 	ECONOMY_INVOICE_FILTERS,
-	EconomyInvoiceFilterId,
 } from "../constants";
-import {
-	ECONOMY_MOCK_INVOICES,
-	EconomyInvoice,
-	formatInvoiceDate,
-} from "../constants/mockData";
-
-type SortOrder = "asc" | "desc" | null;
-
-const RECENT_CUTOFF = mockDate(-30);
+import { EconomyInvoice, formatInvoiceDate } from "../constants/mockData";
+import { useInvoiceFilters } from "../hooks/useInvoiceFilters";
+import { listEconomyInvoices } from "../services/invoiceService";
 
 const AdminEconomy = () => {
 	const router = useRouter();
 	const t = useTranslate();
-	const [search, setSearch] = useState("");
-	const [filterId, setFilterId] = useState<EconomyInvoiceFilterId>("all");
-	const [sortBy, setSortBy] = useState<string | undefined>(undefined);
-	const [sortOrder, setSortOrder] = useState<SortOrder>(null);
-	const [page, setPage] = useState(1);
-	const [pageSize, setPageSize] = useState(10);
-
-	const filtered = useMemo(() => {
-		const term = search.trim().toLowerCase();
-		let rows = ECONOMY_MOCK_INVOICES;
-
-		if (filterId === "recent")
-			rows = rows.filter((invoice) => invoice.date >= RECENT_CUTOFF);
-		else if (filterId === "older")
-			rows = rows.filter((invoice) => invoice.date < RECENT_CUTOFF);
-
-		if (term)
-			rows = rows.filter(
-				(invoice) =>
-					invoice.invoiceNo.toLowerCase().includes(term) ||
-					invoice.billedTo.name.toLowerCase().includes(term),
-			);
-
-		if (sortBy && sortOrder) {
-			const direction = sortOrder === "asc" ? 1 : -1;
-			rows = [...rows].sort((a, b) => {
-				if (sortBy === "amount")
-					return (a.amount - b.amount) * direction;
-				const left = String(a[sortBy as keyof EconomyInvoice] ?? "");
-				const right = String(b[sortBy as keyof EconomyInvoice] ?? "");
-				return left.localeCompare(right) * direction;
-			});
-		}
-
-		return rows;
-	}, [search, filterId, sortBy, sortOrder]);
-
-	const paged = useMemo(
-		() => filtered.slice((page - 1) * pageSize, page * pageSize),
-		[filtered, page, pageSize],
-	);
+	const invoices = useMemo(() => listEconomyInvoices(), []);
+	const {
+		search,
+		setSearch,
+		filterId,
+		setFilterId,
+		sortBy,
+		sortOrder,
+		handleSort,
+		page,
+		setPage,
+		pageSize,
+		setPageSize,
+		filtered,
+		paged,
+	} = useInvoiceFilters(invoices);
 
 	const columns = useMemo<DataTableColumn<EconomyInvoice>[]>(() => {
 		const cellRenderers: Partial<
@@ -138,10 +105,7 @@ const AdminEconomy = () => {
 					<Search className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
 					<Input
 						value={search}
-						onChange={(event) => {
-							setSearch(event.target.value);
-							setPage(1);
-						}}
+						onChange={(event) => setSearch(event.target.value)}
 						placeholder={t(localizationConstants.search)}
 						className="h-9 rounded-none border-0 border-b border-slate-200 bg-transparent pl-6 text-sm shadow-none focus-visible:border-slate-400 focus-visible:ring-0"
 					/>
@@ -164,10 +128,7 @@ const AdminEconomy = () => {
 						{ECONOMY_INVOICE_FILTERS.map((filter) => (
 							<DropdownMenuItem
 								key={filter.id}
-								onClick={() => {
-									setFilterId(filter.id);
-									setPage(1);
-								}}
+								onClick={() => setFilterId(filter.id)}
 								className={cn(
 									"cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700",
 									filter.id === filterId &&
@@ -190,21 +151,14 @@ const AdminEconomy = () => {
 				emptyMessageKey={localizationConstants.economyNoInvoices}
 				sortBy={sortBy}
 				sortOrder={sortOrder ?? undefined}
-				onSort={(field, nextOrder) => {
-					setSortBy(nextOrder ? field : undefined);
-					setSortOrder(nextOrder);
-					setPage(1);
-				}}
+				onSort={handleSort}
 				pagination={{
 					page,
 					pageSize,
 					totalItems: filtered.length,
 				}}
 				onPageChange={setPage}
-				onPageSizeChange={(size) => {
-					setPageSize(size);
-					setPage(1);
-				}}
+				onPageSizeChange={setPageSize}
 			/>
 		</div>
 	);

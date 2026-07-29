@@ -1,6 +1,6 @@
 import Link from "next/link";
 import InvoicePreview from "@/features/admin/economy/components/InvoicePreview";
-import { getEconomyInvoiceById } from "@/features/admin/economy/constants/mockData";
+import { getEconomyInvoiceById } from "@/features/admin/economy/services/invoiceService";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
