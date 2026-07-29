@@ -19,20 +19,74 @@ export const LICENSE_TABS: { id: LicenseTabId; label: string }[] = [
 	},
 ];
 
+export const LICENSE_TAB_HEADINGS: Partial<Record<LicenseTabId, string>> = {
+	addonSystem: localizationConstants.licensesHeadingAddonSystem,
+	addonApp: localizationConstants.licensesHeadingAddonApp,
+	addonCommunication: localizationConstants.licensesHeadingAddonCommunication,
+};
+
+export const LICENSE_CATEGORY_IDS = [
+	"economy",
+	"purchasing",
+	"calculation",
+	"order",
+	"storage",
+	"machine",
+] as const;
+
+export type LicenseCategoryId = (typeof LICENSE_CATEGORY_IDS)[number];
+
+export const LICENSE_CATEGORIES: {
+	id: LicenseCategoryId;
+	label: string;
+}[] = [
+	{ id: "economy", label: localizationConstants.licensesCatEconomy },
+	{ id: "purchasing", label: localizationConstants.licensesCatPurchasing },
+	{ id: "calculation", label: localizationConstants.licensesCatCalculation },
+	{ id: "order", label: localizationConstants.licensesCatOrder },
+	{ id: "storage", label: localizationConstants.licensesCatStorage },
+	{ id: "machine", label: localizationConstants.licensesCatMachine },
+];
+
+export interface LicenseVersionOption {
+	id: string;
+	label: string;
+	priceLabel: string;
+	price: number | null;
+}
+
 export interface LicensePackage {
 	id: string;
 	name: string;
-	price: number;
+	priceLabel: string;
+	price: number | null;
 	feeKey: string;
-	modulesKey: string;
+	modulesKey?: string;
+	versionText?: string;
+	versionOptions?: LicenseVersionOption[];
+	versionChecklist?: LicenseVersionOption[];
+	connectedSystems?: string;
+	industryOptionKeys?: string[];
+	categoryId?: LicenseCategoryId;
 	action: "upgrade" | "add";
 }
+
+const INDUSTRY_OPTION_KEYS = [
+	localizationConstants.licensesIndustryFloor,
+	localizationConstants.licensesIndustryPainting,
+	localizationConstants.licensesIndustryCleaning,
+	localizationConstants.licensesIndustryConstruction,
+	localizationConstants.licensesIndustryPlumbing,
+	localizationConstants.licensesIndustryTiler,
+	localizationConstants.licensesIndustryElectrician,
+];
 
 export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 	system: [
 		{
 			id: "timeflow-start",
 			name: "TimeFlow - Start",
+			priceLabel: "2995",
 			price: 2995,
 			feeKey: localizationConstants.licensesStartFee,
 			modulesKey: localizationConstants.licensesStartModules,
@@ -41,6 +95,7 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "timeflow-standard",
 			name: "TimeFlow - Standard",
+			priceLabel: "995",
 			price: 995,
 			feeKey: localizationConstants.licensesStandardFee,
 			modulesKey: localizationConstants.licensesStandardModules,
@@ -49,6 +104,7 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "timeflow-pro",
 			name: "TimeFlow - Pro",
+			priceLabel: "1295",
 			price: 1295,
 			feeKey: localizationConstants.licensesProFee,
 			modulesKey: localizationConstants.licensesProModules,
@@ -57,6 +113,7 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "app-timeflow-work",
 			name: "App - Timeflow Work",
+			priceLabel: "129",
 			price: 129,
 			feeKey: localizationConstants.licensesAppWorkFee,
 			modulesKey: localizationConstants.licensesAppWorkModules,
@@ -65,85 +122,203 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 	],
 	addonSystem: [
 		{
-			id: "addon-stock",
-			name: "Tillval - Lagerhantering",
-			price: 295,
-			feeKey: localizationConstants.licensesAddonStockFee,
-			modulesKey: localizationConstants.licensesAddonStockModules,
+			id: "connect-economy",
+			name: "Connect - Economi",
+			priceLabel: "99",
+			price: 99,
+			feeKey: localizationConstants.licensesConnectEconomyFee,
+			modulesKey: localizationConstants.licensesConnectEconomyModules,
+			versionText: "Connect Economi",
+			connectedSystems:
+				"Fortnox | Visma | Björn Lunden | Microsoft | Softone",
+			categoryId: "economy",
 			action: "add",
 		},
 		{
-			id: "addon-time",
-			name: "Tillval - Tidrapportering Plus",
-			price: 195,
-			feeKey: localizationConstants.licensesAddonTimeFee,
-			modulesKey: localizationConstants.licensesAddonTimeModules,
+			id: "scan-supplier",
+			name: "Scan- supplier",
+			priceLabel: "5 kr styck",
+			price: 5,
+			feeKey: localizationConstants.licensesScanSupplierFee,
+			modulesKey: localizationConstants.licensesScanSupplierModules,
+			versionText: "Scan- supplier",
+			categoryId: "economy",
+			action: "add",
+		},
+		{
+			id: "connect-supplier",
+			name: "Connect - Supplier",
+			priceLabel: "129",
+			price: 129,
+			feeKey: localizationConstants.licensesConnectSupplierFee,
+			modulesKey: localizationConstants.licensesConnectSupplierModules,
+			versionText: "Connect Supplier",
+			connectedSystems: "Ahlsell | Dhal | Beijer | Bygg-Max | K-Rauta",
+			categoryId: "purchasing",
+			action: "add",
+		},
+		{
+			id: "calculation-pro",
+			name: "Calculation PRO",
+			priceLabel: "199",
+			price: 199,
+			feeKey: localizationConstants.licensesCalculationProFee,
+			modulesKey: localizationConstants.licensesCalculationProModules,
+			versionText: "Calculation - PRO",
+			industryOptionKeys: INDUSTRY_OPTION_KEYS,
+			categoryId: "calculation",
+			action: "add",
+		},
+		{
+			id: "order-direct",
+			name: "Order Direct",
+			priceLabel: "159",
+			price: 159,
+			feeKey: localizationConstants.licensesOrderDirectFee,
+			modulesKey: localizationConstants.licensesOrderDirectModules,
+			versionText: "Order - Direct",
+			categoryId: "order",
+			action: "add",
+		},
+		{
+			id: "storage",
+			name: "Storage",
+			priceLabel: "199 - 599",
+			price: 199,
+			feeKey: localizationConstants.licensesStorageFee,
+			modulesKey: localizationConstants.licensesStorageModules,
+			versionOptions: [
+				{
+					id: "storage-standard",
+					label: "Storage- Standard  51-250 GB",
+					priceLabel: "199",
+					price: 199,
+				},
+				{
+					id: "storage-pro",
+					label: "Storage - PRO, 251 GB-1TB",
+					priceLabel: "599",
+					price: 599,
+				},
+				{
+					id: "storage-plus",
+					label: "Storage - PLUS >1 TB",
+					priceLabel: "Offert",
+					price: null,
+				},
+			],
+			categoryId: "storage",
+			action: "add",
+		},
+		{
+			id: "rutt-plan",
+			name: "Rutt-plan",
+			priceLabel: "999",
+			price: 999,
+			feeKey: localizationConstants.licensesRuttPlanFee,
+			modulesKey: localizationConstants.licensesRuttPlanModules,
+			versionText: "Ruttplan - Standard",
+			categoryId: "machine",
+			action: "add",
+		},
+		{
+			id: "drive",
+			name: "Drive",
+			priceLabel: "199",
+			price: 199,
+			feeKey: localizationConstants.licensesDriveFee,
+			modulesKey: localizationConstants.licensesDriveModules,
+			versionText: "Drive - Standard",
+			categoryId: "machine",
 			action: "add",
 		},
 	],
 	addonApp: [
 		{
-			id: "addon-field",
-			name: "App - Fältservice",
-			price: 99,
-			feeKey: localizationConstants.licensesAddonFieldFee,
-			modulesKey: localizationConstants.licensesAddonFieldModules,
+			id: "metric",
+			name: "Metric - Mätning",
+			priceLabel: "59",
+			price: 59,
+			feeKey: localizationConstants.licensesMetricFee,
+			modulesKey: localizationConstants.licensesMetricModules,
 			action: "add",
 		},
 		{
-			id: "addon-journal",
-			name: "App - Körjournal",
-			price: 59,
-			feeKey: localizationConstants.licensesAddonJournalFee,
-			modulesKey: localizationConstants.licensesAddonJournalModules,
+			id: "product-finder",
+			name: "Product - Finder - produkt sök",
+			priceLabel: "0",
+			price: 89,
+			feeKey: localizationConstants.licensesProductFinderFee,
+			modulesKey: localizationConstants.licensesProductFinderModules,
+			versionText: "Product Finder",
 			action: "add",
 		},
 	],
 	addonCommunication: [
 		{
-			id: "addon-sms",
-			name: "SMS-paket",
-			price: 149,
-			feeKey: localizationConstants.licensesAddonSmsFee,
-			modulesKey: localizationConstants.licensesAddonSmsModules,
-			action: "add",
-		},
-		{
-			id: "addon-email",
-			name: "E-postutskick",
-			price: 99,
-			feeKey: localizationConstants.licensesAddonEmailFee,
-			modulesKey: localizationConstants.licensesAddonEmailModules,
+			id: "communication",
+			name: "Communication",
+			priceLabel: "5 kr/styck",
+			price: null,
+			feeKey: localizationConstants.licensesCommunicationFee,
+			versionChecklist: [
+				{
+					id: "bankid-sign",
+					label: "Bank-Id- sign -agreement",
+					priceLabel: "5 kr /styck",
+					price: 5,
+				},
+				{
+					id: "sms-service",
+					label: "SMS- service",
+					priceLabel: "2 kr /styck",
+					price: 2,
+				},
+				{
+					id: "mail-service",
+					label: "Mail - service",
+					priceLabel: "0,50 kr /styck",
+					price: 0.5,
+				},
+			],
 			action: "add",
 		},
 	],
 };
 
 export interface LicenseCartItem {
-	packageId: string;
+	id: string;
 	name: string;
 	price: number;
 	quantity: number;
+	sourceTab: LicenseTabId;
+	showPrice: boolean;
 }
 
 export const INITIAL_CART_ITEMS: LicenseCartItem[] = [
 	{
-		packageId: "timeflow-start",
+		id: "timeflow-start",
 		name: "TimeFlow Start",
 		price: 2995,
 		quantity: 1,
+		sourceTab: "system",
+		showPrice: true,
 	},
 	{
-		packageId: "timeflow-standard",
+		id: "timeflow-standard",
 		name: "TimeFlow Standard",
 		price: 995,
 		quantity: 4,
+		sourceTab: "system",
+		showPrice: true,
 	},
 	{
-		packageId: "app-timeflow-work",
+		id: "app-timeflow-work",
 		name: "App- TimeFlow Work",
 		price: 129,
 		quantity: 5,
+		sourceTab: "system",
+		showPrice: true,
 	},
 ];
 

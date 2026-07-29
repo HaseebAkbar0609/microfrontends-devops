@@ -4,10 +4,17 @@ import { useMemo, useState } from "react";
 import {
 	LicenseCartItem,
 	LicensePackage,
+	LicenseTabId,
+	LicenseVersionOption,
 	PAYMENT_CYCLES,
 	PaymentCycleId,
 } from "../constants/mockData";
 import { getInitialCartItems } from "../services/licenseService";
+
+export interface AddPackageSelection {
+	versionOption?: LicenseVersionOption;
+	checkedOptions?: LicenseVersionOption[];
+}
 
 export function useLicenseCart() {
 	const [items, setItems] = useState<LicenseCartItem[]>(() =>
@@ -15,11 +22,25 @@ export function useLicenseCart() {
 	);
 	const [paymentCycle, setPaymentCycle] = useState<PaymentCycleId>("monthly");
 
-	const changeQuantity = (packageId: string, delta: number) => {
+	const upsert = (
+		current: LicenseCartItem[],
+		entry: Omit<LicenseCartItem, "quantity">,
+	): LicenseCartItem[] => {
+		const existing = current.find((item) => item.id === entry.id);
+		if (existing)
+			return current.map((item) =>
+				item.id === entry.id
+					? { ...item, quantity: item.quantity + 1 }
+					: item,
+			);
+		return [{ ...entry, quantity: 1 }, ...current];
+	};
+
+	const changeQuantity = (itemId: string, delta: number) => {
 		setItems((current) =>
 			current
 				.map((item) =>
-					item.packageId === packageId
+					item.id === itemId
 						? { ...item, quantity: item.quantity + delta }
 						: item,
 				)
@@ -27,29 +48,52 @@ export function useLicenseCart() {
 		);
 	};
 
-	const addPackage = (pkg: LicensePackage) => {
+	const addPackage = (
+		pkg: LicensePackage,
+		sourceTab: LicenseTabId,
+		selection?: AddPackageSelection,
+	) => {
 		setItems((current) => {
-			const existing = current.find((item) => item.packageId === pkg.id);
-			if (existing)
-				return current.map((item) =>
-					item.packageId === pkg.id
-						? { ...item, quantity: item.quantity + 1 }
-						: item,
+			if (pkg.versionChecklist) {
+				const checked = selection?.checkedOptions ?? [];
+				return checked.reduce(
+					(acc, option) =>
+						upsert(acc, {
+							id: option.id,
+							name: option.label,
+							price: option.price ?? 0,
+							sourceTab,
+							showPrice: false,
+						}),
+					current,
 				);
-			return [
-				...current,
-				{
-					packageId: pkg.id,
-					name: pkg.name,
-					price: pkg.price,
-					quantity: 1,
-				},
-			];
+			}
+			if (pkg.versionOptions) {
+				const option =
+					selection?.versionOption ?? pkg.versionOptions[0];
+				return upsert(current, {
+					id: option.id,
+					name: option.label,
+					price: option.price ?? 0,
+					sourceTab,
+					showPrice: true,
+				});
+			}
+			return upsert(current, {
+				id: pkg.id,
+				name: pkg.name,
+				price: pkg.price ?? 0,
+				sourceTab,
+				showPrice: true,
+			});
 		});
 	};
 
 	const clearCart = () => setItems([]);
 
+	// TODO: Final pricing must be re-validated server-side during checkout —
+	// this client-side total is for UI display only and must never be
+	// trusted as the transaction amount.
 	const total = useMemo(() => {
 		const subtotal = items.reduce(
 			(sum, item) => sum + item.price * item.quantity,
