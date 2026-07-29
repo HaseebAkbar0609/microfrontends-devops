@@ -45,6 +45,17 @@ type SortField = keyof Pick<
 >;
 type SortDir = "asc" | "desc" | null;
 
+function renderSortIcon(
+  field: SortField,
+  activeSortField: SortField | null,
+  activeSortDir: SortDir,
+) {
+  if (activeSortField !== field)
+    return <ChevronsUpDown size={14} className="shrink-0 text-slate-400" />;
+  if (activeSortDir === "asc") return <ChevronUp size={14} className="shrink-0" />;
+  return <ChevronDown size={14} className="shrink-0" />;
+}
+
 type CommentModal = { open: boolean; offertNr: string; job: string };
 type AnswerModal = {
   open: boolean;
@@ -136,13 +147,6 @@ export function OfferQuotedView({ offerId, items }: Props) {
       setSortField(null);
       setSortDir(null);
     }
-  }
-
-  function SortIcon({ field }: { field: SortField }) {
-    if (sortField !== field)
-      return <ChevronsUpDown size={14} className="shrink-0 text-slate-400" />;
-    if (sortDir === "asc") return <ChevronUp size={14} className="shrink-0" />;
-    return <ChevronDown size={14} className="shrink-0" />;
   }
 
   function openCommentModal(item: OfferQuotedItem) {
@@ -263,7 +267,7 @@ export function OfferQuotedView({ offerId, items }: Props) {
                   >
                     <span className="flex items-center gap-1">
                       {col.label}
-                      <SortIcon field={col.key} />
+                      {renderSortIcon(col.key, sortField, sortDir)}
                     </span>
                   </th>
                 ))}

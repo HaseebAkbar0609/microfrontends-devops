@@ -1449,6 +1449,12 @@ export const enOffer: OfferTranslation = {
 	offerQuotedAnswerTitle: "Customer's answer",
 	offerQuotedAnswerLeaveComment: "Leave comment",
 	offerQuotedAnswerBack: "Back",
+	offerAcceptedTotalLabel: "Accepted offers: SEK",
+	offerAcceptedAllJobs: "All jobs",
+	offerAcceptedPrice: "Accepted price",
+	offerAcceptedStatusBadge: "Accepted",
+	offerAcceptedCreateContract: "Create contract",
+	offerAcceptedViewOffer: "View offer",
 };
 
 export const enCommon: CommonTranslation = {
