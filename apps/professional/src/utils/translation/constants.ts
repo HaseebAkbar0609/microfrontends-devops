@@ -637,6 +637,35 @@ export type OfferTranslation = {
 	adminGroupsPermPurchase: string;
 	// Home - Dashboard widgets
 	widgetMockDataNote: string;
+	// Admin - Economy invoices
+	economyInvoicesTitle: string;
+	economyInvoiceCol: string;
+	economyDateCol: string;
+	economyAmountCol: string;
+	economyActionCol: string;
+	economyOpenInvoice: string;
+	economyNoInvoices: string;
+	economyFilterAll: string;
+	economyFilterRecent: string;
+	economyFilterOlder: string;
+	invoicePreviewYourLogo: string;
+	invoicePreviewNoPrefix: string;
+	invoicePreviewTitle: string;
+	invoicePreviewDateLabel: string;
+	invoicePreviewBilledTo: string;
+	invoicePreviewFrom: string;
+	invoicePreviewItemCol: string;
+	invoicePreviewQuantityCol: string;
+	invoicePreviewPriceCol: string;
+	invoicePreviewAmountCol: string;
+	invoicePreviewTotal: string;
+	invoicePreviewPaymentMethod: string;
+	invoicePreviewNoteLabel: string;
+	invoicePreviewNoteText: string;
+	invoicePreviewBack: string;
+	invoicePreviewDownload: string;
+	invoicePreviewPrint: string;
+	invoicePreviewNotFound: string;
 	// Project - Dashboard widgets
 	projectDashboardTitle: string;
 	projWidgetOverviewTitle: string;
@@ -1910,6 +1939,34 @@ export type RegisterTranslation = {
 	validationPriceListCategoryRequired: string;
 	validationPriceListUnitRequired: string;
 	validationInvalidCharacters: string;
+
+	// Price List Detail Translations (TFS-442)
+	priceListDetailTitle: string;
+	priceListDetailBasicInfoTab: string;
+	priceListDetailArticleListTab: string;
+	priceListDetailGrundInfoSection: string;
+	priceListDetailSettingsSection: string;
+	priceListDetailCodeLabel: string;
+	priceListDetailNameLabel: string;
+	priceListDetailDateLabel: string;
+	priceListDetailCreatedByLabel: string;
+	priceListDetailCommentLabel: string;
+	priceListDetailCategoryLabel: string;
+	priceListDetailUnitLabel: string;
+	priceListDetailLinkedCustomersTitle: string;
+	priceListDetailLinkedSuppliersTitle: string;
+	priceListDetailArticleNoHeader: string;
+	priceListDetailBenamningHeader: string;
+	priceListDetailUtprislistaAHeader: string;
+	priceListDetailKalkylKostnadHeader: string;
+	priceListDetailStockHeader: string;
+	priceListDetailReservedHeader: string;
+	priceListDetailAvailableHeader: string;
+	priceListDetailStockValueHeader: string;
+	priceListDetailLandHeader: string;
+	priceListStatusHeader: string;
+	priceListValidPeriodHeader: string;
+	draftStatus: string;
 };
 
 export type CommonTranslation = {
