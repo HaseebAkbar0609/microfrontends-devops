@@ -99,6 +99,29 @@ export type OfferSendConfirmationPanelProps = {
 
 export type OfferFormType = "rent" | "express" | "b2c";
 
+export type OfferQuotedStatus = "notReviewed" | "opened";
+
+export type OfferQuotedContactPerson = {
+  name: string;
+  phone: string;
+  email: string;
+};
+
+export type OfferQuotedItem = {
+  id: string;
+  offertNr: string;
+  job: string;
+  customerName: string;
+  category: string;
+  municipality: string;
+  type: string;
+  price: number;
+  status: OfferQuotedStatus;
+  openedAt?: string;
+  contactPerson: OfferQuotedContactPerson;
+  customerAnswer?: string;
+};
+
 export type OfferFormCompany = {
   name: string;
   email: string;

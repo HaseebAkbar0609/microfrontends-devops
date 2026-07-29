@@ -1354,6 +1354,29 @@ export type OfferTranslation = {
 	offerFormB2CTitle: string;
 	offerFormHourlyRatePlaceholder: string;
 	offerFormNoFileChosen: string;
+	offerQuotedTotalLabel: string;
+	offerQuotedOffertNr: string;
+	offerQuotedJob: string;
+	offerQuotedCustomerName: string;
+	offerQuotedCategory: string;
+	offerQuotedMunicipality: string;
+	offerQuotedType: string;
+	offerQuotedPrice: string;
+	offerQuotedContactPerson: string;
+	offerQuotedStatusNotReviewed: string;
+	offerQuotedStatusOpened: string;
+	offerQuotedOpenedAt: string;
+	offerQuotedActionDelete: string;
+	offerQuotedActionArchive: string;
+	offerQuotedActionAccept: string;
+	offerQuotedActionComment: string;
+	offerQuotedActionViewAnswer: string;
+	offerQuotedCommentTitle: string;
+	offerQuotedCommentPlaceholder: string;
+	offerQuotedCommentSend: string;
+	offerQuotedAnswerTitle: string;
+	offerQuotedAnswerLeaveComment: string;
+	offerQuotedAnswerBack: string;
 };
 
 export type RegisterTranslation = {
