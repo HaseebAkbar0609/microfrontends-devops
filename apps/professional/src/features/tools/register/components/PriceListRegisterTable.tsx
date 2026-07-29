@@ -13,6 +13,7 @@ import {
 	Save,
 } from "lucide-react";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -200,6 +201,44 @@ export function PriceListRegisterTable() {
 				key: "kategori",
 				label: localizationConstants.priceListCategoryHeader,
 				sortable: true,
+			},
+			{
+				key: "valuta",
+				label: localizationConstants.priceListCurrencyLabel,
+				sortable: true,
+				render: (row) => row.valuta || "SEK",
+			},
+			{
+				key: "status",
+				label: localizationConstants.priceListStatusHeader,
+				sortable: true,
+				render: (row) => {
+					const status = row.status || "active";
+					const isBgGreen = status === "active";
+					const isBgYellow = status === "draft";
+					return (
+						<span
+							className={`inline-flex items-center justify-center rounded-md px-2.5 py-0.5 text-xs font-semibold text-white ${
+								isBgGreen ? "bg-[#16A34A]" : isBgYellow ? "bg-amber-500" : "bg-slate-400"
+							}`}
+						>
+							{status === "active" ? (
+								<Translate text={localizationConstants.activeStatus} />
+							) : status === "draft" ? (
+								<Translate text={localizationConstants.draftStatus} />
+							) : (
+								<Translate text={localizationConstants.inactiveStatus} />
+							)}
+						</span>
+					);
+				},
+			},
+			{
+				key: "giltigPeriod",
+				label: localizationConstants.priceListValidPeriodHeader,
+				sortable: true,
+				render: (row) =>
+					row.giltigFran && row.giltigTill ? `${row.giltigFran} - ${row.giltigTill}` : row.datum || "-",
 			},
 			{
 				key: "kopplad",
@@ -432,7 +471,10 @@ export function PriceListUpdatePanel() {
 			{/* Edit Dialog */}
 			<Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
 				<DialogContent
-					className="flex flex-col !left-[55%] !right-auto sm:!left-1/2 sm:!right-auto !top-1/2 !-translate-x-1/2 !-translate-y-1/2 w-[85vw] max-w-[340px] sm:w-full sm:max-w-[480px] md:max-w-[480px] lg:max-w-[480px] xl:max-w-[480px] bg-white h-[calc(100vh-2rem)] lg:h-auto xl:h-auto max-h-[calc(100vh-2rem)] lg:max-h-[90vh] xl:max-h-[85vh] p-0 gap-0 border-0 rounded-lg shadow-xl"
+					className={cn(
+						"flex flex-col left-[55%]! right-auto! sm:left-1/2! sm:right-auto! top-1/2! -translate-x-1/2! -translate-y-1/2!",
+						"w-[85vw] max-w-85 sm:w-full sm:max-w-120 md:max-w-120 lg:max-w-120 xl:max-w-120 bg-white h-[calc(100vh-2rem)] lg:h-auto xl:h-auto max-h-[calc(100vh-2rem)] lg:max-h-[90vh] xl:max-h-[85vh] p-0 gap-0 border-0 rounded-lg shadow-xl",
+					)}
 				>
 					<DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4 shrink-0 border-b border-slate-100">
 						<DialogTitle className="flex items-center gap-2 text-base font-semibold text-zinc-950">

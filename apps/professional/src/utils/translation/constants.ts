@@ -1961,6 +1961,34 @@ export type RegisterTranslation = {
 	validationPriceListCategoryRequired: string;
 	validationPriceListUnitRequired: string;
 	validationInvalidCharacters: string;
+
+	// Price List Detail Translations (TFS-442)
+	priceListDetailTitle: string;
+	priceListDetailBasicInfoTab: string;
+	priceListDetailArticleListTab: string;
+	priceListDetailGrundInfoSection: string;
+	priceListDetailSettingsSection: string;
+	priceListDetailCodeLabel: string;
+	priceListDetailNameLabel: string;
+	priceListDetailDateLabel: string;
+	priceListDetailCreatedByLabel: string;
+	priceListDetailCommentLabel: string;
+	priceListDetailCategoryLabel: string;
+	priceListDetailUnitLabel: string;
+	priceListDetailLinkedCustomersTitle: string;
+	priceListDetailLinkedSuppliersTitle: string;
+	priceListDetailArticleNoHeader: string;
+	priceListDetailBenamningHeader: string;
+	priceListDetailUtprislistaAHeader: string;
+	priceListDetailKalkylKostnadHeader: string;
+	priceListDetailStockHeader: string;
+	priceListDetailReservedHeader: string;
+	priceListDetailAvailableHeader: string;
+	priceListDetailStockValueHeader: string;
+	priceListDetailLandHeader: string;
+	priceListStatusHeader: string;
+	priceListValidPeriodHeader: string;
+	draftStatus: string;
 };
 
 export type CommonTranslation = {
