@@ -6,8 +6,9 @@ import type {
 	GetPriceListRegisterListResponse,
 	CreatePriceListFormData,
 	PriceListArticleRow,
+	PriceListDetail,
 } from "../types";
-import { MOCK_PRICE_LIST_REGISTER_DATA, MOCK_ARTICLE_DATA } from "../mockdata/priceLists";
+import { MOCK_PRICE_LIST_REGISTER_DATA, MOCK_ARTICLE_DATA, MOCK_PRICE_LIST_DETAIL } from "../mockdata/priceLists";
 
 export type { PriceListRegisterRow };
 
@@ -247,4 +248,51 @@ export async function getAvailableArticlesAPIAction(params?: {
 	const startIndex = (page - 1) * limit;
 	const paginatedData = filtered.slice(startIndex, startIndex + limit);
 	return { data: paginatedData, total, page, limit, totalPages };
+}
+
+export async function getPriceListDetailAPIAction(id: string): Promise<PriceListDetail> {
+	try {
+		const res = await axiosInstance.get(API_PATH.PRICE_LISTS.GET(id));
+		const data = res.data?.data;
+		if (data) {
+			return {
+				id: String(data.id ?? ""),
+				kod: String(data.kod ?? data.code ?? ""),
+				benamning: String(data.benamning ?? data.name ?? ""),
+				datum: String(data.datum ?? data.date ?? ""),
+				giltigFran: String(data.giltig_from ?? data.valid_from ?? ""),
+				giltigTill: String(data.giltig_till ?? data.valid_to ?? ""),
+				skapadAv: String(data.skapad_av ?? data.created_by ?? ""),
+				valuta: String(data.valuta ?? data.currency ?? "SEK"),
+				kommentar: String(data.kommentar ?? data.comment ?? ""),
+				kategori: String(data.kategori ?? data.category ?? ""),
+				enhet: String(data.enhet ?? data.unit ?? ""),
+				kund: Array.isArray(data.kund) ? data.kund.map(String) : [],
+				leverantor: Array.isArray(data.leverantor) ? data.leverantor.map(String) : [],
+				articles: Array.isArray(data.articles)
+					? data.articles.map((item: Record<string, unknown>) => ({
+							id: String(item.id ?? ""),
+							isFavorite: Boolean(item.is_favorite ?? item.isFavorite ?? false),
+							articleNo: String(item.article_no ?? item.articleNo ?? ""),
+							benamning: String(item.benamning ?? item.description ?? ""),
+							utprislistaA: String(item.utprislista_a ?? item.outPriceListA ?? "0"),
+							kalkylKostnad: String(item.kalkyl_kostnad ?? item.calculatedCost ?? "0"),
+							lager: Number(item.lager ?? item.stock ?? 0),
+							reserverat: Number(item.reserverat ?? item.reserved ?? 0),
+							disponibelt: Number(item.disponibelt ?? item.available ?? 0),
+							lagervarde: String(item.lagervarde ?? item.stockValue ?? "0"),
+							land: String(item.land ?? item.country ?? ""),
+							status: (item.status as "active" | "inactive") ?? "active",
+					  }))
+					: [],
+			};
+		}
+	} catch (error) {
+		if (process.env.NODE_ENV !== "production") {
+			const sanitizedMessage = error instanceof Error ? error.message : String(error);
+			console.warn("[getPriceListDetailAPIAction] API request failed, falling back to mock data:", sanitizedMessage);
+		}
+	}
+
+	return MOCK_PRICE_LIST_DETAIL;
 }
