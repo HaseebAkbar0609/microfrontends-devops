@@ -585,6 +585,10 @@ export interface PriceListRegisterRow {
 	kod: string;
 	prislista: string;
 	kategori: string;
+	valuta?: string;
+	giltigFran?: string;
+	giltigTill?: string;
+	status?: "active" | "draft" | "expired";
 	kopplad: number;
 	skapadAv: string;
 	datum: string;
@@ -637,5 +641,38 @@ export interface PriceListArticleRow {
 	stock: number;
 	reserved: number;
 	selected: boolean;
+}
+
+// Price List Detail Types (TFS-442)
+export interface PriceListDetail {
+	id: string;
+	kod: string;
+	benamning: string;
+	datum: string;
+	giltigFran: string;
+	giltigTill: string;
+	skapadAv: string;
+	valuta: string;
+	kommentar: string;
+	kategori: string;
+	enhet: string;
+	kund: string[];
+	leverantor: string[];
+	articles: PriceListDetailArticle[];
+}
+
+export interface PriceListDetailArticle {
+	id: string;
+	isFavorite: boolean;
+	articleNo: string;
+	benamning: string;
+	utprislistaA: string;
+	kalkylKostnad: string;
+	lager: number;
+	reserverat: number;
+	disponibelt: number;
+	lagervarde: string;
+	land: string;
+	status: "active" | "inactive";
 }
 
