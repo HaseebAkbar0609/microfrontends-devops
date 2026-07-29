@@ -41,16 +41,18 @@ export function OfferSendPageHeader({
             variant="ghost"
             onClick={() => router.back()}
             aria-label="Go back"
-             className="!p-0 mt-[-6px]"
+             className="p-0! -mt-1.5"
           >
-            <ArrowLeft className="!h-6 !w-6" />
+            <ArrowLeft className="h-6! w-6!" />
           </Button>
 
           <div>
             <h1 className="text-2xl font-semibold leading-tight text-slate-900">
               {title}
             </h1>
-            <p className="mt-1 text-sm text-slate-500">{`Posted: ${postedDate}`}</p>
+            {postedDate && (
+              <p className="mt-1 text-sm text-slate-500">{`Posted: ${postedDate}`}</p>
+            )}
           </div>
         </div>
 

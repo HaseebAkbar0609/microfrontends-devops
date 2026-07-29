@@ -94,5 +94,24 @@ export interface OfferListTableProps {
 }
 
 export type OfferSendConfirmationPanelProps = {
-  data: Pick<OfferSendData, "preliminaryBudgetPrice" | "offerDateLatest">;
+  data: Pick<OfferSendData, "id" | "type" | "preliminaryBudgetPrice" | "offerDateLatest">;
+};
+
+export type OfferFormType = "rent" | "express" | "b2c";
+
+export type OfferFormCompany = {
+  name: string;
+  email: string;
+  orgNumber: string;
+  phone: string;
+  address: string;
+};
+
+export type OfferFormData = {
+  offerId: string;
+  type: OfferFormType;
+  title: string;
+  badges: string[];
+  customer: OfferSendCustomer;
+  company: OfferFormCompany;
 };

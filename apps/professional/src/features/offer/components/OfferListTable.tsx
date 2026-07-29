@@ -315,7 +315,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 				quote={selectedBusinessQuote}
 				onConfirm={(q) => {
 					if (!q?.id) return;
-					router.push(`/offer/send/${q.id}`);
+					router.push(`/module/business/offer/send/${q.id}?type=b2c`);
 				}}
 			/>
 
@@ -325,7 +325,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 				quote={selectedBusinessQuote}
 				onConfirm={(q) => {
 					if (!q?.id) return;
-					router.push(`/offer/send/${q.id}`);
+					router.push(`/module/business/offer/send/${q.id}?type=express`);
 				}}
 			/>
 
@@ -335,7 +335,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 				quote={selectedBusinessQuote}
 				onConfirm={(q) => {
 					if (!q?.id) return;
-					router.push(`/offer/send/${q.id}`);
+					router.push(`/module/business/offer/send/${q.id}?type=rent`);
 				}}
 			/>
 		</div>

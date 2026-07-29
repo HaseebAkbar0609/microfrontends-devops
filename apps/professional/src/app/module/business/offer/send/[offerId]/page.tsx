@@ -1,15 +1,24 @@
-import { OfferSendPage } from "@/features/offer/components/OfferSendPage";
-import { DUMMY_OFFER_SEND } from "@/features/offer/constants/offerSend";
+import { OfferFormPage } from "@/features/offer/components/OfferFormPage";
+import { DUMMY_OFFER_FORMS } from "@/features/offer/constants/offerForm.mock";
+import { OfferFormType } from "@/features/offer/types";
+
+const VALID_TYPES: OfferFormType[] = ["rent", "express", "b2c"];
 
 export default async function OfferSendRoute({
   params,
+  searchParams,
 }: {
   params: Promise<{ offerId: string }>;
+  searchParams: Promise<{ type?: string }>;
 }) {
   const { offerId } = await params;
+  const { type } = await searchParams;
 
-  // NOTE: offerId will be used when API integration is added
-  void offerId;
+  const formType: OfferFormType = VALID_TYPES.includes(type as OfferFormType)
+    ? (type as OfferFormType)
+    : "b2c";
 
-  return <OfferSendPage data={DUMMY_OFFER_SEND} />;
+  const data = { ...DUMMY_OFFER_FORMS[formType], offerId };
+
+  return <OfferFormPage data={data} />;
 }
