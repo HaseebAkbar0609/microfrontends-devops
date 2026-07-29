@@ -228,6 +228,7 @@ export async function getAvailableArticlesAPIAction(params?: {
 			const sanitizedMessage = error instanceof Error ? error.message : String(error);
 			console.warn("[getAvailableArticlesAPIAction] API request failed, falling back to mock data:", sanitizedMessage);
 		}
+		// TODO: Remove mock fallback once BE is ready
 	}
 
 	const page = Math.max(1, params?.page ?? 1);

@@ -27,6 +27,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { PriceListArticleRow } from "../../types";
@@ -37,12 +38,13 @@ interface PriceListArticleStepProps {
 	onArticlesLoaded: (articles: PriceListArticleRow[]) => void;
 	onToggleArticle: (id: string) => void;
 	onToggleAll: () => void;
+	onUpdateCustomPrice?: (id: string, price: string) => void;
 }
 
 type SortKey = keyof Pick<PriceListArticleRow, "articleNo" | "benamning" | "outPriceListA" | "calcCost" | "stock" | "reserved">;
 type SortOrder = "asc" | "desc" | null;
 
-export function PriceListArticleStep({ articles, onArticlesLoaded, onToggleArticle, onToggleAll }: PriceListArticleStepProps) {
+export function PriceListArticleStep({ articles, onArticlesLoaded, onToggleArticle, onToggleAll, onUpdateCustomPrice }: PriceListArticleStepProps) {
 	const t = useTranslate();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [sortKey, setSortKey] = useState<SortKey | null>(null);
@@ -197,6 +199,9 @@ export function PriceListArticleStep({ articles, onArticlesLoaded, onToggleArtic
 										<SortIconComponent field="outPriceListA" />
 									</div>
 								</TableHead>
+								<TableHead className="py-3.5 px-4 text-xs font-semibold text-slate-600 select-none whitespace-nowrap">
+									<Translate text={localizationConstants.priceListCustomPriceHeader} />
+								</TableHead>
 								<TableHead
 									className="py-3.5 px-4 text-xs font-semibold text-slate-600 cursor-pointer select-none whitespace-nowrap"
 									onClick={() => handleSort("calcCost")}
@@ -229,7 +234,7 @@ export function PriceListArticleStep({ articles, onArticlesLoaded, onToggleArtic
 						<TableBody>
 							{isLoading ? (
 								<TableRow>
-									<TableCell colSpan={7} className="py-12 text-center">
+									<TableCell colSpan={8} className="py-12 text-center">
 										<div className="flex items-center justify-center gap-2 text-slate-500">
 											<Loader2 className="h-4 w-4 animate-spin" />
 											<Translate text={localizationConstants.genericLoading} />
@@ -238,7 +243,7 @@ export function PriceListArticleStep({ articles, onArticlesLoaded, onToggleArtic
 								</TableRow>
 							) : paginatedArticles.length === 0 ? (
 								<TableRow>
-									<TableCell colSpan={7} className="py-12 text-center text-sm text-slate-500">
+									<TableCell colSpan={8} className="py-12 text-center text-sm text-slate-500">
 										<Translate text={localizationConstants.noDataFound} />
 									</TableCell>
 								</TableRow>
@@ -264,6 +269,17 @@ export function PriceListArticleStep({ articles, onArticlesLoaded, onToggleArtic
 										</TableCell>
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">
 											{article.outPriceListA}
+										</TableCell>
+										<TableCell className="py-2 px-4 text-sm">
+											<Input
+												type="text"
+												value={article.customPrice ?? article.outPriceListA}
+												onChange={(e) =>
+													onUpdateCustomPrice?.(article.id, e.target.value)
+												}
+												className="h-8 w-24 text-xs bg-white"
+												placeholder={article.outPriceListA}
+											/>
 										</TableCell>
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">
 											{article.calcCost}

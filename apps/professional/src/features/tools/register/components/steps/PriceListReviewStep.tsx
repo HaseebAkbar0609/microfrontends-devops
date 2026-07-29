@@ -259,6 +259,9 @@ export function PriceListReviewStep({ articles }: PriceListReviewStepProps) {
 										<SortIconComponent field="outPriceListA" />
 									</div>
 								</TableHead>
+								<TableHead className="py-3.5 px-4 text-xs font-semibold text-slate-600 select-none whitespace-nowrap">
+									<Translate text={localizationConstants.priceListCustomPriceHeader} />
+								</TableHead>
 								<TableHead
 									className="py-3.5 px-4 text-xs font-semibold text-slate-600 cursor-pointer select-none whitespace-nowrap"
 									onClick={() => handleSort("calcCost")}
@@ -291,7 +294,7 @@ export function PriceListReviewStep({ articles }: PriceListReviewStepProps) {
 						<TableBody>
 							{paginatedArticles.length === 0 ? (
 								<TableRow>
-									<TableCell colSpan={6} className="py-12 text-center text-sm text-slate-500">
+									<TableCell colSpan={7} className="py-12 text-center text-sm text-slate-500">
 										<Translate text={localizationConstants.priceListReviewNoArticles} />
 									</TableCell>
 								</TableRow>
@@ -301,6 +304,7 @@ export function PriceListReviewStep({ articles }: PriceListReviewStepProps) {
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">{article.articleNo}</TableCell>
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">{article.benamning}</TableCell>
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">{article.outPriceListA}</TableCell>
+										<TableCell className="py-3.5 px-4 text-sm font-semibold text-slate-900">{article.customPrice ?? article.outPriceListA}</TableCell>
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">{article.calcCost}</TableCell>
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">{article.stock}</TableCell>
 										<TableCell className="py-3.5 px-4 text-sm text-slate-700">{article.reserved}</TableCell>

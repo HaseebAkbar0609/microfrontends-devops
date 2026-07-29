@@ -75,12 +75,17 @@ export function CreatePriceListPage() {
 		setCurrentStep((prev) => prev + 1);
 	};
 
-	const handleTabClick = async (step: number) => {
-		if (step > currentStep) {
-			const isValid = await validateStep(currentStep);
-			if (!isValid) return;
+	const handleTabClick = async (targetStep: number) => {
+		if (targetStep > currentStep) {
+			for (let s = currentStep; s < targetStep; s++) {
+				const isValid = await validateStep(s);
+				if (!isValid) {
+					setCurrentStep(s);
+					return;
+				}
+			}
 		}
-		setCurrentStep(step);
+		setCurrentStep(targetStep);
 	};
 
 	const handleSubmit = methods.handleSubmit(async (data) => {
@@ -119,6 +124,12 @@ export function CreatePriceListPage() {
 			const allSelected = prev.every((a) => a.selected);
 			return prev.map((a) => ({ ...a, selected: !allSelected }));
 		});
+	}, []);
+
+	const handleUpdateCustomPrice = useCallback((id: string, price: string) => {
+		setArticles((prev) =>
+			prev.map((a) => (a.id === id ? { ...a, customPrice: price } : a)),
+		);
 	}, []);
 
 	return (
@@ -184,6 +195,7 @@ export function CreatePriceListPage() {
 										onArticlesLoaded={handleArticlesLoaded}
 										onToggleArticle={handleToggleArticle}
 										onToggleAll={handleToggleAll}
+										onUpdateCustomPrice={handleUpdateCustomPrice}
 									/>
 								)}
 								{currentStep === 3 && (

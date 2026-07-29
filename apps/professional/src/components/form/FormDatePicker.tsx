@@ -36,6 +36,7 @@ export interface FormDatePickerProps<
 	labelClassName?: string;
 	inputClassName?: string;
 	messageClassName?: string;
+	translateError?: (message: string) => string;
 }
 
 export function FormDatePicker<
@@ -51,6 +52,7 @@ export function FormDatePicker<
 	labelClassName,
 	inputClassName,
 	messageClassName,
+	translateError,
 }: FormDatePickerProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
@@ -124,7 +126,10 @@ export function FormDatePicker<
 								</PopoverContent>
 							</Popover>
 						</FormControl>
-						<FormMessage className={messageClassName} />
+						<FormMessage
+							className={messageClassName}
+							translate={translateError ?? t}
+						/>
 					</FormItem>
 				);
 			}}
