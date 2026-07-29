@@ -54,9 +54,14 @@ export function AppShell({ children }: AppShellProps) {
 	const offerSegment = isOfferModuleRoute
 		? (pathname.match(/^\/module\/business\/offer\/([^/]+)/)?.[1])
 		: undefined;
+	// /offer/send/[offerId] — extract the real offerId from the second segment
+	const sendOfferMatch = isOfferModuleRoute
+		? pathname.match(/^\/module\/business\/offer\/send\/([^/?]+)/)
+		: null;
+	const sendOfferId = sendOfferMatch?.[1];
 	const isOfferDetailRoute =
 		!!offerSegment && !OFFER_NAMED_ROUTES.includes(offerSegment);
-	const isOfferNavRoute = isOfferModuleRoute && !isOfferDetailRoute;
+	const isOfferNavRoute = isOfferModuleRoute && !isOfferDetailRoute && !sendOfferId;
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const showSubSidebar =
 		!!flyoutSubSidebarConfig &&
@@ -144,6 +149,8 @@ export function AppShell({ children }: AppShellProps) {
 			{!isPublicPage && <Sidebar autoCollapse />}
 			{isRegisterPath ? (
 				<InvoiceSubSidebar />
+			) : sendOfferId ? (
+				<OfferDetailSubSidebar offerId={sendOfferId} />
 			) : isOfferDetailRoute ? (
 				<OfferDetailSubSidebar offerId={offerSegment!} />
 			) : isOfferNavRoute ? (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Calendar, CirclePlus, DollarSign, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -9,13 +10,32 @@ import { Input } from "@/components/ui/input";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendConfirmationPanelProps } from "../types";
+import { BusinessOfferModal } from "./BusinessOfferModal";
+import { BusinessExpressModal } from "./BusinessExpressModal";
+import { BusinessRentModal } from "./BusinessRentModal";
+
+function resolveFormType(type: string): "rent" | "express" | "b2c" {
+  const lower = type.toLowerCase();
+  if (lower.includes("rent") || lower.includes("hyra")) return "rent";
+  if (lower.includes("express")) return "express";
+  return "b2c";
+}
 
 export function OfferSendConfirmationPanel({
   data,
 }: OfferSendConfirmationPanelProps) {
   const t = useTranslate();
+  const router = useRouter();
   const [budget, setBudget] = useState("");
   const [offerDate, setOfferDate] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const formType = resolveFormType(data.type);
+  const quote = { id: data.id, type: data.type };
+
+  function handleConfirm() {
+    router.push(`/module/business/offer/send/${data.id}?type=${formType}`);
+  }
 
   return (
     <Card className="overflow-hidden rounded-lg border border-slate-200 bg-white p-0 shadow-sm">
@@ -90,7 +110,10 @@ export function OfferSendConfirmationPanel({
           <Translate text={localizationConstants.offerSendSave} />
         </Button>
 
-        <Button className="h-11 w-full rounded-md bg-neutral-950 text-white hover:bg-neutral-800">
+        <Button
+          className="h-11 w-full rounded-md bg-neutral-950 text-white hover:bg-neutral-800"
+          onClick={() => setModalOpen(true)}
+        >
           <CirclePlus className="mr-2 h-4 w-4" />
           <Translate text={localizationConstants.offerSendCreateOffer} />
         </Button>
@@ -100,6 +123,31 @@ export function OfferSendConfirmationPanel({
           <Translate text={localizationConstants.offerSendCreateCalculation} />
         </Button>
       </div>
+
+      {formType === "b2c" && (
+        <BusinessOfferModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          quote={quote}
+          onConfirm={handleConfirm}
+        />
+      )}
+      {formType === "express" && (
+        <BusinessExpressModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          quote={quote}
+          onConfirm={handleConfirm}
+        />
+      )}
+      {formType === "rent" && (
+        <BusinessRentModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          quote={quote}
+          onConfirm={handleConfirm}
+        />
+      )}
     </Card>
   );
 }
