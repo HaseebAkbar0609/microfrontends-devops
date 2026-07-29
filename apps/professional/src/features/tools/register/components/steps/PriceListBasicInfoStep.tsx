@@ -43,6 +43,12 @@ const SKAPAD_AV_OPTIONS = [
 	{ value: "erik_lindberg", label: "Erik Lindberg" },
 ];
 
+const VALUTA_OPTIONS = [
+	{ value: "SEK", label: "SEK" },
+	{ value: "EUR", label: "EUR" },
+	{ value: "USD", label: "USD" },
+];
+
 export function PriceListBasicInfoStep({ control }: PriceListBasicInfoStepProps) {
 	return (
 		<div className="flex flex-col gap-6">
@@ -70,6 +76,18 @@ export function PriceListBasicInfoStep({ control }: PriceListBasicInfoStepProps)
 							control={control}
 							name="datum"
 							label={localizationConstants.priceListDateLabel}
+							placeholder={TODAY}
+						/>
+						<FormDatePicker
+							control={control}
+							name="giltigFran"
+							label={localizationConstants.priceListValidFromLabel}
+							placeholder={TODAY}
+						/>
+						<FormDatePicker
+							control={control}
+							name="giltigTill"
+							label={localizationConstants.priceListValidToLabel}
 							placeholder={TODAY}
 						/>
 						<FormSelect
@@ -110,6 +128,13 @@ export function PriceListBasicInfoStep({ control }: PriceListBasicInfoStepProps)
 							name="enhet"
 							label={localizationConstants.priceListUnitLabel}
 							options={ENHET_OPTIONS}
+							placeholder={localizationConstants.priceListSelectPlaceholder}
+						/>
+						<FormSelect
+							control={control}
+							name="valuta"
+							label={localizationConstants.priceListCurrencyLabel}
+							options={VALUTA_OPTIONS}
 							placeholder={localizationConstants.priceListSelectPlaceholder}
 						/>
 						<FormSelect

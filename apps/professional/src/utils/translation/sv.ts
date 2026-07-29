@@ -1858,7 +1858,10 @@ export const svRegister: RegisterTranslation = {
 	priceListNameLabel: "Benämning",
 	priceListNamePlaceholder: "Ange benämning",
 	priceListDateLabel: "Datum",
+	priceListValidFromLabel: "Giltig från",
+	priceListValidToLabel: "Giltig till",
 	priceListCreatedByLabel: "Skapad av",
+	priceListCurrencyLabel: "Valuta",
 	priceListCommentLabel: "Kommentar",
 	priceListCommentPlaceholder: "Ange kommentar",
 	priceListSelectPlaceholder: "Välj",
@@ -1871,6 +1874,7 @@ export const svRegister: RegisterTranslation = {
 	priceListArticleNoHeader: "Artikel nr",
 	priceListDescriptionHeader: "Benämning",
 	priceListOutPriceListAHeader: "Utprislista A",
+	priceListCustomPriceHeader: "Anpassat pris",
 	priceListCalcCostHeader: "Kalkyl kostnad",
 	priceListStockHeader: "Lager",
 	priceListReservedHeader: "Reserverat",
@@ -1911,6 +1915,7 @@ export const svRegister: RegisterTranslation = {
 	validationPriceListCreatedByRequired: "Skapad av krävs",
 	validationPriceListCategoryRequired: "Kategori krävs",
 	validationPriceListUnitRequired: "Enhet krävs",
+	validationInvalidCharacters: "HTML-taggar är inte tillåtna",
 };
 
 export const svCommon: CommonTranslation = {

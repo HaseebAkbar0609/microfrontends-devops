@@ -127,6 +127,18 @@ export function PriceListReviewStep({ articles }: PriceListReviewStepProps) {
 						</div>
 						<div>
 							<p className="text-xs text-slate-500 font-medium">
+								<Translate text={localizationConstants.priceListValidFromLabel} />
+							</p>
+							<p className="font-semibold text-slate-900 mt-0.5">{formData.giltigFran || "-"}</p>
+						</div>
+						<div>
+							<p className="text-xs text-slate-500 font-medium">
+								<Translate text={localizationConstants.priceListValidToLabel} />
+							</p>
+							<p className="font-semibold text-slate-900 mt-0.5">{formData.giltigTill || "-"}</p>
+						</div>
+						<div>
+							<p className="text-xs text-slate-500 font-medium">
 								<Translate text={localizationConstants.priceListCreatedByLabel} />
 							</p>
 							<p className="font-semibold text-slate-900 mt-0.5">{formData.skapadAv || "-"}</p>
@@ -142,6 +154,12 @@ export function PriceListReviewStep({ articles }: PriceListReviewStepProps) {
 								<Translate text={localizationConstants.priceListUnitLabel} />
 							</p>
 							<p className="font-semibold text-slate-900 mt-0.5">{formData.enhet || "-"}</p>
+						</div>
+						<div>
+							<p className="text-xs text-slate-500 font-medium">
+								<Translate text={localizationConstants.priceListCurrencyLabel} />
+							</p>
+							<p className="font-semibold text-slate-900 mt-0.5">{formData.valuta || "-"}</p>
 						</div>
 						<div>
 							<p className="text-xs text-slate-500 font-medium">

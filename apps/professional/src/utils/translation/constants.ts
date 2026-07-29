@@ -1793,7 +1793,10 @@ export type RegisterTranslation = {
 	priceListNameLabel: string;
 	priceListNamePlaceholder: string;
 	priceListDateLabel: string;
+	priceListValidFromLabel: string;
+	priceListValidToLabel: string;
 	priceListCreatedByLabel: string;
+	priceListCurrencyLabel: string;
 	priceListCommentLabel: string;
 	priceListCommentPlaceholder: string;
 	priceListSelectPlaceholder: string;
@@ -1806,6 +1809,7 @@ export type RegisterTranslation = {
 	priceListArticleNoHeader: string;
 	priceListDescriptionHeader: string;
 	priceListOutPriceListAHeader: string;
+	priceListCustomPriceHeader: string;
 	priceListCalcCostHeader: string;
 	priceListStockHeader: string;
 	priceListReservedHeader: string;
@@ -1846,6 +1850,7 @@ export type RegisterTranslation = {
 	validationPriceListCreatedByRequired: string;
 	validationPriceListCategoryRequired: string;
 	validationPriceListUnitRequired: string;
+	validationInvalidCharacters: string;
 };
 
 export type CommonTranslation = {

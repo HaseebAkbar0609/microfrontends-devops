@@ -154,7 +154,10 @@ const mapPriceListToApi = (data: CreatePriceListFormData): Record<string, unknow
 	kod: data.kod || null,
 	name: data.benamning,
 	date: data.datum,
+	valid_from: data.giltigFran || null,
+	valid_to: data.giltigTill || null,
 	created_by: data.skapadAv,
+	currency: data.valuta || "SEK",
 	comment: data.kommentar || null,
 	category: data.kategori,
 	unit: data.enhet,
@@ -170,7 +173,7 @@ export async function createPriceListAPIAction(
 		...mapPriceListToApi(data),
 		articles: selectedArticles.map((a) => ({
 			article_id: a.id,
-			price: a.outPriceListA,
+			price: a.customPrice || a.outPriceListA,
 		})),
 	};
 	try {
@@ -178,7 +181,8 @@ export async function createPriceListAPIAction(
 		return { id: String(res.data?.data?.id ?? "") };
 	} catch (error) {
 		if (process.env.NODE_ENV !== "production") {
-			console.warn("[createPriceListAPIAction] API request failed:", error);
+			const sanitizedMessage = error instanceof Error ? error.message : String(error);
+			console.warn("[createPriceListAPIAction] API request failed:", sanitizedMessage);
 		}
 		throw error;
 	}
@@ -189,6 +193,7 @@ const mapArticleFromApi = (item: Record<string, unknown>): PriceListArticleRow =
 	articleNo: String(item.article_no ?? item.articleNo ?? ""),
 	benamning: String(item.description ?? item.benamning ?? ""),
 	outPriceListA: String(item.out_price_list_a ?? item.outPriceListA ?? "0"),
+	customPrice: String(item.custom_price ?? item.out_price_list_a ?? item.outPriceListA ?? "0"),
 	calcCost: String(item.calculated_cost ?? item.calculatedCost ?? "0"),
 	stock: Number(item.stock ?? 0),
 	reserved: Number(item.reserved ?? 0),
@@ -220,7 +225,8 @@ export async function getAvailableArticlesAPIAction(params?: {
 		}
 	} catch (error) {
 		if (process.env.NODE_ENV !== "production") {
-			console.warn("[getAvailableArticlesAPIAction] API request failed, falling back to mock data:", error);
+			const sanitizedMessage = error instanceof Error ? error.message : String(error);
+			console.warn("[getAvailableArticlesAPIAction] API request failed, falling back to mock data:", sanitizedMessage);
 		}
 	}
 

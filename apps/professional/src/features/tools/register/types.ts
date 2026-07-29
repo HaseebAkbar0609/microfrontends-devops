@@ -608,12 +608,17 @@ export interface GetPriceListRegisterListResponse {
 }
 
 // Create Price List Schema (TFS-441)
+const noHtmlRegex = /^[^<>]*$/;
+
 export const createPriceListSchema = z.object({
-	kod: z.string().optional(),
-	benamning: z.string().min(1, "validationPriceListNameRequired"),
+	kod: z.string().regex(noHtmlRegex, "validationInvalidCharacters").optional(),
+	benamning: z.string().min(1, "validationPriceListNameRequired").regex(noHtmlRegex, "validationInvalidCharacters"),
 	datum: z.string().min(1, "validationPriceListDateRequired"),
+	giltigFran: z.string().optional(),
+	giltigTill: z.string().optional(),
 	skapadAv: z.string().min(1, "validationPriceListCreatedByRequired"),
-	kommentar: z.string().optional(),
+	valuta: z.string().optional(),
+	kommentar: z.string().regex(noHtmlRegex, "validationInvalidCharacters").optional(),
 	kategori: z.string().min(1, "validationPriceListCategoryRequired"),
 	enhet: z.string().min(1, "validationPriceListUnitRequired"),
 	kund: z.string().optional(),
@@ -627,6 +632,7 @@ export interface PriceListArticleRow {
 	articleNo: string;
 	benamning: string;
 	outPriceListA: string;
+	customPrice?: string;
 	calcCost: string;
 	stock: number;
 	reserved: number;

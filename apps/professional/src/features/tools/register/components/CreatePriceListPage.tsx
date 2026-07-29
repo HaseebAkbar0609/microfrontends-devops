@@ -47,7 +47,10 @@ export function CreatePriceListPage() {
 			kod: "",
 			benamning: "",
 			datum: "",
+			giltigFran: "",
+			giltigTill: "",
 			skapadAv: "",
+			valuta: "SEK",
 			kommentar: "",
 			kategori: "",
 			enhet: "",
@@ -73,6 +76,10 @@ export function CreatePriceListPage() {
 	};
 
 	const handleTabClick = async (step: number) => {
+		if (step > currentStep) {
+			const isValid = await validateStep(currentStep);
+			if (!isValid) return;
+		}
 		setCurrentStep(step);
 	};
 

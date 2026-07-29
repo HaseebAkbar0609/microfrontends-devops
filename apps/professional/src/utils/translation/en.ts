@@ -1843,7 +1843,10 @@ export const enRegister: RegisterTranslation = {
 	priceListNameLabel: "Name",
 	priceListNamePlaceholder: "Enter name",
 	priceListDateLabel: "Date",
+	priceListValidFromLabel: "Valid From",
+	priceListValidToLabel: "Valid To",
 	priceListCreatedByLabel: "Created by",
+	priceListCurrencyLabel: "Currency",
 	priceListCommentLabel: "Comment",
 	priceListCommentPlaceholder: "Enter comment",
 	priceListSelectPlaceholder: "Select",
@@ -1856,6 +1859,7 @@ export const enRegister: RegisterTranslation = {
 	priceListArticleNoHeader: "Article No",
 	priceListDescriptionHeader: "Description",
 	priceListOutPriceListAHeader: "Out price list A",
+	priceListCustomPriceHeader: "Custom Price",
 	priceListCalcCostHeader: "Calc Cost",
 	priceListStockHeader: "Stock",
 	priceListReservedHeader: "Reserved",
@@ -1896,6 +1900,7 @@ export const enRegister: RegisterTranslation = {
 	validationPriceListCreatedByRequired: "Created by is required",
 	validationPriceListCategoryRequired: "Category is required",
 	validationPriceListUnitRequired: "Unit is required",
+	validationInvalidCharacters: "HTML tags are not allowed",
 };
 
 export const en: Translation = {
