@@ -48,8 +48,10 @@ export async function getAccountPlanListAPIAction(
 				totalPages: Math.ceil((data?.total ?? 0) / (data?.limit ?? params?.limit ?? 10)),
 			};
 		}
-	} catch {
-		// Fallback to local mock data if backend endpoint is unavailable
+	} catch (error) {
+		if (process.env.NEXT_PUBLIC_USE_MOCK !== "true" && process.env.NODE_ENV === "production") {
+			throw error;
+		}
 	}
 
 	const page = Math.max(1, params?.page ?? 1);
@@ -117,7 +119,10 @@ export async function createAccountPlanAPIAction(
 			description: data.description || null,
 		});
 		return { id: String(res.data?.data?.id ?? Date.now()) };
-	} catch {
+	} catch (error) {
+		if (process.env.NEXT_PUBLIC_USE_MOCK !== "true" && process.env.NODE_ENV === "production") {
+			throw error;
+		}
 		return { id: String(Date.now()) };
 	}
 }
@@ -139,7 +144,10 @@ export async function updateAccountPlanAPIAction(
 			description: data.description || null,
 		});
 		return { id: String(res.data?.data?.id ?? id) };
-	} catch {
+	} catch (error) {
+		if (process.env.NEXT_PUBLIC_USE_MOCK !== "true" && process.env.NODE_ENV === "production") {
+			throw error;
+		}
 		return { id };
 	}
 }
@@ -151,7 +159,10 @@ export async function toggleAccountStatusAPIAction(
 	try {
 		await axiosInstance.patch(API_PATH.ACCOUNTS.TOGGLE_STATUS(id), { status });
 		return { success: true };
-	} catch {
+	} catch (error) {
+		if (process.env.NEXT_PUBLIC_USE_MOCK !== "true" && process.env.NODE_ENV === "production") {
+			throw error;
+		}
 		return { success: false };
 	}
 }

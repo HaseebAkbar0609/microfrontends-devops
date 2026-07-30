@@ -180,22 +180,29 @@ export function AccountPlanTable({ activeTab: _activeTab }: AccountPlanTableProp
 		});
 	}, []);
 
-	const handleBulkStatusChange = useCallback(async (newStatus: "active" | "inactive") => {
-		if (selectedRows.size === 0) return;
-		for (const id of selectedRows) {
-			await toggleAccountStatusAPIAction(id, newStatus);
-		}
-		setData((prev) =>
-			prev.map((item) => (selectedRows.has(item.id) ? { ...item, status: newStatus } : item)),
-		);
-		setSelectedRows(new Set());
-		showToast(
-			"success",
-			newStatus === "active"
-				? t(localizationConstants.accountActivatedSuccess)
-				: t(localizationConstants.accountDeactivatedSuccess),
-		);
-	}, [selectedRows, t]);
+	const handleBulkStatusChange = useCallback(
+		async (newStatus: "active" | "inactive") => {
+			if (selectedRows.size === 0) return;
+			try {
+				await Promise.all(
+					Array.from(selectedRows).map((id) => toggleAccountStatusAPIAction(id, newStatus)),
+				);
+				setData((prev) =>
+					prev.map((item) => (selectedRows.has(item.id) ? { ...item, status: newStatus } : item)),
+				);
+				setSelectedRows(new Set());
+				showToast(
+					"success",
+					newStatus === "active"
+						? t(localizationConstants.accountActivatedSuccess)
+						: t(localizationConstants.accountDeactivatedSuccess),
+				);
+			} catch {
+				showToast("error", t(localizationConstants.accountPlanImportError));
+			}
+		},
+		[selectedRows, t],
+	);
 
 	const handleViewAccount = useCallback((row: AccountPlanRow) => {
 		router.push(`/tools/register/account-plan/${row.id}`);

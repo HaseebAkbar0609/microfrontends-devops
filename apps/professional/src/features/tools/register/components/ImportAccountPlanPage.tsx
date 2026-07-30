@@ -67,6 +67,14 @@ const MOCK_IMPORT_ROWS: ImportRow[] = [
 	},
 ];
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
+const ALLOWED_EXTENSIONS = ["csv", "xlsx", "xls", "sie"];
+
+const getFileExtension = (filename: string): string => {
+	const parts = filename.split(".");
+	return parts.length > 1 ? (parts.pop()?.toLowerCase() ?? "") : "";
+};
+
 export function ImportAccountPlanPage() {
 	const t = useTranslate();
 	const router = useRouter();
@@ -82,10 +90,24 @@ export function ImportAccountPlanPage() {
 		useSruFrom: "sieFile",
 	});
 
-	const handleFileSelect = useCallback(async (file: File) => {
-		setSelectedFile(file);
-		setImportRows(MOCK_IMPORT_ROWS);
-	}, []);
+	const handleFileSelect = useCallback(
+		async (file: File) => {
+			const ext = getFileExtension(file.name);
+			if (!ALLOWED_EXTENSIONS.includes(ext)) {
+				showToast("error", t(localizationConstants.invalidFileFormatError));
+				return;
+			}
+
+			if (file.size > MAX_FILE_SIZE) {
+				showToast("error", t(localizationConstants.fileParseError));
+				return;
+			}
+
+			setSelectedFile(file);
+			setImportRows(MOCK_IMPORT_ROWS);
+		},
+		[t],
+	);
 
 	const handleDragOver = useCallback((e: React.DragEvent) => {
 		e.preventDefault();
