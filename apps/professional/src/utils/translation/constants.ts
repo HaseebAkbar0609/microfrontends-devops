@@ -1482,6 +1482,13 @@ export type OfferTranslation = {
 	offerQuotedAnswerTitle: string;
 	offerQuotedAnswerLeaveComment: string;
 	offerQuotedAnswerBack: string;
+	offerAcceptedTotalLabel: string;
+	offerAcceptedAllJobs: string;
+	offerAcceptedPrice: string;
+	offerAcceptedStatusBadge: string;
+	offerAcceptedCreateContract: string;
+	offerAcceptedViewOffer: string;
+	offerDownloadPdf: string;
 };
 
 export type RegisterTranslation = {

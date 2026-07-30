@@ -122,6 +122,17 @@ export type OfferQuotedItem = {
   customerAnswer?: string;
 };
 
+export type OfferAcceptedItem = {
+  id: string;
+  offertNr: string;
+  job: string;
+  customerName: string;
+  category: string;
+  municipality: string;
+  acceptedPrice: number;
+  type: string;
+};
+
 export type OfferFormCompany = {
   name: string;
   email: string;
