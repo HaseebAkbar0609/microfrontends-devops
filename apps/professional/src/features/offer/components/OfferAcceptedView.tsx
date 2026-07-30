@@ -317,7 +317,7 @@ export function OfferAcceptedView({
                             size="sm"
                             className="h-8 cursor-pointer bg-slate-900 px-3 text-xs font-medium text-white hover:bg-slate-700"
                             onClick={() =>
-                              router.push(OFFER_ROUTES.agreed(offerId))
+                              router.push(OFFER_ROUTES.createAgreement(offerId))
                             }
                           >
                             {t(localizationConstants.offerAcceptedCreateContract)}

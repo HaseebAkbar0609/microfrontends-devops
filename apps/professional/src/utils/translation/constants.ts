@@ -1502,6 +1502,13 @@ export type OfferTranslation = {
 	offerAcceptedCreateContract: string;
 	offerAcceptedViewOffer: string;
 	offerDownloadPdf: string;
+	offerAgreedContractNr: string;
+	offerAgreedJobType: string;
+	offerAgreedPrice: string;
+	offerAgreedStatusSigned: string;
+	offerAgreedStatusWaiting: string;
+	offerAgreedViewAgreement: string;
+	offerAgreedViewProject: string;
 	agreementCreateTitle: string;
 	agreementCreateDescription: string;
 	agreementProjectInfo: string;
