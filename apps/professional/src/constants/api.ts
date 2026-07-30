@@ -87,6 +87,14 @@ export const API_PATH = {
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}`,
 		TOGGLE_FAVORITE: (id: string) => `${PROFESSIONALS_BASE_PATH}/pricelists/${id}/favorite`,
 	},
+	COST_CENTERS: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/cost-centers`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/cost-centers`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/cost-centers/${id}`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/cost-centers/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/cost-centers/${id}`,
+		TOGGLE_STATUS: `${PROFESSIONALS_BASE_PATH}/cost-centers/toggle-status`,
+	},
 };
 
 export const appConstants = {
