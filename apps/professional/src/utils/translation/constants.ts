@@ -666,6 +666,19 @@ export type OfferTranslation = {
 	invoicePreviewDownload: string;
 	invoicePreviewPrint: string;
 	invoicePreviewNotFound: string;
+	// Admin - Subscription overview
+	subscriptionTabMy: string;
+	subscriptionTabPayment: string;
+	subscriptionNumberLabel: string;
+	subscriptionStartLabel: string;
+	subscriptionDetailTitlePrefix: string;
+	subscriptionColPackage: string;
+	subscriptionColLicenses: string;
+	subscriptionColAddons: string;
+	subscriptionStatusActive: string;
+	subscriptionServiceBankId: string;
+	subscriptionServiceSms: string;
+	subscriptionServiceEmail: string;
 	// Admin - Licenses overview
 	adminLicensesTitle: string;
 	licensesTabSystem: string;
