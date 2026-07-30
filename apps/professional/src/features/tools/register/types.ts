@@ -712,3 +712,49 @@ export const createCostCenterSchema = z.object({
 
 export type CreateCostCenterFormData = z.infer<typeof createCostCenterSchema>;
 
+// Account Plan Types (TFS-443)
+export interface AccountPlanRow {
+	id: string;
+	accountNumber: string;
+	accountName: string;
+	accountType: string;
+	vatCode: string;
+	sru: string;
+	autoAccount: string;
+	openingBalance: string;
+	budget: string;
+	status: "active" | "inactive";
+}
+
+export interface GetAccountPlanListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	accountType?: string;
+	status?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetAccountPlanListResponse {
+	data: AccountPlanRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
+export const createAccountPlanSchema = z.object({
+	accountNumber: z.string().min(1, "validationAccountNumberRequired"),
+	accountName: z.string().min(1, "validationAccountNameRequired"),
+	accountType: z.string().min(1, "validationAccountTypeRequired"),
+	vatCode: z.string().optional(),
+	sru: z.string().optional(),
+	autoAccount: z.string().optional(),
+	openingBalance: z.string().optional(),
+	budget: z.string().optional(),
+	description: z.string().optional(),
+});
+
+export type CreateAccountPlanFormData = z.infer<typeof createAccountPlanSchema>;
+
