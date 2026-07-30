@@ -679,6 +679,39 @@ export type OfferTranslation = {
 	subscriptionServiceBankId: string;
 	subscriptionServiceSms: string;
 	subscriptionServiceEmail: string;
+	subscriptionPaymentHeading: string;
+	subscriptionPaymentSelectLabel: string;
+	subscriptionPaymentMethodCard: string;
+	subscriptionPaymentAddCard: string;
+	subscriptionPaymentChooseCard: string;
+	subscriptionPaymentNoCards: string;
+	subscriptionPaymentEdit: string;
+	subscriptionPaymentDelete: string;
+	subscriptionNewCardTitle: string;
+	subscriptionCardNameLabel: string;
+	subscriptionCardNamePlaceholder: string;
+	subscriptionFirstNameLabel: string;
+	subscriptionFirstNamePlaceholder: string;
+	subscriptionLastNameLabel: string;
+	subscriptionLastNamePlaceholder: string;
+	subscriptionCardNumberLabel: string;
+	subscriptionMonthLabel: string;
+	subscriptionYearLabel: string;
+	subscriptionSelectPlaceholder: string;
+	subscriptionCvcLabel: string;
+	subscriptionConfirmAction: string;
+	subscriptionCardPreviewName: string;
+	subscriptionSuccessText: string;
+	subscriptionOkAction: string;
+	subscriptionValCardNameRequired: string;
+	subscriptionValFirstNameRequired: string;
+	subscriptionValLastNameRequired: string;
+	subscriptionValCardNumberRequired: string;
+	subscriptionValCardNumberInvalid: string;
+	subscriptionValMonthRequired: string;
+	subscriptionValYearRequired: string;
+	subscriptionValCvcRequired: string;
+	subscriptionValCvcInvalid: string;
 	// Admin - Licenses overview
 	adminLicensesTitle: string;
 	licensesTabSystem: string;
@@ -2183,6 +2216,22 @@ export type RegisterTranslation = {
 	selectAllLabel: string;
 	selectRowLabel: string;
 	goBackToAccountPlanLabel: string;
+	// Create Account Translations (TFS-444)
+	createAccountHeaderTitle: string;
+	additionalDetailsSection: string;
+	accountNumberPlaceholder: string;
+	accountNamePlaceholder: string;
+	openingBalancePlaceholder: string;
+	activeStatusLabel: string;
+	sruPlaceholder: string;
+	vatCodePlaceholder: string;
+	radioObligatoriskt: string;
+	radioTillatet: string;
+	radioEjTillatet: string;
+	suggestedCostCenterLabel: string;
+	suggestedCostCenterPlaceholder: string;
+	suggestedProjectLabel: string;
+	suggestedProjectPlaceholder: string;
 };
 
 export type CommonTranslation = {

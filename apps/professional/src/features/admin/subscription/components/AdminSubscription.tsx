@@ -13,6 +13,7 @@ import {
 	SubscriptionTabId,
 } from "../constants/mockData";
 import { getSubscriptionOverview } from "../services/subscriptionService";
+import PaymentMethodTab from "./PaymentMethodTab";
 
 const isSubscriptionTabId = (
 	value: string | null,
@@ -197,9 +198,7 @@ const AdminSubscription = () => {
 					</div>
 				</div>
 			) : (
-				<p className="py-10 text-center text-sm text-slate-500">
-					<Translate text={localizationConstants.comingSoon} />
-				</p>
+				<PaymentMethodTab />
 			)}
 		</div>
 	);
