@@ -48,6 +48,8 @@ export interface DataTableColumn<TData> {
 	label: string;
 	/** Custom header renderer for complex headers like checkboxes. */
 	headerRender?: (column: DataTableColumn<TData>) => ReactNode;
+	/** Custom render function for the column header. Overrides label translation. */
+	renderHeader?: () => ReactNode;
 	/** Whether the column is sortable. Defaults to false. */
 	sortable?: boolean;
 	/** Tailwind classes applied to the <th> element. */
@@ -190,7 +192,7 @@ export function DataTable<TData>({
 							: "rounded-lg border border-slate-200 shadow-2xs"),
 				)}
 			>
-				<Table className="w-full min-w-[1000px] table-auto border-collapse">
+				<Table className="w-full min-w-250 table-auto border-collapse">
 					<TableHeader className={cn(striped && "bg-slate-50/50")}>
 						<TableRow
 							className={cn(
@@ -215,7 +217,11 @@ export function DataTable<TData>({
 									onClick={() => handleHeaderClick(col)}
 								>
 									<div className={cn("flex items-center gap-1", col.headerClassName?.includes("text-center") && "justify-center")}>
-										{col.headerRender ? col.headerRender(col) : <Translate text={col.label} />}
+										{col.renderHeader
+											? col.renderHeader()
+											: col.headerRender
+												? col.headerRender(col)
+												: <Translate text={col.label} />}
 										{col.sortable && (
 											<SortIcon
 												field={col.key}
