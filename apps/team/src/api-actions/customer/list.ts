@@ -5,8 +5,8 @@ import type {
   PrivateCustomer,
 } from "@/features/customers/types/types";
 
-const MOCK_ENABLE = true; // TODO: set to false when real API is available
-const CUSTOMERS_LIST_PATH = "/api/v1/teams/customer/private/list";
+const MOCK_ENABLE = false;
+const CUSTOMERS_LIST_PATH = "/api/v1/teams/private/customers/active";
 const DEFAULT_PAGE_SIZE = 10;
 
 const MOCK_CUSTOMERS: PrivateCustomer[] = [
@@ -156,14 +156,18 @@ const MOCK_CUSTOMERS: PrivateCustomer[] = [
   },
 ];
 
-interface CustomerListApiResponse {
+export interface CustomerListApiResponse {
   data: {
-    items: PrivateCustomer[];
-    total_pages: number;
-    total_items: number;
-    current_page: number;
-    page_size: number;
+    items: Record<string, unknown>[];
+    total_pages?: number;
+    total_items?: number;
+    current_page?: number;
+    page_size?: number;
   };
+  total_pages?: number;
+  total_items?: number;
+  current_page?: number;
+  page_size?: number;
 }
 
 export async function listPrivateCustomersAPIAction(
@@ -194,12 +198,30 @@ export async function listPrivateCustomersAPIAction(
     CUSTOMERS_LIST_PATH,
     { params: { page, page_size: pageSize, search: search || undefined } }
   );
-  const payload = response.data.data;
+
+  const resData = response.data;
+  const rawItems = Array.isArray(resData?.data)
+    ? resData.data
+    : resData?.data?.items ?? [];
+
+  const mappedItems: PrivateCustomer[] = rawItems.map((item: Record<string, unknown>) => ({
+    id: String(item.id ?? ""),
+    customerNumber: String(item.customer_no || item.customerNumber || item.id || ""),
+    name: String(item.name || `${item.first_name ?? ""} ${item.last_name ?? ""}`.trim() || "Unnamed"),
+    email: String(item.email || "-"),
+    phone: String(item.phone || "-"),
+    city: String(item.city || "-"),
+    activeRequests: Number(item.active_requests ?? item.activeRequests ?? 0),
+    ongoingProjects: Number(item.ongoing_projects ?? item.ongoingProjects ?? 0),
+    lastActivity: String(item.last_activity || item.lastActivity || "-"),
+    status: (item.status as PrivateCustomer["status"]) || "active",
+  }));
+
   return {
-    items: payload.items ?? [],
-    totalPages: payload.total_pages ?? 1,
-    totalItems: payload.total_items ?? 0,
-    currentPage: payload.current_page ?? page,
-    pageSize: payload.page_size ?? pageSize,
+    items: mappedItems,
+    totalPages: resData?.total_pages ?? resData?.data?.total_pages ?? 1,
+    totalItems: resData?.total_items ?? resData?.data?.total_items ?? mappedItems.length,
+    currentPage: resData?.current_page ?? resData?.data?.current_page ?? page,
+    pageSize: resData?.page_size ?? resData?.data?.page_size ?? pageSize,
   };
 }
