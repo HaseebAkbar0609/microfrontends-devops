@@ -50,7 +50,7 @@ export function InvoiceSubSidebar() {
 				{INVOICE_SUB_SIDEBAR_ITEMS.map((item) => {
 					const isActive =
 						item.href === "/tools/register"
-							? pathname === "/tools/register" || pathname.startsWith("/tools/register/customer-register")
+							? pathname === "/tools/register" || pathname.startsWith("/tools/register/")
 							: pathname === item.href || pathname.startsWith(`${item.href}/`);
 
 					const ItemIcon = isActive ? FolderOpen : Folder;

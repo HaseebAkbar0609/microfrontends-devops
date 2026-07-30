@@ -2108,6 +2108,21 @@ export const svRegister: RegisterTranslation = {
 	priceListStatusHeader: "Status",
 	priceListValidPeriodHeader: "Giltighetsperiod",
 	draftStatus: "Utkast",
+
+	// Cost Center Register Translations (TFS-446)
+	costCenterTitle: "Kontoplan- Bas kontoplan",
+	costCenterSubTitle: "Kostnadsställe",
+	createCostCenterButtonText: "Skapa Kostnadsställe",
+	costCenterCodeHeader: "KOD",
+	costCenterNameHeader: "Benämning",
+	costCenterNotesHeader: "Anteckningar",
+	inactivateButton: "Inaktivera",
+	activateButton: "Aktivera",
+	markedCountText: "markerade",
+	costCenterAllStatus: "Alla statusar",
+	costCenterActiveStatus: "Aktiv",
+	costCenterInactiveStatus: "Inaktiv",
+	noCostCentersMessage: "Inga kostnadsställen hittades.",
 };
 
 export const svCommon: CommonTranslation = {
