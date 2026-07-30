@@ -703,3 +703,12 @@ export interface GetCostCenterListResponse {
 	totalPages: number;
 }
 
+export const createCostCenterSchema = z.object({
+	kod: z.string().min(1, "validationCostCenterCodeRequired"),
+	benamning: z.string().min(1, "validationCostCenterNameRequired"),
+	anteckningar: z.string().optional(),
+	status: z.string().default("active"),
+});
+
+export type CreateCostCenterFormData = z.infer<typeof createCostCenterSchema>;
+
