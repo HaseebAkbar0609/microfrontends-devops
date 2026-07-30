@@ -1444,6 +1444,13 @@ export const svOffer: OfferTranslation = {
 	offerQuotedAnswerTitle: "Kundens svar",
 	offerQuotedAnswerLeaveComment: "Lämna kommentar",
 	offerQuotedAnswerBack: "Tillbaka",
+	offerAcceptedTotalLabel: "Accepterade offerter: SEK",
+	offerAcceptedAllJobs: "Alla jobb",
+	offerAcceptedPrice: "Accepterat pris",
+	offerAcceptedStatusBadge: "Accepterade",
+	offerAcceptedCreateContract: "Skapa avtal",
+	offerAcceptedViewOffer: "Se offert",
+	offerDownloadPdf: "Ladda ned PDF",
 };
 
 export const svMyPage: MyPagesTranslation = {

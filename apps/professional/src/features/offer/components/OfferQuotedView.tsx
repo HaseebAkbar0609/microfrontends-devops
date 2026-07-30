@@ -2,13 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Search,
-  ChevronDown,
-  ChevronsUpDown,
-  ChevronUp,
-  MoreVertical,
-} from "lucide-react";
+import { Search, ChevronDown, MoreVertical } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,8 +17,13 @@ import { Input } from "@/components/ui/input";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useDebounce } from "@/hooks/useDebounce";
+import { useTableSort } from "@/hooks/useTableSort";
+import { sortItems } from "@/utils/tableSort";
+import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferQuotedItem } from "../types/offer";
+import { OfferTablePagination } from "./OfferTablePagination";
 import { OfferQuotedTypeBadge } from "./OfferQuotedTypeBadge";
 import { OfferQuotedStatusBadge } from "./OfferQuotedStatusBadge";
 import { OfferQuotedContactCell } from "./OfferQuotedContactCell";
@@ -43,7 +42,6 @@ type SortField = keyof Pick<
   | "status"
   | "contactPerson"
 >;
-type SortDir = "asc" | "desc" | null;
 
 type CommentModal = { open: boolean; offertNr: string; job: string };
 type AnswerModal = {
@@ -64,8 +62,7 @@ export function OfferQuotedView({ offerId, items }: Props) {
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [sortField, setSortField] = useState<SortField | null>(null);
-  const [sortDir, setSortDir] = useState<SortDir>(null);
+  const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -102,48 +99,18 @@ export function OfferQuotedView({ offerId, items }: Props) {
     });
   }, [debouncedSearch, selectedTypes, items]);
 
-  const sorted = useMemo(() => {
-    if (!sortField || !sortDir) return filtered;
-    return [...filtered].sort((a, b) => {
-      let av: string | number;
-      let bv: string | number;
-      if (sortField === "contactPerson") {
-        av = a.contactPerson.name;
-        bv = b.contactPerson.name;
-      } else {
-        av = a[sortField] as string | number;
-        bv = b[sortField] as string | number;
-      }
-      if (typeof av === "number" && typeof bv === "number")
-        return sortDir === "asc" ? av - bv : bv - av;
-      return sortDir === "asc"
-        ? String(av).localeCompare(String(bv))
-        : String(bv).localeCompare(String(av));
-    });
-  }, [filtered, sortField, sortDir]);
+  const sorted = useMemo(
+    () =>
+      sortItems(filtered, sortField, sortDir, (item, field) => {
+        if (field === "contactPerson") return item.contactPerson.name;
+        return item[field as keyof OfferQuotedItem] as string | number;
+      }),
+    [filtered, sortField, sortDir],
+  );
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
   const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
   const totalSum = filtered.reduce((sum, i) => sum + i.price, 0);
-
-  function toggleSort(field: SortField) {
-    if (sortField !== field) {
-      setSortField(field);
-      setSortDir("asc");
-    } else if (sortDir === "asc") {
-      setSortDir("desc");
-    } else {
-      setSortField(null);
-      setSortDir(null);
-    }
-  }
-
-  function SortIcon({ field }: { field: SortField }) {
-    if (sortField !== field)
-      return <ChevronsUpDown size={14} className="shrink-0 text-slate-400" />;
-    if (sortDir === "asc") return <ChevronUp size={14} className="shrink-0" />;
-    return <ChevronDown size={14} className="shrink-0" />;
-  }
 
   function openCommentModal(item: OfferQuotedItem) {
     setCommentModal({ open: true, offertNr: item.offertNr, job: item.job });
@@ -263,7 +230,7 @@ export function OfferQuotedView({ offerId, items }: Props) {
                   >
                     <span className="flex items-center gap-1">
                       {col.label}
-                      <SortIcon field={col.key} />
+                      {renderSortIcon(col.key, sortField, sortDir)}
                     </span>
                   </th>
                 ))}
@@ -319,9 +286,7 @@ export function OfferQuotedView({ offerId, items }: Props) {
                         size="sm"
                         className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
                         onClick={() =>
-                          router.push(
-                            `/module/business/offer/${offerId}/request`,
-                          )
+                          router.push(OFFER_ROUTES.request(offerId))
                         }
                       >
                         {t(localizationConstants.viewProject)}
@@ -382,59 +347,12 @@ export function OfferQuotedView({ offerId, items }: Props) {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between text-sm text-slate-600">
-          <div className="flex items-center gap-2">
-            <span>{t(localizationConstants.rowsPerPageLabel)}</span>
-            <span className="flex h-8 w-16 items-center justify-between rounded border border-slate-200 px-2 text-sm">
-              {rowsPerPage}
-              <ChevronsUpDown size={12} className="text-slate-400" />
-            </span>
-          </div>
-          <div className="flex items-center gap-3">
-            <span>
-              Page {page} of {totalPages}
-            </span>
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 w-7 p-0"
-                onClick={() => setPage(1)}
-                disabled={page === 1}
-              >
-                «
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 w-7 p-0"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-              >
-                ‹
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 w-7 p-0"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-              >
-                ›
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-7 w-7 p-0"
-                onClick={() => setPage(totalPages)}
-                disabled={page === totalPages}
-              >
-                »
-              </Button>
-            </div>
-          </div>
-        </div>
+        <OfferTablePagination
+          page={page}
+          totalPages={totalPages}
+          rowsPerPage={rowsPerPage}
+          onPageChange={setPage}
+        />
       </div>
 
       <OfferQuotedCommentModal
