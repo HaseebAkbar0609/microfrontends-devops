@@ -13,7 +13,13 @@ export function AgreementFileUploadSection() {
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
-    setFileName(file?.name ?? null);
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      e.target.value = "";
+      setFileName(null);
+      return;
+    }
+    setFileName(file.name);
   }
 
   return (

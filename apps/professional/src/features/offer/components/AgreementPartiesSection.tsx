@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useId } from "react";
 import { Handshake, ChevronUp, ChevronDown, Pencil, Plus } from "lucide-react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -8,7 +8,8 @@ import { AgreementParty } from "../types/offer";
 
 function PartyAvatar({ name }: { name: string }) {
   const initials = name
-    .split(" ")
+    .trim()
+    .split(/\s+/)
     .map((n) => n[0])
     .join("")
     .slice(0, 2)
@@ -29,17 +30,19 @@ function InputField({
   defaultValue?: string;
   fullWidth?: boolean;
 }) {
+  const id = useId();
   return (
-    <label
-      className={`flex flex-col gap-1${fullWidth ? " col-span-2" : ""}`}
-    >
-      <span className="text-sm font-medium text-zinc-950">{label}</span>
+    <div className={`flex flex-col gap-1${fullWidth ? " col-span-2" : ""}`}>
+      <label htmlFor={id} className="text-sm font-medium text-zinc-950">
+        {label}
+      </label>
       <input
+        id={id}
         type="text"
         defaultValue={defaultValue}
         className="h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-950 shadow-sm focus-visible:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/50"
       />
-    </label>
+    </div>
   );
 }
 
@@ -65,14 +68,14 @@ function PartyCard({ party }: { party: AgreementParty }) {
             aria-label="Edit party"
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border border-zinc-200 bg-white shadow-sm hover:bg-slate-50"
           >
-            <Pencil size={13} className="text-zinc-700" />
+            <Pencil size={13} className="text-zinc-700" aria-hidden={true} />
           </button>
           <button
             type="button"
             aria-label="Add party"
             className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border border-zinc-200 bg-white shadow-sm hover:bg-slate-50"
           >
-            <Plus size={13} className="text-zinc-700" />
+            <Plus size={13} className="text-zinc-700" aria-hidden={true} />
           </button>
         </div>
       </div>
