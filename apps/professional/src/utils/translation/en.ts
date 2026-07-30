@@ -1708,7 +1708,7 @@ export const enRegister: RegisterTranslation = {
 	vatTypeLabel: "VAT Type",
 	salesAccountLabel: "Sales Account",
 	costCenterLabel: "Cost Center",
-	projectLabel: "Project (Pr)",
+	projectLabel: "Project",
 	cancelButton: "Cancel",
 	saveButton: "Save",
 	saveDraftButton: "Save",
@@ -2232,6 +2232,23 @@ export const enRegister: RegisterTranslation = {
 	selectAllLabel: "Select all",
 	selectRowLabel: "Select row",
 	goBackToAccountPlanLabel: "Go back to account plan",
+
+	// Create Account Translations (TFS-444)
+	createAccountHeaderTitle: "Create new Account",
+	additionalDetailsSection: "Additional information",
+	accountNumberPlaceholder: "e.g. 105",
+	accountNamePlaceholder: "e.g. Cash",
+	openingBalancePlaceholder: "0.00",
+	activeStatusLabel: "Active",
+	sruPlaceholder: "e.g. 102",
+	vatCodePlaceholder: "Select VAT code",
+	radioObligatoriskt: "Required",
+	radioTillatet: "Allowed",
+	radioEjTillatet: "Not allowed",
+	suggestedCostCenterLabel: "Suggested cost center",
+	suggestedCostCenterPlaceholder: "Office 10",
+	suggestedProjectLabel: "Suggested project",
+	suggestedProjectPlaceholder: "e.g. Project 100",
 };
 
 export const en: Translation = {
