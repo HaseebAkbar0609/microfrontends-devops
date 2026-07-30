@@ -153,6 +153,7 @@ export type AgreementData = {
   projectName: string;
   projectNumber: string;
   quoteNumber: string;
+  address: string;
   contractType: string;
   customerName: string;
   price: number;

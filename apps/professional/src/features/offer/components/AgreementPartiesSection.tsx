@@ -1,17 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, ChevronUp, ChevronDown, Pencil, Plus } from "lucide-react";
+import { Handshake, ChevronUp, ChevronDown, Pencil, Plus } from "lucide-react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { AgreementParty } from "../types/offer";
 
-const AVATAR_COLORS: Record<string, string> = {
-  customer: "bg-slate-700",
-  supplier: "bg-teal-700",
-};
-
-function PartyAvatar({ name, role }: { name: string; role: string }) {
+function PartyAvatar({ name }: { name: string }) {
   const initials = name
     .split(" ")
     .map((n) => n[0])
@@ -19,27 +14,32 @@ function PartyAvatar({ name, role }: { name: string; role: string }) {
     .slice(0, 2)
     .toUpperCase();
   return (
-    <div
-      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white ${AVATAR_COLORS[role] ?? "bg-slate-500"}`}
-    >
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-xs font-medium text-zinc-500">
       {initials}
     </div>
   );
 }
 
-function FieldPair({
+function InputField({
   label,
-  value,
+  defaultValue = "",
+  fullWidth = false,
 }: {
   label: string;
-  value: string | undefined;
+  defaultValue?: string;
+  fullWidth?: boolean;
 }) {
-  if (!value) return <div />;
   return (
-    <div>
-      <p className="text-xs text-slate-500">{label}</p>
-      <p className="mt-0.5 text-sm text-slate-800">{value}</p>
-    </div>
+    <label
+      className={`flex flex-col gap-1${fullWidth ? " col-span-2" : ""}`}
+    >
+      <span className="text-sm font-medium text-zinc-950">{label}</span>
+      <input
+        type="text"
+        defaultValue={defaultValue}
+        className="h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-950 shadow-sm focus-visible:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/50"
+      />
+    </label>
   );
 }
 
@@ -48,107 +48,99 @@ function PartyCard({ party }: { party: AgreementParty }) {
   const isCustomer = party.role === "customer";
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-slate-50 px-5 py-4">
-      <div className="mb-4 flex items-center gap-2.5">
-        <PartyAvatar name={party.name} role={party.role} />
-        <span className="text-sm font-semibold text-slate-900">
+    <div>
+      <div className="mb-4 flex items-center gap-3">
+        <PartyAvatar name={party.name} />
+        <span className="text-base font-semibold text-slate-800">
           {party.name}
         </span>
-        <span
-          className={`rounded px-1.5 py-0.5 text-xs font-medium ${
-            isCustomer
-              ? "bg-blue-50 text-blue-700"
-              : "bg-purple-50 text-purple-700"
-          }`}
-        >
+        <span className="rounded-md bg-zinc-900 px-2 py-0.5 text-xs font-medium text-white shadow-sm">
           {isCustomer
             ? t(localizationConstants.agreementCustomerBadge)
             : t(localizationConstants.agreementSupplierBadge)}
         </span>
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex items-center gap-2">
           <button
             type="button"
             aria-label="Edit party"
-            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded hover:bg-slate-200"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border border-zinc-200 bg-white shadow-sm hover:bg-slate-50"
           >
-            <Pencil size={13} className="text-slate-500" />
+            <Pencil size={13} className="text-zinc-700" />
           </button>
           <button
             type="button"
             aria-label="Add party"
-            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded hover:bg-slate-200"
+            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border border-zinc-200 bg-white shadow-sm hover:bg-slate-50"
           >
-            <Plus size={13} className="text-slate-500" />
+            <Plus size={13} className="text-zinc-700" />
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-x-8 gap-y-4">
+      <div className="grid grid-cols-2 gap-4">
         {isCustomer ? (
           <>
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementCompanyOrPerson)}
-              value={party.companyOrPerson}
+              defaultValue={party.companyOrPerson}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementContactPerson)}
-              value={party.contactPerson}
+              defaultValue={party.contactPerson}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementOrgNumber)}
-              value={party.orgNumber}
+              defaultValue={party.orgNumber}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementPhoneNumber)}
-              value={party.phone}
+              defaultValue={party.phone}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementPersonalNumber)}
-              value={party.personalNumber}
+              defaultValue={party.personalNumber}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementEmail)}
-              value={party.email}
+              defaultValue={party.email}
             />
-            <div className="col-span-2">
-              <FieldPair
-                label={t(localizationConstants.agreementAddress)}
-                value={party.address}
-              />
-            </div>
+            <InputField
+              label={t(localizationConstants.agreementAddress)}
+              defaultValue={party.address}
+              fullWidth
+            />
           </>
         ) : (
           <>
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementCompany)}
-              value={party.company}
+              defaultValue={party.company}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementAuthorizedSignatory)}
-              value={party.authorizedSignatory}
+              defaultValue={party.authorizedSignatory}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementOrgNumber)}
-              value={party.orgNumber}
+              defaultValue={party.orgNumber}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementPersonalNumber)}
-              value={party.personalNumber}
+              defaultValue={party.personalNumber}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementPhoneNumber)}
-              value={party.phone}
+              defaultValue={party.phone}
             />
-            <FieldPair
+            <InputField
               label={t(localizationConstants.agreementEmail)}
-              value={party.email}
+              defaultValue={party.email}
             />
-            <div className="col-span-2">
-              <FieldPair
-                label={t(localizationConstants.agreementAddress)}
-                value={party.address}
-              />
-            </div>
+            <InputField
+              label={t(localizationConstants.agreementAddress)}
+              defaultValue={party.address}
+              fullWidth
+            />
           </>
         )}
       </div>
@@ -169,28 +161,33 @@ export function AgreementPartiesSection({ parties }: Props) {
       <button
         type="button"
         aria-expanded={open}
-        className="flex w-full cursor-pointer items-center gap-3 px-5 py-4"
+        className="flex w-full cursor-pointer items-center gap-4 px-4 py-4"
         onClick={() => setOpen((v) => !v)}
       >
-        <FileText size={18} className="shrink-0 text-slate-500" />
-        <span className="text-sm font-semibold text-slate-800">
+        <Handshake size={18} className="shrink-0 text-slate-800" />
+        <span className="text-base font-medium text-slate-800">
           {t(localizationConstants.agreementSection)}
         </span>
         <span className="ml-auto">
           {open ? (
-            <ChevronUp size={16} className="text-slate-400" />
+            <ChevronUp size={16} className="text-zinc-500" />
           ) : (
-            <ChevronDown size={16} className="text-slate-400" />
+            <ChevronDown size={16} className="text-zinc-500" />
           )}
         </span>
       </button>
 
       {open && (
         <>
-          <div className="border-t border-slate-100" />
-          <div className="space-y-3 px-5 py-4">
-            {parties.map((party) => (
-              <PartyCard key={party.id} party={party} />
+          <div className="border-t border-slate-200" />
+          <div className="px-4 py-4">
+            {parties.map((party, index) => (
+              <div key={party.id}>
+                <PartyCard party={party} />
+                {index < parties.length - 1 && (
+                  <div className="my-5 border-t border-slate-200" />
+                )}
+              </div>
             ))}
           </div>
         </>

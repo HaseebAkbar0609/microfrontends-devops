@@ -3,9 +3,10 @@ import { AgreementData } from "../types/offer";
 export const DUMMY_AGREEMENT_DATA: AgreementData = {
   id: "agr-001",
   projectName: "Kitchen Reno Job",
-  projectNumber: "PR-1050",
-  quoteNumber: "Q1-2026-001",
-  contractType: "A2 (test 14516)",
+  projectNumber: "PROJ02",
+  quoteNumber: "OF2026-001",
+  address: "Sveavägen 34, apt 204, 11350 Stockholm, Sweden",
+  contractType: "AB792 / AB00c",
   customerName: "Anna Andersson",
   price: 80000,
   startDate: "31-01-2025",

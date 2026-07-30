@@ -21,26 +21,26 @@ export function AgreementFileUploadSection() {
       <button
         type="button"
         aria-expanded={open}
-        className="flex w-full cursor-pointer items-center gap-3 px-5 py-4"
+        className="flex w-full cursor-pointer items-center gap-4 px-4 py-4"
         onClick={() => setOpen((v) => !v)}
       >
-        <UploadCloud size={18} className="shrink-0 text-slate-500" />
-        <span className="text-sm font-semibold text-slate-800">
+        <UploadCloud size={18} className="shrink-0 text-slate-700" />
+        <span className="text-base font-medium text-slate-800">
           {t(localizationConstants.agreementFileUpload)}
         </span>
         <span className="ml-auto">
           {open ? (
-            <ChevronUp size={16} className="text-slate-400" />
+            <ChevronUp size={16} className="text-zinc-500" />
           ) : (
-            <ChevronDown size={16} className="text-slate-400" />
+            <ChevronDown size={16} className="text-zinc-500" />
           )}
         </span>
       </button>
 
       {open && (
         <>
-          <div className="border-t border-slate-100" />
-          <div className="px-5 py-4">
+          <div className="border-t border-slate-200" />
+          <div className="px-4 py-4">
             <p className="mb-3 text-xs font-medium text-slate-700">
               {t(localizationConstants.agreementUploadFiles)}
             </p>
