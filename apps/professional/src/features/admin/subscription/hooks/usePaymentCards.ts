@@ -4,6 +4,15 @@ import { useState } from "react";
 import { PaymentCard } from "../constants/mockData";
 import { listPaymentCards } from "../services/subscriptionService";
 
+/**
+ * Form values handed over on save. `cardNumber` is sensitive: it exists
+ * only transiently here (reduced to the last 4 digits immediately below)
+ * and must never be logged, sent to analytics or persisted.
+ *
+ * TODO: replace this flow with a PCI-compliant provider (Stripe Elements /
+ * Adyen) once the payment API exists — raw card data must then live only
+ * inside the provider's hosted fields, never in application state.
+ */
 export interface PaymentCardDraft {
 	cardName: string;
 	firstName: string;
@@ -33,7 +42,7 @@ export function usePaymentCards() {
 	});
 
 	const addCard = (draft: PaymentCardDraft) => {
-		const id = `card-${draft.cardName.toLowerCase().replace(/\s+/g, "-")}-${cards.length + 1}`;
+		const id = `card-${crypto.randomUUID()}`;
 		setCards((current) => [...current, toStoredCard(draft, id)]);
 		setSelectedCardId((current) => current ?? id);
 	};

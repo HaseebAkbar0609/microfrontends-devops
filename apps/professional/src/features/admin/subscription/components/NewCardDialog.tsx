@@ -41,6 +41,11 @@ const YEARS = Array.from({ length: 10 }, (_, index) =>
 	String(BASE_YEAR + index),
 );
 
+/**
+ * Blank form state. `cardNumber` and `cvc` are sensitive while they sit in
+ * form state: never log them, never send them to analytics, never persist
+ * them — CVC is dropped on save and only the last 4 card digits are kept.
+ */
 const EMPTY_VALUES: PaymentCardFormValues = {
 	cardName: "",
 	firstName: "",
@@ -108,9 +113,12 @@ const NewCardDialog = ({
 	};
 
 	const watched = form.watch();
-	const previewNumber = watched.cardNumber
-		? formatCardNumber(watched.cardNumber).padEnd(19, "0")
-		: "0000  0000  0000  0000";
+	// Missing digits are masked with bullets, never with zeros, so the
+	// preview cannot be confused with real card digits.
+	const digits = watched.cardNumber.replace(/\D/g, "").slice(0, 16);
+	const previewNumber = (digits.padEnd(16, "\u2022").match(/.{4}/g) ?? []).join(
+		"  ",
+	);
 	const previewName =
 		[watched.firstName, watched.lastName].filter(Boolean).join(" ") ||
 		t(localizationConstants.subscriptionCardPreviewName);
