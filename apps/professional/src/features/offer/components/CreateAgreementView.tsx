@@ -22,9 +22,9 @@ export function CreateAgreementView({ offerId, data }: Props) {
   const router = useRouter();
 
   return (
-    <div className="flex flex-1 flex-col overflow-hidden">
+    <div className="flex flex-1 flex-col overflow-hidden bg-slate-50 -mb-6">
       {/* Header */}
-      <div className="border-b border-slate-200 px-6 py-3">
+      <div className="border-b border-slate-200 bg-white px-6 py-3">
         <button
           type="button"
           className="flex cursor-pointer items-center gap-1.5 text-2xl font-semibold tracking-tight text-zinc-950 hover:text-zinc-700"

@@ -28,6 +28,7 @@ function InputField({
   name,
   type = "text",
   maxLength,
+  pattern,
 }: {
   label: string;
   defaultValue?: string;
@@ -35,6 +36,7 @@ function InputField({
   name?: string;
   type?: string;
   maxLength?: number;
+  pattern?: string;
 }) {
   const id = useId();
   return (
@@ -48,6 +50,7 @@ function InputField({
         type={type}
         defaultValue={defaultValue}
         maxLength={maxLength}
+        pattern={pattern}
         className="h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-950 shadow-sm focus-visible:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/50"
       />
     </div>
@@ -107,6 +110,7 @@ function PartyCard({ party }: { party: AgreementParty }) {
               defaultValue={party.orgNumber}
               name={`${prefix}-org-number`}
               maxLength={11}
+              pattern="[0-9\-]*"
             />
             <InputField
               label={t(localizationConstants.agreementPhoneNumber)}
@@ -119,6 +123,7 @@ function PartyCard({ party }: { party: AgreementParty }) {
               defaultValue={party.personalNumber}
               name={`${prefix}-personal-number`}
               maxLength={12}
+              pattern="[0-9\-]*"
             />
             <InputField
               label={t(localizationConstants.agreementEmail)}
