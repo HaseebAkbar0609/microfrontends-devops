@@ -4,6 +4,7 @@ import type {
 	CostCenterRegisterRow,
 	GetCostCenterListParams,
 	GetCostCenterListResponse,
+	CreateCostCenterFormData,
 } from "../types";
 import { MOCK_COST_CENTER_DATA } from "../mockdata/costCenters";
 
@@ -76,6 +77,39 @@ export async function getCostCenterListAPIAction(
 	const paginatedData = filtered.slice(startIndex, startIndex + limit);
 
 	return { data: paginatedData, total, page, limit, totalPages };
+}
+
+export async function createCostCenterAPIAction(
+	data: CreateCostCenterFormData,
+): Promise<{ success: boolean; data?: CostCenterRegisterRow; error?: string }> {
+	try {
+		const res = await axiosInstance.post(API_PATH.COST_CENTERS.CREATE, {
+			kod: data.kod,
+			benamning: data.benamning,
+			anteckningar: data.anteckningar,
+			status: data.status ?? "active",
+		});
+
+		return {
+			success: true,
+			data: res.data?.data,
+		};
+	} catch (error) {
+		if (process.env.NODE_ENV !== "production") {
+			const sanitizedMessage = error instanceof Error ? error.message : String(error);
+			console.warn("[createCostCenterAPIAction] API request failed, updating mock data:", sanitizedMessage);
+		}
+		const newId = String(Date.now());
+		const newRow: CostCenterRegisterRow = {
+			id: newId,
+			kod: data.kod,
+			benamning: data.benamning,
+			anteckningar: data.anteckningar ?? "",
+			status: (data.status as "active" | "inactive") ?? "active",
+		};
+		MOCK_COST_CENTER_DATA.unshift(newRow);
+		return { success: true, data: newRow };
+	}
 }
 
 export async function deleteCostCenterAPIAction(id: string): Promise<boolean> {

@@ -1607,6 +1607,7 @@ export type RegisterTranslation = {
 	costCenterLabel: string;
 	projectLabel: string;
 	cancelButton: string;
+	saveButton: string;
 	saveDraftButton: string;
 	nextButton: string;
 	createCustomerButton: string;
@@ -2058,6 +2059,13 @@ export type RegisterTranslation = {
 	costCenterActiveStatus: string;
 	costCenterInactiveStatus: string;
 	noCostCentersMessage: string;
+	createCostCenterHeaderTitle: string;
+	costCenterCodePlaceholder: string;
+	costCenterNamePlaceholder: string;
+	costCenterNotesPlaceholder: string;
+	validationCostCenterCodeRequired: string;
+	validationCostCenterNameRequired: string;
+	costCenterCreatedSuccess: string;
 };
 
 export type CommonTranslation = {

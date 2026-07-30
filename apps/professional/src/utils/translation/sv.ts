@@ -1672,6 +1672,7 @@ export const svRegister: RegisterTranslation = {
 	costCenterLabel: "Kostnadsställe",
 	projectLabel: "Projekt (Pr)",
 	cancelButton: "Avbryt",
+	saveButton: "Spara",
 	saveDraftButton: "Spara",
 	nextButton: "Nästa",
 	createCustomerButton: "Skapa kund",
@@ -2123,6 +2124,13 @@ export const svRegister: RegisterTranslation = {
 	costCenterActiveStatus: "Aktiv",
 	costCenterInactiveStatus: "Inaktiv",
 	noCostCentersMessage: "Inga kostnadsställen hittades.",
+	createCostCenterHeaderTitle: "Skapa ny Kostnadsställe",
+	costCenterCodePlaceholder: "t.ex. 105",
+	costCenterNamePlaceholder: "t.ex. Stockholm",
+	costCenterNotesPlaceholder: "info",
+	validationCostCenterCodeRequired: "KOD är obligatoriskt",
+	validationCostCenterNameRequired: "Benämning är obligatoriskt",
+	costCenterCreatedSuccess: "Kostnadsställe har skapats",
 };
 
 export const svCommon: CommonTranslation = {

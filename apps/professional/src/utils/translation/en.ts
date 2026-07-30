@@ -1657,6 +1657,7 @@ export const enRegister: RegisterTranslation = {
 	costCenterLabel: "Cost Center",
 	projectLabel: "Project (Pr)",
 	cancelButton: "Cancel",
+	saveButton: "Save",
 	saveDraftButton: "Save",
 	nextButton: "Next",
 	createCustomerButton: "Create Customer",
@@ -2108,6 +2109,13 @@ export const enRegister: RegisterTranslation = {
 	costCenterActiveStatus: "Active",
 	costCenterInactiveStatus: "Inactive",
 	noCostCentersMessage: "No cost centers found.",
+	createCostCenterHeaderTitle: "Create new Cost center",
+	costCenterCodePlaceholder: "e.g. 105",
+	costCenterNamePlaceholder: "e.g. Stockholm",
+	costCenterNotesPlaceholder: "info...",
+	validationCostCenterCodeRequired: "CODE is required",
+	validationCostCenterNameRequired: "Name is required",
+	costCenterCreatedSuccess: "Cost center created successfully",
 };
 
 export const en: Translation = {
