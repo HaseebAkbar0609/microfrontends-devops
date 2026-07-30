@@ -20,6 +20,7 @@ import { ArticleRegisterTable } from "./ArticleRegisterTable";
 import { SupplierArticleRegisterTable } from "./SupplierArticleRegisterTable";
 import { PriceListRegisterTable, PriceListUpdatePanel } from "./PriceListRegisterTable";
 import { CostCenterRegisterTable } from "./CostCenterRegisterTable";
+import { AccountPlanPage } from "./AccountPlanPage";
 
 function RegisterContent() {
 	const { t } = useTranslation();
@@ -30,6 +31,7 @@ function RegisterContent() {
 	const selectedRegister = searchParams.get("tab") ?? "kund";
 	const articleSubTab = searchParams.get("subtab") ?? "artikel";
 	const priceListSubTab = searchParams.get("subtab") ?? "prislista";
+	const accountPlanSubTab = searchParams.get("subtab") ?? "kontoplan";
 
 	const updateUrlTab = useCallback(
 		(newTab: string, newSubTab?: string) => {
@@ -50,6 +52,8 @@ function RegisterContent() {
 			updateUrlTab("artikel", "artikel");
 		} else if (value === "prislista") {
 			updateUrlTab("prislista", "prislista");
+		} else if (value === "accountPlan") {
+			updateUrlTab("accountPlan", "kontoplan");
 		} else {
 			updateUrlTab(value);
 		}
@@ -122,6 +126,12 @@ function RegisterContent() {
 						>
 							<Translate text={localizationConstants.costCenterSubTitle} />
 						</SelectItem>
+						<SelectItem
+							value="accountPlan"
+							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
+						>
+							<Translate text={localizationConstants.accountPlan} />
+						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
@@ -179,6 +189,31 @@ function RegisterContent() {
 								<Translate text={localizationConstants.updatePriceListTab} />
 							</button>
 						</>
+					) : selectedRegister === "accountPlan" ? (
+						<>
+							<button
+								type="button"
+								onClick={() => updateUrlTab("accountPlan", "kontoplan")}
+								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
+									accountPlanSubTab === "kontoplan"
+										? "border-slate-900 text-slate-900"
+										: "border-transparent text-slate-500 hover:text-slate-700"
+								}`}
+							>
+								<Translate text={localizationConstants.accountPlanTab} />
+							</button>
+							<button
+								type="button"
+								onClick={() => updateUrlTab("accountPlan", "import")}
+								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
+									accountPlanSubTab === "import"
+										? "border-slate-900 text-slate-900"
+										: "border-transparent text-slate-500 hover:text-slate-700"
+								}`}
+							>
+								<Translate text={localizationConstants.importAccountPlanTab} />
+							</button>
+						</>
 					) : (
 						<button
 							type="button"
@@ -230,6 +265,11 @@ function RegisterContent() {
 			{selectedRegister === "kostnadsstalle" && (
 				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 					<CostCenterRegisterTable />
+				</Suspense>
+			)}
+			{selectedRegister === "accountPlan" && (
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
+					<AccountPlanPage activeTab={accountPlanSubTab} />
 				</Suspense>
 			)}
 		</div>

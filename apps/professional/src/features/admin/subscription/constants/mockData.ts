@@ -55,6 +55,46 @@ export const SUBSCRIPTION_OVERVIEW: SubscriptionOverview = {
 	],
 };
 
+export interface PaymentCard {
+	id: string;
+	cardName: string;
+	firstName: string;
+	lastName: string;
+	lastFourDigits: string;
+	expiryMonth: string;
+	expiryYear: string;
+}
+
+export const INITIAL_PAYMENT_CARDS: PaymentCard[] = [
+	{
+		id: "card-hsbc",
+		cardName: "HSBC",
+		firstName: "Robert",
+		lastName: "Hellgren",
+		lastFourDigits: "4321",
+		expiryMonth: "09",
+		expiryYear: "2027",
+	},
+	{
+		id: "card-msb",
+		cardName: "MSB",
+		firstName: "Robert",
+		lastName: "Hellgren",
+		lastFourDigits: "8845",
+		expiryMonth: "03",
+		expiryYear: "2028",
+	},
+	{
+		id: "card-acb",
+		cardName: "ACB",
+		firstName: "Robert",
+		lastName: "Hellgren",
+		lastFourDigits: "1290",
+		expiryMonth: "11",
+		expiryYear: "2026",
+	},
+];
+
 export const SUBSCRIPTION_TAB_IDS = ["my", "payment"] as const;
 
 export type SubscriptionTabId = (typeof SUBSCRIPTION_TAB_IDS)[number];
