@@ -95,6 +95,13 @@ export const API_PATH = {
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/cost-centers/${id}`,
 		TOGGLE_STATUS: `${PROFESSIONALS_BASE_PATH}/cost-centers/toggle-status`,
 	},
+	ACCOUNTS: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/accounts`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/accounts`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/accounts/${id}`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/accounts/${id}`,
+		TOGGLE_STATUS: (id: string) => `${PROFESSIONALS_BASE_PATH}/accounts/${id}/status`,
+	},
 };
 
 export const appConstants = {
