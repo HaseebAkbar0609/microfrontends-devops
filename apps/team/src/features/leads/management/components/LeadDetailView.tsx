@@ -28,7 +28,7 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 
 	const title = `${lead.customer} - ${lead.category}`;
 	const requestDetailsQuery = useLeadRequestDetails(lead.id);
-	const quoteListQuery = useLeadQuoteList(lead.leadId);
+	const quoteListQuery = useLeadQuoteList(lead.id);
 	const requestDetails = requestDetailsQuery.data ?? previewRequestDetails;
 	const quoteRows = quoteListQuery.data ?? [];
 	const isMonitoringView = searchParams.get("source") === "monitoring";
