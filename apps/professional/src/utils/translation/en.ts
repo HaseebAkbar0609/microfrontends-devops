@@ -1664,6 +1664,7 @@ export const enRegister: RegisterTranslation = {
 	costCenterLabel: "Cost Center",
 	projectLabel: "Project (Pr)",
 	cancelButton: "Cancel",
+	saveButton: "Save",
 	saveDraftButton: "Save",
 	nextButton: "Next",
 	createCustomerButton: "Create Customer",
@@ -2100,6 +2101,28 @@ export const enRegister: RegisterTranslation = {
 	priceListStatusHeader: "Status",
 	priceListValidPeriodHeader: "Valid Period",
 	draftStatus: "Draft",
+
+	// Cost Center Register Translations (TFS-446)
+	costCenterTitle: "Chart of Accounts - Base",
+	costCenterSubTitle: "Cost Center",
+	createCostCenterButtonText: "Create Cost Center",
+	costCenterCodeHeader: "CODE",
+	costCenterNameHeader: "Name",
+	costCenterNotesHeader: "Notes",
+	inactivateButton: "Inactivate",
+	activateButton: "Activate",
+	markedCountText: "selected",
+	costCenterAllStatus: "All statuses",
+	costCenterActiveStatus: "Active",
+	costCenterInactiveStatus: "Inactive",
+	noCostCentersMessage: "No cost centers found.",
+	createCostCenterHeaderTitle: "Create new Cost center",
+	costCenterCodePlaceholder: "e.g. 105",
+	costCenterNamePlaceholder: "e.g. Stockholm",
+	costCenterNotesPlaceholder: "info...",
+	validationCostCenterCodeRequired: "CODE is required",
+	validationCostCenterNameRequired: "Name is required",
+	costCenterCreatedSuccess: "Cost center created successfully",
 };
 
 export const en: Translation = {

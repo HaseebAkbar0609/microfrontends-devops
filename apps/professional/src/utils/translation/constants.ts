@@ -1614,6 +1614,7 @@ export type RegisterTranslation = {
 	costCenterLabel: string;
 	projectLabel: string;
 	cancelButton: string;
+	saveButton: string;
 	saveDraftButton: string;
 	nextButton: string;
 	createCustomerButton: string;
@@ -2050,6 +2051,28 @@ export type RegisterTranslation = {
 	priceListStatusHeader: string;
 	priceListValidPeriodHeader: string;
 	draftStatus: string;
+
+	// Cost Center Register Translations (TFS-446)
+	costCenterTitle: string;
+	costCenterSubTitle: string;
+	createCostCenterButtonText: string;
+	costCenterCodeHeader: string;
+	costCenterNameHeader: string;
+	costCenterNotesHeader: string;
+	inactivateButton: string;
+	activateButton: string;
+	markedCountText: string;
+	costCenterAllStatus: string;
+	costCenterActiveStatus: string;
+	costCenterInactiveStatus: string;
+	noCostCentersMessage: string;
+	createCostCenterHeaderTitle: string;
+	costCenterCodePlaceholder: string;
+	costCenterNamePlaceholder: string;
+	costCenterNotesPlaceholder: string;
+	validationCostCenterCodeRequired: string;
+	validationCostCenterNameRequired: string;
+	costCenterCreatedSuccess: string;
 };
 
 export type CommonTranslation = {
