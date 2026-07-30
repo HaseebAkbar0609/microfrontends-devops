@@ -2,13 +2,14 @@ import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import type {
 	AccountPlanRow,
+	AccountPlanDetail,
 	CreateAccountPlanFormData,
 	GetAccountPlanListParams,
 	GetAccountPlanListResponse,
 } from "../types";
 import { MOCK_ACCOUNT_PLAN_DATA } from "../mockdata/accounts";
 
-export type { AccountPlanRow };
+export type { AccountPlanRow, AccountPlanDetail };
 
 const mapAccountFromApi = (item: Record<string, unknown>): AccountPlanRow => ({
 	id: String(item.id ?? ""),
@@ -165,4 +166,47 @@ export async function toggleAccountStatusAPIAction(
 		}
 		return { success: false };
 	}
+}
+
+export async function getAccountPlanDetailAPIAction(
+	id: string,
+): Promise<AccountPlanDetail | null> {
+	try {
+		const res = await axiosInstance.get(API_PATH.ACCOUNTS.UPDATE(id));
+		const data = res.data?.data;
+		if (data) {
+			return {
+				...mapAccountFromApi(data),
+				costCenterMode: data.cost_center_mode ?? "obligatoriskt",
+				projectMode: data.project_mode ?? "obligatoriskt",
+				suggestedCostCenter: data.suggested_cost_center ?? "Kontor 10",
+				suggestedProject: data.suggested_project ?? "Projekt 100",
+				description: data.description ?? "",
+			};
+		}
+	} catch (error) {
+		if (process.env.NEXT_PUBLIC_USE_MOCK !== "true" && process.env.NODE_ENV === "production") {
+			throw error;
+		}
+	}
+
+	const found = MOCK_ACCOUNT_PLAN_DATA.find((item) => item.id === id);
+	if (found) {
+		return {
+			...found,
+			costCenterMode: "obligatoriskt",
+			projectMode: "obligatoriskt",
+			suggestedCostCenter: "Kontor 10",
+			suggestedProject: "Projekt 100",
+		};
+	}
+	return MOCK_ACCOUNT_PLAN_DATA[0]
+		? {
+				...MOCK_ACCOUNT_PLAN_DATA[0],
+				costCenterMode: "obligatoriskt",
+				projectMode: "obligatoriskt",
+				suggestedCostCenter: "Kontor 10",
+				suggestedProject: "Projekt 100",
+		  }
+		: null;
 }
