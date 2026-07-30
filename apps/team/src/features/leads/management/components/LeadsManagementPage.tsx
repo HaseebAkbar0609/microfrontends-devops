@@ -95,7 +95,6 @@ export function LeadsManagementPage() {
   const isAutoMoveRunningRef = useRef(false);
   const isManualMoveRunningRef = useRef(false);
   const debouncedSearch = useDebounce(searchInput, 400);
-  const hasClientFilters = debouncedSearch.trim().length > 0 || typeFilter !== "all";
   const isReviewTab = activeTab === "granskning";
   const leadsListQuery = useLeadsList(
     {
@@ -114,9 +113,14 @@ export function LeadsManagementPage() {
     setSearchInput(searchParam);
   }, [searchParam]);
 
+  const prevSearchRef = useRef(debouncedSearch);
+
   useEffect(() => {
-    changeQueries({ search: debouncedSearch || null, page: "1" });
-    setPageIndex(0);
+    if (prevSearchRef.current !== debouncedSearch) {
+      prevSearchRef.current = debouncedSearch;
+      changeQueries({ search: debouncedSearch || null, page: "1" });
+      setPageIndex(0);
+    }
   }, [debouncedSearch, changeQueries]);
 
   useEffect(() => {
@@ -274,27 +278,16 @@ export function LeadsManagementPage() {
     []
   );
 
-  const totalPages =
-    isReviewTab && !hasClientFilters
-      ? Math.max(1, leadsListQuery.data?.totalPages ?? 1)
-      : Math.max(1, Math.ceil(filteredRows.length / pageSize));
-  const clampedPageIndex = isReviewTab && !hasClientFilters
-    ? Math.min(Math.max(page - 1, 0), totalPages - 1)
-    : Math.min(pageIndex, totalPages - 1);
+  const totalPages = Math.max(1, Math.ceil(filteredRows.length / pageSize));
+  const clampedPageIndex = Math.min(Math.max(pageIndex, 0), totalPages - 1);
+
   const pagedRows = useMemo(() => {
-    if (isReviewTab && !hasClientFilters) {
-      return filteredRows;
-    }
     const start = clampedPageIndex * pageSize;
     return filteredRows.slice(start, start + pageSize);
-  }, [filteredRows, clampedPageIndex, isReviewTab, hasClientFilters, pageSize]);
+  }, [filteredRows, clampedPageIndex, pageSize]);
 
   function goToPage(nextPage: number) {
     const safePage = Math.min(Math.max(nextPage, 0), totalPages - 1);
-    if (isReviewTab && !hasClientFilters) {
-      setPage(safePage + 1);
-      return;
-    }
     setPageIndex(safePage);
     setPage(safePage + 1);
   }

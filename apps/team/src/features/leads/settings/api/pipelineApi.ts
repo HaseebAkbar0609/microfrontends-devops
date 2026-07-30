@@ -14,9 +14,9 @@ export const StageApiSchema = z.object({
   order_index: z.number().optional().default(0),
   is_default: z.boolean().optional().default(false),
   is_active: z.boolean().optional().default(true),
-  schedule_config: z.record(z.string()).optional().nullable(),
+  schedule_config: z.record(z.any()).optional().nullable(),
   reshipment_days: z.number().optional().nullable(),
-});
+}).passthrough();
 
 export const PipelineApiSchema = z.object({
   id: z.string(),
@@ -24,15 +24,15 @@ export const PipelineApiSchema = z.object({
   is_active: z.boolean().optional().default(true),
   is_default: z.boolean().optional().default(false),
   stages: z.array(StageApiSchema).optional().default([]),
-});
+}).passthrough();
 
 export const PipelinesApiResponseSchema = z.object({
   data: z.array(PipelineApiSchema).optional().default([]),
-});
+}).passthrough();
 
 export const SinglePipelineApiResponseSchema = z.object({
   data: PipelineApiSchema,
-});
+}).passthrough();
 
 export const fetchPipelines = async (): Promise<PipelineApiData[]> => {
   const { data } = await axiosInstance.get("/api/v1/teams/pipelines");

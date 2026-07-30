@@ -99,7 +99,11 @@ export function mapLeadListItemToRow(item: LeadApiItem): LeadRow {
 	const projectType =
 		typeof item.project_type === "string" ? item.project_type : "-";
 	const city =
-		typeof item.city === "string" && item.city.trim() ? item.city : "-";
+		typeof item.city_name === "string" && item.city_name.trim()
+			? item.city_name
+			: typeof item.city === "string" && item.city.trim()
+				? item.city
+				: "-";
 
 	return {
 		id: item.lead_id,
@@ -124,7 +128,7 @@ export function mapLeadDetailToRow(item: LeadDetailApiData): LeadRow {
 		customer: item.customer_details.customer_name,
 		type: "-",
 		category: formatLeadCategory(item.categories),
-		city: item.customer_details.city,
+		city: item.customer_details.city_name || item.customer_details.city || "-",
 		matches: String(item.hit_count ?? 0),
 		status: mapLeadStatus(item.status),
 		email: item.customer_details.personal_email || "-",
