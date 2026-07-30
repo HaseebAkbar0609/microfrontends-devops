@@ -1361,6 +1361,7 @@ export const svOffer: OfferTranslation = {
 	offerAcceptedStatusBadge: "Accepterade",
 	offerAcceptedCreateContract: "Skapa avtal",
 	offerAcceptedViewOffer: "Se offert",
+	offerDownloadPdf: "Ladda ned PDF",
 };
 
 export const svMyPage: MyPagesTranslation = {

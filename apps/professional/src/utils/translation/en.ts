@@ -1455,6 +1455,7 @@ export const enOffer: OfferTranslation = {
 	offerAcceptedStatusBadge: "Accepted",
 	offerAcceptedCreateContract: "Create contract",
 	offerAcceptedViewOffer: "View offer",
+	offerDownloadPdf: "Download PDF",
 };
 
 export const enCommon: CommonTranslation = {

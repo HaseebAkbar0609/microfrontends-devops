@@ -1412,6 +1412,7 @@ export type OfferTranslation = {
 	offerAcceptedStatusBadge: string;
 	offerAcceptedCreateContract: string;
 	offerAcceptedViewOffer: string;
+	offerDownloadPdf: string;
 };
 
 export type RegisterTranslation = {
