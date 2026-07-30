@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowUpDown, Ban, EllipsisVertical, Eye, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -26,7 +27,11 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useDebounce } from "@/components/hooks/useDebounce";
 import { useQueryParams } from "@/components/hooks/useQueryParams";
-import { listPendingCustomersAPIAction } from "@/api-actions";
+import {
+  listPendingCustomersAPIAction,
+  deletePrivateCustomerAPIAction,
+  updatePrivateCustomerStatusAPIAction,
+} from "@/api-actions";
 import type { PendingCustomer } from "@/features/customers/types/types";
 
 const COLUMNS = [
@@ -42,6 +47,7 @@ const COLUMNS = [
 export function PendingCustomersTab() {
   const router = useRouter();
   const t = useTranslate();
+  const queryClient = useQueryClient();
   const { page, search: searchParam, changeQueries, setPage } = useQueryParams();
   const [searchInput, setSearchInput] = useState(searchParam);
   const [pageSize, setPageSize] = useState(10);
@@ -58,6 +64,26 @@ export function PendingCustomersTab() {
   const customers = data?.items ?? [];
   const totalPages = data?.totalPages ?? 1;
 
+  async function handleDelete(id: string) {
+    const res = await deletePrivateCustomerAPIAction(id);
+    if (res.success) {
+      toast.success(t("Customer deleted successfully"));
+      queryClient.invalidateQueries({ queryKey: ["pending-customers"] });
+    } else {
+      toast.error(res.error ?? "Failed to delete customer");
+    }
+  }
+
+  async function handleDeactivate(id: string) {
+    const res = await updatePrivateCustomerStatusAPIAction(id, "suspended");
+    if (res.success) {
+      toast.success(t("Customer deactivated successfully"));
+      queryClient.invalidateQueries({ queryKey: ["pending-customers"] });
+    } else {
+      toast.error(res.error ?? "Failed to deactivate customer");
+    }
+  }
+
   function handleSearchChange(value: string) {
     setSearchInput(value);
     changeQueries({ search: value || null, page: null });
@@ -73,21 +99,15 @@ export function PendingCustomersTab() {
       <ActionsToolbar
         searchValue={searchInput}
         onSearchChange={handleSearchChange}
-        filters={[
-          {
-            label: t(localizationConstants.filterLabel),
-            options: [],
-            onFilterChange: () => {},
-          },
-        ]}
-        onCreateClick={() => {}}
+        filters={[]}
+        onCreateClick={() => router.push("/customers/private/create")}
       />
       <PendingTable
         customers={customers}
         isLoading={isLoading}
         onOpen={(id) => router.push(`/customers/private/${id}`)}
-        onDeactivate={() => {}}
-        onDelete={() => {}}
+        onDeactivate={handleDeactivate}
+        onDelete={handleDelete}
       />
       <TablePagination
         currentPage={page}
