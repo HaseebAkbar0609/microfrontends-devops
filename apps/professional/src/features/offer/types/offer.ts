@@ -133,6 +133,36 @@ export type OfferAcceptedItem = {
   type: string;
 };
 
+export type AgreementParty = {
+  id: string;
+  name: string;
+  role: "customer" | "supplier";
+  company?: string;
+  companyOrPerson?: string;
+  orgNumber?: string;
+  personalNumber?: string;
+  phone: string;
+  email: string;
+  address: string;
+  contactPerson?: string;
+  authorizedSignatory?: string;
+};
+
+export type AgreementData = {
+  id: string;
+  projectName: string;
+  projectNumber: string;
+  quoteNumber: string;
+  contractType: string;
+  customerName: string;
+  price: number;
+  startDate: string;
+  endDate: string;
+  parties: AgreementParty[];
+  documents: string[];
+  templates: string[];
+};
+
 export type OfferFormCompany = {
   name: string;
   email: string;

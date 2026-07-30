@@ -1,0 +1,41 @@
+import { AgreementData } from "../types/offer";
+
+export const DUMMY_AGREEMENT_DATA: AgreementData = {
+  id: "agr-001",
+  projectName: "Kitchen Reno Job",
+  projectNumber: "PR-1050",
+  quoteNumber: "Q1-2026-001",
+  contractType: "A2 (test 14516)",
+  customerName: "Anna Andersson",
+  price: 80000,
+  startDate: "31-01-2025",
+  endDate: "31-01-2026",
+  parties: [
+    {
+      id: "party-1",
+      name: "Johan Johansson",
+      role: "customer",
+      companyOrPerson: "Company or person",
+      contactPerson: "Eddie Andersson",
+      orgNumber: "1879-12-15-1210",
+      personalNumber: "971023-1070",
+      phone: "370-000001",
+      email: "jason@example.com",
+      address: "Smedvägen 34, igh 204, 11250 Stockholm, Sweden",
+    },
+    {
+      id: "party-2",
+      name: "Klas Klaesson",
+      role: "supplier",
+      company: "Bygglologi, AB",
+      authorizedSignatory: "Stefan Svensson",
+      orgNumber: "557012-5016",
+      personalNumber: "193706025-1070",
+      phone: "476-000001",
+      email: "peter@example.com",
+      address: "Smedvägen 34, igh 204, 11250 Stockholm, Sweden",
+    },
+  ],
+  documents: ["Document 1", "Document 2"],
+  templates: ["Document.1", "Document.2"],
+};
