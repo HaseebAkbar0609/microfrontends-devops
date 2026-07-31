@@ -686,6 +686,12 @@ export interface CostCenterRegisterRow {
 	selected?: boolean;
 }
 
+export interface CostCenterDetail extends CostCenterRegisterRow {
+	description?: string;
+	createdDate?: string;
+	lastUpdated?: string;
+}
+
 export interface GetCostCenterListParams {
 	page?: number;
 	limit?: number;

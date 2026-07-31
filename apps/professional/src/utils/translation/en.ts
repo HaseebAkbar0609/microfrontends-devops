@@ -2297,6 +2297,8 @@ export const enRegister: RegisterTranslation = {
 	viewActionLabel: "View",
 	editBasicInfoAriaLabel: "Edit basic information",
 	editAdditionalInfoAriaLabel: "Edit additional details",
+	goBackToCostCenterListLabel: "Go back to cost center list",
+	editCostCenterBasicInfoAriaLabel: "Edit cost center basic information",
 };
 
 export const en: Translation = {

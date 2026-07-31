@@ -44,7 +44,7 @@ function DetailSectionCard({
 				</button>
 			</div>
 
-			<CardContent className="p-6 bg-white">{children}</CardContent>
+			<CardContent className="px-6 py-3 bg-white">{children}</CardContent>
 		</Card>
 	);
 }
@@ -158,41 +158,41 @@ export function AccountDetailPage() {
 					>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 							{/* Kontonummer */}
-							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+							<div className="flex flex-col gap-0.5">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.accountNumberHeader} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.accountNumber || "-"}
 								</span>
 							</div>
 
 							{/* Benämning */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.accountNameHeader} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.accountName || "-"}
 								</span>
 							</div>
 
 							{/* Ingående balans */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.openingBalanceLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.openingBalance || "-"}
 								</span>
 							</div>
 
 							{/* Aktivt */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.activeStatusLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.status === "active" ? (
 										<Translate text={localizationConstants.costCenterActiveStatus} />
 									) : (
@@ -212,60 +212,60 @@ export function AccountDetailPage() {
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 							{/* SRU-kod */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.sruLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.sru || "-"}
 								</span>
 							</div>
 
 							{/* Momskod */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.vatCodeLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.vatCode || "-"}
 								</span>
 							</div>
 
 							{/* Kostnadsställe */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.costCenterLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									<Translate text={getModeTranslationKey(account.costCenterMode)} />
 								</span>
 							</div>
 
 							{/* Projekt */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.projectLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									<Translate text={getModeTranslationKey(account.projectMode)} />
 								</span>
 							</div>
 
 							{/* Föreslå kostnadsställe */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.suggestedCostCenterLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.suggestedCostCenter || "-"}
 								</span>
 							</div>
 
 							{/* Föreslå projekt */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.suggestedProjectLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.suggestedProject || "-"}
 								</span>
 							</div>

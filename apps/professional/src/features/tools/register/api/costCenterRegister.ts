@@ -2,6 +2,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import type {
 	CostCenterRegisterRow,
+	CostCenterDetail,
 	GetCostCenterListParams,
 	GetCostCenterListResponse,
 	CreateCostCenterFormData,
@@ -142,4 +143,34 @@ export async function toggleCostCenterStatusAPIAction(
 		}
 		return true;
 	}
+}
+
+export async function getCostCenterDetailAPIAction(
+	id: string,
+): Promise<CostCenterDetail | null> {
+	try {
+		const res = await axiosInstance.get(API_PATH.COST_CENTERS.DELETE(id));
+		const data = res.data?.data;
+		if (data) {
+			return {
+				id: String(data.id ?? id),
+				kod: String(data.kod ?? data.code ?? ""),
+				benamning: String(data.benamning ?? data.name ?? ""),
+				anteckningar: String(data.anteckningar ?? data.description ?? data.notes ?? ""),
+				status: (data.status as "active" | "inactive") ?? "active",
+			};
+		}
+	} catch (error) {
+		if (process.env.NODE_ENV !== "production") {
+			const sanitizedMessage = error instanceof Error ? error.message : String(error);
+			console.warn("[getCostCenterDetailAPIAction] API request failed, falling back to mock:", sanitizedMessage);
+		}
+	}
+
+	const found = MOCK_COST_CENTER_DATA.find((item) => item.id === id);
+	if (found) {
+		return { ...found };
+	}
+
+	return null;
 }
