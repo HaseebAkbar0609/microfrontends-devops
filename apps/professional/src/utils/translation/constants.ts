@@ -1577,6 +1577,36 @@ export type OfferTranslation = {
 	agreementCancel: string;
 	agreementViewAgreement: string;
 	agreementSendAgreement: string;
+	offerArchivedDelete: string;
+	offerArchivedUnarchive: string;
+	offerArchivedCommentAction: string;
+	seeProjectDetailedInfo: string;
+	seeProjectCustomerInfo: string;
+	seeProjectCustomerName: string;
+	seeProjectPostNr: string;
+	seeProjectOrgPersonNr: string;
+	seeProjectInfo: string;
+	seeProjectFirstName: string;
+	seeProjectLastName: string;
+	seeProjectMobile: string;
+	seeProjectRole: string;
+	seeProjectSerialNr: string;
+	seeProjectBlockName: string;
+	seeProjectOrderName: string;
+	seeProjectOrderAddress: string;
+	seeProjectCity: string;
+	seeProjectType: string;
+	seeProjectDepartment: string;
+	seeProjectOfferNr: string;
+	seeProjectBudget: string;
+	seeProjectContractNr: string;
+	seeProjectDocDate: string;
+	seeProjectDocName: string;
+	seeProjectDocFile: string;
+	createOrderOrProjectTitle: string;
+	createProjectOption: string;
+	createOrderOption: string;
+	goToButton: string;
 };
 
 export type RegisterTranslation = {

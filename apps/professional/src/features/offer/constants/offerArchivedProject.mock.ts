@@ -1,0 +1,62 @@
+import { ProjectData } from "../types/offer";
+
+export const DUMMY_PROJECT: ProjectData = {
+  id: "proj-1",
+  title: "Köksrenoveringsjobb",
+  jobType: "Biten",
+  budget: 1586000,
+  statusBadge: "Bokfört",
+  postedDate: "29/10/2024",
+  municipality: "Järfälla",
+  customer: {
+    name: "Fastighetsbolaget AB",
+    postalCode: "12345 02",
+    city: "Stockholm",
+    email: "contact@email.com",
+    orgPersonNr: "",
+    address: "Ange adress",
+    info: "Info",
+    phone: "",
+  },
+  contactPerson: {
+    firstName: "Fastighetsbolaget AB",
+    lastName: "Name",
+    company: "Fastighetsbolaget AB",
+    email: "alex@example.com",
+    mobile: "060-7841 334",
+    role: "",
+  },
+  order: {
+    serialNr: "000",
+    blockName: "",
+    postalCode: "010952",
+    orderName: "Name",
+    orderAddress: "Storgatan 10, 10060 Stockholm",
+    city: "",
+  },
+  orderInfo: {
+    type: "Ort",
+    category: "",
+    department: "",
+    contractNr: "",
+    offerNr: "",
+    startDate: "12/10/2025",
+    endDate: "12/10/2025",
+  },
+  documents: [
+    {
+      id: "doc-1",
+      date: "2024-05-10",
+      name: "Dokumentets name",
+      fileLabel: "Kontrakt.pdf",
+      fileType: "pdf",
+    },
+    {
+      id: "doc-2",
+      date: "2020-06-91",
+      name: "Dokumenterts name",
+      fileLabel: "Kontrakt.pdf",
+      fileType: "pdf",
+    },
+  ],
+};
