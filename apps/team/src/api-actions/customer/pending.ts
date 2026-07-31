@@ -5,8 +5,8 @@ import type {
   PendingCustomer,
 } from "@/features/customers/types/types";
 
-const MOCK_ENABLE = true; // TODO: set to false when real API is available
-const PENDING_CUSTOMERS_LIST_PATH = "/api/v1/teams/customer/private/pending/list";
+const MOCK_ENABLE = false;
+const PENDING_CUSTOMERS_LIST_PATH = "/api/v1/teams/private/customers/pending";
 const DEFAULT_PAGE_SIZE = 10;
 
 const MOCK_PENDING_CUSTOMERS: PendingCustomer[] = [
@@ -24,14 +24,18 @@ const MOCK_PENDING_CUSTOMERS: PendingCustomer[] = [
   { id: "p12", customerNumber: "2025-24", name: "Maja Strand", email: "maja@example.com", phone: "940 987 6574", city: "Lund", lastActivity: "2025-03-12", status: "pending" },
 ];
 
-interface PendingCustomerListApiResponse {
+export interface PendingCustomerListApiResponse {
   data: {
-    items: PendingCustomer[];
-    total_pages: number;
-    total_items: number;
-    current_page: number;
-    page_size: number;
+    items: Record<string, unknown>[];
+    total_pages?: number;
+    total_items?: number;
+    current_page?: number;
+    page_size?: number;
   };
+  total_pages?: number;
+  total_items?: number;
+  current_page?: number;
+  page_size?: number;
 }
 
 export async function listPendingCustomersAPIAction(
@@ -62,12 +66,28 @@ export async function listPendingCustomersAPIAction(
     PENDING_CUSTOMERS_LIST_PATH,
     { params: { page, page_size: pageSize, search: search || undefined } }
   );
-  const payload = response.data.data;
+
+  const resData = response.data;
+  const rawItems = Array.isArray(resData?.data)
+    ? resData.data
+    : resData?.data?.items ?? [];
+
+  const mappedItems: PendingCustomer[] = rawItems.map((item: Record<string, unknown>) => ({
+    id: String(item.id ?? ""),
+    customerNumber: String(item.customer_no || item.customerNumber || item.id || ""),
+    name: String(item.name || `${item.first_name ?? ""} ${item.last_name ?? ""}`.trim() || "Unnamed"),
+    email: String(item.email || "-"),
+    phone: String(item.phone || "-"),
+    city: String(item.city || "-"),
+    lastActivity: String(item.last_activity || item.lastActivity || "-"),
+    status: (item.status as PendingCustomer["status"]) || "pending",
+  }));
+
   return {
-    items: payload.items ?? [],
-    totalPages: payload.total_pages ?? 1,
-    totalItems: payload.total_items ?? 0,
-    currentPage: payload.current_page ?? page,
-    pageSize: payload.page_size ?? pageSize,
+    items: mappedItems,
+    totalPages: resData?.total_pages ?? resData?.data?.total_pages ?? 1,
+    totalItems: resData?.total_items ?? resData?.data?.total_items ?? mappedItems.length,
+    currentPage: resData?.current_page ?? resData?.data?.current_page ?? page,
+    pageSize: resData?.page_size ?? resData?.data?.page_size ?? pageSize,
   };
 }

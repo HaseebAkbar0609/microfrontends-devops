@@ -6,7 +6,7 @@ import axios, {
 } from "axios";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "@/configs";
-import { ApiError, ApiErrorData, ApiResponseData, RequestConfig, UploadProgressCallback, UseApiStateOptions } from "./request.types";
+import { ApiError, ApiErrorData, ApiResponseData, RequestConfig, UploadProgressCallback } from "./request.types";
 
 export const getErrorMessage = (error: unknown): string => {
   if (error instanceof ApiError) {
@@ -231,7 +231,7 @@ export const request = {
 export const createApiHook = <T = any>(
   apiCall: () => Promise<ApiResponse<T>>
 ) => {
-  return (options: UseApiStateOptions = {}) => {
+  return () => {
     // Implementation would depend on React hooks
     // This is just a structure for potential use
     return {

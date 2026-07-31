@@ -14,7 +14,8 @@ export function AgreementFileUploadSection() {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
+    const allowedTypes = ["image/png", "image/jpeg", "application/pdf"];
+    if (!allowedTypes.includes(file.type) || file.size > 5 * 1024 * 1024) {
       e.target.value = "";
       setFileName(null);
       return;
@@ -64,7 +65,7 @@ export function AgreementFileUploadSection() {
                 <input
                   id="agreement-file-upload"
                   type="file"
-                  accept=".png,.jpg,.jpeg,.pdf"
+                  accept="image/png,image/jpeg,application/pdf"
                   className="sr-only"
                   onChange={handleFileChange}
                 />

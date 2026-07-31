@@ -25,10 +25,18 @@ function InputField({
   label,
   defaultValue = "",
   fullWidth = false,
+  name,
+  type = "text",
+  maxLength,
+  pattern,
 }: {
   label: string;
   defaultValue?: string;
   fullWidth?: boolean;
+  name?: string;
+  type?: string;
+  maxLength?: number;
+  pattern?: string;
 }) {
   const id = useId();
   return (
@@ -38,8 +46,11 @@ function InputField({
       </label>
       <input
         id={id}
-        type="text"
+        name={name}
+        type={type}
         defaultValue={defaultValue}
+        maxLength={maxLength}
+        pattern={pattern}
         className="h-9 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-950 shadow-sm focus-visible:border-slate-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300/50"
       />
     </div>
@@ -49,6 +60,7 @@ function InputField({
 function PartyCard({ party }: { party: AgreementParty }) {
   const t = useTranslate();
   const isCustomer = party.role === "customer";
+  const prefix = isCustomer ? "customer" : "supplier";
 
   return (
     <div>
@@ -86,30 +98,43 @@ function PartyCard({ party }: { party: AgreementParty }) {
             <InputField
               label={t(localizationConstants.agreementCompanyOrPerson)}
               defaultValue={party.companyOrPerson}
+              name={`${prefix}-company-or-person`}
             />
             <InputField
               label={t(localizationConstants.agreementContactPerson)}
               defaultValue={party.contactPerson}
+              name={`${prefix}-contact-person`}
             />
             <InputField
               label={t(localizationConstants.agreementOrgNumber)}
               defaultValue={party.orgNumber}
+              name={`${prefix}-org-number`}
+              maxLength={11}
+              pattern="[0-9\-]*"
             />
             <InputField
               label={t(localizationConstants.agreementPhoneNumber)}
               defaultValue={party.phone}
+              name={`${prefix}-phone`}
+              type="tel"
             />
             <InputField
               label={t(localizationConstants.agreementPersonalNumber)}
               defaultValue={party.personalNumber}
+              name={`${prefix}-personal-number`}
+              maxLength={12}
+              pattern="[0-9\-]*"
             />
             <InputField
               label={t(localizationConstants.agreementEmail)}
               defaultValue={party.email}
+              name={`${prefix}-email`}
+              type="email"
             />
             <InputField
               label={t(localizationConstants.agreementAddress)}
               defaultValue={party.address}
+              name={`${prefix}-address`}
               fullWidth
             />
           </>
@@ -118,30 +143,41 @@ function PartyCard({ party }: { party: AgreementParty }) {
             <InputField
               label={t(localizationConstants.agreementCompany)}
               defaultValue={party.company}
+              name={`${prefix}-company`}
             />
             <InputField
               label={t(localizationConstants.agreementAuthorizedSignatory)}
               defaultValue={party.authorizedSignatory}
+              name={`${prefix}-authorized-signatory`}
             />
             <InputField
               label={t(localizationConstants.agreementOrgNumber)}
               defaultValue={party.orgNumber}
+              name={`${prefix}-org-number`}
+              maxLength={11}
             />
             <InputField
               label={t(localizationConstants.agreementPersonalNumber)}
               defaultValue={party.personalNumber}
+              name={`${prefix}-personal-number`}
+              maxLength={12}
             />
             <InputField
               label={t(localizationConstants.agreementPhoneNumber)}
               defaultValue={party.phone}
+              name={`${prefix}-phone`}
+              type="tel"
             />
             <InputField
               label={t(localizationConstants.agreementEmail)}
               defaultValue={party.email}
+              name={`${prefix}-email`}
+              type="email"
             />
             <InputField
               label={t(localizationConstants.agreementAddress)}
               defaultValue={party.address}
+              name={`${prefix}-address`}
               fullWidth
             />
           </>

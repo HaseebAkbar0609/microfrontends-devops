@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const plans = [
   {
     title: "Free plan",
     price: 0,
-    priceText: "0 kr",
+    priceText: "0 SEK",
     buttonText: "Välj denna",
     features: [
       "Full tillgång till TimeFlow system",
@@ -21,7 +22,7 @@ const plans = [
     licensePrice: 0,
     buttonText: "Välj denna",
     features: [
-      "Grundavgift 2995 kr / månaden",
+      "Grundavgift 2995 SEK / månaden",
       "Användare: Obegränsat",
       "Bindningstid 3 månader eller årsplan med 2 månader gratis",
       "Funktioner: Offert, B2B, Faktura, CMS, Mina sidor, App-Work Start, obegränsat",
@@ -34,8 +35,8 @@ const plans = [
     buttonText: "Välj denna",
     hasCounter: true,
     features: [
-      "Grundavgift 2995 kr / månaden",
-      "Licenskostnad 995 kr / användare",
+      "Grundavgift 2995 SEK / månaden",
+      "Licenskostnad 995 SEK / användare",
       "Bindningstid 3 månader eller årsplan med 2 månader gratis",
       "Funktioner: Allt i Start, Kalkyl, Order, Projekt, KMA, Ekonomi, Personal, Maskin, Mallar",
       "App-Manager ingår",
@@ -48,8 +49,8 @@ const plans = [
     buttonText: "Välj denna",
     hasCounter: true,
     features: [
-      "Grundavgift 2995 kr / månaden",
-      "Licenskostnad 1295 kr / användare",
+      "Grundavgift 2995 SEK / månaden",
+      "Licenskostnad 1295 SEK / användare",
       "Bindningstid 3 månader eller årsplan med 2 månader gratis",
       "Funktioner: Allt i Standard + Inköp, Avtal, Data/IT, Marknad, Juridik, Inkasso, Prognos, Projektering, Företagsledning",
       "App-Manager ingår",
@@ -58,6 +59,8 @@ const plans = [
 ];
 
 const ProfessionalPricing2Content: React.FC = () => {
+  const { i18n } = useTranslation();
+  const currentLocale = i18n.language || "sv-SE";
   const [counts, setCounts] = useState<{ [key: string]: number }>({
     STANDARD: 1,
     PRO: 1,
@@ -125,7 +128,7 @@ const ProfessionalPricing2Content: React.FC = () => {
                 <p className="text-3xl font-bold text-[#FF914D] mb-4">
                   {plan.title === "Free plan"
                     ? plan.priceText
-                    : `${finalPrice} kr/mån`}
+                    : `${finalPrice.toLocaleString(currentLocale)} SEK/mån`}
                 </p>
 
                 {/* Features */}
@@ -160,12 +163,12 @@ const ProfessionalPricing2Content: React.FC = () => {
 
                   {/* Price breakdown */}
                   <div className="text-sm text-center mt-3 text-gray-600">
-                    <p>Grund avgift: {plan.basePrice} kr</p>
+                    <p>Grund avgift: {(plan.basePrice || 0).toLocaleString(currentLocale)} SEK</p>
                     <p>
-                      Licens: {plan.licensePrice} kr / användare
+                      Licens: {(plan.licensePrice || 0).toLocaleString(currentLocale)} SEK / användare
                     </p>
                     <p className="font-semibold">
-                      Totalt: {finalPrice} kr / mån
+                      Totalt: {finalPrice.toLocaleString(currentLocale)} SEK / mån
                     </p>
                   </div>
                 </div>

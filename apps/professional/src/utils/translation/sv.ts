@@ -1765,7 +1765,7 @@ export const svRegister: RegisterTranslation = {
 	vatTypeLabel: "Momstyp",
 	salesAccountLabel: "Försäljningskonto",
 	costCenterLabel: "Kostnadsställe",
-	projectLabel: "Projekt (Pr)",
+	projectLabel: "Projekt",
 	cancelButton: "Avbryt",
 	saveButton: "Spara",
 	saveDraftButton: "Spara",
@@ -2289,6 +2289,23 @@ export const svRegister: RegisterTranslation = {
 	selectAllLabel: "Markera alla",
 	selectRowLabel: "Markera rad",
 	goBackToAccountPlanLabel: "Gå tillbaka till kontoplan",
+
+	// Create Account Translations (TFS-444)
+	createAccountHeaderTitle: "Skapa ny konto",
+	additionalDetailsSection: "Ytterligare uppgifter",
+	accountNumberPlaceholder: "t.ex. 105",
+	accountNamePlaceholder: "t.ex. Kassa",
+	openingBalancePlaceholder: "0,00 kr",
+	activeStatusLabel: "Aktivt",
+	sruPlaceholder: "t.ex. 102",
+	vatCodePlaceholder: "Välj momskod",
+	radioObligatoriskt: "Obligatoriskt",
+	radioTillatet: "Tillåtet",
+	radioEjTillatet: "Ej tillåtet",
+	suggestedCostCenterLabel: "Föreslå kostnadsställe",
+	suggestedCostCenterPlaceholder: "Kontor 10",
+	suggestedProjectLabel: "Föreslå projekt",
+	suggestedProjectPlaceholder: "t.ex. Projekt 100",
 };
 
 export const svCommon: CommonTranslation = {
