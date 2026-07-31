@@ -1,0 +1,34 @@
+@media print {
+	@page {
+		margin: 0;
+	}
+
+	body {
+		overflow: visible;
+	}
+
+	body * {
+		visibility: hidden;
+	}
+
+	.contract-print-area,
+	.contract-print-area * {
+		visibility: visible;
+	}
+
+	.contract-print-area {
+		position: absolute;
+		inset: 0 auto auto 50%;
+		transform: translateX(-50%);
+		width: 100%;
+		max-width: 44rem;
+		box-shadow: none;
+		print-color-adjust: exact;
+		-webkit-print-color-adjust: exact;
+	}
+
+	.contract-print-area .contract-print-page {
+		box-shadow: none;
+		break-after: page;
+	}
+}

@@ -1,10 +1,25 @@
+import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
+import EmploymentTabs from "@/features/my-pages/employment/components/EmploymentTabs";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+
 export default function Page() {
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold"><Translate text={localizationConstants.employment} /></h1>
-			<p className="mt-2 text-sm text-slate-600"><Translate text={localizationConstants.comingSoon} /> </p>
+		<div className="pt-6">
+			<div className="px-6">
+				<DynamicBreadcrumb
+					className="!text-2xl mb-3"
+					items={[
+						{
+							translationKey: localizationConstants.myPages,
+							href: "/tools/my-pages",
+						},
+						{
+							translationKey: localizationConstants.employment,
+						},
+					]}
+				/>
+			</div>
+			<EmploymentTabs />
 		</div>
 	);
 }

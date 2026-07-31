@@ -666,6 +666,26 @@ export type OfferTranslation = {
 	invoicePreviewDownload: string;
 	invoicePreviewPrint: string;
 	invoicePreviewNotFound: string;
+	// My pages - Employment
+	myPagesEmpTabContract: string;
+	myPagesEmpTabSickReport: string;
+	myPagesEmpTabLeave: string;
+	myPagesEmpTabPayslip: string;
+	myPagesEmpTabDocuments: string;
+	myPagesEmpOpenBadge: string;
+	myPagesEmpViewContract: string;
+	myPagesEmpDownload: string;
+	myPagesEmpRole: string;
+	myPagesEmpNumber: string;
+	myPagesEmpName: string;
+	myPagesEmpPersonNo: string;
+	myPagesEmpStartDate: string;
+	myPagesEmpAddress: string;
+	myPagesEmpPostalCode: string;
+	myPagesEmpCity: string;
+	myPagesEmpMobile: string;
+	myPagesEmpEmail: string;
+	myPagesEmpBack: string;
 	// Admin - Subscription overview
 	subscriptionTabMy: string;
 	subscriptionTabPayment: string;
