@@ -17,6 +17,7 @@ import {
 	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
 } from "./sidebar/navConfig";
 import { offerSidebarItems, goToItems } from "@/features/offer/constants";
+import { b2bSidebarItems } from "@/features/b2b/constants";
 import localizationConstants from "@/utils/translation/constants";
 import { CircleDollarSign } from "lucide-react";
 
@@ -50,6 +51,7 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
+	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
 	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
 	const offerSegment = isOfferModuleRoute
 		? (pathname.match(/^\/module\/business\/offer\/([^/]+)/)?.[1])
@@ -163,6 +165,12 @@ export function AppShell({ children }: AppShellProps) {
 						titleKey: localizationConstants.goTo,
 						items: goToItems,
 					}}
+				/>
+			) : isB2BNavRoute ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.b2b}
+					items={b2bSidebarItems}
+					hideBack={true}
 				/>
 			) : showSubSidebar ? (
 				<MyPagesSubSidebar

@@ -522,6 +522,30 @@ export type OfferTranslation = {
 	b2bChartRequestsPerMonth: string;
 	b2bChartDaysToAccept: string;
 	b2bChartRequests: string;
+	// B2B - Deal List
+	b2bDeals: string;
+	b2bDealsTotalActive: string;
+	b2bDealsPipelineValue: string;
+	b2bDealsWonThisMonth: string;
+	b2bDealsConversionRate: string;
+	b2bDealId: string;
+	b2bDealCompany: string;
+	b2bDealTitle: string;
+	b2bDealValue: string;
+	b2bDealCreatedDate: string;
+	b2bDealExpectedClose: string;
+	b2bDealAssignedTo: string;
+	b2bDealStatusNew: string;
+	b2bDealStatusInProgress: string;
+	b2bDealStatusWon: string;
+	b2bDealStatusLost: string;
+	b2bDealStatusPending: string;
+	b2bDealViewDetails: string;
+	b2bDealEdit: string;
+	b2bDealArchiveAction: string;
+	b2bDealDelete: string;
+	b2bCreateDeal: string;
+	b2bDealsEmpty: string;
 	// Calculation - Dashboard
 	calcOverview: string;
 	calcKalkyl: string;
