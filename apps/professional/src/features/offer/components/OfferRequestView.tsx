@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronsUpDown, ChevronUp, ChevronDown, MoreVertical, Search } from "lucide-react";
+import { ArrowUpDown, ChevronUp, ChevronDown, MoreVertical, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -89,7 +89,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
 	}
 
 	function SortIcon({ field }: { field: SortField }) {
-		if (sortField !== field) return <ChevronsUpDown size={14} className="shrink-0 text-slate-400" />;
+		if (sortField !== field) return <ArrowUpDown size={14} className="shrink-0 text-slate-400" />;
 		if (sortDir === "asc") return <ChevronUp size={14} className="shrink-0" />;
 		return <ChevronDown size={14} className="shrink-0" />;
 	}
@@ -282,7 +282,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
 						<span>{t(localizationConstants.rowsPerPageLabel)}</span>
 						<span className="flex h-8 w-16 items-center justify-between rounded border border-slate-200 px-2 text-sm">
 							{rowsPerPage}
-							<ChevronsUpDown size={12} className="text-slate-400" />
+							<ArrowUpDown size={12} className="text-slate-400" />
 						</span>
 					</div>
 					<div className="flex items-center gap-3">
