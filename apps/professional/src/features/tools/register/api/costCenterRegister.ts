@@ -1,10 +1,12 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
-import type {
-	CostCenterRegisterRow,
-	GetCostCenterListParams,
-	GetCostCenterListResponse,
-	CreateCostCenterFormData,
+import {
+	costCenterDetailSchema,
+	type CostCenterRegisterRow,
+	type CostCenterDetail,
+	type GetCostCenterListParams,
+	type GetCostCenterListResponse,
+	type CreateCostCenterFormData,
 } from "../types";
 import { MOCK_COST_CENTER_DATA } from "../mockdata/costCenters";
 
@@ -142,4 +144,42 @@ export async function toggleCostCenterStatusAPIAction(
 		}
 		return true;
 	}
+}
+
+export async function getCostCenterDetailAPIAction(
+	id: string,
+): Promise<CostCenterDetail | null> {
+	try {
+		const res = await axiosInstance.get(API_PATH.COST_CENTERS.GET(id));
+		const data = res.data?.data;
+		if (data) {
+			const parsed = costCenterDetailSchema.safeParse({
+				id: String(data.id ?? id),
+				kod: String(data.kod ?? data.code ?? ""),
+				benamning: String(data.benamning ?? data.name ?? ""),
+				anteckningar: String(data.anteckningar ?? data.description ?? data.notes ?? ""),
+				status: data.status === "inactive" ? "inactive" : "active",
+				description: data.description ? String(data.description) : undefined,
+			});
+			if (parsed.success) {
+				return parsed.data;
+			}
+		}
+	} catch (error) {
+		if (process.env.NODE_ENV !== "development") {
+			throw error;
+		}
+	}
+
+	if (process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_USE_MOCK === "true") {
+		const found = MOCK_COST_CENTER_DATA.find((item) => item.id === id);
+		if (found) {
+			const parsed = costCenterDetailSchema.safeParse(found);
+			if (parsed.success) {
+				return parsed.data;
+			}
+		}
+	}
+
+	return null;
 }

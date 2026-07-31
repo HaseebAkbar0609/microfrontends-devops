@@ -2393,6 +2393,8 @@ export const svRegister: RegisterTranslation = {
 	viewActionLabel: "Visa",
 	editBasicInfoAriaLabel: "Redigera grundläggande information",
 	editAdditionalInfoAriaLabel: "Redigera ytterligare uppgifter",
+	goBackToCostCenterListLabel: "Gå tillbaka till kostnadsställe",
+	editCostCenterBasicInfoAriaLabel: "Redigera grundläggande information för kostnadsställe",
 };
 
 export const svCommon: CommonTranslation = {

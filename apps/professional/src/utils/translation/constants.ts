@@ -2326,6 +2326,8 @@ export type RegisterTranslation = {
 	viewActionLabel: string;
 	editBasicInfoAriaLabel: string;
 	editAdditionalInfoAriaLabel: string;
+	goBackToCostCenterListLabel: string;
+	editCostCenterBasicInfoAriaLabel: string;
 };
 
 export type CommonTranslation = {
