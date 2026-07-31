@@ -1484,6 +1484,13 @@ export const svOffer: OfferTranslation = {
 	offerAcceptedCreateContract: "Skapa avtal",
 	offerAcceptedViewOffer: "Se offert",
 	offerDownloadPdf: "Ladda ned PDF",
+	offerAgreedContractNr: "Kontrakt nr",
+	offerAgreedJobType: "Jobb typ",
+	offerAgreedPrice: "Avtalat pris",
+	offerAgreedStatusSigned: "Avtal signerat",
+	offerAgreedStatusWaiting: "Väntar signering",
+	offerAgreedViewAgreement: "Se avtal",
+	offerAgreedViewProject: "Se projekt",
 	agreementCreateTitle: "Skapa nytt avtal",
 	agreementCreateDescription: "Beskrivning",
 	agreementProjectInfo: "Projektinformation",
@@ -2282,6 +2289,8 @@ export const svRegister: RegisterTranslation = {
 	selectAllLabel: "Markera alla",
 	selectRowLabel: "Markera rad",
 	goBackToAccountPlanLabel: "Gå tillbaka till kontoplan",
+	detaljerHeaderTitle: "detaljer",
+	grundlaggandeInfoTab: "Grundläggande info.",
 
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: "Skapa ny konto",
@@ -2299,6 +2308,10 @@ export const svRegister: RegisterTranslation = {
 	suggestedCostCenterPlaceholder: "Kontor 10",
 	suggestedProjectLabel: "Föreslå projekt",
 	suggestedProjectPlaceholder: "t.ex. Projekt 100",
+	editButtonText: "Redigera",
+	viewActionLabel: "Visa",
+	editBasicInfoAriaLabel: "Redigera grundläggande information",
+	editAdditionalInfoAriaLabel: "Redigera ytterligare uppgifter",
 };
 
 export const svCommon: CommonTranslation = {

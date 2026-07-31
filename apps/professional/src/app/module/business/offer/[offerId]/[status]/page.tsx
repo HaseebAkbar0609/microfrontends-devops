@@ -3,12 +3,12 @@ import { z } from "zod";
 import { OfferRequestView } from "@/features/offer/components/OfferRequestView";
 import { OfferQuotedView } from "@/features/offer/components/OfferQuotedView";
 import { OfferAcceptedView } from "@/features/offer/components/OfferAcceptedView";
-import { CreateAgreementView } from "@/features/offer/components/CreateAgreementView";
+import { OfferAgreedView } from "@/features/offer/components/OfferAgreedView";
 import { OFFER_STATUSES } from "@/features/offer/constants/offerDetail";
 import { DUMMY_OFFER_REQUESTS } from "@/features/offer/constants/offerRequests.mock";
 import { DUMMY_QUOTED_ITEMS } from "@/features/offer/constants/offerQuoted.mock";
 import { DUMMY_ACCEPTED_ITEMS } from "@/features/offer/constants/offerAccepted.mock";
-import { DUMMY_AGREEMENT_DATA } from "@/features/offer/constants/offerAgreement.mock";
+import { DUMMY_AGREED_ITEMS } from "@/features/offer/constants/offerAgreed.mock";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
@@ -37,7 +37,7 @@ export default async function OfferStatusPage({
   }
 
   if (parsed.data === "agreed") {
-    return <CreateAgreementView offerId={offerId} data={DUMMY_AGREEMENT_DATA} />;
+    return <OfferAgreedView offerId={offerId} items={DUMMY_AGREED_ITEMS} />;
   }
 
   return (

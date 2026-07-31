@@ -1535,6 +1535,13 @@ export type OfferTranslation = {
 	offerAcceptedCreateContract: string;
 	offerAcceptedViewOffer: string;
 	offerDownloadPdf: string;
+	offerAgreedContractNr: string;
+	offerAgreedJobType: string;
+	offerAgreedPrice: string;
+	offerAgreedStatusSigned: string;
+	offerAgreedStatusWaiting: string;
+	offerAgreedViewAgreement: string;
+	offerAgreedViewProject: string;
 	agreementCreateTitle: string;
 	agreementCreateDescription: string;
 	agreementProjectInfo: string;
@@ -2216,6 +2223,8 @@ export type RegisterTranslation = {
 	selectAllLabel: string;
 	selectRowLabel: string;
 	goBackToAccountPlanLabel: string;
+	detaljerHeaderTitle: string;
+	grundlaggandeInfoTab: string;
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: string;
 	additionalDetailsSection: string;
@@ -2232,6 +2241,10 @@ export type RegisterTranslation = {
 	suggestedCostCenterPlaceholder: string;
 	suggestedProjectLabel: string;
 	suggestedProjectPlaceholder: string;
+	editButtonText: string;
+	viewActionLabel: string;
+	editBasicInfoAriaLabel: string;
+	editAdditionalInfoAriaLabel: string;
 };
 
 export type CommonTranslation = {

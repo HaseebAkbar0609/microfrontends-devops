@@ -71,7 +71,7 @@ export function AgreementDocumentsSection({
                       className="cursor-pointer text-slate-400 hover:text-slate-700"
                       onClick={() => removeDoc(doc)}
                     >
-                      <X size={11} />
+                      <X size={11} aria-hidden={true} />
                     </button>
                   </span>
                 ))}
@@ -97,7 +97,7 @@ export function AgreementDocumentsSection({
                         className="cursor-pointer text-slate-400 hover:text-slate-700"
                         onClick={() => removeTemplate(tpl)}
                       >
-                        <X size={10} />
+                        <X size={10} aria-hidden={true} />
                       </button>
                     </span>
                   ))}
@@ -106,7 +106,7 @@ export function AgreementDocumentsSection({
                   size="sm"
                   className="h-9 shrink-0 cursor-pointer gap-1.5 bg-slate-900 text-xs text-white hover:bg-slate-700"
                 >
-                  <Download size={13} />
+                  <Download size={13} aria-hidden={true} />
                   {t(localizationConstants.agreementDownload)}
                 </Button>
               </div>
