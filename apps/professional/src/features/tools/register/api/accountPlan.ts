@@ -206,11 +206,11 @@ export async function getAccountPlanDetailAPIAction(
 		if (data) {
 			return {
 				...mapAccountFromApi(data),
-				costCenterMode: data.cost_center_mode ?? "obligatoriskt",
-				projectMode: data.project_mode ?? "obligatoriskt",
-				suggestedCostCenter: data.suggested_cost_center ?? "Kontor 10",
-				suggestedProject: data.suggested_project ?? "Projekt 100",
-				description: data.description ?? "",
+				costCenterMode: data.cost_center_mode || undefined,
+				projectMode: data.project_mode || undefined,
+				suggestedCostCenter: data.suggested_cost_center || undefined,
+				suggestedProject: data.suggested_project || undefined,
+				description: data.description || "",
 			};
 		}
 	} catch (error) {
@@ -221,21 +221,14 @@ export async function getAccountPlanDetailAPIAction(
 
 	const found = MOCK_ACCOUNT_PLAN_DATA.find((item) => item.id === id);
 	if (found) {
+		const detail = found as AccountPlanDetail;
 		return {
 			...found,
-			costCenterMode: "obligatoriskt",
-			projectMode: "obligatoriskt",
-			suggestedCostCenter: "Kontor 10",
-			suggestedProject: "Projekt 100",
+			costCenterMode: detail.costCenterMode || undefined,
+			projectMode: detail.projectMode || undefined,
+			suggestedCostCenter: detail.suggestedCostCenter || undefined,
+			suggestedProject: detail.suggestedProject || undefined,
 		};
 	}
-	return MOCK_ACCOUNT_PLAN_DATA[0]
-		? {
-				...MOCK_ACCOUNT_PLAN_DATA[0],
-				costCenterMode: "obligatoriskt",
-				projectMode: "obligatoriskt",
-				suggestedCostCenter: "Kontor 10",
-				suggestedProject: "Projekt 100",
-		  }
-		: null;
+	return null;
 }

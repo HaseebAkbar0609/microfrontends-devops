@@ -49,18 +49,32 @@ function DetailSectionCard({
 	);
 }
 
+function getModeTranslationKey(mode?: string): string {
+	if (mode === "allowed" || mode === "tillatet") {
+		return localizationConstants.radioTillatet;
+	}
+	if (mode === "not_allowed" || mode === "ej_tillatet") {
+		return localizationConstants.radioEjTillatet;
+	}
+	return localizationConstants.radioObligatoriskt;
+}
+
 export function AccountDetailPage() {
 	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
 	const rawId = params.id as string;
 	const cleanId = typeof rawId === "string" ? rawId.trim() : "";
+	const isValidId = Boolean(cleanId && /^[a-zA-Z0-9_-]+$/.test(cleanId));
 
 	const [account, setAccount] = useState<AccountPlanDetail | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchAccount = useCallback(async () => {
-		if (!cleanId) return;
+		if (!isValidId) {
+			setIsLoading(false);
+			return;
+		}
 		setIsLoading(true);
 		try {
 			const data = await getAccountPlanDetailAPIAction(cleanId);
@@ -68,7 +82,7 @@ export function AccountDetailPage() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [cleanId]);
+	}, [cleanId, isValidId]);
 
 	useEffect(() => {
 		fetchAccount();
@@ -222,7 +236,7 @@ export function AccountDetailPage() {
 									<Translate text={localizationConstants.costCenterLabel} />
 								</span>
 								<span className="text-sm text-slate-900 font-normal">
-									<Translate text={localizationConstants.radioObligatoriskt} />
+									<Translate text={getModeTranslationKey(account.costCenterMode)} />
 								</span>
 							</div>
 
@@ -232,7 +246,7 @@ export function AccountDetailPage() {
 									<Translate text={localizationConstants.projectLabel} />
 								</span>
 								<span className="text-sm text-slate-900 font-normal">
-									<Translate text={localizationConstants.radioObligatoriskt} />
+									<Translate text={getModeTranslationKey(account.projectMode)} />
 								</span>
 							</div>
 
