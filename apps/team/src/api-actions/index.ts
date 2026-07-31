@@ -1,8 +1,8 @@
 export { loginAPIAction, type LoginAPIPayload } from "./auth/login";
 export {
-  forgotPasswordAPIAction,
-  type ForgotPasswordAPIPayload,
-  type ForgotPasswordAPIResponse,
+	forgotPasswordAPIAction,
+	type ForgotPasswordAPIPayload,
+	type ForgotPasswordAPIResponse,
 } from "./auth/forgot-password";
 export { logoutAPIAction } from "./auth/logout";
 export { listLeadsAPIAction } from "./leads/list";
@@ -13,6 +13,10 @@ export { listPrivateCustomersAPIAction } from "./customer/list";
 export { createPrivateCustomerAPIAction } from "./customer/create";
 export type { CreateCustomerResult } from "./customer/create";
 export { listPendingCustomersAPIAction } from "./customer/pending";
+export {
+	deletePrivateCustomerAPIAction,
+	updatePrivateCustomerStatusAPIAction,
+} from "./customer/actions";
 export type { AuthResponseData } from "@/types/api";
 export {
 	listProfessionalsAPIAction,
