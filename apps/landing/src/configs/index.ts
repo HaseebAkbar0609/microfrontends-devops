@@ -75,7 +75,7 @@ export const FooterMenu: Record<string, Record<string, FooterMenuStateType[]>> =
     Resurser: [
       { label: "Kunskap", path: "kunskap" },
       { label: "Nyhetsbrev" },
-      { label: "Kundcase" },
+      { label: "Varför TimeFlow", path: "cases" },
       { label: "FAQ", path: "faq" },
       { label: "Se systemet",path: "system-overview"},
       { label: "Boka demo", path: "book_a_demo" },
