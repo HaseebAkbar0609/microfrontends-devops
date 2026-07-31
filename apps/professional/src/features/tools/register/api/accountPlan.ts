@@ -106,26 +106,55 @@ export async function getAccountPlanListAPIAction(
 
 export async function createAccountPlanAPIAction(
 	data: CreateAccountPlanFormData,
-): Promise<{ id: string }> {
+): Promise<{ success: boolean; id: string; error?: string }> {
 	try {
 		const res = await axiosInstance.post(API_PATH.ACCOUNTS.CREATE, {
 			account_number: data.accountNumber,
 			account_name: data.accountName,
-			account_type: data.accountType,
+			account_type: data.accountType || "Asset",
 			vat_code: data.vatCode || null,
 			sru: data.sru || null,
 			auto_account: data.autoAccount || null,
 			opening_balance: data.openingBalance || "0",
 			budget: data.budget || "0",
 			description: data.description || null,
+			status: data.accountStatus || "active",
+			cost_center_mode: data.costCenterMode || "obligatoriskt",
+			project_mode: data.projectMode || "obligatoriskt",
+			suggested_cost_center: data.suggestedCostCenter || null,
+			suggested_project: data.suggestedProject || null,
 		});
-		return { id: String(res.data?.data?.id ?? Date.now()) };
+		return { success: true, id: String(res.data?.data?.id ?? Date.now()) };
 	} catch (error) {
 		if (process.env.NEXT_PUBLIC_USE_MOCK !== "true" && process.env.NODE_ENV === "production") {
 			throw error;
 		}
-		return { id: String(Date.now()) };
 	}
+
+	const newId = String(Date.now());
+	const newRow: AccountPlanRow = {
+		id: newId,
+		accountNumber: data.accountNumber,
+		accountName: data.accountName,
+		accountType: data.accountType || "Asset",
+		vatCode: data.vatCode || "-",
+		sru: data.sru || "-",
+		autoAccount: data.autoAccount || "SEK",
+		openingBalance: data.openingBalance || "0",
+		budget: data.budget || "0",
+		status: (data.accountStatus as "active" | "inactive") || "active",
+	};
+
+	// Check duplicate in mock data
+	const exists = MOCK_ACCOUNT_PLAN_DATA.some(
+		(acc) => acc.accountNumber.toLowerCase() === data.accountNumber.toLowerCase(),
+	);
+	if (exists) {
+		return { success: false, id: "", error: "validationAccountNumberUnique" };
+	}
+
+	MOCK_ACCOUNT_PLAN_DATA.unshift(newRow);
+	return { success: true, id: newId };
 }
 
 export async function updateAccountPlanAPIAction(

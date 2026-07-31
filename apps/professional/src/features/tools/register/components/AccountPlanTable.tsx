@@ -410,7 +410,8 @@ export function AccountPlanTable({ activeTab: _activeTab }: AccountPlanTableProp
 					</Button>
 
 					<Button
-						className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center"
+						onClick={() => router.push("/tools/register/account-plan/create")}
+						className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
 					>
 						<Plus className="h-4 w-4" aria-hidden />
 						<Translate text={localizationConstants.registerNewAccount} />

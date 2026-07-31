@@ -755,12 +755,17 @@ export interface GetAccountPlanListResponse {
 export const createAccountPlanSchema = z.object({
 	accountNumber: z.string().min(1, "validationAccountNumberRequired"),
 	accountName: z.string().min(1, "validationAccountNameRequired"),
-	accountType: z.string().min(1, "validationAccountTypeRequired"),
+	accountType: z.string().optional().default("Asset"),
+	openingBalance: z.string().optional(),
+	accountStatus: z.string().optional().default("active"),
 	vatCode: z.string().optional(),
 	sru: z.string().optional(),
 	autoAccount: z.string().optional(),
-	openingBalance: z.string().optional(),
 	budget: z.string().optional(),
+	costCenterMode: z.enum(["obligatoriskt", "tillatet", "ejTillatet"]).optional().default("obligatoriskt"),
+	projectMode: z.enum(["obligatoriskt", "tillatet", "ejTillatet"]).optional().default("obligatoriskt"),
+	suggestedCostCenter: z.string().optional(),
+	suggestedProject: z.string().optional(),
 	description: z.string().optional(),
 });
 

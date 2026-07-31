@@ -41,9 +41,10 @@ export interface CustomerListQueryParams {
 export interface CreateCustomerFormData {
   firstName: string;
   lastName: string;
-  personalNumber: string;
+  personalNumber?: string;
   privateEmail: string;
-  address: string;
-  city: string;
-  postalCode: string;
+  phone?: string;
+  address?: string;
+  city?: string;
+  postalCode?: string;
 }

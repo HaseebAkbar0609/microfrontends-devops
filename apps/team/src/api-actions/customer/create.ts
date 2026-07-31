@@ -1,12 +1,21 @@
 import axiosInstance from "@/lib/axiosInstance";
 import type { CreateCustomerFormData } from "@/features/customers/types/types";
 
-const MOCK_ENABLE = true; // TODO: set to false when real API is available
-const CUSTOMERS_CREATE_PATH = "/api/v1/teams/customer/private/create";
+const MOCK_ENABLE = false;
+const CUSTOMERS_CREATE_PATH = "/api/v1/teams/private/accounts";
 
 export interface CreateCustomerResult {
   success: boolean;
   error: string | null;
+}
+
+interface ApiErrorResponse {
+  response?: {
+    data?: {
+      message?: string;
+      detail?: Array<{ msg?: string }>;
+    };
+  };
 }
 
 export async function createPrivateCustomerAPIAction(
@@ -21,14 +30,20 @@ export async function createPrivateCustomerAPIAction(
     await axiosInstance.post(CUSTOMERS_CREATE_PATH, {
       first_name: data.firstName,
       last_name: data.lastName,
-      personal_number: data.personalNumber,
-      private_email: data.privateEmail,
+      email: data.privateEmail,
+      personal_id: data.personalNumber,
+      phone_number: data.phone,
       address: data.address,
       city: data.city,
       postal_code: data.postalCode,
     });
     return { success: true, error: null };
-  } catch {
-    return { success: false, error: "Failed to create customer" };
+  } catch (err: unknown) {
+    const errorObj = err as ApiErrorResponse;
+    const errorMsg =
+      errorObj?.response?.data?.message ||
+      errorObj?.response?.data?.detail?.[0]?.msg ||
+      "Failed to create customer";
+    return { success: false, error: errorMsg };
   }
 }
