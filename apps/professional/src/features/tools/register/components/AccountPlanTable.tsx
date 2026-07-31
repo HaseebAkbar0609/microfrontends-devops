@@ -294,33 +294,44 @@ export function AccountPlanTable({ activeTab: _activeTab }: AccountPlanTableProp
 					</span>
 				),
 			},
+			{
+				key: "actions_view",
+				label: "",
+				sortable: false,
+				headerClassName: "!w-[40px] text-center",
+				cellClassName: "!w-[40px] text-center",
+				render: (row) => (
+					<button
+						type="button"
+						onClick={(e) => {
+							e.stopPropagation();
+							handleViewAccount(row);
+						}}
+						className="inline-flex items-center justify-center p-1.5 rounded-md text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors cursor-pointer"
+						aria-label={t(localizationConstants.viewAccountLabel)}
+					>
+						<Eye className="h-4 w-4" />
+					</button>
+				),
+			},
 		],
-		[selectedRows, handleToggleRow, handleToggleSelectAll, data.length, t],
-	);
-
-	const primaryAction = useCallback(
-		(row: AccountPlanRow) => (
-			<button
-				type="button"
-				onClick={() => handleViewAccount(row)}
-				className="inline-flex items-center justify-center h-8 w-8 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors cursor-pointer"
-				aria-label={t(localizationConstants.viewAccountLabel)}
-			>
-				<Eye className="h-4 w-4" />
-			</button>
-		),
-		[handleViewAccount, t],
+		[selectedRows, handleToggleRow, handleToggleSelectAll, data.length, handleViewAccount, t],
 	);
 
 	const actions: DataTableAction<AccountPlanRow>[] = useMemo(
 		() => [
+			{
+				label: localizationConstants.viewActionLabel,
+				icon: <Eye className="h-4 w-4" />,
+				onClick: (row) => handleViewAccount(row),
+			},
 			{
 				label: localizationConstants.editLabel,
 				icon: <Pencil className="h-4 w-4" />,
 				onClick: (row) => router.push(`/tools/register/account-plan/${row.id}`),
 			},
 		],
-		[router],
+		[handleViewAccount, router],
 	);
 
 	return (
@@ -414,7 +425,6 @@ export function AccountPlanTable({ activeTab: _activeTab }: AccountPlanTableProp
 				columns={columns}
 				rowKey={(row) => row.id}
 				actions={actions}
-				primaryAction={primaryAction}
 				loading={isLoading}
 				sortBy={sortBy}
 				sortOrder={sortOrder}

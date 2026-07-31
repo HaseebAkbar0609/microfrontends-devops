@@ -2274,6 +2274,8 @@ export const enRegister: RegisterTranslation = {
 	selectAllLabel: "Select all",
 	selectRowLabel: "Select row",
 	goBackToAccountPlanLabel: "Go back to account plan",
+	detaljerHeaderTitle: "Details",
+	grundlaggandeInfoTab: "Basic info.",
 
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: "Create new Account",
@@ -2291,6 +2293,10 @@ export const enRegister: RegisterTranslation = {
 	suggestedCostCenterPlaceholder: "Office 10",
 	suggestedProjectLabel: "Suggested project",
 	suggestedProjectPlaceholder: "e.g. Project 100",
+	editButtonText: "Edit",
+	viewActionLabel: "View",
+	editBasicInfoAriaLabel: "Edit basic information",
+	editAdditionalInfoAriaLabel: "Edit additional details",
 };
 
 export const en: Translation = {
