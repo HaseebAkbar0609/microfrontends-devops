@@ -7,21 +7,17 @@
 		overflow: visible;
 	}
 
-	body * {
-		visibility: hidden;
-	}
-
-	.contract-print-area,
-	.contract-print-area * {
-		visibility: visible;
+	body
+		*:not(.contract-print-area):not(.contract-print-area *):not(
+			:has(.contract-print-area)
+		) {
+		display: none;
 	}
 
 	.contract-print-area {
-		position: absolute;
-		inset: 0 auto auto 50%;
-		transform: translateX(-50%);
 		width: 100%;
 		max-width: 44rem;
+		margin: 0 auto;
 		box-shadow: none;
 	}
 

@@ -12,12 +12,25 @@ export const sickRequestSchema = z.object({
 
 export type SickRequestValues = z.infer<typeof sickRequestSchema>;
 
-export const leaveRequestSchema = z.object({
-	fromDate: z
-		.string()
-		.min(1, localizationConstants.myPagesEmpValFromRequired),
-	toDate: z.string().min(1, localizationConstants.myPagesEmpValToRequired),
-	message: z.string(),
-});
+export const leaveRequestSchema = z
+	.object({
+		fromDate: z
+			.string()
+			.min(1, localizationConstants.myPagesEmpValFromRequired),
+		toDate: z
+			.string()
+			.min(1, localizationConstants.myPagesEmpValToRequired),
+		message: z.string(),
+	})
+	.refine(
+		(values) =>
+			!values.fromDate ||
+			!values.toDate ||
+			values.toDate >= values.fromDate,
+		{
+			message: localizationConstants.myPagesEmpValToAfterFrom,
+			path: ["toDate"],
+		},
+	);
 
 export type LeaveRequestValues = z.infer<typeof leaveRequestSchema>;

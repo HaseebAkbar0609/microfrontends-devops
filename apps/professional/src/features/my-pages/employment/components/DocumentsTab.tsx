@@ -15,17 +15,10 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
 	DOCUMENT_STATUS_KEY,
-	DocumentStatus,
 	PERSONAL_DOCUMENTS,
 } from "../constants/mockData";
+import { DOCUMENT_STATUS_CLASS } from "../constants/statusStyles";
 import { PdfFileIcon } from "./PayslipTab";
-
-const STATUS_CLASS: Record<DocumentStatus, string> = {
-	read: "bg-amber-50 text-amber-600",
-	needsSign: "bg-blue-50 text-blue-600",
-	notOpened: "text-slate-600",
-	signed: "bg-green-50 text-green-600",
-};
 
 const COLUMNS = [
 	{ labelKey: localizationConstants.myPagesEmpDocCol, sortable: true },
@@ -85,7 +78,7 @@ const DocumentsTab = () => (
 								<span
 									className={cn(
 										"inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium",
-										STATUS_CLASS[document.status],
+										DOCUMENT_STATUS_CLASS[document.status],
 									)}
 								>
 									<Translate

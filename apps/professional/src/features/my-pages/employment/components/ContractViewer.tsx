@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { EmploymentContract } from "../constants/mockData";
+import { downloadContractPdf } from "../utils/generateContractPdf";
 import "./contract-print.css";
 
 const ContractViewer = ({ contract }: { contract: EmploymentContract }) => {
@@ -38,17 +39,10 @@ const ContractViewer = ({ contract }: { contract: EmploymentContract }) => {
 						variant="ghost"
 						size="icon"
 						className="h-8 w-8 text-white hover:bg-slate-700 hover:text-white"
-						asChild
+						onClick={() => downloadContractPdf(contract)}
+						aria-label={t(localizationConstants.myPagesEmpDownload)}
 					>
-						<a
-							href={contract.downloadUrl}
-							download
-							aria-label={t(
-								localizationConstants.myPagesEmpDownload,
-							)}
-						>
-							<Download className="h-4 w-4" />
-						</a>
+						<Download className="h-4 w-4" />
 					</Button>
 					<Button
 						type="button"
@@ -70,7 +64,7 @@ const ContractViewer = ({ contract }: { contract: EmploymentContract }) => {
 					{contract.documentPages.map((page) => (
 						<div
 							key={page.id}
-							className="contract-print-page whitespace-pre-line bg-white px-14 py-12 text-justify text-[13px] leading-relaxed text-slate-800 shadow-xl"
+							className="contract-print-page whitespace-pre-line bg-white px-14 py-12 text-sm leading-relaxed text-slate-800 shadow-xl"
 						>
 							{page.text}
 						</div>

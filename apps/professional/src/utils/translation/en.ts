@@ -752,6 +752,7 @@ export const enOffer: OfferTranslation = {
 	myPagesEmpValStartRequired: "Start date is required",
 	myPagesEmpValFromRequired: "From date is required",
 	myPagesEmpValToRequired: "To date is required",
+	myPagesEmpValToAfterFrom: "To date must be on or after the from date",
 	monthJanuary: "January",
 	monthFebruary: "February",
 	monthMarch: "March",

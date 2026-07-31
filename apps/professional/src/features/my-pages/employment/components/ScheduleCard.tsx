@@ -150,20 +150,18 @@ const ScheduleCard = ({ events }: { events: ScheduleEvent[] }) => {
 												{event && (
 													<span
 														className={cn(
-															"block rounded-md px-2 py-1 text-xs font-medium leading-snug",
+															"block min-h-6 rounded-md px-2 py-1 text-xs font-medium leading-snug",
 															EVENT_CLASS[
 																event.kind
 															],
 														)}
 													>
-														{event.labelKey ? (
+														{event.labelKey && (
 															<Translate
 																text={
 																	event.labelKey
 																}
 															/>
-														) : (
-															" "
 														)}
 													</span>
 												)}
@@ -198,16 +196,14 @@ const ScheduleCard = ({ events }: { events: ScheduleEvent[] }) => {
 									{event && (
 										<div
 											className={cn(
-												"rounded-md px-3 py-1.5 text-sm font-medium",
+												"min-h-8 rounded-md px-3 py-1.5 text-sm font-medium",
 												EVENT_CLASS[event.kind],
 											)}
 										>
-											{event.labelKey ? (
+											{event.labelKey && (
 												<Translate
 													text={event.labelKey}
 												/>
-											) : (
-												" "
 											)}
 											<span className="block text-xs font-normal">
 												{formatHour(event.startHour)} -{" "}

@@ -12,7 +12,6 @@ export interface EmploymentContract {
 	city: string;
 	mobile: string;
 	email: string;
-	downloadUrl: string;
 	documentPages: { id: string; text: string }[];
 }
 
@@ -30,7 +29,6 @@ export const EMPLOYMENT_CONTRACT: EmploymentContract = {
 	city: "Järfälla",
 	mobile: "-",
 	email: "Ann@example.com",
-	downloadUrl: "/mock/anstallningsavtal-00001.pdf",
 	documentPages: [
 		{ id: "page-1", text: CONTRACT_PAGE_TEXT },
 		{ id: "page-2", text: CONTRACT_PAGE_TEXT },

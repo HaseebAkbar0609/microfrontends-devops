@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { EmploymentContract } from "../constants/mockData";
+import { downloadContractPdf } from "../utils/generateContractPdf";
 
 const Field = ({
 	labelKey,
@@ -61,15 +62,13 @@ const EmploymentContractCard = ({
 					<Button
 						type="button"
 						variant="outline"
-						asChild
+						onClick={() => downloadContractPdf(contract)}
 						className="h-9 gap-2 rounded-md border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
 					>
-						<a href={contract.downloadUrl} download>
-							<Download className="h-4 w-4" />
-							<Translate
-								text={localizationConstants.myPagesEmpDownload}
-							/>
-						</a>
+						<Download className="h-4 w-4" />
+						<Translate
+							text={localizationConstants.myPagesEmpDownload}
+						/>
 					</Button>
 				</div>
 			</div>

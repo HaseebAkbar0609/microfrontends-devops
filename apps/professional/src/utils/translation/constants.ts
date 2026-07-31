@@ -734,6 +734,7 @@ export type OfferTranslation = {
 	myPagesEmpValStartRequired: string;
 	myPagesEmpValFromRequired: string;
 	myPagesEmpValToRequired: string;
+	myPagesEmpValToAfterFrom: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;

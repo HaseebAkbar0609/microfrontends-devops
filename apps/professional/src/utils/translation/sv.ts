@@ -646,6 +646,7 @@ export const svOffer: OfferTranslation = {
 	myPagesEmpValStartRequired: "Startdatum krävs",
 	myPagesEmpValFromRequired: "Från datum krävs",
 	myPagesEmpValToRequired: "Till datum krävs",
+	myPagesEmpValToAfterFrom: "Till datum måste vara samma dag eller efter från datum",
 	monthJanuary: "Januari",
 	monthFebruary: "Februari",
 	monthMarch: "Mars",

@@ -40,16 +40,17 @@ import {
 	LeaveRequest,
 	LeaveStatus,
 } from "../constants/mockData";
+import { LEAVE_STATUS_CLASS } from "../constants/statusStyles";
 import { leaveRequestSchema, LeaveRequestValues } from "../schemas/absence";
 import ScheduleCard from "./ScheduleCard";
 
-const STATUS_BADGE: Record<
+const STATUS_ICON: Record<
 	LeaveStatus,
-	{ className: string; icon: React.ComponentType<{ className?: string }> }
+	React.ComponentType<{ className?: string }>
 > = {
-	review: { className: "text-amber-600", icon: Clock3 },
-	approved: { className: "text-green-600", icon: CheckCheck },
-	rejected: { className: "text-red-600", icon: XCircle },
+	review: Clock3,
+	approved: CheckCheck,
+	rejected: XCircle,
 };
 
 const EMPTY_VALUES: LeaveRequestValues = {
@@ -122,8 +123,7 @@ const LeaveTab = () => {
 							</TableHeader>
 							<TableBody>
 								{requests.map((request) => {
-									const badge = STATUS_BADGE[request.status];
-									const Icon = badge.icon;
+									const Icon = STATUS_ICON[request.status];
 									return (
 										<TableRow
 											key={request.id}
@@ -139,7 +139,7 @@ const LeaveTab = () => {
 												<span
 													className={cn(
 														"inline-flex items-center gap-1.5 rounded-full bg-slate-50 px-2.5 py-0.5 text-xs font-medium",
-														badge.className,
+														LEAVE_STATUS_CLASS[request.status],
 													)}
 												>
 													<Icon className="h-3.5 w-3.5" />
