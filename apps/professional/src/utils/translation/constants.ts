@@ -2181,6 +2181,22 @@ export type RegisterTranslation = {
 	selectAllLabel: string;
 	selectRowLabel: string;
 	goBackToAccountPlanLabel: string;
+	// Create Account Translations (TFS-444)
+	createAccountHeaderTitle: string;
+	additionalDetailsSection: string;
+	accountNumberPlaceholder: string;
+	accountNamePlaceholder: string;
+	openingBalancePlaceholder: string;
+	activeStatusLabel: string;
+	sruPlaceholder: string;
+	vatCodePlaceholder: string;
+	radioObligatoriskt: string;
+	radioTillatet: string;
+	radioEjTillatet: string;
+	suggestedCostCenterLabel: string;
+	suggestedCostCenterPlaceholder: string;
+	suggestedProjectLabel: string;
+	suggestedProjectPlaceholder: string;
 };
 
 export type CommonTranslation = {

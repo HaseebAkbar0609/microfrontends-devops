@@ -287,12 +287,15 @@ export function CategoriesSection() {
   const [modal, setModal] = useState<ModalTarget>(null);
   const [groupModalPanel, setGroupModalPanel] = useState<"customers" | "professionals" | null>(null);
 
-  // Initialize open groups once data loads
+  const hasInitializedRef = useState(false);
+
+  // Initialize open groups once on initial load
   useEffect(() => {
-    if (customers.length > 0 && openGroups.size === 0) {
+    if (customers.length > 0 && openGroups.size === 0 && !hasInitializedRef[0]) {
       setOpenGroups(new Set([customers[0].id]));
+      hasInitializedRef[1](true);
     }
-  }, [customers, openGroups.size]);
+  }, [customers, openGroups.size, hasInitializedRef]);
 
   const toggleGroup = (id: string) =>
     setOpenGroups((prev) => {

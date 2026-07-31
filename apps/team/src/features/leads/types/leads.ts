@@ -37,6 +37,7 @@ export type LeadApiItem = {
 	project_name?: string;
 	project_type?: string;
 	city?: string | null;
+	city_name?: string | null;
 	categories?: LeadApiCategory[];
 	hit_count?: number;
 	taken_count?: number;
@@ -74,6 +75,7 @@ export type LeadDetailApiCustomer = {
 	personal_email: string;
 	mobile_number: string;
 	city: string;
+	city_name?: string;
 };
 
 export type LeadDetailApiData = {
@@ -121,6 +123,7 @@ export type LeadProjectDetailsApiData = {
 		categories?: LeadProjectCategory[];
 		project_address?: string;
 		city?: string;
+		city_name?: string;
 		postal_code?: string;
 		directions?: string;
 		project_type?: string;

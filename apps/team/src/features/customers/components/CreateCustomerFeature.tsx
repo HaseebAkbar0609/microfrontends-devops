@@ -40,16 +40,26 @@ const SWEDISH_CITIES = [
   "Karlstad",
 ].map((city) => ({ value: city, label: city }));
 
+function isSwedishPhoneNumberValid(value: string) {
+  if (!value) return true;
+  const normalized = value.replace(/[\s()-]/g, "");
+  return /^(?:\+46|0046|0)[1-9]\d{6,9}$/.test(normalized);
+}
+
 const schema = z.object({
-  firstName: z.string(),
-  lastName: z.string(),
-  personalNumber: z.string(),
-  privateEmail: z.string().refine((v) => !v || z.string().email().safeParse(v).success, {
-    message: "Invalid email address",
-  }),
-  address: z.string(),
-  city: z.string(),
-  postalCode: z.string(),
+  firstName: z.string().min(1, "First name is required"),
+  lastName: z.string().min(1, "Last name is required"),
+  personalNumber: z.string().optional(),
+  privateEmail: z.string().email("Invalid email address"),
+  phone: z
+    .string()
+    .optional()
+    .refine((v) => !v || isSwedishPhoneNumberValid(v), {
+      message: "Enter a valid phone number",
+    }),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  postalCode: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -66,6 +76,7 @@ export default function CreateCustomerFeature() {
       lastName: "",
       personalNumber: "",
       privateEmail: "",
+      phone: "",
       address: "",
       city: "",
       postalCode: "",
@@ -165,14 +176,24 @@ export default function CreateCustomerFeature() {
                     />
                   </div>
 
-                  {/* Row 3: Address (full width) */}
-                  <FormInput
-                    control={form.control}
-                    name="address"
-                    label={localizationConstants.addressLabel}
-                    placeholder="Stengatan 10"
-                    className="grid gap-1"
-                  />
+                  {/* Row 3: Phone number + Address */}
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <FormInput
+                      control={form.control}
+                      name="phone"
+                      label={localizationConstants.phoneLabel}
+                      placeholder="070 123 4567"
+                      type="tel"
+                      className="grid gap-1"
+                    />
+                    <FormInput
+                      control={form.control}
+                      name="address"
+                      label={localizationConstants.addressLabel}
+                      placeholder="Stengatan 10"
+                      className="grid gap-1"
+                    />
+                  </div>
 
                   {/* Row 4: City + Postal code */}
                   <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
