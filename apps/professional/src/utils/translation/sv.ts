@@ -1545,6 +1545,7 @@ export const svOffer: OfferTranslation = {
 	seeProjectOrderAddress: "Order adress",
 	seeProjectCity: "Ort",
 	seeProjectType: "Typ",
+	seeProjectTypeInformation: "Typ information",
 	seeProjectDepartment: "Avdelning",
 	seeProjectOfferNr: "Offer nr",
 	seeProjectBudget: "Kontrakt",

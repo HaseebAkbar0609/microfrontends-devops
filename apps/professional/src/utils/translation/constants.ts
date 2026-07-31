@@ -1596,6 +1596,7 @@ export type OfferTranslation = {
 	seeProjectOrderAddress: string;
 	seeProjectCity: string;
 	seeProjectType: string;
+	seeProjectTypeInformation: string;
 	seeProjectDepartment: string;
 	seeProjectOfferNr: string;
 	seeProjectBudget: string;

@@ -1639,6 +1639,7 @@ export const enOffer: OfferTranslation = {
 	seeProjectOrderAddress: "Order address",
 	seeProjectCity: "City",
 	seeProjectType: "Type",
+	seeProjectTypeInformation: "Type information",
 	seeProjectDepartment: "Department",
 	seeProjectOfferNr: "Offer number",
 	seeProjectBudget: "Budget",

@@ -22,7 +22,7 @@ export const DUMMY_PROJECT: ProjectData = {
     firstName: "Fastighetsbolaget AB",
     lastName: "Name",
     company: "Fastighetsbolaget AB",
-    email: "alex@example.com",
+    email: "alex@example.test",
     mobile: "060-7841 334",
     role: "",
   },
@@ -53,7 +53,7 @@ export const DUMMY_PROJECT: ProjectData = {
     },
     {
       id: "doc-2",
-      date: "2020-06-91",
+      date: "2020-06-15",
       name: "Dokumenterts name",
       fileLabel: "Kontrakt.pdf",
       fileType: "pdf",

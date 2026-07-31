@@ -385,7 +385,7 @@ export function OfferSeeProjectView({ offerId: _offerId, data }: Props) {
               {/* Order information */}
               <AccordionSection
                 icon={<Info size={24} className="text-slate-700" aria-hidden={true} />}
-                title={t(localizationConstants.seeProjectType) + " information"}
+                title={t(localizationConstants.seeProjectTypeInformation)}
                 open={open.orderInfo}
                 onToggle={() => toggleSection("orderInfo")}
               >
@@ -474,6 +474,7 @@ export function OfferSeeProjectView({ offerId: _offerId, data }: Props) {
                                 <Button
                                   variant="ghost"
                                   size="sm"
+                                  aria-label={t(localizationConstants.actions)}
                                   className="h-7 w-7 cursor-pointer p-0"
                                 >
                                   <MoreVertical size={14} aria-hidden={true} />
@@ -482,7 +483,11 @@ export function OfferSeeProjectView({ offerId: _offerId, data }: Props) {
                               <DropdownMenuContent align="end" className="w-40">
                                 <DropdownMenuItem
                                   className="cursor-pointer gap-2"
-                                  onClick={() => window.open(doc.fileLabel, "_blank")}
+                                  onClick={() => {
+                                    if (doc.fileLabel.startsWith("https://")) {
+                                      window.open(doc.fileLabel, "_blank", "noopener,noreferrer");
+                                    }
+                                  }}
                                 >
                                   <Download size={13} aria-hidden={true} />
                                   {t(localizationConstants.offerDownloadPdf)}
