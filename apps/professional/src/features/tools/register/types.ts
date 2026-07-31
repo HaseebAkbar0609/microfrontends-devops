@@ -677,6 +677,19 @@ export interface PriceListDetailArticle {
 }
 
 // Cost Center Register Types (TFS-446)
+export const detailIdSchema = z.string().trim().min(1).regex(/^[a-zA-Z0-9_-]+$/);
+
+export const costCenterDetailSchema = z.object({
+	id: z.string(),
+	kod: z.string(),
+	benamning: z.string(),
+	anteckningar: z.string().optional().default(""),
+	status: z.enum(["active", "inactive"]).default("active"),
+	description: z.string().optional(),
+	createdDate: z.string().optional(),
+	lastUpdated: z.string().optional(),
+});
+
 export interface CostCenterRegisterRow {
 	id: string;
 	kod: string;
@@ -686,11 +699,7 @@ export interface CostCenterRegisterRow {
 	selected?: boolean;
 }
 
-export interface CostCenterDetail extends CostCenterRegisterRow {
-	description?: string;
-	createdDate?: string;
-	lastUpdated?: string;
-}
+export type CostCenterDetail = z.infer<typeof costCenterDetailSchema>;
 
 export interface GetCostCenterListParams {
 	page?: number;
