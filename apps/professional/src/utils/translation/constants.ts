@@ -2328,6 +2328,18 @@ export type RegisterTranslation = {
 	editAdditionalInfoAriaLabel: string;
 	goBackToCostCenterListLabel: string;
 	editCostCenterBasicInfoAriaLabel: string;
+	budgetOption: string;
+	budgetListTab: string;
+	createBudgetButton: string;
+	budgetNrHeader: string;
+	budgetNameHeader: string;
+	budgetDateHeader: string;
+	totalCostHeader: string;
+	totalIncomeHeader: string;
+	ariaUnfavoriteBudget: string;
+	ariaFavoriteBudget: string;
+	ariaViewBudgetDetails: string;
+	ariaSelectRow: string;
 };
 
 export type CommonTranslation = {

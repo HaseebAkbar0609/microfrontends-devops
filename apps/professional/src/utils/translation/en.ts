@@ -2380,6 +2380,18 @@ export const enRegister: RegisterTranslation = {
 	editAdditionalInfoAriaLabel: "Edit additional details",
 	goBackToCostCenterListLabel: "Go back to cost center list",
 	editCostCenterBasicInfoAriaLabel: "Edit cost center basic information",
+	budgetOption: "Budget",
+	budgetListTab: "Budget List",
+	createBudgetButton: "Create budget",
+	budgetNrHeader: "Budget No.",
+	budgetNameHeader: "Budget name",
+	budgetDateHeader: "Date",
+	totalCostHeader: "Total cost",
+	totalIncomeHeader: "Total income",
+	ariaUnfavoriteBudget: "Unfavorite budget",
+	ariaFavoriteBudget: "Favorite budget",
+	ariaViewBudgetDetails: "View budget details",
+	ariaSelectRow: "Select row",
 };
 
 export const en: Translation = {

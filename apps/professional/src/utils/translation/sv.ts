@@ -2395,6 +2395,18 @@ export const svRegister: RegisterTranslation = {
 	editAdditionalInfoAriaLabel: "Redigera ytterligare uppgifter",
 	goBackToCostCenterListLabel: "Gå tillbaka till kostnadsställe",
 	editCostCenterBasicInfoAriaLabel: "Redigera grundläggande information för kostnadsställe",
+	budgetOption: "Budget",
+	budgetListTab: "Budgetlista",
+	createBudgetButton: "Skapa budget",
+	budgetNrHeader: "Budgetnr",
+	budgetNameHeader: "Budgetnamn",
+	budgetDateHeader: "Datum",
+	totalCostHeader: "Total kostnad",
+	totalIncomeHeader: "Total inkomst",
+	ariaUnfavoriteBudget: "Ta bort budget från favoriter",
+	ariaFavoriteBudget: "Markera budget som favorit",
+	ariaViewBudgetDetails: "Visa budgetuppgifter",
+	ariaSelectRow: "Välj rad",
 };
 
 export const svCommon: CommonTranslation = {

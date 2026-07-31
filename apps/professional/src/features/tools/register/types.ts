@@ -786,3 +786,32 @@ export const createAccountPlanSchema = z.object({
 
 export type CreateAccountPlanFormData = z.infer<typeof createAccountPlanSchema>;
 
+export const budgetRegisterRowSchema = z.object({
+	id: z.string(),
+	budgetnr: z.string(),
+	budgetName: z.string(),
+	datum: z.string(),
+	totalKostnad: z.string(),
+	totalInkomst: z.string(),
+	status: z.enum(["active", "inactive"]),
+	isFavorite: z.boolean().optional().default(false),
+});
+
+export type BudgetRegisterRow = z.infer<typeof budgetRegisterRowSchema>;
+
+export interface GetBudgetListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetBudgetListResponse {
+	data: BudgetRegisterRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
