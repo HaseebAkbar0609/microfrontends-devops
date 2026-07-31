@@ -38,10 +38,17 @@ const ContractViewer = ({ contract }: { contract: EmploymentContract }) => {
 						variant="ghost"
 						size="icon"
 						className="h-8 w-8 text-white hover:bg-slate-700 hover:text-white"
-						onClick={() => window.print()}
-						aria-label={t(localizationConstants.myPagesEmpDownload)}
+						asChild
 					>
-						<Download className="h-4 w-4" />
+						<a
+							href={contract.downloadUrl}
+							download
+							aria-label={t(
+								localizationConstants.myPagesEmpDownload,
+							)}
+						>
+							<Download className="h-4 w-4" />
+						</a>
 					</Button>
 					<Button
 						type="button"
@@ -59,13 +66,13 @@ const ContractViewer = ({ contract }: { contract: EmploymentContract }) => {
 			</div>
 
 			<div className="flex flex-1 justify-center overflow-y-auto px-4 py-8">
-				<div className="contract-print-area flex h-fit w-full max-w-[41rem] flex-col gap-6">
-					{contract.documentPages.map((pageText, index) => (
+				<div className="contract-print-area flex h-fit w-full max-w-2xl flex-col gap-6">
+					{contract.documentPages.map((page) => (
 						<div
-							key={`page-${index + 1}`}
+							key={page.id}
 							className="contract-print-page whitespace-pre-line bg-white px-14 py-12 text-justify text-[13px] leading-relaxed text-slate-800 shadow-xl"
 						>
-							{pageText}
+							{page.text}
 						</div>
 					))}
 				</div>

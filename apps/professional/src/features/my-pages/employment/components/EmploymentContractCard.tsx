@@ -61,13 +61,15 @@ const EmploymentContractCard = ({
 					<Button
 						type="button"
 						variant="outline"
-						onClick={openViewer}
+						asChild
 						className="h-9 gap-2 rounded-md border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"
 					>
-						<Download className="h-4 w-4" />
-						<Translate
-							text={localizationConstants.myPagesEmpDownload}
-						/>
+						<a href={contract.downloadUrl} download>
+							<Download className="h-4 w-4" />
+							<Translate
+								text={localizationConstants.myPagesEmpDownload}
+							/>
+						</a>
 					</Button>
 				</div>
 			</div>

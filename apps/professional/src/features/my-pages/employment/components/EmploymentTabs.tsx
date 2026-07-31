@@ -1,18 +1,40 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import localizationConstants from "@/utils/translation/constants";
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { Translate } from "@/utils/translation/translate";
-import { EMPLOYMENT_TABS } from "../constants/mockData";
+import {
+	EMPLOYMENT_TAB_IDS,
+	EMPLOYMENT_TABS,
+	EmploymentTabId,
+} from "../constants/mockData";
 import { getEmploymentContract } from "../services/employmentService";
+import DocumentsTab from "./DocumentsTab";
 import EmploymentContractCard from "./EmploymentContractCard";
+import LeaveTab from "./LeaveTab";
+import PayslipTab from "./PayslipTab";
+import SickReportTab from "./SickReportTab";
+
+const isEmploymentTabId = (value: string | null): value is EmploymentTabId =>
+	EMPLOYMENT_TAB_IDS.includes(value as EmploymentTabId);
 
 export default function EmploymentTabs() {
 	const contract = getEmploymentContract();
+	const { query, changeQueries } = useQueryParams();
+	const tabParam = query.get("tab");
+	const activeTab: EmploymentTabId = isEmploymentTabId(tabParam)
+		? tabParam
+		: "contract";
+	const setActiveTab = (value: string) =>
+		changeQueries({ tab: value === "contract" ? null : value });
 
 	return (
 		<div className="space-y-6">
-			<Tabs defaultValue="contract" className="w-full">
+			<Tabs
+				value={activeTab}
+				onValueChange={setActiveTab}
+				className="w-full"
+			>
 				<div className="px-5 border-b border-slate-200 mb-6">
 					<TabsList
 						variant="line"
@@ -29,21 +51,22 @@ export default function EmploymentTabs() {
 						))}
 					</TabsList>
 				</div>
-				<div className="px-6">
+				<div className="px-6 pb-6">
 					<TabsContent value="contract">
 						<EmploymentContractCard contract={contract} />
 					</TabsContent>
-					{EMPLOYMENT_TABS.filter((tab) => tab.id !== "contract").map(
-						(tab) => (
-							<TabsContent key={tab.id} value={tab.id}>
-								<p className="py-10 text-center text-sm text-slate-500">
-									<Translate
-										text={localizationConstants.comingSoon}
-									/>
-								</p>
-							</TabsContent>
-						),
-					)}
+					<TabsContent value="sickReport">
+						<SickReportTab />
+					</TabsContent>
+					<TabsContent value="leave">
+						<LeaveTab />
+					</TabsContent>
+					<TabsContent value="payslip">
+						<PayslipTab />
+					</TabsContent>
+					<TabsContent value="documents">
+						<DocumentsTab />
+					</TabsContent>
 				</div>
 			</Tabs>
 		</div>

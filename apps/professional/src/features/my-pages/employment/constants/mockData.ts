@@ -12,7 +12,8 @@ export interface EmploymentContract {
 	city: string;
 	mobile: string;
 	email: string;
-	documentPages: string[];
+	downloadUrl: string;
+	documentPages: { id: string; text: string }[];
 }
 
 const CONTRACT_PAGE_TEXT =
@@ -29,7 +30,11 @@ export const EMPLOYMENT_CONTRACT: EmploymentContract = {
 	city: "Järfälla",
 	mobile: "-",
 	email: "Ann@example.com",
-	documentPages: [CONTRACT_PAGE_TEXT, CONTRACT_PAGE_TEXT],
+	downloadUrl: "/mock/anstallningsavtal-00001.pdf",
+	documentPages: [
+		{ id: "page-1", text: CONTRACT_PAGE_TEXT },
+		{ id: "page-2", text: CONTRACT_PAGE_TEXT },
+	],
 };
 
 export const EMPLOYMENT_TAB_IDS = [
@@ -48,4 +53,262 @@ export const EMPLOYMENT_TABS: { id: EmploymentTabId; label: string }[] = [
 	{ id: "leave", label: localizationConstants.myPagesEmpTabLeave },
 	{ id: "payslip", label: localizationConstants.myPagesEmpTabPayslip },
 	{ id: "documents", label: localizationConstants.myPagesEmpTabDocuments },
+];
+
+export type ScheduleEventKind = "sick" | "vab" | "leave";
+
+export interface ScheduleEvent {
+	id: string;
+	day: number;
+	startHour: number;
+	durationHours: number;
+	labelKey: string;
+	kind: ScheduleEventKind;
+}
+
+export const SCHEDULE_DAYS = [
+	{ day: 11, label: "Mån, Februari" },
+	{ day: 12, label: "Tis, Februari" },
+	{ day: 13, label: "Ons, Februari" },
+	{ day: 14, label: "Tors, Februari" },
+	{ day: 15, label: "Fre, Februari" },
+	{ day: 16, label: "Lör, Februari" },
+	{ day: 17, label: "Sön, Februari" },
+];
+
+export const SCHEDULE_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19];
+
+export const SICK_SCHEDULE_EVENTS: ScheduleEvent[] = [
+	{
+		id: "sick-14",
+		day: 14,
+		startHour: 9,
+		durationHours: 1,
+		labelKey: localizationConstants.myPagesEmpTypeSick,
+		kind: "sick",
+	},
+	{
+		id: "vab-15",
+		day: 15,
+		startHour: 9,
+		durationHours: 2,
+		labelKey: localizationConstants.myPagesEmpTypeVab,
+		kind: "vab",
+	},
+	{
+		id: "sick-12",
+		day: 12,
+		startHour: 13,
+		durationHours: 1,
+		labelKey: localizationConstants.myPagesEmpTypeSick,
+		kind: "vab",
+	},
+];
+
+export const LEAVE_SCHEDULE_EVENTS: ScheduleEvent[] = [
+	{
+		id: "leave-14",
+		day: 14,
+		startHour: 9,
+		durationHours: 1,
+		labelKey: "",
+		kind: "leave",
+	},
+	{
+		id: "leave-15",
+		day: 15,
+		startHour: 9,
+		durationHours: 1,
+		labelKey: "",
+		kind: "leave",
+	},
+	{
+		id: "leave-16",
+		day: 16,
+		startHour: 9,
+		durationHours: 1,
+		labelKey: "",
+		kind: "leave",
+	},
+	{
+		id: "leave-12",
+		day: 12,
+		startHour: 13,
+		durationHours: 1,
+		labelKey: "",
+		kind: "leave",
+	},
+];
+
+export interface SickInfoEntry {
+	id: string;
+	labelKey: string;
+	lines: string[];
+}
+
+export const SICK_INFORMATION: SickInfoEntry[] = [
+	{
+		id: "company-doctor",
+		labelKey: localizationConstants.myPagesEmpCompanyDoctor,
+		lines: ["Läkarmottagning Bli Frisk", "Storgatan 10 , 171 63 Solna"],
+	},
+	{
+		id: "phone",
+		labelKey: localizationConstants.myPagesEmpPhone,
+		lines: ["08-560 60 60"],
+	},
+	{
+		id: "mail",
+		labelKey: localizationConstants.myPagesEmpMail,
+		lines: ["info@lakare.se"],
+	},
+	{
+		id: "emergency-dentist",
+		labelKey: localizationConstants.myPagesEmpEmergencyDentist,
+		lines: ["Lag tanden AB", "Mysgränd 14, 113 45 STOCKHOLM"],
+	},
+];
+
+export type LeaveStatus = "review" | "approved" | "rejected";
+
+export interface LeaveRequest {
+	id: string;
+	listDate: string;
+	requestedPeriod: string;
+	status: LeaveStatus;
+	comment: string;
+}
+
+export const LEAVE_STATUS_KEY: Record<LeaveStatus, string> = {
+	review: localizationConstants.myPagesEmpStatusReview,
+	approved: localizationConstants.myPagesEmpStatusApproved,
+	rejected: localizationConstants.myPagesEmpStatusRejected,
+};
+
+export const LEAVE_REQUESTS: LeaveRequest[] = [
+	{
+		id: "lr-1",
+		listDate: "2025/10/01",
+		requestedPeriod: "2025/11/15 - 2025/11/25",
+		status: "review",
+		comment: "-",
+	},
+	{
+		id: "lr-2",
+		listDate: "2025/01/01",
+		requestedPeriod: "2025/11/15 - 2025/11/25",
+		status: "approved",
+		comment: "-",
+	},
+	{
+		id: "lr-3",
+		listDate: "2024/05/01",
+		requestedPeriod: "2025/11/15 - 2025/11/25",
+		status: "approved",
+		comment: "-",
+	},
+	{
+		id: "lr-4",
+		listDate: "2024/07/31",
+		requestedPeriod: "2025/11/15 - 2025/11/25",
+		status: "rejected",
+		comment: "-",
+	},
+	{
+		id: "lr-5",
+		listDate: "2024/10/15",
+		requestedPeriod: "2025/11/15 - 2025/11/25",
+		status: "review",
+		comment: "-",
+	},
+];
+
+export interface Payslip {
+	id: string;
+	monthKey: string;
+	fileName: string;
+}
+
+export const PAYSLIP_EMPLOYEE_NAME = "Pelle Andersson";
+export const PAYSLIP_YEARS = ["2025", "2024", "2023"];
+
+export const PAYSLIPS: Payslip[] = [
+	{
+		id: "ps-01",
+		monthKey: localizationConstants.monthJanuary,
+		fileName: "Lönespecifikation Januari",
+	},
+	{
+		id: "ps-02",
+		monthKey: localizationConstants.monthFebruary,
+		fileName: "Lönespecifikation Februari",
+	},
+	{
+		id: "ps-03",
+		monthKey: localizationConstants.monthMarch,
+		fileName: "Lönespecifikation Mars",
+	},
+	{
+		id: "ps-04",
+		monthKey: localizationConstants.monthApril,
+		fileName: "Lönespecifikation April",
+	},
+	{
+		id: "ps-05",
+		monthKey: localizationConstants.monthMay,
+		fileName: "Lönespecifikation Maj",
+	},
+	{
+		id: "ps-06",
+		monthKey: localizationConstants.monthJune,
+		fileName: "Lönespecifikation Juni",
+	},
+];
+
+export type DocumentStatus = "read" | "needsSign" | "notOpened" | "signed";
+
+export interface PersonalDocument {
+	id: string;
+	name: string;
+	version: string;
+	fileName: string;
+	status: DocumentStatus;
+}
+
+export const DOCUMENT_STATUS_KEY: Record<DocumentStatus, string> = {
+	read: localizationConstants.myPagesEmpDocRead,
+	needsSign: localizationConstants.myPagesEmpDocNeedsSign,
+	notOpened: localizationConstants.myPagesEmpDocNotOpened,
+	signed: localizationConstants.myPagesEmpDocSigned,
+};
+
+export const PERSONAL_DOCUMENTS: PersonalDocument[] = [
+	{
+		id: "doc-1",
+		name: "Policy",
+		version: "2025-006",
+		fileName: "Filename",
+		status: "read",
+	},
+	{
+		id: "doc-2",
+		name: "Personal handboken",
+		version: "2025-001",
+		fileName: "Filename",
+		status: "needsSign",
+	},
+	{
+		id: "doc-3",
+		name: "Regler",
+		version: "2025-008",
+		fileName: "Filename",
+		status: "notOpened",
+	},
+	{
+		id: "doc-4",
+		name: "Regler",
+		version: "2025-009",
+		fileName: "Filename",
+		status: "signed",
+	},
 ];

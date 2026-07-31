@@ -23,8 +23,6 @@
 		width: 100%;
 		max-width: 44rem;
 		box-shadow: none;
-		print-color-adjust: exact;
-		-webkit-print-color-adjust: exact;
 	}
 
 	.contract-print-area .contract-print-page {
