@@ -113,7 +113,13 @@ const Footer: React.FC = () => {
             {FooterMenu[basePath][item].map((sub, subKey) => (
               <div key={subKey} className="flex flex-col gap-1 my-3">
                 <Link
-                  href={sub.path ? `/${basePath}/${sub.path}` : `/${basePath}/#`}
+                  href={
+                    sub.path
+                      ? sub.path.startsWith("/")
+                        ? sub.path
+                        : `/${basePath}/${sub.path}`
+                      : `/${basePath}`
+                  }
                 >
                   <p
                     className={`content-secondary-size text-[#5B5B5B] hover:text-primary-500 transition-colors duration-200`}
