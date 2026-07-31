@@ -133,6 +133,19 @@ export type OfferAcceptedItem = {
   type: string;
 };
 
+export type OfferAgreedStatus = "signed" | "waiting_signature";
+
+export type OfferAgreedItem = {
+  id: string;
+  contractNr: string;
+  jobName: string;
+  customerName: string;
+  status: OfferAgreedStatus;
+  municipality: string;
+  jobType: string;
+  agreedPrice: number;
+};
+
 export type AgreementParty = {
   id: string;
   name: string;
