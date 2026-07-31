@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { detailIdSchema, type AccountPlanDetail } from "../types";
+import { detailIdSchema } from "../types";
 import { getAccountPlanDetailAPIAction } from "../api/accountPlan";
 import { DetailSectionCard } from "./DetailSectionCard";
 
@@ -27,26 +27,11 @@ export function AccountDetailPage() {
 	const cleanId = typeof rawId === "string" ? rawId.trim() : "";
 	const isValidId = detailIdSchema.safeParse(cleanId).success;
 
-	const [account, setAccount] = useState<AccountPlanDetail | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-
-	const fetchAccount = useCallback(async () => {
-		if (!isValidId) {
-			setIsLoading(false);
-			return;
-		}
-		setIsLoading(true);
-		try {
-			const data = await getAccountPlanDetailAPIAction(cleanId);
-			setAccount(data);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [cleanId, isValidId]);
-
-	useEffect(() => {
-		fetchAccount();
-	}, [fetchAccount]);
+	const { data: account, isLoading } = useQuery({
+		queryKey: ["accountPlanDetail", cleanId],
+		queryFn: () => getAccountPlanDetailAPIAction(cleanId),
+		enabled: isValidId,
+	});
 
 	const handleBack = () => {
 		router.push("/tools/register?tab=accountPlan&subtab=kontoplan");

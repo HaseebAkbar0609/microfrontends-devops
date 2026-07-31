@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { detailIdSchema, type CostCenterDetail } from "../types";
+import { detailIdSchema } from "../types";
 import { getCostCenterDetailAPIAction } from "../api/costCenterRegister";
 import { DetailSectionCard } from "./DetailSectionCard";
 
@@ -17,26 +17,11 @@ export function CostCenterDetailPage() {
 	const cleanId = typeof rawId === "string" ? rawId.trim() : "";
 	const isValidId = detailIdSchema.safeParse(cleanId).success;
 
-	const [costCenter, setCostCenter] = useState<CostCenterDetail | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-
-	const fetchCostCenter = useCallback(async () => {
-		if (!isValidId) {
-			setIsLoading(false);
-			return;
-		}
-		setIsLoading(true);
-		try {
-			const data = await getCostCenterDetailAPIAction(cleanId);
-			setCostCenter(data);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [cleanId, isValidId]);
-
-	useEffect(() => {
-		fetchCostCenter();
-	}, [fetchCostCenter]);
+	const { data: costCenter, isLoading } = useQuery({
+		queryKey: ["costCenterDetail", cleanId],
+		queryFn: () => getCostCenterDetailAPIAction(cleanId),
+		enabled: isValidId,
+	});
 
 	const handleBack = () => {
 		router.push("/tools/register?tab=costCenter");

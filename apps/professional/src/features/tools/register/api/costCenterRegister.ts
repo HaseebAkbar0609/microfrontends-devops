@@ -150,7 +150,7 @@ export async function getCostCenterDetailAPIAction(
 	id: string,
 ): Promise<CostCenterDetail | null> {
 	try {
-		const res = await axiosInstance.get(API_PATH.COST_CENTERS.DELETE(id));
+		const res = await axiosInstance.get(API_PATH.COST_CENTERS.GET(id));
 		const data = res.data?.data;
 		if (data) {
 			const parsed = costCenterDetailSchema.safeParse({
@@ -166,16 +166,18 @@ export async function getCostCenterDetailAPIAction(
 			}
 		}
 	} catch (error) {
-		if (process.env.NEXT_PUBLIC_USE_MOCK !== "true" && process.env.NODE_ENV === "production") {
+		if (process.env.NODE_ENV !== "development") {
 			throw error;
 		}
 	}
 
-	const found = MOCK_COST_CENTER_DATA.find((item) => item.id === id);
-	if (found) {
-		const parsed = costCenterDetailSchema.safeParse(found);
-		if (parsed.success) {
-			return parsed.data;
+	if (process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_USE_MOCK === "true") {
+		const found = MOCK_COST_CENTER_DATA.find((item) => item.id === id);
+		if (found) {
+			const parsed = costCenterDetailSchema.safeParse(found);
+			if (parsed.success) {
+				return parsed.data;
+			}
 		}
 	}
 
