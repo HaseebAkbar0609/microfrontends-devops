@@ -2253,6 +2253,8 @@ export const enRegister: RegisterTranslation = {
 	suggestedProjectPlaceholder: "e.g. Project 100",
 	editButtonText: "Edit",
 	viewActionLabel: "View",
+	editBasicInfoAriaLabel: "Edit basic information",
+	editAdditionalInfoAriaLabel: "Edit additional details",
 };
 
 export const en: Translation = {

@@ -2200,6 +2200,8 @@ export type RegisterTranslation = {
 	suggestedProjectPlaceholder: string;
 	editButtonText: string;
 	viewActionLabel: string;
+	editBasicInfoAriaLabel: string;
+	editAdditionalInfoAriaLabel: string;
 };
 
 export type CommonTranslation = {

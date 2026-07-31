@@ -9,24 +9,66 @@ import localizationConstants from "@/utils/translation/constants";
 import type { AccountPlanDetail } from "../types";
 import { getAccountPlanDetailAPIAction } from "../api/accountPlan";
 
+interface DetailSectionCardProps {
+	titleKey: string;
+	editAriaLabelKey: string;
+	onEdit: () => void;
+	children: React.ReactNode;
+}
+
+function DetailSectionCard({
+	titleKey,
+	editAriaLabelKey,
+	onEdit,
+	children,
+}: DetailSectionCardProps) {
+	const t = useTranslate();
+	return (
+		<Card className="w-full border border-slate-200 bg-white shadow-2xs rounded-xl overflow-hidden">
+			<div className="h-14 border-b border-slate-100 bg-white px-6 flex items-center justify-between">
+				<div className="flex items-center gap-2.5">
+					<UserPlus className="h-5 w-5 text-slate-700" aria-hidden />
+					<h2 className="text-[16px] font-medium leading-6 tracking-normal text-zinc-950">
+						<Translate text={titleKey} />
+					</h2>
+				</div>
+
+				<button
+					type="button"
+					onClick={onEdit}
+					aria-label={t(editAriaLabelKey)}
+					className="pointer-events-auto flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-200 sm:h-9 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm transition-colors"
+				>
+					<PenLine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-900" aria-hidden />
+					<Translate text={localizationConstants.editLabel} />
+				</button>
+			</div>
+
+			<CardContent className="p-6 bg-white">{children}</CardContent>
+		</Card>
+	);
+}
+
 export function AccountDetailPage() {
 	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
-	const id = params.id as string;
+	const rawId = params.id as string;
+	const cleanId = typeof rawId === "string" ? rawId.trim() : "";
 
 	const [account, setAccount] = useState<AccountPlanDetail | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchAccount = useCallback(async () => {
+		if (!cleanId) return;
 		setIsLoading(true);
 		try {
-			const data = await getAccountPlanDetailAPIAction(id);
+			const data = await getAccountPlanDetailAPIAction(cleanId);
 			setAccount(data);
 		} finally {
 			setIsLoading(false);
 		}
-	}, [id]);
+	}, [cleanId]);
 
 	useEffect(() => {
 		fetchAccount();
@@ -37,20 +79,22 @@ export function AccountDetailPage() {
 	};
 
 	const handleEdit = () => {
-		router.push(`/tools/register/account-plan/${id}/edit`);
+		if (!cleanId) return;
+		router.push(`/tools/register/account-plan/${cleanId}/edit`);
 	};
 
 	if (isLoading || !account) {
 		return (
 			<div className="flex h-full flex-col overflow-y-auto bg-slate-50 p-4">
-				<div className="flex items-center gap-2 mb-4">
+				<div className="flex items-center gap-2 mb-2">
 					<div className="h-5 w-5 animate-pulse rounded bg-slate-200" />
 					<div className="h-6 w-32 animate-pulse rounded bg-slate-200" />
 				</div>
-				<div className="h-4 w-20 animate-pulse rounded bg-slate-200 opacity-60 ml-8 mb-6" />
+				<div className="h-4 w-16 animate-pulse rounded bg-slate-200 opacity-60 ml-8 mb-6" />
+				<div className="h-9 w-40 animate-pulse rounded-md bg-slate-200 ml-8 mb-6" />
 				<div className="pl-6 space-y-6">
-					<div className="h-48 animate-pulse rounded-xl border border-slate-200 bg-white" />
-					<div className="h-48 animate-pulse rounded-xl border border-slate-200 bg-white" />
+					<div className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white" />
+					<div className="h-44 animate-pulse rounded-xl border border-slate-200 bg-white" />
 				</div>
 			</div>
 		);
@@ -77,7 +121,7 @@ export function AccountDetailPage() {
 
 				{/* Account Number Subtitle */}
 				<p className="mb-4 ml-8 text-sm text-slate-500">
-					#{account.accountNumber || id}
+					#{account.accountNumber || cleanId}
 				</p>
 
 				{/* Sub-tab Header Line */}
@@ -93,158 +137,126 @@ export function AccountDetailPage() {
 				{/* Main Information Cards Container */}
 				<div className="pl-6 flex flex-col items-start gap-6">
 					{/* Card 1: Grund information */}
-					<Card className="w-full border border-slate-200 bg-white shadow-2xs rounded-xl overflow-hidden">
-						<div className="h-14 border-b border-slate-100 bg-white px-6 flex items-center justify-between">
-							<div className="flex items-center gap-2.5">
-								<UserPlus className="h-5 w-5 text-slate-700" aria-hidden />
-								<h2 className="text-[16px] font-medium leading-6 tracking-normal text-zinc-950">
-									<Translate text={localizationConstants.grundInformationSection} />
-								</h2>
+					<DetailSectionCard
+						titleKey={localizationConstants.grundInformationSection}
+						editAriaLabelKey={localizationConstants.editBasicInfoAriaLabel}
+						onEdit={handleEdit}
+					>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+							{/* Kontonummer */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.accountNumberHeader} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.accountNumber || "-"}
+								</span>
 							</div>
 
-							<button
-								type="button"
-								onClick={handleEdit}
-								className="pointer-events-auto flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-200 sm:h-9 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm transition-colors"
-							>
-								<PenLine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-900" aria-hidden />
-								<Translate text={localizationConstants.editLabel} />
-							</button>
+							{/* Benämning */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.accountNameHeader} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.accountName || "-"}
+								</span>
+							</div>
+
+							{/* Ingående balans */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.openingBalanceLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.openingBalance || "-"}
+								</span>
+							</div>
+
+							{/* Aktivt */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.activeStatusLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.status === "active" ? (
+										<Translate text={localizationConstants.costCenterActiveStatus} />
+									) : (
+										<Translate text={localizationConstants.costCenterInactiveStatus} />
+									)}
+								</span>
+							</div>
 						</div>
-
-						<CardContent className="p-6 bg-white">
-							<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-								{/* Kontonummer */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.accountNumberHeader} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.accountNumber || "-"}
-									</span>
-								</div>
-
-								{/* Benämning */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.accountNameHeader} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.accountName || "-"}
-									</span>
-								</div>
-
-								{/* Ingående balans */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.openingBalanceLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.openingBalance || "0,00 kr"}
-									</span>
-								</div>
-
-								{/* Aktivt */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.activeStatusLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.status === "active" ? (
-											<Translate text={localizationConstants.costCenterActiveStatus} />
-										) : (
-											<Translate text={localizationConstants.costCenterInactiveStatus} />
-										)}
-									</span>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
+					</DetailSectionCard>
 
 					{/* Card 2: Ytterligare uppgifter */}
-					<Card className="w-full border border-slate-200 bg-white shadow-2xs rounded-xl overflow-hidden">
-						<div className="h-14 border-b border-slate-100 bg-white px-6 flex items-center justify-between">
-							<div className="flex items-center gap-2.5">
-								<UserPlus className="h-5 w-5 text-slate-700" aria-hidden />
-								<h2 className="text-[16px] font-medium leading-6 tracking-normal text-zinc-950">
-									<Translate text={localizationConstants.additionalDetailsSection} />
-								</h2>
+					<DetailSectionCard
+						titleKey={localizationConstants.additionalDetailsSection}
+						editAriaLabelKey={localizationConstants.editAdditionalInfoAriaLabel}
+						onEdit={handleEdit}
+					>
+						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+							{/* SRU-kod */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.sruLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.sru || "-"}
+								</span>
 							</div>
 
-							<button
-								type="button"
-								onClick={handleEdit}
-								className="pointer-events-auto flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-200 sm:h-9 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm transition-colors"
-							>
-								<PenLine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-900" aria-hidden />
-								<Translate text={localizationConstants.editLabel} />
-							</button>
+							{/* Momskod */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.vatCodeLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.vatCode || "-"}
+								</span>
+							</div>
+
+							{/* Kostnadsställe */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.costCenterLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									<Translate text={localizationConstants.radioObligatoriskt} />
+								</span>
+							</div>
+
+							{/* Projekt */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.projectLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									<Translate text={localizationConstants.radioObligatoriskt} />
+								</span>
+							</div>
+
+							{/* Föreslå kostnadsställe */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.suggestedCostCenterLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.suggestedCostCenter || "-"}
+								</span>
+							</div>
+
+							{/* Föreslå projekt */}
+							<div className="flex flex-col gap-1">
+								<span className="text-xs font-medium text-slate-500">
+									<Translate text={localizationConstants.suggestedProjectLabel} />
+								</span>
+								<span className="text-sm text-slate-900 font-normal">
+									{account.suggestedProject || "-"}
+								</span>
+							</div>
 						</div>
-
-						<CardContent className="p-6 bg-white">
-							<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-6">
-								{/* SRU-kod */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.sruLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.sru || "102"}
-									</span>
-								</div>
-
-								{/* Momskod */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.vatCodeLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.vatCode || "25%"}
-									</span>
-								</div>
-
-								{/* Kostnadsställe */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.costCenterLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										<Translate text={localizationConstants.radioObligatoriskt} />
-									</span>
-								</div>
-
-								{/* Projekt */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.projectLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										<Translate text={localizationConstants.radioObligatoriskt} />
-									</span>
-								</div>
-
-								{/* Föreslå kostnadsställe */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.suggestedCostCenterLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.suggestedCostCenter || "Kontor 10"}
-									</span>
-								</div>
-
-								{/* Föreslå projekt */}
-								<div className="flex flex-col gap-1">
-									<span className="text-xs font-medium text-slate-500">
-										<Translate text={localizationConstants.suggestedProjectLabel} />
-									</span>
-									<span className="text-sm text-slate-900 font-normal">
-										{account.suggestedProject || "Projekt 100"}
-									</span>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
+					</DetailSectionCard>
 				</div>
 			</div>
 		</div>

@@ -2268,6 +2268,8 @@ export const svRegister: RegisterTranslation = {
 	suggestedProjectPlaceholder: "t.ex. Projekt 100",
 	editButtonText: "Redigera",
 	viewActionLabel: "Visa",
+	editBasicInfoAriaLabel: "Redigera grundläggande information",
+	editAdditionalInfoAriaLabel: "Redigera ytterligare uppgifter",
 };
 
 export const svCommon: CommonTranslation = {
