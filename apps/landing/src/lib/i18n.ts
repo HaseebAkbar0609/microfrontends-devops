@@ -29,7 +29,7 @@ if (!i18n.isInitialized) {
   i18n.use(initReactI18next).init({
     resources,
     lng: "sv",
-    fallbackLng: "sv",
+    fallbackLng: "en",
     interpolation: {
       escapeValue: false,
     },

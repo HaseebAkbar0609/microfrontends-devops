@@ -14,7 +14,6 @@ export function Nav() {
     { href: "/solutions", labelKey: "nav.solutions" },
     { href: "/pricing", labelKey: "nav.pricing" },
     { href: "/cases", labelKey: "nav.cases" },
-    { href: "/support", labelKey: "nav.support" },
     { href: "/about", labelKey: "nav.about" },
   ];
 
