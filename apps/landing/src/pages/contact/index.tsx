@@ -71,18 +71,18 @@ export default function ContactPage() {
             <div className="space-y-8">
               <div>
                 <p className="font-mono text-xs text-primary uppercase tracking-widest mb-2">{t("contact.addressLabel")}</p>
-                <p className="font-bold">TimeFlow System AB</p>
-                <p className="text-muted text-sm">Sveavägen 100<br />113 50 Stockholm</p>
+                <p className="font-bold">Timeflowsystem Sverige AB</p>
+                <p className="text-muted text-sm">Org nr: 559063-0777<br />Norrtullsgatan 12N<br />113 27 Stockholm</p>
               </div>
               <div>
                 <p className="font-mono text-xs text-primary uppercase tracking-widest mb-2">{t("contact.salesLabel")}</p>
                 <a href="mailto:hej@timeflowsystem.se" className="font-bold hover:text-primary">hej@timeflowsystem.se</a>
-                <p className="text-muted text-sm">08-123 45 60</p>
+                <p className="text-muted text-sm">+46 70 426 10 92</p>
               </div>
               <div>
                 <p className="font-mono text-xs text-primary uppercase tracking-widest mb-2">{t("contact.supportLabel")}</p>
                 <a href="mailto:support@timeflowsystem.se" className="font-bold hover:text-primary">support@timeflowsystem.se</a>
-                <p className="text-muted text-sm">08-123 45 67</p>
+                <p className="text-muted text-sm">+46 70 426 10 92</p>
               </div>
               <div className="border border-border p-6 bg-surface">
                 <p className="font-mono text-xs text-primary uppercase tracking-widest mb-2">{t("contact.demoLabel")}</p>
