@@ -29,6 +29,8 @@ export function Footer() {
               <p className="text-white font-bold">{t("footer.product")}</p>
               <Link href="/professional" className="hover:text-white transition-colors">{t("footer.forCraftsmen")}</Link>
               <Link href="/consumer" className="hover:text-white transition-colors">{t("footer.forConsumers")}</Link>
+              <Link href="/timeflow-work" className="hover:text-white transition-colors">{t("footer.timeflowWorkApp")}</Link>
+              <Link href="/timeflow-manager" className="hover:text-white transition-colors">{t("footer.timeflowManagerApp")}</Link>
               <Link href="/pricing" className="hover:text-white transition-colors">{t("footer.pricing")}</Link>
               <Link href="/cases" className="hover:text-white transition-colors">{t("footer.cases")}</Link>
             </div>

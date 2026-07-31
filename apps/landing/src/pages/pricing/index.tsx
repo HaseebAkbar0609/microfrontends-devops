@@ -42,7 +42,7 @@ export default function PricingPage() {
       cta: t("pricing.startFree30"),
       highlight: false,
       features: [
-        t("home.step1Body"),
+        t("solutions.feat1"),
         t("solutions.area1Tag"),
         t("consumer.homeAppLabel"),
         t("home.faq4A"),
@@ -224,7 +224,7 @@ export default function PricingPage() {
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-6 tracking-tight">{t("pricing.readyToTest")}</h2>
           <p className="text-stone-400 text-base sm:text-lg mb-8 max-w-xl mx-auto">{t("pricing.noCreditCard")}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all">{t("pricing.startFree30")}</button>
+            <Link href="/register" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all inline-block">{t("pricing.startFree30")}</Link>
             <Link href="/contact" className="px-8 py-4 border border-white/20 font-bold rounded-sm hover:bg-white/5 transition-colors">{t("pricing.bookDemo")}</Link>
           </div>
         </section>
