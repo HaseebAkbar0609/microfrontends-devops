@@ -726,6 +726,14 @@ export interface AccountPlanRow {
 	status: "active" | "inactive";
 }
 
+export interface AccountPlanDetail extends AccountPlanRow {
+	costCenterMode?: "obligatoriskt" | "tillatet" | "ejTillatet";
+	projectMode?: "obligatoriskt" | "tillatet" | "ejTillatet";
+	suggestedCostCenter?: string;
+	suggestedProject?: string;
+	description?: string;
+}
+
 export interface GetAccountPlanListParams {
 	page?: number;
 	limit?: number;
