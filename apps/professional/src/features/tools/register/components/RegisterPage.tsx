@@ -22,6 +22,7 @@ import { PriceListRegisterTable, PriceListUpdatePanel } from "./PriceListRegiste
 import { CostCenterRegisterTable } from "./CostCenterRegisterTable";
 import { AccountPlanPage } from "./AccountPlanPage";
 import { BudgetRegisterTable } from "./BudgetRegisterTable";
+import { WageTypeRegisterTable } from "./WageTypeRegisterTable";
 
 function RegisterContent() {
 	const { t } = useTranslation();
@@ -139,6 +140,12 @@ function RegisterContent() {
 						>
 							<Translate text={localizationConstants.budgetOption} />
 						</SelectItem>
+						<SelectItem
+							value="wageType"
+							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
+						>
+							<Translate text={localizationConstants.wageTypeOption} />
+						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
@@ -232,6 +239,8 @@ function RegisterContent() {
 								<Translate text={localizationConstants.supplierListTab} />
 							) : selectedRegister === "budget" ? (
 								<Translate text={localizationConstants.budgetListTab} />
+							) : selectedRegister === "wageType" ? (
+								<Translate text={localizationConstants.wageTypeListTab} />
 							) : (
 								<Translate text={localizationConstants.costCenterSubTitle} />
 							)}
@@ -284,6 +293,11 @@ function RegisterContent() {
 			{selectedRegister === "budget" && (
 				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 					<BudgetRegisterTable />
+				</Suspense>
+			)}
+			{selectedRegister === "wageType" && (
+				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
+					<WageTypeRegisterTable />
 				</Suspense>
 			)}
 		</div>
