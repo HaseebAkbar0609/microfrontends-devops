@@ -1,22 +1,12 @@
-import {
-  ProfessionalProject_DesignHero,
-  ProfessionalProject_DesignContent,
-} from "@/components/professional/Project_Design";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalProject_DesignPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Project_Design</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalProject_DesignHero /> */}
-        <ProfessionalProject_DesignContent />
-      </div>
-    </>
-  );
-};
+const slug = "projektering";
+const found = findModule(slug);
 
-export default ProfessionalProject_DesignPage;
+export default function ProfessionalProjectDesignPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

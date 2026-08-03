@@ -1,22 +1,12 @@
-import {
-  ProfessionalManagementHero,
-  ProfessionalManagementContent,
-} from "@/components/professional/Management";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalManagementPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Management</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalManagementHero /> */}
-        <ProfessionalManagementContent />
-      </div>
-    </>
-  );
-};
+const slug = "ledningsstod";
+const found = findModule(slug);
 
-export default ProfessionalManagementPage;
+export default function ProfessionalManagementPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

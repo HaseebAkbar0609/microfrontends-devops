@@ -1,22 +1,12 @@
-import {
-  ProfessionalCollectionHero,
-  ProfessionalCollectionContent,
-} from "@/components/professional/Collection";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalCollectionPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Collection</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalCollectionHero /> */}
-        <ProfessionalCollectionContent />
-      </div>
-    </>
-  );
-};
+const slug = "inkasso";
+const found = findModule(slug);
 
-export default ProfessionalCollectionPage;
+export default function ProfessionalCollectionPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });
