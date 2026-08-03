@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   Search,
   ChevronDown,
@@ -128,6 +129,7 @@ interface Props {
 
 export function B2BDealListView({ deals, isLoading = false }: Props) {
   const t = useTranslate();
+  const router = useRouter();
 
   const [search, setSearch] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<DealStatus[]>([]);
@@ -347,7 +349,8 @@ export function B2BDealListView({ deals, isLoading = false }: Props) {
                   {paginated.map((row) => (
                     <tr
                       key={row.id}
-                      className="group border-b border-slate-200 last:border-0 hover:bg-slate-50"
+                      className="group cursor-pointer border-b border-slate-200 last:border-0 hover:bg-slate-50"
+                      onClick={() => router.push(`/module/business/b2b/deals/${row.id}`)}
                     >
                       <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900">
                         {row.dealId}
@@ -373,7 +376,10 @@ export function B2BDealListView({ deals, isLoading = false }: Props) {
                       <td className="whitespace-nowrap px-4 py-3 text-slate-600">
                         {row.assignedTo}
                       </td>
-                      <td className="sticky right-0 border-l border-slate-200 bg-white px-4 py-3 group-hover:bg-slate-50">
+                      <td
+                        className="sticky right-0 border-l border-slate-200 bg-white px-4 py-3 group-hover:bg-slate-50"
+                        onClick={(e) => e.stopPropagation()}
+                      >
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
                             <Button
@@ -386,7 +392,10 @@ export function B2BDealListView({ deals, isLoading = false }: Props) {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-44">
-                            <DropdownMenuItem className="cursor-pointer">
+                            <DropdownMenuItem
+                              className="cursor-pointer"
+                              onClick={() => router.push(`/module/business/b2b/deals/${row.id}`)}
+                            >
                               {t(localizationConstants.b2bDealViewDetails)}
                             </DropdownMenuItem>
                             <DropdownMenuItem className="cursor-pointer">

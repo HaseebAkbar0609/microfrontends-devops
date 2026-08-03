@@ -546,6 +546,27 @@ export type OfferTranslation = {
 	b2bDealDelete: string;
 	b2bCreateDeal: string;
 	b2bDealsEmpty: string;
+	// B2B - Deal Detail
+	b2bDealDetailPreview: string;
+	b2bDealDetailContactInfo: string;
+	b2bDealDetailRequest: string;
+	b2bDealDetailAdditionalInfo: string;
+	b2bDealDetailProjectNumber: string;
+	b2bDealDetailProjectAddress: string;
+	b2bDealDetailContractForm: string;
+	b2bDealDetailJobType: string;
+	b2bDealDetailAddressOptional: string;
+	b2bDealDetailCategoryLabel: string;
+	b2bDealDetailSubcategoryLabel: string;
+	b2bDealDetailStartDate: string;
+	b2bDealDetailOfferDate: string;
+	b2bDealDetailAttachments: string;
+	b2bDealDetailDatum: string;
+	b2bDealDetailProjectNr: string;
+	b2bDealDetailSubmit: string;
+	b2bDealDetailStatusActive: string;
+	b2bDealDetailType: string;
+	b2bDealDetailRef: string;
 	// Calculation - Dashboard
 	calcOverview: string;
 	calcKalkyl: string;
