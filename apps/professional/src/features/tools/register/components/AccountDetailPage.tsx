@@ -1,53 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, UserPlus, PenLine } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { AccountPlanDetail } from "../types";
+import { detailIdSchema } from "../types";
 import { getAccountPlanDetailAPIAction } from "../api/accountPlan";
-
-interface DetailSectionCardProps {
-	titleKey: string;
-	editAriaLabelKey: string;
-	onEdit: () => void;
-	children: React.ReactNode;
-}
-
-function DetailSectionCard({
-	titleKey,
-	editAriaLabelKey,
-	onEdit,
-	children,
-}: DetailSectionCardProps) {
-	const t = useTranslate();
-	return (
-		<Card className="w-full border border-slate-200 bg-white shadow-2xs rounded-xl overflow-hidden">
-			<div className="h-14 border-b border-slate-100 bg-white px-6 flex items-center justify-between">
-				<div className="flex items-center gap-2.5">
-					<UserPlus className="h-5 w-5 text-slate-700" aria-hidden />
-					<h2 className="text-[16px] font-medium leading-6 tracking-normal text-zinc-950">
-						<Translate text={titleKey} />
-					</h2>
-				</div>
-
-				<button
-					type="button"
-					onClick={onEdit}
-					aria-label={t(editAriaLabelKey)}
-					className="pointer-events-auto flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-200 sm:h-9 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm transition-colors"
-				>
-					<PenLine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-900" aria-hidden />
-					<Translate text={localizationConstants.editLabel} />
-				</button>
-			</div>
-
-			<CardContent className="p-6 bg-white">{children}</CardContent>
-		</Card>
-	);
-}
+import { DetailSectionCard } from "./DetailSectionCard";
 
 function getModeTranslationKey(mode?: string): string {
 	if (mode === "allowed" || mode === "tillatet") {
@@ -65,28 +25,13 @@ export function AccountDetailPage() {
 	const params = useParams();
 	const rawId = params.id as string;
 	const cleanId = typeof rawId === "string" ? rawId.trim() : "";
-	const isValidId = Boolean(cleanId && /^[a-zA-Z0-9_-]+$/.test(cleanId));
+	const isValidId = detailIdSchema.safeParse(cleanId).success;
 
-	const [account, setAccount] = useState<AccountPlanDetail | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
-
-	const fetchAccount = useCallback(async () => {
-		if (!isValidId) {
-			setIsLoading(false);
-			return;
-		}
-		setIsLoading(true);
-		try {
-			const data = await getAccountPlanDetailAPIAction(cleanId);
-			setAccount(data);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [cleanId, isValidId]);
-
-	useEffect(() => {
-		fetchAccount();
-	}, [fetchAccount]);
+	const { data: account, isLoading } = useQuery({
+		queryKey: ["accountPlanDetail", cleanId],
+		queryFn: () => getAccountPlanDetailAPIAction(cleanId),
+		enabled: isValidId,
+	});
 
 	const handleBack = () => {
 		router.push("/tools/register?tab=accountPlan&subtab=kontoplan");
@@ -158,41 +103,41 @@ export function AccountDetailPage() {
 					>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 							{/* Kontonummer */}
-							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+							<div className="flex flex-col gap-0.5">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.accountNumberHeader} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.accountNumber || "-"}
 								</span>
 							</div>
 
 							{/* Benämning */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.accountNameHeader} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.accountName || "-"}
 								</span>
 							</div>
 
 							{/* Ingående balans */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.openingBalanceLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.openingBalance || "-"}
 								</span>
 							</div>
 
 							{/* Aktivt */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.activeStatusLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.status === "active" ? (
 										<Translate text={localizationConstants.costCenterActiveStatus} />
 									) : (
@@ -212,60 +157,60 @@ export function AccountDetailPage() {
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
 							{/* SRU-kod */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.sruLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.sru || "-"}
 								</span>
 							</div>
 
 							{/* Momskod */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.vatCodeLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.vatCode || "-"}
 								</span>
 							</div>
 
 							{/* Kostnadsställe */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.costCenterLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									<Translate text={getModeTranslationKey(account.costCenterMode)} />
 								</span>
 							</div>
 
 							{/* Projekt */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.projectLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									<Translate text={getModeTranslationKey(account.projectMode)} />
 								</span>
 							</div>
 
 							{/* Föreslå kostnadsställe */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.suggestedCostCenterLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.suggestedCostCenter || "-"}
 								</span>
 							</div>
 
 							{/* Föreslå projekt */}
 							<div className="flex flex-col gap-1">
-								<span className="text-xs font-medium text-slate-500">
+								<span className="font-sans text-sm font-medium leading-5 text-slate-900">
 									<Translate text={localizationConstants.suggestedProjectLabel} />
 								</span>
-								<span className="text-sm text-slate-900 font-normal">
+								<span className="font-sans text-sm font-normal leading-5 text-slate-500">
 									{account.suggestedProject || "-"}
 								</span>
 							</div>

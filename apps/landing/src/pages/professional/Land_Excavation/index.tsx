@@ -1,5 +1,4 @@
 import {
-  ProfessionalLand_ExcavationHero,
   ProfessionalLand_ExcavationContent,
 } from "@/components/professional/Land_Excavation";
 import { NextPage } from "next";

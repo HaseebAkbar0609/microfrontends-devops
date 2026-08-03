@@ -1,0 +1,28 @@
+@media print {
+	@page {
+		margin: 0;
+	}
+
+	body {
+		overflow: visible;
+	}
+
+	body
+		*:not(.contract-print-area):not(.contract-print-area *):not(
+			:has(.contract-print-area)
+		) {
+		display: none;
+	}
+
+	.contract-print-area {
+		width: 100%;
+		max-width: 44rem;
+		margin: 0 auto;
+		box-shadow: none;
+	}
+
+	.contract-print-area .contract-print-page {
+		box-shadow: none;
+		break-after: page;
+	}
+}

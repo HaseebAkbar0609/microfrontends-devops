@@ -1,22 +1,12 @@
-import {
-  ProfessionalPurchaseHero,
-  ProfessionalPurchaseContent,
-} from "@/components/professional/Purchase";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalPurchasePage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Purchase</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalPurchaseHero /> */}
-        <ProfessionalPurchaseContent />
-      </div>
-    </>
-  );
-};
+const slug = "inkop";
+const found = findModule(slug);
 
-export default ProfessionalPurchasePage;
+export default function ProfessionalPurchasePage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

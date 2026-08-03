@@ -1,24 +1,49 @@
 import { GetStaticProps } from "next";
 import Head from "next/head";
-import { useTranslation, Trans } from "react-i18next";
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 
+const SEARCH_URL = "https://timeflowsystem.com/register/customer";
+
+const projectCategories = [
+  { icon: "🏠", titleKey: "cat1Title", itemsKey: "cat1Items" },
+  { icon: "⚡", titleKey: "cat2Title", itemsKey: "cat2Items" },
+  { icon: "🚿", titleKey: "cat3Title", itemsKey: "cat3Items" },
+  { icon: "🎨", titleKey: "cat4Title", itemsKey: "cat4Items" },
+  { icon: "🌳", titleKey: "cat5Title", itemsKey: "cat5Items" },
+  { icon: "✨", titleKey: "cat6Title", itemsKey: "cat6Items" },
+];
+
+const steps = [
+  { n: "01", titleKey: "step1T", bodyKey: "step1B" },
+  { n: "02", titleKey: "step2T", bodyKey: "step2B" },
+  { n: "03", titleKey: "step3T", bodyKey: "step3B" },
+  { n: "04", titleKey: "step4T", bodyKey: "step4B" },
+];
+
 export default function ConsumerPage() {
   const { t } = useTranslation();
+  const [query, setQuery] = useState("");
 
-  const industries = [
-    t("consumer.ind1"), t("consumer.ind2"), t("consumer.ind3"), t("consumer.ind4"),
-    t("consumer.ind5"), t("consumer.ind6"), t("consumer.ind7"), t("consumer.ind8"),
-    t("consumer.ind9"), t("consumer.ind10"), t("consumer.ind11"), t("consumer.ind12"),
-  ];
+  const handleSearch = (e?: FormEvent) => {
+    e?.preventDefault();
+    const url = new URL(SEARCH_URL);
+    const trimmed = query.trim();
+    if (trimmed) url.searchParams.set("q", trimmed);
+    window.location.href = url.toString();
+  };
 
   return (
     <>
       <Head>
-        <title>{`TimeFlow — ${t("consumer.heroTitle1")} ${t("consumer.heroTitle2")}`}</title>
-        <meta name="description" content={`${t("consumer.heroDesc1")} ${t("consumer.heroDesc2")}`} />
+        <title>{t("seo.consumerTitle")}</title>
+        <meta name="description" content={t("seo.consumerDesc")} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content={t("seo.consumerOgTitle")} />
+        <meta property="og:description" content={t("seo.consumerOgDesc")} />
       </Head>
 
       <div className="min-h-screen bg-background text-foreground font-body">
@@ -26,101 +51,159 @@ export default function ConsumerPage() {
 
         <header className="pt-20 pb-20 px-6 border-b border-border bg-surface">
           <div className="max-w-5xl mx-auto text-center">
-            <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4 animate-fade-up">{t("consumer.heroLabel")}</p>
-            <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tight text-balance mb-8 animate-fade-up [animation-delay:100ms]">
-              {t("consumer.heroTitle1")}<br />
-              <span className="text-primary italic">{t("consumer.heroTitle2")}</span>
+            <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.heroLabel")}</p>
+            <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tight text-balance mb-8">
+              {t("consumer.heroFind1")} <span className="text-primary italic">{t("consumer.heroFind2")}</span>
             </h1>
-            <p className="text-xl text-muted max-w-2xl mx-auto mb-10 animate-fade-up [animation-delay:200ms]">
-              <Trans
-                i18nKey="consumer.heroDesc"
-                defaults={`${t("consumer.heroDesc1")} <strong1>${t("consumer.heroDesc2")}</strong1> ${t("consumer.heroDesc3")} <strong2>${t("consumer.heroDesc4")}</strong2> ${t("consumer.heroDesc5")}`}
-                components={{
-                  strong1: <strong className="text-foreground" />,
-                  strong2: <strong className="text-foreground" />,
-                }}
-              />
+            <p className="text-xl text-muted max-w-2xl mx-auto mb-10">
+              {t("consumer.heroDescA")} <strong className="text-foreground">{t("consumer.heroDescB")}</strong>{" "}
+              {t("consumer.heroDescC")} <strong className="text-foreground">{t("consumer.heroDescD")}</strong> {t("consumer.heroDescE")}
             </p>
 
-            <div className="max-w-xl mx-auto bg-background border border-border rounded-md p-2 flex flex-col sm:flex-row gap-2 animate-fade-up [animation-delay:300ms]">
-              <input type="text" placeholder={t("consumer.searchPlaceholder")} aria-label={t("consumer.searchPlaceholder")} className="flex-1 px-4 py-3 bg-transparent outline-none text-sm" />
-              <button className="px-6 py-3 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all">
+            <form className="max-w-xl mx-auto bg-background border border-border rounded-md p-2 flex flex-col sm:flex-row gap-2" onSubmit={handleSearch}>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t("consumer.searchPlaceholderFull")}
+                aria-label={t("consumer.searchPlaceholderFull")}
+                className="flex-1 px-4 py-3 bg-transparent outline-none text-sm"
+              />
+              <button type="submit" className="px-6 py-3 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all">
                 {t("consumer.searchBtn")}
               </button>
-            </div>
-            <p className="text-xs text-muted mt-4 font-mono">{t("consumer.searchNote")}</p>
+            </form>
+            <p className="text-xs text-muted mt-4 font-mono">{t("consumer.searchNoteFull")}</p>
           </div>
         </header>
 
-        <section className="py-20 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="max-w-2xl mb-12">
-              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.industriesLabel")}</p>
-              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight">{t("consumer.industriesTitle")}</h2>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {industries.map((ind) => (
-                <a key={ind} href="#" className="p-6 border border-border hover:border-primary/30 hover:bg-surface transition-colors group">
-                  <div className="font-display font-bold text-lg mb-2">{ind}</div>
-                  <span className="text-xs text-primary group-hover:translate-x-1 inline-block transition-transform">{t("consumer.getQuote")}</span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-24 px-6 bg-ink text-white">
-          <div className="max-w-5xl mx-auto">
+        {/* How it works */}
+        <section className="py-24 px-6 border-b border-border">
+          <div className="max-w-6xl mx-auto">
             <div className="max-w-2xl mb-16">
               <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.howLabel")}</p>
-              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight">{t("consumer.howTitle")}</h2>
+              <h2 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight">
+                {t("consumer.howTitle1")} <span className="text-primary italic">{t("consumer.howTitle2")}</span>
+                <br />
+                {t("consumer.howTitle3")}
+              </h2>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                { n: "01", t: t("consumer.how1T"), b: t("consumer.how1B") },
-                { n: "02", t: t("consumer.how2T"), b: t("consumer.how2B") },
-                { n: "03", t: t("consumer.how3T"), b: t("consumer.how3B") },
-              ].map((s) => (
-                <div key={s.n} className="border-t border-white/20 pt-6">
-                  <div className="font-mono text-xs text-primary mb-4">{s.n}</div>
-                  <h3 className="font-display text-2xl font-bold mb-3">{s.t}</h3>
-                  <p className="text-stone-400 text-sm">{s.b}</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-border border border-border">
+              {steps.map((s) => (
+                <div key={s.n} className="bg-background p-8 flex flex-col">
+                  <div className="font-display text-5xl font-extrabold text-primary mb-6">{s.n}</div>
+                  <h3 className="font-display text-xl font-bold mb-3">{t(`consumer.${s.titleKey}`)}</h3>
+                  <p className="text-muted text-sm">{t(`consumer.${s.bodyKey}`)}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
+        {/* TimeFlow Home value */}
         <section className="py-24 px-6">
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
+          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-16">
             <div>
-              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.trackLabel")}</p>
-              <h2 className="font-display text-4xl font-bold mb-6 tracking-tight">{t("consumer.trackTitle")}</h2>
-              <p className="text-muted text-lg">{t("consumer.trackDesc")}</p>
+              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.homeLabel")}</p>
+              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight mb-6">
+                {t("consumer.homeTitle1")} <span className="text-primary italic">{t("consumer.homeTitle2")}</span>
+              </h2>
+              <p className="text-muted text-lg mb-4">
+                {t("consumer.homeDescA")} <strong className="text-foreground">{t("consumer.homeDescB")}</strong>
+              </p>
+              <p className="text-muted">{t("consumer.homeDescC")}</p>
             </div>
-            <ul className="space-y-4">
-              {[t("consumer.trackF1"), t("consumer.trackF2"), t("consumer.trackF3"), t("consumer.trackF4"), t("consumer.trackF5"), t("consumer.trackF6")].map((f) => (
-                <li key={f} className="flex items-start gap-3 border-b border-border py-4 text-sm">
-                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary grid place-items-center text-xs shrink-0 mt-0.5">✓</span>
-                  {f}
+            <ul className="space-y-4 text-sm">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <li key={i} className="flex items-start gap-3 border-b border-border py-3">
+                  <span className="text-xl">{["📱", "💬", "📋", "📸", "🧾"][i - 1]}</span>
+                  <span>{t(`consumer.homeFeat${i}`)}</span>
                 </li>
               ))}
             </ul>
           </div>
         </section>
 
-        <section className="py-24 px-6 bg-surface">
-          <div className="max-w-4xl mx-auto text-center">
-            <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.homeAppLabel")}</p>
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-              {t("consumer.homeAppTitle")} <span className="text-primary italic">{t("consumer.homeAppHighlight")}</span>
-            </h2>
-            <p className="text-muted text-lg mb-10 max-w-2xl mx-auto">{t("consumer.homeAppDesc")}</p>
-            <div className="flex justify-center gap-3">
-              <button className="px-6 py-3 bg-foreground text-background font-bold rounded-sm cursor-pointer hover:bg-ink transition-colors">{t("common.appStore")}</button>
-              <button className="px-6 py-3 bg-foreground text-background font-bold rounded-sm cursor-pointer hover:bg-ink transition-colors">{t("common.googlePlay")}</button>
+        {/* Project categories */}
+        <section className="py-20 px-6 bg-surface border-y border-border">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-12 max-w-2xl">
+              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.popularLabel")}</p>
+              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+                {t("consumer.popularTitle")}
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {projectCategories.map((cat) => (
+                <div key={cat.titleKey} className="p-6 bg-background border border-border">
+                  <div className="text-3xl mb-3">{cat.icon}</div>
+                  <h3 className="font-display font-bold text-lg mb-4">{t(`consumer.${cat.titleKey}`)}</h3>
+                  <ul className="space-y-2 text-sm">
+                    {(t(`consumer.${cat.itemsKey}`, { returnObjects: true }) as string[]).map((it) => (
+                      <li key={it} className="flex items-center gap-2">
+                        <span className="text-primary">→</span>{it}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
+        </section>
+
+        {/* Full control */}
+        <section className="py-24 px-6">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
+            <div>
+              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.controlLabel")}</p>
+              <h2 className="font-display text-4xl font-bold mb-6 tracking-tight">
+                {t("consumer.controlTitle1")} <span className="text-primary italic">{t("consumer.controlTitle2")}</span>
+              </h2>
+              <p className="text-muted text-lg">{t("consumer.controlDesc")}</p>
+            </div>
+            <ul className="space-y-3">
+              {[1, 2, 3, 4, 5, 6, 7].map((i) => (
+                <li key={i} className="flex items-start gap-3 border-b border-border py-3 text-sm">
+                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary grid place-items-center text-xs shrink-0 mt-0.5">✓</span>
+                  {t(`consumer.controlF${i}`)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        {/* Trust */}
+        <section className="py-24 px-6 bg-surface border-y border-border">
+          <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
+            <div>
+              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("consumer.trustLabel")}</p>
+              <h2 className="font-display text-4xl font-bold mb-6 tracking-tight">
+                {t("consumer.trustTitle")}
+              </h2>
+            </div>
+            <ul className="space-y-3">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <li key={i} className="flex items-start gap-3 border-b border-border py-3 text-sm">
+                  <span className="w-6 h-6 rounded-full bg-primary/10 text-primary grid place-items-center text-xs shrink-0 mt-0.5">✓</span>
+                  {t(`consumer.trustF${i}`)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="py-20 px-6 text-center bg-ink text-white">
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 tracking-tight">{t("consumer.finalCtaTitle")}</h2>
+          <p className="text-stone-400 text-lg mb-8 max-w-xl mx-auto">
+            {t("consumer.finalCtaDesc")}
+          </p>
+          <button
+            type="button"
+            onClick={() => handleSearch()}
+            className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all text-center"
+          >
+            {t("consumer.searchBtn")}
+          </button>
         </section>
 
         <Footer />
