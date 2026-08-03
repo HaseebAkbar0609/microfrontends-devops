@@ -385,6 +385,20 @@ export const moduleSections: ModuleSection[] = [
         extra: "Tillval: Smart Inköp — integration mot leverantörer.",
       },
       {
+        slug: "inkop-mottagning",
+        name: "Inköp & Mottagning",
+        desc: "Digitalt kvitto på varje leverans – antal, kvalitet, transportskador, bilder, GPS och signatur i samma flöde.",
+        long: "Mottagningsmodulen ger digitalt kvitto på varje leverans. Antal, kvalitet, transportskador, bilder, GPS och signatur samlas i ett och samma flöde i TimeFlow Work – med automatisk uppdatering av inköpsordern och reklamationsunderlag vid avvikelser.",
+        features: [
+          "Mottagningsflöde i åtta steg",
+          "Kontroll av antal och kvalitet",
+          "Transportskador och avvikelser",
+          "Foton från leveransen",
+          "GPS-position och signatur",
+          "Automatisk reklamation",
+        ],
+      },
+      {
         slug: "maskin",
         name: "Maskin",
         desc: "Full kontroll över företagets maskiner, verktyg och utrustning genom hela livscykeln.",

@@ -110,9 +110,8 @@ export default function PricingPage() {
             {plans.map((p) => (
               <div
                 key={p.name}
-                className={`p-6 sm:p-8 border bg-background flex flex-col ${
-                  p.highlight ? "border-primary shadow-xl shadow-primary/10 relative" : "border-border"
-                }`}
+                className={`p-6 sm:p-8 border bg-background flex flex-col ${p.highlight ? "border-primary shadow-xl shadow-primary/10 relative" : "border-border"
+                  }`}
               >
                 {p.highlight && (
                   <div className="absolute -top-3 left-6 sm:left-8 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider">
@@ -129,9 +128,8 @@ export default function PricingPage() {
                   <span className="text-muted text-sm">{p.suffix}</span>
                 </div>
                 <button
-                  className={`w-full py-3 font-bold rounded-sm mb-8 cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all ${
-                    p.highlight ? "bg-primary text-primary-foreground" : "bg-foreground text-background"
-                  }`}
+                  className={`w-full py-3 font-bold rounded-sm mb-8 cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all ${p.highlight ? "bg-primary text-primary-foreground" : "bg-foreground text-background"
+                    }`}
                 >
                   {p.cta}
                 </button>
@@ -203,9 +201,15 @@ export default function PricingPage() {
                 { q: t("home.faq2Q"), a: t("home.faq2A") },
                 { q: t("home.faq3Q"), a: t("home.faq3A") },
                 { q: t("home.faq4Q"), a: t("home.faq4A") },
-                { q: t("support.migrateLabel"), a: t("support.migrateDesc") },
-                { q: t("support.statusLabel"), a: t("support.statusUptime") },
-                { q: t("terms.s2Title"), a: t("terms.s2P1") },
+                { q: t("home.faq5Q"), a: t("home.faq5A") },
+                { q: t("home.faq6Q"), a: t("home.faq6A") },
+                { q: t("home.faq7Q"), a: t("home.faq7A") },
+                { q: t("home.faq8Q"), a: t("home.faq8A") },
+                { q: t("home.faq9Q"), a: t("home.faq9A") },
+                { q: t("home.faq10Q"), a: t("home.faq10A") },
+                { q: t("home.faq11Q"), a: t("home.faq11A") },
+                { q: t("home.faq12Q"), a: t("home.faq12A") },
+                { q: t("home.faq13Q"), a: t("home.faq13A") },
               ].map((f) => (
                 <details key={f.q} className="group py-5 cursor-pointer">
                   <summary className="list-none flex justify-between items-center font-bold">
@@ -224,7 +228,7 @@ export default function PricingPage() {
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold mb-6 tracking-tight">{t("pricing.readyToTest")}</h2>
           <p className="text-stone-400 text-base sm:text-lg mb-8 max-w-xl mx-auto">{t("pricing.noCreditCard")}</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/register" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all inline-block">{t("pricing.startFree30")}</Link>
+            <button type="button" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all">{t("pricing.startFree30")}</button>
             <Link href="/contact" className="px-8 py-4 border border-white/20 font-bold rounded-sm hover:bg-white/5 transition-colors">{t("pricing.bookDemo")}</Link>
           </div>
         </section>
@@ -302,9 +306,8 @@ function PriceCalculator() {
                   <button
                     key={p}
                     onClick={() => setPlan(p)}
-                    className={`py-2.5 sm:py-3 text-xs sm:text-base font-bold rounded-sm border transition-colors cursor-pointer ${
-                      plan === p ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-border hover:border-primary"
-                    }`}
+                    className={`py-2.5 sm:py-3 text-xs sm:text-base font-bold rounded-sm border transition-colors cursor-pointer ${plan === p ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-border hover:border-primary"
+                      }`}
                   >
                     {p}
                   </button>
@@ -405,9 +408,8 @@ function PriceCalculator() {
                   <button
                     key={c}
                     onClick={() => setCycle(c)}
-                    className={`py-2 px-1 text-xs sm:text-sm font-bold rounded-sm border transition-colors cursor-pointer truncate ${
-                      cycle === c ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border hover:border-primary"
-                    }`}
+                    className={`py-2 px-1 text-xs sm:text-sm font-bold rounded-sm border transition-colors cursor-pointer truncate ${cycle === c ? "bg-primary text-primary-foreground border-primary" : "bg-background border-border hover:border-primary"
+                      }`}
                   >
                     {c === "monthly" ? t("pricing.cycleMonthly") : c === "quarterly" ? t("pricing.cycleQuarterly") : t("pricing.cycleYearly")}
                   </button>

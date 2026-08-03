@@ -1,5 +1,4 @@
 import {
-  ProfessionalGoodsHero,
   ProfessionalGoodsContent,
 } from "@/components/professional/Goods";
 import { NextPage } from "next";

@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 const ProfessionalDemoContent: React.FC = () => {
   return (
     <div className="container py-10 md:py-1 text-center">

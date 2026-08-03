@@ -1,22 +1,12 @@
-import {
-  ProfessionalForecastHero,
-  ProfessionalForecastContent,
-} from "@/components/professional/Forecast";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalForecastPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Forecast</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalForecastHero /> */}
-        <ProfessionalForecastContent />
-      </div>
-    </>
-  );
-};
+const slug = "prognos";
+const found = findModule(slug);
 
-export default ProfessionalForecastPage;
+export default function ProfessionalForecastPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

@@ -1,22 +1,12 @@
-import {
-  ProfessionalLegalHero,
-  ProfessionalLegalContent,
-} from "@/components/professional/Legal";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalLegalPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Legal</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalLegalHero /> */}
-        <ProfessionalLegalContent />
-      </div>
-    </>
-  );
-};
+const slug = "juridik";
+const found = findModule(slug);
 
-export default ProfessionalLegalPage;
+export default function ProfessionalLegalPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

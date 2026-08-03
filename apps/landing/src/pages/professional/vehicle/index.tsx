@@ -1,23 +1,12 @@
-import {
-  ProfessionalVehicleHero,
-  ProfessionalVehicleContent,
-} from "@/components/professional/vehicle";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalVehiclePage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Fordon</title>
-      </Head>
+const slug = "fordon";
+const found = findModule(slug);
 
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalVehicleHero /> */}
-        <ProfessionalVehicleContent />
-      </div>
-    </>
-  );
-};
+export default function ProfessionalVehiclePage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
 
-export default ProfessionalVehiclePage;
+export const getStaticProps = async () => ({ props: { hasHeader: false } });
