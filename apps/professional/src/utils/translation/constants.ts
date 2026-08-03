@@ -2435,6 +2435,7 @@ export type RegisterTranslation = {
 	ariaFavoriteBudget: string;
 	ariaViewBudgetDetails: string;
 	ariaSelectRow: string;
+	budgetFetchError: string;
 	// Wage Types (TFS-551)
 	wageTypeOption: string;
 	wageTypeListTab: string;

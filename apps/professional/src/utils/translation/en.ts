@@ -2487,6 +2487,7 @@ export const enRegister: RegisterTranslation = {
 	ariaFavoriteBudget: "Favorite budget",
 	ariaViewBudgetDetails: "View budget details",
 	ariaSelectRow: "Select row",
+	budgetFetchError: "Failed to load budget register",
 	// Wage Types (TFS-551)
 	wageTypeOption: "Wage Type",
 	wageTypeListTab: "Wage Type List",
