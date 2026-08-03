@@ -86,7 +86,7 @@ export function B2BDealDetailView({ data }: Props) {
       </div>
 
       {/* Body */}
-      <div className="flex-1 overflow-y-auto px-4 py-6">
+      <div className="flex-1 overflow-y-auto bg-slate-50 px-4 py-6">
         <div className="grid grid-cols-1 gap-5 pl-9 lg:grid-cols-[1fr_300px]">
           {/* Left: accordion sections */}
           <div className="space-y-4">

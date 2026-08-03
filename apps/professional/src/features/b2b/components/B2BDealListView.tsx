@@ -187,7 +187,7 @@ export function B2BDealListView({ deals, isLoading = false }: Props) {
           icon={Handshake}
           label={t(localizationConstants.b2bDealsTotalActive)}
           value={String(activeDeals.length)}
-          sub={`${deals.length} ${t(localizationConstants.total)}`}
+          sub={`${deals.length} ${t(localizationConstants.totalLabel)}`}
           accent="bg-blue-600"
         />
         <KpiCard

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -56,7 +56,7 @@ export function AppShell({ children }: AppShellProps) {
 	const offerSegment = isOfferModuleRoute
 		? (pathname.match(/^\/module\/business\/offer\/([^/]+)/)?.[1])
 		: undefined;
-	// /offer/send/[offerId] — extract the real offerId from the second segment
+	// /offer/send/[offerId] â€” extract the real offerId from the second segment
 	const sendOfferMatch = isOfferModuleRoute
 		? pathname.match(/^\/module\/business\/offer\/send\/([^/?]+)/)
 		: null;
@@ -180,10 +180,11 @@ export function AppShell({ children }: AppShellProps) {
 			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
-				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0 pb-6">
+				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0">
 					{children}
 				</main>
 			</div>
 		</div>
 	);
 }
+
