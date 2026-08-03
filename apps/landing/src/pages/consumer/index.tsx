@@ -197,16 +197,13 @@ export default function ConsumerPage() {
           <p className="text-stone-400 text-lg mb-8 max-w-xl mx-auto">
             {t("consumer.finalCtaDesc")}
           </p>
-          <a
-            href={SEARCH_URL}
-            onClick={(e) => {
-              e.preventDefault();
-              handleSearch();
-            }}
-            className="inline-block px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all text-center"
+          <button
+            type="button"
+            onClick={() => handleSearch()}
+            className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all text-center"
           >
             {t("consumer.searchBtn")}
-          </a>
+          </button>
         </section>
 
         <Footer />

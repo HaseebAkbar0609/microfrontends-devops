@@ -161,6 +161,72 @@ export type AgreementParty = {
   authorizedSignatory?: string;
 };
 
+export type OfferArchivedItem = {
+  id: string;
+  contractNr: string;
+  jobName: string;
+  customerName: string;
+  status: OfferAgreedStatus;
+  municipality: string;
+  jobType: string;
+  agreedPrice: number;
+  projectId: string;
+};
+
+export type ProjectDocument = {
+  id: string;
+  date: string;
+  name: string;
+  fileLabel: string;
+  fileType: "pdf" | "image";
+};
+
+export type ProjectData = {
+  id: string;
+  title: string;
+  jobType: string;
+  budget: number;
+  statusBadge: string;
+  postedDate?: string;
+  municipality?: string;
+  customer: {
+    name: string;
+    postalCode: string;
+    city: string;
+    email: string;
+    orgPersonNr: string;
+    address: string;
+    info: string;
+    phone: string;
+  };
+  contactPerson: {
+    firstName: string;
+    lastName: string;
+    company: string;
+    email: string;
+    mobile: string;
+    role: string;
+  };
+  order: {
+    serialNr: string;
+    blockName: string;
+    postalCode: string;
+    orderName: string;
+    orderAddress: string;
+    city: string;
+  };
+  orderInfo: {
+    type: string;
+    category: string;
+    department: string;
+    contractNr: string;
+    offerNr: string;
+    startDate: string;
+    endDate: string;
+  };
+  documents: ProjectDocument[];
+};
+
 export type AgreementData = {
   id: string;
   projectName: string;

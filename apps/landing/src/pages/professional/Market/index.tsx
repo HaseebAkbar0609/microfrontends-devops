@@ -1,22 +1,12 @@
-import {
-  ProfessionalMarketHero,
-  ProfessionalMarketContent,
-} from "@/components/professional/Market";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalMarketPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Market</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalMarketHero /> */}
-        <ProfessionalMarketContent />
-      </div>
-    </>
-  );
-};
+const slug = "marknad-salj";
+const found = findModule(slug);
 
-export default ProfessionalMarketPage;
+export default function ProfessionalMarketPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

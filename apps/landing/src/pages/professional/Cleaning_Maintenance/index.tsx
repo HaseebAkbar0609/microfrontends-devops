@@ -1,5 +1,4 @@
 import {
-  ProfessionalCleaning_MaintenanceHero,
   ProfessionalCleaning_MaintenanceContent,
 } from "@/components/professional/Cleaning_Maintenance";
 import { NextPage } from "next";
