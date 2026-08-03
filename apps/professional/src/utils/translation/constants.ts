@@ -799,6 +799,19 @@ export type OfferTranslation = {
 	companyWbValEmailInvalid: string;
 	companyUpdColType: string;
 	companyUpdColFunction: string;
+	// My pages - IT support
+	itSupportNewTicket: string;
+	itSupportColName: string;
+	itSupportStatusNotSent: string;
+	itSupportStatusDone: string;
+	itSupportStatusOngoing: string;
+	itSupportSubjectLabel: string;
+	itSupportSubjectPlaceholder: string;
+	itSupportDescLabel: string;
+	itSupportDescPlaceholder: string;
+	itSupportJustNow: string;
+	itSupportValSubjectRequired: string;
+	itSupportValDescRequired: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;
