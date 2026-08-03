@@ -1,22 +1,12 @@
-import {
-  ProfessionalOfferHero,
-  ProfessionalOfferContent,
-} from "@/components/professional/offer";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalOfferPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Offert</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalOfferHero /> */}
-        <ProfessionalOfferContent />
-      </div>
-    </>
-  );
-};
+const slug = "erbjudande";
+const found = findModule(slug);
 
-export default ProfessionalOfferPage;
+export default function ProfessionalOfferPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });
