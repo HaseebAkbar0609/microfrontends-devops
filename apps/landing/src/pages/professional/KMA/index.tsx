@@ -1,22 +1,12 @@
-import {
-  ProfessionalKMAHero,
-  ProfessionalKMAContent,
-} from "@/components/professional/KMA";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalKMAPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - KMA</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalKMAHero /> */}
-        <ProfessionalKMAContent />
-      </div>
-    </>
-  );
-};
+const slug = "kma";
+const found = findModule(slug);
 
-export default ProfessionalKMAPage;
+export default function ProfessionalKMAPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

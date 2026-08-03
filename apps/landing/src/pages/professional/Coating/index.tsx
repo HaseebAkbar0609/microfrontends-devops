@@ -1,5 +1,4 @@
 import {
-  ProfessionalCoatingHero,
   ProfessionalCoatingContent,
 } from "@/components/professional/Coating";
 import { NextPage } from "next";

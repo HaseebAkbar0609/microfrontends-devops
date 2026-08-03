@@ -320,7 +320,7 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
                       <td className="px-2 py-3" />
                       <td className="sticky right-0 border-l border-slate-200 bg-white px-4 py-3 group-hover:bg-slate-50">
                         <div className="flex items-center gap-2">
-  <div className="w-32.5">
+  <div className="w-32">
     {row.status === "signed" && (
       <Button
         size="sm"

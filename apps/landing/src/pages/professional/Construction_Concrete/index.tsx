@@ -1,5 +1,4 @@
 import {
-  ProfessionalConstruction_ConcreteHero,
   ProfessionalConstruction_ConcreteContent,
 } from "@/components/professional/Construction_Concrete";
 import { NextPage } from "next";
