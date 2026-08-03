@@ -2340,6 +2340,40 @@ export type RegisterTranslation = {
 	ariaFavoriteBudget: string;
 	ariaViewBudgetDetails: string;
 	ariaSelectRow: string;
+	// Wage Types (TFS-551)
+	wageTypeOption: string;
+	wageTypeListTab: string;
+	createWageTypeButton: string;
+	wageTypeIdHeader: string;
+	wageTypeNameHeader: string;
+	wageTypePersonalTypeHeader: string;
+	wageTypeUnitHeader: string;
+	wageTypeWageFormHeader: string;
+	wageTypeTransactionTypeHeader: string;
+	wageTypePreliminaryTaxHeader: string;
+	wageTypeEmployerContributionHeader: string;
+	wageTypeCreatedAtHeader: string;
+	wageTypeUpdatedAtHeader: string;
+	wageTypeAccountHeader: string;
+	wageTypeCreatedSuccess: string;
+	wageTypeUpdatedSuccess: string;
+	wageTypeDuplicateCodeError: string;
+	ariaViewWageTypeDetails: string;
+	goBackToWageTypeListLabel: string;
+	editWageTypeBasicInfoAriaLabel: string;
+	wageTypeCodeLabel: string;
+	wageTypeNameLabel: string;
+	wageTypeUnitLabel: string;
+	wageTypeAccountLabel: string;
+	wageTypeDescriptionLabel: string;
+	wageTypeFactorLabel: string;
+	createWageTypeHeaderTitle: string;
+	editWageTypeHeaderTitle: string;
+	wageTypeSelectUnitPlaceholder: string;
+	wageTypeSelectAccountPlaceholder: string;
+	validationWageTypeCodeRequired: string;
+	validationWageTypeNameRequired: string;
+	validationWageTypeUnitRequired: string;
 };
 
 export type CommonTranslation = {
