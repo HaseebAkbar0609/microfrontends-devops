@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useTranslate, Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { detailIdSchema } from "../types";
@@ -84,7 +84,6 @@ export function WageTypeDetailPage() {
 						titleKey={localizationConstants.grundInformationSection}
 						editAriaLabelKey={localizationConstants.editWageTypeBasicInfoAriaLabel}
 						onEdit={handleEdit}
-						icon={BookOpen}
 					>
 						<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-5">
 							{/* Column 1 */}

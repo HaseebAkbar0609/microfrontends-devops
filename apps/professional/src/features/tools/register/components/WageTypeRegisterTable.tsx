@@ -183,14 +183,49 @@ export function WageTypeRegisterTable() {
 				),
 			},
 			{
+				key: "personalType",
+				label: localizationConstants.wageTypePersonalTypeHeader,
+				render: (row) => <span className="text-slate-600">{row.personalType}</span>,
+			},
+			{
 				key: "unit",
 				label: localizationConstants.wageTypeUnitHeader,
 				render: (row) => <span className="text-slate-600">{row.unit}</span>,
 			},
 			{
-				key: "factor",
-				label: localizationConstants.wageTypeFactorLabel,
-				render: (row) => <span className="text-slate-600">{row.factor || "1.0"}</span>,
+				key: "wageForm",
+				label: localizationConstants.wageTypeWageFormHeader,
+				render: (row) => <span className="text-slate-600">{row.wageForm}</span>,
+			},
+			{
+				key: "transactionType",
+				label: localizationConstants.wageTypeTransactionTypeHeader,
+				render: (row) => <span className="text-slate-600">{row.transactionType}</span>,
+			},
+			{
+				key: "preliminaryTax",
+				label: localizationConstants.wageTypePreliminaryTaxHeader,
+				render: (row) => <span className="text-slate-600">{row.preliminaryTax}</span>,
+			},
+			{
+				key: "employerContribution",
+				label: localizationConstants.wageTypeEmployerContributionHeader,
+				render: (row) => <span className="text-slate-600">{row.employerContribution}</span>,
+			},
+			{
+				key: "createdAt",
+				label: localizationConstants.wageTypeCreatedAtHeader,
+				render: (row) => <span className="text-slate-500">{row.createdAt}</span>,
+			},
+			{
+				key: "updatedAt",
+				label: localizationConstants.wageTypeUpdatedAtHeader,
+				render: (row) => <span className="text-slate-500">{row.updatedAt}</span>,
+			},
+			{
+				key: "accountDebit",
+				label: localizationConstants.wageTypeAccountHeader,
+				render: (row) => <span className="text-slate-700">{row.accountDebit || "-"}</span>,
 			},
 			{
 				key: "status",
