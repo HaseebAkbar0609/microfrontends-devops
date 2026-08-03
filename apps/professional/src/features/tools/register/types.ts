@@ -786,3 +786,82 @@ export const createAccountPlanSchema = z.object({
 
 export type CreateAccountPlanFormData = z.infer<typeof createAccountPlanSchema>;
 
+export const budgetRegisterRowSchema = z.object({
+	id: z.string(),
+	budgetnr: z.string(),
+	budgetName: z.string(),
+	datum: z.string(),
+	totalKostnad: z.string(),
+	totalInkomst: z.string(),
+	status: z.enum(["active", "inactive"]),
+	isFavorite: z.boolean().optional().default(false),
+});
+
+export type BudgetRegisterRow = z.infer<typeof budgetRegisterRowSchema>;
+
+export interface GetBudgetListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetBudgetListResponse {
+	data: BudgetRegisterRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
+export const wageTypeSchema = z.object({
+	id: z.string(),
+	code: z.string(),
+	name: z.string(),
+	personalType: z.string().optional().default("Tjänstemän"),
+	unit: z.string(),
+	wageForm: z.string().optional().default("Fast lön"),
+	transactionType: z.string().optional().default("Br.lön"),
+	preliminaryTax: z.string().optional().default("Ja 30%"),
+	employerContribution: z.string().optional().default("Ja 30%"),
+	createdAt: z.string(),
+	updatedAt: z.string(),
+	accountNumber: z.string().optional(),
+	status: z.enum(["active", "inactive"]),
+	description: z.string().optional(),
+	factor: z.string().optional(),
+});
+
+export type WageTypeRow = z.infer<typeof wageTypeSchema>;
+
+export const createWageTypeSchema = z.object({
+	code: z.string().min(1, "validationWageTypeCodeRequired"),
+	name: z.string().min(1, "validationWageTypeNameRequired"),
+	unit: z.string().min(1, "validationWageTypeUnitRequired"),
+	accountNumber: z.string().optional(),
+	description: z.string().optional(),
+	factor: z.string().optional(),
+	status: z.enum(["active", "inactive"]).optional().default("active"),
+});
+
+export type CreateWageTypeFormData = z.infer<typeof createWageTypeSchema>;
+
+export interface GetWageTypeListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: string;
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetWageTypeListResponse {
+	data: WageTypeRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
