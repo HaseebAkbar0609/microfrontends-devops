@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { Plus, ChevronDown, Eye, Trash2, Edit } from "lucide-react";
@@ -26,6 +26,23 @@ import {
 	useWageTypeListQuery,
 	useToggleWageTypeStatusMutation,
 } from "../hooks/useWageTypeRegister";
+import { showToast } from "@/lib/toast";
+
+function HighlightMatch({ text, query }: { text: string; query: string }) {
+	if (!query) return <span>{text}</span>;
+	const parts = text.split(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi"));
+	return (
+		<span>
+			{parts.map((part, index) =>
+				part.toLowerCase() === query.toLowerCase() ? (
+					<strong key={index} className="bg-yellow-100 text-slate-900 font-semibold">{part}</strong>
+				) : (
+					part
+				),
+			)}
+		</span>
+	);
+}
 
 export function WageTypeRegisterTable() {
 	const t = useTranslate();
@@ -42,7 +59,7 @@ export function WageTypeRegisterTable() {
 	const sortByParam = searchParams.get("sortBy") ?? undefined;
 	const sortOrderParam = (searchParams.get("sortOrder") as "asc" | "desc") ?? undefined;
 
-	const { data, isLoading } = useWageTypeListQuery({
+	const { data, isLoading, isError, error } = useWageTypeListQuery({
 		page,
 		limit: pageSize,
 		search: searchQuery,
@@ -50,6 +67,12 @@ export function WageTypeRegisterTable() {
 		sortBy: sortByParam,
 		sortOrder: sortOrderParam,
 	});
+
+	useEffect(() => {
+		if (isError && error) {
+			showToast("error", t(localizationConstants.wageTypeFetchError));
+		}
+	}, [isError, error, t]);
 
 	const toggleStatusMutation = useToggleWageTypeStatusMutation();
 
@@ -143,18 +166,21 @@ export function WageTypeRegisterTable() {
 				key: "code",
 				label: localizationConstants.wageTypeIdHeader,
 				sortable: true,
-				render: (row) => <span className="font-medium text-slate-900">{row.code}</span>,
+				render: (row) => (
+					<span className="font-medium text-slate-900">
+						<HighlightMatch text={row.code} query={searchQuery} />
+					</span>
+				),
 			},
 			{
 				key: "name",
 				label: localizationConstants.wageTypeNameHeader,
 				sortable: true,
-				render: (row) => <span className="text-slate-700">{row.name}</span>,
-			},
-			{
-				key: "personalType",
-				label: localizationConstants.wageTypePersonalTypeHeader,
-				render: (row) => <span className="text-slate-600">{row.personalType}</span>,
+				render: (row) => (
+					<span className="text-slate-700">
+						<HighlightMatch text={row.name} query={searchQuery} />
+					</span>
+				),
 			},
 			{
 				key: "unit",
@@ -162,39 +188,9 @@ export function WageTypeRegisterTable() {
 				render: (row) => <span className="text-slate-600">{row.unit}</span>,
 			},
 			{
-				key: "wageForm",
-				label: localizationConstants.wageTypeWageFormHeader,
-				render: (row) => <span className="text-slate-600">{row.wageForm}</span>,
-			},
-			{
-				key: "transactionType",
-				label: localizationConstants.wageTypeTransactionTypeHeader,
-				render: (row) => <span className="text-slate-600">{row.transactionType}</span>,
-			},
-			{
-				key: "preliminaryTax",
-				label: localizationConstants.wageTypePreliminaryTaxHeader,
-				render: (row) => <span className="text-slate-600">{row.preliminaryTax}</span>,
-			},
-			{
-				key: "employerContribution",
-				label: localizationConstants.wageTypeEmployerContributionHeader,
-				render: (row) => <span className="text-slate-600">{row.employerContribution}</span>,
-			},
-			{
-				key: "createdAt",
-				label: localizationConstants.wageTypeCreatedAtHeader,
-				render: (row) => <span className="text-slate-500">{row.createdAt}</span>,
-			},
-			{
-				key: "updatedAt",
-				label: localizationConstants.wageTypeUpdatedAtHeader,
-				render: (row) => <span className="text-slate-500">{row.updatedAt}</span>,
-			},
-			{
-				key: "accountDebit",
-				label: localizationConstants.wageTypeAccountHeader,
-				render: (row) => <span className="text-slate-700">{row.accountDebit || "-"}</span>,
+				key: "factor",
+				label: localizationConstants.wageTypeFactorLabel,
+				render: (row) => <span className="text-slate-600">{row.factor || "1.0"}</span>,
 			},
 			{
 				key: "status",
@@ -234,7 +230,7 @@ export function WageTypeRegisterTable() {
 				),
 			},
 		],
-		[isAllSelected, handleSelectAll, handleSelectRow, selectedIds, router, t],
+		[isAllSelected, handleSelectAll, handleSelectRow, selectedIds, router, t, searchQuery],
 	);
 
 	const actions: DataTableAction<WageTypeRow>[] = useMemo(

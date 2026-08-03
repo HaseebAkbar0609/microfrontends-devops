@@ -1,17 +1,14 @@
 "use client";
 
-import localizationConstants from "@/utils/translation/constants";
+import { Suspense } from "react";
+import { WageTypeDetailPage } from "@/features/tools/register/components/WageTypeDetailPage";
 import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 export default function Page() {
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold">
-				<Translate text={localizationConstants.detaljerHeaderTitle} />
-			</h1>
-			<p className="mt-2 text-sm text-slate-600">
-				<Translate text={localizationConstants.comingSoon} />
-			</p>
-		</div>
+		<Suspense fallback={<div className="p-6 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
+			<WageTypeDetailPage />
+		</Suspense>
 	);
 }

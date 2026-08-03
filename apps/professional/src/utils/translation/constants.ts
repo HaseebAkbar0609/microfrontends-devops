@@ -2453,6 +2453,7 @@ export type RegisterTranslation = {
 	wageTypeCreatedSuccess: string;
 	wageTypeUpdatedSuccess: string;
 	wageTypeDuplicateCodeError: string;
+	wageTypeFetchError: string;
 	ariaViewWageTypeDetails: string;
 	goBackToWageTypeListLabel: string;
 	editWageTypeBasicInfoAriaLabel: string;
