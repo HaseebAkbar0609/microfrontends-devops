@@ -192,9 +192,9 @@ export function WageTypeRegisterTable() {
 				render: (row) => <span className="text-slate-500">{row.updatedAt}</span>,
 			},
 			{
-				key: "accountNumber",
+				key: "accountDebit",
 				label: localizationConstants.wageTypeAccountHeader,
-				render: (row) => <span className="text-slate-700">{row.accountNumber || "-"}</span>,
+				render: (row) => <span className="text-slate-700">{row.accountDebit || "-"}</span>,
 			},
 			{
 				key: "status",

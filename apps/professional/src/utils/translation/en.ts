@@ -2521,6 +2521,27 @@ export const enRegister: RegisterTranslation = {
 	validationWageTypeCodeRequired: "Code is required",
 	validationWageTypeNameRequired: "Name is required",
 	validationWageTypeUnitRequired: "Unit is required",
+	// Wage Types create form additions (TFS-452)
+	wageTypeAccountDebitLabel: "Account Debit",
+	wageTypeAccountCreditLabel: "Account Credit",
+	wageTypeAccountOppositeAGLabel: "Opposite AG Account",
+	wageTypeAgUnderlagLabel: "Employer Fee Basis",
+	wageTypeSemestergrundadLabel: "Holiday Pay Basis",
+	wageTypeAgiCodeLabel: "AGI - CODE",
+	wageTypeSelectPersonalTypePlaceholder: "Select personal type",
+	wageTypeSelectWageFormPlaceholder: "Select wage form",
+	wageTypeSelectTransactionTypePlaceholder: "Select transaction type",
+	yesLabel: "Yes",
+	noLabel: "No",
+	wageTypeCodePlaceholder: "e.g. 101",
+	wageTypeNamePlaceholder: "e.g. Månadslön",
+	wageTypeAccountPlaceholder: "e.g. 7010",
+	wageTypeAccountCreditPlaceholder: "e.g. 1930",
+	wageTypeOppositeAGPlaceholder: "e.g. 2710",
+	wageTypeAgiCodePlaceholder: "e.g. 001",
+	wageTypeDescriptionPlaceholder: "Enter description or internal notes...",
+	wageTypeSelectTaxPlaceholder: "Select preliminary tax",
+	wageTypeSelectContributionPlaceholder: "Select employer contribution",
 };
 
 export const en: Translation = {

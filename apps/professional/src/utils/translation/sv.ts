@@ -2536,6 +2536,27 @@ export const svRegister: RegisterTranslation = {
 	validationWageTypeCodeRequired: "Löneartskod är obligatorisk",
 	validationWageTypeNameRequired: "Benämning är obligatorisk",
 	validationWageTypeUnitRequired: "Enhet är obligatorisk",
+	// Wage Types create form additions (TFS-452)
+	wageTypeAccountDebitLabel: "Konto debet",
+	wageTypeAccountCreditLabel: "Konto kredit",
+	wageTypeAccountOppositeAGLabel: "Mot konto AG",
+	wageTypeAgUnderlagLabel: "AG underlag",
+	wageTypeSemestergrundadLabel: "Semestergrundad",
+	wageTypeAgiCodeLabel: "AGI - KOD",
+	wageTypeSelectPersonalTypePlaceholder: "Välj personaltyp",
+	wageTypeSelectWageFormPlaceholder: "Välj löneform",
+	wageTypeSelectTransactionTypePlaceholder: "Välj transaktionstyp",
+	yesLabel: "Ja",
+	noLabel: "Nej",
+	wageTypeCodePlaceholder: "t.ex. 101",
+	wageTypeNamePlaceholder: "t.ex. Månadslön",
+	wageTypeAccountPlaceholder: "t.ex. 7010",
+	wageTypeAccountCreditPlaceholder: "t.ex. 1930",
+	wageTypeOppositeAGPlaceholder: "t.ex. 2710",
+	wageTypeAgiCodePlaceholder: "t.ex. 001",
+	wageTypeDescriptionPlaceholder: "Ange beskrivning eller interna anteckningar...",
+	wageTypeSelectTaxPlaceholder: "Välj preliminärskatt",
+	wageTypeSelectContributionPlaceholder: "Välj arbetsgivaravgift",
 };
 
 export const svCommon: CommonTranslation = {

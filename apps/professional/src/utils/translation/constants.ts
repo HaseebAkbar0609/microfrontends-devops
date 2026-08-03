@@ -2469,6 +2469,27 @@ export type RegisterTranslation = {
 	validationWageTypeCodeRequired: string;
 	validationWageTypeNameRequired: string;
 	validationWageTypeUnitRequired: string;
+	// Wage Types create form additions (TFS-452)
+	wageTypeAccountDebitLabel: string;
+	wageTypeAccountCreditLabel: string;
+	wageTypeAccountOppositeAGLabel: string;
+	wageTypeAgUnderlagLabel: string;
+	wageTypeSemestergrundadLabel: string;
+	wageTypeAgiCodeLabel: string;
+	wageTypeSelectPersonalTypePlaceholder: string;
+	wageTypeSelectWageFormPlaceholder: string;
+	wageTypeSelectTransactionTypePlaceholder: string;
+	yesLabel: string;
+	noLabel: string;
+	wageTypeCodePlaceholder: string;
+	wageTypeNamePlaceholder: string;
+	wageTypeAccountPlaceholder: string;
+	wageTypeAccountCreditPlaceholder: string;
+	wageTypeOppositeAGPlaceholder: string;
+	wageTypeAgiCodePlaceholder: string;
+	wageTypeDescriptionPlaceholder: string;
+	wageTypeSelectTaxPlaceholder: string;
+	wageTypeSelectContributionPlaceholder: string;
 };
 
 export type CommonTranslation = {
