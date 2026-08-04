@@ -502,6 +502,13 @@ export const svOffer: OfferTranslation = {
 	b2bCreateAdditionalPlaceholder: "Ange detaljer för",
 	b2bCreateAdditionalHint: "Genom att ge mer information kan du få högre kvalitet på erbjudanden.",
 	b2bCreatePreview: "Preview",
+	b2bCreateSalesman: "Säljare",
+	b2bCreateEndCustomer: "Slutkunde",
+	b2bCreateAvailablePeriod: "Tillgänglig period",
+	b2bCreateEndCompletion: "Slut genomföras",
+	b2bCreateTypeHyraIN: "Typ: Projekt typ. Hyra IN",
+	b2bCreateTypeHyraUT: "Typ: Projekt typ. Hyra UT",
+	b2bCreateTypeB2BOffert: "Typ: B2B-Offert",
 	// B2B - Project Market List
 	b2bPMRefNr: "Ref nr",
 	b2bPMProject: "Projekt",

@@ -160,20 +160,6 @@ function FileDocGrid({
   );
 }
 
-function AvatarCircle({ name }: { name: string }) {
-  const initials = name
-    .split(" ")
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-  return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-200 text-xs font-semibold text-slate-700">
-      {initials}
-    </div>
-  );
-}
-
 const BADGE_COLOR_MAP: Record<string, string> = {
   UE: "bg-blue-600",
   Beställare: "bg-emerald-600",
@@ -195,21 +181,18 @@ function QACard({ message }: { message: QAMessage }) {
   const t = useTranslate();
   const [comment, setComment] = useState("");
 
-  const replyInitials = message.replyFrom
-    ? message.replyFrom
-        .split(" ")
-        .map((w) => w[0])
-        .slice(0, 2)
-        .join("")
-        .toUpperCase()
-    : "";
-
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4">
       {/* Header: sender info + kebab */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-start gap-2">
-          <AvatarCircle name={message.sender} />
+          <Image
+            src="/assets/images/Avatar.svg"
+            alt={message.sender}
+            width={32}
+            height={32}
+            className="h-8 w-8 shrink-0 rounded-full"
+          />
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-1.5">
               <span className="text-sm font-semibold text-zinc-950">{message.sender}</span>
@@ -256,9 +239,13 @@ function QACard({ message }: { message: QAMessage }) {
       <div className="flex flex-col gap-3">
         {message.replyFrom && (
           <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-100 text-xs font-semibold text-zinc-500">
-              {replyInitials}
-            </div>
+            <Image
+              src="/assets/images/Avatar.svg"
+              alt={message.replyFrom}
+              width={32}
+              height={32}
+              className="h-8 w-8 shrink-0 rounded-full"
+            />
             <span className="text-sm font-semibold text-zinc-950">{message.replyFrom}</span>
           </div>
         )}
@@ -381,7 +368,7 @@ export function B2BProjectMarketDetailView({ data }: Props) {
   return (
     <div className="flex flex-1 flex-col bg-slate-50">
       {/* Header */}
-      <div className="flex items-center gap-3 px-6 py-4">
+      <div className="flex items-center gap-3 py-4 pl-2 pr-6">
         <button
           type="button"
           aria-label={t(localizationConstants.goBackButton)}
@@ -399,13 +386,13 @@ export function B2BProjectMarketDetailView({ data }: Props) {
       <Tabs defaultValue="offers" className="flex flex-1 flex-col overflow-hidden">
         <div className="border-b border-slate-200 px-6">
           <TabsList variant="line" className="h-10 gap-6">
-            <TabsTrigger value="offers" className="px-0 text-sm">
+            <TabsTrigger value="offers" className="cursor-pointer px-0 text-sm">
               {t(localizationConstants.b2bPMTabOffers)}
             </TabsTrigger>
-            <TabsTrigger value="project-info" className="px-0 text-sm">
+            <TabsTrigger value="project-info" className="cursor-pointer px-0 text-sm">
               {t(localizationConstants.b2bPMTabProjectInfo)}
             </TabsTrigger>
-            <TabsTrigger value="qa" className="px-0 text-sm">
+            <TabsTrigger value="qa" className="cursor-pointer px-0 text-sm">
               {t(localizationConstants.b2bPMTabQA)}
             </TabsTrigger>
           </TabsList>

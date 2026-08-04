@@ -594,6 +594,13 @@ export type OfferTranslation = {
 	b2bCreateAdditionalPlaceholder: string;
 	b2bCreateAdditionalHint: string;
 	b2bCreatePreview: string;
+	b2bCreateSalesman: string;
+	b2bCreateEndCustomer: string;
+	b2bCreateAvailablePeriod: string;
+	b2bCreateEndCompletion: string;
+	b2bCreateTypeHyraIN: string;
+	b2bCreateTypeHyraUT: string;
+	b2bCreateTypeB2BOffert: string;
 	// B2B - Project Market List
 	b2bPMRefNr: string;
 	b2bPMProject: string;

@@ -608,6 +608,13 @@ export const enOffer: OfferTranslation = {
 	b2bCreateAdditionalPlaceholder: "Enter details for",
 	b2bCreateAdditionalHint: "By providing more information you can receive higher quality offers.",
 	b2bCreatePreview: "Preview",
+	b2bCreateSalesman: "Salesperson",
+	b2bCreateEndCustomer: "End Customer",
+	b2bCreateAvailablePeriod: "Available Period",
+	b2bCreateEndCompletion: "Completion Date",
+	b2bCreateTypeHyraIN: "Type: Hyra IN",
+	b2bCreateTypeHyraUT: "Type: Hyra UT",
+	b2bCreateTypeB2BOffert: "Type: B2B-Offer",
 	// B2B - Project Market List
 	b2bPMRefNr: "Ref no",
 	b2bPMProject: "Project",
