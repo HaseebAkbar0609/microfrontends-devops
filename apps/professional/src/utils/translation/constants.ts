@@ -232,6 +232,16 @@ export type MyPagesTranslation = {
 	bankAccountNumber: string;
 	swish: string;
 	swift: string;
+	bankIban: string;
+	profilePostalCity: string;
+	securityPrivacyTitle: string;
+	twoFactorAuth: string;
+	twoFactorEnable: string;
+	securityQuestionLabel: string;
+	securityAnswerLabel: string;
+	termsOfUseTitle: string;
+	termsAcceptLabel: string;
+	textField: string;
 	security: string;
 	companyInformation: string;
 	logotype: string;
