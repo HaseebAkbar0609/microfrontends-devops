@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
 import { Plus, ChevronDown, Eye, Trash2, Edit, Star } from "lucide-react";
@@ -27,6 +27,23 @@ import {
 	useToggleBudgetStatusMutation,
 	useToggleBudgetFavoriteMutation,
 } from "../hooks/useBudgetRegister";
+import { showToast } from "@/lib/toast";
+
+function HighlightMatch({ text, query }: { text: string; query: string }) {
+	if (!query) return <span>{text}</span>;
+	const parts = text.split(new RegExp(`(${query.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&")})`, "gi"));
+	return (
+		<span>
+			{parts.map((part, index) =>
+				part.toLowerCase() === query.toLowerCase() ? (
+					<strong key={index} className="bg-yellow-100 text-slate-900 font-semibold">{part}</strong>
+				) : (
+					part
+				),
+			)}
+		</span>
+	);
+}
 
 export function BudgetRegisterTable() {
 	const t = useTranslate();
@@ -43,7 +60,7 @@ export function BudgetRegisterTable() {
 	const sortByParam = searchParams.get("sortBy") ?? undefined;
 	const sortOrderParam = (searchParams.get("sortOrder") as "asc" | "desc") ?? undefined;
 
-	const { data, isLoading } = useBudgetListQuery({
+	const { data, isLoading, isError, error } = useBudgetListQuery({
 		page,
 		limit: pageSize,
 		search: searchQuery,
@@ -51,6 +68,12 @@ export function BudgetRegisterTable() {
 		sortBy: sortByParam,
 		sortOrder: sortOrderParam,
 	});
+
+	useEffect(() => {
+		if (isError && error) {
+			showToast("error", t(localizationConstants.budgetFetchError));
+		}
+	}, [isError, error, t]);
 
 	const toggleStatusMutation = useToggleBudgetStatusMutation();
 	const toggleFavoriteMutation = useToggleBudgetFavoriteMutation();
@@ -175,13 +198,21 @@ export function BudgetRegisterTable() {
 				key: "budgetnr",
 				label: localizationConstants.budgetNrHeader,
 				sortable: true,
-				render: (row) => <span className="text-slate-900 font-medium">{row.budgetnr}</span>,
+				render: (row) => (
+					<span className="text-slate-900 font-medium">
+						<HighlightMatch text={row.budgetnr} query={searchQuery} />
+					</span>
+				),
 			},
 			{
 				key: "budgetName",
 				label: localizationConstants.budgetNameHeader,
 				sortable: true,
-				render: (row) => <span className="text-slate-700">{row.budgetName}</span>,
+				render: (row) => (
+					<span className="text-slate-700">
+						<HighlightMatch text={row.budgetName} query={searchQuery} />
+					</span>
+				),
 			},
 			{
 				key: "datum",
@@ -221,7 +252,7 @@ export function BudgetRegisterTable() {
 				),
 			},
 		],
-		[isAllSelected, handleSelectAll, handleSelectRow, selectedIds, router, handleToggleFavorite, t],
+		[isAllSelected, handleSelectAll, handleSelectRow, selectedIds, router, handleToggleFavorite, t, searchQuery],
 	);
 
 	const actions: DataTableAction<BudgetRegisterRow>[] = useMemo(

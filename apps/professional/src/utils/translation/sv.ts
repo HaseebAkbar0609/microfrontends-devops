@@ -2573,6 +2573,7 @@ export const svRegister: RegisterTranslation = {
 	ariaFavoriteBudget: "Markera budget som favorit",
 	ariaViewBudgetDetails: "Visa budgetuppgifter",
 	ariaSelectRow: "Välj rad",
+	budgetFetchError: "Kunde inte hämta budgetregister",
 	// Wage Types (TFS-551)
 	wageTypeOption: "Löneart",
 	wageTypeListTab: "Löneartlista",
