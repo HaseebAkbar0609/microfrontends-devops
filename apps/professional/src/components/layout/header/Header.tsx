@@ -1,13 +1,12 @@
 "use client";
 
-import { BellDot, Inbox } from "lucide-react";
+import { Inbox } from "lucide-react";
 import CompanyLogo from "./CompanyLogo";
-import HeaderIconButton from "./HeaderIconButton";
 import UserAvatarButton from "./UserAvatarButton";
-import { SLATE } from "@/constants/colors";
 import AlignJustifyButton from "./AlignJustifyButton";
 import AppLauncherDropdown from "./AppLauncherDropdown";
 import HeaderLanguageSelect from "./HeaderLanguageSelect";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 import { useAuthStatus, User, Company } from "@/context/AuthContext";
 import {
 	DropdownMenu,
@@ -35,12 +34,11 @@ const Header = () => {
 				{/* Notification */}
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<HeaderIconButton aria-label="Notifications">
-							<BellDot
-								className="w-5 h-5 sm:w-6 sm:h-6"
-								color={SLATE[800]}
-							/>
-						</HeaderIconButton>
+						<NotificationBell
+							aria-label="Notifications"
+							showBadge={true}
+							count={12}
+						/>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end" className="w-80 p-4">
 						<div className="flex flex-col items-center justify-center py-8 text-center">
