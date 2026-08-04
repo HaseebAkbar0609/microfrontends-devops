@@ -27,7 +27,7 @@ export function OfferSendSection({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <Card className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm py-2 h-auto">
+    <Card className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm pt-2 pb-0 h-auto">
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger asChild>
           <button

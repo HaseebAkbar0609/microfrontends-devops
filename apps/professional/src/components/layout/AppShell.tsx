@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -17,6 +17,7 @@ import {
 	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
 } from "./sidebar/navConfig";
 import { offerSidebarItems, goToItems } from "@/features/offer/constants";
+import { b2bSidebarItems } from "@/features/b2b/constants";
 import localizationConstants from "@/utils/translation/constants";
 import { CircleDollarSign } from "lucide-react";
 
@@ -50,11 +51,12 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
+	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
 	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
 	const offerSegment = isOfferModuleRoute
 		? (pathname.match(/^\/module\/business\/offer\/([^/]+)/)?.[1])
 		: undefined;
-	// /offer/send/[offerId] — extract the real offerId from the second segment
+	// /offer/send/[offerId] â€” extract the real offerId from the second segment
 	const sendOfferMatch = isOfferModuleRoute
 		? pathname.match(/^\/module\/business\/offer\/send\/([^/?]+)/)
 		: null;
@@ -164,6 +166,12 @@ export function AppShell({ children }: AppShellProps) {
 						items: goToItems,
 					}}
 				/>
+			) : isB2BNavRoute ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.b2b}
+					items={b2bSidebarItems}
+					hideBack={true}
+				/>
 			) : showSubSidebar ? (
 				<MyPagesSubSidebar
 					titleKey={flyoutSubSidebarConfig.titleKey}
@@ -172,10 +180,11 @@ export function AppShell({ children }: AppShellProps) {
 			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
-				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0 pb-6">
+				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0">
 					{children}
 				</main>
 			</div>
 		</div>
 	);
 }
+
