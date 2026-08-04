@@ -1,22 +1,12 @@
-import {
-  ProfessionalInvoiceHero,
-  ProfessionalInvoiceContent,
-} from "@/components/professional/Invoice";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalInvoicePage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Offert</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalInvoiceHero /> */}
-        <ProfessionalInvoiceContent />
-      </div>
-    </>
-  );
-};
+const slug = "faktura";
+const found = findModule(slug);
 
-export default ProfessionalInvoicePage;
+export default function ProfessionalInvoicePage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

@@ -1,23 +1,14 @@
-import {
-  ProfessionalAccessHero,
-  ProfessionalAccessContent,
-} from "@/components/professional/Access";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalAccessPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Åtkomsthantering</title>
-      </Head>
+const slug = "smart-access";
+const found = findModule(slug);
 
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalAccessHero /> */}
-        <ProfessionalAccessContent />
-      </div>
-    </>
-  );
-};
+export default function ProfessionalAccessPage() {
+  if (!found) {
+    throw new Error(`Unable to resolve professional module "${slug}"`);
+  }
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
 
-export default ProfessionalAccessPage;
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

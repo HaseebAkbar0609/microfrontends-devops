@@ -1,22 +1,12 @@
-import {
-  ProfessionalDataHero,
-  ProfessionalDataContent,
-} from "@/components/professional/Data";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalDataPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Data</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalDataHero /> */}
-        <ProfessionalDataContent />
-      </div>
-    </>
-  );
-};
+const slug = "data-it";
+const found = findModule(slug);
 
-export default ProfessionalDataPage;
+export default function ProfessionalDataPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

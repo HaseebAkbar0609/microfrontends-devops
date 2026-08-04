@@ -1,22 +1,12 @@
-import {
-  ProfessionalEconomyHero,
-  ProfessionalEconomyContent,
-} from "@/components/professional/Economy";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalEconomyPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Economy</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalEconomyHero /> */}
-        <ProfessionalEconomyContent />
-      </div>
-    </>
-  );
-};
+const slug = "ekonomi";
+const found = findModule(slug);
 
-export default ProfessionalEconomyPage;
+export default function ProfessionalEconomyPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

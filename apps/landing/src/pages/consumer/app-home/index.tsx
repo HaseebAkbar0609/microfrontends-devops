@@ -1,5 +1,4 @@
 import {
-  ProfessionalHomeHero,
   ProfessionalHomeContent,
 } from "@/components/consumer/app-home";
 import { NextPage } from "next";

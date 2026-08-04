@@ -1,22 +1,12 @@
-import {
-  ProfessionalCalculationHero,
-  ProfessionalCalculationContent,
-} from "@/components/professional/Calculation";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalCalculationPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Calculation</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalCalculationHero /> */}
-        <ProfessionalCalculationContent />
-      </div>
-    </>
-  );
-};
+const slug = "kalkyl";
+const found = findModule(slug);
 
-export default ProfessionalCalculationPage;
+export default function ProfessionalCalculationPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });
