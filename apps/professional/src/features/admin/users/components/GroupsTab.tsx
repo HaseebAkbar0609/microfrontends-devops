@@ -14,8 +14,18 @@ import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { DUMMY_ADMIN_GROUPS, type AdminGroup } from "../constants";
+
+export interface AdminGroup {
+	id: string;
+	name: string;
+	description?: string;
+	members: string[];
+	extraMembers: number;
+	status?: string;
+}
+
 import CreateGroupDialog from "./CreateGroupDialog";
+import { useAdminGroups, useCreateAdminGroup } from "../hooks/useAdminUsers";
 
 const AVATAR_COLORS = [
 	"bg-orange-200 text-orange-800",
@@ -57,11 +67,19 @@ function GroupCard({
 	return (
 		<div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
 			<div className="bg-slate-100 px-5 py-4">
-				<h3 className="text-lg font-semibold text-slate-500">
-					{group.name}
-				</h3>
+				<div className="flex justify-between items-center">
+					<h3 className="text-lg font-semibold text-slate-500">
+						{group.name}
+					</h3>
+					{group.status && (
+						<span className="text-xs px-2 py-1 bg-white border border-slate-200 rounded-md text-slate-500">
+							{group.status === "active" ? "Active" : "Inactive"}
+						</span>
+					)}
+				</div>
 			</div>
 			<div className="flex flex-col gap-6 px-5 py-5">
+				<p className="text-sm text-slate-500 min-h-[40px] line-clamp-2">{group.description || "No description"}</p>
 				<div className="flex items-center gap-3">
 					<div className="flex -space-x-2">
 						{group.members.map((member, index) => (
@@ -111,39 +129,62 @@ function GroupCard({
 
 export default function GroupsTab() {
 	const t = useTranslate();
-	const [groups, setGroups] = useState<AdminGroup[]>(DUMMY_ADMIN_GROUPS);
 	const [search, setSearch] = useState("");
 	const [groupFilter, setGroupFilter] = useState("");
 	const [createOpen, setCreateOpen] = useState(false);
+
+	const { data: groupsData } = useAdminGroups({
+		search: search || undefined,
+	});
+
+	const { mutate: createGroupMutation } = useCreateAdminGroup();
+
+	// Wrap in useMemo to prevent unnecessary dependency changes
+	const groupsList = useMemo(() => groupsData?.data || [], [groupsData]);
 
 	const notifyComingSoon = () =>
 		showToast("info", t(localizationConstants.comingSoon));
 
 	const handleCreateGroup = (name: string, description: string) => {
-		setGroups((prev) => [
-			...prev,
+		createGroupMutation(
+			{ name, description, status: "active", initial_member_ids: [] },
 			{
-				id: `group-${prev.length + 1}`,
-				name,
-				description: description || undefined,
-				members: [],
-				extraMembers: 0,
-			},
-		]);
+				onSuccess: () => {
+					showToast("success", "Group created successfully");
+					setCreateOpen(false);
+				},
+				onError: () => {
+					showToast("error", "Failed to create group");
+				}
+			}
+		);
 	};
 
 	const filteredGroups = useMemo(() => {
 		const q = search.trim().toLowerCase();
-		return groups.filter((group) => {
-			const matchesSearch = !q || group.name.toLowerCase().includes(q);
-			const matchesFilter = !groupFilter || group.id === groupFilter;
+		return groupsList.filter((group: Record<string, unknown>) => {
+			const groupName = typeof group.name === "string" ? group.name : "";
+			const groupId = typeof group.id === "string" ? group.id : "";
+			const matchesSearch = !q || groupName.toLowerCase().includes(q);
+			const matchesFilter = !groupFilter || groupId === groupFilter;
 			return matchesSearch && matchesFilter;
+		}).map((g: Record<string, unknown>) => {
+			const sampleMembers = Array.isArray(g.sample_members) ? g.sample_members : [];
+			const memberCount = typeof g.member_count === "number" ? g.member_count : 0;
+			return {
+				id: typeof g.id === "string" ? g.id : "",
+				name: typeof g.name === "string" ? g.name : "",
+				description: typeof g.description === "string" ? g.description : undefined,
+				members: sampleMembers.map((sm: Record<string, unknown>) => `${sm.first_name || ""} ${sm.last_name || ""}`).map(String),
+				extraMembers: Math.max(0, memberCount - sampleMembers.length),
+				status: typeof g.status === "string" ? g.status : undefined,
+			};
 		});
-	}, [groups, search, groupFilter]);
+	}, [groupsList, search, groupFilter]);
 
-	const activeFilterName = groups.find(
-		(group) => group.id === groupFilter,
-	)?.name;
+	const activeFilterName = groupsList.find(
+		(group: Record<string, unknown>) => group.id === groupFilter,
+	)?.name as string | undefined;
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -187,13 +228,13 @@ export default function GroupsTab() {
 								<Check className="h-3.5 w-3.5 text-blue-600" />
 							)}
 						</DropdownMenuItem>
-						{groups.map((group) => (
+						{groupsList.map((group: Record<string, unknown>) => (
 							<DropdownMenuItem
-								key={group.id}
-								onClick={() => setGroupFilter(group.id)}
+								key={group.id as string}
+								onClick={() => setGroupFilter(group.id as string)}
 								className="flex items-center justify-between"
 							>
-								{group.name}
+								{group.name as string}
 								{groupFilter === group.id && (
 									<Check className="h-3.5 w-3.5 text-blue-600" />
 								)}
@@ -217,7 +258,7 @@ export default function GroupsTab() {
 			{/* Group cards */}
 			{filteredGroups.length > 0 ? (
 				<div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-					{filteredGroups.map((group) => (
+					{filteredGroups.map((group: AdminGroup) => (
 						<GroupCard
 							key={group.id}
 							group={group}

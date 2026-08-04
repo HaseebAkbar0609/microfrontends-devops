@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
 	Check,
@@ -38,11 +38,9 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	ACCESS_LABELS,
-	DUMMY_ADMIN_USERS,
-	LICENSE_ROWS,
-	type AdminUser,
 	type AdminUserAccess,
 } from "../constants";
+import { useAdminUsers, useLicensesSummary } from "../hooks/useAdminUsers";
 
 const ACCESS_ICONS: Record<
 	AdminUserAccess,
@@ -82,30 +80,34 @@ export default function AdminUsers() {
 	const notifyComingSoon = () =>
 		showToast("info", t(localizationConstants.comingSoon));
 
-	const filteredUsers = useMemo(() => {
-		const q = search.trim().toLowerCase();
-		return DUMMY_ADMIN_USERS.filter((user) => {
-			const matchesSearch =
-				!q ||
-				user.name.toLowerCase().includes(q) ||
-				user.personNo.toLowerCase().includes(q);
-			const matchesAccess = !accessFilter || user.access === accessFilter;
-			return matchesSearch && matchesAccess;
-		});
-	}, [search, accessFilter]);
+	const { data: usersData, isLoading } = useAdminUsers({
+		skip: (page - 1) * pageSize,
+		limit: pageSize,
+		search: search || undefined,
+		role: accessFilter === "sys-admin" ? "OWNER" : accessFilter === "admin" ? "MANAGER" : accessFilter === "user" ? "WORKER" : undefined,
+	});
 
-	const totalPages = Math.max(1, Math.ceil(filteredUsers.length / pageSize));
-	const pageRows = filteredUsers.slice(
-		(page - 1) * pageSize,
-		page * pageSize,
+
+	const { data: licensesData, isLoading: isLoadingLicenses } = useLicensesSummary();
+
+	const pageRows = usersData?.data || [];
+	const totalItems = usersData?.total_items || 0;
+	const totalPages = usersData?.total_pages || 1;
+	const licenseRows = (licensesData?.data || []).filter(
+		(row: Record<string, unknown>) =>
+			(row.purchased as number) > 0 || (row.allocated as number) > 0
 	);
 
-	const renderAccess = (user: AdminUser) => {
-		const Icon = ACCESS_ICONS[user.access];
+	const renderAccess = (userRole: string) => {
+		let mappedAccess: AdminUserAccess = "user";
+		if (userRole === "owner" || userRole === "OWNER") mappedAccess = "sys-admin";
+		if (userRole === "manage" || userRole === "MANAGER") mappedAccess = "admin";
+		
+		const Icon = ACCESS_ICONS[mappedAccess];
 		return (
 			<span className="flex items-center gap-2 text-slate-700">
 				<Icon size={16} className="shrink-0 text-slate-500" />
-				{ACCESS_LABELS[user.access]}
+				{ACCESS_LABELS[mappedAccess]}
 			</span>
 		);
 	};
@@ -230,25 +232,39 @@ export default function AdminUsers() {
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									{LICENSE_ROWS.map((row) => (
-										<TableRow
-											key={row.id}
-											className="border-slate-100 hover:bg-slate-50"
-										>
-											<TableCell className="px-4 py-4 text-slate-900">
-												{row.license}
-											</TableCell>
-											<TableCell className="px-4 py-4 text-right tabular-nums text-slate-700">
-												{row.purchased}
-											</TableCell>
-											<TableCell className="px-4 py-4 text-right tabular-nums text-slate-700">
-												{row.allocated}
-											</TableCell>
-											<TableCell className="px-4 py-4 text-right tabular-nums text-slate-700">
-												{row.available ?? "-"}
+									{isLoadingLicenses ? (
+										<TableRow>
+											<TableCell colSpan={4} className="h-24 text-center text-slate-500">
+												<Translate text={localizationConstants.genericLoading} />
 											</TableCell>
 										</TableRow>
-									))}
+									) : licenseRows.length > 0 ? (
+										licenseRows.map((row: Record<string, unknown>) => (
+											<TableRow
+												key={row.plan_key as string}
+												className="border-slate-100 hover:bg-slate-50"
+											>
+												<TableCell className="px-4 py-4 text-slate-900 capitalize">
+													{row.plan_key as string}
+												</TableCell>
+												<TableCell className="px-4 py-4 text-right tabular-nums text-slate-700">
+													{row.purchased as number}
+												</TableCell>
+												<TableCell className="px-4 py-4 text-right tabular-nums text-slate-700">
+													{row.allocated as number}
+												</TableCell>
+												<TableCell className="px-4 py-4 text-right tabular-nums text-slate-700">
+													{(row.available as number) ?? "-"}
+												</TableCell>
+											</TableRow>
+										))
+									) : (
+										<TableRow>
+											<TableCell colSpan={4} className="h-24 text-center text-slate-500">
+												<Translate text={localizationConstants.noDataFound} />
+											</TableCell>
+										</TableRow>
+									)}
 								</TableBody>
 							</Table>
 						</div>
@@ -360,51 +376,65 @@ export default function AdminUsers() {
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									{pageRows.map((user) => (
-										<TableRow
-											key={user.id}
-											className="border-slate-100 hover:bg-slate-50"
-										>
-											<TableCell className="max-w-[10rem] truncate px-4 py-4 font-medium text-slate-900">
-												{user.name}
+									{isLoading ? (
+										<TableRow>
+											<TableCell colSpan={USER_COLUMNS.length} className="text-center py-8">
+												Loading...
 											</TableCell>
-											<TableCell className="whitespace-nowrap px-4 py-4 tabular-nums text-slate-700">
-												{user.personNo}
-											</TableCell>
-											<TableCell className="whitespace-nowrap px-4 py-4">
-												{renderAccess(user)}
-											</TableCell>
-											<TableCell className="whitespace-nowrap px-4 py-4">
-												<Badge
-													className={cn(
-														"rounded-[6px] px-2.5 py-0.5 text-xs font-semibold",
-														user.license === "PRO"
-															? "bg-[#18181B] text-white"
-															: "bg-slate-100 text-slate-700",
+										</TableRow>
+									) : pageRows.map((user: Record<string, unknown>) => (
+											<TableRow
+												key={user.id as string}
+												className="border-slate-100 hover:bg-slate-50"
+											>
+												<TableCell className="max-w-[10rem] truncate px-4 py-4 font-medium text-slate-900">
+													{(user.first_name as string)} {(user.last_name as string)}
+												</TableCell>
+												<TableCell className="whitespace-nowrap px-4 py-4 tabular-nums text-slate-700">
+													{(user.personal_id as string) || "-"}
+												</TableCell>
+												<TableCell className="whitespace-nowrap px-4 py-4">
+													{renderAccess(user.role as string)}
+												</TableCell>
+												<TableCell className="whitespace-nowrap px-4 py-4">
+													{user.license ? (
+														<Badge
+															className={cn(
+																"rounded-[6px] px-2.5 py-0.5 text-xs font-semibold",
+																(user.license as string).toUpperCase() === "PRO"
+																	? "bg-[#18181B] text-white"
+																	: "bg-slate-100 text-slate-700",
+															)}
+														>
+															{(user.license as string).toUpperCase() === "PRO" 
+																? "PRO" 
+																: (user.license as string).charAt(0).toUpperCase() + (user.license as string).slice(1).toLowerCase()}
+														</Badge>
+													) : (
+														<span className="text-slate-500">-</span>
 													)}
-												>
-													{user.license}
-												</Badge>
-											</TableCell>
-											<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
-												{user.addons}
-											</TableCell>
-											<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
-												{user.group}
-											</TableCell>
-											<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
-												{user.role}
-											</TableCell>
-											<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
-												{user.type}
-											</TableCell>
+												</TableCell>
+												<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
+													{(user.addons as string) || "-"}
+												</TableCell>
+												<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
+													{Array.isArray(user.groups) && user.groups.length > 0 
+														? user.groups.map((g: Record<string, unknown>) => g.name).join(", ") 
+														: "-"}
+												</TableCell>
+												<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
+													{(user.permission_role_name as string) || "-"}
+												</TableCell>
+												<TableCell className="whitespace-nowrap px-4 py-4 text-slate-700">
+													{(user.position as string) || "-"}
+												</TableCell>
 											<TableCell className="whitespace-nowrap px-4 py-4">
 												<div className="flex items-center gap-2">
 													<Button
 														variant="secondary"
 														onClick={() =>
 															router.push(
-																"/admin/user/settings",
+																`/admin/user/settings?userId=${user.id}`,
 															)
 														}
 														className="h-8 rounded-md bg-slate-100 px-3 text-sm font-medium text-slate-900 hover:bg-slate-200"
@@ -432,7 +462,7 @@ export default function AdminUsers() {
 											</TableCell>
 										</TableRow>
 									))}
-									{pageRows.length === 0 && (
+									{pageRows.length === 0 && !isLoading && (
 										<TableRow>
 											<TableCell
 												colSpan={USER_COLUMNS.length}
@@ -451,16 +481,18 @@ export default function AdminUsers() {
 						</div>
 					</div>
 
-					<TablePagination
-						currentPage={page}
-						totalPages={totalPages}
-						pageSize={pageSize}
-						onPageChange={setPage}
-						onPageSizeChange={(size) => {
-							setPageSize(size);
-							setPage(1);
-						}}
-					/>
+					{totalItems > 0 && (
+						<TablePagination
+							currentPage={page}
+							totalPages={totalPages}
+							pageSize={pageSize}
+							onPageChange={setPage}
+							onPageSizeChange={(size) => {
+								setPageSize(size);
+								setPage(1);
+							}}
+						/>
+					)}
 				</TabsContent>
 
 				<TabsContent value="groups" className="mt-6">
