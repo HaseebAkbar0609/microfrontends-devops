@@ -280,6 +280,7 @@ export function B2BDealListView({ deals, isLoading = false }: Props) {
           <Button
             size="sm"
             className="h-9 cursor-pointer gap-2 bg-neutral-950 text-sm text-white hover:bg-neutral-800"
+            onClick={() => router.push("/module/business/b2b/create")}
           >
             <Plus size={14} aria-hidden={true} />
             {t(localizationConstants.b2bCreateDeal)}
