@@ -38,6 +38,46 @@ import {
 	useUpdateWageTypeMutation,
 } from "../hooks/useWageTypeRegister";
 
+export const WAGE_TYPE_CONSTANTS = {
+	personalType: {
+		tjansteman: "Tjänsteman",
+		arbetare: "Arbetare",
+		dellid: "Dellid",
+		vikarie: "Vikarie",
+		projektanstalld: "Projektanställd",
+	},
+	wageForm: {
+		timLon: "Tim lön",
+		fastLon: "Fast lön",
+	},
+	transactionType: {
+		bruttolon: "Bruttolön",
+		obLon: "OB-lön",
+		sjuklon: "Sjuklön",
+		overtid: "Övertid",
+		semester: "Semester",
+		nettolon: "Nettolön",
+	},
+	unit: {
+		manad: "Månad",
+		tim: "Tim",
+		dag: "Dag",
+		belopp: "Belopp",
+		percent: "%",
+	},
+	preliminaryTax: {
+		ja30: "Ja 30%",
+		ja35: "Ja 35%",
+		ja50: "Ja 50%",
+		nej0: "Nej 0%",
+	},
+	employerContribution: {
+		ja3142: "Ja 31.42%",
+		ja30: "Ja 30%",
+		nej0: "Nej 0%",
+	},
+} as const;
+
 interface CreateWageTypePageProps {
 	isEdit?: boolean;
 }
@@ -56,17 +96,18 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 
 	const createMutation = useCreateWageTypeMutation();
 	const updateMutation = useUpdateWageTypeMutation();
+	const isPending = createMutation.isPending || updateMutation.isPending;
 
 	const form = useForm({
 		resolver: zodResolver(createWageTypeSchema),
 		defaultValues: {
 			code: "",
 			name: "",
-			personalType: "Tjänsteman",
-			wageForm: "Fast lön",
-			transactionType: "Bruttolön",
-			unit: "Månad",
-			preliminaryTax: "Ja 30%",
+			personalType: WAGE_TYPE_CONSTANTS.personalType.tjansteman,
+			wageForm: WAGE_TYPE_CONSTANTS.wageForm.fastLon,
+			transactionType: WAGE_TYPE_CONSTANTS.transactionType.bruttolon,
+			unit: WAGE_TYPE_CONSTANTS.unit.manad,
+			preliminaryTax: WAGE_TYPE_CONSTANTS.preliminaryTax.ja30,
 			employerContribution: "Ja 30%",
 			accountDebit: "",
 			accountCredit: "",
@@ -85,11 +126,11 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 			form.reset({
 				code: wageTypeDetail.code,
 				name: wageTypeDetail.name,
-				personalType: wageTypeDetail.personalType ?? "Tjänsteman",
-				wageForm: wageTypeDetail.wageForm ?? "Fast lön",
-				transactionType: wageTypeDetail.transactionType ?? "Bruttolön",
+				personalType: wageTypeDetail.personalType ?? WAGE_TYPE_CONSTANTS.personalType.tjansteman,
+				wageForm: wageTypeDetail.wageForm ?? WAGE_TYPE_CONSTANTS.wageForm.fastLon,
+				transactionType: wageTypeDetail.transactionType ?? WAGE_TYPE_CONSTANTS.transactionType.bruttolon,
 				unit: wageTypeDetail.unit,
-				preliminaryTax: wageTypeDetail.preliminaryTax ?? "Ja 30%",
+				preliminaryTax: wageTypeDetail.preliminaryTax ?? WAGE_TYPE_CONSTANTS.preliminaryTax.ja30,
 				employerContribution: wageTypeDetail.employerContribution ?? "Ja 30%",
 				accountDebit: wageTypeDetail.accountDebit ?? "",
 				accountCredit: wageTypeDetail.accountCredit ?? "",
@@ -116,7 +157,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 						"error",
 						res.error === "wageTypeDuplicateCodeError"
 							? t(localizationConstants.wageTypeDuplicateCodeError)
-							: (res.error ?? "Failed to update wage type"),
+							: t(localizationConstants.genericError),
 					);
 				}
 			} else {
@@ -129,17 +170,17 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 						"error",
 						res.error === "wageTypeDuplicateCodeError"
 							? t(localizationConstants.wageTypeDuplicateCodeError)
-							: (res.error ?? "Failed to create wage type"),
+							: t(localizationConstants.genericError),
 					);
 				}
 			}
-		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : "An error occurred";
-			showToast("error", errorMessage);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
 		}
 	};
 
 	const handleCancel = () => {
+		if (isPending) return;
 		router.push("/tools/register?tab=wageType");
 	};
 
@@ -160,7 +201,8 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 					<button
 						type="button"
 						onClick={handleCancel}
-						className="rounded-md p-1 hover:bg-slate-100 cursor-pointer"
+						disabled={isPending}
+						className="rounded-md p-1 hover:bg-slate-100 cursor-pointer disabled:opacity-50"
 						aria-label="Go back"
 					>
 						<ArrowLeft className="h-5 w-5 text-slate-700" />
@@ -257,11 +299,21 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent className="bg-white border border-slate-200 rounded-md p-1 shadow-md">
-															<SelectItem value="Tjänsteman" className="cursor-pointer text-slate-700 focus:bg-slate-100">Tjänsteman</SelectItem>
-															<SelectItem value="Arbetare" className="cursor-pointer text-slate-700 focus:bg-slate-100">Arbetare</SelectItem>
-															<SelectItem value="Dellid" className="cursor-pointer text-slate-700 focus:bg-slate-100">Dellid</SelectItem>
-															<SelectItem value="Vikarie" className="cursor-pointer text-slate-700 focus:bg-slate-100">Vikarie</SelectItem>
-															<SelectItem value="Projektanställd" className="cursor-pointer text-slate-700 focus:bg-slate-100">Projektanställd</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.personalType.tjansteman} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.personalTypeTjanstemanLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.personalType.arbetare} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.personalTypeArbetareLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.personalType.dellid} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.personalTypeDellidLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.personalType.vikarie} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.personalTypeVikarieLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.personalType.projektanstalld} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.personalTypeProjektanstalldLabel} />
+															</SelectItem>
 														</SelectContent>
 													</Select>
 													<FormMessage className="text-xs text-red-500" translate={t} />
@@ -288,8 +340,12 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent className="bg-white border border-slate-200 rounded-md p-1 shadow-md">
-															<SelectItem value="Tim lön" className="cursor-pointer text-slate-700 focus:bg-slate-100">Tim lön</SelectItem>
-															<SelectItem value="Fast lön" className="cursor-pointer text-slate-700 focus:bg-slate-100">Fast lön</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.wageForm.timLon} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.wageFormTimLonLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.wageForm.fastLon} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.wageFormFastLonLabel} />
+															</SelectItem>
 														</SelectContent>
 													</Select>
 													<FormMessage className="text-xs text-red-500" translate={t} />
@@ -316,12 +372,24 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent className="bg-white border border-slate-200 rounded-md p-1 shadow-md">
-															<SelectItem value="Bruttolön" className="cursor-pointer text-slate-700 focus:bg-slate-100">Bruttolön</SelectItem>
-															<SelectItem value="OB-lön" className="cursor-pointer text-slate-700 focus:bg-slate-100">OB-lön</SelectItem>
-															<SelectItem value="Sjuklön" className="cursor-pointer text-slate-700 focus:bg-slate-100">Sjuklön</SelectItem>
-															<SelectItem value="Övertid" className="cursor-pointer text-slate-700 focus:bg-slate-100">Övertid</SelectItem>
-															<SelectItem value="Semester" className="cursor-pointer text-slate-700 focus:bg-slate-100">Semester</SelectItem>
-															<SelectItem value="Nettolön" className="cursor-pointer text-slate-700 focus:bg-slate-100">Nettolön</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.transactionType.bruttolon} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.transactionTypeBruttolonLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.transactionType.obLon} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.transactionTypeObLonLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.transactionType.sjuklon} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.transactionTypeSjuklonLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.transactionType.overtid} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.transactionTypeOvertidLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.transactionType.semester} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.transactionTypeSemesterLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.transactionType.nettolon} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.transactionTypeNettolonLabel} />
+															</SelectItem>
 														</SelectContent>
 													</Select>
 													<FormMessage className="text-xs text-red-500" translate={t} />
@@ -348,13 +416,45 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent className="bg-white border border-slate-200 rounded-md p-1 shadow-md">
-															<SelectItem value="Månad" className="cursor-pointer text-slate-700 focus:bg-slate-100">Månad</SelectItem>
-															<SelectItem value="Tim" className="cursor-pointer text-slate-700 focus:bg-slate-100">Tim</SelectItem>
-															<SelectItem value="Dag" className="cursor-pointer text-slate-700 focus:bg-slate-100">Dag</SelectItem>
-															<SelectItem value="Belopp" className="cursor-pointer text-slate-700 focus:bg-slate-100">Belopp</SelectItem>
-															<SelectItem value="%" className="cursor-pointer text-slate-700 focus:bg-slate-100">%</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.unit.manad} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.unitManadLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.unit.tim} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.unitTimLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.unit.dag} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.unitDagLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.unit.belopp} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.unitBeloppLabel} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.unit.percent} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.unitPercentLabel} />
+															</SelectItem>
 														</SelectContent>
 													</Select>
+													<FormMessage className="text-xs text-red-500" translate={t} />
+												</FormItem>
+											)}
+										/>
+
+										{/* Faktor / Multiplier */}
+										<FormField
+											control={form.control}
+											name="factor"
+											render={({ field }) => (
+												<FormItem className="flex flex-col gap-1">
+													<FormLabel className="text-xs font-semibold text-slate-950">
+														<Translate text={localizationConstants.wageTypeFactorLabel} />
+													</FormLabel>
+													<FormControl>
+														<Input
+															type="text"
+															placeholder={t(localizationConstants.wageTypeFactorPlaceholder)}
+															className="h-10 border-slate-200 focus-visible:ring-1 focus-visible:ring-slate-950 text-slate-900 placeholder:text-slate-400"
+															{...field}
+														/>
+													</FormControl>
 													<FormMessage className="text-xs text-red-500" translate={t} />
 												</FormItem>
 											)}
@@ -379,10 +479,18 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent className="bg-white border border-slate-200 rounded-md p-1 shadow-md">
-															<SelectItem value="Ja 30%" className="cursor-pointer text-slate-700 focus:bg-slate-100">Ja 30%</SelectItem>
-															<SelectItem value="Ja 35%" className="cursor-pointer text-slate-700 focus:bg-slate-100">Ja 35%</SelectItem>
-															<SelectItem value="Ja 50%" className="cursor-pointer text-slate-700 focus:bg-slate-100">Ja 50%</SelectItem>
-															<SelectItem value="Nej 0%" className="cursor-pointer text-slate-700 focus:bg-slate-100">Nej 0%</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.preliminaryTax.ja30} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.taxJa30Label} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.preliminaryTax.ja35} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.taxJa35Label} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.preliminaryTax.ja50} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.taxJa50Label} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.preliminaryTax.nej0} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.taxNej0Label} />
+															</SelectItem>
 														</SelectContent>
 													</Select>
 													<FormMessage className="text-xs text-red-500" translate={t} />
@@ -409,9 +517,15 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</SelectTrigger>
 														</FormControl>
 														<SelectContent className="bg-white border border-slate-200 rounded-md p-1 shadow-md">
-															<SelectItem value="Ja 31.42%" className="cursor-pointer text-slate-700 focus:bg-slate-100">Ja 31.42%</SelectItem>
-															<SelectItem value="Ja 30%" className="cursor-pointer text-slate-700 focus:bg-slate-100">Ja 30%</SelectItem>
-															<SelectItem value="Nej 0%" className="cursor-pointer text-slate-700 focus:bg-slate-100">Nej 0%</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.employerContribution.ja3142} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.contrJa30Label} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.employerContribution.ja30} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.contrJa35Label} />
+															</SelectItem>
+															<SelectItem value={WAGE_TYPE_CONSTANTS.employerContribution.nej0} className="cursor-pointer text-slate-700 focus:bg-slate-100">
+																<Translate text={localizationConstants.contrNej0Label} />
+															</SelectItem>
 														</SelectContent>
 													</Select>
 													<FormMessage className="text-xs text-red-500" translate={t} />
@@ -496,6 +610,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															onValueChange={(val) => field.onChange(val === "ja")}
 															value={field.value ? "ja" : "nej"}
 															className="flex items-center gap-6 h-10"
+															aria-describedby="agUnderlag-message"
 														>
 															<FormItem className="flex items-center gap-2 space-y-0 cursor-pointer">
 																<RadioGroupItem value="ja" id="ag-ja" className="border-slate-300 text-[#111721] focus:ring-[#111721] focus:ring-offset-2 data-[state=checked]:border-[#111721] data-[state=checked]:text-[#111721]" />
@@ -511,7 +626,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</FormItem>
 														</RadioGroup>
 													</FormControl>
-													<FormMessage className="text-xs text-red-500" translate={t} />
+													<FormMessage id="agUnderlag-message" className="text-xs text-red-500" translate={t} />
 												</FormItem>
 											)}
 										/>
@@ -530,6 +645,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															onValueChange={(val) => field.onChange(val === "ja")}
 															value={field.value ? "ja" : "nej"}
 															className="flex items-center gap-6 h-10"
+															aria-describedby="semestergrundad-message"
 														>
 															<FormItem className="flex items-center gap-2 space-y-0 cursor-pointer">
 																<RadioGroupItem value="ja" id="sem-ja" className="border-slate-300 text-[#111721] focus:ring-[#111721] focus:ring-offset-2 data-[state=checked]:border-[#111721] data-[state=checked]:text-[#111721]" />
@@ -545,7 +661,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 															</FormItem>
 														</RadioGroup>
 													</FormControl>
-													<FormMessage className="text-xs text-red-500" translate={t} />
+													<FormMessage id="semestergrundad-message" className="text-xs text-red-500" translate={t} />
 												</FormItem>
 											)}
 										/>
@@ -606,8 +722,9 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 						type="button"
 						variant="ghost"
 						size="default"
+						disabled={isPending}
 						onClick={handleCancel}
-						className="h-9 min-w-30 rounded bg-transparent border border-slate-300 px-5 text-slate-700 hover:bg-slate-100 hover:text-slate-900 shadow-none cursor-pointer"
+						className="h-9 min-w-30 rounded bg-transparent border border-slate-300 px-5 text-slate-700 hover:bg-slate-100 hover:text-slate-900 shadow-none cursor-pointer disabled:opacity-50"
 					>
 						<Translate text={localizationConstants.cancelButton} />
 					</Button>

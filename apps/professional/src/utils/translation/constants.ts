@@ -2291,6 +2291,7 @@ export type RegisterTranslation = {
 	priceListOkaOption: string;
 	priceListMinskaOption: string;
 	genericLoading: string;
+	genericError: string;
 
 	// Create Price List Translations (TFS-441)
 	createPriceListTitle: string;
@@ -2535,6 +2536,7 @@ export type RegisterTranslation = {
 	wageTypeAccountLabel: string;
 	wageTypeDescriptionLabel: string;
 	wageTypeFactorLabel: string;
+	wageTypeFactorPlaceholder: string;
 	createWageTypeHeaderTitle: string;
 	editWageTypeHeaderTitle: string;
 	wageTypeSelectUnitPlaceholder: string;
@@ -2563,6 +2565,32 @@ export type RegisterTranslation = {
 	wageTypeDescriptionPlaceholder: string;
 	wageTypeSelectTaxPlaceholder: string;
 	wageTypeSelectContributionPlaceholder: string;
+	personalTypeTjanstemanLabel: string;
+	personalTypeArbetareLabel: string;
+	personalTypeDellidLabel: string;
+	personalTypeVikarieLabel: string;
+	personalTypeProjektanstalldLabel: string;
+	wageFormTimLonLabel: string;
+	wageFormFastLonLabel: string;
+	transactionTypeBruttolonLabel: string;
+	transactionTypeObLonLabel: string;
+	transactionTypeSjuklonLabel: string;
+	transactionTypeOvertidLabel: string;
+	transactionTypeSemesterLabel: string;
+	transactionTypeNettolonLabel: string;
+	unitManadLabel: string;
+	unitTimLabel: string;
+	unitDagLabel: string;
+	unitBeloppLabel: string;
+	unitPercentLabel: string;
+	taxJa30Label: string;
+	taxJa35Label: string;
+	taxJa50Label: string;
+	taxNej0Label: string;
+	contrJa30Label: string;
+	contrJa35Label: string;
+	contrJa50Label: string;
+	contrNej0Label: string;
 };
 
 export type CommonTranslation = {
