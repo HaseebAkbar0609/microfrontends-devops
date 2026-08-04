@@ -282,6 +282,7 @@ export type LeadsTranslation = {
 	quoteDeletedToast: string;
 	settingsSavedToast: string;
 	settingsSaveErrorToast: string;
+	serverError: string;
 	unpaidLabel: string;
 	noLeadsFound: string;
 	rowsPerPage: string;

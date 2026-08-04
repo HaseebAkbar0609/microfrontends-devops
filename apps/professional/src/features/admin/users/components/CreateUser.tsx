@@ -12,7 +12,7 @@ import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { addDummyAdminUser } from "../constants";
+import { useCreateAdminUser } from "../hooks/useAdminUsers";
 
 const LANGUAGE_OPTIONS = [
 	{ value: "sv", label: "Svenska" },
@@ -82,7 +82,8 @@ export default function CreateUser() {
 	const [active, setActive] = useState(true);
 	const [generateEmail, setGenerateEmail] = useState(false);
 	const [smsAuth, setSmsAuth] = useState(false);
-	const [isSaving, setIsSaving] = useState(false);
+
+	const { mutate: createUserMutation, isPending: isSaving } = useCreateAdminUser();
 
 	const schema = z
 		.object({
@@ -106,7 +107,7 @@ export default function CreateUser() {
 					),
 				}),
 			personRegister: z.string(),
-			password: z.string().min(1, {
+			password: z.string().min(8, {
 				message: t(
 					localizationConstants.validationRegisterPasswordRequired,
 				),
@@ -144,28 +145,42 @@ export default function CreateUser() {
 	});
 
 	const onSubmit = (values: FormValues) => {
-		setIsSaving(true);
-		addDummyAdminUser({
-			name: values.name,
-			personNo: values.personalNumber || "-",
-			access: "user",
-			license: "Standard",
-			addons: "",
-			group: "-",
-			role: "-",
-			type: "-",
+		const payload = {
+			email: values.email,
+			password: values.password,
+			first_name: values.name.split(" ")[0] || values.name,
+			last_name: values.name.split(" ").slice(1).join(" ") || " ",
+			role: "manage",
+			status: active ? "ACTIVE" : "INACTIVE",
+			department: "None",
+			position_id: null,
+			permission_role_id: null,
+			phone_number: values.mobile || null,
+			personal_id: values.personalNumber || null,
+			language: values.language,
+			group_ids: [],
+		};
+
+		createUserMutation(payload, {
+			onSuccess: () => {
+				showToast("success", t(localizationConstants.adminCreateSuccess));
+				router.push("/admin/user");
+			},
+			onError: (err: unknown) => {
+				const error = err as { response?: { data?: { message?: string } } };
+				const msg = error?.response?.data?.message || "Failed to create user";
+				showToast("error", msg);
+			}
 		});
-		showToast("success", t(localizationConstants.adminCreateSuccess));
-		router.push("/admin/user");
 	};
 
 	return (
 		<Form {...form}>
 			<form
 				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex min-h-[calc(100vh-180px)] flex-col"
+				className="flex flex-1 flex-col relative"
 			>
-				<div className="flex flex-1 flex-col gap-6 px-6 py-6">
+				<div className="flex flex-col gap-6 px-6 py-6 pb-10">
 					{/* Header */}
 					<div className="flex items-center gap-3">
 						<button
@@ -334,7 +349,7 @@ export default function CreateUser() {
 				</div>
 
 				{/* Footer actions */}
-				<div className="flex items-center justify-end gap-3 border-t border-slate-200 bg-white px-6 py-4">
+				<div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 border-t border-slate-200 bg-white px-6 py-4">
 					<Button
 						type="button"
 						variant="secondary"

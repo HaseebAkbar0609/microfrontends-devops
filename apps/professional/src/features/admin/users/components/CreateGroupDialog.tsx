@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,10 +16,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import {
-	GROUP_PERMISSION_TIERS,
-	type PermissionSection,
-} from "../constants";
+import { useAvailableModules } from "../hooks/useAdminUsers";
+import { useTranslation } from "react-i18next";
 
 interface CreateGroupDialogProps {
 	open: boolean;
@@ -27,13 +25,15 @@ interface CreateGroupDialogProps {
 	onCreate: (name: string, description: string) => void;
 }
 
-function buildDefaultPermissions(): Record<string, boolean> {
+type ModuleData = {id: string; name: Record<string, string>; actions: {id: string; label: Record<string, string>}[]};
+type ProgramGroupData = {id: string; title: Record<string, string>; modules: ModuleData[]};
+
+function buildDefaultPermissions(availableModules: ProgramGroupData[]): Record<string, boolean> {
 	const state: Record<string, boolean> = {};
-	for (const tier of GROUP_PERMISSION_TIERS) {
-		for (const section of tier.sections) {
-			for (const option of section.options) {
-				state[`${tier.id}.${section.id}.${option.id}`] =
-					option.defaultChecked;
+	for (const tier of availableModules) {
+		for (const section of tier.modules) {
+			for (const option of section.actions) {
+				state[`${tier.id}.${section.id}.${option.id}`] = false;
 			}
 		}
 	}
@@ -46,16 +46,18 @@ function PermissionSectionCard({
 	permissions,
 	onToggleOption,
 	onToggleAll,
+	currentLang,
 }: {
 	tierId: string;
-	section: PermissionSection;
+	section: ModuleData;
 	permissions: Record<string, boolean>;
 	onToggleOption: (key: string, checked: boolean) => void;
-	onToggleAll: (tierId: string, section: PermissionSection, checked: boolean) => void;
+	onToggleAll: (tierId: string, section: ModuleData, checked: boolean) => void;
+	currentLang: string;
 }) {
 	const [collapsed, setCollapsed] = useState(false);
 
-	const allChecked = section.options.every(
+	const allChecked = section.actions.length > 0 && section.actions.every(
 		(option) => permissions[`${tierId}.${section.id}.${option.id}`],
 	);
 
@@ -66,8 +68,8 @@ function PermissionSectionCard({
 				onClick={() => setCollapsed((prev) => !prev)}
 				className="flex w-full cursor-pointer items-center justify-between bg-slate-100 px-3 py-2"
 			>
-				<span className="text-sm font-semibold text-slate-900">
-					<Translate text={section.title} />
+				<span className="text-sm font-semibold text-slate-900 capitalize">
+					{section.name[currentLang] || section.name["sv"]}
 				</span>
 				<ChevronUp
 					className={
@@ -90,7 +92,7 @@ function PermissionSectionCard({
 							text={localizationConstants.adminGroupsPermAll}
 						/>
 					</Label>
-					{section.options.map((option) => {
+					{section.actions.map((option) => {
 						const key = `${tierId}.${section.id}.${option.id}`;
 						return (
 							<Label
@@ -98,12 +100,12 @@ function PermissionSectionCard({
 								className="flex items-center gap-2 text-sm font-normal text-slate-900"
 							>
 								<Checkbox
-									checked={permissions[key]}
+									checked={permissions[key] || false}
 									onCheckedChange={(checked) =>
 										onToggleOption(key, checked === true)
 									}
 								/>
-								<Translate text={option.label} />
+								<span className="capitalize">{option.label[currentLang] || option.label["sv"]}</span>
 							</Label>
 						);
 					})}
@@ -119,13 +121,23 @@ export default function CreateGroupDialog({
 	onCreate,
 }: CreateGroupDialogProps) {
 	const t = useTranslate();
+	const { i18n } = useTranslation();
+	const currentLang = i18n.language === 'en' ? 'en' : 'sv';
+	
+	const { data: availableModulesData } = useAvailableModules();
+	const availableModules: ProgramGroupData[] = useMemo(() => availableModulesData?.data || [], [availableModulesData]);
+
 	const [step, setStep] = useState<1 | 2>(1);
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [nameError, setNameError] = useState(false);
-	const [permissions, setPermissions] = useState<Record<string, boolean>>(
-		buildDefaultPermissions,
-	);
+	const [permissions, setPermissions] = useState<Record<string, boolean>>({});
+
+	useEffect(() => {
+		if (open) {
+			setPermissions(buildDefaultPermissions(availableModules));
+		}
+	}, [open, availableModules]);
 
 	const resetAndClose = (nextOpen: boolean) => {
 		if (!nextOpen) {
@@ -133,7 +145,7 @@ export default function CreateGroupDialog({
 			setName("");
 			setDescription("");
 			setNameError(false);
-			setPermissions(buildDefaultPermissions());
+			setPermissions(buildDefaultPermissions(availableModules));
 		}
 		onOpenChange(nextOpen);
 	};
@@ -153,12 +165,12 @@ export default function CreateGroupDialog({
 
 	const handleToggleAll = (
 		tierId: string,
-		section: PermissionSection,
+		section: ModuleData,
 		checked: boolean,
 	) => {
 		setPermissions((prev) => {
 			const next = { ...prev };
-			for (const option of section.options) {
+			for (const option of section.actions) {
 				next[`${tierId}.${section.id}.${option.id}`] = checked;
 			}
 			return next;
@@ -277,12 +289,20 @@ export default function CreateGroupDialog({
 					stepOne
 				) : (
 					<div className="flex flex-col gap-5">
-						{GROUP_PERMISSION_TIERS.map((tier) => (
+						{availableModules.length === 0 ? (
+							<div className="py-8 text-center text-sm text-slate-500">
+								<Translate text={localizationConstants.noDataFound} />
+							</div>
+						) : availableModules.map((tier) => (
 							<div key={tier.id} className="flex flex-col gap-3">
-								<h3 className="text-lg font-bold text-slate-900">
-									{tier.title}
+								<h3 className="text-lg font-bold text-slate-900 capitalize">
+									{tier.title[currentLang] || tier.title["sv"]}
 								</h3>
-								{tier.sections.map((section) => (
+								{tier.modules.length === 0 ? (
+									<div className="text-sm text-slate-500">
+										<Translate text={localizationConstants.noDataFound} />
+									</div>
+								) : tier.modules.map((section) => (
 									<PermissionSectionCard
 										key={`${tier.id}-${section.id}`}
 										tierId={tier.id}
@@ -290,6 +310,7 @@ export default function CreateGroupDialog({
 										permissions={permissions}
 										onToggleOption={handleToggleOption}
 										onToggleAll={handleToggleAll}
+										currentLang={currentLang}
 									/>
 								))}
 							</div>

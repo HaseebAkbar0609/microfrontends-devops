@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useAdminUsers, useAdminGroups, useUpdateUserPermissions, useAssignUserLicense, useAvailableModules, useAdminUserDetail, useLicensesSummary, useAdminRoleOptions, useAdminTypeOptions } from "../hooks/useAdminUsers";
+import { useTranslation } from "react-i18next";
 import {
 	ArrowLeft,
 	Building2,
@@ -45,13 +47,7 @@ import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import {
-	PROGRAM_GROUPS,
-	SETTINGS_USERS,
-	USER_GROUP_OPTIONS,
-	USER_ROLE_OPTIONS,
-	USER_TYPE_OPTIONS,
-} from "../constants";
+// Removed static constants imports
 
 const MODULE_ICONS: Record<string, LucideIcon> = {
 	faktura: Receipt,
@@ -76,9 +72,10 @@ const MODULE_ICONS: Record<string, LucideIcon> = {
 };
 
 function UserAvatar({ name }: { name: string }) {
-	const initials = name
+	const initials = (name || "U")
 		.split(" ")
 		.map((part) => part[0])
+		.filter(Boolean)
 		.slice(0, 2)
 		.join("")
 		.toUpperCase();
@@ -92,37 +89,151 @@ function UserAvatar({ name }: { name: string }) {
 export default function UserSettings() {
 	const t = useTranslate();
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const userIdFromQuery = searchParams.get("userId");
 
-	const [selectedUserId, setSelectedUserId] = useState(SETTINGS_USERS[0].id);
+	const { data: usersData } = useAdminUsers({ page: 1, limit: 100 });
+	const { data: groupsData } = useAdminGroups({ limit: 100 });
+
+	const apiGroups = useMemo(() => {
+		const raw = groupsData?.data?.items || groupsData?.data || [];
+		if (!Array.isArray(raw)) return [];
+		return raw.map((g: Record<string, unknown>) => (g.name as string) || String(g));
+	}, [groupsData]);
+
+	const groupOptions = apiGroups;
+	
+	const { data: rolesData } = useAdminRoleOptions();
+	const roleOptions = useMemo(() => {
+		const raw = rolesData?.data || [];
+		if (!Array.isArray(raw)) return [];
+		return raw.map((r: Record<string, unknown>) => (r.name as string) || String(r));
+	}, [rolesData]);
+
+	const apiUsers = useMemo(() => {
+		const raw = usersData?.data?.items || usersData?.data || [];
+		if (!Array.isArray(raw)) return [];
+		return raw.map((u: Record<string, unknown>) => {
+			const firstName = (u.first_name as string) || "";
+			const lastName = (u.last_name as string) || "";
+			const email = (u.email as string) || "";
+			const fullName = `${firstName} ${lastName}`.trim() || email || "User";
+			const handle = email ? `@${email.split("@")[0]}` : "";
+			return {
+				id: u.id as string,
+				name: fullName,
+				handle,
+				permission_role_name: (u.permission_role_name as string) || "",
+				permission_role_id: (u.permission_role_id as string) || "",
+				position_id: (u.position_id as string) || "",
+				position: (u.position as string) || "",
+				groups: Array.isArray(u.groups) ? u.groups : [],
+				status: u.status,
+			};
+		});
+	}, [usersData]);
+
+	const userOptions = apiUsers;
+
+	const [selectedUserId, setSelectedUserId] = useState<string>("");
+
+	useEffect(() => {
+		if (userIdFromQuery && userOptions.some((u) => u.id === userIdFromQuery)) {
+			setSelectedUserId(userIdFromQuery);
+		} else if (userOptions.length > 0 && !userIdFromQuery && !selectedUserId) {
+			setSelectedUserId(userOptions[0].id);
+		}
+	}, [userIdFromQuery, userOptions, selectedUserId]);
+
 	const [infoOpen, setInfoOpen] = useState(true);
 	const [isAdmin, setIsAdmin] = useState(true);
-	const [group, setGroup] = useState(USER_GROUP_OPTIONS[0]);
-	const [role, setRole] = useState(USER_ROLE_OPTIONS[0]);
-	const [type, setType] = useState(USER_TYPE_OPTIONS[0]);
+	const [group, setGroup] = useState("");
+	const [role, setRole] = useState("");
+	const [type, setType] = useState("");
+	
+	const { data: typesData } = useAdminTypeOptions();
+	const typeOptions = typesData?.data || [];
+
 	const [reports, setReports] = useState(true);
 	const [registerOther, setRegisterOther] = useState(true);
 	const [license, setLicense] = useState("pro");
 	const [collapsedGroups, setCollapsedGroups] = useState<
 		Record<string, boolean>
 	>({});
-	const [moduleAccess, setModuleAccess] = useState<Record<string, boolean>>(
-		() =>
-			Object.fromEntries(
-				PROGRAM_GROUPS.flatMap((programGroup) =>
-					programGroup.modules.map((module) => [
-						module.id,
-						module.checked,
-					]),
-				),
-			),
+	const { data: availableModulesData } = useAvailableModules();
+	const availableModules = availableModulesData?.data || [];
+	const { i18n } = useTranslation();
+	const currentLang = i18n.language === 'en' ? 'en' : 'sv';
+
+	const { data: userDetailData } = useAdminUserDetail(selectedUserId);
+	const { data: licensesData, isLoading: isLoadingLicenses } = useLicensesSummary();
+	const licenseRows = (licensesData?.data || []).filter(
+		(row: Record<string, unknown>) =>
+			(row.purchased as number) > 0 || (row.allocated as number) > 0
 	);
+	
+	const [moduleAccess, setModuleAccess] = useState<Record<string, boolean>>({});
+
+	useEffect(() => {
+		if (userDetailData?.data?.module_permissions) {
+			setModuleAccess(userDetailData.data.module_permissions);
+		} else {
+			setModuleAccess({});
+		}
+		if (userDetailData?.data?.license) {
+			setLicense(userDetailData.data.license.toLowerCase());
+		} else {
+			setLicense("standard");
+		}
+	}, [userDetailData]);
+
+	const updatePermissionsMutation = useUpdateUserPermissions();
+	const assignLicenseMutation = useAssignUserLicense();
+
+	const handleModuleAccessChange = (moduleId: string, checked: boolean) => {
+		setModuleAccess((prev) => {
+			const newAccess = { ...prev, [moduleId]: checked };
+			if (selectedUserId) {
+				updatePermissionsMutation.mutate({
+					userId: selectedUserId,
+					module_permissions: newAccess
+				});
+			}
+			return newAccess;
+		});
+	};
+
+	const handleLicenseChange = (value: string) => {
+		setLicense(value);
+		if (selectedUserId) {
+			assignLicenseMutation.mutate({
+				userId: selectedUserId,
+				subscription_plan_id: value
+			});
+		}
+	};
 
 	const selectedUser = useMemo(
 		() =>
-			SETTINGS_USERS.find((user) => user.id === selectedUserId) ??
-			SETTINGS_USERS[0],
-		[selectedUserId],
+			userOptions.find((user) => user.id === selectedUserId) ??
+			userOptions[0] ??
+			null,
+		[userOptions, selectedUserId],
 	);
+
+	useEffect(() => {
+		if (selectedUser) {
+			if ("permission_role_name" in selectedUser && selectedUser.permission_role_name) {
+				setRole(String(selectedUser.permission_role_name));
+			}
+			if ("groups" in selectedUser && Array.isArray(selectedUser.groups) && selectedUser.groups.length > 0) {
+				setGroup(String(selectedUser.groups[0].name));
+			}
+			if ("position_id" in selectedUser && selectedUser.position_id) {
+				setType(String(selectedUser.position_id));
+			}
+		}
+	}, [selectedUser]);
 
 	const notifyComingSoon = () =>
 		showToast("info", t(localizationConstants.comingSoon));
@@ -158,13 +269,16 @@ export default function UserSettings() {
 				<div className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center">
 					<Select
 						value={selectedUserId}
-						onValueChange={setSelectedUserId}
+						onValueChange={(val) => {
+							setSelectedUserId(val);
+							router.push(`?userId=${val}`);
+						}}
 					>
 						<SelectTrigger className="h-11 w-full flex-1 border-slate-200">
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
-							{SETTINGS_USERS.map((user) => (
+							{userOptions.map((user) => (
 								<SelectItem key={user.id} value={user.id}>
 									<span className="flex items-center gap-2">
 										<UserAvatar name={user.name} />
@@ -226,7 +340,7 @@ export default function UserSettings() {
 									/>
 								</span>
 								<span className="text-sm text-slate-500">
-									{selectedUser.name}
+									{selectedUser?.name || ""}
 								</span>
 							</div>
 							<div className="flex flex-col gap-1.5">
@@ -295,7 +409,7 @@ export default function UserSettings() {
 										</span>
 									</SelectTrigger>
 									<SelectContent>
-										{USER_GROUP_OPTIONS.map((option) => (
+										{groupOptions.map((option) => (
 											<SelectItem
 												key={option}
 												value={option}
@@ -322,7 +436,7 @@ export default function UserSettings() {
 										</span>
 									</SelectTrigger>
 									<SelectContent>
-										{USER_ROLE_OPTIONS.map((option) => (
+										{roleOptions.map((option) => (
 											<SelectItem
 												key={option}
 												value={option}
@@ -346,12 +460,12 @@ export default function UserSettings() {
 										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
-										{USER_TYPE_OPTIONS.map((option) => (
+										{typeOptions.map((option: { id: string; name: string; name_sv: string }) => (
 											<SelectItem
-												key={option}
-												value={option}
+												key={option.id}
+												value={option.id}
 											>
-												{option}
+												{currentLang === 'sv' && option.name_sv ? option.name_sv : option.name}
 											</SelectItem>
 										))}
 									</SelectContent>
@@ -361,7 +475,7 @@ export default function UserSettings() {
 
 						<RadioGroup
 							value={license}
-							onValueChange={setLicense}
+							onValueChange={handleLicenseChange}
 							className="grid grid-cols-1 gap-4 md:grid-cols-4"
 						>
 							<Label className="flex items-center gap-2 text-sm font-medium text-slate-900">
@@ -390,175 +504,152 @@ export default function UserSettings() {
 									}
 								/>
 							</Label>
-							<div className="flex flex-col gap-1">
-								<Label className="flex items-center gap-2 text-sm font-medium text-slate-900">
-									<RadioGroupItem value="standard" />
-									<Translate
-										text={
-											localizationConstants.adminUserStandardLicense
-										}
-									/>
-								</Label>
-								<span className="pl-6 text-sm text-slate-500">
-									<Translate
-										text={
-											localizationConstants.adminUsersPurchasedCol
-										}
-									/>
-									: 5 |{" "}
-									<Translate
-										text={
-											localizationConstants.adminUsersAvailableCol
-										}
-									/>
-									: 3
-								</span>
-							</div>
-							<div className="flex flex-col gap-1">
-								<Label className="flex items-center gap-2 text-sm font-medium text-slate-900">
-									<RadioGroupItem value="pro" />
-									PRO
-								</Label>
-								<span className="pl-6 text-sm text-slate-500">
-									<Translate
-										text={
-											localizationConstants.adminUsersPurchasedCol
-										}
-									/>
-									: 5 |{" "}
-									<Translate
-										text={
-											localizationConstants.adminUsersAvailableCol
-										}
-									/>
-									: 3
-								</span>
-							</div>
+							
+							{isLoadingLicenses ? (
+								<div className="col-span-2 text-sm text-slate-500">
+									<Translate text={localizationConstants.genericLoading} />
+								</div>
+							) : licenseRows.length === 0 ? (
+								<div className="col-span-2 text-sm text-slate-500">
+									<Translate text={localizationConstants.noDataFound} />
+								</div>
+							) : (
+								licenseRows.map((row: Record<string, unknown>) => (
+									<div key={row.plan_key as string} className="flex flex-col gap-1">
+										<Label className="flex items-center gap-2 text-sm font-medium text-slate-900 capitalize">
+											<RadioGroupItem value={(row.plan_key as string).toLowerCase()} />
+											{row.plan_key as string}
+										</Label>
+										<span className="pl-6 text-sm text-slate-500">
+											<Translate text={localizationConstants.adminUsersPurchasedCol} />
+											: {row.purchased as number} |{" "}
+											<Translate text={localizationConstants.adminUsersAvailableCol} />
+											: {(row.available as number) ?? "-"}
+										</span>
+									</div>
+								))
+							)}
 						</RadioGroup>
 
-						<div className="flex flex-col gap-4">
-							<span className="text-sm font-medium text-slate-900">
-								<Translate
-									text={
-										localizationConstants.adminUserPrograms
-									}
-								/>
-							</span>
-							<div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
-								{PROGRAM_GROUPS.map((programGroup) => {
-									const collapsed =
-										collapsedGroups[programGroup.id];
-									return (
-										<div
-											key={programGroup.id}
-											className="overflow-hidden rounded-md border border-slate-200 bg-white"
-										>
-											<button
-												type="button"
-												onClick={() =>
-													setCollapsedGroups(
-														(prev) => ({
-															...prev,
-															[programGroup.id]:
-																!prev[
-																	programGroup
-																		.id
-																],
-														}),
-													)
-												}
-												className="flex w-full cursor-pointer items-center justify-between bg-slate-100 px-4 py-3"
+						{availableModules.length > 0 && (
+							<div className="flex flex-col gap-4">
+								<span className="text-sm font-medium text-slate-900">
+									<Translate
+										text={
+											localizationConstants.adminUserPrograms
+										}
+									/>
+								</span>
+								<div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+									{availableModules.map((programGroup: {id: string, title: Record<string, string>, modules: {id: string, name: Record<string, string>}[]}) => {
+										const collapsed = collapsedGroups[programGroup.id];
+										return (
+											<div
+												key={programGroup.id}
+												className="overflow-hidden rounded-md border border-slate-200 bg-white"
 											>
-												<span className="text-sm font-semibold text-slate-900">
-													{programGroup.title}
-												</span>
-												{collapsed ? (
-													<ChevronDown className="h-4 w-4 text-slate-500" />
-												) : (
-													<ChevronUp className="h-4 w-4 text-slate-500" />
-												)}
-											</button>
-											{!collapsed && (
-												<div>
-													<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-sm font-medium text-slate-500">
-														<Translate
-															text={
-																localizationConstants.adminUserModules
-															}
-														/>
-														<Translate
-															text={
-																localizationConstants.adminUsersColAccess
-															}
-														/>
-													</div>
-													{programGroup.modules.map(
-														(module) => {
-															const Icon =
-																MODULE_ICONS[
-																	module.id
-																] ?? File;
-															return (
-																<div
-																	key={
+												<button
+													type="button"
+													onClick={() =>
+														setCollapsedGroups(
+															(prev) => ({
+																...prev,
+																[programGroup.id]:
+																	!prev[
+																		programGroup
+																			.id
+																	],
+															}),
+														)
+													}
+													className="flex w-full cursor-pointer items-center justify-between bg-slate-100 px-4 py-3"
+												>
+													<span className="text-sm font-semibold text-slate-900 capitalize">
+														{programGroup.title[currentLang] || programGroup.title["sv"]}
+													</span>
+													{collapsed ? (
+														<ChevronDown className="h-4 w-4 text-slate-500" />
+													) : (
+														<ChevronUp className="h-4 w-4 text-slate-500" />
+													)}
+												</button>
+												{!collapsed && (
+													<div>
+														<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3 text-sm font-medium text-slate-500">
+															<Translate
+																text={
+																	localizationConstants.adminUserModules
+																}
+															/>
+															<Translate
+																text={
+																	localizationConstants.adminUsersColAccess
+																}
+															/>
+														</div>
+														{programGroup.modules.length === 0 ? (
+															<div className="px-4 py-6 text-center text-sm text-slate-500">
+																<Translate text={localizationConstants.noDataFound} />
+															</div>
+														) : (
+															programGroup.modules.map(
+																(module: {id: string, name: Record<string, string>}) => {
+																const Icon =
+																	MODULE_ICONS[
 																		module.id
-																	}
-																	className="flex items-center justify-between border-b border-slate-100 px-4 py-3 last:border-b-0"
-																>
-																	<span className="flex items-center gap-2 text-sm text-slate-900">
-																		<Icon className="h-4 w-4 text-slate-600" />
-																		{
-																			module.name
+																	] || Package;
+																const checked =
+																	moduleAccess[
+																		module.id
+																	] || false;
+																return (
+																	<div
+																		key={
+																			module.id
 																		}
-																	</span>
-																	<span className="flex items-center gap-3">
-																		<Checkbox
-																			checked={
-																				moduleAccess[
-																					module
-																						.id
-																				]
-																			}
-																			onCheckedChange={(
-																				checked,
-																			) =>
-																				setModuleAccess(
-																					(
-																						prev,
-																					) => ({
-																						...prev,
-																						[module.id]:
-																							checked ===
-																							true,
-																					}),
-																				)
-																			}
-																		/>
-																		<Button
-																			variant="outline"
-																			onClick={
-																				notifyComingSoon
-																			}
-																			className="h-8 rounded-md border-slate-200 bg-white px-3 text-sm font-medium text-slate-900 hover:bg-slate-50"
-																		>
-																			<Translate
-																				text={
-																					localizationConstants.adminUsersOpen
+																		className="flex items-center justify-between border-b border-slate-100 px-4 py-3 last:border-0"
+																	>
+																		<div className="flex items-center gap-3">
+																			<Icon className="h-4 w-4 text-slate-400" />
+																			<span className="text-sm text-slate-700 capitalize">
+																				{module.name[currentLang] || module.name["sv"]}
+																			</span>
+																		</div>
+																		<div className="flex items-center gap-2">
+																			<Checkbox
+																				checked={
+																					checked
+																				}
+																				onCheckedChange={(c) =>
+																					handleModuleAccessChange(module.id, c === true)
 																				}
 																			/>
-																		</Button>
-																	</span>
-																</div>
-															);
-														},
-													)}
-												</div>
-											)}
-										</div>
-									);
-								})}
+																			<Button
+																				variant="outline"
+																				onClick={
+																					notifyComingSoon
+																				}
+																				className="h-8 rounded-md border-slate-200 bg-white px-3 text-sm font-medium text-slate-900 hover:bg-slate-50"
+																			>
+																				<Translate
+																					text={
+																						localizationConstants.adminUsersOpen
+																					}
+																				/>
+																			</Button>
+																		</div>
+																	</div>
+																);
+															})
+														)}
+													</div>
+												)}
+											</div>
+										);
+									})}
+								</div>
 							</div>
-						</div>
+						)}
 					</div>
 				)}
 			</div>
