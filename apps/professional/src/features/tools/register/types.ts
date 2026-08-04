@@ -816,6 +816,26 @@ export interface GetBudgetListResponse {
 	totalPages: number;
 }
 
+export const createBudgetSchema = z.object({
+	budgetNr: z.string().optional(),
+	budgetName: z.string().min(1, "validationBudgetNameRequired"),
+	totalAmount: z
+		.string()
+		.min(1, "validationBudgetTotalAmountRequired")
+		.refine((val) => !isNaN(Number(val.replace(/\s/g, "").replace(",", "."))), {
+			message: "validationBudgetTotalAmountInvalid",
+		}),
+	currency: z.string().min(1, "validationBudgetCurrencyRequired"),
+	category: z.string().min(1, "validationBudgetCategoryRequired"),
+	startDate: z.string().min(1, "validationBudgetStartDateRequired"),
+	endDate: z.string().min(1, "validationBudgetEndDateRequired"),
+	description: z.string().optional(),
+	avvikBudget: z.boolean(),
+	overheadBudget: z.boolean(),
+});
+
+export type CreateBudgetFormData = z.infer<typeof createBudgetSchema>;
+
 export const wageTypeSchema = z.object({
 	id: z.string(),
 	code: z.string(),
