@@ -54,6 +54,9 @@ export async function getBudgetListAPIAction(
 					limit: res.data?.data?.limit ?? params?.limit ?? 50,
 					totalPages: res.data?.data?.totalPages ?? 1,
 				};
+			} else {
+				console.error("Zod validation failed for Budget list:", validated.error);
+				throw new Error("Budget schema validation error");
 			}
 		}
 	} catch (error) {
