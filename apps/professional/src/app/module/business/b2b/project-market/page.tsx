@@ -1,14 +1,6 @@
-import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-export default function Page() {
-	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold">
-				<Translate text={localizationConstants.b2bProjectMarket} />
-			</h1>
-			<p className="mt-2 text-sm text-slate-600">
-				<Translate text={localizationConstants.comingSoon} />{" "}
-			</p>
-		</div>
-	);
+import { B2BProjectMarketView } from "@/features/b2b/components/B2BProjectMarketView";
+import { DUMMY_PROJECTS } from "@/features/b2b/constants/projectMarketMock";
+
+export default function B2BProjectMarketPage() {
+  return <B2BProjectMarketView projects={DUMMY_PROJECTS} />;
 }
