@@ -1,10 +1,22 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { GetBudgetListParams } from "../types";
 import {
+	createBudgetAPIAction,
 	getBudgetListAPIAction,
 	toggleBudgetStatusAPIAction,
 	toggleBudgetFavoriteAPIAction,
 } from "../api/budgetRegister";
+
+export function useCreateBudgetMutation() {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: createBudgetAPIAction,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["budgetList"] });
+		},
+	});
+}
+
 
 export function useBudgetListQuery(params?: GetBudgetListParams) {
 	return useQuery({
