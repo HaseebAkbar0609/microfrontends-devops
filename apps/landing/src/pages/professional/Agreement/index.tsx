@@ -1,22 +1,12 @@
-import {
-  ProfessionalAgreementHero,
-  ProfessionalAgreementContent,
-} from "@/components/professional/Agreement";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalAgreementPage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Agreement</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalAgreementHero /> */}
-        <ProfessionalAgreementContent />
-      </div>
-    </>
-  );
-};
+const slug = "avtal";
+const found = findModule(slug);
 
-export default ProfessionalAgreementPage;
+export default function ProfessionalAgreementPage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

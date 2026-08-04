@@ -1,22 +1,12 @@
-import {
-  ProfessionalB2b_pageHero,
-  ProfessionalB2b_pageContent,
-} from "@/components/professional/B2b_page";
-import { NextPage } from "next";
-import Head from "next/head";
+import DynamicModulePage from "../[slug]";
+import { findModule } from "@/lib/modules";
 
-const ProfessionalB2b_pagePage: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>TimeFlowSystem - Professional - Offert</title>
-      </Head>
-      <div className="w-full bg-white text-center md:text-left">
-        {/* <ProfessionalB2b_pageHero /> */}
-        <ProfessionalB2b_pageContent />
-      </div>
-    </>
-  );
-};
+const slug = "b2b";
+const found = findModule(slug);
 
-export default ProfessionalB2b_pagePage;
+export default function ProfessionalB2bPagePage() {
+  if (!found) return null;
+  return <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+}
+
+export const getStaticProps = async () => ({ props: { hasHeader: false } });

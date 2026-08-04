@@ -1,5 +1,4 @@
 import {
-  ProfessionalInstallationsHero,
   ProfessionalInstallationsContent,
 } from "@/components/professional/Installations";
 import { NextPage } from "next";
