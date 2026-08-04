@@ -1,10 +1,10 @@
 "use client";
 
-import { useForm, Controller, useFieldArray, useWatch } from "react-hook-form";
+import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
 	BriefcaseBusiness,
 	Loader2,
@@ -24,7 +24,6 @@ import {
 	FormCheckbox,
 	FormSelect,
 	FormFileUpload,
-	FormCitySelect,
 } from "@/components/form";
 import { showToast } from "@/lib/toast";
 import { CollapsibleSection } from "@/components/common/CollapsibleSection";
@@ -33,8 +32,6 @@ import {
 	useUpdateProfileSettings,
 	type ProfileSettingsData,
 } from "../hooks/useProfileSettings";
-import { getCountriesAction, type Country } from "@/api-actions";
-import { formatOptions } from "@/lib/utils";
 
 const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 	nextOfKin: [{ name: "", relation: "", phone: "", email: "" }],
@@ -48,6 +45,7 @@ const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 	email: "",
 	countryId: "",
 	cityId: "",
+	postalCity: "",
 	personalId: "",
 	phone: "",
 	streetAddress: "",
@@ -61,12 +59,6 @@ const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 
 export default function ContactSection() {
 	const lastSavedRef = useRef<ContactFormValues | null>(null);
-	// Tracks the latest saved city so FormCitySelect can preserve and display it
-	// while its paginated options catch up.
-	const initialCityRef = useRef<{ id: string; name: string } | null>(null);
-
-	const [countries, setCountries] = useState<Country[]>([]);
-	const [isCountriesLoading, setIsCountriesLoading] = useState(false);
 
 	const form = useForm<ContactFormValues>({
 		resolver: zodResolver(contactSchema),
@@ -79,38 +71,9 @@ export default function ContactSection() {
 
 	const { fields, append } = useFieldArray({ control, name: "nextOfKin" });
 
-	const selectedCountryId = useWatch({ control, name: "countryId" });
-	const countryOptions = useMemo(() => formatOptions(countries), [countries]);
-
-	// Load country list once on mount
-	useEffect(() => {
-		const load = async () => {
-			setIsCountriesLoading(true);
-			try {
-				const result = await getCountriesAction();
-				if (result.success && result.data) setCountries(result.data);
-				else showToast("error", localizationConstants.loadCountriesFailed);
-			} catch {
-				showToast("error", localizationConstants.loadCountriesFailed);
-			} finally {
-				setIsCountriesLoading(false);
-			}
-		};
-		load();
-	}, []);
-
 	const onSubmit = async (data: ContactFormValues) => {
 		try {
 			await updateProfileSettings.mutateAsync(data);
-			initialCityRef.current = data.cityId
-				? {
-					id: data.cityId,
-					name:
-						initialCityRef.current?.id === data.cityId
-							? initialCityRef.current.name
-							: "",
-				}
-				: null;
 			lastSavedRef.current = data;
 			showToast("success", localizationConstants.profileUpdated);
 		} catch (_error) {
@@ -124,13 +87,10 @@ export default function ContactSection() {
 
 		const incoming = profileSettingsQuery.data as ProfileSettingsData;
 
-		initialCityRef.current = incoming.cityId
-			? { id: incoming.cityId, name: incoming.cityName ?? "" }
-			: null;
-
 		const merged: ContactFormValues = {
 			...DEFAULT_CONTACT_VALUES,
 			...incoming,
+			postalCity: incoming.cityName ?? "",
 			notifications: {
 				...DEFAULT_CONTACT_VALUES.notifications,
 				...incoming.notifications,
@@ -179,7 +139,7 @@ export default function ContactSection() {
 									control={control}
 									name="personalId"
 									label={localizationConstants.personalId}
-									placeholder="YYMMDD-XXXX"
+									placeholder="ÅÅMMDD-XXXX"
 								/>
 							</div>
 						</div>
@@ -221,26 +181,11 @@ export default function ContactSection() {
 									label={localizationConstants.postalCode}
 									placeholder={localizationConstants.postalCode}
 								/>
-								<FormSelect
+								<FormInput
 									control={control}
-									name="countryId"
-									label={<Translate text={localizationConstants.registerCountryLabel} />}
-									placeholder={localizationConstants.registerCountryPlaceholder}
-									options={countryOptions}
-									disabled={isCountriesLoading}
-									triggerClassName="w-full"
-								/>
-								<FormCitySelect
-									name="cityId"
-									countryId={selectedCountryId || undefined}
-									label={<Translate text={localizationConstants.city} />}
-									placeholder={localizationConstants.registerCityPlaceholder}
-									disabled={!selectedCountryId}
-									disableWhileLoading
-									skipCityResetWhenValue={initialCityRef.current?.id}
-									ensureOptionIfMissing={initialCityRef.current?.id}
-									ensureOptionLabelIfMissing={initialCityRef.current?.name}
-									triggerClassName="w-full"
+									name="postalCity"
+									label={localizationConstants.profilePostalCity}
+									placeholder={localizationConstants.profilePostalCity}
 								/>
 							</div>
 						</div>
@@ -299,19 +244,19 @@ export default function ContactSection() {
 										label={localizationConstants.nextOfKinEmail}
 										placeholder={localizationConstants.nextOfKinEmail}
 									/>
-									<div className="flex items-end">
-										<Button
-											type="button"
-											variant="outline"
-											className="border-0 w-[184px] h-10 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
-											onClick={() => append({ name: "", relation: "", phone: "", email: "" })}
-										>
-											<UserPlus size={16} />
-											<Translate text={localizationConstants.addRelatives} />
-										</Button>
-									</div>
 								</div>
 							))}
+							<div className="flex items-end">
+								<Button
+									type="button"
+									variant="outline"
+									className="border-0 w-[184px] h-10 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
+									onClick={() => append({ name: "", relation: "", phone: "", email: "" })}
+								>
+									<UserPlus size={16} />
+									<Translate text={localizationConstants.addRelatives} />
+								</Button>
+							</div>
 						</div>
 					</CollapsibleSection>
 
@@ -329,6 +274,7 @@ export default function ContactSection() {
 									name="employmentNumber"
 									label={localizationConstants.employmentNumber}
 									placeholder={localizationConstants.employmentNumber}
+									inputClassName="!bg-[#f4f4f5]"
 									inputProps={{ readOnly: true }}
 								/>
 								<FormInput
