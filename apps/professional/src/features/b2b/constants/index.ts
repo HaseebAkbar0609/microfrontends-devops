@@ -41,6 +41,12 @@ export const b2bSidebarItems: DynamicSubSidebarItem[] = [
 		icon: Store,
 	},
 	{
+		id: "deals",
+		labelKey: localizationConstants.b2bDeals,
+		href: "/module/business/b2b/deals",
+		icon: Handshake,
+	},
+	{
 		id: "archive",
 		labelKey: localizationConstants.archive,
 		href: "/module/business/b2b/archive",

@@ -1,0 +1,55 @@
+import { B2BDealDetail } from "../types/dealDetail";
+
+export const DUMMY_DEAL_DETAIL: B2BDealDetail = {
+  id: "1",
+  refNumber: "KU9998",
+  title: "Köksrenoveringsjobb",
+  status: "active",
+  date: "18-12-2024",
+  projectNr: "2025-001",
+  municipality: "Järfälla",
+  contact: {
+    name: "Anna Andersson",
+    email: "anna@example.test",
+    phone: "0706000000",
+    postalCode: "000 7981 249",
+    address: "Storgatan 16, 18880 Stockholm",
+    city: "Stockholm",
+  },
+  request: {
+    projectName: "Köksrenovering Stockholmskontor",
+    projectNumber: "0619",
+    projectAddress: "Storgatan 16, 18880 Stockholm",
+    city: "Stockholm",
+    postalCode: "0619",
+    contractForm: "",
+    jobType: "B2B-offert, Hyra, IN",
+    addressOptional: "",
+  },
+  typeSection: {
+    title: "B2B- Hyra IN",
+    category: "Omtjänst",
+    subcategory: "Målning",
+    description: "Skall genomföras",
+    startDate: "27-10-2025",
+    offerDate: "02-01-2026",
+    images: [
+      { id: "img-1", label: "Photo.img" },
+      { id: "img-2", label: "Photo.img" },
+      { id: "img-3", label: "Photo.img" },
+    ],
+    extraImagesCount: 6,
+    documents: [
+      { id: "doc-1", label: "Formulärsäet #1.doc", type: "doc" },
+      { id: "doc-2", label: "Formulärsäet #1.doc", type: "doc" },
+      { id: "doc-3", label: "projekt.pdf", type: "pdf" },
+    ],
+    drawings: [
+      { id: "drw-1", label: "projekt.pdf", type: "pdf" },
+      { id: "drw-2", label: "bild1", type: "other" },
+      { id: "drw-3", label: "bild2", type: "other" },
+      { id: "drw-4", label: "bild3", type: "other" },
+    ],
+  },
+  additionalInfo: "",
+};
