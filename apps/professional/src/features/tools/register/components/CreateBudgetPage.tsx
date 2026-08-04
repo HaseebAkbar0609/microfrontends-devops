@@ -32,6 +32,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { showToast } from "@/lib/toast";
+import { FormDatePicker } from "@/components/form/FormDatePicker";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { createBudgetSchema, type CreateBudgetFormData } from "../types";
@@ -422,45 +423,27 @@ export function CreateBudgetPage() {
 									/>
 
 									{/* Start Date */}
-									<FormField
+									<FormDatePicker
 										control={form.control}
 										name="startDate"
-										render={({ field }) => (
-											<FormItem className="flex flex-col gap-1.5">
-												<FormLabel className="text-[14px] font-medium leading-5 tracking-normal text-slate-700">
-													<Translate text={localizationConstants.budgetStartDateLabel} />
-												</FormLabel>
-												<FormControl>
-													<Input
-														{...field}
-														type="date"
-														className="h-10 border-slate-200 bg-white text-sm text-slate-900 transition-colors"
-													/>
-												</FormControl>
-												<FormMessage translate={t} className="text-xs text-red-500" />
-											</FormItem>
-										)}
+										label={localizationConstants.budgetStartDateLabel}
+										placeholder={localizationConstants.budgetStartDatePlaceholder}
+										className="flex flex-col gap-1.5"
+										labelClassName="text-[14px] font-medium leading-5 tracking-normal text-slate-700"
+										inputClassName="h-10 w-full border-slate-200 bg-white text-sm text-slate-900 transition-colors"
+										translateError={t}
 									/>
 
 									{/* End Date */}
-									<FormField
+									<FormDatePicker
 										control={form.control}
 										name="endDate"
-										render={({ field }) => (
-											<FormItem className="flex flex-col gap-1.5">
-												<FormLabel className="text-[14px] font-medium leading-5 tracking-normal text-slate-700">
-													<Translate text={localizationConstants.budgetEndDateLabel} />
-												</FormLabel>
-												<FormControl>
-													<Input
-														{...field}
-														type="date"
-														className="h-10 border-slate-200 bg-white text-sm text-slate-900 transition-colors"
-													/>
-												</FormControl>
-												<FormMessage translate={t} className="text-xs text-red-500" />
-											</FormItem>
-										)}
+										label={localizationConstants.budgetEndDateLabel}
+										placeholder={localizationConstants.budgetEndDatePlaceholder}
+										className="flex flex-col gap-1.5"
+										labelClassName="text-[14px] font-medium leading-5 tracking-normal text-slate-700"
+										inputClassName="h-10 w-full border-slate-200 bg-white text-sm text-slate-900 transition-colors"
+										translateError={t}
 									/>
 								</div>
 
