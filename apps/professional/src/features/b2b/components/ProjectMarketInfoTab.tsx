@@ -87,7 +87,7 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
           <InfoField label={t(localizationConstants.phone)} value={data.customerInfo.phone} />
           <InfoField label={t(localizationConstants.address)} value={data.customerInfo.address} />
           <InfoField label={t(localizationConstants.contactNameLabel)} value={data.customerInfo.contactPerson} />
-          <InfoField label={t(localizationConstants.address)} value={data.customerInfo.postalAddress} />
+          <InfoField label={t(localizationConstants.postalAddress)} value={data.customerInfo.postalAddress} />
         </div>
       </SectionCard>
 
