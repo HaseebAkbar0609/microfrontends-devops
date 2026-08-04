@@ -2653,6 +2653,7 @@ export const enRegister: RegisterTranslation = {
 	wageTypeCreatedSuccess: "Wage type created successfully",
 	wageTypeUpdatedSuccess: "Wage type updated successfully",
 	wageTypeDuplicateCodeError: "A wage type with this code already exists",
+	wageTypeFetchError: "Failed to load wage types",
 	ariaViewWageTypeDetails: "View wage type details",
 	goBackToWageTypeListLabel: "Go back to wage types",
 	editWageTypeBasicInfoAriaLabel: "Edit wage type basic information",

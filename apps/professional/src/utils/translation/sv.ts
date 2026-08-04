@@ -2668,6 +2668,7 @@ export const svRegister: RegisterTranslation = {
 	wageTypeCreatedSuccess: "Löneart skapades framgångsrikt",
 	wageTypeUpdatedSuccess: "Löneart uppdaterades framgångsrikt",
 	wageTypeDuplicateCodeError: "En löneart med denna kod finns redan",
+	wageTypeFetchError: "Kunde inte hämta lönearter",
 	ariaViewWageTypeDetails: "Visa detaljer om löneart",
 	goBackToWageTypeListLabel: "Gå tillbaka till lönearter",
 	editWageTypeBasicInfoAriaLabel: "Redigera grundläggande information för löneart",
