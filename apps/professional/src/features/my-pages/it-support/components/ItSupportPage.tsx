@@ -48,7 +48,10 @@ const ItSupportPage = () => {
 	const t = useTranslate();
 	const [tickets, setTickets] = useState<ItTicket[]>(() => listItTickets());
 	const [search, setSearch] = useState("");
-	const [sortAsc, setSortAsc] = useState<boolean | null>(null);
+	const [sortBy, setSortBy] = useState<"date" | "name" | "status" | null>(
+		null,
+	);
+	const [sortAsc, setSortAsc] = useState(true);
 	const [page, setPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
 	const [formOpen, setFormOpen] = useState(false);
@@ -61,14 +64,22 @@ const ItSupportPage = () => {
 			rows = rows.filter((ticket) =>
 				ticket.name.toLowerCase().includes(term),
 			);
-		if (sortAsc !== null)
-			rows = [...rows].sort((a, b) =>
-				sortAsc
-					? a.status.localeCompare(b.status)
-					: b.status.localeCompare(a.status),
+		if (sortBy) {
+			const direction = sortAsc ? 1 : -1;
+			rows = [...rows].sort(
+				(a, b) => a[sortBy].localeCompare(b[sortBy]) * direction,
 			);
+		}
 		return rows;
-	}, [tickets, search, sortAsc]);
+	}, [tickets, search, sortBy, sortAsc]);
+
+	const toggleSort = (field: "date" | "name" | "status") => {
+		if (sortBy === field) setSortAsc((value) => !value);
+		else {
+			setSortBy(field);
+			setSortAsc(true);
+		}
+	};
 
 	const paged = useMemo(
 		() => filtered.slice((page - 1) * pageSize, page * pageSize),
@@ -214,44 +225,45 @@ const ItSupportPage = () => {
 				<Table className="w-full min-w-[44rem]">
 					<TableHeader>
 						<TableRow className="border-b border-slate-200 hover:bg-transparent">
-							<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
-								<span className="flex items-center gap-1">
-									<Translate
-										text={
-											localizationConstants.companyMsgColDate
-										}
-									/>
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
-								</span>
-							</TableHead>
-							<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
-								<span className="flex items-center gap-1">
-									<Translate
-										text={
-											localizationConstants.itSupportColName
-										}
-									/>
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
-								</span>
-							</TableHead>
-							<TableHead className="px-4 py-3 text-sm font-medium text-slate-500">
+							{(
+							[
+								{
+									field: "date",
+									labelKey:
+										localizationConstants.companyMsgColDate,
+								},
+								{
+									field: "name",
+									labelKey:
+										localizationConstants.itSupportColName,
+								},
+								{
+									field: "status",
+									labelKey:
+										localizationConstants.myPagesEmpLeaveColStatus,
+								},
+							] as const
+						).map((column) => (
+							<TableHead
+								key={column.field}
+								className="px-4 py-3 text-sm font-medium text-slate-500"
+							>
 								<button
 									type="button"
-									onClick={() =>
-										setSortAsc((value) =>
-											value === null ? true : !value,
-										)
-									}
+									onClick={() => toggleSort(column.field)}
 									className="flex cursor-pointer items-center gap-1"
 								>
-									<Translate
-										text={
-											localizationConstants.myPagesEmpLeaveColStatus
+									<Translate text={column.labelKey} />
+									<ArrowUpDown
+										className={
+											sortBy === column.field
+												? "h-3.5 w-3.5 text-slate-900"
+												: "h-3.5 w-3.5 opacity-50"
 										}
 									/>
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
 								</button>
 							</TableHead>
+						))}
 							<TableHead className="px-4 py-3" />
 						</TableRow>
 					</TableHeader>

@@ -23,8 +23,6 @@ import { ItTicketValues, itTicketSchema } from "../schemas/itTicket";
 
 const EMPTY_VALUES: ItTicketValues = { subject: "", description: "" };
 
-const DEFAULT_ATTACHMENTS = ["Document 1.pdf", "Document 2.pdf"];
-
 const ItTicketForm = ({
 	editingTicket,
 	onBack,
@@ -38,7 +36,7 @@ const ItTicketForm = ({
 }) => {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [files, setFiles] = useState<string[]>(DEFAULT_ATTACHMENTS);
+	const [files, setFiles] = useState<string[]>([]);
 	const form = useForm<ItTicketValues>({
 		resolver: zodResolver(itTicketSchema),
 		defaultValues: EMPTY_VALUES,
@@ -53,16 +51,16 @@ const ItTicketForm = ({
 					}
 				: EMPTY_VALUES,
 		);
-		setFiles(editingTicket ? editingTicket.files : DEFAULT_ATTACHMENTS);
+		setFiles(editingTicket ? editingTicket.files : []);
 	}, [editingTicket, form]);
 
 	const handleFilesSelected = (list: FileList | null) => {
 		if (!list) return;
-		const names = Array.from(list).map((file) => file.name);
-		setFiles((current) => [
-			...current,
-			...names.filter((name) => !current.includes(name)),
-		]);
+		const names = Array.from(list, (file) => file.name);
+		setFiles((current) => {
+			const seen = new Set(current);
+			return [...current, ...names.filter((name) => !seen.has(name))];
+		});
 	};
 
 	const removeFile = (name: string) =>
