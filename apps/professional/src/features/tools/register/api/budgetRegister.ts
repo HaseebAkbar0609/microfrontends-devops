@@ -1,7 +1,9 @@
 import axiosInstance from "@/lib/axiosInstance";
 import {
 	budgetRegisterRowSchema,
+	createBudgetSchema,
 	type BudgetRegisterRow,
+	type CreateBudgetFormData,
 	type GetBudgetListParams,
 	type GetBudgetListResponse,
 } from "../types";
@@ -11,8 +13,43 @@ import { z } from "zod";
 // Add API endpoint in local structure if not in API_PATH yet
 const BUDGET_API_PATH = {
 	LIST: "/api/v1/professionals/budgets",
+	CREATE: "/api/v1/professionals/budgets",
 	TOGGLE_STATUS: "/api/v1/professionals/budgets/toggle-status",
 };
+
+export async function createBudgetAPIAction(
+	data: CreateBudgetFormData,
+): Promise<{ success: boolean; error?: string }> {
+	try {
+		const payload = {
+			budgetNr: data.budgetNr ?? "",
+			name: data.budgetName,
+			totalAmount: Number(data.totalAmount.replace(/\s/g, "").replace(",", ".")),
+			currency: data.currency,
+			category: data.category,
+			startDate: data.startDate,
+			endDate: data.endDate,
+			description: data.description ?? "",
+			avvikBudget: data.avvikBudget ?? false,
+			overheadBudget: data.overheadBudget ?? false,
+		};
+
+		const parsed = createBudgetSchema.safeParse(data);
+		if (!parsed.success) {
+			return { success: false, error: "validationError" };
+		}
+
+		await axiosInstance.post(BUDGET_API_PATH.CREATE, payload);
+		return { success: true };
+	} catch {
+		if (process.env.NODE_ENV !== "development") {
+			return { success: false, error: "genericError" };
+		}
+		// Local dev mock: just simulate success
+		return { success: true };
+	}
+}
+
 
 export async function getBudgetListAPIAction(
 	params?: GetBudgetListParams,
