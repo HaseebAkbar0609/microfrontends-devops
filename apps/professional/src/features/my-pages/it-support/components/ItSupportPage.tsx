@@ -30,6 +30,7 @@ import {
 import { TablePagination } from "@/components/table/TablePagination";
 import { cn } from "@/lib/utils";
 import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
+import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { IT_TICKET_STATUS_KEY, ItTicket } from "../constants/mockData";
@@ -87,6 +88,7 @@ const ItSupportPage = () => {
 
 	const upsertTicket = (
 		values: ItTicketValues,
+		files: string[],
 		status: ItTicket["status"],
 	) => {
 		if (editingTicket) {
@@ -97,6 +99,7 @@ const ItSupportPage = () => {
 								...ticket,
 								name: values.subject,
 								description: values.description,
+								files,
 							}
 						: ticket,
 				),
@@ -105,18 +108,18 @@ const ItSupportPage = () => {
 		}
 		setTickets((current) => [
 			{
-				id: `t-${crypto.randomUUID()}`,
+				id: `temp-${crypto.randomUUID()}`,
 				date: mockDate(0),
 				name: values.subject,
 				status,
 				description: values.description,
-				files: [],
+				files,
 			},
 			...current,
 		]);
 	};
 
-	const sendTicket = (id: string) =>
+	const sendTicket = (id: string) => {
 		setTickets((current) =>
 			current.map((ticket) =>
 				ticket.id === id && ticket.status === "notSent"
@@ -124,6 +127,8 @@ const ItSupportPage = () => {
 					: ticket,
 			),
 		);
+		showToast("success", t(localizationConstants.itSupportSentToast));
+	};
 
 	const deleteTicket = (id: string) =>
 		setTickets((current) => current.filter((ticket) => ticket.id !== id));
@@ -133,8 +138,20 @@ const ItSupportPage = () => {
 			<ItTicketForm
 				editingTicket={editingTicket}
 				onBack={() => setFormOpen(false)}
-				onSave={(values) => upsertTicket(values, "notSent")}
-				onSend={(values) => upsertTicket(values, "ongoing")}
+				onSave={(values, files) => {
+					upsertTicket(values, files, "notSent");
+					showToast(
+						"success",
+						t(localizationConstants.itSupportSavedToast),
+					);
+				}}
+				onSend={(values, files) => {
+					upsertTicket(values, files, "ongoing");
+					showToast(
+						"success",
+						t(localizationConstants.itSupportSentToast),
+					);
+				}}
 			/>
 		);
 
@@ -174,7 +191,7 @@ const ItSupportPage = () => {
 							<DropdownMenuItem className="cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700">
 								<Translate
 									text={
-										localizationConstants.licensesModuleAll
+										localizationConstants.itSupportFilterAll
 									}
 								/>
 							</DropdownMenuItem>

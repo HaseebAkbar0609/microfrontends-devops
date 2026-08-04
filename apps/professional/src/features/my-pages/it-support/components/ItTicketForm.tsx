@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save, X } from "lucide-react";
@@ -23,7 +23,7 @@ import { ItTicketValues, itTicketSchema } from "../schemas/itTicket";
 
 const EMPTY_VALUES: ItTicketValues = { subject: "", description: "" };
 
-const MOCK_ATTACHMENTS = ["Document 1.pdf", "Document 2.pdf"];
+const DEFAULT_ATTACHMENTS = ["Document 1.pdf", "Document 2.pdf"];
 
 const ItTicketForm = ({
 	editingTicket,
@@ -33,10 +33,12 @@ const ItTicketForm = ({
 }: {
 	editingTicket: ItTicket | null;
 	onBack: () => void;
-	onSave: (values: ItTicketValues) => void;
-	onSend: (values: ItTicketValues) => void;
+	onSave: (values: ItTicketValues, files: string[]) => void;
+	onSend: (values: ItTicketValues, files: string[]) => void;
 }) => {
 	const t = useTranslate();
+	const fileInputRef = useRef<HTMLInputElement>(null);
+	const [files, setFiles] = useState<string[]>(DEFAULT_ATTACHMENTS);
 	const form = useForm<ItTicketValues>({
 		resolver: zodResolver(itTicketSchema),
 		defaultValues: EMPTY_VALUES,
@@ -51,15 +53,28 @@ const ItTicketForm = ({
 					}
 				: EMPTY_VALUES,
 		);
+		setFiles(editingTicket ? editingTicket.files : DEFAULT_ATTACHMENTS);
 	}, [editingTicket, form]);
 
+	const handleFilesSelected = (list: FileList | null) => {
+		if (!list) return;
+		const names = Array.from(list).map((file) => file.name);
+		setFiles((current) => [
+			...current,
+			...names.filter((name) => !current.includes(name)),
+		]);
+	};
+
+	const removeFile = (name: string) =>
+		setFiles((current) => current.filter((file) => file !== name));
+
 	const handleSave = form.handleSubmit((values) => {
-		onSave(values);
+		onSave(values, files);
 		onBack();
 	});
 
 	const handleSend = form.handleSubmit((values) => {
-		onSend(values);
+		onSend(values, files);
 		onBack();
 	});
 
@@ -162,13 +177,31 @@ const ItTicketForm = ({
 											}
 										/>
 									</span>
-									<input type="file" className="hidden" />
+									<input
+										ref={fileInputRef}
+										type="file"
+										multiple
+										className="hidden"
+										onChange={(event) => {
+											handleFilesSelected(
+												event.target.files,
+											);
+											event.target.value = "";
+										}}
+									/>
 									<span className="text-slate-500">
-										No file chosen
+										<Translate
+											text={
+												localizationConstants.fileNoFileChosen
+											}
+										/>
 									</span>
 								</label>
 								<Button
 									type="button"
+									onClick={() =>
+										fileInputRef.current?.click()
+									}
 									className="h-11 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 								>
 									<Translate
@@ -187,14 +220,21 @@ const ItTicketForm = ({
 							</p>
 						</div>
 
-						<div className="flex flex-wrap items-center gap-2 rounded-md border border-slate-200 px-3 py-2.5">
-							{MOCK_ATTACHMENTS.map((file) => (
+						<div className="flex min-h-11 flex-wrap items-center gap-2 rounded-md border border-slate-200 px-3 py-2.5">
+							{files.map((file) => (
 								<span
 									key={file}
 									className="flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs text-slate-700"
 								>
 									{file}
-									<X className="h-3 w-3 text-slate-400" />
+									<button
+										type="button"
+										onClick={() => removeFile(file)}
+										className="cursor-pointer"
+										aria-label={file}
+									>
+										<X className="h-3 w-3 text-slate-400" />
+									</button>
 								</span>
 							))}
 						</div>

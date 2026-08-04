@@ -884,6 +884,10 @@ export type OfferTranslation = {
 	itSupportJustNow: string;
 	itSupportValSubjectRequired: string;
 	itSupportValDescRequired: string;
+	itSupportFilterAll: string;
+	fileNoFileChosen: string;
+	itSupportSavedToast: string;
+	itSupportSentToast: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;
