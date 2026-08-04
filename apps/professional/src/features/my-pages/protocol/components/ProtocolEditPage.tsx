@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -25,10 +25,7 @@ import ParticipantSelect from "./ParticipantSelect";
 import SectionCard from "./SectionCard";
 import EditNextMeetingSection from "./edit/EditNextMeetingSection";
 import EditOtherInfoSection from "./edit/EditOtherInfoSection";
-import {
-	EditSelectField,
-	EditTextField,
-} from "./edit/EditFields";
+import { EditSelectField, EditTextField } from "./edit/EditFields";
 
 const TYPE_SUBTITLE_KEY: Record<ProtocolType, string> = {
 	standard: localizationConstants.protocolCreateStandard,
@@ -122,10 +119,11 @@ const ProtocolEditPage = ({ protocolId }: { protocolId: string }) => {
 		defaultValues: protocol ? toFormValues(protocol) : undefined,
 	});
 
-	if (!protocol) {
-		router.replace(LIST_ROUTE);
-		return null;
-	}
+	useEffect(() => {
+		if (!protocol) router.replace(LIST_ROUTE);
+	}, [protocol, router]);
+
+	if (!protocol) return null;
 
 	const viewRoute = `${LIST_ROUTE}/${protocol.id}`;
 

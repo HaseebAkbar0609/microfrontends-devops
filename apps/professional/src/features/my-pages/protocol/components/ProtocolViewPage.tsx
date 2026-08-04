@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Info, Pencil, Save, Send, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,10 +35,11 @@ const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
 	const [pointDialogOpen, setPointDialogOpen] = useState(false);
 	const [editingPoint, setEditingPoint] = useState<MeetingPoint | null>(null);
 
-	if (!protocol) {
-		router.replace(LIST_ROUTE);
-		return null;
-	}
+	useEffect(() => {
+		if (!protocol) router.replace(LIST_ROUTE);
+	}, [protocol, router]);
+
+	if (!protocol) return null;
 
 	const refresh = () => setProtocol(getProtocol(protocolId));
 
