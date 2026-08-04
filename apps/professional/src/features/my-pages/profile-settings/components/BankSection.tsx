@@ -94,9 +94,8 @@ export default function BankSection() {
 						<FormInput
 							control={form.control}
 							name="iban"
-							label={localizationConstants.iban}
-							placeholder={localizationConstants.iban}
-							
+							label={localizationConstants.bankIban}
+							placeholder={localizationConstants.bankIban}
 						/>
 
 						<FormInput
