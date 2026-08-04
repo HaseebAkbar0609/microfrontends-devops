@@ -26,6 +26,11 @@ const defaultItems: FlyoutSubSidebarItem[] = [
 		href: "/tools/my-pages/time",
 	},
 	{
+		id: "protocol",
+		labelKey: localizationConstants.protocolItem,
+		href: "/tools/my-pages/protocol",
+	},
+	{
 		id: "it-support",
 		labelKey: localizationConstants.itSupport,
 		href: "/tools/my-pages/it-support",
