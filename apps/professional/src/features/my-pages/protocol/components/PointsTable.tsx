@@ -37,7 +37,7 @@ import {
 	POINT_STATUS_LEGEND_DOT_CLASS,
 	POINT_STATUS_ORDER,
 } from "../constants/statusStyles";
-import { usePagination } from "../hooks/usePagination";
+import { usePagination } from "@/hooks/usePagination";
 
 interface PointsTableProps {
 	type: ProtocolType;

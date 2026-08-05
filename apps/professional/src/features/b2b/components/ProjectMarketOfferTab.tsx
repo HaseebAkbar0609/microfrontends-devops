@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { MoreVertical, Map, MapPin, Wallet, CreditCard, BadgeDollarSign, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
@@ -41,6 +42,7 @@ function OfferStatusBadge({ status }: { status: OfferStatus }) {
 
 export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
   const t = useTranslate();
+  const router = useRouter();
   const [offerListOpen, setOfferListOpen] = useState(true);
   const { sortField, sortDir, toggleSort } = useTableSort<OfferSortField>();
 
@@ -158,7 +160,11 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                       </td>
                       <td className="whitespace-nowrap px-4 py-3" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center gap-2">
-                          <Button size="sm" className="h-9 cursor-pointer whitespace-nowrap bg-slate-100 px-2 text-sm font-medium text-slate-900 shadow-none hover:bg-slate-200">
+                          <Button
+                            size="sm"
+                            className="h-9 cursor-pointer whitespace-nowrap bg-slate-100 px-2 text-sm font-medium text-slate-900 shadow-none hover:bg-slate-200"
+                            onClick={() => router.push(`/module/business/b2b/project-market/${data.id}/offer/${offer.id}`)}
+                          >
                             {t(localizationConstants.b2bPMViewOffer)}
                           </Button>
                           <DropdownMenu>
