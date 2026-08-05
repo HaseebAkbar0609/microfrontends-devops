@@ -566,6 +566,35 @@ export type OfferTranslation = {
 	b2bArchiveDecline: string;
 	b2bArchiveViewCompanyInfo: string;
 	b2bArchiveAddProject: string;
+	// B2B - Company Info
+	b2bCompanyViewTitle: string;
+	b2bCompanyTabInfo: string;
+	b2bCompanyTabCredit: string;
+	b2bCompanyTabPresentation: string;
+	b2bCompanyTabReferens: string;
+	b2bCompanyTabOmdome: string;
+	b2bCompanySection: string;
+	b2bCompanyAdressSection: string;
+	b2bCompanyAltKontakter: string;
+	b2bCompanyVAT: string;
+	b2bCompanySNI: string;
+	b2bCompanyPostAdress: string;
+	b2bCompanyPostNr: string;
+	b2bCompanyOrt: string;
+	b2bCompanyBesoksAdress: string;
+	b2bCompanyLeveransAdress: string;
+	b2bCompanyVaxelNr: string;
+	b2bCompanyHemsida: string;
+	b2bCompanyInvoiceEmail: string;
+	b2bCompanyKreditSection: string;
+	b2bCompanyPresentationSection: string;
+	b2bCompanyPresentationText: string;
+	b2bCompanyTeam: string;
+	b2bCompanyPresentationFiles: string;
+	b2bCompanyReferensSection: string;
+	b2bCompanyOmdomeSection: string;
+	b2bCompanyLogo: string;
+	b2bCompanyPDF: string;
 	b2bCreateDeal: string;
 	b2bDealsEmpty: string;
 	// B2B - Deal Detail

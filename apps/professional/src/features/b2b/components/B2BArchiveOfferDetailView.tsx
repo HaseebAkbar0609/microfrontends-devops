@@ -292,7 +292,11 @@ export function B2BArchiveOfferDetailView({ data }: Props) {
                   <InfoField label={t(localizationConstants.b2bArchiveOrgNr)} value={data.company.orgNr} />
                 </div>
               </div>
-              <button type="button" className="mt-4 cursor-pointer text-xs font-medium text-blue-600 hover:underline">
+              <button
+                type="button"
+                onClick={() => router.push(`/module/business/b2b/company/${data.company.id}`)}
+                className="mt-4 cursor-pointer text-xs font-medium text-blue-600 hover:underline"
+              >
                 {t(localizationConstants.b2bArchiveViewCompanyInfo)} →
               </button>
             </AccordionSection>
