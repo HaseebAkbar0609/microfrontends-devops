@@ -158,35 +158,28 @@ export const navConfig: NavGroup[] = [
 				href: "/tools/my-pages",
 				flyoutItems: [
 					{
+						id: "company",
+						label: localizationConstants.companyItem,
+						href: "/tools/my-pages/company",
+						icon: Building2,
+					},
+					{
 						id: "employment",
 						label: localizationConstants.employment,
 						href: "/tools/my-pages/employment",
 						icon: Briefcase,
 					},
 					{
-						id: "company",
-						label: localizationConstants.companyItem,
-						href: "/tools/my-pages/company",
-						icon: Building2,
-					},
-
-					{
-						id: "protocol",
-						label: localizationConstants.protocolItem,
-						href: "/tools/my-pages/protocol",
-						icon: FileText,
+						id: "profile-settings",
+						label: localizationConstants.profileSettings,
+						href: "/tools/my-pages/profile-settings",
+						icon: UserCog,
 					},
 					{
 						id: "it-support",
 						label: localizationConstants.itSupport,
 						href: "/tools/my-pages/it-support",
 						icon: Headset,
-					},
-					{
-						id: "profile-settings",
-						label: localizationConstants.profileSettings,
-						href: "/tools/my-pages/profile-settings",
-						icon: UserCog,
 					},
 				],
 			},
