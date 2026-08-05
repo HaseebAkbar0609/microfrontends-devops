@@ -1,18 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Search, Plus, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useTableSort } from "@/hooks/useTableSort";
+import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { OfferTablePagination } from "@/features/offer/components/OfferTablePagination";
@@ -23,6 +28,8 @@ const TH_SORTABLE =
 const TH_PLAIN = "whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-slate-500";
 
 type SortField = "refNr" | "projekt" | "datum" | "typ" | "kommun" | "lagstOffert";
+
+const ALL_TYPS: B2BArchiveTyp[] = ["B2B-Hyra UT", "B2B-Offert", "B2B-Hyra IN"];
 
 const TYP_BADGE: Record<B2BArchiveTyp, string> = {
   "B2B-Hyra UT": "bg-slate-100 text-slate-700",
@@ -39,20 +46,31 @@ export function B2BArchiveView({ items }: Props) {
   const router = useRouter();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [selectedTyps, setSelectedTyps] = useState<B2BArchiveTyp[]>([]);
   const rowsPerPage = 10;
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
 
-  const filtered = items.filter((item) => {
-    const q = search.toLowerCase();
-    return (
-      item.refNr.toLowerCase().includes(q) ||
-      item.projekt.toLowerCase().includes(q) ||
-      item.kommun.toLowerCase().includes(q)
-    );
-  });
+  const activeFilterCount = selectedTyps.length;
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage));
-  const paginated = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase();
+    return items.filter((item) => {
+      const matchesSearch =
+        item.refNr.toLowerCase().includes(q) ||
+        item.projekt.toLowerCase().includes(q) ||
+        item.kommun.toLowerCase().includes(q);
+      const matchesTyp = selectedTyps.length === 0 || selectedTyps.includes(item.typ);
+      return matchesSearch && matchesTyp;
+    });
+  }, [search, selectedTyps, items]);
+
+  const sorted = useMemo(
+    () => sortItems(filtered, sortField, sortDir, (item, field) => item[field as keyof B2BArchiveItem] as string | number),
+    [filtered, sortField, sortDir],
+  );
+
+  const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
+  const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
   return (
     <div className="flex flex-1 flex-col bg-white">
@@ -72,10 +90,44 @@ export function B2BArchiveView({ items }: Props) {
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="h-9 cursor-pointer gap-1.5 text-sm">
               {t(localizationConstants.filter)}
+              {activeFilterCount > 0 && (
+                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-neutral-950 text-[10px] text-white">
+                  {activeFilterCount}
+                </span>
+              )}
               <ChevronDown size={14} />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48" />
+          <DropdownMenuContent align="start" className="w-48">
+            <DropdownMenuLabel className="text-xs font-medium text-slate-500">
+              {t(localizationConstants.b2bDealDetailType)}
+            </DropdownMenuLabel>
+            {ALL_TYPS.map((typ) => (
+              <DropdownMenuCheckboxItem
+                key={typ}
+                checked={selectedTyps.includes(typ)}
+                onCheckedChange={(checked) => {
+                  setSelectedTyps((prev) =>
+                    checked ? [...prev, typ] : prev.filter((t) => t !== typ),
+                  );
+                  setPage(1);
+                }}
+              >
+                {typ}
+              </DropdownMenuCheckboxItem>
+            ))}
+            {activeFilterCount > 0 && (
+              <>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="cursor-pointer text-xs text-slate-500"
+                  onClick={() => { setSelectedTyps([]); setPage(1); }}
+                >
+                  {t(localizationConstants.clearFilters)}
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
         </DropdownMenu>
 
         <div className="ml-auto">
