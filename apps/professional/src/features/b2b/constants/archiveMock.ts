@@ -19,6 +19,7 @@ export const DUMMY_ARCHIVE_OFFER_DETAIL: B2BArchiveOfferDetail = {
   totalOffert: 1589000,
   statusBadge: "Bokfört",
   company: {
+    id: "1",
     name: "Nysse Bygg AB",
     email: "per@example.test",
     telefon: "0700000000",

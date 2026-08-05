@@ -31,6 +31,7 @@ export type B2BArchiveOfferDetail = {
   totalOffert: number;
   statusBadge: string;
   company: {
+    id: string;
     name: string;
     email: string;
     telefon: string;
