@@ -44,7 +44,7 @@ export const APP_GROUPS: AppGroup[] = [
 			{
 				label: localizationConstants.offer,
 				icon: FileText,        // Document with text lines
-				href: "/module/business/offer",
+				href: "/module/business/offer/dashboard",
 			},
 			{
 				label: localizationConstants.b2b,

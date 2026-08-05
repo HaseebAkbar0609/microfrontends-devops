@@ -33,7 +33,7 @@ export default function ProtocolTabs() {
 			<div className="border-b border-slate-200 mb-6">
 				<TabsList
 					variant="line"
-					className="h-auto gap-6 rounded-none px-0 pb-1"
+					className="h-auto gap-6 rounded-none px-0 p-0 -mb-px"
 				>
 					{PROTOCOL_TABS.map((tab) => (
 						<TabsTrigger

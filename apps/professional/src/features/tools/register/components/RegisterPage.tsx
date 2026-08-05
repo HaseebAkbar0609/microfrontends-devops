@@ -11,6 +11,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Translate } from "@/utils/translation/translate";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
@@ -18,46 +19,43 @@ import { CustomerRegisterTable } from "./CustomerRegisterTable";
 import { SupplierRegisterTable } from "./SupplierRegisterTable";
 import { ArticleRegisterTable } from "./ArticleRegisterTable";
 import { SupplierArticleRegisterTable } from "./SupplierArticleRegisterTable";
-import { PriceListRegisterTable, PriceListUpdatePanel } from "./PriceListRegisterTable";
-import { CostCenterRegisterTable } from "./CostCenterRegisterTable";
-import { AccountPlanPage } from "./AccountPlanPage";
-import { BudgetRegisterTable } from "./BudgetRegisterTable";
-import { WageTypeRegisterTable } from "./WageTypeRegisterTable";
 
-function RegisterContent() {
+interface RegisterPageProps {
+	defaultRegister?: "kund" | "supplier" | "artikel";
+}
+
+function RegisterContent({ defaultRegister }: RegisterPageProps) {
 	const { t } = useTranslation();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const selectedRegister = searchParams.get("tab") ?? "kund";
-	const articleSubTab = searchParams.get("subtab") ?? "artikel";
-	const priceListSubTab = searchParams.get("subtab") ?? "prislista";
-	const accountPlanSubTab = searchParams.get("subtab") ?? "kontoplan";
+	const selectedRegister =
+		defaultRegister ??
+		(pathname.includes("/supplier")
+			? "supplier"
+			: pathname.includes("/articles")
+				? "artikel"
+				: "kund");
 
-	const updateUrlTab = useCallback(
-		(newTab: string, newSubTab?: string) => {
+	const articleSubTab = searchParams.get("subtab") ?? "artikel";
+
+	const updateSubTab = useCallback(
+		(newSubTab: string) => {
 			const params = new URLSearchParams(searchParams.toString());
-			params.set("tab", newTab);
-			if (newSubTab) {
-				params.set("subtab", newSubTab);
-			} else {
-				params.delete("subtab");
-			}
+			params.set("subtab", newSubTab);
 			router.replace(`${pathname}?${params.toString()}`, { scroll: false });
 		},
 		[pathname, router, searchParams],
 	);
 
 	const handleRegisterChange = (value: string) => {
-		if (value === "artikel") {
-			updateUrlTab("artikel", "artikel");
-		} else if (value === "prislista") {
-			updateUrlTab("prislista", "prislista");
-		} else if (value === "accountPlan") {
-			updateUrlTab("accountPlan", "kontoplan");
+		if (value === "supplier") {
+			router.push("/tools/register/supplier");
+		} else if (value === "artikel") {
+			router.push("/tools/register/articles");
 		} else {
-			updateUrlTab(value);
+			router.push("/tools/register/customer");
 		}
 	};
 
@@ -88,7 +86,7 @@ function RegisterContent() {
 				</nav>
 			</div>
 
-			{/* Register Section Dropdown Selector */}
+			{/* Register Section Dropdown Selector (Only 3 options: Customer, Supplier, Article) */}
 			<div className="flex flex-col gap-2 w-full lg:w-1/3 xl:w-1/4">
 				<label className="text-xs font-medium text-slate-700">
 					<Translate text={localizationConstants.registerDropdownLabel} />
@@ -102,151 +100,50 @@ function RegisterContent() {
 							value="kund"
 							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
 						>
-							<Translate text={localizationConstants.customerOption} />
+							<Translate text={localizationConstants.registerKunder} />
 						</SelectItem>
 						<SelectItem
 							value="supplier"
 							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
 						>
-							<Translate text={localizationConstants.supplierOption} />
+							<Translate text={localizationConstants.registerLeverantorer} />
 						</SelectItem>
 						<SelectItem
 							value="artikel"
 							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
 						>
-							<Translate text={localizationConstants.articleOption} />
-						</SelectItem>
-						<SelectItem
-							value="prislista"
-							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
-						>
-							<Translate text={localizationConstants.priceListOption} />
-						</SelectItem>
-						<SelectItem
-							value="kostnadsstalle"
-							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
-						>
-							<Translate text={localizationConstants.costCenterSubTitle} />
-						</SelectItem>
-						<SelectItem
-							value="accountPlan"
-							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
-						>
-							<Translate text={localizationConstants.accountPlan} />
-						</SelectItem>
-						<SelectItem
-							value="budget"
-							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
-						>
-							<Translate text={localizationConstants.budgetOption} />
-						</SelectItem>
-						<SelectItem
-							value="wageType"
-							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
-						>
-							<Translate text={localizationConstants.wageTypeOption} />
+							<Translate text={localizationConstants.registerArtiklar} />
 						</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>
 
-			{/* Sub Tabs Bar matching Figma */}
+			{/* Sub Tabs Bar using Shadcn UI Tabs */}
 			<div className="border-b border-slate-200">
-				<div className="flex gap-8">
-					{selectedRegister === "artikel" ? (
-						<>
-							<button
-								type="button"
-								onClick={() => updateUrlTab("artikel", "artikel")}
-								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
-									articleSubTab === "artikel"
-										? "border-slate-900 text-slate-900"
-										: "border-transparent text-slate-500 hover:text-slate-700"
-								}`}
-							>
+				{selectedRegister === "artikel" ? (
+					<Tabs value={articleSubTab} onValueChange={(val) => updateSubTab(val)}>
+						<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
+							<TabsTrigger value="artikel" className="pb-3 pt-1 text-sm font-semibold">
 								<Translate text={localizationConstants.articleListTab} />
-							</button>
-							<button
-								type="button"
-								onClick={() => updateUrlTab("artikel", "leverantorsArtiklar")}
-								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
-									articleSubTab === "leverantorsArtiklar"
-										? "border-slate-900 text-slate-900"
-										: "border-transparent text-slate-500 hover:text-slate-700"
-								}`}
-							>
+							</TabsTrigger>
+							<TabsTrigger value="leverantorsArtiklar" className="pb-3 pt-1 text-sm font-semibold">
 								<Translate text={localizationConstants.supplierArticlesTab} />
-							</button>
-						</>
-					) : selectedRegister === "prislista" ? (
-						<>
-							<button
-								type="button"
-								onClick={() => updateUrlTab("prislista", "prislista")}
-								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
-									priceListSubTab === "prislista"
-										? "border-slate-900 text-slate-900"
-										: "border-transparent text-slate-500 hover:text-slate-700"
-								}`}
-							>
-								<Translate text={localizationConstants.priceListTab} />
-							</button>
-							<button
-								type="button"
-								onClick={() => updateUrlTab("prislista", "uppdatera")}
-								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
-									priceListSubTab === "uppdatera"
-										? "border-slate-900 text-slate-900"
-										: "border-transparent text-slate-500 hover:text-slate-700"
-								}`}
-							>
-								<Translate text={localizationConstants.updatePriceListTab} />
-							</button>
-						</>
-					) : selectedRegister === "accountPlan" ? (
-						<>
-							<button
-								type="button"
-								onClick={() => updateUrlTab("accountPlan", "kontoplan")}
-								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
-									accountPlanSubTab === "kontoplan"
-										? "border-slate-900 text-slate-900"
-										: "border-transparent text-slate-500 hover:text-slate-700"
-								}`}
-							>
-								<Translate text={localizationConstants.accountPlanTab} />
-							</button>
-							<button
-								type="button"
-								onClick={() => updateUrlTab("accountPlan", "import")}
-								className={`pb-3 text-sm font-semibold transition-colors border-b-2 ${
-									accountPlanSubTab === "import"
-										? "border-slate-900 text-slate-900"
-										: "border-transparent text-slate-500 hover:text-slate-700"
-								}`}
-							>
-								<Translate text={localizationConstants.importAccountPlanTab} />
-							</button>
-						</>
-					) : (
-						<button
-							type="button"
-							className="border-b-2 border-slate-900 pb-3 text-sm font-semibold text-slate-900"
-						>
-							{selectedRegister === "kund" ? (
-								<Translate text={localizationConstants.customerListTab} />
-							) : selectedRegister === "supplier" ? (
-								<Translate text={localizationConstants.supplierListTab} />
-							) : selectedRegister === "budget" ? (
-								<Translate text={localizationConstants.budgetListTab} />
-							) : selectedRegister === "wageType" ? (
-								<Translate text={localizationConstants.wageTypeListTab} />
-							) : (
-								<Translate text={localizationConstants.costCenterSubTitle} />
-							)}
-						</button>
-					)}
-				</div>
+							</TabsTrigger>
+						</TabsList>
+					</Tabs>
+				) : (
+					<Tabs value="active">
+						<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
+							<TabsTrigger value="active" className="pb-3 pt-1 text-sm font-semibold">
+								{selectedRegister === "kund" ? (
+									<Translate text={localizationConstants.customerListTab} />
+								) : (
+									<Translate text={localizationConstants.supplierListTab} />
+								)}
+							</TabsTrigger>
+						</TabsList>
+					</Tabs>
+				)}
 			</div>
 
 			{/* Table Content */}
@@ -270,44 +167,14 @@ function RegisterContent() {
 					<SupplierArticleRegisterTable />
 				</Suspense>
 			)}
-			{selectedRegister === "prislista" && priceListSubTab === "prislista" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
-					<PriceListRegisterTable />
-				</Suspense>
-			)}
-			{selectedRegister === "prislista" && priceListSubTab === "uppdatera" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
-					<PriceListUpdatePanel />
-				</Suspense>
-			)}
-			{selectedRegister === "kostnadsstalle" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
-					<CostCenterRegisterTable />
-				</Suspense>
-			)}
-			{selectedRegister === "accountPlan" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
-					<AccountPlanPage activeTab={accountPlanSubTab} />
-				</Suspense>
-			)}
-			{selectedRegister === "budget" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
-					<BudgetRegisterTable />
-				</Suspense>
-			)}
-			{selectedRegister === "wageType" && (
-				<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
-					<WageTypeRegisterTable />
-				</Suspense>
-			)}
 		</div>
 	);
 }
 
-export function RegisterPage() {
+export function RegisterPage({ defaultRegister }: RegisterPageProps) {
 	return (
 		<Suspense fallback={<div className="p-6 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
-			<RegisterContent />
+			<RegisterContent defaultRegister={defaultRegister} />
 		</Suspense>
 	);
 }
