@@ -300,6 +300,7 @@ export const sweLeads: LeadsTranslation = {
 	quoteDeletedToast: "Offert borttagen.",
 	settingsSavedToast: "Leadinställningarna sparades.",
 	settingsSaveErrorToast: "Kunde inte spara leadinställningarna.",
+	serverError: "Ett serverfel inträffade. Försök igen senare.",
 	unpaidLabel: "Unpaid",
 	noLeadsFound: "Inga leads matchar din sökning.",
 	rowsPerPage: "Rader per sida",

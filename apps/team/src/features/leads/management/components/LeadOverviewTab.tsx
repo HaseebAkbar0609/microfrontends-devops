@@ -12,6 +12,8 @@ import {
 	leadDetailRegionOptions,
 } from "@/features/leads/management/constants";
 import TagSelector from "@/features/leads/management/components/TagSelector";
+import { useUpdateLeadDetails } from "@/features/leads/queries/useUpdateLeadDetails";
+import { showToast } from "@/lib/toast";
 
 type LeadOverviewTabProps = {
 	lead: LeadRow;
@@ -43,6 +45,7 @@ export default function LeadOverviewTab({
 		lead.category,
 	]);
 	const [draftRegions, setDraftRegions] = useState<string[]>([lead.city]);
+	const { mutate: updateLeadDetails, isPending } = useUpdateLeadDetails();
 
 	const beginEditingSummary = () => {
 		setDraftCategories(selectedCategories);
@@ -59,11 +62,28 @@ export default function LeadOverviewTab({
 	};
 
 	const saveSummaryChanges = () => {
-		setSelectedCategories(draftCategories);
-		setSelectedRegions(draftRegions);
-		setIsEditingSummary(false);
-		setIsCategoryOpen(false);
-		setIsRegionOpen(false);
+		updateLeadDetails(
+			{
+				leadId: lead.id,
+				payload: {
+					categories: draftCategories,
+					regions: draftRegions,
+				},
+			},
+			{
+				onSuccess: () => {
+					setSelectedCategories(draftCategories);
+					setSelectedRegions(draftRegions);
+					setIsEditingSummary(false);
+					setIsCategoryOpen(false);
+					setIsRegionOpen(false);
+					showToast("success", "Success");
+				},
+				onError: () => {
+					showToast("error", t(localizationConstants.serverError));
+				},
+			},
+		);
 	};
 
 	return (
@@ -112,8 +132,9 @@ export default function LeadOverviewTab({
 										type="button"
 										className="cursor-pointer bg-black h-8 text-sm hover:bg-slate-700"
 										onClick={saveSummaryChanges}
+										disabled={isPending}
 									>
-										<Translate text={localizationConstants.save} />
+										{isPending ? "..." : <Translate text={localizationConstants.save} />}
 									</Button>
 								</>
 							) : (

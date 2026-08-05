@@ -10,6 +10,8 @@ import {
 	PaymentCycleId,
 } from "../constants/mockData";
 import { getInitialCartItems } from "../services/licenseService";
+import { useMutation } from "@tanstack/react-query";
+import { createCheckoutSession } from "../../users/api/adminUsers.api";
 
 export interface AddPackageSelection {
 	versionOption?: LicenseVersionOption;
@@ -105,6 +107,15 @@ export function useLicenseCart() {
 		return Math.round(subtotal * (1 - discount));
 	}, [items, paymentCycle]);
 
+	const checkoutMutation = useMutation({
+		mutationFn: createCheckoutSession,
+		onSuccess: (data) => {
+			if (data?.data?.url) {
+				window.location.href = data.data.url;
+			}
+		}
+	});
+
 	return {
 		items,
 		paymentCycle,
@@ -113,5 +124,6 @@ export function useLicenseCart() {
 		addPackage,
 		clearCart,
 		total,
+		checkoutMutation,
 	};
 }
