@@ -181,6 +181,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
 				<Button
 					size="sm"
 					className="h-10 cursor-pointer bg-neutral-950 px-4 text-sm text-white hover:bg-neutral-800"
+					onClick={() => router.push(`/module/business/offer/${offerId}/request/create`)}
 				>
 					{t(localizationConstants.offerRequestAddNewProject)}
 				</Button>
