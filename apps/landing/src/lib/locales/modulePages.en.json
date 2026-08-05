@@ -21,7 +21,9 @@
     "otherSections": "Other areas",
     "ctaStart": "Create account",
     "ctaDemo": "Try a demo account",
-    "ctaSubtitle": "30-day free trial — then Start from 2 995 kr/month."
+    "ctaSubtitle": "30-day free trial — then Start from 2 995 kr/month.",
+    "stepsSubhero": "See the steps below for how the {{name}} module works – from the first request to a finished project.",
+    "ctaTitle": "Ready to try {{name}}?"
   },
   "avtal": {
     "heroDesc": "TimeFlow's Contract module is the company's central platform for managing all types of contracts throughout their entire lifecycle. Gather all contracts in a secure digital archive, create new contracts with ready-made templates, sign digitally and receive automatic reminders before important dates arrive. The module provides full traceability, version management and history for every contract. Whether it concerns customer contracts, project contracts, employment contracts or supplier agreements, the company gets structured and secure contract management with clear workflows and intelligent monitoring.",
@@ -362,7 +364,9 @@
       "label": "The Contract module",
       "title": "The company's digital contract centre",
       "text": "TimeFlow's Contract module brings the company's entire contract portfolio together in one secure, intelligent system. With digital signing via BankID or SignFlow™, automatic monitoring of expiry and termination dates, full version management, advanced permissions and AI-based risk analysis, the company gets complete control over all its contracts. The result is reduced business risk, better regulatory compliance, more efficient administration and a reliable basis for decisions throughout the entire contract lifecycle."
-    }
+    },
+    "heroTitle": "Full control over company contracts — ",
+    "heroTitleSpan": "from creation to archiving"
   },
   "b2b": {
     "heroDesc": "Sweden's marketplace for the trades industry. The B2B module connects buyers and sellers in the trades industry. Here, companies can easily find subcontractors, suppliers, F-skattare and collaboration partners for their projects and orders.",
@@ -410,7 +414,9 @@
       "title": "A digital marketplace for the trades industry",
       "text": "With the B2B module, TimeFlow becomes more than a business system. It works as a complete marketplace where companies can buy, sell, collaborate and share resources. Whether you need an electrician for a project, want to compare material prices from several suppliers or hire extra staff during a busy period, the B2B module helps you find the right partner – quickly, easily and cost-effectively."
     },
-    "ctaTitle": "Ready to try the B2B module?"
+    "ctaTitle": "Ready to try the B2B module?",
+    "heroTitle": "The B2B module for ",
+    "heroTitleSpan": "craftsmen"
   },
   "data-it": {
     "heroDesc": "TimeFlow's Data & IT module gives the company a complete tool for administering, documenting and following up the entire IT environment. Gather all information about computers, mobile phones, tablets, software, licences, users and IT costs in one central system. The module provides full traceability of the company's digital assets, manages the IT budget and support cases and ensures that the right equipment ends up with the right employee. Link devices and mobile phones to individuals and keep track of documents, logins, codes and security — all in one place.",
@@ -763,7 +769,9 @@
       "label": "The Data & IT module",
       "title": "The company's digital control centre",
       "text": "TimeFlow's Data & IT module provides full control over the company's digital assets, support and IT finances. Through complete asset management, traceability of computers and mobile phones, documentation of purchases and warranties, advanced licence management, IT budget, error reports and intelligent analysis, the company gets a modern IT platform with high security, efficient administration and full control over the entire digital infrastructure."
-    }
+    },
+    "heroTitle": "Full control over company IT environment — ",
+    "heroTitleSpan": "digital assets, support and security"
   },
   "ekonomi": {
     "heroDesc": "TimeFlow's Finance module helps companies structure, manage and streamline their day-to-day financial work. The module brings supplier invoices, approval workflows, finance cases, budgets, reports, company documents and administrative records together in one shared workspace. Developed for finance managers, administrators, project managers and company management. The Finance module complements TimeFlow's other financial functions — invoicing is handled in the Invoice module, while project results, forecasts and actuals are handled in the Forecast module.",
@@ -1119,7 +1127,9 @@
       "label": "The Finance module",
       "title": "A structured finance department in TimeFlow",
       "text": "By bringing supplier invoices, approval workflows, budgets, financial cases, reports, company documents, organisation plans, templates and claims together in one shared platform, manual administration and the risk of important information getting lost are reduced. The Finance module serves as the company's central administrative hub, ensuring that the right records, the right responsible person and the right process are in place throughout all financial work. 📊"
-    }
+    },
+    "heroTitle": "Complete control over ",
+    "heroTitleSpan": "financial administration"
   },
   "faktura": {
     "heroDesc": "TimeFlow's Invoice module provides a complete and automated invoicing process. Create professional invoices quickly and accurately by automatically pulling information from projects, orders, time reporting, materials, supplier invoices and other parts of TimeFlow. Whether you work with private customers (B2C), companies (B2B), property owners, housing cooperatives or the public sector, you get a flexible solution that minimises administration, improves cash flow and ensures that all completed work is invoiced.",
@@ -1468,7 +1478,9 @@
       "label": "The Invoice module",
       "title": "A complete invoicing system",
       "text": "TimeFlow's Invoice module brings the company's entire invoicing process into one intelligent, automated platform. With support for B2B and the private market, flexible invoice templates, automatic invoice bases, contract invoicing, article register, price lists and direct integration with projects, materials, supplier invoices, subcontractors and ÄTA work, every completed job is invoiced correctly and on time. The result is reduced administration, improved cash flow, a higher invoicing rate and full control over the company's revenue. 💸"
-    }
+    },
+    "heroTitle": "Intelligent invoicing — ",
+    "heroTitleSpan": "from documentation to payment"
   },
   "fordon": {
     "heroDesc": "TimeFlow's Vehicles & Machinery module gives you full control over the company's entire vehicle fleet and machinery register. Manage cars, vans, lorries, trailers, construction machinery and other equipment in one shared system where service, inspections, drivers, finances and documentation are gathered in one place. With the Drive™ and RutPlan™ add-ons, the company also gets a digital logbook, GPS positioning, route optimisation and advanced vehicle analytics that reduce costs and streamline daily operations.",
@@ -1808,7 +1820,9 @@
       "label": "Vehicles & Machinery",
       "title": "A complete system for vehicle and machinery management",
       "text": "TimeFlow's Vehicles & Machinery module gives companies full control over the entire vehicle fleet and machinery park – from purchase and registration to service, inspections, drivers, finances and disposal. With Drive™, RutPlan™, Smart Fleet™ and advanced analyses of operating costs and electrification, the business gets powerful decision support that reduces costs, increases availability and ensures the right vehicles and machines are always in the right place, with the right driver and the right documentation. 🚀"
-    }
+    },
+    "heroTitle": "Full control over ",
+    "heroTitleSpan": "vehicles & machinery"
   },
   "inkasso": {
     "heroDesc": "TimeFlow's Debt Collection module gives the company the ability to handle the entire debt collection process in-house. By working with in-house debt collection, the company gains faster control over unpaid invoices, lower costs, increased revenue and a more personal dialogue with the customer before external collection measures become relevant. When an invoice falls due, the case can be transferred automatically from the Invoice module to the Debt Collection module, where the entire process continues without duplicate registration. All history, documentation and communication follow the case, providing efficient and professional handling.",
@@ -2128,10 +2142,12 @@
       "label": "The Debt Collection module",
       "title": "Full control over the company's receivables",
       "text": "TimeFlow's Debt Collection module gives the company the ability to manage the entire claims process itself in a professional, efficient and customer-friendly way. Through automatic transfer from the Invoice module, intelligent workflows and complete history, the company can act faster, improve cash flow and at the same time maintain a good relationship with its customers. Only when internal measures are not enough can the case easily be transferred to an external collection agency or onwards to the Legal module."
-    }
+    },
+    "heroTitle": "Professional debt collection — ",
+    "heroTitleSpan": "from reminder to recovery"
   },
   "inkop-mottagning": {
-    "heroTitle": "Delivery receiving checklist",
+    "heroTitle": "Receiving checklist for ",
     "heroDesc": "A digital receipt for every delivery – quantity, quality, transport damage, images, GPS and signature in the same flow. Here's what the receiving dialogue looks like in TimeFlow Work.",
     "sections": [
       {
@@ -2294,7 +2310,8 @@
           }
         ]
       }
-    ]
+    ],
+    "heroTitleSpan": "deliveries"
   },
   "inkop": {
     "heroDesc": "TimeFlow's Purchasing module gives you full control over the company's entire purchasing. Plan material purchases, create purchase orders, compare suppliers, track deliveries in real time and ensure the right material is in the right place at the right time.",
@@ -2649,7 +2666,9 @@
       "title": "A modern purchasing system for the construction industry",
       "text": "TimeFlow's Purchasing module digitalises the entire purchasing process – from planning and supplier selection to delivery, receiving control and financial follow-up. With Smart Inköp™, AI-based purchasing recommendations, full traceability and real-time monitoring, the company gets better control over material flows, reduced purchasing costs and fewer production stoppages. The result is a faster, smarter and more profitable purchasing process for the entire business. 🚀"
     },
-    "ctaTitle": "Ready to try the Purchasing module?"
+    "ctaTitle": "Ready to try the Purchasing module?",
+    "heroTitle": "The Purchasing module for ",
+    "heroTitleSpan": "craftsmen"
   },
   "juridik": {
     "heroDesc": "TimeFlow's Legal module is the company's central platform for managing all legal cases, disputes, contracts and legal processes. The module provides full control over every case from the first event to a completed process, with structured documentation, a diary, risk assessments, important dates and complete history. Whether the case concerns a customer dispute, construction law, employment law, debt collection, contract issues or court proceedings, all information is gathered in one place. This reduces the risk of missed deadlines and ensures that the company always works in a structured and professional way.",
@@ -3004,7 +3023,9 @@
       "label": "The Legal module",
       "title": "The company's legal control centre",
       "text": "TimeFlow's Legal module gives the company complete digital support for all legal administration and case management. Through structured workflows, risk assessments, a diary, document management, monitoring of response times and important dates, and close collaboration with external lawyers and legal counsel, the company gets full control over its legal processes. The result is lower legal risks, better documentation, safer decisions and stronger protection for the company's business."
-    }
+    },
+    "heroTitle": "Complete legal case management — ",
+    "heroTitleSpan": "full control over processes, risks and documentation"
   },
   "kalkyl": {
     "heroDesc": "Faster, smarter and more accurate calculations. The Calculation module gives you full control over the entire tender and calculation process — from material prices and labour costs to the finished quote.",
@@ -3133,7 +3154,9 @@
       "title": "Calculation – from experience to artificial intelligence",
       "text": "TimeFlow's Calculation module suits both the smaller crafts company and the large contractor. You can choose between a traditional calculation, industry-specific Calculation PRO or let QuickAICalc™ analyse drawings and project documents with the help of AI. The result is faster calculations, higher precision, better margins and a stronger basis for decisions before every quote and project."
     },
-    "ctaTitle": "Ready to try the Calculation module?"
+    "ctaTitle": "Ready to try the Calculation module?",
+    "heroTitle": "The Estimation module for ",
+    "heroTitleSpan": "craftsmen"
   },
   "kma": {
     "heroDesc": "A complete digital management system for Quality, Environment and Work Environment. TimeFlow digitalises the company's entire KMA work — from policies and self-inspections to risk assessments, safety rounds, audits and certifications.",
@@ -3407,7 +3430,9 @@
       "title": "A complete digital management system for the construction industry",
       "text": "TimeFlow's KMA module is much more than a system for discrepancies and self-inspections. It works as the company's complete digital management system where quality, environment, work environment, legal requirements, documentation, audits, training, certifications and AI-based safety checks are gathered in one shared platform. The result is higher quality, safer workplaces, better regulatory compliance and more efficient KMA work throughout the entire business. 🚀"
     },
-    "ctaTitle": "Ready to try the KMA module?"
+    "ctaTitle": "Ready to try the KMA module?",
+    "heroTitle": "The EHS module for ",
+    "heroTitleSpan": "craftsmen"
   },
   "ledningsstod": {
     "heroDesc": "TimeFlow's Management Support module gives the board, management and company leadership a complete overview of the entire business. Gather the company's most important key figures, strategies, board work, reports, decision documents and governing documents in one shared platform. With real-time data from all TimeFlow modules, management gets powerful decision support where finance, sales, projects, personnel, KMA, legal and business goals are presented in one coherent management system.",
@@ -3779,7 +3804,9 @@
       "label": "The Management Support module",
       "title": "Decision support for the entire company",
       "text": "TimeFlow's Management Support module is the hub for the company's governance and strategic development. By gathering board work, minutes, decision cases, KPIs, business goals, strategies, reports, a whistleblowing function and important governing documents in one shared system, management and the board get powerful decision support. With real-time data from the whole of TimeFlow and the AI feature Executive Intelligence™, the company can make faster, safer and better-informed decisions while risks are identified at an early stage and the business is steered towards its goals."
-    }
+    },
+    "heroTitle": "The company's digital command center — ",
+    "heroTitleSpan": "governance, decisions and strategic follow-up"
   },
   "mallar": {
     "heroDesc": "TimeFlow's Templates module gathers all of the company's document templates in one place and ensures a consistent way of working across the entire organisation. Create your own templates, edit existing ones, version manage changes and distribute the right template to the right module or user. Through a central template library, the company avoids duplication of work while quality and standardisation increase. All employees always work with the latest approved version.",
@@ -4115,7 +4142,9 @@
       "label": "The Templates module",
       "title": "A living template library for the entire company",
       "text": "TimeFlow's Templates module makes the company's document management faster, safer and more consistent. Through a central template library with version management, categorisation, advanced permissions and automatic linking to TimeFlow's modules, the entire organisation always works with the right documents and the latest approved version. The result is higher quality, less administration and a standardised way of working throughout the business."
-    }
+    },
+    "heroTitle": "Central company template library — ",
+    "heroTitleSpan": "documents, contracts, checklists and workflows"
   },
   "marknad-salj": {
     "heroDesc": "TimeFlow's Marketing & Sales module brings the company's sales, marketing, CRM and customer communication together in one intelligent platform. Manage the entire customer journey – from first lead to long-term customer care – with automated workflows, campaigns, AI assistants and smart communication. The module provides full control over leads, customers, sales pipeline, marketing materials, visual identity, automatic email and SMS mailings and AI-based phone handling via FlowTalk™. TimeFlow also automatically follows up completed projects and orders with customer surveys to measure customer satisfaction and identify areas for improvement.",
@@ -4458,7 +4487,9 @@
       "label": "The Marketing & Sales module",
       "title": "An intelligent CRM that works around the clock",
       "text": "TimeFlow's Marketing & Sales module combines CRM, marketing, sales and AI in one complete platform. With automatic campaigns, customer surveys after completed projects and orders, personal greetings at holidays and birthdays, and the AI-driven phone assistant FlowTalk™, where AI Robert™ answers incoming calls, creates transcripts and sends summaries via email, the company gets a modern system that builds stronger relationships, increases sales and ensures that no customer contact is ever lost."
-    }
+    },
+    "heroTitle": "Marketing & Sales — ",
+    "heroTitleSpan": "a complete CRM working 24/7"
   },
   "maskin": {
     "heroDesc": "TimeFlow's Machine module is a complete system for managing the company's construction machinery, tools and equipment throughout their entire lifecycle. From purchase and registration to booking, service, inspections, documentation, cost follow-up and disposal, all information is gathered in one shared platform. The module is developed for construction, service, installation and property companies that want to maximise utilisation, reduce downtime and get full traceability over their resources.",
@@ -4789,7 +4820,9 @@
       "label": "Machine",
       "title": "A complete system for machine and equipment management",
       "text": "TimeFlow's Machine module is developed for companies that want full control over their entire machinery and equipment fleet. By gathering the machine register, documentation, bookings, service, inspections, tool tracking, service vans, project links and financial follow-up in one shared platform, the business gets powerful decision support. With ToolTrack™, Smart Machine™ and full traceability from stock to service van and out to projects, administration is reduced, equipment is used more efficiently and the company gets safer, more profitable and better planned machine management. 🚀"
-    }
+    },
+    "heroTitle": "Full control over ",
+    "heroTitleSpan": "machinery & equipment"
   },
   "material": {
     "heroDesc": "TimeFlow's Materials & Stock module gives you full control over the company's material flow – from purchasing and stock to projects, orders and invoicing. Manage the article register, stock balances, price lists and deliveries in a modern stock system that is fully integrated with the whole of TimeFlow.",
@@ -5078,7 +5111,9 @@
       "title": "A complete materials and stock system for the construction industry",
       "text": "TimeFlow's Materials & Stock module is developed for companies that want full control over the entire material flow. From article register, price lists and purchasing to stock, projects, orders and invoicing, all information is gathered in one shared platform. With support for Smart-Lager™, automatic stock reservation and mobile stock management, the company gets better control over costs, reduced waste and more efficient material supply – leading to higher profitability and more reliable project deliveries. 🚀"
     },
-    "ctaTitle": "Ready to try Materials & Stock?"
+    "ctaTitle": "Ready to try Materials & Stock?",
+    "heroTitle": "Full control over ",
+    "heroTitleSpan": "materials & inventory"
   },
   "order": {
     "heroDesc": "Digital order management – from order to invoice. TimeFlow's Order module is the hub for the company's entire service and order operation, with automated processes, mobile work orders and full integration with all of TimeFlow.",
@@ -5256,7 +5291,9 @@
       "title": "A complete order system for the trades industry",
       "text": "The Order module is developed for companies that want to digitalise their entire order management. With support for Order-Direkt™, automatic workflows, mobile work orders, resource planning and full integration with the rest of TimeFlow, administration is minimal and control is maximal. The result is faster processing, better resource utilisation, more satisfied customers and a more efficient company. 🚀"
     },
-    "ctaTitle": "Ready to try the Order module?"
+    "ctaTitle": "Ready to try the Order module?",
+    "heroTitle": "The Order module for ",
+    "heroTitleSpan": "craftsmen"
   },
   "personal": {
     "heroDesc": "TimeFlow's Personnel module brings the company's entire personnel management into one intelligent, digital platform. Manage everything from recruitment and employment contracts to vacation planning, sick leave, training, employee reviews and rehabilitation. Full traceability of what every employee has been issued — Smart Access keys, IT equipment, tools, machines and vehicles. Digital signing, automatic workflows and seamless integration with the rest of TimeFlow.",
@@ -5572,7 +5609,9 @@
       "label": "The Personnel module",
       "title": "A complete HR platform",
       "text": "TimeFlow's Personnel module gives the company full control over the entire employee journey — from recruitment and employment to competence development and exit. With digital employment contracts, signing via BankID or SignFlow™, working hours, vacation planning, sick leave, rehabilitation, training, development reviews, intelligent staffing planning and full traceability of issued Smart Access and IT equipment, the company gets a modern HR system that reduces administration, strengthens regulatory compliance and ensures that the right competence is in the right place at the right time. 👥"
-    }
+    },
+    "heroTitle": "Smart HR — ",
+    "heroTitleSpan": "from recruitment to skills"
   },
   "prognos": {
     "heroDesc": "TimeFlow's Forecast module is the company's strategic decision support for finance, projects and business management. The module continuously analyses the company's financial development and helps management identify risks, opportunities and discrepancies before they affect the results. With support for forecasts at project, order, department and company level, you get a clear picture of future revenue, results, cash flow and profitability. The system monitors budget, actuals and forecasts in real time and warns automatically when something deviates from plan.",
@@ -5924,7 +5963,9 @@
       "label": "The Forecast module",
       "title": "The company's financial compass",
       "text": "TimeFlow's Forecast module gives management powerful decision support where historical data, current actuals and future forecasts work together in real time. Through intelligent analyses of projects, orders, budget, overhead, credit risks and cash flow, the company can identify discrepancies early, improve its calculations and make faster, better-informed business decisions. The Forecast module thus becomes the company's financial compass for long-term growth and profitability. 📊"
-    }
+    },
+    "heroTitle": "Forward outlook with ",
+    "heroTitleSpan": "intelligent forecasting"
   },
   "projekt": {
     "heroDesc": "A complete project management system for the construction, service and property industries. The company's digital project office – from the first planning to final inspection, warranty and final cost calculation.",
@@ -6274,7 +6315,9 @@
       "title": "A complete project management system",
       "text": "The Project module is developed for modern construction, service and property companies that want to gather all project management in one system. With support for IDFlow™, AI Project Intelligence™, Project Health Score™, multi-year service contracts, advanced project finances and full integration with the other TimeFlow modules, the project management gets powerful decision support throughout the project's entire lifecycle. The result is better planning, higher productivity, safer workplaces, more efficient resource utilisation and more profitable projects. 🚀"
     },
-    "ctaTitle": "Ready to try the Project module?"
+    "ctaTitle": "Ready to try the Project module?",
+    "heroTitle": "The Project module for ",
+    "heroTitleSpan": "craftsmen"
   },
   "projektering": {
     "heroDesc": "Plan correctly from the start – the foundation of a profitable project. The Design module gathers all technical and administrative planning in one single place.",
@@ -6365,7 +6408,9 @@
       "title": "Design – the project's control centre",
       "text": "The Design module works as the project's digital control centre where technology, finances, organisation and planning meet. The design organisation, budget, schedule, checklists, allocation of responsibilities and the entire technical project basis are created here. All documents, decisions and changes are gathered in one shared platform that gives the project management full control from the first design meeting to production start. The result is better coordination, fewer errors, higher quality, more secure finances and a significantly more efficient construction process. 🚀"
     },
-    "ctaTitle": "Ready to try the Design module?"
+    "ctaTitle": "Ready to try the Design module?",
+    "heroTitle": "Engineering & Design for ",
+    "heroTitleSpan": "craftsmen"
   },
   "smart-access": {
     "heroDesc": "Smart Access is TimeFlow's complete solution for managing the company's physical access and permissions. The module provides full control over keys, access cards, key fobs, tags and digital access for customers, properties, projects, service vans and the company's own premises. With full traceability at individual level, you always know who has which access, where it is used, when it was issued and when it should be returned. Smart Access reduces security risks, simplifies administration and ensures that the right person has the right permission at the right time.",
@@ -6621,6 +6666,8 @@
       "label": "Smart Access",
       "title": "A complete system for modern access management",
       "text": "Smart Access gathers the company's entire management of keys, access cards, key fobs, tags and permissions in one intelligent and secure platform. With digital sign-off, individual-based permissions, full traceability, AI-based security analysis and integration with the other TimeFlow modules, the company gets modern access management that reduces administration, strengthens security and provides full control over every access – from registration and issuing to return and history. 🔐🚀"
-    }
+    },
+    "heroTitle": "Full control over ",
+    "heroTitleSpan": "keys & permissions"
   }
 }

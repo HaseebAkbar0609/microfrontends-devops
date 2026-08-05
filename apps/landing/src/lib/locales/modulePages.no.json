@@ -21,7 +21,9 @@
     "otherSections": "Andre områder",
     "ctaStart": "Opprett konto",
     "ctaDemo": "Prøv en demokonto",
-    "ctaSubtitle": "30-dagers gratis prøveperiode — deretter Start fra 2 995 kr/måned."
+    "ctaSubtitle": "30-dagers gratis prøveperiode — deretter Start fra 2 995 kr/måned.",
+    "stepsSubhero": "Se stegene nedenfor for hvordan {{name}}-modulen fungerer – fra første forespørsel til et ferdig prosjekt.",
+    "ctaTitle": "Klar til å prøve {{name}}?"
   },
   "avtal": {
     "heroDesc": "TimeFlows kontraktsmodul er selskapets sentrale plattform for å administrere alle typer kontrakter gjennom hele livssyklusen. Samle alle kontrakter i et sikkert digitalt arkiv, lag nye kontrakter med ferdige maler, signer digitalt og motta automatiske påminnelser før viktige datoer kommer. Modulen gir full sporbarhet, versjonsadministrasjon og historikk for hver kontrakt. Enten det gjelder kundekontrakter, prosjektkontrakter, arbeidskontrakter eller leverandøravtaler, får bedriften strukturert og sikker kontraktsstyring med tydelige arbeidsflyter og intelligent overvåking.",
@@ -362,7 +364,9 @@
       "label": "Kontraktsmodulen",
       "title": "Selskapets digitale kontraktssenter",
       "text": "TimeFlows kontraktsmodul samler hele selskapets kontraktsportefølje i ett sikkert, intelligent system. Med digital signering via BankID eller SignFlow™, automatisk overvåking av utløps- og oppsigelsesdatoer, full versjonsadministrasjon, avanserte tillatelser og AI-basert risikoanalyse, får selskapet full kontroll over alle sine kontrakter. Resultatet er redusert forretningsrisiko, bedre etterlevelse av regelverk, mer effektiv administrasjon og et pålitelig beslutningsgrunnlag gjennom hele kontraktens livssyklus."
-    }
+    },
+    "heroTitle": "Full kontroll over bedriftens avtaler — ",
+    "heroTitleSpan": "fra opprettelse til arkivering"
   },
   "b2b": {
     "heroDesc": "Sveriges markedsplass for handelsnæringen. B2B-modulen forbinder kjøpere og selgere i fagbransjen. Her kan bedrifter enkelt finne underleverandører, leverandører, F-skattare og samarbeidspartnere til sine prosjekter og bestillinger.",
@@ -410,7 +414,9 @@
       "title": "En digital markedsplass for handelsnæringen",
       "text": "Med B2B-modulen blir TimeFlow mer enn et forretningssystem. Det fungerer som en komplett markedsplass hvor bedrifter kan kjøpe, selge, samarbeide og dele ressurser. Enten du trenger en elektriker til et prosjekt, ønsker å sammenligne materialpriser fra flere leverandører eller ansette ekstra personell i en travel periode, hjelper B2B-modulen deg med å finne den rette partneren – raskt, enkelt og kostnadseffektivt."
     },
-    "ctaTitle": "Klar til å prøve B2B-modulen?"
+    "ctaTitle": "Klar til å prøve B2B-modulen?",
+    "heroTitle": "B2B-modulen for ",
+    "heroTitleSpan": "håndverkere"
   },
   "data-it": {
     "heroDesc": "TimeFlows Data & IT-modul gir bedriften et komplett verktøy for å administrere, dokumentere og følge opp hele IT-miljøet. Samle all informasjon om datamaskiner, mobiltelefoner, nettbrett, programvare, lisenser, brukere og IT-kostnader i ett sentralt system. Modulen gir full sporbarhet av bedriftens digitale eiendeler, administrerer IT-budsjett og supportsaker og sikrer at riktig utstyr havner hos rett medarbeider. Koble enheter og mobiltelefoner til enkeltpersoner og hold styr på dokumenter, pålogginger, koder og sikkerhet – alt på ett sted.",
@@ -763,7 +769,9 @@
       "label": "Data & IT-modulen",
       "title": "Selskapets digitale kontrollsenter",
       "text": "TimeFlows Data & IT-modul gir full kontroll over selskapets digitale eiendeler, support og IT-økonomi. Gjennom komplett kapitalforvaltning, sporbarhet av datamaskiner og mobiltelefoner, dokumentasjon av kjøp og garantier, avansert lisenshåndtering, IT-budsjett, feilrapporter og intelligent analyse, får selskapet en moderne IT-plattform med høy sikkerhet, effektiv administrasjon og full kontroll over hele den digitale infrastrukturen."
-    }
+    },
+    "heroTitle": "Full kontroll over bedriftens IT-miljø — ",
+    "heroTitleSpan": "digitale eiendeler, support og sikkerhet"
   },
   "ekonomi": {
     "heroDesc": "TimeFlows økonomimodul hjelper bedrifter med å strukturere, administrere og effektivisere det daglige økonomiske arbeidet. Modulen samler leverandørfakturaer, godkjenningsarbeidsflyter, økonomisaker, budsjetter, rapporter, selskapsdokumenter og administrative poster i ett felles arbeidsområde. Utviklet for økonomisjefer, administratorer, prosjektledere og bedriftsledelse. Økonomimodulen utfyller TimeFlows øvrige økonomifunksjoner – fakturering håndteres i Fakturamodulen, mens prosjektresultater, prognoser og faktiske data håndteres i Prognosemodulen.",
@@ -1119,7 +1127,9 @@
       "label": "Økonomimodulen",
       "title": "En strukturert økonomiavdeling i TimeFlow",
       "text": "Ved å samle leverandørfakturaer, godkjenningsarbeidsflyter, budsjetter, økonomiske saker, rapporter, selskapsdokumenter, organisasjonsplaner, maler og krav sammen i én delt plattform, reduseres manuell administrasjon og risikoen for at viktig informasjon går tapt. Økonomimodulen fungerer som selskapets sentrale administrative knutepunkt, og sikrer at riktig journal, rett ansvarlig person og rett prosess er på plass gjennom alt økonomiarbeid. 📊"
-    }
+    },
+    "heroTitle": "Samlet kontroll over ",
+    "heroTitleSpan": "økonomiadministrasjonen"
   },
   "faktura": {
     "heroDesc": "TimeFlows Fakturamodul gir en komplett og automatisert faktureringsprosess. Lag profesjonelle fakturaer raskt og nøyaktig ved automatisk å hente informasjon fra prosjekter, bestillinger, tidsrapportering, materialer, leverandørfakturaer og andre deler av TimeFlow. Enten du jobber med privatkunder (B2C), bedrifter (B2B), eiendomsbesittere, borettslag eller offentlig sektor, får du en fleksibel løsning som minimerer administrasjonen, forbedrer kontantstrømmen og sikrer at alt utført arbeid faktureres.",
@@ -1468,7 +1478,9 @@
       "label": "Fakturamodulen",
       "title": "Et komplett faktureringssystem",
       "text": "TimeFlows Fakturamodul bringer hele selskapets faktureringsprosess til én intelligent, automatisert plattform. Med støtte for B2B og privatmarkedet, fleksible fakturamaler, automatiske fakturagrunnlag, kontraktsfakturering, artikkelregister, prislister og direkte integrasjon mot prosjekter, materiell, leverandørfakturaer, underleverandører og ÄTA-arbeid, faktureres hver utført jobb riktig og til rett tid. Resultatet er redusert administrasjon, forbedret kontantstrøm, høyere faktureringsgrad og full kontroll over selskapets inntekter. 💸"
-    }
+    },
+    "heroTitle": "Intelligent fakturering — ",
+    "heroTitleSpan": "fra underlag til betaling"
   },
   "fordon": {
     "heroDesc": "TimeFlows Vehicles & Machinery-modul gir deg full kontroll over hele selskapets kjøretøypark og maskinregister. Administrer personbiler, varebiler, lastebiler, hengere, anleggsmaskiner og annet utstyr i ett felles system hvor service, kontroller, sjåfører, økonomi og dokumentasjon er samlet på ett sted. Med Drive™- og RutPlan™-tilleggene får selskapet også en digital loggbok, GPS-posisjonering, ruteoptimalisering og avansert kjøretøyanalyse som reduserer kostnadene og effektiviserer daglig drift.",
@@ -1808,7 +1820,9 @@
       "label": "Kjøretøy og maskiner",
       "title": "Et komplett system for kjøretøy- og maskinstyring",
       "text": "TimeFlows Vehicles & Machinery-modul gir bedrifter full kontroll over hele kjøretøyparken og maskinparken – fra kjøp og registrering til service, inspeksjoner, sjåfører, økonomi og avhending. Med Drive™, RutPlan™, Smart Fleet™ og avanserte analyser av driftskostnader og elektrifisering, får virksomheten kraftig beslutningsstøtte som reduserer kostnadene, øker tilgjengeligheten og sikrer at de riktige kjøretøyene og maskinene alltid er på rett sted, med rett sjåfør og rett dokumentasjon. 🚀"
-    }
+    },
+    "heroTitle": "Full kontroll over ",
+    "heroTitleSpan": "kjøretøy & maskiner"
   },
   "inkasso": {
     "heroDesc": "TimeFlows Inkassomodul gir selskapet muligheten til å håndtere hele inkassoprosessen internt. Ved å jobbe med intern inkasso får bedriften raskere kontroll over ubetalte fakturaer, lavere kostnader, økte inntekter og en mer personlig dialog med kunden før eksterne inkassotiltak blir aktuelle. Når en faktura forfaller, kan saken overføres automatisk fra Fakturamodulen til Inkassomodulen, hvor hele prosessen fortsetter uten duplikatregistrering. All historikk, dokumentasjon og kommunikasjon følger saken, og gir effektiv og profesjonell håndtering.",
@@ -2128,10 +2142,12 @@
       "label": "Inkassomodulen",
       "title": "Full kontroll over selskapets fordringer",
       "text": "TimeFlows Inkassomodul gir bedriften muligheten til å styre hele skadeprosessen selv på en profesjonell, effektiv og kundevennlig måte. Gjennom automatisk overføring fra Fakturamodulen, intelligente arbeidsflyter og komplett historikk kan bedriften handle raskere, forbedre kontantstrømmen og samtidig opprettholde et godt forhold til sine kunder. Først når interne tiltak ikke er nok kan saken enkelt overføres til eksternt inkassobyrå eller videre til Juridisk modul."
-    }
+    },
+    "heroTitle": "Profesjonell kravhåndtering — ",
+    "heroTitleSpan": "fra påminnelse til inkasso"
   },
   "inkop-mottagning": {
-    "heroTitle": "Sjekkliste for leveringsmottak",
+    "heroTitle": "Sjekkliste for ",
     "heroDesc": "En digital kvittering for hver levering – kvantitet, kvalitet, transportskader, bilder, GPS og signatur i samme flyt. Slik ser mottaksdialogen ut i TimeFlow Work.",
     "sections": [
       {
@@ -2294,7 +2310,8 @@
           }
         ]
       }
-    ]
+    ],
+    "heroTitleSpan": "leveringsmottak"
   },
   "inkop": {
     "heroDesc": "TimeFlows Innkjøpsmodul gir deg full kontroll over hele selskapets innkjøp. Planlegg materialkjøp, lag innkjøpsordrer, sammenlign leverandører, spor leveranser i sanntid og sørg for at riktig materiale er på rett sted til rett tid.",
@@ -2649,7 +2666,9 @@
       "title": "Et moderne innkjøpssystem for byggebransjen",
       "text": "TimeFlows Innkjøpsmodul digitaliserer hele innkjøpsprosessen – fra planlegging og leverandørvalg til levering, mottakskontroll og økonomisk oppfølging. Med Smart Inköp™, AI-baserte innkjøpsanbefalinger, full sporbarhet og sanntidsovervåking, får selskapet bedre kontroll over materialstrømmer, reduserte innkjøpskostnader og færre produksjonsstans. Resultatet er en raskere, smartere og mer lønnsom kjøpsprosess for hele virksomheten. 🚀"
     },
-    "ctaTitle": "Klar til å prøve innkjøpsmodulen?"
+    "ctaTitle": "Klar til å prøve innkjøpsmodulen?",
+    "heroTitle": "Innkjøpsmodulen for ",
+    "heroTitleSpan": "håndverkere"
   },
   "juridik": {
     "heroDesc": "TimeFlows Juridisk modul er selskapets sentrale plattform for håndtering av alle rettssaker, tvister, kontrakter og juridiske prosesser. Modulen gir full kontroll over hver sak fra den første hendelsen til en fullført prosess, med strukturert dokumentasjon, dagbok, risikovurderinger, viktige datoer og fullstendig historikk. Enten saken gjelder kundetvist, entrepriserett, arbeidsrett, inkasso, kontraktsspørsmål eller rettsbehandling, er all informasjon samlet på ett sted. Dette reduserer risikoen for manglende tidsfrister og sikrer at bedriften alltid jobber strukturert og profesjonell.",
@@ -3004,7 +3023,9 @@
       "label": "Den juridiske modulen",
       "title": "Selskapets juridiske kontrollsenter",
       "text": "TimeFlows Juridisk modul gir selskapet komplett digital støtte for all juridisk administrasjon og saksbehandling. Gjennom strukturerte arbeidsflyter, risikovurderinger, dagbok, dokumenthåndtering, overvåking av responstider og viktige datoer, og tett samarbeid med eksterne advokater og juridiske rådgivere, får selskapet full kontroll over sine juridiske prosesser. Resultatet er lavere juridisk risiko, bedre dokumentasjon, sikrere beslutninger og sterkere beskyttelse for selskapets virksomhet."
-    }
+    },
+    "heroTitle": "Komplett juridisk saksbehandling — ",
+    "heroTitleSpan": "full kontroll over prosesser, risikoer og dokumentasjon"
   },
   "kalkyl": {
     "heroDesc": "Raskere, smartere og mer nøyaktige beregninger. Beregningsmodulen gir deg full kontroll over hele anbuds- og kalkulasjonsprosessen — fra materialpriser og arbeidskostnader til ferdig tilbud.",
@@ -3133,7 +3154,9 @@
       "title": "Beregning – fra erfaring til kunstig intelligens",
       "text": "TimeFlows Beregningsmodul passer både den mindre håndverksbedriften og den store entreprenøren. Du kan velge mellom en tradisjonell beregning, bransjespesifikk Calculation PRO eller la QuickAICalc™ analysere tegninger og prosjektdokumenter ved hjelp av AI. Resultatet er raskere beregninger, høyere presisjon, bedre marginer og et sterkere beslutningsgrunnlag før hvert tilbud og prosjekt."
     },
-    "ctaTitle": "Klar til å prøve beregningsmodulen?"
+    "ctaTitle": "Klar til å prøve beregningsmodulen?",
+    "heroTitle": "Kalkylemodulen for ",
+    "heroTitleSpan": "håndverkere"
   },
   "kma": {
     "heroDesc": "Et komplett digitalt styringssystem for Kvalitet, Miljø og Arbeidsmiljø. TimeFlow digitaliserer hele selskapets KMA-arbeid — fra policyer og egeninspeksjoner til risikovurderinger, vernerunder, revisjoner og sertifiseringer.",
@@ -3407,7 +3430,9 @@
       "title": "Et komplett digitalt styringssystem for byggebransjen",
       "text": "TimeFlows KMA-modul er mye mer enn et system for avvik og egeninspeksjoner. Det fungerer som selskapets komplette digitale styringssystem hvor kvalitet, miljø, arbeidsmiljø, lovkrav, dokumentasjon, revisjoner, opplæring, sertifiseringer og AI-baserte sikkerhetssjekker er samlet i én delt plattform. Resultatet er høyere kvalitet, tryggere arbeidsplasser, bedre etterlevelse av regelverk og mer effektivt KMA-arbeid i hele virksomheten. 🚀"
     },
-    "ctaTitle": "Klar til å prøve KMA-modulen?"
+    "ctaTitle": "Klar til å prøve KMA-modulen?",
+    "heroTitle": "KMA-modulen for ",
+    "heroTitleSpan": "håndverkere"
   },
   "ledningsstod": {
     "heroDesc": "TimeFlows Management Support-modul gir styret, ledelsen og selskapets ledelse en fullstendig oversikt over hele virksomheten. Samle selskapets viktigste nøkkeltall, strategier, styrearbeid, rapporter, beslutningsdokumenter og styrende dokumenter i én felles plattform. Med sanntidsdata fra alle TimeFlow-moduler får ledelsen kraftig beslutningsstøtte der økonomi, salg, prosjekter, personell, KMA, juridiske og forretningsmessige mål presenteres i ett sammenhengende styringssystem.",
@@ -3779,7 +3804,9 @@
       "label": "Styringsstøttemodulen",
       "title": "Beslutningsstøtte for hele selskapet",
       "text": "TimeFlows Management Support-modul er knutepunktet for selskapets styring og strategiske utvikling. Ved å samle styrearbeid, referater, beslutningssaker, KPIer, forretningsmål, strategier, rapporter, en varslingsfunksjon og viktige styrende dokumenter i ett felles system, får ledelse og styre kraftig beslutningsstøtte. Med sanntidsdata fra hele TimeFlow og AI-funksjonen Executive Intelligence™ kan selskapet ta raskere, tryggere og bedre informerte beslutninger samtidig som risikoer identifiseres på et tidlig stadium og virksomheten styres mot sine mål."
-    }
+    },
+    "heroTitle": "Bedriftens digitale ledelsessentral — ",
+    "heroTitleSpan": "styring, beslutninger og strategisk oppfølging"
   },
   "mallar": {
     "heroDesc": "TimeFlows Templates-modul samler alle selskapets dokumentmaler på ett sted og sikrer en konsistent måte å jobbe på på tvers av hele organisasjonen. Lag dine egne maler, rediger eksisterende, versjonsadministrer endringer og distribuer riktig mal til riktig modul eller bruker. Gjennom et sentralt malbibliotek unngår bedriften dobbeltarbeid samtidig som kvalitet og standardisering øker. Alle ansatte jobber alltid med siste godkjente versjon.",
@@ -4115,7 +4142,9 @@
       "label": "Modulen Maler",
       "title": "Et levende malbibliotek for hele bedriften",
       "text": "TimeFlows Templates-modul gjør selskapets dokumenthåndtering raskere, sikrere og mer konsistent. Gjennom et sentralt malbibliotek med versjonshåndtering, kategorisering, avanserte tillatelser og automatisk kobling til TimeFlow sine moduler, jobber hele organisasjonen alltid med riktige dokumenter og siste godkjente versjon. Resultatet er høyere kvalitet, mindre administrasjon og en standardisert måte å jobbe på i hele virksomheten."
-    }
+    },
+    "heroTitle": "Bedriftens sentrale malbibliotek — ",
+    "heroTitleSpan": "dokumenter, avtaler, sjekklister og arbeidsflyter"
   },
   "marknad-salj": {
     "heroDesc": "TimeFlows Marketing & Sales-modul samler selskapets salg, markedsføring, CRM og kundekommunikasjon i én intelligent plattform. Administrer hele kundereisen – fra første kundeemne til langsiktig kundebehandling – med automatiserte arbeidsflyter, kampanjer, AI-assistenter og smart kommunikasjon. Modulen gir full kontroll over potensielle kunder, kunder, salgspipeline, markedsføringsmateriell, visuell identitet, automatiske e-post- og SMS-utsendelser og AI-basert telefonhåndtering via FlowTalk™. TimeFlow følger også automatisk opp gjennomførte prosjekter og bestillinger med kundeundersøkelser for å måle kundetilfredshet og identifisere forbedringsområder.",
@@ -4458,7 +4487,9 @@
       "label": "Markedsførings- og salgsmodulen",
       "title": "Et intelligent CRM som fungerer døgnet rundt",
       "text": "TimeFlows Marketing & Sales-modul kombinerer CRM, markedsføring, salg og AI i en komplett plattform. Med automatiske kampanjer, kundeundersøkelser etter gjennomførte prosjekter og bestillinger, personlige hilsener ved høytider og bursdager, og den AI-drevne telefonassistenten FlowTalk™, der AI Robert™ svarer på innkommende anrop, lager utskrifter og sender oppsummeringer via e-post, får selskapet et moderne system som bygger sterkere relasjoner, øker salget og sørger for at ingen kundekontakt aldri går tapt."
-    }
+    },
+    "heroTitle": "Markedsføring & Salg — ",
+    "heroTitleSpan": "et komplett CRM som jobber døgnet rundt"
   },
   "maskin": {
     "heroDesc": "TimeFlows Maskinmodul er et komplett system for å administrere bedriftens anleggsmaskiner, verktøy og utstyr gjennom hele deres livssyklus. Fra kjøp og registrering til bestilling, service, inspeksjoner, dokumentasjon, kostnadsoppfølging og avhending, samles all informasjon i én delt plattform. Modulen er utviklet for bygg-, service-, installasjons- og eiendomsbedrifter som ønsker å maksimere utnyttelsen, redusere nedetid og få full sporbarhet over sine ressurser.",
@@ -4789,7 +4820,9 @@
       "label": "Maskin",
       "title": "Et komplett system for maskin- og utstyrsstyring",
       "text": "TimeFlows Maskinmodul er utviklet for bedrifter som ønsker full kontroll over hele maskin- og utstyrsparken. Ved å samle maskinregisteret, dokumentasjon, bestillinger, service, inspeksjoner, verktøysporing, servicebiler, prosjektkoblinger og økonomisk oppfølging i én felles plattform, får virksomheten kraftig beslutningsstøtte. Med ToolTrack™, Smart Machine™ og full sporbarhet fra lager til servicebil og ut til prosjekter reduseres administrasjonen, utstyr brukes mer effektivt og bedriften får sikrere, mer lønnsom og bedre planlagt maskinstyring. 🚀"
-    }
+    },
+    "heroTitle": "Full kontroll over ",
+    "heroTitleSpan": "maskiner & utstyr"
   },
   "material": {
     "heroDesc": "TimeFlows Materialer & Lager-modul gir deg full kontroll over selskapets materialflyt – fra innkjøp og lager til prosjekter, bestillinger og fakturering. Håndtere artikkelregister, lagersaldo, prislister og leveranser i et moderne lagersystem som er fullt integrert med hele TimeFlow.",
@@ -5078,7 +5111,9 @@
       "title": "Et komplett material- og lagersystem for byggebransjen",
       "text": "TimeFlows Materialer & Lager-modul er utviklet for bedrifter som ønsker full kontroll over hele materialflyten. Fra artikkelregister, prislister og innkjøp til lager, prosjekter, bestillinger og fakturering, er all informasjon samlet i én felles plattform. Med støtte for Smart-Lager™, automatisk lagerreservasjon og mobil lagerstyring får selskapet bedre kontroll over kostnader, redusert avfall og mer effektiv materialforsyning – noe som fører til høyere lønnsomhet og mer pålitelige prosjektleveranser. 🚀"
     },
-    "ctaTitle": "Klar til å prøve materialer og lager?"
+    "ctaTitle": "Klar til å prøve materialer og lager?",
+    "heroTitle": "Full kontroll over ",
+    "heroTitleSpan": "materiell & lager"
   },
   "order": {
     "heroDesc": "Digital ordrehåndtering – fra ordre til faktura. TimeFlows Ordremodul er navet for hele selskapets service- og ordredrift, med automatiserte prosesser, mobile arbeidsordrer og full integrasjon med hele TimeFlow.",
@@ -5256,7 +5291,9 @@
       "title": "Et komplett ordresystem for handelsnæringen",
       "text": "Ordremodulen er utviklet for bedrifter som ønsker å digitalisere hele ordrehåndteringen. Med støtte for Order-Direkt™, automatiske arbeidsflyter, mobile arbeidsordrer, ressursplanlegging og full integrasjon med resten av TimeFlow, er administrasjonen minimal og kontrollen maksimal. Resultatet er raskere behandling, bedre ressursutnyttelse, mer fornøyde kunder og en mer effektiv bedrift. 🚀"
     },
-    "ctaTitle": "Klar til å prøve Bestillingsmodulen?"
+    "ctaTitle": "Klar til å prøve Bestillingsmodulen?",
+    "heroTitle": "Ordremodulen for ",
+    "heroTitleSpan": "håndverkere"
   },
   "personal": {
     "heroDesc": "TimeFlows Personalmodul bringer hele selskapets personalledelse inn i én intelligent, digital plattform. Håndtere alt fra rekruttering og arbeidskontrakter til ferieplanlegging, sykefravær, opplæring, medarbeidergjennomgang og rehabilitering. Full sporbarhet av det hver ansatt har fått utstedt – Smart Access-nøkler, IT-utstyr, verktøy, maskiner og kjøretøy. Digital signering, automatiske arbeidsflyter og sømløs integrasjon med resten av TimeFlow.",
@@ -5572,7 +5609,9 @@
       "label": "Personalmodulen",
       "title": "En komplett HR-plattform",
       "text": "TimeFlows Personalmodul gir bedriften full kontroll over hele medarbeiderreisen — fra rekruttering og ansettelse til kompetanseutvikling og exit. Med digitale arbeidskontrakter, signering via BankID eller SignFlow™, arbeidstider, ferieplanlegging, sykefravær, rehabilitering, opplæring, utviklingsgjennomganger, intelligent bemanningsplanlegging og full sporbarhet av utstedt Smart Access og IT-utstyr, får bedriften et moderne HR-system som reduserer administrasjonen, styrker regeletterlevelsen og sikrer at rett kompetanse er på rett sted til rett tid. 👥"
-    }
+    },
+    "heroTitle": "Smart HR — ",
+    "heroTitleSpan": "fra rekruttering til kompetanse"
   },
   "prognos": {
     "heroDesc": "TimeFlows Forecast-modul er selskapets strategiske beslutningsstøtte for økonomi, prosjekter og virksomhetsstyring. Modulen analyserer fortløpende selskapets økonomiske utvikling og hjelper ledelsen med å identifisere risikoer, muligheter og avvik før de påvirker resultatene. Med støtte for prognoser på prosjekt-, ordre-, avdelings- og bedriftsnivå får du et klart bilde av fremtidige inntekter, resultater, kontantstrøm og lønnsomhet. Systemet overvåker budsjett, faktiske forhold og prognoser i sanntid og varsler automatisk når noe avviker fra planen.",
@@ -5924,7 +5963,9 @@
       "label": "Prognosemodulen",
       "title": "Selskapets økonomiske kompass",
       "text": "TimeFlows prognosemodul gir ledelsen kraftig beslutningsstøtte der historiske data, nåværende faktiske og fremtidige prognoser fungerer sammen i sanntid. Gjennom intelligente analyser av prosjekter, bestillinger, budsjett, overhead, kredittrisiko og kontantstrøm kan selskapet identifisere avvik tidlig, forbedre sine beregninger og ta raskere, bedre informerte forretningsbeslutninger. Prognosemodulen blir dermed selskapets økonomiske kompass for langsiktig vekst og lønnsomhet. 📊"
-    }
+    },
+    "heroTitle": "Fremtidsblikk med ",
+    "heroTitleSpan": "intelligente prognoser"
   },
   "projekt": {
     "heroDesc": "Et komplett prosjektstyringssystem for bygg-, service- og eiendomsbransjen. Selskapets digitale prosjektkontor – fra første planlegging til sluttkontroll, garanti og sluttkostnadsberegning.",
@@ -6274,7 +6315,9 @@
       "title": "Et komplett prosjektstyringssystem",
       "text": "Prosjektmodulen er utviklet for moderne bygg-, service- og eiendomsbedrifter som ønsker å samle all prosjektledelse i ett system. Med støtte for IDFlow™, AI Project Intelligence™, Project Health Score™, flerårige servicekontrakter, avansert prosjektøkonomi og full integrasjon med de andre TimeFlow-modulene, får prosjektledelsen kraftig beslutningsstøtte gjennom hele prosjektets livssyklus. Resultatet er bedre planlegging, høyere produktivitet, tryggere arbeidsplasser, mer effektiv ressursutnyttelse og mer lønnsomme prosjekter. 🚀"
     },
-    "ctaTitle": "Klar til å prøve prosjektmodulen?"
+    "ctaTitle": "Klar til å prøve prosjektmodulen?",
+    "heroTitle": "Prosjektmodulen for ",
+    "heroTitleSpan": "håndverkere"
   },
   "projektering": {
     "heroDesc": "Planlegg riktig fra starten – grunnlaget for et lønnsomt prosjekt. Designmodulen samler all teknisk og administrativ planlegging på ett sted.",
@@ -6365,7 +6408,9 @@
       "title": "Design – prosjektets kontrollsenter",
       "text": "Designmodulen fungerer som prosjektets digitale kontrollsenter hvor teknologi, økonomi, organisasjon og planlegging møtes. Her lages prosjekteringsorganisasjon, budsjett, tidsplan, sjekklister, ansvarsfordeling og hele det tekniske prosjektgrunnlaget. Alle dokumenter, beslutninger og endringer er samlet i én delt plattform som gir prosjektledelsen full kontroll fra første designmøte til produksjonsstart. Resultatet er bedre koordinering, færre feil, høyere kvalitet, sikrere økonomi og en betydelig mer effektiv byggeprosess. 🚀"
     },
-    "ctaTitle": "Klar til å prøve designmodulen?"
+    "ctaTitle": "Klar til å prøve designmodulen?",
+    "heroTitle": "Prosjektering for ",
+    "heroTitleSpan": "håndverkere"
   },
   "smart-access": {
     "heroDesc": "Smart Access er TimeFlows komplette løsning for å administrere bedriftens fysiske tilgang og tillatelser. Modulen gir full kontroll over nøkler, adgangskort, nøkkelbrikker, brikker og digital tilgang for kunder, eiendommer, prosjekter, servicebiler og bedriftens egne lokaler. Med full sporbarhet på individnivå vet du alltid hvem som har hvilken tilgang, hvor den brukes, når den ble utstedt og når den skal returneres. Smart Access reduserer sikkerhetsrisikoer, forenkler administrasjonen og sikrer at rett person har rett tillatelse til rett tid.",
@@ -6621,6 +6666,8 @@
       "label": "Smart tilgang",
       "title": "Et komplett system for moderne tilgangsadministrasjon",
       "text": "Smart Access samler hele selskapets administrasjon av nøkler, adgangskort, nøkkelbrikker, tagger og tillatelser i én intelligent og sikker plattform. Med digital sign-off, individbaserte tillatelser, full sporbarhet, AI-basert sikkerhetsanalyse og integrasjon med de andre TimeFlow-modulene, får selskapet moderne tilgangsadministrasjon som reduserer administrasjonen, styrker sikkerheten og gir full kontroll over hver tilgang – fra registrering og utstedelse til retur og historikk. 🔐🚀"
-    }
+    },
+    "heroTitle": "Full kontroll over ",
+    "heroTitleSpan": "nøkler & tilganger"
   }
 }
