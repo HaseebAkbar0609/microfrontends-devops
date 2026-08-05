@@ -555,6 +555,17 @@ export type OfferTranslation = {
 	b2bDealEdit: string;
 	b2bDealArchiveAction: string;
 	b2bDealDelete: string;
+	b2bArchiveViewOffer: string;
+	b2bArchiveViewRequest: string;
+	b2bArchiveRequests: string;
+	b2bArchiveCompanyNumber: string;
+	b2bArchiveOrgNr: string;
+	b2bArchiveWork: string;
+	b2bArchiveTotalOffer: string;
+	b2bArchiveAcceptOffer: string;
+	b2bArchiveDecline: string;
+	b2bArchiveViewCompanyInfo: string;
+	b2bArchiveAddProject: string;
 	b2bCreateDeal: string;
 	b2bDealsEmpty: string;
 	// B2B - Deal Detail
