@@ -58,7 +58,7 @@ function AccountPlanContent({ activeTab: initialTab }: { activeTab: string }) {
 			{/* Shadcn UI Tabs */}
 			<Tabs value={subtabParam} onValueChange={updateTab} className="w-full flex-1 flex flex-col">
 				<div className="border-b border-slate-200">
-					<TabsList variant="line" className="gap-8 bg-transparent p-0">
+					<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
 						<TabsTrigger value="kontoplan" className="pb-3 pt-1 text-sm font-semibold">
 							<Translate text={localizationConstants.accountPlanTab} />
 						</TabsTrigger>

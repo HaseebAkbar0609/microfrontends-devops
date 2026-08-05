@@ -81,6 +81,16 @@ export const navConfig: NavGroup[] = [
 		defaultOpen: true,
 		items: [
 			{
+				id: "diary",
+				label: localizationConstants.diary,
+				href: "/tools/diary",
+			},
+			{
+				id: "time",
+				label: localizationConstants.timeItem,
+				href: "/tools/time",
+			},
+			{
 				id: "register",
 				label: localizationConstants.register,
 				href: "/tools/register",
@@ -182,16 +192,6 @@ export const navConfig: NavGroup[] = [
 						icon: Headset,
 					},
 				],
-			},
-			{
-				id: "diary",
-				label: localizationConstants.diary,
-				href: "/tools/diary",
-			},
-			{
-				id: "time",
-				label: localizationConstants.timeItem,
-				href: "/tools/time",
 			},
 		],
 	},

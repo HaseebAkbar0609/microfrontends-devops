@@ -122,7 +122,7 @@ function RegisterContent({ defaultRegister }: RegisterPageProps) {
 			<div className="border-b border-slate-200">
 				{selectedRegister === "artikel" ? (
 					<Tabs value={articleSubTab} onValueChange={(val) => updateSubTab(val)}>
-						<TabsList variant="line" className="gap-8 bg-transparent p-0">
+						<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
 							<TabsTrigger value="artikel" className="pb-3 pt-1 text-sm font-semibold">
 								<Translate text={localizationConstants.articleListTab} />
 							</TabsTrigger>
@@ -133,7 +133,7 @@ function RegisterContent({ defaultRegister }: RegisterPageProps) {
 					</Tabs>
 				) : (
 					<Tabs value="active">
-						<TabsList variant="line" className="gap-8 bg-transparent p-0">
+						<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
 							<TabsTrigger value="active" className="pb-3 pt-1 text-sm font-semibold">
 								{selectedRegister === "kund" ? (
 									<Translate text={localizationConstants.customerListTab} />

@@ -14,7 +14,7 @@ export default function ProfileSettingsTabs() {
 				<div className="px-5 border-b border-slate-200 mb-6">
 					<TabsList
 						variant="line"
-						className="h-auto gap-6 rounded-none px-0 pb-1"
+						className="h-auto gap-6 rounded-none px-0 p-0 -mb-px"
 					>
 						<TabsTrigger value="contact" className="px-0 text-slate-600 data-[state=active]:text-slate-900 data-[state=active]:px-3">
 							<Translate text={localizationConstants.contactInformation} />

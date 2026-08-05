@@ -38,7 +38,7 @@ export function PriceListFeature() {
 			{/* Price List Tabs */}
 			<Tabs defaultValue="prislista" className="w-full flex-1 flex flex-col">
 				<div className="border-b border-slate-200">
-					<TabsList variant="line" className="gap-8 bg-transparent p-0">
+					<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
 						<TabsTrigger value="prislista" className="pb-3 pt-1 text-sm font-semibold">
 							<Translate text={localizationConstants.priceListTab} />
 						</TabsTrigger>
