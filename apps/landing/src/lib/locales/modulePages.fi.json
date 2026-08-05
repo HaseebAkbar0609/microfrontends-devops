@@ -21,7 +21,9 @@
     "otherSections": "Muut alueet",
     "ctaStart": "Luo tili",
     "ctaDemo": "Kokeile demotiliä",
-    "ctaSubtitle": "30 päivän kokeilujakso — sen jälkeen Start alkaen 2 995 kr/mån."
+    "ctaSubtitle": "30 päivän kokeilujakso — sen jälkeen Start alkaen 2 995 kr/mån.",
+    "stepsSubhero": "Katso alta vaiheet, miten {{name}}-moduuli toimii – ensimmäisestä pyynnöstä valmiiseen projektiin.",
+    "ctaTitle": "Valmis kokeilemaan {{name}}?"
   },
   "avtal": {
     "heroDesc": "TimeFlowsin Sopimus-moduuli on yrityksen keskeinen alusta erilaisten sopimusten hallintaan koko niiden elinkaaren ajan. Kokoa kaikki sopimukset turvalliseen digitaaliseen arkistoon, luo uusia sopimuksia valmiilla malleilla, allekirjoita digitaalisesti ja saat automaattisia muistutuksia ennen tärkeitä päivämääriä. Moduuli tarjoaa täyden jäljitettävyyden, versiohallinnan ja historian jokaiselle sopimukselle. Olipa kyse asiakassopimuksista, projektisopimuksista, työsopimuksista tai toimittajasopimuksista, yritys saa strukturoidun ja turvallisen sopimushallinnan, jossa on selkeät työnkulut ja älykäs seuranta.",
@@ -362,7 +364,9 @@
       "label": "Sopimus-moduuli",
       "title": "Yrityksen digitaalinen sopimuskeskus",
       "text": "TimeFlowsin Sopimus-moduuli kokoaa yrityksen koko sopimusportfolion turvalliseen ja älykkääseen järjestelmään. Digitaalisen BankID- tai SignFlow™-allekirjoituksen, erääntymis- ja irtisanomispäivien automaattisen seurannan, täyden versiohallinnan, edistyneiden käyttöoikeuksien ja AI-pohjaisen riskianalyysin ansiosta yritys saa täyden hallinnan kaikista sopimuksista. Tuloksena on pienempi liiketoimintariski, parempi säädösten noudattaminen, tehokkaampi hallinto ja luotettava päätösaineisto koko sopimuksen elinkaaren ajan."
-    }
+    },
+    "heroTitle": "Täysi hallinta yrityksen sopimuksista — ",
+    "heroTitleSpan": "luomisesta arkistointiin"
   },
   "b2b": {
     "heroDesc": "Ruotsin markkinapaikka käsityöalalle. B2B-moduuli yhdistää ostajat ja myyjät käsityöalalla. Täällä yritykset löytävät helposti alihankkijoita, toimittajia, F-verovelvollisia ja yhteistyökumppaneita projekteihinsa ja tilauksiinsa.",
@@ -410,7 +414,9 @@
       "title": "Digitaalinen markkinapaikka käsityöalalle",
       "text": "B2B-moduulin avulla TimeFlow on enemmän kuin toiminnanohjausjärjestelmä. Se toimii täydellisenä markkinapaikkana, jossa yritykset voivat ostaa, myydä, tehdä yhteistyötä ja jakaa resursseja. Olipa sinun tarpeesi sähköasentaja projektiin, materiaalihintojen vertailu useiden toimittajien välillä tai lisähenkilöstön vuokraus kiireiseen aikaan, B2B-moduuli auttaa löytämään oikean kumppanin – nopeasti, helposti ja kustannustehokkaasti."
     },
-    "ctaTitle": "Valmis kokeilemaan B2B-moduulia?"
+    "ctaTitle": "Valmis kokeilemaan B2B-moduulia?",
+    "heroTitle": "B2B-moduuli ",
+    "heroTitleSpan": "käsityöläisille"
   },
   "data-it": {
     "heroDesc": "TimeFlowsin Data & IT -moduuli tarjoaa yritykselle täydellisen työkalun koko IT-ympäristön hallintaan, dokumentointiin ja seurantaan. Kokoa kaikki tietokoneita, matkapuhelimia, tabletteja, ohjelmistoja, lisenssejä, käyttäjiä ja IT-kustannuksia koskeva tieto yhteen keskitettyyn järjestelmään. Moduuli tarjoaa täyden jäljitettävyyden yrityksen digitaalisiin omaisuuseriin, hallinnoi IT-budjettia ja tukipyyntöjä sekä varmistaa, että oikea laitteisto on oikealla työntekijällä. Liitä laitteet ja matkapuhelimet henkilöihin, pidä huolta dokumenteista, kirjautumisista, koodeista ja turvallisuudesta — kaikki yhdestä paikasta.",
@@ -763,7 +769,9 @@
       "label": "Data & IT -moduuli",
       "title": "Yrityksen digitaalinen kontrollikeskus",
       "text": "TimeFlowsin Data & IT -moduuli antaa täyden hallinnan yrityksen digitaalisiin omaisuuseriin, tukeen ja IT-talouteen. Täydellisen inventaarionhallinnan, tietokoneiden ja matkapuhelinten jäljitettävyyden, ostojen ja takuiden dokumentoinnin, edistyneen lisenssienhallinnan, IT-budjetin, vikailmoitusten ja älykkään analyysin ansiosta yritys saa modernin IT-alustan, jossa on korkea turvallisuus, tehokas hallinto ja täysi hallinta koko digitaaliseen infrastruktuuriin."
-    }
+    },
+    "heroTitle": "Täysi hallinta yrityksen IT-ympäristöstä — ",
+    "heroTitleSpan": "digitaaliset varat, tuki ja turvallisuus"
   },
   "ekonomi": {
     "heroDesc": "TimeFlowsin Talous-moduuli auttaa yrityksiä strukturoimaan, hallinnoimaan ja tehostamaan juoksevaa taloushallintoa. Moduuli kokoaa toimittajalaskut, hyväksyntäprosessit, talousasiat, budjetit, raportit, yhtiödokumentit ja hallinnolliset asiakirjat yhteiseen työtilaan. Suunniteltu talousvastaaville, ylläpitäjille, projektipäälliköille ja yritysjohdolle. Talous-moduuli täydentää TimeFlowsin muita taloustoimintoja — laskutus hoidetaan Laskutus-moduulissa ja projektitulokset, ennusteet ja toteumat Ennuste-moduulissa.",
@@ -1119,7 +1127,9 @@
       "label": "Talous-moduuli",
       "title": "Strukturoitu talousosasto TimeFlowissa",
       "text": "Kokoamalla toimittajalaskut, hyväksyntäprosessit, budjetit, talousasiat, raportit, yhtiödokumentit, organisaatiosuunnitelmat, mallit ja reklamaatiot yhteiseen alustaan vähenevät manuaalinen hallinto ja riski siitä, että tärkeää tietoa katoaa. Talous-moduuli toimii yrityksen keskeisenä hallinnollisena keskuksena ja varmistaa, että oikeat asiakirjat, oikea vastuuhenkilö ja oikea prosessi ovat paikallaan koko taloushallinnon ajan. 📊"
-    }
+    },
+    "heroTitle": "Täydellinen hallinta ",
+    "heroTitleSpan": "taloushallinnosta"
   },
   "faktura": {
     "heroDesc": "TimeFlowsin Laskutus-moduuli tarjoaa täydellisen ja automatisoidun laskutusprosessin. Luo ammattimaisia laskuja nopeasti ja oikein hakemalla tiedot automaattisesti projekteista, tilauksista, työajanseurannasta, materiaaleista, toimittajalaskuista ja muista TimeFlowsin osista. Toimitpa sitten yksityisasiakkaille (B2C), yrityksille (B2B), kiinteistönomistajille, asunto-osakeyhtiöille tai julkiselle sektorille, saat joustavan ratkaisun, joka minimoi hallinnon, parantaa kassavirtaa ja varmistaa, että kaikki suoritettu työ laskutetaan.",
@@ -1468,7 +1478,9 @@
       "label": "Laskutus-moduuli",
       "title": "Täydellinen laskutusjärjestelmä",
       "text": "TimeFlowsin Laskutus-moduuli kokoaa yrityksen koko laskutusprosessin älykkääseen ja automatisoituun alustaan. B2B- ja yksityisasiakastuen, joustavien laskumallien, automaattisten laskuaineistojen, sopimuslaskutuksen, artikkelirekisterin, hinnastojen sekä suoran yhteyden projekteihin, materiaaleihin, toimittajalaskuihin, alihankkijoihin ja ÄTA-töihin ansiosta varmistetaan, että jokainen suoritettu työ laskutetaan oikein ja oikea-aikaisesti. Tuloksena on vähemmän hallinnollista työtä, parempi kassavirta, korkeampi laskutusaste ja täysi hallinta yrityksen tuloihin. 💸"
-    }
+    },
+    "heroTitle": "Älykäs laskutus — ",
+    "heroTitleSpan": "perusteista maksutapahtumaan"
   },
   "fordon": {
     "heroDesc": "TimeFlowsin Ajoneuvot ja koneet -moduuli antaa sinulle täyden hallinnan koko yrityksen ajoneuvokantaan ja konerekisteriin. Hallinnoi henkilöautoja, pakettiautoja, kuorma-autoja, perävaunuja, urakointikoneita ja muuta laitteistoa yhteisessä järjestelmässä, jossa huolto, katsastukset, kuljettajat, talous ja dokumentaatio kootaan yhteen paikkaan. Drive™- ja RutPlan™-lisätoimintojen avulla yritys saa lisäksi digitaalisen ajopäiväkirjan, GPS-paikannuksen, reitinoptimoinnin ja edistyneen ajoneuvoanalyysin, jotka vähentävät kustannuksia ja tehostavat päivittäistä toimintaa.",
@@ -1808,7 +1820,9 @@
       "label": "Ajoneuvot ja koneet",
       "title": "Täydellinen järjestelmä ajoneuvo- ja konehallintaan",
       "text": "TimeFlowsin Ajoneuvot ja koneet -moduuli antaa yrityksille täyden hallinnan koko ajoneuvokantaan ja koneparkkiin – ostosta ja rekisteröinnistä huoltoon, katsastuksiin, kuljettajiin, talouteen ja käytöstä poistoon. Drive™, RutPlan™, Smart Fleet™ ja edistyneet käyttökustannus- ja sähköistysanalyysit antavat toiminnalle tehokkaan päätöksenteon tuen, joka vähentää kustannuksia, parantaa saatavuutta ja varmistaa, että oikeat ajoneuvot ja koneet ovat aina oikeassa paikassa oikealla kuljettajalla ja oikealla dokumentaatiolla. 🚀"
-    }
+    },
+    "heroTitle": "Täysi hallinta ",
+    "heroTitleSpan": "ajoneuvoista & koneista"
   },
   "inkasso": {
     "heroDesc": "TimeFlowsin Perintä-moduuli antaa yritykselle mahdollisuuden hoitaa koko perintäprosessi omassa hallinnassa. Oman perintäkäsittelyn avulla yritys saa nopeamman hallinnan maksamattomiin laskuihin, alhaisemmat kustannukset, suuremmat tuotot ja henkilökohtaisemman vuoropuhelun asiakkaan kanssa ennen kuin ulkopuoliset perintätoimet tulevat ajankohtaisiksi. Kun lasku erääntyy, asia voidaan siirtää automaattisesti Laskutus-moduulista Perintä-moduuliin, jossa koko prosessi jatkuu ilman kaksoisrekisteröintiä. Kaikki historia, dokumentaatio ja viestintä siirtyvät asian mukana, mikä takaa tehokkaan ja ammattimaisen käsittelyn.",
@@ -2128,10 +2142,12 @@
       "label": "Perintä-moduuli",
       "title": "Täysi hallinta yrityksen saataviin",
       "text": "TimeFlowsin Perintä-moduuli antaa yritykselle mahdollisuuden hoitaa koko saatavaprosessi itse ammattimaisesti, tehokkaasti ja asiakasystävällisesti. Automaattisen Laskutus-moduulista tapahtuvan siirron, älykkäiden työnkulkujen ja täyden historian avulla yritys voi toimia nopeammin, parantaa kassavirtaa ja säilyttää samalla hyvän suhteen asiakkaisiinsa. Vasta kun sisäiset toimet eivät riitä, asia voidaan helposti siirtää ulkopuoliselle perintäyhtiölle tai edelleen Juridiikka-moduuliin."
-    }
+    },
+    "heroTitle": "Ammattimainen saatavien hallinta — ",
+    "heroTitleSpan": "muistutuksesta perintään"
   },
   "inkop-mottagning": {
-    "heroTitle": "Toimitusten vastaanottotarkistuslista",
+    "heroTitle": "Vastaanottotarkistuslista ",
     "heroDesc": "Digitaalinen kuittaus jokaisesta toimituksesta – määrä, laatu, kuljetusvauriot, kuvat, GPS ja allekirjoitus samassa kulussa. Tältä vastaanottodialogi näyttää TimeFlow Workissa.",
     "sections": [
       {
@@ -2294,7 +2310,8 @@
           }
         ]
       }
-    ]
+    ],
+    "heroTitleSpan": "toimituksille"
   },
   "inkop": {
     "heroDesc": "TimeFlowsin Osto-moduuli antaa sinulle täyden hallinnan koko yrityksen ostoihin. Suunnittele materiaaliostoja, luo ostotilauksia, vertaile toimittajia, seuraa toimituksia reaaliajassa ja varmista, että oikea materiaali on oikeassa paikassa oikeaan aikaan.",
@@ -2649,7 +2666,9 @@
       "title": "Moderni ostojärjestelmä urakka-alalle",
       "text": "TimeFlowsin Osto-moduuli digitalisoi koko ostoprosessin – suunnittelusta ja toimittajavalinnasta toimitukseen, vastaanottotarkistukseen ja taloudelliseen seurantaan. Smart-Inköp™, AI-pohjaiset ostosuositukset, täysi jäljitettävyys ja reaaliaikainen seuranta antavat yritykselle paremman hallinnan materiaalivirtoihin, alhaisemmat ostokustannukset ja vähemmän tuotantokatkoksia. Tuloksena on nopeampi, älykkäämpi ja kannattavampi ostoprosessi koko toiminnalle. 🚀"
     },
-    "ctaTitle": "Valmis kokeilemaan Osto-moduulia?"
+    "ctaTitle": "Valmis kokeilemaan Osto-moduulia?",
+    "heroTitle": "Ostomoduuli ",
+    "heroTitleSpan": "käsityöläisille"
   },
   "juridik": {
     "heroDesc": "TimeFlowsin Juridiikka-moduuli on yrityksen keskeinen alusta kaikkien juridisten asioiden, riita-asiain, sopimusten ja oikeudellisten prosessien hallintaan. Moduuli antaa täyden hallinnan jokaiseen asiaan ensimmäisestä tapahtumasta päättyneeseen prosessiin, strukturoidun dokumentaation, päiväkirjan, riskiarvioinnit, tärkeät päivämäärät ja täydellisen historian. Olipa kyse asiakasriidasta, urakkajuridiikasta, työoikeudesta, perinnästä, sopimuskysymyksistä tai tuomioistuinprosesseista, kaikki tieto kootaan yhteen paikkaan. Se vähentää määräaikojen ylittymisen riskiä ja varmistaa, että yritys toimii aina strukturoidusti ja ammattimaisesti.",
@@ -3004,7 +3023,9 @@
       "label": "Juridiikka-moduuli",
       "title": "Yrityksen juridinen kontrollikeskus",
       "text": "TimeFlowsin Juridiikka-moduuli antaa yritykselle täydellisen digitaalisen tuen kaikkeen juridiseen hallintoon ja asioiden käsittelyyn. Strukturoitujen työnkulkujen, riskiarviointien, päiväkirjan, dokumenttien hallinnan, vastausaikojen ja tärkeiden päivämäärien seurannan sekä läheisen yhteistyön ulkopuolisten asianajajien ja juristien kanssa ansiosta yritys saa täyden hallinnan juridisiin prosesseihinsa. Tuloksena ovat alhaisemmat juridiset riskit, parempi dokumentaatio, turvallisemmat päätökset ja vahvempi suoja yrityksen liiketoiminnalle."
-    }
+    },
+    "heroTitle": "Täydellinen juridisten asioiden hallinta — ",
+    "heroTitleSpan": "täysi hallinta prosesseista, riskeistä ja dokumentaatiosta"
   },
   "kalkyl": {
     "heroDesc": "Nopeampia, älykkäämpiä ja tarkempia kalkyyleja. Kalkyyli-moduuli antaa sinulle täyden hallinnan koko tarjous- ja kalkyyliprosessiin — materiaalihinnoista ja työkustannuksista valmiiseen tarjoukseen.",
@@ -3133,7 +3154,9 @@
       "title": "Kalkyyli – kokemuksesta tekoälyyn",
       "text": "TimeFlowsin Kalkyyli-moduuli sopii sekä pienemmälle käsityöyritykselle että suurelle urakoitsijalle. Voit valita perinteisen kalkyylin, toimialakohtaisen Calculation PRO:n tai antaa QuickAICalc™:in analysoida piirustuksia ja projektianeistoja AI:n avulla. Tuloksena ovat nopeammat kalkyylit, suurempi tarkkuus, paremmat marginaalit ja vahvempi päätöksenteon tuki jokaista tarjousta ja projektia varten."
     },
-    "ctaTitle": "Valmis kokeilemaan Kalkyyli-moduulia?"
+    "ctaTitle": "Valmis kokeilemaan Kalkyyli-moduulia?",
+    "heroTitle": "Laskentamoduuli ",
+    "heroTitleSpan": "käsityöläisille"
   },
   "kma": {
     "heroDesc": "Täydellinen digitaalinen johtamisjärjestelmä laadulle, ympäristölle ja työympäristölle. TimeFlow digitalisoi yrityksen koko KMA-työn — käytännöistä ja omavalvonnasta riskiarviointeihin, työsuojelukierroksiin, auditointeihin ja sertifiointeihin.",
@@ -3407,7 +3430,9 @@
       "title": "Täydellinen digitaalinen johtamisjärjestelmä urakka-alalle",
       "text": "TimeFlowsin KMA-moduuli on paljon enemmän kuin poikkeamien ja omavalvonnan järjestelmä. Se toimii yrityksen täydellisenä digitaalisena johtamisjärjestelmänä, jossa laatu, ympäristö, työympäristö, lakisääteiset vaatimukset, dokumentaatio, auditoinnit, koulutukset, sertifioinnit ja AI-pohjaiset turvallisuustarkistukset kootaan yhteiseen alustaan. Tuloksena ovat korkeampi laatu, turvallisemmat työpaikat, parempi säädösten noudattaminen ja tehokkaampi KMA-työ koko toiminnassa. 🚀"
     },
-    "ctaTitle": "Valmis kokeilemaan KMA-moduulia?"
+    "ctaTitle": "Valmis kokeilemaan KMA-moduulia?",
+    "heroTitle": "KMA-moduuli ",
+    "heroTitleSpan": "käsityöläisille"
   },
   "ledningsstod": {
     "heroDesc": "TimeFlowsin Johdon tuki -moduuli antaa hallitukselle, johdolle ja yritysjohdolle täydellisen yleiskuvan koko toiminnasta. Kokoa yrityksen tärkeimmät avainluvut, strategiat, hallitustyö, raportit, päätösaineistot ja ohjausdokumentit yhteiseen alustaan. Reaaliaikaisen tiedon avulla kaikista TimeFlow-moduuleista johto saa tehokkaan päätöksenteon tuen, jossa talous, myynti, projektit, henkilöstö, KMA, juridiikka ja toiminnan tavoitteet esitetään yhtenäisenä johtamisjärjestelmänä.",
@@ -3779,7 +3804,9 @@
       "label": "Johdon tuki -moduuli",
       "title": "Päätöksenteon tuki koko yritykselle",
       "text": "TimeFlowsin Johdon tuki -moduuli on yrityksen ohjauksen ja strategisen kehityksen keskus. Kokoamalla hallitustyön, pöytäkirjat, päätösasiat, KPI:t, toiminnan tavoitteet, strategiat, raportit, ilmiantotoiminnon ja tärkeät ohjausdokumentit yhteiseen järjestelmään johto ja hallitus saavat tehokkaan päätöksenteon tuen. Reaaliaikaisen tiedon avulla koko TimeFlowsta ja AI-toiminnon Executive Intelligence™:in avulla yritys voi tehdä nopeampia, turvallisempia ja paremmin perusteltuja päätöksiä, kun riskit tunnistetaan varhaisessa vaiheessa ja toimintaa ohjataan kohti asetettuja tavoitteita."
-    }
+    },
+    "heroTitle": "Yrityksen digitaalinen johtamiskeskus — ",
+    "heroTitleSpan": "ohjaus, päätökset ja strateginen seuranta"
   },
   "mallar": {
     "heroDesc": "TimeFlowsin Mallit-moduuli kokoaa yrityksen kaikki dokumenttimallit yhteen paikkaan ja varmistaa yhtenäisen toimintatavan koko organisaatiossa. Luo omia malleja, muokkaa olemassa olevia, hallinnoi muutoksia versioilla ja jaa oikea malli oikeaan moduuliin tai käyttäjälle. Keskitetyn mallikirjaston avulla yritys välttää päällekkäisen työn, samalla kun laatu ja standardointi paranevat. Kaikki työntekijät työskentelevät aina viimeisimmän hyväksytyn version kanssa.",
@@ -4115,7 +4142,9 @@
       "label": "Mallit-moduuli",
       "title": "Elävä mallikirjasto koko yritykselle",
       "text": "TimeFlowsin Mallit-moduuli tekee yrityksen dokumenttienhallinnasta nopeampaa, turvallisempaa ja yhtenäisempää. Keskitetyn mallikirjaston, versiohallinnan, luokittelun, edistyneiden käyttöoikeuksien ja automaattisen liitoksen TimeFlows-moduuleihin ansiosta koko organisaatio työskentelee aina oikeiden dokumenttien ja viimeisimmän hyväksytyn version kanssa. Tuloksena ovat korkeampi laatu, vähemmän hallinnollista työtä ja standardoitu toimintatapa koko toiminnassa."
-    }
+    },
+    "heroTitle": "Yrityksen keskitetty mallikirjasto — ",
+    "heroTitleSpan": "asiakirjat, sopimukset, tarkistuslistat ja työvuo"
   },
   "marknad-salj": {
     "heroDesc": "TimeFlowsin Markkinointi ja myynti -moduuli kokoaa yrityksen myynnin, markkinoinnin, CRM:n ja asiakasviestinnän älykkääseen alustaan. Hallinnoi koko asiakasmatkaa – ensimmäisestä liidistä pitkäaikaiseen asiakashoitoon – automatisoitujen työnkulkujen, kampanjoiden, AI-avustajien ja älykkään viestinnän avulla. Moduuli antaa täyden hallinnan liideihin, asiakkaisiin, myyntiputkeen, markkinointimateriaaleihin, graafiseen ilmeeseen, automaattisiin sähköposti- ja SMS-lähetyksiin sekä AI-pohjaiseen puhelinkäsittelyyn FlowTalk™:in avulla. TimeFlow seuraa lisäksi automaattisesti toteutuneita projekteja ja tilauksia asiakaskyselyillä mitatakseen asiakastyytyväisyyttä ja tunnistaakseen kehityskohteita.",
@@ -4458,7 +4487,9 @@
       "label": "Markkinointi ja myynti -moduuli",
       "title": "Älykäs CRM, joka työskentelee ympäri vuorokauden",
       "text": "TimeFlowsin Markkinointi ja myynti -moduuli yhdistää CRM:n, markkinoinnin, myynnin ja AI:n täydelliseksi alustaksi. Automaattisten kampanjoiden, päättyneiden projektien ja tilausten jälkeen lähetettävien asiakaskyselyiden, juhla- ja syntymäpäivätervehdysten sekä AI-pohjaisen puhelinavustajan FlowTalk™:in ansiosta – jossa AI Robert™ vastaa saapuviin puheluihin, luo transkriptiot ja lähettää yhteenvetoja sähköpostitse – yritys saa modernin järjestelmän, joka rakentaa vahvempia suhteita, lisää myyntiä ja varmistaa, ettei yksikään asiakaskontakti katoa."
-    }
+    },
+    "heroTitle": "Markkinointi & Myynti — ",
+    "heroTitleSpan": "täydellinen CRM vuorokauden ympäri"
   },
   "maskin": {
     "heroDesc": "TimeFlowsin Kone-moduuli on täydellinen järjestelmä yrityksen urakointikoneiden, työkalujen ja laitteiden hallintaan koko elinkaaren ajan. Ostosta ja rekisteröinnistä varaukseen, huoltoon, katsastuksiin, dokumentaatioon, kustannusseurantaan ja käytöstä poistoon kaikki tieto kootaan yhteiseen alustaan. Moduuli on suunniteltu urakka-, huolto-, asennus- ja kiinteistöyrityksille, jotka haluavat maksimoida käyttöasteen, vähentää käyttökatkoksia ja saada täyden jäljitettävyyden resursseihinsa.",
@@ -4789,7 +4820,9 @@
       "label": "Kone",
       "title": "Täydellinen järjestelmä kone- ja laitteistohallintaan",
       "text": "TimeFlowsin Kone-moduuli on suunniteltu yrityksille, jotka haluavat täyden hallinnan koko kone- ja laitteistoparkkiinsa. Kokoamalla konerekisterin, dokumentaation, varaukset, huollot, katsastukset, työkalujen seurannan, huoltoautot, projektiliitokset ja taloudellisen seurannan yhteiseen alustaan toiminta saa tehokkaan päätöksenteon tuen. ToolTrack™, Smart Machine™ ja täysi jäljitettävyys varastosta huoltoautoon ja edelleen projekteille vähentävät hallinnollista työtä, tehostavat laitteiden käyttöä ja tuovat yritykselle turvallisemman, kannattavamman ja paremmin suunnitellun konehallinnan. 🚀"
-    }
+    },
+    "heroTitle": "Täysi hallinta ",
+    "heroTitleSpan": "koneista & kalustosta"
   },
   "material": {
     "heroDesc": "TimeFlowsin Materiaali ja varasto -moduuli antaa sinulle täyden hallinnan yrityksen materiaalivirtaan – ostosta ja varastosta projekteihin, tilauksiin ja laskutukseen. Hallinnoi artikkelirekisteriä, varastosaldoja, hinnastoja ja toimituksia modernissa varastojärjestelmässä, joka on täysin integroitu koko TimeFlow'hun.",
@@ -5078,7 +5111,9 @@
       "title": "Täydellinen materiaali- ja varastojärjestelmä urakka-alalle",
       "text": "TimeFlowsin Materiaali ja varasto -moduuli on suunniteltu yrityksille, jotka haluavat täyden hallinnan koko materiaalivirtaan. Artikkelirekisteristä, hinnastoista ja ostoista varastoon, projekteihin, tilauksiin ja laskutukseen kaikki tieto kootaan yhteiseen alustaan. Smart-Lager™, automaattisen varastovarauksen ja mobiilin varastonhallinnan tuella yritys saa paremman hallinnan kustannuksiin, vähemmän hävikkiä ja tehokkaamman materiaalin toimitusketjun – mikä johtaa korkeampaan kannattavuuteen ja varmempiin projektitoimituksiin. 🚀"
     },
-    "ctaTitle": "Valmis kokeilemaan Materiaali ja varasto -moduulia?"
+    "ctaTitle": "Valmis kokeilemaan Materiaali ja varasto -moduulia?",
+    "heroTitle": "Täysi hallinta ",
+    "heroTitleSpan": "materiaaleista & varastosta"
   },
   "order": {
     "heroDesc": "Digitaalinen tilaustenhallinta – tilauksesta laskutukseen. TimeFlowsin Order-moduuli on koko yrityksen huolto- ja tilaustoiminnan keskus, jossa on automatisoituja prosesseja, mobiili työmääräys ja täysi integraatio koko TimeFlowhun.",
@@ -5256,7 +5291,9 @@
       "title": "Täydellinen tilausjärjestelmä käsityö- ja asennusalalle",
       "text": "Order-moduuli on kehitetty yrityksille, jotka haluavat digitalisoida koko tilaustenhallintansa. Order-Direkt™:n, automaattisten työnkulkujen, mobiilin työmääräyksen, resurssisuunnittelun ja täyden integraation ansiosta koko TimeFlowhun hallinto minimoituu ja kontrolli maksimoituu. Tuloksena ovat nopeampi käsittely, parempi resurssien hyödyntäminen, tyytyväisemmät asiakkaat ja tehokkaampi yritys. 🚀"
     },
-    "ctaTitle": "Valmis kokeilemaan Order-moduulia?"
+    "ctaTitle": "Valmis kokeilemaan Order-moduulia?",
+    "heroTitle": "Tilausmoduuli ",
+    "heroTitleSpan": "käsityöläisille"
   },
   "personal": {
     "heroDesc": "TimeFlowsin Henkilöstö-moduuli kokoaa koko yrityksen henkilöstöhallinnon yhteen älykkääseen ja digitaaliseen alustaan. Hallinnoi kaikkea rekrytoinnista ja työsopimuksista lomasuunnitteluun, sairauspoissaoloihin, koulutuksiin, kehityskeskusteluihin ja kuntoutukseen. Täysi jäljitettävyys siihen, mitä kukin työntekijä on kuittauttanut ulos – Smart Access -avaimet, IT-laitteet, työkalut, koneet ja ajoneuvot. Digitaalinen allekirjoitus, automaattiset työnkulut ja saumaton integraatio muiden TimeFlow-moduulien kanssa.",
@@ -5572,7 +5609,9 @@
       "label": "Henkilöstö-moduuli",
       "title": "Täydellinen HR-alusta",
       "text": "TimeFlowsin Henkilöstö-moduuli antaa yritykselle täyden hallinnan koko työntekijäpolkuun – rekrytoinnista ja työsuhteesta osaamisen kehittämiseen ja työsuhteen päättämiseen. Digitaalisten työsopimusten, BankID- tai SignFlow™-allekirjoituksen, työajan, lomasuunnittelun, sairauspoissaolojen, kuntoutuksen, koulutusten, kehityskeskustelujen, älykkään miehityssuunnittelun sekä kuittautetun Smart Access -kaluston ja IT-laitteiden täyden jäljitettävyyden ansiosta yritys saa modernin HR-järjestelmän, joka vähentää hallintoa, vahvistaa sääntöjen noudattamista ja varmistaa, että oikea osaaminen on oikeassa paikassa oikeaan aikaan. 👥"
-    }
+    },
+    "heroTitle": "Älykäs HR — ",
+    "heroTitleSpan": "rekrytoinnista osaamiseen"
   },
   "prognos": {
     "heroDesc": "TimeFlowsin Ennuste-moduuli on yrityksen strateginen päätöksenteon tuki talouteen, projekteihin ja toiminnan ohjaukseen. Moduuli analysoi jatkuvasti yrityksen taloudellista kehitystä ja auttaa johtoa tunnistamaan riskejä, mahdollisuuksia ja poikkeamia ennen kuin ne vaikuttavat tulokseen. Projektien, tilausten, osastojen ja yritystason ennusteiden avulla saat selkeän kuvan tulevasta liikevaihdosta, tuloksesta, kassavirrasta ja kannattavuudesta. Järjestelmä seuraa budjettia, toteumia ja ennusteita reaaliajassa ja varoittaa automaattisesti, kun jokin poikkeaa suunnitelmasta.",
@@ -5924,7 +5963,9 @@
       "label": "Ennuste-moduuli",
       "title": "Yrityksen taloudellinen kompassi",
       "text": "TimeFlowsin Ennuste-moduuli antaa johdolle tehokkaan päätöksenteon tuen, jossa historiatiedot, nykyinen toteuma ja tulevat ennusteet toimivat yhdessä reaaliajassa. Älykkäiden projektien, tilausten, budjetin, yleiskustannusten, luottoriskien ja kassavirran analyysien avulla yritys voi tunnistaa poikkeamat ajoissa, parantaa laskelmiaan ja tehdä nopeampia ja perustellumpia liiketoimintapäätöksiä. Ennuste-moduulista tulee siten yrityksen taloudellinen kompassi pitkäjänteiseen kasvuun ja kannattavuuteen. 📊"
-    }
+    },
+    "heroTitle": "Tulevaisuuden näkymät ",
+    "heroTitleSpan": "älykkäillä ennusteilla"
   },
   "projekt": {
     "heroDesc": "Täydellinen projektinhallintajärjestelmä urakka-, huolto- ja kiinteistöalalle. Yrityksen digitaalinen projektitoimisto – ensimmäisestä suunnittelusta lopputarkastukseen, takuuseen ja jälkilaskentaan.",
@@ -6274,7 +6315,9 @@
       "title": "Täydellinen projektinhallintajärjestelmä",
       "text": "Projekti-moduuli on kehitetty moderneille urakka-, huolto- ja kiinteistöyrityksille, jotka haluavat koota koko projektiohjauksen yhteen järjestelmään. IDFlow™:n, AI Project Intelligence™:n, Projekt Health Score™:n, monivuotisten huoltosopimusten, edistyneen projektitalouden ja täyden integraation muiden TimeFlow-moduulien kanssa projektijohto saa tehokkaan päätöksenteon tuen koko projektin elinkaaren ajan. Tuloksena ovat parempi suunnittelu, korkeampi tuottavuus, turvallisemmat työkohteet, tehokkaampi resurssien hyödyntäminen ja kannattavammat projektit. 🚀"
     },
-    "ctaTitle": "Valmis kokeilemaan Projekti-moduulia?"
+    "ctaTitle": "Valmis kokeilemaan Projekti-moduulia?",
+    "heroTitle": "Projektimoduuli ",
+    "heroTitleSpan": "käsityöläisille"
   },
   "projektering": {
     "heroDesc": "Suunnittele oikein alusta alkaen – kannattavan projektin perusta. Projektointimoduuli kokoaa kaiken teknisen ja hallinnollisen suunnittelun yhteen paikkaan.",
@@ -6365,7 +6408,9 @@
       "title": "Projektointi – projektin valvontakeskus",
       "text": "Projektointimoduuli toimii projektin digitaalisena valvontakeskuksena, jossa tekniikka, talous, organisaatio ja suunnittelu kohtaavat. Tässä luodaan projektointiorganisaatio, budjetti, aikataulu, tarkistuslistat, vastuunjako ja koko projektin tekninen aineisto. Kaikki asiakirjat, päätökset ja muutokset kootaan yhteiseen alustaan, joka antaa projektinjohdolle täyden hallinnan ensimmäisestä projektointikokouksesta tuotannon aloittamiseen. Tuloksena ovat parempi koordinaatio, vähemmän virheitä, korkeampi laatu, vakaampi talous ja huomattavasti tehokkaampi rakennusprosessi. 🚀"
     },
-    "ctaTitle": "Valmis kokeilemaan Projektointi-moduulia?"
+    "ctaTitle": "Valmis kokeilemaan Projektointi-moduulia?",
+    "heroTitle": "Suunnittelu ",
+    "heroTitleSpan": "käsityöläisille"
   },
   "smart-access": {
     "heroDesc": "Smart Access on TimeFlowsin täydellinen ratkaisu yrityksen fyysisten pääsyoikeuksien ja käyttöoikeuksien hallintaan. Moduuli antaa täyden hallinnan avaimiin, kulunvalvontakortteihin, tunnisteisiin, tageihin ja digitaalisiin pääsyoikeuksiin asiakkaille, kiinteistöihin, projekteihin, huoltoautoihin ja yrityksen omiin tiloihin. Yksilötason täyden jäljitettävyyden ansiosta tiedät aina, kenellä on mikäkin pääsyoikeus, missä sitä käytetään, milloin se kuittautettiin ja milloin se tulee palauttaa. Smart Access vähentää turvallisuusriskejä, yksinkertaistaa hallintoa ja varmistaa, että oikealla henkilöllä on oikea käyttöoikeus oikeaan aikaan.",
@@ -6621,6 +6666,8 @@
       "label": "Smart Access",
       "title": "Täydellinen järjestelmä moderniin pääsyoikeuksien hallintaan",
       "text": "Smart Access kokoaa koko yrityksen avainten, kulunvalvontakorttien, tunnisteiden, tagien ja käyttöoikeuksien hallinnan yhteen älykkääseen ja turvalliseen alustaan. Digitaalisen kuittauksen, yksilöpohjaisten käyttöoikeuksien, täyden jäljitettävyyden, AI-pohjaisen turvallisuusanalyysin ja integraation muiden TimeFlow-moduulien kanssa yritys saa modernin pääsyoikeuksien hallinnan, joka vähentää hallintoa, vahvistaa turvallisuutta ja antaa täyden hallinnan jokaiseen pääsyoikeuteen – rekisteröinnistä ja luovutuksesta palautukseen ja historiaan. 🔐🚀"
-    }
+    },
+    "heroTitle": "Täysi hallinta ",
+    "heroTitleSpan": "avaimista & oikeuksista"
   }
 }

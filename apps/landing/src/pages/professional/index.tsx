@@ -75,9 +75,10 @@ export default function ProfessionalPage() {
               </h2>
               <p className="text-muted mt-4">
                 {t("professional.areasDesc")}{" "}
-                <strong className="text-foreground">TimeFlow Work</strong> &{" "}
+                <strong className="text-foreground">TimeFlow Work</strong>{" "}
+                {t("professional.workTag")} &{" "}
                 <strong className="text-foreground">TimeFlow Manager</strong>{" "}
-                {t("professional.areasDescSuffix")}
+                {t("professional.managerTag")}
               </p>
             </div>
 
@@ -179,7 +180,7 @@ export default function ProfessionalPage() {
             <p className="text-muted text-lg mb-10 max-w-2xl mx-auto">
               {t("professional.roiDesc")}
             </p>
-            <Link href="/pricing#kalkylator" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm text-lg inline-block hover:shadow-lg hover:shadow-primary/20 transition-all">
+            <Link href="/pricing#kalkylator" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm text-lg inline-block">
               {t("professional.roiCta")}
             </Link>
           </div>

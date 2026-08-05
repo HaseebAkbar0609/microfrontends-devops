@@ -43,6 +43,7 @@ export type ModuleRichSection = {
   items?: Array<string | ModuleRichCard>;
   groups?: ModuleRichGroup[];
   example?: string | { label?: string; text?: string };
+  note?: string | { label?: string; text?: string };
   cards?: Array<string | ModuleRichCard>;
   scoreLevels?: ModuleRichCard[];
   itemsHeading?: string;
@@ -58,7 +59,9 @@ export type ModuleSmartFeature = {
 
 export type ModuleRichContent = {
   heroTitle?: string;
+  heroTitleSpan?: string;
   heroDesc?: string;
+  heroAction?: { label: string; href?: string } | string;
   subhero?: string;
   steps?: { label?: string; title?: string; steps: ModuleRichStep[] };
   smart?: { label?: string; title?: string; features: ModuleSmartFeature[] };

@@ -21,7 +21,9 @@
     "otherSections": "Muud alad",
     "ctaStart": "Loo konto",
     "ctaDemo": "Proovige demokontot",
-    "ctaSubtitle": "30-päevane tasuta prooviperiood – seejärel alates 2 995 kroonist kuus."
+    "ctaSubtitle": "30-päevane tasuta prooviperiood – seejärel alates 2 995 kroonist kuus.",
+    "stepsSubhero": "Vaadake allpool samme, kuidas moodul {{name}} töötab – alates esimesest päringust kuni valmis projektini.",
+    "ctaTitle": "Valmis proovima {{name}}?"
   },
   "avtal": {
     "heroDesc": "TimeFlow lepingumoodul on ettevõtte keskne platvorm igat tüüpi lepingute haldamiseks kogu nende elutsükli jooksul. Koguge kõik lepingud turvalisse digitaalarhiivi, looge valmis mallidega uued lepingud, allkirjastage digitaalselt ja saate enne oluliste kuupäevade saabumist automaatseid meeldetuletusi. Moodul pakub iga lepingu jaoks täielikku jälgitavust, versioonihaldust ja ajalugu. Olenemata sellest, kas tegemist on kliendilepingutega, projektilepingutega, töövõtulepingutega või tarnijalepingutega, saab ettevõte struktureeritud ja turvalise lepinguhalduse koos selgete töövoogude ja intelligentse järelevalvega.",
@@ -362,7 +364,9 @@
       "label": "Lepingu moodul",
       "title": "Ettevõtte digitaalne lepingukeskus",
       "text": "TimeFlow lepingumoodul koondab kogu ettevõtte lepinguportfelli ühte turvalisse ja intelligentsesse süsteemi. BankID või SignFlow™ kaudu digitaalallkirjastamise, aegumis- ja lõpetamiskuupäevade automaatse jälgimise, täisversioonihalduse, täiustatud lubade ja AI-põhise riskianalüüsi abil saab ettevõte täieliku kontrolli kõigi oma lepingute üle. Tulemuseks on vähenenud äririsk, parem vastavus eeskirjadele, tõhusam haldus ja usaldusväärne otsustusalus kogu lepingu eluea jooksul."
-    }
+    },
+    "heroTitle": "Täielik kontroll ettevõtte lepingute üle — ",
+    "heroTitleSpan": "loomisest arhiveerimiseni"
   },
   "b2b": {
     "heroDesc": "Rootsi kaubandustööstuse turg. B2B moodul ühendab ostjaid ja müüjaid kaubandussektoris. Siit leiavad ettevõtted hõlpsasti oma projektide ja tellimuste jaoks alltöövõtjaid, tarnijaid, F-skattare'i ja koostööpartnereid.",
@@ -410,7 +414,9 @@
       "title": "Digitaalne turg kaubandustööstusele",
       "text": "B2B mooduliga muutub TimeFlow enamaks kui ärisüsteem. See toimib tervikliku turuna, kus ettevõtted saavad osta, müüa, koostööd teha ja ressursse jagada. Ükskõik, kas vajate projekti jaoks elektrikut, soovite võrrelda mitme tarnija materjalihindu või palgata kiirel perioodil lisatööjõudu, B2B moodul aitab teil leida õige partneri – kiiresti, lihtsalt ja kuluefektiivselt."
     },
-    "ctaTitle": "Kas olete valmis B2B moodulit proovima?"
+    "ctaTitle": "Kas olete valmis B2B moodulit proovima?",
+    "heroTitle": "B2B moodul ",
+    "heroTitleSpan": "käsitöölistele"
   },
   "data-it": {
     "heroDesc": "TimeFlow Data & IT moodul annab ettevõttele tervikliku tööriista kogu IT-keskkonna haldamiseks, dokumenteerimiseks ja jälgimiseks. Kogu info arvutite, mobiiltelefonide, tahvelarvutite, tarkvara, litsentside, kasutajate ja IT-kulude kohta ühte kesksesse süsteemi. Moodul tagab ettevõtte digitaalsete varade täieliku jälgitavuse, haldab IT-eelarvet ja tugijuhtumeid ning tagab, et õiged seadmed jõuavad õige töötajani. Ühendage seadmeid ja mobiiltelefone üksikisikutega ning jälgige dokumente, sisselogimisi, koode ja turvalisust – kõik ühes kohas.",
@@ -763,7 +769,9 @@
       "label": "Andmed ja IT moodul",
       "title": "Ettevõtte digitaalne juhtimiskeskus",
       "text": "TimeFlow Data & IT moodul annab täieliku kontrolli ettevõtte digitaalsete varade, toe ja IT finantside üle. Täieliku varahalduse, arvutite ja mobiiltelefonide jälgitavuse, ostude ja garantiide dokumenteerimise, täiustatud litsentside haldamise, IT-eelarve, vearaportite ja intelligentse analüüsi kaudu saab ettevõte kaasaegse IT-platvormi, millel on kõrge turvalisus, tõhus haldus ja täielik kontroll kogu digitaalse infrastruktuuri üle."
-    }
+    },
+    "heroTitle": "Täielik kontroll ettevõtte IT-keskkonna üle — ",
+    "heroTitleSpan": "digitaalsed varad, tugi ja turvalisus"
   },
   "ekonomi": {
     "heroDesc": "TimeFlow’ rahanduse moodul aitab ettevõtetel struktureerida, juhtida ja tõhustada igapäevast finantstööd. Moodul koondab tarnijate arved, kinnitamise töövood, finantsjuhtumid, eelarved, aruanded, ettevõtte dokumendid ja haldusdokumendid ühte jagatud tööruumi. Välja töötatud finantsjuhtidele, administraatoritele, projektijuhtidele ja ettevõtte juhtkonnale. Finantsmoodul täiendab TimeFlow teisi finantsfunktsioone – arveldust käsitletakse moodulis Arve, projekti tulemusi, prognoose ja tegelikke fakte aga prognoosimoodulis.",
@@ -1119,7 +1127,9 @@
       "label": "Rahandusmoodul",
       "title": "TimeFlow struktureeritud finantsosakond",
       "text": "Tarnijate arved, kinnitamise töövood, eelarved, finantsjuhtumid, aruanded, ettevõtte dokumendid, organisatsiooni plaanid, mallid ja pretensioonid ühte jagatud platvormi koondades väheneb käsitsi haldamine ja olulise teabe kadumise oht. Finantsmoodul toimib ettevõtte keskse halduskeskusena, mis tagab õigete dokumentide, õige vastutava isiku ja õige protsessi olemasolu kogu finantstöö vältel. 📊"
-    }
+    },
+    "heroTitle": "Täielik kontroll ",
+    "heroTitleSpan": "finantsjuhtimise üle"
   },
   "faktura": {
     "heroDesc": "TimeFlow's Invoice'i moodul pakub täielikku ja automatiseeritud arveldusprotsessi. Looge professionaalseid arveid kiiresti ja täpselt, hankides automaatselt teavet projektidest, tellimustest, ajaaruannetest, materjalidest, tarnijaarvetest ja muudest TimeFlow osadest. Olenemata sellest, kas töötate eraklientide (B2C), ettevõtete (B2B), kinnisvaraomanike, elamuühistute või avaliku sektoriga, saate paindliku lahenduse, mis minimeerib asjaajamist, parandab rahavoogusid ja tagab kõigi tehtud tööde arveldamise.",
@@ -1468,7 +1478,9 @@
       "label": "Arve moodul",
       "title": "Täielik arveldussüsteem",
       "text": "TimeFlow moodul Invoice toob kogu ettevõtte arveldusprotsessi ühte intelligentsele automatiseeritud platvormile. B2B ja eraturu toe, paindlike arvemallide, automaatsete arvebaaside, lepinguliste arvete, artiklite registri, hinnakirjade ja otsese integreerimisega projektide, materjalide, tarnijaarvete, alltöövõtjate ja ÄTA töödega saab iga tehtud töö eest korrektselt ja õigeaegselt arve. Tulemuseks on vähenenud haldus, paranenud rahavoog, kõrgem arveldusmäär ja täielik kontroll ettevõtte tulude üle. 💸"
-    }
+    },
+    "heroTitle": "Nutikas arveldamine — ",
+    "heroTitleSpan": "alusdokumentidest makseteni"
   },
   "fordon": {
     "heroDesc": "TimeFlow sõidukite ja masinate moodul annab teile täieliku kontrolli kogu ettevõtte sõidukipargi ja masinate registri üle. Hallake sõiduautosid, kaubikuid, veoautosid, haagiseid, ehitusmasinaid ja muid seadmeid ühes jagatud süsteemis, kus teenindus, ülevaatused, juhid, finantsid ja dokumentatsioon on koondatud ühte kohta. Drive™ ja RutPlan™ lisandmoodulitega saab ettevõte ka digitaalse logiraamatu, GPS-positsioneerimise, marsruudi optimeerimise ja täiustatud sõidukianalüüsi, mis vähendab kulusid ja muudab igapäevatoimingud sujuvamaks.",
@@ -1808,7 +1820,9 @@
       "label": "Sõidukid ja masinad",
       "title": "Täielik süsteem sõidukite ja masinate haldamiseks",
       "text": "TimeFlow sõidukite ja masinate moodul annab ettevõtetele täieliku kontrolli kogu sõidukipargi ja masinapargi üle – alates ostmisest ja registreerimisest kuni teeninduse, ülevaatuste, juhtide, finantside ja utiliseerimiseni. Drive™, RutPlan™, Smart Fleet™ ning tegevuskulude ja elektrifitseerimise täiustatud analüüsid pakuvad ettevõttele võimsat otsustustuge, mis vähendab kulusid, suurendab saadavust ning tagab, et õiged sõidukid ja masinad on alati õiges kohas, õige juhi ja õigete dokumentidega. 🚀"
-    }
+    },
+    "heroTitle": "Täielik kontroll ",
+    "heroTitleSpan": "sõidukite ja masinate üle"
   },
   "inkasso": {
     "heroDesc": "TimeFlow võlgade sissenõudmise moodul annab ettevõttele võimaluse hallata kogu inkassoprotsessi majasiseselt. Töötades ettevõttesisese inkassoga, saavutab ettevõte kiirema kontrolli tasumata arvete üle, madalamad kulud, suurenenud tulu ja isiklikuma dialoogi kliendiga enne, kui välised inkassomeetmed muutuvad aktuaalseks. Arve maksetähtaja saabumisel saab juhtumi automaatselt Arve moodulist Inkasso moodulisse üle viia, kus kogu protsess jätkub ilma topeltregistreerimiseta. Kogu ajalugu, dokumentatsioon ja suhtlus järgivad juhtumit, pakkudes tõhusat ja professionaalset käsitlemist.",
@@ -2128,10 +2142,12 @@
       "label": "Võlgade sissenõudmise moodul",
       "title": "Täielik kontroll ettevõtte nõuete üle",
       "text": "TimeFlow võlgade sissenõudmise moodul annab ettevõttele võimaluse juhtida kogu nõuete protsessi ise professionaalselt, tõhusalt ja kliendisõbralikult. Arve mooduli automaatse ülekande, intelligentsete töövoogude ja täieliku ajaloo kaudu saab ettevõte tegutseda kiiremini, parandada rahavoogusid ja samal ajal säilitada head suhted oma klientidega. Ainult siis, kui sisemistest meetmetest ei piisa, saab juhtumi hõlpsalt üle anda välisele inkassobüroole või edasi juriidilise mooduli juurde."
-    }
+    },
+    "heroTitle": "Professionaalne võlgade sisenõudmine — ",
+    "heroTitleSpan": "meeldetuletusest inkassoni"
   },
   "inkop-mottagning": {
-    "heroTitle": "Kohaletoimetamise vastuvõtmise kontrollnimekiri",
+    "heroTitle": "Vastuvõtu kontrollnimekiri ",
     "heroDesc": "Digitaalne kviitung iga tarne kohta – kogus, kvaliteet, transpordikahjustused, pildid, GPS ja allkiri ühes voos. Nii näeb välja vastuvõttev dialoog rakenduses TimeFlow Work.",
     "sections": [
       {
@@ -2294,7 +2310,8 @@
           }
         ]
       }
-    ]
+    ],
+    "heroTitleSpan": "tarnetele"
   },
   "inkop": {
     "heroDesc": "TimeFlow ostumoodul annab teile täieliku kontrolli ettevõtte kogu ostude üle. Planeerige materjaliostud, koostage ostutellimusi, võrrelge tarnijaid, jälgige tarneid reaalajas ja veenduge, et õige materjal on õigel ajal õiges kohas.",
@@ -2649,7 +2666,9 @@
       "title": "Kaasaegne ostusüsteem ehitustööstusele",
       "text": "TimeFlow ostumoodul digitaliseerib kogu ostuprotsessi – alates planeerimisest ja tarnijate valikust kuni tarnimiseni, kontrolli saamise ja finantsjärelkontrollini. Smart Inköp™, tehisintellektil põhinevad ostusoovitused, täielik jälgitavus ja reaalajas jälgimine võimaldavad ettevõttel paremat kontrolli materjalivoogude üle, väiksemaid ostukulusid ja tootmisseisakuid. Tulemuseks on kogu ettevõtte jaoks kiirem, nutikam ja tulusam ostuprotsess. 🚀"
     },
-    "ctaTitle": "Kas olete ostumooduli proovimiseks valmis?"
+    "ctaTitle": "Kas olete ostumooduli proovimiseks valmis?",
+    "heroTitle": "Ostumoodul ",
+    "heroTitleSpan": "käsitöölistele"
   },
   "juridik": {
     "heroDesc": "TimeFlow Legal moodul on ettevõtte keskne platvorm kõigi juriidiliste juhtumite, vaidluste, lepingute ja õigusprotsesside haldamiseks. Moodul annab täieliku kontrolli iga juhtumi üle alates esimesest sündmusest kuni lõpetatud protsessini koos struktureeritud dokumentatsiooni, päeviku, riskianalüüside, oluliste kuupäevade ja täieliku ajalooga. Olgu tegemist kliendivaidlusega, ehitusõigusega, tööõigusega, võlgade sissenõudmisega, lepingute küsimustega või kohtumenetlusega, kogu info on koondatud ühte kohta. See vähendab tähtaegadest möödalaskmise ohtu ja tagab ettevõtte alati struktureeritud ja professionaalse töö.",
@@ -3004,7 +3023,9 @@
       "label": "Juriidiline moodul",
       "title": "Ettevõtte juriidiline juhtimiskeskus",
       "text": "TimeFlow Legal moodul annab ettevõttele täieliku digitaalse toe kogu juriidiliseks asjaajamiseks ja juhtumikorralduseks. Struktureeritud töövoogude, riskianalüüside, päeviku, dokumendihalduse, reageerimisaegade ja oluliste kuupäevade jälgimise ning tiheda koostöö väliste juristide ja juristidega saavutab ettevõte täieliku kontrolli oma juriidiliste protsesside üle. Tulemuseks on väiksemad juriidilised riskid, parem dokumentatsioon, turvalisemad otsused ja tugevam kaitse ettevõtte äritegevusele."
-    }
+    },
+    "heroTitle": "Täielik juriidiliste juhtumite haldus — ",
+    "heroTitleSpan": "täielik kontroll protsesside, riskide ja dokumentatsiooni üle"
   },
   "kalkyl": {
     "heroDesc": "Kiiremad, targemad ja täpsemad arvutused. Arvutusmoodul annab teile täieliku kontrolli kogu pakkumis- ja arvutusprotsessi üle – alates materjalihindadest ja tööjõukuludest kuni valmis hinnapakkumiseni.",
@@ -3133,7 +3154,9 @@
       "title": "Arvestus – kogemusest tehisintellektini",
       "text": "TimeFlow kalkulatsioonimoodul sobib nii väiksemale käsitööettevõttele kui ka suurele töövõtjale. Saate valida traditsioonilise arvutuse, tööstusharuspetsiifilise Calculation PRO vahel või lasta QuickAICalc™-il AI abil jooniseid ja projektidokumente analüüsida. Tulemuseks on kiiremad arvutused, suurem täpsus, paremad marginaalid ja tugevam alus otsuste tegemiseks enne iga hinnapakkumist ja projekti."
     },
-    "ctaTitle": "Kas olete valmis arvutusmoodulit proovima?"
+    "ctaTitle": "Kas olete valmis arvutusmoodulit proovima?",
+    "heroTitle": "Kalkulatsioonimoodul ",
+    "heroTitleSpan": "käsitöölistele"
   },
   "kma": {
     "heroDesc": "Täielik kvaliteedi-, keskkonna- ja töökeskkonna digitaalne juhtimissüsteem. TimeFlow digitaliseerib kogu ettevõtte KMA töö – alates poliitikast ja enesekontrollist kuni riskihinnangute, ohutusvoorude, auditite ja sertifikaatideni.",
@@ -3407,7 +3430,9 @@
       "title": "Täielik digitaalne juhtimissüsteem ehitustööstusele",
       "text": "TimeFlow KMA moodul on palju enamat kui lahknevuste ja enesekontrolli süsteem. See toimib ettevõtte tervikliku digitaalse juhtimissüsteemina, kus kvaliteet, keskkond, töökeskkond, juriidilised nõuded, dokumentatsioon, auditid, koolitused, sertifikaadid ja tehisintellektil põhinevad ohutuskontrollid on koondatud ühte jagatud platvormi. Tulemuseks on kõrgem kvaliteet, turvalisemad töökohad, parem vastavus eeskirjadele ja tõhusam KMA töö kogu ettevõtte ulatuses. 🚀"
     },
-    "ctaTitle": "Kas olete valmis KMA moodulit proovima?"
+    "ctaTitle": "Kas olete valmis KMA moodulit proovima?",
+    "heroTitle": "KMA moodul ",
+    "heroTitleSpan": "käsitöölistele"
   },
   "ledningsstod": {
     "heroDesc": "TimeFlow juhtimistugi moodul annab juhatusele, juhtkonnale ja ettevõtte juhtkonnale täieliku ülevaate kogu ärist. Koguge ühele jagatud platvormile ettevõtte olulisemad võtmenäitajad, strateegiad, juhatuse töö, aruanded, otsustusdokumendid ja juhtdokumendid. Kõigi TimeFlow moodulite reaalajas andmetega saab juhtkond võimsa otsustustuge, kus rahandus, müük, projektid, personal, KMA, juriidilised ja ärieesmärgid on esitatud ühes ühtses juhtimissüsteemis.",
@@ -3779,7 +3804,9 @@
       "label": "Juhtimistoetuse moodul",
       "title": "Otsuste tugi kogu ettevõttele",
       "text": "TimeFlow juhtimise tugimoodul on ettevõtte juhtimise ja strateegilise arengu sõlmpunkt. Kogudes juhatuse tööd, protokollid, otsustusjuhtumid, KPI-d, ärieesmärgid, strateegiad, aruanded, rikkumistest teatamise funktsiooni ja olulised juhtdokumendid ühte jagatud süsteemi, saavad juhtkond ja juhatus võimsa otsustustuge. Kogu TimeFlow reaalajas andmete ja tehisintellekti funktsiooni Executive Intelligence™ abil saab ettevõte teha kiiremaid, turvalisemaid ja teadlikumaid otsuseid, samas kui riskid tuvastatakse varajases staadiumis ja ettevõtet suunatakse eesmärkide poole."
-    }
+    },
+    "heroTitle": "Ettevõtte digitaalne juhtimiskeskus — ",
+    "heroTitleSpan": "juhtimine, otsused ja strateegiline järelkontroll"
   },
   "mallar": {
     "heroDesc": "TimeFlow mallide moodul koondab kõik ettevõtte dokumendimallid ühte kohta ja tagab järjepideva tööviisi kogu organisatsioonis. Looge oma malle, redigeerige olemasolevaid, hallake muudatusi versioonidega ja levitage õiget malli õigele moodulile või kasutajale. Keskse malliteegi kaudu väldib ettevõte töö dubleerimist, samal ajal kui kvaliteet ja standardiseerimine paranevad. Kõik töötajad töötavad alati uusima kinnitatud versiooniga.",
@@ -4115,7 +4142,9 @@
       "label": "Mallide moodul",
       "title": "Elav malliteek kogu ettevõtte jaoks",
       "text": "TimeFlow mallide moodul muudab ettevõtte dokumendihalduse kiiremaks, turvalisemaks ja järjepidevamaks. Versioonihalduse, kategoriseerimise, täiustatud lubade ja TimeFlow moodulitega automaatse linkimisega keskse malliteegi kaudu töötab kogu organisatsioon alati õigete dokumentide ja uusima kinnitatud versiooniga. Tulemuseks on kõrgem kvaliteet, vähem haldust ja standardiseeritud tööviis kogu ettevõttes."
-    }
+    },
+    "heroTitle": "Ettevõtte keskne mallide raamatukogu — ",
+    "heroTitleSpan": "dokumendid, lepingud, kontrollnimekirjad ja töövoog"
   },
   "marknad-salj": {
     "heroDesc": "TimeFlow Marketing & Sales moodul koondab ettevõtte müügi, turunduse, CRM-i ja kliendisuhtluse üheks intelligentseks platvormiks. Hallake kogu klienditeekonda – esimesest müügivihtest kuni pikaajalise klienditeeninduseni – automatiseeritud töövoogude, kampaaniate, AI-assistentide ja nutika suhtlusega. Moodul pakub täielikku kontrolli müügivihjete, klientide, müügitorude, turundusmaterjalide, visuaalse identiteedi, automaatsete meili- ja SMS-postituste ning AI-põhise telefonihalduse üle FlowTalk™ kaudu. TimeFlow jälgib lõpetatud projekte ja tellimusi automaatselt kliendiküsitlustega, et mõõta klientide rahulolu ja teha kindlaks parendusvaldkonnad.",
@@ -4458,7 +4487,9 @@
       "label": "Turunduse ja müügi moodul",
       "title": "Nutikas CRM, mis töötab ööpäevaringselt",
       "text": "TimeFlow turundus- ja müügimoodul ühendab CRM-i, turunduse, müügi ja tehisintellekti ühel terviklikul platvormil. Automaatsed kampaaniad, kliendiküsitlused pärast lõpetatud projekte ja tellimusi, personaalsed tervitused pühade ja sünnipäevade puhul ning AI-põhise telefoniassistent FlowTalk™, kus AI Robert™ vastab sissetulevatele kõnedele, koostab ärakirju ja saadab kokkuvõtteid meili teel, saab ettevõte kaasaegse süsteemi, mis loob tugevamad suhted, suurendab müüki ja tagab, et kliendikontaktid ei kaoks kunagi."
-    }
+    },
+    "heroTitle": "Turundus ja müük — ",
+    "heroTitleSpan": "täielik CRM, mis töötab ööpäevaringselt"
   },
   "maskin": {
     "heroDesc": "TimeFlow masinamoodul on terviklik süsteem ettevõtte ehitusmasinate, tööriistade ja seadmete haldamiseks kogu nende elutsükli jooksul. Alates ostust ja registreerimisest kuni broneerimise, teeninduse, ülevaatuste, dokumentatsiooni, kulude jälgimise ja utiliseerimiseni on kogu teave koondatud ühele jagatud platvormile. Moodul on välja töötatud ehitus-, teenindus-, paigaldus- ja kinnisvaraettevõtetele, kes soovivad maksimeerida kasutust, vähendada seisakuid ja saada oma ressursside täielikku jälgitavust.",
@@ -4789,7 +4820,9 @@
       "label": "Masin",
       "title": "Täielik süsteem masinate ja seadmete haldamiseks",
       "text": "TimeFlow masinamoodul on välja töötatud ettevõtetele, kes soovivad täielikku kontrolli kogu oma masina- ja seadmepargi üle. Kogudes masinaregistri, dokumentatsiooni, broneeringud, hoolduse, ülevaatused, tööriistade jälgimise, hoolduskaubikud, projektilingid ja finantsjälgimise ühele jagatud platvormile, saab ettevõte võimsat otsustustuge. ToolTrack™, Smart Machine™ ja täielik jälgitavus laost teenindusbussini ja projektideni vähendavad haldust, seadmeid kasutatakse tõhusamalt ning ettevõte saab turvalisema, kasumlikuma ja paremini planeeritud masinahalduse. 🚀"
-    }
+    },
+    "heroTitle": "Täielik kontroll ",
+    "heroTitleSpan": "masinate ja seadmete üle"
   },
   "material": {
     "heroDesc": "TimeFlow materjalide ja laovarude moodul annab teile täieliku kontrolli ettevõtte materjalivoo üle – alates ostust ja laost kuni projektide, tellimuste ja arveldamiseni. Hallake artiklite registrit, laojääke, hinnakirju ja tarneid kaasaegses laosüsteemis, mis on täielikult integreeritud kogu TimeFlow'ga.",
@@ -5078,7 +5111,9 @@
       "title": "Täielik materjalide ja laovarude süsteem ehitustööstusele",
       "text": "TimeFlow’ materjalide ja varude moodul on välja töötatud ettevõtetele, kes soovivad täielikku kontrolli kogu materjalivoo üle. Alates artiklite registrist, hinnakirjadest ja ostmisest kuni laoseisu, projektide, tellimuste ja arveteni on kogu teave koondatud ühele jagatud platvormile. Tänu Smart-Lager™-i toele, automaatsele laovarude broneerimisele ja mobiilsele laohaldusele on ettevõttel parem kontroll kulude üle, väheneb jäätmete hulk ja tõhusam materjalide tarnimine – see toob kaasa suurema kasumlikkuse ja usaldusväärsemate projektitarnete. 🚀"
     },
-    "ctaTitle": "Kas olete valmis materjale ja varusid proovima?"
+    "ctaTitle": "Kas olete valmis materjale ja varusid proovima?",
+    "heroTitle": "Täielik kontroll ",
+    "heroTitleSpan": "materjalide ja lao üle"
   },
   "order": {
     "heroDesc": "Digitaalne tellimuste haldamine – tellimusest arveni. TimeFlow tellimuse moodul on kogu ettevõtte teenuse ja tellimistoimingute keskus koos automatiseeritud protsesside, mobiilsete töökäskude ja täieliku integratsiooniga kogu TimeFlow'ga.",
@@ -5256,7 +5291,9 @@
       "title": "Täielik tellimuste süsteem kaubandusele",
       "text": "Tellimuste moodul on välja töötatud ettevõtetele, kes soovivad kogu oma tellimuste haldamist digitaliseerida. Order-Direkt™-i, automaatsete töövoogude, mobiilsete töökäskude, ressursside planeerimise ja ülejäänud TimeFlow'ga täieliku integreerimise toel on haldus minimaalne ja kontroll maksimaalne. Tulemuseks on kiirem töötlemine, parem ressursikasutus, rahulolevamad kliendid ja efektiivsem ettevõte. 🚀"
     },
-    "ctaTitle": "Kas olete tellimismooduli proovimiseks valmis?"
+    "ctaTitle": "Kas olete tellimismooduli proovimiseks valmis?",
+    "heroTitle": "Tellimuste moodul ",
+    "heroTitleSpan": "käsitöölistele"
   },
   "personal": {
     "heroDesc": "TimeFlow personalimoodul toob kogu ettevõtte personalijuhtimise ühte intelligentsele digitaalsele platvormile. Hallake kõike alates värbamisest ja töölepingutest kuni puhkuse planeerimise, haiguspuhkuse, koolituste, töötajate arvustuste ja rehabilitatsioonini. Täielik jälgitavus selle kohta, mida iga töötaja on välja andnud – Smart Accessi võtmed, IT-seadmed, tööriistad, masinad ja sõidukid. Digitaalallkirjastamine, automaatsed töövood ja sujuv integreerimine ülejäänud TimeFlow'ga.",
@@ -5572,7 +5609,9 @@
       "label": "Personali moodul",
       "title": "Täielik personaliplatvorm",
       "text": "TimeFlow personalimoodul annab ettevõttele täieliku kontrolli kogu töötaja teekonna üle – alates värbamisest ja töölevõtmisest kuni kompetentsi arendamise ja lahkumiseni. Digitaalsete töölepingute, BankID või SignFlow™ kaudu allkirjastamise, tööaja, puhkuse planeerimise, haiguspuhkuse, rehabilitatsiooni, koolituste, arenguülevaadete, intelligentse personaliplaneerimise ning väljastatud Smart Accessi ja IT-seadmete täieliku jälgitavusega saab ettevõte kaasaegse personalisüsteemi, mis vähendab asjaajamist, tugevdab regulatiivset vastavust ja tagab, et õige kompetents on õigel ajal õiges kohas. 👥"
-    }
+    },
+    "heroTitle": "Nutikas HR — ",
+    "heroTitleSpan": "värbamisest pädevuseni"
   },
   "prognos": {
     "heroDesc": "TimeFlow moodul Forecast on ettevõtte strateegiliste otsuste tugi rahanduse, projektide ja ärijuhtimise vallas. Moodul analüüsib pidevalt ettevõtte finantsarengut ning aitab juhtkonnal tuvastada riske, võimalusi ja lahknevusi enne, kui need tulemusi mõjutavad. Projekti-, tellimuse-, osakonna- ja ettevõttetasandi prognooside toel saate selge pildi tulevasest tulust, tulemustest, rahavoost ja kasumlikkusest. Süsteem jälgib eelarvet, tegelikke andmeid ja prognoose reaalajas ning hoiatab automaatselt, kui midagi plaanitust kõrvale kaldub.",
@@ -5924,7 +5963,9 @@
       "label": "Prognoosi moodul",
       "title": "Ettevõtte finantskompass",
       "text": "TimeFlow prognoosimoodul pakub juhtkonnale võimsat otsustustuge, kus ajaloolised andmed, praegused tegelikud andmed ja tulevikuprognoosid töötavad koos reaalajas. Projektide, tellimuste, eelarve, üldkulude, krediidiriskide ja rahavoogude intelligentsete analüüside abil saab ettevõte varakult tuvastada lahknevused, parandada oma arvutusi ning teha kiiremaid ja teadlikumaid äriotsuseid. Prognoosimoodulist saab seega ettevõtte finantskompass pikaajaliseks kasvuks ja kasumlikkuseks. 📊"
-    }
+    },
+    "heroTitle": "Tulevikku vaatav ",
+    "heroTitleSpan": "nutikate prognoosidega"
   },
   "projekt": {
     "heroDesc": "Täielik projektijuhtimissüsteem ehitus-, teenindus- ja kinnisvaratööstusele. Ettevõtte digitaalne projektibüroo – esimesest planeerimisest lõppülevaatuse, garantii ja lõpliku kuluarvestuseni.",
@@ -6274,7 +6315,9 @@
       "title": "Täielik projektijuhtimissüsteem",
       "text": "Projektimoodul on välja töötatud kaasaegsetele ehitus-, teenindus- ja kinnisvaraettevõtetele, kes soovivad koondada kogu projektijuhtimise ühte süsteemi. Tänu IDFlow™-i, AI Project Intelligence™-i, Project Health Score™-i, mitmeaastastele teenuslepingutele, täiustatud projektirahastamisele ja täielikule integratsioonile teiste TimeFlow moodulitega saab projektijuhtimine võimsat otsustustuge kogu projekti elutsükli jooksul. Tulemuseks on parem planeerimine, suurem tootlikkus, turvalisemad töökohad, tõhusam ressursside kasutamine ja tulusamad projektid. 🚀"
     },
-    "ctaTitle": "Kas olete valmis projekti moodulit proovima?"
+    "ctaTitle": "Kas olete valmis projekti moodulit proovima?",
+    "heroTitle": "Projektimoodul ",
+    "heroTitleSpan": "käsitöölistele"
   },
   "projektering": {
     "heroDesc": "Planeerige algusest peale õigesti – tulusa projekti vundament. Disainimoodul koondab kogu tehnilise ja administratiivse planeerimise ühte kohta.",
@@ -6365,7 +6408,9 @@
       "title": "Disain – projekti juhtimiskeskus",
       "text": "Disainimoodul töötab projekti digitaalse juhtimiskeskusena, kus kohtuvad tehnoloogia, rahandus, korraldus ja planeerimine. Siin luuakse projekteerimise korraldus, eelarve, ajakava, kontrollnimekirjad, vastutusalade jaotus ja kogu tehniline projekti alus. Kõik dokumendid, otsused ja muudatused on koondatud ühte jagatud platvormi, mis annab projektijuhtimisele täieliku kontrolli esimesest projekteerimiskoosolekust kuni tootmise alustamiseni. Tulemuseks on parem koordinatsioon, vähem vigu, kõrgem kvaliteet, kindlamad finantsid ja oluliselt tõhusam ehitusprotsess. 🚀"
     },
-    "ctaTitle": "Kas olete valmis disainimoodulit proovima?"
+    "ctaTitle": "Kas olete valmis disainimoodulit proovima?",
+    "heroTitle": "Projekteerimine ",
+    "heroTitleSpan": "käsitöölistele"
   },
   "smart-access": {
     "heroDesc": "Smart Access on TimeFlow terviklahendus ettevõtte füüsilise juurdepääsu ja õiguste haldamiseks. Moodul annab täieliku kontrolli võtmete, pääsukaartide, võtmehoidjate, siltide ja digitaalse juurdepääsu üle klientidele, kinnisvaraobjektidele, projektidele, teeninduskaubikutele ja ettevõtte enda ruumidele. Täieliku jälgitavusega üksikisiku tasandil teate alati, kellel on milline juurdepääs, kus seda kasutatakse, millal see välja anti ja millal see tuleks tagastada. Smart Access vähendab turvariske, lihtsustab asjaajamist ja tagab, et õigel inimesel on õigel ajal õiged õigused.",
@@ -6621,6 +6666,8 @@
       "label": "Nutikas juurdepääs",
       "title": "Täielik süsteem kaasaegseks juurdepääsuhalduseks",
       "text": "Smart Access koondab kogu ettevõtte võtmete, pääsukaartide, võtmehoidjate, siltide ja lubade halduse ühele intelligentsele ja turvalisele platvormile. Digitaallogimise, isikupõhiste lubade, täieliku jälgitavuse, AI-põhise turvaanalüüsi ja teiste TimeFlow moodulitega integreerimisega saab ettevõte kaasaegse juurdepääsuhalduse, mis vähendab haldust, tugevdab turvalisust ja tagab täieliku kontrolli iga juurdepääsu üle – alates registreerimisest ja väljastamisest kuni tagastamise ja ajalooni. 🔐🚀"
-    }
+    },
+    "heroTitle": "Täielik kontroll ",
+    "heroTitleSpan": "võtmete ja õiguste üle"
   }
 }

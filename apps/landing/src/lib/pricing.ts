@@ -18,16 +18,15 @@ export interface Addon {
 }
 
 export const ADDONS: Addon[] = [
-  { code: "1601", name: "Calculation PRO Bas", category: "Kalkyl", price: 199, unit: "per_user", desc: "Målning, Golvläggning, Undertak, Relining, Golvavjämning, Städ, Fasad-Puts, Plåt, Håltagning, Mark, Plattsättning" },
-  { code: "1602", name: "Calculation PRO Advance", category: "Kalkyl", price: 599, unit: "per_user", desc: "Bygg, El, Rör och Vent" },
-  { code: "1650", name: "QuickAICalc", category: "Kalkyl", price: 2995, unit: "per_user", desc: "AI-kalkylator" },
-  { code: "1660", name: "Metric", category: "Kalkyl", price: 59, unit: "per_user", desc: "Ytmätning via mobilkamera, AI+AR, rumsanalys, materialberäkning" },
-  { code: "1701", name: "Order – Direct", category: "Order", price: 199, unit: "flat", desc: "Direktorder via kunddashboard" },
+  { code: "1601", name: "Calculation PRO Bas", category: "Kalkyl", price: 199, unit: "flat", desc: "Målning, Golvläggning, Undertak, Relining, Golvavjämning, Städ, Fasad-Puts, Plåt, Håltagning, Mark, Plattsättning" },
+  { code: "1602", name: "Calculation PRO Advance", category: "Kalkyl", price: 599, unit: "flat", desc: "Bygg, El, Rör och Vent" },
+  { code: "1650", name: "QuickAICalc", category: "Kalkyl", price: 2995, unit: "flat", desc: "AI-kalkylator" },
+  { code: "1660", name: "Metric", category: "Kalkyl", price: 59, unit: "per_user", desc: "Ytmätning via mobilkamera, AI+AR, rumsanalys, materialberäkning (per användare)" },
+  { code: "1701", name: "Order-Direkt", category: "Order", price: 199, unit: "flat", desc: "Direktorder via kunddashboard" },
   { code: "1910", name: "Smart Inköp", category: "Inköp", price: 199, unit: "flat", desc: "Integration till leverantörer" },
-  { code: "2291", name: "Drive", category: "Maskin", price: 199, unit: "flat", desc: "Live-GPS, Körjournal, fordonsdata, GPS-historik, Kartstöd, Export till bokföring" },
+  { code: "2291", name: "Drive", category: "Maskin", price: 199, unit: "per_user", desc: "Live-GPS, Körjournal, fordonsdata, GPS-historik, Kartstöd, Export till bokföring (per användare med Drive)" },
   { code: "2292", name: "Ruttplan", category: "Maskin", price: 1295, unit: "flat", desc: "AI-optimerad ruttplanering, väderdata, GPS-koppling" },
   { code: "2301", name: "AutoEkonomi", category: "Ekonomi", price: 199, unit: "flat", desc: "Integration till bokföringssystem (Fortnox, Visma, Björn Lundén m.fl.)" },
-  { code: "2350", name: "Scan", category: "Ekonomi", price: 5, unit: "per_scan", desc: "Scanning av leverantörsfakturor (per styck)" },
   { code: "3101", name: "TalkFlow", category: "Marknad", price: 299, unit: "flat", desc: "AI-receptionist för inkommande samtal, bokning, lead-hantering" },
 ];
 
