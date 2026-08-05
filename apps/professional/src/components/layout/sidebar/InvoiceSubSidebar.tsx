@@ -14,17 +14,16 @@ export interface InvoiceSubSidebarItem {
 }
 
 export const INVOICE_SUB_SIDEBAR_ITEMS: InvoiceSubSidebarItem[] = [
-	{ id: "dashboard", labelKey: localizationConstants.invoiceDashboard, href: "/tools/register/invoice-dashboard" },
-	{ id: "overview", labelKey: localizationConstants.invoiceOverview, href: "/tools/register/invoice-overview" },
-	{ id: "contractInvoicing", labelKey: localizationConstants.contractInvoicing, href: "/tools/register/contract-invoicing" },
-	{ id: "settings", labelKey: localizationConstants.settings, href: "/tools/register/settings" },
-	{ id: "register", labelKey: localizationConstants.registerDropdownLabel, href: "/tools/register" },
-	{ id: "reports", labelKey: localizationConstants.reportsItem, href: "/tools/register/reports" },
-	{ id: "templates", labelKey: localizationConstants.templates, href: "/tools/register/templates" },
-	{ id: "protocols", labelKey: localizationConstants.protocolsItem, href: "/tools/register/protocols" },
-	{ id: "documentCenter", labelKey: localizationConstants.documentCenterItem, href: "/tools/register/document-center" },
-	{ id: "statistics", labelKey: localizationConstants.statisticsItem, href: "/tools/register/statistics" },
-	{ id: "archive", labelKey: localizationConstants.archiveItem, href: "/tools/register/archive" },
+	{ id: "kunder", labelKey: localizationConstants.registerKunder, href: "/tools/register/customer" },
+	{ id: "leverantorer", labelKey: localizationConstants.registerLeverantorer, href: "/tools/register/supplier" },
+	{ id: "projekt", labelKey: localizationConstants.projectList, href: "/tools/register/project-list" },
+	{ id: "order", labelKey: localizationConstants.orderList, href: "/tools/register/order-list" },
+	{ id: "offerter", labelKey: localizationConstants.registerOfferter, href: "/tools/register/quote-list" },
+	{ id: "prislistor", labelKey: localizationConstants.registerPrislistor, href: "/tools/register/price-list" },
+	{ id: "artiklar", labelKey: localizationConstants.registerArtiklar, href: "/tools/register/articles" },
+	{ id: "kontoplan", labelKey: localizationConstants.accountPlan, href: "/tools/register/account-plan" },
+	{ id: "kostnadsstallen", labelKey: localizationConstants.registerKostnadsstallen, href: "/tools/register/cost-centre" },
+	{ id: "wageTypes", labelKey: localizationConstants.wageTypes, href: "/tools/register/wage-type" },
 ];
 
 export function InvoiceSubSidebar() {
@@ -39,7 +38,7 @@ export function InvoiceSubSidebar() {
 						<ShoppingBag className="h-5 w-5 text-white" aria-hidden />
 					</div>
 					<span className="text-sm font-semibold text-slate-900">
-						<Translate text={localizationConstants.invoice} />
+						<Translate text={localizationConstants.registerDropdownLabel} />
 					</span>
 				</div>
 				<ChevronsUpDown className="h-4 w-4 text-slate-500 cursor-pointer" aria-hidden />
@@ -49,9 +48,9 @@ export function InvoiceSubSidebar() {
 			<nav className="flex flex-1 flex-col gap-1.5 px-3 py-4 overflow-y-auto">
 				{INVOICE_SUB_SIDEBAR_ITEMS.map((item) => {
 					const isActive =
-						item.href === "/tools/register"
-							? pathname === "/tools/register" || pathname.startsWith("/tools/register/")
-							: pathname === item.href || pathname.startsWith(`${item.href}/`);
+						pathname === item.href ||
+						(item.href !== "/tools/register" && pathname.startsWith(`${item.href}/`)) ||
+						(item.href === "/tools/register/customer" && pathname === "/tools/register");
 
 					const ItemIcon = isActive ? FolderOpen : Folder;
 

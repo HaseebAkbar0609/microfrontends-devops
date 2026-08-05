@@ -11,6 +11,7 @@ import { PriceListRegisterTable, PriceListUpdatePanel } from "./PriceListRegiste
 export function PriceListFeature() {
 	return (
 		<div className="flex flex-col gap-6 p-6">
+			{/* Breadcrumbs & Page Header */}
 			<div className="flex flex-col gap-1">
 				<h1 className="text-2xl font-bold tracking-tight text-slate-900">
 					<Translate text={localizationConstants.priceListOption} />
@@ -34,21 +35,25 @@ export function PriceListFeature() {
 				</nav>
 			</div>
 
-			<Tabs defaultValue="prislista" className="w-full">
-				<TabsList>
-					<TabsTrigger value="prislista">
-						<Translate text={localizationConstants.priceListTab} />
-					</TabsTrigger>
-					<TabsTrigger value="uppdatera">
-						<Translate text={localizationConstants.updatePriceListTab} />
-					</TabsTrigger>
-				</TabsList>
-				<TabsContent value="prislista">
+			{/* Price List Tabs */}
+			<Tabs defaultValue="prislista" className="w-full flex-1 flex flex-col">
+				<div className="border-b border-slate-200">
+					<TabsList variant="line" className="gap-8 bg-transparent p-0">
+						<TabsTrigger value="prislista" className="pb-3 pt-1 text-sm font-semibold">
+							<Translate text={localizationConstants.priceListTab} />
+						</TabsTrigger>
+						<TabsTrigger value="uppdatera" className="pb-3 pt-1 text-sm font-semibold">
+							<Translate text={localizationConstants.updatePriceListTab} />
+						</TabsTrigger>
+					</TabsList>
+				</div>
+
+				<TabsContent value="prislista" className="flex-1 pt-4">
 					<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 						<PriceListRegisterTable />
 					</Suspense>
 				</TabsContent>
-				<TabsContent value="uppdatera">
+				<TabsContent value="uppdatera" className="flex-1 pt-4">
 					<Suspense fallback={<div className="py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.genericLoading} /></div>}>
 						<PriceListUpdatePanel />
 					</Suspense>

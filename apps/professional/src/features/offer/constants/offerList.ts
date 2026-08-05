@@ -61,14 +61,10 @@ export const DUMMY_OFFERS: OfferList[] = [
 ];
 
 export const BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.moduleItem },
-	{ label: localizationConstants.business },
-	{
-		label: localizationConstants.offer,
-		href: "/module/business/offer/dashboard",
-	},
-	{ label: localizationConstants.offerList },
+	{ label: localizationConstants.home, href: "/" },
+	{ label: localizationConstants.tools, href: "/tools" },
+	{ label: localizationConstants.registerDropdownLabel, href: "/tools/register" },
+	{ label: localizationConstants.registerOfferter },
 ];
 
 export const OFFER_LIST_COLUMNS = [
