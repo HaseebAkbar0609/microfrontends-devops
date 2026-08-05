@@ -7,7 +7,7 @@ const plans = [
   {
     title: "Free plan",
     price: 0,
-    priceText: "0 SEK",
+    priceText: "0 kr",
     buttonText: "Välj denna",
     features: [
       "Full tillgång till TimeFlow system",
@@ -22,7 +22,7 @@ const plans = [
     licensePrice: 0,
     buttonText: "Välj denna",
     features: [
-      "Grundavgift 2995 SEK / månaden",
+      "Grundavgift 2995 kr / månaden",
       "Användare: Obegränsat",
       "Bindningstid 3 månader eller årsplan med 2 månader gratis",
       "Funktioner: Offert, B2B, Faktura, CMS, Mina sidor, App-Work Start, obegränsat",
@@ -35,8 +35,8 @@ const plans = [
     buttonText: "Välj denna",
     hasCounter: true,
     features: [
-      "Grundavgift 2995 SEK / månaden",
-      "Licenskostnad 995 SEK / användare",
+      "Grundavgift 2995 kr / månaden",
+      "Licenskostnad 995 kr / användare",
       "Bindningstid 3 månader eller årsplan med 2 månader gratis",
       "Funktioner: Allt i Start, Kalkyl, Order, Projekt, KMA, Ekonomi, Personal, Maskin, Mallar",
       "App-Manager ingår",
@@ -49,8 +49,8 @@ const plans = [
     buttonText: "Välj denna",
     hasCounter: true,
     features: [
-      "Grundavgift 2995 SEK / månaden",
-      "Licenskostnad 1295 SEK / användare",
+      "Grundavgift 2995 kr / månaden",
+      "Licenskostnad 1295 kr / användare",
       "Bindningstid 3 månader eller årsplan med 2 månader gratis",
       "Funktioner: Allt i Standard + Inköp, Avtal, Data/IT, Marknad, Juridik, Inkasso, Prognos, Projektering, Företagsledning",
       "App-Manager ingår",
@@ -128,7 +128,7 @@ const ProfessionalPricing2Content: React.FC = () => {
                 <p className="text-3xl font-bold text-[#FF914D] mb-4">
                   {plan.title === "Free plan"
                     ? plan.priceText
-                    : `${finalPrice.toLocaleString(currentLocale)} SEK/mån`}
+                    : `${finalPrice.toLocaleString(currentLocale)} kr/mån`}
                 </p>
 
                 {/* Features */}
@@ -163,12 +163,12 @@ const ProfessionalPricing2Content: React.FC = () => {
 
                   {/* Price breakdown */}
                   <div className="text-sm text-center mt-3 text-gray-600">
-                    <p>Grund avgift: {(plan.basePrice || 0).toLocaleString(currentLocale)} SEK</p>
+                    <p>Grund avgift: {(plan.basePrice || 0).toLocaleString(currentLocale)} kr</p>
                     <p>
-                      Licens: {(plan.licensePrice || 0).toLocaleString(currentLocale)} SEK / användare
+                      Licens: {(plan.licensePrice || 0).toLocaleString(currentLocale)} kr / användare
                     </p>
                     <p className="font-semibold">
-                      Totalt: {finalPrice.toLocaleString(currentLocale)} SEK / mån
+                      Totalt: {finalPrice.toLocaleString(currentLocale)} kr / mån
                     </p>
                   </div>
                 </div>

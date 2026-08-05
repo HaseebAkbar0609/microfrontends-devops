@@ -21,7 +21,9 @@
     "otherSections": "Pozostałe obszary",
     "ctaStart": "Załóż konto",
     "ctaDemo": "Wypróbuj konto demo",
-    "ctaSubtitle": "30 dni okresu próbnego — następnie plan Start od 2 995 kr/mån."
+    "ctaSubtitle": "30 dni okresu próbnego — następnie plan Start od 2 995 kr/mån.",
+    "stepsSubhero": "Zobacz poniżej kroki, jak działa moduł {{name}} – od pierwszego zapytania do gotowego projektu.",
+    "ctaTitle": "Gotowy, aby wypróbować {{name}}?"
   },
   "avtal": {
     "heroDesc": "Moduł Avtal firmy TimeFlow to centralna platforma do zarządzania wszystkimi rodzajami umów w całym ich cyklu życia. Zgromadź wszystkie umowy w bezpiecznym cyfrowym archiwum, twórz nowe umowy z gotowych szablonów, podpisuj elektronicznie i otrzymuj automatyczne przypomnienia przed ważnymi datami. Moduł zapewnia pełną śledzalność, zarządzanie wersjami i historię każdej umowy. Niezależnie od tego, czy chodzi o umowy z klientami, umowy projektowe, umowy o pracę czy umowy z dostawcami, firma otrzymuje uporządkowane i bezpieczne zarządzanie umowami z jasnymi przepływami pracy i inteligentnym monitorowaniem.",
@@ -362,7 +364,9 @@
       "label": "Moduł Avtal",
       "title": "Cyfrowe centrum umów firmy",
       "text": "Moduł Avtal firmy TimeFlow gromadzi cały portfel umów firmy w jednym bezpiecznym i inteligentnym systemie. Dzięki podpisowi cyfrowemu przez BankID lub SignFlow™, automatycznemu monitorowaniu dat wygaśnięcia i wypowiedzenia, pełnemu zarządzaniu wersjami, zaawansowanym uprawnieniom i analizie ryzyka opartej na AI firma zyskuje pełną kontrolę nad wszystkimi umowami. Efektem jest mniejsze ryzyko biznesowe, lepsza zgodność z przepisami, sprawniejsza administracja i bezpieczne podstawy decyzyjne w całym cyklu życia umowy."
-    }
+    },
+    "heroTitle": "Pełna kontrola nad umowami firmy — ",
+    "heroTitleSpan": "od utworzenia do archiwizacji"
   },
   "b2b": {
     "heroDesc": "Szwedzki rynek branży rzemieślniczej. Moduł B2B łączy kupujących i sprzedających w branży rzemieślniczej. Firmy mogą tu łatwo znaleźć podwykonawców, dostawców, przedsiębiorców z F-skatt i partnerów współpracy do swoich projektów i zamówień.",
@@ -410,7 +414,9 @@
       "title": "Cyfrowy rynek branży rzemieślniczej",
       "text": "Dzięki modułowi B2B TimeFlow staje się czymś więcej niż systemem ERP. Działa jak kompletny rynek, na którym firmy mogą kupować, sprzedawać, współpracować i dzielić się zasobami. Niezależnie od tego, czy potrzebujesz elektryka do projektu, chcesz porównać ceny materiałów u kilku dostawców, czy wynająć dodatkowy personel na intensywny okres, moduł B2B pomoże Ci znaleźć właściwego partnera – szybko, łatwo i efektywnie kosztowo."
     },
-    "ctaTitle": "Gotowy przetestować moduł B2B?"
+    "ctaTitle": "Gotowy przetestować moduł B2B?",
+    "heroTitle": "Moduł B2B dla ",
+    "heroTitleSpan": "rzemieślników"
   },
   "data-it": {
     "heroDesc": "Moduł Data & IT firmy TimeFlow daje firmie kompletne narzędzie do administrowania, dokumentowania i monitorowania całego środowiska IT. Zgromadź wszystkie informacje o komputerach, telefonach komórkowych, tabletach, oprogramowaniu, licencjach, użytkownikach i kosztach IT w jednym centralnym systemie. Moduł zapewnia pełną śledzalność cyfrowych zasobów firmy, zarządza budżetem IT i zgłoszeniami wsparcia oraz gwarantuje, że właściwy sprzęt trafia do właściwego pracownika. Przypisuj urządzenia i telefony do osób, kontroluj dokumenty, logowania, kody i bezpieczeństwo — wszystko w jednym miejscu.",
@@ -763,7 +769,9 @@
       "label": "Moduł Data & IT",
       "title": "Cyfrowe centrum kontroli firmy",
       "text": "Moduł Data & IT firmy TimeFlow zapewnia pełną kontrolę nad cyfrowymi zasobami firmy, wsparciem i finansami IT. Dzięki kompletnemu zarządzaniu inwentarzem, śledzalności komputerów i telefonów, dokumentacji zakupów i gwarancji, zaawansowanemu zarządzaniu licencjami, budżetowi IT, zgłoszeniom awarii i inteligentnej analizie firma otrzymuje nowoczesną platformę IT z wysokim poziomem bezpieczeństwa, sprawną administracją i pełną kontrolą nad całą infrastrukturą cyfrową."
-    }
+    },
+    "heroTitle": "Pełna kontrola nad środowiskiem IT firmy — ",
+    "heroTitleSpan": "zasoby cyfrowe, wsparcie i bezpieczeństwo"
   },
   "ekonomi": {
     "heroDesc": "Moduł Ekonomi firmy TimeFlow pomaga firmom strukturyzować, obsługiwać i usprawniać bieżącą pracę finansową. Moduł gromadzi faktury od dostawców, przepływy zatwierdzania, sprawy finansowe, budżety, raporty, dokumenty spółki i materiały administracyjne we wspólnej przestrzeni roboczej. Opracowany dla osób odpowiedzialnych za finanse, administratorów, kierowników projektów i zarządu firmy. Moduł Ekonomi uzupełnia pozostałe funkcje finansowe TimeFlow — fakturowanie obsługiwane jest w module Faktura, a wyniki projektów, prognozy i wykonanie w module Prognos.",
@@ -1119,7 +1127,9 @@
       "label": "Moduł Ekonomi",
       "title": "Ustrukturyzowany dział finansowy w TimeFlow",
       "text": "Gromadząc faktury od dostawców, przepływy zatwierdzania, budżety, sprawy finansowe, raporty, dokumenty spółki, plany organizacyjne, szablony i reklamacje we wspólnej platformie, firma ogranicza ręczną administrację i ryzyko utraty ważnych informacji. Moduł Ekonomi działa jako centralny węzeł administracyjny firmy i gwarantuje, że właściwe dokumenty, właściwa osoba odpowiedzialna i właściwy proces są zawsze na miejscu w całej pracy finansowej. 📊"
-    }
+    },
+    "heroTitle": "Kompleksowa kontrola nad ",
+    "heroTitleSpan": "administracją finansową"
   },
   "faktura": {
     "heroDesc": "Moduł Faktura firmy TimeFlow zapewnia kompletny i zautomatyzowany proces fakturowania. Twórz profesjonalne faktury szybko i poprawnie, automatycznie pobierając informacje z projektów, zamówień, ewidencji czasu pracy, materiałów, faktur od dostawców i innych części TimeFlow. Niezależnie od tego, czy pracujesz z klientami prywatnymi (B2C), firmami (B2B), właścicielami nieruchomości, spółdzielniami mieszkaniowymi (BRF) czy sektorem publicznym, otrzymujesz elastyczne rozwiązanie, które minimalizuje administrację, poprawia przepływy pieniężne i gwarantuje fakturowanie wszystkich wykonanych prac.",
@@ -1468,7 +1478,9 @@
       "label": "Moduł Faktura",
       "title": "Kompletny system fakturowania",
       "text": "Moduł Faktura firmy TimeFlow gromadzi cały proces fakturowania firmy w inteligentnej i zautomatyzowanej platformie. Dzięki wsparciu dla B2B i rynku prywatnego, elastycznym szablonom faktur, automatycznym podstawom faktur, fakturowaniu umownemu, rejestrowi artykułów, cennikom oraz bezpośredniemu powiązaniu z projektami, materiałami, fakturami od dostawców, podwykonawcami i pracami ÄTA gwarantowane jest poprawne i terminowe fakturowanie każdej wykonanej pracy. Efektem jest mniejsza administracja, lepsze przepływy pieniężne, wyższy wskaźnik fakturowania i pełna kontrola nad przychodami firmy. 💸"
-    }
+    },
+    "heroTitle": "Inteligentne fakturowanie — ",
+    "heroTitleSpan": "od dokumentacji do płatności"
   },
   "fordon": {
     "heroDesc": "Moduł Fordon & Maskiner firmy TimeFlow zapewnia pełną kontrolę nad całą flotą pojazdów i rejestrem maszyn firmy. Zarządzaj samochodami osobowymi, samochodami serwisowymi, ciężarówkami, przyczepami, maszynami budowlanymi i innym sprzętem we wspólnym systemie, w którym serwis, przeglądy, kierowcy, finanse i dokumentacja są zgromadzone w jednym miejscu. Dzięki funkcjom dodatkowym Drive™ i RutPlan™ firma otrzymuje ponadto cyfrowy dziennik jazdy, pozycjonowanie GPS, optymalizację tras i zaawansowaną analizę pojazdów, co obniża koszty i usprawnia codzienną działalność.",
@@ -1808,7 +1820,9 @@
       "label": "Fordon & Maskiner",
       "title": "Kompletny system zarządzania pojazdami i maszynami",
       "text": "Moduł Fordon & Maskiner firmy TimeFlow zapewnia firmie pełną kontrolę nad całą flotą pojazdów i maszyn — od zakupu i rejestracji po serwis, badania techniczne, kierowców, finanse i wycofanie z użytku. Dzięki Drive™, RutPlan™, Smart Fleet™ i zaawansowanym analizom kosztów eksploatacji i elektryfikacji firma otrzymuje potężne wsparcie decyzyjne, które obniża koszty, zwiększa dostępność i gwarantuje, że właściwe pojazdy i maszyny są zawsze we właściwym miejscu, z właściwym kierowcą i właściwą dokumentacją. 🚀"
-    }
+    },
+    "heroTitle": "Pełna kontrola nad ",
+    "heroTitleSpan": "pojazdami i maszynami"
   },
   "inkasso": {
     "heroDesc": "Moduł Inkasso firmy TimeFlow daje firmie możliwość prowadzenia całego procesu windykacyjnego we własnym zakresie. Dzięki własnemu zarządzaniu windykacją firma zyskuje szybszą kontrolę nad nieopłaconymi fakturami, niższe koszty, wyższe przychody i bardziej osobisty dialog z klientem, zanim konieczne będą zewnętrzne działania windykacyjne. Gdy faktura przeterminuje się, sprawa może zostać automatycznie przekazana z modułu Faktura do modułu Inkasso, gdzie cały proces jest kontynuowany bez podwójnej rejestracji. Cała historia, dokumentacja i komunikacja przechodzą razem ze sprawą, co zapewnia efektywną i profesjonalną obsługę.",
@@ -2128,10 +2142,12 @@
       "label": "Moduł Inkasso",
       "title": "Pełna kontrola nad należnościami firmy",
       "text": "Moduł Inkasso firmy TimeFlow daje firmie możliwość samodzielnego, profesjonalnego, efektywnego i przyjaznego klientowi prowadzenia całego procesu egzekwowania należności. Dzięki automatycznemu przekazywaniu z modułu Faktura, inteligentnym przepływom pracy i pełnej historii firma może działać szybciej, poprawić przepływy pieniężne i jednocześnie utrzymać dobrą relację z klientami. Dopiero gdy działania wewnętrzne nie wystarczą, sprawę można łatwo przekazać do zewnętrznej firmy windykacyjnej lub do modułu Juridik."
-    }
+    },
+    "heroTitle": "Profesjonalna windykacja — ",
+    "heroTitleSpan": "od przypomnienia do egzekucji"
   },
   "inkop-mottagning": {
-    "heroTitle": "Lista kontrolna odbioru dostaw",
+    "heroTitle": "Lista kontrolna odbioru dla ",
     "heroDesc": "Cyfrowy dowód każdej dostawy – liczba, jakość, uszkodzenia transportowe, zdjęcia, GPS i podpis w jednym przepływie. Tak wygląda dialog odbioru w TimeFlow Work.",
     "sections": [
       {
@@ -2294,7 +2310,8 @@
           }
         ]
       }
-    ]
+    ],
+    "heroTitleSpan": "dostaw"
   },
   "inkop": {
     "heroDesc": "Moduł Inköp firmy TimeFlow zapewnia pełną kontrolę nad wszystkimi zakupami firmy. Planuj zakupy materiałów, twórz zamówienia zakupu, porównuj dostawców, śledź dostawy w czasie rzeczywistym i gwarantuj, że właściwy materiał znajduje się we właściwym miejscu we właściwym czasie.",
@@ -2649,7 +2666,9 @@
       "title": "Nowoczesny system zakupów dla branży wykonawczej",
       "text": "Moduł Inköp firmy TimeFlow digitalizuje cały proces zakupowy – od planowania i wyboru dostawcy po dostawę, kontrolę odbioru i monitorowanie finansowe. Dzięki Smart-Inköp™, rekomendacjom zakupowym opartym na AI, pełnej śledzalności i monitorowaniu w czasie rzeczywistym firma zyskuje lepszą kontrolę nad przepływami materiałowymi, niższe koszty zakupów i mniej przestojów produkcyjnych. Efektem jest szybszy, inteligentniejszy i bardziej rentowny proces zakupowy dla całej organizacji. 🚀"
     },
-    "ctaTitle": "Gotowy przetestować moduł Inköp?"
+    "ctaTitle": "Gotowy przetestować moduł Inköp?",
+    "heroTitle": "Moduł zakupowy dla ",
+    "heroTitleSpan": "rzemieślników"
   },
   "juridik": {
     "heroDesc": "Moduł Juridik firmy TimeFlow to centralna platforma firmy do zarządzania wszystkimi sprawami prawnymi, sporami, umowami i postępowaniami prawnymi. Moduł zapewnia pełną kontrolę nad każdą sprawą od pierwszego zdarzenia do zakończonego postępowania, z ustrukturyzowaną dokumentacją, dziennikiem, ocenami ryzyka, ważnymi datami i kompletną historią. Niezależnie od tego, czy sprawa dotyczy sporu z klientem, prawa budowlanego, prawa pracy, windykacji, kwestii umownych czy postępowań sądowych, wszystkie informacje są gromadzone w jednym miejscu. Zmniejsza to ryzyko przekroczenia terminów i gwarantuje, że firma zawsze pracuje w sposób ustrukturyzowany i profesjonalny.",
@@ -3004,7 +3023,9 @@
       "label": "Moduł Juridik",
       "title": "Centrum kontroli prawnej firmy",
       "text": "Moduł Juridik firmy TimeFlow zapewnia firmie kompletne cyfrowe wsparcie dla całej administracji prawnej i obsługi spraw. Dzięki ustrukturyzowanym przepływom pracy, ocenom ryzyka, dziennikowi, zarządzaniu dokumentami, monitorowaniu terminów odpowiedzi i ważnych dat oraz ścisłej współpracy z zewnętrznymi adwokatami i radcami prawnymi firma zyskuje pełną kontrolę nad swoimi procesami prawnymi. Efektem są niższe ryzyka prawne, lepsza dokumentacja, bezpieczniejsze decyzje i mocniejsza ochrona interesów firmy."
-    }
+    },
+    "heroTitle": "Kompleksowa obsługa spraw prawnych — ",
+    "heroTitleSpan": "pełna kontrola nad procesami, ryzykiem i dokumentacją"
   },
   "kalkyl": {
     "heroDesc": "Szybsze, inteligentniejsze i bardziej trafne kalkulacje. Moduł Kalkyl zapewnia pełną kontrolę nad całym procesem ofertowania i kalkulacji — od cen materiałów i kosztów pracy po gotową ofertę.",
@@ -3133,7 +3154,9 @@
       "title": "Kalkyl – od doświadczenia do sztucznej inteligencji",
       "text": "Moduł Kalkyl firmy TimeFlow pasuje zarówno do mniejszego przedsiębiorstwa rzemieślniczego, jak i dużego wykonawcy. Możesz wybrać tradycyjną kalkulację, branżowe rozwiązanie Calculation PRO lub pozwolić QuickAICalc™ analizować rysunki i dokumenty projektowe za pomocą AI. Efektem są szybsze kalkulacje, wyższa precyzja, lepsze marże i mocniejsze podstawy decyzyjne przed każdą ofertą i projektem."
     },
-    "ctaTitle": "Gotowy przetestować moduł Kalkyl?"
+    "ctaTitle": "Gotowy przetestować moduł Kalkyl?",
+    "heroTitle": "Moduł kalkulacyjny dla ",
+    "heroTitleSpan": "rzemieślników"
   },
   "kma": {
     "heroDesc": "Kompletny cyfrowy system zarządzania jakością, środowiskiem i bezpieczeństwem pracy. TimeFlow digitalizuje całą pracę KMA firmy — od polityk i samokontroli po oceny ryzyka, obchody BHP, audyty i certyfikacje.",
@@ -3407,7 +3430,9 @@
       "title": "Kompletny cyfrowy system zarządzania dla branży wykonawczej",
       "text": "Moduł KMA firmy TimeFlow to znacznie więcej niż system do odchyleń i samokontroli. Działa jako kompletny cyfrowy system zarządzania firmy, w którym jakość, środowisko, bezpieczeństwo pracy, wymogi prawne, dokumentacja, audyty, szkolenia, certyfikacje i kontrole bezpieczeństwa oparte na AI są zgromadzone we wspólnej platformie. Efektem jest wyższa jakość, bezpieczniejsze place budowy, lepsza zgodność z przepisami i sprawniejsza praca KMA w całej organizacji. 🚀"
     },
-    "ctaTitle": "Gotowy przetestować moduł KMA?"
+    "ctaTitle": "Gotowy przetestować moduł KMA?",
+    "heroTitle": "Moduł KMA dla ",
+    "heroTitleSpan": "rzemieślników"
   },
   "ledningsstod": {
     "heroDesc": "Moduł Ledningsstöd firmy TimeFlow zapewnia zarządowi, kadrze kierowniczej i dyrekcji firmy pełny przegląd całej działalności. Zgromadź najważniejsze wskaźniki, strategie, pracę zarządu, raporty, materiały decyzyjne i dokumenty zarządcze firmy we wspólnej platformie. Dzięki danym w czasie rzeczywistym ze wszystkich modułów TimeFlow kadra kierownicza otrzymuje potężne wsparcie decyzyjne, w którym finanse, sprzedaż, projekty, personel, KMA, prawo i cele działalności są prezentowane w spójnym systemie zarządzania.",
@@ -3779,7 +3804,9 @@
       "label": "Moduł Ledningsstöd",
       "title": "Wsparcie decyzyjne dla całej firmy",
       "text": "Moduł Ledningsstöd firmy TimeFlow jest centrum zarządzania i rozwoju strategicznego firmy. Gromadząc pracę zarządu, protokoły, sprawy decyzyjne, KPI, cele działalności, strategie, raporty, funkcję sygnalistów i ważne dokumenty zarządcze we wspólnym systemie, kadra kierownicza i zarząd otrzymują potężne wsparcie decyzyjne. Dzięki danym w czasie rzeczywistym z całego TimeFlow i funkcji AI Executive Intelligence™ firma może podejmować szybsze, bezpieczniejsze i bardziej trafne decyzje, a ryzyka są identyfikowane na wczesnym etapie, a działalność kierowana jest w stronę wyznaczonych celów."
-    }
+    },
+    "heroTitle": "Cyfrowe centrum dowodzenia firmy — ",
+    "heroTitleSpan": "zarządzanie, decyzje i obserwacja strategiczna"
   },
   "mallar": {
     "heroDesc": "Moduł Mallar firmy TimeFlow gromadzi wszystkie szablony dokumentów firmy w jednym miejscu i zapewnia jednolite metody pracy w całej organizacji. Twórz własne szablony, edytuj istniejące, zarządzaj wersjami zmian i dystrybuuj właściwy szablon do właściwego modułu lub użytkownika. Dzięki centralnej bibliotece szablonów firma unika podwójnej pracy, a jakość i standaryzacja rosną. Wszyscy pracownicy zawsze pracują na najnowszej zatwierdzonej wersji.",
@@ -4115,7 +4142,9 @@
       "label": "Moduł Mallar",
       "title": "Żywa biblioteka szablonów dla całej firmy",
       "text": "Moduł Mallar firmy TimeFlow czyni zarządzanie dokumentami szybszym, bezpieczniejszym i bardziej spójnym. Dzięki centralnej bibliotece szablonów z zarządzaniem wersjami, kategoryzacją, zaawansowanymi uprawnieniami i automatycznym powiązaniem z modułami TimeFlow cała organizacja zawsze pracuje na właściwych dokumentach i najnowszej zatwierdzonej wersji. Efektem są wyższa jakość, mniej administracji i ustandaryzowane metody pracy w całej firmie."
-    }
+    },
+    "heroTitle": "Centralna biblioteka szablonów firmy — ",
+    "heroTitleSpan": "dokumenty, umowy, listy kontrolne i procedury"
   },
   "marknad-salj": {
     "heroDesc": "Moduł Marknad & Sälj firmy TimeFlow gromadzi sprzedaż, marketing, CRM i komunikację z klientami firmy w inteligentnej platformie. Zarządzaj całą podróżą klienta — od pierwszego leadu po długoterminową opiekę nad klientem — dzięki zautomatyzowanym przepływom pracy, kampaniom, asystentom AI i inteligentnej komunikacji. Moduł zapewnia pełną kontrolę nad leadami, klientami, pipeline sprzedaży, materiałami marketingowymi, identyfikacją wizualną, automatycznymi wysyłkami e-mail i SMS oraz obsługą telefonów opartą na AI przez FlowTalk™. TimeFlow automatycznie monitoruje ponadto zrealizowane projekty i zamówienia za pomocą ankiet satysfakcji klientów, aby mierzyć zadowolenie i identyfikować obszary do poprawy.",
@@ -4458,7 +4487,9 @@
       "label": "Moduł Marknad & Sälj",
       "title": "Inteligentny CRM pracujący przez całą dobę",
       "text": "Moduł Marknad & Sälj firmy TimeFlow łączy CRM, marketing, sprzedaż i AI w kompletną platformę. Dzięki automatycznym kampaniom, ankietom klienckim po zakończonych projektach i zamówieniach, osobistym życzeniom świątecznym i urodzinowym oraz asystentowi telefonicznemu opartemu na AI — FlowTalk™, gdzie AI Robert™ odbiera rozmowy przychodzące, tworzy transkrypty i wysyła podsumowania przez e-mail — firma otrzymuje nowoczesny system, który buduje silniejsze relacje, zwiększa sprzedaż i gwarantuje, że żaden kontakt z klientem nie przepada."
-    }
+    },
+    "heroTitle": "Marketing i Sprzedaż — ",
+    "heroTitleSpan": "kompletny CRM pracujący całą dobę"
   },
   "maskin": {
     "heroDesc": "Moduł Maskin firmy TimeFlow to kompletny system zarządzania maszynami budowlanymi, narzędziami i wyposażeniem firmy w całym cyklu życia. Od zakupu i rejestracji po rezerwacje, serwis, badania techniczne, dokumentację, monitorowanie kosztów i wycofanie z użytku — wszystkie informacje są zgromadzone we wspólnej platformie. Moduł został opracowany dla firm wykonawczych, serwisowych, instalacyjnych i nieruchomości, które chcą maksymalizować stopień wykorzystania, ograniczać przestoje i uzyskać pełną śledzalność swoich zasobów.",
@@ -4789,7 +4820,9 @@
       "label": "Maskin",
       "title": "Kompletny system zarządzania maszynami i wyposażeniem",
       "text": "Moduł Maskin firmy TimeFlow został opracowany dla firm, które chcą pełnej kontroli nad całą swoją flotą maszyn i wyposażenia. Gromadząc rejestr maszyn, dokumentację, rezerwacje, serwis, badania techniczne, śledzenie narzędzi, auta serwisowe, powiązania projektowe i monitorowanie finansowe we wspólnej platformie, firma otrzymuje potężne wsparcie decyzyjne. Dzięki ToolTrack™, Smart Machine™ i pełnej śledzalności od magazynu po auto serwisowe i dalej na projekty administracja jest mniejsza, wyposażenie jest wykorzystywane efektywniej, a firma zyskuje bezpieczniejsze, bardziej rentowne i lepiej zaplanowane zarządzanie maszynami. 🚀"
-    }
+    },
+    "heroTitle": "Pełna kontrola nad ",
+    "heroTitleSpan": "maszynami i sprzętem"
   },
   "material": {
     "heroDesc": "Moduł Material & Lager firmy TimeFlow zapewnia pełną kontrolę nad przepływem materiałów w firmie – od zakupów i magazynu po projekty, zamówienia i fakturowanie. Zarządzaj rejestrem artykułów, stanami magazynowymi, cennikami i dostawami w nowoczesnym systemie magazynowym w pełni zintegrowanym z całym TimeFlow.",
@@ -5078,7 +5111,9 @@
       "title": "Kompletny system materiałowy i magazynowy dla branży wykonawczej",
       "text": "Moduł Material & Lager firmy TimeFlow został opracowany dla firm, które chcą pełnej kontroli nad całym przepływem materiałów. Od rejestru artykułów, cenników i zakupów po magazyn, projekty, zamówienia i fakturowanie — wszystkie informacje są zgromadzone we wspólnej platformie. Dzięki Smart-Lager™, automatycznej rezerwacji magazynowej i mobilnemu zarządzaniu magazynem firma zyskuje lepszą kontrolę nad kosztami, mniejsze straty i sprawniejsze zaopatrzenie materiałowe – co przekłada się na wyższą rentowność i bezpieczniejsze dostawy projektowe. 🚀"
     },
-    "ctaTitle": "Gotowy przetestować Material & Lager?"
+    "ctaTitle": "Gotowy przetestować Material & Lager?",
+    "heroTitle": "Pełna kontrola nad ",
+    "heroTitleSpan": "materiałami i magazynem"
   },
   "order": {
     "heroDesc": "Cyfrowe zarządzanie zleceniami — od zamówienia do faktury. Moduł Order firmy TimeFlow jest centrum całej działalności serwisowej i zleceniowej firmy, z zautomatyzowanymi procesami, mobilnym zleceniem roboczym i pełną integracją z całym TimeFlow.",
@@ -5256,7 +5291,9 @@
       "title": "Kompletny system zleceń dla branży rzemieślniczej",
       "text": "Moduł Order został stworzony dla firm, które chcą zdigitalizować całe zarządzanie zleceniami. Dzięki obsłudze Order-Direkt™, automatycznych przepływów pracy, mobilnych zleceń roboczych, planowania zasobów i pełnej integracji z pozostałą częścią TimeFlow administracja jest minimalna, a kontrola maksymalna. Efektem są szybsze załatwianie spraw, lepsze wykorzystanie zasobów, bardziej zadowoleni klienci i bardziej efektywna firma. 🚀"
     },
-    "ctaTitle": "Gotowy przetestować moduł Order?"
+    "ctaTitle": "Gotowy przetestować moduł Order?",
+    "heroTitle": "Moduł zleceń dla ",
+    "heroTitleSpan": "rzemieślników"
   },
   "personal": {
     "heroDesc": "Moduł Personel firmy TimeFlow gromadzi całe zarządzanie personelem firmy w jednej inteligentnej, cyfrowej platformie. Zarządzaj wszystkim — od rekrutacji i umów o pracę po planowanie urlopów, zwolnienia chorobowe, szkolenia, rozmowy rozwojowe i rehabilitację. Pełna ścieżka audytu tego, co odebrał każdy pracownik — klucze Smart Access, sprzęt IT, narzędzia, maszyny i pojazdy. Podpisywanie cyfrowe, automatyczne przepływy pracy i bezproblemowa integracja z pozostałą częścią TimeFlow.",
@@ -5572,7 +5609,9 @@
       "label": "Moduł Personel",
       "title": "Kompletna platforma HR",
       "text": "Moduł Personel firmy TimeFlow daje firmie pełną kontrolę nad całą ścieżką pracownika — od rekrutacji i zatrudnienia po rozwój kompetencji i zakończenie współpracy. Dzięki cyfrowym umowom o pracę, podpisywaniu przez BankID lub SignFlow™, czasowi pracy, planowaniu urlopów, absencji chorobowej, rehabilitacji, szkoleniom, rozmowom rozwojowym, inteligentnemu planowaniu obsady oraz pełnej ścieżce audytu wydanego sprzętu Smart Access i IT firma otrzymuje nowoczesny system HR, który ogranicza administrację, wzmacnia zgodność z przepisami i zapewnia, że właściwe kompetencje znajdują się we właściwym miejscu o właściwym czasie. 👥"
-    }
+    },
+    "heroTitle": "Smart HR — ",
+    "heroTitleSpan": "od rekrutacji do kompetencji"
   },
   "prognos": {
     "heroDesc": "Moduł Prognoza firmy TimeFlow to strategiczne wsparcie decyzyjne firmy w zakresie finansów, projektów i sterowania działalnością. Moduł na bieżąco analizuje rozwój finansowy firmy i pomaga kierownictwu identyfikować ryzyka, szanse i odchylenia, zanim wpłyną na wynik. Dzięki prognozom na poziomie projektu, zlecenia, działu i firmy otrzymujesz jasny obraz przyszłych przychodów, wyniku, przepływów pieniężnych i rentowności. System monitoruje budżet, wyniki i prognozy w czasie rzeczywistym i automatycznie ostrzega, gdy coś odbiega od planu.",
@@ -5924,7 +5963,9 @@
       "label": "Moduł Prognoza",
       "title": "Ekonomiczny kompas firmy",
       "text": "Moduł Prognoza firmy TimeFlow daje kierownictwu potężne wsparcie decyzyjne, w którym dane historyczne, bieżące wyniki i przyszłe prognozy współdziałają w czasie rzeczywistym. Dzięki inteligentnym analizom projektów, zleceń, budżetu, kosztów ogólnych, ryzyk kredytowych i przepływów pieniężnych firma może wcześnie identyfikować odchylenia, doskonalić swoje kalkulacje i podejmować szybsze oraz bardziej świadome decyzje biznesowe. Moduł Prognoza staje się tym samym ekonomicznym kompasem firmy dla długoterminowego wzrostu i rentowności. 📊"
-    }
+    },
+    "heroTitle": "Spojrzenie w przyszłość dzięki ",
+    "heroTitleSpan": "inteligentnym prognozom"
   },
   "projekt": {
     "heroDesc": "Kompletny system zarządzania projektami dla branży wykonawczej, serwisowej i nieruchomości. Cyfrowe biuro projektowe firmy — od pierwszego planowania po odbiór końcowy, gwarancję i kalkulację końcową.",
@@ -6274,7 +6315,9 @@
       "title": "Kompletny system zarządzania projektami",
       "text": "Moduł Projekt został stworzony dla nowoczesnych firm wykonawczych, serwisowych i nieruchomościowych, które chcą zebrać całe zarządzanie projektami w jednym systemie. Dzięki obsłudze IDFlow™, AI Project Intelligence™, Projekt Health Score™, wieloletnich umów serwisowych, zaawansowanych finansów projektowych i pełnej integracji z pozostałymi modułami TimeFlow kierownictwo projektu otrzymuje potężne wsparcie decyzyjne przez cały cykl życia projektu. Efektem są lepsze planowanie, wyższa produktywność, bezpieczniejsze place budowy, efektywniejsze wykorzystanie zasobów i bardziej rentowne projekty. 🚀"
     },
-    "ctaTitle": "Gotowy przetestować moduł Projekt?"
+    "ctaTitle": "Gotowy przetestować moduł Projekt?",
+    "heroTitle": "Moduł projektowy dla ",
+    "heroTitleSpan": "rzemieślników"
   },
   "projektering": {
     "heroDesc": "Zaplanuj właściwie od początku — to podstawa rentownego projektu. Moduł Projektowanie gromadzi całe planowanie techniczne i administracyjne w jednym miejscu.",
@@ -6365,7 +6408,9 @@
       "title": "Projektowanie — centrum kontroli projektu",
       "text": "Moduł Projektowanie działa jak cyfrowe centrum kontroli projektu, w którym spotykają się technika, finanse, organizacja i planowanie. Tutaj tworzone są organizacja projektowania, budżet, harmonogram, listy kontrolne, podział odpowiedzialności i cała dokumentacja techniczna projektu. Wszystkie dokumenty, decyzje i zmiany są gromadzone we wspólnej platformie, która daje kierownictwu projektu pełną kontrolę od pierwszego spotkania projektowego do startu produkcji. Efektem są lepsza koordynacja, mniej błędów, wyższa jakość, bezpieczniejsze finanse i znacznie bardziej efektywny proces budowlany. 🚀"
     },
-    "ctaTitle": "Gotowy przetestować moduł Projektowanie?"
+    "ctaTitle": "Gotowy przetestować moduł Projektowanie?",
+    "heroTitle": "Projektowanie dla ",
+    "heroTitleSpan": "rzemieślników"
   },
   "smart-access": {
     "heroDesc": "Smart Access to kompletne rozwiązanie TimeFlow do zarządzania fizycznymi dostępami i uprawnieniami firmy. Moduł daje pełną kontrolę nad kluczami, kartami dostępu, brelokami, identyfikatorami i dostępami cyfrowymi do klientów, nieruchomości, projektów, samochodów serwisowych i własnych lokali firmy. Dzięki pełnej ścieżce audytu na poziomie osoby zawsze wiesz, kto ma jaki dostęp, gdzie jest on używany, kiedy został wydany i kiedy powinien zostać zwrócony. Smart Access ogranicza ryzyka bezpieczeństwa, upraszcza administrację i zapewnia, że właściwa osoba ma właściwe uprawnienia we właściwym czasie.",
@@ -6621,6 +6666,8 @@
       "label": "Smart Access",
       "title": "Kompletny system nowoczesnego zarządzania dostępami",
       "text": "Smart Access gromadzi całe zarządzanie kluczami, kartami dostępu, brelokami, identyfikatorami i uprawnieniami firmy w jednej inteligentnej i bezpiecznej platformie. Dzięki cyfrowemu potwierdzeniu odbioru, uprawnieniom opartym na osobie, pełnej ścieżce audytu, analizie bezpieczeństwa opartej na AI oraz integracji z pozostałymi modułami TimeFlow firma otrzymuje nowoczesne zarządzanie dostępami, które ogranicza administrację, wzmacnia bezpieczeństwo i daje pełną kontrolę nad każdym dostępem — od rejestracji i wydania po zwrot i historię. 🔐🚀"
-    }
+    },
+    "heroTitle": "Pełna kontrola nad ",
+    "heroTitleSpan": "kluczami i uprawnieniami"
   }
 }

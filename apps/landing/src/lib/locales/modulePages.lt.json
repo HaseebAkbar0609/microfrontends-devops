@@ -21,7 +21,9 @@
     "otherSections": "Kitos sritys",
     "ctaStart": "Sukurti paskyrą",
     "ctaDemo": "Išbandyti demo paskyrą",
-    "ctaSubtitle": "30 dienų bandomasis laikotarpis — vėliau planas Start nuo 2 995 kr/mėn."
+    "ctaSubtitle": "30 dienų bandomasis laikotarpis — vėliau planas Start nuo 2 995 kr/mėn.",
+    "stepsSubhero": "Žr. toliau veiksmus, kaip veikia {{name}} modulis – nuo pirmos užklausos iki baigto projekto.",
+    "ctaTitle": "Pasiruošę išbandyti {{name}}?"
   },
   "avtal": {
     "heroDesc": "TimeFlow Avtal modulis – centrinė įmonės platforma visų rūšių sutartims valdyti per visą jų gyvavimo ciklą. Surinkite visas sutartis saugiame skaitmeniniame archyve, kurkite naujas sutartis pagal paruoštus šablonus, pasirašykite skaitmeniniu būdu ir gaukite automatinius priminimus prieš svarbias datas. Modulis suteikia visišką sekimą, versijų valdymą ir kiekvienos sutarties istoriją. Nesvarbu, ar tai klientų, projektų, darbo ar tiekėjų sutartys – įmonė gauna struktūruotą ir saugų sutarčių valdymą su aiškiais darbo srautais ir išmaniu stebėjimu.",
@@ -362,7 +364,9 @@
       "label": "Avtal modulis",
       "title": "Įmonės skaitmeninis sutarčių centras",
       "text": "TimeFlow Avtal modulis surenka visą įmonės sutarčių portfelį į saugią ir išmanią sistemą. Su skaitmeniniu pasirašymu per BankID arba SignFlow™, automatiniu galiojimo ir nutraukimo datų stebėjimu, visaverčiu versijų valdymu, pažangiomis prieigos teisėmis ir AI pagrįsta rizikos analize įmonė gauna visišką visų sutarčių kontrolę. Rezultatas – mažesnė verslo rizika, geresnis reikalavimų laikymasis, efektyvesnė administracija ir patikima sprendimų medžiaga viso sutarties gyvavimo ciklo metu."
-    }
+    },
+    "heroTitle": "Visiška įmonės sutarčių kontrolė — ",
+    "heroTitleSpan": "nuo sukūrimo iki archyvavimo"
   },
   "b2b": {
     "heroDesc": "Švedijos amatininkų sektoriaus rinkos vieta. B2B modulis sujungia pirkėjus ir pardavėjus amatininkų sektoriuje. Čia įmonės lengvai randa subrangovų, tiekėjų, savarankiškai dirbančių specialistų ir partnerių savo projektams bei užsakymams.",
@@ -410,7 +414,9 @@
       "title": "Skaitmeninė amatininkų sektoriaus rinkos vieta",
       "text": "Su B2B moduliu TimeFlow tampa daugiau nei verslo sistema. Ji veikia kaip pilnavertė rinkos vieta, kurioje įmonės gali pirkti, parduoti, bendradarbiauti ir dalintis ištekliais. Nesvarbu, ar jums reikia elektriko projektui, norite palyginti kelių tiekėjų medžiagų kainas, ar samdyti papildomą personalą intensyviu laikotarpiu – B2B modulis padės rasti tinkamą partnerį greitai, paprastai ir ekonomiškai."
     },
-    "ctaTitle": "Pasiruošę išbandyti B2B modulį?"
+    "ctaTitle": "Pasiruošę išbandyti B2B modulį?",
+    "heroTitle": "B2B modulis ",
+    "heroTitleSpan": "amatininkams"
   },
   "data-it": {
     "heroDesc": "TimeFlow Data & IT modulis suteikia įmonei išsamų įrankį visai IT aplinkai administruoti, dokumentuoti ir stebėti. Surinkite visą informaciją apie kompiuterius, mobiliuosius telefonus, planšetes, programinę įrangą, licencijas, naudotojus ir IT sąnaudas į vieną centrinę sistemą. Modulis suteikia visišką įmonės skaitmeninio turto sekimą, valdo IT biudžetą ir pagalbos užklausas bei užtikrina, kad tinkama įranga būtų pas tinkamus darbuotojus. Susiekite įrenginius ir mobiliuosius telefonus su asmenimis, stebėkite dokumentus, prisijungimus, kodus ir saugumą – viską vienoje vietoje.",
@@ -763,7 +769,9 @@
       "label": "Data & IT modulis",
       "title": "Įmonės skaitmeninis kontrolės centras",
       "text": "TimeFlow Data & IT modulis suteikia visišką įmonės skaitmeninio turto, pagalbos ir IT finansų kontrolę. Per išsamų inventoriaus valdymą, kompiuterių ir mobiliųjų telefonų sekimą, pirkimų ir garantijų dokumentavimą, pažangų licencijų valdymą, IT biudžetą, gedimų pranešimus ir išmaniąją analizę įmonė gauna modernią IT platformą su aukštu saugumu, efektyvia administracija ir visiška visos skaitmeninės infrastruktūros kontrole."
-    }
+    },
+    "heroTitle": "Visiška įmonės IT aplinkos kontrolė — ",
+    "heroTitleSpan": "skaitmeninis turtas, palaikymas ir saugumas"
   },
   "ekonomi": {
     "heroDesc": "TimeFlow Ekonomi modulis padeda įmonėms struktūrizuoti, tvarkyti ir efektyvinti kasdienį finansų darbą. Modulis surenka tiekėjų sąskaitas faktūras, tvirtinimo srautus, finansų užklausas, biudžetus, ataskaitas, įmonės dokumentus ir administracinę medžiagą į bendrą darbo sritį. Sukurtas finansų vadovams, administratoriams, projektų vadovams ir įmonės vadovybei. Ekonomi modulis papildo kitas TimeFlow finansų funkcijas – sąskaitų išrašymas tvarkomas Sąskaitų modulyje, o projekto rezultatai, prognozės ir faktiniai rezultatai – Prognozių modulyje.",
@@ -1119,7 +1127,9 @@
       "label": "Ekonomi modulis",
       "title": "Struktūruotas finansų skyrius TimeFlow sistemoje",
       "text": "Surinkus tiekėjų sąskaitas, tvirtinimo srautus, biudžetus, finansų užklausas, ataskaitas, įmonės dokumentus, organizacijos planus, šablonus ir reklamacijas į bendrą platformą, sumažėja rankinis administracinis darbas ir rizika, kad svarbi informacija bus pamiršta. Ekonomi modulis veikia kaip centrinis įmonės administracinis centras ir užtikrina, kad visa finansų veikla turėtų tinkamą medžiagą, tinkamą atsakingą asmenį ir tinkamą procesą. 📊"
-    }
+    },
+    "heroTitle": "Visapusiška kontrolė ",
+    "heroTitleSpan": "finansų administracijai"
   },
   "faktura": {
     "heroDesc": "TimeFlow Faktura modulis suteikia išsamų ir automatizuotą sąskaitų išrašymo procesą. Kurkite profesionalias sąskaitas greitai ir tiksliai, automatiškai gaunant informaciją iš projektų, užsakymų, darbo laiko apskaitos, medžiagų, tiekėjų sąskaitų ir kitų TimeFlow dalių. Nesvarbu, ar dirbate su privačiais klientais (B2C), įmonėmis (B2B), nekilnojamojo turto savininkais, butų savininkų bendrijomis ar viešuoju sektoriumi – gausite lanksčią sprendimą, kuris sumažina administracinį darbą, gerina pinigų srautus ir užtikrina, kad visas atliktas darbas būtų apmokestintas.",
@@ -1468,7 +1478,9 @@
       "label": "Faktura modulis",
       "title": "Išsami sąskaitų išrašymo sistema",
       "text": "TimeFlow Faktura modulis surenka visą įmonės sąskaitų išrašymo procesą į išmanią ir automatizuotą platformą. Su B2B ir privačios rinkos palaikymu, lanksčiais sąskaitų šablonais, automatine sąskaitų medžiaga, sutartiniu sąskaitų išrašymu, straipsnių registru, kainų sąrašais bei tiesioginiu ryšiu su projektais, medžiagomis, tiekėjų sąskaitomis, subrangovais ir ÄTA darbais užtikrinama, kad kiekvienas atliktas darbas būtų apmokestintas teisingai ir laiku. Rezultatas – mažiau administracinio darbo, geresni pinigų srautai, aukštesnis sąskaitų išrašymo lygis ir visiška įmonės pajamų kontrolė. 💸"
-    }
+    },
+    "heroTitle": "Išmanusis sąskaitų išrašymas — ",
+    "heroTitleSpan": "nuo dokumentų iki apmokėjimo"
   },
   "fordon": {
     "heroDesc": "TimeFlow Fordon & Maskiner modulis suteikia visišką visos įmonės transporto priemonių parko ir mašinų registro kontrolę. Tvarkykite lengvuosius automobilius, furgonus, sunkvežimius, priekabas, statybinę techniką ir kitą įrangą vienoje bendroje sistemoje, kurioje susitelkia aptarnavimas, techninės apžiūros, vairuotojai, finansai ir dokumentacija. Su Drive™ ir RutPlan™ priedais įmonė papildomai gauna skaitmeninį važiavimo žurnalą, GPS pozicionavimą, maršrutų optimizavimą ir pažangią transporto priemonių analizę, mažinančią sąnaudas ir efektyvinančią kasdienę veiklą.",
@@ -1808,7 +1820,9 @@
       "label": "Fordon & Maskiner",
       "title": "Išsami transporto priemonių ir mašinų valdymo sistema",
       "text": "TimeFlow Fordon & Maskiner modulis įmonei suteikia visišką viso transporto priemonių parko ir mašinų valdymo kontrolę – nuo pirkimo ir registracijos iki aptarnavimo, techninių apžiūrų, vairuotojų, finansų ir eksploatacijos pabaigos. Su Drive™, RutPlan™, Smart Fleet™ ir pažangia eksploatacijos sąnaudų bei elektrifikavimo analize įmonė gauna galingą sprendimų pagalbą, kuri mažina sąnaudas, didina prieinamumą ir užtikrina, kad tinkamos transporto priemonės ir mašinos visada būtų tinkamoje vietoje su tinkamu vairuotoju ir tinkama dokumentacija. 🚀"
-    }
+    },
+    "heroTitle": "Visiška kontrolė ",
+    "heroTitleSpan": "transportui ir technikai"
   },
   "inkasso": {
     "heroDesc": "TimeFlow Inkasso modulis suteikia įmonei galimybę visą skolų išieškojimo procesą tvarkyti pačiai. Savarankiškai tvarkydama išieškojimą įmonė greičiau kontroliuoja neapmokėtas sąskaitas, sumažina sąnaudas, padidina pajamas ir palaiko asmeniškesnį dialogą su klientu, kol išorinis išieškojimas dar netapo būtinu. Sąskaitai pradelsus terminą, užklausa automatiškai perkeliama iš Sąskaitų modulio į Inkasso modulį, kur visas procesas tęsiasi be dvigubo registravimo. Visa istorija, dokumentacija ir komunikacija pereina kartu su užklausa – tai užtikrina efektyvų ir profesionalų tvarkymą.",
@@ -2128,10 +2142,12 @@
       "label": "Inkasso modulis",
       "title": "Visiška įmonės skolų kontrolė",
       "text": "TimeFlow Inkasso modulis įmonei suteikia galimybę visą reikalavimų procesą tvarkyti pačiai profesionaliai, efektyviai ir draugiškai klientams. Dėl automatinio perkėlimo iš Sąskaitų modulio, išmaniųjų darbo srautų ir pilnos istorijos įmonė gali veikti greičiau, gerinti pinigų srautus ir išlaikyti gerus santykius su klientais. Tik tada, kai vidinių priemonių nepakanka, užklausa gali būti lengvai perduota išorinei išieškojimo įmonei arba Teisės moduliui."
-    }
+    },
+    "heroTitle": "Profesionalus skolų išieškojimas — ",
+    "heroTitleSpan": "nuo priminimo iki išieškojimo"
   },
   "inkop-mottagning": {
-    "heroTitle": "Pristatymų priėmimo kontrolinis sąrašas",
+    "heroTitle": "Priėmimo kontrolinis sąrašas ",
     "heroDesc": "Skaitmeninis kiekvieno pristatymo kvitas – kiekis, kokybė, transporto pažeidimai, nuotraukos, GPS ir parašas viename sraute. Taip atrodo priėmimo dialogas TimeFlow Work.",
     "sections": [
       {
@@ -2294,7 +2310,8 @@
           }
         ]
       }
-    ]
+    ],
+    "heroTitleSpan": "pristatymams"
   },
   "inkop": {
     "heroDesc": "TimeFlow Inköp modulis suteikia visišką visos įmonės pirkimų kontrolę. Planuokite medžiagų pirkimus, kurkite pirkimo užsakymus, palyginkite tiekėjus, sekite pristatymus realiu laiku ir užtikrinkite, kad tinkamos medžiagos būtų tinkamoje vietoje tinkamu laiku.",
@@ -2649,7 +2666,9 @@
       "title": "Moderni pirkimų sistema rangos sektoriui",
       "text": "TimeFlow Inköp modulis skaitmenizuoja visą pirkimų procesą – nuo planavimo ir tiekėjo pasirinkimo iki pristatymo, priėmimo kontrolės ir finansinės stebėsenos. Su Smart-Inköp™, AI pagrįstomis pirkimų rekomendacijomis, visišku sekimu ir stebėjimu realiu laiku įmonė įgyja geresnę medžiagų srautų kontrolę, mažesnes pirkimo sąnaudas ir mažiau gamybos sustojimų. Rezultatas – greitesnis, išmanesnis ir pelningesnis pirkimų procesas visai įmonei. 🚀"
     },
-    "ctaTitle": "Pasiruošę išbandyti Inköp modulį?"
+    "ctaTitle": "Pasiruošę išbandyti Inköp modulį?",
+    "heroTitle": "Pirkimų modulis ",
+    "heroTitleSpan": "amatininkams"
   },
   "juridik": {
     "heroDesc": "TimeFlow Juridik modulis yra centrinė įmonės platforma visoms teisinėms užklausoms, ginčams, sutartims ir teisiniams procesams tvarkyti. Modulis suteikia visišką kiekvienos užklausos kontrolę nuo pirmojo įvykio iki proceso pabaigos – su struktūruota dokumentacija, dienoraščiu, rizikos vertinimais, svarbiomis datomis ir pilna istorija. Nesvarbu, ar užklausa susijusi su kliento ginču, rangos teise, darbo teise, skolų išieškojimu, sutarčių klausimais ar teismo procesais – visa informacija kaupiama vienoje vietoje. Tai mažina praleistų terminų riziką ir užtikrina, kad įmonė visada dirbtų struktūruotai ir profesionaliai.",
@@ -3004,7 +3023,9 @@
       "label": "Juridik modulis",
       "title": "Įmonės teisinis kontrolės centras",
       "text": "TimeFlow Juridik modulis įmonei suteikia išsamią skaitmeninę pagalbą visai teisinei administracijai ir užklausų valdymui. Per struktūruotus darbo srautus, rizikos vertinimus, dienoraštį, dokumentų valdymą, atsakymo terminų ir svarbių datų stebėjimą bei glaudų bendradarbiavimą su išoriniais advokatais ir teisininkais įmonė įgyja visišką savo teisinių procesų kontrolę. Rezultatas – mažesnės teisinės rizikos, geresnė dokumentacija, saugesni sprendimai ir stipresnė įmonės verslo apsauga."
-    }
+    },
+    "heroTitle": "Visapusiškas teisinių reikalų tvarkymas — ",
+    "heroTitleSpan": "visiška procesų, rizikų ir dokumentacijos kontrolė"
   },
   "kalkyl": {
     "heroDesc": "Greitesnės, išmanesnės ir tikslesnės kalkuliacijos. Kalkyl modulis suteikia visišką viso pasiūlymų ir kalkuliacijų proceso kontrolę – nuo medžiagų kainų ir darbo sąnaudų iki galutinio pasiūlymo.",
@@ -3133,7 +3154,9 @@
       "title": "Kalkuliacijos – nuo patirties iki dirbtinio intelekto",
       "text": "TimeFlow Kalkyl modulis tinka ir mažesnei amatininkų įmonei, ir dideliam rangovui. Galite pasirinkti tradicinę kalkuliaciją, sektoriams pritaikytą Calculation PRO arba leisti QuickAICalc™ analizuoti brėžinius ir projekto medžiagą naudojant AI. Rezultatas – greitesnės kalkuliacijos, didesnis tikslumas, geresnės maržos ir stipresnė sprendimų medžiaga kiekvienam pasiūlymui ir projektui."
     },
-    "ctaTitle": "Pasiruošę išbandyti Kalkyl modulį?"
+    "ctaTitle": "Pasiruošę išbandyti Kalkyl modulį?",
+    "heroTitle": "Sąmatų modulis ",
+    "heroTitleSpan": "amatininkams"
   },
   "kma": {
     "heroDesc": "Išsami skaitmeninė kokybės, aplinkos ir darbo aplinkos valdymo sistema. TimeFlow skaitmenizuoja visą įmonės KMA darbą – nuo politikų ir savikontrolių iki rizikos vertinimų, saugumo patikrų, auditų ir sertifikavimų.",
@@ -3407,7 +3430,9 @@
       "title": "Išsami skaitmeninė rangos sektoriaus valdymo sistema",
       "text": "TimeFlow KMA modulis yra gerokai daugiau nei nukrypimų ir savikontrolių sistema. Jis veikia kaip visiška įmonės skaitmeninė valdymo sistema, kurioje kokybė, aplinka, darbo aplinka, teisiniai reikalavimai, dokumentacija, auditai, mokymai, sertifikavimai ir AI pagrįstos saugumo kontrolės kaupiamos vienoje bendroje platformoje. Rezultatas – aukštesnė kokybė, saugesnės darbo vietos, geresnis reikalavimų laikymasis ir efektyvesnis KMA darbas visoje įmonėje. 🚀"
     },
-    "ctaTitle": "Pasiruošę išbandyti KMA modulį?"
+    "ctaTitle": "Pasiruošę išbandyti KMA modulį?",
+    "heroTitle": "KMA modulis ",
+    "heroTitleSpan": "amatininkams"
   },
   "ledningsstod": {
     "heroDesc": "TimeFlow Ledningsstöd modulis valdybai, vadovybei ir įmonės vadovybei suteikia išsamią visos veiklos apžvalgą. Surinkite svarbiausius įmonės rodiklius, strategijas, valdybos darbą, ataskaitas, sprendimų medžiagą ir valdymo dokumentus į bendrą platformą. Su realaus laiko duomenimis iš visų TimeFlow modulių vadovybė gauna galingą sprendimų pagalbą, kurioje finansai, pardavimai, projektai, personalas, KMA, teisė ir veiklos tikslai pateikiami vienoje vientisoje valdymo sistemoje.",
@@ -3779,7 +3804,9 @@
       "label": "Ledningsstöd modulis",
       "title": "Sprendimų pagalba visai įmonei",
       "text": "TimeFlow Ledningsstöd modulis yra įmonės valdymo ir strateginės raidos centras. Surinkus valdybos darbą, protokolus, sprendimų užklausas, KPI rodiklius, veiklos tikslus, strategijas, ataskaitas, pranešėjų funkciją ir svarbius valdymo dokumentus į vieną bendrą sistemą, vadovybė ir valdyba gauna galingą sprendimų pagalbą. Su realaus laiko duomenimis iš visos TimeFlow sistemos ir Executive Intelligence™ AI funkcija įmonė gali priimti greitesnius, saugesnius ir labiau pagrįstus sprendimus, anksti nustatyti rizikas ir valdyti veiklą pagal iškeltus tikslus."
-    }
+    },
+    "heroTitle": "Skaitmeninis įmonės valdymo centras — ",
+    "heroTitleSpan": "valdymas, sprendimai ir strateginė stebėsena"
   },
   "mallar": {
     "heroDesc": "TimeFlow Mallar modulis surenka visus įmonės dokumentų šablonus vienoje vietoje ir užtikrina vienodą darbo būdą visoje organizacijoje. Kurkite savus šablonus, redaguokite esamus, valdykite pakeitimų versijas ir platinkite tinkamą šabloną tinkamam moduliui ar naudotojui. Centrinė šablonų biblioteka padeda įmonei išvengti dvigubo darbo ir didina kokybę bei standartizaciją. Visi darbuotojai visada dirba su naujausia patvirtinta versija.",
@@ -4115,7 +4142,9 @@
       "label": "Mallar modulis",
       "title": "Gyva šablonų biblioteka visai įmonei",
       "text": "TimeFlow Mallar modulis įmonės dokumentų tvarkymą padaro greitesnį, saugesnį ir vienodesnį. Per centrinę šablonų biblioteką su versijų valdymu, kategorizavimu, pažangiomis prieigos teisėmis ir automatiniu susiejimu su TimeFlow moduliais visa organizacija visada dirba su tinkamais dokumentais ir naujausia patvirtinta versija. Rezultatas – aukštesnė kokybė, mažiau administracinio darbo ir standartizuotas darbo būdas visoje įmonėje."
-    }
+    },
+    "heroTitle": "Centrinė įmonės šablonų biblioteka — ",
+    "heroTitleSpan": "dokumentai, sutartys, kontroliniai sąrašai ir procesai"
   },
   "marknad-salj": {
     "heroDesc": "TimeFlow Marknad & Sälj modulis surenka įmonės pardavimus, rinkodarą, CRM ir komunikaciją su klientais į išmanią platformą. Tvarkykite visą kliento kelionę – nuo pirmojo potencialaus kliento iki ilgalaikės priežiūros – su automatizuotais darbo srautais, kampanijomis, AI asistentais ir išmaniąja komunikacija. Modulis suteikia visišką potencialių klientų, klientų, pardavimų piltuvėlio, rinkodaros medžiagos, grafinio identiteto, automatinių el. pašto ir SMS išsiuntimų bei AI pagrįsto telefono valdymo per FlowTalk™ kontrolę. Be to, TimeFlow automatiškai renka atsiliepimus iš klientų po baigtų projektų ir užsakymų, siekdama matuoti pasitenkinimą ir nustatyti tobulinimo sritis.",
@@ -4458,7 +4487,9 @@
       "label": "Marknad & Sälj modulis",
       "title": "Išmanus CRM, dirbantis visą parą",
       "text": "TimeFlow Marknad & Sälj modulis sujungia CRM, rinkodarą, pardavimus ir AI į išsamią platformą. Su automatinėmis kampanijomis, klientų apklausomis po baigtų projektų ir užsakymų, asmeniniais sveikinimais švenčių ir gimtadienių progomis bei AI pagrįstu telefono asistentu FlowTalk™, kuriame AI Robert™ atsako į gaunamus skambučius, kuria transkripcijas ir siunčia santraukas el. paštu, įmonė gauna modernią sistemą, kuri kuria stipresnius ryšius, didina pardavimus ir užtikrina, kad joks kontaktas su klientu nebūtų prarastas."
-    }
+    },
+    "heroTitle": "Rinkodara ir pardavimai — ",
+    "heroTitleSpan": "visapusiška CRM, dirbanti visą parą"
   },
   "maskin": {
     "heroDesc": "TimeFlow Maskin modulis yra išsami sistema įmonės statybinėms mašinoms, įrankiams ir įrangai valdyti per visą gyvavimo ciklą. Nuo pirkimo ir registracijos iki rezervacijų, aptarnavimo, techninių apžiūrų, dokumentacijos, sąnaudų stebėsenos ir eksploatacijos pabaigos – visa informacija kaupiama vienoje bendroje platformoje. Modulis sukurtas rangos, aptarnavimo, įrengimų ir nekilnojamojo turto įmonėms, norinčioms maksimaliai padidinti išnaudojimo lygį, sumažinti eksploatacijos sustojimus ir turėti visišką savo išteklių sekimą.",
@@ -4789,7 +4820,9 @@
       "label": "Maskin",
       "title": "Išsami mašinų ir įrangos valdymo sistema",
       "text": "TimeFlow Maskin modulis sukurtas įmonėms, norinčioms visiškos viso savo mašinų ir įrangos parko kontrolės. Surinkus mašinų registrą, dokumentaciją, rezervacijas, aptarnavimą, technines apžiūras, įrankių sekimą, aptarnavimo furgonus, susiejimus su projektais ir finansinę stebėseną į vieną bendrą platformą, įmonė gauna galingą sprendimų pagalbą. Su ToolTrack™, Smart Machine™ ir visišku sekimu nuo sandėlio iki aptarnavimo furgono ir toliau į projektus sumažėja administracinis darbas, įranga išnaudojama efektyviau, o mašinų valdymas tampa saugesnis, pelningesnis ir geriau suplanuotas. 🚀"
-    }
+    },
+    "heroTitle": "Visiška kontrolė ",
+    "heroTitleSpan": "technikai ir įrangai"
   },
   "material": {
     "heroDesc": "TimeFlow Material & Lager modulis suteikia visišką įmonės medžiagų srauto kontrolę – nuo pirkimų ir sandėlio iki projektų, užsakymų ir sąskaitų išrašymo. Tvarkykite straipsnių registrą, sandėlio likučius, kainų sąrašus ir pristatymus modernioje sandėlio sistemoje, pilnai integruotoje su visa TimeFlow sistema.",
@@ -5078,7 +5111,9 @@
       "title": "Išsami medžiagų ir sandėlio sistema rangos sektoriui",
       "text": "TimeFlow Material & Lager modulis sukurtas įmonėms, norinčioms visiškos viso medžiagų srauto kontrolės. Nuo straipsnių registro, kainų sąrašų ir pirkimų iki sandėlio, projektų, užsakymų ir sąskaitų išrašymo – visa informacija kaupiama vienoje bendroje platformoje. Su Smart-Lager™, automatine sandėlio rezervacija ir mobiliuoju sandėlio valdymu įmonė įgyja geresnę sąnaudų kontrolę, mažesnius nuostolius ir efektyvesnį medžiagų tiekimą – tai lemia didesnį pelningumą ir saugesnius projektų pristatymus. 🚀"
     },
-    "ctaTitle": "Pasiruošę išbandyti Material & Lager?"
+    "ctaTitle": "Pasiruošę išbandyti Material & Lager?",
+    "heroTitle": "Visiška kontrolė ",
+    "heroTitleSpan": "medžiagoms ir sandėliui"
   },
   "order": {
     "heroDesc": "Skaitmeninis užsakymų valdymas – nuo užsakymo iki sąskaitos. TimeFlow Order modulis yra visos įmonės aptarnavimo ir užsakymų veiklos centras, su automatizuotais procesais, mobiliaisiais darbo užsakymais ir pilna integracija su visa TimeFlow sistema.",
@@ -5256,7 +5291,9 @@
       "title": "Išsami užsakymų sistema amatininkų sektoriui",
       "text": "Order modulis sukurtas įmonėms, norinčioms skaitmenizuoti visą savo užsakymų valdymą. Su Order-Direkt™ palaikymu, automatiniais darbo srautais, mobiliaisiais darbo užsakymais, išteklių planavimu ir pilna integracija su likusia TimeFlow sistema administracinis darbas tampa minimalus, o kontrolė – maksimali. Rezultatas – greitesnis užsakymų tvarkymas, geresnis išteklių išnaudojimas, labiau patenkinti klientai ir efektyvesnė įmonė. 🚀"
     },
-    "ctaTitle": "Pasiruošę išbandyti Order modulį?"
+    "ctaTitle": "Pasiruošę išbandyti Order modulį?",
+    "heroTitle": "Užsakymų modulis ",
+    "heroTitleSpan": "amatininkams"
   },
   "personal": {
     "heroDesc": "TimeFlow Personal modulis surenka visą įmonės personalo valdymą į išmanią ir skaitmeninę platformą. Tvarkykite viską nuo įdarbinimo ir darbo sutarčių iki atostogų planavimo, ligos nedarbingumo, mokymų, veiklos pokalbių ir reabilitacijos. Visiškas sekimas, ką kiekvienas darbuotojas yra gavęs — Smart Access raktus, IT įrangą, įrankius, mašinas ir transporto priemones. Skaitmeninis pasirašymas, automatiniai darbo srautai ir sklandi integracija su likusia TimeFlow sistema.",
@@ -5572,7 +5609,9 @@
       "label": "Personal modulis",
       "title": "Išsami HR platforma",
       "text": "TimeFlow Personal modulis įmonei suteikia visišką visos darbuotojo kelionės kontrolę — nuo įdarbinimo ir įdarbinimo iki kompetencijų ugdymo ir darbo santykių pabaigos. Su skaitmeninėmis darbo sutartimis, pasirašymu per BankID arba SignFlow™, darbo laiku, atostogų planavimu, ligos nedarbingumu, reabilitacija, mokymais, veiklos pokalbiais, išmaniuoju personalo planavimu bei visišku išduotų Smart Access ir IT įrangos sekimu įmonė gauna modernią HR sistemą, mažinančią administracinį darbą, stiprinančią reikalavimų laikymąsi ir užtikrinančią, kad tinkamos kompetencijos būtų tinkamoje vietoje tinkamu laiku. 👥"
-    }
+    },
+    "heroTitle": "Išmanusis HR — ",
+    "heroTitleSpan": "nuo atrankos iki kompetencijų"
   },
   "prognos": {
     "heroDesc": "TimeFlow Prognos modulis yra įmonės strateginė sprendimų pagalba finansams, projektams ir veiklos valdymui. Modulis nuolat analizuoja įmonės finansinę raidą ir padeda vadovybei nustatyti rizikas, galimybes ir nukrypimus, kol jie dar neturi įtakos rezultatui. Su prognozėmis projekto, užsakymo, skyriaus ir įmonės lygmeniu gausite aiškų ateities apyvartos, rezultato, pinigų srautų ir pelningumo vaizdą. Sistema stebi biudžetą, rezultatus ir prognozes realiu laiku ir automatiškai įspėja, kai kas nors nukrypsta nuo plano.",
@@ -5924,7 +5963,9 @@
       "label": "Prognos modulis",
       "title": "Įmonės finansinis kompasas",
       "text": "TimeFlow Prognos modulis vadovybei suteikia galingą sprendimų pagalbą, kurioje istoriniai duomenys, aktualūs rezultatai ir ateities prognozės veikia kartu realiu laiku. Per išmaniąją projektų, užsakymų, biudžeto, bendrųjų sąnaudų, kredito rizikų ir pinigų srautų analizę įmonė gali anksti nustatyti nukrypimus, tobulinti savo kalkuliacijas ir priimti greitesnius, labiau pagrįstus verslo sprendimus. Prognos modulis tampa įmonės finansiniu kompasu ilgalaikiam augimui ir pelningumui. 📊"
-    }
+    },
+    "heroTitle": "Žvilgsnis į ateitį su ",
+    "heroTitleSpan": "išmaniosiomis prognozėmis"
   },
   "projekt": {
     "heroDesc": "Išsami projektų valdymo sistema rangos, aptarnavimo ir nekilnojamojo turto sektoriams. Įmonės skaitmeninis projektų biuras – nuo pirmojo planavimo iki galutinės apžiūros, garantijos ir galutinės kalkuliacijos.",
@@ -6274,7 +6315,9 @@
       "title": "Išsami projektų valdymo sistema",
       "text": "Projekt modulis sukurtas modernioms rangos, aptarnavimo ir nekilnojamojo turto įmonėms, norinčioms visą projektų valdymą sutelkti vienoje sistemoje. Su IDFlow™, AI Project Intelligence™, Projekt Health Score™, daugiamečių aptarnavimo sutarčių palaikymu, pažangiais projekto finansais ir pilna integracija su kitais TimeFlow moduliais projekto vadovybė gauna galingą sprendimų pagalbą viso projekto gyvavimo ciklo metu. Rezultatas – geresnis planavimas, didesnis produktyvumas, saugesnės darbo vietos, efektyvesnis išteklių išnaudojimas ir pelningesni projektai. 🚀"
     },
-    "ctaTitle": "Pasiruošę išbandyti Projekt modulį?"
+    "ctaTitle": "Pasiruošę išbandyti Projekt modulį?",
+    "heroTitle": "Projektų modulis ",
+    "heroTitleSpan": "amatininkams"
   },
   "projektering": {
     "heroDesc": "Planuokite teisingai nuo pat pradžių – tai pelningo projekto pagrindas. Projekterings modulis surenka visą techninį ir administracinį planavimą į vieną vietą.",
@@ -6365,7 +6408,9 @@
       "title": "Projektavimas – projekto kontrolės centras",
       "text": "Projekterings modulis veikia kaip skaitmeninis projekto kontrolės centras, kuriame susitinka technika, finansai, organizacija ir planavimas. Čia kuriama projektavimo organizacija, biudžetas, tvarkaraštis, kontroliniai sąrašai, atsakomybių paskirstymas ir visa projekto techninė medžiaga. Visi dokumentai, sprendimai ir pakeitimai kaupiami vienoje bendroje platformoje, suteikiančioje projekto vadovybei visišką kontrolę nuo pirmojo projektavimo susitikimo iki gamybos pradžios. Rezultatas – geresnis koordinavimas, mažiau klaidų, aukštesnė kokybė, saugesni finansai ir gerokai efektyvesnis statybos procesas. 🚀"
     },
-    "ctaTitle": "Pasiruošę išbandyti Projektering modulį?"
+    "ctaTitle": "Pasiruošę išbandyti Projektering modulį?",
+    "heroTitle": "Projektavimas ",
+    "heroTitleSpan": "amatininkams"
   },
   "smart-access": {
     "heroDesc": "Smart Access yra išsamus TimeFlow sprendimas įmonės fizinėms prieigos teisėms ir leidimams valdyti. Modulis suteikia visišką raktų, patekimų kortelių, žetonų, žymų ir skaitmeninių prieigų kontrolę klientams, nekilnojamajam turtui, projektams, aptarnavimo furgonams ir įmonės patalpoms. Su visišku sekimu asmens lygmeniu visada žinote, kas turi kokią prieigą, kur ji naudojama, kada išduota ir kada turi būti grąžinta. Smart Access mažina saugumo rizikas, supaprastina administraciją ir užtikrina, kad tinkamas asmuo turėtų tinkamas prieigos teises tinkamu laiku.",
@@ -6621,6 +6666,8 @@
       "label": "Smart Access",
       "title": "Išsami modernaus prieigų valdymo sistema",
       "text": "Smart Access surenka visą įmonės raktų, patekimų kortelių, žetonų, žymų ir prieigos teisių valdymą į išmanią ir saugią platformą. Su skaitmeniniu patvirtinimu, asmeninėmis prieigos teisėmis, visišku sekimu, AI pagrįsta saugumo analize ir integracija su kitais TimeFlow moduliais įmonė gauna modernų prieigų valdymą, kuris mažina administracinį darbą, stiprina saugumą ir suteikia visišką kiekvienos prieigos kontrolę – nuo registracijos ir išdavimo iki grąžinimo ir istorijos. 🔐🚀"
-    }
+    },
+    "heroTitle": "Visiška kontrolė ",
+    "heroTitleSpan": "raktams ir leidimams"
   }
 }

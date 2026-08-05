@@ -6,8 +6,6 @@ import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 
-const SEARCH_URL = "https://timeflowsystem.com/register/customer";
-
 const projectCategories = [
   { icon: "🏠", titleKey: "cat1Title", itemsKey: "cat1Items" },
   { icon: "⚡", titleKey: "cat2Title", itemsKey: "cat2Items" },
@@ -30,10 +28,6 @@ export default function ConsumerPage() {
 
   const handleSearch = (e?: FormEvent) => {
     e?.preventDefault();
-    const url = new URL(SEARCH_URL);
-    const trimmed = query.trim();
-    if (trimmed) url.searchParams.set("q", trimmed);
-    window.location.href = url.toString();
   };
 
   return (

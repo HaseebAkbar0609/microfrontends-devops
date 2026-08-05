@@ -2,9 +2,10 @@ import { useMemo, useState } from "react";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { TimeStudyModal } from "@/components/site/TimeStudyModal";
 import {
   ADDONS,
   AUTOEKO_PRICE,
@@ -15,10 +16,10 @@ import {
   WORK_APP_PER_USER,
   applyCycle,
   type BillingCycle,
-  type PlanKey,
 } from "@/lib/pricing";
 
 const formatSEK = (n: number) => n.toLocaleString("sv-SE");
+const fmt = (n: number) => n.toLocaleString("sv-SE");
 
 const catKey = (cat: string): string => ({
   "Kalkyl": "pricing.catCalc",
@@ -37,48 +38,49 @@ export default function PricingPage() {
       code: "1101",
       name: "Start",
       price: "2 995",
-      suffix: t("pricing.perMonth"),
-      desc: t("home.runBusinessDesc"),
-      cta: t("pricing.startFree30"),
+      suffix: t("pricing.planUnitMonth"),
+      desc: t("pricing.planStartDesc"),
+      cta: t("pricing.startAccount"),
       highlight: false,
       features: [
-        t("solutions.feat1"),
-        t("solutions.area1Tag"),
-        t("consumer.homeAppLabel"),
-        t("home.faq4A"),
-        t("support.heroLabel"),
+        t("pricing.planStartF1"),
+        t("pricing.planStartF2"),
+        t("pricing.planStartF3"),
+        t("pricing.planStartF4"),
+        t("pricing.planStartF5"),
       ],
     },
     {
       code: "1102",
       name: "Standard",
       price: "995",
-      suffix: t("pricing.perUserMonth"),
-      desc: t("solutions.area2Desc"),
-      cta: t("pricing.startFree30"),
+      suffix: t("pricing.planUnitAdmin"),
+      desc: t("pricing.planStandardDesc", { workPrice: fmt(WORK_APP_PER_USER) }),
+      cta: t("pricing.startAccount"),
       highlight: true,
       features: [
-        t("professional.sec1"),
-        t("professional.sec2"),
-        t("professional.sec3"),
-        t("professional.stat3V"),
-        t("professional.appLabel"),
+        t("pricing.planStandardF1"),
+        t("pricing.planStandardF2"),
+        t("pricing.planStandardF3"),
+        t("pricing.planStandardF4"),
+        t("pricing.planStandardF5"),
       ],
     },
     {
       code: "1103",
       name: "PRO",
       price: "1 295",
-      suffix: t("pricing.perUserMonth"),
-      desc: t("professional.heroDesc"),
-      cta: t("contact.heroLabel"),
+      suffix: t("pricing.planUnitAdmin"),
+      desc: t("pricing.planProDesc"),
+      cta: t("pricing.startAccount"),
       highlight: false,
       features: [
-        t("professional.sec4"),
-        t("solutions.area4Desc"),
-        t("about.val3D"),
-        t("support.migrateTitle"),
-        t("professional.stat1V"),
+        t("pricing.planProF1"),
+        t("pricing.planProF2"),
+        t("pricing.planProF3"),
+        t("pricing.planProF4"),
+        t("pricing.planProF5"),
+        t("pricing.planProF6"),
       ],
     },
   ];
@@ -87,10 +89,10 @@ export default function PricingPage() {
     <>
       <Head>
         <title>{`${t("pricing.heroLabel")} — TimeFlow`}</title>
-        <meta name="description" content={t("pricing.heroSub")} />
+        <meta name="description" content={t("pricing.heroSub").replace(/<\/?strong>/g, "")} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:title" content={`${t("pricing.heroLabel")} — TimeFlow`} />
-        <meta property="og:description" content={t("pricing.heroSub")} />
+        <meta property="og:description" content={t("pricing.heroSub").replace(/<\/?strong>/g, "")} />
       </Head>
 
       <div className="min-h-screen bg-background text-foreground font-body">
@@ -101,7 +103,9 @@ export default function PricingPage() {
           <h1 className="font-display text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight mb-6 text-balance leading-tight">
             {t("pricing.heroTitle1")} <span className="text-primary italic">{t("pricing.heroTitle2")}</span>
           </h1>
-          <p className="text-base sm:text-lg text-muted max-w-2xl mx-auto">{t("pricing.heroSub")}</p>
+          <p className="text-base sm:text-lg text-muted max-w-2xl mx-auto">
+            <Trans i18nKey="pricing.heroSub" components={{ strong: <strong className="font-bold text-foreground" /> }} />
+          </p>
         </header>
 
         {/* Plans */}
@@ -147,6 +151,9 @@ export default function PricingPage() {
               </div>
             ))}
           </div>
+          <p className="text-center text-sm text-muted max-w-2xl mx-auto mt-8">
+            {t("pricing.workNote1")} <strong className="text-foreground">{t("pricing.workNoteApp", { price: fmt(WORK_APP_PER_USER) })}</strong> {t("pricing.workNote2")}
+          </p>
         </section>
 
         {/* Calculator */}
@@ -180,7 +187,7 @@ export default function PricingPage() {
                       <td className="p-3 font-bold">{a.name}</td>
                       <td className="p-3 text-muted">{t(catKey(a.category))}</td>
                       <td className="p-3 whitespace-nowrap">
-                        {formatSEK(a.price)} {t("pricing.sek")}{a.unit === "per_user" ? t("pricing.unitPerUser") : a.unit === "per_scan" ? `/${t("pricing.unitScan")}` : t("pricing.perMonthAbbr")}
+                        {formatSEK(a.price)} {t("pricing.sek")}{t("pricing.perMonthAbbr")}{a.unit === "per_user" ? t("pricing.unitPerUser") : ""}
                       </td>
                       <td className="p-3 text-muted">{a.desc}</td>
                     </tr>
@@ -241,52 +248,59 @@ export default function PricingPage() {
 
 function PriceCalculator() {
   const { t } = useTranslation();
-  const [plan, setPlan] = useState<PlanKey>("Standard");
-  const [admins, setAdmins] = useState(1);
+  const [standardAdmins, setStandardAdmins] = useState(2);
+  const [proAdmins, setProAdmins] = useState(1);
   const [workers, setWorkers] = useState(3);
   const [hourlyCost, setHourlyCost] = useState(450);
   const [hoursSavedPerUser, setHoursSavedPerUser] = useState(8);
   const [autoEko, setAutoEko] = useState(false);
-  const [selectedAddons, setSelectedAddons] = useState<Record<string, number>>({});
+  const [driveUsers, setDriveUsers] = useState(0);
+  const [metricUsers, setMetricUsers] = useState(0);
+  const [selectedAddons, setSelectedAddons] = useState<Record<string, boolean>>({});
   const [cycle, setCycle] = useState<BillingCycle>("monthly");
+  const [studyOpen, setStudyOpen] = useState(false);
+  const [fromTimeStudy, setFromTimeStudy] = useState(false);
 
-  const users = Math.max(0, admins) + Math.max(0, workers);
-  const showUsers = plan !== "Start";
-  const totalUsersForCalc = plan === "Start" ? 0 : users;
+  const stdCount = Math.max(0, standardAdmins);
+  const proCount = Math.max(0, proAdmins);
+  const adminCount = stdCount + proCount;
+  const workerCount = Math.max(0, workers);
+  const totalPeople = adminCount + workerCount;
 
-  const perUser = plan === "Standard" ? STANDARD_PER_USER : plan === "PRO" ? PRO_PER_USER : 0;
+  const lineStandard = STANDARD_PER_USER * stdCount;
+  const linePro = PRO_PER_USER * proCount;
+  const lineAdminLicenses = lineStandard + linePro;
 
-  const lineUserLicenses = perUser * totalUsersForCalc;
-  const workAppQty = plan === "Start" ? 0 : Math.max(0, workers);
-  const lineWorkApps = WORK_APP_PER_USER * workAppQty;
+  const lineWorkApps = WORK_APP_PER_USER * workerCount;
+
   const lineAutoEko = autoEko ? AUTOEKO_PRICE : 0;
 
+  const driveAddon = ADDONS.find((a) => a.code === "2291")!;
+  const lineDrive = driveAddon.price * Math.max(0, driveUsers);
+
+  const metricAddon = ADDONS.find((a) => a.code === "1660")!;
+  const lineMetric = metricAddon.price * Math.max(0, metricUsers);
+
   const lineAddons = ADDONS.reduce((sum, a) => {
-    const qty = selectedAddons[a.code] ?? 0;
-    if (!qty) return sum;
-    if (a.unit === "per_user") return sum + a.price * totalUsersForCalc;
-    if (a.unit === "flat") return sum + a.price;
-    return sum + a.price * qty;
+    if (a.code === "2291" || a.code === "1660") return sum;
+    if (!selectedAddons[a.code]) return sum;
+    if (a.unit === "per_user") return sum + a.price * Math.max(1, adminCount);
+    return sum + a.price;
   }, 0);
 
-  const monthlyTotalRaw = START_BASE + lineUserLicenses + lineWorkApps + lineAutoEko + lineAddons;
+  const monthlyTotalRaw = START_BASE + lineAdminLicenses + lineWorkApps + lineAutoEko + lineDrive + lineMetric + lineAddons;
   const monthlyTotal = useMemo(() => applyCycle(monthlyTotalRaw, cycle), [monthlyTotalRaw, cycle]);
 
-  const savingsPerMonth = hourlyCost * hoursSavedPerUser * Math.max(1, users);
+  const savingsPerMonth = hourlyCost * hoursSavedPerUser * Math.max(1, totalPeople);
   const net = savingsPerMonth - monthlyTotal;
   const roi = monthlyTotal > 0 ? Math.round((net / monthlyTotal) * 100) : 0;
 
-  const toggleAddon = (code: string, defaultQty = 1) => {
-    setSelectedAddons((prev) => {
-      const cur = prev[code] ?? 0;
-      if (cur > 0) {
-        const next = { ...prev };
-        delete next[code];
-        return next;
-      }
-      return { ...prev, [code]: defaultQty };
-    });
+  const toggleAddon = (code: string) => {
+    setSelectedAddons((prev) => ({ ...prev, [code]: !prev[code] }));
   };
+
+  const drivePrice = driveAddon.price;
+  const metricPrice = metricAddon.price;
 
   return (
     <section id="kalkylator" className="py-12 sm:py-16 px-4 sm:px-6 bg-surface border-y border-border scroll-mt-20">
@@ -294,44 +308,59 @@ function PriceCalculator() {
         <div className="mb-10 max-w-2xl">
           <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("pricing.calcLabel")}</p>
           <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-3">{t("pricing.calcTitle")}</h2>
-          <p className="text-muted text-sm">{t("pricing.calcSub")}</p>
+          <p className="text-muted text-sm">{t("pricing.calcSub", { workPrice: fmt(WORK_APP_PER_USER) })}</p>
+          <div className="grid sm:grid-cols-2 gap-4 mt-6">
+            <div className="border border-border bg-background p-4">
+              <p className="font-bold mb-1 text-sm">{t("pricing.calcQuickLabel")}</p>
+              <p className="text-xs text-muted">{t("pricing.calcQuickSub")}</p>
+            </div>
+            <div className="border border-primary bg-background p-4">
+              <p className="font-bold mb-1 text-sm">{t("pricing.calcStudyLabel")}</p>
+              <p className="text-xs text-muted mb-3">{t("pricing.calcStudySub")}</p>
+              <button
+                type="button"
+                onClick={() => setStudyOpen(true)}
+                className="px-4 py-2 bg-primary text-primary-foreground font-bold text-sm rounded-sm cursor-pointer"
+              >
+                {t("pricing.calcStudyButton")}
+              </button>
+            </div>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
+          {/* Inputs */}
           <div className="bg-background border border-border p-4 sm:p-6 md:p-8 space-y-6">
             <div>
-              <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-3">{t("pricing.planLabel")}</label>
-              <div className="grid grid-cols-3 gap-2">
-                {(["Start", "Standard", "PRO"] as PlanKey[]).map((p) => (
-                  <button
-                    key={p}
-                    onClick={() => setPlan(p)}
-                    className={`py-2.5 sm:py-3 text-xs sm:text-base font-bold rounded-sm border transition-colors cursor-pointer ${plan === p ? "bg-primary text-primary-foreground border-primary" : "bg-background text-foreground border-border hover:border-primary"
-                      }`}
-                  >
-                    {p}
-                  </button>
-                ))}
+              <p className="font-mono text-xs uppercase tracking-widest text-muted block mb-3">{t("pricing.adminsSectionLabel")}</p>
+              <p className="text-xs text-muted mb-4">{t("pricing.adminsSectionHint", { price: fmt(START_BASE) })}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <NumberField
+                  label={t("pricing.stdAdmins")}
+                  value={standardAdmins}
+                  onChange={setStandardAdmins}
+                  hint={t("pricing.pricePerAdmin", { price: fmt(STANDARD_PER_USER) })}
+                  min={0}
+                />
+                <NumberField
+                  label={t("pricing.proAdmins")}
+                  value={proAdmins}
+                  onChange={setProAdmins}
+                  hint={t("pricing.pricePerAdmin", { price: fmt(PRO_PER_USER) })}
+                  min={0}
+                />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <NumberField
-                label={t("pricing.admins")}
-                value={admins}
-                onChange={setAdmins}
-                disabled={!showUsers}
-                hint={showUsers ? t("pricing.adminsHint") : t("pricing.unlimitedInStart")}
-                min={0}
-              />
-              <NumberField
                 label={t("pricing.workers")}
                 value={workers}
                 onChange={setWorkers}
-                disabled={!showUsers}
-                hint={showUsers ? t("pricing.hintWorkApp", { price: WORK_APP_PER_USER }) : t("pricing.unlimitedInStart")}
+                hint={t("pricing.hintWorkApp", { price: fmt(WORK_APP_PER_USER) })}
                 min={0}
               />
+              <div />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -346,58 +375,85 @@ function PriceCalculator() {
               <NumberField
                 label={t("pricing.hoursSaved")}
                 value={hoursSavedPerUser}
-                onChange={setHoursSavedPerUser}
+                onChange={(n) => {
+                  setHoursSavedPerUser(n);
+                  setFromTimeStudy(false);
+                }}
                 hint={t("pricing.hoursSavedHint")}
                 min={0}
               />
             </div>
 
+            <div className="border border-border bg-surface p-4">
+              {fromTimeStudy && (
+                <p className="inline-block mb-2 font-mono text-[10px] uppercase tracking-widest bg-primary text-primary-foreground px-2 py-1">
+                  {t("pricing.fromStudy")}
+                </p>
+              )}
+              <p className="text-xs text-muted mb-3">{t("pricing.studyTxt")}</p>
+              <button
+                type="button"
+                onClick={() => setStudyOpen(true)}
+                className="w-full py-3 border border-primary text-primary font-bold rounded-sm hover:bg-primary hover:text-primary-foreground transition-colors cursor-pointer"
+              >
+                {t("pricing.studyBtn")}
+              </button>
+              <p className="text-[11px] text-muted mt-2">{t("pricing.studyNote")}</p>
+            </div>
+
             <label className="flex items-start gap-3 cursor-pointer border-t border-border pt-6">
               <input type="checkbox" checked={autoEko} onChange={(e) => setAutoEko(e.target.checked)} className="mt-1 w-5 h-5 accent-primary shrink-0" />
               <span>
-                <span className="block font-bold text-sm">{t("pricing.autoEkoTitle")}</span>
+                <span className="block font-bold text-sm">{t("pricing.autoEkoTitle", { price: fmt(AUTOEKO_PRICE) })}</span>
                 <span className="block text-xs text-muted">{t("pricing.autoEkoSub")}</span>
               </span>
             </label>
 
             <div className="border-t border-border pt-6">
-              <p className="font-mono text-xs uppercase tracking-widest text-muted block mb-3">{t("pricing.addonsLabel")}</p>
+              <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("pricing.driveLabel", { price: fmt(drivePrice) })}</label>
+              <input
+                type="number"
+                min={0}
+                value={driveUsers}
+                onChange={(e) => setDriveUsers(Math.max(0, Number(e.target.value) || 0))}
+                className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold"
+              />
+              <p className="text-xs text-muted mt-1">{t("pricing.driveHint")}</p>
+            </div>
+
+            <div className="border-t border-border pt-6">
+              <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("pricing.metricLabel", { price: fmt(metricPrice) })}</label>
+              <input
+                type="number"
+                min={0}
+                value={metricUsers}
+                onChange={(e) => setMetricUsers(Math.max(0, Number(e.target.value) || 0))}
+                className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold"
+              />
+              <p className="text-xs text-muted mt-1">{t("pricing.metricHint")}</p>
+            </div>
+
+            <div className="border-t border-border pt-6">
+              <p className="font-mono text-xs uppercase tracking-widest text-muted block mb-3">{t("pricing.otherAddons")}</p>
               <ul className="space-y-2 max-h-64 overflow-y-auto pr-2">
-                {ADDONS.filter((a) => a.code !== "2301").map((a) => {
-                  const active = (selectedAddons[a.code] ?? 0) > 0;
-                  return (
-                    <li key={a.code}>
-                      <label className="flex items-start gap-3 cursor-pointer text-sm">
-                        <input
-                          type="checkbox"
-                          checked={active}
-                          onChange={() => toggleAddon(a.code, a.unit === "per_scan" ? 50 : 1)}
-                          className="mt-1 w-4 h-4 accent-primary shrink-0"
-                        />
-                        <span className="flex-1">
-                          <span className="font-bold">{a.name}</span>{" "}
-                          <span className="text-muted text-xs">
-                            ({formatSEK(a.price)} {t("pricing.sek")}{a.unit === "per_user" ? t("pricing.unitPerUser") : a.unit === "per_scan" ? `/${t("pricing.unitScan")}` : t("pricing.perMonthAbbr")})
-                          </span>
-                          {active && a.unit === "per_scan" && (
-                            <span className="block mt-1">
-                              <input
-                                type="number"
-                                min={0}
-                                value={selectedAddons[a.code] ?? 0}
-                                onChange={(e) =>
-                                  setSelectedAddons((prev) => ({ ...prev, [a.code]: Math.max(0, Number(e.target.value) || 0) }))
-                                }
-                                className="w-24 h-8 px-2 border border-border bg-background text-xs"
-                              />
-                              <span className="text-xs text-muted ml-2">{t("pricing.unitScansMonth")}</span>
-                            </span>
-                          )}
+                {ADDONS.filter((a) => a.code !== "2291" && a.code !== "2301" && a.code !== "1660").map((a) => (
+                  <li key={a.code}>
+                    <label className="flex items-start gap-3 cursor-pointer text-sm">
+                      <input
+                        type="checkbox"
+                        checked={!!selectedAddons[a.code]}
+                        onChange={() => toggleAddon(a.code)}
+                        className="mt-1 w-4 h-4 accent-primary shrink-0"
+                      />
+                      <span className="flex-1">
+                        <span className="font-bold">{a.name}</span>{" "}
+                        <span className="text-muted text-xs">
+                          ({formatSEK(a.price)} {t("pricing.sek")}{a.unit === "per_user" ? t("pricing.unitPerUser") : t("pricing.perMonthAbbr")})
                         </span>
-                      </label>
-                    </li>
-                  );
-                })}
+                      </span>
+                    </label>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -418,20 +474,22 @@ function PriceCalculator() {
             </div>
           </div>
 
+          {/* Summary */}
           <div className="bg-background border border-border p-4 sm:p-6 md:p-8 flex flex-col">
             <p className="font-mono text-xs uppercase tracking-widest text-muted mb-4">{t("pricing.yourMonthlyCost")}</p>
 
             <ul className="space-y-3 text-sm mb-6">
               <Row label={t("pricing.startLicense")} value={START_BASE} t={t} />
-              {plan !== "Start" && totalUsersForCalc > 0 && (
-                <Row label={t("pricing.usersCount", { plan, count: totalUsersForCalc })} value={lineUserLicenses} t={t} />
-              )}
-              {workAppQty > 0 && <Row label={t("pricing.workAppCount", { count: workAppQty })} value={lineWorkApps} t={t} />}
-              {autoEko && <Row label={t("pricing.autoEkoTitle")} value={AUTOEKO_PRICE} t={t} />}
-              {lineAddons > 0 && <Row label={t("pricing.addonsLabel")} value={lineAddons} t={t} />}
+              {stdCount > 0 && <Row label={t("pricing.stdRow", { count: stdCount })} value={lineStandard} t={t} />}
+              {proCount > 0 && <Row label={t("pricing.proRow", { count: proCount })} value={linePro} t={t} />}
+              {workerCount > 0 && <Row label={t("pricing.workRow", { count: workerCount })} value={lineWorkApps} t={t} />}
+              {autoEko && <Row label={t("pricing.autoEkoRow")} value={AUTOEKO_PRICE} t={t} />}
+              {driveUsers > 0 && <Row label={t("pricing.driveRow", { count: driveUsers })} value={lineDrive} t={t} />}
+              {metricUsers > 0 && <Row label={t("pricing.metricRow", { count: metricUsers })} value={lineMetric} t={t} />}
+              {lineAddons > 0 && <Row label={t("pricing.otherAddonsValue")} value={lineAddons} t={t} />}
               {cycle !== "monthly" && (
                 <li className="flex justify-between text-primary pt-2 border-t border-border">
-                  <span>{t("pricing.discountLabel", { type: cycle === "quarterly" ? "-5%" : "-20%" })}</span>
+                  <span>{t("pricing.discountLabel", { type: cycle === "quarterly" ? t("pricing.discountQuarterly") : t("pricing.discountYearly") })}</span>
                   <span className="font-bold">−{formatSEK(Math.round(monthlyTotalRaw * CYCLE_DISCOUNT[cycle]))} {t("pricing.sek")}</span>
                 </li>
               )}
@@ -474,6 +532,18 @@ function PriceCalculator() {
           </div>
         </div>
       </div>
+
+      <TimeStudyModal
+        open={studyOpen}
+        onClose={() => setStudyOpen(false)}
+        workers={workerCount}
+        totalUsers={Math.max(1, totalPeople)}
+        hourlyCost={hourlyCost}
+        onApply={({ savedHoursPerUser }) => {
+          setHoursSavedPerUser(Math.round(savedHoursPerUser * 10) / 10);
+          setFromTimeStudy(true);
+        }}
+      />
     </section>
   );
 }
