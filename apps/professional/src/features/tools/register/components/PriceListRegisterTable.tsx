@@ -180,7 +180,7 @@ export function PriceListRegisterTable() {
 						<Star
 							className={`h-4 w-4 ${
 								row.isFavorite
-									? "fill-yellow-400 text-yellow-400"
+									? "fill-[#111721] text-[#111721]"
 									: "text-slate-300"
 							}`}
 						/>

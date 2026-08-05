@@ -1,10 +1,9 @@
-import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import OrderDashboard from "@/features/order/components/OrderDashboard";
+
 export default function Page() {
-    return (
-        <div className="p-6">
-            <h1 className="text-2xl font-semibold"><Translate text={localizationConstants.orderList} /></h1>
-            <p className="mt-2 text-sm text-slate-600"><Translate text={localizationConstants.comingSoon} /> </p>
-        </div>
-    );
+	return (
+		<div className="p-6">
+			<OrderDashboard />
+		</div>
+	);
 }

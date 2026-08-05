@@ -198,6 +198,12 @@ export type SidebarTranslation = {
 	orderList: string;
 	costCentre: string;
 	materialStorage: string;
+	registerKunder: string;
+	registerLeverantorer: string;
+	registerOfferter: string;
+	registerPrislistor: string;
+	registerArtiklar: string;
+	registerKostnadsstallen: string;
 	customerRegisterList: string;
 	customerRegisterCustomerNo: string;
 	customerRegisterCustomer: string;
