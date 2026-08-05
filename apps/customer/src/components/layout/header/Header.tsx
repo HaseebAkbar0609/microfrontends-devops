@@ -1,13 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { BellDot } from "lucide-react";
-import HeaderIconButton from "./HeaderIconButton";
 import UserAvatarButton from "./UserAvatarButton";
-import { SLATE } from "@/constants/colors";
 import AlignJustifyButton from "./AlignJustifyButton";
 import { LogoutConfirmDialog } from "./LogoutConfirmDialog";
 import { useAuthStatus } from "@/context/AuthContext";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const Header = () => {
 	const [logoutOpen, setLogoutOpen] = useState(false);
@@ -31,12 +29,7 @@ const Header = () => {
 			{/* Right section */}
 			<div className="flex flex-1 items-center justify-end gap-1 sm:gap-2">
 				{/* Notification */}
-				<HeaderIconButton aria-label="Notifications">
-					<BellDot
-						className="w-5 h-5 sm:w-6 sm:h-6"
-						color={SLATE[800]}
-					/>
-				</HeaderIconButton>
+				<NotificationBell aria-label="Notifications" showBadge={true} count={3} />
 
 				{/* Avatar (hidden on very small screens) */}
 				<div className="hidden sm:block">

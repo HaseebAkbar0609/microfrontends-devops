@@ -2,6 +2,7 @@ import localizationConstants from "@/utils/translation/constants";
 import {
 	Briefcase,
 	Building2,
+	FileText,
 	Headset,
 	Heart,
 	Home,
@@ -177,6 +178,12 @@ export const navConfig: NavGroup[] = [
 						icon: Building2,
 					},
 
+					{
+						id: "protocol",
+						label: localizationConstants.protocolItem,
+						href: "/tools/my-pages/protocol",
+						icon: FileText,
+					},
 					{
 						id: "it-support",
 						label: localizationConstants.itSupport,

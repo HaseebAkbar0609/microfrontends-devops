@@ -61,6 +61,7 @@ import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import { showToast } from "@/lib/toast";
 import { fetchLeadSettings } from "@/features/leads/settings/api/leadSettings";
 import { useLeadsList } from "@/features/leads/queries/useLeadsList";
+import { useDeleteLead } from "@/features/leads/queries/useDeleteLead";
 
 import {
   filterLeadRows,
@@ -94,14 +95,13 @@ export function LeadsManagementPage() {
   const autoMovedToMonitoringRef = useRef<Record<string, Set<string>>>({});
   const isAutoMoveRunningRef = useRef(false);
   const isManualMoveRunningRef = useRef(false);
-  const debouncedSearch = useDebounce(searchInput, 400);
   const isReviewTab = activeTab === "granskning";
-  const leadsListQuery = useLeadsList(
-    {
-      page,
-      pageSize,
-    }
-  );
+  const { mutate: deleteLeadMutation } = useDeleteLead();
+  const debouncedSearch = useDebounce(searchInput, 400);
+  const leadsListQuery = useLeadsList({
+    page: 1,
+    pageSize: 10000,
+  });
 
   const { data: leadSettings } = useQuery({
     queryKey: ["lead-settings"],
@@ -194,8 +194,7 @@ export function LeadsManagementPage() {
     setReviewedAtByLeadId((prev) =>
       Object.fromEntries(
         Object.entries(prev).filter(([leadId]) => reviewLeadIdSet.has(leadId))
-      )
-    );
+      ))
   }, [leadsListQuery.data]);
 
   useEffect(() => {
@@ -294,13 +293,20 @@ export function LeadsManagementPage() {
 
   function handleDelete(id: string) {
     if (activeTab === "settings") return;
-    deleteRowByTab[activeTab](id);
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
+    deleteLeadMutation(id, {
+      onSuccess: () => {
+        deleteRowByTab[activeTab](id);
+        setSelectedIds((prev) => {
+          const next = new Set(prev);
+          next.delete(id);
+          return next;
+        });
+        showToast("success", t(localizationConstants.leadDeletedToast));
+      },
+      onError: () => {
+        showToast("error", t(localizationConstants.serverError));
+      }
     });
-    showToast("success", t(localizationConstants.leadDeletedToast));
   }
 
   const selectedCount = isSelectable ? selectedIds.size : 0;
@@ -365,8 +371,8 @@ export function LeadsManagementPage() {
     if (!schedule) return null;
     const root =
       "additionalProp1" in schedule &&
-      typeof schedule.additionalProp1 === "object" &&
-      schedule.additionalProp1
+        typeof schedule.additionalProp1 === "object" &&
+        schedule.additionalProp1
         ? (schedule.additionalProp1 as Record<string, unknown>)
         : (schedule as Record<string, unknown>);
     const dayNames = [
@@ -643,7 +649,7 @@ export function LeadsManagementPage() {
                 searchValue={searchInput}
                 onSearchChange={setSearchInput}
                 filters={[leadTypeFilter]}
-                onCreateClick={tableConfig.showCreateButton ? () => {} : undefined}
+                onCreateClick={tableConfig.showCreateButton ? () => { } : undefined}
                 createButtonLabel={localizationConstants.createLabel}
                 className="px-0 py-0"
               />
@@ -651,11 +657,10 @@ export function LeadsManagementPage() {
             {tableConfig.showResendButton && (
               <Button
                 type="button"
-                className={`h-11 gap-2 rounded-xl px-5 text-base font-medium shadow-none ${
-                  selectedCount === 0
-                    ? "bg-slate-200 text-slate-400"
-                    : "cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
-                }`}
+                className={`h-11 gap-2 rounded-xl px-5 text-base font-medium shadow-none ${selectedCount === 0
+                  ? "bg-slate-200 text-slate-400"
+                  : "cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
+                  }`}
                 disabled={selectedCount === 0}
                 onClick={handleResend}
               >
@@ -719,9 +724,9 @@ export function LeadsManagementPage() {
                         onClick={
                           index === 2
                             ? () => {
-                                const sourceParam = isMonitoring ? "?source=monitoring" : "";
-                                router.push(`/leads/management/${row.id}${sourceParam}`);
-                              }
+                              const sourceParam = isMonitoring ? "?source=monitoring" : "";
+                              router.push(`/leads/management/${row.id}${sourceParam}`);
+                            }
                             : undefined
                         }
                       />

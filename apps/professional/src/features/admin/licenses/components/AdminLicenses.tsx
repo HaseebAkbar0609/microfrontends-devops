@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DynamicBreadcrumb } from "@/components/common";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -102,7 +103,21 @@ const AdminLicenses = () => {
 		addPackage,
 		clearCart,
 		total,
+		checkoutMutation,
 	} = useLicenseCart();
+
+	const handleCheckout = () => {
+		if (items.length === 0) {
+			showToast("error", "Your cart is empty");
+			return;
+		}
+		checkoutMutation.mutate({
+			items: items.map(item => ({
+				plan_key: item.id,
+				quantity: item.quantity
+			}))
+		});
+	};
 
 	const packages = useMemo(() => {
 		const term = search.trim().toLowerCase();
@@ -285,6 +300,8 @@ const AdminLicenses = () => {
 					{isLastTab ? (
 						<Button
 							type="button"
+							onClick={handleCheckout}
+							disabled={checkoutMutation.isPending}
 							className="h-10 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 						>
 							<Translate

@@ -17,6 +17,7 @@ export const contactSchema = z.object({
 	postalCode: z.string().optional(),
 	countryId: z.string().optional(),
 	cityId: z.string().optional(),
+	postalCity: z.string().optional(),
 	nextOfKin: z.array(nextOfKinSchema).optional(),
 	employmentNumber: z.string().optional(),
 	position: z.string().optional(),

@@ -816,22 +816,47 @@ export interface GetBudgetListResponse {
 	totalPages: number;
 }
 
+export const createBudgetSchema = z.object({
+	budgetNr: z.string().optional(),
+	budgetName: z.string().min(1, "validationBudgetNameRequired"),
+	totalAmount: z
+		.string()
+		.min(1, "validationBudgetTotalAmountRequired")
+		.refine((val) => !isNaN(Number(val.replace(/\s/g, "").replace(",", "."))), {
+			message: "validationBudgetTotalAmountInvalid",
+		}),
+	currency: z.string().min(1, "validationBudgetCurrencyRequired"),
+	category: z.string().min(1, "validationBudgetCategoryRequired"),
+	startDate: z.string().min(1, "validationBudgetStartDateRequired"),
+	endDate: z.string().min(1, "validationBudgetEndDateRequired"),
+	description: z.string().optional(),
+	avvikBudget: z.boolean(),
+	overheadBudget: z.boolean(),
+});
+
+export type CreateBudgetFormData = z.infer<typeof createBudgetSchema>;
+
 export const wageTypeSchema = z.object({
 	id: z.string(),
 	code: z.string(),
 	name: z.string(),
-	personalType: z.string().optional().default("Tjänstemän"),
-	unit: z.string(),
+	personalType: z.string().optional().default("Tjänsteman"),
 	wageForm: z.string().optional().default("Fast lön"),
-	transactionType: z.string().optional().default("Br.lön"),
+	transactionType: z.string().optional().default("Bruttolön"),
+	unit: z.string(),
 	preliminaryTax: z.string().optional().default("Ja 30%"),
 	employerContribution: z.string().optional().default("Ja 30%"),
 	createdAt: z.string(),
 	updatedAt: z.string(),
-	accountNumber: z.string().optional(),
-	status: z.enum(["active", "inactive"]),
+	accountDebit: z.string().optional(),
+	accountCredit: z.string().optional(),
+	accountOppositeAG: z.string().optional(),
+	agUnderlag: z.boolean().optional().default(false),
+	semestergrundad: z.boolean().optional().default(false),
+	agiCode: z.string().optional(),
 	description: z.string().optional(),
 	factor: z.string().optional(),
+	status: z.enum(["active", "inactive"]),
 });
 
 export type WageTypeRow = z.infer<typeof wageTypeSchema>;
@@ -839,8 +864,18 @@ export type WageTypeRow = z.infer<typeof wageTypeSchema>;
 export const createWageTypeSchema = z.object({
 	code: z.string().min(1, "validationWageTypeCodeRequired"),
 	name: z.string().min(1, "validationWageTypeNameRequired"),
+	personalType: z.string().optional().default("Tjänsteman"),
+	wageForm: z.string().optional().default("Fast lön"),
+	transactionType: z.string().optional().default("Bruttolön"),
 	unit: z.string().min(1, "validationWageTypeUnitRequired"),
-	accountNumber: z.string().optional(),
+	preliminaryTax: z.string().optional(),
+	employerContribution: z.string().optional(),
+	accountDebit: z.string().optional(),
+	accountCredit: z.string().optional(),
+	accountOppositeAG: z.string().optional(),
+	agUnderlag: z.boolean().optional().default(false),
+	semestergrundad: z.boolean().optional().default(false),
+	agiCode: z.string().optional(),
 	description: z.string().optional(),
 	factor: z.string().optional(),
 	status: z.enum(["active", "inactive"]).optional().default("active"),
