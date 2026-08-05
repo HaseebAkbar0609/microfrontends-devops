@@ -228,14 +228,14 @@ export const navConfig: NavGroup[] = [
 				href: "/module/production",
 				flyoutItems: [
 					{
-						id: "order",
-						label: localizationConstants.order,
-						href: "/module/production/order",
-					},
-					{
 						id: "project",
 						label: localizationConstants.project,
 						href: "/module/production/project",
+					},
+					{
+						id: "order",
+						label: localizationConstants.order,
+						href: "/module/production/order",
 					},
 					{
 						id: "purchase",
@@ -243,14 +243,14 @@ export const navConfig: NavGroup[] = [
 						href: "/module/production/purchase",
 					},
 					{
-						id: "kma",
-						label: localizationConstants.kma,
-						href: "/module/production/kma",
-					},
-					{
 						id: "design",
 						label: localizationConstants.design,
 						href: "/module/production/design",
+					},
+					{
+						id: "kma",
+						label: localizationConstants.kma,
+						href: "/module/production/kma",
 					},
 					{
 						id: "material-storage",
