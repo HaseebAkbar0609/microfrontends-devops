@@ -1,45 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { MessageSquare, ChevronUp, Star } from "lucide-react";
+import { MessageSquare, Star } from "lucide-react";
 import Image from "next/image";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { CompanyDetail, CompanyReview } from "../types/company";
-
-function AccordionSection({
-  title,
-  icon,
-  children,
-  defaultOpen = true,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full cursor-pointer items-center justify-between px-5 py-4"
-      >
-        <div className="flex items-center gap-2 text-slate-600">
-          {icon}
-          <span className="text-sm font-semibold text-zinc-900">{title}</span>
-        </div>
-        <ChevronUp
-          size={16}
-          className={`text-slate-400 transition-transform duration-200 ${open ? "" : "rotate-180"}`}
-          aria-hidden={true}
-        />
-      </button>
-      {open && <div className="border-t border-slate-100 px-5 py-4">{children}</div>}
-    </div>
-  );
-}
+import { CompanyAccordionSection } from "./CompanyAccordionSection";
 
 function StarRating({ rating }: { rating: number }) {
   return (
@@ -104,13 +70,13 @@ export function CompanyOmdomeTab({ data }: Props) {
 
   return (
     <div className="space-y-4">
-      <AccordionSection title={t(localizationConstants.b2bCompanyOmdomeSection)} icon={<MessageSquare size={18} />}>
+      <CompanyAccordionSection title={t(localizationConstants.b2bCompanyOmdomeSection)} icon={<MessageSquare size={18} />}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {data.reviews.map((review) => (
             <ReviewCard key={review.id} review={review} />
           ))}
         </div>
-      </AccordionSection>
+      </CompanyAccordionSection>
     </div>
   );
 }

@@ -1,45 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { ClipboardList, ChevronUp } from "lucide-react";
+import { ClipboardList } from "lucide-react";
 import Image from "next/image";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { CompanyDetail } from "../types/company";
-
-function AccordionSection({
-  title,
-  icon,
-  children,
-  defaultOpen = true,
-}: {
-  title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full cursor-pointer items-center justify-between px-5 py-4"
-      >
-        <div className="flex items-center gap-2 text-slate-600">
-          {icon}
-          <span className="text-sm font-semibold text-zinc-900">{title}</span>
-        </div>
-        <ChevronUp
-          size={16}
-          className={`text-slate-400 transition-transform duration-200 ${open ? "" : "rotate-180"}`}
-          aria-hidden={true}
-        />
-      </button>
-      {open && <div className="border-t border-slate-100">{children}</div>}
-    </div>
-  );
-}
+import { CompanyAccordionSection } from "./CompanyAccordionSection";
 
 const TH = "whitespace-nowrap px-4 py-3 text-left text-xs font-medium text-slate-500";
 const TD = "whitespace-nowrap px-4 py-3 text-sm text-slate-700";
@@ -53,7 +19,7 @@ export function CompanyReferensTab({ data }: Props) {
 
   return (
     <div className="space-y-4">
-      <AccordionSection title={t(localizationConstants.b2bCompanyReferensSection)} icon={<ClipboardList size={18} />}>
+      <CompanyAccordionSection noPadding title={t(localizationConstants.b2bCompanyReferensSection)} icon={<ClipboardList size={18} />}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -89,7 +55,7 @@ export function CompanyReferensTab({ data }: Props) {
             </tbody>
           </table>
         </div>
-      </AccordionSection>
+      </CompanyAccordionSection>
     </div>
   );
 }
