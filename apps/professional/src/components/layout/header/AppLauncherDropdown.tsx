@@ -56,8 +56,8 @@ const AppLauncherDropdown = () => {
 
 										return (
 											<Tooltip key={app.label}>
-												<DropdownMenuItem asChild>
-													<TooltipTrigger asChild>
+												<TooltipTrigger asChild>
+													<DropdownMenuItem asChild>
 														<Link
 															href={app.href}
 															onClick={() => setOpen(false)}
@@ -69,8 +69,8 @@ const AppLauncherDropdown = () => {
 																<Translate text={app.label} />
 															</span>
 														</Link>
-													</TooltipTrigger>
-												</DropdownMenuItem>
+													</DropdownMenuItem>
+												</TooltipTrigger>
 
 												{/* Hover & Focus Floating Tooltip */}
 												<TooltipContent side="top" className="bg-slate-950 text-white border border-slate-700 shadow-lg text-xs font-medium px-2.5 py-1">
