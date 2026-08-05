@@ -42,7 +42,7 @@ export const APP_GROUPS: AppGroup[] = [
 		category: localizationConstants.businessCategory,
 		items: [
 			{
-				label: localizationConstants.offer,
+				label: localizationConstants.offerList,
 				icon: FileText,        // Document with text lines
 				href: "/module/business/offer/dashboard",
 			},
@@ -95,16 +95,16 @@ export const APP_GROUPS: AppGroup[] = [
 				icon: Warehouse,       // Warehouse building with entrance
 				href: "/module/production/material-storage",
 			},
-			// Row 3: Fordon, Maskin, Åtkomst
-			{
-				label: localizationConstants.vehicle,
-				icon: Truck,           // Delivery truck
-				href: "/module/production/vehicle",
-			},
+			// Row 3: Maskin, Fordon, Åtkomst
 			{
 				label: localizationConstants.machine,
 				icon: Construction,    // Construction excavator/equipment
 				href: "/module/production/machine",
+			},
+			{
+				label: localizationConstants.vehicle,
+				icon: Truck,           // Delivery truck
+				href: "/module/production/vehicle",
 			},
 			{
 				label: localizationConstants.access,

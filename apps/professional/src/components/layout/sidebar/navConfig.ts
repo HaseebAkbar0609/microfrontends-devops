@@ -207,7 +207,7 @@ export const navConfig: NavGroup[] = [
 				flyoutItems: [
 					{
 						id: "offer",
-						label: localizationConstants.offer,
+						label: localizationConstants.offerList,
 						href: "/module/business/offer/dashboard",
 					},
 					{
@@ -280,9 +280,19 @@ export const navConfig: NavGroup[] = [
 				href: "/module/financial-management",
 				flyoutItems: [
 					{
+						id: "invoice",
+						label: localizationConstants.invoice,
+						href: "/module/financial-management/invoice",
+					},
+					{
 						id: "economy",
 						label: localizationConstants.economy,
 						href: "/module/financial-management/economy",
+					},
+					{
+						id: "forecast",
+						label: localizationConstants.forecast,
+						href: "/module/financial-management/forecast",
 					},
 					{
 						id: "personnel",
@@ -299,17 +309,6 @@ export const navConfig: NavGroup[] = [
 						label: localizationConstants.debtCollection,
 						href: "/module/financial-management/debt-collection",
 					},
-					{
-						id: "forecast",
-						label: localizationConstants.forecast,
-						href: "/module/financial-management/forecast",
-					},
-
-					{
-						id: "invoice",
-						label: localizationConstants.invoice,
-						href: "/module/financial-management/invoice",
-					},
 				],
 			},
 			{
@@ -318,20 +317,19 @@ export const navConfig: NavGroup[] = [
 				href: "/module/business-support",
 				flyoutItems: [
 					{
-						id: "templates",
-						label: localizationConstants.templates,
-						href: "/module/business-support/templates",
+						id: "managementSupport",
+						label: localizationConstants.managementSupport,
+						href: "/module/business-support/management-support",
+					},
+					{
+						id: "marketingSales",
+						label: localizationConstants.marketingSales,
+						href: "/module/business-support/marketing-sales",
 					},
 					{
 						id: "agreement",
 						label: localizationConstants.agreement,
 						href: "/module/business-support/agreement",
-					},
-
-					{
-						id: "marketingSales",
-						label: localizationConstants.marketingSales,
-						href: "/module/business-support/marketing-sales",
 					},
 					{
 						id: "dataIT",
@@ -339,9 +337,9 @@ export const navConfig: NavGroup[] = [
 						href: "/module/business-support/data-it",
 					},
 					{
-						id: "managementSupport",
-						label: localizationConstants.managementSupport,
-						href: "/module/business-support/management-support",
+						id: "templates",
+						label: localizationConstants.templates,
+						href: "/module/business-support/templates",
 					},
 				],
 			},
@@ -353,19 +351,14 @@ export const navConfig: NavGroup[] = [
 		icon: UserRound,
 		items: [
 			{
-				id: "admin-settings",
-				label: localizationConstants.adminSetting,
-				href: "/admin/settings",
+				id: "company-information",
+				label: localizationConstants.companyInformation,
+				href: "/admin/company-information",
 			},
 			{
-				id: "admin-integration",
-				label: localizationConstants.adminIntegration,
-				href: "/admin/integration",
-			},
-			{
-				id: "admin-subscription",
-				label: localizationConstants.adminSubscription,
-				href: "/admin/subscription",
+				id: "admin-user",
+				label: localizationConstants.adminUser,
+				href: "/admin/user",
 			},
 			{
 				id: "admin-licenses",
@@ -373,20 +366,24 @@ export const navConfig: NavGroup[] = [
 				href: "/admin/licenses",
 			},
 			{
+				id: "admin-subscription",
+				label: localizationConstants.adminSubscription,
+				href: "/admin/subscription",
+			},
+			{
+				id: "admin-integration",
+				label: localizationConstants.adminIntegration,
+				href: "/admin/integration",
+			},
+			{
+				id: "admin-settings",
+				label: localizationConstants.adminSetting,
+				href: "/admin/settings",
+			},
+			{
 				id: "admin-lead-economy",
 				label: localizationConstants.adminEconomy,
 				href: "/admin/economy",
-			},
-			{
-				id: "admin-user",
-				label: localizationConstants.adminUser,
-				href: "/admin/user",
-			},
-
-			{
-				id: "company-information",
-				label: localizationConstants.companyInformation,
-				href: "/admin/company-information",
 			},
 		],
 	},
