@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscrip
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
+import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { OfferDetailSubSidebar } from "./sidebar/OfferDetailSubSidebar";
@@ -144,12 +145,15 @@ export function AppShell({ children }: AppShellProps) {
 		return null;
 	}
 
-	const isRegisterPath = pathname.startsWith("/tools/register");
+	const isAgreementPath = pathname.startsWith("/module/business-support/agreement");
+	const isRegisterPath = pathname.startsWith("/tools/register") && !isAgreementPath;
 
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{isRegisterPath ? (
+			{isAgreementPath ? (
+				<AgreementSubSidebar />
+			) : isRegisterPath ? (
 				<InvoiceSubSidebar />
 			) : sendOfferId ? (
 				<OfferDetailSubSidebar offerId={sendOfferId} />

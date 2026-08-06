@@ -475,6 +475,34 @@ export type DashboardTranslation = {
 	removeWidgetTitle: string;
 	removeWidgetDescription: string;
 	confirmRemove: string;
+	agreementDashboardTitle: string;
+	agreementOverview: string;
+	agreementWidgetKpiTitle: string;
+	agreementWidgetKpiTotal: string;
+	agreementWidgetKpiActive: string;
+	agreementWidgetKpiPending: string;
+	agreementWidgetKpiExpired: string;
+	agreementWidgetKpiDraft: string;
+	agreementWidgetActiveTitle: string;
+	agreementWidgetActiveByCategory: string;
+	agreementWidgetActiveByStatus: string;
+	agreementWidgetActiveTotalCount: string;
+	agreementWidgetExpiringTitle: string;
+	agreementWidgetExpiring30Days: string;
+	agreementWidgetExpiring60Days: string;
+	agreementWidgetExpiring90Days: string;
+	agreementWidgetExpiringActionRequired: string;
+	agreementWidgetPendingTitle: string;
+	agreementWidgetPendingAwaitingSignature: string;
+	agreementWidgetPendingAwaitingReview: string;
+	agreementWidgetPendingAwaitingApproval: string;
+	agreementWidgetSupplierTitle: string;
+	agreementWidgetSupplierWithRules: string;
+	agreementWidgetSupplierWithReminders: string;
+	agreementWidgetSupplierActiveCount: string;
+	agreementWidgetSearchTitle: string;
+	agreementWidgetSearchPlaceholder: string;
+	agreementWidgetSearchHint: string;
 };
 
 export type AdminPageTranslation = {
