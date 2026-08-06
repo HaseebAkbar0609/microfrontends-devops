@@ -171,7 +171,7 @@ export const APP_GROUPS: AppGroup[] = [
 			{
 				label: localizationConstants.agreement,
 				icon: FileSignature,   // Document with signature pen
-				href: "/module/business-support/agreement",
+				href: "/module/business-support/agreement/dashboard",
 			},
 			// Row 2: Data & IT, Mallar
 			{
