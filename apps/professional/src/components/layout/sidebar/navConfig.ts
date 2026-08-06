@@ -58,6 +58,7 @@ export const HIDDEN_SUBSIDEBAR_PATH_PREFIXES = [
 	"/module/business/offer/archive",
 	"/module/business/b2b",
 	"/module/business/calculation",
+	"/module/business-support/agreement",
 ];
 
 export const navConfig: NavGroup[] = [
@@ -329,7 +330,7 @@ export const navConfig: NavGroup[] = [
 					{
 						id: "agreement",
 						label: localizationConstants.agreement,
-						href: "/module/business-support/agreement",
+						href: "/module/business-support/agreement/dashboard",
 					},
 					{
 						id: "dataIT",

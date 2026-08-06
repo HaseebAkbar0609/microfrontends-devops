@@ -4,16 +4,12 @@ import Draggable, { DraggableEvent } from "react-draggable";
 
 interface DraggableGridCardProps {
   className?: string;
-  /** Highlight this card as the current swap target */
   isSwapTarget?: boolean;
   onDragStart: () => void;
   onDrag: (clientX: number, clientY: number) => void;
   onDragStop: (clientX: number, clientY: number) => void;
-  /** Forwards the wrapper div's ref so the parent can read its bounding rect */
   containerRef: (el: HTMLDivElement | null) => void;
-  /** Highlight this card (e.g. when clicked from sidebar) */
   isHighlighted?: boolean;
-  /** Whether this card represents an empty slot */
   isEmpty?: boolean;
   children: React.ReactNode;
 }
@@ -68,14 +64,14 @@ export const DraggableGridCard = ({
           className ?? ""
         } transition-[box-shadow,background-color,ring-color,border-color,transform] duration-150 ${
           isDragging
-            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-xl !transition-none [&_*]:!bg-transparent [&_*]:!text-white [&_*]:!border-none"
+            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-sm transition-none! **:bg-transparent! **:text-white! **:border-none!"
             : isSwapTarget
-            ? "bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-xl min-h-[140px] shadow-inner"
+            ? "bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-sm min-h-35 shadow-inner"
             : isHighlighted
-            ? "ring-4 ring-blue-500 ring-offset-2 rounded-xl scale-[1.02] shadow-xl z-[9997]"
+            ? "ring-4 ring-blue-500 ring-offset-2 rounded-sm scale-[1.02] shadow-xl z-9997"
             : isEmpty
-            ? "bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-xl cursor-grab"
-            : "bg-white border border-slate-200 rounded-xl cursor-grab shadow-sm"
+            ? "bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-sm cursor-grab"
+            : "bg-white border border-slate-200 rounded-sm cursor-grab"
         }`}
         style={{
           position: "relative",
@@ -89,7 +85,7 @@ export const DraggableGridCard = ({
         }}
       >
         {isSwapTarget && !isDragging ? (
-          <div className="flex flex-col items-center justify-center h-full min-h-[140px] text-slate-400 font-medium gap-3 animate-in fade-in zoom-in-95 duration-200">
+          <div className="flex flex-col items-center justify-center h-full min-h-35 text-slate-400 font-medium gap-3 animate-in fade-in zoom-in-95 duration-200">
             <div className="w-10 h-10 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center animate-pulse">
               <div className="w-4 h-4 bg-slate-200 rounded-sm" />
             </div>
