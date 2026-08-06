@@ -11,6 +11,7 @@ import {
 	Megaphone,
 	Newspaper,
 	PieChart,
+	ScrollText,
 	Search,
 	Store,
 	Zap,
@@ -45,6 +46,12 @@ export const b2bSidebarItems: DynamicSubSidebarItem[] = [
 		labelKey: localizationConstants.b2bDeals,
 		href: "/module/business/b2b/deals",
 		icon: Handshake,
+	},
+	{
+		id: "avtal",
+		labelKey: localizationConstants.b2bAvtal,
+		href: "/module/business/b2b/agreements",
+		icon: ScrollText,
 	},
 	{
 		id: "archive",

@@ -213,7 +213,7 @@ export function B2BProjectMarketView({ projects, isLoading = false }: Props) {
 
       {/* Table */}
       <div className="flex flex-1 flex-col gap-4 px-5 py-4">
-        <div className="overflow-x-auto rounded-lg border border-slate-200">
+        <div className="b2b-table-scroll overflow-x-auto rounded-lg border border-slate-200">
           <table className="min-w-300 w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-white">

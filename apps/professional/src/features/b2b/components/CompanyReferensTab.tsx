@@ -20,7 +20,7 @@ export function CompanyReferensTab({ data }: Props) {
   return (
     <div className="space-y-4">
       <CompanyAccordionSection noPadding title={t(localizationConstants.b2bCompanyReferensSection)} icon={<ClipboardList size={18} />}>
-        <div className="overflow-x-auto">
+        <div className="b2b-table-scroll overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200">
