@@ -223,8 +223,9 @@ export function B2BAvtalListView({ items }: Props) {
 
         {totalPages > 1 && (
           <OfferTablePagination
-            currentPage={page}
+            page={page}
             totalPages={totalPages}
+            rowsPerPage={rowsPerPage}
             onPageChange={setPage}
           />
         )}
