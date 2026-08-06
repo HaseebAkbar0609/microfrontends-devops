@@ -111,6 +111,21 @@
 	background-color: var(--color-scroll-thumb);
 }
 
+/* Thin horizontal scrollbar for B2B tables */
+.b2b-table-scroll::-webkit-scrollbar {
+  height: 2px;
+}
+.b2b-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.b2b-table-scroll::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 9999px;
+}
+.b2b-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
 /* Utility to hide scrollbar */
 .no-scrollbar::-webkit-scrollbar {
 	display: none;

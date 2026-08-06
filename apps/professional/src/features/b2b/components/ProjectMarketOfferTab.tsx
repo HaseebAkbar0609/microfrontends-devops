@@ -120,7 +120,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
             </button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className="overflow-x-auto">
+            <div className="b2b-table-scroll overflow-x-auto">
               <table className="w-full border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-slate-200">
