@@ -29,7 +29,7 @@ export function TablePagination({
   onPageSizeChange,
 }: TablePaginationProps) {
   return (
-    <div className="flex items-center justify-center gap-6 py-4">
+    <div className="flex items-center justify-between sm:justify-end gap-4 py-4">
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-slate-700">
           Rows per page
@@ -38,12 +38,12 @@ export function TablePagination({
           value={String(pageSize)}
           onValueChange={(value) => onPageSizeChange(Number(value))}
         >
-          <SelectTrigger className="h-9 w-[70px] border-slate-200 focus:ring-0">
+          <SelectTrigger className="h-9 w-17.5 border-slate-200 focus:ring-0 cursor-pointer">
             <SelectValue placeholder={String(pageSize)} />
           </SelectTrigger>
           <SelectContent>
             {[5, 10, 20, 30, 40, 50].map((size) => (
-              <SelectItem key={size} value={String(size)}>
+              <SelectItem key={size} value={String(size)} className="cursor-pointer">
                 {size}
               </SelectItem>
             ))}
@@ -59,7 +59,7 @@ export function TablePagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(1)}
           disabled={currentPage <= 1}
         >
@@ -69,7 +69,7 @@ export function TablePagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
         >
@@ -79,7 +79,7 @@ export function TablePagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
         >
@@ -89,7 +89,7 @@ export function TablePagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage >= totalPages}
         >
