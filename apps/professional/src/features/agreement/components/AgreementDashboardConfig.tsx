@@ -1,6 +1,6 @@
 import {
 	Clock,
-	CircleDollarSign,
+	Search,
 	Folder,
 	Table2,
 	ShieldCheck,
@@ -42,7 +42,7 @@ export const AGREEMENT_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 
 	agreementSearch: {
 		title: localizationConstants.agreementWidgetSearchTitle,
-		icon: CircleDollarSign,
+		icon: Search,
 	},
 };
 
