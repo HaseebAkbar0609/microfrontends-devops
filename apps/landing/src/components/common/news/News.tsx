@@ -3,14 +3,14 @@
 import { Login, Ribbon } from "@/components/icons";
 import { NewsProps } from "./News.types";
 import Button from "../button";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import {
 	CUSTOMER_REGISTER_URL,
 	PROFESSIONAL_REGISTER_URL,
 } from "@/utils/constants";
 
 const News: React.FC<NewsProps> = ({ resource }) => {
-	const pathname = usePathname() || "";
+	const { pathname } = useRouter();
 	const isProfessional = pathname.includes("/professional");
 
 	// Dynamic link

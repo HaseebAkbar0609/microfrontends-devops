@@ -39,12 +39,12 @@ export function Nav() {
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-4">
-          <button className="text-sm font-medium px-4 py-2 hidden sm:block">
+          <Link href="/login" className="text-sm font-medium px-4 py-2 hidden sm:block hover:text-primary transition-colors">
             {t("nav.login")}
-          </button>
-          <button className="bg-foreground text-background text-sm font-bold px-5 py-2 rounded-sm hover:bg-ink transition-colors">
+          </Link>
+          <Link href="/register" className="bg-foreground text-background text-sm font-bold px-5 py-2 rounded-sm hover:bg-ink transition-colors">
             {t("nav.getStarted")}
-          </button>
+          </Link>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -78,12 +78,12 @@ export function Nav() {
             </Link>
           ))}
           <div className="pt-2 border-t border-border flex flex-col gap-2">
-            <button onClick={() => setMobileMenuOpen(false)} className="text-left py-2 font-medium text-foreground">
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="text-left py-2 font-medium text-foreground hover:text-primary transition-colors">
               {t("nav.login")}
-            </button>
-            <button onClick={() => setMobileMenuOpen(false)} className="bg-foreground text-background text-center font-bold py-2 rounded-sm">
+            </Link>
+            <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="bg-foreground text-background text-center font-bold py-2 rounded-sm hover:bg-ink transition-colors">
               {t("nav.getStarted")}
-            </button>
+            </Link>
           </div>
         </div>
       )}
