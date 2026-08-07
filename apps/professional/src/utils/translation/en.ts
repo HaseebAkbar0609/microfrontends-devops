@@ -1378,6 +1378,21 @@ export const enOffer: OfferTranslation = {
 	moduleStatusClosed: "Closed",
 	moduleViewSettings: "View settings",
 	moduleLoadFailed: "Could not load modules",
+	// Admin - Integration
+	integrationHeading: "Connections to TimeFlow",
+	integrationCreate: "Create integration",
+	integrationIntro1:
+		"TimeFlow has a wide range of integrations between TimeFlow and banks, accounting, suppliers, authorities and other actors.",
+	integrationIntro2:
+		"You connect the integration under each category. For the integration to be activated you need to purchase an integration license - which you do under licenses.",
+	integrationIntro3:
+		"If you have questions, contact support or read more in the help guide.",
+	integrationConnectedTitle: "Systems connected to TimeFlow",
+	integrationTextLabel: "Text",
+	integrationModulesLabel: "Modules / Function",
+	integrationConnectBtn: "Connect",
+	integrationConnectedToast: "Integration connected",
+	integrationFilterAll: "All integrations",
 	monthJanuary: "January",
 	monthFebruary: "February",
 	monthMarch: "March",

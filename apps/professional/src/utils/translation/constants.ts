@@ -1360,6 +1360,18 @@ export type OfferTranslation = {
 	moduleStatusClosed: string;
 	moduleViewSettings: string;
 	moduleLoadFailed: string;
+	// Admin - Integration
+	integrationHeading: string;
+	integrationCreate: string;
+	integrationIntro1: string;
+	integrationIntro2: string;
+	integrationIntro3: string;
+	integrationConnectedTitle: string;
+	integrationTextLabel: string;
+	integrationModulesLabel: string;
+	integrationConnectBtn: string;
+	integrationConnectedToast: string;
+	integrationFilterAll: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;
