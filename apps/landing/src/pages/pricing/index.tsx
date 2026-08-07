@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -381,6 +381,7 @@ function PriceCalculator() {
                 }}
                 hint={t("pricing.hoursSavedHint")}
                 min={0}
+                decimal
               />
             </div>
 
@@ -410,27 +411,23 @@ function PriceCalculator() {
             </label>
 
             <div className="border-t border-border pt-6">
-              <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("pricing.driveLabel", { price: fmt(drivePrice) })}</label>
-              <input
-                type="number"
-                min={0}
+              <NumberField
+                label={t("pricing.driveLabel", { price: fmt(drivePrice) })}
                 value={driveUsers}
-                onChange={(e) => setDriveUsers(Math.max(0, Number(e.target.value) || 0))}
-                className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold"
+                onChange={setDriveUsers}
+                hint={t("pricing.driveHint")}
+                min={0}
               />
-              <p className="text-xs text-muted mt-1">{t("pricing.driveHint")}</p>
             </div>
 
             <div className="border-t border-border pt-6">
-              <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("pricing.metricLabel", { price: fmt(metricPrice) })}</label>
-              <input
-                type="number"
-                min={0}
+              <NumberField
+                label={t("pricing.metricLabel", { price: fmt(metricPrice) })}
                 value={metricUsers}
-                onChange={(e) => setMetricUsers(Math.max(0, Number(e.target.value) || 0))}
-                className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold"
+                onChange={setMetricUsers}
+                hint={t("pricing.metricHint")}
+                min={0}
               />
-              <p className="text-xs text-muted mt-1">{t("pricing.metricHint")}</p>
             </div>
 
             <div className="border-t border-border pt-6">
@@ -564,27 +561,89 @@ function NumberField({
   hint,
   disabled,
   min = 0,
-  step = 1,
+  step,
+  decimal = false,
 }: {
-  label: string;
+  label?: string;
   value: number;
   onChange: (n: number) => void;
   hint?: string;
   disabled?: boolean;
   min?: number;
   step?: number;
+  decimal?: boolean;
 }) {
+  const [valStr, setValStr] = useState<string>(value.toString());
+  const [lastPublishedValue, setLastPublishedValue] = useState<number>(value);
+  const inputId = useId();
+
+  useEffect(() => {
+    if (value !== lastPublishedValue) {
+      setValStr(value.toString());
+      setLastPublishedValue(value);
+    }
+  }, [value, lastPublishedValue]);
+
+  const publishValue = (next: number) => {
+    const normalized = Math.max(min, next);
+    onChange(normalized);
+    setLastPublishedValue(normalized);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    setValStr(raw);
+
+    if (raw === "" || raw === "-" || raw.endsWith(".") || raw.endsWith(",")) {
+      return;
+    }
+
+    const parsed = Number(raw.replace(",", "."));
+    if (Number.isFinite(parsed)) {
+      publishValue(parsed);
+    }
+  };
+
+  const handleBlur = () => {
+    const raw = valStr.trim();
+    if (raw === "" || raw === "-" || raw === "." || raw === ",") {
+      const normalized = min;
+      setValStr(normalized.toString());
+      publishValue(normalized);
+      return;
+    }
+
+    const parsed = Number(raw.replace(",", "."));
+    if (!Number.isFinite(parsed)) {
+      const normalized = min;
+      setValStr(normalized.toString());
+      publishValue(normalized);
+      return;
+    }
+
+    const normalized = Math.max(min, parsed);
+    setValStr(normalized.toString());
+    publishValue(normalized);
+  };
+
   return (
     <div>
-      <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{label}</label>
+      {label && (
+        <label htmlFor={inputId} className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">
+          {label}
+        </label>
+      )}
       <input
+        id={inputId}
         type="number"
-        value={value}
         min={min}
-        step={step}
+        step={step ?? (decimal ? "any" : 1)}
+        value={valStr}
         disabled={disabled}
-        onChange={(e) => onChange(Math.max(min, Number(e.target.value) || 0))}
-        className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold disabled:opacity-50 disabled:bg-surface"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={(e) => e.target.select()}
+        className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold disabled:opacity-50 disabled:bg-surface focus:outline-none focus:border-primary transition-colors"
       />
       {hint && <p className="text-xs text-muted mt-1">{hint}</p>}
     </div>
