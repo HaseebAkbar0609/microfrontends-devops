@@ -881,6 +881,25 @@ export type OfferTranslation = {
 	calcOverviewStatusInProgress: string;
 	calcOverviewStatusCompleted: string;
 	calcKalkyl: string;
+	// Calculation - Kalkyl form
+	calcTabStandard: string;
+	calcTabPro: string;
+	calcTabQuickAI: string;
+	calcTabAPrice: string;
+	calcTabRequired: string;
+	calcMarkup: string;
+	calcBaseCosts: string;
+	calcFieldTitle: string;
+	calcMarkupPercentage: string;
+	calcMarkupPlaceholder: string;
+	calcCreateNew: string;
+	calcNewRow: string;
+	calcDeleteSection: string;
+	calcItemCol: string;
+	calcDescriptionCol: string;
+	calcQuantityCol: string;
+	calcUnitCol: string;
+	calcAPriceCol: string;
 	calcStatistics: string;
 	calcStatus: string;
 	calcCalendarWidget: string;
@@ -909,6 +928,15 @@ export type OfferTranslation = {
 	calcChartCostDistribution: string;
 	calcChartObjects: string;
 	calcChartPerCategory: string;
+	// Calculation PRO tab
+	calcProIndustryCategory: string;
+	calcProPurchaseLicense: string;
+	calcProDefaultSettings: string;
+	calcProMarkupByCalc: string;
+	calcProAPriceList: string;
+	calcProIndustrySettings: string;
+	calcProType: string;
+	calcProVacant: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
