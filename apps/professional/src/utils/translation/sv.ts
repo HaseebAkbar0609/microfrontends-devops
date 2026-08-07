@@ -458,6 +458,30 @@ export const svDashboard: DashboardTranslation = {
 	agreementDetailMail: "Mail",
 	agreementDetailMobil: "Mobil",
 	agreementDetailRoll: "Roll",
+	// Agreement Create (TFS-457)
+	agreementCreateStep1Tab: "Avtalinformation",
+	agreementCreateStep2Tab: "Kontaktinformation",
+	agreementCreateStep3Tab: "Dokument",
+	agreementCreateObjekt: "Objekt",
+	agreementCreateAnteckning: "Anteckning",
+	agreementCreatePaminnelseText: "Påminnelsetext",
+	agreementCreateKontaktLista: "Kontakt lista",
+	agreementCreateSeFil: "Se fil",
+	agreementCreateForhandsvisning: "Förhandsvisning",
+	agreementCreateCreateAgreement: "Skapa avtal",
+	agreementCreateSuccess: "Avtal skapat",
+	agreementCreateError: "Fel vid skapande av avtal",
+	agreementCreateBifogadeDokument: "Bifogade dokument",
+	// Agreement Validation (TFS-457)
+	validationDepartmentRequired: "Avdelning krävs",
+	validationObjectRequired: "Objekt krävs",
+	validationStartDateRequired: "Startdatum krävs",
+	validationRoleRequired: "Roll krävs",
+	agreementCreateValidationFailed: "Vänligen fyll i alla obligatoriska fält",
+	agreementCreateNetworkError: "Nätverksfel, försök igen",
+	agreementCreateSubmitError: "Fel vid skapande av avtal",
+	agreementNoContacts: "Inga kontakter tillagda",
+	agreementNoDocuments: "Inga dokument bifogade",
 };
 
 export const svOffer: OfferTranslation = {

@@ -549,6 +549,30 @@ export type DashboardTranslation = {
 	agreementDetailMail: string;
 	agreementDetailMobil: string;
 	agreementDetailRoll: string;
+	// Agreement Create (TFS-457)
+	agreementCreateStep1Tab: string;
+	agreementCreateStep2Tab: string;
+	agreementCreateStep3Tab: string;
+	agreementCreateObjekt: string;
+	agreementCreateAnteckning: string;
+	agreementCreatePaminnelseText: string;
+	agreementCreateKontaktLista: string;
+	agreementCreateSeFil: string;
+	agreementCreateForhandsvisning: string;
+	agreementCreateCreateAgreement: string;
+	agreementCreateSuccess: string;
+	agreementCreateError: string;
+	agreementCreateBifogadeDokument: string;
+	// Agreement Validation (TFS-457)
+	validationDepartmentRequired: string;
+	validationObjectRequired: string;
+	validationStartDateRequired: string;
+	validationRoleRequired: string;
+	agreementCreateValidationFailed: string;
+	agreementCreateNetworkError: string;
+	agreementCreateSubmitError: string;
+	agreementNoContacts: string;
+	agreementNoDocuments: string;
 };
 
 export type AdminPageTranslation = {

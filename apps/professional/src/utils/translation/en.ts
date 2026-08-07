@@ -568,6 +568,30 @@ export const enDashboard: DashboardTranslation = {
 	agreementDetailMail: "Email",
 	agreementDetailMobil: "Mobile",
 	agreementDetailRoll: "Role",
+	// Agreement Create (TFS-457)
+	agreementCreateStep1Tab: "Agreement information",
+	agreementCreateStep2Tab: "Contact information",
+	agreementCreateStep3Tab: "Documents",
+	agreementCreateObjekt: "Object",
+	agreementCreateAnteckning: "Note",
+	agreementCreatePaminnelseText: "Reminder text",
+	agreementCreateKontaktLista: "Contact list",
+	agreementCreateSeFil: "See file",
+	agreementCreateForhandsvisning: "Preview",
+	agreementCreateCreateAgreement: "Create agreement",
+	agreementCreateSuccess: "Agreement created",
+	agreementCreateError: "Error creating agreement",
+	agreementCreateBifogadeDokument: "Attached documents",
+	// Agreement Validation (TFS-457)
+	validationDepartmentRequired: "Department is required",
+	validationObjectRequired: "Object is required",
+	validationStartDateRequired: "Start date is required",
+	validationRoleRequired: "Role is required",
+	agreementCreateValidationFailed: "Please fill in all required fields",
+	agreementCreateNetworkError: "Network error, please try again",
+	agreementCreateSubmitError: "Error creating agreement",
+	agreementNoContacts: "No contacts added",
+	agreementNoDocuments: "No documents attached",
 };
 
 export const enAdminPage: AdminPageTranslation = {
