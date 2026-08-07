@@ -7,6 +7,8 @@ import localizationConstants from "@/utils/translation/constants";
 import { CalculationMarkupSection } from "./CalculationMarkupSection";
 import { CalculationLaborSection } from "./CalculationLaborSection";
 import { CalculationProContent } from "./CalculationProContent";
+import { CalculationAPriceContent } from "./CalculationAPriceContent";
+import { DUMMY_APRICE_LIST } from "../constants/apriceMock";
 
 const TABS = [
 	{ value: "standard", labelKey: localizationConstants.calcTabStandard },
@@ -70,7 +72,14 @@ export function CalculationKalkylView() {
 					<CalculationProContent />
 				</TabsContent>
 
-				{["quick-ai", "a-price", "required"].map((tabValue) => (
+				<TabsContent
+					value="a-price"
+					className="flex flex-1 flex-col"
+				>
+					<CalculationAPriceContent items={DUMMY_APRICE_LIST} />
+				</TabsContent>
+
+				{["quick-ai", "required"].map((tabValue) => (
 					<TabsContent
 						key={tabValue}
 						value={tabValue}

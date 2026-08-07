@@ -763,7 +763,7 @@ export const svOffer: OfferTranslation = {
 	calcTabPro: "Kalkyl PRO",
 	calcTabQuickAI: "QuickAICalc",
 	calcTabAPrice: "A-pris",
-	calcTabRequired: "Krävda specifikationer",
+	calcTabRequired: "Skall krav",
 	calcMarkup: "Pålägg",
 	calcBaseCosts: "Baskostnader",
 	calcFieldTitle: "Titel",
@@ -814,6 +814,11 @@ export const svOffer: OfferTranslation = {
 	calcProIndustrySettings: "Branschinställningar",
 	calcProType: "Typ",
 	calcProVacant: "Vakant",
+	// Calculation - A-price tab
+	calcAPrisNaming: "Benämning",
+	calcAPrisSpecification: "Specifikation",
+	calcAPrisOpen: "Öppna",
+	calcAPrisCreate: "Skapa nytt",
 	// Admin - Users
 	adminUsersTitle: "Användare",
 	adminUsersTabGroups: "Grupper",

@@ -913,6 +913,11 @@ export type OfferTranslation = {
 	calcProIndustrySettings: string;
 	calcProType: string;
 	calcProVacant: string;
+	// Calculation - A-price tab
+	calcAPrisNaming: string;
+	calcAPrisSpecification: string;
+	calcAPrisOpen: string;
+	calcAPrisCreate: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
