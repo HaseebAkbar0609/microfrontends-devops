@@ -23,7 +23,6 @@ import {
 } from "@/components/ui/select";
 
 interface ContactInformationStepProps {
-	readonly control?: Control<CreateAgreementFormData>;
 	contacts: AgreementContact[];
 	onAddContact: (contact: AgreementContact) => void;
 	onRemoveContact: (id: string) => void;
