@@ -94,10 +94,10 @@ const CreateIntegrationPage = () => {
 							className="w-48 rounded-md border border-slate-200 bg-white p-1 shadow-md"
 						>
 							<DropdownMenuItem
-								onClick={() => filters.setFilter("all")}
+								onClick={() => filters.setFilter(null)}
 								className={cn(
 									"cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700",
-									filters.filter === "all" &&
+									filters.filter === null &&
 										"bg-slate-100 font-medium text-slate-900",
 								)}
 							>
