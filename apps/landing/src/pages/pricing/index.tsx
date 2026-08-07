@@ -637,7 +637,7 @@ function NumberField({
         id={inputId}
         type="number"
         min={min}
-        step={step || (decimal ? "any" : 1)}
+        step={step ?? (decimal ? "any" : 1)}
         value={valStr}
         disabled={disabled}
         onChange={handleChange}
