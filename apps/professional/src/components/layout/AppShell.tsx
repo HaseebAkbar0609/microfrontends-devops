@@ -19,6 +19,10 @@ import {
 } from "./sidebar/navConfig";
 import { offerSidebarItems, goToItems } from "@/features/offer/constants";
 import { b2bSidebarItems } from "@/features/b2b/constants";
+import { calculationSidebarItems, calculationGoToItems } from "@/features/calculation/constants";
+import { productionSidebarItems } from "@/features/production/constants";
+import { financialSidebarItems } from "@/features/financial-management/constants";
+import { businessSupportSidebarItems } from "@/features/business-support/constants";
 import localizationConstants from "@/utils/translation/constants";
 import { CircleDollarSign } from "lucide-react";
 
@@ -53,6 +57,10 @@ export function AppShell({ children }: AppShellProps) {
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
 	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
+	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
+	const isProductionNavRoute = pathname.startsWith("/module/production");
+	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
+	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
 	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
 	const offerSegment = isOfferModuleRoute
 		? (pathname.match(/^\/module\/business\/offer\/([^/]+)/)?.[1])
@@ -174,6 +182,34 @@ export function AppShell({ children }: AppShellProps) {
 				<DynamicSubSidebar
 					titleKey={localizationConstants.b2b}
 					items={b2bSidebarItems}
+					hideBack={true}
+				/>
+			) : isCalculationNavRoute ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.calculation}
+					items={calculationSidebarItems}
+					hideBack={true}
+					additionalSection={{
+						titleKey: localizationConstants.goTo,
+						items: calculationGoToItems,
+					}}
+				/>
+			) : isProductionNavRoute ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.production}
+					items={productionSidebarItems}
+					hideBack={true}
+				/>
+			) : isFinancialNavRoute ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.financialManagement}
+					items={financialSidebarItems}
+					hideBack={true}
+				/>
+			) : isBusinessSupportNavRoute ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.businessSupport}
+					items={businessSupportSidebarItems}
 					hideBack={true}
 				/>
 			) : showSubSidebar ? (
