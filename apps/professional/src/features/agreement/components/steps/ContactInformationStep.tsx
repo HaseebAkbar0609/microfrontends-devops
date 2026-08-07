@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Control } from "react-hook-form";
-import type { CreateAgreementFormData, AgreementContact } from "../../types/agreementCreate";
+import type { AgreementContact } from "../../types/agreementCreate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Contact, MoreHorizontal, Save } from "lucide-react";
