@@ -1284,6 +1284,16 @@ export type OfferTranslation = {
 	timeRowAddedToast: string;
 	timeRowSavedToast: string;
 	timeRowDeletedToast: string;
+	// Admin - Settings (modules)
+	adminSettingsTabModule: string;
+	adminSettingsTabSystem: string;
+	moduleColModules: string;
+	moduleColMaker: string;
+	moduleColAction: string;
+	moduleStatusActive: string;
+	moduleStatusClosed: string;
+	moduleViewSettings: string;
+	moduleLoadFailed: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;
