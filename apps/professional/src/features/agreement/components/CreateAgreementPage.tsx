@@ -215,7 +215,6 @@ export function CreateAgreementPage() {
 								{currentStep === 1 && <AgreementInformationStep control={control} />}
 								{currentStep === 2 && (
 									<ContactInformationStep
-										control={control}
 										contacts={contacts}
 										onAddContact={handleAddContact}
 										onRemoveContact={handleRemoveContact}
