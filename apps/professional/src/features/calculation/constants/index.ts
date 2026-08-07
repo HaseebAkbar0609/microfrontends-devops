@@ -10,6 +10,7 @@ import {
 	FileText,
 	Image as ImageIcon,
 	Layers,
+	List,
 	Newspaper,
 	PieChart,
 	Receipt,
@@ -37,6 +38,12 @@ export const calculationSidebarItems: DynamicSubSidebarItem[] = [
 		href: "/module/business/calculation",
 		icon: FileText,
 		exact: true,
+	},
+	{
+		id: "calc-overview",
+		labelKey: localizationConstants.calcOverviewPage,
+		href: "/module/business/calculation/overview",
+		icon: List,
 	},
 	{
 		id: "kalkyl",

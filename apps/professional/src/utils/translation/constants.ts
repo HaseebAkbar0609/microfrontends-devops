@@ -842,6 +842,20 @@ export type OfferTranslation = {
 	b2bAvtalStatusRejected: string;
 	// Calculation - Dashboard
 	calcOverview: string;
+	// Calculation - Overview (list)
+	calcOverviewPage: string;
+	calcOverviewNewBtn: string;
+	calcOverviewConnection: string;
+	calcOverviewClient: string;
+	calcOverviewOffertDatum: string;
+	calcOverviewTyp: string;
+	calcOverviewOffertSumma: string;
+	calcOverviewKategori: string;
+	calcOverviewEmpty: string;
+	calcOverviewSeKalkyl: string;
+	calcOverviewStatusNotStarted: string;
+	calcOverviewStatusInProgress: string;
+	calcOverviewStatusCompleted: string;
 	calcKalkyl: string;
 	calcStatistics: string;
 	calcStatus: string;
