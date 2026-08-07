@@ -36,7 +36,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       const url = new URL(targetLoginUrl);
-      if (email) url.searchParams.set("email", encodeURIComponent(email));
+      if (email) url.searchParams.set("email", email);
       window.location.href = url.toString();
     } catch {
       window.location.href = targetLoginUrl;
