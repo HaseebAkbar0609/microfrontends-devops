@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown, Eye, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -92,6 +92,8 @@ export function CalculationOverviewView({ items }: Props) {
       ),
     [filtered, sortField, sortDir],
   );
+
+  useEffect(() => { setPage(1); }, [items]);
 
   const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
   const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
