@@ -14,8 +14,20 @@ export interface Agreement {
 	updatedAt: string;
 }
 
+export type AgreementColumnField =
+	| "idNumber"
+	| "object"
+	| "department"
+	| "counterparty"
+	| "startDate"
+	| "endDate"
+	| "actionDate"
+	| "status"
+	| "actions"
+	| "actionsMenu";
+
 export interface AgreementColumn {
-	field: string;
+	field: AgreementColumnField;
 	label: string;
 	sortable: boolean;
 }
