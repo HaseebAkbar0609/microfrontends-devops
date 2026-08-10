@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 
-import { CUSTOMER_REGISTER_URL } from "@/utils/constants";
+import { getCustomerRegisterUrl } from "@/utils/constants";
 
 type DropdownHomeMenuProps = {
   label: string;
@@ -33,7 +33,7 @@ const DropdownHomeMenu: React.FC<DropdownHomeMenuProps> = ({ label }) => {
       onMouseLeave={handleMouseLeave}
     >
       {/* Dropdown Trigger */}
-      <button 
+      <button
         className="px-4 text-[#5B5B5B] hover:text-primary-500 hover:bg-primary-50 rounded-lg transition-colors duration-200"
         aria-haspopup="true"
         aria-expanded={isOpen}
@@ -46,9 +46,8 @@ const DropdownHomeMenu: React.FC<DropdownHomeMenuProps> = ({ label }) => {
       <div
         role="menu"
         aria-label={`${label} navigation`}
-        className={`absolute left-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl transition-all duration-300 ease-in-out z-[9999] ${
-          isOpen ? "opacity-100 visible" : "opacity-0 invisible"
-        }`}
+        className={`absolute left-0 top-full mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-xl transition-all duration-300 ease-in-out z-[9999] ${isOpen ? "opacity-100 visible" : "opacity-0 invisible"
+          }`}
       >
         {items.map((item, index) => {
           const isExternal = item.path.startsWith("http");
