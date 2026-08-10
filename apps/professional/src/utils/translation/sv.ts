@@ -1287,6 +1287,13 @@ export const svOffer: OfferTranslation = {
 	settingsUsersAddLicenses: "Lägga till licenser",
 	settingsUsersChangePermissions: "Ändra behörighet användare",
 	settingsUsersTerminateLicenses: "Säga upp licenser",
+	// Admin - Company presentation
+	companyPresentationTitle: "Företagspresentation",
+	companyPresentationTextLabel: "Presentations text:",
+	companyPresentationTextPlaceholder: "Rubrik",
+	companyPresentationTeamLabel: "Företags team:",
+	companyPresentationFileLabel: "Presentation företag",
+	companyPresentationFileHint: "PPT-, DOC- och PDF-filer är tillåtna.",
 	// Admin - Integration
 	integrationHeading: "Kopplingar till TimeFlow",
 	integrationCreate: "Skapa integration",

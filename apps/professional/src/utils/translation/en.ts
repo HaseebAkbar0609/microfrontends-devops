@@ -1403,6 +1403,13 @@ export const enOffer: OfferTranslation = {
 	settingsUsersAddLicenses: "Add licenses",
 	settingsUsersChangePermissions: "Change user permissions",
 	settingsUsersTerminateLicenses: "Terminate licenses",
+	// Admin - Company presentation
+	companyPresentationTitle: "Company presentation",
+	companyPresentationTextLabel: "Presentation text:",
+	companyPresentationTextPlaceholder: "Title",
+	companyPresentationTeamLabel: "Company team:",
+	companyPresentationFileLabel: "Company presentation",
+	companyPresentationFileHint: "PPT, DOC and PDF files are allowed.",
 	// Admin - Integration
 	integrationHeading: "Connections to TimeFlow",
 	integrationCreate: "Create integration",
