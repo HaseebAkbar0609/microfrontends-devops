@@ -5,10 +5,10 @@ import Input from "@/components/common/input";
 import Button from "../button";
 import { useState } from "react";
 import Textarea from "../textarea";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 const ContactUs: React.FC = () => {
-  const pathname = usePathname(); // ✅ get current route
+  const { pathname } = useRouter();
 
   const [formData, setFormData] = useState({
     business: "",

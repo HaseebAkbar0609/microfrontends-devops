@@ -6,7 +6,7 @@ import Input from "../common/input";
 import Button from "../common/button";
 import Textarea from "../common/textarea";
 import Checkbox from "../common/checkbox";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ const Register: React.FC = () => {
 
   const [error, setError] = useState("");
 
-  const pathname = usePathname() || "";
+  const { pathname } = useRouter();
   const isProfessional = pathname.includes("/professional");
 
   const registerLink = isProfessional

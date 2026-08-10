@@ -1,7 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
+import { CUSTOMER_REGISTER_URL } from "@/utils/constants";
 
 const Content: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -61,7 +62,7 @@ const Content: React.FC = () => {
       formData.phone &&
       formData.accepted
     ) {
-      router.push("https://timeflowsystem.com/register/customer");
+      window.location.href = CUSTOMER_REGISTER_URL;
     } else {
       alert("Fyll i alla fält och godkänn användarvillkoren innan du fortsätter.");
     }
