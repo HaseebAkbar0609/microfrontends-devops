@@ -1375,6 +1375,7 @@ export type OfferTranslation = {
 	moduleSettingAll: string;
 	moduleSettingAuthorized: string;
 	moduleSettingActivated: string;
+	moduleSettingDeactivated: string;
 	moduleSettingPhone: string;
 	adminSettingsTabUsers: string;
 	settingsUsersSysAdmin: string;

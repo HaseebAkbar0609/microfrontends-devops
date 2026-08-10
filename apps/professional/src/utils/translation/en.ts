@@ -1393,6 +1393,7 @@ export const enOffer: OfferTranslation = {
 	moduleSettingAll: "All",
 	moduleSettingAuthorized: "Authorized",
 	moduleSettingActivated: "Activated",
+	moduleSettingDeactivated: "Deactivated",
 	moduleSettingPhone: "Phone number",
 	adminSettingsTabUsers: "Users",
 	settingsUsersSysAdmin: "Sys Admin",

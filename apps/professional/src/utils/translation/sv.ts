@@ -1277,6 +1277,7 @@ export const svOffer: OfferTranslation = {
 	moduleSettingAll: "Alla",
 	moduleSettingAuthorized: "Behörig",
 	moduleSettingActivated: "Aktiverad",
+	moduleSettingDeactivated: "Inaktiverad",
 	moduleSettingPhone: "Telefon nummer",
 	adminSettingsTabUsers: "Användare",
 	settingsUsersSysAdmin: "Sys Admin",

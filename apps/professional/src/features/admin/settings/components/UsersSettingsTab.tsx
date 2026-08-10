@@ -80,7 +80,9 @@ const UsersSettingsTab = () => {
 							<span className="text-sm text-slate-800">
 								<Translate
 									text={
-										localizationConstants.moduleSettingActivated
+										(toggles[row.id] ?? true)
+											? localizationConstants.moduleSettingActivated
+											: localizationConstants.moduleSettingDeactivated
 									}
 								/>
 							</span>

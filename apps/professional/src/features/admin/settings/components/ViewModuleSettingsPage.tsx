@@ -132,7 +132,9 @@ const ModuleSettingsPanel = ({ module }: { module: PermissionModule }) => {
 							<span className="text-sm text-slate-800">
 								<Translate
 									text={
-										localizationConstants.moduleSettingActivated
+										flowTalkEnabled
+											? localizationConstants.moduleSettingActivated
+											: localizationConstants.moduleSettingDeactivated
 									}
 								/>
 							</span>
