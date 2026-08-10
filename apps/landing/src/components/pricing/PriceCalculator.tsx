@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { TimeStudyModal } from "@/components/site/TimeStudyModal";
@@ -63,7 +63,7 @@ export function PriceCalculator() {
   }, 0);
 
   const monthlyTotalRaw = START_BASE + lineAdminLicenses + lineWorkApps + lineAutoEko + lineDrive + lineMetric + lineAddons;
-  const monthlyTotal = useMemo(() => applyCycle(monthlyTotalRaw, cycle), [monthlyTotalRaw, cycle]);
+  const monthlyTotal = applyCycle(monthlyTotalRaw, cycle);
 
   const savingsPerMonth = hourlyCost * hoursSavedPerUser * Math.max(1, totalPeople);
   const net = savingsPerMonth - monthlyTotal;
