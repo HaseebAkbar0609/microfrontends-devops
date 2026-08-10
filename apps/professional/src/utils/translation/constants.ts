@@ -942,6 +942,12 @@ export type OfferTranslation = {
 	calcAPrisSpecification: string;
 	calcAPrisOpen: string;
 	calcAPrisCreate: string;
+	// Calculation - Skall krav tab
+	calcSkallKravViewFile: string;
+	calcSkallKravUploadTitle: string;
+	calcSkallKravUploadLabel: string;
+	calcSkallKravFileTypes: string;
+	calcSkallKravEmpty: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
