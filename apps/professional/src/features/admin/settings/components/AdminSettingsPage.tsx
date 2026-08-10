@@ -6,14 +6,16 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import ModuleSettingsTab from "./ModuleSettingsTab";
+import UsersSettingsTab from "./UsersSettingsTab";
 
-const TAB_IDS = ["module", "system"] as const;
+const TAB_IDS = ["module", "system", "users"] as const;
 
 type AdminSettingsTabId = (typeof TAB_IDS)[number];
 
 const TABS: { id: AdminSettingsTabId; labelKey: string }[] = [
 	{ id: "module", labelKey: localizationConstants.adminSettingsTabModule },
 	{ id: "system", labelKey: localizationConstants.adminSettingsTabSystem },
+	{ id: "users", labelKey: localizationConstants.adminSettingsTabUsers },
 ];
 
 const isTabId = (value: string | null): value is AdminSettingsTabId =>
@@ -76,6 +78,9 @@ const AdminSettingsPage = () => {
 					<div className="rounded-md border border-slate-200 bg-white p-10 text-center text-sm text-slate-600">
 						<Translate text={localizationConstants.comingSoon} />
 					</div>
+				</TabsContent>
+				<TabsContent value="users">
+					<UsersSettingsTab />
 				</TabsContent>
 			</Tabs>
 		</div>
