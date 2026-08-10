@@ -721,7 +721,6 @@ export type AdminTranslation = {
 	actionEdit: string;
 	actionDelete: string;
 	editUserTitle: string;
-	createUserTitle: string;
 	confirmDeleteUser: string;
 	userDetailsReports: string;
 	userDetailsRegisterImportant: string;

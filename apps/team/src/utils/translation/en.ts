@@ -746,7 +746,6 @@ export const enAdmin: AdminTranslation = {
 	actionEdit: "Edit",
 	actionDelete: "Delete",
 	editUserTitle: "Edit User",
-	createUserTitle: "Create New User",
 	confirmDeleteUser: "Are you sure you want to delete this user?",
 	userDetailsReports: "Reports",
 	userDetailsRegisterImportant: "Register/Other",

@@ -744,7 +744,6 @@ export const sweAdmin: AdminTranslation = {
 	actionEdit: "Redigera",
 	actionDelete: "Ta bort",
 	editUserTitle: "Redigera användare",
-	createUserTitle: "Skapa ny användare",
 	confirmDeleteUser: "Är du säker på att du vill ta bort den här användaren?",
 	userDetailsReports: "Rapporter",
 	userDetailsRegisterImportant: "Register/Övrigt",
