@@ -1376,6 +1376,14 @@ export type OfferTranslation = {
 	moduleSettingAuthorized: string;
 	moduleSettingActivated: string;
 	moduleSettingPhone: string;
+	adminSettingsTabUsers: string;
+	settingsUsersSysAdmin: string;
+	settingsUsersFullAccess: string;
+	settingsUsersWholeSystem: string;
+	settingsUsersAddUsers: string;
+	settingsUsersAddLicenses: string;
+	settingsUsersChangePermissions: string;
+	settingsUsersTerminateLicenses: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;
