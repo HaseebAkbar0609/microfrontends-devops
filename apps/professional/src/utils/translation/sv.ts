@@ -1273,6 +1273,11 @@ export const svOffer: OfferTranslation = {
 	moduleStatusClosed: "Stängd",
 	moduleViewSettings: "Visa inställningar",
 	moduleLoadFailed: "Kunde inte ladda moduler",
+	moduleSettingsSuffix: "modul",
+	moduleSettingAll: "Alla",
+	moduleSettingAuthorized: "Behörig",
+	moduleSettingActivated: "Aktiverad",
+	moduleSettingPhone: "Telefon nummer",
 	// Admin - Integration
 	integrationHeading: "Kopplingar till TimeFlow",
 	integrationCreate: "Skapa integration",

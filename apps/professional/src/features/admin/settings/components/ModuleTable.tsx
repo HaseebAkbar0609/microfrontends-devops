@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { ArrowUpDown, Check, Power } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
@@ -12,9 +13,8 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate, useTranslate } from "@/utils/translation/translate";
+import { Translate } from "@/utils/translation/translate";
 import { PermissionModule } from "../api/permissions.api";
 import {
 	MODULE_FALLBACK_ICON,
@@ -39,7 +39,7 @@ const ModuleTable = ({
 	sortField,
 	onToggleSort,
 }: ModuleTableProps) => {
-	const t = useTranslate();
+	const router = useRouter();
 	const localized = useLocalizedText();
 
 	return (
@@ -149,11 +149,8 @@ const ModuleTable = ({
 										type="button"
 										variant="outline"
 										onClick={() =>
-											showToast(
-												"success",
-												`${localized(module.name)} — ${t(
-													localizationConstants.comingSoon,
-												)}`,
+											router.push(
+												`/admin/settings/view?module=${module.id}`,
 											)
 										}
 										className="h-9 rounded-md border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50"

@@ -1371,6 +1371,11 @@ export type OfferTranslation = {
 	moduleStatusClosed: string;
 	moduleViewSettings: string;
 	moduleLoadFailed: string;
+	moduleSettingsSuffix: string;
+	moduleSettingAll: string;
+	moduleSettingAuthorized: string;
+	moduleSettingActivated: string;
+	moduleSettingPhone: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;

@@ -1389,6 +1389,11 @@ export const enOffer: OfferTranslation = {
 	moduleStatusClosed: "Closed",
 	moduleViewSettings: "View settings",
 	moduleLoadFailed: "Could not load modules",
+	moduleSettingsSuffix: "module",
+	moduleSettingAll: "All",
+	moduleSettingAuthorized: "Authorized",
+	moduleSettingActivated: "Activated",
+	moduleSettingPhone: "Phone number",
 	// Admin - Integration
 	integrationHeading: "Connections to TimeFlow",
 	integrationCreate: "Create integration",
