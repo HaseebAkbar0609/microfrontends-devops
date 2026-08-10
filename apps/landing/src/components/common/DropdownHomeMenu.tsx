@@ -14,7 +14,7 @@ const DropdownHomeMenu: React.FC<DropdownHomeMenuProps> = ({ label }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const items = [
-    { label: "Offert", path: CUSTOMER_REGISTER_URL },
+    { label: "Offert", path: getCustomerRegisterUrl() },
     { label: "Hitta Hantverkare", path: "#industries" },
     { label: "Så här fungerar det", path: "/consumer/how-it-works" },
     { label: "App TimeFlow Home", path: "/consumer/app-home" },
