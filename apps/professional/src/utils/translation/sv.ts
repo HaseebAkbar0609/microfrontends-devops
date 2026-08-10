@@ -1267,6 +1267,21 @@ export const svOffer: OfferTranslation = {
 	moduleStatusClosed: "Stängd",
 	moduleViewSettings: "Visa inställningar",
 	moduleLoadFailed: "Kunde inte ladda moduler",
+	// Admin - Integration
+	integrationHeading: "Kopplingar till TimeFlow",
+	integrationCreate: "Skapa integration",
+	integrationIntro1:
+		"TimeFlow har ett stort utbud av integrationer mellan TimeFlow och banker, bokföring, leverantörer och myndigheter och övriga aktörer.",
+	integrationIntro2:
+		"Ni kopplar integrationen under respektive kategori, för att integrationen skall vara aktiverad behöver ni köpa integrations licens - vilket ni gör under licenser.",
+	integrationIntro3:
+		"Vid frågor kontakta supporten eller läs mera på hjälp guiden.",
+	integrationConnectedTitle: "System kopplade till TimeFlow",
+	integrationTextLabel: "Text",
+	integrationModulesLabel: "Moduler /Funktion",
+	integrationConnectBtn: "Anslut",
+	integrationConnectedToast: "Integration ansluten",
+	integrationFilterAll: "Alla integrationer",
 	monthJanuary: "Januari",
 	monthFebruary: "Februari",
 	monthMarch: "Mars",
