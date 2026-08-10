@@ -1385,6 +1385,12 @@ export type OfferTranslation = {
 	settingsUsersAddLicenses: string;
 	settingsUsersChangePermissions: string;
 	settingsUsersTerminateLicenses: string;
+	// Admin - Company presentation
+	companyPresentationTitle: string;
+	companyPresentationTextLabel: string;
+	companyPresentationTeamLabel: string;
+	companyPresentationFileLabel: string;
+	companyPresentationFileHint: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;
