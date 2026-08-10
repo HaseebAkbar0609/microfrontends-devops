@@ -123,9 +123,9 @@ export default function PricingPage() {
                       : "border-border hover:border-primary/40 hover:shadow-md relative"
                     }`}
                 >
-                  {isSelected && (
+                  {p.popular && (
                     <div className="absolute -top-3 left-6 sm:left-8 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider">
-                      {t("pricing.selected") || "VALD PLAN"}
+                      {t("pricing.popular")}
                     </div>
                   )}
                   <div className="flex items-baseline justify-between mb-2">

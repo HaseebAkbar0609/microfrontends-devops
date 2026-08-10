@@ -152,6 +152,7 @@ export function PriceCalculator() {
                 }}
                 hint={t("pricing.hoursSavedHint")}
                 min={0}
+                decimal
               />
             </div>
 
@@ -181,27 +182,23 @@ export function PriceCalculator() {
             </label>
 
             <div className="border-t border-border pt-6">
-              <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("pricing.driveLabel", { price: fmt(drivePrice) })}</label>
-              <input
-                type="number"
-                min={0}
+              <NumberField
+                label={t("pricing.driveLabel", { price: fmt(drivePrice) })}
                 value={driveUsers}
-                onChange={(e) => setDriveUsers(Math.max(0, Number(e.target.value) || 0))}
-                className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold"
+                onChange={setDriveUsers}
+                hint={t("pricing.driveHint")}
+                min={0}
               />
-              <p className="text-xs text-muted mt-1">{t("pricing.driveHint")}</p>
             </div>
 
             <div className="border-t border-border pt-6">
-              <label className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("pricing.metricLabel", { price: fmt(metricPrice) })}</label>
-              <input
-                type="number"
-                min={0}
+              <NumberField
+                label={t("pricing.metricLabel", { price: fmt(metricPrice) })}
                 value={metricUsers}
-                onChange={(e) => setMetricUsers(Math.max(0, Number(e.target.value) || 0))}
-                className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold"
+                onChange={setMetricUsers}
+                hint={t("pricing.metricHint")}
+                min={0}
               />
-              <p className="text-xs text-muted mt-1">{t("pricing.metricHint")}</p>
             </div>
 
             <div className="border-t border-border pt-6">

@@ -1,12 +1,15 @@
+import { useEffect, useId, useState } from "react";
+
 interface NumberFieldProps {
   id?: string;
-  label: string;
+  label?: string;
   value: number;
   onChange: (n: number) => void;
   hint?: string;
   disabled?: boolean;
   min?: number;
   step?: number;
+  decimal?: boolean;
 }
 
 export function NumberField({
@@ -17,23 +20,81 @@ export function NumberField({
   hint,
   disabled,
   min = 0,
-  step = 1,
+  step,
+  decimal = false,
 }: NumberFieldProps) {
-  const inputId = id || `number-field-${label.toLowerCase().replace(/\s+/g, "-")}`;
+  const [valStr, setValStr] = useState<string>(value.toString());
+  const [lastPublishedValue, setLastPublishedValue] = useState<number>(value);
+  const generatedId = useId();
+  const inputId = id || generatedId;
+
+  useEffect(() => {
+    if (value !== lastPublishedValue) {
+      setValStr(value.toString());
+      setLastPublishedValue(value);
+    }
+  }, [value, lastPublishedValue]);
+
+  const publishValue = (next: number) => {
+    const normalized = Math.max(min, next);
+    onChange(normalized);
+    setLastPublishedValue(normalized);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    setValStr(raw);
+
+    if (raw === "" || raw === "-" || raw.endsWith(".") || raw.endsWith(",")) {
+      return;
+    }
+
+    const parsed = Number(raw.replace(",", "."));
+    if (Number.isFinite(parsed)) {
+      publishValue(parsed);
+    }
+  };
+
+  const handleBlur = () => {
+    const raw = valStr.trim();
+    if (raw === "" || raw === "-" || raw === "." || raw === ",") {
+      const normalized = min;
+      setValStr(normalized.toString());
+      publishValue(normalized);
+      return;
+    }
+
+    const parsed = Number(raw.replace(",", "."));
+    if (!Number.isFinite(parsed)) {
+      const normalized = min;
+      setValStr(normalized.toString());
+      publishValue(normalized);
+      return;
+    }
+
+    const normalized = Math.max(min, parsed);
+    setValStr(normalized.toString());
+    publishValue(normalized);
+  };
+
   return (
     <div>
-      <label htmlFor={inputId} className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">
-        {label}
-      </label>
+      {label && (
+        <label htmlFor={inputId} className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">
+          {label}
+        </label>
+      )}
       <input
         id={inputId}
         type="number"
-        value={value}
         min={min}
-        step={step}
+        step={step ?? (decimal ? "any" : 1)}
+        value={valStr}
         disabled={disabled}
-        onChange={(e) => onChange(Math.max(min, Number(e.target.value) || 0))}
-        className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold disabled:opacity-50 disabled:bg-surface"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={(e) => e.target.select()}
+        className="w-full h-11 px-3 border border-border bg-background font-display text-lg font-bold disabled:opacity-50 disabled:bg-surface focus:outline-none focus:border-primary transition-colors"
       />
       {hint && <p className="text-xs text-muted mt-1">{hint}</p>}
     </div>
