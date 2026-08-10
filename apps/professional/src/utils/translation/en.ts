@@ -954,6 +954,11 @@ export const enOffer: OfferTranslation = {
 	calcProIndustrySettings: "Industry settings",
 	calcProType: "Type",
 	calcProVacant: "Vacant",
+	// Calculation - A-price tab
+	calcAPrisNaming: "Naming",
+	calcAPrisSpecification: "Specification",
+	calcAPrisOpen: "Open",
+	calcAPrisCreate: "Create new",
 	// Admin - Users
 	adminUsersTitle: "Users",
 	adminUsersTabGroups: "Groups",
