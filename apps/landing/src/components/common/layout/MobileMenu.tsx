@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 import { HeaderMenu } from "@/configs";
 import { modulerData } from "@/components/professional/moduler_menu/ModulerContent";
 
@@ -17,7 +17,7 @@ interface SubItem {
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ currentMenu, onClose }) => {
-  const pathname = usePathname();
+  const { pathname } = useRouter();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const handleClick = () => {

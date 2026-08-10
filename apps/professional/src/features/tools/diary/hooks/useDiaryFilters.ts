@@ -6,13 +6,13 @@ import { sortItems } from "@/utils/tableSort";
 import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
 import { DiaryEntry } from "../constants/mockData";
 
-export type DiaryFilter = "all" | string;
+export type DiaryFilter = string | null;
 
 const [REF_YEAR, REF_MONTH] = mockDate(0).split("-").map(Number);
 
 export function useDiaryFilters(entries: DiaryEntry[]) {
 	const [search, setSearchState] = useState("");
-	const [filter, setFilterState] = useState<DiaryFilter>("all");
+	const [filter, setFilterState] = useState<DiaryFilter>(null);
 	const [month, setMonthState] = useState(REF_MONTH);
 	const [year, setYearState] = useState(REF_YEAR);
 	const { sortField, sortDir, toggleSort } = useTableSort<"date">();
@@ -30,7 +30,7 @@ export function useDiaryFilters(entries: DiaryEntry[]) {
 			rows = rows.filter((entry) =>
 				entry.title.toLowerCase().includes(term),
 			);
-		if (filter !== "all")
+		if (filter !== null)
 			rows = rows.filter((entry) => entry.projectName === filter);
 		return sortItems(rows, sortField, sortDir, (item) => item.date);
 	}, [entries, search, filter, monthPrefix, sortField, sortDir]);

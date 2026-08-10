@@ -83,7 +83,7 @@ const Footer: React.FC = () => {
 
       <div className="mt-10 grid md:grid-cols-3 lg:grid-cols-6 gap-2 text-center md:text-left">
         {Object.keys(contacts).map((item, key) => (
-          <div className="fex flex-col gap-2" key={key}>
+          <div className="flex flex-col gap-2" key={key}>
             <div className="footer-title-size font-medium mb-7">{item}</div>
             {contacts[item].map((sub, subKey) => (
               <div key={subKey} className="flex flex-col gap-1 my-3">
@@ -108,7 +108,7 @@ const Footer: React.FC = () => {
           </div>
         ))}
         {Object.keys(FooterMenu[basePath]).map((item, key) => (
-          <div className="fex flex-col gap-2" key={key}>
+          <div className="flex flex-col gap-2" key={key}>
             <div className="footer-title-size font-medium mb-7">{item}</div>
             {FooterMenu[basePath][item].map((sub, subKey) => (
               <div key={subKey} className="flex flex-col gap-1 my-3">
@@ -131,8 +131,8 @@ const Footer: React.FC = () => {
             ))}
           </div>
         ))}
-        <div className="fex flex-col gap-2">
-          <div className="fex flex-col gap-2">
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2">
             <div className="footer-title-size font-medium mb-7">
               Sök innehåll
             </div>

@@ -18,6 +18,15 @@ export interface UploadProgressCallback {
   (progress: number): void;
 }
 
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipAuth?: boolean;
+  }
+  export interface InternalAxiosRequestConfig {
+    skipAuth?: boolean;
+  }
+}
+
 export interface RequestConfig extends AxiosRequestConfig {
   skipAuth?: boolean;
 }
@@ -34,10 +43,4 @@ export class ApiError extends Error {
       error.response?.data?.message || error.message || "An error occurred";
     this.data = error.response?.data || null;
   }
-}
-
-export interface UseApiStateOptions {
-  immediate?: boolean;
-  onSuccess?: (data: any) => void;
-  onError?: (error: ApiError) => void;
 }

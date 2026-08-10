@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import { moduleSections as sections } from "@/lib/modules";
+import { CALENDLY_DEMO_URL } from "@/utils/constants";
 
 export default function ProfessionalPage() {
   const { t } = useTranslation();
@@ -42,8 +43,8 @@ export default function ProfessionalPage() {
                   {t("professional.heroSavingSuffix")}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
-                  <Link href="/contact" className="px-6 py-3 bg-primary text-primary-foreground font-bold rounded-sm text-center">{t("professional.startAccount")}</Link>
-                  <Link href="/contact" className="px-6 py-3 border border-border font-bold rounded-sm hover:bg-surface text-center">{t("professional.tryDemo")}</Link>
+                  <Link href="/register?type=business" className="px-6 py-3 bg-primary text-primary-foreground font-bold rounded-sm text-center">{t("professional.startAccount")}</Link>
+                  <a href={CALENDLY_DEMO_URL} target="_blank" rel="noopener noreferrer" className="px-6 py-3 border border-border font-bold rounded-sm hover:bg-surface text-center">{t("professional.tryDemo")}</a>
                 </div>
               </div>
             </div>

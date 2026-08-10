@@ -5,6 +5,7 @@ import type { FormEvent } from "react";
 import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { CUSTOMER_CREATE_OFFER_URL } from "@/utils/constants";
 
 const projectCategories = [
   { icon: "🏠", titleKey: "cat1Title", itemsKey: "cat1Items" },
@@ -28,6 +29,8 @@ export default function ConsumerPage() {
 
   const handleSearch = (e?: FormEvent) => {
     e?.preventDefault();
+    const url = query.trim() ? `${CUSTOMER_CREATE_OFFER_URL}?q=${encodeURIComponent(query.trim())}` : CUSTOMER_CREATE_OFFER_URL;
+    window.location.href = url;
   };
 
   return (
