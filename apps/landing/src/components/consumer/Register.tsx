@@ -7,6 +7,7 @@ import Button from "../common/button";
 import Textarea from "../common/textarea";
 import Checkbox from "../common/checkbox";
 import { useRouter } from "next/router";
+import { getCustomerRegisterUrl, getProfessionalRegisterUrl } from "@/utils/constants";
 
 const Register: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -23,8 +24,8 @@ const Register: React.FC = () => {
   const isProfessional = pathname.includes("/professional");
 
   const registerLink = isProfessional
-    ? "https://timeflowsystem.com/register/member"
-    : "https://timeflowsystem.com/register/customer";
+    ? getProfessionalRegisterUrl()
+    : getCustomerRegisterUrl();
 
   const handleFormDataChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -39,6 +40,21 @@ const Register: React.FC = () => {
     // Basic validation
     if (!name || !email || !mobilePhone) {
       setError("Vänligen fyll i alla obligatoriska fält.");
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Ange en giltig e-postadress.");
+      return;
+    }
+
+    // Phone validation (Swedish format: +46 or 0, followed by 8-10 digits)
+    const cleanPhone = mobilePhone.replace(/[\s-]/g, '');
+    const phoneRegex = /^(\+46|0)[1-9]\d{7,9}$/;
+    if (!phoneRegex.test(cleanPhone)) {
+      setError("Ange ett giltigt svenskt telefonnummer.");
       return;
     }
 

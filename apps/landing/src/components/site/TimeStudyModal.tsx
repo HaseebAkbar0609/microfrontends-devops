@@ -355,28 +355,83 @@ function Stepper({
   unit: string;
   onChange: (v: number) => void;
 }) {
+  const [valStr, setValStr] = useState<string>(value.toString());
+  const [lastPublished, setLastPublished] = useState<number>(value);
+
+  useEffect(() => {
+    if (value !== lastPublished) {
+      setValStr(value.toString());
+      setLastPublished(value);
+    }
+  }, [value, lastPublished]);
+
+  const publish = (n: number) => {
+    const norm = Math.max(0, n);
+    onChange(norm);
+    setLastPublished(norm);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    setValStr(raw);
+    if (raw === "" || raw === "-") return;
+    const parsed = Number(raw);
+    if (Number.isFinite(parsed)) {
+      publish(parsed);
+    }
+  };
+
+  const handleBlur = () => {
+    const raw = valStr.trim();
+    if (raw === "" || raw === "-") {
+      setValStr("0");
+      publish(0);
+      return;
+    }
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed)) {
+      setValStr("0");
+      publish(0);
+    } else {
+      const norm = Math.max(0, parsed);
+      setValStr(norm.toString());
+      publish(norm);
+    }
+  };
+
   return (
     <div className="flex items-center gap-2">
       <button
         type="button"
         aria-label="Minska"
-        onClick={() => onChange(Math.max(0, value - 1))}
-        className="w-10 h-10 border border-border font-bold hover:border-primary"
+        onClick={() => {
+          const next = Math.max(0, value - 1);
+          setValStr(next.toString());
+          publish(next);
+        }}
+        className="w-10 h-10 border border-border font-bold hover:border-primary shrink-0 cursor-pointer"
       >
         −
       </button>
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"
         min={0}
-        value={value}
-        onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}
+        value={valStr}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={(e) => e.target.select()}
         className="w-full h-10 px-3 border border-border bg-background font-display text-lg font-bold text-center"
       />
       <button
         type="button"
         aria-label="Öka"
-        onClick={() => onChange(value + 1)}
-        className="w-10 h-10 border border-border font-bold hover:border-primary"
+        onClick={() => {
+          const next = value + 1;
+          setValStr(next.toString());
+          publish(next);
+        }}
+        className="w-10 h-10 border border-border font-bold hover:border-primary shrink-0 cursor-pointer"
       >
         +
       </button>
@@ -396,14 +451,61 @@ function MiniField({
   value: number;
   onChange: (v: number) => void;
 }) {
+  const [valStr, setValStr] = useState<string>(value.toString());
+  const [lastPublished, setLastPublished] = useState<number>(value);
+
+  useEffect(() => {
+    if (value !== lastPublished) {
+      setValStr(value.toString());
+      setLastPublished(value);
+    }
+  }, [value, lastPublished]);
+
+  const publish = (n: number) => {
+    const norm = Math.max(0, n);
+    onChange(norm);
+    setLastPublished(norm);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    setValStr(raw);
+    if (raw === "" || raw === "-") return;
+    const parsed = Number(raw);
+    if (Number.isFinite(parsed)) {
+      publish(parsed);
+    }
+  };
+
+  const handleBlur = () => {
+    const raw = valStr.trim();
+    if (raw === "" || raw === "-") {
+      setValStr("0");
+      publish(0);
+      return;
+    }
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed)) {
+      setValStr("0");
+      publish(0);
+    } else {
+      const norm = Math.max(0, parsed);
+      setValStr(norm.toString());
+      publish(norm);
+    }
+  };
+
   return (
     <label className="block">
       <span className="block font-mono text-[10px] uppercase tracking-widest text-muted mb-1">{label}</span>
       <input
-        type="number"
+        type="text"
+        inputMode="numeric"
         min={0}
-        value={value}
-        onChange={(e) => onChange(Math.max(0, Number(e.target.value) || 0))}
+        value={valStr}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={(e) => e.target.select()}
         className="w-full h-9 px-2 border border-border bg-background text-sm font-bold"
       />
       <span className="block text-[10px] text-muted mt-1">{suffix}</span>

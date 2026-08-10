@@ -92,17 +92,20 @@ export function AppShell({ children }: AppShellProps) {
 		}
 
 		if (isAuthRoute && isAuthenticated) {
-			// Let users stay on /invitation or /my-companies even with an existing session.
-			if (pathname === "/invitation" || pathname.startsWith("/invitation/") || pathname === "/my-companies") {
+			// Let users stay on /invitation, /my-companies, or /register even with an existing session.
+			if (
+				pathname === "/invitation" ||
+				pathname.startsWith("/invitation/") ||
+				pathname === "/my-companies" ||
+				pathname === "/register" ||
+				pathname.startsWith("/register/")
+			) {
 				setIsCheckingAuth(false);
 				return;
 			}
 
 			const subscriptionRequired = getRequiresSubscriptionFromBrowserCookie();
-			const destination =
-				pathname === "/register" || subscriptionRequired
-					? "/manage-plans"
-					: "/home";
+			const destination = subscriptionRequired ? "/manage-plans" : "/home";
 			router.replace(destination);
 			return;
 		}
@@ -132,7 +135,13 @@ export function AppShell({ children }: AppShellProps) {
 	}
 
 	if (isAuthRoute && isAuthenticated) {
-		if (pathname === "/invitation" || pathname.startsWith("/invitation/") || pathname === "/my-companies") {
+		if (
+			pathname === "/invitation" ||
+			pathname.startsWith("/invitation/") ||
+			pathname === "/my-companies" ||
+			pathname === "/register" ||
+			pathname.startsWith("/register/")
+		) {
 			return <>{children}</>;
 		}
 		return <Loader />;
