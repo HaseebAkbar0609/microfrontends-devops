@@ -935,6 +935,12 @@ export const enOffer: OfferTranslation = {
 	calcAPrisSpecification: "Specification",
 	calcAPrisOpen: "Open",
 	calcAPrisCreate: "Create new",
+	// Calculation - Skall krav tab
+	calcSkallKravViewFile: "View file",
+	calcSkallKravUploadTitle: "Upload Mandatory Requirements",
+	calcSkallKravUploadLabel: "Upload your files",
+	calcSkallKravFileTypes: "PNG, JPG and PDF files are allowed.",
+	calcSkallKravEmpty: "No documents",
 	// Admin - Users
 	adminUsersTitle: "Users",
 	adminUsersTabGroups: "Groups",

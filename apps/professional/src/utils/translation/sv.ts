@@ -819,6 +819,12 @@ export const svOffer: OfferTranslation = {
 	calcAPrisSpecification: "Specifikation",
 	calcAPrisOpen: "Öppna",
 	calcAPrisCreate: "Skapa nytt",
+	// Calculation - Skall krav tab
+	calcSkallKravViewFile: "Se fil",
+	calcSkallKravUploadTitle: "Ladda upp Skall Krav",
+	calcSkallKravUploadLabel: "Ladda upp dina filer",
+	calcSkallKravFileTypes: "PNG-, JPG- och PDF-filer är tillåtna.",
+	calcSkallKravEmpty: "Inga dokument",
 	// Admin - Users
 	adminUsersTitle: "Användare",
 	adminUsersTabGroups: "Grupper",

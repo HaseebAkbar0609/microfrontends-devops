@@ -8,6 +8,7 @@ import { CalculationMarkupSection } from "./CalculationMarkupSection";
 import { CalculationLaborSection } from "./CalculationLaborSection";
 import { CalculationProContent } from "./CalculationProContent";
 import { CalculationAPriceContent } from "./CalculationAPriceContent";
+import { CalculationSkallKravContent } from "./CalculationSkallKravContent";
 import { DUMMY_APRICE_LIST } from "../constants/apriceMock";
 
 const TABS = [
@@ -79,15 +80,16 @@ export function CalculationKalkylView() {
 					<CalculationAPriceContent items={DUMMY_APRICE_LIST} />
 				</TabsContent>
 
-				{["quick-ai", "required"].map((tabValue) => (
-					<TabsContent
-						key={tabValue}
-						value={tabValue}
-						className="flex flex-1 items-center justify-center text-sm text-slate-400"
-					>
-						<Translate text={localizationConstants.comingSoon} />
-					</TabsContent>
-				))}
+				<TabsContent value="required" className="flex flex-1 flex-col">
+					<CalculationSkallKravContent />
+				</TabsContent>
+
+				<TabsContent
+					value="quick-ai"
+					className="flex flex-1 items-center justify-center text-sm text-slate-400"
+				>
+					<Translate text={localizationConstants.comingSoon} />
+				</TabsContent>
 			</Tabs>
 		</div>
 	);
