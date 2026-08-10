@@ -12,3 +12,14 @@ export type LaborRow = {
 	unit: string;
 	aPrice: string;
 };
+
+export type APriceRow = {
+	id: string;
+	artikel: string;
+	benaming: string;
+	specification: string;
+	kategori: string;
+	antal: number;
+	enhet: string;
+	aPrice: number;
+};
