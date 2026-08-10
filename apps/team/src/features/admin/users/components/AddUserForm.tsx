@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Save } from "lucide-react";
@@ -25,16 +25,81 @@ interface AddUserFormProps {
 export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
   const { t } = useTranslation();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id");
+  const isEditMode = !!userId;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isInline = !!onCancel;
 
-  const form = useForm<AddUserFormValues>({
-    resolver: zodResolver(addUserSchema),
-    defaultValues: {
+  const initialValues: AddUserFormValues = useMemo(() => {
+    if (userId === "1") {
+      return {
+        userCredentials: "kalle.a",
+        password: "••••••••",
+        firstName: "Kalle",
+        lastName: "Andersson",
+        confirmPassword: "••••••••",
+        role: "sys-admin",
+        department: "ekonomi",
+        isActive: true,
+        generateEmailForNewPassword: false,
+        personalNumber: "710405-1010",
+        smsAuthentication: true,
+        email: "kalle@timeflow.se",
+        mobileNumber: "+46 70 123 45 67",
+        employeeRegisterPerson: "EMP-101",
+        language: "sv",
+        automaticLogout: "2h",
+      };
+    }
+    if (userId === "2") {
+      return {
+        userCredentials: "sten.s",
+        password: "••••••••",
+        firstName: "Sten",
+        lastName: "Svensson",
+        confirmPassword: "••••••••",
+        role: "admin",
+        department: "service",
+        isActive: true,
+        generateEmailForNewPassword: true,
+        personalNumber: "710405-1011",
+        smsAuthentication: false,
+        email: "sten@timeflow.se",
+        mobileNumber: "+46 70 234 56 78",
+        employeeRegisterPerson: "EMP-102",
+        language: "sv",
+        automaticLogout: "4h",
+      };
+    }
+    if (userId === "3") {
+      return {
+        userCredentials: "sture.l",
+        password: "••••••••",
+        firstName: "Sture",
+        lastName: "Larsson",
+        confirmPassword: "••••••••",
+        role: "user",
+        department: "overhead",
+        isActive: true,
+        generateEmailForNewPassword: false,
+        personalNumber: "710405-1012",
+        smsAuthentication: false,
+        email: "sture@timeflow.se",
+        mobileNumber: "+46 70 345 67 89",
+        employeeRegisterPerson: "EMP-103",
+        language: "en",
+        automaticLogout: "1h",
+      };
+    }
+    return {
       userCredentials: "",
       password: "",
-      name: "",
+      firstName: "",
+      lastName: "",
       confirmPassword: "",
+      role: "",
+      department: "",
       isActive: true,
       generateEmailForNewPassword: false,
       personalNumber: "",
@@ -44,7 +109,12 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
       employeeRegisterPerson: "",
       language: "sv",
       automaticLogout: "2h",
-    },
+    };
+  }, [userId]);
+
+  const form = useForm<AddUserFormValues>({
+    resolver: zodResolver(addUserSchema),
+    defaultValues: initialValues,
   });
 
   async function onSubmit(_values: AddUserFormValues) {
@@ -59,14 +129,14 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
           }
         }, 1000);
       });
-      toast.success(t(localizationConstants.toastUserCreated));
+      toast.success(t(isEditMode ? localizationConstants.toastUserUpdated : localizationConstants.toastUserCreated));
       if (onSuccess) {
         onSuccess();
       } else {
         router.push("/admin/users");
       }
     } catch {
-      toast.error(t(localizationConstants.toastUserCreateError));
+      toast.error(t(isEditMode ? localizationConstants.toastUserUpdateError : localizationConstants.toastUserCreateError));
     } finally {
       setIsSubmitting(false);
     }
@@ -87,7 +157,8 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
           title={t(localizationConstants.adminUsers)}
           breadcrumbs={[
             { label: t(localizationConstants.breadcrumbHome), href: "/home" },
-            { label: t(localizationConstants.adminUsers) },
+            { label: t(localizationConstants.adminUsers), href: "/admin/users" },
+            { label: t(isEditMode ? localizationConstants.editUserTitle : localizationConstants.addUserTitle) },
           ]}
         />
         <div className="flex flex-1 flex-col overflow-hidden">
@@ -103,7 +174,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
               </button>
               <div>
                 <h1 className="text-xl font-semibold text-slate-900">
-                  <Translate text={localizationConstants.addUserTitle} />
+                  <Translate text={isEditMode ? localizationConstants.editUserTitle : localizationConstants.addUserTitle} />
                 </h1>
                 <p className="text-xs text-slate-500">
                   <Translate text={localizationConstants.addUserSubtitle} />
@@ -111,7 +182,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
               </div>
             </div>
             <Form {...form}>
-              <form id="add-user-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col ml-0 sm:ml-[44px] w-full sm:w-[calc(100%-44px)]">
+              <form id="add-user-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col ml-0 sm:ml-11 w-full sm:w-[calc(100%-44px)]">
                 <div className="rounded-lg border border-zinc-200 bg-white">
                   <UserInformationSection form={form} />
                   <SystemSettingsSection form={form} />
@@ -124,7 +195,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
               <Button
                 type="button"
                 variant="outline"
-                className="min-w-[120px] border-slate-200 text-slate-600 h-10 bg-transparent hover:bg-slate-100"
+                className="min-w-30 border-slate-200 text-slate-600 h-10 bg-transparent hover:bg-slate-100"
                 onClick={handleCancel}
                 disabled={isSubmitting}
               >
@@ -133,7 +204,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
               <Button
                 type="submit"
                 form="add-user-form"
-                className="min-w-[120px] bg-slate-900 hover:bg-slate-800 text-white h-10 gap-2"
+                className="min-w-30 bg-slate-900 hover:bg-slate-800 text-white h-10 gap-2"
                 disabled={isSubmitting}
               >
                 <Save className="h-4 w-4" />
@@ -160,7 +231,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
           </button>
           <div>
             <h1 className="text-xl font-semibold text-slate-900">
-              <Translate text={localizationConstants.addUserTitle} />
+              <Translate text={isEditMode ? localizationConstants.editUserTitle : localizationConstants.addUserTitle} />
             </h1>
             <p className="text-xs text-slate-500">
               <Translate text={localizationConstants.addUserSubtitle} />
@@ -168,7 +239,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
           </div>
         </div>
         <Form {...form}>
-          <form id="add-user-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col ml-0 sm:ml-[44px] w-full sm:w-[calc(100%-44px)]">
+          <form id="add-user-form" onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col ml-0 sm:ml-11 w-full sm:w-[calc(100%-44px)]">
             <div className="rounded-lg border border-zinc-200 bg-white">
               <UserInformationSection form={form} />
               <SystemSettingsSection form={form} />
@@ -181,7 +252,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
           <Button
             type="button"
             variant="outline"
-            className="min-w-[120px] border-slate-200 text-slate-600 h-10 bg-transparent hover:bg-slate-100"
+            className="min-w-30 border-slate-200 text-slate-600 h-10 bg-transparent hover:bg-slate-100"
             onClick={handleCancel}
             disabled={isSubmitting}
           >
@@ -190,7 +261,7 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
           <Button
             type="submit"
             form="add-user-form"
-            className="min-w-[120px] bg-slate-900 hover:bg-slate-800 text-white h-10 gap-2"
+            className="min-w-30 bg-slate-900 hover:bg-slate-800 text-white h-10 gap-2"
             disabled={isSubmitting}
           >
             <Save className="h-4 w-4" />
