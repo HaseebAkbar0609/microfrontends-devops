@@ -937,6 +937,11 @@ export type OfferTranslation = {
 	calcProIndustrySettings: string;
 	calcProType: string;
 	calcProVacant: string;
+	// Calculation - A-price tab
+	calcAPrisNaming: string;
+	calcAPrisSpecification: string;
+	calcAPrisOpen: string;
+	calcAPrisCreate: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
@@ -1360,6 +1365,18 @@ export type OfferTranslation = {
 	moduleStatusClosed: string;
 	moduleViewSettings: string;
 	moduleLoadFailed: string;
+	// Admin - Integration
+	integrationHeading: string;
+	integrationCreate: string;
+	integrationIntro1: string;
+	integrationIntro2: string;
+	integrationIntro3: string;
+	integrationConnectedTitle: string;
+	integrationTextLabel: string;
+	integrationModulesLabel: string;
+	integrationConnectBtn: string;
+	integrationConnectedToast: string;
+	integrationFilterAll: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;
