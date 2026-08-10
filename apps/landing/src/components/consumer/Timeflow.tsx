@@ -2,6 +2,7 @@ import Blog from "../common/blog";
 import Button from "../common/button";
 import { Check, RightArrow } from "../icons";
 import Link from "next/link";
+import { CUSTOMER_REGISTER_URL } from "@/utils/constants";
 
 const Timeflow: React.FC = () => {
   const data = [
@@ -60,7 +61,8 @@ const Timeflow: React.FC = () => {
 
               <div className="flex justify-between items-center mt-4">
                 <a
-                  href="https://timeflowsystem.com/register/customer"
+                  href={CUSTOMER_REGISTER_URL}
+                  target="_blank"
                   rel="noopener noreferrer"
                 >
                   <Button round="full" className="flex gap-2 items-center">

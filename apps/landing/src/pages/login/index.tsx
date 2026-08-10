@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import {
-  PROFESSIONAL_LOGIN_URL,
-  CUSTOMER_LOGIN_URL,
+  getCustomerLoginUrl,
+  getProfessionalLoginUrl,
 } from "@/utils/constants";
 
 export default function LoginPage() {
@@ -27,10 +27,8 @@ export default function LoginPage() {
     }
   }, [router.query.type]);
 
-  const targetLoginUrl = accountType === "customer" ? CUSTOMER_LOGIN_URL : PROFESSIONAL_LOGIN_URL;
-  const targetForgotUrl = accountType === "customer"
-    ? CUSTOMER_LOGIN_URL.replace("/login", "/forgot-password")
-    : PROFESSIONAL_LOGIN_URL.replace("/login", "/forgot-password");
+  const targetLoginUrl = accountType === "customer" ? getCustomerLoginUrl() : getProfessionalLoginUrl();
+  const targetForgotUrl = targetLoginUrl.replace("/login", "/forgot-password");
 
   const handlePasswordLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -317,7 +315,7 @@ export default function LoginPage() {
                   {t("auth.directLogin", "Logga in direkt")}
                 </p>
                 <a
-                  href={PROFESSIONAL_LOGIN_URL}
+                  href={getProfessionalLoginUrl()}
                   className="flex items-center justify-between w-full px-4 py-3 border border-border rounded-sm hover:border-primary/30 hover:bg-background transition-colors group"
                 >
                   <div className="flex items-center gap-3">
@@ -348,7 +346,7 @@ export default function LoginPage() {
                   </svg>
                 </a>
                 <a
-                  href={CUSTOMER_LOGIN_URL}
+                  href={getCustomerLoginUrl()}
                   className="flex items-center justify-between w-full px-4 py-3 border border-border rounded-sm hover:border-primary/30 hover:bg-background transition-colors group"
                 >
                   <div className="flex items-center gap-3">

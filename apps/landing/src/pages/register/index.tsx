@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import {
-  PROFESSIONAL_REGISTER_URL,
-  CUSTOMER_REGISTER_URL,
+  getCustomerRegisterUrl,
+  getProfessionalRegisterUrl,
 } from "@/utils/constants";
 
 type AccountType = "private" | "business" | null;
@@ -28,9 +28,9 @@ export default function RegisterPage() {
 
   const handleContinue = () => {
     if (selectedType === "business") {
-      window.location.href = PROFESSIONAL_REGISTER_URL;
+      window.location.href = getProfessionalRegisterUrl();
     } else if (selectedType === "private") {
-      window.location.href = CUSTOMER_REGISTER_URL;
+      window.location.href = getCustomerRegisterUrl();
     }
   };
 
