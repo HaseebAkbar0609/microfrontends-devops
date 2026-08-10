@@ -1,4 +1,6 @@
-import { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useState, useEffect } from "react";
 import Link from "next/link";
 import {
 	FaThumbsUp,
@@ -15,9 +17,14 @@ import {
 } from "react-icons/md";
 import { FiSearch } from "react-icons/fi";
 import Button from "../common/button";
-import { PROFESSIONAL_REGISTER_URL } from "@/utils/constants";
+import { getProfessionalRegisterUrl } from "@/utils/constants";
 
 const ProfessionalSmartFeatures: React.FC = () => {
+	const [professionalRegisterUrl, setProfessionalRegisterUrl] = useState<string>("");
+
+	useEffect(() => {
+		setProfessionalRegisterUrl(getProfessionalRegisterUrl());
+	}, []);
 	interface FeatureItemType {
 		label: string;
 		icon: ReactNode;
@@ -196,7 +203,7 @@ const ProfessionalSmartFeatures: React.FC = () => {
 
 				{/* CTA Button */}
 				<div className="mt-8 text-center">
-					<a href={PROFESSIONAL_REGISTER_URL}>
+					<a href={professionalRegisterUrl}>
 						<Button>Skapa konto</Button>
 					</a>
 				</div>

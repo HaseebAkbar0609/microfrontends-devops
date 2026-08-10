@@ -1,10 +1,18 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Blog from "../common/blog";
 import Button from "../common/button";
-import Link from "next/link"; // ✅ import Link from Next.js
+import Link from "next/link";
 import { Building, Edit, Employee } from "../icons";
-import { CUSTOMER_REGISTER_URL } from "@/utils/constants";
+import { getCustomerRegisterUrl } from "@/utils/constants";
 
 const ConsumerHowItWorks: React.FC = () => {
+	const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
+
+	useEffect(() => {
+		setCustomerRegisterUrl(getCustomerRegisterUrl());
+	}, []);
 	const data = [
 		{
 			background: "bg-[url('/images/consumer/howitworks/bg_hover.svg')]",
@@ -117,7 +125,7 @@ const ConsumerHowItWorks: React.FC = () => {
 						</p>
 					}
 					button={
-						<Link href={CUSTOMER_REGISTER_URL}>
+						<Link href={customerRegisterUrl}>
 							<Button className="mt-4">Skapa ditt konto</Button>
 						</Link>
 					}

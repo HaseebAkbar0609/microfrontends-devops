@@ -14,7 +14,7 @@ import DropdownOmOss from "../DropdownOmOss";
 import DropdownHomeMenu from "../DropdownHomeMenu";
 import DropdownAboutMenu from "../DropdownAboutMenu";
 import MobileMenu from "./MobileMenu";
-import { CUSTOMER_LOGIN_URL, PROFESSIONAL_LOGIN_URL } from "@/utils/constants";
+import { getCustomerLoginUrl, getProfessionalLoginUrl } from "@/utils/constants";
 import { useTranslation } from "react-i18next";
 import { RegionDropdown } from "@/components/site/RegionDropdown";
 
@@ -74,9 +74,13 @@ const Header: React.FC = () => {
 	const { t } = useTranslation();
 
 	// Button redirect logic
-	const buttonHref = isProfessionalPage
-		? PROFESSIONAL_LOGIN_URL
-		: CUSTOMER_LOGIN_URL;
+	const [buttonHref, setButtonHref] = useState<string>("");
+
+	useEffect(() => {
+		setButtonHref(
+			isProfessionalPage ? getProfessionalLoginUrl() : getCustomerLoginUrl()
+		);
+	}, [isProfessionalPage]);
 
 	// Button text logic
 	const buttonText = t("nav.login");
