@@ -948,6 +948,22 @@ export type OfferTranslation = {
 	calcSkallKravUploadLabel: string;
 	calcSkallKravFileTypes: string;
 	calcSkallKravEmpty: string;
+	// Calculation - Statistics page
+	calcStatKpiTotal: string;
+	calcStatKpiWon: string;
+	calcStatKpiLost: string;
+	calcStatFilterTitle: string;
+	calcStatBestellare: string;
+	calcStatEntreprenadform: string;
+	calcStatStartDate: string;
+	calcStatEndDate: string;
+	calcStatApply: string;
+	calcStatReset: string;
+	calcStatInfoTitle: string;
+	calcStatAntalOffert: string;
+	calcStatVunna: string;
+	calcStatForlorade: string;
+	calcStatSeList: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
