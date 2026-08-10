@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 
 import { getCustomerRegisterUrl } from "@/utils/constants";
@@ -11,10 +11,15 @@ type DropdownHomeMenuProps = {
 
 const DropdownHomeMenu: React.FC<DropdownHomeMenuProps> = ({ label }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    setCustomerRegisterUrl(getCustomerRegisterUrl());
+  }, []);
+
   const items = [
-    { label: "Offert", path: getCustomerRegisterUrl() },
+    { label: "Offert", path: customerRegisterUrl },
     { label: "Hitta Hantverkare", path: "#industries" },
     { label: "Så här fungerar det", path: "/consumer/how-it-works" },
     { label: "App TimeFlow Home", path: "/consumer/app-home" },
