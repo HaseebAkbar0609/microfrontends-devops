@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import type { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
   CircleUserRound,
   ChevronDown,
@@ -34,49 +35,44 @@ import type { UserDetailsFormValues } from "@/schemas/admin/userDetails.schema";
 
 const MOCK_USERS = [
   {
-    value: "rachel",
-    name: "Rachel Meyers",
-    email: "@rachel",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80"
-  },
-  {
     value: "kalle",
     name: "Kalle Andersson",
-    email: "@kalle",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80&q=80"
+    email: "kalle.andersson@timeflow.se",
+    phone: "+46 70 123 45 67",
+    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80&q=80",
+    lastLogin: "2026-08-09 14:32",
+    createdDate: "2024-01-15",
   },
   {
     value: "sten",
     name: "Sten Svensson",
-    email: "@sten",
-    avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=80&h=80&q=80"
+    email: "sten.svensson@timeflow.se",
+    phone: "+46 70 234 56 78",
+    avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=80&h=80&q=80",
+    lastLogin: "2026-08-10 09:15",
+    createdDate: "2024-02-20",
   },
   {
     value: "sture",
     name: "Sture Larsson",
-    email: "@sture",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80"
+    email: "sture.larsson@timeflow.se",
+    phone: "+46 70 345 67 89",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80",
+    lastLogin: "2026-08-08 17:45",
+    createdDate: "2024-03-10",
+  },
+  {
+    value: "rachel",
+    name: "Rachel Meyers",
+    email: "rachel.meyers@timeflow.se",
+    phone: "+46 70 456 78 90",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80",
+    lastLogin: "2026-08-10 11:20",
+    createdDate: "2023-11-05",
   },
 ];
 
-const GROUP_OPTIONS = [
-  { value: "ekonomi", label: "Ekonomi" },
-  { value: "service", label: "Service" },
-  { value: "overhead", label: "Overhead" },
-  { value: "entreprenad", label: "Entreprenad" },
-];
 
-const ROLE_OPTIONS = [
-  { value: "manager", label: "Manager" },
-  { value: "projektledare", label: "Projektledare" },
-  { value: "ekonomi", label: "Ekonomi" },
-];
-
-const TYPE_OPTIONS = [
-  { value: "arbetschef", label: "Arbetschef" },
-  { value: "service", label: "Service" },
-  { value: "admin", label: "Admin" },
-];
 
 interface ModuleItem {
   titleKey: string;
@@ -224,7 +220,27 @@ interface UserDetailsSectionProps {
 }
 
 export function UserDetailsSection({ form, showDetails, onToggleDetails }: UserDetailsSectionProps) {
+  const { t } = useTranslation();
   const searchParams = useSearchParams();
+
+  const groupOptions = [
+    { value: "ekonomi", label: t(localizationConstants.deptEkonomi) },
+    { value: "service", label: t(localizationConstants.deptService) },
+    { value: "overhead", label: t(localizationConstants.deptOverhead) },
+    { value: "entreprenad", label: t(localizationConstants.deptEntreprenad) },
+  ];
+
+  const roleOptions = [
+    { value: "manager", label: t(localizationConstants.roleManager) },
+    { value: "projektledare", label: t(localizationConstants.roleProjektledare) },
+    { value: "ekonomi", label: t(localizationConstants.deptEkonomi) },
+  ];
+
+  const typeOptions = [
+    { value: "arbetschef", label: t(localizationConstants.typeArbetschef) },
+    { value: "service", label: t(localizationConstants.typeService) },
+    { value: "admin", label: t(localizationConstants.typeAdmin) },
+  ];
   const id = searchParams.get("id");
   const initialUser = (() => {
     if (id === "1") return MOCK_USERS.find(u => u.value === "kalle") || MOCK_USERS[0];
@@ -347,45 +363,80 @@ export function UserDetailsSection({ form, showDetails, onToggleDetails }: UserD
 
           {isExpanded && (
             <div className="flex flex-col gap-4 p-4 animate-in fade-in duration-200">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="grid gap-1">
-                  <label className="text-sm font-medium text-slate-700">
-                    <Translate text={localizationConstants.userDetailsUserLabel} />
-                  </label>
-                  <p className="text-sm text-slate-500">{selectedUser.name}</p>
-                </div>
-                <FormSwitch
-                  control={form.control}
-                  name="isAdmin"
-                  label="Admin"
-                  yesLabel={<Translate text={localizationConstants.yesLabel} />}
-                  noLabel={<Translate text={localizationConstants.noLabel} />}
+              {/* User Overview Fields from BE Response */}
+              <div className="flex flex-col md:flex-row md:items-center gap-4 rounded-lg bg-slate-50 p-4 border border-slate-200">
+                <Image
+                  src={selectedUser.avatar}
+                  alt={selectedUser.name}
+                  width={64}
+                  height={64}
+                  className="h-16 w-16 rounded-full object-cover shrink-0 border border-slate-200 shadow-sm"
                 />
-                <div />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
+                  <div>
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                      <Translate text={localizationConstants.nameLabel} />
+                    </span>
+                    <span className="text-sm font-semibold text-slate-900">{selectedUser.name}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                      <Translate text={localizationConstants.addUserEmailLabel} />
+                    </span>
+                    <span className="text-sm text-slate-700">{selectedUser.email}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                      <Translate text={localizationConstants.userDetailsPhone} />
+                    </span>
+                    <span className="text-sm text-slate-700">{selectedUser.phone}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                      <Translate text={localizationConstants.userDetailsLastLogin} />
+                    </span>
+                    <span className="text-sm text-slate-700">{selectedUser.lastLogin}</span>
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                      <Translate text={localizationConstants.userDetailsCreatedDate} />
+                    </span>
+                    <span className="text-sm text-slate-700">{selectedUser.createdDate}</span>
+                  </div>
+                </div>
+                <div className="shrink-0 border-t md:border-t-0 md:border-l border-slate-200 pt-3 md:pt-0 md:pl-4">
+                  <FormSwitch
+                    control={form.control}
+                    name="isAdmin"
+                    label={localizationConstants.userDetailsAdmin}
+                    yesLabel={<Translate text={localizationConstants.yesLabel} />}
+                    noLabel={<Translate text={localizationConstants.noLabel} />}
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <FormSelect
                   control={form.control}
                   name="group"
-                  label="Grupp"
-                  options={GROUP_OPTIONS}
+                  label={localizationConstants.userDetailsGroup}
+                  options={groupOptions}
                   leadingIcon={Users}
                   triggerClassName="w-full !w-full justify-between text-left border-slate-200"
                 />
                 <FormSelect
                   control={form.control}
                   name="role"
-                  label="Roll"
-                  options={ROLE_OPTIONS}
+                  label={localizationConstants.userDetailsRole}
+                  options={roleOptions}
                   leadingIcon={CircleUserRound}
                   triggerClassName="w-full !w-full justify-between text-left border-slate-200"
                 />
                 <FormSelect
                   control={form.control}
                   name="type"
-                  label="Typ"
-                  options={TYPE_OPTIONS}
+                  label={localizationConstants.userDetailsType}
+                  options={typeOptions}
                   triggerClassName="w-full !w-full justify-between text-left border-slate-200"
                 />
               </div>

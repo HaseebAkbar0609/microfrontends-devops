@@ -1,6 +1,7 @@
 "use client";
 
 import type { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { MonitorCog } from "lucide-react";
 
 import { FormSelect } from "@/components/form/FormSelect";
@@ -8,24 +9,26 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { AddUserFormValues } from "@/schemas/admin/addUser.schema";
 
-const LANGUAGE_OPTIONS = [
-  { value: "sv", label: "Svenska" },
-  { value: "en", label: "English" },
-];
-
-const LOGOUT_OPTIONS = [
-  { value: "30m", label: "30 minuter" },
-  { value: "1h", label: "1 timme" },
-  { value: "2h", label: "2 timmar" },
-  { value: "4h", label: "4 timmar" },
-  { value: "8h", label: "8 timmar" },
-];
-
 interface SystemSettingsSectionProps {
   form: UseFormReturn<AddUserFormValues>;
 }
 
 export function SystemSettingsSection({ form }: SystemSettingsSectionProps) {
+  const { t } = useTranslation();
+
+  const languageOptions = [
+    { value: "sv", label: t(localizationConstants.languageSwedish) },
+    { value: "en", label: t(localizationConstants.languageEnglish) },
+  ];
+
+  const logoutOptions = [
+    { value: "30m", label: t(localizationConstants.logout30m) },
+    { value: "1h", label: t(localizationConstants.logout1h) },
+    { value: "2h", label: t(localizationConstants.logout2h) },
+    { value: "4h", label: t(localizationConstants.logout4h) },
+    { value: "8h", label: t(localizationConstants.logout8h) },
+  ];
+
   return (
     <div>
       <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-4">
@@ -39,16 +42,16 @@ export function SystemSettingsSection({ form }: SystemSettingsSectionProps) {
         <FormSelect
           control={form.control}
           name="language"
-          label={<Translate text={localizationConstants.addUserLanguageLabel} />}
-          options={LANGUAGE_OPTIONS}
+          label={localizationConstants.addUserLanguageLabel}
+          options={languageOptions}
           className="grid gap-1"
           triggerClassName="w-full"
         />
         <FormSelect
           control={form.control}
           name="automaticLogout"
-          label={<Translate text={localizationConstants.addUserAutomaticLogoutLabel} />}
-          options={LOGOUT_OPTIONS}
+          label={localizationConstants.addUserAutomaticLogoutLabel}
+          options={logoutOptions}
           className="grid gap-1"
           triggerClassName="w-full"
         />
