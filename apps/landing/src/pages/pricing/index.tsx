@@ -118,11 +118,10 @@ export default function PricingPage() {
                       setSelectedPlan(p.code);
                     }
                   }}
-                  className={`p-6 sm:p-8 border bg-background flex flex-col cursor-pointer transition-colors duration-150 ${
-                    isSelected
+                  className={`p-6 sm:p-8 border bg-background flex flex-col cursor-pointer transition-colors duration-150 ${isSelected
                       ? "border-primary shadow-xl shadow-primary/10 relative scale-[1.02] z-10"
                       : "border-border hover:border-primary/40 hover:shadow-md relative"
-                  }`}
+                    }`}
                 >
                   {isSelected && (
                     <div className="absolute -top-3 left-6 sm:left-8 bg-primary text-primary-foreground text-xs font-bold px-3 py-1 rounded-sm uppercase tracking-wider">
@@ -141,11 +140,10 @@ export default function PricingPage() {
                   <Link
                     href={`/register?type=business&plan=${p.code}`}
                     onClick={() => setSelectedPlan(p.code)}
-                    className={`w-full py-3 text-center block font-bold rounded-sm mb-8 cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all ${
-                      isSelected
+                    className={`w-full py-3 text-center block font-bold rounded-sm mb-8 cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all ${isSelected
                         ? "bg-primary text-primary-foreground"
                         : "bg-foreground text-background hover:bg-primary/80 hover:text-primary-foreground"
-                    }`}
+                      }`}
                   >
                     {p.cta}
                   </Link>

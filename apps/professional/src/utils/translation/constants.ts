@@ -549,6 +549,30 @@ export type DashboardTranslation = {
 	agreementDetailMail: string;
 	agreementDetailMobil: string;
 	agreementDetailRoll: string;
+	// Agreement Create (TFS-457)
+	agreementCreateStep1Tab: string;
+	agreementCreateStep2Tab: string;
+	agreementCreateStep3Tab: string;
+	agreementCreateObjekt: string;
+	agreementCreateAnteckning: string;
+	agreementCreatePaminnelseText: string;
+	agreementCreateKontaktLista: string;
+	agreementCreateSeFil: string;
+	agreementCreateForhandsvisning: string;
+	agreementCreateCreateAgreement: string;
+	agreementCreateSuccess: string;
+	agreementCreateError: string;
+	agreementCreateBifogadeDokument: string;
+	// Agreement Validation (TFS-457)
+	validationDepartmentRequired: string;
+	validationObjectRequired: string;
+	validationStartDateRequired: string;
+	validationRoleRequired: string;
+	agreementCreateValidationFailed: string;
+	agreementCreateNetworkError: string;
+	agreementCreateSubmitError: string;
+	agreementNoContacts: string;
+	agreementNoDocuments: string;
 };
 
 export type AdminPageTranslation = {
@@ -842,7 +866,40 @@ export type OfferTranslation = {
 	b2bAvtalStatusRejected: string;
 	// Calculation - Dashboard
 	calcOverview: string;
+	// Calculation - Overview (list)
+	calcOverviewPage: string;
+	calcOverviewNewBtn: string;
+	calcOverviewConnection: string;
+	calcOverviewClient: string;
+	calcOverviewOffertDatum: string;
+	calcOverviewTyp: string;
+	calcOverviewOffertSumma: string;
+	calcOverviewKategori: string;
+	calcOverviewEmpty: string;
+	calcOverviewSeKalkyl: string;
+	calcOverviewStatusNotStarted: string;
+	calcOverviewStatusInProgress: string;
+	calcOverviewStatusCompleted: string;
 	calcKalkyl: string;
+	// Calculation - Kalkyl form
+	calcTabStandard: string;
+	calcTabPro: string;
+	calcTabQuickAI: string;
+	calcTabAPrice: string;
+	calcTabRequired: string;
+	calcMarkup: string;
+	calcBaseCosts: string;
+	calcFieldTitle: string;
+	calcMarkupPercentage: string;
+	calcMarkupPlaceholder: string;
+	calcCreateNew: string;
+	calcNewRow: string;
+	calcDeleteSection: string;
+	calcItemCol: string;
+	calcDescriptionCol: string;
+	calcQuantityCol: string;
+	calcUnitCol: string;
+	calcAPriceCol: string;
 	calcStatistics: string;
 	calcStatus: string;
 	calcCalendarWidget: string;
@@ -871,6 +928,15 @@ export type OfferTranslation = {
 	calcChartCostDistribution: string;
 	calcChartObjects: string;
 	calcChartPerCategory: string;
+	// Calculation PRO tab
+	calcProIndustryCategory: string;
+	calcProPurchaseLicense: string;
+	calcProDefaultSettings: string;
+	calcProMarkupByCalc: string;
+	calcProAPriceList: string;
+	calcProIndustrySettings: string;
+	calcProType: string;
+	calcProVacant: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
@@ -1284,6 +1350,16 @@ export type OfferTranslation = {
 	timeRowAddedToast: string;
 	timeRowSavedToast: string;
 	timeRowDeletedToast: string;
+	// Admin - Settings (modules)
+	adminSettingsTabModule: string;
+	adminSettingsTabSystem: string;
+	moduleColModules: string;
+	moduleColMaker: string;
+	moduleColAction: string;
+	moduleStatusActive: string;
+	moduleStatusClosed: string;
+	moduleViewSettings: string;
+	moduleLoadFailed: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;
