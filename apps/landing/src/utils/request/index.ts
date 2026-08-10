@@ -3,6 +3,8 @@ import axios, {
   AxiosRequestConfig,
   AxiosResponse,
   AxiosError,
+  InternalAxiosRequestConfig,
+  AxiosProgressEvent,
 } from "axios";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "@/configs";
@@ -45,7 +47,7 @@ const apiClient: AxiosInstance = axios.create({
 });
 
 apiClient.interceptors.request.use(
-  (config: any) => {
+  (config: InternalAxiosRequestConfig) => {
     if (config.skipAuth) {
       return config;
     }
@@ -108,7 +110,7 @@ export const request = {
 
   async post<T = any>(
     url: string,
-    data: any = {},
+    data: unknown = {},
     config: RequestConfig = {}
   ): Promise<ApiResponse<T>> {
     try {
@@ -125,7 +127,7 @@ export const request = {
 
   async put<T = any>(
     url: string,
-    data: any = {},
+    data: unknown = {},
     config: RequestConfig = {}
   ): Promise<ApiResponse<T>> {
     try {
@@ -142,7 +144,7 @@ export const request = {
 
   async patch<T = any>(
     url: string,
-    data: any = {},
+    data: unknown = {},
     config: RequestConfig = {}
   ): Promise<ApiResponse<T>> {
     try {
@@ -188,7 +190,7 @@ export const request = {
         "Content-Type": "multipart/form-data",
       },
       onUploadProgress: onProgress
-        ? (progressEvent: any) => {
+        ? (progressEvent: AxiosProgressEvent) => {
             if (progressEvent.total) {
               const progress = Math.round(
                 (progressEvent.loaded * 100) / progressEvent.total
@@ -225,20 +227,4 @@ export const request = {
       throw new ApiError(error as AxiosError<ApiErrorData>);
     }
   },
-};
-
-// This can be used if you're using React
-export const createApiHook = <T = any>(
-  apiCall: () => Promise<ApiResponse<T>>
-) => {
-  return () => {
-    // Implementation would depend on React hooks
-    // This is just a structure for potential use
-    return {
-      data: null as T | null,
-      loading: false,
-      error: null as ApiError | null,
-      execute: apiCall,
-    };
-  };
 };

@@ -68,7 +68,7 @@ export default function SolutionsPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/pricing" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm">{t("solutions.seePricing")}</Link>
-            <Link href="/contact" className="px-8 py-4 border border-white/20 font-bold rounded-sm hover:bg-white/5 transition-colors">{t("professional.tryDemo")}</Link>
+            <Link href="/professional/book_a_demo" className="px-8 py-4 border border-white/20 font-bold rounded-sm hover:bg-white/5 transition-colors">{t("professional.tryDemo")}</Link>
           </div>
         </section>
 

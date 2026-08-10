@@ -549,6 +549,30 @@ export type DashboardTranslation = {
 	agreementDetailMail: string;
 	agreementDetailMobil: string;
 	agreementDetailRoll: string;
+	// Agreement Create (TFS-457)
+	agreementCreateStep1Tab: string;
+	agreementCreateStep2Tab: string;
+	agreementCreateStep3Tab: string;
+	agreementCreateObjekt: string;
+	agreementCreateAnteckning: string;
+	agreementCreatePaminnelseText: string;
+	agreementCreateKontaktLista: string;
+	agreementCreateSeFil: string;
+	agreementCreateForhandsvisning: string;
+	agreementCreateCreateAgreement: string;
+	agreementCreateSuccess: string;
+	agreementCreateError: string;
+	agreementCreateBifogadeDokument: string;
+	// Agreement Validation (TFS-457)
+	validationDepartmentRequired: string;
+	validationObjectRequired: string;
+	validationStartDateRequired: string;
+	validationRoleRequired: string;
+	agreementCreateValidationFailed: string;
+	agreementCreateNetworkError: string;
+	agreementCreateSubmitError: string;
+	agreementNoContacts: string;
+	agreementNoDocuments: string;
 };
 
 export type AdminPageTranslation = {
@@ -1353,6 +1377,49 @@ export type OfferTranslation = {
 	timeRowAddedToast: string;
 	timeRowSavedToast: string;
 	timeRowDeletedToast: string;
+	// Admin - Settings (modules)
+	adminSettingsTabModule: string;
+	adminSettingsTabSystem: string;
+	moduleColModules: string;
+	moduleColMaker: string;
+	moduleColAction: string;
+	moduleStatusActive: string;
+	moduleStatusClosed: string;
+	moduleViewSettings: string;
+	moduleLoadFailed: string;
+	moduleSettingsSuffix: string;
+	moduleSettingAll: string;
+	moduleSettingAuthorized: string;
+	moduleSettingActivated: string;
+	moduleSettingDeactivated: string;
+	moduleSettingPhone: string;
+	adminSettingsTabUsers: string;
+	settingsUsersSysAdmin: string;
+	settingsUsersFullAccess: string;
+	settingsUsersWholeSystem: string;
+	settingsUsersAddUsers: string;
+	settingsUsersAddLicenses: string;
+	settingsUsersChangePermissions: string;
+	settingsUsersTerminateLicenses: string;
+	// Admin - Company presentation
+	companyPresentationTitle: string;
+	companyPresentationTextLabel: string;
+	companyPresentationTextPlaceholder: string;
+	companyPresentationTeamLabel: string;
+	companyPresentationFileLabel: string;
+	companyPresentationFileHint: string;
+	// Admin - Integration
+	integrationHeading: string;
+	integrationCreate: string;
+	integrationIntro1: string;
+	integrationIntro2: string;
+	integrationIntro3: string;
+	integrationConnectedTitle: string;
+	integrationTextLabel: string;
+	integrationModulesLabel: string;
+	integrationConnectBtn: string;
+	integrationConnectedToast: string;
+	integrationFilterAll: string;
 	monthJanuary: string;
 	monthFebruary: string;
 	monthMarch: string;

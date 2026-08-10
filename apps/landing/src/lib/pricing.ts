@@ -42,9 +42,8 @@ export interface CalcInput {
   workApps?: number;
 }
 
-export function formatSEK(amount: number): string {
-  return `${amount.toLocaleString("sv-SE")} SEK`;
-}
+// Re-export shared formatter for backwards compatibility
+export { formatSEK } from "./formatters";
 
 /**
  * Månadskostnad ex. moms för plan + användare + ev. TimeFlow Work-appar.

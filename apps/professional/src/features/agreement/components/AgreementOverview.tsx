@@ -16,11 +16,12 @@ import { DUMMY_AGREEMENTS } from "../constants/agreementList";
 import localizationConstants from "@/utils/translation/constants";
 import { Agreement } from "../types/agreement";
 import { Loader } from "@/components/ui/loader";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { useRouter } from "next/navigation";
 import { AGREEMENT_ROUTES } from "../constants/agreementDashboard";
 
 export default function AgreementOverview() {
+	const t = useTranslate();
 	const { search, changeQuery, page = 1, query } = useQueryParams();
 	const page_size = query.get("page_size") || "10";
 	const [agreements, setAgreements] = useState<Agreement[]>([]);
@@ -61,7 +62,7 @@ export default function AgreementOverview() {
 					<Search
 						value={search}
 						onChange={(val) => changeQuery("search", val)}
-						placeholder="Sök"
+						placeholder={t(localizationConstants.agreementOverviewSearchPlaceholder)}
 						className="h-10 w-full max-w-70 shrink-0"
 					/>
 

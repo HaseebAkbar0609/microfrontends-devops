@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { FAQ } from "@/components/site/FAQ";
 
 export default function Home() {
   const { t } = useTranslation();
@@ -165,7 +166,7 @@ export default function Home() {
             <Link href="/pricing" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm">
               {t("home.ctaPricing")}
             </Link>
-            <Link href="/contact" className="px-8 py-4 border border-border bg-background font-bold rounded-sm hover:bg-surface transition-colors">
+            <Link href="/professional/book_a_demo" className="px-8 py-4 border border-border bg-background font-bold rounded-sm hover:bg-surface transition-colors">
               {t("home.ctaDemo")}
             </Link>
           </div>
@@ -176,31 +177,7 @@ export default function Home() {
           <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 tracking-tight">
             {t("home.faqTitle")}
           </h2>
-          <div className="divide-y divide-border">
-            {[
-              { q: t("home.faq1Q"), a: t("home.faq1A") },
-              { q: t("home.faq2Q"), a: t("home.faq2A") },
-              { q: t("home.faq3Q"), a: t("home.faq3A") },
-              { q: t("home.faq4Q"), a: t("home.faq4A") },
-              { q: t("home.faq5Q"), a: t("home.faq5A") },
-              { q: t("home.faq6Q"), a: t("home.faq6A") },
-              { q: t("home.faq7Q"), a: t("home.faq7A") },
-              { q: t("home.faq8Q"), a: t("home.faq8A") },
-              { q: t("home.faq9Q"), a: t("home.faq9A") },
-              { q: t("home.faq10Q"), a: t("home.faq10A") },
-              { q: t("home.faq11Q"), a: t("home.faq11A") },
-              { q: t("home.faq12Q"), a: t("home.faq12A") },
-              { q: t("home.faq13Q"), a: t("home.faq13A") },
-            ].map((item) => (
-              <details key={item.q} className="group py-6 cursor-pointer">
-                <summary className="list-none flex justify-between items-center font-bold text-lg gap-4">
-                  <span>{item.q}</span>
-                  <span className="text-primary text-2xl group-open:rotate-45 transition-transform shrink-0">+</span>
-                </summary>
-                <p className="pt-4 text-muted">{item.a}</p>
-              </details>
-            ))}
-          </div>
+          <FAQ />
         </section>
 
         <Footer />
