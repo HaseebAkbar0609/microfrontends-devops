@@ -1388,6 +1388,7 @@ export type OfferTranslation = {
 	// Admin - Company presentation
 	companyPresentationTitle: string;
 	companyPresentationTextLabel: string;
+	companyPresentationTextPlaceholder: string;
 	companyPresentationTeamLabel: string;
 	companyPresentationFileLabel: string;
 	companyPresentationFileHint: string;

@@ -1406,6 +1406,7 @@ export const enOffer: OfferTranslation = {
 	// Admin - Company presentation
 	companyPresentationTitle: "Company presentation",
 	companyPresentationTextLabel: "Presentation text:",
+	companyPresentationTextPlaceholder: "Title",
 	companyPresentationTeamLabel: "Company team:",
 	companyPresentationFileLabel: "Company presentation",
 	companyPresentationFileHint: "PPT, DOC and PDF files are allowed.",

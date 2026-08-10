@@ -85,7 +85,7 @@ export function CompanyPresentationTab() {
 							onChange={(event) => setText(event.target.value)}
 							rows={3}
 							placeholder={t(
-								localizationConstants.timeFieldTitle,
+								localizationConstants.companyPresentationTextPlaceholder,
 							)}
 							className="border-slate-200 text-sm"
 						/>

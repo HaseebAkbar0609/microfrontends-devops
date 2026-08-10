@@ -1290,6 +1290,7 @@ export const svOffer: OfferTranslation = {
 	// Admin - Company presentation
 	companyPresentationTitle: "Företagspresentation",
 	companyPresentationTextLabel: "Presentations text:",
+	companyPresentationTextPlaceholder: "Rubrik",
 	companyPresentationTeamLabel: "Företags team:",
 	companyPresentationFileLabel: "Presentation företag",
 	companyPresentationFileHint: "PPT-, DOC- och PDF-filer är tillåtna.",
