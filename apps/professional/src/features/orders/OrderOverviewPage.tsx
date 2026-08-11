@@ -18,7 +18,7 @@ export function OrderOverviewPage() {
 				breadcrumbs={[
 					{ label: localizationConstants.home, href: "/dashboard" },
 					{ label: localizationConstants.moduleItem, href: "/module/business" },
-					{ label: localizationConstants.production, href: "/module/production/order/overview" },
+					{ label: localizationConstants.production, href: "/module/production" },
 					{ label: localizationConstants.orderModule, href: "/module/production/order/overview" },
 					{ label: localizationConstants.orderOverview },
 				]}

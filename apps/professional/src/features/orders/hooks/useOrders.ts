@@ -32,16 +32,17 @@ export function useOrders(options: UseOrdersOptions = {}) {
 	const [pageSize, setPageSize] = useState<number>(initialPageSize);
 	const [currentPage, setCurrentPage] = useState<number>(1);
 
-	const handleSort = useCallback((field: SortField) => {
-		setSortBy((prevField) => {
-			if (prevField === field) {
+	const handleSort = useCallback(
+		(field: SortField) => {
+			if (sortBy === field) {
 				setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
-				return field;
+			} else {
+				setSortBy(field);
+				setSortOrder("asc");
 			}
-			setSortOrder("asc");
-			return field;
-		});
-	}, []);
+		},
+		[sortBy]
+	);
 
 	const deleteOrder = useCallback((orderId: string) => {
 		setOrders((prev) => prev.filter((o) => o.id !== orderId));
