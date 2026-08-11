@@ -1,9 +1,11 @@
 "use client";
 
 import type { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { UserRound } from "lucide-react";
 
 import { FormInput } from "@/components/form/FormInput";
+import { FormSelect } from "@/components/form/FormSelect";
 import { FormSwitch } from "@/components/form/FormSwitch";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -14,6 +16,25 @@ interface UserInformationSectionProps {
 }
 
 export function UserInformationSection({ form }: UserInformationSectionProps) {
+  const { t } = useTranslation();
+
+  const roleOptions = [
+    { value: "sys-admin", label: t(localizationConstants.roleSysAdmin) },
+    { value: "admin", label: t(localizationConstants.roleAdmin) },
+    { value: "user", label: t(localizationConstants.roleUser) },
+    { value: "manager", label: t(localizationConstants.roleManager) },
+    { value: "projektledare", label: t(localizationConstants.roleProjektledare) },
+  ];
+
+  const departmentOptions = [
+    { value: "ekonomi", label: t(localizationConstants.deptEkonomi) },
+    { value: "service", label: t(localizationConstants.deptService) },
+    { value: "overhead", label: t(localizationConstants.deptOverhead) },
+    { value: "entreprenad", label: t(localizationConstants.deptEntreprenad) },
+    { value: "kalkyl", label: t(localizationConstants.deptKalkyl) },
+    { value: "inkop", label: t(localizationConstants.deptInkop) },
+  ];
+
   return (
     <div>
       <div className="flex items-center gap-2 border-b border-slate-200 px-4 py-4">
@@ -24,6 +45,7 @@ export function UserInformationSection({ form }: UserInformationSectionProps) {
       </div>
 
       <div className="flex flex-col gap-4 p-4">
+        {/* Row 1: Credentials & Personal Number */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormInput
             control={form.control}
@@ -35,23 +57,43 @@ export function UserInformationSection({ form }: UserInformationSectionProps) {
           />
           <FormInput
             control={form.control}
+            name="personalNumber"
+            label={localizationConstants.addUserPersonalNumberLabel}
+            placeholder={localizationConstants.addUserPersonalNumberPlaceholder}
+            className="grid gap-1"
+          />
+        </div>
+
+        {/* Row 2: First Name & Last Name */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput
+            control={form.control}
+            name="firstName"
+            label={localizationConstants.addUserFirstNameLabel}
+            placeholder={localizationConstants.addUserFirstNamePlaceholder}
+            className="grid gap-1"
+            inputProps={{ autoComplete: "given-name" }}
+          />
+          <FormInput
+            control={form.control}
+            name="lastName"
+            label={localizationConstants.addUserLastNameLabel}
+            placeholder={localizationConstants.addUserLastNamePlaceholder}
+            className="grid gap-1"
+            inputProps={{ autoComplete: "family-name" }}
+          />
+        </div>
+
+        {/* Row 3: Password & Confirm Password */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput
+            control={form.control}
             name="password"
             label={localizationConstants.addUserPasswordLabel}
             placeholder={localizationConstants.addUserPasswordPlaceholder}
             type="password"
             className="grid gap-1"
             inputProps={{ autoComplete: "new-password" }}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput
-            control={form.control}
-            name="name"
-            label={localizationConstants.addUserNameLabel}
-            placeholder={localizationConstants.addUserNamePlaceholder}
-            className="grid gap-1"
-            inputProps={{ autoComplete: "off" }}
           />
           <FormInput
             control={form.control}
@@ -64,40 +106,27 @@ export function UserInformationSection({ form }: UserInformationSectionProps) {
           />
         </div>
 
+        {/* Row 4: Role & Department */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormSwitch
+          <FormSelect
             control={form.control}
-            name="isActive"
-            label={localizationConstants.addUserActiveLabel}
-            yesLabel={<Translate text={localizationConstants.yesLabel} />}
-            noLabel={<Translate text={localizationConstants.noLabel} />}
+            name="role"
+            label={localizationConstants.addUserRoleLabel}
+            placeholder={localizationConstants.addUserRolePlaceholder}
+            options={roleOptions}
+            triggerClassName="w-full !w-full justify-between text-left border-slate-200"
           />
-          <FormSwitch
+          <FormSelect
             control={form.control}
-            name="generateEmailForNewPassword"
-            label={localizationConstants.addUserGenerateEmailLabel}
-            yesLabel={<Translate text={localizationConstants.yesLabel} />}
-            noLabel={<Translate text={localizationConstants.noLabel} />}
+            name="department"
+            label={localizationConstants.addUserDepartmentLabel}
+            placeholder={localizationConstants.addUserDepartmentPlaceholder}
+            options={departmentOptions}
+            triggerClassName="w-full !w-full justify-between text-left border-slate-200"
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput
-            control={form.control}
-            name="personalNumber"
-            label={localizationConstants.addUserPersonalNumberLabel}
-            placeholder={localizationConstants.addUserPersonalNumberPlaceholder}
-            className="grid gap-1"
-          />
-          <FormSwitch
-            control={form.control}
-            name="smsAuthentication"
-            label={localizationConstants.addUserSmsAuthLabel}
-            yesLabel={<Translate text={localizationConstants.yesLabel} />}
-            noLabel={<Translate text={localizationConstants.noLabel} />}
-          />
-        </div>
-
+        {/* Row 5: Email & Mobile Number */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormInput
             control={form.control}
@@ -116,7 +145,8 @@ export function UserInformationSection({ form }: UserInformationSectionProps) {
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {/* Row 6: Employee Register Person */}
+        <div className="grid grid-cols-1 gap-4">
           <FormInput
             control={form.control}
             name="employeeRegisterPerson"
@@ -124,7 +154,31 @@ export function UserInformationSection({ form }: UserInformationSectionProps) {
             placeholder={localizationConstants.addUserEmployeeRegisterPlaceholder}
             className="grid gap-1"
           />
-          <div />
+        </div>
+
+        {/* Row 7: 3 Checkbox/Toggle Switches on the Same Line (Responsive) */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 pt-2">
+          <FormSwitch
+            control={form.control}
+            name="isActive"
+            label={localizationConstants.addUserActiveLabel}
+            yesLabel={<Translate text={localizationConstants.yesLabel} />}
+            noLabel={<Translate text={localizationConstants.noLabel} />}
+          />
+          <FormSwitch
+            control={form.control}
+            name="generateEmailForNewPassword"
+            label={localizationConstants.addUserGenerateEmailLabel}
+            yesLabel={<Translate text={localizationConstants.yesLabel} />}
+            noLabel={<Translate text={localizationConstants.noLabel} />}
+          />
+          <FormSwitch
+            control={form.control}
+            name="smsAuthentication"
+            label={localizationConstants.addUserSmsAuthLabel}
+            yesLabel={<Translate text={localizationConstants.yesLabel} />}
+            noLabel={<Translate text={localizationConstants.noLabel} />}
+          />
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@
 
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
 import type { LucideIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import {
   FormControl,
@@ -18,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Translate } from "@/utils/translation/translate";
 
 export interface FormSelectOption {
   value: string;
@@ -54,7 +56,7 @@ export function FormSelect<
   control,
   name,
   label,
-  placeholder = "Select...",
+  placeholder,
   options,
   disabled,
   className,
@@ -64,14 +66,19 @@ export function FormSelect<
   messageClassName,
   leadingIcon: LeadingIcon,
 }: FormSelectProps<TFieldValues, TName>) {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder != null ? t(placeholder) : undefined;
+  const resolvedLabel =
+    typeof label === "string" ? <Translate text={label} /> : label;
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem className={cn("grid gap-2", className)}>
-          {label && (
-            <FormLabel className={labelClassName}>{label}</FormLabel>
+          {label != null && (
+            <FormLabel className={labelClassName}>{resolvedLabel}</FormLabel>
           )}
           <Select
             onValueChange={field.onChange}
@@ -84,7 +91,7 @@ export function FormSelect<
                   {LeadingIcon && (
                     <LeadingIcon className="h-4 w-4 shrink-0 text-slate-700" />
                   )}
-                  <SelectValue placeholder={placeholder} />
+                  <SelectValue placeholder={resolvedPlaceholder} />
                 </span>
               </SelectTrigger>
             </FormControl>
@@ -96,7 +103,7 @@ export function FormSelect<
               ))}
             </SelectContent>
           </Select>
-          <FormMessage className={messageClassName} />
+          <FormMessage className={messageClassName} translate={t} />
         </FormItem>
       )}
     />
