@@ -126,11 +126,11 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 	const grandTotal = subtotal + vatTotal;
 
 	const handleSubmit = async (asDraft = false) => {
-		if (!customerId || !customerId.trim()) {
+		if (!customerId) {
 			setError("Vänligen välj en kund.");
 			return;
 		}
-		if (!projectId || !projectId.trim()) {
+		if (!projectId) {
 			setError("Vänligen välj ett projekt.");
 			return;
 		}
@@ -143,6 +143,9 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 		setIsSubmitting(true);
 
 		try {
+			// Simulate async network request
+			await new Promise((resolve) => setTimeout(resolve, 300));
+
 			const selectedCust = MOCK_CUSTOMERS.find((c) => c.id === customerId);
 			const selectedProj = MOCK_PROJECTS.find((p) => p.id === projectId);
 
