@@ -1455,6 +1455,25 @@ export type OfferTranslation = {
 	companyIbanNr: string;
 	companyBic: string;
 	companySwiftNr: string;
+	// Admin - Company references
+	companyReferencesTitle: string;
+	companyReferencesAddNew: string;
+	companyRefColProject: string;
+	companyRefColCustomer: string;
+	companyRefColMunicipality: string;
+	companyRefColContact: string;
+	companyRefColPhone: string;
+	companyRefColPdf: string;
+	companyRefNewTitle: string;
+	companyRefEditTitle: string;
+	companyRefProjectPlaceholder: string;
+	companyRefCustomerPlaceholder: string;
+	companyRefFileHint: string;
+	companyRefCreateBtn: string;
+	companyRefDeleteConfirmTitle: string;
+	companyRefCreatedToast: string;
+	companyRefSavedToast: string;
+	companyRefDeletedToast: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;
