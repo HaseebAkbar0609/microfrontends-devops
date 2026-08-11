@@ -81,8 +81,25 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   if (typeof window === "undefined") return config;
   const token = authStorage.getAccessToken();
+  const userData = authStorage.getUserData() as Record<string, unknown> | null;
+  
+  let companyId: string | undefined = undefined;
+  if (userData) {
+    if (typeof userData.last_visited_company_id === "string") {
+      companyId = userData.last_visited_company_id;
+    } else if (userData.last_visited_company && typeof userData.last_visited_company === "object") {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      companyId = (userData.last_visited_company as any).id;
+    } else if (typeof userData.last_visited_company === "string") {
+      companyId = userData.last_visited_company;
+    }
+  }
+
   if (token && !isPublicAuthUrl(config.url)) {
     config.headers.Authorization = `Bearer ${token}`;
+    if (companyId) {
+      config.headers["X-Company-ID"] = companyId;
+    }
   }
   return config;
 });
