@@ -2097,6 +2097,27 @@ export type OfferTranslation = {
 	rowsPerPage: string;
 	pageLabel: string;
 	ofLabel: string;
+	serialNoHeader: string;
+	createDirectOrder: string;
+	createDirectOrderButton: string;
+	saveDraft: string;
+	cancel: string;
+	poNumberLabel: string;
+	projectLabel: string;
+	orderItemsHeader: string;
+	addItemButton: string;
+	productArticle: string;
+	quantity: string;
+	unitPrice: string;
+	discountPercent: string;
+	vatPercent: string;
+	lineTotal: string;
+	notesLabel: string;
+	subtotal: string;
+	vatTotal: string;
+	grandTotal: string;
+	statusPending: string;
+	statusOpened: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
