@@ -51,6 +51,9 @@ export function CompanyBankTab() {
 	const t = useTranslate();
 	const [values, setValues] = useState<Record<string, string>>({});
 
+	// Static phase: the backend has no bank-details endpoint yet, so Spara
+	// only confirms the local UI state. When the API lands, replace this with
+	// a mutation + error toast following the CompanyDetail.onSubmit pattern.
 	const handleSave = () => {
 		showToast("success", t(localizationConstants.profileUpdated));
 	};
