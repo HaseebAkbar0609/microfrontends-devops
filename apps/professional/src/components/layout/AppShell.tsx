@@ -10,6 +10,7 @@ import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
+import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { OfferDetailSubSidebar } from "./sidebar/OfferDetailSubSidebar";
@@ -56,9 +57,10 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
+	const isOrderPath = pathname.startsWith("/module/production/order");
 	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
 	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
-	const isProductionNavRoute = pathname.startsWith("/module/production");
+	const isProductionNavRoute = pathname.startsWith("/module/production") && !isOrderPath;
 	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
 	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
 	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
@@ -168,7 +170,9 @@ export function AppShell({ children }: AppShellProps) {
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{isAgreementPath ? (
+			{isOrderPath ? (
+				<OrderSubSidebar />
+			) : isAgreementPath ? (
 				<AgreementSubSidebar />
 			) : isRegisterPath ? (
 				<InvoiceSubSidebar />
