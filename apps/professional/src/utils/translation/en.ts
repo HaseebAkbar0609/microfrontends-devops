@@ -981,6 +981,10 @@ export const enOffer: OfferTranslation = {
 	calcStatVunna: "Won",
 	calcStatForlorade: "Lost",
 	calcStatSeList: "View list",
+	// Calculation Archive
+	calcArchiveSeProject: "View project",
+	calcArchiveUnarchive: "Unarchive",
+	calcArchiveDelete: "Delete",
 	// Admin - Users
 	adminUsersTitle: "Users",
 	adminUsersTabGroups: "Groups",

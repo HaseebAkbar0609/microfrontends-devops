@@ -964,6 +964,10 @@ export type OfferTranslation = {
 	calcStatVunna: string;
 	calcStatForlorade: string;
 	calcStatSeList: string;
+	// Calculation Archive
+	calcArchiveSeProject: string;
+	calcArchiveUnarchive: string;
+	calcArchiveDelete: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
