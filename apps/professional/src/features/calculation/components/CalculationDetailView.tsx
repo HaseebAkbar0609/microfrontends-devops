@@ -29,13 +29,19 @@ import type { KalkylDetailData, KalkylDocItem } from "../types/kalkyl";
 
 type DetailTab = "kontakt" | "projekt" | "dokument";
 
+const DETAIL_TABS: { key: DetailTab; labelKey: string }[] = [
+	{ key: "kontakt", labelKey: localizationConstants.calcNewStep1Tab },
+	{ key: "projekt", labelKey: localizationConstants.calcNewStep2Tab },
+	{ key: "dokument", labelKey: localizationConstants.calcNewStep3Tab },
+];
+
 // ── Sub-components ──────────────────────────────────────────────────────────
 
 function InfoField({ label, value }: { label: string; value: string }) {
 	return (
 		<div className="flex flex-col gap-1">
-			<p className="text-sm font-medium text-[#09090B]">{label}</p>
-			<p className="text-sm font-normal text-[#71717A]">{value || "-"}</p>
+			<p className="text-sm font-medium text-zinc-950">{label}</p>
+			<p className="text-sm font-normal text-zinc-500">{value || "-"}</p>
 		</div>
 	);
 }
@@ -49,15 +55,15 @@ interface CardSectionProps {
 function CardSection({ icon: Icon, title, children }: CardSectionProps) {
 	const t = useTranslate();
 	return (
-		<div className="rounded-lg border border-[#E5E5E5] bg-white">
-			<div className="flex h-17 items-center justify-between border-b border-[#E4E4E7] px-4">
+		<div className="rounded-lg border border-neutral-200 bg-white">
+			<div className="flex h-17 items-center justify-between border-b border-zinc-200 px-4">
 				<div className="flex items-center gap-2">
 					<Icon className="h-6 w-6 text-slate-800" />
-					<span className="text-base font-medium text-[#09090B]">{title}</span>
+					<span className="text-base font-medium text-zinc-950">{title}</span>
 				</div>
 				<button
 					type="button"
-					className="flex cursor-pointer items-center gap-2 rounded-md bg-[#F4F4F5] px-4 py-2 text-sm font-medium text-[#09090B] shadow-[0px_1px_2px_rgba(16,24,40,0.05)] hover:bg-zinc-200"
+					className="flex cursor-pointer items-center gap-2 rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-950 shadow-[0px_1px_2px_rgba(16,24,40,0.05)] hover:bg-zinc-200"
 				>
 					<Pencil className="h-4 w-4" />
 					{t(localizationConstants.editLabel)}
@@ -187,9 +193,9 @@ function ProjektPanel({ data }: { data: KalkylDetailData }) {
 
 function DokumentPanel({ data }: { data: KalkylDetailData }) {
 	return (
-		<div className="rounded-lg border border-[#E5E5E5] bg-white">
-			<div className="flex h-17 items-center justify-between border-b border-[#E4E4E7] px-4">
-				<span className="text-base font-medium text-[#09090B]">
+		<div className="rounded-lg border border-neutral-200 bg-white">
+			<div className="flex h-17 items-center justify-between border-b border-zinc-200 px-4">
+				<span className="text-base font-medium text-zinc-950">
 					<Translate text={localizationConstants.agreementCreateBifogadeDokument} />
 				</span>
 				<Button
@@ -205,7 +211,7 @@ function DokumentPanel({ data }: { data: KalkylDetailData }) {
 			<div className="overflow-x-auto">
 				<table className="w-full min-w-max border-collapse text-sm">
 					<thead>
-						<tr className="h-11 border-b border-[#E4E4E7]">
+						<tr className="h-11 border-b border-zinc-200">
 							<th className="px-4 text-left font-medium text-slate-500">
 								<div className="flex items-center gap-1">
 									<Translate text={localizationConstants.agreementDetailDatum} />
@@ -242,15 +248,15 @@ function DokumentPanel({ data }: { data: KalkylDetailData }) {
 							</tr>
 						) : (
 							data.documents.map((doc) => (
-								<tr key={doc.id} className="border-b border-[#E4E4E7] last:border-b-0">
-									<td className="px-4 py-3 text-[#71717A]">{doc.datum}</td>
+								<tr key={doc.id} className="border-b border-zinc-200 last:border-b-0">
+									<td className="px-4 py-3 text-zinc-500">{doc.datum}</td>
 									<td className="px-4 py-3">
-										<span className="inline-flex items-center gap-2 text-[#09090B]">
+										<span className="inline-flex items-center gap-2 text-zinc-950">
 											<DocFileBadge fileType={doc.fileType} />
 											{doc.namn}
 										</span>
 									</td>
-									<td className="px-4 py-3 text-[#71717A]">{doc.typ}</td>
+									<td className="px-4 py-3 text-zinc-500">{doc.typ}</td>
 									<td className="px-4 py-3">
 										<Button
 											type="button"
@@ -299,12 +305,6 @@ interface Props {
 export function CalculationDetailView({ data }: Props) {
 	const [activeTab, setActiveTab] = useState<DetailTab>("kontakt");
 
-	const tabs: { key: DetailTab; labelKey: string }[] = [
-		{ key: "kontakt", labelKey: localizationConstants.calcNewStep1Tab },
-		{ key: "projekt", labelKey: localizationConstants.calcNewStep2Tab },
-		{ key: "dokument", labelKey: localizationConstants.calcNewStep3Tab },
-	];
-
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50">
 			{/* Page header — contains title + tabs, shares the single bottom border */}
@@ -319,7 +319,7 @@ export function CalculationDetailView({ data }: Props) {
 
 				{/* Tab bar — sits flush against the header's bottom border */}
 				<div className="flex">
-					{tabs.map((tab) => (
+					{DETAIL_TABS.map((tab) => (
 						<button
 							key={tab.key}
 							type="button"
@@ -327,7 +327,7 @@ export function CalculationDetailView({ data }: Props) {
 							className={cn(
 								"cursor-pointer whitespace-nowrap border-b-2 text-sm font-semibold px-4 transition-colors",
 								activeTab === tab.key
-									? "border-slate-900 text-[#020617] pb-3 pt-2"
+									? "border-slate-900 text-slate-950 pb-3 pt-2"
 									: "border-transparent text-slate-500 pb-3.5 pt-2 hover:text-slate-700",
 							)}
 						>
