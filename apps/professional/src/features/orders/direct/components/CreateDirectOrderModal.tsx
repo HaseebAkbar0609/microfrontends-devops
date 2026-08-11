@@ -121,19 +121,17 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 	const grandTotal = subtotal + vatTotal;
 
 	const handleSubmit = (asDraft = false) => {
-		if (!asDraft) {
-			if (!customerId) {
-				setError("Vänligen välj en kund.");
-				return;
-			}
-			if (!projectId) {
-				setError("Vänligen välj ett projekt.");
-				return;
-			}
-			if (items.length === 0) {
-				setError("Minst en artikel krävs.");
-				return;
-			}
+		if (!customerId || !customerId.trim()) {
+			setError("Vänligen välj en kund.");
+			return;
+		}
+		if (!projectId || !projectId.trim()) {
+			setError("Vänligen välj ett projekt.");
+			return;
+		}
+		if (items.length === 0 || items.some((item) => !item.productId || item.quantity <= 0)) {
+			setError("Minst en giltig artikel med antal större än 0 krävs.");
+			return;
 		}
 
 		setError("");
