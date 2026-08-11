@@ -2144,6 +2144,12 @@ export const enOffer: OfferTranslation = {
 	grandTotal: "Grand Total",
 	statusPending: "Pending",
 	statusOpened: "Opened",
+	notesPlaceholder: "Internal notes or special instructions...",
+	productCarpenter: "Carpentry Work / hour",
+	productPainting: "Painting Services",
+	productElectrician: "Electrician Consultation",
+	productPlumbing: "Plumbing Installation",
+	productDrywall: "Material: Drywall Boards 12mm",
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: "Offer overview",
 	offerWidgetOverviewTotal: "Total offers",

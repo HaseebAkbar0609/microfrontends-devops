@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, X, AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Plus, Trash2, X, AlertCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +13,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { MOCK_CUSTOMERS, MOCK_PROJECTS, MOCK_PRODUCTS } from "../data/directOrders.mock";
@@ -26,7 +28,7 @@ export interface CreateDirectOrderModalProps {
 interface FormLineItem {
 	id: string;
 	productId: string;
-	productName: string;
+	productNameKey: string;
 	quantity: number;
 	unitPrice: number;
 	discountPercent: number;
@@ -34,6 +36,8 @@ interface FormLineItem {
 }
 
 export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirectOrderModalProps) {
+	const { t } = useTranslation();
+	const router = useRouter();
 	const [customerId, setCustomerId] = useState("");
 	const [projectId, setProjectId] = useState("");
 	const [orderDate, setOrderDate] = useState(new Date().toISOString().split("T")[0]);
@@ -41,12 +45,13 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 	const [referenceNo, setReferenceNo] = useState("");
 	const [notes, setNotes] = useState("");
 	const [error, setError] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const [items, setItems] = useState<FormLineItem[]>([
 		{
 			id: "item-1",
 			productId: MOCK_PRODUCTS[0].id,
-			productName: MOCK_PRODUCTS[0].name,
+			productNameKey: MOCK_PRODUCTS[0].nameKey,
 			quantity: 1,
 			unitPrice: MOCK_PRODUCTS[0].unitPrice,
 			discountPercent: 0,
@@ -76,7 +81,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 			{
 				id: `item-${Date.now()}`,
 				productId: defaultProd.id,
-				productName: defaultProd.name,
+				productNameKey: defaultProd.nameKey,
 				quantity: 1,
 				unitPrice: defaultProd.unitPrice,
 				discountPercent: 0,
@@ -99,7 +104,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 			updated[index] = {
 				...updated[index],
 				productId: prod.id,
-				productName: prod.name,
+				productNameKey: prod.nameKey,
 				unitPrice: prod.unitPrice,
 				vatPercent: prod.vatPercent,
 			};
@@ -120,7 +125,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 	);
 	const grandTotal = subtotal + vatTotal;
 
-	const handleSubmit = (asDraft = false) => {
+	const handleSubmit = async (asDraft = false) => {
 		if (!customerId || !customerId.trim()) {
 			setError("Vänligen välj en kund.");
 			return;
@@ -135,27 +140,34 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 		}
 
 		setError("");
-		const selectedCust = MOCK_CUSTOMERS.find((c) => c.id === customerId);
-		const selectedProj = MOCK_PROJECTS.find((p) => p.id === projectId);
+		setIsSubmitting(true);
 
-		const newOrder: DirectOrderRow = {
-			id: `do-${Date.now()}`,
-			serialNo: `00${Math.floor(Math.random() * 90) + 10}`,
-			orderName: selectedProj ? selectedProj.name : "Renovation",
-			customer: selectedCust ? selectedCust.name : "Okänd kund",
-			projectId,
-			projectName: selectedProj?.name,
-			start: orderDate || "2024/01/01",
-			deliveryDate: deliveryDate || "2024/02/01",
-			status: asDraft ? "pending" : "opened",
-			referenceNo: referenceNo || `PO-${Math.floor(Math.random() * 9000) + 1000}`,
-			subtotal,
-			vatTotal,
-			grandTotal,
-		};
+		try {
+			const selectedCust = MOCK_CUSTOMERS.find((c) => c.id === customerId);
+			const selectedProj = MOCK_PROJECTS.find((p) => p.id === projectId);
 
-		onSave(newOrder);
-		onClose();
+			const newOrder: DirectOrderRow = {
+				id: `do-${Date.now()}`,
+				serialNo: `00${Math.floor(Math.random() * 90) + 10}`,
+				orderName: selectedProj ? selectedProj.name : "Renovation",
+				customer: selectedCust ? selectedCust.name : "Okänd kund",
+				projectId,
+				projectName: selectedProj?.name,
+				start: orderDate || "2024/01/01",
+				deliveryDate: deliveryDate || "2024/02/01",
+				status: asDraft ? "pending" : "opened",
+				referenceNo: referenceNo || `PO-${Math.floor(Math.random() * 9000) + 1000}`,
+				subtotal,
+				vatTotal,
+				grandTotal,
+			};
+
+			onSave(newOrder);
+			onClose();
+			router.push("/module/production/order/overview");
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -169,7 +181,8 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 					<button
 						type="button"
 						onClick={onClose}
-						className="p-1 text-slate-400 hover:text-slate-700 rounded-md cursor-pointer"
+						disabled={isSubmitting}
+						className="p-1 text-slate-400 hover:text-slate-700 rounded-md cursor-pointer disabled:opacity-50"
 					>
 						<X className="h-5 w-5" />
 					</button>
@@ -191,8 +204,8 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							<Label className="text-xs font-medium text-slate-700">
 								<Translate text={localizationConstants.orderCustomer} />
 							</Label>
-							<Select value={customerId} onValueChange={handleCustomerChange}>
-								<SelectTrigger className="h-10 border-slate-200 bg-white text-xs">
+							<Select value={customerId} onValueChange={handleCustomerChange} disabled={isSubmitting}>
+								<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-xs">
 									<SelectValue placeholder="Välj kund..." />
 								</SelectTrigger>
 								<SelectContent className="bg-white">
@@ -212,12 +225,13 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							</Label>
 							<Select
 								value={projectId}
+								disabled={isSubmitting}
 								onValueChange={(val) => {
 									setProjectId(val);
 									setError("");
 								}}
 							>
-								<SelectTrigger className="h-10 border-slate-200 bg-white text-xs">
+								<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-xs">
 									<SelectValue placeholder="Välj projekt..." />
 								</SelectTrigger>
 								<SelectContent className="bg-white">
@@ -238,6 +252,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							<Input
 								type="text"
 								value={referenceNo}
+								disabled={isSubmitting}
 								onChange={(e) => setReferenceNo(e.target.value)}
 								placeholder="e.g. PO-9921"
 								className="h-10 border-slate-200 text-xs"
@@ -252,6 +267,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							<Input
 								type="date"
 								value={orderDate}
+								disabled={isSubmitting}
 								onChange={(e) => setOrderDate(e.target.value)}
 								className="h-10 border-slate-200 text-xs"
 							/>
@@ -265,6 +281,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							<Input
 								type="date"
 								value={deliveryDate}
+								disabled={isSubmitting}
 								onChange={(e) => setDeliveryDate(e.target.value)}
 								className="h-10 border-slate-200 text-xs"
 							/>
@@ -281,6 +298,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 								type="button"
 								variant="outline"
 								size="sm"
+								disabled={isSubmitting}
 								onClick={handleAddItem}
 								className="h-8 gap-1 text-xs border-slate-200 cursor-pointer"
 							>
@@ -310,15 +328,16 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 												<td className="p-2">
 													<Select
 														value={item.productId}
+														disabled={isSubmitting}
 														onValueChange={(val) => handleProductChange(idx, val)}
 													>
-														<SelectTrigger className="h-8 border-slate-200 bg-white text-xs">
+														<SelectTrigger className="h-8 w-full border-slate-200 bg-white text-xs">
 															<SelectValue />
 														</SelectTrigger>
 														<SelectContent className="bg-white">
 															{MOCK_PRODUCTS.map((prod) => (
 																<SelectItem key={prod.id} value={prod.id}>
-																	{prod.name}
+																	<Translate text={prod.nameKey} />
 																</SelectItem>
 															))}
 														</SelectContent>
@@ -329,6 +348,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 														type="number"
 														min={1}
 														value={item.quantity}
+														disabled={isSubmitting}
 														onChange={(e) => {
 															const val = Number(e.target.value);
 															setItems((prev) => {
@@ -345,6 +365,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 														type="number"
 														min={0}
 														value={item.unitPrice}
+														disabled={isSubmitting}
 														onChange={(e) => {
 															const val = Number(e.target.value);
 															setItems((prev) => {
@@ -362,6 +383,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 														min={0}
 														max={100}
 														value={item.discountPercent}
+														disabled={isSubmitting}
 														onChange={(e) => {
 															const val = Number(e.target.value);
 															setItems((prev) => {
@@ -376,6 +398,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 												<td className="p-2">
 													<Select
 														value={String(item.vatPercent)}
+														disabled={isSubmitting}
 														onValueChange={(val) => {
 															setItems((prev) => {
 																const u = [...prev];
@@ -384,7 +407,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 															});
 														}}
 													>
-														<SelectTrigger className="h-8 border-slate-200 bg-white text-xs">
+														<SelectTrigger className="h-8 w-full border-slate-200 bg-white text-xs">
 															<SelectValue />
 														</SelectTrigger>
 														<SelectContent className="bg-white">
@@ -401,7 +424,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 													<button
 														type="button"
 														onClick={() => handleRemoveItem(item.id)}
-														disabled={items.length <= 1}
+														disabled={items.length <= 1 || isSubmitting}
 														className="p-1 text-slate-400 hover:text-red-600 disabled:opacity-30 cursor-pointer"
 													>
 														<Trash2 className="h-4 w-4" />
@@ -423,10 +446,11 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							</Label>
 							<textarea
 								value={notes}
+								disabled={isSubmitting}
 								onChange={(e) => setNotes(e.target.value)}
 								rows={4}
-								placeholder="Internal notes or special instructions..."
-								className="w-full rounded-md border border-slate-200 p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400"
+								placeholder={t(localizationConstants.notesPlaceholder)}
+								className="w-full rounded-md border border-slate-200 p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-400 disabled:opacity-50"
 							/>
 						</div>
 
@@ -454,6 +478,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 						type="button"
 						variant="outline"
 						onClick={onClose}
+						disabled={isSubmitting}
 						className="h-9 text-xs border-slate-200 cursor-pointer"
 					>
 						<Translate text={localizationConstants.cancel} />
@@ -461,16 +486,20 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 					<Button
 						type="button"
 						variant="outline"
+						disabled={isSubmitting}
 						onClick={() => handleSubmit(true)}
-						className="h-9 text-xs border-slate-200 cursor-pointer"
+						className="h-9 text-xs border-slate-200 cursor-pointer gap-1.5"
 					>
+						{isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
 						<Translate text={localizationConstants.saveDraft} />
 					</Button>
 					<Button
 						type="button"
+						disabled={isSubmitting}
 						onClick={() => handleSubmit(false)}
-						className="h-9 text-xs bg-[#111721] text-white hover:bg-slate-800 cursor-pointer"
+						className="h-9 text-xs bg-[#111721] text-white hover:bg-slate-800 cursor-pointer gap-1.5"
 					>
+						{isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
 						<Translate text={localizationConstants.createDirectOrderButton} />
 					</Button>
 				</div>

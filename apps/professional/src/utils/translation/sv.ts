@@ -2034,6 +2034,12 @@ export const svOffer: OfferTranslation = {
 	grandTotal: "Totalsumma",
 	statusPending: "Väntar",
 	statusOpened: "Öppnad",
+	notesPlaceholder: "Interna anteckningar eller särskilda instruktioner...",
+	productCarpenter: "Snickeriarbete / timme",
+	productPainting: "Måleritjänster",
+	productElectrician: "Elektrikerkonsultation",
+	productPlumbing: "VVS-installation",
+	productDrywall: "Material: Gipsplattor 12mm",
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: "Offertöversikt",
 	offerWidgetOverviewTotal: "Totalt antal offerter",

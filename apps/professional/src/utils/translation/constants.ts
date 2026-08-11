@@ -2118,6 +2118,12 @@ export type OfferTranslation = {
 	grandTotal: string;
 	statusPending: string;
 	statusOpened: string;
+	notesPlaceholder: string;
+	productCarpenter: string;
+	productPainting: string;
+	productElectrician: string;
+	productPlumbing: string;
+	productDrywall: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;

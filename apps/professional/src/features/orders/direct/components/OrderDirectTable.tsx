@@ -48,7 +48,11 @@ import type { DirectOrderRow } from "../types/directOrder.types";
 
 import { useTranslation } from "react-i18next";
 
-export function OrderDirectTable() {
+export interface OrderDirectTableProps {
+	onOpenCreateModal: () => void;
+}
+
+export function OrderDirectTable({ onOpenCreateModal }: OrderDirectTableProps) {
 	const { t } = useTranslation();
 	const {
 		paginatedOrders,
@@ -143,14 +147,13 @@ export function OrderDirectTable() {
 
 				{/* Create Direct Order button */}
 				<PermissionGate permission="CREATE_ORDER">
-					<Link href="/module/production/order/create">
-						<Button
-							className="h-10 gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 cursor-pointer"
-						>
-							<Plus className="h-4 w-4" aria-hidden />
-							<Translate text={localizationConstants.createDirectOrder} />
-						</Button>
-					</Link>
+					<Button
+						onClick={onOpenCreateModal}
+						className="h-10 gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 cursor-pointer"
+					>
+						<Plus className="h-4 w-4" aria-hidden />
+						<Translate text={localizationConstants.createDirectOrder} />
+					</Button>
 				</PermissionGate>
 			</div>
 

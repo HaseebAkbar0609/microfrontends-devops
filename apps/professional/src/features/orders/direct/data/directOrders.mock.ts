@@ -1,4 +1,5 @@
 import type { DirectOrderRow } from "../types/directOrder.types";
+import localizationConstants from "@/utils/translation/constants";
 
 export const MOCK_DIRECT_ORDERS: DirectOrderRow[] = [
 	{
@@ -112,9 +113,9 @@ export const MOCK_PROJECTS = [
 ];
 
 export const MOCK_PRODUCTS = [
-	{ id: "pr-1", name: "Snickeri arbete / timme", unitPrice: 650, vatPercent: 25 },
-	{ id: "pr-2", name: "Måleritjänster", unitPrice: 550, vatPercent: 25 },
-	{ id: "pr-3", name: "Elektrikerkonsultation", unitPrice: 780, vatPercent: 25 },
-	{ id: "pr-4", name: "VVS-installation", unitPrice: 850, vatPercent: 25 },
-	{ id: "pr-5", name: "Material: Gipsplattor 12mm", unitPrice: 180, vatPercent: 25 },
+	{ id: "pr-1", nameKey: localizationConstants.productCarpenter, unitPrice: 650, vatPercent: 25 },
+	{ id: "pr-2", nameKey: localizationConstants.productPainting, unitPrice: 550, vatPercent: 25 },
+	{ id: "pr-3", nameKey: localizationConstants.productElectrician, unitPrice: 780, vatPercent: 25 },
+	{ id: "pr-4", nameKey: localizationConstants.productPlumbing, unitPrice: 850, vatPercent: 25 },
+	{ id: "pr-5", nameKey: localizationConstants.productDrywall, unitPrice: 180, vatPercent: 25 },
 ];
