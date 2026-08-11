@@ -1376,6 +1376,14 @@ export const svOffer: OfferTranslation = {
 	companyRefCreatedToast: "Referens skapad",
 	companyRefSavedToast: "Referens sparad",
 	companyRefDeletedToast: "Referens raderad",
+	// Admin - Company reviews
+	companyReviewsTitle: "Företagsomdöme",
+	companyReviewsFromCustomers: "Omdömen från kunder",
+	companyReviewsAnswered: "Besvarade omdömen",
+	companyReviewsLatestChip: "Senaste omdömen",
+	companyReviewsLeaveComment: "Lämna en kommentar",
+	companyReviewsSend: "Skicka",
+	companyReviewsSentToast: "Svar skickat",
 	// Admin - Integration
 	integrationHeading: "Kopplingar till TimeFlow",
 	integrationCreate: "Skapa integration",

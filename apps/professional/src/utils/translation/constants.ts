@@ -1474,6 +1474,14 @@ export type OfferTranslation = {
 	companyRefCreatedToast: string;
 	companyRefSavedToast: string;
 	companyRefDeletedToast: string;
+	// Admin - Company reviews
+	companyReviewsTitle: string;
+	companyReviewsFromCustomers: string;
+	companyReviewsAnswered: string;
+	companyReviewsLatestChip: string;
+	companyReviewsLeaveComment: string;
+	companyReviewsSend: string;
+	companyReviewsSentToast: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;
