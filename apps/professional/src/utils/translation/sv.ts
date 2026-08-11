@@ -2074,7 +2074,7 @@ export const svOffer: OfferTranslation = {
 	orderAddress: "Order adress",
 	contractAmount: "Kontraktsumma",
 	departmentLabel: "Avdelning",
-	documentNameHeader: "Dockumentets namn",
+	documentNameHeader: "Dokumentets namn",
 	fileHeader: "Fil",
 	addressLabel: "Address",
 	postNrLabel: "Post nr",

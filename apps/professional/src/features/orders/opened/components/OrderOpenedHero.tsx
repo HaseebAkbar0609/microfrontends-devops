@@ -37,7 +37,7 @@ export function OrderOpenedHero({ data }: OrderOpenedHeroProps) {
 				<div className="flex items-center gap-2 pt-0.5 flex-wrap">
 					{data.tags.map((tag, idx) => {
 						const tagKey = data.tagKeys?.[idx];
-						const isStockholm = idx === 0 || tag.toLowerCase().includes("stockholm");
+						const isStockholm = tag.toLowerCase().includes("stockholm");
 						return (
 							<span
 								key={tag}
