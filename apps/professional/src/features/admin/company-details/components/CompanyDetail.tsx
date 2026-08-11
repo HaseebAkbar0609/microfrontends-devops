@@ -14,6 +14,7 @@ import { CompanyBankTab } from "./CompanyBankTab";
 import { CompanyInformationTab } from "./CompanyInformationTab";
 import { CompanyLogotypeTab } from "./CompanyLogotypeTab";
 import { CompanyPresentationTab } from "./CompanyPresentationTab";
+import { CompanyReferencesTab } from "./CompanyReferencesTab";
 import {
 	companyInformationSchema,
 	type CompanyInformationFormValues,
@@ -45,7 +46,7 @@ const tabs = [
 	{
 		value: "reference-list",
 		label: localizationConstants.referenceList,
-		isComingSoon: true,
+		isComingSoon: false,
 	},
 	{
 		value: "reviews",
@@ -224,6 +225,14 @@ export default function CompanyDetail() {
 							className="mt-6"
 						>
 							<CompanyPresentationTab />
+						</TabsContent>
+					) : tab.value === "reference-list" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyReferencesTab />
 						</TabsContent>
 					) : (
 						<TabsContent
