@@ -1314,6 +1314,12 @@ export const svOffer: OfferTranslation = {
 	companyPresentationTeamLabel: "Företags team:",
 	companyPresentationFileLabel: "Presentation företag",
 	companyPresentationFileHint: "PPT-, DOC- och PDF-filer är tillåtna.",
+	companyBankAccountNr: "Konto nr:",
+	companyBankgiro: "Bankgiro",
+	companyPostgiro: "Postgiro",
+	companyIbanNr: "IBAN nr:",
+	companyBic: "BIC",
+	companySwiftNr: "Swift nr:",
 	// Admin - Integration
 	integrationHeading: "Kopplingar till TimeFlow",
 	integrationCreate: "Skapa integration",
