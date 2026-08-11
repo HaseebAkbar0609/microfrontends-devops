@@ -162,7 +162,7 @@ export function CalculationOverviewView({ items }: Props) {
           <Button
             size="sm"
             className="h-9 cursor-pointer gap-2 bg-neutral-950 text-sm text-white hover:bg-neutral-800"
-            onClick={() => router.push("/module/business/calculation/overview/create")}
+            onClick={() => router.push("/module/business/calculation/new")}
           >
             <Plus size={14} aria-hidden={true} />
             {t(localizationConstants.calcOverviewNewBtn)}
