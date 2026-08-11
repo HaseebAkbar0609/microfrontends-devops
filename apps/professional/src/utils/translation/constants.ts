@@ -964,6 +964,10 @@ export type OfferTranslation = {
 	calcStatVunna: string;
 	calcStatForlorade: string;
 	calcStatSeList: string;
+	// Calculation Archive
+	calcArchiveSeProject: string;
+	calcArchiveUnarchive: string;
+	calcArchiveDelete: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
@@ -1408,6 +1412,12 @@ export type OfferTranslation = {
 	companyPresentationTeamLabel: string;
 	companyPresentationFileLabel: string;
 	companyPresentationFileHint: string;
+	companyBankAccountNr: string;
+	companyBankgiro: string;
+	companyPostgiro: string;
+	companyIbanNr: string;
+	companyBic: string;
+	companySwiftNr: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;

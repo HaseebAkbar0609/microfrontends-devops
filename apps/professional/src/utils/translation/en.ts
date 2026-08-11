@@ -981,6 +981,10 @@ export const enOffer: OfferTranslation = {
 	calcStatVunna: "Won",
 	calcStatForlorade: "Lost",
 	calcStatSeList: "View list",
+	// Calculation Archive
+	calcArchiveSeProject: "View project",
+	calcArchiveUnarchive: "Unarchive",
+	calcArchiveDelete: "Delete",
 	// Admin - Users
 	adminUsersTitle: "Users",
 	adminUsersTabGroups: "Groups",
@@ -1426,6 +1430,12 @@ export const enOffer: OfferTranslation = {
 	companyPresentationTeamLabel: "Company team:",
 	companyPresentationFileLabel: "Company presentation",
 	companyPresentationFileHint: "PPT, DOC and PDF files are allowed.",
+	companyBankAccountNr: "Account no.:",
+	companyBankgiro: "Bankgiro",
+	companyPostgiro: "Postgiro",
+	companyIbanNr: "IBAN no.:",
+	companyBic: "BIC",
+	companySwiftNr: "Swift no.:",
 	// Admin - Integration
 	integrationHeading: "Connections to TimeFlow",
 	integrationCreate: "Create integration",
