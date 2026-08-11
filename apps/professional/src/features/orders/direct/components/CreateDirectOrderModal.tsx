@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Trash2, X } from "lucide-react";
+import { Plus, Trash2, X, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,6 +40,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 	const [deliveryDate, setDeliveryDate] = useState("");
 	const [referenceNo, setReferenceNo] = useState("");
 	const [notes, setNotes] = useState("");
+	const [error, setError] = useState("");
 
 	const [items, setItems] = useState<FormLineItem[]>([
 		{
@@ -54,6 +55,19 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 	]);
 
 	if (!isOpen) return null;
+
+	const filteredProjects = MOCK_PROJECTS.filter(
+		(p) => !customerId || p.customerId === customerId
+	);
+
+	const handleCustomerChange = (val: string) => {
+		setCustomerId(val);
+		setError("");
+		const validProject = MOCK_PROJECTS.find((p) => p.id === projectId && p.customerId === val);
+		if (!validProject) {
+			setProjectId("");
+		}
+	};
 
 	const handleAddItem = () => {
 		const defaultProd = MOCK_PRODUCTS[0];
@@ -107,6 +121,22 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 	const grandTotal = subtotal + vatTotal;
 
 	const handleSubmit = (asDraft = false) => {
+		if (!asDraft) {
+			if (!customerId) {
+				setError("Vänligen välj en kund.");
+				return;
+			}
+			if (!projectId) {
+				setError("Vänligen välj ett projekt.");
+				return;
+			}
+			if (items.length === 0) {
+				setError("Minst en artikel krävs.");
+				return;
+			}
+		}
+
+		setError("");
 		const selectedCust = MOCK_CUSTOMERS.find((c) => c.id === customerId);
 		const selectedProj = MOCK_PROJECTS.find((p) => p.id === projectId);
 
@@ -149,6 +179,13 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 
 				{/* Modal Body */}
 				<div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+					{error && (
+						<div className="flex items-center gap-2 rounded-lg bg-red-50 p-3 text-xs text-red-700 border border-red-200">
+							<AlertCircle className="h-4 w-4 shrink-0" />
+							<span>{error}</span>
+						</div>
+					)}
+
 					{/* Header Info Grid */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 						{/* Customer Selection */}
@@ -156,7 +193,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							<Label className="text-xs font-medium text-slate-700">
 								<Translate text={localizationConstants.orderCustomer} />
 							</Label>
-							<Select value={customerId} onValueChange={setCustomerId}>
+							<Select value={customerId} onValueChange={handleCustomerChange}>
 								<SelectTrigger className="h-10 border-slate-200 bg-white text-xs">
 									<SelectValue placeholder="Välj kund..." />
 								</SelectTrigger>
@@ -170,17 +207,23 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 							</Select>
 						</div>
 
-						{/* Project Selection */}
+						{/* Project Selection (Filtered by Customer) */}
 						<div className="flex flex-col gap-1.5">
 							<Label className="text-xs font-medium text-slate-700">
 								<Translate text={localizationConstants.projectLabel} />
 							</Label>
-							<Select value={projectId} onValueChange={setProjectId}>
+							<Select
+								value={projectId}
+								onValueChange={(val) => {
+									setProjectId(val);
+									setError("");
+								}}
+							>
 								<SelectTrigger className="h-10 border-slate-200 bg-white text-xs">
 									<SelectValue placeholder="Välj projekt..." />
 								</SelectTrigger>
 								<SelectContent className="bg-white">
-									{MOCK_PROJECTS.map((proj) => (
+									{filteredProjects.map((proj) => (
 										<SelectItem key={proj.id} value={proj.id}>
 											{proj.name}
 										</SelectItem>
@@ -292,7 +335,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 															const val = Number(e.target.value);
 															setItems((prev) => {
 																const u = [...prev];
-																u[idx].quantity = val;
+																u[idx] = { ...u[idx], quantity: val };
 																return u;
 															});
 														}}
@@ -308,7 +351,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 															const val = Number(e.target.value);
 															setItems((prev) => {
 																const u = [...prev];
-																u[idx].unitPrice = val;
+																u[idx] = { ...u[idx], unitPrice: val };
 																return u;
 															});
 														}}
@@ -325,7 +368,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 															const val = Number(e.target.value);
 															setItems((prev) => {
 																const u = [...prev];
-																u[idx].discountPercent = val;
+																u[idx] = { ...u[idx], discountPercent: val };
 																return u;
 															});
 														}}
@@ -338,7 +381,7 @@ export function CreateDirectOrderModal({ isOpen, onClose, onSave }: CreateDirect
 														onValueChange={(val) => {
 															setItems((prev) => {
 																const u = [...prev];
-																u[idx].vatPercent = Number(val);
+																u[idx] = { ...u[idx], vatPercent: Number(val) };
 																return u;
 															});
 														}}
