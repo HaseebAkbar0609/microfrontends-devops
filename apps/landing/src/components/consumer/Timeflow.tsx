@@ -8,7 +8,7 @@ import Link from "next/link";
 import { getCustomerRegisterUrl } from "@/utils/constants";
 
 const Timeflow: React.FC = () => {
-  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
+  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
 
   useEffect(() => {
     setCustomerRegisterUrl(getCustomerRegisterUrl());

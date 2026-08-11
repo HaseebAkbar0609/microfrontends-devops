@@ -20,7 +20,7 @@ import Button from "../common/button";
 import { getProfessionalRegisterUrl } from "@/utils/constants";
 
 const ProfessionalSmartFeatures: React.FC = () => {
-	const [professionalRegisterUrl, setProfessionalRegisterUrl] = useState<string>("");
+	const [professionalRegisterUrl, setProfessionalRegisterUrl] = useState<string>("#");
 
 	useEffect(() => {
 		setProfessionalRegisterUrl(getProfessionalRegisterUrl());

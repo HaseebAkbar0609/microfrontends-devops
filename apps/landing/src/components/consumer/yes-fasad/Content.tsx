@@ -6,7 +6,7 @@ import { getCustomerRegisterUrl } from "@/utils/constants";
 
 const Content: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
+  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
   const [formData, setFormData] = useState({
     name: "",
     email: "",

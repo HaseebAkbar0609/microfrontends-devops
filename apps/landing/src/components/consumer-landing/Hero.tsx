@@ -5,7 +5,7 @@ import { getCustomerRegisterUrl } from "@/utils/constants";
 import Hero from "../common/hero";
 
 const ConsumerLandingHero: React.FC = () => {
-	const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
+	const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
 
 	useEffect(() => {
 		setCustomerRegisterUrl(getCustomerRegisterUrl());

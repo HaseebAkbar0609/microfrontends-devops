@@ -6,7 +6,7 @@ import Button from "../common/button";
 import HeroForm from "../common/hero-form";
 
 const ConsumerHero: React.FC = () => {
-	const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
+	const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
 
 	useEffect(() => {
 		setCustomerRegisterUrl(getCustomerRegisterUrl());

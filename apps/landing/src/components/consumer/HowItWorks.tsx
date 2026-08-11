@@ -8,7 +8,7 @@ import { Building, Edit, Employee } from "../icons";
 import { getCustomerRegisterUrl } from "@/utils/constants";
 
 const ConsumerHowItWorks: React.FC = () => {
-	const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
+	const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
 
 	useEffect(() => {
 		setCustomerRegisterUrl(getCustomerRegisterUrl());

@@ -74,7 +74,7 @@ const Header: React.FC = () => {
 	const { t } = useTranslation();
 
 	// Button redirect logic
-	const [buttonHref, setButtonHref] = useState<string>("");
+	const [buttonHref, setButtonHref] = useState<string>("#");
 
 	useEffect(() => {
 		setButtonHref(

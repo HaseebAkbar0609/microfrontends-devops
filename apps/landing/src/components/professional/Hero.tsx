@@ -5,7 +5,7 @@ import { getProfessionalRegisterUrl } from "@/utils/constants";
 import Hero from "../common/hero";
 
 const ProfessionalHero: React.FC = () => {
-	const [professionalRegisterUrl, setProfessionalRegisterUrl] = useState<string>("");
+	const [professionalRegisterUrl, setProfessionalRegisterUrl] = useState<string>("#");
 
 	useEffect(() => {
 		setProfessionalRegisterUrl(getProfessionalRegisterUrl());

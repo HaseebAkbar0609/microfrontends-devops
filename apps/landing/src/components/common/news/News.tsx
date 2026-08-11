@@ -13,7 +13,7 @@ import {
 const News: React.FC<NewsProps> = ({ resource }) => {
 	const { pathname } = useRouter();
 	const isProfessional = pathname.includes("/professional");
-	const [registerLink, setRegisterLink] = useState<string>("");
+	const [registerLink, setRegisterLink] = useState<string>("#");
 
 	useEffect(() => {
 		// Dynamic link
