@@ -10,6 +10,7 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 import { ComingSoonTab } from "./ComingSoonTab";
+import { CompanyBankTab } from "./CompanyBankTab";
 import { CompanyInformationTab } from "./CompanyInformationTab";
 import { CompanyLogotypeTab } from "./CompanyLogotypeTab";
 import { CompanyPresentationTab } from "./CompanyPresentationTab";
@@ -30,7 +31,7 @@ const tabs = [
 		label: localizationConstants.companyInformation,
 		isComingSoon: false,
 	},
-	{ value: "bank", label: localizationConstants.bank, isComingSoon: true },
+	{ value: "bank", label: localizationConstants.bank, isComingSoon: false },
 	{
 		value: "logotype",
 		label: localizationConstants.logotype,
@@ -207,6 +208,14 @@ export default function CompanyDetail() {
 								onSubmit={onSubmit}
 								lastSavedRef={lastSavedRef}
 							/>
+						</TabsContent>
+					) : tab.value === "bank" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyBankTab />
 						</TabsContent>
 					) : tab.value === "presentation" ? (
 						<TabsContent

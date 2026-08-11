@@ -1467,6 +1467,12 @@ export const enOffer: OfferTranslation = {
 	companyPresentationTeamLabel: "Company team:",
 	companyPresentationFileLabel: "Company presentation",
 	companyPresentationFileHint: "PPT, DOC and PDF files are allowed.",
+	companyBankAccountNr: "Account no.:",
+	companyBankgiro: "Bankgiro",
+	companyPostgiro: "Postgiro",
+	companyIbanNr: "IBAN no.:",
+	companyBic: "BIC",
+	companySwiftNr: "Swift no.:",
 	// Admin - Integration
 	integrationHeading: "Connections to TimeFlow",
 	integrationCreate: "Create integration",

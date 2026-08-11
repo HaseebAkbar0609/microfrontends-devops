@@ -1449,6 +1449,12 @@ export type OfferTranslation = {
 	companyPresentationTeamLabel: string;
 	companyPresentationFileLabel: string;
 	companyPresentationFileHint: string;
+	companyBankAccountNr: string;
+	companyBankgiro: string;
+	companyPostgiro: string;
+	companyIbanNr: string;
+	companyBic: string;
+	companySwiftNr: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;
