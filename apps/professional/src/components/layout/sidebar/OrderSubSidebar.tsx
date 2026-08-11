@@ -13,76 +13,20 @@ import {
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { cn } from "@/lib/utils";
+import {
+	ORDER_SUB_SIDEBAR_ITEMS,
+	ORDER_GOTO_ITEMS,
+} from "@/features/orders/data/orderNav.config";
 
-export interface OrderSubSidebarItem {
-	id: string;
-	labelKey: string;
-	href: string;
+export function isPathActive(currentPath: string, itemHref: string, itemId?: string): boolean {
+	if (currentPath === itemHref || currentPath.startsWith(`${itemHref}/`)) {
+		return true;
+	}
+	if (itemId === "order-overview" && currentPath === "/module/production/order") {
+		return true;
+	}
+	return false;
 }
-
-export const ORDER_SUB_SIDEBAR_ITEMS: OrderSubSidebarItem[] = [
-	{
-		id: "order-dashboard",
-		labelKey: localizationConstants.orderDashboard,
-		href: "/module/production/order/dashboard",
-	},
-	{
-		id: "order-overview",
-		labelKey: localizationConstants.orderOverview,
-		href: "/module/production/order/overview",
-	},
-	{
-		id: "order-direct",
-		labelKey: localizationConstants.orderDirect,
-		href: "/module/production/order/direct",
-	},
-	{
-		id: "economic-overview",
-		labelKey: localizationConstants.economicOverview,
-		href: "/module/production/order/economy",
-	},
-	{
-		id: "planning",
-		labelKey: localizationConstants.planning,
-		href: "/module/production/order/planning",
-	},
-	{
-		id: "warranty",
-		labelKey: localizationConstants.warrantyCommitments,
-		href: "/module/production/order/warranty",
-	},
-	{
-		id: "archive",
-		labelKey: localizationConstants.archive,
-		href: "/module/production/order/archive",
-	},
-];
-
-export interface SubOrderGoToItem {
-	id: string;
-	title: string;
-	href: string;
-	children?: { id: string; title: string; href: string }[];
-}
-
-export const ORDER_GOTO_ITEMS: SubOrderGoToItem[] = [
-	{
-		id: "5000-001",
-		title: "Order 5000-001",
-		href: "/module/production/order/5000-001",
-		children: [
-			{ id: "5000-001-sub1", title: "Delorder 1", href: "/module/production/order/5000-001/sub1" },
-		],
-	},
-	{
-		id: "5000-002",
-		title: "Order 5000-002",
-		href: "/module/production/order/5000-002",
-		children: [
-			{ id: "5000-002-sub1", title: "Delorder 1", href: "/module/production/order/5000-002/sub1" },
-		],
-	},
-];
 
 export function OrderSubSidebar() {
 	const pathname = usePathname();
@@ -112,12 +56,8 @@ export function OrderSubSidebar() {
 			{/* Nav items */}
 			<nav className="flex flex-1 flex-col gap-1.5 px-3 py-4 overflow-y-auto">
 				{ORDER_SUB_SIDEBAR_ITEMS.map((item) => {
-					const isActive =
-						pathname === item.href ||
-						pathname.startsWith(`${item.href}/`) ||
-						(item.id === "order-overview" && pathname === "/module/production/order");
-
-					const ItemIcon = isActive ? FolderOpen : Folder;
+					const active = isPathActive(pathname, item.href, item.id);
+					const ItemIcon = active ? FolderOpen : Folder;
 
 					return (
 						<Link
@@ -125,7 +65,7 @@ export function OrderSubSidebar() {
 							href={item.href}
 							className={cn(
 								"flex items-center gap-3 rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors",
-								isActive
+								active
 									? "bg-[#111721] text-white shadow-xs"
 									: "text-slate-700 hover:bg-slate-100/80 hover:text-slate-900"
 							)}
@@ -133,7 +73,7 @@ export function OrderSubSidebar() {
 							<ItemIcon
 								className={cn(
 									"h-4 w-4 shrink-0",
-									isActive ? "text-white" : "text-slate-500"
+									active ? "text-white" : "text-slate-500"
 								)}
 								aria-hidden
 							/>
@@ -152,17 +92,16 @@ export function OrderSubSidebar() {
 					<div className="flex flex-col gap-1">
 						{ORDER_GOTO_ITEMS.map((item) => {
 							const isExpanded = !!expandedOrders[item.id];
-							const isActive =
-								pathname === item.href || pathname.startsWith(`${item.href}/`);
-							const ItemIcon = isActive ? FolderOpen : Folder;
-							const hasChildren = item.children && item.children.length > 0;
+							const active = isPathActive(pathname, item.href);
+							const ItemIcon = active ? FolderOpen : Folder;
+							const hasChildren = Boolean(item.children && item.children.length > 0);
 
 							return (
 								<div key={item.id} className="flex flex-col gap-1">
 									<div
 										className={cn(
 											"flex items-center justify-between rounded-lg px-3.5 py-2.5 text-sm font-medium transition-colors",
-											isActive
+											active
 												? "bg-[#111721] text-white shadow-xs"
 												: "text-slate-700 hover:bg-slate-100/80 hover:text-slate-900"
 										)}
@@ -171,7 +110,7 @@ export function OrderSubSidebar() {
 											<ItemIcon
 												className={cn(
 													"h-4 w-4 shrink-0",
-													isActive ? "text-white" : "text-slate-500"
+													active ? "text-white" : "text-slate-500"
 												)}
 												aria-hidden
 											/>
@@ -183,7 +122,7 @@ export function OrderSubSidebar() {
 												onClick={(e) => toggleOrderExpand(item.id, e)}
 												className={cn(
 													"p-0.5 rounded hover:bg-slate-200/50 transition-colors cursor-pointer",
-													isActive ? "hover:bg-slate-700 text-white" : "text-slate-400 hover:text-slate-600"
+													active ? "hover:bg-slate-700 text-white" : "text-slate-400 hover:text-slate-600"
 												)}
 												aria-label={`Toggle ${item.title}`}
 											>
@@ -197,7 +136,7 @@ export function OrderSubSidebar() {
 											<ChevronRight
 												className={cn(
 													"h-4 w-4 shrink-0",
-													isActive ? "text-white" : "text-slate-400"
+													active ? "text-white" : "text-slate-400"
 												)}
 												aria-hidden
 											/>

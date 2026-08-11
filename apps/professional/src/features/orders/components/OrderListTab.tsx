@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useMemo } from "react";
 import Link from "next/link";
 import {
 	Plus,
@@ -44,44 +43,30 @@ import {
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { MOCK_ORDERS } from "../data/orders.mock";
 import { OrderStatusBadge, OrderTypeBadge } from "./OrderStatusBadge";
-import type { OrderRow } from "../types/order.types";
-
-type SortField =
-	| "orderNo"
-	| "orderName"
-	| "customer"
-	| "type"
-	| "status"
-	| "orderSum"
-	| "projectManager"
-	| "start"
-	| "end";
+import { useOrders, type SortField } from "../hooks/useOrders";
+import { PermissionGate } from "@/components/common/PermissionGate";
 
 export function OrderListTab() {
 	const { t } = useTranslation();
-	const [orders, setOrders] = useState<OrderRow[]>(MOCK_ORDERS);
-	const [searchQuery, setSearchQuery] = useState("");
-	const [statusFilter, setStatusFilter] = useState<string>("all");
-	const [typeFilter, setTypeFilter] = useState<string>("all");
-	const [sortBy, setSortBy] = useState<SortField>("orderNo");
-	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-	const [pageSize, setPageSize] = useState<number>(10);
-	const [currentPage, setCurrentPage] = useState<number>(1);
-
-	const handleSort = (field: SortField) => {
-		if (sortBy === field) {
-			setSortOrder(sortOrder === "asc" ? "desc" : "asc");
-		} else {
-			setSortBy(field);
-			setSortOrder("asc");
-		}
-	};
-
-	const handleDeleteOrder = (orderId: string) => {
-		setOrders((prev) => prev.filter((o) => o.id !== orderId));
-	};
+	const {
+		paginatedOrders,
+		totalPages,
+		currentPage,
+		setCurrentPage,
+		pageSize,
+		setPageSize,
+		searchQuery,
+		setSearchQuery,
+		statusFilter,
+		setStatusFilter,
+		typeFilter,
+		setTypeFilter,
+		sortBy,
+		sortOrder,
+		handleSort,
+		deleteOrder,
+	} = useOrders();
 
 	const renderSortIcon = (field: SortField) => {
 		if (sortBy !== field) {
@@ -95,51 +80,6 @@ export function OrderListTab() {
 			<ArrowDown className="ml-1 h-3.5 w-3.5 text-slate-900 shrink-0" />
 		);
 	};
-
-	const filteredAndSortedOrders = useMemo(() => {
-		return orders
-			.filter((order) => {
-				const query = searchQuery.trim().toLowerCase();
-				if (query) {
-					const matchesOrderNo = order.orderNo.toLowerCase().includes(query);
-					const matchesName = order.orderName.toLowerCase().includes(query);
-					const matchesCustomer = order.customer.toLowerCase().includes(query);
-					const matchesPM = order.projectManager.toLowerCase().includes(query);
-					if (!matchesOrderNo && !matchesName && !matchesCustomer && !matchesPM) {
-						return false;
-					}
-				}
-
-				if (statusFilter !== "all" && order.status !== statusFilter) {
-					return false;
-				}
-
-				if (typeFilter !== "all" && order.type !== typeFilter) {
-					return false;
-				}
-
-				return true;
-			})
-			.sort((a, b) => {
-				let valA = a[sortBy] || "";
-				let valB = b[sortBy] || "";
-
-				if (typeof valA === "string") valA = valA.toLowerCase();
-				if (typeof valB === "string") valB = valB.toLowerCase();
-
-				let comparison = 0;
-				if (valA < valB) comparison = -1;
-				if (valA > valB) comparison = 1;
-
-				return sortOrder === "asc" ? comparison : -comparison;
-			});
-	}, [orders, searchQuery, statusFilter, typeFilter, sortBy, sortOrder]);
-
-	const totalPages = Math.max(1, Math.ceil(filteredAndSortedOrders.length / pageSize));
-	const paginatedOrders = useMemo(() => {
-		const startIdx = (currentPage - 1) * pageSize;
-		return filteredAndSortedOrders.slice(startIdx, startIdx + pageSize);
-	}, [filteredAndSortedOrders, currentPage, pageSize]);
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -197,17 +137,19 @@ export function OrderListTab() {
 					</Select>
 				</div>
 
-				{/* Create New Order Button */}
-				<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto justify-start xl:justify-end">
-					<Link href="/module/production/order/create">
-						<Button
-							className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
-						>
-							<Plus className="h-4 w-4" aria-hidden />
-							<Translate text={localizationConstants.createOrderButton} />
-						</Button>
-					</Link>
-				</div>
+				{/* Create New Order Button - Protected by PermissionGate */}
+				<PermissionGate permission="CREATE_ORDER">
+					<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto justify-start xl:justify-end">
+						<Link href="/module/production/order/create">
+							<Button
+								className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
+							>
+								<Plus className="h-4 w-4" aria-hidden />
+								<Translate text={localizationConstants.createOrderButton} />
+							</Button>
+						</Link>
+					</div>
+				</PermissionGate>
 			</div>
 
 			{/* Table without outer border container */}
@@ -307,94 +249,108 @@ export function OrderListTab() {
 					</TableHeader>
 
 					<TableBody>
-						{paginatedOrders.map((order) => (
-							<TableRow
-								key={order.id}
-								className="group border-b border-slate-100 transition-colors hover:bg-slate-50/60"
-							>
-								<TableCell className="px-4 py-3.5 text-sm font-normal text-slate-700 whitespace-nowrap">
-									{order.orderNo}
-								</TableCell>
-								<TableCell className="px-4 py-3.5 text-sm font-semibold text-slate-900 whitespace-nowrap">
-									{order.orderName}
-								</TableCell>
-								<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
-									{order.customer}
-								</TableCell>
-								<TableCell className="px-4 py-3.5 whitespace-nowrap">
-									<OrderTypeBadge type={order.type} />
-								</TableCell>
-								<TableCell className="px-4 py-3.5 whitespace-nowrap">
-									<OrderStatusBadge status={order.status} />
-								</TableCell>
-								<TableCell className="px-4 py-3.5 text-sm text-slate-900 whitespace-nowrap">
-									{order.orderSum}
-								</TableCell>
-								<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
-									{order.projectManager}
-								</TableCell>
-								<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
-									{order.start}
-								</TableCell>
-								<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
-									{order.end}
-								</TableCell>
-								{/* Separate non-sticky See Order column */}
-								<TableCell className="px-4 py-3.5 text-right whitespace-nowrap">
-									<Link href={`/module/production/order/${order.id}`}>
-										<Button
-											variant="outline"
-											size="sm"
-											className="h-8 border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-md cursor-pointer shadow-2xs"
-										>
-											<Translate text={localizationConstants.seeOrderButton} />
-										</Button>
-									</Link>
-								</TableCell>
-								{/* Sticky Action dropdown menu column */}
-								<TableCell className="w-[50px] min-w-[50px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] transition-colors group-hover:bg-slate-50 z-10 text-center py-3.5 px-2">
-									<DropdownMenu>
-										<DropdownMenuTrigger asChild>
-											<Button
-												variant="ghost"
-												size="icon"
-												className="h-8 w-8 text-slate-500 hover:text-slate-900 rounded-md cursor-pointer"
-											>
-												<MoreVertical className="h-4 w-4" />
-											</Button>
-										</DropdownMenuTrigger>
-										<DropdownMenuContent align="end" className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1">
-											<DropdownMenuItem asChild>
-												<Link
-													href={`/module/production/order/${order.id}`}
-													className="flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50"
-												>
-													<Eye className="h-4 w-4 text-slate-500" />
-													<span><Translate text={localizationConstants.actionView} /></span>
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuItem asChild>
-												<Link
-													href={`/module/production/order/${order.id}/edit`}
-													className="flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50"
-												>
-													<Pencil className="h-4 w-4 text-slate-500" />
-													<span><Translate text={localizationConstants.actionEdit} /></span>
-												</Link>
-											</DropdownMenuItem>
-											<DropdownMenuSeparator />
-											<DropdownMenuItem
-												onClick={() => handleDeleteOrder(order.id)}
-												className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
-											>
-												<Trash2 className="h-4 w-4 text-red-500" />
-												<span><Translate text={localizationConstants.actionDelete} /></span>
-											</DropdownMenuItem>
-										</DropdownMenuContent>
-									</DropdownMenu>
+						{paginatedOrders.length === 0 ? (
+							<TableRow>
+								<TableCell colSpan={11} className="py-12 text-center text-sm text-slate-500">
+									<Translate text={localizationConstants.noOrdersFound} />
 								</TableCell>
 							</TableRow>
-						))}
+						) : (
+							paginatedOrders.map((order) => (
+								<TableRow
+									key={order.id}
+									className="group border-b border-slate-100 transition-colors hover:bg-slate-50/60"
+								>
+									<TableCell className="px-4 py-3.5 text-sm font-normal text-slate-700 whitespace-nowrap">
+										{order.orderNo}
+									</TableCell>
+									<TableCell className="px-4 py-3.5 text-sm font-semibold text-slate-900 whitespace-nowrap">
+										{order.orderName}
+									</TableCell>
+									<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+										{order.customer}
+									</TableCell>
+									<TableCell className="px-4 py-3.5 whitespace-nowrap">
+										<OrderTypeBadge type={order.type} />
+									</TableCell>
+									<TableCell className="px-4 py-3.5 whitespace-nowrap">
+										<OrderStatusBadge status={order.status} />
+									</TableCell>
+									<TableCell className="px-4 py-3.5 text-sm text-slate-900 whitespace-nowrap">
+										{order.orderSum}
+									</TableCell>
+									<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+										{order.projectManager}
+									</TableCell>
+									<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+										{order.start}
+									</TableCell>
+									<TableCell className="px-4 py-3.5 text-sm text-slate-700 whitespace-nowrap">
+										{order.end}
+									</TableCell>
+									{/* Separate non-sticky See Order column */}
+									<TableCell className="px-4 py-3.5 text-right whitespace-nowrap">
+										<Link href={`/module/production/order/${encodeURIComponent(order.id)}`}>
+											<Button
+												variant="outline"
+												size="sm"
+												className="h-8 border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-md cursor-pointer shadow-2xs"
+											>
+												<Translate text={localizationConstants.seeOrderButton} />
+											</Button>
+										</Link>
+									</TableCell>
+									{/* Sticky Action dropdown menu column */}
+									<TableCell className="w-[50px] min-w-[50px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] transition-colors group-hover:bg-slate-50 z-10 text-center py-3.5 px-2">
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button
+													variant="ghost"
+													size="icon"
+													className="h-8 w-8 text-slate-500 hover:text-slate-900 rounded-md cursor-pointer"
+												>
+													<MoreVertical className="h-4 w-4" />
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent align="end" className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1">
+												<PermissionGate permission="VIEW_ORDERS">
+													<DropdownMenuItem asChild>
+														<Link
+															href={`/module/production/order/${encodeURIComponent(order.id)}`}
+															className="flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50"
+														>
+															<Eye className="h-4 w-4 text-slate-500" />
+															<span><Translate text={localizationConstants.actionView} /></span>
+														</Link>
+													</DropdownMenuItem>
+												</PermissionGate>
+												<PermissionGate permission="EDIT_ORDER">
+													<DropdownMenuItem asChild>
+														<Link
+															href={`/module/production/order/${encodeURIComponent(order.id)}/edit`}
+															className="flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50"
+														>
+															<Pencil className="h-4 w-4 text-slate-500" />
+															<span><Translate text={localizationConstants.actionEdit} /></span>
+														</Link>
+													</DropdownMenuItem>
+												</PermissionGate>
+												<PermissionGate permission="DELETE_ORDER">
+													<DropdownMenuSeparator />
+													<DropdownMenuItem
+														onClick={() => deleteOrder(order.id)}
+														className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+													>
+														<Trash2 className="h-4 w-4 text-red-500" />
+														<span><Translate text={localizationConstants.actionDelete} /></span>
+													</DropdownMenuItem>
+												</PermissionGate>
+											</DropdownMenuContent>
+										</DropdownMenu>
+									</TableCell>
+								</TableRow>
+							))
+						)}
 					</TableBody>
 				</Table>
 			</div>

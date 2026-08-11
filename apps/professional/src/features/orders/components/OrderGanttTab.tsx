@@ -7,6 +7,63 @@ import localizationConstants from "@/utils/translation/constants";
 import { MOCK_GANTT_ITEMS } from "../data/orders.mock";
 import type { GanttItem } from "../types/order.types";
 
+/**
+ * Interface representing a Gantt timeline week column structure.
+ */
+export interface GanttWeekHeader {
+	labelKey: string;
+	days: number[];
+}
+
+/**
+ * Presenter component responsible for rendering the Gantt timeline grid cell.
+ * Decoupled to allow plugging in third-party Gantt adapters (e.g. Bryntum, DHTMLX, Syncfusion)
+ * when interactive timeline editing is connected via backend WebSocket/REST services.
+ */
+export interface GanttChartGridProps {
+	totalDays: number;
+	durationDays: number;
+	startDayIndex: number;
+	color: string;
+}
+
+export function GanttChartGrid({
+	totalDays,
+	durationDays,
+	startDayIndex,
+	color,
+}: GanttChartGridProps) {
+	return (
+		<div className="bg-[#EBEFF5] group-hover:bg-[#E2E8F0] h-10 relative rounded-r-md overflow-hidden transition-colors">
+			{/* Vertical Day Lines */}
+			<div className="absolute inset-0 flex">
+				{Array.from({ length: totalDays }).map((_, colIdx) => (
+					<div key={colIdx} className="flex-1 border-r-2 border-white h-full" />
+				))}
+			</div>
+
+			{/* Timeline Bar */}
+			{durationDays > 0 && color !== "transparent" && (
+				<div
+					className="absolute top-1 bottom-1 flex rounded-xs transition-all overflow-hidden shadow-2xs z-10"
+					style={{
+						left: `${(startDayIndex / totalDays) * 100}%`,
+						width: `${(durationDays / totalDays) * 100}%`,
+						backgroundColor: color,
+					}}
+				>
+					{Array.from({ length: durationDays }).map((_, segmentIdx) => (
+						<div
+							key={segmentIdx}
+							className="flex-1 border-r-2 border-white/40 last:border-r-0 h-full"
+						/>
+					))}
+				</div>
+			)}
+		</div>
+	);
+}
+
 export function OrderGanttTab() {
 	const [items] = useState<GanttItem[]>(MOCK_GANTT_ITEMS);
 	const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
@@ -15,7 +72,7 @@ export function OrderGanttTab() {
 		setExpandedRows((prev) => ({ ...prev, [id]: !prev[id] }));
 	};
 
-	const weeks = [
+	const weeks: GanttWeekHeader[] = [
 		{ labelKey: localizationConstants.ganttWeek10, days: [8, 9, 10, 11, 12, 13, 14] },
 		{ labelKey: localizationConstants.ganttWeek11, days: [8, 9, 10, 11, 12, 13, 14] },
 		{ labelKey: localizationConstants.ganttWeek12, days: [8, 9, 10, 11, 12, 13, 14] },
@@ -138,33 +195,12 @@ export function OrderGanttTab() {
 
 									{/* Timeline Grid Cell */}
 									<td colSpan={totalDays} className="py-1.5 pl-0 pr-2">
-										<div className="bg-[#EBEFF5] group-hover:bg-[#E2E8F0] h-10 relative rounded-r-md overflow-hidden transition-colors">
-											{/* White Vertical Day Lines */}
-											<div className="absolute inset-0 flex">
-												{Array.from({ length: totalDays }).map((_, colIdx) => (
-													<div key={colIdx} className="flex-1 border-r-2 border-white h-full" />
-												))}
-											</div>
-
-											{/* Timeline Gantt Bar */}
-											{item.durationDays > 0 && item.color !== "transparent" && (
-												<div
-													className="absolute top-1 bottom-1 flex rounded-xs transition-all overflow-hidden shadow-2xs z-10"
-													style={{
-														left: `${(item.startDayIndex / totalDays) * 100}%`,
-														width: `${(item.durationDays / totalDays) * 100}%`,
-														backgroundColor: item.color,
-													}}
-												>
-													{Array.from({ length: item.durationDays }).map((_, segmentIdx) => (
-														<div
-															key={segmentIdx}
-															className="flex-1 border-r-2 border-white/40 last:border-r-0 h-full"
-														/>
-													))}
-												</div>
-											)}
-										</div>
+										<GanttChartGrid
+											totalDays={totalDays}
+											durationDays={item.durationDays}
+											startDayIndex={item.startDayIndex}
+											color={item.color}
+										/>
 									</td>
 								</tr>
 							);
