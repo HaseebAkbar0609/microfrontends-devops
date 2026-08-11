@@ -1027,6 +1027,7 @@ export const enOffer: OfferTranslation = {
 	calcDetailProjekteringNamn: "Project name",
 	calcDetailProjekteringAdress: "Project address",
 	calcDetailSenasteDatumOffert: "Latest quote date",
+	calcDetailNewDocument: "New document",
 	// Admin - Users
 	adminUsersTitle: "Users",
 	adminUsersTabGroups: "Groups",

@@ -911,6 +911,7 @@ export const svOffer: OfferTranslation = {
 	calcDetailProjekteringNamn: "Projektering namn",
 	calcDetailProjekteringAdress: "Projektering adress",
 	calcDetailSenasteDatumOffert: "Senaste datum för offert",
+	calcDetailNewDocument: "Skapa nytt",
 	// Admin - Users
 	adminUsersTitle: "Användare",
 	adminUsersTabGroups: "Grupper",

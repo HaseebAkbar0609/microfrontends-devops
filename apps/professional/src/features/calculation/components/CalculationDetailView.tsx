@@ -23,57 +23,11 @@ import {
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { KalkylDocItem } from "../types/kalkyl";
+import type { KalkylDetailData, KalkylDocItem } from "../types/kalkyl";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
 type DetailTab = "kontakt" | "projekt" | "dokument";
-
-export type KalkylDetailData = {
-	calcNo: string;
-	bestellareForetag: string;
-	bestellareAddress: string;
-	bestellarePostNr: string;
-	bestellareOrt: string;
-	bestellareMail: string;
-	bestellareTelefon: string;
-	bestellareOrgNr: string;
-	kontaktFornamn: string;
-	kontaktEfternamn: string;
-	kontaktAddress: string;
-	kontaktPostnummer: string;
-	kontaktMail: string;
-	kontaktMobil: string;
-	kontaktRoll: string;
-	kontaktOrt: string;
-	entreprenorForetag: string;
-	entreprenorAddress: string;
-	entreprenorPostNr: string;
-	entreprenorOrt: string;
-	entreprenorMail: string;
-	entreprenorTelefon: string;
-	entreprenorOrgNr: string;
-	kalkylFornamn: string;
-	kalkylEfternamn: string;
-	kalkylMail: string;
-	kalkylMobil: string;
-	kalkylRoll: string;
-	projekteringNr: string;
-	projekteringNamn: string;
-	kvartersNamn: string;
-	projekteringAdress: string;
-	postNr: string;
-	ort: string;
-	type: string;
-	kategori: string;
-	avdelning: string;
-	kontraktsumma: string;
-	offertNr: string;
-	startDatum: string;
-	slutDatum: string;
-	senatsDatumOffert: string;
-	documents: KalkylDocItem[];
-};
 
 // ── Sub-components ──────────────────────────────────────────────────────────
 
@@ -96,7 +50,7 @@ function CardSection({ icon: Icon, title, children }: CardSectionProps) {
 	const t = useTranslate();
 	return (
 		<div className="rounded-lg border border-[#E5E5E5] bg-white">
-			<div className="flex h-[68px] items-center justify-between border-b border-[#E4E4E7] px-4">
+			<div className="flex h-17 items-center justify-between border-b border-[#E4E4E7] px-4">
 				<div className="flex items-center gap-2">
 					<Icon className="h-6 w-6 text-slate-800" />
 					<span className="text-base font-medium text-[#09090B]">{title}</span>
@@ -234,7 +188,7 @@ function ProjektPanel({ data }: { data: KalkylDetailData }) {
 function DokumentPanel({ data }: { data: KalkylDetailData }) {
 	return (
 		<div className="rounded-lg border border-[#E5E5E5] bg-white">
-			<div className="flex h-[68px] items-center justify-between border-b border-[#E4E4E7] px-4">
+			<div className="flex h-17 items-center justify-between border-b border-[#E4E4E7] px-4">
 				<span className="text-base font-medium text-[#09090B]">
 					<Translate text={localizationConstants.agreementCreateBifogadeDokument} />
 				</span>
@@ -244,7 +198,7 @@ function DokumentPanel({ data }: { data: KalkylDetailData }) {
 					className="h-9 cursor-pointer gap-1.5 bg-[#111721] text-sm text-white hover:bg-slate-800"
 				>
 					<Plus className="h-4 w-4" />
-					<Translate text={localizationConstants.calcNewTitle} />
+					<Translate text={localizationConstants.calcDetailNewDocument} />
 				</Button>
 			</div>
 
@@ -374,7 +328,7 @@ export function CalculationDetailView({ data }: Props) {
 								"cursor-pointer whitespace-nowrap border-b-2 text-sm font-semibold px-4 transition-colors",
 								activeTab === tab.key
 									? "border-slate-900 text-[#020617] pb-3 pt-2"
-									: "border-transparent text-slate-500 pb-[14px] pt-2 hover:text-slate-700",
+									: "border-transparent text-slate-500 pb-3.5 pt-2 hover:text-slate-700",
 							)}
 						>
 							<Translate text={tab.labelKey} />

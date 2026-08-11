@@ -1010,6 +1010,7 @@ export type OfferTranslation = {
 	calcDetailProjekteringNamn: string;
 	calcDetailProjekteringAdress: string;
 	calcDetailSenasteDatumOffert: string;
+	calcDetailNewDocument: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;

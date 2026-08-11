@@ -1,4 +1,4 @@
-import type { KalkylDetailData } from "../components/CalculationDetailView";
+import type { KalkylDetailData } from "../types/kalkyl";
 
 export const DUMMY_KALKYL_DETAIL: KalkylDetailData = {
   calcNo: "Kalkyl 3001",
