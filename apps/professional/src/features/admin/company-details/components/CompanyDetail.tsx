@@ -15,6 +15,7 @@ import { CompanyInformationTab } from "./CompanyInformationTab";
 import { CompanyLogotypeTab } from "./CompanyLogotypeTab";
 import { CompanyPresentationTab } from "./CompanyPresentationTab";
 import { CompanyReferencesTab } from "./CompanyReferencesTab";
+import { CompanyReviewsTab } from "./CompanyReviewsTab";
 import {
 	companyInformationSchema,
 	type CompanyInformationFormValues,
@@ -51,7 +52,7 @@ const tabs = [
 	{
 		value: "reviews",
 		label: localizationConstants.reviews,
-		isComingSoon: true,
+		isComingSoon: false,
 	},
 	{
 		value: "lead-management",
@@ -233,6 +234,14 @@ export default function CompanyDetail() {
 							className="mt-6"
 						>
 							<CompanyReferencesTab />
+						</TabsContent>
+					) : tab.value === "reviews" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyReviewsTab />
 						</TabsContent>
 					) : (
 						<TabsContent

@@ -1492,6 +1492,14 @@ export const enOffer: OfferTranslation = {
 	companyRefCreatedToast: "Reference created",
 	companyRefSavedToast: "Reference saved",
 	companyRefDeletedToast: "Reference deleted",
+	// Admin - Company reviews
+	companyReviewsTitle: "Company reviews",
+	companyReviewsFromCustomers: "Reviews from customers",
+	companyReviewsAnswered: "Answered reviews",
+	companyReviewsLatestChip: "Latest reviews",
+	companyReviewsLeaveComment: "Leave a comment",
+	companyReviewsSend: "Send",
+	companyReviewsSentToast: "Reply sent",
 	// Admin - Integration
 	integrationHeading: "Connections to TimeFlow",
 	integrationCreate: "Create integration",
