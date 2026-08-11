@@ -1005,6 +1005,11 @@ export type OfferTranslation = {
 	calcNewGdprLink: string;
 	calcNewGdprSuffix: string;
 	calcNewCreateBtn: string;
+	// Calculation - Detail view
+	calcDetailProjekteringNr: string;
+	calcDetailProjekteringNamn: string;
+	calcDetailProjekteringAdress: string;
+	calcDetailSenasteDatumOffert: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;

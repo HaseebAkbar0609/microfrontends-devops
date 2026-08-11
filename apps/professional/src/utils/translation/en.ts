@@ -1022,6 +1022,11 @@ export const enOffer: OfferTranslation = {
 	calcNewGdprLink: "Privacy policy",
 	calcNewGdprSuffix: "here.",
 	calcNewCreateBtn: "Create",
+	// Calculation - Detail view
+	calcDetailProjekteringNr: "Project no.",
+	calcDetailProjekteringNamn: "Project name",
+	calcDetailProjekteringAdress: "Project address",
+	calcDetailSenasteDatumOffert: "Latest quote date",
 	// Admin - Users
 	adminUsersTitle: "Users",
 	adminUsersTabGroups: "Groups",
