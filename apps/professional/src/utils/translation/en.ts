@@ -1500,6 +1500,16 @@ export const enOffer: OfferTranslation = {
 	companyReviewsLeaveComment: "Leave a comment",
 	companyReviewsSend: "Send",
 	companyReviewsSentToast: "Reply sent",
+	// Admin - Company lead management
+	companyLeadsTitle: "Lead management for the company | Contact list",
+	companyLeadsPhone: "Mobile phone",
+	companyLeadsMail: "Mail",
+	companyLeadsMainCategory: "Select main category",
+	companyLeadsSubCategory: "Select subcategory",
+	companyLeadsCity: "Select city",
+	companyLeadsDistrict: "District",
+	companyLeadsAddNew: "Add new",
+	companyLeadsAllCategories: "All categories",
 	// Admin - Integration
 	integrationHeading: "Connections to TimeFlow",
 	integrationCreate: "Create integration",

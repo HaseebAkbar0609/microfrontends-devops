@@ -1482,6 +1482,16 @@ export type OfferTranslation = {
 	companyReviewsLeaveComment: string;
 	companyReviewsSend: string;
 	companyReviewsSentToast: string;
+	// Admin - Company lead management
+	companyLeadsTitle: string;
+	companyLeadsPhone: string;
+	companyLeadsMail: string;
+	companyLeadsMainCategory: string;
+	companyLeadsSubCategory: string;
+	companyLeadsCity: string;
+	companyLeadsDistrict: string;
+	companyLeadsAddNew: string;
+	companyLeadsAllCategories: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;
