@@ -37,25 +37,25 @@ export const createCustomerSchema = z.object({
 	contactPerson2FirstName: z.string().optional(),
 	contactPerson2LastName: z.string().optional(),
 	contactPerson2Mobile: z.string().optional(),
-	contactPerson2Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson2Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson2Role: z.string().optional(),
 	contactPerson2PersonalNo: z.string().optional(),
 	contactPerson3FirstName: z.string().optional(),
 	contactPerson3LastName: z.string().optional(),
 	contactPerson3Mobile: z.string().optional(),
-	contactPerson3Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson3Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson3Role: z.string().optional(),
 	contactPerson3PersonalNo: z.string().optional(),
 	contactPerson4FirstName: z.string().optional(),
 	contactPerson4LastName: z.string().optional(),
 	contactPerson4Mobile: z.string().optional(),
-	contactPerson4Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson4Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson4Role: z.string().optional(),
 	contactPerson4PersonalNo: z.string().optional(),
 	contactPerson5FirstName: z.string().optional(),
 	contactPerson5LastName: z.string().optional(),
 	contactPerson5Mobile: z.string().optional(),
-	contactPerson5Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson5Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson5Role: z.string().optional(),
 	contactPerson5PersonalNo: z.string().optional(),
 
@@ -63,12 +63,12 @@ export const createCustomerSchema = z.object({
 	notes: z.string().optional(),
 
 	// Step 4: Invoice
-	paymentTerms: z.string().min(1, "placeholderSelectPaymentTerms"),
-	deliveryTerms: z.string().min(1, "placeholderSelectDeliveryTerms"),
+	paymentTerms: z.string().optional(),
+	deliveryTerms: z.string().optional(),
 	deliveryMethod: z.string().optional(),
 	interestInvoicing: z.string().optional(),
 	priceList: z.string().optional(),
-	currency: z.string().min(1, "placeholderSelectCurrency"),
+	currency: z.string().optional(),
 	invoiceDiscount: z.string().optional(),
 	invoiceFee: z.string().optional(),
 	shippingFee: z.string().optional(),
@@ -97,7 +97,7 @@ export interface Ratings {
 
 export type RatingField = keyof Ratings;
 
-export type CreateCustomerFullData = CreateCustomerFormData & { ratings: Ratings; id?: string | null };
+export type CreateCustomerFullData = CreateCustomerFormData & { ratings: Ratings; documents?: CustomerDocument[]; id?: string | null };
 
 // Customer Register List Types
 export interface CustomerRegisterRow {
@@ -158,6 +158,39 @@ export interface GetArticleListParams {
 
 export interface GetArticleListResponse {
 	data: ArticleRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
+// Supplier Register List Types
+export interface SupplierRegisterRow {
+	id: string;
+	supplierNo: string;
+	name: string;
+	orgNo: string;
+	address: string;
+	postNr: string;
+	city: string;
+	country: string;
+	phone: string;
+	email: string;
+	status: "active" | "inactive";
+	dateAdded?: string;
+}
+
+export interface GetSupplierRegisterListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: "all" | "active" | "inactive";
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetSupplierRegisterListResponse {
+	data: SupplierRegisterRow[];
 	total: number;
 	page: number;
 	limit: number;
@@ -461,7 +494,7 @@ export const createSupplierSchema = z.object({
 
 export type CreateSupplierFormData = z.infer<typeof createSupplierSchema>;
 
-export type CreateSupplierFullData = CreateSupplierFormData & { ratings: Ratings; id?: string | null };
+export type CreateSupplierFullData = CreateSupplierFormData & { ratings: Ratings; documents?: CustomerDocument[]; id?: string | null };
 
 // Create Article Schema (TFS-438)
 export const createArticleSchema = z.object({

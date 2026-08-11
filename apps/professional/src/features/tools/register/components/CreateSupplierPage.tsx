@@ -19,6 +19,7 @@ import {
 	type RatingField,
 	type Ratings,
 	type CreateSupplierFullData,
+	type CustomerDocument,
 } from "../types";
 import {
 	createSupplierAPIAction,
@@ -46,6 +47,7 @@ export function CreateSupplierPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSavingDraft, setIsSavingDraft] = useState(false);
 	const [supplierId, setSupplierId] = useState<string | null>(null);
+	const [documents, setDocuments] = useState<CustomerDocument[]>([]);
 
 	const [ratings, setRatings] = useState<Ratings>({
 		economy: 0,
@@ -160,30 +162,52 @@ export function CreateSupplierPage() {
 		setCurrentStep(step);
 	};
 
-	const handleSubmit = methods.handleSubmit(async (data) => {
+	const handleSubmit = async (e?: React.BaseSyntheticEvent) => {
+		if (isSubmitting) return;
 		setIsSubmitting(true);
 		try {
-			const fullData = { ...data, ratings, id: supplierId } as CreateSupplierFullData;
-			const result = await createSupplierAPIAction(fullData);
-			setSupplierId(result.id);
-			showToast("success", t(localizationConstants.supplierCreatedSuccess));
-			router.push("/tools/register?tab=supplier");
-		} catch {
-			showToast("error", t(localizationConstants.supplierCreateError));
+			await methods.handleSubmit(
+				async (data) => {
+					try {
+						const fullData = { ...data, ratings, documents, id: supplierId } as CreateSupplierFullData;
+						const result = await createSupplierAPIAction(fullData);
+						setSupplierId(result.id);
+						showToast("success", t(localizationConstants.supplierCreatedSuccess));
+						router.push("/tools/register?tab=supplier");
+					} catch {
+						showToast("error", t(localizationConstants.supplierCreateError));
+					}
+				},
+				(errors) => {
+					if (process.env.NODE_ENV === "development") {
+						console.error("[CreateSupplier] Validation errors:", errors);
+					}
+					const errorKeys = Object.keys(errors) as (keyof CreateSupplierFormData)[];
+					if (errorKeys.length > 0) {
+						showToast("error", t(localizationConstants.validationFailedError));
+						if (errorKeys.some((k) => STEP_FIELDS[1].includes(k))) {
+							setCurrentStep(1);
+						} else {
+							setCurrentStep(2);
+						}
+					}
+				},
+			)(e);
 		} finally {
 			setIsSubmitting(false);
 		}
-	});
+	};
 
 	const handleCancel = () => {
 		router.push("/tools/register?tab=supplier");
 	};
 
 	const handleSaveDraft = async () => {
+		if (isSavingDraft || isSubmitting) return;
 		setIsSavingDraft(true);
 		try {
 			const data = methods.getValues();
-			const fullData: CreateSupplierFullData = { ...data, ratings, id: supplierId };
+			const fullData: CreateSupplierFullData = { ...data, ratings, documents, id: supplierId };
 			const result = await saveSupplierDraftAPIAction(fullData);
 			setSupplierId(result.id);
 			showToast("info", t(localizationConstants.draftSaved));
@@ -267,6 +291,8 @@ export function CreateSupplierPage() {
 										control={control}
 										ratings={ratings}
 										onRatingChange={handleRatingChange}
+										documents={documents}
+										onDocumentsChange={setDocuments}
 									/>
 								)}
 							</form>
@@ -313,7 +339,7 @@ export function CreateSupplierPage() {
 						variant="default"
 						size="default"
 						onClick={handleSaveDraft}
-						disabled={isSavingDraft}
+						disabled={isSavingDraft || isSubmitting}
 						className="h-9 min-w-[120px] gap-2 bg-[#111721] text-white hover:bg-slate-800"
 					>
 						<Translate text={localizationConstants.saveDraftButton} />
@@ -343,7 +369,7 @@ export function CreateSupplierPage() {
 							variant="default"
 							size="default"
 							onClick={handleSubmit}
-							disabled={isSubmitting}
+							disabled={isSubmitting || isSavingDraft}
 							className="h-9 min-w-[160px] gap-2 bg-[#111721] text-white hover:bg-slate-800"
 						>
 							<Translate text={localizationConstants.createSupplierButton} />

@@ -10,12 +10,11 @@ import {
 	CircleUserRound,
 	File,
 	ArrowUpDown,
-	MoreVertical,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StarRating } from "@/components/common/StarRating";
-import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
+import { DataTable, type DataTableColumn } from "@/components/table/DataTable";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
@@ -31,6 +30,7 @@ const TABS: { key: TabKey; labelKey: string }[] = [
 ];
 
 export function SupplierDetailPage() {
+	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
 	const id = params.id as string;
@@ -44,10 +44,13 @@ export function SupplierDetailPage() {
 		try {
 			const data = await getSupplierDetailAPIAction(id);
 			setSupplier(data);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
+			router.push("/tools/register?tab=supplier");
 		} finally {
 			setIsLoading(false);
 		}
-	}, [id]);
+	}, [id, router, t]);
 
 	useEffect(() => {
 		fetchSupplier();
@@ -314,14 +317,6 @@ function ContactTab({ supplier }: { supplier: SupplierDetail }) {
 		},
 	];
 
-	const actions: DataTableAction<SupplierContact>[] = [
-		{
-			label: localizationConstants.viewLabel,
-			icon: <MoreVertical className="h-4 w-4" />,
-			onClick: (row) => void row,
-		},
-	];
-
 	return (
 		<div className="flex flex-col gap-6 ml-0 sm:ml-9">
 			{/* Supplier Contact Info */}
@@ -348,7 +343,6 @@ function ContactTab({ supplier }: { supplier: SupplierDetail }) {
 					data={supplier.contacts}
 					columns={columns}
 					rowKey={(row) => row.id}
-					actions={actions}
 					loading={false}
 				/>
 			</SectionCard>
@@ -443,8 +437,8 @@ function AssessmentTab({ supplier }: { supplier: SupplierDetail }) {
 											<div className="flex items-center gap-2">
 												<div className="relative flex h-16 w-12 shrink-0 items-center justify-center">
 													<File className="h-16 w-12 text-slate-300" strokeWidth={1.5} />
-													<span className="absolute -left-0.5 top-[60%] -translate-y-1/2 rounded-[2px] bg-red-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
-														PDF
+													<span className={`absolute -left-0.5 top-[60%] -translate-y-1/2 rounded-[2px] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white uppercase ${doc.type === "PDF" ? "bg-red-600" : "bg-blue-600"}`}>
+														{doc.type || "FILE"}
 													</span>
 												</div>
 												<span className="truncate">{doc.name}</span>

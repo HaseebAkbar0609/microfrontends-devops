@@ -22,6 +22,7 @@ import {
 	type RatingField,
 	type Ratings,
 	type CreateCustomerFullData,
+	type CustomerDocument,
 } from "../types";
 import {
 	createCustomerAPIAction,
@@ -42,6 +43,26 @@ const TABS = [
 	{ key: 4, labelKey: localizationConstants.invoiceTab },
 ];
 
+const TOTAL_STEPS = 4;
+
+const STEP_FIELDS: Record<number, (keyof CreateCustomerFormData)[]> = {
+	1: [
+		"companyName",
+		"orgNo",
+		"status",
+		"mainCategory",
+		"visitingAddress",
+		"visitingPostalCode",
+		"visitingCity",
+		"invoiceAddress",
+		"invoicePostalCode",
+		"invoiceCity",
+	],
+	2: ["phone", "email", "contactPerson1FirstName", "contactPerson1LastName", "contactPerson1Role"],
+	3: [],
+	4: [],
+};
+
 export function CreateCustomerPage() {
 	const t = useTranslate();
 	const router = useRouter();
@@ -49,6 +70,7 @@ export function CreateCustomerPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isSavingDraft, setIsSavingDraft] = useState(false);
 	const [customerId, setCustomerId] = useState<string | null>(null);
+	const [documents, setDocuments] = useState<CustomerDocument[]>([]);
 
 	const [ratings, setRatings] = useState<Ratings>({
 		economy: 0,
@@ -92,6 +114,30 @@ export function CreateCustomerPage() {
 			contactPerson1Email: "",
 			contactPerson1Role: "",
 			contactPerson1PersonalNo: "",
+			contactPerson2FirstName: "",
+			contactPerson2LastName: "",
+			contactPerson2Mobile: "",
+			contactPerson2Email: "",
+			contactPerson2Role: "",
+			contactPerson2PersonalNo: "",
+			contactPerson3FirstName: "",
+			contactPerson3LastName: "",
+			contactPerson3Mobile: "",
+			contactPerson3Email: "",
+			contactPerson3Role: "",
+			contactPerson3PersonalNo: "",
+			contactPerson4FirstName: "",
+			contactPerson4LastName: "",
+			contactPerson4Mobile: "",
+			contactPerson4Email: "",
+			contactPerson4Role: "",
+			contactPerson4PersonalNo: "",
+			contactPerson5FirstName: "",
+			contactPerson5LastName: "",
+			contactPerson5Mobile: "",
+			contactPerson5Email: "",
+			contactPerson5Role: "",
+			contactPerson5PersonalNo: "",
 			notes: "",
 			paymentTerms: "",
 			deliveryTerms: "",
@@ -124,31 +170,18 @@ export function CreateCustomerPage() {
 		[],
 	);
 
+	const validateStep = async (step: number): Promise<boolean> => {
+		const fields = STEP_FIELDS[step];
+		if (!fields || fields.length === 0) return true;
+		const result = await methods.trigger(fields);
+		return result;
+	};
+
 	const handleNext = async () => {
-		if (currentStep >= 4) return;
+		if (currentStep >= TOTAL_STEPS) return;
 
-		const fieldsToValidate: Record<number, (keyof CreateCustomerFormData)[]> = {
-			1: [
-				"companyName",
-				"orgNo",
-				"status",
-				"mainCategory",
-				"visitingAddress",
-				"visitingPostalCode",
-				"visitingCity",
-				"invoiceAddress",
-				"invoicePostalCode",
-				"invoiceCity",
-			],
-			2: ["phone", "email", "contactPerson1FirstName", "contactPerson1LastName", "contactPerson1Role"],
-			3: [],
-		};
-
-		const fields = fieldsToValidate[currentStep];
-		if (fields && fields.length > 0) {
-			const isValid = await methods.trigger(fields);
-			if (!isValid) return;
-		}
+		const isValid = await validateStep(currentStep);
+		if (!isValid) return;
 
 		setCurrentStep((prev) => prev + 1);
 	};
@@ -160,47 +193,50 @@ export function CreateCustomerPage() {
 		}
 
 		for (let s = currentStep; s < step; s++) {
-			const fieldsToValidate: Record<number, (keyof CreateCustomerFormData)[]> = {
-				1: [
-					"companyName",
-					"orgNo",
-					"status",
-					"mainCategory",
-					"visitingAddress",
-					"visitingPostalCode",
-					"visitingCity",
-					"invoiceAddress",
-					"invoicePostalCode",
-					"invoiceCity",
-				],
-				2: ["phone", "email", "contactPerson1FirstName", "contactPerson1LastName", "contactPerson1Role"],
-				3: [],
-			};
-
-			const fields = fieldsToValidate[s];
-			if (fields && fields.length > 0) {
-				const isValid = await methods.trigger(fields);
-				if (!isValid) return;
-			}
+			const isValid = await validateStep(s);
+			if (!isValid) return;
 		}
 
 		setCurrentStep(step);
 	};
 
-	const handleSubmit = methods.handleSubmit(async (data) => {
+	const handleSubmit = async (e?: React.BaseSyntheticEvent) => {
+		if (isSubmitting) return;
 		setIsSubmitting(true);
 		try {
-			const fullData = { ...data, ratings, id: customerId } as CreateCustomerFullData;
-			const result = await createCustomerAPIAction(fullData);
-			setCustomerId(result.id);
-			showToast("success", t(localizationConstants.customerCreatedSuccess));
-			router.push("/tools/register?tab=kund");
-		} catch {
-			showToast("error", t(localizationConstants.customerCreateError));
+			await methods.handleSubmit(
+				async (data) => {
+					try {
+						const fullData = { ...data, ratings, documents, id: customerId } as CreateCustomerFullData;
+						const result = await createCustomerAPIAction(fullData);
+						setCustomerId(result.id);
+						showToast("success", t(localizationConstants.customerCreatedSuccess));
+						router.push("/tools/register?tab=kund");
+					} catch {
+						showToast("error", t(localizationConstants.customerCreateError));
+					}
+				},
+				(errors) => {
+					if (process.env.NODE_ENV === "development") {
+						console.error("[CreateCustomer] Validation errors:", errors);
+					}
+					const errorKeys = Object.keys(errors) as (keyof CreateCustomerFormData)[];
+					if (errorKeys.length > 0) {
+						showToast("error", t(localizationConstants.validationFailedError));
+						if (errorKeys.some((k) => STEP_FIELDS[1].includes(k))) {
+							setCurrentStep(1);
+						} else if (errorKeys.some((k) => STEP_FIELDS[2].includes(k))) {
+							setCurrentStep(2);
+						} else {
+							setCurrentStep(4);
+						}
+					}
+				},
+			)(e);
 		} finally {
 			setIsSubmitting(false);
 		}
-	});
+	};
 
 	const handleCancel = () => {
 		router.push("/tools/register?tab=kund");
@@ -210,7 +246,7 @@ export function CreateCustomerPage() {
 		setIsSavingDraft(true);
 		try {
 			const data = methods.getValues();
-			const fullData: CreateCustomerFullData = { ...data, ratings, id: customerId };
+			const fullData: CreateCustomerFullData = { ...data, ratings, documents, id: customerId };
 			const result = await saveDraftAPIAction(fullData);
 			setCustomerId(result.id);
 			showToast("info", t(localizationConstants.draftSaved));
@@ -246,7 +282,7 @@ export function CreateCustomerPage() {
 
 				{/* Step Counter text between Title and Tabs */}
 				<p className="mb-4 ml-9 text-sm text-slate-500">
-					<Translate text={localizationConstants.stepLabel} /> {currentStep}/4
+					<Translate text={localizationConstants.stepLabel} /> {currentStep}/{TOTAL_STEPS}
 				</p>
 
 				{/* Clickable Tabs */}
@@ -268,20 +304,20 @@ export function CreateCustomerPage() {
 					))}
 				</div>
 
-				{/* Step 1/4 Progress Card ABOVE Form on < xl screens */}
+				{/* Step Progress Card ABOVE Form on < xl screens */}
 				<div className="mb-6 rounded-lg border border-slate-200 bg-white p-4 xl:hidden">
 					<div className="mb-2 flex items-center justify-between">
 						<p className="text-sm font-medium text-slate-900">
-							<Translate text={localizationConstants.stepLabel} /> {currentStep}/4
+							<Translate text={localizationConstants.stepLabel} /> {currentStep}/{TOTAL_STEPS}
 						</p>
 						<span className="text-xs font-semibold text-slate-600">
-							{Math.round((currentStep / 4) * 100)}%
+							{Math.round((currentStep / TOTAL_STEPS) * 100)}%
 						</span>
 					</div>
 					<div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
 						<div
 							className="h-full bg-[#111721] transition-all duration-300"
-							style={{ width: `${(currentStep / 4) * 100}%` }}
+							style={{ width: `${(currentStep / TOTAL_STEPS) * 100}%` }}
 						/>
 					</div>
 				</div>
@@ -299,6 +335,8 @@ export function CreateCustomerPage() {
 										control={control}
 										ratings={ratings}
 										onRatingChange={handleRatingChange}
+										documents={documents}
+										onDocumentsChange={setDocuments}
 									/>
 								)}
 								{currentStep === 4 && <InvoiceStep control={control} />}
@@ -306,21 +344,21 @@ export function CreateCustomerPage() {
 						</FormProvider>
 					</div>
 
-					{/* Step 1/4 Progress Card on RIGHT side for xl screens */}
+					{/* Step Progress Card on RIGHT side for xl screens */}
 					<div className="hidden w-72 shrink-0 xl:block">
 						<div className="sticky top-6 rounded-lg border border-slate-200 bg-white p-4">
 							<div className="mb-2 flex items-center justify-between">
 								<p className="text-sm font-medium text-slate-900">
-									<Translate text={localizationConstants.stepLabel} /> {currentStep}/4
+									<Translate text={localizationConstants.stepLabel} /> {currentStep}/{TOTAL_STEPS}
 								</p>
 								<span className="text-xs font-semibold text-slate-600">
-									{Math.round((currentStep / 4) * 100)}%
+									{Math.round((currentStep / TOTAL_STEPS) * 100)}%
 								</span>
 							</div>
 							<div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
 								<div
 									className="h-full bg-[#111721] transition-all duration-300"
-									style={{ width: `${(currentStep / 4) * 100}%` }}
+									style={{ width: `${(currentStep / TOTAL_STEPS) * 100}%` }}
 								/>
 							</div>
 						</div>
@@ -346,7 +384,7 @@ export function CreateCustomerPage() {
 						variant="default"
 						size="default"
 						onClick={handleSaveDraft}
-						disabled={isSavingDraft}
+						disabled={isSavingDraft || isSubmitting}
 						className="h-9 min-w-[120px] gap-2 bg-[#111721] text-white hover:bg-slate-800"
 					>
 						{isSavingDraft ? (
@@ -357,7 +395,7 @@ export function CreateCustomerPage() {
 						<Translate text={localizationConstants.saveDraftButton} />
 					</Button>
 
-					{currentStep < 4 ? (
+					{currentStep < TOTAL_STEPS ? (
 						<Button
 							type="button"
 							variant="default"
@@ -374,7 +412,7 @@ export function CreateCustomerPage() {
 							variant="default"
 							size="default"
 							onClick={handleSubmit}
-							disabled={isSubmitting}
+							disabled={isSubmitting || isSavingDraft}
 							className="h-9 min-w-[160px] gap-2 bg-[#111721] text-white hover:bg-slate-800"
 						>
 							{isSubmitting ? (

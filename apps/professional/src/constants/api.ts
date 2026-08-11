@@ -60,6 +60,7 @@ export const API_PATH = {
 		CREATE: BASE_PATHS.CUSTOMERS,
 		UPDATE: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
 		GET: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
+		DELETE: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	ARTICLES: {
@@ -77,6 +78,7 @@ export const API_PATH = {
 		CREATE: `${PROFESSIONALS_BASE_PATH}/suppliers`,
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
 		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	PRICE_LISTS: {

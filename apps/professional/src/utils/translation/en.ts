@@ -2668,6 +2668,7 @@ export const enRegister: RegisterTranslation = {
 	backButton: "Back",
 	customerCreatedSuccess: "Customer created successfully!",
 	customerCreateError: "Something went wrong. Please try again.",
+	validationFailedError: "Validation failed. Please check the form inputs.",
 	draftSaved: "Draft saved!",
 	validationCompanyNameRequired: "Company name is required",
 	validationOrgNoRequired: "Organisation number is required",

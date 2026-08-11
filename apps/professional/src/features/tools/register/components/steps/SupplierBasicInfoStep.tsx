@@ -12,9 +12,8 @@ interface SupplierBasicInfoStepProps {
 }
 
 const STATUS_OPTIONS = [
-	{ value: "prospekt", label: <Translate text={localizationConstants.prospektStatus} /> },
-	{ value: "aktiv", label: <Translate text={localizationConstants.activeStatus} /> },
-	{ value: "inaktiv", label: <Translate text={localizationConstants.inactiveStatus} /> },
+	{ value: "active", label: <Translate text={localizationConstants.activeStatus} /> },
+	{ value: "inactive", label: <Translate text={localizationConstants.inactiveStatus} /> },
 ];
 
 const MAIN_CATEGORY_OPTIONS = [

@@ -2683,6 +2683,7 @@ export const svRegister: RegisterTranslation = {
 	backButton: "Tillbaka",
 	customerCreatedSuccess: "Kunden har skapats framgångsrikt!",
 	customerCreateError: "Något gick fel. Försök igen.",
+	validationFailedError: "Formulärvalideringen misslyckades. Kontrollera de angivna uppgifterna.",
 	draftSaved: "Utkast sparat!",
 	validationCompanyNameRequired: "Företagsnamn krävs",
 	validationOrgNoRequired: "Organisationsnummer krävs",

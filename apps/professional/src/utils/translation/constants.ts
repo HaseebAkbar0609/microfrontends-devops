@@ -2615,6 +2615,7 @@ export type RegisterTranslation = {
 	backButton: string;
 	customerCreatedSuccess: string;
 	customerCreateError: string;
+	validationFailedError: string;
 	draftSaved: string;
 	validationCompanyNameRequired: string;
 	validationOrgNoRequired: string;
