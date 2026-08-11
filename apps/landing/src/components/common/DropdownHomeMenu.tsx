@@ -11,7 +11,7 @@ type DropdownHomeMenuProps = {
 
 const DropdownHomeMenu: React.FC<DropdownHomeMenuProps> = ({ label }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("");
+  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

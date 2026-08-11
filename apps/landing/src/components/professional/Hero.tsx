@@ -1,7 +1,16 @@
-import { PROFESSIONAL_REGISTER_URL } from "@/utils/constants";
+"use client";
+
+import { useState, useEffect } from "react";
+import { getProfessionalRegisterUrl } from "@/utils/constants";
 import Hero from "../common/hero";
 
 const ProfessionalHero: React.FC = () => {
+	const [professionalRegisterUrl, setProfessionalRegisterUrl] = useState<string>("#");
+
+	useEffect(() => {
+		setProfessionalRegisterUrl(getProfessionalRegisterUrl());
+	}, []);
+
 	return (
 		<div>
 			<Hero
@@ -9,7 +18,7 @@ const ProfessionalHero: React.FC = () => {
 				formTitle="Kraftfull programvara för hantverksbranschen"
 				formDescription="Timeflowsystem har komplett verktyg för projekthantering och leads - få nya jobb idag"
 				formButton="FORTSÄTT REGISTRERINGEN"
-				formButtonLink={PROFESSIONAL_REGISTER_URL}
+				formButtonLink={professionalRegisterUrl}
 			/>
 			<div className="bg-primary-500">
 				<div className="container mx-auto py-8 px-4 text-black">

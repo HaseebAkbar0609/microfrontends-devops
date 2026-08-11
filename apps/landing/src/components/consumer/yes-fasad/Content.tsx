@@ -2,10 +2,11 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { CUSTOMER_REGISTER_URL } from "@/utils/constants";
+import { getCustomerRegisterUrl } from "@/utils/constants";
 
 const Content: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -54,6 +55,10 @@ const Content: React.FC = () => {
       (prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length
     );
 
+  useEffect(() => {
+    setCustomerRegisterUrl(getCustomerRegisterUrl());
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (
@@ -62,7 +67,7 @@ const Content: React.FC = () => {
       formData.phone &&
       formData.accepted
     ) {
-      window.location.href = CUSTOMER_REGISTER_URL;
+      window.location.href = customerRegisterUrl;
     } else {
       alert("Fyll i alla fält och godkänn användarvillkoren innan du fortsätter.");
     }

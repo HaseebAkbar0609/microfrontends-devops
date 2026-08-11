@@ -1,10 +1,18 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import Blog from "../common/blog";
 import Button from "../common/button";
 import { Check, RightArrow } from "../icons";
 import Link from "next/link";
-import { CUSTOMER_REGISTER_URL } from "@/utils/constants";
+import { getCustomerRegisterUrl } from "@/utils/constants";
 
 const Timeflow: React.FC = () => {
+  const [customerRegisterUrl, setCustomerRegisterUrl] = useState<string>("#");
+
+  useEffect(() => {
+    setCustomerRegisterUrl(getCustomerRegisterUrl());
+  }, []);
   const data = [
     "Se inkommande offerter och vilka hantverkare som visar intresse för ditt projekt.",
     "Få notiser i realtid vid uppdateringar och nya meddelanden.",
@@ -61,7 +69,7 @@ const Timeflow: React.FC = () => {
 
               <div className="flex justify-between items-center mt-4">
                 <a
-                  href={CUSTOMER_REGISTER_URL}
+                  href={customerRegisterUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

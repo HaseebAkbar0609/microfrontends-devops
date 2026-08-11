@@ -1,22 +1,27 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Login, Ribbon } from "@/components/icons";
 import { NewsProps } from "./News.types";
 import Button from "../button";
 import { useRouter } from "next/router";
 import {
-	CUSTOMER_REGISTER_URL,
-	PROFESSIONAL_REGISTER_URL,
+	getCustomerRegisterUrl,
+	getProfessionalRegisterUrl,
 } from "@/utils/constants";
 
 const News: React.FC<NewsProps> = ({ resource }) => {
 	const { pathname } = useRouter();
 	const isProfessional = pathname.includes("/professional");
+	const [registerLink, setRegisterLink] = useState<string>("#");
 
-	// Dynamic link
-	const registerLink = isProfessional
-		? PROFESSIONAL_REGISTER_URL
-		: CUSTOMER_REGISTER_URL;
+	useEffect(() => {
+		// Dynamic link
+		const url = isProfessional
+			? getProfessionalRegisterUrl()
+			: getCustomerRegisterUrl();
+		setRegisterLink(url);
+	}, [isProfessional]);
 
 	return (
 		<>

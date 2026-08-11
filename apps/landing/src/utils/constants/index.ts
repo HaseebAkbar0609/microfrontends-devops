@@ -23,6 +23,9 @@ export const getCustomerBaseUrl = (): string => {
 			return PROD_CUSTOMER_URL;
 		}
 	}
+	if (process.env.NODE_ENV === "production") {
+		return PROD_CUSTOMER_URL;
+	}
 	return LOCAL_CUSTOMER_URL;
 };
 
@@ -36,6 +39,9 @@ export const getProfessionalBaseUrl = (): string => {
 			return PROD_PROFESSIONAL_URL;
 		}
 	}
+	if (process.env.NODE_ENV === "production") {
+		return PROD_PROFESSIONAL_URL;
+	}
 	return LOCAL_PROFESSIONAL_URL;
 };
 
@@ -47,29 +53,12 @@ export const getCustomerCreateOfferUrl = (): string => `${getCustomerBaseUrl()}/
 export const getProfessionalLoginUrl = (): string => `${getProfessionalBaseUrl()}/login`;
 export const getProfessionalRegisterUrl = (): string => `${getProfessionalBaseUrl()}/register`;
 
-// WARNING: Only use these constants in client-side code (useEffect, event handlers)
-// For SSR-safe usage, call the getter functions above instead
-// These are kept for backward compatibility but may cause hydration warnings
-let _customerLoginUrl = `${LOCAL_CUSTOMER_URL}/login`;
-let _customerRegisterUrl = `${LOCAL_CUSTOMER_URL}/register`;
-let _customerCreateOfferUrl = `${LOCAL_CUSTOMER_URL}/create-offer`;
-let _professionalLoginUrl = `${LOCAL_PROFESSIONAL_URL}/login`;
-let _professionalRegisterUrl = `${LOCAL_PROFESSIONAL_URL}/register`;
-
-// Initialize on client-side only
-if (typeof window !== "undefined") {
-	_customerLoginUrl = getCustomerLoginUrl();
-	_customerRegisterUrl = getCustomerRegisterUrl();
-	_customerCreateOfferUrl = getCustomerCreateOfferUrl();
-	_professionalLoginUrl = getProfessionalLoginUrl();
-	_professionalRegisterUrl = getProfessionalRegisterUrl();
-}
-
-export const CUSTOMER_LOGIN_URL = _customerLoginUrl;
-export const CUSTOMER_REGISTER_URL = _customerRegisterUrl;
-export const CUSTOMER_CREATE_OFFER_URL = _customerCreateOfferUrl;
-export const PROFESSIONAL_LOGIN_URL = _professionalLoginUrl;
-export const PROFESSIONAL_REGISTER_URL = _professionalRegisterUrl;
+// Dynamic exported constants for backward compatibility
+export const CUSTOMER_LOGIN_URL = getCustomerLoginUrl();
+export const CUSTOMER_REGISTER_URL = getCustomerRegisterUrl();
+export const CUSTOMER_CREATE_OFFER_URL = getCustomerCreateOfferUrl();
+export const PROFESSIONAL_LOGIN_URL = getProfessionalLoginUrl();
+export const PROFESSIONAL_REGISTER_URL = getProfessionalRegisterUrl();
 
 export const CALENDLY_DEMO_URL =
 	"https://calendly.com/timeflowsystem/har-kan-du-boka-30-min-mote-med-timeflowsystem";
