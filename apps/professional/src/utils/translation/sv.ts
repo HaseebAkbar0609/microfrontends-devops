@@ -778,7 +778,7 @@ export const svOffer: OfferTranslation = {
 	calcOverviewKategori: "Kategori",
 	calcOverviewEmpty: "Inga kalkyler hittades",
 	calcOverviewSeKalkyl: "Se kalkyl",
-	calcOverviewStatusNotStarted: "Ei påbörjad",
+	calcOverviewStatusNotStarted: "Ej påbörjad",
 	calcOverviewStatusInProgress: "Pågår",
 	calcOverviewStatusCompleted: "Avslutad",
 	calcKalkyl: "Kalkyl",
@@ -865,6 +865,10 @@ export const svOffer: OfferTranslation = {
 	calcStatVunna: "Vunna",
 	calcStatForlorade: "Förlorade",
 	calcStatSeList: "Se lista",
+	// Calculation Archive
+	calcArchiveSeProject: "Se projekt",
+	calcArchiveUnarchive: "Avarkivera",
+	calcArchiveDelete: "Radera",
 	// Admin - Users
 	adminUsersTitle: "Användare",
 	adminUsersTabGroups: "Grupper",
