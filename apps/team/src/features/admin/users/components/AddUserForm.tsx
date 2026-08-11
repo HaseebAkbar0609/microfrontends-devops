@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { addUserSchema, type AddUserFormValues } from "@/schemas/admin/addUser.schema";
 import { UserInformationSection } from "./UserInformationSection";
 import { SystemSettingsSection } from "./SystemSettingsSection";
+import { useCreateAdminUser, useAdminUserDetail, useUpdateAdminUser } from "../hooks/useAdminUsers";
 
 interface AddUserFormProps {
   onCancel?: () => void;
@@ -31,68 +32,11 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isInline = !!onCancel;
 
-  const initialValues: AddUserFormValues = useMemo(() => {
-    if (userId === "1") {
-      return {
-        userCredentials: "kalle.a",
-        password: "••••••••",
-        firstName: "Kalle",
-        lastName: "Andersson",
-        confirmPassword: "••••••••",
-        role: "sys-admin",
-        department: "ekonomi",
-        isActive: true,
-        generateEmailForNewPassword: false,
-        personalNumber: "710405-1010",
-        smsAuthentication: true,
-        email: "kalle@timeflow.se",
-        mobileNumber: "+46 70 123 45 67",
-        employeeRegisterPerson: "EMP-101",
-        language: "sv",
-        automaticLogout: "2h",
-      };
-    }
-    if (userId === "2") {
-      return {
-        userCredentials: "sten.s",
-        password: "••••••••",
-        firstName: "Sten",
-        lastName: "Svensson",
-        confirmPassword: "••••••••",
-        role: "admin",
-        department: "service",
-        isActive: true,
-        generateEmailForNewPassword: true,
-        personalNumber: "710405-1011",
-        smsAuthentication: false,
-        email: "sten@timeflow.se",
-        mobileNumber: "+46 70 234 56 78",
-        employeeRegisterPerson: "EMP-102",
-        language: "sv",
-        automaticLogout: "4h",
-      };
-    }
-    if (userId === "3") {
-      return {
-        userCredentials: "sture.l",
-        password: "••••••••",
-        firstName: "Sture",
-        lastName: "Larsson",
-        confirmPassword: "••••••••",
-        role: "user",
-        department: "overhead",
-        isActive: true,
-        generateEmailForNewPassword: false,
-        personalNumber: "710405-1012",
-        smsAuthentication: false,
-        email: "sture@timeflow.se",
-        mobileNumber: "+46 70 345 67 89",
-        employeeRegisterPerson: "EMP-103",
-        language: "en",
-        automaticLogout: "1h",
-      };
-    }
-    return {
+  const { data: userResponse } = useAdminUserDetail(userId || "");
+  const { mutateAsync: createUser } = useCreateAdminUser();
+  const { mutateAsync: updateUser } = useUpdateAdminUser();
+
+  const initialValues: AddUserFormValues = {
       userCredentials: "",
       password: "",
       firstName: "",
@@ -109,26 +53,99 @@ export default function AddUserForm({ onCancel, onSuccess }: AddUserFormProps) {
       employeeRegisterPerson: "",
       language: "sv",
       automaticLogout: "2h",
-    };
-  }, [userId]);
+  };
 
   const form = useForm<AddUserFormValues>({
     resolver: zodResolver(addUserSchema),
     defaultValues: initialValues,
   });
 
-  async function onSubmit(_values: AddUserFormValues) {
+  useEffect(() => {
+    if (isEditMode && userResponse?.data) {
+      const u = userResponse.data;
+      // In edit mode, 'department' field contains the group UUID from the dropdown
+      // 'role' contains the permission_role_id UUID
+      
+      let firstGroupId = u.department || "";
+      if (Array.isArray(u.groups) && u.groups.length > 0) {
+          const firstGroup = u.groups[0];
+          if (typeof firstGroup === "object" && firstGroup !== null && "id" in firstGroup) {
+              firstGroupId = firstGroup.id;
+          }
+      }
+      
+      form.reset({
+        userCredentials: u.user_credentials || "",
+        password: "",
+        firstName: u.first_name || "",
+        lastName: u.last_name || "",
+        confirmPassword: "",
+        role: u.permission_role_id || "",
+        department: firstGroupId,
+        isActive: u.status === "active" || u.status === "ACTIVE",
+        generateEmailForNewPassword: false,
+        personalNumber: u.personal_id || "",
+        smsAuthentication: u.sms_auth_enabled || false,
+        email: u.email || "",
+        mobileNumber: u.phone_number || "",
+        employeeRegisterPerson: "",
+        language: u.language_preference || "sv",
+        automaticLogout: u.auto_logout_minutes ? `${u.auto_logout_minutes}m` : "2h",
+      });
+    }
+  }, [userResponse, isEditMode, form]);
+
+  function parseDurationToMinutes(duration: string): number {
+    if (!duration) return 120;
+    const val = parseInt(duration);
+    if (isNaN(val)) return 120;
+    if (duration.toLowerCase().endsWith("h")) return val * 60;
+    return val;
+  }
+
+  async function onSubmit(values: AddUserFormValues) {
+    if (!isEditMode) {
+      if (!values.password || !values.confirmPassword) {
+        form.setError("password", { message: localizationConstants.addUserValidationPasswordRequired });
+        form.setError("confirmPassword", { message: localizationConstants.addUserValidationConfirmPasswordRequired });
+        return;
+      }
+      if (!values.userCredentials) {
+        form.setError("userCredentials", { message: localizationConstants.addUserValidationCredentialsRequired });
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     try {
-      await new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-          if (Math.random() < 0.05) {
-            reject(new Error("Mock API Error"));
-          } else {
-            resolve();
-          }
-        }, 1000);
-      });
+      const payload: Record<string, unknown> = {
+        first_name: values.firstName || "",
+        last_name: values.lastName || "",
+        email: values.email,
+        user_credentials: values.userCredentials || undefined,
+        phone_number: values.mobileNumber || null,
+        personal_id: values.personalNumber || null,
+        language: values.language || "sv",
+        role: "worker", 
+        department: values.department || undefined, 
+        active: values.isActive,
+        send_invitation: values.generateEmailForNewPassword,
+        sms_authentication: values.smsAuthentication,
+        auto_logout: parseDurationToMinutes(values.automaticLogout),
+        permission_role_id: values.role || undefined,
+      };
+
+      if (!isEditMode) {
+        payload.password = values.password || undefined;
+        payload.confirm_password = values.confirmPassword || undefined;
+      }
+
+      if (isEditMode && userId) {
+        await updateUser({ userId, data: payload });
+      } else {
+        await createUser(payload);
+      }
+      
       toast.success(t(isEditMode ? localizationConstants.toastUserUpdated : localizationConstants.toastUserCreated));
       if (onSuccess) {
         onSuccess();

@@ -31,6 +31,8 @@ import {
 import { PageHeader } from "@/components/common/PageHeader";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { useAdminUsers, useDeleteAdminUser, useAdminGroups } from "./hooks/useAdminUsers";
+import { toast } from "sonner";
 
 type UserAccess = "sys-admin" | "admin" | "user";
 type UserStatus = "active" | "closed";
@@ -47,14 +49,7 @@ interface UserRow {
 	status: UserStatus;
 }
 
-const MOCK_USERS: UserRow[] = [
-	{ id: "1", name: "Kalle Andersson", email: "kalle@timeflow.se", personNo: "710405-1010", access: "sys-admin", group: "Ekonomi", role: "Manager", status: "active" },
-	{ id: "2", name: "Sten Svensson", email: "sten@timeflow.se", personNo: "710405-1011", access: "admin", group: "Service", role: "Projektledare", status: "active" },
-	{ id: "3", name: "Sture Larsson", email: "sture@timeflow.se", personNo: "710405-1012", access: "user", group: "Overhead", role: "Ekonomi", status: "active" },
-	{ id: "4", name: "Stina Jonasson", email: "stina@timeflow.se", personNo: "710405-1013", access: "sys-admin", group: "Entreprenad", role: "Service", status: "closed" },
-	{ id: "5", name: "Petra Karlsson", email: "petra@timeflow.se", personNo: "710405-1014", access: "admin", group: "Kalkyl", role: "Projektledare", status: "active" },
-	{ id: "6", name: "Uran Lindqvist", email: "uran@timeflow.se", personNo: "710405-1015", access: "user", group: "Inköp", role: "Manager", status: "closed" },
-];
+
 
 const ACCESS_CONFIG: Record<UserAccess, { labelKey: keyof typeof localizationConstants; Icon: typeof ShieldUser }> = {
 	"sys-admin": { labelKey: "roleSysAdmin", Icon: ShieldUser },
@@ -89,7 +84,31 @@ function StatusBadge({ status }: { status: UserStatus }) {
 
 export function AdminUsersPage() {
 	const { t } = useTranslation();
-	const [users, setUsers] = useState<UserRow[]>(MOCK_USERS);
+	const { data } = useAdminUsers({});
+	const { mutateAsync: deleteAdminUser } = useDeleteAdminUser();
+
+	const { data: groupsData } = useAdminGroups({ skip: 0, limit: 100 });
+
+	const groupOptions = (groupsData?.data || []).map((g: { id: string; name: string }) => ({ value: g.name, label: g.name }));
+
+	const users: UserRow[] = useMemo(() => {
+		if (!data?.data) return [];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return data.data.map((u: any) => {
+			// useAdminUsers backend already maps department to the group name if found
+			// and permission_role_name to the role name
+			return {
+				id: u.id,
+				name: u.display_name || `${u.first_name || ""} ${u.last_name || ""}`.trim() || "User",
+				email: u.email,
+				personNo: u.personal_id || "-",
+				access: u.role === "owner" ? "sys-admin" : (u.role === "manage" || u.role === "manager" ? "admin" : "user"),
+				group: u.department || "-",
+				role: u.permission_role_name || u.position || "-",
+				status: u.status === "active" ? "active" : "closed",
+			};
+		});
+	}, [data]);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [accessFilter, setAccessFilter] = useState<string>("all");
 	const [groupFilter, setGroupFilter] = useState<string>("all");
@@ -106,9 +125,14 @@ export function AdminUsersPage() {
 		}
 	};
 
-	const handleDeleteUser = (userId: string) => {
+	const handleDeleteUser = async (userId: string) => {
 		if (confirm(t(localizationConstants.confirmDeleteUser))) {
-			setUsers((prev) => prev.filter((u) => u.id !== userId));
+			try {
+				await deleteAdminUser(userId);
+				toast.success(t("User deleted successfully"));
+			} catch {
+				toast.error(t("Failed to delete user"));
+			}
 		}
 	};
 
@@ -230,12 +254,9 @@ export function AdminUsersPage() {
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="all">{t(localizationConstants.filterAllDepartments)}</SelectItem>
-									<SelectItem value="ekonomi">{t(localizationConstants.deptEkonomi)}</SelectItem>
-									<SelectItem value="service">{t(localizationConstants.deptService)}</SelectItem>
-									<SelectItem value="overhead">{t(localizationConstants.deptOverhead)}</SelectItem>
-									<SelectItem value="entreprenad">{t(localizationConstants.deptEntreprenad)}</SelectItem>
-									<SelectItem value="kalkyl">{t(localizationConstants.deptKalkyl)}</SelectItem>
-									<SelectItem value="inköp">{t(localizationConstants.deptInkop)}</SelectItem>
+									{groupOptions.map((opt: { value: string; label: string }) => (
+										<SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+									))}
 								</SelectContent>
 							</Select>
 
