@@ -1384,6 +1384,16 @@ export const svOffer: OfferTranslation = {
 	companyReviewsLeaveComment: "Lämna en kommentar",
 	companyReviewsSend: "Skicka",
 	companyReviewsSentToast: "Svar skickat",
+	// Admin - Company lead management
+	companyLeadsTitle: "Leadshantering för företaget | Kontaktlista",
+	companyLeadsPhone: "Mobil telefon",
+	companyLeadsMail: "Mail",
+	companyLeadsMainCategory: "Välj Huvudkategori",
+	companyLeadsSubCategory: "Välj Underkategori",
+	companyLeadsCity: "Välj stad",
+	companyLeadsDistrict: "Ort",
+	companyLeadsAddNew: "Lägg till ny",
+	companyLeadsAllCategories: "Alla kategorier",
 	// Admin - Integration
 	integrationHeading: "Kopplingar till TimeFlow",
 	integrationCreate: "Skapa integration",
