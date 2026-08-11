@@ -135,15 +135,10 @@ export function CreateKalkylPage() {
 
 	async function handleSubmit() {
 		setIsSubmitting(true);
-		try {
-			await new Promise((resolve) => setTimeout(resolve, 800));
-			showToast("success", t(localizationConstants.agreementCreateSuccess));
-			router.push("/module/business/calculation/overview");
-		} catch {
-			showToast("error", t(localizationConstants.agreementCreateSubmitError));
-		} finally {
-			setIsSubmitting(false);
-		}
+		await new Promise((resolve) => setTimeout(resolve, 800));
+		showToast("success", t(localizationConstants.agreementCreateSuccess));
+		setIsSubmitting(false);
+		router.push("/module/business/calculation/overview");
 	}
 
 	function handleCancel() {
