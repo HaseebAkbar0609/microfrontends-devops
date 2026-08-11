@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CirclePlus, Save } from "lucide-react";
@@ -49,6 +49,7 @@ const ReferenceFormDialog = ({
 }: ReferenceFormDialogProps) => {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const fileInputId = useId();
 	const [fileName, setFileName] = useState("");
 	const form = useForm<CompanyReferenceValues>({
 		resolver: zodResolver(companyReferenceSchema),
@@ -222,13 +223,17 @@ const ReferenceFormDialog = ({
 								/>
 							</span>
 							<div className="flex items-center gap-3">
-								<label className="flex h-11 flex-1 cursor-pointer items-center gap-3 rounded-md border border-slate-200 px-3 text-sm">
+								<label
+									htmlFor={fileInputId}
+									className="flex h-11 flex-1 cursor-pointer items-center gap-3 rounded-md border border-slate-200 px-3 text-sm"
+								>
 									<span className="font-medium text-slate-900">
 										<Translate
 											text={localizationConstants.upload}
 										/>
 									</span>
 									<input
+										id={fileInputId}
 										ref={fileInputRef}
 										type="file"
 										accept={REFERENCE_ALLOWED_TYPES.join(

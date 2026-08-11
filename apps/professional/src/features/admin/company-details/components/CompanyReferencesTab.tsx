@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, MoreVertical, Pencil, Plus, Save, Trash2 } from "lucide-react";
+import {
+	FileText,
+	MoreVertical,
+	Pencil,
+	Plus,
+	Save,
+	Trash2,
+} from "lucide-react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -27,6 +34,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { generateTempId } from "@/lib/tempId";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -80,16 +88,12 @@ export function CompanyReferencesTab() {
 						: reference,
 				),
 			);
-			showToast(
-				"success",
-				t(localizationConstants.companyRefSavedToast),
-			);
+			showToast("success", t(localizationConstants.companyRefSavedToast));
 			return;
 		}
 		setReferences((current) => [
 			{
-				// UI-state-only id; the backend generates real ids at integration
-				id: `temp-${crypto.randomUUID()}`,
+				id: generateTempId(),
 				...values,
 				fileName,
 			},
@@ -243,14 +247,14 @@ export function CompanyReferencesTab() {
 						type="button"
 						variant="outline"
 						onClick={() => setReferences(COMPANY_REFERENCES)}
-						className="w-[204px] border border-slate-200 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
+						className="w-full border border-slate-200 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)] sm:w-52"
 					>
 						<Translate text={localizationConstants.cancel} />
 					</Button>
 					<Button
 						type="button"
 						onClick={handleSavePage}
-						className="w-[204px] bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)]"
+						className="w-full bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)] sm:w-52"
 					>
 						<Save size={16} />
 						<Translate text={localizationConstants.save} />
