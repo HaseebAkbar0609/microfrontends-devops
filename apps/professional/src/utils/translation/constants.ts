@@ -1480,6 +1480,24 @@ export type OfferTranslation = {
 	companyRefCreatedToast: string;
 	companyRefSavedToast: string;
 	companyRefDeletedToast: string;
+	// Admin - Company reviews
+	companyReviewsTitle: string;
+	companyReviewsFromCustomers: string;
+	companyReviewsAnswered: string;
+	companyReviewsLatestChip: string;
+	companyReviewsLeaveComment: string;
+	companyReviewsSend: string;
+	companyReviewsSentToast: string;
+	// Admin - Company lead management
+	companyLeadsTitle: string;
+	companyLeadsPhone: string;
+	companyLeadsMail: string;
+	companyLeadsMainCategory: string;
+	companyLeadsSubCategory: string;
+	companyLeadsCity: string;
+	companyLeadsDistrict: string;
+	companyLeadsAddNew: string;
+	companyLeadsAllCategories: string;
 	// Admin - Integration
 	integrationHeading: string;
 	integrationCreate: string;
@@ -2103,6 +2121,33 @@ export type OfferTranslation = {
 	rowsPerPage: string;
 	pageLabel: string;
 	ofLabel: string;
+	serialNoHeader: string;
+	createDirectOrder: string;
+	createDirectOrderButton: string;
+	saveDraft: string;
+	cancel: string;
+	poNumberLabel: string;
+	projectLabel: string;
+	orderItemsHeader: string;
+	addItemButton: string;
+	productArticle: string;
+	quantity: string;
+	unitPrice: string;
+	discountPercent: string;
+	vatPercent: string;
+	lineTotal: string;
+	notesLabel: string;
+	subtotal: string;
+	vatTotal: string;
+	grandTotal: string;
+	statusPending: string;
+	statusOpened: string;
+	notesPlaceholder: string;
+	productCarpenter: string;
+	productPainting: string;
+	productElectrician: string;
+	productPlumbing: string;
+	productDrywall: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
