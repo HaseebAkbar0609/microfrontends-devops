@@ -2120,6 +2120,38 @@ export type OfferTranslation = {
 	planning: string;
 	warrantyCommitments: string;
 	orderGoTo: string;
+	// Project sub-sidebar
+	projectModule: string;
+	projectSubDashboard: string;
+	projectSubOverview: string;
+	projectEconomicOverview: string;
+	projectWarrantyCommitments: string;
+	projectArchive: string;
+	projectGoTo: string;
+	// Project overview list
+	projectListTab: string;
+	projectListGanttTab: string;
+	projectListCreateNew: string;
+	projectListPrint: string;
+	projectListFilterAll: string;
+	projectListColNr: string;
+	projectListColName: string;
+	projectListColCategory: string;
+	projectListColDepartment: string;
+	projectListColContractSum: string;
+	projectListColManager: string;
+	projectListColCustomer: string;
+	projectListColOfferNr: string;
+	projectListColStart: string;
+	projectListColEnd: string;
+	projectListOpen: string;
+	projectListArchiveAction: string;
+	projectListDeleteAction: string;
+	projectListDeleteConfirmTitle: string;
+	projectListDeleteConfirmDescription: string;
+	projectListArchivedToast: string;
+	projectListDeletedToast: string;
+	projectListCreateToast: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
