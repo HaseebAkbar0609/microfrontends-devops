@@ -1,7 +1,10 @@
 "use client";
 
+import { useTranslation } from "react-i18next";
 import {
 	ArrowUpDown,
+	ArrowUp,
+	ArrowDown,
 	ChevronLeft,
 	ChevronRight,
 	ChevronsLeft,
@@ -21,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { OrderEconomyRow } from "../types/orderEconomy.types";
+import type { OrderEconomyRow, OrderEconomyTab } from "../types/orderEconomy.types";
 import type { SortField, SortOrder } from "../hooks/useOrderEconomy";
 
 export interface OrderEconomyTableProps {
@@ -38,6 +41,8 @@ export interface OrderEconomyTableProps {
 	pageSize: number;
 	setPageSize: (size: number) => void;
 	totalPages: number;
+	totalRows: number;
+	activeTab: OrderEconomyTab;
 }
 
 export function OrderEconomyTable({
@@ -45,6 +50,8 @@ export function OrderEconomyTable({
 	selectedIds,
 	onToggleSelectAll,
 	onToggleSelectRow,
+	sortField,
+	sortOrder,
 	onSort,
 	totalTBBidrag,
 	currentPage,
@@ -52,8 +59,39 @@ export function OrderEconomyTable({
 	pageSize,
 	setPageSize,
 	totalPages,
+	totalRows,
+	activeTab,
 }: OrderEconomyTableProps) {
-	const allSelected = rows.length > 0 && selectedIds.length === rows.length;
+	const { i18n } = useTranslation();
+	const locale = i18n.language === "sv" ? "sv-SE" : "en-US";
+
+	// ID-based selection check instead of count-based check
+	const allSelected = rows.length > 0 && rows.every((r) => selectedIds.includes(r.id));
+
+	const renderSortIcon = (field: SortField) => {
+		if (sortField !== field) {
+			return <ArrowUpDown className="h-3.5 w-3.5 opacity-40 shrink-0" />;
+		}
+		return sortOrder === "asc" ? (
+			<ArrowUp className="h-3.5 w-3.5 text-slate-900 shrink-0" />
+		) : (
+			<ArrowDown className="h-3.5 w-3.5 text-slate-900 shrink-0" />
+		);
+	};
+
+	const getValueForTab = (row: OrderEconomyRow) => {
+		switch (activeTab) {
+			case "result":
+				return row.resultAmount;
+			case "cost":
+				return row.totalCost;
+			case "revenue":
+				return row.totalRevenue;
+			case "contributionMargin":
+			default:
+				return row.tbBidrag;
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-6 p-6">
@@ -62,14 +100,14 @@ export function OrderEconomyTable({
 				<h2 className="text-base font-bold text-slate-900 tracking-tight">
 					<Translate text={localizationConstants.totalTBBidragLabel} />{" "}
 					<span className="font-semibold text-slate-900">
-						{totalTBBidrag.toLocaleString("sv-SE")}
+						{totalTBBidrag.toLocaleString(locale)}
 					</span>
 				</h2>
 			</div>
 
-			{/* Borderless Datatable Container (No outer border, no shadow matching direct table) */}
+			{/* Borderless Datatable Container */}
 			<div className="w-full overflow-x-auto relative bg-white">
-				<table className="w-full min-w-200 border-collapse text-left text-sm">
+				<table className="w-full min-w-[800px] border-collapse text-left text-sm">
 					<thead>
 						<tr className="border-b border-slate-200 bg-white text-slate-600 font-medium">
 							<th className="p-4 w-12 text-center">
@@ -83,40 +121,42 @@ export function OrderEconomyTable({
 							<th className="p-4 cursor-pointer select-none" onClick={() => onSort("projectNo")}>
 								<div className="flex items-center gap-1 font-semibold text-slate-600">
 									<Translate text={localizationConstants.colProjectNo} />
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
+									{renderSortIcon("projectNo")}
 								</div>
 							</th>
 							<th className="p-4 cursor-pointer select-none" onClick={() => onSort("projectName")}>
 								<div className="flex items-center gap-1 font-semibold text-slate-600">
 									<Translate text={localizationConstants.colProjectName} />
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
+									{renderSortIcon("projectName")}
 								</div>
 							</th>
 							<th className="p-4 cursor-pointer select-none" onClick={() => onSort("revenueCategory")}>
 								<div className="flex items-center gap-1 font-semibold text-slate-600">
 									<Translate text={localizationConstants.colTotalRevenue} />
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
+									{renderSortIcon("revenueCategory")}
 								</div>
 							</th>
 							<th className="p-4 cursor-pointer select-none" onClick={() => onSort("costCategory")}>
 								<div className="flex items-center gap-1 font-semibold text-slate-600">
 									<Translate text={localizationConstants.colTotalCosts} />
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
+									{renderSortIcon("costCategory")}
 								</div>
 							</th>
 							<th className="p-4 cursor-pointer select-none text-right" onClick={() => onSort("tbBidrag")}>
 								<div className="flex items-center justify-end gap-1 font-semibold text-slate-600">
 									<Translate text={localizationConstants.colTBBidrag} />
-									<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
+									{renderSortIcon("tbBidrag")}
 								</div>
 							</th>
-							{/* Action menu column matching direct table */}
+							{/* Action menu column */}
 							<th className="w-[50px] min-w-[50px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] z-20 text-center py-3.5 px-2" />
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-slate-100 bg-white">
 						{rows.map((row) => {
 							const isChecked = selectedIds.includes(row.id);
+							const displayValue = getValueForTab(row);
+
 							return (
 								<tr
 									key={row.id}
@@ -147,7 +187,7 @@ export function OrderEconomyTable({
 										<Translate text={row.costCategoryKey} />
 									</td>
 									<td className="p-4 font-semibold text-slate-900 text-right whitespace-nowrap">
-										{row.tbBidrag.toLocaleString("sv-SE")}
+										{displayValue.toLocaleString(locale)}
 									</td>
 									{/* Sticky Action Menu Column */}
 									<td className="w-[50px] min-w-[50px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] transition-colors group-hover:bg-slate-50 z-10 text-center py-3.5 px-2">
@@ -185,7 +225,7 @@ export function OrderEconomyTable({
 				</table>
 			</div>
 
-			{/* Pagination Footer matching screenshot */}
+			{/* Pagination Footer */}
 			<div className="flex flex-col sm:flex-row items-center justify-center sm:justify-end gap-6 pt-4 text-xs text-slate-600">
 				<div className="flex items-center gap-2">
 					<span className="font-medium text-slate-700">
@@ -206,7 +246,7 @@ export function OrderEconomyTable({
 				</div>
 
 				<div className="font-medium text-slate-700">
-					Page {currentPage} of {totalPages}
+					Page {currentPage} of {totalPages} ({totalRows} items)
 				</div>
 
 				<div className="flex items-center gap-1">

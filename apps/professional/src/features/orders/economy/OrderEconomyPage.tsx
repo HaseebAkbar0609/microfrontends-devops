@@ -17,6 +17,7 @@ export function OrderEconomyPage() {
 		sortOrder,
 		handleSort,
 		paginatedRows,
+		totalRows,
 		currentPage,
 		setCurrentPage,
 		pageSize,
@@ -56,10 +57,10 @@ export function OrderEconomyPage() {
 					pageSize={pageSize}
 					setPageSize={setPageSize}
 					totalPages={totalPages}
+					totalRows={totalRows}
+					activeTab={activeTab}
 				/>
 			</div>
 		</div>
 	);
 }
-
-export default OrderEconomyPage;

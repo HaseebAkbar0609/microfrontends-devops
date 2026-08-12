@@ -1,10 +1,15 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { MOCK_ORDER_ECONOMY_ROWS, TOTAL_TB_BIDRAG_MOCK } from "../data/orderEconomy.mock";
+import { MOCK_ORDER_ECONOMY_ROWS } from "../data/orderEconomy.mock";
 import type { OrderEconomyTab } from "../types/orderEconomy.types";
 
-export type SortField = "projectNo" | "projectName" | "revenueCategory" | "costCategory" | "tbBidrag";
+export type SortField =
+	| "projectNo"
+	| "projectName"
+	| "revenueCategory"
+	| "costCategory"
+	| "tbBidrag";
 export type SortOrder = "asc" | "desc";
 
 export function useOrderEconomy() {
@@ -24,6 +29,7 @@ export function useOrderEconomy() {
 		}
 	};
 
+	// TODO: Replace mock sorting and data array with GET /api/v1/orders/economy API integration
 	const sortedRows = useMemo(() => {
 		return [...MOCK_ORDER_ECONOMY_ROWS].sort((a, b) => {
 			const valA = a[sortField];
@@ -43,6 +49,11 @@ export function useOrderEconomy() {
 		});
 	}, [sortField, sortOrder]);
 
+	// Dynamically compute total contribution margin from row data
+	const totalTBBidrag = useMemo(() => {
+		return sortedRows.reduce((acc, r) => acc + r.tbBidrag, 0);
+	}, [sortedRows]);
+
 	const totalPages = Math.max(1, Math.ceil(sortedRows.length / pageSize));
 
 	const paginatedRows = useMemo(() => {
@@ -51,10 +62,12 @@ export function useOrderEconomy() {
 	}, [sortedRows, currentPage, pageSize]);
 
 	const toggleSelectAll = () => {
-		if (selectedIds.length === paginatedRows.length) {
-			setSelectedIds([]);
+		if (paginatedRows.length > 0 && paginatedRows.every((r) => selectedIds.includes(r.id))) {
+			const currentPaginatedIds = new Set(paginatedRows.map((r) => r.id));
+			setSelectedIds((prev) => prev.filter((id) => !currentPaginatedIds.has(id)));
 		} else {
-			setSelectedIds(paginatedRows.map((r) => r.id));
+			const newIds = new Set([...selectedIds, ...paginatedRows.map((r) => r.id)]);
+			setSelectedIds(Array.from(newIds));
 		}
 	};
 
@@ -80,6 +93,6 @@ export function useOrderEconomy() {
 		pageSize,
 		setPageSize,
 		totalPages,
-		totalTBBidrag: TOTAL_TB_BIDRAG_MOCK,
+		totalTBBidrag,
 	};
 }
