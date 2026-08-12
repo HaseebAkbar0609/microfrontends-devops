@@ -2280,6 +2280,13 @@ export type OfferTranslation = {
 	catNyproduktion: string;
 	catROT: string;
 	catService: string;
+	colContractSum: string;
+	colOrderSum: string;
+	departmentProduction: string;
+	departmentPersonnel: string;
+	departmentEconomy: string;
+	actionRestore: string;
+	filterAllCategories: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
