@@ -14,6 +14,7 @@ import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { OfferDetailSubSidebar } from "./sidebar/OfferDetailSubSidebar";
+import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
 import {
 	getFlyoutSubSidebarConfigByPath,
 	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
@@ -60,6 +61,9 @@ export function AppShell({ children }: AppShellProps) {
 	const isOrderPath = pathname.startsWith("/module/production/order");
 	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
 	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
+	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
+	const isCalculationDetailRoute = !!calcDetailMatch;
+	const calculationDetailId = calcDetailMatch?.[1] ?? "";
 	const isProductionNavRoute = pathname.startsWith("/module/production") && !isOrderPath;
 	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
 	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
@@ -197,6 +201,8 @@ export function AppShell({ children }: AppShellProps) {
 					items={b2bSidebarItems}
 					hideBack={true}
 				/>
+			) : isCalculationDetailRoute ? (
+				<CalculationDetailSubSidebar calcId={calculationDetailId} />
 			) : isCalculationNavRoute ? (
 				<DynamicSubSidebar
 					titleKey={localizationConstants.calculation}

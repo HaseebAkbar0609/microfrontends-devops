@@ -1011,6 +1011,40 @@ export type OfferTranslation = {
 	calcDetailProjekteringAdress: string;
 	calcDetailSenasteDatumOffert: string;
 	calcDetailNewDocument: string;
+	// Calculation - Detail layout sidebar
+	calcDetailSidebarHeader: string;
+	calcDetailSidebarForfragan: string;
+	calcDetailSidebarFragaSvar: string;
+	// Calculation - Kalkylberäkning wizard
+	calcBerPageTitle: string;
+	calcBerSkapeNy: string;
+	calcBerKalkylMall: string;
+	calcBerValjFranMallar: string;
+	calcBerNyKalkyl: string;
+	calcBerBorjaFranBorjan: string;
+	calcBerAnvandMall: string;
+	calcBerMallCol: string;
+	calcBerSektionCol: string;
+	calcBerSeMall: string;
+	calcBerSammanfattningTab: string;
+	calcBerNySektion: string;
+	calcBerPaslagCol: string;
+	calcBerDelsummaCol: string;
+	calcBerCalculation: string;
+	calcBerMarkupSection: string;
+	calcBerSubtotal: string;
+	calcBerAdjustment: string;
+	calcBerOverhead: string;
+	calcBerSummering: string;
+	calcBerPaslagKr: string;
+	calcBerJustering: string;
+	calcBerSammanstallning: string;
+	calcBerSummaKalkyl: string;
+	calcBerSummaOverhead: string;
+	calcBerDelsumma: string;
+	calcBerVinstProcent: string;
+	calcBerOffert: string;
+	calcBerSaveAsTemplate: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
