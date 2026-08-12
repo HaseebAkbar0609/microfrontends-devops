@@ -97,18 +97,19 @@ export function WarrantyDetailView({
 					</button>
 
 					{openSections.info && (
+						/* TODO: Map all fields directly from GET /api/v1/orders/warranty/[id] API payload */
 						<div className="p-6 grid grid-cols-1 md:grid-cols-4 gap-y-6 gap-x-8 text-xs">
 							<div className="flex flex-col gap-1">
 								<span className="font-semibold text-slate-900">
 									<Translate text={localizationConstants.orderSection} />
 								</span>
-								<span className="text-slate-600">2025-001</span>
+								<span className="text-slate-600">{warranty.orderNo}</span>
 							</div>
 							<div className="flex flex-col gap-1">
 								<span className="font-semibold text-slate-900">
 									<Translate text={localizationConstants.orderName} />
 								</span>
-								<span className="text-slate-600">Ombyggnad villa</span>
+								<span className="text-slate-600">{warranty.orderName}</span>
 							</div>
 							<div className="flex flex-col gap-1">
 								<span className="font-semibold text-slate-900">
@@ -133,13 +134,13 @@ export function WarrantyDetailView({
 								<span className="font-semibold text-slate-900">
 									<Translate text={localizationConstants.orderStart} />
 								</span>
-								<span className="text-slate-600">2025-09-01</span>
+								<span className="text-slate-600">{warranty.startDate}</span>
 							</div>
 							<div className="flex flex-col gap-1">
 								<span className="font-semibold text-slate-900">
 									<Translate text={localizationConstants.colApproved} />
 								</span>
-								<span className="text-slate-600">2026-02-28</span>
+								<span className="text-slate-600">{warranty.approvedDate}</span>
 							</div>
 							<div className="flex flex-col gap-1">
 								<span className="font-semibold text-slate-900">
