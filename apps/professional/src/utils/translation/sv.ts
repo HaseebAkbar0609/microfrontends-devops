@@ -906,6 +906,12 @@ export const svOffer: OfferTranslation = {
 	calcNewGdprLink: "Integritetspolicy",
 	calcNewGdprSuffix: "här.",
 	calcNewCreateBtn: "Skapa",
+	// Calculation - Detail view
+	calcDetailProjekteringNr: "Projektering nr",
+	calcDetailProjekteringNamn: "Projektering namn",
+	calcDetailProjekteringAdress: "Projektering adress",
+	calcDetailSenasteDatumOffert: "Senaste datum för offert",
+	calcDetailNewDocument: "Skapa nytt",
 	// Admin - Users
 	adminUsersTitle: "Användare",
 	adminUsersTabGroups: "Grupper",
