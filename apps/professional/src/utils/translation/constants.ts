@@ -2183,6 +2183,20 @@ export type OfferTranslation = {
 	orderTitleKitchenRenovation: string;
 	tagStockholm: string;
 	tagJarfalla: string;
+	colApproved: string;
+	colWarrantyPeriod: string;
+	colProjectManager: string;
+	viewDetailsButton: string;
+	viewDetailTitle: string;
+	orderNumberSubtitle: string;
+	warrantyInfoSection: string;
+	warrantyResponsibleLabel: string;
+	visitDatesSection: string;
+	colOrderNo: string;
+	createVisitDateButton: string;
+	createVisitDateTitle: string;
+	reminderEmailLabel: string;
+	ruleLabel: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
