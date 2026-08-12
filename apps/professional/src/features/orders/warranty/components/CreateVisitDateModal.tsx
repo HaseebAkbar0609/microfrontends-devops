@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -12,6 +12,20 @@ import { Label } from "@/components/ui/label";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { InspectionDateItem } from "../types/warranty.types";
+
+// Defined outside component body to avoid re-creation on every render
+const createVisitDateSchema = (isSv: boolean) =>
+	z.object({
+		date: z.string().min(1, isSv ? "Datum krävs" : "Date is required"),
+		reminderEmail: z
+			.string()
+			.min(1, isSv ? "E-post krävs" : "Email is required")
+			.email(isSv ? "Ogiltig e-postadress" : "Invalid email address"),
+		rule: z.string().min(1, isSv ? "Regel krävs" : "Rule is required"),
+		documentName: z.string().min(1, isSv ? "Dokumentnamn krävs" : "Document name is required"),
+	});
+
+export type VisitDateFormData = z.infer<ReturnType<typeof createVisitDateSchema>>;
 
 export interface CreateVisitDateModalProps {
 	isOpen: boolean;
@@ -27,18 +41,7 @@ export function CreateVisitDateModal({
 	const { i18n } = useTranslation();
 	const isSv = i18n.language === "sv";
 
-	// Dynamic bilingual Zod validation schema
-	const visitDateSchema = z.object({
-		date: z.string().min(1, isSv ? "Datum krävs" : "Date is required"),
-		reminderEmail: z
-			.string()
-			.min(1, isSv ? "E-post krävs" : "Email is required")
-			.email(isSv ? "Ogiltig e-postadress" : "Invalid email address"),
-		rule: z.string().min(1, isSv ? "Regel krävs" : "Rule is required"),
-		documentName: z.string().min(1, isSv ? "Dokumentnamn krävs" : "Document name is required"),
-	});
-
-	type VisitDateFormData = z.infer<typeof visitDateSchema>;
+	const visitDateSchema = useMemo(() => createVisitDateSchema(isSv), [isSv]);
 
 	const {
 		register,
@@ -88,7 +91,7 @@ export function CreateVisitDateModal({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
-			{/* Modal container with max-w-lg (wider header width) */}
+			{/* Modal container with max-w-lg */}
 			<div className="relative w-full max-w-lg rounded-xl bg-white shadow-xl flex flex-col overflow-hidden border border-slate-200">
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">

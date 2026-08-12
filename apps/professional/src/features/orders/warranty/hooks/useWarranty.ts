@@ -34,23 +34,26 @@ export function useWarranty() {
 		}
 	};
 
+	// Filter rows with trimmed and sanitized query
 	const filteredRows = useMemo(() => {
-		return rows.filter((row) => {
-			const matchesSearch =
-				!searchQuery ||
-				row.orderNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				row.orderName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				row.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-				row.projectManager.toLowerCase().includes(searchQuery.toLowerCase());
+		const cleanQuery = searchQuery.trim().toLowerCase();
+		if (!cleanQuery) return rows;
 
-			return matchesSearch;
+		return rows.filter((row) => {
+			return (
+				(row.orderNo && row.orderNo.toLowerCase().includes(cleanQuery)) ||
+				(row.orderName && row.orderName.toLowerCase().includes(cleanQuery)) ||
+				(row.customer && row.customer.toLowerCase().includes(cleanQuery)) ||
+				(row.projectManager && row.projectManager.toLowerCase().includes(cleanQuery))
+			);
 		});
 	}, [rows, searchQuery]);
 
+	// Null-safe sorting
 	const sortedRows = useMemo(() => {
 		return [...filteredRows].sort((a, b) => {
-			const valA = a[sortField] || "";
-			const valB = b[sortField] || "";
+			const valA = a[sortField] ?? "";
+			const valB = b[sortField] ?? "";
 
 			return sortOrder === "asc"
 				? String(valA).localeCompare(String(valB))

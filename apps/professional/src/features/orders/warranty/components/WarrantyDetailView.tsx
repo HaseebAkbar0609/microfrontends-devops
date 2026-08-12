@@ -145,7 +145,9 @@ export function WarrantyDetailView({
 								<span className="font-semibold text-slate-900">
 									<Translate text={localizationConstants.colWarrantyPeriod} />
 								</span>
-								<span className="text-slate-600">5 ar / 2030-09-01</span>
+								<span className="text-slate-600">
+									{warranty.warrantyPeriod} / {warranty.warrantyEndDate || "2030-09-01"}
+								</span>
 							</div>
 
 							<div className="flex flex-col gap-1">
