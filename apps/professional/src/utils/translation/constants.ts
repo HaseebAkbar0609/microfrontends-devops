@@ -2183,6 +2183,23 @@ export type OfferTranslation = {
 	orderTitleKitchenRenovation: string;
 	tagStockholm: string;
 	tagJarfalla: string;
+	economicOverviewTabTB: string;
+	economicOverviewTabResult: string;
+	economicOverviewTabCost: string;
+	economicOverviewTabRevenue: string;
+	totalTBBidragLabel: string;
+	colProjectNo: string;
+	colProjectName: string;
+	colTotalRevenue: string;
+	colTotalCosts: string;
+	colTBBidrag: string;
+	catTotalentreprenad: string;
+	catGeneralentreprenad: string;
+	catLopande: string;
+	catSamverkan: string;
+	catNyproduktion: string;
+	catROT: string;
+	catService: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
