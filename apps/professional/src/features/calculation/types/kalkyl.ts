@@ -102,6 +102,42 @@ export type KalkylDetailData = {
 	documents: KalkylDocItem[];
 };
 
+export type KalkylTemplate = {
+	id: string;
+	benamning: string;
+	sektion: number;
+	mall: string;
+	datum: string;
+};
+
+export type KalkylSectionRow = {
+	id: string;
+	artikel: string;
+	benamning: string;
+	antal: string;
+	enhet: string;
+	aPris: string;
+	paslagPct: string;
+};
+
+export type KalkylberakningSection = {
+	id: string;
+	name: string;
+	isOpen: boolean;
+	rows: KalkylSectionRow[];
+};
+
+export type OverheadRow = {
+	id: string;
+	artikel: string;
+	benamning: string;
+	antal: string;
+	enhet: string;
+	aPris: string;
+	paslagPct: string;
+	justering: string;
+};
+
 export type MarkupRow = {
 	id: string;
 	title: string;
