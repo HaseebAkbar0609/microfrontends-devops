@@ -1,126 +1,47 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import {
   CircleUserRound,
   ChevronDown,
   ChevronUp,
-  CircleDollarSign,
   Users,
-  ShieldCheck,
   UserRound,
   Info,
-  BadgePercent,
   Blocks,
-  ShoppingBag,
-  Table2,
-  ShoppingCart,
-  Truck,
-  LayoutPanelLeft,
-  Diff,
-  ScrollText,
-  StickyNote,
 } from "lucide-react";
 
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { FormSelect } from "@/components/form/FormSelect";
 import { FormSwitch } from "@/components/form/FormSwitch";
 import { FormCheckbox } from "@/components/form/FormCheckbox";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { UserDetailsFormValues } from "@/schemas/admin/userDetails.schema";
+import { useAdminUsers, useAdminGroups, useAdminRoleOptions, useAdminTypeOptions, useAdminModules } from "../hooks/useAdminUsers";
 
-const MOCK_USERS = [
-  {
-    value: "kalle",
-    name: "Kalle Andersson",
-    email: "kalle.andersson@timeflow.se",
-    phone: "+46 70 123 45 67",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&h=80&q=80",
-    lastLogin: "2026-08-09 14:32",
-    createdDate: "2024-01-15",
-  },
-  {
-    value: "sten",
-    name: "Sten Svensson",
-    email: "sten.svensson@timeflow.se",
-    phone: "+46 70 234 56 78",
-    avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=80&h=80&q=80",
-    lastLogin: "2026-08-10 09:15",
-    createdDate: "2024-02-20",
-  },
-  {
-    value: "sture",
-    name: "Sture Larsson",
-    email: "sture.larsson@timeflow.se",
-    phone: "+46 70 345 67 89",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80",
-    lastLogin: "2026-08-08 17:45",
-    createdDate: "2024-03-10",
-  },
-  {
-    value: "rachel",
-    name: "Rachel Meyers",
-    email: "rachel.meyers@timeflow.se",
-    phone: "+46 70 456 78 90",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80",
-    lastLogin: "2026-08-10 11:20",
-    createdDate: "2023-11-05",
-  },
-];
+import * as Icons from "lucide-react";
 
-
-
-interface ModuleItem {
-  titleKey: string;
-  field: keyof UserDetailsFormValues;
-  icon: React.ComponentType<{ className?: string }>;
+export interface ModuleItem {
+  id: string;
+  name: string;
+  name_sv?: string;
+  icon?: string;
+  order_key?: number;
 }
 
-interface PermissionColumn {
-  titleKey: string;
+export interface PermissionColumn {
+  category: string;
   modules: ModuleItem[];
-  allField: keyof UserDetailsFormValues;
 }
 
-const COLUMNS: PermissionColumn[] = [
-  {
-    titleKey: "userDetailsSales",
-    modules: [
-      { titleKey: "moduleSell", field: "permSalesSell", icon: BadgePercent },
-      { titleKey: "moduleMarknad", field: "permSalesMarknad", icon: Blocks },
-    ],
-    allField: "permSalesAll",
-  },
-  {
-    titleKey: "userDetailsEconomy",
-    modules: [
-      { titleKey: "moduleEkonomi", field: "permEconEkonomi", icon: ShoppingBag },
-      { titleKey: "moduleFaktura", field: "permEconFaktura", icon: Table2 },
-      { titleKey: "modulePersonal", field: "permEconPersonal", icon: ShoppingCart },
-      { titleKey: "moduleJuridik", field: "permEconJuridik", icon: ShieldCheck },
-      { titleKey: "modulePrognoser", field: "permEconPrognoser", icon: Truck },
-    ],
-    allField: "permEconAll",
-  },
-  {
-    titleKey: "userDetailsBusinessSupport",
-    modules: [
-      { titleKey: "moduleAvtal", field: "permBizAvtal", icon: CircleDollarSign },
-      { titleKey: "moduleDataIT", field: "permBizDataIT", icon: LayoutPanelLeft },
-      { titleKey: "moduleKMA", field: "permBizKMA", icon: Diff },
-      { titleKey: "moduleMailet", field: "permBizMailet", icon: ScrollText },
-      { titleKey: "moduleLedningsstod", field: "permBizLedningsstod", icon: StickyNote },
-    ],
-    allField: "permBizAll",
-  },
-];
-
-function ModuleIcon({ mod }: { mod: ModuleItem }) {
-  return <mod.icon className="h-4 w-4 text-slate-600 shrink-0" />;
+function DynamicIcon({ name, className }: { name?: string, className?: string }) {
+  if (!name) return <Info className={className} />;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const IconComponent = (Icons as Record<string, any>)[name] || Info;
+  return <IconComponent className={className} />;
 }
 
 function PermissionPanel({ col, form }: { col: PermissionColumn; form: UseFormReturn<UserDetailsFormValues> }) {
@@ -133,7 +54,9 @@ function PermissionPanel({ col, form }: { col: PermissionColumn; form: UseFormRe
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full items-center justify-between bg-slate-100 px-4 py-2.5 text-left border-b border-slate-200"
       >
-        <h4 className="text-sm font-bold text-slate-700"><Translate text={col.titleKey} /></h4>
+        <h4 className="text-sm font-bold text-slate-700">
+          <Translate text={(localizationConstants as Record<string, string>)[col.category] || col.category} />
+        </h4>
         {isOpen ? (
           <ChevronUp className="h-4 w-4 text-slate-400" />
         ) : (
@@ -155,17 +78,18 @@ function PermissionPanel({ col, form }: { col: PermissionColumn; form: UseFormRe
 
           {col.modules.map((mod) => (
             <div
-              key={mod.field}
+              key={mod.id}
               className="grid grid-cols-[1fr_110px_100px] items-center border-b border-slate-200 py-3.5 last:border-b-0 hover:bg-slate-50/10"
             >
               <div className="flex items-center gap-2 pl-4">
-                <ModuleIcon mod={mod} />
-                <span className="text-sm font-medium leading-6 text-slate-700 font-sans"><Translate text={mod.titleKey} /></span>
+                <DynamicIcon name={mod.icon} className="h-4 w-4 text-slate-600 shrink-0" />
+                <span className="text-sm font-medium leading-6 text-slate-700 font-sans">{mod.name_sv || mod.name}</span>
               </div>
               <div className="flex items-center justify-center">
                 <FormCheckbox
                   control={form.control}
-                  name={mod.field}
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  name={`permissions.${mod.id}` as any}
                   className="m-0"
                   checkboxClassName="h-4 w-4"
                   variant="secondary"
@@ -192,7 +116,8 @@ function PermissionPanel({ col, form }: { col: PermissionColumn; form: UseFormRe
             <div className="flex items-center justify-center">
               <FormCheckbox
                 control={form.control}
-                name={col.allField}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                name={`permissions.all_${col.category}` as any}
                 className="m-0"
                 checkboxClassName="h-4 w-4"
                 variant="secondary"
@@ -220,36 +145,68 @@ interface UserDetailsSectionProps {
 }
 
 export function UserDetailsSection({ form, showDetails, onToggleDetails }: UserDetailsSectionProps) {
-  const { t } = useTranslation();
   const searchParams = useSearchParams();
 
-  const groupOptions = [
-    { value: "ekonomi", label: t(localizationConstants.deptEkonomi) },
-    { value: "service", label: t(localizationConstants.deptService) },
-    { value: "overhead", label: t(localizationConstants.deptOverhead) },
-    { value: "entreprenad", label: t(localizationConstants.deptEntreprenad) },
-  ];
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const roleOptions = [
-    { value: "manager", label: t(localizationConstants.roleManager) },
-    { value: "projektledare", label: t(localizationConstants.roleProjektledare) },
-    { value: "ekonomi", label: t(localizationConstants.deptEkonomi) },
-  ];
+  const { data: usersData } = useAdminUsers({ skip: 0, limit: 100 });
+  const { data: groupsData } = useAdminGroups({ skip: 0, limit: 100 });
+  const { data: rolesData } = useAdminRoleOptions();
+  const { data: typesData } = useAdminTypeOptions();
+  const { data: modulesData } = useAdminModules();
+  const dynamicColumns = modulesData?.data || [];
 
-  const typeOptions = [
-    { value: "arbetschef", label: t(localizationConstants.typeArbetschef) },
-    { value: "service", label: t(localizationConstants.typeService) },
-    { value: "admin", label: t(localizationConstants.typeAdmin) },
-  ];
+  const groupOptions = (groupsData?.data || []).map((g: { id: string; name: string }) => ({ value: g.id, label: g.name }));
+  const roleOptions = (rolesData?.data || []).map((r: { id: string; name: string }) => ({ value: r.id, label: r.name }));
+  const typeOptions = (typesData?.data || []).map((t: { id: string; name: string }) => ({ value: t.id, label: t.name }));
   const id = searchParams.get("id");
-  const initialUser = (() => {
-    if (id === "1") return MOCK_USERS.find(u => u.value === "kalle") || MOCK_USERS[0];
-    if (id === "2") return MOCK_USERS.find(u => u.value === "sten") || MOCK_USERS[0];
-    if (id === "3") return MOCK_USERS.find(u => u.value === "sture") || MOCK_USERS[0];
-    return MOCK_USERS[0];
-  })();
+
+  const activeUsers = useMemo(() => usersData?.data || [], [usersData]);
+  const foundUser = activeUsers.find((u: { id: string; display_name?: string; first_name?: string; last_name?: string; email: string; phone_number?: string; last_login?: string; created_at?: string; avatar_url?: string; profile_picture_url?: string }) => u.id === id) || activeUsers[0];
+
+  const initialUser = foundUser ? {
+    value: foundUser.id,
+    name: foundUser.display_name || `${foundUser.first_name || ""} ${foundUser.last_name || ""}`.trim() || "User",
+    email: foundUser.email,
+    phone: foundUser.phone_number || "",
+    lastLogin: foundUser.last_login ? new Date(foundUser.last_login).toLocaleString() : "-",
+    createdDate: foundUser.created_at ? new Date(foundUser.created_at).toLocaleDateString() : "-",
+    avatar: foundUser.avatar_url || foundUser.profile_picture_url || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80"
+  } : {
+    value: "",
+    name: "Select User...",
+    email: "",
+    phone: "",
+    lastLogin: "",
+    createdDate: "",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80"
+  };
 
   const [selectedUser, setSelectedUser] = useState(initialUser);
+
+  useEffect(() => {
+    if (activeUsers.length > 0) {
+      // If we have an id in the URL, try to match it. Otherwise fallback to the first active user.
+      const targetId = id || activeUsers[0]?.id;
+
+      if (targetId && selectedUser.value !== targetId) {
+        const u = activeUsers.find((user: { id: string; display_name?: string; first_name?: string; last_name?: string; email: string; phone_number?: string; last_login?: string; created_at?: string; avatar_url?: string; profile_picture_url?: string }) => user.id === targetId) || activeUsers[0];
+        if (u) {
+          setSelectedUser({
+            value: u.id,
+            name: u.display_name || `${u.first_name || ""} ${u.last_name || ""}`.trim() || "User",
+            email: u.email,
+            phone: u.phone_number || "",
+            lastLogin: u.last_login ? new Date(u.last_login).toLocaleString() : "-",
+            createdDate: u.created_at ? new Date(u.created_at).toLocaleDateString() : "-",
+            avatar: u.avatar_url || u.profile_picture_url || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80"
+          });
+        }
+      }
+    }
+  }, [activeUsers, id, selectedUser.value]);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(true);
@@ -300,32 +257,40 @@ export function UserDetailsSection({ form, showDetails, onToggleDetails }: UserD
             </button>
 
             {dropdownOpen && (
-              <div className="absolute left-0 top-full z-50 mt-1 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg">
-                {MOCK_USERS.map((user) => (
+              <div className="absolute left-0 top-full z-50 mt-1 w-full overflow-hidden rounded-lg border border-slate-200 bg-white shadow-lg max-h-64 overflow-y-auto">
+                {activeUsers.length > 0 ? activeUsers.map((user: { id: string; display_name?: string; first_name?: string; last_name?: string; email: string; phone_number?: string; last_login?: string; created_at?: string; avatar_url?: string; profile_picture_url?: string }) => (
                   <button
-                    key={user.value}
+                    key={user.id}
                     type="button"
                     onClick={() => {
-                      setSelectedUser(user);
+                      setSelectedUser({
+                        value: user.id,
+                        name: user.display_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User",
+                        email: user.email,
+                        phone: user.phone_number || "",
+                        lastLogin: user.last_login ? new Date(user.last_login).toLocaleString() : "-",
+                        createdDate: user.created_at ? new Date(user.created_at).toLocaleDateString() : "-",
+                        avatar: user.avatar_url || user.profile_picture_url || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80"
+                      });
                       setDropdownOpen(false);
+                      router.push(`${pathname}?id=${user.id}`);
                     }}
-                    className={`flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-slate-50 ${
-                      selectedUser.value === user.value ? "bg-slate-50" : ""
-                    }`}
+                    className={`flex w-full items-center gap-2 px-3 py-2 text-left hover:bg-slate-50 ${selectedUser.value === user.id ? "bg-slate-50" : ""
+                      }`}
                   >
                     <Image
-                      src={user.avatar}
+                      src={user.avatar_url || user.profile_picture_url || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&h=80&q=80"}
                       className="h-6 w-6 rounded-full object-cover shrink-0"
                       width={24}
                       height={24}
                       alt=""
                     />
                     <div>
-                      <div className="text-sm font-medium text-slate-900">{user.name}</div>
+                      <div className="text-sm font-medium text-slate-900">{user.display_name || `${user.first_name || ""} ${user.last_name || ""}`.trim() || "User"}</div>
                       <div className="text-xs text-slate-400">{user.email}</div>
                     </div>
                   </button>
-                ))}
+                )) : null}
               </div>
             )}
           </div>
@@ -468,8 +433,8 @@ export function UserDetailsSection({ form, showDetails, onToggleDetails }: UserD
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
-                  {COLUMNS.map((col) => (
-                    <PermissionPanel key={col.titleKey} col={col} form={form} />
+                  {dynamicColumns.map((col: PermissionColumn) => (
+                    <PermissionPanel key={col.category} col={col} form={form} />
                   ))}
                 </div>
               </div>

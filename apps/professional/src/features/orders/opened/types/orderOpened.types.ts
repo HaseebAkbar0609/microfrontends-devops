@@ -1,0 +1,60 @@
+export interface CustomerDetails {
+	customerName: string;
+	address: string;
+	postCode: string;
+	city: string;
+	email: string;
+	phone: string;
+	orgNumber: string;
+}
+
+export interface ContactPersonDetails {
+	firstName: string;
+	lastName: string;
+	email: string;
+	mobile: string;
+	role: string;
+}
+
+export interface OrderBasicDetails {
+	serialNo: string;
+	orderName: string;
+	quarterName: string;
+	orderAddress: string;
+	postCode: string;
+	city: string;
+}
+
+export interface OrderMetaInformation {
+	type: string;
+	category: string;
+	department: string;
+	contractAmount: string;
+	offerNo: string;
+	startDate: string;
+	endDate: string;
+}
+
+export interface OrderDocumentItem {
+	id: string;
+	date: string;
+	documentName: string;
+	fileName: string;
+	fileType: "pdf" | "doc" | "xls";
+}
+
+export interface OrderOpenedData {
+	id: string;
+	title: string;
+	titleKey?: string;
+	isDirect: boolean;
+	postedDate: string;
+	tags: string[];
+	tagKeys?: string[];
+	budgetAmount: number;
+	customerInfo: CustomerDetails;
+	contactPerson: ContactPersonDetails;
+	orderDetails: OrderBasicDetails;
+	orderInfo: OrderMetaInformation;
+	documents: OrderDocumentItem[];
+}

@@ -56,6 +56,88 @@ export type KalkylDocItem = {
 	fileType: "pdf" | "doc" | "img";
 };
 
+export type KalkylDetailData = {
+	calcNo: string;
+	bestellareForetag: string;
+	bestellareAddress: string;
+	bestellarePostNr: string;
+	bestellareOrt: string;
+	bestellareMail: string;
+	bestellareTelefon: string;
+	bestellareOrgNr: string;
+	kontaktFornamn: string;
+	kontaktEfternamn: string;
+	kontaktAddress: string;
+	kontaktPostnummer: string;
+	kontaktMail: string;
+	kontaktMobil: string;
+	kontaktRoll: string;
+	kontaktOrt: string;
+	entreprenorForetag: string;
+	entreprenorAddress: string;
+	entreprenorPostNr: string;
+	entreprenorOrt: string;
+	entreprenorMail: string;
+	entreprenorTelefon: string;
+	entreprenorOrgNr: string;
+	kalkylFornamn: string;
+	kalkylEfternamn: string;
+	kalkylMail: string;
+	kalkylMobil: string;
+	kalkylRoll: string;
+	projekteringNr: string;
+	projekteringNamn: string;
+	kvartersNamn: string;
+	projekteringAdress: string;
+	postNr: string;
+	ort: string;
+	type: string;
+	kategori: string;
+	avdelning: string;
+	kontraktsumma: string;
+	offertNr: string;
+	startDatum: string;
+	slutDatum: string;
+	senatsDatumOffert: string;
+	documents: KalkylDocItem[];
+};
+
+export type KalkylTemplate = {
+	id: string;
+	benamning: string;
+	sektion: number;
+	mall: string;
+	datum: string;
+};
+
+export type KalkylSectionRow = {
+	id: string;
+	artikel: string;
+	benamning: string;
+	antal: string;
+	enhet: string;
+	aPris: string;
+	paslagPct: string;
+};
+
+export type KalkylberakningSection = {
+	id: string;
+	name: string;
+	isOpen: boolean;
+	rows: KalkylSectionRow[];
+};
+
+export type OverheadRow = {
+	id: string;
+	artikel: string;
+	benamning: string;
+	antal: string;
+	enhet: string;
+	aPris: string;
+	paslagPct: string;
+	justering: string;
+};
+
 export type MarkupRow = {
 	id: string;
 	title: string;
