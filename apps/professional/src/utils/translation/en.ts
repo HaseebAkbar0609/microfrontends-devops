@@ -2366,6 +2366,13 @@ export const enOffer: OfferTranslation = {
 	catNyproduktion: "New Construction",
 	catROT: "Renovation (ROT)",
 	catService: "Service",
+	colContractSum: "Contract Sum",
+	colOrderSum: "Order Sum",
+	departmentProduction: "Production",
+	departmentPersonnel: "Personnel",
+	departmentEconomy: "Economy",
+	actionRestore: "Restore",
+	filterAllCategories: "All categories",
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: "Offer overview",
 	offerWidgetOverviewTotal: "Total offers",
