@@ -2526,7 +2526,7 @@ export const enOffer: OfferTranslation = {
 	homeImageTitle: "Image",
 	homeImageDescription: "Placeholder image — upload your own media later.",
 	// Offer - List
-	offerList: "Leads",
+	offerList: "Quote",
 	job: "Job",
 	projectName: "Project name",
 	date: "Date",
