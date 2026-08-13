@@ -1071,6 +1071,36 @@ export type OfferTranslation = {
 	calcBerVinstProcent: string;
 	calcBerOffert: string;
 	calcBerSaveAsTemplate: string;
+	// Calculation - Fråga/Svar (Q&A)
+	calcQATitle: string;
+	calcQANewQuestion: string;
+	calcQAAll: string;
+	calcQAArchive: string;
+	calcQANew: string;
+	calcQAOpened: string;
+	calcQAAnswered: string;
+	calcQALeaveComment: string;
+	calcQAMarkAsRead: string;
+	calcQAArchivera: string;
+	calcQADelete: string;
+	calcQANewDialogTitle: string;
+	calcQATyp: string;
+	calcQATypProjekt: string;
+	calcQATypOrder: string;
+	calcQAFunktion: string;
+	calcQAValjFunktion: string;
+	calcQABeskrivning: string;
+	calcQASkicka: string;
+	calcQABadgeUE: string;
+	calcQABadgeBestellare: string;
+	calcQABadgeFraga: string;
+	calcQAAdmin: string;
+	calcQAForetagFilter: string;
+	calcQAKundFilter: string;
+	calcQAReply: string;
+	calcQAFilter: string;
+	calcQANoQuestions: string;
+	calcQASearchPlaceholder: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
