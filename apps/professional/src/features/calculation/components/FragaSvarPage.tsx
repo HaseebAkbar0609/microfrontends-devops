@@ -257,9 +257,10 @@ function KanbanColumn({
 interface NyFragaModalProps {
 	open: boolean;
 	onClose: () => void;
+	onSubmit: (card: QACard) => void;
 }
 
-function NyFragaModal({ open, onClose }: NyFragaModalProps) {
+function NyFragaModal({ open, onClose, onSubmit }: NyFragaModalProps) {
 	const t = useTranslate();
 	const [typ, setTyp] = useState<"projekt" | "order">("projekt");
 	const [funktion, setFunktion] = useState("");
@@ -270,6 +271,24 @@ function NyFragaModal({ open, onClose }: NyFragaModalProps) {
 		setFunktion("");
 		setBeskrivning("");
 		onClose();
+	};
+
+	const handleSubmit = () => {
+		if (!beskrivning.trim()) return;
+		const now = new Date();
+		const timestamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")} ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+		onSubmit({
+			id: `qa-${Date.now()}`,
+			authorName: "Admin",
+			authorInitials: "AD",
+			company: typ === "projekt" ? "Projekt" : "Order",
+			badge: "fraga",
+			timestamp,
+			text: funktion ? `[${funktion}] ${beskrivning.trim()}` : beskrivning.trim(),
+			status: "new",
+			replies: [],
+		});
+		handleClose();
 	};
 
 	return (
@@ -365,8 +384,9 @@ function NyFragaModal({ open, onClose }: NyFragaModalProps) {
 					</Button>
 					<Button
 						type="button"
-						onClick={handleClose}
-						className="h-10 cursor-pointer gap-2 bg-[#111721] px-6 text-sm text-white hover:bg-[#111721]/90"
+						onClick={handleSubmit}
+						disabled={!beskrivning.trim()}
+						className="h-10 cursor-pointer gap-2 bg-[#111721] px-6 text-sm text-white hover:bg-[#111721]/90 disabled:opacity-50"
 					>
 						<Translate text={localizationConstants.calcQASkicka} />
 					</Button>
@@ -550,6 +570,10 @@ export function FragaSvarPage({
 		setReplyTexts((prev) => ({ ...prev, [id]: text }));
 	}
 
+	function handleAddCard(card: QACard) {
+		setCards((prev) => [card, ...prev]);
+	}
+
 	function handleDelete(id: string) {
 		setCards((prev) => prev.filter((c) => c.id !== id));
 	}
@@ -688,6 +712,7 @@ export function FragaSvarPage({
 			<NyFragaModal
 				open={showNewModal}
 				onClose={() => setShowNewModal(false)}
+				onSubmit={handleAddCard}
 			/>
 		</div>
 	);
