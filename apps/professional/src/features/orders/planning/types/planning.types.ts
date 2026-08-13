@@ -99,3 +99,30 @@ export interface PlanningGanttRow {
 	startDayIndex?: number;
 	color?: string;
 }
+
+export interface OrderPlanningCardItem {
+	id: string;
+	orderNumber: string;
+	orderName: string;
+	timeRange: string;
+	dayDate: string;
+	dayIndex: number;
+	startHour: number;
+	endHour: number;
+	colIndex?: number;
+	totalCols?: number;
+	status: PlanningStatus;
+	color: string;
+	bgClass: string;
+	borderClass: string;
+	statusBadgeBg: string;
+	statusBadgeText: string;
+	totalHours: number;
+	assignees: {
+		id: string;
+		name: string;
+		avatarUrl?: string;
+		initials: string;
+		hours: number;
+	}[];
+}
