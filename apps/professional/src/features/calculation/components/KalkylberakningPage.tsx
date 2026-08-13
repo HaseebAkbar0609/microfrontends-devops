@@ -454,7 +454,7 @@ function SectionPanel({
 												onClick={() => onDeleteRow(row.id)}
 												className="flex cursor-pointer items-center justify-center rounded p-1 text-slate-300 hover:bg-red-50 hover:text-red-500"
 											>
-												<Trash2 className="h-3.5 w-3.5" />
+												<Trash2 className="h-4 w-4" />
 											</button>
 										</td>
 									</tr>
@@ -470,7 +470,7 @@ function SectionPanel({
 							onClick={onAddRow}
 							className="flex w-full cursor-pointer items-center justify-center gap-1.5 py-2 text-xs font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800"
 						>
-							<Plus className="h-3.5 w-3.5" />
+							<Plus className="h-4 w-4" />
 							<Translate text={localizationConstants.calcNewRow} />
 						</button>
 					</div>
@@ -528,7 +528,7 @@ function KalkylTabContent({
 					onClick={onAddSection}
 					className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50"
 				>
-					<CirclePlus className="h-3.5 w-3.5" />
+					<CirclePlus className="h-4 w-4" />
 					<Translate text={localizationConstants.calcBerNySektion} />
 				</button>
 			</div>
@@ -808,7 +808,7 @@ function OverheadTable({ rows, onUpdateRow, onDeleteRow, onAddRow }: OverheadTab
 										onClick={() => onDeleteRow(row.id)}
 										className="flex cursor-pointer items-center justify-center rounded p-1 text-slate-300 hover:bg-red-50 hover:text-red-500"
 									>
-										<Trash2 className="h-3.5 w-3.5" />
+										<Trash2 className="h-4 w-4" />
 									</button>
 								</td>
 							</tr>
@@ -822,7 +822,7 @@ function OverheadTable({ rows, onUpdateRow, onDeleteRow, onAddRow }: OverheadTab
 					onClick={onAddRow}
 					className="flex cursor-pointer items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-800"
 				>
-					<Plus className="h-3.5 w-3.5" />
+					<Plus className="h-4 w-4" />
 					<Translate text={localizationConstants.calcNewRow} />
 				</button>
 				<span className="text-xs text-slate-400">

@@ -1015,6 +1015,32 @@ export type OfferTranslation = {
 	calcDetailSidebarHeader: string;
 	calcDetailSidebarForfragan: string;
 	calcDetailSidebarFragaSvar: string;
+	// Calculation - Förfrågan
+	calcForfragnTitle: string;
+	calcForfragnNy: string;
+	calcForfragnKalkylNr: string;
+	calcForfragnForfragan: string;
+	calcForfragnSeForfragan: string;
+	calcForfragnStatusPagar: string;
+	calcForfragnStatusEjPaborjad: string;
+	calcForfragnAllaForfragnningar: string;
+	calcForfragnInbjudna: string;
+	calcForfragnCompany: string;
+	calcForfragnAmount: string;
+	calcForfragnStatusReceivedPrice: string;
+	calcForfragnOpen: string;
+	calcForfragnArchive: string;
+	calcForfragnSupplierQuote: string;
+	calcForfragnLeverantorsInfo: string;
+	calcForfragnForetagsinfo: string;
+	calcForfragnOffertPris: string;
+	calcForfragnKommentarer: string;
+	calcForfragnFardig: string;
+	calcForfragnSePlan: string;
+	calcForfragnKontaktSumma: string;
+	calcForfragnNamn: string;
+	calcForfragnKalkylNo: string;
+	calcForfragnKontakt: string;
 	// Calculation - Kalkylberäkning wizard
 	calcBerPageTitle: string;
 	calcBerSkapeNy: string;
@@ -1045,6 +1071,36 @@ export type OfferTranslation = {
 	calcBerVinstProcent: string;
 	calcBerOffert: string;
 	calcBerSaveAsTemplate: string;
+	// Calculation - Fråga/Svar (Q&A)
+	calcQATitle: string;
+	calcQANewQuestion: string;
+	calcQAAll: string;
+	calcQAArchive: string;
+	calcQANew: string;
+	calcQAOpened: string;
+	calcQAAnswered: string;
+	calcQALeaveComment: string;
+	calcQAMarkAsRead: string;
+	calcQAArchivera: string;
+	calcQADelete: string;
+	calcQANewDialogTitle: string;
+	calcQATyp: string;
+	calcQATypProjekt: string;
+	calcQATypOrder: string;
+	calcQAFunktion: string;
+	calcQAValjFunktion: string;
+	calcQABeskrivning: string;
+	calcQASkicka: string;
+	calcQABadgeUE: string;
+	calcQABadgeBestellare: string;
+	calcQABadgeFraga: string;
+	calcQAAdmin: string;
+	calcQAForetagFilter: string;
+	calcQAKundFilter: string;
+	calcQAReply: string;
+	calcQAFilter: string;
+	calcQANoQuestions: string;
+	calcQASearchPlaceholder: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
@@ -2152,6 +2208,12 @@ export type OfferTranslation = {
 	projectListArchivedToast: string;
 	projectListDeletedToast: string;
 	projectListCreateToast: string;
+	// Project detail (Gantt table)
+	projectDetailColNr: string;
+	projectDetailColName: string;
+	projectDetailColStart: string;
+	projectDetailColEnd: string;
+	projectDetailAddToast: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
