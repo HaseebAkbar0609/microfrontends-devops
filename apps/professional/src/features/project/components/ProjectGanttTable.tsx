@@ -20,15 +20,10 @@ const DAY_COUNT = PROJECT_DETAIL_WEEKS.reduce(
 );
 
 // Later segments paint over earlier ones where they overlap.
-const segmentColorAt = (segments: GanttSegment[], dayIndex: number) => {
-	let color: string | null = null;
-	segments.forEach((segment) => {
-		if (dayIndex >= segment.from && dayIndex <= segment.to) {
-			color = segment.colorClass;
-		}
-	});
-	return color;
-};
+const segmentColorAt = (segments: GanttSegment[], dayIndex: number) =>
+	segments.findLast(
+		(segment) => dayIndex >= segment.from && dayIndex <= segment.to,
+	)?.colorClass ?? null;
 
 const formatDate = (value: string) => value.replaceAll("-", "/");
 
