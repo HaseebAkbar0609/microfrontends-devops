@@ -5,11 +5,9 @@ export const AGREEMENT_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.home, href: "/" },
 	{
 		label: localizationConstants.modulesTitle,
-		href: "/module",
 	},
 	{
 		label: localizationConstants.businessSupportCategory,
-		href: "/module/business-support/agreement/dashboard",
 	},
 	{
 		label: localizationConstants.agreement,
