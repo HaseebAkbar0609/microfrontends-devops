@@ -1,231 +1,144 @@
+import axios from "axios";
 import axiosInstance from "@/lib/axiosInstance";
+import { API_PATH } from "@/constants/api";
 import {
-	wageTypeSchema,
 	type WageTypeRow,
 	type GetWageTypeListParams,
 	type GetWageTypeListResponse,
 	type CreateWageTypeFormData,
 } from "../types";
-import { MOCK_WAGE_TYPES } from "../mockdata/wageTypes";
-import { z } from "zod";
 
-const WAGE_TYPE_API_PATH = {
-	LIST: "/api/v1/professional/wage-types",
-	DETAIL: (id: string) => `/api/v1/professional/wage-types/${id}`,
-	CREATE: "/api/v1/professional/wage-types",
-	UPDATE: (id: string) => `/api/v1/professional/wage-types/${id}`,
-	TOGGLE_STATUS: "/api/v1/professional/wage-types/toggle-status",
+type ApiListEnvelope<T> = {
+	data: T;
+	total_items?: number;
+	current_page?: number;
+	page_size?: number;
+	total_pages?: number;
 };
+
+const WAGE_TYPE_SORT_MAP: Record<string, string> = {
+	code: "code",
+	name: "name",
+	unit: "unit",
+	personalType: "personal_type",
+	wageForm: "wage_form",
+	transactionType: "transaction_type",
+	preliminaryTax: "preliminary_tax",
+	employerContribution: "employer_contribution",
+	accountDebit: "account_debit",
+	accountCredit: "account_credit",
+	factor: "factor",
+	status: "status",
+	createdAt: "created_at",
+	updatedAt: "updated_at",
+};
+
+const mapWageTypeFromApi = (item: Record<string, unknown>): WageTypeRow => ({
+	id: String(item.id ?? ""),
+	code: String(item.code ?? ""),
+	name: String(item.name ?? ""),
+	personalType: String(item.personal_type ?? item.personalType ?? "Tjänsteman"),
+	wageForm: String(item.wage_form ?? item.wageForm ?? "Fast lön"),
+	transactionType: String(item.transaction_type ?? item.transactionType ?? "Bruttolön"),
+	unit: String(item.unit ?? ""),
+	preliminaryTax: String(item.preliminary_tax ?? item.preliminaryTax ?? "Ja 30%"),
+	employerContribution: String(item.employer_contribution ?? item.employerContribution ?? "Ja 30%"),
+	createdAt: String(item.created_at ?? item.createdAt ?? ""),
+	updatedAt: String(item.updated_at ?? item.updatedAt ?? ""),
+	accountDebit: item.account_debit !== null && item.account_debit !== undefined ? String(item.account_debit) : "",
+	accountCredit: item.account_credit !== null && item.account_credit !== undefined ? String(item.account_credit) : "",
+	accountOppositeAG: item.account_opposite_ag !== null && item.account_opposite_ag !== undefined ? String(item.account_opposite_ag) : "",
+	agUnderlag: Boolean(item.ag_underlag ?? item.agUnderlag ?? false),
+	semestergrundad: Boolean(item.semestergrundad ?? false),
+	agiCode: item.agi_code !== null && item.agi_code !== undefined ? String(item.agi_code) : "",
+	description: item.description !== null && item.description !== undefined ? String(item.description) : undefined,
+	factor: item.factor !== null && item.factor !== undefined ? String(item.factor) : undefined,
+	status: item.status === "inactive" ? "inactive" : "active",
+});
+
+const mapWageTypeToApi = (data: Partial<CreateWageTypeFormData>): Record<string, unknown> => ({
+	code: data.code,
+	name: data.name,
+	personal_type: data.personalType ?? "Tjänsteman",
+	wage_form: data.wageForm ?? "Fast lön",
+	transaction_type: data.transactionType ?? "Bruttolön",
+	unit: data.unit,
+	preliminary_tax: data.preliminaryTax ?? "Ja 30%",
+	employer_contribution: data.employerContribution ?? "Ja 30%",
+	account_debit: data.accountDebit ?? "",
+	account_credit: data.accountCredit ?? "",
+	account_opposite_ag: data.accountOppositeAG ?? "",
+	ag_underlag: Boolean(data.agUnderlag),
+	semestergrundad: Boolean(data.semestergrundad),
+	agi_code: data.agiCode ?? "",
+	description: data.description ?? "",
+	factor: data.factor ?? "1.0",
+	status: data.status ?? "active",
+});
 
 export async function getWageTypeListAPIAction(
 	params?: GetWageTypeListParams,
 ): Promise<GetWageTypeListResponse> {
-	try {
-		const res = await axiosInstance.get(WAGE_TYPE_API_PATH.LIST, {
-			params: {
-				page: params?.page ?? 1,
-				limit: params?.limit ?? 50,
-				search: params?.search,
-				status: params?.status,
-				sort_by: params?.sortBy,
-				sort_order: params?.sortOrder,
-			},
-		});
+	const queryParams: Record<string, string | number> = {};
+	if (params?.page) queryParams.page = params.page;
+	if (params?.limit) queryParams.limit = params.limit;
+	if (params?.search) queryParams.search = params.search;
+	if (params?.status && params.status !== "all") queryParams.status = params.status;
+	const sortBy = params?.sortBy ? WAGE_TYPE_SORT_MAP[params.sortBy] ?? params.sortBy : undefined;
+	if (sortBy) queryParams.sort_by = sortBy;
+	if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
 
-		const data = res.data?.data;
-		const items = Array.isArray(data) ? data : data?.items ?? [];
+	const res = await axiosInstance.get<ApiListEnvelope<Record<string, unknown>[]>>(
+		API_PATH.WAGE_TYPES.LIST,
+		{ params: queryParams },
+	);
+	const items = Array.isArray(res.data?.data) ? res.data.data : [];
 
-		if (items.length > 0) {
-			const validated = z.array(wageTypeSchema).safeParse(
-				items.map((item: Record<string, unknown>) => ({
-					id: String(item.id ?? ""),
-					code: String(item.code ?? ""),
-					name: String(item.name ?? ""),
-					personalType: String(item.personalType ?? item.personal_type ?? "Tjänsteman"),
-					wageForm: String(item.wageForm ?? item.wage_form ?? "Fast lön"),
-					transactionType: String(item.transactionType ?? item.transaction_type ?? "Bruttolön"),
-					unit: String(item.unit ?? ""),
-					preliminaryTax: String(item.preliminaryTax ?? item.preliminary_tax ?? "Ja 30%"),
-					employerContribution: String(item.employerContribution ?? item.employer_contribution ?? "Ja 30%"),
-					createdAt: String(item.createdAt ?? item.created_at ?? ""),
-					updatedAt: String(item.updatedAt ?? item.updated_at ?? ""),
-					accountDebit: String(item.accountDebit ?? item.account_debit ?? ""),
-					accountCredit: String(item.accountCredit ?? item.account_credit ?? ""),
-					accountOppositeAG: String(item.accountOppositeAG ?? item.account_opposite_ag ?? ""),
-					agUnderlag: item.agUnderlag !== undefined ? Boolean(item.agUnderlag) : false,
-					semestergrundad: item.semestergrundad !== undefined ? Boolean(item.semestergrundad) : false,
-					agiCode: String(item.agiCode ?? item.agi_code ?? ""),
-					description: item.description ? String(item.description) : undefined,
-					factor: item.factor ? String(item.factor) : undefined,
-					status: item.status === "inactive" ? "inactive" : "active",
-				})),
-			);
-
-			if (validated.success) {
-				return {
-					data: validated.data,
-					total: res.data?.data?.total ?? items.length,
-					page: res.data?.data?.page ?? params?.page ?? 1,
-					limit: res.data?.data?.limit ?? params?.limit ?? 50,
-					totalPages: res.data?.data?.totalPages ?? 1,
-				};
-			}
-		}
-	} catch (error) {
-		if (process.env.NODE_ENV !== "development") {
-			throw error;
-		}
-	}
-
-	// Local development mock fallback
-	if (process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_USE_MOCK === "true") {
-		const page = Math.max(1, params?.page ?? 1);
-		const limit = Math.max(1, params?.limit ?? 50);
-		const search = params?.search?.toLowerCase().trim();
-		const statusFilter = params?.status?.toLowerCase().trim();
-
-		let filtered = [...MOCK_WAGE_TYPES];
-
-		if (search) {
-			filtered = filtered.filter(
-				(item) =>
-					item.code.toLowerCase().includes(search) ||
-					item.name.toLowerCase().includes(search) ||
-					(item.accountDebit && item.accountDebit.toLowerCase().includes(search)),
-			);
-		}
-
-		if (statusFilter && statusFilter !== "all") {
-			filtered = filtered.filter((item) => item.status.toLowerCase() === statusFilter);
-		}
-
-		if (params?.sortBy) {
-			const field = params.sortBy as keyof WageTypeRow;
-			const order = params.sortOrder === "desc" ? -1 : 1;
-
-			filtered.sort((a, b) => {
-				const aVal = a[field as keyof typeof a];
-				const bVal = b[field as keyof typeof b];
-
-				if (field === "code" || field === "accountDebit" || field === "accountCredit") {
-					const numA = parseFloat(String(aVal)) || 0;
-					const numB = parseFloat(String(bVal)) || 0;
-					return (numA - numB) * order;
-				}
-
-				return String(aVal).localeCompare(String(bVal)) * order;
-			});
-		}
-
-		const total = filtered.length;
-		const totalPages = Math.ceil(total / limit) || 1;
-		const startIndex = (page - 1) * limit;
-		const paginatedData = filtered.slice(startIndex, startIndex + limit);
-
-		return { data: paginatedData, total, page, limit, totalPages };
-	}
-
-	return { data: [], total: 0, page: 1, limit: 50, totalPages: 1 };
+	const total = res.data?.total_items ?? items.length;
+	const backendPageSize = Number(res.data?.page_size);
+	const limit = Number.isFinite(backendPageSize) && backendPageSize > 0
+		? backendPageSize
+		: (params?.limit && params.limit > 0 ? params.limit : 50);
+	const effectiveLimit = Number.isFinite(limit) && limit > 0 ? limit : 50;
+	return {
+		data: items.map(mapWageTypeFromApi),
+		total,
+		page: res.data?.current_page ?? params?.page ?? 1,
+		limit: effectiveLimit,
+		totalPages: res.data?.total_pages ?? (Math.ceil(total / effectiveLimit) || 1),
+	};
 }
 
 export async function getWageTypeDetailAPIAction(
 	id: string,
 ): Promise<WageTypeRow | null> {
 	try {
-		const res = await axiosInstance.get(WAGE_TYPE_API_PATH.DETAIL(id));
+		const res = await axiosInstance.get(API_PATH.WAGE_TYPES.GET(id));
 		const data = res.data?.data;
 		if (data) {
-			const parsed = wageTypeSchema.safeParse({
-				id: String(data.id ?? id),
-				code: String(data.code ?? ""),
-				name: String(data.name ?? ""),
-				personalType: String(data.personalType ?? data.personal_type ?? "Tjänsteman"),
-				wageForm: String(data.wageForm ?? data.wage_form ?? "Fast lön"),
-				transactionType: String(data.transactionType ?? data.transaction_type ?? "Bruttolön"),
-				unit: String(data.unit ?? ""),
-				preliminaryTax: String(data.preliminaryTax ?? data.preliminary_tax ?? "Ja 30%"),
-				employerContribution: String(data.employerContribution ?? data.employer_contribution ?? "Ja 30%"),
-				createdAt: String(data.createdAt ?? data.created_at ?? ""),
-				updatedAt: String(data.updatedAt ?? data.updated_at ?? ""),
-				accountDebit: String(data.accountDebit ?? data.account_debit ?? ""),
-				accountCredit: String(data.accountCredit ?? data.account_credit ?? ""),
-				accountOppositeAG: String(data.accountOppositeAG ?? data.account_opposite_ag ?? ""),
-				agUnderlag: data.agUnderlag !== undefined ? Boolean(data.agUnderlag) : false,
-				semestergrundad: data.semestergrundad !== undefined ? Boolean(data.semestergrundad) : false,
-				agiCode: String(data.agiCode ?? data.agi_code ?? ""),
-				status: data.status === "inactive" ? "inactive" : "active",
-				description: data.description ? String(data.description) : undefined,
-				factor: data.factor ? String(data.factor) : undefined,
-			});
-			if (parsed.success) {
-				return parsed.data;
-			}
+			return mapWageTypeFromApi(data);
 		}
+		return null;
 	} catch (error) {
-		if (process.env.NODE_ENV !== "development") {
-			throw error;
-		}
+		throw error;
 	}
-
-	if (process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_USE_MOCK === "true") {
-		const found = MOCK_WAGE_TYPES.find((item) => item.id === id);
-		if (found) {
-			const parsed = wageTypeSchema.safeParse(found);
-			if (parsed.success) {
-				return parsed.data;
-			}
-		}
-	}
-
-	return null;
 }
 
 export async function createWageTypeAPIAction(
 	data: CreateWageTypeFormData,
 ): Promise<{ success: boolean; data?: WageTypeRow; error?: string }> {
 	try {
-		const res = await axiosInstance.post(WAGE_TYPE_API_PATH.CREATE, data);
-		if (res.data?.success && res.data?.data) {
-			return { success: true, data: res.data.data };
+		const res = await axiosInstance.post(API_PATH.WAGE_TYPES.CREATE, mapWageTypeToApi(data));
+		const isSuccess = res.data?.success ?? true;
+		if (isSuccess && res.data?.data) {
+			return { success: true, data: mapWageTypeFromApi(res.data.data) };
 		}
 		return { success: false, error: res.data?.message ?? "Failed to create wage type" };
 	} catch (error) {
-		if (process.env.NODE_ENV !== "development") {
-			throw error;
-		}
-
-		// Mock implementation
-		const codeExists = MOCK_WAGE_TYPES.some((item) => item.code === data.code);
-		if (codeExists) {
+		if (axios.isAxiosError(error) && error.response?.status === 409) {
 			return { success: false, error: "wageTypeDuplicateCodeError" };
 		}
-
-		const newId = String(MOCK_WAGE_TYPES.length + 1);
-		const newWageType: WageTypeRow = {
-			id: newId,
-			code: data.code,
-			name: data.name,
-			personalType: data.personalType ?? "Tjänsteman",
-			wageForm: data.wageForm ?? "Fast lön",
-			transactionType: data.transactionType ?? "Bruttolön",
-			unit: data.unit,
-			preliminaryTax: data.preliminaryTax ?? "Ja 30%",
-			employerContribution: data.employerContribution ?? "Ja 30%",
-			createdAt: new Date().toISOString().split("T")[0],
-			updatedAt: new Date().toISOString().split("T")[0],
-			accountDebit: data.accountDebit ?? "",
-			accountCredit: data.accountCredit ?? "",
-			accountOppositeAG: data.accountOppositeAG ?? "",
-			agUnderlag: Boolean(data.agUnderlag),
-			semestergrundad: Boolean(data.semestergrundad),
-			agiCode: data.agiCode ?? "",
-			status: data.status === "inactive" ? "inactive" : "active",
-			description: data.description ?? "",
-			factor: data.factor ?? "1.0",
-		};
-
-		MOCK_WAGE_TYPES.push(newWageType);
-		return { success: true, data: newWageType };
+		throw error;
 	}
 }
 
@@ -234,77 +147,58 @@ export async function updateWageTypeAPIAction(
 	data: Partial<CreateWageTypeFormData>,
 ): Promise<{ success: boolean; data?: WageTypeRow; error?: string }> {
 	try {
-		const res = await axiosInstance.put(WAGE_TYPE_API_PATH.UPDATE(id), data);
-		if (res.data?.success && res.data?.data) {
-			return { success: true, data: res.data.data };
+		const payload = mapWageTypeToApi(data);
+		const providedKeys = new Set(Object.keys(data));
+		const fieldMap: Record<string, string> = {
+			personalType: "personal_type",
+			wageForm: "wage_form",
+			transactionType: "transaction_type",
+			preliminaryTax: "preliminary_tax",
+			employerContribution: "employer_contribution",
+			accountDebit: "account_debit",
+			accountCredit: "account_credit",
+			accountOppositeAG: "account_opposite_ag",
+			agUnderlag: "ag_underlag",
+			semestergrundad: "semestergrundad",
+			agiCode: "agi_code",
+			factor: "factor",
+			status: "status",
+			unit: "unit",
+			description: "description",
+		};
+		for (const [camel, snake] of Object.entries(fieldMap)) {
+			if (!providedKeys.has(camel)) {
+				delete payload[snake];
+			}
+		}
+		if (!providedKeys.has("code")) delete payload.code;
+		if (!providedKeys.has("name")) delete payload.name;
+		const res = await axiosInstance.put(API_PATH.WAGE_TYPES.UPDATE(id), payload);
+		const isSuccess = res.data?.success ?? true;
+		if (isSuccess && res.data?.data) {
+			return { success: true, data: mapWageTypeFromApi(res.data.data) };
 		}
 		return { success: false, error: res.data?.message ?? "Failed to update wage type" };
 	} catch (error) {
-		if (process.env.NODE_ENV !== "development") {
-			throw error;
+		if (axios.isAxiosError(error) && error.response?.status === 409) {
+			return { success: false, error: "wageTypeDuplicateCodeError" };
 		}
-
-		// Mock implementation
-		const foundIndex = MOCK_WAGE_TYPES.findIndex((item) => item.id === id);
-		if (foundIndex === -1) {
-			return { success: false, error: "Wage type not found" };
-		}
-
-		if (data.code) {
-			const codeExists = MOCK_WAGE_TYPES.some((item) => item.code === data.code && item.id !== id);
-			if (codeExists) {
-				return { success: false, error: "wageTypeDuplicateCodeError" };
-			}
-		}
-
-		const current = MOCK_WAGE_TYPES[foundIndex];
-		const updatedWageType: WageTypeRow = {
-			...current,
-			code: data.code ?? current.code,
-			name: data.name ?? current.name,
-			personalType: data.personalType ?? current.personalType,
-			wageForm: data.wageForm ?? current.wageForm,
-			transactionType: data.transactionType ?? current.transactionType,
-			unit: data.unit ?? current.unit,
-			preliminaryTax: data.preliminaryTax ?? current.preliminaryTax,
-			employerContribution: data.employerContribution ?? current.employerContribution,
-			accountDebit: data.accountDebit ?? current.accountDebit,
-			accountCredit: data.accountCredit ?? current.accountCredit,
-			accountOppositeAG: data.accountOppositeAG ?? current.accountOppositeAG,
-			agUnderlag: data.agUnderlag !== undefined ? Boolean(data.agUnderlag) : current.agUnderlag,
-			semestergrundad: data.semestergrundad !== undefined ? Boolean(data.semestergrundad) : current.semestergrundad,
-			agiCode: data.agiCode ?? current.agiCode,
-			description: data.description ?? current.description,
-			factor: data.factor ?? current.factor,
-			status: data.status ?? current.status,
-			updatedAt: new Date().toISOString().split("T")[0],
-		};
-
-		MOCK_WAGE_TYPES[foundIndex] = updatedWageType;
-		return { success: true, data: updatedWageType };
+		throw error;
 	}
+}
+
+export async function deleteWageTypeAPIAction(id: string): Promise<boolean> {
+	const res = await axiosInstance.delete(API_PATH.WAGE_TYPES.DELETE(id));
+	return res.data?.success ?? true;
 }
 
 export async function toggleWageTypeStatusAPIAction(
 	ids: string[],
 	targetStatus: "active" | "inactive",
 ): Promise<boolean> {
-	try {
-		await axiosInstance.post(WAGE_TYPE_API_PATH.TOGGLE_STATUS, {
-			ids,
-			status: targetStatus,
-		});
-		return true;
-	} catch (error) {
-		if (process.env.NODE_ENV !== "development") {
-			throw error;
-		}
-		// Mock implementation
-		MOCK_WAGE_TYPES.forEach((item) => {
-			if (ids.includes(item.id)) {
-				item.status = targetStatus;
-			}
-		});
-		return true;
-	}
+	const res = await axiosInstance.post(API_PATH.WAGE_TYPES.TOGGLE_STATUS, {
+		ids,
+		status: targetStatus,
+	});
+	return res.data?.success ?? true;
 }

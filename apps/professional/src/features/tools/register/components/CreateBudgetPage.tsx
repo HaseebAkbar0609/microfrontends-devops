@@ -41,21 +41,7 @@ import { useCreateBudgetMutation } from "../hooks/useBudgetRegister";
 // ─── Stable constants ────────────────────────────────────────────────────────
 const CURRENCY_OPTIONS = ["SEK", "EUR", "USD", "GBP", "NOK", "DKK"] as const;
 
-const CATEGORY_OPTIONS = [
-	{ value: "labor", labelKey: localizationConstants.budgetCategoryPlaceholder },
-	{ value: "arbete", label: "Arbete" },
-	{ value: "material", label: "Material" },
-	{ value: "overhead", label: "Overhead" },
-	{ value: "rot_rut", label: "ROT/RUT" },
-	{ value: "contingency", label: "Contingency" },
-] as const;
 
-const DISTRIBUTION_OPTIONS = [
-	{ value: "K4", label: "K4" },
-	{ value: "K12", label: "K12" },
-	{ value: "lika", label: "Lika fördelning" },
-	{ value: "manual", label: "Manuell" },
-] as const;
 
 const MONTH_KEYS = [
 	localizationConstants.monthJan,
@@ -105,11 +91,29 @@ export function CreateBudgetPage() {
 	const createMutation = useCreateBudgetMutation();
 	const isPending = createMutation.isPending;
 
+	const categoryOptions = useMemo(
+		() => [
+			{ value: "arbete", label: t(localizationConstants.budgetCategoryLabor) },
+			{ value: "material", label: t(localizationConstants.budgetCategoryMaterial) },
+			{ value: "overhead", label: t(localizationConstants.budgetCategoryOverhead) },
+			{ value: "rot_rut", label: t(localizationConstants.budgetCategoryRotRut) },
+			{ value: "contingency", label: t(localizationConstants.budgetCategoryContingency) },
+		],
+		[t],
+	);
+
+	const distributionOptions = useMemo(
+		() => [
+			{ value: "K4", label: "K4" },
+			{ value: "K12", label: "K12" },
+			{ value: "lika", label: t(localizationConstants.budgetDistributionEqual) },
+			{ value: "manual", label: t(localizationConstants.budgetDistributionManual) },
+		],
+		[t],
+	);
+
 	// Budget section rows state
-	const [budgetRows, setBudgetRows] = useState<BudgetRow[]>([
-		{ ...createEmptyRow(), konto: "20 I", kostnadsStalle: "10 - Stockholm", arsbelopp: "500 000", fordelning: "0", percent: "0", months: ["100 000", "100 000", "0", "0", "48", "0", "0", "0", "0", "0", "0", "0"] },
-		{ ...createEmptyRow(), konto: "40 C", kostnadsStalle: "10 - Stockholm", arsbelopp: "300 000", fordelning: "12", percent: "0", months: ["-50 000", "-50 000", "0", "0", "30", "0", "0", "0", "0", "0", "0", "0"] },
-	]);
+	const [budgetRows, setBudgetRows] = useState<BudgetRow[]>([]);
 	const [distribution, setDistribution] = useState("K4");
 
 	// Add Row Modal State
@@ -119,7 +123,7 @@ export function CreateBudgetPage() {
 	const form = useForm({
 		resolver: zodResolver(createBudgetSchema),
 		defaultValues: {
-			budgetNr: "105",
+			budgetNr: "",
 			budgetName: "",
 			totalAmount: "",
 			currency: "SEK",
@@ -133,11 +137,34 @@ export function CreateBudgetPage() {
 	});
 
 	const onSubmit = async (data: CreateBudgetFormData): Promise<void> => {
+		// Validate budget rows numeric fields before submitting
+		for (const row of budgetRows) {
+			const checkNum = (val: string) => {
+				const str = String(val ?? "").trim();
+				if (str === "") return true;
+				const n = Number(str.replace(/\s/g, "").replace(",", "."));
+				return Number.isFinite(n);
+			};
+			const isArsbeloppValid = checkNum(row.arsbelopp);
+			const isPercentValid = checkNum(row.percent);
+			const isMonthsValid = Array.isArray(row.months) && row.months.every(checkNum);
+
+			if (!isArsbeloppValid || !isPercentValid || !isMonthsValid) {
+				showToast("error", t(localizationConstants.validationFailedError));
+				return;
+			}
+		}
+
 		try {
-			const res = await createMutation.mutateAsync(data);
+			const fullPayload: CreateBudgetFormData = {
+				...data,
+				distribution,
+				budgetRows,
+			};
+			const res = await createMutation.mutateAsync(fullPayload);
 			if (res.success) {
 				showToast("success", t(localizationConstants.budgetCreatedSuccess));
-				router.push("/tools/register?tab=budget");
+				router.push("/tools/register/budget");
 			} else {
 				showToast("error", t(localizationConstants.budgetCreateError));
 			}
@@ -148,7 +175,7 @@ export function CreateBudgetPage() {
 
 	const handleCancel = () => {
 		if (isPending) return;
-		router.push("/tools/register?tab=budget");
+		router.push("/tools/register/budget");
 	};
 
 	// Computed totals
@@ -385,7 +412,7 @@ export function CreateBudgetPage() {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{DISTRIBUTION_OPTIONS.map((opt) => (
+												{distributionOptions.map((opt) => (
 													<SelectItem key={opt.value} value={opt.value}>
 														{opt.label}
 													</SelectItem>
@@ -464,9 +491,9 @@ export function CreateBudgetPage() {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														{CATEGORY_OPTIONS.filter((c) => "label" in c).map((c) => (
+														{categoryOptions.map((c) => (
 															<SelectItem key={c.value} value={c.value}>
-																{"label" in c ? c.label : ""}
+																{c.label}
 															</SelectItem>
 														))}
 													</SelectContent>

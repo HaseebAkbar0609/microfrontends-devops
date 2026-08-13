@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useWatch, useFormContext } from "react-hook-form";
 import type { Control } from "react-hook-form";
 import { Trash2, Plus, ChevronDown, ChevronRight, Star, ArrowUpDown } from "lucide-react";
 import type { CreateArticleFormData, PriceListRow } from "../../types";
@@ -20,6 +21,11 @@ import {
 } from "@/components/ui/dialog";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { showToast } from "@/lib/toast";
+import {
+	getSupplierNameOptionsAPIAction,
+	getSupplierArticleNumberOptionsAPIAction,
+} from "../../api/articleRegister";
 
 interface ArticleBasicInfoStepProps {
 	readonly control: Control<CreateArticleFormData>;
@@ -28,38 +34,7 @@ interface ArticleBasicInfoStepProps {
 	readonly onRemoveRow: (id: string) => void;
 }
 
-const LEVERANTOR_OPTIONS = [
-	{ value: "beijer", label: "Beijer" },
-	{ value: "elgrossen", label: "Elgrossen" },
-	{ value: "schneider", label: "Schneider" },
-];
 
-const ENHET_OPTIONS = [
-	{ value: "st", label: "St" },
-	{ value: "tim", label: "Tim" },
-	{ value: "km", label: "km" },
-	{ value: "m2", label: "m\u00B2" },
-	{ value: "m", label: "m" },
-	{ value: "lm", label: "lm" },
-	{ value: "par", label: "Par" },
-];
-
-const TYP_ARTIKEL_OPTIONS = [
-	{ value: "tjanst", label: "Tj\u00E4nst" },
-	{ value: "produkt", label: "Produkt" },
-	{ value: "material", label: "Material" },
-];
-
-const LAGER_VARA_OPTIONS = [
-	{ value: "ja", label: "Ja" },
-	{ value: "nej", label: "Nej" },
-];
-
-const TYP_HUSARBETE_OPTIONS = [
-	{ value: "el", label: "El" },
-	{ value: "ror", label: "R\u00F6r" },
-	{ value: "ventilation", label: "Ventilation" },
-];
 
 export function ArticleBasicInfoStep({
 	control,
@@ -83,6 +58,156 @@ export function ArticleBasicInfoStep({
 		kostnad: "",
 		andringsDatum: new Date().toISOString().split("T")[0],
 	});
+
+	const [leverantorOptions, setLeverantorOptions] = useState<
+		{ value: string; label: string }[]
+	>([]);
+	const [supplierArticleNoOptions, setSupplierArticleNoOptions] = useState<
+		{ value: string; label: string }[]
+	>([]);
+	const { setValue } = useFormContext<CreateArticleFormData>();
+
+	const selectedLeverantor = useWatch({ control, name: "leverantor" }) as
+		| string
+		| undefined;
+
+	useEffect(() => {
+		let cancelled = false;
+		getSupplierNameOptionsAPIAction()
+			.then((options) => {
+				if (!cancelled) setLeverantorOptions(options);
+			})
+			.catch(() => {
+				if (!cancelled) {
+					setLeverantorOptions([]);
+					showToast("error", t(localizationConstants.genericError));
+				}
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [t]);
+
+	const prevSupplierRef = useRef(selectedLeverantor);
+	useEffect(() => {
+		if (prevSupplierRef.current !== selectedLeverantor) {
+			prevSupplierRef.current = selectedLeverantor;
+			setValue("supplierArticleNo", "");
+		}
+		let cancelled = false;
+		getSupplierArticleNumberOptionsAPIAction(selectedLeverantor)
+			.then((options) => {
+				if (!cancelled) setSupplierArticleNoOptions(options);
+			})
+			.catch(() => {
+				if (!cancelled) {
+					setSupplierArticleNoOptions([]);
+					showToast("error", t(localizationConstants.genericError));
+				}
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [selectedLeverantor, setValue, t]);
+
+	const leverantorOptionsMerged = useMemo(() => {
+		if (!selectedLeverantor) return leverantorOptions;
+		if (leverantorOptions.some((o) => o.value === selectedLeverantor)) {
+			return leverantorOptions;
+		}
+		return [{ value: selectedLeverantor, label: selectedLeverantor }, ...leverantorOptions];
+	}, [leverantorOptions, selectedLeverantor]);
+
+	const selectedSupplierArticleNo = useWatch({ control, name: "supplierArticleNo" }) as
+		| string
+		| undefined;
+
+	const supplierArticleNoOptionsMerged = useMemo(() => {
+		if (!selectedSupplierArticleNo) return supplierArticleNoOptions;
+		if (supplierArticleNoOptions.some((o) => o.value === selectedSupplierArticleNo)) {
+			return supplierArticleNoOptions;
+		}
+		return [{ value: selectedSupplierArticleNo, label: selectedSupplierArticleNo }, ...supplierArticleNoOptions];
+	}, [supplierArticleNoOptions, selectedSupplierArticleNo]);
+
+	const selectedTypHusarbete = useWatch({ control, name: "typHusarbete" }) as string | undefined;
+	const typHusarbeteBaseOptions = useMemo(
+		() => [
+			{ value: "el", label: t(localizationConstants.houseWorkEl) },
+			{ value: "ror", label: t(localizationConstants.houseWorkRor) },
+			{ value: "ventilation", label: t(localizationConstants.houseWorkVentilation) },
+			{ value: "bygg", label: t(localizationConstants.houseWorkBygg) },
+			{ value: "maleri", label: t(localizationConstants.houseWorkMaleri) },
+			{ value: "stadning", label: t(localizationConstants.houseWorkStadning) },
+			{ value: "tradgard", label: t(localizationConstants.houseWorkTradgard) },
+			{ value: "it", label: t(localizationConstants.houseWorkIt) },
+			{ value: "ovrigt", label: t(localizationConstants.houseWorkOvrigt) },
+		],
+		[t],
+	);
+	const typHusarbeteOptionsMerged = useMemo(() => {
+		if (!selectedTypHusarbete) return typHusarbeteBaseOptions;
+		if (typHusarbeteBaseOptions.some((o) => o.value === selectedTypHusarbete)) {
+			return typHusarbeteBaseOptions;
+		}
+		return [{ value: selectedTypHusarbete, label: selectedTypHusarbete }, ...typHusarbeteBaseOptions];
+	}, [selectedTypHusarbete, typHusarbeteBaseOptions]);
+
+	const selectedEnhet = useWatch({ control, name: "enhet" }) as string | undefined;
+	const enhetBaseOptions = useMemo(
+		() => [
+			{ value: "st", label: t(localizationConstants.unitPcs) },
+			{ value: "tim", label: t(localizationConstants.unitHour) },
+			{ value: "dagar", label: t(localizationConstants.unitDays) },
+			{ value: "km", label: t(localizationConstants.unitKm) },
+			{ value: "m2", label: t(localizationConstants.unitSqm) },
+			{ value: "m", label: t(localizationConstants.unitMeter) },
+			{ value: "lm", label: t(localizationConstants.unitLm) },
+			{ value: "kg", label: t(localizationConstants.unitKg) },
+			{ value: "l", label: t(localizationConstants.unitLiter) },
+			{ value: "par", label: t(localizationConstants.unitPair) },
+			{ value: "pkt", label: t(localizationConstants.unitPkg) },
+		],
+		[t],
+	);
+	const enhetOptionsMerged = useMemo(() => {
+		if (!selectedEnhet) return enhetBaseOptions;
+		if (enhetBaseOptions.some((o) => o.value === selectedEnhet)) {
+			return enhetBaseOptions;
+		}
+		return [{ value: selectedEnhet, label: selectedEnhet }, ...enhetBaseOptions];
+	}, [selectedEnhet, enhetBaseOptions]);
+
+	const selectedTypAvArtikel = useWatch({ control, name: "typAvArtikel" }) as string | undefined;
+	const typAvArtikelBaseOptions = useMemo(
+		() => [
+			{ value: "tjanst", label: t(localizationConstants.articleTypeService) },
+			{ value: "produkt", label: t(localizationConstants.articleTypeProduct) },
+			{ value: "material", label: t(localizationConstants.articleTypeMaterial) },
+			{ value: "arvode", label: t(localizationConstants.articleTypeFee) },
+			{ value: "frakt", label: t(localizationConstants.articleTypeFreight) },
+			{ value: "ovrigt", label: t(localizationConstants.articleTypeOther) },
+		],
+		[t],
+	);
+	const typAvArtikelOptionsMerged = useMemo(() => {
+		if (!selectedTypAvArtikel) return typAvArtikelBaseOptions;
+		if (typAvArtikelBaseOptions.some((o) => o.value === selectedTypAvArtikel)) {
+			return typAvArtikelBaseOptions;
+		}
+		return [{ value: selectedTypAvArtikel, label: selectedTypAvArtikel }, ...typAvArtikelBaseOptions];
+	}, [selectedTypAvArtikel, typAvArtikelBaseOptions]);
+
+	const selectedLagerVara = useWatch({ control, name: "lagerVara" }) as string | undefined;
+	const lagerVaraOptionsMerged = useMemo(() => {
+		const base = [
+			{ value: "ja", label: t(localizationConstants.articleHusarbeteYes) },
+			{ value: "nej", label: t(localizationConstants.articleHusarbeteNo) },
+		];
+		if (!selectedLagerVara) return base;
+		if (base.some((o) => o.value === selectedLagerVara)) return base;
+		return [{ value: selectedLagerVara, label: selectedLagerVara }, ...base];
+	}, [selectedLagerVara, t]);
 
 	const LABEL_CLASS = "text-[14px] font-medium leading-5 text-[#09090B]";
 
@@ -154,7 +279,7 @@ export function ArticleBasicInfoStep({
 							name="leverantor"
 							label={localizationConstants.articleLeverantorLabel}
 							placeholder={t(localizationConstants.placeholderSelectLeverantor)}
-							options={LEVERANTOR_OPTIONS}
+							options={leverantorOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 						<FormField
@@ -203,7 +328,7 @@ export function ArticleBasicInfoStep({
 							name="supplierArticleNo"
 							label={localizationConstants.articleSupplierArticleNoLabel}
 							placeholder={t(localizationConstants.placeholderSelectSupplierArticleNo)}
-							options={[]}
+							options={supplierArticleNoOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 						<FormSelect
@@ -211,7 +336,7 @@ export function ArticleBasicInfoStep({
 							name="typHusarbete"
 							label={localizationConstants.articleTypHusarbeteLabel}
 							placeholder={t(localizationConstants.placeholderSelectTypHusarbete)}
-							options={TYP_HUSARBETE_OPTIONS}
+							options={typHusarbeteOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 						<FormSelect
@@ -219,7 +344,7 @@ export function ArticleBasicInfoStep({
 							name="enhet"
 							label={localizationConstants.articleEnhetLabel}
 							placeholder={t(localizationConstants.placeholderSelectEnhet)}
-							options={ENHET_OPTIONS}
+							options={enhetOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 						<FormSelect
@@ -227,7 +352,7 @@ export function ArticleBasicInfoStep({
 							name="typAvArtikel"
 							label={localizationConstants.articleTypAvArtikelLabel}
 							placeholder={t(localizationConstants.placeholderSelectTypAvArtikel)}
-							options={TYP_ARTIKEL_OPTIONS}
+							options={typAvArtikelOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 						<FormSelect
@@ -235,7 +360,7 @@ export function ArticleBasicInfoStep({
 							name="lagerVara"
 							label={localizationConstants.articleLagerVaraLabel}
 							placeholder={t(localizationConstants.placeholderSelectLagerVara)}
-							options={LAGER_VARA_OPTIONS}
+							options={lagerVaraOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 					</div>

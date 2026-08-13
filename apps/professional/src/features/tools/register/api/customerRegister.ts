@@ -9,10 +9,22 @@ import type {
 	GetCustomerRegisterListParams,
 	GetCustomerRegisterListResponse,
 } from "../types";
-import { MOCK_CUSTOMER_REGISTER_DATA } from "../mockdata/customers";
-import { MOCK_CUSTOMER_DETAIL } from "../mockdata/customerDetail";
-
+import { normalizeRegisterStatus } from "../utils/registerHelpers";
 export type { CustomerRegisterRow };
+
+const CUSTOMER_SORT_MAP: Record<string, string> = {
+	customerNo: "customer_no",
+	name: "company_name",
+	orgNo: "org_no",
+	postNr: "postal_code",
+	city: "visiting_city",
+	address: "visiting_address",
+	status: "status",
+	dateAdded: "created_at",
+	companyName: "company_name",
+	createdAt: "created_at",
+	updatedAt: "updated_at",
+};
 
 const mapCustomerFromApi = (item: Record<string, unknown>): CustomerRegisterRow => ({
 	id: String(item.id ?? ""),
@@ -26,14 +38,14 @@ const mapCustomerFromApi = (item: Record<string, unknown>): CustomerRegisterRow 
 	phone: String(item.phone ?? ""),
 	email: String(item.email ?? ""),
 	status: (item.status as "active" | "inactive") ?? "active",
-	dateAdded: String(item.date_added ?? item.dateAdded ?? "2024-01-15"),
+	dateAdded: String(item.date_added ?? item.dateAdded ?? ""),
 });
 
 const mapCustomerToApi = (data: CreateCustomerFullData): Record<string, unknown> => ({
 	company_name: data.companyName,
 	org_no: data.orgNo,
 	customer_no: data.customerNo || null,
-	status: data.status,
+	status: normalizeRegisterStatus(data.status),
 	main_category: data.mainCategory,
 	department: data.department || null,
 	region: data.region || null,
@@ -113,6 +125,7 @@ const mapCustomerToApi = (data: CreateCustomerFullData): Record<string, unknown>
 			: []),
 	],
 	ratings: data.ratings,
+	documents: data.documents || [],
 	notes: data.notes || null,
 	payment_terms: data.paymentTerms,
 	delivery_terms: data.deliveryTerms,
@@ -138,77 +151,27 @@ const mapCustomerToApi = (data: CreateCustomerFullData): Record<string, unknown>
 export async function getCustomerRegisterListAPIAction(
 	params?: GetCustomerRegisterListParams,
 ): Promise<GetCustomerRegisterListResponse> {
-	try {
-		const queryParams: Record<string, string | number> = {};
-		if (params?.page) queryParams.page = params.page;
-		if (params?.limit) queryParams.limit = params.limit;
-		if (params?.search) queryParams.search = params.search;
-		if (params?.status && params.status !== "all") queryParams.status = params.status;
-		if (params?.sortBy) queryParams.sort_by = params.sortBy;
-		if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
+	const queryParams: Record<string, string | number> = {};
+	if (params?.page) queryParams.page = params.page;
+	if (params?.limit) queryParams.limit = params.limit;
+	if (params?.search) queryParams.search = params.search;
+	if (params?.status && params.status !== "all") queryParams.status = params.status;
+	if (params?.sortBy) queryParams.sort_by = CUSTOMER_SORT_MAP[params.sortBy] ?? params.sortBy;
+	if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
 
-		const res = await axiosInstance.get(API_PATH.CUSTOMERS.LIST, { params: queryParams });
-		const data = res.data?.data;
+	const res = await axiosInstance.get(API_PATH.CUSTOMERS.LIST, { params: queryParams });
 
-		if (data?.items) {
-			return {
-				data: (data.items as Record<string, unknown>[]).map(mapCustomerFromApi),
-				total: data?.total ?? 0,
-				page: data?.page ?? params?.page ?? 1,
-				limit: data?.limit ?? params?.limit ?? 10,
-				totalPages: Math.ceil((data?.total ?? 0) / (data?.limit ?? params?.limit ?? 10)),
-			};
-		}
-	} catch {
-		// Fallback to local mock data if backend endpoint is unavailable or returns 404
+	const items = res.data?.data;
+	if (!Array.isArray(items)) {
+		throw new Error("Invalid customer list response");
 	}
-
-	const page = Math.max(1, params?.page ?? 1);
-	const limit = Math.max(1, params?.limit ?? 10);
-	const search = params?.search?.toLowerCase().trim();
-	const status = params?.status ?? "all";
-	const sortBy = params?.sortBy;
-	const sortOrder = params?.sortOrder;
-
-	let filtered = [...MOCK_CUSTOMER_REGISTER_DATA];
-
-	if (search) {
-		filtered = filtered.filter(
-			(item) =>
-				item.customerNo.toLowerCase().includes(search) ||
-				item.name.toLowerCase().includes(search) ||
-				item.orgNo.toLowerCase().includes(search) ||
-				item.email.toLowerCase().includes(search) ||
-				item.city.toLowerCase().includes(search) ||
-				item.phone.toLowerCase().includes(search) ||
-				item.address.toLowerCase().includes(search),
-		);
-	}
-
-	if (status && status !== "all") {
-		filtered = filtered.filter((item) => item.status === status);
-	}
-
-	if (sortBy) {
-		filtered.sort((a, b) => {
-			const aVal = String((a as unknown as Record<string, unknown>)[sortBy] ?? "");
-			const bVal = String((b as unknown as Record<string, unknown>)[sortBy] ?? "");
-			const cmp = aVal.localeCompare(bVal);
-			return sortOrder === "desc" ? -cmp : cmp;
-		});
-	}
-
-	const total = filtered.length;
-	const totalPages = Math.ceil(total / limit) || 1;
-	const startIndex = (page - 1) * limit;
-	const paginatedData = filtered.slice(startIndex, startIndex + limit);
 
 	return {
-		data: paginatedData,
-		total,
-		page,
-		limit,
-		totalPages,
+		data: (items as Record<string, unknown>[]).map(mapCustomerFromApi),
+		total: Number(res.data?.total_items ?? items.length),
+		page: Number(res.data?.current_page ?? params?.page ?? 1),
+		limit: Number(res.data?.page_size ?? params?.limit ?? 10),
+		totalPages: Number(res.data?.total_pages ?? 1),
 	};
 }
 
@@ -216,13 +179,20 @@ export async function createCustomerAPIAction(
 	data: CreateCustomerFullData,
 ): Promise<{ id: string }> {
 	const payload = mapCustomerToApi(data);
-	try {
-		const res = await axiosInstance.post(API_PATH.CUSTOMERS.CREATE, payload);
-		return { id: String(res.data?.data?.id ?? Date.now()) };
-	} catch {
-		// Fallback for development offline simulation
-		return { id: String(Date.now()) };
+
+	if (data.id) {
+		const res = await axiosInstance.put(
+			API_PATH.CUSTOMERS.UPDATE(data.id),
+			payload,
+		);
+		return { id: String(res.data?.data?.id ?? data.id) };
 	}
+
+	const res = await axiosInstance.post(
+		API_PATH.CUSTOMERS.CREATE,
+		payload,
+	);
+	return { id: String(res.data?.data?.id ?? "") };
 }
 
 export async function saveDraftAPIAction(
@@ -230,18 +200,17 @@ export async function saveDraftAPIAction(
 ): Promise<{ id: string }> {
 	const payload = { ...mapCustomerToApi(data), is_draft: true };
 
-	try {
-		if (data.id) {
-			const res = await axiosInstance.patch(API_PATH.CUSTOMERS.UPDATE(data.id), payload);
-			return { id: String(res.data?.data?.id ?? data.id) };
-		}
-
-		const res = await axiosInstance.post(API_PATH.CUSTOMERS.CREATE, payload);
-		return { id: String(res.data?.data?.id ?? Date.now()) };
-	} catch {
-		// Fallback for development offline simulation
-		return { id: data.id || String(Date.now()) };
+	if (data.id) {
+		const res = await axiosInstance.put(API_PATH.CUSTOMERS.UPDATE(data.id), payload);
+		return { id: String(res.data?.data?.id ?? data.id) };
 	}
+
+	const res = await axiosInstance.post(API_PATH.CUSTOMERS.CREATE, payload);
+	return { id: String(res.data?.data?.id ?? "") };
+}
+
+export async function deleteCustomerAPIAction(id: string): Promise<void> {
+	await axiosInstance.delete(API_PATH.CUSTOMERS.DELETE(id));
 }
 
 export async function uploadCustomerFileAPIAction(
@@ -251,59 +220,35 @@ export async function uploadCustomerFileAPIAction(
 	formData.append("file", file);
 	formData.append("media_type", "customer_document");
 
-	try {
-		const res = await axiosInstance.post(API_PATH.CUSTOMERS.UPLOAD_FILE, formData);
-		return {
-			id: String(res.data?.data?.id ?? Date.now()),
-			url: String(res.data?.data?.url ?? ""),
-		};
-	} catch {
-		// Fallback for development offline simulation
-		return {
-			id: String(Date.now()),
-			url: "",
-		};
+	const res = await axiosInstance.post(API_PATH.CUSTOMERS.UPLOAD_FILE, formData);
+	const data = res.data?.data;
+	const id = String(data?.id ?? "");
+	const url = String(data?.url ?? data?.file_url_path ?? data?.signed_url ?? "");
+
+	if (!id) {
+		throw new Error("Invalid upload response");
 	}
+
+	return { id, url };
 }
 
 export async function getCustomerDetailAPIAction(
 	id: string,
 ): Promise<CustomerDetail> {
-	try {
-		const res = await axiosInstance.get(API_PATH.CUSTOMERS.GET(id));
-		const data = res.data?.data;
-		if (data) {
-			return mapCustomerDetailFromApi(data);
-		}
-	} catch {
-		// Fallback to mock data
+	const res = await axiosInstance.get(API_PATH.CUSTOMERS.GET(id));
+	const data = res.data?.data;
+	if (!data) {
+		throw new Error("Customer not found");
 	}
-
-	const mock = MOCK_CUSTOMER_REGISTER_DATA.find((c) => c.id === id);
-	if (mock) {
-		return {
-			...MOCK_CUSTOMER_DETAIL,
-			id: mock.id,
-			customerNo: mock.customerNo,
-			companyName: mock.name,
-			orgNo: mock.orgNo,
-			status: mock.status,
-			phone: mock.phone,
-			email: mock.email,
-			visitingAddress: mock.address,
-			visitingPostalCode: mock.postNr,
-			visitingCity: mock.city,
-			invoiceAddress: mock.address,
-			invoicePostalCode: mock.postNr,
-			invoiceCity: mock.city,
-		};
-	}
-
-	return MOCK_CUSTOMER_DETAIL;
+	return mapCustomerDetailFromApi(data);
 }
 
 function mapCustomerDetailFromApi(data: Record<string, unknown>): CustomerDetail {
-	const rawContacts = Array.isArray(data.contact_persons) ? data.contact_persons : [];
+	const rawContacts = Array.isArray(data.contact_persons)
+		? data.contact_persons
+		: Array.isArray(data.contacts)
+			? data.contacts
+			: [];
 	const contacts: CustomerContact[] = rawContacts.map((c: Record<string, unknown>, idx: number) => ({
 		id: String(c.id ?? `c${idx + 1}`),
 		firstName: String(c.first_name ?? c.firstName ?? ""),
@@ -351,35 +296,35 @@ function mapCustomerDetailFromApi(data: Record<string, unknown>): CustomerDetail
 		email: String(data.email ?? ""),
 		website: String(data.website ?? ""),
 		contactNotes: String(data.contact_notes ?? data.contactNotes ?? ""),
-		contacts: contacts.length > 0 ? contacts : MOCK_CUSTOMER_DETAIL.contacts,
+		contacts,
 		ratings: {
-			economy: Number(rawRatings.economy ?? 4),
-			environment: Number(rawRatings.environment ?? 3),
-			quality: Number(rawRatings.quality ?? 5),
-			collaboration: Number(rawRatings.collaboration ?? 4),
-			punctuality: Number(rawRatings.punctuality ?? 3),
-			service: Number(rawRatings.service ?? 4),
+			economy: Number(rawRatings.economy ?? 0),
+			environment: Number(rawRatings.environment ?? 0),
+			quality: Number(rawRatings.quality ?? 0),
+			collaboration: Number(rawRatings.collaboration ?? 0),
+			punctuality: Number(rawRatings.punctuality ?? 0),
+			service: Number(rawRatings.service ?? 0),
 		},
-		documents: documents.length > 0 ? documents : MOCK_CUSTOMER_DETAIL.documents,
-		notes: String(data.notes ?? MOCK_CUSTOMER_DETAIL.notes),
-		paymentTerms: String(data.payment_terms ?? data.paymentTerms ?? "30 dagar"),
-		deliveryTerms: String(data.delivery_terms ?? data.deliveryTerms ?? "Ex Works (EXW)"),
-		deliveryMethod: String(data.delivery_method ?? data.deliveryMethod ?? "Email"),
-		interestInvoicing: String(data.interest_invoicing ?? data.interestInvoicing ?? "Ja"),
-		priceList: String(data.price_list ?? data.priceList ?? "Standard"),
+		documents,
+		notes: String(data.notes ?? ""),
+		paymentTerms: String(data.payment_terms ?? data.paymentTerms ?? ""),
+		deliveryTerms: String(data.delivery_terms ?? data.deliveryTerms ?? ""),
+		deliveryMethod: String(data.delivery_method ?? data.deliveryMethod ?? ""),
+		interestInvoicing: String(data.interest_invoicing ?? data.interestInvoicing ?? ""),
+		priceList: String(data.price_list ?? data.priceList ?? ""),
 		currency: String(data.currency ?? "SEK"),
 		invoiceDiscount: String(data.invoice_discount ?? data.invoiceDiscount ?? ""),
 		invoiceFee: String(data.invoice_fee ?? data.invoiceFee ?? ""),
 		shippingFee: String(data.shipping_fee ?? data.shippingFee ?? ""),
 		pricesInclVat: String(data.prices_incl_vat ?? data.pricesInclVat ?? ""),
-		ourReference: String(data.our_reference ?? data.ourReference ?? "info"),
-		customerResponsible: String(data.customer_responsible ?? data.customerResponsible ?? "Anna Svensson"),
+		ourReference: String(data.our_reference ?? data.ourReference ?? ""),
+		customerResponsible: String(data.customer_responsible ?? data.customerResponsible ?? ""),
 		externalReference: String(data.external_reference ?? data.externalReference ?? ""),
-		yourReference: String(data.your_reference ?? data.yourReference ?? "Info (Default)"),
+		yourReference: String(data.your_reference ?? data.yourReference ?? ""),
 		vatNumber: String(data.vat_number ?? data.vatNumber ?? ""),
-		vatType: String(data.vat_type ?? data.vatType ?? "Standard"),
-		salesAccount: String(data.sales_account ?? data.salesAccount ?? "info"),
-		costCenter: String(data.cost_center ?? data.costCenter ?? "Info"),
-		project: String(data.project ?? "info"),
+		vatType: String(data.vat_type ?? data.vatType ?? ""),
+		salesAccount: String(data.sales_account ?? data.salesAccount ?? ""),
+		costCenter: String(data.cost_center ?? data.costCenter ?? ""),
+		project: String(data.project ?? ""),
 	};
 }

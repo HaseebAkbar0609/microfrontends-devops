@@ -151,7 +151,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 				const res = await updateMutation.mutateAsync({ id: cleanId, data });
 				if (res.success) {
 					showToast("success", t(localizationConstants.wageTypeUpdatedSuccess));
-					router.push("/tools/register?tab=wageType");
+					router.push("/tools/register/wage-type");
 				} else {
 					showToast(
 						"error",
@@ -164,7 +164,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 				const res = await createMutation.mutateAsync(data);
 				if (res.success) {
 					showToast("success", t(localizationConstants.wageTypeCreatedSuccess));
-					router.push("/tools/register?tab=wageType");
+					router.push("/tools/register/wage-type");
 				} else {
 					showToast(
 						"error",
@@ -181,7 +181,7 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 
 	const handleCancel = () => {
 		if (isPending) return;
-		router.push("/tools/register?tab=wageType");
+		router.push("/tools/register/wage-type");
 	};
 
 	if (isEdit && isLoadingDetail) {

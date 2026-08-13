@@ -16,9 +16,10 @@ import {
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { cn } from "@/lib/utils";
+import { showToast } from "@/lib/toast";
 import { getArticleDetailAPIAction } from "../api/articleRegister";
 import type { ArticleDetail, PriceListRow } from "../types";
 
@@ -202,6 +203,7 @@ function PriceListTable({ rows }: { rows: PriceListRow[] }) {
 }
 
 export function ArticleDetailPage() {
+	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
 	const id = params.id as string;
@@ -214,10 +216,12 @@ export function ArticleDetailPage() {
 		try {
 			const data = await getArticleDetailAPIAction(id);
 			setArticle(data);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsLoading(false);
 		}
-	}, [id]);
+	}, [id, t]);
 
 	useEffect(() => {
 		fetchArticle();
@@ -270,7 +274,7 @@ export function ArticleDetailPage() {
 				<Button
 					variant="ghost"
 					size="icon"
-					aria-label="Go back to register"
+					aria-label={t(localizationConstants.goBackToRegisterLabel)}
 					onClick={() => router.push("/tools/register?tab=artikel&subtab=artikel")}
 					className="h-8 w-8 shrink-0"
 				>

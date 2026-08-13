@@ -25,6 +25,7 @@ import type { WageTypeRow } from "../types";
 import {
 	useWageTypeListQuery,
 	useToggleWageTypeStatusMutation,
+	useDeleteWageTypeMutation,
 } from "../hooks/useWageTypeRegister";
 import { showToast } from "@/lib/toast";
 
@@ -35,7 +36,7 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 		<span>
 			{parts.map((part, index) =>
 				part.toLowerCase() === query.toLowerCase() ? (
-					<strong key={index} className="bg-yellow-100 text-slate-900 font-semibold">{part}</strong>
+					<strong key={`${part}-${index}`} className="bg-yellow-100 text-slate-900 font-semibold">{part}</strong>
 				) : (
 					part
 				),
@@ -75,6 +76,7 @@ export function WageTypeRegisterTable() {
 	}, [isError, error, t]);
 
 	const toggleStatusMutation = useToggleWageTypeStatusMutation();
+	const deleteMutation = useDeleteWageTypeMutation();
 
 	const updateQueryParams = useCallback(
 		(updates: Record<string, string | undefined>) => {
@@ -134,6 +136,18 @@ export function WageTypeRegisterTable() {
 		await toggleStatusMutation.mutateAsync({ ids: selectedIds, status: targetStatus });
 		setSelectedIds([]);
 	};
+
+	const handleDelete = useCallback(
+		async (id: string) => {
+			try {
+				await deleteMutation.mutateAsync(id);
+				setSelectedIds((prev) => prev.filter((itemId) => itemId !== id));
+			} catch {
+				showToast("error", t(localizationConstants.genericError));
+			}
+		},
+		[deleteMutation, t],
+	);
 
 	const isAllSelected = wageRows.length > 0 && selectedIds.length === wageRows.length;
 
@@ -284,10 +298,10 @@ export function WageTypeRegisterTable() {
 				label: localizationConstants.deleteLabel,
 				icon: <Trash2 className="h-4 w-4" />,
 				destructive: true,
-				onClick: () => {},
+				onClick: (row) => handleDelete(row.id),
 			},
 		],
-		[router],
+		[handleDelete, router],
 	);
 
 	return (
@@ -336,7 +350,7 @@ export function WageTypeRegisterTable() {
 					</DropdownMenu>
 				</div>
 
-				<Link href="/tools/register/wage-type/create" passHref>
+				<Link href="/tools/register/wage-type/create">
 					<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
 						<Plus className="h-4 w-4" aria-hidden />
 						<Translate text={localizationConstants.createWageTypeButton} />

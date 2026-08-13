@@ -40,11 +40,11 @@ const INTEREST_INVOICING_OPTIONS = [
 ];
 
 const CURRENCY_OPTIONS = [
-	{ value: "SEK", label: "SEK - Svensk krona" },
-	{ value: "EUR", label: "EUR - Euro" },
-	{ value: "USD", label: "USD - Amerikansk dollar" },
-	{ value: "NOK", label: "NOK - Norsk krona" },
-	{ value: "DKK", label: "DKK - Dansk krona" },
+	{ value: "SEK", label: "SEK" },
+	{ value: "EUR", label: "EUR" },
+	{ value: "USD", label: "USD" },
+	{ value: "NOK", label: "NOK" },
+	{ value: "DKK", label: "DKK" },
 ];
 
 const PRICE_LIST_OPTIONS = [
@@ -60,12 +60,6 @@ const VAT_TYPE_OPTIONS = [
 	{ value: "zero", label: <Translate text={localizationConstants.vatTypeZero} /> },
 ];
 
-const CUSTOMER_RESPONSIBLE_OPTIONS = [
-	{ value: "anna_svensson", label: "Anna Svensson" },
-	{ value: "erik_karlsson", label: "Erik Karlsson" },
-	{ value: "johan_lindberg", label: "Johan Lindberg" },
-	{ value: "maria_nilsson", label: "Maria Nilsson" },
-];
 
 export function InvoiceStep({ control }: InvoiceStepProps) {
 	return (
@@ -177,12 +171,11 @@ export function InvoiceStep({ control }: InvoiceStepProps) {
 							label={localizationConstants.ourReferenceLabel}
 							placeholder={localizationConstants.placeholderNotes}
 						/>
-						<FormSelect
+						<FormInput
 							control={control}
 							name="customerResponsible"
 							label={localizationConstants.customerResponsibleLabel}
-							placeholder={localizationConstants.placeholderSelectCustomerResponsible}
-							options={CUSTOMER_RESPONSIBLE_OPTIONS}
+							placeholder={localizationConstants.placeholderNotes}
 						/>
 						<FormInput
 							control={control}

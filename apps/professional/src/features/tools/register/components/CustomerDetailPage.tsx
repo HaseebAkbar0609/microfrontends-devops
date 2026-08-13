@@ -13,8 +13,8 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StarRating } from "@/components/common/StarRating";
-import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
+import { DataTable, type DataTableColumn } from "@/components/table/DataTable";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
@@ -31,6 +31,7 @@ const TABS: { key: TabKey; labelKey: string }[] = [
 ];
 
 export function CustomerDetailPage() {
+	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
 	const id = params.id as string;
@@ -44,10 +45,13 @@ export function CustomerDetailPage() {
 		try {
 			const data = await getCustomerDetailAPIAction(id);
 			setCustomer(data);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
+			router.push("/tools/register?tab=kund");
 		} finally {
 			setIsLoading(false);
 		}
-	}, [id]);
+	}, [id, router, t]);
 
 	useEffect(() => {
 		fetchCustomer();
@@ -81,7 +85,7 @@ export function CustomerDetailPage() {
 			<div className="mb-1 flex items-center gap-2 ml-0">
 				<button
 					type="button"
-					aria-label="Go back to register"
+					aria-label={t(localizationConstants.goBackToRegisterLabel)}
 					onClick={() => router.push("/tools/register?tab=kund")}
 					className="rounded-md p-1 hover:bg-slate-100"
 				>
@@ -299,19 +303,6 @@ function ContactTab({ customer }: { customer: CustomerDetail }) {
 		},
 	];
 
-	const actions: DataTableAction<CustomerContact>[] = [
-		{
-			label: localizationConstants.viewLabel,
-			icon: <Eye className="h-4 w-4" />,
-			onClick: (row) => void row,
-		},
-		{
-			label: localizationConstants.editLabel,
-			icon: <PenLine className="h-4 w-4" />,
-			onClick: (row) => void row,
-		},
-	];
-
 	return (
 		<div className="flex flex-col gap-6 ml-0 sm:ml-9">
 			{/* Customer Contact Info */}
@@ -338,7 +329,6 @@ function ContactTab({ customer }: { customer: CustomerDetail }) {
 					data={customer.contacts}
 					columns={columns}
 					rowKey={(row) => row.id}
-					actions={actions}
 					loading={false}
 				/>
 			</SectionCard>
@@ -433,8 +423,8 @@ function AssessmentTab({ customer }: { customer: CustomerDetail }) {
 											<div className="flex items-center gap-2">
 												<div className="relative flex h-16 w-12 shrink-0 items-center justify-center">
 													<File className="h-16 w-12 text-slate-300" strokeWidth={1.5} />
-													<span className="absolute -left-0.5 top-[60%] -translate-y-1/2 rounded-[2px] bg-red-600 px-1.5 py-0.5 text-[10px] font-bold leading-none text-white">
-														PDF
+													<span className={`absolute -left-0.5 top-[60%] -translate-y-1/2 rounded-[2px] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white uppercase ${doc.type?.toUpperCase() === "PDF" ? "bg-red-600" : "bg-blue-600"}`}>
+														{doc.type || "FILE"}
 													</span>
 												</div>
 												<span className="truncate">{doc.name}</span>

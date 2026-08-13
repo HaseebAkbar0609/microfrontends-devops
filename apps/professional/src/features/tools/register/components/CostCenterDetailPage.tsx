@@ -24,12 +24,12 @@ export function CostCenterDetailPage() {
 	});
 
 	const handleBack = () => {
-		router.push("/tools/register?tab=costCenter");
+		router.push("/tools/register/cost-centre");
 	};
 
 	const handleEdit = () => {
 		if (!cleanId) return;
-		router.push(`/tools/register/cost-centre/edit/${cleanId}`);
+		router.push(`/tools/register/cost-centre/create?edit=${cleanId}`);
 	};
 
 	if (isLoading || !costCenter) {

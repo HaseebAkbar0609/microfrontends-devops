@@ -13,16 +13,18 @@ export function usePriceListRegister(initialParams?: GetPriceListRegisterListPar
 	const [data, setData] = useState<PriceListRegisterRow[]>([]);
 	const [totalItems, setTotalItems] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
+	const [hasError, setHasError] = useState(false);
 	const [params, setParams] = useState<GetPriceListRegisterListParams>(initialParams ?? { page: 1, limit: 10 });
 
 	const fetchData = useCallback(async () => {
 		setIsLoading(true);
+		setHasError(false);
 		try {
 			const res = await getPriceListRegisterListAPIAction(params);
 			setData(res.data);
 			setTotalItems(res.total);
 		} catch {
-			// Handled in API action with mock fallback
+			setHasError(true);
 		} finally {
 			setIsLoading(false);
 		}
@@ -36,14 +38,29 @@ export function usePriceListRegister(initialParams?: GetPriceListRegisterListPar
 		setData((prev) =>
 			prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
 		);
-		await togglePriceListFavoriteAPIAction(id);
+		try {
+			const success = await togglePriceListFavoriteAPIAction(id);
+			if (!success) {
+				setData((prev) =>
+					prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
+				);
+			}
+		} catch {
+			setData((prev) =>
+				prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
+			);
+		}
 	}, []);
 
 	const deletePriceList = useCallback(async (id: string) => {
-		const success = await deletePriceListAPIAction(id);
-		if (success) {
-			setData((prev) => prev.filter((item) => item.id !== id));
-			setTotalItems((prev) => prev - 1);
+		try {
+			const success = await deletePriceListAPIAction(id);
+			if (success) {
+				setData((prev) => prev.filter((item) => item.id !== id));
+				setTotalItems((prev) => prev - 1);
+			}
+		} catch {
+			// Catch unhandled rejection
 		}
 	}, []);
 
@@ -51,6 +68,7 @@ export function usePriceListRegister(initialParams?: GetPriceListRegisterListPar
 		data,
 		totalItems,
 		isLoading,
+		hasError,
 		params,
 		setParams,
 		toggleFavorite,
