@@ -20,15 +20,10 @@ const DAY_COUNT = PROJECT_DETAIL_WEEKS.reduce(
 );
 
 // Later segments paint over earlier ones where they overlap.
-const segmentColorAt = (segments: GanttSegment[], dayIndex: number) => {
-	let color: string | null = null;
-	segments.forEach((segment) => {
-		if (dayIndex >= segment.from && dayIndex <= segment.to) {
-			color = segment.colorClass;
-		}
-	});
-	return color;
-};
+const segmentColorAt = (segments: GanttSegment[], dayIndex: number) =>
+	segments.findLast(
+		(segment) => dayIndex >= segment.from && dayIndex <= segment.to,
+	)?.colorClass ?? null;
 
 const formatDate = (value: string) => value.replaceAll("-", "/");
 
@@ -53,7 +48,7 @@ const ProjectGanttTable = () => {
 	return (
 		<div className="w-full overflow-x-auto">
 			{/* min-w keeps the 28 day cells + left columns readable; narrower viewports scroll horizontally */}
-			<table className="w-full min-w-[80rem] border-separate border-spacing-0">
+			<table className="w-full min-w-[96rem] border-separate border-spacing-0">
 				<thead>
 					<tr>
 						<th
@@ -115,7 +110,7 @@ const ProjectGanttTable = () => {
 							week.days.map((day, dayIndex) => (
 								<th
 									key={`${weekIndex}-${dayIndex}`}
-									className="w-8 border-b border-l border-slate-200 px-1 py-1.5 text-center text-xs font-medium text-slate-600"
+									className="w-12 border-b border-l border-slate-200 px-1 py-1.5 text-center text-xs font-medium text-slate-600"
 								>
 									{day}
 								</th>
@@ -180,7 +175,7 @@ const ProjectGanttTable = () => {
 											<td
 												key={dayIndex}
 												className={cn(
-													"h-11 w-8 border-b border-l border-slate-100",
+													"h-11 w-12 border-b border-l border-slate-100",
 													color,
 												)}
 											/>

@@ -82,7 +82,12 @@ function getStatusBadge(status: Agreement["status"]) {
 	}
 }
 
-export function AgreementOverviewTable({ data, totalItems }: AgreementListTableProps) {
+export interface AgreementOverviewTableProps extends AgreementListTableProps {
+	onArchive?: (id: string) => void;
+	onDelete?: (id: string) => void;
+}
+
+export function AgreementOverviewTable({ data, totalItems, onArchive, onDelete }: AgreementOverviewTableProps) {
 	const { query, changeQueries } = useQueryParams();
 	const router = useRouter();
 
@@ -178,11 +183,17 @@ export function AgreementOverviewTable({ data, totalItems }: AgreementListTableP
 									</button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end" className="w-40">
-									<DropdownMenuItem className="cursor-pointer gap-2">
+									<DropdownMenuItem 
+										className="cursor-pointer gap-2"
+										onClick={() => onArchive?.(agreement.id)}
+									>
 										<Archive className="h-4 w-4" />
 										<Translate text={localizationConstants.agreementOverviewActionArchive} />
 									</DropdownMenuItem>
-									<DropdownMenuItem className="cursor-pointer gap-2 text-red-600 focus:text-red-600">
+									<DropdownMenuItem 
+										className="cursor-pointer gap-2 text-red-600 focus:text-red-600"
+										onClick={() => onDelete?.(agreement.id)}
+									>
 										<Trash2 className="h-4 w-4" />
 										<Translate text={localizationConstants.agreementOverviewActionDelete} />
 									</DropdownMenuItem>
@@ -194,7 +205,7 @@ export function AgreementOverviewTable({ data, totalItems }: AgreementListTableP
 					return null;
 			}
 		},
-		[router],
+		[router, onArchive, onDelete],
 	);
 
 	const totalPages = useMemo(

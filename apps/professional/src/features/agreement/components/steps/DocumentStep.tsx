@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { uploadAgreementMediaAction } from "@/api-actions/agreements/agreements";
+import { showToast } from "@/lib/toast";
 
 interface DocumentStepProps {
 	documents: AgreementDocument[];
@@ -30,25 +32,44 @@ export function DocumentStep({
 	const [pendingFiles, setPendingFiles] = useState<
 		{ name: string; file: File }[]
 	>([]);
+	const [isUploading, setIsUploading] = useState(false);
 
 	const displayDocuments = documents;
 
-	const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files;
-		if (!files) return;
+		if (!files || files.length === 0) return;
 
+		setIsUploading(true);
 		const today = new Date().toISOString().split("T")[0];
-		Array.from(files).forEach((file) => {
-			const isPdf = file.name.toLowerCase().endsWith(".pdf");
-			onAddDocument({
-				id: Date.now().toString() + Math.random().toString(36).substring(2, 6),
-				datum: today,
-				namn: file.name,
-				fil: file.name,
-				type: isPdf ? "pdf" : "doc",
-			});
-			setPendingFiles((prev) => [...prev, { name: file.name, file }]);
-		});
+		
+		try {
+			for (const file of Array.from(files)) {
+				const isPdf = file.name.toLowerCase().endsWith(".pdf");
+				
+				// Show it in pending immediately for UX (optional, but good for feedback)
+				setPendingFiles((prev) => [...prev, { name: file.name, file }]);
+
+				// Upload file to backend
+				const res = await uploadAgreementMediaAction(file);
+				if (res.success && res.data) {
+					onAddDocument({
+						id: res.data.id,
+						datum: today,
+						namn: file.name,
+						fil: file.name,
+						type: isPdf ? "pdf" : "doc",
+					});
+				} else {
+					// Remove from pending if failed
+					setPendingFiles((prev) => prev.filter((f) => f.name !== file.name));
+				}
+			}
+		} catch (_error) {
+			showToast("error", "Failed to upload one or more files.");
+		} finally {
+			setIsUploading(false);
+		}
 
 		if (fileInputRef.current) {
 			fileInputRef.current.value = "";
@@ -115,10 +136,11 @@ export function DocumentStep({
 								type="button"
 								variant="default"
 								size="default"
+								disabled={isUploading}
 								onClick={() => fileInputRef.current?.click()}
-								className="h-9 min-w-25 bg-[#111721] text-white hover:bg-slate-800 cursor-pointer"
+								className="h-9 min-w-25 bg-[#111721] text-white hover:bg-slate-800 cursor-pointer disabled:opacity-50"
 							>
-								<Translate text={localizationConstants.agreementUpload} />
+								{isUploading ? "Uploading..." : <Translate text={localizationConstants.agreementUpload} />}
 							</Button>
 						</div>
 					</div>

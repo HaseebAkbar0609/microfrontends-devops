@@ -27,6 +27,7 @@ export interface AgreementDetail {
 	paminnelseDatum: string;
 	avtalsPrioritet: string;
 	meddelande: string;
+	status?: string;
 	contacts: AgreementDetailContact[];
 	documents: AgreementDetailDocument[];
 }

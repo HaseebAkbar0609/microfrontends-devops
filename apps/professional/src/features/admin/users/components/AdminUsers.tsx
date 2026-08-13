@@ -300,7 +300,7 @@ export default function AdminUsers() {
 								</DropdownMenuTrigger>
 								<DropdownMenuContent
 									align="end"
-									className="w-[170px]"
+									className="w-42.5"
 								>
 									<DropdownMenuItem
 										onClick={() => {
@@ -362,7 +362,7 @@ export default function AdminUsers() {
 							</Button>
 						</div>
 						<div className="overflow-x-auto">
-							<Table className="w-full min-w-[64rem] table-auto">
+							<Table className="w-full min-w-5xl table-auto">
 								<TableHeader>
 									<TableRow className="border-slate-200 hover:bg-transparent">
 										{USER_COLUMNS.map((column) => (
@@ -387,7 +387,7 @@ export default function AdminUsers() {
 												key={user.id as string}
 												className="border-slate-100 hover:bg-slate-50"
 											>
-												<TableCell className="max-w-[10rem] truncate px-4 py-4 font-medium text-slate-900">
+												<TableCell className="max-w-40 truncate px-4 py-4 font-medium text-slate-900">
 													{(user.first_name as string)} {(user.last_name as string)}
 												</TableCell>
 												<TableCell className="whitespace-nowrap px-4 py-4 tabular-nums text-slate-700">
