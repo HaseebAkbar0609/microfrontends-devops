@@ -4,22 +4,9 @@ import { useState } from "react";
 import type { AgreementContact } from "../../types/agreementCreate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Contact, MoreHorizontal, Save } from "lucide-react";
+import { Contact, Edit2, Save, Trash2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 
 interface ContactInformationStepProps {
 	contacts: AgreementContact[];
@@ -27,11 +14,7 @@ interface ContactInformationStepProps {
 	onRemoveContact: (id: string) => void;
 }
 
-const ROLE_OPTIONS = [
-	{ value: "Beställare", label: "Beställare" },
-	{ value: "Kontaktperson", label: "Kontaktperson" },
-	{ value: "Beslutare", label: "Beslutare" },
-];
+
 
 export function ContactInformationStep({
 	contacts,
@@ -54,7 +37,7 @@ export function ContactInformationStep({
 			fornamn: fornamn.trim(),
 			efternamn: efternamn.trim(),
 			mail: mail.trim(),
-			mobil: mobil.trim() ? `+46 ${mobil.trim()}` : "",
+			mobil: mobil.trim() ? (mobil.startsWith("+46") ? mobil : `+46 ${mobil.trim()}`) : "",
 			roll,
 		});
 
@@ -63,6 +46,15 @@ export function ContactInformationStep({
 		setMail("");
 		setMobil("");
 		setRoll("");
+	};
+
+	const handleEdit = (contact: AgreementContact) => {
+		setFornamn(contact.fornamn);
+		setEfternamn(contact.efternamn);
+		setMail(contact.mail);
+		setMobil(contact.mobil.replace("+46 ", "").replace("+46", ""));
+		setRoll(contact.roll);
+		onRemoveContact(contact.id);
 	};
 
 	return (
@@ -141,18 +133,13 @@ export function ContactInformationStep({
 								<Translate text={localizationConstants.agreementDetailRoll} />{" "}
 								<span className="text-red-500">*</span>
 							</label>
-							<Select value={roll} onValueChange={setRoll}>
-								<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm focus:ring-0">
-									<SelectValue placeholder="Välj roll" />
-								</SelectTrigger>
-								<SelectContent>
-									{ROLE_OPTIONS.map((opt) => (
-										<SelectItem key={opt.value} value={opt.value} className="cursor-pointer">
-											{opt.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+							<input
+								type="text"
+								value={roll}
+								onChange={(e) => setRoll(e.target.value)}
+								placeholder="Välj roll"
+								className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus-visible:border-slate-400 focus-visible:outline-none"
+							/>
 						</div>
 					</div>
 
@@ -227,25 +214,25 @@ export function ContactInformationStep({
 										<td className="px-4 py-2 font-sans text-sm font-normal leading-5 tracking-normal text-slate-600">
 											{contact.roll}
 										</td>
-										<td className="px-2 py-2">
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<button
-														type="button"
-														className="h-7 w-7 inline-flex items-center justify-center rounded-md hover:bg-slate-100 text-slate-500 cursor-pointer"
-													>
-														<MoreHorizontal className="h-4 w-4 rotate-90" />
-													</button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end" className="w-40">
-													<DropdownMenuItem
-														className="cursor-pointer text-red-600 focus:text-red-600"
-														onClick={() => onRemoveContact(contact.id)}
-													>
-														<Translate text={localizationConstants.agreementOverviewActionDelete} />
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
+										<td className="relative px-2 py-2">
+											<div className="flex items-center gap-2">
+												<button
+													type="button"
+													onClick={() => handleEdit(contact)}
+													className="ml-auto flex h-7 w-7 items-center justify-center rounded-md hover:bg-slate-100 text-slate-500 cursor-pointer"
+													title="Edit"
+												>
+													<Edit2 className="h-4 w-4" />
+												</button>
+												<button
+													type="button"
+													onClick={() => onRemoveContact(contact.id)}
+													className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-slate-100 text-slate-500 cursor-pointer"
+													title="Delete"
+												>
+													<Trash2 className="h-4 w-4" />
+												</button>
+											</div>
 										</td>
 									</tr>
 								))}

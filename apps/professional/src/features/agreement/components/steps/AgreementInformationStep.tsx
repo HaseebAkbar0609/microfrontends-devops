@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import type { Control } from "react-hook-form";
 import type { CreateAgreementFormData } from "../../types/agreementCreate";
 import { FormInput, FormSelect, FormDatePicker } from "@/components/form";
@@ -7,26 +8,39 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Handshake } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { getAgreementDepartmentsAction } from "@/api-actions/agreements/agreements";
 
 interface AgreementInformationStepProps {
 	readonly control: Control<CreateAgreementFormData>;
 }
 
-const DEPARTMENT_OPTIONS = [
-	{ value: "overhead", label: "Overhead" },
-	{ value: "entreprenad", label: "Entreprenad" },
-	{ value: "service", label: "Service" },
-	{ value: "personal", label: "Personal" },
-];
 
-const OBJECT_OPTIONS = [
-	{ value: "it-utrustning", label: "It - Utrustning" },
-	{ value: "kontor", label: "Kontor" },
-	{ value: "fordon", label: "Fordon" },
-	{ value: "projekt", label: "Projekt" },
-];
 
 export function AgreementInformationStep({ control }: AgreementInformationStepProps) {
+	const [departmentOptions, setDepartmentOptions] = useState<{value: string, label: string}[]>([]);
+
+	useEffect(() => {
+		async function fetchDepartments() {
+			try {
+				const res = await getAgreementDepartmentsAction();
+				if (res.success && res.data) {
+					const options = res.data.map(d => ({ value: d, label: d }));
+					
+					// Make sure the current value is in the options array if it exists
+					const currentValue = control._formValues.avdelning;
+					if (currentValue && !options.find(o => o.value === currentValue)) {
+						options.push({ value: currentValue, label: currentValue });
+					}
+					
+					setDepartmentOptions(options);
+				}
+			} catch (error) {
+				console.error("Failed to fetch departments", error);
+			}
+		}
+		fetchDepartments();
+	}, [control._formValues.avdelning]);
+
 	return (
 		<div className="flex flex-col gap-6">
 			<Card>
@@ -48,9 +62,9 @@ export function AgreementInformationStep({ control }: AgreementInformationStepPr
 								</>
 							}
 							placeholder={localizationConstants.agreementDetailAvdelning}
-							options={DEPARTMENT_OPTIONS}
+							options={departmentOptions}
 						/>
-						<FormSelect
+						<FormInput
 							control={control}
 							name="objekt"
 							label={
@@ -60,7 +74,6 @@ export function AgreementInformationStep({ control }: AgreementInformationStepPr
 								</>
 							}
 							placeholder={localizationConstants.agreementCreateObjekt}
-							options={OBJECT_OPTIONS}
 						/>
 						<div className="lg:col-span-2">
 							<FormInput

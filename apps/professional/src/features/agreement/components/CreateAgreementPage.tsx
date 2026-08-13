@@ -20,6 +20,7 @@ import {
 	type CreateAgreementFullData,
 } from "../types/agreementCreate";
 import { AGREEMENT_ROUTES } from "../constants/agreementDashboard";
+import { createAgreementAction } from "@/api-actions/agreements/agreements";
 
 const TABS = [
 	{ key: 1, labelKey: localizationConstants.agreementCreateStep1Tab },
@@ -124,23 +125,12 @@ export function CreateAgreementPage() {
 				contacts,
 				documents,
 			};
-			const response = await fetch("/api/agreement/create", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(fullData),
-			});
-			if (!response.ok) {
-				const errorData = await response.json().catch(() => null);
-				throw new Error(errorData?.message || t(localizationConstants.agreementCreateSubmitError));
+			const response = await createAgreementAction(fullData);
+			if (response.success) {
+				router.push(AGREEMENT_ROUTES.overview);
 			}
-			showToast("success", t(localizationConstants.agreementCreateSuccess));
-			router.push(AGREEMENT_ROUTES.overview);
-		} catch (error) {
-			if (error instanceof TypeError && error.message === "Failed to fetch") {
-				showToast("error", t(localizationConstants.agreementCreateNetworkError));
-			} else {
-				showToast("error", error instanceof Error ? error.message : t(localizationConstants.agreementCreateSubmitError));
-			}
+		} catch (_error) {
+			showToast("error", t(localizationConstants.agreementCreateSubmitError));
 		} finally {
 			setIsSubmitting(false);
 		}
