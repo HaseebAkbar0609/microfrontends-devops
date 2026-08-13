@@ -37,9 +37,9 @@ export function CalculationDetailSubSidebar({ calcId }: Props) {
 		{
 			id: "forfragan",
 			labelKey: localizationConstants.calcDetailSidebarForfragan,
-			href: "",
+			href: `${base}/forfragan`,
 			exact: false,
-			disabled: true,
+			disabled: false,
 		},
 		{
 			id: "fraga-svar",
