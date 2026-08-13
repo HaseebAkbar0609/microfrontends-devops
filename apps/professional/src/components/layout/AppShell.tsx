@@ -11,6 +11,7 @@ import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
 import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
+import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { OfferDetailSubSidebar } from "./sidebar/OfferDetailSubSidebar";
@@ -59,12 +60,14 @@ export function AppShell({ children }: AppShellProps) {
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
 	const isOrderPath = pathname.startsWith("/module/production/order");
+	const isProjectPath = pathname.startsWith("/module/production/project");
 	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
 	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
 	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
 	const isCalculationDetailRoute = !!calcDetailMatch;
 	const calculationDetailId = calcDetailMatch?.[1] ?? "";
-	const isProductionNavRoute = pathname.startsWith("/module/production") && !isOrderPath;
+	const isProductionNavRoute =
+		pathname.startsWith("/module/production") && !isOrderPath && !isProjectPath;
 	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
 	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
 	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
@@ -176,6 +179,8 @@ export function AppShell({ children }: AppShellProps) {
 			{!isPublicPage && <Sidebar autoCollapse />}
 			{isOrderPath ? (
 				<OrderSubSidebar />
+			) : isProjectPath ? (
+				<ProjectSubSidebar />
 			) : isAgreementPath ? (
 				<AgreementSubSidebar />
 			) : isRegisterPath ? (

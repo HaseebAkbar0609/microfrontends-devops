@@ -29,6 +29,15 @@ export const PROJECT_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.projectDashboardTitle },
 ];
 
+export const PROJECT_OVERVIEW_BREADCRUMBS: BreadcrumbItem[] = [
+	{ label: localizationConstants.home, href: "/dashboard" },
+	{
+		label: localizationConstants.projectModule,
+		href: "/module/production/project",
+	},
+	{ label: localizationConstants.projectSubOverview },
+];
+
 export const PROJECT_SIDEBAR_ITEMS: WidgetItem[] = [
 	{
 		id: "emptyPage",

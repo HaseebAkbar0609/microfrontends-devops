@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Check, X, LayoutList, Layers } from "lucide-react";
 import {
 	AlertDialog,
@@ -21,8 +21,21 @@ import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSideb
 import { useWidgetToggle } from "@/features/widgetdashboard/hooks/useWidgetToggle";
 import { AGREEMENT_INITIAL_WIDGETS, AGREEMENT_SIDEBAR_WIDGET_MAP } from "./AgreementDashboardConfig";
 import { AGREEMENT_SIDEBAR_ITEMS } from "../constants/agreementDashboardSidebarItems";
+import { getAgreementDashboardKpisAction } from "@/api-actions/agreements/agreements";
+import { getWidgetsAction, syncWidgetsAction } from "@/api-actions/widgets/widgets";
+import { useAuthStatus } from "@/context/AuthContext";
+import { Loader2 } from "lucide-react";
+import { PlacedWidgetEntry } from "@/features/widgetdashboard/types/dashboard";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
+
+interface AgreementKpis {
+	totalAgreements?: number;
+	activeAgreements?: number;
+	expiringSoon?: number;
+	pendingSignature?: number;
+	[key: string]: number | undefined;
+}
 
 export function AgreementDashboard() {
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
@@ -40,6 +53,80 @@ export function AgreementDashboard() {
 		item: WidgetItem;
 		index: number;
 	} | null>(null);
+
+	const [kpis, setKpis] = useState<AgreementKpis | null>(null);
+	const [isLoadingKpis, setIsLoadingKpis] = useState(true);
+	
+	const { company } = useAuthStatus();
+	const [isSavingLayout, setIsSavingLayout] = useState(false);
+	const persistedLayoutRef = useRef<PlacedWidgetEntry[]>(AGREEMENT_INITIAL_WIDGETS);
+
+	useEffect(() => {
+		async function fetchLayout() {
+			if (!company) return;
+			const res = await getWidgetsAction(company.id, "agreement_dashboard");
+			if (res.success && res.data && res.data.length > 0) {
+				const sorted = [...res.data].sort((a, b) => a.order - b.order);
+				const usedKeys = sorted.map(w => w.key);
+				const remainingInitial = AGREEMENT_INITIAL_WIDGETS.filter(w => w.sidebarId && !usedKeys.includes(w.sidebarId));
+				
+				const restoredLayout = AGREEMENT_INITIAL_WIDGETS.map((initial, i) => {
+					const dbWidget = sorted[i];
+					if (dbWidget) {
+						return {
+							...initial,
+							sidebarId: dbWidget.key,
+							widgetProps: AGREEMENT_SIDEBAR_WIDGET_MAP[dbWidget.key] || AGREEMENT_SIDEBAR_WIDGET_MAP.emptyPage
+						};
+					}
+					const fallback = remainingInitial.shift() || initial;
+					return {
+						...initial,
+						sidebarId: fallback.sidebarId,
+						widgetProps: fallback.widgetProps
+					};
+				});
+				setPlacedWidgets(restoredLayout);
+				persistedLayoutRef.current = restoredLayout;
+			}
+		}
+		fetchLayout();
+	}, [company, setPlacedWidgets]);
+
+	useEffect(() => {
+		async function fetchKpis() {
+			try {
+				const res = await getAgreementDashboardKpisAction();
+				if (res.success && res.data) {
+					setKpis(res.data as AgreementKpis);
+				}
+			} finally {
+				setIsLoadingKpis(false);
+			}
+		}
+		fetchKpis();
+	}, []);
+
+	const handleSaveLayout = async () => {
+		if (!company) return;
+		setIsSavingLayout(true);
+		try {
+			const syncItems = placedWidgets.map((w, index) => ({
+				key: w.sidebarId as string,
+				order: index,
+			}));
+			const res = await syncWidgetsAction(company.id, "agreement_dashboard", syncItems);
+			if (res.success) {
+				persistedLayoutRef.current = [...placedWidgets];
+			}
+		} finally {
+			setIsSavingLayout(false);
+		}
+	};
+
+	const handleCloseLayout = () => {
+		setPlacedWidgets(persistedLayoutRef.current);
+	};
 
 	const placedSidebarIds = placedWidgets
 		.map((w) => w.sidebarId)
@@ -256,6 +343,34 @@ export function AgreementDashboard() {
 								isEmpty={
 									entry.sidebarId === "emptyPage"
 								}
+								content={
+									entry.sidebarId !== "emptyPage" ? (
+										isLoadingKpis ? (
+											<div className="flex h-full min-h-[100px] items-center justify-center">
+												<Loader2 className="animate-spin text-slate-400" size={32} />
+											</div>
+										) : kpis ? (
+											(() => {
+												let count: number | undefined = undefined;
+												if (entry.sidebarId === "agreementKpi") count = kpis.totalAgreements;
+												if (entry.sidebarId === "agreementActive") count = kpis.activeAgreements;
+												if (entry.sidebarId === "agreementExpiring") count = kpis.expiringSoon;
+												if (entry.sidebarId === "agreementPending") count = kpis.pendingSignature;
+												
+												if (count !== undefined) {
+													return (
+														<div className="flex w-full items-center justify-end pt-4 pb-2 pr-2">
+															<span className="text-4xl font-bold text-[#111827]">
+																{count}
+															</span>
+														</div>
+													);
+												}
+												return null;
+											})()
+										) : null
+									) : null
+								}
 							/>
 						</DraggableGridCard>
 					))}
@@ -276,13 +391,16 @@ export function AgreementDashboard() {
 				<div className="rounded-sm border border-slate-200 bg-white p-4 space-y-3">
 					<button
 						type="button"
-						className="flex w-full items-center justify-center gap-2 rounded-sm bg-[#111827] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#111827]/90 cursor-pointer"
+						onClick={handleSaveLayout}
+						disabled={isSavingLayout}
+						className="flex w-full items-center justify-center gap-2 rounded-sm bg-[#111827] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#111827]/90 cursor-pointer disabled:opacity-70"
 					>
-						<Check size={16} />
+						{isSavingLayout ? <Loader2 className="w-4 h-4 text-white animate-spin" /> : <Check size={16} />}
 						<Translate text={localizationConstants.confirmSave} />
 					</button>
 					<button
 						type="button"
+						onClick={handleCloseLayout}
 						className="flex w-full items-center justify-center gap-2 rounded-sm bg-[#F4F4F5] px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-200 cursor-pointer"
 					>
 						<X size={16} />

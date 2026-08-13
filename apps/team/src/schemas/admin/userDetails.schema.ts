@@ -7,21 +7,7 @@ export const userDetailsSchema = z.object({
   type: z.string(),
   reports: z.boolean(),
   registerImportant: z.boolean(),
-  permSalesSell: z.boolean(),
-  permSalesMarknad: z.boolean(),
-  permSalesAll: z.boolean(),
-  permEconEkonomi: z.boolean(),
-  permEconFaktura: z.boolean(),
-  permEconPersonal: z.boolean(),
-  permEconJuridik: z.boolean(),
-  permEconPrognoser: z.boolean(),
-  permEconAll: z.boolean(),
-  permBizAvtal: z.boolean(),
-  permBizDataIT: z.boolean(),
-  permBizKMA: z.boolean(),
-  permBizMailet: z.boolean(),
-  permBizLedningsstod: z.boolean(),
-  permBizAll: z.boolean(),
+  permissions: z.record(z.boolean().optional()).optional(),
 });
 
 export type UserDetailsFormValues = z.infer<typeof userDetailsSchema>;
