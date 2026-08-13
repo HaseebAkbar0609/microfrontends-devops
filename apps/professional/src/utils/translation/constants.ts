@@ -2178,6 +2178,12 @@ export type OfferTranslation = {
 	projectListArchivedToast: string;
 	projectListDeletedToast: string;
 	projectListCreateToast: string;
+	// Project detail (Gantt table)
+	projectDetailColNr: string;
+	projectDetailColName: string;
+	projectDetailColStart: string;
+	projectDetailColEnd: string;
+	projectDetailAddToast: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
