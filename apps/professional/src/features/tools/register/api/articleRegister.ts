@@ -420,10 +420,13 @@ export async function getSupplierNameOptionsAPIAction(): Promise<
 export async function getSupplierArticleNumberOptionsAPIAction(
 	supplierName?: string,
 ): Promise<{ value: string; label: string }[]> {
-	if (!supplierName) return [];
 	const seen = new Set<string>();
 	const options: { value: string; label: string }[] = [];
-	const first = await getSupplierArticleListAPIAction({ page: 1, limit: 100, supplier: supplierName });
+	const params: GetSupplierArticleListParams = { page: 1, limit: 100 };
+	if (supplierName && supplierName.trim()) {
+		params.supplier = supplierName.trim();
+	}
+	const first = await getSupplierArticleListAPIAction(params);
 	for (const row of first.data) {
 		const no = row.supplierArticleNo.trim();
 		if (!no || seen.has(no)) continue;
@@ -432,7 +435,7 @@ export async function getSupplierArticleNumberOptionsAPIAction(
 	}
 	const totalPages = Math.min(first.totalPages ?? 1, MAX_OPTIONS_PAGES);
 	for (let p = 2; p <= totalPages; p++) {
-		const r = await getSupplierArticleListAPIAction({ page: p, limit: first.limit, supplier: supplierName });
+		const r = await getSupplierArticleListAPIAction({ ...params, page: p });
 		for (const row of r.data) {
 			const no = row.supplierArticleNo.trim();
 			if (!no || seen.has(no)) continue;

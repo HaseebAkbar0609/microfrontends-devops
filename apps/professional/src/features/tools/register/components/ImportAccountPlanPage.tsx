@@ -41,35 +41,7 @@ interface ImportRow {
 	targetAccountName: string;
 }
 
-const MOCK_IMPORT_ROWS: ImportRow[] = [
-	{
-		id: "import-row-1",
-		accountNumber: "1010",
-		accountName: "Lorem Ipsum is simply dummy",
-		action: "koppla",
-		targetAccountNumber: "1010",
-		vatCode: "none",
-		targetAccountName: "Lorem Ipsum is simply dummy",
-	},
-	{
-		id: "import-row-2",
-		accountNumber: "1011",
-		accountName: "Lorem Ipsum is simply dummy",
-		action: "skapaNytt",
-		targetAccountNumber: "1011",
-		vatCode: "none",
-		targetAccountName: "Lorem Ipsum is simply dummy",
-	},
-	{
-		id: "import-row-3",
-		accountNumber: "1012",
-		accountName: "Lorem Ipsum is simply dummy",
-		action: "skapaNytt",
-		targetAccountNumber: "1012",
-		vatCode: "none",
-		targetAccountName: "Lorem Ipsum is simply dummy",
-	},
-];
+
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB limit
 const ALLOWED_EXTENSIONS = ["csv", "xlsx", "xls", "sie"];
@@ -108,7 +80,49 @@ export function ImportAccountPlanPage() {
 			}
 
 			setSelectedFile(file);
-			setImportRows(MOCK_IMPORT_ROWS);
+			try {
+				const text = await file.text();
+				const lines = text.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+				const parsedRows: ImportRow[] = [];
+				for (let idx = 0; idx < lines.length; idx++) {
+					const line = lines[idx];
+					// Handle SIE #KONTO or CSV lines
+					if (line.toUpperCase().startsWith("#KONTO")) {
+						const parts = line.split(/\s+/);
+						const num = parts[1] || "";
+						const name = parts.slice(2).join(" ").replace(/^"/, "").replace(/"$/, "") || num;
+						if (num && /^\d+$/.test(num)) {
+							parsedRows.push({
+								id: `import-row-${parsedRows.length + 1}`,
+								accountNumber: num,
+								accountName: name,
+								action: "koppla",
+								targetAccountNumber: num,
+								vatCode: "none",
+								targetAccountName: name,
+							});
+						}
+					} else {
+						const parts = line.includes(";") ? line.split(";") : line.split(",");
+						const num = parts[0]?.trim() || "";
+						const name = parts[1]?.trim() || num;
+						if (num && /^\d+$/.test(num)) {
+							parsedRows.push({
+								id: `import-row-${parsedRows.length + 1}`,
+								accountNumber: num,
+								accountName: name,
+								action: "koppla",
+								targetAccountNumber: num,
+								vatCode: "none",
+								targetAccountName: name,
+							});
+						}
+					}
+				}
+				setImportRows(parsedRows);
+			} catch {
+				setImportRows([]);
+			}
 		},
 		[t],
 	);

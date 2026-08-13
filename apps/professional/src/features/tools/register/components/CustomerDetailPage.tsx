@@ -423,7 +423,7 @@ function AssessmentTab({ customer }: { customer: CustomerDetail }) {
 											<div className="flex items-center gap-2">
 												<div className="relative flex h-16 w-12 shrink-0 items-center justify-center">
 													<File className="h-16 w-12 text-slate-300" strokeWidth={1.5} />
-													<span className={`absolute -left-0.5 top-[60%] -translate-y-1/2 rounded-[2px] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white uppercase ${doc.type === "PDF" ? "bg-red-600" : "bg-blue-600"}`}>
+													<span className={`absolute -left-0.5 top-[60%] -translate-y-1/2 rounded-[2px] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white uppercase ${doc.type?.toUpperCase() === "PDF" ? "bg-red-600" : "bg-blue-600"}`}>
 														{doc.type || "FILE"}
 													</span>
 												</div>

@@ -2870,6 +2870,11 @@ export type RegisterTranslation = {
 	validationEmailRequired: string;
 	validationEmailInvalid: string;
 	validationPhoneRequired: string;
+	validationPhoneInvalid: string;
+	validationOrgNoInvalid: string;
+	validationPostalCodeInvalid: string;
+	validationNumberInvalid: string;
+	validationCodeInvalid: string;
 	// Form Placeholders
 	placeholderCustomerNo: string;
 	placeholderSelectStatus: string;
@@ -3585,6 +3590,41 @@ export type RegisterTranslation = {
 	contrJa35Label: string;
 	contrJa50Label: string;
 	contrNej0Label: string;
+	articleTypeService: string;
+	articleTypeProduct: string;
+	articleTypeMaterial: string;
+	articleTypeFee: string;
+	articleTypeFreight: string;
+	articleTypeOther: string;
+	houseWorkEl: string;
+	houseWorkRor: string;
+	houseWorkVentilation: string;
+	houseWorkBygg: string;
+	houseWorkMaleri: string;
+	houseWorkStadning: string;
+	houseWorkTradgard: string;
+	houseWorkIt: string;
+	houseWorkOvrigt: string;
+	unitPcs: string;
+	unitHour: string;
+	unitDays: string;
+	unitKm: string;
+	unitSqm: string;
+	unitMeter: string;
+	unitLm: string;
+	unitKg: string;
+	unitLiter: string;
+	unitPair: string;
+	unitPkg: string;
+	bestallningspunktStock: string;
+	bestallningspunktOrder: string;
+	budgetCategoryLabor: string;
+	budgetCategoryMaterial: string;
+	budgetCategoryOverhead: string;
+	budgetCategoryRotRut: string;
+	budgetCategoryContingency: string;
+	budgetDistributionEqual: string;
+	budgetDistributionManual: string;
 };
 
 export type CommonTranslation = {

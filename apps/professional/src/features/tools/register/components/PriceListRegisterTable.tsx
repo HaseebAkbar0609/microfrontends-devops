@@ -11,6 +11,7 @@ import {
 	Tag,
 	PenLine,
 	Save,
+	Check,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -64,6 +65,7 @@ export function PriceListRegisterTable() {
 	const pageParam = searchParams.get("pricelist_page");
 	const limitParam = searchParams.get("pricelist_limit");
 	const searchParam = searchParams.get("pricelist_search") ?? "";
+	const categoryParam = searchParams.get("pricelist_category") ?? "all";
 	const sortByParam = searchParams.get("pricelist_sortBy") ?? undefined;
 	const sortOrderParam = (searchParams.get("pricelist_sortOrder") as "asc" | "desc") ?? undefined;
 
@@ -105,6 +107,7 @@ export function PriceListRegisterTable() {
 				page,
 				limit: pageSize,
 				search: searchParam,
+				category: categoryParam,
 				sortBy: sortByParam,
 				sortOrder: sortOrderParam,
 			});
@@ -115,11 +118,33 @@ export function PriceListRegisterTable() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [page, pageSize, searchParam, sortByParam, sortOrderParam]);
+	}, [page, pageSize, searchParam, categoryParam, sortByParam, sortOrderParam]);
 
 	useEffect(() => {
 		void fetchData();
 	}, [fetchData]);
+
+	const filteredData = useMemo(() => {
+		if (!categoryParam || categoryParam === "all") return data;
+		const target = categoryParam.toLowerCase();
+		return data.filter((item) => {
+			const cat = (item.kategori || "").toLowerCase();
+			if (target === "service" || target === "tjänst") {
+				return cat.includes("service") || cat.includes("tjänst");
+			}
+			if (target === "private" || target === "privat") {
+				return cat.includes("private") || cat.includes("privat");
+			}
+			return cat.includes(target);
+		});
+	}, [data, categoryParam]);
+
+	const handleCategoryFilterChange = (newCategory: "all" | "service" | "private") => {
+		updateQueryParams({
+			pricelist_category: newCategory === "all" ? null : newCategory,
+			pricelist_page: "1",
+		});
+	};
 
 	const handleSearchChange = (value: string) => {
 		setSearchQuery(value);
@@ -341,14 +366,26 @@ export function PriceListRegisterTable() {
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="start" className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1">
-							<DropdownMenuItem className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900">
+							<DropdownMenuItem
+								onClick={() => handleCategoryFilterChange("all")}
+								className="flex items-center justify-between cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterAll} />
+								{(categoryParam === "all" || !categoryParam) && <Check className="h-3.5 w-3.5 text-slate-700" />}
 							</DropdownMenuItem>
-							<DropdownMenuItem className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900">
+							<DropdownMenuItem
+								onClick={() => handleCategoryFilterChange("service")}
+								className="flex items-center justify-between cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterService} />
+								{categoryParam === "service" && <Check className="h-3.5 w-3.5 text-slate-700" />}
 							</DropdownMenuItem>
-							<DropdownMenuItem className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900">
+							<DropdownMenuItem
+								onClick={() => handleCategoryFilterChange("private")}
+								className="flex items-center justify-between cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterPrivate} />
+								{categoryParam === "private" && <Check className="h-3.5 w-3.5 text-slate-700" />}
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -363,7 +400,7 @@ export function PriceListRegisterTable() {
 			</div>
 
 			<DataTable
-				data={data}
+				data={filteredData}
 				columns={columns as unknown as DataTableColumn<unknown>[]}
 				rowKey={(row) => (row as PriceListRegisterRow).id}
 				actions={actions as unknown as DataTableAction<unknown>[]}

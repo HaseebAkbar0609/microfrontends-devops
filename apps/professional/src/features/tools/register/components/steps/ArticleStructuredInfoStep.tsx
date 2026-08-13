@@ -7,7 +7,7 @@ import { FormInput, FormSelect } from "@/components/form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 interface ArticleStructuredInfoStepProps {
 	readonly control: Control<CreateArticleFormData>;
@@ -23,10 +23,7 @@ const EUROPRISLISTA_OPTIONS = [
 	{ value: "eu-premium", label: "EU Premium" },
 ];
 
-const BESTALLNINGSPUNKT_OPTIONS = [
-	{ value: "lager", label: "Lager" },
-	{ value: "bestallning", label: "Beställning" },
-];
+
 
 const MOMS_OPTIONS = [
 	{ value: "25", label: "25%" },
@@ -39,6 +36,14 @@ export function ArticleStructuredInfoStep({ control }: ArticleStructuredInfoStep
 	const t = useTranslate();
 	const [bokoringUppgifterOpen, setBokoringUppgifterOpen] = useState(true);
 	const [bokforingsUppgifterOpen, setBokforingsUppgifterOpen] = useState(true);
+
+	const bestallningspunktOptions = useMemo(
+		() => [
+			{ value: "lager", label: t(localizationConstants.bestallningspunktStock) },
+			{ value: "bestallning", label: t(localizationConstants.bestallningspunktOrder) },
+		],
+		[t],
+	);
 
 	const LABEL_CLASS = "text-[14px] font-medium leading-5 text-[#09090B]";
 
@@ -118,7 +123,7 @@ export function ArticleStructuredInfoStep({ control }: ArticleStructuredInfoStep
 								name="bestallningspunkt"
 								label={localizationConstants.articleBestallningspunkt}
 								placeholder={t(localizationConstants.placeholderSelectBestallningspunkt)}
-								options={BESTALLNINGSPUNKT_OPTIONS}
+								options={bestallningspunktOptions}
 								labelClassName={LABEL_CLASS}
 							/>
 							<FormInput

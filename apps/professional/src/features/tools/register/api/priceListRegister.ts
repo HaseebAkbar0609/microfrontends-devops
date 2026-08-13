@@ -75,6 +75,7 @@ export async function getPriceListRegisterListAPIAction(
 	if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
 	if (params?.status && params.status !== "all") queryParams.status = params.status;
 	if (params?.currency && params.currency !== "all") queryParams.currency = params.currency;
+	if (params?.category && params.category !== "all") queryParams.category = params.category;
 
 	const res = await axiosInstance.get<ApiListEnvelope<Record<string, unknown>[]>>(
 		API_PATH.PRICE_LISTS.LIST,

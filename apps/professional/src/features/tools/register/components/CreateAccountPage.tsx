@@ -371,21 +371,13 @@ export function CreateAccountPage() {
 														<FormLabel className="text-[14px] font-medium leading-5 tracking-normal text-slate-700">
 															<Translate text={localizationConstants.suggestedCostCenterLabel} />
 														</FormLabel>
-														<Select value={field.value} onValueChange={field.onChange}>
-															<FormControl>
-																<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm text-slate-900 shadow-none">
-																	<SelectValue placeholder={t(localizationConstants.suggestedCostCenterPlaceholder)} />
-																</SelectTrigger>
-															</FormControl>
-															<SelectContent className="bg-white border-slate-200 shadow-md">
-																<SelectItem value="kontor10" className="cursor-pointer text-sm">
-																	Kontor 10
-																</SelectItem>
-																<SelectItem value="kontor20" className="cursor-pointer text-sm">
-																	Kontor 20
-																</SelectItem>
-															</SelectContent>
-														</Select>
+														<FormControl>
+															<Input
+																{...field}
+																placeholder={t(localizationConstants.suggestedCostCenterPlaceholder)}
+																className="h-10 border-slate-200 bg-white text-sm text-slate-900"
+															/>
+														</FormControl>
 														<FormMessage translate={t} />
 													</FormItem>
 												)}

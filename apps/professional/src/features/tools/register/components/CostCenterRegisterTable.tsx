@@ -225,7 +225,7 @@ export function CostCenterRegisterTable() {
 			{
 				label: localizationConstants.editLabel,
 				icon: <Edit className="h-4 w-4" />,
-				onClick: (row) => router.push(`/tools/register/cost-centre/edit/${row.id}`),
+				onClick: (row) => router.push(`/tools/register/cost-centre/${row.id}`),
 			},
 			{
 				label: localizationConstants.deleteLabel,

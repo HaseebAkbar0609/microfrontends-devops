@@ -339,7 +339,7 @@ export function SupplierAssessmentStep({
 													<div className="flex items-center gap-2">
 														<div className="relative flex h-16 w-12 items-center justify-center">
 															<File className="h-16 w-12 text-slate-300" strokeWidth={1.5} />
-															<span className="absolute -left-0.5 top-[55%] -translate-y-1/2 rounded-[2px] bg-red-600 px-1.5 py-0.5 text-[9px] font-bold leading-none text-white uppercase">
+															<span className={`absolute -left-0.5 top-[55%] -translate-y-1/2 rounded-[2px] px-1.5 py-0.5 text-[9px] font-bold leading-none text-white uppercase ${file.type?.toUpperCase() === "PDF" ? "bg-red-600" : "bg-blue-600"}`}>
 																{file.type}
 															</span>
 														</div>

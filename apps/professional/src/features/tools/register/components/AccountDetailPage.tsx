@@ -39,7 +39,7 @@ export function AccountDetailPage() {
 
 	const handleEdit = () => {
 		if (!cleanId) return;
-		router.push(`/tools/register/account-plan/${cleanId}/edit`);
+		router.push(`/tools/register/account-plan/create?edit=${cleanId}`);
 	};
 
 	if (isLoading || !account) {

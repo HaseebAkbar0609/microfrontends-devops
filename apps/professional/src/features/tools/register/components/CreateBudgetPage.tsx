@@ -41,21 +41,7 @@ import { useCreateBudgetMutation } from "../hooks/useBudgetRegister";
 // ─── Stable constants ────────────────────────────────────────────────────────
 const CURRENCY_OPTIONS = ["SEK", "EUR", "USD", "GBP", "NOK", "DKK"] as const;
 
-const CATEGORY_OPTIONS = [
-	{ value: "labor", labelKey: localizationConstants.budgetCategoryPlaceholder },
-	{ value: "arbete", label: "Arbete" },
-	{ value: "material", label: "Material" },
-	{ value: "overhead", label: "Overhead" },
-	{ value: "rot_rut", label: "ROT/RUT" },
-	{ value: "contingency", label: "Contingency" },
-] as const;
 
-const DISTRIBUTION_OPTIONS = [
-	{ value: "K4", label: "K4" },
-	{ value: "K12", label: "K12" },
-	{ value: "lika", label: "Lika fördelning" },
-	{ value: "manual", label: "Manuell" },
-] as const;
 
 const MONTH_KEYS = [
 	localizationConstants.monthJan,
@@ -104,6 +90,27 @@ export function CreateBudgetPage() {
 	const router = useRouter();
 	const createMutation = useCreateBudgetMutation();
 	const isPending = createMutation.isPending;
+
+	const categoryOptions = useMemo(
+		() => [
+			{ value: "arbete", label: t(localizationConstants.budgetCategoryLabor) },
+			{ value: "material", label: t(localizationConstants.budgetCategoryMaterial) },
+			{ value: "overhead", label: t(localizationConstants.budgetCategoryOverhead) },
+			{ value: "rot_rut", label: t(localizationConstants.budgetCategoryRotRut) },
+			{ value: "contingency", label: t(localizationConstants.budgetCategoryContingency) },
+		],
+		[t],
+	);
+
+	const distributionOptions = useMemo(
+		() => [
+			{ value: "K4", label: "K4" },
+			{ value: "K12", label: "K12" },
+			{ value: "lika", label: t(localizationConstants.budgetDistributionEqual) },
+			{ value: "manual", label: t(localizationConstants.budgetDistributionManual) },
+		],
+		[t],
+	);
 
 	// Budget section rows state
 	const [budgetRows, setBudgetRows] = useState<BudgetRow[]>([]);
@@ -405,7 +412,7 @@ export function CreateBudgetPage() {
 												<SelectValue />
 											</SelectTrigger>
 											<SelectContent>
-												{DISTRIBUTION_OPTIONS.map((opt) => (
+												{distributionOptions.map((opt) => (
 													<SelectItem key={opt.value} value={opt.value}>
 														{opt.label}
 													</SelectItem>
@@ -484,9 +491,9 @@ export function CreateBudgetPage() {
 														</SelectTrigger>
 													</FormControl>
 													<SelectContent>
-														{CATEGORY_OPTIONS.filter((c) => "label" in c).map((c) => (
+														{categoryOptions.map((c) => (
 															<SelectItem key={c.value} value={c.value}>
-																{"label" in c ? c.label : ""}
+																{c.label}
 															</SelectItem>
 														))}
 													</SelectContent>

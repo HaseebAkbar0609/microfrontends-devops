@@ -27,22 +27,6 @@ const ENHET_OPTIONS = [
 	{ value: "lm", label: <Translate text={localizationConstants.priceListUnitLm} /> },
 ];
 
-const KUND_OPTIONS = [
-	{ value: "service", label: <Translate text={localizationConstants.priceListCustomerService} /> },
-	{ value: "foretag", label: <Translate text={localizationConstants.priceListCustomerForetag} /> },
-];
-
-const LEVERANTOR_OPTIONS = [
-	{ value: "styck", label: <Translate text={localizationConstants.priceListSupplierStyck} /> },
-	{ value: "timme", label: <Translate text={localizationConstants.priceListSupplierTimme} /> },
-];
-
-const SKAPAD_AV_OPTIONS = [
-	{ value: "kalle_andersson", label: "Kalle Andersson" },
-	{ value: "anna_svensson", label: "Anna Svensson" },
-	{ value: "erik_lindberg", label: "Erik Lindberg" },
-];
-
 const VALUTA_OPTIONS = [
 	{ value: "SEK", label: "SEK" },
 	{ value: "EUR", label: "EUR" },
@@ -90,12 +74,11 @@ export function PriceListBasicInfoStep({ control }: PriceListBasicInfoStepProps)
 							label={localizationConstants.priceListValidToLabel}
 							placeholder={TODAY}
 						/>
-						<FormSelect
+						<FormInput
 							control={control}
 							name="skapadAv"
 							label={localizationConstants.priceListCreatedByLabel}
-							options={SKAPAD_AV_OPTIONS}
-							placeholder={localizationConstants.priceListSelectPlaceholder}
+							placeholder={localizationConstants.priceListCreatedByLabel}
 						/>
 						<FormInput
 							control={control}
@@ -137,18 +120,16 @@ export function PriceListBasicInfoStep({ control }: PriceListBasicInfoStepProps)
 							options={VALUTA_OPTIONS}
 							placeholder={localizationConstants.priceListSelectPlaceholder}
 						/>
-						<FormSelect
+						<FormInput
 							control={control}
 							name="kund"
 							label={localizationConstants.priceListCustomerLabel}
-							options={KUND_OPTIONS}
 							placeholder={localizationConstants.priceListSelectPlaceholder}
 						/>
-						<FormSelect
+						<FormInput
 							control={control}
 							name="leverantor"
 							label={localizationConstants.priceListSupplierLabel}
-							options={LEVERANTOR_OPTIONS}
 							placeholder={localizationConstants.priceListSelectPlaceholder}
 						/>
 					</div>

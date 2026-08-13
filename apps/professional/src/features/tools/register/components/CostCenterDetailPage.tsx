@@ -29,7 +29,7 @@ export function CostCenterDetailPage() {
 
 	const handleEdit = () => {
 		if (!cleanId) return;
-		router.push(`/tools/register/cost-centre/edit/${cleanId}`);
+		router.push(`/tools/register/cost-centre/create?edit=${cleanId}`);
 	};
 
 	if (isLoading || !costCenter) {
