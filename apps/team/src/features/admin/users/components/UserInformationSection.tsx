@@ -1,7 +1,6 @@
 "use client";
 
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { UserRound } from "lucide-react";
 
 import { FormInput } from "@/components/form/FormInput";
@@ -10,30 +9,19 @@ import { FormSwitch } from "@/components/form/FormSwitch";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { AddUserFormValues } from "@/schemas/admin/addUser.schema";
+import { useAdminGroups, useAdminRoleOptions } from "../hooks/useAdminUsers";
 
 interface UserInformationSectionProps {
   form: UseFormReturn<AddUserFormValues>;
 }
 
 export function UserInformationSection({ form }: UserInformationSectionProps) {
-  const { t } = useTranslation();
+  
+  const { data: rolesData } = useAdminRoleOptions();
+  const { data: groupsData } = useAdminGroups({ skip: 0, limit: 100 });
 
-  const roleOptions = [
-    { value: "sys-admin", label: t(localizationConstants.roleSysAdmin) },
-    { value: "admin", label: t(localizationConstants.roleAdmin) },
-    { value: "user", label: t(localizationConstants.roleUser) },
-    { value: "manager", label: t(localizationConstants.roleManager) },
-    { value: "projektledare", label: t(localizationConstants.roleProjektledare) },
-  ];
-
-  const departmentOptions = [
-    { value: "ekonomi", label: t(localizationConstants.deptEkonomi) },
-    { value: "service", label: t(localizationConstants.deptService) },
-    { value: "overhead", label: t(localizationConstants.deptOverhead) },
-    { value: "entreprenad", label: t(localizationConstants.deptEntreprenad) },
-    { value: "kalkyl", label: t(localizationConstants.deptKalkyl) },
-    { value: "inkop", label: t(localizationConstants.deptInkop) },
-  ];
+  const roleOptions = (rolesData?.data || []).map((r: { id: string; name: string }) => ({ value: r.id, label: r.name }));
+  const departmentOptions = (groupsData?.data || []).map((g: { id: string; name: string }) => ({ value: g.id, label: g.name }));
 
   return (
     <div>
