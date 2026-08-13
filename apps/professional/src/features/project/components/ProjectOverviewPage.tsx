@@ -6,6 +6,7 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { PROJECT_OVERVIEW_BREADCRUMBS } from "../constants";
+import ProjectGanttSchedule from "./ProjectGanttSchedule";
 import ProjectListTab from "./ProjectListTab";
 
 const PROJECT_OVERVIEW_TAB_IDS = ["list", "gantt"] as const;
@@ -52,7 +53,7 @@ const ProjectOverviewPage = () => {
 								<TabsTrigger
 									key={tab.id}
 									value={tab.id}
-									className="px-0 text-slate-600 data-[state=active]:px-3 data-[state=active]:text-slate-900"
+									className="cursor-pointer px-0 text-slate-600 data-[state=active]:px-3 data-[state=active]:text-slate-900"
 								>
 									<Translate text={tab.label} />
 								</TabsTrigger>
@@ -63,19 +64,8 @@ const ProjectOverviewPage = () => {
 						<ProjectListTab />
 					</TabsContent>
 					<TabsContent value="gantt">
-						<div className="flex flex-col gap-3">
-							<h2 className="text-xl font-semibold text-slate-900">
-								<Translate
-									text={
-										localizationConstants.projectListGanttTab
-									}
-								/>
-							</h2>
-							<p className="text-sm text-slate-500">
-								<Translate
-									text={localizationConstants.comingSoonMessage}
-								/>
-							</p>
+						<div className="rounded-md border border-slate-200 bg-white">
+							<ProjectGanttSchedule />
 						</div>
 					</TabsContent>
 				</Tabs>
