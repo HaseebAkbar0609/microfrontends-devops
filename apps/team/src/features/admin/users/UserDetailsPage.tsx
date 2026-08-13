@@ -15,52 +15,93 @@ import { useTranslation } from "react-i18next";
 import { UserDetailsSection } from "./components/UserDetailsSection";
 
 import { userDetailsSchema, type UserDetailsFormValues } from "@/schemas/admin/userDetails.schema";
+import { useAdminUserDetail, useUpdateAdminUser, useUpdateUserPermissions } from "./hooks/useAdminUsers";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default function UserDetailsPage() {
   const { t } = useTranslation();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const userId = searchParams.get("id");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDetails, setShowDetails] = useState(true);
+
+  const { data: userResponse } = useAdminUserDetail(userId || "");
+  const { mutateAsync: updateUser } = useUpdateAdminUser();
 
   const form = useForm<UserDetailsFormValues>({
     resolver: zodResolver(userDetailsSchema),
     defaultValues: {
-      isAdmin: true,
-      group: "ekonomi",
-      role: "manager",
-      type: "arbetschef",
+      isAdmin: false,
+      group: "",
+      role: "",
+      type: "",
       reports: false,
       registerImportant: false,
-      permSalesSell: false,
-      permSalesMarknad: true,
-      permSalesAll: true,
-      permEconEkonomi: false,
-      permEconFaktura: true,
-      permEconPersonal: false,
-      permEconJuridik: true,
-      permEconPrognoser: false,
-      permEconAll: true,
-      permBizAvtal: true,
-      permBizDataIT: false,
-      permBizKMA: true,
-      permBizMailet: true,
-      permBizLedningsstod: false,
-      permBizAll: true,
+      permissions: {},
     },
   });
 
-  async function onSubmit(_values: UserDetailsFormValues) {
+  useEffect(() => {
+    if (userResponse?.data) {
+      const user = userResponse.data;
+      const perms = user.module_permissions || {};
+      // user.department contains the group UUID.
+      let firstGroupId = user.department || "";
+      if (Array.isArray(user.groups) && user.groups.length > 0) {
+        const firstGroup = user.groups[0];
+        if (typeof firstGroup === "object" && firstGroup !== null && "id" in firstGroup) {
+          firstGroupId = firstGroup.id;
+        } else if (typeof firstGroup === "string") {
+          // Note: If groups is array of strings due to Pydantic coercion, fallback to user.department
+          firstGroupId = user.department || "";
+        }
+      }
+      form.reset({
+        isAdmin: user.role === "owner" || user.role === "manage" || user.role === "MANAGE" || user.role === "OWNER",
+        group: firstGroupId,
+        role: user.permission_role_id || "",
+        type: user.position_id || "",
+        reports: perms.reports || false,
+        registerImportant: perms.registerImportant || false,
+        permissions: perms,
+      });
+    }
+  }, [userResponse, form]);
+
+  const { mutateAsync: updateUserPermissions } = useUpdateUserPermissions();
+
+  async function onSubmit(values: UserDetailsFormValues) {
+    if (!userId) return;
     setIsSubmitting(true);
     try {
-      await new Promise<void>((resolve, reject) => {
-        setTimeout(() => {
-          if (Math.random() < 0.05) {
-            reject(new Error("Mock API Error"));
-          } else {
-            resolve();
-          }
-        }, 1000);
-      });
+      const payload = {
+        role: values.isAdmin ? "manage" : "worker",
+        department: values.group || undefined,
+        position_id: values.type || undefined,
+        permission_role_id: values.role || undefined,
+      };
+
+      // Build permissions payload: only include keys with boolean true/false (not undefined)
+      const rawPerms = {
+        reports: values.reports,
+        registerImportant: values.registerImportant,
+        ...(values.permissions || {}),
+      };
+      const permissionsPayload: Record<string, boolean> = {};
+      for (const [key, val] of Object.entries(rawPerms)) {
+        if (typeof val === "boolean") {
+          permissionsPayload[key] = val;
+        }
+      }
+
+      await Promise.all([
+        updateUser({ userId, data: payload }),
+        updateUserPermissions({ userId, module_permissions: permissionsPayload })
+      ]);
+
       toast.success(t(localizationConstants.toastUserUpdated));
       router.push("/admin/users");
     } catch {
