@@ -56,7 +56,7 @@ export const svAppLauncher: AppLauncherTranslation = {
 	dataIT: "Data-IT",
 	managementSupport: "Ledning",
 	vehicle: "Fordon",
-	access: "Åtkomst",
+	access: "Smart Åtkomst",
 	economy: "Ekonomi",
 };
 
@@ -2468,7 +2468,7 @@ export const svOffer: OfferTranslation = {
 	homeImageTitle: "Bild",
 	homeImageDescription: "Platshållarbild – ladda upp egen media senare.",
 	// Offer - List
-	offerList: "Leads",
+	offerList: "Offert",
 	job: "Jobb",
 	projectName: "Projektnamn",
 	date: "Datum",

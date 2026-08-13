@@ -56,7 +56,7 @@ export const enAppLauncher: AppLauncherTranslation = {
 	marketingSales: "Marketing",
 	dataIT: "Data-IT",
 	managementSupport: "Management Support",
-	access: "Access",
+	access: "Smart Access",
 	economy: "Economy",
 };
 
@@ -2578,7 +2578,7 @@ export const enOffer: OfferTranslation = {
 	homeImageTitle: "Image",
 	homeImageDescription: "Placeholder image — upload your own media later.",
 	// Offer - List
-	offerList: "Leads",
+	offerList: "Quote",
 	job: "Job",
 	projectName: "Project name",
 	date: "Date",
