@@ -634,6 +634,8 @@ export interface GetPriceListRegisterListParams {
 	search?: string;
 	sortBy?: string;
 	sortOrder?: "asc" | "desc";
+	status?: string;
+	currency?: string;
 }
 
 export interface GetPriceListRegisterListResponse {
@@ -692,6 +694,13 @@ export interface PriceListDetail {
 	kund: string[];
 	leverantor: string[];
 	articles: PriceListDetailArticle[];
+	// Price update settings (TFS-717)
+	baseCalculation?: string;
+	updatePriceList?: string;
+	calculation?: string;
+	rounding?: string;
+	increaseDecrease?: string;
+	percentage?: string;
 }
 
 export interface PriceListDetailArticle {
@@ -832,6 +841,39 @@ export const budgetRegisterRowSchema = z.object({
 
 export type BudgetRegisterRow = z.infer<typeof budgetRegisterRowSchema>;
 
+export interface BudgetVsActual {
+	budget_amount: number;
+	actual_spend: number;
+	difference: number;
+	percent_used: number;
+}
+
+export interface BudgetExpenseBreakdownEntry {
+	category: string;
+	budgeted: number;
+	actual: number;
+}
+
+export interface BudgetRegisterDetail {
+	id: string;
+	budgetnr: string;
+	name: string;
+	date?: string;
+	totalCost?: string;
+	totalIncome?: string;
+	totalAmount?: number;
+	currency?: string;
+	category?: string;
+	startDate?: string;
+	endDate?: string;
+	description?: string;
+	status: "active" | "inactive";
+	isFavorite?: boolean;
+	budgetVsActual?: BudgetVsActual;
+	expenseBreakdown?: BudgetExpenseBreakdownEntry[];
+	createdAt?: string;
+}
+
 export interface GetBudgetListParams {
 	page?: number;
 	limit?: number;
@@ -865,6 +907,8 @@ export const createBudgetSchema = z.object({
 	description: z.string().optional(),
 	avvikBudget: z.boolean(),
 	overheadBudget: z.boolean(),
+	distribution: z.string().optional(),
+	budgetRows: z.array(z.any()).optional(),
 });
 
 export type CreateBudgetFormData = z.infer<typeof createBudgetSchema>;

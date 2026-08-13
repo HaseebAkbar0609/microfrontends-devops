@@ -84,17 +84,16 @@ export function SupplierDetailPage() {
 			<div className="mb-1 flex items-center gap-2 ml-0">
 				<button
 					type="button"
-					aria-label="Go back to register"
+					aria-label={t(localizationConstants.goBackToRegisterLabel)}
 					onClick={() => router.push("/tools/register?tab=supplier")}
 					className="rounded-md p-1 hover:bg-slate-100"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />
 				</button>
-				<h1 className="text-xl font-semibold text-slate-900">
-					<Translate text={localizationConstants.detailTitle} />
+				<h1 className="font-sans text-xl font-bold leading-7 text-slate-900 sm:text-2xl">
+					{supplier.companyName}
 				</h1>
 			</div>
-
 			{/* Supplier number */}
 			<p className="mb-4 text-sm text-slate-500 sm:ml-9">{supplier.supplierNo}</p>
 

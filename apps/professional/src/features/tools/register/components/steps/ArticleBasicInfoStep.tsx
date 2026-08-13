@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useWatch, useFormContext } from "react-hook-form";
 import type { Control } from "react-hook-form";
 import { Trash2, Plus, ChevronDown, ChevronRight, Star, ArrowUpDown } from "lucide-react";
 import type { CreateArticleFormData, PriceListRow } from "../../types";
@@ -20,6 +21,11 @@ import {
 } from "@/components/ui/dialog";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { showToast } from "@/lib/toast";
+import {
+	getSupplierNameOptionsAPIAction,
+	getSupplierArticleNumberOptionsAPIAction,
+} from "../../api/articleRegister";
 
 interface ArticleBasicInfoStepProps {
 	readonly control: Control<CreateArticleFormData>;
@@ -27,12 +33,6 @@ interface ArticleBasicInfoStepProps {
 	readonly onAddRow: (row: PriceListRow) => void;
 	readonly onRemoveRow: (id: string) => void;
 }
-
-const LEVERANTOR_OPTIONS = [
-	{ value: "beijer", label: "Beijer" },
-	{ value: "elgrossen", label: "Elgrossen" },
-	{ value: "schneider", label: "Schneider" },
-];
 
 const ENHET_OPTIONS = [
 	{ value: "st", label: "St" },
@@ -83,6 +83,81 @@ export function ArticleBasicInfoStep({
 		kostnad: "",
 		andringsDatum: new Date().toISOString().split("T")[0],
 	});
+
+	const [leverantorOptions, setLeverantorOptions] = useState<
+		{ value: string; label: string }[]
+	>([]);
+	const [supplierArticleNoOptions, setSupplierArticleNoOptions] = useState<
+		{ value: string; label: string }[]
+	>([]);
+	const { setValue } = useFormContext<CreateArticleFormData>();
+
+	const selectedLeverantor = useWatch({ control, name: "leverantor" }) as
+		| string
+		| undefined;
+
+	useEffect(() => {
+		let cancelled = false;
+		getSupplierNameOptionsAPIAction()
+			.then((options) => {
+				if (!cancelled) setLeverantorOptions(options);
+			})
+			.catch(() => {
+				if (!cancelled) {
+					setLeverantorOptions([]);
+					showToast("error", t(localizationConstants.genericError));
+				}
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
+	const prevSupplierRef = useRef(selectedLeverantor);
+	useEffect(() => {
+		if (prevSupplierRef.current !== selectedLeverantor) {
+			prevSupplierRef.current = selectedLeverantor;
+			setValue("supplierArticleNo", "");
+		}
+		if (!selectedLeverantor) {
+			setSupplierArticleNoOptions([]);
+			return;
+		}
+		let cancelled = false;
+		getSupplierArticleNumberOptionsAPIAction(selectedLeverantor)
+			.then((options) => {
+				if (!cancelled) setSupplierArticleNoOptions(options);
+			})
+			.catch(() => {
+				if (!cancelled) {
+					setSupplierArticleNoOptions([]);
+					showToast("error", t(localizationConstants.genericError));
+				}
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [selectedLeverantor, setValue]);
+
+	const leverantorOptionsMerged = useMemo(() => {
+		if (!selectedLeverantor) return leverantorOptions;
+		if (leverantorOptions.some((o) => o.value === selectedLeverantor)) {
+			return leverantorOptions;
+		}
+		return [{ value: selectedLeverantor, label: selectedLeverantor }, ...leverantorOptions];
+	}, [leverantorOptions, selectedLeverantor]);
+
+	const selectedSupplierArticleNo = useWatch({ control, name: "supplierArticleNo" }) as
+		| string
+		| undefined;
+
+	const supplierArticleNoOptionsMerged = useMemo(() => {
+		if (!selectedSupplierArticleNo) return supplierArticleNoOptions;
+		if (supplierArticleNoOptions.some((o) => o.value === selectedSupplierArticleNo)) {
+			return supplierArticleNoOptions;
+		}
+		return [{ value: selectedSupplierArticleNo, label: selectedSupplierArticleNo }, ...supplierArticleNoOptions];
+	}, [supplierArticleNoOptions, selectedSupplierArticleNo]);
 
 	const LABEL_CLASS = "text-[14px] font-medium leading-5 text-[#09090B]";
 
@@ -154,7 +229,7 @@ export function ArticleBasicInfoStep({
 							name="leverantor"
 							label={localizationConstants.articleLeverantorLabel}
 							placeholder={t(localizationConstants.placeholderSelectLeverantor)}
-							options={LEVERANTOR_OPTIONS}
+							options={leverantorOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 						<FormField
@@ -203,7 +278,7 @@ export function ArticleBasicInfoStep({
 							name="supplierArticleNo"
 							label={localizationConstants.articleSupplierArticleNoLabel}
 							placeholder={t(localizationConstants.placeholderSelectSupplierArticleNo)}
-							options={[]}
+							options={supplierArticleNoOptionsMerged}
 							labelClassName={LABEL_CLASS}
 						/>
 						<FormSelect

@@ -19,7 +19,7 @@ export function WageTypeDetailPage() {
 	const { data: wageType, isLoading } = useWageTypeDetailQuery(cleanId, isValidId);
 
 	const handleBack = () => {
-		router.push("/tools/register?tab=wageType");
+		router.push("/tools/register/wage-type");
 	};
 
 	const handleEdit = () => {

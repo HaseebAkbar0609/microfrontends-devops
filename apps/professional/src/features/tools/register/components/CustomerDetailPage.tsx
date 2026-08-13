@@ -85,7 +85,7 @@ export function CustomerDetailPage() {
 			<div className="mb-1 flex items-center gap-2 ml-0">
 				<button
 					type="button"
-					aria-label="Go back to register"
+					aria-label={t(localizationConstants.goBackToRegisterLabel)}
 					onClick={() => router.push("/tools/register?tab=kund")}
 					className="rounded-md p-1 hover:bg-slate-100"
 				>

@@ -32,6 +32,7 @@ import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 
 interface ImportRow {
+	id: string;
 	accountNumber: string;
 	accountName: string;
 	action: string;
@@ -42,6 +43,7 @@ interface ImportRow {
 
 const MOCK_IMPORT_ROWS: ImportRow[] = [
 	{
+		id: "import-row-1",
 		accountNumber: "1010",
 		accountName: "Lorem Ipsum is simply dummy",
 		action: "koppla",
@@ -50,6 +52,7 @@ const MOCK_IMPORT_ROWS: ImportRow[] = [
 		targetAccountName: "Lorem Ipsum is simply dummy",
 	},
 	{
+		id: "import-row-2",
 		accountNumber: "1011",
 		accountName: "Lorem Ipsum is simply dummy",
 		action: "skapaNytt",
@@ -58,6 +61,7 @@ const MOCK_IMPORT_ROWS: ImportRow[] = [
 		targetAccountName: "Lorem Ipsum is simply dummy",
 	},
 	{
+		id: "import-row-3",
 		accountNumber: "1012",
 		accountName: "Lorem Ipsum is simply dummy",
 		action: "skapaNytt",
@@ -345,8 +349,8 @@ export function ImportAccountPlanPage() {
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{importRows.map((row, index) => (
-											<TableRow key={index} className="border-b border-slate-100">
+										    {importRows.map((row, index) => (
+											    <TableRow key={row.id} className="border-b border-slate-100">
 												<TableCell className="py-3 px-4 text-sm text-slate-700 whitespace-nowrap min-w-17.5">
 													{row.accountNumber}
 												</TableCell>

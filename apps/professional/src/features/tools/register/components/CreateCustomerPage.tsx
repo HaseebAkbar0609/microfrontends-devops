@@ -269,7 +269,7 @@ export function CreateCustomerPage() {
 				<div className="mb-2 flex items-center gap-2">
 					<button
 						type="button"
-						aria-label="Go back to register"
+						aria-label={t(localizationConstants.goBackToRegisterLabel)}
 						onClick={() => router.push("/tools/register?tab=kund")}
 						className="rounded-md p-1 hover:bg-slate-100"
 					>

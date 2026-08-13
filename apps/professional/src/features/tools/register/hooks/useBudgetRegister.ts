@@ -3,6 +3,7 @@ import type { GetBudgetListParams } from "../types";
 import {
 	createBudgetAPIAction,
 	getBudgetListAPIAction,
+	deleteBudgetAPIAction,
 	toggleBudgetStatusAPIAction,
 	toggleBudgetFavoriteAPIAction,
 } from "../api/budgetRegister";
@@ -41,6 +42,16 @@ export function useToggleBudgetFavoriteMutation() {
 	return useMutation({
 		mutationFn: ({ id, isFavorite }: { id: string; isFavorite: boolean }) =>
 			toggleBudgetFavoriteAPIAction(id, isFavorite),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["budgetList"] });
+		},
+	});
+}
+
+export function useDeleteBudgetMutation() {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (id: string) => deleteBudgetAPIAction(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["budgetList"] });
 		},

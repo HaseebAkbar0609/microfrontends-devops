@@ -23,6 +23,7 @@ export const INVOICE_SUB_SIDEBAR_ITEMS: InvoiceSubSidebarItem[] = [
 	{ id: "artiklar", labelKey: localizationConstants.registerArtiklar, href: "/tools/register/articles" },
 	{ id: "kontoplan", labelKey: localizationConstants.accountPlan, href: "/tools/register/account-plan" },
 	{ id: "kostnadsstallen", labelKey: localizationConstants.registerKostnadsstallen, href: "/tools/register/cost-centre" },
+	{ id: "budget", labelKey: localizationConstants.budgetOption, href: "/tools/register/budget" },
 	{ id: "wageTypes", labelKey: localizationConstants.wageTypes, href: "/tools/register/wage-type" },
 ];
 

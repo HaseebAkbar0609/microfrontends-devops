@@ -106,10 +106,7 @@ export function CreateBudgetPage() {
 	const isPending = createMutation.isPending;
 
 	// Budget section rows state
-	const [budgetRows, setBudgetRows] = useState<BudgetRow[]>([
-		{ ...createEmptyRow(), konto: "20 I", kostnadsStalle: "10 - Stockholm", arsbelopp: "500 000", fordelning: "0", percent: "0", months: ["100 000", "100 000", "0", "0", "48", "0", "0", "0", "0", "0", "0", "0"] },
-		{ ...createEmptyRow(), konto: "40 C", kostnadsStalle: "10 - Stockholm", arsbelopp: "300 000", fordelning: "12", percent: "0", months: ["-50 000", "-50 000", "0", "0", "30", "0", "0", "0", "0", "0", "0", "0"] },
-	]);
+	const [budgetRows, setBudgetRows] = useState<BudgetRow[]>([]);
 	const [distribution, setDistribution] = useState("K4");
 
 	// Add Row Modal State
@@ -119,7 +116,7 @@ export function CreateBudgetPage() {
 	const form = useForm({
 		resolver: zodResolver(createBudgetSchema),
 		defaultValues: {
-			budgetNr: "105",
+			budgetNr: "",
 			budgetName: "",
 			totalAmount: "",
 			currency: "SEK",
@@ -133,11 +130,34 @@ export function CreateBudgetPage() {
 	});
 
 	const onSubmit = async (data: CreateBudgetFormData): Promise<void> => {
+		// Validate budget rows numeric fields before submitting
+		for (const row of budgetRows) {
+			const checkNum = (val: string) => {
+				const str = String(val ?? "").trim();
+				if (str === "") return true;
+				const n = Number(str.replace(/\s/g, "").replace(",", "."));
+				return Number.isFinite(n);
+			};
+			const isArsbeloppValid = checkNum(row.arsbelopp);
+			const isPercentValid = checkNum(row.percent);
+			const isMonthsValid = Array.isArray(row.months) && row.months.every(checkNum);
+
+			if (!isArsbeloppValid || !isPercentValid || !isMonthsValid) {
+				showToast("error", t(localizationConstants.validationFailedError));
+				return;
+			}
+		}
+
 		try {
-			const res = await createMutation.mutateAsync(data);
+			const fullPayload: CreateBudgetFormData = {
+				...data,
+				distribution,
+				budgetRows,
+			};
+			const res = await createMutation.mutateAsync(fullPayload);
 			if (res.success) {
 				showToast("success", t(localizationConstants.budgetCreatedSuccess));
-				router.push("/tools/register?tab=budget");
+				router.push("/tools/register/budget");
 			} else {
 				showToast("error", t(localizationConstants.budgetCreateError));
 			}
@@ -148,7 +168,7 @@ export function CreateBudgetPage() {
 
 	const handleCancel = () => {
 		if (isPending) return;
-		router.push("/tools/register?tab=budget");
+		router.push("/tools/register/budget");
 	};
 
 	// Computed totals

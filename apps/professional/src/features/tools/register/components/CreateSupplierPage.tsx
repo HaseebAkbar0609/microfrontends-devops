@@ -225,17 +225,16 @@ export function CreateSupplierPage() {
 				<div className="mb-2 flex items-center gap-2">
 					<button
 						type="button"
-						aria-label="Go back to register"
+						aria-label={t(localizationConstants.goBackToRegisterLabel)}
 						onClick={() => router.push("/tools/register?tab=supplier")}
 						className="rounded-md p-1 hover:bg-slate-100"
 					>
 						<ArrowLeft className="h-5 w-5 text-slate-700" />
 					</button>
-					<h1 className="text-xl font-semibold text-slate-900">
+					<h1 className="font-sans text-xl font-bold text-slate-900">
 						<Translate text={localizationConstants.createSupplierTitle} />
 					</h1>
 				</div>
-
 				{/* Step Counter */}
 				<p className="mb-4 ml-9 text-sm text-slate-500">
 					<Translate text={localizationConstants.stepLabel} /> {currentStep}/{TOTAL_STEPS}

@@ -8,8 +8,8 @@ import localizationConstants from "@/utils/translation/constants";
 
 interface DetailSectionCardProps {
 	titleKey: string;
-	editAriaLabelKey: string;
-	onEdit: () => void;
+	editAriaLabelKey?: string;
+	onEdit?: () => void;
 	icon?: LucideIcon;
 	children: React.ReactNode;
 }
@@ -32,15 +32,17 @@ export function DetailSectionCard({
 					</h2>
 				</div>
 
-				<button
-					type="button"
-					onClick={onEdit}
-					aria-label={t(editAriaLabelKey)}
-					className="pointer-events-auto flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-200 sm:h-9 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm transition-colors"
-				>
-					<PenLine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-900" aria-hidden />
-					<Translate text={localizationConstants.editLabel} />
-				</button>
+				{onEdit && editAriaLabelKey && (
+					<button
+						type="button"
+						onClick={onEdit}
+						aria-label={t(editAriaLabelKey)}
+						className="pointer-events-auto flex h-8 cursor-pointer items-center justify-center gap-1.5 rounded-md bg-slate-100 px-3 py-1.5 text-xs font-medium text-slate-900 hover:bg-slate-200 sm:h-9 sm:gap-2 sm:px-4 sm:py-2 sm:text-sm transition-colors"
+					>
+						<PenLine className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-slate-900" aria-hidden />
+						<Translate text={localizationConstants.editLabel} />
+					</button>
+				)}
 			</div>
 
 			<CardContent className="px-6 py-3 bg-white">{children}</CardContent>

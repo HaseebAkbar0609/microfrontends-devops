@@ -283,7 +283,7 @@ export function CostCenterRegisterTable() {
 					</DropdownMenu>
 				</div>
 
-				<Link href="/tools/register/cost-centre/create" passHref>
+				<Link href="/tools/register/cost-centre/create">
 					<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
 						<Plus className="h-4 w-4" aria-hidden />
 						<Translate text={localizationConstants.createCostCenterButtonText} />

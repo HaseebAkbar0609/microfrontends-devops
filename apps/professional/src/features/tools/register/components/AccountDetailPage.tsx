@@ -13,7 +13,7 @@ function getModeTranslationKey(mode?: string): string {
 	if (mode === "allowed" || mode === "tillatet") {
 		return localizationConstants.radioTillatet;
 	}
-	if (mode === "not_allowed" || mode === "ej_tillatet") {
+	if (mode === "not_allowed" || mode === "ej_tillatet" || mode === "ejTillatet") {
 		return localizationConstants.radioEjTillatet;
 	}
 	return localizationConstants.radioObligatoriskt;

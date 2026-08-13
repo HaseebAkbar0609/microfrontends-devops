@@ -24,7 +24,7 @@ export function CostCenterDetailPage() {
 	});
 
 	const handleBack = () => {
-		router.push("/tools/register?tab=costCenter");
+		router.push("/tools/register/cost-centre");
 	};
 
 	const handleEdit = () => {

@@ -2720,6 +2720,7 @@ export type RegisterTranslation = {
 	statusHeader: string;
 	activeStatus: string;
 	inactiveStatus: string;
+	discontinuedStatus: string;
 	allStatus: string;
 	rowsPerPageLabel: string;
 	pageLabel: string;
@@ -2934,6 +2935,7 @@ export type RegisterTranslation = {
 	purchasePriceHeader: string;
 	linkedToArticleHeader: string;
 	mappedStatus: string;
+	unmappedStatus: string;
 	allSuppliers: string;
 	selectSupplier: string;
 	selectRegisterPlaceholder: string;
@@ -2954,6 +2956,7 @@ export type RegisterTranslation = {
 	unitPriceLabel: string;
 	linkedArticleLabel: string;
 	articleDescriptionLabel: string;
+	leadTimeLabel: string;
 	// Import Article Translations (TFS-437)
 	importFileTitle: string;
 	yourFileSection: string;
@@ -2995,6 +2998,7 @@ export type RegisterTranslation = {
 	importingLabel: string;
 	importSuccessMessage: string;
 	importErrorMessage: string;
+	downloadTemplateErrorMessage: string;
 	invalidFileFormatError: string;
 	missingRequiredColumnError: string;
 	filesImportedSuccessfully: string;
@@ -3083,6 +3087,23 @@ export type RegisterTranslation = {
 	articleCreateButton: string;
 	articleCreatedSuccess: string;
 	articleCreateError: string;
+	articleUpdatedSuccess: string;
+	articleUpdateError: string;
+	articleDeletedSuccess: string;
+	editArticleTitle: string;
+	editSupplierArticleTitle: string;
+	supplierArticleUpdatedSuccess: string;
+	supplierArticleUpdateError: string;
+	supplierArticleDeletedSuccess: string;
+	supplierArticleDeleteConfirmTitle: string;
+	supplierArticleDeleteConfirmDesc: string;
+	articleDeleteConfirmTitle: string;
+	articleDeleteConfirmDesc: string;
+	budgetDeletedSuccess: string;
+	budgetDeleteError: string;
+	budgetDeleteConfirmTitle: string;
+	budgetDeleteConfirmDesc: string;
+	goBackToRegisterLabel: string;
 	validationArticleNameRequired: string;
 	validationArticleUnitRequired: string;
 	validationArticleTypeRequired: string;
@@ -3164,6 +3185,8 @@ export type RegisterTranslation = {
 	priceListHelKronaOption: string;
 	priceListOkaOption: string;
 	priceListMinskaOption: string;
+	priceListUpdateSuccess: string;
+	priceListUpdateError: string;
 	genericLoading: string;
 	genericError: string;
 
@@ -3371,6 +3394,7 @@ export type RegisterTranslation = {
 	goBackToCostCenterListLabel: string;
 	editCostCenterBasicInfoAriaLabel: string;
 	budgetOption: string;
+	budgetTitle: string;
 	budgetListTab: string;
 	createBudgetButton: string;
 	budgetNrHeader: string;
@@ -3411,6 +3435,13 @@ export type RegisterTranslation = {
 	budgetEndDatePlaceholder: string;
 	budgetCreatedSuccess: string;
 	budgetCreateError: string;
+	goBackToBudgetListLabel: string;
+	budgetAmountLabel: string;
+	budgetVsActualSection: string;
+	budgetActualSpendLabel: string;
+	budgetDifferenceLabel: string;
+	budgetPercentUsedLabel: string;
+	expenseBreakdownSection: string;
 	validationBudgetNameRequired: string;
 	validationBudgetTotalAmountRequired: string;
 	validationBudgetTotalAmountInvalid: string;

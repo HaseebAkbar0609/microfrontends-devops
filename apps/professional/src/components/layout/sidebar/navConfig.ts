@@ -153,6 +153,12 @@ export const navConfig: NavGroup[] = [
 						icon: Building2,
 					},
 					{
+						id: "budget",
+						label: localizationConstants.budgetOption,
+						href: "/tools/register/budget",
+						icon: Landmark,
+					},
+					{
 						id: "wageTypes",
 						label: localizationConstants.wageTypes,
 						href: "/tools/register/wage-type",
