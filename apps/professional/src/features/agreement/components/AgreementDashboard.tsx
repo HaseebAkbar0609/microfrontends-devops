@@ -67,6 +67,9 @@ export function AgreementDashboard() {
 			const res = await getWidgetsAction(company.id, "agreement_dashboard");
 			if (res.success && res.data && res.data.length > 0) {
 				const sorted = [...res.data].sort((a, b) => a.order - b.order);
+				const usedKeys = sorted.map(w => w.key);
+				const remainingInitial = AGREEMENT_INITIAL_WIDGETS.filter(w => w.sidebarId && !usedKeys.includes(w.sidebarId));
+				
 				const restoredLayout = AGREEMENT_INITIAL_WIDGETS.map((initial, i) => {
 					const dbWidget = sorted[i];
 					if (dbWidget) {
@@ -76,7 +79,12 @@ export function AgreementDashboard() {
 							widgetProps: AGREEMENT_SIDEBAR_WIDGET_MAP[dbWidget.key] || AGREEMENT_SIDEBAR_WIDGET_MAP.emptyPage
 						};
 					}
-					return initial;
+					const fallback = remainingInitial.shift() || initial;
+					return {
+						...initial,
+						sidebarId: fallback.sidebarId,
+						widgetProps: fallback.widgetProps
+					};
 				});
 				setPlacedWidgets(restoredLayout);
 				persistedLayoutRef.current = restoredLayout;

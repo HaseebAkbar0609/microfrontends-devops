@@ -73,9 +73,9 @@ export async function getAgreementDetailAction(id: string): Promise<ActionResult
 	}
 }
 
-export async function getAgreementDocumentsAction(): Promise<ActionResult<AgreementDetailDocument[]>> {
+export async function getAgreementDocumentsAction(agreementId: string): Promise<ActionResult<AgreementDetailDocument[]>> {
 	try {
-		const response = await axiosInstance.get<ApiResponse<AgreementDetailDocument[]>>(`${AGREEMENTS_BASE_PATH}/documents`);
+		const response = await axiosInstance.get<ApiResponse<AgreementDetailDocument[]>>(`${AGREEMENTS_BASE_PATH}/${agreementId}/documents`);
 		return { success: true, data: response.data.data, error: null };
 	} catch (error: unknown) {
 		const apiError = error as ApiError;

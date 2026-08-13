@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import type { Control } from "react-hook-form";
+import { useWatch, type Control } from "react-hook-form";
 import type { CreateAgreementFormData } from "../../types/agreementCreate";
 import { FormInput, FormSelect, FormDatePicker } from "@/components/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +19,8 @@ interface AgreementInformationStepProps {
 export function AgreementInformationStep({ control }: AgreementInformationStepProps) {
 	const [departmentOptions, setDepartmentOptions] = useState<{value: string, label: string}[]>([]);
 
+	const currentValue = useWatch({ control, name: "avdelning" });
+
 	useEffect(() => {
 		async function fetchDepartments() {
 			try {
@@ -26,8 +28,6 @@ export function AgreementInformationStep({ control }: AgreementInformationStepPr
 				if (res.success && res.data) {
 					const options = res.data.map(d => ({ value: d, label: d }));
 					
-					// Make sure the current value is in the options array if it exists
-					const currentValue = control._formValues.avdelning;
 					if (currentValue && !options.find(o => o.value === currentValue)) {
 						options.push({ value: currentValue, label: currentValue });
 					}
@@ -39,7 +39,7 @@ export function AgreementInformationStep({ control }: AgreementInformationStepPr
 			}
 		}
 		fetchDepartments();
-	}, [control._formValues.avdelning]);
+	}, []);
 
 	return (
 		<div className="flex flex-col gap-6">
