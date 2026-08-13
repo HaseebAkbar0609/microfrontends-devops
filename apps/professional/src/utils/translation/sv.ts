@@ -2256,6 +2256,13 @@ export const svOffer: OfferTranslation = {
 	catNyproduktion: "Nyproduktion",
 	catROT: "ROT",
 	catService: "Service",
+	colContractSum: "Kontrakts summa",
+	colOrderSum: "Order summa",
+	departmentProduction: "Produktion",
+	departmentPersonnel: "Personal",
+	departmentEconomy: "Ekonomi",
+	actionRestore: "Återställ",
+	filterAllCategories: "Alla kategorier",
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: "Offertöversikt",
 	offerWidgetOverviewTotal: "Totalt antal offerter",
