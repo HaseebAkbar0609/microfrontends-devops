@@ -2416,7 +2416,7 @@ export const svOffer: OfferTranslation = {
 	homeImageTitle: "Bild",
 	homeImageDescription: "Platshållarbild – ladda upp egen media senare.",
 	// Offer - List
-	offerList: "Leads",
+	offerList: "Offert",
 	job: "Jobb",
 	projectName: "Projektnamn",
 	date: "Datum",
