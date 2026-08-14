@@ -1,4 +1,26 @@
 export type ForfragnStatus = "pagar" | "ej-paborjad" | "avslutad";
+
+export interface ForfragnKontaktData {
+	kontaktperson: string;
+	fornamn: string;
+	efternamn: string;
+	adress: string;
+	postNr: string;
+	mail: string;
+	telefon: string;
+	ort: string;
+}
+
+export const DEFAULT_KONTAKT: ForfragnKontaktData = {
+	kontaktperson: "Anders Svensson",
+	fornamn: "",
+	efternamn: "",
+	adress: "",
+	postNr: "",
+	mail: "",
+	telefon: "",
+	ort: "",
+};
 export type InbjudnaStatus = "received-price" | "ongoing" | "declined";
 
 export interface ForfragnRow {

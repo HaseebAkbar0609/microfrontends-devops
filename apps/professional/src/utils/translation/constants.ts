@@ -1101,6 +1101,20 @@ export type OfferTranslation = {
 	calcQAFilter: string;
 	calcQANoQuestions: string;
 	calcQASearchPlaceholder: string;
+	// Calculation - Create Förfrågan wizard
+	createForfrgnTabLeverantor: string;
+	createForfrgnInbjudnaSection: string;
+	createForfrgnLaggTill: string;
+	createForfrgnLeverantorLabel: string;
+	createForfrgnSkickaErb: string;
+	createForfrgnSuccess: string;
+	createForfrgnPlaceholderFornamn: string;
+	createForfrgnPlaceholderEfternamn: string;
+	createForfrgnPlaceholderAdress: string;
+	createForfrgnPlaceholderPostNr: string;
+	createForfrgnPlaceholderMail: string;
+	createForfrgnPlaceholderTelefon: string;
+	createForfrgnPlaceholderOrt: string;
 	// Admin - Users
 	adminUsersTitle: string;
 	adminUsersTabGroups: string;
