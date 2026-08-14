@@ -8,7 +8,6 @@ import type {
 	PriceListArticleRow,
 	PriceListDetail,
 } from "../types";
-import { MOCK_PRICE_LIST_REGISTER_DATA, MOCK_ARTICLE_DATA, MOCK_PRICE_LIST_DETAIL } from "../mockdata/priceLists";
 
 export type { PriceListRegisterRow };
 
@@ -22,85 +21,75 @@ export type PriceListUpdateData = {
 	percentage?: string;
 };
 
+type ApiListEnvelope<T> = {
+	data: T;
+	total_items?: number;
+	current_page?: number;
+	page_size?: number;
+	total_pages?: number;
+};
+
+const PRICE_LIST_SORT_MAP: Record<string, string> = {
+	prislista: "name",
+	kategori: "category",
+	valuta: "currency",
+	giltigPeriod: "valid_from",
+	skapadAv: "created_by",
+	senastUppdaterad: "updated_at",
+	kopplad: "linked",
+	datum: "date",
+	kod: "kod",
+	status: "status",
+};
+
+function toSortBy(sortBy?: string): string | undefined {
+	if (!sortBy) return undefined;
+	return PRICE_LIST_SORT_MAP[sortBy] ?? sortBy;
+}
+
 const mapPriceListFromApi = (item: Record<string, unknown>): PriceListRegisterRow => ({
 	id: String(item.id ?? ""),
-	isFavorite: Boolean(item.is_favorite ?? item.isFavorite ?? false),
-	kod: String(item.kod ?? item.code ?? ""),
-	prislista: String(item.prislista ?? item.name ?? ""),
-	kategori: String(item.kategori ?? item.category ?? ""),
-	kopplad: Number(item.kopplad ?? item.linked ?? 0),
-	skapadAv: String(item.skapad_av ?? item.created_by ?? ""),
-	datum: String(item.datum ?? item.date ?? ""),
-	senastUppdaterad: String(item.senast_uppdaterad ?? item.last_updated ?? ""),
+	isFavorite: Boolean(item.is_favorite ?? false),
+	kod: String(item.kod ?? ""),
+	prislista: String(item.name ?? ""),
+	kategori: String(item.category ?? ""),
+	valuta: String(item.currency ?? ""),
+	status: (item.status as PriceListRegisterRow["status"]) ?? "active",
+	giltigFran: String(item.valid_from ?? ""),
+	giltigTill: String(item.valid_to ?? ""),
+	kopplad: Number(item.linked ?? 0),
+	skapadAv: String(item.created_by ?? ""),
+	datum: String(item.date ?? item.created_at ?? ""),
+	senastUppdaterad: String(item.updated_at ?? ""),
 });
 
 export async function getPriceListRegisterListAPIAction(
 	params?: GetPriceListRegisterListParams,
 ): Promise<GetPriceListRegisterListResponse> {
-	try {
-		const queryParams: Record<string, string | number> = {};
-		if (params?.page) queryParams.page = params.page;
-		if (params?.limit) queryParams.limit = params.limit;
-		if (params?.search) queryParams.search = params.search;
-		if (params?.sortBy) queryParams.sort_by = params.sortBy;
-		if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
+	const queryParams: Record<string, string | number> = {};
+	if (params?.page) queryParams.page = params.page;
+	if (params?.limit) queryParams.limit = params.limit;
+	if (params?.search) queryParams.search = params.search;
+	const sortBy = toSortBy(params?.sortBy);
+	if (sortBy) queryParams.sort_by = sortBy;
+	if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
+	if (params?.status && params.status !== "all") queryParams.status = params.status;
+	if (params?.currency && params.currency !== "all") queryParams.currency = params.currency;
+	if (params?.category && params.category !== "all") queryParams.category = params.category;
 
-		const res = await axiosInstance.get(API_PATH.PRICE_LISTS.LIST, { params: queryParams });
-		const data = res.data?.data;
-
-		if (data?.items) {
-			return {
-				data: (data.items as Record<string, unknown>[]).map(mapPriceListFromApi),
-				total: data?.total ?? 0,
-				page: data?.page ?? params?.page ?? 1,
-				limit: data?.limit ?? params?.limit ?? 10,
-				totalPages: Math.ceil((data?.total ?? 0) / (data?.limit ?? params?.limit ?? 10)),
-			};
-		}
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			console.warn("[getPriceListRegisterListAPIAction] API request failed, falling back to mock data:", error);
-		}
-	}
-
-	const page = Math.max(1, params?.page ?? 1);
-	const limit = Math.max(1, params?.limit ?? 10);
-	const search = params?.search?.toLowerCase().trim();
-	const sortBy = params?.sortBy;
-	const sortOrder = params?.sortOrder;
-
-	let filtered = [...MOCK_PRICE_LIST_REGISTER_DATA];
-
-	if (search) {
-		filtered = filtered.filter(
-			(item) =>
-				item.kod.toLowerCase().includes(search) ||
-				item.prislista.toLowerCase().includes(search) ||
-				item.kategori.toLowerCase().includes(search) ||
-				item.skapadAv.toLowerCase().includes(search),
-		);
-	}
-
-	if (sortBy) {
-		filtered.sort((a, b) => {
-			const aVal = String((a as unknown as Record<string, unknown>)[sortBy] ?? "");
-			const bVal = String((b as unknown as Record<string, unknown>)[sortBy] ?? "");
-			const cmp = aVal.localeCompare(bVal);
-			return sortOrder === "desc" ? -cmp : cmp;
-		});
-	}
-
-	const total = filtered.length;
-	const totalPages = Math.ceil(total / limit) || 1;
-	const startIndex = (page - 1) * limit;
-	const paginatedData = filtered.slice(startIndex, startIndex + limit);
-
+	const res = await axiosInstance.get<ApiListEnvelope<Record<string, unknown>[]>>(
+		API_PATH.PRICE_LISTS.LIST,
+		{ params: queryParams },
+	);
+	const items = Array.isArray(res.data?.data) ? res.data.data : [];
+	const total = res.data?.total_items ?? items.length;
+	const limit = res.data?.page_size ?? params?.limit ?? 10;
 	return {
-		data: paginatedData,
+		data: items.map(mapPriceListFromApi),
 		total,
-		page,
+		page: res.data?.current_page ?? params?.page ?? 1,
 		limit,
-		totalPages,
+		totalPages: res.data?.total_pages ?? (Math.ceil(total / limit) || 1),
 	};
 }
 
@@ -108,45 +97,28 @@ export async function togglePriceListFavoriteAPIAction(id: string): Promise<bool
 	try {
 		await axiosInstance.post(API_PATH.PRICE_LISTS.TOGGLE_FAVORITE(id));
 		return true;
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			console.warn("[togglePriceListFavoriteAPIAction] API request failed:", error);
-		}
-		const idx = MOCK_PRICE_LIST_REGISTER_DATA.findIndex((item) => item.id === id);
-		if (idx !== -1) {
-			MOCK_PRICE_LIST_REGISTER_DATA[idx].isFavorite = !MOCK_PRICE_LIST_REGISTER_DATA[idx].isFavorite;
-		}
-		return true;
+	} catch {
+		return false;
 	}
 }
 
 export async function updatePriceListAPIAction(data: PriceListUpdateData): Promise<boolean> {
-	try {
-		await axiosInstance.put(API_PATH.PRICE_LISTS.UPDATE(data.id), {
-			base_calculation: data.baseCalculation,
-			update_price_list: data.updatePriceList,
-			calculation: data.calculation,
-			rounding: data.rounding,
-			increase_decrease: data.increaseDecrease,
-			percentage: data.percentage,
-		});
-		return true;
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			console.warn("[updatePriceListAPIAction] API request failed:", error);
-		}
-		return false;
-	}
+	await axiosInstance.put(API_PATH.PRICE_LISTS.UPDATE(data.id), {
+		base_calculation: data.baseCalculation,
+		update_price_list: data.updatePriceList,
+		calculation: data.calculation,
+		rounding: data.rounding,
+		increase_decrease: data.increaseDecrease,
+		percentage: data.percentage,
+	});
+	return true;
 }
 
 export async function deletePriceListAPIAction(id: string): Promise<boolean> {
 	try {
 		await axiosInstance.delete(API_PATH.PRICE_LISTS.DELETE(id));
 		return true;
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			console.warn("[deletePriceListAPIAction] API request failed:", error);
-		}
+	} catch {
 		return false;
 	}
 }
@@ -154,7 +126,7 @@ export async function deletePriceListAPIAction(id: string): Promise<boolean> {
 const mapPriceListToApi = (data: CreatePriceListFormData): Record<string, unknown> => ({
 	kod: data.kod || null,
 	name: data.benamning,
-	date: data.datum,
+	date: data.datum || null,
 	valid_from: data.giltigFran || null,
 	valid_to: data.giltigTill || null,
 	created_by: data.skapadAv,
@@ -177,25 +149,17 @@ export async function createPriceListAPIAction(
 			price: a.customPrice || a.outPriceListA,
 		})),
 	};
-	try {
-		const res = await axiosInstance.post(API_PATH.PRICE_LISTS.CREATE, payload);
-		return { id: String(res.data?.data?.id ?? "") };
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			const sanitizedMessage = error instanceof Error ? error.message : String(error);
-			console.warn("[createPriceListAPIAction] API request failed:", sanitizedMessage);
-		}
-		throw error;
-	}
+	const res = await axiosInstance.post(API_PATH.PRICE_LISTS.CREATE, payload);
+	return { id: String(res.data?.data?.id ?? "") };
 }
 
 const mapArticleFromApi = (item: Record<string, unknown>): PriceListArticleRow => ({
 	id: String(item.id ?? ""),
-	articleNo: String(item.article_no ?? item.articleNo ?? ""),
-	benamning: String(item.description ?? item.benamning ?? ""),
-	outPriceListA: String(item.out_price_list_a ?? item.outPriceListA ?? "0"),
-	customPrice: String(item.custom_price ?? item.out_price_list_a ?? item.outPriceListA ?? "0"),
-	calcCost: String(item.calculated_cost ?? item.calculatedCost ?? "0"),
+	articleNo: String(item.article_no ?? ""),
+	benamning: String(item.benamning ?? ""),
+	outPriceListA: String(item.out_price_list_a ?? "0"),
+	customPrice: String(item.out_price_list_a ?? "0"),
+	calcCost: String(item.calculated_cost ?? "0"),
 	stock: Number(item.stock ?? 0),
 	reserved: Number(item.reserved ?? 0),
 	selected: false,
@@ -206,93 +170,70 @@ export async function getAvailableArticlesAPIAction(params?: {
 	limit?: number;
 	search?: string;
 }): Promise<{ data: PriceListArticleRow[]; total: number; page: number; limit: number; totalPages: number }> {
-	try {
-		const res = await axiosInstance.get(API_PATH.ARTICLES.LIST, {
-			params: {
-				page: params?.page ?? 1,
-				limit: params?.limit ?? 50,
-				search: params?.search ?? "",
-			},
-		});
-		const items = res.data?.data?.items ?? res.data?.data;
-		if (Array.isArray(items)) {
-			return {
-				data: items.map(mapArticleFromApi),
-				total: res.data?.data?.total ?? items.length,
-				page: res.data?.data?.page ?? params?.page ?? 1,
-				limit: res.data?.data?.limit ?? params?.limit ?? 50,
-				totalPages: res.data?.data?.totalPages ?? 1,
-			};
-		}
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			const sanitizedMessage = error instanceof Error ? error.message : String(error);
-			console.warn("[getAvailableArticlesAPIAction] API request failed, falling back to mock data:", sanitizedMessage);
-		}
-		// TODO: Remove mock fallback once BE is ready
-	}
-
-	const page = Math.max(1, params?.page ?? 1);
-	const limit = Math.max(1, params?.limit ?? 50);
-	const search = params?.search?.toLowerCase().trim();
-	let filtered = [...MOCK_ARTICLE_DATA];
-	if (search) {
-		filtered = filtered.filter(
-			(item) =>
-				item.articleNo.toLowerCase().includes(search) ||
-				item.benamning.toLowerCase().includes(search),
-		);
-	}
-	const total = filtered.length;
-	const totalPages = Math.ceil(total / limit) || 1;
-	const startIndex = (page - 1) * limit;
-	const paginatedData = filtered.slice(startIndex, startIndex + limit);
-	return { data: paginatedData, total, page, limit, totalPages };
+	const res = await axiosInstance.get<ApiListEnvelope<Record<string, unknown>[]>>(API_PATH.ARTICLES.LIST, {
+		params: {
+			page: params?.page ?? 1,
+			limit: params?.limit ?? 50,
+			search: params?.search ?? "",
+		},
+	});
+	const items = Array.isArray(res.data?.data) ? res.data.data : [];
+	const total = res.data?.total_items ?? items.length;
+	const limit = res.data?.page_size ?? params?.limit ?? 50;
+	return {
+		data: items.map(mapArticleFromApi),
+		total,
+		page: res.data?.current_page ?? params?.page ?? 1,
+		limit,
+		totalPages: res.data?.total_pages ?? (Math.ceil(total / limit) || 1),
+	};
 }
 
-export async function getPriceListDetailAPIAction(id: string): Promise<PriceListDetail> {
-	try {
-		const res = await axiosInstance.get(API_PATH.PRICE_LISTS.GET(id));
-		const data = res.data?.data;
-		if (data) {
-			return {
-				id: String(data.id ?? ""),
-				kod: String(data.kod ?? data.code ?? ""),
-				benamning: String(data.benamning ?? data.name ?? ""),
-				datum: String(data.datum ?? data.date ?? ""),
-				giltigFran: String(data.giltig_from ?? data.valid_from ?? ""),
-				giltigTill: String(data.giltig_till ?? data.valid_to ?? ""),
-				skapadAv: String(data.skapad_av ?? data.created_by ?? ""),
-				valuta: String(data.valuta ?? data.currency ?? "SEK"),
-				kommentar: String(data.kommentar ?? data.comment ?? ""),
-				kategori: String(data.kategori ?? data.category ?? ""),
-				enhet: String(data.enhet ?? data.unit ?? ""),
-				kund: Array.isArray(data.kund) ? data.kund.map(String) : [],
-				leverantor: Array.isArray(data.leverantor) ? data.leverantor.map(String) : [],
-				articles: Array.isArray(data.articles)
-					? data.articles.map((item: Record<string, unknown>) => ({
-							id: String(item.id ?? ""),
-							isFavorite: Boolean(item.is_favorite ?? item.isFavorite ?? false),
-							articleNo: String(item.article_no ?? item.articleNo ?? ""),
-							benamning: String(item.benamning ?? item.description ?? ""),
-							utprislistaA: String(item.utprislista_a ?? item.outPriceListA ?? "0"),
-							kalkylKostnad: String(item.kalkyl_kostnad ?? item.calculatedCost ?? "0"),
-							lager: Number(item.lager ?? item.stock ?? 0),
-							reserverat: Number(item.reserverat ?? item.reserved ?? 0),
-							disponibelt: Number(item.disponibelt ?? item.available ?? 0),
-							lagervarde: String(item.lagervarde ?? item.stockValue ?? "0"),
-							land: String(item.land ?? item.country ?? ""),
-							status: (item.status as "active" | "inactive") ?? "active",
-					  }))
-					: [],
-			};
-		}
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			const sanitizedMessage = error instanceof Error ? error.message : String(error);
-			console.warn("[getPriceListDetailAPIAction] API request failed, falling back to mock data:", sanitizedMessage);
-		}
-	}
+const mapArticleDetailFromApi = (item: Record<string, unknown>): PriceListDetail["articles"][number] => ({
+	id: String(item.id ?? ""),
+	isFavorite: false,
+	articleNo: String(item.article_no ?? ""),
+	benamning: String(item.benamning ?? ""),
+	utprislistaA: String(item.price ?? item.out_price_list_a ?? "0"),
+	kalkylKostnad: String(item.calculated_cost ?? item.calc_cost ?? "0"),
+	lager: Number(item.stock ?? 0),
+	reserverat: Number(item.reserved ?? 0),
+	disponibelt: Number(item.available ?? 0),
+	lagervarde: String(item.stock_value ?? "0"),
+	land: String(item.land ?? item.country ?? ""),
+	status: item.status === "inactive" ? "inactive" : "active",
+});
 
-	return MOCK_PRICE_LIST_DETAIL;
+export async function getPriceListDetailAPIAction(id: string): Promise<PriceListDetail | null> {
+	const res = await axiosInstance.get(API_PATH.PRICE_LISTS.GET(id));
+	const data = res.data?.data;
+	if (!data) return null;
+	return {
+		id: String(data?.id ?? ""),
+		kod: String(data?.kod ?? ""),
+		benamning: String(data?.name ?? ""),
+		datum: String(data?.date ?? ""),
+		giltigFran: String(data?.valid_from ?? ""),
+		giltigTill: String(data?.valid_to ?? ""),
+		skapadAv: String(data?.created_by ?? ""),
+		valuta: String(data?.currency ?? ""),
+		kommentar: String(data?.comment ?? ""),
+		kategori: String(data?.category ?? ""),
+		enhet: String(data?.unit ?? ""),
+		kund: Array.isArray(data?.customer) ? data.customer.map(String) : data?.customer ? [String(data.customer)] : [],
+		leverantor: Array.isArray(data?.supplier)
+			? data.supplier.map(String)
+			: data?.supplier
+				? [String(data.supplier)]
+				: [],
+		articles: Array.isArray(data?.articles)
+			? (data.articles as Record<string, unknown>[]).map(mapArticleDetailFromApi)
+			: [],
+		baseCalculation: String(data?.base_calculation ?? ""),
+		updatePriceList: String(data?.update_price_list ?? ""),
+		calculation: String(data?.calculation ?? ""),
+		rounding: String(data?.rounding ?? ""),
+		increaseDecrease: String(data?.increase_decrease ?? ""),
+		percentage: String(data?.percentage ?? ""),
+	};
 }

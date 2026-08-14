@@ -8,77 +8,54 @@ import {
 	type GetCostCenterListResponse,
 	type CreateCostCenterFormData,
 } from "../types";
-import { MOCK_COST_CENTER_DATA } from "../mockdata/costCenters";
+
+type ApiListEnvelope<T> = {
+	data: T;
+	total_items?: number;
+	current_page?: number;
+	page_size?: number;
+	total_pages?: number;
+};
+
+const mapCostCenterFromApi = (item: Record<string, unknown>): CostCenterRegisterRow => ({
+	id: String(item.id ?? ""),
+	kod: String(item.kod ?? item.code ?? ""),
+	benamning: String(item.benamning ?? item.name ?? ""),
+	anteckningar: String(item.anteckningar ?? item.description ?? item.notes ?? ""),
+	status: item.status === "inactive" ? "inactive" : "active",
+});
 
 export async function getCostCenterListAPIAction(
 	params?: GetCostCenterListParams,
 ): Promise<GetCostCenterListResponse> {
-	try {
-		const res = await axiosInstance.get(API_PATH.COST_CENTERS.LIST, {
-			params: {
-				page: params?.page ?? 1,
-				limit: params?.limit ?? 50,
-				search: params?.search,
-				status: params?.status,
-				sort_by: params?.sortBy,
-				sort_order: params?.sortOrder,
-			},
-		});
+	const queryParams: Record<string, string | number> = {};
+	if (params?.page) queryParams.page = params.page;
+	if (params?.limit) queryParams.limit = params.limit;
+	if (params?.search) queryParams.search = params.search;
+	if (params?.status && params.status !== "all") queryParams.status = params.status;
+	if (params?.sortBy) queryParams.sort_by = params.sortBy;
+	if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
 
-		const data = res.data?.data;
-		const items = Array.isArray(data) ? data : data?.items ?? [];
+	const res = await axiosInstance.get<ApiListEnvelope<Record<string, unknown>[]>>(
+		API_PATH.COST_CENTERS.LIST,
+		{ params: queryParams },
+	);
+	const items = Array.isArray(res.data?.data) ? res.data.data : [];
 
-		if (items.length > 0) {
-			const formattedData: CostCenterRegisterRow[] = items.map((item: Record<string, unknown>) => ({
-				id: String(item.id ?? ""),
-				kod: String(item.kod ?? item.code ?? ""),
-				benamning: String(item.benamning ?? item.name ?? ""),
-				anteckningar: String(item.anteckningar ?? item.description ?? item.notes ?? ""),
-				status: (item.status as "active" | "inactive") ?? "active",
-			}));
+	const total = res.data?.total_items ?? items.length;
+	const backendPageSize = Number(res.data?.page_size);
+	const limit = Number.isFinite(backendPageSize) && backendPageSize > 0
+		? backendPageSize
+		: (params?.limit && params.limit > 0 ? params.limit : 50);
+	const effectiveLimit = Number.isFinite(limit) && limit > 0 ? limit : 50;
 
-			return {
-				data: formattedData,
-				total: res.data?.data?.total ?? items.length,
-				page: res.data?.data?.page ?? params?.page ?? 1,
-				limit: res.data?.data?.limit ?? params?.limit ?? 50,
-				totalPages: res.data?.data?.totalPages ?? 1,
-			};
-		}
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			const sanitizedMessage = error instanceof Error ? error.message : String(error);
-			console.warn("[getCostCenterListAPIAction] API request failed, falling back to mock data:", sanitizedMessage);
-		}
-		// TODO: Remove mock fallback once BE is ready
-	}
-
-	const page = Math.max(1, params?.page ?? 1);
-	const limit = Math.max(1, params?.limit ?? 50);
-	const search = params?.search?.toLowerCase().trim();
-	const statusFilter = params?.status?.toLowerCase().trim();
-
-	let filtered = [...MOCK_COST_CENTER_DATA];
-
-	if (search) {
-		filtered = filtered.filter(
-			(item) =>
-				item.kod.toLowerCase().includes(search) ||
-				item.benamning.toLowerCase().includes(search) ||
-				item.anteckningar.toLowerCase().includes(search),
-		);
-	}
-
-	if (statusFilter && statusFilter !== "all") {
-		filtered = filtered.filter((item) => item.status.toLowerCase() === statusFilter);
-	}
-
-	const total = filtered.length;
-	const totalPages = Math.ceil(total / limit) || 1;
-	const startIndex = (page - 1) * limit;
-	const paginatedData = filtered.slice(startIndex, startIndex + limit);
-
-	return { data: paginatedData, total, page, limit, totalPages };
+	return {
+		data: items.map(mapCostCenterFromApi),
+		total,
+		page: res.data?.current_page ?? params?.page ?? 1,
+		limit: effectiveLimit,
+		totalPages: res.data?.total_pages ?? (Math.ceil(total / effectiveLimit) || 1),
+	};
 }
 
 export async function createCostCenterAPIAction(
@@ -88,62 +65,33 @@ export async function createCostCenterAPIAction(
 		const res = await axiosInstance.post(API_PATH.COST_CENTERS.CREATE, {
 			kod: data.kod,
 			benamning: data.benamning,
-			anteckningar: data.anteckningar,
+			anteckningar: data.anteckningar ?? "",
 			status: data.status ?? "active",
 		});
 
 		return {
 			success: true,
-			data: res.data?.data,
+			data: res.data?.data ? mapCostCenterFromApi(res.data.data) : undefined,
 		};
 	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			const sanitizedMessage = error instanceof Error ? error.message : String(error);
-			console.warn("[createCostCenterAPIAction] API request failed, updating mock data:", sanitizedMessage);
-		}
-		const newId = String(Date.now());
-		const newRow: CostCenterRegisterRow = {
-			id: newId,
-			kod: data.kod,
-			benamning: data.benamning,
-			anteckningar: data.anteckningar ?? "",
-			status: (data.status as "active" | "inactive") ?? "active",
-		};
-		MOCK_COST_CENTER_DATA.unshift(newRow);
-		return { success: true, data: newRow };
+		throw error;
 	}
 }
 
 export async function deleteCostCenterAPIAction(id: string): Promise<boolean> {
-	try {
-		await axiosInstance.delete(API_PATH.COST_CENTERS.DELETE(id));
-		return true;
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			const sanitizedMessage = error instanceof Error ? error.message : String(error);
-			console.warn("[deleteCostCenterAPIAction] API request failed:", sanitizedMessage);
-		}
-		return true;
-	}
+	await axiosInstance.delete(API_PATH.COST_CENTERS.DELETE(id));
+	return true;
 }
 
 export async function toggleCostCenterStatusAPIAction(
 	ids: string[],
 	targetStatus: "active" | "inactive",
 ): Promise<boolean> {
-	try {
-		await axiosInstance.post(API_PATH.COST_CENTERS.TOGGLE_STATUS, {
-			ids,
-			status: targetStatus,
-		});
-		return true;
-	} catch (error) {
-		if (process.env.NODE_ENV !== "production") {
-			const sanitizedMessage = error instanceof Error ? error.message : String(error);
-			console.warn("[toggleCostCenterStatusAPIAction] API request failed:", sanitizedMessage);
-		}
-		return true;
-	}
+	await axiosInstance.post(API_PATH.COST_CENTERS.TOGGLE_STATUS, {
+		ids,
+		status: targetStatus,
+	});
+	return true;
 }
 
 export async function getCostCenterDetailAPIAction(
@@ -160,26 +108,15 @@ export async function getCostCenterDetailAPIAction(
 				anteckningar: String(data.anteckningar ?? data.description ?? data.notes ?? ""),
 				status: data.status === "inactive" ? "inactive" : "active",
 				description: data.description ? String(data.description) : undefined,
+				createdDate: data.created_at ? String(data.created_at) : undefined,
+				lastUpdated: data.updated_at ? String(data.updated_at) : undefined,
 			});
 			if (parsed.success) {
 				return parsed.data;
 			}
 		}
+		return null;
 	} catch (error) {
-		if (process.env.NODE_ENV !== "development") {
-			throw error;
-		}
+		throw error;
 	}
-
-	if (process.env.NODE_ENV === "development" || process.env.NEXT_PUBLIC_USE_MOCK === "true") {
-		const found = MOCK_COST_CENTER_DATA.find((item) => item.id === id);
-		if (found) {
-			const parsed = costCenterDetailSchema.safeParse(found);
-			if (parsed.success) {
-				return parsed.data;
-			}
-		}
-	}
-
-	return null;
 }

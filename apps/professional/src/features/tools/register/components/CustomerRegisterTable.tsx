@@ -12,15 +12,28 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { showToast } from "@/lib/toast";
 import Link from "next/link";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import {
 	type CustomerRegisterRow,
 	getCustomerRegisterListAPIAction,
+	deleteCustomerAPIAction,
 } from "../api/customerRegister";
 
 export function CustomerRegisterTable() {
+	const t = useTranslate();
 	const searchParams = useSearchParams();
 	const router = useRouter();
 	const pathname = usePathname();
@@ -35,6 +48,7 @@ export function CustomerRegisterTable() {
 	const [data, setData] = useState<CustomerRegisterRow[]>([]);
 	const [totalItems, setTotalItems] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
+	const [deletingId, setDeletingId] = useState<string | null>(null);
 
 	const [searchQuery, setSearchQuery] = useState(initialSearch);
 	const [statusFilter, setStatusFilter] = useState<"all" | "active" | "inactive">(initialStatus);
@@ -95,10 +109,26 @@ export function CustomerRegisterTable() {
 			});
 			setData(res.data);
 			setTotalItems(res.total);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsLoading(false);
 		}
-	}, [page, pageSize, searchQuery, statusFilter, sortBy, sortOrder]);
+	}, [page, pageSize, searchQuery, statusFilter, sortBy, sortOrder, t]);
+
+	const handleDelete = useCallback(
+		async (id: string) => {
+			try {
+				await deleteCustomerAPIAction(id);
+				fetchCustomers();
+			} catch {
+				showToast("error", t(localizationConstants.genericError));
+			} finally {
+				setDeletingId((currentId) => (currentId === id ? null : currentId));
+			}
+		},
+		[fetchCustomers, t],
+	);
 
 	useEffect(() => {
 		fetchCustomers();
@@ -222,13 +252,13 @@ export function CustomerRegisterTable() {
 			{
 				label: localizationConstants.editLabel,
 				icon: <Pencil className="h-4 w-4" />,
-				onClick: (row) => void row,
+				onClick: (row) => router.push(`/tools/register/customer/${row.id}`),
 			},
 			{
 				label: localizationConstants.deleteLabel,
 				icon: <Trash2 className="h-4 w-4" />,
 				destructive: true,
-				onClick: (row) => void row,
+				onClick: (row) => setDeletingId(row.id),
 			},
 		],
 		[router],
@@ -320,6 +350,33 @@ export function CustomerRegisterTable() {
 				onPageChange={handlePageChange}
 				onPageSizeChange={handlePageSizeChange}
 			/>
+
+			<AlertDialog open={deletingId !== null} onOpenChange={(open) => !open && setDeletingId(null)}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>
+							<Translate text={localizationConstants.deleteLabel} />
+						</AlertDialogTitle>
+						<AlertDialogDescription>
+							<Translate text={localizationConstants.protocolDeleteConfirmDesc} />
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>
+							<Translate text={localizationConstants.cancel} />
+						</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={() => {
+								if (deletingId) {
+									handleDelete(deletingId);
+								}
+							}}
+						>
+							<Translate text={localizationConstants.deleteLabel} />
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }

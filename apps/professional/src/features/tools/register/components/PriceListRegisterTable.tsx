@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
 	Plus,
@@ -11,6 +11,7 @@ import {
 	Tag,
 	PenLine,
 	Save,
+	Check,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -44,11 +45,14 @@ import {
 	type DataTableColumn,
 	type DataTableAction,
 } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { PriceListRegisterRow } from "../types";
+import { showToast } from "@/lib/toast";
+import type { PriceListRegisterRow, PriceListDetail } from "../types";
 import {
 	getPriceListRegisterListAPIAction,
+	getPriceListDetailAPIAction,
+	updatePriceListAPIAction,
 	togglePriceListFavoriteAPIAction,
 	deletePriceListAPIAction,
 } from "../api/priceListRegister";
@@ -61,6 +65,7 @@ export function PriceListRegisterTable() {
 	const pageParam = searchParams.get("pricelist_page");
 	const limitParam = searchParams.get("pricelist_limit");
 	const searchParam = searchParams.get("pricelist_search") ?? "";
+	const categoryParam = searchParams.get("pricelist_category") ?? "all";
 	const sortByParam = searchParams.get("pricelist_sortBy") ?? undefined;
 	const sortOrderParam = (searchParams.get("pricelist_sortOrder") as "asc" | "desc") ?? undefined;
 
@@ -102,6 +107,7 @@ export function PriceListRegisterTable() {
 				page,
 				limit: pageSize,
 				search: searchParam,
+				category: categoryParam,
 				sortBy: sortByParam,
 				sortOrder: sortOrderParam,
 			});
@@ -112,11 +118,33 @@ export function PriceListRegisterTable() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [page, pageSize, searchParam, sortByParam, sortOrderParam]);
+	}, [page, pageSize, searchParam, categoryParam, sortByParam, sortOrderParam]);
 
 	useEffect(() => {
 		void fetchData();
 	}, [fetchData]);
+
+	const filteredData = useMemo(() => {
+		if (!categoryParam || categoryParam === "all") return data;
+		const target = categoryParam.toLowerCase();
+		return data.filter((item) => {
+			const cat = (item.kategori || "").toLowerCase();
+			if (target === "service" || target === "tjänst") {
+				return cat.includes("service") || cat.includes("tjänst");
+			}
+			if (target === "private" || target === "privat") {
+				return cat.includes("private") || cat.includes("privat");
+			}
+			return cat.includes(target);
+		});
+	}, [data, categoryParam]);
+
+	const handleCategoryFilterChange = (newCategory: "all" | "service" | "private") => {
+		updateQueryParams({
+			pricelist_category: newCategory === "all" ? null : newCategory,
+			pricelist_page: "1",
+		});
+	};
 
 	const handleSearchChange = (value: string) => {
 		setSearchQuery(value);
@@ -149,14 +177,29 @@ export function PriceListRegisterTable() {
 		setData((prev) =>
 			prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
 		);
-		await togglePriceListFavoriteAPIAction(id);
+		try {
+			const success = await togglePriceListFavoriteAPIAction(id);
+			if (!success) {
+				setData((prev) =>
+					prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
+				);
+			}
+		} catch {
+			setData((prev) =>
+				prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
+			);
+		}
 	}, []);
 
 	const handleDelete = useCallback(async (id: string) => {
-		const success = await deletePriceListAPIAction(id);
-		if (success) {
-			setData((prev) => prev.filter((item) => item.id !== id));
-			setTotalItems((prev) => prev - 1);
+		try {
+			const success = await deletePriceListAPIAction(id);
+			if (success) {
+				setData((prev) => prev.filter((item) => item.id !== id));
+				setTotalItems((prev) => prev - 1);
+			}
+		} catch {
+			// Catch unhandled rejection
 		}
 	}, []);
 
@@ -323,20 +366,32 @@ export function PriceListRegisterTable() {
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="start" className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1">
-							<DropdownMenuItem className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900">
+							<DropdownMenuItem
+								onClick={() => handleCategoryFilterChange("all")}
+								className="flex items-center justify-between cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterAll} />
+								{(categoryParam === "all" || !categoryParam) && <Check className="h-3.5 w-3.5 text-slate-700" />}
 							</DropdownMenuItem>
-							<DropdownMenuItem className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900">
+							<DropdownMenuItem
+								onClick={() => handleCategoryFilterChange("service")}
+								className="flex items-center justify-between cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterService} />
+								{categoryParam === "service" && <Check className="h-3.5 w-3.5 text-slate-700" />}
 							</DropdownMenuItem>
-							<DropdownMenuItem className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900">
+							<DropdownMenuItem
+								onClick={() => handleCategoryFilterChange("private")}
+								className="flex items-center justify-between cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterPrivate} />
+								{categoryParam === "private" && <Check className="h-3.5 w-3.5 text-slate-700" />}
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
 
-				<Link href="/tools/register/price-list/create-price-list" passHref>
+				<Link href="/tools/register/price-list/create-price-list">
 					<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
 						<Plus className="h-4 w-4" aria-hidden />
 						<Translate text={localizationConstants.registerNew} />
@@ -345,7 +400,7 @@ export function PriceListRegisterTable() {
 			</div>
 
 			<DataTable
-				data={data}
+				data={filteredData}
 				columns={columns as unknown as DataTableColumn<unknown>[]}
 				rowKey={(row) => (row as PriceListRegisterRow).id}
 				actions={actions as unknown as DataTableAction<unknown>[]}
@@ -366,11 +421,178 @@ export function PriceListRegisterTable() {
 }
 
 export function PriceListUpdatePanel() {
-	const [selectedPriceList, setSelectedPriceList] = useState("prislista-a");
+	const t = useTranslate();
+	const [priceLists, setPriceLists] = useState<PriceListRegisterRow[]>([]);
+	const [selectedPriceListId, setSelectedPriceListId] = useState("");
+	const [detail, setDetail] = useState<PriceListDetail | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [isSaving, setIsSaving] = useState(false);
 	const [isEditOpen, setIsEditOpen] = useState(false);
+	const [baseCalculation, setBaseCalculation] = useState("info");
+	const [updatePriceList, setUpdatePriceList] = useState("prislista-a");
 	const [calculation, setCalculation] = useState("procent");
 	const [rounding, setRounding] = useState("2decimal");
+	const [increaseDecrease, setIncreaseDecrease] = useState("oka");
 	const [percentage, setPercentage] = useState("0");
+
+	const selectedPriceListIdRef = useRef(selectedPriceListId);
+	useEffect(() => {
+		selectedPriceListIdRef.current = selectedPriceListId;
+	}, [selectedPriceListId]);
+
+	const tRef = useRef(t);
+	useEffect(() => {
+		tRef.current = t;
+	}, [t]);
+
+	useEffect(() => {
+		let cancelled = false;
+		const fetchAllPriceLists = async () => {
+			try {
+				const firstRes = await getPriceListRegisterListAPIAction({ page: 1, limit: 100 });
+				if (cancelled) return;
+				let allLists = [...firstRes.data];
+				const maxPages = Math.min(firstRes.totalPages ?? 1, 10);
+				if (maxPages > 1) {
+					const remainingPromises = [];
+					for (let p = 2; p <= maxPages; p++) {
+						remainingPromises.push(getPriceListRegisterListAPIAction({ page: p, limit: 100 }));
+					}
+					const remainingResults = await Promise.all(remainingPromises);
+					if (cancelled) return;
+					for (const r of remainingResults) {
+						allLists = allLists.concat(r.data);
+					}
+				}
+				setPriceLists(allLists);
+				if (allLists.length > 0) {
+					setSelectedPriceListId((prev) =>
+						prev && allLists.some((item) => item.id === prev) ? prev : allLists[0].id,
+					);
+				}
+			} catch {
+				if (cancelled) return;
+				showToast("error", tRef.current(localizationConstants.priceListUpdateError));
+			} finally {
+				if (!cancelled) setIsLoading(false);
+			}
+		};
+
+		void fetchAllPriceLists();
+
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
+	useEffect(() => {
+		setDetail(null);
+		if (!selectedPriceListId) return;
+		let cancelled = false;
+		getPriceListDetailAPIAction(selectedPriceListId)
+			.then((data) => {
+				if (cancelled || !data) return;
+				setDetail(data);
+				setBaseCalculation(data.baseCalculation || "info");
+				setUpdatePriceList(data.updatePriceList || "prislista-a");
+				setCalculation(data.calculation || "procent");
+				setRounding(data.rounding || "2decimal");
+				setIncreaseDecrease(data.increaseDecrease || "oka");
+				setPercentage(data.percentage || "0");
+			})
+			.catch(() => {
+				if (cancelled) return;
+				setDetail(null);
+				showToast("error", tRef.current(localizationConstants.priceListUpdateError));
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [selectedPriceListId]);
+
+	const priceListVariantLabel = (value?: string) =>
+		value === "prislista-b"
+			? t(localizationConstants.priceListBOption)
+			: value === "prislista-c"
+				? t(localizationConstants.priceListCOption)
+				: t(localizationConstants.priceListAOption);
+
+	const baseCalculationLabel = (value?: string) =>
+		!value || value === "info"
+			? t(localizationConstants.priceListInfoPlaceholder)
+			: value === "prislista-a" || value === "prislista-b" || value === "prislista-c"
+				? priceListVariantLabel(value)
+				: value;
+
+	const calculationLabel = (value?: string) =>
+		value === "index"
+			? t(localizationConstants.priceListIndexOption)
+			: value === "sek"
+				? t(localizationConstants.priceListSekOption)
+				: t(localizationConstants.priceListProcentOption);
+
+	const roundingLabel = (value?: string) =>
+		value === "helkrona"
+			? t(localizationConstants.priceListHelKronaOption)
+			: t(localizationConstants.priceList2DecimalOption);
+
+	const directionLabel = (value?: string) =>
+		value === "minska"
+			? t(localizationConstants.priceListMinskaOption)
+			: t(localizationConstants.priceListOkaOption);
+
+	const handleSave = async () => {
+		if (!detail || isSaving) return;
+		const targetId = detail.id;
+		if (targetId !== selectedPriceListId) return;
+		setIsSaving(true);
+		try {
+			// Validate percentage: must be non-empty, numeric, and between 0 and 100 inclusive
+			const percRaw = (percentage ?? "").toString().trim();
+			if (percRaw === "") {
+				showToast("error", t(localizationConstants.validationFailedError));
+				setIsSaving(false);
+				return;
+			}
+			const percNum = Number(percRaw);
+			if (!Number.isFinite(percNum) || percNum < 0 || percNum > 100) {
+				showToast("error", t(localizationConstants.validationFailedError));
+				setIsSaving(false);
+				return;
+			}
+			const success = await updatePriceListAPIAction({
+				id: targetId,
+				baseCalculation,
+				updatePriceList,
+				calculation,
+				rounding,
+				increaseDecrease,
+				percentage: String(percNum),
+			});
+			if (success) {
+				// Immediately show success and close the editor. Refresh detail in background.
+				showToast("success", t(localizationConstants.priceListUpdateSuccess));
+				setIsEditOpen(false);
+				void (async () => {
+					try {
+						const updated = await getPriceListDetailAPIAction(targetId);
+						if (updated && updated.id === selectedPriceListIdRef.current) {
+							setDetail(updated);
+						}
+					} catch (err) {
+						// Refresh failed - do not convert committed update into an error state.
+						console.warn("Price list detail refresh failed:", err);
+					}
+				})();
+			} else {
+				showToast("error", t(localizationConstants.priceListUpdateError));
+			}
+		} catch {
+			showToast("error", t(localizationConstants.priceListUpdateError));
+		} finally {
+			setIsSaving(false);
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -378,20 +600,26 @@ export function PriceListUpdatePanel() {
 				<label className="font-['Inter'] text-sm font-medium leading-5 text-slate-700">
 					<Translate text={localizationConstants.priceListTab} />
 				</label>
-				<Select value={selectedPriceList} onValueChange={setSelectedPriceList}>
+				<Select
+					value={selectedPriceListId}
+					onValueChange={(val) => {
+						if (!isSaving) setSelectedPriceListId(val);
+					}}
+				>
 					<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm text-slate-900 shadow-2xs">
-						<SelectValue placeholder={localizationConstants.priceListAOption} />
+						<SelectValue placeholder={t(localizationConstants.priceListAOption)} />
 					</SelectTrigger>
 					<SelectContent className="bg-white border-slate-200 shadow-md">
-						<SelectItem value="prislista-a" className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer">
-							<Translate text={localizationConstants.priceListAOption} />
-						</SelectItem>
-						<SelectItem value="prislista-b" className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer">
-							<Translate text={localizationConstants.priceListBOption} />
-						</SelectItem>
-						<SelectItem value="prislista-c" className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer">
-							<Translate text={localizationConstants.priceListCOption} />
-						</SelectItem>
+						{priceLists.map((row) => (
+							<SelectItem
+								key={row.id}
+								value={row.id}
+								className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
+							>
+								{row.kod ? `${row.kod} - ` : ""}
+								{row.prislista}
+							</SelectItem>
+						))}
 					</SelectContent>
 				</Select>
 			</div>
@@ -408,6 +636,7 @@ export function PriceListUpdatePanel() {
 						variant="ghost"
 						size="sm"
 						onClick={() => setIsEditOpen(true)}
+						disabled={!detail}
 						className="inline-flex h-9 gap-2 rounded bg-zinc-100 px-4 py-2 text-sm font-medium leading-5 tracking-normal text-zinc-950 hover:opacity-80"
 					>
 						<PenLine className="h-4 w-4" />
@@ -415,13 +644,22 @@ export function PriceListUpdatePanel() {
 					</Button>
 				</div>
 				<CardContent className="px-4 py-4 sm:px-6">
+					{isLoading ? (
+						<div className="py-8 text-center text-sm text-slate-500">
+							<Translate text={localizationConstants.genericLoading} />
+						</div>
+					) : priceLists.length === 0 ? (
+						<div className="py-8 text-center text-sm text-slate-500">
+							<Translate text={localizationConstants.priceListInfoPlaceholder} />
+						</div>
+					) : (
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 						<div className="flex flex-col gap-1 min-w-0">
 							<span className="text-sm font-medium leading-5 tracking-normal text-zinc-950">
 								<Translate text={localizationConstants.priceListBaseCalculationLabel} />
 							</span>
 							<span className="text-sm leading-5 tracking-normal text-slate-500">
-								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+								{detail ? baseCalculationLabel(detail.baseCalculation) : "-"}
 							</span>
 						</div>
 						<div className="flex flex-col gap-1 min-w-0">
@@ -429,7 +667,7 @@ export function PriceListUpdatePanel() {
 								<Translate text={localizationConstants.priceListUpdatePriceListLabel} />
 							</span>
 							<span className="text-sm leading-5 tracking-normal text-slate-500">
-								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+								{detail ? priceListVariantLabel(detail.updatePriceList) : "-"}
 							</span>
 						</div>
 						<div className="flex flex-col gap-1 min-w-0">
@@ -437,7 +675,7 @@ export function PriceListUpdatePanel() {
 								<Translate text={localizationConstants.priceListCalculationLabel} />
 							</span>
 							<span className="text-sm leading-5 tracking-normal text-slate-500">
-								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+								{detail ? calculationLabel(detail.calculation) : "-"}
 							</span>
 						</div>
 						<div className="flex flex-col gap-1 min-w-0">
@@ -445,7 +683,7 @@ export function PriceListUpdatePanel() {
 								<Translate text={localizationConstants.priceListRoundingLabel} />
 							</span>
 							<span className="text-sm leading-5 tracking-normal text-slate-500">
-								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+								{detail ? roundingLabel(detail.rounding) : "-"}
 							</span>
 						</div>
 						<div className="flex flex-col gap-1 min-w-0">
@@ -453,7 +691,7 @@ export function PriceListUpdatePanel() {
 								<Translate text={localizationConstants.priceListIncreaseDecreaseLabel} />
 							</span>
 							<span className="text-sm leading-5 tracking-normal text-slate-500">
-								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+								{detail ? directionLabel(detail.increaseDecrease) : "-"}
 							</span>
 						</div>
 						<div className="flex flex-col gap-1 min-w-0">
@@ -461,10 +699,11 @@ export function PriceListUpdatePanel() {
 								<Translate text={localizationConstants.priceListPercentageLabel} />
 							</span>
 							<span className="text-sm leading-5 tracking-normal text-slate-500">
-								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+								{detail?.percentage || "-"}
 							</span>
 						</div>
 					</div>
+					)}
 				</CardContent>
 			</Card>
 
@@ -488,7 +727,7 @@ export function PriceListUpdatePanel() {
 							<Label className="font-['Inter'] text-sm font-medium leading-5 tracking-normal text-zinc-950">
 								<Translate text={localizationConstants.priceListBaseCalculationLabel} />
 							</Label>
-							<Select defaultValue="info">
+							<Select value={baseCalculation} onValueChange={setBaseCalculation}>
 								<SelectTrigger className="h-10 w-full text-sm text-slate-500">
 									<SelectValue />
 								</SelectTrigger>
@@ -496,6 +735,9 @@ export function PriceListUpdatePanel() {
 									<SelectItem value="info">
 										<Translate text={localizationConstants.priceListInfoPlaceholder} />
 									</SelectItem>
+									{baseCalculation && baseCalculation !== "info" ? (
+										<SelectItem value={baseCalculation}>{baseCalculationLabel(baseCalculation)}</SelectItem>
+									) : null}
 								</SelectContent>
 							</Select>
 						</div>
@@ -505,7 +747,7 @@ export function PriceListUpdatePanel() {
 							<Label className="font-['Inter'] text-sm font-medium leading-5 tracking-normal text-zinc-950">
 								<Translate text={localizationConstants.priceListUpdatePriceListLabel} />
 							</Label>
-							<Select defaultValue="prislista-a">
+							<Select value={updatePriceList} onValueChange={setUpdatePriceList}>
 								<SelectTrigger className="h-10 w-full text-sm text-slate-900">
 									<SelectValue />
 								</SelectTrigger>
@@ -601,7 +843,7 @@ export function PriceListUpdatePanel() {
 							<Label className="font-['Inter'] text-sm font-medium leading-5 tracking-normal text-zinc-950">
 								<Translate text={localizationConstants.priceListIncreaseDecreaseLabel} />
 							</Label>
-							<Select defaultValue="oka">
+							<Select value={increaseDecrease} onValueChange={setIncreaseDecrease}>
 								<SelectTrigger className="h-10 w-full text-sm text-slate-900">
 									<SelectValue />
 								</SelectTrigger>
@@ -645,7 +887,8 @@ export function PriceListUpdatePanel() {
 							<Translate text={localizationConstants.priceListCloseButton} />
 						</Button>
 						<Button
-							onClick={() => setIsEditOpen(false)}
+							onClick={() => handleSave()}
+							disabled={!detail || isSaving}
 							className="h-10 w-full sm:w-auto px-8 min-w-30 text-sm font-medium gap-2 bg-[#111721] hover:bg-slate-800"
 						>
 							<Save className="h-4 w-4" />

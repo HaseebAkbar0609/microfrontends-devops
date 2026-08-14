@@ -10,13 +10,15 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { Trash2, X, ChevronDown, File, ArrowUpDown, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import type { Ratings, RatingField, CreateCustomerFormData } from "../../types";
+import type { Ratings, RatingField, CreateCustomerFormData, CustomerDocument } from "../../types";
 import { uploadCustomerFileAPIAction } from "../../api/customerRegister";
 
 interface AssessmentStepProps {
 	readonly control: Control<CreateCustomerFormData>;
 	readonly ratings: Ratings;
 	readonly onRatingChange: (field: RatingField, value: number) => void;
+	readonly documents?: CustomerDocument[];
+	readonly onDocumentsChange?: (documents: CustomerDocument[]) => void;
 }
 
 interface UploadedFile {
@@ -24,7 +26,8 @@ interface UploadedFile {
 	name: string;
 	type: string;
 	date: string;
-	file: File;
+	file?: File;
+	url?: string;
 	remoteId?: string;
 }
 
@@ -32,9 +35,19 @@ export function AssessmentStep({
 	control,
 	ratings,
 	onRatingChange,
+	documents = [],
+	onDocumentsChange,
 }: AssessmentStepProps) {
 	const t = useTranslate();
-	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+	const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>(() =>
+		documents.map((d) => ({
+			id: d.id,
+			name: d.name,
+			type: d.type,
+			date: d.date || new Date().toISOString().split("T")[0],
+			url: d.url,
+		})),
+	);
 	const [isUploading, setIsUploading] = useState(false);
 	const [sortField, setSortField] = useState<"date" | "name" | "type">("date");
 	const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
@@ -46,23 +59,40 @@ export function AssessmentStep({
 
 		setIsUploading(true);
 		try {
+			const newUploadedList: UploadedFile[] = [...uploadedFiles];
+			const newDocsList: CustomerDocument[] = [...(documents || [])];
+
 			for (let i = 0; i < files.length; i++) {
 				const file = files[i];
-				if (file.type !== "application/pdf") continue;
+				const allowedTypes = ["application/pdf", "image/png", "image/jpeg", "image/jpg"];
+				if (!allowedTypes.includes(file.type)) continue;
+
+				const ext = file.name.split(".").pop()?.toUpperCase() || "FILE";
+				const fileType = ext === "JPEG" ? "JPG" : ext;
 
 				const result = await uploadCustomerFileAPIAction(file);
-				setUploadedFiles((prev) => [
-					...prev,
-					{
-						id: `${Date.now()}-${i}`,
-						name: file.name,
-						type: "PDF",
-						date: new Date().toISOString().split("T")[0],
-						file,
-						remoteId: result.id,
-					},
-				]);
+				const dateStr = new Date().toISOString().split("T")[0];
+				const uploadedItem: UploadedFile = {
+					id: `${Date.now()}-${i}`,
+					name: file.name,
+					type: fileType,
+					date: dateStr,
+					file,
+					url: result.url,
+					remoteId: result.id,
+				};
+				const docItem: CustomerDocument = {
+					id: result.id || `${Date.now()}-${i}`,
+					name: file.name,
+					type: fileType,
+					date: dateStr,
+					url: result.url,
+				};
+				newUploadedList.push(uploadedItem);
+				newDocsList.push(docItem);
 			}
+			setUploadedFiles(newUploadedList);
+			onDocumentsChange?.(newDocsList);
 		} catch {
 			showToast("error", t(localizationConstants.customerCreateError));
 		} finally {
@@ -74,12 +104,20 @@ export function AssessmentStep({
 	};
 
 	const handleDeleteFile = (id: string) => {
-		setUploadedFiles((prev) => prev.filter((f) => f.id !== id));
+		const updatedUploaded = uploadedFiles.filter((f) => f.id !== id);
+		const updatedDocs = (documents || []).filter((d) => d.id !== id && d.url !== uploadedFiles.find((f) => f.id === id)?.url);
+		setUploadedFiles(updatedUploaded);
+		onDocumentsChange?.(updatedDocs);
 	};
 
 	const handleViewFile = (file: UploadedFile) => {
-		const url = URL.createObjectURL(file.file);
-		window.open(url, "_blank");
+		if (file.url) {
+			window.open(file.url, "_blank");
+		} else if (file.file) {
+			const url = URL.createObjectURL(file.file);
+			window.open(url, "_blank");
+			window.setTimeout(() => URL.revokeObjectURL(url), 60_000);
+		}
 	};
 
 	const handleSort = (field: "date" | "name" | "type") => {
@@ -211,7 +249,7 @@ export function AssessmentStep({
 									<input
 										ref={fileInputRef}
 										type="file"
-										accept=".pdf"
+										accept=".pdf,.png,.jpg,.jpeg"
 										multiple
 										className="hidden"
 										onChange={handleFileSelect}
@@ -301,8 +339,8 @@ export function AssessmentStep({
 													<div className="flex items-center gap-2">
 														<div className="relative flex h-16 w-12 items-center justify-center">
 															<File className="h-16 w-12 text-slate-300" strokeWidth={1.5} />
-															<span className="absolute -left-0.5 top-[55%] -translate-y-1/2 rounded-[2px] bg-red-600 px-1.5 py-0.5 text-[9px] font-bold leading-none text-white">
-																PDF
+															<span className={`absolute -left-0.5 top-[55%] -translate-y-1/2 rounded-[2px] px-1.5 py-0.5 text-[9px] font-bold leading-none text-white uppercase ${file.type?.toUpperCase() === "PDF" ? "bg-red-600" : "bg-blue-600"}`}>
+																{file.type}
 															</span>
 														</div>
 														<span>{file.name}</span>

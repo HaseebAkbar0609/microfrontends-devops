@@ -25,15 +25,28 @@ import {
 	type DataTableColumn,
 	type DataTableAction,
 } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { showToast } from "@/lib/toast";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { ArticleRow } from "../types";
 import {
 	getArticleListAPIAction,
+	deleteArticleAPIAction,
 	toggleArticleFavoriteAPIAction,
 } from "../api/articleRegister";
 
 export function ArticleRegisterTable() {
+	const t = useTranslate();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -53,6 +66,7 @@ export function ArticleRegisterTable() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState(searchParam);
+	const [deletingId, setDeletingId] = useState<string | null>(null);
 
 	const createQueryString = useCallback(
 		(updates: Record<string, string | null>) => {
@@ -90,10 +104,12 @@ export function ArticleRegisterTable() {
 			});
 			setData(res.data);
 			setTotalItems(res.total);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsLoading(false);
 		}
-	}, [page, pageSize, searchParam, statusParam, sortByParam, sortOrderParam]);
+	}, [page, pageSize, searchParam, statusParam, sortByParam, sortOrderParam, t]);
 
 	useEffect(() => {
 		fetchData();
@@ -137,12 +153,36 @@ export function ArticleRegisterTable() {
 		});
 	};
 
-	const handleToggleFavorite = useCallback(async (id: string) => {
-		setData((prev) =>
-			prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
-		);
-		await toggleArticleFavoriteAPIAction(id);
-	}, []);
+	const handleToggleFavorite = useCallback(
+		async (id: string) => {
+			setData((prev) =>
+				prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
+			);
+			try {
+				await toggleArticleFavoriteAPIAction(id);
+			} catch {
+				setData((prev) =>
+					prev.map((item) => (item.id === id ? { ...item, isFavorite: !item.isFavorite } : item)),
+				);
+				showToast("error", t(localizationConstants.genericError));
+			}
+		},
+		[t],
+	);
+
+	const handleDelete = useCallback(
+		async (id: string) => {
+			try {
+				await deleteArticleAPIAction(id);
+				setData((prev) => prev.filter((item) => item.id !== id));
+				setTotalItems((prev) => Math.max(0, prev - 1));
+				showToast("success", t(localizationConstants.articleDeletedSuccess));
+			} catch {
+				showToast("error", t(localizationConstants.genericError));
+			}
+		},
+		[t],
+	);
 
 	const columns: DataTableColumn<ArticleRow>[] = useMemo(
 		() => [
@@ -260,13 +300,13 @@ export function ArticleRegisterTable() {
 			{
 				label: localizationConstants.editLabel,
 				icon: <Pencil className="h-4 w-4" />,
-				onClick: (row) => void row,
+				onClick: (row) => router.push(`/tools/register/articles/${row.id}/edit`),
 			},
 			{
 				label: localizationConstants.deleteLabel,
 				icon: <Trash2 className="h-4 w-4" />,
 				destructive: true,
-				onClick: (row) => void row,
+				onClick: (row) => setDeletingId(row.id),
 			},
 		],
 		[router],
@@ -359,6 +399,33 @@ export function ArticleRegisterTable() {
 				onPageChange={handlePageChange}
 				onPageSizeChange={handlePageSizeChange}
 			/>
+
+			<AlertDialog open={deletingId !== null} onOpenChange={(open) => !open && setDeletingId(null)}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>
+							<Translate text={localizationConstants.articleDeleteConfirmTitle} />
+						</AlertDialogTitle>
+						<AlertDialogDescription>
+							<Translate text={localizationConstants.articleDeleteConfirmDesc} />
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>
+							<Translate text={localizationConstants.cancel} />
+						</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={() => {
+								if (deletingId) {
+									handleDelete(deletingId);
+								}
+							}}
+						>
+							<Translate text={localizationConstants.deleteLabel} />
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }

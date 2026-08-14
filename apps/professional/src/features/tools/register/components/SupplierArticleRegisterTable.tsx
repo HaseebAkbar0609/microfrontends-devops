@@ -4,20 +4,12 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import {
 	Plus,
-	Check,
-	ChevronDown,
 	Eye,
 	Pencil,
 	Trash2,
 } from "lucide-react";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
 	Select,
 	SelectContent,
@@ -30,23 +22,28 @@ import {
 	type DataTableColumn,
 	type DataTableAction,
 } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
-import { useTranslation } from "react-i18next";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { showToast } from "@/lib/toast";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { SupplierArticleRow } from "../types";
-import { getSupplierArticleListAPIAction } from "../api/articleRegister";
-
-const SUPPLIER_OPTIONS = [
-	{ value: "all", labelKey: localizationConstants.allSuppliers },
-	{ value: "Beijer", labelKey: "Beijer" },
-	{ value: "Ahlsell", labelKey: "Ahlsell" },
-	{ value: "Solar Sweden", labelKey: "Solar Sweden" },
-	{ value: "Dahl Sverige", labelKey: "Dahl Sverige" },
-	{ value: "Elektroskandia", labelKey: "Elektroskandia" },
-];
+import {
+	getSupplierArticleListAPIAction,
+	getSupplierNameOptionsAPIAction,
+	deleteSupplierArticleAPIAction,
+} from "../api/articleRegister";
 
 export function SupplierArticleRegisterTable() {
-	const { t } = useTranslation();
+	const t = useTranslate();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -66,6 +63,27 @@ export function SupplierArticleRegisterTable() {
 	const [totalItems, setTotalItems] = useState(0);
 	const [isLoading, setIsLoading] = useState(true);
 	const [searchQuery, setSearchQuery] = useState(searchParam);
+	const [deletingId, setDeletingId] = useState<string | null>(null);
+	const [supplierOptions, setSupplierOptions] = useState<{ value: string; label: string }[]>(
+		[],
+	);
+
+	useEffect(() => {
+		let cancelled = false;
+		getSupplierNameOptionsAPIAction()
+			.then((options) => {
+				if (!cancelled) setSupplierOptions(options);
+			})
+			.catch(() => {
+				if (!cancelled) {
+					setSupplierOptions([]);
+					showToast("error", t(localizationConstants.genericError));
+				}
+			});
+		return () => {
+			cancelled = true;
+		};
+	}, [t]);
 
 	const createQueryString = useCallback(
 		(updates: Record<string, string | null>) => {
@@ -103,10 +121,12 @@ export function SupplierArticleRegisterTable() {
 			});
 			setData(res.data);
 			setTotalItems(res.total);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsLoading(false);
 		}
-	}, [page, pageSize, searchParam, supplierParam, sortByParam, sortOrderParam]);
+	}, [page, pageSize, searchParam, supplierParam, sortByParam, sortOrderParam, t]);
 
 	useEffect(() => {
 		fetchData();
@@ -150,6 +170,30 @@ export function SupplierArticleRegisterTable() {
 		});
 	};
 
+	const handleDelete = useCallback(
+		async (id: string) => {
+			try {
+				await deleteSupplierArticleAPIAction(id);
+				setData((prev) => prev.filter((item) => item.id !== id));
+				setTotalItems((prev) => Math.max(0, prev - 1));
+				showToast("success", t(localizationConstants.supplierArticleDeletedSuccess));
+			} catch {
+				showToast("error", t(localizationConstants.genericError));
+			} finally {
+				setDeletingId((currentId) => (currentId === id ? null : currentId));
+			}
+		},
+		[t],
+	);
+
+	const selectOptions = useMemo(() => {
+		if (supplierParam === "all") return supplierOptions;
+		if (supplierOptions.some((option) => option.value === supplierParam)) {
+			return supplierOptions;
+		}
+		return [{ value: supplierParam, label: supplierParam }, ...supplierOptions];
+	}, [supplierOptions, supplierParam]);
+
 	const columns: DataTableColumn<SupplierArticleRow>[] = useMemo(
 		() => [
 			{
@@ -187,7 +231,13 @@ export function SupplierArticleRegisterTable() {
 							row.status === "mapped" ? "bg-[#16A34A]" : "bg-slate-400"
 						}`}
 					>
-						<Translate text={localizationConstants.mappedStatus} />
+						<Translate
+							text={
+								row.status === "mapped"
+									? localizationConstants.mappedStatus
+									: localizationConstants.unmappedStatus
+							}
+						/>
 					</span>
 				),
 			},
@@ -223,13 +273,13 @@ export function SupplierArticleRegisterTable() {
 			{
 				label: localizationConstants.editLabel,
 				icon: <Pencil className="h-4 w-4" />,
-				onClick: (row) => void row,
+				onClick: (row) => router.push(`/tools/register/supplier-articles/${row.id}/edit`),
 			},
 			{
 				label: localizationConstants.deleteLabel,
 				icon: <Trash2 className="h-4 w-4" />,
 				destructive: true,
-				onClick: (row) => void row,
+				onClick: (row) => setDeletingId(row.id),
 			},
 		],
 		[router],
@@ -248,31 +298,9 @@ export function SupplierArticleRegisterTable() {
 							className="h-10 w-full"
 							wrapperClassName="w-full sm:w-[240px] md:w-[260px] lg:w-[300px]"
 						/>
-
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="outline"
-									className="h-10 w-full sm:w-18.75 sm:min-w-18.75 border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between"
-								>
-									<Translate text={localizationConstants.filter} />
-									<ChevronDown className="h-3.5 w-3.5 opacity-50" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="start" className="w-48 bg-white border-slate-200 shadow-md">
-								<DropdownMenuItem
-									onClick={() => handleSupplierFilterChange("all")}
-									className="flex items-center justify-between text-xs cursor-pointer focus:bg-slate-100"
-								>
-									<Translate text={localizationConstants.allStatus} />
-									{supplierParam === "all" && <Check className="h-4 w-4 text-slate-700" />}
-								</DropdownMenuItem>
-							</DropdownMenuContent>
-						</DropdownMenu>
 					</div>
 				</div>
 
-				{/* Leverantör Filter Selector & Uppdatera artiklar button matching Figma */}
 				<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
 					<div className="flex flex-col gap-1 w-full sm:w-64">
 						<label className="text-xs font-semibold text-slate-900">
@@ -283,17 +311,19 @@ export function SupplierArticleRegisterTable() {
 								<SelectValue placeholder={t(localizationConstants.selectSupplier)} />
 							</SelectTrigger>
 							<SelectContent className="bg-white border-slate-200 shadow-md">
-								{SUPPLIER_OPTIONS.map((opt) => (
+								<SelectItem
+									value="all"
+									className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 hover:bg-slate-100 cursor-pointer"
+								>
+									<Translate text={localizationConstants.allSuppliers} />
+								</SelectItem>
+								{selectOptions.map((option) => (
 									<SelectItem
-										key={opt.value}
-										value={opt.value}
+										key={option.value}
+										value={option.value}
 										className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 hover:bg-slate-100 cursor-pointer"
 									>
-										{opt.value === "all" ? (
-											<Translate text={opt.labelKey} />
-										) : (
-											opt.labelKey
-										)}
+										{option.label}
 									</SelectItem>
 								))}
 							</SelectContent>
@@ -327,6 +357,33 @@ export function SupplierArticleRegisterTable() {
 				onPageChange={handlePageChange}
 				onPageSizeChange={handlePageSizeChange}
 			/>
+
+			<AlertDialog open={deletingId !== null} onOpenChange={(open) => !open && setDeletingId(null)}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>
+							<Translate text={localizationConstants.supplierArticleDeleteConfirmTitle} />
+						</AlertDialogTitle>
+						<AlertDialogDescription>
+							<Translate text={localizationConstants.supplierArticleDeleteConfirmDesc} />
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>
+							<Translate text={localizationConstants.cancel} />
+						</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={() => {
+								if (deletingId) {
+									handleDelete(deletingId);
+								}
+							}}
+						>
+							<Translate text={localizationConstants.deleteLabel} />
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }

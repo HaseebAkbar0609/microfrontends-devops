@@ -13,7 +13,7 @@ function getModeTranslationKey(mode?: string): string {
 	if (mode === "allowed" || mode === "tillatet") {
 		return localizationConstants.radioTillatet;
 	}
-	if (mode === "not_allowed" || mode === "ej_tillatet") {
+	if (mode === "not_allowed" || mode === "ej_tillatet" || mode === "ejTillatet") {
 		return localizationConstants.radioEjTillatet;
 	}
 	return localizationConstants.radioObligatoriskt;
@@ -39,7 +39,7 @@ export function AccountDetailPage() {
 
 	const handleEdit = () => {
 		if (!cleanId) return;
-		router.push(`/tools/register/account-plan/${cleanId}/edit`);
+		router.push(`/tools/register/account-plan/create?edit=${cleanId}`);
 	};
 
 	if (isLoading || !account) {

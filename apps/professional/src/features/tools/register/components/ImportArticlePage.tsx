@@ -29,7 +29,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
-import { importArticleAPIAction } from "../api/articleRegister";
+import { importArticleAPIAction, downloadArticleImportTemplateAPIAction } from "../api/articleRegister";
 import type { ArticleImportMapping, ArticleImportColumn } from "../types";
 
 interface ParsedFileData {
@@ -50,7 +50,9 @@ function parseCSV(text: string): ParsedFileData {
 	if (lines.length === 0) return { columns: [], rows: [], totalRows: 0 };
 
 	const delimiter = lines[0].includes(";") ? ";" : ",";
-	const columns = lines[0].split(delimiter).map((col) => col.trim().replace(/^"|"$/g, ""));
+	const columns = lines[0]
+		.split(delimiter)
+		.map((col) => col.trim().replace(/^\uFEFF/, "").replace(/^"|"$/g, ""));
 	const rows: Record<string, string>[] = [];
 
 	for (let i = 1; i < lines.length; i++) {
@@ -192,31 +194,13 @@ export function ImportArticlePage() {
 		}
 	}, [selectedFile, mapping, t, router]);
 
-	const handleDownloadTemplate = useCallback(() => {
-		const headers = [
-			"Leverantör",
-			"Artikel nr",
-			"Benämning",
-			"Pris",
-			"Enhet",
-			"EAN",
-			"Tillverkare",
-			"Tillverkarens artikelnr",
-			"Modell",
-			"Vikt",
-			"Längd",
-			"Bredd",
-			"Höjd",
-			"Material",
-		];
-		const csvContent = headers.join(",") + "\n";
-		const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-		const link = document.createElement("a");
-		link.href = URL.createObjectURL(blob);
-		link.download = "article_import_template.csv";
-		link.click();
-		URL.revokeObjectURL(link.href);
-	}, []);
+	const handleDownloadTemplate = useCallback(async () => {
+		try {
+			await downloadArticleImportTemplateAPIAction();
+		} catch {
+			showToast("error", t(localizationConstants.downloadTemplateErrorMessage));
+		}
+	}, [t]);
 
 	const mappedColumns = useMemo((): ArticleImportColumn[] => {
 		if (!parsedData) return [];
@@ -234,7 +218,7 @@ export function ImportArticlePage() {
 			<div className="mb-1 flex items-center gap-2 ml-0 px-3 sm:px-4 md:px-6 pt-6">
 				<button
 					type="button"
-					aria-label="Go back to register"
+					aria-label={t(localizationConstants.goBackToRegisterLabel)}
 					onClick={() => router.push("/tools/register?tab=artikel&subtab=artikel")}
 					className="rounded-md p-1 hover:bg-slate-100 cursor-pointer"
 				>
@@ -449,7 +433,7 @@ export function ImportArticlePage() {
 																			readOnly
 																			value={col.fileValue}
 																			className={cn(
-																				"h-9 min-h-9 w-full xl:min-w-30 xl:-ml-3 pl-3 pr-8 py-1.5 text-sm bg-white border rounded-(--radius-input,6px) focus:outline-none focus:ring-1 focus:ring-slate-300",
+																				"h-9 min-h-9 w-full xl:min-w-30 xl:-ml-3 pl-3 pr-8 py-1.5 text-sm bg-white border rounded-md focus:outline-none focus:ring-1 focus:ring-slate-300",
 																				isMapped ? "border-green-500" : "border-slate-200",
 																			)}
 																			style={{ color: "#09090B" }}

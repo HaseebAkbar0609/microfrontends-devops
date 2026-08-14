@@ -60,6 +60,7 @@ export const API_PATH = {
 		CREATE: BASE_PATHS.CUSTOMERS,
 		UPDATE: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
 		GET: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
+		DELETE: (id: string) => `${BASE_PATHS.CUSTOMERS}/${id}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	ARTICLES: {
@@ -67,16 +68,19 @@ export const API_PATH = {
 		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}`,
 		CREATE: `${PROFESSIONALS_BASE_PATH}/articles`,
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}`,
 		TOGGLE_FAVORITE: (id: string) => `${PROFESSIONALS_BASE_PATH}/articles/${id}/favorite`,
 		IMPORT: `${PROFESSIONALS_BASE_PATH}/articles/import`,
 		SUPPLIER_ARTICLES_LIST: `${PROFESSIONALS_BASE_PATH}/supplier-articles`,
 		SUPPLIER_ARTICLES_UPDATE: `${PROFESSIONALS_BASE_PATH}/supplier-articles/update`,
+		SUPPLIER_ARTICLES_DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/supplier-articles/${id}`,
 	},
 	SUPPLIERS: {
 		LIST: `${PROFESSIONALS_BASE_PATH}/suppliers`,
 		CREATE: `${PROFESSIONALS_BASE_PATH}/suppliers`,
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
 		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/suppliers/${id}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	PRICE_LISTS: {
@@ -101,6 +105,23 @@ export const API_PATH = {
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/accounts/${id}`,
 		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/accounts/${id}`,
 		TOGGLE_STATUS: (id: string) => `${PROFESSIONALS_BASE_PATH}/accounts/${id}/status`,
+	},
+	BUDGETS: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/budgets`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/budgets`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/budgets/${id}`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/budgets/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/budgets/${id}`,
+		TOGGLE_STATUS: `${PROFESSIONALS_BASE_PATH}/budgets/toggle-status`,
+		TOGGLE_FAVORITE: (id: string) => `${PROFESSIONALS_BASE_PATH}/budgets/${id}/favorite`,
+	},
+	WAGE_TYPES: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/wage-types`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/wage-types`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/wage-types/${id}`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/wage-types/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/wage-types/${id}`,
+		TOGGLE_STATUS: `${PROFESSIONALS_BASE_PATH}/wage-types/toggle-status`,
 	},
 };
 

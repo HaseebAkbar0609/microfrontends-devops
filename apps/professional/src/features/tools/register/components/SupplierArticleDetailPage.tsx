@@ -21,9 +21,10 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { cn } from "@/lib/utils";
+import { showToast } from "@/lib/toast";
 import { getSupplierArticleDetailAPIAction } from "../api/articleRegister";
 import type { SupplierArticleDetail } from "../types";
 
@@ -138,6 +139,7 @@ function SectionCard({
 }
 
 export function SupplierArticleDetailPage() {
+	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
 	const id = params.id as string;
@@ -150,10 +152,12 @@ export function SupplierArticleDetailPage() {
 		try {
 			const data = await getSupplierArticleDetailAPIAction(id);
 			setArticle(data);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsLoading(false);
 		}
-	}, [id]);
+	}, [id, t]);
 
 	useEffect(() => {
 		fetchArticle();
@@ -205,7 +209,7 @@ export function SupplierArticleDetailPage() {
 				<Button
 					variant="ghost"
 					size="icon"
-					aria-label="Go back to register"
+					aria-label={t(localizationConstants.goBackToRegisterLabel)}
 					onClick={() => router.push("/tools/register?tab=artikel&subtab=leverantorsArtiklar")}
 					className="h-8 w-8 shrink-0"
 				>

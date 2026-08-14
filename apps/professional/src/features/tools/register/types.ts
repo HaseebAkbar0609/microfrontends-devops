@@ -3,7 +3,10 @@ import { z } from "zod";
 export const createCustomerSchema = z.object({
 	// Step 1: BasicInfo
 	companyName: z.string().min(1, "validationCompanyNameRequired"),
-	orgNo: z.string().min(1, "validationOrgNoRequired"),
+	orgNo: z
+		.string()
+		.min(1, "validationOrgNoRequired")
+		.refine((val) => /^[0-9\s-]+$/.test(val), { message: "validationOrgNoInvalid" }),
 	customerNo: z.string().optional(),
 	status: z.string().min(1, "placeholderSelectStatus"),
 	mainCategory: z.string().min(1, "placeholderSelectCategory"),
@@ -11,10 +14,16 @@ export const createCustomerSchema = z.object({
 	region: z.string().optional(),
 	vatRegNo: z.string().optional(),
 	visitingAddress: z.string().min(1, "placeholderAddress"),
-	visitingPostalCode: z.string().min(1, "placeholderPostalCode"),
+	visitingPostalCode: z
+		.string()
+		.min(1, "placeholderPostalCode")
+		.refine((val) => /^[0-9\s-]+$/.test(val), { message: "validationPostalCodeInvalid" }),
 	visitingCity: z.string().min(1, "placeholderCity"),
 	invoiceAddress: z.string().min(1, "placeholderAddress"),
-	invoicePostalCode: z.string().min(1, "placeholderPostalCode"),
+	invoicePostalCode: z
+		.string()
+		.min(1, "placeholderPostalCode")
+		.refine((val) => /^[0-9\s-]+$/.test(val), { message: "validationPostalCodeInvalid" }),
 	invoiceCity: z.string().min(1, "placeholderCity"),
 	bankName: z.string().optional(),
 	bankAccount: z.string().optional(),
@@ -24,38 +33,56 @@ export const createCustomerSchema = z.object({
 	bic: z.string().optional(),
 
 	// Step 2: Contact
-	phone: z.string().min(1, "validationPhoneRequired"),
+	phone: z
+		.string()
+		.min(1, "validationPhoneRequired")
+		.refine((val) => /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	email: z.string().min(1, "validationEmailRequired").email("validationEmailInvalid"),
 	website: z.string().optional(),
 	contactNotes: z.string().optional(),
 	contactPerson1FirstName: z.string().min(1, "validationFirstNameRequired"),
 	contactPerson1LastName: z.string().min(1, "validationLastNameRequired"),
-	contactPerson1Mobile: z.string().optional(),
+	contactPerson1Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	contactPerson1Email: z.string().email("validationEmailInvalid").or(z.literal("")),
 	contactPerson1Role: z.string().min(1, "placeholderSelectRole"),
 	contactPerson1PersonalNo: z.string().optional(),
 	contactPerson2FirstName: z.string().optional(),
 	contactPerson2LastName: z.string().optional(),
-	contactPerson2Mobile: z.string().optional(),
-	contactPerson2Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson2Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
+	contactPerson2Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson2Role: z.string().optional(),
 	contactPerson2PersonalNo: z.string().optional(),
 	contactPerson3FirstName: z.string().optional(),
 	contactPerson3LastName: z.string().optional(),
-	contactPerson3Mobile: z.string().optional(),
-	contactPerson3Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson3Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
+	contactPerson3Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson3Role: z.string().optional(),
 	contactPerson3PersonalNo: z.string().optional(),
 	contactPerson4FirstName: z.string().optional(),
 	contactPerson4LastName: z.string().optional(),
-	contactPerson4Mobile: z.string().optional(),
-	contactPerson4Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson4Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
+	contactPerson4Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson4Role: z.string().optional(),
 	contactPerson4PersonalNo: z.string().optional(),
 	contactPerson5FirstName: z.string().optional(),
 	contactPerson5LastName: z.string().optional(),
-	contactPerson5Mobile: z.string().optional(),
-	contactPerson5Email: z.string().email("validationEmailInvalid").or(z.literal("")),
+	contactPerson5Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
+	contactPerson5Email: z.string().email("validationEmailInvalid").or(z.literal("")).optional(),
 	contactPerson5Role: z.string().optional(),
 	contactPerson5PersonalNo: z.string().optional(),
 
@@ -63,12 +90,12 @@ export const createCustomerSchema = z.object({
 	notes: z.string().optional(),
 
 	// Step 4: Invoice
-	paymentTerms: z.string().min(1, "placeholderSelectPaymentTerms"),
-	deliveryTerms: z.string().min(1, "placeholderSelectDeliveryTerms"),
+	paymentTerms: z.string().optional(),
+	deliveryTerms: z.string().optional(),
 	deliveryMethod: z.string().optional(),
 	interestInvoicing: z.string().optional(),
 	priceList: z.string().optional(),
-	currency: z.string().min(1, "placeholderSelectCurrency"),
+	currency: z.string().optional(),
 	invoiceDiscount: z.string().optional(),
 	invoiceFee: z.string().optional(),
 	shippingFee: z.string().optional(),
@@ -97,7 +124,7 @@ export interface Ratings {
 
 export type RatingField = keyof Ratings;
 
-export type CreateCustomerFullData = CreateCustomerFormData & { ratings: Ratings; id?: string | null };
+export type CreateCustomerFullData = CreateCustomerFormData & { ratings: Ratings; documents?: CustomerDocument[]; id?: string | null };
 
 // Customer Register List Types
 export interface CustomerRegisterRow {
@@ -158,6 +185,39 @@ export interface GetArticleListParams {
 
 export interface GetArticleListResponse {
 	data: ArticleRow[];
+	total: number;
+	page: number;
+	limit: number;
+	totalPages: number;
+}
+
+// Supplier Register List Types
+export interface SupplierRegisterRow {
+	id: string;
+	supplierNo: string;
+	name: string;
+	orgNo: string;
+	address: string;
+	postNr: string;
+	city: string;
+	country: string;
+	phone: string;
+	email: string;
+	status: "active" | "inactive";
+	dateAdded?: string;
+}
+
+export interface GetSupplierRegisterListParams {
+	page?: number;
+	limit?: number;
+	search?: string;
+	status?: "all" | "active" | "inactive";
+	sortBy?: string;
+	sortOrder?: "asc" | "desc";
+}
+
+export interface GetSupplierRegisterListResponse {
+	data: SupplierRegisterRow[];
 	total: number;
 	page: number;
 	limit: number;
@@ -400,13 +460,22 @@ export const createSupplierSchema = z.object({
 	mainCategory: z.string().optional(),
 	department: z.string().optional(),
 	region: z.string().optional(),
-	orgNo: z.string().min(1, "validationOrgNoRequired"),
+	orgNo: z
+		.string()
+		.min(1, "validationOrgNoRequired")
+		.refine((val) => /^[0-9\s-]+$/.test(val), { message: "validationOrgNoInvalid" }),
 	vatRegNo: z.string().optional(),
 	visitingAddress: z.string().min(1, "placeholderAddress"),
-	visitingPostalCode: z.string().min(1, "placeholderPostalCode"),
+	visitingPostalCode: z
+		.string()
+		.min(1, "placeholderPostalCode")
+		.refine((val) => /^[0-9\s-]+$/.test(val), { message: "validationPostalCodeInvalid" }),
 	visitingCity: z.string().min(1, "placeholderCity"),
 	invoiceAddress: z.string().min(1, "placeholderAddress"),
-	invoicePostalCode: z.string().min(1, "placeholderPostalCode"),
+	invoicePostalCode: z
+		.string()
+		.min(1, "placeholderPostalCode")
+		.refine((val) => /^[0-9\s-]+$/.test(val), { message: "validationPostalCodeInvalid" }),
 	invoiceCity: z.string().min(1, "placeholderCity"),
 	bankName: z.string().optional(),
 	bankAccount: z.string().optional(),
@@ -420,37 +489,55 @@ export const createSupplierSchema = z.object({
 	inkasso: z.string().optional(),
 
 	// Step 2: Contact
-	phone: z.string().optional(),
+	phone: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	email: z.string().email("validationEmailInvalid").or(z.literal("")),
 	website: z.string().optional(),
 	contactNotes: z.string().optional(),
 	contactPerson1FirstName: z.string().optional(),
 	contactPerson1LastName: z.string().optional(),
-	contactPerson1Mobile: z.string().optional(),
+	contactPerson1Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	contactPerson1Email: z.string().email("validationEmailInvalid").or(z.literal("")),
 	contactPerson1Role: z.string().optional(),
 	contactPerson1PersonalNo: z.string().optional(),
 	contactPerson2FirstName: z.string().optional(),
 	contactPerson2LastName: z.string().optional(),
-	contactPerson2Mobile: z.string().optional(),
+	contactPerson2Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	contactPerson2Email: z.string().email("validationEmailInvalid").or(z.literal("")),
 	contactPerson2Role: z.string().optional(),
 	contactPerson2PersonalNo: z.string().optional(),
 	contactPerson3FirstName: z.string().optional(),
 	contactPerson3LastName: z.string().optional(),
-	contactPerson3Mobile: z.string().optional(),
+	contactPerson3Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	contactPerson3Email: z.string().email("validationEmailInvalid").or(z.literal("")),
 	contactPerson3Role: z.string().optional(),
 	contactPerson3PersonalNo: z.string().optional(),
 	contactPerson4FirstName: z.string().optional(),
 	contactPerson4LastName: z.string().optional(),
-	contactPerson4Mobile: z.string().optional(),
+	contactPerson4Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	contactPerson4Email: z.string().email("validationEmailInvalid").or(z.literal("")),
 	contactPerson4Role: z.string().optional(),
 	contactPerson4PersonalNo: z.string().optional(),
 	contactPerson5FirstName: z.string().optional(),
 	contactPerson5LastName: z.string().optional(),
-	contactPerson5Mobile: z.string().optional(),
+	contactPerson5Mobile: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9+\s-()]+$/.test(val), { message: "validationPhoneInvalid" }),
 	contactPerson5Email: z.string().email("validationEmailInvalid").or(z.literal("")),
 	contactPerson5Role: z.string().optional(),
 	contactPerson5PersonalNo: z.string().optional(),
@@ -461,7 +548,7 @@ export const createSupplierSchema = z.object({
 
 export type CreateSupplierFormData = z.infer<typeof createSupplierSchema>;
 
-export type CreateSupplierFullData = CreateSupplierFormData & { ratings: Ratings; id?: string | null };
+export type CreateSupplierFullData = CreateSupplierFormData & { ratings: Ratings; documents?: CustomerDocument[]; id?: string | null };
 
 // Create Article Schema (TFS-438)
 export const createArticleSchema = z.object({
@@ -601,6 +688,9 @@ export interface GetPriceListRegisterListParams {
 	search?: string;
 	sortBy?: string;
 	sortOrder?: "asc" | "desc";
+	status?: string;
+	currency?: string;
+	category?: string;
 }
 
 export interface GetPriceListRegisterListResponse {
@@ -659,6 +749,13 @@ export interface PriceListDetail {
 	kund: string[];
 	leverantor: string[];
 	articles: PriceListDetailArticle[];
+	// Price update settings (TFS-717)
+	baseCalculation?: string;
+	updatePriceList?: string;
+	calculation?: string;
+	rounding?: string;
+	increaseDecrease?: string;
+	percentage?: string;
 }
 
 export interface PriceListDetailArticle {
@@ -719,7 +816,10 @@ export interface GetCostCenterListResponse {
 }
 
 export const createCostCenterSchema = z.object({
-	kod: z.string().min(1, "validationCostCenterCodeRequired"),
+	kod: z
+		.string()
+		.min(1, "validationCostCenterCodeRequired")
+		.refine((val) => /^[0-9a-zA-Z_-]+$/.test(val), { message: "validationCodeInvalid" }),
 	benamning: z.string().min(1, "validationCostCenterNameRequired"),
 	anteckningar: z.string().optional(),
 	status: z.string().default("active"),
@@ -767,16 +867,39 @@ export interface GetAccountPlanListResponse {
 	totalPages: number;
 }
 
+const isValidOptionalNumber = (val?: string): boolean => {
+	if (!val) return true;
+	const trimmed = val.trim();
+	if (!trimmed) return true;
+	const normalized = trimmed.replace(/\s/g, "").replace(",", ".");
+	if (!normalized) return true;
+	const num = Number(normalized);
+	return Number.isFinite(num);
+};
+
 export const createAccountPlanSchema = z.object({
-	accountNumber: z.string().min(1, "validationAccountNumberRequired"),
+	accountNumber: z
+		.string()
+		.min(1, "validationAccountNumberRequired")
+		.refine((val) => /^[0-9]+$/.test(val), { message: "validationCodeInvalid" }),
 	accountName: z.string().min(1, "validationAccountNameRequired"),
 	accountType: z.string().optional().default("Asset"),
-	openingBalance: z.string().optional(),
+	openingBalance: z
+		.string()
+		.optional()
+		.refine(isValidOptionalNumber, {
+			message: "validationNumberInvalid",
+		}),
 	accountStatus: z.string().optional().default("active"),
 	vatCode: z.string().optional(),
 	sru: z.string().optional(),
 	autoAccount: z.string().optional(),
-	budget: z.string().optional(),
+	budget: z
+		.string()
+		.optional()
+		.refine(isValidOptionalNumber, {
+			message: "validationNumberInvalid",
+		}),
 	costCenterMode: z.enum(["obligatoriskt", "tillatet", "ejTillatet"]).optional().default("obligatoriskt"),
 	projectMode: z.enum(["obligatoriskt", "tillatet", "ejTillatet"]).optional().default("obligatoriskt"),
 	suggestedCostCenter: z.string().optional(),
@@ -798,6 +921,39 @@ export const budgetRegisterRowSchema = z.object({
 });
 
 export type BudgetRegisterRow = z.infer<typeof budgetRegisterRowSchema>;
+
+export interface BudgetVsActual {
+	budget_amount: number;
+	actual_spend: number;
+	difference: number;
+	percent_used: number;
+}
+
+export interface BudgetExpenseBreakdownEntry {
+	category: string;
+	budgeted: number;
+	actual: number;
+}
+
+export interface BudgetRegisterDetail {
+	id: string;
+	budgetnr: string;
+	name: string;
+	date?: string;
+	totalCost?: string;
+	totalIncome?: string;
+	totalAmount?: number;
+	currency?: string;
+	category?: string;
+	startDate?: string;
+	endDate?: string;
+	description?: string;
+	status: "active" | "inactive";
+	isFavorite?: boolean;
+	budgetVsActual?: BudgetVsActual;
+	expenseBreakdown?: BudgetExpenseBreakdownEntry[];
+	createdAt?: string;
+}
 
 export interface GetBudgetListParams {
 	page?: number;
@@ -832,6 +988,8 @@ export const createBudgetSchema = z.object({
 	description: z.string().optional(),
 	avvikBudget: z.boolean(),
 	overheadBudget: z.boolean(),
+	distribution: z.string().optional(),
+	budgetRows: z.array(z.any()).optional(),
 });
 
 export type CreateBudgetFormData = z.infer<typeof createBudgetSchema>;
@@ -862,7 +1020,10 @@ export const wageTypeSchema = z.object({
 export type WageTypeRow = z.infer<typeof wageTypeSchema>;
 
 export const createWageTypeSchema = z.object({
-	code: z.string().min(1, "validationWageTypeCodeRequired"),
+	code: z
+		.string()
+		.min(1, "validationWageTypeCodeRequired")
+		.refine((val) => /^[0-9a-zA-Z_-]+$/.test(val), { message: "validationCodeInvalid" }),
 	name: z.string().min(1, "validationWageTypeNameRequired"),
 	personalType: z.string().optional().default("Tjänsteman"),
 	wageForm: z.string().optional().default("Fast lön"),
@@ -870,14 +1031,26 @@ export const createWageTypeSchema = z.object({
 	unit: z.string().min(1, "validationWageTypeUnitRequired"),
 	preliminaryTax: z.string().optional(),
 	employerContribution: z.string().optional(),
-	accountDebit: z.string().optional(),
-	accountCredit: z.string().optional(),
-	accountOppositeAG: z.string().optional(),
+	accountDebit: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9]+$/.test(val), { message: "validationCodeInvalid" }),
+	accountCredit: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9]+$/.test(val), { message: "validationCodeInvalid" }),
+	accountOppositeAG: z
+		.string()
+		.optional()
+		.refine((val) => !val || /^[0-9]+$/.test(val), { message: "validationCodeInvalid" }),
 	agUnderlag: z.boolean().optional().default(false),
 	semestergrundad: z.boolean().optional().default(false),
 	agiCode: z.string().optional(),
 	description: z.string().optional(),
-	factor: z.string().optional(),
+	factor: z
+		.string()
+		.optional()
+		.refine(isValidOptionalNumber, { message: "validationNumberInvalid" }),
 	status: z.enum(["active", "inactive"]).optional().default("active"),
 });
 

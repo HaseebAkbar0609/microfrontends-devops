@@ -72,11 +72,13 @@ export function AgreementDashboard() {
 				
 				const restoredLayout = AGREEMENT_INITIAL_WIDGETS.map((initial, i) => {
 					const dbWidget = sorted[i];
-					if (dbWidget) {
+					const mappedProps = dbWidget ? AGREEMENT_SIDEBAR_WIDGET_MAP[dbWidget.key] : null;
+
+					if (dbWidget && mappedProps) {
 						return {
 							...initial,
 							sidebarId: dbWidget.key,
-							widgetProps: AGREEMENT_SIDEBAR_WIDGET_MAP[dbWidget.key] || AGREEMENT_SIDEBAR_WIDGET_MAP.emptyPage
+							widgetProps: mappedProps
 						};
 					}
 					const fallback = remainingInitial.shift() || initial;

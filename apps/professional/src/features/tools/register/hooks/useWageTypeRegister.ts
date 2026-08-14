@@ -5,6 +5,7 @@ import {
 	getWageTypeDetailAPIAction,
 	createWageTypeAPIAction,
 	updateWageTypeAPIAction,
+	deleteWageTypeAPIAction,
 	toggleWageTypeStatusAPIAction,
 } from "../api/wageTypeRegister";
 
@@ -54,6 +55,16 @@ export function useToggleWageTypeStatusMutation() {
 	return useMutation({
 		mutationFn: ({ ids, status }: { ids: string[]; status: "active" | "inactive" }) =>
 			toggleWageTypeStatusAPIAction(ids, status),
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["wageTypeList"] });
+		},
+	});
+}
+
+export function useDeleteWageTypeMutation() {
+	const queryClient = useQueryClient();
+	return useMutation({
+		mutationFn: (id: string) => deleteWageTypeAPIAction(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["wageTypeList"] });
 		},

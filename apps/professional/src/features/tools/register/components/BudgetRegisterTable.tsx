@@ -3,7 +3,7 @@
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";
-import { Plus, ChevronDown, Eye, Trash2, Edit, Star } from "lucide-react";
+import { Plus, ChevronDown, Eye, Trash2, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Search } from "@/components/search/Search";
@@ -23,9 +23,20 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { BudgetRegisterRow } from "../types";
 import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
 	useBudgetListQuery,
 	useToggleBudgetStatusMutation,
 	useToggleBudgetFavoriteMutation,
+	useDeleteBudgetMutation,
 } from "../hooks/useBudgetRegister";
 import { showToast } from "@/lib/toast";
 
@@ -36,7 +47,7 @@ function HighlightMatch({ text, query }: { text: string; query: string }) {
 		<span>
 			{parts.map((part, index) =>
 				part.toLowerCase() === query.toLowerCase() ? (
-					<strong key={index} className="bg-yellow-100 text-slate-900 font-semibold">{part}</strong>
+					<strong key={`${part}-${index}`} className="bg-yellow-100 text-slate-900 font-semibold">{part}</strong>
 				) : (
 					part
 				),
@@ -53,6 +64,7 @@ export function BudgetRegisterTable() {
 
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 	const [statusFilter, setStatusFilter] = useState<string>("all");
+	const [deletingId, setDeletingId] = useState<string | null>(null);
 
 	const page = Number(searchParams.get("page") ?? "1");
 	const pageSize = Number(searchParams.get("limit") ?? "50");
@@ -77,6 +89,7 @@ export function BudgetRegisterTable() {
 
 	const toggleStatusMutation = useToggleBudgetStatusMutation();
 	const toggleFavoriteMutation = useToggleBudgetFavoriteMutation();
+	const deleteMutation = useDeleteBudgetMutation();
 
 	const updateQueryParams = useCallback(
 		(updates: Record<string, string | undefined>) => {
@@ -143,6 +156,21 @@ export function BudgetRegisterTable() {
 		await toggleStatusMutation.mutateAsync({ ids: selectedIds, status: targetStatus });
 		setSelectedIds([]);
 	};
+
+	const handleDelete = useCallback(
+		async (id: string) => {
+			try {
+				await deleteMutation.mutateAsync(id);
+				setSelectedIds((prev) => prev.filter((itemId) => itemId !== id));
+				showToast("success", t(localizationConstants.budgetDeletedSuccess));
+			} catch {
+				showToast("error", t(localizationConstants.budgetDeleteError));
+			} finally {
+				setDeletingId(null);
+			}
+		},
+		[deleteMutation, t],
+	);
 
 	const isAllSelected = budgetRows.length > 0 && selectedIds.length === budgetRows.length;
 
@@ -263,15 +291,10 @@ export function BudgetRegisterTable() {
 				onClick: (row) => router.push(`/tools/register/budget/${row.id}`),
 			},
 			{
-				label: localizationConstants.editLabel,
-				icon: <Edit className="h-4 w-4" />,
-				onClick: (row) => router.push(`/tools/register/budget/edit/${row.id}`),
-			},
-			{
 				label: localizationConstants.deleteLabel,
 				icon: <Trash2 className="h-4 w-4" />,
 				destructive: true,
-				onClick: () => {},
+				onClick: (row) => setDeletingId(row.id),
 			},
 		],
 		[router],
@@ -323,7 +346,7 @@ export function BudgetRegisterTable() {
 					</DropdownMenu>
 				</div>
 
-				<Link href="/tools/register/budget/create" passHref>
+				<Link href="/tools/register/budget/create">
 					<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center self-end">
 						<Plus className="h-4 w-4" aria-hidden />
 						<Translate text={localizationConstants.createBudgetButton} />
@@ -374,6 +397,34 @@ export function BudgetRegisterTable() {
 					<Translate text={localizationConstants.activateButton} />
 				</Button>
 			</div>
+			<AlertDialog open={deletingId !== null} onOpenChange={(open) => !open && setDeletingId(null)}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>
+							<Translate text={localizationConstants.budgetDeleteConfirmTitle} />
+						</AlertDialogTitle>
+						<AlertDialogDescription>
+							<Translate text={localizationConstants.budgetDeleteConfirmDesc} />
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel>
+							<Translate text={localizationConstants.cancelButton} />
+						</AlertDialogCancel>
+						<AlertDialogAction
+							disabled={deleteMutation.isPending}
+							onClick={() => {
+								if (deletingId) {
+									handleDelete(deletingId);
+								}
+							}}
+							className="bg-red-600 hover:bg-red-700 text-white"
+						>
+							<Translate text={localizationConstants.deleteLabel} />
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }
