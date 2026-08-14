@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 
 interface TablePaginationProps {
   currentPage: number;
@@ -19,6 +20,7 @@ interface TablePaginationProps {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  className?: string;
 }
 
 export function TablePagination({
@@ -27,9 +29,15 @@ export function TablePagination({
   pageSize,
   onPageChange,
   onPageSizeChange,
+  className,
 }: TablePaginationProps) {
   return (
-    <div className="flex items-center justify-between sm:justify-end gap-4 py-4">
+    <div
+      className={cn(
+        "flex items-center justify-between sm:justify-end gap-4 py-4",
+        className,
+      )}
+    >
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-slate-700">
           Rows per page

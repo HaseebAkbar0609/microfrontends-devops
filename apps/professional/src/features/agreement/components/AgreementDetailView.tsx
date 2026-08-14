@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import {
 	ArrowLeft,
@@ -15,7 +15,14 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { AgreementDetail, AgreementDetailContact } from "../types/agreementDetail";
+import { AGREEMENT_ROUTES } from "../constants/agreementDashboard";
+import { AgreementDetail, AgreementDetailContact, AgreementDetailDocument } from "../types/agreementDetail";
+import { 
+	addAgreementContactAction, 
+	deleteAgreementContactAction, 
+	deleteAgreementDocumentAction,
+	updateAgreementContactAction
+} from "@/api-actions/agreements/agreements";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -90,8 +97,14 @@ interface Props {
 
 export default function AgreementDetailView({ data }: Props) {
 	const router = useRouter();
-	const [contacts, setContacts] = useState<AgreementDetailContact[]>(data.contacts);
+	const [contacts, setContacts] = useState<AgreementDetailContact[]>(data.contacts || []);
+	const [documents, setDocuments] = useState<AgreementDetailDocument[]>(data.documents || []);
+	
+	const [sortConfig, setSortConfig] = useState<{ key: keyof AgreementDetailDocument; direction: "asc" | "desc" } | null>(null);
+	
 	const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+	const [editingContactId, setEditingContactId] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [newContact, setNewContact] = useState({
 		fornamn: "",
 		efternamn: "",
@@ -100,34 +113,112 @@ export default function AgreementDetailView({ data }: Props) {
 		roll: "",
 	});
 
-	const handleAddContact = (e: React.FormEvent) => {
+	const handleAddContact = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!newContact.fornamn || !newContact.efternamn) return;
+		if (!newContact.fornamn || !newContact.efternamn || isSubmitting) return;
 
-		const created: AgreementDetailContact = {
-			id: String(Date.now()),
-			fornamn: newContact.fornamn,
-			efternamn: newContact.efternamn,
-			mail: newContact.mail,
-			mobil: newContact.mobil,
-			roll: newContact.roll,
-		};
+		setIsSubmitting(true);
+		try {
+			if (editingContactId) {
+				const res = await updateAgreementContactAction(data.id, editingContactId, {
+					first_name: newContact.fornamn,
+					last_name: newContact.efternamn,
+					email: newContact.mail || null,
+					mobile: newContact.mobil || null,
+					role: newContact.roll || null,
+				});
 
-		setContacts((prev) => [...prev, created]);
-		setNewContact({ fornamn: "", efternamn: "", mail: "", mobil: "", roll: "" });
+				if (res.success && res.data) {
+					const updatedContact = res.data as AgreementDetailContact;
+					setContacts((prev) => prev.map((c) => (c.id === editingContactId ? updatedContact : c)));
+					handleCloseContactModal();
+				}
+			} else {
+				const res = await addAgreementContactAction(data.id, {
+					first_name: newContact.fornamn,
+					last_name: newContact.efternamn,
+					email: newContact.mail || null,
+					mobile: newContact.mobil || null,
+					role: newContact.roll || null,
+				});
+
+				if (res.success && res.data) {
+					const newContact = res.data as AgreementDetailContact;
+					setContacts((prev) => [...prev, newContact]);
+					handleCloseContactModal();
+				}
+			}
+		} finally {
+			setIsSubmitting(false);
+		}
+	};
+
+	const handleEditContact = (contact: AgreementDetailContact) => {
+		setEditingContactId(contact.id);
+		setNewContact({
+			fornamn: contact.fornamn,
+			efternamn: contact.efternamn,
+			mail: contact.mail || "",
+			mobil: contact.mobil || "",
+			roll: contact.roll || "",
+		});
+		setIsContactModalOpen(true);
+	};
+
+	const handleCloseContactModal = () => {
 		setIsContactModalOpen(false);
+		setEditingContactId(null);
+		setNewContact({ fornamn: "", efternamn: "", mail: "", mobil: "", roll: "" });
 	};
 
-	const handleDeleteContact = (id: string) => {
-		setContacts((prev) => prev.filter((c) => c.id !== id));
+	const handleEditAgreement = () => {
+		router.push(`/module/business-support/agreement/${data.id}/edit`);
 	};
+
+
+
+	const handleDeleteContact = async (contactId: string) => {
+		const res = await deleteAgreementContactAction(data.id, contactId);
+		if (res.success) {
+			setContacts((prev) => prev.filter((c) => c.id !== contactId));
+		}
+	};
+
+	const handleDeleteDocument = async (documentId: string) => {
+		const res = await deleteAgreementDocumentAction(data.id, documentId);
+		if (res.success) {
+			setDocuments((prev) => prev.filter((d) => d.id !== documentId));
+		}
+	};
+
+	const handleSortDocuments = (key: keyof AgreementDetailDocument) => {
+		let direction: "asc" | "desc" = "asc";
+		if (sortConfig && sortConfig.key === key && sortConfig.direction === "asc") {
+			direction = "desc";
+		}
+		setSortConfig({ key, direction });
+	};
+
+	const sortedDocuments = useMemo(() => {
+		const sortableDocs = [...documents];
+		if (sortConfig !== null) {
+			sortableDocs.sort((a, b) => {
+				const aVal = String(a[sortConfig.key] || "").toLowerCase();
+				const bVal = String(b[sortConfig.key] || "").toLowerCase();
+				if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+				if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+				return 0;
+			});
+		}
+		return sortableDocs;
+	}, [documents, sortConfig]);
 
 	return (
 		<div className="flex flex-1 flex-col overflow-y-auto px-3 py-6 sm:px-5">
 			<div className="mb-4 flex items-center gap-2 ml-0">
 				<button
 					type="button"
-					onClick={() => router.back()}
+					onClick={() => router.push(AGREEMENT_ROUTES.overview)}
 					className="rounded-md p-1 hover:bg-slate-100 cursor-pointer"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />
@@ -141,7 +232,7 @@ export default function AgreementDetailView({ data }: Props) {
 				<SectionCard
 					title={<Translate text={localizationConstants.agreementDetailAvtalDetails} />}
 					icon={<FileText size={22} className="text-slate-700" />}
-					onEdit={() => {}}
+					onEdit={handleEditAgreement}
 					editLabelKey={localizationConstants.agreementDetailEditBtn}
 				>
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-y-5">
@@ -163,8 +254,6 @@ export default function AgreementDetailView({ data }: Props) {
 				<SectionCard
 					title={<Translate text={localizationConstants.agreementDetailPaminnelseKontakter} />}
 					icon={<CircleUser size={22} className="text-slate-700" />}
-					onEdit={() => {}}
-					editLabelKey={localizationConstants.agreementDetailEditBtn}
 				>
 					<div className="overflow-x-auto rounded border border-slate-200">
 						<table className="w-full min-w-150 border-collapse">
@@ -216,7 +305,13 @@ export default function AgreementDetailView({ data }: Props) {
 														<MoreHorizontal className="h-4 w-4 rotate-90" />
 													</button>
 												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end" className="w-40">
+												<DropdownMenuContent align="end" className="w-40 z-[9999] bg-white">
+													<DropdownMenuItem
+														onClick={() => handleEditContact(contact)}
+														className="cursor-pointer text-slate-700 focus:text-slate-900"
+													>
+														<Translate text={localizationConstants.agreementDetailEditBtn || "Edit"} />
+													</DropdownMenuItem>
 													<DropdownMenuItem
 														onClick={() => handleDeleteContact(contact.id)}
 														className="cursor-pointer text-red-600 focus:text-red-600"
@@ -233,7 +328,11 @@ export default function AgreementDetailView({ data }: Props) {
 					</div>
 					<button
 						type="button"
-						onClick={() => setIsContactModalOpen(true)}
+						onClick={() => {
+							setEditingContactId(null);
+							setNewContact({ fornamn: "", efternamn: "", mail: "", mobil: "", roll: "" });
+							setIsContactModalOpen(true);
+						}}
 						className="mt-3 flex w-full items-center justify-center gap-2 rounded-md border border-dashed border-slate-300 bg-slate-50 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 cursor-pointer sm:mt-4 transition-colors"
 					>
 						<Plus size={16} />
@@ -249,29 +348,38 @@ export default function AgreementDetailView({ data }: Props) {
 						<table className="w-full min-w-162.5 border-collapse">
 							<thead>
 								<tr className="h-11 border-b border-slate-200">
-									<th className="font-sans px-4 text-left text-sm font-medium leading-6 tracking-normal text-slate-500">
+									<th 
+										className="font-sans px-4 text-left text-sm font-medium leading-6 tracking-normal text-slate-500 cursor-pointer select-none hover:bg-slate-50"
+										onClick={() => handleSortDocuments("datum")}
+									>
 										<div className="flex items-center gap-1">
 											<Translate text={localizationConstants.agreementDetailDatum} />
-											<ArrowUpDown className="h-4 w-4 text-slate-400" />
+											<ArrowUpDown className={`h-4 w-4 ${sortConfig?.key === "datum" ? "text-slate-900" : "text-slate-400"}`} />
 										</div>
 									</th>
-									<th className="font-sans px-4 text-left text-sm font-medium leading-6 tracking-normal text-slate-500">
+									<th 
+										className="font-sans px-4 text-left text-sm font-medium leading-6 tracking-normal text-slate-500 cursor-pointer select-none hover:bg-slate-50"
+										onClick={() => handleSortDocuments("namn")}
+									>
 										<div className="flex items-center gap-1">
 											<Translate text={localizationConstants.agreementDetailDokumentetsNamn} />
-											<ArrowUpDown className="h-4 w-4 text-slate-400" />
+											<ArrowUpDown className={`h-4 w-4 ${sortConfig?.key === "namn" ? "text-slate-900" : "text-slate-400"}`} />
 										</div>
 									</th>
-									<th className="font-sans px-4 text-left text-sm font-medium leading-6 tracking-normal text-slate-500">
+									<th 
+										className="font-sans px-4 text-left text-sm font-medium leading-6 tracking-normal text-slate-500 cursor-pointer select-none hover:bg-slate-50"
+										onClick={() => handleSortDocuments("fil")}
+									>
 										<div className="flex items-center gap-1">
 											<Translate text={localizationConstants.agreementDetailFil} />
-											<ArrowUpDown className="h-4 w-4 text-slate-400" />
+											<ArrowUpDown className={`h-4 w-4 ${sortConfig?.key === "fil" ? "text-slate-900" : "text-slate-400"}`} />
 										</div>
 									</th>
 									<th />
 								</tr>
 							</thead>
 							<tbody>
-								{data.documents.map((doc) => (
+								{sortedDocuments.map((doc) => (
 									<tr key={doc.id} className="border-b border-slate-100 last:border-b-0">
 										<td className="px-4 py-2 font-sans text-sm font-normal leading-5 tracking-normal text-slate-600">
 											{doc.datum}
@@ -303,7 +411,10 @@ export default function AgreementDetailView({ data }: Props) {
 													</button>
 												</DropdownMenuTrigger>
 												<DropdownMenuContent align="end" className="w-40">
-													<DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
+													<DropdownMenuItem 
+														onClick={() => handleDeleteDocument(doc.id)}
+														className="cursor-pointer text-red-600 focus:text-red-600"
+													>
 														<Translate text={localizationConstants.agreementOverviewActionDelete} />
 													</DropdownMenuItem>
 												</DropdownMenuContent>
@@ -317,11 +428,11 @@ export default function AgreementDetailView({ data }: Props) {
 				</SectionCard>
 			</div>
 
-			<Dialog open={isContactModalOpen} onOpenChange={setIsContactModalOpen}>
-				<DialogContent className="sm:max-w-106.25">
+			<Dialog open={isContactModalOpen} onOpenChange={(open) => !open && handleCloseContactModal()}>
+				<DialogContent className="sm:max-w-106.25" aria-describedby={undefined}>
 					<DialogHeader>
 						<DialogTitle>
-							<Translate text={localizationConstants.agreementDetailNyKontakt} />
+							<Translate text={editingContactId ? localizationConstants.agreementDetailEditBtn : localizationConstants.agreementDetailNyKontakt} />
 						</DialogTitle>
 					</DialogHeader>
 					<form onSubmit={handleAddContact} className="grid gap-4 py-4">
@@ -387,13 +498,17 @@ export default function AgreementDetailView({ data }: Props) {
 							<Button
 								type="button"
 								variant="outline"
-								onClick={() => setIsContactModalOpen(false)}
+								onClick={handleCloseContactModal}
 								className="cursor-pointer"
 							>
 								Cancel
 							</Button>
-							<Button type="submit" className="bg-[#18181B] text-white hover:bg-[#18181B]/90 cursor-pointer">
-								Save
+							<Button 
+								type="submit" 
+								className="bg-[#18181B] text-white hover:bg-[#18181B]/90 cursor-pointer"
+								disabled={isSubmitting}
+							>
+								{isSubmitting ? "Saving..." : "Save"}
 							</Button>
 						</DialogFooter>
 					</form>
