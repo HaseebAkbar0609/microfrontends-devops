@@ -24,6 +24,7 @@ import { offerSidebarItems, goToItems } from "@/features/offer/constants";
 import { b2bSidebarItems } from "@/features/b2b/constants";
 import { calculationSidebarItems, calculationGoToItems } from "@/features/calculation/constants";
 import { productionSidebarItems } from "@/features/production/constants";
+import { KMA_SIDEBAR_NAV_ITEMS } from "@/features/kma/data/kmaNav.config";
 import { financialSidebarItems } from "@/features/financial-management/constants";
 import { businessSupportSidebarItems } from "@/features/business-support/constants";
 import localizationConstants from "@/utils/translation/constants";
@@ -66,8 +67,9 @@ export function AppShell({ children }: AppShellProps) {
 	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
 	const isCalculationDetailRoute = !!calcDetailMatch;
 	const calculationDetailId = calcDetailMatch?.[1] ?? "";
+	const isKmaPath = pathname.startsWith("/module/production/kma");
 	const isProductionNavRoute =
-		pathname.startsWith("/module/production") && !isOrderPath && !isProjectPath;
+		pathname.startsWith("/module/production") && !isOrderPath && !isProjectPath && !isKmaPath;
 	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
 	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
 	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
@@ -217,6 +219,12 @@ export function AppShell({ children }: AppShellProps) {
 						titleKey: localizationConstants.goTo,
 						items: calculationGoToItems,
 					}}
+				/>
+			) : isKmaPath ? (
+				<DynamicSubSidebar
+					titleKey={localizationConstants.kma}
+					items={KMA_SIDEBAR_NAV_ITEMS}
+					backHref="/module/production/kma"
 				/>
 			) : isProductionNavRoute ? (
 				<DynamicSubSidebar

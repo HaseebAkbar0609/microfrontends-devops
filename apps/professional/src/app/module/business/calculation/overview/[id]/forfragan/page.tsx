@@ -1,5 +1,4 @@
-import { ForfragnListView } from "@/features/calculation/components/ForfragnListView";
-import { MOCK_FORFRAGNNINGAR } from "@/features/calculation/constants/forfragnMock";
+import { redirect } from "next/navigation";
 
 interface PageProps {
 	params: Promise<{ id: string }>;
@@ -7,5 +6,5 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
-	return <ForfragnListView calcId={id} rows={MOCK_FORFRAGNNINGAR} />;
+	redirect(`/module/business/calculation/overview/${id}/inquiry`);
 }

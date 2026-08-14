@@ -1041,6 +1041,23 @@ export type OfferTranslation = {
 	calcForfragnNamn: string;
 	calcForfragnKalkylNo: string;
 	calcForfragnKontakt: string;
+	// Calculation - Create Inquiry wizard (TFS-619)
+	calcInquiryWizTitle: string;
+	calcInquiryWizStep1: string;
+	calcInquiryWizStep2: string;
+	calcInquiryWizStep3: string;
+	calcInquiryWizStep4: string;
+	calcInquiryWizDesc: string;
+	calcInquiryWizDeadline: string;
+	calcInquiryWizContactPerson: string;
+	calcInquiryWizSupplierLabel: string;
+	calcInquiryWizSupplierMsg: string;
+	calcInquiryWizSend: string;
+	calcInquiryWizSaved: string;
+	calcInquiryWizSent: string;
+	calcInquiryWizEmailErr: string;
+	calcInquiryWizPhoneErr: string;
+	calcInquiryWizRequiredErr: string;
 	// Calculation - Kalkylberäkning wizard
 	calcBerPageTitle: string;
 	calcBerSkapeNy: string;
@@ -1964,6 +1981,42 @@ export type OfferTranslation = {
 	kmaWidgetNews2Intro: string;
 	kmaWidgetNews3: string;
 	kmaWidgetNews3Intro: string;
+	// KMA - Overview list & Gantt (TFS-725)
+	kmaListTitle: string;
+	kmaListTabList: string;
+	kmaListTabGantt: string;
+	kmaListTabTemplates: string;
+	kmaListCreateBtn: string;
+	kmaListCreateNew: string;
+	kmaListUseGroup: string;
+	kmaListColId: string;
+	kmaListColObject: string;
+	kmaListColDesc: string;
+	kmaListColStartDate: string;
+	kmaListColCustomer: string;
+	kmaListColResponsible: string;
+	kmaListColActivities: string;
+	kmaListColSecureCheck: string;
+	kmaListColSecureStatus: string;
+	kmaListColSafetyRound: string;
+	kmaListFilterType: string;
+	kmaListResetAll: string;
+	kmaListTypeOrder: string;
+	kmaListTypeProject: string;
+	kmaListStatusPagaende: string;
+	kmaListStatusForfallt: string;
+	kmaListStatusDone: string;
+	kmaListGanttControl: string;
+	kmaListGanttKund: string;
+	kmaListSidebarOverview: string;
+	kmaListSidebarKvalite: string;
+	kmaListSidebarMiljo: string;
+	kmaListSidebarArbetsmiljo: string;
+	kmaListSidebarPersonal: string;
+	kmaListSidebarPolicy: string;
+	kmaListSidebarRevisioner: string;
+	kmaListSidebarDocCenter: string;
+	kmaListSidebarArchive: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;
