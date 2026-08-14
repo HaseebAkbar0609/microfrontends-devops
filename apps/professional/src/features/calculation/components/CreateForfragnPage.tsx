@@ -1,40 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Folder, Loader2, Plus, Save, Send, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Save, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { KalkylDocItem, KalkylProjektData } from "../types/kalkyl";
+import { DEFAULT_KONTAKT } from "../types/forfragan";
+import type { ForfragnKontaktData } from "../types/forfragan";
 import { KalkylProjektStep } from "./steps/KalkylProjektStep";
 import { KalkylDokumentStep } from "./steps/KalkylDokumentStep";
+import { ForfragnKontaktStep } from "./steps/ForfragnKontaktStep";
+import { ForfragnLeverantorStep } from "./steps/ForfragnLeverantorStep";
 
 // ── Constants ──────────────────────────────────────────────────────────────
 
 const TOTAL_STEPS = 4;
 
-const KONTAKTPERSON_OPTIONS = ["Anders Svensson", "Maria Lindqvist", "Erik Johansson"];
-
-const SUPPLIER_OPTIONS = [
-	"Beijer",
-	"ByggMax",
-	"Fredells",
-	"Marbodal",
-	"NCC",
-	"Peab",
-	"Skanska",
-];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^[\d\s\-+()]{7,}$/;
 
 const DEFAULT_PROJEKT: KalkylProjektData = {
 	projektNr: "",
@@ -53,273 +40,6 @@ const DEFAULT_PROJEKT: KalkylProjektData = {
 	senatsDatum: "2026-01-15",
 };
 
-// ── Types ──────────────────────────────────────────────────────────────────
-
-interface ForfragnKontaktData {
-	kontaktperson: string;
-	fornamn: string;
-	efternamn: string;
-	adress: string;
-	postNr: string;
-	mail: string;
-	telefon: string;
-	ort: string;
-	roll: string;
-}
-
-const DEFAULT_KONTAKT: ForfragnKontaktData = {
-	kontaktperson: "Anders Svensson",
-	fornamn: "",
-	efternamn: "",
-	adress: "",
-	postNr: "",
-	mail: "",
-	telefon: "",
-	ort: "",
-	roll: "",
-};
-
-// ── Module-level sub-components ────────────────────────────────────────────
-
-interface StepFormFieldProps {
-	label: string;
-	value: string;
-	onChange: (v: string) => void;
-	placeholder?: string;
-	required?: boolean;
-	type?: string;
-}
-
-function StepFormField({
-	label,
-	value,
-	onChange,
-	placeholder,
-	required,
-	type = "text",
-}: StepFormFieldProps) {
-	return (
-		<div className="grid gap-1.5">
-			<label className="text-sm font-medium text-slate-900">
-				{label}
-				{required && <span className="ml-0.5 text-red-500">*</span>}
-			</label>
-			<input
-				type={type}
-				value={value}
-				onChange={(e) => onChange(e.target.value)}
-				placeholder={placeholder}
-				className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus-visible:border-slate-400 focus-visible:outline-none"
-			/>
-		</div>
-	);
-}
-
-interface ForfragnKontaktStepProps {
-	data: ForfragnKontaktData;
-	onChange: (patch: Partial<ForfragnKontaktData>) => void;
-	showErrors?: boolean;
-}
-
-function ForfragnKontaktStep({ data, onChange, showErrors: _showErrors }: ForfragnKontaktStepProps) {
-	const t = useTranslate();
-	return (
-		<div className="flex flex-col gap-4">
-			<Card>
-				<CardHeader className="h-14 flex flex-row items-center border-b border-slate-200 px-6 py-0 [.border-b]:pb-0">
-					<CardTitle className="flex items-center gap-2 text-base font-medium">
-						<Folder className="h-5 w-5 text-slate-700" />
-						<Translate text={localizationConstants.calcNewStep1Tab} />
-					</CardTitle>
-				</CardHeader>
-				<CardContent className="p-6">
-					<div className="mb-4 grid gap-1.5">
-						<label className="text-sm font-medium text-slate-900">
-							<Translate text={localizationConstants.calcNewKontaktperson} />
-						</label>
-						<Select
-							value={data.kontaktperson}
-							onValueChange={(v) => onChange({ kontaktperson: v })}
-						>
-							<SelectTrigger className="h-10 border-slate-200 bg-white text-sm focus:ring-0">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								{KONTAKTPERSON_OPTIONS.map((o) => (
-									<SelectItem key={o} value={o}>
-										{o}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
-
-					<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-						<StepFormField
-							label={t(localizationConstants.agreementDetailFornamn)}
-							value={data.fornamn}
-							onChange={(v) => onChange({ fornamn: v })}
-							placeholder={t(localizationConstants.createForfrgnPlaceholderFornamn)}
-							required
-						/>
-						<StepFormField
-							label={t(localizationConstants.agreementDetailEfternamn)}
-							value={data.efternamn}
-							onChange={(v) => onChange({ efternamn: v })}
-							placeholder={t(localizationConstants.createForfrgnPlaceholderEfternamn)}
-						/>
-						<StepFormField
-							label={t(localizationConstants.b2bAvtalAdress)}
-							value={data.adress}
-							onChange={(v) => onChange({ adress: v })}
-							placeholder={t(localizationConstants.createForfrgnPlaceholderAdress)}
-						/>
-						<StepFormField
-							label={t(localizationConstants.calcNewPostNr)}
-							value={data.postNr}
-							onChange={(v) => onChange({ postNr: v })}
-							placeholder={t(localizationConstants.createForfrgnPlaceholderPostNr)}
-						/>
-						<StepFormField
-							label={t(localizationConstants.agreementDetailMail)}
-							value={data.mail}
-							onChange={(v) => onChange({ mail: v })}
-							placeholder={t(localizationConstants.createForfrgnPlaceholderMail)}
-							type="email"
-						/>
-						<div className="grid gap-1.5">
-							<label className="text-sm font-medium text-slate-900">
-								<Translate text={localizationConstants.calcNewTelefon} />
-							</label>
-							<div className="flex items-center">
-								<span className="flex h-10 items-center rounded-l-md border border-r-0 border-slate-200 bg-white px-3 text-sm text-slate-600">
-									+46
-								</span>
-								<input
-									type="text"
-									value={data.telefon}
-									onChange={(e) => onChange({ telefon: e.target.value })}
-									placeholder={t(localizationConstants.createForfrgnPlaceholderTelefon)}
-									className="h-10 w-full rounded-r-md border border-slate-200 bg-white px-3 text-sm focus-visible:border-slate-400 focus-visible:outline-none"
-								/>
-							</div>
-						</div>
-						<StepFormField
-							label={t(localizationConstants.calcNewOrt)}
-							value={data.ort}
-							onChange={(v) => onChange({ ort: v })}
-							placeholder={t(localizationConstants.createForfrgnPlaceholderOrt)}
-						/>
-						<div className="grid gap-1.5">
-							<label className="text-sm font-medium text-slate-900">
-								<Translate text={localizationConstants.agreementDetailRoll} />
-							</label>
-							<input
-								type="text"
-								value={t(localizationConstants.b2bAvtalBestellare)}
-								readOnly
-								className="h-10 w-full rounded-md border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700"
-							/>
-						</div>
-					</div>
-				</CardContent>
-			</Card>
-		</div>
-	);
-}
-
-interface ForfragnLeverantorStepProps {
-	suppliers: string[];
-	onAdd: (name: string) => void;
-	onRemove: (name: string) => void;
-}
-
-function ForfragnLeverantorStep({ suppliers, onAdd, onRemove }: ForfragnLeverantorStepProps) {
-	const t = useTranslate();
-	const [dropdownOpen, setDropdownOpen] = useState(false);
-	const dropdownRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		function handleOutside(e: MouseEvent) {
-			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-				setDropdownOpen(false);
-			}
-		}
-		document.addEventListener("mousedown", handleOutside);
-		return () => document.removeEventListener("mousedown", handleOutside);
-	}, []);
-
-	const available = SUPPLIER_OPTIONS.filter((s) => !suppliers.includes(s));
-
-	return (
-		<div className="flex flex-col gap-4">
-			<Card>
-				<CardHeader className="h-14 flex flex-row items-center border-b border-slate-200 px-6 py-0 [.border-b]:pb-0">
-					<CardTitle className="flex flex-1 items-center gap-2 text-base font-medium">
-						<Folder className="h-5 w-5 text-slate-700" />
-						<Translate text={localizationConstants.createForfrgnInbjudnaSection} />
-					</CardTitle>
-					<div ref={dropdownRef} className="relative">
-						<Button
-							type="button"
-							size="sm"
-							onClick={() => setDropdownOpen((v) => !v)}
-							className="h-8 cursor-pointer gap-1.5 bg-[#111721] text-xs text-white hover:bg-slate-800"
-						>
-							<Plus className="h-3.5 w-3.5" />
-							<Translate text={localizationConstants.createForfrgnLaggTill} />
-						</Button>
-						{dropdownOpen && available.length > 0 && (
-							<div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md border border-slate-200 bg-white shadow-md">
-								{available.map((s) => (
-									<button
-										key={s}
-										type="button"
-										onClick={() => {
-											onAdd(s);
-											setDropdownOpen(false);
-										}}
-										className="flex w-full cursor-pointer items-center px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50"
-									>
-										{s}
-									</button>
-								))}
-							</div>
-						)}
-					</div>
-				</CardHeader>
-				<CardContent className="p-6">
-					<div className="grid gap-1.5">
-						<label className="text-sm font-medium text-slate-900">
-							{t(localizationConstants.createForfrgnLeverantorLabel)}
-						</label>
-						<div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2">
-							{suppliers.length === 0 && (
-								<span className="text-sm text-slate-400">—</span>
-							)}
-							{suppliers.map((s) => (
-								<span
-									key={s}
-									className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-700"
-								>
-									{s}
-									<button
-										type="button"
-										onClick={() => onRemove(s)}
-										className="cursor-pointer text-slate-400 hover:text-slate-600"
-									>
-										<X className="h-3 w-3" />
-									</button>
-								</span>
-							))}
-						</div>
-					</div>
-				</CardContent>
-			</Card>
-		</div>
-	);
-}
-
 // ── Main component ─────────────────────────────────────────────────────────
 
 interface CreateForfragnPageProps {
@@ -333,6 +53,8 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [showErrors, setShowErrors] = useState(false);
+	const [emailError, setEmailError] = useState(false);
+	const [phoneError, setPhoneError] = useState(false);
 
 	const [projekt, setProjekt] = useState<KalkylProjektData>(DEFAULT_PROJEKT);
 	const [kontakt, setKontakt] = useState<ForfragnKontaktData>(DEFAULT_KONTAKT);
@@ -350,13 +72,11 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 	];
 
 	const handleProjektChange = useCallback(
-		(patch: Partial<KalkylProjektData>) =>
-			setProjekt((prev) => ({ ...prev, ...patch })),
+		(patch: Partial<KalkylProjektData>) => setProjekt((prev) => ({ ...prev, ...patch })),
 		[],
 	);
 	const handleKontaktChange = useCallback(
-		(patch: Partial<ForfragnKontaktData>) =>
-			setKontakt((prev) => ({ ...prev, ...patch })),
+		(patch: Partial<ForfragnKontaktData>) => setKontakt((prev) => ({ ...prev, ...patch })),
 		[],
 	);
 	const handleAddDocument = useCallback(
@@ -368,20 +88,28 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 		[],
 	);
 
-	function handleAddSupplier(name: string) {
-		setSuppliers((prev) => [...prev, name]);
-	}
-	function handleRemoveSupplier(name: string) {
-		setSuppliers((prev) => prev.filter((s) => s !== name));
-	}
-
 	function validateCurrentStep(): boolean {
-		if (currentStep === 2 && !kontakt.fornamn.trim()) {
+		if (currentStep !== 2) return true;
+
+		if (!kontakt.fornamn.trim()) {
 			setShowErrors(true);
 			showToast("error", t(localizationConstants.agreementCreateValidationFailed));
 			return false;
 		}
+		if (kontakt.mail && !EMAIL_RE.test(kontakt.mail)) {
+			setEmailError(true);
+			showToast("error", t(localizationConstants.validationRegisterEmailInvalid));
+			return false;
+		}
+		if (kontakt.telefon && !PHONE_RE.test(kontakt.telefon)) {
+			setPhoneError(true);
+			showToast("error", t(localizationConstants.agreementCreateValidationFailed));
+			return false;
+		}
+
 		setShowErrors(false);
+		setEmailError(false);
+		setPhoneError(false);
 		return true;
 	}
 
@@ -402,6 +130,7 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 
 	async function handleSubmit() {
 		setIsSubmitting(true);
+		// TODO: replace with real API call — POST /api/calculation/${calcId}/inquiry
 		await new Promise((resolve) => setTimeout(resolve, 800));
 		showToast("success", t(localizationConstants.createForfrgnSuccess));
 		setIsSubmitting(false);
@@ -478,6 +207,8 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 								data={kontakt}
 								onChange={handleKontaktChange}
 								showErrors={showErrors}
+								emailError={emailError}
+								phoneError={phoneError}
 							/>
 						)}
 						{currentStep === 3 && (
@@ -496,8 +227,8 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 						{currentStep === 4 && (
 							<ForfragnLeverantorStep
 								suppliers={suppliers}
-								onAdd={handleAddSupplier}
-								onRemove={handleRemoveSupplier}
+								onAdd={(name) => setSuppliers((prev) => [...prev, name])}
+								onRemove={(name) => setSuppliers((prev) => prev.filter((s) => s !== name))}
 							/>
 						)}
 					</div>
@@ -564,9 +295,7 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 										) : (
 											<Send className="h-4 w-4" />
 										)}
-										<Translate
-											text={localizationConstants.createForfrgnSkickaErb}
-										/>
+										<Translate text={localizationConstants.createForfrgnSkickaErb} />
 									</Button>
 								</div>
 							)}
@@ -587,17 +316,15 @@ export function CreateForfragnPage({ calcId }: CreateForfragnPageProps) {
 						<Translate text={localizationConstants.cancelButton} />
 					</Button>
 
-					{currentStep !== 3 && (
-						<Button
-							type="button"
-							variant="ghost"
-							onClick={handleSave}
-							className="h-8 min-w-20 cursor-pointer gap-1 border border-slate-200 bg-transparent px-3 text-xs text-slate-700 shadow-none hover:bg-slate-100 sm:h-9 sm:min-w-25 sm:gap-2 sm:px-5 sm:text-sm"
-						>
-							<Save className="h-3 w-3 sm:h-4 sm:w-4" />
-							<Translate text={localizationConstants.saveButton} />
-						</Button>
-					)}
+					<Button
+						type="button"
+						variant="ghost"
+						onClick={handleSave}
+						className="h-8 min-w-20 cursor-pointer gap-1 border border-slate-200 bg-transparent px-3 text-xs text-slate-700 shadow-none hover:bg-slate-100 sm:h-9 sm:min-w-25 sm:gap-2 sm:px-5 sm:text-sm"
+					>
+						<Save className="h-3 w-3 sm:h-4 sm:w-4" />
+						<Translate text={localizationConstants.saveButton} />
+					</Button>
 
 					{currentStep > 1 && (
 						<Button
