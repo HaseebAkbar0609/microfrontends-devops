@@ -2031,6 +2031,14 @@ export type OfferTranslation = {
 	kmaListSidebarRevisioner: string;
 	kmaListSidebarDocCenter: string;
 	kmaListSidebarArchive: string;
+	// KMA - Mall Group tab (TFS-726)
+	kmaMallGruppTitle: string;
+	kmaMallGruppCreate: string;
+	kmaMallGruppColId: string;
+	kmaMallGruppColDoc: string;
+	kmaMallGruppColVersion: string;
+	kmaMallGruppColLastUpdated: string;
+	kmaMallGruppColCreatedBy: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;

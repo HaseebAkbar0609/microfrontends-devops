@@ -1940,6 +1940,14 @@ export const svOffer: OfferTranslation = {
 	kmaListSidebarRevisioner: "Revisioner",
 	kmaListSidebarDocCenter: "Dokumentcenter",
 	kmaListSidebarArchive: "Arkiv",
+	// KMA - Mall Group tab (TFS-726)
+	kmaMallGruppTitle: "KMA - Mall-Grupp",
+	kmaMallGruppCreate: "Skapa KMA mall grupp",
+	kmaMallGruppColId: "T-KMA nr",
+	kmaMallGruppColDoc: "KMA Dokuments",
+	kmaMallGruppColVersion: "Version",
+	kmaMallGruppColLastUpdated: "Senast uppdaterad",
+	kmaMallGruppColCreatedBy: "Skapad av",
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: "B2B-Översikt",
 	b2bWidgetOverviewActive: "Aktiva uppdrag",

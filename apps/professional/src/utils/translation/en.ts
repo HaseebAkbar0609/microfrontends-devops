@@ -1935,6 +1935,14 @@ export const enOffer: OfferTranslation = {
 	kmaListSidebarRevisioner: "Revisions",
 	kmaListSidebarDocCenter: "Document Center",
 	kmaListSidebarArchive: "Archive",
+	// KMA - Mall Group tab (TFS-726)
+	kmaMallGruppTitle: "KMA - Template Group",
+	kmaMallGruppCreate: "Create KMA template group",
+	kmaMallGruppColId: "T-KMA No.",
+	kmaMallGruppColDoc: "KMA Documents",
+	kmaMallGruppColVersion: "Version",
+	kmaMallGruppColLastUpdated: "Last Updated",
+	kmaMallGruppColCreatedBy: "Created by",
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Project - Overview",
 	projWidgetOverviewTitle: "Project overview",
