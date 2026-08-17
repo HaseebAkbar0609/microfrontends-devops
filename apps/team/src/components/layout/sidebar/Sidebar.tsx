@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Search } from "lucide-react";
 import { getFavoriteNavItems, getNavConfig, type NavGroup } from "./navConfig";
 import { SidebarNavGroup } from "./SidebarNavGroup";
+import { DashboardLogo } from "./DashboardLogo";
 import { SLATE } from "@/constants/colors";
 
 interface SidebarProps {
@@ -113,26 +114,8 @@ export default function Sidebar({ autoCollapse = false }: SidebarProps) {
 					<div
 						className={`flex items-center gap-4 p-2 ${collapsed ? "flex-col justify-center" : "justify-between"}`}
 					>
-						{/* Logo — full when expanded, abbreviated when collapsed */}
-						{collapsed ? (
-							<div className="flex items-center justify-center">
-								<span className="text-xl font-bold leading-none text-brand-orange">
-									T
-								</span>
-								<span className="text-xl font-bold leading-none text-white">
-									F
-								</span>
-							</div>
-						) : (
-							<div className="flex items-center">
-								<span className="text-lg font-bold leading-none text-brand-orange">
-									Time
-								</span>
-								<span className="text-lg font-bold leading-none text-white">
-									Flow
-								</span>
-							</div>
-						)}
+						{/* Logo */}
+						<DashboardLogo collapsed={collapsed} />
 
 						{collapsed && (
 							<hr

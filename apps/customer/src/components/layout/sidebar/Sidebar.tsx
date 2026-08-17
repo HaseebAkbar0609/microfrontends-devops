@@ -4,6 +4,7 @@ import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useState } from "react";
 import { navConfig } from "./navConfig";
 import { SidebarNavGroup } from "./SidebarNavGroup";
+import { DashboardLogo } from "./DashboardLogo";
 import { SLATE } from "@/constants/colors";
 
 export default function Sidebar() {
@@ -21,26 +22,8 @@ export default function Sidebar() {
 					<div
 						className={`flex items-center gap-4 p-2 ${collapsed ? "flex-col justify-center" : "justify-between"}`}
 					>
-						{/* Logo — full when expanded, abbreviated when collapsed */}
-						{collapsed ? (
-							<div className="flex items-center justify-center">
-								<span className="text-xl font-bold leading-none text-brand-orange">
-									T
-								</span>
-								<span className="text-xl font-bold leading-none text-white">
-									F
-								</span>
-							</div>
-						) : (
-							<div className="flex items-center">
-								<span className="text-lg font-bold leading-none text-brand-orange">
-									Time
-								</span>
-								<span className="text-lg font-bold leading-none text-white">
-									Flow
-								</span>
-							</div>
-						)}
+						{/* Logo */}
+						<DashboardLogo collapsed={collapsed} />
 						<button
 							type="button"
 							onClick={() => setCollapsed((prev) => !prev)}
