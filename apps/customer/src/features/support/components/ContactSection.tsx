@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Mail, Phone, MessageCircle, Loader2 } from "lucide-react";
+import { Mail, Phone, Loader2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { getSupportConfigAPIAction } from "@/api-actions";
@@ -28,12 +28,8 @@ export function ContactSection() {
 
 	const phoneValue = config?.support_phone || "";
 	const emailValue = config?.support_email || "";
-	const chatAvailable = config?.chat_available ?? false;
-	const chatUrl = config?.contact_support_url || "/questions";
-	const operatingHoursValue =
-		config?.operating_hours || localizationConstants.supportOperatingHours;
 
-	const hasContactInfo = Boolean(phoneValue || emailValue || chatAvailable);
+	const hasContactInfo = Boolean(phoneValue || emailValue);
 
 	const sanitizePhone = (phone: string) => phone.replace(/[^\d+]/g, "");
 
@@ -56,20 +52,9 @@ export function ContactSection() {
 			href: `mailto:${emailValue}`,
 			isExternal: true,
 		},
-		{
-			id: "chat",
-			title: localizationConstants.supportLiveChat,
-			value: operatingHoursValue,
-			isTranslatedValue: !config?.operating_hours,
-			icon: MessageCircle,
-			href: chatUrl,
-			isExternal: chatUrl.startsWith("http"),
-		},
-	].filter((item) => {
-		if (item.id === "phone") return Boolean(phoneValue);
-		if (item.id === "email") return Boolean(emailValue);
-		return chatAvailable;
-	});
+	].filter((item) =>
+		item.id === "phone" ? Boolean(phoneValue) : Boolean(emailValue),
+	);
 
 	return (
 		<div className="mt-6">
@@ -87,7 +72,7 @@ export function ContactSection() {
 					<Translate text={localizationConstants.supportNoContactInfo} />
 				</p>
 			) : (
-				<div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+				<div className="grid grid-cols-1 gap-6 md:grid-cols-2">
 					{contacts.map((item) => {
 						const Icon = item.icon;
 
