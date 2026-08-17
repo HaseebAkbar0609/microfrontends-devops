@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { ChevronDown, ChevronRight, ChevronLeft, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { differenceInCalendarDays, startOfMonth, addMonths, subMonths } from "date-fns";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { GanttChartGrid } from "@/features/orders/components/OrderGanttTab";
@@ -15,21 +16,41 @@ import {
 
 const TOTAL_DAYS = 28;
 
-// Helper function to calculate exact date difference in days
-function getDaysDiff(d1: Date, d2: Date): number {
-	const utc1 = Date.UTC(d1.getFullYear(), d1.getMonth(), d1.getDate());
-	const utc2 = Date.UTC(d2.getFullYear(), d2.getMonth(), d2.getDate());
-	return Math.floor((utc1 - utc2) / 86400000);
-}
-
-function parseTaskDate(dateStr: string): Date {
-	if (!dateStr) return new Date(2024, 0, 1);
+/** Helper to parse a task date string (e.g. "2024/01/01" or "2024-01-01") */
+function parseTaskDate(dateStr?: string | null): Date {
+	if (!dateStr) return new Date();
 	const clean = dateStr.replace(/\//g, "-");
 	const parts = clean.split("-").map(Number);
 	if (parts.length === 3) {
-		return new Date(parts[0], parts[1] - 1, parts[2]);
+		const parsed = new Date(parts[0], parts[1] - 1, parts[2]);
+		if (!isNaN(parsed.getTime())) {
+			return parsed;
+		}
 	}
-	return new Date(dateStr);
+	const fallback = new Date(dateStr);
+	return isNaN(fallback.getTime()) ? new Date() : fallback;
+}
+
+/** Dynamically calculates initial date from dataset, falling back to start of current month */
+function getInitialTimelineDate(dataRows: PlanningGanttRow[]): Date {
+	if (!dataRows || dataRows.length === 0) {
+		return startOfMonth(new Date());
+	}
+	const validDates = dataRows
+		.map((r) => parseTaskDate(r.startDate))
+		.filter((d) => !isNaN(d.getTime()));
+
+	if (validDates.length === 0) {
+		return startOfMonth(new Date());
+	}
+
+	const earliestTimestamp = Math.min(...validDates.map((d) => d.getTime()));
+	return startOfMonth(new Date(earliestTimestamp));
+}
+
+interface ProcessedPlanningRow extends PlanningGanttRow {
+	durationDays: number;
+	startDayIndex: number;
 }
 
 export function PlanningOverviewTab() {
@@ -37,9 +58,9 @@ export function PlanningOverviewTab() {
 	const t = useTranslate();
 	const currentLang = i18n.language || "sv";
 
-	// Active Date state defaulting to Jan 1, 2024 so "5000 - Köksrenov" matches timeline
-	const [activeDate, setActiveDate] = useState<Date>(new Date(2024, 0, 1));
 	const [rows, setRows] = useState<PlanningGanttRow[]>(GANTT_DATA_ROWS);
+	// Active Date dynamically initialized from data rows or current date
+	const [activeDate, setActiveDate] = useState<Date>(() => getInitialTimelineDate(GANTT_DATA_ROWS));
 	const [collapsedRows, setCollapsedRows] = useState<Record<string, boolean>>({});
 
 	// Modal State for adding new sub-task / activity
@@ -48,14 +69,14 @@ export function PlanningOverviewTab() {
 	const year = activeDate.getFullYear();
 	const month = activeDate.getMonth();
 
-	// Dynamic Navigation Handlers
-	const handlePrevMonth = () => {
-		setActiveDate((prev) => new Date(prev.getFullYear(), prev.getMonth() - 1, 1));
-	};
+	// Dynamic Navigation Handlers using date-fns
+	const handlePrevMonth = useCallback(() => {
+		setActiveDate((prev) => subMonths(startOfMonth(prev), 1));
+	}, []);
 
-	const handleNextMonth = () => {
-		setActiveDate((prev) => new Date(prev.getFullYear(), prev.getMonth() + 1, 1));
-	};
+	const handleNextMonth = useCallback(() => {
+		setActiveDate((prev) => addMonths(startOfMonth(prev), 1));
+	}, []);
 
 	// Dynamic Month Label & Weeks Calculation
 	const { displayMonth, WEEKS, viewStartDate } = useMemo(() => {
@@ -72,7 +93,7 @@ export function PlanningOverviewTab() {
 		const baseWeekNumber = Math.max(
 			1,
 			Math.ceil(
-				(getDaysDiff(firstDayOfMonth, new Date(year, 0, 1)) +
+				(differenceInCalendarDays(firstDayOfMonth, new Date(year, 0, 1)) +
 					new Date(year, 0, 1).getDay() +
 					1) /
 					7
@@ -98,27 +119,15 @@ export function PlanningOverviewTab() {
 		};
 	}, [activeDate, month, year, currentLang]);
 
-	const toggleCollapse = (id: string) => {
+	const toggleCollapse = useCallback((id: string) => {
 		setCollapsedRows((prev) => ({ ...prev, [id]: !prev[id] }));
-	};
+	}, []);
 
-	const isRowVisible = (row: PlanningGanttRow): boolean => {
-		let currentParentId = row.parentId;
-		while (currentParentId) {
-			if (collapsedRows[currentParentId]) {
-				return false;
-			}
-			const parentRow = rows.find((r) => r.id === currentParentId);
-			currentParentId = parentRow?.parentId;
-		}
-		return true;
-	};
-
-	const handleOpenAddModal = (row: PlanningGanttRow) => {
+	const handleOpenAddModal = useCallback((row: PlanningGanttRow) => {
 		setSelectedParentRow(row);
-	};
+	}, []);
 
-	const handleSaveTask = (formData: PlanningTaskFormData) => {
+	const handleSaveTask = useCallback((formData: PlanningTaskFormData) => {
 		if (!selectedParentRow) return;
 
 		const targetLevel = (selectedParentRow.level === 0 ? 1 : 2) as 1 | 2;
@@ -155,36 +164,55 @@ export function PlanningOverviewTab() {
 
 		setCollapsedRows((prev) => ({ ...prev, [selectedParentRow.id]: false }));
 		setSelectedParentRow(null);
-	};
+	}, [selectedParentRow]);
 
-	const visibleRows = rows.filter(isRowVisible);
+	// Performance optimization: Memoized visible rows calculation
+	const visibleRows = useMemo(() => {
+		return rows.filter((row) => {
+			let currentParentId = row.parentId;
+			while (currentParentId) {
+				if (collapsedRows[currentParentId]) {
+					return false;
+				}
+				const parentRow = rows.find((r) => r.id === currentParentId);
+				currentParentId = parentRow?.parentId;
+			}
+			return true;
+		});
+	}, [rows, collapsedRows]);
 
-	// Dynamically calculate timeline bar parameters relative to the active viewStartDate
-	const getTimelineParams = (row: PlanningGanttRow) => {
-		const taskStart = parseTaskDate(row.startDate);
-		const taskDuration = row.durationDays || 1;
+	// Performance optimization: Pre-compute timeline positioning parameters for all visible rows
+	const processedVisibleRows: ProcessedPlanningRow[] = useMemo(() => {
+		return visibleRows.map((row) => {
+			const taskStart = parseTaskDate(row.startDate);
+			const taskDuration = row.durationDays || 1;
+			const diffFromViewStart = differenceInCalendarDays(taskStart, viewStartDate);
 
-		const diffFromViewStart = getDaysDiff(taskStart, viewStartDate);
+			let startDayIndex = diffFromViewStart;
+			let durationDays = taskDuration;
 
-		let startDayIndex = diffFromViewStart;
-		let durationDays = taskDuration;
+			if (startDayIndex < 0) {
+				durationDays = Math.max(0, taskDuration + startDayIndex);
+				startDayIndex = 0;
+			}
 
-		if (startDayIndex < 0) {
-			durationDays = Math.max(0, taskDuration + startDayIndex);
-			startDayIndex = 0;
-		}
+			if (startDayIndex >= TOTAL_DAYS || durationDays <= 0) {
+				return {
+					...row,
+					durationDays: 0,
+					startDayIndex: 0,
+				};
+			}
 
-		if (startDayIndex >= TOTAL_DAYS || durationDays <= 0) {
-			return { durationDays: 0, startDayIndex: 0 };
-		}
+			durationDays = Math.min(durationDays, TOTAL_DAYS - startDayIndex);
 
-		durationDays = Math.min(durationDays, TOTAL_DAYS - startDayIndex);
-
-		return {
-			durationDays: Math.max(0, durationDays),
-			startDayIndex: Math.max(0, startDayIndex),
-		};
-	};
+			return {
+				...row,
+				durationDays: Math.max(0, durationDays),
+				startDayIndex: Math.max(0, startDayIndex),
+			};
+		});
+	}, [visibleRows, viewStartDate]);
 
 	return (
 		<div className="flex flex-col w-full bg-white rounded-lg overflow-hidden border border-slate-200 shadow-2xs font-sans">
@@ -208,6 +236,7 @@ export function PlanningOverviewTab() {
 										onClick={handlePrevMonth}
 										className="p-1 rounded-md hover:bg-slate-200/60 text-slate-500 hover:text-slate-900 cursor-pointer transition-colors"
 										title={t(localizationConstants.prevMonthTooltip)}
+										aria-label={t(localizationConstants.prevMonthTooltip)}
 									>
 										<ChevronLeft className="w-4 h-4" />
 									</button>
@@ -217,6 +246,7 @@ export function PlanningOverviewTab() {
 										onClick={handleNextMonth}
 										className="p-1 rounded-md hover:bg-slate-200/60 text-slate-500 hover:text-slate-900 cursor-pointer transition-colors"
 										title={t(localizationConstants.nextMonthTooltip)}
+										aria-label={t(localizationConstants.nextMonthTooltip)}
 									>
 										<ChevronRight className="w-4 h-4" />
 									</button>
@@ -249,9 +279,8 @@ export function PlanningOverviewTab() {
 					</thead>
 
 					<tbody>
-						{visibleRows.map((row) => {
+						{processedVisibleRows.map((row) => {
 							const isCollapsed = collapsedRows[row.id];
-							const { durationDays, startDayIndex } = getTimelineParams(row);
 
 							const leftBgClass =
 								row.level === 0
@@ -270,6 +299,7 @@ export function PlanningOverviewTab() {
 														type="button"
 														onClick={() => toggleCollapse(row.id)}
 														className="p-0.5 text-slate-500 hover:text-slate-900 rounded cursor-pointer flex-shrink-0"
+														aria-label={isCollapsed ? "Expand row" : "Collapse row"}
 													>
 														{isCollapsed ? (
 															<ChevronRight className="h-4 w-4" />
@@ -299,6 +329,7 @@ export function PlanningOverviewTab() {
 												type="button"
 												onClick={() => handleOpenAddModal(row)}
 												className="h-6 w-6 rounded flex items-center justify-center hover:bg-slate-300/60 text-slate-600 hover:text-slate-900 mx-auto cursor-pointer transition-colors"
+												aria-label="Add sub-task"
 											>
 												<Plus className="h-4 w-4" />
 											</button>
@@ -308,8 +339,8 @@ export function PlanningOverviewTab() {
 									<td colSpan={TOTAL_DAYS} className="py-1.5 pl-0 pr-2">
 										<GanttChartGrid
 											totalDays={TOTAL_DAYS}
-											durationDays={durationDays}
-											startDayIndex={startDayIndex}
+											durationDays={row.durationDays}
+											startDayIndex={row.startDayIndex}
 											color={row.color || "transparent"}
 											level={row.level}
 										/>
