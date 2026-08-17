@@ -713,12 +713,8 @@ export const enQuestions: QuestionsModule = {
 	faqDoINeedToDownloadAnApp: "Do I need to download an app?",
 	faqTimeFlowWorksInBrowserAndApp:
 		"No. TimeFlow works in the browser, but a mobile app is also available.",
-	questionsSearchPlaceholder: "Search",
-	questionsFilterLabel: "Filter",
-	questionsAskButton: "Ask a question",
 	questionsNoQuestionsYet: "No questions yet. Click \"Ask a question\" to get started.",
 	questionsAskFirstQuestion: "Ask a question to get started",
-	questionsNoResults: "No results found.",
 	questionsAskTitle: "Ask a Question",
 	questionsSubjectLabel: "Subject",
 	questionsSubjectPlaceholder: "e.g. How do I use the cost calculator?",
