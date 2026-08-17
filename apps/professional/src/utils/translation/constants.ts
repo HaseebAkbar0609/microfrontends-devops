@@ -2275,6 +2275,14 @@ export type OfferTranslation = {
 	projectListArchivedToast: string;
 	projectListDeletedToast: string;
 	projectListCreateToast: string;
+	// Project economic overview
+	projectEconomyTbTab: string;
+	projectEconomyTotalTb: string;
+	projectEconomyColNr: string;
+	projectEconomyColName: string;
+	projectEconomyColRevenue: string;
+	projectEconomyColCosts: string;
+	projectEconomyColTb: string;
 	// Project detail (Gantt table)
 	projectDetailColNr: string;
 	projectDetailColName: string;
