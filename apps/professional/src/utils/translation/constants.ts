@@ -2041,6 +2041,33 @@ export type OfferTranslation = {
 	kmaMallGruppColCreatedBy: string;
 	kmaMallGruppFilterStarred: string;
 	filterAll: string;
+	// KMA - Quality System (TFS-727)
+	kmaQualityTabSystem: string;
+	kmaQualityTabPlan: string;
+	kmaQualityMainCat: string;
+	kmaQualitySubCat: string;
+	kmaQualityDocs: string;
+	kmaQualityUpload: string;
+	kmaQualityAddNew: string;
+	kmaQualityPublished: string;
+	kmaQualityEditMetadata: string;
+	kmaQualityDetailZoom: string;
+	kmaQualityDetailDownload: string;
+	kmaQualityDetailDetails: string;
+	kmaQualityDetailComments: string;
+	kmaQualityDetailVersions: string;
+	kmaQualityDetailCatFrom: string;
+	kmaQualityDetailTemplateType: string;
+	kmaQualityDetailTags: string;
+	kmaQualityDetailOwner: string;
+	kmaQualityDetailLinkedModules: string;
+	kmaQualityDetailCreated: string;
+	kmaQualityDetailLastUpdated: string;
+	kmaQualityDetailRecentActivity: string;
+	kmaQualityDetailDescription: string;
+	kmaQualitySearchCategories: string;
+	kmaQualitySearchSubCategories: string;
+	kmaQualitySearchDocs: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;
