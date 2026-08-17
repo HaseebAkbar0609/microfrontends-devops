@@ -4,10 +4,15 @@ import { useMemo, useState } from "react";
 import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { ProjectEconomyItem } from "../data/projectEconomy.mock";
+import {
+	getTotalTbContribution,
+	listEconomyRows,
+} from "../services/projectEconomyService";
 
 export type ProjectEconomySortField = keyof Omit<ProjectEconomyItem, "id">;
 
-export function useProjectEconomyFilters(rows: ProjectEconomyItem[]) {
+export function useProjectEconomyFilters() {
+	const [rows] = useState<ProjectEconomyItem[]>(() => listEconomyRows());
 	const { sortField, sortDir, toggleSort } =
 		useTableSort<ProjectEconomySortField>();
 	const [page, setPage] = useState(1);
@@ -15,8 +20,11 @@ export function useProjectEconomyFilters(rows: ProjectEconomyItem[]) {
 
 	const sorted = useMemo(
 		() =>
-			sortItems(rows, sortField, sortDir, (item, field) =>
-				String(item[field as ProjectEconomySortField]),
+			sortItems(
+				rows,
+				sortField,
+				sortDir,
+				(item, field) => item[field as ProjectEconomySortField],
 			),
 		[rows, sortField, sortDir],
 	);
@@ -33,6 +41,7 @@ export function useProjectEconomyFilters(rows: ProjectEconomyItem[]) {
 	};
 
 	return {
+		totalTbContribution: getTotalTbContribution(),
 		sortField,
 		sortDir,
 		toggleSort,

@@ -1,25 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TablePagination } from "@/components/table/TablePagination";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { PROJECT_ECONOMY_BREADCRUMBS } from "../constants";
-import { ProjectEconomyItem } from "../data/projectEconomy.mock";
 import { useProjectEconomyFilters } from "../hooks/useProjectEconomyFilters";
-import {
-	getTotalTbContribution,
-	listEconomyRows,
-} from "../services/projectEconomyService";
 import ProjectEconomyTable from "./ProjectEconomyTable";
 
 const PROJECT_ECONOMY_TAB_TB = "tb";
 
+const TOTAL_TB_FORMAT = new Intl.NumberFormat("en-US");
+
 const ProjectEconomyPage = () => {
-	const [rows] = useState<ProjectEconomyItem[]>(() => listEconomyRows());
-	const filters = useProjectEconomyFilters(rows);
+	const filters = useProjectEconomyFilters();
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
@@ -55,7 +50,9 @@ const ProjectEconomyPage = () => {
 									}
 								/>
 								{": "}
-								{getTotalTbContribution()}
+								{TOTAL_TB_FORMAT.format(
+									filters.totalTbContribution,
+								)}
 							</p>
 
 							<div className="rounded-md border border-slate-200 bg-white">

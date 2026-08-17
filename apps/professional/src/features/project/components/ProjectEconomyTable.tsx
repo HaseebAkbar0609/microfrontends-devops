@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { ArrowUpDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -17,15 +17,25 @@ import { Translate } from "@/utils/translation/translate";
 import { ProjectEconomyItem } from "../data/projectEconomy.mock";
 import { ProjectEconomySortField } from "../hooks/useProjectEconomyFilters";
 
-export const PROJECT_ECONOMY_COLUMNS: {
+const TB_AMOUNT_FORMAT = new Intl.NumberFormat("de-DE");
+
+interface ProjectEconomyColumn {
 	key: ProjectEconomySortField;
 	labelKey: string;
-}[] = [
+	renderCell?: (row: ProjectEconomyItem) => ReactNode;
+}
+
+export const PROJECT_ECONOMY_COLUMNS: ProjectEconomyColumn[] = [
 	{ key: "projectNr", labelKey: localizationConstants.projectEconomyColNr },
 	{ key: "name", labelKey: localizationConstants.projectEconomyColName },
 	{
 		key: "totalRevenue",
 		labelKey: localizationConstants.projectEconomyColRevenue,
+		renderCell: (row) => (
+			<span className="inline-flex rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+				{row.totalRevenue}
+			</span>
+		),
 	},
 	{
 		key: "totalCosts",
@@ -34,6 +44,7 @@ export const PROJECT_ECONOMY_COLUMNS: {
 	{
 		key: "tbContribution",
 		labelKey: localizationConstants.projectEconomyColTb,
+		renderCell: (row) => TB_AMOUNT_FORMAT.format(row.tbContribution),
 	},
 ];
 
@@ -122,13 +133,9 @@ const ProjectEconomyTable = ({
 									key={column.key}
 									className="px-4 py-3.5 text-sm text-slate-700"
 								>
-									{column.key === "totalRevenue" ? (
-										<span className="inline-flex rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-											{row.totalRevenue}
-										</span>
-									) : (
-										row[column.key]
-									)}
+									{column.renderCell
+										? column.renderCell(row)
+										: row[column.key]}
 								</TableCell>
 							))}
 						</TableRow>

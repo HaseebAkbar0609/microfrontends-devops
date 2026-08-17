@@ -4,10 +4,10 @@ export interface ProjectEconomyItem {
 	name: string;
 	totalRevenue: string;
 	totalCosts: string;
-	tbContribution: string;
+	tbContribution: number;
 }
 
-export const PROJECT_ECONOMY_TOTAL_TB = "15,360,000";
+export const PROJECT_ECONOMY_TOTAL_TB = 15_360_000;
 
 export const PROJECT_ECONOMY_ROWS: ProjectEconomyItem[] = [
 	{
@@ -16,7 +16,7 @@ export const PROJECT_ECONOMY_ROWS: ProjectEconomyItem[] = [
 		name: "Renovation",
 		totalRevenue: "Totalentreprenad",
 		totalCosts: "Nyproduktion",
-		tbContribution: "10.000",
+		tbContribution: 10_000,
 	},
 	{
 		id: "5001",
@@ -24,7 +24,7 @@ export const PROJECT_ECONOMY_ROWS: ProjectEconomyItem[] = [
 		name: "Renovation",
 		totalRevenue: "Generalentreprenad",
 		totalCosts: "ROT",
-		tbContribution: "10.000",
+		tbContribution: 10_000,
 	},
 	{
 		id: "5002",
@@ -32,7 +32,7 @@ export const PROJECT_ECONOMY_ROWS: ProjectEconomyItem[] = [
 		name: "Renovation",
 		totalRevenue: "Löpande",
 		totalCosts: "Service",
-		tbContribution: "10.000",
+		tbContribution: 10_000,
 	},
 	{
 		id: "5003",
@@ -40,7 +40,7 @@ export const PROJECT_ECONOMY_ROWS: ProjectEconomyItem[] = [
 		name: "Renovation",
 		totalRevenue: "Samverkan",
 		totalCosts: "ROT",
-		tbContribution: "10.000",
+		tbContribution: 10_000,
 	},
 	{
 		id: "5004",
@@ -48,7 +48,7 @@ export const PROJECT_ECONOMY_ROWS: ProjectEconomyItem[] = [
 		name: "Renovation",
 		totalRevenue: "Totalentreprenad",
 		totalCosts: "ROT",
-		tbContribution: "10.000",
+		tbContribution: 10_000,
 	},
 	{
 		id: "5005",
@@ -56,6 +56,6 @@ export const PROJECT_ECONOMY_ROWS: ProjectEconomyItem[] = [
 		name: "Renovation",
 		totalRevenue: "Totalentreprenad",
 		totalCosts: "ROT",
-		tbContribution: "10.000",
+		tbContribution: 10_000,
 	},
 ];

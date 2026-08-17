@@ -8,6 +8,6 @@ export function listEconomyRows(): ProjectEconomyItem[] {
 	return PROJECT_ECONOMY_ROWS;
 }
 
-export function getTotalTbContribution(): string {
+export function getTotalTbContribution(): number {
 	return PROJECT_ECONOMY_TOTAL_TB;
 }
