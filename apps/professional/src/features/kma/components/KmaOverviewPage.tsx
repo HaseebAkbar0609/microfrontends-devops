@@ -85,7 +85,7 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
 interface CreateDropdownProps {
 	open: boolean;
 	onToggle: () => void;
-	dropdownRef: RefObject<HTMLDivElement>;
+	dropdownRef: RefObject<HTMLDivElement | null>;
 }
 
 function CreateDropdown({ open, onToggle, dropdownRef }: CreateDropdownProps) {
