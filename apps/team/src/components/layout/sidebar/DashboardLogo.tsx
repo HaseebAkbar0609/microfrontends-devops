@@ -28,7 +28,7 @@ export function DashboardLogo({
 			{/* Short Logo (TF..) - 24px x 18px */}
 			<div
 				className={cn(
-					"flex items-center justify-center transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none",
+					"flex items-center justify-center transition-[opacity,transform] duration-300 ease-out will-change-[opacity,transform] motion-reduce:transition-none",
 					collapsed
 						? "opacity-100 scale-100"
 						: "pointer-events-none absolute inset-0 scale-95 opacity-0"
@@ -37,7 +37,7 @@ export function DashboardLogo({
 			>
 				<Image
 					src="/images/logo-short.png"
-					alt="TimeFlow"
+					alt="TimeFlow Icon"
 					width={24}
 					height={18}
 					className="w-[24px] h-[18px] object-contain shrink-0"
@@ -48,7 +48,7 @@ export function DashboardLogo({
 			{/* Full Logo (TIMEFLOW..) - 108px x 18px */}
 			<div
 				className={cn(
-					"flex items-center transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none",
+					"flex items-center transition-[opacity,transform] duration-300 ease-out will-change-[opacity,transform] motion-reduce:transition-none",
 					collapsed
 						? "pointer-events-none absolute inset-0 justify-center scale-95 opacity-0"
 						: "scale-100 opacity-100"
@@ -57,7 +57,7 @@ export function DashboardLogo({
 			>
 				<Image
 					src="/images/logo-full.png"
-					alt="TimeFlow"
+					alt="TimeFlow Logo"
 					width={108}
 					height={18}
 					className="w-[108px] h-[18px] object-contain shrink-0"
@@ -74,6 +74,7 @@ export function DashboardLogo({
 	return (
 		<Link
 			href={href}
+			aria-label="TimeFlow Home"
 			className={cn(
 				"flex items-center transition-opacity hover:opacity-90",
 				collapsed ? "w-full justify-center" : "min-w-0 flex-1 justify-start"
