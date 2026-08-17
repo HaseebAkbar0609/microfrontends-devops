@@ -102,7 +102,7 @@ export function ForfragnListView({ calcId, rows }: ForfragnListViewProps) {
 	const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
 	const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-	const base = `/module/business/calculation/overview/${calcId}/forfragan`;
+	const base = `/module/business/calculation/overview/${calcId}/inquiry`;
 
 	const TH =
 		"cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-slate-500 hover:text-slate-800";
@@ -112,7 +112,9 @@ export function ForfragnListView({ calcId, rows }: ForfragnListViewProps) {
 			{/* Page title */}
 			<div className="border-b border-slate-200 px-6 py-4">
 				<h1 className="text-2xl font-semibold">
-					<span className="text-slate-400">Kalkyl {calcId} / </span>
+					<span className="text-slate-400">
+						<Translate text={localizationConstants.calcKalkyl} /> {calcId} /{" "}
+					</span>
 					<Translate text={localizationConstants.calcForfragnTitle} />
 				</h1>
 			</div>
@@ -136,6 +138,7 @@ export function ForfragnListView({ calcId, rows }: ForfragnListViewProps) {
 				</div>
 				<Button
 					size="sm"
+					onClick={() => router.push(`${base}/ny`)}
 					className="h-9 cursor-pointer gap-1.5 bg-[#111721] px-4 text-sm text-white hover:bg-slate-800"
 				>
 					<Plus className="h-4 w-4" />
