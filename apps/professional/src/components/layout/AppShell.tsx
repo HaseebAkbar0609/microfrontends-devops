@@ -14,13 +14,11 @@ import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
 import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
-import { OfferDetailSubSidebar } from "./sidebar/OfferDetailSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
 import {
 	getFlyoutSubSidebarConfigByPath,
 	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
 } from "./sidebar/navConfig";
-import { offerSidebarItems, goToItems } from "@/features/offer/constants";
 import { b2bSidebarItems } from "@/features/b2b/constants";
 import { calculationSidebarItems, calculationGoToItems } from "@/features/calculation/constants";
 import { productionSidebarItems } from "@/features/production/constants";
@@ -28,9 +26,6 @@ import { KMA_SIDEBAR_NAV_ITEMS } from "@/features/kma/data/kmaNav.config";
 import { financialSidebarItems } from "@/features/financial-management/constants";
 import { businessSupportSidebarItems } from "@/features/business-support/constants";
 import localizationConstants from "@/utils/translation/constants";
-import { CircleDollarSign } from "lucide-react";
-
-const OFFER_NAMED_ROUTES = ["dashboard", "list", "archive", "send"];
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -72,18 +67,6 @@ export function AppShell({ children }: AppShellProps) {
 		pathname.startsWith("/module/production") && !isOrderPath && !isProjectPath && !isKmaPath;
 	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
 	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
-	const isOfferModuleRoute = pathname.startsWith("/module/business/offer/");
-	const offerSegment = isOfferModuleRoute
-		? (pathname.match(/^\/module\/business\/offer\/([^/]+)/)?.[1])
-		: undefined;
-	// /offer/send/[offerId] â€” extract the real offerId from the second segment
-	const sendOfferMatch = isOfferModuleRoute
-		? pathname.match(/^\/module\/business\/offer\/send\/([^/?]+)/)
-		: null;
-	const sendOfferId = sendOfferMatch?.[1];
-	const isOfferDetailRoute =
-		!!offerSegment && !OFFER_NAMED_ROUTES.includes(offerSegment);
-	const isOfferNavRoute = isOfferModuleRoute && !isOfferDetailRoute && !sendOfferId;
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const showSubSidebar =
 		!!flyoutSubSidebarConfig &&
@@ -187,21 +170,6 @@ export function AppShell({ children }: AppShellProps) {
 				<AgreementSubSidebar />
 			) : isRegisterPath ? (
 				<InvoiceSubSidebar />
-			) : sendOfferId ? (
-				<OfferDetailSubSidebar offerId={sendOfferId} />
-			) : isOfferDetailRoute ? (
-				<OfferDetailSubSidebar offerId={offerSegment!} />
-			) : isOfferNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.offer}
-					headerIcon={CircleDollarSign}
-					items={offerSidebarItems}
-					hideBack={true}
-					additionalSection={{
-						titleKey: localizationConstants.goTo,
-						items: goToItems,
-					}}
-				/>
 			) : isB2BNavRoute ? (
 				<DynamicSubSidebar
 					titleKey={localizationConstants.b2b}
@@ -260,3 +228,4 @@ export function AppShell({ children }: AppShellProps) {
 	);
 }
 
+export default AppShell;
