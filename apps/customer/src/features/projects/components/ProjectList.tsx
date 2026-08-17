@@ -1,21 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Plus,
   Loader2,
-  Search,
-  ChevronDown,
   ArrowUpDown,
   MoreVertical,
-  ChevronLeft,
-  ChevronRight,
-  Check,
   Pencil,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/common";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -41,16 +35,8 @@ const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
   "on-hold": { bg: "bg-yellow-50", text: "text-yellow-600" },
 };
 
-const STATUS_OPTIONS = [
-  { value: "", label: "All Statuses" },
-  { value: "received-quote", label: "Received Quote" },
-  { value: "completed", label: "Completed" },
-  { value: "draft", label: "Draft" },
-  { value: "active", label: "Active" },
-  { value: "on-hold", label: "On Hold" },
-];
-
-const ROWS_OPTIONS = [10, 25, 50];
+const PAGE = 1;
+const PAGE_SIZE = 10;
 
 type SortKey = "referenceNo" | "name" | "orderNo" | "quoteReferenceNo" | "companyName" | "status";
 
@@ -116,22 +102,13 @@ function mapListProjectToFrontend(q: ApiQuoteItem): ActiveProject {
 
 export function ProjectList() {
   const router = useRouter();
-  const [search, setSearch] = useState("");
   const [projects, setProjects] = useState<ActiveProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortKey, setSortKey] = useState<SortKey>("referenceNo");
   const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [statusFilter, setStatusFilter] = useState("");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [filterAnchor, setFilterAnchor] = useState<{ top: number; left: number } | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [menuAnchor, setMenuAnchor] = useState<{ top: number; right: number } | null>(null);
-  const filterBtnRef = useRef<HTMLButtonElement>(null);
-
-  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -141,7 +118,7 @@ export function ProjectList() {
 
       const combinedMap = new Map<string, ActiveProject>();
 
-      const activeRes = await getActiveProjectsAPIAction({ limit: rowsPerPage });
+      const activeRes = await getActiveProjectsAPIAction({ limit: PAGE_SIZE });
       if (cancelled) return;
 
       let hasError = false;
@@ -159,12 +136,10 @@ export function ProjectList() {
 
       if (!hasError) {
         const listRes = await getProjectListAPIAction({
-          page,
-          pageSize: rowsPerPage,
-          search: search.trim() || undefined,
+          page: PAGE,
+          pageSize: PAGE_SIZE,
           sortBy: sortKey || undefined,
           sortOrder: sortDir || undefined,
-          quote_status: statusFilter || undefined,
         });
         if (cancelled) return;
         if (listRes.success && listRes.data?.quotes) {
@@ -183,7 +158,6 @@ export function ProjectList() {
                 : item);
             }
           });
-          setTotalCount(listRes.data.totalItems ?? listRes.data.quotes.length);
         } else {
           hasError = true;
           setError(listRes.error || "Failed to load projects list");
@@ -202,14 +176,13 @@ export function ProjectList() {
     return () => {
       cancelled = true;
     };
-  }, [page, rowsPerPage, search, sortKey, sortDir, statusFilter]);
+  }, [sortKey, sortDir]);
 
-  // Close dropdowns on outside click, resize, or scroll
+  // Close the row-actions dropdown on outside click, resize, or scroll
   useEffect(() => {
-    if (!openMenu && !filterOpen) return;
+    if (!openMenu) return;
     const close = () => {
       setOpenMenu(null); setMenuAnchor(null);
-      setFilterOpen(false); setFilterAnchor(null);
     };
     document.addEventListener("click", close);
     window.addEventListener("resize", close);
@@ -219,7 +192,7 @@ export function ProjectList() {
       window.removeEventListener("resize", close);
       window.removeEventListener("scroll", close, true);
     };
-  }, [openMenu, filterOpen]);
+  }, [openMenu]);
 
   function handleMenuOpen(e: React.MouseEvent<HTMLButtonElement>, id: string) {
     e.stopPropagation();
@@ -229,23 +202,12 @@ export function ProjectList() {
     setMenuAnchor({ top: rect.bottom + 4, right: window.innerWidth - rect.right });
   }
 
-  function handleFilterToggle(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    if (filterOpen) { setFilterOpen(false); setFilterAnchor(null); return; }
-    const rect = e.currentTarget.getBoundingClientRect();
-    setFilterOpen(true);
-    setFilterAnchor({ top: rect.bottom + 4, left: rect.left });
-  }
-
   function toggleSort(key: SortKey) {
     if (sortKey === key) setSortDir((d) => (d === "asc" ? "desc" : "asc"));
     else { setSortKey(key); setSortDir("asc"); }
   }
 
-  const totalPages = Math.max(1, Math.ceil(totalCount / rowsPerPage));
   const pageRows = projects;
-
-  const activeFilterLabel = STATUS_OPTIONS.find((o) => o.value === statusFilter)?.label ?? "All Statuses";
 
   return (
     <div className="flex flex-1 flex-col">
@@ -257,38 +219,6 @@ export function ProjectList() {
       <div className="p-6 flex-1">
         {/* Toolbar */}
         <div className="flex items-center gap-3 mb-5">
-          <div className="relative max-w-64 flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#94A3B8]" />
-            <Input
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Search"
-              className="pl-9 h-9 text-sm border-[#E2E8F0] bg-white"
-            />
-          </div>
-
-          {/* Filter button */}
-          <button
-            ref={filterBtnRef}
-            type="button"
-            onClick={handleFilterToggle}
-            className={cn(
-              "h-9 px-4 flex items-center gap-2 text-sm font-medium border rounded-lg transition-colors",
-              statusFilter
-                ? "bg-blue-50 border-blue-200 text-blue-700"
-                : "bg-white border-[#E2E8F0] text-[#374151] hover:bg-slate-50",
-            )}
-          >
-            Filter
-            {statusFilter && (
-              <span className="text-xs font-normal">· {activeFilterLabel}</span>
-            )}
-            <ChevronDown className={cn("h-4 w-4 transition-transform", filterOpen && "rotate-180")} />
-          </button>
-
           <div className="ml-auto flex items-center gap-3">
             <Link
               href="/business/offer/create"
@@ -315,12 +245,12 @@ export function ProjectList() {
                 <tr className="border-b border-[#E2E8F0] bg-white">
                   {(
                     [
-                      { key: "referenceNo", label: "Ref No" },
-                      { key: "name", label: "Project Name" },
-                      { key: "orderNo", label: "Order No" },
-                      { key: "quoteReferenceNo", label: "Quote Reference No" },
-                      { key: "companyName", label: "Supplier" },
-                      { key: "status", label: "Status" },
+                      { key: "referenceNo", label: localizationConstants.refNo },
+                      { key: "name", label: localizationConstants.projectName },
+                      { key: "orderNo", label: localizationConstants.projectOrderNoCol },
+                      { key: "quoteReferenceNo", label: localizationConstants.projectQuoteRefNoCol },
+                      { key: "companyName", label: localizationConstants.projectSupplierCol },
+                      { key: "status", label: localizationConstants.status },
                     ] as { key: SortKey; label: string }[]
                   ).map(({ key, label }) => (
                     <th
@@ -329,7 +259,7 @@ export function ProjectList() {
                       onClick={() => toggleSort(key)}
                     >
                       <span className="inline-flex items-center gap-1">
-                        {label}
+                        <Translate text={label} />
                         <ArrowUpDown
                           className={cn(
                             "h-3.5 w-3.5 transition-colors",
@@ -418,88 +348,7 @@ export function ProjectList() {
           </div>
         </div>
 
-        {/* Pagination — outside table card */}
-        <div className="w-[90%] flex items-center justify-center gap-6 px-4 py-3 mt-2 text-sm text-[#64748B]">
-          <div className="flex items-center gap-2">
-            <span>Rows per page</span>
-            <select
-              value={rowsPerPage}
-              onChange={(e) => { setRowsPerPage(Number(e.target.value)); setPage(1); }}
-              className="h-8 rounded-md border border-[#E2E8F0] bg-white px-2 text-sm text-[#374151] focus:outline-none"
-            >
-              {ROWS_OPTIONS.map((n) => (
-                <option key={n} value={n}>{n}</option>
-              ))}
-            </select>
-          </div>
-
-          <span>Page {page} of {totalPages}</span>
-
-          <div className="flex items-center gap-0.5">
-            <button
-              type="button"
-              onClick={() => setPage(1)}
-              disabled={page === 1}
-              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronLeft className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setPage(totalPages)}
-              disabled={page === totalPages}
-              className="p-1.5 rounded hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              <ChevronRight className="h-3.5 w-3.5" />
-            </button>
-          </div>
-        </div>
       </div>
-
-      {/* Filter dropdown — fixed portal */}
-      {filterOpen && filterAnchor && (
-        <div
-          style={{ position: "fixed", top: filterAnchor.top, left: filterAnchor.left, zIndex: 9999 }}
-          className="w-48 bg-white border border-[#E2E8F0] rounded-lg shadow-lg py-1"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <p className="px-3 py-1.5 text-xs font-semibold text-[#94A3B8] uppercase tracking-wide">
-            Status
-          </p>
-          {STATUS_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              onClick={() => {
-                setStatusFilter(opt.value);
-                setPage(1);
-                setFilterOpen(false);
-                setFilterAnchor(null);
-              }}
-              className="w-full flex items-center justify-between px-3 py-1.5 text-sm text-[#374151] hover:bg-slate-50"
-            >
-              {opt.label}
-              {statusFilter === opt.value && <Check className="h-3.5 w-3.5 text-blue-600" />}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Row actions dropdown — fixed portal */}
       {openMenu && menuAnchor && (
