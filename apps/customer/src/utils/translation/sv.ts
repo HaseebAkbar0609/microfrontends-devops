@@ -710,12 +710,8 @@ export const svQuestions: QuestionsModule = {
 	faqDoINeedToDownloadAnApp: "Behöver jag ladda ner någon app?",
 	faqTimeFlowWorksInBrowserAndApp:
 		"Nej. Du kan använda TimeFlow direkt i webbläsaren. För en ännu bättre upplevelse finns även appen TimeFlow Home.",
-	questionsSearchPlaceholder: "Sök",
-	questionsFilterLabel: "Filter",
-	questionsAskButton: "Ställ en fråga",
 	questionsNoQuestionsYet: "Inga frågor än. Klicka på \"Ställ en fråga\" för att komma igång.",
 	questionsAskFirstQuestion: "Ställ en fråga för att komma igång",
-	questionsNoResults: "Inga resultat hittades.",
 	questionsAskTitle: "Ställ en fråga",
 	questionsSubjectLabel: "Ämne",
 	questionsSubjectPlaceholder: "t.ex. Hur använder jag kostnadskalkylatorn?",
