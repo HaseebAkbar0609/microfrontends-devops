@@ -25,6 +25,7 @@ export interface GanttChartGridProps {
 	durationDays: number;
 	startDayIndex: number;
 	color: string;
+	level?: 0 | 1 | 2;
 }
 
 export function GanttChartGrid({
@@ -32,9 +33,15 @@ export function GanttChartGrid({
 	durationDays,
 	startDayIndex,
 	color,
+	level = 0,
 }: GanttChartGridProps) {
+	const gridBgClass =
+		level === 0
+			? "bg-[#EBEFF5] group-hover:bg-[#E2E8F0]"
+			: "bg-[#F9FAFB] group-hover:bg-[#E2E8F0]";
+
 	return (
-		<div className="bg-[#EBEFF5] group-hover:bg-[#E2E8F0] h-10 relative rounded-r-md overflow-hidden transition-colors">
+		<div className={`${gridBgClass} h-11 relative rounded-r-md overflow-hidden transition-colors`}>
 			{/* Vertical Day Lines */}
 			<div className="absolute inset-0 flex">
 				{Array.from({ length: totalDays }).map((_, colIdx) => (
@@ -45,7 +52,7 @@ export function GanttChartGrid({
 			{/* Timeline Bar */}
 			{durationDays > 0 && color !== "transparent" && (
 				<div
-					className="absolute top-1 bottom-1 flex rounded-xs transition-all overflow-hidden shadow-2xs z-10"
+					className="absolute top-2 bottom-2 flex rounded-xs transition-all overflow-hidden shadow-2xs z-10"
 					style={{
 						left: `${(startDayIndex / totalDays) * 100}%`,
 						width: `${(durationDays / totalDays) * 100}%`,

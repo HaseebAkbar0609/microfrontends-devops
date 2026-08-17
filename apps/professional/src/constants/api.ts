@@ -123,6 +123,12 @@ export const API_PATH = {
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/wage-types/${id}`,
 		TOGGLE_STATUS: `${PROFESSIONALS_BASE_PATH}/wage-types/toggle-status`,
 	},
+	PLANNING: {
+		LIST: `${PROFESSIONALS_BASE_PATH}/planning`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/planning/tasks`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/planning/tasks/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/planning/tasks/${id}`,
+	},
 };
 
 export const appConstants = {
