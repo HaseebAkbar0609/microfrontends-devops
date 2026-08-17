@@ -658,12 +658,8 @@ export type QuestionsModule = {
 	faqTimeFlowFocusedOnSwedishMarket: string;
 	faqDoINeedToDownloadAnApp: string;
 	faqTimeFlowWorksInBrowserAndApp: string;
-	questionsSearchPlaceholder: string;
-	questionsFilterLabel: string;
-	questionsAskButton: string;
 	questionsNoQuestionsYet: string;
 	questionsAskFirstQuestion: string;
-	questionsNoResults: string;
 	questionsAskTitle: string;
 	questionsSubjectLabel: string;
 	questionsSubjectPlaceholder: string;
