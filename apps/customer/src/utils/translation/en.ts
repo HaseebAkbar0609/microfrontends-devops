@@ -743,8 +743,6 @@ export const enSupport: SupportModule = {
 	supportContactUsTitle: "Contact us",
 	supportContactPhone: "Phone",
 	supportContactEmail: "Email",
-	supportLiveChat: "Live Chat",
-	supportOperatingHours: "Monday - Friday 09:00-15:00",
 	supportLoading: "Loading support information...",
 	supportNoContactInfo: "No contact information available.",
 	guideLoading: "Loading guide folders...",

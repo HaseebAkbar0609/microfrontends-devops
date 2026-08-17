@@ -741,8 +741,6 @@ export const svSupport: SupportModule = {
 	supportContactUsTitle: "Kontakta oss",
 	supportContactPhone: "Telefon",
 	supportContactEmail: "Mail",
-	supportLiveChat: "Livechatt",
-	supportOperatingHours: "Måndag - Fredag 09:00-15:00",
 	supportLoading: "Laddar supportinformation...",
 	supportNoContactInfo: "Ingen kontaktinformation tillgänglig.",
 	guideLoading: "Laddar guidemappar...",

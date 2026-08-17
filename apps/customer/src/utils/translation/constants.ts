@@ -688,8 +688,6 @@ export type SupportModule = {
 	supportContactUsTitle: string;
 	supportContactPhone: string;
 	supportContactEmail: string;
-	supportLiveChat: string;
-	supportOperatingHours: string;
 	supportLoading: string;
 	supportNoContactInfo: string;
 	guideLoading: string;
