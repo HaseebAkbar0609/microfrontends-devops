@@ -22,7 +22,7 @@ import { useTableSort } from "@/hooks/useTableSort";
 import type { KmaItem, KmaMallGruppItem, KmaStatus, KmaType, KmaSecureStatus } from "../types/overview";
 import { MOCK_KMA_MALL_GRUPP } from "../constants/overviewMock";
 
-// â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Constants
 
 const ROWS_PER_PAGE = 10;
 
@@ -35,7 +35,7 @@ const GANTT_YEAR = 2026;
 
 const STATUS_FILTER_VALUES: KmaStatus[] = ["ongoing", "overdue", "done"];
 
-// â”€â”€ Utility â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Utility
 
 function statusBadgeClass(status: KmaStatus): string {
 	if (status === "ongoing") return "bg-emerald-100 text-emerald-700";
@@ -49,7 +49,7 @@ function secureStatusDot(status: KmaSecureStatus): string {
 	return "bg-red-500";
 }
 
-// â”€â”€ Sub-components â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Sub-components
 
 interface PaginationProps {
 	page: number;
@@ -72,10 +72,10 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
 					Page {page} of {totalPages}
 				</span>
 				<div className="flex items-center gap-1">
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(1)} disabled={page === 1}>Â«</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(page - 1)} disabled={page === 1}>â€¹</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(page + 1)} disabled={page === totalPages}>â€º</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(totalPages)} disabled={page === totalPages}>Â»</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(1)} aria-label="First page" disabled={page === 1}>«</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Previous page" onClick={() => onPageChange(page - 1)} disabled={page === 1}>‹</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Next page" onClick={() => onPageChange(page + 1)} disabled={page === totalPages}>›</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Last page" onClick={() => onPageChange(totalPages)} disabled={page === totalPages}>»</Button>
 				</div>
 			</div>
 		</div>
@@ -130,7 +130,7 @@ function CreateDropdown({ open, onToggle, dropdownRef }: CreateDropdownProps) {
 	);
 }
 
-// â”€â”€ TypeBadge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// TypeBadge
 
 function TypeBadge({ type, label }: { type: KmaType; label: string }) {
 	return (
@@ -147,7 +147,7 @@ function TypeBadge({ type, label }: { type: KmaType; label: string }) {
 	);
 }
 
-// â”€â”€ KMA List Tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// KMA List Tab
 
 type SortField = keyof Pick<
 	KmaItem,
@@ -208,7 +208,7 @@ function KmaListTab({ items }: KmaListTabProps) {
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden">
-			{/* Figma toolbar â€” h-[86px], px-5, gap-5 */}
+			{/* Figma toolbar - h-[86px], px-5, gap-5 */}
 			<div className="flex items-center gap-5 border-b border-slate-200 px-5" style={{ minHeight: 86 }}>
 
 				{/* Type checkboxes section */}
@@ -314,7 +314,7 @@ function KmaListTab({ items }: KmaListTabProps) {
 						</div>
 					</div>
 
-					{/* SÃ¶k / Reset button */}
+					{/* Sök / Reset button */}
 					<button
 						type="button"
 						onClick={handleReset}
@@ -456,7 +456,7 @@ function KmaListTab({ items }: KmaListTabProps) {
 	);
 }
 
-// â”€â”€ Gantt Tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Gantt Tab
 
 interface TooltipState {
 	item: KmaItem;
@@ -507,14 +507,14 @@ function GanttTab({ items }: GanttTabProps) {
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden">
-			{/* Toolbar â€” h-16, px-5, py-3, justify-between */}
+			{/* Toolbar - h-16, px-5, py-3, justify-between */}
 			<div
 				className="flex items-center justify-between border-b border-slate-200 px-5"
 				style={{ height: 64, paddingTop: 12, paddingBottom: 12 }}
 			>
 				{/* Left: search + view selector */}
 				<div className="flex items-center gap-2">
-					{/* Search input â€” bottom-border only, no radius */}
+					{/* Search input - bottom-border only, no radius */}
 					<div
 						className="flex items-center gap-2 px-3"
 						style={{
@@ -546,7 +546,7 @@ function GanttTab({ items }: GanttTabProps) {
 				</div>
 			</div>
 
-			{/* Schedule block â€” px-5 pb-4, rounded-lg border rgba(71,85,105,0.1) */}
+			{/* Schedule block - px-5 pb-4, rounded-lg border rgba(71,85,105,0.1) */}
 			<div className="flex-1 overflow-auto px-5 pb-4 pt-3">
 				<div
 					className="overflow-x-auto bg-white"
@@ -554,7 +554,7 @@ function GanttTab({ items }: GanttTabProps) {
 				>
 					{/* Flex-row table */}
 					<div className="flex min-w-max">
-						{/* Column 1 â€” ID/Object (128px) */}
+						{/* Column 1 - ID/Object (128px) */}
 						<div style={{ width: 128, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
 								<button
@@ -578,7 +578,7 @@ function GanttTab({ items }: GanttTabProps) {
 							))}
 						</div>
 
-						{/* Column 2 â€” Customer (127px) */}
+						{/* Column 2 - Customer (127px) */}
 						<div style={{ width: 127, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
 								<button
@@ -690,7 +690,7 @@ function GanttTab({ items }: GanttTabProps) {
 						{tooltip.item.secureCheck}
 					</p>
 					<p className="text-slate-600">
-						{tooltip.item.startDate} â†’ {tooltip.item.endDate}
+						{tooltip.item.startDate} &rarr; {tooltip.item.endDate}
 					</p>
 				</div>
 			)}
@@ -698,7 +698,7 @@ function GanttTab({ items }: GanttTabProps) {
 	);
 }
 
-// â”€â”€ Mall Grupp Tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Mall Grupp Tab
 
 type MallGruppSortField = keyof Pick<KmaMallGruppItem, "id" | "title" | "version" | "lastUpdated" | "createdBy">;
 
@@ -972,7 +972,7 @@ function KmaMallGruppTab() {
 	);
 }
 
-// â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Main component
 
 type TabId = "list" | "gantt" | "templates";
 

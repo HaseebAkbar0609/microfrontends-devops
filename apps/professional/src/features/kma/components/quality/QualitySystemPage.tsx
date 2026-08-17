@@ -295,15 +295,49 @@ function DocDetailView({ doc, onBack }: DocDetailViewProps) {
 
 					{/* Comments tab */}
 					{activeTab === "comments" && (
-						<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
-							<Translate text={localizationConstants.noDataFound} />
+						<div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
+							<div className="mb-3 flex flex-col gap-2">
+								<div className="rounded-md border border-slate-200 bg-slate-50 p-3">
+									<div className="mb-1 flex items-center justify-between">
+										<span className="text-xs font-medium text-slate-700">Anna Svensson</span>
+										<span className="text-xs text-slate-400">2 days ago</span>
+									</div>
+									<p className="text-xs text-slate-600">Document approved and published to the quality system.</p>
+								</div>
+								<div className="rounded-md border border-slate-200 bg-slate-50 p-3">
+									<div className="mb-1 flex items-center justify-between">
+										<span className="text-xs font-medium text-slate-700">Lars Andersson</span>
+										<span className="text-xs text-slate-400">5 days ago</span>
+									</div>
+									<p className="text-xs text-slate-600">Initial draft reviewed. Minor revisions requested.</p>
+								</div>
+							</div>
+							<textarea
+								rows={2}
+								placeholder="Add a comment..."
+								className="w-full resize-none rounded border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
+							/>
 						</div>
 					)}
 
 					{/* Versions tab */}
 					{activeTab === "versions" && (
-						<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
-							<Translate text={localizationConstants.noDataFound} />
+						<div className="flex flex-1 flex-col overflow-y-auto px-4 py-4">
+							{[
+								{ version: "v1.2", date: "2025-01-18", author: "Anna Svensson", note: "Updated compliance section" },
+								{ version: "v1.1", date: "2024-11-04", author: "Lars Andersson", note: "Minor wording changes" },
+								{ version: "v1.0", date: "2024-01-15", author: "Anna Svensson", note: "Initial publication" },
+							].map((v) => (
+								<div key={v.version} className="mb-2 flex items-start gap-3 rounded-md border border-slate-200 bg-white p-3">
+									<span className="mt-0.5 shrink-0 rounded bg-slate-100 px-1.5 py-0.5 text-xs font-mono font-medium text-slate-600">
+										{v.version}
+									</span>
+									<div className="flex-1 min-w-0">
+										<p className="text-xs text-slate-600">{v.note}</p>
+										<p className="mt-0.5 text-xs text-slate-400">{v.author} · {v.date}</p>
+									</div>
+								</div>
+							))}
 						</div>
 					)}
 				</div>
@@ -514,9 +548,7 @@ function DocsPanel({ documents, onOpenDoc, selectedSubCatId }: DocsPanelProps) {
 					</p>
 					<textarea
 						rows={3}
-						defaultValue=""
 						placeholder="Description"
-						onChange={() => {}}
 						className="w-full resize-none rounded border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
 					/>
 				</div>
