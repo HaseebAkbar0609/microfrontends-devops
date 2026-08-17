@@ -113,8 +113,8 @@ export function ForfragnListView({ calcId, rows }: ForfragnListViewProps) {
 			<div className="border-b border-slate-200 px-6 py-4">
 				<h1 className="text-2xl font-semibold">
 					<span className="text-slate-400">
-						<Translate text={localizationConstants.calcKalkyl} /> {calcId} /{" "}
-					</span>
+							<Translate text={localizationConstants.calcKalkyl} /> {calcId} /{" "}
+						</span>
 					<Translate text={localizationConstants.calcForfragnTitle} />
 				</h1>
 			</div>
@@ -138,7 +138,7 @@ export function ForfragnListView({ calcId, rows }: ForfragnListViewProps) {
 				</div>
 				<Button
 					size="sm"
-					onClick={() => router.push(`${base}/ny`)}
+					onClick={() => router.push(`${base}/new`)}
 					className="h-9 cursor-pointer gap-1.5 bg-[#111721] px-4 text-sm text-white hover:bg-slate-800"
 				>
 					<Plus className="h-4 w-4" />

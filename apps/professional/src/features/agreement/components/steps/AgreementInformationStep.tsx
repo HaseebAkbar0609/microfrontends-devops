@@ -39,7 +39,7 @@ export function AgreementInformationStep({ control }: AgreementInformationStepPr
 			}
 		}
 		fetchDepartments();
-	}, []);
+	}, [currentValue]);
 
 	return (
 		<div className="flex flex-col gap-6">

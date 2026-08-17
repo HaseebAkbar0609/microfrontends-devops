@@ -1,98 +1,133 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Folder, Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ChevronDown, Truck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { SUPPLIER_OPTIONS } from "../../constants/createForfragnOptions";
 
-export interface ForfragnLeverantorStepProps {
-	suppliers: string[];
-	onAdd: (name: string) => void;
-	onRemove: (name: string) => void;
+// ── Sub-components ─────────────────────────────────────────────────────────
+
+interface StepFormFieldProps {
+	label: string;
+	value: string;
+	onChange: (v: string) => void;
+	placeholder?: string;
+	multiline?: boolean;
 }
 
-export function ForfragnLeverantorStep({ suppliers, onAdd, onRemove }: ForfragnLeverantorStepProps) {
+function StepFormField({ label, value, onChange, placeholder, multiline }: StepFormFieldProps) {
+	return (
+		<div className="grid gap-1.5">
+			<label className="text-sm font-medium text-slate-900">{label}</label>
+			{multiline ? (
+				<textarea
+					value={value}
+					onChange={(e) => onChange(e.target.value)}
+					placeholder={placeholder}
+					rows={4}
+					className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm focus-visible:border-slate-400 focus-visible:outline-none resize-none"
+				/>
+			) : (
+				<input
+					type="text"
+					value={value}
+					onChange={(e) => onChange(e.target.value)}
+					placeholder={placeholder}
+					className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm focus-visible:border-slate-400 focus-visible:outline-none"
+				/>
+			)}
+		</div>
+	);
+}
+
+// ── Main component ─────────────────────────────────────────────────────────
+
+export interface ForfragnLeverantorData {
+	supplier: string;
+	message: string;
+}
+
+export interface ForfragnLeverantorStepProps {
+	data: ForfragnLeverantorData;
+	onChange: (patch: Partial<ForfragnLeverantorData>) => void;
+}
+
+export function ForfragnLeverantorStep({ data, onChange }: ForfragnLeverantorStepProps) {
 	const t = useTranslate();
-	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const [open, setOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		function handleOutside(e: MouseEvent) {
+		function handleClickOutside(e: MouseEvent) {
 			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-				setDropdownOpen(false);
+				setOpen(false);
 			}
 		}
-		document.addEventListener("mousedown", handleOutside);
-		return () => document.removeEventListener("mousedown", handleOutside);
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, []);
-
-	const available = SUPPLIER_OPTIONS.filter((s) => !suppliers.includes(s));
 
 	return (
 		<div className="flex flex-col gap-4">
 			<Card>
 				<CardHeader className="h-14 flex flex-row items-center border-b border-slate-200 px-6 py-0 [.border-b]:pb-0">
-					<CardTitle className="flex flex-1 items-center gap-2 text-base font-medium">
-						<Folder className="h-5 w-5 text-slate-700" />
-						<Translate text={localizationConstants.createForfrgnInbjudnaSection} />
+					<CardTitle className="flex items-center gap-2 text-base font-medium">
+						<Truck className="h-5 w-5 text-slate-700" />
+						<Translate text={localizationConstants.calcInquiryWizStep4} />
 					</CardTitle>
-					<div ref={dropdownRef} className="relative">
-						<Button
-							type="button"
-							size="sm"
-							onClick={() => setDropdownOpen((v) => !v)}
-							className="h-8 cursor-pointer gap-1.5 bg-[#111721] text-xs text-white hover:bg-slate-800"
-						>
-							<Plus className="h-3.5 w-3.5" />
-							<Translate text={localizationConstants.createForfrgnLaggTill} />
-						</Button>
-						{dropdownOpen && available.length > 0 && (
-							<div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-md border border-slate-200 bg-white shadow-md">
-								{available.map((s) => (
-									<button
-										key={s}
-										type="button"
-										onClick={() => {
-											onAdd(s);
-											setDropdownOpen(false);
-										}}
-										className="flex w-full cursor-pointer items-center px-3 py-2 text-sm text-zinc-700 hover:bg-slate-50"
-									>
-										{s}
-									</button>
-								))}
-							</div>
-						)}
-					</div>
 				</CardHeader>
 				<CardContent className="p-6">
-					<div className="grid gap-1.5">
-						<label className="text-sm font-medium text-slate-900">
-							{t(localizationConstants.createForfrgnLeverantorLabel)}
-						</label>
-						<div className="flex min-h-10 flex-wrap items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2">
-							{suppliers.length === 0 && (
-								<span className="text-sm text-slate-400">—</span>
-							)}
-							{suppliers.map((s) => (
-								<span
-									key={s}
-									className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-700"
+					<div className="flex flex-col gap-5">
+						{/* Supplier dropdown */}
+						<div className="grid gap-1.5">
+							<label className="text-sm font-medium text-slate-900">
+								<Translate text={localizationConstants.calcInquiryWizSupplierLabel} />
+							</label>
+							<div className="relative" ref={dropdownRef}>
+								<button
+									type="button"
+									onClick={() => setOpen((v) => !v)}
+									className="flex h-10 w-full cursor-pointer items-center justify-between rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus-visible:border-slate-400 focus-visible:outline-none"
 								>
-									{s}
-									<button
-										type="button"
-										onClick={() => onRemove(s)}
-										className="cursor-pointer text-slate-400 hover:text-slate-600"
-									>
-										<X className="h-3 w-3" />
-									</button>
-								</span>
-							))}
+									<span className={data.supplier ? "text-slate-900" : "text-slate-400"}>
+										{data.supplier || t(localizationConstants.calcInquiryWizSupplierLabel)}
+									</span>
+									<ChevronDown className="h-4 w-4 shrink-0 text-slate-400" />
+								</button>
+								{open && (
+									<div className="absolute z-20 mt-1 w-full rounded-md border border-slate-200 bg-white py-1 shadow-md">
+										{SUPPLIER_OPTIONS.map((opt) => (
+											<button
+												key={opt}
+												type="button"
+												onClick={() => {
+													onChange({ supplier: opt });
+													setOpen(false);
+												}}
+												className={`w-full cursor-pointer px-3 py-2 text-left text-sm hover:bg-slate-50 ${
+													data.supplier === opt
+														? "font-medium text-slate-900"
+														: "text-slate-700"
+												}`}
+											>
+												{opt}
+											</button>
+										))}
+									</div>
+								)}
+							</div>
 						</div>
+
+						{/* Message to supplier */}
+						<StepFormField
+							label={t(localizationConstants.calcInquiryWizSupplierMsg)}
+							value={data.message}
+							onChange={(v) => onChange({ message: v })}
+							placeholder={t(localizationConstants.calcInquiryWizSupplierMsg)}
+							multiline
+						/>
 					</div>
 				</CardContent>
 			</Card>

@@ -231,6 +231,7 @@ function TaskDetailCard({
 									<div className="flex items-center gap-2.5 min-w-0">
 										{user.avatarUrl ? (
 											<div className="w-6 h-6 rounded-full overflow-hidden shrink-0 border border-slate-100 shadow-2xs">
+												{/* eslint-disable-next-line @next/next/no-img-element */}
 												<img
 													src={user.avatarUrl}
 													alt={user.name}
@@ -266,6 +267,7 @@ function TaskDetailCard({
 							<div className="flex items-center gap-3 min-w-0">
 								{user.avatarUrl ? (
 									<div className="w-8 h-8 rounded-full overflow-hidden shrink-0 border border-slate-100 shadow-2xs">
+										{/* eslint-disable-next-line @next/next/no-img-element */}
 										<img
 											src={user.avatarUrl}
 											alt={user.name}
@@ -651,20 +653,8 @@ export function PlanningOrderTab() {
 									</div>
 									{/* Stacked User Avatars & Interactive + Button */}
 									<div className="flex items-center gap-1 sm:gap-1.5 mt-auto flex-wrap">
-										<div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-600 text-white text-[9px] font-semibold flex items-center justify-center border-2 border-white overflow-hidden shadow-2xs flex-shrink-0">
-											<img
-												src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=80"
-												alt="Avatar"
-												className="w-full h-full object-cover"
-											/>
-										</div>
-										<div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-600 text-white text-[9px] font-semibold flex items-center justify-center border-2 border-white overflow-hidden shadow-2xs -ml-2 flex-shrink-0">
-											<img
-												src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&auto=format&fit=crop&q=80"
-												alt="Avatar"
-												className="w-full h-full object-cover"
-											/>
-										</div>
+										<div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-600 text-white text-[9px] font-semibold flex items-center justify-center border-2 border-white overflow-hidden shadow-2xs flex-shrink-0" />
+										<div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-slate-600 text-white text-[9px] font-semibold flex items-center justify-center border-2 border-white overflow-hidden shadow-2xs -ml-2 flex-shrink-0" />
 										<span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white border border-dotted border-slate-400 flex items-center justify-center flex-shrink-0 ml-1 cursor-pointer hover:bg-slate-50">
 											<Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-slate-500" />
 										</span>
@@ -804,6 +794,7 @@ export function PlanningOrderTab() {
 																			style={{ marginLeft: idx > 0 ? "-4px" : "0" }}
 																		>
 																			{user.avatarUrl ? (
+																				// eslint-disable-next-line @next/next/no-img-element
 																				<img src={user.avatarUrl} alt={user.name} className="w-full h-full object-cover" />
 																			) : (
 																				user.initials
