@@ -2491,6 +2491,27 @@ export type OfferTranslation = {
 	hoursAbbr: string;
 	addUserPlaceholder: string;
 	actionClose: string;
+	bastaTilldelade: string;
+	visaDetaljer: string;
+	overgripandeStatistik: string;
+	totaltAntalProjekt: string;
+	antalTilldelade: string;
+	totalaArbetstimmar: string;
+	allEmployees: string;
+	skapaNy: string;
+	reset: string;
+	redigeraPlanering: string;
+	skapaNyPlanering: string;
+	orderAktivitetNamn: string;
+	personalAnstalld: string;
+	startdag: string;
+	varaktighetDagar: string;
+	fargtema: string;
+	avbryt: string;
+	spara: string;
+	timmarSuffix: string;
+	projektNamn: string;
+	status: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
