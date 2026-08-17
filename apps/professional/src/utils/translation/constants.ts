@@ -2039,6 +2039,8 @@ export type OfferTranslation = {
 	kmaMallGruppColVersion: string;
 	kmaMallGruppColLastUpdated: string;
 	kmaMallGruppColCreatedBy: string;
+	kmaMallGruppFilterStarred: string;
+	filterAll: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;

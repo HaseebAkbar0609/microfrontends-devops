@@ -1943,6 +1943,8 @@ export const enOffer: OfferTranslation = {
 	kmaMallGruppColVersion: "Version",
 	kmaMallGruppColLastUpdated: "Last Updated",
 	kmaMallGruppColCreatedBy: "Created by",
+	kmaMallGruppFilterStarred: "Starred only",
+	filterAll: "All",
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Project - Overview",
 	projWidgetOverviewTitle: "Project overview",

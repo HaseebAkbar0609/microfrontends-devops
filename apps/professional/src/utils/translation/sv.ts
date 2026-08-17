@@ -1948,6 +1948,8 @@ export const svOffer: OfferTranslation = {
 	kmaMallGruppColVersion: "Version",
 	kmaMallGruppColLastUpdated: "Senast uppdaterad",
 	kmaMallGruppColCreatedBy: "Skapad av",
+	kmaMallGruppFilterStarred: "Bara stjärnmärkta",
+	filterAll: "Alla",
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: "B2B-Översikt",
 	b2bWidgetOverviewActive: "Aktiva uppdrag",
