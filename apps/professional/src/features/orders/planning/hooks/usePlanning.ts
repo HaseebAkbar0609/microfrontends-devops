@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { format, startOfMonth, endOfMonth } from "date-fns";
 import type {
 	PlanningQuery,
 	PlanningResponse,
@@ -10,8 +11,14 @@ import type {
 import { getPlanning } from "../api/planning.api";
 import { MOCK_PLANNING_RESPONSE } from "../data/planning.mock";
 
-export function usePlanning() {
-	const [activeTab, setActiveTab] = useState<PlanningTab>("overview");
+export interface UsePlanningOptions {
+	initialStartDate?: string;
+	initialEndDate?: string;
+	initialTab?: PlanningTab;
+}
+
+export function usePlanning(options?: UsePlanningOptions) {
+	const [activeTab, setActiveTab] = useState<PlanningTab>(options?.initialTab || "overview");
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [statusFilter, setStatusFilter] = useState<PlanningStatus | "all">("all");
 	const [assigneeFilter, setAssigneeFilter] = useState<string>("all");
@@ -19,8 +26,21 @@ export function usePlanning() {
 	const [error, setError] = useState<string | null>(null);
 	const [data, setData] = useState<PlanningResponse>(MOCK_PLANNING_RESPONSE);
 
-	const [startDate] = useState<string>("2024-03-01");
-	const [endDate] = useState<string>("2024-03-28");
+	// Dynamic startDate and endDate defaulting to the current month or provided initial bounds
+	const [startDate, setStartDate] = useState<string>(() => {
+		if (options?.initialStartDate) return options.initialStartDate;
+		return format(startOfMonth(new Date()), "yyyy-MM-dd");
+	});
+
+	const [endDate, setEndDate] = useState<string>(() => {
+		if (options?.initialEndDate) return options.initialEndDate;
+		return format(endOfMonth(new Date()), "yyyy-MM-dd");
+	});
+
+	const setDateRange = useCallback((newStart: string, newEnd: string) => {
+		setStartDate(newStart);
+		setEndDate(newEnd);
+	}, []);
 
 	const fetchPlanningData = useCallback(async () => {
 		setIsLoading(true);
@@ -29,14 +49,15 @@ export function usePlanning() {
 			const query: PlanningQuery = {
 				startDate,
 				endDate,
-				search: searchQuery,
-				status: statusFilter,
+				search: searchQuery.trim() || undefined,
+				status: statusFilter !== "all" ? statusFilter : undefined,
 				assigneeId: assigneeFilter !== "all" ? assigneeFilter : undefined,
 			};
 			const res = await getPlanning(query);
 			setData(res);
 		} catch (err) {
-			setError(err instanceof Error ? err.message : "Failed to load planning data");
+			const message = err instanceof Error ? err.message : "Failed to load planning data";
+			setError(message);
 		} finally {
 			setIsLoading(false);
 		}
@@ -55,9 +76,16 @@ export function usePlanning() {
 		setStatusFilter,
 		assigneeFilter,
 		setAssigneeFilter,
+		startDate,
+		setStartDate,
+		endDate,
+		setEndDate,
+		setDateRange,
 		isLoading,
 		error,
 		data,
 		refetch: fetchPlanningData,
 	};
 }
+
+export default usePlanning;

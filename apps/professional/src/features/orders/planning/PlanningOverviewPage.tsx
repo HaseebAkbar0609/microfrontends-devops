@@ -33,15 +33,24 @@ export function PlanningOverviewPage() {
 			/>
 
 			<div className="px-6 py-4 flex flex-col gap-4">
-				{/* Tab Bar Navigation */}
+				{/* Tab Bar Navigation with Accessible ARIA semantics */}
 				<div className="border-b border-slate-200">
-					<div className="flex gap-8">
+					<div
+						className="flex gap-8"
+						role="tablist"
+						aria-label="Planning Navigation Tabs"
+					>
 						{tabs.map((tab) => {
 							const isActive = activeTab === tab.id;
 							return (
 								<button
 									key={tab.id}
+									id={`tab-${tab.id}`}
+									role="tab"
 									type="button"
+									aria-selected={isActive}
+									aria-controls={`tabpanel-${tab.id}`}
+									tabIndex={isActive ? 0 : -1}
 									onClick={() => setActiveTab(tab.id)}
 									className={`py-3 text-sm font-medium transition-colors border-b-2 cursor-pointer ${
 										isActive
@@ -57,7 +66,12 @@ export function PlanningOverviewPage() {
 				</div>
 
 				{/* Tab Content Container */}
-				<div className="mt-2">
+				<div
+					id={`tabpanel-${activeTab}`}
+					role="tabpanel"
+					aria-labelledby={`tab-${activeTab}`}
+					className="mt-2"
+				>
 					{activeTab === "overview" && <PlanningOverviewTab />}
 					{activeTab === "order" && <PlanningOrderTab orders={data.orders} />}
 					{activeTab === "personnel" && (
