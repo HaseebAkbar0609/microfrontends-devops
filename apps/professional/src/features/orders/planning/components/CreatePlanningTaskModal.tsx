@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useTranslation } from "react-i18next";
+import { format } from "date-fns";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,17 +30,25 @@ const COLOR_OPTIONS = [
 	{ labelKey: localizationConstants.colorPurple, value: "#A855F7" },
 ];
 
-// Zod Schema defined outside component body with no 28-day restriction
+// Zod Schema with clear error messages on type mismatch
 const createPlanningTaskSchema = (isSv: boolean) =>
 	z.object({
 		taskName: z.string().min(1, isSv ? "Aktivitetsnamn krävs" : "Activity name is required"),
 		startDate: z.string().min(1, isSv ? "Startdatum krävs" : "Start date is required"),
 		duration: z.coerce
-			.number()
+			.number({
+				invalid_type_error: isSv ? "Varaktighet måste vara ett nummer" : "Duration must be a valid number",
+				required_error: isSv ? "Varaktighet krävs" : "Duration is required",
+			})
+			.int(isSv ? "Måste vara ett heltal" : "Must be an integer")
 			.min(1, isSv ? "Minst 1 dag" : "Min 1 day")
 			.max(365, isSv ? "Max 365 dagar" : "Max 365 days"),
 		startDayIndex: z.coerce
-			.number()
+			.number({
+				invalid_type_error: isSv ? "Startindex måste vara ett nummer" : "Start index must be a valid number",
+				required_error: isSv ? "Startindex krävs" : "Start index is required",
+			})
+			.int(isSv ? "Måste vara ett heltal" : "Must be an integer")
 			.min(0, isSv ? "Minst index 0" : "Min index 0")
 			.max(365, isSv ? "Max index 365" : "Max index 365"),
 		color: z.string().min(1, isSv ? "Färg krävs" : "Color is required"),
@@ -65,6 +74,7 @@ export function CreatePlanningTaskModal({
 	const isSv = i18n.language === "sv";
 
 	const taskSchema = useMemo(() => createPlanningTaskSchema(isSv), [isSv]);
+	const todayStr = useMemo(() => format(new Date(), "yyyy/MM/dd"), []);
 
 	const {
 		register,
@@ -76,25 +86,25 @@ export function CreatePlanningTaskModal({
 		resolver: zodResolver(taskSchema),
 		defaultValues: {
 			taskName: "",
-			startDate: parentRow?.startDate || "2024/01/01",
+			startDate: parentRow?.startDate || todayStr,
 			duration: 14,
 			startDayIndex: parentRow?.startDayIndex || 0,
 			color: parentRow?.color && parentRow.color !== "transparent" ? parentRow.color : "#EAB308",
 		},
 	});
 
-	// Reset form values when modal opens or parentRow changes
+	// Reset form values dynamically when modal opens or parentRow changes
 	useEffect(() => {
 		if (isOpen && parentRow) {
 			reset({
 				taskName: "",
-				startDate: parentRow.startDate || "2024/01/01",
+				startDate: parentRow.startDate || todayStr,
 				duration: parentRow.durationDays || 14,
 				startDayIndex: parentRow.startDayIndex || 0,
 				color: parentRow.color && parentRow.color !== "transparent" ? parentRow.color : "#EAB308",
 			});
 		}
-	}, [isOpen, parentRow, reset]);
+	}, [isOpen, parentRow, reset, todayStr]);
 
 	if (!isOpen || !parentRow) return null;
 
@@ -115,6 +125,7 @@ export function CreatePlanningTaskModal({
 						type="button"
 						onClick={onClose}
 						className="text-slate-400 hover:text-slate-700 rounded-md p-1 cursor-pointer transition-colors"
+						aria-label="Close dialog"
 					>
 						<X className="w-4 h-4" />
 					</button>
@@ -251,3 +262,5 @@ export function CreatePlanningTaskModal({
 		</div>
 	);
 }
+
+export default CreatePlanningTaskModal;

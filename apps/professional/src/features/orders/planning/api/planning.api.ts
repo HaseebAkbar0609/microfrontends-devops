@@ -27,8 +27,12 @@ export async function getPlanning(
 		if (res.data?.data) {
 			return res.data.data;
 		}
-	} catch {
-		// Fallback to mock data
+	} catch (error) {
+		// Log warning for diagnostics while maintaining development fallback
+		console.warn(
+			"[Planning API] getPlanning request failed, using mock data fallback:",
+			error instanceof Error ? error.message : error
+		);
 	}
 
 	return MOCK_PLANNING_RESPONSE;
@@ -40,7 +44,12 @@ export async function createPlanningTask(
 	try {
 		const res = await axiosInstance.post(API_PATH.PLANNING.CREATE, payload);
 		return res.data?.data ?? res.data;
-	} catch {
+	} catch (error) {
+		console.error(
+			"[Planning API] createPlanningTask failed:",
+			error instanceof Error ? error.message : error
+		);
+		// Return local optimistic task in mock mode for offline dev
 		return {
 			...payload,
 			id: `task-${Date.now()}`,
@@ -61,7 +70,11 @@ export async function updatePlanningTask({
 			payload,
 		);
 		return res.data?.data ?? res.data;
-	} catch {
+	} catch (error) {
+		console.error(
+			`[Planning API] updatePlanningTask failed for task ${taskId}:`,
+			error instanceof Error ? error.message : error
+		);
 		return { ...payload, id: taskId } as PlanningTask;
 	}
 }
@@ -69,7 +82,11 @@ export async function updatePlanningTask({
 export async function deletePlanningTask(taskId: string): Promise<void> {
 	try {
 		await axiosInstance.delete(API_PATH.PLANNING.DELETE(taskId));
-	} catch {
-		// Silent fail for mock
+	} catch (error) {
+		console.error(
+			`[Planning API] deletePlanningTask failed for task ${taskId}:`,
+			error instanceof Error ? error.message : error
+		);
+		throw error;
 	}
 }
