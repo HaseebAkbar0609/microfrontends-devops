@@ -1757,7 +1757,7 @@ export const enOffer: OfferTranslation = {
 	licensesIndustryPlumbing: "Plumbing",
 	licensesIndustryTiler: "Tiling",
 	licensesIndustryElectrician: "Electrician",
-	licensesConnectEconomyFee: "99 SEK / month",
+	licensesConnectEconomyFee: "199 SEK / month",
 	licensesConnectEconomyModules: "API connection to accounting systems. See the list of connected systems",
 	licensesScanSupplierFee: "5 SEK / item (base fee) License: unlimited 0 SEK, App: unlimited: 0 SEK",
 	licensesScanSupplierModules: "Let your supplier invoices go through scanning so they arrive in the system interpreted, and easily handle them in approval and as records. Scanning interprets project, order, customer, account, cost centre and gives you a good flow.",

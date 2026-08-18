@@ -123,12 +123,12 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 	addonSystem: [
 		{
 			id: "connect-economy",
-			name: "Connect - Economi",
-			priceLabel: "99",
-			price: 99,
+			name: "Autoekonomi",
+			priceLabel: "199 kr/mån",
+			price: 199,
 			feeKey: localizationConstants.licensesConnectEconomyFee,
 			modulesKey: localizationConstants.licensesConnectEconomyModules,
-			versionText: "Connect Economi",
+			versionText: "Autoekonomi",
 			connectedSystems:
 				"Fortnox | Visma | Björn Lunden | Microsoft | Softone",
 			categoryId: "economy",
