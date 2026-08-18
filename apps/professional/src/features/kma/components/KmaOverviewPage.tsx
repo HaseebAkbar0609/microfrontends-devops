@@ -317,7 +317,7 @@ function KmaListTab({ items }: KmaListTabProps) {
 						</div>
 					</div>
 
-					{/* Search / Reset button */}
+					{/* SÃ¶k / Reset button */}
 					<button
 						type="button"
 						onClick={handleReset}
@@ -558,6 +558,7 @@ function GanttTab({ items }: GanttTabProps) {
 					{/* Flex-row table */}
 					<div className="flex min-w-max">
 						{/* Column 1 - ID/Object (128px) */}
+						{/* Column 1 - ID/Object (128px) */}
 						<div style={{ width: 128, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
 								<button
@@ -581,6 +582,7 @@ function GanttTab({ items }: GanttTabProps) {
 							))}
 						</div>
 
+						{/* Column 2 - Customer (127px) */}
 						{/* Column 2 - Customer (127px) */}
 						<div style={{ width: 127, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
@@ -701,6 +703,7 @@ function GanttTab({ items }: GanttTabProps) {
 	);
 }
 
+// Mall Grupp Tab
 // Mall Grupp Tab
 
 type MallGruppSortField = keyof Pick<KmaMallGruppItem, "id" | "title" | "version" | "lastUpdated" | "createdBy">;
