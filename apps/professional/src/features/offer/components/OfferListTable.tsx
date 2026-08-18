@@ -12,7 +12,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { TablePagination } from "@/components/table/TablePagination";
 import { OfferList, OfferListColumn, OfferListTableProps } from "../types";
@@ -36,18 +35,35 @@ const SortIconElement = ({
 	sortOrder: string;
 }) => {
 	if (sortBy !== field)
-		return <ArrowUpDown className="ml-1 h-3.5 w-3.5 opacity-50" />;
+		return <ArrowUpDown className="ml-1 h-3.5 w-3.5 text-slate-400 opacity-70" />;
 	return sortOrder === "asc" ? (
-		<ArrowUp className="ml-1 h-3.5 w-3.5 text-primary" />
+		<ArrowUp className="ml-1 h-3.5 w-3.5 text-slate-900" />
 	) : (
-		<ArrowDown className="ml-1 h-3.5 w-3.5 text-primary" />
+		<ArrowDown className="ml-1 h-3.5 w-3.5 text-slate-900" />
 	);
 };
 
-function getTypeBadgeVariant(type: string) {
-	if (type.toLowerCase().includes("express")) return "typeOutline" as const;
-	if (type.toLowerCase().includes("b2c")) return "typeDark" as const;
-	return "typeLight" as const;
+function renderTypeBadge(type: string) {
+	const lower = type.toLowerCase();
+	if (lower.includes("express")) {
+		return (
+			<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-slate-50 text-slate-700 border border-slate-200 shadow-xs whitespace-nowrap">
+				{type}
+			</span>
+		);
+	}
+	if (lower.includes("b2c")) {
+		return (
+			<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-xs whitespace-nowrap">
+				{type}
+			</span>
+		);
+	}
+	return (
+		<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60 shadow-xs whitespace-nowrap">
+			{type}
+		</span>
+	);
 }
 
 export function OfferListTable({ data, totalItems }: OfferListTableProps) {
@@ -98,48 +114,41 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 			switch (columnKey) {
 				case "idNumber":
 					return (
-						<span className="text-slate-600">{quote.idNumber}</span>
+						<span className="text-slate-600 text-xs font-normal">{quote.idNumber}</span>
 					);
 				case "jobName":
 					return (
-						<span className="text-slate-950 font-semibold">
+						<span className="text-slate-900 text-xs font-bold">
 							{quote.jobName}
 						</span>
 					);
 				case "date":
 					return (
-						<span className="text-slate-600">
+						<span className="text-slate-600 text-xs font-normal">
 							{quote[columnKey]}
 						</span>
 					);
 				case "type":
-					return (
-						<Badge
-							variant={getTypeBadgeVariant(quote.type)}
-							className="rounded-full px-3 py-1 cursor-default"
-						>
-							{quote.type}
-						</Badge>
-					);
+					return renderTypeBadge(quote.type);
 				case "request":
 				case "municipality":
 					return (
-						<span className="text-slate-600">
+						<span className="text-slate-600 text-xs font-normal">
 							{quote[columnKey]}
 						</span>
 					);
 				case "category":
 					return (
-						<span className="text-slate-600">{quote.category}</span>
+						<span className="text-slate-600 text-xs font-normal">{quote.category}</span>
 					);
 				case "actions": {
 					const isFavorite = favoriteIds.has(quote.id);
 
 					return (
-						<div className="flex items-center justify-start gap-3">
+						<div className="flex items-center justify-end gap-2.5">
 							<Button
 								variant="ghost"
-								className="h-10 px-4 bg-secondary-foreground font-medium text-secondary"
+								className="h-8 px-3 bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-800 rounded-md cursor-pointer transition-colors"
 								onClick={() => router.push(`/module/business/offer/${quote.id}/request`)}
 							>
 								<Translate
@@ -148,14 +157,11 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 							</Button>
 							<Button
 								variant="outline"
-								className="h-10 px-4 border-border font-medium bg-white text-secondary"
+								className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-xs font-medium text-slate-800 bg-white rounded-md cursor-pointer transition-colors"
 								onClick={() => {
-									const type = quote.type.toLowerCase();
-									const isExpress = type.includes("express");
-									const isRent = type.includes("rent");
-									const isBusinessOffer =
-										type.includes("b2c") ||
-										type.includes("b2b");
+									const typeStr = quote.type.toLowerCase();
+									const isExpress = typeStr.includes("express");
+									const isRent = typeStr.includes("rent") || typeStr.includes("hyra");
 
 									if (isExpress) {
 										openModal(
@@ -173,7 +179,6 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 										return;
 									}
 
-									if (!isBusinessOffer) return;
 									openModal(
 										MODAL_CONSTANTS.BUSINESS_OFFER,
 										quote.id,
@@ -186,7 +191,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 							</Button>
 							<button
 								type="button"
-								className="h-10 w-10 inline-flex items-center justify-center rounded-md hover:bg-slate-50"
+								className="p-1 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
 								aria-label="Toggle favorite"
 								onClick={() =>
 									setFavoriteIds((prev) => {
@@ -200,10 +205,10 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 							>
 								<Heart
 									className={cn(
-										"h-5 w-5",
+										"h-4 w-4 stroke-[1.75]",
 										isFavorite
 											? "text-slate-900 fill-slate-900"
-											: "text-slate-400",
+											: "text-slate-600 fill-none",
 									)}
 								/>
 							</button>
@@ -224,26 +229,25 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 	);
 
 	return (
-		<div className="flex flex-col gap-4">
-			<div className="w-full bg-white rounded-md border border-slate-200 overflow-hidden">
+		<div className="flex flex-col gap-4 font-sans">
+			<div className="w-full bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
 				<Table className="table-auto w-full">
-					<TableHeader className="bg-slate-50/50">
+					<TableHeader className="bg-slate-50/70 border-b border-slate-200">
 						<TableRow className="hover:bg-transparent border-slate-200">
 							{OFFER_LIST_COLUMNS.map((col) => (
 								<TableHead
 									key={col.field}
 									className={cn(
-										"cursor-pointer select-none text-slate-500 font-medium py-4 px-5 h-auto whitespace-nowrap",
+										"cursor-pointer select-none text-slate-500 font-medium py-3.5 px-4 h-auto whitespace-nowrap text-xs text-left",
 										col.field === "actions" &&
-											"cursor-default w-[360px]",
+											"cursor-default text-right w-[240px]",
 									)}
 									onClick={() => handleSort(col.field)}
 								>
 									<div
 										className={cn(
-											"flex items-center",
-											col.field === "actions" &&
-												"justify-start w-[270px]",
+											"flex items-center gap-1",
+											col.field === "actions" && "justify-end",
 										)}
 									>
 										<Translate text={col.label} />
@@ -259,85 +263,78 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 							))}
 						</TableRow>
 					</TableHeader>
-					<TableBody>
-						{data.map((quote) => (
-							<TableRow
-								key={quote.id}
-								className="border-slate-100 hover:bg-slate-50/50"
-							>
-								{OFFER_LIST_COLUMNS.map((col) => (
-									<TableCell
-										key={`${quote.id}-${col.field}`}
-										className={cn(
-											"py-3 px-4",
-											col.field === "actions" &&
-												"text-right w-[360px]",
-										)}
-									>
-										{renderCell(quote, col.field)}
-									</TableCell>
-								))}
-							</TableRow>
-						))}
-						{data.length === 0 && (
+					<TableBody className="divide-y divide-slate-100">
+						{data.length === 0 ? (
 							<TableRow>
 								<TableCell
 									colSpan={OFFER_LIST_COLUMNS.length}
-									className="h-32 text-center text-slate-500"
+									className="h-32 text-center text-slate-400 text-xs"
 								>
-									<Translate
-										text={
-											localizationConstants.noQuotesFound
-										}
-									/>
+									<Translate text={localizationConstants.noQuotesFound} />
 								</TableCell>
 							</TableRow>
+						) : (
+							data.map((quote) => (
+								<TableRow
+									key={quote.id}
+									className="hover:bg-slate-50/50 transition-colors border-b border-slate-100"
+								>
+									{OFFER_LIST_COLUMNS.map((col) => (
+										<TableCell
+											key={col.field}
+											className="py-3 px-4 text-left"
+										>
+											{renderCell(quote, col.field)}
+										</TableCell>
+									))}
+								</TableRow>
+							))
 						)}
 					</TableBody>
 				</Table>
 			</div>
 
+			{/* Pagination Controls */}
 			<TablePagination
 				currentPage={page}
 				totalPages={totalPages}
 				pageSize={pageSize}
-				onPageChange={(newPage) =>
-					changeQueries({ page: String(newPage) })
-				}
-				onPageSizeChange={(newSize) =>
-					changeQueries({ page: "1", page_size: String(newSize) })
+				onPageChange={(nextPage) => changeQueries({ page: String(nextPage) })}
+				onPageSizeChange={(newPageSize) =>
+					changeQueries({ page_size: String(newPageSize), page: "1" })
 				}
 			/>
 
-			<BusinessOfferModal
-				open={isOpen && type === MODAL_CONSTANTS.BUSINESS_OFFER}
-				onOpenChange={(open) => !open && closeModal()}
-				quote={selectedBusinessQuote}
-				onConfirm={(q) => {
-					if (!q?.id) return;
-					router.push(`/module/business/offer/send/${q.id}?type=b2c`);
-				}}
-			/>
-
-			<BusinessExpressModal
-				open={isOpen && type === MODAL_CONSTANTS.BUSINESS_EXPRESS}
-				onOpenChange={(open) => !open && closeModal()}
-				quote={selectedBusinessQuote}
-				onConfirm={(q) => {
-					if (!q?.id) return;
-					router.push(`/module/business/offer/send/${q.id}?type=express`);
-				}}
-			/>
-
-			<BusinessRentModal
-				open={isOpen && type === MODAL_CONSTANTS.BUSINESS_RENT}
-				onOpenChange={(open) => !open && closeModal()}
-				quote={selectedBusinessQuote}
-				onConfirm={(q) => {
-					if (!q?.id) return;
-					router.push(`/module/business/offer/send/${q.id}?type=rent`);
-				}}
-			/>
+			{/* Modal Dialogs */}
+			{isOpen && type === MODAL_CONSTANTS.BUSINESS_OFFER && (
+				<BusinessOfferModal
+					open={isOpen}
+					onOpenChange={(openState) => {
+						if (!openState) closeModal();
+					}}
+					quote={selectedBusinessQuote}
+				/>
+			)}
+			{isOpen && type === MODAL_CONSTANTS.BUSINESS_EXPRESS && (
+				<BusinessExpressModal
+					open={isOpen}
+					onOpenChange={(openState) => {
+						if (!openState) closeModal();
+					}}
+					quote={selectedBusinessQuote}
+				/>
+			)}
+			{isOpen && type === MODAL_CONSTANTS.BUSINESS_RENT && (
+				<BusinessRentModal
+					open={isOpen}
+					onOpenChange={(openState) => {
+						if (!openState) closeModal();
+					}}
+					quote={selectedBusinessQuote}
+				/>
+			)}
 		</div>
 	);
 }
+
+export default OfferListTable;
