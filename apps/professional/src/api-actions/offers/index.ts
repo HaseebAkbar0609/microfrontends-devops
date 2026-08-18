@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { OfferList } from "@/features/offer/types";
 import { OfferApiResponseItem, OffersListApiResponse } from "@/types/offer";
+import { ApiResponse, ActionResult } from "@/types/api";
 
 const OFFERS_LIST_PATH = "/professionals/quotes/quote-listing/offer_listing_by_status";
 const DEFAULT_PAGE_SIZE = 10;
@@ -61,4 +62,38 @@ export async function listOffersAPIAction(
 		totalPages: payload.total_pages ?? 1,
 		currentPage: payload.current_page ?? (params.page ?? 1),
 	};
+}
+
+export async function getOfferByIdAPIAction(
+	offerId: string,
+): Promise<ActionResult<OfferList | null>> {
+	try {
+		const response = await axiosInstance.get<ApiResponse<OfferApiResponseItem>>(
+			`/professionals/quotes/${offerId}`,
+		);
+		if (response.data?.data) {
+			return {
+				success: true,
+				data: mapItemToOfferList(response.data.data),
+				error: null,
+			};
+		}
+		return { success: true, data: null, error: null };
+	} catch {
+		return { success: false, data: null, error: "Failed to fetch offer details" };
+	}
+}
+
+export async function toggleOfferFavoriteAPIAction(
+	offerId: string,
+	isFavorite: boolean,
+): Promise<ActionResult<boolean>> {
+	try {
+		await axiosInstance.post(`/professionals/quotes/${offerId}/favorite`, {
+			isFavorite,
+		});
+		return { success: true, data: isFavorite, error: null };
+	} catch {
+		return { success: false, data: isFavorite, error: null };
+	}
 }

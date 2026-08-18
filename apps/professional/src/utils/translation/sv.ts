@@ -2676,7 +2676,7 @@ export const svOffer: OfferTranslation = {
 
 	// Business offer modal
 	businessOfferModalTitle:
-		"Är du säker på att du vill skicka detta Erbjudandet?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	businessOfferModalSubtitle:
 		"Villkor för Tagna Offerter – B2C-OFFERT, B2B-OFFERT:",
 	businessOfferModalBullet1:
@@ -2697,7 +2697,7 @@ export const svOffer: OfferTranslation = {
 
 	// Business express modal
 	businessExpressModalTitle:
-		"Är du säker på att du vill skicka detta Erbjudandet?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	businessExpressModalSubtitleB2C:
 		"Villkor för Tagna Offerter – B2C-EXPRESS:",
 	businessExpressModalSubtitleB2B:
@@ -2720,7 +2720,7 @@ export const svOffer: OfferTranslation = {
 
 	// Business rent modal
 	businessRentModalTitle:
-		"Är du säker på att du vill skicka detta Erbjudandet?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	businessRentModalSubtitle: "Villkor för Tagna Offerter – B2B – HYRA IN/UT:",
 	businessRentModalBullet1:
 		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
@@ -2740,7 +2740,7 @@ export const svOffer: OfferTranslation = {
 
 	// Offer confirmation modal
 	offerConfirmationModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	offerConfirmationModalCheckbox: "Jag accepterar villkoren",
 	offerConfirmationModalCancel: "Avbryt",
 	offerConfirmationModalConfirm: "Bekräfta",
