@@ -1641,7 +1641,7 @@ export const svOffer: OfferTranslation = {
 	licensesIndustryPlumbing: "Rör",
 	licensesIndustryTiler: "Plattsättare",
 	licensesIndustryElectrician: "Elektriker",
-	licensesConnectEconomyFee: "99KR / månad",
+	licensesConnectEconomyFee: "199 kr / månad",
 	licensesConnectEconomyModules: "API-connection till ekonomisystem. Se lista på anslutna system",
 	licensesScanSupplierFee: "Pris 5 kr / styck (grundavgift) Licens: obegränsat 0 kr, App: obegränsat: 0 kr",
 	licensesScanSupplierModules: "Låt era leverantörs fakturor gå för scanning, så ni får in dom i systemet tolkade, och kan enkelt hantera dom i attest och som underlag. Scanning tolkar, projekt, order, kund, konto, kostnadsställe och ger er bra flöde.",
