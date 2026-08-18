@@ -1,5 +1,5 @@
 import axiosInstance from "@/lib/axiosInstance";
-import { OfferList } from "@/features/offer/types";
+import { OfferList, OfferSendData, OfferSendImage, OfferSendFile } from "@/features/offer/types";
 import { OfferApiResponseItem, OffersListApiResponse } from "@/types/offer";
 import { ApiResponse, ActionResult } from "@/types/api";
 
@@ -75,6 +75,71 @@ export async function getOfferByIdAPIAction(
 			return {
 				success: true,
 				data: mapItemToOfferList(response.data.data),
+				error: null,
+			};
+		}
+		return { success: true, data: null, error: null };
+	} catch {
+		return { success: false, data: null, error: "Failed to fetch offer details" };
+	}
+}
+
+export async function getOfferDetailByIdAPIAction(
+	offerId: string,
+): Promise<ActionResult<OfferSendData | null>> {
+	try {
+		const response = await axiosInstance.get<ApiResponse<OfferApiResponseItem>>(
+			`/professionals/quotes/${offerId}`,
+		);
+		if (response.data?.data) {
+			const item = response.data.data;
+			return {
+				success: true,
+				data: {
+					id: item.id || item.offer_id || offerId,
+					title: item.project_title || item.title || "Köksrenoveringsjobb",
+					postedDate: item.created_at ? new Date(item.created_at).toISOString().split("T")[0] : "2024-12-18",
+					type: item.project_type || "Express",
+					badges: [
+						(item.project_type as string) || "Expressen är bättre",
+						(item.region as string) || "Stockholm",
+						(item.city as string) || "Järfälla",
+					],
+					customer: {
+						name: (item.customer_name as string) || "Anna Andersson",
+						email: (item.customer_email as string) || "anna@example.com",
+						phone: (item.customer_phone as string) || "076000000",
+						address: (item.customer_address as string) || "Storgatan 16, 18880 Stockholm.",
+					},
+					description:
+						(item.description as string) ||
+						"Företaget behöver Beprövad erfarenhet av köksrenovering eller inredning. Ett skarpt öga för designtrender och en passion för att skapa snygga och funktionella utrymmen.",
+					images: Array.isArray(item.images)
+						? (item.images as OfferSendImage[])
+						: [
+								{ id: "img-1", label: "Photo.img", src: "/offer-details.png" },
+								{ id: "img-2", label: "Photo.img", src: "/offer-details.png" },
+								{ id: "img-3", label: "Photo.img", src: "/offer-details.png" },
+						  ],
+					extraImagesCount: (item.extra_images_count as number) || 6,
+					documents: Array.isArray(item.documents)
+						? (item.documents as OfferSendFile[])
+						: [
+								{ id: "doc-1", label: "Förmulärsmall #1.doc" },
+								{ id: "doc-2", label: "Förmulärsmall #1.doc" },
+								{ id: "doc-3", label: "projekt.pdf" },
+						  ],
+					drawings: Array.isArray(item.drawings)
+						? (item.drawings as OfferSendFile[])
+						: [
+								{ id: "drawing-1", label: "projekt.pdf" },
+								{ id: "drawing-2", label: "bild 1" },
+								{ id: "drawing-3", label: "bild 1" },
+								{ id: "drawing-4", label: "bild 1" },
+						  ],
+					preliminaryBudgetPrice: (item.preliminary_budget as string) || "550,000",
+					offerDateLatest: (item.latest_offer_date as string) || "2025-04-15",
+				},
 				error: null,
 			};
 		}
