@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -13,6 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 interface TablePaginationProps {
   currentPage: number;
@@ -40,7 +44,7 @@ export function TablePagination({
     >
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-slate-700">
-          Rows per page
+          <Translate text={localizationConstants.rowsPerPage} />
         </span>
         <Select
           value={String(pageSize)}
@@ -59,8 +63,9 @@ export function TablePagination({
         </Select>
       </div>
 
-      <div className="text-sm font-medium text-slate-700">
-        Page {currentPage} of {totalPages || 1}
+      <div className="text-sm font-medium text-slate-700 flex items-center gap-1">
+        <Translate text={localizationConstants.page} /> {currentPage}{" "}
+        <Translate text={localizationConstants.of} /> {totalPages || 1}
       </div>
 
       <div className="flex items-center gap-1">
@@ -108,3 +113,5 @@ export function TablePagination({
     </div>
   );
 }
+
+export default TablePagination;

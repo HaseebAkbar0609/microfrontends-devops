@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -78,7 +78,6 @@ function UseTemplateModal({
 						<X className="h-4 w-4" />
 					</button>
 				</div>
-
 				{/* Table */}
 				<div className="overflow-x-auto">
 					<table className="w-full">
@@ -123,7 +122,6 @@ function UseTemplateModal({
 						</tbody>
 					</table>
 				</div>
-
 				{/* Footer */}
 				<div className="flex items-center justify-end gap-2 border-t border-slate-200 px-6 py-4">
 					<button
@@ -187,8 +185,7 @@ function CreateKontrollplanPage({
 	function toggleCat(id: string) {
 		setExpandedCatIds((prev) => {
 			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
+			if (next.has(id)) { next.delete(id); } else { next.add(id); }
 			return next;
 		});
 	}
@@ -196,8 +193,7 @@ function CreateKontrollplanPage({
 	function toggleSub(id: string) {
 		setExpandedSubIds((prev) => {
 			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
+			if (next.has(id)) { next.delete(id); } else { next.add(id); }
 			return next;
 		});
 	}
@@ -205,8 +201,7 @@ function CreateKontrollplanPage({
 	function toggleDoc(docId: string) {
 		setCheckedDocIds((prev) => {
 			const next = new Set(prev);
-			if (next.has(docId)) next.delete(docId);
-			else next.add(docId);
+			if (next.has(docId)) { next.delete(docId); } else { next.add(docId); }
 			return next;
 		});
 	}
@@ -263,7 +258,6 @@ function CreateKontrollplanPage({
 					}}
 				/>
 			)}
-
 			<div className="flex flex-1 flex-col overflow-hidden bg-white">
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
@@ -300,7 +294,6 @@ function CreateKontrollplanPage({
 						</button>
 					</div>
 				</div>
-
 				{/* Scrollable body */}
 				<div className="flex flex-1 flex-col overflow-y-auto">
 					{/* Kontrollplan detaljer form */}
@@ -1321,6 +1314,11 @@ function QualityPlanTab({
 		[selectedMain],
 	);
 
+	const filteredDocs = useMemo(() => {
+		const docs = selectedSub?.documents ?? [];
+		return viewMode === "mallar" ? docs.filter((d) => d.isTemplate) : docs;
+	}, [selectedSub, viewMode]);
+
 	const currentPlanLabel = t(planTypeLabelKey(planType));
 
 	return (
@@ -1423,28 +1421,34 @@ function QualityPlanTab({
 					)}
 				</div>
 			</div>
-			{/* 3-panel layout */}
-			<div className="flex flex-1 overflow-hidden">
-				<CategoryPanel
-					headerKey={localizationConstants.kmaQualityMainCat}
-					items={mainItems}
-					selectedId={selectedMainId}
-					onSelect={handleSelectMain}
-					searchKey={localizationConstants.kmaQualitySearchCategories}
-				/>
-				<CategoryPanel
-					headerKey={localizationConstants.kmaQualitySubCat}
-					items={subItems}
-					selectedId={selectedSubId}
-					onSelect={setSelectedSubId}
-					searchKey={localizationConstants.kmaQualitySearchSubCategories}
-				/>
-				<DocsPanel
-					documents={selectedSub?.documents ?? []}
-					onOpenDoc={onOpenDoc}
-					selectedSubCatId={selectedSubId}
-				/>
-			</div>
+			{/* Content */}
+			{planType !== "kontrollplan" ? (
+				<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
+					<Translate text={localizationConstants.comingSoon} />
+				</div>
+			) : (
+				<div className="flex flex-1 overflow-hidden">
+					<CategoryPanel
+						headerKey={localizationConstants.kmaQualityMainCat}
+						items={mainItems}
+						selectedId={selectedMainId}
+						onSelect={handleSelectMain}
+						searchKey={localizationConstants.kmaQualitySearchCategories}
+					/>
+					<CategoryPanel
+						headerKey={localizationConstants.kmaQualitySubCat}
+						items={subItems}
+						selectedId={selectedSubId}
+						onSelect={setSelectedSubId}
+						searchKey={localizationConstants.kmaQualitySearchSubCategories}
+					/>
+					<DocsPanel
+						documents={filteredDocs}
+						onOpenDoc={onOpenDoc}
+						selectedSubCatId={selectedSubId}
+					/>
+				</div>
+			)}
 		</div>
 	);
 }
@@ -1526,7 +1530,7 @@ export function QualitySystemPage() {
 			{activeTab === "plan" && (
 				<QualityPlanTab
 					onOpenDoc={setOpenDoc}
-					onCreateNew={() => setCreatePlanOpen(true)}
+					onCreateNew={() => { setCreateWithTemplate(false); setCreatePlanOpen(true); }}
 					onUseTemplate={() => {
 						setCreateWithTemplate(true);
 						setCreatePlanOpen(true);

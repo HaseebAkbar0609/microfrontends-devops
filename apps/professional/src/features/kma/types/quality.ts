@@ -18,6 +18,7 @@ export interface QualityDocument {
 	lastUpdated: string;
 	recentActivity: string;
 	description?: string;
+	isTemplate?: boolean;
 }
 
 export interface QualitySubCategory {

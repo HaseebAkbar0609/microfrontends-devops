@@ -2746,6 +2746,20 @@ export type OfferTranslation = {
 	homeImageDescription: string;
 	// Offer - List
 	offerList: string;
+	offerTabDashboard: string;
+	offerTabAvailable: string;
+	offerTabRequest: string;
+	offerTabQuoted: string;
+	offerTabAccepted: string;
+	offerTabAgreed: string;
+	offerTabArchived: string;
+	offerAvailableProjects: string;
+	offerAvailableListBreadcrumb: string;
+	offerFavJobb: string;
+	allJobs: string;
+	locationPlace: string;
+	page: string;
+	of: string;
 	job: string;
 	projectName: string;
 	date: string;
