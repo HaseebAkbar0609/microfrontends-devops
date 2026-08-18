@@ -1,4 +1,4 @@
-import type { KmaItem } from "../types/overview";
+import type { KmaItem, KmaMallGruppItem } from "../types/overview";
 
 // TODO: replace with API-sourced data before production
 export const MOCK_KMA_ITEMS: KmaItem[] = [
@@ -98,4 +98,12 @@ export const MOCK_KMA_ITEMS: KmaItem[] = [
 		type: "project",
 		status: "ongoing",
 	},
+];
+
+// TODO: replace with API-sourced data before production
+export const MOCK_KMA_MALL_GRUPP: KmaMallGruppItem[] = [
+	{ id: "T-KMA001", title: "Nyproduktion", version: "V2025-12", lastUpdated: "2026-01-28", createdBy: "Lars Andersson", starred: false },
+	{ id: "T-KMA002", title: "ROT", version: "v1.8", lastUpdated: "2025-01-08", createdBy: "Lars Andersson", starred: true },
+	{ id: "T-KMA003", title: "Service", version: "v2.1", lastUpdated: "2025-04-09", createdBy: "Lars Andersson", starred: false },
+	{ id: "T-KMA004", title: "Ombyggnad", version: "v1.8", lastUpdated: "2025-04-09", createdBy: "Lars Andersson", starred: false },
 ];

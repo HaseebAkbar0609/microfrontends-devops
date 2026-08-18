@@ -1,13 +1,17 @@
-"use client";
+﻿"use client";
 
 import { type RefObject, useEffect, useMemo, useRef, useState } from "react";
 import {
+	Archive,
 	ArrowUpDown,
 	ChevronDown,
-	LayoutList,
 	MoreVertical,
+	Pencil,
 	Plus,
 	Search,
+	SlidersHorizontal,
+	Star,
+	Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,9 +19,10 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { sortItems } from "@/utils/tableSort";
 import { useTableSort } from "@/hooks/useTableSort";
-import type { KmaItem, KmaStatus, KmaType, KmaSecureStatus } from "../types/overview";
+import type { KmaItem, KmaMallGruppItem, KmaStatus, KmaType, KmaSecureStatus } from "../types/overview";
+import { MOCK_KMA_MALL_GRUPP } from "../constants/overviewMock";
 
-// ── Constants ──────────────────────────────────────────────────────────────
+// Constants
 
 const ROWS_PER_PAGE = 10;
 
@@ -30,7 +35,7 @@ const GANTT_YEAR = 2026;
 
 const STATUS_FILTER_VALUES: KmaStatus[] = ["ongoing", "overdue", "done"];
 
-// ── Utility ────────────────────────────────────────────────────────────────
+// Utility
 
 function statusBadgeClass(status: KmaStatus): string {
 	if (status === "ongoing") return "bg-emerald-100 text-emerald-700";
@@ -44,7 +49,7 @@ function secureStatusDot(status: KmaSecureStatus): string {
 	return "bg-red-500";
 }
 
-// ── Sub-components ─────────────────────────────────────────────────────────
+// Sub-components
 
 interface PaginationProps {
 	page: number;
@@ -67,10 +72,10 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
 					Page {page} of {totalPages}
 				</span>
 				<div className="flex items-center gap-1">
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(1)} disabled={page === 1}>«</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(page - 1)} disabled={page === 1}>‹</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(page + 1)} disabled={page === totalPages}>›</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(totalPages)} disabled={page === totalPages}>»</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(1)} aria-label="First page" disabled={page === 1}>«</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Previous page" onClick={() => onPageChange(page - 1)} disabled={page === 1}>‹</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Next page" onClick={() => onPageChange(page + 1)} disabled={page === totalPages}>›</Button>
+					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Last page" onClick={() => onPageChange(totalPages)} disabled={page === totalPages}>»</Button>
 				</div>
 			</div>
 		</div>
@@ -125,7 +130,7 @@ function CreateDropdown({ open, onToggle, dropdownRef }: CreateDropdownProps) {
 	);
 }
 
-// ── TypeBadge ─────────────────────────────────────────────────────────────
+// TypeBadge
 
 function TypeBadge({ type, label }: { type: KmaType; label: string }) {
 	return (
@@ -142,7 +147,7 @@ function TypeBadge({ type, label }: { type: KmaType; label: string }) {
 	);
 }
 
-// ── KMA List Tab ─────────────────────────────────────────────────────────
+// KMA List Tab
 
 type SortField = keyof Pick<
 	KmaItem,
@@ -203,7 +208,7 @@ function KmaListTab({ items }: KmaListTabProps) {
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden">
-			{/* Figma toolbar — h-[86px], px-5, gap-5 */}
+			{/* Figma toolbar - h-[86px], px-5, gap-5 */}
 			<div className="flex items-center gap-5 border-b border-slate-200 px-5" style={{ minHeight: 86 }}>
 
 				{/* Type checkboxes section */}
@@ -451,7 +456,7 @@ function KmaListTab({ items }: KmaListTabProps) {
 	);
 }
 
-// ── Gantt Tab ─────────────────────────────────────────────────────────────
+// Gantt Tab
 
 interface TooltipState {
 	item: KmaItem;
@@ -502,14 +507,14 @@ function GanttTab({ items }: GanttTabProps) {
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden">
-			{/* Toolbar — h-16, px-5, py-3, justify-between */}
+			{/* Toolbar - h-16, px-5, py-3, justify-between */}
 			<div
 				className="flex items-center justify-between border-b border-slate-200 px-5"
 				style={{ height: 64, paddingTop: 12, paddingBottom: 12 }}
 			>
 				{/* Left: search + view selector */}
 				<div className="flex items-center gap-2">
-					{/* Search input — bottom-border only, no radius */}
+					{/* Search input - bottom-border only, no radius */}
 					<div
 						className="flex items-center gap-2 px-3"
 						style={{
@@ -541,7 +546,7 @@ function GanttTab({ items }: GanttTabProps) {
 				</div>
 			</div>
 
-			{/* Schedule block — px-5 pb-4, rounded-lg border rgba(71,85,105,0.1) */}
+			{/* Schedule block - px-5 pb-4, rounded-lg border rgba(71,85,105,0.1) */}
 			<div className="flex-1 overflow-auto px-5 pb-4 pt-3">
 				<div
 					className="overflow-x-auto bg-white"
@@ -549,7 +554,7 @@ function GanttTab({ items }: GanttTabProps) {
 				>
 					{/* Flex-row table */}
 					<div className="flex min-w-max">
-						{/* Column 1 — ID/Object (128px) */}
+						{/* Column 1 - ID/Object (128px) */}
 						<div style={{ width: 128, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
 								<button
@@ -573,7 +578,7 @@ function GanttTab({ items }: GanttTabProps) {
 							))}
 						</div>
 
-						{/* Column 2 — Customer (127px) */}
+						{/* Column 2 - Customer (127px) */}
 						<div style={{ width: 127, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
 								<button
@@ -685,7 +690,7 @@ function GanttTab({ items }: GanttTabProps) {
 						{tooltip.item.secureCheck}
 					</p>
 					<p className="text-slate-600">
-						{tooltip.item.startDate} → {tooltip.item.endDate}
+						{tooltip.item.startDate} &rarr; {tooltip.item.endDate}
 					</p>
 				</div>
 			)}
@@ -693,22 +698,281 @@ function GanttTab({ items }: GanttTabProps) {
 	);
 }
 
-// ── Templates Tab ─────────────────────────────────────────────────────────
+// Mall Grupp Tab
 
-function KmaTemplatesTab() {
+type MallGruppSortField = keyof Pick<KmaMallGruppItem, "id" | "title" | "version" | "lastUpdated" | "createdBy">;
+
+function KmaMallGruppTab() {
+	const t = useTranslate();
+	const [search, setSearch] = useState("");
+	const [items, setItems] = useState<KmaMallGruppItem[]>(MOCK_KMA_MALL_GRUPP);
+	const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+	const [filterOpen, setFilterOpen] = useState(false);
+	const [filterStarred, setFilterStarred] = useState(false);
+	const [filterCreatedBy, setFilterCreatedBy] = useState("");
+	const menuRef = useRef<HTMLDivElement>(null);
+	const filterRef = useRef<HTMLDivElement>(null);
+
+	const { sortField, sortDir, toggleSort } = useTableSort<MallGruppSortField>();
+
+	useEffect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+				setOpenMenuId(null);
+			}
+			if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+				setFilterOpen(false);
+			}
+		}
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, []);
+
+	const createdByOptions = useMemo(
+		() => [...new Set(items.map((i) => i.createdBy))],
+		[items],
+	);
+
+	const filtered = useMemo(() => {
+		const q = search.toLowerCase();
+		return items.filter((item) => {
+			const matchSearch =
+				item.id.toLowerCase().includes(q) ||
+				item.title.toLowerCase().includes(q) ||
+				item.createdBy.toLowerCase().includes(q);
+			const matchStarred = filterStarred ? item.starred : true;
+			const matchCreatedBy = filterCreatedBy ? item.createdBy === filterCreatedBy : true;
+			return matchSearch && matchStarred && matchCreatedBy;
+		});
+	}, [items, search, filterStarred, filterCreatedBy]);
+
+	const sorted = useMemo(
+		() => sortItems(filtered, sortField, sortDir, (r, f) => r[f as MallGruppSortField]),
+		[filtered, sortField, sortDir],
+	);
+
+	function toggleStar(id: string) {
+		setItems((prev) =>
+			prev.map((item) => (item.id === id ? { ...item, starred: !item.starred } : item)),
+		);
+	}
+
+	const TH_BTN =
+		"flex cursor-pointer select-none items-center gap-1 rounded-md px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-800 whitespace-nowrap";
+
 	return (
-		<div className="flex flex-1 items-center justify-center text-slate-400">
-			<div className="text-center">
-				<LayoutList className="mx-auto mb-3 h-12 w-12 opacity-30" />
-				<p className="text-sm">
-					<Translate text={localizationConstants.kmaListTabTemplates} />
-				</p>
+		<div className="flex flex-1 flex-col overflow-hidden">
+			{/* Toolbar */}
+			<div className="flex items-center justify-between gap-3 border-b border-[#E2E8F0] px-5 py-3">
+				<div className="flex items-center gap-2">
+					{/* Search */}
+					<div className="relative">
+						<Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 opacity-50" style={{ color: "#020617" }} />
+						<input
+							type="text"
+							value={search}
+							onChange={(e) => setSearch(e.target.value)}
+							placeholder={t(localizationConstants.search)}
+							className="h-10 w-75 rounded-none border-0 border-b border-[#E2E8F0] bg-white pl-8 pr-3 text-sm text-[#020617] focus:outline-none"
+							style={{ width: 300 }}
+						/>
+					</div>
+					{/* Filter */}
+					<div className="relative" ref={filterRef}>
+						<button
+							type="button"
+							onClick={() => setFilterOpen((v) => !v)}
+							className="flex h-9 cursor-pointer items-center gap-1.5 rounded-md border border-[#E2E8F0] bg-white px-3 text-sm font-medium text-[#0F172A] shadow-none hover:bg-slate-50"
+						>
+							<SlidersHorizontal className="h-4 w-4" />
+							<Translate text={localizationConstants.filter} />
+							<ChevronDown className="h-4 w-4" />
+						</button>
+						{filterOpen && (
+							<div className="absolute left-0 z-20 mt-1 w-60 rounded-md border border-slate-200 bg-white p-4 shadow-md">
+								{/* Starred only */}
+								<label className="mb-3 flex cursor-pointer items-center gap-2 text-sm text-slate-700">
+									<input
+										type="checkbox"
+										checked={filterStarred}
+										onChange={(e) => setFilterStarred(e.target.checked)}
+										className="h-4 w-4 cursor-pointer rounded border-slate-300 accent-slate-800"
+									/>
+									<Translate text={localizationConstants.kmaMallGruppFilterStarred} />
+								</label>
+								{/* Created by */}
+								<div className="mb-3">
+									<p className="mb-1 text-xs font-medium text-slate-500">
+										<Translate text={localizationConstants.kmaMallGruppColCreatedBy} />
+									</p>
+									<select
+										value={filterCreatedBy}
+										onChange={(e) => setFilterCreatedBy(e.target.value)}
+										className="h-8 w-full cursor-pointer rounded border border-slate-200 px-2 text-sm text-slate-700 focus:outline-none"
+									>
+										<option value="">{t(localizationConstants.filterAll)}</option>
+										{createdByOptions.map((name) => (
+											<option key={name} value={name}>{name}</option>
+										))}
+									</select>
+								</div>
+								{/* Reset */}
+								<button
+									type="button"
+									onClick={() => { setFilterStarred(false); setFilterCreatedBy(""); setFilterOpen(false); }}
+									className="w-full cursor-pointer rounded border border-slate-200 py-1.5 text-sm text-slate-600 hover:bg-slate-50"
+								>
+									<Translate text={localizationConstants.resetFilter} />
+								</button>
+							</div>
+						)}
+					</div>
+				</div>
+
+				{/* Create button */}
+				<button
+					type="button"
+					className="flex h-10 cursor-pointer items-center gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-zinc-800"
+					style={{ minWidth: 137 }}
+				>
+					<Plus className="h-5 w-5" />
+					<Translate text={localizationConstants.kmaMallGruppCreate} />
+				</button>
+			</div>
+
+			{/* Section heading + table */}
+			<div className="flex-1 overflow-auto px-5 py-4">
+				<h2 className="mb-4 text-lg font-semibold text-[#020617]">
+					<Translate text={localizationConstants.kmaMallGruppTitle} />
+				</h2>
+
+				<div className="overflow-x-auto rounded-lg border border-[#E2E8F0] bg-white">
+					<table className="w-full min-w-max border-collapse text-sm">
+						<thead>
+							<tr className="border-b border-[#E2E8F0]">
+								{/* Star column */}
+								<th className="h-12 w-10 px-3" />
+								<th className="h-12 px-0">
+									<button type="button" onClick={() => toggleSort("id")} className={TH_BTN}>
+										<Translate text={localizationConstants.kmaMallGruppColId} />
+										<ArrowUpDown className="h-4 w-4 text-slate-400" />
+									</button>
+								</th>
+								<th className="h-12 px-0">
+									<button type="button" onClick={() => toggleSort("title")} className={TH_BTN}>
+										<Translate text={localizationConstants.kmaMallGruppColDoc} />
+										<ArrowUpDown className="h-4 w-4 text-slate-400" />
+									</button>
+								</th>
+								<th className="h-12 px-0">
+									<button type="button" onClick={() => toggleSort("version")} className={TH_BTN}>
+										<Translate text={localizationConstants.kmaMallGruppColVersion} />
+										<ArrowUpDown className="h-4 w-4 text-slate-400" />
+									</button>
+								</th>
+								<th className="h-12 px-0">
+									<button type="button" onClick={() => toggleSort("lastUpdated")} className={TH_BTN}>
+										<Translate text={localizationConstants.kmaMallGruppColLastUpdated} />
+										<ArrowUpDown className="h-4 w-4 text-slate-400" />
+									</button>
+								</th>
+								<th className="h-12 px-0">
+									<button type="button" onClick={() => toggleSort("createdBy")} className={TH_BTN}>
+										<Translate text={localizationConstants.kmaMallGruppColCreatedBy} />
+										<ArrowUpDown className="h-4 w-4 text-slate-400" />
+									</button>
+								</th>
+								{/* Add column + actions */}
+								<th className="h-12 w-8 px-2 text-center">
+									<button type="button" className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-400 hover:bg-slate-100">
+										<Plus className="h-4 w-4" />
+									</button>
+								</th>
+								<th className="h-12 w-10 px-2" />
+							</tr>
+						</thead>
+						<tbody>
+							{sorted.length === 0 ? (
+								<tr>
+									<td colSpan={8} className="h-32 text-center text-sm text-slate-400">
+										<Translate text={localizationConstants.noDataFound} />
+									</td>
+								</tr>
+							) : (
+								sorted.map((item) => (
+									<tr key={item.id} className="border-b border-[#E2E8F0] last:border-b-0 hover:bg-slate-50">
+										{/* Star */}
+										<td className="h-14 px-3">
+											<button
+												type="button"
+												onClick={() => toggleStar(item.id)}
+												className="flex cursor-pointer items-center justify-center text-slate-300 hover:text-amber-400"
+											>
+												<Star
+													className="h-4 w-4"
+													fill={item.starred ? "#F59E0B" : "none"}
+													stroke={item.starred ? "#F59E0B" : "currentColor"}
+												/>
+											</button>
+										</td>
+										<td className="h-14 px-4 text-sm font-semibold text-[#020617]">{item.id}</td>
+										<td className="h-14 px-4 text-sm font-semibold text-[#020617]">{item.title}</td>
+										<td className="h-14 px-4 text-sm text-[#020617]">{item.version}</td>
+										<td className="h-14 whitespace-nowrap px-4 text-sm text-[#020617]">{item.lastUpdated}</td>
+										<td className="h-14 px-4 text-sm text-[#020617]">{item.createdBy}</td>
+										<td className="h-14 px-2" />
+										{/* Row actions */}
+										<td className="h-14 px-2">
+											<div className="relative" ref={openMenuId === item.id ? menuRef : undefined}>
+												<button
+													type="button"
+													onClick={() => setOpenMenuId(openMenuId === item.id ? null : item.id)}
+													className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+												>
+													<MoreVertical className="h-4 w-4" />
+												</button>
+												{openMenuId === item.id && (
+													<div className="absolute right-0 z-20 mt-1 w-40 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+														<button
+															type="button"
+															className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+															onClick={() => setOpenMenuId(null)}
+														>
+															<Pencil className="h-4 w-4 text-slate-400" />
+															<Translate text={localizationConstants.actionEdit} />
+														</button>
+														<button
+															type="button"
+															className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-sm text-red-600 hover:bg-slate-50"
+															onClick={() => setOpenMenuId(null)}
+														>
+															<Trash2 className="h-4 w-4" />
+															<Translate text={localizationConstants.actionDelete} />
+														</button>
+														<button
+															type="button"
+															className="flex w-full cursor-pointer items-center gap-2 px-4 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+															onClick={() => setOpenMenuId(null)}
+														>
+															<Archive className="h-4 w-4 text-slate-400" />
+															<Translate text={localizationConstants.archive} />
+														</button>
+													</div>
+												)}
+											</div>
+										</td>
+									</tr>
+								))
+							)}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	);
 }
 
-// ── Main component ─────────────────────────────────────────────────────────
+// Main component
 
 type TabId = "list" | "gantt" | "templates";
 
@@ -757,7 +1021,7 @@ export function KmaOverviewPage({ items }: KmaOverviewPageProps) {
 
 			{activeTab === "list" && <KmaListTab items={items} />}
 			{activeTab === "gantt" && <GanttTab items={items} />}
-			{activeTab === "templates" && <KmaTemplatesTab />}
+			{activeTab === "templates" && <KmaMallGruppTab />}
 		</div>
 	);
 }
