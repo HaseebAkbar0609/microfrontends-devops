@@ -53,9 +53,7 @@ export interface FlyoutSubSidebarConfig {
 }
 
 export const HIDDEN_SUBSIDEBAR_PATH_PREFIXES = [
-	"/module/business/offer/dashboard",
-	"/module/business/offer/list",
-	"/module/business/offer/archive",
+	"/module/business/offer",
 	"/module/business/b2b",
 	"/module/business/calculation",
 	"/module/business-support/agreement",
