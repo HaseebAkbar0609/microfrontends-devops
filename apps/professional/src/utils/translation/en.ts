@@ -2746,7 +2746,6 @@ export const enOffer: OfferTranslation = {
 	offerFavJobb: "Fav jobs",
 	allJobs: "All jobs",
 	locationPlace: "Location",
-	reset: "Reset",
 	page: "Page",
 	of: "of",
 	job: "Job",
