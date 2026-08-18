@@ -1,6 +1,5 @@
-import { ComingSoonPage } from "@/components/common/ComingSoonPage";
-import localizationConstants from "@/utils/translation/constants";
+import ProjectEconomyPage from "@/features/project/components/ProjectEconomyPage";
 
-export default function ProjectEconomyPage() {
-	return <ComingSoonPage titleKey={localizationConstants.projectEconomicOverview} />;
+export default function ProjectEconomyRoute() {
+	return <ProjectEconomyPage />;
 }
