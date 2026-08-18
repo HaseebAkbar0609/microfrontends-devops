@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
+export const OFFER_MODULE_BASE_URL = "/module/business/offer";
+
 export type OfferTabId =
 	| "dashboard"
 	| "available"
@@ -17,11 +19,13 @@ export type OfferTabId =
 
 interface OfferModuleHeaderProps {
 	activeTab?: OfferTabId;
+	offerId?: string;
 	className?: string;
 }
 
 export function OfferModuleHeader({
 	activeTab = "available",
+	offerId = "1001",
 	className,
 }: OfferModuleHeaderProps) {
 	const pathname = usePathname();
@@ -30,46 +34,46 @@ export function OfferModuleHeader({
 		{
 			id: "dashboard" as OfferTabId,
 			label: localizationConstants.offerTabDashboard,
-			href: "/module/business/offer/dashboard",
+			href: `${OFFER_MODULE_BASE_URL}/dashboard`,
 			isActive: activeTab === "dashboard" || pathname.includes("/offer/dashboard"),
 		},
 		{
 			id: "available" as OfferTabId,
 			label: localizationConstants.offerTabAvailable,
-			href: "/module/business/offer/list",
+			href: `${OFFER_MODULE_BASE_URL}/list`,
 			isActive:
 				activeTab === "available" ||
-				pathname === "/module/business/offer/list" ||
-				pathname === "/module/business/offer",
+				pathname === `${OFFER_MODULE_BASE_URL}/list` ||
+				pathname === OFFER_MODULE_BASE_URL,
 		},
 		{
 			id: "request" as OfferTabId,
 			label: localizationConstants.offerTabRequest,
-			href: "/module/business/offer/1001/request",
+			href: `${OFFER_MODULE_BASE_URL}/${offerId}/request`,
 			isActive: activeTab === "request" || pathname.includes("/request"),
 		},
 		{
 			id: "quoted" as OfferTabId,
 			label: localizationConstants.offerTabQuoted,
-			href: "/module/business/offer/1001/quoted",
+			href: `${OFFER_MODULE_BASE_URL}/${offerId}/quoted`,
 			isActive: activeTab === "quoted" || pathname.includes("/quoted"),
 		},
 		{
 			id: "accepted" as OfferTabId,
 			label: localizationConstants.offerTabAccepted,
-			href: "/module/business/offer/1001/accepted",
+			href: `${OFFER_MODULE_BASE_URL}/${offerId}/accepted`,
 			isActive: activeTab === "accepted" || pathname.includes("/accepted"),
 		},
 		{
 			id: "agreed" as OfferTabId,
 			label: localizationConstants.offerTabAgreed,
-			href: "/module/business/offer/1001/agreed",
+			href: `${OFFER_MODULE_BASE_URL}/${offerId}/agreed`,
 			isActive: activeTab === "agreed" || pathname.includes("/agreed"),
 		},
 		{
 			id: "archived" as OfferTabId,
 			label: localizationConstants.offerTabArchived,
-			href: "/module/business/offer/1001/archived",
+			href: `${OFFER_MODULE_BASE_URL}/${offerId}/archived`,
 			isActive: activeTab === "archived" || pathname.includes("/archived"),
 		},
 	];

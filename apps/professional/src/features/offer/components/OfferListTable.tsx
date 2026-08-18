@@ -47,20 +47,20 @@ function renderTypeBadge(type: string) {
 	const lower = type.toLowerCase();
 	if (lower.includes("express")) {
 		return (
-			<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-slate-50 text-slate-700 border border-slate-200 shadow-2xs whitespace-nowrap">
+			<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-slate-50 text-slate-700 border border-slate-200 shadow-xs whitespace-nowrap">
 				{type}
 			</span>
 		);
 	}
 	if (lower.includes("b2c")) {
 		return (
-			<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-[#18181B] text-white shadow-2xs whitespace-nowrap">
+			<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-slate-900 text-white shadow-xs whitespace-nowrap">
 				{type}
 			</span>
 		);
 	}
 	return (
-		<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60 shadow-2xs whitespace-nowrap">
+		<span className="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200/60 shadow-xs whitespace-nowrap">
 			{type}
 		</span>
 	);
@@ -230,7 +230,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 
 	return (
 		<div className="flex flex-col gap-4 font-sans">
-			<div className="w-full bg-white rounded-lg border border-slate-200 overflow-hidden shadow-2xs">
+			<div className="w-full bg-white rounded-lg border border-slate-200 overflow-hidden shadow-xs">
 				<Table className="table-auto w-full">
 					<TableHeader className="bg-slate-50/70 border-b border-slate-200">
 						<TableRow className="hover:bg-transparent border-slate-200">

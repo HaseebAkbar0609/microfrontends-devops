@@ -46,7 +46,7 @@ const FILTER_CHIPS: { id: ChipId; labelKey: string; addable?: boolean }[] = [
 ];
 
 export default function OfferList() {
-	const { search, changeQuery, page = 1, query } = useQueryParams();
+	const { search, changeQuery, changeQueries, page = 1, query } = useQueryParams();
 	const page_size = query.get("page_size") || "10";
 	const [offers, setOffers] = useState<OfferListType[]>(DUMMY_OFFERS);
 	const [totalItems, setTotalItems] = useState(DUMMY_OFFERS.length);
@@ -103,7 +103,7 @@ export default function OfferList() {
 		setSelectedCategory("all");
 		setSelectedMunicipality("all");
 		setShowFavoritesOnly(false);
-		changeQuery("search", "");
+		changeQueries({ search: null, page: "1" });
 	};
 
 	// Unique categories & municipalities for dropdowns
@@ -357,7 +357,7 @@ export default function OfferList() {
 							"cursor-pointer h-9 px-4 gap-2 rounded-md text-xs font-semibold transition-colors shrink-0",
 							showFavoritesOnly
 								? "bg-rose-600 hover:bg-rose-700 text-white"
-								: "bg-[#18181B] hover:bg-[#18181B]/90 text-white shadow-2xs"
+								: "bg-slate-900 hover:bg-slate-800 text-white shadow-xs"
 						)}
 					>
 						<Heart
