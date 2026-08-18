@@ -2722,7 +2722,6 @@ export type OfferTranslation = {
 	offerFavJobb: string;
 	allJobs: string;
 	locationPlace: string;
-	reset: string;
 	page: string;
 	of: string;
 	job: string;
