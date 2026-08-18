@@ -1977,6 +1977,13 @@ export const svOffer: OfferTranslation = {
 	kmaQualitySearchCategories: "Sök kategorier...",
 	kmaQualitySearchSubCategories: "Sök underkategorier...",
 	kmaQualitySearchDocs: "Sök dokument...",
+	kmaQualityPlanKontrollplan: "Kontrollplan",
+	kmaQualityPlanRiskhantering: "Riskhantering",
+	kmaQualityPlanChecklistor: "Checklistor",
+	kmaQualityPlanAtgardsplaner: "Åtgärdsplaner",
+	kmaQualityPlanViewAlla: "Alla",
+	kmaQualityPlanViewMallar: "Mallar",
+	kmaQualityPlanCreateBtn: "Skapa ny kontrollplan",
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: "B2B-Översikt",
 	b2bWidgetOverviewActive: "Aktiva uppdrag",

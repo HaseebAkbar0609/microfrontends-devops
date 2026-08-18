@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
 	ArrowLeft,
+	ChevronDown,
 	Download,
 	FileText,
 	MoreVertical,
@@ -16,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory } from "../../types/quality";
-import { MOCK_QUALITY_CATEGORIES } from "../../constants/qualityMock";
+import { MOCK_QUALITY_CATEGORIES, MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -628,10 +629,173 @@ function QualitySystemTab({
 
 // ── Quality Plan Tab ───────────────────────────────────────────────────────────
 
-function QualityPlanTab() {
+type PlanType = "kontrollplan" | "riskhantering" | "checklistor" | "atgardsplaner";
+type PlanView = "alla" | "mallar";
+
+const PLAN_TYPE_IDS: PlanType[] = [
+	"kontrollplan",
+	"riskhantering",
+	"checklistor",
+	"atgardsplaner",
+];
+
+function planTypeLabelKey(id: PlanType): string {
+	const map: Record<PlanType, string> = {
+		kontrollplan: localizationConstants.kmaQualityPlanKontrollplan,
+		riskhantering: localizationConstants.kmaQualityPlanRiskhantering,
+		checklistor: localizationConstants.kmaQualityPlanChecklistor,
+		atgardsplaner: localizationConstants.kmaQualityPlanAtgardsplaner,
+	};
+	return map[id];
+}
+
+function QualityPlanTab({ onOpenDoc }: { onOpenDoc: (doc: QualityDocument) => void }) {
+	const t = useTranslate();
+	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
+	const [viewMode, setViewMode] = useState<PlanView>("alla");
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+	const [selectedMainId, setSelectedMainId] = useState<string | null>(
+		MOCK_QUALITY_PLAN_CATEGORIES[0]?.id ?? null,
+	);
+	const [selectedSubId, setSelectedSubId] = useState<string | null>(
+		MOCK_QUALITY_PLAN_CATEGORIES[0]?.subcategories[0]?.id ?? null,
+	);
+
+	useEffect(() => {
+		function handleClickOutside(e: MouseEvent) {
+			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+				setDropdownOpen(false);
+			}
+		}
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, []);
+
+	const selectedMain = MOCK_QUALITY_PLAN_CATEGORIES.find((c) => c.id === selectedMainId);
+	const selectedSub = selectedMain?.subcategories.find((s) => s.id === selectedSubId);
+
+	function handleSelectMain(id: string) {
+		setSelectedMainId(id);
+		const cat = MOCK_QUALITY_PLAN_CATEGORIES.find((c) => c.id === id);
+		setSelectedSubId(cat?.subcategories[0]?.id ?? null);
+	}
+
+	const mainItems = useMemo(
+		() =>
+			MOCK_QUALITY_PLAN_CATEGORIES.map((c) => ({
+				id: c.id,
+				label: c.label,
+				count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
+			})),
+		[],
+	);
+
+	const subItems = useMemo(
+		() =>
+			selectedMain?.subcategories.map((s) => ({
+				id: s.id,
+				label: s.label,
+				count: s.documents.length,
+			})) ?? [],
+		[selectedMain],
+	);
+
+	const currentPlanLabel = t(planTypeLabelKey(planType));
+
 	return (
-		<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
-			<Translate text={localizationConstants.comingSoon} />
+		<div className="flex flex-1 flex-col overflow-hidden">
+			{/* Toolbar */}
+			<div className="flex items-center justify-between border-b border-slate-200 px-4 py-2">
+				<div className="flex items-center gap-2">
+					{/* Plan type dropdown */}
+					<div ref={dropdownRef} className="relative">
+						<button
+							type="button"
+							onClick={() => setDropdownOpen((v) => !v)}
+							className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+						>
+							{currentPlanLabel}
+							<ChevronDown className="h-4 w-4 text-slate-400" />
+						</button>
+						{dropdownOpen && (
+							<div className="absolute left-0 top-full z-20 mt-1 w-48 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+								{PLAN_TYPE_IDS.filter((id) => id !== planType).map((id) => (
+									<button
+										key={id}
+										type="button"
+										onClick={() => {
+											setPlanType(id);
+											setDropdownOpen(false);
+										}}
+										className="w-full cursor-pointer px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+									>
+										<Translate text={planTypeLabelKey(id)} />
+									</button>
+								))}
+							</div>
+						)}
+					</div>
+					{/* View mode toggle */}
+					<div className="flex rounded-md border border-slate-200">
+						<button
+							type="button"
+							onClick={() => setViewMode("alla")}
+							className={cn(
+								"cursor-pointer rounded-l-md px-3 py-1.5 text-sm font-medium transition-colors",
+								viewMode === "alla"
+									? "bg-slate-900 text-white"
+									: "bg-white text-slate-600 hover:bg-slate-50",
+							)}
+						>
+							<Translate text={localizationConstants.kmaQualityPlanViewAlla} />
+						</button>
+						<button
+							type="button"
+							onClick={() => setViewMode("mallar")}
+							className={cn(
+								"cursor-pointer rounded-r-md border-l border-slate-200 px-3 py-1.5 text-sm font-medium transition-colors",
+								viewMode === "mallar"
+									? "bg-slate-900 text-white"
+									: "bg-white text-slate-600 hover:bg-slate-50",
+							)}
+						>
+							<Translate text={localizationConstants.kmaQualityPlanViewMallar} />
+						</button>
+					</div>
+				</div>
+				{/* Create button */}
+				<button
+					type="button"
+					className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
+				>
+					<Plus className="h-4 w-4" />
+					<Translate text={localizationConstants.kmaQualityPlanCreateBtn} />
+				</button>
+			</div>
+			{/* 3-panel layout */}
+			<div className="flex flex-1 overflow-hidden">
+				<CategoryPanel
+					headerKey={localizationConstants.kmaQualityMainCat}
+					items={mainItems}
+					selectedId={selectedMainId}
+					onSelect={handleSelectMain}
+					searchKey={localizationConstants.kmaQualitySearchCategories}
+				/>
+				<CategoryPanel
+					headerKey={localizationConstants.kmaQualitySubCat}
+					items={subItems}
+					selectedId={selectedSubId}
+					onSelect={setSelectedSubId}
+					searchKey={localizationConstants.kmaQualitySearchSubCategories}
+				/>
+				<DocsPanel
+					documents={selectedSub?.documents ?? []}
+					onOpenDoc={onOpenDoc}
+					selectedSubCatId={selectedSubId}
+				/>
+			</div>
 		</div>
 	);
 }
@@ -696,7 +860,7 @@ export function QualitySystemPage() {
 			</div>
 
 			{activeTab === "system" && <QualitySystemTab onOpenDoc={setOpenDoc} />}
-			{activeTab === "plan" && <QualityPlanTab />}
+			{activeTab === "plan" && <QualityPlanTab onOpenDoc={setOpenDoc} />}
 		</div>
 	);
 }

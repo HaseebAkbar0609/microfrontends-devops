@@ -1,5 +1,24 @@
 import type { QualityDocument, QualityMainCategory } from "../types/quality";
 
+const PLAN_DOC = (id: string, n: number): QualityDocument => ({
+	id,
+	title: `Consultancy Agreement – Standard`,
+	fileType: "pdf",
+	updatedText: `Updated ${n} day${n === 1 ? "" : "s"} ago`,
+	starred: false,
+	status: "published",
+	categoryFrom: "Agreements",
+	subCategoryFrom: "Consultancy agreement",
+	templateType: "Contract",
+	tags: ["konsult", "avtal", "standard"],
+	owner: "Anna Svensson",
+	linkedModules: ["Legal", "Data IT"],
+	created: "2024-01-15",
+	lastUpdated: "2025-01-10",
+	recentActivity: `Published by Anna Svensson • ${n} day${n === 1 ? "" : "s"} ago`,
+	description: "",
+});
+
 const DOC_STANDARD = (id: string, n: number): QualityDocument => ({
 	id,
 	title: `Consultancy Agreement – Standard`,
@@ -163,6 +182,119 @@ export const MOCK_QUALITY_CATEGORIES: QualityMainCategory[] = [
 				documents: [
 					DOC_STANDARD("14.2001", 2),
 					DOC_STANDARD("14.2002", 2),
+				],
+			},
+		],
+	},
+];
+
+export const MOCK_QUALITY_PLAN_CATEGORIES: QualityMainCategory[] = [
+	{
+		id: "grund",
+		label: "10.0 Grund",
+		subcategories: [
+			{
+				id: "grund-mark",
+				label: "10.1 Mark",
+				documents: [
+					PLAN_DOC("10.11", 2),
+					PLAN_DOC("10.1.2", 2),
+					PLAN_DOC("10.1.3", 3),
+					PLAN_DOC("10.1.4", 4),
+				],
+			},
+			{
+				id: "grund-armering",
+				label: "10.2 Armering",
+				documents: [
+					PLAN_DOC("10.2.1", 2),
+					PLAN_DOC("10.2.2", 3),
+					PLAN_DOC("10.2.3", 5),
+				],
+			},
+			{
+				id: "grund-betong",
+				label: "10.3 Betong",
+				documents: [
+					PLAN_DOC("10.3.1", 2),
+					PLAN_DOC("10.3.2", 2),
+					PLAN_DOC("10.3.3", 3),
+					PLAN_DOC("10.3.4", 2),
+					PLAN_DOC("10.3.5", 6),
+					PLAN_DOC("10.3.6", 1),
+				],
+			},
+		],
+	},
+	{
+		id: "stomme",
+		label: "Stomme",
+		subcategories: [
+			{
+				id: "stomme-vaggar",
+				label: "S.1 Väggar",
+				documents: [
+					PLAN_DOC("S.1.1", 2),
+					PLAN_DOC("S.1.2", 3),
+					PLAN_DOC("S.1.3", 2),
+					PLAN_DOC("S.1.4", 5),
+				],
+			},
+			{
+				id: "stomme-bjalklager",
+				label: "S.2 Bjälklag",
+				documents: [
+					PLAN_DOC("S.2.1", 2),
+					PLAN_DOC("S.2.2", 3),
+					PLAN_DOC("S.2.3", 4),
+					PLAN_DOC("S.2.4", 1),
+				],
+			},
+		],
+	},
+	{
+		id: "installation",
+		label: "Installation",
+		subcategories: [
+			{
+				id: "inst-vvs",
+				label: "I.1 VVS",
+				documents: [
+					PLAN_DOC("I.1.1", 2),
+					PLAN_DOC("I.1.2", 3),
+					PLAN_DOC("I.1.3", 2),
+				],
+			},
+			{
+				id: "inst-el",
+				label: "I.2 El",
+				documents: [
+					PLAN_DOC("I.2.1", 2),
+					PLAN_DOC("I.2.2", 4),
+				],
+			},
+		],
+	},
+	{
+		id: "badrum",
+		label: "Badrum",
+		subcategories: [
+			{
+				id: "badrum-kakel",
+				label: "B.1 Kakel och klinker",
+				documents: [
+					PLAN_DOC("B.1.1", 2),
+					PLAN_DOC("B.1.2", 3),
+					PLAN_DOC("B.1.3", 2),
+				],
+			},
+			{
+				id: "badrum-sanitet",
+				label: "B.2 Sanitet",
+				documents: [
+					PLAN_DOC("B.2.1", 2),
+					PLAN_DOC("B.2.2", 3),
+					PLAN_DOC("B.2.3", 4),
 				],
 			},
 		],

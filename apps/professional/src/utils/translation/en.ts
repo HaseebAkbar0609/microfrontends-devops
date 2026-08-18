@@ -1972,6 +1972,13 @@ export const enOffer: OfferTranslation = {
 	kmaQualitySearchCategories: "Search categories...",
 	kmaQualitySearchSubCategories: "Search subcategories...",
 	kmaQualitySearchDocs: "Search documents...",
+	kmaQualityPlanKontrollplan: "Control Plan",
+	kmaQualityPlanRiskhantering: "Risk Management",
+	kmaQualityPlanChecklistor: "Checklists",
+	kmaQualityPlanAtgardsplaner: "Action Plans",
+	kmaQualityPlanViewAlla: "All",
+	kmaQualityPlanViewMallar: "Templates",
+	kmaQualityPlanCreateBtn: "Create new control plan",
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Project - Overview",
 	projWidgetOverviewTitle: "Project overview",
