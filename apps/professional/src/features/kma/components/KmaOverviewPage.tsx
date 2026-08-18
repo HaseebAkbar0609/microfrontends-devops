@@ -1,10 +1,14 @@
-﻿"use client";
+"use client";
 
 import { type RefObject, useEffect, useMemo, useRef, useState } from "react";
 import {
 	Archive,
 	ArrowUpDown,
 	ChevronDown,
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
 	MoreVertical,
 	Pencil,
 	Plus,
@@ -72,10 +76,10 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
 					Page {page} of {totalPages}
 				</span>
 				<div className="flex items-center gap-1">
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(1)} aria-label="First page" disabled={page === 1}>«</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Previous page" onClick={() => onPageChange(page - 1)} disabled={page === 1}>‹</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Next page" onClick={() => onPageChange(page + 1)} disabled={page === totalPages}>›</Button>
-					<Button variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" aria-label="Last page" onClick={() => onPageChange(totalPages)} disabled={page === totalPages}>»</Button>
+					<Button aria-label="First page" variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(1)} disabled={page === 1}><ChevronsLeft className="h-4 w-4" /></Button>
+					<Button aria-label="Previous page" variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(page - 1)} disabled={page === 1}><ChevronLeft className="h-4 w-4" /></Button>
+					<Button aria-label="Next page" variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(page + 1)} disabled={page === totalPages}><ChevronRight className="h-4 w-4" /></Button>
+					<Button aria-label="Last page" variant="ghost" size="sm" className="h-7 w-7 cursor-pointer p-0" onClick={() => onPageChange(totalPages)} disabled={page === totalPages}><ChevronsRight className="h-4 w-4" /></Button>
 				</div>
 			</div>
 		</div>
@@ -104,8 +108,7 @@ function CreateDropdown({ open, onToggle, dropdownRef }: CreateDropdownProps) {
 			<button
 				type="button"
 				onClick={onToggle}
-				className="flex h-10 cursor-pointer items-center gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-zinc-800"
-				style={{ minWidth: 137 }}
+				className="flex h-10 min-w-36 cursor-pointer items-center gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-zinc-800"
 			>
 				<Plus className="h-5 w-5" />
 				<Translate text={localizationConstants.kmaListCreateBtn} />
@@ -314,7 +317,7 @@ function KmaListTab({ items }: KmaListTabProps) {
 						</div>
 					</div>
 
-					{/* Sök / Reset button */}
+					{/* SÃ¶k / Reset button */}
 					<button
 						type="button"
 						onClick={handleReset}
@@ -555,6 +558,7 @@ function GanttTab({ items }: GanttTabProps) {
 					{/* Flex-row table */}
 					<div className="flex min-w-max">
 						{/* Column 1 - ID/Object (128px) */}
+						{/* Column 1 - ID/Object (128px) */}
 						<div style={{ width: 128, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
 								<button
@@ -578,6 +582,7 @@ function GanttTab({ items }: GanttTabProps) {
 							))}
 						</div>
 
+						{/* Column 2 - Customer (127px) */}
 						{/* Column 2 - Customer (127px) */}
 						<div style={{ width: 127, flexShrink: 0 }}>
 							<div className="flex h-12 items-center border-b border-[#E2E8F0] pr-4">
@@ -699,6 +704,7 @@ function GanttTab({ items }: GanttTabProps) {
 }
 
 // Mall Grupp Tab
+// Mall Grupp Tab
 
 type MallGruppSortField = keyof Pick<KmaMallGruppItem, "id" | "title" | "version" | "lastUpdated" | "createdBy">;
 
@@ -751,6 +757,7 @@ function KmaMallGruppTab() {
 		[filtered, sortField, sortDir],
 	);
 
+	// TODO: Persist via API when endpoint is available
 	function toggleStar(id: string) {
 		setItems((prev) =>
 			prev.map((item) => (item.id === id ? { ...item, starred: !item.starred } : item)),
@@ -774,7 +781,6 @@ function KmaMallGruppTab() {
 							onChange={(e) => setSearch(e.target.value)}
 							placeholder={t(localizationConstants.search)}
 							className="h-10 w-75 rounded-none border-0 border-b border-[#E2E8F0] bg-white pl-8 pr-3 text-sm text-[#020617] focus:outline-none"
-							style={{ width: 300 }}
 						/>
 					</div>
 					{/* Filter */}
@@ -832,8 +838,7 @@ function KmaMallGruppTab() {
 				{/* Create button */}
 				<button
 					type="button"
-					className="flex h-10 cursor-pointer items-center gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-zinc-800"
-					style={{ minWidth: 137 }}
+					className="flex h-10 min-w-36 cursor-pointer items-center gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-zinc-800"
 				>
 					<Plus className="h-5 w-5" />
 					<Translate text={localizationConstants.kmaMallGruppCreate} />
