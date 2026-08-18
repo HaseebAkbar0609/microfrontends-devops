@@ -2068,6 +2068,13 @@ export type OfferTranslation = {
 	kmaQualitySearchCategories: string;
 	kmaQualitySearchSubCategories: string;
 	kmaQualitySearchDocs: string;
+	kmaQualityPlanKontrollplan: string;
+	kmaQualityPlanRiskhantering: string;
+	kmaQualityPlanChecklistor: string;
+	kmaQualityPlanAtgardsplaner: string;
+	kmaQualityPlanViewAlla: string;
+	kmaQualityPlanViewMallar: string;
+	kmaQualityPlanCreateBtn: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;
