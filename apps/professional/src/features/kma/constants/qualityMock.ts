@@ -1,5 +1,25 @@
 import type { QualityDocument, QualityMainCategory } from "../types/quality";
 
+const PLAN_DOC = (id: string, title: string, n: number, isTemplate = false): QualityDocument => ({
+	id,
+	title,
+	fileType: "pdf",
+	updatedText: `Updated ${n} day${n === 1 ? "" : "s"} ago`,
+	starred: false,
+	status: "published",
+	categoryFrom: "Kontrollplan",
+	subCategoryFrom: id.split(".").slice(0, 2).join("."),
+	templateType: "Kontrollplan",
+	tags: ["kontroll", "kvalitet"],
+	owner: "Anna Svensson",
+	linkedModules: ["KMA", "Produktion"],
+	created: "2024-01-15",
+	lastUpdated: "2025-01-10",
+	recentActivity: `Published by Anna Svensson • ${n} day${n === 1 ? "" : "s"} ago`,
+	description: "",
+	isTemplate,
+});
+
 const DOC_STANDARD = (id: string, n: number): QualityDocument => ({
 	id,
 	title: `Consultancy Agreement – Standard`,
@@ -163,6 +183,119 @@ export const MOCK_QUALITY_CATEGORIES: QualityMainCategory[] = [
 				documents: [
 					DOC_STANDARD("14.2001", 2),
 					DOC_STANDARD("14.2002", 2),
+				],
+			},
+		],
+	},
+];
+
+export const MOCK_QUALITY_PLAN_CATEGORIES: QualityMainCategory[] = [
+	{
+		id: "grund",
+		label: "10.0 Grund",
+		subcategories: [
+			{
+				id: "grund-mark",
+				label: "10.1 Mark",
+				documents: [
+					PLAN_DOC("10.1.1", "Markbesiktning – Standard", 2, true),
+					PLAN_DOC("10.1.2", "Markarbete – Uppfyllnad", 2),
+					PLAN_DOC("10.1.3", "Markavvattning – Protokoll", 3),
+					PLAN_DOC("10.1.4", "Marknivellering – Checklista", 4),
+				],
+			},
+			{
+				id: "grund-armering",
+				label: "10.2 Armering",
+				documents: [
+					PLAN_DOC("10.2.1", "Armeringsprotokoll – Standard", 2, true),
+					PLAN_DOC("10.2.2", "Armering – Dimensionskontroll", 3),
+					PLAN_DOC("10.2.3", "Armering – Bindning", 5),
+				],
+			},
+			{
+				id: "grund-betong",
+				label: "10.3 Betong",
+				documents: [
+					PLAN_DOC("10.3.1", "Betongprovning – Standard", 2, true),
+					PLAN_DOC("10.3.2", "Betongpump – Protokoll", 2),
+					PLAN_DOC("10.3.3", "Gjutning – Checklista", 3),
+					PLAN_DOC("10.3.4", "Betongkvalitet – Rapport", 2),
+					PLAN_DOC("10.3.5", "Härdning – Protokoll", 6),
+					PLAN_DOC("10.3.6", "Betongytor – Standard", 1),
+				],
+			},
+		],
+	},
+	{
+		id: "stomme",
+		label: "Stomme",
+		subcategories: [
+			{
+				id: "stomme-vaggar",
+				label: "S.1 Väggar",
+				documents: [
+					PLAN_DOC("S.1.1", "Vägguppbyggnad – Standard", 2, true),
+					PLAN_DOC("S.1.2", "Lättbetongblock – Protokoll", 3),
+					PLAN_DOC("S.1.3", "Regelstomme – Checklista", 2),
+					PLAN_DOC("S.1.4", "Väggisolering – Rapport", 5),
+				],
+			},
+			{
+				id: "stomme-bjalklager",
+				label: "S.2 Bjälklag",
+				documents: [
+					PLAN_DOC("S.2.1", "Bjälklag – Standard", 2, true),
+					PLAN_DOC("S.2.2", "Plattbärlag – Protokoll", 3),
+					PLAN_DOC("S.2.3", "Massivdäck – Checklista", 4),
+					PLAN_DOC("S.2.4", "Bjälklagsavjämning – Rapport", 1),
+				],
+			},
+		],
+	},
+	{
+		id: "installation",
+		label: "Installation",
+		subcategories: [
+			{
+				id: "inst-vvs",
+				label: "I.1 VVS",
+				documents: [
+					PLAN_DOC("I.1.1", "VVS-installation – Standard", 2, true),
+					PLAN_DOC("I.1.2", "Rörinstallation – Protokoll", 3),
+					PLAN_DOC("I.1.3", "Ventilation – Checklista", 2),
+				],
+			},
+			{
+				id: "inst-el",
+				label: "I.2 El",
+				documents: [
+					PLAN_DOC("I.2.1", "Elinstallation – Standard", 2, true),
+					PLAN_DOC("I.2.2", "Kablage – Protokoll", 4),
+				],
+			},
+		],
+	},
+	{
+		id: "badrum",
+		label: "Badrum",
+		subcategories: [
+			{
+				id: "badrum-kakel",
+				label: "B.1 Kakel och klinker",
+				documents: [
+					PLAN_DOC("B.1.1", "Kakelläggning – Standard", 2, true),
+					PLAN_DOC("B.1.2", "Klinker – Protokoll", 3),
+					PLAN_DOC("B.1.3", "Fogning – Checklista", 2),
+				],
+			},
+			{
+				id: "badrum-sanitet",
+				label: "B.2 Sanitet",
+				documents: [
+					PLAN_DOC("B.2.1", "WC-installation – Standard", 2, true),
+					PLAN_DOC("B.2.2", "Dusch – Protokoll", 3),
+					PLAN_DOC("B.2.3", "Sanitetsgods – Checklista", 4),
 				],
 			},
 		],
