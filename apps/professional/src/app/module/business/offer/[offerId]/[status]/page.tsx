@@ -8,7 +8,6 @@ import { OfferArchivedView } from "@/features/offer/components/OfferArchivedView
 import { OFFER_STATUSES } from "@/features/offer/constants/offerDetail";
 import { DUMMY_OFFER_REQUESTS } from "@/features/offer/constants/offerRequests.mock";
 import { DUMMY_QUOTED_ITEMS } from "@/features/offer/constants/offerQuoted.mock";
-import { DUMMY_ACCEPTED_ITEMS } from "@/features/offer/constants/offerAccepted.mock";
 import { DUMMY_AGREED_ITEMS } from "@/features/offer/constants/offerAgreed.mock";
 import { DUMMY_ARCHIVED_ITEMS } from "@/features/offer/constants/offerArchived.mock";
 import { Translate } from "@/utils/translation/translate";
@@ -35,7 +34,7 @@ export default async function OfferStatusPage({
   }
 
   if (parsed.data === "accepted") {
-    return <OfferAcceptedView offerId={offerId} items={DUMMY_ACCEPTED_ITEMS} />;
+    return <OfferAcceptedView />;
   }
 
   if (parsed.data === "agreed") {

@@ -9,7 +9,8 @@ export const DUMMY_ACCEPTED_ITEMS: OfferAcceptedItem[] = [
     category: "Måleri",
     municipality: "Järfälla",
     acceptedPrice: 12000,
-    type: "B2C",
+    type: "1.300",
+    contactPerson: { name: "Lars Andersson", phone: "0701234567", email: "lars@example.com" },
   },
   {
     id: "acc-2",
@@ -19,7 +20,8 @@ export const DUMMY_ACCEPTED_ITEMS: OfferAcceptedItem[] = [
     category: "Express",
     municipality: "Järfälla",
     acceptedPrice: 12000,
-    type: "Express",
+    type: "1.400",
+    contactPerson: { name: "Lars Andersson", phone: "0701234567", email: "lars@example.com" },
   },
   {
     id: "acc-3",
@@ -29,7 +31,8 @@ export const DUMMY_ACCEPTED_ITEMS: OfferAcceptedItem[] = [
     category: "B2B",
     municipality: "Järfälla",
     acceptedPrice: 12000,
-    type: "B2B",
+    type: "1.600",
+    contactPerson: { name: "Lars Andersson", phone: "0701234567", email: "lars@example.com" },
   },
   {
     id: "acc-4",
@@ -39,7 +42,8 @@ export const DUMMY_ACCEPTED_ITEMS: OfferAcceptedItem[] = [
     category: "Express",
     municipality: "Järfälla",
     acceptedPrice: 12000,
-    type: "Express",
+    type: "2.000",
+    contactPerson: { name: "Lars Andersson", phone: "0701234567", email: "lars@example.com" },
   },
   {
     id: "acc-5",
@@ -49,7 +53,8 @@ export const DUMMY_ACCEPTED_ITEMS: OfferAcceptedItem[] = [
     category: "Express",
     municipality: "Järfälla",
     acceptedPrice: 12000,
-    type: "B2C",
+    type: "3.000",
+    contactPerson: { name: "Lars Andersson", phone: "0701234567", email: "lars@example.com" },
   },
   {
     id: "acc-6",
@@ -59,6 +64,7 @@ export const DUMMY_ACCEPTED_ITEMS: OfferAcceptedItem[] = [
     category: "B2B",
     municipality: "Järfälla",
     acceptedPrice: 12000,
-    type: "B2B",
+    type: "4.000",
+    contactPerson: { name: "Lars Andersson", phone: "0701234567", email: "lars@example.com" },
   },
 ];

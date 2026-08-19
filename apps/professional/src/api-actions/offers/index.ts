@@ -162,3 +162,27 @@ export async function toggleOfferFavoriteAPIAction(
 		return { success: false, data: isFavorite, error: null };
 	}
 }
+
+export async function createAgreementFromOfferAPIAction(
+	offerId: string,
+	data: {
+		parties: Array<Record<string, unknown>>;
+		documents: string[];
+		templates: string[];
+		price?: number;
+		startDate?: string;
+		endDate?: string;
+	},
+): Promise<ActionResult<Record<string, unknown>>> {
+	try {
+		const response = await axiosInstance.post<ApiResponse<Record<string, unknown>>>(
+			`/professionals/quotes/${offerId}/agreement`,
+			data,
+		);
+		return { success: true, data: response.data?.data || {}, error: null };
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
+		const errorMessage = apiError.response?.data?.message || "Failed to create agreement";
+		return { success: false, data: null, error: errorMessage };
+	}
+}

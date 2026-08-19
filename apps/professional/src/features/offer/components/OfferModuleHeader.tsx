@@ -24,59 +24,88 @@ interface OfferModuleHeaderProps {
 }
 
 export function OfferModuleHeader({
-	activeTab = "available",
+	activeTab,
 	offerId = "1001",
 	className,
 }: OfferModuleHeaderProps) {
 	const pathname = usePathname();
+
+	const getIsActive = (tabId: OfferTabId) => {
+		if (activeTab) {
+			return activeTab === tabId;
+		}
+
+		if (tabId === "dashboard") {
+			return pathname.includes("/offer/dashboard");
+		}
+		if (tabId === "available") {
+			return (
+				pathname === `${OFFER_MODULE_BASE_URL}/list` ||
+				pathname === OFFER_MODULE_BASE_URL ||
+				pathname.startsWith(`${OFFER_MODULE_BASE_URL}/list`) ||
+				pathname.includes("/available")
+			);
+		}
+		if (tabId === "request") {
+			return pathname.includes("/request");
+		}
+		if (tabId === "quoted") {
+			return pathname.includes("/quoted");
+		}
+		if (tabId === "accepted") {
+			return pathname.includes("/accepted");
+		}
+		if (tabId === "agreed") {
+			return pathname.includes("/agreed");
+		}
+		if (tabId === "archived") {
+			return pathname.includes("/archived");
+		}
+		return false;
+	};
 
 	const tabs = [
 		{
 			id: "dashboard" as OfferTabId,
 			label: localizationConstants.offerTabDashboard,
 			href: `${OFFER_MODULE_BASE_URL}/dashboard`,
-			isActive: activeTab === "dashboard" || pathname.includes("/offer/dashboard"),
+			isActive: getIsActive("dashboard"),
 		},
 		{
 			id: "available" as OfferTabId,
 			label: localizationConstants.offerTabAvailable,
 			href: `${OFFER_MODULE_BASE_URL}/list`,
-			isActive:
-				activeTab === "available" ||
-				pathname === `${OFFER_MODULE_BASE_URL}/list` ||
-				pathname === OFFER_MODULE_BASE_URL ||
-				pathname.startsWith(`${OFFER_MODULE_BASE_URL}/list`) ||
-				pathname.includes("/available"),
+			isActive: getIsActive("available"),
 		},
 		{
 			id: "request" as OfferTabId,
 			label: localizationConstants.offerTabRequest,
 			href: `${OFFER_MODULE_BASE_URL}/${offerId}/request`,
-			isActive: activeTab === "request" || pathname.includes("/request"),
+			isActive: getIsActive("request"),
 		},
 		{
 			id: "quoted" as OfferTabId,
 			label: localizationConstants.offerTabQuoted,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/quoted`,
-			isActive: activeTab === "quoted" || pathname.includes("/quoted"),
+			href: `${OFFER_MODULE_BASE_URL}/quoted`,
+			isActive: getIsActive("quoted"),
 		},
 		{
 			id: "accepted" as OfferTabId,
 			label: localizationConstants.offerTabAccepted,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/accepted`,
-			isActive: activeTab === "accepted" || pathname.includes("/accepted"),
+			href: `${OFFER_MODULE_BASE_URL}/accepted`,
+			isActive: getIsActive("accepted"),
 		},
 		{
 			id: "agreed" as OfferTabId,
 			label: localizationConstants.offerTabAgreed,
 			href: `${OFFER_MODULE_BASE_URL}/${offerId}/agreed`,
-			isActive: activeTab === "agreed" || pathname.includes("/agreed"),
+			isActive: getIsActive("agreed"),
 		},
 		{
 			id: "archived" as OfferTabId,
 			label: localizationConstants.offerTabArchived,
 			href: `${OFFER_MODULE_BASE_URL}/${offerId}/archived`,
-			isActive: activeTab === "archived" || pathname.includes("/archived"),
+			isActive: getIsActive("archived"),
 		},
 	];
 

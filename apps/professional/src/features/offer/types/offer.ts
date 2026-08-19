@@ -124,6 +124,12 @@ export type OfferQuotedItem = {
   customerAnswer?: string;
 };
 
+export type OfferAcceptedContactPerson = {
+  name: string;
+  phone: string;
+  email: string;
+};
+
 export type OfferAcceptedItem = {
   id: string;
   offertNr: string;
@@ -133,6 +139,7 @@ export type OfferAcceptedItem = {
   municipality: string;
   acceptedPrice: number;
   type: string;
+  contactPerson: OfferAcceptedContactPerson;
 };
 
 export type OfferAgreedStatus = "signed" | "waiting_signature";
