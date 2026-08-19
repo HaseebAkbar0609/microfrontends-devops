@@ -1,6 +1,5 @@
-import { OfferQuotedView } from "@/features/offer/components/OfferQuotedView";
-import { DUMMY_QUOTED_ITEMS } from "@/features/offer/constants/offerQuoted.mock";
+import { OfferStatusPageContent } from "@/features/offer/components/OfferStatusPageContent";
 
 export default function OfferQuotedPage() {
-  return <OfferQuotedView offerId="" items={DUMMY_QUOTED_ITEMS} />;
+  return <OfferStatusPageContent tabId="quoted" />;
 }

@@ -1757,8 +1757,6 @@ export type OfferTranslation = {
 	licensesDriveModules: string;
 	licensesMetricFee: string;
 	licensesMetricModules: string;
-	licensesProductFinderFee: string;
-	licensesProductFinderModules: string;
 	licensesCommunicationFee: string;
 	licensesStartFee: string;
 	licensesStartModules: string;
@@ -2552,6 +2550,8 @@ export type OfferTranslation = {
 	breadcrumbProduction: string;
 	breadcrumbOrder: string;
 	breadcrumbPlanning: string;
+	breadcrumbBusiness: string;
+	breadcrumbOffer: string;
 	planningNoOrders: string;
 	planningNoAssignees: string;
 	filterAssignee: string;
@@ -2845,6 +2845,7 @@ export type OfferTranslation = {
 	offerConfirmationModalCheckbox: string;
 	offerConfirmationModalCancel: string;
 	offerConfirmationModalConfirm: string;
+	offerConfirmationModalSend: string;
 
 	// Offer - Send page
 	offerSendCustomerDetails: string;
@@ -3003,6 +3004,27 @@ export type OfferTranslation = {
 	createProjectOption: string;
 	createOrderOption: string;
 	goToButton: string;
+	offerConfirmationModalDescription: string;
+	offerFormPersonnelHelper: string;
+	offerFormSelect: string;
+	offerFormWorkAddressPlaceholder: string;
+	offerFormSpecificationsPlaceholder: string;
+	offerFormHourlyRateLabel: string;
+	offerForm350KrPerHour: string;
+	offerFormEnter: string;
+	offerFormPickADate: string;
+	offerFormProjectNamePlaceholder: string;
+	offerFormWorkPlaceholder: string;
+	offerFormMaterialPlaceholder: string;
+	offerFormLaddaUpp: string;
+	offerFormExpressTitle: string;
+	offerFormB2BTitle: string;
+	offerFormPostedLabel: string;
+	offerMoreImages: string;
+	offerBadgeExpressJob: string;
+	offerBadgeStockholm: string;
+	offerBadgeJarfalla: string;
+	offerFormDescriptionLabel: string;
 };
 
 export type RegisterTranslation = {
@@ -3031,6 +3053,10 @@ export type RegisterTranslation = {
 	pageLabel: string;
 	ofLabel: string;
 	pageOfLabel: string;
+	paginationFirstPage: string;
+	paginationPreviousPage: string;
+	paginationNextPage: string;
+	paginationLastPage: string;
 	customerOption: string;
 	supplierOption: string;
 	supplierListTab: string;

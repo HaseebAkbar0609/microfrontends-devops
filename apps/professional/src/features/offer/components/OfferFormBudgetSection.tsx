@@ -4,6 +4,7 @@ import { useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 
@@ -24,53 +25,52 @@ export function OfferFormBudgetSection({ variant }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <p className="mb-1 text-sm font-medium text-slate-700">
+          <label className="block mb-1.5 font-sans font-medium text-sm leading-5 tracking-normal text-[#475569]">
             <Translate text={localizationConstants.offerFormWork} />
-          </p>
+          </label>
           <Input
             value={work}
             onChange={(e) => setWork(e.target.value)}
-            placeholder={t(localizationConstants.offerFormWork)}
-            className="h-9 bg-white text-sm"
+            placeholder={t(localizationConstants.offerFormWorkPlaceholder)}
+            className="h-10 rounded-lg border-slate-200 bg-white text-sm placeholder:text-slate-400 px-3.5"
           />
         </div>
 
         <div>
-          <p className="mb-1 text-sm font-medium text-slate-700">
+          <label className="block mb-1.5 font-sans font-medium text-sm leading-5 tracking-normal text-[#475569]">
             <Translate text={localizationConstants.offerFormMaterial} />
-          </p>
+          </label>
           <Input
             value={material}
             onChange={(e) => setMaterial(e.target.value)}
-            placeholder={t(localizationConstants.offerFormMaterial)}
-            className="h-9 bg-white text-sm"
+            placeholder={t(localizationConstants.offerFormMaterialPlaceholder)}
+            className="h-10 rounded-lg border-slate-200 bg-white text-sm placeholder:text-slate-400 px-3.5"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <p className="mb-1 text-sm font-medium text-slate-700">
+          <label className="block mb-1.5 font-sans font-medium text-sm leading-5 tracking-normal text-[#475569]">
             <Translate text={priceLabel} />
-          </p>
+          </label>
           <Input
             value={budgetPrice}
             onChange={(e) => setBudgetPrice(e.target.value.replace(/[^0-9]/g, ""))}
             inputMode="numeric"
             placeholder={t(priceLabel)}
-            className="h-9 bg-white text-sm"
+            className="h-10 rounded-lg border-slate-200 bg-white text-sm placeholder:text-slate-400 px-3.5"
           />
         </div>
 
-        <div className="flex items-end pb-1">
-          <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
-            <input
-              type="checkbox"
+        <div className="flex items-end pb-2">
+          <label className="flex cursor-pointer items-center gap-2 font-sans font-medium text-sm leading-5 tracking-normal text-[#475569]">
+            <Checkbox
               checked={rotDeduction}
-              onChange={(e) => setRotDeduction(e.target.checked)}
-              className="h-4 w-4 cursor-pointer rounded border-slate-300"
+              onCheckedChange={(checked) => setRotDeduction(checked === true)}
+              className="border-slate-300 data-[state=checked]:bg-[#09090B] data-[state=checked]:border-[#09090B] data-[state=checked]:text-white"
             />
             <Translate text={localizationConstants.offerFormRotDeduction} />
           </label>
@@ -78,14 +78,14 @@ export function OfferFormBudgetSection({ variant }: Props) {
       </div>
 
       <div>
-        <p className="mb-1 text-sm font-medium text-slate-700">
-          <Translate text={localizationConstants.offerFormPaymentTerms} />
-        </p>
+          <label className="block mb-1.5 font-sans font-medium text-sm leading-5 tracking-normal text-[#475569]">
+            <Translate text={localizationConstants.offerFormPaymentTerms} />
+          </label>
         <Textarea
           value={paymentTerms}
           onChange={(e) => setPaymentTerms(e.target.value)}
           placeholder={t(localizationConstants.offerFormPaymentTerms)}
-          className="min-h-24 resize-none bg-white text-sm"
+          className="min-h-24 resize-none rounded-lg border-slate-200 bg-white text-sm placeholder:text-slate-400 p-3"
         />
       </div>
     </div>

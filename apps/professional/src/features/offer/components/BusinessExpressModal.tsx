@@ -47,26 +47,26 @@ export function BusinessExpressModal({
       open={open}
       onOpenChange={onOpenChange}
       headerClassName="gap-0"
-      bodyClassName="pt-0 max-h-[calc(100vh-280px)] overflow-y-auto font-sans"
+      bodyClassName="pt-0 max-h-[calc(100vh-280px)] overflow-y-auto"
       showCloseButton
       title={
-        <div className="pr-10 text-left font-sans font-semibold text-[18px] leading-7.5 text-slate-950 align-middle">
+        <div className="pr-10 text-left text-lg font-bold leading-tight text-slate-950">
           <Translate text={localizationConstants.businessExpressModalTitle} />
         </div>
       }
       description={
         <div className="w-full text-left">
           <div className="mt-4 h-px w-full bg-slate-200" />
-          <p className="mt-4 font-sans font-semibold text-[15px] leading-relaxed text-slate-700">
+          <p className="mt-4 text-base font-semibold leading-relaxed text-slate-700">
             <Translate text={subtitleKey} />
           </p>
         </div>
       }
       footer={
-        <div className="flex w-full items-center justify-end gap-4 pt-4 font-sans">
+        <div className="flex w-full items-center justify-end gap-4 pt-4">
           <Button
             variant="outline"
-            className="h-10 rounded-md border-transparent bg-slate-100 px-6 text-sm font-medium text-slate-900 hover:bg-slate-200 cursor-pointer"
+            className="h-10 rounded-md border-transparent bg-slate-100 px-6 text-sm font-medium text-slate-900 hover:bg-slate-200"
             onClick={() => onOpenChange(false)}
           >
             <Translate
@@ -74,7 +74,7 @@ export function BusinessExpressModal({
             />
           </Button>
           <Button
-            className="h-10 rounded-md bg-slate-900 px-6 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer shadow-xs"
+            className="h-10 rounded-md bg-slate-900 px-6 text-sm font-medium text-white hover:bg-slate-900/90 disabled:cursor-not-allowed disabled:opacity-50"
             disabled={!accepted}
             onClick={() => {
               if (!accepted) return;
@@ -90,8 +90,8 @@ export function BusinessExpressModal({
         </div>
       }
     >
-      <div className="flex flex-col gap-4 font-sans">
-        <ul className="list-disc space-y-4 pl-5 font-sans font-normal text-[14px] leading-5 text-slate-500 align-middle">
+      <div className="flex flex-col gap-4">
+        <ul className="list-disc space-y-4 pl-5 text-sm leading-relaxed text-slate-600">
           {bullets.map((key) => (
             <li key={key}>
               <Translate text={key} />
@@ -101,13 +101,13 @@ export function BusinessExpressModal({
 
         <div className="mt-4 h-px w-full bg-slate-200" />
 
-        <label className="flex items-center gap-3 pt-4 cursor-pointer select-none">
+        <label className="flex items-center gap-3 pt-4 text-sm text-slate-700 cursor-pointer">
           <Checkbox
             checked={accepted}
             onCheckedChange={(v) => setAccepted(Boolean(v))}
-            className="size-4.5 rounded-[4px] border-slate-300 data-[state=checked]:bg-slate-900! data-[state=checked]:border-slate-900! data-[state=checked]:text-white! transition-colors cursor-pointer"
+            className="border-slate-400 data-[state=checked]:bg-black data-[state=checked]:border-black data-[state=checked]:text-white focus-visible:ring-black"
           />
-          <span className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+          <span>
             <Translate
               text={localizationConstants.businessExpressModalCheckbox}
             />
@@ -117,5 +117,3 @@ export function BusinessExpressModal({
     </ModalWrapper>
   );
 }
-
-export default BusinessExpressModal;

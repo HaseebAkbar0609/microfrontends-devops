@@ -147,6 +147,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     fetchQuotedOffers();
     return () => { isMounted = false; };
   }, [page, debouncedSearch, initialItems, t]);
+
   const uniqueTypes = useMemo(
     () => [...new Set(items.map((i) => i.type))],
     [items],
