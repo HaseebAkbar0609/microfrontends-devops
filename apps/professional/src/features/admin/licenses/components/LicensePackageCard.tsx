@@ -31,7 +31,7 @@ const LicensePackageCard = ({
 	const [industry, setIndustry] = useState(pkg.industryOptionKeys?.[2] ?? "");
 	const [checkedIds, setCheckedIds] = useState<string[]>(
 		pkg.versionChecklist
-			?.filter((option) => option.defaultChecked !== false)
+			?.filter((option) => option.defaultChecked === true)
 			.map((option) => option.id) ?? [],
 	);
 

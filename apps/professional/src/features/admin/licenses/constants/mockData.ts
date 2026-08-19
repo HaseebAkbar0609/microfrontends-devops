@@ -53,13 +53,15 @@ export interface LicenseVersionOption {
 	label: string;
 	priceLabel: string;
 	price: number | null;
+	// Only options with defaultChecked: true start checked.
 	defaultChecked?: boolean;
 }
 
 export interface LicensePackage {
 	id: string;
 	name: string;
-	priceLabel: string;
+	// null hides the header price line entirely.
+	priceLabel: string | null;
 	price: number | null;
 	feeKey: string;
 	modulesKey?: string;
@@ -252,7 +254,7 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "communication",
 			name: "Kommunikation",
-			priceLabel: "",
+			priceLabel: null,
 			price: null,
 			feeKey: localizationConstants.licensesCommunicationFee,
 			versionChecklist: [
@@ -261,25 +263,27 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 					label: "Bank-Id- sign -agreement",
 					priceLabel: "5 kr /styck",
 					price: 5,
+					defaultChecked: true,
 				},
 				{
 					id: "sms-service",
 					label: "SMS- service",
 					priceLabel: "2 kr /styck",
 					price: 2,
+					defaultChecked: true,
 				},
 				{
 					id: "mail-service",
 					label: "Mail - service",
 					priceLabel: "0,50 kr /styck",
 					price: 0.5,
+					defaultChecked: true,
 				},
 				{
 					id: "sign-flow",
 					label: "Sign-Flow",
 					priceLabel: "3 kr /styck",
 					price: 3,
-					defaultChecked: false,
 				},
 			],
 			action: "add",
