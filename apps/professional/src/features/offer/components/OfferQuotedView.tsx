@@ -207,7 +207,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
 
   return (
     <div className="flex flex-1 flex-col bg-white">
-      <OfferModuleHeader activeTab="quoted" offerId={offerId} />
+      <OfferModuleHeader activeTab="quoted" />
 
       <div className="flex flex-col gap-1.5 px-6 pt-5 pb-2">
         <h2 className="text-xl font-bold text-slate-900 tracking-tight">
