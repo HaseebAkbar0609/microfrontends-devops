@@ -18,6 +18,9 @@ node_modules/
 # Testing
 coverage/
 
+# Local pnpm config (machine-specific)
+.npmrc
+
 # Environment
 .env
 .env.local
