@@ -1988,6 +1988,15 @@ export const svOffer: OfferTranslation = {
 	kmaQualityPlanViewMallar: "Mallar",
 	kmaQualityPlanCreateBtn: "Skapa ny kontrollplan",
 	kmaQualityPlanUseTemplate: "Använd mall",
+<<<<<<< HEAD
+	kmaQualityPlanCreateSubtitle: "Lägg till detaljerad information",
+	kmaQualityPlanCreateDetailsHeader: "Kontrollplan detaljer",
+	kmaQualityPlanCreateNameLabel: "Kontrollplan name",
+	kmaQualityPlanCreateIdLabel: "Kontrollplan id",
+	kmaQualityPlanCreateVersionLabel: "Version",
+	kmaQualityPlanCreateKmaIdLabel: "KMA id",
+	kmaQualityPlanCreateObjTypeLabel: "Objekt typ",
+=======
 	kmaQualityPlanCreateSubtitle: "Fyll i detaljer och välj struktur för kontrollplanen",
 	kmaQualityPlanCreateDetailsHeader: "Kontrollplan detaljer",
 	kmaQualityPlanCreateNameLabel: "Namn",
@@ -1995,10 +2004,30 @@ export const svOffer: OfferTranslation = {
 	kmaQualityPlanCreateVersionLabel: "Version",
 	kmaQualityPlanCreateKmaIdLabel: "KMA-ID",
 	kmaQualityPlanCreateObjTypeLabel: "Objekttyp",
+>>>>>>> origin/dev
 	kmaQualityPlanCreateObjTypeProject: "Projekt",
 	kmaQualityPlanCreateObjTypeOrder: "Order",
 	kmaQualityPlanCreateObjectLabel: "Objekt",
 	kmaQualityPlanCreateCreatedByLabel: "Skapad av",
+<<<<<<< HEAD
+	kmaQualityPlanCreateDateLabel: "Date of creation",
+	kmaQualityPlanCreateStructureHeader: "Huvudmallstruktur",
+	kmaQualityPlanCreateSelectAll: "Alla",
+	kmaQualityPlanCreateSelectAllSub: "Välj alla i underkategori",
+	kmaQualityPlanCreateSelectAllCat: "Välj alla i kategori",
+	kmaQualityPlanCreateAvailable: "till gängliga",
+	kmaQualityPlanCreateNewPanelTitle: "Ny kontrollplan",
+	kmaQualityPlanCreateAddBtn: "Lägg till",
+	kmaQualityPlanCreateRemoveBtn: "Ta bort",
+	kmaQualityPlanCreateNote: "Detta ändrar e-stad och vy. Det raderar inte mallar.",
+	kmaQualityPlanTemplateModalTitle: "Välj mall",
+	kmaQualityPlanTemplateNrCol: "Template Nr",
+	kmaQualityPlanTemplateNameCol: "Kontrollplan",
+	kmaQualityPlanTemplateVersionCol: "Version",
+	kmaQualityPlanTemplateUpdatedCol: "Senast uppdaterad",
+	kmaQualityPlanTemplateCreatedByCol: "Skapad av",
+	kmaQualityPlanTemplateUseBtn: "Använd",
+=======
 	kmaQualityPlanCreateDateLabel: "Datum",
 	kmaQualityPlanCreateStructureHeader: "Huvudmallstruktur",
 	kmaQualityPlanCreateSelectAll: "Välj alla",
@@ -2016,6 +2045,7 @@ export const svOffer: OfferTranslation = {
 	kmaQualityPlanTemplateUpdatedCol: "Uppdaterad",
 	kmaQualityPlanTemplateCreatedByCol: "Skapad av",
 	kmaQualityPlanTemplateUseBtn: "Använd mall",
+>>>>>>> origin/dev
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: "B2B-Översikt",
 	b2bWidgetOverviewActive: "Aktiva uppdrag",
@@ -2715,7 +2745,7 @@ export const svOffer: OfferTranslation = {
 
 	// Business offer modal
 	businessOfferModalTitle:
-		"Är du säker på att du vill skicka detta Erbjudandet?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	businessOfferModalSubtitle:
 		"Villkor för Tagna Offerter – B2C-OFFERT, B2B-OFFERT:",
 	businessOfferModalBullet1:
@@ -2736,7 +2766,7 @@ export const svOffer: OfferTranslation = {
 
 	// Business express modal
 	businessExpressModalTitle:
-		"Är du säker på att du vill skicka detta Erbjudandet?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	businessExpressModalSubtitleB2C:
 		"Villkor för Tagna Offerter – B2C-EXPRESS:",
 	businessExpressModalSubtitleB2B:
@@ -2759,7 +2789,7 @@ export const svOffer: OfferTranslation = {
 
 	// Business rent modal
 	businessRentModalTitle:
-		"Är du säker på att du vill skicka detta Erbjudandet?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	businessRentModalSubtitle: "Villkor för Tagna Offerter – B2B – HYRA IN/UT:",
 	businessRentModalBullet1:
 		'Medlemmar kan ta uppdrag i flödet för nya uppdrag, där "först till kvarn"-principen gäller (max fem medlemmar per uppdrag).',
@@ -2779,7 +2809,7 @@ export const svOffer: OfferTranslation = {
 
 	// Offer confirmation modal
 	offerConfirmationModalTitle:
-		"Är du säker på att du vill skicka detta erbjudande?",
+		"Är du säker på att du vill ta det här uppdraget?",
 	offerConfirmationModalCheckbox: "Jag accepterar villkoren",
 	offerConfirmationModalCancel: "Avbryt",
 	offerConfirmationModalConfirm: "Bekräfta",

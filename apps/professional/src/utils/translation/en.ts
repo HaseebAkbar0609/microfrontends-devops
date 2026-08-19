@@ -1983,17 +1983,45 @@ export const enOffer: OfferTranslation = {
 	kmaQualityPlanViewMallar: "Templates",
 	kmaQualityPlanCreateBtn: "Create new control plan",
 	kmaQualityPlanUseTemplate: "Use template",
+<<<<<<< HEAD
+	kmaQualityPlanCreateSubtitle: "Add detailed information",
+	kmaQualityPlanCreateDetailsHeader: "Control plan details",
+	kmaQualityPlanCreateNameLabel: "Control plan name",
+	kmaQualityPlanCreateIdLabel: "Control plan id",
+	kmaQualityPlanCreateVersionLabel: "Version",
+	kmaQualityPlanCreateKmaIdLabel: "KMA id",
+=======
 	kmaQualityPlanCreateSubtitle: "Fill in details and select structure for the control plan",
 	kmaQualityPlanCreateDetailsHeader: "Control plan details",
 	kmaQualityPlanCreateNameLabel: "Name",
 	kmaQualityPlanCreateIdLabel: "CP-ID",
 	kmaQualityPlanCreateVersionLabel: "Version",
 	kmaQualityPlanCreateKmaIdLabel: "KMA-ID",
+>>>>>>> origin/dev
 	kmaQualityPlanCreateObjTypeLabel: "Object type",
 	kmaQualityPlanCreateObjTypeProject: "Project",
 	kmaQualityPlanCreateObjTypeOrder: "Order",
 	kmaQualityPlanCreateObjectLabel: "Object",
 	kmaQualityPlanCreateCreatedByLabel: "Created by",
+<<<<<<< HEAD
+	kmaQualityPlanCreateDateLabel: "Date of creation",
+	kmaQualityPlanCreateStructureHeader: "Main template structure",
+	kmaQualityPlanCreateSelectAll: "All",
+	kmaQualityPlanCreateSelectAllSub: "Select all in subcategory",
+	kmaQualityPlanCreateSelectAllCat: "Select all in category",
+	kmaQualityPlanCreateAvailable: "available",
+	kmaQualityPlanCreateNewPanelTitle: "New control plan",
+	kmaQualityPlanCreateAddBtn: "Add",
+	kmaQualityPlanCreateRemoveBtn: "Remove",
+	kmaQualityPlanCreateNote: "This changes state and view. It does not delete templates.",
+	kmaQualityPlanTemplateModalTitle: "Select template",
+	kmaQualityPlanTemplateNrCol: "Template Nr",
+	kmaQualityPlanTemplateNameCol: "Control Plan",
+	kmaQualityPlanTemplateVersionCol: "Version",
+	kmaQualityPlanTemplateUpdatedCol: "Last Updated",
+	kmaQualityPlanTemplateCreatedByCol: "Created by",
+	kmaQualityPlanTemplateUseBtn: "Use",
+=======
 	kmaQualityPlanCreateDateLabel: "Date",
 	kmaQualityPlanCreateStructureHeader: "Main template structure",
 	kmaQualityPlanCreateSelectAll: "Select all",
@@ -2011,6 +2039,7 @@ export const enOffer: OfferTranslation = {
 	kmaQualityPlanTemplateUpdatedCol: "Updated",
 	kmaQualityPlanTemplateCreatedByCol: "Created by",
 	kmaQualityPlanTemplateUseBtn: "Use template",
+>>>>>>> origin/dev
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Project - Overview",
 	projWidgetOverviewTitle: "Project overview",
@@ -2824,7 +2853,7 @@ export const enOffer: OfferTranslation = {
 	offerStatusArchived: "Archived",
 
 	// Business offer modal
-	businessOfferModalTitle: "Are you sure you want to send this Offer?",
+	businessOfferModalTitle: "Are you sure you want to take this assignment?",
 	businessOfferModalSubtitle:
 		"Terms for Accepted Offers - B2C-OFFER, B2B-OFFER:",
 	businessOfferModalBullet1:
@@ -2844,7 +2873,7 @@ export const enOffer: OfferTranslation = {
 	businessOfferModalConfirm: "Confirm",
 
 	// Business express modal
-	businessExpressModalTitle: "Are you sure you want to send this Offer?",
+	businessExpressModalTitle: "Are you sure you want to take this assignment?",
 	businessExpressModalSubtitleB2C: "Terms for Accepted Quotes - B2C-EXPRESS:",
 	businessExpressModalSubtitleB2B: "Terms for Accepted Quotes - B2B-EXPRESS:",
 	businessExpressModalBullet1:
@@ -2864,7 +2893,7 @@ export const enOffer: OfferTranslation = {
 	businessExpressModalConfirm: "Confirm",
 
 	// Business rent modal
-	businessRentModalTitle: "Are you sure you want to send this offer?",
+	businessRentModalTitle: "Are you sure you want to take this assignment?",
 	businessRentModalSubtitle: "Terms for Accepted Offers - B2B - RENT IN/OUT:",
 	businessRentModalBullet1:
 		'Members can take on tasks in the flow for new assignments, where the "first come, first served" principle applies (maximum five members per task).',
@@ -2883,7 +2912,7 @@ export const enOffer: OfferTranslation = {
 	businessRentModalConfirm: "Confirm",
 
 	// Offer confirmation modal
-	offerConfirmationModalTitle: "Are you sure you want to send this offer?",
+	offerConfirmationModalTitle: "Are you sure you want to take this assignment?",
 	offerConfirmationModalCheckbox: "I accept the terms and conditions",
 	offerConfirmationModalCancel: "Cancel",
 	offerConfirmationModalConfirm: "Confirm",
