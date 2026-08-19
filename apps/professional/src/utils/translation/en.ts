@@ -1778,8 +1778,6 @@ export const enOffer: OfferTranslation = {
 	licensesDriveModules: "GPS tracking of vehicles and machines. Track your vehicle fleet, supports drivers log and theft management. GPS equipment is added per vehicle / machine. You can follow and control vehicles and equipment in real time.",
 	licensesMetricFee: "59 SEK / month",
 	licensesMetricModules: "Metric lets you use AI to quickly measure surfaces and materials. You save time by getting quantities and surfaces with the help of the camera.",
-	licensesProductFinderFee: "89 SEK / month",
-	licensesProductFinderModules: "With Product Finder you can use the TimeFlow Work app and the camera to directly get information about products, make, place of purchase and model. Speeds up handling in service projects.",
 	licensesCommunicationFee: "The communication functions simplify your business so you can quickly handle change and additional work, digital contracts, with customers, staff and suppliers. Use the SMS and mail functions for customer surveys and newsletters.\n\nPrevent workplace accidents by setting rules on safety functions that require BankID signing and photo evidence that they have been carried out and followed. The KMA system warns if things are not done on time and in the right place. For the system to work optimally these services need to be activated. Settlement is based on used volume, deducted monthly.",
 	licensesStartFee: "2,995 SEK / month (base fee) License: unlimited 0 SEK, App: unlimited: 0 SEK",
 	licensesStartModules: "Quote, B2B, Invoice, CRM, My Pages, App TimeFlow Work-Start",
@@ -1787,7 +1785,7 @@ export const enOffer: OfferTranslation = {
 	licensesStandardModules: "Everything in TimeFlow Start. Order, Project, KMA, Personnel, Economy, Templates, Calculation",
 	licensesProFee: "2,995 SEK / month (base fee) License: 1295 SEK",
 	licensesProModules: "Everything in Start + Standard, Purchasing, Planning, Contracts, Forecast, Legal, Data/IT, Marketing, Debt collection, Company management",
-	licensesAppWorkFee: "129 SEK / month per user",
+	licensesAppWorkFee: "159 SEK / month per user",
 	licensesAppWorkModules: "Everything in Start. Connection to Standard or PRO gives access to functions. Requires a Standard or PRO license",
 	// KMA - Dashboard widgets
 	kmaDashboardTitle: "KMA - Overview",
