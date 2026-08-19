@@ -17,14 +17,23 @@ import { OfferRequest } from "@/features/offer/constants/offerRequests";
 import { OfferQuotedItem, OfferAcceptedItem, OfferAgreedItem, OfferArchivedItem, OfferList } from "@/features/offer/types";
 import { Loader } from "@/components/ui/loader";
 
-const STATUS_API_MAP: Record<OfferTabId, string> = {
-  dashboard: "",
-  available: "REQUESTED",
-  request: "REQUESTED",
-  quoted: "OFFERED",
-  accepted: "ACCEPTED",
-  agreed: "AGREED",
-  archived: "ARCHIVED",
+export const OFFER_API_STATUS = {
+  REQUESTED: "REQUESTED",
+  OFFERED: "OFFERED",
+  ACCEPTED: "ACCEPTED",
+  AGREED: "AGREED",
+  ARCHIVED: "ARCHIVED",
+} as const;
+
+export type OfferApiStatus = (typeof OFFER_API_STATUS)[keyof typeof OFFER_API_STATUS];
+
+const STATUS_API_MAP: Partial<Record<OfferTabId, OfferApiStatus>> = {
+  available: OFFER_API_STATUS.REQUESTED,
+  request: OFFER_API_STATUS.REQUESTED,
+  quoted: OFFER_API_STATUS.OFFERED,
+  accepted: OFFER_API_STATUS.ACCEPTED,
+  agreed: OFFER_API_STATUS.AGREED,
+  archived: OFFER_API_STATUS.ARCHIVED,
 };
 
 function mapToRequestItems(result: OffersListResult): OfferRequest[] {
@@ -116,12 +125,13 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
     const status = STATUS_API_MAP[tabId];
     if (!status) return;
 
+    const apiStatus: OfferApiStatus = status;
     let cancelled = false;
 
     async function fetchOffers() {
       setIsLoading(true);
       try {
-        const result = await listOffersAPIAction({ status, page: 1, pageSize: 50 });
+        const result = await listOffersAPIAction({ status: apiStatus, page: 1, pageSize: 50 });
 
         if (cancelled) return;
 

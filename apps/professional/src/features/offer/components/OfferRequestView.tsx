@@ -73,9 +73,10 @@ type AnswerModal = {
 
 interface Props {
 	requests: OfferRequest[];
+	totalSum?: number;
 }
 
-export function OfferRequestView({ requests }: Props) {
+export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
 	const t = useTranslate();
 	const router = useRouter();
 
@@ -169,7 +170,10 @@ export function OfferRequestView({ requests }: Props) {
 
 	const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
 	const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
-	const totalSum = 2500000; // Total summa OFFERERAD from Figma
+	const calculatedTotalSum = useMemo(() => {
+		if (totalSumProp !== undefined) return totalSumProp;
+		return filtered.reduce((acc, item) => acc + (Number(item.price) || 0), 0);
+	}, [filtered, totalSumProp]);
 
 	const columns: { key: SortField; label: string }[] = [
 		{ key: "offertNr", label: t(localizationConstants.offerQuotedOffertNr) },
@@ -387,7 +391,7 @@ export function OfferRequestView({ requests }: Props) {
 
             {/* Total Sum Headline */}
             <p className="text-base font-semibold text-slate-900 tracking-tight">
-              {t(localizationConstants.offerQuotedTotalLabel)} {totalSum.toLocaleString("sv-SE")}
+              {t(localizationConstants.offerQuotedTotalLabel)} {calculatedTotalSum.toLocaleString("sv-SE")}
             </p>
           </div>
 

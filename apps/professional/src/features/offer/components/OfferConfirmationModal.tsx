@@ -15,6 +15,9 @@ export function OfferConfirmationModal({
   onConfirm,
 }: OfferConfirmationModalProps) {
   const t = useTranslate();
+  const descTemplate = t(localizationConstants.offerConfirmationModalDescription);
+  const [beforeProject, afterProject] = descTemplate.split("{project}");
+
   return (
     <ModalWrapper
       open={open}
@@ -57,8 +60,12 @@ export function OfferConfirmationModal({
         <p className="font-sans font-normal text-[14px] leading-[20px] tracking-normal text-[#71717A]">
           {description ? (
             description
-          ) : projectName ? (
-            t(localizationConstants.offerConfirmationModalDescription).replace("{project}", projectName)
+          ) : projectName && afterProject !== undefined ? (
+            <>
+              {beforeProject}
+              <span className="font-medium text-slate-800">{projectName}</span>
+              {afterProject}
+            </>
           ) : (
             <Translate text={localizationConstants.offerConfirmationModalDescription} />
           )}

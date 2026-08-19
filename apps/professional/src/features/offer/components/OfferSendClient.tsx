@@ -13,17 +13,23 @@ type Props = {
   type?: string;
 };
 
-export function OfferSendClient({ offerId, type }: Props) {
-  const rawType = (type || "").toLowerCase().trim();
+const FORM_TYPE_MAP: Record<string, OfferFormType> = {
+  rent: "rent",
+  hyra: "rent",
+  b2b: "rent",
+  express: "express",
+  snabb: "express",
+  b2c: "b2c",
+};
 
-  let formType: OfferFormType = "b2c";
-  if (rawType.includes("rent") || rawType.includes("hyra")) {
-    formType = "rent";
-  } else if (rawType.includes("express")) {
-    formType = "express";
-  } else {
-    formType = "b2c";
-  }
+export function parseOfferFormType(type?: string): OfferFormType {
+  if (!type) return "b2c";
+  const normalized = type.toLowerCase().trim();
+  return FORM_TYPE_MAP[normalized] ?? "b2c";
+}
+
+export function OfferSendClient({ offerId, type }: Props) {
+  const formType = parseOfferFormType(type);
 
   const [data, setData] = useState<OfferFormData>({
     ...(DUMMY_OFFER_FORMS[formType] || DUMMY_OFFER_FORMS.b2c),
