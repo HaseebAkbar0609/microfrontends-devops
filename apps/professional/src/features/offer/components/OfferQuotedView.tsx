@@ -2,7 +2,21 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, ChevronDown, MoreVertical, Trash2, Archive, CheckCircle, MessageCircleMore, MessagesSquare } from "lucide-react";
+import {
+  Search,
+  ChevronDown,
+  MoreVertical,
+  Trash2,
+  Archive,
+  CheckCircle,
+  MessageCircleMore,
+  MessagesSquare,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  ArrowLeft,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +26,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslate } from "@/utils/translation/translate";
@@ -24,13 +45,11 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OFFER_QUOTED_BREADCRUMBS } from "../constants/offerQuoted";
 import { OfferQuotedItem } from "../types/offer";
-import { OfferTablePagination } from "./OfferTablePagination";
 import { OfferQuotedStatusBadge } from "./OfferQuotedStatusBadge";
 import { OfferQuotedContactCell } from "./OfferQuotedContactCell";
 import { OfferQuotedCommentModal } from "./OfferQuotedCommentModal";
 import { OfferQuotedAnswerModal } from "./OfferQuotedAnswerModal";
 import { OfferQuotedCategoryBadge } from "./OfferQuotedCategoryBadge";
-import { OfferModuleHeader } from "./OfferModuleHeader";
 import {
   Breadcrumb,
   BreadcrumbItem as BreadcrumbUIItem,
@@ -84,7 +103,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const [pageSize, setPageSize] = useState(10);
 
   const [commentModal, setCommentModal] = useState<CommentModal>({
     open: false,
@@ -110,7 +129,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
         const result = await listOffersAPIAction({
           status: "OFFERED",
           page,
-          pageSize: rowsPerPage,
+          pageSize,
           search: debouncedSearch,
           companyId: companyData?.id,
         });
@@ -146,7 +165,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     }
     fetchQuotedOffers();
     return () => { isMounted = false; };
-  }, [page, debouncedSearch, initialItems, t]);
+  }, [page, pageSize, debouncedSearch, initialItems, t]);
 
   const uniqueTypes = useMemo(
     () => [...new Set(items.map((i) => i.type))],
@@ -176,8 +195,8 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     [filtered, sortField, sortDir],
   );
 
-  const totalPages = Math.max(1, Math.ceil(totalItems / rowsPerPage));
-  const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
   const totalSum = filtered.reduce((sum, i) => sum + i.price, 0);
 
   function openCommentModal(item: OfferQuotedItem) {
@@ -207,12 +226,17 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
 
   return (
     <div className="flex flex-1 flex-col bg-white">
-      <OfferModuleHeader activeTab="quoted" />
-
       <div className="flex flex-col gap-1.5 px-6 pt-5 pb-2">
-        <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-          <Translate text={localizationConstants.offerTabQuoted} />
-        </h2>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => router.push("/module/business/offer/dashboard")}
+            className="flex items-center gap-2 text-slate-900 font-bold text-lg hover:text-slate-700 transition-colors cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span>{t(localizationConstants.offerTabQuoted)}</span>
+          </button>
+        </div>
         <Breadcrumb>
           <BreadcrumbList className="flex items-center flex-wrap gap-1 text-slate-500 text-xs">
             {OFFER_QUOTED_BREADCRUMBS.map((item, index) => {
@@ -452,16 +476,95 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                 </tbody>
               </table>
               </div>
-            </div>
-          </div>
 
-          <div className="flex justify-center px-5 py-4">
-            <OfferTablePagination
-              page={page}
-              totalPages={totalPages}
-              rowsPerPage={rowsPerPage}
-              onPageChange={setPage}
-            />
+              {/* Table Pagination Section Inside the Card */}
+              <div className="flex items-center justify-center sm:justify-end gap-6 py-3 px-5 text-sm text-slate-600 flex-wrap border-t border-slate-100">
+                {/* Rows per page selector */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-slate-700">
+                    <Translate text={localizationConstants.rowsPerPage} />
+                  </span>
+                  <Select
+                    value={String(pageSize)}
+                    onValueChange={(val) => {
+                      setPageSize(Number(val));
+                      setPage(1);
+                    }}
+                  >
+                    <SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0 cursor-pointer">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      {[5, 10, 20, 30, 50].map((size) => (
+                        <SelectItem
+                          key={size}
+                          value={String(size)}
+                          className="cursor-pointer"
+                        >
+                          {size}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Page counter */}
+                <div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+                  <span>
+                    <Translate text={localizationConstants.pageLabel} />
+                  </span>
+                  <span>{page}</span>
+                  <span>
+                    <Translate text={localizationConstants.ofLabel} />
+                  </span>
+                  <span>{totalPages}</span>
+                </div>
+
+                {/* Navigation buttons */}
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                    disabled={page <= 1}
+                    onClick={() => setPage(1)}
+                    title={t(localizationConstants.paginationFirstPage)}
+                  >
+                    <ChevronsLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                    disabled={page <= 1}
+                    onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                    title={t(localizationConstants.paginationPreviousPage)}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                    title={t(localizationConstants.paginationNextPage)}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage(totalPages)}
+                    title={t(localizationConstants.paginationLastPage)}
+                  >
+                    <ChevronsRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </>
       )}
