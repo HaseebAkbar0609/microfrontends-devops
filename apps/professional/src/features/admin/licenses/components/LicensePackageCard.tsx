@@ -30,7 +30,9 @@ const LicensePackageCard = ({
 	);
 	const [industry, setIndustry] = useState(pkg.industryOptionKeys?.[2] ?? "");
 	const [checkedIds, setCheckedIds] = useState<string[]>(
-		pkg.versionChecklist?.map((option) => option.id) ?? [],
+		pkg.versionChecklist
+			?.filter((option) => option.defaultChecked !== false)
+			.map((option) => option.id) ?? [],
 	);
 
 	const handleAdd = () =>
@@ -49,10 +51,14 @@ const LicensePackageCard = ({
 				<h3 className="text-lg font-semibold text-slate-800">
 					{pkg.name}
 				</h3>
-				<span className="text-sm font-semibold text-slate-700">
-					<Translate text={localizationConstants.licensesPriceLabel} />
-					: {pkg.priceLabel}
-				</span>
+				{pkg.priceLabel && (
+					<span className="text-sm font-semibold text-slate-700">
+						<Translate
+							text={localizationConstants.licensesPriceLabel}
+						/>
+						: {pkg.priceLabel}
+					</span>
+				)}
 			</div>
 			<div className="space-y-4 px-5 py-4">
 				<div>

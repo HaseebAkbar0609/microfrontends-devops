@@ -53,6 +53,7 @@ export interface LicenseVersionOption {
 	label: string;
 	priceLabel: string;
 	price: number | null;
+	defaultChecked?: boolean;
 }
 
 export interface LicensePackage {
@@ -260,8 +261,8 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 	addonCommunication: [
 		{
 			id: "communication",
-			name: "Communication",
-			priceLabel: "5 kr/styck",
+			name: "Kommunikation",
+			priceLabel: "",
 			price: null,
 			feeKey: localizationConstants.licensesCommunicationFee,
 			versionChecklist: [
@@ -282,6 +283,13 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 					label: "Mail - service",
 					priceLabel: "0,50 kr /styck",
 					price: 0.5,
+				},
+				{
+					id: "sign-flow",
+					label: "Sign-Flow",
+					priceLabel: "3 kr /styck",
+					price: 3,
+					defaultChecked: false,
 				},
 			],
 			action: "add",
