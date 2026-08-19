@@ -217,7 +217,7 @@ export const svSidebar: SidebarTranslation = {
 	projectList: "Projekt",
 	orderList: "Order",
 	costCentre: "Kostnadsställe",
-	materialStorage: "Material-Lager",
+	materialStorage: "Materialhantering",
 	registerKunder: "Kunder",
 	registerLeverantorer: "Leverantörer",
 	registerOfferter: "Offerter",
