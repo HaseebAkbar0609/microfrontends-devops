@@ -57,7 +57,7 @@ export function OfferModuleHeader({
 		{
 			id: "quoted" as OfferTabId,
 			label: localizationConstants.offerTabQuoted,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/quoted`,
+			href: `${OFFER_MODULE_BASE_URL}/quoted`,
 			isActive: activeTab === "quoted" || pathname.includes("/quoted"),
 		},
 		{

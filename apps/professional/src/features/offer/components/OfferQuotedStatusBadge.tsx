@@ -1,6 +1,7 @@
 "use client";
 
-import { AtSign, Circle } from "lucide-react";
+import { useState } from "react";
+import { XCircle, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -13,29 +14,40 @@ interface Props {
 export function OfferQuotedStatusBadge({ item }: Props) {
   const t = useTranslate();
   const isOpened = item.status === "opened";
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div className="group/status relative inline-block">
+    <div
+      className="relative inline-flex"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <span
         className={cn(
-          "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium",
+          "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium",
           isOpened
-            ? "bg-green-50 text-green-700 ring-1 ring-green-200"
-            : "bg-orange-50 text-orange-600 ring-1 ring-orange-200",
+            ? "bg-green-50 text-green-700"
+            : "text-[#A16207]",
         )}
+        style={!isOpened ? { backgroundColor: "var(--color-bg-warning-muted, #FEFCE8)" } : undefined}
       >
         {isOpened ? (
-          <Circle className="h-2 w-2 fill-green-500 text-green-500" />
+          <FolderOpen className="h-3.5 w-3.5 text-green-600" />
         ) : (
-          <AtSign className="h-3 w-3" />
+          <XCircle className="h-3.5 w-3.5 text-[#A16207]" />
         )}
         {isOpened
           ? t(localizationConstants.offerQuotedStatusOpened)
           : t(localizationConstants.offerQuotedStatusNotReviewed)}
       </span>
-      {isOpened && item.openedAt && (
-        <div className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 hidden min-w-max rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 shadow-md group-hover/status:block">
-          {t(localizationConstants.offerQuotedOpenedAt)} {item.openedAt}
+      {isOpened && item.openedAt && hovered && (
+        <div className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 min-w-max">
+          <div className="rounded-lg bg-neutral-900 px-4 py-2.5 shadow-lg">
+            <p className="text-sm text-white">
+              {t(localizationConstants.offerQuotedOpenedAt)} {item.openedAt}
+            </p>
+          </div>
+          <div className="absolute left-4 -bottom-1.5 h-0 w-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-neutral-900" />
         </div>
       )}
     </div>

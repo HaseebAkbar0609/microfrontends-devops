@@ -20,7 +20,7 @@ export function OfferTablePagination({
 }: Props) {
   const t = useTranslate();
   return (
-    <div className="flex items-center justify-between text-sm text-slate-600">
+    <div className="flex items-center justify-between gap-6 text-sm text-slate-600">
       <div className="flex items-center gap-2">
         <span>{t(localizationConstants.rowsPerPageLabel)}</span>
         <span className="flex h-8 w-16 items-center justify-between rounded border border-slate-200 px-2 text-sm">
@@ -30,13 +30,16 @@ export function OfferTablePagination({
       </div>
       <div className="flex items-center gap-3">
         <span>
-          Page {page} of {totalPages}
+          {t(localizationConstants.pageOfLabel)
+            .replace("{page}", String(page))
+            .replace("{total}", String(totalPages))}
         </span>
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"
             size="sm"
             className="h-7 w-7 p-0"
+            aria-label={t(localizationConstants.paginationFirstPage)}
             onClick={() => onPageChange(1)}
             disabled={page === 1}
           >
@@ -46,6 +49,7 @@ export function OfferTablePagination({
             variant="ghost"
             size="sm"
             className="h-7 w-7 p-0"
+            aria-label={t(localizationConstants.paginationPreviousPage)}
             onClick={() => onPageChange(Math.max(1, page - 1))}
             disabled={page === 1}
           >
@@ -55,6 +59,7 @@ export function OfferTablePagination({
             variant="ghost"
             size="sm"
             className="h-7 w-7 p-0"
+            aria-label={t(localizationConstants.paginationNextPage)}
             onClick={() => onPageChange(Math.min(totalPages, page + 1))}
             disabled={page === totalPages}
           >
@@ -64,6 +69,7 @@ export function OfferTablePagination({
             variant="ghost"
             size="sm"
             className="h-7 w-7 p-0"
+            aria-label={t(localizationConstants.paginationLastPage)}
             onClick={() => onPageChange(totalPages)}
             disabled={page === totalPages}
           >
