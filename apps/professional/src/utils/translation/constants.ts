@@ -1757,8 +1757,6 @@ export type OfferTranslation = {
 	licensesDriveModules: string;
 	licensesMetricFee: string;
 	licensesMetricModules: string;
-	licensesProductFinderFee: string;
-	licensesProductFinderModules: string;
 	licensesCommunicationFee: string;
 	licensesStartFee: string;
 	licensesStartModules: string;

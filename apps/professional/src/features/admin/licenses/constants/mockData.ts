@@ -53,12 +53,15 @@ export interface LicenseVersionOption {
 	label: string;
 	priceLabel: string;
 	price: number | null;
+	// Only options with defaultChecked: true start checked.
+	defaultChecked?: boolean;
 }
 
 export interface LicensePackage {
 	id: string;
 	name: string;
-	priceLabel: string;
+	// null hides the header price line entirely.
+	priceLabel: string | null;
 	price: number | null;
 	feeKey: string;
 	modulesKey?: string;
@@ -116,8 +119,8 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "app-timeflow-work",
 			name: "App - Timeflow Work",
-			priceLabel: "129",
-			price: 129,
+			priceLabel: "159 kr / mån / anv",
+			price: 159,
 			feeKey: localizationConstants.licensesAppWorkFee,
 			modulesKey: localizationConstants.licensesAppWorkModules,
 			action: "add",
@@ -216,8 +219,8 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "rutt-plan",
 			name: "Rutt-plan",
-			priceLabel: "999",
-			price: 999,
+			priceLabel: "1295 kr / mån",
+			price: 1295,
 			feeKey: localizationConstants.licensesRuttPlanFee,
 			modulesKey: localizationConstants.licensesRuttPlanModules,
 			versionText: "Ruttplan - Standard",
@@ -246,22 +249,12 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 			modulesKey: localizationConstants.licensesMetricModules,
 			action: "add",
 		},
-		{
-			id: "product-finder",
-			name: "Product - Finder - produkt sök",
-			priceLabel: "0",
-			price: 89,
-			feeKey: localizationConstants.licensesProductFinderFee,
-			modulesKey: localizationConstants.licensesProductFinderModules,
-			versionText: "Product Finder",
-			action: "add",
-		},
 	],
 	addonCommunication: [
 		{
 			id: "communication",
-			name: "Communication",
-			priceLabel: "5 kr/styck",
+			name: "Kommunikation",
+			priceLabel: null,
 			price: null,
 			feeKey: localizationConstants.licensesCommunicationFee,
 			versionChecklist: [
@@ -270,18 +263,27 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 					label: "Bank-Id- sign -agreement",
 					priceLabel: "5 kr /styck",
 					price: 5,
+					defaultChecked: true,
 				},
 				{
 					id: "sms-service",
 					label: "SMS- service",
 					priceLabel: "2 kr /styck",
 					price: 2,
+					defaultChecked: true,
 				},
 				{
 					id: "mail-service",
 					label: "Mail - service",
 					priceLabel: "0,50 kr /styck",
 					price: 0.5,
+					defaultChecked: true,
+				},
+				{
+					id: "sign-flow",
+					label: "Sign-Flow",
+					priceLabel: "3 kr /styck",
+					price: 3,
 				},
 			],
 			action: "add",
