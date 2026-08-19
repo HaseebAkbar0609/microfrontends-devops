@@ -247,16 +247,6 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 			modulesKey: localizationConstants.licensesMetricModules,
 			action: "add",
 		},
-		{
-			id: "product-finder",
-			name: "Product - Finder - produkt sök",
-			priceLabel: "0",
-			price: 89,
-			feeKey: localizationConstants.licensesProductFinderFee,
-			modulesKey: localizationConstants.licensesProductFinderModules,
-			versionText: "Product Finder",
-			action: "add",
-		},
 	],
 	addonCommunication: [
 		{
