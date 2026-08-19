@@ -44,7 +44,9 @@ export function OfferModuleHeader({
 			isActive:
 				activeTab === "available" ||
 				pathname === `${OFFER_MODULE_BASE_URL}/list` ||
-				pathname === OFFER_MODULE_BASE_URL,
+				pathname === OFFER_MODULE_BASE_URL ||
+				pathname.startsWith(`${OFFER_MODULE_BASE_URL}/list`) ||
+				pathname.includes("/available"),
 		},
 		{
 			id: "request" as OfferTabId,

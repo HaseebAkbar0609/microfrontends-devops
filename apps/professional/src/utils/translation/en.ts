@@ -2850,7 +2850,7 @@ export const enOffer: OfferTranslation = {
 	offerStatusArchived: "Archived",
 
 	// Business offer modal
-	businessOfferModalTitle: "Are you sure you want to send this Offer?",
+	businessOfferModalTitle: "Are you sure you want to take this assignment?",
 	businessOfferModalSubtitle:
 		"Terms for Accepted Offers - B2C-OFFER, B2B-OFFER:",
 	businessOfferModalBullet1:
@@ -2870,7 +2870,7 @@ export const enOffer: OfferTranslation = {
 	businessOfferModalConfirm: "Confirm",
 
 	// Business express modal
-	businessExpressModalTitle: "Are you sure you want to send this Offer?",
+	businessExpressModalTitle: "Are you sure you want to take this assignment?",
 	businessExpressModalSubtitleB2C: "Terms for Accepted Quotes - B2C-EXPRESS:",
 	businessExpressModalSubtitleB2B: "Terms for Accepted Quotes - B2B-EXPRESS:",
 	businessExpressModalBullet1:
@@ -2890,7 +2890,7 @@ export const enOffer: OfferTranslation = {
 	businessExpressModalConfirm: "Confirm",
 
 	// Business rent modal
-	businessRentModalTitle: "Are you sure you want to send this offer?",
+	businessRentModalTitle: "Are you sure you want to take this assignment?",
 	businessRentModalSubtitle: "Terms for Accepted Offers - B2B - RENT IN/OUT:",
 	businessRentModalBullet1:
 		'Members can take on tasks in the flow for new assignments, where the "first come, first served" principle applies (maximum five members per task).',
@@ -2909,7 +2909,7 @@ export const enOffer: OfferTranslation = {
 	businessRentModalConfirm: "Confirm",
 
 	// Offer confirmation modal
-	offerConfirmationModalTitle: "Are you sure you want to send this offer?",
+	offerConfirmationModalTitle: "Are you sure you want to take this assignment?",
 	offerConfirmationModalCheckbox: "I accept the terms and conditions",
 	offerConfirmationModalCancel: "Cancel",
 	offerConfirmationModalConfirm: "Confirm",
