@@ -77,7 +77,7 @@ export default function DynamicBreadcrumb({
 
           return (
             <BreadcrumbItem
-              key={item.href ?? `crumb-${index}`}
+              key={`${item.href ?? "crumb"}-${item.translationKey ?? item.label ?? "label"}-${index}`}
               className="flex items-center text-xs font-normal gap-1"
             >
               {index !== 0 && (
