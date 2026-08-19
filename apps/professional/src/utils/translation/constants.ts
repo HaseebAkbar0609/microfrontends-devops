@@ -1732,10 +1732,13 @@ export type OfferTranslation = {
 	licensesIndustryFloor: string;
 	licensesIndustryPainting: string;
 	licensesIndustryCleaning: string;
-	licensesIndustryConstruction: string;
-	licensesIndustryPlumbing: string;
+	licensesIndustryCeiling: string;
+	licensesIndustryRelining: string;
 	licensesIndustryTiler: string;
-	licensesIndustryElectrician: string;
+	licensesIndustrySheetMetal: string;
+	licensesIndustryDrilling: string;
+	licensesIndustryFloorLeveling: string;
+	licensesIndustryFacade: string;
 	licensesConnectEconomyFee: string;
 	licensesConnectEconomyModules: string;
 	licensesScanSupplierFee: string;

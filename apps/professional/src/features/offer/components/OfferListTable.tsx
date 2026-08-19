@@ -22,6 +22,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { BusinessOfferModal } from "./BusinessOfferModal";
 import { BusinessExpressModal } from "./BusinessExpressModal";
 import { BusinessRentModal } from "./BusinessRentModal";
+import { OfferConfirmationModal } from "./OfferConfirmationModal";
 import { MODAL_CONSTANTS, type ModalType } from "@/constants/constant";
 import useModal from "@/features/auth/hooks/useModal";
 
@@ -149,7 +150,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 							<Button
 								variant="ghost"
 								className="h-8 px-3 bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-800 rounded-md cursor-pointer transition-colors"
-								onClick={() => router.push(`/module/business/offer/${quote.id}/request`)}
+								onClick={() => router.push(`/module/business/offer/list/${quote.id}`)}
 							>
 								<Translate
 									text={localizationConstants.viewProject}
@@ -162,6 +163,18 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 									const typeStr = quote.type.toLowerCase();
 									const isExpress = typeStr.includes("express");
 									const isRent = typeStr.includes("rent") || typeStr.includes("hyra");
+									const isConfirmation =
+										typeStr.includes("confirm") ||
+										typeStr.includes("direkt") ||
+										typeStr.includes("direct");
+
+									if (isConfirmation) {
+										openModal(
+											MODAL_CONSTANTS.OFFER_CONFIRMATION,
+											quote.id,
+										);
+										return;
+									}
 
 									if (isExpress) {
 										openModal(
@@ -240,7 +253,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 									className={cn(
 										"cursor-pointer select-none text-slate-500 font-medium py-3.5 px-4 h-auto whitespace-nowrap text-xs text-left",
 										col.field === "actions" &&
-											"cursor-default text-right w-[240px]",
+											"cursor-default text-right w-60",
 									)}
 									onClick={() => handleSort(col.field)}
 								>
@@ -331,6 +344,14 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 						if (!openState) closeModal();
 					}}
 					quote={selectedBusinessQuote}
+				/>
+			)}
+			{isOpen && type === MODAL_CONSTANTS.OFFER_CONFIRMATION && (
+				<OfferConfirmationModal
+					open={isOpen}
+					onOpenChange={(openState) => {
+						if (!openState) closeModal();
+					}}
 				/>
 			)}
 		</div>
