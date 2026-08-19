@@ -1656,7 +1656,7 @@ export const svOffer: OfferTranslation = {
 	licensesOrderDirectModules: "Orderfunktion i kund-dashboard, anslut kund, kan lägga beställning direkt till order modulen. Kunder kan lägga order direkt.",
 	licensesStorageFee: "fr 199 kr / månad",
 	licensesStorageModules: "Överstiger er datamängd 50 GB så kan ni uppdatera datamängden vid stort behov av filmer, foton och dokument.",
-	licensesRuttPlanFee: "995 KR / månad",
+	licensesRuttPlanFee: "1295 kr / månad",
 	licensesRuttPlanModules: "Planera in er fordons park vilka rutter dom skall åka och avrapportera. Allt handeras i appen TimeFlow Work. Ni kan central planera och hantera ruttplaneringen.",
 	licensesDriveFee: "Från 199 KR / månad",
 	licensesDriveModules: "GPS- tracking på fordon och Maskin. Spåra och tracka era fordonspark, stöder körjournal och stöldhantering. GPS-utrustning tillkommer för respektive fordon, / maskin. Ni kan i realtid följa och ha kontroll över fordon och utrustning.",
