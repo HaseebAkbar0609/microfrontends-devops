@@ -216,8 +216,8 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "rutt-plan",
 			name: "Rutt-plan",
-			priceLabel: "999",
-			price: 999,
+			priceLabel: "1295 kr / mån",
+			price: 1295,
 			feeKey: localizationConstants.licensesRuttPlanFee,
 			modulesKey: localizationConstants.licensesRuttPlanModules,
 			versionText: "Ruttplan - Standard",

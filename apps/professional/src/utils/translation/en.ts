@@ -1772,7 +1772,7 @@ export const enOffer: OfferTranslation = {
 	licensesOrderDirectModules: "Order function in the customer dashboard, connect a customer who can place orders directly into the order module. Customers can place orders directly.",
 	licensesStorageFee: "From 199 SEK / month",
 	licensesStorageModules: "If your data volume exceeds 50 GB you can upgrade the data amount when you have a large need for videos, photos and documents.",
-	licensesRuttPlanFee: "995 SEK / month",
+	licensesRuttPlanFee: "1295 SEK / month",
 	licensesRuttPlanModules: "Plan which routes your vehicle fleet should drive and report back. Everything is handled in the TimeFlow Work app. You can centrally plan and manage the route planning.",
 	licensesDriveFee: "From 199 SEK / month",
 	licensesDriveModules: "GPS tracking of vehicles and machines. Track your vehicle fleet, supports drivers log and theft management. GPS equipment is added per vehicle / machine. You can follow and control vehicles and equipment in real time.",
