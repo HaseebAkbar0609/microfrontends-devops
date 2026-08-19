@@ -75,10 +75,13 @@ const INDUSTRY_OPTION_KEYS = [
 	localizationConstants.licensesIndustryFloor,
 	localizationConstants.licensesIndustryPainting,
 	localizationConstants.licensesIndustryCleaning,
-	localizationConstants.licensesIndustryConstruction,
-	localizationConstants.licensesIndustryPlumbing,
+	localizationConstants.licensesIndustryCeiling,
+	localizationConstants.licensesIndustryRelining,
 	localizationConstants.licensesIndustryTiler,
-	localizationConstants.licensesIndustryElectrician,
+	localizationConstants.licensesIndustrySheetMetal,
+	localizationConstants.licensesIndustryDrilling,
+	localizationConstants.licensesIndustryFloorLeveling,
+	localizationConstants.licensesIndustryFacade,
 ];
 
 export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
@@ -159,12 +162,12 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		},
 		{
 			id: "calculation-pro",
-			name: "Calculation PRO",
+			name: "Calculation PRO BAS",
 			priceLabel: "199",
 			price: 199,
 			feeKey: localizationConstants.licensesCalculationProFee,
 			modulesKey: localizationConstants.licensesCalculationProModules,
-			versionText: "Calculation - PRO",
+			versionText: "Calculation PRO BAS",
 			industryOptionKeys: INDUSTRY_OPTION_KEYS,
 			categoryId: "calculation",
 			action: "add",
