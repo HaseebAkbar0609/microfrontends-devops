@@ -2131,6 +2131,22 @@ export type OfferTranslation = {
 	kmaControlPlanDiscardCancel: string;
 	kmaControlPlanSaveBtn: string;
 	kmaControlPlanCancelBtn: string;
+	kmaControlPlanValidationName: string;
+	kmaControlPlanValidationRows: string;
+	// TFS-731 – Sändlista (Mail List)
+	kmaSandlistaTitle: string;
+	kmaSandlistaMenuOption: string;
+	kmaSandlistaAddBtn: string;
+	kmaSandlistaSearchPlaceholder: string;
+	kmaSandlistaColName: string;
+	kmaSandlistaColRole: string;
+	kmaSandlistaColEmail: string;
+	kmaSandlistaColNewPlan: string;
+	kmaSandlistaColUpdates: string;
+	kmaSandlistaColNonConformity: string;
+	kmaSandlistaColVerification: string;
+	kmaTemplateModalCategories: string;
+	kmaTemplateModalSearchFolders: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;
