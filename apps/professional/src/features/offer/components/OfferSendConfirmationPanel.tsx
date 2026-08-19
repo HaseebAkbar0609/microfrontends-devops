@@ -3,10 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Calendar1, CircleFadingPlus, Receipt, Save } from "lucide-react";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendConfirmationPanelProps } from "../types";
@@ -24,7 +27,8 @@ export function OfferSendConfirmationPanel({
   const t = useTranslate();
   const router = useRouter();
   const [budget, setBudget] = useState("");
-  const [offerDate, setOfferDate] = useState("");
+  const [offerDate, setOfferDate] = useState<Date | undefined>(undefined);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   const formType = resolveFormType(data.type);
 
@@ -89,13 +93,37 @@ export function OfferSendConfirmationPanel({
         <label className="font-sans font-medium text-xs text-[#09090B]">
           <Translate text={localizationConstants.offerSendOfferDateLabel} />
         </label>
-        <Input
-          type="text"
-          value={offerDate}
-          onChange={(e) => setOfferDate(e.target.value)}
-          placeholder={t(localizationConstants.offerSendOfferDateLabel)}
-          className="h-10 rounded-lg border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400"
-        />
+        <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-10 w-full justify-between text-left font-normal border-slate-200 bg-slate-50/50 px-3 shadow-none hover:bg-slate-50 text-sm"
+            >
+              <div className="flex items-center gap-2">
+                <Calendar1 className="h-4 w-4 text-slate-500 shrink-0" />
+                <span className={offerDate ? "text-slate-900" : "text-slate-400"}>
+                  {offerDate
+                    ? format(offerDate, "yyyy-MM-dd")
+                    : t(localizationConstants.offerSendOfferDateLabel)}
+                </span>
+              </div>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-auto p-0 border-0 bg-transparent shadow-none">
+            <Calendar
+              mode="single"
+              captionLayout="dropdown"
+              startMonth={new Date(2015, 0)}
+              endMonth={new Date(2035, 11)}
+              selected={offerDate}
+              onSelect={(date) => {
+                setOfferDate(date);
+                setDatePickerOpen(false);
+              }}
+            />
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Action buttons */}

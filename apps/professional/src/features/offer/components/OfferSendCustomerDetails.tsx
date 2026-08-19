@@ -25,7 +25,7 @@ export function OfferSendCustomerDetails({
           {customer.name}
         </div>
 
-        <div className="mt-3 space-y-2 font-sans font-normal text-base leading-6 text-[#475569]">
+        <div className="mt-3 space-y-2 font-sans font-medium text-sm leading-5 tracking-normal text-[#475569]">
           <div className="flex items-center gap-3">
             <Mail className="h-4.5 w-4.5 text-[#6B7280] shrink-0" strokeWidth={1.5} />
             <span className="truncate">{customer.email}</span>

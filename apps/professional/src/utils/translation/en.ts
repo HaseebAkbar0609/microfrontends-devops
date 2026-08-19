@@ -2575,6 +2575,8 @@ export const enOffer: OfferTranslation = {
 	breadcrumbProduction: "Production",
 	breadcrumbOrder: "Order",
 	breadcrumbPlanning: "Planning",
+	breadcrumbBusiness: "Business",
+	breadcrumbOffer: "Offer",
 	planningNoOrders: "No orders this week",
 	planningNoAssignees: "No assignees yet",
 	filterAssignee: "Assignee",
@@ -2883,10 +2885,11 @@ export const enOffer: OfferTranslation = {
 	businessRentModalConfirm: "Confirm",
 
 	// Offer confirmation modal
-	offerConfirmationModalTitle: "Are you sure you want to take this assignment?",
+	offerConfirmationModalTitle: "Are you sure you want to send this offer?",
 	offerConfirmationModalCheckbox: "I accept the terms and conditions",
 	offerConfirmationModalCancel: "Cancel",
 	offerConfirmationModalConfirm: "Confirm",
+	offerConfirmationModalSend: "Send offer",
 
 	// Offer - Send page
 	offerSendCustomerDetails: "Customer details",
@@ -3039,7 +3042,7 @@ export const enOffer: OfferTranslation = {
 	createProjectOption: "Create project",
 	createOrderOption: "Create order",
 	goToButton: "Go to",
-	offerConfirmationModalDescription: "Are you sure you want to take this assignment for {project}?",
+	offerConfirmationModalDescription: "You are about to send an offer to \"{project}\". The customer will then choose to accept or decline your offer.",
 	offerFormPersonnelHelper: "Personnel for rental + first name + last name + personal nr",
 	offerFormSelect: "Select",
 	offerFormWorkAddressPlaceholder: "Address where work will be performed",
@@ -3052,6 +3055,14 @@ export const enOffer: OfferTranslation = {
 	offerFormWorkPlaceholder: "Total cost for the project, including materials and labor",
 	offerFormMaterialPlaceholder: "Enter material",
 	offerFormLaddaUpp: "Upload",
+	offerFormExpressTitle: "EXPRESS",
+	offerFormB2BTitle: "B2B - RENT OUT/IN",
+	offerFormPostedLabel: "Posted:",
+	offerMoreImages: "more",
+	offerBadgeExpressJob: "Express job",
+	offerBadgeStockholm: "Stockholm",
+	offerBadgeJarfalla: "Järfälla",
+	offerFormDescriptionLabel: "Description",
 };
 
 export const enCommon: CommonTranslation = {
@@ -3087,6 +3098,10 @@ export const enRegister: RegisterTranslation = {
 	pageLabel: "Page",
 	ofLabel: "of",
 	pageOfLabel: "Page {page} of {total}",
+	paginationFirstPage: "First page",
+	paginationPreviousPage: "Previous page",
+	paginationNextPage: "Next page",
+	paginationLastPage: "Last page",
 	customerOption: "Customer",
 	supplierOption: "Supplier",
 	supplierListTab: "Supplier List",

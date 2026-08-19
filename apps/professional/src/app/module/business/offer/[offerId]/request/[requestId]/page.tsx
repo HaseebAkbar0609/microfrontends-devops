@@ -20,7 +20,7 @@ export default async function OfferRequestDetailPage({
 
   return (
     <div className="flex flex-1 flex-col min-h-screen">
-      <OfferModuleHeader activeTab="request" offerId={offerId} />
+      <OfferModuleHeader activeTab="request" />
       <OfferSendPage data={data} />
     </div>
   );

@@ -4,7 +4,7 @@ import { FileText, Image as ImageIcon } from "lucide-react";
 import Image from "next/image";
 
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendDocumentsAndImagesProps } from "../types";
 
 const getDocumentIconSrc = (filename: string) => {
@@ -16,6 +16,7 @@ const getDocumentIconSrc = (filename: string) => {
 export function OfferSendDocumentsAndImages({
   data,
 }: OfferSendDocumentsAndImagesProps) {
+  const t = useTranslate();
   const imagePlaceholders = data.extraImagesCount > 0 ? 3 : 0;
 
   return (
@@ -56,7 +57,7 @@ export function OfferSendDocumentsAndImages({
                   <ImageIcon className="h-6 w-6 text-slate-400" />
                 </div>
                 <div className="mt-2 w-full truncate text-center font-sans font-normal text-xs leading-5 text-[#64748B]">
-                  {isMore ? `+${data.extraImagesCount} more` : "Photo.img"}
+                  {isMore ? `+${data.extraImagesCount} ${t(localizationConstants.offerMoreImages)}` : "Photo.img"}
                 </div>
               </div>
             );

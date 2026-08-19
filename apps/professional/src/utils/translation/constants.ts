@@ -2552,6 +2552,8 @@ export type OfferTranslation = {
 	breadcrumbProduction: string;
 	breadcrumbOrder: string;
 	breadcrumbPlanning: string;
+	breadcrumbBusiness: string;
+	breadcrumbOffer: string;
 	planningNoOrders: string;
 	planningNoAssignees: string;
 	filterAssignee: string;
@@ -2844,6 +2846,7 @@ export type OfferTranslation = {
 	offerConfirmationModalCheckbox: string;
 	offerConfirmationModalCancel: string;
 	offerConfirmationModalConfirm: string;
+	offerConfirmationModalSend: string;
 
 	// Offer - Send page
 	offerSendCustomerDetails: string;
@@ -3009,6 +3012,14 @@ export type OfferTranslation = {
 	offerFormWorkPlaceholder: string;
 	offerFormMaterialPlaceholder: string;
 	offerFormLaddaUpp: string;
+	offerFormExpressTitle: string;
+	offerFormB2BTitle: string;
+	offerFormPostedLabel: string;
+	offerMoreImages: string;
+	offerBadgeExpressJob: string;
+	offerBadgeStockholm: string;
+	offerBadgeJarfalla: string;
+	offerFormDescriptionLabel: string;
 };
 
 export type RegisterTranslation = {
@@ -3037,6 +3048,10 @@ export type RegisterTranslation = {
 	pageLabel: string;
 	ofLabel: string;
 	pageOfLabel: string;
+	paginationFirstPage: string;
+	paginationPreviousPage: string;
+	paginationNextPage: string;
+	paginationLastPage: string;
 	customerOption: string;
 	supplierOption: string;
 	supplierListTab: string;

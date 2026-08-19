@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferFormData } from "../types";
 import { OfferSendPageHeader } from "./OfferSendPageHeader";
 import { OfferSendSection } from "./OfferSendSection";
@@ -26,17 +26,18 @@ import { OfferFormBudgetSection } from "./OfferFormBudgetSection";
 type Props = { data: OfferFormData };
 
 export function OfferFormPage({ data }: Props) {
+  const t = useTranslate();
   const isRent = data.type === "rent";
   const isExpress = data.type === "express";
   const isB2C = data.type === "b2c";
 
   const pageTitle = isExpress
-    ? "EXPRESS"
+    ? t(localizationConstants.offerFormExpressTitle)
     : isRent
-      ? "B2B - HYRA UT / IN"
-      : "Ladda ner Offert - mallar +";
+      ? t(localizationConstants.offerFormB2BTitle)
+      : t(localizationConstants.offerFormB2CTitle);
 
-  const subtitle = isB2C ? "Offert numer: 079687345" : "";
+  const subtitle = isB2C ? t(localizationConstants.offerFormB2CTitle) : "";
 
   return (
     <div className="flex flex-1 flex-col bg-white">
@@ -74,7 +75,7 @@ export function OfferFormPage({ data }: Props) {
             {/* Rent-specific */}
             {isRent && (
               <OfferSendSection
-                title="Personal"
+                title={<Translate text={localizationConstants.offerFormPersonnel} />}
                 icon={<CircleUser className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
                 iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
@@ -85,7 +86,7 @@ export function OfferFormPage({ data }: Props) {
 
             {isRent && (
               <OfferSendSection
-                title="Offert"
+                title={<Translate text={localizationConstants.offerFormOffertSection} />}
                 icon={<BadgePercent className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
                 iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen

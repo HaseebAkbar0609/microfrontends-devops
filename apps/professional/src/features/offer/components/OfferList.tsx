@@ -35,7 +35,7 @@ import { Loader } from "@/components/ui/loader";
 import { authStorage } from "@/lib/authStorage";
 import { ProfessionalRow } from "@/types/company";
 import { cn } from "@/lib/utils";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 
 type ChipId = "alla-jobb" | "label-1" | "label-2";
 
@@ -46,6 +46,7 @@ const FILTER_CHIPS: { id: ChipId; labelKey: string; addable?: boolean }[] = [
 ];
 
 export default function OfferList() {
+	const t = useTranslate();
 	const { search, changeQuery, changeQueries, page = 1, query } = useQueryParams();
 	const page_size = query.get("page_size") || "10";
 	const [offers, setOffers] = useState<OfferListType[]>(DUMMY_OFFERS);
@@ -200,7 +201,7 @@ export default function OfferList() {
 						<Search
 							value={search}
 							onChange={(val) => changeQuery("search", val)}
-							placeholder={localizationConstants.search}
+							placeholder={t(localizationConstants.search)}
 							wrapperClassName="w-full sm:w-[220px] flex-shrink-0"
 							className="h-9 text-xs"
 						/>

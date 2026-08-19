@@ -19,13 +19,11 @@ export type OfferTabId =
 
 interface OfferModuleHeaderProps {
 	activeTab?: OfferTabId;
-	offerId?: string;
 	className?: string;
 }
 
 export function OfferModuleHeader({
 	activeTab = "available",
-	offerId = "1001",
 	className,
 }: OfferModuleHeaderProps) {
 	const pathname = usePathname();
@@ -51,31 +49,31 @@ export function OfferModuleHeader({
 		{
 			id: "request" as OfferTabId,
 			label: localizationConstants.offerTabRequest,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/request`,
+			href: `${OFFER_MODULE_BASE_URL}/request`,
 			isActive: activeTab === "request" || pathname.includes("/request"),
 		},
 		{
 			id: "quoted" as OfferTabId,
 			label: localizationConstants.offerTabQuoted,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/quoted`,
+			href: `${OFFER_MODULE_BASE_URL}/quoted`,
 			isActive: activeTab === "quoted" || pathname.includes("/quoted"),
 		},
 		{
 			id: "accepted" as OfferTabId,
 			label: localizationConstants.offerTabAccepted,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/accepted`,
+			href: `${OFFER_MODULE_BASE_URL}/accepted`,
 			isActive: activeTab === "accepted" || pathname.includes("/accepted"),
 		},
 		{
 			id: "agreed" as OfferTabId,
 			label: localizationConstants.offerTabAgreed,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/agreed`,
+			href: `${OFFER_MODULE_BASE_URL}/agreed`,
 			isActive: activeTab === "agreed" || pathname.includes("/agreed"),
 		},
 		{
 			id: "archived" as OfferTabId,
 			label: localizationConstants.offerTabArchived,
-			href: `${OFFER_MODULE_BASE_URL}/${offerId}/archived`,
+			href: `${OFFER_MODULE_BASE_URL}/archived`,
 			isActive: activeTab === "archived" || pathname.includes("/archived"),
 		},
 	];

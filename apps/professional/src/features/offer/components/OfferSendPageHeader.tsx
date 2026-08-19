@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Briefcase, Building2, MapPin } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import localizationConstants from "@/utils/translation/constants";
+import { useTranslate } from "@/utils/translation/translate";
 
 type OfferSendPageHeaderProps = {
   title: string;
@@ -13,14 +15,14 @@ type OfferSendPageHeaderProps = {
 
 function badgeVariant(label: string) {
   const lower = label.toLowerCase();
-  if (lower.includes("express")) return "info" as const;
+  if (lower.includes("express") || lower.includes("express jobb")) return "info" as const;
   if (lower.includes("stockholm")) return "success" as const;
   return "warning" as const;
 }
 
 function badgeIcon(label: string) {
   const lower = label.toLowerCase();
-  if (lower.includes("express")) return Briefcase;
+  if (lower.includes("express") || lower.includes("express jobb")) return Briefcase;
   if (lower.includes("stockholm")) return Building2;
   return MapPin;
 }
@@ -31,6 +33,13 @@ export function OfferSendPageHeader({
   badges,
 }: OfferSendPageHeaderProps) {
   const router = useRouter();
+  const t = useTranslate();
+
+  const badgeTranslationMap: Record<string, string> = {
+    "Express jobb": t(localizationConstants.offerBadgeExpressJob),
+    "Stockholm": t(localizationConstants.offerBadgeStockholm),
+    "Järfälla": t(localizationConstants.offerBadgeJarfalla),
+  };
 
   return (
     <div className="w-full px-6 pt-6">
@@ -50,7 +59,7 @@ export function OfferSendPageHeader({
             <p className="pl-7 mt-1 font-sans font-normal text-xs text-slate-500">
               {postedDate.startsWith("Offert") || postedDate.startsWith("Posted")
                 ? postedDate
-                : `Posted: ${postedDate}`}
+                : `${t(localizationConstants.offerFormPostedLabel)} ${postedDate}`}
             </p>
           )}
         </div>
@@ -59,6 +68,7 @@ export function OfferSendPageHeader({
           {badges.map((b) => {
             const Icon = badgeIcon(b);
             const variant = badgeVariant(b);
+            const translatedLabel = badgeTranslationMap[b] ?? b;
             const cls =
               variant === "info"
                 ? "gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-3 py-1 text-xs font-medium text-blue-600 hover:bg-blue-50"
@@ -69,7 +79,7 @@ export function OfferSendPageHeader({
             return (
               <Badge key={b} variant={variant} className={cls}>
                 <Icon className="h-3.5 w-3.5" />
-                {b}
+                {translatedLabel}
               </Badge>
             );
           })}

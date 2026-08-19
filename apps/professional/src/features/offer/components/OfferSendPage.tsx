@@ -48,7 +48,7 @@ export function OfferSendPage({ data }: OfferSendPageProps) {
               iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none"
               defaultOpen
             >
-              <p className="whitespace-pre-line font-sans font-normal text-base leading-6 text-[#475569]">
+              <p className="whitespace-pre-line font-sans font-normal text-base leading-6 tracking-normal text-[#475569]">
                 {data.description}
               </p>
             </OfferSendSection>

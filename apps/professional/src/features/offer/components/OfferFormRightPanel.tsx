@@ -11,7 +11,7 @@ import { OfferConfirmationModal } from "./OfferConfirmationModal";
 
 type Props = { type: OfferFormType; projectName?: string };
 
-export function OfferFormRightPanel({ projectName = "Köksrenovering för enplanshus" }: Props) {
+export function OfferFormRightPanel({ projectName }: Props) {
   const router = useRouter();
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 

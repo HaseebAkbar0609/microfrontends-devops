@@ -3,7 +3,7 @@
 import { Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ModalWrapper } from "@/components/modal";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { OfferConfirmationModalProps } from "../types";
 
@@ -14,6 +14,7 @@ export function OfferConfirmationModal({
   description,
   onConfirm,
 }: OfferConfirmationModalProps) {
+  const t = useTranslate();
   return (
     <ModalWrapper
       open={open}
@@ -57,7 +58,7 @@ export function OfferConfirmationModal({
           {description ? (
             description
           ) : projectName ? (
-            `Du är på väg att skicka ett offert till "${projectName}". Kunden kommer då att välja att acceptera, eller avslå ditt offert.`
+            t(localizationConstants.offerConfirmationModalDescription).replace("{project}", projectName)
           ) : (
             <Translate text={localizationConstants.offerConfirmationModalDescription} />
           )}

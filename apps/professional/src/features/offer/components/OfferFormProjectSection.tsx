@@ -60,7 +60,7 @@ export function OfferFormProjectSection() {
         <label className="block mb-1.5 font-sans font-medium text-sm leading-5 text-[#09090B]">
           <Translate text={localizationConstants.offerFormUploadFiles} />
         </label>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <input
             ref={fileRef}
             type="file"
@@ -68,15 +68,15 @@ export function OfferFormProjectSection() {
             className="sr-only"
             onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "")}
           />
-          <div className="flex h-10 items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-sm">
+          <div className="flex h-10 w-[296px] items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm">
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
-              className="rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 hover:bg-slate-200 cursor-pointer"
+              className="px-2.5 py-1 text-xs font-medium text-slate-800 cursor-pointer"
             >
               <Translate text={localizationConstants.offerFormLaddaUpp} />
             </button>
-            <span className="ml-2.5 text-xs text-slate-500 truncate max-w-[180px]">
+            <span className="text-xs text-slate-500 truncate">
               {fileName || t(localizationConstants.offerFormNoFileChosen)}
             </span>
           </div>

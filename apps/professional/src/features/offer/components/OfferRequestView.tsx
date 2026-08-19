@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
 	ChevronDown,
@@ -9,6 +10,14 @@ import {
 	Info,
 	ChevronsUpDown,
 } from "lucide-react";
+import {
+	Breadcrumb,
+	BreadcrumbItem as BreadcrumbUIItem,
+	BreadcrumbLink,
+	BreadcrumbList,
+	BreadcrumbPage,
+	BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -20,7 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Search } from "@/components/search/Search";
-import { useTranslate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTableSort } from "@/hooks/useTableSort";
@@ -53,11 +62,10 @@ type AnswerModal = {
 };
 
 interface Props {
-	offerId: string;
 	requests: OfferRequest[];
 }
 
-export function OfferRequestView({ offerId, requests }: Props) {
+export function OfferRequestView({ requests }: Props) {
 	const t = useTranslate();
 	const router = useRouter();
 
@@ -176,17 +184,62 @@ export function OfferRequestView({ offerId, requests }: Props) {
             className="flex items-center gap-2 text-slate-900 font-bold text-lg hover:text-slate-700 transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-5 w-5" />
-            <span>{t(localizationConstants.offerTabAvailable)}</span>
+            <span>{t(localizationConstants.offerTabRequest)}</span>
           </button>
         </div>
-        <div className="flex items-center gap-1 text-slate-500 text-xs mt-1">
-          <span>Modul</span>
-          <span>&gt;</span>
-          <span>Affär</span>
-          <span>&gt;</span>
-          <span>Offert</span>
-          <span>&gt;</span>
-        </div>
+        <Breadcrumb>
+          <BreadcrumbList className="flex items-center flex-wrap gap-1 text-[#64748B]">
+            <BreadcrumbUIItem className="flex items-center gap-1 text-sm!">
+              <BreadcrumbLink
+                asChild
+                className="font-sans font-normal text-sm leading-5 tracking-normal text-[#64748B] hover:text-[#0A0A0A] transition-colors"
+              >
+                <Link href="/home">
+                  <Translate text={localizationConstants.breadcrumbHome} />
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbUIItem>
+            <BreadcrumbUIItem className="flex items-center gap-1 text-sm!">
+              <BreadcrumbSeparator className="text-[#64748B]" />
+              <BreadcrumbLink
+                asChild
+                className="font-sans font-normal text-sm leading-5 tracking-normal text-[#64748B] hover:text-[#0A0A0A] transition-colors"
+              >
+                <Link href="/module">
+                  <Translate text={localizationConstants.breadcrumbModule} />
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbUIItem>
+            <BreadcrumbUIItem className="flex items-center gap-1 text-sm!">
+              <BreadcrumbSeparator className="text-[#64748B]" />
+              <BreadcrumbLink
+                asChild
+                className="font-sans font-normal text-sm leading-5 tracking-normal text-[#64748B] hover:text-[#0A0A0A] transition-colors"
+              >
+                <Link href="/module/business">
+                  <Translate text={localizationConstants.breadcrumbBusiness} />
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbUIItem>
+            <BreadcrumbUIItem className="flex items-center gap-1 text-sm!">
+              <BreadcrumbSeparator className="text-[#64748B]" />
+              <BreadcrumbLink
+                asChild
+                className="font-sans font-normal text-sm leading-5 tracking-normal text-[#64748B] hover:text-[#0A0A0A] transition-colors"
+              >
+                <Link href="/module/business/offer/list">
+                  <Translate text={localizationConstants.breadcrumbOffer} />
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbUIItem>
+            <BreadcrumbUIItem className="flex items-center gap-1 text-sm!">
+              <BreadcrumbSeparator className="text-[#64748B]" />
+              <BreadcrumbPage className="font-sans text-sm leading-5 tracking-normal text-[#64748B] font-normal!">
+                <Translate text={localizationConstants.offerTabRequest} />
+              </BreadcrumbPage>
+            </BreadcrumbUIItem>
+          </BreadcrumbList>
+        </Breadcrumb>
       </div>
 
       {/* Main Content Card Container */}
@@ -203,7 +256,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                   setSearch(val);
                   setPage(1);
                 }}
-                placeholder={localizationConstants.search}
+                placeholder={t(localizationConstants.search)}
                 wrapperClassName="w-64"
                 className="h-9 text-xs"
               />
@@ -324,7 +377,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
 
             {/* Total Sum Headline */}
             <p className="text-base font-semibold text-slate-900 tracking-tight">
-              Total summa OFFERERAD: sek {totalSum.toLocaleString("sv-SE")}
+              {t(localizationConstants.offerQuotedTotalLabel)} {totalSum.toLocaleString("sv-SE")}
             </p>
           </div>
 
@@ -350,7 +403,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                     <div className="flex items-center justify-end pr-2">
                       <span
                         className="text-xl font-normal text-slate-700 hover:text-slate-800 cursor-pointer select-none leading-none"
-                        title="Add"
+                        title={t(localizationConstants.add)}
                       >
                         +
                       </span>
@@ -426,7 +479,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                           className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
                           onClick={() =>
                             router.push(
-                              `/module/business/offer/${offerId}/request/${row.id}`,
+                              `/module/business/offer/request/${row.id}`,
                             )
                           }
                         >
@@ -450,7 +503,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                               className="cursor-pointer"
                               onClick={() =>
                                 router.push(
-                                  `/module/business/offer/${offerId}/request/${row.id}`,
+                                  `/module/business/offer/request/${row.id}`,
                                 )
                               }
                             >
@@ -505,7 +558,9 @@ export function OfferRequestView({ offerId, requests }: Props) {
             {/* Page counter & Navigation buttons */}
             <div className="flex items-center gap-3">
               <span>
-                Page {page} of {totalPages}
+                {t(localizationConstants.pageOfLabel)
+                  .replace("{page}", String(page))
+                  .replace("{total}", String(totalPages))}
               </span>
               <div className="flex items-center gap-1">
                 <Button
@@ -514,7 +569,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                   className="h-7 w-7 p-0 flex items-center justify-center text-xs text-slate-600 hover:text-slate-900 disabled:opacity-40 cursor-pointer rounded"
                   onClick={() => setPage(1)}
                   disabled={page === 1}
-                  title="First page"
+                  title={t(localizationConstants.paginationFirstPage)}
                 >
                   «
                 </Button>
@@ -524,7 +579,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                   className="h-7 w-7 p-0 flex items-center justify-center text-xs text-slate-600 hover:text-slate-900 disabled:opacity-40 cursor-pointer rounded"
                   onClick={() => setPage((prev) => Math.max(1, prev - 1))}
                   disabled={page === 1}
-                  title="Previous page"
+                  title={t(localizationConstants.paginationPreviousPage)}
                 >
                   ‹
                 </Button>
@@ -536,7 +591,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                     setPage((prev) => Math.min(totalPages, prev + 1))
                   }
                   disabled={page === totalPages}
-                  title="Next page"
+                  title={t(localizationConstants.paginationNextPage)}
                 >
                   ›
                 </Button>
@@ -546,7 +601,7 @@ export function OfferRequestView({ offerId, requests }: Props) {
                   className="h-7 w-7 p-0 flex items-center justify-center text-xs text-slate-600 hover:text-slate-900 disabled:opacity-40 cursor-pointer rounded"
                   onClick={() => setPage(totalPages)}
                   disabled={page === totalPages}
-                  title="Last page"
+                  title={t(localizationConstants.paginationLastPage)}
                 >
                   »
                 </Button>

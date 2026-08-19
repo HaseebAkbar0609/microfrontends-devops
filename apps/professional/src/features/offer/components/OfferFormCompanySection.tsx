@@ -31,7 +31,7 @@ export function OfferFormCompanySection({ company }: Props) {
             <Info className="h-4.5 w-4.5" strokeWidth={1.5} />
           </button>
         </div>
-        <div className="mt-3 space-y-2 font-sans font-normal text-sm leading-6 text-[#475569]">
+        <div className="mt-3 space-y-2 font-sans font-medium text-sm leading-5 tracking-normal text-[#475569]">
           <div className="flex items-center gap-3">
             <Mail className="h-4.5 w-4.5 shrink-0 text-[#6B7280]" strokeWidth={1.5} />
             <span className="truncate">{company.email}</span>
