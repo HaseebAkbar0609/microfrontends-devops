@@ -99,6 +99,8 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     answer: "",
   });
 
+  const debouncedSearch = useDebounce(search, 300);
+
   useEffect(() => {
     let isMounted = true;
     async function fetchQuotedOffers() {
@@ -109,7 +111,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
           status: "OFFERED",
           page,
           pageSize: rowsPerPage,
-          search,
+          search: debouncedSearch,
           companyId: companyData?.id,
         });
         if (isMounted && result && result.items && result.items.length > 0) {
@@ -144,9 +146,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     }
     fetchQuotedOffers();
     return () => { isMounted = false; };
-  }, [page, search, initialItems, t]);
-
-  const debouncedSearch = useDebounce(search, 300);
+  }, [page, debouncedSearch, initialItems, t]);
   const uniqueTypes = useMemo(
     () => [...new Set(items.map((i) => i.type))],
     [items],
@@ -389,7 +389,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                             size="sm"
                             className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
                             onClick={() =>
-                              offerId && router.push(OFFER_ROUTES.request(offerId))
+                              router.push(OFFER_ROUTES.request(offerId || row.id || "1001"))
                             }
                           >
                             {t(localizationConstants.viewProject)}
