@@ -3039,6 +3039,19 @@ export const enOffer: OfferTranslation = {
 	createProjectOption: "Create project",
 	createOrderOption: "Create order",
 	goToButton: "Go to",
+	offerConfirmationModalDescription: "Are you sure you want to take this assignment for {project}?",
+	offerFormPersonnelHelper: "Personnel for rental + first name + last name + personal nr",
+	offerFormSelect: "Select",
+	offerFormWorkAddressPlaceholder: "Address where work will be performed",
+	offerFormSpecificationsPlaceholder: "Enter specifications",
+	offerFormHourlyRateLabel: "Hourly rate, excluding VAT (Hour/ Cost)",
+	offerForm350KrPerHour: "350 SEK /hr",
+	offerFormEnter: "Enter",
+	offerFormPickADate: "Pick a date",
+	offerFormProjectNamePlaceholder: "Enter detailed description of work to be performed",
+	offerFormWorkPlaceholder: "Total cost for the project, including materials and labor",
+	offerFormMaterialPlaceholder: "Enter material",
+	offerFormLaddaUpp: "Upload",
 };
 
 export const enCommon: CommonTranslation = {

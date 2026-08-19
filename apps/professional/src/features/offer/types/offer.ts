@@ -24,6 +24,8 @@ export type BusinessRentModalProps = {
 export type OfferConfirmationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  projectName?: string;
+  description?: string;
   onConfirm?: () => void;
 };
 
@@ -54,13 +56,11 @@ export type OfferSendCustomer = {
 export type OfferSendImage = {
   id: string;
   label: string;
-  src?: string;
 };
 
 export type OfferSendFile = {
   id: string;
   label: string;
-  src?: string;
 };
 
 export type OfferSendData = {

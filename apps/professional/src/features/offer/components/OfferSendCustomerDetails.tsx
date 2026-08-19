@@ -1,6 +1,6 @@
 "use client";
 
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, Map, Phone } from "lucide-react";
 
 import { OfferSendCustomerDetailsProps } from "../types";
 
@@ -16,26 +16,26 @@ export function OfferSendCustomerDetails({
 
   return (
     <div className="flex items-start gap-4">
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-semibold text-slate-600">
+      <div className="flex h-[36px] w-[36px] shrink-0 items-center justify-center rounded-full bg-[#F4F4F5] shadow-[0px_1px_2px_0px_#1018280D] text-xs font-semibold text-slate-600">
         {initials || "AA"}
       </div>
 
-      <div className="min-w-0">
-        <div className="text-base font-semibold text-slate-900">
+      <div className="min-w-0 flex-1">
+        <div className="font-sans font-medium text-[14px] leading-[20px] tracking-normal text-[#09090B]">
           {customer.name}
         </div>
 
-        <div className="mt-3 space-y-2 text-sm text-slate-600">
+        <div className="mt-3 space-y-2 font-sans font-normal text-base leading-6 text-[#475569]">
           <div className="flex items-center gap-3">
-            <Mail className="h-4 w-4 text-slate-500" />
+            <Mail className="h-4.5 w-4.5 text-[#6B7280] shrink-0" strokeWidth={1.5} />
             <span className="truncate">{customer.email}</span>
           </div>
           <div className="flex items-center gap-3">
-            <Phone className="h-4 w-4 text-slate-500" />
+            <Phone className="h-4.5 w-4.5 text-[#6B7280] shrink-0" strokeWidth={1.5} />
             <span>{customer.phone}</span>
           </div>
           <div className="flex items-center gap-3">
-            <MapPin className="h-4 w-4 text-slate-500" />
+            <Map className="h-4.5 w-4.5 text-[#6B7280] shrink-0" strokeWidth={1.5} />
             <span className="truncate">{customer.address}</span>
           </div>
         </div>

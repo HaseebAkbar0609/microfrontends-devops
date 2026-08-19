@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Calendar, CirclePlus, DollarSign, Save } from "lucide-react";
+import { Calendar1, CircleFadingPlus, Receipt, Save } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -10,9 +10,6 @@ import { Input } from "@/components/ui/input";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendConfirmationPanelProps } from "../types";
-import { BusinessOfferModal } from "./BusinessOfferModal";
-import { BusinessExpressModal } from "./BusinessExpressModal";
-import { BusinessRentModal } from "./BusinessRentModal";
 
 function resolveFormType(type: string): "rent" | "express" | "b2c" {
   const lower = type.toLowerCase();
@@ -28,126 +25,120 @@ export function OfferSendConfirmationPanel({
   const router = useRouter();
   const [budget, setBudget] = useState("");
   const [offerDate, setOfferDate] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
 
   const formType = resolveFormType(data.type);
-  const quote = { id: data.id, type: data.type };
 
-  function handleConfirm() {
+  function handleCreateOffer() {
     router.push(`/module/business/offer/send/${data.id}?type=${formType}`);
   }
 
   return (
-    <Card className="overflow-hidden rounded-lg border border-slate-200 bg-white p-0 shadow-sm">
-      <div className="flex flex-col gap-4 border-b border-slate-200 p-5">
-        <h2 className="text-lg font-semibold text-slate-900">
-          <Translate text={localizationConstants.offerSendConfirmationTitle} />
-        </h2>
+    <Card className="overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-none flex flex-col gap-4">
+      {/* Title */}
+      <h2 className="font-sans font-semibold text-lg leading-7 tracking-normal text-[#020617]">
+        <Translate text={localizationConstants.offerSendConfirmationTitle} />
+      </h2>
 
-        <div className="rounded-lg bg-gray-800 px-4 py-4 text-white">
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-5 w-5 shrink-0 text-slate-200" />
-            <span className="text-base text-slate-200">
-              <Translate text={localizationConstants.offerSendPreliminaryBudgetLabel} />
-            </span>
-          </div>
-          <div className="pl-8 pt-1 text-xl font-semibold text-slate-50">
-            {data.preliminaryBudgetPrice}
-          </div>
+      {/* Preliminary Budget Banner */}
+      <div className="flex items-center gap-3 rounded-lg bg-[#1E2530] p-4 text-white">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10">
+          <Receipt className="h-5 w-5 text-white" />
         </div>
-
-        <div className="rounded-lg bg-slate-200 px-4 py-4">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-5 w-5 shrink-0 text-slate-500" />
-            <span className="text-base text-slate-600">
-              <Translate text={localizationConstants.offerSendOfferDateLabel} />
-            </span>
-          </div>
-          <div className="pl-8 pt-1 text-base font-medium text-slate-700">
-            {data.offerDateLatest}
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium text-zinc-950">
+        <div>
+          <p className="font-sans font-normal text-xs text-slate-300">
             <Translate text={localizationConstants.offerSendPreliminaryBudgetLabel} />
           </p>
-          <Input
-            value={budget}
-            onChange={(e) => setBudget(e.target.value.replace(/[^0-9]/g, ""))}
-            placeholder={t(localizationConstants.offerSendPreliminaryBudgetPlaceholder)}
-            inputMode="numeric"
-            className="h-9 border-gray-200 bg-zinc-100 text-sm placeholder:text-zinc-400"
-          />
-        </div>
-
-        <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium text-zinc-950">
-            <Translate text={localizationConstants.offerSendOfferDateLabel} />
+          <p className="font-sans font-semibold text-xl leading-7 text-white">
+            {data.preliminaryBudgetPrice}
           </p>
-          <Input
-            type="date"
-            value={offerDate}
-            onChange={(e) => setOfferDate(e.target.value)}
-            className="h-9 border-gray-200 bg-zinc-100 text-sm"
-          />
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 p-5">
+      {/* Offer Date Latest Banner */}
+      <div className="flex items-center gap-3 rounded-lg bg-slate-100 p-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-xs">
+          <Calendar1 className="h-5 w-5 text-slate-700" />
+        </div>
+        <div>
+          <p className="font-sans font-normal text-xs text-slate-500">
+            <Translate text={localizationConstants.offerSendOfferDateLabel} />
+          </p>
+          <p className="font-sans font-semibold text-sm leading-5 text-slate-800">
+            {data.offerDateLatest}
+          </p>
+        </div>
+      </div>
+
+      {/* Input: Preliminary budget price */}
+      <div className="space-y-1.5">
+        <label className="font-sans font-medium text-xs text-[#09090B]">
+          <Translate text={localizationConstants.offerSendPreliminaryBudgetLabel} />
+        </label>
+        <Input
+          type="text"
+          value={budget}
+          onChange={(e) => setBudget(e.target.value.replace(/[^0-9]/g, ""))}
+          inputMode="numeric"
+          placeholder={t(localizationConstants.offerSendPreliminaryBudgetPlaceholder)}
+          className="h-10 rounded-lg border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400"
+        />
+      </div>
+
+      {/* Input: Offer date latest */}
+      <div className="space-y-1.5">
+        <label className="font-sans font-medium text-xs text-[#09090B]">
+          <Translate text={localizationConstants.offerSendOfferDateLabel} />
+        </label>
+        <Input
+          type="text"
+          value={offerDate}
+          onChange={(e) => setOfferDate(e.target.value)}
+          placeholder={t(localizationConstants.offerSendOfferDateLabel)}
+          className="h-10 rounded-lg border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400"
+        />
+      </div>
+
+      {/* Action buttons */}
+      <div className="flex flex-col gap-2 pt-2">
         <Button
+          type="button"
           variant="outline"
-          className="h-11 w-full rounded-md border-transparent bg-slate-100 text-slate-900 hover:bg-slate-200"
+          className="h-10 w-full rounded-lg border-transparent bg-slate-100 text-sm font-medium text-slate-800 hover:bg-slate-200 cursor-pointer shadow-none"
+          onClick={() => router.back()}
         >
           <Translate text={localizationConstants.offerSendCancel} />
         </Button>
 
         <Button
+          type="button"
           variant="outline"
-          className="h-11 w-full rounded-md border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
+          className="h-10 w-full rounded-lg border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 cursor-pointer shadow-xs gap-2"
+          onClick={() => {
+            router.refresh();
+          }}
         >
-          <Save className="mr-2 h-4 w-4" />
+          <Save className="w-[15px] h-[15px] text-[#18181B] shrink-0" strokeWidth={1.67} />
           <Translate text={localizationConstants.offerSendSave} />
         </Button>
 
         <Button
-          className="h-11 w-full rounded-md bg-neutral-950 text-white hover:bg-neutral-800"
-          onClick={() => setModalOpen(true)}
+          type="button"
+          className="h-10 w-full rounded-lg bg-[#1E2530] text-sm font-medium text-white hover:bg-slate-800 cursor-pointer shadow-xs gap-2"
+          onClick={handleCreateOffer}
         >
-          <CirclePlus className="mr-2 h-4 w-4" />
+          <CircleFadingPlus className="h-4 w-4 text-white shrink-0" strokeWidth={1.75} />
           <Translate text={localizationConstants.offerSendCreateOffer} />
         </Button>
 
-        <Button className="h-11 w-full rounded-md bg-neutral-950 text-white hover:bg-neutral-800">
-          <CirclePlus className="mr-2 h-4 w-4" />
+        <Button
+          type="button"
+          className="h-10 w-full rounded-lg bg-[#1E2530] text-sm font-medium text-white hover:bg-slate-800 cursor-pointer shadow-xs gap-2"
+          onClick={() => router.push("/module/business/calculation")}
+        >
+          <CircleFadingPlus className="h-4 w-4 text-white shrink-0" strokeWidth={1.75} />
           <Translate text={localizationConstants.offerSendCreateCalculation} />
         </Button>
       </div>
-
-      {formType === "b2c" && (
-        <BusinessOfferModal
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-          quote={quote}
-          onConfirm={handleConfirm}
-        />
-      )}
-      {formType === "express" && (
-        <BusinessExpressModal
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-          quote={quote}
-          onConfirm={handleConfirm}
-        />
-      )}
-      {formType === "rent" && (
-        <BusinessRentModal
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-          quote={quote}
-          onConfirm={handleConfirm}
-        />
-      )}
     </Card>
   );
 }

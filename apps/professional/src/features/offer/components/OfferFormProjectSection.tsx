@@ -18,48 +18,48 @@ export function OfferFormProjectSection() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <p className="mb-1 text-sm font-medium text-slate-700">
+          <label className="block mb-1.5 font-sans font-medium text-sm leading-5 text-[#09090B]">
             <Translate text={localizationConstants.offerFormProjectName} />
-          </p>
+          </label>
           <Input
             value={projectName}
             onChange={(e) => setProjectName(e.target.value)}
-            placeholder={t(localizationConstants.offerFormProjectName)}
-            className="h-9 bg-white text-sm"
+            placeholder={t(localizationConstants.offerFormProjectNamePlaceholder)}
+            className="h-10 rounded-lg border-slate-200 bg-white text-sm placeholder:text-slate-400 px-3.5"
           />
         </div>
 
         <div>
-          <p className="mb-1 text-sm font-medium text-slate-700">
+          <label className="block mb-1.5 font-sans font-medium text-sm leading-5 text-[#09090B]">
             <Translate text={localizationConstants.offerFormWorkLocation} />
-          </p>
+          </label>
           <Input
             value={workLocation}
             onChange={(e) => setWorkLocation(e.target.value)}
-            placeholder={t(localizationConstants.offerFormWorkLocation)}
-            className="h-9 bg-white text-sm"
+            placeholder={t(localizationConstants.offerFormWorkAddressPlaceholder)}
+            className="h-10 rounded-lg border-slate-200 bg-white text-sm placeholder:text-slate-400 px-3.5"
           />
         </div>
       </div>
 
       <div>
-        <p className="mb-1 text-sm font-medium text-slate-700">
+        <label className="block mb-1.5 font-sans font-medium text-sm leading-5 text-[#09090B]">
           <Translate text={localizationConstants.offerFormSpecifications} />
-        </p>
+        </label>
         <Textarea
           value={specifications}
           onChange={(e) => setSpecifications(e.target.value)}
-          placeholder={t(localizationConstants.offerFormSpecifications)}
-          className="min-h-24 resize-none bg-white text-sm"
+          placeholder={t(localizationConstants.offerFormSpecificationsPlaceholder)}
+          className="min-h-24 resize-none rounded-lg border-slate-200 bg-white text-sm placeholder:text-slate-400 p-3"
         />
       </div>
 
       <div>
-        <p className="mb-1 text-sm font-medium text-slate-700">
+        <label className="block mb-1.5 font-sans font-medium text-sm leading-5 text-[#09090B]">
           <Translate text={localizationConstants.offerFormUploadFiles} />
-        </p>
+        </label>
         <div className="flex items-center gap-3">
           <input
             ref={fileRef}
@@ -68,27 +68,26 @@ export function OfferFormProjectSection() {
             className="sr-only"
             onChange={(e) => setFileName(e.target.files?.[0]?.name ?? "")}
           />
+          <div className="flex h-10 items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-sm">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="rounded bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800 hover:bg-slate-200 cursor-pointer"
+            >
+              <Translate text={localizationConstants.offerFormLaddaUpp} />
+            </button>
+            <span className="ml-2.5 text-xs text-slate-500 truncate max-w-[180px]">
+              {fileName || t(localizationConstants.offerFormNoFileChosen)}
+            </span>
+          </div>
           <Button
             type="button"
-            variant="outline"
-            className="h-9 shrink-0 text-sm"
-            onClick={() => fileRef.current?.click()}
+            className="h-10 rounded-lg bg-[#1E2530] px-5 text-sm font-medium text-white hover:bg-slate-800 cursor-pointer"
           >
-            <Translate text={localizationConstants.offerFormUploadFiles} />
+            <Translate text={localizationConstants.offerFormSubmit} />
           </Button>
-          <span className="text-sm text-slate-500">
-            {fileName || t(localizationConstants.offerFormNoFileChosen)}
-          </span>
-          {fileName && (
-            <Button
-              type="button"
-              className="h-9 bg-neutral-950 text-sm text-white hover:bg-neutral-800"
-            >
-              <Translate text={localizationConstants.offerFormSubmit} />
-            </Button>
-          )}
         </div>
-        <p className="mt-1.5 text-xs text-slate-400">
+        <p className="mt-1.5 font-sans font-normal text-xs leading-5 text-[#64748B]">
           <Translate text={localizationConstants.offerFormFileTypesInfo} />
         </p>
       </div>

@@ -2996,6 +2996,19 @@ export type OfferTranslation = {
 	createProjectOption: string;
 	createOrderOption: string;
 	goToButton: string;
+	offerConfirmationModalDescription: string;
+	offerFormPersonnelHelper: string;
+	offerFormSelect: string;
+	offerFormWorkAddressPlaceholder: string;
+	offerFormSpecificationsPlaceholder: string;
+	offerFormHourlyRateLabel: string;
+	offerForm350KrPerHour: string;
+	offerFormEnter: string;
+	offerFormPickADate: string;
+	offerFormProjectNamePlaceholder: string;
+	offerFormWorkPlaceholder: string;
+	offerFormMaterialPlaceholder: string;
+	offerFormLaddaUpp: string;
 };
 
 export type RegisterTranslation = {

@@ -2935,6 +2935,19 @@ export const svOffer: OfferTranslation = {
 	createProjectOption: "Skapa Projekt",
 	createOrderOption: "Skapa Order",
 	goToButton: "Gå till",
+	offerConfirmationModalDescription: "Är du säker på att du vill ta detta oppdrag för {project}?",
+	offerFormPersonnelHelper: "Personal att hyra ut + förnamn + efternamn + person nr",
+	offerFormSelect: "Välja",
+	offerFormWorkAddressPlaceholder: "Adress där renoveringen ska utföras",
+	offerFormSpecificationsPlaceholder: "Ange specifikationer",
+	offerFormHourlyRateLabel: "Timpris, exklusive moms (Tim/ Kostand)",
+	offerForm350KrPerHour: "350 kr /tim",
+	offerFormEnter: "Ange",
+	offerFormPickADate: "Välj ett datum",
+	offerFormProjectNamePlaceholder: "Ange detaljerad beskrivning av arbetet som ska utföras",
+	offerFormWorkPlaceholder: "Total kostnad för projektet, inklusive material och arbete",
+	offerFormMaterialPlaceholder: "Ange material",
+	offerFormLaddaUpp: "Ladda upp",
 };
 
 export const svMyPage: MyPagesTranslation = {

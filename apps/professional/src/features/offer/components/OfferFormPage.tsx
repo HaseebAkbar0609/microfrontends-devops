@@ -1,10 +1,16 @@
 "use client";
 
-import Image from "next/image";
-import { Building2, CalendarDays, CircleDollarSign, ClipboardList, FileText } from "lucide-react";
+import {
+  BadgeDollarSign,
+  BadgePercent,
+  Building2,
+  CalendarMinus2,
+  CircleUser,
+  ClipboardList,
+} from "lucide-react";
 
 import localizationConstants from "@/utils/translation/constants";
-import { Translate, useTranslate } from "@/utils/translation/translate";
+import { Translate } from "@/utils/translation/translate";
 import { OfferFormData } from "../types";
 import { OfferSendPageHeader } from "./OfferSendPageHeader";
 import { OfferSendSection } from "./OfferSendSection";
@@ -16,23 +22,27 @@ import { OfferFormRentOffertSection } from "./OfferFormRentOffertSection";
 import { OfferFormProjectSection } from "./OfferFormProjectSection";
 import { OfferFormScheduleSection } from "./OfferFormScheduleSection";
 import { OfferFormBudgetSection } from "./OfferFormBudgetSection";
-import { OfferFormDocumentsSection } from "./OfferFormDocumentsSection";
 
 type Props = { data: OfferFormData };
 
 export function OfferFormPage({ data }: Props) {
-  const t = useTranslate();
   const isRent = data.type === "rent";
   const isExpress = data.type === "express";
   const isB2C = data.type === "b2c";
 
-  const pageTitle = isB2C ? t(localizationConstants.offerFormB2CTitle) : data.title;
+  const pageTitle = isExpress
+    ? "EXPRESS"
+    : isRent
+      ? "B2B - HYRA UT / IN"
+      : "Ladda ner Offert - mallar +";
+
+  const subtitle = isB2C ? "Offert numer: 079687345" : "";
 
   return (
-    <div className="flex flex-1 flex-col bg-slate-50">
+    <div className="flex flex-1 flex-col bg-white">
       <OfferSendPageHeader
         title={pageTitle}
-        postedDate=""
+        postedDate={subtitle}
         badges={data.badges}
       />
 
@@ -44,7 +54,8 @@ export function OfferFormPage({ data }: Props) {
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <OfferSendSection
                 title={<Translate text={localizationConstants.offerSendCustomerDetails} />}
-                icon={<Image src="/assets/icons/personal-info.svg" alt="" width={20} height={20} />}
+                icon={<CircleUser className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
+                iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
               >
                 <OfferSendCustomerDetails customer={data.customer} />
@@ -52,7 +63,8 @@ export function OfferFormPage({ data }: Props) {
 
               <OfferSendSection
                 title={<Translate text={localizationConstants.offerFormCompanyNumber} />}
-                icon={<Building2 className="h-5 w-5" />}
+                icon={<Building2 className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
+                iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
               >
                 <OfferFormCompanySection company={data.company} />
@@ -62,8 +74,9 @@ export function OfferFormPage({ data }: Props) {
             {/* Rent-specific */}
             {isRent && (
               <OfferSendSection
-                title={<Translate text={localizationConstants.offerFormPersonnel} />}
-                icon={<Image src="/assets/icons/users.svg" alt="" width={20} height={20} />}
+                title="Personal"
+                icon={<CircleUser className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
+                iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
               >
                 <OfferFormPersonnelSection />
@@ -72,8 +85,9 @@ export function OfferFormPage({ data }: Props) {
 
             {isRent && (
               <OfferSendSection
-                title={<Translate text={localizationConstants.offerFormOffertSection} />}
-                icon={<FileText className="h-5 w-5" />}
+                title="Offert"
+                icon={<BadgePercent className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
+                iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
               >
                 <OfferFormRentOffertSection />
@@ -84,7 +98,8 @@ export function OfferFormPage({ data }: Props) {
             {(isExpress || isB2C) && (
               <OfferSendSection
                 title={<Translate text={localizationConstants.offerFormProjectDescription} />}
-                icon={<ClipboardList className="h-5 w-5" />}
+                icon={<ClipboardList className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
+                iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
               >
                 <OfferFormProjectSection />
@@ -94,47 +109,29 @@ export function OfferFormPage({ data }: Props) {
             {(isExpress || isB2C) && (
               <OfferSendSection
                 title={<Translate text={localizationConstants.offerFormSchedule} />}
-                icon={<CalendarDays className="h-5 w-5" />}
+                icon={<CalendarMinus2 className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
+                iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
               >
                 <OfferFormScheduleSection />
               </OfferSendSection>
             )}
 
-            {isExpress && (
+            {(isExpress || isB2C) && (
               <OfferSendSection
                 title={<Translate text={localizationConstants.offerFormBudget} />}
-                icon={<CircleDollarSign className="h-5 w-5" />}
+                icon={<BadgeDollarSign className="h-5 w-5 text-[#1E293B]" strokeWidth={2} />}
+                iconWrapperClassName="h-auto w-auto bg-transparent p-0 shadow-none border-none text-[#1E293B]"
                 defaultOpen
               >
-                <OfferFormBudgetSection variant="express" />
-              </OfferSendSection>
-            )}
-
-            {isB2C && (
-              <OfferSendSection
-                title={<Translate text={localizationConstants.offerFormOffertSection} />}
-                icon={<CircleDollarSign className="h-5 w-5" />}
-                defaultOpen
-              >
-                <OfferFormBudgetSection variant="b2c" />
-              </OfferSendSection>
-            )}
-
-            {isB2C && (
-              <OfferSendSection
-                title={<Translate text={localizationConstants.offerFormDocuments} />}
-                icon={<Image src="/assets/icons/file-plus.svg" alt="" width={20} height={20} />}
-                defaultOpen
-              >
-                <OfferFormDocumentsSection />
+                <OfferFormBudgetSection variant={isExpress ? "express" : "b2c"} />
               </OfferSendSection>
             )}
           </div>
 
           {/* Right column — action panel */}
           <div className="lg:sticky lg:top-6 lg:self-start">
-            <OfferFormRightPanel type={data.type} />
+            <OfferFormRightPanel type={data.type} projectName={pageTitle} />
           </div>
         </div>
       </div>
