@@ -116,8 +116,8 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 		{
 			id: "app-timeflow-work",
 			name: "App - Timeflow Work",
-			priceLabel: "129",
-			price: 129,
+			priceLabel: "159 kr / mån / anv",
+			price: 159,
 			feeKey: localizationConstants.licensesAppWorkFee,
 			modulesKey: localizationConstants.licensesAppWorkModules,
 			action: "add",

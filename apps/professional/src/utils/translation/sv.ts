@@ -1671,7 +1671,7 @@ export const svOffer: OfferTranslation = {
 	licensesStandardModules: "Allt i TimeFlow Start. Order, Projekt, KMA, Personal, Ekonomi, Mallar, Kalkyl",
 	licensesProFee: "2,995 KR / månad (grundavgift) Licens: 1295 kr",
 	licensesProModules: "Allt i Start + Standard, Inköp, Projektering, Avtal, Prognos, Juridik, Data,/IT, Marknad, Inkasso, Företagsledning",
-	licensesAppWorkFee: "129KR / månad per användare",
+	licensesAppWorkFee: "159 kr / månad per användare",
 	licensesAppWorkModules: "Allt i Start, Koppling mot Standard eller PRO ger access till funktioner. krävs att man har licens Standard eller PRO",
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Projekt - Översikt",

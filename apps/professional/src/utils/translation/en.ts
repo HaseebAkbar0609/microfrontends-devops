@@ -1787,7 +1787,7 @@ export const enOffer: OfferTranslation = {
 	licensesStandardModules: "Everything in TimeFlow Start. Order, Project, KMA, Personnel, Economy, Templates, Calculation",
 	licensesProFee: "2,995 SEK / month (base fee) License: 1295 SEK",
 	licensesProModules: "Everything in Start + Standard, Purchasing, Planning, Contracts, Forecast, Legal, Data/IT, Marketing, Debt collection, Company management",
-	licensesAppWorkFee: "129 SEK / month per user",
+	licensesAppWorkFee: "159 SEK / month per user",
 	licensesAppWorkModules: "Everything in Start. Connection to Standard or PRO gives access to functions. Requires a Standard or PRO license",
 	// KMA - Dashboard widgets
 	kmaDashboardTitle: "KMA - Overview",
