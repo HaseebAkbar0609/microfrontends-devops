@@ -8,7 +8,10 @@ import {
 	ArrowLeft,
 	MoreVertical,
 	Info,
-	ChevronsUpDown,
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
 } from "lucide-react";
 import {
 	Breadcrumb,
@@ -27,6 +30,13 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Search } from "@/components/search/Search";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -76,7 +86,7 @@ export function OfferRequestView({ requests }: Props) {
 	const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 	const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
 	const [page, setPage] = useState(1);
-	const rowsPerPage = 10;
+	const [pageSize, setPageSize] = useState(10);
 
 	const [commentModal, setCommentModal] = useState<CommentModal>({
 		open: false,
@@ -157,8 +167,8 @@ export function OfferRequestView({ requests }: Props) {
 		[filtered, sortField, sortDir],
 	);
 
-	const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
-	const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+	const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
+	const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
 	const totalSum = 2500000; // Total summa OFFERERAD from Figma
 
 	const columns: { key: SortField; label: string }[] = [
@@ -544,68 +554,91 @@ export function OfferRequestView({ requests }: Props) {
             </table>
           </div>
 
-          {/* Table Pagination Section Inside the Card (Centered in Middle) */}
-          <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-600 w-full select-none">
+          {/* Table Pagination Section Inside the Card */}
+          <div className="flex items-center justify-center sm:justify-end gap-6 py-2 px-1 text-sm text-slate-600 flex-wrap">
             {/* Rows per page selector */}
             <div className="flex items-center gap-2">
-              <span>{t(localizationConstants.rowsPerPageLabel)}</span>
-              <div className="flex h-8 w-16 items-center justify-between rounded-md border border-slate-200 bg-white px-2 text-xs font-medium text-slate-700 shadow-xs">
-                <span>{rowsPerPage}</span>
-                <ChevronsUpDown size={12} className="text-slate-400 shrink-0" />
-              </div>
+              <span className="text-sm font-medium text-slate-700">
+                <Translate text={localizationConstants.rowsPerPage} />
+              </span>
+              <Select
+                value={String(pageSize)}
+                onValueChange={(val) => {
+                  setPageSize(Number(val));
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0 cursor-pointer">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {[5, 10, 20, 30, 50].map((size) => (
+                    <SelectItem
+                      key={size}
+                      value={String(size)}
+                      className="cursor-pointer"
+                    >
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Page counter & Navigation buttons */}
-            <div className="flex items-center gap-3">
+            {/* Page counter */}
+            <div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
               <span>
-                {t(localizationConstants.pageOfLabel)
-                  .replace("{page}", String(page))
-                  .replace("{total}", String(totalPages))}
+                <Translate text={localizationConstants.pageLabel} />
               </span>
-              <div className="flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0 flex items-center justify-center text-xs text-slate-600 hover:text-slate-900 disabled:opacity-40 cursor-pointer rounded"
-                  onClick={() => setPage(1)}
-                  disabled={page === 1}
-                  title={t(localizationConstants.paginationFirstPage)}
-                >
-                  «
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0 flex items-center justify-center text-xs text-slate-600 hover:text-slate-900 disabled:opacity-40 cursor-pointer rounded"
-                  onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-                  disabled={page === 1}
-                  title={t(localizationConstants.paginationPreviousPage)}
-                >
-                  ‹
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0 flex items-center justify-center text-xs text-slate-600 hover:text-slate-900 disabled:opacity-40 cursor-pointer rounded"
-                  onClick={() =>
-                    setPage((prev) => Math.min(totalPages, prev + 1))
-                  }
-                  disabled={page === totalPages}
-                  title={t(localizationConstants.paginationNextPage)}
-                >
-                  ›
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-7 w-7 p-0 flex items-center justify-center text-xs text-slate-600 hover:text-slate-900 disabled:opacity-40 cursor-pointer rounded"
-                  onClick={() => setPage(totalPages)}
-                  disabled={page === totalPages}
-                  title={t(localizationConstants.paginationLastPage)}
-                >
-                  »
-                </Button>
-              </div>
+              <span>{page}</span>
+              <span>
+                <Translate text={localizationConstants.ofLabel} />
+              </span>
+              <span>{totalPages}</span>
+            </div>
+
+            {/* Navigation buttons */}
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page <= 1}
+                onClick={() => setPage(1)}
+                title={t(localizationConstants.paginationFirstPage)}
+              >
+                <ChevronsLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page <= 1}
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                title={t(localizationConstants.paginationPreviousPage)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page >= totalPages}
+                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                title={t(localizationConstants.paginationNextPage)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page >= totalPages}
+                onClick={() => setPage(totalPages)}
+                title={t(localizationConstants.paginationLastPage)}
+              >
+                <ChevronsRight className="h-4 w-4" />
+              </Button>
             </div>
           </div>
         </div>

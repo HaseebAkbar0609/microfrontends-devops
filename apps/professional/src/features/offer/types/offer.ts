@@ -56,11 +56,13 @@ export type OfferSendCustomer = {
 export type OfferSendImage = {
   id: string;
   label: string;
+  src?: string;
 };
 
 export type OfferSendFile = {
   id: string;
   label: string;
+  src?: string;
 };
 
 export type OfferSendData = {

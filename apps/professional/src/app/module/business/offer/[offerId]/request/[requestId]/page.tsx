@@ -8,7 +8,7 @@ export default async function OfferRequestDetailPage({
 }: {
   params: Promise<{ offerId: string; requestId: string }>;
 }) {
-  const { offerId, requestId } = await params;
+  const { requestId } = await params;
   const matchedRequest = DUMMY_OFFER_REQUESTS.find((r) => r.id === requestId);
 
   const data = {
