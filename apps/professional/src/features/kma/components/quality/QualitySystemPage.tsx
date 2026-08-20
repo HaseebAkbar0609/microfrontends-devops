@@ -10,6 +10,7 @@ import {
 	Download,
 	FileText,
 	Filter,
+	Mail,
 	MoreVertical,
 	Pencil,
 	Plus,
@@ -54,6 +55,58 @@ interface ControlPoint {
 	responsible: string;
 	documentation: string;
 }
+
+interface MailRecipient {
+	id: string;
+	name: string;
+	role: string;
+	email: string;
+	notifyNewPlan: boolean;
+	notifyUpdates: boolean;
+	notifyNonConformity: boolean;
+	notifyVerification: boolean;
+}
+
+const MOCK_RECIPIENTS: MailRecipient[] = [
+	{ id: "1", name: "Lars Andersson", role: "Platschef", email: "lars.andersson@company.se", notifyNewPlan: true, notifyUpdates: true, notifyNonConformity: true, notifyVerification: false },
+	{ id: "2", name: "Anna Svensson", role: "Kvalitetsinspektör", email: "anna.svensson@company.se", notifyNewPlan: true, notifyUpdates: false, notifyNonConformity: true, notifyVerification: true },
+	{ id: "3", name: "Erik Lindqvist", role: "Projektledare", email: "erik.lindqvist@company.se", notifyNewPlan: false, notifyUpdates: true, notifyNonConformity: false, notifyVerification: true },
+];
+
+// ── Category Tree ─────────────────────────────────────────────────────────────
+
+interface CategoryTreeNode {
+	id: string;
+	label: string;
+	children?: CategoryTreeNode[];
+}
+
+const MOCK_CATEGORY_TREE: CategoryTreeNode[] = [
+	{
+		id: "invoicing",
+		label: "Invoicing",
+		children: [
+			{ id: "compliance-agreement", label: "Compliance Agreement" },
+			{ id: "subcontractor-agreement", label: "Subcontractor Agreement" },
+		],
+	},
+	{
+		id: "project",
+		label: "Project",
+		children: [
+			{ id: "offer", label: "Offer" },
+			{ id: "doc-confirmation", label: "Doc Confirmation" },
+			{ id: "employment-confirmation", label: "Employment Confirmation" },
+		],
+	},
+	{ id: "draw", label: "Draw" },
+	{ id: "legal", label: "Legal" },
+	{ id: "hr-personnel", label: "HR / Personnel" },
+	{ id: "marketing", label: "Marketing" },
+	{ id: "support-it", label: "Support IT" },
+	{ id: "debt-collection", label: "Debt Collection" },
+	{ id: "other-modules", label: "Other modules" },
+];
 
 // ── Use Template Modal ────────────────────────────────────────────────────────
 
@@ -1222,9 +1275,10 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 	const [status, setStatus] = useState<"draft" | "active">("draft");
 	const version = "1.0";
 	const [rows, setRows] = useState<ControlPoint[]>([
-		{ id: "1", step: "", control: "", method: "", frequency: "", responsible: "", documentation: "" },
+		{ id: crypto.randomUUID(), step: "", control: "", method: "", frequency: "", responsible: "", documentation: "" },
 	]);
 	const [discardOpen, setDiscardOpen] = useState(false);
+	const [errors, setErrors] = useState<{ name?: boolean; rows?: boolean }>({});
 
 	const isDirty =
 		name.trim() !== "" ||
@@ -1239,6 +1293,16 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 				r.documentation !== "",
 		);
 
+	useEffect(() => {
+		if (!isDirty) return;
+		function handleBeforeUnload(e: BeforeUnloadEvent) {
+			e.preventDefault();
+			e.returnValue = "";
+		}
+		window.addEventListener("beforeunload", handleBeforeUnload);
+		return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+	}, [isDirty]);
+
 	function handleCancel() {
 		if (isDirty) {
 			setDiscardOpen(true);
@@ -1247,10 +1311,22 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 		}
 	}
 
+	function handleSave() {
+		const newErrors: { name?: boolean; rows?: boolean } = {};
+		if (!name.trim()) newErrors.name = true;
+		if (rows.some((r) => !r.step.trim() || !r.control.trim())) newErrors.rows = true;
+		if (Object.keys(newErrors).length > 0) {
+			setErrors(newErrors);
+			return;
+		}
+		setErrors({});
+		// backend integration pending
+	}
+
 	function addRow() {
 		setRows((prev) => [
 			...prev,
-			{ id: String(Date.now()), step: "", control: "", method: "", frequency: "", responsible: "", documentation: "" },
+			{ id: crypto.randomUUID(), step: "", control: "", method: "", frequency: "", responsible: "", documentation: "" },
 		]);
 	}
 
@@ -1294,6 +1370,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 					</button>
 					<button
 						type="button"
+						onClick={handleSave}
 						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
 					>
 						<Translate text={localizationConstants.kmaControlPlanSaveBtn} />
@@ -1315,9 +1392,21 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 							<input
 								type="text"
 								value={name}
-								onChange={(e) => setName(e.target.value)}
-								className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
+								onChange={(e) => { setName(e.target.value); if (e.target.value.trim()) setErrors((p) => ({ ...p, name: false })); }}
+								aria-required="true"
+								aria-invalid={!!errors.name}
+								className={cn(
+									"w-full rounded-md border px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1",
+									errors.name
+										? "border-red-400 focus:ring-red-300"
+										: "border-slate-200 focus:ring-slate-300",
+								)}
 							/>
+							{errors.name && (
+								<p className="mt-1 text-xs text-red-500">
+									<Translate text={localizationConstants.kmaControlPlanValidationName} />
+								</p>
+							)}
 						</div>
 						<div>
 							<label className="mb-1.5 block text-xs font-medium text-slate-500">
@@ -1358,6 +1447,11 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 				</div>
 				{/* Control Points Table */}
 				<div className="rounded-lg border border-slate-200 bg-white">
+					{errors.rows && (
+						<p className="border-b border-red-200 bg-red-50 px-5 py-2 text-xs text-red-600">
+							<Translate text={localizationConstants.kmaControlPlanValidationRows} />
+						</p>
+					)}
 					<div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
 						<h2 className="text-sm font-semibold text-slate-800">
 							<Translate text={localizationConstants.kmaControlPlanTableTitle} />
@@ -1406,6 +1500,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 												type="text"
 												value={row.step}
 												onChange={(e) => updateRow(row.id, "step", e.target.value)}
+												aria-label={`${t(localizationConstants.kmaControlPlanColStep)} ${idx + 1}`}
 												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
 											/>
 										</td>
@@ -1414,6 +1509,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 												type="text"
 												value={row.control}
 												onChange={(e) => updateRow(row.id, "control", e.target.value)}
+												aria-label={`${t(localizationConstants.kmaControlPlanColControl)} ${idx + 1}`}
 												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
 											/>
 										</td>
@@ -1422,6 +1518,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 												type="text"
 												value={row.method}
 												onChange={(e) => updateRow(row.id, "method", e.target.value)}
+												aria-label={`${t(localizationConstants.kmaControlPlanColMethod)} ${idx + 1}`}
 												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
 											/>
 										</td>
@@ -1430,6 +1527,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 												type="text"
 												value={row.frequency}
 												onChange={(e) => updateRow(row.id, "frequency", e.target.value)}
+												aria-label={`${t(localizationConstants.kmaControlPlanColFrequency)} ${idx + 1}`}
 												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
 											/>
 										</td>
@@ -1438,6 +1536,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 												type="text"
 												value={row.responsible}
 												onChange={(e) => updateRow(row.id, "responsible", e.target.value)}
+												aria-label={`${t(localizationConstants.kmaControlPlanColResponsible)} ${idx + 1}`}
 												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
 											/>
 										</td>
@@ -1446,6 +1545,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 												type="text"
 												value={row.documentation}
 												onChange={(e) => updateRow(row.id, "documentation", e.target.value)}
+												aria-label={`${t(localizationConstants.kmaControlPlanColDoc)} ${idx + 1}`}
 												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
 											/>
 										</td>
@@ -1464,6 +1564,204 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 						</table>
 					</div>
 				</div>
+			</div>
+		</div>
+	);
+}
+
+// ── Sändlista Page ────────────────────────────────────────────────────────────
+
+type NotifyField = "notifyNewPlan" | "notifyUpdates" | "notifyNonConformity" | "notifyVerification";
+
+const NOTIFY_COLS: { key: NotifyField; labelKey: string }[] = [
+	{ key: "notifyNewPlan", labelKey: localizationConstants.kmaSandlistaColNewPlan },
+	{ key: "notifyUpdates", labelKey: localizationConstants.kmaSandlistaColUpdates },
+	{ key: "notifyNonConformity", labelKey: localizationConstants.kmaSandlistaColNonConformity },
+	{ key: "notifyVerification", labelKey: localizationConstants.kmaSandlistaColVerification },
+];
+
+function SandlistaPage({ onBack }: { onBack: () => void }) {
+	const t = useTranslate();
+	const [recipients, setRecipients] = useState<MailRecipient[]>(MOCK_RECIPIENTS);
+	const [search, setSearch] = useState("");
+
+	const filtered = recipients.filter(
+		(r) =>
+			search === "" ||
+			r.name.toLowerCase().includes(search.toLowerCase()) ||
+			r.email.toLowerCase().includes(search.toLowerCase()) ||
+			r.role.toLowerCase().includes(search.toLowerCase()),
+	);
+
+	function toggleNotify(id: string, field: NotifyField) {
+		setRecipients((prev) =>
+			prev.map((r) => (r.id === id ? { ...r, [field]: !r[field] } : r)),
+		);
+	}
+
+	function removeRecipient(id: string) {
+		setRecipients((prev) => prev.filter((r) => r.id !== id));
+	}
+
+	function addRecipient() {
+		setRecipients((prev) => [
+			...prev,
+			{ id: crypto.randomUUID(), name: "", role: "", email: "", notifyNewPlan: false, notifyUpdates: false, notifyNonConformity: false, notifyVerification: false },
+		]);
+	}
+
+	function updateRecipient(id: string, field: "name" | "role" | "email", value: string) {
+		setRecipients((prev) =>
+			prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)),
+		);
+	}
+
+	return (
+		<div className="flex flex-1 flex-col overflow-hidden">
+			{/* Header */}
+			<div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+				<div className="flex items-center gap-3">
+					<button
+						type="button"
+						onClick={onBack}
+						className="cursor-pointer rounded-md p-1.5 text-slate-500 hover:bg-slate-100"
+					>
+						<ArrowLeft className="h-4 w-4" />
+					</button>
+					<h1 className="text-base font-semibold text-slate-900">
+						<Translate text={localizationConstants.kmaSandlistaTitle} />
+					</h1>
+				</div>
+				<div className="flex items-center gap-2">
+					<button
+						type="button"
+						onClick={onBack}
+						className="cursor-pointer rounded-md border border-slate-200 px-4 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+					>
+						<Translate text={localizationConstants.cancel} />
+					</button>
+					<button
+						type="button"
+						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
+					>
+						<Translate text={localizationConstants.save} />
+					</button>
+				</div>
+			</div>
+			{/* Toolbar */}
+			<div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+				<div className="relative w-72">
+					<Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+					<input
+						type="text"
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder={t(localizationConstants.kmaSandlistaSearchPlaceholder)}
+						className="h-8 w-full rounded border border-slate-200 pl-8 pr-3 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
+					/>
+				</div>
+				<div className="flex items-center gap-2">
+					<button
+						type="button"
+						className="flex cursor-pointer items-center gap-1.5 rounded border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
+					>
+						<Filter className="h-3.5 w-3.5" />
+						<Translate text={localizationConstants.filter} />
+					</button>
+					<button
+						type="button"
+						onClick={addRecipient}
+						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#27272A]"
+					>
+						<Plus className="h-3.5 w-3.5" />
+						<Translate text={localizationConstants.kmaSandlistaAddBtn} />
+					</button>
+				</div>
+			</div>
+			{/* Table */}
+			<div className="flex-1 overflow-auto">
+				<table className="w-full text-xs">
+					<thead>
+						<tr className="border-b border-slate-200 bg-slate-50">
+							<th className="min-w-36 px-4 py-3 text-left font-medium text-slate-500">
+								<Translate text={localizationConstants.kmaSandlistaColName} />
+							</th>
+							<th className="min-w-36 px-4 py-3 text-left font-medium text-slate-500">
+								<Translate text={localizationConstants.kmaSandlistaColRole} />
+							</th>
+							<th className="min-w-48 px-4 py-3 text-left font-medium text-slate-500">
+								<Translate text={localizationConstants.kmaSandlistaColEmail} />
+							</th>
+							{NOTIFY_COLS.map((col) => (
+								<th key={col.key} className="min-w-28 px-4 py-3 text-center font-medium text-slate-500">
+									<Translate text={col.labelKey} />
+								</th>
+							))}
+							<th className="w-10 px-3 py-3" />
+						</tr>
+					</thead>
+					<tbody>
+						{filtered.length === 0 ? (
+							<tr>
+								<td colSpan={8} className="py-12 text-center text-slate-400">
+									<Translate text={localizationConstants.noDataFound} />
+								</td>
+							</tr>
+						) : (
+							filtered.map((r) => (
+								<tr key={r.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+									<td className="px-3 py-2">
+										<input
+											type="text"
+											value={r.name}
+											onChange={(e) => updateRecipient(r.id, "name", e.target.value)}
+											aria-label={t(localizationConstants.kmaSandlistaColName)}
+											className="w-full rounded border border-transparent px-2 py-1 text-slate-800 focus:border-slate-300 focus:outline-none"
+										/>
+									</td>
+									<td className="px-3 py-2">
+										<input
+											type="text"
+											value={r.role}
+											onChange={(e) => updateRecipient(r.id, "role", e.target.value)}
+											aria-label={t(localizationConstants.kmaSandlistaColRole)}
+											className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+										/>
+									</td>
+									<td className="px-3 py-2">
+										<input
+											type="email"
+											value={r.email}
+											onChange={(e) => updateRecipient(r.id, "email", e.target.value)}
+											aria-label={t(localizationConstants.kmaSandlistaColEmail)}
+											className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+										/>
+									</td>
+									{NOTIFY_COLS.map((col) => (
+										<td key={col.key} className="px-4 py-2 text-center">
+											<input
+												type="checkbox"
+												checked={r[col.key]}
+												onChange={() => toggleNotify(r.id, col.key)}
+												aria-label={t(col.labelKey)}
+												className="h-4 w-4 cursor-pointer accent-slate-800"
+											/>
+										</td>
+									))}
+									<td className="px-2 py-2">
+										<button
+											type="button"
+											onClick={() => removeRecipient(r.id)}
+											className="flex cursor-pointer items-center justify-center rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-500"
+										>
+											<Trash2 className="h-3.5 w-3.5" />
+										</button>
+									</td>
+								</tr>
+							))
+						)}
+					</tbody>
+				</table>
 			</div>
 		</div>
 	);
@@ -1538,19 +1836,256 @@ function QualitySystemTab({
 	);
 }
 
+// ── Category Tree Item ────────────────────────────────────────────────────────
+
+function CategoryTreeItem({ node, depth = 0 }: { node: CategoryTreeNode; depth?: number }) {
+	const [expanded, setExpanded] = useState(
+		node.id === "invoicing" || node.id === "project",
+	);
+	const hasChildren = !!node.children?.length;
+
+	return (
+		<div>
+			<button
+				type="button"
+				onClick={() => hasChildren && setExpanded((v) => !v)}
+				style={{ paddingLeft: `${8 + depth * 16}px` }}
+				className="flex w-full cursor-pointer items-center gap-1.5 py-1.5 pr-3 text-left text-xs text-slate-700 hover:bg-slate-100"
+			>
+				{hasChildren ? (
+					expanded ? (
+						<ChevronDown className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+					) : (
+						<ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+					)
+				) : (
+					<span className="h-3.5 w-3.5 shrink-0" />
+				)}
+				<FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
+				<span className="truncate">{node.label}</span>
+			</button>
+			{hasChildren && expanded && (
+				<div>
+					{node.children!.map((child) => (
+						<CategoryTreeItem key={child.id} node={child} depth={depth + 1} />
+					))}
+				</div>
+			)}
+		</div>
+	);
+}
+
+// ── Template Detail Modal ─────────────────────────────────────────────────────
+
+function TemplateDetailModal({ template, onClose }: { template: PlanTemplate; onClose: () => void }) {
+	const t = useTranslate();
+	const [search, setSearch] = useState("");
+	const [treeSearch, setTreeSearch] = useState("");
+	const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+
+	const MODAL_COLS = [
+		{ key: "id", label: localizationConstants.kmaQualityPlanTemplateNrCol },
+		{ key: "name", label: localizationConstants.kmaQualityPlanTemplateNameCol },
+		{ key: "version", label: localizationConstants.kmaQualityPlanTemplateVersionCol },
+		{ key: "lastUpdated", label: localizationConstants.kmaQualityPlanTemplateUpdatedCol },
+		{ key: "createdBy", label: localizationConstants.kmaQualityPlanTemplateCreatedByCol },
+	];
+
+	const filtered = MOCK_TEMPLATES.filter(
+		(tpl) =>
+			search === "" ||
+			tpl.name.toLowerCase().includes(search.toLowerCase()) ||
+			tpl.id.toLowerCase().includes(search.toLowerCase()),
+	);
+
+	const filteredTree = treeSearch
+		? MOCK_CATEGORY_TREE.filter((n) =>
+				n.label.toLowerCase().includes(treeSearch.toLowerCase()) ||
+				n.children?.some((c) => c.label.toLowerCase().includes(treeSearch.toLowerCase())),
+			)
+		: MOCK_CATEGORY_TREE;
+
+	return (
+		<div
+			className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+			onClick={onClose}
+		>
+			<div
+				className="flex h-[80vh] w-full max-w-4xl overflow-hidden rounded-xl bg-white shadow-2xl"
+				onClick={(e) => e.stopPropagation()}
+			>
+				{/* Left: Category tree */}
+				<div className="flex w-60 shrink-0 flex-col border-r border-slate-200 bg-white">
+					<div className="border-b border-slate-200 px-4 py-3">
+						<p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+							<Translate text={localizationConstants.kmaTemplateModalCategories} />
+						</p>
+					</div>
+					<div className="relative border-b border-slate-200">
+						<Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+						<input
+							type="text"
+							value={treeSearch}
+							onChange={(e) => setTreeSearch(e.target.value)}
+							placeholder={t(localizationConstants.kmaTemplateModalSearchFolders)}
+							className="h-8 w-full bg-white pl-8 pr-3 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none"
+						/>
+					</div>
+					<div className="flex-1 overflow-y-auto py-1">
+						{filteredTree.map((node) => (
+							<CategoryTreeItem key={node.id} node={node} />
+						))}
+					</div>
+				</div>
+
+				{/* Right: Template list */}
+				<div className="flex flex-1 flex-col overflow-hidden">
+					<div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+						<h2 className="text-base font-semibold text-slate-900">{template.name}</h2>
+						<div className="flex items-center gap-2">
+							<button
+								type="button"
+								className="flex cursor-pointer items-center gap-1.5 rounded border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+							>
+								<Pencil className="h-3.5 w-3.5" />
+								<Translate text={localizationConstants.actionEdit} />
+							</button>
+							<button
+								type="button"
+								onClick={onClose}
+								className="cursor-pointer rounded p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+							>
+								<X className="h-4 w-4" />
+							</button>
+						</div>
+					</div>
+					<div className="flex items-center gap-2 border-b border-slate-200 px-4 py-2">
+						<div className="relative flex-1">
+							<Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+							<input
+								type="text"
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+								placeholder={t(localizationConstants.kmaQualitySearchDocs)}
+								className="h-8 w-full rounded border border-slate-200 pl-8 pr-3 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
+							/>
+						</div>
+						<button
+							type="button"
+							className="flex cursor-pointer items-center gap-1.5 rounded border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
+						>
+							<Filter className="h-3.5 w-3.5" />
+							Filter
+						</button>
+					</div>
+					<div className="flex-1 overflow-auto">
+						<table className="w-full text-xs">
+							<thead>
+								<tr className="border-b border-slate-200 bg-slate-50">
+									<th className="w-9 px-3 py-2.5" />
+									{MODAL_COLS.map((col) => (
+										<th key={col.key} className="px-3 py-2.5 text-left">
+											<div className="flex cursor-pointer items-center gap-1 font-medium text-slate-500 hover:text-slate-700">
+												<Translate text={col.label} />
+												<ArrowUpDown className="h-3 w-3 shrink-0" />
+											</div>
+										</th>
+									))}
+									<th className="w-9 px-3 py-2.5 text-center">
+										<Plus className="inline h-3.5 w-3.5 text-slate-400" />
+									</th>
+									<th className="w-8 px-2 py-2.5" />
+								</tr>
+							</thead>
+							<tbody>
+								{filtered.map((tpl) => (
+									<tr
+										key={tpl.id}
+										className={cn(
+											"group border-b border-slate-100 last:border-0",
+											tpl.id === template.id ? "bg-slate-100" : "hover:bg-slate-50",
+										)}
+									>
+										<td className="px-3 py-2.5">
+											<Star
+												className={cn(
+													"h-3.5 w-3.5",
+													tpl.id === "KP002" ? "fill-amber-400 text-amber-400" : "text-slate-300",
+												)}
+											/>
+										</td>
+										<td className="px-3 py-2.5 text-slate-500">{tpl.id}</td>
+										<td className="px-3 py-2.5 font-medium text-slate-800">{tpl.name}</td>
+										<td className="px-3 py-2.5 text-slate-500">{tpl.version}</td>
+										<td className="px-3 py-2.5 text-slate-500">{tpl.lastUpdated}</td>
+										<td className="px-3 py-2.5 text-slate-500">{tpl.createdBy}</td>
+										<td className="px-3 py-2.5 text-center">
+											<Plus className="inline h-3.5 w-3.5 cursor-pointer text-slate-300 opacity-0 hover:text-slate-500 group-hover:opacity-100" />
+										</td>
+										<td className="relative px-2 py-2.5">
+											<button
+												type="button"
+												onClick={() => setOpenMenuId(openMenuId === tpl.id ? null : tpl.id)}
+												className="flex cursor-pointer items-center justify-center rounded p-1 text-slate-300 opacity-0 hover:bg-slate-200 hover:text-slate-600 group-hover:opacity-100"
+											>
+												<MoreVertical className="h-3.5 w-3.5" />
+											</button>
+											{openMenuId === tpl.id && (
+												<div className="absolute right-0 z-20 mt-1 w-36 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+													<button
+														type="button"
+														className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+														onClick={() => setOpenMenuId(null)}
+													>
+														<Pencil className="h-3.5 w-3.5 text-slate-400" />
+														<Translate text={localizationConstants.actionEdit} />
+													</button>
+													<button
+														type="button"
+														className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-red-600 hover:bg-slate-50"
+														onClick={() => setOpenMenuId(null)}
+													>
+														<Trash2 className="h-3.5 w-3.5 text-red-400" />
+														<Translate text={localizationConstants.actionDelete} />
+													</button>
+													<button
+														type="button"
+														className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+														onClick={() => setOpenMenuId(null)}
+													>
+														<Archive className="h-3.5 w-3.5 text-slate-400" />
+														<Translate text={localizationConstants.kmaQualityPlanArchive} />
+													</button>
+												</div>
+											)}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
 // ── Kontrollplan Table ────────────────────────────────────────────────────────
 
 function KontrollplanTable({
 	title,
 	onOpenPlan,
+	onOpenSandlista,
 }: {
 	title: string;
 	onOpenPlan: () => void;
+	onOpenSandlista: () => void;
 }) {
 	const t = useTranslate();
 	const [search, setSearch] = useState("");
 	const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 	const [starred, setStarred] = useState<Set<string>>(new Set(["KP002"]));
+	const [selectedTemplate, setSelectedTemplate] = useState<PlanTemplate | null>(null);
 
 	const COLS = [
 		{ key: "id", label: localizationConstants.kmaQualityPlanTemplateNrCol },
@@ -1577,6 +2112,12 @@ function KontrollplanTable({
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden border-l border-slate-200">
+			{selectedTemplate && (
+				<TemplateDetailModal
+					template={selectedTemplate}
+					onClose={() => setSelectedTemplate(null)}
+				/>
+			)}
 			{/* Section header */}
 			<div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
 				<h3 className="text-sm font-semibold text-slate-800">{title}</h3>
@@ -1646,7 +2187,15 @@ function KontrollplanTable({
 									</button>
 								</td>
 								<td className="px-3 py-2.5 text-slate-500">{tpl.id}</td>
-								<td className="px-3 py-2.5 font-medium text-slate-800">{tpl.name}</td>
+								<td className="px-3 py-2.5 font-medium text-slate-800">
+									<button
+										type="button"
+										onClick={() => setSelectedTemplate(tpl)}
+										className="cursor-pointer text-left hover:underline"
+									>
+										{tpl.name}
+									</button>
+								</td>
 								<td className="px-3 py-2.5 text-slate-500">{tpl.version}</td>
 								<td className="px-3 py-2.5 text-slate-500">{tpl.lastUpdated}</td>
 								<td className="px-3 py-2.5 text-slate-500">{tpl.createdBy}</td>
@@ -1687,6 +2236,14 @@ function KontrollplanTable({
 												<Archive className="h-3.5 w-3.5 text-slate-400" />
 												<Translate text={localizationConstants.kmaQualityPlanArchive} />
 											</button>
+											<button
+												type="button"
+												className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+												onClick={() => { onOpenSandlista(); setOpenMenuId(null); }}
+											>
+												<Mail className="h-3.5 w-3.5 text-slate-400" />
+												<Translate text={localizationConstants.kmaSandlistaMenuOption} />
+											</button>
 										</div>
 									)}
 								</td>
@@ -1725,10 +2282,12 @@ function QualityPlanTab({
 	onCreateNew,
 	onUseTemplate,
 	onOpenPlan,
+	onOpenSandlista,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
 	onOpenPlan: () => void;
+	onOpenSandlista: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -1890,6 +2449,7 @@ function QualityPlanTab({
 					<KontrollplanTable
 						title={selectedMain?.label ?? ""}
 						onOpenPlan={onOpenPlan}
+						onOpenSandlista={onOpenSandlista}
 					/>
 				</div>
 			)}
@@ -1907,6 +2467,7 @@ export function QualitySystemPage() {
 	const [createPlanOpen, setCreatePlanOpen] = useState(false);
 	const [createWithTemplate, setCreateWithTemplate] = useState(false);
 	const [openPlanOpen, setOpenPlanOpen] = useState(false);
+	const [sandlistaOpen, setSandlistaOpen] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -1931,6 +2492,10 @@ export function QualitySystemPage() {
 
 	if (openPlanOpen) {
 		return <OpenKontrollplanPage onBack={() => setOpenPlanOpen(false)} />;
+	}
+
+	if (sandlistaOpen) {
+		return <SandlistaPage onBack={() => setSandlistaOpen(false)} />;
 	}
 
 	return (
@@ -1984,6 +2549,7 @@ export function QualitySystemPage() {
 						setCreatePlanOpen(true);
 					}}
 					onOpenPlan={() => setOpenPlanOpen(true)}
+					onOpenSandlista={() => setSandlistaOpen(true)}
 				/>
 			)}
 		</div>
