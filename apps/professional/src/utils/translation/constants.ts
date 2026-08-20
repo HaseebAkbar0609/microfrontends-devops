@@ -2105,6 +2105,46 @@ export type OfferTranslation = {
 	kmaQualityPlanTemplateUpdatedCol: string;
 	kmaQualityPlanTemplateCreatedByCol: string;
 	kmaQualityPlanTemplateUseBtn: string;
+	kmaQualityPlanArchive: string;
+	// TFS-730 – Open New Control Plan
+	kmaControlPlanOpenTitle: string;
+	kmaControlPlanGeneralInfo: string;
+	kmaControlPlanNameLabel: string;
+	kmaControlPlanDescLabel: string;
+	kmaControlPlanStatusLabel: string;
+	kmaControlPlanVersionLabel: string;
+	kmaControlPlanStatusDraft: string;
+	kmaControlPlanStatusActive: string;
+	kmaControlPlanTableTitle: string;
+	kmaControlPlanColStep: string;
+	kmaControlPlanColControl: string;
+	kmaControlPlanColMethod: string;
+	kmaControlPlanColFrequency: string;
+	kmaControlPlanColResponsible: string;
+	kmaControlPlanColDoc: string;
+	kmaControlPlanAddRow: string;
+	kmaControlPlanDiscardTitle: string;
+	kmaControlPlanDiscardMsg: string;
+	kmaControlPlanDiscardConfirm: string;
+	kmaControlPlanDiscardCancel: string;
+	kmaControlPlanSaveBtn: string;
+	kmaControlPlanCancelBtn: string;
+	kmaControlPlanValidationName: string;
+	kmaControlPlanValidationRows: string;
+	// TFS-731 – Sändlista (Mail List)
+	kmaSandlistaTitle: string;
+	kmaSandlistaMenuOption: string;
+	kmaSandlistaAddBtn: string;
+	kmaSandlistaSearchPlaceholder: string;
+	kmaSandlistaColName: string;
+	kmaSandlistaColRole: string;
+	kmaSandlistaColEmail: string;
+	kmaSandlistaColNewPlan: string;
+	kmaSandlistaColUpdates: string;
+	kmaSandlistaColNonConformity: string;
+	kmaSandlistaColVerification: string;
+	kmaTemplateModalCategories: string;
+	kmaTemplateModalSearchFolders: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;
