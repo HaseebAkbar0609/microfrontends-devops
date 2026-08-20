@@ -24,6 +24,8 @@ export type BusinessRentModalProps = {
 export type OfferConfirmationModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  projectName?: string;
+  description?: string;
   onConfirm?: () => void;
 };
 

@@ -1,5 +1,5 @@
-import { OfferAcceptedView } from "@/features/offer/components/OfferAcceptedView";
+import { OfferStatusPageContent } from "@/features/offer/components/OfferStatusPageContent";
 
-export default function AcceptedPage() {
-  return <OfferAcceptedView />;
+export default function OfferAcceptedPage() {
+  return <OfferStatusPageContent tabId="accepted" />;
 }

@@ -63,9 +63,11 @@ function SkeletonRows({ count }: { count: number }) {
 
 interface Props {
   initialItems?: OfferAcceptedItem[];
+  items?: OfferAcceptedItem[];
+  offerId?: string;
 }
 
-export function OfferAcceptedView({ initialItems }: Props) {
+export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _offerId }: Props) {
   const t = useTranslate();
   const router = useRouter();
 
@@ -74,11 +76,15 @@ export function OfferAcceptedView({ initialItems }: Props) {
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [items, setItems] = useState<OfferAcceptedItem[]>(initialItems ?? DUMMY_ACCEPTED_ITEMS);
+  const [items, setItems] = useState<OfferAcceptedItem[]>(itemsProp ?? initialItems ?? DUMMY_ACCEPTED_ITEMS);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (initialItems && initialItems.length > 0) return;
+    const passedItems = itemsProp ?? initialItems;
+    if (passedItems && passedItems.length > 0) {
+      setItems(passedItems);
+      return;
+    }
 
     let cancelled = false;
     async function fetchAccepted() {
@@ -117,7 +123,7 @@ export function OfferAcceptedView({ initialItems }: Props) {
     }
     fetchAccepted();
     return () => { cancelled = true; };
-  }, [initialItems]);
+  }, [initialItems, itemsProp]);
 
   const debouncedSearch = useDebounce(search, 300);
   const uniqueTypes = useMemo(
