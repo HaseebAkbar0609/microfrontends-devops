@@ -2,7 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import {
+  ChevronDown,
+  ArrowLeft,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import { Search } from "@/components/search/Search";
 import {
   DropdownMenu,
@@ -13,6 +20,13 @@ import {
   DropdownMenuLabel,
   DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -23,12 +37,10 @@ import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferAcceptedItem } from "../types/offer";
-import { TablePagination } from "@/components/table/TablePagination";
 import { DUMMY_ACCEPTED_ITEMS } from "../constants/offerAccepted.mock";
 import { OFFER_ACCEPTED_BREADCRUMBS } from "../constants/offerAccepted";
 import { authStorage } from "@/lib/authStorage";
 import { ProfessionalRow } from "@/types/company";
-import { OfferModuleHeader } from "./OfferModuleHeader";
 import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
 
 type SortField = keyof Pick<
@@ -158,11 +170,6 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
   const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
   const totalSum = filtered.reduce((sum, i) => sum + i.acceptedPrice, 0);
 
-  const handlePageSizeChange = (newSize: number) => {
-    setPageSize(newSize);
-    setPage(1);
-  };
-
   const columns: { key: SortField | "status"; label: string; sortable?: boolean }[] = [
     { key: "offertNr", label: t(localizationConstants.offerQuotedOffertNr) },
     { key: "job", label: t(localizationConstants.offerAcceptedAllJobs) },
@@ -177,11 +184,17 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
 
   return (
     <div className="flex flex-1 flex-col bg-white">
-      <OfferModuleHeader activeTab="accepted" />
       <div className="flex flex-col gap-1.5 px-6 pt-5 pb-2">
-        <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-          {t(localizationConstants.offerTabAccepted)}
-        </h2>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => router.push("/module/business/offer/dashboard")}
+            className="flex items-center gap-2 text-slate-900 font-bold text-lg hover:text-slate-700 transition-colors cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span>{t(localizationConstants.offerTabAccepted)}</span>
+          </button>
+        </div>
         <DynamicBreadcrumb
           items={OFFER_ACCEPTED_BREADCRUMBS.map((item) => ({
             translationKey: item.label,
@@ -374,16 +387,95 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
               </tbody>
             </table>
           </div>
-        </div>
 
-        <TablePagination
-          currentPage={page}
-          totalPages={totalPages}
-          pageSize={pageSize}
-          onPageChange={setPage}
-          onPageSizeChange={handlePageSizeChange}
-          className="justify-end sm:justify-end"
-        />
+          {/* Table Pagination Section Inside the Card */}
+          <div className="flex items-center justify-center sm:justify-end gap-6 pt-4 pb-1 text-sm text-slate-600 flex-wrap border-t border-slate-100">
+            {/* Rows per page selector */}
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-slate-700">
+                <Translate text={localizationConstants.rowsPerPage} />
+              </span>
+              <Select
+                value={String(pageSize)}
+                onValueChange={(val) => {
+                  setPageSize(Number(val));
+                  setPage(1);
+                }}
+              >
+                <SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0 cursor-pointer">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-white">
+                  {[5, 10, 20, 30, 50].map((size) => (
+                    <SelectItem
+                      key={size}
+                      value={String(size)}
+                      className="cursor-pointer"
+                    >
+                      {size}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Page counter */}
+            <div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+              <span>
+                <Translate text={localizationConstants.pageLabel} />
+              </span>
+              <span>{page}</span>
+              <span>
+                <Translate text={localizationConstants.ofLabel} />
+              </span>
+              <span>{totalPages}</span>
+            </div>
+
+            {/* Navigation buttons */}
+            <div className="flex items-center gap-1">
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page <= 1}
+                onClick={() => setPage(1)}
+                title={t(localizationConstants.paginationFirstPage)}
+              >
+                <ChevronsLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page <= 1}
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                title={t(localizationConstants.paginationPreviousPage)}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page >= totalPages}
+                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                title={t(localizationConstants.paginationNextPage)}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-none"
+                disabled={page >= totalPages}
+                onClick={() => setPage(totalPages)}
+                title={t(localizationConstants.paginationLastPage)}
+              >
+                <ChevronsRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
