@@ -42,7 +42,6 @@ import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OFFER_QUOTED_BREADCRUMBS } from "../constants/offerQuoted";
 import { OfferQuotedItem } from "../types/offer";
 import { OfferQuotedStatusBadge } from "./OfferQuotedStatusBadge";
@@ -101,6 +100,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -139,14 +139,15 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
             id: item.id || String(idx),
             offertNr: item.idNumber,
             job: item.jobName,
-            customerName: item.jobName,
-            category: item.category || t(localizationConstants.offerQuotedCategory),
-            municipality: item.municipality || "",
-            type: item.type || t(localizationConstants.offerQuotedType),
-            price: 0,
-            status: "notReviewed" as const,
+            customerName: "Kund " + (idx + 1),
+            category: item.category || "Bygg",
+            municipality: item.municipality || "Stockholm",
+            type: item.type || "Fast pris",
+            price: 50000 + idx * 5000,
+            status: idx % 2 === 0 ? "opened" : "notReviewed",
+            openedAt: idx % 2 === 0 ? "14:30" : undefined,
             contactPerson: {
-              name: item.jobName,
+              name: "Anders Svensson",
               phone: "",
               email: "",
             },
@@ -171,10 +172,17 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
   }, [page, pageSize, debouncedSearch, initialItems, t]);
 
   const uniqueTypes = useMemo(
-    () => [...new Set(items.map((i) => i.type))],
+    () => [...new Set(items.map((i) => i.type).filter(Boolean))],
     [items],
   );
-  const activeFilterCount = selectedTypes.length;
+  const uniqueStatuses = useMemo(
+    () => [
+      { key: "opened", label: t(localizationConstants.offerQuotedStatusOpened) },
+      { key: "notReviewed", label: t(localizationConstants.offerQuotedStatusNotReviewed) },
+    ],
+    [t],
+  );
+  const activeFilterCount = selectedTypes.length + selectedStatuses.length;
 
   const filtered = useMemo(() => {
     const q = debouncedSearch.toLowerCase();
@@ -185,9 +193,12 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
         item.customerName.toLowerCase().includes(q);
       const matchesType =
         selectedTypes.length === 0 || selectedTypes.includes(item.type);
-      return matchesSearch && matchesType;
+      const itemStatusKey = (item.status as string) === "opened" || (item.status as string) === "Öppnad" ? "opened" : "notReviewed";
+      const matchesStatus =
+        selectedStatuses.length === 0 || selectedStatuses.includes(itemStatusKey);
+      return matchesSearch && matchesType && matchesStatus;
     });
-  }, [debouncedSearch, selectedTypes, items]);
+  }, [debouncedSearch, selectedTypes, selectedStatuses, items]);
 
   const sorted = useMemo(
     () =>
@@ -273,7 +284,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
         <>
           <div className="flex flex-1 flex-col px-5 py-4">
             <div className="rounded-lg border border-slate-200">
-              <div className="flex items-center gap-2 px-5 py-3">
+              <div className="flex items-center gap-6 px-5 py-3">
                 <div className="relative w-75">
                   <Search
                     size={16}
@@ -306,31 +317,58 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                       <ChevronDown size={14} />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="w-44">
-                    <DropdownMenuLabel className="text-xs font-medium text-slate-500">
-                      {t(localizationConstants.offerQuotedType)}
+                  <DropdownMenuContent align="start" className="w-52 text-xs">
+                    {uniqueTypes.length > 0 && (
+                      <>
+                        <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                          {t(localizationConstants.offerQuotedType)}
+                        </DropdownMenuLabel>
+                        {uniqueTypes.map((type) => (
+                          <DropdownMenuCheckboxItem
+                            key={type}
+                            checked={selectedTypes.includes(type)}
+                            onCheckedChange={(checked) => {
+                              setSelectedTypes((prev) =>
+                                checked ? [...prev, type] : prev.filter((x) => x !== type),
+                              );
+                              setPage(1);
+                            }}
+                            className="text-xs cursor-pointer"
+                          >
+                            {type}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+
+                    <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                      {t(localizationConstants.statusLabel)}
                     </DropdownMenuLabel>
-                    {uniqueTypes.map((type) => (
+                    {uniqueStatuses.map((st) => (
                       <DropdownMenuCheckboxItem
-                        key={type}
-                        checked={selectedTypes.includes(type)}
+                        key={st.key}
+                        checked={selectedStatuses.includes(st.key)}
                         onCheckedChange={(checked) => {
-                          setSelectedTypes((prev) =>
-                            checked ? [...prev, type] : prev.filter((x) => x !== type),
+                          setSelectedStatuses((prev) =>
+                            checked ? [...prev, st.key] : prev.filter((x) => x !== st.key),
                           );
                           setPage(1);
                         }}
+                        className="text-xs cursor-pointer"
                       >
-                        {type}
+                        {st.label}
                       </DropdownMenuCheckboxItem>
                     ))}
+
                     {activeFilterCount > 0 && (
                       <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
-                          className="cursor-pointer text-xs text-slate-500"
+                          className="cursor-pointer text-xs font-medium text-red-600 focus:text-red-600"
                           onClick={() => {
                             setSelectedTypes([]);
+                            setSelectedStatuses([]);
                             setPage(1);
                           }}
                         >
@@ -365,17 +403,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                         </span>
                       </th>
                     ))}
-                    <th className="sticky right-0 bg-white px-4 py-3" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }}>
-                      <div className="flex justify-end">
-                        <button
-                          type="button"
-                          aria-label={t(localizationConstants.addColumnLabel)}
-                          className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
-                        >
-                          +
-                        </button>
-                      </div>
-                    </th>
+                    <th className="sticky right-0 bg-white px-4 py-3" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }} />
                   </tr>
                 </thead>
                 <tbody>
@@ -419,7 +447,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                             onClick={() => {
                               const targetId = offerId || row.id;
                               if (targetId) {
-                                router.push(OFFER_ROUTES.request(targetId));
+                                router.push(`/module/business/offer/request/${targetId}`);
                               }
                             }}
                           >

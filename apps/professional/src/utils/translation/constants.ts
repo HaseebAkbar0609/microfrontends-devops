@@ -1005,6 +1005,28 @@ export type OfferTranslation = {
 	calcNewGdprLink: string;
 	calcNewGdprSuffix: string;
 	calcNewCreateBtn: string;
+	calcNewPlaceholderForetag: string;
+	calcNewPlaceholderAddress: string;
+	calcNewPlaceholderPostNr: string;
+	calcNewPlaceholderOrt: string;
+	calcNewPlaceholderMail: string;
+	calcNewPlaceholderTelefon: string;
+	calcNewPlaceholderFornamn: string;
+	calcNewPlaceholderEfternamn: string;
+	calcNewPlaceholderOrgNr: string;
+	calcNewPlaceholderProjektNr: string;
+	calcNewPlaceholderProjektNamn: string;
+	calcNewPlaceholderKvartersNamn: string;
+	calcNewPlaceholderProjektAdress: string;
+	calcNewPlaceholderType: string;
+	calcNewPlaceholderKategori: string;
+	calcNewPlaceholderAvdelning: string;
+	calcNewPlaceholderKontraktsumma: string;
+	calcNewPlaceholderOffertNr: string;
+	calcNewPlaceholderStartDatum: string;
+	calcNewPlaceholderSlutDatum: string;
+	calcNewPlaceholderKontaktperson: string;
+	calcNewPlaceholderRoll: string;
 	// Calculation - Detail view
 	calcDetailProjekteringNr: string;
 	calcDetailProjekteringNamn: string;
@@ -2840,6 +2862,7 @@ export type OfferTranslation = {
 	offerRequestCustomerName: string;
 	offerRequestLatestOfferDate: string;
 	offerRequestPreliminaryBudget: string;
+	offerRequestAddProject: string;
 	offerRequestAddNewProject: string;
 	offerRequestTotalBudget: string;
 	offerRequestAssignee: string;

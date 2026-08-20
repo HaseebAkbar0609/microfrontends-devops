@@ -1,13 +1,62 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { getOfferDetailByIdAPIAction } from "@/api-actions/offers";
+import { DUMMY_OFFER_SEND } from "@/features/offer/constants/offerSend";
+import { DUMMY_OFFER_REQUESTS } from "@/features/offer/constants/offerRequests.mock";
+import { DUMMY_QUOTED_ITEMS } from "@/features/offer/constants/offerQuoted.mock";
+
+function getOfferFallback(offerId: string) {
+	const reqMatch = DUMMY_OFFER_REQUESTS.find((r) => r.id === offerId);
+	if (reqMatch) {
+		return {
+			...DUMMY_OFFER_SEND,
+			id: reqMatch.id,
+			title: reqMatch.job,
+			type: reqMatch.type,
+			badges: [reqMatch.type, reqMatch.category, reqMatch.municipality],
+			customer: {
+				name: reqMatch.customerName,
+				email: `${reqMatch.customerName.toLowerCase().replace(/\s+/g, ".")}@example.com`,
+				phone: "076000000",
+				address: `Storgatan 16, ${reqMatch.municipality}`,
+			},
+			preliminaryBudgetPrice: reqMatch.price ? reqMatch.price.toLocaleString("en-US") : "550,000",
+			offerDateLatest: "2025-04-15",
+		};
+	}
+
+	const quotedMatch = DUMMY_QUOTED_ITEMS.find((q) => q.id === offerId);
+	if (quotedMatch) {
+		return {
+			...DUMMY_OFFER_SEND,
+			id: quotedMatch.id,
+			title: quotedMatch.job,
+			type: quotedMatch.type,
+			badges: [quotedMatch.type, quotedMatch.category, quotedMatch.municipality],
+			customer: {
+				name: quotedMatch.customerName,
+				email: quotedMatch.contactPerson.email || `${quotedMatch.customerName.toLowerCase().replace(/\s+/g, ".")}@example.com`,
+				phone: quotedMatch.contactPerson.phone || "076000000",
+				address: `Storgatan 16, ${quotedMatch.municipality}`,
+			},
+			preliminaryBudgetPrice: quotedMatch.price ? quotedMatch.price.toLocaleString("en-US") : "550,000",
+			offerDateLatest: "2025-04-15",
+		};
+	}
+
+	return {
+		...DUMMY_OFFER_SEND,
+		id: offerId,
+	};
+}
 import type { KalkylDocItem, KalkylKontaktData, KalkylProjektData } from "../types/kalkyl";
 import { KalkylKontaktStep } from "./steps/KalkylKontaktStep";
 import { KalkylProjektStep } from "./steps/KalkylProjektStep";
@@ -75,6 +124,8 @@ const DEFAULT_PROJEKT: KalkylProjektData = {
 export function CreateKalkylPage() {
 	const t = useTranslate();
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const offerId = searchParams.get("offerId");
 
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,6 +138,110 @@ export function CreateKalkylPage() {
 	const [datumFran, setDatumFran] = useState("");
 	const [datumTill, setDatumTill] = useState("");
 	const [gdprAccepted, setGdprAccepted] = useState(false);
+
+	useEffect(() => {
+		if (!offerId) return;
+
+		async function loadOfferData() {
+			try {
+				let offer = null;
+				const res = await getOfferDetailByIdAPIAction(offerId as string);
+				if (res.success && res.data) {
+					offer = res.data;
+				} else {
+					offer = getOfferFallback(offerId as string);
+				}
+
+				if (offer) {
+					const customerName = offer.customer?.name || "";
+					const nameParts = customerName.trim().split(" ");
+					const fornamn = nameParts[0] || "";
+					const efternamn = nameParts.slice(1).join(" ") || "";
+
+					setKontakt((prev) => ({
+						...prev,
+						offert: offer.id || (offerId as string),
+						foretag: customerName,
+						address: offer.customer?.address || "",
+						ort: offer.badges?.[1] || offer.badges?.[2] || "",
+						mail: offer.customer?.email || "",
+						telefon: offer.customer?.phone || "",
+						fornamn,
+						efternamn,
+						kontaktMail: offer.customer?.email || "",
+						mobil: offer.customer?.phone || "",
+						// Beställare
+						bestellareFoetag: customerName,
+						bestellareAddress: offer.customer?.address || "",
+						bestellareOrt: offer.badges?.[1] || offer.badges?.[2] || "",
+						bestellareMail: offer.customer?.email || "",
+						bestellareTelefon: offer.customer?.phone || "",
+						bestellareFornamn: fornamn,
+						bestellareEfternamn: efternamn,
+						bestellareKontaktMail: offer.customer?.email || "",
+						bestellareMobil: offer.customer?.phone || "",
+					}));
+
+					setProjekt((prev) => ({
+						...prev,
+						projektNr: offer.id || (offerId as string),
+						projektNamn: offer.title || "",
+						projektAdress: offer.customer?.address || "",
+						ort: offer.badges?.[1] || offer.badges?.[2] || "",
+						type: offer.type || "",
+						offertNr: offer.id || (offerId as string),
+						kontraktsumma: offer.preliminaryBudgetPrice || "",
+						senatsDatum: offer.offerDateLatest || prev.senatsDatum,
+					}));
+				}
+			} catch {
+				const fallbackOffer = getOfferFallback(offerId as string);
+				if (fallbackOffer) {
+					const customerName = fallbackOffer.customer?.name || "";
+					const nameParts = customerName.trim().split(" ");
+					const fornamn = nameParts[0] || "";
+					const efternamn = nameParts.slice(1).join(" ") || "";
+
+					setKontakt((prev) => ({
+						...prev,
+						offert: fallbackOffer.id || (offerId as string),
+						foretag: customerName,
+						address: fallbackOffer.customer?.address || "",
+						ort: fallbackOffer.badges?.[1] || fallbackOffer.badges?.[2] || "",
+						mail: fallbackOffer.customer?.email || "",
+						telefon: fallbackOffer.customer?.phone || "",
+						fornamn,
+						efternamn,
+						kontaktMail: fallbackOffer.customer?.email || "",
+						mobil: fallbackOffer.customer?.phone || "",
+						bestellareFoetag: customerName,
+						bestellareAddress: fallbackOffer.customer?.address || "",
+						bestellareOrt: fallbackOffer.badges?.[1] || fallbackOffer.badges?.[2] || "",
+						bestellareMail: fallbackOffer.customer?.email || "",
+						bestellareTelefon: fallbackOffer.customer?.phone || "",
+						bestellareFornamn: fornamn,
+						bestellareEfternamn: efternamn,
+						bestellareKontaktMail: fallbackOffer.customer?.email || "",
+						bestellareMobil: fallbackOffer.customer?.phone || "",
+					}));
+
+					setProjekt((prev) => ({
+						...prev,
+						projektNr: fallbackOffer.id || (offerId as string),
+						projektNamn: fallbackOffer.title || "",
+						projektAdress: fallbackOffer.customer?.address || "",
+						ort: fallbackOffer.badges?.[1] || fallbackOffer.badges?.[2] || "",
+						type: fallbackOffer.type || "",
+						offertNr: fallbackOffer.id || (offerId as string),
+						kontraktsumma: fallbackOffer.preliminaryBudgetPrice || "",
+						senatsDatum: fallbackOffer.offerDateLatest || prev.senatsDatum,
+					}));
+				}
+			}
+		}
+
+		loadOfferData();
+	}, [offerId]);
 
 	const handleKontaktChange = useCallback(
 		(patch: Partial<KalkylKontaktData>) => setKontakt((prev) => ({ ...prev, ...patch })),
