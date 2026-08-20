@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Glasses, Send, Briefcase, MapPin, FileText, CheckCircle2 } from "lucide-react";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { Button } from "@/components/ui/button";
-import { useTranslate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
 import { showToast } from "@/lib/toast";
@@ -226,15 +226,15 @@ export function CreateAgreementView({ offerId, data }: Props) {
           <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-normal text-sky-700">
               <Briefcase size={12} className="text-sky-600" />
-              {t(localizationConstants.offerDetailExpressJobBadge)}
+              <Translate text={localizationConstants.offerDetailExpressJobBadge} />
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-normal text-emerald-700">
               <MapPin size={12} className="text-emerald-600" />
-              Stockholm
+              <Translate text={localizationConstants.tagStockholm} />
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-normal text-amber-700">
               <MapPin size={12} className="text-amber-600" />
-              Järfälla
+              <Translate text={localizationConstants.tagJarfalla} />
             </span>
           </div>
         </div>

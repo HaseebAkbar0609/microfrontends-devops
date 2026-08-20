@@ -23,7 +23,7 @@ import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferAcceptedItem } from "../types/offer";
-import { OfferTablePagination } from "./OfferTablePagination";
+import { TablePagination } from "@/components/table/TablePagination";
 import { DUMMY_ACCEPTED_ITEMS } from "../constants/offerAccepted.mock";
 import { OFFER_ACCEPTED_BREADCRUMBS } from "../constants/offerAccepted";
 import { authStorage } from "@/lib/authStorage";
@@ -73,9 +73,9 @@ export function OfferAcceptedView({ initialItems }: Props) {
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [items, setItems] = useState<OfferAcceptedItem[]>(initialItems ?? DUMMY_ACCEPTED_ITEMS);
   const [isLoading, setIsLoading] = useState(false);
-  const rowsPerPage = 10;
 
   useEffect(() => {
     if (initialItems && initialItems.length > 0) return;
@@ -148,9 +148,14 @@ export function OfferAcceptedView({ initialItems }: Props) {
     [filtered, sortField, sortDir],
   );
 
-  const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
-  const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
+  const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
+  const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
   const totalSum = filtered.reduce((sum, i) => sum + i.acceptedPrice, 0);
+
+  const handlePageSizeChange = (newSize: number) => {
+    setPageSize(newSize);
+    setPage(1);
+  };
 
   const columns: { key: SortField | "status"; label: string; sortable?: boolean }[] = [
     { key: "offertNr", label: t(localizationConstants.offerQuotedOffertNr) },
@@ -191,7 +196,7 @@ export function OfferAcceptedView({ initialItems }: Props) {
                 setPage(1);
               }}
               placeholder={localizationConstants.search}
-              wrapperClassName="w-full sm:w-[220px] flex-shrink-0"
+              wrapperClassName="w-full sm:w-75 flex-shrink-0"
               className="h-9 text-xs"
             />
 
@@ -280,7 +285,7 @@ export function OfferAcceptedView({ initialItems }: Props) {
               </thead>
               <tbody>
                 {isLoading ? (
-                  <SkeletonRows count={rowsPerPage} />
+                  <SkeletonRows count={pageSize} />
                 ) : (
                   <>
                     {paginated.map((row) => (
@@ -288,7 +293,7 @@ export function OfferAcceptedView({ initialItems }: Props) {
                         key={row.id}
                         className="group border-b border-slate-200 last:border-0 hover:bg-slate-50"
                       >
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
                           {row.offertNr}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">
@@ -296,11 +301,11 @@ export function OfferAcceptedView({ initialItems }: Props) {
                             {row.job}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-700">
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
                           {row.customerName}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3">
-                          <span className="inline-flex items-center rounded-[4px] border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-medium text-slate-700">
+                          <span className="inline-flex items-center rounded-[4px] border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-medium text-slate-500">
                             {row.category}
                           </span>
                         </td>
@@ -309,16 +314,16 @@ export function OfferAcceptedView({ initialItems }: Props) {
                             {t(localizationConstants.offerAcceptedStatusBadge)}
                           </span>
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
                           {row.municipality}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900 tabular-nums">
                           {formatCurrency(row.acceptedPrice)}
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
                           {row.type}
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-700">
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
                           {row.contactPerson.name}
                         </td>
                         <td className="whitespace-nowrap px-4 py-3">
@@ -326,7 +331,7 @@ export function OfferAcceptedView({ initialItems }: Props) {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="h-9 cursor-pointer border border-slate-200 bg-white px-3.5 text-xs font-medium text-slate-900 hover:bg-slate-50 transition-colors shadow-none"
+                              className="h-10 cursor-pointer font-sans font-medium text-sm leading-6 tracking-normal border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 px-4 transition-colors shadow-none rounded-md"
                               onClick={() =>
                                 router.push(OFFER_ROUTES.createAgreement(row.id))
                               }
@@ -336,7 +341,7 @@ export function OfferAcceptedView({ initialItems }: Props) {
                             <Button
                               variant="outline"
                               size="sm"
-                              className="h-9 cursor-pointer border border-slate-200 bg-white px-3.5 text-xs font-medium text-slate-900 hover:bg-slate-50 transition-colors shadow-none"
+                              className="h-10 cursor-pointer font-sans font-medium text-sm leading-6 tracking-normal border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 px-4 transition-colors shadow-none rounded-md"
                               onClick={() =>
                                 router.push(OFFER_ROUTES.quoted())
                               }
@@ -365,14 +370,14 @@ export function OfferAcceptedView({ initialItems }: Props) {
           </div>
         </div>
 
-        <div className="flex justify-center w-full">
-          <OfferTablePagination
-            page={page}
-            totalPages={totalPages}
-            rowsPerPage={rowsPerPage}
-            onPageChange={setPage}
-          />
-        </div>
+        <TablePagination
+          currentPage={page}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={setPage}
+          onPageSizeChange={handlePageSizeChange}
+          className="justify-end sm:justify-end"
+        />
       </div>
     </div>
   );

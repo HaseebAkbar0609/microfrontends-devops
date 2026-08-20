@@ -2484,7 +2484,7 @@ export const enOffer: OfferTranslation = {
 	dateHeaderLabel: "Date",
 	orderTitleKitchenRenovation: "Kitchen Renovation Job",
 	tagStockholm: "Stockholm",
-	tagJarfalla: "JÃ¤rfÃ¤lla",
+	tagJarfalla: "Järfälla",
 	colApproved: "Approved",
 	colWarrantyPeriod: "Warranty Period",
 	colProjectManager: "Project Manager",

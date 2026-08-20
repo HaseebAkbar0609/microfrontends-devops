@@ -51,7 +51,7 @@ export function AgreementFileUploadSection() {
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white">
+    <div className="rounded-lg border border-slate-200 bg-white max-w-[76%]">
       <button
         type="button"
         aria-expanded={open}
