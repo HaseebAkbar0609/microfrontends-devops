@@ -274,7 +274,7 @@ export function OfferQuotedView({ offerId, items }: Props) {
                     {formatCurrency(row.price)}
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
-                    <OfferQuotedStatusBadge item={row} />
+                    <OfferQuotedStatusBadge status={row.status} openedAt={row.openedAt} />
                   </td>
                   <td className="whitespace-nowrap px-4 py-3">
                     <OfferQuotedContactCell item={row} />

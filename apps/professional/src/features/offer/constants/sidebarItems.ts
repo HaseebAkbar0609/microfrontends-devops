@@ -28,9 +28,9 @@ export const offerSidebarItems: DynamicSubSidebarItem[] = [
 
 export const goToItems: DynamicSubSidebarItem[] = [
 	{
-		id: "quote-1001",
-		label: "Offert nr 1001",
-		href: "/module/business/offer/1001/request",
+		id: "quote-request",
+		labelKey: localizationConstants.offerTabRequest,
+		href: "/module/business/offer/request",
 		icon: Folder,
 	},
 ];

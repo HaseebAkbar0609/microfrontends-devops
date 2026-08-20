@@ -1,41 +1,41 @@
 "use client";
 
-import { AtSign, Circle } from "lucide-react";
+import { Disc, FolderOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { OfferQuotedItem } from "../types/offer";
 
 interface Props {
-  item: OfferQuotedItem;
+  status: string;
+  openedAt?: string;
 }
 
-export function OfferQuotedStatusBadge({ item }: Props) {
+export function OfferQuotedStatusBadge({ status, openedAt }: Props) {
   const t = useTranslate();
-  const isOpened = item.status === "opened";
+  const isOpened = status === "opened" || status === "Öppnad";
 
   return (
     <div className="group/status relative inline-block">
       <span
         className={cn(
-          "inline-flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium",
+          "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium",
           isOpened
-            ? "bg-green-50 text-green-700 ring-1 ring-green-200"
-            : "bg-orange-50 text-orange-600 ring-1 ring-orange-200",
+            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+            : "bg-amber-50 text-amber-700 border border-amber-200",
         )}
       >
         {isOpened ? (
-          <Circle className="h-2 w-2 fill-green-500 text-green-500" />
+          <FolderOpen className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
         ) : (
-          <AtSign className="h-3 w-3" />
+          <Disc className="h-3.5 w-3.5 text-amber-600 shrink-0" />
         )}
         {isOpened
           ? t(localizationConstants.offerQuotedStatusOpened)
           : t(localizationConstants.offerQuotedStatusNotReviewed)}
       </span>
-      {isOpened && item.openedAt && (
+      {isOpened && openedAt && (
         <div className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 hidden min-w-max rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 shadow-md group-hover/status:block">
-          {t(localizationConstants.offerQuotedOpenedAt)} {item.openedAt}
+          {t(localizationConstants.offerQuotedOpenedAt)} {openedAt}
         </div>
       )}
     </div>
