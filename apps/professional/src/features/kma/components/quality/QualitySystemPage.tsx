@@ -2,16 +2,20 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
+	Archive,
 	ArrowLeft,
 	ArrowUpDown,
 	ChevronDown,
 	ChevronRight,
 	Download,
 	FileText,
+	Filter,
 	MoreVertical,
+	Pencil,
 	Plus,
 	Search,
 	Star,
+	Trash2,
 	Upload,
 	X,
 	ZoomIn,
@@ -40,6 +44,16 @@ const MOCK_TEMPLATES: PlanTemplate[] = [
 	{ id: "KP003", name: "Nybyggnad", version: "v2.1", lastUpdated: "2025-04-09", createdBy: "Lars Andersson" },
 	{ id: "KP004", name: "Subcontractor Agreement – Construction", version: "v1.8", lastUpdated: "2025-04-09", createdBy: "Lars Andersson" },
 ];
+
+interface ControlPoint {
+	id: string;
+	step: string;
+	control: string;
+	method: string;
+	frequency: string;
+	responsible: string;
+	documentation: string;
+}
 
 // ── Use Template Modal ────────────────────────────────────────────────────────
 
@@ -1030,9 +1044,10 @@ interface DocsPanelProps {
 	documents: QualityDocument[];
 	onOpenDoc: (doc: QualityDocument) => void;
 	selectedSubCatId: string | null;
+	onOpenPlan?: () => void;
 }
 
-function DocsPanel({ documents, onOpenDoc, selectedSubCatId }: DocsPanelProps) {
+function DocsPanel({ documents, onOpenDoc, selectedSubCatId, onOpenPlan }: DocsPanelProps) {
 	const t = useTranslate();
 	const [search, setSearch] = useState("");
 	const [openMenuDocId, setOpenMenuDocId] = useState<string | null>(null);
@@ -1099,7 +1114,7 @@ function DocsPanel({ documents, onOpenDoc, selectedSubCatId }: DocsPanelProps) {
 							<button
 								type="button"
 								className="flex-1 cursor-pointer text-left"
-								onClick={() => onOpenDoc(doc)}
+								onClick={() => onOpenPlan ? onOpenPlan() : onOpenDoc(doc)}
 							>
 								<p className="text-xs font-semibold text-slate-800">
 									{doc.id} {doc.title}
@@ -1118,19 +1133,21 @@ function DocsPanel({ documents, onOpenDoc, selectedSubCatId }: DocsPanelProps) {
 									<MoreVertical className="h-4 w-4" />
 								</button>
 								{openMenuDocId === doc.id && (
-									<div className="absolute right-0 z-20 mt-1 w-32 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+									<div className="absolute right-0 z-20 mt-1 w-36 rounded-md border border-slate-200 bg-white py-1 shadow-md">
 										<button
 											type="button"
-											className="w-full cursor-pointer px-3 py-1.5 text-left text-xs text-slate-700 hover:bg-slate-50"
-											onClick={() => { onOpenDoc(doc); setOpenMenuDocId(null); }}
+											className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+											onClick={() => { if (onOpenPlan) { onOpenPlan(); } else { onOpenDoc(doc); } setOpenMenuDocId(null); }}
 										>
+											<Pencil className="h-3.5 w-3.5 text-slate-400" />
 											<Translate text={localizationConstants.actionEdit} />
 										</button>
 										<button
 											type="button"
-											className="w-full cursor-pointer px-3 py-1.5 text-left text-xs text-red-600 hover:bg-slate-50"
+											className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-red-600 hover:bg-slate-50"
 											onClick={() => setOpenMenuDocId(null)}
 										>
+											<Trash2 className="h-3.5 w-3.5 text-red-400" />
 											<Translate text={localizationConstants.actionDelete} />
 										</button>
 									</div>
@@ -1153,6 +1170,301 @@ function DocsPanel({ documents, onOpenDoc, selectedSubCatId }: DocsPanelProps) {
 					/>
 				</div>
 			)}
+		</div>
+	);
+}
+
+// ── Discard Confirm Modal ─────────────────────────────────────────────────────
+
+function DiscardConfirmModal({
+	onConfirm,
+	onCancel,
+}: {
+	onConfirm: () => void;
+	onCancel: () => void;
+}) {
+	return (
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+			<div className="w-96 rounded-lg bg-white p-6 shadow-xl">
+				<h3 className="text-base font-semibold text-slate-900">
+					<Translate text={localizationConstants.kmaControlPlanDiscardTitle} />
+				</h3>
+				<p className="mt-2 text-sm text-slate-600">
+					<Translate text={localizationConstants.kmaControlPlanDiscardMsg} />
+				</p>
+				<div className="mt-5 flex justify-end gap-3">
+					<button
+						type="button"
+						onClick={onCancel}
+						className="cursor-pointer rounded-md border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+					>
+						<Translate text={localizationConstants.kmaControlPlanDiscardCancel} />
+					</button>
+					<button
+						type="button"
+						onClick={onConfirm}
+						className="cursor-pointer rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+					>
+						<Translate text={localizationConstants.kmaControlPlanDiscardConfirm} />
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+// ── Open Kontrollplan Page ────────────────────────────────────────────────────
+
+function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
+	const t = useTranslate();
+	const [name, setName] = useState("");
+	const [description, setDescription] = useState("");
+	const [status, setStatus] = useState<"draft" | "active">("draft");
+	const version = "1.0";
+	const [rows, setRows] = useState<ControlPoint[]>([
+		{ id: "1", step: "", control: "", method: "", frequency: "", responsible: "", documentation: "" },
+	]);
+	const [discardOpen, setDiscardOpen] = useState(false);
+
+	const isDirty =
+		name.trim() !== "" ||
+		description.trim() !== "" ||
+		rows.some(
+			(r) =>
+				r.step !== "" ||
+				r.control !== "" ||
+				r.method !== "" ||
+				r.frequency !== "" ||
+				r.responsible !== "" ||
+				r.documentation !== "",
+		);
+
+	function handleCancel() {
+		if (isDirty) {
+			setDiscardOpen(true);
+		} else {
+			onBack();
+		}
+	}
+
+	function addRow() {
+		setRows((prev) => [
+			...prev,
+			{ id: String(Date.now()), step: "", control: "", method: "", frequency: "", responsible: "", documentation: "" },
+		]);
+	}
+
+	function deleteRow(id: string) {
+		setRows((prev) => prev.filter((r) => r.id !== id));
+	}
+
+	function updateRow(id: string, field: keyof Omit<ControlPoint, "id">, value: string) {
+		setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
+	}
+
+	return (
+		<div className="flex flex-1 flex-col overflow-hidden">
+			{discardOpen && (
+				<DiscardConfirmModal
+					onConfirm={onBack}
+					onCancel={() => setDiscardOpen(false)}
+				/>
+			)}
+			{/* Header */}
+			<div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+				<div className="flex items-center gap-3">
+					<button
+						type="button"
+						onClick={handleCancel}
+						className="cursor-pointer rounded-md p-1.5 text-slate-500 hover:bg-slate-100"
+					>
+						<ArrowLeft className="h-4 w-4" />
+					</button>
+					<h1 className="text-base font-semibold text-slate-900">
+						<Translate text={localizationConstants.kmaControlPlanOpenTitle} />
+					</h1>
+				</div>
+				<div className="flex items-center gap-2">
+					<button
+						type="button"
+						onClick={handleCancel}
+						className="cursor-pointer rounded-md border border-slate-200 px-4 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+					>
+						<Translate text={localizationConstants.kmaControlPlanCancelBtn} />
+					</button>
+					<button
+						type="button"
+						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
+					>
+						<Translate text={localizationConstants.kmaControlPlanSaveBtn} />
+					</button>
+				</div>
+			</div>
+			{/* Body */}
+			<div className="flex-1 overflow-y-auto px-6 py-6">
+				{/* General Information */}
+				<div className="mb-6 rounded-lg border border-slate-200 bg-white p-5">
+					<h2 className="mb-4 text-sm font-semibold text-slate-800">
+						<Translate text={localizationConstants.kmaControlPlanGeneralInfo} />
+					</h2>
+					<div className="grid grid-cols-2 gap-4">
+						<div>
+							<label className="mb-1.5 block text-xs font-medium text-slate-500">
+								<Translate text={localizationConstants.kmaControlPlanNameLabel} />
+							</label>
+							<input
+								type="text"
+								value={name}
+								onChange={(e) => setName(e.target.value)}
+								className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
+							/>
+						</div>
+						<div>
+							<label className="mb-1.5 block text-xs font-medium text-slate-500">
+								<Translate text={localizationConstants.kmaControlPlanStatusLabel} />
+							</label>
+							<select
+								value={status}
+								onChange={(e) => setStatus(e.target.value as "draft" | "active")}
+								className="w-full cursor-pointer rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-300"
+							>
+								<option value="draft">{t(localizationConstants.kmaControlPlanStatusDraft)}</option>
+								<option value="active">{t(localizationConstants.kmaControlPlanStatusActive)}</option>
+							</select>
+						</div>
+						<div>
+							<label className="mb-1.5 block text-xs font-medium text-slate-500">
+								<Translate text={localizationConstants.kmaControlPlanDescLabel} />
+							</label>
+							<textarea
+								rows={3}
+								value={description}
+								onChange={(e) => setDescription(e.target.value)}
+								className="w-full resize-none rounded-md border border-slate-200 px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
+							/>
+						</div>
+						<div>
+							<label className="mb-1.5 block text-xs font-medium text-slate-500">
+								<Translate text={localizationConstants.kmaControlPlanVersionLabel} />
+							</label>
+							<input
+								type="text"
+								value={version}
+								readOnly
+								className="w-full rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-500"
+							/>
+						</div>
+					</div>
+				</div>
+				{/* Control Points Table */}
+				<div className="rounded-lg border border-slate-200 bg-white">
+					<div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+						<h2 className="text-sm font-semibold text-slate-800">
+							<Translate text={localizationConstants.kmaControlPlanTableTitle} />
+						</h2>
+						<button
+							type="button"
+							onClick={addRow}
+							className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#27272A]"
+						>
+							<Plus className="h-3.5 w-3.5" />
+							<Translate text={localizationConstants.kmaControlPlanAddRow} />
+						</button>
+					</div>
+					<div className="overflow-x-auto">
+						<table className="w-full text-xs">
+							<thead>
+								<tr className="border-b border-slate-200 bg-slate-50">
+									<th className="w-10 px-3 py-2.5 text-center font-medium text-slate-500">#</th>
+									<th className="min-w-32 px-3 py-2.5 text-left font-medium text-slate-500">
+										<Translate text={localizationConstants.kmaControlPlanColStep} />
+									</th>
+									<th className="min-w-32 px-3 py-2.5 text-left font-medium text-slate-500">
+										<Translate text={localizationConstants.kmaControlPlanColControl} />
+									</th>
+									<th className="min-w-28 px-3 py-2.5 text-left font-medium text-slate-500">
+										<Translate text={localizationConstants.kmaControlPlanColMethod} />
+									</th>
+									<th className="min-w-28 px-3 py-2.5 text-left font-medium text-slate-500">
+										<Translate text={localizationConstants.kmaControlPlanColFrequency} />
+									</th>
+									<th className="min-w-28 px-3 py-2.5 text-left font-medium text-slate-500">
+										<Translate text={localizationConstants.kmaControlPlanColResponsible} />
+									</th>
+									<th className="min-w-36 px-3 py-2.5 text-left font-medium text-slate-500">
+										<Translate text={localizationConstants.kmaControlPlanColDoc} />
+									</th>
+									<th className="w-8 px-2 py-2.5" />
+								</tr>
+							</thead>
+							<tbody>
+								{rows.map((row, idx) => (
+									<tr key={row.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
+										<td className="px-3 py-1.5 text-center text-slate-400">{idx + 1}</td>
+										<td className="px-2 py-1">
+											<input
+												type="text"
+												value={row.step}
+												onChange={(e) => updateRow(row.id, "step", e.target.value)}
+												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+											/>
+										</td>
+										<td className="px-2 py-1">
+											<input
+												type="text"
+												value={row.control}
+												onChange={(e) => updateRow(row.id, "control", e.target.value)}
+												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+											/>
+										</td>
+										<td className="px-2 py-1">
+											<input
+												type="text"
+												value={row.method}
+												onChange={(e) => updateRow(row.id, "method", e.target.value)}
+												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+											/>
+										</td>
+										<td className="px-2 py-1">
+											<input
+												type="text"
+												value={row.frequency}
+												onChange={(e) => updateRow(row.id, "frequency", e.target.value)}
+												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+											/>
+										</td>
+										<td className="px-2 py-1">
+											<input
+												type="text"
+												value={row.responsible}
+												onChange={(e) => updateRow(row.id, "responsible", e.target.value)}
+												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+											/>
+										</td>
+										<td className="px-2 py-1">
+											<input
+												type="text"
+												value={row.documentation}
+												onChange={(e) => updateRow(row.id, "documentation", e.target.value)}
+												className="w-full rounded border border-transparent px-2 py-1 text-slate-700 focus:border-slate-300 focus:outline-none"
+											/>
+										</td>
+										<td className="px-2 py-1">
+											<button
+												type="button"
+												onClick={() => deleteRow(row.id)}
+												className="flex cursor-pointer items-center justify-center rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-500"
+											>
+												<X className="h-3.5 w-3.5" />
+											</button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
@@ -1226,6 +1538,167 @@ function QualitySystemTab({
 	);
 }
 
+// ── Kontrollplan Table ────────────────────────────────────────────────────────
+
+function KontrollplanTable({
+	title,
+	onOpenPlan,
+}: {
+	title: string;
+	onOpenPlan: () => void;
+}) {
+	const t = useTranslate();
+	const [search, setSearch] = useState("");
+	const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+	const [starred, setStarred] = useState<Set<string>>(new Set(["KP002"]));
+
+	const COLS = [
+		{ key: "id", label: localizationConstants.kmaQualityPlanTemplateNrCol },
+		{ key: "name", label: localizationConstants.kmaQualityPlanTemplateNameCol },
+		{ key: "version", label: localizationConstants.kmaQualityPlanTemplateVersionCol },
+		{ key: "lastUpdated", label: localizationConstants.kmaQualityPlanTemplateUpdatedCol },
+		{ key: "createdBy", label: localizationConstants.kmaQualityPlanTemplateCreatedByCol },
+	];
+
+	const filtered = MOCK_TEMPLATES.filter(
+		(tpl) =>
+			search === "" ||
+			tpl.name.toLowerCase().includes(search.toLowerCase()) ||
+			tpl.id.toLowerCase().includes(search.toLowerCase()),
+	);
+
+	function toggleStar(id: string) {
+		setStarred((prev) => {
+			const next = new Set(prev);
+			if (next.has(id)) { next.delete(id); } else { next.add(id); }
+			return next;
+		});
+	}
+
+	return (
+		<div className="flex flex-1 flex-col overflow-hidden border-l border-slate-200">
+			{/* Section header */}
+			<div className="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+				<h3 className="text-sm font-semibold text-slate-800">{title}</h3>
+				<button
+					type="button"
+					onClick={onOpenPlan}
+					className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+				>
+					<Pencil className="h-3.5 w-3.5" />
+					<Translate text={localizationConstants.actionEdit} />
+				</button>
+			</div>
+			{/* Search + Filter */}
+			<div className="flex items-center gap-2 border-b border-slate-200 px-4 py-2">
+				<div className="relative flex-1">
+					<Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
+					<input
+						type="text"
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+						placeholder={t(localizationConstants.kmaQualitySearchDocs)}
+						className="h-8 w-full rounded border border-slate-200 pl-8 pr-3 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
+					/>
+				</div>
+				<button
+					type="button"
+					className="flex cursor-pointer items-center gap-1.5 rounded border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-50"
+				>
+					<Filter className="h-3.5 w-3.5" />
+					Filter
+				</button>
+			</div>
+			{/* Table */}
+			<div className="flex-1 overflow-auto">
+				<table className="w-full text-xs">
+					<thead>
+						<tr className="border-b border-slate-200 bg-slate-50">
+							<th className="w-9 px-3 py-2.5" />
+							{COLS.map((col) => (
+								<th key={col.key} className="px-3 py-2.5 text-left">
+									<div className="flex cursor-pointer items-center gap-1 font-medium text-slate-500 hover:text-slate-700">
+										<Translate text={col.label} />
+										<ArrowUpDown className="h-3 w-3 shrink-0" />
+									</div>
+								</th>
+							))}
+							<th className="w-9 px-3 py-2.5 text-center">
+								<Plus className="inline h-3.5 w-3.5 text-slate-400" />
+							</th>
+							<th className="w-8 px-2 py-2.5" />
+						</tr>
+					</thead>
+					<tbody>
+						{filtered.map((tpl) => (
+							<tr key={tpl.id} className="group border-b border-slate-100 last:border-0 hover:bg-slate-50">
+								<td className="px-3 py-2.5">
+									<button
+										type="button"
+										onClick={() => toggleStar(tpl.id)}
+										className="cursor-pointer text-slate-300 hover:text-amber-400"
+									>
+										<Star
+											className="h-3.5 w-3.5"
+											fill={starred.has(tpl.id) ? "#F59E0B" : "none"}
+											stroke={starred.has(tpl.id) ? "#F59E0B" : "currentColor"}
+										/>
+									</button>
+								</td>
+								<td className="px-3 py-2.5 text-slate-500">{tpl.id}</td>
+								<td className="px-3 py-2.5 font-medium text-slate-800">{tpl.name}</td>
+								<td className="px-3 py-2.5 text-slate-500">{tpl.version}</td>
+								<td className="px-3 py-2.5 text-slate-500">{tpl.lastUpdated}</td>
+								<td className="px-3 py-2.5 text-slate-500">{tpl.createdBy}</td>
+								<td className="px-3 py-2.5 text-center">
+									<Plus className="inline h-3.5 w-3.5 cursor-pointer text-slate-300 opacity-0 hover:text-slate-500 group-hover:opacity-100" />
+								</td>
+								<td className="relative px-2 py-2.5">
+									<button
+										type="button"
+										onClick={() => setOpenMenuId(openMenuId === tpl.id ? null : tpl.id)}
+										className="flex cursor-pointer items-center justify-center rounded p-1 text-slate-300 opacity-0 hover:bg-slate-200 hover:text-slate-600 group-hover:opacity-100"
+									>
+										<MoreVertical className="h-3.5 w-3.5" />
+									</button>
+									{openMenuId === tpl.id && (
+										<div className="absolute right-0 z-20 mt-1 w-36 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+											<button
+												type="button"
+												className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+												onClick={() => { onOpenPlan(); setOpenMenuId(null); }}
+											>
+												<Pencil className="h-3.5 w-3.5 text-slate-400" />
+												<Translate text={localizationConstants.actionEdit} />
+											</button>
+											<button
+												type="button"
+												className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-red-600 hover:bg-slate-50"
+												onClick={() => setOpenMenuId(null)}
+											>
+												<Trash2 className="h-3.5 w-3.5 text-red-400" />
+												<Translate text={localizationConstants.actionDelete} />
+											</button>
+											<button
+												type="button"
+												className="flex w-full cursor-pointer items-center gap-2 px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50"
+												onClick={() => setOpenMenuId(null)}
+											>
+												<Archive className="h-3.5 w-3.5 text-slate-400" />
+												<Translate text={localizationConstants.kmaQualityPlanArchive} />
+											</button>
+										</div>
+									)}
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	);
+}
+
 // ── Quality Plan Tab ───────────────────────────────────────────────────────────
 
 type PlanType = "kontrollplan" | "riskhantering" | "checklistor" | "atgardsplaner";
@@ -1249,13 +1722,13 @@ function planTypeLabelKey(id: PlanType): string {
 }
 
 function QualityPlanTab({
-	onOpenDoc,
 	onCreateNew,
 	onUseTemplate,
+	onOpenPlan,
 }: {
-	onOpenDoc: (doc: QualityDocument) => void;
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
+	onOpenPlan: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -1267,9 +1740,6 @@ function QualityPlanTab({
 
 	const [selectedMainId, setSelectedMainId] = useState<string | null>(
 		MOCK_QUALITY_PLAN_CATEGORIES[0]?.id ?? null,
-	);
-	const [selectedSubId, setSelectedSubId] = useState<string | null>(
-		MOCK_QUALITY_PLAN_CATEGORIES[0]?.subcategories[0]?.id ?? null,
 	);
 
 	useEffect(() => {
@@ -1286,12 +1756,9 @@ function QualityPlanTab({
 	}, []);
 
 	const selectedMain = MOCK_QUALITY_PLAN_CATEGORIES.find((c) => c.id === selectedMainId);
-	const selectedSub = selectedMain?.subcategories.find((s) => s.id === selectedSubId);
 
 	function handleSelectMain(id: string) {
 		setSelectedMainId(id);
-		const cat = MOCK_QUALITY_PLAN_CATEGORIES.find((c) => c.id === id);
-		setSelectedSubId(cat?.subcategories[0]?.id ?? null);
 	}
 
 	const mainItems = useMemo(
@@ -1303,21 +1770,6 @@ function QualityPlanTab({
 			})),
 		[],
 	);
-
-	const subItems = useMemo(
-		() =>
-			selectedMain?.subcategories.map((s) => ({
-				id: s.id,
-				label: s.label,
-				count: s.documents.length,
-			})) ?? [],
-		[selectedMain],
-	);
-
-	const filteredDocs = useMemo(() => {
-		const docs = selectedSub?.documents ?? [];
-		return viewMode === "mallar" ? docs.filter((d) => d.isTemplate) : docs;
-	}, [selectedSub, viewMode]);
 
 	const currentPlanLabel = t(planTypeLabelKey(planType));
 
@@ -1435,17 +1887,9 @@ function QualityPlanTab({
 						onSelect={handleSelectMain}
 						searchKey={localizationConstants.kmaQualitySearchCategories}
 					/>
-					<CategoryPanel
-						headerKey={localizationConstants.kmaQualitySubCat}
-						items={subItems}
-						selectedId={selectedSubId}
-						onSelect={setSelectedSubId}
-						searchKey={localizationConstants.kmaQualitySearchSubCategories}
-					/>
-					<DocsPanel
-						documents={filteredDocs}
-						onOpenDoc={onOpenDoc}
-						selectedSubCatId={selectedSubId}
+					<KontrollplanTable
+						title={selectedMain?.label ?? ""}
+						onOpenPlan={onOpenPlan}
 					/>
 				</div>
 			)}
@@ -1462,6 +1906,7 @@ export function QualitySystemPage() {
 	const [openDoc, setOpenDoc] = useState<QualityDocument | null>(null);
 	const [createPlanOpen, setCreatePlanOpen] = useState(false);
 	const [createWithTemplate, setCreateWithTemplate] = useState(false);
+	const [openPlanOpen, setOpenPlanOpen] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -1482,6 +1927,10 @@ export function QualitySystemPage() {
 				startWithTemplate={createWithTemplate}
 			/>
 		);
+	}
+
+	if (openPlanOpen) {
+		return <OpenKontrollplanPage onBack={() => setOpenPlanOpen(false)} />;
 	}
 
 	return (
@@ -1529,12 +1978,12 @@ export function QualitySystemPage() {
 			{activeTab === "system" && <QualitySystemTab onOpenDoc={setOpenDoc} />}
 			{activeTab === "plan" && (
 				<QualityPlanTab
-					onOpenDoc={setOpenDoc}
 					onCreateNew={() => { setCreateWithTemplate(false); setCreatePlanOpen(true); }}
 					onUseTemplate={() => {
 						setCreateWithTemplate(true);
 						setCreatePlanOpen(true);
 					}}
+					onOpenPlan={() => setOpenPlanOpen(true)}
 				/>
 			)}
 		</div>
