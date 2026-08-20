@@ -2145,6 +2145,13 @@ export type OfferTranslation = {
 	kmaSandlistaColVerification: string;
 	kmaTemplateModalCategories: string;
 	kmaTemplateModalSearchFolders: string;
+	kmaOpenSandlistaTitle: string;
+	kmaOpenSandlistaCloseBtn: string;
+	kmaOpenSandlistaDeleteConfirmTitle: string;
+	kmaOpenSandlistaDeleteConfirmMsg: string;
+	kmaOpenSandlistaListNameCol: string;
+	kmaOpenSandlistaListDescCol: string;
+	kmaOpenSandlistaListRecipientsCol: string;
 	kmaCreateSandlistaTitle: string;
 	kmaCreateSandlistaBtn: string;
 	kmaCreateSandlistaGeneralInfo: string;
