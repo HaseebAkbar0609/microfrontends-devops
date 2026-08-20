@@ -2145,6 +2145,14 @@ export type OfferTranslation = {
 	kmaSandlistaColVerification: string;
 	kmaTemplateModalCategories: string;
 	kmaTemplateModalSearchFolders: string;
+	kmaCreateSandlistaTitle: string;
+	kmaCreateSandlistaBtn: string;
+	kmaCreateSandlistaGeneralInfo: string;
+	kmaCreateSandlistaNameLabel: string;
+	kmaCreateSandlistaDescLabel: string;
+	kmaCreateSandlistaValidationName: string;
+	kmaCreateSandlistaValidationEmail: string;
+	kmaCreateTemplateBtn: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;
 	b2bWidgetOverviewActive: string;
