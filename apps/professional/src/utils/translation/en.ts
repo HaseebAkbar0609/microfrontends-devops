@@ -2048,6 +2048,13 @@ export const enOffer: OfferTranslation = {
 	kmaSandlistaColVerification: "Verification",
 	kmaTemplateModalCategories: "Categories",
 	kmaTemplateModalSearchFolders: "Search folders...",
+	kmaCreateSandlistaTitle: "Create New Mail List",
+	kmaCreateSandlistaBtn: "Create new mail list",
+	kmaCreateSandlistaGeneralInfo: "General Information",
+	kmaCreateSandlistaNameLabel: "List Name",
+	kmaCreateSandlistaDescLabel: "Description",
+	kmaCreateSandlistaValidationName: "List name is required.",
+	kmaCreateTemplateBtn: "Create new template",
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Project - Overview",
 	projWidgetOverviewTitle: "Project overview",
