@@ -123,7 +123,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
   useEffect(() => {
     let isMounted = true;
     async function fetchQuotedOffers() {
-      setIsLoading(true);
+      if (isMounted) setIsLoading(true);
       try {
         const companyData = authStorage.getCompanyData() as ProfessionalRow | null;
         const result = await listOffersAPIAction({
@@ -133,7 +133,8 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
           search: debouncedSearch,
           companyId: companyData?.id,
         });
-        if (isMounted && result && result.items && result.items.length > 0) {
+        if (!isMounted) return;
+        if (result && result.items && result.items.length > 0) {
           const mapped: OfferQuotedItem[] = result.items.map((item, idx) => ({
             id: item.id || String(idx),
             offertNr: item.idNumber,
@@ -157,8 +158,10 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
           setTotalItems(initialItems.length);
         }
       } catch {
-        setItems(initialItems);
-        setTotalItems(initialItems.length);
+        if (isMounted) {
+          setItems(initialItems);
+          setTotalItems(initialItems.length);
+        }
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -413,9 +416,12 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                           <Button
                             size="sm"
                             className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
-                            onClick={() =>
-                              router.push(OFFER_ROUTES.request(offerId || row.id || "1001"))
-                            }
+                            onClick={() => {
+                              const targetId = offerId || row.id;
+                              if (targetId) {
+                                router.push(OFFER_ROUTES.request(targetId));
+                              }
+                            }}
                           >
                             {t(localizationConstants.viewProject)}
                           </Button>
@@ -425,6 +431,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                                 variant="ghost"
                                 size="sm"
                                 className="h-7 w-7 cursor-pointer p-0"
+                                aria-label={t(localizationConstants.actions)}
                               >
                                 <MoreVertical size={14} />
                               </Button>
