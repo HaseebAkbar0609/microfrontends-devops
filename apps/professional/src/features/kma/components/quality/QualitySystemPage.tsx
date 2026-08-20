@@ -1586,8 +1586,9 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 	const [listDesc, setListDesc] = useState("");
 	const [recipients, setRecipients] = useState<MailRecipient[]>([]);
 	const [search, setSearch] = useState("");
-	const [errors, setErrors] = useState<{ name?: boolean }>({});
+	const [errors, setErrors] = useState<{ name?: boolean; invalidEmail?: boolean }>({});
 	const [isDirty, setIsDirty] = useState(false);
+	const [isSaving, setIsSaving] = useState(false);
 
 	useEffect(() => {
 		if (!isDirty) return;
@@ -1613,19 +1614,28 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 		if (errors.name) setErrors((prev) => ({ ...prev, name: false }));
 	}
 
+	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 	function handleSave() {
-		if (!listName.trim()) {
-			setErrors({ name: true });
+		if (isSaving) return;
+		const newErrors: { name?: boolean; invalidEmail?: boolean } = {};
+		if (!listName.trim()) newErrors.name = true;
+		if (recipients.some((r) => r.email.trim() && !EMAIL_REGEX.test(r.email.trim()))) {
+			newErrors.invalidEmail = true;
+		}
+		if (Object.keys(newErrors).length > 0) {
+			setErrors(newErrors);
 			return;
 		}
 		setErrors({});
+		setIsSaving(true);
 		// backend integration pending
 	}
 
 	function addRecipient() {
 		setRecipients((prev) => [
 			...prev,
-			{ id: crypto.randomUUID(), name: "", role: "", email: "", notifyNewPlan: false, notifyUpdates: false, notifyNonConformity: false, notifyVerification: false },
+			{ id: `temp_${crypto.randomUUID()}`, name: "", role: "", email: "", notifyNewPlan: false, notifyUpdates: false, notifyNonConformity: false, notifyVerification: false },
 		]);
 		setIsDirty(true);
 	}
@@ -1672,7 +1682,8 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 					<button
 						type="button"
 						onClick={handleSave}
-						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A]"
+						disabled={isSaving}
+						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A] disabled:opacity-60"
 					>
 						<Translate text={localizationConstants.save} />
 					</button>
@@ -1752,6 +1763,12 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 							className="h-8 w-full rounded border border-slate-200 pl-8 pr-3 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
 						/>
 					</div>
+					{/* Email error banner */}
+					{errors.invalidEmail && (
+						<p className="mb-2 rounded border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-600">
+							<Translate text={localizationConstants.kmaCreateSandlistaValidationEmail} />
+						</p>
+					)}
 					{/* Table */}
 					<div className="overflow-x-auto rounded border border-slate-200">
 						<table className="w-full text-xs">
@@ -1804,16 +1821,28 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 											</td>
 											<td className="px-3 py-2">
 												<input
-													type="text"
+													type="email"
 													value={r.email}
 													onChange={(e) => updateRecipient(r.id, "email", e.target.value)}
 													aria-label={t(localizationConstants.kmaSandlistaColEmail)}
-													className="h-7 w-full rounded border border-slate-200 px-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300"
+													className={cn(
+														"h-7 w-full rounded border px-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300",
+														errors.invalidEmail && r.email.trim() && !EMAIL_REGEX.test(r.email.trim())
+															? "border-red-400 focus:ring-red-300"
+															: "border-slate-200",
+													)}
 												/>
 											</td>
 											{NOTIFY_COLS.map((col) => (
 												<td key={col.key} className="px-3 py-2 text-center">
+													<label
+														htmlFor={`notify-${r.id}-${col.key}`}
+														className="sr-only"
+													>
+														<Translate text={col.labelKey} />
+													</label>
 													<input
+														id={`notify-${r.id}-${col.key}`}
 														type="checkbox"
 														checked={r[col.key]}
 														onChange={() => toggleNotifyCreate(r.id, col.key)}
@@ -2551,6 +2580,7 @@ function KontrollplanTable({
 function CreateTemplatePage({ onBack }: { onBack: () => void }) {
 	const [name, setName] = useState("");
 	const [errors, setErrors] = useState<{ name?: boolean }>({});
+	const [isSaving, setIsSaving] = useState(false);
 	const [expandedCatIds, setExpandedCatIds] = useState<Set<string>>(
 		new Set(MOCK_QUALITY_PLAN_CATEGORIES.map((c) => c.id)),
 	);
@@ -2631,11 +2661,13 @@ function CreateTemplatePage({ onBack }: { onBack: () => void }) {
 	}
 
 	function handleSave() {
+		if (isSaving) return;
 		if (!name.trim()) {
 			setErrors({ name: true });
 			return;
 		}
 		setErrors({});
+		setIsSaving(true);
 		// backend integration pending
 	}
 
@@ -2671,7 +2703,8 @@ function CreateTemplatePage({ onBack }: { onBack: () => void }) {
 					<button
 						type="button"
 						onClick={handleSave}
-						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A]"
+						disabled={isSaving}
+						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A] disabled:opacity-60"
 					>
 						<Translate text={localizationConstants.save} />
 					</button>

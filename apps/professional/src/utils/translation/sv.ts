@@ -2059,6 +2059,7 @@ export const svOffer: OfferTranslation = {
 	kmaCreateSandlistaNameLabel: "Listnamn",
 	kmaCreateSandlistaDescLabel: "Beskrivning",
 	kmaCreateSandlistaValidationName: "Listnamn är obligatoriskt.",
+	kmaCreateSandlistaValidationEmail: "En eller flera e-postadresser är ogiltiga.",
 	kmaCreateTemplateBtn: "Skapa ny mall",
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: "B2B-Översikt",

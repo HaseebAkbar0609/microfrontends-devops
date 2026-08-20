@@ -2151,6 +2151,7 @@ export type OfferTranslation = {
 	kmaCreateSandlistaNameLabel: string;
 	kmaCreateSandlistaDescLabel: string;
 	kmaCreateSandlistaValidationName: string;
+	kmaCreateSandlistaValidationEmail: string;
 	kmaCreateTemplateBtn: string;
 	// B2B - Dashboard widgets
 	b2bWidgetOverviewTitle: string;

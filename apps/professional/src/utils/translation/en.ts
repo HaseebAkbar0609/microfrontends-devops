@@ -2054,6 +2054,7 @@ export const enOffer: OfferTranslation = {
 	kmaCreateSandlistaNameLabel: "List Name",
 	kmaCreateSandlistaDescLabel: "Description",
 	kmaCreateSandlistaValidationName: "List name is required.",
+	kmaCreateSandlistaValidationEmail: "One or more email addresses are invalid.",
 	kmaCreateTemplateBtn: "Create new template",
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Project - Overview",
