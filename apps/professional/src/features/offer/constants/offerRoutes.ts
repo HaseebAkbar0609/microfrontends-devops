@@ -1,6 +1,6 @@
 export const OFFER_ROUTES = {
   request: (offerId: string) => `/module/business/offer/${offerId}/request`,
-  quoted: (offerId: string) => `/module/business/offer/${offerId}/quoted`,
+  quoted: () => `/module/business/offer/quoted`,
   accepted: (offerId: string) => `/module/business/offer/${offerId}/accepted`,
   agreed: (offerId: string) => `/module/business/offer/${offerId}/agreed`,
   createAgreement: (offerId: string) =>

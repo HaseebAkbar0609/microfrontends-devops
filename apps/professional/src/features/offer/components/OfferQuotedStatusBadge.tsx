@@ -1,41 +1,57 @@
 "use client";
 
-import { Disc, FolderOpen } from "lucide-react";
+import { useState } from "react";
+import { FolderOpen, XCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { OfferQuotedItem } from "../types/offer";
 
 interface Props {
-  status: string;
+  status?: string;
   openedAt?: string;
+  item?: OfferQuotedItem;
 }
 
-export function OfferQuotedStatusBadge({ status, openedAt }: Props) {
+export function OfferQuotedStatusBadge({ status: statusProp, openedAt: openedAtProp, item }: Props) {
   const t = useTranslate();
-  const isOpened = status === "opened" || status === "Öppnad";
+  const rawStatus = item?.status ?? statusProp ?? "";
+  const openedAt = item?.openedAt ?? openedAtProp;
+  const isOpened = rawStatus === "opened" || rawStatus === "Öppnad";
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div className="group/status relative inline-block">
+    <div
+      className="relative inline-flex"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
       <span
         className={cn(
-          "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium",
+          "inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium",
           isOpened
-            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-            : "bg-amber-50 text-amber-700 border border-amber-200",
+            ? "bg-green-50 text-green-700"
+            : "text-[#A16207]",
         )}
+        style={!isOpened ? { backgroundColor: "var(--color-bg-warning-muted, #FEFCE8)" } : undefined}
       >
         {isOpened ? (
-          <FolderOpen className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+          <FolderOpen className="h-3.5 w-3.5 text-green-600 shrink-0" />
         ) : (
-          <Disc className="h-3.5 w-3.5 text-amber-600 shrink-0" />
+          <XCircle className="h-3.5 w-3.5 text-[#A16207] shrink-0" />
         )}
         {isOpened
           ? t(localizationConstants.offerQuotedStatusOpened)
           : t(localizationConstants.offerQuotedStatusNotReviewed)}
       </span>
-      {isOpened && openedAt && (
-        <div className="pointer-events-none absolute left-0 top-full z-50 mt-1.5 hidden min-w-max rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 shadow-md group-hover/status:block">
-          {t(localizationConstants.offerQuotedOpenedAt)} {openedAt}
+      {isOpened && openedAt && hovered && (
+        <div className="pointer-events-none absolute bottom-full left-0 z-50 mb-2 min-w-max">
+          <div className="rounded-lg bg-neutral-900 px-4 py-2.5 shadow-lg">
+            <p className="text-sm text-white">
+              {t(localizationConstants.offerQuotedOpenedAt)} {openedAt}
+            </p>
+          </div>
+          <div className="absolute left-4 -bottom-1.5 h-0 w-0 border-l-[6px] border-r-[6px] border-t-[6px] border-l-transparent border-r-transparent border-t-neutral-900" />
         </div>
       )}
     </div>

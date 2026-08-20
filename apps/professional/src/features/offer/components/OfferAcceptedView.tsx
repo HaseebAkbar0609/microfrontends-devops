@@ -326,7 +326,7 @@ export function OfferAcceptedView({
                             size="sm"
                             className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
                             onClick={() =>
-                              router.push(OFFER_ROUTES.quoted(offerId))
+                              router.push(OFFER_ROUTES.quoted())
                             }
                           >
                             {t(localizationConstants.offerAcceptedViewOffer)}

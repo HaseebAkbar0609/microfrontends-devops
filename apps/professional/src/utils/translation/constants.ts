@@ -2798,6 +2798,7 @@ export type OfferTranslation = {
 	offerTabArchived: string;
 	offerAvailableProjects: string;
 	offerAvailableListBreadcrumb: string;
+	offerQuotedListBreadcrumb: string;
 	offerFavJobb: string;
 	allJobs: string;
 	locationPlace: string;
@@ -2957,6 +2958,12 @@ export type OfferTranslation = {
 	offerQuotedAnswerTitle: string;
 	offerQuotedAnswerLeaveComment: string;
 	offerQuotedAnswerBack: string;
+	offerQuotedNoAnswer: string;
+	addColumnLabel: string;
+	paginationFirstPage: string;
+	paginationPreviousPage: string;
+	paginationNextPage: string;
+	paginationLastPage: string;
 	offerAcceptedTotalLabel: string;
 	offerAcceptedAllJobs: string;
 	offerAcceptedPrice: string;
