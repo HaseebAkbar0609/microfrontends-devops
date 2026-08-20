@@ -2486,6 +2486,8 @@ export const svOffer: OfferTranslation = {
 	breadcrumbProduction: "Produktion",
 	breadcrumbOrder: "Order",
 	breadcrumbPlanning: "Planering",
+	breadcrumbBusiness: "Affär",
+	breadcrumbOffer: "Offert",
 	planningNoOrders: "Inga order denna vecka",
 	planningNoAssignees: "Inga tilldelade användare",
 	filterAssignee: "Tilldelad",
@@ -2800,10 +2802,11 @@ export const svOffer: OfferTranslation = {
 
 	// Offer confirmation modal
 	offerConfirmationModalTitle:
-		"Är du säker på att du vill ta det här uppdraget?",
+		"Är du säker på att du vill skicka detta offert?",
 	offerConfirmationModalCheckbox: "Jag accepterar villkoren",
 	offerConfirmationModalCancel: "Avbryt",
 	offerConfirmationModalConfirm: "Bekräfta",
+	offerConfirmationModalSend: "Skicka offert",
 
 	// Offer - Send page
 	offerSendCustomerDetails: "Kundinformation",
@@ -2956,6 +2959,27 @@ export const svOffer: OfferTranslation = {
 	createProjectOption: "Skapa Projekt",
 	createOrderOption: "Skapa Order",
 	goToButton: "Gå till",
+	offerConfirmationModalDescription: "Du är på väg att skicka ett offert till \"{project}\". Kunden kommer då att välja att acceptera, eller avslå ditt offert.",
+	offerFormPersonnelHelper: "Personal att hyra ut + förnamn + efternamn + person nr",
+	offerFormSelect: "Välja",
+	offerFormWorkAddressPlaceholder: "Adress där renoveringen ska utföras",
+	offerFormSpecificationsPlaceholder: "Ange specifikationer",
+	offerFormHourlyRateLabel: "Timpris, exklusive moms (Tim/ Kostand)",
+	offerForm350KrPerHour: "350 kr /tim",
+	offerFormEnter: "Ange",
+	offerFormPickADate: "Välj ett datum",
+	offerFormProjectNamePlaceholder: "Ange detaljerad beskrivning av arbetet som ska utföras",
+	offerFormWorkPlaceholder: "Total kostnad för projektet, inklusive material och arbete",
+	offerFormMaterialPlaceholder: "Ange material",
+	offerFormLaddaUpp: "Ladda upp",
+	offerFormExpressTitle: "EXPRESS",
+	offerFormB2BTitle: "B2B - HYRA UT / IN",
+	offerFormPostedLabel: "Publicerat:",
+	offerMoreImages: "fler",
+	offerBadgeExpressJob: "Express jobb",
+	offerBadgeStockholm: "Stockholm",
+	offerBadgeJarfalla: "Järfälla",
+	offerFormDescriptionLabel: "Beskrivning",
 };
 
 export const svMyPage: MyPagesTranslation = {
@@ -3109,7 +3133,11 @@ export const svRegister: RegisterTranslation = {
 	rowsPerPageLabel: "Rader per sida",
 	pageLabel: "Page",
 	ofLabel: "of",
-	pageOfLabel: "Page {page} of {total}",
+	pageOfLabel: "Sida {page} av {total}",
+	paginationFirstPage: "Första sidan",
+	paginationPreviousPage: "Föregående sida",
+	paginationNextPage: "Nästa sida",
+	paginationLastPage: "Sista sidan",
 	customerOption: "Kund",
 	supplierOption: "Leverantör",
 	supplierListTab: "Leverantörslista",
