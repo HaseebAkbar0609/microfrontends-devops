@@ -7,24 +7,9 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory, QualitySubCategory } from "../../types/quality";
 import { MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
+import { type RiskTemplate, MOCK_RISK_TEMPLATES } from "./RiskTemplateTable";
 
 // ── Use Template Modal ────────────────────────────────────────────────────────
-
-interface RiskTemplate {
-	id: string;
-	templateNr: string;
-	name: string;
-	version: string;
-	lastUpdate: string;
-	createdBy: string;
-}
-
-const MOCK_RISK_TEMPLATES: RiskTemplate[] = [
-	{ id: "RT001", templateNr: "RK-C01", name: "Riskhantering 1", version: "V2025-12", lastUpdate: "2025-01-28", createdBy: "Lars Andersson" },
-	{ id: "RT002", templateNr: "RK-C02", name: "Riskhantering 2", version: "v1.8", lastUpdate: "2025-01-08", createdBy: "Lars Andersson" },
-	{ id: "RT003", templateNr: "RK-C03", name: "Riskhantering 3", version: "v2.1", lastUpdate: "2025-04-09", createdBy: "Lars Andersson" },
-	{ id: "RT004", templateNr: "RK-C04", name: "Riskhantering 4", version: "v1.8", lastUpdate: "2025-04-09", createdBy: "Lars Andersson" },
-];
 
 function UseRiskTemplateModal({
 	onClose,
