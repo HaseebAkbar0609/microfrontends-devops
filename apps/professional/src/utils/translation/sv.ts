@@ -2091,7 +2091,7 @@ export const svOffer: OfferTranslation = {
 	kmaRiskTemplateColVersion: "Version",
 	kmaRiskTemplateColLastUpdate: "Senast uppdaterad",
 	kmaRiskTemplateColCreatedBy: "Skapad av",
-	kmaRiskTemplateTableTitle: "Riskhantering mallar",
+	kmaRiskTemplateTableTitle: "Riskhanteringsmallar",
 	kmaRiskTemplateActionEdit: "Redigera",
 	kmaRiskTemplateActionArchive: "Arkiv",
 	kmaRiskTemplateDeleteTitle: "Ta bort mall?",

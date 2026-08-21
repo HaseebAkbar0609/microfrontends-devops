@@ -20,7 +20,7 @@ export interface RiskTemplate {
 export const MOCK_RISK_TEMPLATES: RiskTemplate[] = [
 	{ id: "RT001", templateNr: "RH001", name: "Riskhantering 1", version: "V2025-12", lastUpdate: "2025-01-28", createdBy: "Lars Andersson" },
 	{ id: "RT002", templateNr: "RH002", name: "Riskhantering 2", version: "v1.8", lastUpdate: "2025-01-08", createdBy: "Lars Andersson" },
-	{ id: "RT003", templateNr: "RH003", name: "Riskhanterng 3", version: "v2.1", lastUpdate: "2025-04-09", createdBy: "Lars Andersson" },
+	{ id: "RT003", templateNr: "RH003", name: "Riskhantering 3", version: "v2.1", lastUpdate: "2025-04-09", createdBy: "Lars Andersson" },
 	{ id: "RT004", templateNr: "RH004", name: "Riskhantering 4", version: "v1.8", lastUpdate: "2025-04-09", createdBy: "Lars Andersson" },
 ];
 
@@ -45,8 +45,15 @@ function RowActionMenu({
 				onClose();
 			}
 		}
+		function handleKeyDown(e: KeyboardEvent) {
+			if (e.key === "Escape") onClose();
+		}
 		document.addEventListener("mousedown", handleClickOutside);
-		return () => document.removeEventListener("mousedown", handleClickOutside);
+		document.addEventListener("keydown", handleKeyDown);
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+			document.removeEventListener("keydown", handleKeyDown);
+		};
 	}, [onClose]);
 
 	return (
@@ -87,7 +94,7 @@ function RowActionMenu({
 export function RiskTemplateTable() {
 	const t = useTranslate();
 	const [templates, setTemplates] = useState<RiskTemplate[]>(MOCK_RISK_TEMPLATES);
-	const [favorites, setFavorites] = useState<Set<string>>(new Set(["RT002"]));
+	const [favorites, setFavorites] = useState<Set<string>>(new Set());
 	const [search, setSearch] = useState("");
 	const [openMenuId, setOpenMenuId] = useState<string | null>(null);
 	const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
