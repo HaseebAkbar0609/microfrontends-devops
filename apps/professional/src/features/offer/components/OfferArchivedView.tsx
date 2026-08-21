@@ -49,6 +49,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferArchivedItem, OfferAgreedStatus } from "../types/offer";
 import { OfferArchivedCommentModal } from "./OfferArchivedCommentModal";
@@ -100,6 +101,34 @@ function renderArchivedStatusBadge(
       <ClockFading size={13} className="text-amber-600" />
       {waitingLabel}
     </span>
+  );
+}
+
+function ArchivedStatusActionButton({
+  status,
+  rowId,
+  offerId,
+  onNavigate,
+}: {
+  status: OfferAgreedStatus;
+  rowId: string;
+  offerId: string;
+  onNavigate: (path: string) => void;
+}) {
+  const isSigned = status === "signed";
+  const actionLabelKey = isSigned
+    ? localizationConstants.offerAgreedViewAgreement
+    : localizationConstants.offerAgreedSign;
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
+      onClick={() => onNavigate(OFFER_ROUTES.createAgreement(rowId || offerId))}
+    >
+      <Translate text={actionLabelKey} />
+    </Button>
   );
 }
 
@@ -401,51 +430,18 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
                         {/* Avtalat pris */}
                         <td className="whitespace-nowrap px-4 py-3.5 font-normal text-slate-900 tabular-nums">
                           {row.agreedPrice > 0
-                            ? row.agreedPrice.toLocaleString("de-DE")
+                            ? formatCurrency(row.agreedPrice)
                             : "—"}
                         </td>
 
                         {/* Agreement Action button column (Status based: Se Avtal for signed, Signera for waiting) */}
                         <td className="whitespace-nowrap px-4 py-3.5">
-                          {row.status === "signed" ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
-                              onClick={() =>
-                                router.push(
-                                  OFFER_ROUTES.createAgreement(
-                                    row.id || offerId,
-                                  ),
-                                )
-                              }
-                            >
-                              <Translate
-                                text={
-                                  localizationConstants.offerAgreedViewAgreement
-                                }
-                              />
-                            </Button>
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
-                              onClick={() =>
-                                router.push(
-                                  OFFER_ROUTES.createAgreement(
-                                    row.id || offerId,
-                                  ),
-                                )
-                              }
-                            >
-                              <Translate
-                                text={
-                                  localizationConstants.offerAgreedSign
-                                }
-                              />
-                            </Button>
-                          )}
+                          <ArchivedStatusActionButton
+                            status={row.status}
+                            rowId={row.id}
+                            offerId={offerId}
+                            onNavigate={router.push}
+                          />
                         </td>
 
                         {/* Actions (Sticky Right) */}
@@ -457,6 +453,7 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
                                   variant="ghost"
                                   size="sm"
                                   className="h-8 w-8 cursor-pointer p-0 text-slate-700 hover:text-slate-900"
+                                  aria-label={t(localizationConstants.actions)}
                                 >
                                   <MoreVertical className="h-4 w-4 text-slate-700" />
                                 </Button>
@@ -509,9 +506,7 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
                               className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
                               onClick={() =>
                                 router.push(
-                                  offerId
-                                    ? `/module/business/offer/${offerId}/archived/project/${row.id}`
-                                    : `/module/business/offer/archived/project/${row.id}`,
+                                  OFFER_ROUTES.archivedProject(row.id, offerId),
                                 )
                               }
                             >
