@@ -42,6 +42,7 @@ import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OFFER_QUOTED_BREADCRUMBS } from "../constants/offerQuoted";
 import { OfferQuotedItem } from "../types/offer";
 import { OfferQuotedStatusBadge } from "./OfferQuotedStatusBadge";
@@ -193,7 +194,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
         item.customerName.toLowerCase().includes(q);
       const matchesType =
         selectedTypes.length === 0 || selectedTypes.includes(item.type);
-      const itemStatusKey = (item.status as string) === "opened" || (item.status as string) === "Öppnad" ? "opened" : "notReviewed";
+      const itemStatusKey = item.status === "opened" ? "opened" : "notReviewed";
       const matchesStatus =
         selectedStatuses.length === 0 || selectedStatuses.includes(itemStatusKey);
       return matchesSearch && matchesType && matchesStatus;
@@ -447,7 +448,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                             onClick={() => {
                               const targetId = offerId || row.id;
                               if (targetId) {
-                                router.push(`/module/business/offer/request/${targetId}`);
+                                router.push(OFFER_ROUTES.requestDetail(targetId));
                               }
                             }}
                           >
