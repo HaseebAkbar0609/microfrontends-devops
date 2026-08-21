@@ -58,7 +58,7 @@ export default function DynamicBreadcrumb({
 
   const defaultSeparator =
     variant === "small" ? (
-      <ChevronRight className="!w-[18px] !h-[18px]" strokeWidth="2" />
+      <ChevronRight className="!w-3.5 !h-3.5 text-slate-400" strokeWidth="2" />
     ) : (
       <Slash
         className="rotate-[-20deg] !w-[18px] !h-[18px]"
@@ -69,7 +69,7 @@ export default function DynamicBreadcrumb({
   return (
     <Breadcrumb className={cn(variant === "small" ? "mb-1" : "mb-2")}>
       <BreadcrumbList
-        className={cn(variant === "small" ? "text-sm" : undefined, className)}
+        className={cn(variant === "small" ? "text-xs font-normal text-slate-500 gap-1" : "font-normal", className)}
       >
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
@@ -77,20 +77,20 @@ export default function DynamicBreadcrumb({
 
           return (
             <BreadcrumbItem
-              key={item.href ?? `crumb-${index}`}
-              className="flex items-center"
+              key={`${item.href ?? "crumb"}-${item.translationKey ?? item.label ?? "label"}-${index}`}
+              className="flex items-center text-xs font-normal gap-1"
             >
               {index !== 0 && (
-                <BreadcrumbSeparator>
+                <BreadcrumbSeparator className="text-slate-400">
                   {separator ?? defaultSeparator}
                 </BreadcrumbSeparator>
               )}
 
               {isLast || !item.href ? (
-                <BreadcrumbPage className={cn(variant === "small" ? "text-sm" : undefined, "ml-0")}>{labelNode}</BreadcrumbPage>
+                <BreadcrumbPage className={cn(variant === "small" ? "text-xs" : undefined, "ml-0 font-normal text-slate-500")}>{labelNode}</BreadcrumbPage>
               ) : (
                 <BreadcrumbLink asChild>
-                  <Link href={item.href} className={cn(variant === "small" ? "text-sm" : undefined)}>{labelNode}</Link>
+                  <Link href={item.href} className={cn(variant === "small" ? "text-xs" : undefined, "font-normal text-slate-500 hover:text-slate-900 transition-colors")}>{labelNode}</Link>
                 </BreadcrumbLink>
               )}
             </BreadcrumbItem>

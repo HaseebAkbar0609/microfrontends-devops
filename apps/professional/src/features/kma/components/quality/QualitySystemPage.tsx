@@ -31,6 +31,7 @@ import { MailListPage, NOTIFY_COLS } from "../mail-list/MailListPage";
 import type { MailList, MailRecipient, NotifyField } from "../mail-list/MailListPage";
 import { CategoryPanel } from "../shared/CategoryPanel";
 import { RiskTable } from "../risk/RiskTable";
+import { RiskTemplateTable } from "../risk/RiskTemplateTable";
 import { CreateRiskhanteringPage } from "../risk/CreateRiskhanteringPage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -3025,7 +3026,7 @@ function QualityPlanTab({
 			</div>
 			{/* Content */}
 			{planType === "riskhantering" ? (
-				<RiskTable />
+				viewMode === "mallar" ? <RiskTemplateTable /> : <RiskTable />
 			) : planType !== "kontrollplan" ? (
 				<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
 					<Translate text={localizationConstants.comingSoon} />
