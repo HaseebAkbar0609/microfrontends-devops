@@ -77,13 +77,13 @@ export function KalkylProjektStep({ data, onChange, showErrors }: KalkylProjektS
 							label={t(localizationConstants.calcNewProjektNr)}
 							value={data.projektNr}
 							onChange={(v) => onChange({ projektNr: v })}
-							placeholder="Ange projektnr"
+							placeholder={t(localizationConstants.calcNewPlaceholderProjektNr)}
 						/>
 						<FormField
 							label={t(localizationConstants.projectName)}
 							value={data.projektNamn}
 							onChange={(v) => onChange({ projektNamn: v })}
-							placeholder="Ange projektnamn"
+							placeholder={t(localizationConstants.calcNewPlaceholderProjektNamn)}
 							required
 							error={showErrors && !data.projektNamn.trim()}
 						/>
@@ -91,25 +91,25 @@ export function KalkylProjektStep({ data, onChange, showErrors }: KalkylProjektS
 							label={t(localizationConstants.calcNewKvartersNamn)}
 							value={data.kvartersNamn}
 							onChange={(v) => onChange({ kvartersNamn: v })}
-							placeholder="Ange Kvarters namn"
+							placeholder={t(localizationConstants.calcNewPlaceholderKvartersNamn)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewProjektAdress)}
 							value={data.projektAdress}
 							onChange={(v) => onChange({ projektAdress: v })}
-							placeholder="Ange Projekt adress"
+							placeholder={t(localizationConstants.calcNewPlaceholderProjektAdress)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewPostNr)}
 							value={data.postNr}
 							onChange={(v) => onChange({ postNr: v })}
-							placeholder="Ange Post nr"
+							placeholder={t(localizationConstants.calcNewPlaceholderPostNr)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewOrt)}
 							value={data.ort}
 							onChange={(v) => onChange({ ort: v })}
-							placeholder="Ange ort"
+							placeholder={t(localizationConstants.calcNewPlaceholderOrt)}
 						/>
 					</div>
 				</CardContent>
@@ -130,8 +130,8 @@ export function KalkylProjektStep({ data, onChange, showErrors }: KalkylProjektS
 								<Translate text={localizationConstants.calcProType} />
 							</label>
 							<Select value={data.type} onValueChange={(v) => onChange({ type: v })}>
-								<SelectTrigger className="h-10 border-slate-200 bg-white text-sm focus:ring-0">
-									<SelectValue placeholder="Ange Type" />
+								<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm focus:ring-0">
+									<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderType)} />
 								</SelectTrigger>
 								<SelectContent>
 									{TYPE_OPTIONS.map((o) => (
@@ -148,8 +148,8 @@ export function KalkylProjektStep({ data, onChange, showErrors }: KalkylProjektS
 								<Translate text={localizationConstants.category} />
 							</label>
 							<Select value={data.kategori} onValueChange={(v) => onChange({ kategori: v })}>
-								<SelectTrigger className="h-10 border-slate-200 bg-white text-sm focus:ring-0">
-									<SelectValue placeholder="Ange Kategori" />
+								<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm focus:ring-0">
+									<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderKategori)} />
 								</SelectTrigger>
 								<SelectContent>
 									{KATEGORI_OPTIONS.map((o) => (
@@ -166,8 +166,8 @@ export function KalkylProjektStep({ data, onChange, showErrors }: KalkylProjektS
 								<Translate text={localizationConstants.calcNewAvdelning} />
 							</label>
 							<Select value={data.avdelning} onValueChange={(v) => onChange({ avdelning: v })}>
-								<SelectTrigger className="h-10 border-slate-200 bg-white text-sm focus:ring-0">
-									<SelectValue placeholder="Ange Avdelning" />
+								<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm focus:ring-0">
+									<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderAvdelning)} />
 								</SelectTrigger>
 								<SelectContent>
 									{AVDELNING_OPTIONS.map((o) => (
@@ -183,25 +183,25 @@ export function KalkylProjektStep({ data, onChange, showErrors }: KalkylProjektS
 							label={t(localizationConstants.calcNewKontraktsumma)}
 							value={data.kontraktsumma}
 							onChange={(v) => onChange({ kontraktsumma: v })}
-							placeholder="Ange Kontraktsumma"
+							placeholder={t(localizationConstants.calcNewPlaceholderKontraktsumma)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewOffertNr)}
 							value={data.offertNr}
 							onChange={(v) => onChange({ offertNr: v })}
-							placeholder="Ange Offert nr"
+							placeholder={t(localizationConstants.calcNewPlaceholderOffertNr)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcStatStartDate)}
 							value={data.startDatum}
 							onChange={(v) => onChange({ startDatum: v })}
-							placeholder="Ange start datum"
+							placeholder={t(localizationConstants.calcNewPlaceholderStartDatum)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcStatEndDate)}
 							value={data.slutDatum}
 							onChange={(v) => onChange({ slutDatum: v })}
-							placeholder="Ange slut datum"
+							placeholder={t(localizationConstants.calcNewPlaceholderSlutDatum)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewSenasteDatum)}

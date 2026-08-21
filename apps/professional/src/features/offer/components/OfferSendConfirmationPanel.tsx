@@ -26,6 +26,8 @@ export function OfferSendConfirmationPanel({
 }: OfferSendConfirmationPanelProps) {
   const t = useTranslate();
   const router = useRouter();
+  const [displayBudget, setDisplayBudget] = useState(data.preliminaryBudgetPrice);
+  const [displayOfferDate, setDisplayOfferDate] = useState(data.offerDateLatest);
   const [budget, setBudget] = useState("");
   const [offerDate, setOfferDate] = useState<Date | undefined>(undefined);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
@@ -34,6 +36,20 @@ export function OfferSendConfirmationPanel({
 
   function handleCreateOffer() {
     router.push(`/module/business/offer/send/${data.id}?type=${formType}`);
+  }
+
+  function handleSave() {
+    if (budget.trim()) {
+      const num = Number(budget.replace(/[^0-9]/g, ""));
+      if (!isNaN(num)) {
+        setDisplayBudget(num.toLocaleString("en-US"));
+      } else {
+        setDisplayBudget(budget.trim());
+      }
+    }
+    if (offerDate) {
+      setDisplayOfferDate(format(offerDate, "yyyy-MM-dd"));
+    }
   }
 
   return (
@@ -53,7 +69,7 @@ export function OfferSendConfirmationPanel({
             <Translate text={localizationConstants.offerSendPreliminaryBudgetLabel} />
           </p>
           <p className="font-sans font-semibold text-xl leading-7 text-white">
-            {data.preliminaryBudgetPrice}
+            {displayBudget}
           </p>
         </div>
       </div>
@@ -68,7 +84,7 @@ export function OfferSendConfirmationPanel({
             <Translate text={localizationConstants.offerSendOfferDateLabel} />
           </p>
           <p className="font-sans font-semibold text-sm leading-5 text-slate-800">
-            {data.offerDateLatest}
+            {displayOfferDate}
           </p>
         </div>
       </div>
@@ -81,7 +97,16 @@ export function OfferSendConfirmationPanel({
         <Input
           type="text"
           value={budget}
-          onChange={(e) => setBudget(e.target.value.replace(/[^0-9]/g, ""))}
+          onChange={(e) => {
+            const val = e.target.value.replace(/[^0-9]/g, "");
+            setBudget(val);
+            if (val) {
+              const num = Number(val);
+              setDisplayBudget(!isNaN(num) ? num.toLocaleString("en-US") : val);
+            } else {
+              setDisplayBudget(data.preliminaryBudgetPrice);
+            }
+          }}
           inputMode="numeric"
           placeholder={t(localizationConstants.offerSendPreliminaryBudgetPlaceholder)}
           className="h-10 rounded-lg border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400"
@@ -119,6 +144,9 @@ export function OfferSendConfirmationPanel({
               selected={offerDate}
               onSelect={(date) => {
                 setOfferDate(date);
+                if (date) {
+                  setDisplayOfferDate(format(date, "yyyy-MM-dd"));
+                }
                 setDatePickerOpen(false);
               }}
             />
@@ -141,9 +169,7 @@ export function OfferSendConfirmationPanel({
           type="button"
           variant="outline"
           className="h-10 w-full rounded-lg border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 cursor-pointer shadow-xs gap-2"
-          onClick={() => {
-            router.refresh();
-          }}
+          onClick={handleSave}
         >
           <Save className="w-[15px] h-[15px] text-[#18181B] shrink-0" strokeWidth={1.67} />
           <Translate text={localizationConstants.offerSendSave} />
@@ -161,7 +187,7 @@ export function OfferSendConfirmationPanel({
         <Button
           type="button"
           className="h-10 w-full rounded-lg bg-[#1E2530] text-sm font-medium text-white hover:bg-slate-800 cursor-pointer shadow-xs gap-2"
-          onClick={() => router.push("/module/business/calculation")}
+          onClick={() => router.push(`/module/business/calculation/new?offerId=${data.id}`)}
         >
           <CircleFadingPlus className="h-4 w-4 text-white shrink-0" strokeWidth={1.75} />
           <Translate text={localizationConstants.offerSendCreateCalculation} />

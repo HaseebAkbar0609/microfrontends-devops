@@ -1,13 +1,125 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useCallback, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowLeft, ArrowRight, Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { getOfferDetailByIdAPIAction } from "@/api-actions/offers";
+import { DUMMY_OFFER_SEND } from "@/features/offer/constants/offerSend";
+import { DUMMY_OFFER_REQUESTS } from "@/features/offer/constants/offerRequests.mock";
+import { DUMMY_QUOTED_ITEMS } from "@/features/offer/constants/offerQuoted.mock";
+
+function getOfferFallback(offerId: string) {
+	const reqMatch = DUMMY_OFFER_REQUESTS.find((r) => r.id === offerId);
+	if (reqMatch) {
+		return {
+			...DUMMY_OFFER_SEND,
+			id: reqMatch.id,
+			title: reqMatch.job,
+			type: reqMatch.type,
+			badges: [reqMatch.type, reqMatch.category, reqMatch.municipality],
+			customer: {
+				name: reqMatch.customerName,
+				email: "",
+				phone: "",
+				address: reqMatch.municipality || "",
+			},
+			preliminaryBudgetPrice: reqMatch.price ? reqMatch.price.toLocaleString("en-US") : "",
+			offerDateLatest: "",
+		};
+	}
+
+	const quotedMatch = DUMMY_QUOTED_ITEMS.find((q) => q.id === offerId);
+	if (quotedMatch) {
+		return {
+			...DUMMY_OFFER_SEND,
+			id: quotedMatch.id,
+			title: quotedMatch.job,
+			type: quotedMatch.type,
+			badges: [quotedMatch.type, quotedMatch.category, quotedMatch.municipality],
+			customer: {
+				name: quotedMatch.customerName,
+				email: quotedMatch.contactPerson.email || "",
+				phone: quotedMatch.contactPerson.phone || "",
+				address: quotedMatch.municipality || "",
+			},
+			preliminaryBudgetPrice: quotedMatch.price ? quotedMatch.price.toLocaleString("en-US") : "",
+			offerDateLatest: "",
+		};
+	}
+
+	return {
+		...DUMMY_OFFER_SEND,
+		id: offerId,
+		customer: {
+			name: "",
+			email: "",
+			phone: "",
+			address: "",
+		},
+		preliminaryBudgetPrice: "",
+		offerDateLatest: "",
+	};
+}
+
+function mapOfferToState(
+	offer: Partial<typeof DUMMY_OFFER_SEND> | null,
+	offerId: string,
+	setKontakt: React.Dispatch<React.SetStateAction<KalkylKontaktData>>,
+	setProjekt: React.Dispatch<React.SetStateAction<KalkylProjektData>>,
+) {
+	if (!offer) return;
+
+	const customerName = offer.customer?.name || "";
+	const nameParts = customerName.trim().split(" ");
+	const fornamn = nameParts[0] || "";
+	const efternamn = nameParts.slice(1).join(" ") || "";
+	const id = offer.id || offerId;
+	const address = offer.customer?.address || "";
+	const ort = offer.badges?.[1] || offer.badges?.[2] || "";
+	const email = offer.customer?.email || "";
+	const phone = offer.customer?.phone || "";
+
+	setKontakt((prev) => ({
+		...prev,
+		offert: id,
+		foretag: customerName,
+		address,
+		ort,
+		mail: email,
+		telefon: phone,
+		fornamn,
+		efternamn,
+		kontaktMail: email,
+		mobil: phone,
+		// Beställare
+		bestellareFoetag: customerName,
+		bestellareAddress: address,
+		bestellareOrt: ort,
+		bestellareMail: email,
+		bestellareTelefon: phone,
+		bestellareFornamn: fornamn,
+		bestellareEfternamn: efternamn,
+		bestellareKontaktMail: email,
+		bestellareMobil: phone,
+	}));
+
+	setProjekt((prev) => ({
+		...prev,
+		projektNr: id,
+		projektNamn: offer.title || "",
+		projektAdress: address,
+		ort,
+		type: offer.type || "",
+		offertNr: id,
+		kontraktsumma: offer.preliminaryBudgetPrice || "",
+		senatsDatum: offer.offerDateLatest || prev.senatsDatum,
+	}));
+}
 import type { KalkylDocItem, KalkylKontaktData, KalkylProjektData } from "../types/kalkyl";
 import { KalkylKontaktStep } from "./steps/KalkylKontaktStep";
 import { KalkylProjektStep } from "./steps/KalkylProjektStep";
@@ -75,6 +187,8 @@ const DEFAULT_PROJEKT: KalkylProjektData = {
 export function CreateKalkylPage() {
 	const t = useTranslate();
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const offerId = searchParams.get("offerId");
 
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -87,6 +201,27 @@ export function CreateKalkylPage() {
 	const [datumFran, setDatumFran] = useState("");
 	const [datumTill, setDatumTill] = useState("");
 	const [gdprAccepted, setGdprAccepted] = useState(false);
+
+	useEffect(() => {
+		if (!offerId) return;
+
+		async function loadOfferData() {
+			try {
+				const res = await getOfferDetailByIdAPIAction(offerId as string);
+				if (res.success && res.data) {
+					mapOfferToState(res.data, offerId as string, setKontakt, setProjekt);
+				} else {
+					const fallbackOffer = getOfferFallback(offerId as string);
+					mapOfferToState(fallbackOffer, offerId as string, setKontakt, setProjekt);
+				}
+			} catch {
+				const fallbackOffer = getOfferFallback(offerId as string);
+				mapOfferToState(fallbackOffer, offerId as string, setKontakt, setProjekt);
+			}
+		}
+
+		loadOfferData();
+	}, [offerId]);
 
 	const handleKontaktChange = useCallback(
 		(patch: Partial<KalkylKontaktData>) => setKontakt((prev) => ({ ...prev, ...patch })),

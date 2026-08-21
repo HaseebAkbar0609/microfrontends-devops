@@ -6,6 +6,16 @@ import { ApiResponse, ActionResult } from "@/types/api";
 const OFFERS_LIST_PATH = "/professionals/quotes/quote-listing/offer_listing_by_status";
 const DEFAULT_PAGE_SIZE = 10;
 
+export const OFFER_API_STATUS = {
+	REQUESTED: "REQUESTED",
+	OFFERED: "OFFERED",
+	ACCEPTED: "ACCEPTED",
+	AGREED: "AGREED",
+	ARCHIVED: "ARCHIVED",
+} as const;
+
+export type OfferApiStatus = (typeof OFFER_API_STATUS)[keyof typeof OFFER_API_STATUS];
+
 export interface ListOffersParams {
 	status: string; // e.g. "REQUESTED", "OFFERED"
 	page?: number;
@@ -160,5 +170,50 @@ export async function toggleOfferFavoriteAPIAction(
 		return { success: true, data: isFavorite, error: null };
 	} catch {
 		return { success: false, data: isFavorite, error: null };
+	}
+}
+
+export interface AgreementPartyPayload {
+	id?: string;
+	name: string;
+	role: string;
+	email?: string;
+	phone?: string;
+	address?: string;
+	orgNumber?: string;
+}
+
+export interface AgreementRequestPayload {
+	parties: AgreementPartyPayload[];
+	documents: string[];
+	templates: string[];
+	price?: number;
+	startDate?: string;
+	endDate?: string;
+	projectName?: string;
+	quoteNumber?: string;
+}
+
+export interface AgreementResponseData {
+	id: string;
+	status?: string;
+	createdAt?: string;
+	[key: string]: unknown;
+}
+
+export async function createAgreementFromOfferAPIAction(
+	offerId: string,
+	data: AgreementRequestPayload,
+): Promise<ActionResult<AgreementResponseData>> {
+	try {
+		const response = await axiosInstance.post<ApiResponse<AgreementResponseData>>(
+			`/professionals/quotes/${offerId}/agreement`,
+			data,
+		);
+		return { success: true, data: response.data?.data || { id: offerId }, error: null };
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
+		const errorMessage = apiError.response?.data?.message || "Failed to create agreement";
+		return { success: false, data: null, error: errorMessage };
 	}
 }
