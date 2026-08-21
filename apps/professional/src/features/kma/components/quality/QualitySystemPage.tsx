@@ -31,6 +31,7 @@ import { MailListPage, NOTIFY_COLS } from "../mail-list/MailListPage";
 import type { MailList, MailRecipient, NotifyField } from "../mail-list/MailListPage";
 import { CategoryPanel } from "../shared/CategoryPanel";
 import { RiskTable } from "../risk/RiskTable";
+import { CreateRiskhanteringPage } from "../risk/CreateRiskhanteringPage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -2865,12 +2866,16 @@ function planTypeLabelKey(id: PlanType): string {
 function QualityPlanTab({
 	onCreateNew,
 	onUseTemplate,
+	onCreateRiskhantering,
+	onUseRiskTemplate,
 	onOpenPlan,
 	onOpenSandlista,
 	onCreateTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
+	onCreateRiskhantering: () => void;
+	onUseRiskTemplate: () => void;
 	onOpenPlan: () => void;
 	onOpenSandlista: () => void;
 	onCreateTemplate: () => void;
@@ -2979,15 +2984,15 @@ function QualityPlanTab({
 						</button>
 					</div>
 				</div>
-				{/* Create button — split: main action + dropdown chevron */}
+				{/* Create button — split: main action + dropdown chevron (conditional on planType) */}
 				<div ref={createBtnRef} className="relative flex">
 					<button
 						type="button"
-						onClick={onCreateNew}
+						onClick={planType === "riskhantering" ? onCreateRiskhantering : onCreateNew}
 						className="flex cursor-pointer items-center gap-1.5 rounded-l-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.kmaQualityPlanCreateBtn} />
+						<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
 					</button>
 					<button
 						type="button"
@@ -3000,15 +3005,15 @@ function QualityPlanTab({
 						<div className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-slate-200 bg-white py-1 shadow-md">
 							<button
 								type="button"
-								onClick={() => { onCreateNew(); setCreateBtnOpen(false); }}
+								onClick={() => { (planType === "riskhantering" ? onCreateRiskhantering : onCreateNew)(); setCreateBtnOpen(false); }}
 								className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
 							>
 								<Plus className="h-4 w-4 text-slate-400" />
-								<Translate text={localizationConstants.kmaQualityPlanCreateBtn} />
+								<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
 							</button>
 							<button
 								type="button"
-								onClick={() => { onUseTemplate(); setCreateBtnOpen(false); }}
+								onClick={() => { (planType === "riskhantering" ? onUseRiskTemplate : onUseTemplate)(); setCreateBtnOpen(false); }}
 								className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
 							>
 								<FileText className="h-4 w-4 text-slate-400" />
@@ -3058,6 +3063,8 @@ export function QualitySystemPage() {
 	const [openPlanOpen, setOpenPlanOpen] = useState(false);
 	const [sandlistaOpen, setSandlistaOpen] = useState(false);
 	const [createTemplateOpen, setCreateTemplateOpen] = useState(false);
+	const [createRiskhanteringOpen, setCreateRiskhanteringOpen] = useState(false);
+	const [createRiskWithTemplate, setCreateRiskWithTemplate] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3082,6 +3089,18 @@ export function QualitySystemPage() {
 
 	if (createTemplateOpen) {
 		return <CreateTemplatePage onBack={() => setCreateTemplateOpen(false)} />;
+	}
+
+	if (createRiskhanteringOpen) {
+		return (
+			<CreateRiskhanteringPage
+				startWithTemplate={createRiskWithTemplate}
+				onBack={() => {
+					setCreateRiskhanteringOpen(false);
+					setCreateRiskWithTemplate(false);
+				}}
+			/>
+		);
 	}
 
 	if (openPlanOpen) {
@@ -3142,6 +3161,8 @@ export function QualitySystemPage() {
 						setCreateWithTemplate(true);
 						setCreatePlanOpen(true);
 					}}
+					onCreateRiskhantering={() => { setCreateRiskWithTemplate(false); setCreateRiskhanteringOpen(true); }}
+					onUseRiskTemplate={() => { setCreateRiskWithTemplate(true); setCreateRiskhanteringOpen(true); }}
 					onOpenPlan={() => setOpenPlanOpen(true)}
 					onOpenSandlista={() => setSandlistaOpen(true)}
 					onCreateTemplate={() => setCreateTemplateOpen(true)}
