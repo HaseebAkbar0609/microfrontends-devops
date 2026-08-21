@@ -3072,6 +3072,9 @@ export type OfferTranslation = {
 	offerAcceptedStatusBadge: string;
 	offerAcceptedCreateContract: string;
 	offerAcceptedViewOffer: string;
+	offerAcceptedContactPerson: string;
+	offerAcceptedAddColumn: string;
+	offerAcceptedListBreadcrumb: string;
 	offerDownloadPdf: string;
 	offerAgreedContractNr: string;
 	offerAgreedJobType: string;
