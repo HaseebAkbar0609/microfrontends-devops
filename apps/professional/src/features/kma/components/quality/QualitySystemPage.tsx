@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { z } from "zod";
 import {
 	Archive,
 	ArrowLeft,
@@ -26,6 +27,11 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory, QualitySubCategory } from "../../types/quality";
 import { MOCK_QUALITY_CATEGORIES, MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
+import { MailListPage, NOTIFY_COLS } from "../mail-list/MailListPage";
+import type { MailList, MailRecipient, NotifyField } from "../mail-list/MailListPage";
+import { CategoryPanel } from "../shared/CategoryPanel";
+import { RiskTable } from "../risk/RiskTable";
+import { CreateRiskhanteringPage } from "../risk/CreateRiskhanteringPage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -54,24 +60,6 @@ interface ControlPoint {
 	frequency: string;
 	responsible: string;
 	documentation: string;
-}
-
-interface MailRecipient {
-	id: string;
-	name: string;
-	role: string;
-	email: string;
-	notifyNewPlan: boolean;
-	notifyUpdates: boolean;
-	notifyNonConformity: boolean;
-	notifyVerification: boolean;
-}
-
-interface MailList {
-	id: string;
-	name: string;
-	description: string;
-	recipients: MailRecipient[];
 }
 
 const MOCK_MAIL_LISTS: MailList[] = [
@@ -162,7 +150,7 @@ function UseTemplateModal({
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-			<div className="w-[660px] max-w-full rounded-lg bg-white shadow-xl">
+			<div className="w-165 max-w-full rounded-lg bg-white shadow-xl">
 				{/* Header */}
 				<div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
 					<h2 className="text-base font-semibold text-slate-900">
@@ -233,7 +221,7 @@ function UseTemplateModal({
 						type="button"
 						onClick={() => selected && onUse(selected)}
 						disabled={!selected}
-						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A] disabled:opacity-40"
+						className="cursor-pointer rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-40"
 					>
 						<Translate text={localizationConstants.kmaQualityPlanTemplateUseBtn} />
 					</button>
@@ -386,7 +374,7 @@ function CreateKontrollplanPage({
 						</button>
 						<button
 							type="button"
-							className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A]"
+							className="cursor-pointer rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
 						>
 							<Translate text={localizationConstants.save} />
 						</button>
@@ -1044,83 +1032,7 @@ function DocDetailView({ doc, onBack }: DocDetailViewProps) {
 	);
 }
 
-// ── Category Panel ─────────────────────────────────────────────────────────────
 
-interface CategoryPanelProps {
-	headerKey: string;
-	items: { id: string; label: string; count?: number }[];
-	selectedId: string | null;
-	onSelect: (id: string) => void;
-	searchKey: string;
-}
-
-function CategoryPanel({ headerKey, items, selectedId, onSelect, searchKey }: CategoryPanelProps) {
-	const t = useTranslate();
-	const [search, setSearch] = useState("");
-
-	const filtered = useMemo(() => {
-		const q = search.toLowerCase();
-		return items.filter((i) => i.label.toLowerCase().includes(q));
-	}, [items, search]);
-
-	return (
-		<div className="flex w-56 shrink-0 flex-col border-r border-slate-200">
-			{/* Header */}
-			<div className="border-b border-slate-200 px-4 py-3">
-				<p className="text-xs font-semibold tracking-wide text-slate-500">
-					<Translate text={headerKey} />
-				</p>
-			</div>
-			{/* Search */}
-			<div className="relative border-b border-slate-200">
-				<Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-				<input
-					type="text"
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-					placeholder={t(searchKey)}
-					className="h-9 w-full bg-white pl-8 pr-3 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none"
-				/>
-			</div>
-			{/* Items */}
-			<div className="flex-1 overflow-y-auto">
-				{filtered.map((item) => (
-					<button
-						key={item.id}
-						type="button"
-						onClick={() => onSelect(item.id)}
-						className={cn(
-							"flex w-full cursor-pointer items-center justify-between gap-2 px-4 py-2.5 text-left text-xs transition-colors hover:bg-slate-50",
-							selectedId === item.id
-								? "border-l-2 border-slate-800 bg-slate-50 font-medium text-slate-900"
-								: "border-l-2 border-transparent text-slate-600",
-						)}
-					>
-						<span className="flex items-center gap-2">
-							<FileText className="h-3.5 w-3.5 shrink-0 text-slate-400" />
-							<span className="truncate">{item.label}</span>
-						</span>
-						{item.count !== undefined && (
-							<span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-xs text-slate-500">
-								{item.count}
-							</span>
-						)}
-					</button>
-				))}
-			</div>
-			{/* Add new */}
-			<div className="border-t border-slate-200 px-4 py-3">
-				<button
-					type="button"
-					className="flex cursor-pointer items-center gap-1.5 text-xs text-slate-500 hover:text-slate-700"
-				>
-					<Plus className="h-3.5 w-3.5" />
-					<Translate text={localizationConstants.kmaQualityAddNew} />
-				</button>
-			</div>
-		</div>
-	);
-}
 
 // ── Documents Panel ────────────────────────────────────────────────────────────
 
@@ -1402,7 +1314,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 					<button
 						type="button"
 						onClick={handleSave}
-						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
+						className="cursor-pointer rounded-md bg-zinc-900 px-4 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Translate text={localizationConstants.kmaControlPlanSaveBtn} />
 					</button>
@@ -1490,7 +1402,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 						<button
 							type="button"
 							onClick={addRow}
-							className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#27272A]"
+							className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
 						>
 							<Plus className="h-3.5 w-3.5" />
 							<Translate text={localizationConstants.kmaControlPlanAddRow} />
@@ -1600,349 +1512,7 @@ function OpenKontrollplanPage({ onBack }: { onBack: () => void }) {
 	);
 }
 
-type NotifyField = "notifyNewPlan" | "notifyUpdates" | "notifyNonConformity" | "notifyVerification";
 
-// ── Open Sändlista Page ───────────────────────────────────────────────────────
-
-function OpenSandlistaPage({
-	list: initialList,
-	onBack,
-	onDelete,
-}: {
-	list: MailList;
-	onBack: () => void;
-	onDelete: (id: string) => void;
-}) {
-	const t = useTranslate();
-	const [isEditMode, setIsEditMode] = useState(false);
-	const [listName, setListName] = useState(initialList.name);
-	const [listDesc, setListDesc] = useState(initialList.description);
-	const [recipients, setRecipients] = useState<MailRecipient[]>(initialList.recipients);
-	const [search, setSearch] = useState("");
-	const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-
-	const EMAIL_REGEX_OPEN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-	const filtered = recipients.filter(
-		(r) =>
-			search === "" ||
-			r.name.toLowerCase().includes(search.toLowerCase()) ||
-			r.email.toLowerCase().includes(search.toLowerCase()),
-	);
-
-	function toggleNotify(id: string, field: NotifyField) {
-		setRecipients((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: !r[field] } : r)));
-	}
-
-	function removeRecipient(id: string) {
-		setRecipients((prev) => prev.filter((r) => r.id !== id));
-	}
-
-	function addRecipient() {
-		setRecipients((prev) => [
-			...prev,
-			{ id: `temp_${crypto.randomUUID()}`, name: "", role: "", email: "", notifyNewPlan: false, notifyUpdates: false, notifyNonConformity: false, notifyVerification: false },
-		]);
-	}
-
-	function updateRecipient(id: string, field: "name" | "role" | "email", value: string) {
-		setRecipients((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
-	}
-
-	function handleSave() {
-		setIsEditMode(false);
-	}
-
-	function handleDelete() {
-		onDelete(initialList.id);
-		onBack();
-	}
-
-	return (
-		<>
-			{/* Delete confirmation modal */}
-			{deleteConfirmOpen && (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-					<div className="w-96 max-w-full rounded-lg bg-white shadow-xl">
-						<div className="border-b border-slate-200 px-6 py-4">
-							<h2 className="text-base font-semibold text-slate-900">
-								<Translate text={localizationConstants.kmaOpenSandlistaDeleteConfirmTitle} />
-							</h2>
-						</div>
-						<div className="px-6 py-5">
-							<p className="text-sm text-slate-600">
-								<Translate text={localizationConstants.kmaOpenSandlistaDeleteConfirmMsg} />
-							</p>
-						</div>
-						<div className="flex items-center justify-end gap-2 border-t border-slate-200 px-6 py-4">
-							<button
-								type="button"
-								onClick={() => setDeleteConfirmOpen(false)}
-								className="cursor-pointer rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-							>
-								<Translate text={localizationConstants.cancel} />
-							</button>
-							<button
-								type="button"
-								onClick={handleDelete}
-								className="cursor-pointer rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
-							>
-								<Translate text={localizationConstants.actionDelete} />
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
-
-			<div className="flex flex-1 flex-col overflow-hidden bg-white">
-				{/* Header */}
-				<div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
-					<div className="flex items-center gap-3">
-						<button
-							type="button"
-							onClick={onBack}
-							className="cursor-pointer rounded-md p-1.5 text-slate-500 hover:bg-slate-100"
-						>
-							<ArrowLeft className="h-4 w-4" />
-						</button>
-						<div>
-							<p className="text-xs text-slate-400">
-								<Translate text={localizationConstants.kmaOpenSandlistaTitle} />
-							</p>
-							<h1 className="text-base font-semibold text-slate-900">{listName}</h1>
-						</div>
-					</div>
-					<div className="flex items-center gap-2">
-						{isEditMode ? (
-							<>
-								<button
-									type="button"
-									onClick={() => { setIsEditMode(false); setListName(initialList.name); setListDesc(initialList.description); setRecipients(initialList.recipients); }}
-									className="cursor-pointer rounded-md border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-								>
-									<Translate text={localizationConstants.cancel} />
-								</button>
-								<button
-									type="button"
-									onClick={handleSave}
-									className="cursor-pointer rounded-md bg-[#18181B] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
-								>
-									<Translate text={localizationConstants.save} />
-								</button>
-							</>
-						) : (
-							<>
-								<button
-									type="button"
-									onClick={() => setIsEditMode(true)}
-									className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-								>
-									<Pencil className="h-3.5 w-3.5" />
-									<Translate text={localizationConstants.actionEdit} />
-								</button>
-								<button
-									type="button"
-									onClick={() => setDeleteConfirmOpen(true)}
-									className="flex cursor-pointer items-center gap-1.5 rounded-md border border-red-200 bg-white px-3 py-1.5 text-sm font-medium text-red-600 hover:bg-red-50"
-								>
-									<Trash2 className="h-3.5 w-3.5" />
-									<Translate text={localizationConstants.actionDelete} />
-								</button>
-								<button
-									type="button"
-									onClick={onBack}
-									className="cursor-pointer rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-								>
-									<Translate text={localizationConstants.kmaOpenSandlistaCloseBtn} />
-								</button>
-							</>
-						)}
-					</div>
-				</div>
-
-				{/* Body */}
-				<div className="flex-1 overflow-y-auto">
-					{/* General info */}
-					<div className="border-b border-slate-200 px-6 py-5">
-						<h2 className="mb-4 text-sm font-semibold text-slate-700">
-							<Translate text={localizationConstants.kmaCreateSandlistaGeneralInfo} />
-						</h2>
-						<div className="flex flex-col gap-4 max-w-lg">
-							<div>
-								<label className="mb-1 block text-xs font-medium text-slate-500">
-									<Translate text={localizationConstants.kmaCreateSandlistaNameLabel} />
-								</label>
-								{isEditMode ? (
-									<input
-										type="text"
-										value={listName}
-										onChange={(e) => setListName(e.target.value)}
-										aria-label={t(localizationConstants.kmaCreateSandlistaNameLabel)}
-										className="h-9 w-full rounded border border-slate-200 bg-white px-3 text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300"
-									/>
-								) : (
-									<p className="text-sm text-slate-800">{listName || "—"}</p>
-								)}
-							</div>
-							<div>
-								<label className="mb-1 block text-xs font-medium text-slate-500">
-									<Translate text={localizationConstants.kmaCreateSandlistaDescLabel} />
-								</label>
-								{isEditMode ? (
-									<textarea
-										value={listDesc}
-										onChange={(e) => setListDesc(e.target.value)}
-										aria-label={t(localizationConstants.kmaCreateSandlistaDescLabel)}
-										rows={2}
-										className="w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300 resize-none"
-									/>
-								) : (
-									<p className="text-sm text-slate-600">{listDesc || "—"}</p>
-								)}
-							</div>
-						</div>
-					</div>
-
-					{/* Recipients */}
-					<div className="px-6 py-5">
-						<div className="mb-3 flex items-center justify-between">
-							<h2 className="text-sm font-semibold text-slate-700">
-								<Translate text={localizationConstants.kmaSandlistaTitle} />
-								{" "}
-								<span className="ml-1 text-xs font-normal text-slate-400">({recipients.length})</span>
-							</h2>
-							{isEditMode && (
-								<button
-									type="button"
-									onClick={addRecipient}
-									className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#27272A]"
-								>
-									<Plus className="h-3.5 w-3.5" />
-									<Translate text={localizationConstants.kmaSandlistaAddBtn} />
-								</button>
-							)}
-						</div>
-						{/* Search */}
-						<div className="relative mb-3 max-w-sm">
-							<Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
-							<input
-								type="text"
-								value={search}
-								onChange={(e) => setSearch(e.target.value)}
-								placeholder={t(localizationConstants.kmaSandlistaSearchPlaceholder)}
-								className="h-8 w-full rounded border border-slate-200 pl-8 pr-3 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
-							/>
-						</div>
-						{/* Table */}
-						<div className="overflow-x-auto rounded border border-slate-200">
-							<table className="w-full text-xs">
-								<thead>
-									<tr className="border-b border-slate-200 bg-slate-50">
-										<th className="px-4 py-2.5 text-left font-medium text-slate-500">
-											<Translate text={localizationConstants.kmaSandlistaColName} />
-										</th>
-										<th className="px-4 py-2.5 text-left font-medium text-slate-500">
-											<Translate text={localizationConstants.kmaSandlistaColEmail} />
-										</th>
-										{NOTIFY_COLS.map((col) => (
-											<th key={col.key} className="px-3 py-2.5 text-center font-medium text-slate-500">
-												<Translate text={col.labelKey} />
-											</th>
-										))}
-										{isEditMode && <th className="w-8 px-3 py-2.5" />}
-									</tr>
-								</thead>
-								<tbody>
-									{filtered.length === 0 ? (
-										<tr>
-											<td colSpan={7} className="px-4 py-8 text-center text-slate-400">
-												<Translate text={localizationConstants.noDataFound} />
-											</td>
-										</tr>
-									) : (
-										filtered.map((r) => (
-											<tr key={r.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50">
-												<td className="px-4 py-2.5 font-medium text-slate-800">
-													{isEditMode ? (
-														<input
-															type="text"
-															value={r.name}
-															onChange={(e) => updateRecipient(r.id, "name", e.target.value)}
-															aria-label={t(localizationConstants.kmaSandlistaColName)}
-															className="h-7 w-full rounded border border-slate-200 px-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300"
-														/>
-													) : (
-														r.name || "—"
-													)}
-												</td>
-												<td className="px-4 py-2.5 text-slate-600">
-													{isEditMode ? (
-														<input
-															type="email"
-															value={r.email}
-															onChange={(e) => updateRecipient(r.id, "email", e.target.value)}
-															aria-label={t(localizationConstants.kmaSandlistaColEmail)}
-															className={cn(
-																"h-7 w-full rounded border px-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300",
-																r.email.trim() && !EMAIL_REGEX_OPEN.test(r.email.trim())
-																	? "border-red-300"
-																	: "border-slate-200",
-															)}
-														/>
-													) : (
-														r.email || "—"
-													)}
-												</td>
-												{NOTIFY_COLS.map((col) => (
-													<td key={col.key} className="px-3 py-2.5 text-center">
-														<label htmlFor={`open-notify-${r.id}-${col.key}`} className="sr-only">
-															<Translate text={col.labelKey} />
-														</label>
-														<input
-															id={`open-notify-${r.id}-${col.key}`}
-															type="checkbox"
-															checked={r[col.key]}
-															onChange={() => isEditMode && toggleNotify(r.id, col.key)}
-															aria-label={t(col.labelKey)}
-															disabled={!isEditMode}
-															className={cn(
-																"h-4 w-4 accent-slate-800",
-																isEditMode ? "cursor-pointer" : "cursor-default opacity-80",
-															)}
-														/>
-													</td>
-												))}
-												{isEditMode && (
-													<td className="px-3 py-2.5">
-														<button
-															type="button"
-															onClick={() => removeRecipient(r.id)}
-															className="cursor-pointer text-slate-300 hover:text-red-500"
-															aria-label="Remove recipient"
-														>
-															<Trash2 className="h-3.5 w-3.5" />
-														</button>
-													</td>
-												)}
-											</tr>
-										))
-									)}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div>
-			</div>
-		</>
-	);
-}
-
-const NOTIFY_COLS: { key: NotifyField; labelKey: string }[] = [
-	{ key: "notifyNewPlan", labelKey: localizationConstants.kmaSandlistaColNewPlan },
-	{ key: "notifyUpdates", labelKey: localizationConstants.kmaSandlistaColUpdates },
-	{ key: "notifyNonConformity", labelKey: localizationConstants.kmaSandlistaColNonConformity },
-	{ key: "notifyVerification", labelKey: localizationConstants.kmaSandlistaColVerification },
-];
 
 // ── Create Sändlista Page ─────────────────────────────────────────────────────
 
@@ -1980,13 +1550,11 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 		if (errors.name) setErrors((prev) => ({ ...prev, name: false }));
 	}
 
-	const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
 	function handleSave() {
 		if (isSaving) return;
 		const newErrors: { name?: boolean; invalidEmail?: boolean } = {};
 		if (!listName.trim()) newErrors.name = true;
-		if (recipients.some((r) => r.email.trim() && !EMAIL_REGEX.test(r.email.trim()))) {
+		if (recipients.some((r) => r.email.trim() && !z.string().email().safeParse(r.email.trim()).success)) {
 			newErrors.invalidEmail = true;
 		}
 		if (Object.keys(newErrors).length > 0) {
@@ -2049,7 +1617,7 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 						type="button"
 						onClick={handleSave}
 						disabled={isSaving}
-						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A] disabled:opacity-60"
+						className="cursor-pointer rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-60"
 					>
 						<Translate text={localizationConstants.save} />
 					</button>
@@ -2112,7 +1680,7 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 						<button
 							type="button"
 							onClick={addRecipient}
-							className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#27272A]"
+							className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
 						>
 							<Plus className="h-3.5 w-3.5" />
 							<Translate text={localizationConstants.kmaSandlistaAddBtn} />
@@ -2193,7 +1761,7 @@ function CreateSandlistaPage({ onBack }: { onBack: () => void }) {
 													aria-label={t(localizationConstants.kmaSandlistaColEmail)}
 													className={cn(
 														"h-7 w-full rounded border px-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300",
-														errors.invalidEmail && r.email.trim() && !EMAIL_REGEX.test(r.email.trim())
+														errors.invalidEmail && r.email.trim() && !z.string().email().safeParse(r.email.trim()).success
 															? "border-red-400 focus:ring-red-300"
 															: "border-slate-200",
 													)}
@@ -2253,7 +1821,8 @@ function SandlistaPage({ onBack }: { onBack: () => void }) {
 
 	if (openedList) {
 		return (
-			<OpenSandlistaPage
+			<MailListPage
+				key={openedList.id}
 				list={openedList}
 				onBack={() => setOpenedList(null)}
 				onDelete={(id) => setLists((prev) => prev.filter((l) => l.id !== id))}
@@ -2287,7 +1856,7 @@ function SandlistaPage({ onBack }: { onBack: () => void }) {
 				<button
 					type="button"
 					onClick={() => setCreateNewOpen(true)}
-					className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
+					className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 				>
 					<Plus className="h-4 w-4" />
 					<Translate text={localizationConstants.kmaCreateSandlistaBtn} />
@@ -2722,7 +2291,7 @@ function KontrollplanTable({
 					<button
 						type="button"
 						onClick={onCreateTemplate}
-						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-[#18181B] px-3 py-1.5 text-xs font-medium text-white hover:bg-[#27272A]"
+						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-3.5 w-3.5" />
 						<Translate text={localizationConstants.kmaCreateTemplateBtn} />
@@ -2863,6 +2432,7 @@ function KontrollplanTable({
 	);
 }
 
+
 // ── Create Template Page ──────────────────────────────────────────────────────
 
 function CreateTemplatePage({ onBack }: { onBack: () => void }) {
@@ -2992,7 +2562,7 @@ function CreateTemplatePage({ onBack }: { onBack: () => void }) {
 						type="button"
 						onClick={handleSave}
 						disabled={isSaving}
-						className="cursor-pointer rounded-md bg-[#18181B] px-4 py-2 text-sm font-medium text-white hover:bg-[#27272A] disabled:opacity-60"
+						className="cursor-pointer rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-60"
 					>
 						<Translate text={localizationConstants.save} />
 					</button>
@@ -3296,12 +2866,16 @@ function planTypeLabelKey(id: PlanType): string {
 function QualityPlanTab({
 	onCreateNew,
 	onUseTemplate,
+	onCreateRiskhantering,
+	onUseRiskTemplate,
 	onOpenPlan,
 	onOpenSandlista,
 	onCreateTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
+	onCreateRiskhantering: () => void;
+	onUseRiskTemplate: () => void;
 	onOpenPlan: () => void;
 	onOpenSandlista: () => void;
 	onCreateTemplate: () => void;
@@ -3410,20 +2984,20 @@ function QualityPlanTab({
 						</button>
 					</div>
 				</div>
-				{/* Create button — split: main action + dropdown chevron */}
+				{/* Create button — split: main action + dropdown chevron (conditional on planType) */}
 				<div ref={createBtnRef} className="relative flex">
 					<button
 						type="button"
-						onClick={onCreateNew}
-						className="flex cursor-pointer items-center gap-1.5 rounded-l-md bg-[#18181B] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#27272A]"
+						onClick={planType === "riskhantering" ? onCreateRiskhantering : onCreateNew}
+						className="flex cursor-pointer items-center gap-1.5 rounded-l-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.kmaQualityPlanCreateBtn} />
+						<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
 					</button>
 					<button
 						type="button"
 						onClick={() => setCreateBtnOpen((v) => !v)}
-						className="flex cursor-pointer items-center rounded-r-md border-l border-white/20 bg-[#18181B] px-2 py-1.5 text-white hover:bg-[#27272A]"
+						className="flex cursor-pointer items-center rounded-r-md border-l border-white/20 bg-zinc-900 px-2 py-1.5 text-white hover:bg-zinc-800"
 					>
 						<ChevronDown className="h-4 w-4" />
 					</button>
@@ -3431,15 +3005,15 @@ function QualityPlanTab({
 						<div className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-slate-200 bg-white py-1 shadow-md">
 							<button
 								type="button"
-								onClick={() => { onCreateNew(); setCreateBtnOpen(false); }}
+								onClick={() => { (planType === "riskhantering" ? onCreateRiskhantering : onCreateNew)(); setCreateBtnOpen(false); }}
 								className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
 							>
 								<Plus className="h-4 w-4 text-slate-400" />
-								<Translate text={localizationConstants.kmaQualityPlanCreateBtn} />
+								<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
 							</button>
 							<button
 								type="button"
-								onClick={() => { onUseTemplate(); setCreateBtnOpen(false); }}
+								onClick={() => { (planType === "riskhantering" ? onUseRiskTemplate : onUseTemplate)(); setCreateBtnOpen(false); }}
 								className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
 							>
 								<FileText className="h-4 w-4 text-slate-400" />
@@ -3450,7 +3024,9 @@ function QualityPlanTab({
 				</div>
 			</div>
 			{/* Content */}
-			{planType !== "kontrollplan" ? (
+			{planType === "riskhantering" ? (
+				<RiskTable />
+			) : planType !== "kontrollplan" ? (
 				<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
 					<Translate text={localizationConstants.comingSoon} />
 				</div>
@@ -3487,6 +3063,8 @@ export function QualitySystemPage() {
 	const [openPlanOpen, setOpenPlanOpen] = useState(false);
 	const [sandlistaOpen, setSandlistaOpen] = useState(false);
 	const [createTemplateOpen, setCreateTemplateOpen] = useState(false);
+	const [createRiskhanteringOpen, setCreateRiskhanteringOpen] = useState(false);
+	const [createRiskWithTemplate, setCreateRiskWithTemplate] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3511,6 +3089,18 @@ export function QualitySystemPage() {
 
 	if (createTemplateOpen) {
 		return <CreateTemplatePage onBack={() => setCreateTemplateOpen(false)} />;
+	}
+
+	if (createRiskhanteringOpen) {
+		return (
+			<CreateRiskhanteringPage
+				startWithTemplate={createRiskWithTemplate}
+				onBack={() => {
+					setCreateRiskhanteringOpen(false);
+					setCreateRiskWithTemplate(false);
+				}}
+			/>
+		);
 	}
 
 	if (openPlanOpen) {
@@ -3571,6 +3161,8 @@ export function QualitySystemPage() {
 						setCreateWithTemplate(true);
 						setCreatePlanOpen(true);
 					}}
+					onCreateRiskhantering={() => { setCreateRiskWithTemplate(false); setCreateRiskhanteringOpen(true); }}
+					onUseRiskTemplate={() => { setCreateRiskWithTemplate(true); setCreateRiskhanteringOpen(true); }}
 					onOpenPlan={() => setOpenPlanOpen(true)}
 					onOpenSandlista={() => setSandlistaOpen(true)}
 					onCreateTemplate={() => setCreateTemplateOpen(true)}
