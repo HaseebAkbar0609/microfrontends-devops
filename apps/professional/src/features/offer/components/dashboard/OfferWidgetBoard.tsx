@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Check, LayoutGrid, SquarePlus, PanelRightOpen } from "lucide-react";
 import {
 	AlertDialog,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { OFFER_SIDEBAR_WIDGET_MAP } from "@/features/offer/components/OfferDashboardConfig";
+import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
@@ -21,23 +22,48 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
 	OFFER_BOARD_CELL_CLASS,
 	OFFER_BOARD_GRID_CLASS,
-	OFFER_BOARD_IS_ADMIN,
 } from "../../constants/offerWidgetBoard";
+import { useIsTeamAdmin } from "../../hooks/useIsTeamAdmin";
 import { useOfferWidgetBoard } from "../../hooks/useOfferWidgetBoard";
 import BoardWidgetCard from "./BoardWidgetCard";
-import WidgetLibraryPanel, { LIBRARY_DRAG_TYPE } from "./WidgetLibraryPanel";
-
-const CARD_DRAG_TYPE = "application/x-offer-slot-uid";
+import WidgetLibraryPanel from "./WidgetLibraryPanel";
 
 const OfferWidgetBoard = () => {
 	const t = useTranslate();
 	const board = useOfferWidgetBoard();
+	const isAdmin = useIsTeamAdmin();
 	const [libraryOpen, setLibraryOpen] = useState(true);
 	const [discardOpen, setDiscardOpen] = useState(false);
 	const [dropTargetUid, setDropTargetUid] = useState<string | null>(null);
 
 	const editing = board.mode === "edit";
 	const hasOwnWidgets = board.slots.some((slot) => slot.widgetId !== null);
+
+	// Pointer hit-testing over the rendered slots (react-draggable reports
+	// client coordinates, same approach as the other module dashboards).
+	const slotRefs = useRef<Record<string, HTMLDivElement | null>>({});
+	const findSlotUidAt = (
+		clientX: number,
+		clientY: number,
+		options?: { emptyOnly?: boolean; skipUid?: string },
+	) => {
+		for (const slot of board.slots) {
+			if (options?.skipUid === slot.uid) continue;
+			if (options?.emptyOnly && slot.widgetId !== null) continue;
+			const el = slotRefs.current[slot.uid];
+			if (!el) continue;
+			const rect = el.getBoundingClientRect();
+			if (
+				clientX >= rect.left &&
+				clientX <= rect.right &&
+				clientY >= rect.top &&
+				clientY <= rect.bottom
+			) {
+				return slot.uid;
+			}
+		}
+		return null;
+	};
 
 	const handleCancel = () => {
 		if (board.dirty) setDiscardOpen(true);
@@ -49,30 +75,27 @@ const OfferWidgetBoard = () => {
 		showToast("success", t(localizationConstants.offerBoardLayoutSaved));
 	};
 
-	const handleSlotDrop = (
-		event: React.DragEvent<HTMLDivElement>,
-		targetUid: string,
+	const handleRowDrag = (clientX: number, clientY: number) =>
+		setDropTargetUid(findSlotUidAt(clientX, clientY, { emptyOnly: true }));
+
+	const handleRowDrop = (
+		widgetId: string,
+		clientX: number,
+		clientY: number,
 	) => {
-		event.preventDefault();
+		const target = findSlotUidAt(clientX, clientY, { emptyOnly: true });
 		setDropTargetUid(null);
-		const libraryId = event.dataTransfer.getData(LIBRARY_DRAG_TYPE);
-		if (libraryId) {
-			board.dropWidget(libraryId, targetUid);
-			return;
-		}
-		const fromUid = event.dataTransfer.getData(CARD_DRAG_TYPE);
-		if (fromUid) board.moveWidget(fromUid, targetUid);
+		if (target) board.dropWidget(widgetId, target);
 	};
 
-	const slotDropProps = (targetUid: string) => ({
-		onDragOver: (event: React.DragEvent<HTMLDivElement>) => {
-			event.preventDefault();
-			setDropTargetUid(targetUid);
-		},
-		onDragLeave: () => setDropTargetUid(null),
-		onDrop: (event: React.DragEvent<HTMLDivElement>) =>
-			handleSlotDrop(event, targetUid),
-	});
+	const handleCardDrag = (uid: string, clientX: number, clientY: number) =>
+		setDropTargetUid(findSlotUidAt(clientX, clientY, { skipUid: uid }));
+
+	const handleCardDrop = (uid: string, clientX: number, clientY: number) => {
+		const target = findSlotUidAt(clientX, clientY, { skipUid: uid });
+		setDropTargetUid(null);
+		if (target) board.moveWidget(uid, target);
+	};
 
 	return (
 		<div className="min-h-screen">
@@ -250,75 +273,78 @@ const OfferWidgetBoard = () => {
 					) : (
 						<div className={cn(OFFER_BOARD_GRID_CLASS, "mt-2.5")}>
 							{board.slots.map((slot) => {
-								if (slot.widgetId === null) {
-									if (!editing) return null;
-									const isTarget =
-										dropTargetUid === slot.uid;
+								const isTarget = dropTargetUid === slot.uid;
+								const widget =
+									slot.widgetId !== null
+										? OFFER_SIDEBAR_WIDGET_MAP[slot.widgetId]
+										: null;
+
+								if (!editing) {
+									if (!widget) return null;
 									return (
 										<div
 											key={slot.uid}
-											{...slotDropProps(slot.uid)}
-											className={cn(
-												OFFER_BOARD_CELL_CLASS,
-												"flex min-h-[281px] flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed text-sm",
-												isTarget
-													? "border-blue-500 bg-blue-50/60 text-blue-600"
-													: "border-slate-200 text-slate-400",
-											)}
+											className={OFFER_BOARD_CELL_CLASS}
 										>
-											<SquarePlus className="h-5 w-5" />
-											<Translate
-												text={
-													isTarget
-														? localizationConstants.offerBoardDropHere
-														: localizationConstants.offerBoardDragHere
-												}
+											<BoardWidgetCard
+												widget={widget}
+												onMove={board.enterEdit}
+												onRemove={board.enterEdit}
 											/>
 										</div>
 									);
 								}
-								const widget = OFFER_SIDEBAR_WIDGET_MAP[
-									slot.widgetId
-								];
+
 								return (
-									<div
+									<DraggableGridCard
 										key={slot.uid}
-										{...(editing
-											? slotDropProps(slot.uid)
-											: {})}
-										className={OFFER_BOARD_CELL_CLASS}
+										className={cn(
+											OFFER_BOARD_CELL_CLASS,
+											isTarget &&
+												"!border-blue-500 bg-blue-50/60",
+										)}
+										isEmpty={widget === null}
+										containerRef={(el) => {
+											slotRefs.current[slot.uid] = el;
+										}}
+										onDragStart={() =>
+											setDropTargetUid(null)
+										}
+										onDrag={(x, y) =>
+											handleCardDrag(slot.uid, x, y)
+										}
+										onDragStop={(x, y) =>
+											handleCardDrop(slot.uid, x, y)
+										}
 									>
-										<BoardWidgetCard
-											widget={widget}
-											editMode={editing}
-											onMove={
-												editing
-													? undefined
-													: board.enterEdit
-											}
-											onRemove={() => {
-												if (!editing) {
-													board.enterEdit();
-													return;
+										{widget ? (
+											<BoardWidgetCard
+												widget={widget}
+												editMode
+												onRemove={() =>
+													board.removeWidget(slot.uid)
 												}
-												board.removeWidget(slot.uid);
-											}}
-											dragHandleProps={
-												editing
-													? {
-															draggable: true,
-															onDragStart: (
-																event,
-															) =>
-																event.dataTransfer.setData(
-																	CARD_DRAG_TYPE,
-																	slot.uid,
-																),
-														}
-													: undefined
-											}
-										/>
-									</div>
+											/>
+										) : (
+											<div
+												className={cn(
+													"flex min-h-[281px] flex-col items-center justify-center gap-2 text-sm",
+													isTarget
+														? "text-blue-600"
+														: "text-slate-400",
+												)}
+											>
+												<SquarePlus className="h-5 w-5" />
+												<Translate
+													text={
+														isTarget
+															? localizationConstants.offerBoardDropHere
+															: localizationConstants.offerBoardDragHere
+													}
+												/>
+											</div>
+										)}
+									</DraggableGridCard>
 								);
 							})}
 						</div>
@@ -327,7 +353,7 @@ const OfferWidgetBoard = () => {
 
 				{editing && libraryOpen && (
 					<WidgetLibraryPanel
-						isAdmin={OFFER_BOARD_IS_ADMIN}
+						isAdmin={isAdmin}
 						libraryItems={board.libraryItems}
 						standardItems={board.standardItems}
 						placedIds={board.placedIds}
@@ -342,6 +368,9 @@ const OfferWidgetBoard = () => {
 								t(localizationConstants.offerBoardHiddenToast),
 							);
 						}}
+						onRowDrag={handleRowDrag}
+						onRowDrop={handleRowDrop}
+						onRowDragEnd={() => setDropTargetUid(null)}
 					/>
 				)}
 			</div>

@@ -25,7 +25,6 @@ interface BoardWidgetCardProps {
 	editMode?: boolean;
 	onMove?: () => void;
 	onRemove?: () => void;
-	dragHandleProps?: React.HTMLAttributes<HTMLDivElement>;
 }
 
 const BoardWidgetCard = ({
@@ -34,7 +33,6 @@ const BoardWidgetCard = ({
 	editMode,
 	onMove,
 	onRemove,
-	dragHandleProps,
 }: BoardWidgetCardProps) => {
 	const t = useTranslate();
 	const [fullscreenOpen, setFullscreenOpen] = useState(false);
@@ -42,7 +40,6 @@ const BoardWidgetCard = ({
 
 	return (
 		<div
-			{...dragHandleProps}
 			className={cn(
 				"relative flex h-full min-h-[281px] flex-col rounded-sm bg-slate-100 px-3 py-3",
 				editMode && !locked && "cursor-grab",

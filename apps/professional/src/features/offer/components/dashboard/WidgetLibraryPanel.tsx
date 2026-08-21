@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Draggable, { DraggableEvent } from "react-draggable";
 import {
 	EyeOff,
 	GripVertical,
@@ -20,10 +21,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
+import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-
-export const LIBRARY_DRAG_TYPE = "application/x-offer-widget-id";
 
 interface WidgetLibraryPanelProps {
 	isAdmin: boolean;
@@ -35,7 +35,68 @@ interface WidgetLibraryPanelProps {
 	onSetStandard: (widgetId: string) => void;
 	onRemoveStandard: (widgetId: string) => void;
 	onHideForTeam: (widgetId: string) => void;
+	onRowDrag: (clientX: number, clientY: number) => void;
+	onRowDrop: (widgetId: string, clientX: number, clientY: number) => void;
+	onRowDragEnd: () => void;
 }
+
+// Pointer-based drag row (react-draggable, same pattern as the other module
+// dashboards) so touch devices work without the native HTML5 DnD API.
+const LibraryRow = ({
+	item,
+	added,
+	onDrag,
+	onDrop,
+	onDragEnd,
+	children,
+}: {
+	item: WidgetItem;
+	added: boolean;
+	onDrag: (clientX: number, clientY: number) => void;
+	onDrop: (widgetId: string, clientX: number, clientY: number) => void;
+	onDragEnd: () => void;
+	children: React.ReactNode;
+}) => {
+	const nodeRef = useRef<HTMLDivElement>(null);
+	const [dragKey, setDragKey] = useState(0);
+	const [isDragging, setIsDragging] = useState(false);
+
+	return (
+		<Draggable
+			key={dragKey}
+			nodeRef={nodeRef as React.RefObject<HTMLElement>}
+			disabled={added}
+			cancel="button"
+			onStart={() => setIsDragging(true)}
+			onDrag={(event: DraggableEvent) => {
+				const { clientX, clientY } = event as MouseEvent;
+				if (clientX !== undefined) onDrag(clientX, clientY);
+			}}
+			onStop={(event: DraggableEvent) => {
+				setIsDragging(false);
+				onDragEnd();
+				const { clientX, clientY } = event as MouseEvent;
+				if (clientX !== undefined) onDrop(item.id, clientX, clientY);
+				setDragKey((key) => key + 1);
+			}}
+		>
+			<div
+				ref={nodeRef}
+				className={cn(
+					"flex items-center gap-2 rounded-md px-2 py-2",
+					isDragging
+						? "z-[9999] cursor-grabbing bg-slate-900 text-white shadow-2xl [&_*]:!text-white"
+						: added
+							? "opacity-60"
+							: "cursor-grab hover:bg-slate-50",
+				)}
+				style={{ position: "relative" }}
+			>
+				{children}
+			</div>
+		</Draggable>
+	);
+};
 
 const WidgetLibraryPanel = ({
 	isAdmin,
@@ -47,6 +108,9 @@ const WidgetLibraryPanel = ({
 	onSetStandard,
 	onRemoveStandard,
 	onHideForTeam,
+	onRowDrag,
+	onRowDrop,
+	onRowDragEnd,
 }: WidgetLibraryPanelProps) => {
 	const t = useTranslate();
 	const [search, setSearch] = useState("");
@@ -183,21 +247,13 @@ const WidgetLibraryPanel = ({
 					{filteredLibrary.map((item) => {
 						const added = placedIds.includes(item.id);
 						return (
-							<div
+							<LibraryRow
 								key={item.id}
-								draggable={!added}
-								onDragStart={(event) => {
-									event.dataTransfer.setData(
-										LIBRARY_DRAG_TYPE,
-										item.id,
-									);
-									event.dataTransfer.effectAllowed = "move";
-								}}
-								className={
-									added
-										? "flex items-center gap-2 rounded-md px-2 py-2 opacity-60"
-										: "flex cursor-grab items-center gap-2 rounded-md px-2 py-2 hover:bg-slate-50"
-								}
+								item={item}
+								added={added}
+								onDrag={onRowDrag}
+								onDrop={onRowDrop}
+								onDragEnd={onRowDragEnd}
 							>
 								<GripVertical
 									size={14}
@@ -279,7 +335,7 @@ const WidgetLibraryPanel = ({
 										<Plus size={15} />
 									</button>
 								)}
-							</div>
+							</LibraryRow>
 						);
 					})}
 				</div>
