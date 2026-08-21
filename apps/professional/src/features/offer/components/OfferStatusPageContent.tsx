@@ -14,8 +14,17 @@ import { DUMMY_ACCEPTED_ITEMS } from "@/features/offer/constants/offerAccepted.m
 import { DUMMY_AGREED_ITEMS } from "@/features/offer/constants/offerAgreed.mock";
 import { DUMMY_ARCHIVED_ITEMS } from "@/features/offer/constants/offerArchived.mock";
 import { OfferRequest } from "@/features/offer/constants/offerRequests";
-import { OfferQuotedItem, OfferAcceptedItem, OfferAgreedItem, OfferArchivedItem, OfferList } from "@/features/offer/types";
+import {
+  OfferQuotedItem,
+  OfferAcceptedItem,
+  OfferAgreedItem,
+  OfferAgreedStatus,
+  OfferArchivedItem,
+  OfferList,
+} from "@/features/offer/types";
 import { Loader } from "@/components/ui/loader";
+import { authStorage } from "@/lib/authStorage";
+import { ProfessionalRow } from "@/types/company";
 
 export const OFFER_API_STATUS = {
   REQUESTED: "REQUESTED",
@@ -84,13 +93,13 @@ function mapToAcceptedItems(result: OffersListResult): OfferAcceptedItem[] {
 function mapToAgreedItems(result: OffersListResult): OfferAgreedItem[] {
   return result.items.map((item: OfferList) => ({
     id: item.id,
-    contractNr: item.idNumber,
+    contractNr: item.idNumber || "KNT001",
     jobName: item.jobName,
     customerName: item.jobName,
-    status: "waiting_signature" as const,
-    municipality: item.municipality,
-    jobType: item.type,
-    agreedPrice: 0,
+    status: (item.request === "opened" || item.isFavorite ? "signed" : "waiting_signature") as OfferAgreedStatus,
+    municipality: item.municipality || "-",
+    jobType: item.type || "-",
+    agreedPrice: 5000,
   }));
 }
 
@@ -131,7 +140,13 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
     async function fetchOffers() {
       setIsLoading(true);
       try {
-        const result = await listOffersAPIAction({ status: apiStatus, page: 1, pageSize: 50 });
+        const companyData = authStorage.getCompanyData() as ProfessionalRow | null;
+        const result = await listOffersAPIAction({
+          status: apiStatus,
+          page: 1,
+          pageSize: 50,
+          companyId: companyData?.id,
+        });
 
         if (cancelled) return;
 

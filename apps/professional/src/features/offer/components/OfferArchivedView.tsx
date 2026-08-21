@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Search, ChevronDown, MoreVertical, CheckCheck, Clock } from "lucide-react";
+import { Search, ChevronDown, MoreVertical, CheckCheck, ClockFading } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -73,7 +73,7 @@ function renderArchivedStatusBadge(
   }
   return (
     <span className="inline-flex items-center gap-1 rounded-md border border-yellow-400 bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700 shadow-sm">
-      <Clock size={12} />
+      <ClockFading size={12} />
       {waitingLabel}
     </span>
   );
