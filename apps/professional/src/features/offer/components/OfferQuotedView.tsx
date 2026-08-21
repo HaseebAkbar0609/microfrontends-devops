@@ -416,12 +416,14 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                               size="sm"
                               className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
                               onClick={() => {
-                                const targetId = row.id || offerId || "agr-1";
-                                router.push(
-                                  offerId
-                                    ? `/module/business/offer/${offerId}/agreed/project/${targetId}`
-                                    : `/module/business/offer/agreed/project/${targetId}`,
-                                );
+                                const targetId = row.id || offerId;
+                                if (targetId) {
+                                  router.push(
+                                    offerId
+                                      ? `/module/business/offer/${offerId}/agreed/project/${targetId}`
+                                      : `/module/business/offer/agreed/project/${targetId}`,
+                                  );
+                                }
                               }}
                             >
                               {t(localizationConstants.viewProject)}

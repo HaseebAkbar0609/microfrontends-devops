@@ -14,6 +14,7 @@ import {
   ChevronsRight,
   Download,
   Archive,
+  ArrowLeft,
 } from "lucide-react";
 import {
   Breadcrumb,
@@ -231,9 +232,16 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
     <div className="flex flex-1 flex-col bg-slate-50/60 min-h-screen font-sans">
       {/* Subheader with Page Title and Breadcrumbs */}
       <div className="px-6 pt-5 pb-3">
-        <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-          <Translate text={localizationConstants.offerTabAgreed} />
-        </h2>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => router.push("/module/business/offer/dashboard")}
+            className="flex items-center gap-2 text-slate-900 font-bold text-lg hover:text-slate-700 transition-colors cursor-pointer"
+          >
+            <ArrowLeft className="h-5 w-5" />
+            <span>{t(localizationConstants.offerTabAgreed)}</span>
+          </button>
+        </div>
         <Breadcrumb>
           <BreadcrumbList className="flex items-center flex-wrap gap-1 text-[#64748B]">
             <BreadcrumbUIItem className="flex items-center gap-1 text-sm!">
@@ -274,7 +282,7 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
                 asChild
                 className="font-sans font-normal text-sm leading-5 tracking-normal text-[#64748B] hover:text-[#0A0A0A] transition-colors"
               >
-                <Link href="/module/business/offer/list">
+                <Link href="/module/business/offer/dashboard">
                   <Translate text={localizationConstants.breadcrumbOffer} />
                 </Link>
               </BreadcrumbLink>
@@ -282,7 +290,7 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
             <BreadcrumbUIItem className="flex items-center gap-1 text-sm!">
               <BreadcrumbSeparator className="text-[#64748B]" />
               <BreadcrumbPage className="font-sans text-sm leading-5 tracking-normal text-[#64748B] font-normal!">
-                <Translate text={localizationConstants.offerAvailableListBreadcrumb} />
+                <Translate text={localizationConstants.offerTabAgreed} />
               </BreadcrumbPage>
             </BreadcrumbUIItem>
           </BreadcrumbList>
@@ -490,6 +498,7 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
                                   variant="ghost"
                                   size="sm"
                                   className="h-8 w-8 cursor-pointer p-0 text-slate-700 hover:text-slate-900"
+                                  aria-label={t(localizationConstants.actions)}
                                 >
                                   <MoreVertical className="h-4 w-4 text-slate-700" />
                                 </Button>

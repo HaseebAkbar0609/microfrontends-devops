@@ -87,6 +87,7 @@ function mapToAcceptedItems(result: OffersListResult): OfferAcceptedItem[] {
     municipality: item.municipality,
     acceptedPrice: 0,
     type: item.type,
+    contactPerson: { name: "", phone: "", email: "" },
   }));
 }
 
