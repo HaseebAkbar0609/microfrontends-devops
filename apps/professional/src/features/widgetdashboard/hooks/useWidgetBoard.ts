@@ -2,10 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { generateTempId } from "@/lib/tempId";
-import {
-	OFFER_BOARD_LIBRARY_ITEMS,
-	OFFER_STANDARD_WIDGET_IDS,
-} from "../constants/offerWidgetBoard";
+import { WidgetItem } from "../components/DraggableSidebarItem";
 
 export type OwnSlot = { uid: string; widgetId: string | null };
 
@@ -30,15 +27,16 @@ const padDraft = (slots: OwnSlot[]): OwnSlot[] => {
 	return next;
 };
 
-export function useOfferWidgetBoard() {
+export function useWidgetBoard(
+	allItems: WidgetItem[],
+	initialStandardIds: string[],
+) {
 	const [mode, setMode] = useState<"view" | "edit">("view");
 	const [savedSlots, setSavedSlots] = useState<OwnSlot[]>([]);
 	const [savedAtLabel, setSavedAtLabel] = useState<string | null>(null);
 	const [draftSlots, setDraftSlots] = useState<OwnSlot[]>([]);
 	const [dirty, setDirty] = useState(false);
-	const [standardIds, setStandardIds] = useState<string[]>(
-		OFFER_STANDARD_WIDGET_IDS,
-	);
+	const [standardIds, setStandardIds] = useState<string[]>(initialStandardIds);
 	const [hiddenIds, setHiddenIds] = useState<string[]>([]);
 
 	const slots = mode === "edit" ? draftSlots : savedSlots;
@@ -52,20 +50,20 @@ export function useOfferWidgetBoard() {
 
 	const libraryItems = useMemo(
 		() =>
-			OFFER_BOARD_LIBRARY_ITEMS.filter(
+			allItems.filter(
 				(item) =>
 					!hiddenIds.includes(item.id) &&
 					!standardIds.includes(item.id),
 			),
-		[hiddenIds, standardIds],
+		[allItems, hiddenIds, standardIds],
 	);
 
 	const standardItems = useMemo(
 		() =>
-			OFFER_BOARD_LIBRARY_ITEMS.filter((item) =>
+			allItems.filter((item) =>
 				standardIds.includes(item.id),
 			),
-		[standardIds],
+		[allItems, standardIds],
 	);
 
 	const enterEdit = () => {

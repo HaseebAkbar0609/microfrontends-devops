@@ -127,7 +127,7 @@ const WidgetLibraryPanel = ({
 						<h2 className="text-base font-semibold text-slate-900">
 							<Translate
 								text={
-									localizationConstants.offerBoardLibraryTitle
+									localizationConstants.widgetBoardLibraryTitle
 								}
 							/>
 						</h2>
@@ -141,8 +141,8 @@ const WidgetLibraryPanel = ({
 						<Translate
 							text={
 								isAdmin
-									? localizationConstants.offerBoardLibraryAdminHint
-									: localizationConstants.offerBoardLibraryHint
+									? localizationConstants.widgetBoardLibraryAdminHint
+									: localizationConstants.widgetBoardLibraryHint
 							}
 						/>
 					</p>
@@ -150,7 +150,7 @@ const WidgetLibraryPanel = ({
 				<button
 					type="button"
 					onClick={onCollapse}
-					aria-label={t(localizationConstants.offerBoardLibraryTitle)}
+					aria-label={t(localizationConstants.widgetBoardLibraryTitle)}
 					className="rounded-md border border-slate-200 p-2 text-slate-500 hover:bg-slate-50 cursor-pointer"
 				>
 					<PanelRightClose size={16} />
@@ -163,7 +163,7 @@ const WidgetLibraryPanel = ({
 					value={search}
 					onChange={(event) => setSearch(event.target.value)}
 					placeholder={t(
-						localizationConstants.offerBoardSearchWidget,
+						localizationConstants.widgetBoardSearchWidget,
 					)}
 					className="h-9 rounded-md border-slate-200 pl-9 text-sm"
 				/>
@@ -174,7 +174,7 @@ const WidgetLibraryPanel = ({
 					<div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-500">
 						<Translate
 							text={
-								localizationConstants.offerBoardStandardSection
+								localizationConstants.widgetBoardStandardSection
 							}
 						/>
 						<span>{standardItems.length}</span>
@@ -184,14 +184,14 @@ const WidgetLibraryPanel = ({
 							<Info size={13} />
 							<Translate
 								text={
-									localizationConstants.offerBoardStandardInfoTitle
+									localizationConstants.widgetBoardStandardInfoTitle
 								}
 							/>
 						</p>
 						<p className="mt-1">
 							<Translate
 								text={
-									localizationConstants.offerBoardStandardInfoBody
+									localizationConstants.widgetBoardStandardInfoBody
 								}
 							/>
 						</p>
@@ -233,7 +233,7 @@ const WidgetLibraryPanel = ({
 											<Lock className="h-4 w-4 text-slate-600" />
 											<Translate
 												text={
-													localizationConstants.offerBoardRemoveStandard
+													localizationConstants.widgetBoardRemoveStandard
 												}
 											/>
 										</DropdownMenuItem>
@@ -248,7 +248,7 @@ const WidgetLibraryPanel = ({
 			<div className="mt-4">
 				<div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-500">
 					<Translate
-						text={localizationConstants.offerBoardAllWidgets}
+						text={localizationConstants.widgetBoardAllWidgets}
 					/>
 					<span>{libraryItems.length}</span>
 				</div>
@@ -279,7 +279,7 @@ const WidgetLibraryPanel = ({
 									<span className="text-xs text-slate-400">
 										<Translate
 											text={
-												localizationConstants.offerBoardAdded
+												localizationConstants.widgetBoardAdded
 											}
 										/>
 									</span>
@@ -307,7 +307,7 @@ const WidgetLibraryPanel = ({
 												<Lock className="h-4 w-4 text-slate-600" />
 												<Translate
 													text={
-														localizationConstants.offerBoardSetStandard
+														localizationConstants.widgetBoardSetStandard
 													}
 												/>
 											</DropdownMenuItem>
@@ -318,7 +318,7 @@ const WidgetLibraryPanel = ({
 												<SquarePlus className="h-4 w-4 text-slate-600" />
 												<Translate
 													text={
-														localizationConstants.offerBoardAddToDashboard
+														localizationConstants.widgetBoardAddToDashboard
 													}
 												/>
 											</DropdownMenuItem>
@@ -331,7 +331,7 @@ const WidgetLibraryPanel = ({
 												<EyeOff className="h-4 w-4" />
 												<Translate
 													text={
-														localizationConstants.offerBoardHideForTeam
+														localizationConstants.widgetBoardHideForTeam
 													}
 												/>
 											</DropdownMenuItem>
@@ -357,8 +357,8 @@ const WidgetLibraryPanel = ({
 				<Translate
 					text={
 						isAdmin
-							? localizationConstants.offerBoardAdminLibraryFooter
-							: localizationConstants.offerBoardLibraryFooter
+							? localizationConstants.widgetBoardAdminLibraryFooter
+							: localizationConstants.widgetBoardLibraryFooter
 					}
 				/>
 			</p>
