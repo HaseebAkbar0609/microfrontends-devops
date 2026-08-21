@@ -94,13 +94,13 @@ function mapToAcceptedItems(result: OffersListResult): OfferAcceptedItem[] {
 function mapToAgreedItems(result: OffersListResult): OfferAgreedItem[] {
   return result.items.map((item: OfferList) => ({
     id: item.id,
-    contractNr: item.idNumber || "KNT001",
+    contractNr: item.idNumber || item.id || "—",
     jobName: item.jobName,
     customerName: item.jobName,
     status: (item.request === "opened" || item.isFavorite ? "signed" : "waiting_signature") as OfferAgreedStatus,
     municipality: item.municipality || "-",
     jobType: item.type || "-",
-    agreedPrice: 5000,
+    agreedPrice: 0,
   }));
 }
 

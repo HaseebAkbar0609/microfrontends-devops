@@ -49,8 +49,10 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
+import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferAgreedItem, OfferAgreedStatus } from "../types/offer";
+import { generateAndDownloadAgreedPdf } from "../utils/agreedPdf";
 
 type SortField = keyof Pick<
   OfferAgreedItem,
@@ -99,6 +101,34 @@ function renderAgreedStatusBadge(
       <ClockFading className="h-3.5 w-3.5 text-[#a16207]" />
       {waitingLabel}
     </span>
+  );
+}
+
+function AgreedStatusActionButton({
+  status,
+  rowId,
+  offerId,
+  onNavigate,
+}: {
+  status: OfferAgreedStatus;
+  rowId: string;
+  offerId: string;
+  onNavigate: (path: string) => void;
+}) {
+  const isSigned = status === "signed";
+  const actionLabelKey = isSigned
+    ? localizationConstants.offerAgreedViewAgreement
+    : localizationConstants.offerAgreedSign;
+
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
+      onClick={() => onNavigate(OFFER_ROUTES.createAgreement(rowId || offerId))}
+    >
+      <Translate text={actionLabelKey} />
+    </Button>
   );
 }
 
@@ -151,71 +181,15 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
   const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
 
   function handleDownloadPdf(row: OfferAgreedItem) {
-    const title = "TFS AVTAL (AGREEMENT DOCUMENT)";
-    const lines = [
-      `Kontrakt nr: ${row.contractNr}`,
-      `Uppdrag / Jobb: ${row.jobName}`,
-      `Kundnamn: ${row.customerName}`,
-      `Kommun / Ort: ${row.municipality}`,
-      `Jobb typ: ${row.jobType || "-"}`,
-      `Avtalat pris: ${row.agreedPrice > 0 ? `${row.agreedPrice.toLocaleString("de-DE")} SEK` : "5.000 SEK"}`,
-      `Status: ${row.status === "signed" ? "Avtal signerat" : "Vantar signering"}`,
-      `Datum: ${new Date().toISOString().split("T")[0]}`,
-    ];
-
-    const escapePdf = (text: string) =>
-      text.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
-
-    let textStream = `BT\n/F1 18 Tf\n50 760 Td\n(${escapePdf(title)}) Tj\nET\n`;
-    textStream += `0.5 w\n50 745 m\n545 745 l\nS\n`; // Horizontal separator line
-    let y = 710;
-    for (const line of lines) {
-      textStream += `BT\n/F1 12 Tf\n50 ${y} Td\n(${escapePdf(line)}) Tj\nET\n`;
-      y -= 25;
+    const success = generateAndDownloadAgreedPdf(row);
+    if (success) {
+      showToast(
+        "success",
+        `${t(localizationConstants.offerDownloadPdf)}: ${row.contractNr} - ${row.jobName}`,
+      );
+    } else {
+      showToast("error", "Failed to generate agreement PDF.");
     }
-
-    const obj1 = "1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n";
-    const obj2 = "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n";
-    const obj3 =
-      "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>\nendobj\n";
-    const obj4 =
-      "4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n";
-    const obj5 = `5 0 obj\n<< /Length ${textStream.length} >>\nstream\n${textStream}\nendstream\nendobj\n`;
-
-    const header = "%PDF-1.4\n";
-    const offset1 = header.length;
-    const offset2 = offset1 + obj1.length;
-    const offset3 = offset2 + obj2.length;
-    const offset4 = offset3 + obj3.length;
-    const offset5 = offset4 + obj4.length;
-    const xrefOffset = offset5 + obj5.length;
-
-    const xref =
-      `xref\n0 6\n` +
-      `0000000000 65535 f \n` +
-      `${String(offset1).padStart(10, "0")} 00000 n \n` +
-      `${String(offset2).padStart(10, "0")} 00000 n \n` +
-      `${String(offset3).padStart(10, "0")} 00000 n \n` +
-      `${String(offset4).padStart(10, "0")} 00000 n \n` +
-      `${String(offset5).padStart(10, "0")} 00000 n \n`;
-
-    const trailer = `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
-    const pdfData = header + obj1 + obj2 + obj3 + obj4 + obj5 + xref + trailer;
-
-    const blob = new Blob([pdfData], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `Avtal_${row.contractNr}_${row.jobName.replace(/\s+/g, "_")}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
-    showToast(
-      "success",
-      `${t(localizationConstants.offerDownloadPdf)}: ${row.contractNr} - ${row.jobName}`,
-    );
   }
 
   const columns: { key: SortField; label: string }[] = [
@@ -442,51 +416,18 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
                         {/* Avtalat pris */}
                         <td className="whitespace-nowrap px-4 py-3.5 font-normal text-slate-900 tabular-nums">
                           {row.agreedPrice > 0
-                            ? row.agreedPrice.toLocaleString("de-DE")
+                            ? formatCurrency(row.agreedPrice)
                             : "—"}
                         </td>
 
                         {/* Agreement Action button column (Status based: Se Avtal for signed, Signera for waiting) */}
                         <td className="whitespace-nowrap px-4 py-3.5">
-                          {row.status === "signed" ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
-                              onClick={() =>
-                                router.push(
-                                  OFFER_ROUTES.createAgreement(
-                                    row.id || offerId,
-                                  ),
-                                )
-                              }
-                            >
-                              <Translate
-                                text={
-                                  localizationConstants.offerAgreedViewAgreement
-                                }
-                              />
-                            </Button>
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
-                              onClick={() =>
-                                router.push(
-                                  OFFER_ROUTES.createAgreement(
-                                    row.id || offerId,
-                                  ),
-                                )
-                              }
-                            >
-                              <Translate
-                                text={
-                                  localizationConstants.offerAgreedSign
-                                }
-                              />
-                            </Button>
-                          )}
+                          <AgreedStatusActionButton
+                            status={row.status}
+                            rowId={row.id}
+                            offerId={offerId}
+                            onNavigate={router.push}
+                          />
                         </td>
 
                         {/* Actions (Sticky Right) */}
