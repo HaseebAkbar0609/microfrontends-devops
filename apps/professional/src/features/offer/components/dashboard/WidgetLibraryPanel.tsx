@@ -40,8 +40,6 @@ interface WidgetLibraryPanelProps {
 	onRowDragEnd: () => void;
 }
 
-// Pointer-based drag row (react-draggable, same pattern as the other module
-// dashboards) so touch devices work without the native HTML5 DnD API.
 const LibraryRow = ({
 	item,
 	added,
@@ -128,7 +126,9 @@ const WidgetLibraryPanel = ({
 					<div className="flex items-center gap-2">
 						<h2 className="text-base font-semibold text-slate-900">
 							<Translate
-								text={localizationConstants.offerBoardLibraryTitle}
+								text={
+									localizationConstants.offerBoardLibraryTitle
+								}
 							/>
 						</h2>
 						{isAdmin && (
@@ -162,7 +162,9 @@ const WidgetLibraryPanel = ({
 				<Input
 					value={search}
 					onChange={(event) => setSearch(event.target.value)}
-					placeholder={t(localizationConstants.offerBoardSearchWidget)}
+					placeholder={t(
+						localizationConstants.offerBoardSearchWidget,
+					)}
 					className="h-9 rounded-md border-slate-200 pl-9 text-sm"
 				/>
 			</div>
@@ -171,7 +173,9 @@ const WidgetLibraryPanel = ({
 				<div className="mt-4">
 					<div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-500">
 						<Translate
-							text={localizationConstants.offerBoardStandardSection}
+							text={
+								localizationConstants.offerBoardStandardSection
+							}
 						/>
 						<span>{standardItems.length}</span>
 					</div>
@@ -199,7 +203,10 @@ const WidgetLibraryPanel = ({
 								className="flex items-center gap-2 rounded-md px-2 py-2 hover:bg-slate-50"
 							>
 								<Lock size={14} className="text-slate-400" />
-								<item.icon size={16} className="text-slate-600" />
+								<item.icon
+									size={16}
+									className="text-slate-600"
+								/>
 								<span className="flex-1 text-sm text-slate-800">
 									<Translate text={item.label} />
 								</span>
@@ -240,7 +247,9 @@ const WidgetLibraryPanel = ({
 
 			<div className="mt-4">
 				<div className="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-500">
-					<Translate text={localizationConstants.offerBoardAllWidgets} />
+					<Translate
+						text={localizationConstants.offerBoardAllWidgets}
+					/>
 					<span>{libraryItems.length}</span>
 				</div>
 				<div className="mt-1">
@@ -259,7 +268,10 @@ const WidgetLibraryPanel = ({
 									size={14}
 									className="text-slate-300"
 								/>
-								<item.icon size={16} className="text-slate-600" />
+								<item.icon
+									size={16}
+									className="text-slate-600"
+								/>
 								<span className="flex-1 text-sm text-slate-800">
 									<Translate text={item.label} />
 								</span>
