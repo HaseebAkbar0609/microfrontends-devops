@@ -3108,9 +3108,18 @@ export type OfferTranslation = {
 	agreementCancel: string;
 	agreementViewAgreement: string;
 	agreementSendAgreement: string;
+	offerAgreedSign: string;
 	offerArchivedDelete: string;
 	offerArchivedUnarchive: string;
 	offerArchivedCommentAction: string;
+	offerArchivedQuoteNr: string;
+	offerArchivedOfferedTo: string;
+	offerArchivedViewTheProject: string;
+	offerArchivedUndo: string;
+	offerArchivedDeletedToast: string;
+	offerArchivedRestoredToast: string;
+	offerCommentRequired: string;
+	offerCommentSavedToast: string;
 	seeProjectDetailedInfo: string;
 	seeProjectCustomerInfo: string;
 	seeProjectCustomerName: string;

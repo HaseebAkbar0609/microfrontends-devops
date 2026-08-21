@@ -8,9 +8,10 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { useTranslate } from "@/utils/translation/translate";
+import { showToast } from "@/lib/toast";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { cn } from "@/lib/utils";
 
 interface Props {
   open: boolean;
@@ -19,49 +20,82 @@ interface Props {
   onClose: () => void;
 }
 
-export function OfferArchivedCommentModal({ open, offertNr, job, onClose }: Props) {
+export function OfferArchivedCommentModal({
+  open,
+  offertNr,
+  job,
+  onClose,
+}: Props) {
   const t = useTranslate();
   const [commentText, setCommentText] = useState("");
+  const [error, setError] = useState(false);
 
   function handleClose() {
     setCommentText("");
+    setError(false);
     onClose();
   }
 
   function handleSave() {
+    if (!commentText.trim()) {
+      setError(true);
+      return;
+    }
+    setError(false);
+    showToast("success", t(localizationConstants.offerCommentSavedToast));
     setCommentText("");
     onClose();
   }
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
-      <DialogContent className="w-110 p-0">
-        <DialogHeader className="border-b border-slate-100 px-6 py-4">
-          <DialogTitle className="text-base font-semibold text-slate-900">
+      <DialogContent className="w-[400px] h-[214px] max-w-[400px] bg-white p-4.5 rounded-lg border border-slate-200 shadow-xl opacity-100 flex flex-col justify-between gap-0">
+        {/* Header */}
+        <DialogHeader className="p-0 text-left space-y-0.5">
+          <DialogTitle className="text-sm font-semibold text-slate-900 leading-tight">
             {t(localizationConstants.offerQuotedCommentTitle)}
           </DialogTitle>
-          <p className="mt-0.5 text-sm text-slate-500">
-            {job} – {offertNr}
+          <p className="text-xs text-slate-500 font-normal">
+            {job} - {offertNr}
           </p>
         </DialogHeader>
-        <div className="px-6 py-4">
-          <Textarea
+
+        {/* Text Area */}
+        <div className="py-1.5 flex-1 flex flex-col justify-center">
+          <textarea
             value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
+            onChange={(e) => {
+              setCommentText(e.target.value);
+              if (error && e.target.value.trim()) {
+                setError(false);
+              }
+            }}
             placeholder={t(localizationConstants.offerQuotedCommentPlaceholder)}
-            className="min-h-28 resize-none bg-white text-sm"
+            className={cn(
+              "w-full h-[85px] min-h-[65px] resize bg-white text-xs border focus:outline-none rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 leading-relaxed font-sans transition-colors",
+              error
+                ? "border-red-500 focus:ring-1 focus:ring-red-400"
+                : "border-slate-200 focus:ring-1 focus:ring-slate-300",
+            )}
           />
+          {error && (
+            <p className="text-[11px] text-red-500 font-medium mt-1">
+              <Translate text={localizationConstants.offerCommentRequired} />
+            </p>
+          )}
         </div>
-        <div className="flex items-center justify-end gap-2 border-t border-slate-100 px-6 py-4">
+
+        {/* Footer Actions */}
+        <div className="flex items-center justify-between pt-0.5">
           <Button
             variant="outline"
-            className="h-9 cursor-pointer px-5 text-sm"
+            className="h-8 px-4 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer shadow-none"
             onClick={handleClose}
           >
             {t(localizationConstants.cancel)}
           </Button>
           <Button
-            className="h-9 cursor-pointer bg-neutral-950 px-5 text-sm text-white hover:bg-neutral-800"
+            className="h-8 px-5 text-xs font-medium text-white bg-slate-900 hover:bg-slate-800 rounded-md cursor-pointer shadow-none"
             onClick={handleSave}
           >
             {t(localizationConstants.save)}

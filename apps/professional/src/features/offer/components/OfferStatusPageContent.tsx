@@ -16,6 +16,7 @@ import { DUMMY_ARCHIVED_ITEMS } from "@/features/offer/constants/offerArchived.m
 import { OfferRequest } from "@/features/offer/constants/offerRequests";
 import { OfferQuotedItem, OfferAcceptedItem, OfferAgreedItem, OfferArchivedItem, OfferList } from "@/features/offer/types";
 import { Loader } from "@/components/ui/loader";
+import { authStorage } from "@/lib/authStorage";
 
 export const OFFER_API_STATUS = {
   REQUESTED: "REQUESTED",
@@ -131,7 +132,16 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
     async function fetchOffers() {
       setIsLoading(true);
       try {
-        const result = await listOffersAPIAction({ status: apiStatus, page: 1, pageSize: 50 });
+        const companyData = authStorage.getCompanyData() as {
+          id?: string;
+        } | null;
+        const companyId = companyData?.id;
+        const result = await listOffersAPIAction({
+          status: apiStatus,
+          page: 1,
+          pageSize: 50,
+          companyId,
+        });
 
         if (cancelled) return;
 
