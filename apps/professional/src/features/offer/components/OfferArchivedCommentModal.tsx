@@ -49,9 +49,9 @@ export function OfferArchivedCommentModal({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && handleClose()}>
-      <DialogContent className="w-[400px] h-[214px] max-w-[400px] bg-white p-4.5 rounded-lg border border-slate-200 shadow-xl opacity-100 flex flex-col justify-between gap-0">
+      <DialogContent className="w-[400px] max-w-[90vw] min-h-[214px] max-h-[85vh] bg-white p-4.5 rounded-lg border border-slate-200 shadow-xl opacity-100 flex flex-col justify-between gap-3 overflow-y-auto">
         {/* Header */}
-        <DialogHeader className="p-0 text-left space-y-0.5">
+        <DialogHeader className="p-0 text-left space-y-0.5 shrink-0">
           <DialogTitle className="text-sm font-semibold text-slate-900 leading-tight">
             {t(localizationConstants.offerQuotedCommentTitle)}
           </DialogTitle>
@@ -61,7 +61,7 @@ export function OfferArchivedCommentModal({
         </DialogHeader>
 
         {/* Text Area */}
-        <div className="py-1.5 flex-1 flex flex-col justify-center">
+        <div className="py-1 flex-1 flex flex-col justify-center">
           <textarea
             value={commentText}
             onChange={(e) => {
@@ -72,7 +72,7 @@ export function OfferArchivedCommentModal({
             }}
             placeholder={t(localizationConstants.offerQuotedCommentPlaceholder)}
             className={cn(
-              "w-full h-[85px] min-h-[65px] resize bg-white text-xs border focus:outline-none rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 leading-relaxed font-sans transition-colors",
+              "w-full min-h-[85px] max-h-[45vh] resize-y bg-white text-xs border focus:outline-none rounded-lg p-2.5 text-slate-800 placeholder:text-slate-400 leading-relaxed font-sans transition-colors",
               error
                 ? "border-red-500 focus:ring-1 focus:ring-red-400"
                 : "border-slate-200 focus:ring-1 focus:ring-slate-300",
@@ -86,7 +86,7 @@ export function OfferArchivedCommentModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between pt-0.5">
+        <div className="flex items-center justify-between pt-0.5 shrink-0">
           <Button
             variant="outline"
             className="h-8 px-4 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer shadow-none"
