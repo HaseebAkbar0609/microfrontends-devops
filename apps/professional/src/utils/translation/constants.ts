@@ -2183,6 +2183,13 @@ export type OfferTranslation = {
 	kmaRiskTemplateColVersion: string;
 	kmaRiskTemplateColLastUpdate: string;
 	kmaRiskTemplateColCreatedBy: string;
+	kmaRiskTemplateTableTitle: string;
+	kmaRiskTemplateActionEdit: string;
+	kmaRiskTemplateActionArchive: string;
+	kmaRiskTemplateDeleteTitle: string;
+	kmaRiskTemplateDeleteMsg: string;
+	kmaRiskTemplateFavoriteLabel: string;
+	kmaRiskTemplateMenuLabel: string;
 	kmaOpenSandlistaTitle: string;
 	kmaOpenSandlistaCloseBtn: string;
 	kmaOpenSandlistaDeleteConfirmTitle: string;
