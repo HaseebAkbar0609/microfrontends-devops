@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ChevronDown,
@@ -41,6 +41,7 @@ import { DUMMY_ACCEPTED_ITEMS } from "../constants/offerAccepted.mock";
 import { OFFER_ACCEPTED_BREADCRUMBS } from "../constants/offerAccepted";
 import { authStorage } from "@/lib/authStorage";
 import { ProfessionalRow } from "@/types/company";
+import { listOffersAPIAction, OFFER_API_STATUS } from "@/api-actions/offers";
 import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
 
 type SortField = keyof Pick<
@@ -73,6 +74,70 @@ function SkeletonRows({ count }: { count: number }) {
   );
 }
 
+interface RowProps {
+  row: OfferAcceptedItem;
+  statusBadgeLabel: string;
+  createContractLabel: string;
+  viewOfferLabel: string;
+  onCreateContract: (id: string) => void;
+  onViewOffer: () => void;
+}
+
+const OfferAcceptedTableRow = React.memo(function OfferAcceptedTableRow({
+  row,
+  statusBadgeLabel,
+  createContractLabel,
+  viewOfferLabel,
+  onCreateContract,
+  onViewOffer,
+}: RowProps) {
+  return (
+    <tr className="group border-b border-slate-200 last:border-0 hover:bg-slate-50">
+      <td className="whitespace-nowrap px-4 py-3 text-slate-900">{row.offertNr}</td>
+      <td className="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">
+        <span className="block max-w-36 truncate">{row.job}</span>
+      </td>
+      <td className="whitespace-nowrap px-4 py-3 text-slate-900">{row.customerName}</td>
+      <td className="whitespace-nowrap px-4 py-3">
+        <span className="inline-flex items-center rounded-[4px] border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-medium text-slate-500">
+          {row.category}
+        </span>
+      </td>
+      <td className="whitespace-nowrap px-4 py-3">
+        <span className="inline-flex items-center rounded-[4px] border border-emerald-500 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600">
+          {statusBadgeLabel}
+        </span>
+      </td>
+      <td className="whitespace-nowrap px-4 py-3 text-slate-900">{row.municipality}</td>
+      <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900 tabular-nums">
+        {formatCurrency(row.acceptedPrice)}
+      </td>
+      <td className="whitespace-nowrap px-4 py-3 text-slate-900">{row.type}</td>
+      <td className="whitespace-nowrap px-4 py-3 text-slate-900">{row.contactPerson.name}</td>
+      <td className="whitespace-nowrap px-4 py-3">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-10 cursor-pointer font-sans font-medium text-sm leading-6 tracking-normal border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 px-4 transition-colors shadow-none rounded-md"
+            onClick={() => onCreateContract(row.id)}
+          >
+            {createContractLabel}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-10 cursor-pointer font-sans font-medium text-sm leading-6 tracking-normal border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 px-4 transition-colors shadow-none rounded-md"
+            onClick={onViewOffer}
+          >
+            {viewOfferLabel}
+          </Button>
+        </div>
+      </td>
+    </tr>
+  );
+});
+
 interface Props {
   initialItems?: OfferAcceptedItem[];
   items?: OfferAcceptedItem[];
@@ -103,29 +168,26 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
       setIsLoading(true);
       try {
         const companyData = authStorage.getCompanyData() as ProfessionalRow | null;
-        const result = await fetch(
-          `/api/professionals/quotes/quote-listing/offer_listing_by_status?status=accepted&page=1&page_size=100&company_id=${companyData?.id ?? ""}`
-        ).then((r) => r.json());
+        const result = await listOffersAPIAction({
+          status: OFFER_API_STATUS.ACCEPTED,
+          page: 1,
+          pageSize: 100,
+          companyId: companyData?.id,
+        });
 
-        if (!cancelled && result?.data) {
-          const mapped: OfferAcceptedItem[] = result.data.map(
-            (item: Record<string, unknown>, idx: number) => ({
-              id: String(item.id ?? idx),
-              offertNr: String(item.project_code ?? "N/A"),
-              job: String(item.project_title ?? item.title ?? ""),
-              customerName: String(item.customer_name ?? ""),
-              category: String(item.category ?? ""),
-              municipality: String(item.city ?? ""),
-              acceptedPrice: Number(item.accepted_price ?? item.preliminary_budget ?? 0),
-              type: String(item.project_type ?? "Standard"),
-              contactPerson: {
-                name: String(item.contact_name ?? ""),
-                phone: String(item.contact_phone ?? ""),
-                email: String(item.contact_email ?? ""),
-              },
-            })
-          );
-          if (mapped.length > 0) setItems(mapped);
+        if (!cancelled && result.items.length > 0) {
+          const mapped: OfferAcceptedItem[] = result.items.map((item) => ({
+            id: item.id,
+            offertNr: item.idNumber || "N/A",
+            job: item.jobName,
+            customerName: item.jobName,
+            category: item.category,
+            municipality: item.municipality,
+            acceptedPrice: 0,
+            type: item.type,
+            contactPerson: { name: "", phone: "", email: "" },
+          }));
+          setItems(mapped);
         }
       } catch {
         // keep dummy data
@@ -308,68 +370,15 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
                 ) : (
                   <>
                     {paginated.map((row) => (
-                      <tr
+                      <OfferAcceptedTableRow
                         key={row.id}
-                        className="group border-b border-slate-200 last:border-0 hover:bg-slate-50"
-                      >
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
-                          {row.offertNr}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">
-                          <span className="block max-w-36 truncate">
-                            {row.job}
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
-                          {row.customerName}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3">
-                          <span className="inline-flex items-center rounded-[4px] border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-medium text-slate-500">
-                            {row.category}
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3">
-                          <span className="inline-flex items-center rounded-[4px] border border-emerald-500 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-600">
-                            {t(localizationConstants.offerAcceptedStatusBadge)}
-                          </span>
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
-                          {row.municipality}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900 tabular-nums">
-                          {formatCurrency(row.acceptedPrice)}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
-                          {row.type}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-slate-900">
-                          {row.contactPerson.name}
-                        </td>
-                        <td className="whitespace-nowrap px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-10 cursor-pointer font-sans font-medium text-sm leading-6 tracking-normal border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 px-4 transition-colors shadow-none rounded-md"
-                              onClick={() =>
-                                router.push(OFFER_ROUTES.createAgreement(row.id))
-                              }
-                            >
-                              {t(localizationConstants.offerAcceptedCreateContract)}
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="h-10 cursor-pointer font-sans font-medium text-sm leading-6 tracking-normal border border-slate-200 bg-white text-slate-900 hover:bg-slate-50 px-4 transition-colors shadow-none rounded-md"
-                              onClick={() =>
-                                router.push(OFFER_ROUTES.quoted())
-                              }
-                            >
-                              {t(localizationConstants.offerAcceptedViewOffer)}
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
+                        row={row}
+                        statusBadgeLabel={t(localizationConstants.offerAcceptedStatusBadge)}
+                        createContractLabel={t(localizationConstants.offerAcceptedCreateContract)}
+                        viewOfferLabel={t(localizationConstants.offerAcceptedViewOffer)}
+                        onCreateContract={(id) => router.push(OFFER_ROUTES.createAgreement(id))}
+                        onViewOffer={() => router.push(OFFER_ROUTES.quoted())}
+                      />
                     ))}
 
                     {paginated.length === 0 && (

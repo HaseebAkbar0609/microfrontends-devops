@@ -163,7 +163,15 @@ export function CreateAgreementView({ offerId, data }: Props) {
     setIsSending(true);
     try {
       const res = await createAgreementFromOfferAPIAction(offerId, {
-        parties: parties as unknown as Array<Record<string, unknown>>,
+        parties: parties.map((p) => ({
+          id: p.id,
+          name: p.name,
+          role: p.role,
+          email: p.email,
+          phone: p.phone,
+          address: p.address,
+          orgNumber: p.orgNumber,
+        })),
         documents: data.documents,
         templates: data.templates,
         price: data.price,

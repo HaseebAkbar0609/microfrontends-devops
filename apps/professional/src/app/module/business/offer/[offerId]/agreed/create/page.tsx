@@ -1,7 +1,7 @@
 import { CreateAgreementView } from "@/features/offer/components/CreateAgreementView";
-import { DUMMY_AGREEMENT_DATA } from "@/features/offer/constants/offerAgreement.mock";
 import { getOfferDetailByIdAPIAction } from "@/api-actions/offers";
 import { AgreementData } from "@/features/offer/types";
+import { DUMMY_AGREEMENT_DATA } from "@/features/offer/constants/offerAgreement.mock";
 
 export default async function CreateAgreementPage({
   params,
@@ -10,42 +10,71 @@ export default async function CreateAgreementPage({
 }) {
   const { offerId } = await params;
 
-  let agreementData: AgreementData = DUMMY_AGREEMENT_DATA;
+  let agreementData: AgreementData = {
+    ...DUMMY_AGREEMENT_DATA,
+    id: offerId,
+    projectNumber: offerId,
+    quoteNumber: offerId,
+    projectName: "",
+    customerName: "",
+    address: "",
+    price: 0,
+    parties: [
+      {
+        id: "customer-1",
+        name: "",
+        role: "customer",
+        companyOrPerson: "",
+        contactPerson: "",
+        phone: "",
+        email: "",
+        address: "",
+      },
+      {
+        id: "contractor-1",
+        name: "",
+        role: "supplier",
+        companyOrPerson: "",
+        contactPerson: "",
+        phone: "",
+        email: "",
+        address: "",
+      },
+    ],
+  };
 
   try {
     const res = await getOfferDetailByIdAPIAction(offerId);
     if (res.success && res.data) {
       const offer = res.data;
       agreementData = {
-        ...DUMMY_AGREEMENT_DATA,
+        ...agreementData,
         id: offer.id,
-        projectName: offer.title || DUMMY_AGREEMENT_DATA.projectName,
+        projectName: offer.title || "",
         projectNumber: offer.id,
         quoteNumber: offerId,
-        address: offer.customer.address || DUMMY_AGREEMENT_DATA.address,
-        customerName: offer.customer.name || DUMMY_AGREEMENT_DATA.customerName,
+        address: offer.customer.address || "",
+        customerName: offer.customer.name || "",
         price: offer.preliminaryBudgetPrice
-          ? Number(offer.preliminaryBudgetPrice.replace(/[^0-9.-]+/g, "")) || DUMMY_AGREEMENT_DATA.price
-          : DUMMY_AGREEMENT_DATA.price,
+          ? Number(offer.preliminaryBudgetPrice.replace(/[^0-9.-]+/g, "")) || 0
+          : 0,
         parties: [
           {
             id: "customer-1",
-            name: offer.customer.name || DUMMY_AGREEMENT_DATA.parties[0].name,
+            name: offer.customer.name || "",
             role: "customer",
-            companyOrPerson: offer.customer.name || DUMMY_AGREEMENT_DATA.parties[0].companyOrPerson,
-            contactPerson: offer.customer.name || DUMMY_AGREEMENT_DATA.parties[0].contactPerson,
-            phone: offer.customer.phone || DUMMY_AGREEMENT_DATA.parties[0].phone,
-            email: offer.customer.email || DUMMY_AGREEMENT_DATA.parties[0].email,
-            address: offer.customer.address || DUMMY_AGREEMENT_DATA.parties[0].address,
-            orgNumber: DUMMY_AGREEMENT_DATA.parties[0].orgNumber,
-            personalNumber: DUMMY_AGREEMENT_DATA.parties[0].personalNumber,
+            companyOrPerson: offer.customer.name || "",
+            contactPerson: offer.customer.name || "",
+            phone: offer.customer.phone || "",
+            email: offer.customer.email || "",
+            address: offer.customer.address || "",
           },
-          DUMMY_AGREEMENT_DATA.parties[1],
+          agreementData.parties[1],
         ],
       };
     }
   } catch {
-    // Keep mock data as fallback
+    // Keep initial agreement structure
   }
 
   return <CreateAgreementView offerId={offerId} data={agreementData} />;

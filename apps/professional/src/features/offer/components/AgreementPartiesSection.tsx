@@ -113,7 +113,6 @@ function PartyCard({
 
   const handleEditClick = () => {
     firstInputRef.current?.focus();
-    firstInputRef.current?.select();
     showToast("info", `Editing ${party.name} details`);
   };
 
