@@ -2205,6 +2205,13 @@ export type OfferTranslation = {
 	kmaRiskTemplateColVersion: string;
 	kmaRiskTemplateColLastUpdate: string;
 	kmaRiskTemplateColCreatedBy: string;
+	kmaRiskTemplateTableTitle: string;
+	kmaRiskTemplateActionEdit: string;
+	kmaRiskTemplateActionArchive: string;
+	kmaRiskTemplateDeleteTitle: string;
+	kmaRiskTemplateDeleteMsg: string;
+	kmaRiskTemplateFavoriteLabel: string;
+	kmaRiskTemplateMenuLabel: string;
 	kmaOpenSandlistaTitle: string;
 	kmaOpenSandlistaCloseBtn: string;
 	kmaOpenSandlistaDeleteConfirmTitle: string;
@@ -3088,6 +3095,9 @@ export type OfferTranslation = {
 	offerAcceptedStatusBadge: string;
 	offerAcceptedCreateContract: string;
 	offerAcceptedViewOffer: string;
+	offerAcceptedContactPerson: string;
+	offerAcceptedAddColumn: string;
+	offerAcceptedListBreadcrumb: string;
 	offerDownloadPdf: string;
 	offerAgreedContractNr: string;
 	offerAgreedJobType: string;
