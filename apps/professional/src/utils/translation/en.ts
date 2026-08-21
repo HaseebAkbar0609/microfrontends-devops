@@ -2038,6 +2038,7 @@ export const enOffer: OfferTranslation = {
 	kmaSandlistaTitle: "Mail List",
 	kmaSandlistaMenuOption: "Mail List",
 	kmaSandlistaAddBtn: "Add recipient",
+	kmaSandlistaRemoveBtn: "Remove recipient",
 	kmaSandlistaSearchPlaceholder: "Search recipients...",
 	kmaSandlistaColName: "Name",
 	kmaSandlistaColRole: "Role / Position",

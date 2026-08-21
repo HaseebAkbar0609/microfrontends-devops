@@ -2043,6 +2043,7 @@ export const svOffer: OfferTranslation = {
 	kmaSandlistaTitle: "Sändlista",
 	kmaSandlistaMenuOption: "Sändlista",
 	kmaSandlistaAddBtn: "Lägg till mottagare",
+	kmaSandlistaRemoveBtn: "Ta bort mottagare",
 	kmaSandlistaSearchPlaceholder: "Sök mottagare...",
 	kmaSandlistaColName: "Namn",
 	kmaSandlistaColRole: "Roll / Befattning",

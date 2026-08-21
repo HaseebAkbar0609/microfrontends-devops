@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { z } from "zod";
 import { ArrowLeft, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -38,6 +38,12 @@ export const NOTIFY_COLS: { key: NotifyField; labelKey: string }[] = [
 
 const emailSchema = z.string().email();
 
+const recipientSchema = z.object({
+	name: z.string().max(200),
+	role: z.string().max(200),
+	email: z.union([z.string().email(), z.literal("")]),
+});
+
 function isValidEmail(email: string): boolean {
 	return emailSchema.safeParse(email).success;
 }
@@ -61,11 +67,15 @@ export function MailListPage({
 	const [search, setSearch] = useState("");
 	const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
-	const filtered = recipients.filter(
-		(r) =>
-			search === "" ||
-			r.name.toLowerCase().includes(search.toLowerCase()) ||
-			r.email.toLowerCase().includes(search.toLowerCase()),
+	const filtered = useMemo(
+		() =>
+			recipients.filter(
+				(r) =>
+					search === "" ||
+					r.name.toLowerCase().includes(search.toLowerCase()) ||
+					r.email.toLowerCase().includes(search.toLowerCase()),
+			),
+		[recipients, search],
 	);
 
 	function toggleNotify(id: string, field: NotifyField) {
@@ -97,6 +107,10 @@ export function MailListPage({
 	}
 
 	function handleSave() {
+		const allValid = recipients.every((r) =>
+			recipientSchema.safeParse({ name: r.name, role: r.role, email: r.email.trim() }).success,
+		);
+		if (!allValid) return;
 		setIsEditMode(false);
 	}
 
@@ -325,6 +339,7 @@ export function MailListPage({
 															value={r.name}
 															onChange={(e) => updateRecipient(r.id, "name", e.target.value)}
 															aria-label={t(localizationConstants.kmaSandlistaColName)}
+															maxLength={200}
 															className="h-7 w-full rounded border border-slate-200 px-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300"
 														/>
 													) : (
@@ -338,6 +353,7 @@ export function MailListPage({
 															value={r.email}
 															onChange={(e) => updateRecipient(r.id, "email", e.target.value)}
 															aria-label={t(localizationConstants.kmaSandlistaColEmail)}
+															maxLength={254}
 															className={cn(
 																"h-7 w-full rounded border px-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-300",
 																r.email.trim() && !isValidEmail(r.email.trim())
@@ -374,7 +390,7 @@ export function MailListPage({
 															type="button"
 															onClick={() => removeRecipient(r.id)}
 															className="cursor-pointer text-slate-300 hover:text-red-500"
-															aria-label="Remove recipient"
+															aria-label={t(localizationConstants.kmaSandlistaRemoveBtn)}
 														>
 															<Trash2 className="h-3.5 w-3.5" />
 														</button>

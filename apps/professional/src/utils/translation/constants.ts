@@ -2135,6 +2135,7 @@ export type OfferTranslation = {
 	kmaSandlistaTitle: string;
 	kmaSandlistaMenuOption: string;
 	kmaSandlistaAddBtn: string;
+	kmaSandlistaRemoveBtn: string;
 	kmaSandlistaSearchPlaceholder: string;
 	kmaSandlistaColName: string;
 	kmaSandlistaColRole: string;
