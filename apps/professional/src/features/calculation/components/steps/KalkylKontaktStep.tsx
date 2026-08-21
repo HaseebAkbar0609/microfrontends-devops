@@ -52,9 +52,10 @@ interface PhoneFieldProps {
 	label: string;
 	value: string;
 	onChange: (v: string) => void;
+	placeholder?: string;
 }
 
-function PhoneField({ label, value, onChange }: PhoneFieldProps) {
+function PhoneField({ label, value, onChange, placeholder }: PhoneFieldProps) {
 	return (
 		<div className="grid gap-1.5">
 			<label className="text-sm font-medium text-slate-900">{label}</label>
@@ -66,7 +67,7 @@ function PhoneField({ label, value, onChange }: PhoneFieldProps) {
 					type="text"
 					value={value}
 					onChange={(e) => onChange(e.target.value)}
-					placeholder="Ange telefon"
+					placeholder={placeholder}
 					className="h-10 w-full rounded-r-md border border-slate-200 bg-white px-3 text-sm focus-visible:border-slate-400 focus-visible:outline-none"
 				/>
 			</div>
@@ -164,37 +165,38 @@ export function KalkylKontaktStep({ data, onChange }: KalkylKontaktStepProps) {
 								label={t(localizationConstants.calcNewForetagLabel)}
 								value={data.bestellareFoetag}
 								onChange={(v) => onChange({ bestellareFoetag: v })}
-								placeholder="Byggbolaget"
+								placeholder={t(localizationConstants.calcNewPlaceholderForetag)}
 							/>
 							<FormField
 								label={t(localizationConstants.calcNewAddressLabel)}
 								value={data.bestellareAddress}
 								onChange={(v) => onChange({ bestellareAddress: v })}
-								placeholder="Ange adress"
+								placeholder={t(localizationConstants.calcNewPlaceholderAddress)}
 							/>
 							<FormField
 								label={t(localizationConstants.calcNewPostNr)}
 								value={data.bestellarePostNr}
 								onChange={(v) => onChange({ bestellarePostNr: v })}
-								placeholder="Ange postnr"
+								placeholder={t(localizationConstants.calcNewPlaceholderPostNr)}
 							/>
 							<FormField
 								label={t(localizationConstants.calcNewOrt)}
 								value={data.bestellareOrt}
 								onChange={(v) => onChange({ bestellareOrt: v })}
-								placeholder="Ange ort"
+								placeholder={t(localizationConstants.calcNewPlaceholderOrt)}
 							/>
 							<FormField
 								label={t(localizationConstants.agreementDetailMail)}
 								value={data.bestellareMail}
 								onChange={(v) => onChange({ bestellareMail: v })}
-								placeholder="Ange mail"
+								placeholder={t(localizationConstants.calcNewPlaceholderMail)}
 								type="email"
 							/>
 							<PhoneField
 								label={t(localizationConstants.calcNewTelefon)}
 								value={data.bestellareTelefon}
 								onChange={(v) => onChange({ bestellareTelefon: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderTelefon)}
 							/>
 						</div>
 
@@ -207,25 +209,26 @@ export function KalkylKontaktStep({ data, onChange }: KalkylKontaktStepProps) {
 									label={t(localizationConstants.agreementDetailFornamn)}
 									value={data.bestellareFornamn}
 									onChange={(v) => onChange({ bestellareFornamn: v })}
-									placeholder="Ange förnamn"
+									placeholder={t(localizationConstants.calcNewPlaceholderFornamn)}
 								/>
 								<FormField
 									label={t(localizationConstants.agreementDetailEfternamn)}
 									value={data.bestellareEfternamn}
 									onChange={(v) => onChange({ bestellareEfternamn: v })}
-									placeholder="Ange efternamn"
+									placeholder={t(localizationConstants.calcNewPlaceholderEfternamn)}
 								/>
 								<FormField
 									label={t(localizationConstants.agreementDetailMail)}
 									value={data.bestellareKontaktMail}
 									onChange={(v) => onChange({ bestellareKontaktMail: v })}
-									placeholder="Ange mail"
+									placeholder={t(localizationConstants.calcNewPlaceholderMail)}
 									type="email"
 								/>
 								<PhoneField
 									label={t(localizationConstants.agreementDetailMobil)}
 									value={data.bestellareMobil}
 									onChange={(v) => onChange({ bestellareMobil: v })}
+									placeholder={t(localizationConstants.calcNewPlaceholderTelefon)}
 								/>
 							</div>
 						</div>
@@ -260,44 +263,45 @@ export function KalkylKontaktStep({ data, onChange }: KalkylKontaktStepProps) {
 							label={t(localizationConstants.calcNewForetagLabel)}
 							value={data.foretag}
 							onChange={(v) => onChange({ foretag: v })}
-							placeholder="Byggbolaget"
+							placeholder={t(localizationConstants.calcNewPlaceholderForetag)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewAddressLabel)}
 							value={data.address}
 							onChange={(v) => onChange({ address: v })}
-							placeholder="Ange adress"
+							placeholder={t(localizationConstants.calcNewPlaceholderAddress)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewPostNr)}
 							value={data.postNr}
 							onChange={(v) => onChange({ postNr: v })}
-							placeholder="Ange postnr"
+							placeholder={t(localizationConstants.calcNewPlaceholderPostNr)}
 						/>
 						<FormField
 							label={t(localizationConstants.calcNewOrt)}
 							value={data.ort}
 							onChange={(v) => onChange({ ort: v })}
-							placeholder="Ange ort"
+							placeholder={t(localizationConstants.calcNewPlaceholderOrt)}
 						/>
 						<FormField
 							label={t(localizationConstants.agreementDetailMail)}
 							value={data.mail}
 							onChange={(v) => onChange({ mail: v })}
-							placeholder="Ange mail"
+							placeholder={t(localizationConstants.calcNewPlaceholderMail)}
 							type="email"
 						/>
 						<PhoneField
 							label={t(localizationConstants.calcNewTelefon)}
 							value={data.telefon}
 							onChange={(v) => onChange({ telefon: v })}
+							placeholder={t(localizationConstants.calcNewPlaceholderTelefon)}
 						/>
 						<div className="lg:col-span-2">
 							<FormField
 								label={t(localizationConstants.calcNewOrgPersonNr)}
 								value={data.orgNr}
 								onChange={(v) => onChange({ orgNr: v })}
-								placeholder="556060-2020"
+								placeholder={t(localizationConstants.calcNewPlaceholderOrgNr)}
 							/>
 						</div>
 					</div>
@@ -322,8 +326,8 @@ export function KalkylKontaktStep({ data, onChange }: KalkylKontaktStepProps) {
 								value={data.kontaktperson}
 								onValueChange={(v) => onChange({ kontaktperson: v })}
 							>
-								<SelectTrigger className="h-10 border-slate-200 bg-white text-sm focus:ring-0">
-									<SelectValue placeholder="Anders Svensson" />
+								<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm focus:ring-0">
+									<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderKontaktperson)} />
 								</SelectTrigger>
 								<SelectContent>
 									{KONTAKTPERSON_OPTIONS.map((o) => (
@@ -339,33 +343,34 @@ export function KalkylKontaktStep({ data, onChange }: KalkylKontaktStepProps) {
 								label={t(localizationConstants.agreementDetailFornamn)}
 								value={data.fornamn}
 								onChange={(v) => onChange({ fornamn: v })}
-								placeholder="Ange förnamn"
+								placeholder={t(localizationConstants.calcNewPlaceholderFornamn)}
 							/>
 							<FormField
 								label={t(localizationConstants.agreementDetailEfternamn)}
 								value={data.efternamn}
 								onChange={(v) => onChange({ efternamn: v })}
-								placeholder="Ange efternamn"
+								placeholder={t(localizationConstants.calcNewPlaceholderEfternamn)}
 							/>
 							<FormField
 								label={t(localizationConstants.agreementDetailMail)}
 								value={data.kontaktMail}
 								onChange={(v) => onChange({ kontaktMail: v })}
-								placeholder="Ange mail"
+								placeholder={t(localizationConstants.calcNewPlaceholderMail)}
 								type="email"
 							/>
 							<PhoneField
 								label={t(localizationConstants.agreementDetailMobil)}
 								value={data.mobil}
 								onChange={(v) => onChange({ mobil: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderTelefon)}
 							/>
-							<div className="grid gap-1.5">
+							<div className="grid gap-1.5 lg:col-span-2">
 								<label className="text-sm font-medium text-slate-900">
 									<Translate text={localizationConstants.agreementDetailRoll} />
 								</label>
 								<Select value={data.roll} onValueChange={(v) => onChange({ roll: v })}>
-									<SelectTrigger className="h-10 border-slate-200 bg-white text-sm focus:ring-0">
-										<SelectValue placeholder="Kalkyl" />
+									<SelectTrigger className="h-10 w-full border-slate-200 bg-white text-sm focus:ring-0">
+										<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderRoll)} />
 									</SelectTrigger>
 									<SelectContent>
 										{ROLL_OPTIONS.map((o) => (

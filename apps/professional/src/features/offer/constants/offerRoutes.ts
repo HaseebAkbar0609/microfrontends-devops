@@ -1,10 +1,14 @@
 export const OFFER_ROUTES = {
-  request: (offerId: string) => `/module/business/offer/${offerId}/request`,
+  request: (offerId?: string) =>
+    offerId ? `/module/business/offer/${offerId}/request` : `/module/business/offer/request`,
+  requestDetail: (requestId: string) => `/module/business/offer/request/${requestId}`,
   quoted: () => `/module/business/offer/quoted`,
   accepted: (offerId?: string) =>
     offerId ? `/module/business/offer/${offerId}/accepted` : `/module/business/offer/accepted`,
-  agreed: (offerId: string) => `/module/business/offer/${offerId}/agreed`,
+  agreed: (offerId?: string) =>
+    offerId ? `/module/business/offer/${offerId}/agreed` : `/module/business/offer/agreed`,
   createAgreement: (offerId: string) =>
     `/module/business/offer/${offerId}/agreed/create`,
-  archived: (offerId: string) => `/module/business/offer/${offerId}/archived`,
+  archived: (offerId?: string) =>
+    offerId ? `/module/business/offer/${offerId}/archived` : `/module/business/offer/archived`,
 } as const;

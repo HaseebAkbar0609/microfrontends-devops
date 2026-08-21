@@ -8,6 +8,7 @@ import {
 	ArrowLeft,
 	MoreVertical,
 	Info,
+	Plus,
 	ChevronLeft,
 	ChevronRight,
 	ChevronsLeft,
@@ -261,132 +262,143 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
         <div className="w-full bg-white rounded-xl border border-slate-200 shadow-xs flex flex-col p-6 gap-5">
           {/* Card Header Section: Search, Filter & Total Sum */}
           <div className="flex flex-col gap-4">
-            {/* Search and Filter Row */}
-            <div className="flex items-center gap-3 flex-wrap">
-              {/* Standard Reusable Search Input */}
-              <Search
-                value={search}
-                onChange={(val) => {
-                  setSearch(val);
-                  setPage(1);
-                }}
-                placeholder={t(localizationConstants.search)}
-                wrapperClassName="w-64"
-                className="h-9 text-xs"
-              />
+            {/* Search, Filter, and Action Button Row */}
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-6 flex-wrap">
+                {/* Standard Reusable Search Input */}
+                <Search
+                  value={search}
+                  onChange={(val) => {
+                    setSearch(val);
+                    setPage(1);
+                  }}
+                  placeholder={t(localizationConstants.search)}
+                  wrapperClassName="w-64"
+                  className="h-9 text-xs"
+                />
 
-              {/* Filter Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="h-9 px-3 gap-1.5 border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-md cursor-pointer"
-                  >
-                    {t(localizationConstants.filter)}
-                    {activeFilterCount > 0 && (
-                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-slate-900 text-[10px] text-white">
-                        {activeFilterCount}
-                      </span>
-                    )}
-                    <ChevronDown size={14} className="text-slate-400" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-52 text-xs">
-                  {uniqueCategories.length > 0 && (
-                    <>
-                      <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                        {t(localizationConstants.offerQuotedCategory)}
-                      </DropdownMenuLabel>
-                      {uniqueCategories.map((cat) => (
-                        <DropdownMenuCheckboxItem
-                          key={cat}
-                          checked={selectedCategories.includes(cat)}
-                          onCheckedChange={(checked) => {
-                            setSelectedCategories((prev) =>
-                              checked
-                                ? [...prev, cat]
-                                : prev.filter((x) => x !== cat),
-                            );
-                            setPage(1);
-                          }}
-                          className="text-xs cursor-pointer"
-                        >
-                          {cat}
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                      <DropdownMenuSeparator />
-                    </>
-                  )}
-
-                  {uniqueTypes.length > 0 && (
-                    <>
-                      <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                        {t(localizationConstants.offerQuotedType)}
-                      </DropdownMenuLabel>
-                      {uniqueTypes.map((type) => (
-                        <DropdownMenuCheckboxItem
-                          key={type}
-                          checked={selectedTypes.includes(type)}
-                          onCheckedChange={(checked) => {
-                            setSelectedTypes((prev) =>
-                              checked
-                                ? [...prev, type]
-                                : prev.filter((x) => x !== type),
-                            );
-                            setPage(1);
-                          }}
-                          className="text-xs cursor-pointer"
-                        >
-                          {type}
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                      <DropdownMenuSeparator />
-                    </>
-                  )}
-
-                  {uniqueMunicipalities.length > 0 && (
-                    <>
-                      <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
-                        {t(localizationConstants.offerQuotedMunicipality)}
-                      </DropdownMenuLabel>
-                      {uniqueMunicipalities.map((muni) => (
-                        <DropdownMenuCheckboxItem
-                          key={muni}
-                          checked={selectedMunicipalities.includes(muni)}
-                          onCheckedChange={(checked) => {
-                            setSelectedMunicipalities((prev) =>
-                              checked
-                                ? [...prev, muni]
-                                : prev.filter((x) => x !== muni),
-                            );
-                            setPage(1);
-                          }}
-                          className="text-xs cursor-pointer"
-                        >
-                          {muni}
-                        </DropdownMenuCheckboxItem>
-                      ))}
-                      <DropdownMenuSeparator />
-                    </>
-                  )}
-
-                  {activeFilterCount > 0 && (
-                    <DropdownMenuItem
-                      className="cursor-pointer text-xs font-medium text-red-600 focus:text-red-600"
-                      onClick={() => {
-                        setSelectedCategories([]);
-                        setSelectedTypes([]);
-                        setSelectedMunicipalities([]);
-                        setSelectedStatuses([]);
-                        setPage(1);
-                      }}
+                {/* Filter Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-9 px-3 gap-1.5 border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 rounded-md cursor-pointer"
                     >
-                      {t(localizationConstants.clearFilters)}
-                    </DropdownMenuItem>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+                      {t(localizationConstants.filter)}
+                      {activeFilterCount > 0 && (
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-slate-900 text-[10px] text-white">
+                          {activeFilterCount}
+                        </span>
+                      )}
+                      <ChevronDown size={14} className="text-slate-400" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start" className="w-52 text-xs">
+                    {uniqueCategories.length > 0 && (
+                      <>
+                        <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                          {t(localizationConstants.offerQuotedCategory)}
+                        </DropdownMenuLabel>
+                        {uniqueCategories.map((cat) => (
+                          <DropdownMenuCheckboxItem
+                            key={cat}
+                            checked={selectedCategories.includes(cat)}
+                            onCheckedChange={(checked) => {
+                              setSelectedCategories((prev) =>
+                                checked
+                                  ? [...prev, cat]
+                                  : prev.filter((x) => x !== cat),
+                              );
+                              setPage(1);
+                            }}
+                            className="text-xs cursor-pointer"
+                          >
+                            {cat}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+
+                    {uniqueTypes.length > 0 && (
+                      <>
+                        <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                          {t(localizationConstants.offerQuotedType)}
+                        </DropdownMenuLabel>
+                        {uniqueTypes.map((type) => (
+                          <DropdownMenuCheckboxItem
+                            key={type}
+                            checked={selectedTypes.includes(type)}
+                            onCheckedChange={(checked) => {
+                              setSelectedTypes((prev) =>
+                                checked
+                                  ? [...prev, type]
+                                  : prev.filter((x) => x !== type),
+                              );
+                              setPage(1);
+                            }}
+                            className="text-xs cursor-pointer"
+                          >
+                            {type}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+
+                    {uniqueMunicipalities.length > 0 && (
+                      <>
+                        <DropdownMenuLabel className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
+                          {t(localizationConstants.offerQuotedMunicipality)}
+                        </DropdownMenuLabel>
+                        {uniqueMunicipalities.map((muni) => (
+                          <DropdownMenuCheckboxItem
+                            key={muni}
+                            checked={selectedMunicipalities.includes(muni)}
+                            onCheckedChange={(checked) => {
+                              setSelectedMunicipalities((prev) =>
+                                checked
+                                  ? [...prev, muni]
+                                  : prev.filter((x) => x !== muni),
+                              );
+                              setPage(1);
+                            }}
+                            className="text-xs cursor-pointer"
+                          >
+                            {muni}
+                          </DropdownMenuCheckboxItem>
+                        ))}
+                        <DropdownMenuSeparator />
+                      </>
+                    )}
+
+                    {activeFilterCount > 0 && (
+                      <DropdownMenuItem
+                        className="cursor-pointer text-xs font-medium text-red-600 focus:text-red-600"
+                        onClick={() => {
+                          setSelectedCategories([]);
+                          setSelectedTypes([]);
+                          setSelectedMunicipalities([]);
+                          setSelectedStatuses([]);
+                          setPage(1);
+                        }}
+                      >
+                        {t(localizationConstants.clearFilters)}
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+              {/* Right Side Action Button: Lägg till projekt */}
+              <Button
+                size="sm"
+                className="h-9 px-4 gap-1.5 bg-[#111721] hover:bg-slate-800 text-white text-xs font-medium rounded-md cursor-pointer transition-colors shadow-xs"
+              >
+                <Plus size={14} aria-hidden={true} />
+                <Translate text={localizationConstants.offerRequestAddProject} />
+              </Button>
             </div>
 
             {/* Total Sum Headline */}
@@ -412,17 +424,8 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
                       </span>
                     </th>
                   ))}
-                  {/* Normal weight, right-aligned + button header */}
-                  <th className="sticky right-0 z-10 bg-white px-4 py-3.5 text-right w-40 before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-slate-100">
-                    <div className="flex items-center justify-end pr-2">
-                      <span
-                        className="text-xl font-normal text-slate-700 hover:text-slate-800 cursor-pointer select-none leading-none"
-                        title={t(localizationConstants.add)}
-                      >
-                        +
-                      </span>
-                    </div>
-                  </th>
+                  {/* Sticky right header for actions */}
+                  <th className="sticky right-0 z-10 bg-white px-4 py-3.5 text-right w-40 before:absolute before:inset-y-0 before:left-0 before:w-px before:bg-slate-100" />
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
