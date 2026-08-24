@@ -1,71 +1,61 @@
-import localizationConstants from "@/utils/translation/constants";
+import type { ModuleTabItem } from "@/components/layout/navigation";
+import type { BreadcrumbItem } from "@/types/common";
+import localizationConstants, {
+  type TranslationKeys,
+} from "@/utils/translation/constants";
 
-export interface OrderSubSidebarItem {
-	id: string;
-	labelKey: string;
-	href: string;
+export const ORDER_MODULE_BASE_URL = "/module/production/order";
+
+/** Module title shown as the H1 on every page of the Order module (rule 1). */
+export const ORDER_MODULE_TITLE = localizationConstants.orderModule;
+
+/** `Home > Order > Section` breadcrumb for Order list/overview pages. */
+export function orderBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
+  return [
+    { label: localizationConstants.home, href: "/dashboard" },
+    {
+      label: localizationConstants.orderModule,
+      href: `${ORDER_MODULE_BASE_URL}/overview`,
+    },
+    { label: section },
+  ];
 }
 
-export interface SubOrderGoToItem {
-	id: string;
-	title: string;
-	href: string;
-	children?: { id: string; title: string; href: string }[];
-}
-
-export const ORDER_SUB_SIDEBAR_ITEMS: OrderSubSidebarItem[] = [
-	{
-		id: "order-dashboard",
-		labelKey: localizationConstants.orderDashboard,
-		href: "/module/production/order/dashboard",
-	},
-	{
-		id: "order-overview",
-		labelKey: localizationConstants.orderOverview,
-		href: "/module/production/order/overview",
-	},
-	{
-		id: "order-direct",
-		labelKey: localizationConstants.orderDirect,
-		href: "/module/production/order/direct",
-	},
-	{
-		id: "economic-overview",
-		labelKey: localizationConstants.economicOverview,
-		href: "/module/production/order/economy",
-	},
-	{
-		id: "planning",
-		labelKey: localizationConstants.planning,
-		href: "/module/production/order/planning",
-	},
-	{
-		id: "warranty",
-		labelKey: localizationConstants.warrantyCommitments,
-		href: "/module/production/order/warranty",
-	},
-	{
-		id: "archive",
-		labelKey: localizationConstants.archive,
-		href: "/module/production/order/archive",
-	},
-];
-
-export const ORDER_GOTO_ITEMS: SubOrderGoToItem[] = [
-	{
-		id: "5000-001",
-		title: "Order 5000-001",
-		href: "/module/production/order/5000-001",
-		children: [
-			{ id: "5000-001-sub1", title: "Delorder 1", href: "/module/production/order/5000-001/sub1" },
-		],
-	},
-	{
-		id: "5000-002",
-		title: "Order 5000-002",
-		href: "/module/production/order/5000-002",
-		children: [
-			{ id: "5000-002-sub1", title: "Delorder 1", href: "/module/production/order/5000-002/sub1" },
-		],
-	},
+/** Primary tab row for the Order module. */
+export const ORDER_MODULE_TABS: ModuleTabItem[] = [
+  {
+    id: "order-dashboard",
+    labelKey: localizationConstants.orderDashboard,
+    href: "/module/production/order/dashboard",
+  },
+  {
+    id: "order-overview",
+    labelKey: localizationConstants.orderOverview,
+    href: "/module/production/order/overview",
+  },
+  {
+    id: "order-direct",
+    labelKey: localizationConstants.orderDirect,
+    href: "/module/production/order/direct",
+  },
+  {
+    id: "economic-overview",
+    labelKey: localizationConstants.economicOverview,
+    href: "/module/production/order/economy",
+  },
+  {
+    id: "planning",
+    labelKey: localizationConstants.planning,
+    href: "/module/production/order/planning",
+  },
+  {
+    id: "warranty",
+    labelKey: localizationConstants.warrantyCommitments,
+    href: "/module/production/order/warranty",
+  },
+  {
+    id: "archive",
+    labelKey: localizationConstants.archive,
+    href: "/module/production/order/archive",
+  },
 ];
