@@ -13,24 +13,38 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { OFFER_SIDEBAR_WIDGET_MAP } from "@/features/offer/components/OfferDashboardConfig";
 import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import {
-	OFFER_BOARD_CELL_CLASS,
-	OFFER_BOARD_GRID_CLASS,
-} from "../../constants/offerWidgetBoard";
-import { useIsTeamAdmin } from "../../hooks/useIsTeamAdmin";
-import { useOfferWidgetBoard } from "../../hooks/useOfferWidgetBoard";
+import { useIsTeamAdmin } from "@/hooks/useIsTeamAdmin";
+import { WidgetItem } from "../DraggableSidebarItem";
+import { WidgetProps } from "../../types/dashboard";
+import { useWidgetBoard } from "../../hooks/useWidgetBoard";
 import BoardWidgetCard from "./BoardWidgetCard";
 import WidgetLibraryPanel from "./WidgetLibraryPanel";
 
-const OfferWidgetBoard = () => {
+const BOARD_GRID_CLASS = "grid grid-cols-12 gap-2.5";
+const BOARD_CELL_CLASS = "col-span-12 md:col-span-6 xl:col-span-4";
+
+export interface WidgetBoardProps {
+	widgetMap: Record<string, WidgetProps>;
+	items: WidgetItem[];
+	standardWidgetIds: string[];
+	header?: React.ReactNode;
+	belowGrid?: React.ReactNode;
+}
+
+const WidgetBoard = ({
+	widgetMap,
+	items,
+	standardWidgetIds,
+	header,
+	belowGrid,
+}: WidgetBoardProps) => {
 	const t = useTranslate();
-	const board = useOfferWidgetBoard();
+	const board = useWidgetBoard(items, standardWidgetIds);
 	const isAdmin = useIsTeamAdmin();
 	const [libraryOpen, setLibraryOpen] = useState(true);
 	const [discardOpen, setDiscardOpen] = useState(false);
@@ -39,8 +53,6 @@ const OfferWidgetBoard = () => {
 	const editing = board.mode === "edit";
 	const hasOwnWidgets = board.slots.some((slot) => slot.widgetId !== null);
 
-	// Pointer hit-testing over the rendered slots (react-draggable reports
-	// client coordinates, same approach as the other module dashboards).
 	const slotRefs = useRef<Record<string, HTMLDivElement | null>>({});
 	const findSlotUidAt = (
 		clientX: number,
@@ -72,7 +84,7 @@ const OfferWidgetBoard = () => {
 
 	const handleSave = () => {
 		board.save();
-		showToast("success", t(localizationConstants.offerBoardLayoutSaved));
+		showToast("success", t(localizationConstants.widgetBoardLayoutSaved));
 	};
 
 	const handleRowDrag = (clientX: number, clientY: number) =>
@@ -99,6 +111,7 @@ const OfferWidgetBoard = () => {
 
 	return (
 		<div className="min-h-screen">
+			{header}
 			{editing ? (
 				<div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-md bg-slate-100 px-4 py-3">
 					<div className="flex items-center gap-3">
@@ -106,13 +119,15 @@ const OfferWidgetBoard = () => {
 						<div>
 							<p className="text-sm font-semibold text-slate-900">
 								<Translate
-									text={localizationConstants.offerBoardEditMode}
+									text={
+										localizationConstants.widgetBoardEditMode
+									}
 								/>
 							</p>
 							<p className="text-xs text-slate-500">
 								<Translate
 									text={
-										localizationConstants.offerBoardEditModeHint
+										localizationConstants.widgetBoardEditModeHint
 									}
 								/>
 							</p>
@@ -129,7 +144,7 @@ const OfferWidgetBoard = () => {
 								<PanelRightOpen className="h-4 w-4" />
 								<Translate
 									text={
-										localizationConstants.offerBoardShowLibrary
+										localizationConstants.widgetBoardShowLibrary
 									}
 								/>
 							</Button>
@@ -149,7 +164,9 @@ const OfferWidgetBoard = () => {
 						>
 							<Check className="h-4 w-4" />
 							<Translate
-								text={localizationConstants.offerBoardSaveLayout}
+								text={
+									localizationConstants.widgetBoardSaveLayout
+								}
 							/>
 						</Button>
 					</div>
@@ -161,20 +178,20 @@ const OfferWidgetBoard = () => {
 							<>
 								<Translate
 									text={
-										localizationConstants.offerBoardSavedLayout
+										localizationConstants.widgetBoardSavedLayout
 									}
 								/>
 								{" · "}
 								<Translate
 									text={
-										localizationConstants.offerBoardUpdatedToday
+										localizationConstants.widgetBoardUpdatedToday
 									}
 								/>{" "}
 								{board.savedAtLabel}
 							</>
 						) : (
 							<Translate
-								text={localizationConstants.offerBoardNoLayout}
+								text={localizationConstants.widgetBoardNoLayout}
 							/>
 						)}
 					</p>
@@ -186,7 +203,7 @@ const OfferWidgetBoard = () => {
 					>
 						<LayoutGrid className="h-4 w-4" />
 						<Translate
-							text={localizationConstants.offerBoardCustomize}
+							text={localizationConstants.widgetBoardCustomize}
 						/>
 					</Button>
 				</div>
@@ -197,21 +214,20 @@ const OfferWidgetBoard = () => {
 					{!editing && (
 						<p className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-slate-500">
 							<Translate
-								text={localizationConstants.offerBoardAdminSection}
+								text={
+									localizationConstants.widgetBoardAdminSection
+								}
 							/>
 						</p>
 					)}
-					<div className={OFFER_BOARD_GRID_CLASS}>
+					<div className={BOARD_GRID_CLASS}>
 						{board.standardItems.map((item) => (
-							<div
-								key={item.id}
-								className={OFFER_BOARD_CELL_CLASS}
-							>
+							<div key={item.id} className={BOARD_CELL_CLASS}>
 								<BoardWidgetCard
 									locked
 									editMode={editing}
 									widget={
-										OFFER_SIDEBAR_WIDGET_MAP[item.id] ?? {
+										widgetMap[item.id] ?? {
 											title: item.label,
 											icon: item.icon,
 										}
@@ -225,7 +241,9 @@ const OfferWidgetBoard = () => {
 						<div className="mt-6">
 							<p className="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">
 								<Translate
-									text={localizationConstants.offerBoardOwnSection}
+									text={
+										localizationConstants.widgetBoardOwnSection
+									}
 								/>
 							</p>
 							<div className="flex flex-col items-center rounded-md border-2 border-dashed border-slate-200 px-6 py-16 text-center">
@@ -238,14 +256,14 @@ const OfferWidgetBoard = () => {
 								<h3 className="mt-4 text-lg font-semibold text-slate-900">
 									<Translate
 										text={
-											localizationConstants.offerBoardBuildTitle
+											localizationConstants.widgetBoardBuildTitle
 										}
 									/>
 								</h3>
 								<p className="mt-2 max-w-xl text-sm text-slate-500">
 									<Translate
 										text={
-											localizationConstants.offerBoardBuildBody
+											localizationConstants.widgetBoardBuildBody
 										}
 									/>
 								</p>
@@ -257,26 +275,26 @@ const OfferWidgetBoard = () => {
 									<SquarePlus className="h-4 w-4" />
 									<Translate
 										text={
-											localizationConstants.offerBoardAddWidgets
+											localizationConstants.widgetBoardAddWidgets
 										}
 									/>
 								</Button>
 								<p className="mt-3 text-xs text-slate-400">
 									<Translate
 										text={
-											localizationConstants.offerBoardBuildHint
+											localizationConstants.widgetBoardBuildHint
 										}
 									/>
 								</p>
 							</div>
 						</div>
 					) : (
-						<div className={cn(OFFER_BOARD_GRID_CLASS, "mt-2.5")}>
+						<div className={cn(BOARD_GRID_CLASS, "mt-2.5")}>
 							{board.slots.map((slot) => {
 								const isTarget = dropTargetUid === slot.uid;
 								const widget =
 									slot.widgetId !== null
-										? OFFER_SIDEBAR_WIDGET_MAP[slot.widgetId]
+										? widgetMap[slot.widgetId]
 										: null;
 
 								if (!editing) {
@@ -284,7 +302,7 @@ const OfferWidgetBoard = () => {
 									return (
 										<div
 											key={slot.uid}
-											className={OFFER_BOARD_CELL_CLASS}
+											className={BOARD_CELL_CLASS}
 										>
 											<BoardWidgetCard
 												widget={widget}
@@ -299,7 +317,7 @@ const OfferWidgetBoard = () => {
 									<DraggableGridCard
 										key={slot.uid}
 										className={cn(
-											OFFER_BOARD_CELL_CLASS,
+											BOARD_CELL_CLASS,
 											isTarget &&
 												"!border-blue-500 bg-blue-50/60",
 										)}
@@ -338,8 +356,8 @@ const OfferWidgetBoard = () => {
 												<Translate
 													text={
 														isTarget
-															? localizationConstants.offerBoardDropHere
-															: localizationConstants.offerBoardDragHere
+															? localizationConstants.widgetBoardDropHere
+															: localizationConstants.widgetBoardDragHere
 													}
 												/>
 											</div>
@@ -349,6 +367,8 @@ const OfferWidgetBoard = () => {
 							})}
 						</div>
 					)}
+
+					{belowGrid && <div className="mt-6">{belowGrid}</div>}
 				</div>
 
 				{editing && libraryOpen && (
@@ -365,7 +385,7 @@ const OfferWidgetBoard = () => {
 							board.hideForTeam(id);
 							showToast(
 								"info",
-								t(localizationConstants.offerBoardHiddenToast),
+								t(localizationConstants.widgetBoardHiddenToast),
 							);
 						}}
 						onRowDrag={handleRowDrag}
@@ -380,12 +400,16 @@ const OfferWidgetBoard = () => {
 					<AlertDialogHeader>
 						<AlertDialogTitle>
 							<Translate
-								text={localizationConstants.offerBoardDiscardTitle}
+								text={
+									localizationConstants.widgetBoardDiscardTitle
+								}
 							/>
 						</AlertDialogTitle>
 						<AlertDialogDescription>
 							<Translate
-								text={localizationConstants.offerBoardDiscardBody}
+								text={
+									localizationConstants.widgetBoardDiscardBody
+								}
 							/>
 						</AlertDialogDescription>
 					</AlertDialogHeader>
@@ -397,7 +421,7 @@ const OfferWidgetBoard = () => {
 							}}
 						>
 							<Translate
-								text={localizationConstants.offerBoardDiscard}
+								text={localizationConstants.widgetBoardDiscard}
 							/>
 						</AlertDialogCancel>
 						<AlertDialogAction
@@ -409,7 +433,9 @@ const OfferWidgetBoard = () => {
 						>
 							<Check className="h-4 w-4" />
 							<Translate
-								text={localizationConstants.offerBoardSaveLayout}
+								text={
+									localizationConstants.widgetBoardSaveLayout
+								}
 							/>
 						</AlertDialogAction>
 					</AlertDialogFooter>
@@ -419,4 +445,4 @@ const OfferWidgetBoard = () => {
 	);
 };
 
-export default OfferWidgetBoard;
+export default WidgetBoard;

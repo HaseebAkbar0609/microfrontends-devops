@@ -54,7 +54,7 @@ const BoardWidgetCard = ({
 						<span className="inline-flex items-center gap-1 rounded-md bg-white px-2 py-1 text-xs font-medium text-slate-600">
 							<Lock size={12} />
 							<Translate
-								text={localizationConstants.offerBoardLocked}
+								text={localizationConstants.widgetBoardLocked}
 							/>
 						</span>
 					)}
@@ -79,7 +79,7 @@ const BoardWidgetCard = ({
 								<Expand className="h-4 w-4 text-slate-600" />
 								<Translate
 									text={
-										localizationConstants.offerBoardOpenFullscreen
+										localizationConstants.widgetBoardOpenFullscreen
 									}
 								/>
 							</DropdownMenuItem>
@@ -91,7 +91,7 @@ const BoardWidgetCard = ({
 								<Move className="h-4 w-4 text-slate-600" />
 								<Translate
 									text={
-										localizationConstants.offerBoardMoveWidget
+										localizationConstants.widgetBoardMoveWidget
 									}
 								/>
 								{locked && (
@@ -106,7 +106,7 @@ const BoardWidgetCard = ({
 								<Trash2 className="h-4 w-4 text-slate-600" />
 								<Translate
 									text={
-										localizationConstants.offerBoardRemoveWidget
+										localizationConstants.widgetBoardRemoveWidget
 									}
 								/>
 								{locked && (
@@ -117,7 +117,7 @@ const BoardWidgetCard = ({
 								<p className="border-t border-slate-100 px-3 py-2 text-xs text-slate-500">
 									<Translate
 										text={
-											localizationConstants.offerBoardLockedExplainer
+											localizationConstants.widgetBoardLockedExplainer
 										}
 									/>
 								</p>
@@ -139,7 +139,7 @@ const BoardWidgetCard = ({
 			</div>
 
 			<Dialog open={fullscreenOpen} onOpenChange={setFullscreenOpen}>
-				<DialogContent className="max-w-3xl">
+				<DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle className="flex items-center gap-2">
 							<Icon size={20} className="text-slate-700" />
