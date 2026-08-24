@@ -1,9 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	ORDER_MODULE_BASE_URL,
+	ORDER_MODULE_TABS,
+	ORDER_MODULE_TITLE,
+} from "@/features/orders/data/orderNav.config";
+import { useTranslate } from "@/utils/translation/translate";
 import { OrderOpenedHero } from "./components/OrderOpenedHero";
 import { OrderOpenedSections } from "./components/OrderOpenedSections";
 import { OrderOpenedActionBar } from "./components/OrderOpenedActionBar";
@@ -24,8 +28,13 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
 	} = useOrderOpened(orderId);
 
 	const handleBack = () => {
-		router.push("/module/production/order/overview");
+		router.push(`${ORDER_MODULE_BASE_URL}/overview`);
 	};
+
+	const t = useTranslate();
+	const recordTitle = orderData.titleKey
+		? t(orderData.titleKey)
+		: orderData.title;
 
 	const handleModalConfirm = (option: "project" | "order") => {
 		if (option === "project") {
@@ -37,19 +46,14 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
 
 	return (
 		<div className="flex h-full flex-col bg-slate-50/50 relative overflow-hidden">
-			{/* Sub-header with Back button matching screenshot */}
-			<div className="flex items-center gap-3 border-b border-slate-200 bg-white px-6 py-4">
-				<button
-					type="button"
-					onClick={handleBack}
-					className="flex items-center justify-center p-1 text-slate-600 hover:text-slate-900 rounded-md cursor-pointer transition-colors"
-				>
-					<ArrowLeft className="h-5 w-5" />
-				</button>
-				<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.seeOrderTitle} />
-				</h1>
-			</div>
+			<ModulePageHeader
+				title={ORDER_MODULE_TITLE}
+				tabs={ORDER_MODULE_TABS}
+				record={{
+					title: recordTitle,
+					backHref: `${ORDER_MODULE_BASE_URL}/overview`,
+				}}
+			/>
 
 			{/* Main Content Scrollable Container (70% width layout) */}
 			<div className="flex-1 overflow-y-auto px-6 py-6">

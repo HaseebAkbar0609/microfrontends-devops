@@ -1,11 +1,15 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	PROJECT_MODULE_TABS,
+	PROJECT_MODULE_TITLE,
+	projectBreadcrumbs,
+} from "@/features/project/data/projectNav.config";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { PROJECT_OVERVIEW_BREADCRUMBS } from "../constants";
 import ProjectGanttSchedule from "./ProjectGanttSchedule";
 import ProjectListTab from "./ProjectListTab";
 
@@ -34,9 +38,10 @@ const ProjectOverviewPage = () => {
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
-			<PageHeader
-				title={localizationConstants.projectSubOverview}
-				breadcrumbs={PROJECT_OVERVIEW_BREADCRUMBS}
+			<ModulePageHeader
+				title={PROJECT_MODULE_TITLE}
+				tabs={PROJECT_MODULE_TABS}
+				breadcrumbs={projectBreadcrumbs(localizationConstants.projectSubOverview)}
 			/>
 			<div className="flex-1 p-6">
 				<Tabs

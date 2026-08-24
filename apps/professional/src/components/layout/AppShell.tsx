@@ -9,13 +9,9 @@ import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscrip
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
-import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
-import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
 import { b2bSidebarItems } from "@/features/b2b/constants";
-import { productionSidebarItems } from "@/features/production/constants";
-import { KMA_SIDEBAR_NAV_ITEMS } from "@/features/kma/data/kmaNav.config";
 import { financialSidebarItems } from "@/features/financial-management/constants";
 import { businessSupportSidebarItems } from "@/features/business-support/constants";
 import localizationConstants from "@/utils/translation/constants";
@@ -48,8 +44,6 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
-	const isOrderPath = pathname.startsWith("/module/production/order");
-	const isProjectPath = pathname.startsWith("/module/production/project");
 	const isB2BDashboardPage = pathname === "/module/business/b2b";
 	const isB2BNavRoute =
 		pathname.startsWith("/module/business/b2b") && !isB2BDashboardPage;
@@ -58,12 +52,6 @@ export function AppShell({ children }: AppShellProps) {
 	);
 	const isCalculationDetailRoute = !!calcDetailMatch;
 	const calculationDetailId = calcDetailMatch?.[1] ?? "";
-	const isKmaPath = pathname.startsWith("/module/production/kma");
-	const isProductionNavRoute =
-		pathname.startsWith("/module/production") &&
-		!isOrderPath &&
-		!isProjectPath &&
-		!isKmaPath;
 	const isFinancialNavRoute = pathname.startsWith(
 		"/module/financial-management",
 	);
@@ -157,11 +145,7 @@ export function AppShell({ children }: AppShellProps) {
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{isOrderPath ? (
-				<OrderSubSidebar />
-			) : isProjectPath ? (
-				<ProjectSubSidebar />
-			) : isAgreementPath ? (
+			{isAgreementPath ? (
 				<AgreementSubSidebar />
 			) : isB2BNavRoute ? (
 				<DynamicSubSidebar
@@ -171,18 +155,6 @@ export function AppShell({ children }: AppShellProps) {
 				/>
 			) : isCalculationDetailRoute ? (
 				<CalculationDetailSubSidebar calcId={calculationDetailId} />
-			) : isKmaPath ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.kma}
-					items={KMA_SIDEBAR_NAV_ITEMS}
-					backHref="/module/production/kma"
-				/>
-			) : isProductionNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.production}
-					items={productionSidebarItems}
-					hideBack={true}
-				/>
 			) : isFinancialNavRoute ? (
 				<DynamicSubSidebar
 					titleKey={localizationConstants.financialManagement}

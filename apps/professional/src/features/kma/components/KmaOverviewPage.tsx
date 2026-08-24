@@ -20,6 +20,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	KMA_MODULE_TABS,
+	KMA_MODULE_TITLE,
+	kmaBreadcrumbs,
+} from "@/features/kma/data/kmaNav.config";
 import localizationConstants from "@/utils/translation/constants";
 import { sortItems } from "@/utils/tableSort";
 import { useTableSort } from "@/hooks/useTableSort";
@@ -996,12 +1002,13 @@ export function KmaOverviewPage({ items }: KmaOverviewPageProps) {
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden bg-white">
-			{/* Page title */}
-			<div className="border-b border-slate-200 px-6 py-4">
-				<h1 className="text-2xl font-semibold">
-					<Translate text={localizationConstants.kmaListTitle} />
-				</h1>
-			</div>
+			<ModulePageHeader
+				title={KMA_MODULE_TITLE}
+				tabs={KMA_MODULE_TABS}
+				breadcrumbs={kmaBreadcrumbs(
+					localizationConstants.kmaListSidebarOverview,
+				)}
+			/>
 
 			{/* Sub-tab bar */}
 			<div className="border-b border-slate-200 px-6">

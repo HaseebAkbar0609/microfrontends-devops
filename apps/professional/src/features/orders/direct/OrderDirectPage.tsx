@@ -1,7 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	ORDER_MODULE_TABS,
+	ORDER_MODULE_TITLE,
+	orderBreadcrumbs,
+} from "@/features/orders/data/orderNav.config";
 import localizationConstants from "@/utils/translation/constants";
 import { OrderDirectTable } from "./components/OrderDirectTable";
 import { CreateDirectOrderModal } from "./components/CreateDirectOrderModal";
@@ -19,15 +24,10 @@ export function OrderDirectPage() {
 	return (
 		<div className="flex h-full flex-col bg-slate-50/50">
 			{/* Page Header with Breadcrumbs matching screenshot */}
-			<PageHeader
-				title={localizationConstants.orderDirect}
-				breadcrumbs={[
-					{ label: localizationConstants.home, href: "/dashboard" },
-					{ label: localizationConstants.moduleItem, href: "/module/business" },
-					{ label: localizationConstants.production, href: "/module/production" },
-					{ label: localizationConstants.orderModule, href: "/module/production/order/overview" },
-					{ label: localizationConstants.orderDirect },
-				]}
+			<ModulePageHeader
+				title={ORDER_MODULE_TITLE}
+				tabs={ORDER_MODULE_TABS}
+				breadcrumbs={orderBreadcrumbs(localizationConstants.orderDirect)}
 			/>
 
 			{/* Main Content Area */}

@@ -1,5 +1,10 @@
 import ProjectDetailPage from "@/features/project/components/ProjectDetailPage";
 
-export default function Page() {
-	return <ProjectDetailPage />;
+interface PageProps {
+	params: Promise<{ id: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+	const { id } = await params;
+	return <ProjectDetailPage projectId={id} />;
 }
