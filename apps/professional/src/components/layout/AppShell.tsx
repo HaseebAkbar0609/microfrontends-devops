@@ -14,7 +14,6 @@ import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
 import { b2bSidebarItems } from "@/features/b2b/constants";
-import { calculationSidebarItems, calculationGoToItems } from "@/features/calculation/constants";
 import { productionSidebarItems } from "@/features/production/constants";
 import { KMA_SIDEBAR_NAV_ITEMS } from "@/features/kma/data/kmaNav.config";
 import { financialSidebarItems } from "@/features/financial-management/constants";
@@ -52,16 +51,25 @@ export function AppShell({ children }: AppShellProps) {
 	const isOrderPath = pathname.startsWith("/module/production/order");
 	const isProjectPath = pathname.startsWith("/module/production/project");
 	const isB2BDashboardPage = pathname === "/module/business/b2b";
-	const isB2BNavRoute = pathname.startsWith("/module/business/b2b") && !isB2BDashboardPage;
-	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
-	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
+	const isB2BNavRoute =
+		pathname.startsWith("/module/business/b2b") && !isB2BDashboardPage;
+	const calcDetailMatch = pathname.match(
+		/^\/module\/business\/calculation\/overview\/([^/]+)/,
+	);
 	const isCalculationDetailRoute = !!calcDetailMatch;
 	const calculationDetailId = calcDetailMatch?.[1] ?? "";
 	const isKmaPath = pathname.startsWith("/module/production/kma");
 	const isProductionNavRoute =
-		pathname.startsWith("/module/production") && !isOrderPath && !isProjectPath && !isKmaPath;
-	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
-	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
+		pathname.startsWith("/module/production") &&
+		!isOrderPath &&
+		!isProjectPath &&
+		!isKmaPath;
+	const isFinancialNavRoute = pathname.startsWith(
+		"/module/financial-management",
+	);
+	const isBusinessSupportNavRoute = pathname.startsWith(
+		"/module/business-support",
+	);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -88,13 +96,16 @@ export function AppShell({ children }: AppShellProps) {
 				return;
 			}
 
-			const subscriptionRequired = getRequiresSubscriptionFromBrowserCookie();
-			const destination = subscriptionRequired ? "/manage-plans" : "/home";
+			const subscriptionRequired =
+				getRequiresSubscriptionFromBrowserCookie();
+			const destination = subscriptionRequired
+				? "/manage-plans"
+				: "/home";
 			router.replace(destination);
 			return;
 		}
 
-		if (!isAuthenticated && (!isAuthRoute && !isPublicPage)) {
+		if (!isAuthenticated && !isAuthRoute && !isPublicPage) {
 			router.replace("/login");
 			return;
 		}
@@ -105,14 +116,7 @@ export function AppShell({ children }: AppShellProps) {
 		}
 
 		setIsCheckingAuth(false);
-	}, [
-		isReady,
-		isAuthenticated,
-		isAuthRoute,
-		isPublicPage,
-		pathname,
-		router,
-	]);
+	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, pathname, router]);
 
 	if (!isReady) {
 		return <Loader />;
@@ -146,7 +150,9 @@ export function AppShell({ children }: AppShellProps) {
 		return null;
 	}
 
-	const isAgreementPath = pathname.startsWith("/module/business-support/agreement");
+	const isAgreementPath = pathname.startsWith(
+		"/module/business-support/agreement",
+	);
 
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
@@ -165,16 +171,6 @@ export function AppShell({ children }: AppShellProps) {
 				/>
 			) : isCalculationDetailRoute ? (
 				<CalculationDetailSubSidebar calcId={calculationDetailId} />
-			) : isCalculationNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.calculation}
-					items={calculationSidebarItems}
-					hideBack={true}
-					additionalSection={{
-						titleKey: localizationConstants.goTo,
-						items: calculationGoToItems,
-					}}
-				/>
 			) : isKmaPath ? (
 				<DynamicSubSidebar
 					titleKey={localizationConstants.kma}
