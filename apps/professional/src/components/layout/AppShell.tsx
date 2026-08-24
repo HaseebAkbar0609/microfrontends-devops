@@ -11,7 +11,6 @@ import Sidebar from "./sidebar/Sidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
 import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
 import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
-import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
 import { b2bSidebarItems } from "@/features/b2b/constants";
@@ -148,7 +147,6 @@ export function AppShell({ children }: AppShellProps) {
 	}
 
 	const isAgreementPath = pathname.startsWith("/module/business-support/agreement");
-	const isRegisterPath = pathname.startsWith("/tools/register") && !isAgreementPath;
 
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
@@ -159,8 +157,6 @@ export function AppShell({ children }: AppShellProps) {
 				<ProjectSubSidebar />
 			) : isAgreementPath ? (
 				<AgreementSubSidebar />
-			) : isRegisterPath ? (
-				<InvoiceSubSidebar />
 			) : isB2BNavRoute ? (
 				<DynamicSubSidebar
 					titleKey={localizationConstants.b2b}
