@@ -395,34 +395,3 @@ export const navConfig: NavGroup[] = [
 		],
 	},
 ];
-
-export function getFlyoutSubSidebarConfigByPath(
-	pathname: string,
-): FlyoutSubSidebarConfig | null {
-	for (const group of navConfig) {
-		for (const item of group.items) {
-			if (!item.flyoutItems?.length) continue;
-
-			const isParentMatch =
-				pathname === item.href || pathname.startsWith(`${item.href}/`);
-			const isFlyoutMatch = item.flyoutItems.some(
-				(flyoutItem) =>
-					pathname === flyoutItem.href ||
-					pathname.startsWith(`${flyoutItem.href}/`),
-			);
-
-			if (!isParentMatch && !isFlyoutMatch) continue;
-
-			return {
-				titleKey: item.label,
-				items: item.flyoutItems.map((flyoutItem) => ({
-					id: flyoutItem.id,
-					labelKey: flyoutItem.label,
-					href: flyoutItem.href,
-				})),
-			};
-		}
-	}
-
-	return null;
-}
