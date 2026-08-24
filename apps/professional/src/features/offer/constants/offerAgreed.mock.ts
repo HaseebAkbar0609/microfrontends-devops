@@ -8,8 +8,8 @@ export const DUMMY_AGREED_ITEMS: OfferAgreedItem[] = [
     customerName: "Anna Andersson",
     status: "signed",
     municipality: "Järfälla",
-    jobType: "B2C",
-    agreedPrice: 0,
+    jobType: "-",
+    agreedPrice: 5000,
   },
   {
     id: "agr-2",
@@ -18,7 +18,7 @@ export const DUMMY_AGREED_ITEMS: OfferAgreedItem[] = [
     customerName: "Anna Andersson",
     status: "waiting_signature",
     municipality: "Järfälla",
-    jobType: "B2C",
+    jobType: "-",
     agreedPrice: 5000,
   },
   {
@@ -28,7 +28,7 @@ export const DUMMY_AGREED_ITEMS: OfferAgreedItem[] = [
     customerName: "Anna Andersson",
     status: "signed",
     municipality: "Järfälla",
-    jobType: "B2C",
+    jobType: "-",
     agreedPrice: 5000,
   },
   {
@@ -38,7 +38,7 @@ export const DUMMY_AGREED_ITEMS: OfferAgreedItem[] = [
     customerName: "Anna Andersson",
     status: "waiting_signature",
     municipality: "Järfälla",
-    jobType: "B2C",
+    jobType: "-",
     agreedPrice: 5000,
   },
   {
@@ -48,7 +48,7 @@ export const DUMMY_AGREED_ITEMS: OfferAgreedItem[] = [
     customerName: "Anna Andersson",
     status: "waiting_signature",
     municipality: "Järfälla",
-    jobType: "B2C",
+    jobType: "-",
     agreedPrice: 5000,
   },
   {
@@ -58,7 +58,7 @@ export const DUMMY_AGREED_ITEMS: OfferAgreedItem[] = [
     customerName: "Anna Andersson",
     status: "signed",
     municipality: "Järfälla",
-    jobType: "B2C",
+    jobType: "-",
     agreedPrice: 5000,
   },
 ];

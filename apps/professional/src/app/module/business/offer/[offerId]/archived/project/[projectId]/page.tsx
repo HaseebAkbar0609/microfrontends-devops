@@ -1,16 +1,13 @@
-import { notFound } from "next/navigation";
 import { OfferSeeProjectView } from "@/features/offer/components/OfferSeeProjectView";
-import { DUMMY_PROJECT } from "@/features/offer/constants/offerArchivedProject.mock";
+import { getArchivedProjectData } from "@/features/offer/utils/archivedProject";
 
-export default async function OfferArchivedProjectPage({
+export default async function OfferArchivedProjectWithOfferIdPage({
   params,
 }: {
   params: Promise<{ offerId: string; projectId: string }>;
 }) {
   const { offerId, projectId } = await params;
+  const projectData = getArchivedProjectData(projectId);
 
-  const project = projectId === DUMMY_PROJECT.id ? DUMMY_PROJECT : null;
-  if (!project) notFound();
-
-  return <OfferSeeProjectView offerId={offerId} data={project} />;
+  return <OfferSeeProjectView offerId={offerId} data={projectData} />;
 }

@@ -3100,11 +3100,13 @@ export type OfferTranslation = {
 	offerAcceptedListBreadcrumb: string;
 	offerDownloadPdf: string;
 	offerAgreedContractNr: string;
+	offerAgreedMunicipality: string;
 	offerAgreedJobType: string;
 	offerAgreedPrice: string;
 	offerAgreedStatusSigned: string;
 	offerAgreedStatusWaiting: string;
 	offerAgreedViewAgreement: string;
+	offerAgreedSign: string;
 	offerAgreedViewProject: string;
 	agreementCreateTitle: string;
 	agreementCreateDescription: string;
@@ -3144,6 +3146,14 @@ export type OfferTranslation = {
 	offerArchivedDelete: string;
 	offerArchivedUnarchive: string;
 	offerArchivedCommentAction: string;
+	offerArchivedQuoteNr: string;
+	offerArchivedOfferedTo: string;
+	offerArchivedViewTheProject: string;
+	offerArchivedUndo: string;
+	offerArchivedDeletedToast: string;
+	offerArchivedRestoredToast: string;
+	offerCommentRequired: string;
+	offerCommentSavedToast: string;
 	seeProjectDetailedInfo: string;
 	seeProjectCustomerInfo: string;
 	seeProjectCustomerName: string;

@@ -109,7 +109,7 @@ function CreateOrderProjectModal({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="w-110 gap-4 rounded-xl border border-zinc-200 p-6 shadow-lg">
+      <DialogContent className="w-110 max-w-[90vw] max-h-[85vh] gap-4 rounded-xl border border-zinc-200 p-6 shadow-lg overflow-y-auto">
         <DialogHeader className="gap-2">
           <DialogTitle className="text-lg font-semibold text-zinc-950">
             {t(localizationConstants.createOrderOrProjectTitle)}
