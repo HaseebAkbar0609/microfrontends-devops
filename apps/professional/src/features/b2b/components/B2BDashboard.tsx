@@ -12,8 +12,9 @@ import {
 	AlertDialogHeader,
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 import useModal from "@/features/auth/hooks/useModal";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { DashboardWidget } from "@/features/widgetdashboard/components/DashboardWidget";
 import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
@@ -44,6 +45,7 @@ import {
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
 
 export function B2BDashboard() {
+	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [isRearranging, setIsRearranging] = useState(false);
 	const [kpiData, setKpiData] = useState<B2BDashboardKpis>(DEFAULT_B2B_KPIS);
@@ -154,10 +156,10 @@ export function B2BDashboard() {
 						return next;
 					});
 					resumeAfterDrop();
-					showToast("success", "Widget added to dashboard");
+					showToast("success", t(localizationConstants.b2bLayoutSaved));
 				}
 			} else {
-				showToast("info", "Drag widget to replace an existing slot");
+				showToast("info", t(localizationConstants.replaceWidgetDescription));
 			}
 		}
 	};
@@ -172,9 +174,8 @@ export function B2BDashboard() {
 				order: index + 1,
 			}));
 			await syncWidgetsAction(company.id, "b2b_dashboard", syncPayload);
-		} else {
-			showToast("success", "Dashboard layout saved successfully");
 		}
+		showToast("success", t(localizationConstants.b2bLayoutSaved));
 		setIsSavingLayout(false);
 		setIsRearranging(false);
 	};
@@ -182,7 +183,7 @@ export function B2BDashboard() {
 	const handleCloseLayout = () => {
 		setPlacedWidgets(persistedLayoutRef.current);
 		setIsRearranging(false);
-		showToast("info", "Changes discarded");
+		showToast("info", t(localizationConstants.b2bLayoutDiscarded));
 	};
 
 	const cancelDialog = () => {
@@ -359,17 +360,18 @@ export function B2BDashboard() {
 						{/* Reset Default Button if all widgets are removed */}
 						{placedWidgets.every((w) => w.sidebarId === "emptyPage") && (
 							<div className="col-span-12 flex justify-center py-6">
-								<button
+								<Button
 									type="button"
+									size="sm"
 									onClick={() => {
 										setPlacedWidgets(B2B_INITIAL_WIDGETS);
-										showToast("info", "Reset to default layout");
+										showToast("info", t(localizationConstants.b2bLayoutDiscarded));
 									}}
 									className="flex items-center gap-2 rounded-sm bg-[#111827] px-4 py-2 text-xs font-medium text-white hover:bg-black transition-colors cursor-pointer"
 								>
 									<RotateCcw size={14} />
-									<span>Reset Default Layout</span>
-								</button>
+									<span><Translate text={localizationConstants.b2bDiscard} /></span>
+								</Button>
 							</div>
 						)}
 					</div>
@@ -379,27 +381,29 @@ export function B2BDashboard() {
 				<div className="w-full xl:w-90 shrink-0 space-y-4" ref={sidebarRef}>
 					{/* Top Rearrange Button */}
 					<div className="flex justify-end">
-						<button
+						<Button
 							type="button"
+							variant={isRearranging ? "default" : "secondary"}
+							size="sm"
 							onClick={() => {
 								setIsRearranging((prev) => !prev);
-								showToast("info", !isRearranging ? "Drag and drop enabled" : "Drag mode closed");
+								showToast("info", !isRearranging ? t(localizationConstants.rearrange) : t(localizationConstants.confirmClose));
 							}}
 							className={cn(
 								"flex items-center gap-2 rounded-sm px-4 py-2 text-sm font-medium transition-all cursor-pointer",
 								isRearranging
-									? "bg-[#111827] text-white shadow-xs"
+									? "bg-[#111827] text-white shadow-xs hover:bg-black"
 									: "bg-[#F4F4F5] text-slate-700 hover:bg-slate-200"
 							)}
 						>
 							<LayoutList size={16} />
 							<span><Translate text={localizationConstants.rearrange} /></span>
-						</button>
+						</Button>
 					</div>
 
 					{/* Save & Discard Buttons */}
 					<div className="rounded-xl border border-slate-200 bg-white p-4 space-y-3">
-						<button
+						<Button
 							type="button"
 							onClick={handleSaveLayout}
 							disabled={isSavingLayout}
@@ -407,15 +411,16 @@ export function B2BDashboard() {
 						>
 							{isSavingLayout ? <Loader2 className="w-4 h-4 text-white animate-spin" /> : <Check size={16} />}
 							<span><Translate text={localizationConstants.confirmSave} /></span>
-						</button>
-						<button
+						</Button>
+						<Button
 							type="button"
+							variant="secondary"
 							onClick={handleCloseLayout}
 							className="flex w-full items-center justify-center gap-2 rounded-sm bg-[#F4F4F5] px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-200 cursor-pointer"
 						>
 							<X size={16} />
 							<span><Translate text={localizationConstants.confirmClose} /></span>
-						</button>
+						</Button>
 					</div>
 
 					{/* Menu Card */}
@@ -457,17 +462,16 @@ export function B2BDashboard() {
 					<AlertDialogContent>
 						<AlertDialogHeader>
 							<AlertDialogTitle>
-								Are you sure you want to replace this widget?
+								<Translate text={localizationConstants.replaceWidgetTitle} />
 							</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action will remove the existing widget and
-								replace it with{" "}
+								<Translate text={localizationConstants.replaceWidgetDescription} />{" "}
 								<strong>
 									<Translate
 										text={pendingReplacement?.item.label ?? ""}
 									/>
 								</strong>
-								. This cannot be undone.
+								. <Translate text={localizationConstants.replaceWidgetUndone} />
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
@@ -498,11 +502,10 @@ export function B2BDashboard() {
 					<AlertDialogContent>
 						<AlertDialogHeader>
 							<AlertDialogTitle>
-								Are you sure you want to remove this widget?
+								<Translate text={localizationConstants.removeWidgetTitle} />
 							</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action will remove the widget from the grid and
-								replace it with an empty slot.
+								<Translate text={localizationConstants.removeWidgetDescription} />
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>

@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -66,14 +67,16 @@ export const DashboardWidget = ({
         {!isEmpty && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
+              <Button
+                variant="ghost"
+                size="icon"
                 type="button"
                 onClick={onMenuClick}
-                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 transition-colors cursor-pointer"
+                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 transition-colors cursor-pointer shadow-none"
                 aria-label="Widget options"
               >
                 <MoreVertical size={18} />
-              </button>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-40 bg-white shadow-md border border-slate-200">
               <DropdownMenuItem

@@ -88,7 +88,6 @@ export async function getB2BDashboardKpisAction(): Promise<ActionResult<B2BDashb
 	} catch (error: unknown) {
 		const apiError = error as ApiError;
 		const errorMessage = apiError.response?.data?.message || "Failed to fetch B2B dashboard KPIs";
-		// Return standard default KPI structure on initial unseeded backend
-		return { success: true, data: DEFAULT_B2B_KPIS, error: errorMessage };
+		return { success: false, data: DEFAULT_B2B_KPIS, error: errorMessage };
 	}
 }

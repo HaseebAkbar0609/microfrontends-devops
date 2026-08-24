@@ -70,7 +70,7 @@ export const DraggableGridCard = ({
           className ?? ""
         } transition-[box-shadow,background-color,ring-color,border-color,transform] duration-150 ${
           isDragging
-            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-sm transition-none! **:bg-transparent! **:text-white! **:border-none!"
+            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-sm !transition-none [&_*]:!bg-transparent [&_*]:!text-white [&_*]:!border-none"
             : isSwapTarget
             ? "bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-sm min-h-35 shadow-inner"
             : isHighlighted
