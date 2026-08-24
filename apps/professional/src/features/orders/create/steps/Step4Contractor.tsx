@@ -96,8 +96,8 @@ export function Step4Contractor({
 }: Step4ContractorProps) {
 	const t = useTranslate();
 	const [contactForm, setContactForm] = useState<Omit<ContractorContactItem, "id">>({
-		firstName: "Anders",
-		lastName: "Svensson",
+		firstName: "",
+		lastName: "",
 		email: "",
 		mobile: "",
 		role: "Beställare",
@@ -129,8 +129,8 @@ export function Step4Contractor({
 			id: `contact-${Date.now()}`,
 			firstName: contactForm.firstName.trim(),
 			lastName: contactForm.lastName.trim(),
-			email: contactForm.email.trim() || "lars.svensson@byg...",
-			mobile: contactForm.mobile.trim() || "070-6306345",
+			email: contactForm.email.trim(),
+			mobile: contactForm.mobile.trim(),
 			role: contactForm.role || "Beställare",
 		};
 
@@ -425,23 +425,17 @@ export function Step4Contractor({
 													onClick={(e) => e.stopPropagation()}
 												>
 													{tag}
-													<span
-														role="button"
-														tabIndex={0}
+													<button
+														type="button"
 														onClick={(e) => {
 															e.stopPropagation();
 															handleRemoveTag(tag);
 														}}
-														onKeyDown={(e) => {
-															if (e.key === "Enter" || e.key === " ") {
-																e.stopPropagation();
-																handleRemoveTag(tag);
-															}
-														}}
+														aria-label={`Ta bort ${tag}`}
 														className="text-slate-400 hover:text-slate-700 cursor-pointer inline-flex items-center"
 													>
 														<X className="h-3 w-3" />
-													</span>
+													</button>
 												</span>
 											))}
 											{contractor.selectedContactTags.length === 0 && (
@@ -495,7 +489,7 @@ export function Step4Contractor({
 										firstName: e.target.value,
 									}))
 								}
-								placeholder="Anders"
+								placeholder={t(localizationConstants.placeholderFirstName)}
 								className="h-10 border-slate-200 rounded-md shadow-none focus-visible:border-gray-300 focus-visible:outline-none"
 							/>
 						</div>
@@ -511,7 +505,7 @@ export function Step4Contractor({
 										lastName: e.target.value,
 									}))
 								}
-								placeholder="Svensson"
+								placeholder={t(localizationConstants.placeholderLastName)}
 								className="h-10 border-slate-200 rounded-md shadow-none focus-visible:border-gray-300 focus-visible:outline-none"
 							/>
 						</div>
@@ -644,6 +638,7 @@ export function Step4Contractor({
 															<Button
 																variant="ghost"
 																size="icon"
+																aria-label={t(localizationConstants.actionsHeader)}
 																className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
 															>
 																<MoreVertical className="h-4 w-4" />

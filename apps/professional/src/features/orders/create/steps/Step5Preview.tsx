@@ -15,6 +15,7 @@ import {
 	MoreVertical,
 	PencilLine,
 	Trash2,
+	ArrowLeft,
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -570,6 +571,7 @@ export function Step5Preview({
 															<Button
 																variant="ghost"
 																size="icon"
+																aria-label={t(localizationConstants.actionsHeader)}
 																className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
 															>
 																<MoreVertical className="h-4 w-4" />
@@ -724,6 +726,7 @@ export function Step5Preview({
 																<Button
 																	variant="ghost"
 																	size="icon"
+																	aria-label={t(localizationConstants.actionsHeader)}
 																	className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
 																>
 																	<MoreVertical className="h-4 w-4" />
@@ -769,6 +772,16 @@ export function Step5Preview({
 										<Info className="h-4.5 w-4.5 text-slate-900" />
 										<span><Translate text={localizationConstants.orderGeneralInformation} /></span>
 									</div>
+									<Button
+										type="button"
+										variant="outline"
+										size="sm"
+										onClick={() => setViewingOrgDetails(null)}
+										className="h-8 gap-1.5 border-slate-200 px-3 text-xs font-medium text-slate-700 hover:bg-slate-50 cursor-pointer shadow-none rounded-md"
+									>
+										<ArrowLeft className="h-3.5 w-3.5" />
+										<span><Translate text={localizationConstants.orderCreateBackButton} /></span>
+									</Button>
 								</div>
 
 								{/* Contractor Overview Grid */}

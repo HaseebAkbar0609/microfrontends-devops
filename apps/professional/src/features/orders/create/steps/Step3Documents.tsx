@@ -140,9 +140,10 @@ export function Step3Documents({
 								onChange={handleFileSelect}
 								className="hidden"
 							/>
-							<div
+							<button
+								type="button"
 								onClick={() => fileInputRef.current?.click()}
-								className="flex h-10 flex-1 items-center rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-600 shadow-none cursor-pointer hover:border-gray-300"
+								className="flex h-10 flex-1 items-center rounded-md border border-slate-200 bg-white px-3 text-left text-sm text-slate-600 shadow-none cursor-pointer hover:border-gray-300 focus:outline-none focus:ring-1 focus:ring-slate-300"
 							>
 								{selectedFileName ? (
 									<span className="text-slate-900">{selectedFileName}</span>
@@ -151,7 +152,7 @@ export function Step3Documents({
 										{t(localizationConstants.fileUploadLabel)}
 									</span>
 								)}
-							</div>
+							</button>
 							<Button
 								type="button"
 								onClick={handleUploadClick}
@@ -279,6 +280,7 @@ export function Step3Documents({
 															<Button
 																variant="ghost"
 																size="icon"
+																aria-label={t(localizationConstants.actionsHeader)}
 																className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
 															>
 																<MoreVertical className="h-4 w-4" />

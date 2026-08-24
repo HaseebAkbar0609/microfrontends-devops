@@ -45,9 +45,10 @@ export function SearchableSelect({
 
 	useEffect(() => {
 		if (open) {
-			setTimeout(() => {
+			const timer = setTimeout(() => {
 				searchInputRef.current?.focus();
 			}, 50);
+			return () => clearTimeout(timer);
 		} else {
 			setSearchQuery("");
 		}
