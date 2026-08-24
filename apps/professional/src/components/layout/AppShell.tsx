@@ -51,7 +51,8 @@ export function AppShell({ children }: AppShellProps) {
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
 	const isOrderPath = pathname.startsWith("/module/production/order");
 	const isProjectPath = pathname.startsWith("/module/production/project");
-	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
+	const isB2BDashboardPage = pathname === "/module/business/b2b";
+	const isB2BNavRoute = pathname.startsWith("/module/business/b2b") && !isB2BDashboardPage;
 	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
 	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
 	const isCalculationDetailRoute = !!calcDetailMatch;
