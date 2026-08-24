@@ -1,6 +1,14 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
-import type { CreateOrderFormData } from "../types";
+import type {
+	CreateOrderFormData,
+	CustomerInfoData,
+	ContactPersonData,
+	OrderInfoData,
+	OrderDocumentItem,
+	ContractorOrganizationData,
+	OrderOrganizationSummaryRow,
+} from "../types";
 
 export interface CreateOrderResult {
 	id: string;
@@ -15,42 +23,42 @@ export interface SaveDraftOrderResult {
 	data?: Record<string, unknown>;
 }
 
-/**
- * Standard backend payload mapper converting CamelCase wizard data to snake_case API payload
- */
-export const mapOrderToApi = (data: CreateOrderFormData): Record<string, unknown> => ({
-	customer_info: {
-		customer: data.customerInfo.customer,
-		address: data.customerInfo.address,
-		postal_code: data.customerInfo.postalCode,
-		city: data.customerInfo.city,
-		email: data.customerInfo.email,
-		phone: data.customerInfo.phone,
-		org_or_personal_no: data.customerInfo.orgOrPersonalNo,
-	},
-	contact_person: {
-		first_name: data.contactPerson.firstName,
-		last_name: data.contactPerson.lastName,
-		email: data.contactPerson.email,
-		mobile: data.contactPerson.mobile,
-		role: data.contactPerson.role,
-	},
-	order_info: {
-		order_no: data.orderInfo.orderNo,
-		order_name: data.orderInfo.orderName,
-		block_name: data.orderInfo.blockName,
-		order_address: data.orderInfo.orderAddress,
-		postal_code: data.orderInfo.postalCode,
-		city: data.orderInfo.city,
-		type: data.orderInfo.type,
-		category: data.orderInfo.category,
-		department: data.orderInfo.department,
-		contract_sum: data.orderInfo.contractSum,
-		offer_no: data.orderInfo.offerNo,
-		start_date: data.orderInfo.startDate,
-		end_date: data.orderInfo.endDate,
-	},
-	documents: data.documents.map((doc) => ({
+export const mapCustomerInfoToApi = (info: CustomerInfoData) => ({
+	customer: info.customer,
+	address: info.address,
+	postal_code: info.postalCode,
+	city: info.city,
+	email: info.email,
+	phone: info.phone,
+	org_or_personal_no: info.orgOrPersonalNo,
+});
+
+export const mapContactPersonToApi = (contact: ContactPersonData) => ({
+	first_name: contact.firstName,
+	last_name: contact.lastName,
+	email: contact.email,
+	mobile: contact.mobile,
+	role: contact.role,
+});
+
+export const mapOrderInfoToApi = (order: OrderInfoData) => ({
+	order_no: order.orderNo,
+	order_name: order.orderName,
+	block_name: order.blockName,
+	order_address: order.orderAddress,
+	postal_code: order.postalCode,
+	city: order.city,
+	type: order.type,
+	category: order.category,
+	department: order.department,
+	contract_sum: order.contractSum,
+	offer_no: order.offerNo,
+	start_date: order.startDate,
+	end_date: order.endDate,
+});
+
+export const mapDocumentsToApi = (documents: OrderDocumentItem[]) =>
+	documents.map((doc) => ({
 		id: doc.id,
 		date: doc.date,
 		document_name: doc.documentName,
@@ -58,26 +66,29 @@ export const mapOrderToApi = (data: CreateOrderFormData): Record<string, unknown
 		file_type: doc.fileType,
 		file_size: doc.fileSize,
 		url: doc.fileUrl || null,
+	}));
+
+export const mapContractorToApi = (contractor: ContractorOrganizationData) => ({
+	contractor_type: contractor.contractorType,
+	organization_name: contractor.organizationName,
+	address: contractor.address,
+	postal_code: contractor.postalCode,
+	city: contractor.city,
+	email: contractor.email,
+	phone: contractor.phone,
+	selected_contact_tags: contractor.selectedContactTags,
+	contacts: contractor.contacts.map((c) => ({
+		id: c.id,
+		first_name: c.firstName,
+		last_name: c.lastName,
+		email: c.email,
+		mobile: c.mobile,
+		role: c.role,
 	})),
-	contractor: {
-		contractor_type: data.contractor.contractorType,
-		organization_name: data.contractor.organizationName,
-		address: data.contractor.address,
-		postal_code: data.contractor.postalCode,
-		city: data.contractor.city,
-		email: data.contractor.email,
-		phone: data.contractor.phone,
-		selected_contact_tags: data.contractor.selectedContactTags,
-		contacts: data.contractor.contacts.map((c) => ({
-			id: c.id,
-			first_name: c.firstName,
-			last_name: c.lastName,
-			email: c.email,
-			mobile: c.mobile,
-			role: c.role,
-		})),
-	},
-	organizations_list: data.organizationsList.map((org) => ({
+});
+
+export const mapOrganizationsListToApi = (organizations: OrderOrganizationSummaryRow[]) =>
+	organizations.map((org) => ({
 		id: org.id,
 		company: org.company,
 		category: org.category,
@@ -97,7 +108,18 @@ export const mapOrderToApi = (data: CreateOrderFormData): Record<string, unknown
 			mobile: c.mobile,
 			role: c.role,
 		})),
-	})),
+	}));
+
+/**
+ * Standard backend payload mapper converting CamelCase wizard data to snake_case API payload
+ */
+export const mapOrderToApi = (data: CreateOrderFormData): Record<string, unknown> => ({
+	customer_info: mapCustomerInfoToApi(data.customerInfo),
+	contact_person: mapContactPersonToApi(data.contactPerson),
+	order_info: mapOrderInfoToApi(data.orderInfo),
+	documents: mapDocumentsToApi(data.documents),
+	contractor: mapContractorToApi(data.contractor),
+	organizations_list: mapOrganizationsListToApi(data.organizationsList),
 });
 
 /**
@@ -107,27 +129,14 @@ export async function createOrderAPIAction(
 	data: CreateOrderFormData
 ): Promise<CreateOrderResult> {
 	const payload = mapOrderToApi(data);
-	try {
-		const response = await axiosInstance.post(API_PATH.ORDERS.CREATE, payload);
-		const responseData = response.data?.data ?? response.data;
-		return {
-			id: String(responseData?.id ?? `ord-${Date.now()}`),
-			orderNo: String(responseData?.order_no ?? data.orderInfo.orderNo ?? "ORD-0012"),
-			success: true,
-			data: responseData,
-		};
-	} catch (error) {
-		console.warn(
-			"[Order API] createOrderAPIAction request failed, using optimistic response:",
-			error instanceof Error ? error.message : error
-		);
-		// Optimistic fallback for frontend preview & dev environment
-		return {
-			id: `ord-${Date.now()}`,
-			orderNo: data.orderInfo.orderNo || "ORD-0012",
-			success: true,
-		};
-	}
+	const response = await axiosInstance.post(API_PATH.ORDERS.CREATE, payload);
+	const responseData = response.data?.data ?? response.data;
+	return {
+		id: String(responseData?.id ?? ""),
+		orderNo: String(responseData?.order_no ?? data.orderInfo.orderNo ?? ""),
+		success: true,
+		data: responseData,
+	};
 }
 
 /**
@@ -140,24 +149,13 @@ export async function saveOrderDraftAPIAction(
 		...mapOrderToApi(data),
 		is_draft: true,
 	};
-	try {
-		const response = await axiosInstance.post(API_PATH.ORDERS.DRAFT, payload);
-		const responseData = response.data?.data ?? response.data;
-		return {
-			id: String(responseData?.id ?? `draft-${Date.now()}`),
-			success: true,
-			data: responseData,
-		};
-	} catch (error) {
-		console.warn(
-			"[Order API] saveOrderDraftAPIAction request failed, using optimistic response:",
-			error instanceof Error ? error.message : error
-		);
-		return {
-			id: `draft-${Date.now()}`,
-			success: true,
-		};
-	}
+	const response = await axiosInstance.post(API_PATH.ORDERS.DRAFT, payload);
+	const responseData = response.data?.data ?? response.data;
+	return {
+		id: String(responseData?.id ?? ""),
+		success: true,
+		data: responseData,
+	};
 }
 
 /**
@@ -166,26 +164,14 @@ export async function saveOrderDraftAPIAction(
 export async function uploadOrderDocumentAPIAction(
 	file: File
 ): Promise<{ id: string; url: string; fileName: string }> {
-	try {
-		const formData = new FormData();
-		formData.append("file", file);
-		formData.append("media_type", "order_document");
+	const formData = new FormData();
+	formData.append("file", file);
+	formData.append("media_type", "order_document");
 
-		const response = await axiosInstance.post(API_PATH.ORDERS.UPLOAD_FILE, formData);
-		const data = response.data?.data;
-		const id = String(data?.id ?? `doc-${Date.now()}`);
-		const url = String(data?.url ?? data?.file_url_path ?? data?.signed_url ?? "");
+	const response = await axiosInstance.post(API_PATH.ORDERS.UPLOAD_FILE, formData);
+	const data = response.data?.data;
+	const id = String(data?.id ?? "");
+	const url = String(data?.url ?? data?.file_url_path ?? data?.signed_url ?? "");
 
-		return { id, url, fileName: file.name };
-	} catch (error) {
-		console.warn(
-			"[Order API] uploadOrderDocumentAPIAction failed, using local mock:",
-			error instanceof Error ? error.message : error
-		);
-		return {
-			id: `doc-${Date.now()}`,
-			url: "",
-			fileName: file.name,
-		};
-	}
+	return { id, url, fileName: file.name };
 }

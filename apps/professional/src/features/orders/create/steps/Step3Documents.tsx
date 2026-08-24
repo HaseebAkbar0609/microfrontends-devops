@@ -38,15 +38,38 @@ interface Step3DocumentsProps {
 	onDocumentsChange: (docs: OrderDocumentItem[]) => void;
 }
 
+function getFileType(file?: File | null, fallbackName = ""): OrderDocumentItem["fileType"] {
+	const mime = file?.type?.toLowerCase() || "";
+	const ext = (file?.name || fallbackName).split(".").pop()?.toLowerCase() || "";
+
+	if (mime === "application/pdf" || ext === "pdf") return "pdf";
+	if (
+		mime === "application/msword" ||
+		mime === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+		ext === "doc" ||
+		ext === "docx"
+	) {
+		return "doc";
+	}
+	if (mime === "image/png" || ext === "png") return "png";
+	if (mime === "image/jpeg" || mime === "image/jpg" || ext === "jpg" || ext === "jpeg") return "jpg";
+
+	return "pdf";
+}
+
 export function Step3Documents({
 	documents,
 	onDocumentsChange,
 }: Step3DocumentsProps) {
 	const t = useTranslate();
+	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [selectedFileName, setSelectedFileName] = useState("");
 	const [pendingFile, setPendingFile] = useState<File | null>(null);
 	const [editingId, setEditingId] = useState<string | null>(null);
-	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const handleStartEdit = (id: string) => {
+		setEditingId(id);
+	};
 
 	const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
@@ -63,15 +86,7 @@ export function Step3Documents({
 		}
 
 		const fileName = pendingFile ? pendingFile.name : selectedFileName;
-		const ext = fileName.split(".").pop()?.toLowerCase() || "pdf";
-		const fileType: OrderDocumentItem["fileType"] =
-			ext === "doc" || ext === "docx"
-				? "doc"
-				: ext === "png"
-				? "png"
-				: ext === "jpg" || ext === "jpeg"
-				? "jpg"
-				: "pdf";
+		const fileType = getFileType(pendingFile, fileName);
 
 		let uploadedUrl = "";
 		let uploadedId = `doc-${Date.now()}`;
@@ -80,8 +95,8 @@ export function Step3Documents({
 				const uploadRes = await uploadOrderDocumentAPIAction(pendingFile);
 				uploadedUrl = uploadRes.url;
 				uploadedId = uploadRes.id;
-			} catch (err) {
-				console.warn("[Upload API Error]", err);
+			} catch {
+				// Upload failed, continue with local state
 			}
 		}
 
@@ -239,7 +254,7 @@ export function Step3Documents({
 														/>
 													) : (
 														<div
-															onClick={() => setEditingId(doc.id)}
+															onClick={() => handleStartEdit(doc.id)}
 															className="inline-flex items-center rounded-md border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 shadow-none cursor-pointer hover:border-gray-300 min-h-[34px]"
 														>
 															{doc.documentName || "Dockumentets namn"}
@@ -291,7 +306,7 @@ export function Step3Documents({
 															className="w-36 bg-white shadow-lg border border-slate-200 rounded-lg"
 														>
 															<DropdownMenuItem
-																onClick={() => setEditingId(doc.id)}
+																onClick={() => handleStartEdit(doc.id)}
 																className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer hover:bg-slate-50"
 															>
 																<PencilLine className="h-3.5 w-3.5 text-slate-700" />

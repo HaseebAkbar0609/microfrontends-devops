@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { format, parseISO, isValid } from "date-fns";
+import { format } from "date-fns";
+import { parseDateValue } from "@/utils/date";
 import { ShoppingBag, Info, CircleFadingPlus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -24,16 +25,6 @@ import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { OrderInfoData } from "../types";
-
-function parseDateValue(val?: string): Date | undefined {
-	if (!val) return undefined;
-	const parsedIso = parseISO(val);
-	if (isValid(parsedIso)) return parsedIso;
-	const parsed = new Date(val);
-	if (isValid(parsed)) return parsed;
-	return undefined;
-}
-
 interface Step2OrderInfoProps {
 	orderInfo: OrderInfoData;
 	onOrderInfoChange: (data: Partial<OrderInfoData>) => void;

@@ -12,7 +12,6 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { SearchableSelect } from "../components/SearchableSelect";
 import { PhoneInput } from "../components/PhoneInput";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -28,16 +27,6 @@ interface Step1CustomerInfoProps {
 	errors?: Record<string, string>;
 }
 
-const FIRST_NAME_SUGGESTIONS = [
-	"Anders",
-	"Rachel",
-	"Bruno",
-	"Anna",
-	"Erik",
-	"Johan",
-	"Maria",
-	"Karl",
-];
 
 const ROLE_OPTIONS_KEYS = [
 	{ value: "Beställare", labelKey: localizationConstants.roleLabel },
@@ -227,12 +216,16 @@ export function Step1CustomerInfo({
 							<Label className="text-sm font-medium text-slate-700">
 								<Translate text={localizationConstants.orderFornamLabel} />
 							</Label>
-							<SearchableSelect
+							<Input
 								value={contactPerson.firstName}
-								onChange={(val) => onContactPersonChange({ firstName: val })}
+								onChange={(e) =>
+									onContactPersonChange({ firstName: e.target.value })
+								}
 								placeholder={t(localizationConstants.orderFornamLabel)}
-								searchPlaceholder={t(localizationConstants.customerRegisterSearch)}
-								options={FIRST_NAME_SUGGESTIONS}
+								className={cn(
+									"h-10 border-slate-200 rounded-md shadow-none focus-visible:border-gray-300 focus-visible:outline-none",
+									errors.firstName && "border-red-500 focus-visible:border-red-500"
+								)}
 							/>
 							{errors.firstName && (
 								<p className="text-xs text-red-500 mt-1 font-normal">{errors.firstName}</p>

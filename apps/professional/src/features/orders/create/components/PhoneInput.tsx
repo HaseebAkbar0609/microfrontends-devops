@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 interface PhoneInputProps {
@@ -20,7 +19,6 @@ function parsePhoneValue(fullVal?: string): { code: string; number: string } {
 	}
 
 	const trimmed = fullVal.trim();
-	// If starts with + (e.g. +46 701234567 or +1-555-1234)
 	if (trimmed.startsWith("+")) {
 		const match = trimmed.match(/^(\+\d{1,4})\s*(.*)$/);
 		if (match && match[1]) {
@@ -41,52 +39,33 @@ export function PhoneInput({
 	className,
 	hasError = false,
 }: PhoneInputProps) {
-	const parsed = parsePhoneValue(value);
-	const [countryCode, setCountryCode] = useState(parsed.code);
-	const [number, setNumber] = useState(parsed.number);
-
-	useEffect(() => {
-		const latest = parsePhoneValue(value);
-		setCountryCode(latest.code);
-		setNumber(latest.number);
-	}, [value]);
-
-	const emitCombined = (newCode: string, newNumber: string) => {
-		const cleanNum = newNumber.replace(/[^0-9\- ()]/g, "").trim();
-		if (!cleanNum) {
-			onChange("");
-			return;
-		}
-		const cleanCode = newCode.trim().startsWith("+")
-			? newCode.trim()
-			: `+${newCode.trim().replace(/\D/g, "")}`;
-		onChange(`${cleanCode} ${cleanNum}`);
-	};
+	const { code: countryCode, number } = parsePhoneValue(value);
 
 	const handleCountryCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		let val = e.target.value.replace(/[^0-9+]/g, "");
 		if (val && !val.startsWith("+")) {
 			val = `+${val}`;
 		}
-		setCountryCode(val);
-		emitCombined(val, number);
+		const cleanCode = val.trim().startsWith("+")
+			? val.trim()
+			: `+${val.trim().replace(/\D/g, "")}`;
+		onChange(number ? `${cleanCode} ${number}` : cleanCode);
 	};
 
 	const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const raw = e.target.value;
-
-		// If user pastes full international number starting with + into number field
 		if (raw.trim().startsWith("+")) {
-			const autoParsed = parsePhoneValue(raw);
-			setCountryCode(autoParsed.code);
-			setNumber(autoParsed.number);
-			emitCombined(autoParsed.code, autoParsed.number);
+			onChange(raw.trim());
 			return;
 		}
 
 		const cleanedNum = raw.replace(/[^0-9+\- ()]/g, "");
-		setNumber(cleanedNum);
-		emitCombined(countryCode, cleanedNum);
+		if (!cleanedNum) {
+			onChange("");
+			return;
+		}
+		const cleanCode = countryCode || "+46";
+		onChange(`${cleanCode} ${cleanedNum}`);
 	};
 
 	return (
@@ -97,7 +76,7 @@ export function PhoneInput({
 				className
 			)}
 		>
-			{/* Country Code Text Input (same bg as number input) */}
+			{/* Country Code Text Input */}
 			<input
 				type="text"
 				value={countryCode}
