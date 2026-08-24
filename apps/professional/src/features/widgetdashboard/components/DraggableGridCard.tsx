@@ -5,6 +5,7 @@ import Draggable, { DraggableEvent } from "react-draggable";
 interface DraggableGridCardProps {
   className?: string;
   isSwapTarget?: boolean;
+  disabled?: boolean;
   onDragStart: () => void;
   onDrag: (clientX: number, clientY: number) => void;
   onDragStop: (clientX: number, clientY: number) => void;
@@ -17,6 +18,7 @@ interface DraggableGridCardProps {
 export const DraggableGridCard = ({
   className,
   isSwapTarget,
+  disabled,
   onDragStart,
   onDrag,
   onDragStop,
@@ -30,16 +32,19 @@ export const DraggableGridCard = ({
   const [isDragging, setIsDragging] = useState(false);
 
   const handleStart = () => {
+    if (disabled) return false;
     setIsDragging(true);
     onDragStart();
   };
 
   const handleDrag = (e: DraggableEvent) => {
+    if (disabled) return;
     const { clientX, clientY } = e as MouseEvent;
     onDrag(clientX, clientY);
   };
 
   const handleStop = (e: DraggableEvent) => {
+    if (disabled) return;
     const { clientX, clientY } = e as MouseEvent;
     setIsDragging(false);
     onDragStop(clientX, clientY);
@@ -49,6 +54,7 @@ export const DraggableGridCard = ({
   return (
     <Draggable
       key={dragKey}
+      disabled={disabled}
       nodeRef={nodeRef as React.RefObject<HTMLElement>}
       onStart={handleStart}
       onDrag={handleDrag}
@@ -64,14 +70,14 @@ export const DraggableGridCard = ({
           className ?? ""
         } transition-[box-shadow,background-color,ring-color,border-color,transform] duration-150 ${
           isDragging
-            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-sm transition-none! **:bg-transparent! **:text-white! **:border-none!"
+            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-sm !transition-none [&_*]:!bg-transparent [&_*]:!text-white [&_*]:!border-none"
             : isSwapTarget
             ? "bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-sm min-h-35 shadow-inner"
             : isHighlighted
             ? "ring-4 ring-blue-500 ring-offset-2 rounded-sm scale-[1.02] shadow-xl z-9997"
             : isEmpty
-            ? "bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-sm cursor-grab"
-            : "bg-white border border-slate-200 rounded-sm cursor-grab"
+            ? `bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-sm ${disabled ? "cursor-default" : "cursor-grab"}`
+            : `bg-white border border-slate-200 rounded-sm ${disabled ? "cursor-default" : "cursor-grab"}`
         }`}
         style={{
           position: "relative",

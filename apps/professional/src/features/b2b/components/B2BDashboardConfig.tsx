@@ -1,414 +1,198 @@
+import React from "react";
 import {
-	BarChart3,
-	Bot,
-	CalendarDays,
-	ClipboardList,
-	Handshake,
-	Image as ImageIcon,
+	Folder,
+	Table2,
+	DollarSign,
+	ShieldCheck,
+	User,
+	CircleDollarSign,
+	Focus,
 	Layers,
-	Megaphone,
-	Newspaper,
-	PieChart,
-	Search,
-	Zap,
 } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	PlacedWidgetEntry,
 	WidgetProps,
 } from "@/features/widgetdashboard/types/dashboard";
-import {
-	WidgetContent as Content,
-	WidgetImagePlaceholder,
-	WidgetListItem,
-	WidgetMockTag as MockTag,
-	WidgetRow as Row,
-} from "@/features/widgetdashboard/components/WidgetContent";
+import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import { Translate } from "@/utils/translation/translate";
+import { B2BDashboardKpis, EMPTY_B2B_KPIS } from "@/api-actions/b2b/b2b";
 
-/**
- * Maps a sidebar item id → widget render props for the B2B dashboard.
- * Mock content only — replace with API data when available.
- */
-export const B2B_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
-	emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
+export function KpiStatusWidgetContent({ kpiStatus }: { kpiStatus: B2BDashboardKpis["kpiStatus"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.activeProjects} />: {kpiStatus.activeProjects}</div>
+			<div><Translate text={localizationConstants.b2bOngoingBilling} />: {kpiStatus.ongoingBilling}</div>
+			<div><Translate text={localizationConstants.b2bDelayedMilestones} />: {kpiStatus.delayedMilestones}</div>
+		</div>
+	);
+}
 
-	// 1. B2B-Översikt
-	b2bOverview: {
-		title: localizationConstants.b2bWidgetOverviewTitle,
-		icon: PieChart,
-		content: (
-			<Content>
-				<Row
-					label={localizationConstants.b2bWidgetOverviewActive}
-					value="8"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetOverviewPublished}
-					value="5"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetOverviewInterest}
-					value="12"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetOverviewAds}
-					value="14"
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
+export function OngoingProjectsWidgetContent({ projects }: { projects: B2BDashboardKpis["ongoingProjects"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			{projects.length === 0 ? (
+				<div>-</div>
+			) : (
+				projects.map((p) => <div key={p.id}>{p.name}</div>)
+			)}
+		</div>
+	);
+}
 
-	// 2. Tillgängliga Uppdrag
-	b2bAvailableAssignments: {
-		title: localizationConstants.b2bWidgetAvailableTitle,
-		icon: Search,
-		content: (
-			<Content>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable1}
-					meta={
-						<>
-							Teknik AB · Stockholm · 2026-03-20 ·{" "}
-							<Translate
-								text={localizationConstants.b2bWidgetStatusOpen}
-							/>
-						</>
-					}
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable2}
-					meta={
-						<>
-							ByggFix · Solna · 2026-03-15 ·{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetStatusClosingSoon
-								}
-							/>
-						</>
-					}
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable3}
-					meta={
-						<>
-							FastighetCo · Uppsala · 2026-04-02 ·{" "}
-							<Translate
-								text={localizationConstants.b2bWidgetStatusOpen}
-							/>
-						</>
-					}
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
+export function UpcomingActivitiesWidgetContent({ activities }: { activities: B2BDashboardKpis["upcomingActivities"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			{activities.length === 0 ? (
+				<div>-</div>
+			) : (
+				activities.map((a) => <div key={a.id}>{a.title}</div>)
+			)}
+		</div>
+	);
+}
 
-	// 3. Mina Publicerade Uppdrag
-	b2bPublishedAssignments: {
-		title: localizationConstants.b2bWidgetPublishedTitle,
-		icon: Megaphone,
-		content: (
-			<Content>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable1}
-					meta={
-						<>
-							124{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetPublishedViews
-								}
-							/>{" "}
-							· 6{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetPublishedApplicants
-								}
-							/>{" "}
-							·{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetStatusPublished
-								}
-							/>
-						</>
-					}
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable3}
-					meta={
-						<>
-							38{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetPublishedViews
-								}
-							/>{" "}
-							· 2{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetPublishedApplicants
-								}
-							/>{" "}
-							·{" "}
-							<Translate
-								text={localizationConstants.b2bWidgetStatusDraft}
-							/>
-						</>
-					}
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
+export function FinancialOverviewWidgetContent({ financial }: { financial: B2BDashboardKpis["financialOverview"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.activeProjects} />: {financial.activeProjects}</div>
+			<div><Translate text={localizationConstants.activeOrders} />: {financial.activeOrders}</div>
+			<div><Translate text={localizationConstants.completedChecks} />: {financial.completedChecks}</div>
+		</div>
+	);
+}
 
-	// 4. Mina Intresseanmälningar
-	b2bInterestRegistrations: {
-		title: localizationConstants.b2bWidgetInterestTitle,
-		icon: Handshake,
-		content: (
-			<Content>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable2}
-					meta={
-						<>
-							ByggFix · 2026-03-01 ·{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetInterestStatusSubmitted
-								}
-							/>
-						</>
-					}
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable1}
-					meta={
-						<>
-							Teknik AB · 2026-02-24 ·{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetInterestStatusAccepted
-								}
-							/>
-						</>
-					}
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAvailable3}
-					meta={
-						<>
-							FastighetCo · 2026-02-19 ·{" "}
-							<Translate
-								text={
-									localizationConstants.b2bWidgetInterestStatusReviewing
-								}
-							/>
-						</>
-					}
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
+export function GuaranteeCommitmentsWidgetContent({ guarantee }: { guarantee: B2BDashboardKpis["guaranteeCommitments"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div>{guarantee.guaranteedPointsOpen} <Translate text={localizationConstants.guaranteedPointsOpen} /></div>
+			<div>{guarantee.jobsInPlanningPhase} <Translate text={localizationConstants.jobsInPlanningPhase} /></div>
+			<div>{guarantee.awaitingCustomerResponse} <Translate text={localizationConstants.awaitingCustomerResponse} /></div>
+		</div>
+	);
+}
 
-	// 5. Mina B2B-Annonser
-	b2bAds: {
-		title: localizationConstants.b2bWidgetAdsTitle,
-		icon: ClipboardList,
-		content: (
-			<Content>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAd1}
-					meta="Bygg · 2026-02-01 – 2026-04-30 · 842 / 96"
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetAd2}
-					meta="Måleri · 2026-03-01 – 2026-05-31 · 318 / 24"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetAdPerformance}
-					value="1 160 / 120"
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
+export function EventsWidgetContent({ events }: { events: B2BDashboardKpis["events"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.b2bNumberOfQuotes} />: {events.numberOfQuotes}</div>
+			<div>{events.totalKronor}</div>
+		</div>
+	);
+}
 
-	// 6. B2B-Kalender
-	b2bCalendar: {
-		title: localizationConstants.b2bWidgetCalendarTitle,
-		icon: CalendarDays,
-		content: (
-			<Content>
-				<Row
-					label={localizationConstants.b2bWidgetCalendarDeadline}
-					value="2026-03-20"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetCalendarMeeting}
-					value="2026-03-18 10:00"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetCalendarPublication}
-					value="2026-03-25"
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
+export function QuickActionsWidgetContent({ quickActions }: { quickActions: B2BDashboardKpis["quickActions"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.number} />: {quickActions.count}</div>
+		</div>
+	);
+}
 
-	// 7. Senaste Aktivitet
-	b2bActivity: {
-		title: localizationConstants.b2bWidgetActivityTitle,
-		icon: Zap,
-		content: (
-			<Content>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetActivityView}
-					meta="2026-03-03"
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetActivityNew}
-					meta="2026-03-02"
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetActivityStatus}
-					meta="2026-02-28"
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetActivityReceived}
-					meta="2026-02-26"
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
+export function buildB2BWidgetMap(kpis: B2BDashboardKpis = EMPTY_B2B_KPIS): Record<string, WidgetProps> {
+	return {
+		emptyPage: { title: localizationConstants.emptyPageLabel, icon: Folder },
+		kpiStatus: {
+			title: localizationConstants.b2bWidgetKpiStatus,
+			icon: Folder,
+			content: <KpiStatusWidgetContent kpiStatus={kpis.kpiStatus} />,
+		},
+		ongoingProjects: {
+			title: localizationConstants.b2bWidgetOngoingProjects,
+			icon: Table2,
+			content: <OngoingProjectsWidgetContent projects={kpis.ongoingProjects} />,
+		},
+		upcomingActivities: {
+			title: localizationConstants.b2bWidgetUpcomingActivities,
+			icon: DollarSign,
+			content: <UpcomingActivitiesWidgetContent activities={kpis.upcomingActivities} />,
+		},
+		financialOverview: {
+			title: localizationConstants.b2bWidgetFinancialOverview,
+			icon: ShieldCheck,
+			content: <FinancialOverviewWidgetContent financial={kpis.financialOverview} />,
+		},
+		guaranteeCommitments: {
+			title: localizationConstants.b2bWidgetGuaranteeCommitments,
+			icon: User,
+			content: <GuaranteeCommitmentsWidgetContent guarantee={kpis.guaranteeCommitments} />,
+		},
+		events: {
+			title: localizationConstants.b2bWidgetEvents,
+			icon: CircleDollarSign,
+			content: <EventsWidgetContent events={kpis.events} />,
+		},
+		quickActions: {
+			title: localizationConstants.b2bWidgetQuickActions,
+			icon: Focus,
+			content: <QuickActionsWidgetContent quickActions={kpis.quickActions} />,
+		},
+	};
+}
 
-	// 8. AI Rekommendationer
-	b2bAiRecommendations: {
-		title: localizationConstants.b2bWidgetAiTitle,
-		icon: Bot,
-		content: (
-			<Content>
-				<p>
-					•{" "}
-					<Translate
-						text={localizationConstants.b2bWidgetAiAssignment}
-					/>
-				</p>
-				<p>
-					• <Translate text={localizationConstants.b2bWidgetAiContact} />
-				</p>
-				<p>
-					• <Translate text={localizationConstants.b2bWidgetAiAd} />
-				</p>
-				<p>
-					•{" "}
-					<Translate
-						text={localizationConstants.b2bWidgetAiNextAction}
-					/>
-				</p>
-				<MockTag />
-			</Content>
-		),
-	},
+export const B2B_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = buildB2BWidgetMap(EMPTY_B2B_KPIS);
 
-	// 9. Statistik
-	b2bStatistics: {
-		title: localizationConstants.b2bWidgetStatsTitle,
-		icon: BarChart3,
-		content: (
-			<Content>
-				<Row
-					label={localizationConstants.b2bWidgetStatsViews}
-					value="1 160"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetStatsConversion}
-					value="10 %"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetStatsEngagement}
-					value="6,2 / uppdrag"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetStatsAdPerformance}
-					value="120 klick"
-				/>
-				<Row
-					label={localizationConstants.b2bWidgetStatsTrend}
-					value="+18 %"
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
-
-	// 10. Nyheter
-	b2bNews: {
-		title: localizationConstants.b2bWidgetNewsTitle,
-		icon: Newspaper,
-		content: (
-			<Content>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetNews1}
-					meta="2026-03-03"
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetNews2}
-					meta="2026-02-27"
-				/>
-				<WidgetListItem
-					title={localizationConstants.b2bWidgetNews3}
-					meta="2026-02-21"
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
-
-	// 11. Bild
-	image: {
-		title: localizationConstants.b2bWidgetImageTitle,
-		icon: ImageIcon,
-		content: (
-			<Content>
-				<WidgetImagePlaceholder
-					description={
-						localizationConstants.b2bWidgetImageDescription
-					}
-				/>
-				<MockTag />
-			</Content>
-		),
-	},
-};
-
-/** Widget order defined by the B2B module widget structure ticket. */
 export const B2B_WIDGET_ORDER = [
-	"b2bOverview",
-	"b2bAvailableAssignments",
-	"b2bPublishedAssignments",
-	"b2bInterestRegistrations",
-	"b2bAds",
-	"b2bCalendar",
-	"b2bActivity",
-	"b2bAiRecommendations",
-	"b2bStatistics",
-	"b2bNews",
-	"image",
+	"kpiStatus",
+	"ongoingProjects",
+	"upcomingActivities",
+	"financialOverview",
+	"guaranteeCommitments",
+	"events",
+	"quickActions",
 ] as const;
 
-/** The 11 widgets shown on first load, in ticket order. */
-export const B2B_INITIAL_WIDGETS: PlacedWidgetEntry[] = B2B_WIDGET_ORDER.map(
-	(id) => ({
-		uid: `b2b-${id}`,
-		sidebarId: id,
-		colSpanClass: "col-span-12 md:col-span-6 xl:col-span-4",
-		widgetProps: B2B_SIDEBAR_WIDGET_MAP[id],
-	}),
-);
+export const B2B_INITIAL_WIDGETS: PlacedWidgetEntry[] = [
+	{
+		uid: "b2b-kpi-status",
+		sidebarId: "kpiStatus",
+		colSpanClass: "col-span-12 lg:col-span-4 min-h-[185px]",
+		widgetProps: B2B_SIDEBAR_WIDGET_MAP.kpiStatus,
+	},
+	{
+		uid: "b2b-ongoing-projects",
+		sidebarId: "ongoingProjects",
+		colSpanClass: "col-span-12 lg:col-span-8 min-h-[185px]",
+		widgetProps: B2B_SIDEBAR_WIDGET_MAP.ongoingProjects,
+	},
+	{
+		uid: "b2b-upcoming-activities",
+		sidebarId: "upcomingActivities",
+		colSpanClass: "col-span-12 sm:col-span-6 lg:col-span-4 min-h-[185px]",
+		widgetProps: B2B_SIDEBAR_WIDGET_MAP.upcomingActivities,
+	},
+	{
+		uid: "b2b-financial-overview",
+		sidebarId: "financialOverview",
+		colSpanClass: "col-span-12 sm:col-span-6 lg:col-span-4 min-h-[185px]",
+		widgetProps: B2B_SIDEBAR_WIDGET_MAP.financialOverview,
+	},
+	{
+		uid: "b2b-guarantee-commitments",
+		sidebarId: "guaranteeCommitments",
+		colSpanClass: "col-span-12 sm:col-span-12 lg:col-span-4 min-h-[185px]",
+		widgetProps: B2B_SIDEBAR_WIDGET_MAP.guaranteeCommitments,
+	},
+	{
+		uid: "b2b-events",
+		sidebarId: "events",
+		colSpanClass: "col-span-12 lg:col-span-8 min-h-[185px]",
+		widgetProps: B2B_SIDEBAR_WIDGET_MAP.events,
+	},
+	{
+		uid: "b2b-quick-actions",
+		sidebarId: "quickActions",
+		colSpanClass: "col-span-12 lg:col-span-4 min-h-[185px]",
+		widgetProps: B2B_SIDEBAR_WIDGET_MAP.quickActions,
+	},
+];
+
+export const B2B_DASHBOARD_SIDEBAR_ITEMS: WidgetItem[] = [
+	{ id: "kpiStatus", label: localizationConstants.b2bWidgetKpiStatus, icon: Layers },
+	{ id: "ongoingProjects", label: localizationConstants.b2bWidgetOngoingProjects, icon: Layers },
+	{ id: "upcomingActivities", label: localizationConstants.b2bWidgetUpcomingActivities, icon: Layers },
+	{ id: "financialOverview", label: localizationConstants.b2bWidgetFinancialOverview, icon: Layers },
+	{ id: "guaranteeCommitments", label: localizationConstants.b2bWidgetGuaranteeCommitments, icon: Layers },
+	{ id: "events", label: localizationConstants.b2bWidgetEvents, icon: Layers },
+	{ id: "quickActions", label: localizationConstants.b2bWidgetQuickActions, icon: Layers },
+];

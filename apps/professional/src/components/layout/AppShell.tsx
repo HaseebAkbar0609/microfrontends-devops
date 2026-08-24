@@ -8,17 +8,11 @@ import { Loader } from "@/components/ui/loader";
 import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscriptionCookie";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
-import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
 import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
 import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
-import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
-import {
-	getFlyoutSubSidebarConfigByPath,
-	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
-} from "./sidebar/navConfig";
 import { b2bSidebarItems } from "@/features/b2b/constants";
 import { productionSidebarItems } from "@/features/production/constants";
 import { KMA_SIDEBAR_NAV_ITEMS } from "@/features/kma/data/kmaNav.config";
@@ -56,20 +50,26 @@ export function AppShell({ children }: AppShellProps) {
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
 	const isOrderPath = pathname.startsWith("/module/production/order");
 	const isProjectPath = pathname.startsWith("/module/production/project");
-	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
-	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
+	const isB2BDashboardPage = pathname === "/module/business/b2b";
+	const isB2BNavRoute =
+		pathname.startsWith("/module/business/b2b") && !isB2BDashboardPage;
+	const calcDetailMatch = pathname.match(
+		/^\/module\/business\/calculation\/overview\/([^/]+)/,
+	);
 	const isCalculationDetailRoute = !!calcDetailMatch;
 	const calculationDetailId = calcDetailMatch?.[1] ?? "";
 	const isKmaPath = pathname.startsWith("/module/production/kma");
 	const isProductionNavRoute =
-		pathname.startsWith("/module/production") && !isOrderPath && !isProjectPath && !isKmaPath;
-	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
-	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
-	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
-	const showSubSidebar =
-		!!flyoutSubSidebarConfig &&
-		!isPublicPage &&
-		!pathMatchesPrefixes(pathname, HIDDEN_SUBSIDEBAR_PATH_PREFIXES);
+		pathname.startsWith("/module/production") &&
+		!isOrderPath &&
+		!isProjectPath &&
+		!isKmaPath;
+	const isFinancialNavRoute = pathname.startsWith(
+		"/module/financial-management",
+	);
+	const isBusinessSupportNavRoute = pathname.startsWith(
+		"/module/business-support",
+	);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -96,13 +96,16 @@ export function AppShell({ children }: AppShellProps) {
 				return;
 			}
 
-			const subscriptionRequired = getRequiresSubscriptionFromBrowserCookie();
-			const destination = subscriptionRequired ? "/manage-plans" : "/home";
+			const subscriptionRequired =
+				getRequiresSubscriptionFromBrowserCookie();
+			const destination = subscriptionRequired
+				? "/manage-plans"
+				: "/home";
 			router.replace(destination);
 			return;
 		}
 
-		if (!isAuthenticated && (!isAuthRoute && !isPublicPage)) {
+		if (!isAuthenticated && !isAuthRoute && !isPublicPage) {
 			router.replace("/login");
 			return;
 		}
@@ -113,14 +116,7 @@ export function AppShell({ children }: AppShellProps) {
 		}
 
 		setIsCheckingAuth(false);
-	}, [
-		isReady,
-		isAuthenticated,
-		isAuthRoute,
-		isPublicPage,
-		pathname,
-		router,
-	]);
+	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, pathname, router]);
 
 	if (!isReady) {
 		return <Loader />;
@@ -154,8 +150,9 @@ export function AppShell({ children }: AppShellProps) {
 		return null;
 	}
 
-	const isAgreementPath = pathname.startsWith("/module/business-support/agreement");
-	const isRegisterPath = pathname.startsWith("/tools/register") && !isAgreementPath;
+	const isAgreementPath = pathname.startsWith(
+		"/module/business-support/agreement",
+	);
 
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
@@ -166,8 +163,6 @@ export function AppShell({ children }: AppShellProps) {
 				<ProjectSubSidebar />
 			) : isAgreementPath ? (
 				<AgreementSubSidebar />
-			) : isRegisterPath ? (
-				<InvoiceSubSidebar />
 			) : isB2BNavRoute ? (
 				<DynamicSubSidebar
 					titleKey={localizationConstants.b2b}
@@ -199,11 +194,6 @@ export function AppShell({ children }: AppShellProps) {
 					titleKey={localizationConstants.businessSupport}
 					items={businessSupportSidebarItems}
 					hideBack={true}
-				/>
-			) : showSubSidebar ? (
-				<MyPagesSubSidebar
-					titleKey={flyoutSubSidebarConfig.titleKey}
-					items={flyoutSubSidebarConfig.items}
 				/>
 			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">

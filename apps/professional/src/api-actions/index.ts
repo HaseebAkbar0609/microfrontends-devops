@@ -70,3 +70,8 @@ export {
   type CategoriesPageResult,
   type GetCategoriesParams,
 } from "./common/common";
+
+export {
+  getB2BDashboardKpisAction,
+  type B2BDashboardKpis,
+} from "./b2b/b2b";
