@@ -2188,6 +2188,10 @@ export type OfferTranslation = {
 	kmaRiskMainCat: string;
 	kmaCreateRiskBtn: string;
 	kmaCreateRiskTitle: string;
+	kmaCreateRiskTemplateBtn: string;
+	kmaCreateRiskTemplateTitle: string;
+	kmaCreateRiskTemplateSubtitle: string;
+	kmaCreateRiskTemplateNameLabel: string;
 	kmaCreateRiskSubtitle: string;
 	kmaCreateRiskSectionDetails: string;
 	kmaCreateRiskNameLabel: string;
