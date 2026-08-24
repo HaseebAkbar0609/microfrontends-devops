@@ -1,20 +1,10 @@
 import {
 	Archive,
-	BarChart3,
-	Bot,
-	CalendarDays,
-	ClipboardList,
 	FileText,
 	Handshake,
-	Image as ImageIcon,
 	Layers,
-	Megaphone,
-	Newspaper,
-	PieChart,
 	ScrollText,
-	Search,
 	Store,
-	Zap,
 } from "lucide-react";
 import { BreadcrumbItem } from "@/types/common";
 import { DynamicSubSidebarItem } from "@/components/layout/sidebar/DynamicSubSidebar";
@@ -22,9 +12,11 @@ import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSideb
 import localizationConstants from "@/utils/translation/constants";
 
 export const B2B_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.b2b, href: "/module/business/b2b" },
-	{ label: localizationConstants.b2bOverview },
+	{ label: "Home", href: "/home" },
+	{ label: "Module", href: "/module/business" },
+	{ label: "Business", href: "/module/business" },
+	{ label: "B2B", href: "/module/business/b2b" },
+	{ label: "B2B Dashboard" },
 ];
 
 export const b2bSidebarItems: DynamicSubSidebarItem[] = [
@@ -69,58 +61,38 @@ export const B2B_SIDEBAR_ITEMS: WidgetItem[] = [
 		icon: Layers,
 	},
 	{
-		id: "b2bOverview",
-		label: localizationConstants.b2bWidgetOverviewTitle,
-		icon: PieChart,
+		id: "kpiStatus",
+		label: localizationConstants.b2bWidgetKpiStatus,
+		icon: Layers,
 	},
 	{
-		id: "b2bAvailableAssignments",
-		label: localizationConstants.b2bWidgetAvailableTitle,
-		icon: Search,
+		id: "ongoingProjects",
+		label: localizationConstants.b2bWidgetOngoingProjects,
+		icon: Layers,
 	},
 	{
-		id: "b2bPublishedAssignments",
-		label: localizationConstants.b2bWidgetPublishedTitle,
-		icon: Megaphone,
+		id: "upcomingActivities",
+		label: localizationConstants.b2bWidgetUpcomingActivities,
+		icon: Layers,
 	},
 	{
-		id: "b2bInterestRegistrations",
-		label: localizationConstants.b2bWidgetInterestTitle,
-		icon: Handshake,
+		id: "financialOverview",
+		label: localizationConstants.b2bWidgetFinancialOverview,
+		icon: Layers,
 	},
 	{
-		id: "b2bAds",
-		label: localizationConstants.b2bWidgetAdsTitle,
-		icon: ClipboardList,
+		id: "guaranteeCommitments",
+		label: localizationConstants.b2bWidgetGuaranteeCommitments,
+		icon: Layers,
 	},
 	{
-		id: "b2bCalendar",
-		label: localizationConstants.b2bWidgetCalendarTitle,
-		icon: CalendarDays,
+		id: "events",
+		label: localizationConstants.b2bWidgetEvents,
+		icon: Layers,
 	},
 	{
-		id: "b2bActivity",
-		label: localizationConstants.b2bWidgetActivityTitle,
-		icon: Zap,
-	},
-	{
-		id: "b2bAiRecommendations",
-		label: localizationConstants.b2bWidgetAiTitle,
-		icon: Bot,
-	},
-	{
-		id: "b2bStatistics",
-		label: localizationConstants.b2bWidgetStatsTitle,
-		icon: BarChart3,
-	},
-	{
-		id: "b2bNews",
-		label: localizationConstants.b2bWidgetNewsTitle,
-		icon: Newspaper,
-	},
-	{
-		id: "image",
-		label: localizationConstants.b2bWidgetImageTitle,
-		icon: ImageIcon,
+		id: "quickActions",
+		label: localizationConstants.b2bWidgetQuickActions,
+		icon: Layers,
 	},
 ];
