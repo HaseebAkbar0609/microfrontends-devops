@@ -129,6 +129,16 @@ export const API_PATH = {
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/planning/tasks/${id}`,
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/planning/tasks/${id}`,
 	},
+	ORDERS: {
+		BASE: `${PROFESSIONALS_BASE_PATH}/orders`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/orders`,
+		DRAFT: `${PROFESSIONALS_BASE_PATH}/orders/draft`,
+		LIST: `${PROFESSIONALS_BASE_PATH}/orders`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
+		UPLOAD_FILE: `/media/upload`,
+	},
 };
 
 export const appConstants = {

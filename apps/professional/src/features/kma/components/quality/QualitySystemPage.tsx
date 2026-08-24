@@ -33,6 +33,7 @@ import { CategoryPanel } from "../shared/CategoryPanel";
 import { RiskTable } from "../risk/RiskTable";
 import { RiskTemplateTable } from "../risk/RiskTemplateTable";
 import { CreateRiskhanteringPage } from "../risk/CreateRiskhanteringPage";
+import { CreateRiskTemplatePage } from "../risk/CreateRiskTemplatePage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -2872,6 +2873,7 @@ function QualityPlanTab({
 	onOpenPlan,
 	onOpenSandlista,
 	onCreateTemplate,
+	onCreateRiskTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -2880,6 +2882,7 @@ function QualityPlanTab({
 	onOpenPlan: () => void;
 	onOpenSandlista: () => void;
 	onCreateTemplate: () => void;
+	onCreateRiskTemplate: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -2985,44 +2988,55 @@ function QualityPlanTab({
 						</button>
 					</div>
 				</div>
-				{/* Create button — split: main action + dropdown chevron (conditional on planType) */}
-				<div ref={createBtnRef} className="relative flex">
+				{/* Create button — single for Mallar tab, split for all other views */}
+				{planType === "riskhantering" && viewMode === "mallar" ? (
 					<button
 						type="button"
-						onClick={planType === "riskhantering" ? onCreateRiskhantering : onCreateNew}
-						className="flex cursor-pointer items-center gap-1.5 rounded-l-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
+						onClick={onCreateRiskTemplate}
+						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
+						<Translate text={localizationConstants.kmaCreateRiskTemplateBtn} />
 					</button>
-					<button
-						type="button"
-						onClick={() => setCreateBtnOpen((v) => !v)}
-						className="flex cursor-pointer items-center rounded-r-md border-l border-white/20 bg-zinc-900 px-2 py-1.5 text-white hover:bg-zinc-800"
-					>
-						<ChevronDown className="h-4 w-4" />
-					</button>
-					{createBtnOpen && (
-						<div className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-slate-200 bg-white py-1 shadow-md">
-							<button
-								type="button"
-								onClick={() => { (planType === "riskhantering" ? onCreateRiskhantering : onCreateNew)(); setCreateBtnOpen(false); }}
-								className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
-							>
-								<Plus className="h-4 w-4 text-slate-400" />
-								<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
-							</button>
-							<button
-								type="button"
-								onClick={() => { (planType === "riskhantering" ? onUseRiskTemplate : onUseTemplate)(); setCreateBtnOpen(false); }}
-								className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
-							>
-								<FileText className="h-4 w-4 text-slate-400" />
-								<Translate text={localizationConstants.kmaQualityPlanUseTemplate} />
-							</button>
-						</div>
-					)}
-				</div>
+				) : (
+					<div ref={createBtnRef} className="relative flex">
+						<button
+							type="button"
+							onClick={planType === "riskhantering" ? onCreateRiskhantering : onCreateNew}
+							className="flex cursor-pointer items-center gap-1.5 rounded-l-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
+						>
+							<Plus className="h-4 w-4" />
+							<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
+						</button>
+						<button
+							type="button"
+							onClick={() => setCreateBtnOpen((v) => !v)}
+							className="flex cursor-pointer items-center rounded-r-md border-l border-white/20 bg-zinc-900 px-2 py-1.5 text-white hover:bg-zinc-800"
+						>
+							<ChevronDown className="h-4 w-4" />
+						</button>
+						{createBtnOpen && (
+							<div className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+								<button
+									type="button"
+									onClick={() => { (planType === "riskhantering" ? onCreateRiskhantering : onCreateNew)(); setCreateBtnOpen(false); }}
+									className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+								>
+									<Plus className="h-4 w-4 text-slate-400" />
+									<Translate text={planType === "riskhantering" ? localizationConstants.kmaCreateRiskBtn : localizationConstants.kmaQualityPlanCreateBtn} />
+								</button>
+								<button
+									type="button"
+									onClick={() => { (planType === "riskhantering" ? onUseRiskTemplate : onUseTemplate)(); setCreateBtnOpen(false); }}
+									className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+								>
+									<FileText className="h-4 w-4 text-slate-400" />
+									<Translate text={localizationConstants.kmaQualityPlanUseTemplate} />
+								</button>
+							</div>
+						)}
+					</div>
+				)}
 			</div>
 			{/* Content */}
 			{planType === "riskhantering" ? (
@@ -3066,6 +3080,7 @@ export function QualitySystemPage() {
 	const [createTemplateOpen, setCreateTemplateOpen] = useState(false);
 	const [createRiskhanteringOpen, setCreateRiskhanteringOpen] = useState(false);
 	const [createRiskWithTemplate, setCreateRiskWithTemplate] = useState(false);
+	const [createRiskTemplateOpen, setCreateRiskTemplateOpen] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3102,6 +3117,10 @@ export function QualitySystemPage() {
 				}}
 			/>
 		);
+	}
+
+	if (createRiskTemplateOpen) {
+		return <CreateRiskTemplatePage onBack={() => setCreateRiskTemplateOpen(false)} />;
 	}
 
 	if (openPlanOpen) {
@@ -3167,6 +3186,7 @@ export function QualitySystemPage() {
 					onOpenPlan={() => setOpenPlanOpen(true)}
 					onOpenSandlista={() => setSandlistaOpen(true)}
 					onCreateTemplate={() => setCreateTemplateOpen(true)}
+					onCreateRiskTemplate={() => setCreateRiskTemplateOpen(true)}
 				/>
 			)}
 		</div>

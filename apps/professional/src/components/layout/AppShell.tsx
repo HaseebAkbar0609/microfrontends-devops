@@ -8,17 +8,12 @@ import { Loader } from "@/components/ui/loader";
 import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscriptionCookie";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
-import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
 import { OrderSubSidebar } from "./sidebar/OrderSubSidebar";
 import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
-import {
-	getFlyoutSubSidebarConfigByPath,
-	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
-} from "./sidebar/navConfig";
 import { b2bSidebarItems } from "@/features/b2b/constants";
 import { calculationSidebarItems, calculationGoToItems } from "@/features/calculation/constants";
 import { productionSidebarItems } from "@/features/production/constants";
@@ -68,11 +63,6 @@ export function AppShell({ children }: AppShellProps) {
 		pathname.startsWith("/module/production") && !isOrderPath && !isProjectPath && !isKmaPath;
 	const isFinancialNavRoute = pathname.startsWith("/module/financial-management");
 	const isBusinessSupportNavRoute = pathname.startsWith("/module/business-support");
-	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
-	const showSubSidebar =
-		!!flyoutSubSidebarConfig &&
-		!isPublicPage &&
-		!pathMatchesPrefixes(pathname, HIDDEN_SUBSIDEBAR_PATH_PREFIXES);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -212,11 +202,6 @@ export function AppShell({ children }: AppShellProps) {
 					titleKey={localizationConstants.businessSupport}
 					items={businessSupportSidebarItems}
 					hideBack={true}
-				/>
-			) : showSubSidebar ? (
-				<MyPagesSubSidebar
-					titleKey={flyoutSubSidebarConfig.titleKey}
-					items={flyoutSubSidebarConfig.items}
 				/>
 			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">

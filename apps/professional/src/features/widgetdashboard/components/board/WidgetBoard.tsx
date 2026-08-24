@@ -32,12 +32,16 @@ export interface WidgetBoardProps {
 	widgetMap: Record<string, WidgetProps>;
 	items: WidgetItem[];
 	standardWidgetIds: string[];
+	header?: React.ReactNode;
+	belowGrid?: React.ReactNode;
 }
 
 const WidgetBoard = ({
 	widgetMap,
 	items,
 	standardWidgetIds,
+	header,
+	belowGrid,
 }: WidgetBoardProps) => {
 	const t = useTranslate();
 	const board = useWidgetBoard(items, standardWidgetIds);
@@ -107,6 +111,7 @@ const WidgetBoard = ({
 
 	return (
 		<div className="min-h-screen">
+			{header}
 			{editing ? (
 				<div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-md bg-slate-100 px-4 py-3">
 					<div className="flex items-center gap-3">
@@ -362,6 +367,8 @@ const WidgetBoard = ({
 							})}
 						</div>
 					)}
+
+					{belowGrid && <div className="mt-6">{belowGrid}</div>}
 				</div>
 
 				{editing && libraryOpen && (
