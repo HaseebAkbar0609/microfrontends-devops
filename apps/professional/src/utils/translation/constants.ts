@@ -4191,6 +4191,18 @@ export type CommonTranslation = {
 	filter: string;
 	createNewButtonText: string;
 	noDataFound: string;
+	module: string;
+	b2bDashboard: string;
+	b2bOverview: string;
+	customizeColumns: string;
+	open: string;
+	closingSoon: string;
+	remove: string;
+	cancel: string;
+	b2bRemoveConfirmTitle: string;
+	b2bRemoveConfirmDesc: string;
+	b2bRemoveSuccessToast: string;
+	b2bRemoveErrorToast: string;
 };
 
 export type Translation = HeaderTranslation &

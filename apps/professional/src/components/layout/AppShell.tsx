@@ -14,7 +14,6 @@ import { ProjectSubSidebar } from "./sidebar/ProjectSubSidebar";
 import { InvoiceSubSidebar } from "./sidebar/InvoiceSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
-import { b2bSidebarItems } from "@/features/b2b/constants";
 import { calculationSidebarItems, calculationGoToItems } from "@/features/calculation/constants";
 import { productionSidebarItems } from "@/features/production/constants";
 import { KMA_SIDEBAR_NAV_ITEMS } from "@/features/kma/data/kmaNav.config";
@@ -52,7 +51,6 @@ export function AppShell({ children }: AppShellProps) {
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
 	const isOrderPath = pathname.startsWith("/module/production/order");
 	const isProjectPath = pathname.startsWith("/module/production/project");
-	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
 	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
 	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
 	const isCalculationDetailRoute = !!calcDetailMatch;
@@ -160,12 +158,6 @@ export function AppShell({ children }: AppShellProps) {
 				<AgreementSubSidebar />
 			) : isRegisterPath ? (
 				<InvoiceSubSidebar />
-			) : isB2BNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.b2b}
-					items={b2bSidebarItems}
-					hideBack={true}
-				/>
 			) : isCalculationDetailRoute ? (
 				<CalculationDetailSubSidebar calcId={calculationDetailId} />
 			) : isCalculationNavRoute ? (
