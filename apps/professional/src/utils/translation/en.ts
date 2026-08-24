@@ -882,7 +882,7 @@ export const enOffer: OfferTranslation = {
 	b2bChartDaysToAccept: "Days from object request to accept",
 	b2bChartRequests: "Requests",
 	// Calculation - Dashboard
-	calcOverview: "Calculation Dashboard",
+	calcOverview: "Dashboard",
 	// Calculation - Overview (list)
 	calcOverviewPage: "Calculation Overview",
 	calcOverviewNewBtn: "New Calculation",

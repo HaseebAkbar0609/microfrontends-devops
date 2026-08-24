@@ -766,7 +766,7 @@ export const svOffer: OfferTranslation = {
 	b2bChartDaysToAccept: "Dagar från objekt förfrågan till accept",
 	b2bChartRequests: "Förfrågningar",
 	// Calculation - Dashboard
-	calcOverview: "Kalkyl Dashboard",
+	calcOverview: "Dashboard",
 	// Calculation - Overview (list)
 	calcOverviewPage: "Kalkylöversikt",
 	calcOverviewNewBtn: "Ny kalkyl",

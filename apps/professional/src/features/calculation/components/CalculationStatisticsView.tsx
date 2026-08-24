@@ -329,6 +329,7 @@ export function CalculationStatisticsView() {
 					variant="small"
 					items={[
 						{ translationKey: localizationConstants.home, href: "/home" },
+						{ translationKey: localizationConstants.moduleItem, href: "/module/business" },
 						{ translationKey: localizationConstants.calculation, href: "/module/business/calculation" },
 						{ translationKey: localizationConstants.calcStatistics },
 					]}

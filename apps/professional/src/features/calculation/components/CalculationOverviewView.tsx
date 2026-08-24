@@ -11,6 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DynamicBreadcrumb } from "@/components/common";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useTableSort } from "@/hooks/useTableSort";
@@ -107,6 +108,15 @@ export function CalculationOverviewView({ items }: Props) {
         <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
           {t(localizationConstants.calcOverviewPage)}
         </h1>
+        <DynamicBreadcrumb
+          variant="small"
+          items={[
+            { translationKey: localizationConstants.home, href: "/home" },
+            { translationKey: localizationConstants.moduleItem, href: "/module/business" },
+            { translationKey: localizationConstants.calculation, href: "/module/business/calculation" },
+            { translationKey: localizationConstants.calcOverviewPage },
+          ]}
+        />
       </div>
 
       {/* Toolbar — no bottom border */}

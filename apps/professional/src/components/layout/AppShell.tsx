@@ -20,7 +20,6 @@ import {
 	HIDDEN_SUBSIDEBAR_PATH_PREFIXES,
 } from "./sidebar/navConfig";
 import { b2bSidebarItems } from "@/features/b2b/constants";
-import { calculationSidebarItems, calculationGoToItems } from "@/features/calculation/constants";
 import { productionSidebarItems } from "@/features/production/constants";
 import { KMA_SIDEBAR_NAV_ITEMS } from "@/features/kma/data/kmaNav.config";
 import { financialSidebarItems } from "@/features/financial-management/constants";
@@ -58,7 +57,6 @@ export function AppShell({ children }: AppShellProps) {
 	const isOrderPath = pathname.startsWith("/module/production/order");
 	const isProjectPath = pathname.startsWith("/module/production/project");
 	const isB2BNavRoute = pathname.startsWith("/module/business/b2b");
-	const isCalculationNavRoute = pathname.startsWith("/module/business/calculation");
 	const calcDetailMatch = pathname.match(/^\/module\/business\/calculation\/overview\/([^/]+)/);
 	const isCalculationDetailRoute = !!calcDetailMatch;
 	const calculationDetailId = calcDetailMatch?.[1] ?? "";
@@ -178,16 +176,6 @@ export function AppShell({ children }: AppShellProps) {
 				/>
 			) : isCalculationDetailRoute ? (
 				<CalculationDetailSubSidebar calcId={calculationDetailId} />
-			) : isCalculationNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.calculation}
-					items={calculationSidebarItems}
-					hideBack={true}
-					additionalSection={{
-						titleKey: localizationConstants.goTo,
-						items: calculationGoToItems,
-					}}
-				/>
 			) : isKmaPath ? (
 				<DynamicSubSidebar
 					titleKey={localizationConstants.kma}

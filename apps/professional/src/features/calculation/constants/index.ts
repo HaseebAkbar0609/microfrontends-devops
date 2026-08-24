@@ -1,6 +1,5 @@
 import {
 	Archive,
-	ArrowRight,
 	BarChart3,
 	Bell,
 	Bot,
@@ -17,21 +16,11 @@ import {
 	TrafficCone,
 	Trophy,
 } from "lucide-react";
-import { BreadcrumbItem } from "@/types/common";
 import { DynamicSubSidebarItem } from "@/components/layout/sidebar/DynamicSubSidebar";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
 
-export const CALCULATION_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/home" },
-	{
-		label: localizationConstants.calculation,
-		href: "/module/business/calculation",
-	},
-	{ label: localizationConstants.calcOverview },
-];
-
-export const calculationSidebarItems: DynamicSubSidebarItem[] = [
+export const calculationNavItems: DynamicSubSidebarItem[] = [
 	{
 		id: "overview",
 		labelKey: localizationConstants.calcOverview,
@@ -62,15 +51,6 @@ export const calculationSidebarItems: DynamicSubSidebarItem[] = [
 		labelKey: localizationConstants.archive,
 		href: "/module/business/calculation/archive",
 		icon: Archive,
-	},
-];
-
-export const calculationGoToItems: DynamicSubSidebarItem[] = [
-	{
-		id: "calculation-3001",
-		label: "Calculation 3001",
-		href: "/module/business/calculation",
-		icon: ArrowRight,
 	},
 ];
 
