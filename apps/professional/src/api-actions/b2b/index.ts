@@ -1,6 +1,7 @@
+import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
+import type { ActionResult, ApiError } from "@/types/api";
 import { ProjectMarket } from "@/features/b2b/types/projectMarket";
-import { DUMMY_PROJECTS } from "@/features/b2b/constants/projectMarketMock";
 
 export interface ListB2BProjectsParams {
 	page?: number;
@@ -17,28 +18,41 @@ export interface B2BProjectsListResult {
 	currentPage: number;
 }
 
-interface RawB2BProjectItem {
-	id?: string | number;
-	project_id?: string | number;
-	ref_nr?: string;
-	project_code?: string;
-	project_name?: string;
-	title?: string;
-	created_at?: string;
-	type?: string;
-	requests?: number;
-	inquiry_count?: number;
-	municipality?: string;
-	city?: string;
-	lowest_offer?: number;
-	lowest_quote?: number;
-	status?: ProjectMarket["status"];
-}
+export const b2bProjectItemSchema = z.object({
+	id: z.union([z.string(), z.number()]).transform(String),
+	project_id: z
+		.union([z.string(), z.number()])
+		.optional()
+		.transform((v) => (v != null ? String(v) : undefined)),
+	ref_nr: z.string().optional().default(""),
+	project_code: z.string().optional().default(""),
+	project_name: z.string().optional().default(""),
+	title: z.string().optional().default(""),
+	created_at: z.string().optional().default(""),
+	type: z.string().optional().default(""),
+	requests: z.number().optional().default(0),
+	inquiry_count: z.number().optional().default(0),
+	municipality: z.string().optional().default(""),
+	city: z.string().optional().default(""),
+	lowest_offer: z.number().optional().default(0),
+	lowest_quote: z.number().optional().default(0),
+	status: z
+		.enum(["contract_signed", "waiting", "open", "closing_soon"])
+		.optional()
+		.default("waiting"),
+});
+
+export const b2bProjectsResponseSchema = z.object({
+	data: z.array(b2bProjectItemSchema).default([]),
+	total: z.number().optional(),
+	total_pages: z.number().optional(),
+	page: z.number().optional(),
+});
 
 const B2B_PROJECTS_PATH = "/professionals/b2b/projects";
 
 /**
- * Fetch B2B Project Market / Overview projects from backend API
+ * Fetch B2B Project Market / Overview projects from backend API with Zod validation
  */
 export async function getB2BProjectsAction(
 	params?: ListB2BProjectsParams
@@ -54,35 +68,37 @@ export async function getB2BProjectsAction(
 			},
 		});
 
-		if (response.data && Array.isArray(response.data.data)) {
-			const items: ProjectMarket[] = response.data.data.map((item: RawB2BProjectItem) => ({
-				id: String(item.id || item.project_id || ""),
-				refNr: item.ref_nr || item.project_code || "PRJ001",
-				project: item.project_name || item.title || "Project",
-				date: item.created_at ? new Date(item.created_at).toISOString().split("T")[0] : "2024-05-10",
-				type: item.type || "B2B-Rent OUT",
-				requests: Number(item.requests || item.inquiry_count || 5),
-				municipality: item.municipality || item.city || "Järfälla",
-				lowestOffer: Number(item.lowest_offer || item.lowest_quote || 100000),
-				status: item.status || "waiting",
+		const parsed = b2bProjectsResponseSchema.safeParse(response.data);
+		if (parsed.success) {
+			const items: ProjectMarket[] = parsed.data.data.map((item) => ({
+				id: item.id || item.project_id || "",
+				refNr: item.ref_nr || item.project_code || "-",
+				project: item.project_name || item.title || "-",
+				date: item.created_at ? item.created_at.split("T")[0] : "-",
+				type: item.type || "-",
+				requests: item.requests || item.inquiry_count || 0,
+				municipality: item.municipality || item.city || "-",
+				lowestOffer: item.lowest_offer || item.lowest_quote || 0,
+				status: item.status,
 			}));
 
 			return {
 				projects: items,
-				totalItems: response.data.total || items.length,
-				totalPages: response.data.total_pages || Math.ceil(items.length / 10),
+				totalItems: parsed.data.total ?? items.length,
+				totalPages:
+					parsed.data.total_pages ??
+					Math.max(1, Math.ceil(items.length / (params?.pageSize ?? 10))),
 				currentPage: params?.page ?? 1,
 			};
 		}
-	} catch (error) {
-		console.warn("B2B Projects API endpoint not live, using fallback data", error);
+	} catch {
+		// Non-blocking fallback to empty result
 	}
 
-	// Graceful fallback to mock data when backend endpoint is in development
 	return {
-		projects: DUMMY_PROJECTS,
-		totalItems: DUMMY_PROJECTS.length,
-		totalPages: Math.ceil(DUMMY_PROJECTS.length / (params?.pageSize ?? 10)),
+		projects: [],
+		totalItems: 0,
+		totalPages: 1,
 		currentPage: params?.page ?? 1,
 	};
 }
@@ -92,15 +108,25 @@ export async function getB2BProjectsAction(
  */
 export async function deleteB2BProjectAction(
 	id: string
-): Promise<{ success: boolean; message?: string }> {
+): Promise<ActionResult<{ success: boolean; message?: string }>> {
 	try {
 		const response = await axiosInstance.delete(`${B2B_PROJECTS_PATH}/${id}`);
 		return {
 			success: true,
-			message: response.data?.message || "Project removed successfully",
+			data: {
+				success: true,
+				message: response.data?.message || "Project removed successfully",
+			},
+			error: null,
 		};
-	} catch (error) {
-		console.warn("Backend delete endpoint not live, simulating local delete", error);
-		return { success: true };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		const errorMessage =
+			apiError.response?.data?.message || "Failed to remove project";
+		return {
+			success: false,
+			data: null,
+			error: errorMessage,
+		};
 	}
 }

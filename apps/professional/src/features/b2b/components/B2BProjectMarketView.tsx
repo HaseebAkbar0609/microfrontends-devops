@@ -21,6 +21,16 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Table,
   TableBody,
   TableCell,
@@ -106,6 +116,8 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
   const [loading, setLoading] = useState(isLoading || projects.length === 0);
   const [search, setSearch] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectMarketStatus[]>([]);
+  const [projectToRemove, setProjectToRemove] = useState<ProjectMarket | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -136,13 +148,22 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     };
   }, [page, rowsPerPage, debouncedSearch]);
 
-  const handleRemoveProject = async (project: ProjectMarket) => {
+  const handleConfirmRemove = async () => {
+    if (!projectToRemove) return;
+    setIsRemoving(true);
     try {
-      await deleteB2BProjectAction(project.id);
-      setProjectList((prev) => prev.filter((p) => p.id !== project.id));
-      showToast("success", t(localizationConstants.b2bRemoveSuccessToast));
+      const res = await deleteB2BProjectAction(projectToRemove.id);
+      if (res.success) {
+        setProjectList((prev) => prev.filter((p) => p.id !== projectToRemove.id));
+        showToast("success", t(localizationConstants.b2bRemoveSuccessToast));
+      } else {
+        showToast("error", res.error || t(localizationConstants.b2bRemoveErrorToast));
+      }
     } catch {
       showToast("error", t(localizationConstants.b2bRemoveErrorToast));
+    } finally {
+      setIsRemoving(false);
+      setProjectToRemove(null);
     }
   };
 
@@ -466,10 +487,10 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                             {t(localizationConstants.archive)}
                           </DropdownMenuItem>
                           <DropdownMenuItem
-                            className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-md py-1.5 px-2"
-                            onClick={() => handleRemoveProject(row)}
+                            className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 rounded-md py-1.5 px-2"
+                            onClick={() => setProjectToRemove(row)}
                           >
-                            <Trash2 size={15} className="text-slate-600" />
+                            <Trash2 size={15} className="text-red-500" />
                             {t(localizationConstants.remove)}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -502,6 +523,30 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
           onPageSizeChange={setRowsPerPage}
           className="mt-6 flex-wrap justify-between sm:justify-end gap-3 sm:gap-6"
         />
+
+        {/* Confirmation Modal for Project Removal */}
+        <AlertDialog open={!!projectToRemove} onOpenChange={(open) => !open && setProjectToRemove(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t(localizationConstants.b2bRemoveConfirmTitle)}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t(localizationConstants.b2bRemoveConfirmDesc)}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isRemoving} className="cursor-pointer">
+                {t(localizationConstants.cancel)}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmRemove}
+                disabled={isRemoving}
+                className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+              >
+                {t(localizationConstants.remove)}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
