@@ -389,128 +389,138 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
               </div>
 
               <div className="overflow-x-auto p-4 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-blue-400 [&::-webkit-scrollbar-track]:bg-slate-100">
-              <table className="min-w-275 w-full text-sm">
-                <thead>
-                  <tr className="border-b border-slate-200 bg-white">
-                    {columns.map((col) => (
-                      <th
-                        key={col.key}
-                        className="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-slate-500 hover:text-slate-800"
-                        onClick={() => toggleSort(col.key)}
-                      >
-                        <span className="flex items-center gap-1">
-                          {col.label}
-                          {renderSortIcon(col.key, sortField, sortDir)}
-                        </span>
-                      </th>
-                    ))}
-                    <th className="sticky right-0 bg-white px-4 py-3" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }} />
-                  </tr>
-                </thead>
-                <tbody>
-                  {paginated.map((row) => (
-                    <tr
-                      key={row.id}
-                      className="group border-b border-slate-200 last:border-0 hover:bg-slate-50"
-                    >
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-600">
-                        {row.offertNr}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">
-                        <span className="block max-w-36 truncate">{row.job}</span>
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-700">
-                        {row.customerName}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-600">
-                        <OfferQuotedCategoryBadge category={row.category} />
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-600">
-                        {row.municipality}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-700">
-                        {row.type}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900 tabular-nums">
-                        {formatCurrency(row.price)}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <OfferQuotedStatusBadge item={row} />
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <OfferQuotedContactCell item={row} />
-                      </td>
-                      <td className="sticky right-0 bg-white px-4 py-3 group-hover:bg-slate-50" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }}>
-                        <div className="flex items-center justify-end gap-2">
-                          <Button
-                            size="sm"
-                            className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
-                            onClick={() => {
-                              const targetId = offerId || row.id;
-                              if (targetId) {
-                                router.push(OFFER_ROUTES.requestDetail(targetId));
-                              }
-                            }}
+                <table className="min-w-275 w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-slate-200 bg-white">
+                      {columns.map((col) => (
+                        <th
+                          key={col.key}
+                          className="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-slate-500 hover:text-slate-800"
+                          onClick={() => toggleSort(col.key)}
+                        >
+                          <span className="flex items-center gap-1">
+                            {col.label}
+                            {renderSortIcon(col.key, sortField, sortDir)}
+                          </span>
+                        </th>
+                      ))}
+                      <th className="sticky right-0 bg-white px-4 py-3" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }}>
+                        <div className="flex justify-end">
+                          <button
+                            type="button"
+                            aria-label={t(localizationConstants.addColumnLabel)}
+                            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-base font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
                           >
-                            {t(localizationConstants.viewProject)}
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-7 w-7 cursor-pointer p-0"
-                                aria-label={t(localizationConstants.actions)}
-                              >
-                                <MoreVertical size={14} />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-[170px]">
-                              <DropdownMenuItem className="cursor-pointer">
-                                <Trash2 size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
-                                {t(localizationConstants.offerQuotedActionDelete)}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="cursor-pointer">
-                                <Archive size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
-                                {t(localizationConstants.offerQuotedActionArchive)}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem className="cursor-pointer">
-                                <CheckCircle size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
-                                {t(localizationConstants.offerQuotedActionAccept)}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => openCommentModal(row)}
-                              >
-                                <MessageCircleMore size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
-                                {t(localizationConstants.offerQuotedActionComment)}
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="cursor-pointer"
-                                onClick={() => openAnswerModal(row)}
-                              >
-                                <MessagesSquare size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
-                                {t(localizationConstants.offerQuotedActionViewAnswer)}
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                            +
+                          </button>
                         </div>
-                      </td>
+                      </th>
                     </tr>
-                  ))}
-
-                  {paginated.length === 0 && (
-                    <tr>
-                      <td
-                        colSpan={columns.length + 1}
-                        className="px-4 py-12 text-center text-sm text-slate-400"
+                  </thead>
+                  <tbody>
+                    {paginated.map((row) => (
+                      <tr
+                        key={row.id}
+                        className="group border-b border-slate-200 last:border-0 hover:bg-slate-50"
                       >
-                        {t(localizationConstants.noQuotesFound)}
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                          {row.offertNr}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">
+                          <span className="block max-w-36 truncate">{row.job}</span>
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-700">
+                          {row.customerName}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                          <OfferQuotedCategoryBadge category={row.category} />
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-600">
+                          {row.municipality}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 text-slate-700">
+                          {row.type}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900 tabular-nums">
+                          {formatCurrency(row.price)}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <OfferQuotedStatusBadge item={row} />
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <OfferQuotedContactCell item={row} />
+                        </td>
+                        <td className="sticky right-0 bg-white px-4 py-3 group-hover:bg-slate-50" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }}>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              size="sm"
+                              className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
+                              onClick={() => {
+                                const targetId = offerId || row.id;
+                                if (targetId) {
+                                  router.push(OFFER_ROUTES.requestDetail(targetId));
+                                }
+                              }}
+                            >
+                              {t(localizationConstants.viewProject)}
+                            </Button>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-7 w-7 cursor-pointer p-0"
+                                  aria-label={t(localizationConstants.actions)}
+                                >
+                                  <MoreVertical size={14} />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-[170px]">
+                                <DropdownMenuItem className="cursor-pointer">
+                                  <Trash2 size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
+                                  {t(localizationConstants.offerQuotedActionDelete)}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer">
+                                  <Archive size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
+                                  {t(localizationConstants.offerQuotedActionArchive)}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer">
+                                  <CheckCircle size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
+                                  {t(localizationConstants.offerQuotedActionAccept)}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="cursor-pointer"
+                                  onClick={() => openCommentModal(row)}
+                                >
+                                  <MessageCircleMore size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
+                                  {t(localizationConstants.offerQuotedActionComment)}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="cursor-pointer"
+                                  onClick={() => openAnswerModal(row)}
+                                >
+                                  <MessagesSquare size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
+                                  {t(localizationConstants.offerQuotedActionViewAnswer)}
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+
+                    {paginated.length === 0 && (
+                      <tr>
+                        <td
+                          colSpan={columns.length + 1}
+                          className="px-4 py-12 text-center text-sm text-slate-400"
+                        >
+                          {t(localizationConstants.noQuotesFound)}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
 
               {/* Table Pagination Section Inside the Card */}
