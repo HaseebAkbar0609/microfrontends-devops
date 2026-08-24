@@ -1,6 +1,11 @@
 "use client";
 
-import { PageHeader } from "@/components/layout/PageHeader";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	ORDER_MODULE_TABS,
+	ORDER_MODULE_TITLE,
+	orderBreadcrumbs,
+} from "@/features/orders/data/orderNav.config";
 import localizationConstants from "@/utils/translation/constants";
 import { OrderEconomyTabs } from "./components/OrderEconomyTabs";
 import { OrderEconomyTable } from "./components/OrderEconomyTable";
@@ -29,14 +34,10 @@ export function OrderEconomyPage() {
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50">
 			{/* Page Header with Breadcrumbs */}
-			<PageHeader
-				title={localizationConstants.economicOverview}
-				breadcrumbs={[
-					{ label: localizationConstants.home, href: "/dashboard" },
-					{ label: localizationConstants.production },
-					{ label: localizationConstants.orderModule, href: "/module/production/order" },
-					{ label: localizationConstants.economicOverview },
-				]}
+			<ModulePageHeader
+				title={ORDER_MODULE_TITLE}
+				tabs={ORDER_MODULE_TABS}
+				breadcrumbs={orderBreadcrumbs(localizationConstants.economicOverview)}
 			/>
 
 			{/* Tabs & Table Content */}

@@ -19,33 +19,8 @@ import {
 	TrafficCone,
 	Zap,
 } from "lucide-react";
-import { BreadcrumbItem } from "@/types/common";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
-
-export const PROJECT_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/dashboard" },
-	{ label: localizationConstants.production },
-	{ label: localizationConstants.projectDashboardTitle },
-];
-
-export const PROJECT_OVERVIEW_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/dashboard" },
-	{
-		label: localizationConstants.projectModule,
-		href: "/module/production/project",
-	},
-	{ label: localizationConstants.projectSubOverview },
-];
-
-export const PROJECT_ECONOMY_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/dashboard" },
-	{
-		label: localizationConstants.projectModule,
-		href: "/module/production/project",
-	},
-	{ label: localizationConstants.projectEconomicOverview },
-];
 
 export const PROJECT_SIDEBAR_ITEMS: WidgetItem[] = [
 	{

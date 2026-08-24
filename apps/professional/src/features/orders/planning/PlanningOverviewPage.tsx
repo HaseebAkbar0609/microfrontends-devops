@@ -1,6 +1,11 @@
 "use client";
 
-import { PageHeader } from "@/components/layout/PageHeader";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	ORDER_MODULE_TABS,
+	ORDER_MODULE_TITLE,
+	orderBreadcrumbs,
+} from "@/features/orders/data/orderNav.config";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { usePlanning } from "./hooks/usePlanning";
@@ -22,15 +27,10 @@ export function PlanningOverviewPage() {
 		<div className="flex min-h-screen flex-col bg-white text-slate-900 font-sans">
 			{/* Page Header with localized breadcrumbs */}
 			<div className="sticky top-0 z-40 bg-white">
-				<PageHeader
-					title={localizationConstants.planningOverviewTab}
-					breadcrumbs={[
-						{ label: localizationConstants.breadcrumbHome, href: "/" },
-						{ label: localizationConstants.breadcrumbModule, href: "/module" },
-						{ label: localizationConstants.breadcrumbProduction, href: "/module/production" },
-						{ label: localizationConstants.breadcrumbOrder, href: "/module/production/order" },
-						{ label: localizationConstants.breadcrumbPlanning, href: "/module/production/order/planning" },
-					]}
+				<ModulePageHeader
+					title={ORDER_MODULE_TITLE}
+					tabs={ORDER_MODULE_TABS}
+					breadcrumbs={orderBreadcrumbs(localizationConstants.breadcrumbPlanning)}
 				/>
 			</div>
 

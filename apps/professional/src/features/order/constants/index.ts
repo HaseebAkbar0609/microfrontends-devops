@@ -16,15 +16,8 @@ import {
 	TrafficCone,
 	Zap,
 } from "lucide-react";
-import { BreadcrumbItem } from "@/types/common";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
-
-export const ORDER_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/dashboard" },
-	{ label: localizationConstants.production },
-	{ label: localizationConstants.orderDashboardTitle },
-];
 
 export const ORDER_SIDEBAR_ITEMS: WidgetItem[] = [
 	{
