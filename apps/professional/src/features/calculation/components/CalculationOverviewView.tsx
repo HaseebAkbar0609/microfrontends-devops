@@ -105,7 +105,7 @@ export function CalculationOverviewView({ items }: Props) {
     <div className="flex flex-1 flex-col bg-white">
       {/* Page heading */}
       <div className="px-5 py-4">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+        <h1 className="mb-0.5 text-2xl font-semibold tracking-tight text-slate-950">
           {t(localizationConstants.calcOverviewPage)}
         </h1>
         <DynamicBreadcrumb

@@ -22,14 +22,17 @@ const TABS = [
 export function CalculationKalkylView() {
 	return (
 		<div className="flex flex-1 flex-col">
-			<div className="px-5 py-4">
-				<h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+			<div className="px-5 pt-4 pb-2">
+				<h1 className="mb-0.5 text-2xl font-semibold tracking-tight text-slate-950">
 					<Translate text={localizationConstants.calcKalkyl} />
 				</h1>
 				<DynamicBreadcrumb
 					variant="small"
 					items={[
-						{ translationKey: localizationConstants.home, href: "/home" },
+						{
+							translationKey: localizationConstants.home,
+							href: "/home",
+						},
 						{
 							translationKey: localizationConstants.moduleItem,
 							href: "/module/business",
@@ -65,8 +68,12 @@ export function CalculationKalkylView() {
 					value="standard"
 					className="flex flex-1 flex-col gap-4 bg-slate-50 p-5"
 				>
-					<CalculationMarkupSection titleKey={localizationConstants.calcMarkup} />
-					<CalculationMarkupSection titleKey={localizationConstants.calcBaseCosts} />
+					<CalculationMarkupSection
+						titleKey={localizationConstants.calcMarkup}
+					/>
+					<CalculationMarkupSection
+						titleKey={localizationConstants.calcBaseCosts}
+					/>
 					<CalculationLaborSection />
 				</TabsContent>
 
@@ -77,10 +84,7 @@ export function CalculationKalkylView() {
 					<CalculationProContent />
 				</TabsContent>
 
-				<TabsContent
-					value="a-price"
-					className="flex flex-1 flex-col"
-				>
+				<TabsContent value="a-price" className="flex flex-1 flex-col">
 					<CalculationAPriceContent items={DUMMY_APRICE_LIST} />
 				</TabsContent>
 
