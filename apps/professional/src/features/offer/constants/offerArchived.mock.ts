@@ -53,7 +53,7 @@ export const DUMMY_ARCHIVED_ITEMS: OfferArchivedItem[] = [
     status: "waiting_signature",
     municipality: "Järfälla",
     jobType: "-",
-    agreedPrice: 5000,
+    agreedPrice: 0,
     projectId: "proj-1",
   },
   {
@@ -64,7 +64,7 @@ export const DUMMY_ARCHIVED_ITEMS: OfferArchivedItem[] = [
     status: "signed",
     municipality: "Järfälla",
     jobType: "-",
-    agreedPrice: 5000,
+    agreedPrice: 0,
     projectId: "proj-1",
   },
 ];

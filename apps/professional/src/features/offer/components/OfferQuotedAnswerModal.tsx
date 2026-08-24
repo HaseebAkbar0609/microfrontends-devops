@@ -32,8 +32,8 @@ export function OfferQuotedAnswerModal({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="w-110 bg-white p-0">
-        <DialogHeader className="px-6 py-4">
+      <DialogContent className="w-110 max-w-[90vw] max-h-[85vh] bg-white p-0 flex flex-col overflow-y-auto">
+        <DialogHeader className="px-6 py-4 shrink-0">
           <DialogTitle className="text-base font-semibold text-slate-900">
             {t(localizationConstants.offerQuotedAnswerTitle)}
           </DialogTitle>
@@ -41,14 +41,14 @@ export function OfferQuotedAnswerModal({
             {job} – {offertNr}
           </p>
         </DialogHeader>
-        <div className="px-6 pb-4">
+        <div className="px-6 pb-4 flex-1 flex flex-col">
           <Textarea
             readOnly
             value={answer || t(localizationConstants.offerQuotedNoAnswer)}
-            className="min-h-14 resize-none border border-slate-200 bg-white text-sm"
+            className="min-h-14 max-h-[45vh] resize-none border border-slate-200 bg-white text-sm"
           />
         </div>
-        <div className="flex items-center justify-between bg-white px-6 py-4">
+        <div className="flex items-center justify-between bg-white px-6 py-4 shrink-0">
           <Button
             variant="outline"
             className="h-9 cursor-pointer px-5 text-sm"

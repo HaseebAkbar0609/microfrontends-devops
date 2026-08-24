@@ -139,7 +139,7 @@ const BoardWidgetCard = ({
 			</div>
 
 			<Dialog open={fullscreenOpen} onOpenChange={setFullscreenOpen}>
-				<DialogContent className="max-w-3xl">
+				<DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
 					<DialogHeader>
 						<DialogTitle className="flex items-center gap-2">
 							<Icon size={20} className="text-slate-700" />
