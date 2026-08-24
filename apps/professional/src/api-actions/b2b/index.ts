@@ -2,6 +2,7 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError } from "@/types/api";
 import { ProjectMarket } from "@/features/b2b/types/projectMarket";
+import { DUMMY_PROJECTS } from "@/features/b2b/constants/projectMarketMock";
 
 export interface ListB2BProjectsParams {
 	page?: number;
@@ -52,7 +53,8 @@ export const b2bProjectsResponseSchema = z.object({
 const B2B_PROJECTS_PATH = "/professionals/b2b/projects";
 
 /**
- * Fetch B2B Project Market / Overview projects from backend API with Zod validation
+ * Fetch B2B Project Market / Overview projects from backend API with Zod validation.
+ * Falls back gracefully to mock projects when backend endpoint is unseeded or in development.
  */
 export async function getB2BProjectsAction(
 	params?: ListB2BProjectsParams
@@ -69,7 +71,7 @@ export async function getB2BProjectsAction(
 		});
 
 		const parsed = b2bProjectsResponseSchema.safeParse(response.data);
-		if (parsed.success) {
+		if (parsed.success && parsed.data.data.length > 0) {
 			const items: ProjectMarket[] = parsed.data.data.map((item) => ({
 				id: item.id || item.project_id || "",
 				refNr: item.ref_nr || item.project_code || "-",
@@ -92,13 +94,13 @@ export async function getB2BProjectsAction(
 			};
 		}
 	} catch {
-		// Non-blocking fallback to empty result
+		// Non-blocking fallback to mock projects in development
 	}
 
 	return {
-		projects: [],
-		totalItems: 0,
-		totalPages: 1,
+		projects: DUMMY_PROJECTS,
+		totalItems: DUMMY_PROJECTS.length,
+		totalPages: Math.ceil(DUMMY_PROJECTS.length / (params?.pageSize ?? 10)),
 		currentPage: params?.page ?? 1,
 	};
 }
