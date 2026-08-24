@@ -1,11 +1,15 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PageHeader } from "@/components/layout/PageHeader";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	PROJECT_MODULE_TABS,
+	PROJECT_MODULE_TITLE,
+	projectBreadcrumbs,
+} from "@/features/project/data/projectNav.config";
 import { TablePagination } from "@/components/table/TablePagination";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { PROJECT_ECONOMY_BREADCRUMBS } from "../constants";
 import { useProjectEconomyFilters } from "../hooks/useProjectEconomyFilters";
 import ProjectEconomyTable from "./ProjectEconomyTable";
 
@@ -18,9 +22,10 @@ const ProjectEconomyPage = () => {
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
-			<PageHeader
-				title={localizationConstants.projectEconomicOverview}
-				breadcrumbs={PROJECT_ECONOMY_BREADCRUMBS}
+			<ModulePageHeader
+				title={PROJECT_MODULE_TITLE}
+				tabs={PROJECT_MODULE_TABS}
+				breadcrumbs={projectBreadcrumbs(localizationConstants.projectEconomicOverview)}
 			/>
 			<div className="flex-1 p-6">
 				<Tabs value={PROJECT_ECONOMY_TAB_TB} className="w-full">

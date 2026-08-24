@@ -15,15 +15,8 @@ import {
 	Siren,
 	Zap,
 } from "lucide-react";
-import { BreadcrumbItem } from "@/types/common";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
-
-export const KMA_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/dashboard" },
-	{ label: localizationConstants.production },
-	{ label: localizationConstants.kmaDashboardTitle },
-];
 
 export const KMA_SIDEBAR_ITEMS: WidgetItem[] = [
 	{

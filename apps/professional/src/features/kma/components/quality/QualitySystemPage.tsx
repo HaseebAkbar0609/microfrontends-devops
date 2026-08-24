@@ -24,6 +24,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	KMA_MODULE_TABS,
+	KMA_MODULE_TITLE,
+	kmaBreadcrumbs,
+} from "@/features/kma/data/kmaNav.config";
 import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory, QualitySubCategory } from "../../types/quality";
 import { MOCK_QUALITY_CATEGORIES, MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
@@ -3133,24 +3139,13 @@ export function QualitySystemPage() {
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden bg-white">
-			{/* Page title */}
-			<div className="border-b border-slate-200 px-6 py-4">
-				<h1 className="text-2xl font-semibold text-slate-900">
-					<Translate text={localizationConstants.kmaListSidebarKvalite} />
-				</h1>
-				{/* Breadcrumb */}
-				<nav className="mt-1 flex items-center gap-1.5 text-xs text-slate-400">
-					<span>Home</span>
-					<span>›</span>
-					<span>Modul</span>
-					<span>›</span>
-					<span>Produktion</span>
-					<span>›</span>
-					<span>KMA</span>
-					<span>›</span>
-					<span className="text-slate-600">SecureCheck</span>
-				</nav>
-			</div>
+			<ModulePageHeader
+				title={KMA_MODULE_TITLE}
+				tabs={KMA_MODULE_TABS}
+				breadcrumbs={kmaBreadcrumbs(
+					localizationConstants.kmaListSidebarKvalite,
+				)}
+			/>
 
 			{/* Sub-tab bar */}
 			<div className="border-b border-slate-200 px-6">

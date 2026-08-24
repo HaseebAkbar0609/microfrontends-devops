@@ -190,13 +190,17 @@ export function CalculationArchiveView() {
 		<div className="flex flex-1 flex-col overflow-y-auto bg-slate-50">
 			{/* Heading */}
 			<div className="bg-slate-50 px-6 pt-5 pb-4">
-				<h1 className="text-2xl font-semibold tracking-tight text-slate-950">
+				<h1 className="mb-0.5 text-2xl font-semibold tracking-tight text-slate-950">
 					<Translate text={localizationConstants.archive} />
 				</h1>
 				<DynamicBreadcrumb
 					variant="small"
 					items={[
 						{ translationKey: localizationConstants.home, href: "/home" },
+						{
+							translationKey: localizationConstants.moduleItem,
+							href: "/module/business",
+						},
 						{
 							translationKey: localizationConstants.calculation,
 							href: "/module/business/calculation",

@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
-	ArrowLeft,
 	Info,
 	Calendar1,
 	ChevronUp,
@@ -20,6 +18,12 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	ORDER_MODULE_BASE_URL,
+	ORDER_MODULE_TABS,
+	ORDER_MODULE_TITLE,
+} from "@/features/orders/data/orderNav.config";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { WarrantyRow, InspectionDateItem } from "../types/warranty.types";
@@ -36,7 +40,6 @@ export function WarrantyDetailView({
 	inspectionDates,
 	onAddInspectionDate,
 }: WarrantyDetailViewProps) {
-	const router = useRouter();
 	const [openSections, setOpenSections] = useState({
 		info: true,
 		dates: true,
@@ -47,35 +50,20 @@ export function WarrantyDetailView({
 		setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
 	};
 
-	const handleBack = () => {
-		router.push("/module/production/order/warranty");
-	};
-
 	return (
-		<div className="flex flex-1 flex-col overflow-y-auto px-3 py-6 space-y-6">
-			{/* Back arrow + Title header matching customer/1 detail page */}
-			<div className="flex flex-col gap-1">
-				<div className="flex items-center gap-2 ml-0">
-					<button
-						type="button"
-						aria-label="Go back"
-						onClick={handleBack}
-						className="rounded-md p-1 hover:bg-slate-100 cursor-pointer"
-					>
-						<ArrowLeft className="h-5 w-5 text-slate-700" />
-					</button>
-					<h1 className="text-xl font-semibold text-slate-900">
-						<Translate text={localizationConstants.viewDetailTitle} />
-					</h1>
-				</div>
+		<div className="flex flex-1 flex-col overflow-hidden">
+			<ModulePageHeader
+				title={ORDER_MODULE_TITLE}
+				tabs={ORDER_MODULE_TABS}
+				record={{
+					title: warranty.orderNo,
+					backHref: `${ORDER_MODULE_BASE_URL}/warranty`,
+				}}
+			/>
 
-				<p className="text-sm text-slate-500 sm:ml-9">
-					<Translate text={localizationConstants.orderNumberSubtitle} />: {warranty.orderNo}
-				</p>
-			</div>
-
-			{/* Main Collapsible Sections starting at sm:ml-9 aligned with title text */}
-			<div className="flex flex-col gap-6 ml-0 sm:ml-9">
+			<div className="flex flex-1 flex-col overflow-y-auto px-3 py-6 space-y-6">
+			{/* Main Collapsible Sections */}
+			<div className="flex flex-col gap-6">
 				{/* Section 1: Garantiinformation */}
 				<div className="rounded-xl border border-slate-200 bg-white overflow-hidden">
 					<button
@@ -293,6 +281,7 @@ export function WarrantyDetailView({
 				onClose={() => setIsModalOpen(false)}
 				onSave={onAddInspectionDate}
 			/>
+			</div>
 		</div>
 	);
 }

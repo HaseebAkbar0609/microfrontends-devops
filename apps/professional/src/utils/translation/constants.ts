@@ -621,6 +621,22 @@ export type OfferTranslation = {
 	offerDashboard: string;
 	widgetPanelOpenClosed: string;
 	// B2B - Dashboard
+	b2bDashboard: string;
+	b2bWidgetKpiStatus: string;
+	b2bWidgetOngoingProjects: string;
+	b2bWidgetUpcomingActivities: string;
+	b2bWidgetFinancialOverview: string;
+	b2bWidgetGuaranteeCommitments: string;
+	b2bWidgetEvents: string;
+	b2bWidgetQuickActions: string;
+	b2bMenuTitle: string;
+	b2bDiscard: string;
+	b2bOngoingBilling: string;
+	b2bDelayedMilestones: string;
+	b2bNumberOfQuotes: string;
+	b2bTotalKronor: string;
+	b2bLayoutSaved: string;
+	b2bLayoutDiscarded: string;
 	b2bOverview: string;
 	b2bProjectMarket: string;
 	b2bAvailableAssignments: string;
