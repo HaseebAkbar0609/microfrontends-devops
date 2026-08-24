@@ -16,96 +16,121 @@ import {
 } from "@/features/widgetdashboard/types/dashboard";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import { Translate } from "@/utils/translation/translate";
-import { B2BDashboardKpis, DEFAULT_B2B_KPIS } from "@/api-actions/b2b/b2b";
+import { B2BDashboardKpis, EMPTY_B2B_KPIS } from "@/api-actions/b2b/b2b";
 
-export function buildB2BWidgetMap(kpis: B2BDashboardKpis = DEFAULT_B2B_KPIS): Record<string, WidgetProps> {
+export function KpiStatusWidgetContent({ kpiStatus }: { kpiStatus: B2BDashboardKpis["kpiStatus"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.activeProjects} />: {kpiStatus.activeProjects}</div>
+			<div><Translate text={localizationConstants.b2bOngoingBilling} />: {kpiStatus.ongoingBilling}</div>
+			<div><Translate text={localizationConstants.b2bDelayedMilestones} />: {kpiStatus.delayedMilestones}</div>
+		</div>
+	);
+}
+
+export function OngoingProjectsWidgetContent({ projects }: { projects: B2BDashboardKpis["ongoingProjects"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			{projects.length === 0 ? (
+				<div>-</div>
+			) : (
+				projects.map((p) => <div key={p.id}>{p.name}</div>)
+			)}
+		</div>
+	);
+}
+
+export function UpcomingActivitiesWidgetContent({ activities }: { activities: B2BDashboardKpis["upcomingActivities"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			{activities.length === 0 ? (
+				<div>-</div>
+			) : (
+				activities.map((a) => <div key={a.id}>{a.title}</div>)
+			)}
+		</div>
+	);
+}
+
+export function FinancialOverviewWidgetContent({ financial }: { financial: B2BDashboardKpis["financialOverview"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.activeProjects} />: {financial.activeProjects}</div>
+			<div><Translate text={localizationConstants.activeOrders} />: {financial.activeOrders}</div>
+			<div><Translate text={localizationConstants.completedChecks} />: {financial.completedChecks}</div>
+		</div>
+	);
+}
+
+export function GuaranteeCommitmentsWidgetContent({ guarantee }: { guarantee: B2BDashboardKpis["guaranteeCommitments"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div>{guarantee.guaranteedPointsOpen} <Translate text={localizationConstants.guaranteedPointsOpen} /></div>
+			<div>{guarantee.jobsInPlanningPhase} <Translate text={localizationConstants.jobsInPlanningPhase} /></div>
+			<div>{guarantee.awaitingCustomerResponse} <Translate text={localizationConstants.awaitingCustomerResponse} /></div>
+		</div>
+	);
+}
+
+export function EventsWidgetContent({ events }: { events: B2BDashboardKpis["events"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.b2bNumberOfQuotes} />: {events.numberOfQuotes}</div>
+			<div>{events.totalKronor}</div>
+		</div>
+	);
+}
+
+export function QuickActionsWidgetContent({ quickActions }: { quickActions: B2BDashboardKpis["quickActions"] }) {
+	return (
+		<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
+			<div><Translate text={localizationConstants.number} />: {quickActions.count}</div>
+		</div>
+	);
+}
+
+export function buildB2BWidgetMap(kpis: B2BDashboardKpis = EMPTY_B2B_KPIS): Record<string, WidgetProps> {
 	return {
 		emptyPage: { title: localizationConstants.emptyPageLabel, icon: Folder },
-
 		kpiStatus: {
 			title: localizationConstants.b2bWidgetKpiStatus,
 			icon: Folder,
-			content: (
-				<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
-					<div><Translate text={localizationConstants.activeProjects} />: {kpis.kpiStatus.activeProjects}</div>
-					<div><Translate text={localizationConstants.b2bOngoingBilling} />: {kpis.kpiStatus.ongoingBilling}</div>
-					<div><Translate text={localizationConstants.b2bDelayedMilestones} />: {kpis.kpiStatus.delayedMilestones}</div>
-				</div>
-			),
+			content: <KpiStatusWidgetContent kpiStatus={kpis.kpiStatus} />,
 		},
-
 		ongoingProjects: {
 			title: localizationConstants.b2bWidgetOngoingProjects,
 			icon: Table2,
-			content: (
-				<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
-					{kpis.ongoingProjects.map((p) => (
-						<div key={p.id}>{p.name}</div>
-					))}
-				</div>
-			),
+			content: <OngoingProjectsWidgetContent projects={kpis.ongoingProjects} />,
 		},
-
 		upcomingActivities: {
 			title: localizationConstants.b2bWidgetUpcomingActivities,
 			icon: DollarSign,
-			content: (
-				<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
-					{kpis.upcomingActivities.map((a) => (
-						<div key={a.id}>{a.title}</div>
-					))}
-				</div>
-			),
+			content: <UpcomingActivitiesWidgetContent activities={kpis.upcomingActivities} />,
 		},
-
 		financialOverview: {
 			title: localizationConstants.b2bWidgetFinancialOverview,
 			icon: ShieldCheck,
-			content: (
-				<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
-					<div><Translate text={localizationConstants.activeProjects} />: {kpis.financialOverview.activeProjects}</div>
-					<div><Translate text={localizationConstants.activeOrders} />: {kpis.financialOverview.activeOrders}</div>
-					<div><Translate text={localizationConstants.completedChecks} />: {kpis.financialOverview.completedChecks}</div>
-				</div>
-			),
+			content: <FinancialOverviewWidgetContent financial={kpis.financialOverview} />,
 		},
-
 		guaranteeCommitments: {
 			title: localizationConstants.b2bWidgetGuaranteeCommitments,
 			icon: User,
-			content: (
-				<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
-					<div>{kpis.guaranteeCommitments.guaranteedPointsOpen} <Translate text={localizationConstants.guaranteedPointsOpen} /></div>
-					<div>{kpis.guaranteeCommitments.jobsInPlanningPhase} <Translate text={localizationConstants.jobsInPlanningPhase} /></div>
-					<div>{kpis.guaranteeCommitments.awaitingCustomerResponse} <Translate text={localizationConstants.awaitingCustomerResponse} /></div>
-				</div>
-			),
+			content: <GuaranteeCommitmentsWidgetContent guarantee={kpis.guaranteeCommitments} />,
 		},
-
 		events: {
 			title: localizationConstants.b2bWidgetEvents,
 			icon: CircleDollarSign,
-			content: (
-				<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
-					<div><Translate text={localizationConstants.b2bNumberOfQuotes} />: {kpis.events.numberOfQuotes}</div>
-					<div>{kpis.events.totalKronor}</div>
-				</div>
-			),
+			content: <EventsWidgetContent events={kpis.events} />,
 		},
-
 		quickActions: {
 			title: localizationConstants.b2bWidgetQuickActions,
 			icon: Focus,
-			content: (
-				<div className="space-y-0.5 text-sm text-slate-500 font-normal leading-tight">
-					<div><Translate text={localizationConstants.number} />: {kpis.quickActions.count}</div>
-				</div>
-			),
+			content: <QuickActionsWidgetContent quickActions={kpis.quickActions} />,
 		},
 	};
 }
 
-export const B2B_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = buildB2BWidgetMap(DEFAULT_B2B_KPIS);
+export const B2B_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = buildB2BWidgetMap(EMPTY_B2B_KPIS);
 
 export const B2B_WIDGET_ORDER = [
 	"kpiStatus",

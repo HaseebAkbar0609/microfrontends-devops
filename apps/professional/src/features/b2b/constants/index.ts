@@ -12,11 +12,10 @@ import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSideb
 import localizationConstants from "@/utils/translation/constants";
 
 export const B2B_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: "Home", href: "/home" },
-	{ label: "Module", href: "/module/business" },
-	{ label: "Business", href: "/module/business" },
-	{ label: "B2B", href: "/module/business/b2b" },
-	{ label: "B2B Dashboard" },
+	{ label: localizationConstants.home, href: "/home" },
+	{ label: localizationConstants.businessCategory, href: "/module/business" },
+	{ label: localizationConstants.b2b, href: "/module/business/b2b" },
+	{ label: localizationConstants.b2bDashboard },
 ];
 
 export const b2bSidebarItems: DynamicSubSidebarItem[] = [

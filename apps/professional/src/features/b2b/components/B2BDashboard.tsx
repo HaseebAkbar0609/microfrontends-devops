@@ -29,7 +29,7 @@ import {
 } from "@/api-actions/widgets/widgets";
 import {
 	getB2BDashboardKpisAction,
-	DEFAULT_B2B_KPIS,
+	EMPTY_B2B_KPIS,
 	type B2BDashboardKpis,
 } from "@/api-actions/b2b/b2b";
 import { PlacedWidgetEntry } from "@/features/widgetdashboard/types/dashboard";
@@ -48,7 +48,7 @@ export function B2BDashboard() {
 	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [isRearranging, setIsRearranging] = useState(false);
-	const [kpiData, setKpiData] = useState<B2BDashboardKpis>(DEFAULT_B2B_KPIS);
+	const [kpiData, setKpiData] = useState<B2BDashboardKpis>(EMPTY_B2B_KPIS);
 	const [isLoadingKpis, setIsLoadingKpis] = useState(true);
 
 	const {
@@ -69,6 +69,7 @@ export function B2BDashboard() {
 	const persistedLayoutRef = useRef<PlacedWidgetEntry[]>(B2B_INITIAL_WIDGETS);
 
 	const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+	const cardRectsRef = useRef<(DOMRect | null)[]>([]);
 	const dropZoneRef = useRef<HTMLDivElement>(null);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 	const [gridDragOverIndex, setGridDragOverIndex] = useState<number | null>(null);
@@ -224,20 +225,28 @@ export function B2BDashboard() {
 		setPendingReplacement(null);
 	};
 
+	const handleGridCardDragStart = () => {
+		setGridDragOverIndex(null);
+		cardRectsRef.current = cardRefs.current.map((el) => (el ? el.getBoundingClientRect() : null));
+	};
+
 	const handleGridCardDrag = (fromIndex: number, clientX: number, clientY: number) => {
 		let targetIndex: number | null = null;
-		cardRefs.current.forEach((el, i) => {
-			if (i === fromIndex || !el) return;
-			const rect = el.getBoundingClientRect();
+		const rects = cardRectsRef.current;
+		for (let i = 0; i < rects.length; i++) {
+			if (i === fromIndex) continue;
+			const rect = rects[i];
 			if (
+				rect &&
 				clientX >= rect.left &&
 				clientX <= rect.right &&
 				clientY >= rect.top &&
 				clientY <= rect.bottom
 			) {
 				targetIndex = i;
+				break;
 			}
-		});
+		}
 		setGridDragOverIndex(targetIndex);
 	};
 
@@ -338,7 +347,7 @@ export function B2BDashboard() {
 								containerRef={(el) => {
 									cardRefs.current[index] = el;
 								}}
-								onDragStart={() => setGridDragOverIndex(null)}
+								onDragStart={handleGridCardDragStart}
 								onDrag={(x, y) => handleGridCardDrag(index, x, y)}
 								onDragStop={(x, y) => handleGridCardDrop(index, x, y)}
 							>
