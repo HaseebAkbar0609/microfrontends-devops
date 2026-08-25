@@ -42,6 +42,7 @@ import { CreateRiskhanteringPage } from "../risk/CreateRiskhanteringPage";
 import { CreateRiskTemplatePage } from "../risk/CreateRiskTemplatePage";
 import { OpenRiskTemplatePage } from "../risk/OpenRiskTemplatePage";
 import { MOCK_RISK_TEMPLATES } from "../risk/RiskTemplateTable";
+import { CreateChecklistPage } from "./CreateChecklistPage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -2968,6 +2969,7 @@ function QualityPlanTab({
 	onOpenRiskTemplate,
 	onOpenDoc,
 	onCreateChecklist,
+	onUseChecklistTemplate
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -2980,6 +2982,7 @@ function QualityPlanTab({
 	onOpenRiskTemplate: (id: string) => void;
 	onOpenDoc: (doc: QualityDocument) => void;
 	onCreateChecklist: () => void;
+	onUseChecklistTemplate: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3105,14 +3108,43 @@ function QualityPlanTab({
 						<Translate text={localizationConstants.kmaChecklistMallarCreateBtn} />
 					</button>
 				) : planType === "checklistor" ? (
-					<button
-						type="button"
-						onClick={onCreateChecklist}
-						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
-					>
-						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.kmaChecklistCreateBtn} />
-					</button>
+					<div ref={createBtnRef} className="relative flex">
+						<button
+							type="button"
+							onClick={onCreateChecklist}
+							className="flex cursor-pointer items-center gap-1.5 rounded-l-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
+						>
+							<Plus className="h-4 w-4" />
+							<Translate text={localizationConstants.kmaChecklistCreateBtn} />
+						</button>
+						<button
+							type="button"
+							onClick={() => setCreateBtnOpen((v) => !v)}
+							className="flex cursor-pointer items-center rounded-r-md border-l border-white/20 bg-zinc-900 px-2 py-1.5 text-white hover:bg-zinc-800"
+						>
+							<ChevronDown className="h-4 w-4" />
+						</button>
+						{createBtnOpen && (
+							<div className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+								<button
+									type="button"
+									onClick={() => { onCreateChecklist(); setCreateBtnOpen(false); }}
+									className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+								>
+									<Plus className="h-4 w-4 text-slate-400" />
+									<Translate text={localizationConstants.kmaChecklistCreateBtn} />
+								</button>
+								<button
+									type="button"
+									onClick={() => { onUseChecklistTemplate(); setCreateBtnOpen(false); }}
+									className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+								>
+									<FileText className="h-4 w-4 text-slate-400" />
+									<Translate text={localizationConstants.kmaQualityPlanUseTemplate} />
+								</button>
+							</div>
+						)}
+					</div>
 				) : (
 					<div ref={createBtnRef} className="relative flex">
 						<button
@@ -3218,6 +3250,7 @@ export function QualitySystemPage() {
 	const [createRiskTemplateOpen, setCreateRiskTemplateOpen] = useState(false);
 	const [openRiskTemplateId, setOpenRiskTemplateId] = useState<string | null>(null);
 	const [createChecklistOpen, setCreateChecklistOpen] = useState(false);
+	const [createChecklistWithTemplate, setCreateChecklistWithTemplate] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3262,9 +3295,12 @@ export function QualitySystemPage() {
 
 	if (createChecklistOpen) {
 		return (
-			<CreateKontrollplanPage
-				onBack={() => setCreateChecklistOpen(false)}
-				startWithTemplate={false}
+			<CreateChecklistPage
+				onBack={() => {
+					setCreateChecklistOpen(false);
+					setCreateChecklistWithTemplate(false);
+				}}
+				startWithTemplate={createChecklistWithTemplate}
 			/>
 		);
 	}
@@ -3319,10 +3355,7 @@ export function QualitySystemPage() {
 			{activeTab === "plan" && (
 				<QualityPlanTab
 					onCreateNew={() => { setCreateWithTemplate(false); setCreatePlanOpen(true); }}
-					onUseTemplate={() => {
-						setCreateWithTemplate(true);
-						setCreatePlanOpen(true);
-					}}
+					onUseTemplate={() => { setCreateWithTemplate(true); setCreatePlanOpen(true); }}
 					onCreateRiskhantering={() => { setCreateRiskWithTemplate(false); setCreateRiskhanteringOpen(true); }}
 					onUseRiskTemplate={() => { setCreateRiskWithTemplate(true); setCreateRiskhanteringOpen(true); }}
 					onOpenPlan={() => setOpenPlanOpen(true)}
@@ -3331,7 +3364,8 @@ export function QualitySystemPage() {
 					onCreateRiskTemplate={() => setCreateRiskTemplateOpen(true)}
 					onOpenRiskTemplate={(id) => setOpenRiskTemplateId(id)}
 					onOpenDoc={setOpenDoc}
-					onCreateChecklist={() => setCreateChecklistOpen(true)}
+					onCreateChecklist={() => { setCreateChecklistWithTemplate(false); setCreateChecklistOpen(true); }}
+					onUseChecklistTemplate={() => { setCreateChecklistWithTemplate(true); setCreateChecklistOpen(true); }}
 				/>
 			)}
 		</div>
