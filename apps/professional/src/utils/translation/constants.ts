@@ -2225,6 +2225,8 @@ export type OfferTranslation = {
 	kmaRiskTemplateColVersion: string;
 	kmaRiskTemplateColLastUpdate: string;
 	kmaRiskTemplateColCreatedBy: string;
+	kmaOpenRiskTemplateTitle: string;
+	kmaEditRiskTemplateTitle: string;
 	kmaRiskTemplateTableTitle: string;
 	kmaRiskTemplateActionEdit: string;
 	kmaRiskTemplateActionArchive: string;
