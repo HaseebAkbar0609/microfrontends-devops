@@ -2144,6 +2144,8 @@ export type OfferTranslation = {
 	kmaQualityPlanTemplateCreatedByCol: string;
 	kmaQualityPlanTemplateUseBtn: string;
 	kmaQualityPlanArchive: string;
+	kmaChecklistCreateBtn: string;
+	kmaChecklistMallarCreateBtn: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;

@@ -2053,6 +2053,8 @@ export const svOffer: OfferTranslation = {
 	kmaQualityPlanTemplateCreatedByCol: "Skapad av",
 	kmaQualityPlanTemplateUseBtn: "Använd mall",
 	kmaQualityPlanArchive: "Arkiv",
+	kmaChecklistCreateBtn: "Skapa ny checklista",
+	kmaChecklistMallarCreateBtn: "Skapa ny mall",
 	kmaControlPlanOpenTitle: "Öppna ny kontrollplan",
 	kmaControlPlanGeneralInfo: "Allmän information",
 	kmaControlPlanNameLabel: "Namn",

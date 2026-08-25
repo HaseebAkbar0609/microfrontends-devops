@@ -2048,6 +2048,8 @@ export const enOffer: OfferTranslation = {
 	kmaQualityPlanTemplateCreatedByCol: "Created by",
 	kmaQualityPlanTemplateUseBtn: "Use template",
 	kmaQualityPlanArchive: "Archive",
+	kmaChecklistCreateBtn: "Create new checklist",
+	kmaChecklistMallarCreateBtn: "Create new template",
 	kmaControlPlanOpenTitle: "Open new control plan",
 	kmaControlPlanGeneralInfo: "General information",
 	kmaControlPlanNameLabel: "Name",
