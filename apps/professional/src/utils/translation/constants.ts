@@ -2350,6 +2350,9 @@ export type OfferTranslation = {
 	calcWidgetImageTitle: string;
 	calcWidgetImageDescription: string;
 	widgetNoData: string;
+	// Module dashboard rail (shared)
+	widgetRailMenuTitle: string;
+	widgetRailDiscard: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;

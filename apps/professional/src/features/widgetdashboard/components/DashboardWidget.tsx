@@ -21,6 +21,7 @@ import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { WidgetLoadingState } from "./WidgetContent";
 
 interface DashboardWidgetProps {
   title: string;
@@ -31,6 +32,10 @@ interface DashboardWidgetProps {
   onMenuClick?: () => void;
   onRemove?: () => void;
   isEmpty?: boolean;
+  /** Toggled off or unavailable: greyed out and non-interactive. */
+  isDisabled?: boolean;
+  /** Swap the content for a skeleton while the widget's data is being fetched. */
+  isLoading?: boolean;
 }
 
 export const DashboardWidget = ({
@@ -42,14 +47,23 @@ export const DashboardWidget = ({
   onMenuClick,
   onRemove,
   isEmpty,
+  isDisabled,
+  isLoading,
 }: DashboardWidgetProps) => {
   const t = useTranslate();
   const titleText = t(title) || title;
 
   return (
     <div
+      tabIndex={isEmpty || isDisabled ? -1 : 0}
+      aria-disabled={isDisabled || undefined}
+      aria-busy={isLoading || undefined}
       className={cn(
-        "rounded-sm p-4 overflow-hidden flex flex-col justify-start gap-1",
+        "rounded-sm p-4 overflow-hidden flex flex-col justify-start gap-1 transition-shadow",
+        !isEmpty &&
+          !isDisabled &&
+          "hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-2",
+        isDisabled && "pointer-events-none opacity-50",
         className
       )}
       style={{
@@ -122,10 +136,14 @@ export const DashboardWidget = ({
         <h3 className="font-sans font-semibold text-base leading-snug tracking-normal text-[#0A0A0A]">
           <Translate text={title} />
         </h3>
-        {subtitle && (
+        {subtitle && !isLoading && (
           <div className="text-sm text-slate-500">{subtitle}</div>
         )}
-        {content && <div>{content}</div>}
+        {isLoading ? (
+          <WidgetLoadingState />
+        ) : (
+          content && <div>{content}</div>
+        )}
       </div>
     </div>
   );

@@ -2260,6 +2260,9 @@ export const svOffer: OfferTranslation = {
 	calcWidgetImageDescription:
 		"Platshållarbanner för kalkylmodulen – byt till egen media senare.",
 	widgetNoData: "Ingen data att visa ännu",
+	// Module dashboard rail (shared)
+	widgetRailMenuTitle: "Meny",
+	widgetRailDiscard: "Avbryt",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Orderöversikt",
 	orderWidgetOverviewTotal: "Totalt antal order",

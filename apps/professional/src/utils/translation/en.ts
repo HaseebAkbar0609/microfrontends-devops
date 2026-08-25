@@ -2372,6 +2372,9 @@ export const enOffer: OfferTranslation = {
 	calcWidgetImageDescription:
 		"Placeholder banner for the calculation module â€” replace with your own media later.",
 	widgetNoData: "No data to show yet",
+	// Module dashboard rail (shared)
+	widgetRailMenuTitle: "Menu",
+	widgetRailDiscard: "Discard",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Order overview",
 	orderWidgetOverviewTotal: "Total orders",

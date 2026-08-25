@@ -26,6 +26,14 @@ import { PlacedWidgetEntry, WidgetProps } from "../types/dashboard";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
 
+/** Selection state handed to a custom rail so it can render the widget menu. */
+export interface ModuleDashboardRailApi {
+	selectedItem: string;
+	onSelectItem: (id: string) => void;
+	/** Ids already placed on the grid. */
+	placedItemIds: string[];
+}
+
 export interface ModuleWidgetDashboardProps {
 	widgetMap: Record<string, WidgetProps>;
 	initialWidgets: PlacedWidgetEntry[];
@@ -33,6 +41,12 @@ export interface ModuleWidgetDashboardProps {
 	gridHeader?: React.ReactNode;
 	belowGrid?: React.ReactNode;
 	panelHeader?: React.ReactNode;
+	/**
+	 * Replaces the default `SidebarWidgetList` panel with a custom right-hand
+	 * rail (see `DashboardRearrangeRail`). Dragging a grid card onto it still
+	 * removes the widget, so it keeps the panel's drop-target role.
+	 */
+	rail?: (api: ModuleDashboardRailApi) => React.ReactNode;
 	className?: string;
 }
 
@@ -43,6 +57,7 @@ export function ModuleWidgetDashboard({
 	gridHeader,
 	belowGrid,
 	panelHeader,
+	rail,
 	className,
 }: ModuleWidgetDashboardProps) {
 	const t = useTranslate();
@@ -250,22 +265,26 @@ export function ModuleWidgetDashboard({
 
 	return (
 		<div className={cn("min-h-screen", className)}>
-			<div className="mb-2.5 flex justify-end">
-				<button
-					type="button"
-					onClick={() => setPanelOpen((prev) => !prev)}
-					aria-expanded={panelOpen}
-					aria-label={t(localizationConstants.widgetPanelOpenClosed)}
-					className={cn(
-						"flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border transition-colors",
-						panelOpen
-							? "border-blue-500 bg-white text-blue-600 hover:bg-blue-50"
-							: "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
-					)}
-				>
-					<LayoutGrid size={18} />
-				</button>
-			</div>
+			{!rail && (
+				<div className="mb-2.5 flex justify-end">
+					<button
+						type="button"
+						onClick={() => setPanelOpen((prev) => !prev)}
+						aria-expanded={panelOpen}
+						aria-label={t(
+							localizationConstants.widgetPanelOpenClosed,
+						)}
+						className={cn(
+							"flex h-9 w-9 cursor-pointer items-center justify-center rounded-md border transition-colors",
+							panelOpen
+								? "border-blue-500 bg-white text-blue-600 hover:bg-blue-50"
+								: "border-slate-200 bg-white text-slate-500 hover:bg-slate-50",
+						)}
+					>
+						<LayoutGrid size={18} />
+					</button>
+				</div>
+			)}
 
 			<div className="mx-auto flex flex-col gap-6 lg:flex-row">
 				<div className="flex-1 space-y-6 mb-6">
@@ -308,7 +327,17 @@ export function ModuleWidgetDashboard({
 					{belowGrid}
 				</div>
 
-				{panelOpen && (
+				{rail && (
+					<div ref={sidebarRef} className="mb-6">
+						{rail({
+							selectedItem,
+							onSelectItem: handleSidebarItemClick,
+							placedItemIds: placedSidebarIds,
+						})}
+					</div>
+				)}
+
+				{!rail && panelOpen && (
 					<div
 						className="w-full space-y-6 lg:w-[400px] mb-6"
 						ref={sidebarRef}
