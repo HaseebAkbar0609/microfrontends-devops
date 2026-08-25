@@ -1,5 +1,5 @@
-import { ComingSoonPage } from "@/components/common/ComingSoonPage";
 import { ModulePageHeader } from "@/components/layout/navigation";
+import PurchaseDashboard from "@/features/purchase/components/PurchaseDashboard";
 import {
 	PURCHASE_MODULE_TABS,
 	PURCHASE_MODULE_TITLE,
@@ -17,7 +17,9 @@ export default function PurchaseDashboardPage() {
 					localizationConstants.purchaseTabDashboard,
 				)}
 			/>
-			<ComingSoonPage hideTitle />
+			<div className="p-5 flex-1">
+				<PurchaseDashboard />
+			</div>
 		</div>
 	);
 }
