@@ -20,13 +20,14 @@ import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
+/** Swedish weekday initials, matching PROJECT_WEEK_DAYS. */
 const CALENDAR_WEEK_DAYS: WidgetCalendarWeekDay[] = [
 	{ id: "mon", label: "M" },
 	{ id: "tue", label: "T" },
-	{ id: "wed", label: "W" },
+	{ id: "wed", label: "O" },
 	{ id: "thu", label: "T" },
 	{ id: "fri", label: "F" },
-	{ id: "sat", label: "S" },
+	{ id: "sat", label: "L" },
 	{ id: "sun", label: "S" },
 ];
 
