@@ -1052,9 +1052,10 @@ interface DocsPanelProps {
 	onOpenDoc: (doc: QualityDocument) => void;
 	selectedSubCatId: string | null;
 	onOpenPlan?: () => void;
+	headerAction?: React.ReactNode;
 }
 
-function DocsPanel({ documents, onOpenDoc, selectedSubCatId, onOpenPlan }: DocsPanelProps) {
+function DocsPanel({ documents, onOpenDoc, selectedSubCatId, onOpenPlan, headerAction }: DocsPanelProps) {
 	const t = useTranslate();
 	const [search, setSearch] = useState("");
 	const [openMenuDocId, setOpenMenuDocId] = useState<string | null>(null);
@@ -1080,13 +1081,15 @@ function DocsPanel({ documents, onOpenDoc, selectedSubCatId, onOpenPlan }: DocsP
 				<p className="text-xs font-semibold tracking-wide text-slate-500">
 					<Translate text={localizationConstants.kmaQualityDocs} />
 				</p>
-				<button
-					type="button"
-					className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
-				>
-					<Upload className="h-3.5 w-3.5" />
-					<Translate text={localizationConstants.kmaQualityUpload} />
-				</button>
+				{headerAction ?? (
+					<button
+						type="button"
+						className="flex cursor-pointer items-center gap-1.5 rounded-md border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50"
+					>
+						<Upload className="h-3.5 w-3.5" />
+						<Translate text={localizationConstants.kmaQualityUpload} />
+					</button>
+				)}
 			</div>
 			{/* Search */}
 			<div className="relative border-b border-slate-200">
@@ -2444,6 +2447,86 @@ function KontrollplanTable({
 }
 
 
+// ── Checklist Tab ─────────────────────────────────────────────────────────────
+
+function ChecklistTab({
+	onOpenDoc,
+	onCreateChecklist,
+}: {
+	onOpenDoc: (doc: QualityDocument) => void;
+	onCreateChecklist: () => void;
+}) {
+	const [selectedMainId, setSelectedMainId] = useState<string | null>(
+		MOCK_QUALITY_PLAN_CATEGORIES[0]?.id ?? null,
+	);
+	const [selectedSubId, setSelectedSubId] = useState<string | null>(
+		MOCK_QUALITY_PLAN_CATEGORIES[0]?.subcategories[0]?.id ?? null,
+	);
+
+	const selectedMain = MOCK_QUALITY_PLAN_CATEGORIES.find((c) => c.id === selectedMainId);
+	const selectedSub = selectedMain?.subcategories.find((s) => s.id === selectedSubId);
+
+	function handleSelectMain(id: string) {
+		setSelectedMainId(id);
+		const cat = MOCK_QUALITY_PLAN_CATEGORIES.find((c) => c.id === id);
+		setSelectedSubId(cat?.subcategories[0]?.id ?? null);
+	}
+
+	const mainItems = useMemo(
+		() =>
+			MOCK_QUALITY_PLAN_CATEGORIES.map((c) => ({
+				id: c.id,
+				label: c.label,
+				count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
+			})),
+		[MOCK_QUALITY_PLAN_CATEGORIES],
+	);
+
+	const subItems = useMemo(
+		() =>
+			selectedMain?.subcategories.map((s) => ({
+				id: s.id,
+				label: s.label,
+				count: s.documents.length,
+			})) ?? [],
+		[selectedMain],
+	);
+
+	return (
+		<div className="flex flex-1 overflow-hidden">
+			<CategoryPanel
+				headerKey={localizationConstants.kmaQualityMainCat}
+				items={mainItems}
+				selectedId={selectedMainId}
+				onSelect={handleSelectMain}
+				searchKey={localizationConstants.kmaQualitySearchCategories}
+			/>
+			<CategoryPanel
+				headerKey={localizationConstants.kmaQualitySubCat}
+				items={subItems}
+				selectedId={selectedSubId}
+				onSelect={setSelectedSubId}
+				searchKey={localizationConstants.kmaQualitySearchSubCategories}
+			/>
+			<DocsPanel
+				documents={selectedSub?.documents ?? []}
+				onOpenDoc={onOpenDoc}
+				selectedSubCatId={selectedSubId}
+				headerAction={
+					<button
+						type="button"
+						onClick={onCreateChecklist}
+						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
+					>
+						<Plus className="h-3.5 w-3.5" />
+						<Translate text={localizationConstants.kmaChecklistCreateBtn} />
+					</button>
+				}
+			/>
+		</div>
+	);
+}
+
 // ── Create Template Page ──────────────────────────────────────────────────────
 
 function CreateTemplatePage({ onBack }: { onBack: () => void }) {
@@ -2884,8 +2967,9 @@ function QualityPlanTab({
 	onCreateTemplate,
 	onCreateRiskTemplate,
 	onOpenRiskTemplate,
+	onOpenDoc,
 	onCreateChecklist,
-	onUseChecklistTemplate,
+	onUseChecklistTemplate
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -2896,6 +2980,7 @@ function QualityPlanTab({
 	onCreateTemplate: () => void;
 	onCreateRiskTemplate: () => void;
 	onOpenRiskTemplate: (id: string) => void;
+	onOpenDoc: (doc: QualityDocument) => void;
 	onCreateChecklist: () => void;
 	onUseChecklistTemplate: () => void;
 }) {
@@ -3003,7 +3088,7 @@ function QualityPlanTab({
 						</button>
 					</div>
 				</div>
-				{/* Create button */}
+				{/* Create button — single for Mallar tabs, split for all other views */}
 				{planType === "riskhantering" && viewMode === "mallar" ? (
 					<button
 						type="button"
@@ -3016,6 +3101,7 @@ function QualityPlanTab({
 				) : planType === "checklistor" && viewMode === "mallar" ? (
 					<button
 						type="button"
+						onClick={onCreateChecklist}
 						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-4 w-4" />
@@ -3102,6 +3188,26 @@ function QualityPlanTab({
 			{/* Content */}
 			{planType === "riskhantering" ? (
 				viewMode === "mallar" ? <RiskTemplateTable onOpenTemplate={onOpenRiskTemplate} /> : <RiskTable />
+			) : planType === "checklistor" ? (
+				viewMode === "mallar" ? (
+					<div className="flex flex-1 overflow-hidden">
+						<CategoryPanel
+							headerKey={localizationConstants.kmaQualityMainCat}
+							items={mainItems}
+							selectedId={selectedMainId}
+							onSelect={handleSelectMain}
+							searchKey={localizationConstants.kmaQualitySearchCategories}
+						/>
+						<KontrollplanTable
+							title={selectedMain?.label ?? ""}
+							onOpenPlan={onOpenPlan}
+							onOpenSandlista={onOpenSandlista}
+							onCreateTemplate={onCreateTemplate}
+						/>
+					</div>
+				) : (
+					<ChecklistTab onOpenDoc={onOpenDoc} onCreateChecklist={onCreateChecklist} />
+				)
 			) : planType !== "kontrollplan" ? (
 				<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
 					<Translate text={localizationConstants.comingSoon} />
@@ -3257,6 +3363,7 @@ export function QualitySystemPage() {
 					onCreateTemplate={() => setCreateTemplateOpen(true)}
 					onCreateRiskTemplate={() => setCreateRiskTemplateOpen(true)}
 					onOpenRiskTemplate={(id) => setOpenRiskTemplateId(id)}
+					onOpenDoc={setOpenDoc}
 					onCreateChecklist={() => { setCreateChecklistWithTemplate(false); setCreateChecklistOpen(true); }}
 					onUseChecklistTemplate={() => { setCreateChecklistWithTemplate(true); setCreateChecklistOpen(true); }}
 				/>
