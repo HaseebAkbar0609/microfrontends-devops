@@ -2263,6 +2263,15 @@ export const svOffer: OfferTranslation = {
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: "Meny",
 	widgetRailDiscard: "Avbryt",
+	// Purchase - module tabs
+	purchaseModuleTitle: "Inköp",
+	purchaseTabDashboard: "Inköpspanel",
+	purchaseTabOverview: "Inköp - Översikt",
+	purchaseTabSuppliers: "Leverantörer",
+	purchaseTabComplaints: "Reklamationer",
+	purchaseTabGoodsReception: "Godsmottagning",
+	purchaseTabQa: "Fråga / Svar",
+	purchaseTabArchive: "Arkiv",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Orderöversikt",
 	orderWidgetOverviewTotal: "Totalt antal order",

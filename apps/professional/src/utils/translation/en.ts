@@ -2375,6 +2375,15 @@ export const enOffer: OfferTranslation = {
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: "Menu",
 	widgetRailDiscard: "Discard",
+	// Purchase - module tabs
+	purchaseModuleTitle: "Purchasing",
+	purchaseTabDashboard: "Purchasing Dashboard",
+	purchaseTabOverview: "Purchasing - Overview",
+	purchaseTabSuppliers: "Suppliers",
+	purchaseTabComplaints: "Complaints",
+	purchaseTabGoodsReception: "Goods Reception",
+	purchaseTabQa: "Question / Answer",
+	purchaseTabArchive: "Archive",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Order overview",
 	orderWidgetOverviewTotal: "Total orders",

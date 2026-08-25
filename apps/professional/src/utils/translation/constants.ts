@@ -2353,6 +2353,15 @@ export type OfferTranslation = {
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: string;
 	widgetRailDiscard: string;
+	// Purchase - module tabs
+	purchaseModuleTitle: string;
+	purchaseTabDashboard: string;
+	purchaseTabOverview: string;
+	purchaseTabSuppliers: string;
+	purchaseTabComplaints: string;
+	purchaseTabGoodsReception: string;
+	purchaseTabQa: string;
+	purchaseTabArchive: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
