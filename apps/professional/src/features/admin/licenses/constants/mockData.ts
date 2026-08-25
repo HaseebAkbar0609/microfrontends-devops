@@ -117,6 +117,15 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 			action: "add",
 		},
 		{
+			id: "timeflow-extern-access",
+			name: "Timeflow - Extern Åtkomst",
+			priceLabel: "299",
+			price: 299,
+			feeKey: localizationConstants.licensesExternAccessFee,
+			modulesKey: localizationConstants.licensesExternAccessModules,
+			action: "add",
+		},
+		{
 			id: "app-timeflow-work",
 			name: "App - Timeflow Work",
 			priceLabel: "159 kr / mån / anv",

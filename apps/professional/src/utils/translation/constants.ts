@@ -1802,6 +1802,8 @@ export type OfferTranslation = {
 	licensesStandardModules: string;
 	licensesProFee: string;
 	licensesProModules: string;
+	licensesExternAccessFee: string;
+	licensesExternAccessModules: string;
 	licensesAppWorkFee: string;
 	licensesAppWorkModules: string;
 	// Project - Dashboard widgets
