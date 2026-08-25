@@ -91,7 +91,7 @@ function RowActionMenu({
 
 // ── RiskTemplateTable ─────────────────────────────────────────────────────────
 
-export function RiskTemplateTable() {
+export function RiskTemplateTable({ onOpenTemplate }: { onOpenTemplate: (id: string) => void }) {
 	const t = useTranslate();
 	const [templates, setTemplates] = useState<RiskTemplate[]>(MOCK_RISK_TEMPLATES);
 	const [favorites, setFavorites] = useState<Set<string>>(new Set());
@@ -271,7 +271,7 @@ export function RiskTemplateTable() {
 											</button>
 											{openMenuId === tmpl.id && (
 												<RowActionMenu
-													onEdit={() => setOpenMenuId(null)}
+													onEdit={() => { onOpenTemplate(tmpl.id); setOpenMenuId(null); }}
 													onDelete={() => { setDeleteConfirmId(tmpl.id); setOpenMenuId(null); }}
 													onArchive={() => setOpenMenuId(null)}
 													onClose={() => setOpenMenuId(null)}

@@ -40,6 +40,8 @@ import { RiskTable } from "../risk/RiskTable";
 import { RiskTemplateTable } from "../risk/RiskTemplateTable";
 import { CreateRiskhanteringPage } from "../risk/CreateRiskhanteringPage";
 import { CreateRiskTemplatePage } from "../risk/CreateRiskTemplatePage";
+import { OpenRiskTemplatePage } from "../risk/OpenRiskTemplatePage";
+import { MOCK_RISK_TEMPLATES } from "../risk/RiskTemplateTable";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -2880,6 +2882,7 @@ function QualityPlanTab({
 	onOpenSandlista,
 	onCreateTemplate,
 	onCreateRiskTemplate,
+	onOpenRiskTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -2889,6 +2892,7 @@ function QualityPlanTab({
 	onOpenSandlista: () => void;
 	onCreateTemplate: () => void;
 	onCreateRiskTemplate: () => void;
+	onOpenRiskTemplate: (id: string) => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3046,7 +3050,7 @@ function QualityPlanTab({
 			</div>
 			{/* Content */}
 			{planType === "riskhantering" ? (
-				viewMode === "mallar" ? <RiskTemplateTable /> : <RiskTable />
+				viewMode === "mallar" ? <RiskTemplateTable onOpenTemplate={onOpenRiskTemplate} /> : <RiskTable />
 			) : planType !== "kontrollplan" ? (
 				<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
 					<Translate text={localizationConstants.comingSoon} />
@@ -3087,6 +3091,7 @@ export function QualitySystemPage() {
 	const [createRiskhanteringOpen, setCreateRiskhanteringOpen] = useState(false);
 	const [createRiskWithTemplate, setCreateRiskWithTemplate] = useState(false);
 	const [createRiskTemplateOpen, setCreateRiskTemplateOpen] = useState(false);
+	const [openRiskTemplateId, setOpenRiskTemplateId] = useState<string | null>(null);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3127,6 +3132,13 @@ export function QualitySystemPage() {
 
 	if (createRiskTemplateOpen) {
 		return <CreateRiskTemplatePage onBack={() => setCreateRiskTemplateOpen(false)} />;
+	}
+
+	if (openRiskTemplateId) {
+		const tmpl = MOCK_RISK_TEMPLATES.find((t) => t.id === openRiskTemplateId);
+		if (tmpl) {
+			return <OpenRiskTemplatePage template={tmpl} onBack={() => setOpenRiskTemplateId(null)} />;
+		}
 	}
 
 	if (openPlanOpen) {
@@ -3182,6 +3194,7 @@ export function QualitySystemPage() {
 					onOpenSandlista={() => setSandlistaOpen(true)}
 					onCreateTemplate={() => setCreateTemplateOpen(true)}
 					onCreateRiskTemplate={() => setCreateRiskTemplateOpen(true)}
+					onOpenRiskTemplate={(id) => setOpenRiskTemplateId(id)}
 				/>
 			)}
 		</div>

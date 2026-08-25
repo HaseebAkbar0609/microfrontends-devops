@@ -2133,6 +2133,8 @@ export const svOffer: OfferTranslation = {
 	kmaRiskTemplateColVersion: "Version",
 	kmaRiskTemplateColLastUpdate: "Senast uppdaterad",
 	kmaRiskTemplateColCreatedBy: "Skapad av",
+	kmaOpenRiskTemplateTitle: "Öppna mall",
+	kmaEditRiskTemplateTitle: "Ändra mall",
 	kmaRiskTemplateTableTitle: "Riskhanteringsmallar",
 	kmaRiskTemplateActionEdit: "Redigera",
 	kmaRiskTemplateActionArchive: "Arkiv",

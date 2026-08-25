@@ -2128,6 +2128,8 @@ export const enOffer: OfferTranslation = {
 	kmaRiskTemplateColVersion: "Version",
 	kmaRiskTemplateColLastUpdate: "Last Update",
 	kmaRiskTemplateColCreatedBy: "Created By",
+	kmaOpenRiskTemplateTitle: "Open Template",
+	kmaEditRiskTemplateTitle: "Edit Template",
 	kmaRiskTemplateTableTitle: "Risk Management Templates",
 	kmaRiskTemplateActionEdit: "Edit",
 	kmaRiskTemplateActionArchive: "Archive",
