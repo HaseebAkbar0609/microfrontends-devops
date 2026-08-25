@@ -1802,6 +1802,8 @@ export type OfferTranslation = {
 	licensesStandardModules: string;
 	licensesProFee: string;
 	licensesProModules: string;
+	licensesExternAccessFee: string;
+	licensesExternAccessModules: string;
 	licensesAppWorkFee: string;
 	licensesAppWorkModules: string;
 	// Project - Dashboard widgets
@@ -2144,6 +2146,21 @@ export type OfferTranslation = {
 	kmaQualityPlanTemplateCreatedByCol: string;
 	kmaQualityPlanTemplateUseBtn: string;
 	kmaQualityPlanArchive: string;
+	// TFS-740 – Create New Checklist
+	kmaChecklistCreateBtn: string;
+	kmaChecklistMallarCreateBtn: string;
+	kmaChecklistPageSubtitle: string;
+	kmaChecklistDetailsHeader: string;
+	kmaChecklistNameLabel: string;
+	kmaChecklistIdLabel: string;
+	kmaChecklistVersionLabel: string;
+	kmaChecklistCreatedByLabel: string;
+	kmaChecklistDateLabel: string;
+	kmaChecklistNewPanelTitle: string;
+	kmaChecklistTemplateModalTitle: string;
+	kmaChecklistTemplateNrCol: string;
+	kmaChecklistTemplateNameCol: string;
+	kmaChecklistTemplateUseBtn: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
