@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-import { ComingSoonPage } from "@/components/common/ComingSoonPage";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
@@ -11,6 +10,7 @@ import {
 	PURCHASE_MODULE_TITLE,
 	purchaseBreadcrumbs,
 } from "../data/purchaseNav.config";
+import { PurchaseGanttTab } from "./PurchaseGanttTab";
 import { PurchaseListTab } from "./PurchaseListTab";
 
 type OverviewTab = "list" | "gantt";
@@ -66,7 +66,7 @@ export function PurchaseOverviewPage() {
 					{activeTab === "list" ? (
 						<PurchaseListTab />
 					) : (
-						<ComingSoonPage hideTitle />
+						<PurchaseGanttTab />
 					)}
 				</div>
 			</div>
