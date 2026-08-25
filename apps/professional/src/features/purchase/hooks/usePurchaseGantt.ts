@@ -74,7 +74,7 @@ export function usePurchaseGantt(
 	const { i18n } = useTranslation();
 	const locale = i18n.language?.startsWith("sv") ? sv : enUS;
 
-	const [rows] = useState<PurchaseGanttRow[]>(initialRows);
+    const rows = initialRows;
 	const [zoom, setZoom] = useState<PurchaseGanttZoom>("day");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState<string>("all");
