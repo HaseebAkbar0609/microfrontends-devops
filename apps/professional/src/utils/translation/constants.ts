@@ -2437,6 +2437,31 @@ export type OfferTranslation = {
 	purchaseCtaViewCalendar: string;
 	purchaseCtaViewSuppliers: string;
 	purchaseCtaViewReport: string;
+	// Purchase - overview list
+	purchaseOverviewTabList: string;
+	purchaseOverviewTabGantt: string;
+	purchaseColNumber: string;
+	purchaseColName: string;
+	purchaseColObject: string;
+	purchaseColOrderer: string;
+	purchaseColType: string;
+	purchaseColCategory: string;
+	purchaseTypeTotal: string;
+	purchaseTypeGeneral: string;
+	purchaseTypeRunning: string;
+	purchaseTypeCollaboration: string;
+	purchaseCategoryService: string;
+	purchaseCategoryContracting: string;
+	purchaseCategoryRunning: string;
+	purchaseStatusNotStarted: string;
+	purchaseStatusOngoing: string;
+	purchaseStatusCompleted: string;
+	purchaseCreateButton: string;
+	purchaseSeeButton: string;
+	purchaseFilterLabel: string;
+	purchaseFilterAllStatuses: string;
+	purchaseNoneFound: string;
+	purchaseActionView: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
