@@ -2478,7 +2478,7 @@ function ChecklistTab({
 				label: c.label,
 				count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
 			})),
-		[],
+		[MOCK_QUALITY_PLAN_CATEGORIES],
 	);
 
 	const subItems = useMemo(
@@ -3098,6 +3098,7 @@ function QualityPlanTab({
 				) : planType === "checklistor" && viewMode === "mallar" ? (
 					<button
 						type="button"
+						onClick={onCreateChecklist}
 						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-4 w-4" />
@@ -3160,17 +3161,13 @@ function QualityPlanTab({
 					<div className="flex flex-1 overflow-hidden">
 						<CategoryPanel
 							headerKey={localizationConstants.kmaQualityMainCat}
-							items={MOCK_QUALITY_PLAN_CATEGORIES.map((c) => ({
-								id: c.id,
-								label: c.label,
-								count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
-							}))}
+							items={mainItems}
 							selectedId={selectedMainId}
 							onSelect={handleSelectMain}
 							searchKey={localizationConstants.kmaQualitySearchCategories}
 						/>
 						<KontrollplanTable
-							title={MOCK_QUALITY_PLAN_CATEGORIES.find((c) => c.id === selectedMainId)?.label ?? ""}
+							title={selectedMain?.label ?? ""}
 							onOpenPlan={onOpenPlan}
 							onOpenSandlista={onOpenSandlista}
 							onCreateTemplate={onCreateTemplate}
