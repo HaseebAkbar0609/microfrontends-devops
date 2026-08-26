@@ -19,6 +19,7 @@ import { MachineDocumentsStep, fileTypeOf } from "./components/MachineDocumentsS
 import { MachinePhotosStep } from "./components/MachinePhotosStep";
 import {
 	MOCK_MACHINE_DOCUMENTS,
+	MOCK_MACHINE_PHOTOS,
 	NEXT_MACHINE_NO,
 } from "./data/newMachine.config";
 import {
@@ -28,6 +29,7 @@ import {
 import type {
 	MachineDocumentItem,
 	MachineDocumentKind,
+	MachinePhotoItem,
 	NewMachineFormData,
 	PendingMachineFile,
 } from "./types/newMachine.types";
@@ -62,6 +64,7 @@ export function NewMachinePage() {
 	const [documents, setDocuments] = useState<MachineDocumentItem[]>(
 		MOCK_MACHINE_DOCUMENTS
 	);
+	const [photos, setPhotos] = useState<MachinePhotoItem[]>(MOCK_MACHINE_PHOTOS);
 
 	const methods = useForm<NewMachineFormData>({
 		resolver: zodResolver(newMachineSchema),
@@ -125,6 +128,25 @@ export function NewMachinePage() {
 
 	const handleRemoveDocument = useCallback((id: string) => {
 		setDocuments((prev) => prev.filter((doc) => doc.id !== id));
+	}, []);
+
+	const handleAddPhotos = useCallback((files: PendingMachineFile[]) => {
+		setPhotos((prev) => [
+			...prev,
+			...files.map((file) => ({
+				id: `photo-${file.id}`,
+				name: file.name,
+				previewUrl: file.previewUrl,
+			})),
+		]);
+	}, []);
+
+	const handleRemovePhoto = useCallback((id: string) => {
+		setPhotos((prev) => {
+			const removed = prev.find((photo) => photo.id === id);
+			if (removed?.previewUrl) URL.revokeObjectURL(removed.previewUrl);
+			return prev.filter((photo) => photo.id !== id);
+		});
 	}, []);
 
 	const handleCancel = () => {
@@ -205,7 +227,13 @@ export function NewMachinePage() {
 										onRemoveDocument={handleRemoveDocument}
 									/>
 								)}
-								{activeTab === "photos" && <MachinePhotosStep />}
+								{activeTab === "photos" && (
+									<MachinePhotosStep
+										photos={photos}
+										onAddPhotos={handleAddPhotos}
+										onRemovePhoto={handleRemovePhoto}
+									/>
+								)}
 							</form>
 						</FormProvider>
 					</div>

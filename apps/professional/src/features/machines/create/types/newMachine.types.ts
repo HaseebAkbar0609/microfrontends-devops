@@ -16,6 +16,18 @@ export interface MachineDocumentItem {
 export interface PendingMachineFile {
 	id: string;
 	name: string;
+	/** Object URL for image previews; absent for documents. */
+	previewUrl?: string;
+}
+
+export interface MachinePhotoItem {
+	id: string;
+	name: string;
+	/**
+	 * Object URL of a just-uploaded image. Seeded rows have none and render the
+	 * neutral tile the design shows.
+	 */
+	previewUrl?: string;
 }
 
 export interface NewMachineFormData {

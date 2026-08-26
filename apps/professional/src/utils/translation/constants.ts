@@ -2708,6 +2708,14 @@ export type OfferTranslation = {
 	machineCreateFieldRequired: string;
 	machineCreateValidationFailed: string;
 	machineCreateSuccess: string;
+	machineCreateUploadImagesLabel: string;
+	machineCreateUploadImagesHint: string;
+	machineCreateChoosePhotos: string;
+	machineCreateImagesSection: string;
+	machineCreateNoPhotos: string;
+	machineCreateNoPhotosPicked: string;
+	machineCreatePhotosUploaded: string;
+	machineCreateRemovePhoto: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;

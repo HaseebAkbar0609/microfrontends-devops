@@ -2,7 +2,10 @@ import type { FormSelectOption } from "@/components/form";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { createElement } from "react";
-import type { MachineDocumentItem } from "../types/newMachine.types";
+import type {
+	MachineDocumentItem,
+	MachinePhotoItem,
+} from "../types/newMachine.types";
 
 /** Machine number is assigned by the backend; shown read-only while mocked. */
 export const NEXT_MACHINE_NO = "M1001";
@@ -73,3 +76,12 @@ export const MOCK_MACHINE_DOCUMENTS: MachineDocumentItem[] = [
 ];
 
 export const ACCEPTED_UPLOAD_TYPES = ".png,.jpg,.jpeg,.pdf";
+
+/** The Fotos tab only takes images. */
+export const ACCEPTED_IMAGE_TYPES = ".png,.jpg,.jpeg";
+
+/** Six placeholder tiles, matching the gallery in the design. */
+export const MOCK_MACHINE_PHOTOS: MachinePhotoItem[] = Array.from(
+	{ length: 6 },
+	(_, index) => ({ id: `photo-${index + 1}`, name: "Photo.img" })
+);
