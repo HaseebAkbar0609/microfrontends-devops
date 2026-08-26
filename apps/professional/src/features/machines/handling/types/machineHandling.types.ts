@@ -6,6 +6,13 @@ export type MachineRentalStatus =
 	| "returned"
 	| "overtime";
 
+/**
+ * A machine list runs until it is archived. Kept as a union rather than a
+ * single literal so sorting and filtering by status stay meaningful — the
+ * design only happens to show active lists.
+ */
+export type MachineListStatus = "active" | "ended";
+
 /** A row on the Maskinhantering list: one machine list per project or order. */
 export interface MachineListRow {
 	id: string;
@@ -17,7 +24,7 @@ export interface MachineListRow {
 	customer: string;
 	startDate: string;
 	endDate: string;
-	status: "active";
+	status: MachineListStatus;
 }
 
 /** A machine booked onto a project, internal fleet or hired in. */

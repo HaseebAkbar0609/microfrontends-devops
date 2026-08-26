@@ -79,10 +79,13 @@ export function MachineHandlingPage() {
 		setPageSize,
 		searchQuery,
 		setSearchQuery,
+		statusFilter,
+		setStatusFilter,
 		sortBy,
 		sortOrder,
 		handleSort,
 		deleteList,
+		archiveList,
 	} = useMachineLists();
 
 	const renderSortIcon = (field: MachineListSortField) => {
@@ -120,15 +123,25 @@ export function MachineHandlingPage() {
 								wrapperClassName="w-full sm:w-[240px] md:w-[260px] lg:w-[300px]"
 							/>
 
-							{/* Filter has no options in the design yet; the trigger is kept so
-							    the toolbar matches, and wired to the search reset. */}
-							<Select value="" onValueChange={() => setCurrentPage(1)}>
+							<Select
+								value={statusFilter}
+								onValueChange={(val) => {
+									setStatusFilter(val);
+									setCurrentPage(1);
+								}}
+							>
 								<SelectTrigger className="h-10 w-full cursor-pointer border-slate-200 bg-white text-xs font-normal text-slate-700 shadow-2xs sm:w-[150px]">
 									<SelectValue placeholder={t(localizationConstants.filter)} />
 								</SelectTrigger>
 								<SelectContent className="bg-white">
 									<SelectItem value="all">
 										<Translate text={localizationConstants.filterAllStatuses} />
+									</SelectItem>
+									<SelectItem value="active">
+										<Translate text={localizationConstants.machineStatusActive} />
+									</SelectItem>
+									<SelectItem value="ended">
+										<Translate text={localizationConstants.machineStatusEnded} />
 									</SelectItem>
 								</SelectContent>
 							</Select>
@@ -237,7 +250,10 @@ export function MachineHandlingPage() {
 															</DropdownMenuItem>
 														</PermissionGate>
 														<PermissionGate permission="EDIT_MACHINE">
-															<DropdownMenuItem className="flex cursor-pointer items-center gap-2 text-slate-700 focus:bg-slate-50">
+															<DropdownMenuItem
+																onClick={() => archiveList(row.id)}
+																className="flex cursor-pointer items-center gap-2 text-slate-700 focus:bg-slate-50"
+															>
 																<Archive className="h-4 w-4 text-slate-500" />
 																<span>
 																	<Translate

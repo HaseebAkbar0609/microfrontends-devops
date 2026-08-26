@@ -20,6 +20,8 @@ export type MachineListSortField =
 export function useMachineLists(initialPageSize = 10) {
 	const [lists, setLists] = useState<MachineListRow[]>(MOCK_MACHINE_LISTS);
 	const [searchQuery, setSearchQuery] = useState("");
+	/** "" = unfiltered, so the trigger shows the "Filter" placeholder. */
+	const [statusFilter, setStatusFilter] = useState<string>("");
 	const [sortBy, setSortBy] = useState<MachineListSortField | null>(null);
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 	const [pageSize, setPageSize] = useState(initialPageSize);
@@ -41,13 +43,26 @@ export function useMachineLists(initialPageSize = 10) {
 		setLists((prev) => prev.filter((row) => row.id !== id));
 	}, []);
 
+	const archiveList = useCallback((id: string) => {
+		setLists((prev) =>
+			prev.map((row) => (row.id === id ? { ...row, status: "ended" } : row))
+		);
+	}, []);
+
 	const filteredAndSorted = useMemo(() => {
 		const query = searchQuery.trim().toLowerCase();
 		const filtered = lists.filter((row) => {
-			if (!query) return true;
-			return [row.object, row.label, row.customer].some((field) =>
-				field.toLowerCase().includes(query)
-			);
+			if (query) {
+				const matches = [row.object, row.label, row.customer].some((field) =>
+					field.toLowerCase().includes(query)
+				);
+				if (!matches) return false;
+			}
+
+			const filtersByStatus = statusFilter !== "" && statusFilter !== "all";
+			if (filtersByStatus && row.status !== statusFilter) return false;
+
+			return true;
 		});
 
 		if (!sortBy) return filtered;
@@ -60,7 +75,7 @@ export function useMachineLists(initialPageSize = 10) {
 			if (valA > valB) comparison = 1;
 			return sortOrder === "asc" ? comparison : -comparison;
 		});
-	}, [lists, searchQuery, sortBy, sortOrder]);
+	}, [lists, searchQuery, statusFilter, sortBy, sortOrder]);
 
 	const totalPages = Math.max(1, Math.ceil(filteredAndSorted.length / pageSize));
 	const safePage = Math.min(currentPage, totalPages);
@@ -83,9 +98,12 @@ export function useMachineLists(initialPageSize = 10) {
 		setPageSize,
 		searchQuery,
 		setSearchQuery,
+		statusFilter,
+		setStatusFilter,
 		sortBy,
 		sortOrder,
 		handleSort,
 		deleteList,
+		archiveList,
 	};
 }

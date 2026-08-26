@@ -172,6 +172,16 @@ const externalRows = (prefix: string) => [
 	},
 ];
 
+/**
+ * Look up a machine list by the id in the route. Only one list is mocked, so
+ * unknown ids fall back to it; the lookup is here so the page already binds to
+ * the route and will select the right record once the API exists.
+ */
+export function getMachineListDetail(listId?: string): MachineListDetail {
+	if (listId && MACHINE_LIST_DETAILS[listId]) return MACHINE_LIST_DETAILS[listId];
+	return MOCK_MACHINE_LIST_DETAIL;
+}
+
 export const MOCK_MACHINE_LIST_DETAIL: MachineListDetail = {
 	id: "p2025-001",
 	projectNo: "P2025-001",
@@ -205,4 +215,9 @@ export const MOCK_MACHINE_LIST_DETAIL: MachineListDetail = {
 			rows: externalRows("ext-concrete"),
 		},
 	],
+};
+
+/** Machine lists keyed by the id used in the route. */
+const MACHINE_LIST_DETAILS: Record<string, MachineListDetail> = {
+	[MOCK_MACHINE_LIST_DETAIL.id]: MOCK_MACHINE_LIST_DETAIL,
 };

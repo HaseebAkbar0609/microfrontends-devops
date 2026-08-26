@@ -12,7 +12,7 @@ import localizationConstants, {
 } from "@/utils/translation/constants";
 import { PermissionGate } from "@/components/common/PermissionGate";
 import { MACHINE_HANDLING_BASE_URL } from "./data/handlingNav.config";
-import { MOCK_MACHINE_LIST_DETAIL } from "./data/machineHandling.mock";
+import { getMachineListDetail } from "./data/machineHandling.mock";
 import { MachineListInformationTab } from "./components/MachineListInformationTab";
 import { MachineListMachinesTab } from "./components/MachineListMachinesTab";
 
@@ -36,9 +36,7 @@ export function MachineListDetailPage({ listId }: { listId?: string }) {
 	const router = useRouter();
 	const [activeTab, setActiveTab] = useState<DetailTab>("information");
 
-	// Only one list is mocked; the id is carried through so the route and the
-	// back navigation already behave correctly once the API exists.
-	const detail = MOCK_MACHINE_LIST_DETAIL;
+	const detail = getMachineListDetail(listId);
 
 	return (
 		<div className="flex h-full flex-col bg-slate-50/50">
@@ -59,7 +57,7 @@ export function MachineListDetailPage({ listId }: { listId?: string }) {
 
 				<p className="mb-3 ml-9 text-xs text-slate-500 sm:text-sm">
 					<Translate text={localizationConstants.machineListProject} />{" "}
-                    {detail.projectNo}
+					{detail.projectNo}
 				</p>
 
 				<div className="mb-4 ml-9 flex flex-col gap-4 border-b border-slate-200 sm:flex-row sm:items-center sm:justify-between">
