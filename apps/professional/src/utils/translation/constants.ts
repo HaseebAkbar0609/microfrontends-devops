@@ -2571,6 +2571,33 @@ export type OfferTranslation = {
 	planning: string;
 	warrantyCommitments: string;
 	orderGoTo: string;
+	// Machine module (TFS-803)
+	moduleLabel: string;
+	machineOverviewTitle: string;
+	machineOverviewBreadcrumb: string;
+	machineTabOverview: string;
+	machineTabGantt: string;
+	machineColumnId: string;
+	machineColumnFactory: string;
+	machineColumnDesignation: string;
+	machineColumnCategory: string;
+	machineColumnInternalRent: string;
+	machineColumnUnit: string;
+	machineColumnPurchase: string;
+	machineColumnLocation: string;
+	machineStatusActive: string;
+	machineStatusRepair: string;
+	machineStatusEnded: string;
+	machineCategoryHandTool: string;
+	machineCategoryEstablishment: string;
+	machineCategoryConcrete: string;
+	machineUnitHour: string;
+	machineUnitDay: string;
+	machineUnitWeek: string;
+	machineUnitMonth: string;
+	machineNewButton: string;
+	machineActionOpen: string;
+	machineNoResults: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;
