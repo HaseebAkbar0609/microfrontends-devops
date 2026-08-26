@@ -1,16 +1,7 @@
-import { ComingSoonPage } from "@/components/common/ComingSoonPage";
-import { ModulePageHeader } from "@/components/layout/navigation";
-import { productionBreadcrumbs } from "@/features/production/constants";
-import localizationConstants from "@/utils/translation/constants";
+import { MachineOverviewPage } from "@/features/machines/MachineOverviewPage";
+
+export const dynamic = "force-dynamic";
 
 export default function Page() {
-	return (
-		<div className="flex flex-1 flex-col bg-blue-gray-50">
-			<ModulePageHeader
-				title={localizationConstants.machine}
-				breadcrumbs={productionBreadcrumbs(localizationConstants.machine)}
-			/>
-			<ComingSoonPage hideTitle />
-		</div>
-	);
+	return <MachineOverviewPage />;
 }
