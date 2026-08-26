@@ -2500,6 +2500,35 @@ export type OfferTranslation = {
 	purchaseGanttResetRange: string;
 	purchaseGanttExpandRow: string;
 	purchaseStatusDelayed: string;
+	// Purchase - create purchase object
+	purchaseCreateTitle: string;
+	purchaseCreateCompanyLabel: string;
+	purchaseCreateLinkOrder: string;
+	purchaseCreateLinkProject: string;
+	purchaseCreateLinkSection: string;
+	purchaseCreateLinkButton: string;
+	purchaseCreateSelectPlaceholder: string;
+	purchaseCreateObjectSection: string;
+	purchaseCreateOrderNo: string;
+	purchaseCreateOrderName: string;
+	purchaseCreateOrderAddress: string;
+	purchaseCreateProjectNo: string;
+	purchaseCreateProjectName: string;
+	purchaseCreateProjectAddress: string;
+	purchaseCreateBlockName: string;
+	purchaseCreateBlockNamePlaceholder: string;
+	purchaseCreateDelivery: string;
+	purchaseCreateDeliverySameAsObject: string;
+	purchaseCreateDeliveryAddress: string;
+	purchaseCreateDeliveryAddressPlaceholder: string;
+	purchaseCreateInfoSection: string;
+	purchaseCreateInfoOfferNo: string;
+	purchaseCreateInfoCalcNo: string;
+	purchaseCreateSubmit: string;
+	purchaseCreateSuccess: string;
+	purchaseCreateValidationLinkRequired: string;
+	purchaseCreateValidationRefNoRequired: string;
+	purchaseCreateValidationRefNameRequired: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
