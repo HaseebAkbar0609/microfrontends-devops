@@ -2623,6 +2623,12 @@ export const enOffer: OfferTranslation = {
 	machineNewButton: "New Machine",
 	machineActionOpen: "Open",
 	machineNoResults: "No machines found",
+	// Machine Gantt schema (TFS-804)
+	machineGanttObjectNo: "Object no.",
+	machineGanttLabel: "Description",
+	machineGanttStart: "Start",
+	machineGanttCount: "No. of machines",
+	machineGanttAddBooking: "Add booking",
 	projectModule: "Project",
 	projectSubDashboard: "Project dashboard",
 	projectSubOverview: "Project Overview",
