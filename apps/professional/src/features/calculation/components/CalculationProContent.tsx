@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Save, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -46,7 +46,7 @@ const INITIAL_INDUSTRY_ROWS: IndustrySettingRow[] = [
 ];
 
 const CHECKBOX_CLASS =
-	"data-[state=checked]:bg-neutral-950 data-[state=checked]:border-neutral-950 data-[state=checked]:text-white";
+	"border-gray-900 data-[state=checked]:bg-neutral-950 data-[state=checked]:border-neutral-950 data-[state=checked]:text-white";
 
 interface SectionHeaderProps {
 	titleKey: string;
@@ -55,8 +55,8 @@ interface SectionHeaderProps {
 
 function SectionHeader({ titleKey, action }: SectionHeaderProps) {
 	return (
-		<div className="flex items-center justify-between bg-slate-100 px-4 py-3">
-			<span className="text-sm font-medium text-slate-700">
+		<div className="flex items-center justify-between bg-slate-200 px-4 py-3">
+			<span className="text-base font-medium tracking-normal text-zinc-950">
 				<Translate text={titleKey} />
 			</span>
 			{action}
@@ -66,7 +66,7 @@ function SectionHeader({ titleKey, action }: SectionHeaderProps) {
 
 function ActiveBadge({ label }: { label: string }) {
 	return (
-		<span className="inline-flex items-center rounded-md border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+		<span className="inline-flex items-center rounded-md bg-green-500 px-2 py-1 text-xs font-medium text-white">
 			{label}
 		</span>
 	);
@@ -77,29 +77,26 @@ export function CalculationProContent() {
 	const idCounterRef = useRef(100);
 
 	const [settings, setSettings] = useState<DefaultSettings>(INITIAL_SETTINGS);
-	const [savedSettings, setSavedSettings] = useState<DefaultSettings>(INITIAL_SETTINGS);
+	const [savedSettings, setSavedSettings] =
+		useState<DefaultSettings>(INITIAL_SETTINGS);
 
 	const [selectedType, setSelectedType] = useState(INDUSTRY_TYPES[0]);
-	const [industryRows, setIndustryRows] =
-		useState<IndustrySettingRow[]>(INITIAL_INDUSTRY_ROWS);
-	const [savedIndustryRows, setSavedIndustryRows] =
-		useState<IndustrySettingRow[]>(INITIAL_INDUSTRY_ROWS);
+	const [industryRows, setIndustryRows] = useState<IndustrySettingRow[]>(
+		INITIAL_INDUSTRY_ROWS,
+	);
+	const [savedIndustryRows, setSavedIndustryRows] = useState<
+		IndustrySettingRow[]
+	>(INITIAL_INDUSTRY_ROWS);
 
 	function handleToggleSetting(field: keyof DefaultSettings) {
 		setSettings((prev) => ({ ...prev, [field]: !prev[field] }));
 	}
 
-	function handleSaveSettings() {
-		setSavedSettings(settings);
-	}
-
-	function handleCancelSettings() {
-		setSettings(savedSettings);
-	}
-
 	function handleToggleRow(id: string) {
 		setIndustryRows((prev) =>
-			prev.map((row) => (row.id === id ? { ...row, checked: !row.checked } : row)),
+			prev.map((row) =>
+				row.id === id ? { ...row, checked: !row.checked } : row,
+			),
 		);
 	}
 
@@ -116,11 +113,13 @@ export function CalculationProContent() {
 		setIndustryRows((prev) => [...prev, newRow]);
 	}
 
-	function handleSaveIndustry() {
+	function handleSave() {
+		setSavedSettings(settings);
 		setSavedIndustryRows(industryRows);
 	}
 
-	function handleCancelIndustry() {
+	function handleCancel() {
+		setSettings(savedSettings);
 		setIndustryRows(savedIndustryRows);
 	}
 
@@ -135,7 +134,7 @@ export function CalculationProContent() {
 					action={
 						<Button
 							size="sm"
-							className="h-8 cursor-pointer gap-1.5 bg-neutral-950 text-xs text-white hover:bg-neutral-800"
+							className="h-9 cursor-pointer gap-1.5 bg-neutral-950 text-xs text-white hover:bg-neutral-800"
 						>
 							<Plus size={12} aria-hidden />
 							{t(localizationConstants.calcProPurchaseLicense)}
@@ -159,32 +158,40 @@ export function CalculationProContent() {
 
 			{/* Default settings */}
 			<div className="overflow-hidden rounded-md border border-slate-200">
-				<SectionHeader titleKey={localizationConstants.calcProDefaultSettings} />
-				<div className="flex flex-col bg-white">
-					<label className="flex cursor-pointer items-center gap-3 border-b border-slate-100 px-4 py-3 hover:bg-slate-50">
+				<SectionHeader
+					titleKey={localizationConstants.calcProDefaultSettings}
+				/>
+				<div className="flex flex-col gap-2 bg-white px-4 py-4">
+					<label className="flex w-133.75 max-w-full cursor-pointer items-center gap-3 rounded-md border border-gray-300 px-3 py-2.5 hover:bg-slate-50">
 						<Checkbox
 							checked={settings.markupByCalc}
-							onCheckedChange={() => handleToggleSetting("markupByCalc")}
+							onCheckedChange={() =>
+								handleToggleSetting("markupByCalc")
+							}
 							className={CHECKBOX_CLASS}
 						/>
 						<span className="text-sm text-slate-700">
 							{t(localizationConstants.calcProMarkupByCalc)}
 						</span>
 					</label>
-					<label className="flex cursor-pointer items-center gap-3 border-b border-slate-100 px-4 py-3 hover:bg-slate-50">
+					<label className="flex w-133.75 max-w-full cursor-pointer items-center gap-3 rounded-md border border-gray-300 px-3 py-2.5 hover:bg-slate-50">
 						<Checkbox
 							checked={settings.baseCosts}
-							onCheckedChange={() => handleToggleSetting("baseCosts")}
+							onCheckedChange={() =>
+								handleToggleSetting("baseCosts")
+							}
 							className={CHECKBOX_CLASS}
 						/>
 						<span className="text-sm text-slate-700">
 							{t(localizationConstants.calcBaseCosts)}
 						</span>
 					</label>
-					<label className="flex cursor-pointer items-center gap-3 px-4 py-3 hover:bg-slate-50">
+					<label className="flex w-133.75 max-w-full cursor-pointer items-center gap-3 rounded-md border border-gray-300 px-3 py-2.5 hover:bg-slate-50">
 						<Checkbox
 							checked={settings.aPriceList}
-							onCheckedChange={() => handleToggleSetting("aPriceList")}
+							onCheckedChange={() =>
+								handleToggleSetting("aPriceList")
+							}
 							className={CHECKBOX_CLASS}
 						/>
 						<span className="text-sm text-slate-700">
@@ -192,34 +199,22 @@ export function CalculationProContent() {
 						</span>
 					</label>
 				</div>
-				<div className="flex items-center justify-end gap-2 border-t border-slate-200 bg-white px-4 py-3">
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={handleCancelSettings}
-						className="h-8 cursor-pointer border-slate-200 text-sm text-slate-700"
-					>
-						<Translate text={localizationConstants.cancel} />
-					</Button>
-					<Button
-						size="sm"
-						onClick={handleSaveSettings}
-						className="h-8 cursor-pointer bg-neutral-950 text-sm text-white hover:bg-neutral-800"
-					>
-						<Translate text={localizationConstants.save} />
-					</Button>
-				</div>
 			</div>
 
 			{/* Industry settings */}
 			<div className="overflow-hidden rounded-md border border-slate-200">
-				<SectionHeader titleKey={localizationConstants.calcProIndustrySettings} />
+				<SectionHeader
+					titleKey={localizationConstants.calcProIndustrySettings}
+				/>
 				<div className="bg-white px-4 pt-4 pb-3">
-					<label className="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">
+					<label className="mb-1.5 block text-sm font-medium text-zinc-950">
 						{t(localizationConstants.calcProType)}
 					</label>
-					<Select value={selectedType} onValueChange={setSelectedType}>
-						<SelectTrigger className="h-9 w-72 border-slate-200 text-sm">
+					<Select
+						value={selectedType}
+						onValueChange={setSelectedType}
+					>
+						<SelectTrigger className="h-9 w-133.75 max-w-full border-gray-300 text-sm [&_svg]:opacity-100 [&_svg]:text-gray-500!">
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
@@ -232,36 +227,39 @@ export function CalculationProContent() {
 					</Select>
 				</div>
 
-				<div className="flex flex-col bg-white">
+				<div className="flex flex-col gap-2 bg-white px-4 pb-3">
 					{industryRows.map((row) => (
-						<div
-							key={row.id}
-							className="flex items-center gap-3 border-t border-slate-100 px-4 py-3"
-						>
-							<Checkbox
-								checked={row.checked}
-								onCheckedChange={() => handleToggleRow(row.id)}
-								className={CHECKBOX_CLASS}
-							/>
-							<span className="flex-1 text-sm text-slate-700">{row.label}</span>
+						<div key={row.id} className="flex items-center gap-3">
+							<label className="flex w-133.75 max-w-full cursor-pointer items-center gap-3 rounded-md border border-gray-300 px-3 py-2.5 hover:bg-slate-50">
+								<Checkbox
+									checked={row.checked}
+									onCheckedChange={() =>
+										handleToggleRow(row.id)
+									}
+									className={CHECKBOX_CLASS}
+								/>
+								<span className="flex-1 text-sm text-slate-700">
+									{row.label}
+								</span>
+							</label>
 							<button
 								type="button"
 								onClick={() => handleDeleteRow(row.id)}
-								className="cursor-pointer rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+								className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-md border border-gray-300 text-gray-500 hover:bg-slate-100 hover:text-gray-600"
 								aria-label={`Delete ${row.label}`}
 							>
-								<Trash2 size={14} aria-hidden />
+								<Trash2 aria-hidden size={17} />
 							</button>
 						</div>
 					))}
 				</div>
 
-				<div className="border-t border-slate-100 bg-white px-4 py-2">
+				<div className="bg-white  px-4 pt-1 pb-3 ">
 					<Button
 						variant="outline"
 						size="sm"
 						onClick={handleAddRow}
-						className="h-8 cursor-pointer gap-1.5 border-slate-200 text-sm font-medium text-slate-700"
+						className="h-9 w-[561px] max-w-full cursor-pointer gap-1.5 border-dotted border-slate-200 bg-slate-200/28 text-sm font-medium text-slate-900"
 					>
 						<Plus size={13} aria-hidden />
 						{t(localizationConstants.calcNewRow)}
@@ -271,17 +269,16 @@ export function CalculationProContent() {
 				<div className="flex items-center justify-end gap-2 border-t border-slate-200 bg-white px-4 py-3">
 					<Button
 						variant="outline"
-						size="sm"
-						onClick={handleCancelIndustry}
-						className="h-8 cursor-pointer border-slate-200 text-sm text-slate-700"
+						onClick={handleCancel}
+						className="h-10 w-24 cursor-pointer border-none bg-bg-secondary px-5 text-sm font-medium text-zinc-950 shadow-none hover:bg-bg-secondary/80"
 					>
 						<Translate text={localizationConstants.cancel} />
 					</Button>
 					<Button
-						size="sm"
-						onClick={handleSaveIndustry}
-						className="h-8 cursor-pointer bg-neutral-950 text-sm text-white hover:bg-neutral-800"
+						onClick={handleSave}
+						className="h-10 w-24 cursor-pointer bg-neutral-950 text-sm font-medium text-white hover:bg-neutral-800"
 					>
+						<Save size={16} aria-hidden className="text-zinc-50" />
 						<Translate text={localizationConstants.save} />
 					</Button>
 				</div>
