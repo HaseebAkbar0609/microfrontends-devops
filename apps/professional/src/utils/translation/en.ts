@@ -2550,6 +2550,16 @@ export const enOffer: OfferTranslation = {
 	purchaseCreateValidationLinkRequired: "Select an order or a project",
 	purchaseCreateValidationRefNoRequired: "Reference number is required",
 	purchaseCreateValidationRefNameRequired: "Name is required",
+	// Purchase - suppliers
+	purchaseSuppliersTabAgreements: "Agreements",
+	purchaseSuppliersTabPriceLists: "Price lists",
+	purchaseSuppliersTabApi: "Supplier integrations (API)",
+	purchaseSupplierColName: "Supplier",
+	purchaseSupplierOpenPriceList: "Open price list",
+	purchaseSupplierSeeDetails: "See details",
+	purchaseSupplierAdd: "Add supplier",
+	purchaseSupplierNoneFound: "No suppliers found",
+	purchaseSupplierGeneralInfo: "General information",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Order overview",
 	orderWidgetOverviewTotal: "Total orders",

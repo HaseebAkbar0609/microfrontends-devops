@@ -2529,6 +2529,16 @@ export type OfferTranslation = {
 	purchaseCreateValidationLinkRequired: string;
 	purchaseCreateValidationRefNoRequired: string;
 	purchaseCreateValidationRefNameRequired: string;
+	// Purchase - suppliers
+	purchaseSuppliersTabAgreements: string;
+	purchaseSuppliersTabPriceLists: string;
+	purchaseSuppliersTabApi: string;
+	purchaseSupplierColName: string;
+	purchaseSupplierOpenPriceList: string;
+	purchaseSupplierSeeDetails: string;
+	purchaseSupplierAdd: string;
+	purchaseSupplierNoneFound: string;
+	purchaseSupplierGeneralInfo: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
