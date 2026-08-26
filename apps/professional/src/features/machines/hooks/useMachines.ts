@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { MOCK_MACHINES } from "../data/machines.mock";
 import type { MachineRow } from "../types/machine.types";
 
@@ -105,17 +105,31 @@ export function useMachines(options: UseMachinesOptions = {}) {
 		Math.ceil(filteredAndSortedMachines.length / pageSize)
 	);
 
+	/**
+	 * Removing rows can leave the current page beyond the end of the list — e.g.
+	 * deleting or archiving the only machine on page 2 drops the list to a single
+	 * page. Clamp when slicing so the table never renders an empty page while
+	 * rows still exist, and sync the state so the pager buttons stay in step.
+	 */
+	const safePage = Math.min(currentPage, totalPages);
+
+	useEffect(() => {
+		if (currentPage > totalPages) {
+			setCurrentPage(totalPages);
+		}
+	}, [currentPage, totalPages]);
+
 	const paginatedMachines = useMemo(() => {
-		const startIdx = (currentPage - 1) * pageSize;
+		const startIdx = (safePage - 1) * pageSize;
 		return filteredAndSortedMachines.slice(startIdx, startIdx + pageSize);
-	}, [filteredAndSortedMachines, currentPage, pageSize]);
+	}, [filteredAndSortedMachines, safePage, pageSize]);
 
 	return {
 		machines,
 		paginatedMachines,
 		totalCount: filteredAndSortedMachines.length,
 		totalPages,
-		currentPage,
+		currentPage: safePage,
 		setCurrentPage,
 		pageSize,
 		setPageSize,
