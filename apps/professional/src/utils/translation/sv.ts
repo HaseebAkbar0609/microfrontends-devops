@@ -2451,6 +2451,14 @@ export const svOffer: OfferTranslation = {
 	// Purchase - supplier agreements
 	purchaseAgreementSeeFile: "Se fil",
 	purchaseAgreementUploadedToast: "Filer bifogade",
+	// Purchase - supplier API integrations
+	purchaseApiCategory: "API kategori",
+	purchaseApiBuyLicense: "Köp licens",
+	purchaseApiSuppliersToConnect: "Leverantörer att ansluta",
+	purchaseApiConnectedSuppliers: "Anslutna leverantörer",
+	purchaseApiConnectedToast: "Leverantör ansluten",
+	purchaseApiDisconnectedToast: "Leverantör frånkopplad",
+	purchaseApiLicenseToast: "Licensköp kommer snart",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Orderöversikt",
 	orderWidgetOverviewTotal: "Totalt antal order",
