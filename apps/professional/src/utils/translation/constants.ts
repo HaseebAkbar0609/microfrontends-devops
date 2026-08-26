@@ -2481,6 +2481,25 @@ export type OfferTranslation = {
 	purchaseFilterAllStatuses: string;
 	purchaseNoneFound: string;
 	purchaseActionView: string;
+	// Purchase - Gantt schedule
+	purchaseGanttColObject: string;
+	purchaseGanttColConnection: string;
+	purchaseGanttZoomDay: string;
+	purchaseGanttZoomWeek: string;
+	purchaseGanttZoomMonth: string;
+	purchaseGanttWeekAbbrev: string;
+	purchaseGanttToday: string;
+	purchaseGanttOrderDate: string;
+	purchaseGanttEstimatedDelivery: string;
+	purchaseGanttDelivery: string;
+	purchaseGanttMonitoring: string;
+	purchaseGanttDetails: string;
+	purchaseGanttNoRows: string;
+	purchaseGanttFrom: string;
+	purchaseGanttTo: string;
+	purchaseGanttResetRange: string;
+	purchaseGanttExpandRow: string;
+	purchaseStatusDelayed: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;

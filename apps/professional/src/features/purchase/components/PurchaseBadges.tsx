@@ -13,12 +13,14 @@ import type {
 const STATUS_STYLES: Record<PurchaseStatus, string> = {
 	not_started: "bg-[#FEF3C7] text-[#92400E]",
 	ongoing: "bg-[#DCFCE7] text-[#15803D]",
+	delayed: "bg-[#FEE2E2] text-[#B91C1C]",
 	completed: "bg-[#E0F2FE] text-[#0369A1]",
 };
 
 const STATUS_LABELS: Record<PurchaseStatus, TranslationKeys> = {
 	not_started: localizationConstants.purchaseStatusNotStarted,
 	ongoing: localizationConstants.purchaseStatusOngoing,
+	delayed: localizationConstants.purchaseStatusDelayed,
 	completed: localizationConstants.purchaseStatusCompleted,
 };
 
