@@ -2681,6 +2681,33 @@ export type OfferTranslation = {
 	machineGanttStart: string;
 	machineGanttCount: string;
 	machineGanttAddBooking: string;
+	// Load new machine wizard (TFS-805)
+	machineCreateTitle: string;
+	machineCreateTabInformation: string;
+	machineCreateTabDocuments: string;
+	machineCreateTabPhotos: string;
+	machineCreateInfoCard: string;
+	machineCreateInstructionCard: string;
+	machineCreateInstructionText: string;
+	machineCreateQrCode: string;
+	machineCreateDocumentsCard: string;
+	machineCreateUploadLabel: string;
+	machineCreateUploadHint: string;
+	machineCreateUploadButton: string;
+	machineCreateChooseFiles: string;
+	machineCreateSpecification: string;
+	machineCreateEconomy: string;
+	machineCreateEconomyDocuments: string;
+	machineCreateColDate: string;
+	machineCreateColDocName: string;
+	machineCreateColFile: string;
+	machineCreateViewFile: string;
+	machineCreateNoDocuments: string;
+	machineCreateNoFilesPicked: string;
+	machineCreateFilesUploaded: string;
+	machineCreateFieldRequired: string;
+	machineCreateValidationFailed: string;
+	machineCreateSuccess: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;
