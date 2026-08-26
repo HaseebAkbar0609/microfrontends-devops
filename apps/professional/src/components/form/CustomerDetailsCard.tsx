@@ -22,6 +22,8 @@ export interface CustomerDetailsCardProps {
 	errors?: Partial<Record<keyof CustomerDetails, string>>;
 	/** Override the card heading; defaults to "Kunduppgifter". */
 	titleKey?: TranslationKeys;
+	/** Override the first field's label; defaults to "Kund". */
+	customerLabelKey?: TranslationKeys;
 	className?: string;
 }
 
@@ -37,6 +39,7 @@ export function CustomerDetailsCard({
 	onChange,
 	errors = {},
 	titleKey = localizationConstants.orderKunduppgifterSection,
+	customerLabelKey = localizationConstants.orderKundLabel,
 	className,
 }: CustomerDetailsCardProps) {
 	const t = useTranslate();
@@ -95,7 +98,7 @@ export function CustomerDetailsCard({
 			</CardHeader>
 			<CardContent className="px-4 py-0">
 				<div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
-					{field("customer", localizationConstants.orderKundLabel)}
+					{field("customer", customerLabelKey)}
 					{field("address", localizationConstants.orderAddressLabel, {
 						placeholder: t(localizationConstants.placeholderAddress),
 					})}
