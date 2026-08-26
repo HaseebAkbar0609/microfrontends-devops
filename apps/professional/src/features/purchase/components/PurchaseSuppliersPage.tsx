@@ -44,8 +44,16 @@ export function PurchaseSuppliersPage() {
 			/>
 
 			<div className="flex flex-1 flex-col overflow-y-auto px-6 pt-4 pb-8">
-				{/* Content switcher for the suppliers area itself. */}
-				<div className="mb-4 flex items-center gap-6 overflow-x-auto rounded-t-lg border-b border-slate-200 bg-white px-4 pt-2">
+				{/*
+					Content switcher for the suppliers area itself. Four labels
+					need horizontal scrolling on narrow screens, which makes this
+					a scroll container — hence two details the sibling overview
+					switcher does not need: `shrink-0`, so the flex parent cannot
+					squeeze the row until the labels clip, and an inset underline
+					on the active tab rather than a negative margin, which would
+					overflow by a pixel and render a stray vertical scrollbar.
+				*/}
+				<div className="no-scrollbar mb-4 flex shrink-0 items-center gap-6 overflow-x-auto rounded-t-lg border-b border-slate-200 bg-white px-4 pt-3">
 					{TABS.map((tab) => (
 						<button
 							key={tab.id}
@@ -53,7 +61,7 @@ export function PurchaseSuppliersPage() {
 							onClick={() => setActiveTab(tab.id)}
 							className={`relative cursor-pointer pb-3 text-sm font-medium whitespace-nowrap transition-colors ${
 								activeTab === tab.id
-									? "-mb-px border-b-2 border-slate-900 font-semibold text-slate-900"
+									? "font-semibold text-slate-900 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-slate-900"
 									: "text-slate-500 hover:text-slate-800"
 							}`}
 						>
