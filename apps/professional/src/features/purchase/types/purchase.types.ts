@@ -25,6 +25,24 @@ export interface PurchaseRow {
 	status: PurchaseStatus;
 }
 
+export type PurchaseSupplierStatus = "active" | "inactive";
+
+/**
+ * One row of the module's supplier list. Columns follow the Figma's headers;
+ * its sample cells are placeholder data copied from the overview frame.
+ */
+export interface PurchaseSupplierRow {
+	id: string;
+	name: string;
+	/** "Beställare" — who orders from this supplier. */
+	orderer: string;
+	postalCode: string;
+	city: string;
+	email: string;
+	phone: string;
+	status: PurchaseSupplierStatus;
+}
+
 /** Timeline granularity of the Gantt schedule. */
 export type PurchaseGanttZoom = "day" | "week" | "month";
 
