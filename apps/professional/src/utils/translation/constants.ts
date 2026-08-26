@@ -2539,6 +2539,9 @@ export type OfferTranslation = {
 	purchaseSupplierAdd: string;
 	purchaseSupplierNoneFound: string;
 	purchaseSupplierGeneralInfo: string;
+	// Purchase - supplier agreements
+	purchaseAgreementSeeFile: string;
+	purchaseAgreementUploadedToast: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;

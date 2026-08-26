@@ -2448,6 +2448,9 @@ export const svOffer: OfferTranslation = {
 	purchaseSupplierAdd: "Lägg till leverantör",
 	purchaseSupplierNoneFound: "Inga leverantörer hittades",
 	purchaseSupplierGeneralInfo: "Allmän information",
+	// Purchase - supplier agreements
+	purchaseAgreementSeeFile: "Se fil",
+	purchaseAgreementUploadedToast: "Filer bifogade",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Orderöversikt",
 	orderWidgetOverviewTotal: "Totalt antal order",

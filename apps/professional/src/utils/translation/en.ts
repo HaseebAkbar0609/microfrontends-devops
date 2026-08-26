@@ -2560,6 +2560,9 @@ export const enOffer: OfferTranslation = {
 	purchaseSupplierAdd: "Add supplier",
 	purchaseSupplierNoneFound: "No suppliers found",
 	purchaseSupplierGeneralInfo: "General information",
+	// Purchase - supplier agreements
+	purchaseAgreementSeeFile: "See file",
+	purchaseAgreementUploadedToast: "Files attached",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Order overview",
 	orderWidgetOverviewTotal: "Total orders",

@@ -43,6 +43,25 @@ export interface PurchaseSupplierRow {
 	status: PurchaseSupplierStatus;
 }
 
+export type PurchaseDocumentFileType = "pdf" | "doc";
+
+/** One row of the supplier agreements ("Avtal") document table. */
+export interface PurchaseAgreementDocument {
+	id: string;
+	/** ISO date the document was attached. */
+	date: string;
+	supplier: string;
+	documentName: string;
+	/**
+	 * The frame's "Typ" column, e.g. "A500-10". It reads as an agreement or
+	 * document reference rather than a file type — the adjacent "Fil" column
+	 * already carries the format.
+	 */
+	reference: string;
+	fileType: PurchaseDocumentFileType;
+	fileUrl?: string;
+}
+
 /** Timeline granularity of the Gantt schedule. */
 export type PurchaseGanttZoom = "day" | "week" | "month";
 

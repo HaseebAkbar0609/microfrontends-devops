@@ -13,6 +13,7 @@ import {
 	PURCHASE_MODULE_TITLE,
 	purchaseBreadcrumbs,
 } from "../data/purchaseNav.config";
+import { PurchaseAgreementsTab } from "./PurchaseAgreementsTab";
 import { PurchaseSupplierListTab } from "./PurchaseSupplierListTab";
 
 type SuppliersTab = "suppliers" | "agreements" | "priceLists" | "api";
@@ -71,11 +72,13 @@ export function PurchaseSuppliersPage() {
 				</div>
 
 				<div className="flex-1">
-					{activeTab === "suppliers" ? (
+					{activeTab === "suppliers" && (
 						<PurchaseSupplierListTab
 							onOpenPriceList={() => setActiveTab("priceLists")}
 						/>
-					) : (
+					)}
+					{activeTab === "agreements" && <PurchaseAgreementsTab />}
+					{(activeTab === "priceLists" || activeTab === "api") && (
 						<ComingSoonPage hideTitle />
 					)}
 				</div>
