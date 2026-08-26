@@ -2513,6 +2513,12 @@ export const svOffer: OfferTranslation = {
 	machineNewButton: "Ny Maskin",
 	machineActionOpen: "Öppna",
 	machineNoResults: "Inga maskiner hittades",
+	// Machine Gantt schema (TFS-804)
+	machineGanttObjectNo: "Objekt nr",
+	machineGanttLabel: "Benämning",
+	machineGanttStart: "Start",
+	machineGanttCount: "Antal maskin",
+	machineGanttAddBooking: "Lägg till bokning",
 	projectModule: "Projekt",
 	projectSubDashboard: "Projekt dashboard",
 	projectSubOverview: "Projekt Översikt",

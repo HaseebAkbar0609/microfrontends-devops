@@ -2598,6 +2598,12 @@ export type OfferTranslation = {
 	machineNewButton: string;
 	machineActionOpen: string;
 	machineNoResults: string;
+	// Machine Gantt schema (TFS-804)
+	machineGanttObjectNo: string;
+	machineGanttLabel: string;
+	machineGanttStart: string;
+	machineGanttCount: string;
+	machineGanttAddBooking: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;

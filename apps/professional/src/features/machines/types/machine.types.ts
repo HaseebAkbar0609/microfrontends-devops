@@ -27,3 +27,34 @@ export interface MachineRow {
 	location: string;
 	status: MachineStatus;
 }
+
+/**
+ * A horizontal span on the Gantt timeline, expressed in day indices into the
+ * visible window (0-based, inclusive on both ends).
+ */
+export interface MachineScheduleSpan {
+	from: number;
+	to: number;
+	color: string;
+	/**
+	 * Optional distinct colour for the first day of a bar. The design shades the
+	 * opening day green-600 and the remainder green-700.
+	 */
+	leadColor?: string;
+}
+
+export interface MachineScheduleRow {
+	id: string;
+	/** "Objekt nr" — project, order or service vehicle the machines are booked to. */
+	objectNo: string;
+	/** "Benämning" — what the booking is for. */
+	label: string;
+	/** "Start" — booking start date as displayed. */
+	start: string;
+	/** "Antal maskin" — how many machines the booking covers. */
+	machineCount: number;
+	/** Tinted band behind the bar: the planned/reserved window. */
+	window?: MachineScheduleSpan;
+	/** Solid bar: the actual assignment or maintenance block. */
+	bar?: MachineScheduleSpan;
+}
