@@ -87,7 +87,11 @@ export function usePurchaseAgreementDocuments(
 	}, [pendingFiles]);
 
 	const removeDocument = useCallback((id: string) => {
-		setDocuments((previous) => previous.filter((doc) => doc.id !== id));
+        setDocuments((previous) => {
+            const target = previous.find((doc) => doc.id === id);
+            if (target?.fileUrl) URL.revokeObjectURL(target.fileUrl);
+            return previous.filter((doc) => doc.id !== id);
+        });
 	}, []);
 
 	const sortedDocuments = useMemo(() => {
