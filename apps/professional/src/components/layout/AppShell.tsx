@@ -12,8 +12,6 @@ import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
 import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
 import { b2bSidebarItems } from "@/features/b2b/constants";
-import { financialSidebarItems } from "@/features/financial-management/constants";
-import { businessSupportSidebarItems } from "@/features/business-support/constants";
 import localizationConstants from "@/utils/translation/constants";
 
 interface AppShellProps {
@@ -52,12 +50,6 @@ export function AppShell({ children }: AppShellProps) {
 	);
 	const isCalculationDetailRoute = !!calcDetailMatch;
 	const calculationDetailId = calcDetailMatch?.[1] ?? "";
-	const isFinancialNavRoute = pathname.startsWith(
-		"/module/financial-management",
-	);
-	const isBusinessSupportNavRoute = pathname.startsWith(
-		"/module/business-support",
-	);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -155,18 +147,6 @@ export function AppShell({ children }: AppShellProps) {
 				/>
 			) : isCalculationDetailRoute ? (
 				<CalculationDetailSubSidebar calcId={calculationDetailId} />
-			) : isFinancialNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.financialManagement}
-					items={financialSidebarItems}
-					hideBack={true}
-				/>
-			) : isBusinessSupportNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.businessSupport}
-					items={businessSupportSidebarItems}
-					hideBack={true}
-				/>
 			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />

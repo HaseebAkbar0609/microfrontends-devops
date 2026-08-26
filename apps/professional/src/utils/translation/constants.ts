@@ -1802,6 +1802,8 @@ export type OfferTranslation = {
 	licensesStandardModules: string;
 	licensesProFee: string;
 	licensesProModules: string;
+	licensesExternAccessFee: string;
+	licensesExternAccessModules: string;
 	licensesAppWorkFee: string;
 	licensesAppWorkModules: string;
 	// Project - Dashboard widgets
@@ -2144,6 +2146,21 @@ export type OfferTranslation = {
 	kmaQualityPlanTemplateCreatedByCol: string;
 	kmaQualityPlanTemplateUseBtn: string;
 	kmaQualityPlanArchive: string;
+	// TFS-740 – Create New Checklist
+	kmaChecklistCreateBtn: string;
+	kmaChecklistMallarCreateBtn: string;
+	kmaChecklistPageSubtitle: string;
+	kmaChecklistDetailsHeader: string;
+	kmaChecklistNameLabel: string;
+	kmaChecklistIdLabel: string;
+	kmaChecklistVersionLabel: string;
+	kmaChecklistCreatedByLabel: string;
+	kmaChecklistDateLabel: string;
+	kmaChecklistNewPanelTitle: string;
+	kmaChecklistTemplateModalTitle: string;
+	kmaChecklistTemplateNrCol: string;
+	kmaChecklistTemplateNameCol: string;
+	kmaChecklistTemplateUseBtn: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
@@ -2225,6 +2242,8 @@ export type OfferTranslation = {
 	kmaRiskTemplateColVersion: string;
 	kmaRiskTemplateColLastUpdate: string;
 	kmaRiskTemplateColCreatedBy: string;
+	kmaOpenRiskTemplateTitle: string;
+	kmaEditRiskTemplateTitle: string;
 	kmaRiskTemplateTableTitle: string;
 	kmaRiskTemplateActionEdit: string;
 	kmaRiskTemplateActionArchive: string;
@@ -2462,6 +2481,54 @@ export type OfferTranslation = {
 	purchaseFilterAllStatuses: string;
 	purchaseNoneFound: string;
 	purchaseActionView: string;
+	// Purchase - Gantt schedule
+	purchaseGanttColObject: string;
+	purchaseGanttColConnection: string;
+	purchaseGanttZoomDay: string;
+	purchaseGanttZoomWeek: string;
+	purchaseGanttZoomMonth: string;
+	purchaseGanttWeekAbbrev: string;
+	purchaseGanttToday: string;
+	purchaseGanttOrderDate: string;
+	purchaseGanttEstimatedDelivery: string;
+	purchaseGanttDelivery: string;
+	purchaseGanttMonitoring: string;
+	purchaseGanttDetails: string;
+	purchaseGanttNoRows: string;
+	purchaseGanttFrom: string;
+	purchaseGanttTo: string;
+	purchaseGanttResetRange: string;
+	purchaseGanttExpandRow: string;
+	purchaseStatusDelayed: string;
+	// Purchase - create purchase object
+	purchaseCreateTitle: string;
+	purchaseCreateCompanyLabel: string;
+	purchaseCreateLinkOrder: string;
+	purchaseCreateLinkProject: string;
+	purchaseCreateLinkSection: string;
+	purchaseCreateLinkButton: string;
+	purchaseCreateSelectPlaceholder: string;
+	purchaseCreateObjectSection: string;
+	purchaseCreateOrderNo: string;
+	purchaseCreateOrderName: string;
+	purchaseCreateOrderAddress: string;
+	purchaseCreateProjectNo: string;
+	purchaseCreateProjectName: string;
+	purchaseCreateProjectAddress: string;
+	purchaseCreateBlockName: string;
+	purchaseCreateBlockNamePlaceholder: string;
+	purchaseCreateDelivery: string;
+	purchaseCreateDeliverySameAsObject: string;
+	purchaseCreateDeliveryAddress: string;
+	purchaseCreateDeliveryAddressPlaceholder: string;
+	purchaseCreateInfoSection: string;
+	purchaseCreateInfoOfferNo: string;
+	purchaseCreateInfoCalcNo: string;
+	purchaseCreateSubmit: string;
+	purchaseCreateSuccess: string;
+	purchaseCreateValidationLinkRequired: string;
+	purchaseCreateValidationRefNoRequired: string;
+	purchaseCreateValidationRefNameRequired: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
