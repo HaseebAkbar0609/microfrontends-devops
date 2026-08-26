@@ -59,7 +59,7 @@ export function MachineListDetailPage({ listId }: { listId?: string }) {
 
 				<p className="mb-3 ml-9 text-xs text-slate-500 sm:text-sm">
 					<Translate text={localizationConstants.machineListProject} />{" "}
-					{listId ? detail.projectNo : detail.projectNo}
+                    {detail.projectNo}
 				</p>
 
 				<div className="mb-4 ml-9 flex flex-col gap-4 border-b border-slate-200 sm:flex-row sm:items-center sm:justify-between">
