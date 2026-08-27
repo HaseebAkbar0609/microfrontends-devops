@@ -23,5 +23,17 @@ export type { FormCitySelectProps } from "./FormCitySelect";
 export { FormFileUpload } from "./FormFileUpload";
 export type { FormFileUploadProps } from "./FormFileUpload";
 
+export { MultiFileUploadField } from "./MultiFileUploadField";
+export type {
+  MultiFileUploadFieldProps,
+  PendingUploadFile,
+} from "./MultiFileUploadField";
+
 export { FormDatePicker } from "./FormDatePicker";
 export type { FormDatePickerProps } from "./FormDatePicker";
+
+export { PhoneInput } from "./PhoneInput";
+export type { PhoneInputProps } from "./PhoneInput";
+
+export { CustomerDetailsCard } from "./CustomerDetailsCard";
+export type { CustomerDetailsCardProps } from "./CustomerDetailsCard";

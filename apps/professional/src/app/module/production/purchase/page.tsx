@@ -1,16 +1,25 @@
-import { ComingSoonPage } from "@/components/common/ComingSoonPage";
 import { ModulePageHeader } from "@/components/layout/navigation";
-import { productionBreadcrumbs } from "@/features/production/constants";
+import PurchaseDashboard from "@/features/purchase/components/PurchaseDashboard";
+import {
+	PURCHASE_MODULE_TABS,
+	PURCHASE_MODULE_TITLE,
+	purchaseBreadcrumbs,
+} from "@/features/purchase/data/purchaseNav.config";
 import localizationConstants from "@/utils/translation/constants";
 
-export default function Page() {
+export default function PurchaseDashboardPage() {
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
 			<ModulePageHeader
-				title={localizationConstants.purchase}
-				breadcrumbs={productionBreadcrumbs(localizationConstants.purchase)}
+				title={PURCHASE_MODULE_TITLE}
+				tabs={PURCHASE_MODULE_TABS}
+				breadcrumbs={purchaseBreadcrumbs(
+					localizationConstants.purchaseTabDashboard,
+				)}
 			/>
-			<ComingSoonPage hideTitle />
+			<div className="p-5 flex-1">
+				<PurchaseDashboard />
+			</div>
 		</div>
 	);
 }
