@@ -2794,6 +2794,16 @@ export type OfferTranslation = {
 	machineListLinked: string;
 	machineListLinkRequired: string;
 	machineListSaved: string;
+	// Book machine wizard (TFS-808)
+	machineBookInternal: string;
+	machineBookExternal: string;
+	machineBookMachineList: string;
+	machineBookBookedMachines: string;
+	machineBookNoMachines: string;
+	machineBookRemoveMachine: string;
+	machineBookAlreadyBooked: string;
+	machineBookNoneSelected: string;
+	machineBookSaved: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;
