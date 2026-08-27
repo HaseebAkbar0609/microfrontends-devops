@@ -2479,7 +2479,7 @@ function ChecklistTab({
 				label: c.label,
 				count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
 			})),
-		[MOCK_QUALITY_PLAN_CATEGORIES],
+		[],
 	);
 
 	const subItems = useMemo(
