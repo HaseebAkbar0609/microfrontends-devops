@@ -4519,6 +4519,10 @@ export type CommonTranslation = {
 	b2bRemoveConfirmDesc: string;
 	b2bRemoveSuccessToast: string;
 	b2bRemoveErrorToast: string;
+	b2bArchiveConfirmTitle: string;
+	b2bArchiveConfirmDesc: string;
+	b2bArchiveSuccessToast: string;
+	b2bArchiveErrorToast: string;
 };
 
 export type Translation = HeaderTranslation &

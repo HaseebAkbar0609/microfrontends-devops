@@ -3582,6 +3582,10 @@ export const enCommon: CommonTranslation = {
 	b2bRemoveConfirmDesc: "Are you sure you want to remove this project from B2B Overview?",
 	b2bRemoveSuccessToast: "Project removed successfully",
 	b2bRemoveErrorToast: "Failed to remove project",
+	b2bArchiveConfirmTitle: "Archive Project",
+	b2bArchiveConfirmDesc: "Are you sure you want to archive this project?",
+	b2bArchiveSuccessToast: "Project archived successfully",
+	b2bArchiveErrorToast: "Failed to archive project",
 };
 
 export const enRegister: RegisterTranslation = {

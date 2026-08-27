@@ -52,7 +52,12 @@ import { renderSortIcon } from "@/utils/renderSortIcon";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { BreadcrumbItem } from "@/types/common";
-import { getB2BProjectsAction, deleteB2BProjectAction } from "@/api-actions/b2b";
+import { formatCurrency } from "@/utils/formatCurrency";
+import {
+  getB2BProjectsAction,
+  deleteB2BProjectAction,
+  archiveB2BProjectAction,
+} from "@/api-actions/b2b";
 import { ProjectMarket, ProjectMarketStatus } from "../types/projectMarket";
 
 export const B2B_OVERVIEW_BREADCRUMBS: BreadcrumbItem[] = [
@@ -68,7 +73,7 @@ type SortField = keyof Pick<
   "refNr" | "project" | "date" | "type" | "requests" | "municipality" | "lowestOffer" | "status"
 >;
 
-const SKELETON_COL_COUNT = 9;
+const TABLE_COLUMNS_COUNT = 10;
 const ALL_STATUSES: ProjectMarketStatus[] = ["contract_signed", "waiting", "open", "closing_soon"];
 
 function SkeletonRows({ count }: { count: number }) {
@@ -76,7 +81,7 @@ function SkeletonRows({ count }: { count: number }) {
     <>
       {Array.from({ length: count }).map((_, i) => (
         <TableRow key={`skeleton-${i}`}>
-          {Array.from({ length: SKELETON_COL_COUNT }).map((_, j) => (
+          {Array.from({ length: TABLE_COLUMNS_COUNT }).map((_, j) => (
             <TableCell key={j} className="px-4 py-3.5">
               <div className="h-4 w-3/4 animate-pulse rounded bg-slate-200" />
             </TableCell>
@@ -91,13 +96,13 @@ function StatusBadge({ status }: { status: ProjectMarketStatus }) {
   const t = useTranslate();
   if (status === "contract_signed") {
     return (
-      <Badge className="rounded-md bg-[#059669] hover:bg-[#059669] px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
+      <Badge className="rounded-md bg-emerald-600 hover:bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
         {t(localizationConstants.b2bPMStatusContractSigned)}
       </Badge>
     );
   }
   return (
-    <Badge className="rounded-md bg-[#F59E0B] hover:bg-[#F59E0B] px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
+    <Badge className="rounded-md bg-amber-500 hover:bg-amber-500 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
       {t(localizationConstants.b2bPMStatusWaiting)}
     </Badge>
   );
@@ -118,6 +123,8 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectMarketStatus[]>([]);
   const [projectToRemove, setProjectToRemove] = useState<ProjectMarket | null>(null);
   const [isRemoving, setIsRemoving] = useState(false);
+  const [projectToArchive, setProjectToArchive] = useState<ProjectMarket | null>(null);
+  const [isArchiving, setIsArchiving] = useState(false);
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -167,6 +174,25 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     }
   };
 
+  const handleConfirmArchive = async () => {
+    if (!projectToArchive) return;
+    setIsArchiving(true);
+    try {
+      const res = await archiveB2BProjectAction(projectToArchive.id);
+      if (res.success) {
+        setProjectList((prev) => prev.filter((p) => p.id !== projectToArchive.id));
+        showToast("success", t(localizationConstants.b2bArchiveSuccessToast));
+      } else {
+        showToast("error", res.error || t(localizationConstants.b2bArchiveErrorToast));
+      }
+    } catch {
+      showToast("error", t(localizationConstants.b2bArchiveErrorToast));
+    } finally {
+      setIsArchiving(false);
+      setProjectToArchive(null);
+    }
+  };
+
   const filtered = useMemo(() => {
     const q = debouncedSearch.toLowerCase();
     return projectList.filter((p) => {
@@ -197,10 +223,6 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     waiting: t(localizationConstants.b2bPMStatusWaiting),
     open: t(localizationConstants.open),
     closing_soon: t(localizationConstants.closingSoon),
-  };
-
-  const formatNumberWithCommas = (val: number) => {
-    return new Intl.NumberFormat("en-US").format(val);
   };
 
   return (
@@ -323,7 +345,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
           <div>
             <Button
               size="sm"
-              className="h-9 cursor-pointer gap-1.5 bg-[#111827] text-sm font-medium text-white hover:bg-neutral-800 rounded-md px-4 shadow-2xs"
+              className="h-9 cursor-pointer gap-1.5 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 rounded-md px-4 shadow-2xs"
               onClick={() => router.push("/module/business/b2b/project-market/create")}
             >
               <Plus size={16} aria-hidden={true} />
@@ -435,7 +457,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                     <TableCell className="whitespace-nowrap px-4 py-3.5">
                       <Badge
                         variant="secondary"
-                        className="rounded-md bg-[#F1F5F9] hover:bg-[#F1F5F9] px-2.5 py-0.5 text-xs font-semibold text-slate-800 border border-slate-200/50"
+                        className="rounded-md bg-slate-100 hover:bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-800 border border-slate-200/50"
                       >
                         {row.type}
                       </Badge>
@@ -447,7 +469,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                       {row.municipality}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-4 py-3.5 text-xs tabular-nums text-slate-900 font-normal">
-                      {formatNumberWithCommas(row.lowestOffer)}
+                      {formatCurrency(row.lowestOffer)}
                     </TableCell>
                     <TableCell className="whitespace-nowrap px-4 py-3.5">
                       <StatusBadge status={row.status} />
@@ -460,7 +482,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                         onClick={() =>
                           router.push(`/module/business/b2b/project-market/${row.id}`)
                         }
-                        className="h-10 bg-[#F1F5F9] hover:bg-slate-200/80 text-slate-800 text-xs font-semibold px-5 py-3 shadow-none cursor-pointer rounded-md border-0"
+                        className="h-10 bg-slate-100 hover:bg-slate-200/80 text-slate-800 text-xs font-semibold px-5 py-3 shadow-none cursor-pointer rounded-md border-0"
                       >
                         {t(localizationConstants.b2bPMViewProject)}
                       </Button>
@@ -481,7 +503,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                         <DropdownMenuContent align="end" className="w-32 bg-white border border-slate-200/80 rounded-lg shadow-lg p-1">
                           <DropdownMenuItem
                             className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-md py-1.5 px-2"
-                            onClick={() => router.push(`/module/business/b2b/archive`)}
+                            onClick={() => setProjectToArchive(row)}
                           >
                             <ArchiveIcon size={15} className="text-slate-600" />
                             {t(localizationConstants.archive)}
@@ -502,7 +524,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                 {paginated.length === 0 && (
                   <TableRow>
                     <TableCell
-                      colSpan={SKELETON_COL_COUNT}
+                      colSpan={TABLE_COLUMNS_COUNT}
                       className="px-4 py-12 text-center text-sm text-slate-400"
                     >
                       {t(localizationConstants.b2bPMEmpty)}
@@ -523,6 +545,30 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
           onPageSizeChange={setRowsPerPage}
           className="mt-6 flex-wrap justify-between sm:justify-end gap-3 sm:gap-6"
         />
+
+        {/* Confirmation Modal for Project Archival */}
+        <AlertDialog open={!!projectToArchive} onOpenChange={(open) => !open && setProjectToArchive(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t(localizationConstants.b2bArchiveConfirmTitle)}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t(localizationConstants.b2bArchiveConfirmDesc)}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isArchiving} className="cursor-pointer">
+                {t(localizationConstants.cancel)}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmArchive}
+                disabled={isArchiving}
+                className="bg-slate-900 hover:bg-slate-800 text-white cursor-pointer"
+              >
+                {t(localizationConstants.archive)}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         {/* Confirmation Modal for Project Removal */}
         <AlertDialog open={!!projectToRemove} onOpenChange={(open) => !open && setProjectToRemove(null)}>
