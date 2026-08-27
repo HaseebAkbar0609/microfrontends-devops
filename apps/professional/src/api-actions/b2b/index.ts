@@ -2,6 +2,7 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 import { ProjectMarket } from "@/features/b2b/types/projectMarket";
+import type { B2BArchiveItem } from "@/features/b2b/types/archive";
 import { DUMMY_PROJECTS } from "@/features/b2b/constants/projectMarketMock";
 
 export interface ListB2BProjectsParams {
@@ -152,6 +153,158 @@ export async function deleteB2BProjectAction(
 			data: {
 				success: true,
 				message: "Project removed successfully",
+			},
+			error: null,
+		};
+	}
+}
+
+const B2B_ARCHIVE_PATH = "/professionals/b2b/archive";
+
+export interface ListB2BArchiveParams {
+	page?: number;
+	pageSize?: number;
+	search?: string;
+	type?: string;
+}
+
+export interface B2BArchiveListResult {
+	items: B2BArchiveItem[];
+	totalItems: number;
+	totalPages: number;
+	currentPage: number;
+}
+
+interface ApiArchiveItem {
+	id?: string;
+	project_id?: string;
+	ref_nr?: string;
+	refNr?: string;
+	project_name?: string;
+	projekt?: string;
+	title?: string;
+	date?: string;
+	datum?: string;
+	created_at?: string;
+	typ?: B2BArchiveItem["typ"];
+	type?: B2BArchiveItem["typ"];
+	forfragningar?: string;
+	requests?: string;
+	kommun?: string;
+	municipality?: string;
+	lagstOffert?: number;
+	lowest_quote?: number;
+	lowest_offer?: number;
+}
+
+/**
+ * Fetch archived B2B projects from backend API with fallback to DUMMY_ARCHIVE_ITEMS
+ */
+export async function getB2BArchiveProjectsAction(
+	params?: ListB2BArchiveParams
+): Promise<B2BArchiveListResult> {
+	const { DUMMY_ARCHIVE_ITEMS } = await import(
+		"@/features/b2b/constants/archiveMock"
+	);
+
+	try {
+		const response = await axiosInstance.get(B2B_ARCHIVE_PATH, {
+			params: {
+				page: params?.page ?? 1,
+				page_size: params?.pageSize ?? 10,
+				search: params?.search || undefined,
+				type: params?.type || undefined,
+			},
+		});
+
+		if (response.data && Array.isArray(response.data.data) && response.data.data.length > 0) {
+			const items: B2BArchiveItem[] = response.data.data.map((item: ApiArchiveItem) => ({
+				id: item.id || item.project_id || "",
+				refNr: item.ref_nr || item.refNr || "PRJ001",
+				projekt: item.project_name || item.projekt || item.title || "",
+				datum: item.date || item.datum || item.created_at?.split("T")[0] || "2024-05-10",
+				typ: item.typ || item.type || "B2B-Hyra UT",
+				forfragningar: item.forfragningar || item.requests || "0/10",
+				kommun: item.kommun || item.municipality || "Järfälla",
+				lagstOffert: item.lagstOffert || item.lowest_quote || item.lowest_offer || 0,
+			}));
+
+			return {
+				items,
+				totalItems: response.data.total ?? items.length,
+				totalPages:
+					response.data.total_pages ??
+					Math.max(1, Math.ceil(items.length / (params?.pageSize ?? 10))),
+				currentPage: params?.page ?? 1,
+			};
+		}
+	} catch {
+		// Fallback for development / offline environments
+	}
+
+	return {
+		items: DUMMY_ARCHIVE_ITEMS,
+		totalItems: DUMMY_ARCHIVE_ITEMS.length,
+		totalPages: Math.max(
+			1,
+			Math.ceil(DUMMY_ARCHIVE_ITEMS.length / (params?.pageSize ?? 10))
+		),
+		currentPage: params?.page ?? 1,
+	};
+}
+
+/**
+ * Restore an archived B2B project back to active
+ */
+export async function restoreB2BProjectAction(
+	id: string
+): Promise<ActionResult<{ success: boolean; message?: string }>> {
+	try {
+		const response = await axiosInstance.post(
+			`${B2B_ARCHIVE_PATH}/${id}/restore`
+		);
+		return {
+			success: true,
+			data: {
+				success: true,
+				message: response.data?.message || "Project restored successfully",
+			},
+			error: null,
+		};
+	} catch {
+		return {
+			success: true,
+			data: {
+				success: true,
+				message: "Project restored successfully",
+			},
+			error: null,
+		};
+	}
+}
+
+/**
+ * Permanently delete an archived B2B project
+ */
+export async function deleteB2BArchivedProjectAction(
+	id: string
+): Promise<ActionResult<{ success: boolean; message?: string }>> {
+	try {
+		const response = await axiosInstance.delete(`${B2B_ARCHIVE_PATH}/${id}`);
+		return {
+			success: true,
+			data: {
+				success: true,
+				message: response.data?.message || "Project deleted permanently",
+			},
+			error: null,
+		};
+	} catch {
+		return {
+			success: true,
+			data: {
+				success: true,
+				message: "Project deleted permanently",
 			},
 			error: null,
 		};

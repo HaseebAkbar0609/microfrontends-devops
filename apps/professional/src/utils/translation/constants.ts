@@ -678,6 +678,8 @@ export type OfferTranslation = {
 	b2bArchiveViewOffer: string;
 	b2bArchiveViewRequest: string;
 	b2bArchiveRequests: string;
+	b2bArchiveInquiry: string;
+	b2bArchiveLowestQuote: string;
 	b2bArchiveCompanyNumber: string;
 	b2bArchiveOrgNr: string;
 	b2bArchiveWork: string;

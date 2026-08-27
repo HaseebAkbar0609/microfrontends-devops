@@ -1,12 +1,12 @@
 import { B2BArchiveItem, B2BArchiveOfferDetail } from "../types/archive";
 
 export const DUMMY_ARCHIVE_ITEMS: B2BArchiveItem[] = [
-  { id: "1", refNr: "PRJ001", projekt: "Köksrenoveringsjobb", datum: "2024-05-10", typ: "B2B-Hyra UT", forfragningar: "0/10", kommun: "Järfälla", lagstOffert: 159000 },
-  { id: "2", refNr: "PRJ001", projekt: "Målare", datum: "2024-05-10", typ: "B2B-Offert", forfragningar: "2/10", kommun: "Järfälla", lagstOffert: 256000 },
-  { id: "3", refNr: "PRJ001", projekt: "Köksrenoveringsjobb", datum: "2024-05-10", typ: "B2B-Hyra IN", forfragningar: "4/10", kommun: "Järfälla", lagstOffert: 78500 },
-  { id: "4", refNr: "PRJ001", projekt: "Målare", datum: "2024-05-10", typ: "B2B-Hyra IN", forfragningar: "3/10", kommun: "Järfälla", lagstOffert: 145000 },
-  { id: "5", refNr: "PRJ001", projekt: "Kök Reno Job", datum: "2024-05-10", typ: "B2B-Hyra UT", forfragningar: "5/10", kommun: "Järfälla", lagstOffert: 125000 },
-  { id: "6", refNr: "PRJ001", projekt: "Målare", datum: "2024-05-10", typ: "B2B-Hyra IN", forfragningar: "8/10", kommun: "Järfälla", lagstOffert: 54000 },
+  { id: "1", refNr: "PRJ001", projekt: "Kitchen renovation job", datum: "2024-05-10", typ: "B2B-Hyra UT", forfragningar: "0/10", kommun: "Järfälla", lagstOffert: 158000 },
+  { id: "2", refNr: "PRJ001", projekt: "Painter", datum: "2024-05-10", typ: "B2B-Offert", forfragningar: "2/10", kommun: "Järfälla", lagstOffert: 256000 },
+  { id: "3", refNr: "PRJ001", projekt: "Kitchen renovation job", datum: "2024-05-10", typ: "B2B-Hyra UT", forfragningar: "4/10", kommun: "Järfälla", lagstOffert: 78500 },
+  { id: "4", refNr: "PRJ001", projekt: "Painter", datum: "2024-05-10", typ: "B2B-Hyra IN", forfragningar: "3/10", kommun: "Järfälla", lagstOffert: 145000 },
+  { id: "5", refNr: "PRJ001", projekt: "Kitchen Reno Job", datum: "2024-05-10", typ: "B2B-Hyra UT", forfragningar: "5/10", kommun: "Järfälla", lagstOffert: 125000 },
+  { id: "6", refNr: "PRJ001", projekt: "Painter", datum: "2024-05-10", typ: "B2B-Hyra IN", forfragningar: "8/10", kommun: "Järfälla", lagstOffert: 54000 },
 ];
 
 export const DUMMY_ARCHIVE_OFFER_DETAIL: B2BArchiveOfferDetail = {

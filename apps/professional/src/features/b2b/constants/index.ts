@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { BreadcrumbItem } from "@/types/common";
 import { DynamicSubSidebarItem } from "@/components/layout/sidebar/DynamicSubSidebar";
+import type { ModuleTabItem } from "@/components/layout/navigation";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
 
@@ -16,6 +17,36 @@ export const B2B_DASHBOARD_BREADCRUMBS: BreadcrumbItem[] = [
 	{ label: localizationConstants.businessCategory, href: "/module/business" },
 	{ label: localizationConstants.b2b, href: "/module/business/b2b" },
 	{ label: localizationConstants.b2bDashboard },
+];
+
+export const B2B_ARCHIVE_BREADCRUMBS: BreadcrumbItem[] = [
+	{ label: localizationConstants.home, href: "/home" },
+	{ label: localizationConstants.moduleItem, href: "/module" },
+	{ label: localizationConstants.businessCategory, href: "/module/business" },
+	{ label: localizationConstants.b2b, href: "/module/business/b2b" },
+	{ label: localizationConstants.archive },
+];
+
+export const B2B_MODULE_TABS: ModuleTabItem[] = [
+	{
+		id: "b2b-dashboard",
+		label: "B2B Dashboard",
+		labelKey: localizationConstants.b2bDashboard,
+		href: "/module/business/b2b",
+		exact: true,
+	},
+	{
+		id: "b2b-overview",
+		label: "B2B Overview",
+		labelKey: localizationConstants.b2bOverview,
+		href: "/module/business/b2b/overview",
+	},
+	{
+		id: "b2b-archive",
+		label: "Archive",
+		labelKey: localizationConstants.archive,
+		href: "/module/business/b2b/archive",
+	},
 ];
 
 export const b2bSidebarItems: DynamicSubSidebarItem[] = [
