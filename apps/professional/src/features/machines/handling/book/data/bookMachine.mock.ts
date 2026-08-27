@@ -1,5 +1,9 @@
 import { MOCK_MACHINES } from "../../../data/machines.mock";
-import type { BookableMachine, BookingKind } from "../types/bookMachine.types";
+import type {
+	BookableMachine,
+	BookingKind,
+	ExternalBookingRow,
+} from "../types/bookMachine.types";
 
 /**
  * Own fleet, reused from the machine register so the wizard and the
@@ -16,14 +20,65 @@ const INTERNAL_MACHINES: BookableMachine[] = MOCK_MACHINES.map((machine) => ({
  * a rental catalogue.
  */
 const EXTERNAL_MACHINES: BookableMachine[] = [
-	{ id: "ext-c100", machineNo: "C100", name: "Minigravare", supplier: "Cramo" },
-	{ id: "ext-c101", machineNo: "C101", name: "Bygghiss", supplier: "Cramo" },
-	{ id: "ext-r200", machineNo: "R200", name: "Byggtork", supplier: "Ramirent" },
+	{
+		id: "ext-c100",
+		machineNo: "C100",
+		name: "Minigravare",
+		supplier: "Cramo",
+		rate: "250 kr / dag",
+	},
+	{
+		id: "ext-c101",
+		machineNo: "C101",
+		name: "Bygghiss",
+		supplier: "Cramo",
+		rate: "480 kr / dag",
+	},
+	{
+		id: "ext-r200",
+		machineNo: "R200",
+		name: "Byggtork",
+		supplier: "Ramirent",
+		rate: "180 kr / dag",
+	},
 	{
 		id: "ext-r201",
 		machineNo: "R201",
 		name: "Vibratorplatta",
 		supplier: "Ramirent",
+		rate: "320 kr / dag",
+	},
+];
+
+/** Suppliers offered in the booking form, derived from the hire catalogue. */
+export const SUPPLIERS = Array.from(
+	new Set(EXTERNAL_MACHINES.map((machine) => machine.supplier as string))
+);
+
+/**
+ * Hired-in machines already booked onto the list, reproducing the two rows in
+ * the TFS-809 frame: one kept past its return date, one still out.
+ */
+export const INITIAL_EXTERNAL_BOOKINGS: ExternalBookingRow[] = [
+	{
+		id: "ext-booking-1",
+		machineNo: "M1001",
+		name: "Borrmaskin",
+		supplier: "Cramo",
+		rate: "250 kr / dag",
+		deliveryDate: "2025-09-01",
+		returnDate: "2025-12-01",
+		status: "overtime",
+	},
+	{
+		id: "ext-booking-2",
+		machineNo: "M1001",
+		name: "Borrmaskin",
+		supplier: "Cramo",
+		rate: "250 kr / dag",
+		deliveryDate: "2025-09-15",
+		returnDate: "",
+		status: "active",
 	},
 ];
 

@@ -2804,6 +2804,17 @@ export type OfferTranslation = {
 	machineBookNoAvailable: string;
 	machineBookNoMachines: string;
 	machineBookNoneSelected: string;
+	// Book machine externally (TFS-809)
+	machineBookTab: string;
+	machineBookBookedMachines: string;
+	machineBookAtSupplier: string;
+	machineBookRentCost: string;
+	machineBookRentCostHint: string;
+	machineBookAdd: string;
+	machineBookPickMachine: string;
+	machineBookFieldsRequired: string;
+	machineBookDateOrder: string;
+	machineBookAdded: string;
 	machineBookSaved: string;
 	// Project sub-sidebar
 	projectModule: string;

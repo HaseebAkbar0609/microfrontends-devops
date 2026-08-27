@@ -11,12 +11,17 @@ import localizationConstants from "@/utils/translation/constants";
 import { MACHINE_HANDLING_BASE_URL } from "../data/handlingNav.config";
 import { getMachineListDetail } from "../data/machineHandling.mock";
 import { BookingKindRadio } from "./components/BookingKindRadio";
+import { ExternalBookingSection } from "./components/ExternalBookingSection";
 import { MachinePickerPane } from "./components/MachinePickerPane";
 import {
 	bookableMachines,
+	INITIAL_EXTERNAL_BOOKINGS,
 	INITIALLY_BOOKED_IDS,
 } from "./data/bookMachine.mock";
-import type { BookingKind } from "./types/bookMachine.types";
+import type {
+	BookingKind,
+	ExternalBookingRow,
+} from "./types/bookMachine.types";
 
 const TOTAL_STEPS = 2;
 
@@ -48,6 +53,11 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 	// selection made under the other one.
 	const [bookedIds, setBookedIds] =
 		useState<Record<BookingKind, string[]>>(INITIALLY_BOOKED_IDS);
+	// Hired-in bookings live here rather than in the section so Spara can see
+	// them alongside the internal picks.
+	const [externalRows, setExternalRows] = useState<ExternalBookingRow[]>(
+		INITIAL_EXTERNAL_BOOKINGS
+	);
 	const [availableSearch, setAvailableSearch] = useState("");
 	const [bookedSearch, setBookedSearch] = useState("");
 	const [availableOpen, setAvailableOpen] = useState(true);
@@ -95,7 +105,9 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 
 	const handleSave = () => {
 		const total =
-			bookedIds.internal.length + bookedIds.external.length;
+			bookedIds.internal.length +
+			bookedIds.external.length +
+			externalRows.length;
 		if (total === 0) {
 			showToast("error", t(localizationConstants.machineBookNoneSelected));
 			return;
@@ -108,7 +120,7 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 	return (
 		<div className="flex h-full flex-col overflow-hidden bg-slate-50">
 			<div className="flex-1 overflow-y-auto px-4 py-4">
-				<div className="mb-4 flex items-center gap-2">
+				<div className="mb-1 flex items-center gap-2">
 					<button
 						type="button"
 						aria-label={t(localizationConstants.backButton)}
@@ -122,36 +134,58 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 					</h1>
 				</div>
 
+				<p className="mb-3 ml-9 text-xs text-slate-500 sm:text-sm">
+					<Translate text={localizationConstants.stepLabel} /> {currentStep}/
+					{TOTAL_STEPS}
+				</p>
+
+				{/* The design shows a single tab; it marks the section rather than
+				    switching anything, so it renders as the active tab only. */}
+				<div className="mb-4 ml-9 border-b border-slate-200">
+					<span className="inline-block border-b-2 border-slate-900 pb-3 text-sm font-medium text-slate-900">
+						<Translate text={localizationConstants.machineBookTab} />
+					</span>
+				</div>
+
 				<div className="ml-9 flex flex-col items-start gap-6 xl:flex-row">
 					<div className="flex w-full flex-1 flex-col gap-6 overflow-hidden">
 						<BookingKindRadio kind={kind} onChange={setKind} />
 
-						<div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
-							<MachinePickerPane
-								titleKey={localizationConstants.machineBookAvailable}
-								count={availableCount}
-								machines={available}
-								checked={false}
-								onToggle={book}
-								emptyKey={localizationConstants.machineBookNoAvailable}
-								search={availableSearch}
-								onSearchChange={setAvailableSearch}
-								expanded={availableOpen}
-								onToggleExpanded={() => setAvailableOpen((prev) => !prev)}
+						{/* Intern picks from the own fleet (TFS-808); Extern books
+						    through a supplier and has its own form (TFS-809). */}
+						{kind === "external" ? (
+							<ExternalBookingSection
+								rows={externalRows}
+								onRowsChange={setExternalRows}
 							/>
+						) : (
+							<div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+								<MachinePickerPane
+									titleKey={localizationConstants.machineBookAvailable}
+									count={availableCount}
+									machines={available}
+									checked={false}
+									onToggle={book}
+									emptyKey={localizationConstants.machineBookNoAvailable}
+									search={availableSearch}
+									onSearchChange={setAvailableSearch}
+									expanded={availableOpen}
+									onToggleExpanded={() => setAvailableOpen((prev) => !prev)}
+								/>
 
-							<MachinePickerPane
-								titleKey={localizationConstants.machineBookMine}
-								machines={booked}
-								checked
-								onToggle={unbook}
-								emptyKey={localizationConstants.machineBookNoMachines}
-								search={bookedSearch}
-								onSearchChange={setBookedSearch}
-								expanded={bookedOpen}
-								onToggleExpanded={() => setBookedOpen((prev) => !prev)}
-							/>
-						</div>
+								<MachinePickerPane
+									titleKey={localizationConstants.machineBookMine}
+									machines={booked}
+									checked
+									onToggle={unbook}
+									emptyKey={localizationConstants.machineBookNoMachines}
+									search={bookedSearch}
+									onSearchChange={setBookedSearch}
+									expanded={bookedOpen}
+									onToggleExpanded={() => setBookedOpen((prev) => !prev)}
+								/>
+							</div>
+						)}
 					</div>
 
 					<div className="w-full shrink-0 xl:w-72">
