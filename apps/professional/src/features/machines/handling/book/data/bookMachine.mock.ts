@@ -1,18 +1,9 @@
 import { MOCK_MACHINES } from "../../../data/machines.mock";
-import type { BookedMachineRow, BookingKind } from "../types/bookMachine.types";
-
-/** A machine offered in the "Maskin" select, before it is booked. */
-export interface BookableMachine {
-	id: string;
-	machineNo: string;
-	name: string;
-	/** "Leverantör" — only set on hired-in machines. */
-	supplier?: string;
-}
+import type { BookableMachine, BookingKind } from "../types/bookMachine.types";
 
 /**
  * Own fleet, reused from the machine register so the wizard and the
- * "Maskin - Översikt" list can never drift apart.
+ * "Maskin - Oversikt" list can never drift apart.
  */
 const INTERNAL_MACHINES: BookableMachine[] = MOCK_MACHINES.map((machine) => ({
 	id: machine.id,
@@ -25,10 +16,15 @@ const INTERNAL_MACHINES: BookableMachine[] = MOCK_MACHINES.map((machine) => ({
  * a rental catalogue.
  */
 const EXTERNAL_MACHINES: BookableMachine[] = [
-	{ id: "ext-c100", machineNo: "C100", name: "Minigrävare", supplier: "Cramo" },
+	{ id: "ext-c100", machineNo: "C100", name: "Minigravare", supplier: "Cramo" },
 	{ id: "ext-c101", machineNo: "C101", name: "Bygghiss", supplier: "Cramo" },
 	{ id: "ext-r200", machineNo: "R200", name: "Byggtork", supplier: "Ramirent" },
-	{ id: "ext-r201", machineNo: "R201", name: "Vibratorplatta", supplier: "Ramirent" },
+	{
+		id: "ext-r201",
+		machineNo: "R201",
+		name: "Vibratorplatta",
+		supplier: "Ramirent",
+	},
 ];
 
 export function bookableMachines(kind: BookingKind): BookableMachine[] {
@@ -36,22 +32,10 @@ export function bookableMachines(kind: BookingKind): BookableMachine[] {
 }
 
 /**
- * Machines already booked onto the list, as shown in the design. Replaced by
- * the machine list's own bookings once the endpoint exists.
+ * Machines already booked onto the list when the screen opens, as shown in the
+ * design. Replaced by the machine list's own bookings once the endpoint exists.
  */
-export const INITIAL_BOOKED_MACHINES: BookedMachineRow[] = [
-	{
-		id: "booked-m1001",
-		machineNo: "M1001",
-		name: "Borrmaskin",
-		deliveryDate: "2025-09-01",
-		status: "booked",
-	},
-	{
-		id: "booked-k002",
-		machineNo: "K002",
-		name: "Skruvdragare",
-		deliveryDate: "2025-09-01",
-		status: "booked",
-	},
-];
+export const INITIALLY_BOOKED_IDS: Record<BookingKind, string[]> = {
+	internal: ["m1001", "k002"],
+	external: [],
+};

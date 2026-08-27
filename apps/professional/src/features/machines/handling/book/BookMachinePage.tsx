@@ -10,24 +10,31 @@ import { useTranslate, Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { MACHINE_HANDLING_BASE_URL } from "../data/handlingNav.config";
 import { getMachineListDetail } from "../data/machineHandling.mock";
-import { BookMachineSelectStep } from "./components/BookMachineSelectStep";
-import { BookedMachinesTable } from "./components/BookedMachinesTable";
+import { BookingKindRadio } from "./components/BookingKindRadio";
+import { MachinePickerPane } from "./components/MachinePickerPane";
 import {
 	bookableMachines,
-	INITIAL_BOOKED_MACHINES,
+	INITIALLY_BOOKED_IDS,
 } from "./data/bookMachine.mock";
-import type {
-	BookedMachineRow,
-	BookedMachineSortKey,
-	BookingKind,
-} from "./types/bookMachine.types";
+import type { BookingKind } from "./types/bookMachine.types";
 
 const TOTAL_STEPS = 2;
 
+/** Case-insensitive match on machine number or name. */
+function matches(term: string, machineNo: string, name: string) {
+	const needle = term.trim().toLowerCase();
+	if (!needle) return true;
+	return (
+		machineNo.toLowerCase().includes(needle) ||
+		name.toLowerCase().includes(needle)
+	);
+}
+
 /**
- * "Boka maskin" (TFS-808) — reserves machines against one machine list. Step 1
- * picks the machines; nothing is persisted until Spara, because there is no
- * bookings endpoint yet.
+ * "Boka maskin" (TFS-808) — reserves machines against one machine list. The
+ * available and booked panes are two views of the same catalogue: ticking a row
+ * moves it from one side to the other. Nothing is persisted until Spara,
+ * because there is no bookings endpoint yet.
  */
 export function BookMachinePage({ listId }: { listId?: string }) {
 	const t = useTranslate();
@@ -37,63 +44,59 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 	const detailUrl = `${MACHINE_HANDLING_BASE_URL}/${detail.id}`;
 
 	const [kind, setKind] = useState<BookingKind>("internal");
-	const [selectedMachineId, setSelectedMachineId] = useState("");
-	const [rows, setRows] = useState<BookedMachineRow[]>(INITIAL_BOOKED_MACHINES);
-	const [expanded, setExpanded] = useState(true);
-	const [sortKey, setSortKey] = useState<BookedMachineSortKey>(null);
-	const [sortAsc, setSortAsc] = useState(true);
+	// Booked ids are kept per kind so switching Intern/Extern does not lose a
+	// selection made under the other one.
+	const [bookedIds, setBookedIds] =
+		useState<Record<BookingKind, string[]>>(INITIALLY_BOOKED_IDS);
+	const [availableSearch, setAvailableSearch] = useState("");
+	const [bookedSearch, setBookedSearch] = useState("");
+	const [availableOpen, setAvailableOpen] = useState(true);
+	const [bookedOpen, setBookedOpen] = useState(true);
 
 	const currentStep = 1;
 	const progress = (currentStep / TOTAL_STEPS) * 100;
 
-	const sortedRows = useMemo(() => {
-		if (!sortKey) return rows;
-		return [...rows].sort((a, b) => {
-			const compared = a[sortKey].localeCompare(b[sortKey], "sv");
-			return sortAsc ? compared : -compared;
-		});
-	}, [rows, sortKey, sortAsc]);
+	const catalogue = bookableMachines(kind);
+	const bookedForKind = bookedIds[kind];
 
-	const handleSort = (key: NonNullable<BookedMachineSortKey>) => {
-		if (key === sortKey) {
-			setSortAsc((prev) => !prev);
-			return;
-		}
-		setSortKey(key);
-		setSortAsc(true);
-	};
+	const available = useMemo(
+		() =>
+			catalogue.filter(
+				(machine) =>
+					!bookedForKind.includes(machine.id) &&
+					matches(availableSearch, machine.machineNo, machine.name)
+			),
+		[catalogue, bookedForKind, availableSearch]
+	);
 
-	/** Picking a machine books it straight onto the list below. */
-	const handleSelectMachine = (machineId: string) => {
-		const machine = bookableMachines(kind).find((m) => m.id === machineId);
-		if (!machine) return;
+	const booked = useMemo(
+		() =>
+			catalogue
+				.filter((machine) => bookedForKind.includes(machine.id))
+				.filter((machine) =>
+					matches(bookedSearch, machine.machineNo, machine.name)
+				)
+				// The booking runs to the end of the machine list it belongs to.
+				.map((machine) => ({ ...machine, bookedUntil: detail.endDate })),
+		[catalogue, bookedForKind, bookedSearch, detail.endDate]
+	);
 
-		if (rows.some((row) => row.machineNo === machine.machineNo)) {
-			showToast("error", t(localizationConstants.machineBookAlreadyBooked));
-			return;
-		}
+	/** Unfiltered count, so searching does not change the badge. */
+	const availableCount = catalogue.length - bookedForKind.length;
 
-		setRows((prev) => [
+	const book = (machineId: string) =>
+		setBookedIds((prev) => ({ ...prev, [kind]: [...prev[kind], machineId] }));
+
+	const unbook = (machineId: string) =>
+		setBookedIds((prev) => ({
 			...prev,
-			{
-				id: `booked-${machine.id}`,
-				machineNo: machine.machineNo,
-				name: machine.name,
-				// The list's start date is the earliest the machine can be needed.
-				deliveryDate: detail.startDate,
-				status: "booked",
-			},
-		]);
-		// Reset so the same machine can be re-picked after it is removed again.
-		setSelectedMachineId("");
-	};
-
-	const handleRemove = (id: string) => {
-		setRows((prev) => prev.filter((row) => row.id !== id));
-	};
+			[kind]: prev[kind].filter((id) => id !== machineId),
+		}));
 
 	const handleSave = () => {
-		if (rows.length === 0) {
+		const total =
+			bookedIds.internal.length + bookedIds.external.length;
+		if (total === 0) {
 			showToast("error", t(localizationConstants.machineBookNoneSelected));
 			return;
 		}
@@ -121,22 +124,34 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 
 				<div className="ml-9 flex flex-col items-start gap-6 xl:flex-row">
 					<div className="flex w-full flex-1 flex-col gap-6 overflow-hidden">
-						<BookMachineSelectStep
-							kind={kind}
-							onKindChange={setKind}
-							selectedMachineId={selectedMachineId}
-							onSelectMachine={handleSelectMachine}
-						/>
+						<BookingKindRadio kind={kind} onChange={setKind} />
 
-						<BookedMachinesTable
-							rows={sortedRows}
-							expanded={expanded}
-							onToggle={() => setExpanded((prev) => !prev)}
-							sortKey={sortKey}
-							sortAsc={sortAsc}
-							onSort={handleSort}
-							onRemove={handleRemove}
-						/>
+						<div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-2">
+							<MachinePickerPane
+								titleKey={localizationConstants.machineBookAvailable}
+								count={availableCount}
+								machines={available}
+								checked={false}
+								onToggle={book}
+								emptyKey={localizationConstants.machineBookNoAvailable}
+								search={availableSearch}
+								onSearchChange={setAvailableSearch}
+								expanded={availableOpen}
+								onToggleExpanded={() => setAvailableOpen((prev) => !prev)}
+							/>
+
+							<MachinePickerPane
+								titleKey={localizationConstants.machineBookMine}
+								machines={booked}
+								checked
+								onToggle={unbook}
+								emptyKey={localizationConstants.machineBookNoMachines}
+								search={bookedSearch}
+								onSearchChange={setBookedSearch}
+								expanded={bookedOpen}
+								onToggleExpanded={() => setBookedOpen((prev) => !prev)}
+							/>
+						</div>
 					</div>
 
 					<div className="w-full shrink-0 xl:w-72">
