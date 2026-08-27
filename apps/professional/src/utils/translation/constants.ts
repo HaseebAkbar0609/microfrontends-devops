@@ -2542,6 +2542,14 @@ export type OfferTranslation = {
 	// Purchase - supplier agreements
 	purchaseAgreementSeeFile: string;
 	purchaseAgreementUploadedToast: string;
+	// Purchase - supplier API integrations
+	purchaseApiCategory: string;
+	purchaseApiBuyLicense: string;
+	purchaseApiSuppliersToConnect: string;
+	purchaseApiConnectedSuppliers: string;
+	purchaseApiConnectedToast: string;
+	purchaseApiDisconnectedToast: string;
+	purchaseApiLicenseToast: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;

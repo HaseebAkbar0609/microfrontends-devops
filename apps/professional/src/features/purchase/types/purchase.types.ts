@@ -43,6 +43,24 @@ export interface PurchaseSupplierRow {
 	status: PurchaseSupplierStatus;
 }
 
+/**
+ * A supplier on the API integrations tab. The two lists in the design are
+ * derived from this one flag rather than held as separate arrays, so they
+ * cannot drift apart.
+ */
+export interface PurchaseApiSupplier {
+	id: string;
+	name: string;
+	connected: boolean;
+}
+
+/** A purchasable API integration category. */
+export interface PurchaseApiCategory {
+	id: string;
+	name: string;
+	active: boolean;
+}
+
 export type PurchaseDocumentFileType = "pdf" | "doc";
 
 /** One row of the supplier agreements ("Avtal") document table. */

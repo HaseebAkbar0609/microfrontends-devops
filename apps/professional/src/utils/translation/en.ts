@@ -2563,6 +2563,14 @@ export const enOffer: OfferTranslation = {
 	// Purchase - supplier agreements
 	purchaseAgreementSeeFile: "See file",
 	purchaseAgreementUploadedToast: "Files attached",
+	// Purchase - supplier API integrations
+	purchaseApiCategory: "API category",
+	purchaseApiBuyLicense: "Buy licence",
+	purchaseApiSuppliersToConnect: "Suppliers to connect",
+	purchaseApiConnectedSuppliers: "Connected suppliers",
+	purchaseApiConnectedToast: "Supplier connected",
+	purchaseApiDisconnectedToast: "Supplier disconnected",
+	purchaseApiLicenseToast: "Licence purchase is coming soon",
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Order overview",
 	orderWidgetOverviewTotal: "Total orders",

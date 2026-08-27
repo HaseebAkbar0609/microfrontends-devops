@@ -14,6 +14,7 @@ import {
 	purchaseBreadcrumbs,
 } from "../data/purchaseNav.config";
 import { PurchaseAgreementsTab } from "./PurchaseAgreementsTab";
+import { PurchaseApiIntegrationsTab } from "./PurchaseApiIntegrationsTab";
 import { PurchaseSupplierListTab } from "./PurchaseSupplierListTab";
 
 type SuppliersTab = "suppliers" | "agreements" | "priceLists" | "api";
@@ -78,9 +79,8 @@ export function PurchaseSuppliersPage() {
 						/>
 					)}
 					{activeTab === "agreements" && <PurchaseAgreementsTab />}
-					{(activeTab === "priceLists" || activeTab === "api") && (
-						<ComingSoonPage hideTitle />
-					)}
+					{activeTab === "api" && <PurchaseApiIntegrationsTab />}
+					{activeTab === "priceLists" && <ComingSoonPage hideTitle />}
 				</div>
 			</div>
 		</div>
