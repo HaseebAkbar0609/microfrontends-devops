@@ -149,12 +149,14 @@ export function MachineHandlingPage() {
 
 						<PermissionGate permission="CREATE_MACHINE">
 							<div className="flex w-full flex-col items-stretch justify-start gap-3 sm:flex-row sm:items-center xl:w-auto xl:justify-end">
-								<Button className="h-10 w-full cursor-pointer justify-center gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 sm:w-auto">
-									<Plus className="h-4 w-4" aria-hidden />
-									<Translate
-										text={localizationConstants.machineHandlingNewList}
-									/>
-								</Button>
+								<Link href={`${MACHINE_HANDLING_BASE_URL}/create`}>
+									<Button className="h-10 w-full cursor-pointer justify-center gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 sm:w-auto">
+										<Plus className="h-4 w-4" aria-hidden />
+										<Translate
+											text={localizationConstants.machineHandlingNewList}
+										/>
+									</Button>
+								</Link>
 							</div>
 						</PermissionGate>
 					</div>
