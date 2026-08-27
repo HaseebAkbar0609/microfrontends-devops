@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Info, Plus, Trash2 } from "lucide-react";
+import {
+	ArrowUpDown,
+	ChevronDown,
+	ChevronUp,
+	Info,
+	Plus,
+	Trash2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Table,
@@ -11,7 +18,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { ArrowUpDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants, {
