@@ -57,7 +57,7 @@ export function B2BProjectMarketDetailView({ data }: Props) {
       </div>
 
       {/* Subheader with Back Button */}
-      <div className="flex shrink-0 items-center gap-2 px-3 pt-3 pb-1">
+      <div className="flex shrink-0 items-center gap-2 px-4 pt-6 pb-6">
         <Button
           type="button"
           variant="ghost"
@@ -74,7 +74,7 @@ export function B2BProjectMarketDetailView({ data }: Props) {
       </div>
 
       {/* Sub Tabs — shrink-0 ensures it is always visible and never collapses */}
-      <div className="w-full shrink-0 overflow-x-auto scrollbar-none px-4 sm:px-6 md:px-11">
+      <div className="w-full shrink-0 overflow-x-auto scrollbar-none pl-4 sm:pl-6 md:pl-11 pr-4 sm:pr-5 md:pr-6">
         <div className="inline-flex min-w-max items-center gap-4 sm:gap-5 border-b border-slate-200">
           <Button
             type="button"

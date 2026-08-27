@@ -70,7 +70,7 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
   const t = useTranslate();
 
   return (
-    <div className="flex flex-col gap-3 px-4 sm:px-6 md:px-11 py-3.5">
+    <div className="flex flex-col gap-3 pl-4 sm:pl-6 md:pl-11 pr-4 sm:pr-5 md:pr-6 py-3.5">
       {/* 1. Kunduppgifter */}
       <SectionCard
         title={t(localizationConstants.b2bPMCustomerInfo)}

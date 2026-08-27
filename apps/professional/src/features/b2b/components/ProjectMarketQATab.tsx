@@ -365,7 +365,7 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
   });
 
   return (
-    <div className="flex flex-col gap-3 px-4 sm:px-6 md:pl-11 md:pr-12 py-3.5 w-full max-w-[1200px]">
+    <div className="flex flex-col gap-3 pl-4 sm:pl-6 md:pl-11 pr-4 sm:pr-5 md:pr-6 py-3.5 w-full">
       {/* Top Filter Controls */}
       <div className="flex flex-col gap-3">
         {/* Row 1: Search and Filter dropdown */}

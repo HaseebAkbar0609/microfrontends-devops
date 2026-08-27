@@ -112,7 +112,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
   );
 
   return (
-    <div className="flex flex-col gap-3 px-4 sm:px-6 md:px-11 py-3.5">
+    <div className="flex flex-col gap-4 pl-4 sm:pl-6 md:pl-11 pr-4 sm:pr-5 md:pr-6 py-3.5">
       {/* Summary — Single outer white card containing info on left, and 2 inner boxes on right */}
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white p-3.5 sm:p-4 shadow-xs">
         <div className="grid grid-cols-1 gap-3.5 sm:gap-4 min-[860px]:grid-cols-2 xl:grid-cols-3">
