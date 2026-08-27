@@ -806,6 +806,16 @@ export type OfferTranslation = {
 	b2bPMClientName: string;
 	b2bPMEndDate: string;
 	b2bPMDocuments: string;
+	b2bPMQuarterName: string;
+	b2bPMWorkPlace: string;
+	b2bPMCalculatedEndDate: string;
+	b2bPMCompanyNamn: string;
+	b2bPMStartDatum: string;
+	b2bPMProjektNamn: string;
+	b2bPMProjektNr: string;
+	b2bPMBilder: string;
+	b2bPMDocumentSection: string;
+	b2bPMDrawingSection: string;
 	b2bPMQANew: string;
 	b2bPMQAOpened: string;
 	b2bPMQAAnswered: string;
@@ -817,6 +827,14 @@ export type OfferTranslation = {
 	b2bPMQAUE: string;
 	b2bPMQASupplier: string;
 	b2bPMQAForetag: string;
+	b2bPMQAStatus: string;
+	b2bPMQAAdmin: string;
+	b2bPMQAYou: string;
+	b2bPMQAArchive: string;
+	b2bPMQAArkivera: string;
+	b2bPMQARadera: string;
+	b2bPMQABestallare: string;
+	b2bPMQAFraga: string;
 	// B2B - Avtal (Agreements)
 	b2bAvtal: string;
 	b2bAvtalListTitle: string;
