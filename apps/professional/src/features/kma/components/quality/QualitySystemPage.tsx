@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
@@ -2472,15 +2472,11 @@ function ChecklistTab({
 		setSelectedSubId(cat?.subcategories[0]?.id ?? null);
 	}
 
-	const mainItems = useMemo(
-		() =>
-			MOCK_QUALITY_PLAN_CATEGORIES.map((c) => ({
-				id: c.id,
-				label: c.label,
-				count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
-			})),
-		[MOCK_QUALITY_PLAN_CATEGORIES],
-	);
+	const mainItems = MOCK_QUALITY_PLAN_CATEGORIES.map((c) => ({
+		id: c.id,
+		label: c.label,
+		count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
+	}));
 
 	const subItems = useMemo(
 		() =>

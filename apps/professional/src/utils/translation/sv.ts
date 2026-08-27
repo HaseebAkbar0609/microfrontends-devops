@@ -4598,6 +4598,22 @@ export const svCommon: CommonTranslation = {
 	filter: "Filter",
 	createNewButtonText: "Skapa ny",
 	noDataFound: "Inga data hittades",
+	module: "Modul",
+	b2bDashboard: "B2B Dashboard",
+	b2bOverview: "B2B Översikt",
+	customizeColumns: "Anpassa kolumner",
+	open: "Öppen",
+	closingSoon: "Stänger snart",
+	remove: "Ta bort",
+	cancel: "Avbryt",
+	b2bRemoveConfirmTitle: "Ta bort projekt",
+	b2bRemoveConfirmDesc: "Är du säker på att du vill ta bort detta projekt från B2B Översikt?",
+	b2bRemoveSuccessToast: "Projektet har tagits bort",
+	b2bRemoveErrorToast: "Det gick inte att ta bort projektet",
+	b2bArchiveConfirmTitle: "Arkivera projekt",
+	b2bArchiveConfirmDesc: "Är du säker på att du vill arkivera detta projekt?",
+	b2bArchiveSuccessToast: "Projektet har arkiverats",
+	b2bArchiveErrorToast: "Det gick inte att arkivera projektet",
 };
 
 export const sv: Translation = {

@@ -72,6 +72,13 @@ export {
 } from "./common/common";
 
 export {
+  getB2BProjectsAction,
+  deleteB2BProjectAction,
+  type ListB2BProjectsParams,
+  type B2BProjectsListResult,
+} from "./b2b";
+
+export {
   getB2BDashboardKpisAction,
   type B2BDashboardKpis,
 } from "./b2b/b2b";

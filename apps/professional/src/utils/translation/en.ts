@@ -3597,6 +3597,22 @@ export const enCommon: CommonTranslation = {
 	filter: "Filter",
 	createNewButtonText: "Create new",
 	noDataFound: "No data found",
+	module: "Module",
+	b2bDashboard: "B2B Dashboard",
+	b2bOverview: "B2B Overview",
+	customizeColumns: "Customize columns",
+	open: "Open",
+	closingSoon: "Closing soon",
+	remove: "Remove",
+	cancel: "Cancel",
+	b2bRemoveConfirmTitle: "Remove Project",
+	b2bRemoveConfirmDesc: "Are you sure you want to remove this project from B2B Overview?",
+	b2bRemoveSuccessToast: "Project removed successfully",
+	b2bRemoveErrorToast: "Failed to remove project",
+	b2bArchiveConfirmTitle: "Archive Project",
+	b2bArchiveConfirmDesc: "Are you sure you want to archive this project?",
+	b2bArchiveSuccessToast: "Project archived successfully",
+	b2bArchiveErrorToast: "Failed to archive project",
 };
 
 export const enRegister: RegisterTranslation = {

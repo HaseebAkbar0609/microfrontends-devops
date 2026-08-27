@@ -9,10 +9,7 @@ import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscrip
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
-import DynamicSubSidebar from "./sidebar/DynamicSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
-import { b2bSidebarItems } from "@/features/b2b/constants";
-import localizationConstants from "@/utils/translation/constants";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -42,9 +39,6 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
-	const isB2BDashboardPage = pathname === "/module/business/b2b";
-	const isB2BNavRoute =
-		pathname.startsWith("/module/business/b2b") && !isB2BDashboardPage;
 	const calcDetailMatch = pathname.match(
 		/^\/module\/business\/calculation\/overview\/([^/]+)/,
 	);
@@ -139,12 +133,6 @@ export function AppShell({ children }: AppShellProps) {
 			{!isPublicPage && <Sidebar autoCollapse />}
 			{isAgreementPath ? (
 				<AgreementSubSidebar />
-			) : isB2BNavRoute ? (
-				<DynamicSubSidebar
-					titleKey={localizationConstants.b2b}
-					items={b2bSidebarItems}
-					hideBack={true}
-				/>
 			) : isCalculationDetailRoute ? (
 				<CalculationDetailSubSidebar calcId={calculationDetailId} />
 			) : null}

@@ -1,52 +1,92 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, ChevronDown, MoreVertical, Plus } from "lucide-react";
+import {
+  Search,
+  ChevronDown,
+  MoreVertical,
+  Plus,
+  Archive as ArchiveIcon,
+  Trash2,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuCheckboxItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useTranslate } from "@/utils/translation/translate";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { TablePagination } from "@/components/table/TablePagination";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
+import { showToast } from "@/lib/toast";
+import { cn } from "@/lib/utils";
+import { BreadcrumbItem } from "@/types/common";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { OfferTablePagination } from "@/features/offer/components/OfferTablePagination";
+import {
+  getB2BProjectsAction,
+  deleteB2BProjectAction,
+  archiveB2BProjectAction,
+} from "@/api-actions/b2b";
 import { ProjectMarket, ProjectMarketStatus } from "../types/projectMarket";
+
+export const B2B_OVERVIEW_BREADCRUMBS: BreadcrumbItem[] = [
+  { label: localizationConstants.home, href: "/home" },
+  { label: localizationConstants.module, href: "/module/business" },
+  { label: localizationConstants.businessCategory, href: "/module/business" },
+  { label: localizationConstants.b2b, href: "/module/business/b2b" },
+  { label: localizationConstants.b2bOverview },
+];
 
 type SortField = keyof Pick<
   ProjectMarket,
-  "refNr" | "project" | "date" | "type" | "requests" | "municipality" | "lowestOffer"
+  "refNr" | "project" | "date" | "type" | "requests" | "municipality" | "lowestOffer" | "status"
 >;
 
-const TH_SORTABLE =
-  "cursor-pointer select-none whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-slate-500 hover:text-slate-800";
-const TH_PLAIN =
-  "whitespace-nowrap px-4 py-3 text-left text-sm font-medium text-slate-500";
-const SKELETON_COL_COUNT = 9;
+const TABLE_COLUMNS_COUNT = 10;
 const ALL_STATUSES: ProjectMarketStatus[] = ["contract_signed", "waiting", "open", "closing_soon"];
 
 function SkeletonRows({ count }: { count: number }) {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
-        <tr key={`skeleton-${i}`} className="border-b border-slate-200">
-          {Array.from({ length: SKELETON_COL_COUNT }).map((_, j) => (
-            <td key={j} className="px-4 py-3">
+        <TableRow key={`skeleton-${i}`}>
+          {Array.from({ length: TABLE_COLUMNS_COUNT }).map((_, j) => (
+            <TableCell key={j} className="px-4 py-3.5">
               <div className="h-4 w-3/4 animate-pulse rounded bg-slate-200" />
-            </td>
+            </TableCell>
           ))}
-        </tr>
+        </TableRow>
       ))}
     </>
   );
@@ -54,64 +94,118 @@ function SkeletonRows({ count }: { count: number }) {
 
 function StatusBadge({ status }: { status: ProjectMarketStatus }) {
   const t = useTranslate();
-  const config: Record<ProjectMarketStatus, { label: string; className: string }> = {
-    contract_signed: {
-      label: t(localizationConstants.b2bPMStatusContractSigned),
-      className: "border-emerald-300 bg-emerald-50 text-emerald-700",
-    },
-    waiting: {
-      label: t(localizationConstants.b2bPMStatusWaiting),
-      className: "border-amber-300 bg-amber-50 text-amber-700",
-    },
-    open: {
-      label: t(localizationConstants.b2bPMStatusWaiting),
-      className: "border-blue-300 bg-blue-50 text-blue-700",
-    },
-    closing_soon: {
-      label: t(localizationConstants.b2bPMStatusWaiting),
-      className: "border-red-300 bg-red-50 text-red-700",
-    },
-  };
-  const { label, className } = config[status];
+  if (status === "contract_signed") {
+    return (
+      <Badge className="rounded-md bg-emerald-600 hover:bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
+        {t(localizationConstants.b2bPMStatusContractSigned)}
+      </Badge>
+    );
+  }
   return (
-    <span
-      className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm ${className}`}
-    >
-      {label}
-    </span>
+    <Badge className="rounded-md bg-amber-500 hover:bg-amber-500 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
+      {t(localizationConstants.b2bPMStatusWaiting)}
+    </Badge>
   );
 }
 
 interface Props {
-  projects: ProjectMarket[];
+  projects?: ProjectMarket[];
   isLoading?: boolean;
 }
 
-export function B2BProjectMarketView({ projects, isLoading = false }: Props) {
+export function B2BProjectMarketView({ projects = [], isLoading = false }: Props) {
   const t = useTranslate();
   const router = useRouter();
 
+  const [projectList, setProjectList] = useState<ProjectMarket[]>(projects);
+  const [loading, setLoading] = useState(isLoading || projects.length === 0);
   const [search, setSearch] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectMarketStatus[]>([]);
+  const [projectToRemove, setProjectToRemove] = useState<ProjectMarket | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
+  const [projectToArchive, setProjectToArchive] = useState<ProjectMarket | null>(null);
+  const [isArchiving, setIsArchiving] = useState(false);
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
-  const rowsPerPage = 10;
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const debouncedSearch = useDebounce(search, 300);
   const activeFilterCount = selectedStatuses.length;
 
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchProjects() {
+      setLoading(true);
+      try {
+        const res = await getB2BProjectsAction({
+          page,
+          pageSize: rowsPerPage,
+          search: debouncedSearch,
+        });
+        if (isMounted && res && res.projects) {
+          setProjectList(res.projects);
+        }
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    fetchProjects();
+    return () => {
+      isMounted = false;
+    };
+  }, [page, rowsPerPage, debouncedSearch]);
+
+  const handleConfirmRemove = async () => {
+    if (!projectToRemove) return;
+    setIsRemoving(true);
+    try {
+      const res = await deleteB2BProjectAction(projectToRemove.id);
+      if (res.success) {
+        setProjectList((prev) => prev.filter((p) => p.id !== projectToRemove.id));
+        showToast("success", t(localizationConstants.b2bRemoveSuccessToast));
+      } else {
+        showToast("error", res.error || t(localizationConstants.b2bRemoveErrorToast));
+      }
+    } catch {
+      showToast("error", t(localizationConstants.b2bRemoveErrorToast));
+    } finally {
+      setIsRemoving(false);
+      setProjectToRemove(null);
+    }
+  };
+
+  const handleConfirmArchive = async () => {
+    if (!projectToArchive) return;
+    setIsArchiving(true);
+    try {
+      const res = await archiveB2BProjectAction(projectToArchive.id);
+      if (res.success) {
+        setProjectList((prev) => prev.filter((p) => p.id !== projectToArchive.id));
+        showToast("success", t(localizationConstants.b2bArchiveSuccessToast));
+      } else {
+        showToast("error", res.error || t(localizationConstants.b2bArchiveErrorToast));
+      }
+    } catch {
+      showToast("error", t(localizationConstants.b2bArchiveErrorToast));
+    } finally {
+      setIsArchiving(false);
+      setProjectToArchive(null);
+    }
+  };
+
   const filtered = useMemo(() => {
     const q = debouncedSearch.toLowerCase();
-    return projects.filter((p) => {
+    return projectList.filter((p) => {
       const matchesSearch =
         p.refNr.toLowerCase().includes(q) ||
         p.project.toLowerCase().includes(q) ||
-        p.municipality.toLowerCase().includes(q);
+        p.municipality.toLowerCase().includes(q) ||
+        p.type.toLowerCase().includes(q);
       const matchesStatus =
         selectedStatuses.length === 0 || selectedStatuses.includes(p.status);
       return matchesSearch && matchesStatus;
     });
-  }, [debouncedSearch, selectedStatuses, projects]);
+  }, [debouncedSearch, selectedStatuses, projectList]);
 
   const sorted = useMemo(
     () =>
@@ -127,243 +221,378 @@ export function B2BProjectMarketView({ projects, isLoading = false }: Props) {
   const statusLabels: Record<ProjectMarketStatus, string> = {
     contract_signed: t(localizationConstants.b2bPMStatusContractSigned),
     waiting: t(localizationConstants.b2bPMStatusWaiting),
-    open: t(localizationConstants.b2bPMStatusWaiting),
-    closing_soon: t(localizationConstants.b2bPMStatusWaiting),
+    open: t(localizationConstants.open),
+    closing_soon: t(localizationConstants.closingSoon),
   };
 
   return (
-    <div className="flex flex-1 flex-col bg-white">
-      {/* Toolbar */}
-      <div className="flex items-center gap-2 border-b border-slate-200 px-5 py-3">
-        <div className="relative w-75">
-          <Search
-            size={16}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-900 opacity-50"
-            aria-hidden={true}
-          />
-          <Input
-            placeholder={t(localizationConstants.search)}
-            value={search}
-            onChange={(e) => {
-              setSearch(e.target.value);
-              setPage(1);
-            }}
-            className="h-10 rounded-none border-0 border-b border-slate-200 pl-8 text-sm shadow-none focus-visible:ring-0"
-          />
+    <div className="flex flex-1 flex-col bg-white min-h-screen">
+      {/* Page Header with Breadcrumbs */}
+      <PageHeader
+        title={t(localizationConstants.b2bOverview)}
+        breadcrumbs={B2B_OVERVIEW_BREADCRUMBS}
+      />
+
+      {/* Main Content Area */}
+      <div className="flex flex-1 flex-col px-4 sm:px-6 md:px-8 py-5">
+        {/* Title Header */}
+        <div className="mb-4">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+            <Translate text={localizationConstants.b2b} />
+          </h1>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9 cursor-pointer gap-1.5 text-sm">
-              {t(localizationConstants.filter)}
-              {activeFilterCount > 0 && (
-                <span className="flex h-4 w-4 items-center justify-center rounded-full bg-neutral-950 text-[10px] text-white">
-                  {activeFilterCount}
-                </span>
-              )}
-              <ChevronDown size={14} aria-hidden={true} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-48">
-            <DropdownMenuLabel className="text-xs font-medium text-slate-500">
-              {t(localizationConstants.statusLabel)}
-            </DropdownMenuLabel>
-            {ALL_STATUSES.map((status) => (
-              <DropdownMenuCheckboxItem
-                key={status}
-                checked={selectedStatuses.includes(status)}
-                onCheckedChange={(checked) => {
-                  setSelectedStatuses((prev) =>
-                    checked ? [...prev, status] : prev.filter((s) => s !== status),
-                  );
+        {/* Navigation Tabs (Responsive) */}
+        <div className="flex items-center gap-2 sm:gap-4 md:gap-6 border-b border-slate-200 text-sm font-medium -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8 overflow-x-auto scrollbar-none mb-6 whitespace-nowrap">
+          <Link
+            href="/module/business/b2b"
+            className="px-3 sm:px-4 md:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center shrink-0"
+          >
+            <Translate text={localizationConstants.b2bDashboard} />
+          </Link>
+          <Link
+            href="/module/business/b2b/project-market"
+            className={cn(
+              "relative px-3 sm:px-4 md:px-6 pb-3.5 text-slate-900 font-semibold transition-colors text-center shrink-0",
+              "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-slate-900"
+            )}
+          >
+            <Translate text={localizationConstants.b2bOverview} />
+          </Link>
+          <Link
+            href="/module/business/b2b/archive"
+            className="px-3 sm:px-4 md:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center shrink-0"
+          >
+            <Translate text={localizationConstants.archive} />
+          </Link>
+        </div>
+
+        {/* Actions Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
+          <div className="flex items-center gap-4 sm:gap-6">
+            {/* Search Box */}
+            <div className="relative w-56 sm:w-64">
+              <Search
+                size={16}
+                className="absolute left-1 top-1/2 -translate-y-1/2 text-slate-400"
+                aria-hidden={true}
+              />
+              <Input
+                placeholder={t(localizationConstants.search)}
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
                   setPage(1);
                 }}
-              >
-                {statusLabels[status]}
-              </DropdownMenuCheckboxItem>
-            ))}
-            {activeFilterCount > 0 && (
-              <>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  className="cursor-pointer text-xs text-slate-500"
-                  onClick={() => {
-                    setSelectedStatuses([]);
-                    setPage(1);
-                  }}
+                className="h-9 rounded-none border-0 border-b border-slate-300 pl-7 text-sm shadow-none focus-visible:ring-0 focus-visible:border-slate-800 placeholder:text-slate-400"
+              />
+            </div>
+
+            {/* Filter Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-9 cursor-pointer gap-1.5 text-sm font-medium border-slate-300 rounded-md bg-white hover:bg-slate-50 text-slate-700"
                 >
-                  {t(localizationConstants.clearFilters)}
-                </DropdownMenuItem>
+                  {t(localizationConstants.filter)}
+                  {activeFilterCount > 0 && (
+                    <span className="flex h-4 w-4 items-center justify-center rounded-full bg-slate-900 text-[10px] text-white">
+                      {activeFilterCount}
+                    </span>
+                  )}
+                  <ChevronDown size={14} className="text-slate-500" aria-hidden={true} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48 bg-white border border-slate-200 shadow-md">
+                <DropdownMenuLabel className="text-xs font-semibold text-slate-500">
+                  {t(localizationConstants.statusLabel)}
+                </DropdownMenuLabel>
+                {ALL_STATUSES.map((status) => (
+                  <DropdownMenuCheckboxItem
+                    key={status}
+                    checked={selectedStatuses.includes(status)}
+                    onCheckedChange={(checked) => {
+                      setSelectedStatuses((prev) =>
+                        checked ? [...prev, status] : prev.filter((s) => s !== status),
+                      );
+                      setPage(1);
+                    }}
+                  >
+                    {statusLabels[status]}
+                  </DropdownMenuCheckboxItem>
+                ))}
+                {activeFilterCount > 0 && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="cursor-pointer text-xs text-slate-500"
+                      onClick={() => {
+                        setSelectedStatuses([]);
+                        setPage(1);
+                      }}
+                    >
+                      {t(localizationConstants.clearFilters)}
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Add New Project Button */}
+          <div>
+            <Button
+              size="sm"
+              className="h-9 cursor-pointer gap-1.5 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 rounded-md px-4 shadow-2xs"
+              onClick={() => router.push("/module/business/b2b/project-market/create")}
+            >
+              <Plus size={16} aria-hidden={true} />
+              {t(localizationConstants.b2bPMAddProject)}
+            </Button>
+          </div>
+        </div>
+
+        {/* Reused Standard Shadcn Table */}
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("refNr")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.b2bPMRefNr)}
+                  {renderSortIcon("refNr", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("project")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.b2bPMProject)}
+                  {renderSortIcon("project", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("date")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.b2bDealDetailDatum)}
+                  {renderSortIcon("date", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("type")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.b2bPMType)}
+                  {renderSortIcon("type", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("requests")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.b2bPMRequests)}
+                  {renderSortIcon("requests", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("municipality")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.b2bPMMunicipality)}
+                  {renderSortIcon("municipality", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("lowestOffer")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.b2bPMLowestOffer)}
+                  {renderSortIcon("lowestOffer", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead
+                className="cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+                onClick={() => toggleSort("status")}
+              >
+                <span className="flex items-center gap-1">
+                  {t(localizationConstants.statusLabel)}
+                  {renderSortIcon("status", sortField, sortDir)}
+                </span>
+              </TableHead>
+              <TableHead className="px-4 py-3.5 text-right font-medium text-slate-500" />
+              {/* 3-dots column with vertical divider to the right of See project */}
+              <TableHead className="w-12 px-3 py-3.5 text-center font-medium text-slate-500 border-l border-slate-200" />
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <SkeletonRows count={rowsPerPage} />
+            ) : (
+              <>
+                {paginated.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    className="hover:bg-slate-50/70 transition-colors border-b border-slate-100"
+                  >
+                    <TableCell className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-900 font-normal">
+                      {row.refNr}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-4 py-3.5 text-xs font-bold text-slate-900">
+                      {row.project}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-600 font-normal">
+                      {row.date}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-4 py-3.5">
+                      <Badge
+                        variant="secondary"
+                        className="rounded-md bg-slate-100 hover:bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-800 border border-slate-200/50"
+                      >
+                        {row.type}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-4 py-3.5 text-xs font-normal tabular-nums text-slate-700">
+                      {row.requests}/10
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-4 py-3.5 text-xs text-slate-700 font-normal">
+                      {row.municipality}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-4 py-3.5 text-xs tabular-nums text-slate-900 font-normal">
+                      {formatCurrency(row.lowestOffer)}
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap px-4 py-3.5">
+                      <StatusBadge status={row.status} />
+                    </TableCell>
+                    {/* See project button column */}
+                    <TableCell className="whitespace-nowrap px-4 py-3 text-right">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() =>
+                          router.push(`/module/business/b2b/project-market/${row.id}`)
+                        }
+                        className="h-10 bg-slate-100 hover:bg-slate-200/80 text-slate-800 text-xs font-semibold px-5 py-3 shadow-none cursor-pointer rounded-md border-0"
+                      >
+                        {t(localizationConstants.b2bPMViewProject)}
+                      </Button>
+                    </TableCell>
+                    {/* 3-dots action column with left border (to the right of See project) */}
+                    <TableCell className="w-12 whitespace-nowrap px-3 py-3.5 text-center border-l border-slate-200">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label={t(localizationConstants.actions)}
+                            className="h-7 w-7 text-slate-500 hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
+                          >
+                            <MoreVertical size={16} aria-hidden={true} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-32 bg-white border border-slate-200/80 rounded-lg shadow-lg p-1">
+                          <DropdownMenuItem
+                            className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-slate-700 hover:bg-slate-100 hover:text-slate-900 rounded-md py-1.5 px-2"
+                            onClick={() => setProjectToArchive(row)}
+                          >
+                            <ArchiveIcon size={15} className="text-slate-600" />
+                            {t(localizationConstants.archive)}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="flex items-center gap-2.5 cursor-pointer text-xs font-medium text-red-600 hover:bg-red-50 hover:text-red-700 rounded-md py-1.5 px-2"
+                            onClick={() => setProjectToRemove(row)}
+                          >
+                            <Trash2 size={15} className="text-red-500" />
+                            {t(localizationConstants.remove)}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
+                {paginated.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={TABLE_COLUMNS_COUNT}
+                      className="px-4 py-12 text-center text-sm text-slate-400"
+                    >
+                      {t(localizationConstants.b2bPMEmpty)}
+                    </TableCell>
+                  </TableRow>
+                )}
               </>
             )}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </TableBody>
+        </Table>
 
-        <div className="ml-auto">
-          <Button
-            size="sm"
-            className="h-9 cursor-pointer gap-2 bg-neutral-950 text-sm text-white hover:bg-neutral-800"
-            onClick={() => router.push("/module/business/b2b/project-market/create")}
-          >
-            <Plus size={14} aria-hidden={true} />
-            {t(localizationConstants.b2bPMAddProject)}
-          </Button>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="flex flex-1 flex-col gap-4 px-5 py-4">
-        <div className="b2b-table-scroll overflow-x-auto rounded-lg border border-slate-200">
-          <table className="min-w-300 w-full text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 bg-white">
-                <th scope="col" className={TH_SORTABLE} onClick={() => toggleSort("refNr")}>
-                  <span className="flex items-center gap-1">
-                    {t(localizationConstants.b2bPMRefNr)}
-                    {renderSortIcon("refNr", sortField, sortDir)}
-                  </span>
-                </th>
-                <th scope="col" className={TH_SORTABLE} onClick={() => toggleSort("project")}>
-                  <span className="flex items-center gap-1">
-                    {t(localizationConstants.b2bPMProject)}
-                    {renderSortIcon("project", sortField, sortDir)}
-                  </span>
-                </th>
-                <th scope="col" className={TH_SORTABLE} onClick={() => toggleSort("date")}>
-                  <span className="flex items-center gap-1">
-                    {t(localizationConstants.b2bDealDetailDatum)}
-                    {renderSortIcon("date", sortField, sortDir)}
-                  </span>
-                </th>
-                <th scope="col" className={TH_SORTABLE} onClick={() => toggleSort("type")}>
-                  <span className="flex items-center gap-1">
-                    {t(localizationConstants.b2bPMType)}
-                    {renderSortIcon("type", sortField, sortDir)}
-                  </span>
-                </th>
-                <th scope="col" className={TH_SORTABLE} onClick={() => toggleSort("requests")}>
-                  <span className="flex items-center gap-1">
-                    {t(localizationConstants.b2bPMRequests)}
-                    {renderSortIcon("requests", sortField, sortDir)}
-                  </span>
-                </th>
-                <th scope="col" className={TH_SORTABLE} onClick={() => toggleSort("municipality")}>
-                  <span className="flex items-center gap-1">
-                    {t(localizationConstants.b2bPMMunicipality)}
-                    {renderSortIcon("municipality", sortField, sortDir)}
-                  </span>
-                </th>
-                <th scope="col" className={TH_SORTABLE} onClick={() => toggleSort("lowestOffer")}>
-                  <span className="flex items-center gap-1">
-                    {t(localizationConstants.b2bPMLowestOffer)}
-                    {renderSortIcon("lowestOffer", sortField, sortDir)}
-                  </span>
-                </th>
-                <th scope="col" className={TH_PLAIN}>
-                  {t(localizationConstants.statusLabel)}
-                </th>
-                <th scope="col" className="sticky right-0 border-l border-slate-200 bg-white px-4 py-3" />
-              </tr>
-            </thead>
-            <tbody>
-              {isLoading ? (
-                <SkeletonRows count={rowsPerPage} />
-              ) : (
-                <>
-                  {paginated.map((row) => (
-                    <tr
-                      key={row.id}
-                      className="group cursor-pointer border-b border-slate-200 last:border-0 hover:bg-slate-50"
-                      onClick={() =>
-                        router.push(`/module/business/b2b/project-market/${row.id}`)
-                      }
-                    >
-                      <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900">
-                        {row.refNr}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 font-semibold text-slate-900">
-                        {row.project}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-600">{row.date}</td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <span className="inline-flex items-center rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs font-medium text-slate-700">
-                          {row.type}
-                        </span>
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 tabular-nums text-slate-700">
-                        {row.requests}/10
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-slate-700">
-                        {row.municipality}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3 tabular-nums font-medium text-slate-900">
-                        {formatCurrency(row.lowestOffer)}
-                      </td>
-                      <td className="whitespace-nowrap px-4 py-3">
-                        <StatusBadge status={row.status} />
-                      </td>
-                      <td
-                        className="sticky right-0 border-l border-slate-200 bg-white px-4 py-3 group-hover:bg-slate-50"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Button
-                            size="sm"
-                            className="h-9 cursor-pointer whitespace-nowrap bg-slate-100 px-2 text-sm font-medium text-slate-900 shadow-none hover:bg-slate-200"
-                            onClick={() =>
-                              router.push(`/module/business/b2b/project-market/${row.id}`)
-                            }
-                          >
-                            {t(localizationConstants.b2bPMViewProject)}
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                aria-label={t(localizationConstants.actions)}
-                                className="h-7 w-7 cursor-pointer p-0"
-                              >
-                                <MoreVertical size={14} aria-hidden={true} />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-44">
-                              <DropdownMenuItem className="cursor-pointer">
-                                {t(localizationConstants.b2bDealArchiveAction)}
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="cursor-pointer text-red-600 focus:text-red-600">
-                                {t(localizationConstants.b2bDealDelete)}
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-
-                  {paginated.length === 0 && (
-                    <tr>
-                      <td
-                        colSpan={SKELETON_COL_COUNT}
-                        className="px-4 py-12 text-center text-sm text-slate-400"
-                      >
-                        {t(localizationConstants.b2bPMEmpty)}
-                      </td>
-                    </tr>
-                  )}
-                </>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <OfferTablePagination
-          page={page}
+        {/* Project Standard Reusable Table Pagination (Responsive) */}
+        <TablePagination
+          currentPage={page}
           totalPages={totalPages}
-          rowsPerPage={rowsPerPage}
+          pageSize={rowsPerPage}
           onPageChange={setPage}
+          onPageSizeChange={setRowsPerPage}
+          className="mt-6 flex-wrap justify-between sm:justify-end gap-3 sm:gap-6"
         />
+
+        {/* Confirmation Modal for Project Archival */}
+        <AlertDialog open={!!projectToArchive} onOpenChange={(open) => !open && setProjectToArchive(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t(localizationConstants.b2bArchiveConfirmTitle)}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t(localizationConstants.b2bArchiveConfirmDesc)}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isArchiving} className="cursor-pointer">
+                {t(localizationConstants.cancel)}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmArchive}
+                disabled={isArchiving}
+                className="bg-slate-900 hover:bg-slate-800 text-white cursor-pointer"
+              >
+                {t(localizationConstants.archive)}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Confirmation Modal for Project Removal */}
+        <AlertDialog open={!!projectToRemove} onOpenChange={(open) => !open && setProjectToRemove(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{t(localizationConstants.b2bRemoveConfirmTitle)}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {t(localizationConstants.b2bRemoveConfirmDesc)}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isRemoving} className="cursor-pointer">
+                {t(localizationConstants.cancel)}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmRemove}
+                disabled={isRemoving}
+                className="bg-red-600 hover:bg-red-700 text-white cursor-pointer"
+              >
+                {t(localizationConstants.remove)}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
