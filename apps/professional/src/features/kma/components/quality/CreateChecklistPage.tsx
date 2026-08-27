@@ -7,24 +7,8 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory, QualitySubCategory } from "../../types/quality";
 import { MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
-
-// ── Types ─────────────────────────────────────────────────────────────────────
-
-interface ChecklistTemplate {
-	id: string;
-	templateNr: string;
-	name: string;
-	version: string;
-	lastUpdate: string;
-	createdBy: string;
-}
-
-const MOCK_CHECKLIST_TEMPLATES: ChecklistTemplate[] = [
-	{ id: "CH001", templateNr: "CH001", name: "Checklistor 1", version: "V2025-12", lastUpdate: "2026-01-28", createdBy: "Lars Andersson" },
-	{ id: "CH002", templateNr: "CH002", name: "Checklistor 2", version: "v1.8",     lastUpdate: "2025-01-08", createdBy: "Lars Andersson" },
-	{ id: "CH003", templateNr: "CH003", name: "Checklistor 3", version: "v2.1",     lastUpdate: "2025-04-09", createdBy: "Lars Andersson" },
-	{ id: "CH004", templateNr: "CH004", name: "Checklistor 4", version: "v1.8",     lastUpdate: "2026-01-09", createdBy: "Lars Andersson" },
-];
+import type { ChecklistTemplate } from "./ChecklistTemplateTable";
+import { MOCK_CHECKLIST_TEMPLATES } from "./ChecklistTemplateTable";
 
 // ── Use Checklist Template Modal ──────────────────────────────────────────────
 
