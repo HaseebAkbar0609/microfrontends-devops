@@ -2759,6 +2759,33 @@ export type OfferTranslation = {
 	machineRentalDelivered: string;
 	machineRentalReturned: string;
 	machineRentalOvertime: string;
+	// New machine list wizard (TFS-807)
+	machineListCreateTitle: string;
+	machineListTabOwn: string;
+	machineListTabExternal: string;
+	machineListTypeOrder: string;
+	machineListTypeProject: string;
+	machineListTypeServiceVehicle: string;
+	machineListLinkObject: string;
+	machineListLinkButton: string;
+	machineListSelect: string;
+	machineListObjectInfo: string;
+	machineListObjectNo: string;
+	machineListObjectName: string;
+	machineListOwnMachines: string;
+	machineListNewSection: string;
+	machineListNewMachine: string;
+	machineListDeleteSection: string;
+	machineListNoSections: string;
+	machineListNoMachines: string;
+	machineListSupplierInfo: string;
+	machineListCompanyName: string;
+	machineListCompanyAddress: string;
+	machineListRentedDay: string;
+	machineListPickObject: string;
+	machineListLinked: string;
+	machineListLinkRequired: string;
+	machineListSaved: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;
