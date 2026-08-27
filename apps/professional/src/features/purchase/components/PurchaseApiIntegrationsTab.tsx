@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -62,17 +63,20 @@ export function PurchaseApiIntegrationsTab() {
 	const { categories, toConnect, connected, setConnected } =
 		usePurchaseApiIntegrations();
 
-	const handleToggle = (supplier: PurchaseApiSupplier, next: boolean) => {
-		setConnected(supplier.id, next);
-		showToast(
-			next ? "success" : "info",
-			`${supplier.name} — ${t(
-				next
-					? localizationConstants.purchaseApiConnectedToast
-					: localizationConstants.purchaseApiDisconnectedToast,
-			)}`,
-		);
-	};
+	const handleToggle = useCallback(
+		(supplier: PurchaseApiSupplier, next: boolean) => {
+			setConnected(supplier.id, next);
+			showToast(
+				next ? "success" : "info",
+				`${supplier.name} — ${t(
+					next
+						? localizationConstants.purchaseApiConnectedToast
+						: localizationConstants.purchaseApiDisconnectedToast,
+				)}`,
+			);
+		},
+		[setConnected, t],
+	);
 
 	return (
 		<div className="flex flex-col gap-6">
