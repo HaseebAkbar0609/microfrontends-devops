@@ -40,22 +40,21 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 	const [selectedMachineId, setSelectedMachineId] = useState("");
 	const [rows, setRows] = useState<BookedMachineRow[]>(INITIAL_BOOKED_MACHINES);
 	const [expanded, setExpanded] = useState(true);
-	const [sortKey, setSortKey] = useState<BookedMachineSortKey>("machineNo");
+	const [sortKey, setSortKey] = useState<BookedMachineSortKey>(null);
 	const [sortAsc, setSortAsc] = useState(true);
 
 	const currentStep = 1;
 	const progress = (currentStep / TOTAL_STEPS) * 100;
 
-	const sortedRows = useMemo(
-		() =>
-			[...rows].sort((a, b) => {
-				const compared = a[sortKey].localeCompare(b[sortKey], "sv");
-				return sortAsc ? compared : -compared;
-			}),
-		[rows, sortKey, sortAsc]
-	);
+	const sortedRows = useMemo(() => {
+		if (!sortKey) return rows;
+		return [...rows].sort((a, b) => {
+			const compared = a[sortKey].localeCompare(b[sortKey], "sv");
+			return sortAsc ? compared : -compared;
+		});
+	}, [rows, sortKey, sortAsc]);
 
-	const handleSort = (key: BookedMachineSortKey) => {
+	const handleSort = (key: NonNullable<BookedMachineSortKey>) => {
 		if (key === sortKey) {
 			setSortAsc((prev) => !prev);
 			return;

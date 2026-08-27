@@ -18,5 +18,9 @@ export interface BookedMachineRow {
 	status: MachineRentalStatus;
 }
 
-/** Column the "Bokade maskiner" table is sorted by. */
-export type BookedMachineSortKey = "machineNo" | "name";
+/**
+ * Column the "Bokade maskiner" table is sorted by. `null` is the initial
+ * state: the design lists the machines in the order they were booked, and
+ * sorting only kicks in once a header is clicked.
+ */
+export type BookedMachineSortKey = "machineNo" | "name" | null;

@@ -21,13 +21,16 @@ import type {
 	BookedMachineSortKey,
 } from "../types/bookMachine.types";
 
+/** A column always has a key; only the table's active key can be unset. */
+type SortableColumn = NonNullable<BookedMachineSortKey>;
+
 interface BookedMachinesTableProps {
 	rows: BookedMachineRow[];
 	expanded: boolean;
 	onToggle: () => void;
 	sortKey: BookedMachineSortKey;
 	sortAsc: boolean;
-	onSort: (key: BookedMachineSortKey) => void;
+	onSort: (key: SortableColumn) => void;
 	onRemove: (id: string) => void;
 }
 
@@ -40,10 +43,10 @@ function SortableHead({
 	onSort,
 }: {
 	labelKey: TranslationKeys;
-	sortKey: BookedMachineSortKey;
+	sortKey: SortableColumn;
 	activeKey: BookedMachineSortKey;
 	sortAsc: boolean;
-	onSort: (key: BookedMachineSortKey) => void;
+	onSort: (key: SortableColumn) => void;
 }) {
 	const isActive = activeKey === sortKey;
 
