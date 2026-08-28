@@ -44,6 +44,7 @@ import {
 import type { PurchaseComplaintRow } from "../types/purchase.types";
 import { PurchaseComplaintActions } from "./PurchaseComplaintActions";
 import {
+	PurchaseComplaintPriorityBadge,
 	PurchaseComplaintStatusBadge,
 	PurchaseComplaintTypeLabel,
 } from "./PurchaseBadges";
@@ -66,6 +67,10 @@ const COLUMNS: {
 	{ field: "type", label: localizationConstants.purchaseComplaintColType },
 	{ field: "date", label: localizationConstants.purchaseComplaintColDate },
 	{ field: "status", label: localizationConstants.statusLabel },
+	{
+		field: "priority",
+		label: localizationConstants.purchaseComplaintColPriority,
+	},
 ];
 
 export function PurchaseComplaintsPage() {
@@ -328,6 +333,13 @@ export function PurchaseComplaintsPage() {
 											<TableCell className="px-4 py-3.5 whitespace-nowrap">
 												<PurchaseComplaintStatusBadge
 													status={complaint.status}
+												/>
+											</TableCell>
+											<TableCell className="px-4 py-3.5 whitespace-nowrap">
+												<PurchaseComplaintPriorityBadge
+													priority={
+														complaint.priority
+													}
 												/>
 											</TableCell>
 											<TableCell className="px-4 py-3.5 text-right whitespace-nowrap">

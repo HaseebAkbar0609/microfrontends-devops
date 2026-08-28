@@ -2554,6 +2554,10 @@ export type OfferTranslation = {
 	purchaseComplaintColNumber: string;
 	purchaseComplaintColType: string;
 	purchaseComplaintColDate: string;
+	purchaseComplaintColPriority: string;
+	purchaseComplaintPriorityHigh: string;
+	purchaseComplaintPriorityMedium: string;
+	purchaseComplaintPriorityLow: string;
 	purchaseComplaintStatusNotSent: string;
 	purchaseComplaintStatusSent: string;
 	purchaseComplaintStatusApproved: string;

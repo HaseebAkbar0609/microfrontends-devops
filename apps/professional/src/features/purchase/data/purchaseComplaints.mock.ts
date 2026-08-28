@@ -18,6 +18,7 @@ export const MOCK_PURCHASE_COMPLAINTS: PurchaseComplaintRow[] = [
 		type: "damaged",
 		date: "2026-05-01",
 		status: "sent",
+		priority: "high",
 		archived: false,
 	},
 	{
@@ -30,6 +31,7 @@ export const MOCK_PURCHASE_COMPLAINTS: PurchaseComplaintRow[] = [
 		type: "wrong_delivery",
 		date: "2026-05-01",
 		status: "sent",
+		priority: "medium",
 		archived: false,
 	},
 	{
@@ -42,6 +44,7 @@ export const MOCK_PURCHASE_COMPLAINTS: PurchaseComplaintRow[] = [
 		type: "wrong_delivery",
 		date: "2026-05-01",
 		status: "approved",
+		priority: "low",
 		archived: false,
 	},
 	{
@@ -54,6 +57,7 @@ export const MOCK_PURCHASE_COMPLAINTS: PurchaseComplaintRow[] = [
 		type: "wrong_delivery",
 		date: "2026-05-01",
 		status: "not_sent",
+		priority: "high",
 		archived: false,
 	},
 	{
@@ -66,6 +70,7 @@ export const MOCK_PURCHASE_COMPLAINTS: PurchaseComplaintRow[] = [
 		type: "wrong_delivery",
 		date: "2026-05-01",
 		status: "approved",
+		priority: "medium",
 		archived: false,
 	},
 ];

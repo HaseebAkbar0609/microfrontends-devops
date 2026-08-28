@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { MOCK_PURCHASE_COMPLAINTS } from "../data/purchaseComplaints.mock";
 import type {
+	PurchaseComplaintPriority,
 	PurchaseComplaintRow,
 	PurchaseComplaintStatus,
 } from "../types/purchase.types";
@@ -19,7 +20,18 @@ export type PurchaseComplaintSortField =
 	| "supplier"
 	| "type"
 	| "date"
-	| "status";
+	| "status"
+	| "priority";
+
+/**
+ * Priority sorts by severity, not alphabetically — "high, low, medium" would be
+ * meaningless to read.
+ */
+const PRIORITY_RANK: Record<PurchaseComplaintPriority, number> = {
+	high: 0,
+	medium: 1,
+	low: 2,
+};
 
 export interface UsePurchaseComplaintsOptions {
 	initialComplaints?: PurchaseComplaintRow[];
@@ -108,13 +120,14 @@ export function usePurchaseComplaints(
 				);
 			})
 			.sort((a, b) => {
-				const valueA = a[sortBy] ?? "";
-				const valueB = b[sortBy] ?? "";
-
-				const comparison = valueA.localeCompare(valueB, undefined, {
-					sensitivity: "base",
-					numeric: true,
-				});
+				const comparison =
+					sortBy === "priority"
+						? PRIORITY_RANK[a.priority] - PRIORITY_RANK[b.priority]
+						: (a[sortBy] ?? "").localeCompare(
+								b[sortBy] ?? "",
+								undefined,
+								{ sensitivity: "base", numeric: true },
+							);
 
 				return sortOrder === "asc" ? comparison : -comparison;
 			});

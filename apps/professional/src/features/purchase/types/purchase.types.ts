@@ -65,6 +65,8 @@ export type PurchaseComplaintStatus = "not_sent" | "sent" | "approved";
 
 export type PurchaseComplaintType = "damaged" | "wrong_delivery";
 
+export type PurchaseComplaintPriority = "high" | "medium" | "low";
+
 /** One row of the Reklamationer list. */
 export interface PurchaseComplaintRow {
 	id: string;
@@ -79,6 +81,7 @@ export interface PurchaseComplaintRow {
 	/** ISO date the complaint was raised. */
 	date: string;
 	status: PurchaseComplaintStatus;
+	priority: PurchaseComplaintPriority;
 	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
 	archived: boolean;
 }

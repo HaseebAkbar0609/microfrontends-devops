@@ -6,6 +6,7 @@ import localizationConstants, {
 import { Translate } from "@/utils/translation/translate";
 import type {
 	PurchaseCategory,
+	PurchaseComplaintPriority,
 	PurchaseComplaintStatus,
 	PurchaseComplaintType,
 	PurchaseStatus,
@@ -95,6 +96,39 @@ export function PurchaseComplaintStatusBadge({
 			className={`inline-flex items-center rounded-md px-3 py-0.5 text-xs font-medium ${COMPLAINT_STATUS_STYLES[status]}`}
 		>
 			<Translate text={COMPLAINT_STATUS_LABELS[status]} />
+		</span>
+	);
+}
+
+const COMPLAINT_PRIORITY_STYLES: Record<PurchaseComplaintPriority, string> = {
+	high: "bg-red-100 text-red-700",
+	medium: "bg-amber-100 text-amber-800",
+	low: "bg-slate-100 text-slate-700",
+};
+
+const COMPLAINT_PRIORITY_LABELS: Record<
+	PurchaseComplaintPriority,
+	TranslationKeys
+> = {
+	high: localizationConstants.purchaseComplaintPriorityHigh,
+	medium: localizationConstants.purchaseComplaintPriorityMedium,
+	low: localizationConstants.purchaseComplaintPriorityLow,
+};
+
+/**
+ * Priority is not in the Figma frame; the ticket's acceptance criteria call for
+ * it, so it follows the status badge's shape with severity-ordered colours.
+ */
+export function PurchaseComplaintPriorityBadge({
+	priority,
+}: {
+	priority: PurchaseComplaintPriority;
+}) {
+	return (
+		<span
+			className={`inline-flex items-center rounded-md px-3 py-0.5 text-xs font-medium ${COMPLAINT_PRIORITY_STYLES[priority]}`}
+		>
+			<Translate text={COMPLAINT_PRIORITY_LABELS[priority]} />
 		</span>
 	);
 }
