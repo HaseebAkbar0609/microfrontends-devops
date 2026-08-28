@@ -207,25 +207,19 @@ export function PurchaseComplaintsPage() {
 
 						<PermissionGate permission="CREATE_PURCHASE">
 							<div className="flex w-full justify-start xl:w-auto xl:justify-end">
-								<Button
-									type="button"
-									onClick={() =>
-										showToast(
-											"info",
-											t(
-												localizationConstants.purchaseComplaintCreateToast,
-											),
-										)
-									}
-									className="h-10 w-full cursor-pointer justify-center gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 sm:w-auto"
+								<Link
+									href={`${PURCHASE_MODULE_BASE_URL}/complaints/create`}
+									className="w-full sm:w-auto"
 								>
-									<Plus className="h-4 w-4" aria-hidden />
-									<Translate
-										text={
-											localizationConstants.purchaseComplaintCreate
-										}
-									/>
-								</Button>
+									<Button className="h-10 w-full cursor-pointer justify-center gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 sm:w-auto">
+										<Plus className="h-4 w-4" aria-hidden />
+										<Translate
+											text={
+												localizationConstants.purchaseComplaintCreate
+											}
+										/>
+									</Button>
+								</Link>
 							</div>
 						</PermissionGate>
 					</div>
