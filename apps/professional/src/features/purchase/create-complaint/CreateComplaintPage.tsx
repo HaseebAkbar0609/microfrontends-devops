@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, Folder, Save, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { SearchableSelect } from "@/components/form";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
+import { MOCK_PURCHASES } from "../data/purchases.mock";
+import { MOCK_PURCHASE_SUPPLIERS } from "../data/purchaseSuppliers.mock";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -82,11 +85,16 @@ const PRIORITIES: { value: ComplaintPriority; label: TranslationKeys }[] = [
 	{ value: "low", label: localizationConstants.purchaseComplaintPriorityLow },
 ];
 
-const SUPPLIER_OPTIONS = [
-	{ id: "beijer", name: "Beijer" },
-	{ id: "byggmax", name: "ByggMax" },
-	{ id: "fredells", name: "Fredells" },
-];
+const SUPPLIER_OPTIONS = MOCK_PURCHASE_SUPPLIERS.map((supplier) => ({
+	id: supplier.id,
+	name: supplier.name,
+}));
+
+/** Existing purchases a complaint can be raised against. */
+const PURCHASE_OPTIONS = MOCK_PURCHASES.map((purchase) => ({
+	value: purchase.purchaseNo,
+	label: `${purchase.purchaseNo} — ${purchase.name}`,
+}));
 
 const CONTACT_OPTIONS = [
 	{ id: "anders", name: "Anders Svensson" },
@@ -134,6 +142,26 @@ export function CreateComplaintPage() {
 				[key]: { ...previous[key], ...patch },
 			}));
 
+	/**
+	 * Links the complaint to a purchase. Choosing one fills the descriptive
+	 * fields, but they stay editable — and a value typed by hand is kept as-is.
+	 */
+	const handlePurchasePick = (purchaseNo: string) => {
+		const match = MOCK_PURCHASES.find(
+			(purchase) => purchase.purchaseNo === purchaseNo,
+		);
+
+		patchInfo(
+			match
+				? {
+						purchaseNo,
+						name: match.name,
+						object: match.object,
+					}
+				: { purchaseNo },
+		);
+	};
+
 	const patchInfo = (patch: Partial<ComplaintInfo>) =>
 		setDraft((previous) => ({
 			...previous,
@@ -165,6 +193,8 @@ export function CreateComplaintPage() {
 
 	const validateStep1 = () => {
 		const result = complaintContactStepSchema.safeParse({
+			info: { complaintType: draft.info.complaintType },
+			supplierId: draft.supplierId,
 			supplier: draft.supplier,
 			supplierContact: draft.supplierContact,
 			reporter: draft.reporter,
@@ -271,18 +301,16 @@ export function CreateComplaintPage() {
 													}
 												/>
 											</Label>
-											<Input
+											<SearchableSelect
 												value={draft.info.purchaseNo}
-												onChange={(event) =>
-													patchInfo({
-														purchaseNo: event.target
-															.value,
-													})
-												}
+												onChange={handlePurchasePick}
+												options={PURCHASE_OPTIONS}
 												placeholder={t(
 													localizationConstants.purchaseColNumber,
 												)}
-												className={FIELD_CLASS}
+												searchPlaceholder={t(
+													localizationConstants.search,
+												)}
 											/>
 										</div>
 										<div className="space-y-1">
@@ -388,6 +416,7 @@ export function CreateComplaintPage() {
 									onChange={patchCompany("supplier")}
 									errors={companyErrors("supplier")}
 									selectOptions={SUPPLIER_OPTIONS}
+									selectError={errors.supplierId}
 									selectedId={draft.supplierId}
 									onSelect={(supplierId) =>
 										setDraft((previous) => ({

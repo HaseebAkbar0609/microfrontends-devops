@@ -2603,6 +2603,8 @@ export type OfferTranslation = {
 	complaintCreateSavedToast: string;
 	complaintCreatePreviewToast: string;
 	complaintValidationFirstNameRequired: string;
+	complaintValidationSupplierRequired: string;
+	complaintValidationTypeRequired: string;
 	complaintValidationTitleRequired: string;
 	complaintValidationDescriptionRequired: string;
 	// Order - Dashboard widgets

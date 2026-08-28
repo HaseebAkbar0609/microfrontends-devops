@@ -5,13 +5,7 @@ import { Folder } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/form";
 import { cn } from "@/lib/utils";
 import localizationConstants, {
 	type TranslationKeys,
@@ -36,6 +30,8 @@ export interface ComplaintCompanyCardProps {
 	selectOptions?: ComplaintCompanySelectOption[];
 	selectedId?: string;
 	onSelect?: (id: string) => void;
+	/** Validation message for the picker; the description makes it mandatory. */
+	selectError?: string;
 }
 
 /**
@@ -55,6 +51,7 @@ export function ComplaintCompanyCard({
 	selectOptions,
 	selectedId,
 	onSelect,
+	selectError,
 }: ComplaintCompanyCardProps) {
 	const t = useTranslate();
 
@@ -99,29 +96,29 @@ export function ComplaintCompanyCard({
 									localizationConstants.complaintFieldSupplier
 								}
 							/>
+							<span className="text-red-500"> *</span>
 						</Label>
-						<Select
-							value={selectedId || undefined}
-							onValueChange={(id) => onSelect?.(id)}
-						>
-							<SelectTrigger className="h-10 w-full cursor-pointer border-slate-200 bg-white text-sm text-slate-900 shadow-none">
-								<SelectValue
-									placeholder={t(
-										localizationConstants.complaintFieldSupplierPlaceholder,
-									)}
-								/>
-							</SelectTrigger>
-							<SelectContent className="bg-white">
-								{selectOptions.map((option) => (
-									<SelectItem
-										key={option.id}
-										value={option.id}
-									>
-										{option.name}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+						<SearchableSelect
+							value={selectedId ?? ""}
+							onChange={(id) => onSelect?.(id)}
+							options={selectOptions.map((option) => ({
+								value: option.id,
+								label: option.name,
+							}))}
+							allowCustom={false}
+							hasError={Boolean(selectError)}
+							placeholder={t(
+								localizationConstants.complaintFieldSupplierPlaceholder,
+							)}
+							searchPlaceholder={t(
+								localizationConstants.search,
+							)}
+						/>
+						{selectError && (
+							<p className="mt-1 text-xs font-normal text-red-500">
+								{t(selectError as TranslationKeys)}
+							</p>
+						)}
 					</div>
 				)}
 

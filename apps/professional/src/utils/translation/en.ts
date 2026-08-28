@@ -2624,6 +2624,8 @@ export const enOffer: OfferTranslation = {
 	complaintCreateSavedToast: "Draft saved",
 	complaintCreatePreviewToast: "Preview is coming soon",
 	complaintValidationFirstNameRequired: "First name is required",
+	complaintValidationSupplierRequired: "Supplier is required",
+	complaintValidationTypeRequired: "Complaint type is required",
 	complaintValidationTitleRequired: "A short title is required",
 	complaintValidationDescriptionRequired: "A description is required",
 	// Order - Dashboard widgets

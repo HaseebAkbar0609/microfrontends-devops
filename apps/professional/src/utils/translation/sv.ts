@@ -2512,6 +2512,8 @@ export const svOffer: OfferTranslation = {
 	complaintCreateSavedToast: "Utkast sparat",
 	complaintCreatePreviewToast: "Förhandsvisning kommer snart",
 	complaintValidationFirstNameRequired: "Förnamn krävs",
+	complaintValidationSupplierRequired: "Leverantör krävs",
+	complaintValidationTypeRequired: "Reklamationtyp krävs",
 	complaintValidationTitleRequired: "Kort titel krävs",
 	complaintValidationDescriptionRequired: "Beskrivning krävs",
 	// Order - Dashboard widgets

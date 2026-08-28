@@ -68,6 +68,16 @@ export const complaintCompanySchema = z.object({
 
 /** Step 1 — everything on the Kontaktuppgifter tab. */
 export const complaintContactStepSchema = z.object({
+	info: z.object({
+		complaintType: z
+			.string()
+			.trim()
+			.min(1, localizationConstants.complaintValidationTypeRequired),
+	}),
+	supplierId: z
+		.string()
+		.trim()
+		.min(1, localizationConstants.complaintValidationSupplierRequired),
 	supplier: complaintCompanySchema,
 	supplierContact: complaintContactSchema,
 	reporter: complaintCompanySchema,
