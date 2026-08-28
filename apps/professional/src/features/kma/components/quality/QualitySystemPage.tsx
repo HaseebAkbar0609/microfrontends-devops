@@ -43,6 +43,8 @@ import { CreateRiskTemplatePage } from "../risk/CreateRiskTemplatePage";
 import { OpenRiskTemplatePage } from "../risk/OpenRiskTemplatePage";
 import { MOCK_RISK_TEMPLATES } from "../risk/RiskTemplateTable";
 import { CreateChecklistPage } from "./CreateChecklistPage";
+import { ChecklistTemplateTable, MOCK_CHECKLIST_TEMPLATES } from "./ChecklistTemplateTable";
+import { OpenChecklistTemplatePage } from "./OpenChecklistTemplatePage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -2965,7 +2967,8 @@ function QualityPlanTab({
 	onOpenRiskTemplate,
 	onOpenDoc,
 	onCreateChecklist,
-	onUseChecklistTemplate
+	onUseChecklistTemplate,
+	onOpenChecklistTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -2979,6 +2982,7 @@ function QualityPlanTab({
 	onOpenDoc: (doc: QualityDocument) => void;
 	onCreateChecklist: () => void;
 	onUseChecklistTemplate: () => void;
+	onOpenChecklistTemplate: (id: string) => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3186,21 +3190,7 @@ function QualityPlanTab({
 				viewMode === "mallar" ? <RiskTemplateTable onOpenTemplate={onOpenRiskTemplate} /> : <RiskTable />
 			) : planType === "checklistor" ? (
 				viewMode === "mallar" ? (
-					<div className="flex flex-1 overflow-hidden">
-						<CategoryPanel
-							headerKey={localizationConstants.kmaQualityMainCat}
-							items={mainItems}
-							selectedId={selectedMainId}
-							onSelect={handleSelectMain}
-							searchKey={localizationConstants.kmaQualitySearchCategories}
-						/>
-						<KontrollplanTable
-							title={selectedMain?.label ?? ""}
-							onOpenPlan={onOpenPlan}
-							onOpenSandlista={onOpenSandlista}
-							onCreateTemplate={onCreateTemplate}
-						/>
-					</div>
+					<ChecklistTemplateTable onOpenTemplate={onOpenChecklistTemplate} />
 				) : (
 					<ChecklistTab onOpenDoc={onOpenDoc} onCreateChecklist={onCreateChecklist} />
 				)
@@ -3247,6 +3237,7 @@ export function QualitySystemPage() {
 	const [openRiskTemplateId, setOpenRiskTemplateId] = useState<string | null>(null);
 	const [createChecklistOpen, setCreateChecklistOpen] = useState(false);
 	const [createChecklistWithTemplate, setCreateChecklistWithTemplate] = useState(false);
+	const [openChecklistTemplateId, setOpenChecklistTemplateId] = useState<string | null>(null);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3308,6 +3299,13 @@ export function QualitySystemPage() {
 		}
 	}
 
+	if (openChecklistTemplateId) {
+		const tmpl = MOCK_CHECKLIST_TEMPLATES.find((t) => t.id === openChecklistTemplateId);
+		if (tmpl) {
+			return <OpenChecklistTemplatePage template={tmpl} onBack={() => setOpenChecklistTemplateId(null)} />;
+		}
+	}
+
 	if (openPlanOpen) {
 		return <OpenKontrollplanPage onBack={() => setOpenPlanOpen(false)} />;
 	}
@@ -3362,6 +3360,7 @@ export function QualitySystemPage() {
 					onOpenDoc={setOpenDoc}
 					onCreateChecklist={() => { setCreateChecklistWithTemplate(false); setCreateChecklistOpen(true); }}
 					onUseChecklistTemplate={() => { setCreateChecklistWithTemplate(true); setCreateChecklistOpen(true); }}
+					onOpenChecklistTemplate={(id) => setOpenChecklistTemplateId(id)}
 				/>
 			)}
 		</div>
