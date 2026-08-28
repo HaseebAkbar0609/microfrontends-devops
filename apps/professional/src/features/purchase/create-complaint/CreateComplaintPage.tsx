@@ -77,9 +77,9 @@ const COMPLAINT_TYPES: { value: string; label: TranslationKeys }[] = [
 ];
 
 const PRIORITIES: { value: ComplaintPriority; label: TranslationKeys }[] = [
-	{ value: "high", label: localizationConstants.complaintPriorityHigh },
-	{ value: "medium", label: localizationConstants.complaintPriorityMedium },
-	{ value: "low", label: localizationConstants.complaintPriorityLow },
+	{ value: "high", label: localizationConstants.purchaseComplaintPriorityHigh },
+	{ value: "medium", label: localizationConstants.purchaseComplaintPriorityMedium },
+	{ value: "low", label: localizationConstants.purchaseComplaintPriorityLow },
 ];
 
 const SUPPLIER_OPTIONS = [

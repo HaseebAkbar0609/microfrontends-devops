@@ -2591,9 +2591,6 @@ export type OfferTranslation = {
 	complaintFieldDiscoveredAt: string;
 	complaintFieldDeliveredAt: string;
 	complaintFieldPriority: string;
-	complaintPriorityHigh: string;
-	complaintPriorityMedium: string;
-	complaintPriorityLow: string;
 	complaintTypeDamagedOnDelivery: string;
 	complaintTypeWrongDelivery: string;
 	complaintTypeMissingParts: string;
