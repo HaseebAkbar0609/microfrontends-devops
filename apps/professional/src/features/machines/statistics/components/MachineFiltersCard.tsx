@@ -23,10 +23,23 @@ import type {
 } from "../types/statistics.types";
 import {
 	SUPPLIER_OPTIONS,
-	AGE_INTERVAL_OPTIONS,
 	CATEGORY_OPTIONS,
-	STATUS_OPTIONS,
 } from "../data/machineStatistics.mock";
+
+export const AGE_INTERVAL_ITEMS = [
+	{ value: "Alla", labelKey: localizationConstants.machineStatAgeAll },
+	{ value: "under 1 year", labelKey: localizationConstants.machineStatAgeUnder1Year },
+	{ value: "1 - 2 years", labelKey: localizationConstants.machineStatAge1To2Years },
+	{ value: "2 - 5 years", labelKey: localizationConstants.machineStatAge2To5Years },
+	{ value: "5+ years", labelKey: localizationConstants.machineStatAgeOver5Years },
+];
+
+export const STATUS_ITEMS = [
+	{ value: "Alla", labelKey: localizationConstants.machineStatStatusAll },
+	{ value: "Aktiv", labelKey: localizationConstants.machineStatStatusActive },
+	{ value: "Reparation", labelKey: localizationConstants.machineStatStatusRepair },
+	{ value: "Avslutad", labelKey: localizationConstants.machineStatStatusCompleted },
+];
 
 interface MachineFiltersCardProps {
 	filters: MachineFilterState;
@@ -69,7 +82,7 @@ export function MachineFiltersCard({
 				<button
 					type="button"
 					onClick={onReset}
-					className="flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors"
+					className="flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
 				>
 					<Translate text={localizationConstants.machineStatFilterReset} />
 					<X className="h-3.5 w-3.5" />
@@ -78,7 +91,7 @@ export function MachineFiltersCard({
 
 			{/* Filter Controls Grid */}
 			<div
-				className={`mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 ${
+				className={`mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2 ${
 					isExternal
 						? "lg:grid-cols-[1fr_1fr_1fr_1.5fr_1fr_auto]"
 						: "lg:grid-cols-[1fr_1fr_1.5fr_1fr_auto]"
@@ -163,9 +176,9 @@ export function MachineFiltersCard({
 							/>
 						</SelectTrigger>
 						<SelectContent>
-							{AGE_INTERVAL_OPTIONS.map((opt) => (
-								<SelectItem key={opt} value={opt}>
-									{opt}
+							{AGE_INTERVAL_ITEMS.map((item) => (
+								<SelectItem key={item.value} value={item.value}>
+									<Translate text={item.labelKey} />
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -201,7 +214,7 @@ export function MachineFiltersCard({
 													e.stopPropagation();
 													removeCategory(val);
 												}}
-												className="text-slate-400 hover:text-slate-600"
+												className="text-slate-400 hover:text-slate-600 cursor-pointer"
 											>
 												<X className="h-3 w-3" />
 											</button>
@@ -244,9 +257,9 @@ export function MachineFiltersCard({
 							/>
 						</SelectTrigger>
 						<SelectContent>
-							{STATUS_OPTIONS.map((opt) => (
-								<SelectItem key={opt} value={opt}>
-									{opt}
+							{STATUS_ITEMS.map((item) => (
+								<SelectItem key={item.value} value={item.value}>
+									<Translate text={item.labelKey} />
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -258,7 +271,7 @@ export function MachineFiltersCard({
 					<Button
 						type="button"
 						onClick={onApply}
-						className="h-9 w-24 px-5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold rounded-md shrink-0"
+						className="h-9 w-24 px-5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold rounded-md shrink-0 cursor-pointer"
 					>
 						<Translate
 							text={localizationConstants.machineStatFilterSelectButton}

@@ -17,7 +17,7 @@ import {
 	VEHICLE_MILEAGE_OPTIONS,
 	VEHICLE_DRIFT_OPTIONS,
 } from "../data/vehicleStatistics.mock";
-import { STATUS_OPTIONS } from "../data/machineStatistics.mock";
+import { STATUS_ITEMS } from "./MachineFiltersCard";
 
 interface VehicleFiltersCardProps {
 	filters: VehicleFilterState;
@@ -42,7 +42,7 @@ export function VehicleFiltersCard({
 				<button
 					type="button"
 					onClick={onReset}
-					className="flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors"
+					className="flex items-center gap-1 text-xs font-medium text-slate-400 hover:text-slate-700 transition-colors cursor-pointer"
 				>
 					<Translate text={localizationConstants.machineStatFilterReset} />
 					<X className="h-3.5 w-3.5" />
@@ -50,7 +50,7 @@ export function VehicleFiltersCard({
 			</div>
 
 			{/* Filter Controls Grid */}
-			<div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] items-end">
+			<div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] items-end">
 				{/* 1. Märke & modell */}
 				<div className="flex flex-col gap-1.5">
 					<label className="text-xs font-medium text-slate-500">
@@ -112,9 +112,7 @@ export function VehicleFiltersCard({
 				{/* 3. Drift */}
 				<div className="flex flex-col gap-1.5">
 					<label className="text-xs font-medium text-slate-500">
-						<Translate
-							text={localizationConstants.machineStatFilterDriftLabel}
-						/>
+						<Translate text={localizationConstants.machineStatFilterDriftLabel} />
 					</label>
 					<Select
 						value={filters.driftPeriod}
@@ -156,21 +154,21 @@ export function VehicleFiltersCard({
 							/>
 						</SelectTrigger>
 						<SelectContent>
-							{STATUS_OPTIONS.map((opt) => (
-								<SelectItem key={opt} value={opt}>
-									{opt}
+							{STATUS_ITEMS.map((item) => (
+								<SelectItem key={item.value} value={item.value}>
+									<Translate text={item.labelKey} />
 								</SelectItem>
 							))}
 						</SelectContent>
 					</Select>
 				</div>
 
-				{/* 5. Välj (Apply Button) */}
+				{/* 5. Välj Button */}
 				<div className="flex items-end">
 					<Button
 						type="button"
 						onClick={onApply}
-						className="h-9 w-24 px-5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold rounded-md shrink-0"
+						className="h-9 w-24 px-5 bg-slate-900 text-white hover:bg-slate-800 text-xs font-semibold rounded-md shrink-0 cursor-pointer"
 					>
 						<Translate
 							text={localizationConstants.machineStatFilterSelectButton}

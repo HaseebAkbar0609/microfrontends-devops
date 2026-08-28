@@ -22,6 +22,8 @@ export function MachineStatisticsPage() {
 	const {
 		filters: machineFilters,
 		setFilters: setMachineFilters,
+		searchQuery: machineSearchQuery,
+		setSearchQuery: setMachineSearchQuery,
 		applyFilters: applyMachineFilters,
 		resetFilters: resetMachineFilters,
 		sortField: machineSortField,
@@ -40,6 +42,8 @@ export function MachineStatisticsPage() {
 	const {
 		filters: vehicleFilters,
 		setFilters: setVehicleFilters,
+		searchQuery: vehicleSearchQuery,
+		setSearchQuery: setVehicleSearchQuery,
 		applyFilters: applyVehicleFilters,
 		resetFilters: resetVehicleFilters,
 		sortField: vehicleSortField,
@@ -97,7 +101,6 @@ export function MachineStatisticsPage() {
 
 			{/* Main Scrollable Body */}
 			<div className="flex flex-1 flex-col gap-6 overflow-y-auto px-6 pt-6 pb-12">
-
 				{/* Tab 1: Maskiner View */}
 				{activeMainTab === "machines" && (
 					<div className="flex flex-col gap-6">
@@ -130,10 +133,8 @@ export function MachineStatisticsPage() {
 						<MachineStatisticsTable
 							data={machinePaginatedData}
 							showSupplierColumn={isExternalView}
-							searchQuery={machineFilters.search}
-							onSearchChange={(val) =>
-								setMachineFilters({ ...machineFilters, search: val })
-							}
+							searchQuery={machineSearchQuery}
+							onSearchChange={setMachineSearchQuery}
 							sortField={machineSortField}
 							sortOrder={machineSortOrder}
 							onSort={handleMachineSort}
@@ -178,10 +179,8 @@ export function MachineStatisticsPage() {
 						{/* Vehicle Statistics Data Table */}
 						<VehicleStatisticsTable
 							data={vehiclePaginatedData}
-							searchQuery={vehicleFilters.search}
-							onSearchChange={(val) =>
-								setVehicleFilters({ ...vehicleFilters, search: val })
-							}
+							searchQuery={vehicleSearchQuery}
+							onSearchChange={setVehicleSearchQuery}
 							sortField={vehicleSortField}
 							sortOrder={vehicleSortOrder}
 							onSort={handleVehicleSort}

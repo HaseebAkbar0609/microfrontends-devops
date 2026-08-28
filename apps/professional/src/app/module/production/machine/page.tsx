@@ -1,7 +1,5 @@
-import { MachineOverviewPage } from "@/features/machines/MachineOverviewPage";
-
-export const dynamic = "force-dynamic";
+import { MachineDashboardPage } from "@/features/machines/dashboard/MachineDashboardPage";
 
 export default function Page() {
-	return <MachineOverviewPage />;
+	return <MachineDashboardPage />;
 }

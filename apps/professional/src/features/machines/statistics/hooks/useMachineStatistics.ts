@@ -6,16 +6,7 @@ import type {
 } from "../types/statistics.types";
 import { MOCK_MACHINE_STATISTICS } from "../data/machineStatistics.mock";
 
-const INITIAL_FILTERS: MachineFilterState = {
-	machineType: "Interna",
-	supplier: "Alla",
-	ageInterval: "under 1 year",
-	categories: ["Handmaskin", "Betong"],
-	status: "Aktiv",
-	search: "",
-};
-
-const INITIAL_APPLIED_FILTERS: MachineFilterState = {
+export const INITIAL_MACHINE_FILTERS: MachineFilterState = {
 	machineType: "Interna",
 	supplier: "Alla",
 	ageInterval: "Alla",
@@ -24,10 +15,96 @@ const INITIAL_APPLIED_FILTERS: MachineFilterState = {
 	search: "",
 };
 
+function matchesAgeInterval(itemAge: string, interval: string): boolean {
+	if (!interval || interval === "Alla" || interval === "All") return true;
+
+	const lowerAge = itemAge.toLowerCase().trim();
+	let years = 0;
+
+	if (
+		lowerAge.includes("month") ||
+		lowerAge.includes("månad") ||
+		lowerAge.includes("månader")
+	) {
+		const num = parseFloat(lowerAge) || 0;
+		years = num / 12;
+	} else if (lowerAge.includes("year") || lowerAge.includes("år")) {
+		years = parseFloat(lowerAge) || 0;
+	} else {
+		years = parseFloat(lowerAge) || 0;
+	}
+
+	const normInterval = interval.toLowerCase().trim();
+	if (
+		normInterval.includes("under 1") ||
+		normInterval.includes("< 1") ||
+		normInterval === "under 1 year" ||
+		normInterval === "under 1 år"
+	) {
+		return years < 1;
+	}
+	if (
+		normInterval.includes("1 - 2") ||
+		normInterval.includes("1-2") ||
+		normInterval === "1 - 2 years" ||
+		normInterval === "1 - 2 år"
+	) {
+		return years >= 1 && years <= 2;
+	}
+	if (
+		normInterval.includes("2 - 5") ||
+		normInterval.includes("2-5") ||
+		normInterval === "2 - 5 years" ||
+		normInterval === "2 - 5 år"
+	) {
+		return years > 2 && years <= 5;
+	}
+	if (
+		normInterval.includes("5+") ||
+		normInterval.includes("> 5") ||
+		normInterval.includes("över 5") ||
+		normInterval === "5+ years" ||
+		normInterval === "5+ år"
+	) {
+		return years > 5;
+	}
+
+	return true;
+}
+
+function matchesStatus(itemStatus: string, filterStatus: string): boolean {
+	if (!filterStatus || filterStatus === "Alla" || filterStatus === "All") return true;
+
+	const normItem = itemStatus.toLowerCase().trim();
+	const normFilter = filterStatus.toLowerCase().trim();
+
+	if (normFilter === "alla" || normFilter === "all") return true;
+
+	if (normFilter === "aktiv" || normFilter === "active") {
+		return normItem === "aktiv" || normItem === "active";
+	}
+	if (normFilter === "reparation" || normFilter === "repair") {
+		return normItem === "reparation" || normItem === "repair";
+	}
+	if (
+		normFilter === "avslutad" ||
+		normFilter === "completed" ||
+		normFilter === "closed"
+	) {
+		return (
+			normItem === "avslutad" ||
+			normItem === "completed" ||
+			normItem === "closed"
+		);
+	}
+
+	return normItem === normFilter;
+}
+
 export function useMachineStatistics() {
-	const [filters, setFilters] = useState<MachineFilterState>(INITIAL_FILTERS);
-	const [appliedFilters, setAppliedFilters] =
-		useState<MachineFilterState>(INITIAL_APPLIED_FILTERS);
+	const [filters, setFilters] = useState<MachineFilterState>(INITIAL_MACHINE_FILTERS);
+	const [appliedFilters, setAppliedFilters] = useState<MachineFilterState>(INITIAL_MACHINE_FILTERS);
+	const [searchQuery, setSearchQuery] = useState("");
 	const [sortField, setSortField] = useState<MachineSortField>("id");
 	const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 	const [currentPage, setCurrentPage] = useState(1);
@@ -35,13 +112,19 @@ export function useMachineStatistics() {
 
 	const handleFilterChange = (newFilters: MachineFilterState) => {
 		setFilters(newFilters);
-		// If machine type (Interna vs Externa) changes, immediately reflect it in table
+		// If machine type (Interna vs Externa vs Alla) changes, immediately reflect it in table
 		if (newFilters.machineType !== filters.machineType) {
 			setAppliedFilters((prev) => ({
 				...prev,
 				machineType: newFilters.machineType,
 			}));
+			setCurrentPage(1);
 		}
+	};
+
+	const handleSearchChange = (query: string) => {
+		setSearchQuery(query);
+		setCurrentPage(1);
 	};
 
 	const handleSort = (field: MachineSortField) => {
@@ -59,8 +142,9 @@ export function useMachineStatistics() {
 	};
 
 	const resetFilters = () => {
-		setFilters(INITIAL_FILTERS);
-		setAppliedFilters(INITIAL_APPLIED_FILTERS);
+		setFilters(INITIAL_MACHINE_FILTERS);
+		setAppliedFilters(INITIAL_MACHINE_FILTERS);
+		setSearchQuery("");
 		setCurrentPage(1);
 	};
 
@@ -69,7 +153,7 @@ export function useMachineStatistics() {
 			// Machine Type filter
 			if (
 				appliedFilters.machineType !== "Alla" &&
-				item.type !== appliedFilters.machineType
+				(item.type as string) !== appliedFilters.machineType
 			) {
 				return false;
 			}
@@ -77,50 +161,49 @@ export function useMachineStatistics() {
 			// Supplier filter (for external)
 			if (
 				appliedFilters.supplier !== "Alla" &&
+				appliedFilters.supplier !== "All" &&
+				item.supplier &&
 				item.supplier !== appliedFilters.supplier
 			) {
 				return false;
 			}
 
 			// Age Interval filter
-			if (
-				appliedFilters.ageInterval !== "Alla" &&
-				item.age !== appliedFilters.ageInterval
-			) {
+			if (!matchesAgeInterval(item.age, appliedFilters.ageInterval)) {
 				return false;
 			}
 
-			// Categories filter
+			// Categories filter (multi-select)
 			if (
 				appliedFilters.categories.length > 0 &&
-				!appliedFilters.categories.includes(item.category)
+				!appliedFilters.categories.some(
+					(cat) => cat.toLowerCase() === item.category.toLowerCase()
+				)
 			) {
 				return false;
 			}
 
 			// Status filter
-			if (
-				appliedFilters.status !== "Alla" &&
-				item.status !== appliedFilters.status
-			) {
+			if (!matchesStatus(item.status, appliedFilters.status)) {
 				return false;
 			}
 
-			// Search query filter
-			if (appliedFilters.search.trim()) {
-				const query = appliedFilters.search.toLowerCase().trim();
+			// Live Search query filter (matches ID, name, brand, category, supplier, status)
+			if (searchQuery.trim()) {
+				const query = searchQuery.toLowerCase().trim();
 				const matches =
 					item.id.toLowerCase().includes(query) ||
 					item.name.toLowerCase().includes(query) ||
 					item.brand.toLowerCase().includes(query) ||
 					item.category.toLowerCase().includes(query) ||
+					item.status.toLowerCase().includes(query) ||
 					Boolean(item.supplier && item.supplier.toLowerCase().includes(query));
 				if (!matches) return false;
 			}
 
 			return true;
 		});
-	}, [appliedFilters]);
+	}, [appliedFilters, searchQuery]);
 
 	const sortedData = useMemo(() => {
 		return [...filteredData].sort((a, b) => {
@@ -149,6 +232,8 @@ export function useMachineStatistics() {
 	return {
 		filters,
 		setFilters: handleFilterChange,
+		searchQuery,
+		setSearchQuery: handleSearchChange,
 		appliedFilters,
 		applyFilters,
 		resetFilters,
