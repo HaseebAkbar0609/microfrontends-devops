@@ -37,11 +37,11 @@ function RowActionMenu({
 	onArchive: () => void;
 	onClose: () => void;
 }) {
-	const ref = useRef<HTMLDivElement | null>(null);
+	const ref = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		function handleClickOutside(e: MouseEvent) {
-			if (ref.current && !ref.current.contains(e.target as Node)) {
+			if (!ref.current?.contains(e.target as Node)) {
 				onClose();
 			}
 		}

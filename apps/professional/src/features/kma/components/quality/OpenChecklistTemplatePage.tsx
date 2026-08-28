@@ -6,22 +6,8 @@ import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { ChecklistTemplate } from "./ChecklistTemplateTable";
-
-// ── ChecklistItem ─────────────────────────────────────────────────────────────
-
-interface ChecklistItem {
-	id: string;
-	kontrollpunkt: string;
-	category: string;
-	krav: string;
-	responsibleRole: string;
-}
-
-const MOCK_CHECKLIST_ITEMS: ChecklistItem[] = [
-	{ id: "CI001", kontrollpunkt: "Kontrollera säkerhetsutrustning", category: "Säkerhet", krav: "AFS 2001:1", responsibleRole: "Platschef" },
-	{ id: "CI002", kontrollpunkt: "Besiktiga fundament", category: "Grund", krav: "SS-EN 1997", responsibleRole: "Förman" },
-	{ id: "CI003", kontrollpunkt: "Slutbesiktning invändigt", category: "Slutbesiktning", krav: "BBR 2023", responsibleRole: "Platschef" },
-];
+import type { ChecklistItem } from "../../constants/qualityMock";
+import { MOCK_CHECKLIST_ITEMS } from "../../constants/qualityMock";
 
 // ── OpenChecklistTemplatePage ─────────────────────────────────────────────────
 
