@@ -82,3 +82,8 @@ export {
   getB2BDashboardKpisAction,
   type B2BDashboardKpis,
 } from "./b2b/b2b";
+
+export {
+  getProjectMarketListAction,
+  getProjectMarketDetailAction,
+} from "./b2b/projectMarket";

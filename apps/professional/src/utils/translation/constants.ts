@@ -806,6 +806,16 @@ export type OfferTranslation = {
 	b2bPMClientName: string;
 	b2bPMEndDate: string;
 	b2bPMDocuments: string;
+	b2bPMQuarterName: string;
+	b2bPMWorkPlace: string;
+	b2bPMCalculatedEndDate: string;
+	b2bPMCompanyNamn: string;
+	b2bPMStartDatum: string;
+	b2bPMProjektNamn: string;
+	b2bPMProjektNr: string;
+	b2bPMBilder: string;
+	b2bPMDocumentSection: string;
+	b2bPMDrawingSection: string;
 	b2bPMQANew: string;
 	b2bPMQAOpened: string;
 	b2bPMQAAnswered: string;
@@ -817,6 +827,14 @@ export type OfferTranslation = {
 	b2bPMQAUE: string;
 	b2bPMQASupplier: string;
 	b2bPMQAForetag: string;
+	b2bPMQAStatus: string;
+	b2bPMQAAdmin: string;
+	b2bPMQAYou: string;
+	b2bPMQAArchive: string;
+	b2bPMQAArkivera: string;
+	b2bPMQARadera: string;
+	b2bPMQABestallare: string;
+	b2bPMQAFraga: string;
 	// B2B - Avtal (Agreements)
 	b2bAvtal: string;
 	b2bAvtalListTitle: string;
@@ -2567,6 +2585,26 @@ export type OfferTranslation = {
 	purchaseApiConnectedToast: string;
 	purchaseApiDisconnectedToast: string;
 	purchaseApiLicenseToast: string;
+	// Purchase - complaints
+	purchaseComplaintColNumber: string;
+	purchaseComplaintColType: string;
+	purchaseComplaintColDate: string;
+	purchaseComplaintColPriority: string;
+	purchaseComplaintPriorityHigh: string;
+	purchaseComplaintPriorityMedium: string;
+	purchaseComplaintPriorityLow: string;
+	purchaseComplaintStatusNotSent: string;
+	purchaseComplaintStatusSent: string;
+	purchaseComplaintStatusApproved: string;
+	purchaseComplaintTypeDamaged: string;
+	purchaseComplaintTypeWrongDelivery: string;
+	purchaseComplaintCreate: string;
+	purchaseComplaintNoneFound: string;
+	purchaseComplaintDetails: string;
+	purchaseComplaintCreateToast: string;
+	purchaseComplaintEditToast: string;
+	purchaseComplaintArchivedToast: string;
+	purchaseComplaintDeletedToast: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
@@ -2811,6 +2849,28 @@ export type OfferTranslation = {
 	machineListLinked: string;
 	machineListLinkRequired: string;
 	machineListSaved: string;
+	// Book machine wizard (TFS-808)
+	machineBookInternal: string;
+	machineBookExternal: string;
+	machineBookAvailable: string;
+	machineBookMine: string;
+	machineBookSearch: string;
+	machineBookBookedUntil: string;
+	machineBookNoAvailable: string;
+	machineBookNoMachines: string;
+	machineBookNoneSelected: string;
+	// Book machine externally (TFS-809)
+	machineBookTab: string;
+	machineBookBookedMachines: string;
+	machineBookAtSupplier: string;
+	machineBookRentCost: string;
+	machineBookRentCostHint: string;
+	machineBookAdd: string;
+	machineBookPickMachine: string;
+	machineBookFieldsRequired: string;
+	machineBookDateOrder: string;
+	machineBookAdded: string;
+	machineBookSaved: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;
