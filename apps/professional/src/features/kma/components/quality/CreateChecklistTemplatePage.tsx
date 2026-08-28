@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ChevronDown, ChevronRight, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory, QualitySubCategory } from "../../types/quality";
 import { MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
@@ -11,10 +11,12 @@ import { MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
 // ── CreateChecklistTemplatePage ───────────────────────────────────────────────
 
 export function CreateChecklistTemplatePage({ onBack }: { onBack: () => void }) {
+	const t = useTranslate();
 	const [name, setName] = useState("");
-	const [errors, setErrors] = useState<{ name?: boolean }>({});
+	const [errors, setErrors] = useState<{ name?: boolean; docs?: boolean }>({});
 	const [isSaving, setIsSaving] = useState(false);
 	const [isDirty, setIsDirty] = useState(false);
+	const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
 
 	const [expandedCatIds, setExpandedCatIds] = useState<Set<string>>(
 		new Set(MOCK_QUALITY_PLAN_CATEGORIES.map((c) => c.id)),
@@ -47,10 +49,17 @@ export function CreateChecklistTemplatePage({ onBack }: { onBack: () => void }) 
 
 	function handleSave() {
 		if (isSaving) return;
-		if (!name.trim()) { setErrors({ name: true }); return; }
+		const newErrors: { name?: boolean; docs?: boolean } = {};
+		if (!name.trim()) newErrors.name = true;
+		if (addedDocs.length === 0) newErrors.docs = true;
+		if (Object.keys(newErrors).length > 0) { setErrors(newErrors); return; }
 		setErrors({});
 		setIsSaving(true);
 		// backend integration pending
+	}
+
+	function handleCancel() {
+		if (isDirty) { setCancelConfirmOpen(true); } else { onBack(); }
 	}
 
 	function toggleCat(id: string) {
@@ -117,6 +126,7 @@ export function CreateChecklistTemplatePage({ onBack }: { onBack: () => void }) 
 	}
 
 	return (
+		<>
 		<div className="flex flex-1 flex-col overflow-hidden bg-white">
 			{/* Header */}
 			<div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
@@ -140,7 +150,7 @@ export function CreateChecklistTemplatePage({ onBack }: { onBack: () => void }) 
 				<div className="flex items-center gap-2">
 					<button
 						type="button"
-						onClick={onBack}
+						onClick={handleCancel}
 						className="cursor-pointer rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
 					>
 						<Translate text={localizationConstants.cancel} />
@@ -178,7 +188,7 @@ export function CreateChecklistTemplatePage({ onBack }: { onBack: () => void }) 
 									setIsDirty(true);
 									if (e.target.value.trim()) setErrors((p) => ({ ...p, name: false }));
 								}}
-								placeholder="Badrum"
+								placeholder={t(localizationConstants.kmaChecklistNamePlaceholder)}
 								aria-invalid={!!errors.name}
 								className={cn(
 									"h-9 w-full rounded border bg-white px-3 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1",
@@ -390,7 +400,14 @@ export function CreateChecklistTemplatePage({ onBack }: { onBack: () => void }) 
 						</div>
 						<div className="flex-1 overflow-y-auto px-3 py-2">
 							{addedDocs.length === 0 ? (
-								<p className="mt-6 text-center text-xs text-slate-400">—</p>
+								<>
+									{errors.docs && (
+										<p className="mt-4 text-center text-xs text-red-500">
+											<Translate text={localizationConstants.kmaChecklistTemplateValidationDocs} />
+										</p>
+									)}
+									{!errors.docs && <p className="mt-6 text-center text-xs text-slate-400">—</p>}
+								</>
 							) : (
 								addedDocs.map((doc, i) => (
 									<button
@@ -421,5 +438,34 @@ export function CreateChecklistTemplatePage({ onBack }: { onBack: () => void }) 
 				</div>
 			</div>
 		</div>
+		{cancelConfirmOpen && (
+			<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+				<div className="w-80 rounded-lg bg-white p-6 shadow-xl">
+					<h3 className="mb-2 text-sm font-semibold text-slate-900">
+						<Translate text={localizationConstants.kmaUnsavedChangesTitle} />
+					</h3>
+					<p className="mb-5 text-sm text-slate-600">
+						<Translate text={localizationConstants.kmaUnsavedChangesMsg} />
+					</p>
+					<div className="flex justify-end gap-2">
+						<button
+							type="button"
+							onClick={() => setCancelConfirmOpen(false)}
+							className="cursor-pointer rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+						>
+							<Translate text={localizationConstants.kmaUnsavedChangesStay} />
+						</button>
+						<button
+							type="button"
+							onClick={onBack}
+							className="cursor-pointer rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+						>
+							<Translate text={localizationConstants.cancel} />
+						</button>
+					</div>
+				</div>
+			</div>
+		)}
+		</>
 	);
 }
