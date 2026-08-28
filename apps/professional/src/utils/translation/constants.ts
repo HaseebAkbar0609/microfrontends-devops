@@ -2189,6 +2189,13 @@ export type OfferTranslation = {
 	kmaChecklistTemplateColKrav: string;
 	kmaChecklistTemplateColRole: string;
 	kmaChecklistTemplateAddRow: string;
+	// TFS-742 – Create Checklist Template
+	kmaCreateChecklistTemplatePanelTitle: string;
+	kmaChecklistNamePlaceholder: string;
+	kmaUnsavedChangesTitle: string;
+	kmaUnsavedChangesMsg: string;
+	kmaUnsavedChangesStay: string;
+	kmaChecklistTemplateValidationDocs: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
