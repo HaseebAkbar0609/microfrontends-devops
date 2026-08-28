@@ -2550,6 +2550,26 @@ export type OfferTranslation = {
 	purchaseApiConnectedToast: string;
 	purchaseApiDisconnectedToast: string;
 	purchaseApiLicenseToast: string;
+	// Purchase - complaints
+	purchaseComplaintColNumber: string;
+	purchaseComplaintColType: string;
+	purchaseComplaintColDate: string;
+	purchaseComplaintColPriority: string;
+	purchaseComplaintPriorityHigh: string;
+	purchaseComplaintPriorityMedium: string;
+	purchaseComplaintPriorityLow: string;
+	purchaseComplaintStatusNotSent: string;
+	purchaseComplaintStatusSent: string;
+	purchaseComplaintStatusApproved: string;
+	purchaseComplaintTypeDamaged: string;
+	purchaseComplaintTypeWrongDelivery: string;
+	purchaseComplaintCreate: string;
+	purchaseComplaintNoneFound: string;
+	purchaseComplaintDetails: string;
+	purchaseComplaintCreateToast: string;
+	purchaseComplaintEditToast: string;
+	purchaseComplaintArchivedToast: string;
+	purchaseComplaintDeletedToast: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
