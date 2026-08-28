@@ -27,9 +27,9 @@ import localizationConstants, {
 } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
-	usePurchaseAgreementDocuments,
+	usePurchaseDocuments,
 	type PurchaseDocumentSortField,
-} from "../hooks/usePurchaseAgreementDocuments";
+} from "../hooks/usePurchaseDocuments";
 
 const TH_CLASS =
 	"h-11 px-4 text-left text-sm font-medium text-slate-500 select-none whitespace-nowrap cursor-pointer hover:text-slate-800";
@@ -59,7 +59,7 @@ export function PurchaseAgreementsTab() {
 		sortBy,
 		sortOrder,
 		handleSort,
-	} = usePurchaseAgreementDocuments();
+	} = usePurchaseDocuments();
 
 	const renderSortIcon = (field: PurchaseDocumentSortField) => {
 		if (sortBy !== field) {

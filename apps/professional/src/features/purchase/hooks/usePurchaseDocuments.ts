@@ -23,11 +23,11 @@ function fileTypeOf(name: string): PurchaseDocumentFileType {
 }
 
 /**
- * Attached-document state for the supplier agreements tab: sorting, plus adding
+ * Attached-document state for any purchase document list: sorting, plus adding
  * and removing rows. Uploads stay in local state — there is no purchase upload
  * endpoint, and the rest of this module is mock-backed.
  */
-export function usePurchaseAgreementDocuments(
+export function usePurchaseDocuments(
 	initialDocuments: PurchaseAgreementDocument[] = MOCK_PURCHASE_AGREEMENT_DOCS,
 ) {
 	const [documents, setDocuments] =
