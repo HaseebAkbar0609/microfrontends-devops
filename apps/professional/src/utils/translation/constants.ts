@@ -806,6 +806,16 @@ export type OfferTranslation = {
 	b2bPMClientName: string;
 	b2bPMEndDate: string;
 	b2bPMDocuments: string;
+	b2bPMQuarterName: string;
+	b2bPMWorkPlace: string;
+	b2bPMCalculatedEndDate: string;
+	b2bPMCompanyNamn: string;
+	b2bPMStartDatum: string;
+	b2bPMProjektNamn: string;
+	b2bPMProjektNr: string;
+	b2bPMBilder: string;
+	b2bPMDocumentSection: string;
+	b2bPMDrawingSection: string;
 	b2bPMQANew: string;
 	b2bPMQAOpened: string;
 	b2bPMQAAnswered: string;
@@ -817,6 +827,14 @@ export type OfferTranslation = {
 	b2bPMQAUE: string;
 	b2bPMQASupplier: string;
 	b2bPMQAForetag: string;
+	b2bPMQAStatus: string;
+	b2bPMQAAdmin: string;
+	b2bPMQAYou: string;
+	b2bPMQAArchive: string;
+	b2bPMQAArkivera: string;
+	b2bPMQARadera: string;
+	b2bPMQABestallare: string;
+	b2bPMQAFraga: string;
 	// B2B - Avtal (Agreements)
 	b2bAvtal: string;
 	b2bAvtalListTitle: string;
@@ -2161,6 +2179,23 @@ export type OfferTranslation = {
 	kmaChecklistTemplateNrCol: string;
 	kmaChecklistTemplateNameCol: string;
 	kmaChecklistTemplateUseBtn: string;
+	// TFS-741 – Open Checklist Template
+	kmaChecklistTemplateTableTitle: string;
+	kmaOpenChecklistTemplateTitle: string;
+	kmaChecklistTemplateCategoryLabel: string;
+	kmaChecklistTemplateItemsHeader: string;
+	kmaChecklistTemplateColKontrollpunkt: string;
+	kmaChecklistTemplateColCategory: string;
+	kmaChecklistTemplateColKrav: string;
+	kmaChecklistTemplateColRole: string;
+	kmaChecklistTemplateAddRow: string;
+	// TFS-742 – Create Checklist Template
+	kmaCreateChecklistTemplatePanelTitle: string;
+	kmaChecklistNamePlaceholder: string;
+	kmaUnsavedChangesTitle: string;
+	kmaUnsavedChangesMsg: string;
+	kmaUnsavedChangesStay: string;
+	kmaChecklistTemplateValidationDocs: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
