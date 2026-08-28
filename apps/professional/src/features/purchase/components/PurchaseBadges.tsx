@@ -13,10 +13,10 @@ import type {
 } from "../types/purchase.types";
 
 const STATUS_STYLES: Record<PurchaseStatus, string> = {
-	not_started: "bg-[#FEF3C7] text-[#92400E]",
-	ongoing: "bg-[#DCFCE7] text-[#15803D]",
-	delayed: "bg-[#FEE2E2] text-[#B91C1C]",
-	completed: "bg-[#E0F2FE] text-[#0369A1]",
+	not_started: "bg-amber-100 text-amber-800",
+	ongoing: "bg-green-100 text-green-700",
+	delayed: "bg-red-100 text-red-700",
+	completed: "bg-sky-100 text-sky-700",
 };
 
 const STATUS_LABELS: Record<PurchaseStatus, TranslationKeys> = {
@@ -71,9 +71,9 @@ export function PurchaseCategoryBadge({
 }
 
 const COMPLAINT_STATUS_STYLES: Record<PurchaseComplaintStatus, string> = {
-	not_sent: "bg-[#E0F2FE] text-[#0369A1]",
-	sent: "bg-[#FEF3C7] text-[#92400E]",
-	approved: "bg-[#DCFCE7] text-[#15803D]",
+	not_sent: "bg-sky-100 text-sky-700",
+	sent: "bg-amber-100 text-amber-800",
+	approved: "bg-green-100 text-green-700",
 };
 
 const COMPLAINT_STATUS_LABELS: Record<

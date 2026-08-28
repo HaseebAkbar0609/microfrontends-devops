@@ -3,7 +3,13 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { MOCK_PURCHASE_COMPLAINTS } from "../data/purchaseComplaints.mock";
-import type { PurchaseComplaintRow } from "../types/purchase.types";
+import type {
+	PurchaseComplaintRow,
+	PurchaseComplaintStatus,
+} from "../types/purchase.types";
+
+/** Status filter value: a concrete status, or "all" for no filtering. */
+export type PurchaseComplaintStatusFilter = PurchaseComplaintStatus | "all";
 
 export type PurchaseComplaintSortField =
 	| "complaintNo"
@@ -36,7 +42,8 @@ export function usePurchaseComplaints(
 	const [complaints, setComplaints] =
 		useState<PurchaseComplaintRow[]>(initialComplaints);
 	const [searchQuery, setSearchQuery] = useState("");
-	const [statusFilter, setStatusFilter] = useState<string>("all");
+	const [statusFilter, setStatusFilter] =
+		useState<PurchaseComplaintStatusFilter>("all");
 	const [sortBy, setSortBy] =
 		useState<PurchaseComplaintSortField>("complaintNo");
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -101,12 +108,13 @@ export function usePurchaseComplaints(
 				);
 			})
 			.sort((a, b) => {
-				const valueA = a[sortBy].toLowerCase();
-				const valueB = b[sortBy].toLowerCase();
+				const valueA = a[sortBy] ?? "";
+				const valueB = b[sortBy] ?? "";
 
-				let comparison = 0;
-				if (valueA < valueB) comparison = -1;
-				if (valueA > valueB) comparison = 1;
+				const comparison = valueA.localeCompare(valueB, undefined, {
+					sensitivity: "base",
+					numeric: true,
+				});
 
 				return sortOrder === "asc" ? comparison : -comparison;
 			});

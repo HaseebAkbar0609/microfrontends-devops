@@ -1,16 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-	Archive,
-	ArrowDown,
-	ArrowUp,
-	ArrowUpDown,
-	MoreVertical,
-	Pencil,
-	Plus,
-	Trash2,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Plus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { PermissionGate } from "@/components/common/PermissionGate";
@@ -19,13 +10,6 @@ import { Search } from "@/components/search/Search";
 import { TablePagination } from "@/components/table/TablePagination";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
 	Select,
 	SelectContent,
@@ -55,7 +39,10 @@ import {
 import {
 	usePurchaseComplaints,
 	type PurchaseComplaintSortField,
+	type PurchaseComplaintStatusFilter,
 } from "../hooks/usePurchaseComplaints";
+import type { PurchaseComplaintRow } from "../types/purchase.types";
+import { PurchaseComplaintActions } from "./PurchaseComplaintActions";
 import {
 	PurchaseComplaintStatusBadge,
 	PurchaseComplaintTypeLabel,
@@ -114,6 +101,28 @@ export function PurchaseComplaintsPage() {
 		);
 	};
 
+	const handleEdit = () =>
+		showToast(
+			"info",
+			t(localizationConstants.purchaseComplaintEditToast),
+		);
+
+	const handleArchive = (complaint: PurchaseComplaintRow) => {
+		archiveComplaint(complaint.id);
+		showToast(
+			"success",
+			`${complaint.complaintNo} — ${t(localizationConstants.purchaseComplaintArchivedToast)}`,
+		);
+	};
+
+	const handleDelete = (complaint: PurchaseComplaintRow) => {
+		removeComplaint(complaint.id);
+		showToast(
+			"info",
+			`${complaint.complaintNo} — ${t(localizationConstants.purchaseComplaintDeletedToast)}`,
+		);
+	};
+
 	const detailHref = (id: string) =>
 		`${PURCHASE_MODULE_BASE_URL}/complaints/${encodeURIComponent(id)}`;
 
@@ -145,7 +154,9 @@ export function PurchaseComplaintsPage() {
 							<Select
 								value={statusFilter}
 								onValueChange={(value) => {
-									setStatusFilter(value);
+									setStatusFilter(
+										value as PurchaseComplaintStatusFilter,
+									);
 									setCurrentPage(1);
 								}}
 							>
@@ -222,9 +233,26 @@ export function PurchaseComplaintsPage() {
 										<TableHead
 											key={column.field}
 											className={TH_CLASS}
+											aria-sort={
+												sortBy === column.field
+													? sortOrder === "asc"
+														? "ascending"
+														: "descending"
+													: "none"
+											}
+											tabIndex={0}
 											onClick={() =>
 												handleSort(column.field)
 											}
+											onKeyDown={(event) => {
+												if (
+													event.key === "Enter" ||
+													event.key === " "
+												) {
+													event.preventDefault();
+													handleSort(column.field);
+												}
+											}}
 										>
 											<div className="flex items-center gap-1">
 												<Translate
@@ -322,92 +350,12 @@ export function PurchaseComplaintsPage() {
 												</Link>
 											</TableCell>
 											<TableCell className="sticky right-0 z-10 w-[50px] min-w-[50px] bg-white px-2 py-3.5 text-center shadow-[inset_1px_0_0_0_#e2e8f0] transition-colors group-hover:bg-slate-50">
-												<DropdownMenu>
-													<DropdownMenuTrigger asChild>
-														<Button
-															variant="ghost"
-															size="icon"
-															className="h-8 w-8 cursor-pointer rounded-md text-slate-500 hover:text-slate-900"
-															aria-label={t(
-																localizationConstants.actionsHeader,
-															)}
-														>
-															<MoreVertical className="h-4 w-4" />
-														</Button>
-													</DropdownMenuTrigger>
-													<DropdownMenuContent
-														align="end"
-														className="w-36 rounded-md border border-slate-200 bg-white p-1 shadow-md"
-													>
-														<PermissionGate permission="EDIT_PURCHASE">
-															<DropdownMenuItem
-																onClick={() =>
-																	showToast(
-																		"info",
-																		t(
-																			localizationConstants.purchaseComplaintEditToast,
-																		),
-																	)
-																}
-																className="flex cursor-pointer items-center gap-2 text-slate-700 hover:bg-slate-50"
-															>
-																<Pencil className="h-4 w-4 text-slate-500" />
-																<span>
-																	<Translate
-																		text={
-																			localizationConstants.actionEdit
-																		}
-																	/>
-																</span>
-															</DropdownMenuItem>
-															<DropdownMenuItem
-																onClick={() => {
-																	archiveComplaint(
-																		complaint.id,
-																	);
-																	showToast(
-																		"success",
-																		`${complaint.complaintNo} — ${t(localizationConstants.purchaseComplaintArchivedToast)}`,
-																	);
-																}}
-																className="flex cursor-pointer items-center gap-2 text-slate-700 hover:bg-slate-50"
-															>
-																<Archive className="h-4 w-4 text-slate-500" />
-																<span>
-																	<Translate
-																		text={
-																			localizationConstants.archive
-																		}
-																	/>
-																</span>
-															</DropdownMenuItem>
-														</PermissionGate>
-														<PermissionGate permission="DELETE_PURCHASE">
-															<DropdownMenuSeparator />
-															<DropdownMenuItem
-																onClick={() => {
-																	removeComplaint(
-																		complaint.id,
-																	);
-																	showToast(
-																		"info",
-																		`${complaint.complaintNo} — ${t(localizationConstants.purchaseComplaintDeletedToast)}`,
-																	);
-																}}
-																className="flex cursor-pointer items-center gap-2 text-red-600 focus:bg-red-50 focus:text-red-600"
-															>
-																<Trash2 className="h-4 w-4 text-red-500" />
-																<span>
-																	<Translate
-																		text={
-																			localizationConstants.actionDelete
-																		}
-																	/>
-																</span>
-															</DropdownMenuItem>
-														</PermissionGate>
-													</DropdownMenuContent>
-												</DropdownMenu>
+												<PurchaseComplaintActions
+													complaint={complaint}
+													onEdit={handleEdit}
+													onArchive={handleArchive}
+													onDelete={handleDelete}
+												/>
 											</TableCell>
 										</TableRow>
 									))
