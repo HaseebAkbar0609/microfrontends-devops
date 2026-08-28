@@ -136,7 +136,7 @@ export function ExternalBookingSection({
 		onRowsChange((prev) => [
 			...prev,
 			{
-				id: `ext-booking-${prev.length + 1}-${deliveryDate}-${machineName}`,
+                id: `ext-booking-${crypto.randomUUID()}`,
 				machineNo: picked?.machineNo ?? "",
 				name: machineName.trim(),
 				supplier,
