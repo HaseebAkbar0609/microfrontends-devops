@@ -1,10 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowRight, Folder, Save, Send } from "lucide-react";
-import { useTranslation } from "react-i18next";
 
+import { PermissionGate } from "@/components/common/PermissionGate";
 import { SearchableSelect } from "@/components/form";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import { Button } from "@/components/ui/button";
@@ -19,50 +17,25 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
-import { MOCK_PURCHASES } from "../data/purchases.mock";
-import { MOCK_PURCHASE_SUPPLIERS } from "../data/purchaseSuppliers.mock";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
-	PURCHASE_MODULE_BASE_URL,
 	PURCHASE_MODULE_TABS,
 	PURCHASE_MODULE_TITLE,
 } from "../data/purchaseNav.config";
+import type { ComplaintPriority } from "./types";
+import { useCreateComplaintForm } from "./useCreateComplaintForm";
 import { ComplaintCompanyCard } from "./components/ComplaintCompanyCard";
 import { ComplaintContactCard } from "./components/ComplaintContactCard";
 import { ComplaintDocumentsCard } from "./components/ComplaintDocumentsCard";
-import {
-	collectComplaintErrors,
-	complaintContactStepSchema,
-	complaintReportStepSchema,
-} from "./schema";
-import {
-	EMPTY_COMPLAINT_COMPANY,
-	EMPTY_COMPLAINT_CONTACT,
-	type ComplaintCompany,
-	type ComplaintContact,
-	type ComplaintDraft,
-	type ComplaintInfo,
-	type ComplaintPriority,
-	type ComplaintReport,
-} from "./types";
 
 const FIELD_CLASS =
 	"h-10 rounded-md border-slate-200 shadow-none focus-visible:border-gray-300 focus-visible:outline-none";
 
 const TOTAL_STEPS = 2;
-
-/** Sample values for the read-only summary, as printed in the design. */
-const SAMPLE_INFO = {
-	purchaseNo: "I501-05",
-	name: "Kök",
-	object: "Projekt 2025-001",
-	complaintType: "damaged_on_delivery",
-};
 
 const COMPLAINT_TYPES: { value: string; label: TranslationKeys }[] = [
 	{
@@ -85,160 +58,37 @@ const PRIORITIES: { value: ComplaintPriority; label: TranslationKeys }[] = [
 	{ value: "low", label: localizationConstants.purchaseComplaintPriorityLow },
 ];
 
-const SUPPLIER_OPTIONS = MOCK_PURCHASE_SUPPLIERS.map((supplier) => ({
-	id: supplier.id,
-	name: supplier.name,
-}));
-
-/** Existing purchases a complaint can be raised against. */
-const PURCHASE_OPTIONS = MOCK_PURCHASES.map((purchase) => ({
-	value: purchase.purchaseNo,
-	label: `${purchase.purchaseNo} — ${purchase.name}`,
-}));
-
-const CONTACT_OPTIONS = [
-	{ id: "anders", name: "Anders Svensson" },
-	{ id: "karin", name: "Karin Lund" },
-];
-
 export function CreateComplaintPage() {
 	const t = useTranslate();
-	const { t: translate } = useTranslation();
-	const router = useRouter();
-
-	const [step, setStep] = useState<1 | 2>(1);
-	const [errors, setErrors] = useState<Record<string, string>>({});
-	const [draft, setDraft] = useState<ComplaintDraft>({
-		info: SAMPLE_INFO,
-		supplierId: "",
-		supplier: { ...EMPTY_COMPLAINT_COMPANY },
-		supplierContact: { ...EMPTY_COMPLAINT_CONTACT },
-		reporter: { ...EMPTY_COMPLAINT_COMPANY },
-		reporterContact: { ...EMPTY_COMPLAINT_CONTACT },
-		report: {
-			title: "",
-			description: "",
-			discoveredAt: "",
-			deliveredAt: "",
-			priority: "high",
-			gdprAccepted: false,
-		},
-	});
-
-	const listHref = `${PURCHASE_MODULE_BASE_URL}/complaints`;
-
-	const patchCompany =
-		(key: "supplier" | "reporter") => (patch: Partial<ComplaintCompany>) =>
-			setDraft((previous) => ({
-				...previous,
-				[key]: { ...previous[key], ...patch },
-			}));
-
-	const patchContact =
-		(key: "supplierContact" | "reporterContact") =>
-		(patch: Partial<ComplaintContact>) =>
-			setDraft((previous) => ({
-				...previous,
-				[key]: { ...previous[key], ...patch },
-			}));
-
-	/**
-	 * Links the complaint to a purchase. Choosing one fills the descriptive
-	 * fields, but they stay editable — and a value typed by hand is kept as-is.
-	 */
-	const handlePurchasePick = (purchaseNo: string) => {
-		const match = MOCK_PURCHASES.find(
-			(purchase) => purchase.purchaseNo === purchaseNo,
-		);
-
-		patchInfo(
-			match
-				? {
-						purchaseNo,
-						name: match.name,
-						object: match.object,
-					}
-				: { purchaseNo },
-		);
-	};
-
-	const patchInfo = (patch: Partial<ComplaintInfo>) =>
-		setDraft((previous) => ({
-			...previous,
-			info: { ...previous.info, ...patch },
-		}));
-
-	const patchReport = (patch: Partial<ComplaintReport>) =>
-		setDraft((previous) => ({
-			...previous,
-			report: { ...previous.report, ...patch },
-		}));
+	const {
+		purchaseOptions,
+		supplierOptions,
+		contactOptions,
+		step,
+		setStep,
+		draft,
+		errors,
+		blockErrors,
+		listHref,
+		patchInfo,
+		patchCompany,
+		patchContact,
+		patchReport,
+		setSupplierId,
+		selectPurchase,
+		goNext,
+		submit,
+		cancel,
+	} = useCreateComplaintForm();
 
 	const errorFor = (block: string, field: string) =>
 		errors[`${block}.${field}`];
 
-	const contactErrors = (block: "supplierContact" | "reporterContact") =>
-		Object.fromEntries(
-			Object.entries(errors)
-				.filter(([key]) => key.startsWith(`${block}.`))
-				.map(([key, message]) => [key.split(".")[1], message]),
-		) as Partial<Record<keyof ComplaintContact, string>>;
-
-	const companyErrors = (block: "supplier" | "reporter") =>
-		Object.fromEntries(
-			Object.entries(errors)
-				.filter(([key]) => key.startsWith(`${block}.`))
-				.map(([key, message]) => [key.split(".")[1], message]),
-		) as Partial<Record<keyof ComplaintCompany, string>>;
-
-	const validateStep1 = () => {
-		const result = complaintContactStepSchema.safeParse({
-			info: { complaintType: draft.info.complaintType },
-			supplierId: draft.supplierId,
-			supplier: draft.supplier,
-			supplierContact: draft.supplierContact,
-			reporter: draft.reporter,
-			reporterContact: draft.reporterContact,
-		});
-
-		if (result.success) {
-			setErrors({});
-			return true;
-		}
-
-		setErrors(collectComplaintErrors(result.error));
-		return false;
-	};
-
-	const validateStep2 = () => {
-		const result = complaintReportStepSchema.safeParse(draft.report);
-
-		if (result.success) {
-			setErrors({});
-			return true;
-		}
-
-		setErrors(collectComplaintErrors(result.error, "report"));
-		return false;
-	};
-
-	const handleNext = () => {
-		if (validateStep1()) setStep(2);
-	};
-
-	const handleSend = () => {
-		if (!validateStep1()) {
-			setStep(1);
-			return;
-		}
-		if (!validateStep2()) return;
-
-		showToast(
-			"success",
-			translate(localizationConstants.complaintCreateSentToast),
-		);
-		router.push(listHref);
-	};
+	const contactErrors = blockErrors.contact;
+	const companyErrors = blockErrors.company;
+	const handlePurchasePick = selectPurchase;
+	const handleNext = goNext;
+	const handleSend = submit;
 
 	return (
 		<div className="flex h-full flex-col bg-slate-50/50">
@@ -304,7 +154,7 @@ export function CreateComplaintPage() {
 											<SearchableSelect
 												value={draft.info.purchaseNo}
 												onChange={handlePurchasePick}
-												options={PURCHASE_OPTIONS}
+												options={purchaseOptions}
 												placeholder={t(
 													localizationConstants.purchaseColNumber,
 												)}
@@ -370,14 +220,9 @@ export function CreateComplaintPage() {
 													draft.info.complaintType
 												}
 												onValueChange={(value) =>
-													setDraft((previous) => ({
-														...previous,
-														info: {
-															...previous.info,
-															complaintType:
-																value,
-														},
-													}))
+													patchInfo({
+														complaintType: value,
+													})
 												}
 											>
 												<SelectTrigger className="h-10 w-full cursor-pointer border-slate-200 bg-white text-sm text-slate-900 shadow-none">
@@ -415,15 +260,10 @@ export function CreateComplaintPage() {
 									value={draft.supplier}
 									onChange={patchCompany("supplier")}
 									errors={companyErrors("supplier")}
-									selectOptions={SUPPLIER_OPTIONS}
+									selectOptions={supplierOptions}
 									selectError={errors.supplierId}
 									selectedId={draft.supplierId}
-									onSelect={(supplierId) =>
-										setDraft((previous) => ({
-											...previous,
-											supplierId,
-										}))
-									}
+									onSelect={setSupplierId}
 								/>
 
 								<ComplaintContactCard
@@ -433,7 +273,7 @@ export function CreateComplaintPage() {
 									value={draft.supplierContact}
 									onChange={patchContact("supplierContact")}
 									errors={contactErrors("supplierContact")}
-									contactOptions={CONTACT_OPTIONS}
+									contactOptions={contactOptions}
 								/>
 
 								<ComplaintCompanyCard
@@ -452,7 +292,7 @@ export function CreateComplaintPage() {
 									value={draft.reporterContact}
 									onChange={patchContact("reporterContact")}
 									errors={contactErrors("reporterContact")}
-									contactOptions={CONTACT_OPTIONS}
+									contactOptions={contactOptions}
 								/>
 							</>
 						) : (
@@ -685,18 +525,20 @@ export function CreateComplaintPage() {
 							</div>
 
 							{step === 2 && (
-								<Button
-									type="button"
-									onClick={handleSend}
-									className="h-10 w-full cursor-pointer gap-2 rounded-md bg-[#111721] text-sm font-medium text-white hover:bg-slate-800"
-								>
-									<Send className="h-4 w-4" />
-									<Translate
-										text={
-											localizationConstants.complaintCreateSend
-										}
-									/>
-								</Button>
+								<PermissionGate permission="CREATE_PURCHASE">
+									<Button
+										type="button"
+										onClick={handleSend}
+										className="h-10 w-full cursor-pointer gap-2 rounded-md bg-[#111721] text-sm font-medium text-white hover:bg-slate-800"
+									>
+										<Send className="h-4 w-4" />
+										<Translate
+											text={
+												localizationConstants.complaintCreateSend
+											}
+										/>
+									</Button>
+								</PermissionGate>
 							)}
 						</div>
 					</div>
@@ -709,7 +551,7 @@ export function CreateComplaintPage() {
 					<Button
 						type="button"
 						variant="outline"
-						onClick={() => router.push(listHref)}
+						onClick={cancel}
 						className="h-10 min-w-25 cursor-pointer border-slate-300 bg-white text-sm text-slate-700 shadow-none hover:bg-slate-100"
 					>
 						<Translate
@@ -721,15 +563,11 @@ export function CreateComplaintPage() {
 						<Button
 							type="button"
 							variant="outline"
-							onClick={() =>
-								showToast(
-									"info",
-									translate(
-										localizationConstants.complaintCreatePreviewToast,
-									),
-								)
-							}
-							className="h-10 cursor-pointer border-slate-300 bg-white text-sm text-slate-700 shadow-none hover:bg-slate-100"
+							disabled
+							title={t(
+								localizationConstants.complaintCreateUnavailable,
+							)}
+							className="h-10 border-slate-300 bg-white text-sm text-slate-700 shadow-none disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							<Translate
 								text={
@@ -741,14 +579,8 @@ export function CreateComplaintPage() {
 
 					<Button
 						type="button"
-						onClick={() =>
-							showToast(
-								"success",
-								translate(
-									localizationConstants.complaintCreateSavedToast,
-								),
-							)
-						}
+						disabled
+						title={t(localizationConstants.complaintCreateUnavailable)}
 						className="h-10 min-w-25 cursor-pointer gap-2 bg-[#111721] text-sm text-white shadow-none hover:bg-slate-800"
 					>
 						<Save className="h-4 w-4" />

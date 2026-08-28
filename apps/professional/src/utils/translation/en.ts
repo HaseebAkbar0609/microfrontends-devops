@@ -2623,6 +2623,7 @@ export const enOffer: OfferTranslation = {
 	complaintCreateSentToast: "Complaint sent",
 	complaintCreateSavedToast: "Draft saved",
 	complaintCreatePreviewToast: "Preview is coming soon",
+	complaintCreateUnavailable: "Not available yet",
 	complaintValidationFirstNameRequired: "First name is required",
 	complaintValidationSupplierRequired: "Supplier is required",
 	complaintValidationTypeRequired: "Complaint type is required",

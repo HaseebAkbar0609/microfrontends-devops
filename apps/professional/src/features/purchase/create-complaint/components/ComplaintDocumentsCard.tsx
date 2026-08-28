@@ -19,7 +19,7 @@ import {
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { usePurchaseAgreementDocuments } from "../../hooks/usePurchaseAgreementDocuments";
+import { usePurchaseDocuments } from "../../hooks/usePurchaseDocuments";
 
 const TH_CLASS =
 	"h-11 px-4 text-left text-sm font-medium text-slate-500 select-none whitespace-nowrap";
@@ -33,7 +33,7 @@ export interface ComplaintDocumentsCardProps {
  * Step 2's Dokument card: upload control, GDPR consent, and the attached
  * documents table.
  *
- * Reuses `usePurchaseAgreementDocuments` for the pending/attached state — the
+ * Reuses `usePurchaseDocuments` for the pending/attached state — the
  * same shape the supplier agreements tab needs — and starts empty, since a new
  * complaint has no attachments yet.
  */
@@ -49,7 +49,7 @@ export function ComplaintDocumentsCard({
 		removePending,
 		commitPendingFiles,
 		removeDocument,
-	} = usePurchaseAgreementDocuments([]);
+	} = usePurchaseDocuments([]);
 
 	const handleUpload = () => {
 		const added = commitPendingFiles();

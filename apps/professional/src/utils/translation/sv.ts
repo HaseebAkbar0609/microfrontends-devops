@@ -2511,6 +2511,7 @@ export const svOffer: OfferTranslation = {
 	complaintCreateSentToast: "Reklamation skickad",
 	complaintCreateSavedToast: "Utkast sparat",
 	complaintCreatePreviewToast: "Förhandsvisning kommer snart",
+	complaintCreateUnavailable: "Inte tillgängligt ännu",
 	complaintValidationFirstNameRequired: "Förnamn krävs",
 	complaintValidationSupplierRequired: "Leverantör krävs",
 	complaintValidationTypeRequired: "Reklamationtyp krävs",

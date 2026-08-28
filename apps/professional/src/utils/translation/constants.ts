@@ -2602,6 +2602,7 @@ export type OfferTranslation = {
 	complaintCreateSentToast: string;
 	complaintCreateSavedToast: string;
 	complaintCreatePreviewToast: string;
+	complaintCreateUnavailable: string;
 	complaintValidationFirstNameRequired: string;
 	complaintValidationSupplierRequired: string;
 	complaintValidationTypeRequired: string;

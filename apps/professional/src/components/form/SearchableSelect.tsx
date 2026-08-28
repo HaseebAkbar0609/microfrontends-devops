@@ -52,10 +52,10 @@ export function SearchableSelect({
 
 	useEffect(() => {
 		if (open) {
-			const timer = setTimeout(() => {
+			const frame = requestAnimationFrame(() => {
 				searchInputRef.current?.focus();
-			}, 50);
-			return () => clearTimeout(timer);
+			});
+			return () => cancelAnimationFrame(frame);
 		} else {
 			setSearchQuery("");
 		}
