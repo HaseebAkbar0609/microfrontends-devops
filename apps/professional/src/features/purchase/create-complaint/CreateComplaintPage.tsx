@@ -43,6 +43,7 @@ import {
 	type ComplaintCompany,
 	type ComplaintContact,
 	type ComplaintDraft,
+	type ComplaintInfo,
 	type ComplaintPriority,
 	type ComplaintReport,
 } from "./types";
@@ -132,6 +133,12 @@ export function CreateComplaintPage() {
 				...previous,
 				[key]: { ...previous[key], ...patch },
 			}));
+
+	const patchInfo = (patch: Partial<ComplaintInfo>) =>
+		setDraft((previous) => ({
+			...previous,
+			info: { ...previous.info, ...patch },
+		}));
 
 	const patchReport = (patch: Partial<ComplaintReport>) =>
 		setDraft((previous) => ({
@@ -266,7 +273,15 @@ export function CreateComplaintPage() {
 											</Label>
 											<Input
 												value={draft.info.purchaseNo}
-												readOnly
+												onChange={(event) =>
+													patchInfo({
+														purchaseNo: event.target
+															.value,
+													})
+												}
+												placeholder={t(
+													localizationConstants.purchaseColNumber,
+												)}
 												className={FIELD_CLASS}
 											/>
 										</div>
@@ -280,7 +295,15 @@ export function CreateComplaintPage() {
 											</Label>
 											<Input
 												value={draft.info.name}
-												readOnly
+												onChange={(event) =>
+													patchInfo({
+														name: event.target
+															.value,
+													})
+												}
+												placeholder={t(
+													localizationConstants.purchaseColName,
+												)}
 												className={FIELD_CLASS}
 											/>
 										</div>
@@ -294,7 +317,15 @@ export function CreateComplaintPage() {
 											</Label>
 											<Input
 												value={draft.info.object}
-												readOnly
+												onChange={(event) =>
+													patchInfo({
+														object: event.target
+															.value,
+													})
+												}
+												placeholder={t(
+													localizationConstants.purchaseColObject,
+												)}
 												className={FIELD_CLASS}
 											/>
 										</div>
