@@ -6,6 +6,8 @@ import localizationConstants, {
 import { Translate } from "@/utils/translation/translate";
 import type {
 	PurchaseCategory,
+	PurchaseComplaintStatus,
+	PurchaseComplaintType,
 	PurchaseStatus,
 	PurchaseType,
 } from "../types/purchase.types";
@@ -66,4 +68,47 @@ export function PurchaseCategoryBadge({
 	category: PurchaseCategory;
 }) {
 	return <PurchaseChip label={CATEGORY_LABELS[category]} />;
+}
+
+const COMPLAINT_STATUS_STYLES: Record<PurchaseComplaintStatus, string> = {
+	not_sent: "bg-[#E0F2FE] text-[#0369A1]",
+	sent: "bg-[#FEF3C7] text-[#92400E]",
+	approved: "bg-[#DCFCE7] text-[#15803D]",
+};
+
+const COMPLAINT_STATUS_LABELS: Record<
+	PurchaseComplaintStatus,
+	TranslationKeys
+> = {
+	not_sent: localizationConstants.purchaseComplaintStatusNotSent,
+	sent: localizationConstants.purchaseComplaintStatusSent,
+	approved: localizationConstants.purchaseComplaintStatusApproved,
+};
+
+export function PurchaseComplaintStatusBadge({
+	status,
+}: {
+	status: PurchaseComplaintStatus;
+}) {
+	return (
+		<span
+			className={`inline-flex items-center rounded-md px-3 py-0.5 text-xs font-medium ${COMPLAINT_STATUS_STYLES[status]}`}
+		>
+			<Translate text={COMPLAINT_STATUS_LABELS[status]} />
+		</span>
+	);
+}
+
+const COMPLAINT_TYPE_LABELS: Record<PurchaseComplaintType, TranslationKeys> = {
+	damaged: localizationConstants.purchaseComplaintTypeDamaged,
+	wrong_delivery: localizationConstants.purchaseComplaintTypeWrongDelivery,
+};
+
+/** Plain text in the design, not a chip. */
+export function PurchaseComplaintTypeLabel({
+	type,
+}: {
+	type: PurchaseComplaintType;
+}) {
+	return <Translate text={COMPLAINT_TYPE_LABELS[type]} />;
 }

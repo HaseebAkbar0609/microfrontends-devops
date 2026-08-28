@@ -61,6 +61,28 @@ export interface PurchaseApiCategory {
 	active: boolean;
 }
 
+export type PurchaseComplaintStatus = "not_sent" | "sent" | "approved";
+
+export type PurchaseComplaintType = "damaged" | "wrong_delivery";
+
+/** One row of the Reklamationer list. */
+export interface PurchaseComplaintRow {
+	id: string;
+	complaintNo: string;
+	/** The purchase the complaint was raised against. */
+	purchaseNo: string;
+	/** The order or project the purchase belongs to. */
+	object: string;
+	name: string;
+	supplier: string;
+	type: PurchaseComplaintType;
+	/** ISO date the complaint was raised. */
+	date: string;
+	status: PurchaseComplaintStatus;
+	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
+	archived: boolean;
+}
+
 export type PurchaseDocumentFileType = "pdf" | "doc";
 
 /** One row of the supplier agreements ("Avtal") document table. */
