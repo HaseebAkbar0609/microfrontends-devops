@@ -2073,6 +2073,7 @@ export const enOffer: OfferTranslation = {
 	kmaChecklistTemplateColKrav: "Requirement",
 	kmaChecklistTemplateColRole: "Responsible Role",
 	kmaChecklistTemplateAddRow: "+ Add row",
+	kmaCreateChecklistTemplatePanelTitle: "New template",
 	kmaControlPlanOpenTitle: "Open new control plan",
 	kmaControlPlanGeneralInfo: "General information",
 	kmaControlPlanNameLabel: "Name",

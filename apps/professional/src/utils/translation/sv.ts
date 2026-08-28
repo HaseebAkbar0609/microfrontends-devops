@@ -2078,6 +2078,7 @@ export const svOffer: OfferTranslation = {
 	kmaChecklistTemplateColKrav: "Krav",
 	kmaChecklistTemplateColRole: "Ansvarig roll",
 	kmaChecklistTemplateAddRow: "+ Lägg till rad",
+	kmaCreateChecklistTemplatePanelTitle: "Ny mall",
 	kmaControlPlanOpenTitle: "Öppna ny kontrollplan",
 	kmaControlPlanGeneralInfo: "Allmän information",
 	kmaControlPlanNameLabel: "Namn",
