@@ -2560,6 +2560,26 @@ export type OfferTranslation = {
 	purchaseApiConnectedToast: string;
 	purchaseApiDisconnectedToast: string;
 	purchaseApiLicenseToast: string;
+	// Purchase - complaints
+	purchaseComplaintColNumber: string;
+	purchaseComplaintColType: string;
+	purchaseComplaintColDate: string;
+	purchaseComplaintColPriority: string;
+	purchaseComplaintPriorityHigh: string;
+	purchaseComplaintPriorityMedium: string;
+	purchaseComplaintPriorityLow: string;
+	purchaseComplaintStatusNotSent: string;
+	purchaseComplaintStatusSent: string;
+	purchaseComplaintStatusApproved: string;
+	purchaseComplaintTypeDamaged: string;
+	purchaseComplaintTypeWrongDelivery: string;
+	purchaseComplaintCreate: string;
+	purchaseComplaintNoneFound: string;
+	purchaseComplaintDetails: string;
+	purchaseComplaintCreateToast: string;
+	purchaseComplaintEditToast: string;
+	purchaseComplaintArchivedToast: string;
+	purchaseComplaintDeletedToast: string;
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
@@ -2804,6 +2824,28 @@ export type OfferTranslation = {
 	machineListLinked: string;
 	machineListLinkRequired: string;
 	machineListSaved: string;
+	// Book machine wizard (TFS-808)
+	machineBookInternal: string;
+	machineBookExternal: string;
+	machineBookAvailable: string;
+	machineBookMine: string;
+	machineBookSearch: string;
+	machineBookBookedUntil: string;
+	machineBookNoAvailable: string;
+	machineBookNoMachines: string;
+	machineBookNoneSelected: string;
+	// Book machine externally (TFS-809)
+	machineBookTab: string;
+	machineBookBookedMachines: string;
+	machineBookAtSupplier: string;
+	machineBookRentCost: string;
+	machineBookRentCostHint: string;
+	machineBookAdd: string;
+	machineBookPickMachine: string;
+	machineBookFieldsRequired: string;
+	machineBookDateOrder: string;
+	machineBookAdded: string;
+	machineBookSaved: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;

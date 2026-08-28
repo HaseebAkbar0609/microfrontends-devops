@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus } from "lucide-react";
 
@@ -80,9 +81,18 @@ export function MachineListDetailPage({ listId }: { listId?: string }) {
 					</div>
 
 					<PermissionGate permission="CREATE_MACHINE">
-						<Button className="mb-2 h-10 cursor-pointer gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800">
-							<Plus className="h-4 w-4" aria-hidden />
-							<Translate text={localizationConstants.machineListBookMachine} />
+						{/* asChild so this renders a single <a>; a <button> inside an
+						    anchor is invalid HTML. */}
+						<Button
+							asChild
+							className="mb-2 h-10 cursor-pointer gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800"
+						>
+							<Link
+								href={`${MACHINE_HANDLING_BASE_URL}/${encodeURIComponent(detail.id)}/book`}
+							>
+								<Plus className="h-4 w-4" aria-hidden />
+								<Translate text={localizationConstants.machineListBookMachine} />
+							</Link>
 						</Button>
 					</PermissionGate>
 				</div>
