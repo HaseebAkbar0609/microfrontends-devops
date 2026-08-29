@@ -37,7 +37,7 @@ export const MACHINE_SUB_SIDEBAR_ITEMS: MachineSubSidebarItem[] = [
 	{
 		id: "purchase",
 		labelKey: localizationConstants.machineSidebarPurchase,
-		href: "/module/production/machine/create",
+		href: "/module/production/machine/purchase",
 		exact: false,
 	},
 	{

@@ -52,7 +52,6 @@ import {
 	MachineUnitLabel,
 } from "./MachineBadges";
 import { useMachines, type MachineSortField } from "../hooks/useMachines";
-import { MACHINE_MODULE_BASE_URL } from "../data/machineNav.config";
 
 /** Column order and sort field, matching the Figma table left-to-right. */
 const COLUMNS: { field: MachineSortField; labelKey: TranslationKeys }[] = [
@@ -154,7 +153,7 @@ export function MachineListTab() {
 
 				<PermissionGate permission="CREATE_MACHINE">
 					<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto justify-start xl:justify-end">
-						<Link href={`${MACHINE_MODULE_BASE_URL}/create`}>
+						<Link href="/module/production/machine/overview/create">
 							<Button className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer">
 								<Plus className="h-4 w-4" aria-hidden />
 								<Translate text={localizationConstants.machineNewButton} />
