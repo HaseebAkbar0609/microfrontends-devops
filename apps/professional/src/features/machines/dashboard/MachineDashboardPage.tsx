@@ -284,12 +284,9 @@ export function MachineDashboardPage() {
 									>
 										<Translate text={localizationConstants.machineDashActionRegisterService} />
 									</Link>
-									<Link
-										href="/module/production/machine/statistics"
-										className="py-1 text-slate-700 hover:text-slate-900 transition-colors"
-									>
+									<div className="py-1 text-slate-700 hover:text-slate-900 cursor-pointer transition-colors">
 										<Translate text={localizationConstants.machineDashActionAddVehicle} />
-									</Link>
+									</div>
 									<div className="py-1 text-slate-700 hover:text-slate-900 cursor-pointer transition-colors">
 										<Translate text={localizationConstants.machineDashActionVehicleMap} />
 									</div>
