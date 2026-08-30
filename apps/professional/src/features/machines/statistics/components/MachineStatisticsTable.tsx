@@ -245,7 +245,7 @@ export function MachineStatisticsTable({
 						{data.length === 0 ? (
 							<TableRow>
 								<TableCell
-									colSpan={showSupplierColumn ? 9 : 9}
+									colSpan={showSupplierColumn ? 9 : 8}
 									className="h-32 text-center text-sm text-slate-400"
 								>
 									<Translate text={localizationConstants.machineStatEmptyState} />
