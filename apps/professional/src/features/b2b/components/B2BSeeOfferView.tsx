@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -12,6 +12,7 @@ import {
   ChevronUp,
   CircleCheckBig,
   CircleUserRound,
+  FilePlus,
   FileText,
   ImageIcon,
   Mail,
@@ -114,29 +115,28 @@ function AccordionSection({
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xs">
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger asChild>
-          <Button
+          <button
             type="button"
-            variant="ghost"
-            className="flex h-auto w-full cursor-pointer items-center justify-between px-4 sm:px-5 py-3.5 sm:py-4 text-left transition-colors hover:bg-slate-50/60 rounded-none shadow-none font-normal"
+            className="flex w-full cursor-pointer items-center justify-between border-b border-slate-100 bg-white px-5 py-4 text-left transition-colors hover:bg-slate-50"
           >
-            <div className="flex items-center gap-2.5">
-              {icon && <span className="text-slate-800">{icon}</span>}
-              <span className="font-sans text-sm font-semibold sm:text-base text-slate-900 leading-none">
+            <div className="flex items-center gap-3">
+              {icon && <span className="flex items-center shrink-0 text-slate-800">{icon}</span>}
+              <span className="font-sans text-base font-medium leading-6 tracking-normal text-slate-900">
                 {title}
               </span>
             </div>
             <ChevronUp
               size={18}
               className={cn(
-                "text-slate-500 transition-transform duration-200",
+                "text-slate-400 transition-transform duration-200",
                 !open && "rotate-180"
               )}
               aria-hidden={true}
             />
-          </Button>
+          </button>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="border-t border-slate-100 px-4 sm:px-5 py-4">{children}</div>
+          <div className="px-5 py-4">{children}</div>
         </CollapsibleContent>
       </Collapsible>
     </div>
@@ -158,6 +158,10 @@ function QACard({
 }) {
   const t = useTranslate();
   const [comment, setComment] = useState("");
+
+  const handleCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    setComment(e.target.value);
+  };
 
   const handleSend = () => {
     if (!comment.trim()) return;
@@ -283,7 +287,7 @@ function QACard({
 
           <Textarea
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            onChange={handleCommentChange}
             placeholder={t(localizationConstants.b2bPMQALeaveComment)}
             className="w-full resize-y rounded-lg border border-slate-200 p-2.5 font-sans text-sm font-normal leading-5 tracking-normal text-slate-950 placeholder:text-slate-500 focus:border-slate-300 focus:outline-none min-h-[70px] bg-white shadow-none focus-visible:ring-1 focus-visible:ring-slate-300"
             rows={3}
@@ -400,17 +404,17 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                   </div>
                 </div>
 
-                {/* Dark Total-offert Highlight Box */}
-                <div className="flex flex-col justify-between w-full sm:w-[309px] h-[88px] rounded-[8px] bg-slate-800 p-4 border border-slate-700/50 text-white shadow-xs shrink-0 self-start sm:self-auto gap-[4px]">
-                  <div className="flex items-center gap-2">
-                    <BadgeDollarSign size={20} className="h-5 w-5 shrink-0 text-slate-300" aria-hidden={true} />
-                    <span className="text-sm font-normal text-slate-300 font-sans truncate">
+                {/* Dark Total-offert Highlight Box matching OrderOpenedHero style */}
+                <div className="w-full sm:w-[309px] h-[88px] rounded-xl bg-[#111721] px-6 py-4 text-white shadow-md flex items-start gap-3.5 box-border shrink-0 self-start sm:self-auto">
+                  <BadgeDollarSign className="h-6 w-6 text-slate-300 shrink-0 mt-0.5" strokeWidth={1.75} />
+                  <div className="flex flex-col justify-center gap-0.5">
+                    <span className="font-sans font-normal text-base leading-6 tracking-normal text-slate-300">
                       <Translate text={localizationConstants.b2bArchiveTotalOffer} />
                     </span>
+                    <span className="font-sans font-semibold text-xl leading-7 tracking-normal text-white tabular-nums">
+                      {formatCurrency(data.totalOffert)}
+                    </span>
                   </div>
-                  <p className="pl-7 font-sans font-semibold text-xl leading-7 tracking-normal text-white tabular-nums">
-                    {formatCurrency(data.totalOffert)}
-                  </p>
                 </div>
               </div>
             </div>
@@ -418,7 +422,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
             {/* Accordion 1: Företagsnummer */}
             <AccordionSection
               title={t(localizationConstants.b2bArchiveCompanyNumber)}
-              icon={<Building2 size={20} />}
+              icon={<Building2 className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12">
                 <InfoField label={t(localizationConstants.companyName)} value={data.company.name} />
@@ -448,7 +452,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
             {/* Accordion 2: Kontaktperson */}
             <AccordionSection
               title={t(localizationConstants.contactNameLabel)}
-              icon={<CircleUserRound size={20} />}
+              icon={<CircleUserRound className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12">
                 <InfoField label={t(localizationConstants.companyName)} value={data.contactPerson.name} />
@@ -462,7 +466,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
             {/* Accordion 3: Offert */}
             <AccordionSection
               title={t(localizationConstants.b2bPMOffer)}
-              icon={<BadgeDollarSign size={20} />}
+              icon={<BadgeDollarSign className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
             >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12">
                 <InfoField label={t(localizationConstants.b2bArchiveWork)} value={data.offert.arbete} />
@@ -481,12 +485,12 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
             {/* Accordion 4: Documents */}
             <AccordionSection
               title={t(localizationConstants.b2bPMDocuments)}
-              icon={<FileText size={20} />}
+              icon={<FilePlus className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
             >
               <div className="space-y-6">
                 {/* Bilder */}
                 <div className="space-y-3">
-                  <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                  <h4 className="font-sans text-sm font-medium leading-5 tracking-normal text-slate-900">
                     {t(localizationConstants.b2bPMBilder)}
                   </h4>
                   <div className="flex flex-wrap gap-4">
@@ -507,7 +511,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
 
                 {/* Document */}
                 <div className="space-y-3 pt-1">
-                  <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                  <h4 className="font-sans text-sm font-medium leading-5 tracking-normal text-slate-900">
                     {t(localizationConstants.b2bPMDocumentSection)}
                   </h4>
                   <div className="flex flex-wrap items-center gap-6">
@@ -546,7 +550,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
 
                 {/* Drawing */}
                 <div className="space-y-3 pt-1">
-                  <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
+                  <h4 className="font-sans text-sm font-medium leading-5 tracking-normal text-slate-900">
                     {t(localizationConstants.b2bPMDrawingSection)}
                   </h4>
                   <div className="flex flex-wrap items-center gap-6">
@@ -580,13 +584,15 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
           <div className="flex flex-col gap-4 self-start">
             {/* Project Summary & Action Card */}
             <div className="overflow-hidden rounded-lg border border-slate-200 bg-white p-3.5 sm:p-4 shadow-2xs">
-              <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
-                {data.title}
-              </span>
-              <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
-                <span className="rounded border border-slate-200 bg-white px-1.5 py-0.5 text-xs font-medium text-slate-700">
+              <div className="flex items-start justify-between gap-2">
+                <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
+                  {data.title}
+                </span>
+                <span className="shrink-0 rounded border border-slate-200 bg-white px-2 py-0.5 text-xs font-medium text-slate-700">
                   {data.refNr}
                 </span>
+              </div>
+              <div className="mt-2 flex items-center gap-1.5 flex-wrap">
                 <span className="inline-flex items-center gap-0.5 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
                   <Map size={10} aria-hidden={true} />
                   {data.city}
@@ -638,14 +644,13 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
             <div className="flex w-full min-w-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xs">
               <Collapsible open={qaOpen} onOpenChange={setQaOpen}>
                 <CollapsibleTrigger asChild>
-                  <Button
+                  <button
                     type="button"
-                    variant="ghost"
-                    className="flex h-auto w-full cursor-pointer items-center justify-between border-b border-slate-200 bg-slate-100 px-4 py-3 hover:bg-slate-200/70 transition-colors rounded-none shadow-none font-normal"
+                    className="flex w-full cursor-pointer items-center justify-between border-b border-slate-200 bg-slate-100 px-4 py-3 hover:bg-slate-200/70 transition-colors"
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Mail size={18} className="text-slate-900" aria-hidden={true} />
-                      <span className="text-sm font-semibold text-slate-900">
+                    <div className="flex items-center gap-3">
+                      <Mail className="h-6 w-6 size-6 text-slate-900 shrink-0" strokeWidth={1.75} />
+                      <span className="font-sans text-base font-medium leading-6 tracking-normal text-slate-900">
                         {t(localizationConstants.b2bPMTabQA)}
                       </span>
                       {data.qa.length > 0 && (
@@ -662,7 +667,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                       )}
                       aria-hidden={true}
                     />
-                  </Button>
+                  </button>
                 </CollapsibleTrigger>
                 <CollapsibleContent>
                   <div className="flex flex-col gap-3.5 bg-white p-3.5">

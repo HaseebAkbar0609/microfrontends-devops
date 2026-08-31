@@ -2,7 +2,7 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiResponse } from "@/types/api";
 import { B2BSeeOfferDetail } from "@/features/b2b/types/seeOffer";
-import { DUMMY_SEE_OFFER_DETAIL } from "@/features/b2b/constants/seeOfferMock";
+import { getMockSeeOfferDetail } from "@/features/b2b/constants/seeOfferMock";
 
 const B2B_BASE_PATH = "/professionals/b2b";
 
@@ -90,9 +90,9 @@ export async function getB2BOfferDetailAction(
     if (parsed.success) {
       return { success: true, data: parsed.data, error: null };
     }
-    return { success: true, data: DUMMY_SEE_OFFER_DETAIL, error: null };
+    return { success: true, data: getMockSeeOfferDetail(_projectId, _offerId), error: null };
   } catch (_error: unknown) {
-    return { success: true, data: DUMMY_SEE_OFFER_DETAIL, error: null };
+    return { success: true, data: getMockSeeOfferDetail(_projectId, _offerId), error: null };
   }
 }
 

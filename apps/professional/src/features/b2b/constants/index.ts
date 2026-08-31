@@ -55,16 +55,6 @@ export const b2bNavItems: RouteTabItem[] = [
 		href: "/module/business/b2b/project-market",
 	},
 	{
-		id: "deals",
-		labelKey: localizationConstants.b2bDeals,
-		href: "/module/business/b2b/deals",
-	},
-	{
-		id: "avtal",
-		labelKey: localizationConstants.b2bAvtal,
-		href: "/module/business/b2b/agreements",
-	},
-	{
 		id: "archive",
 		labelKey: localizationConstants.archive,
 		href: "/module/business/b2b/archive",
