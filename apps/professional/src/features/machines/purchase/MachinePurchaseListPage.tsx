@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
 	Plus,
 	ArrowUpDown,
@@ -119,6 +120,7 @@ const COLUMNS: {
 
 export function MachinePurchaseListPage() {
 	const t = useTranslate();
+	const router = useRouter();
 
 	const {
 		categoryFilter,
@@ -269,6 +271,7 @@ export function MachinePurchaseListPage() {
 					<div className="flex items-center gap-2">
 						<Button
 							type="button"
+							onClick={() => router.push(`${MACHINE_PURCHASE_BASE_URL}/create`)}
 							className="h-10 px-5 gap-2 rounded-lg bg-[#111721] text-white hover:bg-slate-800 text-sm font-medium shadow-2xs cursor-pointer"
 						>
 							<Plus className="h-4 w-4" />

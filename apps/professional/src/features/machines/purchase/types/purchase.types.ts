@@ -1,4 +1,4 @@
-export type PurchaseStatus = "not_ready" | "ready" | "in_progress" | "archived";
+export type PurchaseStatus = "not_ready" | "ready" | "in_progress" | "pending" | "archived";
 
 export interface PurchaseDocument {
 	id: string;
@@ -16,6 +16,8 @@ export interface PurchaseItem {
 	brand: string;
 	designation: string;
 	price: number;
+	quantity?: number;
+	totalCost?: number;
 	supplier: string;
 	address: string;
 	postalCode: string;
