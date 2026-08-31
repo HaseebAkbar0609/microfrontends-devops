@@ -2106,6 +2106,7 @@ export const svOffer: OfferTranslation = {
 	kmaUnsavedChangesMsg: "Du har osparade ändringar. Vill du avbryta utan att spara?",
 	kmaUnsavedChangesStay: "Fortsätt redigera",
 	kmaChecklistTemplateValidationDocs: "Lägg till minst ett dokument.",
+	kmaChecklistTemplateCreateCheck: "Skapa Kontroll",
 	kmaControlPlanOpenTitle: "Öppna ny kontrollplan",
 	kmaControlPlanGeneralInfo: "Allmän information",
 	kmaControlPlanNameLabel: "Namn",

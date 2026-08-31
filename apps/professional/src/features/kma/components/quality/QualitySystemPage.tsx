@@ -3310,7 +3310,17 @@ export function QualitySystemPage() {
 	if (openChecklistTemplateId) {
 		const tmpl = MOCK_CHECKLIST_TEMPLATES.find((t) => t.id === openChecklistTemplateId);
 		if (tmpl) {
-			return <OpenChecklistTemplatePage template={tmpl} onBack={() => setOpenChecklistTemplateId(null)} />;
+			return (
+				<OpenChecklistTemplatePage
+					template={tmpl}
+					onBack={() => setOpenChecklistTemplateId(null)}
+					onCreateCheck={() => {
+						setOpenChecklistTemplateId(null);
+						setCreateChecklistWithTemplate(true);
+						setCreateChecklistOpen(true);
+					}}
+				/>
+			);
 		}
 	}
 
