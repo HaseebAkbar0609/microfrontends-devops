@@ -13,10 +13,22 @@ export type PurchaseDocumentSortField =
 	| "date"
 	| "supplier"
 	| "documentName"
-	| "reference";
+	| "reference"
+	| "purchaseNo";
 
-/** The supplier attributed to files uploaded in this session. */
-const UPLOAD_SUPPLIER = "Beijer Byggmaterial";
+/** Attributes stamped onto files uploaded in this session. */
+export interface PurchaseDocumentUploadDefaults {
+	supplier?: string;
+	purchaseNo?: string;
+	reference?: string;
+}
+
+const FALLBACK_UPLOAD_DEFAULTS: Required<
+	Pick<PurchaseDocumentUploadDefaults, "supplier" | "reference">
+> = {
+	supplier: "Beijer Byggmaterial",
+	reference: "-",
+};
 
 function fileTypeOf(name: string): PurchaseDocumentFileType {
 	return name.toLowerCase().endsWith(".pdf") ? "pdf" : "doc";
@@ -29,7 +41,9 @@ function fileTypeOf(name: string): PurchaseDocumentFileType {
  */
 export function usePurchaseDocuments(
 	initialDocuments: PurchaseAgreementDocument[] = MOCK_PURCHASE_AGREEMENT_DOCS,
+	uploadDefaults: PurchaseDocumentUploadDefaults = {},
 ) {
+	const { supplier, purchaseNo, reference } = uploadDefaults;
 	const [documents, setDocuments] =
 		useState<PurchaseAgreementDocument[]>(initialDocuments);
 	const [pendingFiles, setPendingFiles] = useState<PendingUploadFile[]>([]);
@@ -74,9 +88,10 @@ export function usePurchaseDocuments(
 		const added = pendingFiles.map((pending, index) => ({
 			id: `upload-${today}-${pending.name}-${index}`,
 			date: today,
-			supplier: UPLOAD_SUPPLIER,
+			supplier: supplier ?? FALLBACK_UPLOAD_DEFAULTS.supplier,
+			purchaseNo,
 			documentName: pending.name,
-			reference: "-",
+			reference: reference ?? FALLBACK_UPLOAD_DEFAULTS.reference,
 			fileType: fileTypeOf(pending.name),
 			fileUrl: URL.createObjectURL(pending.file),
 		}));
@@ -84,7 +99,7 @@ export function usePurchaseDocuments(
 		setDocuments((previous) => [...added, ...previous]);
 		setPendingFiles([]);
 		return added.length;
-	}, [pendingFiles]);
+	}, [pendingFiles, purchaseNo, reference, supplier]);
 
 	const removeDocument = useCallback((id: string) => {
         setDocuments((previous) => {
@@ -96,8 +111,10 @@ export function usePurchaseDocuments(
 
 	const sortedDocuments = useMemo(() => {
 		return [...documents].sort((a, b) => {
-			const valueA = a[sortBy].toLowerCase();
-			const valueB = b[sortBy].toLowerCase();
+			// `purchaseNo` is optional, so an absent value sorts as empty
+			// rather than throwing.
+			const valueA = (a[sortBy] ?? "").toLowerCase();
+			const valueB = (b[sortBy] ?? "").toLowerCase();
 
 			let comparison = 0;
 			if (valueA < valueB) comparison = -1;
