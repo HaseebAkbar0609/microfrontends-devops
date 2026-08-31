@@ -4969,6 +4969,16 @@ export const enMachinePurchase: MachinePurchaseTranslation = {
 	machinePurchaseArchiveSuccess: "Machine has been archived",
 	machinePurchaseRestoreSuccess: "Machine has been restored from archive",
 	machinePurchaseDeleteSuccess: "Machine has been deleted",
+	machinePurchaseCreateTitle: "New Machine Purchase",
+	machinePurchaseStep1Indicator: "Step 1/5",
+	machinePurchaseStep2Indicator: "Step 2/5",
+	machinePurchaseCardDetails: "Machine Details",
+	machinePurchaseBtnNext: "Next",
+	machinePurchaseBtnSave: "Save",
+	machinePurchaseBtnCancel: "Cancel",
+	machinePurchaseCreateSuccess: "Machine purchase saved successfully",
+	machinePurchaseCreateError: "Please fill in all required fields",
+	machinePurchaseFieldMaskinInfo: "Machine Information",
 };
 
 export const en: Translation = {

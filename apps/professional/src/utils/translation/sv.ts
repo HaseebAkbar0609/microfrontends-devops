@@ -4991,6 +4991,16 @@ export const svMachinePurchase: MachinePurchaseTranslation = {
 	machinePurchaseArchiveSuccess: "Maskin har arkiverats",
 	machinePurchaseRestoreSuccess: "Maskin har återställts från arkivet",
 	machinePurchaseDeleteSuccess: "Maskin har tagits bort",
+	machinePurchaseCreateTitle: "Ny Maskin inköp",
+	machinePurchaseStep1Indicator: "Step 1/5",
+	machinePurchaseStep2Indicator: "Step 2/5",
+	machinePurchaseCardDetails: "Maskin Details",
+	machinePurchaseBtnNext: "Nästa",
+	machinePurchaseBtnSave: "Spara",
+	machinePurchaseBtnCancel: "Avbryt",
+	machinePurchaseCreateSuccess: "Maskin inköp har sparats framgångsrikt",
+	machinePurchaseCreateError: "Vänligen fyll i alla obligatoriska fält",
+	machinePurchaseFieldMaskinInfo: "Maskin Information",
 };
 
 export const sv: Translation = {
