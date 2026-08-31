@@ -2198,6 +2198,8 @@ export type OfferTranslation = {
 	kmaUnsavedChangesMsg: string;
 	kmaUnsavedChangesStay: string;
 	kmaChecklistTemplateValidationDocs: string;
+	// TFS-743 – Open Checklist Template
+	kmaChecklistTemplateCreateCheck: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
