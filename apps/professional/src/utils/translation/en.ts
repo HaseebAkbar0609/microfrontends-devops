@@ -2101,6 +2101,7 @@ export const enOffer: OfferTranslation = {
 	kmaUnsavedChangesMsg: "You have unsaved changes. Do you want to cancel without saving?",
 	kmaUnsavedChangesStay: "Continue editing",
 	kmaChecklistTemplateValidationDocs: "Add at least one document.",
+	kmaChecklistTemplateCreateCheck: "Create Check",
 	kmaControlPlanOpenTitle: "Open new control plan",
 	kmaControlPlanGeneralInfo: "General information",
 	kmaControlPlanNameLabel: "Name",
