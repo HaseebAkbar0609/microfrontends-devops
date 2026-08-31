@@ -4994,7 +4994,7 @@ export const svMachinePurchase: MachinePurchaseTranslation = {
 	machinePurchaseCreateTitle: "Ny Maskin inköp",
 	machinePurchaseStep1Indicator: "Step 1/5",
 	machinePurchaseStep2Indicator: "Step 2/5",
-	machinePurchaseCardDetails: "Maskin Details",
+	machinePurchaseCardDetails: "Maskindetaljer",
 	machinePurchaseBtnNext: "Nästa",
 	machinePurchaseBtnSave: "Spara",
 	machinePurchaseBtnCancel: "Avbryt",
