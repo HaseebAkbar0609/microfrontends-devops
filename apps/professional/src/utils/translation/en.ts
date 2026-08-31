@@ -2702,6 +2702,23 @@ export const enOffer: OfferTranslation = {
 	purchaseGoodsNoAttachments: "No attachments",
 	purchaseGoodsDownload: "Download",
 	purchaseGoodsValidationPositive: "Enter a number greater than 0",
+	// Purchase - Archive
+	purchaseArchiveTabPurchases: "Purchase orders",
+	purchaseArchiveTabComplaints: "Complaints",
+	purchaseArchiveTabReceptions: "Goods reception",
+	purchaseArchiveUnarchive: "Unarchive",
+	purchaseArchiveNoPurchases: "No archived purchase orders",
+	purchaseArchiveNoComplaints: "No archived complaints",
+	purchaseArchiveNoReceptions: "No archived goods receptions",
+	purchaseRestoredToast: "Purchase order restored",
+	purchaseComplaintRestoredToast: "Complaint restored",
+	purchaseGoodsReceptionRestoredToast: "Goods reception restored",
+	purchaseArchivedToast: "Purchase order archived",
+	purchaseDeletedToast: "Purchase order deleted",
+	purchaseArchiveDeleteTitle: "Delete permanently?",
+	purchaseArchiveDeleteBody: "The record is removed permanently. This action cannot be undone.",
+	purchaseArchiveConfirmTitle: "Archive purchase order?",
+	purchaseArchiveConfirmBody: "The purchase order moves to the Archive tab. You can restore it from there.",
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Order overview",

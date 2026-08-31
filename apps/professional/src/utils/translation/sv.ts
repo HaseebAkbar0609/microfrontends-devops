@@ -2590,6 +2590,23 @@ export const svOffer: OfferTranslation = {
 	purchaseGoodsNoAttachments: "Inga bilagor",
 	purchaseGoodsDownload: "Ladda ner",
 	purchaseGoodsValidationPositive: "Ange ett tal större än 0",
+	// Purchase - Archive
+	purchaseArchiveTabPurchases: "Inköpsordrar",
+	purchaseArchiveTabComplaints: "Reklamationer",
+	purchaseArchiveTabReceptions: "Godsmottagning",
+	purchaseArchiveUnarchive: "Avarkivera",
+	purchaseArchiveNoPurchases: "Inga arkiverade inköpsordrar",
+	purchaseArchiveNoComplaints: "Inga arkiverade reklamationer",
+	purchaseArchiveNoReceptions: "Inga arkiverade godsmottagningar",
+	purchaseRestoredToast: "Inköpsorder återställd",
+	purchaseComplaintRestoredToast: "Reklamation återställd",
+	purchaseGoodsReceptionRestoredToast: "Godsmottagning återställd",
+	purchaseArchivedToast: "Inköpsorder arkiverad",
+	purchaseDeletedToast: "Inköpsorder borttagen",
+	purchaseArchiveDeleteTitle: "Ta bort permanent?",
+	purchaseArchiveDeleteBody: "Posten tas bort permanent. Åtgärden kan inte ångras.",
+	purchaseArchiveConfirmTitle: "Arkivera inköpsorder?",
+	purchaseArchiveConfirmBody: "Inköpsordern flyttas till fliken Arkiv. Du kan återställa den därifrån.",
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Orderöversikt",

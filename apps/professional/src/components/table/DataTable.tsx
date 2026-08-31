@@ -94,6 +94,12 @@ export interface DataTableProps<TData> {
 	actions?: DataTableAction<TData>[];
 	/** Custom direct cell renderer for primary action icon (e.g. Eye icon). */
 	primaryAction?: (row: TData) => ReactNode;
+	/**
+	 * Accessible name for a row's ⋮ trigger. Without it every row exposes an
+	 * unnamed button, so a screen reader cannot tell them apart. Return a
+	 * translated string including the row's identifier.
+	 */
+	actionsLabel?: (row: TData) => string;
 	/** Whether the table is in a loading state (shows skeleton rows). */
 	loading?: boolean;
 	/** Translation key for the empty-state message. Defaults to generic text. */
@@ -149,6 +155,7 @@ export function DataTable<TData>({
 	rowKey,
 	actions,
 	primaryAction,
+	actionsLabel,
 	loading = false,
 	emptyMessageKey,
 	pagination,
@@ -331,6 +338,11 @@ export function DataTable<TData>({
 																<Button
 																	variant="ghost"
 																	size="icon"
+																	aria-label={
+																		actionsLabel
+																			? actionsLabel(row)
+																			: "Actions"
+																	}
 																	className="h-8 w-8 text-slate-500 hover:text-slate-900 rounded-md"
 																>
 																	<MoreVertical className="h-4 w-4" />
