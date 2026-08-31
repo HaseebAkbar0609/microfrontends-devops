@@ -4,7 +4,9 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
+import { ROLES } from "@/constants/roles";
 import { useAuthStatus } from "@/context/AuthContext";
+import { hasPermission } from "@/lib/hasPermission";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { PURCHASE_MODULE_BASE_URL } from "../data/purchaseNav.config";
@@ -24,9 +26,16 @@ import {
 	type OrderSpecificationStepInput,
 } from "./schema";
 
-export type OrderStep = 1 | 2 | 3;
+/** Named so call sites read as steps rather than magic numbers. */
+export const ORDER_STEPS = {
+	OBJECT: 1,
+	CONTACT: 2,
+	SPECIFICATION: 3,
+} as const;
 
-export const TOTAL_ORDER_STEPS = 3;
+export type OrderStep = (typeof ORDER_STEPS)[keyof typeof ORDER_STEPS];
+
+export const TOTAL_ORDER_STEPS = ORDER_STEPS.SPECIFICATION;
 
 /**
  * Parses a numeric cell for arithmetic. Anything that is not a finite,
@@ -40,6 +49,51 @@ export function parseAmount(value: string): number {
 
 export function lineSubtotal(line: PurchaseOrderSpecLine): number {
 	return parseAmount(line.quantity) * parseAmount(line.unitPrice);
+}
+
+/**
+ * Builds the payload a create-order endpoint will take.
+ *
+ * Kept as a pure function so the shape is inspectable and testable without
+ * mounting the wizard, and so there is a single obvious call site to swap for
+ * the real request once an endpoint exists.
+ */
+export function buildPurchaseOrderPayload(input: {
+	purchaseId: string;
+	object: OrderObjectStepInput;
+	delivery: {
+		deliveryAddress: string;
+		deliveryPostalCode: string;
+		deliveryCity: string;
+	};
+	contact: PurchaseContactPerson;
+	specification: OrderSpecificationStepInput;
+	total: number;
+	gdprAccepted: boolean;
+	companyId: string | null;
+}) {
+	return {
+		purchaseId: input.purchaseId,
+		object: { ...input.object, ...input.delivery },
+		contact: input.contact,
+		specification: {
+			...input.specification,
+			lines: (input.specification.lines ?? []).map((line) => ({
+				...line,
+				quantity: parseAmount(line.quantity),
+				unitPrice: parseAmount(line.unitPrice),
+			})),
+			total: input.total,
+		},
+		gdprAccepted: input.gdprAccepted,
+		/**
+		 * The company is this codebase's isolation unit — there is no
+		 * `tenant_id` anywhere in the frontend. Whatever consumes this must
+		 * still scope server-side; a client-supplied id is a hint, not a
+		 * boundary.
+		 */
+		companyId: input.companyId,
+	};
 }
 
 function emptyLine(id: string): PurchaseOrderSpecLine {
@@ -310,7 +364,20 @@ export function useCreatePurchaseOrderForm(purchase: PurchaseRow) {
 	const cancel = useCallback(() => router.push(recordHref), [router, recordHref]);
 
 	const submit = useCallback(() => {
-		for (const target of [1, 2, 3] as OrderStep[]) {
+		/**
+		 * The buttons are wrapped in `PermissionGate`, but `submit` is reachable
+		 * from the hook, so it re-checks rather than trusting the rendered tree.
+		 * This is a guard, not a boundary — the server must enforce it too.
+		 */
+		if (!hasPermission(ROLES.MANAGER, "CREATE_PURCHASE")) {
+			showToast(
+				"error",
+				t(localizationConstants.purchaseOrderUnavailable),
+			);
+			return;
+		}
+
+		for (const target of Object.values(ORDER_STEPS)) {
 			if (!validateStep(target)) {
 				setStep(target);
 				return;
@@ -319,26 +386,16 @@ export function useCreatePurchaseOrderForm(purchase: PurchaseRow) {
 
 		documents.commitPendingFiles();
 
-		/**
-		 * Scoped to the signed-in company, which is this codebase's isolation
-		 * unit — there is no `tenant_id` anywhere in the frontend yet.
-		 */
-		void {
+		void buildPurchaseOrderPayload({
 			purchaseId: purchase.id,
-			object: { ...object, ...delivery },
+			object,
+			delivery,
 			contact,
-			specification: {
-				...specification,
-				lines: (specification.lines ?? []).map((line) => ({
-					...line,
-					quantity: parseAmount(line.quantity),
-					unitPrice: parseAmount(line.unitPrice),
-				})),
-				total: grandTotal,
-			},
+			specification,
+			total: grandTotal,
 			gdprAccepted,
 			companyId: company?.id ?? null,
-		};
+		});
 
 		showToast("success", t(localizationConstants.purchaseOrderCreatedToast));
 		router.push(recordHref);

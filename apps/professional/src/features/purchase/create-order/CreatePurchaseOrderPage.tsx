@@ -176,7 +176,11 @@ export function CreatePurchaseOrderPage({
 					)}
 				</div>
 
-				<OrderStepRail step={step} onSend={submit} />
+				<OrderStepRail
+					step={step}
+					onSend={submit}
+					supplierId={object.supplierId}
+				/>
 			</div>
 
 			<div className="sticky bottom-0 z-20 border-t border-slate-200 bg-white py-3 shadow-sm">

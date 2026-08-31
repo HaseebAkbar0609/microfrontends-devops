@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { Check, Send, Store } from "lucide-react";
 
 import { PermissionGate } from "@/components/common/PermissionGate";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { PURCHASE_MODULE_BASE_URL } from "../../data/purchaseNav.config";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -14,6 +16,8 @@ import { TOTAL_ORDER_STEPS, type OrderStep } from "../useCreatePurchaseOrderForm
 export interface OrderStepRailProps {
 	step: OrderStep;
 	onSend: () => void;
+	/** Supplier picked on step 1; enables the "Öppna leverantör" link. */
+	supplierId?: string;
 }
 
 const STEP_LABELS: TranslationKeys[] = [
@@ -29,7 +33,11 @@ const STEP_LABELS: TranslationKeys[] = [
  * its own rail reads "Step 2/3" — so three is used throughout, matching the
  * three tabs that actually exist.
  */
-export function OrderStepRail({ step, onSend }: OrderStepRailProps) {
+export function OrderStepRail({
+	step,
+	onSend,
+	supplierId,
+}: OrderStepRailProps) {
 	const t = useTranslate();
 
 	return (
@@ -113,23 +121,42 @@ export function OrderStepRail({ step, onSend }: OrderStepRailProps) {
 							</Button>
 						</PermissionGate>
 
-						{/* The frame draws this in green, but it has no
-						    destination — shown, and honestly disabled. */}
-						<Button
-							type="button"
-							disabled
-							title={t(
-								localizationConstants.purchaseOrderUnavailable,
-							)}
-							className="h-10 w-full gap-2 rounded-md bg-green-600 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
-						>
-							<Store className="h-4 w-4" aria-hidden />
-							<Translate
-								text={
-									localizationConstants.purchaseOrderOpenSupplier
-								}
-							/>
-						</Button>
+						{/* Opens the supplier picked on step 1. Disabled only
+						    while none is chosen — the supplier record route
+						    exists, so this is a real destination. */}
+						{supplierId ? (
+							<Button
+								asChild
+								className="h-10 w-full cursor-pointer gap-2 rounded-md bg-green-600 text-sm font-medium text-white hover:bg-green-700"
+							>
+								<Link
+									href={`${PURCHASE_MODULE_BASE_URL}/suppliers/${encodeURIComponent(supplierId)}`}
+								>
+									<Store className="h-4 w-4" aria-hidden />
+									<Translate
+										text={
+											localizationConstants.purchaseOrderOpenSupplier
+										}
+									/>
+								</Link>
+							</Button>
+						) : (
+							<Button
+								type="button"
+								disabled
+								title={t(
+									localizationConstants.purchaseSupplierColName,
+								)}
+								className="h-10 w-full gap-2 rounded-md bg-green-600 text-sm font-medium text-white disabled:cursor-not-allowed disabled:opacity-50"
+							>
+								<Store className="h-4 w-4" aria-hidden />
+								<Translate
+									text={
+										localizationConstants.purchaseOrderOpenSupplier
+									}
+								/>
+							</Button>
+						)}
 					</div>
 				)}
 			</div>
