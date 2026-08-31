@@ -4,9 +4,23 @@ import localizationConstants, {
 } from "@/utils/translation/constants";
 
 export const MACHINE_MODULE_BASE_URL = "/module/production/machine";
+export const MACHINE_OVERVIEW_BASE_URL = "/module/production/machine/overview";
+export const MACHINE_HANDLING_BASE_URL = "/module/production/machine/handling";
+export const MACHINE_STATISTICS_BASE_URL = "/module/production/machine/statistics";
 
 /** Module title shown as the H1 on every page of the Machine module. */
 export const MACHINE_MODULE_TITLE = localizationConstants.machineOverviewTitle;
+
+/**
+ * `Home > Modul > Maskin` breadcrumb for Machine Dashboard.
+ */
+export function machineDashboardBreadcrumbs(): BreadcrumbItem[] {
+	return [
+		{ label: localizationConstants.home, href: "/dashboard" },
+		{ label: localizationConstants.moduleLabel },
+		{ label: localizationConstants.machine },
+	];
+}
 
 /**
  * `Home > Modul > Maskin > Section` breadcrumb, matching the breadcrumb row in

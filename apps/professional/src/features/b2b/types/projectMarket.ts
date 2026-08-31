@@ -29,11 +29,19 @@ export type QAMessage = {
   id: string;
   sender: string;
   role: string;
+  company?: string;
   badge?: string;
   replyFrom?: string;
+  replyText?: string;
+  answerUser?: string;
+  answerBadge?: string;
+  answerRole?: string;
+  answerDate?: string;
+  answerText?: string;
   message: string;
   date: string;
   status: QAStatus;
+  avatar?: string;
 };
 
 export type ProjectMarketDetail = {

@@ -32,6 +32,12 @@ export type {
 export { FormDatePicker } from "./FormDatePicker";
 export type { FormDatePickerProps } from "./FormDatePicker";
 
+export { SearchableSelect } from "./SearchableSelect";
+export type {
+  SearchableSelectProps,
+  SearchableOption,
+} from "./SearchableSelect";
+
 export { PhoneInput } from "./PhoneInput";
 export type { PhoneInputProps } from "./PhoneInput";
 
