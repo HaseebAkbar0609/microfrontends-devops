@@ -86,3 +86,19 @@ export function collectGoodsReceptionErrors(
 
 	return collected;
 }
+
+/** Starting values for a blank form, kept with the schema they must satisfy. */
+export const EMPTY_GOODS_RECEPTION_DRAFT: GoodsReceptionInput = {
+	purchaseNo: "",
+	name: "",
+	description: "",
+	category: "raw_materials",
+	sku: "",
+	supplier: "",
+	object: "",
+	expectedDelivery: "",
+	orderType: "normal",
+	unitPrice: "",
+	leadTimeDays: "",
+	minimumOrderQuantity: "",
+};

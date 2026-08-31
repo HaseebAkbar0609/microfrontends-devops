@@ -14,6 +14,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { openSafeUrl } from "@/lib/safeUrl";
 import { showToast } from "@/lib/toast";
 import localizationConstants, {
 	type TranslationKeys,
@@ -72,11 +73,13 @@ export function PurchaseGoodsReceptionListTab({
 		);
 	};
 
+	/**
+	 * Opens the file only when its URL passes the protocol allow-list. A row with
+	 * no file — or one carrying something unopenable — falls back to the toast
+	 * rather than navigating.
+	 */
 	const handleSeeFile = (fileUrl?: string, name?: string) => {
-		if (fileUrl) {
-			window.open(fileUrl, "_blank", "noopener,noreferrer");
-			return;
-		}
+		if (openSafeUrl(fileUrl)) return;
 		showToast("info", name ?? t(localizationConstants.agreementDetailFil));
 	};
 

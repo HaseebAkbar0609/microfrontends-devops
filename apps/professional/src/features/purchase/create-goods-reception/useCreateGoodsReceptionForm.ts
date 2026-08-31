@@ -13,6 +13,7 @@ import { PURCHASE_MODULE_BASE_URL } from "../data/purchaseNav.config";
 import { usePurchaseDocuments } from "../hooks/usePurchaseDocuments";
 import {
 	collectGoodsReceptionErrors,
+	EMPTY_GOODS_RECEPTION_DRAFT,
 	goodsReceptionSchema,
 	type GoodsReceptionInput,
 } from "./schema";
@@ -23,21 +24,6 @@ const LIST_HREF = `${PURCHASE_MODULE_BASE_URL}/goods-reception`;
 function orderLineOf(purchaseNo: string) {
 	return `${purchaseNo}-001`;
 }
-
-const EMPTY_DRAFT: GoodsReceptionInput = {
-	purchaseNo: "",
-	name: "",
-	description: "",
-	category: "raw_materials",
-	sku: "",
-	supplier: "",
-	object: "",
-	expectedDelivery: "",
-	orderType: "normal",
-	unitPrice: "",
-	leadTimeDays: "",
-	minimumOrderQuantity: "",
-};
 
 /**
  * Draft state, validation and submission for the goods reception create screen.
@@ -50,7 +36,9 @@ export function useCreateGoodsReceptionForm() {
 	const router = useRouter();
 	const { company } = useAuthStatus();
 
-	const [draft, setDraft] = useState<GoodsReceptionInput>(EMPTY_DRAFT);
+	const [draft, setDraft] = useState<GoodsReceptionInput>(
+		EMPTY_GOODS_RECEPTION_DRAFT,
+	);
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [gdprAccepted, setGdprAccepted] = useState(false);
 

@@ -11,6 +11,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
+import { safeExternalUrl } from "@/lib/safeUrl";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -33,24 +34,6 @@ const priceFormatter = new Intl.NumberFormat("sv-SE", {
 	currency: "SEK",
 	maximumFractionDigits: 0,
 });
-
-/**
- * Attachments come from the mock today and from an API later, so the href is
- * checked before it is rendered: only http(s) and the blob: URLs a session
- * upload produces become links. Anything else — `javascript:` above all — falls
- * back to plain text.
- */
-function safeAttachmentHref(url?: string): string | undefined {
-	if (!url) return undefined;
-	try {
-		const { protocol } = new URL(url, window.location.origin);
-		return ["http:", "https:", "blob:"].includes(protocol)
-			? url
-			: undefined;
-	} catch {
-		return undefined;
-	}
-}
 
 function Field({
 	label,
@@ -93,7 +76,9 @@ function AttachmentRow({
 	attachment: PurchaseGoodsAttachment;
 	downloadLabel: string;
 }) {
-	const href = safeAttachmentHref(attachment.url);
+	/* Attachments come from the mock today and an API later, so the URL is
+	   checked before it becomes a link. */
+	const href = safeExternalUrl(attachment.url);
 
 	return (
 		<li className="flex items-center justify-between gap-3 py-2">
