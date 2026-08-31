@@ -315,3 +315,109 @@ export const MOCK_QUALITY_PLAN_CATEGORIES: QualityMainCategory[] = [
 		],
 	},
 ];
+
+// ── Action Plan mock data ─────────────────────────────────────────────────────
+
+const ACTION_DOC = (id: string, title: string, n: number): QualityDocument => ({
+	id,
+	title,
+	fileType: "pdf",
+	updatedText: `Updated ${n} day${n === 1 ? "" : "s"} ago`,
+	starred: false,
+	status: "published",
+	categoryFrom: "Åtgärdsplaner",
+	subCategoryFrom: "",
+	templateType: "Action",
+	tags: ["åtgärd", "kvalitet"],
+	owner: "Lars Andersson",
+	linkedModules: ["KMA"],
+	created: "2025-01-10",
+	lastUpdated: "2025-08-20",
+	recentActivity: `Updated by Lars Andersson • ${n} day${n === 1 ? "" : "s"} ago`,
+	description: "",
+});
+
+export const MOCK_ACTION_PLAN_CATEGORIES: QualityMainCategory[] = [
+	{
+		id: "avvikelser",
+		label: "Uppföljning av avvikelser",
+		subcategories: [
+			{
+				id: "avvikelser-inventering",
+				label: "Inventeringslista",
+				documents: [
+					ACTION_DOC("AP.1.1", "Avvikelserapport – Betonggjutning", 2),
+					ACTION_DOC("AP.1.2", "Avvikelserapport – Armering", 4),
+					ACTION_DOC("AP.1.3", "Avvikelserapport – Isolering", 1),
+					ACTION_DOC("AP.1.4", "Avvikelserapport – VVS", 3),
+				],
+			},
+			{
+				id: "avvikelser-armering",
+				label: "Armering",
+				documents: [
+					ACTION_DOC("AP.1.5", "Armeringsåtgärd – Dimensionskontroll", 5),
+					ACTION_DOC("AP.1.6", "Armeringsåtgärd – Rättning", 2),
+					ACTION_DOC("AP.1.7", "Armeringsprotokoll – Uppföljning", 3),
+				],
+			},
+			{
+				id: "avvikelser-betong",
+				label: "Betong",
+				documents: [
+					ACTION_DOC("AP.1.8", "Betongåtgärd – Sprickor", 1),
+					ACTION_DOC("AP.1.9", "Betongåtgärd – Hållfasthet", 6),
+					ACTION_DOC("AP.1.10", "Betongkvalitet – Åtgärdsplan", 2),
+					ACTION_DOC("AP.1.11", "Gjutning – Korrigeringsprotokoll", 4),
+					ACTION_DOC("AP.1.12", "Betong – Slutuppföljning", 1),
+				],
+			},
+		],
+	},
+	{
+		id: "riskåtgärder",
+		label: "Riskåtgärder",
+		subcategories: [
+			{
+				id: "risk-brand",
+				label: "Brand & säkerhet",
+				documents: [
+					ACTION_DOC("AP.2.1", "Brandsäkerhetsåtgärd – Plan", 3),
+					ACTION_DOC("AP.2.2", "Utrymningsplan – Uppdatering", 2),
+					ACTION_DOC("AP.2.3", "Brandskyddskontroll – Protokoll", 5),
+				],
+			},
+			{
+				id: "risk-miljö",
+				label: "Miljörisker",
+				documents: [
+					ACTION_DOC("AP.2.4", "Miljöriskåtgärd – Kemikalier", 1),
+					ACTION_DOC("AP.2.5", "Miljökontroll – Avfall", 3),
+				],
+			},
+		],
+	},
+	{
+		id: "förbättringar",
+		label: "Förbättringsåtgärder",
+		subcategories: [
+			{
+				id: "förbättringar-process",
+				label: "Processförbättringar",
+				documents: [
+					ACTION_DOC("AP.3.1", "Processförbättring – Betongblandning", 2),
+					ACTION_DOC("AP.3.2", "Arbetsflöde – Optimering", 4),
+					ACTION_DOC("AP.3.3", "Lean-åtgärd – Byggtid", 1),
+				],
+			},
+			{
+				id: "förbättringar-dokumentation",
+				label: "Dokumentation",
+				documents: [
+					ACTION_DOC("AP.3.4", "Dokumentationsrutiner – Uppdatering", 2),
+					ACTION_DOC("AP.3.5", "Digitaliseringsplan – KMA", 3),
+				],
+			},
+		],
+	},
+];
