@@ -2643,6 +2643,44 @@ export type OfferTranslation = {
 	complaintValidationTypeRequired: string;
 	complaintValidationTitleRequired: string;
 	complaintValidationDescriptionRequired: string;
+	// Purchase - Goods reception
+	purchaseGoodsReceptionTabUpload: string;
+	purchaseGoodsReceptionTabList: string;
+	purchaseGoodsReceptionColExpectedDelivery: string;
+	purchaseGoodsReceptionColOrderType: string;
+	purchaseGoodsReceptionOrderTypeNormal: string;
+	purchaseGoodsReceptionOrderTypePartial: string;
+	purchaseGoodsReceptionOrderTypeBackorder: string;
+	purchaseGoodsReceptionFilterAllTypes: string;
+	purchaseGoodsReceptionNoneFound: string;
+	purchaseGoodsReceptionOrderLabel: string;
+	purchaseGoodsReceptionQrLabel: string;
+	purchaseGoodsReceptionQrAlt: string;
+	purchaseGoodsReceptionArchivedToast: string;
+	purchaseGoodsReceptionDeletedToast: string;
+	purchaseGoodsReceptionCreate: string;
+	purchaseGoodsReceptionCreatedToast: string;
+	purchaseGoodsReceptionValidationRequired: string;
+	purchaseGoodsGeneralInfo: string;
+	purchaseGoodsPricingLogistics: string;
+	purchaseGoodsAttachments: string;
+	purchaseGoodsColDescription: string;
+	purchaseGoodsColCategory: string;
+	purchaseGoodsColSku: string;
+	purchaseGoodsColUnitPrice: string;
+	purchaseGoodsColLeadTime: string;
+	purchaseGoodsColMoq: string;
+	purchaseGoodsBulkDiscounts: string;
+	purchaseGoodsCategorySpareParts: string;
+	purchaseGoodsCategoryRawMaterials: string;
+	purchaseGoodsCategoryMachinery: string;
+	purchaseGoodsDays: string;
+	purchaseGoodsUnitsShort: string;
+	purchaseGoodsNoDiscounts: string;
+	purchaseGoodsNoAttachments: string;
+	purchaseGoodsDownload: string;
+	purchaseGoodsValidationPositive: string;
+
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
