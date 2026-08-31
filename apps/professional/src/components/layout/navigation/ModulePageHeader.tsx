@@ -59,7 +59,7 @@ export function ModulePageHeader({
       />
 
       {tabs && tabs.length > 0 && (
-        <div className="mt-3">
+        <div className="mt-3 -mb-[1px]">
           <ModuleTabs items={tabs} ariaLabel={title} />
         </div>
       )}
@@ -67,7 +67,7 @@ export function ModulePageHeader({
       {record && <RecordNavRow {...record} />}
 
       {record && secondaryTabs && secondaryTabs.length > 0 && (
-        <div className="mt-3">
+        <div className="mt-3 -mb-[1px]">
           <ModuleTabs items={secondaryTabs} />
         </div>
       )}

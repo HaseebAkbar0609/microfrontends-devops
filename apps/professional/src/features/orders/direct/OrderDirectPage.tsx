@@ -1,12 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ModulePageHeader } from "@/components/layout/navigation";
-import {
-	ORDER_MODULE_TABS,
-	ORDER_MODULE_TITLE,
-	orderBreadcrumbs,
-} from "@/features/orders/data/orderNav.config";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { orderBreadcrumbs } from "@/features/orders/data/orderNav.config";
 import localizationConstants from "@/utils/translation/constants";
 import { OrderDirectTable } from "./components/OrderDirectTable";
 import { CreateDirectOrderModal } from "./components/CreateDirectOrderModal";
@@ -22,16 +18,16 @@ export function OrderDirectPage() {
 	};
 
 	return (
-		<div className="flex h-full flex-col bg-slate-50/50">
-			{/* Page Header with Breadcrumbs matching screenshot */}
-			<ModulePageHeader
-				title={ORDER_MODULE_TITLE}
-				tabs={ORDER_MODULE_TABS}
+		<div className="flex flex-1 flex-col bg-slate-50/50">
+			{/* Page Title with Breadcrumbs directly below it */}
+			<PageHeader
+				title={localizationConstants.orderDirect}
 				breadcrumbs={orderBreadcrumbs(localizationConstants.orderDirect)}
+				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
 			{/* Main Content Area */}
-			<div className="flex flex-1 flex-col px-6 pt-4 pb-8 overflow-y-auto">
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto">
 				<OrderDirectTable onOpenCreateModal={() => setIsCreateModalOpen(true)} />
 			</div>
 

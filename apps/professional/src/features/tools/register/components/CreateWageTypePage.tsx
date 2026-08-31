@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	Form,
 	FormControl,
@@ -217,13 +218,14 @@ export function CreateWageTypePage({ isEdit = false }: CreateWageTypePageProps) 
 				</div>
 
 				{/* Section Tab Line Header */}
-				<div className="flex gap-4 ml-8 overflow-x-auto border-b border-slate-200 sm:mb-6 sm:gap-6">
-					<button
-						type="button"
-						className="whitespace-nowrap pb-3 text-sm font-medium transition-colors border-b-2 border-slate-900 text-slate-900 cursor-pointer"
-					>
-						<Translate text={localizationConstants.grundInformationSection} />
-					</button>
+				<div className="ml-8 border-b border-slate-200 sm:mb-6 h-[36px] -mb-[1px]">
+					<Tabs defaultValue="grund" className="w-fit">
+						<TabsList variant="line" className="h-[36px]">
+							<TabsTrigger value="grund" className="cursor-pointer">
+								<Translate text={localizationConstants.grundInformationSection} />
+							</TabsTrigger>
+						</TabsList>
+					</Tabs>
 				</div>
 
 				<div className="pl-6 flex flex-col items-start gap-6 lg:gap-8">
