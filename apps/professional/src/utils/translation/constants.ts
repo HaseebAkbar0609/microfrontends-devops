@@ -4928,6 +4928,16 @@ export type MachinePurchaseTranslation = {
 	machinePurchaseArchiveSuccess: string;
 	machinePurchaseRestoreSuccess: string;
 	machinePurchaseDeleteSuccess: string;
+	machinePurchaseCreateTitle: string;
+	machinePurchaseStep1Indicator: string;
+	machinePurchaseStep2Indicator: string;
+	machinePurchaseCardDetails: string;
+	machinePurchaseBtnNext: string;
+	machinePurchaseBtnSave: string;
+	machinePurchaseBtnCancel: string;
+	machinePurchaseCreateSuccess: string;
+	machinePurchaseCreateError: string;
+	machinePurchaseFieldMaskinInfo: string;
 };
 
 export type Translation = HeaderTranslation &
