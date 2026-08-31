@@ -9,6 +9,8 @@ import type {
 	PurchaseComplaintPriority,
 	PurchaseComplaintStatus,
 	PurchaseComplaintType,
+	PurchaseGoodsCategory,
+	PurchaseGoodsReceptionOrderType,
 	PurchaseStatus,
 	PurchaseType,
 } from "../types/purchase.types";
@@ -145,4 +147,37 @@ export function PurchaseComplaintTypeLabel({
 	type: PurchaseComplaintType;
 }) {
 	return <Translate text={COMPLAINT_TYPE_LABELS[type]} />;
+}
+
+const GOODS_RECEPTION_ORDER_TYPE_LABELS: Record<
+	PurchaseGoodsReceptionOrderType,
+	TranslationKeys
+> = {
+	normal: localizationConstants.purchaseGoodsReceptionOrderTypeNormal,
+	partial: localizationConstants.purchaseGoodsReceptionOrderTypePartial,
+	backorder: localizationConstants.purchaseGoodsReceptionOrderTypeBackorder,
+};
+
+/** Plain text in the design, not a chip. */
+export function PurchaseGoodsReceptionOrderTypeLabel({
+	orderType,
+}: {
+	orderType: PurchaseGoodsReceptionOrderType;
+}) {
+	return <Translate text={GOODS_RECEPTION_ORDER_TYPE_LABELS[orderType]} />;
+}
+
+const GOODS_CATEGORY_LABELS: Record<PurchaseGoodsCategory, TranslationKeys> = {
+	spare_parts: localizationConstants.purchaseGoodsCategorySpareParts,
+	raw_materials: localizationConstants.purchaseGoodsCategoryRawMaterials,
+	machinery: localizationConstants.purchaseGoodsCategoryMachinery,
+};
+
+/** The ticket's category badge, on the neutral chip the module already uses. */
+export function PurchaseGoodsCategoryBadge({
+	category,
+}: {
+	category: PurchaseGoodsCategory;
+}) {
+	return <PurchaseChip label={GOODS_CATEGORY_LABELS[category]} />;
 }

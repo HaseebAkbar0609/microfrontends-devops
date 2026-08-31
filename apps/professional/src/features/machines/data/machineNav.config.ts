@@ -7,6 +7,7 @@ export const MACHINE_MODULE_BASE_URL = "/module/production/machine";
 export const MACHINE_OVERVIEW_BASE_URL = "/module/production/machine/overview";
 export const MACHINE_HANDLING_BASE_URL = "/module/production/machine/handling";
 export const MACHINE_STATISTICS_BASE_URL = "/module/production/machine/statistics";
+export const MACHINE_PURCHASE_BASE_URL = "/module/production/machine/purchase";
 
 /** Module title shown as the H1 on every page of the Machine module. */
 export const MACHINE_MODULE_TITLE = localizationConstants.machineOverviewTitle;

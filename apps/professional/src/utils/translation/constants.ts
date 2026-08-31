@@ -2645,6 +2645,44 @@ export type OfferTranslation = {
 	complaintValidationTypeRequired: string;
 	complaintValidationTitleRequired: string;
 	complaintValidationDescriptionRequired: string;
+	// Purchase - Goods reception
+	purchaseGoodsReceptionTabUpload: string;
+	purchaseGoodsReceptionTabList: string;
+	purchaseGoodsReceptionColExpectedDelivery: string;
+	purchaseGoodsReceptionColOrderType: string;
+	purchaseGoodsReceptionOrderTypeNormal: string;
+	purchaseGoodsReceptionOrderTypePartial: string;
+	purchaseGoodsReceptionOrderTypeBackorder: string;
+	purchaseGoodsReceptionFilterAllTypes: string;
+	purchaseGoodsReceptionNoneFound: string;
+	purchaseGoodsReceptionOrderLabel: string;
+	purchaseGoodsReceptionQrLabel: string;
+	purchaseGoodsReceptionQrAlt: string;
+	purchaseGoodsReceptionArchivedToast: string;
+	purchaseGoodsReceptionDeletedToast: string;
+	purchaseGoodsReceptionCreate: string;
+	purchaseGoodsReceptionCreatedToast: string;
+	purchaseGoodsReceptionValidationRequired: string;
+	purchaseGoodsGeneralInfo: string;
+	purchaseGoodsPricingLogistics: string;
+	purchaseGoodsAttachments: string;
+	purchaseGoodsColDescription: string;
+	purchaseGoodsColCategory: string;
+	purchaseGoodsColSku: string;
+	purchaseGoodsColUnitPrice: string;
+	purchaseGoodsColLeadTime: string;
+	purchaseGoodsColMoq: string;
+	purchaseGoodsBulkDiscounts: string;
+	purchaseGoodsCategorySpareParts: string;
+	purchaseGoodsCategoryRawMaterials: string;
+	purchaseGoodsCategoryMachinery: string;
+	purchaseGoodsDays: string;
+	purchaseGoodsUnitsShort: string;
+	purchaseGoodsNoDiscounts: string;
+	purchaseGoodsNoAttachments: string;
+	purchaseGoodsDownload: string;
+	purchaseGoodsValidationPositive: string;
+
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
 	orderWidgetOverviewTotal: string;
@@ -3027,6 +3065,37 @@ export type OfferTranslation = {
 	machineStatPageOf: string;
 	machineStatEmptyState: string;
 	machineStatVehicleEmptyState: string;
+	// Machine Purchase (TFS-811)
+	machinePurchaseTitle: string;
+	machinePurchaseBreadcrumb: string;
+	machinePurchaseNewButton: string;
+	machinePurchaseColRow: string;
+	machinePurchaseColRevenue: string;
+	machinePurchaseColType: string;
+	machinePurchaseColBrand: string;
+	machinePurchaseColOrder: string;
+	machinePurchaseColPrice: string;
+	machinePurchaseColSupplier: string;
+	machinePurchaseColAddress: string;
+	machinePurchaseColPlaces: string;
+	machinePurchaseColCity: string;
+	machinePurchaseColPhone: string;
+	machinePurchaseColEmail: string;
+	machinePurchaseColStatus: string;
+	machinePurchaseStatusNotReady: string;
+	machinePurchaseStatusReady: string;
+	machinePurchaseStatusInProgress: string;
+	machinePurchaseViewFile: string;
+	machinePurchaseDetailsTitle: string;
+	machinePurchaseTabInfo: string;
+	machinePurchaseTabDocuments: string;
+	machinePurchaseInfoSection: string;
+	machinePurchaseAdditionalInfo: string;
+	machinePurchaseUploadFiles: string;
+	machinePurchaseUploadHint: string;
+	machinePurchaseEditButton: string;
+	machinePurchaseDeleteConfirm: string;
+	machinePurchaseNoResults: string;
 	// Project sub-sidebar
 	projectModule: string;
 	projectSubDashboard: string;
@@ -4798,6 +4867,52 @@ export type CommonTranslation = {
 	retry: string;
 };
 
+export type MachinePurchaseTranslation = {
+	machinePurchaseTitle: string;
+	machinePurchaseBreadcrumb: string;
+	machinePurchaseCategoryLabel: string;
+	machinePurchaseCategoryHand: string;
+	machinePurchaseCategoryHeavy: string;
+	machinePurchaseCategoryVehicle: string;
+	machinePurchaseCategoryOther: string;
+	machinePurchaseCategoryAll: string;
+	machinePurchaseNewButton: string;
+	machinePurchaseColNumber: string;
+	machinePurchaseColType: string;
+	machinePurchaseColBrand: string;
+	machinePurchaseColDesignation: string;
+	machinePurchaseColPrice: string;
+	machinePurchaseColSupplier: string;
+	machinePurchaseColAddress: string;
+	machinePurchaseColPostalCode: string;
+	machinePurchaseColCity: string;
+	machinePurchaseColPhone: string;
+	machinePurchaseColEmail: string;
+	machinePurchaseColFile: string;
+	machinePurchaseDetailsTitle: string;
+	machinePurchaseTabInfo: string;
+	machinePurchaseTabDocs: string;
+	machinePurchaseCardInfo: string;
+	machinePurchaseCardAdditional: string;
+	machinePurchaseUploadSubtitle: string;
+	machinePurchaseUploadHelper: string;
+	machinePurchaseUploadButton: string;
+	machinePurchaseColDocDate: string;
+	machinePurchaseColDocName: string;
+	machinePurchaseColDocFile: string;
+	machinePurchaseActionViewFile: string;
+	machinePurchaseRowsPerPage: string;
+	machinePurchasePageOf: string;
+	machinePurchaseCreateModalTitle: string;
+	machinePurchaseActionArchive: string;
+	machinePurchaseActionDelete: string;
+	machinePurchaseActionRestore: string;
+	machinePurchaseArchiveEmpty: string;
+	machinePurchaseArchiveSuccess: string;
+	machinePurchaseRestoreSuccess: string;
+	machinePurchaseDeleteSuccess: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -4809,7 +4924,8 @@ export type Translation = HeaderTranslation &
 	MyPagesTranslation &
 	OfferTranslation &
 	RegisterTranslation &
-	CommonTranslation;
+	CommonTranslation &
+	MachinePurchaseTranslation;
 
 export type TranslationKeys = keyof Translation;
 

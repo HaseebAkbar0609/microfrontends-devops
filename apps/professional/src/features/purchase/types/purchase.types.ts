@@ -103,6 +103,11 @@ export interface PurchaseAgreementDocument {
 	reference: string;
 	fileType: PurchaseDocumentFileType;
 	fileUrl?: string;
+	/**
+	 * The purchase the document belongs to. Goods reception lists this where the
+	 * agreements table lists the supplier, so it stays optional.
+	 */
+	purchaseNo?: string;
 }
 
 /** Timeline granularity of the Gantt schedule. */
@@ -127,4 +132,75 @@ export interface PurchaseGanttRow {
 	monitoring: string;
 	/** Sub-rows shown when the row is expanded. */
 	children?: PurchaseGanttRow[];
+}
+
+/**
+ * Delivery shape of a goods reception. Taken from the frame's "Ordertyp"
+ * column: a whole delivery, one instalment of several, or a re-send of what a
+ * previous delivery was short.
+ */
+export type PurchaseGoodsReceptionOrderType =
+	| "normal"
+	| "partial"
+	| "backorder";
+
+/** Goods category, from the ticket's "Category" badge. */
+export type PurchaseGoodsCategory =
+	| "spare_parts"
+	| "raw_materials"
+	| "machinery";
+
+/** One step of the ticket's "Bulk Discount tiers". */
+export interface PurchaseGoodsDiscountTier {
+	/** Smallest quantity that unlocks the tier. */
+	quantity: number;
+	/** Percentage off the unit price. */
+	percentage: number;
+}
+
+/**
+ * A technical specification or brochure, from the ticket's "Attachments".
+ * `url` is absent until the file is uploaded in this session.
+ */
+export interface PurchaseGoodsAttachment {
+	id: string;
+	name: string;
+	fileType: PurchaseDocumentFileType;
+	url?: string;
+}
+
+/**
+ * One row of the Godsmottagning list, plus the goods detail the ticket
+ * description asks the drawer to show.
+ *
+ * Prices are in SEK. The description writes "€1,200", but every other money
+ * value in this app is SEK — flagged on the ticket rather than mixing currencies.
+ */
+export interface PurchaseGoodsReceptionRow {
+	id: string;
+	/** The order or project the purchase belongs to. */
+	object: string;
+	purchaseNo: string;
+	name: string;
+	supplier: string;
+	/** ISO date the delivery is expected. */
+	expectedDelivery: string;
+	orderType: PurchaseGoodsReceptionOrderType;
+	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
+	archived: boolean;
+
+	// Drawer: general info
+	description: string;
+	category: PurchaseGoodsCategory;
+	/** Part number. */
+	sku: string;
+
+	// Drawer: pricing and logistics
+	unitPrice: number;
+	leadTimeDays: number;
+	/** Minimum order quantity (MOQ). */
+	minimumOrderQuantity: number;
+	bulkDiscounts: PurchaseGoodsDiscountTier[];
+
+	attachments: PurchaseGoodsAttachment[];
 }

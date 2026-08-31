@@ -18,17 +18,17 @@ const Header = () => {
 	const { user, company } = useAuthStatus() as { user: User; company: Company | null };
 
 	return (
-		<header className="flex h-16 w-full items-center border-b border-slate-200 bg-white px-3 sm:px-5">
-			{/* Left spacer (tablet only) */}
-			<div className="hidden sm:flex flex-1" />
+		<header className="relative flex h-16 w-full items-center justify-between border-b border-slate-100 bg-white px-3 sm:px-5">
+			{/* Left spacer */}
+			<div className="flex items-center gap-2" />
 
-			{/* Center Logo */}
-			<div className="flex flex-1 justify-center sm:flex-none">
-				<CompanyLogo name={company?.company_name ?? ""} logoUrl={null} />
+			{/* Exact Center Logo (Always centered to the screen viewport) */}
+			<div className="fixed left-1/2 top-8 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-auto z-30">
+				<CompanyLogo name={company?.company_name || "PhiloMetric"} logoUrl={null} />
 			</div>
 
 			{/* Right section */}
-			<div className="flex flex-1 items-center justify-end gap-1 sm:gap-2">
+			<div className="flex items-center justify-end gap-1 sm:gap-2 ml-auto z-40">
 				<HeaderLanguageSelect />
 
 				{/* Notification */}
@@ -53,17 +53,16 @@ const Header = () => {
 				{/* Avatar (hidden on very small screens) */}
 				<div className="hidden sm:block">
 					<UserAvatarButton
-						name={`${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim()}
+						name={`${user?.first_name ?? ""} ${user?.last_name ?? ""}`.trim() || "Admin"}
 						role="Administrator"
 						initials={
 							`${user?.first_name?.charAt(0) ?? ""}${user?.last_name?.charAt(0) ?? ""}` ||
-							"?"
+							"A"
 						}
 					/>
 				</div>
 
 				{/* Menu */}
-
 				<AlignJustifyButton />
 
 				{/* App Launcher */}
