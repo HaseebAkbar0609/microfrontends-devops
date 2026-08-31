@@ -2715,6 +2715,34 @@ export type OfferTranslation = {
 	purchaseLineCreate: string;
 	purchaseLineArchivedToast: string;
 	purchaseLineDeletedToast: string;
+	// Purchase - New purchase order
+	purchaseOrderTitle: string;
+	purchaseOrderTabObject: string;
+	purchaseOrderTabContact: string;
+	purchaseOrderTabSpecification: string;
+	purchaseOrderSupplierFromCalc: string;
+	purchaseOrderSelectAction: string;
+	purchaseOrderObjectHeading: string;
+	purchaseOrderInsuranceQuestion: string;
+	purchaseOrderSelectedSupplier: string;
+	purchaseOrderDesiredDelivery: string;
+	purchaseOrderMarking: string;
+	purchaseOrderQrLabel: string;
+	purchaseOrderInvoiceTo: string;
+	purchaseOrderColSupplierArticle: string;
+	purchaseOrderDeliveryByCar: string;
+	purchaseOrderDeliveryPickup: string;
+	purchaseOrderComments: string;
+	purchaseOrderCommentsPlaceholder: string;
+	purchaseOrderSend: string;
+	purchaseOrderOpenSupplier: string;
+	purchaseOrderPreview: string;
+	purchaseOrderCreatedToast: string;
+	purchaseOrderValidationRequired: string;
+	purchaseOrderValidationQuantity: string;
+	purchaseOrderUnavailable: string;
+	purchaseOrderNewLineAria: string;
+	purchaseOrderRemoveLineAria: string;
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;

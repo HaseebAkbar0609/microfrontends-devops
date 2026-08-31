@@ -18,22 +18,22 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import type { ComplaintContact } from "../types";
+import type { PurchaseContactPerson } from "../../types/purchase.types";
 
 const FIELD_CLASS =
 	"h-10 rounded-md border-slate-200 shadow-none focus-visible:border-gray-300 focus-visible:outline-none";
 
-export interface ComplaintContactOption {
+export interface ContactPersonOption {
 	id: string;
 	name: string;
 }
 
-export interface ComplaintContactCardProps {
+export interface ContactPersonCardProps {
 	titleKey: TranslationKeys;
-	value: ComplaintContact;
-	onChange: (patch: Partial<ComplaintContact>) => void;
-	errors?: Partial<Record<keyof ComplaintContact, string>>;
-	contactOptions: ComplaintContactOption[];
+	value: PurchaseContactPerson;
+	onChange: (patch: Partial<PurchaseContactPerson>) => void;
+	errors?: Partial<Record<keyof PurchaseContactPerson, string>>;
+	contactOptions: ContactPersonOption[];
 }
 
 /**
@@ -41,17 +41,17 @@ export interface ComplaintContactCardProps {
  * the supplier's contact and for the reporting side. Only Förnamn is required,
  * matching the asterisk in the frame.
  */
-export function ComplaintContactCard({
+export function ContactPersonCard({
 	titleKey,
 	value,
 	onChange,
 	errors = {},
 	contactOptions,
-}: ComplaintContactCardProps) {
+}: ContactPersonCardProps) {
 	const t = useTranslate();
 
 	const field = (
-		key: keyof ComplaintContact,
+		key: keyof PurchaseContactPerson,
 		labelKey: TranslationKeys,
 		options: { required?: boolean; type?: string } = {},
 	) => (
@@ -162,4 +162,4 @@ export function ComplaintContactCard({
 	);
 }
 
-export default ComplaintContactCard;
+export default ContactPersonCard;
