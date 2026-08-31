@@ -286,6 +286,7 @@ export function PurchaseArchivePage() {
 						<TabsContent value="purchases" className="mt-4">
 							<ArchivableRowsTable<PurchaseRow>
 								rows={MOCK_PURCHASES}
+								mode="restore"
 								columns={PURCHASE_COLUMNS}
 								searchFields={(row) => [
 									row.purchaseNo,
@@ -327,6 +328,7 @@ export function PurchaseArchivePage() {
 						<TabsContent value="complaints" className="mt-4">
 							<ArchivableRowsTable<PurchaseComplaintRow>
 								rows={MOCK_PURCHASE_COMPLAINTS}
+								mode="restore"
 								columns={COMPLAINT_COLUMNS}
 								searchFields={(row) => [
 									row.complaintNo,
@@ -368,6 +370,7 @@ export function PurchaseArchivePage() {
 						<TabsContent value="receptions" className="mt-4">
 							<ArchivableRowsTable<PurchaseGoodsReceptionRow>
 								rows={MOCK_PURCHASE_GOODS_RECEPTIONS}
+								mode="restore"
 								columns={RECEPTION_COLUMNS}
 								searchFields={(row) => [
 									row.purchaseNo,

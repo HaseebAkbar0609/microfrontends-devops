@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 
@@ -11,18 +11,15 @@ import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { purchaseLinesFor } from "../data/purchaseLines.mock";
 import {
 	PURCHASE_MODULE_BASE_URL,
 	PURCHASE_MODULE_TABS,
 	PURCHASE_MODULE_TITLE,
 } from "../data/purchaseNav.config";
+import { usePurchaseLines } from "../hooks/usePurchaseLines";
 import type {
-	PurchaseGanttRow,
 	PurchaseLineRow,
-	PurchaseLineStatus,
 	PurchaseRow,
-	PurchaseStatus,
 } from "../types/purchase.types";
 import { PurchaseGanttTab } from "./PurchaseGanttTab";
 import { PurchaseLineStatusBadge } from "./PurchaseBadges";
@@ -105,41 +102,6 @@ const LINE_STATUS_FILTERS = [
 ];
 
 /**
- * The Gantt is typed against the module-wide schedule, whose status drives the
- * bar colour. Line statuses map onto the nearest schedule meaning.
- */
-const LINE_TO_SCHEDULE_STATUS: Record<PurchaseLineStatus, PurchaseStatus> = {
-	ordered: "not_started",
-	in_progress: "ongoing",
-	delivered: "completed",
-	monitoring: "delayed",
-};
-
-/**
- * The schedule parses all four dates, so every one must be present. A line
- * carries them progressively — a date it has not reached yet falls back to the
- * last one it has, which draws a bar that stops at what is actually known.
- */
-function toGanttRow(line: PurchaseLineRow, orderer: string): PurchaseGanttRow {
-	const estimated = line.estimatedDelivery || line.purchaseDate;
-	const delivery = line.deliveryDate || estimated;
-	const monitoring = line.monitoringDate || delivery;
-
-	return {
-		id: line.id,
-		purchaseNo: line.lineNo,
-		objectName: line.designation,
-		connection: line.supplier || "-",
-		orderer,
-		status: LINE_TO_SCHEDULE_STATUS[line.status],
-		orderDate: line.purchaseDate,
-		estimatedDelivery: estimated,
-		delivery,
-		monitoring,
-	};
-}
-
-/**
  * A purchase record: its lines, and those lines on a schedule.
  *
  * This route is what "Se inköp" on the purchase list and the Arkiv tab have
@@ -151,15 +113,7 @@ function toGanttRow(line: PurchaseLineRow, orderer: string): PurchaseGanttRow {
  * items have no destination — so the header is used here too. Flagged.
  */
 export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
-	const lines = useMemo(
-		() => purchaseLinesFor(purchase.id),
-		[purchase.id],
-	);
-
-	const ganttRows = useMemo(
-		() => lines.map((line) => toGanttRow(line, purchase.orderer)),
-		[lines, purchase.orderer],
-	);
+	const { lines, ganttRows } = usePurchaseLines(purchase);
 
 	const listHref = `${PURCHASE_MODULE_BASE_URL}/overview`;
 
