@@ -4624,6 +4624,11 @@ export const svCommon: CommonTranslation = {
 	b2bArchiveConfirmDesc: "Är du säker på att du vill arkivera detta projekt?",
 	b2bArchiveSuccessToast: "Projektet har arkiverats",
 	b2bArchiveErrorToast: "Det gick inte att arkivera projektet",
+	b2bRestoreConfirmTitle: "Återställ projekt",
+	b2bRestoreConfirmDesc: "Är du säker på att du vill återställa detta projekt till aktivt?",
+	b2bDeletePermanentConfirmTitle: "Radera projekt permanent",
+	b2bDeletePermanentConfirmDesc: "Är du säker på att du vill radera detta projekt permanent? Denna åtgärd kan inte ångras.",
+	retry: "Försök igen",
 };
 
 export const sv: Translation = {

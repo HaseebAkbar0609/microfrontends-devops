@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -9,7 +10,9 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  Loader2,
+  MoreVertical,
+  RotateCcw,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,15 +34,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TablePagination } from "@/components/table/TablePagination";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { B2BArchiveTyp } from "../types/archive";
+import { B2BArchiveItem, B2BArchiveTyp } from "../types/archive";
 import { B2B_ARCHIVE_BREADCRUMBS, B2B_MODULE_TABS } from "../constants";
 import { useB2BArchive, B2BArchiveSortField } from "../hooks/useB2BArchive";
 
 const ALL_TYPS: B2BArchiveTyp[] = ["B2B-Hyra UT", "B2B-Offert", "B2B-Hyra IN"];
+const TABLE_COLUMNS_COUNT = 8;
+
+function SkeletonRows({ count }: { count: number }) {
+  return (
+    <>
+      {Array.from({ length: count }).map((_, i) => (
+        <TableRow key={`skeleton-${i}`} className="border-b border-slate-200">
+          {Array.from({ length: TABLE_COLUMNS_COUNT }).map((_, j) => (
+            <TableCell key={j} className="px-4 py-3.5">
+              <div className="h-4 w-3/4 animate-pulse rounded bg-slate-200" />
+            </TableCell>
+          ))}
+        </TableRow>
+      ))}
+    </>
+  );
+}
 
 export function B2BArchiveView() {
   const t = useTranslate();
@@ -48,6 +78,7 @@ export function B2BArchiveView() {
   const {
     items,
     isLoading,
+    error,
     search,
     setSearch,
     page,
@@ -60,7 +91,15 @@ export function B2BArchiveView() {
     sortField,
     sortDir,
     toggleSort,
+    handleRestore,
+    handleDelete,
+    refetch,
   } = useB2BArchive();
+
+  const [projectToRestore, setProjectToRestore] = useState<B2BArchiveItem | null>(null);
+  const [isRestoring, setIsRestoring] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<B2BArchiveItem | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const activeFilterCount = selectedTyps.length;
 
@@ -73,6 +112,28 @@ export function B2BArchiveView() {
     ) : (
       <ArrowDown size={12} className="text-slate-900 shrink-0 ml-1" />
     );
+  };
+
+  const handleConfirmRestore = async () => {
+    if (!projectToRestore) return;
+    setIsRestoring(true);
+    try {
+      await handleRestore(projectToRestore.id);
+    } finally {
+      setIsRestoring(false);
+      setProjectToRestore(null);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!projectToDelete) return;
+    setIsDeleting(true);
+    try {
+      await handleDelete(projectToDelete.id);
+    } finally {
+      setIsDeleting(false);
+      setProjectToDelete(null);
+    }
   };
 
   return (
@@ -273,21 +334,28 @@ export function B2BArchiveView() {
                   {renderSortIndicator("lagstOffert")}
                 </div>
               </TableHead>
-              <TableHead className="whitespace-nowrap px-4 py-3.5 text-xs font-semibold text-slate-500 text-right w-44" />
+              <TableHead className="whitespace-nowrap px-4 py-3.5 text-xs font-semibold text-slate-500 text-right w-52" />
             </TableRow>
           </TableHeader>
           <TableBody className="[&_tr:last-child]:border-b [&_tr:last-child]:border-slate-200">
             {isLoading ? (
+              <SkeletonRows count={rowsPerPage || 5} />
+            ) : error && items.length === 0 ? (
               <TableRow className="border-b border-slate-200 hover:bg-transparent">
                 <TableCell
-                  colSpan={8}
-                  className="px-4 py-16 text-center text-sm text-slate-500"
+                  colSpan={TABLE_COLUMNS_COUNT}
+                  className="px-4 py-16 text-center text-sm text-red-500"
                 >
-                  <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="size-4 animate-spin text-slate-500" />
-                    <span>
-                      <Translate text={localizationConstants.genericLoading} />
-                    </span>
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <span>{error}</span>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => refetch()}
+                      className="cursor-pointer"
+                    >
+                      <Translate text={localizationConstants.retry} />
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>
@@ -354,6 +422,40 @@ export function B2BArchiveView() {
                       >
                         <Translate text={localizationConstants.b2bArchiveViewRequest} />
                       </Button>
+
+                      {/* 3-dots action menu for Restore & Delete */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            aria-label="More actions"
+                            className="h-8 w-8 text-slate-500 hover:bg-slate-100 hover:text-slate-900 cursor-pointer"
+                          >
+                            <MoreVertical size={16} aria-hidden={true} />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-36 bg-white border border-slate-200 shadow-md p-1">
+                          <DropdownMenuItem
+                            className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-900 hover:bg-slate-100"
+                            onClick={() => setProjectToRestore(row)}
+                          >
+                            <RotateCcw size={14} className="text-slate-900" />
+                            <span>
+                              <Translate text={localizationConstants.actionRestore} />
+                            </span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-900 hover:bg-slate-100"
+                            onClick={() => setProjectToDelete(row)}
+                          >
+                            <Trash2 size={14} className="text-slate-900" />
+                            <span>
+                              <Translate text={localizationConstants.b2bDealDelete} />
+                            </span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -361,7 +463,7 @@ export function B2BArchiveView() {
             ) : (
               <TableRow className="border-b border-slate-200 hover:bg-transparent">
                 <TableCell
-                  colSpan={8}
+                  colSpan={TABLE_COLUMNS_COUNT}
                   className="px-4 py-16 text-center text-sm text-slate-500"
                 >
                   <Translate text={localizationConstants.noQuotesFound} />
@@ -386,6 +488,64 @@ export function B2BArchiveView() {
           />
         </div>
       </div>
+
+      {/* Confirmation Modal for Project Restore */}
+      <AlertDialog
+        open={!!projectToRestore}
+        onOpenChange={(open) => !open && setProjectToRestore(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t(localizationConstants.b2bRestoreConfirmTitle)}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t(localizationConstants.b2bRestoreConfirmDesc)}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isRestoring} className="cursor-pointer">
+              {t(localizationConstants.cancel)}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmRestore}
+              disabled={isRestoring}
+              className="bg-slate-900 hover:bg-slate-800 text-white cursor-pointer"
+            >
+              {t(localizationConstants.actionRestore)}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Confirmation Modal for Project Permanent Deletion */}
+      <AlertDialog
+        open={!!projectToDelete}
+        onOpenChange={(open) => !open && setProjectToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t(localizationConstants.b2bDeletePermanentConfirmTitle)}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t(localizationConstants.b2bDeletePermanentConfirmDesc)}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting} className="cursor-pointer">
+              {t(localizationConstants.cancel)}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmDelete}
+              disabled={isDeleting}
+              className="bg-slate-950 hover:bg-slate-800 text-white cursor-pointer"
+            >
+              {t(localizationConstants.b2bDealDelete)}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

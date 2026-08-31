@@ -26,6 +26,7 @@ export function useB2BArchive() {
   const t = useTranslate();
   const [items, setItems] = useState<B2BArchiveItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState<string>("");
   const [page, setPage] = useState<number>(1);
   const [rowsPerPage, setRowsPerPage] = useState<number>(10);
@@ -35,14 +36,18 @@ export function useB2BArchive() {
 
   const loadData = useCallback(async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const res = await getB2BArchiveProjectsAction({
         search: search || undefined,
         type: selectedTyps.length === 1 ? selectedTyps[0] : undefined,
       });
       setItems(res.items);
-    } catch {
-      // Fallback
+    } catch (err) {
+      const errorMsg =
+        err instanceof Error ? err.message : "Failed to load archived projects";
+      setError(errorMsg);
+      console.error("Failed to load B2B archive projects:", err);
     } finally {
       setIsLoading(false);
     }
@@ -80,23 +85,39 @@ export function useB2BArchive() {
   const totalPages = Math.max(1, Math.ceil(sorted.length / rowsPerPage));
   const paginated = sorted.slice((page - 1) * rowsPerPage, page * rowsPerPage);
 
-  const handleRestore = async (id: string) => {
-    const res = await restoreB2BProjectAction(id);
-    if (res.success) {
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      showToast("success", t(localizationConstants.offerArchivedRestoredToast));
-    } else {
+  const handleRestore = async (id: string): Promise<boolean> => {
+    try {
+      const res = await restoreB2BProjectAction(id);
+      if (res.success) {
+        setItems((prev) => prev.filter((item) => item.id !== id));
+        showToast("success", t(localizationConstants.offerArchivedRestoredToast));
+        return true;
+      } else {
+        showToast("error", res.error || t(localizationConstants.b2bArchiveErrorToast));
+        return false;
+      }
+    } catch (err) {
+      console.error("Error restoring project:", err);
       showToast("error", t(localizationConstants.b2bArchiveErrorToast));
+      return false;
     }
   };
 
-  const handleDelete = async (id: string) => {
-    const res = await deleteB2BArchivedProjectAction(id);
-    if (res.success) {
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      showToast("success", t(localizationConstants.offerArchivedDeletedToast));
-    } else {
+  const handleDelete = async (id: string): Promise<boolean> => {
+    try {
+      const res = await deleteB2BArchivedProjectAction(id);
+      if (res.success) {
+        setItems((prev) => prev.filter((item) => item.id !== id));
+        showToast("success", t(localizationConstants.offerArchivedDeletedToast));
+        return true;
+      } else {
+        showToast("error", res.error || t(localizationConstants.b2bRemoveErrorToast));
+        return false;
+      }
+    } catch (err) {
+      console.error("Error deleting project:", err);
       showToast("error", t(localizationConstants.b2bRemoveErrorToast));
+      return false;
     }
   };
 
@@ -104,6 +125,7 @@ export function useB2BArchive() {
     items: paginated,
     allItems: sorted,
     isLoading,
+    error,
     search,
     setSearch,
     page,

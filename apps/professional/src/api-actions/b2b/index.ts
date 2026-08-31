@@ -4,6 +4,7 @@ import type { ActionResult } from "@/types/api";
 import { ProjectMarket } from "@/features/b2b/types/projectMarket";
 import type { B2BArchiveItem } from "@/features/b2b/types/archive";
 import { DUMMY_PROJECTS } from "@/features/b2b/constants/projectMarketMock";
+import { DUMMY_ARCHIVE_ITEMS } from "@/features/b2b/constants/archiveMock";
 
 export interface ListB2BProjectsParams {
 	page?: number;
@@ -197,16 +198,14 @@ interface ApiArchiveItem {
 	lowest_offer?: number;
 }
 
+const ArchiveIdSchema = z.string().trim().min(1, "Project ID is required");
+
 /**
  * Fetch archived B2B projects from backend API with fallback to DUMMY_ARCHIVE_ITEMS
  */
 export async function getB2BArchiveProjectsAction(
 	params?: ListB2BArchiveParams
 ): Promise<B2BArchiveListResult> {
-	const { DUMMY_ARCHIVE_ITEMS } = await import(
-		"@/features/b2b/constants/archiveMock"
-	);
-
 	try {
 		const response = await axiosInstance.get(B2B_ARCHIVE_PATH, {
 			params: {
@@ -259,9 +258,18 @@ export async function getB2BArchiveProjectsAction(
 export async function restoreB2BProjectAction(
 	id: string
 ): Promise<ActionResult<{ success: boolean; message?: string }>> {
+	const parsed = ArchiveIdSchema.safeParse(id);
+	if (!parsed.success) {
+		return {
+			success: false,
+			data: null,
+			error: parsed.error.errors[0]?.message || "Invalid project ID",
+		};
+	}
+
 	try {
 		const response = await axiosInstance.post(
-			`${B2B_ARCHIVE_PATH}/${id}/restore`
+			`${B2B_ARCHIVE_PATH}/${parsed.data}/restore`
 		);
 		return {
 			success: true,
@@ -289,8 +297,17 @@ export async function restoreB2BProjectAction(
 export async function deleteB2BArchivedProjectAction(
 	id: string
 ): Promise<ActionResult<{ success: boolean; message?: string }>> {
+	const parsed = ArchiveIdSchema.safeParse(id);
+	if (!parsed.success) {
+		return {
+			success: false,
+			data: null,
+			error: parsed.error.errors[0]?.message || "Invalid project ID",
+		};
+	}
+
 	try {
-		const response = await axiosInstance.delete(`${B2B_ARCHIVE_PATH}/${id}`);
+		const response = await axiosInstance.delete(`${B2B_ARCHIVE_PATH}/${parsed.data}`);
 		return {
 			success: true,
 			data: {
