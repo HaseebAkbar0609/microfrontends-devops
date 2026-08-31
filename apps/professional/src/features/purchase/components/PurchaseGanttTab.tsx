@@ -155,7 +155,21 @@ function PurchaseGanttGrid({
 	);
 }
 
-export function PurchaseGanttTab() {
+export interface PurchaseGanttTabProps {
+	/**
+	 * Rows to schedule. Defaults to the module-wide purchase set; a purchase
+	 * record passes its own lines so the same timeline maths, zoom bands and
+	 * column-fraction bar positioning are reused rather than rebuilt.
+	 */
+	rows?: PurchaseGanttRow[];
+	/** Zoom the schedule opens at. Defaults to day, as the module schedule does. */
+	initialZoom?: PurchaseGanttZoom;
+}
+
+export function PurchaseGanttTab({
+	rows,
+	initialZoom,
+}: PurchaseGanttTabProps = {}) {
 	const { t } = useTranslation();
 	const {
 		zoom,
@@ -180,7 +194,7 @@ export function PurchaseGanttTab() {
 		setCurrentPage,
 		pageSize,
 		setPageSize,
-	} = usePurchaseGantt();
+	} = usePurchaseGantt(rows, initialZoom);
 
 	const columnCount = columns.length;
 	const timelineWidth = columnCount * MIN_COLUMN_WIDTH[zoom];

@@ -206,3 +206,37 @@ export interface PurchaseGoodsReceptionRow {
 
 	attachments: PurchaseGoodsAttachment[];
 }
+
+/**
+ * Status of a single line within a purchase, from the frame's Status column.
+ * Distinct from `PurchaseStatus`, which describes the whole purchase.
+ */
+export type PurchaseLineStatus =
+	| "ordered"
+	| "in_progress"
+	| "delivered"
+	| "monitoring";
+
+/**
+ * One line of a purchase — the rows of the record page's Inköpslista.
+ *
+ * Dates are ISO or empty; the frame prints "-" for a missing one, which is a
+ * rendering concern rather than something to store.
+ */
+export interface PurchaseLineRow {
+	id: string;
+	/** The purchase this line belongs to, e.g. "I501". */
+	purchaseId: string;
+	/** Line number, numbered from the parent purchase: "I501-001". */
+	lineNo: string;
+	designation: string;
+	supplier: string;
+	purchaseDate: string;
+	deliveryDate: string;
+	estimatedDelivery: string;
+	/** Set only while the line is being chased. */
+	monitoringDate: string;
+	status: PurchaseLineStatus;
+	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
+	archived: boolean;
+}
