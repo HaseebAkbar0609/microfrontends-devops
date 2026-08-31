@@ -1,7 +1,5 @@
-import { OrderOverviewPage } from "@/features/orders/OrderOverviewPage";
+import { redirect } from "next/navigation";
 
-export const dynamic = "force-dynamic";
-
-export default function Page() {
-	return <OrderOverviewPage />;
+export default function OrderRootPage() {
+	redirect("/module/production/order/dashboard");
 }

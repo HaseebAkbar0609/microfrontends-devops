@@ -1,56 +1,48 @@
 import {
-	Archive,
 	BarChart3,
 	Bell,
 	Bot,
 	CalendarDays,
 	CircleDollarSign,
 	Clock,
-	FileText,
 	Image as ImageIcon,
 	Layers,
-	List,
 	Newspaper,
 	PieChart,
 	Receipt,
 	TrafficCone,
 	Trophy,
 } from "lucide-react";
-import { DynamicSubSidebarItem } from "@/components/layout/sidebar/DynamicSubSidebar";
+import { RouteTabItem } from "@/types/navigation";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
 
-export const calculationNavItems: DynamicSubSidebarItem[] = [
+export const calculationNavItems: RouteTabItem[] = [
 	{
 		id: "overview",
 		labelKey: localizationConstants.calcOverview,
 		href: "/module/business/calculation",
-		icon: FileText,
 		exact: true,
 	},
 	{
 		id: "calc-overview",
 		labelKey: localizationConstants.calcOverviewPage,
 		href: "/module/business/calculation/overview",
-		icon: List,
 	},
 	{
 		id: "kalkyl",
 		labelKey: localizationConstants.calcKalkyl,
 		href: "/module/business/calculation/kalkyl",
-		icon: FileText,
 	},
 	{
 		id: "statistics",
 		labelKey: localizationConstants.calcStatistics,
 		href: "/module/business/calculation/statistics",
-		icon: BarChart3,
 	},
 	{
 		id: "archive",
 		labelKey: localizationConstants.archive,
 		href: "/module/business/calculation/archive",
-		icon: Archive,
 	},
 ];
 

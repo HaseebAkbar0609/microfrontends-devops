@@ -23,6 +23,42 @@ export function machineDashboardBreadcrumbs(): BreadcrumbItem[] {
 	];
 }
 
+import type { RouteTabItem } from "@/types/navigation";
+
+export const MACHINE_MODULE_TABS: RouteTabItem[] = [
+	{
+		id: "dashboard",
+		labelKey: localizationConstants.machineSidebarDashboard,
+		href: "/module/production/machine",
+		exact: true,
+	},
+	{
+		id: "overview",
+		labelKey: localizationConstants.machineSidebarOverview,
+		href: "/module/production/machine/overview",
+	},
+	{
+		id: "handling",
+		labelKey: localizationConstants.machineSidebarHandling,
+		href: "/module/production/machine/handling",
+	},
+	{
+		id: "purchase",
+		labelKey: localizationConstants.machineSidebarPurchase,
+		href: "/module/production/machine/purchase",
+	},
+	{
+		id: "statistics",
+		labelKey: localizationConstants.machineSidebarStatistics,
+		href: "/module/production/machine/statistics",
+	},
+	{
+		id: "archive",
+		labelKey: localizationConstants.machineSidebarArchive,
+		href: "/module/production/machine/archive",
+	},
+];
+
 /**
  * `Home > Modul > Maskin > Section` breadcrumb, matching the breadcrumb row in
  * the TFS-803 Figma frame.
