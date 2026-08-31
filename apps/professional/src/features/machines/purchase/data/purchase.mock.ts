@@ -1,4 +1,4 @@
-import type { PurchaseDetail, PurchaseItem, PurchaseDocument } from "../types/purchase.types";
+import type { PurchaseDetail, PurchaseItem } from "../types/purchase.types";
 
 export const INITIAL_PURCHASES: PurchaseItem[] = [
 	{

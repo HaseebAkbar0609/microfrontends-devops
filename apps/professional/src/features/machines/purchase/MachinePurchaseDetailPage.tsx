@@ -7,10 +7,7 @@ import {
 	Info,
 	Edit2,
 	Check,
-	Plus,
 	Trash2,
-	FileText,
-	Eye,
 	X,
 	Folder,
 	ArrowUpDown,
@@ -29,7 +26,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { PdfFileIcon } from "@/components/ui/PdfFileIcon";
-import { Translate, useTranslate } from "@/utils/translation/translate";
+import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { MACHINE_PURCHASE_BASE_URL } from "@/features/machines/data/machineNav.config";
 import { usePurchaseDetail } from "./hooks/usePurchaseDetail";
@@ -40,7 +37,6 @@ interface MachinePurchaseDetailPageProps {
 }
 
 export function MachinePurchaseDetailPage({ id }: MachinePurchaseDetailPageProps) {
-	const t = useTranslate();
 	const params = useParams();
 	const router = useRouter();
 	const purchaseId = id || (params?.id as string) || "PUR-01";
