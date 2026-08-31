@@ -182,7 +182,7 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 								toolbarAction={
 									<PermissionGate permission="CREATE_PURCHASE">
 										<Link
-											href={`${PURCHASE_MODULE_BASE_URL}/create`}
+											href={`${PURCHASE_MODULE_BASE_URL}/${encodeURIComponent(purchase.id)}/new-order`}
 										>
 											<Button className="h-10 cursor-pointer gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800">
 												<Plus
