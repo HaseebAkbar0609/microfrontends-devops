@@ -23,6 +23,8 @@ export interface PurchaseRow {
 	type: PurchaseType;
 	category: PurchaseCategory;
 	status: PurchaseStatus;
+	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
+	archived: boolean;
 }
 
 export type PurchaseSupplierStatus = "active" | "inactive";

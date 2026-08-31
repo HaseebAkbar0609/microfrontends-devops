@@ -49,6 +49,16 @@ export function usePurchases(options: UsePurchasesOptions = {}) {
 		[sortBy],
 	);
 
+	const archivePurchase = useCallback((purchaseId: string) => {
+		setPurchases((previous) =>
+			previous.map((purchase) =>
+				purchase.id === purchaseId
+					? { ...purchase, archived: true }
+					: purchase,
+			),
+		);
+	}, []);
+
 	const removePurchase = useCallback((purchaseId: string) => {
 		setPurchases((previous) =>
 			previous.filter((purchase) => purchase.id !== purchaseId),
@@ -58,6 +68,8 @@ export function usePurchases(options: UsePurchasesOptions = {}) {
 	const filteredAndSorted = useMemo(() => {
 		return purchases
 			.filter((purchase) => {
+				if (purchase.archived) return false;
+
 				const query = searchQuery.trim().toLowerCase();
 				if (query) {
 					const haystack = [
@@ -78,12 +90,11 @@ export function usePurchases(options: UsePurchasesOptions = {}) {
 				return statusFilter === "all" || purchase.status === statusFilter;
 			})
 			.sort((a, b) => {
-				const valueA = a[sortBy].toLowerCase();
-				const valueB = b[sortBy].toLowerCase();
-
-				let comparison = 0;
-				if (valueA < valueB) comparison = -1;
-				if (valueA > valueB) comparison = 1;
+				const comparison = (a[sortBy] ?? "").localeCompare(
+					b[sortBy] ?? "",
+					undefined,
+					{ sensitivity: "base", numeric: true },
+				);
 
 				return sortOrder === "asc" ? comparison : -comparison;
 			});
@@ -115,6 +126,7 @@ export function usePurchases(options: UsePurchasesOptions = {}) {
 		sortBy,
 		sortOrder,
 		handleSort,
+		archivePurchase,
 		removePurchase,
 	};
 }

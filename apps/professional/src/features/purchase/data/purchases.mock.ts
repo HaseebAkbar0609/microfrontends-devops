@@ -1,6 +1,13 @@
 import type { PurchaseRow } from "../types/purchase.types";
 
-/** Sample rows taken from the Figma frame for the purchase overview. */
+/**
+ * Sample rows taken from the Figma frame for the purchase overview.
+ *
+ * The `I49x` rows are archived and exist only to give the Arkiv tab something to
+ * show. They carry their own numbers rather than reusing `I500`-`I505`, because
+ * a row cannot be both archived and live and flipping an existing row would
+ * silently change this list.
+ */
 export const MOCK_PURCHASES: PurchaseRow[] = [
 	{
 		id: "I500",
@@ -11,6 +18,7 @@ export const MOCK_PURCHASES: PurchaseRow[] = [
 		type: "total",
 		category: "service",
 		status: "ongoing",
+		archived: false,
 	},
 	{
 		id: "I501",
@@ -21,6 +29,7 @@ export const MOCK_PURCHASES: PurchaseRow[] = [
 		type: "general",
 		category: "contracting",
 		status: "not_started",
+		archived: false,
 	},
 	{
 		id: "I502",
@@ -31,6 +40,7 @@ export const MOCK_PURCHASES: PurchaseRow[] = [
 		type: "running",
 		category: "running",
 		status: "not_started",
+		archived: false,
 	},
 	{
 		id: "I503",
@@ -41,6 +51,7 @@ export const MOCK_PURCHASES: PurchaseRow[] = [
 		type: "collaboration",
 		category: "service",
 		status: "ongoing",
+		archived: false,
 	},
 	{
 		id: "I504",
@@ -51,6 +62,7 @@ export const MOCK_PURCHASES: PurchaseRow[] = [
 		type: "total",
 		category: "contracting",
 		status: "ongoing",
+		archived: false,
 	},
 	{
 		id: "I505",
@@ -61,5 +73,39 @@ export const MOCK_PURCHASES: PurchaseRow[] = [
 		type: "general",
 		category: "service",
 		status: "ongoing",
+		archived: false,
+	},
+	{
+		id: "I490",
+		purchaseNo: "I490",
+		name: "Rivning etapp 1",
+		object: "Order OR001",
+		orderer: "Fastighetsbolag",
+		type: "total",
+		category: "contracting",
+		status: "completed",
+		archived: true,
+	},
+	{
+		id: "I491",
+		purchaseNo: "I491",
+		name: "Stambyte",
+		object: "Projekt 2024-08",
+		orderer: "Fastighetsbolag",
+		type: "general",
+		category: "service",
+		status: "completed",
+		archived: true,
+	},
+	{
+		id: "I492",
+		purchaseNo: "I492",
+		name: "Fasadputs",
+		object: "Order OR002",
+		orderer: "Fastighetsbolag",
+		type: "running",
+		category: "running",
+		status: "delayed",
+		archived: true,
 	},
 ];

@@ -2680,6 +2680,23 @@ export type OfferTranslation = {
 	purchaseGoodsNoAttachments: string;
 	purchaseGoodsDownload: string;
 	purchaseGoodsValidationPositive: string;
+	// Purchase - Archive
+	purchaseArchiveTabPurchases: string;
+	purchaseArchiveTabComplaints: string;
+	purchaseArchiveTabReceptions: string;
+	purchaseArchiveUnarchive: string;
+	purchaseArchiveNoPurchases: string;
+	purchaseArchiveNoComplaints: string;
+	purchaseArchiveNoReceptions: string;
+	purchaseRestoredToast: string;
+	purchaseComplaintRestoredToast: string;
+	purchaseGoodsReceptionRestoredToast: string;
+	purchaseArchivedToast: string;
+	purchaseDeletedToast: string;
+	purchaseArchiveDeleteTitle: string;
+	purchaseArchiveDeleteBody: string;
+	purchaseArchiveConfirmTitle: string;
+	purchaseArchiveConfirmBody: string;
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;

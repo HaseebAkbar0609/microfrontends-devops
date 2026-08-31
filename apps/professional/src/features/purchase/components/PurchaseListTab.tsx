@@ -14,6 +14,7 @@ import {
 	Plus,
 	Trash2,
 } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { PermissionGate } from "@/components/common/PermissionGate";
@@ -41,12 +42,15 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { showToast } from "@/lib/toast";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { PURCHASE_MODULE_BASE_URL } from "../data/purchaseNav.config";
 import { usePurchases, type PurchaseSortField } from "../hooks/usePurchases";
+import type { PurchaseRow } from "../types/purchase.types";
+import { ConfirmActionDialog } from "./archive/ConfirmActionDialog";
 import {
 	PurchaseCategoryBadge,
 	PurchaseStatusBadge,
@@ -83,8 +87,24 @@ export function PurchaseListTab() {
 		sortBy,
 		sortOrder,
 		handleSort,
+		archivePurchase,
 		removePurchase,
 	} = usePurchases();
+
+	const [pendingArchive, setPendingArchive] = useState<PurchaseRow | null>(
+		null,
+	);
+
+	/** Archiving moves the row to the Arkiv tab, so it confirms first. */
+	const handleConfirmArchive = () => {
+		if (!pendingArchive) return;
+		archivePurchase(pendingArchive.id);
+		showToast(
+			"success",
+			`${pendingArchive.purchaseNo} — ${t(localizationConstants.purchaseArchivedToast)}`,
+		);
+		setPendingArchive(null);
+	};
 
 	const renderSortIcon = (field: PurchaseSortField) => {
 		if (sortBy !== field) {
@@ -287,7 +307,12 @@ export function PurchaseListTab() {
 												className="w-36 rounded-md border border-slate-200 bg-white p-1 shadow-md"
 											>
 												<PermissionGate permission="EDIT_PURCHASE">
-													<DropdownMenuItem className="flex w-full cursor-pointer items-center gap-2 text-slate-700 hover:bg-slate-50">
+													<DropdownMenuItem
+														onClick={() =>
+															setPendingArchive(purchase)
+														}
+														className="flex w-full cursor-pointer items-center gap-2 text-slate-700 hover:bg-slate-50"
+													>
 														<Archive className="h-4 w-4 text-slate-500" />
 														<span>
 															<Translate
@@ -411,6 +436,20 @@ export function PurchaseListTab() {
 					</Button>
 				</div>
 			</div>
+
+			{/* Confirms before archiving; `archive` is the noun "Arkiv", so the
+			    action button uses the generic confirm verb. */}
+			<ConfirmActionDialog
+				open={pendingArchive !== null}
+				onOpenChange={(next) => {
+					if (!next) setPendingArchive(null);
+				}}
+				title={localizationConstants.purchaseArchiveConfirmTitle}
+				description={localizationConstants.purchaseArchiveConfirmBody}
+				confirmLabel={localizationConstants.confirmButton}
+				subject={pendingArchive?.purchaseNo}
+				onConfirm={handleConfirmArchive}
+			/>
 		</div>
 	);
 }
