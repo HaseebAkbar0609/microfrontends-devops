@@ -43,6 +43,9 @@ import { CreateRiskTemplatePage } from "../risk/CreateRiskTemplatePage";
 import { OpenRiskTemplatePage } from "../risk/OpenRiskTemplatePage";
 import { MOCK_RISK_TEMPLATES } from "../risk/RiskTemplateTable";
 import { CreateChecklistPage } from "./CreateChecklistPage";
+import { ChecklistTemplateTable, MOCK_CHECKLIST_TEMPLATES } from "./ChecklistTemplateTable";
+import { CreateChecklistTemplatePage } from "./CreateChecklistTemplatePage";
+import { OpenChecklistTemplatePage } from "./OpenChecklistTemplatePage";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -2965,7 +2968,9 @@ function QualityPlanTab({
 	onOpenRiskTemplate,
 	onOpenDoc,
 	onCreateChecklist,
-	onUseChecklistTemplate
+	onUseChecklistTemplate,
+	onOpenChecklistTemplate,
+	onCreateChecklistTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -2979,6 +2984,8 @@ function QualityPlanTab({
 	onOpenDoc: (doc: QualityDocument) => void;
 	onCreateChecklist: () => void;
 	onUseChecklistTemplate: () => void;
+	onOpenChecklistTemplate: (id: string) => void;
+	onCreateChecklistTemplate: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3097,7 +3104,7 @@ function QualityPlanTab({
 				) : planType === "checklistor" && viewMode === "mallar" ? (
 					<button
 						type="button"
-						onClick={onCreateChecklist}
+						onClick={onCreateChecklistTemplate}
 						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-4 w-4" />
@@ -3186,21 +3193,7 @@ function QualityPlanTab({
 				viewMode === "mallar" ? <RiskTemplateTable onOpenTemplate={onOpenRiskTemplate} /> : <RiskTable />
 			) : planType === "checklistor" ? (
 				viewMode === "mallar" ? (
-					<div className="flex flex-1 overflow-hidden">
-						<CategoryPanel
-							headerKey={localizationConstants.kmaQualityMainCat}
-							items={mainItems}
-							selectedId={selectedMainId}
-							onSelect={handleSelectMain}
-							searchKey={localizationConstants.kmaQualitySearchCategories}
-						/>
-						<KontrollplanTable
-							title={selectedMain?.label ?? ""}
-							onOpenPlan={onOpenPlan}
-							onOpenSandlista={onOpenSandlista}
-							onCreateTemplate={onCreateTemplate}
-						/>
-					</div>
+					<ChecklistTemplateTable onOpenTemplate={onOpenChecklistTemplate} />
 				) : (
 					<ChecklistTab onOpenDoc={onOpenDoc} onCreateChecklist={onCreateChecklist} />
 				)
@@ -3247,6 +3240,8 @@ export function QualitySystemPage() {
 	const [openRiskTemplateId, setOpenRiskTemplateId] = useState<string | null>(null);
 	const [createChecklistOpen, setCreateChecklistOpen] = useState(false);
 	const [createChecklistWithTemplate, setCreateChecklistWithTemplate] = useState(false);
+	const [createChecklistTemplateOpen, setCreateChecklistTemplateOpen] = useState(false);
+	const [openChecklistTemplateId, setOpenChecklistTemplateId] = useState<string | null>(null);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3308,6 +3303,17 @@ export function QualitySystemPage() {
 		}
 	}
 
+	if (createChecklistTemplateOpen) {
+		return <CreateChecklistTemplatePage onBack={() => setCreateChecklistTemplateOpen(false)} />;
+	}
+
+	if (openChecklistTemplateId) {
+		const tmpl = MOCK_CHECKLIST_TEMPLATES.find((t) => t.id === openChecklistTemplateId);
+		if (tmpl) {
+			return <OpenChecklistTemplatePage template={tmpl} onBack={() => setOpenChecklistTemplateId(null)} />;
+		}
+	}
+
 	if (openPlanOpen) {
 		return <OpenKontrollplanPage onBack={() => setOpenPlanOpen(false)} />;
 	}
@@ -3362,6 +3368,8 @@ export function QualitySystemPage() {
 					onOpenDoc={setOpenDoc}
 					onCreateChecklist={() => { setCreateChecklistWithTemplate(false); setCreateChecklistOpen(true); }}
 					onUseChecklistTemplate={() => { setCreateChecklistWithTemplate(true); setCreateChecklistOpen(true); }}
+					onOpenChecklistTemplate={(id) => setOpenChecklistTemplateId(id)}
+					onCreateChecklistTemplate={() => setCreateChecklistTemplateOpen(true)}
 				/>
 			)}
 		</div>

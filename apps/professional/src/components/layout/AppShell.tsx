@@ -10,6 +10,7 @@ import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
 import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
+import { MachineSubSidebar } from "./sidebar/MachineSubSidebar";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -127,6 +128,7 @@ export function AppShell({ children }: AppShellProps) {
 	const isAgreementPath = pathname.startsWith(
 		"/module/business-support/agreement",
 	);
+	const isMachinePath = pathname.startsWith("/module/production/machine");
 
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
@@ -135,6 +137,8 @@ export function AppShell({ children }: AppShellProps) {
 				<AgreementSubSidebar />
 			) : isCalculationDetailRoute ? (
 				<CalculationDetailSubSidebar calcId={calculationDetailId} />
+			) : isMachinePath ? (
+				<MachineSubSidebar />
 			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
