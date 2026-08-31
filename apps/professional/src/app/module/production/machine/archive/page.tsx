@@ -1,11 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ModulePageHeader } from "@/components/layout/navigation";
-import {
-	MACHINE_MODULE_TITLE,
-	machineBreadcrumbs,
-} from "@/features/machines/data/machineNav.config";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { machineBreadcrumbs } from "@/features/machines/data/machineNav.config";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -58,15 +55,16 @@ export default function MachineArchivePage() {
 	};
 
 	return (
-		<div className="flex min-h-screen flex-col bg-white">
-			<ModulePageHeader
-				title={MACHINE_MODULE_TITLE}
+		<div className="flex flex-1 flex-col bg-slate-50/50">
+			<PageHeader
+				title={localizationConstants.machineSidebarArchive}
 				breadcrumbs={machineBreadcrumbs(
-					localizationConstants.machineSidebarArchive
+					localizationConstants.machineSidebarArchive,
 				)}
+				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
-			<div className="px-8 py-6 space-y-6 max-w-[1600px] w-full">
+			<div className="px-6 pt-2 pb-8 space-y-6 max-w-[1600px] w-full overflow-y-auto">
 				<div className="flex items-center justify-between">
 					<div>
 						<h2 className="text-xl font-bold text-slate-900 tracking-tight">
