@@ -4940,6 +4940,151 @@ export type MachinePurchaseTranslation = {
 	machinePurchaseFieldMaskinInfo: string;
 };
 
+export type MachineDashboardTranslation = {
+	machineWidgetHealthTitle: string;
+	machineWidgetHealthScoreLabel: string;
+	machineWidgetHealthStatusGood: string;
+	machineWidgetHealthTrendLabel: string;
+	machineWidgetHealthEngine: string;
+	machineWidgetHealthEngineVal: string;
+	machineWidgetHealthHydraulics: string;
+	machineWidgetHealthHydraulicsVal: string;
+	machineWidgetHealthBattery: string;
+	machineWidgetHealthBatteryVal: string;
+	machineWidgetHealthDiagnoseCta: string;
+
+	machineWidgetOverviewTitle: string;
+	machineWidgetOverviewModel: string;
+	machineWidgetOverviewModelVal: string;
+	machineWidgetOverviewAssetId: string;
+	machineWidgetOverviewYear: string;
+	machineWidgetOverviewHours: string;
+	machineWidgetOverviewSite: string;
+	machineWidgetOverviewSiteVal: string;
+	machineWidgetOverviewDept: string;
+	machineWidgetOverviewDeptVal: string;
+	machineWidgetOverviewLastService: string;
+	machineWidgetOverviewNoteVal: string;
+	machineWidgetOverviewDetailsCta: string;
+
+	machineWidgetStatusTitle: string;
+	machineWidgetStatusRunning: string;
+	machineWidgetStatusRunningBadge: string;
+	machineWidgetStatusTelemetry: string;
+	machineWidgetStatusTelemetryVal: string;
+	machineWidgetStatusRpmLoad: string;
+	machineWidgetStatusRpmLoadVal: string;
+	machineWidgetStatusAlertsLabel: string;
+	machineWidgetStatusAlertFuel: string;
+	machineWidgetStatusAlertMaintenance: string;
+
+	machineWidgetFleetTitle: string;
+	machineWidgetFleetTotal: string;
+	machineWidgetFleetUnitPcs: string;
+	machineWidgetFleetActive: string;
+	machineWidgetFleetActiveVal: string;
+	machineWidgetFleetIdle: string;
+	machineWidgetFleetIdleVal: string;
+	machineWidgetFleetOffline: string;
+	machineWidgetFleetOfflineVal: string;
+	machineWidgetFleetDailyCost: string;
+	machineWidgetFleetCostVal: string;
+	machineWidgetFleetExcavators: string;
+	machineWidgetFleetExcavatorsVal: string;
+	machineWidgetFleetLoaders: string;
+	machineWidgetFleetLoadersVal: string;
+	machineWidgetFleetTrucks: string;
+	machineWidgetFleetTrucksVal: string;
+
+	machineWidgetUsageTitle: string;
+	machineWidgetUsageUtilization: string;
+	machineWidgetUsageUtilizationVal: string;
+	machineWidgetUsageOperatingHours: string;
+	machineWidgetUsageOperatingHoursVal: string;
+	machineWidgetUsageIdleHours: string;
+	machineWidgetUsageIdleHoursVal: string;
+	machineWidgetUsageFuel: string;
+	machineWidgetUsageFuelVal: string;
+	machineWidgetUsageTrendLabel: string;
+	machineWidgetUsageReportCta: string;
+
+	machineWidgetActivitiesTitle: string;
+	machineWidgetActivity1Title: string;
+	machineWidgetActivity1Meta: string;
+	machineWidgetActivity2Title: string;
+	machineWidgetActivity2Meta: string;
+	machineWidgetActivity3Title: string;
+	machineWidgetActivity3Meta: string;
+	machineWidgetActivity4Title: string;
+	machineWidgetActivity4Meta: string;
+	machineWidgetActivitiesLogCta: string;
+
+	machineWidgetGpsTitle: string;
+	machineWidgetGpsCoords: string;
+	machineWidgetGpsGeofence: string;
+	machineWidgetGpsGeofenceVal: string;
+	machineWidgetGpsLastMoved: string;
+	machineWidgetGpsLastMovedVal: string;
+	machineWidgetGpsAccuracy: string;
+	machineWidgetGpsAccuracyVal: string;
+	machineWidgetGpsLocationLabel: string;
+	machineWidgetGpsMapCta: string;
+
+	machineWidgetAiTitle: string;
+	machineWidgetAiInsightsHeader: string;
+	machineWidgetAiInsight1: string;
+	machineWidgetAiInsight2: string;
+	machineWidgetAiQuestionsHeader: string;
+	machineWidgetAiQuestion1: string;
+	machineWidgetAiQuestion2: string;
+	machineWidgetAiOpenCta: string;
+
+	machineWidgetRepairsTitle: string;
+	machineWidgetRepairsActive: string;
+	machineWidgetRepairsActiveVal: string;
+	machineWidgetRepairsItem1: string;
+	machineWidgetRepairsItem1Meta: string;
+	machineWidgetRepairsItem2: string;
+	machineWidgetRepairsItem2Meta: string;
+	machineWidgetRepairsUrgentBadge: string;
+	machineWidgetRepairsLastCompleted: string;
+	machineWidgetRepairsLastCompletedVal: string;
+	machineWidgetRepairsCreateCta: string;
+
+	machineWidgetBookingsTitle: string;
+	machineWidgetBookingsConflicts: string;
+	machineWidgetBookingsConflictNone: string;
+	machineWidgetBookingsItem1Title: string;
+	machineWidgetBookingsItem1Meta: string;
+	machineWidgetBookingsItem2Title: string;
+	machineWidgetBookingsItem2Meta: string;
+	machineWidgetBookingsCreateCta: string;
+
+	machineWidgetImageTitle: string;
+	machineWidgetImageCaption: string;
+	machineWidgetImageModelVal: string;
+	machineWidgetImageIdVal: string;
+	machineWidgetImageVerified: string;
+	machineWidgetImageUpdated: string;
+	machineWidgetImageUpdatedVal: string;
+
+	machineModalDiagnosticTitle: string;
+	machineModalDiagnosticDesc: string;
+	machineModalMapTitle: string;
+	machineModalMapDesc: string;
+	machineModalAiTitle: string;
+	machineModalAiPlaceholder: string;
+	machineModalAiSend: string;
+	machineModalRepairTitle: string;
+	machineModalRepairFieldDesc: string;
+	machineModalRepairPriority: string;
+	machineModalRepairSubmit: string;
+	machineModalBookingTitle: string;
+	machineModalBookingDate: string;
+	machineModalBookingProject: string;
+	machineModalBookingSubmit: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -4952,7 +5097,8 @@ export type Translation = HeaderTranslation &
 	OfferTranslation &
 	RegisterTranslation &
 	CommonTranslation &
-	MachinePurchaseTranslation;
+	MachinePurchaseTranslation &
+	MachineDashboardTranslation;
 
 export type TranslationKeys = keyof Translation;
 
