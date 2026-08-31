@@ -42,11 +42,15 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { PdfFileIcon } from "@/components/ui/PdfFileIcon";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
-import { MACHINE_PURCHASE_BASE_URL } from "@/features/machines/data/machineNav.config";
+import {
+	MACHINE_PURCHASE_BASE_URL,
+	machineBreadcrumbs,
+} from "@/features/machines/data/machineNav.config";
 import { usePurchaseList } from "./hooks/usePurchaseList";
 import type { PurchaseSortField } from "./types/purchase.types";
 import { showToast } from "@/lib/toast";
@@ -152,44 +156,17 @@ export function MachinePurchaseListPage() {
 	};
 
 	return (
-		<div className="flex flex-col min-h-screen bg-white">
-			{/* Top Header with border line */}
-			<div className="border-b border-slate-200 px-8 py-5">
-				<h1 className="text-2xl font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.machinePurchaseTitle} />
-				</h1>
-				<nav
-					className="flex items-center gap-1.5 text-xs text-slate-500 mt-1.5"
-					aria-label="Breadcrumb"
-				>
-					<Link
-						href="/dashboard"
-						className="hover:text-slate-900 transition-colors"
-					>
-						<Translate text={localizationConstants.home} />
-					</Link>
-					<span>&gt;</span>
-					<Link
-						href="/module"
-						className="hover:text-slate-900 transition-colors"
-					>
-						<Translate text={localizationConstants.moduleLabel} />
-					</Link>
-					<span>&gt;</span>
-					<Link
-						href="/module/production/machine"
-						className="hover:text-slate-900 transition-colors"
-					>
-						<Translate text={localizationConstants.machine} />
-					</Link>
-					<span>&gt;</span>
-					<span className="font-semibold text-slate-900">
-						<Translate text={localizationConstants.machinePurchaseBreadcrumb} />
-					</span>
-				</nav>
-			</div>
+		<div className="flex flex-1 flex-col bg-slate-50/50">
+			{/* Page Title with Breadcrumbs */}
+			<PageHeader
+				title={localizationConstants.machinePurchaseTitle}
+				breadcrumbs={machineBreadcrumbs(
+					localizationConstants.machinePurchaseBreadcrumb,
+				)}
+				className="border-b-0 px-6 pt-5 pb-2"
+			/>
 
-			<div className="px-8 py-6 space-y-5 max-w-[1600px] w-full">
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto max-w-[1600px] w-full">
 				{/* Top Category Filter Section */}
 				<div className="w-60 space-y-1.5">
 					<label className="text-xs font-semibold text-slate-900">
