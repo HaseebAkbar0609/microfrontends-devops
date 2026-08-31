@@ -8,7 +8,6 @@ import {
 	deletePurchaseItem,
 	archivePurchaseItem,
 	restorePurchaseItem,
-	getArchivedPurchases,
 } from "../data/purchase.mock";
 import type {
 	PurchaseItem,
