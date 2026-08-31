@@ -678,6 +678,8 @@ export type OfferTranslation = {
 	b2bArchiveViewOffer: string;
 	b2bArchiveViewRequest: string;
 	b2bArchiveRequests: string;
+	b2bArchiveInquiry: string;
+	b2bArchiveLowestQuote: string;
 	b2bArchiveCompanyNumber: string;
 	b2bArchiveOrgNr: string;
 	b2bArchiveWork: string;
@@ -4858,6 +4860,11 @@ export type CommonTranslation = {
 	b2bArchiveConfirmDesc: string;
 	b2bArchiveSuccessToast: string;
 	b2bArchiveErrorToast: string;
+	b2bRestoreConfirmTitle: string;
+	b2bRestoreConfirmDesc: string;
+	b2bDeletePermanentConfirmTitle: string;
+	b2bDeletePermanentConfirmDesc: string;
+	retry: string;
 };
 
 export type MachinePurchaseTranslation = {

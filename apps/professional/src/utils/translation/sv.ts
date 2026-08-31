@@ -577,9 +577,11 @@ export const svOffer: OfferTranslation = {
 	b2bDealEdit: "Redigera",
 	b2bDealArchiveAction: "Arkivera",
 	b2bDealDelete: "Radera",
-	b2bArchiveViewOffer: "Se Offerter",
-	b2bArchiveViewRequest: "Se Förfrågan",
+	b2bArchiveViewOffer: "Se offert",
+	b2bArchiveViewRequest: "Se förfrågan",
 	b2bArchiveRequests: "Förfrågningar",
+	b2bArchiveInquiry: "Förfrågan",
+	b2bArchiveLowestQuote: "Lägst offert",
 	b2bArchiveCompanyNumber: "Företagsnummer",
 	b2bArchiveOrgNr: "Organisationsnummer",
 	b2bArchiveWork: "Arbete",
@@ -4921,6 +4923,11 @@ export const svCommon: CommonTranslation = {
 	b2bArchiveConfirmDesc: "Är du säker på att du vill arkivera detta projekt?",
 	b2bArchiveSuccessToast: "Projektet har arkiverats",
 	b2bArchiveErrorToast: "Det gick inte att arkivera projektet",
+	b2bRestoreConfirmTitle: "Återställ projekt",
+	b2bRestoreConfirmDesc: "Är du säker på att du vill återställa detta projekt till aktivt?",
+	b2bDeletePermanentConfirmTitle: "Radera projekt permanent",
+	b2bDeletePermanentConfirmDesc: "Är du säker på att du vill radera detta projekt permanent? Denna åtgärd kan inte ångras.",
+	retry: "Försök igen",
 };
 
 export const svMachinePurchase: MachinePurchaseTranslation = {

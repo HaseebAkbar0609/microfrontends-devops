@@ -693,9 +693,11 @@ export const enOffer: OfferTranslation = {
 	b2bDealEdit: "Edit",
 	b2bDealArchiveAction: "Archive",
 	b2bDealDelete: "Delete",
-	b2bArchiveViewOffer: "View Offers",
-	b2bArchiveViewRequest: "View Request",
+	b2bArchiveViewOffer: "View quote",
+	b2bArchiveViewRequest: "View inquiry",
 	b2bArchiveRequests: "Requests",
+	b2bArchiveInquiry: "Inquiry.",
+	b2bArchiveLowestQuote: "Lowest quote",
 	b2bArchiveCompanyNumber: "Company Number",
 	b2bArchiveOrgNr: "Organization Number",
 	b2bArchiveWork: "Work",
@@ -3920,6 +3922,11 @@ export const enCommon: CommonTranslation = {
 	b2bArchiveConfirmDesc: "Are you sure you want to archive this project?",
 	b2bArchiveSuccessToast: "Project archived successfully",
 	b2bArchiveErrorToast: "Failed to archive project",
+	b2bRestoreConfirmTitle: "Restore Project",
+	b2bRestoreConfirmDesc: "Are you sure you want to restore this project to active?",
+	b2bDeletePermanentConfirmTitle: "Delete Project Permanently",
+	b2bDeletePermanentConfirmDesc: "Are you sure you want to permanently delete this project? This action cannot be undone.",
+	retry: "Retry",
 };
 
 export const enRegister: RegisterTranslation = {
