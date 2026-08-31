@@ -2719,6 +2719,22 @@ export const enOffer: OfferTranslation = {
 	purchaseArchiveDeleteBody: "The record is removed permanently. This action cannot be undone.",
 	purchaseArchiveConfirmTitle: "Archive purchase order?",
 	purchaseArchiveConfirmBody: "The purchase order moves to the Archive tab. You can restore it from there.",
+	// Purchase - Record lines
+	purchaseLineTabList: "Purchase list",
+	purchaseLineColPurchaseDate: "Purchase date",
+	purchaseLineColDeliveryDate: "Delivery date",
+	purchaseLineColEstimatedDelivery: "Estimated delivery",
+	purchaseLineColMonitoringDate: "Monitoring date",
+	purchaseLineColPurchase: "Purchase",
+	purchaseLineColMonitoring: "Monitoring",
+	purchaseLineStatusOrdered: "Ordered",
+	purchaseLineStatusInProgress: "In progress",
+	purchaseLineStatusDelivered: "Delivered",
+	purchaseLineStatusMonitoring: "Monitoring",
+	purchaseLineNoneFound: "No purchase lines found",
+	purchaseLineCreate: "New purchase",
+	purchaseLineArchivedToast: "Purchase line archived",
+	purchaseLineDeletedToast: "Purchase line deleted",
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Order overview",

@@ -2607,6 +2607,22 @@ export const svOffer: OfferTranslation = {
 	purchaseArchiveDeleteBody: "Posten tas bort permanent. Åtgärden kan inte ångras.",
 	purchaseArchiveConfirmTitle: "Arkivera inköpsorder?",
 	purchaseArchiveConfirmBody: "Inköpsordern flyttas till fliken Arkiv. Du kan återställa den därifrån.",
+	// Purchase - Record lines
+	purchaseLineTabList: "Inköps-lista",
+	purchaseLineColPurchaseDate: "Inköps datum",
+	purchaseLineColDeliveryDate: "Leveransdatum",
+	purchaseLineColEstimatedDelivery: "Beräknad leverans",
+	purchaseLineColMonitoringDate: "Bevakningsdatum",
+	purchaseLineColPurchase: "Inköp",
+	purchaseLineColMonitoring: "Bevakning",
+	purchaseLineStatusOrdered: "Beställd",
+	purchaseLineStatusInProgress: "Pågår",
+	purchaseLineStatusDelivered: "Levererad",
+	purchaseLineStatusMonitoring: "Bevakning",
+	purchaseLineNoneFound: "Inga inköpsrader hittades",
+	purchaseLineCreate: "Nytt inköp",
+	purchaseLineArchivedToast: "Inköpsrad arkiverad",
+	purchaseLineDeletedToast: "Inköpsrad borttagen",
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: "Orderöversikt",

@@ -8,9 +8,14 @@ export interface ArchivableRow {
 	archived: boolean;
 }
 
-export interface UseArchivedRowsOptions<T extends ArchivableRow> {
-	/** The full collection, live rows included; only archived ones are listed. */
+export interface UseArchivableRowsOptions<T extends ArchivableRow> {
+	/** The full collection; `archivedOnly` decides which half is listed. */
 	rows: T[];
+	/**
+	 * `true` lists archived rows (the Arkiv tab), `false` lists live ones (a
+	 * record's line list). Defaults to `true`.
+	 */
+	archivedOnly?: boolean;
 	/** Fields the search box matches against. */
 	searchFields: (row: T) => string[];
 	/**
@@ -25,24 +30,25 @@ export interface UseArchivedRowsOptions<T extends ArchivableRow> {
 }
 
 /**
- * List state for one Arkiv sub-tab: search, filter, tri-state sort, pagination,
- * restore and permanent delete.
+ * List state for any collection of rows carrying an `archived` flag: search,
+ * filter, tri-state sort, pagination, archive, restore and permanent delete.
  *
- * Written once for all three tabs rather than copied per entity — the three live
- * list hooks already duplicate this shape between them.
+ * Written once rather than copied per entity — it backs the three Arkiv sub-tabs
+ * and a purchase record's line list.
  *
- * Restore and delete mutate local state only. There is no purchase API, so a
- * restored row reappears on its live list only until the next navigation, when
- * the mock is read again. Flagged on the ticket.
+ * Mutations are local state only. There is no purchase API, so an archived or
+ * restored row reverts on the next navigation, when the mock is read again.
+ * Flagged on the ticket.
  */
-export function useArchivedRows<T extends ArchivableRow>({
+export function useArchivableRows<T extends ArchivableRow>({
 	rows,
+	archivedOnly = true,
 	searchFields,
 	sortValue,
 	defaultSortBy,
 	matchesFilter,
 	initialPageSize = 10,
-}: UseArchivedRowsOptions<T>) {
+}: UseArchivableRowsOptions<T>) {
 	const [allRows, setAllRows] = useState<T[]>(rows);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [filterValue, setFilterValue] = useState("all");
@@ -69,14 +75,23 @@ export function useArchivedRows<T extends ArchivableRow>({
 		[defaultSortBy],
 	);
 
-	/** Puts the row back on its live list. */
-	const restoreRow = useCallback((id: string) => {
+	const setArchived = useCallback((id: string, archived: boolean) => {
 		setAllRows((previous) =>
-			previous.map((row) =>
-				row.id === id ? { ...row, archived: false } : row,
-			),
+			previous.map((row) => (row.id === id ? { ...row, archived } : row)),
 		);
 	}, []);
+
+	/** Puts the row back on its live list. */
+	const restoreRow = useCallback(
+		(id: string) => setArchived(id, false),
+		[setArchived],
+	);
+
+	/** Moves the row to the Arkiv tab. */
+	const archiveRow = useCallback(
+		(id: string) => setArchived(id, true),
+		[setArchived],
+	);
 
 	/** Permanent, which is why the caller confirms first. */
 	const deleteRow = useCallback((id: string) => {
@@ -88,7 +103,7 @@ export function useArchivedRows<T extends ArchivableRow>({
 
 		return allRows
 			.filter((row) => {
-				if (!row.archived) return false;
+				if (row.archived !== archivedOnly) return false;
 
 				if (
 					query &&
@@ -122,6 +137,7 @@ export function useArchivedRows<T extends ArchivableRow>({
 			});
 	}, [
 		allRows,
+		archivedOnly,
 		searchQuery,
 		filterValue,
 		sortBy,
@@ -173,6 +189,7 @@ export function useArchivedRows<T extends ArchivableRow>({
 		sortOrder,
 		handleSort,
 		restoreRow,
+		archiveRow,
 		deleteRow,
 	};
 }

@@ -33,7 +33,7 @@ import {
 	PurchaseTypeBadge,
 } from "./PurchaseBadges";
 import { PurchaseGoodsDetailDrawer } from "./PurchaseGoodsDetailDrawer";
-import { ArchiveTab } from "./archive/ArchiveTab";
+import { ArchivableRowsTable } from "./shared/ArchivableRowsTable";
 
 /** The grey pill the sibling lists use for the Objekt column. */
 function ObjectPill({ value }: { value: string }) {
@@ -239,8 +239,8 @@ const ORDER_TYPE_RANK: Record<
  * The module's Arkiv tab: archived purchase orders, complaints and goods
  * receptions, each restorable or permanently deletable.
  *
- * The three tabs differ only in configuration — `ArchiveTab` holds the table,
- * toolbar, row menu and confirm step.
+ * The three tabs differ only in configuration — `ArchivableRowsTable` holds the
+ * table, toolbar, row menu and confirm step.
  */
 export function PurchaseArchivePage() {
 	const { t } = useTranslation();
@@ -284,8 +284,9 @@ export function PurchaseArchivePage() {
 						ariaLabel={t(localizationConstants.purchaseTabArchive)}
 					>
 						<TabsContent value="purchases" className="mt-4">
-							<ArchiveTab<PurchaseRow>
+							<ArchivableRowsTable<PurchaseRow>
 								rows={MOCK_PURCHASES}
+								mode="restore"
 								columns={PURCHASE_COLUMNS}
 								searchFields={(row) => [
 									row.purchaseNo,
@@ -315,7 +316,7 @@ export function PurchaseArchivePage() {
 								matchesFilter={(row, value) =>
 									row.status === value
 								}
-								restoredToast={
+								movedToast={
 									localizationConstants.purchaseRestoredToast
 								}
 								deletedToast={
@@ -325,8 +326,9 @@ export function PurchaseArchivePage() {
 						</TabsContent>
 
 						<TabsContent value="complaints" className="mt-4">
-							<ArchiveTab<PurchaseComplaintRow>
+							<ArchivableRowsTable<PurchaseComplaintRow>
 								rows={MOCK_PURCHASE_COMPLAINTS}
+								mode="restore"
 								columns={COMPLAINT_COLUMNS}
 								searchFields={(row) => [
 									row.complaintNo,
@@ -356,7 +358,7 @@ export function PurchaseArchivePage() {
 								matchesFilter={(row, value) =>
 									row.status === value
 								}
-								restoredToast={
+								movedToast={
 									localizationConstants.purchaseComplaintRestoredToast
 								}
 								deletedToast={
@@ -366,8 +368,9 @@ export function PurchaseArchivePage() {
 						</TabsContent>
 
 						<TabsContent value="receptions" className="mt-4">
-							<ArchiveTab<PurchaseGoodsReceptionRow>
+							<ArchivableRowsTable<PurchaseGoodsReceptionRow>
 								rows={MOCK_PURCHASE_GOODS_RECEPTIONS}
+								mode="restore"
 								columns={RECEPTION_COLUMNS}
 								searchFields={(row) => [
 									row.purchaseNo,
@@ -404,7 +407,7 @@ export function PurchaseArchivePage() {
 								matchesFilter={(row, value) =>
 									row.orderType === value
 								}
-								restoredToast={
+								movedToast={
 									localizationConstants.purchaseGoodsReceptionRestoredToast
 								}
 								deletedToast={

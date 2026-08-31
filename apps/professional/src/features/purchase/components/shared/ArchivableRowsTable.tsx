@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { RotateCcw, Trash2 } from "lucide-react";
+import { Archive, RotateCcw, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Search } from "@/components/search/Search";
@@ -26,17 +26,17 @@ import localizationConstants, {
 } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
-	useArchivedRows,
+	useArchivableRows,
 	type ArchivableRow,
-} from "../../hooks/useArchivedRows";
+} from "../../hooks/useArchivableRows";
 import { ConfirmActionDialog } from "./ConfirmActionDialog";
 
-export interface ArchiveFilterOption {
+export interface ArchivableFilterOption {
 	value: string;
 	label: TranslationKeys;
 }
 
-export interface ArchiveTabProps<T extends ArchivableRow> {
+export interface ArchivableRowsTableProps<T extends ArchivableRow> {
 	/** Full collection; the hook lists only the archived rows. */
 	rows: T[];
 	columns: DataTableColumn<T>[];
@@ -47,25 +47,37 @@ export interface ArchiveTabProps<T extends ArchivableRow> {
 	/** Human-readable identifier, used in toasts and the confirm dialog. */
 	rowLabel: (row: T) => string;
 	/**
-	 * Right-aligned "see details" cell. A render prop because the three tabs
-	 * differ: purchases and complaints link to a route, goods reception opens a
-	 * drawer (TFS-925 replaced its record route with one).
+	 * Right-aligned "see details" cell. A render prop because callers differ:
+	 * purchases and complaints link to a route, goods reception opens a drawer.
+	 * Omit it where the design draws a button with no destination.
 	 */
-	renderPrimaryAction: (row: T) => ReactNode;
-	restoredToast: TranslationKeys;
+	renderPrimaryAction?: (row: T) => ReactNode;
+	/**
+	 * `"restore"` lists archived rows and offers Avarkivera (the Arkiv tab);
+	 * `"archive"` lists live rows and offers Arkiv (a record's line list).
+	 */
+	mode?: "restore" | "archive";
+	/** Toast for the restore/archive action, whichever `mode` selects. */
+	movedToast: TranslationKeys;
 	deletedToast: TranslationKeys;
-	filterOptions?: ArchiveFilterOption[];
+	/** Right-hand slot in the toolbar, e.g. a create CTA. */
+	toolbarAction?: ReactNode;
+	filterOptions?: ArchivableFilterOption[];
 	matchesFilter?: (row: T, value: string) => boolean;
 }
 
 /**
- * One Arkiv sub-tab. All three differ only in their columns, search fields and
- * copy, so the table, toolbar, row menu and confirm step are written once here.
+ * A searchable, sortable, paginated table over rows carrying an `archived`
+ * flag, with a row menu and a confirmed delete.
+ *
+ * Backs the three Arkiv sub-tabs (`mode="restore"`) and a purchase record's
+ * line list (`mode="archive"`), which differ only in columns, copy and which
+ * direction the archive action moves a row.
  *
  * Uses the shared `DataTable`, which already brings the sticky action column,
  * sort icons, empty state and pagination the purchase lists hand-roll.
  */
-export function ArchiveTab<T extends ArchivableRow>({
+export function ArchivableRowsTable<T extends ArchivableRow>({
 	rows,
 	columns,
 	searchFields,
@@ -74,11 +86,13 @@ export function ArchiveTab<T extends ArchivableRow>({
 	emptyMessageKey,
 	rowLabel,
 	renderPrimaryAction,
-	restoredToast,
+	mode = "restore",
+	movedToast,
 	deletedToast,
 	filterOptions,
 	matchesFilter,
-}: ArchiveTabProps<T>) {
+	toolbarAction,
+}: ArchivableRowsTableProps<T>) {
 	const { t } = useTranslation();
 	const {
 		paginatedRows,
@@ -95,9 +109,11 @@ export function ArchiveTab<T extends ArchivableRow>({
 		sortOrder,
 		handleSort,
 		restoreRow,
+		archiveRow,
 		deleteRow,
-	} = useArchivedRows({
+	} = useArchivableRows({
 		rows,
+		archivedOnly: mode === "restore",
 		searchFields,
 		sortValue,
 		defaultSortBy,
@@ -117,12 +133,20 @@ export function ArchiveTab<T extends ArchivableRow>({
 	const actions: DataTableAction<T>[] = [];
 
 	if (canRestore) {
+		const restoring = mode === "restore";
 		actions.push({
-			label: localizationConstants.purchaseArchiveUnarchive,
-			icon: <RotateCcw className="h-4 w-4 text-slate-500" />,
+			label: restoring
+				? localizationConstants.purchaseArchiveUnarchive
+				: localizationConstants.archive,
+			icon: restoring ? (
+				<RotateCcw className="h-4 w-4 text-slate-500" />
+			) : (
+				<Archive className="h-4 w-4 text-slate-500" />
+			),
 			onClick: (row) => {
-				restoreRow(row.id);
-				showToast("success", `${rowLabel(row)} — ${t(restoredToast)}`);
+				if (restoring) restoreRow(row.id);
+				else archiveRow(row.id);
+				showToast("success", `${rowLabel(row)} — ${t(movedToast)}`);
 			},
 		});
 	}
@@ -187,6 +211,12 @@ export function ArchiveTab<T extends ArchivableRow>({
 							</SelectContent>
 						</Select>
 					)}
+
+					{toolbarAction && (
+						<div className="flex w-full justify-start sm:ml-auto sm:w-auto sm:justify-end">
+							{toolbarAction}
+						</div>
+					)}
 				</div>
 
 				<div className="mt-5">
@@ -230,4 +260,4 @@ export function ArchiveTab<T extends ArchivableRow>({
 	);
 }
 
-export default ArchiveTab;
+export default ArchivableRowsTable;

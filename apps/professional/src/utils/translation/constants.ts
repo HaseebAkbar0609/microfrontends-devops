@@ -2699,6 +2699,22 @@ export type OfferTranslation = {
 	purchaseArchiveDeleteBody: string;
 	purchaseArchiveConfirmTitle: string;
 	purchaseArchiveConfirmBody: string;
+	// Purchase - Record lines
+	purchaseLineTabList: string;
+	purchaseLineColPurchaseDate: string;
+	purchaseLineColDeliveryDate: string;
+	purchaseLineColEstimatedDelivery: string;
+	purchaseLineColMonitoringDate: string;
+	purchaseLineColPurchase: string;
+	purchaseLineColMonitoring: string;
+	purchaseLineStatusOrdered: string;
+	purchaseLineStatusInProgress: string;
+	purchaseLineStatusDelivered: string;
+	purchaseLineStatusMonitoring: string;
+	purchaseLineNoneFound: string;
+	purchaseLineCreate: string;
+	purchaseLineArchivedToast: string;
+	purchaseLineDeletedToast: string;
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;
