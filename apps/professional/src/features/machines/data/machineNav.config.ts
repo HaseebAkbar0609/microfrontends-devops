@@ -1,5 +1,5 @@
-import type { ModuleTabItem } from "@/components/layout/navigation";
 import type { BreadcrumbItem } from "@/types/common";
+import type { RouteTabItem } from "@/types/navigation";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -24,8 +24,19 @@ export function machineDashboardBreadcrumbs(): BreadcrumbItem[] {
 	];
 }
 
-import type { RouteTabItem } from "@/types/navigation";
+/**
+ * `Home > Modul > Maskin > Section` breadcrumb for Machine subpages.
+ */
+export function machineBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
+	return [
+		{ label: localizationConstants.home, href: "/dashboard" },
+		{ label: localizationConstants.moduleLabel },
+		{ label: localizationConstants.machine, href: MACHINE_MODULE_BASE_URL },
+		{ label: section },
+	];
+}
 
+/** Primary tab row for the Machine module. */
 export const MACHINE_MODULE_TABS: RouteTabItem[] = [
 	{
 		id: "dashboard",
@@ -57,47 +68,5 @@ export const MACHINE_MODULE_TABS: RouteTabItem[] = [
 		id: "archive",
 		labelKey: localizationConstants.machineSidebarArchive,
 		href: "/module/production/machine/archive",
-	},
-];
-
-/**
- * `Home > Modul > Maskin > Section` breadcrumb for Machine subpages.
- */
-export function machineBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
-	return [
-		{ label: localizationConstants.home, href: "/dashboard" },
-		{ label: localizationConstants.moduleLabel },
-		{ label: localizationConstants.machine, href: MACHINE_MODULE_BASE_URL },
-		{ label: section },
-	];
-}
-
-/** Primary tab row for the Machine module. */
-export const MACHINE_MODULE_TABS: ModuleTabItem[] = [
-	{
-		id: "machine-dashboard",
-		labelKey: localizationConstants.machineSidebarDashboard,
-		href: MACHINE_MODULE_BASE_URL,
-		exact: true,
-	},
-	{
-		id: "machine-overview",
-		labelKey: localizationConstants.machineSidebarOverview,
-		href: MACHINE_OVERVIEW_BASE_URL,
-	},
-	{
-		id: "machine-handling",
-		labelKey: localizationConstants.machineSidebarHandling,
-		href: MACHINE_HANDLING_BASE_URL,
-	},
-	{
-		id: "machine-statistics",
-		labelKey: localizationConstants.machineSidebarStatistics,
-		href: MACHINE_STATISTICS_BASE_URL,
-	},
-	{
-		id: "machine-purchase",
-		labelKey: localizationConstants.machineSidebarPurchase,
-		href: MACHINE_PURCHASE_BASE_URL,
 	},
 ];
