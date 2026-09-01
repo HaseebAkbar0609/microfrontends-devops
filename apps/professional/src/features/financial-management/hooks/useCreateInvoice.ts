@@ -9,6 +9,7 @@ import {
 	InvoiceLineItem,
 	PaymentPlanItem,
 	TimeReportItem,
+	InvoiceAttachment,
 } from "../types/createInvoice.types";
 
 const INITIAL_LINE_ITEMS: InvoiceLineItem[] = [
@@ -18,10 +19,10 @@ const INITIAL_LINE_ITEMS: InvoiceLineItem[] = [
 		description: "Aconto 3",
 		quantity: 10,
 		unit: "tim",
-		unitPrice: 750,
+		unitPrice: 1000,
 		subtotal: 10000,
 		handlingType: "discount",
-		handlingPercentage: 5,
+		handlingPercentage: 10,
 		adjustmentAmount: -1000,
 		total: 9000,
 		costCenter: "10",
@@ -93,9 +94,9 @@ const INITIAL_TIME_REPORTS: TimeReportItem[] = [
 		workHours: 5,
 		unit: "tim",
 		ataHours: 20,
-		totalHours: 8,
+		totalHours: 25,
 		costCenter: "10",
-		comments: "",
+		comments: "Monterat elcentral och kablage",
 	},
 	{
 		id: "tr-2",
@@ -104,9 +105,26 @@ const INITIAL_TIME_REPORTS: TimeReportItem[] = [
 		workHours: 8,
 		unit: "tim",
 		ataHours: 15,
-		totalHours: 6,
+		totalHours: 23,
 		costCenter: "10",
-		comments: "",
+		comments: "VVS-installation och rördragning",
+	},
+];
+
+const INITIAL_ATTACHMENTS: InvoiceAttachment[] = [
+	{
+		id: "att-1",
+		name: "Tidrapport_Kv_Solen_Vecka_6.pdf",
+		size: "2.4 MB",
+		uploadDate: "2026-02-13",
+		type: "application/pdf",
+	},
+	{
+		id: "att-2",
+		name: "Materialkvitto_Ahlsell_10492.pdf",
+		size: "840 KB",
+		uploadDate: "2026-02-14",
+		type: "application/pdf",
 	},
 ];
 
@@ -143,7 +161,7 @@ export function useCreateInvoice() {
 		lineItems: INITIAL_LINE_ITEMS,
 		paymentPlanItems: INITIAL_PAYMENT_PLANS,
 		timeReportItems: INITIAL_TIME_REPORTS,
-		attachments: [],
+		attachments: INITIAL_ATTACHMENTS,
 
 		comments:
 			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries",
@@ -235,7 +253,7 @@ export function useCreateInvoice() {
 			invoiceNo: String(1000 + formData.paymentPlanItems.length + 1),
 			date: new Date().toISOString().split("T")[0],
 			description: "",
-			quantity: 0,
+			quantity: 1,
 			unit: "tim",
 			unitPrice: 0,
 			withheld: 0,
@@ -249,6 +267,18 @@ export function useCreateInvoice() {
 		}));
 	}, [formData.paymentPlanItems.length]);
 
+	const updatePaymentPlanRow = useCallback(
+		(id: string, updates: Partial<PaymentPlanItem>) => {
+			setFormData((prev) => ({
+				...prev,
+				paymentPlanItems: prev.paymentPlanItems.map((item) =>
+					item.id === id ? { ...item, ...updates } : item,
+				),
+			}));
+		},
+		[],
+	);
+
 	const removePaymentPlanRow = useCallback((id: string) => {
 		setFormData((prev) => ({
 			...prev,
@@ -261,11 +291,11 @@ export function useCreateInvoice() {
 		const newTR: TimeReportItem = {
 			id: `tr-${Date.now()}`,
 			date: new Date().toISOString().split("T")[0],
-			employee: "",
-			workHours: 0,
+			employee: "Kalle Andersson",
+			workHours: 8,
 			unit: "tim",
 			ataHours: 0,
-			totalHours: 0,
+			totalHours: 8,
 			costCenter: "10",
 			comments: "",
 		};
@@ -275,6 +305,27 @@ export function useCreateInvoice() {
 		}));
 	}, []);
 
+	const updateTimeReportRow = useCallback(
+		(id: string, updates: Partial<TimeReportItem>) => {
+			setFormData((prev) => ({
+				...prev,
+				timeReportItems: prev.timeReportItems.map((item) => {
+					if (item.id !== id) return item;
+					const merged = { ...item, ...updates };
+					const work = Number(merged.workHours) || 0;
+					const ata = Number(merged.ataHours) || 0;
+					return {
+						...merged,
+						workHours: work,
+						ataHours: ata,
+						totalHours: work + ata,
+					};
+				}),
+			}));
+		},
+		[],
+	);
+
 	const removeTimeReportRow = useCallback((id: string) => {
 		setFormData((prev) => ({
 			...prev,
@@ -282,7 +333,38 @@ export function useCreateInvoice() {
 		}));
 	}, []);
 
-	// Calculations summary
+	// Attachment actions
+	const addAttachments = useCallback((files: FileList | File[]) => {
+		const newAttachments: InvoiceAttachment[] = Array.from(files).map((file) => {
+			const sizeInKb = file.size / 1024;
+			const sizeStr =
+				sizeInKb > 1024
+					? `${(sizeInKb / 1024).toFixed(1)} MB`
+					: `${Math.round(sizeInKb)} KB`;
+			return {
+				id: `att-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+				name: file.name,
+				size: sizeStr,
+				uploadDate: new Date().toISOString().split("T")[0],
+				type: file.type || "application/octet-stream",
+			};
+		});
+
+		setFormData((prev) => ({
+			...prev,
+			attachments: [...prev.attachments, ...newAttachments],
+		}));
+		toast.success(`${newAttachments.length} fil(er) har laddats upp`);
+	}, []);
+
+	const removeAttachment = useCallback((id: string) => {
+		setFormData((prev) => ({
+			...prev,
+			attachments: prev.attachments.filter((a) => a.id !== id),
+		}));
+	}, []);
+
+	// Calculations summary with dynamic calculation
 	const calculations = useMemo(() => {
 		let delsumma = 0;
 		let totalDiscount = 0;
@@ -301,8 +383,8 @@ export function useCreateInvoice() {
 		});
 
 		const totalExclVat = delsumma + totalDiscount + totalMarkup + totalRotRut;
-		const vatAmount = 33750; // Standard Swedish 25% tax as in Figma
-		const attErhalla = 203300; // Total payable as in Figma
+		const vatAmount = Math.round(totalExclVat * 0.25);
+		const attErhalla = totalExclVat + vatAmount;
 
 		return {
 			delsumma,
@@ -315,7 +397,7 @@ export function useCreateInvoice() {
 		};
 	}, [formData.lineItems]);
 
-	// Time report totals matching Figma (13 + 35 = 48 tim)
+	// Time report totals matching sum
 	const timeReportTotals = useMemo(() => {
 		let totalWork = 0;
 		let totalAta = 0;
@@ -337,9 +419,13 @@ export function useCreateInvoice() {
 	}, [router, t]);
 
 	const handleSendInvoice = useCallback(() => {
+		if (formData.lineItems.length === 0) {
+			toast.error("Vänligen lägg till minst en fakturarad innan du skickar.");
+			return;
+		}
 		toast.success(t(localizationConstants.createInvoiceSendSuccessToast));
 		router.push("/module/financial-management/invoice");
-	}, [router, t]);
+	}, [formData.lineItems.length, router, t]);
 
 	const handleCancel = useCallback(() => {
 		router.push("/module/financial-management/invoice");
@@ -356,9 +442,13 @@ export function useCreateInvoice() {
 		updateLineItem,
 		removeLineItem,
 		addPaymentPlanRow,
+		updatePaymentPlanRow,
 		removePaymentPlanRow,
 		addTimeReportRow,
+		updateTimeReportRow,
 		removeTimeReportRow,
+		addAttachments,
+		removeAttachment,
 		calculations,
 		timeReportTotals,
 		handleSaveDraft,

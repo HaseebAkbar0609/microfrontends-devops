@@ -1,36 +1,44 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import { UploadCloud, FileText, Trash2, CheckCircle2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { InvoiceAttachment } from "../../types/createInvoice.types";
 
-export function InvoiceAttachmentsTab() {
-	const [attachments, setAttachments] = useState<InvoiceAttachment[]>([
-		{
-			id: "att-1",
-			name: "Tidrapport_Kv_Solen_Vecka_6.pdf",
-			size: "2.4 MB",
-			uploadDate: "2026-02-13",
-			type: "application/pdf",
-		},
-		{
-			id: "att-2",
-			name: "Materialkvitto_Ahlsell_10492.pdf",
-			size: "840 KB",
-			uploadDate: "2026-02-14",
-			type: "application/pdf",
-		},
-	]);
+interface InvoiceAttachmentsTabProps {
+	attachments: InvoiceAttachment[];
+	onAddAttachments: (files: FileList | File[]) => void;
+	onRemoveAttachment: (id: string) => void;
+}
 
-	const removeAttachment = (id: string) => {
-		setAttachments((prev) => prev.filter((a) => a.id !== id));
+export function InvoiceAttachmentsTab({
+	attachments,
+	onAddAttachments,
+	onRemoveAttachment,
+}: InvoiceAttachmentsTabProps) {
+	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+		if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+			onAddAttachments(e.dataTransfer.files);
+		}
+	};
+
+	const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+		e.preventDefault();
+	};
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0) {
+			onAddAttachments(e.target.files);
+		}
 	};
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-6 space-y-6">
+		<div className="bg-white rounded-lg border border-slate-200 p-6 space-y-6">
 			<div>
 				<h3 className="text-sm font-semibold text-slate-900 mb-1">
 					<Translate text={localizationConstants.createInvoiceAttachUploadTitle} />
@@ -40,8 +48,22 @@ export function InvoiceAttachmentsTab() {
 				</p>
 			</div>
 
+			{/* Hidden file input */}
+			<input
+				type="file"
+				multiple
+				ref={fileInputRef}
+				onChange={handleFileChange}
+				className="hidden"
+			/>
+
 			{/* Dropzone */}
-			<div className="border-2 border-dashed border-slate-200 rounded-lg p-8 text-center hover:border-slate-300 transition-colors bg-slate-50/50 cursor-pointer">
+			<div
+				onClick={() => fileInputRef.current?.click()}
+				onDrop={handleDrop}
+				onDragOver={handleDragOver}
+				className="border-2 border-dashed border-slate-200 rounded-lg p-8 text-center hover:border-slate-400 transition-colors bg-slate-50/50 cursor-pointer"
+			>
 				<UploadCloud className="mx-auto h-10 w-10 text-slate-400 mb-3" />
 				<p className="text-xs font-medium text-slate-700 mb-1">
 					<Translate text={localizationConstants.createInvoiceAttachDropzone} />
@@ -78,7 +100,10 @@ export function InvoiceAttachmentsTab() {
 									<Button
 										variant="ghost"
 										size="icon"
-										onClick={() => removeAttachment(file.id)}
+										onClick={(e) => {
+											e.stopPropagation();
+											onRemoveAttachment(file.id);
+										}}
 										className="h-7 w-7 text-slate-400 hover:text-red-600 cursor-pointer"
 									>
 										<Trash2 className="h-3.5 w-3.5" />

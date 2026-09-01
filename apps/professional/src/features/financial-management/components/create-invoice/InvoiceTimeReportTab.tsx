@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Trash2 } from "lucide-react";
+import React, { useState } from "react";
+import { Trash2, MessageSquare } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -17,7 +17,21 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import { CreateInvoiceFormData } from "../../types/createInvoice.types";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogFooter,
+} from "@/components/ui/dialog";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
+import { CreateInvoiceFormData, TimeReportItem } from "../../types/createInvoice.types";
 
 interface InvoiceTimeReportTabProps {
 	formData: CreateInvoiceFormData;
@@ -26,6 +40,7 @@ interface InvoiceTimeReportTabProps {
 		value: CreateInvoiceFormData[K],
 	) => void;
 	onAddRow: () => void;
+	onUpdateRow: (id: string, updates: Partial<TimeReportItem>) => void;
 	onRemoveRow: (id: string) => void;
 	totals: {
 		totalWork: number;
@@ -38,9 +53,25 @@ export function InvoiceTimeReportTab({
 	formData,
 	updateField,
 	onAddRow,
+	onUpdateRow,
 	onRemoveRow,
 	totals,
 }: InvoiceTimeReportTabProps) {
+	const [activeCommentItem, setActiveCommentItem] = useState<TimeReportItem | null>(null);
+	const [commentText, setCommentText] = useState("");
+
+	const handleOpenComment = (item: TimeReportItem) => {
+		setActiveCommentItem(item);
+		setCommentText(item.comments || "");
+	};
+
+	const handleSaveComment = () => {
+		if (activeCommentItem) {
+			onUpdateRow(activeCommentItem.id, { comments: commentText });
+			setActiveCommentItem(null);
+		}
+	};
+
 	return (
 		<div className="space-y-5">
 			{/* Top Header Card */}
@@ -173,34 +204,74 @@ export function InvoiceTimeReportTab({
 						<TableBody>
 							{formData.timeReportItems.map((tr) => (
 								<TableRow key={tr.id} className="border-b border-slate-200 hover:bg-slate-50/50">
-									<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
-										{tr.date}
+									<TableCell className="py-2 px-3 border-r border-slate-200">
+										<Input
+											type="date"
+											value={tr.date}
+											onChange={(e) => onUpdateRow(tr.id, { date: e.target.value })}
+											className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none bg-transparent"
+										/>
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
-										{tr.employee}
+									<TableCell className="py-2 px-3 border-r border-slate-200">
+										<Input
+											value={tr.employee}
+											onChange={(e) => onUpdateRow(tr.id, { employee: e.target.value })}
+											className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none font-normal"
+										/>
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs font-semibold text-slate-900 text-center bg-[#e6f4ea] border-r border-slate-200">
-										{tr.workHours}
+									<TableCell className="py-2 px-3 text-center bg-[#e6f4ea] border-r border-slate-200">
+										<Input
+											type="number"
+											value={tr.workHours}
+											onChange={(e) =>
+												onUpdateRow(tr.id, { workHours: Number(e.target.value) })
+											}
+											className="h-8 text-xs border-0 focus-visible:ring-0 text-center shadow-none font-semibold text-slate-900 bg-transparent"
+										/>
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs text-slate-700 border-r border-slate-200">
-										{tr.unit}
+									<TableCell className="py-2 px-3 border-r border-slate-200">
+										<Select
+											value={tr.unit}
+											onValueChange={(val) => onUpdateRow(tr.id, { unit: val })}
+										>
+											<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent shadow-none">
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent className="bg-white">
+												<SelectItem value="tim">tim</SelectItem>
+												<SelectItem value="dagar">dagar</SelectItem>
+											</SelectContent>
+										</Select>
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs text-slate-700 text-center border-r border-slate-200">
-										{tr.ataHours}
+									<TableCell className="py-2 px-3 text-center border-r border-slate-200">
+										<Input
+											type="number"
+											value={tr.ataHours}
+											onChange={(e) =>
+												onUpdateRow(tr.id, { ataHours: Number(e.target.value) })
+											}
+											className="h-8 text-xs border-0 focus-visible:ring-0 text-center shadow-none bg-transparent"
+										/>
 									</TableCell>
 									<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 text-center border-r border-slate-200">
 										{tr.totalHours}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs text-slate-700 text-center border-r border-slate-200">
-										{tr.costCenter}
+									<TableCell className="py-2 px-3 border-r border-slate-200">
+										<Input
+											value={tr.costCenter}
+											onChange={(e) => onUpdateRow(tr.id, { costCenter: e.target.value })}
+											className="h-8 text-xs border-0 focus-visible:ring-0 text-center shadow-none bg-transparent"
+										/>
 									</TableCell>
 									<TableCell className="py-2 px-3 text-center border-r border-slate-200">
 										<Button
+											type="button"
 											variant="outline"
 											size="sm"
+											onClick={() => handleOpenComment(tr)}
 											className="h-7 text-[11px] px-3 border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer bg-slate-50 font-normal rounded-md"
 										>
-											lägga till kommentarer
+											{tr.comments ? "Redigera kommentar" : "lägga till kommentarer"}
 										</Button>
 									</TableCell>
 									<TableCell className="py-2 px-2 text-center">
@@ -269,6 +340,35 @@ export function InvoiceTimeReportTab({
 					className="text-xs border-slate-200 resize-y bg-white rounded-md"
 				/>
 			</div>
+
+			{/* Row Comment Modal */}
+			<Dialog open={!!activeCommentItem} onOpenChange={(open) => !open && setActiveCommentItem(null)}>
+				<DialogContent className="max-w-md bg-white">
+					<DialogHeader>
+						<DialogTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+							<MessageSquare className="h-4 w-4" />
+							Kommentar för {activeCommentItem?.employee} ({activeCommentItem?.date})
+						</DialogTitle>
+					</DialogHeader>
+					<div className="py-2">
+						<Textarea
+							rows={4}
+							value={commentText}
+							onChange={(e) => setCommentText(e.target.value)}
+							placeholder="Skriv anteckningar för detta arbetspass..."
+							className="text-xs"
+						/>
+					</div>
+					<DialogFooter>
+						<Button variant="outline" size="sm" onClick={() => setActiveCommentItem(null)}>
+							Avbryt
+						</Button>
+						<Button size="sm" onClick={handleSaveComment} className="bg-slate-900 text-white">
+							Spara kommentar
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

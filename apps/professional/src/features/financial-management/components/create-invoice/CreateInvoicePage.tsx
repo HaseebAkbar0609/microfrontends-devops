@@ -29,9 +29,13 @@ export function CreateInvoicePage() {
 		updateLineItem,
 		removeLineItem,
 		addPaymentPlanRow,
+		updatePaymentPlanRow,
 		removePaymentPlanRow,
 		addTimeReportRow,
+		updateTimeReportRow,
 		removeTimeReportRow,
+		addAttachments,
+		removeAttachment,
 		calculations,
 		timeReportTotals,
 		handleSaveDraft,
@@ -64,7 +68,7 @@ export function CreateInvoicePage() {
 					</div>
 				</div>
 
-				{/* Level-2 Tabs Header matching Figma */}
+				{/* Level-2 Tabs Header */}
 				<div className="mt-4 border-b border-slate-200">
 					<Tabs
 						value={activeTab}
@@ -105,11 +109,12 @@ export function CreateInvoicePage() {
 						<InvoicePaymentPlanTable
 							items={formData.paymentPlanItems}
 							onAddRow={addPaymentPlanRow}
+							onUpdateRow={updatePaymentPlanRow}
 							onRemoveRow={removePaymentPlanRow}
 						/>
 
 						{/* Comment Box */}
-						<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5 mb-6">
+						<div className="bg-white rounded-lg border border-slate-200 p-5 mb-6">
 							<h3 className="text-sm font-semibold text-slate-900 mb-1">
 								<Translate text={localizationConstants.createInvoiceCommentTitle} />
 							</h3>
@@ -121,7 +126,7 @@ export function CreateInvoicePage() {
 								value={formData.comments}
 								onChange={(e) => updateField("comments", e.target.value)}
 								placeholder="Skriv kommentar här..."
-								className="text-xs border-slate-200 resize-y bg-white"
+								className="text-xs border-slate-200 resize-y bg-white rounded-md"
 							/>
 						</div>
 					</div>
@@ -132,12 +137,19 @@ export function CreateInvoicePage() {
 						formData={formData}
 						updateField={updateField}
 						onAddRow={addTimeReportRow}
+						onUpdateRow={updateTimeReportRow}
 						onRemoveRow={removeTimeReportRow}
 						totals={timeReportTotals}
 					/>
 				)}
 
-				{activeTab === "underlag" && <InvoiceAttachmentsTab />}
+				{activeTab === "underlag" && (
+					<InvoiceAttachmentsTab
+						attachments={formData.attachments}
+						onAddAttachments={addAttachments}
+						onRemoveAttachment={removeAttachment}
+					/>
+				)}
 
 				{/* Actions Bar matching Figma */}
 				<div className="flex items-center justify-end gap-3 pt-4 pb-8">

@@ -12,24 +12,30 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { PaymentPlanItem } from "../../types/createInvoice.types";
 
 interface InvoicePaymentPlanTableProps {
 	items: PaymentPlanItem[];
 	onAddRow: () => void;
+	onUpdateRow: (id: string, updates: Partial<PaymentPlanItem>) => void;
 	onRemoveRow: (id: string) => void;
 }
 
 export function InvoicePaymentPlanTable({
 	items,
 	onAddRow,
+	onUpdateRow,
 	onRemoveRow,
 }: InvoicePaymentPlanTableProps) {
-	const formatNum = (num: number) => {
-		return num.toLocaleString("sv-SE");
-	};
-
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 p-5 mb-5">
 			<h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-3 mb-4">
@@ -76,35 +82,93 @@ export function InvoicePaymentPlanTable({
 					<TableBody>
 						{items.map((row) => (
 							<TableRow key={row.id} className="border-b border-slate-200 hover:bg-slate-50/50">
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
-									{row.invoiceNo}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										value={row.invoiceNo}
+										onChange={(e) => onUpdateRow(row.id, { invoiceNo: e.target.value })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 border-r border-slate-200">
-									{row.date}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										type="date"
+										value={row.date}
+										onChange={(e) => onUpdateRow(row.id, { date: e.target.value })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none bg-transparent"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
-									{row.description}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										value={row.description}
+										onChange={(e) => onUpdateRow(row.id, { description: e.target.value })}
+										placeholder="Beskrivning..."
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
-									{row.quantity}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										type="number"
+										value={row.quantity}
+										onChange={(e) => onUpdateRow(row.id, { quantity: Number(e.target.value) })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 border-r border-slate-200">
-									{row.unit}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Select
+										value={row.unit}
+										onValueChange={(val) => onUpdateRow(row.id, { unit: val })}
+									>
+										<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent shadow-none">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent className="bg-white">
+											<SelectItem value="tim">tim</SelectItem>
+											<SelectItem value="styck">styck</SelectItem>
+											<SelectItem value="st">st</SelectItem>
+											<SelectItem value="mån">mån</SelectItem>
+											<SelectItem value="km">km</SelectItem>
+										</SelectContent>
+									</Select>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
-									{formatNum(row.unitPrice)}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										type="number"
+										value={row.unitPrice}
+										onChange={(e) => onUpdateRow(row.id, { unitPrice: Number(e.target.value) })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
-									{formatNum(row.withheld)}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										type="number"
+										value={row.withheld}
+										onChange={(e) => onUpdateRow(row.id, { withheld: Number(e.target.value) })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 text-left border-r border-slate-200">
-									{formatNum(row.amount)}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										type="number"
+										value={row.amount}
+										onChange={(e) => onUpdateRow(row.id, { amount: Number(e.target.value) })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none font-medium text-slate-800"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
-									{formatNum(row.paid)}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										type="number"
+										value={row.paid}
+										onChange={(e) => onUpdateRow(row.id, { paid: Number(e.target.value) })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
+									/>
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
-									{formatNum(row.cost)}
+								<TableCell className="py-2 px-3 border-r border-slate-200">
+									<Input
+										type="number"
+										value={row.cost}
+										onChange={(e) => onUpdateRow(row.id, { cost: Number(e.target.value) })}
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
+									/>
 								</TableCell>
 								<TableCell className="py-2 px-2 text-center">
 									<Button
