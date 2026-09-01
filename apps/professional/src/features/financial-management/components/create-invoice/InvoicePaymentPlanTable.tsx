@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -31,7 +31,7 @@ export function InvoicePaymentPlanTable({
 	};
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5 mb-5">
+		<div className="bg-white rounded-lg border border-slate-200 p-5 mb-5">
 			<h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-3 mb-4">
 				<Translate text={localizationConstants.createInvoicePaymentPlanTitle} />
 			</h3>
@@ -123,14 +123,13 @@ export function InvoicePaymentPlanTable({
 			</div>
 
 			<div className="pt-4">
-				<Button
-					variant="outline"
+				<button
+					type="button"
 					onClick={onAddRow}
-					className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer bg-white"
+					className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 				>
-					<Plus className="h-3.5 w-3.5" />
-					<Translate text={localizationConstants.createInvoiceAddRow} />
-				</Button>
+					+ Ny rad
+				</button>
 			</div>
 		</div>
 	);

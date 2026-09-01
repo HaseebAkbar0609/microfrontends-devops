@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -51,46 +51,46 @@ export function InvoiceLineItemsTable({
 	};
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5 mb-5 overflow-hidden">
-			{/* Table */}
+		<div className="bg-white rounded-lg border border-slate-200 p-5 mb-5 overflow-hidden">
+			{/* Table with visible light border grid matching Figma */}
 			<div className="w-full overflow-x-auto">
 				<Table className="w-full min-w-[1050px] border-collapse border border-slate-200">
 					<TableHeader>
 						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColArticle} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 min-w-[160px] border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 min-w-[160px] border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColDesc} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColQty} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColUnit} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColPrice} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColSubtotal} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-28 border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColHandling} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 text-left border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-20 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColPercent} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColAdjustment} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColTotal} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 text-left border-r border-slate-200">
+							<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-20 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColKS} />
 							</TableHead>
-							<TableHead className="py-2.5 px-2 w-12 text-center" />
+							<TableHead className="py-2 px-2 w-12 text-center" />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -101,7 +101,7 @@ export function InvoiceLineItemsTable({
 									<Input
 										value={row.articleId}
 										onChange={(e) => onUpdateItem(row.id, { articleId: e.target.value })}
-										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
 									/>
 								</TableCell>
 
@@ -111,7 +111,7 @@ export function InvoiceLineItemsTable({
 										value={row.description}
 										onChange={(e) => onUpdateItem(row.id, { description: e.target.value })}
 										placeholder="Beskrivning..."
-										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
 									/>
 								</TableCell>
 
@@ -121,7 +121,7 @@ export function InvoiceLineItemsTable({
 										type="number"
 										value={row.quantity}
 										onChange={(e) => onUpdateItem(row.id, { quantity: Number(e.target.value) })}
-										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
 									/>
 								</TableCell>
 
@@ -131,7 +131,7 @@ export function InvoiceLineItemsTable({
 										value={row.unit}
 										onValueChange={(val) => onUpdateItem(row.id, { unit: val })}
 									>
-										<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent">
+										<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent shadow-none">
 											<SelectValue />
 										</SelectTrigger>
 										<SelectContent className="bg-white">
@@ -151,7 +151,7 @@ export function InvoiceLineItemsTable({
 										type="number"
 										value={row.unitPrice}
 										onChange={(e) => onUpdateItem(row.id, { unitPrice: Number(e.target.value) })}
-										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
 									/>
 								</TableCell>
 
@@ -168,7 +168,7 @@ export function InvoiceLineItemsTable({
 											onUpdateItem(row.id, { handlingType: val as HandlingType })
 										}
 									>
-										<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent">
+										<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent shadow-none">
 											<SelectValue />
 										</SelectTrigger>
 										<SelectContent className="bg-white">
@@ -191,7 +191,7 @@ export function InvoiceLineItemsTable({
 											const val = Number(e.target.value.replace(/[^0-9]/g, "")) || 0;
 											onUpdateItem(row.id, { handlingPercentage: val });
 										}}
-										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
 									/>
 								</TableCell>
 
@@ -210,7 +210,7 @@ export function InvoiceLineItemsTable({
 									<Input
 										value={row.costCenter}
 										onChange={(e) => onUpdateItem(row.id, { costCenter: e.target.value })}
-										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
+										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
 									/>
 								</TableCell>
 
@@ -233,14 +233,14 @@ export function InvoiceLineItemsTable({
 
 			{/* Add Row Button & Financial Summary */}
 			<div className="pt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-				<Button
-					variant="outline"
+				{/* Dashed button matching Figma Image 3 */}
+				<button
+					type="button"
 					onClick={onAddItem}
-					className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer bg-white"
+					className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 				>
-					<Plus className="h-3.5 w-3.5" />
-					<Translate text={localizationConstants.createInvoiceAddRow} />
-				</Button>
+					+ Ny rad
+				</button>
 
 				{/* Financial Calculation Breakdown Box matching Figma layout */}
 				<div className="w-full sm:w-80 text-xs space-y-1.5 text-right pr-2">
