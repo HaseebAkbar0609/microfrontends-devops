@@ -927,6 +927,35 @@ export type OfferTranslation = {
 	b2bAvtalPlaceholderByggbolaget: string;
 	b2bAvtalPlaceholderKalleEmail: string;
 	b2bAvtalPlaceholderKalleMobil: string;
+	b2bAvtalStepHeaderTitle: string;
+	b2bAvtalStepHeaderSubtext: string;
+	b2bAvtalHandlerSelfTitle: string;
+	b2bAvtalHandlerSelfDesc: string;
+	b2bAvtalHandlerCompanyTitle: string;
+	b2bAvtalHandlerCompanyDesc: string;
+	b2bAvtalHandlerOtherTitle: string;
+	b2bAvtalHandlerOtherDesc: string;
+	b2bAvtalContactSectionTitle: string;
+	b2bAvtalContactPersonLabel: string;
+	b2bAvtalContactPersonPlaceholder: string;
+	b2bAvtalEmailPlaceholder: string;
+	b2bAvtalValidationSelectHandler: string;
+	b2bAvtalValidationContactPerson: string;
+	b2bAvtalValidationEmailRequired: string;
+	b2bAvtalValidationEmailInvalid: string;
+	b2bAvtalStepDetails: string;
+	b2bAvtalStepHandler: string;
+	b2bAvtalStepReview: string;
+	b2bAvtalReviewSummary: string;
+	b2bAvtalReviewHandlerInfo: string;
+	b2bAvtalSuccessCreated: string;
+	b2bPMSelectCompanyModalTitle: string;
+	b2bPMSelectCompanyModalDesc: string;
+	b2bPMSelectCompanyModalPlaceholder: string;
+	b2bAvtalSkrivUt: string;
+	b2bAvtalTotalOffert: string;
+	b2bAvtalStatusOpen: string;
+	b2bAvtalStatusOpened: string;
 	// Calculation - Dashboard
 	calcOverview: string;
 	// Calculation - Overview (list)

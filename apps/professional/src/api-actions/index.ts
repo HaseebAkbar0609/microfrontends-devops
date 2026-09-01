@@ -87,3 +87,13 @@ export {
   getProjectMarketListAction,
   getProjectMarketDetailAction,
 } from "./b2b/projectMarket";
+
+export {
+  getB2BAgreementDetailAction,
+  createB2BAgreementAction,
+  sendB2BAgreementAction,
+  uploadB2BAgreementFileAction,
+  downloadB2BAgreementDocAction,
+  downloadB2BAgreementTemplatesAction,
+} from "./b2b/agreements";
+

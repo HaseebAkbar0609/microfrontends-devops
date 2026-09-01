@@ -13,6 +13,7 @@ import {
   Download,
   Eye,
   File,
+  FolderOpen,
   Info,
   LayoutList,
   Map,
@@ -20,7 +21,7 @@ import {
   MoreVertical,
   PenTool,
   PencilLine,
-  Send,
+  Printer,
   UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -40,7 +41,6 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { B2BAgreementDetail } from "../types/agreement";
 import { useB2BAgreements } from "../hooks/useB2BAgreements";
 import { getAgreementDetailByContext } from "../constants/agreementMock";
-import { B2BDocumentPreviewModal, PreviewableDoc } from "./B2BDocumentPreviewModal";
 
 function AccordionSection({
   title,
@@ -126,8 +126,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
     return initialData;
   }, [queryProjectId, queryOfferId, initialData]);
 
-  const { isSubmitting, handleSendAgreement, handleDownloadDoc } = useB2BAgreements(data);
-  const [previewDoc, setPreviewDoc] = useState<PreviewableDoc | null>(null);
+  const { isSubmitting, handleDownloadDoc } = useB2BAgreements(data);
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
 
@@ -255,7 +254,25 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
               </div>
             </AccordionSection>
 
-            {/* Accordion 2: Kontaktperson */}
+            {/* Accordion 2: Kunduppgifter (Second client block from Figma) */}
+            <AccordionSection
+              title={t(localizationConstants.b2bAvtalSectionKunduppgifter)}
+              icon={<UserPlus className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
+            >
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12">
+                <InfoItem label={t(localizationConstants.b2bAvtalKund)} value={data.client.kund} />
+                <InfoItem label={t(localizationConstants.b2bAvtalAdress)} value={data.client.adress} />
+                <InfoItem label={t(localizationConstants.b2bAvtalPostNr)} value={data.client.postNr} />
+                <InfoItem label={t(localizationConstants.b2bAvtalOrt)} value={data.client.ort} />
+                <InfoItem label={t(localizationConstants.b2bAvtalEmail)} value={data.client.email} />
+                <InfoItem label={t(localizationConstants.b2bAvtalTelefon)} value={data.client.telefon} />
+                <div className="sm:col-span-2">
+                  <InfoItem label={t(localizationConstants.b2bAvtalOrgNr)} value={data.client.orgNr} />
+                </div>
+              </div>
+            </AccordionSection>
+
+            {/* Accordion 3: Kontaktperson */}
             <AccordionSection
               title={t(localizationConstants.b2bAvtalSectionKontaktperson)}
               icon={<CircleUserRound className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
@@ -435,7 +452,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-36 rounded-lg bg-white p-1 shadow-lg border border-[#E5E5E5]">
                               <DropdownMenuItem
-                                onClick={() => setPreviewDoc(doc)}
+                                onClick={() => handleDownloadDoc(doc.label)}
                                 className="flex items-center gap-2 text-xs text-slate-800 cursor-pointer"
                               >
                                 <Eye size={14} />
@@ -525,13 +542,24 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                   {data.projectInfo.municipality}
                 </span>
               </div>
+              <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
+                <span className="font-medium text-slate-500">{t(localizationConstants.status)}</span>
+                <span
+                  style={{ background: "var(--color-bg-success-strong, #059669)" }}
+                  className="inline-flex items-center gap-1.5 rounded-[8px] px-2.5 py-1 text-xs font-medium text-white shadow-xs"
+                >
+                  <FolderOpen size={13} className="shrink-0 text-white" aria-hidden={true} />
+                  {t(localizationConstants.b2bAvtalStatusOpened)}
+                </span>
+              </div>
+
               <p className="mt-2 text-xs text-slate-500">
                 {t(localizationConstants.b2bDealCreatedDate)}: {data.projectInfo.postedDate}
               </p>
 
               <div className="mt-3 flex items-baseline justify-between">
                 <span className="text-xs font-medium text-slate-500">
-                  <Translate text={localizationConstants.b2bArchiveTotalOffer} />
+                  <Translate text={localizationConstants.b2bArchiveTotalOffer} />:
                 </span>
                 <span className="text-base font-bold tabular-nums text-slate-900">
                   {formatCurrency(data.projectInfo.totalOffert)}
@@ -549,14 +577,14 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                   onClick={() => router.back()}
                   className="h-10 w-full cursor-pointer rounded-lg bg-zinc-100 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors shadow-none"
                 >
-                  {t(localizationConstants.cancel)}
+                  {t(localizationConstants.b2bAvtalAvbryt)}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
                   onClick={() =>
                     router.push(
-                      `/module/business/b2b/agreements/create?projectId=${data.projectInfo.refNr || queryProjectId || "1"}&offerId=${queryOfferId || "1"}`
+                      `/module/business/b2b/overview`
                     )
                   }
                   className="h-10 w-full cursor-pointer gap-2 border border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 transition-colors rounded-lg shadow-2xs"
@@ -567,23 +595,17 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                 <Button
                   type="button"
                   disabled={isSubmitting}
-                  onClick={() => handleSendAgreement(data.id)}
-                  className="h-10 w-full cursor-pointer gap-2 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs"
+                  onClick={() => window.print()}
+                  className="h-11 w-full cursor-pointer gap-2 bg-slate-950 text-sm font-semibold text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs flex items-center justify-center"
                 >
-                  <Send size={15} aria-hidden={true} />
-                  <span>{t(localizationConstants.b2bAvtalSkicka)}</span>
+                  <Printer size={15} aria-hidden={true} />
+                  <span>{t(localizationConstants.b2bAvtalSkrivUt)}</span>
                 </Button>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <B2BDocumentPreviewModal
-        document={previewDoc}
-        onClose={() => setPreviewDoc(null)}
-        onDownload={handleDownloadDoc}
-      />
     </div>
   );
 }

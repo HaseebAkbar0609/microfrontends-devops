@@ -1,12 +1,12 @@
-import { B2BCreateAgreementView } from "@/features/b2b/components/B2BCreateAgreementView";
+import { B2BContractDetailView } from "@/features/b2b/components/B2BContractDetailView";
 import { getAgreementDetailByContext } from "@/features/b2b/constants/agreementMock";
 
 interface Props {
-  searchParams: Promise<{ projectId?: string; offerId?: string }>;
+  searchParams?: Promise<{ projectId?: string; offerId?: string }>;
 }
 
 export default async function B2BCreateAgreementPage({ searchParams }: Props) {
   const params = await searchParams;
-  const initialData = getAgreementDetailByContext(params?.projectId, params?.offerId);
-  return <B2BCreateAgreementView data={initialData} />;
+  const initialData = getAgreementDetailByContext(params?.projectId || "1", params?.offerId || "1");
+  return <B2BContractDetailView initialData={initialData} />;
 }
