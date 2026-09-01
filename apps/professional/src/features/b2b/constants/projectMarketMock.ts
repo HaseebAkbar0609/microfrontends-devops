@@ -262,3 +262,22 @@ export const DUMMY_PROJECT_DETAIL: ProjectMarketDetail = {
     },
   ],
 };
+
+export function getMockProjectDetail(id: string): ProjectMarketDetail {
+  const proj = DUMMY_PROJECTS.find((p) => p.id === id);
+  if (!proj) return DUMMY_PROJECT_DETAIL;
+  return {
+    ...DUMMY_PROJECT_DETAIL,
+    id: proj.id,
+    refNr: proj.refNr,
+    title: proj.project,
+    type: proj.type,
+    municipality: proj.municipality,
+    lowestOfferValue: proj.lowestOffer,
+    projectInfo: {
+      ...DUMMY_PROJECT_DETAIL.projectInfo,
+      projectName: proj.project,
+      projectNr: proj.refNr,
+    },
+  };
+}

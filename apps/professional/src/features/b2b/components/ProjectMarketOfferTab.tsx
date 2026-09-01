@@ -311,7 +311,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                       </TableCell>
                       <TableCell
                         className="whitespace-nowrap px-4 py-3.5 text-right"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       >
                         <Button
                           size="sm"
@@ -327,7 +327,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                       </TableCell>
                       <TableCell
                         className="w-12 whitespace-nowrap border-l border-slate-200 px-2 py-3.5 text-center"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       >
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

@@ -246,7 +246,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
               <Input
                 placeholder={t(localizationConstants.search)}
                 value={search}
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setSearch(e.target.value);
                   setPage(1);
                 }}
