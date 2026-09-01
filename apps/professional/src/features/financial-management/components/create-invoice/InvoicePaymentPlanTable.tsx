@@ -47,34 +47,34 @@ export function InvoicePaymentPlanTable({
 					<TableHeader>
 						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
-								Invoice nr
+								<Translate text={localizationConstants.createInvoicePaymentColInvoiceNo} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 border-r border-slate-200">
-								Datum
+								<Translate text={localizationConstants.createInvoicePaymentColDate} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 min-w-[160px] border-r border-slate-200">
-								Beskrivning
+								<Translate text={localizationConstants.createInvoicePaymentColDesc} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
-								Deb. Antal
+								<Translate text={localizationConstants.createInvoicePaymentColQty} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 border-r border-slate-200">
-								Enhet
+								<Translate text={localizationConstants.createInvoicePaymentColUnit} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
-								Pris / styck
+								<Translate text={localizationConstants.createInvoicePaymentColUnitPrice} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
-								Innehållet
+								<Translate text={localizationConstants.createInvoicePaymentColWithheld} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
-								Belopp
+								<Translate text={localizationConstants.createInvoicePaymentColAmount} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
-								Betalt
+								<Translate text={localizationConstants.createInvoicePaymentColPaid} />
 							</TableHead>
 							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
-								Kost
+								<Translate text={localizationConstants.createInvoicePaymentColCost} />
 							</TableHead>
 							<TableHead className="py-2.5 px-2 w-12 text-center" />
 						</TableRow>
@@ -192,7 +192,7 @@ export function InvoicePaymentPlanTable({
 					onClick={onAddRow}
 					className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 				>
-					+ Ny rad
+					+ <Translate text={localizationConstants.createInvoiceAddRow} />
 				</button>
 			</div>
 		</div>

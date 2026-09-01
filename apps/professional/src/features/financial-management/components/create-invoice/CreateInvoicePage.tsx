@@ -151,7 +151,7 @@ export function CreateInvoicePage() {
 					/>
 				)}
 
-				{/* Actions Bar matching Figma */}
+				{/* Actions Bar matching Figma specs */}
 				<div className="flex items-center justify-end gap-3 pt-4 pb-8">
 					<Button
 						variant="outline"
@@ -161,13 +161,18 @@ export function CreateInvoicePage() {
 						<Translate text={localizationConstants.createInvoiceBtnCancel} />
 					</Button>
 
-					<Button
-						onClick={() => setPreviewOpen(true)}
-						className="h-9 px-4 text-xs font-normal bg-[#18181b] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
-					>
-						<Eye className="h-3.5 w-3.5" />
-						<span>förhandsvisning</span>
-					</Button>
+					{/* Preview button is only shown in Tab 1 (Översikt) in Figma */}
+					{activeTab === "oversikt" && (
+						<Button
+							onClick={() => setPreviewOpen(true)}
+							className="h-9 px-4 text-xs font-normal bg-[#18181b] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
+						>
+							<Eye className="h-3.5 w-3.5" />
+							<span>
+								<Translate text={localizationConstants.createInvoiceBtnPreview} />
+							</span>
+						</Button>
+					)}
 
 					<Button
 						onClick={handleSaveDraft}

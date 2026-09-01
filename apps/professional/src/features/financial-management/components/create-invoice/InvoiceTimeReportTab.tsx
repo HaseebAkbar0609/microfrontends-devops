@@ -145,10 +145,10 @@ export function InvoiceTimeReportTab({
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4">
 						<div className="lg:col-span-2">
 							<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
-								kund
+								<Translate text={localizationConstants.createInvoiceFieldCustomer} />
 							</Label>
 							<Input
-								value="David Gilmour"
+								value={formData.customer}
 								onChange={(e) => updateField("customer", e.target.value)}
 								className="h-9 border-slate-200 text-xs text-slate-800 bg-white rounded-md"
 							/>
@@ -156,7 +156,7 @@ export function InvoiceTimeReportTab({
 
 						<div className="lg:col-span-2">
 							<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
-								Objekt nr
+								<Translate text={localizationConstants.createInvoiceFieldProjectNumber} />
 							</Label>
 							<Input
 								value={formData.projectNumber}
@@ -271,7 +271,11 @@ export function InvoiceTimeReportTab({
 											onClick={() => handleOpenComment(tr)}
 											className="h-7 text-[11px] px-3 border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer bg-slate-50 font-normal rounded-md"
 										>
-											{tr.comments ? "Redigera kommentar" : "lägga till kommentarer"}
+											{tr.comments ? (
+												"Redigera kommentar"
+											) : (
+												<Translate text={localizationConstants.createInvoiceTimeColAddComment} />
+											)}
 										</Button>
 									</TableCell>
 									<TableCell className="py-2 px-2 text-center">
@@ -296,7 +300,7 @@ export function InvoiceTimeReportTab({
 						onClick={onAddRow}
 						className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 					>
-						+ Add
+						+ <Translate text={localizationConstants.createInvoiceAddRow} />
 					</button>
 
 					{/* Time Totals Summary Box matching Figma */}

@@ -86,7 +86,9 @@ export function InvoiceHeaderForm({ formData, updateField }: InvoiceHeaderFormPr
 								onCheckedChange={(checked) => updateField("attachTimeReport", !!checked)}
 								className="data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 rounded-xs h-4 w-4"
 							/>
-							<span>Bifoga tidrapp...</span>
+							<span>
+								<Translate text={localizationConstants.createInvoiceAttachTimeReport} />
+							</span>
 						</label>
 
 						<label className="flex items-center gap-2 text-xs font-normal text-slate-700 cursor-pointer select-none">

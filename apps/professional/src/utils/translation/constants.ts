@@ -5292,6 +5292,16 @@ export type InvoiceTranslation = {
 	createInvoiceCalcTax: string;
 	createInvoiceCalcPayable: string;
 	createInvoicePaymentPlanTitle: string;
+	createInvoicePaymentColInvoiceNo: string;
+	createInvoicePaymentColDate: string;
+	createInvoicePaymentColDesc: string;
+	createInvoicePaymentColQty: string;
+	createInvoicePaymentColUnit: string;
+	createInvoicePaymentColUnitPrice: string;
+	createInvoicePaymentColWithheld: string;
+	createInvoicePaymentColAmount: string;
+	createInvoicePaymentColPaid: string;
+	createInvoicePaymentColCost: string;
 	createInvoiceCommentTitle: string;
 	createInvoiceCommentPlaceholder: string;
 	createInvoiceBtnCancel: string;
