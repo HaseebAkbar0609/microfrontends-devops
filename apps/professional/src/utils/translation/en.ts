@@ -2127,6 +2127,7 @@ export const enOffer: OfferTranslation = {
 	kmaActionPlanTemplateNameCol: "Action plan",
 	kmaActionPlanTemplateUseBtn: "Use",
 	kmaActionPlanUseTemplate: "Select template",
+	kmaActionPlanMallarTableTitle: "Action plan templates",
 	kmaControlPlanOpenTitle: "Open new control plan",
 	kmaControlPlanGeneralInfo: "General information",
 	kmaControlPlanNameLabel: "Name",
