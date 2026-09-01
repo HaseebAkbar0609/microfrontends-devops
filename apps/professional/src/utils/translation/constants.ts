@@ -5325,8 +5325,29 @@ export type InvoiceTranslation = {
 	createInvoiceAttachUploadTitle: string;
 	createInvoiceAttachUploadDesc: string;
 	createInvoiceAttachDropzone: string;
+	createInvoiceAttachFilesCount: string;
 	createInvoiceSaveSuccess: string;
 	createInvoiceSendSuccessToast: string;
+	createInvoiceModalPrint: string;
+	createInvoiceModalInvoice: string;
+	createInvoiceModalInvoiceNo: string;
+	createInvoiceModalDate: string;
+	createInvoiceModalDueDate: string;
+	createInvoiceModalOCR: string;
+	createInvoiceModalBillTo: string;
+	createInvoiceModalProjectInfo: string;
+	createInvoiceModalPricingModel: string;
+	createInvoiceModalRotRut: string;
+	createInvoiceModalPaymentTerms: string;
+	createInvoiceModalNotes: string;
+	createInvoiceModalBankgiro: string;
+	createInvoiceModalPlusgiro: string;
+	createInvoiceModalInterest: string;
+	createInvoiceModalFtax: string;
+	createInvoiceTimeEditComment: string;
+	createInvoiceTimeCommentDialogTitle: string;
+	createInvoiceTimeCommentDialogPlaceholder: string;
+	createInvoiceTimeCommentDialogSave: string;
 };
 
 export type Translation = HeaderTranslation &

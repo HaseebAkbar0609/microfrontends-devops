@@ -192,7 +192,7 @@ export function InvoicePaymentPlanTable({
 					onClick={onAddRow}
 					className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 				>
-					+ <Translate text={localizationConstants.createInvoiceAddRow} />
+					<Translate text={localizationConstants.createInvoiceAddRow} />
 				</button>
 			</div>
 		</div>

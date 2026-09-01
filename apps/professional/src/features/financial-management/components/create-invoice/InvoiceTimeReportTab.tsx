@@ -272,7 +272,7 @@ export function InvoiceTimeReportTab({
 											className="h-7 text-[11px] px-3 border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer bg-slate-50 font-normal rounded-md"
 										>
 											{tr.comments ? (
-												"Redigera kommentar"
+												<Translate text={localizationConstants.createInvoiceTimeEditComment} />
 											) : (
 												<Translate text={localizationConstants.createInvoiceTimeColAddComment} />
 											)}
@@ -300,7 +300,7 @@ export function InvoiceTimeReportTab({
 						onClick={onAddRow}
 						className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 					>
-						+ <Translate text={localizationConstants.createInvoiceAddRow} />
+						<Translate text={localizationConstants.createInvoiceAddRow} />
 					</button>
 
 					{/* Time Totals Summary Box matching Figma */}
@@ -351,7 +351,9 @@ export function InvoiceTimeReportTab({
 					<DialogHeader>
 						<DialogTitle className="text-sm font-semibold text-slate-900 flex items-center gap-2">
 							<MessageSquare className="h-4 w-4" />
-							Kommentar för {activeCommentItem?.employee} ({activeCommentItem?.date})
+							<span>
+								<Translate text={localizationConstants.createInvoiceTimeCommentDialogTitle} />: {activeCommentItem?.employee} ({activeCommentItem?.date})
+							</span>
 						</DialogTitle>
 					</DialogHeader>
 					<div className="py-2">
@@ -365,10 +367,10 @@ export function InvoiceTimeReportTab({
 					</div>
 					<DialogFooter>
 						<Button variant="outline" size="sm" onClick={() => setActiveCommentItem(null)}>
-							Avbryt
+							<Translate text={localizationConstants.createInvoiceBtnCancel} />
 						</Button>
 						<Button size="sm" onClick={handleSaveComment} className="bg-slate-900 text-white">
-							Spara kommentar
+							<Translate text={localizationConstants.createInvoiceTimeCommentDialogSave} />
 						</Button>
 					</DialogFooter>
 				</DialogContent>

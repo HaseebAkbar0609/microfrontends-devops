@@ -75,7 +75,7 @@ export function InvoiceAttachmentsTab({
 			{attachments.length > 0 && (
 				<div className="space-y-2.5">
 					<h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
-						Bifogade filer ({attachments.length})
+						<Translate text={localizationConstants.createInvoiceAttachFilesCount} /> ({attachments.length})
 					</h4>
 					<div className="space-y-2">
 						{attachments.map((file) => (
