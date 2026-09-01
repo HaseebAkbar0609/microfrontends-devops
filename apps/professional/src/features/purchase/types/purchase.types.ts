@@ -276,3 +276,50 @@ export interface PurchaseContactPerson {
 	city: string;
 	role: string;
 }
+
+/**
+ * The Calculation card on a purchase's Information section. Every field is a
+ * display string; absent values are stored empty and dashed at render.
+ */
+export interface PurchaseCalculationInfo {
+	calculationNo: string;
+	orderer: string;
+	quoteDate: string;
+	type: string;
+	quoteAmount: string;
+	category: string;
+	status: PurchaseStatus;
+}
+
+/** The Quote card. */
+export interface PurchaseQuoteInfo {
+	idNo: string;
+	job: string;
+	date: string;
+	type: string;
+	inquiry: string;
+	municipality: string;
+	category: string;
+}
+
+/** The Order card. */
+export interface PurchaseOrderInfo {
+	orderNo: string;
+	orderName: string;
+	customer: string;
+	type: string;
+	status: string;
+	telephone: string;
+	orderAmount: string;
+	projectManager: string;
+	startDate: string;
+	endDate: string;
+}
+
+/** Everything the record's Information section shows, for one purchase. */
+export interface PurchaseInformation {
+	purchaseId: string;
+	calculation: PurchaseCalculationInfo;
+	quote: PurchaseQuoteInfo;
+	order: PurchaseOrderInfo;
+}

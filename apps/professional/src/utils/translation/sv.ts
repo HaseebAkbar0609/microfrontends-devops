@@ -2665,6 +2665,13 @@ export const svOffer: OfferTranslation = {
 	purchaseOrderValidationRequired: "Detta fält är obligatoriskt",
 	purchaseOrderValidationQuantity: "Ange ett tal större än 0",
 	purchaseOrderUnavailable: "Inte tillgängligt ännu",
+	// Purchase - Record information
+	purchaseInfoQuoteDate: "Offert datum",
+	purchaseInfoQuoteAmount: "Offert summa",
+	purchaseInfoIdNo: "ID-nr",
+	purchaseInfoOrderAmount: "Orderbelopp",
+	purchaseInfoNone: "Ingen information registrerad",
+	purchaseInfoTab: "Information",
 	purchaseOrderNewLineAria: "Lägg till specifikationsrad",
 	purchaseOrderRemoveLineAria: "Ta bort specifikationsrad",
 

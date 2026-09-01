@@ -2777,6 +2777,13 @@ export const enOffer: OfferTranslation = {
 	purchaseOrderValidationRequired: "This field is required",
 	purchaseOrderValidationQuantity: "Enter a number greater than 0",
 	purchaseOrderUnavailable: "Not available yet",
+	// Purchase - Record information
+	purchaseInfoQuoteDate: "Quote date",
+	purchaseInfoQuoteAmount: "Quote amount",
+	purchaseInfoIdNo: "ID no.",
+	purchaseInfoOrderAmount: "Order amount",
+	purchaseInfoNone: "No information recorded",
+	purchaseInfoTab: "Information",
 	purchaseOrderNewLineAria: "Add specification row",
 	purchaseOrderRemoveLineAria: "Remove specification row",
 
