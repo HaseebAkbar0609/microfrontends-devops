@@ -398,7 +398,7 @@ export function B2BArchiveOfferDetailView({ data }: Props) {
             {/* Action buttons */}
             <Button
               className="h-11 w-full cursor-pointer bg-zinc-950 text-sm font-medium text-white hover:bg-zinc-800"
-              onClick={() => router.push("/module/business/b2b/agreements/create")}
+              onClick={() => router.push(`/module/business/b2b/agreements/create?projectId=${data.id}&offerId=${data.id}`)}
             >
               {t(localizationConstants.b2bArchiveAcceptOffer)}
             </Button>

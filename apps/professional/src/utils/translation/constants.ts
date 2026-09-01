@@ -900,6 +900,33 @@ export type OfferTranslation = {
 	b2bAvtalStatusSent: string;
 	b2bAvtalStatusSigned: string;
 	b2bAvtalStatusRejected: string;
+	b2bAvtalLaddaUpp: string;
+	b2bAvtalNoFileChosen: string;
+	b2bAvtalVisa: string;
+	b2bAvtalDescription: string;
+	b2bAvtalDocNamnPlaceholder: string;
+	b2bAvtalSelectAttachmentsPlaceholder: string;
+	b2bAvtalSelectedBadge: string;
+	b2bAvtalAddAttachment: string;
+	b2bAvtalSelectCustomerAria: string;
+	b2bAvtalCompanyOrPersonPlaceholder: string;
+	b2bAvtalRemoveFileAria: string;
+	b2bAvtalDirectBadge: string;
+	b2bAvtalPlaceholderKontaktPerson: string;
+	b2bAvtalPlaceholderOrgNr: string;
+	b2bAvtalPlaceholderTelefon: string;
+	b2bAvtalPlaceholderPersonNummer: string;
+	b2bAvtalPlaceholderEmail: string;
+	b2bAvtalPlaceholderAdress: string;
+	b2bAvtalPlaceholderForetag: string;
+	b2bAvtalPlaceholderFirmatecknare: string;
+	b2bAvtalPlaceholderSupplierOrgNr: string;
+	b2bAvtalPlaceholderStefanLarsson: string;
+	b2bAvtalPlaceholderStefanEmail: string;
+	b2bAvtalPlaceholderStefanMobil: string;
+	b2bAvtalPlaceholderByggbolaget: string;
+	b2bAvtalPlaceholderKalleEmail: string;
+	b2bAvtalPlaceholderKalleMobil: string;
 	// Calculation - Dashboard
 	calcOverview: string;
 	// Calculation - Overview (list)

@@ -39,6 +39,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { B2BSeeOfferDetail, B2BOfferQAMessage } from "../types/seeOffer";
 import { useB2BSeeOffer } from "../hooks/useB2BSeeOffer";
+import { B2BDocumentPreviewModal, PreviewableDoc } from "./B2BDocumentPreviewModal";
 import { B2B_QA_BADGE_COLOR_MAP } from "../constants/seeOfferConstants";
 
 function RoleBadge({ badge }: { badge: string }) {
@@ -361,10 +362,11 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
     handleDeleteQAMessage,
     handleMarkQARead,
   } = useB2BSeeOffer(initialData, projectId, offerId);
+  const [previewDoc, setPreviewDoc] = useState<PreviewableDoc | null>(null);
 
   const onAccept = () => {
     handleAcceptOffer(() => {
-      router.push("/module/business/b2b/agreements/create");
+      router.push(`/module/business/b2b/agreements/create?projectId=${projectId}&offerId=${offerId}`);
     });
   };
 
@@ -530,7 +532,13 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                   </h4>
                   <div className="flex flex-wrap items-center gap-6">
                     {data.documents.docs.map((file) => (
-                      <div key={file.id} className="flex flex-col items-center gap-1.5">
+                      <div
+                        key={file.id}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setPreviewDoc(file)}
+                        className="flex flex-col items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity p-1 rounded"
+                      >
                         <div className="flex h-12 w-12 items-center justify-center">
                           {file.type === "pdf" ? (
                             <Image
@@ -552,7 +560,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                             <FileText size={32} strokeWidth={1} className="text-slate-300 stroke-[1]" aria-hidden={true} />
                           )}
                         </div>
-                        <span className="text-xs font-normal text-slate-600">
+                        <span className="text-xs font-normal text-slate-600 hover:text-slate-900">
                           {file.label}
                         </span>
                       </div>
@@ -569,7 +577,13 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                   </h4>
                   <div className="flex flex-wrap items-center gap-6">
                     {data.documents.drawings.map((drawing) => (
-                      <div key={drawing.id} className="flex flex-col items-center gap-1.5">
+                      <div
+                        key={drawing.id}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setPreviewDoc(drawing)}
+                        className="flex flex-col items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity p-1 rounded"
+                      >
                         <div className="flex h-12 w-12 items-center justify-center">
                           {drawing.type === "pdf" ? (
                             <Image
@@ -583,7 +597,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                             <BlankDocFileIcon className="h-9 w-7" />
                           )}
                         </div>
-                        <span className="text-xs font-normal text-slate-600">
+                        <span className="text-xs font-normal text-slate-600 hover:text-slate-900">
                           {drawing.label}
                         </span>
                       </div>
@@ -717,6 +731,10 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
           </div>
         </div>
       </div>
+      <B2BDocumentPreviewModal
+        document={previewDoc}
+        onClose={() => setPreviewDoc(null)}
+      />
     </div>
   );
 }
