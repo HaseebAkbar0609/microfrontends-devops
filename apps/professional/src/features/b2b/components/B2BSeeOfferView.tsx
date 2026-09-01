@@ -731,7 +731,6 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
           </div>
         </div>
       </div>
-
       <B2BDocumentPreviewModal
         document={previewDoc}
         onClose={() => setPreviewDoc(null)}

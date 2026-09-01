@@ -2793,6 +2793,7 @@ export type OfferTranslation = {
 	purchaseInfoNone: string;
 	purchaseInfoTab: string;
 	purchaseInfoValueMissing: string;
+	purchaseComplaintTab: string;
 	purchaseOrderNewLineAria: string;
 	purchaseOrderRemoveLineAria: string;
 

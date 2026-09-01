@@ -32,11 +32,12 @@ export type ComplaintStep = 1 | 2;
  * Split out of the page so the component is layout and wiring only, and so the
  * step transitions can be exercised without mounting the whole form.
  */
-export function useCreateComplaintForm() {
+export function useCreateComplaintForm(prefillPurchaseNo?: string) {
 	const { t } = useTranslation();
 	const router = useRouter();
 	const { company } = useAuthStatus();
-	const { initialInfo, findPurchase, ...options } = usePurchaseOptions();
+	const { initialInfo, findPurchase, ...options } =
+		usePurchaseOptions(prefillPurchaseNo);
 
 	const [step, setStep] = useState<ComplaintStep>(1);
 	const [errors, setErrors] = useState<Record<string, string>>({});
