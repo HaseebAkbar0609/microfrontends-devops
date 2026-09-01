@@ -1,3 +1,5 @@
+import type { PurchaseContactPerson } from "../types/purchase.types";
+
 /** Company block: the four fields the design's company cards carry. */
 export interface ComplaintCompany {
 	company: string;
@@ -7,18 +9,8 @@ export interface ComplaintCompany {
 }
 
 /** Contact block, repeated for the supplier and the reporting side. */
-export interface ComplaintContact {
-	/** Id of the picked existing contact, or "" when entering a new one. */
-	contactId: string;
-	firstName: string;
-	lastName: string;
-	address: string;
-	postalCode: string;
-	email: string;
-	phone: string;
-	city: string;
-	role: string;
-}
+/** Kept as the wizard's local name for the shared contact shape. */
+export type ComplaintContact = PurchaseContactPerson;
 
 export type ComplaintPriority = "high" | "medium" | "low";
 

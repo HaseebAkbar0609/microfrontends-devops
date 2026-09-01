@@ -23,6 +23,7 @@ import type {
 } from "../types/purchase.types";
 import { PurchaseGanttTab } from "./PurchaseGanttTab";
 import { PurchaseLineStatusBadge } from "./PurchaseBadges";
+import { PurchaseInformationTab } from "./record/PurchaseInformationTab";
 import { ArchivableRowsTable } from "./shared/ArchivableRowsTable";
 
 export interface PurchaseRecordPageProps {
@@ -145,6 +146,11 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 								labelKey:
 									localizationConstants.purchaseOverviewTabGantt,
 							},
+							{
+								id: "information",
+								labelKey:
+									localizationConstants.purchaseInfoTab,
+							},
 						]}
 						ariaLabel={purchase.purchaseNo}
 					>
@@ -182,7 +188,7 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 								toolbarAction={
 									<PermissionGate permission="CREATE_PURCHASE">
 										<Link
-											href={`${PURCHASE_MODULE_BASE_URL}/create`}
+											href={`${PURCHASE_MODULE_BASE_URL}/${encodeURIComponent(purchase.id)}/new-order`}
 										>
 											<Button className="h-10 cursor-pointer gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800">
 												<Plus
@@ -210,6 +216,12 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 							<PurchaseGanttTab
 								rows={ganttRows}
 								initialZoom="month"
+							/>
+						</TabsContent>
+
+						<TabsContent value="information" className="mt-4">
+							<PurchaseInformationTab
+								purchaseId={purchase.id}
 							/>
 						</TabsContent>
 					</SectionTabs>

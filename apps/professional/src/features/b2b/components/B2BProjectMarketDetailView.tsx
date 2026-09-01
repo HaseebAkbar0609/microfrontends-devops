@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -24,38 +23,6 @@ export function B2BProjectMarketDetailView({ data }: Props) {
 
   return (
     <div className="flex flex-1 flex-col bg-slate-50 min-h-full">
-      {/* Top Header */}
-      <div className="shrink-0 border-b border-slate-200 px-5 pt-4 bg-white">
-        <h1 className="font-sans font-semibold text-2xl leading-8 tracking-normal align-middle text-slate-900">
-          <Translate text={localizationConstants.b2b} />
-        </h1>
-
-        {/* Navigation Tabs — exact match with B2BDashboard */}
-        <div className="mt-3 flex items-center gap-4 sm:gap-6 border-b border-slate-200 text-sm font-medium -mx-5 px-5 overflow-x-auto scrollbar-none">
-          <Link
-            href="/module/business/b2b"
-            className="whitespace-nowrap shrink-0 px-4 sm:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center"
-          >
-            <Translate text={localizationConstants.b2bDashboard} />
-          </Link>
-          <Link
-            href="/module/business/b2b/project-market"
-            className={cn(
-              "whitespace-nowrap shrink-0 relative px-4 sm:px-6 pb-3.5 text-slate-900 font-semibold transition-colors text-center",
-              "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-slate-900"
-            )}
-          >
-            <Translate text={localizationConstants.b2bOverview} />
-          </Link>
-          <Link
-            href="/module/business/b2b/archive"
-            className="whitespace-nowrap shrink-0 px-4 sm:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center"
-          >
-            <Translate text={localizationConstants.archive} />
-          </Link>
-        </div>
-      </div>
-
       {/* Subheader with Back Button */}
       <div className="flex shrink-0 items-center gap-2 px-4 pt-6 pb-6">
         <Button

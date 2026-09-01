@@ -53,16 +53,11 @@ export const b2bNavItems: RouteTabItem[] = [
 		id: "overview",
 		labelKey: localizationConstants.b2bOverview,
 		href: "/module/business/b2b/project-market",
-	},
-	{
-		id: "deals",
-		labelKey: localizationConstants.b2bDeals,
-		href: "/module/business/b2b/deals",
-	},
-	{
-		id: "avtal",
-		labelKey: localizationConstants.b2bAvtal,
-		href: "/module/business/b2b/agreements",
+		matchSubPaths: [
+			"/module/business/b2b/overview",
+			"/module/business/b2b/project-market",
+			"/module/business/b2b/agreements",
+		],
 	},
 	{
 		id: "archive",

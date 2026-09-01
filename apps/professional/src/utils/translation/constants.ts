@@ -900,6 +900,33 @@ export type OfferTranslation = {
 	b2bAvtalStatusSent: string;
 	b2bAvtalStatusSigned: string;
 	b2bAvtalStatusRejected: string;
+	b2bAvtalLaddaUpp: string;
+	b2bAvtalNoFileChosen: string;
+	b2bAvtalVisa: string;
+	b2bAvtalDescription: string;
+	b2bAvtalDocNamnPlaceholder: string;
+	b2bAvtalSelectAttachmentsPlaceholder: string;
+	b2bAvtalSelectedBadge: string;
+	b2bAvtalAddAttachment: string;
+	b2bAvtalSelectCustomerAria: string;
+	b2bAvtalCompanyOrPersonPlaceholder: string;
+	b2bAvtalRemoveFileAria: string;
+	b2bAvtalDirectBadge: string;
+	b2bAvtalPlaceholderKontaktPerson: string;
+	b2bAvtalPlaceholderOrgNr: string;
+	b2bAvtalPlaceholderTelefon: string;
+	b2bAvtalPlaceholderPersonNummer: string;
+	b2bAvtalPlaceholderEmail: string;
+	b2bAvtalPlaceholderAdress: string;
+	b2bAvtalPlaceholderForetag: string;
+	b2bAvtalPlaceholderFirmatecknare: string;
+	b2bAvtalPlaceholderSupplierOrgNr: string;
+	b2bAvtalPlaceholderStefanLarsson: string;
+	b2bAvtalPlaceholderStefanEmail: string;
+	b2bAvtalPlaceholderStefanMobil: string;
+	b2bAvtalPlaceholderByggbolaget: string;
+	b2bAvtalPlaceholderKalleEmail: string;
+	b2bAvtalPlaceholderKalleMobil: string;
 	// Calculation - Dashboard
 	calcOverview: string;
 	// Calculation - Overview (list)
@@ -2200,6 +2227,21 @@ export type OfferTranslation = {
 	kmaChecklistTemplateValidationDocs: string;
 	// TFS-743 – Open Checklist Template
 	kmaChecklistTemplateCreateCheck: string;
+	// TFS-744 – Action Plans
+	kmaActionPlanCreateBtn: string;
+	kmaActionPlanCreateTitle: string;
+	kmaActionPlanFieldTitle: string;
+	kmaActionPlanFieldDesc: string;
+	kmaActionPlanFieldResponsible: string;
+	kmaActionPlanFieldDueDate: string;
+	kmaActionPlanFieldPriority: string;
+	kmaActionPlanFieldStatus: string;
+	kmaActionPlanPriorityLow: string;
+	kmaActionPlanPriorityMedium: string;
+	kmaActionPlanPriorityHigh: string;
+	kmaActionPlanStatusNotStarted: string;
+	kmaActionPlanStatusInProgress: string;
+	kmaActionPlanStatusCompleted: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
@@ -2717,6 +2759,42 @@ export type OfferTranslation = {
 	purchaseLineCreate: string;
 	purchaseLineArchivedToast: string;
 	purchaseLineDeletedToast: string;
+	// Purchase - New purchase order
+	purchaseOrderTitle: string;
+	purchaseOrderTabObject: string;
+	purchaseOrderTabContact: string;
+	purchaseOrderTabSpecification: string;
+	purchaseOrderSupplierFromCalc: string;
+	purchaseOrderSelectAction: string;
+	purchaseOrderObjectHeading: string;
+	purchaseOrderInsuranceQuestion: string;
+	purchaseOrderSelectedSupplier: string;
+	purchaseOrderDesiredDelivery: string;
+	purchaseOrderMarking: string;
+	purchaseOrderQrLabel: string;
+	purchaseOrderInvoiceTo: string;
+	purchaseOrderColSupplierArticle: string;
+	purchaseOrderDeliveryByCar: string;
+	purchaseOrderDeliveryPickup: string;
+	purchaseOrderComments: string;
+	purchaseOrderCommentsPlaceholder: string;
+	purchaseOrderSend: string;
+	purchaseOrderOpenSupplier: string;
+	purchaseOrderPreview: string;
+	purchaseOrderCreatedToast: string;
+	purchaseOrderValidationRequired: string;
+	purchaseOrderValidationQuantity: string;
+	purchaseOrderUnavailable: string;
+	// Purchase - Record information
+	purchaseInfoQuoteDate: string;
+	purchaseInfoQuoteAmount: string;
+	purchaseInfoIdNo: string;
+	purchaseInfoOrderAmount: string;
+	purchaseInfoNone: string;
+	purchaseInfoTab: string;
+	purchaseInfoValueMissing: string;
+	purchaseOrderNewLineAria: string;
+	purchaseOrderRemoveLineAria: string;
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;

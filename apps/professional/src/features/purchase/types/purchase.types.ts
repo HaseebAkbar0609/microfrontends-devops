@@ -240,3 +240,92 @@ export interface PurchaseLineRow {
 	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
 	archived: boolean;
 }
+
+/**
+ * One row of a purchase order's Specifikation table.
+ *
+ * Quantity and unit price are held as strings because they are edited through
+ * text inputs; parsing at the edge keeps an empty or non-numeric entry from
+ * silently becoming 0 or NaN in the totals. The frame prints a Delsumma that
+ * does not match its own inputs, so it is always computed, never stored.
+ */
+export interface PurchaseOrderSpecLine {
+	id: string;
+	/** The buyer's own article number. */
+	articleNo: string;
+	supplierArticleNo: string;
+	designation: string;
+	quantity: string;
+	unit: string;
+	unitPrice: string;
+}
+
+/**
+ * A named contact on a purchase document — a complaint's reporter, a purchase
+ * order's orderer. One shape, because every screen collects the same fields.
+ */
+export interface PurchaseContactPerson {
+	/** Id of the picked existing contact, or "" when entering a new one. */
+	contactId: string;
+	firstName: string;
+	lastName: string;
+	address: string;
+	postalCode: string;
+	email: string;
+	phone: string;
+	city: string;
+	role: string;
+}
+
+/**
+ * The Calculation card on a purchase's Information section. Every field is a
+ * display string; absent values are stored empty and dashed at render.
+ */
+export interface PurchaseCalculationInfo {
+	calculationNo: string;
+	orderer: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	quoteDate: string;
+	type: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
+	quoteAmount: string;
+	category: string;
+	status: PurchaseStatus;
+}
+
+/** The Quote card. */
+export interface PurchaseQuoteInfo {
+	idNo: string;
+	job: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	date: string;
+	type: string;
+	inquiry: string;
+	municipality: string;
+	category: string;
+}
+
+/** The Order card. */
+export interface PurchaseOrderInfo {
+	orderNo: string;
+	orderName: string;
+	customer: string;
+	type: string;
+	status: string;
+	telephone: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
+	orderAmount: string;
+	projectManager: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	startDate: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	endDate: string;
+}
+
+/** Everything the record's Information section shows, for one purchase. */
+export interface PurchaseInformation {
+	purchaseId: string;
+	calculation: PurchaseCalculationInfo;
+	quote: PurchaseQuoteInfo;
+	order: PurchaseOrderInfo;
+}

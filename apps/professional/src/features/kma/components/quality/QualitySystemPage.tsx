@@ -32,7 +32,8 @@ import {
 } from "@/features/kma/data/kmaNav.config";
 import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory, QualitySubCategory } from "../../types/quality";
-import { MOCK_QUALITY_CATEGORIES, MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
+import { MOCK_ACTION_PLAN_CATEGORIES, MOCK_QUALITY_CATEGORIES, MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
+import { CreateActionPlanPage } from "./CreateActionPlanPage";
 import { MailListPage, NOTIFY_COLS } from "../mail-list/MailListPage";
 import type { MailList, MailRecipient, NotifyField } from "../mail-list/MailListPage";
 import { CategoryPanel } from "../shared/CategoryPanel";
@@ -2526,6 +2527,82 @@ function ChecklistTab({
 	);
 }
 
+// ── Action Plans Tab ──────────────────────────────────────────────────────────
+
+function AtgardsplanerTab({
+	onOpenDoc,
+	onCreateActionPlan,
+}: {
+	onOpenDoc: (doc: QualityDocument) => void;
+	onCreateActionPlan: () => void;
+}) {
+	const [selectedMainId, setSelectedMainId] = useState<string | null>(
+		MOCK_ACTION_PLAN_CATEGORIES[0]?.id ?? null,
+	);
+	const [selectedSubId, setSelectedSubId] = useState<string | null>(
+		MOCK_ACTION_PLAN_CATEGORIES[0]?.subcategories[0]?.id ?? null,
+	);
+
+	const selectedMain = MOCK_ACTION_PLAN_CATEGORIES.find((c) => c.id === selectedMainId);
+	const selectedSub = selectedMain?.subcategories.find((s) => s.id === selectedSubId);
+
+	function handleSelectMain(id: string) {
+		setSelectedMainId(id);
+		const cat = MOCK_ACTION_PLAN_CATEGORIES.find((c) => c.id === id);
+		setSelectedSubId(cat?.subcategories[0]?.id ?? null);
+	}
+
+	const mainItems = MOCK_ACTION_PLAN_CATEGORIES.map((c) => ({
+		id: c.id,
+		label: c.label,
+		count: c.subcategories.reduce((acc, s) => acc + s.documents.length, 0),
+	}));
+
+	const subItems = useMemo(
+		() =>
+			selectedMain?.subcategories.map((s) => ({
+				id: s.id,
+				label: s.label,
+				count: s.documents.length,
+			})) ?? [],
+		[selectedMain],
+	);
+
+	return (
+		<div className="flex flex-1 overflow-hidden">
+			<CategoryPanel
+				headerKey={localizationConstants.kmaQualityMainCat}
+				items={mainItems}
+				selectedId={selectedMainId}
+				onSelect={handleSelectMain}
+				searchKey={localizationConstants.kmaQualitySearchCategories}
+			/>
+			<CategoryPanel
+				headerKey={localizationConstants.kmaQualitySubCat}
+				items={subItems}
+				selectedId={selectedSubId}
+				onSelect={setSelectedSubId}
+				searchKey={localizationConstants.kmaQualitySearchSubCategories}
+			/>
+			<DocsPanel
+				documents={selectedSub?.documents ?? []}
+				onOpenDoc={onOpenDoc}
+				selectedSubCatId={selectedSubId}
+				headerAction={
+					<button
+						type="button"
+						onClick={onCreateActionPlan}
+						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-xs font-medium text-white hover:bg-zinc-800"
+					>
+						<Plus className="h-3.5 w-3.5" />
+						<Translate text={localizationConstants.kmaActionPlanCreateBtn} />
+					</button>
+				}
+			/>
+		</div>
+	);
+}
+
 // ── Create Template Page ──────────────────────────────────────────────────────
 
 function CreateTemplatePage({ onBack }: { onBack: () => void }) {
@@ -2971,6 +3048,7 @@ function QualityPlanTab({
 	onUseChecklistTemplate,
 	onOpenChecklistTemplate,
 	onCreateChecklistTemplate,
+	onCreateActionPlan,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -2986,6 +3064,7 @@ function QualityPlanTab({
 	onUseChecklistTemplate: () => void;
 	onOpenChecklistTemplate: (id: string) => void;
 	onCreateChecklistTemplate: () => void;
+	onCreateActionPlan: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3197,6 +3276,8 @@ function QualityPlanTab({
 				) : (
 					<ChecklistTab onOpenDoc={onOpenDoc} onCreateChecklist={onCreateChecklist} />
 				)
+			) : planType === "atgardsplaner" ? (
+				<AtgardsplanerTab onOpenDoc={onOpenDoc} onCreateActionPlan={onCreateActionPlan} />
 			) : planType !== "kontrollplan" ? (
 				<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
 					<Translate text={localizationConstants.comingSoon} />
@@ -3242,6 +3323,7 @@ export function QualitySystemPage() {
 	const [createChecklistWithTemplate, setCreateChecklistWithTemplate] = useState(false);
 	const [createChecklistTemplateOpen, setCreateChecklistTemplateOpen] = useState(false);
 	const [openChecklistTemplateId, setOpenChecklistTemplateId] = useState<string | null>(null);
+	const [createActionPlanOpen, setCreateActionPlanOpen] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3324,6 +3406,10 @@ export function QualitySystemPage() {
 		}
 	}
 
+	if (createActionPlanOpen) {
+		return <CreateActionPlanPage onBack={() => setCreateActionPlanOpen(false)} />;
+	}
+
 	if (openPlanOpen) {
 		return <OpenKontrollplanPage onBack={() => setOpenPlanOpen(false)} />;
 	}
@@ -3380,6 +3466,7 @@ export function QualitySystemPage() {
 					onUseChecklistTemplate={() => { setCreateChecklistWithTemplate(true); setCreateChecklistOpen(true); }}
 					onOpenChecklistTemplate={(id) => setOpenChecklistTemplateId(id)}
 					onCreateChecklistTemplate={() => setCreateChecklistTemplateOpen(true)}
+					onCreateActionPlan={() => setCreateActionPlanOpen(true)}
 				/>
 			)}
 		</div>

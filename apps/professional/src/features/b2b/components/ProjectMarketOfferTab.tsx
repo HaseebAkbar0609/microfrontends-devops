@@ -179,6 +179,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
             <Button
               size="sm"
               variant="outline"
+              onClick={() => router.push(`/module/business/b2b/agreements/create?projectId=${data.id}`)}
               className="cursor-pointer border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-900 shadow-xs hover:bg-slate-50 shrink-0 self-start"
             >
               {t(localizationConstants.b2bPMManageContract)}
@@ -311,7 +312,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                       </TableCell>
                       <TableCell
                         className="whitespace-nowrap px-4 py-3.5 text-right"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       >
                         <Button
                           size="sm"
@@ -327,7 +328,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                       </TableCell>
                       <TableCell
                         className="w-12 whitespace-nowrap border-l border-slate-200 px-2 py-3.5 text-center"
-                        onClick={(e) => e.stopPropagation()}
+                        onClick={(e: React.MouseEvent) => e.stopPropagation()}
                       >
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
