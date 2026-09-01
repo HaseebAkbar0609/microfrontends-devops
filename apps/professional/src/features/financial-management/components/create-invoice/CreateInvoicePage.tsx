@@ -44,7 +44,7 @@ export function CreateInvoicePage() {
 	} = useCreateInvoice();
 
 	return (
-		<div className="flex flex-1 flex-col bg-[#fafafa] min-h-screen pb-16">
+		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen pb-16">
 			{/* Page Header */}
 			<div className="bg-white border-b border-slate-200 px-8 py-4">
 				<div className="flex items-center gap-3">
@@ -165,7 +165,7 @@ export function CreateInvoicePage() {
 					{activeTab === "oversikt" && (
 						<Button
 							onClick={() => setPreviewOpen(true)}
-							className="h-9 px-4 text-xs font-normal bg-[#18181b] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
+							className="h-9 px-4 text-xs font-normal bg-zinc-900 hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
 						>
 							<Eye className="h-3.5 w-3.5" />
 							<span>
@@ -176,7 +176,7 @@ export function CreateInvoicePage() {
 
 					<Button
 						onClick={handleSaveDraft}
-						className="h-9 px-5 text-xs font-normal bg-[#18181b] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
+						className="h-9 px-5 text-xs font-normal bg-zinc-900 hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
 					>
 						<Save className="h-3.5 w-3.5" />
 						<Translate text={localizationConstants.createInvoiceBtnSave} />
@@ -184,7 +184,7 @@ export function CreateInvoicePage() {
 
 					<Button
 						onClick={handleSendInvoice}
-						className="h-9 px-6 text-xs font-normal bg-[#16a34a] hover:bg-[#15803d] text-white gap-2 shadow-2xs cursor-pointer transition-colors rounded-md"
+						className="h-9 px-6 text-xs font-normal bg-emerald-600 hover:bg-emerald-700 text-white gap-2 shadow-2xs cursor-pointer transition-colors rounded-md"
 					>
 						<span>
 							<Translate text={localizationConstants.createInvoiceBtnSend} />

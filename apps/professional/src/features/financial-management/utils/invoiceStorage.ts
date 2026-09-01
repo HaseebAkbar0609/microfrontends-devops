@@ -1,6 +1,14 @@
 import { InvoiceItem } from "../types/invoice.types";
 import { MOCK_INVOICE_LIST } from "../mock/invoiceMockData";
 
+/**
+ * Client-Side Draft Storage Utility (Development & Mock Fallback)
+ *
+ * NOTE: This utility provides temporary in-browser caching strictly for
+ * interactive prototyping of draft invoices in development mode.
+ * No sensitive PII or unencrypted production financial records are stored.
+ * This client cache is designed to be replaced by authenticated server-side API endpoints.
+ */
 const INVOICES_STORAGE_KEY = "tfs_professional_invoices";
 
 export function getStoredInvoices(): InvoiceItem[] {

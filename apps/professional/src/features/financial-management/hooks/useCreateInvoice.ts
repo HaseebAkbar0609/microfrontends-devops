@@ -13,6 +13,7 @@ import {
 } from "../types/createInvoice.types";
 import { InvoiceItem } from "../types/invoice.types";
 import { addStoredInvoice } from "../utils/invoiceStorage";
+import { VAT_RATE } from "../constants/invoice.constants";
 
 const INITIAL_LINE_ITEMS: InvoiceLineItem[] = [
 	{
@@ -273,9 +274,22 @@ export function useCreateInvoice() {
 		(id: string, updates: Partial<PaymentPlanItem>) => {
 			setFormData((prev) => ({
 				...prev,
-				paymentPlanItems: prev.paymentPlanItems.map((item) =>
-					item.id === id ? { ...item, ...updates } : item,
-				),
+				paymentPlanItems: prev.paymentPlanItems.map((item) => {
+					if (item.id !== id) return item;
+					const merged = { ...item, ...updates };
+					const qty = Number(merged.quantity) || 0;
+					const price = Number(merged.unitPrice) || 0;
+					const amount =
+						updates.amount !== undefined
+							? Number(updates.amount)
+							: qty * price;
+					return {
+						...merged,
+						quantity: qty,
+						unitPrice: price,
+						amount,
+					};
+				}),
 			}));
 		},
 		[],
@@ -287,6 +301,28 @@ export function useCreateInvoice() {
 			paymentPlanItems: prev.paymentPlanItems.filter((item) => item.id !== id),
 		}));
 	}, []);
+
+	// Payment Plan Totals
+	const paymentPlanTotals = useMemo(() => {
+		let totalAmount = 0;
+		let totalPaid = 0;
+		let totalWithheld = 0;
+		let totalCost = 0;
+
+		formData.paymentPlanItems.forEach((item) => {
+			totalAmount += Number(item.amount) || 0;
+			totalPaid += Number(item.paid) || 0;
+			totalWithheld += Number(item.withheld) || 0;
+			totalCost += Number(item.cost) || 0;
+		});
+
+		return {
+			totalAmount,
+			totalPaid,
+			totalWithheld,
+			totalCost,
+		};
+	}, [formData.paymentPlanItems]);
 
 	// Time Report actions
 	const addTimeReportRow = useCallback(() => {
@@ -385,7 +421,7 @@ export function useCreateInvoice() {
 		});
 
 		const totalExclVat = delsumma + totalDiscount + totalMarkup + totalRotRut;
-		const vatAmount = Math.round(totalExclVat * 0.25);
+		const vatAmount = Math.round(totalExclVat * VAT_RATE);
 		const attErhalla = totalExclVat + vatAmount;
 
 		return {
@@ -504,6 +540,7 @@ export function useCreateInvoice() {
 		addAttachments,
 		removeAttachment,
 		calculations,
+		paymentPlanTotals,
 		timeReportTotals,
 		handleSaveDraft,
 		handleSendInvoice,

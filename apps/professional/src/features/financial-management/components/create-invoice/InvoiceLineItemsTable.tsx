@@ -237,7 +237,7 @@ export function InvoiceLineItemsTable({
 				<button
 					type="button"
 					onClick={onAddItem}
-					className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
+					className="h-8 px-4 border border-dashed border-slate-300 bg-slate-50 text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 				>
 					<Translate text={localizationConstants.createInvoiceAddRow} />
 				</button>
@@ -258,7 +258,9 @@ export function InvoiceLineItemsTable({
 							<Translate text={localizationConstants.createInvoiceCalcDiscount} />
 						</span>
 						<span className="text-slate-800">
-							-1000
+							{calculations.totalDiscount !== 0
+								? `-${formatNum(Math.abs(calculations.totalDiscount))}`
+								: "0"}
 						</span>
 					</div>
 
@@ -267,7 +269,7 @@ export function InvoiceLineItemsTable({
 							<Translate text={localizationConstants.createInvoiceCalcMarkup} />
 						</span>
 						<span className="text-slate-800">
-							15 000
+							{formatNum(calculations.totalMarkup)}
 						</span>
 					</div>
 
@@ -276,7 +278,9 @@ export function InvoiceLineItemsTable({
 							<Translate text={localizationConstants.createInvoiceCalcRotRut} />
 						</span>
 						<span className="text-slate-800">
-							-1 500
+							{calculations.totalRotRut !== 0
+								? `-${formatNum(Math.abs(calculations.totalRotRut))}`
+								: "0"}
 						</span>
 					</div>
 
@@ -284,7 +288,9 @@ export function InvoiceLineItemsTable({
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcTotal} />
 						</span>
-						<span className="text-slate-800">178 000</span>
+						<span className="text-slate-800">
+							{formatNum(calculations.totalExclVat)}
+						</span>
 					</div>
 
 					<div className="border-t border-slate-200 my-1 pt-1" />
@@ -293,14 +299,14 @@ export function InvoiceLineItemsTable({
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcTax} />
 						</span>
-						<span>33 750 SEK</span>
+						<span>{formatNum(calculations.vatAmount)} SEK</span>
 					</div>
 
-					<div className="flex justify-between text-[#16a34a] font-bold text-sm pt-0.5">
+					<div className="flex justify-between text-emerald-600 font-bold text-sm pt-0.5">
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcPayable} />
 						</span>
-						<span>203 300 SEK</span>
+						<span>{formatNum(calculations.attErhalla)} SEK</span>
 					</div>
 				</div>
 			</div>
