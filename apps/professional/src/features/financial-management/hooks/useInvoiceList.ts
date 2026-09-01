@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
@@ -9,7 +9,8 @@ import {
 	ReminderSortField,
 	SortOrder,
 } from "../types/invoice.types";
-import { MOCK_INVOICE_LIST, MOCK_REMINDERS_LIST } from "../mock/invoiceMockData";
+import { MOCK_REMINDERS_LIST } from "../mock/invoiceMockData";
+import { getStoredInvoices, saveStoredInvoices } from "../utils/invoiceStorage";
 
 export function useInvoiceList() {
 	const { t } = useTranslation();
@@ -35,8 +36,24 @@ export function useInvoiceList() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
 
-	const [invoices, setInvoices] = useState<InvoiceItem[]>(MOCK_INVOICE_LIST);
+	const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
 	const [reminders, _setReminders] = useState<ReminderItem[]>(MOCK_REMINDERS_LIST);
+
+	// Load stored invoices on mount and on storage events
+	useEffect(() => {
+		setInvoices(getStoredInvoices());
+
+		const handleStorageChange = () => {
+			setInvoices(getStoredInvoices());
+		};
+
+		window.addEventListener("storage", handleStorageChange);
+		window.addEventListener("focus", handleStorageChange);
+		return () => {
+			window.removeEventListener("storage", handleStorageChange);
+			window.removeEventListener("focus", handleStorageChange);
+		};
+	}, []);
 
 	// Toggle row selection
 	const toggleSelectInvoice = useCallback((id: string) => {
@@ -193,7 +210,11 @@ export function useInvoiceList() {
 
 	const archiveInvoice = useCallback(
 		(id: string) => {
-			setInvoices((prev) => prev.filter((i) => i.id !== id));
+			setInvoices((prev) => {
+				const next = prev.filter((i) => i.id !== id);
+				saveStoredInvoices(next);
+				return next;
+			});
 			toast.success(t(localizationConstants.invoiceArchiveSuccess));
 		},
 		[t],
@@ -201,7 +222,11 @@ export function useInvoiceList() {
 
 	const deleteInvoice = useCallback(
 		(id: string) => {
-			setInvoices((prev) => prev.filter((i) => i.id !== id));
+			setInvoices((prev) => {
+				const next = prev.filter((i) => i.id !== id);
+				saveStoredInvoices(next);
+				return next;
+			});
 			toast.success(t(localizationConstants.invoiceDeleteSuccess));
 		},
 		[t],
