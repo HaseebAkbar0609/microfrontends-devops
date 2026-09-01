@@ -5168,6 +5168,55 @@ export type MachineDashboardTranslation = {
 	machineModalBookingSubmit: string;
 };
 
+export type InvoiceTranslation = {
+	invoiceOverviewTitle: string;
+	invoiceTabList: string;
+	invoiceTabReminders: string;
+	invoiceNewButton: string;
+	invoiceSendButton: string;
+	invoiceFilterAll: string;
+	invoiceColumnInvoiceNo: string;
+	invoiceColumnOcr: string;
+	invoiceColumnObject: string;
+	invoiceColumnType: string;
+	invoiceColumnCustomer: string;
+	invoiceColumnInvoiceDate: string;
+	invoiceColumnCostCenter: string;
+	invoiceColumnProjectLeader: string;
+	invoiceColumnLocation: string;
+	invoiceColumnContractType: string;
+	invoiceColumnTotal: string;
+	invoiceColumnBalance: string;
+	invoiceColumnDueDate: string;
+	invoiceColumnFullyPaidDate: string;
+	invoiceColumnStatus: string;
+	invoiceStatusPaid: string;
+	invoiceStatusReminder1: string;
+	invoiceStatusReminder2: string;
+	invoiceStatusReminder3: string;
+	invoiceStatusSent: string;
+	invoiceStatusSaved: string;
+	invoiceStatusOverdue: string;
+	invoiceStatusCollection: string;
+	invoiceTypeFixed: string;
+	invoiceTypeBudget: string;
+	invoiceActionOpen: string;
+	invoiceActionArchive: string;
+	invoiceActionDelete: string;
+	invoiceRemindersColId: string;
+	invoiceRemindersColCustomer: string;
+	invoiceRemindersColEmail: string;
+	invoiceRemindersColAmount: string;
+	invoiceRemindersColLatest: string;
+	invoiceRemindersColLeft: string;
+	invoiceRemindersColStatus: string;
+	invoiceNoResults: string;
+	invoiceSelectedCount: string;
+	invoiceSendSuccess: string;
+	invoiceArchiveSuccess: string;
+	invoiceDeleteSuccess: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -5181,7 +5230,8 @@ export type Translation = HeaderTranslation &
 	RegisterTranslation &
 	CommonTranslation &
 	MachinePurchaseTranslation &
-	MachineDashboardTranslation;
+	MachineDashboardTranslation &
+	InvoiceTranslation;
 
 export type TranslationKeys = keyof Translation;
 
