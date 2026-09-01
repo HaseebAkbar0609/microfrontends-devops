@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Plus, Trash2, MessageSquare } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { CreateInvoiceFormData } from "../../types/createInvoice.types";
 
 interface InvoiceTimeReportTabProps {
@@ -48,113 +49,122 @@ export function InvoiceTimeReportTab({
 					<Translate text={localizationConstants.createInvoiceHeaderCardTitle} />
 				</h3>
 
-				<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-					<div>
-						<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
-							<Translate text={localizationConstants.createInvoiceFieldInvoiceNo} />
-						</Label>
-						<Input
-							value={formData.invoiceNo}
-							disabled
-							className="h-9 bg-slate-50 border-slate-200 text-xs text-slate-800"
-						/>
+				<div className="space-y-4">
+					{/* Row 1: Faktura nr | Status | Checkboxes */}
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+						<div>
+							<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
+								<Translate text={localizationConstants.createInvoiceFieldInvoiceNo} />
+							</Label>
+							<Input
+								value={formData.invoiceNo}
+								disabled
+								className="h-9 bg-slate-100/70 border-slate-200 text-xs font-medium text-slate-800"
+							/>
+						</div>
+
+						<div>
+							<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
+								<Translate text={localizationConstants.createInvoiceFieldStatus} />
+							</Label>
+							<Input
+								value={formData.status}
+								onChange={(e) => updateField("status", e.target.value)}
+								className="h-9 border-slate-200 text-xs text-slate-800 bg-white"
+							/>
+						</div>
+
+						<div className="sm:col-span-2 lg:col-span-3 flex items-center justify-start lg:justify-end gap-5 pt-3 sm:pt-0">
+							<label className="flex items-center gap-2 text-xs font-normal text-slate-700 cursor-pointer select-none">
+								<Checkbox
+									checked={formData.detailedReporting}
+									onCheckedChange={(c) => updateField("detailedReporting", !!c)}
+									className="data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900"
+								/>
+								<span>
+									<Translate text={localizationConstants.createInvoiceTimeDetailedReporting} />
+								</span>
+							</label>
+
+							<label className="flex items-center gap-2 text-xs font-normal text-slate-700 cursor-pointer select-none">
+								<Checkbox
+									checked={formData.mergedReport}
+									onCheckedChange={(c) => updateField("mergedReport", !!c)}
+									className="data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900"
+								/>
+								<span>
+									<Translate text={localizationConstants.createInvoiceTimeMergedReport} />
+								</span>
+							</label>
+
+							<label className="flex items-center gap-2 text-xs font-normal text-slate-700 cursor-pointer select-none">
+								<Checkbox
+									checked={formData.showAta}
+									onCheckedChange={(c) => updateField("showAta", !!c)}
+									className="data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900"
+								/>
+								<span>
+									<Translate text={localizationConstants.createInvoiceTimeShowAta} />
+								</span>
+							</label>
+						</div>
 					</div>
 
-					<div>
-						<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
-							<Translate text={localizationConstants.createInvoiceFieldStatus} />
-						</Label>
-						<Input
-							value={formData.status}
-							onChange={(e) => updateField("status", e.target.value)}
-							className="h-9 border-slate-200 text-xs text-slate-800"
-						/>
+					{/* Row 2: kund | Objekt nr */}
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+						<div>
+							<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
+								kund
+							</Label>
+							<Input
+								value="David Gilmour"
+								onChange={(e) => updateField("customer", e.target.value)}
+								className="h-9 border-slate-200 text-xs text-slate-800 bg-white"
+							/>
+						</div>
+
+						<div>
+							<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
+								Objekt nr
+							</Label>
+							<Input
+								value={formData.projectNumber}
+								onChange={(e) => updateField("projectNumber", e.target.value)}
+								className="h-9 border-slate-200 text-xs text-slate-800 bg-white"
+							/>
+						</div>
 					</div>
-
-					<div>
-						<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
-							<Translate text={localizationConstants.createInvoiceFieldCustomer} />
-						</Label>
-						<Input
-							value={formData.customer}
-							onChange={(e) => updateField("customer", e.target.value)}
-							className="h-9 border-slate-200 text-xs text-slate-800"
-						/>
-					</div>
-
-					<div>
-						<Label className="text-xs font-medium text-slate-700 mb-1.5 block">
-							<Translate text={localizationConstants.createInvoiceFieldProjectNumber} />
-						</Label>
-						<Input
-							value={formData.projectNumber}
-							onChange={(e) => updateField("projectNumber", e.target.value)}
-							className="h-9 border-slate-200 text-xs text-slate-800"
-						/>
-					</div>
-				</div>
-
-				<div className="flex flex-wrap items-center gap-6 pt-3 border-t border-slate-100">
-					<label className="flex items-center gap-2 text-xs font-normal text-slate-700 cursor-pointer select-none">
-						<Checkbox
-							checked={formData.detailedReporting}
-							onCheckedChange={(c) => updateField("detailedReporting", !!c)}
-						/>
-						<span>
-							<Translate text={localizationConstants.createInvoiceTimeDetailedReporting} />
-						</span>
-					</label>
-
-					<label className="flex items-center gap-2 text-xs font-normal text-slate-700 cursor-pointer select-none">
-						<Checkbox
-							checked={formData.mergedReport}
-							onCheckedChange={(c) => updateField("mergedReport", !!c)}
-						/>
-						<span>
-							<Translate text={localizationConstants.createInvoiceTimeMergedReport} />
-						</span>
-					</label>
-
-					<label className="flex items-center gap-2 text-xs font-normal text-slate-700 cursor-pointer select-none">
-						<Checkbox
-							checked={formData.showAta}
-							onCheckedChange={(c) => updateField("showAta", !!c)}
-						/>
-						<span>
-							<Translate text={localizationConstants.createInvoiceTimeShowAta} />
-						</span>
-					</label>
 				</div>
 			</div>
 
 			{/* Time Report Table */}
 			<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5">
 				<div className="w-full overflow-x-auto">
-					<Table className="w-full min-w-[850px] border-collapse">
+					<Table className="w-full min-w-[850px] border-collapse border border-slate-200">
 						<TableHeader>
-							<TableRow className="border-b border-slate-200 bg-slate-50/70 hover:bg-slate-50/70">
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28">
+							<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+								<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColDate} />
 								</TableHead>
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 min-w-[160px]">
+								<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 min-w-[160px] border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColEmployee} />
 								</TableHead>
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-center bg-emerald-50">
+								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-800 w-24 text-center bg-[#e6f4ea] border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColWorkHours} />
 								</TableHead>
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-20">
+								<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColUnit} />
 								</TableHead>
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-center">
+								<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-center border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColAta} />
 								</TableHead>
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-center">
+								<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-center border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColTotalTime} />
 								</TableHead>
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-20 text-center">
+								<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 text-center border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColKS} />
 								</TableHead>
-								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-44 text-center">
+								<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-44 text-center border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColAddComment} />
 								</TableHead>
 								<TableHead className="py-2.5 px-2 w-12 text-center" />
@@ -162,36 +172,35 @@ export function InvoiceTimeReportTab({
 						</TableHeader>
 						<TableBody>
 							{formData.timeReportItems.map((tr) => (
-								<TableRow key={tr.id} className="border-b border-slate-100 hover:bg-slate-50/50">
-									<TableCell className="py-2 px-3 text-xs font-medium text-slate-800">
+								<TableRow key={tr.id} className="border-b border-slate-200 hover:bg-slate-50/50">
+									<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
 										{tr.date}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs font-medium text-slate-800">
+									<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
 										{tr.employee}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs font-semibold text-slate-900 text-center bg-emerald-50/70">
+									<TableCell className="py-2 px-3 text-xs font-semibold text-slate-900 text-center bg-[#e6f4ea] border-r border-slate-200">
 										{tr.workHours}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs text-slate-700">
+									<TableCell className="py-2 px-3 text-xs text-slate-700 border-r border-slate-200">
 										{tr.unit}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs text-slate-700 text-center">
+									<TableCell className="py-2 px-3 text-xs text-slate-700 text-center border-r border-slate-200">
 										{tr.ataHours}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs font-medium text-slate-800 text-center">
+									<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 text-center border-r border-slate-200">
 										{tr.totalHours}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-xs text-slate-700 text-center">
+									<TableCell className="py-2 px-3 text-xs text-slate-700 text-center border-r border-slate-200">
 										{tr.costCenter}
 									</TableCell>
-									<TableCell className="py-2 px-3 text-center">
+									<TableCell className="py-2 px-3 text-center border-r border-slate-200">
 										<Button
 											variant="outline"
 											size="sm"
-											className="h-7 text-[11px] px-2.5 border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
+											className="h-7 text-[11px] px-3 border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer bg-slate-50 font-normal rounded-md"
 										>
-											<MessageSquare className="h-3 w-3 mr-1 text-slate-400" />
-											<Translate text={localizationConstants.createInvoiceTimeColAddComment} />
+											lägga till kommentarer
 										</Button>
 									</TableCell>
 									<TableCell className="py-2 px-2 text-center">
@@ -210,31 +219,32 @@ export function InvoiceTimeReportTab({
 					</Table>
 				</div>
 
-				<div className="pt-4 border-t border-slate-100 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+				<div className="pt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 					<Button
 						variant="outline"
 						onClick={onAddRow}
-						className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer"
+						className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer bg-white"
 					>
 						<Plus className="h-3.5 w-3.5" />
 						<span>+ Add</span>
 					</Button>
 
-					{/* Time Totals Summary Box */}
-					<div className="w-full sm:w-64 bg-slate-50/60 rounded-md border border-slate-200 p-3 text-xs space-y-1.5">
+					{/* Time Totals Summary Box matching Figma */}
+					<div className="w-full sm:w-64 text-xs space-y-1.5 text-right pr-2">
 						<div className="flex justify-between text-slate-600">
 							<span>
 								<Translate text={localizationConstants.createInvoiceTimeTotalWork} />
 							</span>
-							<span className="font-medium text-slate-800">{totals.totalWork}</span>
+							<span className="text-slate-800">{totals.totalWork}</span>
 						</div>
 						<div className="flex justify-between text-slate-600">
 							<span>
 								<Translate text={localizationConstants.createInvoiceTimeTotalAta} />
 							</span>
-							<span className="font-medium text-slate-800">{totals.totalAta}</span>
+							<span className="text-slate-800">{totals.totalAta}</span>
 						</div>
-						<div className="flex justify-between text-slate-900 font-bold pt-1 border-t border-slate-200">
+						<div className="border-t border-slate-200 my-1 pt-1" />
+						<div className="flex justify-between text-slate-900 font-bold text-xs">
 							<span>
 								<Translate text={localizationConstants.createInvoiceTimeTotalTime} />
 							</span>
@@ -242,6 +252,23 @@ export function InvoiceTimeReportTab({
 						</div>
 					</div>
 				</div>
+			</div>
+
+			{/* Kommentar Card matching Figma Image 5 */}
+			<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5 mb-5">
+				<h3 className="text-sm font-semibold text-slate-900 mb-1">
+					<Translate text={localizationConstants.createInvoiceCommentTitle} />
+				</h3>
+				<Label className="text-xs text-slate-500 mb-2 block">
+					<Translate text={localizationConstants.createInvoiceCommentPlaceholder} />
+				</Label>
+				<Textarea
+					rows={4}
+					value={formData.comments}
+					onChange={(e) => updateField("comments", e.target.value)}
+					placeholder="Skriv kommentar här..."
+					className="text-xs border-slate-200 resize-y bg-white"
+				/>
 			</div>
 		</div>
 	);

@@ -5319,6 +5319,7 @@ export const svInvoice: InvoiceTranslation = {
 	createInvoiceFieldStatus: "Status",
 	createInvoiceFieldTemplate: "Faktura mall",
 	createInvoiceFieldCustomer: "Kund",
+	createInvoiceFieldCustomerContactPerson: "Kund Kontakt Person",
 	createInvoiceFieldCategory: "Kategori",
 	createInvoiceFieldProjectName: "Projekt Namn",
 	createInvoiceFieldProjectNumber: "Projekt nummer",

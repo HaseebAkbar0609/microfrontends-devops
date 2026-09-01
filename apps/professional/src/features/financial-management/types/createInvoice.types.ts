@@ -62,6 +62,7 @@ export interface CreateInvoiceFormData {
 
 	// Customer & Project Info
 	customer: string;
+	customerContactPerson: string;
 	category: string;
 	projectName: string;
 	projectNumber: string;

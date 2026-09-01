@@ -40,16 +40,16 @@ export function CreateInvoicePage() {
 	} = useCreateInvoice();
 
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen pb-24">
+		<div className="flex flex-1 flex-col bg-[#fafafa] min-h-screen pb-16">
 			{/* Page Header */}
-			<div className="bg-white border-b border-slate-200 px-6 py-4">
+			<div className="bg-white border-b border-slate-200 px-8 py-4">
 				<div className="flex items-center gap-3">
 					<Link href="/module/financial-management/invoice">
 						<Button
 							variant="ghost"
 							size="icon"
 							aria-label="Tillbaka"
-							className="h-8 w-8 text-slate-500 hover:text-slate-900 cursor-pointer"
+							className="h-8 w-8 text-slate-700 hover:text-slate-900 cursor-pointer -ml-2"
 						>
 							<ArrowLeft className="h-4 w-4" />
 						</Button>
@@ -58,26 +58,26 @@ export function CreateInvoicePage() {
 						<h1 className="text-lg font-bold text-slate-900 leading-tight">
 							<Translate text={localizationConstants.createInvoiceTitle} />
 						</h1>
-						<p className="text-xs text-slate-500">
+						<p className="text-xs text-slate-400 font-normal mt-0.5">
 							<Translate text={localizationConstants.createInvoiceStep} />
 						</p>
 					</div>
 				</div>
 
-				{/* Level-2 Tabs Header */}
+				{/* Level-2 Tabs Header matching Figma */}
 				<div className="mt-4 border-b border-slate-200">
 					<Tabs
 						value={activeTab}
 						onValueChange={(val) => setActiveTab(val as "oversikt" | "tidrapport" | "underlag")}
 					>
 						<TabsList variant="line" className="h-[36px]">
-							<TabsTrigger value="oversikt" className="cursor-pointer">
+							<TabsTrigger value="oversikt" className="cursor-pointer text-xs font-medium">
 								<Translate text={localizationConstants.createInvoiceTabOverview} />
 							</TabsTrigger>
-							<TabsTrigger value="tidrapport" className="cursor-pointer">
+							<TabsTrigger value="tidrapport" className="cursor-pointer text-xs font-medium">
 								<Translate text={localizationConstants.createInvoiceTabTimeReport} />
 							</TabsTrigger>
-							<TabsTrigger value="underlag" className="cursor-pointer">
+							<TabsTrigger value="underlag" className="cursor-pointer text-xs font-medium">
 								<Translate text={localizationConstants.createInvoiceTabAttachments} />
 							</TabsTrigger>
 						</TabsList>
@@ -86,7 +86,7 @@ export function CreateInvoicePage() {
 			</div>
 
 			{/* Main Form Content Area */}
-			<div className="px-6 py-6 max-w-7xl mx-auto w-full flex-1">
+			<div className="px-8 py-6 max-w-7xl mx-auto w-full flex-1">
 				{activeTab === "oversikt" && (
 					<div>
 						{/* Top Header Card */}
@@ -109,11 +109,11 @@ export function CreateInvoicePage() {
 						/>
 
 						{/* Comment Box */}
-						<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5 mb-5">
+						<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5 mb-6">
 							<h3 className="text-sm font-semibold text-slate-900 mb-1">
 								<Translate text={localizationConstants.createInvoiceCommentTitle} />
 							</h3>
-							<Label className="text-xs text-slate-500 mb-2 block">
+							<Label className="text-xs text-slate-500 mb-2 block font-normal">
 								<Translate text={localizationConstants.createInvoiceCommentPlaceholder} />
 							</Label>
 							<Textarea
@@ -121,7 +121,7 @@ export function CreateInvoicePage() {
 								value={formData.comments}
 								onChange={(e) => updateField("comments", e.target.value)}
 								placeholder="Skriv kommentar här..."
-								className="text-xs border-slate-200 resize-y"
+								className="text-xs border-slate-200 resize-y bg-white"
 							/>
 						</div>
 					</div>
@@ -138,45 +138,41 @@ export function CreateInvoicePage() {
 				)}
 
 				{activeTab === "underlag" && <InvoiceAttachmentsTab />}
-			</div>
 
-			{/* Sticky Bottom Action Bar matching Figma */}
-			<div className="fixed bottom-0 left-0 right-0 z-20 bg-white border-t border-slate-200 px-8 py-3 shadow-lg flex items-center justify-between">
-				<div>
+				{/* Actions Bar matching Figma */}
+				<div className="flex items-center justify-end gap-3 pt-4 pb-8">
 					<Button
 						variant="outline"
 						onClick={handleCancel}
-						className="h-10 px-5 text-xs font-medium border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
+						className="h-9 px-6 text-xs font-normal border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer bg-white rounded-md"
 					>
 						<Translate text={localizationConstants.createInvoiceBtnCancel} />
 					</Button>
-				</div>
 
-				<div className="flex items-center gap-3">
 					<Button
 						onClick={() => setPreviewOpen(true)}
-						className="h-10 px-4 text-xs font-medium bg-[#111721] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer"
+						className="h-9 px-4 text-xs font-normal bg-[#18181b] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
 					>
-						<Eye className="h-4 w-4" />
-						<Translate text={localizationConstants.createInvoiceBtnPreview} />
+						<Eye className="h-3.5 w-3.5" />
+						<span>förhandsvisning</span>
 					</Button>
 
 					<Button
 						onClick={handleSaveDraft}
-						className="h-10 px-4 text-xs font-medium bg-[#111721] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer"
+						className="h-9 px-5 text-xs font-normal bg-[#18181b] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-md"
 					>
-						<Save className="h-4 w-4" />
+						<Save className="h-3.5 w-3.5" />
 						<Translate text={localizationConstants.createInvoiceBtnSave} />
 					</Button>
 
 					<Button
 						onClick={handleSendInvoice}
-						className="h-10 px-5 text-xs font-medium bg-[#16a34a] hover:bg-[#15803d] text-white gap-2 shadow-2xs cursor-pointer transition-colors"
+						className="h-9 px-6 text-xs font-normal bg-[#16a34a] hover:bg-[#15803d] text-white gap-2 shadow-2xs cursor-pointer transition-colors rounded-md"
 					>
 						<span>
 							<Translate text={localizationConstants.createInvoiceBtnSend} />
 						</span>
-						<ArrowRight className="h-4 w-4" />
+						<ArrowRight className="h-3.5 w-3.5" />
 					</Button>
 				</div>
 			</div>

@@ -37,37 +37,37 @@ export function InvoicePaymentPlanTable({
 			</h3>
 
 			<div className="w-full overflow-x-auto">
-				<Table className="w-full min-w-[950px] border-collapse">
+				<Table className="w-full min-w-[950px] border-collapse border border-slate-200">
 					<TableHeader>
-						<TableRow className="border-b border-slate-200 bg-slate-50/70 hover:bg-slate-50/70">
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24">
+						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
 								Invoice nr
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 border-r border-slate-200">
 								Datum
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 min-w-[160px]">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 min-w-[160px] border-r border-slate-200">
 								Beskrivning
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								Deb. Antal
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-20">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 border-r border-slate-200">
 								Enhet
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								Pris / styck
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								Innehållet
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								Belopp
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								Betalt
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								Kost
 							</TableHead>
 							<TableHead className="py-2.5 px-2 w-12 text-center" />
@@ -75,35 +75,35 @@ export function InvoicePaymentPlanTable({
 					</TableHeader>
 					<TableBody>
 						{items.map((row) => (
-							<TableRow key={row.id} className="border-b border-slate-100 hover:bg-slate-50/50">
-								<TableCell className="py-2 px-3 text-xs font-medium text-slate-800">
+							<TableRow key={row.id} className="border-b border-slate-200 hover:bg-slate-50/50">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
 									{row.invoiceNo}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs text-slate-700">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 border-r border-slate-200">
 									{row.date}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-medium text-slate-800">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 border-r border-slate-200">
 									{row.description}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs text-slate-700 text-right">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
 									{row.quantity}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs text-slate-700">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 border-r border-slate-200">
 									{row.unit}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs text-slate-700 text-right">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
 									{formatNum(row.unitPrice)}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs text-slate-700 text-right">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
 									{formatNum(row.withheld)}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs font-medium text-slate-800 text-right">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-800 text-left border-r border-slate-200">
 									{formatNum(row.amount)}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs text-slate-700 text-right">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
 									{formatNum(row.paid)}
 								</TableCell>
-								<TableCell className="py-2 px-3 text-xs text-slate-700 text-right">
+								<TableCell className="py-2 px-3 text-xs font-normal text-slate-700 text-left border-r border-slate-200">
 									{formatNum(row.cost)}
 								</TableCell>
 								<TableCell className="py-2 px-2 text-center">
@@ -122,11 +122,11 @@ export function InvoicePaymentPlanTable({
 				</Table>
 			</div>
 
-			<div className="pt-3">
+			<div className="pt-4">
 				<Button
 					variant="outline"
 					onClick={onAddRow}
-					className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer"
+					className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer bg-white"
 				>
 					<Plus className="h-3.5 w-3.5" />
 					<Translate text={localizationConstants.createInvoiceAddRow} />

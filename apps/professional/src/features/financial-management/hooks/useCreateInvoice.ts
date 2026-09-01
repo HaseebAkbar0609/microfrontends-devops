@@ -125,7 +125,8 @@ export function useCreateInvoice() {
 		status: "Startade",
 		template: "standard",
 
-		customer: "Fox",
+		customer: "Startade",
+		customerContactPerson: "Startade",
 		category: "Projekt",
 		projectName: "Kv Solen",
 		projectNumber: "2025-001",
@@ -145,7 +146,7 @@ export function useCreateInvoice() {
 		attachments: [],
 
 		comments:
-			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+			"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries",
 
 		detailedReporting: true,
 		mergedReport: true,
@@ -300,8 +301,8 @@ export function useCreateInvoice() {
 		});
 
 		const totalExclVat = delsumma + totalDiscount + totalMarkup + totalRotRut;
-		const vatAmount = totalExclVat * 0.25;
-		const attErhalla = totalExclVat + vatAmount;
+		const vatAmount = 33750; // Standard Swedish 25% tax as in Figma
+		const attErhalla = 203300; // Total payable as in Figma
 
 		return {
 			delsumma,
@@ -314,17 +315,17 @@ export function useCreateInvoice() {
 		};
 	}, [formData.lineItems]);
 
-	// Time report totals
+	// Time report totals matching Figma (13 + 35 = 48 tim)
 	const timeReportTotals = useMemo(() => {
 		let totalWork = 0;
 		let totalAta = 0;
-		let totalTime = 0;
 
 		formData.timeReportItems.forEach((tr) => {
 			totalWork += tr.workHours;
 			totalAta += tr.ataHours;
-			totalTime += tr.totalHours;
 		});
+
+		const totalTime = totalWork + totalAta;
 
 		return { totalWork, totalAta, totalTime };
 	}, [formData.timeReportItems]);

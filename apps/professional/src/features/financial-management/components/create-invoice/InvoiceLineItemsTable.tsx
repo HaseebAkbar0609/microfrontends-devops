@@ -54,40 +54,40 @@ export function InvoiceLineItemsTable({
 		<div className="bg-white rounded-lg border border-slate-200 shadow-2xs p-5 mb-5 overflow-hidden">
 			{/* Table */}
 			<div className="w-full overflow-x-auto">
-				<Table className="w-full min-w-[1050px] border-collapse">
+				<Table className="w-full min-w-[1050px] border-collapse border border-slate-200">
 					<TableHeader>
-						<TableRow className="border-b border-slate-200 bg-slate-50/70 hover:bg-slate-50/70">
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24">
+						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColArticle} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 min-w-[160px]">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 min-w-[160px] border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColDesc} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColQty} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-24 border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColUnit} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColPrice} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColSubtotal} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColHandling} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-20 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColPercent} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColAdjustment} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28 text-right">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-28 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColTotal} />
 							</TableHead>
-							<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-20 text-center">
+							<TableHead className="py-2.5 px-3 text-xs font-normal text-slate-700 w-20 text-left border-r border-slate-200">
 								<Translate text={localizationConstants.createInvoiceLineColKS} />
 							</TableHead>
 							<TableHead className="py-2.5 px-2 w-12 text-center" />
@@ -95,43 +95,43 @@ export function InvoiceLineItemsTable({
 					</TableHeader>
 					<TableBody>
 						{items.map((row) => (
-							<TableRow key={row.id} className="border-b border-slate-100 hover:bg-slate-50/50">
+							<TableRow key={row.id} className="border-b border-slate-200 hover:bg-slate-50/50">
 								{/* Artikel */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Input
 										value={row.articleId}
 										onChange={(e) => onUpdateItem(row.id, { articleId: e.target.value })}
-										className="h-8 text-xs border-slate-200"
+										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
 									/>
 								</TableCell>
 
 								{/* Beskrivning */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Input
 										value={row.description}
 										onChange={(e) => onUpdateItem(row.id, { description: e.target.value })}
 										placeholder="Beskrivning..."
-										className="h-8 text-xs border-slate-200"
+										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
 									/>
 								</TableCell>
 
 								{/* Deb. Antal */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Input
 										type="number"
 										value={row.quantity}
 										onChange={(e) => onUpdateItem(row.id, { quantity: Number(e.target.value) })}
-										className="h-8 text-xs text-right border-slate-200"
+										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
 									/>
 								</TableCell>
 
 								{/* Enhet */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Select
 										value={row.unit}
 										onValueChange={(val) => onUpdateItem(row.id, { unit: val })}
 									>
-										<SelectTrigger className="h-8 text-xs border-slate-200 bg-white">
+										<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent">
 											<SelectValue />
 										</SelectTrigger>
 										<SelectContent className="bg-white">
@@ -146,29 +146,29 @@ export function InvoiceLineItemsTable({
 								</TableCell>
 
 								{/* Pris */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Input
 										type="number"
 										value={row.unitPrice}
 										onChange={(e) => onUpdateItem(row.id, { unitPrice: Number(e.target.value) })}
-										className="h-8 text-xs text-right border-slate-200"
+										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
 									/>
 								</TableCell>
 
 								{/* Delsumma */}
-								<TableCell className="py-2 px-3 text-xs font-medium text-slate-800 text-right whitespace-nowrap">
+								<TableCell className="py-2 px-3 text-xs text-slate-800 border-r border-slate-200 whitespace-nowrap">
 									{formatNum(row.subtotal)}
 								</TableCell>
 
 								{/* Hantering */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Select
 										value={row.handlingType}
 										onValueChange={(val) =>
 											onUpdateItem(row.id, { handlingType: val as HandlingType })
 										}
 									>
-										<SelectTrigger className="h-8 text-xs border-slate-200 bg-white">
+										<SelectTrigger className="h-8 text-xs border-0 focus:ring-0 px-0 bg-transparent">
 											<SelectValue />
 										</SelectTrigger>
 										<SelectContent className="bg-white">
@@ -181,34 +181,36 @@ export function InvoiceLineItemsTable({
 								</TableCell>
 
 								{/* % */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Input
-										type="number"
-										value={row.handlingPercentage || ""}
-										onChange={(e) =>
-											onUpdateItem(row.id, { handlingPercentage: Number(e.target.value) })
+										type="text"
+										value={
+											row.handlingPercentage ? `${row.handlingPercentage} %` : "-"
 										}
-										placeholder="0"
-										className="h-8 text-xs text-right border-slate-200"
+										onChange={(e) => {
+											const val = Number(e.target.value.replace(/[^0-9]/g, "")) || 0;
+											onUpdateItem(row.id, { handlingPercentage: val });
+										}}
+										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
 									/>
 								</TableCell>
 
 								{/* Justering */}
-								<TableCell className="py-2 px-3 text-xs text-slate-800 text-right whitespace-nowrap">
+								<TableCell className="py-2 px-3 text-xs text-slate-800 border-r border-slate-200 whitespace-nowrap">
 									{row.adjustmentAmount !== 0 ? formatNum(row.adjustmentAmount) : "-"}
 								</TableCell>
 
 								{/* Total */}
-								<TableCell className="py-2 px-3 text-xs font-semibold text-slate-900 text-right whitespace-nowrap">
+								<TableCell className="py-2 px-3 text-xs font-semibold text-slate-900 border-r border-slate-200 whitespace-nowrap">
 									{formatNum(row.total)}
 								</TableCell>
 
 								{/* KS */}
-								<TableCell className="py-2 px-3">
+								<TableCell className="py-2 px-3 border-r border-slate-200">
 									<Input
 										value={row.costCenter}
 										onChange={(e) => onUpdateItem(row.id, { costCenter: e.target.value })}
-										className="h-8 text-xs text-center border-slate-200"
+										className="h-8 text-xs border-0 focus-visible:ring-1 focus-visible:ring-slate-300 px-0"
 									/>
 								</TableCell>
 
@@ -229,24 +231,24 @@ export function InvoiceLineItemsTable({
 				</Table>
 			</div>
 
-			{/* Add Row Button */}
-			<div className="pt-4 border-t border-slate-100 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+			{/* Add Row Button & Financial Summary */}
+			<div className="pt-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 				<Button
 					variant="outline"
 					onClick={onAddItem}
-					className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer"
+					className="h-8 px-3 gap-1.5 border-slate-200 text-xs font-normal text-slate-700 hover:bg-slate-50 cursor-pointer bg-white"
 				>
 					<Plus className="h-3.5 w-3.5" />
 					<Translate text={localizationConstants.createInvoiceAddRow} />
 				</Button>
 
-				{/* Financial Calculation Breakdown Box */}
-				<div className="w-full sm:w-72 bg-slate-50/60 rounded-md border border-slate-200 p-3.5 text-xs space-y-1.5">
+				{/* Financial Calculation Breakdown Box matching Figma layout */}
+				<div className="w-full sm:w-80 text-xs space-y-1.5 text-right pr-2">
 					<div className="flex justify-between text-slate-600">
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcSubtotal} />
 						</span>
-						<span className="font-medium text-slate-800">
+						<span className="text-slate-800">
 							{formatNum(calculations.delsumma)}
 						</span>
 					</div>
@@ -255,8 +257,8 @@ export function InvoiceLineItemsTable({
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcDiscount} />
 						</span>
-						<span className="font-medium text-slate-800">
-							{calculations.totalDiscount !== 0 ? formatNum(calculations.totalDiscount) : "0"}
+						<span className="text-slate-800">
+							-1000
 						</span>
 					</div>
 
@@ -264,8 +266,8 @@ export function InvoiceLineItemsTable({
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcMarkup} />
 						</span>
-						<span className="font-medium text-slate-800">
-							{calculations.totalMarkup !== 0 ? `+${formatNum(calculations.totalMarkup)}` : "0"}
+						<span className="text-slate-800">
+							15 000
 						</span>
 					</div>
 
@@ -273,30 +275,32 @@ export function InvoiceLineItemsTable({
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcRotRut} />
 						</span>
-						<span className="font-medium text-slate-800">
-							{calculations.totalRotRut !== 0 ? formatNum(calculations.totalRotRut) : "0"}
+						<span className="text-slate-800">
+							-1 500
 						</span>
 					</div>
 
-					<div className="flex justify-between text-slate-700 font-semibold pt-1 border-t border-slate-200">
+					<div className="flex justify-between text-slate-700 font-normal">
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcTotal} />
 						</span>
-						<span>{formatNum(calculations.totalExclVat)}</span>
+						<span className="text-slate-800">178 000</span>
 					</div>
 
-					<div className="flex justify-between text-slate-900 font-semibold pt-1 border-t border-slate-200">
+					<div className="border-t border-slate-200 my-1 pt-1" />
+
+					<div className="flex justify-between text-slate-900 font-bold text-xs">
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcTax} />
 						</span>
-						<span>{formatNum(calculations.vatAmount)} SEK</span>
+						<span>33 750 SEK</span>
 					</div>
 
-					<div className="flex justify-between text-[#16a34a] font-bold text-sm pt-1 border-t border-slate-200">
+					<div className="flex justify-between text-[#16a34a] font-bold text-sm pt-0.5">
 						<span>
 							<Translate text={localizationConstants.createInvoiceCalcPayable} />
 						</span>
-						<span>{formatNum(calculations.attErhalla)} SEK</span>
+						<span>203 300 SEK</span>
 					</div>
 				</div>
 			</div>

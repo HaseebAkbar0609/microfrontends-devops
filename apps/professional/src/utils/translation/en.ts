@@ -5297,6 +5297,7 @@ export const enInvoice: InvoiceTranslation = {
 	createInvoiceFieldStatus: "Status",
 	createInvoiceFieldTemplate: "Invoice Template",
 	createInvoiceFieldCustomer: "Customer",
+	createInvoiceFieldCustomerContactPerson: "Customer Contact Person",
 	createInvoiceFieldCategory: "Category",
 	createInvoiceFieldProjectName: "Project Name",
 	createInvoiceFieldProjectNumber: "Project Number",

@@ -5257,6 +5257,7 @@ export type InvoiceTranslation = {
 	createInvoiceFieldStatus: string;
 	createInvoiceFieldTemplate: string;
 	createInvoiceFieldCustomer: string;
+	createInvoiceFieldCustomerContactPerson: string;
 	createInvoiceFieldCategory: string;
 	createInvoiceFieldProjectName: string;
 	createInvoiceFieldProjectNumber: string;
