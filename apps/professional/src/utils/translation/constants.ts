@@ -2200,6 +2200,21 @@ export type OfferTranslation = {
 	kmaChecklistTemplateValidationDocs: string;
 	// TFS-743 – Open Checklist Template
 	kmaChecklistTemplateCreateCheck: string;
+	// TFS-744 – Action Plans
+	kmaActionPlanCreateBtn: string;
+	kmaActionPlanCreateTitle: string;
+	kmaActionPlanFieldTitle: string;
+	kmaActionPlanFieldDesc: string;
+	kmaActionPlanFieldResponsible: string;
+	kmaActionPlanFieldDueDate: string;
+	kmaActionPlanFieldPriority: string;
+	kmaActionPlanFieldStatus: string;
+	kmaActionPlanPriorityLow: string;
+	kmaActionPlanPriorityMedium: string;
+	kmaActionPlanPriorityHigh: string;
+	kmaActionPlanStatusNotStarted: string;
+	kmaActionPlanStatusInProgress: string;
+	kmaActionPlanStatusCompleted: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
@@ -2717,6 +2732,34 @@ export type OfferTranslation = {
 	purchaseLineCreate: string;
 	purchaseLineArchivedToast: string;
 	purchaseLineDeletedToast: string;
+	// Purchase - New purchase order
+	purchaseOrderTitle: string;
+	purchaseOrderTabObject: string;
+	purchaseOrderTabContact: string;
+	purchaseOrderTabSpecification: string;
+	purchaseOrderSupplierFromCalc: string;
+	purchaseOrderSelectAction: string;
+	purchaseOrderObjectHeading: string;
+	purchaseOrderInsuranceQuestion: string;
+	purchaseOrderSelectedSupplier: string;
+	purchaseOrderDesiredDelivery: string;
+	purchaseOrderMarking: string;
+	purchaseOrderQrLabel: string;
+	purchaseOrderInvoiceTo: string;
+	purchaseOrderColSupplierArticle: string;
+	purchaseOrderDeliveryByCar: string;
+	purchaseOrderDeliveryPickup: string;
+	purchaseOrderComments: string;
+	purchaseOrderCommentsPlaceholder: string;
+	purchaseOrderSend: string;
+	purchaseOrderOpenSupplier: string;
+	purchaseOrderPreview: string;
+	purchaseOrderCreatedToast: string;
+	purchaseOrderValidationRequired: string;
+	purchaseOrderValidationQuantity: string;
+	purchaseOrderUnavailable: string;
+	purchaseOrderNewLineAria: string;
+	purchaseOrderRemoveLineAria: string;
 
 	// Order - Dashboard widgets
 	orderWidgetOverviewTitle: string;

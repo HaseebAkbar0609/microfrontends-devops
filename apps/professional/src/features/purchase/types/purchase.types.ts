@@ -240,3 +240,39 @@ export interface PurchaseLineRow {
 	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
 	archived: boolean;
 }
+
+/**
+ * One row of a purchase order's Specifikation table.
+ *
+ * Quantity and unit price are held as strings because they are edited through
+ * text inputs; parsing at the edge keeps an empty or non-numeric entry from
+ * silently becoming 0 or NaN in the totals. The frame prints a Delsumma that
+ * does not match its own inputs, so it is always computed, never stored.
+ */
+export interface PurchaseOrderSpecLine {
+	id: string;
+	/** The buyer's own article number. */
+	articleNo: string;
+	supplierArticleNo: string;
+	designation: string;
+	quantity: string;
+	unit: string;
+	unitPrice: string;
+}
+
+/**
+ * A named contact on a purchase document — a complaint's reporter, a purchase
+ * order's orderer. One shape, because every screen collects the same fields.
+ */
+export interface PurchaseContactPerson {
+	/** Id of the picked existing contact, or "" when entering a new one. */
+	contactId: string;
+	firstName: string;
+	lastName: string;
+	address: string;
+	postalCode: string;
+	email: string;
+	phone: string;
+	city: string;
+	role: string;
+}

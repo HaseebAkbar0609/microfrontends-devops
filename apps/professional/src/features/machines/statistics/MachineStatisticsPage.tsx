@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ModulePageHeader } from "@/components/layout/navigation";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { machineBreadcrumbs } from "@/features/machines/data/machineNav.config";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useMachineStatistics } from "./hooks/useMachineStatistics";
 import { useVehicleStatistics } from "./hooks/useVehicleStatistics";
 import { StatisticsKpiCards } from "./components/StatisticsKpiCards";
@@ -15,7 +16,7 @@ import { VehicleStatisticsTable } from "./components/VehicleStatisticsTable";
 
 export function MachineStatisticsPage() {
 	const [activeMainTab, setActiveMainTab] = useState<"machines" | "vehicles">(
-		"machines"
+		"machines",
 	);
 
 	// Machine statistics hook
@@ -61,49 +62,36 @@ export function MachineStatisticsPage() {
 	const isExternalView = machineFilters.machineType === "Externa";
 
 	return (
-		<div className="flex h-full flex-col bg-slate-50/50">
-			{/* Module Header with Breadcrumbs & Tabs unified in white header with border line UNDER tabs */}
-			<div className="bg-white border-b border-slate-200">
-				<ModulePageHeader
-					title={localizationConstants.machineStatTitle}
-					breadcrumbs={machineBreadcrumbs(
-						localizationConstants.machineStatBreadcrumb
-					)}
-					className="border-b-0 pb-1"
-				/>
+		<div className="flex flex-1 flex-col bg-slate-50/50">
+			{/* Page Title with Breadcrumbs */}
+			<PageHeader
+				title={localizationConstants.machineStatTitle}
+				breadcrumbs={machineBreadcrumbs(
+					localizationConstants.machineStatBreadcrumb,
+				)}
+				className="border-b-0 px-6 pt-5 pb-2"
+			/>
 
-				{/* Top-level Tabs: Maskiner | Fordonspark */}
-				<div className="flex items-center gap-8 px-5">
-					<button
-						type="button"
-						onClick={() => setActiveMainTab("machines")}
-						className={`pb-3 text-sm font-semibold transition-colors cursor-pointer ${
-							activeMainTab === "machines"
-								? "border-b-2 border-slate-900 text-slate-900 -mb-px"
-								: "border-b-2 border-transparent text-slate-500 hover:text-slate-800"
-						}`}
-					>
-						<Translate text={localizationConstants.machineStatTabMachines} />
-					</button>
-					<button
-						type="button"
-						onClick={() => setActiveMainTab("vehicles")}
-						className={`pb-3 text-sm font-semibold transition-colors cursor-pointer ${
-							activeMainTab === "vehicles"
-								? "border-b-2 border-slate-900 text-slate-900 -mb-px"
-								: "border-b-2 border-transparent text-slate-500 hover:text-slate-800"
-						}`}
-					>
-						<Translate text={localizationConstants.machineStatTabVehicles} />
-					</button>
-				</div>
-			</div>
+			{/* Main Content Area with 2-level Tab Row */}
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-12 overflow-y-auto">
+				<Tabs
+					value={activeMainTab}
+					onValueChange={(v) => setActiveMainTab(v as "machines" | "vehicles")}
+					className="flex-1"
+				>
+					<div className="flex items-center border-b border-slate-200 mb-6 bg-white px-4 rounded-t-lg h-[44px]">
+						<TabsList variant="line" className="h-[36px]">
+							<TabsTrigger value="machines" className="cursor-pointer">
+								<Translate text={localizationConstants.machineStatTabMachines} />
+							</TabsTrigger>
+							<TabsTrigger value="vehicles" className="cursor-pointer">
+								<Translate text={localizationConstants.machineStatTabVehicles} />
+							</TabsTrigger>
+						</TabsList>
+					</div>
 
-			{/* Main Scrollable Body */}
-			<div className="flex flex-1 flex-col gap-6 overflow-y-auto px-6 pt-6 pb-12">
-				{/* Tab 1: Maskiner View */}
-				{activeMainTab === "machines" && (
-					<div className="flex flex-col gap-6">
+					{/* Tab 1: Maskiner View */}
+					<TabsContent value="machines" className="mt-0 flex flex-col gap-6">
 						{/* 3 Dark Summary KPI Cards */}
 						<StatisticsKpiCards
 							variant="machines"
@@ -145,12 +133,10 @@ export function MachineStatisticsPage() {
 							onPageChange={setMachineCurrentPage}
 							onPageSizeChange={setMachinePageSize}
 						/>
-					</div>
-				)}
+					</TabsContent>
 
-				{/* Tab 2: Fordonspark View */}
-				{activeMainTab === "vehicles" && (
-					<div className="flex flex-col gap-6">
+					{/* Tab 2: Fordonspark View */}
+					<TabsContent value="vehicles" className="mt-0 flex flex-col gap-6">
 						{/* 3 Dark Summary KPI Cards */}
 						<StatisticsKpiCards
 							variant="vehicles"
@@ -191,9 +177,11 @@ export function MachineStatisticsPage() {
 							onPageChange={setVehicleCurrentPage}
 							onPageSizeChange={setVehiclePageSize}
 						/>
-					</div>
-				)}
+					</TabsContent>
+				</Tabs>
 			</div>
 		</div>
 	);
 }
+
+export default MachineStatisticsPage;

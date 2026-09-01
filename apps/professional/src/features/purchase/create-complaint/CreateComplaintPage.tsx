@@ -29,7 +29,7 @@ import {
 import type { ComplaintPriority } from "./types";
 import { useCreateComplaintForm } from "./useCreateComplaintForm";
 import { ComplaintCompanyCard } from "./components/ComplaintCompanyCard";
-import { ComplaintContactCard } from "./components/ComplaintContactCard";
+import { ContactPersonCard } from "../components/shared/ContactPersonCard";
 import { ComplaintDocumentsCard } from "./components/ComplaintDocumentsCard";
 
 const FIELD_CLASS =
@@ -266,7 +266,7 @@ export function CreateComplaintPage() {
 									onSelect={setSupplierId}
 								/>
 
-								<ComplaintContactCard
+								<ContactPersonCard
 									titleKey={
 										localizationConstants.complaintCreateSupplierContactSection
 									}
@@ -285,7 +285,7 @@ export function CreateComplaintPage() {
 									errors={companyErrors("reporter")}
 								/>
 
-								<ComplaintContactCard
+								<ContactPersonCard
 									titleKey={
 										localizationConstants.complaintCreateReporterContactSection
 									}
