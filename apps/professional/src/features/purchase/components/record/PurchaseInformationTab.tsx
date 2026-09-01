@@ -117,15 +117,22 @@ export function PurchaseInformationTab({
 				action={
 					<PermissionGate permission="EDIT_PURCHASE">
 						{/* Drawn in the frame, but no order edit screen exists
-						    yet — shown, and honestly disabled. */}
+						    yet — shown, and honestly disabled. `title` is not
+						    reliably announced, so the reason is also carried in
+						    the accessible name and the state is stated
+						    explicitly rather than left to the attribute. */}
 						<Button
 							type="button"
 							variant="outline"
 							size="sm"
 							disabled
+							aria-disabled
 							title={t(
 								localizationConstants.purchaseOrderUnavailable,
 							)}
+							aria-label={`${t(localizationConstants.actionEdit)} — ${t(
+								localizationConstants.purchaseOrderUnavailable,
+							)}`}
 							className="h-8 gap-1.5 border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-2xs disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							<Pencil className="h-3.5 w-3.5" aria-hidden />

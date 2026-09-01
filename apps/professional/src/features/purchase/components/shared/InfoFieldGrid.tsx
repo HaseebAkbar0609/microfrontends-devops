@@ -2,15 +2,25 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { TranslationKeys } from "@/utils/translation/constants";
+import localizationConstants, {
+	type TranslationKeys,
+} from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+
+/**
+ * The glyph the frame draws in an empty field. A typographic mark rather than
+ * copy — the same character in every locale this app ships — so it is hidden
+ * from assistive tech and paired with a translated word instead. A screen
+ * reader hears `purchaseInfoValueMissing`, not "em dash".
+ */
+const EMPTY_VALUE_GLYPH = "—";
 
 /**
  * One read-only label/value pair, label above value.
  *
- * An absent value renders an em dash rather than an empty cell, so a field that
- * has no data still reads as a field. Callers therefore store `""`, never a
- * literal "-".
+ * An absent value renders the empty-field treatment rather than an empty cell,
+ * so a field with no data still reads as a field. Callers therefore store `""`,
+ * never a literal "-".
  */
 export function InfoField({
 	labelKey,
@@ -28,7 +38,21 @@ export function InfoField({
 				<Translate text={labelKey} />
 			</dt>
 			<dd className="text-sm text-slate-500">
-				{children ?? (value?.trim() ? value : "—")}
+				{children ??
+					(value?.trim() ? (
+						value
+					) : (
+						<>
+							<span aria-hidden>{EMPTY_VALUE_GLYPH}</span>
+							<span className="sr-only">
+								<Translate
+									text={
+										localizationConstants.purchaseInfoValueMissing
+									}
+								/>
+							</span>
+						</>
+					))}
 			</dd>
 		</div>
 	);

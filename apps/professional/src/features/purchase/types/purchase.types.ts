@@ -284,8 +284,10 @@ export interface PurchaseContactPerson {
 export interface PurchaseCalculationInfo {
 	calculationNo: string;
 	orderer: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
 	quoteDate: string;
 	type: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
 	quoteAmount: string;
 	category: string;
 	status: PurchaseStatus;
@@ -295,6 +297,7 @@ export interface PurchaseCalculationInfo {
 export interface PurchaseQuoteInfo {
 	idNo: string;
 	job: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
 	date: string;
 	type: string;
 	inquiry: string;
@@ -310,9 +313,12 @@ export interface PurchaseOrderInfo {
 	type: string;
 	status: string;
 	telephone: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
 	orderAmount: string;
 	projectManager: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
 	startDate: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
 	endDate: string;
 }
 

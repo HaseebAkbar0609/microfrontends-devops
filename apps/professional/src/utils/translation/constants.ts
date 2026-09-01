@@ -2765,6 +2765,7 @@ export type OfferTranslation = {
 	purchaseInfoOrderAmount: string;
 	purchaseInfoNone: string;
 	purchaseInfoTab: string;
+	purchaseInfoValueMissing: string;
 	purchaseOrderNewLineAria: string;
 	purchaseOrderRemoveLineAria: string;
 

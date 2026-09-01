@@ -2672,6 +2672,7 @@ export const svOffer: OfferTranslation = {
 	purchaseInfoOrderAmount: "Orderbelopp",
 	purchaseInfoNone: "Ingen information registrerad",
 	purchaseInfoTab: "Information",
+	purchaseInfoValueMissing: "Saknas",
 	purchaseOrderNewLineAria: "Lägg till specifikationsrad",
 	purchaseOrderRemoveLineAria: "Ta bort specifikationsrad",
 
