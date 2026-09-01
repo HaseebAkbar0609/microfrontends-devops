@@ -64,6 +64,12 @@ export interface ArchivableRowsTableProps<T extends ArchivableRow> {
 	toolbarAction?: ReactNode;
 	filterOptions?: ArchivableFilterOption[];
 	matchesFilter?: (row: T, value: string) => boolean;
+	/**
+	 * Row-menu items listed above Arkiv and Ta bort, for designs whose kebab
+	 * carries more than the two this component owns. Callers apply their own
+	 * permission gate — this array is passed through untouched.
+	 */
+	extraActions?: DataTableAction<T>[];
 }
 
 /**
@@ -92,6 +98,7 @@ export function ArchivableRowsTable<T extends ArchivableRow>({
 	filterOptions,
 	matchesFilter,
 	toolbarAction,
+	extraActions,
 }: ArchivableRowsTableProps<T>) {
 	const { t } = useTranslation();
 	const {
@@ -130,7 +137,7 @@ export function ArchivableRowsTable<T extends ArchivableRow>({
 	const canRestore = hasPermission(ROLES.MANAGER, "EDIT_PURCHASE");
 	const canDelete = hasPermission(ROLES.MANAGER, "DELETE_PURCHASE");
 
-	const actions: DataTableAction<T>[] = [];
+	const actions: DataTableAction<T>[] = [...(extraActions ?? [])];
 
 	if (canRestore) {
 		const restoring = mode === "restore";

@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 import { ModulePageHeader, SectionTabs } from "@/components/layout/navigation";
@@ -26,43 +25,15 @@ import type {
 } from "../types/purchase.types";
 import {
 	PurchaseCategoryBadge,
-	PurchaseComplaintStatusBadge,
-	PurchaseComplaintTypeLabel,
 	PurchaseGoodsReceptionOrderTypeLabel,
 	PurchaseStatusBadge,
 	PurchaseTypeBadge,
 } from "./PurchaseBadges";
 import { PurchaseGoodsDetailDrawer } from "./PurchaseGoodsDetailDrawer";
 import { ArchivableRowsTable } from "./shared/ArchivableRowsTable";
-
-/** The grey pill the sibling lists use for the Objekt column. */
-function ObjectPill({ value }: { value: string }) {
-	return (
-		<span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-0.5 text-xs font-medium text-slate-700">
-			{value}
-		</span>
-	);
-}
-
-function SeeDetailsLink({
-	href,
-	label,
-}: {
-	href: string;
-	label: string;
-}) {
-	return (
-		<Link href={href}>
-			<Button
-				variant="outline"
-				size="sm"
-				className="h-8 cursor-pointer rounded-md border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-100"
-			>
-				<Translate text={label} />
-			</Button>
-		</Link>
-	);
-}
+import { COMPLAINT_COLUMNS } from "./shared/complaintColumns";
+import { ObjectPill } from "./shared/ObjectPill";
+import { SeeDetailsLink } from "./shared/SeeDetailsLink";
 
 const PURCHASE_COLUMNS: DataTableColumn<PurchaseRow>[] = [
 	{
@@ -104,49 +75,6 @@ const PURCHASE_COLUMNS: DataTableColumn<PurchaseRow>[] = [
 		label: localizationConstants.statusLabel,
 		sortable: true,
 		render: (row) => <PurchaseStatusBadge status={row.status} />,
-	},
-];
-
-const COMPLAINT_COLUMNS: DataTableColumn<PurchaseComplaintRow>[] = [
-	{
-		key: "complaintNo",
-		label: localizationConstants.purchaseComplaintColNumber,
-		sortable: true,
-		cellClassName: "text-sm font-medium text-slate-900",
-	},
-	{
-		key: "purchaseNo",
-		label: localizationConstants.purchaseColNumber,
-		sortable: true,
-	},
-	{
-		key: "object",
-		label: localizationConstants.purchaseColObject,
-		sortable: true,
-		render: (row) => <ObjectPill value={row.object} />,
-	},
-	{ key: "name", label: localizationConstants.purchaseColName, sortable: true },
-	{
-		key: "supplier",
-		label: localizationConstants.purchaseSupplierColName,
-		sortable: true,
-	},
-	{
-		key: "type",
-		label: localizationConstants.purchaseComplaintColType,
-		sortable: true,
-		render: (row) => <PurchaseComplaintTypeLabel type={row.type} />,
-	},
-	{
-		key: "date",
-		label: localizationConstants.purchaseComplaintColDate,
-		sortable: true,
-	},
-	{
-		key: "status",
-		label: localizationConstants.statusLabel,
-		sortable: true,
-		render: (row) => <PurchaseComplaintStatusBadge status={row.status} />,
 	},
 ];
 

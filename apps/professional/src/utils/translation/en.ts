@@ -2785,6 +2785,7 @@ export const enOffer: OfferTranslation = {
 	purchaseInfoNone: "No information recorded",
 	purchaseInfoTab: "Information",
 	purchaseInfoValueMissing: "Not provided",
+	purchaseComplaintTab: "Complaint",
 	purchaseOrderNewLineAria: "Add specification row",
 	purchaseOrderRemoveLineAria: "Remove specification row",
 
