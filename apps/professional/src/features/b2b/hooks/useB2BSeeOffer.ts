@@ -12,12 +12,24 @@ import { DUMMY_SEE_OFFER_DETAIL } from "../constants/seeOfferMock";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { useAuthStatus, type User } from "@/context/AuthContext";
 
 export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1", offerId = "1") {
   const t = useTranslate();
+  const { user } = useAuthStatus() as { user: User | null };
+  const currentUserName =
+    [user?.first_name, user?.last_name].filter(Boolean).join(" ") ||
+    user?.email ||
+    "Stefan Eriksson";
+  const userInitials =
+    ((user?.first_name?.[0] || "") + (user?.last_name?.[0] || "")).toUpperCase() ||
+    currentUserName.slice(0, 2).toUpperCase() ||
+    "SE";
+
   const [data, setData] = useState<B2BSeeOfferDetail>(initialData || DUMMY_SEE_OFFER_DETAIL);
   const [isLoading, setIsLoading] = useState<boolean>(!initialData);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [submittingAction, setSubmittingAction] = useState<"accept" | "decline" | "reply" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const fetchOfferDetail = useCallback(async () => {
@@ -47,6 +59,7 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
 
   const handleAcceptOffer = async (onSuccess?: () => void) => {
     setIsSubmitting(true);
+    setSubmittingAction("accept");
     try {
       const res = await acceptB2BOfferAction(offerId);
       if (res.success) {
@@ -55,16 +68,18 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
       } else {
         showToast("error", res.error || "Failed to accept offer");
       }
-    } catch {
-      showToast("success", t(localizationConstants.b2bPMAcceptOffer));
-      if (onSuccess) onSuccess();
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to accept offer";
+      showToast("error", errorMsg);
     } finally {
       setIsSubmitting(false);
+      setSubmittingAction(null);
     }
   };
 
   const handleDeclineOffer = async () => {
     setIsSubmitting(true);
+    setSubmittingAction("decline");
     try {
       const res = await declineB2BOfferAction(offerId);
       if (res.success) {
@@ -72,15 +87,22 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
       } else {
         showToast("error", res.error || "Failed to decline offer");
       }
-    } catch {
-      showToast("info", t(localizationConstants.b2bPMDeclineOffer));
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to decline offer";
+      showToast("error", errorMsg);
     } finally {
       setIsSubmitting(false);
+      setSubmittingAction(null);
     }
   };
 
   const handleSendQAReply = async (messageId: string, replyText: string) => {
-    if (!replyText.trim()) return;
+    const sanitizedReply = replyText.replace(/<[^>]*>?/gm, "").trim();
+    if (!sanitizedReply) return;
+
+    setIsSubmitting(true);
+    setSubmittingAction("reply");
+
     setData((prev) => ({
       ...prev,
       qa: prev.qa.map((msg) =>
@@ -88,18 +110,27 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
           ? {
               ...msg,
               status: "answered" as const,
-              answerText: replyText,
-              answerUser: "Stefan Eriksson",
-              answerDate: "Idag",
+              answerText: sanitizedReply,
+              answerUser: currentUserName,
+              answerDate: t(localizationConstants.planningToday) || "Idag",
             }
           : msg
       ),
     }));
+
     try {
-      await sendB2BOfferQAReplyAction(offerId, messageId, replyText);
-      showToast("success", t(localizationConstants.b2bPMQASend));
-    } catch {
-      showToast("success", t(localizationConstants.b2bPMQASend));
+      const res = await sendB2BOfferQAReplyAction(offerId, messageId, sanitizedReply);
+      if (res.success) {
+        showToast("success", t(localizationConstants.b2bPMQASend));
+      } else {
+        showToast("error", res.error || "Failed to send reply");
+      }
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to send reply";
+      showToast("error", errorMsg);
+    } finally {
+      setIsSubmitting(false);
+      setSubmittingAction(null);
     }
   };
 
@@ -133,7 +164,10 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
     data,
     isLoading,
     isSubmitting,
+    submittingAction,
     error,
+    currentUserName,
+    userInitials,
     refetch: fetchOfferDetail,
     handleAcceptOffer,
     handleDeclineOffer,

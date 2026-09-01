@@ -1,6 +1,6 @@
 import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
-import type { ActionResult, ApiResponse } from "@/types/api";
+import type { ActionResult, ApiError, ApiResponse } from "@/types/api";
 import { B2BSeeOfferDetail } from "@/features/b2b/types/seeOffer";
 import { getMockSeeOfferDetail } from "@/features/b2b/constants/seeOfferMock";
 
@@ -114,14 +114,15 @@ export async function acceptB2BOfferAction(
       },
       error: null,
     };
-  } catch {
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    const errorMessage =
+      apiError.response?.data?.message ||
+      (error instanceof Error ? error.message : "Failed to accept offer");
     return {
-      success: true,
-      data: {
-        success: true,
-        message: "Offer accepted successfully",
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: errorMessage,
     };
   }
 }
@@ -144,14 +145,15 @@ export async function declineB2BOfferAction(
       },
       error: null,
     };
-  } catch {
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    const errorMessage =
+      apiError.response?.data?.message ||
+      (error instanceof Error ? error.message : "Failed to decline offer");
     return {
-      success: true,
-      data: {
-        success: true,
-        message: "Offer declined successfully",
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: errorMessage,
     };
   }
 }
@@ -177,14 +179,15 @@ export async function sendB2BOfferQAReplyAction(
       },
       error: null,
     };
-  } catch {
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    const errorMessage =
+      apiError.response?.data?.message ||
+      (error instanceof Error ? error.message : "Failed to send reply");
     return {
-      success: true,
-      data: {
-        success: true,
-        message: "Reply sent successfully",
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: errorMessage,
     };
   }
 }

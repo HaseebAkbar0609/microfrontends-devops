@@ -15,6 +15,7 @@ import {
   FilePlus,
   FileText,
   ImageIcon,
+  Loader2,
   Mail,
   Map,
   MapPin,
@@ -38,15 +39,10 @@ import localizationConstants from "@/utils/translation/constants";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { B2BSeeOfferDetail, B2BOfferQAMessage } from "../types/seeOffer";
 import { useB2BSeeOffer } from "../hooks/useB2BSeeOffer";
-
-const BADGE_COLOR_MAP: Record<string, string> = {
-  UE: "bg-blue-600 text-white",
-  Fråga: "bg-amber-500 text-white",
-  Beställare: "bg-teal-600 text-white",
-};
+import { B2B_QA_BADGE_COLOR_MAP } from "../constants/seeOfferConstants";
 
 function RoleBadge({ badge }: { badge: string }) {
-  const colorClass = BADGE_COLOR_MAP[badge] ?? "bg-slate-600 text-white";
+  const colorClass = B2B_QA_BADGE_COLOR_MAP[badge] ?? "bg-slate-600 text-white";
   return (
     <span
       className={cn(
@@ -145,12 +141,16 @@ function AccordionSection({
 
 function QACard({
   message,
+  currentUserName,
+  userInitials,
   onReply,
   onMarkRead,
   onArchive,
   onDelete,
 }: {
   message: B2BOfferQAMessage;
+  currentUserName: string;
+  userInitials: string;
   onReply: (messageId: string, reply: string) => void;
   onMarkRead: (messageId: string) => void;
   onArchive: (messageId: string) => void;
@@ -164,8 +164,9 @@ function QACard({
   };
 
   const handleSend = () => {
-    if (!comment.trim()) return;
-    onReply(message.id, comment.trim());
+    const sanitized = comment.replace(/<[^>]*>?/gm, "").trim();
+    if (!sanitized) return;
+    onReply(message.id, sanitized);
     setComment("");
   };
 
@@ -201,6 +202,7 @@ function QACard({
               size="icon"
               className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-800 hover:bg-slate-100 data-[state=open]:bg-slate-200 transition-colors p-0"
               aria-label={t(localizationConstants.actions)}
+              title={t(localizationConstants.actions)}
             >
               <MoreVertical size={16} className="text-slate-800" aria-hidden={true} />
             </Button>
@@ -210,6 +212,8 @@ function QACard({
             className="w-44 rounded-lg border border-slate-200 bg-white p-1.5 shadow-xl"
           >
             <DropdownMenuItem
+              role="button"
+              aria-label={t(localizationConstants.b2bPMQAMarkAsRead)}
               onClick={() => onMarkRead(message.id)}
               className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
             >
@@ -217,6 +221,8 @@ function QACard({
               <span>{t(localizationConstants.b2bPMQAMarkAsRead)}</span>
             </DropdownMenuItem>
             <DropdownMenuItem
+              role="button"
+              aria-label={t(localizationConstants.b2bDealArchiveAction)}
               onClick={() => onArchive(message.id)}
               className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
             >
@@ -224,6 +230,8 @@ function QACard({
               <span>{t(localizationConstants.b2bDealArchiveAction)}</span>
             </DropdownMenuItem>
             <DropdownMenuItem
+              role="button"
+              aria-label={t(localizationConstants.b2bDealDelete)}
               onClick={() => onDelete(message.id)}
               className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
             >
@@ -249,12 +257,14 @@ function QACard({
         <div className="mt-3.5 border-t border-slate-100 pt-3">
           <div className="flex items-start gap-2.5">
             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-medium text-slate-500">
-              SE
+              {message.answerUser
+                ? (message.answerUser.split(" ").map((w) => w[0]).filter(Boolean).join("").toUpperCase().slice(0, 2) || "U")
+                : userInitials}
             </div>
             <div className="flex flex-1 flex-col">
               <div className="flex items-center gap-1.5">
                 <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
-                  {message.answerUser || "Stefan Eriksson"}
+                  {message.answerUser || currentUserName}
                 </span>
                 <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-700">
                   {t(localizationConstants.b2bPMQAAdmin)}
@@ -265,7 +275,7 @@ function QACard({
               </span>
               <div className="mt-1 flex items-baseline justify-between gap-3">
                 <p className="font-sans text-sm font-normal leading-5 tracking-normal text-slate-950">
-                  {message.answerText || message.replyText || "Hej, jag skickar över den via KMA-modulen"}
+                  {message.answerText || message.replyText || "—"}
                 </p>
                 <span className="shrink-0 font-sans text-xs font-normal leading-4 tracking-normal text-slate-500 text-right">
                   {message.answerDate || message.date}
@@ -278,10 +288,10 @@ function QACard({
         <div className="mt-3.5 flex flex-col gap-2 border-t border-slate-100 pt-3">
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-medium text-slate-500">
-              SE
+              {userInitials}
             </div>
             <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
-              {message.replyFrom || "Stefan Eriksson"}
+              {message.replyFrom || currentUserName}
             </span>
           </div>
 
@@ -340,6 +350,10 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
 
   const {
     data,
+    isSubmitting,
+    submittingAction,
+    currentUserName,
+    userInitials,
     handleAcceptOffer,
     handleDeclineOffer,
     handleSendQAReply,
@@ -622,19 +636,29 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
               <div className="flex flex-col gap-2">
                 <Button
                   type="button"
-                  className="h-10 w-full cursor-pointer gap-2 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs"
+                  disabled={isSubmitting}
+                  className="h-10 w-full cursor-pointer gap-2 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={onAccept}
                 >
-                  <Check size={16} strokeWidth={2} className="shrink-0" aria-hidden={true} />
+                  {submittingAction === "accept" ? (
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden={true} />
+                  ) : (
+                    <Check size={16} strokeWidth={2} className="shrink-0" aria-hidden={true} />
+                  )}
                   <span>{t(localizationConstants.b2bArchiveAcceptOffer)}</span>
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-10 w-full cursor-pointer gap-2 border-0 bg-zinc-100 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-colors rounded-lg shadow-none"
+                  disabled={isSubmitting}
+                  className="h-10 w-full cursor-pointer gap-2 border-0 bg-zinc-100 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-colors rounded-lg shadow-none disabled:opacity-60 disabled:cursor-not-allowed"
                   onClick={handleDeclineOffer}
                 >
-                  <X size={15} aria-hidden={true} />
+                  {submittingAction === "decline" ? (
+                    <Loader2 className="h-4 w-4 animate-spin shrink-0 text-slate-800" aria-hidden={true} />
+                  ) : (
+                    <X size={15} aria-hidden={true} />
+                  )}
                   <span>{t(localizationConstants.b2bArchiveDecline)}</span>
                 </Button>
               </div>
@@ -675,6 +699,8 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                       <QACard
                         key={msg.id}
                         message={msg}
+                        currentUserName={currentUserName}
+                        userInitials={userInitials}
                         onReply={handleSendQAReply}
                         onMarkRead={handleMarkQARead}
                         onArchive={handleArchiveQAMessage}
@@ -694,3 +720,4 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
     </div>
   );
 }
+
