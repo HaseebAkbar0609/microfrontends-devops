@@ -58,7 +58,17 @@ const PRIORITIES: { value: ComplaintPriority; label: TranslationKeys }[] = [
 	{ value: "low", label: localizationConstants.purchaseComplaintPriorityLow },
 ];
 
-export function CreateComplaintPage() {
+export interface CreateComplaintPageProps {
+	/**
+	 * Purchase the complaint is being raised against, when the wizard was
+	 * opened from that record. Already validated and resolved by the route.
+	 */
+	prefillPurchaseNo?: string;
+}
+
+export function CreateComplaintPage({
+	prefillPurchaseNo,
+}: CreateComplaintPageProps) {
 	const t = useTranslate();
 	const {
 		purchaseOptions,
@@ -79,7 +89,7 @@ export function CreateComplaintPage() {
 		goNext,
 		submit,
 		cancel,
-	} = useCreateComplaintForm();
+	} = useCreateComplaintForm(prefillPurchaseNo);
 
 	const errorFor = (block: string, field: string) =>
 		errors[`${block}.${field}`];

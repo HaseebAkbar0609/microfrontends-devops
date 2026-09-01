@@ -75,6 +75,12 @@ export interface PurchaseComplaintRow {
 	complaintNo: string;
 	/** The purchase the complaint was raised against. */
 	purchaseNo: string;
+	/**
+	 * The purchase line, where the complaint is against one. A list already
+	 * scoped to a purchase shows this instead of `purchaseNo`, which would
+	 * otherwise repeat on every row.
+	 */
+	lineNo?: string;
 	/** The order or project the purchase belongs to. */
 	object: string;
 	name: string;

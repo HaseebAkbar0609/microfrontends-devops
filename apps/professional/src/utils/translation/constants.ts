@@ -2215,6 +2215,19 @@ export type OfferTranslation = {
 	kmaActionPlanStatusNotStarted: string;
 	kmaActionPlanStatusInProgress: string;
 	kmaActionPlanStatusCompleted: string;
+	// TFS-745 – Create New Action Plan (revised)
+	kmaActionPlanSubtitle: string;
+	kmaActionPlanDetailsSection: string;
+	kmaActionPlanNameLabel: string;
+	kmaActionPlanIdLabel: string;
+	kmaActionPlanVersionLabel: string;
+	kmaActionPlanCreatedByLabel: string;
+	kmaActionPlanDateLabel: string;
+	kmaActionPlanNewPanelTitle: string;
+	kmaActionPlanTemplateModalTitle: string;
+	kmaActionPlanTemplateNameCol: string;
+	kmaActionPlanTemplateUseBtn: string;
+	kmaActionPlanUseTemplate: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
@@ -2766,6 +2779,7 @@ export type OfferTranslation = {
 	purchaseInfoNone: string;
 	purchaseInfoTab: string;
 	purchaseInfoValueMissing: string;
+	purchaseComplaintTab: string;
 	purchaseOrderNewLineAria: string;
 	purchaseOrderRemoveLineAria: string;
 
