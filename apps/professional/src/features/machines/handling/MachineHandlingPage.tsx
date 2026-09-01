@@ -16,7 +16,7 @@ import {
 	Trash2,
 } from "lucide-react";
 
-import { ModulePageHeader } from "@/components/layout/navigation";
+import { PageHeader } from "@/components/layout/PageHeader";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
 import {
@@ -100,15 +100,16 @@ export function MachineHandlingPage() {
 	};
 
 	return (
-		<div className="flex h-full flex-col bg-slate-50/50">
-			<ModulePageHeader
+		<div className="flex flex-1 flex-col bg-slate-50/50">
+			<PageHeader
 				title={localizationConstants.machineHandlingTitle}
 				breadcrumbs={machineBreadcrumbs(
-					localizationConstants.machineHandlingTitle
+					localizationConstants.machineHandlingTitle,
 				)}
+				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
-			<div className="flex flex-1 flex-col overflow-y-auto px-6 pt-4 pb-8">
+			<div className="flex flex-1 flex-col overflow-y-auto px-6 pt-2 pb-8">
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
 						<div className="flex w-full flex-col items-stretch gap-3 sm:flex-row sm:items-center xl:w-auto">
