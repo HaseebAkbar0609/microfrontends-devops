@@ -23,6 +23,7 @@ import type {
 } from "../types/purchase.types";
 import { PurchaseGanttTab } from "./PurchaseGanttTab";
 import { PurchaseLineStatusBadge } from "./PurchaseBadges";
+import { PurchaseComplaintsTab } from "./record/PurchaseComplaintsTab";
 import { PurchaseInformationTab } from "./record/PurchaseInformationTab";
 import { ArchivableRowsTable } from "./shared/ArchivableRowsTable";
 
@@ -151,6 +152,11 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 								labelKey:
 									localizationConstants.purchaseInfoTab,
 							},
+							{
+								id: "complaints",
+								labelKey:
+									localizationConstants.purchaseComplaintTab,
+							},
 						]}
 						ariaLabel={purchase.purchaseNo}
 					>
@@ -222,6 +228,12 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 						<TabsContent value="information" className="mt-4">
 							<PurchaseInformationTab
 								purchaseId={purchase.id}
+							/>
+						</TabsContent>
+
+						<TabsContent value="complaints" className="mt-4">
+							<PurchaseComplaintsTab
+								purchaseNo={purchase.purchaseNo}
 							/>
 						</TabsContent>
 					</SectionTabs>
