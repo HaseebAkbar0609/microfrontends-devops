@@ -276,3 +276,56 @@ export interface PurchaseContactPerson {
 	city: string;
 	role: string;
 }
+
+/**
+ * The Calculation card on a purchase's Information section. Every field is a
+ * display string; absent values are stored empty and dashed at render.
+ */
+export interface PurchaseCalculationInfo {
+	calculationNo: string;
+	orderer: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	quoteDate: string;
+	type: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
+	quoteAmount: string;
+	category: string;
+	status: PurchaseStatus;
+}
+
+/** The Quote card. */
+export interface PurchaseQuoteInfo {
+	idNo: string;
+	job: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	date: string;
+	type: string;
+	inquiry: string;
+	municipality: string;
+	category: string;
+}
+
+/** The Order card. */
+export interface PurchaseOrderInfo {
+	orderNo: string;
+	orderName: string;
+	customer: string;
+	type: string;
+	status: string;
+	telephone: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
+	orderAmount: string;
+	projectManager: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	startDate: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	endDate: string;
+}
+
+/** Everything the record's Information section shows, for one purchase. */
+export interface PurchaseInformation {
+	purchaseId: string;
+	calculation: PurchaseCalculationInfo;
+	quote: PurchaseQuoteInfo;
+	order: PurchaseOrderInfo;
+}

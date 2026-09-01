@@ -2758,6 +2758,14 @@ export type OfferTranslation = {
 	purchaseOrderValidationRequired: string;
 	purchaseOrderValidationQuantity: string;
 	purchaseOrderUnavailable: string;
+	// Purchase - Record information
+	purchaseInfoQuoteDate: string;
+	purchaseInfoQuoteAmount: string;
+	purchaseInfoIdNo: string;
+	purchaseInfoOrderAmount: string;
+	purchaseInfoNone: string;
+	purchaseInfoTab: string;
+	purchaseInfoValueMissing: string;
 	purchaseOrderNewLineAria: string;
 	purchaseOrderRemoveLineAria: string;
 

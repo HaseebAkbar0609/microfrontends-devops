@@ -23,6 +23,7 @@ import type {
 } from "../types/purchase.types";
 import { PurchaseGanttTab } from "./PurchaseGanttTab";
 import { PurchaseLineStatusBadge } from "./PurchaseBadges";
+import { PurchaseInformationTab } from "./record/PurchaseInformationTab";
 import { ArchivableRowsTable } from "./shared/ArchivableRowsTable";
 
 export interface PurchaseRecordPageProps {
@@ -145,6 +146,11 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 								labelKey:
 									localizationConstants.purchaseOverviewTabGantt,
 							},
+							{
+								id: "information",
+								labelKey:
+									localizationConstants.purchaseInfoTab,
+							},
 						]}
 						ariaLabel={purchase.purchaseNo}
 					>
@@ -210,6 +216,12 @@ export function PurchaseRecordPage({ purchase }: PurchaseRecordPageProps) {
 							<PurchaseGanttTab
 								rows={ganttRows}
 								initialZoom="month"
+							/>
+						</TabsContent>
+
+						<TabsContent value="information" className="mt-4">
+							<PurchaseInformationTab
+								purchaseId={purchase.id}
 							/>
 						</TabsContent>
 					</SectionTabs>
