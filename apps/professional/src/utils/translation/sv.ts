@@ -2569,6 +2569,8 @@ export const svOffer: OfferTranslation = {
 	complaintValidationTypeRequired: "Reklamationtyp krävs",
 	complaintValidationTitleRequired: "Kort titel krävs",
 	complaintValidationDescriptionRequired: "Beskrivning krävs",
+	complaintValidationGdprRequired: "Du måste godkänna GDPR-villkoren för att skicka",
+	complaintFileRejectedToast: "Filtypen eller filstorleken är inte tillåten",
 	// Purchase - Goods reception
 	purchaseGoodsReceptionTabUpload: "Ladda upp dokument",
 	purchaseGoodsReceptionTabList: "Lista godsmottagning",

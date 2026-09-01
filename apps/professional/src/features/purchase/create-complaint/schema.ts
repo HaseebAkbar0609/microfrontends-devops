@@ -97,7 +97,16 @@ export const complaintReportStepSchema = z.object({
 	discoveredAt: z.string().optional().default(""),
 	deliveredAt: z.string().optional().default(""),
 	priority: z.enum(["high", "medium", "low"]).default("high"),
-	gdprAccepted: z.boolean().default(false),
+	/**
+	 * Consent is required to send. The attachments and contact blocks carry
+	 * personal data, so the checkbox has to mean something — but only on send:
+	 * `saveDraft` skips validation, so an unfinished draft still saves.
+	 */
+	gdprAccepted: z
+		.boolean()
+		.refine((accepted) => accepted === true, {
+			message: localizationConstants.complaintValidationGdprRequired,
+		}),
 });
 
 /**

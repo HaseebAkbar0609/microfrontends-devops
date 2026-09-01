@@ -49,7 +49,7 @@ export function CreateGoodsReceptionPage() {
 
 	const handleUpload = () => {
 		const added = documents.commitPendingFiles();
-		if (added > 0) {
+		if (added.length > 0) {
 			showToast(
 				"success",
 				t(localizationConstants.purchaseAgreementUploadedToast),

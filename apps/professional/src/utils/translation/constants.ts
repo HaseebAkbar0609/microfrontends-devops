@@ -2662,6 +2662,8 @@ export type OfferTranslation = {
 	complaintValidationTypeRequired: string;
 	complaintValidationTitleRequired: string;
 	complaintValidationDescriptionRequired: string;
+	complaintValidationGdprRequired: string;
+	complaintFileRejectedToast: string;
 	// Purchase - Goods reception
 	purchaseGoodsReceptionTabUpload: string;
 	purchaseGoodsReceptionTabList: string;
