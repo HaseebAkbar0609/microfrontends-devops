@@ -3049,6 +3049,7 @@ function QualityPlanTab({
 	onOpenChecklistTemplate,
 	onCreateChecklistTemplate,
 	onCreateActionPlan,
+	onUseActionPlanTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -3065,6 +3066,7 @@ function QualityPlanTab({
 	onOpenChecklistTemplate: (id: string) => void;
 	onCreateChecklistTemplate: () => void;
 	onCreateActionPlan: () => void;
+	onUseActionPlanTemplate: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3227,6 +3229,44 @@ function QualityPlanTab({
 							</div>
 						)}
 					</div>
+				) : planType === "atgardsplaner" ? (
+					<div ref={createBtnRef} className="relative flex">
+						<button
+							type="button"
+							onClick={onCreateActionPlan}
+							className="flex cursor-pointer items-center gap-1.5 rounded-l-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
+						>
+							<Plus className="h-4 w-4" />
+							<Translate text={localizationConstants.kmaActionPlanCreateBtn} />
+						</button>
+						<button
+							type="button"
+							onClick={() => setCreateBtnOpen((v) => !v)}
+							className="flex cursor-pointer items-center rounded-r-md border-l border-white/20 bg-zinc-900 px-2 py-1.5 text-white hover:bg-zinc-800"
+						>
+							<ChevronDown className="h-4 w-4" />
+						</button>
+						{createBtnOpen && (
+							<div className="absolute right-0 top-full z-20 mt-1 w-44 rounded-md border border-slate-200 bg-white py-1 shadow-md">
+								<button
+									type="button"
+									onClick={() => { onCreateActionPlan(); setCreateBtnOpen(false); }}
+									className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+								>
+									<Plus className="h-4 w-4 text-slate-400" />
+									<Translate text={localizationConstants.kmaActionPlanCreateBtn} />
+								</button>
+								<button
+									type="button"
+									onClick={() => { onUseActionPlanTemplate(); setCreateBtnOpen(false); }}
+									className="flex w-full cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+								>
+									<FileText className="h-4 w-4 text-slate-400" />
+									<Translate text={localizationConstants.kmaActionPlanUseTemplate} />
+								</button>
+							</div>
+						)}
+					</div>
 				) : (
 					<div ref={createBtnRef} className="relative flex">
 						<button
@@ -3324,6 +3364,7 @@ export function QualitySystemPage() {
 	const [createChecklistTemplateOpen, setCreateChecklistTemplateOpen] = useState(false);
 	const [openChecklistTemplateId, setOpenChecklistTemplateId] = useState<string | null>(null);
 	const [createActionPlanOpen, setCreateActionPlanOpen] = useState(false);
+	const [createActionPlanWithTemplate, setCreateActionPlanWithTemplate] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3407,7 +3448,15 @@ export function QualitySystemPage() {
 	}
 
 	if (createActionPlanOpen) {
-		return <CreateActionPlanPage onBack={() => setCreateActionPlanOpen(false)} />;
+		return (
+			<CreateActionPlanPage
+				onBack={() => {
+					setCreateActionPlanOpen(false);
+					setCreateActionPlanWithTemplate(false);
+				}}
+				startWithTemplate={createActionPlanWithTemplate}
+			/>
+		);
 	}
 
 	if (openPlanOpen) {
@@ -3467,6 +3516,7 @@ export function QualitySystemPage() {
 					onOpenChecklistTemplate={(id) => setOpenChecklistTemplateId(id)}
 					onCreateChecklistTemplate={() => setCreateChecklistTemplateOpen(true)}
 					onCreateActionPlan={() => setCreateActionPlanOpen(true)}
+					onUseActionPlanTemplate={() => { setCreateActionPlanWithTemplate(true); setCreateActionPlanOpen(true); }}
 				/>
 			)}
 		</div>
