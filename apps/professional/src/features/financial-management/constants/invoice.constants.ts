@@ -3,6 +3,8 @@ import localizationConstants, {
 } from "@/utils/translation/constants";
 import { InvoiceSortField, ReminderSortField } from "../types/invoice.types";
 
+export const VAT_RATE = 0.25;
+
 export interface InvoiceColumnConfig {
 	field: InvoiceSortField;
 	labelKey: TranslationKeys;
