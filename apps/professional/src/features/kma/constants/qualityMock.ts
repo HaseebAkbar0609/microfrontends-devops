@@ -431,8 +431,8 @@ export interface ActionPlanTemplate {
 }
 
 export const MOCK_ACTION_PLAN_TEMPLATES: ActionPlanTemplate[] = [
-	{ id: "AP001", name: "Åtgärdsplan 1", version: "V2025.12", lastUpdated: "2025-01-28", createdBy: "Lars Andersson" },
-	{ id: "AP002", name: "Åtgärdsplan 2", version: "v1.6", lastUpdated: "2025-01-09", createdBy: "Lars Andersson" },
-	{ id: "AP003", name: "Åtgärdsplan 3", version: "v2.1", lastUpdated: "2025-04-19", createdBy: "Lars Andersson" },
-	{ id: "AP004", name: "Åtgärdsplan 4", version: "v1.8", lastUpdated: "2025-06-04", createdBy: "Lars Andersson" },
+	{ id: "AP001", name: "Åtgärdsplan 1", version: "V2025-12", lastUpdated: "2026-01-28", createdBy: "Lars Andersson" },
+	{ id: "AP002", name: "Åtgärdsplan 2", version: "v1.8", lastUpdated: "2025-01-08", createdBy: "Lars Andersson" },
+	{ id: "AP003", name: "Åtgärdsplan 3", version: "v2.1", lastUpdated: "2025-04-09", createdBy: "Lars Andersson" },
+	{ id: "AP004", name: "Åtgärdsplan 4", version: "v1.8", lastUpdated: "2025-04-09", createdBy: "Lars Andersson" },
 ];
