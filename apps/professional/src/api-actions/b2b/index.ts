@@ -327,3 +327,14 @@ export async function deleteB2BArchivedProjectAction(
 		};
 	}
 }
+
+export * from "./company";
+export {
+	getB2BAgreementDetailAction,
+	createB2BAgreementAction,
+	sendB2BAgreementAction,
+	uploadB2BAgreementFileAction,
+	downloadB2BAgreementDocAction,
+	downloadB2BAgreementTemplatesAction,
+} from "./agreements";
+

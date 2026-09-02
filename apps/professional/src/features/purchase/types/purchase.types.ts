@@ -75,6 +75,12 @@ export interface PurchaseComplaintRow {
 	complaintNo: string;
 	/** The purchase the complaint was raised against. */
 	purchaseNo: string;
+	/**
+	 * The purchase line, where the complaint is against one. A list already
+	 * scoped to a purchase shows this instead of `purchaseNo`, which would
+	 * otherwise repeat on every row.
+	 */
+	lineNo?: string;
 	/** The order or project the purchase belongs to. */
 	object: string;
 	name: string;
@@ -86,6 +92,117 @@ export interface PurchaseComplaintRow {
 	priority: PurchaseComplaintPriority;
 	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
 	archived: boolean;
+}
+
+/** Which column of the Fråga/Svar board a question sits in. */
+export type PurchaseQaStatus = "new" | "opened" | "answered";
+
+/**
+ * One question on the purchase module's Fråga/Svar board.
+ *
+ * Carries the shared `QAThreadMessage` fields the card renders, plus the two
+ * this board owns: which column it belongs to, and whether it has been moved
+ * to Arkiv.
+ */
+export interface PurchaseQaMessage {
+	id: string;
+	sender: string;
+	company: string;
+	/** Role chip beside the name, e.g. "UE". */
+	badge: string;
+	message: string;
+	/** Display date as drawn, e.g. "12 augusti". */
+	date: string;
+	status: PurchaseQaStatus;
+	archived: boolean;
+	answerUser?: string;
+	answerText?: string;
+	answerDate?: string;
+}
+
+/** How the complaint record's gallery groups an attachment. */
+export type PurchaseComplaintAttachmentCategory =
+	| "image"
+	| "document"
+	| "drawing";
+
+/**
+ * One file on a complaint.
+ *
+ * Complaint-local rather than `PurchaseAgreementDocument`, whose `fileType` is
+ * a closed `"pdf" | "doc"` union with no image member — it reports a `.png` as
+ * a Word document — and which carries no notion of a drawing. Four flows share
+ * that type, so the gallery gets its own rather than reshaping theirs.
+ */
+export interface PurchaseComplaintAttachment {
+	id: string;
+	name: string;
+	category: PurchaseComplaintAttachmentCategory;
+	/** Preview source for `category: "image"`. */
+	thumbnailUrl?: string;
+	fileUrl?: string;
+}
+
+export type ComplaintResolutionStatus =
+	| "open"
+	| "in_progress"
+	| "resolved"
+	| "closed";
+
+/** The Lösning & Utfall form. Empty strings mean "not chosen yet". */
+export interface PurchaseComplaintResolution {
+	decision: string;
+	resolutionType: string;
+	resolutionStatus: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	resolutionDate: string;
+	internalNotes: string;
+}
+
+/** The Leverantörskommunikation card. */
+export interface PurchaseComplaintSupplierContact {
+	contactPerson: string;
+	email: string;
+	referenceNumber: string;
+	phone: string;
+}
+
+/**
+ * Everything the complaint record shows beyond its list row.
+ *
+ * Kept separate from `PurchaseComplaintRow` so the list is not carrying a
+ * dozen fields no list renders — the same split the purchase record's
+ * Information section uses.
+ */
+export interface PurchaseComplaintDetail {
+	complaintId: string;
+	linkedPurchase: {
+		/** The purchase line the complaint is against, e.g. "I500-001". */
+		lineNo: string;
+		/** The purchase record to link to. */
+		purchaseId: string;
+		name: string;
+		supplier: string;
+		/**
+		 * The supplier record to link to. Held as an id rather than matched on
+		 * the display name, which differs between the two mocks ("Beijer" vs
+		 * "Beijer Byggmaterial") and would silently link the wrong record if
+		 * two suppliers ever shared a name.
+		 */
+		supplierId?: string;
+		/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+		purchaseDate: string;
+		supplierDate: string;
+		estimatedDelivery: string;
+	};
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	createdDate: string;
+	createdBy: string;
+	assignedTo: string;
+	description: string;
+	attachments: PurchaseComplaintAttachment[];
+	supplierContact: PurchaseComplaintSupplierContact;
+	resolution: PurchaseComplaintResolution;
 }
 
 export type PurchaseDocumentFileType = "pdf" | "doc";
@@ -205,4 +322,127 @@ export interface PurchaseGoodsReceptionRow {
 	bulkDiscounts: PurchaseGoodsDiscountTier[];
 
 	attachments: PurchaseGoodsAttachment[];
+}
+
+/**
+ * Status of a single line within a purchase, from the frame's Status column.
+ * Distinct from `PurchaseStatus`, which describes the whole purchase.
+ */
+export type PurchaseLineStatus =
+	| "ordered"
+	| "in_progress"
+	| "delivered"
+	| "monitoring";
+
+/**
+ * One line of a purchase — the rows of the record page's Inköpslista.
+ *
+ * Dates are ISO or empty; the frame prints "-" for a missing one, which is a
+ * rendering concern rather than something to store.
+ */
+export interface PurchaseLineRow {
+	id: string;
+	/** The purchase this line belongs to, e.g. "I501". */
+	purchaseId: string;
+	/** Line number, numbered from the parent purchase: "I501-001". */
+	lineNo: string;
+	designation: string;
+	supplier: string;
+	purchaseDate: string;
+	deliveryDate: string;
+	estimatedDelivery: string;
+	/** Set only while the line is being chased. */
+	monitoringDate: string;
+	status: PurchaseLineStatus;
+	/** Archived rows drop out of the list; the module has its own Arkiv tab. */
+	archived: boolean;
+}
+
+/**
+ * One row of a purchase order's Specifikation table.
+ *
+ * Quantity and unit price are held as strings because they are edited through
+ * text inputs; parsing at the edge keeps an empty or non-numeric entry from
+ * silently becoming 0 or NaN in the totals. The frame prints a Delsumma that
+ * does not match its own inputs, so it is always computed, never stored.
+ */
+export interface PurchaseOrderSpecLine {
+	id: string;
+	/** The buyer's own article number. */
+	articleNo: string;
+	supplierArticleNo: string;
+	designation: string;
+	quantity: string;
+	unit: string;
+	unitPrice: string;
+}
+
+/**
+ * A named contact on a purchase document — a complaint's reporter, a purchase
+ * order's orderer. One shape, because every screen collects the same fields.
+ */
+export interface PurchaseContactPerson {
+	/** Id of the picked existing contact, or "" when entering a new one. */
+	contactId: string;
+	firstName: string;
+	lastName: string;
+	address: string;
+	postalCode: string;
+	email: string;
+	phone: string;
+	city: string;
+	role: string;
+}
+
+/**
+ * The Calculation card on a purchase's Information section. Every field is a
+ * display string; absent values are stored empty and dashed at render.
+ */
+export interface PurchaseCalculationInfo {
+	calculationNo: string;
+	orderer: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	quoteDate: string;
+	type: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
+	quoteAmount: string;
+	category: string;
+	status: PurchaseStatus;
+}
+
+/** The Quote card. */
+export interface PurchaseQuoteInfo {
+	idNo: string;
+	job: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	date: string;
+	type: string;
+	inquiry: string;
+	municipality: string;
+	category: string;
+}
+
+/** The Order card. */
+export interface PurchaseOrderInfo {
+	orderNo: string;
+	orderName: string;
+	customer: string;
+	type: string;
+	status: string;
+	telephone: string;
+	/** Already-formatted amount, e.g. `"486 000"`. Not parsed or summed. */
+	orderAmount: string;
+	projectManager: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	startDate: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	endDate: string;
+}
+
+/** Everything the record's Information section shows, for one purchase. */
+export interface PurchaseInformation {
+	purchaseId: string;
+	calculation: PurchaseCalculationInfo;
+	quote: PurchaseQuoteInfo;
+	order: PurchaseOrderInfo;
 }

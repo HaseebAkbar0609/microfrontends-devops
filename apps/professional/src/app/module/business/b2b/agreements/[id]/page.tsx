@@ -1,6 +1,25 @@
-import { B2BAvtalDetailView } from "@/features/b2b/components/B2BAvtalDetailView";
-import { DUMMY_AVTAL_DETAIL } from "@/features/b2b/constants/avtalMock";
+import { B2BAgreementDetailView } from "@/features/b2b/components/B2BAgreementDetailView";
+import { getB2BAgreementDetailAction } from "@/api-actions/b2b/agreements";
+import { getAgreementDetailByContext } from "@/features/b2b/constants/agreementMock";
 
-export default function B2BAgreementDetailPage() {
-  return <B2BAvtalDetailView data={DUMMY_AVTAL_DETAIL} />;
+interface Props {
+  params: Promise<{
+    id: string;
+  }>;
+  searchParams?: Promise<{
+    projectId?: string;
+    offerId?: string;
+  }>;
+}
+
+export default async function B2BAgreementDetailPage({ params, searchParams }: Props) {
+  const { id } = await params;
+  const sParams = await searchParams;
+  const result = await getB2BAgreementDetailAction(id);
+  const data =
+    result.success && result.data
+      ? result.data
+      : getAgreementDetailByContext(sParams?.projectId || id, sParams?.offerId);
+
+  return <B2BAgreementDetailView data={data} />;
 }

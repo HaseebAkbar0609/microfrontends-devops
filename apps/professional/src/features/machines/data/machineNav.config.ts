@@ -1,4 +1,5 @@
 import type { BreadcrumbItem } from "@/types/common";
+import type { RouteTabItem } from "@/types/navigation";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -24,8 +25,7 @@ export function machineDashboardBreadcrumbs(): BreadcrumbItem[] {
 }
 
 /**
- * `Home > Modul > Maskin > Section` breadcrumb, matching the breadcrumb row in
- * the TFS-803 Figma frame.
+ * `Home > Modul > Maskin > Section` breadcrumb for Machine subpages.
  */
 export function machineBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
 	return [
@@ -35,3 +35,38 @@ export function machineBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
 		{ label: section },
 	];
 }
+
+/** Primary tab row for the Machine module. */
+export const MACHINE_MODULE_TABS: RouteTabItem[] = [
+	{
+		id: "dashboard",
+		labelKey: localizationConstants.machineSidebarDashboard,
+		href: "/module/production/machine",
+		exact: true,
+	},
+	{
+		id: "overview",
+		labelKey: localizationConstants.machineSidebarOverview,
+		href: "/module/production/machine/overview",
+	},
+	{
+		id: "handling",
+		labelKey: localizationConstants.machineSidebarHandling,
+		href: "/module/production/machine/handling",
+	},
+	{
+		id: "purchase",
+		labelKey: localizationConstants.machineSidebarPurchase,
+		href: "/module/production/machine/purchase",
+	},
+	{
+		id: "statistics",
+		labelKey: localizationConstants.machineSidebarStatistics,
+		href: "/module/production/machine/statistics",
+	},
+	{
+		id: "archive",
+		labelKey: localizationConstants.machineSidebarArchive,
+		href: "/module/production/machine/archive",
+	},
+];

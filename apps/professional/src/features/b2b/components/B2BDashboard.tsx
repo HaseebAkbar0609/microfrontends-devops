@@ -33,7 +33,6 @@ import {
 	type B2BDashboardKpis,
 } from "@/api-actions/b2b/b2b";
 import { PlacedWidgetEntry } from "@/features/widgetdashboard/types/dashboard";
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
 	B2B_INITIAL_WIDGETS,
@@ -291,45 +290,12 @@ export function B2BDashboard() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			{/* Section Heading & Sub-Navigation Tabs */}
-			<div className="space-y-4">
-				<div className="flex items-center justify-between">
-					<h1 className="text-2xl font-bold tracking-tight text-slate-900">
-						<Translate text={localizationConstants.b2b} />
-					</h1>
-					{isLoadingKpis && (
-						<div className="flex items-center gap-2 text-xs text-slate-400">
-							<Loader2 className="w-3.5 h-3.5 animate-spin" />
-							<span>Updating live KPIs...</span>
-						</div>
-					)}
+			{isLoadingKpis && (
+				<div className="flex items-center gap-2 text-xs text-slate-400">
+					<Loader2 className="w-3.5 h-3.5 animate-spin" />
+					<span>Updating live KPIs...</span>
 				</div>
-
-				{/* Navigation Tabs */}
-				<div className="flex items-center gap-4 sm:gap-6 border-b border-slate-200 text-sm font-medium -mx-3 sm:-mx-5 px-3 sm:px-5 overflow-x-auto scrollbar-none">
-					<Link
-						href="/module/business/b2b"
-						className={cn(
-							"relative px-4 sm:px-6 pb-3.5 text-slate-900 font-semibold transition-colors text-center",
-							"after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-slate-900"
-						)}
-					>
-						<Translate text={localizationConstants.b2bDashboard} />
-					</Link>
-					<Link
-						href="/module/business/b2b/project-market"
-						className="px-4 sm:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center"
-					>
-						<Translate text={localizationConstants.b2bOverview} />
-					</Link>
-					<Link
-						href="/module/business/b2b/archive"
-						className="px-4 sm:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center"
-					>
-						<Translate text={localizationConstants.archive} />
-					</Link>
-				</div>
-			</div>
+			)}
 
 			{/* Main Layout: Widgets Grid (Left) & Control Sidebar (Right) */}
 			<div className="flex flex-col gap-4 xl:flex-row xl:gap-5 lg:pr-44">
