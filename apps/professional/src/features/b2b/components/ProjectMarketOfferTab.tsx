@@ -319,7 +319,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                           className="h-8 cursor-pointer whitespace-nowrap bg-slate-100 px-3.5 text-xs font-medium text-slate-900 shadow-none hover:bg-slate-200"
                           onClick={() =>
                             router.push(
-                              `/module/business/b2b/project-market/${data.id}/offer/${offer.id}`
+                              `/module/business/b2b/overview/${data.id}/offer/${offer.id}`
                             )
                           }
                         >

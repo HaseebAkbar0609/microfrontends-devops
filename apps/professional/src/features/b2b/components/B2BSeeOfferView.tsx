@@ -530,16 +530,17 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                   <h4 className="font-sans text-sm font-medium leading-5 tracking-normal text-slate-900">
                     {t(localizationConstants.b2bPMDocumentSection)}
                   </h4>
-                  <div className="flex flex-wrap items-center gap-6">
+                  <div className="flex flex-wrap items-start gap-4 sm:gap-6">
                     {data.documents.docs.map((file) => (
                       <div
                         key={file.id}
                         role="button"
                         tabIndex={0}
                         onClick={() => setPreviewDoc(file)}
-                        className="flex flex-col items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity p-1 rounded"
+                        title={file.label}
+                        className="flex w-20 sm:w-24 flex-col items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity p-1 rounded group text-center"
                       >
-                        <div className="flex h-12 w-12 items-center justify-center">
+                        <div className="flex h-12 w-12 items-center justify-center shrink-0">
                           {file.type === "pdf" ? (
                             <Image
                               src="/file-type-pdf.png"
@@ -560,7 +561,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                             <FileText size={32} strokeWidth={1} className="text-slate-300 stroke-[1]" aria-hidden={true} />
                           )}
                         </div>
-                        <span className="text-xs font-normal text-slate-600 hover:text-slate-900">
+                        <span className="w-full truncate text-center text-xs font-normal text-slate-600 group-hover:text-slate-900 group-hover:underline">
                           {file.label}
                         </span>
                       </div>
@@ -575,16 +576,17 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                   <h4 className="font-sans text-sm font-medium leading-5 tracking-normal text-slate-900">
                     {t(localizationConstants.b2bPMDrawingSection)}
                   </h4>
-                  <div className="flex flex-wrap items-center gap-6">
+                  <div className="flex flex-wrap items-start gap-4 sm:gap-6">
                     {data.documents.drawings.map((drawing) => (
                       <div
                         key={drawing.id}
                         role="button"
                         tabIndex={0}
                         onClick={() => setPreviewDoc(drawing)}
-                        className="flex flex-col items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity p-1 rounded"
+                        title={drawing.label}
+                        className="flex w-20 sm:w-24 flex-col items-center gap-1.5 cursor-pointer hover:opacity-80 transition-opacity p-1 rounded group text-center"
                       >
-                        <div className="flex h-12 w-12 items-center justify-center">
+                        <div className="flex h-12 w-12 items-center justify-center shrink-0">
                           {drawing.type === "pdf" ? (
                             <Image
                               src="/file-type-pdf.png"
@@ -597,7 +599,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                             <BlankDocFileIcon className="h-9 w-7" />
                           )}
                         </div>
-                        <span className="text-xs font-normal text-slate-600 hover:text-slate-900">
+                        <span className="w-full truncate text-center text-xs font-normal text-slate-600 group-hover:text-slate-900 group-hover:underline">
                           {drawing.label}
                         </span>
                       </div>
