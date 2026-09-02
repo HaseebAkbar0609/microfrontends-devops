@@ -46,7 +46,8 @@ export function ComplaintStepRail({
 						aria-valuenow={step}
 						aria-valuemin={1}
 						aria-valuemax={totalSteps}
-						aria-label={`${t(localizationConstants.complaintCreateStep)} ${step}/${totalSteps}`}
+						aria-label={t(localizationConstants.complaintCreateStep)}
+						aria-valuetext={`${t(localizationConstants.complaintCreateStep)} ${step}/${totalSteps}`}
 					>
 						<div
 							className="h-1.5 rounded-full bg-slate-900 transition-all"

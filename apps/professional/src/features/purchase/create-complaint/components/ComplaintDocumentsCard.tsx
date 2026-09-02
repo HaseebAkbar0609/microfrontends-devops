@@ -27,6 +27,9 @@ import type {
 	usePurchaseDocuments,
 } from "../../hooks/usePurchaseDocuments";
 
+/** How many rejected filenames the toast lists before collapsing the rest. */
+const MAX_REJECTED_NAMES_SHOWN = 3;
+
 const TH_CLASS =
 	"h-11 px-4 text-left text-sm font-medium text-slate-500 select-none whitespace-nowrap";
 
@@ -83,15 +86,25 @@ export function ComplaintDocumentsCard({
 		handleSort,
 	} = documentState;
 
-	/** Says so when a file is turned away, rather than dropping it silently. */
+	/**
+	 * Says so when a file is turned away, rather than dropping it silently.
+	 *
+	 * Only the first few names are listed — dragging in a folder would
+	 * otherwise push a toast taller than the viewport.
+	 */
 	const handleSelectFiles = (files: File[]) => {
 		const { rejected } = selectFiles(files);
-		if (rejected.length > 0) {
-			showToast(
-				"error",
-				`${rejected.join(", ")} — ${t(localizationConstants.complaintFileRejectedToast)}`,
-			);
-		}
+		if (rejected.length === 0) return;
+
+		const shown = rejected.slice(0, MAX_REJECTED_NAMES_SHOWN);
+		const overflow = rejected.length - shown.length;
+		const names =
+			overflow > 0 ? `${shown.join(", ")} +${overflow}` : shown.join(", ");
+
+		showToast(
+			"error",
+			`${names} — ${t(localizationConstants.complaintFileRejectedToast)}`,
+		);
 	};
 
 	const handleUpload = () => {
@@ -200,13 +213,25 @@ export function ComplaintDocumentsCard({
 											<TableHead
 												key={column.field}
 												className={TH_CLASS}
+												// The column's own sort state,
+												// through the attribute made
+												// for it — a screen reader
+												// announces "sorted ascending"
+												// without the label having to
+												// spell it out.
+												aria-sort={
+													active
+														? sortOrder === "asc"
+															? "ascending"
+															: "descending"
+														: "none"
+												}
 											>
 												<button
 													type="button"
 													onClick={() =>
 														handleSort(column.field)
 													}
-													aria-label={t(column.label)}
 													className="flex cursor-pointer items-center gap-1 hover:text-slate-700"
 												>
 													<Translate

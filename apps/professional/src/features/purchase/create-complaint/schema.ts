@@ -102,11 +102,17 @@ export const complaintReportStepSchema = z.object({
 	 * personal data, so the checkbox has to mean something — but only on send:
 	 * `saveDraft` skips validation, so an unfinished draft still saves.
 	 */
-	gdprAccepted: z
-		.boolean()
-		.refine((accepted) => accepted === true, {
+	gdprAccepted: z.literal(true, {
+		/**
+		 * `errorMap`, not `message`: with `message` zod only applies it to the
+		 * missing/wrong-type case and reports an unchecked box as the English
+		 * "Invalid literal value, expected true", which would reach the screen
+		 * untranslated. `errorMap` covers both.
+		 */
+		errorMap: () => ({
 			message: localizationConstants.complaintValidationGdprRequired,
 		}),
+	}),
 });
 
 /**
