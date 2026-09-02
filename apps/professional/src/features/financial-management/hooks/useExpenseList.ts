@@ -101,10 +101,8 @@ export function useExpenseList(activeSubTab: ExpenseActiveSubTab = "supplier_lis
 	const filteredExpenses = useMemo(() => {
 		return expenses.filter((item) => {
 			// Sub-tab filter: inbox vs all supplier list
-			if (activeSubTab === "inbox") {
-				if (!item.isInboxItem && item.status !== "ej_attesterad" && item.status !== "pending") {
-					return false;
-				}
+			if (activeSubTab === "inbox" && !item.isInboxItem) {
+				return false;
 			}
 
 			// Search query match

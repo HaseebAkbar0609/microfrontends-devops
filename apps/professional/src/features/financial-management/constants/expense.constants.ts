@@ -1,7 +1,7 @@
 import localizationConstants from "@/utils/translation/constants";
 import { ExpenseCategory, ExpenseStatus, ExpenseSortField } from "../types/expense.types";
 
-export const EXPENSES_STORAGE_KEY = "tfs_prof_expenses_v2";
+export const EXPENSES_STORAGE_KEY = "tfs_prof_expenses_figma_v3";
 
 export const DEFAULT_ANNUAL_EXPENSE_BUDGET = 1500000; // 1.5 Mkr in SEK
 
