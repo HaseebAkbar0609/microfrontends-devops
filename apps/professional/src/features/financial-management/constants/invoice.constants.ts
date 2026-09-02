@@ -5,6 +5,9 @@ import { InvoiceSortField, ReminderSortField } from "../types/invoice.types";
 
 export const VAT_RATE = 0.25;
 
+export const INVOICES_STORAGE_KEY = "tfs_professional_invoices_v2";
+export const DETAILS_STORAGE_KEY = "tfs_professional_invoice_details_v2";
+
 export interface InvoiceColumnConfig {
 	field: InvoiceSortField;
 	labelKey: TranslationKeys;

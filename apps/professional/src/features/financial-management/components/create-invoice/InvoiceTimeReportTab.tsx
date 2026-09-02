@@ -90,7 +90,7 @@ export function InvoiceTimeReportTab({
 							<Input
 								value={formData.invoiceNo}
 								disabled
-								className="h-9 bg-[#f4f4f5] border-slate-200 text-xs font-medium text-slate-800 rounded-md"
+								className="h-9 bg-slate-100 border-slate-200 text-xs font-medium text-slate-800 rounded-md"
 							/>
 						</div>
 
@@ -180,7 +180,7 @@ export function InvoiceTimeReportTab({
 								<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 min-w-[160px] border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColEmployee} />
 								</TableHead>
-								<TableHead className="py-2 px-3 text-xs font-semibold text-slate-800 w-24 text-center bg-[#e6f4ea] border-r border-slate-200">
+								<TableHead className="py-2 px-3 text-xs font-semibold text-slate-800 w-24 text-center bg-emerald-50/60 border-r border-slate-200">
 									<Translate text={localizationConstants.createInvoiceTimeColWorkHours} />
 								</TableHead>
 								<TableHead className="py-2 px-3 text-xs font-normal text-slate-700 w-20 border-r border-slate-200">
@@ -219,7 +219,7 @@ export function InvoiceTimeReportTab({
 											className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none font-normal"
 										/>
 									</TableCell>
-									<TableCell className="py-2 px-3 text-center bg-[#e6f4ea] border-r border-slate-200">
+									<TableCell className="py-2 px-3 text-center bg-emerald-50/60 border-r border-slate-200">
 										<Input
 											type="number"
 											value={tr.workHours}
@@ -298,7 +298,7 @@ export function InvoiceTimeReportTab({
 					<button
 						type="button"
 						onClick={onAddRow}
-						className="h-8 px-4 border border-dashed border-slate-300 bg-[#f8fafc] text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
+						className="h-8 px-4 border border-dashed border-slate-300 bg-slate-50 text-xs font-normal text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 					>
 						<Translate text={localizationConstants.createInvoiceAddRow} />
 					</button>

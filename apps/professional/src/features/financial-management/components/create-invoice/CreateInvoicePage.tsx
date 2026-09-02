@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft, Save, ArrowRight, Eye } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,6 +19,7 @@ import { InvoiceAttachmentsTab } from "./InvoiceAttachmentsTab";
 import { InvoicePreviewModal } from "./InvoicePreviewModal";
 
 export function CreateInvoicePage() {
+	const { t } = useTranslation();
 	const {
 		activeTab,
 		setActiveTab,
@@ -125,7 +127,7 @@ export function CreateInvoicePage() {
 								rows={4}
 								value={formData.comments}
 								onChange={(e) => updateField("comments", e.target.value)}
-								placeholder="Skriv kommentar här..."
+								placeholder={t(localizationConstants.createInvoiceCommentPlaceholder)}
 								className="text-xs border-slate-200 resize-y bg-white rounded-md"
 							/>
 						</div>

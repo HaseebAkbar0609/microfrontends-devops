@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -11,8 +13,7 @@ import {
 	TimeReportItem,
 	InvoiceAttachment,
 } from "../types/createInvoice.types";
-import { InvoiceItem } from "../types/invoice.types";
-import { addStoredInvoice } from "../utils/invoiceStorage";
+import { invoiceRepository } from "../utils/invoiceRepository";
 import { VAT_RATE } from "../constants/invoice.constants";
 
 const INITIAL_LINE_ITEMS: InvoiceLineItem[] = [
@@ -452,34 +453,10 @@ export function useCreateInvoice() {
 
 	// Save Draft Handler
 	const handleSaveDraft = useCallback(() => {
-		const newInvoice: InvoiceItem = {
-			id: `inv-${Date.now()}`,
-			invoiceNo: formData.invoiceNo,
-			ocr: `${formData.invoiceNo}456301`,
-			object: formData.category === "Order" ? "Order" : "Projekt",
-			type:
-				formData.pricingModel === "fastpris"
-					? "fastpris"
-					: formData.pricingModel === "budget"
-						? "budget"
-						: "hourly",
-			customer: formData.customer,
-			invoiceDate: formData.invoiceDate,
-			costCenter: formData.lineItems[0]?.costCenter || "10",
-			projectLeader: formData.contactPerson,
-			location: "Stockholm",
-			contractType: formData.category,
-			total: calculations.attErhalla,
-			balance: calculations.attErhalla,
-			currency: "SEK",
-			dueDate: "2026-03-15",
-			status: "saved",
-		};
-
-		addStoredInvoice(newInvoice);
+		invoiceRepository.createInvoice(formData, calculations, "saved");
 		toast.success(t(localizationConstants.createInvoiceSaveSuccess));
 		router.push("/module/financial-management/invoice");
-	}, [calculations.attErhalla, formData, router, t]);
+	}, [calculations, formData, router, t]);
 
 	// Send Invoice Handler
 	const handleSendInvoice = useCallback(() => {
@@ -488,34 +465,10 @@ export function useCreateInvoice() {
 			return;
 		}
 
-		const newInvoice: InvoiceItem = {
-			id: `inv-${Date.now()}`,
-			invoiceNo: formData.invoiceNo,
-			ocr: `${formData.invoiceNo}456301`,
-			object: formData.category === "Order" ? "Order" : "Projekt",
-			type:
-				formData.pricingModel === "fastpris"
-					? "fastpris"
-					: formData.pricingModel === "budget"
-						? "budget"
-						: "hourly",
-			customer: formData.customer,
-			invoiceDate: formData.invoiceDate,
-			costCenter: formData.lineItems[0]?.costCenter || "10",
-			projectLeader: formData.contactPerson,
-			location: "Stockholm",
-			contractType: formData.category,
-			total: calculations.attErhalla,
-			balance: calculations.attErhalla,
-			currency: "SEK",
-			dueDate: "2026-03-15",
-			status: "sent",
-		};
-
-		addStoredInvoice(newInvoice);
+		invoiceRepository.createInvoice(formData, calculations, "sent");
 		toast.success(t(localizationConstants.createInvoiceSendSuccessToast));
 		router.push("/module/financial-management/invoice");
-	}, [calculations.attErhalla, formData, router, t]);
+	}, [calculations, formData, router, t]);
 
 	const handleCancel = useCallback(() => {
 		router.push("/module/financial-management/invoice");
