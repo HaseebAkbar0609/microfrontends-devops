@@ -5475,6 +5475,55 @@ export type InvoiceTranslation = {
 	invoiceDetailRetry: string;
 };
 
+export type ExpenseTranslation = {
+	expenseOverviewTitle: string;
+	expenseOverviewSubtitle: string;
+	expenseRegisterBtn: string;
+	expenseKpiTotalExpenses: string;
+	expenseKpiPendingApproval: string;
+	expenseKpiThisMonth: string;
+	expenseKpiBudgetUtilization: string;
+	expenseKpiItemsPending: string;
+	expenseColId: string;
+	expenseColSupplier: string;
+	expenseColCategory: string;
+	expenseColAmount: string;
+	expenseColStatus: string;
+	expenseColDate: string;
+	expenseColDueDate: string;
+	expenseColProject: string;
+	expenseColActions: string;
+	expenseStatusPending: string;
+	expenseStatusApproved: string;
+	expenseStatusPaid: string;
+	expenseStatusRejected: string;
+	expenseCategoryMaterial: string;
+	expenseCategoryLabor: string;
+	expenseCategoryEquipment: string;
+	expenseCategoryTravel: string;
+	expenseCategoryOther: string;
+	expenseFilterAllStatuses: string;
+	expenseFilterAllCategories: string;
+	expenseFilterAllProjects: string;
+	expenseSearchPlaceholder: string;
+	expenseActionView: string;
+	expenseActionApprove: string;
+	expenseActionReject: string;
+	expenseActionMarkAsPaid: string;
+	expenseActionDelete: string;
+	expenseConfirmApproveTitle: string;
+	expenseConfirmApproveDesc: string;
+	expenseConfirmRejectTitle: string;
+	expenseConfirmRejectDesc: string;
+	expenseConfirmDeleteTitle: string;
+	expenseConfirmDeleteDesc: string;
+	expenseDetailsTitle: string;
+	expenseDetailsReceipt: string;
+	expenseDetailsNoReceipt: string;
+	expenseNoRecordsFound: string;
+	expenseNoRecordsSubtitle: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -5489,7 +5538,8 @@ export type Translation = HeaderTranslation &
 	CommonTranslation &
 	MachinePurchaseTranslation &
 	MachineDashboardTranslation &
-	InvoiceTranslation;
+	InvoiceTranslation &
+	ExpenseTranslation;
 
 export type TranslationKeys = keyof Translation;
 
