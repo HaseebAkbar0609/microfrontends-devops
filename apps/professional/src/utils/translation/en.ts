@@ -5625,6 +5625,7 @@ const enExpense: ExpenseTranslation = {
 	expensePaginationPage: "Page",
 	expensePaginationOf: "of",
 	expenseActionSeeInvoice: "View invoice",
+	expenseKpiAccumulatedYear: "Accumulated current year",
 };
 
 export const en: Translation = {

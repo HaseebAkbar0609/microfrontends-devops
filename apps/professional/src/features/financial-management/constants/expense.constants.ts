@@ -1,9 +1,17 @@
 import localizationConstants from "@/utils/translation/constants";
 import { ExpenseCategory, ExpenseStatus, ExpenseSortField } from "../types/expense.types";
 
-export const EXPENSES_STORAGE_KEY = "tfs_prof_expenses_figma_v4";
-
 export const DEFAULT_ANNUAL_EXPENSE_BUDGET = 1500000; // 1.5 Mkr in SEK
+export const EXPENSE_DEFAULT_ATTEST_RESPONSIBLE = "-";
+export const EXPENSE_DEFAULT_PAGE_SIZE = 10;
+
+// Shared Tab Style Constants (Standard #1 - Zero Hardcoding)
+export const EXPENSE_TOP_TAB_ACTIVE_CLASS = "py-3 text-xs font-bold border-b-2 text-slate-900 border-slate-900 transition-colors cursor-pointer";
+export const EXPENSE_TOP_TAB_INACTIVE_CLASS = "py-3 text-xs font-medium border-b-2 text-slate-500 hover:text-slate-900 border-transparent transition-colors cursor-pointer";
+
+export const EXPENSE_SUB_TAB_CONTAINER_CLASS = "inline-flex items-center bg-[#F3F4F6] p-1 rounded-lg gap-1 border border-slate-200/60 shadow-2xs";
+export const EXPENSE_SUB_TAB_ACTIVE_CLASS = "px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer bg-white text-slate-900 shadow-xs border border-slate-200/80";
+export const EXPENSE_SUB_TAB_INACTIVE_CLASS = "px-4 py-1.5 text-xs font-normal rounded-md transition-all cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-white/40 border border-transparent";
 
 export const expenseBreadcrumbs = [
 	{ label: localizationConstants.home, href: "/" },

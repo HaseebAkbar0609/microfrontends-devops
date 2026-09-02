@@ -24,6 +24,8 @@ export * from "./hooks/useInvoiceList";
 export * from "./hooks/useCreateInvoice";
 export * from "./hooks/useInvoiceDetail";
 export * from "./components/expense-list/ExpenseListPage";
+export * from "./components/expense-list/SupplierInvoiceView";
+export * from "./components/expense-list/CustomerInvoiceView";
 export * from "./components/expense-list/ExpenseKpiCards";
 export * from "./components/expense-list/ExpenseToolbar";
 export * from "./components/expense-list/ExpenseListTable";

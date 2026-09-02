@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { CreditCard, Clock, Calendar, PieChart } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { ExpenseSummaryStats } from "../../types/expense.types";
+import { DEFAULT_ANNUAL_EXPENSE_BUDGET } from "../../constants/expense.constants";
 
 interface ExpenseKpiCardsProps {
 	stats: ExpenseSummaryStats;
@@ -15,6 +16,13 @@ function formatSEK(num: number): string {
 }
 
 export function ExpenseKpiCards({ stats }: ExpenseKpiCardsProps) {
+	// Dynamically format current period (Standard #1 - Zero Hardcoding)
+	const currentPeriodLabel = useMemo(() => {
+		const now = new Date();
+		const month = String(now.getMonth() + 1).padStart(2, "0");
+		return `${now.getFullYear()}-${month}`;
+	}, []);
+
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 			{/* Card 1: Total Expenses */}
@@ -32,7 +40,7 @@ export function ExpenseKpiCards({ stats }: ExpenseKpiCardsProps) {
 						{formatSEK(stats.totalExpenses)} SEK
 					</p>
 					<p className="text-[11px] text-slate-400 mt-0.5">
-						Ackumulerat innevarande år
+						<Translate text={localizationConstants.expenseKpiAccumulatedYear} />
 					</p>
 				</div>
 			</div>
@@ -72,7 +80,7 @@ export function ExpenseKpiCards({ stats }: ExpenseKpiCardsProps) {
 						{formatSEK(stats.thisMonthAmount)} SEK
 					</p>
 					<p className="text-[11px] text-slate-400 mt-0.5">
-						Maj 2025 period
+						{currentPeriodLabel}
 					</p>
 				</div>
 			</div>
@@ -93,7 +101,7 @@ export function ExpenseKpiCards({ stats }: ExpenseKpiCardsProps) {
 							{stats.budgetUtilizationPercentage} %
 						</p>
 						<span className="text-[10px] text-slate-400 font-medium">
-							av 1.5 Mkr
+							<Translate text={localizationConstants.expensePaginationOf} /> {DEFAULT_ANNUAL_EXPENSE_BUDGET / 1000000} Mkr
 						</span>
 					</div>
 					<div className="w-full bg-slate-100 rounded-full h-1.5 mt-2 overflow-hidden">

@@ -5584,6 +5584,7 @@ export type ExpenseTranslation = {
 	expensePaginationPage: string;
 	expensePaginationOf: string;
 	expenseActionSeeInvoice: string;
+	expenseKpiAccumulatedYear: string;
 };
 
 export type Translation = HeaderTranslation &

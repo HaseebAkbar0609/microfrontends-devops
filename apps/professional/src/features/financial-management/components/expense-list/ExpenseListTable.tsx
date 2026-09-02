@@ -36,7 +36,7 @@ import {
 	ExpenseItem,
 	ExpenseSortField,
 } from "../../types/expense.types";
-import { EXPENSE_TABLE_COLUMNS } from "../../constants/expense.constants";
+import { EXPENSE_TABLE_COLUMNS, EXPENSE_DEFAULT_ATTEST_RESPONSIBLE } from "../../constants/expense.constants";
 import { ExpenseStatusBadge } from "./ExpenseBadges";
 
 interface ExpenseListTableProps {
@@ -217,7 +217,7 @@ export function ExpenseListTable({
 
 										{/* 8. Attest ansvarig */}
 										<td className="py-3.5 px-3.5 text-slate-700">
-											{item.attestResponsible || "Kalle Andersson"}
+											{item.attestResponsible || EXPENSE_DEFAULT_ATTEST_RESPONSIBLE}
 										</td>
 
 										{/* 9. Status */}

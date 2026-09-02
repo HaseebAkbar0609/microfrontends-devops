@@ -5647,6 +5647,7 @@ const svExpense: ExpenseTranslation = {
 	expensePaginationPage: "Sida",
 	expensePaginationOf: "av",
 	expenseActionSeeInvoice: "Se faktura",
+	expenseKpiAccumulatedYear: "Ackumulerat innevarande år",
 };
 
 export const sv: Translation = {
