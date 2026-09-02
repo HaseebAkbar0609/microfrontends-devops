@@ -100,8 +100,11 @@ export function useExpenseList(activeSubTab: ExpenseActiveSubTab = "supplier_lis
 	// Filtered list based on active sub-tab and search/filters
 	const filteredExpenses = useMemo(() => {
 		return expenses.filter((item) => {
-			// Sub-tab filter: inbox vs all supplier list
+			// Sub-tab filter: inbox vs supplier list
 			if (activeSubTab === "inbox" && !item.isInboxItem) {
+				return false;
+			}
+			if (activeSubTab === "supplier_list" && item.isInboxItem) {
 				return false;
 			}
 

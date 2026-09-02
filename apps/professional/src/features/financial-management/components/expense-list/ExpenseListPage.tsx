@@ -232,10 +232,10 @@ export function ExpenseListPage() {
 										setActiveSubTab("supplier_list");
 										setCurrentPage(1);
 									}}
-									className={`px-4 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+									className={`px-4 py-1.5 text-xs rounded-md transition-all cursor-pointer ${
 										activeSubTab === "supplier_list"
-											? "bg-white text-slate-900 shadow-xs font-semibold"
-											: "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+											? "bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/80"
+											: "text-slate-600 font-normal hover:text-slate-900 hover:bg-white/40 border border-transparent"
 									}`}
 								>
 									<Translate text={localizationConstants.expenseSubTabSupplierList} />
@@ -246,10 +246,10 @@ export function ExpenseListPage() {
 										setActiveSubTab("inbox");
 										setCurrentPage(1);
 									}}
-									className={`px-4 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+									className={`px-4 py-1.5 text-xs rounded-md transition-all cursor-pointer ${
 										activeSubTab === "inbox"
-											? "bg-white text-slate-900 shadow-xs font-semibold"
-											: "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+											? "bg-white text-slate-900 font-semibold shadow-xs border border-slate-200/80"
+											: "text-slate-600 font-normal hover:text-slate-900 hover:bg-white/40 border border-transparent"
 									}`}
 								>
 									<Translate text={localizationConstants.expenseSubTabInbox} />
