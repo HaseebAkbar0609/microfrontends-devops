@@ -55,7 +55,7 @@ function AccordionSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white shadow-2xs">
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xs">
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger asChild>
           <Button
@@ -80,7 +80,7 @@ function AccordionSection({
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="border-t border-[#E5E5E5] px-5 py-4">{children}</div>
+          <div className="border-t border-slate-200 px-5 py-4">{children}</div>
         </CollapsibleContent>
       </Collapsible>
     </div>
@@ -120,15 +120,19 @@ export function B2BContractDetailView({ initialData }: Props) {
   const queryOfferId = searchParams.get("offerId") || undefined;
 
   const data = useMemo(() => {
-    if (queryProjectId || queryOfferId) {
-      return getAgreementDetailByContext(queryProjectId, queryOfferId);
-    }
-    return initialData || getAgreementDetailByContext("1", "1");
+    if (initialData) return initialData;
+    return getAgreementDetailByContext(queryProjectId, queryOfferId);
   }, [queryProjectId, queryOfferId, initialData]);
 
   const { isSubmitting, handleDownloadDoc } = useB2BAgreements(data);
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
+
+  const handlePrintContract = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
 
   const handleSort = (field: "datum" | "namn" | "fil") => {
     if (sortField === field) {
@@ -190,7 +194,7 @@ export function B2BContractDetailView({ initialData }: Props) {
           {/* Left Column */}
           <div className="flex flex-col gap-4">
             {/* Top Project & Kontrakt Header Card */}
-            <div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white p-3.5 sm:p-4 shadow-xs">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-white p-3.5 sm:p-4 shadow-xs">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -254,25 +258,7 @@ export function B2BContractDetailView({ initialData }: Props) {
               </div>
             </AccordionSection>
 
-            {/* Accordion 2: Kunduppgifter (Second client block from Figma) */}
-            <AccordionSection
-              title={t(localizationConstants.b2bAvtalSectionKunduppgifter)}
-              icon={<UserPlus className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-12">
-                <InfoItem label={t(localizationConstants.b2bAvtalKund)} value={data.client.kund} />
-                <InfoItem label={t(localizationConstants.b2bAvtalAdress)} value={data.client.adress} />
-                <InfoItem label={t(localizationConstants.b2bAvtalPostNr)} value={data.client.postNr} />
-                <InfoItem label={t(localizationConstants.b2bAvtalOrt)} value={data.client.ort} />
-                <InfoItem label={t(localizationConstants.b2bAvtalEmail)} value={data.client.email} />
-                <InfoItem label={t(localizationConstants.b2bAvtalTelefon)} value={data.client.telefon} />
-                <div className="sm:col-span-2">
-                  <InfoItem label={t(localizationConstants.b2bAvtalOrgNr)} value={data.client.orgNr} />
-                </div>
-              </div>
-            </AccordionSection>
-
-            {/* Accordion 3: Kontaktperson */}
+            {/* Accordion 2: Kontaktperson */}
             <AccordionSection
               title={t(localizationConstants.b2bAvtalSectionKontaktperson)}
               icon={<CircleUserRound className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
@@ -353,7 +339,7 @@ export function B2BContractDetailView({ initialData }: Props) {
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed text-sm">
                   <thead>
-                    <tr className="border-b border-[#E5E5E5] text-left text-xs font-medium text-slate-500">
+                    <tr className="border-b border-slate-200 text-left text-xs font-medium text-slate-500">
                       <th className="w-[120px] pb-2.5 font-normal">
                         <Button
                           type="button"
@@ -414,7 +400,7 @@ export function B2BContractDetailView({ initialData }: Props) {
                       <th className="w-[48px] pb-2.5 text-right font-normal"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E5E5E5]">
+                  <tbody className="divide-y divide-slate-200">
                     {sortedDocuments.map((doc) => (
                       <tr key={doc.id} className="hover:bg-slate-50/50 transition-colors">
                         <td className="w-[120px] py-2 text-slate-500 text-xs truncate">
@@ -423,7 +409,7 @@ export function B2BContractDetailView({ initialData }: Props) {
                         <td className="w-[150px] py-2 pr-3">
                           <span
                             title={doc.namn || t(localizationConstants.b2bAvtalDocNamnPlaceholder)}
-                            className="flex h-[34px] w-full max-w-[150px] items-center rounded border border-[#E5E5E5] bg-white px-2.5 text-xs text-slate-800 font-normal leading-none truncate"
+                            className="flex h-[34px] w-full max-w-[150px] items-center rounded border border-slate-200 bg-white px-2.5 text-xs text-slate-800 font-normal leading-none truncate"
                           >
                             {doc.namn || t(localizationConstants.b2bAvtalDocNamnPlaceholder)}
                           </span>
@@ -450,7 +436,7 @@ export function B2BContractDetailView({ initialData }: Props) {
                                 <MoreVertical size={15} aria-hidden={true} />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-36 rounded-lg bg-white p-1 shadow-lg border border-[#E5E5E5]">
+                            <DropdownMenuContent align="end" className="w-36 rounded-lg bg-white p-1 shadow-lg border border-slate-200">
                               <DropdownMenuItem
                                 onClick={() => handleDownloadDoc(doc.label)}
                                 className="flex items-center gap-2 text-xs text-slate-800 cursor-pointer"
@@ -523,7 +509,7 @@ export function B2BContractDetailView({ initialData }: Props) {
 
           {/* Right Column (Summary & Action Card) */}
           <div className="flex flex-col gap-4 self-start">
-            <div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white p-3.5 sm:p-4 shadow-2xs">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-white p-3.5 sm:p-4 shadow-2xs">
               <div className="flex items-start justify-between gap-2">
                 <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
                   {data.projectInfo.projektNamn}
@@ -544,10 +530,7 @@ export function B2BContractDetailView({ initialData }: Props) {
               </div>
               <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
                 <span className="font-medium text-slate-500">{t(localizationConstants.status)}</span>
-                <span
-                  style={{ background: "var(--color-bg-success-strong, #059669)" }}
-                  className="inline-flex items-center gap-1.5 rounded-[8px] px-2.5 py-1 text-xs font-medium text-white shadow-xs"
-                >
+                <span className="inline-flex items-center gap-1.5 rounded-[8px] bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white shadow-xs">
                   <FolderOpen size={13} className="shrink-0 text-white" aria-hidden={true} />
                   {t(localizationConstants.b2bAvtalStatusOpened)}
                 </span>
@@ -567,7 +550,7 @@ export function B2BContractDetailView({ initialData }: Props) {
               </div>
 
               {/* Separator line below price */}
-              <div className="my-3.5 -mx-3.5 sm:-mx-4 border-b border-[#E5E5E5]" />
+              <div className="my-3.5 -mx-3.5 sm:-mx-4 border-b border-slate-200" />
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-2">
@@ -595,7 +578,7 @@ export function B2BContractDetailView({ initialData }: Props) {
                 <Button
                   type="button"
                   disabled={isSubmitting}
-                  onClick={() => window.print()}
+                  onClick={handlePrintContract}
                   className="h-11 w-full cursor-pointer gap-2 bg-slate-950 text-sm font-semibold text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs flex items-center justify-center"
                 >
                   <Printer size={15} aria-hidden={true} />

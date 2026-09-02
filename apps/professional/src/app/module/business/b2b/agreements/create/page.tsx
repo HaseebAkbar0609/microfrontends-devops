@@ -7,6 +7,6 @@ interface Props {
 
 export default async function B2BCreateAgreementPage({ searchParams }: Props) {
   const params = await searchParams;
-  const initialData = getAgreementDetailByContext(params?.projectId || "1", params?.offerId || "1");
+  const initialData = getAgreementDetailByContext(params?.projectId, params?.offerId);
   return <B2BContractDetailView initialData={initialData} />;
 }
