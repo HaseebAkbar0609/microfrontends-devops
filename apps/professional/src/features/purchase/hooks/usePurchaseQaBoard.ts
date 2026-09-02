@@ -13,6 +13,13 @@ import type {
 	PurchaseQaStatus,
 } from "../types/purchase.types";
 
+/** Adds or removes a value, for the multi-select filter chips. */
+function toggleIn<T>(list: T[], value: T): T[] {
+	return list.includes(value)
+		? list.filter((item) => item !== value)
+		: [...list, value];
+}
+
 export interface PurchaseQaDraft {
 	type: string;
 	subject: string;
@@ -97,11 +104,6 @@ export function usePurchaseQaBoard() {
 			),
 		[visible],
 	);
-
-	const toggleIn = <T,>(list: T[], value: T): T[] =>
-		list.includes(value)
-			? list.filter((item) => item !== value)
-			: [...list, value];
 
 	const toggleCompany = useCallback(
 		(value: string) => setCompanies((prev) => toggleIn(prev, value)),
