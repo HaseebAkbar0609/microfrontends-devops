@@ -186,11 +186,3 @@ export const MOCK_PURCHASE_GOODS_RECEPTION_DOCS: PurchaseAgreementDocument[] = [
 		fileType: "pdf",
 	},
 ];
-
-/**
- * Order lines offered by the record page's "Inköps order" select. The frame
- * shows sub-numbered lines (`I501-001`) against a purchase numbered `I501`.
- */
-export function goodsReceptionOrderLines(purchaseNo: string): string[] {
-	return [`${purchaseNo}-001`, `${purchaseNo}-002`];
-}

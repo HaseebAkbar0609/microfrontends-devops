@@ -27,9 +27,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { showToast } from "@/lib/toast";
-import localizationConstants, {
-	type TranslationKeys,
-} from "@/utils/translation/constants";
+import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
 	PURCHASE_MODULE_BASE_URL,
@@ -45,32 +43,13 @@ import {
 import type { PurchaseGoodsReceptionRow } from "../types/purchase.types";
 import { PurchaseGoodsReceptionOrderTypeLabel } from "./PurchaseBadges";
 import { PurchaseGoodsReceptionActions } from "./PurchaseGoodsReceptionActions";
+import { GOODS_RECEPTION_HEADERS } from "./shared/goodsReceptionColumns";
+import { ObjectPill } from "./shared/ObjectPill";
 import { PurchaseGoodsDetailDrawer } from "./PurchaseGoodsDetailDrawer";
 
 const TH_CLASS =
 	"py-3.5 px-4 text-xs font-semibold text-slate-600 transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900";
 
-/**
- * The frame prints "Benämning" twice — header and data both duplicated — so the
- * column is rendered once here. See the mock for the other frame correction.
- */
-const COLUMNS: {
-	field: PurchaseGoodsReceptionSortField;
-	label: TranslationKeys;
-}[] = [
-	{ field: "object", label: localizationConstants.purchaseColObject },
-	{ field: "purchaseNo", label: localizationConstants.purchaseColNumber },
-	{ field: "name", label: localizationConstants.purchaseColName },
-	{ field: "supplier", label: localizationConstants.purchaseSupplierColName },
-	{
-		field: "expectedDelivery",
-		label: localizationConstants.purchaseGoodsReceptionColExpectedDelivery,
-	},
-	{
-		field: "orderType",
-		label: localizationConstants.purchaseGoodsReceptionColOrderType,
-	},
-];
 
 export function PurchaseGoodsReceptionPage() {
 	const { t } = useTranslation();
@@ -203,7 +182,7 @@ export function PurchaseGoodsReceptionPage() {
 						<Table className="w-full min-w-250 table-auto border-collapse">
 							<TableHeader>
 								<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
-									{COLUMNS.map((column) => (
+									{GOODS_RECEPTION_HEADERS.map((column) => (
 										<TableHead
 											key={column.field}
 											className={TH_CLASS}
@@ -278,7 +257,7 @@ export function PurchaseGoodsReceptionPage() {
 								{paginatedReceptions.length === 0 ? (
 									<TableRow>
 										<TableCell
-											colSpan={COLUMNS.length + 2}
+											colSpan={GOODS_RECEPTION_HEADERS.length + 2}
 											className="py-12 text-center text-sm text-slate-500"
 										>
 											<Translate
@@ -295,9 +274,7 @@ export function PurchaseGoodsReceptionPage() {
 											className="group border-b border-slate-100 transition-colors hover:bg-slate-50/60"
 										>
 											<TableCell className="px-4 py-3.5 whitespace-nowrap">
-												<span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-0.5 text-xs font-medium text-slate-700">
-													{reception.object}
-												</span>
+												<ObjectPill value={reception.object} />
 											</TableCell>
 											<TableCell className="px-4 py-3.5 text-sm font-medium whitespace-nowrap text-slate-900">
 												{/* The description opens the goods
