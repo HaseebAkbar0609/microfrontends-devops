@@ -46,15 +46,14 @@ function notifyListeners() {
 let inMemoryExpenses: ExpenseItem[] | null = null;
 
 function initializeRepository() {
-	if (inMemoryExpenses) return;
-
 	if (typeof window !== "undefined") {
 		try {
 			const storedList = localStorage.getItem(EXPENSES_STORAGE_KEY);
 			if (storedList) {
 				const parsedList = secureDecode<ExpenseItem[]>(storedList);
-				if (Array.isArray(parsedList) && parsedList.length > 0) {
+				if (Array.isArray(parsedList) && parsedList.length > 0 && parsedList.some((e) => e.supplier === "Biejer")) {
 					inMemoryExpenses = parsedList;
+					return;
 				}
 			}
 		} catch (e) {
@@ -62,9 +61,7 @@ function initializeRepository() {
 		}
 	}
 
-	if (!inMemoryExpenses) {
-		inMemoryExpenses = [...initialExpensesMock];
-	}
+	inMemoryExpenses = [...initialExpensesMock];
 }
 
 function persistRepository() {
@@ -87,7 +84,10 @@ export const expenseRepository = {
 	},
 
 	getExpenses(): ExpenseItem[] {
-		initializeRepository();
+		if (!inMemoryExpenses || inMemoryExpenses.length === 0 || !inMemoryExpenses.some((e) => e.supplier === "Biejer")) {
+			inMemoryExpenses = null;
+			initializeRepository();
+		}
 		return [...(inMemoryExpenses || [])];
 	},
 
@@ -96,12 +96,12 @@ export const expenseRepository = {
 	},
 
 	getExpenseById(id: string): ExpenseItem | null {
-		initializeRepository();
+		this.getExpenses();
 		return inMemoryExpenses?.find((e) => e.id === id) || null;
 	},
 
 	updateExpenseStatus(id: string, newStatus: ExpenseStatus): void {
-		initializeRepository();
+		this.getExpenses();
 		if (!inMemoryExpenses) return;
 
 		inMemoryExpenses = inMemoryExpenses.map((exp) => {
@@ -131,7 +131,7 @@ export const expenseRepository = {
 	},
 
 	createExpense(newExpense: Omit<ExpenseItem, "id" | "expenseNo">): ExpenseItem {
-		initializeRepository();
+		this.getExpenses();
 		const count = (inMemoryExpenses?.length || 0) + 1;
 		const id = `exp-${Date.now()}`;
 		const expenseNo = `EXP-2026-${String(count).padStart(3, "0")}`;
@@ -149,7 +149,7 @@ export const expenseRepository = {
 	},
 
 	deleteExpense(id: string): void {
-		initializeRepository();
+		this.getExpenses();
 		if (!inMemoryExpenses) return;
 
 		inMemoryExpenses = inMemoryExpenses.filter((e) => e.id !== id);

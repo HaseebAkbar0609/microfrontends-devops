@@ -14,8 +14,8 @@ import { DEFAULT_ANNUAL_EXPENSE_BUDGET } from "../constants/expense.constants";
 export type ExpenseActiveSubTab = "supplier_list" | "inbox";
 
 export function useExpenseList(activeSubTab: ExpenseActiveSubTab = "supplier_list") {
-	const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
-	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [expenses, setExpenses] = useState<ExpenseItem[]>(() => expenseRepository.getAllExpenses());
+	const [isLoading, setIsLoading] = useState<boolean>(false);
 
 	// Selection state
 	const [selectedExpenseIds, setSelectedExpenseIds] = useState<string[]>([]);
