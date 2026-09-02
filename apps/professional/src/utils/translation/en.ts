@@ -2750,6 +2750,8 @@ export const enOffer: OfferTranslation = {
 	complaintValidationTypeRequired: "Complaint type is required",
 	complaintValidationTitleRequired: "A short title is required",
 	complaintValidationDescriptionRequired: "A description is required",
+	complaintValidationGdprRequired: "You must accept the GDPR terms to send",
+	complaintFileRejectedToast: "File type or size not allowed",
 	// Purchase - Goods reception
 	purchaseGoodsReceptionTabUpload: "Upload document",
 	purchaseGoodsReceptionTabList: "Goods reception list",

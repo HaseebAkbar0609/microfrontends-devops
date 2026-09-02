@@ -14,13 +14,47 @@ export type PurchaseDocumentSortField =
 	| "supplier"
 	| "documentName"
 	| "reference"
+	| "fileType"
 	| "purchaseNo";
 
-/** Attributes stamped onto files uploaded in this session. */
+/** Attributes stamped onto files uploaded in this session, plus what may be uploaded. */
 export interface PurchaseDocumentUploadDefaults {
 	supplier?: string;
 	purchaseNo?: string;
 	reference?: string;
+	/**
+	 * Extensions the picker will actually take, e.g. `[".pdf", ".png"]`. The
+	 * input's `accept` attribute only filters the OS dialog — it is advisory
+	 * and a drag-and-drop or a renamed file walks straight past it — so the
+	 * list is enforced here too. Omitted means unrestricted, which is what the
+	 * callers that predate this did.
+	 */
+	acceptExtensions?: string[];
+	/** Per-file ceiling in bytes. Omitted means unrestricted. */
+	maxFileSizeBytes?: number;
+}
+
+/** What `selectFiles` took and what it turned away, so callers can say so. */
+export interface SelectFilesResult {
+	added: number;
+	rejected: string[];
+}
+
+function isAllowed(
+	file: File,
+	acceptExtensions?: string[],
+	maxFileSizeBytes?: number,
+): boolean {
+	if (maxFileSizeBytes !== undefined && file.size > maxFileSizeBytes) {
+		return false;
+	}
+
+	if (!acceptExtensions || acceptExtensions.length === 0) return true;
+
+	const name = file.name.toLowerCase();
+	return acceptExtensions.some((extension) =>
+		name.endsWith(extension.toLowerCase()),
+	);
 }
 
 const FALLBACK_UPLOAD_DEFAULTS: Required<
@@ -43,7 +77,8 @@ export function usePurchaseDocuments(
 	initialDocuments: PurchaseAgreementDocument[] = MOCK_PURCHASE_AGREEMENT_DOCS,
 	uploadDefaults: PurchaseDocumentUploadDefaults = {},
 ) {
-	const { supplier, purchaseNo, reference } = uploadDefaults;
+	const { supplier, purchaseNo, reference, acceptExtensions, maxFileSizeBytes } =
+		uploadDefaults;
 	const [documents, setDocuments] =
 		useState<PurchaseAgreementDocument[]>(initialDocuments);
 	const [pendingFiles, setPendingFiles] = useState<PendingUploadFile[]>([]);
@@ -64,15 +99,37 @@ export function usePurchaseDocuments(
 		[sortBy],
 	);
 
-	const selectFiles = useCallback((files: File[]) => {
-		setPendingFiles((previous) => {
-			const existing = new Set(previous.map((item) => item.name));
-			const added = files
-				.filter((file) => !existing.has(file.name))
-				.map((file) => ({ name: file.name, file }));
-			return [...previous, ...added];
-		});
-	}, []);
+	/**
+	 * Takes the files the caller allows and reports the rest by name, so a
+	 * rejected file is visibly turned away rather than silently dropped.
+	 */
+	const selectFiles = useCallback(
+		(files: File[]): SelectFilesResult => {
+			const allowed: File[] = [];
+			const rejected: string[] = [];
+
+			for (const file of files) {
+				if (isAllowed(file, acceptExtensions, maxFileSizeBytes)) {
+					allowed.push(file);
+				} else {
+					rejected.push(file.name);
+				}
+			}
+
+			let added = 0;
+			setPendingFiles((previous) => {
+				const existing = new Set(previous.map((item) => item.name));
+				const next = allowed
+					.filter((file) => !existing.has(file.name))
+					.map((file) => ({ name: file.name, file }));
+				added = next.length;
+				return [...previous, ...next];
+			});
+
+			return { added, rejected };
+		},
+		[acceptExtensions, maxFileSizeBytes],
+	);
 
 	const removePending = useCallback((name: string) => {
 		setPendingFiles((previous) =>
@@ -80,9 +137,14 @@ export function usePurchaseDocuments(
 		);
 	}, []);
 
-	/** Moves the pending files into the table. Returns how many were added. */
-	const commitPendingFiles = useCallback(() => {
-		if (pendingFiles.length === 0) return 0;
+	/**
+	 * Moves the pending files into the table and returns the rows it added.
+	 *
+	 * The rows rather than a count, because `setDocuments` has not flushed by
+	 * the time a caller building a payload needs to read them.
+	 */
+	const commitPendingFiles = useCallback((): PurchaseAgreementDocument[] => {
+		if (pendingFiles.length === 0) return [];
 
 		const today = new Date().toISOString().slice(0, 10);
 		const added = pendingFiles.map((pending, index) => ({
@@ -98,7 +160,7 @@ export function usePurchaseDocuments(
 
 		setDocuments((previous) => [...added, ...previous]);
 		setPendingFiles([]);
-		return added.length;
+		return added;
 	}, [pendingFiles, purchaseNo, reference, supplier]);
 
 	const removeDocument = useCallback((id: string) => {
