@@ -2,23 +2,17 @@
 
 import React, { useState } from "react";
 import {
-  MoreVertical,
   Mail,
   MailOpen,
   CheckCheck,
-  CircleCheckBig,
   ChevronUp,
   ChevronDown,
   PlusCircle,
   X,
-  Archive,
-  Trash2,
 } from "lucide-react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import {
   DropdownMenu,
@@ -31,206 +25,32 @@ import {
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { QAThreadCard, type QAThreadLabels } from "@/components/common/QAThreadCard";
 import { ProjectMarketDetail, QAStatus, QAMessage } from "../types/projectMarket";
 
-function RoleBadge({ badge }: { badge: string }) {
-  const t = useTranslate();
-  const badgeClasses: Record<string, string> = {
-    UE: "bg-blue-600 text-white",
-    Beställare: "bg-teal-600 text-white",
-    Fråga: "bg-amber-500 text-white",
-  };
+/**
+ * The labels this feature already shipped. Passed through so moving onto the
+ * shared card cannot change a single word of what renders here.
+ */
+const QA_LABELS: QAThreadLabels = {
+  markAsRead: localizationConstants.b2bPMQAMarkAsRead,
+  archive: localizationConstants.b2bPMQAArkivera,
+  delete: localizationConstants.b2bPMQARadera,
+  leaveComment: localizationConstants.b2bPMQALeaveComment,
+  send: localizationConstants.b2bPMQASend,
+  cancel: localizationConstants.cancel,
+  answerBadge: localizationConstants.b2bPMQAAdmin,
+  answerSubLabel: localizationConstants.b2bPMQAYou,
+  badges: {
+    UE: localizationConstants.b2bPMQAUE,
+    "Beställare": localizationConstants.b2bPMQABestallare,
+    "Fråga": localizationConstants.b2bPMQAFraga,
+  },
+};
 
-  const badgeLabels: Record<string, string> = {
-    UE: t(localizationConstants.b2bPMQAUE),
-    Beställare: t(localizationConstants.b2bPMQABestallare),
-    Fråga: t(localizationConstants.b2bPMQAFraga),
-  };
-
-  const colorClass = badgeClasses[badge] ?? "bg-slate-600 text-white";
-  const label = badgeLabels[badge] ?? badge;
-
-  return (
-    <span
-      className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium leading-none ${colorClass}`}
-    >
-      {label}
-    </span>
-  );
-}
-
-function QACard({
-  message,
-  onSendReply,
-  onMarkAsRead,
-  onArchive,
-  onDelete,
-}: {
-  message: QAMessage;
-  onSendReply: (id: string, text: string) => void;
-  onMarkAsRead: (id: string) => void;
-  onArchive: (id: string) => void;
-  onDelete: (id: string) => void;
-}) {
-  const t = useTranslate();
-  const [comment, setComment] = useState(message.replyText ?? "");
-
-  return (
-    <div className="rounded-xl border border-slate-200 bg-white p-3.5 sm:p-4 shadow-2xs">
-      {/* Top message header */}
-      <div className="flex items-start justify-between gap-2">
-        <div className="flex items-start gap-2.5">
-          <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full border border-slate-200 bg-slate-100">
-            <Image
-              src="/assets/images/Avatar.svg"
-              alt={message.sender}
-              width={32}
-              height={32}
-              className="h-full w-full object-cover"
-            />
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5">
-              <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">{message.sender}</span>
-              {message.badge && <RoleBadge badge={message.badge} />}
-            </div>
-            <span className="text-[11px] text-slate-500">{message.company || message.role}</span>
-          </div>
-        </div>
-
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-800 hover:bg-slate-100 data-[state=open]:bg-slate-200 transition-colors p-0"
-              aria-label={t(localizationConstants.actions)}
-            >
-              <MoreVertical size={16} className="text-slate-800" aria-hidden={true} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-44 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xl"
-          >
-            <DropdownMenuItem
-              onClick={() => onMarkAsRead(message.id)}
-              className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
-            >
-              <CircleCheckBig size={16} className="text-slate-700 shrink-0" aria-hidden={true} />
-              <span>{t(localizationConstants.b2bPMQAMarkAsRead)}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => onArchive(message.id)}
-              className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
-            >
-              <Archive size={16} className="text-slate-700 shrink-0" aria-hidden={true} />
-              <span>{t(localizationConstants.b2bPMQAArkivera)}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => onDelete(message.id)}
-              className="flex cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
-            >
-              <Trash2 size={16} className="text-slate-700 shrink-0" aria-hidden={true} />
-              <span>{t(localizationConstants.b2bPMQARadera)}</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-
-      {/* Message question content & date on right under 3 dots */}
-      <div className="mt-2 flex items-baseline justify-between gap-3">
-        <p className="font-sans text-sm font-normal leading-5 tracking-normal text-slate-950">{message.message}</p>
-        <span className="shrink-0 font-sans text-xs font-normal leading-4 tracking-normal text-slate-500 text-right">{message.date}</span>
-      </div>
-
-      {/* Bottom reply / answer section */}
-      {message.status === "answered" ? (
-        <div className="mt-3.5 border-t border-slate-100 pt-3">
-          <div className="flex items-start gap-2.5">
-            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-xs font-medium text-slate-500">
-              SE
-            </div>
-            <div className="flex flex-1 flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
-                  {message.answerUser || "Stefan Eriksson"}
-                </span>
-                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-700">
-                  {t(localizationConstants.b2bPMQAAdmin)}
-                </span>
-              </div>
-              <span className="text-[11px] text-slate-400 font-normal">
-                {t(localizationConstants.b2bPMQAYou)}
-              </span>
-              <div className="mt-1 flex items-baseline justify-between gap-3">
-                <p className="font-sans text-sm font-normal leading-5 tracking-normal text-slate-950">
-                  {message.answerText || message.replyText || "Hej, jag skickar över den via KMA-modulen"}
-                </p>
-                <span className="shrink-0 font-sans text-xs font-normal leading-4 tracking-normal text-slate-500 text-right">
-                  {message.answerDate || message.date}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <div className="mt-3.5 flex flex-col gap-2 border-t border-slate-100 pt-3">
-          <div className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-medium text-slate-500">
-              SE
-            </div>
-            <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
-              {message.replyFrom || "Stefan Eriksson"}
-            </span>
-          </div>
-
-          <Textarea
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder={t(localizationConstants.b2bPMQALeaveComment)}
-            className="w-full resize-y rounded-lg border border-slate-200 p-2.5 font-sans text-sm font-normal leading-5 tracking-normal text-slate-950 placeholder:text-slate-500 focus:border-slate-300 focus:outline-none min-h-[70px] bg-white shadow-none focus-visible:ring-1 focus-visible:ring-slate-300"
-            rows={3}
-          />
-
-          <span className="font-sans text-sm font-normal leading-5 tracking-normal text-slate-500">
-            {t(localizationConstants.b2bPMQALeaveComment)}
-          </span>
-
-          <div className="flex items-center justify-end gap-2 pt-1 w-full">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setComment("")}
-              className={`flex h-[36px] w-[120px] items-center justify-center rounded-md px-4 py-2 font-sans font-medium text-[14px] leading-[20px] tracking-normal transition-colors shadow-none ${comment.trim()
-                  ? "cursor-pointer bg-slate-100 text-slate-900 hover:bg-slate-200"
-                  : "cursor-default bg-slate-100 text-slate-400"
-                }`}
-            >
-              {t(localizationConstants.cancel)}
-            </Button>
-            <Button
-              type="button"
-              disabled={!comment.trim()}
-              onClick={() => {
-                if (comment.trim()) {
-                  onSendReply(message.id, comment.trim());
-                  setComment("");
-                }
-              }}
-              className={`flex h-[36px] w-[120px] items-center justify-center rounded-md px-4 py-2 font-sans font-medium text-[14px] leading-[20px] tracking-normal transition-colors ${comment.trim()
-                  ? "cursor-pointer bg-slate-900 text-white hover:bg-slate-800 shadow-2xs"
-                  : "cursor-not-allowed bg-slate-100 text-slate-400"
-                }`}
-            >
-              {t(localizationConstants.b2bPMQASend)}
-            </Button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
+/** The card kept these as literals; they stay literal here, not in the shared component. */
+const QA_FALLBACK_USER = "Stefan Eriksson";
+const QA_FALLBACK_ANSWER = "Hej, jag skickar över den via KMA-modulen";
 
 function QAColumn({
   status,
@@ -286,9 +106,26 @@ function QAColumn({
         <CollapsibleContent>
           <div className="flex flex-col gap-3.5 bg-white p-3.5">
             {items.map((msg) => (
-              <QACard
+              <QAThreadCard
                 key={msg.id}
-                message={msg}
+                message={{
+                  id: msg.id,
+                  sender: msg.sender,
+                  company: msg.company,
+                  role: msg.role,
+                  badge: msg.badge,
+                  message: msg.message,
+                  date: msg.date,
+                  answered: msg.status === "answered",
+                  answerUser: msg.answerUser || QA_FALLBACK_USER,
+                  answerBadge: undefined,
+                  answerText:
+                    msg.answerText || msg.replyText || QA_FALLBACK_ANSWER,
+                  answerDate: msg.answerDate || msg.date,
+                  replyText: msg.replyText,
+                }}
+                labels={QA_LABELS}
+                currentUserName={msg.replyFrom || QA_FALLBACK_USER}
                 onSendReply={onSendReply}
                 onMarkAsRead={onMarkAsRead}
                 onArchive={onArchive}

@@ -94,6 +94,91 @@ export interface PurchaseComplaintRow {
 	archived: boolean;
 }
 
+/** How the complaint record's gallery groups an attachment. */
+export type PurchaseComplaintAttachmentCategory =
+	| "image"
+	| "document"
+	| "drawing";
+
+/**
+ * One file on a complaint.
+ *
+ * Complaint-local rather than `PurchaseAgreementDocument`, whose `fileType` is
+ * a closed `"pdf" | "doc"` union with no image member — it reports a `.png` as
+ * a Word document — and which carries no notion of a drawing. Four flows share
+ * that type, so the gallery gets its own rather than reshaping theirs.
+ */
+export interface PurchaseComplaintAttachment {
+	id: string;
+	name: string;
+	category: PurchaseComplaintAttachmentCategory;
+	/** Preview source for `category: "image"`. */
+	thumbnailUrl?: string;
+	fileUrl?: string;
+}
+
+export type ComplaintResolutionStatus =
+	| "open"
+	| "in_progress"
+	| "resolved"
+	| "closed";
+
+/** The Lösning & Utfall form. Empty strings mean "not chosen yet". */
+export interface PurchaseComplaintResolution {
+	decision: string;
+	resolutionType: string;
+	resolutionStatus: string;
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	resolutionDate: string;
+	internalNotes: string;
+}
+
+/** The Leverantörskommunikation card. */
+export interface PurchaseComplaintSupplierContact {
+	contactPerson: string;
+	email: string;
+	referenceNumber: string;
+	phone: string;
+}
+
+/**
+ * Everything the complaint record shows beyond its list row.
+ *
+ * Kept separate from `PurchaseComplaintRow` so the list is not carrying a
+ * dozen fields no list renders — the same split the purchase record's
+ * Information section uses.
+ */
+export interface PurchaseComplaintDetail {
+	complaintId: string;
+	linkedPurchase: {
+		/** The purchase line the complaint is against, e.g. "I500-001". */
+		lineNo: string;
+		/** The purchase record to link to. */
+		purchaseId: string;
+		name: string;
+		supplier: string;
+		/**
+		 * The supplier record to link to. Held as an id rather than matched on
+		 * the display name, which differs between the two mocks ("Beijer" vs
+		 * "Beijer Byggmaterial") and would silently link the wrong record if
+		 * two suppliers ever shared a name.
+		 */
+		supplierId?: string;
+		/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+		purchaseDate: string;
+		supplierDate: string;
+		estimatedDelivery: string;
+	};
+	/** ISO 8601 date (`YYYY-MM-DD`), or `""` when none is recorded. */
+	createdDate: string;
+	createdBy: string;
+	assignedTo: string;
+	description: string;
+	attachments: PurchaseComplaintAttachment[];
+	supplierContact: PurchaseComplaintSupplierContact;
+	resolution: PurchaseComplaintResolution;
+}
+
 export type PurchaseDocumentFileType = "pdf" | "doc";
 
 /** One row of the supplier agreements ("Avtal") document table. */
