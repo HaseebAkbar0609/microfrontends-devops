@@ -75,30 +75,53 @@ export const DUMMY_SEE_OFFER_DETAIL: B2BSeeOfferDetail = {
 };
 
 export function getMockSeeOfferDetail(projectId?: string, offerId?: string): B2BSeeOfferDetail {
-  const project = DUMMY_PROJECTS.find((p) => p.id === projectId);
-  const offer = DUMMY_PROJECT_DETAIL.offers.find((o) => o.id === offerId);
+  const cleanProjectId =
+    projectId?.replace(/^AGR-/, "").replace(/^PRJ-?/, "").replace(/^PRJ00/, "").replace(/^PRJ0/, "") ||
+    projectId;
 
-  const title = project?.project ?? DUMMY_SEE_OFFER_DETAIL.title;
-  const refNr = project?.refNr ?? DUMMY_SEE_OFFER_DETAIL.refNr;
-  const municipality = project?.municipality ?? DUMMY_SEE_OFFER_DETAIL.municipality;
-  const postedDate = project?.date ?? DUMMY_SEE_OFFER_DETAIL.postedDate;
-  const totalOffert = offer?.offerAmount ?? (project?.lowestOffer || DUMMY_SEE_OFFER_DETAIL.totalOffert);
+  const project =
+    DUMMY_PROJECTS.find(
+      (p) =>
+        p.id === projectId ||
+        p.id === cleanProjectId ||
+        p.refNr.toLowerCase() === projectId?.toLowerCase() ||
+        p.refNr.toLowerCase() === cleanProjectId?.toLowerCase()
+    ) ||
+    (!isNaN(Number(cleanProjectId)) && DUMMY_PROJECTS[Number(cleanProjectId) - 1]) ||
+    DUMMY_PROJECTS[0];
 
-  const companyName = offer?.company ?? DUMMY_SEE_OFFER_DETAIL.company.name;
-  const contactName = offer?.contactPerson ?? DUMMY_SEE_OFFER_DETAIL.contactPerson.name;
-  const email = offer?.email ?? DUMMY_SEE_OFFER_DETAIL.contactPerson.email;
-  const mobile = offer?.mobile ?? DUMMY_SEE_OFFER_DETAIL.contactPerson.mobil;
+  const offer =
+    DUMMY_PROJECT_DETAIL.offers.find((o) => o.id === offerId) ||
+    DUMMY_PROJECT_DETAIL.offers.find((o) => o.id === cleanProjectId) ||
+    DUMMY_PROJECT_DETAIL.offers[0];
+
+  const title = project?.project || "Köksrenoveringsjobb";
+  const refNr = project?.refNr || "PRJ001";
+  const municipality = project?.municipality || "Järfälla";
+  const postedDate = project?.date || "2024-05-10";
+  const totalOffert =
+    offer?.offerAmount ?? (project?.lowestOffer || DUMMY_SEE_OFFER_DETAIL.totalOffert);
+
+  const companyName = offer?.company || "Nesse bygg AB";
+  const contactName = offer?.contactPerson || "Anna Andersson";
+  const email = offer?.email || "anna@example.com";
+  const mobile = offer?.mobile || "076000000";
 
   return {
     ...DUMMY_SEE_OFFER_DETAIL,
-    id: offerId ?? DUMMY_SEE_OFFER_DETAIL.id,
-    projectId: projectId ?? DUMMY_SEE_OFFER_DETAIL.projectId,
+    id: offerId || "1",
+    projectId: project.id,
     title,
     refNr,
     postedDate,
     municipality,
     totalOffert,
-    statusBadge: offer?.status === "accepted" ? "Godkänd" : offer?.status === "deny" ? "Nekad" : "Väntande",
+    statusBadge:
+      offer?.status === "accepted"
+        ? "Godkänd"
+        : offer?.status === "deny"
+        ? "Nekad"
+        : "Väntande",
     company: {
       ...DUMMY_SEE_OFFER_DETAIL.company,
       name: companyName,
@@ -114,6 +137,22 @@ export function getMockSeeOfferDetail(projectId?: string, offerId?: string): B2B
     offert: {
       ...DUMMY_SEE_OFFER_DETAIL.offert,
       totalOffert,
+    },
+    documents: {
+      images: [
+        { id: "img-1", label: `${title} - Foto 1.jpg` },
+        { id: "img-2", label: `${title} - Foto 2.jpg` },
+        { id: "img-3", label: `${title} - Översikt.jpg` },
+      ],
+      docs: [
+        { id: "doc-1", label: `Offert - ${title}.pdf`, type: "pdf" },
+        { id: "doc-2", label: `Specifikation - ${refNr}.doc`, type: "doc" },
+        { id: "doc-3", label: `Villkor - ${companyName}.pdf`, type: "pdf" },
+      ],
+      drawings: [
+        { id: "drw-1", label: `Ritning - ${refNr}.pdf`, type: "pdf" },
+        { id: "drw-2", label: `Planritning - ${title}.pdf`, type: "pdf" },
+      ],
     },
   };
 }
