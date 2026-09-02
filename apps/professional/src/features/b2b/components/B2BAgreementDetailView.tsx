@@ -13,7 +13,6 @@ import {
   Download,
   Eye,
   File,
-  FolderOpen,
   Info,
   LayoutList,
   Map,
@@ -21,7 +20,7 @@ import {
   MoreVertical,
   PenTool,
   PencilLine,
-  Printer,
+  Send,
   UserPlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -126,14 +125,24 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
     return initialData;
   }, [queryProjectId, queryOfferId, initialData]);
 
-  const { isSubmitting, handleDownloadDoc } = useB2BAgreements(data);
+  const { isSubmitting, handleDownloadDoc, handleSendAgreement } = useB2BAgreements(data);
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
 
-  const handlePrintContract = () => {
-    if (typeof window !== "undefined") {
-      window.print();
+  const handleBack = () => {
+    if (queryProjectId || queryOfferId) {
+      router.push(
+        `/module/business/b2b/agreements/create?projectId=${queryProjectId || "1"}&offerId=${queryOfferId || "1"}`
+      );
+    } else {
+      router.push(`/module/business/b2b/agreements/create`);
     }
+  };
+
+  const handleSendContract = async () => {
+    await handleSendAgreement(data.id || "1", () => {
+      router.push("/module/business/b2b/overview");
+    });
   };
 
   const handleSort = (field: "datum" | "namn" | "fil") => {
@@ -179,7 +188,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
           variant="ghost"
           size="icon"
           aria-label={t(localizationConstants.goBackButton)}
-          onClick={() => router.back()}
+          onClick={handleBack}
           className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-900 hover:bg-slate-200/60 transition-colors p-0"
         >
           <ArrowLeft size={20} aria-hidden={true} />
@@ -530,13 +539,6 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                   {data.projectInfo.municipality}
                 </span>
               </div>
-              <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
-                <span className="font-medium text-slate-500">{t(localizationConstants.status)}</span>
-                <span className="inline-flex items-center gap-1.5 rounded-[8px] bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white shadow-xs">
-                  <FolderOpen size={13} className="shrink-0 text-white" aria-hidden={true} />
-                  {t(localizationConstants.b2bAvtalStatusOpened)}
-                </span>
-              </div>
 
               <p className="mt-2 text-xs text-slate-500">
                 {t(localizationConstants.b2bDealCreatedDate)}: {data.projectInfo.postedDate}
@@ -559,7 +561,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => router.back()}
+                  onClick={handleBack}
                   className="h-10 w-full cursor-pointer rounded-lg bg-zinc-100 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors shadow-none"
                 >
                   {t(localizationConstants.b2bAvtalAvbryt)}
@@ -567,11 +569,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() =>
-                    router.push(
-                      `/module/business/b2b/overview`
-                    )
-                  }
+                  onClick={handleBack}
                   className="h-10 w-full cursor-pointer gap-2 border border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 transition-colors rounded-lg shadow-2xs"
                 >
                   <PencilLine size={15} aria-hidden={true} />
@@ -580,11 +578,11 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                 <Button
                   type="button"
                   disabled={isSubmitting}
-                  onClick={handlePrintContract}
-                  className="h-11 w-full cursor-pointer gap-2 bg-slate-950 text-sm font-semibold text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs flex items-center justify-center"
+                  onClick={handleSendContract}
+                  className="h-10 w-full cursor-pointer gap-2 bg-slate-950 text-sm font-semibold text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs flex items-center justify-center"
                 >
-                  <Printer size={15} aria-hidden={true} />
-                  <span>{t(localizationConstants.b2bAvtalSkrivUt)}</span>
+                  <Send size={15} className="shrink-0" aria-hidden={true} />
+                  <span>{t(localizationConstants.b2bAvtalSkicka)}</span>
                 </Button>
               </div>
             </div>

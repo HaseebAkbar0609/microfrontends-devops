@@ -94,6 +94,32 @@ export interface PurchaseComplaintRow {
 	archived: boolean;
 }
 
+/** Which column of the Fråga/Svar board a question sits in. */
+export type PurchaseQaStatus = "new" | "opened" | "answered";
+
+/**
+ * One question on the purchase module's Fråga/Svar board.
+ *
+ * Carries the shared `QAThreadMessage` fields the card renders, plus the two
+ * this board owns: which column it belongs to, and whether it has been moved
+ * to Arkiv.
+ */
+export interface PurchaseQaMessage {
+	id: string;
+	sender: string;
+	company: string;
+	/** Role chip beside the name, e.g. "UE". */
+	badge: string;
+	message: string;
+	/** Display date as drawn, e.g. "12 augusti". */
+	date: string;
+	status: PurchaseQaStatus;
+	archived: boolean;
+	answerUser?: string;
+	answerText?: string;
+	answerDate?: string;
+}
+
 /** How the complaint record's gallery groups an attachment. */
 export type PurchaseComplaintAttachmentCategory =
 	| "image"

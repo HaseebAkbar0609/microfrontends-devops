@@ -5,15 +5,12 @@ import {
   Mail,
   MailOpen,
   CheckCheck,
-  ChevronUp,
   ChevronDown,
   PlusCircle,
   X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,6 +23,7 @@ import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { QAThreadCard, type QAThreadLabels } from "@/components/common/QAThreadCard";
+import { QAThreadColumn } from "@/components/common/QAThreadColumn";
 import { ProjectMarketDetail, QAStatus, QAMessage } from "../types/projectMarket";
 
 /**
@@ -75,70 +73,45 @@ function QAColumn({
   onArchive: (id: string) => void;
   onDelete: (id: string) => void;
 }) {
-  const [open, setOpen] = useState(true);
   const items = messages.filter((m) => m.status === status);
 
   return (
-    <div className={cn("flex w-full min-w-0 flex-1 flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xs", className)}>
-      <Collapsible open={open} onOpenChange={setOpen}>
-        <CollapsibleTrigger asChild>
-          <button
-            type="button"
-            className="flex w-full cursor-pointer items-center justify-between border-b border-slate-200 bg-slate-100 px-4 py-3 hover:bg-slate-200/70 transition-colors"
-          >
-            <div className="flex items-center gap-2.5">
-              {icon}
-              <span className="text-sm font-semibold text-slate-900">{label}</span>
-              {badgeNumber && (
-                <span className="flex h-4 items-center justify-center rounded bg-orange-600 px-1.5 text-[10px] font-bold text-white">
-                  {badgeNumber}
-                </span>
-              )}
-            </div>
-            <ChevronUp
-              size={16}
-              className={`shrink-0 text-slate-400 transition-transform duration-200 ${open ? "" : "rotate-180"
-                }`}
-              aria-hidden={true}
-            />
-          </button>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div className="flex flex-col gap-3.5 bg-white p-3.5">
-            {items.map((msg) => (
-              <QAThreadCard
-                key={msg.id}
-                message={{
-                  id: msg.id,
-                  sender: msg.sender,
-                  company: msg.company,
-                  role: msg.role,
-                  badge: msg.badge,
-                  message: msg.message,
-                  date: msg.date,
-                  answered: msg.status === "answered",
-                  answerUser: msg.answerUser || QA_FALLBACK_USER,
-                  answerBadge: undefined,
-                  answerText:
-                    msg.answerText || msg.replyText || QA_FALLBACK_ANSWER,
-                  answerDate: msg.answerDate || msg.date,
-                  replyText: msg.replyText,
-                }}
-                labels={QA_LABELS}
-                currentUserName={msg.replyFrom || QA_FALLBACK_USER}
-                onSendReply={onSendReply}
-                onMarkAsRead={onMarkAsRead}
-                onArchive={onArchive}
-                onDelete={onDelete}
-              />
-            ))}
-            {items.length === 0 && (
-              <p className="py-6 text-center text-xs text-slate-400">—</p>
-            )}
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
-    </div>
+    <QAThreadColumn
+      label={label}
+      icon={icon}
+      className={className}
+      // This board only ever badged the New column, so the count is passed
+      // only where a badgeNumber was. The shared column derives the figure
+      // rather than taking the hard-coded string this file used.
+      count={badgeNumber ? items.length : 0}
+    >
+      {items.map((msg) => (
+        <QAThreadCard
+          key={msg.id}
+          message={{
+            id: msg.id,
+            sender: msg.sender,
+            company: msg.company,
+            role: msg.role,
+            badge: msg.badge,
+            message: msg.message,
+            date: msg.date,
+            answered: msg.status === "answered",
+            answerUser: msg.answerUser || QA_FALLBACK_USER,
+            answerBadge: undefined,
+            answerText: msg.answerText || msg.replyText || QA_FALLBACK_ANSWER,
+            answerDate: msg.answerDate || msg.date,
+            replyText: msg.replyText,
+          }}
+          labels={QA_LABELS}
+          currentUserName={msg.replyFrom || QA_FALLBACK_USER}
+          onSendReply={onSendReply}
+          onMarkAsRead={onMarkAsRead}
+          onArchive={onArchive}
+          onDelete={onDelete}
+        />
+      ))}
+    </QAThreadColumn>
   );
 }
 

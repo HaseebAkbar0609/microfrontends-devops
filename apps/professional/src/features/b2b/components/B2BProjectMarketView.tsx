@@ -312,7 +312,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
             <Button
               size="sm"
               className="h-9 cursor-pointer gap-1.5 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 rounded-md px-4 shadow-2xs"
-              onClick={() => router.push("/module/business/b2b/project-market/create")}
+              onClick={() => router.push("/module/business/b2b/create")}
             >
               <Plus size={16} aria-hidden={true} />
               {t(localizationConstants.b2bPMAddProject)}
@@ -446,7 +446,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                         variant="secondary"
                         size="sm"
                         onClick={() =>
-                          router.push(`/module/business/b2b/project-market/${row.id}`)
+                          router.push(`/module/business/b2b/overview/${row.id}`)
                         }
                         className="h-10 bg-slate-100 hover:bg-slate-200/80 text-slate-800 text-xs font-semibold px-5 py-3 shadow-none cursor-pointer rounded-md border-0"
                       >

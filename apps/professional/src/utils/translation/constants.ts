@@ -717,7 +717,18 @@ export type OfferTranslation = {
 	b2bCompanyOmdomeSection: string;
 	b2bCompanyLogo: string;
 	b2bCompanyPDF: string;
+	b2bCompanyEdit: string;
+	b2bCompanySave: string;
+	b2bCompanyCancel: string;
+	b2bCompanySaved: string;
+	b2bCompanyVerified: string;
+	b2bCompanyPending: string;
+	b2bCompanyVerifyBusiness: string;
+	b2bCompanyUploadLogo: string;
+	b2bCompanyPlaceholderOrgNr: string;
+	b2bCompanyInput: string;
 	b2bCreateDeal: string;
+
 	b2bDealsEmpty: string;
 	// B2B - Deal Detail
 	b2bDealDetailPreview: string;
@@ -2284,6 +2295,7 @@ export type OfferTranslation = {
 	kmaActionPlanTemplateNameCol: string;
 	kmaActionPlanTemplateUseBtn: string;
 	kmaActionPlanUseTemplate: string;
+	kmaActionPlanMallarTableTitle: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
@@ -2878,6 +2890,37 @@ export type OfferTranslation = {
 	purchaseComplaintQaUe: string;
 	purchaseComplaintQaSentToast: string;
 	purchaseComplaintQaNone: string;
+	purchaseQaTabAll: string;
+	purchaseQaColNew: string;
+	purchaseQaColOpened: string;
+	purchaseQaColAnswered: string;
+	purchaseQaFilterCompany: string;
+	purchaseQaFilterRole: string;
+	purchaseQaFilterReset: string;
+	purchaseQaSearchPlaceholder: string;
+	purchaseQaCreate: string;
+	purchaseQaCreateTitle: string;
+	purchaseQaFieldType: string;
+	purchaseQaTypePurchase: string;
+	purchaseQaTypeOrder: string;
+	purchaseQaFieldSubject: string;
+	purchaseQaSubjectPlaceholder: string;
+	purchaseQaSubjectDelivery: string;
+	purchaseQaSubjectPrice: string;
+	purchaseQaSubjectQuality: string;
+	purchaseQaFieldDescription: string;
+	purchaseQaMarkAsRead: string;
+	purchaseQaArchiveAction: string;
+	purchaseQaDeleteAction: string;
+	purchaseQaDeleteTitle: string;
+	purchaseQaDeleteBody: string;
+	purchaseQaCreatedToast: string;
+	purchaseQaRepliedToast: string;
+	purchaseQaReadToast: string;
+	purchaseQaArchivedToast: string;
+	purchaseQaDeletedToast: string;
+	purchaseQaNoneInColumn: string;
+	purchaseQaUnavailable: string;
 	purchaseOrderNewLineAria: string;
 	purchaseOrderRemoveLineAria: string;
 
