@@ -40,45 +40,47 @@ import { EXPENSE_TABLE_COLUMNS } from "../../constants/expense.constants";
 import { ExpenseStatusBadge } from "./ExpenseBadges";
 
 interface ExpenseListTableProps {
-	expenses: ExpenseItem[];
-	totalCount: number;
-	selectedIds: string[];
-	onToggleSelect: (id: string) => void;
-	onToggleSelectAll: () => void;
-	sortField: ExpenseSortField;
-	sortOrder: "asc" | "desc";
-	onSort: (field: ExpenseSortField) => void;
-	currentPage: number;
-	pageSize: number;
-	onPageSizeChange: (size: number) => void;
-	totalPages: number;
-	onPageChange: (page: number) => void;
-	onView: (item: ExpenseItem) => void;
-	onDelete: (id: string) => void;
+	expenses?: ExpenseItem[];
+	totalCount?: number;
+	selectedIds?: string[];
+	onToggleSelect?: (id: string) => void;
+	onToggleSelectAll?: () => void;
+	sortField?: ExpenseSortField;
+	sortOrder?: "asc" | "desc";
+	onSort?: (field: ExpenseSortField) => void;
+	currentPage?: number;
+	pageSize?: number;
+	onPageSizeChange?: (size: number) => void;
+	totalPages?: number;
+	onPageChange?: (page: number) => void;
+	onView?: (item: ExpenseItem) => void;
+	onDelete?: (id: string) => void;
 }
 
 function formatSEK(num: number): string {
-	return num.toLocaleString("sv-SE", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+	return (num || 0).toLocaleString("sv-SE", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
 }
 
 export function ExpenseListTable({
-	expenses,
-	totalCount,
-	selectedIds,
-	onToggleSelect,
-	onToggleSelectAll,
-	sortField,
-	sortOrder,
-	onSort,
-	currentPage,
-	pageSize,
-	onPageSizeChange,
-	totalPages,
-	onPageChange,
-	onView,
-	onDelete,
+	expenses = [],
+	totalCount = 0,
+	selectedIds = [],
+	onToggleSelect = () => {},
+	onToggleSelectAll = () => {},
+	sortField = "date",
+	sortOrder = "desc",
+	onSort = () => {},
+	currentPage = 1,
+	pageSize = 10,
+	onPageSizeChange = () => {},
+	totalPages = 1,
+	onPageChange = () => {},
+	onView = () => {},
+	onDelete = () => {},
 }: ExpenseListTableProps) {
-	const allSelected = expenses.length > 0 && selectedIds.length === expenses.length;
+	const safeExpenses = expenses || [];
+	const safeSelectedIds = selectedIds || [];
+	const allSelected = safeExpenses.length > 0 && safeSelectedIds.length === safeExpenses.length;
 
 	const renderSortIcon = (field: ExpenseSortField) => {
 		if (sortField !== field) {
@@ -132,7 +134,7 @@ export function ExpenseListTable({
 					</thead>
 
 					<tbody className="divide-y divide-slate-100">
-						{expenses.length === 0 ? (
+						{safeExpenses.length === 0 ? (
 							<tr>
 								<td colSpan={EXPENSE_TABLE_COLUMNS.length + 2} className="py-16 text-center">
 									<div className="flex flex-col items-center justify-center gap-2">
@@ -149,8 +151,8 @@ export function ExpenseListTable({
 								</td>
 							</tr>
 						) : (
-							expenses.map((item) => {
-								const isSelected = selectedIds.includes(item.id);
+							safeExpenses.map((item) => {
+								const isSelected = safeSelectedIds.includes(item.id);
 
 								return (
 									<tr
