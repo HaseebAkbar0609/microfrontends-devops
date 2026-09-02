@@ -12,6 +12,7 @@ import {
   ChevronUp,
   Check,
   Archive,
+  ArrowRight,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableHeader,
@@ -79,6 +95,10 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
   const router = useRouter();
   const [offers, setOffers] = useState<ProjectMarketOffer[]>(data.offers);
   const [offerListOpen, setOfferListOpen] = useState(true);
+  const [contractModalOpen, setContractModalOpen] = useState(false);
+  const [selectedOfferId, setSelectedOfferId] = useState<string>(
+    data.offers.length > 0 ? data.offers[0].id : ""
+  );
   const { sortField, sortDir, toggleSort } = useTableSort<OfferSortField>();
 
   function handleAcceptOffer(offerId: string) {
@@ -179,7 +199,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
             <Button
               size="sm"
               variant="outline"
-              onClick={() => router.push(`/module/business/b2b/agreements/create?projectId=${data.id}`)}
+              onClick={() => setContractModalOpen(true)}
               className="cursor-pointer border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-900 shadow-xs hover:bg-slate-50 shrink-0 self-start"
             >
               {t(localizationConstants.b2bPMManageContract)}
@@ -381,6 +401,63 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
           </CollapsibleContent>
         </div>
       </Collapsible>
+      {/* Modal: Välj företag för att skapa kontrakt */}
+      <Dialog open={contractModalOpen} onOpenChange={setContractModalOpen}>
+        <DialogContent className="w-full max-w-[458px] min-h-[230px] rounded-xl border border-slate-200 bg-white p-6 shadow-xl gap-4 flex flex-col justify-between">
+          <DialogHeader className="flex flex-col gap-1.5 text-left">
+            <DialogTitle className="font-sans font-semibold text-[18px] leading-[30px] text-zinc-950 tracking-normal">
+              {t(localizationConstants.b2bPMSelectCompanyModalTitle)}
+            </DialogTitle>
+            <DialogDescription className="font-sans font-medium text-[14px] leading-[20px] text-zinc-950 tracking-normal text-left">
+              {t(localizationConstants.b2bPMSelectCompanyModalDesc)}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="py-1">
+            <Select
+              value={selectedOfferId}
+              onValueChange={setSelectedOfferId}
+            >
+              <SelectTrigger className="h-10 w-full rounded-md border-slate-200 bg-white text-sm text-zinc-950 shadow-xs focus:ring-zinc-950">
+                <SelectValue
+                  placeholder={t(localizationConstants.b2bPMSelectCompanyModalPlaceholder)}
+                />
+              </SelectTrigger>
+              <SelectContent className="bg-white border-slate-200">
+                {offers.map((o) => (
+                  <SelectItem key={o.id} value={o.id} className="cursor-pointer text-sm">
+                    {o.company} - {formatCurrency(o.offerAmount)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <DialogFooter className="flex flex-row items-center justify-end gap-2 pt-1 sm:justify-end">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setContractModalOpen(false)}
+              className="h-[36px] w-[120px] cursor-pointer rounded-md bg-slate-100 px-4 py-2 text-sm font-medium text-zinc-950 hover:bg-slate-200 transition-colors shadow-none"
+            >
+              {t(localizationConstants.b2bAvtalAvbryt)}
+            </Button>
+            <Button
+              type="button"
+              onClick={() => {
+                setContractModalOpen(false);
+                router.push(
+                  `/module/business/b2b/agreements/create?projectId=${data.id}&offerId=${selectedOfferId || "1"}`
+                );
+              }}
+              className="h-[36px] w-[120px] cursor-pointer gap-2 rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium text-white shadow-none hover:bg-zinc-800 transition-colors flex items-center justify-center"
+            >
+              {t(localizationConstants.b2bCreateNext)}
+              <ArrowRight size={16} aria-hidden={true} />
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

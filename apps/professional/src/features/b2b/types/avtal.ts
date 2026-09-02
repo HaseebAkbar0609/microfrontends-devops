@@ -9,6 +9,16 @@ export type AvtalDocument = {
   type: "pdf" | "doc";
 };
 
+export type ContractHandlerType = "self" | "company" | "other";
+
+export type ContractHandlerInfo = {
+  handlerType: ContractHandlerType;
+  contactPerson: string;
+  email: string;
+  phone?: string;
+  notes?: string;
+};
+
 export type AvtalUnderskrift = {
   foretagsNamn: string;
   namn: string;
@@ -31,6 +41,7 @@ export type AvtalDetail = {
   startDatum: string;
   slutDatum: string;
   status: AvtalStatus;
+  handlerInfo?: ContractHandlerInfo;
   kunduppgifter: {
     kund: string;
     adress: string;
