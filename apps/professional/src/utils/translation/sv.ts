@@ -2201,7 +2201,7 @@ export const svOffer: OfferTranslation = {
 	kmaActionPlanTemplateNameCol: "Åtgärdsplan",
 	kmaActionPlanTemplateUseBtn: "Använd",
 	kmaActionPlanUseTemplate: "Välj mall",
-	kmaActionPlanMallarTableTitle: "Åtgärdsplaner mallar",
+	kmaActionPlanMallarTableTitle: "Åtgärdsplan mallar",
 	kmaControlPlanOpenTitle: "Öppna ny kontrollplan",
 	kmaControlPlanGeneralInfo: "Allmän information",
 	kmaControlPlanNameLabel: "Namn",
