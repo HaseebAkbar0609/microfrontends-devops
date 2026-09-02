@@ -6,7 +6,6 @@ import {
 	ChevronDown,
 	ChevronLeft,
 	ChevronRight,
-	Info,
 	Plus,
 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
@@ -66,34 +65,34 @@ function getTaskThemeStyles(theme: GridTaskItem["colorTheme"]) {
 	switch (theme) {
 		case "yellow":
 			return {
-				bg: "bg-[#FEFCE8]",
-				text: "text-[#854D0E]",
-				border: "border-l-[2px] border-[#EAB308]",
+				bg: "bg-yellow-50",
+				text: "text-yellow-800",
+				border: "border-l-[2px] border-yellow-500",
 			};
 		case "purple":
 			return {
-				bg: "bg-[#FAF5FF]",
-				text: "text-[#6B21A8]",
-				border: "border-l-[2px] border-[#A855F7]",
+				bg: "bg-purple-50",
+				text: "text-purple-800",
+				border: "border-l-[2px] border-purple-500",
 			};
 		case "blue":
 			return {
-				bg: "bg-[#EFF6FF]",
-				text: "text-[#1E40AF]",
-				border: "border-l-[2px] border-[#3B82F6]",
+				bg: "bg-blue-50",
+				text: "text-blue-800",
+				border: "border-l-[2px] border-blue-500",
 			};
 		case "green":
 			return {
-				bg: "bg-[#F0FDF4]",
-				text: "text-[#166534]",
-				border: "border-l-[2px] border-[#22C55E]",
+				bg: "bg-emerald-50",
+				text: "text-emerald-800",
+				border: "border-l-[2px] border-emerald-500",
 			};
 		case "pink":
 		case "red":
 			return {
-				bg: "bg-[#FFF1F2]",
-				text: "text-[#9F1239]",
-				border: "border-l-[2px] border-[#F43F5E]",
+				bg: "bg-rose-50",
+				text: "text-rose-800",
+				border: "border-l-[2px] border-rose-500",
 			};
 		default:
 			return {
@@ -313,212 +312,230 @@ export function PersonnelScheduleGrid({
 	}, [tasks, searchQuery, selectedStatus, selectedAssignee, selectedProject]);
 
 	return (
-		<div className="flex flex-col gap-3.5 w-full font-sans">
-			{/* ── Month/Week Navigation Header & Skapa ny (gap: 12px) ── */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-				<div className="flex items-center gap-3 flex-wrap">
-					<Button
-						type="button"
-						variant="ghost"
-						className="p-0 h-auto font-sans font-bold text-lg leading-7 tracking-normal text-slate-900 flex items-center gap-1 hover:text-slate-700 hover:bg-transparent cursor-pointer whitespace-nowrap shadow-none border-0"
-					>
-						<Translate
-							text={
-								localizationConstants[
-									currentMonthKey as keyof typeof localizationConstants
-								] || localizationConstants.monthDec
-							}
-						/>{" "}
-						{currentYear}
-						<ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-					</Button>
+    <div className="flex flex-col gap-3.5 w-full font-sans">
+      {/* ── Month/Week Navigation Header & Skapa ny (gap: 12px) ── */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+        <div className="flex items-center gap-3 flex-wrap">
+          <Button
+            type="button"
+            variant="ghost"
+            className="p-0 h-auto font-sans font-bold text-lg leading-7 tracking-normal text-slate-900 flex items-center gap-1 hover:text-slate-700 hover:bg-transparent cursor-pointer whitespace-nowrap shadow-none border-0"
+          >
+            <Translate
+              text={
+                localizationConstants[
+                  currentMonthKey as keyof typeof localizationConstants
+                ] || localizationConstants.monthDec
+              }
+            />{" "}
+            {currentYear}
+            <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+          </Button>
 
-					<span className="text-slate-300 font-medium">/</span>
+          <span className="text-slate-300 font-medium">/</span>
 
-					<div className="flex items-center gap-1.5 text-slate-400 h-[28px]">
-						<Button
-							type="button"
-							variant="ghost"
-							size="icon"
-							onClick={onPrevWeek}
-							className="w-7 h-7 p-1 hover:bg-slate-100 rounded transition-colors cursor-pointer flex items-center justify-center text-slate-400 hover:text-slate-600"
-							aria-label="Previous Week"
-						>
-							<ChevronLeft className="w-4 h-4 text-slate-400" />
-						</Button>
-						<div className="h-[28px] shrink-0 flex items-center justify-center gap-1.5 whitespace-nowrap">
-							<CalendarMinus2 className="w-5 h-5 text-slate-400 shrink-0" />
-							<span className="font-sans font-medium text-lg leading-7 tracking-normal text-slate-400">
-								W{currentWeekNumber}
-							</span>
-						</div>
-						<Button
-							type="button"
-							variant="ghost"
-							size="icon"
-							onClick={onNextWeek}
-							className="w-7 h-7 p-1 hover:bg-slate-100 rounded transition-colors cursor-pointer flex items-center justify-center text-slate-400 hover:text-slate-600"
-							aria-label="Next Week"
-						>
-							<ChevronRight className="w-4 h-4 text-slate-400" />
-						</Button>
-					</div>
-				</div>
+          <div className="flex items-center gap-1.5 text-slate-400 h-7">
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onPrevWeek}
+              className="w-7 h-7 p-1 hover:bg-slate-100 rounded transition-colors cursor-pointer flex items-center justify-center text-slate-400 hover:text-slate-600"
+              aria-label="Previous Week"
+            >
+              <ChevronLeft className="w-4 h-4 text-slate-400" />
+            </Button>
+            <div className="h-7 shrink-0 flex items-center justify-center gap-1.5 whitespace-nowrap">
+              <CalendarMinus2 className="w-5 h-5 text-slate-400 shrink-0" />
+              <span className="font-sans font-medium text-lg leading-7 tracking-normal text-slate-400">
+                W{currentWeekNumber}
+              </span>
+            </div>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onNextWeek}
+              className="w-7 h-7 p-1 hover:bg-slate-100 rounded transition-colors cursor-pointer flex items-center justify-center text-slate-400 hover:text-slate-600"
+              aria-label="Next Week"
+            >
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Button>
+          </div>
+        </div>
 
-				<Button
-					onClick={onOpenCreateModal}
-					className="bg-[#18181B] text-white hover:bg-black h-9 px-3.5 gap-1.5 rounded-md transition-colors w-full sm:w-auto justify-center cursor-pointer shadow-2xs text-xs font-medium"
-				>
-					<Plus className="h-4 w-4" />
-					<Translate text={localizationConstants.skapaNy} />
-				</Button>
-			</div>
+        <Button
+          onClick={onOpenCreateModal}
+          className="bg-zinc-900 text-white hover:bg-black h-9 px-3.5 gap-1.5 rounded-md transition-colors w-full sm:w-auto justify-center cursor-pointer shadow-2xs text-xs font-medium"
+        >
+          <Plus className="h-4 w-4" />
+          <Translate text={localizationConstants.skapaNy} />
+        </Button>
+      </div>
 
-			{/* ── 7-Day Hourly Timeline Grid ── */}
-			<div ref={tableScrollRef} className="w-full overflow-x-auto">
-				<div className="min-w-[1180px] w-full flex items-stretch">
-					{/* Outer Left Time Gutter (width: 56px, pr: 8px, pt: 60px) */}
-					<div className="w-[56px] shrink-0 flex flex-col select-none pr-2 pt-[60px]">
-						{/* GMT +2 label positioned right below the header line */}
-						<div className="h-[28px] flex items-center justify-end font-sans font-semibold text-xs leading-4 tracking-normal text-slate-500 text-right whitespace-nowrap">
-							<Translate text={localizationConstants.gmtLabel} />
-						</div>
+      {/* ── 7-Day Hourly Timeline Grid ── */}
+      <div ref={tableScrollRef} className="w-full overflow-x-auto">
+        <div className="min-w-295 w-full flex items-stretch">
+          {/* Outer Left Time Gutter (width: 56px, pr: 8px, pt: 60px) */}
+          <div className="w-14 shrink-0 flex flex-col select-none pr-2 pt-15">
+            {/* GMT +2 label positioned right below the header line */}
+            <div className="h-7 flex items-center justify-end font-sans font-semibold text-xs leading-4 tracking-normal text-slate-500 text-right whitespace-nowrap">
+              <Translate text={localizationConstants.gmtLabel} />
+            </div>
 
-						{/* Time labels */}
-						{TIME_SLOTS.map((slot) => (
-							<div
-								key={slot.hour}
-								className="flex items-center justify-end font-sans font-semibold text-xs leading-4 tracking-normal text-slate-500 text-right whitespace-nowrap"
-								style={{ height: `${SLOT_HEIGHT}px` }}
-							>
-								{slot.label}
-							</div>
-						))}
-					</div>
+            {/* Time labels */}
+            {TIME_SLOTS.map((slot) => (
+              <div
+                key={slot.hour}
+                className="flex items-center justify-end font-sans font-semibold text-xs leading-4 tracking-normal text-slate-500 text-right whitespace-nowrap"
+                style={{ height: `${SLOT_HEIGHT}px` }}
+              >
+                {slot.label}
+              </div>
+            ))}
+          </div>
 
-					{/* Main 7-Day Bordered Table */}
-					<div className="flex-1 min-w-[1115px] flex flex-col bg-white border border-slate-200 shadow-2xs">
-						{/* 7 Day Column Headers (Height: 60px, bg: #F8FAFC, padding: 8px 12px) */}
-						<div className="grid grid-cols-7 divide-x divide-slate-200 border-b border-slate-200 bg-[#F8FAFC] text-xs font-semibold text-slate-900 h-[60px] sticky top-0 z-20">
-							{daysHeader.map((day) => (
-								<div
-									key={day.dayNumber}
-									className="h-[60px] px-3 py-2 flex items-center justify-between min-w-[159px]"
-								>
-									<div className="flex flex-col">
-										<span className="w-[23px] h-[28px] shrink-0 font-sans font-semibold text-xl leading-7 tracking-normal text-slate-900 flex items-center">
-											{day.dayNumber}
-										</span>
-										<span className="font-sans font-normal text-xs leading-4 tracking-normal text-[#374151]">
-											<Translate
-												text={
-													localizationConstants[
-														day.dayNameKey as keyof typeof localizationConstants
-													] || day.dayNameKey
-												}
-											/>
-										</span>
-									</div>
+          {/* Main 7-Day Bordered Table */}
+          <div className="flex-1 min-w-278.75 flex flex-col bg-white border border-slate-200 shadow-2xs">
+            {/* Header Row: 7 Days */}
+            <div className="grid grid-cols-7 divide-x divide-slate-200 border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-900 h-15 sticky top-0 z-20">
+              {daysHeader.map((d, index) => {
+                const isWeekend = index === 5 || index === 6;
+                return (
+                  <div
+                    key={d.dayNumber}
+                    className="px-2 sm:px-3 py-2 flex flex-col justify-center gap-0.5"
+                  >
+                    <div className="flex items-center gap-1">
+                      <span className="font-sans font-bold text-xs leading-4 tracking-normal text-slate-900">
+                        {d.dayNumber}
+                      </span>
+                      <span className="font-sans font-normal text-xs leading-4 tracking-normal text-slate-700">
+                        <Translate
+                          text={
+                            localizationConstants[
+                              d.dayNameKey as keyof typeof localizationConstants
+                            ] || d.dayNameKey
+                          }
+                        />
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="font-sans font-medium text-xs leading-4 tracking-normal text-slate-400">
+                        {isWeekend ? "0" : d.hours || 8}
+                      </span>
+                      <span className="font-sans font-normal text-xs leading-4 tracking-normal text-slate-700 whitespace-nowrap">
+                        <Translate text={localizationConstants.timmarSuffix} />
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
-									<div className="flex flex-col items-end justify-center gap-1.5 shrink-0">
-										<Info className="w-4 h-4 text-slate-500 stroke-[1.5] shrink-0" />
-										<span className="font-sans font-normal text-xs leading-4 tracking-normal text-[#374151] whitespace-nowrap">
-											{day.hours ?? 40} h
-										</span>
-									</div>
-								</div>
-							))}
-						</div>
+            {/* 7 Columns Grid Canvas */}
+            <div
+              className="grid grid-cols-7 divide-x divide-slate-200 relative bg-white"
+              style={{ height: `${SLOT_HEIGHT * TIME_SLOTS.length}px` }}
+            >
+              {/* Background Horizontal Guidelines */}
+              <div className="absolute inset-0 flex flex-col pointer-events-none">
+                {TIME_SLOTS.map((slot) => (
+                  <div
+                    key={`line-${slot.hour}`}
+                    className="w-full border-b border-slate-100 last:border-b-0"
+                    style={{ height: `${SLOT_HEIGHT}px` }}
+                  />
+                ))}
+              </div>
 
-						{/* 7 Columns Grid Canvas */}
-						<div
-							className="grid grid-cols-7 divide-x divide-slate-200 relative bg-white"
-							style={{ height: `${SLOT_HEIGHT * TIME_SLOTS.length}px` }}
-						>
-							{/* Background Horizontal Guidelines */}
-							<div className="absolute inset-0 flex flex-col pointer-events-none">
-								{TIME_SLOTS.map((slot) => (
-									<div
-										key={`line-${slot.hour}`}
-										className="w-full border-b border-slate-100 last:border-b-0"
-										style={{ height: `${SLOT_HEIGHT}px` }}
-									/>
-								))}
-							</div>
+              {/* Day Columns */}
+              {daysHeader.map((day, dayIdx) => {
+                const dayTasks = activeTasks.filter(
+                  (t) => t.dayIndex === dayIdx,
+                );
+                const positionedTasks = calculateDayTaskPositions(dayTasks);
 
-							{/* Day Columns */}
-							{daysHeader.map((day, dayIdx) => {
-								const dayTasks = activeTasks.filter((t) => t.dayIndex === dayIdx);
-								const positionedTasks = calculateDayTaskPositions(dayTasks);
+                return (
+                  <div key={day.dayNumber} className="relative h-full">
+                    {positionedTasks.map((item) => {
+                      const style = getTaskThemeStyles(item.colorTheme);
+                      const topPx =
+                        (item.topMinutes / TOTAL_MINUTES) *
+                        (SLOT_HEIGHT * TIME_SLOTS.length);
+                      const heightPx = Math.max(
+                        34,
+                        (item.durationMinutes / TOTAL_MINUTES) *
+                          (SLOT_HEIGHT * TIME_SLOTS.length),
+                      );
 
-								return (
-									<div key={day.dayNumber} className="relative h-full">
-										{positionedTasks.map((item) => {
-											const style = getTaskThemeStyles(item.colorTheme);
-											const topPx = (item.topMinutes / TOTAL_MINUTES) * (SLOT_HEIGHT * TIME_SLOTS.length);
-											const heightPx = Math.max(34, (item.durationMinutes / TOTAL_MINUTES) * (SLOT_HEIGHT * TIME_SLOTS.length));
+                      const colWidthPercent = 100 / item.totalCols;
+                      const leftPercent = item.colIndex * colWidthPercent;
 
-											const colWidthPercent = 100 / item.totalCols;
-											const leftPercent = item.colIndex * colWidthPercent;
+                      const scheduleItem: PersonnelScheduleItem = {
+                        id: item.id,
+                        employeeId: "emp-1",
+                        employeeName: "Göran Andersson",
+                        employeeInitials: "GA",
+                        title: item.title,
+                        dayStart: day.dayNumber,
+                        daySpan: 1,
+                        colorTheme:
+                          item.colorTheme === "red" ? "pink" : item.colorTheme,
+                        status: item.status,
+                        timeRange: item.timeRange,
+                        dateText: item.dateText,
+                        assignees:
+                          item.assignees || MOCK_PERSONNEL_SAMPLE_ASSIGNEES,
+                      };
 
-											const scheduleItem: PersonnelScheduleItem = {
-												id: item.id,
-												employeeId: "emp-1",
-												employeeName: "Göran Andersson",
-												employeeInitials: "GA",
-												title: item.title,
-												dayStart: day.dayNumber,
-												daySpan: 1,
-												colorTheme: item.colorTheme === "red" ? "pink" : item.colorTheme,
-												status: item.status,
-												timeRange: item.timeRange,
-												dateText: item.dateText,
-												assignees: item.assignees || MOCK_PERSONNEL_SAMPLE_ASSIGNEES,
-											};
-
-											return (
-												<div
-													key={item.id}
-													className="absolute z-10"
-													style={{
-														top: `${topPx}px`,
-														height: `${heightPx}px`,
-														left: `calc(${leftPercent}% + 2px)`,
-														width: `calc(${colWidthPercent}% - 4px)`,
-													}}
-												>
-													<PersonnelTaskPopover
-														item={scheduleItem}
-														isOpen={activeId === item.id}
-														onOpenChange={(open) => handleSetActiveId(open ? item.id : null)}
-														onEdit={(it) => {
-															if (onOpenEditModal) onOpenEditModal(it);
-														}}
-														onDelete={handleDeleteTask}
-														onAddAssignee={handleAddAssigneeInternal}
-														employeesList={employeesList}
-													>
-														<Button
-															type="button"
-															variant="ghost"
-															onClick={() => handleSetActiveId(item.id)}
-															className={`w-full h-full p-0 px-2 pt-1.5 pb-1 rounded-[4px] text-left ${style.bg} ${style.text} ${style.border} cursor-pointer shadow-2xs transition-all hover:shadow hover:${style.bg} hover:${style.text} flex flex-col items-start justify-start overflow-hidden font-sans font-medium text-sm leading-snug tracking-normal border-0 border-l-[2px]`}
-														>
-															<span className="line-clamp-2 break-words w-full select-none text-left">{item.title}</span>
-														</Button>
-													</PersonnelTaskPopover>
-												</div>
-											);
-										})}
-									</div>
-								);
-							})}
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+                      return (
+                        <div
+                          key={item.id}
+                          className="absolute z-10"
+                          style={{
+                            top: `${topPx}px`,
+                            height: `${heightPx}px`,
+                            left: `calc(${leftPercent}% + 2px)`,
+                            width: `calc(${colWidthPercent}% - 4px)`,
+                          }}
+                        >
+                          <PersonnelTaskPopover
+                            item={scheduleItem}
+                            isOpen={activeId === item.id}
+                            onOpenChange={(open) =>
+                              handleSetActiveId(open ? item.id : null)
+                            }
+                            onEdit={(it) => {
+                              if (onOpenEditModal) onOpenEditModal(it);
+                            }}
+                            onDelete={handleDeleteTask}
+                            onAddAssignee={handleAddAssigneeInternal}
+                            employeesList={employeesList}
+                          >
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              onClick={() => handleSetActiveId(item.id)}
+                              className={`w-full h-full p-0 px-2 pt-1.5 pb-1 rounded-lg text-left ${style.bg} ${style.text} ${style.border} cursor-pointer shadow-2xs transition-all hover:shadow hover:${style.bg} hover:${style.text} flex flex-col items-start justify-start overflow-hidden font-sans font-medium text-sm leading-snug tracking-normal border-0 border-l-2`}
+                            >
+                              <span className="line-clamp-2 wrap-break-word w-full select-none text-left">
+                                {item.title}
+                              </span>
+                            </Button>
+                          </PersonnelTaskPopover>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default PersonnelScheduleGrid;

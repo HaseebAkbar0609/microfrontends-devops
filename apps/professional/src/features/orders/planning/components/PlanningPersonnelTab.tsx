@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import type {
 	PlanningResource,
 	PersonnelScheduleItem,
@@ -13,7 +13,8 @@ import {
 	PersonnelCreateTaskModal,
 	type PersonnelTaskFormData,
 } from "./personnel/PersonnelCreateTaskModal";
-import { EVA_MENDES_AVATAR } from "../data/personnelPlanning.mock";
+import { PersonnelDeleteConfirmModal } from "./personnel/PersonnelDeleteConfirmModal";
+import { MOCK_PERSONNEL_TOP_ASSIGNED_ALL } from "../data/personnelPlanning.mock";
 
 interface PlanningPersonnelTabProps {
 	resources?: PlanningResource[];
@@ -63,6 +64,10 @@ export function PlanningPersonnelTab({ resources: _resources }: PlanningPersonne
 	};
 
 	const handleSaveTask = async (formData: PersonnelTaskFormData) => {
+		const assigneeIds = formData.assignees && formData.assignees.length > 0
+			? formData.assignees.map((a) => a.id)
+			: [formData.employeeId];
+
 		if (editingItem) {
 			await handleUpdateTask({
 				id: editingItem.id,
@@ -71,9 +76,9 @@ export function PlanningPersonnelTab({ resources: _resources }: PlanningPersonne
 				daySpan: formData.daySpan,
 				colorTheme: formData.colorTheme,
 				status: formData.status,
-				timeRange: "08:00 - 16:00 (8 tim)",
-				dateText: `Måndag ${formData.dayStart} Dec, 2025`,
-				assigneeIds: [formData.employeeId],
+				timeRange: formData.timeRange || "08:00 - 16:00 (8 tim)",
+				dateText: formData.dateText || `Måndag ${formData.dayStart} Dec, 2025`,
+				assigneeIds,
 			});
 		} else {
 			await handleCreateTask({
@@ -82,9 +87,9 @@ export function PlanningPersonnelTab({ resources: _resources }: PlanningPersonne
 				daySpan: formData.daySpan,
 				colorTheme: formData.colorTheme,
 				status: formData.status,
-				timeRange: "08:00 - 16:00 (8 tim)",
-				dateText: `Måndag ${formData.dayStart} Dec, 2025`,
-				assigneeIds: [formData.employeeId],
+				timeRange: formData.timeRange || "08:00 - 16:00 (8 tim)",
+				dateText: formData.dateText || `Måndag ${formData.dayStart} Dec, 2025`,
+				assigneeIds,
 			});
 		}
 	};
@@ -104,13 +109,30 @@ export function PlanningPersonnelTab({ resources: _resources }: PlanningPersonne
 		if (apiData?.resources && apiData.resources.length > 0) {
 			return apiData.resources;
 		}
-		return [
-			{ id: "emp-1", name: "Göran Andersson", initials: "GA", role: "Snickare", totalHours: 40, allocatedHours: 32, percentage: 70 },
-			{ id: "emp-2", name: "Eva Mendes", initials: "EM", avatarUrl: EVA_MENDES_AVATAR, role: "Projektledare", totalHours: 20, allocatedHours: 12, percentage: 40 },
-			{ id: "emp-3", name: "Anders Larsson", initials: "AB", role: "Elektriker", totalHours: 10, allocatedHours: 4, percentage: 20 },
-			{ id: "emp-4", name: "Sara Nilsson", initials: "SN", role: "Målare", totalHours: 19, allocatedHours: 10, percentage: 40 },
-		];
+		return MOCK_PERSONNEL_TOP_ASSIGNED_ALL;
 	}, [apiData]);
+
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [taskToDeleteId, setTaskToDeleteId] = useState<string | null>(null);
+	const [isDeleting, setIsDeleting] = useState(false);
+
+	const handleRequestDelete = (taskId: string) => {
+		setTaskToDeleteId(taskId);
+		setIsDeleteModalOpen(true);
+	};
+
+	const handleConfirmDelete = async () => {
+		if (taskToDeleteId) {
+			setIsDeleting(true);
+			try {
+				await handleDeleteTask(taskToDeleteId);
+				setIsDeleteModalOpen(false);
+				setTaskToDeleteId(null);
+			} finally {
+				setIsDeleting(false);
+			}
+		}
+	};
 
 	return (
 		<div className="flex flex-col gap-5 w-full font-sans text-slate-900 pb-12">
@@ -153,11 +175,11 @@ export function PlanningPersonnelTab({ resources: _resources }: PlanningPersonne
 				onNextWeek={handleNextWeek}
 				onOpenCreateModal={handleOpenCreateModal}
 				onOpenEditModal={handleOpenEditModal}
-				onDeleteTask={handleDeleteTask}
+				onDeleteTask={handleRequestDelete}
 				onAddAssignee={(item, assignee) => handleAddAssignee(item, assignee)}
 			/>
 
-			{/* 4. Create / Edit Modal Dialog */}
+			{/* 4. Create / Edit Slide-over Sheet */}
 			<PersonnelCreateTaskModal
 				isOpen={isCreateModalOpen}
 				onOpenChange={setIsCreateModalOpen}
@@ -166,6 +188,14 @@ export function PlanningPersonnelTab({ resources: _resources }: PlanningPersonne
 				isSaving={isSaving}
 				employeesList={employeesList}
 				daysHeader={daysHeader}
+			/>
+
+			{/* 5. Delete Confirmation Dialog */}
+			<PersonnelDeleteConfirmModal
+				isOpen={isDeleteModalOpen}
+				onOpenChange={setIsDeleteModalOpen}
+				onConfirm={handleConfirmDelete}
+				isDeleting={isDeleting}
 			/>
 		</div>
 	);

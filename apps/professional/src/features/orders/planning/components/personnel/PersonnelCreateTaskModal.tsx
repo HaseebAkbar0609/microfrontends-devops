@@ -1,16 +1,33 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { format } from "date-fns";
+import { sv, enUS } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
-import { Loader2 } from "lucide-react";
+import Image from "next/image";
+import { cn } from "@/lib/utils";
+import {
+	ArrowLeft,
+	Calendar as CalendarIcon,
+	Clock,
+	Loader2,
+	Trash2,
+	UserPlus,
+} from "lucide-react";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import {
 	Select,
 	SelectContent,
@@ -19,53 +36,37 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
+	Sheet,
+	SheetContent,
+	SheetTitle,
+} from "@/components/ui/sheet";
 import type {
 	PersonnelScheduleItem,
+	PlanningAssignee,
+	PlanningStatus,
 } from "../../types/planning.types";
 
-const personnelTaskSchema = (isSv: boolean) =>
-	z.object({
-		title: z
-			.string()
-			.min(1, isSv ? "Order / Aktivitetsnamn krävs" : "Order / Activity name is required"),
-		employeeId: z
-			.string()
-			.min(1, isSv ? "Personal / Anställd krävs" : "Personnel / Employee is required"),
-		dayStart: z.coerce
-			.number({
-				invalid_type_error: isSv ? "Startdag måste vara ett nummer" : "Start day must be a number",
-				required_error: isSv ? "Startdag krävs" : "Start day is required",
-			})
-			.int(isSv ? "Måste vara ett heltal" : "Must be an integer")
-			.min(1, isSv ? "Minst dag 1" : "Min day 1")
-			.max(31, isSv ? "Max dag 31" : "Max day 31"),
-		daySpan: z.coerce
-			.number({
-				invalid_type_error: isSv ? "Varaktighet måste vara ett nummer" : "Duration must be a number",
-				required_error: isSv ? "Varaktighet krävs" : "Duration is required",
-			})
-			.int(isSv ? "Måste vara ett heltal" : "Must be an integer")
-			.min(1, isSv ? "Minst 1 dag" : "Min 1 day")
-			.max(7, isSv ? "Max 7 dagar" : "Max 7 days"),
-		colorTheme: z.enum([
-			"blue",
-			"yellow",
-			"green",
-			"purple",
-			"pink",
-			"light-purple",
-			"light-yellow",
-			"red",
-		]),
-		status: z.enum(["completed", "in_progress", "not_started", "waiting", "cancelled", "due"]),
-	});
+const personnelTaskSchema = z.object({
+	orderNr: z.string().optional(),
+	projectName: z.string().optional(),
+	startTime: z.string().optional(),
+	endTime: z.string().optional(),
+	status: z.enum(["completed", "in_progress", "not_started", "waiting", "cancelled", "due"]).optional(),
+});
 
-export type PersonnelTaskFormData = z.infer<ReturnType<typeof personnelTaskSchema>>;
+export type PersonnelTaskFormValues = z.infer<typeof personnelTaskSchema>;
+
+export interface PersonnelTaskFormData {
+	title: string;
+	employeeId: string;
+	dayStart: number;
+	daySpan: number;
+	colorTheme: "yellow" | "blue" | "purple" | "pink" | "green" | "light-purple" | "light-yellow" | "red";
+	status: PlanningStatus;
+	timeRange?: string;
+	dateText?: string;
+	assignees?: PlanningAssignee[];
+}
 
 interface PersonnelCreateTaskModalProps {
 	isOpen: boolean;
@@ -77,6 +78,22 @@ interface PersonnelCreateTaskModalProps {
 	daysHeader: { dayNumber: number; dayNameKey: string }[];
 }
 
+function calculateHoursDifference(startTime?: string, endTime?: string): number {
+	if (!startTime || !endTime) return 0;
+	try {
+		const [startH, startM] = startTime.split(":").map(Number);
+		const [endH, endM] = endTime.split(":").map(Number);
+		if (!isNaN(startH) && !isNaN(endH)) {
+			let totalMinutes = endH * 60 + (endM || 0) - (startH * 60 + (startM || 0));
+			if (totalMinutes < 0) totalMinutes += 24 * 60;
+			return Math.round((totalMinutes / 60) * 10) / 10;
+		}
+	} catch {
+		// fallback
+	}
+	return 0;
+}
+
 export function PersonnelCreateTaskModal({
 	isOpen,
 	onOpenChange,
@@ -86,281 +103,626 @@ export function PersonnelCreateTaskModal({
 	employeesList,
 	daysHeader,
 }: PersonnelCreateTaskModalProps) {
-	const { i18n } = useTranslation();
 	const t = useTranslate();
+	const { i18n } = useTranslation();
 	const isSv = i18n.language === "sv";
 
-	const schema = useMemo(() => personnelTaskSchema(isSv), [isSv]);
+	const [startDate, setStartDate] = useState<Date | undefined>(undefined);
+	const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+	const [isStartDateOpen, setIsStartDateOpen] = useState(false);
+	const [isEndDateOpen, setIsEndDateOpen] = useState(false);
+
+	const [selectedUserToAddId, setSelectedUserToAddId] = useState<string>("");
+	const [assigneeStartTime, setAssigneeStartTime] = useState("");
+	const [assigneeEndTime, setAssigneeEndTime] = useState("");
+	const [assignedUsers, setAssignedUsers] = useState<PlanningAssignee[]>([]);
 
 	const {
 		register,
 		handleSubmit,
 		reset,
 		control,
-		formState: { errors },
-	} = useForm<PersonnelTaskFormData>({
-		resolver: zodResolver(schema),
+		watch,
+	} = useForm<PersonnelTaskFormValues>({
+		resolver: zodResolver(personnelTaskSchema),
 		defaultValues: {
-			title: "Order 5000 - Badrum",
-			employeeId: employeesList[0]?.id || "emp-1",
-			dayStart: daysHeader[0]?.dayNumber || 10,
-			daySpan: 1,
-			colorTheme: "blue",
+			orderNr: "",
+			projectName: "",
+			startTime: "",
+			endTime: "",
 			status: "in_progress",
 		},
 	});
 
+	const formStartTime = watch("startTime");
+	const formEndTime = watch("endTime");
+
+	const totalHours = useMemo(() => {
+		return calculateHoursDifference(assigneeStartTime || formStartTime, assigneeEndTime || formEndTime);
+	}, [assigneeStartTime, assigneeEndTime, formStartTime, formEndTime]);
+
+	const formatDateDisplay = (date: Date) => {
+		const dayName = format(date, "EEEE", { locale: isSv ? sv : enUS });
+		const capitalizedDay = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+		const rest = format(date, "d MMM, yyyy", { locale: isSv ? sv : enUS });
+		return `${capitalizedDay} ${rest}`;
+	};
+
 	useEffect(() => {
 		if (isOpen) {
 			if (editingItem) {
+				const parts = editingItem.title.split(" - ");
+				const orderPart = parts[0]?.replace(/Order\s*/i, "").trim() || "";
+				const projectPart = parts[1]?.trim() || parts[0]?.trim() || "";
+
 				reset({
-					title: editingItem.title,
-					employeeId: editingItem.employeeId,
-					dayStart: editingItem.dayStart,
-					daySpan: editingItem.daySpan,
-					colorTheme: editingItem.colorTheme,
-					status: editingItem.status,
+					orderNr: orderPart,
+					projectName: projectPart,
+					startTime: "07:00",
+					endTime: "15:00",
+					status: editingItem.status || "in_progress",
 				});
+				setStartDate(new Date(2025, 11, editingItem.dayStart || 10));
+				setEndDate(new Date(2025, 11, (editingItem.dayStart || 10) + (editingItem.daySpan || 1) - 1));
+				setAssignedUsers(editingItem.assignees || []);
+				setAssigneeStartTime("07:00");
+				setAssigneeEndTime("15:00");
 			} else {
 				reset({
-					title: "",
-					employeeId: employeesList[0]?.id || "emp-1",
-					dayStart: daysHeader[0]?.dayNumber || 10,
-					daySpan: 1,
-					colorTheme: "blue",
+					orderNr: "",
+					projectName: "",
+					startTime: "",
+					endTime: "",
 					status: "in_progress",
 				});
+				setStartDate(undefined);
+				setEndDate(undefined);
+				setAssigneeStartTime("");
+				setAssigneeEndTime("");
+				setAssignedUsers([]);
+				setSelectedUserToAddId("");
 			}
 		}
-	}, [isOpen, editingItem, reset, employeesList, daysHeader]);
+	}, [isOpen, editingItem, reset]);
 
-	const onSubmit = async (data: PersonnelTaskFormData) => {
-		await onSave(data);
+	const handleAddAssignee = () => {
+		if (!selectedUserToAddId) return;
+		const emp = employeesList.find((e) => e.id === selectedUserToAddId);
+		if (!emp) return;
+
+		const exists = assignedUsers.some((u) => u.id === emp.id);
+		if (exists) return;
+
+		const newAssignee: PlanningAssignee = {
+			id: emp.id,
+			name: emp.name,
+			initials: emp.initials,
+			avatarUrl: emp.avatarUrl,
+			hours: totalHours || 8,
+		};
+		setAssignedUsers((prev) => [...prev, newAssignee]);
+		setSelectedUserToAddId("");
+	};
+
+	const handleRemoveAssignee = (id: string) => {
+		setAssignedUsers((prev) => prev.filter((u) => u.id !== id));
+	};
+
+	const onFormSubmit = async (values: PersonnelTaskFormValues) => {
+		const orderNr = values.orderNr?.trim();
+		const projectName = values.projectName?.trim();
+		const title = orderNr
+			? projectName
+				? `Order ${orderNr} - ${projectName}`
+				: `Order ${orderNr}`
+			: projectName || "Planering";
+
+		const dayStart = startDate ? startDate.getDate() : daysHeader[0]?.dayNumber || 10;
+		const daySpan = 1;
+		const employeeId = assignedUsers[0]?.id || employeesList[0]?.id || "emp-1";
+
+		const calculatedTimeRange = (values.startTime && values.endTime)
+			? `${values.startTime} - ${values.endTime} (${calculateHoursDifference(
+					values.startTime,
+					values.endTime
+			  )} tim)`
+			: undefined;
+
+		await onSave({
+			title,
+			employeeId,
+			dayStart,
+			daySpan,
+			colorTheme: "blue",
+			status: values.status || "in_progress",
+			timeRange: calculatedTimeRange,
+			dateText: startDate ? formatDateDisplay(startDate) : undefined,
+			assignees: assignedUsers.length > 0 ? assignedUsers : undefined,
+		});
+
+		onOpenChange(false);
 	};
 
 	return (
-		<Dialog open={isOpen} onOpenChange={onOpenChange}>
-			<DialogContent className="w-[calc(100vw-32px)] max-w-lg sm:max-w-md bg-white border border-slate-200 rounded-xl p-5 sm:p-6 font-sans max-h-[90vh] overflow-y-auto">
-				<DialogHeader className="border-b border-slate-100 pb-3">
-					<DialogTitle className="text-base font-semibold text-slate-900">
-						{editingItem ? (
-							<Translate text={localizationConstants.redigeraPlanering} />
-						) : (
-							<Translate text={localizationConstants.skapaNyPlanering} />
-						)}
-					</DialogTitle>
-				</DialogHeader>
+    <Sheet open={isOpen} onOpenChange={onOpenChange}>
+      <SheetContent
+        side="right"
+        className="w-full sm:max-w-135 md:max-w-145 p-0 font-sans flex flex-col bg-white overflow-hidden shadow-2xl border-l border-slate-200"
+      >
+        <form
+          onSubmit={handleSubmit(onFormSubmit)}
+          className="flex flex-col h-full"
+        >
+          {/* ── Sheet Header matching Figma ── */}
+          <div className="px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white gap-2">
+            <div className="flex items-center gap-2.5 min-w-0">
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() => onOpenChange(false)}
+                className="w-8 h-8 rounded-md p-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 cursor-pointer transition-colors shrink-0"
+                aria-label="Back"
+              >
+                <ArrowLeft className="w-5 h-5 text-black stroke-2" />
+              </Button>
+              <SheetTitle className="text-base sm:text-xl font-bold text-slate-900 tracking-tight truncate">
+                <Translate
+                  text={
+                    editingItem
+                      ? localizationConstants.editPlan
+                      : localizationConstants.createNewPlan
+                  }
+                />
+              </SheetTitle>
+            </div>
 
-				<form onSubmit={handleSubmit(onSubmit)} className="space-y-4 text-xs mt-3">
-					{/* Title Field */}
-					<div className="space-y-1.5 w-full">
-						<Label className="font-semibold text-slate-700 text-xs">
-							<Translate text={localizationConstants.orderAktivitetNamn} />
-						</Label>
-						<Input
-							type="text"
-							{...register("title")}
-							placeholder={t(localizationConstants.planningSearchPlaceholder) || "Order / Task..."}
-							className="h-9 w-full text-xs border-slate-200 focus-visible:ring-slate-400"
-						/>
-						{errors.title && (
-							<p className="text-[11px] text-red-500 font-medium">{errors.title.message}</p>
-						)}
-					</div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => onOpenChange(false)}
+                className="h-8 sm:h-9 px-3 sm:px-4 bg-zinc-100 hover:bg-slate-200 text-slate-700 font-medium text-xs rounded-md transition-colors cursor-pointer border-0 shadow-none"
+              >
+                <Translate text={localizationConstants.cancelButton} />
+              </Button>
 
-					{/* Employee Select */}
-					<div className="space-y-1.5 w-full">
-						<Label className="font-semibold text-slate-700 text-xs">
-							<Translate text={localizationConstants.personalAnstalld} />
-						</Label>
-						<Controller
-							name="employeeId"
-							control={control}
-							render={({ field }) => (
-								<Select value={field.value} onValueChange={field.onChange}>
-									<SelectTrigger className="h-9 w-full text-xs border-slate-200 bg-white flex items-center justify-between">
-										<SelectValue placeholder={t(localizationConstants.addUsers) || "Select..."} />
-									</SelectTrigger>
-									<SelectContent className="w-[calc(100vw-80px)] sm:w-[var(--radix-select-trigger-width)] max-h-60 overflow-y-auto z-50 bg-white">
-										{employeesList.map((emp) => (
-											<SelectItem key={emp.id} value={emp.id} className="text-xs">
-												{emp.name} ({emp.initials})
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-							)}
-						/>
-						{errors.employeeId && (
-							<p className="text-[11px] text-red-500 font-medium">{errors.employeeId.message}</p>
-						)}
-					</div>
+              <Button
+                type="submit"
+                disabled={isSaving}
+                className="h-8 sm:h-9 px-3 sm:px-4 bg-zinc-900 hover:bg-black text-white font-medium text-xs rounded-md transition-colors cursor-pointer flex items-center gap-1.5 shadow-none"
+              >
+                {isSaving ? (
+                  <Loader2 className="w-4 h-4 animate-spin stroke-[1.33]" />
+                ) : (
+                  <Translate
+                    text={
+                      editingItem
+                        ? localizationConstants.save
+                        : localizationConstants.skapaNy
+                    }
+                  />
+                )}
+              </Button>
+            </div>
+          </div>
 
-					{/* Start Day & Duration (Responsive Grid) */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-						<div className="space-y-1.5 w-full">
-							<Label className="font-semibold text-slate-700 text-xs">
-								<Translate text={localizationConstants.startdag} />
-							</Label>
-							<Controller
-								name="dayStart"
-								control={control}
-								render={({ field }) => (
-									<Select
-										value={String(field.value)}
-										onValueChange={(val) => field.onChange(Number(val))}
-									>
-										<SelectTrigger className="h-9 w-full text-xs border-slate-200 bg-white flex items-center justify-between">
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent className="w-[calc(100vw-80px)] sm:w-[var(--radix-select-trigger-width)] max-h-60 overflow-y-auto z-50 bg-white">
-											{daysHeader.map((d) => (
-												<SelectItem key={d.dayNumber} value={String(d.dayNumber)} className="text-xs">
-													{d.dayNumber}{" "}
-													{t(localizationConstants[d.dayNameKey as keyof typeof localizationConstants]) ||
-														d.dayNameKey}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-								)}
-							/>
-							{errors.dayStart && (
-								<p className="text-[11px] text-red-500 font-medium">{errors.dayStart.message}</p>
-							)}
-						</div>
+          {/* ── Sheet Form Body ── */}
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 space-y-4">
+            {/* Row 1: Order nr & Projekt namn */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="orderNr"
+                  className="font-sans font-medium text-[14px] leading-5 text-slate-900"
+                >
+                  <Translate text={localizationConstants.orderNr} />
+                </Label>
+                <Input
+                  id="orderNr"
+                  {...register("orderNr")}
+                  placeholder={t(localizationConstants.enterNr) || "Enter nr"}
+                  className="h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
+                />
+              </div>
 
-						<div className="space-y-1.5 w-full">
-							<Label className="font-semibold text-slate-700 text-xs">
-								<Translate text={localizationConstants.varaktighetDagar} />
-							</Label>
-							<Controller
-								name="daySpan"
-								control={control}
-								render={({ field }) => (
-									<Select
-										value={String(field.value)}
-										onValueChange={(val) => field.onChange(Number(val))}
-									>
-										<SelectTrigger className="h-9 w-full text-xs border-slate-200 bg-white flex items-center justify-between">
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent className="w-[calc(100vw-80px)] sm:w-[var(--radix-select-trigger-width)] max-h-60 overflow-y-auto z-50 bg-white">
-											{[1, 2, 3, 4, 5, 6, 7].map((num) => (
-												<SelectItem key={num} value={String(num)} className="text-xs">
-													{num}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-								)}
-							/>
-							{errors.daySpan && (
-								<p className="text-[11px] text-red-500 font-medium">{errors.daySpan.message}</p>
-							)}
-						</div>
-					</div>
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="projectName"
+                  className="font-sans font-medium text-[14px] leading-5 text-slate-900"
+                >
+                  <Translate text={localizationConstants.projektNamn} />
+                </Label>
+                <Input
+                  id="projectName"
+                  {...register("projectName")}
+                  placeholder={
+                    t(localizationConstants.enterNamn) || "Enter namn"
+                  }
+                  className="h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
+                />
+              </div>
+            </div>
 
-					{/* Color Theme & Status (Responsive Grid) */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-						<div className="space-y-1.5 w-full">
-							<Label className="font-semibold text-slate-700 text-xs">
-								<Translate text={localizationConstants.fargtema} />
-							</Label>
-							<Controller
-								name="colorTheme"
-								control={control}
-								render={({ field }) => (
-									<Select value={field.value} onValueChange={field.onChange}>
-										<SelectTrigger className="h-9 w-full text-xs border-slate-200 bg-white flex items-center justify-between">
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent className="w-[calc(100vw-80px)] sm:w-[var(--radix-select-trigger-width)] max-h-60 overflow-y-auto z-50 bg-white">
-											<SelectItem value="blue" className="text-xs">
-												{t(localizationConstants.colorBlue) || "Blå"}
-											</SelectItem>
-											<SelectItem value="yellow" className="text-xs">
-												{t(localizationConstants.colorYellow) || "Gul"}
-											</SelectItem>
-											<SelectItem value="green" className="text-xs">
-												{t(localizationConstants.colorGreen) || "Grön"}
-											</SelectItem>
-											<SelectItem value="purple" className="text-xs">
-												{t(localizationConstants.colorPurple) || "Lila"}
-											</SelectItem>
-											<SelectItem value="pink" className="text-xs">
-												{t(localizationConstants.colorOrange) || "Rosa / Orange"}
-											</SelectItem>
-											<SelectItem value="light-purple" className="text-xs">
-												{t(localizationConstants.colorPurple) || "Ljuslila"}
-											</SelectItem>
-											<SelectItem value="light-yellow" className="text-xs">
-												{t(localizationConstants.colorYellow) || "Ljusgul"}
-											</SelectItem>
-										</SelectContent>
-									</Select>
-								)}
-							/>
-							{errors.colorTheme && (
-								<p className="text-[11px] text-red-500 font-medium">{errors.colorTheme.message}</p>
-							)}
-						</div>
+            {/* Row 2: Start datum & Slut datum (Interactive Date Picker via Shadcn Popover & Calendar) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                  <Translate text={localizationConstants.startDatum} />
+                </Label>
+                <Popover
+                  open={isStartDateOpen}
+                  onOpenChange={setIsStartDateOpen}
+                >
+                  <PopoverTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-10 px-3 border-slate-200 bg-white text-xs sm:text-sm shadow-none hover:bg-slate-50 focus-visible:ring-1 focus-visible:ring-slate-900",
+                        !startDate ? "text-muted-foreground" : "text-slate-900",
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground stroke-[1.33] shrink-0" />
+                      <span className="truncate">
+                        {startDate ? (
+                          formatDateDisplay(startDate)
+                        ) : (
+                          <Translate text={localizationConstants.chooseDate} />
+                        )}
+                      </span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto p-0 bg-white border border-slate-200 shadow-xl z-10000"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={startDate}
+                      onSelect={(d) => {
+                        setStartDate(d);
+                        setIsStartDateOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
 
-						<div className="space-y-1.5 w-full">
-							<Label className="font-semibold text-slate-700 text-xs">
-								<Translate text={localizationConstants.status} />
-							</Label>
-							<Controller
-								name="status"
-								control={control}
-								render={({ field }) => (
-									<Select value={field.value} onValueChange={field.onChange}>
-										<SelectTrigger className="h-9 w-full text-xs border-slate-200 bg-white flex items-center justify-between">
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent className="w-[calc(100vw-80px)] sm:w-[var(--radix-select-trigger-width)] max-h-60 overflow-y-auto z-50 bg-white">
-											<SelectItem value="completed" className="text-xs">
-												<Translate text={localizationConstants.planningCompleted} />
-											</SelectItem>
-											<SelectItem value="in_progress" className="text-xs">
-												<Translate text={localizationConstants.planningInProgress} />
-											</SelectItem>
-											<SelectItem value="not_started" className="text-xs">
-												<Translate text={localizationConstants.planningNotStarted} />
-											</SelectItem>
-										</SelectContent>
-									</Select>
-								)}
-							/>
-							{errors.status && (
-								<p className="text-[11px] text-red-500 font-medium">{errors.status.message}</p>
-							)}
-						</div>
-					</div>
+              <div className="space-y-1.5">
+                <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                  <Translate text={localizationConstants.slutDatum} />
+                </Label>
+                <Popover open={isEndDateOpen} onOpenChange={setIsEndDateOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal h-10 px-3 border-slate-200 bg-white text-xs sm:text-sm shadow-none hover:bg-slate-50 focus-visible:ring-1 focus-visible:ring-slate-900",
+                        !endDate ? "text-muted-foreground" : "text-slate-900",
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground stroke-[1.33] shrink-0" />
+                      <span className="truncate">
+                        {endDate ? (
+                          formatDateDisplay(endDate)
+                        ) : (
+                          <Translate text={localizationConstants.chooseDate} />
+                        )}
+                      </span>
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="w-auto p-0 bg-white border border-slate-200 shadow-xl z-10000"
+                    align="start"
+                  >
+                    <Calendar
+                      mode="single"
+                      selected={endDate}
+                      onSelect={(d) => {
+                        setEndDate(d);
+                        setIsEndDateOpen(false);
+                      }}
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
 
-					{/* Action Buttons (Responsive) */}
-					<div className="flex flex-col-reverse sm:flex-row justify-end gap-2.5 pt-4 border-t border-slate-100">
-						<Button
-							type="button"
-							variant="outline"
-							onClick={() => onOpenChange(false)}
-							className="w-full sm:w-auto px-4 h-9 rounded-lg border-slate-200 text-slate-700 font-medium hover:bg-slate-50 cursor-pointer"
-						>
-							<Translate text={localizationConstants.avbryt} />
-						</Button>
-						<Button
-							type="submit"
-							disabled={isSaving}
-							className="w-full sm:w-auto px-4 h-9 rounded-lg bg-slate-900 text-white font-medium hover:bg-slate-800 shadow-xs flex items-center justify-center gap-1.5 cursor-pointer"
-						>
-							{isSaving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-							<Translate text={localizationConstants.spara} />
-						</Button>
-					</div>
-				</form>
-			</DialogContent>
-		</Dialog>
-	);
+            {/* Row 3: Starttid & Sluttid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="startTime"
+                  className="font-sans font-medium text-[14px] leading-5 text-slate-900"
+                >
+                  <Translate text={localizationConstants.startTid} />
+                </Label>
+                <div className="relative">
+                  <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Input
+                    id="startTime"
+                    {...register("startTime")}
+                    placeholder={
+                      t(localizationConstants.chooseTime) || "Choose time"
+                    }
+                    className="pl-9 h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="endTime"
+                  className="font-sans font-medium text-[14px] leading-5 text-slate-900"
+                >
+                  <Translate text={localizationConstants.slutTid} />
+                </Label>
+                <div className="relative">
+                  <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <Input
+                    id="endTime"
+                    {...register("endTime")}
+                    placeholder={
+                      t(localizationConstants.chooseTime) || "Choose time"
+                    }
+                    className="pl-9 h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Row 4: Status Dropdown (Half Width) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <Label
+                  htmlFor="status"
+                  className="font-sans font-medium text-[14px] leading-5 text-slate-900"
+                >
+                  <Translate text={localizationConstants.status} />
+                </Label>
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <SelectTrigger
+                        id="status"
+                        className="h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 bg-white w-full"
+                      >
+                        <SelectValue
+                          placeholder={
+                            t(localizationConstants.selectStatus) ||
+                            "Select status"
+                          }
+                        />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-slate-200 rounded-md shadow-xl font-sans">
+                        <SelectItem
+                          value="in_progress"
+                          className="text-xs cursor-pointer"
+                        >
+                          <Translate
+                            text={localizationConstants.planningInProgress}
+                          />
+                        </SelectItem>
+                        <SelectItem
+                          value="completed"
+                          className="text-xs cursor-pointer"
+                        >
+                          <Translate
+                            text={localizationConstants.planningCompleted}
+                          />
+                        </SelectItem>
+                        <SelectItem
+                          value="not_started"
+                          className="text-xs cursor-pointer"
+                        >
+                          <Translate
+                            text={localizationConstants.planningNotStarted}
+                          />
+                        </SelectItem>
+                        <SelectItem
+                          value="waiting"
+                          className="text-xs cursor-pointer"
+                        >
+                          <Translate
+                            text={localizationConstants.planningWaiting}
+                          />
+                        </SelectItem>
+                        <SelectItem
+                          value="cancelled"
+                          className="text-xs cursor-pointer"
+                        >
+                          <Translate
+                            text={localizationConstants.planningCancelled}
+                          />
+                        </SelectItem>
+                        <SelectItem
+                          value="due"
+                          className="text-xs cursor-pointer"
+                        >
+                          <Translate text={localizationConstants.planningDue} />
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+              </div>
+              <div className="hidden sm:block" />
+            </div>
+
+            {/* Divider Line above Assignee */}
+            <div className="border-t border-slate-200 my-4" />
+
+            {/* ── Assignee Section Container ── */}
+            <div className="space-y-2 pt-0">
+              <h3 className="font-sans font-medium text-[14px] leading-5 tracking-normal text-zinc-950">
+                <Translate text={localizationConstants.planningAssignee} />
+              </h3>
+
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 space-y-3.5">
+                {/* Top Row: User Select + Add Button */}
+                <div className="flex items-center gap-2">
+                  <Select
+                    value={selectedUserToAddId}
+                    onValueChange={setSelectedUserToAddId}
+                  >
+                    <SelectTrigger className="h-10 bg-white border-slate-200 text-xs sm:text-sm text-slate-700 flex-1 rounded-md">
+                      <SelectValue
+                        placeholder={
+                          t(localizationConstants.addUsers) || "Add users"
+                        }
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border border-slate-200 rounded-md shadow-xl font-sans max-h-48">
+                      {employeesList.map((emp) => (
+                        <SelectItem
+                          key={emp.id}
+                          value={emp.id}
+                          className="text-xs cursor-pointer"
+                        >
+                          <div className="flex items-center gap-2">
+                            {emp.avatarUrl ? (
+                              <Image
+                                src={emp.avatarUrl}
+                                alt={emp.name}
+                                width={18}
+                                height={18}
+                                className="w-4.5 h-4.5 rounded-full object-cover shrink-0"
+                              />
+                            ) : (
+                              <div className="w-4.5 h-4.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-semibold flex items-center justify-center shrink-0">
+                                {emp.initials}
+                              </div>
+                            )}
+                            <span>{emp.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleAddAssignee}
+                    disabled={!selectedUserToAddId}
+                    className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-xs font-medium text-slate-800 rounded-md flex items-center gap-1.5 shrink-0 shadow-none cursor-pointer"
+                  >
+                    <UserPlus className="w-4 h-4 text-zinc-500 stroke-[1.33]" />
+                    <Translate text={localizationConstants.add} />
+                  </Button>
+                </div>
+
+                {/* Bottom Row: Starttid, Sluttid, Total tim */}
+                <div className="grid grid-cols-3 gap-2.5">
+                  <div className="space-y-1">
+                    <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                      <Translate text={localizationConstants.startTid} />
+                    </Label>
+                    <div className="relative">
+                      <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <Input
+                        value={assigneeStartTime}
+                        onChange={(e) => setAssigneeStartTime(e.target.value)}
+                        placeholder={
+                          t(localizationConstants.chooseTime) || "Choose time"
+                        }
+                        className="pl-9 h-10 text-xs sm:text-sm rounded-md bg-white border-slate-200 text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                      <Translate text={localizationConstants.slutTid} />
+                    </Label>
+                    <div className="relative">
+                      <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      <Input
+                        value={assigneeEndTime}
+                        onChange={(e) => setAssigneeEndTime(e.target.value)}
+                        placeholder={
+                          t(localizationConstants.chooseTime) || "Choose time"
+                        }
+                        className="pl-9 h-10 text-xs sm:text-sm rounded-md bg-white border-slate-200 text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-1">
+                    <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                      <Translate text={localizationConstants.totalTim} />
+                    </Label>
+                    <Input
+                      disabled
+                      value={
+                        totalHours
+                          ? `${totalHours} ${t(localizationConstants.timmarSuffix) || "tim"}`
+                          : "-"
+                      }
+                      className="h-10 text-xs sm:text-sm rounded-md bg-slate-100/80 border-slate-200 text-slate-600 font-medium text-center"
+                    />
+                  </div>
+                </div>
+
+                {/* Assigned Users List */}
+                {assignedUsers.length > 0 && (
+                  <div className="pt-2 border-t border-slate-200/80 space-y-2">
+                    {assignedUsers.map((user) => (
+                      <div
+                        key={user.id}
+                        className="flex items-center justify-between bg-white px-3 py-2 rounded-md border border-slate-200 shadow-2xs"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          {user.avatarUrl ? (
+                            <Image
+                              src={user.avatarUrl}
+                              alt={user.name}
+                              width={24}
+                              height={24}
+                              className="w-6 h-6 rounded-full object-cover shrink-0"
+                            />
+                          ) : (
+                            <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-semibold text-[10px] flex items-center justify-center shrink-0">
+                              {user.initials}
+                            </div>
+                          )}
+                          <span className="text-xs font-medium text-slate-900 truncate">
+                            {user.name}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2.5 shrink-0">
+                          <span className="text-xs font-normal text-slate-500">
+                            {user.hours}{" "}
+                            <Translate
+                              text={localizationConstants.timmarSuffix}
+                            />
+                          </span>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => handleRemoveAssignee(user.id)}
+                            className="w-6 h-6 p-0 text-zinc-500 hover:text-rose-600 rounded cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 stroke-[1.33]" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </form>
+      </SheetContent>
+    </Sheet>
+  );
 }
 
 export default PersonnelCreateTaskModal;

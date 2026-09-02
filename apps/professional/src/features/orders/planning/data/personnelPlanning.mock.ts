@@ -2,27 +2,79 @@ import type {
 	GridTaskItem,
 	PersonnelScheduleItem,
 	PlanningAssignee,
+	PlanningResource,
 } from "../types/planning.types";
 import localizationConstants from "@/utils/translation/constants";
 
 export const EVA_MENDES_AVATAR =
 	"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=120&h=120";
+export const MOCK_AVATAR_2 =
+	"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120&h=120";
+export const MOCK_AVATAR_3 =
+	"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=120&h=120";
+export const MOCK_AVATAR_4 =
+	"https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=120&h=120";
+export const MOCK_AVATAR_5 =
+	"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=120&h=120";
+export const MOCK_AVATAR_6 =
+	"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=120&h=120";
+export const MOCK_AVATAR_7 =
+	"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=120&h=120";
+export const MOCK_AVATAR_8 =
+	"https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=120&h=120";
 
 export const MOCK_PERSONNEL_EMPLOYEES = [
 	{ id: "emp-1", name: "Göran Andersson", initials: "GA" },
 	{ id: "emp-2", name: "Eva Mendes", initials: "EM", avatarUrl: EVA_MENDES_AVATAR },
-	{ id: "emp-3", name: "Anders Larsson", initials: "AB" },
-	{ id: "emp-4", name: "Sara Nilsson", initials: "SN" },
-	{ id: "emp-5", name: "Anders Larsson", initials: "AB" },
-	{ id: "emp-6", name: "Eva Mendes", initials: "EM", avatarUrl: EVA_MENDES_AVATAR },
-	{ id: "emp-7", name: "Anders Larsson", initials: "AB" },
+	{ id: "emp-3", name: "Anders Larsson", initials: "AL" },
+	{ id: "emp-4", name: "Sara Nilsson", initials: "SN", avatarUrl: MOCK_AVATAR_4 },
+	{ id: "emp-5", name: "Erik Lindqvist", initials: "EL", avatarUrl: MOCK_AVATAR_2 },
+	{ id: "emp-6", name: "Karin Berg", initials: "KB", avatarUrl: MOCK_AVATAR_3 },
+	{ id: "emp-7", name: "Johan Holm", initials: "JH", avatarUrl: MOCK_AVATAR_5 },
+	{ id: "emp-8", name: "Elin Sandström", initials: "ES", avatarUrl: MOCK_AVATAR_6 },
+	{ id: "emp-9", name: "Mikael Ek", initials: "ME", avatarUrl: MOCK_AVATAR_7 },
+	{ id: "emp-10", name: "Astrid Lind", initials: "AL", avatarUrl: MOCK_AVATAR_8 },
+	{ id: "emp-11", name: "Fredrik Dahl", initials: "FD" },
+	{ id: "emp-12", name: "Linnéa Blom", initials: "LB" },
+	{ id: "emp-13", name: "Magnus Hedlund", initials: "MH" },
+	{ id: "emp-14", name: "Hanna Sjöberg", initials: "HS" },
+	{ id: "emp-15", name: "Viktor Wallin", initials: "VW" },
+];
+
+export const MOCK_PERSONNEL_TOP_ASSIGNED_ALL: (PlanningResource & { hours?: number })[] = [
+	{ id: "emp-1", name: "Göran Andersson", initials: "GA", totalHours: 40, allocatedHours: 32, hours: 40, percentage: 70, avatarUrl: undefined },
+	{ id: "emp-2", name: "Eva Mendes", initials: "EM", totalHours: 20, allocatedHours: 12, hours: 20, percentage: 40, avatarUrl: EVA_MENDES_AVATAR },
+	{ id: "emp-3", name: "Anders Larsson", initials: "AL", totalHours: 10, allocatedHours: 4, hours: 10, percentage: 20, avatarUrl: undefined },
+	{ id: "emp-4", name: "Sara Nilsson", initials: "SN", totalHours: 35, allocatedHours: 22, hours: 35, percentage: 65, avatarUrl: MOCK_AVATAR_4 },
+	{ id: "emp-5", name: "Erik Lindqvist", initials: "EL", totalHours: 28, allocatedHours: 15, hours: 28, percentage: 55, avatarUrl: MOCK_AVATAR_2 },
+	{ id: "emp-6", name: "Karin Berg", initials: "KB", totalHours: 32, allocatedHours: 20, hours: 32, percentage: 60, avatarUrl: MOCK_AVATAR_3 },
+	{ id: "emp-7", name: "Johan Holm", initials: "JH", totalHours: 16, allocatedHours: 8, hours: 16, percentage: 30, avatarUrl: MOCK_AVATAR_5 },
+	{ id: "emp-8", name: "Elin Sandström", initials: "ES", totalHours: 24, allocatedHours: 12, hours: 24, percentage: 45, avatarUrl: MOCK_AVATAR_6 },
+	{ id: "emp-9", name: "Mikael Ek", initials: "ME", totalHours: 38, allocatedHours: 28, hours: 38, percentage: 75, avatarUrl: MOCK_AVATAR_7 },
+	{ id: "emp-10", name: "Astrid Lind", initials: "AL", totalHours: 22, allocatedHours: 10, hours: 22, percentage: 40, avatarUrl: MOCK_AVATAR_8 },
+	{ id: "emp-11", name: "Fredrik Dahl", initials: "FD", totalHours: 14, allocatedHours: 6, hours: 14, percentage: 25, avatarUrl: undefined },
+	{ id: "emp-12", name: "Linnéa Blom", initials: "LB", totalHours: 30, allocatedHours: 18, hours: 30, percentage: 58, avatarUrl: undefined },
+	{ id: "emp-13", name: "Magnus Hedlund", initials: "MH", totalHours: 19, allocatedHours: 8, hours: 19, percentage: 38, avatarUrl: undefined },
+	{ id: "emp-14", name: "Hanna Sjöberg", initials: "HS", totalHours: 26, allocatedHours: 14, hours: 26, percentage: 50, avatarUrl: undefined },
+	{ id: "emp-15", name: "Viktor Wallin", initials: "VW", totalHours: 34, allocatedHours: 20, hours: 34, percentage: 62, avatarUrl: undefined },
 ];
 
 export const MOCK_PERSONNEL_SAMPLE_ASSIGNEES: PlanningAssignee[] = [
 	{ id: "emp-1", name: "Göran Andersson", initials: "GA", hours: 8 },
 	{ id: "emp-2", name: "Eva Mendes", initials: "EM", avatarUrl: EVA_MENDES_AVATAR, hours: 6 },
-	{ id: "emp-3", name: "Anders Larsson", initials: "AB", hours: 5 },
-	{ id: "emp-4", name: "Sara Nilsson", initials: "SN", hours: 4 },
+	{ id: "emp-3", name: "Anders Larsson", initials: "AL", hours: 5 },
+	{ id: "emp-4", name: "Sara Nilsson", initials: "SN", avatarUrl: MOCK_AVATAR_4, hours: 4 },
+	{ id: "emp-5", name: "Erik Lindqvist", initials: "EL", avatarUrl: MOCK_AVATAR_2, hours: 8 },
+	{ id: "emp-6", name: "Karin Berg", initials: "KB", avatarUrl: MOCK_AVATAR_3, hours: 6 },
+	{ id: "emp-7", name: "Johan Holm", initials: "JH", avatarUrl: MOCK_AVATAR_5, hours: 5 },
+	{ id: "emp-8", name: "Elin Sandström", initials: "ES", avatarUrl: MOCK_AVATAR_6, hours: 7 },
+	{ id: "emp-9", name: "Mikael Ek", initials: "ME", avatarUrl: MOCK_AVATAR_7, hours: 8 },
+	{ id: "emp-10", name: "Astrid Lind", initials: "AL", avatarUrl: MOCK_AVATAR_8, hours: 6 },
+	{ id: "emp-11", name: "Fredrik Dahl", initials: "FD", hours: 4 },
+	{ id: "emp-12", name: "Linnéa Blom", initials: "LB", hours: 7 },
+	{ id: "emp-13", name: "Magnus Hedlund", initials: "MH", hours: 5 },
+	{ id: "emp-14", name: "Hanna Sjöberg", initials: "HS", hours: 6 },
+	{ id: "emp-15", name: "Viktor Wallin", initials: "VW", hours: 8 },
 ];
 
 export const MOCK_PERSONNEL_PROJECT_ITEMS = [
