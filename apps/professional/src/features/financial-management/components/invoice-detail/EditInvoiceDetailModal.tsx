@@ -45,6 +45,8 @@ export function EditInvoiceDetailModal({
 		comments: data.comments,
 	});
 
+	const [errors, setErrors] = useState<Record<string, string>>({});
+
 	useEffect(() => {
 		setFormData({
 			projectName: data.projectName,
@@ -57,9 +59,38 @@ export function EditInvoiceDetailModal({
 			category: data.category,
 			comments: data.comments,
 		});
+		setErrors({});
 	}, [data, open]);
 
+	const validate = () => {
+		if (section === "comments") return true;
+
+		const nextErrors: Record<string, string> = {};
+		if (!formData.projectName.trim()) {
+			nextErrors.projectName = t(localizationConstants.invoiceDetailValidationRequired);
+		}
+		if (!formData.projectNumber.trim()) {
+			nextErrors.projectNumber = t(localizationConstants.invoiceDetailValidationRequired);
+		}
+		if (!formData.customer.trim()) {
+			nextErrors.customer = t(localizationConstants.invoiceDetailValidationRequired);
+		}
+		if (!formData.contactPerson.trim()) {
+			nextErrors.contactPerson = t(localizationConstants.invoiceDetailValidationRequired);
+		}
+		if (!formData.invoiceDate.trim()) {
+			nextErrors.invoiceDate = t(localizationConstants.invoiceDetailValidationRequired);
+		}
+		if (!formData.dueDate.trim()) {
+			nextErrors.dueDate = t(localizationConstants.invoiceDetailValidationRequired);
+		}
+
+		setErrors(nextErrors);
+		return Object.keys(nextErrors).length === 0;
+	};
+
 	const handleSave = () => {
+		if (!validate()) return;
 		onSave(formData);
 		onOpenChange(false);
 	};
@@ -98,70 +129,94 @@ export function EditInvoiceDetailModal({
 						<div className="grid grid-cols-2 gap-4">
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									<Translate text={localizationConstants.createInvoiceFieldProjectName} />
+									<Translate text={localizationConstants.createInvoiceFieldProjectName} /> *
 								</Label>
 								<Input
 									value={formData.projectName}
-									onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
-									className="h-8 text-xs border-slate-200"
+									onChange={(e) => {
+										setFormData({ ...formData, projectName: e.target.value });
+										if (errors.projectName) setErrors({ ...errors, projectName: "" });
+									}}
+									className={`h-8 text-xs border-slate-200 ${errors.projectName ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
 								/>
+								{errors.projectName && <p className="text-[11px] text-rose-500">{errors.projectName}</p>}
 							</div>
 
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									<Translate text={localizationConstants.createInvoiceFieldProjectNumber} />
+									<Translate text={localizationConstants.createInvoiceFieldProjectNumber} /> *
 								</Label>
 								<Input
 									value={formData.projectNumber}
-									onChange={(e) => setFormData({ ...formData, projectNumber: e.target.value })}
-									className="h-8 text-xs border-slate-200"
+									onChange={(e) => {
+										setFormData({ ...formData, projectNumber: e.target.value });
+										if (errors.projectNumber) setErrors({ ...errors, projectNumber: "" });
+									}}
+									className={`h-8 text-xs border-slate-200 ${errors.projectNumber ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
 								/>
+								{errors.projectNumber && <p className="text-[11px] text-rose-500">{errors.projectNumber}</p>}
 							</div>
 
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									<Translate text={localizationConstants.createInvoiceFieldContactPerson} />
+									<Translate text={localizationConstants.createInvoiceFieldContactPerson} /> *
 								</Label>
 								<Input
 									value={formData.contactPerson}
-									onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
-									className="h-8 text-xs border-slate-200"
+									onChange={(e) => {
+										setFormData({ ...formData, contactPerson: e.target.value });
+										if (errors.contactPerson) setErrors({ ...errors, contactPerson: "" });
+									}}
+									className={`h-8 text-xs border-slate-200 ${errors.contactPerson ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
 								/>
+								{errors.contactPerson && <p className="text-[11px] text-rose-500">{errors.contactPerson}</p>}
 							</div>
 
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									<Translate text={localizationConstants.createInvoiceFieldCustomer} />
+									<Translate text={localizationConstants.createInvoiceFieldCustomer} /> *
 								</Label>
 								<Input
 									value={formData.customer}
-									onChange={(e) => setFormData({ ...formData, customer: e.target.value })}
-									className="h-8 text-xs border-slate-200"
+									onChange={(e) => {
+										setFormData({ ...formData, customer: e.target.value });
+										if (errors.customer) setErrors({ ...errors, customer: "" });
+									}}
+									className={`h-8 text-xs border-slate-200 ${errors.customer ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
 								/>
+								{errors.customer && <p className="text-[11px] text-rose-500">{errors.customer}</p>}
 							</div>
 
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									<Translate text={localizationConstants.createInvoiceFieldInvoiceDate} />
+									<Translate text={localizationConstants.createInvoiceFieldInvoiceDate} /> *
 								</Label>
 								<Input
 									type="date"
 									value={formData.invoiceDate}
-									onChange={(e) => setFormData({ ...formData, invoiceDate: e.target.value })}
-									className="h-8 text-xs border-slate-200"
+									onChange={(e) => {
+										setFormData({ ...formData, invoiceDate: e.target.value });
+										if (errors.invoiceDate) setErrors({ ...errors, invoiceDate: "" });
+									}}
+									className={`h-8 text-xs border-slate-200 ${errors.invoiceDate ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
 								/>
+								{errors.invoiceDate && <p className="text-[11px] text-rose-500">{errors.invoiceDate}</p>}
 							</div>
 
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									<Translate text={localizationConstants.invoiceColumnDueDate} />
+									<Translate text={localizationConstants.invoiceColumnDueDate} /> *
 								</Label>
 								<Input
 									type="date"
 									value={formData.dueDate}
-									onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-									className="h-8 text-xs border-slate-200"
+									onChange={(e) => {
+										setFormData({ ...formData, dueDate: e.target.value });
+										if (errors.dueDate) setErrors({ ...errors, dueDate: "" });
+									}}
+									className={`h-8 text-xs border-slate-200 ${errors.dueDate ? "border-rose-500 focus-visible:ring-rose-500" : ""}`}
 								/>
+								{errors.dueDate && <p className="text-[11px] text-rose-500">{errors.dueDate}</p>}
 							</div>
 						</div>
 					)}

@@ -5466,6 +5466,13 @@ export const enInvoice: InvoiceTranslation = {
 	invoiceDetailEditGeneralInfo: "Invoice Information",
 	invoiceDetailEditComments: "Comments",
 	invoiceDetailEditPaymentPlan: "Payment Plan",
+	defaultSupplierName: "Cleaning Services AB",
+	invoiceDetailConfirmMarkPaidTitle: "Mark invoice as paid?",
+	invoiceDetailConfirmMarkPaidDesc: "Are you sure you want to mark this invoice as fully paid? This will reset the remaining balance to zero and update its status.",
+	invoiceDetailConfirmCreditTitle: "Credit invoice?",
+	invoiceDetailConfirmCreditDesc: "Are you sure you want to credit this invoice? This will create a credit record and update the invoice status.",
+	invoiceDetailValidationRequired: "This field is required",
+	invoiceDetailRetry: "Retry",
 };
 
 export const en: Translation = {

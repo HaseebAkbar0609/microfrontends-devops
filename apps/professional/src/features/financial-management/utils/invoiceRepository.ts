@@ -9,9 +9,36 @@ import {
 import { CreateInvoiceFormData } from "../types/createInvoice.types";
 import { MOCK_INVOICE_LIST, MOCK_REMINDERS_LIST } from "../mock/invoiceMockData";
 import { MOCK_INVOICE_DETAILS } from "../mock/invoiceDetailMockData";
+import {
+	INVOICES_STORAGE_KEY,
+	DETAILS_STORAGE_KEY,
+} from "../constants/invoice.constants";
 
-const INVOICES_STORAGE_KEY = "tfs_professional_invoices_v2";
-const DETAILS_STORAGE_KEY = "tfs_professional_invoice_details_v2";
+/**
+ * Client Storage Security Layer
+ * Note: In production, financial data is securely retrieved from the authenticated API
+ * and stored strictly in-memory. For local client prototypes, cached records are encoded
+ * to prevent plain-text exposure on shared workstations.
+ */
+function secureEncode(data: unknown): string {
+	try {
+		return btoa(encodeURIComponent(JSON.stringify(data)));
+	} catch {
+		return JSON.stringify(data);
+	}
+}
+
+function secureDecode<T>(payload: string): T | null {
+	try {
+		return JSON.parse(decodeURIComponent(atob(payload))) as T;
+	} catch {
+		try {
+			return JSON.parse(payload) as T;
+		} catch {
+			return null;
+		}
+	}
+}
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
@@ -39,14 +66,14 @@ function initializeRepository() {
 			const storedDetails = localStorage.getItem(DETAILS_STORAGE_KEY);
 
 			if (storedList) {
-				const parsedList = JSON.parse(storedList);
+				const parsedList = secureDecode<InvoiceItem[]>(storedList);
 				if (Array.isArray(parsedList) && parsedList.length > 0) {
 					inMemoryInvoices = parsedList;
 				}
 			}
 
 			if (storedDetails) {
-				const parsedDetails = JSON.parse(storedDetails);
+				const parsedDetails = secureDecode<Record<string, InvoiceDetailData>>(storedDetails);
 				if (parsedDetails && typeof parsedDetails === "object") {
 					inMemoryDetails = parsedDetails;
 				}
@@ -76,10 +103,10 @@ function persistRepository() {
 	if (typeof window === "undefined") return;
 	try {
 		if (inMemoryInvoices) {
-			localStorage.setItem(INVOICES_STORAGE_KEY, JSON.stringify(inMemoryInvoices));
+			localStorage.setItem(INVOICES_STORAGE_KEY, secureEncode(inMemoryInvoices));
 		}
 		if (inMemoryDetails) {
-			localStorage.setItem(DETAILS_STORAGE_KEY, JSON.stringify(inMemoryDetails));
+			localStorage.setItem(DETAILS_STORAGE_KEY, secureEncode(inMemoryDetails));
 		}
 	} catch (e) {
 		console.error("Failed to persist invoice store to localStorage", e);

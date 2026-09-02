@@ -5426,6 +5426,13 @@ export type InvoiceTranslation = {
 	invoiceDetailEditGeneralInfo: string;
 	invoiceDetailEditComments: string;
 	invoiceDetailEditPaymentPlan: string;
+	defaultSupplierName: string;
+	invoiceDetailConfirmMarkPaidTitle: string;
+	invoiceDetailConfirmMarkPaidDesc: string;
+	invoiceDetailConfirmCreditTitle: string;
+	invoiceDetailConfirmCreditDesc: string;
+	invoiceDetailValidationRequired: string;
+	invoiceDetailRetry: string;
 };
 
 export type Translation = HeaderTranslation &

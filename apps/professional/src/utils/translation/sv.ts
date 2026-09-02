@@ -5488,6 +5488,13 @@ export const svInvoice: InvoiceTranslation = {
 	invoiceDetailEditGeneralInfo: "Fakturainformation",
 	invoiceDetailEditComments: "Kommentarer",
 	invoiceDetailEditPaymentPlan: "Betalningsplan",
+	defaultSupplierName: "Cleaning Services AB",
+	invoiceDetailConfirmMarkPaidTitle: "Markera faktura som betald?",
+	invoiceDetailConfirmMarkPaidDesc: "Är du säker på att du vill markera denna faktura som fullt betald? Detta kommer att nollställa kvarstående saldo och uppdatera statusen.",
+	invoiceDetailConfirmCreditTitle: "Kreditera faktura?",
+	invoiceDetailConfirmCreditDesc: "Är du säker på att du vill kreditera denna faktura? Detta skapar ett kreditunderlag och uppdaterar fakturans status.",
+	invoiceDetailValidationRequired: "Detta fält är obligatoriskt",
+	invoiceDetailRetry: "Försök igen",
 };
 
 export const sv: Translation = {

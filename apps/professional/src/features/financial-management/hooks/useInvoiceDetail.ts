@@ -13,37 +13,51 @@ export function useInvoiceDetail(invoiceId: string) {
 	const [activeTab, setActiveTab] = useState<"oversikt" | "tidrapport" | "faktura-underlag">("oversikt");
 	const [invoiceData, setInvoiceData] = useState<InvoiceDetailData | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
+	const [error, setError] = useState<string | null>(null);
 	const [editModalSection, setEditModalSection] = useState<"header" | "paymentPlan" | "comments" | null>(null);
 	const [showPrintView, setShowPrintView] = useState<boolean>(false);
 
+	// Confirmation modal states for safe UX
+	const [confirmMarkPaidOpen, setConfirmMarkPaidOpen] = useState<boolean>(false);
+	const [confirmCreditOpen, setConfirmCreditOpen] = useState<boolean>(false);
+
 	const loadData = useCallback(() => {
+		setIsLoading(true);
+		setError(null);
 		try {
 			const data = invoiceRepository.getInvoiceDetail(invoiceId);
-			setInvoiceData(data);
+			if (!data) {
+				setError("Kunde inte hitta fakturan");
+			} else {
+				setInvoiceData(data);
+			}
 		} catch (e) {
+			const errorMsg = e instanceof Error ? e.message : "Ett oväntat fel uppstod vid laddning";
 			console.error("Failed to load invoice detail:", e);
+			setError(errorMsg);
 		} finally {
 			setIsLoading(false);
 		}
 	}, [invoiceId]);
 
 	useEffect(() => {
-		setIsLoading(true);
 		loadData();
 
 		// Subscribe to repository changes so updates reflect immediately
 		const unsubscribe = invoiceRepository.subscribe(() => {
-			loadData();
+			const current = invoiceRepository.getInvoiceDetail(invoiceId);
+			if (current) setInvoiceData(current);
 		});
 
 		return () => {
 			unsubscribe();
 		};
-	}, [loadData]);
+	}, [invoiceId, loadData]);
 
-	// Calculations for Line Items
+	// Calculations for Line Items - strictly memoized by lineItems array for performance
 	const calculations: InvoiceDetailCalculations = useMemo(() => {
-		if (!invoiceData || !invoiceData.lineItems) {
+		const lineItems = invoiceData?.lineItems;
+		if (!lineItems || lineItems.length === 0) {
 			return {
 				delsumma: 0,
 				totalDiscount: 0,
@@ -61,7 +75,7 @@ export function useInvoiceDetail(invoiceId: string) {
 		let totalMarkup = 0;
 		let totalRotRut = 0;
 
-		invoiceData.lineItems.forEach((item) => {
+		lineItems.forEach((item) => {
 			const itemSubtotal = item.delsumma || item.quantity * item.unitPrice;
 			delsumma += itemSubtotal;
 
@@ -88,16 +102,17 @@ export function useInvoiceDetail(invoiceId: string) {
 			vatAmount,
 			attErhalla,
 		};
-	}, [invoiceData]);
+	}, [invoiceData?.lineItems]);
 
-	// Time Report Totals
+	// Time Report Totals - memoized by timeReportItems
 	const timeReportTotals = useMemo(() => {
-		if (!invoiceData || !invoiceData.timeReportItems) {
+		const timeReportItems = invoiceData?.timeReportItems;
+		if (!timeReportItems || timeReportItems.length === 0) {
 			return { regularHours: 0, ataHours: 0, totalHours: 0 };
 		}
 		let regularHours = 0;
 		let ataHours = 0;
-		invoiceData.timeReportItems.forEach((item) => {
+		timeReportItems.forEach((item) => {
 			regularHours += Number(item.regularHours) || 0;
 			ataHours += Number(item.ataHours) || 0;
 		});
@@ -106,17 +121,18 @@ export function useInvoiceDetail(invoiceId: string) {
 			ataHours,
 			totalHours: regularHours + ataHours,
 		};
-	}, [invoiceData]);
+	}, [invoiceData?.timeReportItems]);
 
-	// Underlag Totals
+	// Underlag Totals - memoized by underlagItems
 	const underlagTotals = useMemo(() => {
-		if (!invoiceData || !invoiceData.underlagItems) {
+		const underlagItems = invoiceData?.underlagItems;
+		if (!underlagItems || underlagItems.length === 0) {
 			return { totalAmount: 0, totalMarkup: 0, totalSubtotal: 0 };
 		}
 		let totalAmount = 0;
 		let totalMarkup = 0;
 		let totalSubtotal = 0;
-		invoiceData.underlagItems.forEach((item) => {
+		underlagItems.forEach((item) => {
 			totalAmount += Number(item.amount) || 0;
 			totalMarkup += Number(item.markupAmount) || 0;
 			totalSubtotal += Number(item.subtotal) || 0;
@@ -126,16 +142,33 @@ export function useInvoiceDetail(invoiceId: string) {
 			totalMarkup,
 			totalSubtotal,
 		};
-	}, [invoiceData]);
+	}, [invoiceData?.underlagItems]);
 
-	// Actions
+	// Explicit Type Safety & Data Validation on Edit
 	const updateInvoiceData = useCallback(
 		(updates: Partial<InvoiceDetailData>) => {
 			if (!invoiceData) return;
+
+			// Strict type validation
+			const validatedCustomer = typeof updates.customer === "string" ? updates.customer : invoiceData.customer;
+			const validatedProjectName = typeof updates.projectName === "string" ? updates.projectName : invoiceData.projectName;
+			const validatedInvoiceDate = typeof updates.invoiceDate === "string" ? updates.invoiceDate : invoiceData.invoiceDate;
+			const validatedDueDate = typeof updates.dueDate === "string" ? updates.dueDate : invoiceData.dueDate;
+
+			if (!validatedCustomer.trim() || !validatedProjectName.trim()) {
+				toast.error("Kund och projektnamn måste anges");
+				return;
+			}
+
 			const updated: InvoiceDetailData = {
 				...invoiceData,
 				...updates,
+				customer: validatedCustomer,
+				projectName: validatedProjectName,
+				invoiceDate: validatedInvoiceDate,
+				dueDate: validatedDueDate,
 			};
+
 			invoiceRepository.saveInvoiceDetail(updated);
 			setInvoiceData(updated);
 			toast.success("Ändringarna har sparats");
@@ -148,13 +181,17 @@ export function useInvoiceDetail(invoiceId: string) {
 		toast.success("Fakturan har skickats");
 	}, [invoiceId]);
 
-	const handleMarkAsPaid = useCallback(() => {
+	// UX: Execute Mark as Paid with Confirmation Flow
+	const executeMarkAsPaid = useCallback(() => {
 		invoiceRepository.markInvoiceAsPaid(invoiceId);
+		setConfirmMarkPaidOpen(false);
 		toast.success("Fakturan har markerats som betald");
 	}, [invoiceId]);
 
-	const handleCreditInvoice = useCallback(() => {
+	// UX: Execute Credit Invoice with Confirmation Flow
+	const executeCreditInvoice = useCallback(() => {
 		invoiceRepository.creditInvoice(invoiceId);
+		setConfirmCreditOpen(false);
 		toast.success("Fakturan har krediterats");
 	}, [invoiceId]);
 
@@ -167,6 +204,8 @@ export function useInvoiceDetail(invoiceId: string) {
 		setActiveTab,
 		invoiceData,
 		isLoading,
+		error,
+		retry: loadData,
 		calculations,
 		timeReportTotals,
 		underlagTotals,
@@ -176,8 +215,12 @@ export function useInvoiceDetail(invoiceId: string) {
 		setShowPrintView,
 		updateInvoiceData,
 		handleSendInvoice,
-		handleMarkAsPaid,
-		handleCreditInvoice,
+		confirmMarkPaidOpen,
+		setConfirmMarkPaidOpen,
+		confirmCreditOpen,
+		setConfirmCreditOpen,
+		executeMarkAsPaid,
+		executeCreditInvoice,
 		handlePrint,
 	};
 }

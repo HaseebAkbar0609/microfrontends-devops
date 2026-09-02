@@ -9,11 +9,20 @@ import {
 	CheckCircle,
 	AlertOctagon,
 	Edit2,
+	RotateCcw,
 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+	DialogDescription,
+	DialogFooter,
+} from "@/components/ui/dialog";
 import { useInvoiceDetail } from "../../hooks/useInvoiceDetail";
 import { InvoiceDetailOverviewTab } from "./InvoiceDetailOverviewTab";
 import { InvoiceDetailTimeReportTab } from "./InvoiceDetailTimeReportTab";
@@ -31,6 +40,8 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 		setActiveTab,
 		invoiceData,
 		isLoading,
+		error,
+		retry,
 		calculations,
 		timeReportTotals,
 		underlagTotals,
@@ -40,8 +51,12 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 		setShowPrintView,
 		updateInvoiceData,
 		handleSendInvoice,
-		handleMarkAsPaid,
-		handleCreditInvoice,
+		confirmMarkPaidOpen,
+		setConfirmMarkPaidOpen,
+		confirmCreditOpen,
+		setConfirmCreditOpen,
+		executeMarkAsPaid,
+		executeCreditInvoice,
 	} = useInvoiceDetail(invoiceId);
 
 	if (isLoading) {
@@ -54,17 +69,30 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 		);
 	}
 
-	if (!invoiceData) {
+	if (error || !invoiceData) {
 		return (
 			<div className="flex flex-1 flex-col items-center justify-center min-h-[400px] gap-4">
-				<p className="text-sm text-slate-500">
-					<Translate text={localizationConstants.invoiceDetailNotFound} />
+				<p className="text-sm text-slate-600 font-medium">
+					{error || <Translate text={localizationConstants.invoiceDetailNotFound} />}
 				</p>
-				<Link href="/module/financial-management/invoice">
-					<Button variant="outline" size="sm">
-						<Translate text={localizationConstants.invoiceDetailBack} />
+				<div className="flex items-center gap-2">
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={retry}
+						className="text-xs gap-1.5 cursor-pointer"
+					>
+						<RotateCcw className="h-3.5 w-3.5" />
+						<span>
+							<Translate text={localizationConstants.invoiceDetailRetry} />
+						</span>
 					</Button>
-				</Link>
+					<Link href="/module/financial-management/invoice">
+						<Button variant="default" size="sm" className="text-xs bg-zinc-900 hover:bg-slate-800">
+							<Translate text={localizationConstants.invoiceDetailBack} />
+						</Button>
+					</Link>
+				</div>
 			</div>
 		);
 	}
@@ -139,7 +167,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 							<Button
 								variant="outline"
 								size="sm"
-								onClick={handleCreditInvoice}
+								onClick={() => setConfirmCreditOpen(true)}
 								className="h-8 px-3 text-xs gap-1.5 border-slate-200 text-rose-600 hover:bg-rose-50 hover:text-rose-700 cursor-pointer rounded-md"
 							>
 								<AlertOctagon className="h-3.5 w-3.5" />
@@ -153,7 +181,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 							<Button
 								variant="outline"
 								size="sm"
-								onClick={handleMarkAsPaid}
+								onClick={() => setConfirmMarkPaidOpen(true)}
 								className="h-8 px-3 text-xs gap-1.5 border-slate-200 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 cursor-pointer rounded-md"
 							>
 								<CheckCircle className="h-3.5 w-3.5" />
@@ -239,6 +267,68 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 				data={invoiceData}
 				onSave={updateInvoiceData}
 			/>
+
+			{/* UX: Confirmation Dialog for Mark as Paid */}
+			<Dialog open={confirmMarkPaidOpen} onOpenChange={setConfirmMarkPaidOpen}>
+				<DialogContent className="max-w-md bg-white p-6 rounded-xl shadow-2xl">
+					<DialogHeader>
+						<DialogTitle className="text-base font-bold text-slate-900">
+							<Translate text={localizationConstants.invoiceDetailConfirmMarkPaidTitle} />
+						</DialogTitle>
+						<DialogDescription className="text-xs text-slate-600 mt-2">
+							<Translate text={localizationConstants.invoiceDetailConfirmMarkPaidDesc} />
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter className="mt-4 flex justify-end gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setConfirmMarkPaidOpen(false)}
+							className="text-xs cursor-pointer border-slate-200"
+						>
+							<Translate text={localizationConstants.createInvoiceBtnCancel} />
+						</Button>
+						<Button
+							size="sm"
+							onClick={executeMarkAsPaid}
+							className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
+						>
+							<Translate text={localizationConstants.invoiceDetailMarkAsPaid} />
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			{/* UX: Confirmation Dialog for Credit Invoice */}
+			<Dialog open={confirmCreditOpen} onOpenChange={setConfirmCreditOpen}>
+				<DialogContent className="max-w-md bg-white p-6 rounded-xl shadow-2xl">
+					<DialogHeader>
+						<DialogTitle className="text-base font-bold text-slate-900">
+							<Translate text={localizationConstants.invoiceDetailConfirmCreditTitle} />
+						</DialogTitle>
+						<DialogDescription className="text-xs text-slate-600 mt-2">
+							<Translate text={localizationConstants.invoiceDetailConfirmCreditDesc} />
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter className="mt-4 flex justify-end gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setConfirmCreditOpen(false)}
+							className="text-xs cursor-pointer border-slate-200"
+						>
+							<Translate text={localizationConstants.createInvoiceBtnCancel} />
+						</Button>
+						<Button
+							size="sm"
+							onClick={executeCreditInvoice}
+							className="text-xs bg-rose-600 hover:bg-rose-700 text-white cursor-pointer"
+						>
+							<Translate text={localizationConstants.invoiceDetailCredit} />
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }
