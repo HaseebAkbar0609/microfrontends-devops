@@ -2295,6 +2295,7 @@ export type OfferTranslation = {
 	kmaActionPlanTemplateNameCol: string;
 	kmaActionPlanTemplateUseBtn: string;
 	kmaActionPlanUseTemplate: string;
+	kmaActionPlanMallarTableTitle: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
