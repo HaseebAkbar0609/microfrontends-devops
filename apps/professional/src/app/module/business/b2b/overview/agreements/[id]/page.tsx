@@ -1,4 +1,4 @@
-import { B2BAgreementDetailView } from "@/features/b2b/components/B2BAgreementDetailView";
+import { B2BContractDetailView } from "@/features/b2b/components/B2BContractDetailView";
 import { getB2BAgreementDetailAction } from "@/api-actions/b2b/agreements";
 import { getAgreementDetailByContext } from "@/features/b2b/constants/agreementMock";
 
@@ -21,5 +21,5 @@ export default async function B2BOverviewAgreementDetailPage({ params, searchPar
       ? result.data
       : getAgreementDetailByContext(sParams?.projectId || id, sParams?.offerId);
 
-  return <B2BAgreementDetailView data={data} />;
+  return <B2BContractDetailView initialData={data} />;
 }

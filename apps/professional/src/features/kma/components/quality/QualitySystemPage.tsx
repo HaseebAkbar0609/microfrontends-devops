@@ -47,6 +47,7 @@ import { CreateChecklistPage } from "./CreateChecklistPage";
 import { ChecklistTemplateTable, MOCK_CHECKLIST_TEMPLATES } from "./ChecklistTemplateTable";
 import { CreateChecklistTemplatePage } from "./CreateChecklistTemplatePage";
 import { OpenChecklistTemplatePage } from "./OpenChecklistTemplatePage";
+import { ActionPlanTemplateTable } from "./ActionPlanTemplateTable";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -3050,6 +3051,7 @@ function QualityPlanTab({
 	onCreateChecklistTemplate,
 	onCreateActionPlan,
 	onUseActionPlanTemplate,
+	onOpenActionPlanTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -3067,6 +3069,7 @@ function QualityPlanTab({
 	onCreateChecklistTemplate: () => void;
 	onCreateActionPlan: () => void;
 	onUseActionPlanTemplate: () => void;
+	onOpenActionPlanTemplate: (id: string) => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3229,6 +3232,15 @@ function QualityPlanTab({
 							</div>
 						)}
 					</div>
+				) : planType === "atgardsplaner" && viewMode === "mallar" ? (
+					<button
+						type="button"
+						onClick={onCreateActionPlan}
+						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
+					>
+						<Plus className="h-4 w-4" />
+						<Translate text={localizationConstants.kmaActionPlanCreateBtn} />
+					</button>
 				) : planType === "atgardsplaner" ? (
 					<div ref={createBtnRef} className="relative flex">
 						<button
@@ -3317,7 +3329,11 @@ function QualityPlanTab({
 					<ChecklistTab onOpenDoc={onOpenDoc} onCreateChecklist={onCreateChecklist} />
 				)
 			) : planType === "atgardsplaner" ? (
-				<AtgardsplanerTab onOpenDoc={onOpenDoc} onCreateActionPlan={onCreateActionPlan} />
+				viewMode === "mallar" ? (
+					<ActionPlanTemplateTable onOpenTemplate={onOpenActionPlanTemplate} />
+				) : (
+					<AtgardsplanerTab onOpenDoc={onOpenDoc} onCreateActionPlan={onCreateActionPlan} />
+				)
 			) : planType !== "kontrollplan" ? (
 				<div className="flex flex-1 items-center justify-center text-sm text-slate-400">
 					<Translate text={localizationConstants.comingSoon} />
@@ -3365,6 +3381,7 @@ export function QualitySystemPage() {
 	const [openChecklistTemplateId, setOpenChecklistTemplateId] = useState<string | null>(null);
 	const [createActionPlanOpen, setCreateActionPlanOpen] = useState(false);
 	const [createActionPlanWithTemplate, setCreateActionPlanWithTemplate] = useState(false);
+	const [openActionPlanTemplateId, setOpenActionPlanTemplateId] = useState<string | null>(null);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3447,6 +3464,14 @@ export function QualitySystemPage() {
 		}
 	}
 
+	if (openActionPlanTemplateId) {
+		return (
+			<CreateActionPlanPage
+				onBack={() => setOpenActionPlanTemplateId(null)}
+			/>
+		);
+	}
+
 	if (createActionPlanOpen) {
 		return (
 			<CreateActionPlanPage
@@ -3517,6 +3542,7 @@ export function QualitySystemPage() {
 					onCreateChecklistTemplate={() => setCreateChecklistTemplateOpen(true)}
 					onCreateActionPlan={() => setCreateActionPlanOpen(true)}
 					onUseActionPlanTemplate={() => { setCreateActionPlanWithTemplate(true); setCreateActionPlanOpen(true); }}
+					onOpenActionPlanTemplate={(id) => setOpenActionPlanTemplateId(id)}
 				/>
 			)}
 		</div>

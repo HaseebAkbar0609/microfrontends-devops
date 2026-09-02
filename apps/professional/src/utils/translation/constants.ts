@@ -717,7 +717,18 @@ export type OfferTranslation = {
 	b2bCompanyOmdomeSection: string;
 	b2bCompanyLogo: string;
 	b2bCompanyPDF: string;
+	b2bCompanyEdit: string;
+	b2bCompanySave: string;
+	b2bCompanyCancel: string;
+	b2bCompanySaved: string;
+	b2bCompanyVerified: string;
+	b2bCompanyPending: string;
+	b2bCompanyVerifyBusiness: string;
+	b2bCompanyUploadLogo: string;
+	b2bCompanyPlaceholderOrgNr: string;
+	b2bCompanyInput: string;
 	b2bCreateDeal: string;
+
 	b2bDealsEmpty: string;
 	// B2B - Deal Detail
 	b2bDealDetailPreview: string;
@@ -2284,6 +2295,7 @@ export type OfferTranslation = {
 	kmaActionPlanTemplateNameCol: string;
 	kmaActionPlanTemplateUseBtn: string;
 	kmaActionPlanUseTemplate: string;
+	kmaActionPlanMallarTableTitle: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;

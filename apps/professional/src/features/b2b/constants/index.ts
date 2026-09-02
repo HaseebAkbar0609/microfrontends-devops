@@ -52,10 +52,10 @@ export const b2bNavItems: RouteTabItem[] = [
 	{
 		id: "overview",
 		labelKey: localizationConstants.b2bOverview,
-		href: "/module/business/b2b/project-market",
+		href: "/module/business/b2b/overview",
 		matchSubPaths: [
 			"/module/business/b2b/overview",
-			"/module/business/b2b/project-market",
+			"/module/business/b2b/company",
 			"/module/business/b2b/agreements",
 		],
 	},

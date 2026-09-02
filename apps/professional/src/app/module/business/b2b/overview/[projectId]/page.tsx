@@ -8,7 +8,7 @@ interface PageProps {
   }>;
 }
 
-export default async function B2BProjectMarketDetailPage({ params }: PageProps) {
+export default async function B2BOverviewProjectDetailPage({ params }: PageProps) {
   const { projectId } = await params;
   const result = await getProjectMarketDetailAction(projectId);
   const data = result.success && result.data ? result.data : DUMMY_PROJECT_DETAIL;
