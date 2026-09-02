@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	Dialog,
 	DialogContent,
@@ -226,25 +225,36 @@ export function ExpenseListPage() {
 					<>
 						{/* Sub-tabs: Leverantörs lista / Inbox */}
 						<div className="mb-4">
-							<Tabs
-								value={activeSubTab}
-								onValueChange={(val) => setActiveSubTab(val as "supplier_list" | "inbox")}
-							>
-								<TabsList className="bg-slate-100 p-0.5 rounded-lg h-8">
-									<TabsTrigger
-										value="supplier_list"
-										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
-									>
-										<Translate text={localizationConstants.expenseSubTabSupplierList} />
-									</TabsTrigger>
-									<TabsTrigger
-										value="inbox"
-										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
-									>
-										<Translate text={localizationConstants.expenseSubTabInbox} />
-									</TabsTrigger>
-								</TabsList>
-							</Tabs>
+							<div className="inline-flex items-center bg-[#F3F4F6] p-1 rounded-lg gap-1 border border-slate-200/60 shadow-2xs">
+								<button
+									type="button"
+									onClick={() => {
+										setActiveSubTab("supplier_list");
+										setCurrentPage(1);
+									}}
+									className={`px-4 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+										activeSubTab === "supplier_list"
+											? "bg-white text-slate-900 shadow-xs font-semibold"
+											: "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+									}`}
+								>
+									<Translate text={localizationConstants.expenseSubTabSupplierList} />
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setActiveSubTab("inbox");
+										setCurrentPage(1);
+									}}
+									className={`px-4 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+										activeSubTab === "inbox"
+											? "bg-white text-slate-900 shadow-xs font-semibold"
+											: "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+									}`}
+								>
+									<Translate text={localizationConstants.expenseSubTabInbox} />
+								</button>
+							</div>
 						</div>
 
 						{/* Search & Filters Toolbar */}
@@ -285,28 +295,36 @@ export function ExpenseListPage() {
 					<>
 						{/* Sub-tabs: Fakturalista / Påminnelser */}
 						<div className="mb-4">
-							<Tabs
-								value={invoiceSubTab}
-								onValueChange={(val) => {
-									setInvoiceSubTab(val as "fakturalista" | "påminnelser");
-									setInvoiceCurrentPage(1);
-								}}
-							>
-								<TabsList className="bg-slate-100 p-0.5 rounded-lg h-8">
-									<TabsTrigger
-										value="fakturalista"
-										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
-									>
-										<Translate text={localizationConstants.invoiceTabList} />
-									</TabsTrigger>
-									<TabsTrigger
-										value="påminnelser"
-										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
-									>
-										<Translate text={localizationConstants.invoiceTabReminders} />
-									</TabsTrigger>
-								</TabsList>
-							</Tabs>
+							<div className="inline-flex items-center bg-[#F3F4F6] p-1 rounded-lg gap-1 border border-slate-200/60 shadow-2xs">
+								<button
+									type="button"
+									onClick={() => {
+										setInvoiceSubTab("fakturalista");
+										setInvoiceCurrentPage(1);
+									}}
+									className={`px-4 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+										invoiceSubTab === "fakturalista"
+											? "bg-white text-slate-900 shadow-xs font-semibold"
+											: "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+									}`}
+								>
+									<Translate text={localizationConstants.invoiceTabList} />
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setInvoiceSubTab("påminnelser");
+										setInvoiceCurrentPage(1);
+									}}
+									className={`px-4 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+										invoiceSubTab === "påminnelser"
+											? "bg-white text-slate-900 shadow-xs font-semibold"
+											: "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+									}`}
+								>
+									<Translate text={localizationConstants.invoiceTabReminders} />
+								</button>
+							</div>
 						</div>
 
 						{/* Customer Invoice Toolbar */}
