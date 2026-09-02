@@ -5601,6 +5601,8 @@ const svExpense: ExpenseTranslation = {
 	expenseStatusLedig: "Ledig",
 	expenseStatusEjPaborjad: "Ej påbörjad",
 	expenseRowsPerPage: "Rader per sida",
+	expensePaginationPage: "Sida",
+	expensePaginationOf: "av",
 	expenseActionSeeInvoice: "Se faktura",
 };
 

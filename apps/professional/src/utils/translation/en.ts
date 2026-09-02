@@ -5579,6 +5579,8 @@ const enExpense: ExpenseTranslation = {
 	expenseStatusLedig: "Available",
 	expenseStatusEjPaborjad: "Not started",
 	expenseRowsPerPage: "Rows per page",
+	expensePaginationPage: "Page",
+	expensePaginationOf: "of",
 	expenseActionSeeInvoice: "View invoice",
 };
 

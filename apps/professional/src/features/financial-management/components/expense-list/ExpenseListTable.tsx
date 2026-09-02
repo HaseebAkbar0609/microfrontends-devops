@@ -296,7 +296,7 @@ export function ExpenseListTable({
 				{/* Page Navigation Controls */}
 				<div className="flex items-center gap-1.5">
 					<span className="mr-3 text-slate-600">
-						Page {currentPage} of {totalPages}
+						<Translate text={localizationConstants.expensePaginationPage} /> {currentPage} <Translate text={localizationConstants.expensePaginationOf} /> {totalPages}
 					</span>
 
 					<Button

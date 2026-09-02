@@ -5538,6 +5538,8 @@ export type ExpenseTranslation = {
 	expenseStatusLedig: string;
 	expenseStatusEjPaborjad: string;
 	expenseRowsPerPage: string;
+	expensePaginationPage: string;
+	expensePaginationOf: string;
 	expenseActionSeeInvoice: string;
 };
 
