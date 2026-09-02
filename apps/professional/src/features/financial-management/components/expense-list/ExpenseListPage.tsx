@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -26,16 +25,23 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { useExpenseList } from "../../hooks/useExpenseList";
+import { useInvoiceList } from "../../hooks/useInvoiceList";
 import { expenseBreadcrumbs, EXPENSE_CATEGORIES } from "../../constants/expense.constants";
 import { ExpenseCategory } from "../../types/expense.types";
 import { expenseRepository } from "../../utils/expenseRepository";
 import { ExpenseToolbar } from "./ExpenseToolbar";
 import { ExpenseListTable } from "./ExpenseListTable";
 import { ExpenseDetailsModal } from "./ExpenseDetailsModal";
+import { InvoiceToolbar } from "../invoice-list/InvoiceToolbar";
+import { InvoiceListTable } from "../invoice-list/InvoiceListTable";
+import { InvoiceRemindersTable } from "../invoice-list/InvoiceRemindersTable";
 import { toast } from "sonner";
 
 export function ExpenseListPage() {
-	const router = useRouter();
+	// Top Category Tab: "customer_invoice" (Kundfaktura) | "supplier_invoice" (Leverantörsfaktura)
+	const [topCategoryTab, setTopCategoryTab] = useState<"customer_invoice" | "supplier_invoice">("supplier_invoice");
+
+	// Supplier Invoice / Expense State (TFS-498)
 	const {
 		activeSubTab,
 		setActiveSubTab,
@@ -74,6 +80,36 @@ export function ExpenseListPage() {
 		executeMarkPaid,
 		executeDelete,
 	} = useExpenseList();
+
+	// Customer Invoice State (TFS-495 / Column 1 in Figma)
+	const {
+		activeTab: invoiceSubTab,
+		setActiveTab: setInvoiceSubTab,
+		searchQuery: invoiceSearchQuery,
+		setSearchQuery: setInvoiceSearchQuery,
+		statusFilter: invoiceStatusFilter,
+		setStatusFilter: setInvoiceStatusFilter,
+		sortBy: invoiceSortBy,
+		sortOrder: invoiceSortOrder,
+		handleSort: handleInvoiceSort,
+		reminderSortBy,
+		reminderSortOrder,
+		handleReminderSort,
+		selectedInvoiceIds,
+		toggleSelectInvoice,
+		toggleSelectAllInvoices,
+		currentPage: invoiceCurrentPage,
+		setCurrentPage: setInvoiceCurrentPage,
+		pageSize: invoicePageSize,
+		setPageSize: setInvoicePageSize,
+		paginatedInvoices,
+		totalInvoicePages,
+		paginatedReminders,
+		totalReminderPages,
+		sendSelectedInvoices,
+		archiveInvoice,
+		deleteInvoice,
+	} = useInvoiceList();
 
 	// Quick Register Modal State (TFS-499 hook)
 	const [registerModalOpen, setRegisterModalOpen] = useState<boolean>(false);
@@ -159,15 +195,24 @@ export function ExpenseListPage() {
 				<div className="flex items-center gap-6">
 					<button
 						type="button"
-						onClick={() => router.push("/module/financial-management/invoice")}
-						className="py-3 text-xs font-medium text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition-colors cursor-pointer"
+						onClick={() => setTopCategoryTab("customer_invoice")}
+						className={`py-3 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
+							topCategoryTab === "customer_invoice"
+								? "text-slate-900 border-slate-900 font-bold"
+								: "text-slate-500 hover:text-slate-900 border-transparent font-medium"
+						}`}
 					>
 						<Translate text={localizationConstants.expenseTopTabCustomerInvoice} />
 					</button>
 
 					<button
 						type="button"
-						className="py-3 text-xs font-bold text-slate-900 border-b-2 border-slate-900 transition-colors cursor-default"
+						onClick={() => setTopCategoryTab("supplier_invoice")}
+						className={`py-3 text-xs font-semibold border-b-2 transition-colors cursor-pointer ${
+							topCategoryTab === "supplier_invoice"
+								? "text-slate-900 border-slate-900 font-bold"
+								: "text-slate-500 hover:text-slate-900 border-transparent font-medium"
+						}`}
 					>
 						<Translate text={localizationConstants.expenseTopTabSupplierInvoice} />
 					</button>
@@ -176,61 +221,142 @@ export function ExpenseListPage() {
 
 			{/* Main Content Area */}
 			<div className="px-8 py-5 flex-1 max-w-7xl mx-auto w-full">
-				{/* Sub-tabs: Leverantörs lista / Inbox */}
-				<div className="mb-4">
-					<Tabs
-						value={activeSubTab}
-						onValueChange={(val) => setActiveSubTab(val as "supplier_list" | "inbox")}
-					>
-						<TabsList className="bg-slate-100 p-0.5 rounded-lg h-8">
-							<TabsTrigger
-								value="supplier_list"
-								className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+				{topCategoryTab === "supplier_invoice" ? (
+					<>
+						{/* Sub-tabs: Leverantörs lista / Inbox */}
+						<div className="mb-4">
+							<Tabs
+								value={activeSubTab}
+								onValueChange={(val) => setActiveSubTab(val as "supplier_list" | "inbox")}
 							>
-								<Translate text={localizationConstants.expenseSubTabSupplierList} />
-							</TabsTrigger>
-							<TabsTrigger
-								value="inbox"
-								className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+								<TabsList className="bg-slate-100 p-0.5 rounded-lg h-8">
+									<TabsTrigger
+										value="supplier_list"
+										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+									>
+										<Translate text={localizationConstants.expenseSubTabSupplierList} />
+									</TabsTrigger>
+									<TabsTrigger
+										value="inbox"
+										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+									>
+										<Translate text={localizationConstants.expenseSubTabInbox} />
+									</TabsTrigger>
+								</TabsList>
+							</Tabs>
+						</div>
+
+						{/* Search & Filters Toolbar */}
+						<ExpenseToolbar
+							searchQuery={searchQuery}
+							onSearchChange={setSearchQuery}
+							statusFilter={statusFilter}
+							onStatusFilterChange={setStatusFilter}
+							categoryFilter={categoryFilter}
+							onCategoryFilterChange={setCategoryFilter}
+							projectFilter={projectFilter}
+							onProjectFilterChange={setProjectFilter}
+							availableProjects={availableProjects}
+							onRegisterClick={() => setRegisterModalOpen(true)}
+						/>
+
+						{/* Expense List Table matching Figma 1:1 */}
+						<ExpenseListTable
+							expenses={expenses}
+							totalCount={totalCount}
+							selectedIds={selectedExpenseIds}
+							onToggleSelect={toggleSelectExpense}
+							onToggleSelectAll={toggleSelectAll}
+							sortField={sortField}
+							sortOrder={sortOrder}
+							onSort={handleSort}
+							currentPage={currentPage}
+							pageSize={pageSize}
+							onPageSizeChange={setPageSize}
+							totalPages={totalPages}
+							onPageChange={setCurrentPage}
+							onView={(item) => setSelectedExpense(item)}
+							onDelete={(id) => setConfirmDeleteId(id)}
+						/>
+					</>
+				) : (
+					/* Kundfaktura / Customer Invoices View (Column 1 in Figma) */
+					<>
+						{/* Sub-tabs: Fakturalista / Påminnelser */}
+						<div className="mb-4">
+							<Tabs
+								value={invoiceSubTab}
+								onValueChange={(val) => {
+									setInvoiceSubTab(val as "fakturalista" | "påminnelser");
+									setInvoiceCurrentPage(1);
+								}}
 							>
-								<Translate text={localizationConstants.expenseSubTabInbox} />
-							</TabsTrigger>
-						</TabsList>
-					</Tabs>
-				</div>
+								<TabsList className="bg-slate-100 p-0.5 rounded-lg h-8">
+									<TabsTrigger
+										value="fakturalista"
+										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+									>
+										<Translate text={localizationConstants.invoiceTabList} />
+									</TabsTrigger>
+									<TabsTrigger
+										value="påminnelser"
+										className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+									>
+										<Translate text={localizationConstants.invoiceTabReminders} />
+									</TabsTrigger>
+								</TabsList>
+							</Tabs>
+						</div>
 
-				{/* Search & Filters Toolbar */}
-				<ExpenseToolbar
-					searchQuery={searchQuery}
-					onSearchChange={setSearchQuery}
-					statusFilter={statusFilter}
-					onStatusFilterChange={setStatusFilter}
-					categoryFilter={categoryFilter}
-					onCategoryFilterChange={setCategoryFilter}
-					projectFilter={projectFilter}
-					onProjectFilterChange={setProjectFilter}
-					availableProjects={availableProjects}
-					onRegisterClick={() => setRegisterModalOpen(true)}
-				/>
+						{/* Customer Invoice Toolbar */}
+						<InvoiceToolbar
+							searchQuery={invoiceSearchQuery}
+							onSearchChange={(q) => {
+								setInvoiceSearchQuery(q);
+								setInvoiceCurrentPage(1);
+							}}
+							statusFilter={invoiceStatusFilter}
+							onStatusFilterChange={(s) => {
+								setInvoiceStatusFilter(s);
+								setInvoiceCurrentPage(1);
+							}}
+							selectedCount={invoiceSubTab === "fakturalista" ? selectedInvoiceIds.size : 0}
+							onSendSelected={sendSelectedInvoices}
+						/>
 
-				{/* Expense List Table matching Figma 1:1 */}
-				<ExpenseListTable
-					expenses={expenses}
-					totalCount={totalCount}
-					selectedIds={selectedExpenseIds}
-					onToggleSelect={toggleSelectExpense}
-					onToggleSelectAll={toggleSelectAll}
-					sortField={sortField}
-					sortOrder={sortOrder}
-					onSort={handleSort}
-					currentPage={currentPage}
-					pageSize={pageSize}
-					onPageSizeChange={setPageSize}
-					totalPages={totalPages}
-					onPageChange={setCurrentPage}
-					onView={(item) => setSelectedExpense(item)}
-					onDelete={(id) => setConfirmDeleteId(id)}
-				/>
+						{/* Customer Invoice Tables */}
+						{invoiceSubTab === "fakturalista" ? (
+							<InvoiceListTable
+								invoices={paginatedInvoices}
+								selectedIds={selectedInvoiceIds}
+								onToggleSelect={toggleSelectInvoice}
+								onToggleSelectAll={toggleSelectAllInvoices}
+								sortBy={invoiceSortBy}
+								sortOrder={invoiceSortOrder}
+								onSort={handleInvoiceSort}
+								currentPage={invoiceCurrentPage}
+								pageSize={invoicePageSize}
+								onPageSizeChange={setInvoicePageSize}
+								totalPages={totalInvoicePages}
+								onPageChange={setInvoiceCurrentPage}
+								onArchive={archiveInvoice}
+								onDelete={deleteInvoice}
+							/>
+						) : (
+							<InvoiceRemindersTable
+								reminders={paginatedReminders}
+								sortBy={reminderSortBy}
+								sortOrder={reminderSortOrder}
+								onSort={handleReminderSort}
+								currentPage={invoiceCurrentPage}
+								pageSize={invoicePageSize}
+								onPageSizeChange={setInvoicePageSize}
+								totalPages={totalReminderPages}
+								onPageChange={setInvoiceCurrentPage}
+							/>
+						)}
+					</>
+				)}
 			</div>
 
 			{/* Modal: View Details */}
