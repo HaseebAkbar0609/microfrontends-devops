@@ -6,12 +6,14 @@ import {
 	ChevronDown,
 	ChevronLeft,
 	ChevronRight,
+	Info,
 	Plus,
 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { PersonnelTaskPopover } from "./PersonnelTaskPopover";
+import { PersonnelDayDetailsDrawer } from "./PersonnelDayDetailsDrawer";
 import type {
 	PersonnelScheduleItem,
 	PlanningAssignee,
@@ -214,6 +216,10 @@ export function PersonnelScheduleGrid({
 }: PersonnelScheduleGridProps) {
 	const [localActivePopoverId, setLocalActivePopoverId] = useState<string | null>(null);
 	const [tasks, setTasks] = useState<GridTaskItem[]>(DEFAULT_GRID_TASKS);
+	const [selectedDayDrawer, setSelectedDayDrawer] = useState<{
+		day: { dayNumber: number; dayNameKey: string; hours?: number };
+		index: number;
+	} | null>(null);
 
 	const activeId = activePopoverId !== undefined ? activePopoverId : localActivePopoverId;
 	const handleSetActiveId = (id: string | null) => {
@@ -373,15 +379,18 @@ export function PersonnelScheduleGrid({
         </Button>
       </div>
 
-      {/* ── 7-Day Hourly Timeline Grid ── */}
-      <div ref={tableScrollRef} className="w-full overflow-x-auto">
-        <div className="min-w-295 w-full flex items-stretch">
-          {/* Outer Left Time Gutter (width: 56px, pr: 8px, pt: 60px) */}
-          <div className="w-14 shrink-0 flex flex-col select-none pr-2 pt-15">
-            {/* GMT +2 label positioned right below the header line */}
-            <div className="h-7 flex items-center justify-end font-sans font-semibold text-xs leading-4 tracking-normal text-slate-500 text-right whitespace-nowrap">
-              <Translate text={localizationConstants.gmtLabel} />
-            </div>
+			{/* ── 7-Day Hourly Timeline Grid ── */}
+			<div ref={tableScrollRef} className="w-full overflow-x-auto">
+				<div className="min-w-[1180px] w-full flex items-stretch">
+					{/* Outer Left Time Gutter (width: 56px, pr: 8px) */}
+					<div className="w-[56px] shrink-0 flex flex-col select-none pr-2 pt-[18px]">
+						{/* GMT +2 label with exact slot height */}
+						<div
+							className="flex items-center justify-end font-sans font-semibold text-xs leading-4 tracking-normal text-slate-500 text-right whitespace-nowrap"
+							style={{ height: `${SLOT_HEIGHT}px` }}
+						>
+							<Translate text={localizationConstants.gmtLabel} />
+						</div>
 
             {/* Time labels */}
             {TIME_SLOTS.map((slot) => (
@@ -395,59 +404,60 @@ export function PersonnelScheduleGrid({
             ))}
           </div>
 
-          {/* Main 7-Day Bordered Table */}
-          <div className="flex-1 min-w-278.75 flex flex-col bg-white border border-slate-200 shadow-2xs">
-            {/* Header Row: 7 Days */}
-            <div className="grid grid-cols-7 divide-x divide-slate-200 border-b border-slate-200 bg-slate-50 text-xs font-semibold text-slate-900 h-15 sticky top-0 z-20">
-              {daysHeader.map((d, index) => {
-                const isWeekend = index === 5 || index === 6;
-                return (
-                  <div
-                    key={d.dayNumber}
-                    className="px-2 sm:px-3 py-2 flex flex-col justify-center gap-0.5"
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="font-sans font-bold text-xs leading-4 tracking-normal text-slate-900">
-                        {d.dayNumber}
-                      </span>
-                      <span className="font-sans font-normal text-xs leading-4 tracking-normal text-slate-700">
-                        <Translate
-                          text={
-                            localizationConstants[
-                              d.dayNameKey as keyof typeof localizationConstants
-                            ] || d.dayNameKey
-                          }
-                        />
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="font-sans font-medium text-xs leading-4 tracking-normal text-slate-400">
-                        {isWeekend ? "0" : d.hours || 8}
-                      </span>
-                      <span className="font-sans font-normal text-xs leading-4 tracking-normal text-slate-700 whitespace-nowrap">
-                        <Translate text={localizationConstants.timmarSuffix} />
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+					{/* Main 7-Day Bordered Table */}
+					<div className="flex-1 min-w-[1115px] flex flex-col bg-white border border-slate-200 shadow-2xs">
+						{/* 7 Day Column Headers (Height: 60px, bg: #F8FAFC, padding: 8px 12px) */}
+						<div className="grid grid-cols-7 divide-x divide-slate-200 border-b border-slate-200 bg-[#F8FAFC] text-xs font-semibold text-slate-900 h-[60px] sticky top-0 z-20">
+							{daysHeader.map((day, index) => (
+								<div
+									key={day.dayNumber}
+									onClick={() => setSelectedDayDrawer({ day, index })}
+									className="h-[60px] px-3 py-2 flex items-center justify-between min-w-[159px] cursor-pointer hover:bg-slate-100/80 transition-colors select-none"
+								>
+									<div className="flex flex-col">
+										<span className="w-[23px] h-[28px] shrink-0 font-sans font-semibold text-xl leading-7 tracking-normal text-slate-900 flex items-center">
+											{day.dayNumber}
+										</span>
+										<span className="font-sans font-normal text-xs leading-4 tracking-normal text-[#374151]">
+											<Translate
+												text={
+													localizationConstants[
+														day.dayNameKey as keyof typeof localizationConstants
+													] || day.dayNameKey
+												}
+											/>
+										</span>
+									</div>
 
-            {/* 7 Columns Grid Canvas */}
-            <div
-              className="grid grid-cols-7 divide-x divide-slate-200 relative bg-white"
-              style={{ height: `${SLOT_HEIGHT * TIME_SLOTS.length}px` }}
-            >
-              {/* Background Horizontal Guidelines */}
-              <div className="absolute inset-0 flex flex-col pointer-events-none">
-                {TIME_SLOTS.map((slot) => (
-                  <div
-                    key={`line-${slot.hour}`}
-                    className="w-full border-b border-slate-100 last:border-b-0"
-                    style={{ height: `${SLOT_HEIGHT}px` }}
-                  />
-                ))}
-              </div>
+									<div className="flex flex-col items-end justify-center gap-1.5 shrink-0">
+										<Info className="w-4 h-4 text-slate-500 stroke-[1.5] shrink-0" />
+										<span className="font-sans font-normal text-xs leading-4 tracking-normal text-[#374151] whitespace-nowrap">
+											{day.hours ?? 40} h
+										</span>
+									</div>
+								</div>
+							))}
+						</div>
+
+						{/* 7 Columns Grid Canvas */}
+						<div
+							className="grid grid-cols-7 divide-x divide-slate-200 relative bg-white"
+							style={{ height: `${SLOT_HEIGHT + SLOT_HEIGHT * TIME_SLOTS.length}px` }}
+						>
+							{/* Background Horizontal Guidelines */}
+							<div className="absolute inset-0 flex flex-col pointer-events-none">
+								<div
+									className="w-full border-b border-slate-100"
+									style={{ height: `${SLOT_HEIGHT}px` }}
+								/>
+								{TIME_SLOTS.map((slot) => (
+									<div
+										key={`line-${slot.hour}`}
+										className="w-full border-b border-slate-100 last:border-b-0"
+										style={{ height: `${SLOT_HEIGHT}px` }}
+									/>
+								))}
+							</div>
 
               {/* Day Columns */}
               {daysHeader.map((day, dayIdx) => {
@@ -456,18 +466,12 @@ export function PersonnelScheduleGrid({
                 );
                 const positionedTasks = calculateDayTaskPositions(dayTasks);
 
-                return (
-                  <div key={day.dayNumber} className="relative h-full">
-                    {positionedTasks.map((item) => {
-                      const style = getTaskThemeStyles(item.colorTheme);
-                      const topPx =
-                        (item.topMinutes / TOTAL_MINUTES) *
-                        (SLOT_HEIGHT * TIME_SLOTS.length);
-                      const heightPx = Math.max(
-                        34,
-                        (item.durationMinutes / TOTAL_MINUTES) *
-                          (SLOT_HEIGHT * TIME_SLOTS.length),
-                      );
+								return (
+									<div key={day.dayNumber} className="relative h-full">
+										{positionedTasks.map((item) => {
+											const style = getTaskThemeStyles(item.colorTheme);
+											const topPx = SLOT_HEIGHT + (item.topMinutes / TOTAL_MINUTES) * (SLOT_HEIGHT * TIME_SLOTS.length);
+											const heightPx = Math.max(34, (item.durationMinutes / TOTAL_MINUTES) * (SLOT_HEIGHT * TIME_SLOTS.length));
 
                       const colWidthPercent = 100 / item.totalCols;
                       const leftPercent = item.colIndex * colWidthPercent;
@@ -489,53 +493,74 @@ export function PersonnelScheduleGrid({
                           item.assignees || MOCK_PERSONNEL_SAMPLE_ASSIGNEES,
                       };
 
-                      return (
-                        <div
-                          key={item.id}
-                          className="absolute z-10"
-                          style={{
-                            top: `${topPx}px`,
-                            height: `${heightPx}px`,
-                            left: `calc(${leftPercent}% + 2px)`,
-                            width: `calc(${colWidthPercent}% - 4px)`,
-                          }}
-                        >
-                          <PersonnelTaskPopover
-                            item={scheduleItem}
-                            isOpen={activeId === item.id}
-                            onOpenChange={(open) =>
-                              handleSetActiveId(open ? item.id : null)
-                            }
-                            onEdit={(it) => {
-                              if (onOpenEditModal) onOpenEditModal(it);
-                            }}
-                            onDelete={handleDeleteTask}
-                            onAddAssignee={handleAddAssigneeInternal}
-                            employeesList={employeesList}
-                          >
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              onClick={() => handleSetActiveId(item.id)}
-                              className={`w-full h-full p-0 px-2 pt-1.5 pb-1 rounded-lg text-left ${style.bg} ${style.text} ${style.border} cursor-pointer shadow-2xs transition-all hover:shadow hover:${style.bg} hover:${style.text} flex flex-col items-start justify-start overflow-hidden font-sans font-medium text-sm leading-snug tracking-normal border-0 border-l-2`}
-                            >
-                              <span className="line-clamp-2 wrap-break-word w-full select-none text-left">
-                                {item.title}
-                              </span>
-                            </Button>
-                          </PersonnelTaskPopover>
-                        </div>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+											return (
+												<div
+													key={item.id}
+													className="absolute z-10"
+													style={{
+														top: `${topPx}px`,
+														height: `${heightPx}px`,
+														left: `calc(${leftPercent}% + 2px)`,
+														width: `calc(${colWidthPercent}% - 4px)`,
+													}}
+												>
+													<PersonnelTaskPopover
+														item={scheduleItem}
+														isOpen={activeId === item.id}
+														onOpenChange={(open) => handleSetActiveId(open ? item.id : null)}
+														onEdit={(it) => {
+															if (onOpenEditModal) onOpenEditModal(it);
+														}}
+														onDelete={handleDeleteTask}
+														onAddAssignee={handleAddAssigneeInternal}
+														employeesList={employeesList}
+														side={dayIdx >= 4 ? "left" : "right"}
+														align="start"
+														sideOffset={8}
+													>
+														<Button
+															type="button"
+															variant="ghost"
+															onClick={() => handleSetActiveId(item.id)}
+															className={`w-full h-full p-0 px-2 pt-1.5 pb-1 rounded-[4px] text-left ${style.bg} ${style.text} ${style.border} cursor-pointer shadow-2xs flex flex-col items-start justify-start overflow-hidden font-sans font-medium text-sm leading-snug tracking-normal border-0 border-l-[2px]`}
+														>
+															<span className="line-clamp-2 break-words w-full select-none text-left">{item.title}</span>
+														</Button>
+													</PersonnelTaskPopover>
+												</div>
+											);
+										})}
+									</div>
+								);
+							})}
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{/* ── Day Details Sheet (Drawer) ── */}
+			{selectedDayDrawer && (
+				<PersonnelDayDetailsDrawer
+					isOpen={Boolean(selectedDayDrawer)}
+					onOpenChange={(open) => {
+						if (!open) setSelectedDayDrawer(null);
+					}}
+					dayHeader={selectedDayDrawer.day}
+					dayIndex={selectedDayDrawer.index}
+					currentMonthKey={currentMonthKey}
+					currentYear={currentYear}
+					tasks={tasks}
+					employeesList={employeesList}
+					onOpenCreateModal={() => {
+						if (onOpenCreateModal) onOpenCreateModal();
+					}}
+					onOpenEditModal={onOpenEditModal}
+					onDeleteTask={handleDeleteTask}
+					onAddAssignee={handleAddAssigneeInternal}
+				/>
+			)}
+		</div>
+	);
 }
 
 export default PersonnelScheduleGrid;

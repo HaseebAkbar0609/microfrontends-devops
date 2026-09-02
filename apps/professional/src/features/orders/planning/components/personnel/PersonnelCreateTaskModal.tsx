@@ -9,19 +9,20 @@ import { sv, enUS } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { showToast } from "@/lib/toast";
 import {
 	ArrowLeft,
 	Calendar as CalendarIcon,
-	Clock,
 	Loader2,
-	Trash2,
 	UserPlus,
+	UserRoundMinus,
 } from "lucide-react";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { TimePicker } from "@/components/ui/time-picker";
 import { Calendar } from "@/components/ui/calendar";
 import {
 	Popover,
@@ -52,7 +53,24 @@ const personnelTaskSchema = z.object({
 	startTime: z.string().optional(),
 	endTime: z.string().optional(),
 	status: z.enum(["completed", "in_progress", "not_started", "waiting", "cancelled", "due"]).optional(),
-});
+}).refine(
+	(data) => {
+		if (data.startTime && data.endTime) {
+			const [startH, startM] = data.startTime.split(":").map(Number);
+			const [endH, endM] = data.endTime.split(":").map(Number);
+			if (!isNaN(startH) && !isNaN(endH)) {
+				const startMinutes = startH * 60 + (startM || 0);
+				const endMinutes = endH * 60 + (endM || 0);
+				return endMinutes > startMinutes;
+			}
+		}
+		return true;
+	},
+	{
+		message: "planningValidationEndTimeBeforeStart",
+		path: ["endTime"],
+	}
+);
 
 export type PersonnelTaskFormValues = z.infer<typeof personnelTaskSchema>;
 
@@ -101,7 +119,6 @@ export function PersonnelCreateTaskModal({
 	onSave,
 	isSaving,
 	employeesList,
-	daysHeader,
 }: PersonnelCreateTaskModalProps) {
 	const t = useTranslate();
 	const { i18n } = useTranslation();
@@ -116,6 +133,7 @@ export function PersonnelCreateTaskModal({
 	const [assigneeStartTime, setAssigneeStartTime] = useState("");
 	const [assigneeEndTime, setAssigneeEndTime] = useState("");
 	const [assignedUsers, setAssignedUsers] = useState<PlanningAssignee[]>([]);
+	const [userTimes, setUserTimes] = useState<Record<string, { start: string; end: string }>>({});
 
 	const {
 		register,
@@ -123,6 +141,7 @@ export function PersonnelCreateTaskModal({
 		reset,
 		control,
 		watch,
+		formState: { errors },
 	} = useForm<PersonnelTaskFormValues>({
 		resolver: zodResolver(personnelTaskSchema),
 		defaultValues: {
@@ -158,15 +177,20 @@ export function PersonnelCreateTaskModal({
 				reset({
 					orderNr: orderPart,
 					projectName: projectPart,
-					startTime: "07:00",
-					endTime: "15:00",
+					startTime: "10:00",
+					endTime: "18:00",
 					status: editingItem.status || "in_progress",
 				});
 				setStartDate(new Date(2025, 11, editingItem.dayStart || 10));
 				setEndDate(new Date(2025, 11, (editingItem.dayStart || 10) + (editingItem.daySpan || 1) - 1));
 				setAssignedUsers(editingItem.assignees || []);
-				setAssigneeStartTime("07:00");
-				setAssigneeEndTime("15:00");
+				setAssigneeStartTime("10:00");
+				setAssigneeEndTime("18:00");
+				const times: Record<string, { start: string; end: string }> = {};
+				(editingItem.assignees || []).forEach((a) => {
+					times[a.id] = { start: "10:00", end: "18:00" };
+				});
+				setUserTimes(times);
 			} else {
 				reset({
 					orderNr: "",
@@ -181,6 +205,7 @@ export function PersonnelCreateTaskModal({
 				setAssigneeEndTime("");
 				setAssignedUsers([]);
 				setSelectedUserToAddId("");
+				setUserTimes({});
 			}
 		}
 	}, [isOpen, editingItem, reset]);
@@ -201,14 +226,36 @@ export function PersonnelCreateTaskModal({
 			hours: totalHours || 8,
 		};
 		setAssignedUsers((prev) => [...prev, newAssignee]);
+		setUserTimes((prev) => ({
+			...prev,
+			[emp.id]: {
+				start: assigneeStartTime || formStartTime || "10:00",
+				end: assigneeEndTime || formEndTime || "18:00",
+			},
+		}));
 		setSelectedUserToAddId("");
 	};
 
 	const handleRemoveAssignee = (id: string) => {
 		setAssignedUsers((prev) => prev.filter((u) => u.id !== id));
+		setUserTimes((prev) => {
+			const next = { ...prev };
+			delete next[id];
+			return next;
+		});
 	};
 
 	const onFormSubmit = async (values: PersonnelTaskFormValues) => {
+		if (!startDate) {
+			showToast("error", t(localizationConstants.planningValidationStartDateRequired));
+			return;
+		}
+
+		if (assignedUsers.length === 0) {
+			showToast("error", t(localizationConstants.planningValidationAssigneeRequired));
+			return;
+		}
+
 		const orderNr = values.orderNr?.trim();
 		const projectName = values.projectName?.trim();
 		const title = orderNr
@@ -217,30 +264,34 @@ export function PersonnelCreateTaskModal({
 				: `Order ${orderNr}`
 			: projectName || "Planering";
 
-		const dayStart = startDate ? startDate.getDate() : daysHeader[0]?.dayNumber || 10;
-		const daySpan = 1;
+		const dayStart = startDate.getDate();
+		const daySpan = endDate ? Math.max(1, Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1) : 1;
 		const employeeId = assignedUsers[0]?.id || employeesList[0]?.id || "emp-1";
 
 		const calculatedTimeRange = (values.startTime && values.endTime)
 			? `${values.startTime} - ${values.endTime} (${calculateHoursDifference(
-					values.startTime,
-					values.endTime
-			  )} tim)`
+				values.startTime,
+				values.endTime
+			)} tim)`
 			: undefined;
 
-		await onSave({
-			title,
-			employeeId,
-			dayStart,
-			daySpan,
-			colorTheme: "blue",
-			status: values.status || "in_progress",
-			timeRange: calculatedTimeRange,
-			dateText: startDate ? formatDateDisplay(startDate) : undefined,
-			assignees: assignedUsers.length > 0 ? assignedUsers : undefined,
-		});
+		try {
+			await onSave({
+				title,
+				employeeId,
+				dayStart,
+				daySpan,
+				colorTheme: "blue",
+				status: values.status || "in_progress",
+				timeRange: calculatedTimeRange,
+				dateText: formatDateDisplay(startDate),
+				assignees: assignedUsers,
+			});
 
-		onOpenChange(false);
+			onOpenChange(false);
+		} catch (err) {
+			showToast("error", err instanceof Error ? err.message : t(localizationConstants.planningCreateError));
+		}
 	};
 
 	return (
@@ -321,7 +372,7 @@ export function PersonnelCreateTaskModal({
                 <Input
                   id="orderNr"
                   {...register("orderNr")}
-                  placeholder={t(localizationConstants.enterNr) || "Enter nr"}
+                  placeholder={t(localizationConstants.enterNr)}
                   className="h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
                 />
               </div>
@@ -337,7 +388,7 @@ export function PersonnelCreateTaskModal({
                   id="projectName"
                   {...register("projectName")}
                   placeholder={
-                    t(localizationConstants.enterNamn) || "Enter namn"
+                    t(localizationConstants.enterNamn)
                   }
                   className="h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
                 />
@@ -361,6 +412,7 @@ export function PersonnelCreateTaskModal({
                       className={cn(
                         "w-full justify-start text-left font-normal h-10 px-3 border-slate-200 bg-white text-xs sm:text-sm shadow-none hover:bg-slate-50 focus-visible:ring-1 focus-visible:ring-slate-900",
                         !startDate ? "text-muted-foreground" : "text-slate-900",
+                        !startDate && "border-red-300",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4 text-muted-foreground stroke-[1.33] shrink-0" />
@@ -439,17 +491,18 @@ export function PersonnelCreateTaskModal({
                 >
                   <Translate text={localizationConstants.startTid} />
                 </Label>
-                <div className="relative">
-                  <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <Input
-                    id="startTime"
-                    {...register("startTime")}
-                    placeholder={
-                      t(localizationConstants.chooseTime) || "Choose time"
-                    }
-                    className="pl-9 h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
-                  />
-                </div>
+                <Controller
+                  name="startTime"
+                  control={control}
+                  render={({ field }) => (
+                    <TimePicker
+                      id="startTime"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={t(localizationConstants.chooseTime)}
+                    />
+                  )}
+                />
               </div>
 
               <div className="space-y-1.5">
@@ -459,17 +512,25 @@ export function PersonnelCreateTaskModal({
                 >
                   <Translate text={localizationConstants.slutTid} />
                 </Label>
-                <div className="relative">
-                  <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <Input
-                    id="endTime"
-                    {...register("endTime")}
-                    placeholder={
-                      t(localizationConstants.chooseTime) || "Choose time"
-                    }
-                    className="pl-9 h-10 rounded-md border-slate-200 text-xs sm:text-sm text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900 bg-white"
-                  />
-                </div>
+                <Controller
+                  name="endTime"
+                  control={control}
+                  render={({ field }) => (
+                    <TimePicker
+                      id="endTime"
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder={t(localizationConstants.chooseTime)}
+                    />
+                  )}
+                />
+                {errors.endTime && (
+                  <p className="text-xs text-red-500 mt-1">
+                    {errors.endTime.message === "planningValidationEndTimeBeforeStart"
+                      ? t(localizationConstants.planningValidationEndTimeBeforeStart)
+                      : errors.endTime.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -493,8 +554,7 @@ export function PersonnelCreateTaskModal({
                       >
                         <SelectValue
                           placeholder={
-                            t(localizationConstants.selectStatus) ||
-                            "Select status"
+t(localizationConstants.selectStatus)
                           }
                         />
                       </SelectTrigger>
@@ -557,7 +617,7 @@ export function PersonnelCreateTaskModal({
             <div className="border-t border-slate-200 my-4" />
 
             {/* ── Assignee Section Container ── */}
-            <div className="space-y-2 pt-0">
+            <div className="space-y-3 pt-0">
               <h3 className="font-sans font-medium text-[14px] leading-5 tracking-normal text-zinc-950">
                 <Translate text={localizationConstants.planningAssignee} />
               </h3>
@@ -571,9 +631,7 @@ export function PersonnelCreateTaskModal({
                   >
                     <SelectTrigger className="h-10 bg-white border-slate-200 text-xs sm:text-sm text-slate-700 flex-1 rounded-md">
                       <SelectValue
-                        placeholder={
-                          t(localizationConstants.addUsers) || "Add users"
-                        }
+                        placeholder={t(localizationConstants.addUsers)}
                       />
                     </SelectTrigger>
                     <SelectContent className="bg-white border border-slate-200 rounded-md shadow-xl font-sans max-h-48">
@@ -622,34 +680,22 @@ export function PersonnelCreateTaskModal({
                     <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
                       <Translate text={localizationConstants.startTid} />
                     </Label>
-                    <div className="relative">
-                      <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      <Input
-                        value={assigneeStartTime}
-                        onChange={(e) => setAssigneeStartTime(e.target.value)}
-                        placeholder={
-                          t(localizationConstants.chooseTime) || "Choose time"
-                        }
-                        className="pl-9 h-10 text-xs sm:text-sm rounded-md bg-white border-slate-200 text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900"
-                      />
-                    </div>
+                    <TimePicker
+                      value={assigneeStartTime}
+                      onChange={setAssigneeStartTime}
+                      placeholder={t(localizationConstants.chooseTime)}
+                    />
                   </div>
 
                   <div className="space-y-1">
                     <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
                       <Translate text={localizationConstants.slutTid} />
                     </Label>
-                    <div className="relative">
-                      <Clock className="w-4 h-4 text-zinc-500 stroke-[1.33] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-                      <Input
-                        value={assigneeEndTime}
-                        onChange={(e) => setAssigneeEndTime(e.target.value)}
-                        placeholder={
-                          t(localizationConstants.chooseTime) || "Choose time"
-                        }
-                        className="pl-9 h-10 text-xs sm:text-sm rounded-md bg-white border-slate-200 text-slate-800 focus-visible:ring-1 focus-visible:ring-slate-900"
-                      />
-                    </div>
+                    <TimePicker
+                      value={assigneeEndTime}
+                      onChange={setAssigneeEndTime}
+                      placeholder={t(localizationConstants.chooseTime)}
+                    />
                   </div>
 
                   <div className="space-y-1">
@@ -660,63 +706,170 @@ export function PersonnelCreateTaskModal({
                       disabled
                       value={
                         totalHours
-                          ? `${totalHours} ${t(localizationConstants.timmarSuffix) || "tim"}`
+                          ? `${totalHours} ${t(localizationConstants.timmarSuffix)}`
                           : "-"
                       }
                       className="h-10 text-xs sm:text-sm rounded-md bg-slate-100/80 border-slate-200 text-slate-600 font-medium text-center"
                     />
                   </div>
                 </div>
+              </div>
 
-                {/* Assigned Users List */}
-                {assignedUsers.length > 0 && (
-                  <div className="pt-2 border-t border-slate-200/80 space-y-2">
-                    {assignedUsers.map((user) => (
+              {/* Assigned Users List - Each as separate gray box */}
+              {assignedUsers.length > 0 && (
+                <div className="space-y-3">
+                  {assignedUsers.map((user) => {
+                    const times = userTimes[user.id] || {
+                      start: "10:00",
+                      end: "18:00",
+                    };
+                    const userHours = calculateHoursDifference(
+                      times.start,
+                      times.end,
+                    );
+                    return (
                       <div
                         key={user.id}
-                        className="flex items-center justify-between bg-white px-3 py-2 rounded-md border border-slate-200 shadow-2xs"
+                        className="rounded-lg border border-slate-200 bg-slate-50 p-4 space-y-3.5"
                       >
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          {user.avatarUrl ? (
-                            <Image
-                              src={user.avatarUrl}
-                              alt={user.name}
-                              width={24}
-                              height={24}
-                              className="w-6 h-6 rounded-full object-cover shrink-0"
-                            />
-                          ) : (
-                            <div className="w-6 h-6 rounded-full bg-slate-100 text-slate-700 font-semibold text-[10px] flex items-center justify-center shrink-0">
-                              {user.initials}
-                            </div>
-                          )}
-                          <span className="text-xs font-medium text-slate-900 truncate">
-                            {user.name}
-                          </span>
-                        </div>
+                        {/* User Select + Delete Button Row */}
+                        <div className="flex items-center gap-2">
+                          <Select defaultValue={user.id}>
+                            <SelectTrigger className="h-10 bg-white border-slate-200 text-[14px] font-normal leading-5 text-slate-700 flex-1 rounded-md font-sans">
+                              <SelectValue>
+                                <div className="flex items-center gap-2">
+                                  {user.avatarUrl ? (
+                                    <Image
+                                      src={user.avatarUrl}
+                                      alt={user.name}
+                                      width={32}
+                                      height={32}
+                                      className="w-8 h-8 rounded-full object-cover shrink-0"
+                                    />
+                                  ) : (
+                                    <div className="w-8 h-8 rounded-full bg-slate-200 text-slate-600 text-[11px] font-semibold flex items-center justify-center shrink-0">
+                                      {user.initials}
+                                    </div>
+                                  )}
+                                  <span className="font-sans font-normal text-[14px] leading-5 text-slate-700">
+                                    {user.name}
+                                  </span>
+                                  <span className="font-sans font-normal text-[14px] leading-5 text-zinc-500">
+                                    @{user.name.split(" ")[0]?.toLowerCase()}
+                                  </span>
+                                </div>
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent className="bg-white border border-slate-200 rounded-md shadow-xl font-sans max-h-48">
+                              {employeesList.map((emp) => (
+                                <SelectItem
+                                  key={emp.id}
+                                  value={emp.id}
+                                  className="text-[14px] font-normal leading-5 cursor-pointer font-sans"
+                                >
+                                  <div className="flex items-center gap-2">
+                                    {emp.avatarUrl ? (
+                                      <Image
+                                        src={emp.avatarUrl}
+                                        alt={emp.name}
+                                        width={32}
+                                        height={32}
+                                        className="w-8 h-8 rounded-full object-cover shrink-0"
+                                      />
+                                    ) : (
+                                      <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 text-[11px] font-semibold flex items-center justify-center shrink-0">
+                                        {emp.initials}
+                                      </div>
+                                    )}
+                                    <span>{emp.name}</span>
+                                  </div>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
 
-                        <div className="flex items-center gap-2.5 shrink-0">
-                          <span className="text-xs font-normal text-slate-500">
-                            {user.hours}{" "}
-                            <Translate
-                              text={localizationConstants.timmarSuffix}
-                            />
-                          </span>
                           <Button
                             type="button"
-                            variant="ghost"
-                            size="icon"
+                            variant="outline"
                             onClick={() => handleRemoveAssignee(user.id)}
-                            className="w-6 h-6 p-0 text-zinc-500 hover:text-rose-600 rounded cursor-pointer"
+                            className="w-25 h-9 bg-white border border-slate-200 hover:bg-slate-50 text-[14px] font-medium text-slate-900 rounded-md flex items-center justify-center gap-2 shadow-none cursor-pointer"
                           >
-                            <Trash2 className="w-3.5 h-3.5 stroke-[1.33]" />
+                            <UserRoundMinus className="w-4 h-4 text-slate-800 stroke-2" />
+                            <Translate
+                              text={localizationConstants.deleteLabel}
+                            />
                           </Button>
                         </div>
+
+                        {/* Time Inputs Row */}
+                        <div className="grid grid-cols-3 gap-2.5">
+                          <div className="space-y-1">
+                            <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                              <Translate
+                                text={localizationConstants.startTid}
+                              />
+                            </Label>
+                            <TimePicker
+                              value={times.start}
+                              onChange={(val) =>
+                                setUserTimes((prev) => ({
+                                  ...prev,
+                                  [user.id]: {
+                                    ...prev[user.id],
+                                    start: val,
+                                  },
+                                }))
+                              }
+                              placeholder={t(localizationConstants.chooseTime)}
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                              <Translate text={localizationConstants.slutTid} />
+                            </Label>
+                            <TimePicker
+                              value={times.end}
+                              onChange={(val) =>
+                                setUserTimes((prev) => ({
+                                  ...prev,
+                                  [user.id]: {
+                                    ...prev[user.id],
+                                    end: val,
+                                  },
+                                }))
+                              }
+                              placeholder={t(localizationConstants.chooseTime)}
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <Label className="font-sans font-medium text-[14px] leading-5 text-slate-900">
+                              <Translate
+                                text={localizationConstants.totalTim}
+                              />
+                            </Label>
+                            <Input
+                              disabled
+                              value={
+                                userHours
+                                  ? `${userHours} ${t(localizationConstants.timmarSuffix)}`
+                                  : "-"
+                              }
+                              className="h-10 text-[14px] font-normal leading-5 font-sans rounded-md bg-slate-100/80 border-slate-200 text-slate-600 text-center"
+                            />
+                          </div>
+                        </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
+              {assignedUsers.length === 0 && (
+                <p className="text-xs text-red-500">
+                  <Translate text={localizationConstants.planningValidationAssigneeRequired} />
+                </p>
+              )}
             </div>
           </div>
         </form>

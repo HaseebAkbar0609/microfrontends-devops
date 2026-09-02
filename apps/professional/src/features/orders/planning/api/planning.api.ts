@@ -27,34 +27,21 @@ export async function getPlanning(
 		if (res.data?.data) {
 			return res.data.data;
 		}
+		return res.data;
 	} catch (error) {
-		// Log warning for diagnostics while maintaining development fallback
 		console.warn(
 			"[Planning API] getPlanning request failed, using mock data fallback:",
 			error instanceof Error ? error.message : error
 		);
+		return MOCK_PLANNING_RESPONSE;
 	}
-
-	return MOCK_PLANNING_RESPONSE;
 }
 
 export async function createPlanningTask(
 	payload: CreatePlanningTaskPayload,
 ): Promise<PlanningTask> {
-	try {
-		const res = await axiosInstance.post(API_PATH.PLANNING.CREATE, payload);
-		return res.data?.data ?? res.data;
-	} catch (error) {
-		console.error(
-			"[Planning API] createPlanningTask failed:",
-			error instanceof Error ? error.message : error
-		);
-		// Return local optimistic task in mock mode for offline dev
-		return {
-			...payload,
-			id: `task-${Date.now()}`,
-		};
-	}
+	const res = await axiosInstance.post(API_PATH.PLANNING.CREATE, payload);
+	return res.data?.data ?? res.data;
 }
 
 export async function updatePlanningTask({
@@ -64,29 +51,13 @@ export async function updatePlanningTask({
 	taskId: string;
 	payload: UpdatePlanningTaskPayload;
 }): Promise<PlanningTask> {
-	try {
-		const res = await axiosInstance.put(
-			API_PATH.PLANNING.UPDATE(taskId),
-			payload,
-		);
-		return res.data?.data ?? res.data;
-	} catch (error) {
-		console.error(
-			`[Planning API] updatePlanningTask failed for task ${taskId}:`,
-			error instanceof Error ? error.message : error
-		);
-		return { ...payload, id: taskId } as PlanningTask;
-	}
+	const res = await axiosInstance.put(
+		API_PATH.PLANNING.UPDATE(taskId),
+		payload,
+	);
+	return res.data?.data ?? res.data;
 }
 
 export async function deletePlanningTask(taskId: string): Promise<void> {
-	try {
-		await axiosInstance.delete(API_PATH.PLANNING.DELETE(taskId));
-	} catch (error) {
-		console.error(
-			`[Planning API] deletePlanningTask failed for task ${taskId}:`,
-			error instanceof Error ? error.message : error
-		);
-		throw error;
-	}
+	await axiosInstance.delete(API_PATH.PLANNING.DELETE(taskId));
 }

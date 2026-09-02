@@ -3641,6 +3641,19 @@ export type OfferTranslation = {
 	projectOmbyggnad: string;
 	projectRenovering: string;
 	searchProjectName: string;
+	// Planning - Validation
+	planningValidationStartDateRequired: string;
+	planningValidationEndDateRequired: string;
+	planningValidationEndTimeBeforeStart: string;
+	planningValidationAssigneeRequired: string;
+	planningValidationStartTimeRequired: string;
+	planningValidationEndTimeRequired: string;
+	planningCreateSuccess: string;
+	planningCreateError: string;
+	planningUpdateSuccess: string;
+	planningUpdateError: string;
+	planningDeleteSuccess: string;
+	planningDeleteError: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
