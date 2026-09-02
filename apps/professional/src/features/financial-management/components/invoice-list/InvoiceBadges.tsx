@@ -15,7 +15,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#22c55e] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500 text-white whitespace-nowrap",
 						className,
 					)}
 				>
@@ -26,7 +26,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#ef4444] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-500 text-white whitespace-nowrap",
 						className,
 					)}
 				>
@@ -37,7 +37,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#dc2626] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-600 text-white whitespace-nowrap",
 						className,
 					)}
 				>
@@ -48,7 +48,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#b91c1c] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-700 text-white whitespace-nowrap",
 						className,
 					)}
 				>
@@ -59,7 +59,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#f97316] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-orange-500 text-white whitespace-nowrap",
 						className,
 					)}
 				>
@@ -70,7 +70,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#38bdf8] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-400 text-white whitespace-nowrap",
 						className,
 					)}
 				>
@@ -81,7 +81,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#eab308] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500 text-white whitespace-nowrap",
 						className,
 					)}
 				>
@@ -92,7 +92,7 @@ export function InvoiceStatusBadge({ status, className }: InvoiceStatusBadgeProp
 			return (
 				<span
 					className={cn(
-						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#10b981] text-white whitespace-nowrap",
+						"inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-600 text-white whitespace-nowrap",
 						className,
 					)}
 				>

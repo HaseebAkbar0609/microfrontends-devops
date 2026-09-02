@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -36,6 +37,7 @@ export function InvoicePaymentPlanTable({
 	onUpdateRow,
 	onRemoveRow,
 }: InvoicePaymentPlanTableProps) {
+	const { t } = useTranslation();
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 p-5 mb-5">
 			<h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-3 mb-4">
@@ -101,7 +103,7 @@ export function InvoicePaymentPlanTable({
 									<Input
 										value={row.description}
 										onChange={(e) => onUpdateRow(row.id, { description: e.target.value })}
-										placeholder="Beskrivning..."
+										placeholder={`${t(localizationConstants.createInvoicePaymentColDesc)}...`}
 										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none"
 									/>
 								</TableCell>

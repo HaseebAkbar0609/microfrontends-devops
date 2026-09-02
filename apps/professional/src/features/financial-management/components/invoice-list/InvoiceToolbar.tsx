@@ -109,7 +109,7 @@ export function InvoiceToolbar({
 				{selectedCount > 0 && (
 					<Button
 						onClick={onSendSelected}
-						className="h-10 gap-2 rounded-lg bg-[#16a34a] hover:bg-[#15803d] px-4 text-xs font-medium text-white shadow-2xs cursor-pointer transition-colors"
+						className="h-10 gap-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 px-4 text-xs font-medium text-white shadow-2xs cursor-pointer transition-colors"
 					>
 						<Send className="h-3.5 w-3.5" />
 						<span>
@@ -119,7 +119,7 @@ export function InvoiceToolbar({
 				)}
 
 				<Link href="/module/financial-management/invoice/create">
-					<Button className="h-10 gap-2 rounded-lg bg-[#111721] hover:bg-slate-800 px-4 text-xs font-medium text-white shadow-2xs cursor-pointer transition-colors">
+					<Button className="h-10 gap-2 rounded-lg bg-zinc-900 hover:bg-slate-800 px-4 text-xs font-medium text-white shadow-2xs cursor-pointer transition-colors">
 						<Plus className="h-4 w-4" />
 						<Translate text={localizationConstants.invoiceNewButton} />
 					</Button>

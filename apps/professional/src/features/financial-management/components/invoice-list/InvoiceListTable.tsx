@@ -166,8 +166,13 @@ export function InvoiceListTable({
 										</TableCell>
 
 										{/* Invoice No */}
-										<TableCell className="px-3 py-3 text-xs font-medium text-slate-900 whitespace-nowrap">
-											{inv.invoiceNo}
+										<TableCell className="px-3 py-3 text-xs font-medium whitespace-nowrap">
+											<Link
+												href={`/module/financial-management/invoice/${inv.id}`}
+												className="text-slate-900 hover:text-emerald-600 hover:underline cursor-pointer"
+											>
+												{inv.invoiceNo}
+											</Link>
 										</TableCell>
 
 										{/* OCR */}

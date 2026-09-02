@@ -43,7 +43,7 @@ export function InvoiceHeaderForm({ formData, updateField }: InvoiceHeaderFormPr
 							<Input
 								value={formData.invoiceNo}
 								disabled
-								className="h-9 bg-[#f4f4f5] border-slate-200 text-xs font-medium text-slate-800 rounded-md"
+								className="h-9 bg-slate-100 border-slate-200 text-xs font-medium text-slate-800 rounded-md"
 							/>
 						</div>
 
@@ -290,7 +290,7 @@ export function InvoiceHeaderForm({ formData, updateField }: InvoiceHeaderFormPr
 								value={formData.rotRutType}
 								onValueChange={(val) => updateField("rotRutType", val as "rot" | "rut" | "none")}
 							>
-								<SelectTrigger className="h-9 border-[#f97316] bg-[#f97316] hover:bg-[#ea580c] text-xs font-semibold text-white cursor-pointer rounded-md">
+								<SelectTrigger className="h-9 border-orange-500 bg-orange-500 hover:bg-orange-600 text-xs font-semibold text-white cursor-pointer rounded-md">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent className="bg-white">
@@ -336,7 +336,7 @@ export function InvoiceHeaderForm({ formData, updateField }: InvoiceHeaderFormPr
 									updateField("pricingModel", val as "lopande" | "fastpris" | "budget")
 								}
 							>
-								<SelectTrigger className="h-9 border-[#f97316] bg-[#f97316] hover:bg-[#ea580c] text-xs font-semibold text-white cursor-pointer rounded-md">
+								<SelectTrigger className="h-9 border-orange-500 bg-orange-500 hover:bg-orange-600 text-xs font-semibold text-white cursor-pointer rounded-md">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent className="bg-white">

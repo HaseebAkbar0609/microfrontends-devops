@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -9,8 +11,7 @@ import {
 	ReminderSortField,
 	SortOrder,
 } from "../types/invoice.types";
-import { MOCK_REMINDERS_LIST } from "../mock/invoiceMockData";
-import { getStoredInvoices, saveStoredInvoices } from "../utils/invoiceStorage";
+import { invoiceRepository } from "../utils/invoiceRepository";
 
 export function useInvoiceList() {
 	const { t } = useTranslation();
@@ -37,23 +38,25 @@ export function useInvoiceList() {
 	const [pageSize, setPageSize] = useState(10);
 
 	const [invoices, setInvoices] = useState<InvoiceItem[]>([]);
-	const [reminders, _setReminders] = useState<ReminderItem[]>(MOCK_REMINDERS_LIST);
+	const [reminders, _setReminders] = useState<ReminderItem[]>([]);
 
-	// Load stored invoices on mount and on storage events
-	useEffect(() => {
-		setInvoices(getStoredInvoices());
-
-		const handleStorageChange = () => {
-			setInvoices(getStoredInvoices());
-		};
-
-		window.addEventListener("storage", handleStorageChange);
-		window.addEventListener("focus", handleStorageChange);
-		return () => {
-			window.removeEventListener("storage", handleStorageChange);
-			window.removeEventListener("focus", handleStorageChange);
-		};
+	const loadData = useCallback(() => {
+		setInvoices(invoiceRepository.getInvoices());
+		_setReminders(invoiceRepository.getReminders());
 	}, []);
+
+	// Load stored invoices on mount and subscribe to repository changes
+	useEffect(() => {
+		loadData();
+
+		const unsubscribe = invoiceRepository.subscribe(() => {
+			loadData();
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, [loadData]);
 
 	// Toggle row selection
 	const toggleSelectInvoice = useCallback((id: string) => {
@@ -202,6 +205,7 @@ export function useInvoiceList() {
 	// Actions
 	const sendSelectedInvoices = useCallback(() => {
 		if (selectedInvoiceIds.size === 0) return;
+		invoiceRepository.sendInvoice(Array.from(selectedInvoiceIds));
 		toast.success(
 			`${selectedInvoiceIds.size} ${t(localizationConstants.invoiceSendSuccess)}`,
 		);
@@ -210,11 +214,7 @@ export function useInvoiceList() {
 
 	const archiveInvoice = useCallback(
 		(id: string) => {
-			setInvoices((prev) => {
-				const next = prev.filter((i) => i.id !== id);
-				saveStoredInvoices(next);
-				return next;
-			});
+			invoiceRepository.archiveInvoice(id);
 			toast.success(t(localizationConstants.invoiceArchiveSuccess));
 		},
 		[t],
@@ -222,11 +222,7 @@ export function useInvoiceList() {
 
 	const deleteInvoice = useCallback(
 		(id: string) => {
-			setInvoices((prev) => {
-				const next = prev.filter((i) => i.id !== id);
-				saveStoredInvoices(next);
-				return next;
-			});
+			invoiceRepository.deleteInvoice(id);
 			toast.success(t(localizationConstants.invoiceDeleteSuccess));
 		},
 		[t],
@@ -265,3 +261,5 @@ export function useInvoiceList() {
 		deleteInvoice,
 	};
 }
+
+export default useInvoiceList;
