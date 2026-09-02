@@ -5379,6 +5379,53 @@ export type InvoiceTranslation = {
 	createInvoiceTimeCommentDialogTitle: string;
 	createInvoiceTimeCommentDialogPlaceholder: string;
 	createInvoiceTimeCommentDialogSave: string;
+
+	// Invoice Detail Keys (TFS-497)
+	invoiceDetailTitle: string;
+	invoiceDetailMarkAsPaid: string;
+	invoiceDetailCredit: string;
+	invoiceDetailDownloadPdf: string;
+	invoiceDetailBack: string;
+	invoiceDetailLoading: string;
+	invoiceDetailNotFound: string;
+	invoiceDetailSupplier: string;
+	invoiceDetailSupplierNo: string;
+	invoiceDetailAmount: string;
+	invoiceDetailMarkup: string;
+	invoiceDetailMarkupAmount: string;
+	invoiceDetailAtaNo: string;
+	invoiceDetailAtaTime: string;
+	invoiceDetailWorkTime: string;
+	invoiceDetailTotalTime: string;
+	invoiceDetailAttachedTimeReport: string;
+	invoiceDetailAttachedUnderlag: string;
+	invoiceDetailContractNo: string;
+	invoiceDetailFreightFee: string;
+	invoiceDetailInvoiceFee: string;
+	invoiceDetailTotalExclVat: string;
+	invoiceDetailVat: string;
+	invoiceDetailAmountToPay: string;
+	invoiceDetailCompanyName: string;
+	invoiceDetailOrgNo: string;
+	invoiceDetailVatNo: string;
+	invoiceDetailAddress: string;
+	invoiceDetailBank: string;
+	invoiceDetailBankgiro: string;
+	invoiceDetailIban: string;
+	invoiceDetailBic: string;
+	invoiceDetailEmail: string;
+	invoiceDetailPhone: string;
+	invoiceDetailSwish: string;
+	invoiceDetailFTax: string;
+	invoiceDetailLineItemsTitle: string;
+	invoiceDetailNoComment: string;
+	invoiceDetailYes: string;
+	invoiceDetailNo: string;
+	invoiceDetailPaymentNote: string;
+	invoiceDetailThankYouNote: string;
+	invoiceDetailEditGeneralInfo: string;
+	invoiceDetailEditComments: string;
+	invoiceDetailEditPaymentPlan: string;
 };
 
 export type Translation = HeaderTranslation &
