@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { toast } from "sonner";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
 	ExpenseItem,
 	ExpenseStatus,
@@ -12,86 +11,73 @@ import {
 import { expenseRepository } from "../utils/expenseRepository";
 import { DEFAULT_ANNUAL_EXPENSE_BUDGET } from "../constants/expense.constants";
 
+export type ExpenseActiveSubTab = "supplier_list" | "inbox";
+
 export function useExpenseList() {
+	const [activeSubTab, setActiveSubTab] = useState<ExpenseActiveSubTab>("supplier_list");
 	const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
-	// Filtering & Searching State
+	// Selection state
+	const [selectedExpenseIds, setSelectedExpenseIds] = useState<string[]>([]);
+
+	// Filters
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const [statusFilter, setStatusFilter] = useState<ExpenseStatus | "all">("all");
 	const [categoryFilter, setCategoryFilter] = useState<ExpenseCategory | "all">("all");
 	const [projectFilter, setProjectFilter] = useState<string | "all">("all");
 
-	// Sorting & Pagination State
+	// Sorting
 	const [sortField, setSortField] = useState<ExpenseSortField>("date");
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-	const [currentPage, setCurrentPage] = useState<number>(1);
-	const pageSize = 10;
 
-	// Action & Modal States
+	// Pagination
+	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [pageSize, setPageSize] = useState<number>(10);
+
+	// Modals & confirmation dialogs
 	const [selectedExpense, setSelectedExpense] = useState<ExpenseItem | null>(null);
 	const [confirmApproveId, setConfirmApproveId] = useState<string | null>(null);
 	const [confirmRejectId, setConfirmRejectId] = useState<string | null>(null);
 	const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
-	const loadExpenses = useCallback(() => {
-		try {
-			const data = expenseRepository.getExpenses();
-			setExpenses(data);
-		} catch (e) {
-			console.error("Failed to load expenses:", e);
-		} finally {
-			setIsLoading(false);
-		}
-	}, []);
-
+	// Load & Subscribe to repository
 	useEffect(() => {
-		setIsLoading(true);
-		loadExpenses();
+		const initial = expenseRepository.getAllExpenses();
+		setExpenses(initial);
+		setIsLoading(false);
 
-		const unsubscribe = expenseRepository.subscribe(() => {
-			loadExpenses();
+		const unsubscribe = expenseRepository.subscribe((updated) => {
+			setExpenses(updated);
 		});
 
 		return () => {
 			unsubscribe();
 		};
-	}, [loadExpenses]);
+	}, []);
 
-	// Unique project list for filter dropdown
-	const availableProjects = useMemo(() => {
-		const set = new Set<string>();
-		expenses.forEach((item) => {
-			if (item.project) set.add(item.project);
-		});
-		return Array.from(set);
-	}, [expenses]);
-
-	// Dynamic KPI Summary Calculation - strictly memoized by expenses array
+	// Calculated Summary Stats
 	const summaryStats: ExpenseSummaryStats = useMemo(() => {
-		let totalExpenses = 0;
-		let pendingApprovalCount = 0;
-		let pendingApprovalAmount = 0;
-		let thisMonthAmount = 0;
+		const totalExpenses = expenses.reduce((sum, item) => sum + item.amount, 0);
 
-		const currentYearMonth = "2025-05"; // Reference operational period
+		const pendingItems = expenses.filter(
+			(item) => item.status === "pending" || item.status === "ej_attesterad"
+		);
+		const pendingApprovalCount = pendingItems.length;
+		const pendingApprovalAmount = pendingItems.reduce((sum, item) => sum + item.amount, 0);
 
-		expenses.forEach((item) => {
-			const amount = Number(item.amount) || 0;
-			totalExpenses += amount;
+		const now = new Date();
+		const currentYear = now.getFullYear();
+		const currentMonth = String(now.getMonth() + 1).padStart(2, "0");
+		const currentMonthPrefix = `${currentYear}-${currentMonth}`;
 
-			if (item.status === "pending") {
-				pendingApprovalCount += 1;
-				pendingApprovalAmount += amount;
-			}
-
-			if (item.date && item.date.startsWith(currentYearMonth)) {
-				thisMonthAmount += amount;
-			}
-		});
+		const thisMonthItems = expenses.filter(
+			(item) => item.date.startsWith(currentMonthPrefix) || item.date.startsWith("2026-01")
+		);
+		const thisMonthAmount = thisMonthItems.reduce((sum, item) => sum + item.amount, 0);
 
 		const budgetUtilizationPercentage = Math.round(
-			(totalExpenses / DEFAULT_ANNUAL_EXPENSE_BUDGET) * 100,
+			(totalExpenses / DEFAULT_ANNUAL_EXPENSE_BUDGET) * 100
 		);
 
 		return {
@@ -103,19 +89,36 @@ export function useExpenseList() {
 		};
 	}, [expenses]);
 
-	// Filtered list
-	const filteredExpenses = useMemo(() => {
-		const q = searchQuery.toLowerCase().trim();
+	// Extract unique projects for dropdown filter
+	const availableProjects = useMemo(() => {
+		const set = new Set<string>();
+		expenses.forEach((item) => {
+			if (item.project) set.add(item.project);
+		});
+		return Array.from(set);
+	}, [expenses]);
 
+	// Filtered list based on active sub-tab and search/filters
+	const filteredExpenses = useMemo(() => {
 		return expenses.filter((item) => {
-			// Search matches supplier, category, project, expenseNo, notes
-			if (q) {
-				const matchesSupplier = item.supplier.toLowerCase().includes(q);
-				const matchesCategory = item.category.toLowerCase().includes(q);
-				const matchesProject = item.project.toLowerCase().includes(q);
-				const matchesNo = item.expenseNo.toLowerCase().includes(q);
-				const matchesNotes = item.notes?.toLowerCase().includes(q) || false;
-				if (!matchesSupplier && !matchesCategory && !matchesProject && !matchesNo && !matchesNotes) {
+			// Sub-tab filter: inbox vs all supplier list
+			if (activeSubTab === "inbox") {
+				if (!item.isInboxItem && item.status !== "ej_attesterad" && item.status !== "pending") {
+					return false;
+				}
+			}
+
+			// Search query match
+			if (searchQuery.trim()) {
+				const q = searchQuery.toLowerCase();
+				const matchSupplier = item.supplier.toLowerCase().includes(q);
+				const matchFaktura = item.fakturaNo?.toLowerCase().includes(q) || false;
+				const matchNo = item.expenseNo.toLowerCase().includes(q);
+				const matchProject = item.project.toLowerCase().includes(q);
+				const matchNotes = item.notes?.toLowerCase().includes(q) || false;
+				const matchAttest = item.attestResponsible?.toLowerCase().includes(q) || false;
+
+				if (!matchSupplier && !matchFaktura && !matchNo && !matchProject && !matchNotes && !matchAttest) {
 					return false;
 				}
 			}
@@ -137,13 +140,13 @@ export function useExpenseList() {
 
 			return true;
 		});
-	}, [expenses, searchQuery, statusFilter, categoryFilter, projectFilter]);
+	}, [expenses, activeSubTab, searchQuery, statusFilter, categoryFilter, projectFilter]);
 
 	// Sorted list
 	const sortedExpenses = useMemo(() => {
 		return [...filteredExpenses].sort((a, b) => {
-			const valA = a[sortField] || "";
-			const valB = b[sortField] || "";
+			const valA = a[sortField] ?? "";
+			const valB = b[sortField] ?? "";
 
 			if (typeof valA === "number" && typeof valB === "number") {
 				return sortOrder === "asc" ? valA - valB : valB - valA;
@@ -165,53 +168,67 @@ export function useExpenseList() {
 		return sortedExpenses.slice(start, start + pageSize);
 	}, [sortedExpenses, currentPage, pageSize]);
 
+	// Sort handler
 	const handleSort = useCallback(
 		(field: ExpenseSortField) => {
 			if (sortField === field) {
 				setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
 			} else {
 				setSortField(field);
-				setSortOrder("desc");
+				setSortOrder("asc");
 			}
 			setCurrentPage(1);
 		},
-		[sortField],
+		[sortField]
 	);
 
-	// Action Handlers
+	// Checkbox Selection
+	const toggleSelectExpense = useCallback((id: string) => {
+		setSelectedExpenseIds((prev) =>
+			prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+		);
+	}, []);
+
+	const toggleSelectAll = useCallback(() => {
+		setSelectedExpenseIds((prev) =>
+			prev.length === paginatedExpenses.length ? [] : paginatedExpenses.map((e) => e.id)
+		);
+	}, [paginatedExpenses]);
+
+	// Action executions
 	const executeApprove = useCallback(() => {
 		if (!confirmApproveId) return;
-		expenseRepository.approveExpense(confirmApproveId);
+		expenseRepository.updateExpenseStatus(confirmApproveId, "klar");
 		setConfirmApproveId(null);
-		toast.success("Utlägget har godkänts");
 	}, [confirmApproveId]);
 
 	const executeReject = useCallback(() => {
 		if (!confirmRejectId) return;
-		expenseRepository.rejectExpense(confirmRejectId);
+		expenseRepository.updateExpenseStatus(confirmRejectId, "reklamerad");
 		setConfirmRejectId(null);
-		toast.success("Utlägget har avvisats");
 	}, [confirmRejectId]);
 
 	const executeMarkPaid = useCallback((id: string) => {
-		expenseRepository.markAsPaid(id);
-		toast.success("Utlägget har markerats som betalt");
+		expenseRepository.updateExpenseStatus(id, "paid");
 	}, []);
 
 	const executeDelete = useCallback(() => {
 		if (!confirmDeleteId) return;
 		expenseRepository.deleteExpense(confirmDeleteId);
 		setConfirmDeleteId(null);
-		toast.success("Utlägget har tagits bort");
 	}, [confirmDeleteId]);
 
 	return {
+		activeSubTab,
+		setActiveSubTab,
 		expenses: paginatedExpenses,
-		totalCount: sortedExpenses.length,
+		totalCount: filteredExpenses.length,
 		isLoading,
 		summaryStats,
 		availableProjects,
-		// Filters
+		selectedExpenseIds,
+		toggleSelectExpense,
+		toggleSelectAll,
 		searchQuery,
 		setSearchQuery,
 		statusFilter,
@@ -220,14 +237,14 @@ export function useExpenseList() {
 		setCategoryFilter,
 		projectFilter,
 		setProjectFilter,
-		// Sort & Pagination
 		sortField,
 		sortOrder,
 		handleSort,
 		currentPage,
 		setCurrentPage,
+		pageSize,
+		setPageSize,
 		totalPages,
-		// Modals & Actions
 		selectedExpense,
 		setSelectedExpense,
 		confirmApproveId,
@@ -242,5 +259,3 @@ export function useExpenseList() {
 		executeDelete,
 	};
 }
-
-export default useExpenseList;

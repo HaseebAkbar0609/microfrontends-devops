@@ -5563,6 +5563,23 @@ const enExpense: ExpenseTranslation = {
 	expenseDetailsNoReceipt: "No receipt attached",
 	expenseNoRecordsFound: "No expenses found",
 	expenseNoRecordsSubtitle: "There are no expenses matching your search criteria or active filters.",
+	expenseTopTabCustomerInvoice: "Customer Invoices",
+	expenseTopTabSupplierInvoice: "Supplier Invoices",
+	expenseSubTabSupplierList: "Supplier list",
+	expenseSubTabInbox: "Inbox",
+	expenseAddSupplierInvoiceBtn: "Add supplier invoice",
+	expenseColInvoiceNo: "Invoice",
+	expenseColObject: "Object",
+	expenseColInvoiceDate: "Invoice date",
+	expenseColAttestResponsible: "Attest responsible",
+	expenseStatusKlar: "Ready",
+	expenseStatusEjAttesterad: "Not attested",
+	expenseStatusReklamerad: "Reclaimed",
+	expenseStatusAktiv: "Active",
+	expenseStatusLedig: "Available",
+	expenseStatusEjPaborjad: "Not started",
+	expenseRowsPerPage: "Rows per page",
+	expenseActionSeeInvoice: "View invoice",
 };
 
 export const en: Translation = {

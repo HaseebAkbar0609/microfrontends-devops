@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	Dialog,
 	DialogContent,
@@ -27,18 +29,22 @@ import { useExpenseList } from "../../hooks/useExpenseList";
 import { expenseBreadcrumbs, EXPENSE_CATEGORIES } from "../../constants/expense.constants";
 import { ExpenseCategory } from "../../types/expense.types";
 import { expenseRepository } from "../../utils/expenseRepository";
-import { ExpenseKpiCards } from "./ExpenseKpiCards";
 import { ExpenseToolbar } from "./ExpenseToolbar";
 import { ExpenseListTable } from "./ExpenseListTable";
 import { ExpenseDetailsModal } from "./ExpenseDetailsModal";
 import { toast } from "sonner";
 
 export function ExpenseListPage() {
+	const router = useRouter();
 	const {
+		activeSubTab,
+		setActiveSubTab,
 		expenses,
 		totalCount,
-		summaryStats,
 		availableProjects,
+		selectedExpenseIds,
+		toggleSelectExpense,
+		toggleSelectAll,
 		searchQuery,
 		setSearchQuery,
 		statusFilter,
@@ -52,6 +58,8 @@ export function ExpenseListPage() {
 		handleSort,
 		currentPage,
 		setCurrentPage,
+		pageSize,
+		setPageSize,
 		totalPages,
 		selectedExpense,
 		setSelectedExpense,
@@ -67,7 +75,7 @@ export function ExpenseListPage() {
 		executeDelete,
 	} = useExpenseList();
 
-	// Quick Register Modal State
+	// Quick Register Modal State (TFS-499 hook)
 	const [registerModalOpen, setRegisterModalOpen] = useState<boolean>(false);
 	const [registerForm, setRegisterForm] = useState({
 		supplier: "",
@@ -76,9 +84,10 @@ export function ExpenseListPage() {
 		vatAmount: "",
 		date: new Date().toISOString().split("T")[0],
 		dueDate: "",
-		project: "Storgatan 12 Renovering",
+		project: "Projekt 2025-001",
 		projectNumber: "PRJ-2025-001",
 		costCenter: "CC-101 (Bygg)",
+		attestResponsible: "Kalle Andersson",
 		invoiceRef: "",
 		notes: "",
 	});
@@ -104,17 +113,20 @@ export function ExpenseListPage() {
 			category: registerForm.category,
 			amount: numAmount,
 			vatAmount: numVat,
-			status: "pending",
+			status: "ej_attesterad",
 			date: registerForm.date,
+			invoiceDate: registerForm.date,
 			dueDate: registerForm.dueDate || registerForm.date,
 			project: registerForm.project,
 			projectNumber: registerForm.projectNumber,
 			costCenter: registerForm.costCenter,
+			attestResponsible: registerForm.attestResponsible,
 			invoiceRef: registerForm.invoiceRef.trim() || undefined,
 			notes: registerForm.notes.trim() || undefined,
+			isInboxItem: true,
 		});
 
-		toast.success("Utlägget har registrerats");
+		toast.success("Leverantörsfakturan har registrerats");
 		setRegisterModalOpen(false);
 		setRegisterForm({
 			supplier: "",
@@ -123,9 +135,10 @@ export function ExpenseListPage() {
 			vatAmount: "",
 			date: new Date().toISOString().split("T")[0],
 			dueDate: "",
-			project: "Storgatan 12 Renovering",
+			project: "Projekt 2025-001",
 			projectNumber: "PRJ-2025-001",
 			costCenter: "CC-101 (Bygg)",
+			attestResponsible: "Kalle Andersson",
 			invoiceRef: "",
 			notes: "",
 		});
@@ -133,20 +146,60 @@ export function ExpenseListPage() {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen pb-16">
-			{/* Page Header */}
+		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
+			{/* Page Header with Breadcrumbs */}
 			<PageHeader
 				title={localizationConstants.expenseOverviewTitle}
 				breadcrumbs={expenseBreadcrumbs}
 				className="border-b-0 px-8 pt-5 pb-2"
 			/>
 
-			{/* Main Content Area */}
-			<div className="px-8 py-6 max-w-7xl mx-auto w-full flex-1">
-				{/* 1. Summary KPI Cards */}
-				<ExpenseKpiCards stats={summaryStats} />
+			{/* Top Level Category Tabs: Kundfaktura / Leverantörsfaktura */}
+			<div className="px-8 border-b border-slate-200 bg-white">
+				<div className="flex items-center gap-6">
+					<button
+						type="button"
+						onClick={() => router.push("/module/financial-management/invoice")}
+						className="py-3 text-xs font-medium text-slate-500 hover:text-slate-900 border-b-2 border-transparent transition-colors cursor-pointer"
+					>
+						<Translate text={localizationConstants.expenseTopTabCustomerInvoice} />
+					</button>
 
-				{/* 2. Search & Filters Toolbar */}
+					<button
+						type="button"
+						className="py-3 text-xs font-bold text-slate-900 border-b-2 border-slate-900 transition-colors cursor-default"
+					>
+						<Translate text={localizationConstants.expenseTopTabSupplierInvoice} />
+					</button>
+				</div>
+			</div>
+
+			{/* Main Content Area */}
+			<div className="px-8 py-5 flex-1 max-w-7xl mx-auto w-full">
+				{/* Sub-tabs: Leverantörs lista / Inbox */}
+				<div className="mb-4">
+					<Tabs
+						value={activeSubTab}
+						onValueChange={(val) => setActiveSubTab(val as "supplier_list" | "inbox")}
+					>
+						<TabsList className="bg-slate-100 p-0.5 rounded-lg h-8">
+							<TabsTrigger
+								value="supplier_list"
+								className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+							>
+								<Translate text={localizationConstants.expenseSubTabSupplierList} />
+							</TabsTrigger>
+							<TabsTrigger
+								value="inbox"
+								className="text-xs font-medium px-4 h-7 rounded-md data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-2xs cursor-pointer"
+							>
+								<Translate text={localizationConstants.expenseSubTabInbox} />
+							</TabsTrigger>
+						</TabsList>
+					</Tabs>
+				</div>
+
+				{/* Search & Filters Toolbar */}
 				<ExpenseToolbar
 					searchQuery={searchQuery}
 					onSearchChange={setSearchQuery}
@@ -160,20 +213,22 @@ export function ExpenseListPage() {
 					onRegisterClick={() => setRegisterModalOpen(true)}
 				/>
 
-				{/* 3. Expense List Table */}
+				{/* Expense List Table matching Figma 1:1 */}
 				<ExpenseListTable
 					expenses={expenses}
 					totalCount={totalCount}
+					selectedIds={selectedExpenseIds}
+					onToggleSelect={toggleSelectExpense}
+					onToggleSelectAll={toggleSelectAll}
 					sortField={sortField}
 					sortOrder={sortOrder}
 					onSort={handleSort}
 					currentPage={currentPage}
+					pageSize={pageSize}
+					onPageSizeChange={setPageSize}
 					totalPages={totalPages}
 					onPageChange={setCurrentPage}
 					onView={(item) => setSelectedExpense(item)}
-					onApprove={(id) => setConfirmApproveId(id)}
-					onReject={(id) => setConfirmRejectId(id)}
-					onMarkPaid={executeMarkPaid}
 					onDelete={(id) => setConfirmDeleteId(id)}
 				/>
 			</div>
@@ -190,12 +245,12 @@ export function ExpenseListPage() {
 				onMarkPaid={executeMarkPaid}
 			/>
 
-			{/* Modal: Register Expense */}
+			{/* Modal: Register Expense (TFS-499) */}
 			<Dialog open={registerModalOpen} onOpenChange={setRegisterModalOpen}>
 				<DialogContent className="max-w-lg bg-white p-6 rounded-xl shadow-2xl">
 					<DialogHeader className="border-b border-slate-100 pb-3">
 						<DialogTitle className="text-base font-bold text-slate-900">
-							<Translate text={localizationConstants.expenseRegisterBtn} />
+							<Translate text={localizationConstants.expenseAddSupplierInvoiceBtn} />
 						</DialogTitle>
 					</DialogHeader>
 
@@ -211,7 +266,7 @@ export function ExpenseListPage() {
 										setRegisterForm({ ...registerForm, supplier: e.target.value });
 										if (formErrors.supplier) setFormErrors({ ...formErrors, supplier: "" });
 									}}
-									placeholder="T.ex. Ahlsell Sverige AB"
+									placeholder="T.ex. Biejer Byggmaterial AB"
 									className={`h-8 text-xs border-slate-200 ${formErrors.supplier ? "border-rose-500" : ""}`}
 								/>
 								{formErrors.supplier && (
@@ -246,7 +301,7 @@ export function ExpenseListPage() {
 						<div className="grid grid-cols-2 gap-3">
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									<Translate text={localizationConstants.expenseColAmount} /> *
+									<Translate text={localizationConstants.expenseColAmount} /> (SEK) *
 								</Label>
 								<Input
 									type="number"
@@ -255,7 +310,7 @@ export function ExpenseListPage() {
 										setRegisterForm({ ...registerForm, amount: e.target.value });
 										if (formErrors.amount) setFormErrors({ ...formErrors, amount: "" });
 									}}
-									placeholder="0.00"
+									placeholder="150000"
 									className={`h-8 text-xs border-slate-200 ${formErrors.amount ? "border-rose-500" : ""}`}
 								/>
 								{formErrors.amount && (
@@ -265,14 +320,14 @@ export function ExpenseListPage() {
 
 							<div className="space-y-1">
 								<Label className="text-xs font-semibold text-slate-700">
-									Fakturareferens
+									<Translate text={localizationConstants.expenseColInvoiceNo} />
 								</Label>
 								<Input
 									value={registerForm.invoiceRef}
 									onChange={(e) =>
 										setRegisterForm({ ...registerForm, invoiceRef: e.target.value })
 									}
-									placeholder="T.ex. AHL-982341"
+									placeholder="T.ex. 456989"
 									className="h-8 text-xs border-slate-200"
 								/>
 							</div>
@@ -312,17 +367,47 @@ export function ExpenseListPage() {
 							</div>
 						</div>
 
+						<div className="grid grid-cols-2 gap-3">
+							<div className="space-y-1">
+								<Label className="text-xs font-semibold text-slate-700">
+									<Translate text={localizationConstants.expenseColObject} />
+								</Label>
+								<Input
+									value={registerForm.project}
+									onChange={(e) =>
+										setRegisterForm({ ...registerForm, project: e.target.value })
+									}
+									placeholder="Projekt 2025-001"
+									className="h-8 text-xs border-slate-200"
+								/>
+							</div>
+
+							<div className="space-y-1">
+								<Label className="text-xs font-semibold text-slate-700">
+									<Translate text={localizationConstants.expenseColAttestResponsible} />
+								</Label>
+								<Input
+									value={registerForm.attestResponsible}
+									onChange={(e) =>
+										setRegisterForm({ ...registerForm, attestResponsible: e.target.value })
+									}
+									placeholder="Kalle Andersson"
+									className="h-8 text-xs border-slate-200"
+								/>
+							</div>
+						</div>
+
 						<div className="space-y-1">
 							<Label className="text-xs font-semibold text-slate-700">
 								<Translate text={localizationConstants.createInvoiceModalNotes} />
 							</Label>
 							<Textarea
-								rows={3}
+								rows={2}
 								value={registerForm.notes}
 								onChange={(e) =>
 									setRegisterForm({ ...registerForm, notes: e.target.value })
 								}
-								placeholder="Beskrivning av utlägget eller artiklar..."
+								placeholder="Beskrivning av leverans eller inköp..."
 								className="text-xs border-slate-200 resize-y"
 							/>
 						</div>
@@ -333,14 +418,14 @@ export function ExpenseListPage() {
 							variant="outline"
 							size="sm"
 							onClick={() => setRegisterModalOpen(false)}
-							className="text-xs border-slate-200"
+							className="text-xs border-slate-200 cursor-pointer"
 						>
 							<Translate text={localizationConstants.createInvoiceBtnCancel} />
 						</Button>
 						<Button
 							size="sm"
 							onClick={handleSaveNewExpense}
-							className="text-xs bg-zinc-900 hover:bg-slate-800 text-white"
+							className="text-xs bg-zinc-950 hover:bg-slate-800 text-white cursor-pointer"
 						>
 							<Translate text={localizationConstants.createInvoiceBtnSave} />
 						</Button>
@@ -348,7 +433,7 @@ export function ExpenseListPage() {
 				</DialogContent>
 			</Dialog>
 
-			{/* UX: Confirmation Dialog: Approve */}
+			{/* UX Confirmation Dialog: Approve */}
 			<Dialog
 				open={confirmApproveId !== null}
 				onOpenChange={(open) => {
@@ -369,14 +454,14 @@ export function ExpenseListPage() {
 							variant="outline"
 							size="sm"
 							onClick={() => setConfirmApproveId(null)}
-							className="text-xs border-slate-200"
+							className="text-xs border-slate-200 cursor-pointer"
 						>
 							<Translate text={localizationConstants.createInvoiceBtnCancel} />
 						</Button>
 						<Button
 							size="sm"
 							onClick={executeApprove}
-							className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white"
+							className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
 						>
 							<Translate text={localizationConstants.expenseActionApprove} />
 						</Button>
@@ -384,7 +469,7 @@ export function ExpenseListPage() {
 				</DialogContent>
 			</Dialog>
 
-			{/* UX: Confirmation Dialog: Reject */}
+			{/* UX Confirmation Dialog: Reject */}
 			<Dialog
 				open={confirmRejectId !== null}
 				onOpenChange={(open) => {
@@ -405,14 +490,14 @@ export function ExpenseListPage() {
 							variant="outline"
 							size="sm"
 							onClick={() => setConfirmRejectId(null)}
-							className="text-xs border-slate-200"
+							className="text-xs border-slate-200 cursor-pointer"
 						>
 							<Translate text={localizationConstants.createInvoiceBtnCancel} />
 						</Button>
 						<Button
 							size="sm"
 							onClick={executeReject}
-							className="text-xs bg-rose-600 hover:bg-rose-700 text-white"
+							className="text-xs bg-rose-600 hover:bg-rose-700 text-white cursor-pointer"
 						>
 							<Translate text={localizationConstants.expenseActionReject} />
 						</Button>
@@ -420,7 +505,7 @@ export function ExpenseListPage() {
 				</DialogContent>
 			</Dialog>
 
-			{/* UX: Confirmation Dialog: Delete */}
+			{/* UX Confirmation Dialog: Delete */}
 			<Dialog
 				open={confirmDeleteId !== null}
 				onOpenChange={(open) => {
@@ -441,14 +526,14 @@ export function ExpenseListPage() {
 							variant="outline"
 							size="sm"
 							onClick={() => setConfirmDeleteId(null)}
-							className="text-xs border-slate-200"
+							className="text-xs border-slate-200 cursor-pointer"
 						>
 							<Translate text={localizationConstants.createInvoiceBtnCancel} />
 						</Button>
 						<Button
 							size="sm"
 							onClick={executeDelete}
-							className="text-xs bg-rose-600 hover:bg-rose-700 text-white"
+							className="text-xs bg-rose-600 hover:bg-rose-700 text-white cursor-pointer"
 						>
 							<Translate text={localizationConstants.expenseActionDelete} />
 						</Button>

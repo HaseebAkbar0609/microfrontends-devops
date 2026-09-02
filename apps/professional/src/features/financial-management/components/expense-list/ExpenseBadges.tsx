@@ -12,6 +12,66 @@ interface ExpenseStatusBadgeProps {
 
 export function ExpenseStatusBadge({ status }: ExpenseStatusBadgeProps) {
 	switch (status) {
+		case "klar":
+			return (
+				<Badge
+					variant="outline"
+					className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+				>
+					<span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+					<Translate text={localizationConstants.expenseStatusKlar} />
+				</Badge>
+			);
+		case "ej_attesterad":
+			return (
+				<Badge
+					variant="outline"
+					className="bg-sky-50 text-sky-700 border-sky-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+				>
+					<span className="h-1.5 w-1.5 rounded-full bg-sky-500 mr-1.5" />
+					<Translate text={localizationConstants.expenseStatusEjAttesterad} />
+				</Badge>
+			);
+		case "reklamerad":
+			return (
+				<Badge
+					variant="outline"
+					className="bg-amber-50 text-amber-700 border-amber-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+				>
+					<span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-1.5" />
+					<Translate text={localizationConstants.expenseStatusReklamerad} />
+				</Badge>
+			);
+		case "aktiv":
+			return (
+				<Badge
+					variant="outline"
+					className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+				>
+					<span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+					<Translate text={localizationConstants.expenseStatusAktiv} />
+				</Badge>
+			);
+		case "ledig":
+			return (
+				<Badge
+					variant="outline"
+					className="bg-yellow-50 text-yellow-700 border-yellow-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+				>
+					<span className="h-1.5 w-1.5 rounded-full bg-yellow-500 mr-1.5" />
+					<Translate text={localizationConstants.expenseStatusLedig} />
+				</Badge>
+			);
+		case "ej_paborjad":
+			return (
+				<Badge
+					variant="outline"
+					className="bg-slate-100 text-slate-600 border-slate-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
+				>
+					<span className="h-1.5 w-1.5 rounded-full bg-slate-400 mr-1.5" />
+					<Translate text={localizationConstants.expenseStatusEjPaborjad} />
+				</Badge>
+			);
 		case "pending":
 			return (
 				<Badge

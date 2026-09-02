@@ -5585,6 +5585,23 @@ const svExpense: ExpenseTranslation = {
 	expenseDetailsNoReceipt: "Inget kvitto bifogat",
 	expenseNoRecordsFound: "Inga utlägg hittades",
 	expenseNoRecordsSubtitle: "Det finns inga utlägg som matchar dina sökkriterier eller filter.",
+	expenseTopTabCustomerInvoice: "Kundfaktura",
+	expenseTopTabSupplierInvoice: "Leverantörsfaktura",
+	expenseSubTabSupplierList: "Leverantörs lista",
+	expenseSubTabInbox: "Inbox",
+	expenseAddSupplierInvoiceBtn: "Lägg till leverantörsfaktura",
+	expenseColInvoiceNo: "Faktura",
+	expenseColObject: "Objekt",
+	expenseColInvoiceDate: "Faktura datum",
+	expenseColAttestResponsible: "Attest ansvarig",
+	expenseStatusKlar: "Klar",
+	expenseStatusEjAttesterad: "Ej attesterad",
+	expenseStatusReklamerad: "Reklamerad",
+	expenseStatusAktiv: "Aktiv",
+	expenseStatusLedig: "Ledig",
+	expenseStatusEjPaborjad: "Ej påbörjad",
+	expenseRowsPerPage: "Rader per sida",
+	expenseActionSeeInvoice: "Se faktura",
 };
 
 export const sv: Translation = {

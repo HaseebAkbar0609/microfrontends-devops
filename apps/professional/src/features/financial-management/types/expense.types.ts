@@ -1,34 +1,51 @@
-export type ExpenseStatus = "pending" | "approved" | "paid" | "rejected";
+export type ExpenseStatus =
+	| "klar"
+	| "ej_attesterad"
+	| "reklamerad"
+	| "aktiv"
+	| "ledig"
+	| "ej_paborjad"
+	| "pending"
+	| "approved"
+	| "paid"
+	| "rejected";
 
 export type ExpenseCategory = "material" | "labor" | "equipment" | "travel" | "other";
 
 export interface ExpenseItem {
 	id: string;
 	expenseNo: string;
+	fakturaNo?: string;
 	supplier: string;
 	category: ExpenseCategory;
 	amount: number;
 	vatAmount: number;
 	status: ExpenseStatus;
 	date: string;
+	invoiceDate?: string;
 	dueDate: string;
 	project: string;
 	projectNumber: string;
 	costCenter: string;
+	attestResponsible?: string;
 	invoiceRef?: string;
 	notes?: string;
 	receiptUrl?: string;
+	isInboxItem?: boolean;
 }
 
 export type ExpenseSortField =
+	| "date"
+	| "fakturaNo"
 	| "expenseNo"
 	| "supplier"
-	| "category"
+	| "project"
 	| "amount"
-	| "status"
-	| "date"
+	| "invoiceDate"
 	| "dueDate"
-	| "project";
+	| "attestResponsible"
+	| "status"
+	| "category";
 
 export interface ExpenseSummaryStats {
 	totalExpenses: number;

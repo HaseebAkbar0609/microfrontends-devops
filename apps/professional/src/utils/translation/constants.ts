@@ -5522,6 +5522,23 @@ export type ExpenseTranslation = {
 	expenseDetailsNoReceipt: string;
 	expenseNoRecordsFound: string;
 	expenseNoRecordsSubtitle: string;
+	expenseTopTabCustomerInvoice: string;
+	expenseTopTabSupplierInvoice: string;
+	expenseSubTabSupplierList: string;
+	expenseSubTabInbox: string;
+	expenseAddSupplierInvoiceBtn: string;
+	expenseColInvoiceNo: string;
+	expenseColObject: string;
+	expenseColInvoiceDate: string;
+	expenseColAttestResponsible: string;
+	expenseStatusKlar: string;
+	expenseStatusEjAttesterad: string;
+	expenseStatusReklamerad: string;
+	expenseStatusAktiv: string;
+	expenseStatusLedig: string;
+	expenseStatusEjPaborjad: string;
+	expenseRowsPerPage: string;
+	expenseActionSeeInvoice: string;
 };
 
 export type Translation = HeaderTranslation &

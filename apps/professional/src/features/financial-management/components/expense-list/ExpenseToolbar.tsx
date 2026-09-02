@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, Filter } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Input } from "@/components/ui/input";
@@ -45,8 +45,8 @@ export function ExpenseToolbar({
 	const { t } = useTranslation();
 
 	return (
-		<div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs mb-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-			{/* Left: Search & Dropdown Filters */}
+		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
+			{/* Left: Search Bar & Filters */}
 			<div className="flex flex-wrap items-center gap-2.5 flex-1">
 				{/* Search Bar */}
 				<div className="relative flex-1 min-w-[200px] max-w-sm">
@@ -56,19 +56,20 @@ export function ExpenseToolbar({
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
 						placeholder={t(localizationConstants.expenseSearchPlaceholder)}
-						className="pl-9 h-8 text-xs border-slate-200 rounded-lg focus-visible:ring-1 focus-visible:ring-slate-900"
+						className="pl-9 h-9 text-xs bg-white border-slate-200 rounded-lg shadow-2xs focus-visible:ring-1 focus-visible:ring-slate-900"
 					/>
 				</div>
 
-				{/* Status Filter */}
+				{/* Status Filter Dropdown */}
 				<Select
 					value={statusFilter}
 					onValueChange={(val) => onStatusFilterChange(val as ExpenseStatus | "all")}
 				>
-					<SelectTrigger className="h-8 text-xs border-slate-200 rounded-lg w-[130px]">
-						<SelectValue placeholder={t(localizationConstants.expenseFilterAllStatuses)} />
+					<SelectTrigger className="h-9 text-xs bg-white border-slate-200 rounded-lg shadow-2xs w-[130px] gap-1">
+						<Filter className="h-3 w-3 text-slate-400 mr-1 shrink-0" />
+						<SelectValue placeholder={t(localizationConstants.filter)} />
 					</SelectTrigger>
-					<SelectContent className="bg-white border-slate-200">
+					<SelectContent className="bg-white border-slate-200 shadow-lg">
 						<SelectItem value="all" className="text-xs">
 							<Translate text={localizationConstants.expenseFilterAllStatuses} />
 						</SelectItem>
@@ -85,10 +86,10 @@ export function ExpenseToolbar({
 					value={categoryFilter}
 					onValueChange={(val) => onCategoryFilterChange(val as ExpenseCategory | "all")}
 				>
-					<SelectTrigger className="h-8 text-xs border-slate-200 rounded-lg w-[140px]">
+					<SelectTrigger className="h-9 text-xs bg-white border-slate-200 rounded-lg shadow-2xs w-[135px]">
 						<SelectValue placeholder={t(localizationConstants.expenseFilterAllCategories)} />
 					</SelectTrigger>
-					<SelectContent className="bg-white border-slate-200">
+					<SelectContent className="bg-white border-slate-200 shadow-lg">
 						<SelectItem value="all" className="text-xs">
 							<Translate text={localizationConstants.expenseFilterAllCategories} />
 						</SelectItem>
@@ -106,10 +107,10 @@ export function ExpenseToolbar({
 						value={projectFilter}
 						onValueChange={(val) => onProjectFilterChange(val)}
 					>
-						<SelectTrigger className="h-8 text-xs border-slate-200 rounded-lg w-[160px]">
+						<SelectTrigger className="h-9 text-xs bg-white border-slate-200 rounded-lg shadow-2xs w-[150px]">
 							<SelectValue placeholder={t(localizationConstants.expenseFilterAllProjects)} />
 						</SelectTrigger>
-						<SelectContent className="bg-white border-slate-200">
+						<SelectContent className="bg-white border-slate-200 shadow-lg">
 							<SelectItem value="all" className="text-xs">
 								<Translate text={localizationConstants.expenseFilterAllProjects} />
 							</SelectItem>
@@ -123,16 +124,16 @@ export function ExpenseToolbar({
 				)}
 			</div>
 
-			{/* Right: Primary CTA */}
+			{/* Right: Primary CTA "+ Lägg till leverantörsfaktura" */}
 			<div className="flex items-center gap-2">
 				<Button
 					size="sm"
 					onClick={onRegisterClick}
-					className="h-8 px-3.5 text-xs font-medium bg-zinc-900 hover:bg-slate-800 text-white gap-1.5 shadow-2xs cursor-pointer rounded-lg shrink-0"
+					className="h-9 px-4 text-xs font-semibold bg-zinc-950 hover:bg-slate-800 text-white gap-2 shadow-xs cursor-pointer rounded-lg shrink-0 transition-all"
 				>
 					<Plus className="h-3.5 w-3.5" />
 					<span>
-						<Translate text={localizationConstants.expenseRegisterBtn} />
+						<Translate text={localizationConstants.expenseAddSupplierInvoiceBtn} />
 					</span>
 				</Button>
 			</div>

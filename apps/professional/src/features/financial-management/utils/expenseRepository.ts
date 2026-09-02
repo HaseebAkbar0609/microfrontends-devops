@@ -1,6 +1,6 @@
 import { ExpenseItem, ExpenseStatus } from "../types/expense.types";
 import { EXPENSES_STORAGE_KEY } from "../constants/expense.constants";
-import { MOCK_EXPENSES_LIST } from "../mock/expenseMockData";
+import { initialExpensesMock } from "../mock/expenseMockData";
 
 /**
  * Client Storage Security Layer
@@ -28,13 +28,14 @@ function secureDecode<T>(payload: string): T | null {
 	}
 }
 
-type Listener = () => void;
+type Listener = (updated: ExpenseItem[]) => void;
 const listeners = new Set<Listener>();
 
 function notifyListeners() {
+	const current = inMemoryExpenses ? [...inMemoryExpenses] : [];
 	listeners.forEach((listener) => {
 		try {
-			listener();
+			listener(current);
 		} catch (e) {
 			console.error("Error in expense repository listener", e);
 		}
@@ -62,7 +63,7 @@ function initializeRepository() {
 	}
 
 	if (!inMemoryExpenses) {
-		inMemoryExpenses = [...MOCK_EXPENSES_LIST];
+		inMemoryExpenses = [...initialExpensesMock];
 	}
 }
 
@@ -88,6 +89,10 @@ export const expenseRepository = {
 	getExpenses(): ExpenseItem[] {
 		initializeRepository();
 		return [...(inMemoryExpenses || [])];
+	},
+
+	getAllExpenses(): ExpenseItem[] {
+		return this.getExpenses();
 	},
 
 	getExpenseById(id: string): ExpenseItem | null {
@@ -125,33 +130,35 @@ export const expenseRepository = {
 		this.updateExpenseStatus(id, "paid");
 	},
 
+	createExpense(newExpense: Omit<ExpenseItem, "id" | "expenseNo">): ExpenseItem {
+		initializeRepository();
+		const count = (inMemoryExpenses?.length || 0) + 1;
+		const id = `exp-${Date.now()}`;
+		const expenseNo = `EXP-2026-${String(count).padStart(3, "0")}`;
+
+		const item: ExpenseItem = {
+			...newExpense,
+			id,
+			expenseNo,
+		};
+
+		inMemoryExpenses = [item, ...(inMemoryExpenses || [])];
+		persistRepository();
+		notifyListeners();
+		return item;
+	},
+
 	deleteExpense(id: string): void {
 		initializeRepository();
 		if (!inMemoryExpenses) return;
 
-		inMemoryExpenses = inMemoryExpenses.filter((exp) => exp.id !== id);
+		inMemoryExpenses = inMemoryExpenses.filter((e) => e.id !== id);
 		persistRepository();
 		notifyListeners();
-	},
-
-	createExpense(item: Omit<ExpenseItem, "id" | "expenseNo">): ExpenseItem {
-		initializeRepository();
-		const newIndex = (inMemoryExpenses?.length || 0) + 1;
-		const paddedNum = String(newIndex).padStart(3, "0");
-		const newExpense: ExpenseItem = {
-			...item,
-			id: `exp-${Date.now()}`,
-			expenseNo: `EXP-2025-${paddedNum}`,
-		};
-
-		inMemoryExpenses = [newExpense, ...(inMemoryExpenses || [])];
-		persistRepository();
-		notifyListeners();
-		return newExpense;
 	},
 
 	resetToMock(): void {
-		inMemoryExpenses = [...MOCK_EXPENSES_LIST];
+		inMemoryExpenses = [...initialExpensesMock];
 		persistRepository();
 		notifyListeners();
 	},
