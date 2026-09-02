@@ -41,10 +41,11 @@ export function ExpenseListPage() {
 	// Top Category Tab: "customer_invoice" (Kundfaktura) | "supplier_invoice" (Leverantörsfaktura)
 	const [topCategoryTab, setTopCategoryTab] = useState<"customer_invoice" | "supplier_invoice">("supplier_invoice");
 
+	// Sub-tab under Leverantörsfaktura: "supplier_list" | "inbox"
+	const [activeSubTab, setActiveSubTab] = useState<"supplier_list" | "inbox">("supplier_list");
+
 	// Supplier Invoice / Expense State (TFS-498)
 	const {
-		activeSubTab,
-		setActiveSubTab,
 		expenses,
 		totalCount,
 		availableProjects,
@@ -79,7 +80,7 @@ export function ExpenseListPage() {
 		executeReject,
 		executeMarkPaid,
 		executeDelete,
-	} = useExpenseList();
+	} = useExpenseList(activeSubTab);
 
 	// Customer Invoice State (TFS-495 / Column 1 in Figma)
 	const {

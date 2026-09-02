@@ -13,8 +13,7 @@ import { DEFAULT_ANNUAL_EXPENSE_BUDGET } from "../constants/expense.constants";
 
 export type ExpenseActiveSubTab = "supplier_list" | "inbox";
 
-export function useExpenseList() {
-	const [activeSubTab, setActiveSubTab] = useState<ExpenseActiveSubTab>("supplier_list");
+export function useExpenseList(activeSubTab: ExpenseActiveSubTab = "supplier_list") {
 	const [expenses, setExpenses] = useState<ExpenseItem[]>([]);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -219,8 +218,6 @@ export function useExpenseList() {
 	}, [confirmDeleteId]);
 
 	return {
-		activeSubTab,
-		setActiveSubTab,
 		expenses: paginatedExpenses,
 		totalCount: filteredExpenses.length,
 		isLoading,
