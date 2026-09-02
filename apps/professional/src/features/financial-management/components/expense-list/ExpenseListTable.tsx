@@ -2,17 +2,17 @@
 
 import React from "react";
 import {
-	MoreVertical,
 	ArrowUpDown,
 	ArrowUp,
 	ArrowDown,
-	Eye,
 	Trash2,
 	Inbox,
 	ChevronLeft,
 	ChevronRight,
 	ChevronsLeft,
 	ChevronsRight,
+	FileText,
+	Plus,
 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -57,13 +57,16 @@ interface ExpenseListTableProps {
 	onDelete?: (id: string) => void;
 }
 
-function formatSEK(num: number): string {
-	return (num || 0).toLocaleString("sv-SE", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+function formatAmountDisplay(item: ExpenseItem): string {
+	if (typeof item.amount === "number") {
+		return item.amount.toLocaleString("sv-SE", { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+	}
+	return String(item.amount || "");
 }
 
 export function ExpenseListTable({
 	expenses = [],
-	totalCount = 0,
+	totalCount: _totalCount = 0,
 	selectedIds = [],
 	onToggleSelect = () => {},
 	onToggleSelectAll = () => {},
@@ -84,7 +87,7 @@ export function ExpenseListTable({
 
 	const renderSortIcon = (field: ExpenseSortField) => {
 		if (sortField !== field) {
-			return <ArrowUpDown className="h-3 w-3 text-slate-300 ml-1 inline" />;
+			return <ArrowUpDown className="h-3 w-3 text-slate-300 ml-1 inline opacity-60 group-hover:opacity-100 transition-opacity" />;
 		}
 		return sortOrder === "asc" ? (
 			<ArrowUp className="h-3 w-3 text-slate-900 ml-1 inline" />
@@ -94,19 +97,19 @@ export function ExpenseListTable({
 	};
 
 	return (
-		<div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden flex flex-col">
+		<div className="bg-white rounded-xl border border-slate-200/80 shadow-2xs overflow-hidden flex flex-col">
 			{/* Table Container */}
 			<div className="overflow-x-auto min-h-[350px]">
 				<table className="w-full text-left border-collapse text-xs">
 					<thead>
-						<tr className="border-b border-slate-200 bg-slate-50/70 text-slate-700 font-semibold select-none">
+						<tr className="border-b border-slate-200/80 bg-white text-slate-600 font-medium select-none">
 							{/* Checkbox Column */}
-							<th className="py-3 px-3.5 w-10 text-center">
+							<th className="py-3.5 px-4 w-12 text-center">
 								<Checkbox
 									checked={allSelected}
 									onCheckedChange={onToggleSelectAll}
 									aria-label="Select all"
-									className="rounded border-slate-300 data-[state=checked]:bg-zinc-900 data-[state=checked]:border-zinc-900"
+									className="rounded border-slate-300 data-[state=checked]:bg-zinc-950 data-[state=checked]:border-zinc-950"
 								/>
 							</th>
 
@@ -115,20 +118,20 @@ export function ExpenseListTable({
 								<th
 									key={col.field}
 									onClick={() => onSort(col.field)}
-									className={`py-3 px-3.5 cursor-pointer hover:bg-slate-100 transition-colors ${
+									className={`py-3.5 px-3.5 cursor-pointer hover:text-slate-900 transition-colors group ${
 										col.align === "right" ? "text-right" : "text-left"
 									}`}
 								>
-									<span className="inline-flex items-center">
+									<span className="inline-flex items-center gap-1 font-medium text-slate-600">
 										<Translate text={col.labelKey} />
 										{renderSortIcon(col.field)}
 									</span>
 								</th>
 							))}
 
-							{/* Actions Column Header */}
-							<th className="py-3 px-3.5 text-right w-12">
-								<Translate text={localizationConstants.expenseColActions} />
+							{/* Column customization + icon in header matching Figma */}
+							<th className="py-3.5 px-4 text-center w-10 text-slate-400">
+								<Plus className="h-3.5 w-3.5 mx-auto" />
 							</th>
 						</tr>
 					</thead>
@@ -157,74 +160,74 @@ export function ExpenseListTable({
 								return (
 									<tr
 										key={item.id}
-										className={`hover:bg-slate-50/80 transition-colors group cursor-pointer ${
+										className={`hover:bg-slate-50/70 transition-colors group cursor-pointer ${
 											isSelected ? "bg-slate-50/60" : ""
 										}`}
 										onClick={() => onView(item)}
 									>
 										{/* Checkbox */}
 										<td
-											className="py-3 px-3.5 text-center"
+											className="py-3.5 px-4 text-center"
 											onClick={(e) => e.stopPropagation()}
 										>
 											<Checkbox
 												checked={isSelected}
 												onCheckedChange={() => onToggleSelect(item.id)}
 												aria-label={`Select ${item.expenseNo}`}
-												className="rounded border-slate-300 data-[state=checked]:bg-zinc-900 data-[state=checked]:border-zinc-900"
+												className="rounded border-slate-300 data-[state=checked]:bg-zinc-950 data-[state=checked]:border-zinc-950"
 											/>
 										</td>
 
 										{/* 1. Datum */}
-										<td className="py-3 px-3.5 text-slate-600 font-normal">
+										<td className="py-3.5 px-3.5 text-slate-600 font-normal">
 											{item.date}
 										</td>
 
-										{/* 2. Faktura (Pill badge like Figma #456989) */}
-										<td className="py-3 px-3.5">
-											<span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-800 border border-slate-200">
+										{/* 2. Faktura (Pill badge like Figma #456989 / Heltid) */}
+										<td className="py-3.5 px-3.5">
+											<span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-800 border border-slate-200">
 												{item.fakturaNo || item.expenseNo.replace("EXP-2026-00", "#")}
 											</span>
 										</td>
 
 										{/* 3. Leverantör */}
-										<td className="py-3 px-3.5 font-medium text-slate-800">
+										<td className="py-3.5 px-3.5 font-normal text-slate-800">
 											{item.supplier}
 										</td>
 
-										{/* 4. Objekt (Project / Object) */}
-										<td className="py-3 px-3.5 text-slate-700 font-semibold">
+										{/* 4. Objekt (Project / Object) - Bold text in Figma */}
+										<td className="py-3.5 px-3.5 font-semibold text-slate-900">
 											{item.project}
 										</td>
 
-										{/* 5. Belopp (SEK) */}
-										<td className="py-3 px-3.5 text-right font-bold text-slate-900">
-											{formatSEK(item.amount)}
+										{/* 5. Belopp */}
+										<td className="py-3.5 px-3.5 text-right font-normal text-slate-800">
+											{formatAmountDisplay(item)}
 										</td>
 
 										{/* 6. Faktura datum */}
-										<td className="py-3 px-3.5 text-slate-600">
+										<td className="py-3.5 px-3.5 text-slate-600">
 											{item.invoiceDate || item.date}
 										</td>
 
 										{/* 7. Förfallodatum */}
-										<td className="py-3 px-3.5 text-slate-600">
+										<td className="py-3.5 px-3.5 text-slate-600">
 											{item.dueDate}
 										</td>
 
 										{/* 8. Attest ansvarig */}
-										<td className="py-3 px-3.5 text-slate-700">
+										<td className="py-3.5 px-3.5 text-slate-700">
 											{item.attestResponsible || "Kalle Andersson"}
 										</td>
 
 										{/* 9. Status */}
-										<td className="py-3 px-3.5">
+										<td className="py-3.5 px-3.5">
 											<ExpenseStatusBadge status={item.status} />
 										</td>
 
 										{/* 10. Actions Dropdown */}
 										<td
-											className="py-3 px-3.5 text-right"
+											className="py-3.5 px-4 text-center"
 											onClick={(e) => e.stopPropagation()}
 										>
 											<DropdownMenu>
@@ -233,27 +236,27 @@ export function ExpenseListTable({
 														variant="ghost"
 														size="icon"
 														aria-label="Actions"
-														className="h-7 w-7 text-slate-500 hover:text-slate-900 cursor-pointer rounded-md"
+														className="h-7 w-7 text-slate-400 hover:text-slate-900 hover:bg-slate-100 cursor-pointer rounded-md"
 													>
-														<MoreVertical className="h-3.5 w-3.5" />
+														<span className="text-base leading-none font-bold">⋮</span>
 													</Button>
 												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end" className="w-40 bg-white border-slate-200 shadow-lg">
+												<DropdownMenuContent align="end" className="w-36 bg-white border-slate-200 shadow-lg p-1">
 													<DropdownMenuItem
 														onClick={() => onView(item)}
-														className="text-xs gap-2 cursor-pointer text-slate-700"
+														className="text-xs gap-2 cursor-pointer text-slate-700 py-1.5"
 													>
-														<Eye className="h-3.5 w-3.5 text-slate-500" />
+														<FileText className="h-3.5 w-3.5 text-slate-500" />
 														<Translate text={localizationConstants.expenseActionSeeInvoice} />
 													</DropdownMenuItem>
 
-													<DropdownMenuSeparator />
+													<DropdownMenuSeparator className="my-1 border-slate-100" />
 
 													<DropdownMenuItem
 														onClick={() => onDelete(item.id)}
-														className="text-xs gap-2 text-rose-600 focus:text-rose-700 cursor-pointer"
+														className="text-xs gap-2 text-rose-600 focus:text-rose-700 cursor-pointer py-1.5"
 													>
-														<Trash2 className="h-3.5 w-3.5" />
+														<Trash2 className="h-3.5 w-3.5 text-rose-500" />
 														<Translate text={localizationConstants.expenseActionDelete} />
 													</DropdownMenuItem>
 												</DropdownMenuContent>
@@ -268,7 +271,7 @@ export function ExpenseListTable({
 			</div>
 
 			{/* Pagination Footer matching Figma */}
-			<div className="border-t border-slate-200 px-4 py-3 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+			<div className="border-t border-slate-200/80 px-4 py-3 bg-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
 				{/* Rows per page selector */}
 				<div className="flex items-center gap-2">
 					<span>
@@ -278,7 +281,7 @@ export function ExpenseListTable({
 						value={String(pageSize)}
 						onValueChange={(val) => onPageSizeChange(Number(val))}
 					>
-						<SelectTrigger className="h-7 w-16 text-xs bg-white border-slate-200">
+						<SelectTrigger className="h-7 w-16 text-xs bg-white border-slate-200 rounded">
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent className="bg-white border-slate-200">
@@ -288,15 +291,11 @@ export function ExpenseListTable({
 							<SelectItem value="50" className="text-xs">50</SelectItem>
 						</SelectContent>
 					</Select>
-					<span className="text-slate-400">|</span>
-					<span>
-						{totalCount} utlägg totalt
-					</span>
 				</div>
 
 				{/* Page Navigation Controls */}
-				<div className="flex items-center gap-1">
-					<span className="mr-2 font-medium text-slate-700">
+				<div className="flex items-center gap-1.5">
+					<span className="mr-3 text-slate-600">
 						Page {currentPage} of {totalPages}
 					</span>
 
@@ -305,36 +304,36 @@ export function ExpenseListTable({
 						size="icon"
 						disabled={currentPage <= 1}
 						onClick={() => onPageChange(1)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-40 cursor-pointer bg-white"
+						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
 					>
-						<ChevronsLeft className="h-3.5 w-3.5" />
+						<ChevronsLeft className="h-3.5 w-3.5 text-slate-600" />
 					</Button>
 					<Button
 						variant="outline"
 						size="icon"
 						disabled={currentPage <= 1}
 						onClick={() => onPageChange(currentPage - 1)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-40 cursor-pointer bg-white"
+						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
 					>
-						<ChevronLeft className="h-3.5 w-3.5" />
+						<ChevronLeft className="h-3.5 w-3.5 text-slate-600" />
 					</Button>
 					<Button
 						variant="outline"
 						size="icon"
 						disabled={currentPage >= totalPages}
 						onClick={() => onPageChange(currentPage + 1)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-40 cursor-pointer bg-white"
+						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
 					>
-						<ChevronRight className="h-3.5 w-3.5" />
+						<ChevronRight className="h-3.5 w-3.5 text-slate-600" />
 					</Button>
 					<Button
 						variant="outline"
 						size="icon"
 						disabled={currentPage >= totalPages}
 						onClick={() => onPageChange(totalPages)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-40 cursor-pointer bg-white"
+						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
 					>
-						<ChevronsRight className="h-3.5 w-3.5" />
+						<ChevronsRight className="h-3.5 w-3.5 text-slate-600" />
 					</Button>
 				</div>
 			</div>

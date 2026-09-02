@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Badge } from "@/components/ui/badge";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { ExpenseStatus, ExpenseCategory } from "../../types/expense.types";
@@ -14,106 +13,70 @@ export function ExpenseStatusBadge({ status }: ExpenseStatusBadgeProps) {
 	switch (status) {
 		case "klar":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#138855] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusKlar} />
-				</Badge>
+				</span>
 			);
 		case "ej_attesterad":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-sky-50 text-sky-700 border-sky-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-sky-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#0284c7] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusEjAttesterad} />
-				</Badge>
+				</span>
 			);
 		case "reklamerad":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-amber-50 text-amber-700 border-amber-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#f59e0b] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusReklamerad} />
-				</Badge>
+				</span>
 			);
 		case "aktiv":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#138855] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusAktiv} />
-				</Badge>
+				</span>
 			);
 		case "ledig":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-yellow-50 text-yellow-700 border-yellow-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-yellow-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#eab308] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusLedig} />
-				</Badge>
+				</span>
 			);
 		case "ej_paborjad":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-slate-100 text-slate-600 border-slate-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-slate-400 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#94a3b8] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusEjPaborjad} />
-				</Badge>
+				</span>
 			);
 		case "pending":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-amber-50 text-amber-700 border-amber-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-amber-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#f59e0b] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusPending} />
-				</Badge>
+				</span>
 			);
 		case "approved":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-blue-50 text-blue-700 border-blue-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-blue-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#0284c7] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusApproved} />
-				</Badge>
+				</span>
 			);
 		case "paid":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-emerald-50 text-emerald-700 border-emerald-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-emerald-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#138855] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusPaid} />
-				</Badge>
+				</span>
 			);
 		case "rejected":
 			return (
-				<Badge
-					variant="outline"
-					className="bg-rose-50 text-rose-700 border-rose-200 text-[11px] font-semibold px-2 py-0.5 rounded-full"
-				>
-					<span className="h-1.5 w-1.5 rounded-full bg-rose-500 mr-1.5" />
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-[#ef4444] text-white shadow-2xs">
 					<Translate text={localizationConstants.expenseStatusRejected} />
-				</Badge>
+				</span>
 			);
 		default:
-			return <Badge variant="secondary">{status}</Badge>;
+			return (
+				<span className="inline-flex items-center px-2.5 py-0.5 rounded text-[11px] font-medium bg-slate-200 text-slate-800">
+					{status}
+				</span>
+			);
 	}
 }
 

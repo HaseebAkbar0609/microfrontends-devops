@@ -5517,7 +5517,7 @@ export const enInvoice: InvoiceTranslation = {
 };
 
 const enExpense: ExpenseTranslation = {
-	expenseOverviewTitle: "Expenses & Vendor Invoices",
+	expenseOverviewTitle: "Economy Overview",
 	expenseOverviewSubtitle: "Track company expenses, vendor invoices, and cost controls",
 	expenseRegisterBtn: "Register Expense",
 	expenseKpiTotalExpenses: "Total Expenses",
@@ -5528,11 +5528,11 @@ const enExpense: ExpenseTranslation = {
 	expenseColId: "Expense ID",
 	expenseColSupplier: "Supplier",
 	expenseColCategory: "Category",
-	expenseColAmount: "Amount (SEK)",
+	expenseColAmount: "Amount",
 	expenseColStatus: "Status",
 	expenseColDate: "Date",
 	expenseColDueDate: "Due Date",
-	expenseColProject: "Project",
+	expenseColProject: "Object",
 	expenseColActions: "Actions",
 	expenseStatusPending: "Pending",
 	expenseStatusApproved: "Approved",
@@ -5546,7 +5546,7 @@ const enExpense: ExpenseTranslation = {
 	expenseFilterAllStatuses: "All Statuses",
 	expenseFilterAllCategories: "All Categories",
 	expenseFilterAllProjects: "All Projects",
-	expenseSearchPlaceholder: "Search supplier, category, project...",
+	expenseSearchPlaceholder: "Search",
 	expenseActionView: "View Details",
 	expenseActionApprove: "Approve",
 	expenseActionReject: "Reject",

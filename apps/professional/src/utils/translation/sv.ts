@@ -5539,7 +5539,7 @@ export const svInvoice: InvoiceTranslation = {
 };
 
 const svExpense: ExpenseTranslation = {
-	expenseOverviewTitle: "Utlägg & Utgifter",
+	expenseOverviewTitle: "Ekonomi Översikt",
 	expenseOverviewSubtitle: "Hantera företagets utgifter, leverantörsfakturor och kostnadsuppföljning",
 	expenseRegisterBtn: "Registrera utlägg",
 	expenseKpiTotalExpenses: "Totala utgifter",
@@ -5550,11 +5550,11 @@ const svExpense: ExpenseTranslation = {
 	expenseColId: "Utläggs-ID",
 	expenseColSupplier: "Leverantör",
 	expenseColCategory: "Kategori",
-	expenseColAmount: "Belopp (SEK)",
+	expenseColAmount: "Belopp",
 	expenseColStatus: "Status",
 	expenseColDate: "Datum",
 	expenseColDueDate: "Förfallodatum",
-	expenseColProject: "Projekt",
+	expenseColProject: "Objekt",
 	expenseColActions: "Åtgärder",
 	expenseStatusPending: "Väntar",
 	expenseStatusApproved: "Godkänd",
@@ -5568,7 +5568,7 @@ const svExpense: ExpenseTranslation = {
 	expenseFilterAllStatuses: "Alla statusar",
 	expenseFilterAllCategories: "Alla kategorier",
 	expenseFilterAllProjects: "Alla projekt",
-	expenseSearchPlaceholder: "Sök leverantör, kategori, projekt...",
+	expenseSearchPlaceholder: "Sök",
 	expenseActionView: "Visa detaljer",
 	expenseActionApprove: "Godkänn",
 	expenseActionReject: "Avvisa",
