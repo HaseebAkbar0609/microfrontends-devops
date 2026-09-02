@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Folder, Save, Send } from "lucide-react";
+import { ArrowRight, Folder, Save } from "lucide-react";
 
 import { PermissionGate } from "@/components/common/PermissionGate";
 import { SearchableSelect } from "@/components/form";
@@ -27,10 +27,14 @@ import {
 	PURCHASE_MODULE_TITLE,
 } from "../data/purchaseNav.config";
 import type { ComplaintPriority } from "./types";
-import { useCreateComplaintForm } from "./useCreateComplaintForm";
+import {
+	COMPLAINT_ACCEPT_EXTENSIONS,
+	useCreateComplaintForm,
+} from "./useCreateComplaintForm";
 import { ComplaintCompanyCard } from "./components/ComplaintCompanyCard";
 import { ContactPersonCard } from "../components/shared/ContactPersonCard";
 import { ComplaintDocumentsCard } from "./components/ComplaintDocumentsCard";
+import { ComplaintStepRail } from "./components/ComplaintStepRail";
 
 const FIELD_CLASS =
 	"h-10 rounded-md border-slate-200 shadow-none focus-visible:border-gray-300 focus-visible:outline-none";
@@ -88,6 +92,8 @@ export function CreateComplaintPage({
 		selectPurchase,
 		goNext,
 		submit,
+		saveDraft,
+		documents,
 		cancel,
 	} = useCreateComplaintForm(prefillPurchaseNo);
 
@@ -235,7 +241,15 @@ export function CreateComplaintPage({
 													})
 												}
 											>
-												<SelectTrigger className="h-10 w-full cursor-pointer border-slate-200 bg-white text-sm text-slate-900 shadow-none">
+												<SelectTrigger
+													className={cn(
+														"h-10 w-full cursor-pointer border-slate-200 bg-white text-sm text-slate-900 shadow-none",
+														errorFor(
+															"info",
+															"complaintType",
+														) && "border-red-500",
+													)}
+												>
 													<SelectValue />
 												</SelectTrigger>
 												<SelectContent className="bg-white">
@@ -259,6 +273,19 @@ export function CreateComplaintPage({
 													)}
 												</SelectContent>
 											</Select>
+											{errorFor(
+												"info",
+												"complaintType",
+											) && (
+												<p className="mt-1 text-xs font-normal text-red-500">
+													{t(
+														errorFor(
+															"info",
+															"complaintType",
+														) as TranslationKeys,
+													)}
+												</p>
+											)}
 										</div>
 									</CardContent>
 								</Card>
@@ -498,60 +525,29 @@ export function CreateComplaintPage({
 
 								<ComplaintDocumentsCard
 									gdprAccepted={draft.report.gdprAccepted}
-									onGdprChange={(gdprAccepted) =>
-										patchReport({ gdprAccepted })
+									onGdprChange={(accepted) =>
+										patchReport({
+											gdprAccepted: accepted,
+										})
+									}
+									gdprError={errorFor(
+										"report",
+										"gdprAccepted",
+									)}
+									documents={documents}
+									acceptExtensions={
+										COMPLAINT_ACCEPT_EXTENSIONS
 									}
 								/>
 							</>
 						)}
 					</div>
 
-					{/* Progress panel */}
-					<div className="w-full shrink-0 xl:w-80">
-						<div className="sticky top-4 space-y-4 rounded-lg border border-slate-200 bg-white p-4 shadow-none">
-							<div className="space-y-2.5">
-								<p className="text-sm font-medium text-slate-900">
-									<Translate
-										text={
-											localizationConstants.complaintCreateStep
-										}
-									/>{" "}
-									{step}/{TOTAL_STEPS}
-								</p>
-								<div
-									className="h-1.5 w-full rounded-full bg-slate-200"
-									role="progressbar"
-									aria-valuenow={step}
-									aria-valuemin={1}
-									aria-valuemax={TOTAL_STEPS}
-								>
-									<div
-										className="h-1.5 rounded-full bg-slate-900 transition-all"
-										style={{
-											width: `${(step / TOTAL_STEPS) * 100}%`,
-										}}
-									/>
-								</div>
-							</div>
-
-							{step === 2 && (
-								<PermissionGate permission="CREATE_PURCHASE">
-									<Button
-										type="button"
-										onClick={handleSend}
-										className="h-10 w-full cursor-pointer gap-2 rounded-md bg-[#111721] text-sm font-medium text-white hover:bg-slate-800"
-									>
-										<Send className="h-4 w-4" />
-										<Translate
-											text={
-												localizationConstants.complaintCreateSend
-											}
-										/>
-									</Button>
-								</PermissionGate>
-							)}
-						</div>
-					</div>
+					<ComplaintStepRail
+						step={step}
+						totalSteps={TOTAL_STEPS}
+						onSend={handleSend}
+					/>
 				</div>
 			</div>
 
@@ -587,15 +583,20 @@ export function CreateComplaintPage({
 						</Button>
 					)}
 
-					<Button
-						type="button"
-						disabled
-						title={t(localizationConstants.complaintCreateUnavailable)}
-						className="h-10 min-w-25 cursor-pointer gap-2 bg-[#111721] text-sm text-white shadow-none hover:bg-slate-800"
-					>
-						<Save className="h-4 w-4" />
-						<Translate text={localizationConstants.confirmSave} />
-					</Button>
+					{/* Saves whatever is filled in so far; a draft is
+					    deliberately not validated. */}
+					<PermissionGate permission="CREATE_PURCHASE">
+						<Button
+							type="button"
+							onClick={saveDraft}
+							className="h-10 min-w-25 cursor-pointer gap-2 bg-[#111721] text-sm text-white shadow-none hover:bg-slate-800"
+						>
+							<Save className="h-4 w-4" aria-hidden />
+							<Translate
+								text={localizationConstants.confirmSave}
+							/>
+						</Button>
+					</PermissionGate>
 
 					{step === 1 && (
 						<Button

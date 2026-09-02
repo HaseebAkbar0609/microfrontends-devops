@@ -40,7 +40,6 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { B2BAgreementDetail } from "../types/agreement";
 import { useB2BAgreements } from "../hooks/useB2BAgreements";
 import { getAgreementDetailByContext } from "../constants/agreementMock";
-import { B2BDocumentPreviewModal, PreviewableDoc } from "./B2BDocumentPreviewModal";
 
 function AccordionSection({
   title,
@@ -55,7 +54,7 @@ function AccordionSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white shadow-2xs">
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xs">
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger asChild>
           <Button
@@ -80,7 +79,7 @@ function AccordionSection({
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <div className="border-t border-[#E5E5E5] px-5 py-4">{children}</div>
+          <div className="border-t border-slate-200 px-5 py-4">{children}</div>
         </CollapsibleContent>
       </Collapsible>
     </div>
@@ -126,10 +125,25 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
     return initialData;
   }, [queryProjectId, queryOfferId, initialData]);
 
-  const { isSubmitting, handleSendAgreement, handleDownloadDoc } = useB2BAgreements(data);
-  const [previewDoc, setPreviewDoc] = useState<PreviewableDoc | null>(null);
+  const { isSubmitting, handleDownloadDoc, handleSendAgreement } = useB2BAgreements(data);
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
+
+  const handleBack = () => {
+    if (queryProjectId || queryOfferId) {
+      router.push(
+        `/module/business/b2b/agreements/create?projectId=${queryProjectId || "1"}&offerId=${queryOfferId || "1"}`
+      );
+    } else {
+      router.push(`/module/business/b2b/agreements/create`);
+    }
+  };
+
+  const handleSendContract = async () => {
+    await handleSendAgreement(data.id || "1", () => {
+      router.push("/module/business/b2b/overview");
+    });
+  };
 
   const handleSort = (field: "datum" | "namn" | "fil") => {
     if (sortField === field) {
@@ -174,7 +188,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
           variant="ghost"
           size="icon"
           aria-label={t(localizationConstants.goBackButton)}
-          onClick={() => router.back()}
+          onClick={handleBack}
           className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-900 hover:bg-slate-200/60 transition-colors p-0"
         >
           <ArrowLeft size={20} aria-hidden={true} />
@@ -191,7 +205,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
           {/* Left Column */}
           <div className="flex flex-col gap-4">
             {/* Top Project & Kontrakt Header Card */}
-            <div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white p-3.5 sm:p-4 shadow-xs">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-white p-3.5 sm:p-4 shadow-xs">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center gap-2 flex-wrap">
@@ -336,7 +350,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
               <div className="overflow-x-auto">
                 <table className="w-full table-fixed text-sm">
                   <thead>
-                    <tr className="border-b border-[#E5E5E5] text-left text-xs font-medium text-slate-500">
+                    <tr className="border-b border-slate-200 text-left text-xs font-medium text-slate-500">
                       <th className="w-[120px] pb-2.5 font-normal">
                         <Button
                           type="button"
@@ -397,7 +411,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                       <th className="w-[48px] pb-2.5 text-right font-normal"></th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#E5E5E5]">
+                  <tbody className="divide-y divide-slate-200">
                     {sortedDocuments.map((doc) => (
                       <tr key={doc.id} className="hover:bg-slate-50/50 transition-colors">
                         <td className="w-[120px] py-2 text-slate-500 text-xs truncate">
@@ -406,7 +420,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                         <td className="w-[150px] py-2 pr-3">
                           <span
                             title={doc.namn || t(localizationConstants.b2bAvtalDocNamnPlaceholder)}
-                            className="flex h-[34px] w-full max-w-[150px] items-center rounded border border-[#E5E5E5] bg-white px-2.5 text-xs text-slate-800 font-normal leading-none truncate"
+                            className="flex h-[34px] w-full max-w-[150px] items-center rounded border border-slate-200 bg-white px-2.5 text-xs text-slate-800 font-normal leading-none truncate"
                           >
                             {doc.namn || t(localizationConstants.b2bAvtalDocNamnPlaceholder)}
                           </span>
@@ -433,9 +447,9 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                                 <MoreVertical size={15} aria-hidden={true} />
                               </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-36 rounded-lg bg-white p-1 shadow-lg border border-[#E5E5E5]">
+                            <DropdownMenuContent align="end" className="w-36 rounded-lg bg-white p-1 shadow-lg border border-slate-200">
                               <DropdownMenuItem
-                                onClick={() => setPreviewDoc(doc)}
+                                onClick={() => handleDownloadDoc(doc.label)}
                                 className="flex items-center gap-2 text-xs text-slate-800 cursor-pointer"
                               >
                                 <Eye size={14} />
@@ -506,7 +520,7 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
 
           {/* Right Column (Summary & Action Card) */}
           <div className="flex flex-col gap-4 self-start">
-            <div className="overflow-hidden rounded-lg border border-[#E5E5E5] bg-white p-3.5 sm:p-4 shadow-2xs">
+            <div className="overflow-hidden rounded-lg border border-slate-200 bg-white p-3.5 sm:p-4 shadow-2xs">
               <div className="flex items-start justify-between gap-2">
                 <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
                   {data.projectInfo.projektNamn}
@@ -525,13 +539,14 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                   {data.projectInfo.municipality}
                 </span>
               </div>
+
               <p className="mt-2 text-xs text-slate-500">
                 {t(localizationConstants.b2bDealCreatedDate)}: {data.projectInfo.postedDate}
               </p>
 
               <div className="mt-3 flex items-baseline justify-between">
                 <span className="text-xs font-medium text-slate-500">
-                  <Translate text={localizationConstants.b2bArchiveTotalOffer} />
+                  <Translate text={localizationConstants.b2bArchiveTotalOffer} />:
                 </span>
                 <span className="text-base font-bold tabular-nums text-slate-900">
                   {formatCurrency(data.projectInfo.totalOffert)}
@@ -539,26 +554,22 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
               </div>
 
               {/* Separator line below price */}
-              <div className="my-3.5 -mx-3.5 sm:-mx-4 border-b border-[#E5E5E5]" />
+              <div className="my-3.5 -mx-3.5 sm:-mx-4 border-b border-slate-200" />
 
               {/* Action Buttons */}
               <div className="flex flex-col gap-2">
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => router.back()}
+                  onClick={handleBack}
                   className="h-10 w-full cursor-pointer rounded-lg bg-zinc-100 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors shadow-none"
                 >
-                  {t(localizationConstants.cancel)}
+                  {t(localizationConstants.b2bAvtalAvbryt)}
                 </Button>
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() =>
-                    router.push(
-                      `/module/business/b2b/agreements/create?projectId=${data.projectInfo.refNr || queryProjectId || "1"}&offerId=${queryOfferId || "1"}`
-                    )
-                  }
+                  onClick={handleBack}
                   className="h-10 w-full cursor-pointer gap-2 border border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 transition-colors rounded-lg shadow-2xs"
                 >
                   <PencilLine size={15} aria-hidden={true} />
@@ -567,10 +578,10 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
                 <Button
                   type="button"
                   disabled={isSubmitting}
-                  onClick={() => handleSendAgreement(data.id)}
-                  className="h-10 w-full cursor-pointer gap-2 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs"
+                  onClick={handleSendContract}
+                  className="h-10 w-full cursor-pointer gap-2 bg-slate-950 text-sm font-semibold text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs flex items-center justify-center"
                 >
-                  <Send size={15} aria-hidden={true} />
+                  <Send size={15} className="shrink-0" aria-hidden={true} />
                   <span>{t(localizationConstants.b2bAvtalSkicka)}</span>
                 </Button>
               </div>
@@ -578,12 +589,6 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
           </div>
         </div>
       </div>
-
-      <B2BDocumentPreviewModal
-        document={previewDoc}
-        onClose={() => setPreviewDoc(null)}
-        onDownload={handleDownloadDoc}
-      />
     </div>
   );
 }

@@ -379,7 +379,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
           variant="ghost"
           size="icon"
           aria-label={t(localizationConstants.goBackButton)}
-          onClick={() => router.back()}
+          onClick={() => router.push(`/module/business/b2b/overview/${projectId || "1"}`)}
           className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg text-slate-900 hover:bg-slate-200/60 transition-colors p-0"
         >
           <ArrowLeft size={18} aria-hidden={true} />

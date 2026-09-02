@@ -2,7 +2,7 @@ import { B2BCreateAgreementView } from "@/features/b2b/components/B2BCreateAgree
 import { getAgreementDetailByContext } from "@/features/b2b/constants/agreementMock";
 
 interface Props {
-  searchParams: Promise<{ projectId?: string; offerId?: string }>;
+  searchParams?: Promise<{ projectId?: string; offerId?: string }>;
 }
 
 export default async function B2BCreateAgreementPage({ searchParams }: Props) {
