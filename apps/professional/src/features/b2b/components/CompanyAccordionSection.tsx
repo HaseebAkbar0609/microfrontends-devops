@@ -10,7 +10,9 @@ interface Props {
   children: React.ReactNode;
   defaultOpen?: boolean;
   noPadding?: boolean;
+  hideChevron?: boolean;
   className?: string;
+  headerBorderClassName?: string;
 }
 
 export function CompanyAccordionSection({
@@ -19,32 +21,65 @@ export function CompanyAccordionSection({
   children,
   defaultOpen = true,
   noPadding = false,
+  hideChevron = false,
   className,
+  headerBorderClassName,
 }: Props) {
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className={cn("overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xs transition-all", className)}>
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="flex w-full cursor-pointer items-center justify-between px-5 py-4 text-left hover:bg-slate-50/50 transition-colors"
-      >
-        <div className="flex items-center gap-2.5 text-slate-700">
-          <span className="shrink-0 text-slate-700">{icon}</span>
-          <span className="text-[14px] font-semibold tracking-tight text-slate-900">{title}</span>
+    <div
+      className={cn(
+        "overflow-hidden rounded-lg border border-[#E5E5E5] bg-white shadow-2xs w-full",
+        className
+      )}
+    >
+      {hideChevron ? (
+        <div className="flex h-[56px] min-h-[56px] w-full items-center justify-between px-5 py-0 font-normal">
+          <div className="flex items-center gap-3">
+            <span className="flex items-center shrink-0 text-slate-800">{icon}</span>
+            <span className="font-sans text-base font-medium leading-6 tracking-normal text-slate-900">
+              {title}
+            </span>
+          </div>
         </div>
-        <ChevronUp
-          size={16}
-          className={cn(
-            "text-slate-400 transition-transform duration-200 shrink-0",
-            !open && "rotate-180"
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="flex h-[56px] min-h-[56px] w-full cursor-pointer items-center justify-between px-5 py-0 text-left transition-colors hover:bg-slate-50/70 font-normal rounded-none shadow-none"
+        >
+          <div className="flex items-center gap-3">
+            <span className="flex items-center shrink-0 text-slate-800">{icon}</span>
+            <span className="font-sans text-base font-medium leading-6 tracking-normal text-slate-900">
+              {title}
+            </span>
+          </div>
+          <ChevronUp
+            size={18}
+            className={cn(
+              "text-zinc-500 transition-transform duration-200",
+              !open && "rotate-180"
+            )}
+            aria-hidden={true}
+          />
+        </button>
+      )}
+      {(open || hideChevron) && (
+        <div
+          className={
+            noPadding
+              ? headerBorderClassName
+                ? ""
+                : "border-t border-[#E5E5E5]"
+              : headerBorderClassName
+              ? "p-4 sm:p-4"
+              : "border-t border-[#E5E5E5] p-4 sm:p-4"
+          }
+        >
+          {headerBorderClassName && (
+            <div className={cn("border-t border-[#E5E5E5]", headerBorderClassName)} />
           )}
-          aria-hidden={true}
-        />
-      </button>
-      {open && (
-        <div className={cn(noPadding ? "border-t border-slate-100" : "border-t border-slate-100 px-5 py-5")}>
           {children}
         </div>
       )}

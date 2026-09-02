@@ -124,6 +124,7 @@ export function getMockSeeOfferDetail(projectId?: string, offerId?: string): B2B
         : "Väntande",
     company: {
       ...DUMMY_SEE_OFFER_DETAIL.company,
+      id: offerId || "1",
       name: companyName,
       email,
       telefon: mobile,

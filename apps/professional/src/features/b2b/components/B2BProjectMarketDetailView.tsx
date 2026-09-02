@@ -30,7 +30,7 @@ export function B2BProjectMarketDetailView({ data }: Props) {
           variant="ghost"
           size="icon"
           aria-label={t(localizationConstants.goBackButton)}
-          onClick={() => router.back()}
+          onClick={() => router.push("/module/business/b2b/overview")}
           className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-900 hover:bg-slate-200/60 transition-colors p-0"
         >
           <ArrowLeft size={18} aria-hidden={true} />

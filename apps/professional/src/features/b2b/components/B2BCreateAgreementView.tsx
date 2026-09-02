@@ -217,6 +217,12 @@ export function B2BCreateAgreementView({ data: initialData }: Props) {
     }
   };
 
+  const handleBackToOffer = () => {
+    router.push(
+      `/module/business/b2b/overview/${queryProjectId || "1"}/offer/${queryOfferId || "1"}`
+    );
+  };
+
   const onSendAgreement = () => {
     handleCreateAgreement((newId) => {
       router.push(
@@ -235,7 +241,7 @@ export function B2BCreateAgreementView({ data: initialData }: Props) {
             variant="ghost"
             size="icon"
             aria-label={t(localizationConstants.goBackButton)}
-            onClick={() => router.back()}
+            onClick={handleBackToOffer}
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg text-slate-900 hover:bg-slate-200/60 transition-colors p-0"
           >
             <ArrowLeft size={20} aria-hidden={true} />
@@ -786,7 +792,7 @@ export function B2BCreateAgreementView({ data: initialData }: Props) {
                 <Button
                   type="button"
                   variant="secondary"
-                  onClick={() => router.back()}
+                  onClick={handleBackToOffer}
                   className="h-10 w-full cursor-pointer rounded-lg bg-zinc-100 text-sm font-medium text-slate-700 hover:bg-slate-200 transition-colors shadow-none"
                 >
                   {t(localizationConstants.cancel)}

@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type CompanyTeamMember = {
   id: string;
   name: string;
@@ -6,6 +8,7 @@ export type CompanyTeamMember = {
   email: string;
   initials: string;
   avatarColor: string;
+  image?: string;
 };
 
 export type CompanyReference = {
@@ -24,6 +27,7 @@ export type CompanyReview = {
   rating: number;
   date: string;
   reviewText: string;
+  reviewerAvatar?: string;
   companyReply?: {
     companyInitials: string;
     companyName: string;
@@ -38,6 +42,9 @@ export type CompanyDetail = {
   orgNr: string;
   vatNr: string;
   sniKod: string;
+  verificationStatus?: "verified" | "pending" | "unverified";
+  logoUrl?: string;
+  description?: string;
   adress: {
     postAdress: string;
     postNr: string;
@@ -61,3 +68,30 @@ export type CompanyDetail = {
   references: CompanyReference[];
   reviews: CompanyReview[];
 };
+
+export const companyValidationSchema = z.object({
+  namn: z.string().min(1, "validationRequired"),
+  orgNr: z.string().min(1, "validationRequired"),
+  vatNr: z.string().min(1, "validationRequired"),
+  sniKod: z.string().min(1, "validationRequired"),
+  adress: z.object({
+    postAdress: z.string().min(1, "validationRequired"),
+    postNr: z.string().min(1, "validationRequired"),
+    ort: z.string().min(1, "validationRequired"),
+    besoksAdress: z.string().min(1, "validationRequired"),
+    besoksPostNr: z.string().min(1, "validationRequired"),
+    besoksOrt: z.string().min(1, "validationRequired"),
+    leveransAdress: z.string().min(1, "validationRequired"),
+    leveransPostNr: z.string().min(1, "validationRequired"),
+    leveransOrt: z.string().min(1, "validationRequired"),
+    vaxelNr: z.string().min(1, "validationRequired"),
+    epost: z.string().email("validationEmailInvalid").min(1, "validationRequired"),
+    hemsida: z.string().min(1, "validationRequired"),
+  }),
+  fakturaEmail: z.string().email("validationEmailInvalid").min(1, "validationRequired"),
+  kreditInput1: z.string().optional(),
+  kreditInput2: z.string().optional(),
+  presentationText: z.string().optional(),
+});
+
+export type CompanyFormValues = z.infer<typeof companyValidationSchema>;

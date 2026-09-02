@@ -139,6 +139,11 @@ export const API_PATH = {
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
+	B2B: {
+		COMPANIES: `${PROFESSIONALS_BASE_PATH}/b2b/companies`,
+		COMPANY_DETAIL: (id: string) => `${PROFESSIONALS_BASE_PATH}/b2b/companies/${id}`,
+		COMPANY_VERIFY: (id: string) => `${PROFESSIONALS_BASE_PATH}/b2b/companies/${id}/verify`,
+	},
 };
 
 export const appConstants = {
