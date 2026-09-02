@@ -28,7 +28,6 @@ export * from "./components/expense-list/ExpenseKpiCards";
 export * from "./components/expense-list/ExpenseToolbar";
 export * from "./components/expense-list/ExpenseListTable";
 export * from "./components/expense-list/ExpenseBadges";
-export * from "./components/expense-list/ExpenseDetailsModal";
 export * from "./types/expense.types";
 export * from "./constants/expense.constants";
 export * from "./hooks/useExpenseList";
