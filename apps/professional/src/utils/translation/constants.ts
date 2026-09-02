@@ -3616,6 +3616,11 @@ export type OfferTranslation = {
 	timmarSuffix: string;
 	projektNamn: string;
 	status: string;
+	projectBadrum: string;
+	projectKok: string;
+	projectOmbyggnad: string;
+	projectRenovering: string;
+	searchProjectName: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
