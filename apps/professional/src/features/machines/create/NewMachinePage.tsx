@@ -13,7 +13,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
-import { MACHINE_MODULE_BASE_URL } from "@/features/machines/data/machineNav.config";
+import { MACHINE_OVERVIEW_BASE_URL } from "@/features/machines/data/machineNav.config";
 import { MachineInformationStep } from "./components/MachineInformationStep";
 import { MachineDocumentsStep, fileTypeOf } from "./components/MachineDocumentsStep";
 import { MachinePhotosStep } from "./components/MachinePhotosStep";
@@ -150,7 +150,7 @@ export function NewMachinePage() {
 	}, []);
 
 	const handleCancel = () => {
-		router.push(MACHINE_MODULE_BASE_URL);
+		router.push(MACHINE_OVERVIEW_BASE_URL);
 	};
 
 	const handleSave = methods.handleSubmit(
@@ -160,7 +160,7 @@ export function NewMachinePage() {
 				// No machines endpoint yet — the register is still mock data, so the
 				// wizard confirms and returns to the list.
 				showToast("success", t(localizationConstants.machineCreateSuccess));
-				router.push(MACHINE_MODULE_BASE_URL);
+				router.push(MACHINE_OVERVIEW_BASE_URL);
 			} finally {
 				setIsSubmitting(false);
 			}
