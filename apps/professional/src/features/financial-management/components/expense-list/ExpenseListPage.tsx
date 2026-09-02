@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -24,7 +23,6 @@ import { InvoiceListTable } from "../invoice-list/InvoiceListTable";
 import { InvoiceRemindersTable } from "../invoice-list/InvoiceRemindersTable";
 
 export function ExpenseListPage() {
-	const router = useRouter();
 
 	// Top Category Tab: "customer_invoice" (Kundfaktura) | "supplier_invoice" (Leverantörsfaktura)
 	const [topCategoryTab, setTopCategoryTab] = useState<"customer_invoice" | "supplier_invoice">("supplier_invoice");
@@ -178,7 +176,6 @@ export function ExpenseListPage() {
 							projectFilter={projectFilter}
 							onProjectFilterChange={setProjectFilter}
 							availableProjects={availableProjects}
-							onRegisterClick={() => router.push("/module/financial-management/economy/create")}
 						/>
 
 						{/* Expense List Table matching Figma 1:1 */}
@@ -196,7 +193,6 @@ export function ExpenseListPage() {
 							onPageSizeChange={setPageSize}
 							totalPages={totalPages}
 							onPageChange={setCurrentPage}
-							onView={(item) => router.push(`/module/financial-management/economy/${item.id}`)}
 							onDelete={(id) => setConfirmDeleteId(id)}
 						/>
 					</>

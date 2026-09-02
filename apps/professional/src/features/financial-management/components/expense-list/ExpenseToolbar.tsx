@@ -28,7 +28,7 @@ interface ExpenseToolbarProps {
 	projectFilter: string | "all";
 	onProjectFilterChange: (val: string | "all") => void;
 	availableProjects: string[];
-	onRegisterClick: () => void;
+	onRegisterClick?: () => void;
 }
 
 export function ExpenseToolbar({
