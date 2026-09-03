@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import { Search, Plus, ChevronDown } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
@@ -16,7 +17,11 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ExpenseStatus, ExpenseCategory } from "../../types/expense.types";
-import { EXPENSE_CATEGORIES, EXPENSE_STATUSES } from "../../constants/expense.constants";
+import {
+	EXPENSE_CATEGORIES,
+	EXPENSE_STATUSES,
+	CREATE_EXPENSE_ROUTE,
+} from "../../constants/expense.constants";
 
 interface ExpenseToolbarProps {
 	searchQuery: string;
@@ -146,16 +151,18 @@ export function ExpenseToolbar({
 
 			{/* Right: Primary CTA "+ Lägg till leverantörsfaktura" matching Figma */}
 			<div className="flex items-center gap-2">
-				<Button
-					size="sm"
-					onClick={onRegisterClick}
-					className="h-9 px-4 text-xs font-medium bg-zinc-950 hover:bg-slate-800 text-white gap-1.5 shadow-xs cursor-pointer rounded-md shrink-0 transition-all"
-				>
-					<Plus className="h-3.5 w-3.5" />
-					<span>
-						<Translate text={localizationConstants.expenseAddSupplierInvoiceBtn} />
-					</span>
-				</Button>
+				<Link href={CREATE_EXPENSE_ROUTE}>
+					<Button
+						size="sm"
+						onClick={onRegisterClick}
+						className="h-9 px-4 text-xs font-medium bg-zinc-950 hover:bg-slate-800 text-white gap-1.5 shadow-xs cursor-pointer rounded-md shrink-0 transition-all"
+					>
+						<Plus className="h-3.5 w-3.5" />
+						<span>
+							<Translate text={localizationConstants.expenseAddSupplierInvoiceBtn} />
+						</span>
+					</Button>
+				</Link>
 			</div>
 		</div>
 	);
