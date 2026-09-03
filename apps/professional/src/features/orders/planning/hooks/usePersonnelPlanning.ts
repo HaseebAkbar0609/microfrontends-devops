@@ -186,6 +186,20 @@ export function usePersonnelPlanning() {
 
 				setScheduleItems((prev) => [newScheduleItem, ...prev]);
 
+				const newGridTask: GridTaskItem = {
+					id: newId,
+					dayIndex: 0,
+					topMinutes: 0,
+					durationMinutes: 60,
+					title: data.title,
+					colorTheme: data.colorTheme,
+					status: data.status,
+					timeRange: data.timeRange,
+					dateText: data.dateText,
+					assignees: newScheduleItem.assignees,
+				};
+				setTasks((prev) => [newGridTask, ...prev]);
+
 				// Call standard API
 				await createPlanningTask({
 					orderId: "order-5000",
