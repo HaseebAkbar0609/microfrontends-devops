@@ -2577,7 +2577,7 @@ export const svOffer: OfferTranslation = {
 	purchaseSuppliersTabApi: "Leverantörsintegrationer (API)",
 	purchaseSupplierColName: "Leverantör",
 	purchaseSupplierOpenPriceList: "Öppna prislista",
-	purchaseSupplierSeeDetails: "Se Detaljer",
+	purchaseSupplierSeeDetails: "Se detaljer",
 	purchaseSupplierAdd: "Lägg till leverantör",
 	purchaseSupplierNoneFound: "Inga leverantörer hittades",
 	purchaseSupplierGeneralInfo: "Allmän information",

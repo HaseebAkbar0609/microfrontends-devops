@@ -25,13 +25,13 @@ import type {
 } from "../types/purchase.types";
 import {
 	PurchaseCategoryBadge,
-	PurchaseGoodsReceptionOrderTypeLabel,
 	PurchaseStatusBadge,
 	PurchaseTypeBadge,
 } from "./PurchaseBadges";
 import { PurchaseGoodsDetailDrawer } from "./PurchaseGoodsDetailDrawer";
 import { ArchivableRowsTable } from "./shared/ArchivableRowsTable";
 import { COMPLAINT_COLUMNS } from "./shared/complaintColumns";
+import { GOODS_RECEPTION_COLUMNS } from "./shared/goodsReceptionColumns";
 import { ObjectPill } from "./shared/ObjectPill";
 import { SeeDetailsLink } from "./shared/SeeDetailsLink";
 
@@ -82,39 +82,6 @@ const PURCHASE_COLUMNS: DataTableColumn<PurchaseRow>[] = [
  * The frame duplicates "Benämning" here, header and data both — the same
  * copy-paste defect corrected in TFS-925. Rendered once.
  */
-const RECEPTION_COLUMNS: DataTableColumn<PurchaseGoodsReceptionRow>[] = [
-	{
-		key: "object",
-		label: localizationConstants.purchaseColObject,
-		sortable: true,
-		render: (row) => <ObjectPill value={row.object} />,
-	},
-	{
-		key: "purchaseNo",
-		label: localizationConstants.purchaseColNumber,
-		sortable: true,
-		cellClassName: "text-sm font-medium text-slate-900",
-	},
-	{ key: "name", label: localizationConstants.purchaseColName, sortable: true },
-	{
-		key: "supplier",
-		label: localizationConstants.purchaseSupplierColName,
-		sortable: true,
-	},
-	{
-		key: "expectedDelivery",
-		label: localizationConstants.purchaseGoodsReceptionColExpectedDelivery,
-		sortable: true,
-	},
-	{
-		key: "orderType",
-		label: localizationConstants.purchaseGoodsReceptionColOrderType,
-		sortable: true,
-		render: (row) => (
-			<PurchaseGoodsReceptionOrderTypeLabel orderType={row.orderType} />
-		),
-	},
-];
 
 /** Filter options per tab, matching the "Filter" control in the frames. */
 const PURCHASE_STATUS_FILTERS = [
@@ -299,7 +266,7 @@ export function PurchaseArchivePage() {
 							<ArchivableRowsTable<PurchaseGoodsReceptionRow>
 								rows={MOCK_PURCHASE_GOODS_RECEPTIONS}
 								mode="restore"
-								columns={RECEPTION_COLUMNS}
+								columns={GOODS_RECEPTION_COLUMNS}
 								searchFields={(row) => [
 									row.purchaseNo,
 									row.name,

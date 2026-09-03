@@ -8,6 +8,7 @@ import { useAuthStatus } from "@/context/AuthContext";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { MOCK_PURCHASE_SUPPLIERS } from "../data/purchaseSuppliers.mock";
+import { MOCK_PURCHASE_GOODS_RECEPTION_DOCS } from "../data/purchaseGoodsReception.mock";
 import { MOCK_PURCHASES } from "../data/purchases.mock";
 import { PURCHASE_MODULE_BASE_URL } from "../data/purchaseNav.config";
 import { usePurchaseDocuments } from "../hooks/usePurchaseDocuments";
@@ -52,8 +53,15 @@ export function useCreateGoodsReceptionForm() {
 		[],
 	);
 
-	/** Documents attached in this session; a new reception starts with none. */
-	const documents = usePurchaseDocuments([], {
+	/**
+	 * Documents already attached to the goods reception, plus whatever is
+	 * uploaded in this session.
+	 *
+	 * This was seeded with `[]` until TFS-934, so the "Lista godsmottagning"
+	 * tab rendered its empty state and the frame's two rows — which had been
+	 * written into the mock and never imported — were never shown.
+	 */
+	const documents = usePurchaseDocuments(MOCK_PURCHASE_GOODS_RECEPTION_DOCS, {
 		supplier: draft.supplier || undefined,
 		purchaseNo: draft.purchaseNo || undefined,
 		reference: draft.name || undefined,

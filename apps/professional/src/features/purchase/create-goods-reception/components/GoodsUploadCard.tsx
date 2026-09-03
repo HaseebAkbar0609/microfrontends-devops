@@ -75,7 +75,11 @@ export function GoodsUploadCard({
 						<Translate
 							text={localizationConstants.complaintGdprText}
 						/>{" "}
-						<span className="cursor-pointer text-orange-500 underline">
+						{/* Styled as a link until TFS-934, matching the complaint card's
+						    fix in TFS-931: there is no privacy-policy route in
+						    this app, so the text advertised a destination that
+						    did not exist. */}
+						<span className="font-medium text-slate-900">
 							<Translate
 								text={localizationConstants.complaintGdprLink}
 							/>
