@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { MOCK_MACHINE_LISTS } from "../data/machineHandling.mock";
 import type { MachineListRow } from "../types/machineHandling.types";
+import { machineHandlingRepository } from "../data/machineHandlingRepository";
 
 export type MachineListSortField =
 	| "object"
@@ -14,11 +14,12 @@ export type MachineListSortField =
 
 /**
  * List state for Maskinhantering: search, sorting, pagination and the row
- * actions. Mirrors `useMachines` so both machine list pages behave the same,
- * including clamping the page when rows are removed.
+ * actions connected to shared in-memory repository.
  */
 export function useMachineLists(initialPageSize = 10) {
-	const [lists, setLists] = useState<MachineListRow[]>(MOCK_MACHINE_LISTS);
+	const [lists, setLists] = useState<MachineListRow[]>(() =>
+		machineHandlingRepository.getAllLists()
+	);
 	const [searchQuery, setSearchQuery] = useState("");
 	/** "" = unfiltered, so the trigger shows the "Filter" placeholder. */
 	const [statusFilter, setStatusFilter] = useState<string>("");
@@ -26,6 +27,15 @@ export function useMachineLists(initialPageSize = 10) {
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 	const [pageSize, setPageSize] = useState(initialPageSize);
 	const [currentPage, setCurrentPage] = useState(1);
+	const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+
+	// Subscribe to repository updates
+	useEffect(() => {
+		const unsubscribe = machineHandlingRepository.subscribe(() => {
+			setLists(machineHandlingRepository.getAllLists());
+		});
+		return unsubscribe;
+	}, []);
 
 	const handleSort = useCallback(
 		(field: MachineListSortField) => {
@@ -40,13 +50,12 @@ export function useMachineLists(initialPageSize = 10) {
 	);
 
 	const deleteList = useCallback((id: string) => {
-		setLists((prev) => prev.filter((row) => row.id !== id));
+		machineHandlingRepository.deleteList(id);
+		setConfirmDeleteId(null);
 	}, []);
 
 	const archiveList = useCallback((id: string) => {
-		setLists((prev) =>
-			prev.map((row) => (row.id === id ? { ...row, status: "ended" } : row))
-		);
+		machineHandlingRepository.archiveList(id);
 	}, []);
 
 	const filteredAndSorted = useMemo(() => {
@@ -103,6 +112,8 @@ export function useMachineLists(initialPageSize = 10) {
 		sortBy,
 		sortOrder,
 		handleSort,
+		confirmDeleteId,
+		setConfirmDeleteId,
 		deleteList,
 		archiveList,
 	};

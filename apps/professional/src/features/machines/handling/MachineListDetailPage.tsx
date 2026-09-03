@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Plus } from "lucide-react";
@@ -13,9 +13,10 @@ import localizationConstants, {
 } from "@/utils/translation/constants";
 import { PermissionGate } from "@/components/common/PermissionGate";
 import { MACHINE_HANDLING_BASE_URL } from "./data/handlingNav.config";
-import { getMachineListDetail } from "./data/machineHandling.mock";
+import { machineHandlingRepository } from "./data/machineHandlingRepository";
 import { MachineListInformationTab } from "./components/MachineListInformationTab";
 import { MachineListMachinesTab } from "./components/MachineListMachinesTab";
+import type { MachineListDetail } from "./types/machineHandling.types";
 
 type DetailTab = "information" | "machines";
 
@@ -36,8 +37,17 @@ export function MachineListDetailPage({ listId }: { listId?: string }) {
 	const t = useTranslate();
 	const router = useRouter();
 	const [activeTab, setActiveTab] = useState<DetailTab>("information");
+	const [detail, setDetail] = useState<MachineListDetail>(() =>
+		machineHandlingRepository.getListDetail(listId)
+	);
 
-	const detail = getMachineListDetail(listId);
+	useEffect(() => {
+		setDetail(machineHandlingRepository.getListDetail(listId));
+		const unsubscribe = machineHandlingRepository.subscribe(() => {
+			setDetail(machineHandlingRepository.getListDetail(listId));
+		});
+		return unsubscribe;
+	}, [listId]);
 
 	return (
 		<div className="flex h-full flex-col bg-slate-50/50">
@@ -98,9 +108,10 @@ export function MachineListDetailPage({ listId }: { listId?: string }) {
 				</div>
 
 				<div className="ml-9">
-					{activeTab === "information" ? (
+					{activeTab === "information" && (
 						<MachineListInformationTab detail={detail} />
-					) : (
+					)}
+					{activeTab === "machines" && (
 						<MachineListMachinesTab detail={detail} />
 					)}
 				</div>
@@ -108,5 +119,3 @@ export function MachineListDetailPage({ listId }: { listId?: string }) {
 		</div>
 	);
 }
-
-export default MachineListDetailPage;

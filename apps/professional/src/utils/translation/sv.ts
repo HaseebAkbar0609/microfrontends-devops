@@ -5206,6 +5206,8 @@ export const svCommon: CommonTranslation = {
 	b2bRestoreConfirmDesc: "Är du säker på att du vill återställa detta projekt till aktivt?",
 	b2bDeletePermanentConfirmTitle: "Radera projekt permanent",
 	b2bDeletePermanentConfirmDesc: "Är du säker på att du vill radera detta projekt permanent? Denna åtgärd kan inte ångras.",
+	deleteConfirmationTitle: "Bekräfta borttagning",
+	deleteConfirmationDescription: "Är du säker på att du vill ta bort detta objekt? Åtgärden kan inte ångras.",
 	retry: "Försök igen",
 };
 
@@ -5263,6 +5265,9 @@ export const svMachinePurchase: MachinePurchaseTranslation = {
 	machinePurchaseCreateSuccess: "Maskin inköp har sparats framgångsrikt",
 	machinePurchaseCreateError: "Vänligen fyll i alla obligatoriska fält",
 	machinePurchaseFieldMaskinInfo: "Maskin Information",
+	machinePurchaseChangesSaved: "Ändringar har sparats!",
+	machinePurchaseUploadMinFile: "Välj minst en fil att ladda upp.",
+	machinePurchaseUploadSuccess: "Dokument har laddats upp!",
 };
 
 export const svMachineDashboard: MachineDashboardTranslation = {

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import { MOCK_MACHINES } from "../data/machines.mock";
 import type { MachineRow } from "../types/machine.types";
+import { machineOverviewRepository } from "../data/machineOverviewRepository";
 
 /** Every column in the Figma frame carries a sort control. */
 export type MachineSortField =
@@ -18,19 +18,19 @@ export type MachineSortField =
 	| "status";
 
 export interface UseMachinesOptions {
-	initialMachines?: MachineRow[];
 	initialPageSize?: number;
 }
 
 /**
  * List state for the Machine overview: search, status filter, sorting,
- * pagination and the archive/delete row actions. Mirrors `useOrders` so both
- * production list pages behave identically.
+ * pagination and the archive/delete row actions connected to shared in-memory repo.
  */
 export function useMachines(options: UseMachinesOptions = {}) {
-	const { initialMachines = MOCK_MACHINES, initialPageSize = 10 } = options;
+	const { initialPageSize = 10 } = options;
 
-	const [machines, setMachines] = useState<MachineRow[]>(initialMachines);
+	const [machines, setMachines] = useState<MachineRow[]>(() =>
+		machineOverviewRepository.getAllMachines()
+	);
 	const [searchQuery, setSearchQuery] = useState("");
 	/** "" = unfiltered, so the trigger shows the "Filter" placeholder as designed. */
 	const [statusFilter, setStatusFilter] = useState<string>("");
@@ -39,6 +39,16 @@ export function useMachines(options: UseMachinesOptions = {}) {
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 	const [pageSize, setPageSize] = useState<number>(initialPageSize);
 	const [currentPage, setCurrentPage] = useState<number>(1);
+	const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+	const [viewMachine, setViewMachine] = useState<MachineRow | null>(null);
+
+	// Subscribe to shared repo updates
+	useEffect(() => {
+		const unsubscribe = machineOverviewRepository.subscribe(() => {
+			setMachines(machineOverviewRepository.getAllMachines());
+		});
+		return unsubscribe;
+	}, []);
 
 	const handleSort = useCallback(
 		(field: MachineSortField) => {
@@ -53,13 +63,12 @@ export function useMachines(options: UseMachinesOptions = {}) {
 	);
 
 	const deleteMachine = useCallback((machineId: string) => {
-		setMachines((prev) => prev.filter((m) => m.id !== machineId));
+		machineOverviewRepository.deleteMachine(machineId);
+		setConfirmDeleteId(null);
 	}, []);
 
 	const archiveMachine = useCallback((machineId: string) => {
-		setMachines((prev) =>
-			prev.map((m) => (m.id === machineId ? { ...m, status: "ended" } : m))
-		);
+		machineOverviewRepository.archiveMachine(machineId);
 	}, []);
 
 	const filteredAndSortedMachines = useMemo(() => {
@@ -105,12 +114,6 @@ export function useMachines(options: UseMachinesOptions = {}) {
 		Math.ceil(filteredAndSortedMachines.length / pageSize)
 	);
 
-	/**
-	 * Removing rows can leave the current page beyond the end of the list — e.g.
-	 * deleting or archiving the only machine on page 2 drops the list to a single
-	 * page. Clamp when slicing so the table never renders an empty page while
-	 * rows still exist, and sync the state so the pager buttons stay in step.
-	 */
 	const safePage = Math.min(currentPage, totalPages);
 
 	useEffect(() => {
@@ -140,6 +143,10 @@ export function useMachines(options: UseMachinesOptions = {}) {
 		sortBy,
 		sortOrder,
 		handleSort,
+		confirmDeleteId,
+		setConfirmDeleteId,
+		viewMachine,
+		setViewMachine,
 		deleteMachine,
 		archiveMachine,
 	};
