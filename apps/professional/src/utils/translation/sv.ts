@@ -5740,6 +5740,9 @@ const svExpense: ExpenseTranslation = {
 	registerExpenseTimeNotesPlaceholder: "Skriv kommentarer eller specifikation av utfört arbete...",
 	registerExpenseTimeRefPlaceholder: "Namn eller referens...",
 	registerExpenseTimeCommentPlaceholder: "Kommentar...",
+	registerExpenseSupplierSearchPlaceholder: "Sök leverantör...",
+	registerExpenseSupplierAddCustom: "Lägg till",
+	registerExpenseSupplierNotFound: "Inga leverantörer hittades",
 };
 
 export const sv: Translation = {

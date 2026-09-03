@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Plus } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Input } from "@/components/ui/input";
@@ -24,6 +23,7 @@ import {
 	DEFAULT_PROJECTS_LIST,
 	DEFAULT_COST_CENTERS_LIST,
 } from "../../constants/expense.constants";
+import { SupplierSearchableDropdown } from "./SupplierSearchableDropdown";
 
 interface RegisterExpenseHeaderFormProps {
 	formData: RegisterExpenseFormData;
@@ -32,6 +32,7 @@ interface RegisterExpenseHeaderFormProps {
 		value: RegisterExpenseFormData[K],
 	) => void;
 	suppliers: string[];
+	onAddSupplier: (name: string) => void;
 	onOpenAddSupplier: () => void;
 	errors: RegisterExpenseErrors;
 }
@@ -40,6 +41,7 @@ export function RegisterExpenseHeaderForm({
 	formData,
 	updateField,
 	suppliers,
+	onAddSupplier,
 	onOpenAddSupplier,
 	errors,
 }: RegisterExpenseHeaderFormProps) {
@@ -48,45 +50,22 @@ export function RegisterExpenseHeaderForm({
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs">
 			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
-				{/* 1. Supplier Field with single '+' button */}
+				{/* 1. Supplier Field (Searchable Combobox Dropdown to select or add new) */}
 				<div className="lg:col-span-4">
 					<div className="flex items-center justify-between mb-1.5 h-5">
 						<Label className="text-xs font-semibold text-slate-700">
 							<Translate text={localizationConstants.registerExpenseSupplierLabel} />{" "}
 							<span className="text-rose-500">*</span>
 						</Label>
-						<button
-							type="button"
-							onClick={onOpenAddSupplier}
-							className="text-[11px] text-blue-600 hover:text-blue-700 font-medium cursor-pointer inline-flex items-center gap-1 transition-colors"
-						>
-							<Plus className="h-3 w-3" />
-							<span>
-								<Translate text={localizationConstants.registerExpenseAddNewSupplier} />
-							</span>
-						</button>
 					</div>
-					<Select
+					<SupplierSearchableDropdown
 						value={formData.supplier}
-						onValueChange={(val) => updateField("supplier", val)}
-					>
-						<SelectTrigger
-							className={`h-9 text-xs border-slate-200 bg-white rounded-md ${
-								errors.supplier ? "border-rose-500 ring-1 ring-rose-500" : ""
-							}`}
-						>
-							<SelectValue
-								placeholder={t(localizationConstants.registerExpenseSupplierPlaceholder)}
-							/>
-						</SelectTrigger>
-						<SelectContent className="bg-white max-h-56">
-							{suppliers.map((sup) => (
-								<SelectItem key={sup} value={sup} className="text-xs cursor-pointer">
-									{sup}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
+						onChange={(val) => updateField("supplier", val)}
+						suppliers={suppliers}
+						onAddSupplier={onAddSupplier}
+						onOpenAddSupplierModal={onOpenAddSupplier}
+						hasError={Boolean(errors.supplier)}
+					/>
 					{errors.supplier && (
 						<p className="text-[11px] text-rose-500 mt-1 font-medium">{errors.supplier}</p>
 					)}

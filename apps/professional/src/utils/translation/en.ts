@@ -5718,6 +5718,9 @@ const enExpense: ExpenseTranslation = {
 	registerExpenseTimeNotesPlaceholder: "Write comments or specification of performed work...",
 	registerExpenseTimeRefPlaceholder: "Name or reference...",
 	registerExpenseTimeCommentPlaceholder: "Comment...",
+	registerExpenseSupplierSearchPlaceholder: "Search supplier...",
+	registerExpenseSupplierAddCustom: "Add",
+	registerExpenseSupplierNotFound: "No suppliers found",
 };
 
 export const en: Translation = {

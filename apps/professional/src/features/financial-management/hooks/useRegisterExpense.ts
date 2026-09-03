@@ -195,17 +195,6 @@ export function useRegisterExpense() {
 		setIsDirty(true);
 	}, []);
 
-	// Add supplier on-the-fly
-	const handleAddSupplier = useCallback((name: string) => {
-		const trimmed = name.trim();
-		if (!trimmed) return;
-		expenseRepository.addSupplier(trimmed);
-		setSuppliers(expenseRepository.getSuppliers());
-		setFormData((prev) => ({ ...prev, supplier: trimmed }));
-		setShowSupplierModal(false);
-		setIsDirty(true);
-	}, []);
-
 	// Time Report Operations
 	const addTimeReportRow = useCallback(() => {
 		setFormData((prev) => ({
@@ -254,6 +243,25 @@ export function useRegisterExpense() {
 		return { totalHours, totalAmount };
 	}, [formData.timeReportItems]);
 
+	// Supplier management
+	const handleAddSupplier = useCallback((name: string) => {
+		const trimmed = name.trim();
+		if (!trimmed) return;
+		expenseRepository.addSupplier(trimmed);
+		setSuppliers(expenseRepository.getSuppliers());
+		setFormData((prev) => ({ ...prev, supplier: trimmed }));
+		setErrors((prev) => {
+			if (prev.supplier) {
+				const copy = { ...prev };
+				delete copy.supplier;
+				return copy;
+			}
+			return prev;
+		});
+		setIsDirty(true);
+		setShowSupplierModal(false);
+	}, []);
+
 	// Real-time calculations with granular memoization (Standard #7)
 	const calculations: RegisterExpenseCalculations = useMemo(() => {
 		let subtotal = 0;
@@ -272,6 +280,18 @@ export function useRegisterExpense() {
 			if (rate in vatMap) {
 				vatMap[rate].basis += lineTotal;
 				vatMap[rate].vat += (lineTotal * rate) / 100;
+			}
+		}
+
+		// If user logged time report items and has no line items, compute from time report
+		if (formData.lineItems.length === 0 && formData.timeReportItems.length > 0) {
+			for (const row of formData.timeReportItems) {
+				if (row.included) {
+					const lineTotal = row.total || 0;
+					subtotal += lineTotal;
+					vatMap[25].basis += lineTotal;
+					vatMap[25].vat += (lineTotal * 25) / 100;
+				}
 			}
 		}
 
@@ -296,45 +316,72 @@ export function useRegisterExpense() {
 			totalVat: Math.round(totalVat * 100) / 100,
 			grandTotal,
 		};
-	}, [formData.lineItems]);
+	}, [formData.lineItems, formData.timeReportItems]);
 
 	// Validation
-	const validate = useCallback((): boolean => {
+	const validate = useCallback((): { isValid: boolean; errorMessage: string } => {
 		const newErrors: RegisterExpenseErrors = {};
+		let firstErrorMsg = "";
 
 		if (!formData.supplier.trim()) {
 			newErrors.supplier = t(localizationConstants.registerExpenseErrorSupplierRequired);
+			if (!firstErrorMsg) firstErrorMsg = newErrors.supplier;
 		}
 
 		if (!formData.fakturaNo.trim()) {
 			newErrors.fakturaNo = t(localizationConstants.registerExpenseErrorInvoiceNoRequired);
+			if (!firstErrorMsg) firstErrorMsg = newErrors.fakturaNo;
 		}
 
 		if (!formData.date) {
 			newErrors.date = t(localizationConstants.registerExpenseErrorDateRequired);
+			if (!firstErrorMsg) firstErrorMsg = newErrors.date;
 		}
 
 		if (!formData.dueDate) {
 			newErrors.dueDate = t(localizationConstants.registerExpenseErrorDueDateRequired);
+			if (!firstErrorMsg) firstErrorMsg = newErrors.dueDate;
 		}
 
 		if (!formData.category) {
 			newErrors.category = t(localizationConstants.registerExpenseErrorCategoryRequired);
+			if (!firstErrorMsg) firstErrorMsg = newErrors.category;
 		}
 
-		if (formData.lineItems.length === 0) {
+		const hasLineItems = formData.lineItems.length > 0;
+		const hasIncludedTimeReport = formData.timeReportItems.some((item) => item.included);
+
+		if (!hasLineItems && !hasIncludedTimeReport) {
 			newErrors.lineItems = t(localizationConstants.registerExpenseErrorLineItemsRequired);
-		} else {
+			if (!firstErrorMsg) firstErrorMsg = newErrors.lineItems;
+		} else if (hasLineItems) {
 			const hasInvalidLine = formData.lineItems.some(
 				(item) => !item.description.trim() || item.quantity <= 0 || item.unitPrice < 0,
 			);
 			if (hasInvalidLine) {
 				newErrors.lineItems = t(localizationConstants.registerExpenseErrorLineItemDesc);
+				if (!firstErrorMsg) firstErrorMsg = newErrors.lineItems;
 			}
 		}
 
 		setErrors(newErrors);
-		return Object.keys(newErrors).length === 0;
+
+		if (Object.keys(newErrors).length > 0) {
+			// Switch to the relevant tab so the user sees the highlighted red input
+			if (
+				newErrors.supplier ||
+				newErrors.fakturaNo ||
+				newErrors.date ||
+				newErrors.dueDate ||
+				newErrors.category ||
+				newErrors.lineItems
+			) {
+				setActiveTab("oversikt");
+			}
+			return { isValid: false, errorMessage: firstErrorMsg };
+		}
+
+		return { isValid: true, errorMessage: "" };
 	}, [formData, t]);
 
 	// Build ExpenseItem payload
@@ -366,8 +413,9 @@ export function useRegisterExpense() {
 
 	// Save and navigate to list
 	const handleSave = useCallback(async () => {
-		if (!validate()) {
-			showToast("error", t(localizationConstants.registerExpenseErrorLineItemsRequired));
+		const validation = validate();
+		if (!validation.isValid) {
+			showToast("error", validation.errorMessage);
 			return;
 		}
 
@@ -387,8 +435,9 @@ export function useRegisterExpense() {
 
 	// Save and reset form for next entry
 	const handleSaveAndAddAnother = useCallback(async () => {
-		if (!validate()) {
-			showToast("error", t(localizationConstants.registerExpenseErrorLineItemsRequired));
+		const validation = validate();
+		if (!validation.isValid) {
+			showToast("error", validation.errorMessage);
 			return;
 		}
 

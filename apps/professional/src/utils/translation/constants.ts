@@ -5677,6 +5677,9 @@ export type ExpenseTranslation = {
 	registerExpenseTimeNotesPlaceholder: string;
 	registerExpenseTimeRefPlaceholder: string;
 	registerExpenseTimeCommentPlaceholder: string;
+	registerExpenseSupplierSearchPlaceholder: string;
+	registerExpenseSupplierAddCustom: string;
+	registerExpenseSupplierNotFound: string;
 };
 
 export type Translation = HeaderTranslation &

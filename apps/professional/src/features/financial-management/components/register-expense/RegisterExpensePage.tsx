@@ -65,7 +65,7 @@ export function RegisterExpensePage() {
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen pb-12">
 			{/* Page Header with Back Button & Breadcrumbs */}
-			<div className="bg-white border-b border-slate-200 px-8 py-4">
+			<div className="bg-white border-b border-slate-200 px-8 pt-4 pb-0 sticky top-0 z-20 shadow-xs">
 				<div className="flex items-center gap-3">
 					<Link href={EXPENSE_LIST_ROUTE}>
 						<Button
@@ -116,6 +116,7 @@ export function RegisterExpensePage() {
 							formData={formData}
 							updateField={updateField}
 							suppliers={suppliers}
+							onAddSupplier={handleAddSupplier}
 							onOpenAddSupplier={() => setShowSupplierModal(true)}
 							errors={errors}
 						/>
