@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -41,6 +42,8 @@ export function ExpenseTimeReportTab({
 	onRemoveRow,
 	totals,
 }: ExpenseTimeReportTabProps) {
+	const { t } = useTranslation();
+
 	const formatNum = (num: number) => {
 		return num.toLocaleString("sv-SE", {
 			minimumFractionDigits: 2,
@@ -58,7 +61,7 @@ export function ExpenseTimeReportTab({
 							<Translate text={localizationConstants.createInvoiceTabTimeReport} />
 						</h3>
 						<p className="text-xs text-slate-400 mt-0.5">
-							Registrera arbetad tid för underentreprenör och arbete kopplat till utgiften.
+							<Translate text={localizationConstants.registerExpenseTimeReportSubtitle} />
 						</p>
 					</div>
 				</div>
@@ -68,25 +71,25 @@ export function ExpenseTimeReportTab({
 						<TableHeader>
 							<TableRow className="border-b border-slate-200 bg-slate-50/70 hover:bg-slate-50/70">
 								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-12 text-center border-r border-slate-200">
-									Aktiv
+									<Translate text={localizationConstants.registerExpenseTimeColActive} />
 								</TableHead>
 								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-32 border-r border-slate-200">
-									Datum
+									<Translate text={localizationConstants.registerExpenseTimeColDate} />
 								</TableHead>
 								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 min-w-[200px] border-r border-slate-200">
-									Namn / Referens
+									<Translate text={localizationConstants.registerExpenseTimeColRef} />
 								</TableHead>
 								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-24 border-r border-slate-200">
-									Arbetad tid (h)
+									<Translate text={localizationConstants.registerExpenseTimeColHours} />
 								</TableHead>
 								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-28 border-r border-slate-200">
-									Á-pris (SEK/h)
+									<Translate text={localizationConstants.registerExpenseTimeColRate} />
 								</TableHead>
 								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 w-32 text-right border-r border-slate-200">
-									Summa (SEK)
+									<Translate text={localizationConstants.registerExpenseTimeColSum} />
 								</TableHead>
 								<TableHead className="py-2.5 px-3 text-xs font-semibold text-slate-700 min-w-[180px] border-r border-slate-200">
-									Kommentar
+									<Translate text={localizationConstants.registerExpenseTimeColComment} />
 								</TableHead>
 								<TableHead className="py-2.5 px-2 w-12 text-center" />
 							</TableRow>
@@ -95,7 +98,7 @@ export function ExpenseTimeReportTab({
 							{formData.timeReportItems.length === 0 ? (
 								<TableRow>
 									<TableCell colSpan={8} className="py-8 text-center text-xs text-slate-400">
-										Ingen arbetad tid har registrerats ännu. Klicka på &quot;+ Lägg till tidrad&quot; nedan för att lägga till.
+										<Translate text={localizationConstants.registerExpenseTimeEmptyText} />
 									</TableCell>
 								</TableRow>
 							) : (
@@ -124,7 +127,7 @@ export function ExpenseTimeReportTab({
 											<Input
 												value={row.referenceName}
 												onChange={(e) => onUpdateRow(row.id, { referenceName: e.target.value })}
-												placeholder="Namn eller referens..."
+												placeholder={t(localizationConstants.registerExpenseTimeRefPlaceholder)}
 												className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none bg-transparent"
 											/>
 										</TableCell>
@@ -159,7 +162,7 @@ export function ExpenseTimeReportTab({
 											<Input
 												value={row.comments || ""}
 												onChange={(e) => onUpdateRow(row.id, { comments: e.target.value })}
-												placeholder="Valfri kommentar..."
+												placeholder={t(localizationConstants.registerExpenseTimeCommentPlaceholder)}
 												className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none bg-transparent"
 											/>
 										</TableCell>
@@ -169,7 +172,7 @@ export function ExpenseTimeReportTab({
 												variant="ghost"
 												size="icon"
 												onClick={() => onRemoveRow(row.id)}
-												aria-label="Ta bort rad"
+												aria-label={t(localizationConstants.registerExpenseDeleteRow)}
 												className="h-7 w-7 text-slate-400 hover:text-rose-600 cursor-pointer"
 											>
 												<Trash2 className="h-3.5 w-3.5" />
@@ -189,17 +192,21 @@ export function ExpenseTimeReportTab({
 						onClick={onAddRow}
 						className="h-8 px-4 border border-dashed border-slate-300 bg-slate-50 text-xs font-medium text-slate-800 hover:bg-slate-100 cursor-pointer rounded-md transition-colors inline-flex items-center justify-center gap-1.5"
 					>
-						+ Lägg till tidrad
+						<Translate text={localizationConstants.registerExpenseTimeAddRowBtn} />
 					</button>
 
 					{/* Totals Summary */}
 					<div className="flex items-center gap-6 text-xs text-slate-600">
 						<div>
-							<span>Totalt antal timmar: </span>
+							<span>
+								<Translate text={localizationConstants.registerExpenseTimeTotalHours} />{" "}
+							</span>
 							<span className="font-semibold text-slate-900">{totals.totalHours} h</span>
 						</div>
 						<div>
-							<span>Totalt belopp: </span>
+							<span>
+								<Translate text={localizationConstants.registerExpenseTimeTotalAmount} />{" "}
+							</span>
 							<span className="font-semibold text-emerald-600">{formatNum(totals.totalAmount)} SEK</span>
 						</div>
 					</div>
@@ -208,12 +215,14 @@ export function ExpenseTimeReportTab({
 
 			{/* Comments / Summering Card */}
 			<div className="bg-white rounded-lg border border-slate-200 p-6 shadow-2xs">
-				<h3 className="text-sm font-semibold text-slate-900 mb-2">Summering och noteringar för tidrapport</h3>
+				<h3 className="text-sm font-semibold text-slate-900 mb-2">
+					<Translate text={localizationConstants.registerExpenseTimeNotesTitle} />
+				</h3>
 				<Textarea
 					rows={3}
 					value={formData.comments || ""}
 					onChange={(e) => updateField("comments", e.target.value)}
-					placeholder="Skriv kommentarer eller specifikation av utfört arbete..."
+					placeholder={t(localizationConstants.registerExpenseTimeNotesPlaceholder)}
 					className="text-xs border-slate-200 bg-white rounded-md resize-y"
 				/>
 			</div>

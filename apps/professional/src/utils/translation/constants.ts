@@ -5652,6 +5652,31 @@ export type ExpenseTranslation = {
 	registerExpenseModalSupplierOrgNoLabel: string;
 	registerExpenseModalSupplierOrgNoPlaceholder: string;
 	registerExpenseModalAddSupplierBtn: string;
+	registerExpenseBtnPreview: string;
+	registerExpenseCommentsTitle: string;
+	registerExpenseCommentsPlaceholder: string;
+	registerExpenseLineColDescPlaceholder: string;
+	registerExpenseDeleteRow: string;
+	registerExpenseDeleteFile: string;
+	registerExpensePreviewModalTitle: string;
+	registerExpensePreviewModalSubtitle: string;
+	registerExpensePreviewPrint: string;
+	registerExpenseTimeReportSubtitle: string;
+	registerExpenseTimeColActive: string;
+	registerExpenseTimeColDate: string;
+	registerExpenseTimeColRef: string;
+	registerExpenseTimeColHours: string;
+	registerExpenseTimeColRate: string;
+	registerExpenseTimeColSum: string;
+	registerExpenseTimeColComment: string;
+	registerExpenseTimeEmptyText: string;
+	registerExpenseTimeAddRowBtn: string;
+	registerExpenseTimeTotalHours: string;
+	registerExpenseTimeTotalAmount: string;
+	registerExpenseTimeNotesTitle: string;
+	registerExpenseTimeNotesPlaceholder: string;
+	registerExpenseTimeRefPlaceholder: string;
+	registerExpenseTimeCommentPlaceholder: string;
 };
 
 export type Translation = HeaderTranslation &

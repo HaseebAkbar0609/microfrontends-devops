@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -43,6 +44,7 @@ export function RegisterExpenseLineItemsTable({
 	onRemoveItem,
 	error,
 }: RegisterExpenseLineItemsTableProps) {
+	const { t } = useTranslation();
 	const formatNum = (num: number) => {
 		return num.toLocaleString("sv-SE", {
 			minimumFractionDigits: 2,
@@ -99,7 +101,7 @@ export function RegisterExpenseLineItemsTable({
 									<Input
 										value={row.description}
 										onChange={(e) => onUpdateItem(row.id, { description: e.target.value })}
-										placeholder="Beskrivning av utgift..."
+										placeholder={t(localizationConstants.registerExpenseLineColDescPlaceholder)}
 										className="h-8 text-xs border-0 focus-visible:ring-0 px-0 shadow-none bg-transparent"
 									/>
 								</TableCell>
@@ -207,7 +209,7 @@ export function RegisterExpenseLineItemsTable({
 										variant="ghost"
 										size="icon"
 										onClick={() => onRemoveItem(row.id)}
-										aria-label="Ta bort rad"
+										aria-label={t(localizationConstants.registerExpenseDeleteRow)}
 										className="h-7 w-7 text-slate-400 hover:text-rose-600 cursor-pointer"
 									>
 										<Trash2 className="h-3.5 w-3.5" />

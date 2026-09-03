@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { UploadCloud, FileText, Image as ImageIcon, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ export function RegisterExpenseAttachmentZone({
 	onAddAttachments,
 	onRemoveAttachment,
 }: RegisterExpenseAttachmentZoneProps) {
+	const { t } = useTranslation();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [isDragOver, setIsDragOver] = useState(false);
 
@@ -138,7 +140,7 @@ export function RegisterExpenseAttachmentZone({
 								variant="ghost"
 								size="icon"
 								onClick={() => onRemoveAttachment(att.id)}
-								aria-label="Ta bort fil"
+								aria-label={t(localizationConstants.registerExpenseDeleteFile)}
 								className="h-7 w-7 text-slate-400 hover:text-rose-600 cursor-pointer shrink-0"
 							>
 								<Trash2 className="h-3.5 w-3.5" />

@@ -43,7 +43,9 @@ export function RegisterExpenseActions({
 				className="h-9 px-4 text-xs font-normal border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer bg-white rounded-md gap-1.5"
 			>
 				<Eye className="h-3.5 w-3.5 text-slate-500" />
-				<span>Förhandsgranska</span>
+				<span>
+					<Translate text={localizationConstants.registerExpenseBtnPreview} />
+				</span>
 			</Button>
 
 			{/* Save & Add Another Button */}

@@ -7,7 +7,6 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import {
 	Select,
 	SelectContent,
@@ -15,7 +14,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import {
 	RegisterExpenseFormData,
 	RegisterExpenseErrors,
@@ -49,26 +47,24 @@ export function RegisterExpenseHeaderForm({
 
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs">
-			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-				{/* 1. Supplier Field with "+ Lägg till ny leverantör" button */}
-				<div>
-					<div className="flex items-center justify-between mb-1.5">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+				{/* 1. Supplier Field with single '+' button */}
+				<div className="lg:col-span-4">
+					<div className="flex items-center justify-between mb-1.5 h-5">
 						<Label className="text-xs font-semibold text-slate-700">
 							<Translate text={localizationConstants.registerExpenseSupplierLabel} />{" "}
 							<span className="text-rose-500">*</span>
 						</Label>
-						<Button
+						<button
 							type="button"
-							variant="ghost"
-							size="sm"
 							onClick={onOpenAddSupplier}
-							className="h-6 px-2 text-[11px] text-zinc-900 hover:text-zinc-950 font-medium cursor-pointer -mr-1 gap-1"
+							className="text-[11px] text-blue-600 hover:text-blue-700 font-medium cursor-pointer inline-flex items-center gap-1 transition-colors"
 						>
 							<Plus className="h-3 w-3" />
 							<span>
 								<Translate text={localizationConstants.registerExpenseAddNewSupplier} />
 							</span>
-						</Button>
+						</button>
 					</div>
 					<Select
 						value={formData.supplier}
@@ -97,11 +93,13 @@ export function RegisterExpenseHeaderForm({
 				</div>
 
 				{/* 2. Invoice / Receipt Number */}
-				<div>
-					<Label className="text-xs font-semibold text-slate-700 block mb-1.5">
-						<Translate text={localizationConstants.registerExpenseInvoiceNoLabel} />{" "}
-						<span className="text-rose-500">*</span>
-					</Label>
+				<div className="lg:col-span-4">
+					<div className="flex items-center justify-between mb-1.5 h-5">
+						<Label className="text-xs font-semibold text-slate-700">
+							<Translate text={localizationConstants.registerExpenseInvoiceNoLabel} />{" "}
+							<span className="text-rose-500">*</span>
+						</Label>
+					</div>
 					<Input
 						type="text"
 						value={formData.fakturaNo}
@@ -117,11 +115,13 @@ export function RegisterExpenseHeaderForm({
 				</div>
 
 				{/* 3. Category */}
-				<div>
-					<Label className="text-xs font-semibold text-slate-700 block mb-1.5">
-						<Translate text={localizationConstants.registerExpenseCategoryLabel} />{" "}
-						<span className="text-rose-500">*</span>
-					</Label>
+				<div className="lg:col-span-4">
+					<div className="flex items-center justify-between mb-1.5 h-5">
+						<Label className="text-xs font-semibold text-slate-700">
+							<Translate text={localizationConstants.registerExpenseCategoryLabel} />{" "}
+							<span className="text-rose-500">*</span>
+						</Label>
+					</div>
 					<Select
 						value={formData.category}
 						onValueChange={(val) => updateField("category", val as ExpenseCategory)}
@@ -138,7 +138,7 @@ export function RegisterExpenseHeaderForm({
 						<SelectContent className="bg-white">
 							{EXPENSE_CATEGORIES.map((cat) => (
 								<SelectItem key={cat.value} value={cat.value} className="text-xs cursor-pointer">
-									<Translate text={cat.labelKey} />
+									{t(cat.labelKey)}
 								</SelectItem>
 							))}
 						</SelectContent>
@@ -149,10 +149,10 @@ export function RegisterExpenseHeaderForm({
 				</div>
 
 				{/* 4. Invoice Date */}
-				<div>
-					<Label className="text-xs font-semibold text-slate-700 block mb-1.5">
+				<div className="lg:col-span-3">
+					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseDateLabel} />{" "}
-						<span className="text-rose-500">*</span>
+						<span className="text-rose-500 ml-0.5">*</span>
 					</Label>
 					<Input
 						type="date"
@@ -168,10 +168,10 @@ export function RegisterExpenseHeaderForm({
 				</div>
 
 				{/* 5. Due Date */}
-				<div>
-					<Label className="text-xs font-semibold text-slate-700 block mb-1.5">
+				<div className="lg:col-span-3">
+					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseDueDateLabel} />{" "}
-						<span className="text-rose-500">*</span>
+						<span className="text-rose-500 ml-0.5">*</span>
 					</Label>
 					<Input
 						type="date"
@@ -187,8 +187,8 @@ export function RegisterExpenseHeaderForm({
 				</div>
 
 				{/* 6. Project (Optional) */}
-				<div>
-					<Label className="text-xs font-semibold text-slate-700 block mb-1.5">
+				<div className="lg:col-span-3">
+					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseProjectLabel} />
 					</Label>
 					<Select
@@ -211,8 +211,8 @@ export function RegisterExpenseHeaderForm({
 				</div>
 
 				{/* 7. Cost Center (Optional) */}
-				<div>
-					<Label className="text-xs font-semibold text-slate-700 block mb-1.5">
+				<div className="lg:col-span-3">
+					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseCostCenterLabel} />
 					</Label>
 					<Select
@@ -234,17 +234,17 @@ export function RegisterExpenseHeaderForm({
 					</Select>
 				</div>
 
-				{/* 8. Notes / Comments (spans 2 columns on lg) */}
-				<div className="lg:col-span-2">
-					<Label className="text-xs font-semibold text-slate-700 block mb-1.5">
+				{/* 8. Notes / Message (full width 12 cols, single-line input) */}
+				<div className="lg:col-span-12">
+					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseNotesLabel} />
 					</Label>
-					<Textarea
-						rows={2}
+					<Input
+						type="text"
 						value={formData.notes}
 						onChange={(e) => updateField("notes", e.target.value)}
 						placeholder={t(localizationConstants.registerExpenseNotesPlaceholder)}
-						className="text-xs border-slate-200 bg-white rounded-md resize-none"
+						className="h-9 text-xs border-slate-200 bg-white rounded-md"
 					/>
 				</div>
 			</div>

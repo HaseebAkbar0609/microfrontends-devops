@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -29,6 +30,7 @@ import { RegisterExpenseActions } from "./RegisterExpenseActions";
 import { AddNewSupplierModal } from "./AddNewSupplierModal";
 
 export function RegisterExpensePage() {
+	const { t } = useTranslation();
 	const {
 		activeTab,
 		setActiveTab,
@@ -69,7 +71,7 @@ export function RegisterExpensePage() {
 						<Button
 							variant="ghost"
 							size="icon"
-							aria-label="Tillbaka"
+							aria-label="Back"
 							className="h-8 w-8 text-slate-700 hover:text-slate-900 cursor-pointer -ml-2"
 						>
 							<ArrowLeft className="h-4 w-4" />
@@ -81,9 +83,6 @@ export function RegisterExpensePage() {
 							breadcrumbs={registerExpenseBreadcrumbs}
 							className="border-b-0 p-0"
 						/>
-						<p className="text-xs text-slate-400 font-normal mt-0.5">
-							<Translate text={localizationConstants.registerExpenseSubtitle} />
-						</p>
 					</div>
 				</div>
 
@@ -133,12 +132,14 @@ export function RegisterExpensePage() {
 
 						{/* Comments Box */}
 						<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs">
-							<h3 className="text-sm font-semibold text-slate-900 mb-2">Kommentar / Anteckningar</h3>
+							<h3 className="text-sm font-semibold text-slate-900 mb-2">
+								<Translate text={localizationConstants.registerExpenseCommentsTitle} />
+							</h3>
 							<Textarea
 								rows={3}
 								value={formData.comments || ""}
 								onChange={(e) => updateField("comments", e.target.value)}
-								placeholder="Skriv eventuella interna kommentarer om utgiften..."
+								placeholder={t(localizationConstants.registerExpenseCommentsPlaceholder)}
 								className="text-xs border-slate-200 bg-white rounded-md resize-y"
 							/>
 						</div>
