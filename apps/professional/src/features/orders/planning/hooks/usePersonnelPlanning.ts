@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { format, addWeeks, subWeeks, addDays, getISOWeek } from "date-fns";
+import { showToast } from "@/lib/toast";
 import type {
 	PlanningQuery,
 	PlanningResponse,
@@ -114,6 +115,33 @@ export function usePersonnelPlanning() {
 
 			const res = await getPlanning(query);
 			setApiData(res);
+
+			// If API returns orders with tasks, map them to schedule items
+			if (res.orders && res.orders.length > 0) {
+				const allTasks = res.orders.flatMap((order) =>
+					order.tasks.map((task) => ({
+						id: task.id,
+						employeeId: task.assignees?.[0]?.id || "emp-1",
+						employeeName: task.assignees?.[0]?.name || "Anställd",
+						employeeInitials: task.assignees?.[0]?.initials || "AN",
+						employeeAvatarUrl: task.assignees?.[0]?.avatarUrl,
+						title: task.orderName || task.name || order.orderName,
+						orderNumber: task.orderNumber || order.orderNumber,
+						dayStart: task.startDayIndex ?? 0,
+						daySpan: task.durationDays ?? 1,
+						colorTheme: "blue" as const,
+						status: task.status,
+						timeRange: task.startTime && task.endTime
+							? `${task.startTime} - ${task.endTime}`
+							: undefined,
+						dateText: task.startDate,
+						assignees: task.assignees,
+					}))
+				);
+				if (allTasks.length > 0) {
+					setScheduleItems(allTasks);
+				}
+			}
 		} catch (err) {
 			const message = err instanceof Error ? err.message : "Failed to load personnel planning";
 			setError(message);
@@ -156,66 +184,85 @@ export function usePersonnelPlanning() {
 			assigneeIds: string[];
 		}) => {
 			setIsSaving(true);
+			setError(null);
+
+			const emp = MOCK_PERSONNEL_EMPLOYEES.find((e) => e.id === data.assigneeIds[0]) || MOCK_PERSONNEL_EMPLOYEES[0];
+			const newId = `task-${Date.now()}`;
+
+			const newAssignees = data.assigneeIds.map((id) => {
+				const found = MOCK_PERSONNEL_EMPLOYEES.find((e) => e.id === id);
+				return {
+					id,
+					name: found?.name || "Anställd",
+					initials: found?.initials || "AN",
+					hours: 8,
+				};
+			});
+
+			const newScheduleItem: PersonnelScheduleItem = {
+				id: newId,
+				employeeId: emp.id,
+				employeeName: emp.name,
+				employeeInitials: emp.initials,
+				title: data.title,
+				dayStart: data.dayStart,
+				daySpan: data.daySpan,
+				colorTheme: data.colorTheme,
+				status: data.status,
+				timeRange: data.timeRange,
+				dateText: data.dateText,
+				assignees: newAssignees,
+			};
+
+			const newGridTask: GridTaskItem = {
+				id: newId,
+				dayIndex: 0,
+				topMinutes: 0,
+				durationMinutes: 60,
+				title: data.title,
+				colorTheme: data.colorTheme,
+				status: data.status,
+				timeRange: data.timeRange,
+				dateText: data.dateText,
+				assignees: newAssignees,
+			};
+
+			// Optimistic update
+			setScheduleItems((prev) => [newScheduleItem, ...prev]);
+			setTasks((prev) => [newGridTask, ...prev]);
+
 			try {
-				const emp = MOCK_PERSONNEL_EMPLOYEES.find((e) => e.id === data.assigneeIds[0]) || MOCK_PERSONNEL_EMPLOYEES[0];
-				const newId = `task-${Date.now()}`;
-
-				// Optimistic local state update
-				const newScheduleItem: PersonnelScheduleItem = {
-					id: newId,
-					employeeId: emp.id,
-					employeeName: emp.name,
-					employeeInitials: emp.initials,
-					title: data.title,
-					dayStart: data.dayStart,
-					daySpan: data.daySpan,
-					colorTheme: data.colorTheme,
-					status: data.status,
-					timeRange: data.timeRange,
-					dateText: data.dateText,
-					assignees: data.assigneeIds.map((id) => {
-						const found = MOCK_PERSONNEL_EMPLOYEES.find((e) => e.id === id);
-						return {
-							id,
-							name: found?.name || "Anställd",
-							initials: found?.initials || "AN",
-							hours: 8,
-						};
-					}),
-				};
-
-				setScheduleItems((prev) => [newScheduleItem, ...prev]);
-
-				const newGridTask: GridTaskItem = {
-					id: newId,
-					dayIndex: 0,
-					topMinutes: 0,
-					durationMinutes: 60,
-					title: data.title,
-					colorTheme: data.colorTheme,
-					status: data.status,
-					timeRange: data.timeRange,
-					dateText: data.dateText,
-					assignees: newScheduleItem.assignees,
-				};
-				setTasks((prev) => [newGridTask, ...prev]);
-
-				// Call standard API
-				await createPlanningTask({
+				const created = await createPlanningTask({
 					orderId: "order-5000",
 					orderNumber: "Order 5000",
 					orderName: data.title,
 					name: data.title,
-					startDate: data.dateText,
-					endDate: data.dateText,
+					startDate: data.dateText || "",
+					endDate: data.dateText || "",
 					color: "#3B82F6",
 					status: data.status,
-					assignees: newScheduleItem.assignees || [],
+					assignees: newAssignees,
 				});
+
+				// Replace temp ID with real API ID
+				const realId = created.id;
+				if (realId && realId !== newId) {
+					setScheduleItems((prev) =>
+						prev.map((item) => (item.id === newId ? { ...item, id: realId } : item))
+					);
+					setTasks((prev) =>
+						prev.map((t) => (t.id === newId ? { ...t, id: realId } : t))
+					);
+				}
 
 				setIsCreateModalOpen(false);
 			} catch (err) {
-				setError(err instanceof Error ? err.message : "Failed to create task");
+				// Rollback optimistic update on failure
+				setScheduleItems((prev) => prev.filter((item) => item.id !== newId));
+				setTasks((prev) => prev.filter((t) => t.id !== newId));
+				const message = err instanceof Error ? err.message : "Failed to create task";
+				setError(message);
+				showToast("error", message);
 			} finally {
 				setIsSaving(false);
 			}
@@ -237,42 +284,48 @@ export function usePersonnelPlanning() {
 			assigneeIds: string[];
 		}) => {
 			setIsSaving(true);
+			setError(null);
+
+			// Store previous state for rollback
+			const prevScheduleItems = scheduleItems;
+			const prevTasks = tasks;
+
+			// Optimistic update
+			setScheduleItems((prev) =>
+				prev.map((item) => {
+					if (item.id === data.id) {
+						return {
+							...item,
+							title: data.title,
+							dayStart: data.dayStart,
+							daySpan: data.daySpan,
+							colorTheme: data.colorTheme,
+							status: data.status,
+							timeRange: data.timeRange,
+							dateText: data.dateText,
+						};
+					}
+					return item;
+				})
+			);
+
+			setTasks((prev) =>
+				prev.map((t) => {
+					if (t.id === data.id) {
+						return {
+							...t,
+							title: data.title,
+							colorTheme: data.colorTheme === "light-purple" ? "purple" : data.colorTheme === "light-yellow" ? "yellow" : data.colorTheme,
+							status: data.status,
+							timeRange: data.timeRange,
+							dateText: data.dateText,
+						};
+					}
+					return t;
+				})
+			);
+
 			try {
-				setScheduleItems((prev) =>
-					prev.map((item) => {
-						if (item.id === data.id) {
-							return {
-								...item,
-								title: data.title,
-								dayStart: data.dayStart,
-								daySpan: data.daySpan,
-								colorTheme: data.colorTheme,
-								status: data.status,
-								timeRange: data.timeRange,
-								dateText: data.dateText,
-							};
-						}
-						return item;
-					})
-				);
-
-				setTasks((prev) =>
-					prev.map((t) => {
-						if (t.id === data.id) {
-							return {
-								...t,
-								title: data.title,
-								colorTheme: data.colorTheme === "light-purple" ? "purple" : data.colorTheme === "light-yellow" ? "yellow" : data.colorTheme,
-								status: data.status,
-								timeRange: data.timeRange,
-								dateText: data.dateText,
-							};
-						}
-						return t;
-					})
-				);
-
-				// Call standard API
 				await updatePlanningTask({
 					taskId: data.id,
 					payload: {
@@ -283,27 +336,45 @@ export function usePersonnelPlanning() {
 
 				setEditingItem(null);
 			} catch (err) {
-				setError(err instanceof Error ? err.message : "Failed to update task");
+				// Rollback on failure
+				setScheduleItems(prevScheduleItems);
+				setTasks(prevTasks);
+				const message = err instanceof Error ? err.message : "Failed to update task";
+				setError(message);
+				showToast("error", message);
 			} finally {
 				setIsSaving(false);
 			}
 		},
-		[]
+		[scheduleItems, tasks]
 	);
 
 	// Delete task with API integration
 	const handleDeleteTask = useCallback(
 		async (taskId: string) => {
+			setError(null);
+
+			// Store previous state for rollback
+			const prevScheduleItems = scheduleItems;
+			const prevTasks = tasks;
+
+			// Optimistic update
+			setTasks((prev) => prev.filter((t) => t.id !== taskId));
+			setScheduleItems((prev) => prev.filter((t) => t.id !== taskId));
+			setActivePopoverId(null);
+
 			try {
-				setTasks((prev) => prev.filter((t) => t.id !== taskId));
-				setScheduleItems((prev) => prev.filter((t) => t.id !== taskId));
-				setActivePopoverId(null);
 				await deletePlanningTask(taskId);
 			} catch (err) {
-				setError(err instanceof Error ? err.message : "Failed to delete task");
+				// Rollback on failure
+				setScheduleItems(prevScheduleItems);
+				setTasks(prevTasks);
+				const message = err instanceof Error ? err.message : "Failed to delete task";
+				setError(message);
+				showToast("error", message);
 			}
 		},
-		[]
+		[scheduleItems, tasks]
 	);
 
 	// Add assignee with optimistic update

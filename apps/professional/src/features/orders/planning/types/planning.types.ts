@@ -131,18 +131,18 @@ export interface PersonnelScheduleItem {
 	id: string;
 	employeeId: string;
 	employeeName: string;
-	employeeInitials: string;
+	employeeInitials?: string;
 	employeeAvatarUrl?: string;
 	title: string;
 	orderNumber?: string;
-	dayStart: number; // e.g. 10 to 16
-	daySpan: number; // e.g. 1 to 4
+	dayStart?: number; // e.g. 10 to 16
+	daySpan?: number; // e.g. 1 to 4
 	colorTheme: "yellow" | "blue" | "purple" | "pink" | "green" | "light-purple" | "light-yellow" | "red";
 	hasLeftBar?: boolean;
 	status: PlanningStatus;
 	timeRange?: string;
 	dateText?: string;
-	assignees: PlanningAssignee[];
+	assignees?: PlanningAssignee[];
 	isBarOnly?: boolean;
 }
 

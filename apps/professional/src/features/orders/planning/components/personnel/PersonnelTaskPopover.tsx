@@ -26,22 +26,19 @@ import type {
 import { MOCK_PERSONNEL_SAMPLE_ASSIGNEES } from "../../data/personnelPlanning.mock";
 
 interface PersonnelTaskPopoverProps {
-  item: PersonnelScheduleItem;
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  onEdit: (item: PersonnelScheduleItem) => void;
-  onDelete: (itemId: string) => void;
-  onAddAssignee: (
-    item: PersonnelScheduleItem,
-    assignee: PlanningAssignee,
-  ) => void;
-  employeesList: {
-    id: string;
-    name: string;
-    initials: string;
-    avatarUrl?: string;
-  }[];
-  children: React.ReactNode;
+	item: PersonnelScheduleItem;
+	isOpen: boolean;
+	onOpenChange: (open: boolean) => void;
+	onEdit: (item: PersonnelScheduleItem) => void;
+	onDelete: (itemId: string) => void;
+	onAddAssignee: (item: PersonnelScheduleItem, assignee: PlanningAssignee) => void;
+	employeesList: { id: string; name: string; initials: string; avatarUrl?: string }[];
+	children: React.ReactNode;
+	side?: "top" | "right" | "bottom" | "left";
+	align?: "start" | "center" | "end";
+	sideOffset?: number;
+	alignOffset?: number;
+	isCenteredModal?: boolean;
 }
 
 const DEFAULT_MOCK_ASSIGNEES: PlanningAssignee[] =
@@ -85,71 +82,54 @@ function getPopoverThemeBorder(
   }
 }
 
-export function PersonnelTaskPopover({
-  item,
-  isOpen,
-  onOpenChange,
-  onEdit,
-  onDelete,
-  onAddAssignee,
-  employeesList,
-  children,
-}: PersonnelTaskPopoverProps) {
-  const t = useTranslate();
-  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
-  const [selectedUserToAdd, setSelectedUserToAdd] = useState<{
-    id: string;
-    name: string;
-    initials: string;
-    avatarUrl?: string;
-  } | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+export interface PersonnelTaskPopoverCardProps {
+	item: PersonnelScheduleItem;
+	onClose: () => void;
+	onEdit: (item: PersonnelScheduleItem) => void;
+	onDelete: (itemId: string) => void;
+	onAddAssignee: (item: PersonnelScheduleItem, assignee: PlanningAssignee) => void;
+	employeesList: { id: string; name: string; initials: string; avatarUrl?: string }[];
+}
 
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(typeof window !== "undefined" && window.innerWidth < 640);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Lock background scroll on small screens when popup is open
-  useEffect(() => {
-    if (isOpen && isMobile) {
-      const originalOverflow = document.body.style.overflow;
-      const originalTouchAction = document.body.style.touchAction;
-      document.body.style.overflow = "hidden";
-      document.body.style.touchAction = "none";
-      return () => {
-        document.body.style.overflow = originalOverflow;
-        document.body.style.touchAction = originalTouchAction;
-      };
-    }
-  }, [isOpen, isMobile]);
+export function PersonnelTaskPopoverCard({
+	item,
+	onClose,
+	onEdit,
+	onDelete,
+	onAddAssignee,
+	employeesList,
+}: PersonnelTaskPopoverCardProps) {
+	const t = useTranslate();
+	const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+	const [selectedUserToAdd, setSelectedUserToAdd] = useState<{
+		id: string;
+		name: string;
+		initials: string;
+		avatarUrl?: string;
+	} | null>(null);
 
   const assignees =
     item.assignees && item.assignees.length > 0
       ? item.assignees
       : DEFAULT_MOCK_ASSIGNEES;
 
-  const handleSelectAssigneeFromDropdown = (emp: {
-    id: string;
-    name: string;
-    initials: string;
-    avatarUrl?: string;
-  }) => {
-    setSelectedUserToAdd(emp);
-    setIsUserDropdownOpen(false);
-    const newAssignee: PlanningAssignee = {
-      id: emp.id,
-      name: emp.name,
-      initials: emp.initials,
-      avatarUrl: emp.avatarUrl,
-      hours: 4,
-    };
-    onAddAssignee(item, newAssignee);
-  };
+	const handleSelectAssigneeFromDropdown = (emp: {
+		id: string;
+		name: string;
+		initials: string;
+		avatarUrl?: string;
+	}) => {
+		setSelectedUserToAdd(emp);
+		setIsUserDropdownOpen(false);
+		const newAssignee: PlanningAssignee = {
+			id: emp.id,
+			name: emp.name,
+			initials: emp.initials,
+			avatarUrl: emp.avatarUrl,
+			hours: 4,
+		};
+		onAddAssignee(item, newAssignee);
+	};
 
   const handleAddClick = () => {
     if (selectedUserToAdd) {
@@ -175,53 +155,49 @@ export function PersonnelTaskPopover({
     }
   };
 
-  const renderCardContent = () => (
-    <div
-      className={`relative bg-white rounded-xl shadow-2xl border border-slate-200 w-full max-w-85 h-auto flex flex-col p-4 pt-2 pb-3 animate-in fade-in zoom-in-95 duration-200 text-slate-900 transition-all duration-200 ${isUserDropdownOpen ? "min-h-[420px]" : ""}`}
-    >
-      {/* Header with full width edge-to-edge 6px theme border-left */}
-      <div
-        className={`-mx-4 px-3 flex items-center justify-between pt-1 pb-1 ${getPopoverThemeBorder(item.colorTheme)}`}
-      >
-        <h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate pr-2">
-          {item.title || "Order 5000 - Badrum"}
-        </h3>
-        <div className="flex items-center gap-1 shrink-0">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => onDelete(item.id)}
-            className="w-8 h-8 rounded-md hover:bg-slate-100 transition-colors cursor-pointer hover:text-rose-600 p-0"
-            title={t(localizationConstants.remove) || "Delete"}
-          >
-            <Trash2 className="w-4 h-4 text-zinc-900 stroke-[1.33]" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              onOpenChange(false);
-              onEdit(item);
-            }}
-            className="w-8 h-8 rounded-md hover:bg-slate-100 transition-colors cursor-pointer p-0"
-            title={t(localizationConstants.redigeraPlanering) || "Edit"}
-          >
-            <PenLine className="w-4 h-4 text-zinc-900 stroke-[1.33]" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            onClick={() => onOpenChange(false)}
-            className="w-8 h-8 rounded-md hover:bg-slate-100 transition-colors cursor-pointer p-0"
-            title={t(localizationConstants.actionClose) || "Close"}
-          >
-            <X className="w-4 h-4 text-zinc-900 stroke-[1.33]" />
-          </Button>
-        </div>
-      </div>
+	return (
+		<div className={`relative bg-white rounded-[8px] shadow-2xl border border-slate-200 w-full max-w-[340px] h-auto flex flex-col p-4 pt-2 pb-3 animate-in fade-in zoom-in-95 duration-150 text-slate-900 transition-all duration-200 ${isUserDropdownOpen ? "min-h-[420px]" : ""}`}>
+			{/* Header with full width edge-to-edge 6px theme border-left */}
+			<div className={`-mx-4 px-3 flex items-center justify-between pt-1 pb-1 ${getPopoverThemeBorder(item.colorTheme)}`}>
+				<h3 className="text-sm sm:text-base font-bold text-slate-900 tracking-tight truncate pr-2">
+					{item.title || "Order 5000 - Badrum"}
+				</h3>
+				<div className="flex items-center gap-1 shrink-0">
+					<Button
+						type="button"
+						variant="ghost"
+						size="icon"
+						onClick={() => onDelete(item.id)}
+						className="w-8 h-8 rounded-md hover:bg-slate-100 transition-colors cursor-pointer hover:text-rose-600 p-0"
+						title={t(localizationConstants.remove) || "Delete"}
+					>
+						<Trash2 className="w-4 h-4 text-zinc-900 stroke-[1.33]" />
+					</Button>
+					<Button
+						type="button"
+						variant="ghost"
+						size="icon"
+						onClick={() => {
+							onClose();
+							onEdit(item);
+						}}
+						className="w-8 h-8 rounded-md hover:bg-slate-100 transition-colors cursor-pointer p-0"
+						title={t(localizationConstants.redigeraPlanering) || "Edit"}
+					>
+						<PenLine className="w-4 h-4 text-zinc-900 stroke-[1.33]" />
+					</Button>
+					<Button
+						type="button"
+						variant="ghost"
+						size="icon"
+						onClick={onClose}
+						className="w-8 h-8 rounded-md hover:bg-slate-100 transition-colors cursor-pointer p-0"
+						title={t(localizationConstants.actionClose) || "Close"}
+					>
+						<X className="w-4 h-4 text-zinc-900 stroke-[1.33]" />
+					</Button>
+				</div>
+			</div>
 
       {/* Status Pill */}
       <div className="mt-2 mb-2">
@@ -245,65 +221,58 @@ export function PersonnelTaskPopover({
           <Translate text={localizationConstants.planningAssignee} />
         </h4>
 
-        {/* Add Assignee Control */}
-        <div className="flex items-center gap-2">
-          <div className="relative flex-1">
-            <DropdownMenu
-              open={isUserDropdownOpen}
-              onOpenChange={setIsUserDropdownOpen}
-            >
-              <DropdownMenuTrigger asChild>
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full h-9 px-3 bg-white border-slate-200 rounded-md text-xs text-slate-500 flex items-center justify-between hover:bg-slate-50 focus:outline-none transition-colors cursor-pointer font-normal shadow-none"
-                >
-                  <span className="truncate">
-                    {selectedUserToAdd
-                      ? selectedUserToAdd.name
-                      : t(localizationConstants.addUsers) ||
-                        "Lägg till användare"}
-                  </span>
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-150 ${
-                      isUserDropdownOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="start"
-                className="w-50 min-w-50 max-h-48 overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-xl p-1 z-10000 font-sans"
-              >
-                {employeesList.map((emp) => (
-                  <DropdownMenuItem
-                    key={emp.id}
-                    onClick={() => handleSelectAssigneeFromDropdown(emp)}
-                    className="flex items-center justify-between px-2.5 py-1.5 hover:bg-slate-50 text-left transition-colors cursor-pointer"
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      {emp.avatarUrl ? (
-                        <Image
-                          src={emp.avatarUrl}
-                          alt={emp.name}
-                          width={20}
-                          height={20}
-                          className="w-5 h-5 rounded-full object-cover shrink-0"
-                        />
-                      ) : (
-                        <div className="w-5 h-5 rounded-full bg-zinc-100 text-slate-600 font-semibold text-[9px] flex items-center justify-center shrink-0">
-                          {emp.initials}
-                        </div>
-                      )}
-                      <span className="text-xs font-medium text-slate-800 truncate">
-                        {emp.name}
-                      </span>
-                    </div>
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+				{/* Add Assignee Control */}
+				<div className="flex items-center gap-2">
+					<div className="relative flex-1">
+						<DropdownMenu open={isUserDropdownOpen} onOpenChange={setIsUserDropdownOpen}>
+							<DropdownMenuTrigger asChild>
+								<Button
+									type="button"
+									variant="outline"
+									className="w-full h-[36px] px-3 bg-white border-slate-200 rounded-md text-xs text-slate-500 flex items-center justify-between hover:bg-slate-50 focus:outline-none transition-colors cursor-pointer font-normal shadow-none"
+								>
+									<span className="truncate">
+										{selectedUserToAdd ? selectedUserToAdd.name : (t(localizationConstants.addUsers) || "Lägg till användare")}
+									</span>
+									<ChevronDown
+										className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-150 ${isUserDropdownOpen ? "rotate-180" : ""
+											}`}
+									/>
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent
+								align="start"
+								className="w-[200px] min-w-[200px] max-h-48 overflow-y-auto bg-white border border-slate-200 rounded-lg shadow-xl p-1 z-[10000] font-sans"
+							>
+								{employeesList.map((emp) => (
+									<DropdownMenuItem
+										key={emp.id}
+										onClick={() => handleSelectAssigneeFromDropdown(emp)}
+										className="flex items-center justify-between px-2.5 py-1.5 hover:bg-slate-50 text-left transition-colors cursor-pointer"
+									>
+										<div className="flex items-center gap-2 min-w-0">
+											{emp.avatarUrl ? (
+												<Image
+													src={emp.avatarUrl}
+													alt={emp.name}
+													width={20}
+													height={20}
+													className="w-5 h-5 rounded-full object-cover shrink-0"
+												/>
+											) : (
+												<div className="w-5 h-5 rounded-full bg-zinc-100 text-slate-600 font-semibold text-[9px] flex items-center justify-center shrink-0">
+													{emp.initials}
+												</div>
+											)}
+											<span className="text-xs font-medium text-slate-800 truncate">
+												{emp.name}
+											</span>
+										</div>
+									</DropdownMenuItem>
+								))}
+							</DropdownMenuContent>
+						</DropdownMenu>
+					</div>
 
           <Button
             type="button"
@@ -343,73 +312,109 @@ export function PersonnelTaskPopover({
                 </span>
               </div>
 
-              <span className="font-sans font-normal text-sm leading-5 tracking-normal text-slate-500 shrink-0">
-                {user.hours}{" "}
-                <Translate text={localizationConstants.timmarSuffix} />
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
+							<span className="font-sans font-normal text-sm leading-5 tracking-normal text-slate-500 shrink-0">
+								{user.hours} <Translate text={localizationConstants.timmarSuffix} />
+							</span>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	);
+}
 
-  const [mounted, setMounted] = useState(false);
+export function PersonnelTaskPopover({
+	item,
+	isOpen,
+	onOpenChange,
+	onEdit,
+	onDelete,
+	onAddAssignee,
+	employeesList,
+	children,
+	side = "right",
+	align = "start",
+	sideOffset = 8,
+	alignOffset,
+	isCenteredModal = false,
+}: PersonnelTaskPopoverProps) {
+	const [isMobile, setIsMobile] = useState(false);
+	const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+	useEffect(() => {
+		setMounted(true);
+		const checkMobile = () => {
+			setIsMobile(typeof window !== "undefined" && window.innerWidth < 640);
+		};
+		checkMobile();
+		window.addEventListener("resize", checkMobile);
+		return () => window.removeEventListener("resize", checkMobile);
+	}, []);
 
-  useEffect(() => {
-    if (isOpen) {
-      const prevBodyOverflow = document.body.style.overflow;
-      const prevHtmlOverflow = document.documentElement.style.overflow;
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-      return () => {
-        document.body.style.overflow = prevBodyOverflow;
-        document.documentElement.style.overflow = prevHtmlOverflow;
-      };
-    }
-  }, [isOpen]);
+	// Lock background scroll on small screens when popup is open
+	useEffect(() => {
+		if (isOpen) {
+			const prevBodyOverflow = document.body.style.overflow;
+			const prevHtmlOverflow = document.documentElement.style.overflow;
+			document.body.style.overflow = "hidden";
+			document.documentElement.style.overflow = "hidden";
+			return () => {
+				document.body.style.overflow = prevBodyOverflow;
+				document.documentElement.style.overflow = prevHtmlOverflow;
+			};
+		}
+	}, [isOpen]);
 
-  if (isMobile) {
-    return (
-      <>
-        {children}
-        {mounted &&
-          isOpen &&
-          createPortal(
-            <div className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-transparent font-sans">
-              <div
-                className="fixed inset-0 cursor-pointer"
-                onClick={() => onOpenChange(false)}
-              />
-              <div className="relative z-10 w-full max-w-85 flex justify-center">
-                {renderCardContent()}
-              </div>
-            </div>,
-            document.body,
-          )}
-      </>
-    );
-  }
+	if (isCenteredModal || isMobile) {
+		return (
+			<>
+				{children}
+				{mounted && isOpen && createPortal(
+					<div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/15 backdrop-blur-[0.5px] font-sans">
+						<div
+							className="fixed inset-0 cursor-pointer"
+							onClick={() => onOpenChange(false)}
+						/>
+						<div className="relative z-10 w-full max-w-[340px] flex justify-center">
+							<PersonnelTaskPopoverCard
+								item={item}
+								onClose={() => onOpenChange(false)}
+								onEdit={onEdit}
+								onDelete={onDelete}
+								onAddAssignee={onAddAssignee}
+								employeesList={employeesList}
+							/>
+						</div>
+					</div>,
+					document.body
+				)}
+			</>
+		);
+	}
 
-  return (
-    <Popover open={isOpen} onOpenChange={onOpenChange}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent
-        side="right"
-        align="start"
-        sideOffset={8}
-        collisionPadding={{ top: 90, bottom: 24, left: 16, right: 16 }}
-        avoidCollisions={true}
-        className="w-83 min-w-83 max-w-83 p-0 border-0 bg-transparent shadow-none z-50 font-sans"
-      >
-        {renderCardContent()}
-      </PopoverContent>
-    </Popover>
-  );
+	return (
+		<Popover open={isOpen} onOpenChange={onOpenChange}>
+			<PopoverTrigger asChild>{children}</PopoverTrigger>
+			<PopoverContent
+				side={side}
+				align={align}
+				sideOffset={sideOffset}
+				alignOffset={alignOffset}
+				collisionPadding={{ top: 80, bottom: 24, left: 16, right: 16 }}
+				avoidCollisions={true}
+				className="w-[332px] min-w-[332px] max-w-[332px] p-0 border-0 bg-transparent shadow-none z-50 font-sans"
+			>
+				<PersonnelTaskPopoverCard
+					item={item}
+					onClose={() => onOpenChange(false)}
+					onEdit={onEdit}
+					onDelete={onDelete}
+					onAddAssignee={onAddAssignee}
+					employeesList={employeesList}
+				/>
+			</PopoverContent>
+		</Popover>
+	);
 }
 
 export default PersonnelTaskPopover;
