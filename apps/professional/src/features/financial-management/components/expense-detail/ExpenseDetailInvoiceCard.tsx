@@ -72,7 +72,11 @@ export function ExpenseDetailInvoiceCard({
 						<Translate text={localizationConstants.expenseDetailPaymentTerms} />
 					</span>
 					<span className="font-semibold text-slate-800">
-						{expense.paymentTerms || "30 dagar netto"}
+						{expense.paymentTerms === "30 dagar netto" ? (
+							<Translate text={localizationConstants.expenseDetailPaymentTerms30Net} />
+						) : (
+							expense.paymentTerms || <Translate text={localizationConstants.expenseDetailPaymentTerms30Net} />
+						)}
 					</span>
 				</div>
 
@@ -100,7 +104,7 @@ export function ExpenseDetailInvoiceCard({
 						{expense.customerAddress || "Storgatan 14, 111 22 Stockholm"}
 					</p>
 					<p className="text-slate-500 mt-1">
-						Org.nr: {expense.customerOrgNo || "556789-0123"}
+						<Translate text={localizationConstants.expenseDetailOrgNo} />: {expense.customerOrgNo || "556789-0123"}
 					</p>
 				</div>
 
@@ -116,10 +120,10 @@ export function ExpenseDetailInvoiceCard({
 						{expense.supplierAddress || "Verkstadsvägen 12, 123 45 Stockholm"}
 					</p>
 					<p className="text-slate-500 mt-1">
-						Org.nr: {expense.supplierOrgNo || "556112-4301"}
+						<Translate text={localizationConstants.expenseDetailOrgNo} />: {expense.supplierOrgNo || "556112-4301"}
 					</p>
 					<p className="text-slate-500">
-						E-post: {expense.supplierEmail || "faktura@leverantor.se"}
+						<Translate text={localizationConstants.expenseDetailEmail} />: {expense.supplierEmail || "faktura@leverantor.se"}
 					</p>
 				</div>
 			</div>
@@ -184,7 +188,7 @@ export function ExpenseDetailInvoiceCard({
 						{lineItems.length === 0 ? (
 							<tr>
 								<td colSpan={11} className="py-6 text-center text-slate-400">
-									Inga fakturarader specificerade.
+									<Translate text={localizationConstants.expenseDetailLineItemsEmpty} />
 								</td>
 							</tr>
 						) : (
@@ -201,7 +205,9 @@ export function ExpenseDetailInvoiceCard({
 										<td className="py-2.5 px-3 text-right text-slate-700">
 											{item.quantity}
 										</td>
-										<td className="py-2.5 px-3 text-slate-500">{item.unit || "st"}</td>
+										<td className="py-2.5 px-3 text-slate-500">
+											{item.unit || <Translate text={localizationConstants.expenseDetailUnitPieces} />}
+										</td>
 										<td className="py-2.5 px-3 text-right text-slate-700 font-mono">
 											{formatSEK(item.unitPrice)}
 										</td>
@@ -235,7 +241,7 @@ export function ExpenseDetailInvoiceCard({
 							<Translate text={localizationConstants.expenseDetailNetTotal} />:
 						</span>
 						<span className="font-mono font-medium text-slate-900">
-							{formatSEK(calculations.netTotal)} kr
+							{formatSEK(calculations.netTotal)} SEK
 						</span>
 					</div>
 
@@ -244,7 +250,7 @@ export function ExpenseDetailInvoiceCard({
 							<Translate text={localizationConstants.expenseDetailVatTotal} /> (25%):
 						</span>
 						<span className="font-mono font-medium text-slate-900">
-							{formatSEK(calculations.vatTotal)} kr
+							{formatSEK(calculations.vatTotal)} SEK
 						</span>
 					</div>
 
@@ -252,7 +258,7 @@ export function ExpenseDetailInvoiceCard({
 						<span>
 							<Translate text={localizationConstants.expenseDetailRounding} />:
 						</span>
-						<span className="font-mono">{formatSEK(calculations.rounding)} kr</span>
+						<span className="font-mono">{formatSEK(calculations.rounding)} SEK</span>
 					</div>
 
 					<div className="border-t border-slate-200 pt-2.5 flex justify-between items-baseline">
@@ -269,20 +275,30 @@ export function ExpenseDetailInvoiceCard({
 			{/* Payment Details Footer */}
 			<div className="border-t border-slate-200 pt-6 text-[11px] text-slate-500 grid grid-cols-2 sm:grid-cols-4 gap-4">
 				<div>
-					<span className="font-semibold text-slate-700 block mb-0.5">Bankgiro</span>
+					<span className="font-semibold text-slate-700 block mb-0.5">
+						<Translate text={localizationConstants.expenseDetailBankgiro} />
+					</span>
 					<span>5412-4321</span>
 				</div>
 				<div>
-					<span className="font-semibold text-slate-700 block mb-0.5">IBAN</span>
+					<span className="font-semibold text-slate-700 block mb-0.5">
+						<Translate text={localizationConstants.expenseDetailIban} />
+					</span>
 					<span>SE45 5000 0000 0541 2432 1000</span>
 				</div>
 				<div>
-					<span className="font-semibold text-slate-700 block mb-0.5">BIC / Swift</span>
+					<span className="font-semibold text-slate-700 block mb-0.5">
+						<Translate text={localizationConstants.expenseDetailBicSwift} />
+					</span>
 					<span>ESSESESS</span>
 				</div>
 				<div>
-					<span className="font-semibold text-slate-700 block mb-0.5">Skattestatus</span>
-					<span>Godkänd för F-skatt</span>
+					<span className="font-semibold text-slate-700 block mb-0.5">
+						<Translate text={localizationConstants.expenseDetailTaxStatus} />
+					</span>
+					<span>
+						<Translate text={localizationConstants.expenseDetailApprovedForFtax} />
+					</span>
 				</div>
 			</div>
 		</div>

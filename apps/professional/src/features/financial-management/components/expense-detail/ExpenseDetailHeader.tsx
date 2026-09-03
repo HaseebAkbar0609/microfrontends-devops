@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowLeft, Printer, CheckCircle, Check, Trash2, CreditCard } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ export function ExpenseDetailHeader({
 	onDelete,
 	isSubmitting,
 }: ExpenseDetailHeaderProps) {
+	const { t } = useTranslation();
 	const isApproved = expense.approvalStatus === "approved" || expense.status === "klar";
 	const isPaid = Boolean(expense.paymentDate);
 
@@ -36,7 +38,7 @@ export function ExpenseDetailHeader({
 					<Button
 						variant="ghost"
 						size="icon"
-						aria-label="Back"
+						aria-label={t(localizationConstants.expenseDetailBack)}
 						className="h-8 w-8 text-slate-700 hover:text-slate-900 cursor-pointer -ml-2"
 					>
 						<ArrowLeft className="h-4 w-4" />
@@ -115,7 +117,7 @@ export function ExpenseDetailHeader({
 					size="icon"
 					disabled={isSubmitting}
 					onClick={onDelete}
-					aria-label="Delete expense"
+					aria-label={t(localizationConstants.expenseDetailBtnDelete)}
 					className="h-8 w-8 text-slate-400 hover:text-rose-600 cursor-pointer"
 				>
 					<Trash2 className="h-3.5 w-3.5" />

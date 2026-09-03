@@ -82,7 +82,11 @@ export function ExpenseDetailTimeline({ expense }: ExpenseDetailTimelineProps) {
 									)}
 								</span>
 								<span className="text-slate-500 block text-[11px] mt-0.5">
-									{event.date !== "-" ? event.date : "Ej utförd"}
+									{event.date !== "-" ? (
+										event.date
+									) : (
+										<Translate text={localizationConstants.expenseDetailTimelineNotPerformed} />
+									)}
 								</span>
 								{event.user && event.user !== "-" && (
 									<span className="text-slate-400 block text-[11px]">

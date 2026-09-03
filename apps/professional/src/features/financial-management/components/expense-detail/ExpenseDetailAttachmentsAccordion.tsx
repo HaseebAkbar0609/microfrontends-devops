@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Paperclip, FileText, Download, Eye } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
@@ -20,6 +21,7 @@ interface ExpenseDetailAttachmentsAccordionProps {
 export function ExpenseDetailAttachmentsAccordion({
 	expense,
 }: ExpenseDetailAttachmentsAccordionProps) {
+	const { t } = useTranslation();
 	const [isOpen, setIsOpen] = useState(true);
 	const [previewAttachment, setPreviewAttachment] = useState<ExpenseAttachment | null>(null);
 	const attachments: ExpenseAttachment[] = expense.attachments || [];
@@ -58,7 +60,12 @@ export function ExpenseDetailAttachmentsAccordion({
 						<Translate text={localizationConstants.expenseDetailAttachmentsTitle} />
 					</h3>
 					<span className="text-xs text-slate-400 font-normal">
-						({attachments.length} {attachments.length === 1 ? "fil" : "filer"})
+						({attachments.length}{" "}
+						{attachments.length === 1 ? (
+							<Translate text={localizationConstants.expenseDetailFileSingular} />
+						) : (
+							<Translate text={localizationConstants.expenseDetailFilePlural} />
+						)})
 					</span>
 				</div>
 				<div className="flex items-center gap-2">
@@ -75,7 +82,7 @@ export function ExpenseDetailAttachmentsAccordion({
 				<div className="p-4 border-t border-slate-100 text-xs">
 					{attachments.length === 0 ? (
 						<div className="py-6 text-center text-slate-400">
-							Inga fakturaunderlag eller kvitton har bifogats.
+							<Translate text={localizationConstants.expenseDetailAttachmentsEmpty} />
 						</div>
 					) : (
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -104,7 +111,7 @@ export function ExpenseDetailAttachmentsAccordion({
 											variant="ghost"
 											size="icon"
 											onClick={() => setPreviewAttachment(att)}
-											aria-label="Visa fil"
+											aria-label={t(localizationConstants.expenseDetailViewFile)}
 											className="h-7 w-7 text-slate-500 hover:text-slate-900 cursor-pointer"
 										>
 											<Eye className="h-3.5 w-3.5" />
@@ -115,7 +122,7 @@ export function ExpenseDetailAttachmentsAccordion({
 											variant="ghost"
 											size="icon"
 											onClick={() => handleDownload(att)}
-											aria-label="Ladda ner"
+											aria-label={t(localizationConstants.expenseDetailDownloadFile)}
 											className="h-7 w-7 text-slate-500 hover:text-slate-900 cursor-pointer"
 										>
 											<Download className="h-3.5 w-3.5" />
@@ -141,7 +148,7 @@ export function ExpenseDetailAttachmentsAccordion({
 						<FileText className="h-16 w-16 text-slate-400 mb-3" />
 						<p className="font-semibold text-slate-800 text-sm">{previewAttachment?.name}</p>
 						<p className="text-xs text-slate-400 mt-1">
-							{formatFileSize(previewAttachment?.size || 0)} • {previewAttachment?.type || "PDF Dokument"}
+							{formatFileSize(previewAttachment?.size || 0)} • {previewAttachment?.type || t(localizationConstants.expenseDetailPdfDocument)}
 						</p>
 
 						<Button

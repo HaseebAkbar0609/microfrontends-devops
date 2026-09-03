@@ -5773,6 +5773,26 @@ export type ExpenseTranslation = {
 	expenseDetailLoading: string;
 	expenseDetailStatusApprovedSuccess: string;
 	expenseDetailStatusPaidSuccess: string;
+	expenseDetailLineItemsEmpty: string;
+	expenseDetailOrgNo: string;
+	expenseDetailEmail: string;
+	expenseDetailBankgiro: string;
+	expenseDetailIban: string;
+	expenseDetailBicSwift: string;
+	expenseDetailTaxStatus: string;
+	expenseDetailApprovedForFtax: string;
+	expenseDetailFileSingular: string;
+	expenseDetailFilePlural: string;
+	expenseDetailAttachmentsEmpty: string;
+	expenseDetailRowSingular: string;
+	expenseDetailRowPlural: string;
+	expenseDetailTimeReportEmpty: string;
+	expenseDetailUnitHours: string;
+	expenseDetailUnitPieces: string;
+	expenseDetailTimelineNotPerformed: string;
+	expenseDetailPdfDocument: string;
+	expenseDetailClearSupplierAria: string;
+	expenseDetailPaymentTerms30Net: string;
 };
 
 export type OrderInformationTranslation = {

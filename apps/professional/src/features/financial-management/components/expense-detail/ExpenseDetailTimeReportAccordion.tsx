@@ -40,12 +40,17 @@ export function ExpenseDetailTimeReportAccordion({
 						<Translate text={localizationConstants.expenseDetailTimeReportTitle} />
 					</h3>
 					<span className="text-xs text-slate-400 font-normal">
-						({timeItems.length} {timeItems.length === 1 ? "rad" : "rader"})
+						({timeItems.length}{" "}
+						{timeItems.length === 1 ? (
+							<Translate text={localizationConstants.expenseDetailRowSingular} />
+						) : (
+							<Translate text={localizationConstants.expenseDetailRowPlural} />
+						)})
 					</span>
 				</div>
 				<div className="flex items-center gap-2">
 					<span className="text-xs font-semibold text-slate-700">
-						{totalHours} h • {formatSEK(totalAmount)} SEK
+						{totalHours} <Translate text={localizationConstants.expenseDetailUnitHours} /> • {formatSEK(totalAmount)} SEK
 					</span>
 					{isOpen ? (
 						<ChevronUp className="h-4 w-4 text-slate-400" />
@@ -89,7 +94,7 @@ export function ExpenseDetailTimeReportAccordion({
 								{timeItems.length === 0 ? (
 									<tr>
 										<td colSpan={7} className="py-6 text-center text-slate-400">
-											Ingen arbetad tid har kopplats till denna utgift.
+											<Translate text={localizationConstants.expenseDetailTimeReportEmpty} />
 										</td>
 									</tr>
 								) : (
@@ -102,7 +107,9 @@ export function ExpenseDetailTimeReportAccordion({
 											<td className="py-2.5 px-3 text-right font-medium text-slate-900">
 												{item.workedHours}
 											</td>
-											<td className="py-2.5 px-3 text-slate-500">{item.unit || "tim"}</td>
+											<td className="py-2.5 px-3 text-slate-500">
+												{item.unit || <Translate text={localizationConstants.expenseDetailUnitHours} />}
+											</td>
 											<td className="py-2.5 px-3 text-right font-mono text-slate-700">
 												{formatSEK(item.hourlyRate)}
 											</td>
@@ -123,7 +130,9 @@ export function ExpenseDetailTimeReportAccordion({
 					<div className="flex justify-end gap-6 text-xs text-slate-600 font-medium py-1">
 						<span>
 							<Translate text={localizationConstants.registerExpenseTimeTotalHours} />{" "}
-							<strong className="text-slate-900">{totalHours} h</strong>
+							<strong className="text-slate-900">
+								{totalHours} <Translate text={localizationConstants.expenseDetailUnitHours} />
+							</strong>
 						</span>
 						<span>
 							<Translate text={localizationConstants.registerExpenseTimeTotalAmount} />{" "}

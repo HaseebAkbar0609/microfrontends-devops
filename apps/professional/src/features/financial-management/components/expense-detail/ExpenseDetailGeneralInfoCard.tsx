@@ -6,7 +6,7 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { ExpenseItem } from "../../types/expense.types";
-import { ExpenseStatusBadge } from "../expense-list/ExpenseBadges";
+import { ExpenseStatusBadge, ExpenseCategoryBadge } from "../expense-list/ExpenseBadges";
 
 interface ExpenseDetailGeneralInfoCardProps {
 	expense: ExpenseItem;
@@ -62,9 +62,9 @@ export function ExpenseDetailGeneralInfoCard({
 					<span className="text-slate-500 block mb-0.5">
 						<Translate text={localizationConstants.registerExpenseCategoryLabel} />
 					</span>
-					<span className="font-medium text-slate-900 capitalize">
-						{expense.category || "material"}
-					</span>
+					<div>
+						<ExpenseCategoryBadge category={expense.category || "material"} />
+					</div>
 				</div>
 
 				<div>
