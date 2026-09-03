@@ -406,7 +406,21 @@ export function useRegisterExpense() {
 			costCenter: formData.costCenter.trim() || "10",
 			attestResponsible: "-",
 			notes: formData.notes.trim() || undefined,
-			lineItems: [...formData.lineItems],
+			lineItems:
+				formData.lineItems.length > 0
+					? [...formData.lineItems]
+					: formData.timeReportItems
+							.filter((tr) => tr.included)
+							.map((tr) => ({
+								id: tr.id,
+								description: `${tr.referenceName}${tr.comments ? ` - ${tr.comments}` : ""}`,
+								quantity: tr.workedHours,
+								unit: "tim",
+								unitPrice: tr.hourlyRate,
+								vatRate: 25 as const,
+								accountNumber: "4010",
+								total: tr.total,
+							})),
 			attachments: [...formData.attachments],
 		};
 	}, [formData, calculations]);
