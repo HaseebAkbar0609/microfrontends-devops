@@ -13,14 +13,14 @@ export interface OrderOpenedPageProps {
 }
 
 export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
-	const { orderData, isLoading } = useOrderOpened(orderId);
+	const { orderData, updateOrderData, isLoading } = useOrderOpened(orderId);
 	const t = useTranslate();
 
 	const serialNo = orderData.orderDetails.serialNo || orderData.id || "";
 	const recordTitle = serialNo ? (
 		<span>
 			<span className="text-slate-400 font-normal">
-				Order {serialNo} /{" "}
+				{t(localizationConstants.order)} {serialNo} /{" "}
 			</span>
 			<span className="text-slate-900 font-semibold">
 				{t(localizationConstants.orderInfoSection)}
@@ -59,7 +59,7 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
 								</div>
 							</div>
 						) : (
-							<OrderOpenedSections data={orderData} />
+							<OrderOpenedSections data={orderData} onUpdateData={updateOrderData} />
 						)}
 					</div>
 				</div>

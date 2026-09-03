@@ -13,7 +13,7 @@ export interface OrderOpenedSectionsProps {
 	onUpdateData?: (updated: Partial<OrderOpenedData>) => void;
 }
 
-export function OrderOpenedSections({ data }: OrderOpenedSectionsProps) {
+export function OrderOpenedSections({ data, onUpdateData }: OrderOpenedSectionsProps) {
 	const t = useTranslate();
 	const [activeTab, setActiveTab] = useState<string>("project-details");
 
@@ -34,7 +34,7 @@ export function OrderOpenedSections({ data }: OrderOpenedSectionsProps) {
 
 				{/* Tab 1: Projektuppgifter (2x2 Grid matching Node 8533-80209) */}
 				<TabsContent value="project-details" className="mt-0 focus-visible:outline-none">
-					<OrderProjectDetailsView data={data} />
+					<OrderProjectDetailsView data={data} onUpdateData={onUpdateData} />
 				</TabsContent>
 
 				{/* Tab 2: Offert (Collapsible cards matching Node 8533-80423) */}

@@ -1,11 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import type { OrderOpenedData } from "../types/orderOpened.types";
 import { getOrderOpenedMockById } from "../data/orderOpened.mock";
-import { getOrderInformation } from "../api/orderInformation.api";
+import { getOrderInformation, updateOrderInformation } from "../api/orderInformation.api";
+import { useTranslate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 export function useOrderOpened(orderId?: string) {
+	const t = useTranslate();
 	const [orderData, setOrderData] = useState<OrderOpenedData>(() =>
 		getOrderOpenedMockById(orderId)
 	);
@@ -40,9 +44,35 @@ export function useOrderOpened(orderId?: string) {
 		};
 	}, [orderId]);
 
+	const updateOrderData = async (updated: Partial<OrderOpenedData>) => {
+		const previousData = orderData;
+		setOrderData((prev) => ({
+			...prev,
+			...updated,
+			customerInfo: { ...prev.customerInfo, ...updated.customerInfo },
+			contactPerson: { ...prev.contactPerson, ...updated.contactPerson },
+			orderDetails: { ...prev.orderDetails, ...updated.orderDetails },
+			orderInfo: { ...prev.orderInfo, ...updated.orderInfo },
+		}));
+
+		if (orderId) {
+			try {
+				await updateOrderInformation(orderId, updated);
+				toast.success(t(localizationConstants.orderUpdatedSuccess));
+			} catch (err) {
+				console.error("[useOrderOpened] Update sync failed:", err);
+				setOrderData(previousData);
+				toast.error(t(localizationConstants.orderUpdateFailed));
+			}
+		} else {
+			toast.success(t(localizationConstants.orderUpdatedSuccess));
+		}
+	};
+
 	return {
 		orderData,
 		setOrderData,
+		updateOrderData,
 		isLoading,
 		error,
 	};

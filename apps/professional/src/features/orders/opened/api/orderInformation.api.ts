@@ -33,3 +33,15 @@ export async function getOrderInformation(orderId?: string): Promise<OrderOpened
 		return getOrderOpenedMockById(orderId);
 	}
 }
+
+/**
+ * Updates order details via API with fallback to local update
+ */
+export async function updateOrderInformation(
+	orderId: string,
+	updatedData: Partial<OrderOpenedData>
+): Promise<OrderOpenedData> {
+	const res = await axiosInstance.patch(API_PATH.ORDERS.GET(orderId), updatedData);
+	return res.data?.data || res.data || { ...getOrderOpenedMockById(orderId), ...updatedData };
+}
+
