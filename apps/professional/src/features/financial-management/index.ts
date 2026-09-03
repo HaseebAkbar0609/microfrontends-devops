@@ -23,3 +23,15 @@ export * from "./constants/invoice.constants";
 export * from "./hooks/useInvoiceList";
 export * from "./hooks/useCreateInvoice";
 export * from "./hooks/useInvoiceDetail";
+export * from "./components/expense-list/ExpenseListPage";
+export * from "./components/expense-list/SupplierInvoiceView";
+export * from "./components/expense-list/CustomerInvoiceView";
+export * from "./components/expense-list/ExpenseKpiCards";
+export * from "./components/expense-list/ExpenseToolbar";
+export * from "./components/expense-list/ExpenseListTable";
+export * from "./components/expense-list/ExpenseBadges";
+export * from "./types/expense.types";
+export * from "./constants/expense.constants";
+export * from "./hooks/useExpenseList";
+export * from "./utils/expenseRepository";
+

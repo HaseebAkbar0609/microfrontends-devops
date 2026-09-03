@@ -41,6 +41,16 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { PermissionGate } from "@/components/common/PermissionGate";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
@@ -84,6 +94,8 @@ export function MachineHandlingPage() {
 		sortBy,
 		sortOrder,
 		handleSort,
+		confirmDeleteId,
+		setConfirmDeleteId,
 		deleteList,
 		archiveList,
 	} = useMachineLists();
@@ -273,7 +285,7 @@ export function MachineHandlingPage() {
 														<PermissionGate permission="DELETE_MACHINE">
 															<DropdownMenuSeparator />
 															<DropdownMenuItem
-																onClick={() => deleteList(row.id)}
+																onClick={() => setConfirmDeleteId(row.id)}
 																className="flex cursor-pointer items-center gap-2 text-red-600 focus:bg-red-50 focus:text-red-600"
 															>
 																<Trash2 className="h-4 w-4 text-red-500" />
@@ -293,6 +305,39 @@ export function MachineHandlingPage() {
 							</TableBody>
 						</Table>
 					</div>
+
+					<AlertDialog
+						open={!!confirmDeleteId}
+						onOpenChange={(open) => {
+							if (!open) setConfirmDeleteId(null);
+						}}
+					>
+						<AlertDialogContent className="bg-white">
+							<AlertDialogHeader>
+								<AlertDialogTitle>
+									<Translate text={localizationConstants.deleteConfirmationTitle} />
+								</AlertDialogTitle>
+								<AlertDialogDescription>
+									<Translate
+										text={localizationConstants.deleteConfirmationDescription}
+									/>
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel className="cursor-pointer">
+									<Translate text={localizationConstants.cancelButton} />
+								</AlertDialogCancel>
+								<AlertDialogAction
+									onClick={() => {
+										if (confirmDeleteId) deleteList(confirmDeleteId);
+									}}
+									className="bg-red-600 text-white hover:bg-red-700 cursor-pointer"
+								>
+									<Translate text={localizationConstants.actionDelete} />
+								</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</AlertDialog>
 
 					<div className="flex flex-wrap items-center justify-center gap-6 px-1 py-2 text-sm text-slate-600 sm:justify-end">
 						<div className="flex items-center gap-2">
