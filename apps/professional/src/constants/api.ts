@@ -137,6 +137,7 @@ export const API_PATH = {
 		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
+		ORGANISATION: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}/organisation`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {

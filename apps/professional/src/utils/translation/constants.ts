@@ -5739,6 +5739,44 @@ export type OrderInformationTranslation = {
 	invalidEmailError: string;
 };
 
+export type OrderOrganisationTranslation = {
+	orderOrganisationTab: string;
+	orgGroupBestallare: string;
+	orgGroupArkitekt: string;
+	orgGroupByggentreprenor: string;
+	orgGroupElektriker: string;
+	orgGroupOther: string;
+	orgColForetag: string;
+	orgColRoll: string;
+	orgColKategori: string;
+	orgColAddress: string;
+	orgColPostNr: string;
+	orgColOrt: string;
+	orgColKontakt: string;
+	orgColMail: string;
+	orgSearchPlaceholder: string;
+	orgFilterButton: string;
+	orgFilterAll: string;
+	orgAddButton: string;
+	orgViewAction: string;
+	orgEditAction: string;
+	orgDeleteAction: string;
+	orgPrintButton: string;
+	orgAddModalTitle: string;
+	orgEditModalTitle: string;
+	orgDeleteConfirmTitle: string;
+	orgDeleteConfirmDesc: string;
+	orgSelectGroupPlaceholder: string;
+	orgGroupLabel: string;
+	orgMemberAddedSuccess: string;
+	orgMemberUpdatedSuccess: string;
+	orgMemberDeletedSuccess: string;
+	orgNoMembersFound: string;
+	companyNameRequired: string;
+	backToMainMenu: string;
+	noRecordsFound: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -5755,7 +5793,8 @@ export type Translation = HeaderTranslation &
 	MachineDashboardTranslation &
 	InvoiceTranslation &
 	ExpenseTranslation &
-	OrderInformationTranslation;
+	OrderInformationTranslation &
+	OrderOrganisationTranslation;
 
 export type TranslationKeys = keyof Translation;
 

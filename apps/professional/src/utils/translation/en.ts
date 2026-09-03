@@ -17,6 +17,7 @@ import {
 	InvoiceTranslation,
 	ExpenseTranslation,
 	OrderInformationTranslation,
+	OrderOrganisationTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -5781,6 +5782,44 @@ const enOrderInformation: OrderInformationTranslation = {
 	invalidEmailError: "Invalid email address",
 };
 
+export const enOrderOrganisation: OrderOrganisationTranslation = {
+	orderOrganisationTab: "Organisation",
+	orgGroupBestallare: "Client",
+	orgGroupArkitekt: "Architect",
+	orgGroupByggentreprenor: "General Contractor",
+	orgGroupElektriker: "Electrician",
+	orgGroupOther: "Other",
+	orgColForetag: "Company",
+	orgColRoll: "Role",
+	orgColKategori: "Category",
+	orgColAddress: "Address",
+	orgColPostNr: "Postal code",
+	orgColOrt: "City",
+	orgColKontakt: "Contact",
+	orgColMail: "Email",
+	orgSearchPlaceholder: "Search",
+	orgFilterButton: "Filter",
+	orgFilterAll: "All groups",
+	orgAddButton: "Add",
+	orgViewAction: "View Details",
+	orgEditAction: "Edit",
+	orgDeleteAction: "Delete",
+	orgPrintButton: "Print",
+	orgAddModalTitle: "Add contact",
+	orgEditModalTitle: "Edit contact",
+	orgDeleteConfirmTitle: "Delete contact",
+	orgDeleteConfirmDesc: "Are you sure you want to delete this contact? This action cannot be undone.",
+	orgSelectGroupPlaceholder: "Select organisation/category",
+	orgGroupLabel: "Organisation / Group",
+	orgMemberAddedSuccess: "Contact has been added",
+	orgMemberUpdatedSuccess: "Contact has been updated",
+	orgMemberDeletedSuccess: "Contact has been deleted",
+	orgNoMembersFound: "No contacts found",
+	companyNameRequired: "Company name is required",
+	backToMainMenu: "Back to main menu",
+	noRecordsFound: "No records registered",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -5799,4 +5838,5 @@ export const en: Translation = {
 	...enInvoice,
 	...enExpense,
 	...enOrderInformation,
+	...enOrderOrganisation,
 };
