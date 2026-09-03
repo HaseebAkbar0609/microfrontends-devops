@@ -191,6 +191,22 @@ export interface ExpenseItem {
 	rotRutAmount?: number;
 	toReceiveAmount?: number;
 	subtotal?: number;
+	contractNo?: string;
+	customerContactPerson?: string;
+	customerEmail?: string;
+	customerPhone?: string;
+	customerPostalCity?: string;
+	supplierContactPerson?: string;
+	supplierPostalCity?: string;
+	supplierVatNo?: string;
+	freightFee?: number;
+	invoiceFee?: number;
+	bankName?: string;
+	iban?: string;
+	bic?: string;
+	swishNo?: string;
+	bankgiro?: string;
+	fTaxStatus?: string;
 }
 
 export type ExpenseSortField =

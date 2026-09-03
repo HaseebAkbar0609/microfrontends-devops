@@ -1,18 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, ChevronUp, Paperclip, FileText, Download, Eye } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { Button } from "@/components/ui/button";
-import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-} from "@/components/ui/dialog";
-import { ExpenseItem, ExpenseAttachment } from "../../types/expense.types";
+import { ExpenseItem, ExpenseUnderlagItem } from "../../types/expense.types";
+import { ExpenseStatusBadge } from "../expense-list/ExpenseBadges";
+import { formatSEK } from "../../utils/expenseUtils";
 
 interface ExpenseDetailAttachmentsAccordionProps {
 	expense: ExpenseItem;
@@ -21,150 +15,239 @@ interface ExpenseDetailAttachmentsAccordionProps {
 export function ExpenseDetailAttachmentsAccordion({
 	expense,
 }: ExpenseDetailAttachmentsAccordionProps) {
-	const { t } = useTranslation();
 	const [isOpen, setIsOpen] = useState(true);
-	const [previewAttachment, setPreviewAttachment] = useState<ExpenseAttachment | null>(null);
-	const attachments: ExpenseAttachment[] = expense.attachments || [];
 
-	const formatFileSize = (bytes: number) => {
-		if (!bytes) return "0 KB";
-		const kb = bytes / 1024;
-		if (kb < 1024) return `${Math.round(kb)} KB`;
-		return `${(kb / 1024).toFixed(1)} MB`;
-	};
+	const defaultUnderlagItems: ExpenseUnderlagItem[] = [
+		{
+			id: "und-1",
+			date: "2026-01-12",
+			supplier: "Bygg Max",
+			supplierInvoiceNo: "2025-001-11",
+			amount: 15685,
+			unit: "st",
+			ataNo: "5",
+			markupPercent: 12,
+			markupKr: 1560,
+			costCenter: "10",
+			subtotal: 163685,
+			comments: "Lorem Ipsum is simply dummy",
+		},
+		{
+			id: "und-2",
+			date: "2026-01-14",
+			supplier: "Beijer",
+			supplierInvoiceNo: "2025-001-11",
+			amount: 15685,
+			unit: "st",
+			ataNo: "14",
+			markupPercent: 15,
+			markupKr: 1685,
+			costCenter: "10",
+			subtotal: 163685,
+			comments: "Lorem Ipsum is simply dummy",
+		},
+	];
 
-	const handleDownload = (att: ExpenseAttachment) => {
-		// Create a mock download link
-		const blob = new Blob([`TimeFlow Document: ${att.name}`], { type: att.type || "application/pdf" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = att.name;
-		document.body.appendChild(a);
-		a.click();
-		document.body.removeChild(a);
-		URL.revokeObjectURL(url);
-	};
+	const underlagItems =
+		expense.underlagItems && expense.underlagItems.length > 0
+			? expense.underlagItems
+			: defaultUnderlagItems;
+
+	const totalAmount = underlagItems.reduce((sum, item) => sum + item.amount, 0);
+	const totalSum = underlagItems.reduce((sum, item) => sum + item.subtotal, 0);
 
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 shadow-2xs mb-5 overflow-hidden">
-			{/* Accordion Toggle Header */}
+			{/* Accordion Toggle Header matching Figma */}
 			<button
 				type="button"
 				onClick={() => setIsOpen((prev) => !prev)}
 				className="w-full flex items-center justify-between p-4 bg-white hover:bg-slate-50/70 transition-colors cursor-pointer text-left"
 			>
-				<div className="flex items-center gap-2.5">
-					<Paperclip className="h-4 w-4 text-slate-500" />
-					<h3 className="text-sm font-semibold text-slate-900">
-						<Translate text={localizationConstants.expenseDetailAttachmentsTitle} />
-					</h3>
-					<span className="text-xs text-slate-400 font-normal">
-						({attachments.length}{" "}
-						{attachments.length === 1 ? (
-							<Translate text={localizationConstants.expenseDetailFileSingular} />
-						) : (
-							<Translate text={localizationConstants.expenseDetailFilePlural} />
-						)})
-					</span>
-				</div>
-				<div className="flex items-center gap-2">
-					{isOpen ? (
-						<ChevronUp className="h-4 w-4 text-slate-400" />
-					) : (
-						<ChevronDown className="h-4 w-4 text-slate-400" />
-					)}
-				</div>
+				<h3 className="text-sm font-semibold text-slate-900">
+					<Translate text={localizationConstants.expenseDetailTabUnderlag} />
+				</h3>
+				{isOpen ? (
+					<ChevronUp className="h-4 w-4 text-slate-500" />
+				) : (
+					<ChevronDown className="h-4 w-4 text-slate-500" />
+				)}
 			</button>
 
 			{/* Accordion Content */}
 			{isOpen && (
-				<div className="p-4 border-t border-slate-100 text-xs">
-					{attachments.length === 0 ? (
-						<div className="py-6 text-center text-slate-400">
-							<Translate text={localizationConstants.expenseDetailAttachmentsEmpty} />
-						</div>
-					) : (
-						<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-							{attachments.map((att) => (
-								<div
-									key={att.id}
-									className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-colors"
-								>
-									<div className="flex items-center gap-2.5 truncate flex-1 mr-3">
-										<div className="h-8 w-8 rounded-md bg-white border border-slate-200 flex items-center justify-center shrink-0 text-slate-600">
-											<FileText className="h-4 w-4 text-blue-600" />
-										</div>
-										<div className="truncate">
-											<p className="font-semibold text-slate-900 truncate text-xs">
-												{att.name}
-											</p>
-											<p className="text-[11px] text-slate-400">
-												{formatFileSize(att.size)} • {att.uploadedAt}
-											</p>
-										</div>
-									</div>
+				<div className="p-5 border-t border-slate-100 text-xs">
+					{/* Fakturainformation section header */}
+					<h4 className="text-xs font-semibold text-slate-800 mb-3">
+						<Translate text={localizationConstants.expenseDetailCardInvoiceInfo} />
+					</h4>
 
-									<div className="flex items-center gap-1 shrink-0">
-										<Button
-											type="button"
-											variant="ghost"
-											size="icon"
-											onClick={() => setPreviewAttachment(att)}
-											aria-label={t(localizationConstants.expenseDetailViewFile)}
-											className="h-7 w-7 text-slate-500 hover:text-slate-900 cursor-pointer"
-										>
-											<Eye className="h-3.5 w-3.5" />
-										</Button>
-
-										<Button
-											type="button"
-											variant="ghost"
-											size="icon"
-											onClick={() => handleDownload(att)}
-											aria-label={t(localizationConstants.expenseDetailDownloadFile)}
-											className="h-7 w-7 text-slate-500 hover:text-slate-900 cursor-pointer"
-										>
-											<Download className="h-3.5 w-3.5" />
-										</Button>
-									</div>
-								</div>
-							))}
+					{/* Metadata 4-field grid matching Figma */}
+					<div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5 pb-4 border-b border-slate-100">
+						<div>
+							<span className="text-slate-500 block mb-0.5">
+								<Translate text={localizationConstants.expenseColInvoiceNo} />:
+							</span>
+							<span className="font-medium text-slate-800">
+								{expense.fakturaNo || "4563"}
+							</span>
 						</div>
-					)}
+
+						<div>
+							<span className="text-slate-500 block mb-0.5">
+								<Translate text={localizationConstants.expenseColStatus} />:
+							</span>
+							<div>
+								<ExpenseStatusBadge status={expense.status} />
+							</div>
+						</div>
+
+						<div>
+							<span className="text-slate-500 block mb-0.5">
+								<Translate text={localizationConstants.expenseDetailCustomer} />:
+							</span>
+							<span className="font-medium text-slate-800">
+								{expense.customerName || "David Gilmour"}
+							</span>
+						</div>
+
+						<div>
+							<span className="text-slate-500 block mb-0.5">
+								<Translate text={localizationConstants.expenseDetailObjectNo} />:
+							</span>
+							<span className="font-medium text-slate-800">
+								{expense.projectNumber || "2025-001"}
+							</span>
+						</div>
+					</div>
+
+					{/* Underlag Table matching Figma */}
+					<div className="overflow-x-auto border border-slate-200 rounded-md mb-4">
+						<table className="w-full text-left text-xs border-collapse">
+							<thead className="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold">
+								<tr>
+									<th className="py-2.5 px-3 whitespace-nowrap">
+										<Translate text={localizationConstants.expenseColDate} />
+									</th>
+									<th className="py-2.5 px-3 whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailUnderlagColSupplier} />
+									</th>
+									<th className="py-2.5 px-3 text-center whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailUnderlagColSupplierNo} />
+									</th>
+									<th className="py-2.5 px-3 text-right whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailUnderlagColAmount} />
+									</th>
+									<th className="py-2.5 px-3 whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailColUnit} />
+									</th>
+									<th className="py-2.5 px-3 text-center whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailUnderlagColAtaNo} />
+									</th>
+									<th className="py-2.5 px-3 text-center whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailUnderlagColMarkup} />
+									</th>
+									<th className="py-2.5 px-3 text-right whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailUnderlagColMarkupKr} />
+									</th>
+									<th className="py-2.5 px-3 text-center whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailColKs} />
+									</th>
+									<th className="py-2.5 px-3 text-right whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailUnderlagColSubtotal} />
+									</th>
+									<th className="py-2.5 px-3 whitespace-nowrap">
+										<Translate text={localizationConstants.expenseDetailTimeColComments} />
+									</th>
+								</tr>
+							</thead>
+							<tbody className="divide-y divide-slate-100">
+								{underlagItems.map((item) => (
+									<tr key={item.id} className="hover:bg-slate-50/50">
+										<td className="py-2.5 px-3 text-slate-600 whitespace-nowrap">
+											{item.date}
+										</td>
+										<td className="py-2.5 px-3 text-slate-900 font-medium">
+											{item.supplier}
+										</td>
+										{/* Leverantörs nummer yellow tint highlight matching Figma */}
+										<td className="py-2.5 px-3 text-center font-medium bg-amber-50 text-amber-900">
+											{item.supplierInvoiceNo}
+										</td>
+										{/* Belopp green tint highlight matching Figma */}
+										<td className="py-2.5 px-3 text-right font-semibold bg-emerald-50 text-emerald-900 font-mono">
+											{formatSEK(item.amount)}
+										</td>
+										<td className="py-2.5 px-3 text-slate-500">{item.unit}</td>
+										<td className="py-2.5 px-3 text-center text-slate-700">
+											{item.ataNo || "-"}
+										</td>
+										<td className="py-2.5 px-3 text-center text-slate-700">
+											{item.markupPercent}%
+										</td>
+										<td className="py-2.5 px-3 text-right text-slate-700 font-mono">
+											{formatSEK(item.markupKr)}
+										</td>
+										<td className="py-2.5 px-3 text-center text-slate-500 font-mono">
+											{item.costCenter}
+										</td>
+										<td className="py-2.5 px-3 text-right text-slate-700 font-mono font-medium">
+											{formatSEK(item.subtotal)}
+										</td>
+										<td className="py-2.5 px-3 text-slate-600">
+											{item.comments || "-"}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+
+					{/* Summary Block on Right */}
+					<div className="flex justify-end mb-5">
+						<div className="w-64 space-y-1.5 text-xs text-slate-700">
+							<div className="flex justify-between py-1">
+								<span>
+									<Translate text={localizationConstants.expenseDetailUnderlagSumAmount} />
+								</span>
+								<span className="font-mono font-medium">
+									{formatSEK(totalAmount)}
+								</span>
+							</div>
+
+							<div className="flex justify-between py-1 border-b border-slate-200">
+								<span>
+									<Translate text={localizationConstants.expenseDetailUnderlagSumSum} />
+								</span>
+								<span className="font-mono font-medium">{formatSEK(totalSum)}</span>
+							</div>
+
+							<div className="flex justify-between py-1.5 font-bold text-slate-900 text-sm">
+								<span>
+									<Translate text={localizationConstants.expenseDetailUnderlagSumTotalAmount} />
+								</span>
+								<span className="font-mono font-bold">
+									{formatSEK(totalAmount)}
+								</span>
+							</div>
+						</div>
+					</div>
+
+					{/* Kommentar section matching Figma */}
+					<div className="border-t border-slate-100 pt-4">
+						<span className="text-xs font-semibold text-slate-800 block mb-1">
+							<Translate text={localizationConstants.expenseDetailCardComment} />
+						</span>
+						<p className="text-[11px] text-slate-400 mb-2">
+							<Translate text={localizationConstants.expenseDetailCommentSubtitle} />
+						</p>
+						<div className="bg-slate-50 border border-slate-200 rounded-md p-3 text-xs text-slate-600 leading-relaxed">
+							{expense.comments ||
+								"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries"}
+						</div>
+					</div>
 				</div>
 			)}
-
-			{/* File Preview Modal */}
-			<Dialog open={previewAttachment !== null} onOpenChange={(open) => !open && setPreviewAttachment(null)}>
-				<DialogContent className="max-w-2xl bg-white p-6 rounded-xl shadow-2xl border-slate-200">
-					<DialogHeader>
-						<DialogTitle className="text-base font-bold text-slate-900 flex items-center justify-between">
-							<span className="truncate">{previewAttachment?.name}</span>
-						</DialogTitle>
-					</DialogHeader>
-
-					<div className="min-h-[350px] bg-slate-100 rounded-lg border border-slate-200 flex flex-col items-center justify-center p-6 text-center">
-						<FileText className="h-16 w-16 text-slate-400 mb-3" />
-						<p className="font-semibold text-slate-800 text-sm">{previewAttachment?.name}</p>
-						<p className="text-xs text-slate-400 mt-1">
-							{formatFileSize(previewAttachment?.size || 0)} • {previewAttachment?.type || t(localizationConstants.expenseDetailPdfDocument)}
-						</p>
-
-						<Button
-							type="button"
-							size="sm"
-							onClick={() => previewAttachment && handleDownload(previewAttachment)}
-							className="mt-6 text-xs bg-zinc-900 hover:bg-slate-800 text-white gap-2 cursor-pointer"
-						>
-							<Download className="h-3.5 w-3.5" />
-							<span>
-								<Translate text={localizationConstants.expenseDetailDownloadFile} />
-							</span>
-						</Button>
-					</div>
-				</DialogContent>
-			</Dialog>
 		</div>
 	);
 }

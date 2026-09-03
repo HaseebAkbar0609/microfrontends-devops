@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Link from "next/link";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -15,12 +15,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { useExpenseDetail } from "../../hooks/useExpenseDetail";
 import { ExpenseDetailHeader } from "./ExpenseDetailHeader";
-import { ExpenseDetailTabs, ExpenseDetailActiveTab } from "./ExpenseDetailTabs";
-import { ExpenseDetailOversiktTab } from "./ExpenseDetailOversiktTab";
-import { ExpenseDetailTidrapportTab } from "./ExpenseDetailTidrapportTab";
-import { ExpenseDetailUnderlagTab } from "./ExpenseDetailUnderlagTab";
+import { ExpenseDetailAttestCard } from "./ExpenseDetailAttestCard";
 import { ExpenseDetailInvoiceCard } from "./ExpenseDetailInvoiceCard";
-import { ExpenseDetailTimeline } from "./ExpenseDetailTimeline";
+import { ExpenseDetailTimeReportAccordion } from "./ExpenseDetailTimeReportAccordion";
 import { ExpenseDetailAttachmentsAccordion } from "./ExpenseDetailAttachmentsAccordion";
 
 interface ExpenseDetailPageProps {
@@ -28,25 +25,21 @@ interface ExpenseDetailPageProps {
 }
 
 export function ExpenseDetailPage({ expenseId }: ExpenseDetailPageProps) {
-	const [activeTab, setActiveTab] = useState<ExpenseDetailActiveTab>("oversikt");
-	const [showDocumentView, setShowDocumentView] = useState(false);
-
 	const {
 		expense,
 		isLoading,
 		error,
 		calculations,
-		confirmApproveOpen,
-		setConfirmApproveOpen,
-		confirmMarkPaidOpen,
-		setConfirmMarkPaidOpen,
-		confirmDeleteOpen,
-		setConfirmDeleteOpen,
+		confirmDisputeOpen,
+		setConfirmDisputeOpen,
+		confirmCertifiedOpen,
+		setConfirmCertifiedOpen,
+		confirmMoveToSupplierOpen,
+		setConfirmMoveToSupplierOpen,
 		isSubmitting,
-		handleApprove,
-		handleMarkAsPaid,
-		handleDelete,
-		handlePrint,
+		handleDispute,
+		handleMarkCertified,
+		handleMoveToSupplierList,
 	} = useExpenseDetail(expenseId);
 
 	if (isLoading) {
@@ -79,63 +72,54 @@ export function ExpenseDetailPage({ expenseId }: ExpenseDetailPageProps) {
 		);
 	}
 
+	const isInbox = Boolean(expense.isInboxItem);
+
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
-			{/* Main Content Container matching Figma width and padding */}
-			<div className="max-w-6xl mx-auto w-full px-6 py-6 flex flex-col gap-4">
-				{/* 1. Header with Detaljer title and Actions */}
+			{/* Main Content Container matching Figma layout */}
+			<div className="max-w-6xl mx-auto w-full px-6 py-6 flex flex-col gap-3">
+				{/* 1. Header with Detaljer and Actions */}
 				<ExpenseDetailHeader
 					expense={expense}
-					onPrint={handlePrint}
-					onApprove={() => setConfirmApproveOpen(true)}
-					onMarkAsPaid={() => setConfirmMarkPaidOpen(true)}
-					onDelete={() => setConfirmDeleteOpen(true)}
+					onDispute={() => setConfirmDisputeOpen(true)}
+					onMarkCertified={() => setConfirmCertifiedOpen(true)}
+					onMoveToSupplierList={() => setConfirmMoveToSupplierOpen(true)}
 					isSubmitting={isSubmitting}
-					showDocumentView={showDocumentView}
-					onToggleDocumentView={() => setShowDocumentView((prev) => !prev)}
 				/>
 
-				{showDocumentView ? (
-					<div className="space-y-6">
-						<ExpenseDetailTimeline expense={expense} />
-						<ExpenseDetailInvoiceCard expense={expense} calculations={calculations} />
-						<ExpenseDetailAttachmentsAccordion expense={expense} />
-					</div>
-				) : (
-					<div>
-						{/* 2. Figma Tabs Navigation (Översikt | Tidrapport | Faktura underlag) */}
-						<ExpenseDetailTabs activeTab={activeTab} onTabChange={setActiveTab} />
+				{/* 2. When Inbox: Attest ansvarig Card at top */}
+				{isInbox && <ExpenseDetailAttestCard expense={expense} />}
 
-						{/* 3. Active Tab Content matching Figma */}
-						{activeTab === "oversikt" && (
-							<ExpenseDetailOversiktTab expense={expense} />
-						)}
-						{activeTab === "tidrapport" && (
-							<ExpenseDetailTidrapportTab expense={expense} />
-						)}
-						{activeTab === "underlag" && (
-							<ExpenseDetailUnderlagTab expense={expense} />
-						)}
-					</div>
-				)}
+				{/* 3. Invoice Card (Wrapped in Faktura container if inbox, standalone if supplier list) */}
+				<ExpenseDetailInvoiceCard
+					expense={expense}
+					calculations={calculations}
+					isInboxWrapper={isInbox}
+				/>
+
+				{/* 4. Collapsible Tidrapport Accordion */}
+				<ExpenseDetailTimeReportAccordion expense={expense} />
+
+				{/* 5. Collapsible Faktura underlag Accordion */}
+				<ExpenseDetailAttachmentsAccordion expense={expense} />
 			</div>
 
-			{/* Modal: Confirm Approve */}
-			<Dialog open={confirmApproveOpen} onOpenChange={setConfirmApproveOpen}>
+			{/* Modal: Confirm Dispute (göra reklamation) */}
+			<Dialog open={confirmDisputeOpen} onOpenChange={setConfirmDisputeOpen}>
 				<DialogContent className="max-w-md bg-white p-6 rounded-xl shadow-2xl">
 					<DialogHeader>
 						<DialogTitle className="text-base font-bold text-slate-900">
-							<Translate text={localizationConstants.expenseConfirmApproveTitle} />
+							<Translate text={localizationConstants.expenseConfirmDisputeTitle} />
 						</DialogTitle>
 						<DialogDescription className="text-xs text-slate-600 mt-2">
-							<Translate text={localizationConstants.expenseConfirmApproveDesc} />
+							<Translate text={localizationConstants.expenseConfirmDisputeDesc} />
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter className="mt-4 flex justify-end gap-2">
 						<Button
 							variant="outline"
 							size="sm"
-							onClick={() => setConfirmApproveOpen(false)}
+							onClick={() => setConfirmDisputeOpen(false)}
 							className="text-xs cursor-pointer"
 						>
 							<Translate text={localizationConstants.cancel} />
@@ -143,75 +127,83 @@ export function ExpenseDetailPage({ expenseId }: ExpenseDetailPageProps) {
 						<Button
 							size="sm"
 							disabled={isSubmitting}
-							onClick={handleApprove}
-							className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
-						>
-							<Translate text={localizationConstants.expenseDetailBtnApprove} />
-						</Button>
-					</DialogFooter>
-				</DialogContent>
-			</Dialog>
-
-			{/* Modal: Confirm Mark as Paid */}
-			<Dialog open={confirmMarkPaidOpen} onOpenChange={setConfirmMarkPaidOpen}>
-				<DialogContent className="max-w-md bg-white p-6 rounded-xl shadow-2xl">
-					<DialogHeader>
-						<DialogTitle className="text-base font-bold text-slate-900">
-							<Translate text={localizationConstants.expenseConfirmMarkPaidTitle} />
-						</DialogTitle>
-						<DialogDescription className="text-xs text-slate-600 mt-2">
-							<Translate text={localizationConstants.expenseConfirmMarkPaidDesc} />
-						</DialogDescription>
-					</DialogHeader>
-					<DialogFooter className="mt-4 flex justify-end gap-2">
-						<Button
-							variant="outline"
-							size="sm"
-							onClick={() => setConfirmMarkPaidOpen(false)}
-							className="text-xs cursor-pointer"
-						>
-							<Translate text={localizationConstants.cancel} />
-						</Button>
-						<Button
-							size="sm"
-							disabled={isSubmitting}
-							onClick={handleMarkAsPaid}
+							onClick={handleDispute}
 							className="text-xs bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer"
 						>
-							<Translate text={localizationConstants.expenseDetailBtnMarkPaid} />
+							<Translate text={localizationConstants.expenseDetailBtnDispute} />
 						</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>
 
-			{/* Modal: Confirm Delete */}
-			<Dialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
+			{/* Modal: Confirm Certified (Markera som bestyrkt) */}
+			<Dialog open={confirmCertifiedOpen} onOpenChange={setConfirmCertifiedOpen}>
 				<DialogContent className="max-w-md bg-white p-6 rounded-xl shadow-2xl">
 					<DialogHeader>
 						<DialogTitle className="text-base font-bold text-slate-900">
-							<Translate text={localizationConstants.expenseConfirmDeleteTitle} />
+							<Translate text={localizationConstants.expenseConfirmCertifiedTitle} />
 						</DialogTitle>
 						<DialogDescription className="text-xs text-slate-600 mt-2">
-							<Translate text={localizationConstants.expenseConfirmDeleteDesc} />
+							<Translate text={localizationConstants.expenseConfirmCertifiedDesc} />
 						</DialogDescription>
 					</DialogHeader>
 					<DialogFooter className="mt-4 flex justify-end gap-2">
 						<Button
 							variant="outline"
 							size="sm"
-							onClick={() => setConfirmDeleteOpen(false)}
+							onClick={() => setConfirmCertifiedOpen(false)}
 							className="text-xs cursor-pointer"
 						>
 							<Translate text={localizationConstants.cancel} />
 						</Button>
 						<Button
 							size="sm"
-							variant="destructive"
 							disabled={isSubmitting}
-							onClick={handleDelete}
-							className="text-xs bg-rose-600 hover:bg-rose-700 text-white cursor-pointer"
+							onClick={handleMarkCertified}
+							className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer"
 						>
-							<Translate text={localizationConstants.expenseDetailBtnDelete} />
+							<Translate text={localizationConstants.expenseDetailBtnMarkCertified} />
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			{/* Modal: Confirm Move to Supplier List (Flytta till leverantörslistan) */}
+			<Dialog
+				open={confirmMoveToSupplierOpen}
+				onOpenChange={setConfirmMoveToSupplierOpen}
+			>
+				<DialogContent className="max-w-md bg-white p-6 rounded-xl shadow-2xl">
+					<DialogHeader>
+						<DialogTitle className="text-base font-bold text-slate-900">
+							<Translate
+								text={localizationConstants.expenseConfirmMoveToSupplierListTitle}
+							/>
+						</DialogTitle>
+						<DialogDescription className="text-xs text-slate-600 mt-2">
+							<Translate
+								text={localizationConstants.expenseConfirmMoveToSupplierListDesc}
+							/>
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter className="mt-4 flex justify-end gap-2">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => setConfirmMoveToSupplierOpen(false)}
+							className="text-xs cursor-pointer"
+						>
+							<Translate text={localizationConstants.cancel} />
+						</Button>
+						<Button
+							size="sm"
+							disabled={isSubmitting}
+							onClick={handleMoveToSupplierList}
+							className="text-xs bg-zinc-900 hover:bg-zinc-800 text-white cursor-pointer"
+						>
+							<Translate
+								text={localizationConstants.expenseDetailBtnMoveToSupplierList}
+							/>
 						</Button>
 					</DialogFooter>
 				</DialogContent>

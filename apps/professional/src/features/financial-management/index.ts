@@ -55,6 +55,7 @@ export * from "./components/expense-detail/ExpenseDetailPaymentPlanCard";
 export * from "./components/expense-detail/ExpenseDetailCommentCard";
 export * from "./components/expense-detail/ExpenseDetailGeneralInfoCard";
 export * from "./components/expense-detail/ExpenseDetailInvoiceCard";
+export * from "./components/expense-detail/ExpenseDetailAttestCard";
 export * from "./components/expense-detail/ExpenseDetailTimeReportAccordion";
 export * from "./components/expense-detail/ExpenseDetailAttachmentsAccordion";
 export * from "./components/expense-detail/ExpenseDetailTimeline";

@@ -27,6 +27,9 @@ export function useExpenseDetail(expenseId: string) {
 	const [confirmApproveOpen, setConfirmApproveOpen] = useState(false);
 	const [confirmMarkPaidOpen, setConfirmMarkPaidOpen] = useState(false);
 	const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
+	const [confirmDisputeOpen, setConfirmDisputeOpen] = useState(false);
+	const [confirmCertifiedOpen, setConfirmCertifiedOpen] = useState(false);
+	const [confirmMoveToSupplierOpen, setConfirmMoveToSupplierOpen] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	// Collapsible accordions open states
@@ -178,6 +181,55 @@ export function useExpenseDetail(expenseId: string) {
 		}
 	}, [expense, router, t]);
 
+	const handleDispute = useCallback(async () => {
+		if (!expense) return;
+		setIsSubmitting(true);
+		try {
+			await expenseRepository.updateExpense(expense.id, {
+				status: "reklamerad",
+			});
+			toast.success(t(localizationConstants.expenseConfirmDisputeTitle));
+			setConfirmDisputeOpen(false);
+		} catch (err) {
+			console.error("Failed to dispute expense", err);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}, [expense, t]);
+
+	const handleMarkCertified = useCallback(async () => {
+		if (!expense) return;
+		setIsSubmitting(true);
+		try {
+			await expenseRepository.updateExpense(expense.id, {
+				status: "klar",
+				approvalStatus: "approved",
+			});
+			toast.success(t(localizationConstants.expenseConfirmCertifiedTitle));
+			setConfirmCertifiedOpen(false);
+		} catch (err) {
+			console.error("Failed to certify expense", err);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}, [expense, t]);
+
+	const handleMoveToSupplierList = useCallback(async () => {
+		if (!expense) return;
+		setIsSubmitting(true);
+		try {
+			await expenseRepository.updateExpense(expense.id, {
+				isInboxItem: false,
+			});
+			toast.success(t(localizationConstants.expenseConfirmMoveToSupplierListTitle));
+			setConfirmMoveToSupplierOpen(false);
+		} catch (err) {
+			console.error("Failed to move expense to supplier list", err);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}, [expense, t]);
+
 	const handlePrint = useCallback(() => {
 		window.print();
 	}, []);
@@ -198,10 +250,19 @@ export function useExpenseDetail(expenseId: string) {
 		setConfirmMarkPaidOpen,
 		confirmDeleteOpen,
 		setConfirmDeleteOpen,
+		confirmDisputeOpen,
+		setConfirmDisputeOpen,
+		confirmCertifiedOpen,
+		setConfirmCertifiedOpen,
+		confirmMoveToSupplierOpen,
+		setConfirmMoveToSupplierOpen,
 		isSubmitting,
 		handleApprove,
 		handleMarkAsPaid,
 		handleDelete,
+		handleDispute,
+		handleMarkCertified,
+		handleMoveToSupplierList,
 		handlePrint,
 	};
 }

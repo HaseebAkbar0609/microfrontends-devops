@@ -7,6 +7,8 @@ interface PageProps {
 	}>;
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function ExpenseDetailRoute({ params }: PageProps) {
 	const { id } = await params;
 	return <ExpenseDetailPage expenseId={id} />;
