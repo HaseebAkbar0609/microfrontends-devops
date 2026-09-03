@@ -131,18 +131,32 @@ export interface PersonnelScheduleItem {
 	id: string;
 	employeeId: string;
 	employeeName: string;
-	employeeInitials: string;
+	employeeInitials?: string;
 	employeeAvatarUrl?: string;
 	title: string;
 	orderNumber?: string;
-	dayStart: number; // e.g. 10 to 16
-	daySpan: number; // e.g. 1 to 4
-	colorTheme: "yellow" | "blue" | "purple" | "pink" | "green" | "light-purple" | "light-yellow";
+	dayStart?: number; // e.g. 10 to 16
+	daySpan?: number; // e.g. 1 to 4
+	colorTheme: "yellow" | "blue" | "purple" | "pink" | "green" | "light-purple" | "light-yellow" | "red";
 	hasLeftBar?: boolean;
 	status: PlanningStatus;
 	timeRange?: string;
 	dateText?: string;
-	assignees: PlanningAssignee[];
+	assignees?: PlanningAssignee[];
 	isBarOnly?: boolean;
 }
+
+export interface GridTaskItem {
+	id: string;
+	dayIndex: number; // 0 to 6
+	topMinutes: number; // minutes from 7:00 AM (0 = 7 AM, 60 = 8 AM, etc.)
+	durationMinutes: number;
+	title: string;
+	colorTheme: "yellow" | "purple" | "blue" | "green" | "pink" | "red" | "light-purple" | "light-yellow";
+	status: PlanningStatus;
+	timeRange: string;
+	dateText: string;
+	assignees?: PlanningAssignee[];
+}
+
 

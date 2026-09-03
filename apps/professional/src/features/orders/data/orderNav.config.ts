@@ -10,15 +10,17 @@ export const ORDER_MODULE_BASE_URL = "/module/production/order";
 export const ORDER_MODULE_TITLE = localizationConstants.orderModule;
 
 /** `Home > Order > Section` breadcrumb for Order list/overview pages. */
-export function orderBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
-  return [
-    { label: localizationConstants.home, href: "/dashboard" },
-    {
-      label: localizationConstants.orderModule,
-      href: `${ORDER_MODULE_BASE_URL}/overview`,
-    },
-    { label: section },
+export function orderBreadcrumbs(section?: TranslationKeys): BreadcrumbItem[] {
+  const items: BreadcrumbItem[] = [
+    { label: localizationConstants.home, href: "/home" },
+    { label: localizationConstants.moduleItem, href: "/module" },
+    { label: localizationConstants.production, href: "/module/production" },
+    { label: localizationConstants.orderModule, href: "/module/production/order" },
   ];
+  if (section) {
+    items.push({ label: section });
+  }
+  return items;
 }
 
 /** Primary tab row for the Order module. */
@@ -32,6 +34,7 @@ export const ORDER_MODULE_TABS: ModuleTabItem[] = [
     id: "order-overview",
     labelKey: localizationConstants.orderOverview,
     href: "/module/production/order/overview",
+    matchSubPaths: ["/module/production/order/create"],
   },
   {
     id: "order-direct",

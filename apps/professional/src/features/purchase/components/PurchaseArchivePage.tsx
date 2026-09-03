@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 import { ModulePageHeader, SectionTabs } from "@/components/layout/navigation";
@@ -26,43 +25,15 @@ import type {
 } from "../types/purchase.types";
 import {
 	PurchaseCategoryBadge,
-	PurchaseComplaintStatusBadge,
-	PurchaseComplaintTypeLabel,
-	PurchaseGoodsReceptionOrderTypeLabel,
 	PurchaseStatusBadge,
 	PurchaseTypeBadge,
 } from "./PurchaseBadges";
 import { PurchaseGoodsDetailDrawer } from "./PurchaseGoodsDetailDrawer";
-import { ArchiveTab } from "./archive/ArchiveTab";
-
-/** The grey pill the sibling lists use for the Objekt column. */
-function ObjectPill({ value }: { value: string }) {
-	return (
-		<span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-0.5 text-xs font-medium text-slate-700">
-			{value}
-		</span>
-	);
-}
-
-function SeeDetailsLink({
-	href,
-	label,
-}: {
-	href: string;
-	label: string;
-}) {
-	return (
-		<Link href={href}>
-			<Button
-				variant="outline"
-				size="sm"
-				className="h-8 cursor-pointer rounded-md border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-100"
-			>
-				<Translate text={label} />
-			</Button>
-		</Link>
-	);
-}
+import { ArchivableRowsTable } from "./shared/ArchivableRowsTable";
+import { COMPLAINT_COLUMNS } from "./shared/complaintColumns";
+import { GOODS_RECEPTION_COLUMNS } from "./shared/goodsReceptionColumns";
+import { ObjectPill } from "./shared/ObjectPill";
+import { SeeDetailsLink } from "./shared/SeeDetailsLink";
 
 const PURCHASE_COLUMNS: DataTableColumn<PurchaseRow>[] = [
 	{
@@ -107,86 +78,10 @@ const PURCHASE_COLUMNS: DataTableColumn<PurchaseRow>[] = [
 	},
 ];
 
-const COMPLAINT_COLUMNS: DataTableColumn<PurchaseComplaintRow>[] = [
-	{
-		key: "complaintNo",
-		label: localizationConstants.purchaseComplaintColNumber,
-		sortable: true,
-		cellClassName: "text-sm font-medium text-slate-900",
-	},
-	{
-		key: "purchaseNo",
-		label: localizationConstants.purchaseColNumber,
-		sortable: true,
-	},
-	{
-		key: "object",
-		label: localizationConstants.purchaseColObject,
-		sortable: true,
-		render: (row) => <ObjectPill value={row.object} />,
-	},
-	{ key: "name", label: localizationConstants.purchaseColName, sortable: true },
-	{
-		key: "supplier",
-		label: localizationConstants.purchaseSupplierColName,
-		sortable: true,
-	},
-	{
-		key: "type",
-		label: localizationConstants.purchaseComplaintColType,
-		sortable: true,
-		render: (row) => <PurchaseComplaintTypeLabel type={row.type} />,
-	},
-	{
-		key: "date",
-		label: localizationConstants.purchaseComplaintColDate,
-		sortable: true,
-	},
-	{
-		key: "status",
-		label: localizationConstants.statusLabel,
-		sortable: true,
-		render: (row) => <PurchaseComplaintStatusBadge status={row.status} />,
-	},
-];
-
 /**
  * The frame duplicates "Benämning" here, header and data both — the same
  * copy-paste defect corrected in TFS-925. Rendered once.
  */
-const RECEPTION_COLUMNS: DataTableColumn<PurchaseGoodsReceptionRow>[] = [
-	{
-		key: "object",
-		label: localizationConstants.purchaseColObject,
-		sortable: true,
-		render: (row) => <ObjectPill value={row.object} />,
-	},
-	{
-		key: "purchaseNo",
-		label: localizationConstants.purchaseColNumber,
-		sortable: true,
-		cellClassName: "text-sm font-medium text-slate-900",
-	},
-	{ key: "name", label: localizationConstants.purchaseColName, sortable: true },
-	{
-		key: "supplier",
-		label: localizationConstants.purchaseSupplierColName,
-		sortable: true,
-	},
-	{
-		key: "expectedDelivery",
-		label: localizationConstants.purchaseGoodsReceptionColExpectedDelivery,
-		sortable: true,
-	},
-	{
-		key: "orderType",
-		label: localizationConstants.purchaseGoodsReceptionColOrderType,
-		sortable: true,
-		render: (row) => (
-			<PurchaseGoodsReceptionOrderTypeLabel orderType={row.orderType} />
-		),
-	},
-];
 
 /** Filter options per tab, matching the "Filter" control in the frames. */
 const PURCHASE_STATUS_FILTERS = [
@@ -239,8 +134,8 @@ const ORDER_TYPE_RANK: Record<
  * The module's Arkiv tab: archived purchase orders, complaints and goods
  * receptions, each restorable or permanently deletable.
  *
- * The three tabs differ only in configuration — `ArchiveTab` holds the table,
- * toolbar, row menu and confirm step.
+ * The three tabs differ only in configuration — `ArchivableRowsTable` holds the
+ * table, toolbar, row menu and confirm step.
  */
 export function PurchaseArchivePage() {
 	const { t } = useTranslation();
@@ -284,8 +179,9 @@ export function PurchaseArchivePage() {
 						ariaLabel={t(localizationConstants.purchaseTabArchive)}
 					>
 						<TabsContent value="purchases" className="mt-4">
-							<ArchiveTab<PurchaseRow>
+							<ArchivableRowsTable<PurchaseRow>
 								rows={MOCK_PURCHASES}
+								mode="restore"
 								columns={PURCHASE_COLUMNS}
 								searchFields={(row) => [
 									row.purchaseNo,
@@ -315,7 +211,7 @@ export function PurchaseArchivePage() {
 								matchesFilter={(row, value) =>
 									row.status === value
 								}
-								restoredToast={
+								movedToast={
 									localizationConstants.purchaseRestoredToast
 								}
 								deletedToast={
@@ -325,8 +221,9 @@ export function PurchaseArchivePage() {
 						</TabsContent>
 
 						<TabsContent value="complaints" className="mt-4">
-							<ArchiveTab<PurchaseComplaintRow>
+							<ArchivableRowsTable<PurchaseComplaintRow>
 								rows={MOCK_PURCHASE_COMPLAINTS}
+								mode="restore"
 								columns={COMPLAINT_COLUMNS}
 								searchFields={(row) => [
 									row.complaintNo,
@@ -356,7 +253,7 @@ export function PurchaseArchivePage() {
 								matchesFilter={(row, value) =>
 									row.status === value
 								}
-								restoredToast={
+								movedToast={
 									localizationConstants.purchaseComplaintRestoredToast
 								}
 								deletedToast={
@@ -366,9 +263,10 @@ export function PurchaseArchivePage() {
 						</TabsContent>
 
 						<TabsContent value="receptions" className="mt-4">
-							<ArchiveTab<PurchaseGoodsReceptionRow>
+							<ArchivableRowsTable<PurchaseGoodsReceptionRow>
 								rows={MOCK_PURCHASE_GOODS_RECEPTIONS}
-								columns={RECEPTION_COLUMNS}
+								mode="restore"
+								columns={GOODS_RECEPTION_COLUMNS}
 								searchFields={(row) => [
 									row.purchaseNo,
 									row.name,
@@ -404,7 +302,7 @@ export function PurchaseArchivePage() {
 								matchesFilter={(row, value) =>
 									row.orderType === value
 								}
-								restoredToast={
+								movedToast={
 									localizationConstants.purchaseGoodsReceptionRestoredToast
 								}
 								deletedToast={

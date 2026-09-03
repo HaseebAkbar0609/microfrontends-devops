@@ -10,11 +10,11 @@ export const WidgetRow = ({
 	label: string;
 	value: React.ReactNode;
 }) => (
-	<div className="flex items-baseline justify-between gap-3">
-		<span className="truncate">
+	<div className="flex items-baseline justify-between gap-2 text-xs">
+		<span className="text-slate-500 font-normal shrink-0">
 			<Translate text={label} />
 		</span>
-		<span className="shrink-0 font-medium text-slate-700">{value}</span>
+		<span className="shrink-0 font-medium text-slate-800 text-right">{value}</span>
 	</div>
 );
 

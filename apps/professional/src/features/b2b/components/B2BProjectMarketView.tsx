@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -43,14 +42,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { TablePagination } from "@/components/table/TablePagination";
-import { Translate, useTranslate } from "@/utils/translation/translate";
+import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
 import { showToast } from "@/lib/toast";
-import { cn } from "@/lib/utils";
 import { BreadcrumbItem } from "@/types/common";
 import { formatCurrency } from "@/utils/formatCurrency";
 import {
@@ -235,38 +233,6 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
 
       {/* Main Content Area */}
       <div className="flex flex-1 flex-col px-4 sm:px-6 md:px-8 py-5">
-        {/* Title Header */}
-        <div className="mb-4">
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-            <Translate text={localizationConstants.b2b} />
-          </h1>
-        </div>
-
-        {/* Navigation Tabs (Responsive) */}
-        <div className="flex items-center gap-2 sm:gap-4 md:gap-6 border-b border-slate-200 text-sm font-medium -mx-4 sm:-mx-6 md:-mx-8 px-4 sm:px-6 md:px-8 overflow-x-auto scrollbar-none mb-6 whitespace-nowrap">
-          <Link
-            href="/module/business/b2b"
-            className="px-3 sm:px-4 md:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center shrink-0"
-          >
-            <Translate text={localizationConstants.b2bDashboard} />
-          </Link>
-          <Link
-            href="/module/business/b2b/project-market"
-            className={cn(
-              "relative px-3 sm:px-4 md:px-6 pb-3.5 text-slate-900 font-semibold transition-colors text-center shrink-0",
-              "after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-slate-900"
-            )}
-          >
-            <Translate text={localizationConstants.b2bOverview} />
-          </Link>
-          <Link
-            href="/module/business/b2b/archive"
-            className="px-3 sm:px-4 md:px-6 pb-3.5 text-slate-500 hover:text-slate-900 transition-colors text-center shrink-0"
-          >
-            <Translate text={localizationConstants.archive} />
-          </Link>
-        </div>
-
         {/* Actions Toolbar */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
           <div className="flex items-center gap-4 sm:gap-6">
@@ -280,7 +246,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
               <Input
                 placeholder={t(localizationConstants.search)}
                 value={search}
-                onChange={(e) => {
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setSearch(e.target.value);
                   setPage(1);
                 }}
@@ -346,7 +312,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
             <Button
               size="sm"
               className="h-9 cursor-pointer gap-1.5 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 rounded-md px-4 shadow-2xs"
-              onClick={() => router.push("/module/business/b2b/project-market/create")}
+              onClick={() => router.push("/module/business/b2b/create")}
             >
               <Plus size={16} aria-hidden={true} />
               {t(localizationConstants.b2bPMAddProject)}
@@ -480,7 +446,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
                         variant="secondary"
                         size="sm"
                         onClick={() =>
-                          router.push(`/module/business/b2b/project-market/${row.id}`)
+                          router.push(`/module/business/b2b/overview/${row.id}`)
                         }
                         className="h-10 bg-slate-100 hover:bg-slate-200/80 text-slate-800 text-xs font-semibold px-5 py-3 shadow-none cursor-pointer rounded-md border-0"
                       >

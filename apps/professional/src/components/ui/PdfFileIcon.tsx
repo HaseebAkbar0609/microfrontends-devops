@@ -4,20 +4,20 @@ interface PdfFileIconProps {
 	className?: string;
 }
 
-export function PdfFileIcon({ className = "h-7 w-[22px]" }: PdfFileIconProps) {
+export function PdfFileIcon({ className = "h-9 w-7" }: PdfFileIconProps) {
 	return (
 		<svg
-			viewBox="0 0 24 30"
+			viewBox="-3.5 0 27.5 30"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
 			className={`shrink-0 ${className}`}
 		>
-			{/* Page Base with rounded corners and folded top-right */}
+			{/* Page Base with subtle rounded corners and folded top-right */}
 			<path
-				d="M4 2C2.89543 2 2 2.89543 2 4V26C2 27.1046 2.89543 28 4 28H20C21.1046 28 22 27.1046 22 26V9.5L14.5 2H4Z"
+				d="M3.5 2C2.67 2 2 2.67 2 3.5V26.5C2 27.33 2.67 28 3.5 28H20.5C21.33 28 22 27.33 22 26.5V9.5L14.5 2H3.5Z"
 				fill="#FFFFFF"
 				stroke="#CBD5E1"
-				strokeWidth="1.3"
+				strokeWidth="1.2"
 				strokeLinecap="round"
 				strokeLinejoin="round"
 			/>
@@ -27,31 +27,31 @@ export function PdfFileIcon({ className = "h-7 w-[22px]" }: PdfFileIconProps) {
 				d="M14.5 2V8C14.5 8.82843 15.1716 9.5 16 9.5H22"
 				fill="#F8FAFC"
 				stroke="#CBD5E1"
-				strokeWidth="1.3"
+				strokeWidth="1.2"
 				strokeLinejoin="round"
 			/>
 
-			{/* Red PDF Badge overlapping left edge matching Figma */}
+			{/* Red PDF Badge shifted further left with subtle radius and balanced padding */}
 			<rect
-				x="0.5"
-				y="11"
-				width="15.5"
-				height="9.5"
-				rx="2"
-				fill="#DC2626"
+				x="-3.5"
+				y="13.5"
+				width="18"
+				height="11.5"
+				rx="1.5"
+				fill="#EF4444"
 			/>
 
-			{/* White Bold PDF Text */}
+			{/* White Medium/SemiBold Centered PDF Text with balanced padding */}
 			<text
-				x="8.2"
-				y="17.8"
+				x="5.5"
+				y="19.25"
 				fill="#FFFFFF"
 				fontSize="6.8"
-				fontWeight="900"
+				fontWeight="600"
 				fontFamily="Inter, system-ui, -apple-system, sans-serif"
 				textAnchor="middle"
 				dominantBaseline="central"
-				letterSpacing="0.4px"
+				letterSpacing="0.25px"
 			>
 				PDF
 			</text>

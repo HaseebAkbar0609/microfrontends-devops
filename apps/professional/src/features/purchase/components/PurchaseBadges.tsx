@@ -10,6 +10,7 @@ import type {
 	PurchaseComplaintStatus,
 	PurchaseComplaintType,
 	PurchaseGoodsCategory,
+	PurchaseLineStatus,
 	PurchaseGoodsReceptionOrderType,
 	PurchaseStatus,
 	PurchaseType,
@@ -180,4 +181,33 @@ export function PurchaseGoodsCategoryBadge({
 	category: PurchaseGoodsCategory;
 }) {
 	return <PurchaseChip label={GOODS_CATEGORY_LABELS[category]} />;
+}
+
+const LINE_STATUS_STYLES: Record<PurchaseLineStatus, string> = {
+	ordered: "bg-amber-100 text-amber-800",
+	in_progress: "bg-amber-100 text-amber-800",
+	delivered: "bg-green-100 text-green-700",
+	monitoring: "bg-orange-100 text-orange-700",
+};
+
+const LINE_STATUS_LABELS: Record<PurchaseLineStatus, TranslationKeys> = {
+	ordered: localizationConstants.purchaseLineStatusOrdered,
+	in_progress: localizationConstants.purchaseLineStatusInProgress,
+	delivered: localizationConstants.purchaseLineStatusDelivered,
+	monitoring: localizationConstants.purchaseLineStatusMonitoring,
+};
+
+/** Status of one line within a purchase, on the record page's list. */
+export function PurchaseLineStatusBadge({
+	status,
+}: {
+	status: PurchaseLineStatus;
+}) {
+	return (
+		<span
+			className={`inline-flex items-center rounded-md px-3 py-0.5 text-xs font-medium ${LINE_STATUS_STYLES[status]}`}
+		>
+			<Translate text={LINE_STATUS_LABELS[status]} />
+		</span>
+	);
 }

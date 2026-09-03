@@ -1,11 +1,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ModulePageHeader } from "@/components/layout/navigation";
+import { RecordNavRow } from "@/components/layout/navigation";
 import {
 	ORDER_MODULE_BASE_URL,
-	ORDER_MODULE_TABS,
-	ORDER_MODULE_TITLE,
 } from "@/features/orders/data/orderNav.config";
 import { useTranslate } from "@/utils/translation/translate";
 import { OrderOpenedHero } from "./components/OrderOpenedHero";
@@ -46,18 +44,16 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
 
 	return (
 		<div className="flex h-full flex-col bg-slate-50/50 relative overflow-hidden">
-			<ModulePageHeader
-				title={ORDER_MODULE_TITLE}
-				tabs={ORDER_MODULE_TABS}
-				record={{
-					title: recordTitle,
-					backHref: `${ORDER_MODULE_BASE_URL}/overview`,
-				}}
-			/>
-
 			{/* Main Content Scrollable Container (70% width layout) */}
 			<div className="flex-1 overflow-y-auto px-6 py-6">
 				<div className="w-full lg:w-[70%] space-y-6">
+					{/* Record Back Navigation Bar */}
+					<RecordNavRow
+						title={recordTitle}
+						backHref={`${ORDER_MODULE_BASE_URL}/overview`}
+						className="pt-0"
+					/>
+
 					{/* Top Hero Summary Card */}
 					<OrderOpenedHero data={orderData} />
 

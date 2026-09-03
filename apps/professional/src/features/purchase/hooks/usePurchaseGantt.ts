@@ -70,12 +70,18 @@ const DAY_ZOOM_WEEKS = 6;
  */
 export function usePurchaseGantt(
 	initialRows: PurchaseGanttRow[] = MOCK_PURCHASE_GANTT,
+	/**
+	 * Zoom the schedule opens at. Day zoom shows a six-week window around the
+	 * anchor, which is right for the module-wide schedule but hides a record's
+	 * lines when they span months — those callers open at month.
+	 */
+	initialZoom: PurchaseGanttZoom = "day",
 ) {
 	const { i18n } = useTranslation();
 	const locale = i18n.language?.startsWith("sv") ? sv : enUS;
 
     const rows = initialRows;
-	const [zoom, setZoom] = useState<PurchaseGanttZoom>("day");
+	const [zoom, setZoom] = useState<PurchaseGanttZoom>(initialZoom);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState<string>("all");
 	const [rangeFrom, setRangeFrom] = useState<string>("");

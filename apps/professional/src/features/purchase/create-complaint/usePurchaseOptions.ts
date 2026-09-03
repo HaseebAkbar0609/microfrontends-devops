@@ -16,13 +16,16 @@ export interface PurchaseOption {
 	label: string;
 }
 
+/** The purchase the design's info card is drawn against. */
+const DEFAULT_PURCHASE_NO = "I501";
+
 /**
  * Option lists and starting values for the complaint wizard.
  *
  * The wizard reads these through the hook rather than importing the mock files,
  * so replacing them with a query later touches only this file.
  */
-export function usePurchaseOptions() {
+export function usePurchaseOptions(prefillPurchaseNo?: string) {
 	const purchaseOptions = useMemo<PurchaseOption[]>(
 		() =>
 			MOCK_PURCHASES.map((purchase) => ({
@@ -49,20 +52,31 @@ export function usePurchaseOptions() {
 		[],
 	);
 
-	/** Starting values for the info card, as printed in the design. */
-	const initialInfo = useMemo<ComplaintInfo>(
-		() => ({
-			purchaseNo: "I501-05",
-			name: "Kök",
-			object: "Projekt 2025-001",
-			complaintType: "damaged_on_delivery",
-		}),
-		[],
-	);
-
 	/** Resolves a purchase number to its descriptive fields. */
 	const findPurchase = (purchaseNo: string) =>
 		MOCK_PURCHASES.find((purchase) => purchase.purchaseNo === purchaseNo);
+
+	/**
+	 * Starting values for the info card, always taken from a real purchase so
+	 * the number, description and object agree with each other.
+	 *
+	 * Opened from a record the wizard is told which purchase it is for; opened
+	 * from the module list it starts on the one the design prints. The design's
+	 * literal values describe a purchase *line* ("I501-05", "Kök"), which this
+	 * select cannot represent — its options are purchases — so the line's
+	 * purchase is used instead of copying strings the dropdown cannot resolve.
+	 */
+	const initialInfo = useMemo<ComplaintInfo>(() => {
+		const source =
+			findPurchase(prefillPurchaseNo ?? "") ?? findPurchase(DEFAULT_PURCHASE_NO);
+
+		return {
+			purchaseNo: source?.purchaseNo ?? "",
+			name: source?.name ?? "",
+			object: source?.object ?? "",
+			complaintType: "damaged_on_delivery",
+		};
+	}, [prefillPurchaseNo]);
 
 	return {
 		purchaseOptions,

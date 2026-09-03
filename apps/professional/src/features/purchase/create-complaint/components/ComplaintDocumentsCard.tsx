@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpDown, Folders, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Folders, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { MultiFileUploadField } from "@/components/form";
@@ -16,30 +16,62 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { openSafeUrl } from "@/lib/safeUrl";
 import { showToast } from "@/lib/toast";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, {
+	type TranslationKeys,
+} from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { usePurchaseDocuments } from "../../hooks/usePurchaseDocuments";
+import type {
+	PurchaseDocumentSortField,
+	usePurchaseDocuments,
+} from "../../hooks/usePurchaseDocuments";
+
+/** How many rejected filenames the toast lists before collapsing the rest. */
+const MAX_REJECTED_NAMES_SHOWN = 3;
 
 const TH_CLASS =
 	"h-11 px-4 text-left text-sm font-medium text-slate-500 select-none whitespace-nowrap";
 
+/** The column keys this table can sort by, in the order it draws them. */
+const SORT_COLUMNS: {
+	label: TranslationKeys;
+	field: PurchaseDocumentSortField;
+}[] = [
+	{ label: localizationConstants.agreementDetailDatum, field: "date" },
+	{
+		label: localizationConstants.agreementDetailDokumentetsNamn,
+		field: "documentName",
+	},
+	// "Typ" renders `reference` (the A500-10 code); "Fil" renders `fileType`.
+	{ label: localizationConstants.purchaseColType, field: "reference" },
+	{ label: localizationConstants.agreementDetailFil, field: "fileType" },
+];
+
 export interface ComplaintDocumentsCardProps {
 	gdprAccepted: boolean;
 	onGdprChange: (accepted: boolean) => void;
+	/** Consent is required to send, so its error renders under the checkbox. */
+	gdprError?: string;
+	/**
+	 * The wizard's document state. Owned by `useCreateComplaintForm` rather
+	 * than here, so submission can actually attach what was uploaded — the same
+	 * arrangement the order and goods-reception wizards use.
+	 */
+	documents: ReturnType<typeof usePurchaseDocuments>;
+	acceptExtensions: string[];
 }
 
 /**
  * Step 2's Dokument card: upload control, GDPR consent, and the attached
  * documents table.
- *
- * Reuses `usePurchaseDocuments` for the pending/attached state — the
- * same shape the supplier agreements tab needs — and starts empty, since a new
- * complaint has no attachments yet.
  */
 export function ComplaintDocumentsCard({
 	gdprAccepted,
 	onGdprChange,
+	gdprError,
+	documents: documentState,
+	acceptExtensions,
 }: ComplaintDocumentsCardProps) {
 	const { t } = useTranslation();
 	const {
@@ -49,11 +81,35 @@ export function ComplaintDocumentsCard({
 		removePending,
 		commitPendingFiles,
 		removeDocument,
-	} = usePurchaseDocuments([]);
+		sortBy,
+		sortOrder,
+		handleSort,
+	} = documentState;
+
+	/**
+	 * Says so when a file is turned away, rather than dropping it silently.
+	 *
+	 * Only the first few names are listed — dragging in a folder would
+	 * otherwise push a toast taller than the viewport.
+	 */
+	const handleSelectFiles = (files: File[]) => {
+		const { rejected } = selectFiles(files);
+		if (rejected.length === 0) return;
+
+		const shown = rejected.slice(0, MAX_REJECTED_NAMES_SHOWN);
+		const overflow = rejected.length - shown.length;
+		const names =
+			overflow > 0 ? `${shown.join(", ")} +${overflow}` : shown.join(", ");
+
+		showToast(
+			"error",
+			`${names} — ${t(localizationConstants.complaintFileRejectedToast)}`,
+		);
+	};
 
 	const handleUpload = () => {
 		const added = commitPendingFiles();
-		if (added > 0) {
+		if (added.length > 0) {
 			showToast(
 				"success",
 				t(localizationConstants.purchaseAgreementUploadedToast),
@@ -61,11 +117,13 @@ export function ComplaintDocumentsCard({
 		}
 	};
 
+	/**
+	 * Attached files are `blob:` URLs today, but this is the shape TFS-925's
+	 * review flagged, so it goes through the shared allow-list rather than
+	 * trusting whatever a row carries once these come from an API.
+	 */
 	const handleSeeFile = (fileUrl?: string, name?: string) => {
-		if (fileUrl) {
-			window.open(fileUrl, "_blank", "noopener,noreferrer");
-			return;
-		}
+		if (openSafeUrl(fileUrl)) return;
 		showToast("info", name ?? t(localizationConstants.agreementDetailFil));
 	};
 
@@ -95,10 +153,10 @@ export function ComplaintDocumentsCard({
 
 					<MultiFileUploadField
 						pendingFiles={pendingFiles}
-						onSelectFiles={selectFiles}
+						onSelectFiles={handleSelectFiles}
 						onRemovePending={removePending}
 						onUpload={handleUpload}
-						accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"
+						accept={acceptExtensions.join(",")}
 					/>
 
 					<label className="mt-4 flex items-start gap-2 text-sm text-slate-700">
@@ -111,7 +169,12 @@ export function ComplaintDocumentsCard({
 							<Translate
 								text={localizationConstants.complaintGdprText}
 							/>{" "}
-							<span className="cursor-pointer text-orange-500 underline">
+							{/* Styled as a link until TFS-931: there is no
+							    privacy-policy route in this app, so the text
+							    advertised a destination that did not exist.
+							    Becomes an anchor through `openSafeUrl` once a
+							    URL is available. */}
+							<span className="font-medium text-slate-900">
 								<Translate
 									text={
 										localizationConstants.complaintGdprLink
@@ -123,6 +186,12 @@ export function ComplaintDocumentsCard({
 							/>
 						</span>
 					</label>
+
+					{gdprError && (
+						<p className="mt-1 text-xs font-normal text-red-500">
+							{t(gdprError as TranslationKeys)}
+						</p>
+					)}
 				</div>
 
 				<div className="border-t border-slate-100 pt-4">
@@ -138,22 +207,49 @@ export function ComplaintDocumentsCard({
 						<Table className="w-full border-collapse">
 							<TableHeader>
 								<TableRow className="h-11 border-b border-slate-200 hover:bg-transparent">
-									{[
-										localizationConstants.agreementDetailDatum,
-										localizationConstants.agreementDetailDokumentetsNamn,
-										localizationConstants.purchaseColType,
-										localizationConstants.agreementDetailFil,
-									].map((label) => (
-										<TableHead
-											key={label}
-											className={TH_CLASS}
-										>
-											<div className="flex items-center gap-1">
-												<Translate text={label} />
-												<ArrowUpDown className="h-4 w-4 text-slate-400" />
-											</div>
-										</TableHead>
-									))}
+									{SORT_COLUMNS.map((column) => {
+										const active = sortBy === column.field;
+										return (
+											<TableHead
+												key={column.field}
+												className={TH_CLASS}
+												// The column's own sort state,
+												// through the attribute made
+												// for it — a screen reader
+												// announces "sorted ascending"
+												// without the label having to
+												// spell it out.
+												aria-sort={
+													active
+														? sortOrder === "asc"
+															? "ascending"
+															: "descending"
+														: "none"
+												}
+											>
+												<button
+													type="button"
+													onClick={() =>
+														handleSort(column.field)
+													}
+													className="flex cursor-pointer items-center gap-1 hover:text-slate-700"
+												>
+													<Translate
+														text={column.label}
+													/>
+													{active ? (
+														sortOrder === "asc" ? (
+															<ArrowUp className="h-4 w-4 text-slate-700" />
+														) : (
+															<ArrowDown className="h-4 w-4 text-slate-700" />
+														)
+													) : (
+														<ArrowUpDown className="h-4 w-4 text-slate-400" />
+													)}
+												</button>
+											</TableHead>
+										);
+									})}
 									<TableHead className="h-11 px-4" />
 									<TableHead className="h-11 w-12 px-2" />
 								</TableRow>

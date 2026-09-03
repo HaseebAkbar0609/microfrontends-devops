@@ -2,7 +2,7 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiResponse } from "@/types/api";
 import { ProjectMarket, ProjectMarketDetail } from "@/features/b2b/types/projectMarket";
-import { DUMMY_PROJECTS, DUMMY_PROJECT_DETAIL } from "@/features/b2b/constants/projectMarketMock";
+import { DUMMY_PROJECTS, getMockProjectDetail } from "@/features/b2b/constants/projectMarketMock";
 
 const B2B_BASE_PATH = "/professionals/b2b";
 
@@ -120,9 +120,9 @@ export async function getProjectMarketDetailAction(id: string): Promise<ActionRe
     if (parsed.success) {
       return { success: true, data: parsed.data, error: null };
     }
-    return { success: true, data: DUMMY_PROJECT_DETAIL, error: null };
+    return { success: true, data: getMockProjectDetail(id), error: null };
   } catch (_error: unknown) {
     // Fallback to mock data gracefully until backend endpoint is deployed
-    return { success: true, data: DUMMY_PROJECT_DETAIL, error: null };
+    return { success: true, data: getMockProjectDetail(id), error: null };
   }
 }

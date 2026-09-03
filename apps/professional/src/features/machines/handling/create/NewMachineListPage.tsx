@@ -12,6 +12,11 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { MACHINE_HANDLING_BASE_URL } from "../data/handlingNav.config";
+import { machineHandlingRepository } from "../data/machineHandlingRepository";
+import type {
+	MachineListDetail,
+	MachineListRow,
+} from "../types/machineHandling.types";
 import { MachineListInformationStep } from "./components/MachineListInformationStep";
 import { MachineSectionList } from "./components/MachineSectionList";
 import {
@@ -170,8 +175,66 @@ export function NewMachineListPage() {
 	};
 
 	const handleSave = () => {
-		if (!requireLinkedObject()) return;
-		// No machine-list endpoint yet; confirm and return to the register.
+		if (!requireLinkedObject() || !linkedObject) return;
+		const newId = `list-${Date.now()}`;
+		const row: MachineListRow = {
+			id: newId,
+			object: linkedObject.objectNo,
+			label: linkedObject.objectName,
+			customer: "Kunde",
+			startDate: linkedObject.startDate || "2026-01-01",
+			endDate: linkedObject.endDate || "2026-12-31",
+			status: "active",
+		};
+		const detail: MachineListDetail = {
+			id: newId,
+			projectNo: linkedObject.objectNo,
+			projectName: linkedObject.objectName,
+			projectAddress: linkedObject.address || "Storgatan 1",
+			postalCode: linkedObject.postalCode || "111 22",
+			city: linkedObject.city || "Stockholm",
+			startDate: linkedObject.startDate || "2026-01-01",
+			endDate: linkedObject.endDate || "2026-12-31",
+			responsibleName: contact?.label || "Kalle Andersson",
+			responsibleEmail: contact?.email || "kalle@byggbolaget.se",
+			responsiblePhone: contact?.phone || "070-000 00 00",
+			totalCost: "0",
+			internalCost: "0",
+			externalCost: "0",
+			internalGroups: ownSections.map((sec) => ({
+				id: sec.id,
+				titleKey: localizationConstants.machineCategoryEstablishment,
+				rows: sec.rows.map((r, idx) => ({
+					id: `sec-row-${idx}-${Date.now()}`,
+					machineNo: r.machineNo,
+					name: r.name,
+					rate: r.rate,
+					deliveryDate: r.fromDate || "2026-01-01",
+					returnDate: r.returnDate || "2026-12-31",
+					days: r.days || 30,
+					cost: r.cost || "0",
+					status: "active" as const,
+				})),
+			})),
+			externalGroups: externalSections.map((sec) => ({
+				id: sec.id,
+				titleKey: localizationConstants.machineCategoryEstablishment,
+				rows: sec.rows.map((r, idx) => ({
+					id: `sec-ext-${idx}-${Date.now()}`,
+					machineNo: r.machineNo,
+					name: r.name,
+					supplier: r.supplier || "Extern Leverantör",
+					rate: r.rate,
+					deliveryDate: r.fromDate || "2026-01-01",
+					returnDate: r.returnDate || "2026-12-31",
+					days: r.days || 30,
+					cost: r.cost || "0",
+					status: "active" as const,
+				})),
+			})),
+		};
+
+		machineHandlingRepository.createList(row, detail);
 		showToast("success", t(localizationConstants.machineListSaved));
 		router.push(MACHINE_HANDLING_BASE_URL);
 	};

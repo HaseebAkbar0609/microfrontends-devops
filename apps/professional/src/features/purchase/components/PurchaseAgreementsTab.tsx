@@ -74,7 +74,7 @@ export function PurchaseAgreementsTab() {
 
 	const handleUpload = () => {
 		const added = commitPendingFiles();
-		if (added > 0) {
+		if (added.length > 0) {
 			showToast(
 				"success",
 				t(localizationConstants.purchaseAgreementUploadedToast),

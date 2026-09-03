@@ -26,7 +26,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { PdfFileIcon } from "@/components/ui/PdfFileIcon";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { MACHINE_PURCHASE_BASE_URL } from "@/features/machines/data/machineNav.config";
 import { usePurchaseDetail } from "./hooks/usePurchaseDetail";
@@ -37,6 +37,7 @@ interface MachinePurchaseDetailPageProps {
 }
 
 export function MachinePurchaseDetailPage({ id }: MachinePurchaseDetailPageProps) {
+	const t = useTranslate();
 	const params = useParams();
 	const router = useRouter();
 	const purchaseId = id || (params?.id as string) || "PUR-01";
@@ -60,7 +61,7 @@ export function MachinePurchaseDetailPage({ id }: MachinePurchaseDetailPageProps
 
 	const handleSaveEdit = () => {
 		setIsEditing(false);
-		showToast("success", "Ändringar har sparats!");
+		showToast("success", t(localizationConstants.machinePurchaseChangesSaved));
 	};
 
 	const handleCancelEdit = () => {
@@ -76,7 +77,7 @@ export function MachinePurchaseDetailPage({ id }: MachinePurchaseDetailPageProps
 
 	const handleUploadFiles = () => {
 		if (selectedFileNames.length === 0 && !newFileNameInput.trim()) {
-			showToast("error", "Välj minst en fil att ladda upp.");
+			showToast("error", t(localizationConstants.machinePurchaseUploadMinFile));
 			return;
 		}
 
@@ -94,7 +95,7 @@ export function MachinePurchaseDetailPage({ id }: MachinePurchaseDetailPageProps
 
 		setSelectedFileNames([]);
 		setNewFileNameInput("");
-		showToast("success", "Dokument har laddats upp!");
+		showToast("success", t(localizationConstants.machinePurchaseUploadSuccess));
 	};
 
 	const removeSelectedTag = (index: number) => {

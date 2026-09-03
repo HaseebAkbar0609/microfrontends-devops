@@ -8,9 +8,6 @@ import { Loader } from "@/components/ui/loader";
 import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscriptionCookie";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
-import { AgreementSubSidebar } from "./sidebar/AgreementSubSidebar";
-import { CalculationDetailSubSidebar } from "./sidebar/CalculationDetailSubSidebar";
-import { MachineSubSidebar } from "./sidebar/MachineSubSidebar";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -40,11 +37,6 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
-	const calcDetailMatch = pathname.match(
-		/^\/module\/business\/calculation\/overview\/([^/]+)/,
-	);
-	const isCalculationDetailRoute = !!calcDetailMatch;
-	const calculationDetailId = calcDetailMatch?.[1] ?? "";
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -125,21 +117,9 @@ export function AppShell({ children }: AppShellProps) {
 		return null;
 	}
 
-	const isAgreementPath = pathname.startsWith(
-		"/module/business-support/agreement",
-	);
-	const isMachinePath = pathname.startsWith("/module/production/machine");
-
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{isAgreementPath ? (
-				<AgreementSubSidebar />
-			) : isCalculationDetailRoute ? (
-				<CalculationDetailSubSidebar calcId={calculationDetailId} />
-			) : isMachinePath ? (
-				<MachineSubSidebar />
-			) : null}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
 				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0">

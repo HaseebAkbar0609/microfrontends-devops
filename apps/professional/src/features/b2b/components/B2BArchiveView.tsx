@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -49,7 +48,7 @@ import { TablePagination } from "@/components/table/TablePagination";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { B2BArchiveItem, B2BArchiveTyp } from "../types/archive";
-import { B2B_ARCHIVE_BREADCRUMBS, B2B_MODULE_TABS } from "../constants";
+import { B2B_ARCHIVE_BREADCRUMBS } from "../constants";
 import { useB2BArchive, B2BArchiveSortField } from "../hooks/useB2BArchive";
 
 const ALL_TYPS: B2BArchiveTyp[] = ["B2B-Hyra UT", "B2B-Offert", "B2B-Hyra IN"];
@@ -144,38 +143,6 @@ export function B2BArchiveView() {
         breadcrumbs={B2B_ARCHIVE_BREADCRUMBS}
         className="border-b-0 px-6 pt-5 pb-2"
       />
-
-      {/* 2. Module Sub-Header (B2B Title + Tabs) */}
-      <div className="px-6 pt-4 pb-0">
-        <h2 className="text-xl font-bold text-slate-950 mb-3">
-          <Translate text={localizationConstants.b2b} />
-        </h2>
-        <div
-          role="tablist"
-          aria-label="B2B Module Navigation"
-          className="flex items-center border-b border-slate-200 gap-1 sm:gap-2 overflow-x-auto no-scrollbar whitespace-nowrap h-[36px] -mb-[1px]"
-        >
-          {B2B_MODULE_TABS.map((tab) => {
-            const isActive = tab.id === "b2b-archive";
-            return (
-              <Link
-                key={tab.id}
-                href={tab.href}
-                className={`relative inline-flex items-center justify-center h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-semibold leading-none tracking-normal text-center whitespace-nowrap transition-colors cursor-pointer shrink-0 ${
-                  isActive
-                    ? "text-slate-950"
-                    : "text-slate-500 hover:text-slate-900"
-                }`}
-              >
-                <Translate text={tab.labelKey || tab.label || ""} />
-                {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-950 z-10" />
-                )}
-              </Link>
-            );
-          })}
-        </div>
-      </div>
 
       {/* 3. Actions Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-4 px-6 pt-5 pb-4">

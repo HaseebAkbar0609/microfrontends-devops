@@ -1,3 +1,5 @@
+"use client";
+
 import { CalculationModuleHeader } from "@/features/calculation/components/CalculationModuleHeader";
 
 export default function CalculationLayout({

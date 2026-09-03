@@ -1,42 +1,57 @@
-import {
-	Briefcase,
-	Database,
-	LayoutTemplate,
-	Megaphone,
-	ScrollText,
-} from "lucide-react";
-import { DynamicSubSidebarItem } from "@/components/layout/sidebar/DynamicSubSidebar";
+import { RouteTabItem } from "@/types/navigation";
 import localizationConstants from "@/utils/translation/constants";
 
-export const businessSupportSidebarItems: DynamicSubSidebarItem[] = [
+export const businessSupportNavItems: RouteTabItem[] = [
 	{
 		id: "management-support",
 		labelKey: localizationConstants.managementSupport,
 		href: "/module/business-support/management-support",
-		icon: Briefcase,
 	},
 	{
 		id: "marketing-sales",
 		labelKey: localizationConstants.marketingSales,
 		href: "/module/business-support/marketing-sales",
-		icon: Megaphone,
 	},
 	{
 		id: "agreement",
 		labelKey: localizationConstants.agreement,
-		href: "/module/business-support/agreement/dashboard",
-		icon: ScrollText,
+		href: "/module/business-support/agreement",
 	},
 	{
 		id: "data-it",
 		labelKey: localizationConstants.dataIT,
 		href: "/module/business-support/data-it",
-		icon: Database,
 	},
 	{
 		id: "templates",
 		labelKey: localizationConstants.templates,
 		href: "/module/business-support/templates",
-		icon: LayoutTemplate,
 	},
 ];
+
+export const businessSupportSidebarItems = businessSupportNavItems;
+
+export const agreementNavItems: RouteTabItem[] = [
+	{
+		id: "dashboard",
+		labelKey: localizationConstants.agreementDashboardTitle,
+		href: "/module/business-support/agreement/dashboard",
+	},
+	{
+		id: "overview",
+		labelKey: localizationConstants.agreementOverview,
+		href: "/module/business-support/agreement/overview",
+	},
+	{
+		id: "documents",
+		labelKey: localizationConstants.agreementDocuments,
+		href: "/module/business-support/agreement/documents",
+	},
+	{
+		id: "archive",
+		labelKey: localizationConstants.archiveItem,
+		href: "/module/business-support/agreement/archive",
+	},
+];
+
+export const agreementSidebarItems = agreementNavItems;

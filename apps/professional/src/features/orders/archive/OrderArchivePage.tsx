@@ -1,11 +1,7 @@
 "use client";
 
-import { ModulePageHeader } from "@/components/layout/navigation";
-import {
-	ORDER_MODULE_TABS,
-	ORDER_MODULE_TITLE,
-	orderBreadcrumbs,
-} from "@/features/orders/data/orderNav.config";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { orderBreadcrumbs } from "@/features/orders/data/orderNav.config";
 import localizationConstants from "@/utils/translation/constants";
 import { OrderArchiveTable } from "./components/OrderArchiveTable";
 import { useOrderArchive } from "./hooks/useOrderArchive";
@@ -35,11 +31,11 @@ export function OrderArchivePage() {
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50">
-			{/* Page Header with Breadcrumbs matching Figma */}
-			<ModulePageHeader
-				title={ORDER_MODULE_TITLE}
-				tabs={ORDER_MODULE_TABS}
+			{/* Page Title with Breadcrumbs directly below it */}
+			<PageHeader
+				title={localizationConstants.archive}
 				breadcrumbs={orderBreadcrumbs(localizationConstants.archive)}
+				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
 			{/* Archive Datatable */}

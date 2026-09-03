@@ -1,14 +1,7 @@
-import {
-	Archive,
-	FileText,
-	Handshake,
-	Layers,
-	ScrollText,
-	Store,
-} from "lucide-react";
+import { Layers } from "lucide-react";
 import { BreadcrumbItem } from "@/types/common";
-import { DynamicSubSidebarItem } from "@/components/layout/sidebar/DynamicSubSidebar";
 import type { ModuleTabItem } from "@/components/layout/navigation";
+import { RouteTabItem } from "@/types/navigation";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import localizationConstants from "@/utils/translation/constants";
 
@@ -49,39 +42,31 @@ export const B2B_MODULE_TABS: ModuleTabItem[] = [
 	},
 ];
 
-export const b2bSidebarItems: DynamicSubSidebarItem[] = [
+export const b2bNavItems: RouteTabItem[] = [
 	{
-		id: "overview",
-		labelKey: localizationConstants.b2bOverview,
+		id: "dashboard",
+		labelKey: localizationConstants.b2bDashboard,
 		href: "/module/business/b2b",
-		icon: FileText,
 		exact: true,
 	},
 	{
-		id: "project-market",
-		labelKey: localizationConstants.b2bProjectMarket,
-		href: "/module/business/b2b/project-market",
-		icon: Store,
-	},
-	{
-		id: "deals",
-		labelKey: localizationConstants.b2bDeals,
-		href: "/module/business/b2b/deals",
-		icon: Handshake,
-	},
-	{
-		id: "avtal",
-		labelKey: localizationConstants.b2bAvtal,
-		href: "/module/business/b2b/agreements",
-		icon: ScrollText,
+		id: "overview",
+		labelKey: localizationConstants.b2bOverview,
+		href: "/module/business/b2b/overview",
+		matchSubPaths: [
+			"/module/business/b2b/overview",
+			"/module/business/b2b/company",
+			"/module/business/b2b/agreements",
+		],
 	},
 	{
 		id: "archive",
 		labelKey: localizationConstants.archive,
 		href: "/module/business/b2b/archive",
-		icon: Archive,
 	},
 ];
+
+export const b2bSidebarItems = b2bNavItems;
 
 /** Same 11 widgets as the B2B grid, in ticket order (plus the empty slot). */
 export const B2B_SIDEBAR_ITEMS: WidgetItem[] = [

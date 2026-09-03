@@ -1,17 +1,14 @@
 "use client";
 
-import { ModulePageHeader } from "@/components/layout/navigation";
-import {
-	ORDER_MODULE_TABS,
-	ORDER_MODULE_TITLE,
-	orderBreadcrumbs,
-} from "@/features/orders/data/orderNav.config";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { orderBreadcrumbs } from "@/features/orders/data/orderNav.config";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { usePlanning } from "./hooks/usePlanning";
 import { PlanningOverviewTab } from "./components/PlanningOverviewTab";
 import { PlanningOrderTab } from "./components/PlanningOrderTab";
 import { PlanningPersonnelTab } from "./components/PlanningPersonnelTab";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { PlanningTab } from "./types/planning.types";
 
 export function PlanningOverviewPage() {
@@ -24,45 +21,33 @@ export function PlanningOverviewPage() {
 	];
 
 	return (
-		<div className="flex min-h-screen flex-col bg-white text-slate-900 font-sans">
-			{/* Page Header with localized breadcrumbs */}
-			<div className="sticky top-0 z-40 bg-white">
-				<ModulePageHeader
-					title={ORDER_MODULE_TITLE}
-					tabs={ORDER_MODULE_TABS}
-					breadcrumbs={orderBreadcrumbs(localizationConstants.breadcrumbPlanning)}
-				/>
-			</div>
+		<div className="flex flex-1 flex-col bg-white text-slate-900 font-sans">
+			{/* Page Title with Breadcrumbs directly below it */}
+			<PageHeader
+				title={localizationConstants.breadcrumbPlanning}
+				breadcrumbs={orderBreadcrumbs(localizationConstants.breadcrumbPlanning)}
+				className="border-b-0 px-6 pt-5 pb-2"
+			/>
 
-			<div className="px-3 sm:px-6 pt-2 sm:pt-3 pb-6 flex flex-col gap-3">
+			<div className="px-6 pt-2 pb-6 flex flex-col gap-3">
 				{/* Tab Bar Navigation with Accessible ARIA semantics & responsive horizontal scroll */}
-				<div
-					role="tablist"
-					aria-label="Planning Navigation Tabs"
-					className="w-full min-w-0 flex items-center border-b border-slate-200 gap-6 sm:gap-8 overflow-x-auto no-scrollbar whitespace-nowrap"
-				>
-					{tabs.map((tab) => {
-						const isActive = activeTab === tab.id;
-						return (
-							<button
-								key={tab.id}
-								id={`tab-${tab.id}`}
-								role="tab"
-								type="button"
-								aria-selected={isActive}
-								aria-controls={`tabpanel-${tab.id}`}
-								tabIndex={isActive ? 0 : -1}
-								onClick={() => setActiveTab(tab.id)}
-								className={`py-3 text-xs sm:text-sm font-medium transition-colors border-b-2 cursor-pointer shrink-0 -mb-px ${
-									isActive
-										? "border-slate-900 text-slate-900 font-semibold"
-										: "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
-								}`}
-							>
-								<Translate text={tab.labelKey} />
-							</button>
-						);
-					})}
+				<div className="border-b border-slate-200 h-[36px] -mb-[1px]">
+					<Tabs
+						value={activeTab}
+						onValueChange={(val) => setActiveTab(val as PlanningTab)}
+					>
+						<TabsList variant="line" className="h-[36px]">
+							{tabs.map((tab) => (
+								<TabsTrigger
+									key={tab.id}
+									value={tab.id}
+									className="cursor-pointer"
+								>
+									<Translate text={tab.labelKey} />
+								</TabsTrigger>
+							))}
+						</TabsList>
+					</Tabs>
 				</div>
 
 				{/* Tab Content Container */}
