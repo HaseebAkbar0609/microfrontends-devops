@@ -5130,6 +5130,8 @@ export type CommonTranslation = {
 	b2bRestoreConfirmDesc: string;
 	b2bDeletePermanentConfirmTitle: string;
 	b2bDeletePermanentConfirmDesc: string;
+	deleteConfirmationTitle: string;
+	deleteConfirmationDescription: string;
 	retry: string;
 };
 
@@ -5187,6 +5189,9 @@ export type MachinePurchaseTranslation = {
 	machinePurchaseCreateSuccess: string;
 	machinePurchaseCreateError: string;
 	machinePurchaseFieldMaskinInfo: string;
+	machinePurchaseChangesSaved: string;
+	machinePurchaseUploadMinFile: string;
+	machinePurchaseUploadSuccess: string;
 };
 
 export type MachineDashboardTranslation = {

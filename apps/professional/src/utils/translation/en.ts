@@ -4192,6 +4192,8 @@ export const enCommon: CommonTranslation = {
 	b2bRestoreConfirmDesc: "Are you sure you want to restore this project to active?",
 	b2bDeletePermanentConfirmTitle: "Delete Project Permanently",
 	b2bDeletePermanentConfirmDesc: "Are you sure you want to permanently delete this project? This action cannot be undone.",
+	deleteConfirmationTitle: "Confirm deletion",
+	deleteConfirmationDescription: "Are you sure you want to delete this item? This action cannot be undone.",
 	retry: "Retry",
 };
 
@@ -5228,6 +5230,9 @@ export const enMachinePurchase: MachinePurchaseTranslation = {
 	machinePurchaseCreateSuccess: "Machine purchase saved successfully",
 	machinePurchaseCreateError: "Please fill in all required fields",
 	machinePurchaseFieldMaskinInfo: "Machine Information",
+	machinePurchaseChangesSaved: "Changes have been saved!",
+	machinePurchaseUploadMinFile: "Please select at least one file to upload.",
+	machinePurchaseUploadSuccess: "Documents have been uploaded!",
 };
 
 export const enMachineDashboard: MachineDashboardTranslation = {

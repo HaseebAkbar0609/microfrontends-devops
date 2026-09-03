@@ -13,7 +13,13 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
-import { MACHINE_MODULE_BASE_URL } from "@/features/machines/data/machineNav.config";
+import { MACHINE_OVERVIEW_BASE_URL } from "@/features/machines/data/machineNav.config";
+import { machineOverviewRepository } from "@/features/machines/data/machineOverviewRepository";
+import type {
+	MachineCategory,
+	MachineRow,
+	MachineUnit,
+} from "@/features/machines/types/machine.types";
 import { MachineInformationStep } from "./components/MachineInformationStep";
 import { MachineDocumentsStep, fileTypeOf } from "./components/MachineDocumentsStep";
 import { MachinePhotosStep } from "./components/MachinePhotosStep";
@@ -150,17 +156,30 @@ export function NewMachinePage() {
 	}, []);
 
 	const handleCancel = () => {
-		router.push(MACHINE_MODULE_BASE_URL);
+		router.push(MACHINE_OVERVIEW_BASE_URL);
 	};
 
 	const handleSave = methods.handleSubmit(
-		async () => {
+		async (formData) => {
 			setIsSubmitting(true);
 			try {
-				// No machines endpoint yet — the register is still mock data, so the
-				// wizard confirms and returns to the list.
+				const today = new Date().toISOString().slice(0, 10);
+				const newMachine: MachineRow = {
+					id: `m-${Date.now()}`,
+					machineNo: NEXT_MACHINE_NO,
+					name: formData.name,
+					factory: formData.factory || "-",
+					designation: formData.designation || "-",
+					category: formData.category as MachineCategory,
+					internalRent: `${formData.internalRent || "0"} kr`,
+					unit: (formData.unit || "day") as MachineUnit,
+					purchaseDate: formData.purchaseDate || today,
+					location: formData.location || "Lager",
+					status: "active",
+				};
+				machineOverviewRepository.addMachine(newMachine);
 				showToast("success", t(localizationConstants.machineCreateSuccess));
-				router.push(MACHINE_MODULE_BASE_URL);
+				router.push(MACHINE_OVERVIEW_BASE_URL);
 			} finally {
 				setIsSubmitting(false);
 			}
