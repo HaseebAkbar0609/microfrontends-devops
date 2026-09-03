@@ -29,7 +29,7 @@ function CardSection({ title, icon, children }: CardSectionProps) {
 					type="button"
 					variant="secondary"
 					size="sm"
-					className="h-9 w-[82px] shrink-0 gap-2 rounded-md bg-zinc-100 px-4 py-2 font-sans text-sm font-medium text-slate-900 pointer-events-none cursor-default shadow-none hover:bg-zinc-100"
+					className="h-9 w-[82px] shrink-0 gap-2 rounded-md bg-zinc-100 px-4 py-2 font-sans text-sm font-medium text-slate-900 shadow-none hover:bg-zinc-100 cursor-pointer"
 				>
 					<PencilLine className="h-4 w-4 shrink-0 text-slate-900" />
 					<span>{t(localizationConstants.actionEdit)}</span>
