@@ -40,6 +40,16 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants, {
@@ -51,6 +61,7 @@ import {
 	MachineStatusBadge,
 	MachineUnitLabel,
 } from "./MachineBadges";
+import { MachineDetailModal } from "./MachineDetailModal";
 import { useMachines, type MachineSortField } from "../hooks/useMachines";
 
 /** Column order and sort field, matching the Figma table left-to-right. */
@@ -92,6 +103,10 @@ export function MachineListTab() {
 		sortBy,
 		sortOrder,
 		handleSort,
+		confirmDeleteId,
+		setConfirmDeleteId,
+		viewMachine,
+		setViewMachine,
 		deleteMachine,
 		archiveMachine,
 	} = useMachines();
@@ -240,6 +255,7 @@ export function MachineListTab() {
 										<Button
 											variant="ghost"
 											size="icon"
+											onClick={() => setViewMachine(machine)}
 											aria-label={t(localizationConstants.machineActionOpen)}
 											className="h-8 w-8 text-slate-500 hover:text-slate-900 rounded-md cursor-pointer"
 										>
@@ -263,7 +279,10 @@ export function MachineListTab() {
 												className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1"
 											>
 												<PermissionGate permission="VIEW_MACHINES">
-													<DropdownMenuItem className="flex items-center gap-2 cursor-pointer text-slate-700 focus:bg-slate-50">
+													<DropdownMenuItem
+														onClick={() => setViewMachine(machine)}
+														className="flex items-center gap-2 cursor-pointer text-slate-700 focus:bg-slate-50"
+													>
 														<Eye className="h-4 w-4 text-slate-500" />
 														<span>
 															<Translate
@@ -286,7 +305,7 @@ export function MachineListTab() {
 												<PermissionGate permission="DELETE_MACHINE">
 													<DropdownMenuSeparator />
 													<DropdownMenuItem
-														onClick={() => deleteMachine(machine.id)}
+														onClick={() => setConfirmDeleteId(machine.id)}
 														className="flex items-center gap-2 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
 													>
 														<Trash2 className="h-4 w-4 text-red-500" />
@@ -306,6 +325,47 @@ export function MachineListTab() {
 					</TableBody>
 				</Table>
 			</div>
+
+			<MachineDetailModal
+				machine={viewMachine}
+				open={!!viewMachine}
+				onOpenChange={(open) => {
+					if (!open) setViewMachine(null);
+				}}
+			/>
+
+			<AlertDialog
+				open={!!confirmDeleteId}
+				onOpenChange={(open) => {
+					if (!open) setConfirmDeleteId(null);
+				}}
+			>
+				<AlertDialogContent className="bg-white">
+					<AlertDialogHeader>
+						<AlertDialogTitle>
+							<Translate text={localizationConstants.deleteConfirmationTitle} />
+						</AlertDialogTitle>
+						<AlertDialogDescription>
+							<Translate
+								text={localizationConstants.deleteConfirmationDescription}
+							/>
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel className="cursor-pointer">
+							<Translate text={localizationConstants.cancelButton} />
+						</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={() => {
+								if (confirmDeleteId) deleteMachine(confirmDeleteId);
+							}}
+							className="bg-red-600 text-white hover:bg-red-700 cursor-pointer"
+						>
+							<Translate text={localizationConstants.actionDelete} />
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 
 			{/* Pagination Footer */}
 			<div className="flex items-center justify-center sm:justify-end gap-6 py-2 px-1 text-sm text-slate-600 flex-wrap">

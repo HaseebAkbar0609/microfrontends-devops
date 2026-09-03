@@ -9,7 +9,7 @@ import { showToast } from "@/lib/toast";
 import { useTranslate, Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { MACHINE_HANDLING_BASE_URL } from "../data/handlingNav.config";
-import { getMachineListDetail } from "../data/machineHandling.mock";
+import { machineHandlingRepository } from "../data/machineHandlingRepository";
 import { BookingKindRadio } from "./components/BookingKindRadio";
 import { ExternalBookingSection } from "./components/ExternalBookingSection";
 import { MachinePickerPane } from "./components/MachinePickerPane";
@@ -45,7 +45,7 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 	const t = useTranslate();
 	const router = useRouter();
 
-	const detail = getMachineListDetail(listId);
+	const detail = machineHandlingRepository.getListDetail(listId);
 	const detailUrl = `${MACHINE_HANDLING_BASE_URL}/${detail.id}`;
 
 	const [kind, setKind] = useState<BookingKind>("internal");
@@ -112,7 +112,18 @@ export function BookMachinePage({ listId }: { listId?: string }) {
 			showToast("error", t(localizationConstants.machineBookNoneSelected));
 			return;
 		}
-		// No bookings endpoint yet; confirm and return to the machine list.
+
+		const internalCatalogue = bookableMachines("internal");
+		const internalBooked = internalCatalogue.filter((m) =>
+			bookedIds.internal.includes(m.id)
+		);
+
+		machineHandlingRepository.addBookings(
+			detail.id,
+			internalBooked,
+			externalRows
+		);
+
 		showToast("success", t(localizationConstants.machineBookSaved));
 		router.push(detailUrl);
 	};
