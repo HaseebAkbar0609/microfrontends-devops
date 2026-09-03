@@ -22,12 +22,18 @@ export type SwedishVatRate = 25 | 12 | 6 | 0;
 
 export interface ExpenseLineItem {
 	id: string;
+	articleNo?: string;
 	description: string;
 	quantity: number;
 	unit: string;
 	unitPrice: number;
+	subtotal?: number;
+	handling?: string;
+	percent?: string;
+	adjustment?: number;
 	vatRate: SwedishVatRate;
 	accountNumber: string;
+	costCenter?: string;
 	total: number;
 }
 
@@ -47,9 +53,41 @@ export interface ExpenseTimeReportItem {
 	workedHours: number;
 	unit: string;
 	hourlyRate: number;
+	ataHours?: number;
+	sumTime?: number;
+	costCenter?: string;
 	total: number;
 	comments?: string;
 	included: boolean;
+}
+
+export interface ExpensePaymentPlanItem {
+	id: string;
+	invoiceNo: string;
+	date: string;
+	description: string;
+	debQuantity: number;
+	unit: string;
+	unitPrice: number;
+	withheld: number;
+	amount: number;
+	paid: number;
+	cost: number;
+}
+
+export interface ExpenseUnderlagItem {
+	id: string;
+	date: string;
+	supplier: string;
+	supplierInvoiceNo: string;
+	amount: number;
+	unit: string;
+	ataNo?: string;
+	markupPercent: number;
+	markupKr: number;
+	costCenter: string;
+	subtotal: number;
+	comments?: string;
 }
 
 export interface RegisterExpenseFormData {
@@ -134,6 +172,25 @@ export interface ExpenseItem {
 	attachments?: ExpenseAttachment[];
 	timeReportItems?: ExpenseTimeReportItem[];
 	timeline?: ExpenseTimelineEvent[];
+	invoiceTemplate?: string;
+	attachTimeReport?: boolean;
+	hasUnderlag?: boolean;
+	isCreditInvoice?: boolean;
+	contactPerson?: string;
+	projectSum?: number;
+	invoicedEarlier?: number;
+	invoiceInclThis?: number;
+	rotRut?: string;
+	paymentPlanTitle?: string;
+	pricingModel?: string;
+	comments?: string;
+	paymentPlanItems?: ExpensePaymentPlanItem[];
+	underlagItems?: ExpenseUnderlagItem[];
+	withheldAmount?: number;
+	markupAmount?: number;
+	rotRutAmount?: number;
+	toReceiveAmount?: number;
+	subtotal?: number;
 }
 
 export type ExpenseSortField =

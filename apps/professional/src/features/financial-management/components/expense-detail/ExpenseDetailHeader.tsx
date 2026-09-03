@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, Printer, CheckCircle, Check, Trash2, CreditCard } from "lucide-react";
+import { ArrowLeft, Printer, CheckCircle, Check, Trash2, CreditCard, FileText } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -16,6 +16,8 @@ interface ExpenseDetailHeaderProps {
 	onMarkAsPaid: () => void;
 	onDelete: () => void;
 	isSubmitting: boolean;
+	showDocumentView?: boolean;
+	onToggleDocumentView?: () => void;
 }
 
 export function ExpenseDetailHeader({
@@ -25,6 +27,8 @@ export function ExpenseDetailHeader({
 	onMarkAsPaid,
 	onDelete,
 	isSubmitting,
+	showDocumentView = false,
+	onToggleDocumentView,
 }: ExpenseDetailHeaderProps) {
 	const { t } = useTranslation();
 	const isApproved = expense.approvalStatus === "approved" || expense.status === "klar";
@@ -56,6 +60,26 @@ export function ExpenseDetailHeader({
 
 			{/* Right: Actions */}
 			<div className="flex items-center gap-2 flex-wrap">
+				{/* Document View Toggle */}
+				{onToggleDocumentView && (
+					<Button
+						type="button"
+						variant="outline"
+						size="sm"
+						onClick={onToggleDocumentView}
+						className="h-8 px-3 text-xs font-medium border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer gap-1.5"
+					>
+						<FileText className="h-3.5 w-3.5 text-slate-500" />
+						<span>
+							{showDocumentView ? (
+								<Translate text={localizationConstants.expenseDetailBackToTabs} />
+							) : (
+								<Translate text={localizationConstants.expenseDetailPrintDocumentView} />
+							)}
+						</span>
+					</Button>
+				)}
+
 				{/* Print Button */}
 				<Button
 					type="button"

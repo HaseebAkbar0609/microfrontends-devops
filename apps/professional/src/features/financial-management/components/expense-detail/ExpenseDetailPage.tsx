@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -15,17 +15,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { useExpenseDetail } from "../../hooks/useExpenseDetail";
 import { ExpenseDetailHeader } from "./ExpenseDetailHeader";
-import { ExpenseDetailGeneralInfoCard } from "./ExpenseDetailGeneralInfoCard";
+import { ExpenseDetailTabs, ExpenseDetailActiveTab } from "./ExpenseDetailTabs";
+import { ExpenseDetailOversiktTab } from "./ExpenseDetailOversiktTab";
+import { ExpenseDetailTidrapportTab } from "./ExpenseDetailTidrapportTab";
+import { ExpenseDetailUnderlagTab } from "./ExpenseDetailUnderlagTab";
 import { ExpenseDetailInvoiceCard } from "./ExpenseDetailInvoiceCard";
-import { ExpenseDetailTimeReportAccordion } from "./ExpenseDetailTimeReportAccordion";
-import { ExpenseDetailAttachmentsAccordion } from "./ExpenseDetailAttachmentsAccordion";
 import { ExpenseDetailTimeline } from "./ExpenseDetailTimeline";
+import { ExpenseDetailAttachmentsAccordion } from "./ExpenseDetailAttachmentsAccordion";
 
 interface ExpenseDetailPageProps {
 	expenseId: string;
 }
 
 export function ExpenseDetailPage({ expenseId }: ExpenseDetailPageProps) {
+	const [activeTab, setActiveTab] = useState<ExpenseDetailActiveTab>("oversikt");
+	const [showDocumentView, setShowDocumentView] = useState(false);
+
 	const {
 		expense,
 		isLoading,
@@ -76,9 +81,9 @@ export function ExpenseDetailPage({ expenseId }: ExpenseDetailPageProps) {
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
-			{/* Main Content Container */}
-			<div className="max-w-5xl mx-auto w-full px-6 py-6 flex flex-col gap-5">
-				{/* 1. Header with Actions */}
+			{/* Main Content Container matching Figma width and padding */}
+			<div className="max-w-6xl mx-auto w-full px-6 py-6 flex flex-col gap-4">
+				{/* 1. Header with Detaljer title and Actions */}
 				<ExpenseDetailHeader
 					expense={expense}
 					onPrint={handlePrint}
@@ -86,22 +91,33 @@ export function ExpenseDetailPage({ expenseId }: ExpenseDetailPageProps) {
 					onMarkAsPaid={() => setConfirmMarkPaidOpen(true)}
 					onDelete={() => setConfirmDeleteOpen(true)}
 					isSubmitting={isSubmitting}
+					showDocumentView={showDocumentView}
+					onToggleDocumentView={() => setShowDocumentView((prev) => !prev)}
 				/>
 
-				{/* 2. Timeline Status Bar */}
-				<ExpenseDetailTimeline expense={expense} />
+				{showDocumentView ? (
+					<div className="space-y-6">
+						<ExpenseDetailTimeline expense={expense} />
+						<ExpenseDetailInvoiceCard expense={expense} calculations={calculations} />
+						<ExpenseDetailAttachmentsAccordion expense={expense} />
+					</div>
+				) : (
+					<div>
+						{/* 2. Figma Tabs Navigation (Översikt | Tidrapport | Faktura underlag) */}
+						<ExpenseDetailTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
-				{/* 3. General Information Card */}
-				<ExpenseDetailGeneralInfoCard expense={expense} />
-
-				{/* 4. Invoice Card Document View */}
-				<ExpenseDetailInvoiceCard expense={expense} calculations={calculations} />
-
-				{/* 5. Collapsible Time Report Accordion */}
-				<ExpenseDetailTimeReportAccordion expense={expense} />
-
-				{/* 6. Collapsible Attachments Accordion */}
-				<ExpenseDetailAttachmentsAccordion expense={expense} />
+						{/* 3. Active Tab Content matching Figma */}
+						{activeTab === "oversikt" && (
+							<ExpenseDetailOversiktTab expense={expense} />
+						)}
+						{activeTab === "tidrapport" && (
+							<ExpenseDetailTidrapportTab expense={expense} />
+						)}
+						{activeTab === "underlag" && (
+							<ExpenseDetailUnderlagTab expense={expense} />
+						)}
+					</div>
+				)}
 			</div>
 
 			{/* Modal: Confirm Approve */}
