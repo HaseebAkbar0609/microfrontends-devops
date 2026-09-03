@@ -60,6 +60,7 @@ const personnelTaskSchema = (isSv: boolean) =>
 			"pink",
 			"light-purple",
 			"light-yellow",
+			"red",
 		]),
 		status: z.enum(["completed", "in_progress", "not_started", "waiting", "cancelled", "due"]),
 	});
