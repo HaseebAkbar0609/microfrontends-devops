@@ -90,15 +90,35 @@ export interface RegisterExpenseErrors {
 	general?: string;
 }
 
+export interface ExpenseTimelineEvent {
+	id: string;
+	titleKey: string;
+	date: string;
+	user?: string;
+	status: "completed" | "current" | "pending";
+}
+
 export interface ExpenseItem {
 	id: string;
 	expenseNo: string;
 	fakturaNo?: string;
 	supplier: string;
+	supplierOrgNo?: string;
+	supplierAddress?: string;
+	supplierPhone?: string;
+	supplierEmail?: string;
+	customerName?: string;
+	customerAddress?: string;
+	customerOrgNo?: string;
+	paymentTerms?: string;
+	reference?: string;
+	paymentDate?: string;
 	category: ExpenseCategory;
 	amount: number;
 	vatAmount: number;
 	status: ExpenseStatus;
+	approvalStatus?: "pending" | "approved" | "rejected";
+	approverName?: string;
 	date: string;
 	invoiceDate?: string;
 	dueDate: string;
@@ -112,6 +132,8 @@ export interface ExpenseItem {
 	isInboxItem?: boolean;
 	lineItems?: ExpenseLineItem[];
 	attachments?: ExpenseAttachment[];
+	timeReportItems?: ExpenseTimeReportItem[];
+	timeline?: ExpenseTimelineEvent[];
 }
 
 export type ExpenseSortField =

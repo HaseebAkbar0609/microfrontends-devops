@@ -82,6 +82,28 @@ export const expenseRepository = {
 	},
 
 	/**
+	 * Update generic fields of an expense
+	 */
+	async updateExpense(id: string, updates: Partial<ExpenseItem>): Promise<ExpenseItem | null> {
+		const index = inMemoryExpenses.findIndex((e) => e.id === id);
+		if (index === -1) return null;
+
+		const updated: ExpenseItem = {
+			...inMemoryExpenses[index],
+			...updates,
+		};
+
+		inMemoryExpenses = [
+			...inMemoryExpenses.slice(0, index),
+			updated,
+			...inMemoryExpenses.slice(index + 1),
+		];
+
+		notifyListeners();
+		return updated;
+	},
+
+	/**
 	 * Add a new expense record with async API contract
 	 */
 	async addExpense(expense: ExpenseItem): Promise<ExpenseItem> {

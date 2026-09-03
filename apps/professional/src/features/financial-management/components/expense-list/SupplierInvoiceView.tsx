@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -22,6 +23,7 @@ import { ExpenseToolbar } from "./ExpenseToolbar";
 import { ExpenseListTable } from "./ExpenseListTable";
 
 export function SupplierInvoiceView() {
+	const router = useRouter();
 	const [activeSubTab, setActiveSubTab] = useState<ExpenseActiveSubTab>("supplier_list");
 
 	const {
@@ -116,6 +118,7 @@ export function SupplierInvoiceView() {
 				onPageSizeChange={setPageSize}
 				totalPages={totalPages}
 				onPageChange={setCurrentPage}
+				onView={(item) => router.push(`/module/financial-management/economy/${item.id}`)}
 				onDelete={(id) => setConfirmDeleteId(id)}
 			/>
 
