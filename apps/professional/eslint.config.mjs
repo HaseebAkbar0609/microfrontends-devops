@@ -1,7 +1,16 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import { FlatCompat } from "@eslint/eslintrc";
+import { createRequire } from "node:module";
+import { dirname } from "node:path";
 
-const compat = new FlatCompat({ baseDirectory: import.meta.dirname });
+const require = createRequire(import.meta.url);
+const nextConfigDirectory = dirname(
+  require.resolve("eslint-config-next/package.json"),
+);
+const compat = new FlatCompat({
+  baseDirectory: import.meta.dirname,
+  resolvePluginsRelativeTo: nextConfigDirectory,
+});
 
 export default defineConfig([
   ...compat.extends("next/core-web-vitals", "next/typescript"),
