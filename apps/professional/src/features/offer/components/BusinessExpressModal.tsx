@@ -82,7 +82,7 @@ export function BusinessExpressModal({
               onOpenChange(false);
             }}
           >
-            <Check className="mr-2 h-4 w-4" />
+            <Check className="mr-1 h-4 w-4" />
             <Translate
               text={localizationConstants.businessExpressModalConfirm}
             />
@@ -101,11 +101,11 @@ export function BusinessExpressModal({
 
         <div className="mt-4 h-px w-full bg-slate-200" />
 
-        <label className="flex items-center gap-3 pt-4 text-sm text-slate-700">
+        <label className="flex items-center gap-3 pt-4 text-sm text-slate-700 cursor-pointer">
           <Checkbox
             checked={accepted}
             onCheckedChange={(v) => setAccepted(Boolean(v))}
-            className="border-black"
+            className="border-slate-400 data-[state=checked]:bg-black data-[state=checked]:border-black data-[state=checked]:text-white focus-visible:ring-black"
           />
           <span>
             <Translate

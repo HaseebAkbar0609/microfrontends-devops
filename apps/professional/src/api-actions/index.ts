@@ -70,3 +70,30 @@ export {
   type CategoriesPageResult,
   type GetCategoriesParams,
 } from "./common/common";
+
+export {
+  getB2BProjectsAction,
+  deleteB2BProjectAction,
+  type ListB2BProjectsParams,
+  type B2BProjectsListResult,
+} from "./b2b";
+
+export {
+  getB2BDashboardKpisAction,
+  type B2BDashboardKpis,
+} from "./b2b/b2b";
+
+export {
+  getProjectMarketListAction,
+  getProjectMarketDetailAction,
+} from "./b2b/projectMarket";
+
+export {
+  getB2BAgreementDetailAction,
+  createB2BAgreementAction,
+  sendB2BAgreementAction,
+  uploadB2BAgreementFileAction,
+  downloadB2BAgreementDocAction,
+  downloadB2BAgreementTemplatesAction,
+} from "./b2b/agreements";
+

@@ -12,6 +12,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
+import { useTranslation } from "react-i18next";
+import { Translate } from "@/utils/translation/translate";
+
 export interface FormTextareaProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
@@ -53,26 +56,31 @@ export function FormTextarea<
   messageClassName,
   textareaProps,
 }: FormTextareaProps<TFieldValues, TName>) {
+  const { t } = useTranslation();
+  const resolvedPlaceholder = placeholder != null ? t(placeholder) : undefined;
+  const resolvedLabel = typeof label === "string" ? <Translate text={label} /> : label;
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={cn("grid gap-0", className)}>
+        <FormItem className={cn("grid gap-1", className)}>
           {label && (
-            <FormLabel className={labelClassName}>{label}</FormLabel>
+            <FormLabel className={labelClassName}>{resolvedLabel}</FormLabel>
           )}
           <FormControl>
             <Textarea
-              placeholder={placeholder}
+              placeholder={resolvedPlaceholder}
               disabled={disabled}
               rows={rows}
               className={textareaClassName}
               {...field}
+              value={field.value ?? ""}
               {...textareaProps}
             />
           </FormControl>
-          <FormMessage className={messageClassName} />
+          <FormMessage className={messageClassName} translate={t} />
         </FormItem>
       )}
     />

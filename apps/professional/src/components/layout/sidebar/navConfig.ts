@@ -2,10 +2,16 @@ import localizationConstants from "@/utils/translation/constants";
 import {
 	Briefcase,
 	Building2,
+	FileText,
+	Folder,
 	Headset,
 	Heart,
+	Home,
+	Landmark,
 	Package2,
 	Pickaxe,
+	ShoppingCart,
+	Tag,
 	UserCog,
 	UserRound,
 	type LucideIcon,
@@ -46,7 +52,25 @@ export interface FlyoutSubSidebarConfig {
 	items: FlyoutSubSidebarItem[];
 }
 
+export const HIDDEN_SUBSIDEBAR_PATH_PREFIXES = [
+	"/module/business/offer",
+	"/module/business/b2b",
+	"/module/business/calculation",
+	"/module/business-support",
+	"/module/financial-management",
+	"/module/production/order",
+	"/module/production/project",
+	"/module/production/machine",
+];
+
 export const navConfig: NavGroup[] = [
+	{
+		id: "home",
+		label: localizationConstants.home,
+		icon: Home,
+		href: "/home",
+		items: [],
+	},
 	{
 		id: "favorites",
 		label: localizationConstants.favorites,
@@ -60,68 +84,84 @@ export const navConfig: NavGroup[] = [
 		defaultOpen: true,
 		items: [
 			{
+				id: "diary",
+				label: localizationConstants.diary,
+				href: "/tools/diary",
+			},
+			{
+				id: "time",
+				label: localizationConstants.timeItem,
+				href: "/tools/time",
+			},
+			{
 				id: "register",
 				label: localizationConstants.register,
 				href: "/tools/register",
 				flyoutItems: [
 					{
-						id: "employment",
-						label: localizationConstants.accountPlan,
-						href: "/tools/register/account-plan",
-						icon: Briefcase,
+						id: "kunder",
+						label: localizationConstants.registerKunder,
+						href: "/tools/register/customer",
+						icon: UserRound,
 					},
 					{
-						id: "costCentre",
-						label: localizationConstants.costCentre,
-						href: "/tools/register/cost-centre",
-						icon: Briefcase,
+						id: "leverantorer",
+						label: localizationConstants.registerLeverantorer,
+						href: "/tools/register/supplier",
+						icon: Building2,
 					},
 					{
-						id: "items",
-						label: localizationConstants.itemsLabel,
-						href: "/tools/register/items",
-						icon: Briefcase,
-					},
-					{
-						id: "accountPlan",
-						label: localizationConstants.wageTypes,
-						href: "/tools/register/wage-type",
-						icon: Briefcase,
-					},
-					{
-						id: "priceList",
-						label: localizationConstants.priceList,
-						href: "/tools/register/price-list",
-						icon: Briefcase,
-					},
-					{
-						id: "customerRegister",
-						label: localizationConstants.customerRegister,
-						href: "/tools/register/customer-register",
-						icon: Briefcase,
-					},
-					{
-						id: "supplierRegister",
-						label: localizationConstants.supplierRegister,
-						href: "/tools/register/supplier-register",
-						icon: Briefcase,
-					},
-					{
-						id: "quoteList",
-						label: localizationConstants.quoteList,
-						href: "/tools/register/quote-list",
-						icon: Briefcase,
-					},
-					{
-						id: "projectList",
+						id: "projekt",
 						label: localizationConstants.projectList,
 						href: "/tools/register/project-list",
-						icon: Briefcase,
+						icon: Folder,
 					},
 					{
-						id: "orderList",
+						id: "order",
 						label: localizationConstants.orderList,
 						href: "/tools/register/order-list",
+						icon: ShoppingCart,
+					},
+					{
+						id: "offerter",
+						label: localizationConstants.registerOfferter,
+						href: "/tools/register/quote-list",
+						icon: FileText,
+					},
+					{
+						id: "prislistor",
+						label: localizationConstants.registerPrislistor,
+						href: "/tools/register/price-list",
+						icon: Tag,
+					},
+					{
+						id: "artiklar",
+						label: localizationConstants.registerArtiklar,
+						href: "/tools/register/articles",
+						icon: Package2,
+					},
+					{
+						id: "kontoplan",
+						label: localizationConstants.accountPlan,
+						href: "/tools/register/account-plan",
+						icon: Landmark,
+					},
+					{
+						id: "kostnadsstallen",
+						label: localizationConstants.registerKostnadsstallen,
+						href: "/tools/register/cost-centre",
+						icon: Building2,
+					},
+					{
+						id: "budget",
+						label: localizationConstants.budgetOption,
+						href: "/tools/register/budget",
+						icon: Landmark,
+					},
+					{
+						id: "wageTypes",
+						label: localizationConstants.wageTypes,
+						href: "/tools/register/wage-type",
 						icon: Briefcase,
 					},
 				],
@@ -137,23 +177,16 @@ export const navConfig: NavGroup[] = [
 				href: "/tools/my-pages",
 				flyoutItems: [
 					{
-						id: "employment",
-						label: localizationConstants.employment,
-						href: "/tools/my-pages/employment",
-						icon: Briefcase,
-					},
-					{
 						id: "company",
 						label: localizationConstants.companyItem,
 						href: "/tools/my-pages/company",
 						icon: Building2,
 					},
-
 					{
-						id: "it-support",
-						label: localizationConstants.itSupport,
-						href: "/tools/my-pages/it-support",
-						icon: Headset,
+						id: "employment",
+						label: localizationConstants.employment,
+						href: "/tools/my-pages/employment",
+						icon: Briefcase,
 					},
 					{
 						id: "profile-settings",
@@ -161,17 +194,13 @@ export const navConfig: NavGroup[] = [
 						href: "/tools/my-pages/profile-settings",
 						icon: UserCog,
 					},
+					{
+						id: "it-support",
+						label: localizationConstants.itSupport,
+						href: "/tools/my-pages/it-support",
+						icon: Headset,
+					},
 				],
-			},
-			{
-				id: "diary",
-				label: localizationConstants.diary,
-				href: "/tools/diary",
-			},
-			{
-				id: "time",
-				label: localizationConstants.timeItem,
-				href: "/tools/time",
 			},
 		],
 	},
@@ -187,7 +216,7 @@ export const navConfig: NavGroup[] = [
 				flyoutItems: [
 					{
 						id: "offer",
-						label: localizationConstants.offer,
+						label: localizationConstants.offerList,
 						href: "/module/business/offer/dashboard",
 					},
 					{
@@ -208,14 +237,14 @@ export const navConfig: NavGroup[] = [
 				href: "/module/production",
 				flyoutItems: [
 					{
-						id: "order",
-						label: localizationConstants.order,
-						href: "/module/production/order",
-					},
-					{
 						id: "project",
 						label: localizationConstants.project,
 						href: "/module/production/project",
+					},
+					{
+						id: "order",
+						label: localizationConstants.order,
+						href: "/module/production/order",
 					},
 					{
 						id: "purchase",
@@ -223,14 +252,14 @@ export const navConfig: NavGroup[] = [
 						href: "/module/production/purchase",
 					},
 					{
-						id: "kma",
-						label: localizationConstants.kma,
-						href: "/module/production/kma",
-					},
-					{
 						id: "design",
 						label: localizationConstants.design,
 						href: "/module/production/design",
+					},
+					{
+						id: "kma",
+						label: localizationConstants.kma,
+						href: "/module/production/kma",
 					},
 					{
 						id: "material-storage",
@@ -243,7 +272,7 @@ export const navConfig: NavGroup[] = [
 						href: "/module/production/machine",
 					},
 					{
-						id: "machine",
+						id: "vehicle",
 						label: localizationConstants.vehicle,
 						href: "/module/production/vehicle",
 					},
@@ -260,9 +289,19 @@ export const navConfig: NavGroup[] = [
 				href: "/module/financial-management",
 				flyoutItems: [
 					{
+						id: "invoice",
+						label: localizationConstants.invoice,
+						href: "/module/financial-management/invoice",
+					},
+					{
 						id: "economy",
 						label: localizationConstants.economy,
 						href: "/module/financial-management/economy",
+					},
+					{
+						id: "forecast",
+						label: localizationConstants.forecast,
+						href: "/module/financial-management/forecast",
 					},
 					{
 						id: "personnel",
@@ -279,17 +318,6 @@ export const navConfig: NavGroup[] = [
 						label: localizationConstants.debtCollection,
 						href: "/module/financial-management/debt-collection",
 					},
-					{
-						id: "forecast",
-						label: localizationConstants.forecast,
-						href: "/module/financial-management/forecast",
-					},
-
-					{
-						id: "invoice",
-						label: localizationConstants.invoice,
-						href: "/module/financial-management/invoice",
-					},
 				],
 			},
 			{
@@ -298,20 +326,19 @@ export const navConfig: NavGroup[] = [
 				href: "/module/business-support",
 				flyoutItems: [
 					{
-						id: "templates",
-						label: localizationConstants.templates,
-						href: "/module/business-support/templates",
+						id: "managementSupport",
+						label: localizationConstants.managementSupport,
+						href: "/module/business-support/management-support",
 					},
-					{
-						id: "agreement",
-						label: localizationConstants.agreement,
-						href: "/module/business-support/agreement",
-					},
-
 					{
 						id: "marketingSales",
 						label: localizationConstants.marketingSales,
 						href: "/module/business-support/marketing-sales",
+					},
+					{
+						id: "agreement",
+						label: localizationConstants.agreement,
+						href: "/module/business-support/agreement/dashboard",
 					},
 					{
 						id: "dataIT",
@@ -319,9 +346,9 @@ export const navConfig: NavGroup[] = [
 						href: "/module/business-support/data-it",
 					},
 					{
-						id: "managementSupport",
-						label: localizationConstants.managementSupport,
-						href: "/module/business-support/management-support",
+						id: "templates",
+						label: localizationConstants.templates,
+						href: "/module/business-support/templates",
 					},
 				],
 			},
@@ -333,19 +360,14 @@ export const navConfig: NavGroup[] = [
 		icon: UserRound,
 		items: [
 			{
-				id: "admin-settings",
-				label: localizationConstants.admitSetting,
-				href: "/admin/settings",
+				id: "company-information",
+				label: localizationConstants.companyInformation,
+				href: "/admin/company-information",
 			},
 			{
-				id: "admin-intergration",
-				label: localizationConstants.adminIntegration,
-				href: "/admin/intergration",
-			},
-			{
-				id: "admin-subscription",
-				label: localizationConstants.adminSubscription,
-				href: "/admin/subscription",
+				id: "admin-user",
+				label: localizationConstants.adminUser,
+				href: "/admin/user",
 			},
 			{
 				id: "admin-licenses",
@@ -353,52 +375,25 @@ export const navConfig: NavGroup[] = [
 				href: "/admin/licenses",
 			},
 			{
+				id: "admin-subscription",
+				label: localizationConstants.adminSubscription,
+				href: "/admin/subscription",
+			},
+			{
+				id: "admin-integration",
+				label: localizationConstants.adminIntegration,
+				href: "/admin/integration",
+			},
+			{
+				id: "admin-settings",
+				label: localizationConstants.adminSetting,
+				href: "/admin/settings",
+			},
+			{
 				id: "admin-lead-economy",
 				label: localizationConstants.adminEconomy,
 				href: "/admin/economy",
 			},
-			{
-				id: "admin-user",
-				label: localizationConstants.adminUser,
-				href: "/admin/user",
-			},
-
-			{
-				id: "company-information",
-				label: localizationConstants.companyInformation,
-				href: "/admin/company-information",
-			},
 		],
 	},
 ];
-
-export function getFlyoutSubSidebarConfigByPath(
-	pathname: string,
-): FlyoutSubSidebarConfig | null {
-	for (const group of navConfig) {
-		for (const item of group.items) {
-			if (!item.flyoutItems?.length) continue;
-
-			const isParentMatch =
-				pathname === item.href || pathname.startsWith(`${item.href}/`);
-			const isFlyoutMatch = item.flyoutItems.some(
-				(flyoutItem) =>
-					pathname === flyoutItem.href ||
-					pathname.startsWith(`${flyoutItem.href}/`),
-			);
-
-			if (!isParentMatch && !isFlyoutMatch) continue;
-
-			return {
-				titleKey: item.label,
-				items: item.flyoutItems.map((flyoutItem) => ({
-					id: flyoutItem.id,
-					labelKey: flyoutItem.label,
-					href: flyoutItem.href,
-				})),
-			};
-		}
-	}
-
-	return null;
-}

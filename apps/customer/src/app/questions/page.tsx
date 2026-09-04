@@ -1,27 +1,7 @@
 "use client";
 
-import { PageHeader } from "@/components/layout/PageHeader";
-import { BreadcrumbItem } from "@/types/user";
-import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import QuestionsFeature from "@/features/questions/components/Index";
 
-const BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.questions },
-];
-
-export default function QuestionsPage() {
-	return (
-		<div className="flex flex-1 flex-col">
-			<PageHeader
-				title={localizationConstants.questions}
-				breadcrumbs={BREADCRUMBS}
-			/>
-			<div className="p-6">
-				<p className="text-slate-600">
-					<Translate text={localizationConstants.comingSoon} />
-				</p>
-			</div>
-		</div>
-	);
+export default function Page() {
+  return <QuestionsFeature />;
 }

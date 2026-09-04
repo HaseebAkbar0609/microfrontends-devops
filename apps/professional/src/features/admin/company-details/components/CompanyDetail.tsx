@@ -10,8 +10,13 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 import { ComingSoonTab } from "./ComingSoonTab";
+import { CompanyBankTab } from "./CompanyBankTab";
 import { CompanyInformationTab } from "./CompanyInformationTab";
 import { CompanyLogotypeTab } from "./CompanyLogotypeTab";
+import { CompanyPresentationTab } from "./CompanyPresentationTab";
+import { CompanyReferencesTab } from "./CompanyReferencesTab";
+import { CompanyLeadManagementTab } from "./CompanyLeadManagementTab";
+import { CompanyReviewsTab } from "./CompanyReviewsTab";
 import {
 	companyInformationSchema,
 	type CompanyInformationFormValues,
@@ -29,29 +34,62 @@ const tabs = [
 		label: localizationConstants.companyInformation,
 		isComingSoon: false,
 	},
-	{ value: "bank", label: localizationConstants.bank, isComingSoon: true },
-	{ value: "logotype", label: localizationConstants.logotype, isComingSoon: false },
+	{ value: "bank", label: localizationConstants.bank, isComingSoon: false },
+	{
+		value: "logotype",
+		label: localizationConstants.logotype,
+		isComingSoon: false,
+	},
 	{
 		value: "presentation",
 		label: localizationConstants.presentation,
-		isComingSoon: true,
+		isComingSoon: false,
 	},
 	{
 		value: "reference-list",
 		label: localizationConstants.referenceList,
-		isComingSoon: true,
+		isComingSoon: false,
 	},
-	{ value: "reviews", label: localizationConstants.reviews, isComingSoon: true },
+	{
+		value: "reviews",
+		label: localizationConstants.reviews,
+		isComingSoon: false,
+	},
 	{
 		value: "lead-management",
 		label: localizationConstants.leadManagement,
-		isComingSoon: true,
+		isComingSoon: false,
 	},
 ];
 
+const DEFAULT_TAB = "company";
+
+const tabFromHash = () => {
+	const hash = window.location.hash.replace("#", "");
+	return tabs.some((tab) => tab.value === hash) ? hash : DEFAULT_TAB;
+};
+
 export default function CompanyDetail() {
 	const lastSavedRef = useRef<CompanyInformationFormValues | null>(null);
-	const [activeTab, setActiveTab] = useState("company");
+	const [activeTab, setActiveTab] = useState(DEFAULT_TAB);
+
+	useEffect(() => {
+		setActiveTab(tabFromHash());
+		const onHashChange = () => setActiveTab(tabFromHash());
+		window.addEventListener("hashchange", onHashChange);
+		return () => window.removeEventListener("hashchange", onHashChange);
+	}, []);
+
+	const handleTabChange = (value: string) => {
+		setActiveTab(value);
+		window.history.replaceState(
+			null,
+			"",
+			value === DEFAULT_TAB
+				? window.location.pathname + window.location.search
+				: `#${value}`,
+		);
+	};
 
 	const form = useForm<CompanyInformationFormValues>({
 		resolver: zodResolver(companyInformationSchema),
@@ -66,7 +104,9 @@ export default function CompanyDetail() {
 	const onSubmit = async (data: CompanyInformationFormValues) => {
 		try {
 			await updateCompanyInformation.mutateAsync(data);
-			await queryClient.invalidateQueries({ queryKey: ["company-information"] });
+			await queryClient.invalidateQueries({
+				queryKey: ["company-information"],
+			});
 			lastSavedRef.current = data;
 			showToast("success", localizationConstants.profileUpdated);
 		} catch (_error) {
@@ -79,7 +119,8 @@ export default function CompanyDetail() {
 			return;
 		}
 
-		const incoming = companyInformationQuery.data as Partial<CompanyInformationFormValues>;
+		const incoming =
+			companyInformationQuery.data as Partial<CompanyInformationFormValues>;
 		const merged: CompanyInformationFormValues = {
 			...DEFAULT_VALUES,
 			...incoming,
@@ -105,7 +146,9 @@ export default function CompanyDetail() {
 		<div className="flex min-h-[calc(100vh-180px)] flex-col gap-6 px-6 py-6">
 			<div>
 				<h1 className="text-2xl font-semibold text-slate-900 mb-2">
-					<Translate text={localizationConstants.companyInformation} />
+					<Translate
+						text={localizationConstants.companyInformation}
+					/>
 				</h1>
 				<DynamicBreadcrumb
 					variant="small"
@@ -115,13 +158,18 @@ export default function CompanyDetail() {
 							href: "/admin",
 						},
 						{
-							translationKey: localizationConstants.companyInformation,
+							translationKey:
+								localizationConstants.companyInformation,
 						},
 					]}
 				/>
 			</div>
 
-			<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+			<Tabs
+				value={activeTab}
+				onValueChange={handleTabChange}
+				className="w-full"
+			>
 				<div className="border-b border-slate-200">
 					<TabsList
 						variant="line"
@@ -131,11 +179,7 @@ export default function CompanyDetail() {
 							<TabsTrigger
 								key={tab.value}
 								value={tab.value}
-								className={
-									tab.isComingSoon
-										? "px-0 text-slate-400  data-[state=active]:px-5 data-[state=active]:text-slate-900"
-										: "px-0 text-slate-600 data-[state=active]:px-5 data-[state=active]:text-slate-900"
-								}
+								className="px-0 text-slate-400 data-[state=active]:px-5 data-[state=active]:text-slate-900"
 							>
 								<Translate text={tab.label} />
 							</TabsTrigger>
@@ -145,7 +189,11 @@ export default function CompanyDetail() {
 
 				{tabs.map((tab) =>
 					tab.value === "company" ? (
-						<TabsContent key={tab.value} value={tab.value} className="mt-6">
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
 							<CompanyInformationTab
 								form={form}
 								onSubmit={onSubmit}
@@ -153,23 +201,68 @@ export default function CompanyDetail() {
 							/>
 						</TabsContent>
 					) : tab.value === "logotype" ? (
-						<TabsContent key={tab.value} value={tab.value} className="mt-6">
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
 							<CompanyLogotypeTab
 								form={form}
 								onSubmit={onSubmit}
 								lastSavedRef={lastSavedRef}
 							/>
 						</TabsContent>
+					) : tab.value === "bank" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyBankTab />
+						</TabsContent>
+					) : tab.value === "presentation" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyPresentationTab />
+						</TabsContent>
+					) : tab.value === "reference-list" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyReferencesTab />
+						</TabsContent>
+					) : tab.value === "reviews" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyReviewsTab />
+						</TabsContent>
+					) : tab.value === "lead-management" ? (
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
+							<CompanyLeadManagementTab />
+						</TabsContent>
 					) : (
-						<TabsContent key={tab.value} value={tab.value} className="mt-6">
+						<TabsContent
+							key={tab.value}
+							value={tab.value}
+							className="mt-6"
+						>
 							<ComingSoonTab />
 						</TabsContent>
-					)
+					),
 				)}
 			</Tabs>
-
-
-
 		</div>
 	);
 }

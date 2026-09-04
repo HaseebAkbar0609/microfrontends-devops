@@ -4,6 +4,7 @@ import { authStorage } from "@/lib/authStorage";
 import axiosInstance from "@/lib/axiosInstance";
 import { showToast } from "@/lib/toast";
 import { ActionResult, ApiError, ApiResponse } from "@/types/api";
+import { expenseRepository } from "@/features/financial-management/utils/expenseRepository";
 
 const LOGOUT_PATH = API_PATH.AUTH.LOGOUT;
 
@@ -50,6 +51,7 @@ export async function logoutAPIAction(
     }
 
     authStorage.clearSession();
+    expenseRepository.reset();
 
     showToast("success", authMessages.logout.success);
     return { success: true, data: apiData, error: null };
@@ -76,5 +78,6 @@ export async function logoutAPIAction(
     return { success: false, data: null, error: authMessages.logout.failed };
   } finally {
     authStorage.clearSession();
+    expenseRepository.reset();
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -31,9 +31,24 @@ export function SidebarNavGroup({
 				pathname === item.href || pathname.startsWith(item.href + "/"),
 		);
 
+	const activeSubItemId = useMemo(() => {
+		let bestId: string | null = null;
+		let bestLen = -1;
+		for (const item of group.items) {
+			const matches =
+				pathname === item.href || pathname.startsWith(item.href + "/");
+			if (matches && item.href.length > bestLen) {
+				bestId = item.id;
+				bestLen = item.href.length;
+			}
+		}
+		return bestId;
+	}, [group.items, pathname]);
+
 	const handleClick = () => {
 		if (collapsed) {
-			const targetHref = group.href || (hasItems ? group.items[0].href : null);
+			const targetHref =
+				group.href || (hasItems ? group.items[0].href : null);
 			if (targetHref) {
 				router.push(targetHref);
 			}
@@ -101,7 +116,11 @@ export function SidebarNavGroup({
 				<div className="flex flex-row self-stretch pl-5 pt-1.5 pb-1.5">
 					<div className="flex flex-1 flex-col gap-1.5 border-l border-gray-600 py-0.5 pl-2">
 						{group.items.map((item) => (
-							<SidebarSubItem key={item.id} item={item} />
+							<SidebarSubItem
+								key={item.id}
+								item={item}
+								isActive={item.id === activeSubItemId}
+							/>
 						))}
 					</div>
 				</div>

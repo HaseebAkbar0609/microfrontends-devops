@@ -1,6 +1,5 @@
-import ComingSoonPage from "@/components/common/ComingSoonPage";
-import localizationConstants from "@/utils/translation/constants";
+import CompanyDetail from "@/features/admin/company-details/components/CompanyDetail";
 
 export default function Page() {
-	return <ComingSoonPage titleKey={localizationConstants.companyItem} />;
+	return <CompanyDetail />;
 }

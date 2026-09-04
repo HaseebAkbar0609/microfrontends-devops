@@ -1,0 +1,126 @@
+import localizationConstants from "@/utils/translation/constants";
+import { ExpenseCategory, ExpenseStatus, ExpenseSortField } from "../types/expense.types";
+
+export const DEFAULT_ANNUAL_EXPENSE_BUDGET = 1500000; // 1.5 Mkr in SEK
+export const EXPENSE_DEFAULT_ATTEST_RESPONSIBLE = "-";
+export const EXPENSE_DEFAULT_PAGE_SIZE = 10;
+
+// Shared Tab Style Constants (Standard #1 - Zero Hardcoding)
+export const EXPENSE_TOP_TAB_ACTIVE_CLASS = "py-3 text-xs font-bold border-b-2 text-slate-900 border-slate-900 transition-colors cursor-pointer";
+export const EXPENSE_TOP_TAB_INACTIVE_CLASS = "py-3 text-xs font-medium border-b-2 text-slate-500 hover:text-slate-900 border-transparent transition-colors cursor-pointer";
+
+export const EXPENSE_SUB_TAB_CONTAINER_CLASS = "inline-flex items-center bg-[#F3F4F6] p-1 rounded-lg gap-1 border border-slate-200/60 shadow-2xs";
+export const EXPENSE_SUB_TAB_ACTIVE_CLASS = "px-4 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer bg-white text-slate-900 shadow-xs border border-slate-200/80";
+export const EXPENSE_SUB_TAB_INACTIVE_CLASS = "px-4 py-1.5 text-xs font-normal rounded-md transition-all cursor-pointer text-slate-600 hover:text-slate-900 hover:bg-white/40 border border-transparent";
+
+export const expenseBreadcrumbs = [
+	{ label: localizationConstants.home, href: "/" },
+	{ label: localizationConstants.module, href: "/module" },
+	{ label: localizationConstants.economy, href: "/module/financial-management/economy" },
+	{ label: localizationConstants.expenseOverviewTitle, href: "/module/financial-management/economy" },
+	{ label: localizationConstants.expenseTopTabSupplierInvoice, href: "/module/financial-management/economy" },
+];
+
+export const EXPENSE_CATEGORIES: { value: ExpenseCategory; labelKey: string }[] = [
+	{ value: "material", labelKey: localizationConstants.expenseCategoryMaterial },
+	{ value: "labor", labelKey: localizationConstants.expenseCategoryLabor },
+	{ value: "equipment", labelKey: localizationConstants.expenseCategoryEquipment },
+	{ value: "travel", labelKey: localizationConstants.expenseCategoryTravel },
+	{ value: "subcontractor", labelKey: localizationConstants.expenseCategorySubcontractor },
+	{ value: "other", labelKey: localizationConstants.expenseCategoryOther },
+];
+
+export const SWEDISH_VAT_RATES = [25, 12, 6, 0] as const;
+export const DEFAULT_VAT_RATE = 25;
+
+export const DEFAULT_EXPENSE_UNITS = [
+	{ value: "st", label: "st" },
+	{ value: "tim", label: "tim" },
+	{ value: "km", label: "km" },
+	{ value: "mån", label: "mån" },
+	{ value: "dagar", label: "dagar" },
+	{ value: "kg", label: "kg" },
+	{ value: "m", label: "m" },
+] as const;
+
+export const STANDARD_BAS_ACCOUNTS = [
+	{ code: "4010", name: "Inköp material och varor" },
+	{ code: "4011", name: "Inköp underentreprenader" },
+	{ code: "5010", name: "Lokalhyra" },
+	{ code: "5410", name: "Förbrukningsinventarier" },
+	{ code: "5610", name: "Personbilar och transportmedel" },
+	{ code: "5800", name: "Resekostnader" },
+	{ code: "6070", name: "Representation" },
+	{ code: "6540", name: "IT-tjänster och programvaror" },
+	{ code: "6990", name: "Övriga externa kostnader" },
+] as const;
+
+export const DEFAULT_SUPPLIERS_LIST = [
+	"Ahlsell Sverige AB",
+	"Biejer Byggmaterial AB",
+	"Bygg-Max AB",
+	"Cleaning Services AB",
+	"Cramo AB",
+	"Renta AB",
+	"Würth Svenska AB",
+	"Beijer Byggmaterial",
+	"Elektroskandia Sverige",
+];
+
+export const DEFAULT_PROJECTS_LIST = [
+	{ id: "PROJ-2025-001", name: "Projekt 2025-001 - Storgatan" },
+	{ id: "PROJ-2025-042", name: "PROJ-2025-042 - Kontorsstädning" },
+	{ id: "OR5001", name: "OR5001 - Ombyggnad badrum" },
+	{ id: "PROJ-2025-089", name: "PROJ-2025-089 - Fasader Renovering" },
+];
+
+export const DEFAULT_COST_CENTERS_LIST = [
+	{ id: "10", name: "10 - Ledning / Administration" },
+	{ id: "20", name: "20 - Produktion / Bygg" },
+	{ id: "30", name: "30 - Installation / El" },
+	{ id: "40", name: "40 - Fastighetsförvaltning" },
+];
+
+export const EXPENSE_LIST_ROUTE = "/module/financial-management/economy";
+export const CREATE_EXPENSE_ROUTE = "/module/financial-management/economy/create";
+
+export const registerExpenseBreadcrumbs = [
+	{ label: localizationConstants.home, href: "/" },
+	{ label: localizationConstants.module, href: "/module" },
+	{ label: localizationConstants.economy, href: EXPENSE_LIST_ROUTE },
+	{ label: localizationConstants.expenseOverviewTitle, href: EXPENSE_LIST_ROUTE },
+	{ label: localizationConstants.registerExpenseBreadcrumb, href: CREATE_EXPENSE_ROUTE },
+];
+
+export const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+export const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/jpg"];
+
+
+export const EXPENSE_STATUSES: { value: ExpenseStatus; labelKey: string }[] = [
+	{ value: "klar", labelKey: localizationConstants.expenseStatusKlar },
+	{ value: "ej_attesterad", labelKey: localizationConstants.expenseStatusEjAttesterad },
+	{ value: "reklamerad", labelKey: localizationConstants.expenseStatusReklamerad },
+	{ value: "aktiv", labelKey: localizationConstants.expenseStatusAktiv },
+	{ value: "ledig", labelKey: localizationConstants.expenseStatusLedig },
+	{ value: "ej_paborjad", labelKey: localizationConstants.expenseStatusEjPaborjad },
+	{ value: "pending", labelKey: localizationConstants.expenseStatusPending },
+	{ value: "approved", labelKey: localizationConstants.expenseStatusApproved },
+	{ value: "paid", labelKey: localizationConstants.expenseStatusPaid },
+	{ value: "rejected", labelKey: localizationConstants.expenseStatusRejected },
+];
+
+export const EXPENSE_TABLE_COLUMNS: {
+	field: ExpenseSortField;
+	labelKey: string;
+	align?: "left" | "right" | "center";
+}[] = [
+	{ field: "date", labelKey: localizationConstants.expenseColDate },
+	{ field: "fakturaNo", labelKey: localizationConstants.expenseColInvoiceNo },
+	{ field: "supplier", labelKey: localizationConstants.expenseColSupplier },
+	{ field: "project", labelKey: localizationConstants.expenseColObject },
+	{ field: "amount", labelKey: localizationConstants.expenseColAmount, align: "right" },
+	{ field: "invoiceDate", labelKey: localizationConstants.expenseColInvoiceDate },
+	{ field: "dueDate", labelKey: localizationConstants.expenseColDueDate },
+	{ field: "attestResponsible", labelKey: localizationConstants.expenseColAttestResponsible },
+	{ field: "status", labelKey: localizationConstants.expenseColStatus },
+];

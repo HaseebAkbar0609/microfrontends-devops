@@ -6,7 +6,7 @@ import { useState } from "react";
 import Button from "../button";
 import { HeroFormProps } from "./HeroForm.types";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/router";
 
 const HeroForm: React.FC<HeroFormProps> = ({
   title,
@@ -15,7 +15,7 @@ const HeroForm: React.FC<HeroFormProps> = ({
   buttonLink,
 }) => {
   const [formData, setFormData] = useState({ email: "", mobilePhone: "" });
-  const pathname = usePathname() || "";
+  const { pathname } = useRouter();
 
   // Check which section user is in
   const isProfessional = pathname.includes("/professional");
@@ -35,7 +35,7 @@ const HeroForm: React.FC<HeroFormProps> = ({
         if (formData.mobilePhone)
           url.searchParams.set("phone", formData.mobilePhone);
         window.location.href = url.toString();
-      } catch (error) {
+      } catch {
         console.error("Invalid URL:", buttonLink);
         // Fallback or just go to the link if it's relative (though likely it's absolute here)
         window.location.href = buttonLink;

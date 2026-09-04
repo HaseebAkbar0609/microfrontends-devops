@@ -1,298 +1,186 @@
-import Select from "@/components/home/select";
 import { GetStaticProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
-import { useState } from "react";
-
-interface CountryOption {
-  label: string;
-  value: string;
-  icon: string;
-}
+import { useTranslation } from "react-i18next";
+import { Nav } from "@/components/site/Nav";
+import { Footer } from "@/components/site/Footer";
+import { FAQ } from "@/components/site/FAQ";
 
 export default function Home() {
-  const [hoverButton, setHoverButton] = useState("");
-
-  const [selectedRegion, setSelectedRegion] = useState<string | number>(
-    "Northern Europe"
-  );
-  const [selectedCountry, setSelectedCountry] = useState<string | number>(
-    "Sweden"
-  );
-
-  const regionOptions = [
-    { value: "Northern Europe", label: "Northern Europe" },
-    { value: "Western Europe", label: "Western Europe" },
-    { value: "Southern Europe", label: "Southern Europe" },
-    { value: "Eastern Europe", label: "Eastern Europe" },
-    { value: "Americas", label: "Americas" },
-    { value: "Asia", label: "Asia" },
-    { value: "Oceania", label: "Oceania" },
-  ];
-
-  const countryOptions: Record<string | number, CountryOption[]> = {
-    "Northern Europe": [
-      {
-        label: "Sweden",
-        value: "Sweden",
-        icon: "https://flagcdn.com/se.svg",
-      },
-      {
-        label: "Norway",
-        value: "Norway",
-        icon: "https://flagcdn.com/no.svg",
-      },
-      {
-        label: "Denmark",
-        value: "Denmark",
-        icon: "https://flagcdn.com/dk.svg",
-      },
-      {
-        label: "Finland",
-        value: "Finland",
-        icon: "https://flagcdn.com/fi.svg",
-      },
-      {
-        label: "Estonia",
-        value: "Estonia",
-        icon: "https://flagcdn.com/ee.svg",
-      },
-    ],
-    "Western Europe": [
-      {
-        label: "Germany",
-        value: "Germany",
-        icon: "https://flagcdn.com/de.svg",
-      },
-      {
-        label: "England",
-        value: "England",
-        icon: "https://flagcdn.com/gb.svg",
-      },
-      {
-        label: "France",
-        value: "France",
-        icon: "https://flagcdn.com/fr.svg",
-      },
-      {
-        label: "Switzerland",
-        value: "Switzerland",
-        icon: "https://flagcdn.com/ch.svg",
-      },
-      {
-        label: "Austria",
-        value: "Austria",
-        icon: "https://flagcdn.com/at.svg",
-      },
-      {
-        label: "Ireland",
-        value: "Ireland",
-        icon: "https://flagcdn.com/ie.svg",
-      },
-      {
-        label: "Belgium",
-        value: "Belgium",
-        icon: "https://flagcdn.com/be.svg",
-      },
-      {
-        label: "Netherlands",
-        value: "Netherlands",
-        icon: "https://flagcdn.com/nl.svg",
-      },
-    ],
-    "Southern Europe": [
-      {
-        label: "Italy",
-        value: "Italy",
-        icon: "https://flagcdn.com/it.svg",
-      },
-      {
-        label: "Greece",
-        value: "Greece",
-        icon: "https://flagcdn.com/gr.svg",
-      },
-      {
-        label: "Spain",
-        value: "Spain",
-        icon: "https://flagcdn.com/es.svg",
-      },
-      {
-        label: "Portugal",
-        value: "Portugal",
-        icon: "https://flagcdn.com/pt.svg",
-      },
-    ],
-    "Eastern Europe": [
-      {
-        label: "Poland",
-        value: "Poland",
-        icon: "https://flagcdn.com/pl.svg",
-      },
-      {
-        label: "Czech Republic",
-        value: "Czech Republic",
-        icon: "https://flagcdn.com/cz.svg",
-      },
-      {
-        label: "Latvia",
-        value: "Latvia",
-        icon: "https://flagcdn.com/lv.svg",
-      },
-      {
-        label: "Lithuania",
-        value: "Lithuania",
-        icon: "https://flagcdn.com/lt.svg",
-      },
-    ],
-    Americas: [
-      {
-        label: "USA",
-        value: "USA",
-        icon: "https://flagcdn.com/us.svg",
-      },
-      {
-        label: "Canada",
-        value: "Canada",
-        icon: "https://flagcdn.com/ca.svg",
-      },
-    ],
-    Asia: [
-      {
-        label: "India",
-        value: "India",
-        icon: "https://flagcdn.com/in.svg",
-      },
-      {
-        label: "Singapore",
-        value: "Singapore",
-        icon: "https://flagcdn.com/sg.svg",
-      },
-      {
-        label: "South Korea",
-        value: "South Korea",
-        icon: "https://flagcdn.com/kr.svg",
-      },
-    ],
-    Oceania: [
-      {
-        label: "New Zealand",
-        value: "New Zealand",
-        icon: "https://flagcdn.com/nz.svg",
-      },
-      {
-        label: "Australia",
-        value: "Australia",
-        icon: "https://flagcdn.com/au.svg",
-      },
-    ],
-  };
-
-  const handleRegionChange = (region: string | number) => {
-    setSelectedRegion(region);
-    setSelectedCountry(countryOptions[region][0].value);
-  };
-
-  const handleCountryChange = (country: string | number) => {
-    setSelectedCountry(country);
-  };
+  const { t } = useTranslation();
 
   return (
     <>
       <Head>
-        <title>TimeFlowSystem</title>
-        <meta name="description" content="landing page" />
+        <title>{t("seo.homeTitle")}</title>
+        <meta name="description" content={t("seo.homeDesc")} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content={t("seo.homeOgTitle")} />
+        <meta property="og:description" content={t("seo.homeOgDesc")} />
       </Head>
-      <div className="w-screen h-screen relative flex">
-        <div
-          className={`${
-            hoverButton === "professional"
-              ? "flex-[2]"
-              : hoverButton === "consumer"
-              ? "flex-0"
-              : "flex-1"
-          } overflow-hidden transition-all duration-700 ease-in-out`}
-        >
-          <img
-            className="w-full h-full object-cover pointer-events-none"
-            src="/images/landing_left.png"
-            alt="landing_left.png"
-          />
-        </div>
-        <div
-          className={`${
-            hoverButton === "consumer"
-              ? "flex-[2]"
-              : hoverButton === "professional"
-              ? "flex-0"
-              : "flex-1"
-          } overflow-hidden transition-all duration-700 ease-in-out`}
-        >
-          <img
-            className="w-full h-full object-cover pointer-events-none"
-            src="/images/landing_right.png"
-            alt="landing_right.png"
-          />
-        </div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#FF6600] p-4 lg:p-6 rounded-lg w-4/5 sm:w-3/5 lg:w-[48%]">
-          <div className="flex flex-col md:flex-row gap-4 justify-between">
-            <div>
-              <div className="bg-white rounded-2xl py-2 px-3 lg:py-4 lg:px-5">
-                <Link href={"/"}>
-                  <img
-                    className="w-50 h-auto"
-                    src="/images/logo.png"
-                    alt="logo.png"
-                  />
-                </Link>
-              </div>
-            </div>
-            <div className="flex flex-col min-w-45">
-              <Select
-                options={regionOptions}
-                onChange={handleRegionChange}
-                value={selectedRegion}
-              />
 
-              <Select
-                className="mt-3"
-                options={countryOptions[selectedRegion]}
-                onChange={handleCountryChange}
-                value={selectedCountry}
-              />
+      <div className="min-h-screen bg-background text-foreground font-body">
+        <Nav />
+
+        {/* Hero */}
+        <header className="pt-20 pb-16 px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="font-display text-5xl md:text-7xl font-extrabold tracking-tight text-balance mb-8 mt-6 animate-fade-up [animation-delay:100ms]">
+              {t("home.heroTitle1")}{" "}
+              <span className="text-primary italic">{t("home.heroTitle2")}</span>
+            </h1>
+            <p className="text-xl text-muted max-w-3xl mx-auto text-pretty mb-4 animate-fade-up [animation-delay:200ms]">
+              {t("home.heroSub")}
+            </p>
+            <p className="text-sm text-muted/80 max-w-xl mx-auto mb-10 animate-fade-up [animation-delay:250ms]">
+              {t("home.heroBranches")}
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-up [animation-delay:300ms]">
+              <Link
+                href="/professional"
+                className="w-full sm:w-auto px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm text-lg hover:shadow-lg hover:shadow-primary/20 transition-all text-center"
+              >
+                {t("home.ctaPro")}
+              </Link>
+              <Link
+                href="/consumer"
+                className="w-full sm:w-auto px-8 py-4 bg-background border border-border font-bold rounded-sm text-lg hover:bg-surface transition-all text-center"
+              >
+                {t("home.ctaConsumer")}
+              </Link>
             </div>
           </div>
+        </header>
 
-          <div className="mt-4 text-white">
-            <h1 className="font-[600] text-3xl">Hej hur kan vi</h1>
-            <h1 className="font-[600] text-3xl">hjälpa dig?</h1>
-            <div className="w-full h-[1px] bg-white my-8"></div>
+        {/* Stats */}
+        <section className="grid grid-cols-2 md:grid-cols-4 border-y border-border">
+          {[
+            { v: t("home.stat1V"), l: t("home.stat1L") },
+            { v: t("home.stat2V"), l: t("home.stat2L") },
+            { v: t("home.stat3V"), l: t("home.stat3L") },
+            { v: t("home.stat4V"), l: t("home.stat4L") },
+          ].map((s) => (
+            <div key={s.l} className="p-8 border-r border-border last:border-r-0">
+              <div className="font-display text-3xl md:text-4xl font-extrabold tracking-tight">{s.v}</div>
+              <p className="text-xs text-muted uppercase tracking-widest mt-2">{s.l}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* Feature Grid — Plattformen */}
+        <section className="py-24 px-6 border-b border-border">
+          <div className="max-w-7xl mx-auto">
+            <div className="mb-16 max-w-2xl">
+              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">
+                {t("home.platformLabel")}
+              </p>
+              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight">
+                {t("home.platformTitle1")}{" "}
+                <span className="text-primary italic">{t("home.platformTitle2")}</span>
+              </h2>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {[
+                {
+                  num: "01",
+                  title: t("home.feat1Title"),
+                  body: t("home.feat1Body"),
+                },
+                {
+                  num: "02",
+                  title: t("home.feat2Title"),
+                  body: t("home.feat2Body"),
+                },
+                {
+                  num: "03",
+                  title: t("home.feat3Title"),
+                  body: t("home.feat3Body"),
+                },
+              ].map((f) => (
+                <div
+                  key={f.num}
+                  className="p-8 border border-border hover:border-primary/30 transition-colors bg-background"
+                >
+                  <div className="font-mono text-xs text-primary mb-4">{f.num}</div>
+                  <h3 className="font-display text-2xl font-bold mb-4">{f.title}</h3>
+                  <p className="text-muted">{f.body}</p>
+                </div>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 lg:gap-12">
-            <Link href="/professional">
-              <button
-                className="inline-block bg-[#545454] text-white cursor-pointer py-2 px-3 sm:py-4 sm:px-6 rounded-lg font-bold text-base transition-all duration-200 ease-in-out opacity-90 hover:opacity-100"
-                onMouseEnter={() => setHoverButton("professional")}
-                onMouseLeave={() => setHoverButton("")}
-              >
-                Professionell
-              </button>
+        {/* Audience Split */}
+        <section className="grid md:grid-cols-2 min-h-[500px] border-b border-border">
+          <Link
+            href="/professional"
+            className="relative p-12 md:p-20 flex flex-col justify-center bg-ink text-white group overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="relative z-10">
+              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">
+                {t("home.forCompany")}
+              </p>
+              <h2 className="font-display text-4xl font-bold mb-6">
+                {t("home.runBusiness")}
+              </h2>
+              <p className="text-stone-400 text-lg mb-8 max-w-md">
+                {t("home.runBusinessDesc")}
+              </p>
+              <span className="font-bold text-primary group-hover:translate-x-1 inline-block transition-transform">
+                {t("home.seePro")}
+              </span>
+            </div>
+          </Link>
+          <Link
+            href="/consumer"
+            className="relative p-12 md:p-20 flex flex-col justify-center bg-background group"
+          >
+            <div className="relative z-10">
+              <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">
+                {t("home.forPrivate")}
+              </p>
+              <h2 className="font-display text-4xl font-bold mb-6">
+                {t("home.hireHelp")}
+              </h2>
+              <p className="text-muted text-lg mb-8 max-w-md">
+                {t("home.hireHelpDesc")}
+              </p>
+              <span className="font-bold text-foreground group-hover:translate-x-1 inline-block transition-transform">
+                {t("home.seeConsumer")}
+              </span>
+            </div>
+          </Link>
+        </section>
+
+        {/* CTA */}
+        <section className="py-24 px-6 bg-surface text-center">
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+            {t("home.ctaTitle1")}{" "}
+            <span className="text-primary italic">{t("home.ctaTitle2")}</span>
+          </h2>
+          <p className="text-muted text-lg mb-10 max-w-2xl mx-auto">
+            {t("home.ctaSub")}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link href="/pricing" className="px-8 py-4 bg-primary text-primary-foreground font-bold rounded-sm">
+              {t("home.ctaPricing")}
             </Link>
-
-            <p>eller</p>
-
-            <Link href="/consumer">
-              <button
-                className="inline-block bg-[#e9e9e9] text-[#f58220] cursor-pointer py-2 px-3 sm:py-4 sm:px-6 rounded-lg font-bold text-base transition-all duration-200 ease-in-out opacity-90 hover:opacity-100"
-                onMouseEnter={() => setHoverButton("consumer")}
-                onMouseLeave={() => setHoverButton("")}
-              >
-                Konsument
-              </button>
+            <Link href="/professional/book_a_demo" className="px-8 py-4 border border-border bg-background font-bold rounded-sm hover:bg-surface transition-colors">
+              {t("home.ctaDemo")}
             </Link>
           </div>
-        </div>
+        </section>
+
+        {/* FAQ */}
+        <section className="py-24 px-6 max-w-4xl mx-auto border-t border-border">
+          <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 tracking-tight">
+            {t("home.faqTitle")}
+          </h2>
+          <FAQ />
+        </section>
+
+        <Footer />
       </div>
     </>
   );
@@ -300,8 +188,6 @@ export default function Home() {
 
 export const getStaticProps: GetStaticProps = async () => {
   return {
-    props: {
-      hasHeader: false,
-    },
+    props: { hasHeader: false },
   };
 };

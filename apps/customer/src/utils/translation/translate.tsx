@@ -3,9 +3,9 @@
 import { useTranslation } from "react-i18next";
 
 
-export function useTranslate(): (key: string) => string {
+export function useTranslate(): (key: string, options?: Record<string, unknown>) => string {
   const { t } = useTranslation();
-  return t;
+  return t as (key: string, options?: Record<string, unknown>) => string;
 }
 
 export const Translate: React.FC<{ text: string }> = ({ text }) => {

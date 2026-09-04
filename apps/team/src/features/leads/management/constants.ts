@@ -7,6 +7,7 @@ export const leadTabs = [
   { value: "accepterad", labelKey: localizationConstants.acceptedTab },
   { value: "betalda", labelKey: localizationConstants.paidTab },
   { value: "arkiv", labelKey: localizationConstants.archiveTab },
+  { value: "settings", labelKey: localizationConstants.settings },
 ] as const;
 
 export const filterOptions = ["all", "B2C", "B2B", "Express", "Hyra IN", "Hyra UT"] as const;
@@ -14,7 +15,7 @@ export const filterOptions = ["all", "B2C", "B2B", "Express", "Hyra IN", "Hyra U
 export const leadDetailTabs = [
   { value: "overview", labelKey: localizationConstants.overviewTab },
   { value: "request", labelKey: localizationConstants.requestTab },
-  { value: "activity", labelKey: localizationConstants.activityTab },
+  { value: "quote-list", labelKey: localizationConstants.quoteListTab },
   { value: "notes", labelKey: localizationConstants.notesTab },
 ] as const;
 

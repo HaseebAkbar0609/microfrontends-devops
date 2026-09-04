@@ -1,6 +1,7 @@
 import {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useState,
@@ -18,24 +19,24 @@ export const WebinarProvider: React.FC<{ children: ReactNode }> = ({
     {}
   );
 
-  useEffect(() => {
-    fetchWebinars();
-  }, []);
-
-  const fetchWebinars = async () => {
+  const fetchWebinars = useCallback(async () => {
     try {
       const response = await request.get("/webinars");
 
-      if (response.success) {
+      if (response.success && response.data?.webinars) {
         const groupedWebinars = groupWebinarsByMonth(response.data.webinars);
         setWebinars(groupedWebinars);
       }
     } catch (error) {
-      throw error;
+      console.error("Failed to fetch webinars:", error);
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchWebinars();
+  }, [fetchWebinars]);
 
   const groupWebinarsByMonth = (webinars: WebinarStateType[]) => {
     const grouped: Record<string, WebinarStateType[]> = {};

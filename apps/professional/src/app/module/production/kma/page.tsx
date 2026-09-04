@@ -1,14 +1,23 @@
+import { ModulePageHeader } from "@/components/layout/navigation";
+import KmaDashboard from "@/features/kma/components/KmaDashboard";
+import {
+	KMA_MODULE_TABS,
+	KMA_MODULE_TITLE,
+	kmaBreadcrumbs,
+} from "@/features/kma/data/kmaNav.config";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-export default function Page() {
+
+export default function KmaDashboardPage() {
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold">
-				<Translate text={localizationConstants.kma} />
-			</h1>
-			<p className="mt-2 text-sm text-slate-600">
-				<Translate text={localizationConstants.comingSoon} />{" "}
-			</p>
+		<div className="flex flex-1 flex-col bg-blue-gray-50">
+			<ModulePageHeader
+				title={KMA_MODULE_TITLE}
+				tabs={KMA_MODULE_TABS}
+				breadcrumbs={kmaBreadcrumbs(localizationConstants.kmaDashboardTitle)}
+			/>
+			<div className="p-5 flex-1">
+				<KmaDashboard />
+			</div>
 		</div>
 	);
 }

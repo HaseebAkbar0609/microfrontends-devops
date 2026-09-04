@@ -1,5 +1,4 @@
 import {
-  ProfessionalConsultant_ArchitectHero,
   ProfessionalConsultant_ArchitectContent,
 } from "@/components/professional/Consultant_Architect";
 import { NextPage } from "next";

@@ -1,16 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { CircleUserRound, PencilLine } from "lucide-react";
+import { PencilLine } from "lucide-react";
 import type { LeadRow } from "@/features/leads/types";
 import {
 	leadDetailCategoryOptions,
 	leadDetailRegionOptions,
 } from "@/features/leads/management/constants";
 import TagSelector from "@/features/leads/management/components/TagSelector";
+import { useUpdateLeadDetails } from "@/features/leads/queries/useUpdateLeadDetails";
+import { showToast } from "@/lib/toast";
 
 type LeadOverviewTabProps = {
 	lead: LeadRow;
@@ -18,10 +21,13 @@ type LeadOverviewTabProps = {
 };
 
 type DetailCardProps = {
-	icon: typeof CircleUserRound;
 	titleKey: string;
 	items: Array<{ labelKey: string; value: string }>;
 };
+
+function OverviewIcon() {
+	return <Image src="/assets/icons/personal-info.svg" alt="" width={24} height={24} />;
+}
 
 export default function LeadOverviewTab({
 	lead,
@@ -39,6 +45,7 @@ export default function LeadOverviewTab({
 		lead.category,
 	]);
 	const [draftRegions, setDraftRegions] = useState<string[]>([lead.city]);
+	const { mutate: updateLeadDetails, isPending } = useUpdateLeadDetails();
 
 	const beginEditingSummary = () => {
 		setDraftCategories(selectedCategories);
@@ -55,17 +62,33 @@ export default function LeadOverviewTab({
 	};
 
 	const saveSummaryChanges = () => {
-		setSelectedCategories(draftCategories);
-		setSelectedRegions(draftRegions);
-		setIsEditingSummary(false);
-		setIsCategoryOpen(false);
-		setIsRegionOpen(false);
+		updateLeadDetails(
+			{
+				leadId: lead.id,
+				payload: {
+					categories: draftCategories,
+					regions: draftRegions,
+				},
+			},
+			{
+				onSuccess: () => {
+					setSelectedCategories(draftCategories);
+					setSelectedRegions(draftRegions);
+					setIsEditingSummary(false);
+					setIsCategoryOpen(false);
+					setIsRegionOpen(false);
+					showToast("success", "Success");
+				},
+				onError: () => {
+					showToast("error", t(localizationConstants.serverError));
+				},
+			},
+		);
 	};
 
 	return (
 		<div className="grid gap-4 xl:grid-cols-2 mb-10">
 			<DetailCard
-				icon={CircleUserRound}
 				titleKey={localizationConstants.leadInformation}
 				items={[
 					{ labelKey: localizationConstants.leadIdLabel, value: lead.leadId },
@@ -76,7 +99,6 @@ export default function LeadOverviewTab({
 			/>
 
 			<DetailCard
-				icon={CircleUserRound}
 				titleKey={localizationConstants.customerInformation}
 				items={[
 					{ labelKey: localizationConstants.nameLabel, value: lead.customer },
@@ -90,7 +112,7 @@ export default function LeadOverviewTab({
 				<div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
 					<div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
 						<div className="flex items-center gap-3">
-							<CircleUserRound className="size-7 text-slate-700" />
+							<OverviewIcon />
 							<div className="text-sm font-semibold text-slate-900">
 								<Translate text={localizationConstants.requestSummary} />
 							</div>
@@ -100,7 +122,7 @@ export default function LeadOverviewTab({
 								<>
 									<Button
 										type="button"
-										className="cursor-pointer ç h-8"
+										className="cursor-pointer h-8"
 										variant="outline"
 										onClick={cancelEditingSummary}
 									>
@@ -110,8 +132,9 @@ export default function LeadOverviewTab({
 										type="button"
 										className="cursor-pointer bg-black h-8 text-sm hover:bg-slate-700"
 										onClick={saveSummaryChanges}
+										disabled={isPending}
 									>
-										<Translate text={localizationConstants.save} />
+										{isPending ? "..." : <Translate text={localizationConstants.save} />}
 									</Button>
 								</>
 							) : (
@@ -186,11 +209,11 @@ export default function LeadOverviewTab({
 	);
 }
 
-function DetailCard({ icon: Icon, titleKey, items }: DetailCardProps) {
+function DetailCard({ titleKey, items }: DetailCardProps) {
 	return (
 		<div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
 			<div className="flex items-center gap-3 border-b border-slate-200 px-5 py-4">
-				<Icon className="size-7 text-slate-700" />
+				<OverviewIcon />
 				<div className="text-sm font-semibold text-slate-900">
 					<Translate text={titleKey} />
 				</div>

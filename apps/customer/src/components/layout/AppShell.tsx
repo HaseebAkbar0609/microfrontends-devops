@@ -28,7 +28,8 @@ export function AppShell({ children }: AppShellProps) {
 
 		if (isAuthPage) {
 			if (isAuthenticated) {
-				router.replace("/home");
+				// Navigation handled by LoginForm (router.push) + middleware server-side.
+				// Calling router.replace here competed with LoginForm's navigation and caused a hang.
 			} else {
 				setIsCheckingAuth(false);
 			}
@@ -64,7 +65,7 @@ export function AppShell({ children }: AppShellProps) {
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
 				<main
-					className={`flex flex-1 flex-col bg-slate-50 ${isMyPages ? "overflow-hidden" : "overflow-auto"}`}
+					className={`flex flex-1 flex-col bg-white ${isMyPages ? "overflow-hidden" : "overflow-auto"}`}
 				>
 					{children}
 				</main>

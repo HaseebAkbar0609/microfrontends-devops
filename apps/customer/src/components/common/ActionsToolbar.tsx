@@ -50,7 +50,6 @@ function FilterDropdown({ filter }: FilterDropdownProps) {
 						</span>
 					</div>
 					<div className="flex items-center gap-1">
-						
 						<ChevronDown className="h-4 w-4 shrink-0 opacity-50" />
 					</div>
 				</Button>
@@ -96,6 +95,9 @@ interface ActionsToolbarProps {
 	onCreateClick?: () => void;
 	createButtonLabel?: string;
 	className?: string;
+	showSearch?: boolean;
+	showFilters?: boolean;
+	actions?: React.ReactNode;
 }
 
 export function ActionsToolbar({
@@ -106,6 +108,9 @@ export function ActionsToolbar({
 	onCreateClick,
 	createButtonLabel = localizationConstants.createNewButtonText,
 	className,
+	showSearch = true,
+	showFilters = true,
+	actions,
 }: ActionsToolbarProps) {
 	return (
 		<div
@@ -115,25 +120,33 @@ export function ActionsToolbar({
 			)}
 		>
 			<div className="flex items-center gap-3 flex-1 max-w-2xl">
-				<Search
-					value={searchValue}
-					onChange={onSearchChange}
-					placeholder={searchPlaceholder}
-					className="h-10 w-full max-w-[300px]"
-				/>
-				{filters?.map((filter, index) => (
-					<FilterDropdown key={index} filter={filter} />
-				))}
+				{showSearch && (
+					<Search
+						value={searchValue}
+						onChange={onSearchChange}
+						placeholder={searchPlaceholder}
+						className="h-10 w-full max-w-[300px]"
+					/>
+				)}
+				{showFilters &&
+					filters?.map((filter, index) => (
+						<FilterDropdown key={index} filter={filter} />
+					))}
 			</div>
 
-			{onCreateClick && (
-				<Button
-					onClick={onCreateClick}
-					className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md transition-colors"
-				>
-					<Plus className="h-4 w-4" />
-					<Translate text={createButtonLabel} />
-				</Button>
+			{(onCreateClick || actions) && (
+				<div className="flex items-center gap-3">
+					{onCreateClick && (
+						<Button
+							onClick={onCreateClick}
+							className="bg-[#18181B] text-white hover:bg-[#18181B]/90 h-10 px-4 gap-2 rounded-md transition-colors"
+						>
+							<Plus className="h-4 w-4" />
+							<Translate text={createButtonLabel} />
+						</Button>
+					)}
+					{actions}
+				</div>
 			)}
 		</div>
 	);

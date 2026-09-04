@@ -1,5 +1,4 @@
 import {
-  ProfessionalYes_FasadHero,
   ProfessionalYes_FasadContent,
 } from "@/components/professional/Yes_Fasad";
 import { NextPage } from "next";

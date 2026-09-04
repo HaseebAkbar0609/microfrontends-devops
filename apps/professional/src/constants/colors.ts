@@ -18,6 +18,8 @@
  * text-slate-200  →  #E2E8F0   →  SLATE[200]
  * text-slate-400  →  #94A3B8   →  SLATE[400]
  * text-brand-orange→ #FF8100   →  BRAND.orange  (custom — no Tailwind match)
+ * bg-green-500    →  #22C55E   →  GREEN[500]  (active/success badge)
+ * text-zinc-950   →  #09090B   →  ZINC[950]  (section header text)
  */
 
 export const SLATE = {
@@ -39,6 +41,16 @@ export const GRAY = {
 	600: "#4B5563",
 	800: "#1F2937",
 	900: "#18181B", //added dark gray
+} as const;
+
+export const ZINC = {
+	/** Section header / primary heading text — use `text-zinc-950` */
+	950: "#09090B",
+} as const;
+
+export const GREEN = {
+	/** Active/success state — use `bg-green-500` */
+	500: "#22C55E",
 } as const;
 
 export const BRAND = {

@@ -7,20 +7,6 @@ import {
 } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 
-export const dashboardBreadcrumbItems = [
-	{
-		labelKey: localizationConstants.breadcrumbHome,
-		href: "/",
-	},
-	{
-		labelKey: localizationConstants.breadcrumbFavorite,
-		href: "/favorites",
-	},
-	{
-		labelKey: localizationConstants.dashboardTitle,
-	},
-];
-
 export const dashboardInfoCards = [
 	{
 		titleKey: localizationConstants.statsTitle,

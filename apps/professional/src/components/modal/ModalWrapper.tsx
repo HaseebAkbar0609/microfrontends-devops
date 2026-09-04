@@ -50,13 +50,13 @@ export function ModalWrapper({
         {(title || description) && (
           <DialogHeader className={cn("flex flex-col gap-1", headerClassName)}>
             {title && (
-              <DialogTitle className="text-center text-xl font-boldtext-gray-700 sm:text-2xl">
+              <DialogTitle className="text-center text-xl font-bold text-gray-700 sm:text-2xl">
                 {title}
               </DialogTitle>
             )}
             {description && (
-              <DialogDescription className="text-xs text-center py-3">
-                <div className="flex justify-center text-muted-foreground">{description}</div>
+              <DialogDescription asChild>
+                <div className="flex justify-center py-3 text-xs text-muted-foreground">{description}</div>
               </DialogDescription>
             )}
           </DialogHeader>

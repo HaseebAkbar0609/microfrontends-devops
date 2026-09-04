@@ -102,6 +102,7 @@ export function FormInput<
 									inputClassName,
 								)}
 								{...field}
+								value={inputProps?.value ?? field.value ?? ""}
 								{...(inputProps as React.ComponentProps<"textarea">)}
 								ref={field.ref}
 							/>
@@ -113,6 +114,7 @@ export function FormInput<
 									disabled={disabled}
 									className={cn("pr-10 focus-visible:border-gray-300 focus-visible:outline-none", inputClassName)}
 									{...field}
+									value={inputProps?.value ?? field.value ?? ""}
 									{...inputProps}
 								/>
 
@@ -123,6 +125,7 @@ export function FormInput<
 										onClick={() =>
 											setShowPassword((prev) => !prev)
 										}
+										aria-label={showPassword ? "Hide password" : "Show password"}
 										className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
 									>
 										{showPassword ? (

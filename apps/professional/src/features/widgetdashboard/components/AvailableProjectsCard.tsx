@@ -19,7 +19,10 @@ export const AvailableProjectsCard = () => (
                 />
             </div>
             <CardAction>
-                <button className="text-slate-400 hover:text-slate-600">
+                <button
+                    type="button"
+                    className="text-slate-400 hover:text-slate-600"
+                >
                     <MoreVertical size={20} />
                 </button>
             </CardAction>

@@ -1,15 +1,14 @@
-import { OfferSendPage } from "@/features/offer/components/OfferSendPage";
-import { DUMMY_OFFER_SEND } from "@/features/offer/constants/offerSend";
+import { OfferSendClient } from "@/features/offer/components/OfferSendClient";
 
 export default async function OfferSendRoute({
   params,
+  searchParams,
 }: {
   params: Promise<{ offerId: string }>;
+  searchParams: Promise<{ type?: string }>;
 }) {
   const { offerId } = await params;
+  const sParams = await searchParams;
 
-  // NOTE: offerId will be used when API integration is added
-  void offerId;
-
-  return <OfferSendPage data={DUMMY_OFFER_SEND} />;
+  return <OfferSendClient offerId={offerId} type={sParams?.type} />;
 }

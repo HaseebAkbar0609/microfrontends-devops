@@ -1,14 +1,9 @@
-import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-export default function Page() {
+import { MachineDashboard } from "@/features/machines/dashboard/MachineDashboard";
+
+export default function MachineDashboardPage() {
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold">
-				<Translate text={localizationConstants.machine} />
-			</h1>
-			<p className="mt-2 text-sm text-slate-600">
-				<Translate text={localizationConstants.comingSoon} />{" "}
-			</p>
+		<div className="flex flex-1 flex-col bg-blue-gray-50 min-h-0 p-5 overflow-y-auto">
+			<MachineDashboard />
 		</div>
 	);
 }

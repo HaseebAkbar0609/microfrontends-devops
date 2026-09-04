@@ -1,109 +1,197 @@
 "use client";
 
-import { Calendar, CirclePlus, DollarSign, Save } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Calendar1, CircleFadingPlus, Receipt, Save } from "lucide-react";
+import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendConfirmationPanelProps } from "../types";
+
+function resolveFormType(type: string): "rent" | "express" | "b2c" {
+  const lower = type.toLowerCase();
+  if (lower.includes("rent") || lower.includes("hyra")) return "rent";
+  if (lower.includes("express")) return "express";
+  return "b2c";
+}
 
 export function OfferSendConfirmationPanel({
   data,
 }: OfferSendConfirmationPanelProps) {
+  const t = useTranslate();
+  const router = useRouter();
+  const [displayBudget, setDisplayBudget] = useState(data.preliminaryBudgetPrice);
+  const [displayOfferDate, setDisplayOfferDate] = useState(data.offerDateLatest);
+  const [budget, setBudget] = useState("");
+  const [offerDate, setOfferDate] = useState<Date | undefined>(undefined);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
+
+  const formType = resolveFormType(data.type);
+
+  function handleCreateOffer() {
+    router.push(`/module/business/offer/send/${data.id}?type=${formType}`);
+  }
+
+  function handleSave() {
+    if (budget.trim()) {
+      const num = Number(budget.replace(/[^0-9]/g, ""));
+      if (!isNaN(num)) {
+        setDisplayBudget(num.toLocaleString("en-US"));
+      } else {
+        setDisplayBudget(budget.trim());
+      }
+    }
+    if (offerDate) {
+      setDisplayOfferDate(format(offerDate, "yyyy-MM-dd"));
+    }
+  }
+
   return (
-    <Card className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-semibold text-slate-900">
+    <Card className="overflow-hidden rounded-xl border border-slate-200 bg-white p-5 shadow-none flex flex-col gap-4">
+      {/* Title */}
+      <h2 className="font-sans font-semibold text-lg leading-7 tracking-normal text-[#020617]">
         <Translate text={localizationConstants.offerSendConfirmationTitle} />
       </h2>
 
-      <div className="mt-0 space-y-4">
-        <div className="rounded-lg bg-slate-900 px-5 py-4 text-white">
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-md bg-white/10">
-              <DollarSign className="h-4 w-4 text-white" />
-            </div>
-            <div>
-              <div className="text-sm text-white/90">
-                <Translate
-                  text={localizationConstants.offerSendPreliminaryBudgetLabel}
-                />
-              </div>
-              <div className="mt-0.5 text-2xl font-semibold">
-                {data.preliminaryBudgetPrice}
-              </div>
-            </div>
-          </div>
+      {/* Preliminary Budget Banner */}
+      <div className="flex items-center gap-3 rounded-lg bg-[#1E2530] p-4 text-white">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10">
+          <Receipt className="h-5 w-5 text-white" />
         </div>
-
-        <div className="rounded-lg bg-slate-100 px-5 py-4 text-slate-900">
-          <div className="flex items-start gap-3">
-            <div className="mt-0.5 flex h-8 w-8 items-center justify-center rounded-md bg-slate-200">
-              <Calendar className="h-4 w-4 text-slate-700" />
-            </div>
-            <div>
-              <div className="text-sm text-slate-600">
-                <Translate
-                  text={localizationConstants.offerSendOfferDateLabel}
-                />
-              </div>
-              <div className="mt-0.5 text-base font-semibold text-slate-900">
-                {data.offerDateLatest}
-              </div>
-            </div>
-          </div>
+        <div>
+          <p className="font-sans font-normal text-xs text-slate-300">
+            <Translate text={localizationConstants.offerSendPreliminaryBudgetLabel} />
+          </p>
+          <p className="font-sans font-semibold text-xl leading-7 text-white">
+            {displayBudget}
+          </p>
         </div>
+      </div>
 
-        <div className="pt-2">
-          <div className="text-sm font-medium text-slate-900">
-            <Translate
-              text={localizationConstants.offerSendPreliminaryBudgetLabel}
-            />
-          </div>
-          <div className="mt-2">
-            <Input
-              placeholder="Preliminary budget price"
-              className="bg-white"
-            />
-          </div>
-
-          <div className="mt-5 text-sm font-medium text-slate-900">
+      {/* Offer Date Latest Banner */}
+      <div className="flex items-center gap-3 rounded-lg bg-slate-100 p-4">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white shadow-xs">
+          <Calendar1 className="h-5 w-5 text-slate-700" />
+        </div>
+        <div>
+          <p className="font-sans font-normal text-xs text-slate-500">
             <Translate text={localizationConstants.offerSendOfferDateLabel} />
-          </div>
-          <div className="mt-2">
-            <Input placeholder="Enter offer date latest" className="bg-white" />
-          </div>
+          </p>
+          <p className="font-sans font-semibold text-sm leading-5 text-slate-800">
+            {displayOfferDate}
+          </p>
         </div>
+      </div>
 
-        <div className="pt-6 space-y-3">
-          <Button
-            variant="outline"
-            className="w-full h-11 rounded-md border-transparent bg-slate-100 text-slate-900 hover:bg-slate-200"
-          >
-            <Translate text={localizationConstants.offerSendCancel} />
-          </Button>
+      {/* Input: Preliminary budget price */}
+      <div className="space-y-1.5">
+        <label className="font-sans font-medium text-xs text-[#09090B]">
+          <Translate text={localizationConstants.offerSendPreliminaryBudgetLabel} />
+        </label>
+        <Input
+          type="text"
+          value={budget}
+          onChange={(e) => {
+            const val = e.target.value.replace(/[^0-9]/g, "");
+            setBudget(val);
+            if (val) {
+              const num = Number(val);
+              setDisplayBudget(!isNaN(num) ? num.toLocaleString("en-US") : val);
+            } else {
+              setDisplayBudget(data.preliminaryBudgetPrice);
+            }
+          }}
+          inputMode="numeric"
+          placeholder={t(localizationConstants.offerSendPreliminaryBudgetPlaceholder)}
+          className="h-10 rounded-lg border-slate-200 bg-slate-50/50 text-sm placeholder:text-slate-400"
+        />
+      </div>
 
-          <Button
-            variant="outline"
-            className="w-full h-11 rounded-md border-slate-200 bg-white text-slate-900 hover:bg-slate-50"
-          >
-            <Save className="mr-2 h-4 w-4" />
-            <Translate text={localizationConstants.offerSendSave} />
-          </Button>
-
-          <Button className="w-full h-11 rounded-md bg-slate-900 text-white hover:bg-slate-900/90">
-            <CirclePlus className="mr-2 h-4 w-4" />
-            <Translate text={localizationConstants.offerSendCreateOffer} />
-          </Button>
-
-          <Button className="w-full h-11 rounded-md bg-slate-900 text-white hover:bg-slate-900/90">
-            <CirclePlus className="mr-2 h-4 w-4" />
-            <Translate
-              text={localizationConstants.offerSendCreateCalculation}
+      {/* Input: Offer date latest */}
+      <div className="space-y-1.5">
+        <label className="font-sans font-medium text-xs text-[#09090B]">
+          <Translate text={localizationConstants.offerSendOfferDateLabel} />
+        </label>
+        <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className="h-10 w-full justify-between text-left font-normal border-slate-200 bg-slate-50/50 px-3 shadow-none hover:bg-slate-50 text-sm"
+            >
+              <div className="flex items-center gap-2">
+                <Calendar1 className="h-4 w-4 text-slate-500 shrink-0" />
+                <span className={offerDate ? "text-slate-900" : "text-slate-400"}>
+                  {offerDate
+                    ? format(offerDate, "yyyy-MM-dd")
+                    : t(localizationConstants.offerSendOfferDateLabel)}
+                </span>
+              </div>
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="w-auto p-0 border-0 bg-transparent shadow-none">
+            <Calendar
+              mode="single"
+              captionLayout="dropdown"
+              startMonth={new Date(2015, 0)}
+              endMonth={new Date(2035, 11)}
+              selected={offerDate}
+              onSelect={(date) => {
+                setOfferDate(date);
+                if (date) {
+                  setDisplayOfferDate(format(date, "yyyy-MM-dd"));
+                }
+                setDatePickerOpen(false);
+              }}
             />
-          </Button>
-        </div>
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      {/* Action buttons */}
+      <div className="flex flex-col gap-2 pt-2">
+        <Button
+          type="button"
+          variant="outline"
+          className="h-10 w-full rounded-lg border-transparent bg-slate-100 text-sm font-medium text-slate-800 hover:bg-slate-200 cursor-pointer shadow-none"
+          onClick={() => router.back()}
+        >
+          <Translate text={localizationConstants.offerSendCancel} />
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="h-10 w-full rounded-lg border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 cursor-pointer shadow-xs gap-2"
+          onClick={handleSave}
+        >
+          <Save className="w-[15px] h-[15px] text-[#18181B] shrink-0" strokeWidth={1.67} />
+          <Translate text={localizationConstants.offerSendSave} />
+        </Button>
+
+        <Button
+          type="button"
+          className="h-10 w-full rounded-lg bg-[#1E2530] text-sm font-medium text-white hover:bg-slate-800 cursor-pointer shadow-xs gap-2"
+          onClick={handleCreateOffer}
+        >
+          <CircleFadingPlus className="h-4 w-4 text-white shrink-0" strokeWidth={1.75} />
+          <Translate text={localizationConstants.offerSendCreateOffer} />
+        </Button>
+
+        <Button
+          type="button"
+          className="h-10 w-full rounded-lg bg-[#1E2530] text-sm font-medium text-white hover:bg-slate-800 cursor-pointer shadow-xs gap-2"
+          onClick={() => router.push(`/module/business/calculation/new?offerId=${data.id}`)}
+        >
+          <CircleFadingPlus className="h-4 w-4 text-white shrink-0" strokeWidth={1.75} />
+          <Translate text={localizationConstants.offerSendCreateCalculation} />
+        </Button>
       </div>
     </Card>
   );

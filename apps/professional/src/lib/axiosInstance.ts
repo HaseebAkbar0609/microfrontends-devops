@@ -4,7 +4,7 @@ import { BASE_API_VERSION } from "@/constants/api";
 import { authStorage } from "@/lib/authStorage";
 import { getUserLanguage } from "@/utils/userLanguage";
 
-const REFRESH_PATH = "/auth/refresh-token";
+const REFRESH_PATH = "/professionals/auth/refresh-token";
 
 /** Same origin as main client; no auth interceptors on this instance. */
 function getApiBaseURL(): string | undefined {
@@ -16,7 +16,7 @@ const AUTH_PATHS_NO_REFRESH = [
   "/auth/login",
   "/auth/register",
   "/auth/forgot-password",
-  "/auth/refresh-token",
+  "/professionals/auth/refresh-token",
 ];
 
 function isPublicAuthUrl(url: string | undefined): boolean {
@@ -126,6 +126,10 @@ axiosInstance.interceptors.response.use(
     }
 
     if (originalRequest._retry) {
+      authStorage.clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
       return Promise.reject(error);
     }
     originalRequest._retry = true;
@@ -137,6 +141,9 @@ axiosInstance.interceptors.response.use(
       return axiosInstance(originalRequest);
     } catch {
       authStorage.clearAuth();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
       return Promise.reject(error);
     }
   }

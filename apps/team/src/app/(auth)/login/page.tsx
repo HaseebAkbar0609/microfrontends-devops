@@ -32,7 +32,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isReady || !isAuthenticated) return;
-    router.replace("/dashboard");
+    router.replace("/home");
   }, [isReady, isAuthenticated, router]);
 
   const form = useForm<LoginFormValues>({
@@ -51,7 +51,7 @@ export default function LoginPage() {
       const token = authStorage.getAccessToken();
       setUser(authStorage.getUserData());
       setAccessToken(token);
-      router.replace("/dashboard");
+      router.replace("/home");
     }
   };
 

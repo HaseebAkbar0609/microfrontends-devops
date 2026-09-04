@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
-import LeadsSubSidebar from "./sidebar/LeadsSubSidebar";
 import { useAuthStatus } from "@/context/AuthContext";
 import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
 interface AppShellProps {
@@ -23,8 +22,7 @@ export function AppShell({ children }: AppShellProps) {
 	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const hasFlyoutSubSidebar = !!flyoutSubSidebarConfig;
-	const isLeads = pathname.startsWith("/leads");
-	const hasSubSidebar = hasFlyoutSubSidebar || isLeads;
+	const hasSubSidebar = hasFlyoutSubSidebar;
 
 	useEffect(() => {
 		if (!isReady || didRedirect.current) return;
@@ -42,24 +40,25 @@ export function AppShell({ children }: AppShellProps) {
 	}
 
 		return (
-			<div className="flex h-screen flex-1 overflow-hidden">
-				<Sidebar autoCollapse={hasSubSidebar} />
-				{flyoutSubSidebarConfig && (
-					<MyPagesSubSidebar
-						titleKey={flyoutSubSidebarConfig.titleKey}
-						items={flyoutSubSidebarConfig.items}
-					/>
-				)}
-				{isLeads && <LeadsSubSidebar />}
-				<div className="flex flex-1 flex-col overflow-hidden">
-				<Header />
-				<main
-					className={`flex flex-1 flex-col bg-white pb-6 ${hasFlyoutSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
-				>
-					{/* className="flex-1 overflow-auto bg-slate-50" */}
-					{children}
-				</main>
+			<div className="flex h-screen flex-1 flex-col overflow-hidden">
+				<div className="flex flex-1 overflow-hidden">
+					<Sidebar autoCollapse={hasSubSidebar} />
+					{flyoutSubSidebarConfig && (
+						<MyPagesSubSidebar
+							titleKey={flyoutSubSidebarConfig.titleKey}
+							items={flyoutSubSidebarConfig.items}
+						/>
+					)}
+
+					<div className="flex flex-1 flex-col overflow-hidden">
+						<Header />
+						<main
+							className={`flex flex-1 flex-col bg-white hide-scrollbar ${hasFlyoutSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
+						>
+							{children}
+						</main>
+					</div>
+				</div>
 			</div>
-		</div>
-	);
+		);
 }

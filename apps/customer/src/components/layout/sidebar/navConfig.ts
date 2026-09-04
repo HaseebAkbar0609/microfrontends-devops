@@ -19,6 +19,7 @@ export interface NavSubItem {
 	id: string;
 	label: string;
 	href: string;
+	icon?: LucideIcon;
 	flyoutItems?: NavFlyoutItem[];
 }
 
@@ -53,7 +54,7 @@ export const navConfig: NavGroup[] = [
 
 			{
 				id: "consultant",
-				label: localizationConstants.consultant,
+				label: localizationConstants.consultantNav,
 				href: "/business/consultant",
 			},
 		],
@@ -71,7 +72,7 @@ export const navConfig: NavGroup[] = [
 			{
 				id: "archivedprojects",
 				label: localizationConstants.archivedprojects,
-				href: "/archivedprojects",
+				href: "/projects/archived",
 			},
 		],
 	},
@@ -91,9 +92,9 @@ export const navConfig: NavGroup[] = [
 				href: "/priceCalculator",
 			},
 			{
-				id: "rootRut",
+				id: "rotRut",
 				label: localizationConstants.rootRut,
-				href: "/rootRut",
+				href: "/rotRut",
 			},
 			{
 				id: "inspiration",
@@ -118,10 +119,17 @@ export const navConfig: NavGroup[] = [
 		],
 	},
 	{
-		id: "setting",
-		label: localizationConstants.setting,
+		id: "settings",
+		label: localizationConstants.settings,
 		icon: Settings,
-		href: "/setting",
-		items: [],
+		items: [
+			{
+				id: "users",
+				label: localizationConstants.users,
+				href: "/settings/users",
+				icon: Settings,
+			},
+
+		],
 	},
 ];

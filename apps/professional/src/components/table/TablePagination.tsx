@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,6 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 interface TablePaginationProps {
   currentPage: number;
@@ -19,6 +24,7 @@ interface TablePaginationProps {
   pageSize: number;
   onPageChange: (page: number) => void;
   onPageSizeChange: (size: number) => void;
+  className?: string;
 }
 
 export function TablePagination({
@@ -27,23 +33,29 @@ export function TablePagination({
   pageSize,
   onPageChange,
   onPageSizeChange,
+  className,
 }: TablePaginationProps) {
   return (
-    <div className="flex items-center justify-center gap-6 py-4">
+    <div
+      className={cn(
+        "flex items-center justify-between sm:justify-end gap-4 py-4",
+        className,
+      )}
+    >
       <div className="flex items-center gap-2">
         <span className="text-sm font-medium text-slate-700">
-          Rows per page
+          <Translate text={localizationConstants.rowsPerPage} />
         </span>
         <Select
           value={String(pageSize)}
           onValueChange={(value) => onPageSizeChange(Number(value))}
         >
-          <SelectTrigger className="h-9 w-[70px] border-slate-200 focus:ring-0">
+          <SelectTrigger className="h-9 w-17.5 border-slate-200 focus:ring-0 cursor-pointer">
             <SelectValue placeholder={String(pageSize)} />
           </SelectTrigger>
           <SelectContent>
             {[5, 10, 20, 30, 40, 50].map((size) => (
-              <SelectItem key={size} value={String(size)}>
+              <SelectItem key={size} value={String(size)} className="cursor-pointer">
                 {size}
               </SelectItem>
             ))}
@@ -51,15 +63,16 @@ export function TablePagination({
         </Select>
       </div>
 
-      <div className="text-sm font-medium text-slate-700">
-        Page {currentPage} of {totalPages || 1}
+      <div className="text-sm font-medium text-slate-700 flex items-center gap-1">
+        <Translate text={localizationConstants.page} /> {currentPage}{" "}
+        <Translate text={localizationConstants.of} /> {totalPages || 1}
       </div>
 
       <div className="flex items-center gap-1">
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(1)}
           disabled={currentPage <= 1}
         >
@@ -69,7 +82,7 @@ export function TablePagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage <= 1}
         >
@@ -79,7 +92,7 @@ export function TablePagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
         >
@@ -89,7 +102,7 @@ export function TablePagination({
         <Button
           variant="outline"
           size="icon"
-          className="h-9 w-9 border-slate-200"
+          className="h-9 w-9 border border-slate-200 bg-transparent hover:bg-slate-100/80 shadow-none cursor-pointer"
           onClick={() => onPageChange(totalPages)}
           disabled={currentPage >= totalPages}
         >
@@ -100,3 +113,5 @@ export function TablePagination({
     </div>
   );
 }
+
+export default TablePagination;

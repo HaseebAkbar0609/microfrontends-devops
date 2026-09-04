@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { AcceptInvitationContent } from "@/features/auth/components/AcceptInvitationContent";
 
+export const dynamic = "force-dynamic";
+
 export default function AcceptInvitationPage() {
 	return (
 		<Suspense

@@ -11,9 +11,13 @@ import { Translate } from "@/utils/translation/translate";
 
 interface SidebarSubItemProps {
 	item: NavSubItem;
+	isActive?: boolean;
 }
 
-export function SidebarSubItem({ item }: SidebarSubItemProps) {
+export function SidebarSubItem({
+	item,
+	isActive: isActiveProp,
+}: SidebarSubItemProps) {
 	const pathname = usePathname();
 	const [flyoutOpen, setFlyoutOpen] = useState(false);
 	const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
@@ -21,7 +25,8 @@ export function SidebarSubItem({ item }: SidebarSubItemProps) {
 
 	const hasFlyout = !!item.flyoutItems?.length;
 	const isActive =
-		pathname === item.href || pathname.startsWith(item.href + "/");
+		isActiveProp ??
+		(pathname === item.href || pathname.startsWith(item.href + "/"));
 
 	function handleClick() {
 		if (!hasFlyout) return;

@@ -8,11 +8,10 @@ import {
   useReactTable,
   type SortingState,
 } from "@tanstack/react-table";
-import Image from "next/image";
-
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import FilePreviewIcon from "@/features/leads/management/components/FilePreviewIcon";
 import {
   getPersonnelColumns,
   personnelRows,
@@ -73,7 +72,7 @@ function PersonnelTable({ search }: { search: string }) {
                 <TableCell key={cell.id} className="px-4 py-4">
                   {cell.column.id === "fileType" ? (
                     <div className="flex items-center gap-2">
-                      <Image src="/images/file-icon.svg" height={40} width={40} alt="File" />
+                      <FilePreviewIcon fileType={row.original.fileType} />
                     </div>
                   ) : (
                     flexRender(cell.column.columnDef.cell, cell.getContext())

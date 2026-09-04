@@ -1,0 +1,140 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { PageHeader, ActionsToolbar } from "@/components/common";
+import { useQueryParams } from "@/hooks/useQueryParams";
+import { showToast } from "@/lib/toast";
+import { useTranslate, Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
+import type { BreadcrumbItem } from "@/types/user";
+import type { ArchivedProject, ApiQuoteItem } from "../types";
+import { ArchivedProjectsTable } from "./ArchivedProjectsTable";
+import { getProjectListAPIAction } from "@/api-actions";
+import { resolveCompanyName } from "../utils/activeProject";
+import { Loader2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const BREADCRUMBS: BreadcrumbItem[] = [
+  { label: localizationConstants.home, href: "/home" },
+  { label: localizationConstants.projectMyProjects },
+  { label: localizationConstants.archivedprojects },
+];
+
+const PAGE_SIZE = 10;
+
+export function ArchivedProjectList() {
+  const t = useTranslate();
+  const { query, search, changeQuery, page } = useQueryParams();
+
+  const sortBy = query.get("sort_by") || "";
+  const sortOrder = query.get("sort_order") || "";
+
+  const [projects, setProjects] = useState<ArchivedProject[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [retryKey, setRetryKey] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchArchived() {
+      setLoading(true);
+      setError(null);
+      const res = await getProjectListAPIAction({
+        page,
+        pageSize: PAGE_SIZE,
+        search: search.trim() || undefined,
+        sortBy: sortBy || undefined,
+        sortOrder: sortOrder || undefined,
+        quote_status: "archived",
+      });
+      if (cancelled) return;
+      if (res.success && res.data?.quotes) {
+        const mapped: ArchivedProject[] = res.data.quotes.map(
+          (q: ApiQuoteItem) => ({
+            id: q.project_id || q.id || "",
+            name: q.project_name || q.projectName || "Archived Project",
+            referenceNo:
+              q.ref_no || q.refNo || q.id?.substring(0, 8).toUpperCase() || "-",
+            clientNo: q.client_no || q.clientNo || "-",
+            projectNo: q.ref_no || q.refNo || "-",
+            startDate: "-",
+            endDate: "-",
+            contactPersonName: "-",
+            mobileNumber: "-",
+            email: "-",
+            address: "-",
+            postalCode: "-",
+            companyName:
+              q.company_name ||
+              q.companyName ||
+              resolveCompanyName({}, q.project_name || q.projectName),
+            status: "archived",
+            category: q.category || "-",
+            archivedDate: q.created_at || "-",
+          }),
+        );
+        setProjects(mapped);
+      } else {
+        setError(res.error || "Failed to load archived projects");
+      }
+      setLoading(false);
+    }
+    void fetchArchived();
+    return () => {
+      cancelled = true;
+    };
+  }, [page, search, sortBy, sortOrder, retryKey]);
+
+  const pageRows = projects;
+
+  const handleActivate = (project: ArchivedProject) => {
+    setProjects((prev) => prev.filter((p) => p.id !== project.id));
+    showToast("success", t(localizationConstants.projectActivatedSuccess));
+  };
+
+  const handleDelete = (project: ArchivedProject) => {
+    setProjects((prev) => prev.filter((p) => p.id !== project.id));
+    showToast("success", t(localizationConstants.projectDeletedSuccess));
+  };
+
+  return (
+    <div className="flex flex-1 flex-col">
+      <PageHeader
+        title={localizationConstants.archivedprojects}
+        breadcrumbs={BREADCRUMBS}
+      />
+      <ActionsToolbar
+        searchValue={search}
+        onSearchChange={(val) => changeQuery("search", val)}
+      />
+      <div className="px-5 pb-5 flex-1">
+        {loading ? (
+          <div className="flex items-center justify-center p-16">
+            <Loader2
+              className="h-8 w-8 animate-spin text-slate-500"
+              role="status"
+              aria-label="Loading archived projects"
+            />
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center p-16 gap-4 text-center">
+            <p className="text-red-600 text-sm font-medium">{error}</p>
+            <Button
+              onClick={() => setRetryKey((k) => k + 1)}
+              className="gap-2 bg-slate-900 text-white hover:bg-slate-800"
+            >
+              <RefreshCw className="h-4 w-4" />
+              <Translate text={localizationConstants.errorRetry} />
+            </Button>
+          </div>
+        ) : (
+          <ArchivedProjectsTable
+            data={pageRows}
+            onActivate={handleActivate}
+            onDelete={handleDelete}
+          />
+        )}
+      </div>
+    </div>
+  );
+}

@@ -9,7 +9,7 @@ export async function getLeadProjectDetailsAPIAction(
 	leadId: string
 ): Promise<LeadRequestDetails | null> {
 	const response = await axiosInstance.get<LeadProjectDetailsApiResponse>(
-		`/api/v1/lead/${leadId}/project-details`
+		`/api/v1/teams/lead/${leadId}/project-details`
 	);
 	const payload = response.data.data;
 
@@ -32,7 +32,7 @@ export async function getLeadProjectDetailsAPIAction(
 				.join(", ") || "-",
 		projectType: mapProjectType(projectDetails?.project_type ?? ""),
 		address: projectDetails?.project_address || "-",
-		city: projectDetails?.city || "-",
+		city: projectDetails?.city_name || projectDetails?.city || "-",
 		postalCode: projectDetails?.postal_code || "-",
 		directions: projectDetails?.directions || "-",
 		description: projectDescription?.project_description || "-",

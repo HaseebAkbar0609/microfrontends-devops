@@ -1,224 +1,427 @@
 import {
-  CircleDollarSign,
-  Layers,
-  FileText,
-  BarChart3,
-  Clock,
-  CheckCircle2,
-  AlertTriangle,
-  ClipboardList,
-  TrendingUp,
+	BarChart3,
+	Bot,
+	CalendarDays,
+	CheckCircle2,
+	ClipboardList,
+	CircleDollarSign,
+	Globe,
+	History,
+	Image as ImageIcon,
+	Inbox,
+	Layers,
+	Newspaper,
+	Send,
+	Zap,
 } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import {
-  PlacedWidgetEntry,
-  WidgetProps,
+	PlacedWidgetEntry,
+	WidgetProps,
 } from "@/features/widgetdashboard/types/dashboard";
-import React from "react";
+import {
+	WidgetContent as Content,
+	WidgetImagePlaceholder,
+	WidgetListItem,
+	WidgetMockTag as MockTag,
+	WidgetRow as Row,
+} from "@/features/widgetdashboard/components/WidgetContent";
 import { Translate } from "@/utils/translation/translate";
 
-/**
- * Maps a sidebar item id → widget render props for Offer Dashboard
- */
 export const OFFER_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
-  emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
+	emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
 
-  openQuotes: {
-    title: localizationConstants.openQuotes,
-    icon: FileText,
-    content: (
-      <div className="space-y-2 text-sm text-slate-500">
-        <div>
-          Offert #1004 - Teknik AB -{" "}
-          <Translate text={localizationConstants.offertSent} /> -{" "}
-          <Translate text={localizationConstants.offertAwaitingResponse} />
-        </div>
-        <div>
-          Offert #1003 - ByggFix -{" "}
-          <Translate text={localizationConstants.completionRequired} />
-        </div>
-      </div>
-    ),
-  },
+	offerOverview: {
+		title: localizationConstants.offerWidgetOverviewTitle,
+		icon: ClipboardList,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.offerWidgetOverviewTotal}
+					value="42"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetOverviewDrafts}
+					value="4"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetOverviewSent}
+					value="9"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetOverviewAccepted}
+					value="3"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetOverviewConversion}
+					value="34 %"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
 
-  quickActions: {
-    title: localizationConstants.quickActions,
-    icon: BarChart3,
-    content: (
-      <div className="text-sm text-slate-500">
-        <Translate text={localizationConstants.number} />: 20{" "}
-        <Translate text={localizationConstants.itemsLabel} />
-      </div>
-    ),
-  },
+	offerRequests: {
+		title: localizationConstants.offerWidgetRequestsTitle,
+		icon: Inbox,
+		content: (
+			<Content>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetRequest1}
+					meta={
+						<>
+							2026-03-02 ·{" "}
+							<Translate
+								text={
+									localizationConstants.offerWidgetRequestStatusNew
+								}
+							/>
+						</>
+					}
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetRequest2}
+					meta={
+						<>
+							2026-02-28 ·{" "}
+							<Translate
+								text={
+									localizationConstants.offerWidgetRequestStatusReviewed
+								}
+							/>
+						</>
+					}
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetRequest3}
+					meta={
+						<>
+							2026-02-25 ·{" "}
+							<Translate
+								text={
+									localizationConstants.offerWidgetRequestStatusNew
+								}
+							/>
+						</>
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
 
-  kpiStatus: {
-    title: localizationConstants.kpiStatus,
-    icon: TrendingUp,
-    content: (
-      <div className="space-y-1 text-sm text-slate-500">
-        <div>
-          <Translate text={localizationConstants.activeQuotes} />: 17
-        </div>
-        <div>
-          <Translate text={localizationConstants.sentQuotes} />: 9
-        </div>
-        <div>
-          <Translate text={localizationConstants.accepted} />: 3
-        </div>
-        <div>
-          <Translate text={localizationConstants.inquiries} />: 6
-        </div>
-        <div>
-          <Translate text={localizationConstants.expiredQuotes} />: 1
-        </div>
-        <div className="flex items-center gap-1">
-          <AlertTriangle size={14} className="text-amber-500" />
-          <Translate text={localizationConstants.renegotiation} />: 2
-        </div>
-      </div>
-    ),
-  },
+	offerAvailableProjects: {
+		title: localizationConstants.offerWidgetProjectsTitle,
+		icon: Globe,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.offerWidgetProjectCustomer}
+					value="Teknik AB"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetProjectLocation}
+					value="Stockholm"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetProjectDeadline}
+					value="2026-03-20"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetProjectValue}
+					value="850 000 SEK"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
 
-  ongoingQuotes: {
-    title: localizationConstants.ongoingQuotes,
-    icon: ClipboardList,
-    content: (
-      <div className="space-y-2 text-sm text-slate-500">
-        <div>
-          Quote #1004 - Teknik AB -{" "}
-          <Translate text={localizationConstants.offertSent} /> -{" "}
-          <Translate text={localizationConstants.awaitingResponse} />
-        </div>
-        <div className="flex items-center gap-1">
-          Quote #1003 - ByggFix -{" "}
-          <Translate text={localizationConstants.completionRequired} />
-          <AlertTriangle size={14} className="text-amber-500" />
-        </div>
-        <div>
-          Quote #1001 - EntreprenadPro -{" "}
-          <Translate text={localizationConstants.createContract} />
-        </div>
-        <div>
-          Quote #999 - IndustriPartner -{" "}
-          <Translate text={localizationConstants.quoteDraftReady} />
-        </div>
-        <div>
-          Quote #998 - FastighetCo -{" "}
-          <Translate text={localizationConstants.priorityHigh} />
-        </div>
-      </div>
-    ),
-  },
+	offerSent: {
+		title: localizationConstants.offerWidgetSentTitle,
+		icon: Send,
+		content: (
+			<Content>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetActivitySent}
+					meta={
+						<>
+							2026-03-01 · 420 000 SEK ·{" "}
+							<Translate
+								text={
+									localizationConstants.offerWidgetSentStatusWaiting
+								}
+							/>
+						</>
+					}
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetRequest2}
+					meta={
+						<>
+							2026-02-26 · 180 000 SEK ·{" "}
+							<Translate
+								text={
+									localizationConstants.offerWidgetSentStatusOpened
+								}
+							/>
+						</>
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
 
-  deadlinesReminders: {
-    title: localizationConstants.deadlinesReminders,
-    icon: Clock,
-    content: (
-      <div className="space-y-1 text-sm text-slate-500">
-        <div>
-          <Translate text={localizationConstants.finalInspection} /> 2025-002
-        </div>
-        <div>
-          <Translate text={localizationConstants.productionStart} /> 2025-003
-        </div>
-      </div>
-    ),
-  },
+	offerAccepted: {
+		title: localizationConstants.offerWidgetAcceptedTitle,
+		icon: CheckCircle2,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.offerWidgetProjectCustomer}
+					value="EntreprenadPro"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetRequest1}
+					value="2026-02-20"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetValueAccepted}
+					value="1 250 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetAcceptedNextAction}
+					value={
+						<Translate
+							text={
+								localizationConstants.offerWidgetAcceptedNextActionValue
+							}
+						/>
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
 
-  quoteFlowPipeline: {
-    title: localizationConstants.quoteFlowPipeline,
-    icon: CheckCircle2,
-    content: (
-      <div className="space-y-1 text-sm text-slate-500">
-        <div>
-          <Translate text={localizationConstants.activeProjects} />: 5
-        </div>
-        <div>
-          <Translate text={localizationConstants.activeOrders} />: 15
-        </div>
-        <div>
-          <Translate text={localizationConstants.completedChecks} />: 45
-        </div>
-      </div>
-    ),
-  },
+	offerCalendar: {
+		title: localizationConstants.offerWidgetCalendarTitle,
+		icon: CalendarDays,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.offerWidgetCalendarDeadline}
+					value="2026-03-12"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetCalendarFollowUp}
+					value="2026-03-14"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetCalendarMeeting}
+					value="2026-03-18 10:00"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
 
-  quickStatistics: {
-    title: localizationConstants.quickStatistics,
-    icon: CircleDollarSign,
-    content: (
-      <div className="space-y-1 text-sm text-slate-500">
-        <div>
-          5 <Translate text={localizationConstants.guaranteedPointsOpen} />
-        </div>
-        <div>
-          2 <Translate text={localizationConstants.jobsInPlanningPhase} />
-        </div>
-        <div>
-          1 <Translate text={localizationConstants.awaitingCustomerResponse} />
-        </div>
-      </div>
-    ),
-  },
+	offerActivity: {
+		title: localizationConstants.offerWidgetActivityTitle,
+		icon: Zap,
+		content: (
+			<Content>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetActivityCreated}
+					meta="2026-03-03"
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetActivitySent}
+					meta="2026-03-01"
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetActivityAccepted}
+					meta="2026-02-20"
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetActivityRejected}
+					meta="2026-02-14"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	offerAiCalc: {
+		title: localizationConstants.offerWidgetAiCalcTitle,
+		icon: Bot,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.offerWidgetAiCalcHours}
+					value="120 h"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetAiCalcMaterial}
+					value="145 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetAiCalcMargin}
+					value="18 %"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetAiCalcDiscount}
+					value="5 %"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetAiCalcTotal}
+					value="312 000 SEK"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	offerValue: {
+		title: localizationConstants.offerWidgetValueTitle,
+		icon: CircleDollarSign,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.offerWidgetValueTotal}
+					value="15 800 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetValueAverage}
+					value="376 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetValuePending}
+					value="4 200 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetValueAccepted}
+					value="9 400 000 SEK"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetValueRejected}
+					value="2 200 000 SEK"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	offerStatistics: {
+		title: localizationConstants.offerWidgetStatsTitle,
+		icon: BarChart3,
+		content: (
+			<Content>
+				<Row
+					label={localizationConstants.offerWidgetStatsWinRate}
+					value="34 %"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetStatsResponseTime}
+					value="2,4 d"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetStatsVolume}
+					value="42"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetStatsTrend}
+					value="+12 %"
+				/>
+				<Row
+					label={localizationConstants.offerWidgetStatsForecast}
+					value="18 400 000 SEK"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	offerHistory: {
+		title: localizationConstants.offerWidgetHistoryTitle,
+		icon: History,
+		content: (
+			<Content>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetHistoryVersion}
+					meta="2026-03-02 14:12"
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetHistoryChange}
+					meta="2026-03-01 09:45"
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetHistoryInteraction}
+					meta="2026-02-28 16:30"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	offerNews: {
+		title: localizationConstants.offerWidgetNewsTitle,
+		icon: Newspaper,
+		content: (
+			<Content>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetNews1}
+					meta="2026-03-03"
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetNews2}
+					meta="2026-02-27"
+				/>
+				<WidgetListItem
+					title={localizationConstants.offerWidgetNews3}
+					meta="2026-02-22"
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
+
+	image: {
+		title: localizationConstants.offerWidgetImageTitle,
+		icon: ImageIcon,
+		content: (
+			<Content>
+				<WidgetImagePlaceholder
+					description={
+						localizationConstants.offerWidgetImageDescription
+					}
+				/>
+				<MockTag />
+			</Content>
+		),
+	},
 };
 
-/**
- * Initial widgets for Offer Dashboard based on the image
- */
-export const OFFER_INITIAL_WIDGETS: PlacedWidgetEntry[] = [
-  {
-    uid: "offer-open-quotes",
-    sidebarId: "openQuotes",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.openQuotes,
-  },
-  {
-    uid: "offer-quick-actions",
-    sidebarId: "quickActions",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.quickActions,
-  },
-  {
-    uid: "offer-kpi-status",
-    sidebarId: "kpiStatus",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.kpiStatus,
-  },
-  {
-    uid: "offer-ongoing-quotes",
-    sidebarId: "ongoingQuotes",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.ongoingQuotes,
-  },
-  {
-    uid: "offer-deadlines",
-    sidebarId: "deadlinesReminders",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.deadlinesReminders,
-  },
-  {
-    uid: "offer-quote-flow",
-    sidebarId: "quoteFlowPipeline",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.quoteFlowPipeline,
-  },
-  {
-    uid: "offer-quick-stats",
-    sidebarId: "quickStatistics",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.quickStatistics,
-  },
-  {
-    uid: "offer-empty-1",
-    sidebarId: "emptyPage",
-    colSpanClass: "col-span-12 md:col-span-4",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.emptyPage,
-  },
-  {
-    uid: "offer-empty-2",
-    sidebarId: "emptyPage",
-    colSpanClass: "col-span-12 md:col-span-8",
-    widgetProps: OFFER_SIDEBAR_WIDGET_MAP.emptyPage,
-  },
-];
+export const OFFER_WIDGET_ORDER = [
+	"offerOverview",
+	"offerRequests",
+	"offerAvailableProjects",
+	"offerSent",
+	"offerAccepted",
+	"offerCalendar",
+	"offerActivity",
+	"offerAiCalc",
+	"offerValue",
+	"offerStatistics",
+	"offerHistory",
+	"offerNews",
+	"image",
+] as const;
+
+export const OFFER_INITIAL_WIDGETS: PlacedWidgetEntry[] =
+	OFFER_WIDGET_ORDER.map((id) => ({
+		uid: `offer-${id}`,
+		sidebarId: id,
+		colSpanClass: "col-span-12 md:col-span-6 xl:col-span-4",
+		widgetProps: OFFER_SIDEBAR_WIDGET_MAP[id],
+	}));

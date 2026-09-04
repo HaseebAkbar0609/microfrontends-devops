@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import {
 	Breadcrumb,
 	BreadcrumbItem as BreadcrumbUIItem,
@@ -16,9 +17,17 @@ interface PageHeaderProps {
 	title: string;
 	breadcrumbs?: BreadcrumbItem[];
 	className?: string;
+	children?: React.ReactNode;
+	onBack?: () => void;
 }
 
-export function PageHeader({ title, breadcrumbs, className }: PageHeaderProps) {
+export function PageHeader({
+	title,
+	breadcrumbs,
+	className,
+	children,
+	onBack,
+}: PageHeaderProps) {
 	return (
 		<div
 			className={cn(
@@ -26,9 +35,21 @@ export function PageHeader({ title, breadcrumbs, className }: PageHeaderProps) {
 				className,
 			)}
 		>
-			<h1 className="text-2xl font-semibold text-[#0A0A0A] leading-tight">
-				<Translate text={title} />
-			</h1>
+			<div className="flex items-center gap-2">
+				{onBack && (
+					<button
+						type="button"
+						onClick={onBack}
+						aria-label="Go back"
+						className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-md text-slate-700 transition-colors hover:bg-slate-100"
+					>
+						<ArrowLeft className="h-5 w-5" />
+					</button>
+				)}
+				<h1 className="text-2xl font-semibold text-[#0A0A0A] leading-tight">
+					<Translate text={title} />
+				</h1>
+			</div>
 
 			{breadcrumbs && breadcrumbs.length > 0 && (
 				<Breadcrumb>
@@ -42,7 +63,7 @@ export function PageHeader({ title, breadcrumbs, className }: PageHeaderProps) {
 								>
 									{index !== 0 && <BreadcrumbSeparator />}
 									{isLast ? (
-										<BreadcrumbPage className="text-sm font-medium text-[#020617]">
+										<BreadcrumbPage className="text-sm font-normal text-slate-800">
 											<Translate text={item.label} />
 										</BreadcrumbPage>
 									) : (
@@ -61,6 +82,7 @@ export function PageHeader({ title, breadcrumbs, className }: PageHeaderProps) {
 					</BreadcrumbList>
 				</Breadcrumb>
 			)}
+			{children}
 		</div>
 	);
 }

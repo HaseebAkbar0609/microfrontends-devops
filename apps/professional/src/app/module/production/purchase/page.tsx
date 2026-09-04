@@ -1,14 +1,25 @@
+import { ModulePageHeader } from "@/components/layout/navigation";
+import PurchaseDashboard from "@/features/purchase/components/PurchaseDashboard";
+import {
+	PURCHASE_MODULE_TABS,
+	PURCHASE_MODULE_TITLE,
+	purchaseBreadcrumbs,
+} from "@/features/purchase/data/purchaseNav.config";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-export default function Page() {
+
+export default function PurchaseDashboardPage() {
 	return (
-		<div className="p-6">
-			<h1 className="text-2xl font-semibold">
-				<Translate text={localizationConstants.purchase} />
-			</h1>
-			<p className="mt-2 text-sm text-slate-600">
-				<Translate text={localizationConstants.comingSoon} />{" "}
-			</p>
+		<div className="flex flex-1 flex-col bg-blue-gray-50">
+			<ModulePageHeader
+				title={PURCHASE_MODULE_TITLE}
+				tabs={PURCHASE_MODULE_TABS}
+				breadcrumbs={purchaseBreadcrumbs(
+					localizationConstants.purchaseTabDashboard,
+				)}
+			/>
+			<div className="p-5 flex-1">
+				<PurchaseDashboard />
+			</div>
 		</div>
 	);
 }

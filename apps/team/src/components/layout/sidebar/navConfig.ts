@@ -48,13 +48,20 @@ export interface FlyoutSubSidebarConfig {
 	items: FlyoutSubSidebarItem[];
 }
 
+/**
+ * Sales navigates through its own tab rows (`ModulePageHeader`), the way the
+ * professional app does. Keeping it out of `flyoutItems` stops the flyout
+ * sub-sidebar from opening on top of that navigation and reclaims the 256px it
+ * would otherwise take from the content column.
+ */
+const moduleSalesItem: NavFlyoutItem = {
+	id: "module-business-sales",
+	label: localizationConstants.sales,
+	href: "/module/sales",
+	isFavoriteSupported: true,
+};
+
 const moduleBusinessItems: NavFlyoutItem[] = [
-	{
-		id: "module-business-sales",
-		label: localizationConstants.sales,
-		href: "/module/business/sales",
-		isFavoriteSupported: true,
-	},
 	{
 		id: "module-business-marketing",
 		label: localizationConstants.marketing,
@@ -130,6 +137,7 @@ const moduleGovernanceItems: NavFlyoutItem[] = [
 ];
 
 export const favoriteableNavItems: NavFlyoutItem[] = [
+	moduleSalesItem,
 	...moduleBusinessItems,
 	...moduleOperationsItems,
 	...moduleGovernanceItems,
@@ -169,10 +177,10 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 
 	return [
 		{
-			id: "dashboard",
+			id: "home",
 			label: localizationConstants.dashboard,
 			icon: Home,
-			href: "/dashboard",
+			href: "/home",
 			items: [],
 		},
 		{
@@ -223,6 +231,11 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			icon: LayoutGrid,
 			items: [
 				{
+					id: moduleSalesItem.id,
+					label: moduleSalesItem.label,
+					href: moduleSalesItem.href,
+				},
+				{
 					id: "module-business",
 					label: localizationConstants.moduleBusiness,
 					href: "/module/business",
@@ -269,11 +282,6 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 					label: localizationConstants.leadsManagement,
 					href: "/leads/management",
 				},
-				{
-					id: "settings",
-					label: localizationConstants.settings,
-					href: "/leads/settings",
-				},
 			],
 		},
 		{
@@ -309,15 +317,40 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			id: "partners",
 			label: localizationConstants.partners,
 			icon: Handshake,
-			href: "/partners",
-			items: [],
+			items: [
+				{
+					id: "partners-dashboard",
+					label: localizationConstants.partnerDashboardItem,
+					href: "/partners/dashboard",
+				},
+				{
+					id: "partners-admin",
+					label: localizationConstants.partnerAdminItem,
+					href: "/partners/admin",
+				},
+			],
 		},
 		{
 			id: "admin",
 			label: localizationConstants.adminItem,
 			icon: ShieldUser,
-			href: "/admin",
-			items: [],
+			items: [
+				{
+					id: "admin-settings",
+					label: localizationConstants.settings,
+					href: "/admin",
+				},
+				{
+					id: "admin-users",
+					label: localizationConstants.adminUsers,
+					href: "/admin/users",
+				},
+				{
+					id: "admin-company-information",
+					label: localizationConstants.adminCompanyInformation,
+					href: "/admin/company-information",
+				},
+			],
 		},
 	];
 }

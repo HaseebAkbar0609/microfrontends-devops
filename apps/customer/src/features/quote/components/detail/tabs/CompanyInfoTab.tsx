@@ -4,43 +4,46 @@ import { CompanyDetailsCard } from "../CompanyDetailsCard";
 import { CreditInformationCard } from "../CreditInformationCard";
 import { CertificatesTable } from "../CertificatesTable";
 import { PersonnelTable } from "../PersonnelTable";
-import {
-	COMPANY_DESCRIPTION,
-	DUMMY_CERTIFICATES,
-	DUMMY_PERSONNEL,
-} from "../../../constants";
+import type { QuoteSupplier } from "../../../types/form";
 
-export function CompanyInfoTab() {
+interface CompanyInfoTabProps {
+	supplier?: QuoteSupplier | null;
+}
+
+export function CompanyInfoTab({ supplier }: CompanyInfoTabProps) {
+	const name = supplier?.companyName || "Supplier";
+	const desc = `Welcome to ${name}. We provide professional services tailored to your project requirements.`;
+
 	return (
 		<TabsContent value="company-info">
 			<div className="space-y-8 animate-in fade-in duration-300">
 				<CompanyWelcomeBanner
-					companyName="Målarfirman Solen AB"
+					companyName={name}
 					imageUrl="/assets/images/bathroom_repair_intro.png"
-					description={COMPANY_DESCRIPTION}
+					description={desc}
 				/>
 
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 					<CompanyDetailsCard
-						companyName="Målarfirman Solen AB"
-						website="www.malarfirman.se"
-						address="Storgatan 11B"
-						city="Solna"
-						parentCompany="Pelle Construction"
-						mobile="08-580 50 50"
-						email="info@malarfirman.se"
+						companyName={name}
+						website="-"
+						address="-"
+						city="-"
+						parentCompany={name}
+						mobile={supplier?.mobileNumber || "-"}
+						email={supplier?.emailAddress || "-"}
 					/>
 					<CreditInformationCard
-						companyName="Målarfirman Solen AB"
-						registeredFTax="YES"
-						registeredVat="YES"
-						boardInformation="NO"
+						companyName={name}
+						registeredFTax="-"
+						registeredVat="-"
+						boardInformation="-"
 					/>
 				</div>
 
-				<CertificatesTable certificates={DUMMY_CERTIFICATES} />
+				<CertificatesTable certificates={[]} />
 
-				<PersonnelTable personnel={DUMMY_PERSONNEL} />
+				<PersonnelTable personnel={[]} />
 			</div>
 		</TabsContent>
 	);

@@ -6,6 +6,8 @@
 @theme inline {
 	/* ── Custom brand colors (mirrors src/constants/colors.ts) ── */
 	--color-brand-orange: #ff8100; /* primary brand orange – no Tailwind equivalent */
+	--color-green-500: #22c55e; /* active/success badge – GREEN[500] in colors.ts */
+	--color-zinc-950: #09090b; /* section header text – ZINC[950] in colors.ts */
 
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
@@ -32,6 +34,7 @@
 	--radius-lg: var(--radius);
 	--radius-xl: calc(var(--radius) + 4px);
 	--shadow-lg: 0px 2px 2px 0px hsla(0, 0%, 0%, 0.25);
+	--color-bg-secondary: var(--color-bg-secondary);
 	--color-gray-100: var(--color-gray-100);
 	--color-gray-200: var(--color-gray-200);
 	--color-gray-300: var(--color-gray-300);
@@ -109,6 +112,21 @@
 ::-webkit-scrollbar-thumb {
 	border-radius: 10px;
 	background-color: var(--color-scroll-thumb);
+}
+
+/* Thin horizontal scrollbar for B2B tables */
+.b2b-table-scroll::-webkit-scrollbar {
+  height: 2px;
+}
+.b2b-table-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.b2b-table-scroll::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 9999px;
+}
+.b2b-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
 }
 
 /* Utility to hide scrollbar */

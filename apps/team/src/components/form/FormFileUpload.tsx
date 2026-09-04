@@ -34,6 +34,7 @@ export interface FormFileUploadProps<
 	helperText?: ReactNode;
 	invalidTypeMessage?: ReactNode;
 	showPreview?: boolean;
+	onFileSelected?: (file: File) => void;
 	className?: string;
 	labelClassName?: string;
 	inputWrapperClassName?: string;
@@ -59,6 +60,7 @@ export function FormFileUpload<
 	helperText,
 	invalidTypeMessage = localizationConstants.unsupportedFileType,
 	showPreview = true,
+	onFileSelected,
 	className,
 	labelClassName,
 	inputWrapperClassName,
@@ -178,6 +180,7 @@ export function FormFileUpload<
 									setLocalError(null);
 									setSelectedFile(file);
 									field.onChange(file);
+									onFileSelected?.(file);
 								}}
 							/>
 
@@ -185,7 +188,7 @@ export function FormFileUpload<
 								type="button"
 								variant="outline"
 								className={cn(
-									"flex flex-1 items-center justify-between rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm shadow-sm",
+									"flex h-10 flex-1 items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2.5 text-sm shadow-none",
 									inputClassName,
 								)}
 								onClick={() => inputRef.current?.click()}
@@ -200,7 +203,7 @@ export function FormFileUpload<
 
 							<Button
 								type="button"
-								className={buttonClassName}
+								className={cn("h-10 rounded-md px-3 py-2", buttonClassName)}
 								onClick={() => inputRef.current?.click()}
 							>
 								{resolvedButtonLabel}

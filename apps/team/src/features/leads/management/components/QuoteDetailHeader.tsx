@@ -14,7 +14,7 @@ type QuoteDetailHeaderProps = {
 export default function QuoteDetailHeader({ title, backHref }: QuoteDetailHeaderProps) {
 	return (
 		<div className="flex flex-col gap-2">
-			<Button asChild variant="ghost" className="w-fit gap-2 text-slate-600 hover:text-slate-900">
+			<Button asChild variant="ghost" className="w-fit gap-2 px-0 has-[>svg]:px-0 text-slate-600 hover:bg-transparent hover:text-slate-900">
 				<Link href={backHref}>
 					<ArrowLeft className="size-4" />
 					<Translate text={localizationConstants.backToQuoteList} />

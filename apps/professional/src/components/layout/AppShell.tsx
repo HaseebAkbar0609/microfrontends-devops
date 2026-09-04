@@ -8,8 +8,6 @@ import { Loader } from "@/components/ui/loader";
 import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscriptionCookie";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
-import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
-import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -26,7 +24,9 @@ const AUTH_ROUTE_PREFIXES = [
 const PUBLIC_ROUTE_PREFIXES = ["/manage-plans", "/manage-cart"];
 
 function pathMatchesPrefixes(pathname: string, prefixes: string[]) {
-	return prefixes.some((prefix) => pathname.startsWith(prefix));
+	return prefixes.some(
+		(prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+	);
 }
 
 export function AppShell({ children }: AppShellProps) {
@@ -37,7 +37,6 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
-	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -47,54 +46,66 @@ export function AppShell({ children }: AppShellProps) {
 			isPublicPage &&
 			!getRequiresSubscriptionFromBrowserCookie()
 		) {
-			setIsCheckingAuth(false);
-			router.replace("/dashboard");
+			router.replace("/home");
 			return;
 		}
 
 		if (isAuthRoute && isAuthenticated) {
-			// Let users stay on /invitation?token=… to accept (even with an existing session).
-			if (pathname === "/invitation" || pathname.startsWith("/invitation/")) {
+			// Let users stay on /invitation, /my-companies, or /register even with an existing session.
+			if (
+				pathname === "/invitation" ||
+				pathname.startsWith("/invitation/") ||
+				pathname === "/my-companies" ||
+				pathname === "/register" ||
+				pathname.startsWith("/register/")
+			) {
 				setIsCheckingAuth(false);
 				return;
 			}
 
-			setIsCheckingAuth(false);
-			const subscriptionRequired = getRequiresSubscriptionFromBrowserCookie();
-			const destination =
-				pathname === "/register" || subscriptionRequired
-					? "/manage-plans"
-					: "/dashboard";
+			const subscriptionRequired =
+				getRequiresSubscriptionFromBrowserCookie();
+			const destination = subscriptionRequired
+				? "/manage-plans"
+				: "/home";
 			router.replace(destination);
 			return;
 		}
 
 		if (!isAuthenticated && !isAuthRoute && !isPublicPage) {
 			router.replace("/login");
+			return;
+		}
+
+		if (!isAuthenticated && pathname === "/my-companies") {
+			router.replace("/login");
+			return;
 		}
 
 		setIsCheckingAuth(false);
-	}, [
-		isReady,
-		isAuthenticated,
-		isAuthRoute,
-		isPublicPage,
-		pathname,
-		router,
-	]);
+	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, pathname, router]);
 
 	if (!isReady) {
 		return <Loader />;
 	}
 
 	if (isAuthRoute && isAuthenticated) {
-		if (pathname === "/invitation" || pathname.startsWith("/invitation/")) {
+		if (
+			pathname === "/invitation" ||
+			pathname.startsWith("/invitation/") ||
+			pathname === "/my-companies" ||
+			pathname === "/register" ||
+			pathname.startsWith("/register/")
+		) {
 			return <>{children}</>;
 		}
 		return <Loader />;
 	}
 
 	if (isAuthRoute) {
+		if (pathname === "/my-companies" && !isAuthenticated) {
+			return <Loader />;
+		}
 		return <>{children}</>;
 	}
 
@@ -109,19 +120,9 @@ export function AppShell({ children }: AppShellProps) {
 	return (
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
-			{flyoutSubSidebarConfig && !isPublicPage && (
-				<MyPagesSubSidebar
-					titleKey={flyoutSubSidebarConfig.titleKey}
-					items={flyoutSubSidebarConfig.items}
-				/>
-			)}
 			<div className="flex flex-1 flex-col overflow-hidden">
 				<Header />
-				<main
-					className={`flex flex-1 flex-col bg-white pb-6 ${
-						flyoutSubSidebarConfig ? "overflow-hidden" : "overflow-auto"
-					}`}
-				>
+				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0">
 					{children}
 				</main>
 			</div>

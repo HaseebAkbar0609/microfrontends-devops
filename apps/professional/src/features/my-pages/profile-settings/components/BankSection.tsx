@@ -21,9 +21,7 @@ export default function BankSection() {
 		
 	});
 
-	const onSubmit = (data: BankFormValues) => {
-		console.log(data);
-	};
+	const onSubmit = (_data: BankFormValues) => {};
 
 	return (
 		<Form {...form}>
@@ -69,7 +67,7 @@ export default function BankSection() {
 						<FormSelect
 							control={form.control}
 							name="bank"
-							label={<Translate text={localizationConstants.banktab} />}
+							label={<Translate text={localizationConstants.bankTab} />}
 							placeholder={localizationConstants.selectField}
 							className="space-y-1"
 							labelClassName="text-sm font-medium"
@@ -96,9 +94,8 @@ export default function BankSection() {
 						<FormInput
 							control={form.control}
 							name="iban"
-							label={localizationConstants.iban}
-							placeholder={localizationConstants.iban}
-							
+							label={localizationConstants.bankIban}
+							placeholder={localizationConstants.bankIban}
 						/>
 
 						<FormInput

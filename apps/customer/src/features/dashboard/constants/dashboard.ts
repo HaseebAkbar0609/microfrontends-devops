@@ -27,32 +27,19 @@ export const DASHBOARD_QUICK_STATS: QuickStat[] = [
 		id: "offer-management",
 		title: localizationConstants.offerManagementTitle,
 		value: localizationConstants.offerManagementValue,
-		href: "/quote",
+		href: "/business/offer",
 		icon: ShieldCheck,
 	},
 	{
 		id: "completed-projects",
 		title: localizationConstants.completedProjectsTitle,
 		value: localizationConstants.completedProjectsValue,
-		href: "/archivedprojects",
+		href: "/projectmanagement",
 		icon: UserRound,
 	},
 ];
 
-export const DASHBOARD_NEWS: DashboardNewsItem[] = [
-	{
-		id: "news-1",
-		title: localizationConstants.newsTitle,
-		time: localizationConstants.newsTime,
-		description: localizationConstants.newsDescription,
-	},
-	{
-		id: "news-2",
-		title: localizationConstants.newsTitle,
-		time: localizationConstants.newsTime,
-		description: localizationConstants.newsDescription,
-	},
-];
+export const DASHBOARD_NEWS: DashboardNewsItem[] = [];
 
 export const DASHBOARD_RESOURCE_LINKS: ResourceLink[] = [
 	{
@@ -75,7 +62,7 @@ export const DASHBOARD_RESOURCE_LINKS: ResourceLink[] = [
 	},
 	{
 		id: "calculator",
-		label: localizationConstants.calculation,
+		label: localizationConstants.costCalculatorLabel,
 		icon: Calculator,
 		href: "/priceCalculator",
 	},

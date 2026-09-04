@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { LeadRequestDetails } from "@/features/leads/types";
 import { SortLabel } from "@/features/leads/management/components/LeadDetailShared";
+import { isSafeUrl } from "@/utils/urlValidator";
 import FilePreviewIcon from "@/features/leads/management/components/FilePreviewIcon";
 
 type LeadRequestTabProps = {
@@ -25,9 +26,7 @@ export default function LeadRequestTab({ requestDetails }: LeadRequestTabProps) 
 			? localizationConstants.yesLabel
 			: localizationConstants.noLabel
 	);
-if (requestDetails) {
-		console.log("Request Details:", requestDetails);
-	}
+
 	return (
 		<div className="space-y-6 mb-10">
 			<div className="grid gap-6 xl:grid-cols-2">
@@ -52,20 +51,20 @@ if (requestDetails) {
 							<div className="text-sm font-semibold text-slate-900">
 								<Translate text={localizationConstants.projectDocuments} />
 							</div>
-							<div className="overflow-hidden rounded-lg border border-slate-200">
-								<Table className="text-sm">
+							<div className="max-w-129 [&>div]:scrollbar-thin [&>div::-webkit-scrollbar]:h-0.75 [&>div::-webkit-scrollbar-track]:bg-transparent [&>div::-webkit-scrollbar-thumb]:rounded-full [&>div::-webkit-scrollbar-thumb]:bg-slate-100">
+								<Table>
 									<TableHeader>
-										<TableRow>
-											<TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-slate-500">
+										<TableRow className="h-12">
+											<TableHead className="w-29 px-4 text-sm font-medium text-slate-500">
 												<SortLabel label={t(localizationConstants.dateLabel)} />
 											</TableHead>
-											<TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-slate-500">
+											<TableHead className="w-55.25 px-4 text-sm font-medium text-slate-500">
 												<SortLabel label={t(localizationConstants.documentNameLabel)} />
 											</TableHead>
-											<TableHead className="px-4 py-3 text-xs font-semibold tracking-wide text-slate-500">
+											<TableHead className="w-18 px-4 text-sm font-medium text-slate-500">
 												<SortLabel label={t(localizationConstants.fileTypeLabel)} />
 											</TableHead>
-											<TableHead className="border-l px-4 py-3 text-xs font-semibold tracking-wide text-slate-200">
+											<TableHead className="w-27 border-l border-slate-200 px-4">
 												<span className="sr-only">
 													<Translate text={localizationConstants.requestAction} />
 												</span>
@@ -74,30 +73,29 @@ if (requestDetails) {
 									</TableHeader>
 									<TableBody>
 										{(requestDetails?.documents ?? []).map((document) => (
-											<TableRow key={document.id}>
-												<TableCell className="px-4 py-4 text-slate-700">
+											<TableRow key={document.id} className="h-14">
+												<TableCell className="px-4 text-sm text-[#020617]">
 													{document.date}
 												</TableCell>
-												<TableCell className="px-4 py-4">
-													<div className="flex items-center gap-3 text-slate-700">
-														<FilePreviewIcon fileType={document.fileType} />
-														<span className="font-medium text-slate-700">
+												<TableCell className="px-4">
+													<div className="flex items-center gap-3">
+														<FilePreviewIcon fileType={document.fileType} className="h-10 w-10 shrink-0" />
+														<span className="truncate text-sm text-[#020617]">
 															{document.name}
 														</span>
 													</div>
 												</TableCell>
-												<TableCell className="px-4 py-4 text-slate-600">
+												<TableCell className="px-4 text-sm text-[#020617]">
 													{document.fileType}
 												</TableCell>
-												<TableCell className="border-l border-slate-200 px-4 py-4">
+												<TableCell className="border-l border-slate-200 px-4">
 													<Button
 														type="button"
 														variant="outline"
-														size="sm"
-														className="rounded-md border-slate-300 bg-white px-5 text-slate-900 hover:bg-slate-50"
-														disabled={!document.url}
+														className="h-9 w-16 min-w-16 rounded-md border-slate-200 bg-white px-2 text-sm font-medium text-[#0F172A] hover:bg-slate-50"
+														disabled={!document.url || !isSafeUrl(document.url)}
 														onClick={() => {
-															if (!document.url) return;
+															if (!document.url || !isSafeUrl(document.url)) return;
 															window.open(document.url, "_blank", "noopener,noreferrer");
 														}}
 													>

@@ -1,6 +1,6 @@
 "use client";
 
-import { PanelLeftClose, PanelLeftOpen, Search } from "lucide-react";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { navConfig, type NavGroup } from "./navConfig";
@@ -8,6 +8,7 @@ import { SidebarNavGroup } from "./SidebarNavGroup";
 import { SidebarRailFlyoutContext } from "./SidebarRailContext";
 import { SLATE } from "@/constants/colors";
 import { cn } from "@/lib/utils";
+import { DashboardLogo } from "./DashboardLogo";
 
 interface SidebarProps {
 	autoCollapse?: boolean;
@@ -98,47 +99,7 @@ export default function Sidebar({ autoCollapse = true }: SidebarProps) {
 								: "min-h-[3rem] justify-between"
 						)}
 					>
-						<div
-							className={cn(
-								"relative flex h-7 items-center",
-								collapsed
-									? "w-full justify-center"
-									: "min-w-0 flex-1 justify-start"
-							)}
-						>
-							<div
-								className={cn(
-									"flex items-center justify-center gap-0 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none",
-									collapsed
-										? "opacity-100"
-										: "pointer-events-none absolute inset-0 scale-95 opacity-0"
-								)}
-								aria-hidden={!collapsed}
-							>
-								<span className="text-xl font-bold leading-none text-brand-orange">
-									T
-								</span>
-								<span className="text-xl font-bold leading-none text-white">
-									F
-								</span>
-							</div>
-							<div
-								className={cn(
-									"flex items-center transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none",
-									collapsed
-										? "pointer-events-none absolute inset-0 justify-center scale-95 opacity-0"
-										: "scale-100 opacity-100"
-								)}
-								aria-hidden={collapsed}
-							>
-								<span className="text-lg font-bold leading-none text-brand-orange">
-									Time
-								</span>
-								<span className="text-lg font-bold leading-none text-white">
-									Flow
-								</span>
-							</div>
-						</div>
+						<DashboardLogo collapsed={collapsed} />
 
 						{!autoCollapse && (
 							<button
@@ -163,28 +124,6 @@ export default function Sidebar({ autoCollapse = true }: SidebarProps) {
 								style={{ borderTopColor: SLATE[700] }}
 							/>
 						)}
-					</div>
-
-					<div
-						className={cn(
-							"grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
-							collapsed ? "grid-rows-[0fr]" : "grid-rows-[1fr]"
-						)}
-					>
-						<div className="min-h-0 overflow-hidden">
-							<div className="relative flex items-center pb-0.5 pt-0">
-								<Search
-									size={16}
-									className="pointer-events-none absolute left-[9px] top-1/2 -translate-y-1/2 text-slate-400"
-								/>
-								<input
-									type="text"
-									placeholder="Search"
-									disabled={collapsed}
-									className="w-full rounded-md border border-slate-600 bg-slate-700 py-1 pl-8 pr-3 text-sm text-slate-200 outline-none placeholder:text-slate-400 focus:border-slate-500 disabled:pointer-events-none"
-								/>
-							</div>
-						</div>
 					</div>
 				</div>
 

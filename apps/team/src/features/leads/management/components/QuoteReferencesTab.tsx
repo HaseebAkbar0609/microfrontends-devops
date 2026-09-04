@@ -6,7 +6,7 @@ import { QuoteReferencesImagesSection } from "@/features/leads/management/compon
 
 export default function QuoteReferencesTab() {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 mb-10">
       <QuoteReferencesReviewSection />
       <QuoteReferencesTableSection />
       <QuoteReferencesImagesSection />

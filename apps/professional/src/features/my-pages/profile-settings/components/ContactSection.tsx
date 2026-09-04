@@ -7,6 +7,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useRef } from "react";
 import {
 	BriefcaseBusiness,
+	Loader2,
 	MapPin,
 	Settings2,
 	Contact,
@@ -29,6 +30,7 @@ import { CollapsibleSection } from "@/components/common/CollapsibleSection";
 import {
 	useProfileSettings,
 	useUpdateProfileSettings,
+	type ProfileSettingsData,
 } from "../hooks/useProfileSettings";
 
 const DEFAULT_CONTACT_VALUES: ContactFormValues = {
@@ -40,30 +42,34 @@ const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 	},
 	firstName: "",
 	lastName: "",
-	email: ""
+	email: "",
+	countryId: "",
+	cityId: "",
+	postalCity: "",
+	personalId: "",
+	phone: "",
+	streetAddress: "",
+	postalCode: "",
+	employmentNumber: "",
+	position: "",
+	department: "",
+	languagePreference: "",
+	languageOther: "",
 };
 
 export default function ContactSection() {
-	const inputClassName = "";
 	const lastSavedRef = useRef<ContactFormValues | null>(null);
 
 	const form = useForm<ContactFormValues>({
 		resolver: zodResolver(contactSchema),
 		defaultValues: DEFAULT_CONTACT_VALUES,
 	});
-	const {
-		handleSubmit,
-		control,
-		watch,
-	} = form;
+	const { handleSubmit, control, watch } = form;
 
 	const profileSettingsQuery = useProfileSettings();
 	const updateProfileSettings = useUpdateProfileSettings();
 
-	const { fields, append } = useFieldArray({
-		control,
-		name: "nextOfKin",
-	});
+	const { fields, append } = useFieldArray({ control, name: "nextOfKin" });
 
 	const onSubmit = async (data: ContactFormValues) => {
 		try {
@@ -75,19 +81,16 @@ export default function ContactSection() {
 		}
 	};
 
-	useEffect(() => {
-		lastSavedRef.current = form.getValues();
-	}, [form]);
 
 	useEffect(() => {
-		if (!profileSettingsQuery.data) {
-			return;
-		}
+		if (!profileSettingsQuery.data) return;
 
-		const incoming = profileSettingsQuery.data as Partial<ContactFormValues>;
+		const incoming = profileSettingsQuery.data as ProfileSettingsData;
+
 		const merged: ContactFormValues = {
 			...DEFAULT_CONTACT_VALUES,
 			...incoming,
+			postalCity: incoming.cityName ?? "",
 			notifications: {
 				...DEFAULT_CONTACT_VALUES.notifications,
 				...incoming.notifications,
@@ -123,7 +126,6 @@ export default function ContactSection() {
 									name="firstName"
 									label={localizationConstants.firstName}
 									placeholder={localizationConstants.firstName}
-									
 									messageClassName="text-xs text-red-600 mt-1"
 								/>
 								<FormInput
@@ -131,15 +133,13 @@ export default function ContactSection() {
 									name="lastName"
 									label={localizationConstants.lastName}
 									placeholder={localizationConstants.lastName}
-									
 									messageClassName="text-xs text-red-600 mt-1"
 								/>
 								<FormInput
 									control={control}
 									name="personalId"
 									label={localizationConstants.personalId}
-									placeholder="YYMMDD-XXXX"
-									
+									placeholder="ÅÅMMDD-XXXX"
 								/>
 							</div>
 						</div>
@@ -159,7 +159,6 @@ export default function ContactSection() {
 									name="email"
 									label={localizationConstants.email}
 									placeholder={localizationConstants.email}
-									
 									messageClassName="text-xs text-red-600 mt-1"
 								/>
 								<FormInput
@@ -167,14 +166,12 @@ export default function ContactSection() {
 									name="phone"
 									label={localizationConstants.phone}
 									placeholder={localizationConstants.phone}
-								
 								/>
 								<FormInput
 									control={control}
 									name="streetAddress"
 									label={localizationConstants.streetAddress}
 									placeholder={localizationConstants.streetAddress}
-									
 								/>
 							</div>
 							<div className="grid grid-cols-3 gap-4 mt-4">
@@ -183,14 +180,12 @@ export default function ContactSection() {
 									name="postalCode"
 									label={localizationConstants.postalCode}
 									placeholder={localizationConstants.postalCode}
-									
 								/>
 								<FormInput
 									control={control}
-									name="city"
-									label={localizationConstants.city}
-									placeholder={localizationConstants.city}
-									
+									name="postalCity"
+									label={localizationConstants.profilePostalCity}
+									placeholder={localizationConstants.profilePostalCity}
 								/>
 							</div>
 						</div>
@@ -211,15 +206,13 @@ export default function ContactSection() {
 										name={`nextOfKin.${idx}.name` as const}
 										label={localizationConstants.nextOfKinName}
 										placeholder={localizationConstants.nextOfKinName}
-										
 									/>
 									<FormSelect
 										control={control}
 										name={`nextOfKin.${idx}.relation` as const}
 										label={<Translate text={localizationConstants.relation} />}
 										placeholder={localizationConstants.relation}
-										
-										triggerClassName={`w-full ${inputClassName}`}
+										triggerClassName={`w-full`}
 										options={[
 											{
 												value: "parent",
@@ -244,27 +237,26 @@ export default function ContactSection() {
 										name={`nextOfKin.${idx}.phone` as const}
 										label={localizationConstants.nextOfKinPhone}
 										placeholder={localizationConstants.nextOfKinPhone}
-										
 									/>
 									<FormInput
 										control={control}
 										name={`nextOfKin.${idx}.email` as const}
 										label={localizationConstants.nextOfKinEmail}
 										placeholder={localizationConstants.nextOfKinEmail}
-										
 									/>
-									<div className="flex items-end">
-							<Button
-								type="button"
-								variant="outline"
-								className="border-0 w-[184px] h-10 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
-								onClick={() => append({ name: "", relation: "", phone: "", email: "" })}
-							>
-								<UserPlus size={16} />
-								<Translate text={localizationConstants.addRelatives} />
-							</Button></div>
 								</div>
 							))}
+							<div className="flex items-end">
+								<Button
+									type="button"
+									variant="outline"
+									className="border-0 w-[184px] h-10 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
+									onClick={() => append({ name: "", relation: "", phone: "", email: "" })}
+								>
+									<UserPlus size={16} />
+									<Translate text={localizationConstants.addRelatives} />
+								</Button>
+							</div>
 						</div>
 					</CollapsibleSection>
 
@@ -282,6 +274,7 @@ export default function ContactSection() {
 									name="employmentNumber"
 									label={localizationConstants.employmentNumber}
 									placeholder={localizationConstants.employmentNumber}
+									inputClassName="!bg-[#f4f4f5]"
 									inputProps={{ readOnly: true }}
 								/>
 								<FormInput
@@ -289,7 +282,7 @@ export default function ContactSection() {
 									name="position"
 									label={localizationConstants.position}
 									placeholder={localizationConstants.position}
-									inputClassName={`!bg-[#f4f4f5] ${inputClassName}`}
+									inputClassName="!bg-[#f4f4f5]"
 									inputProps={{ readOnly: true }}
 								/>
 								<FormInput
@@ -297,7 +290,7 @@ export default function ContactSection() {
 									name="department"
 									label={localizationConstants.department}
 									placeholder={localizationConstants.department}
-									inputClassName={`!bg-[#f4f4f5] ${inputClassName}`}
+									inputClassName="!bg-[#f4f4f5]"
 									inputProps={{ readOnly: true }}
 								/>
 							</div>
@@ -325,9 +318,7 @@ export default function ContactSection() {
 									<Translate text={localizationConstants.unsupportedFileType} />
 								}
 								buttonClassName="bg-slate-900 px-6 !text-white hover:bg-slate-900/90"
-								
 								showPreview
-								
 							/>
 
 							<div>
@@ -361,8 +352,8 @@ export default function ContactSection() {
 														<FormSelect
 															control={control}
 															name="languageOther"
-															placeholder={localizationConstants.languagePreference} 
-															triggerClassName={`w-full ${inputClassName}`}
+															placeholder={localizationConstants.languagePreference}
+															triggerClassName={`w-full`}
 															options={[
 																{
 																	value: "french",
@@ -428,18 +419,21 @@ export default function ContactSection() {
 							className="border border-slate-200 w-[204px] bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
 							onClick={() => {
 								const lastSaved = lastSavedRef.current;
-								if (lastSaved) {
-									form.reset(lastSaved);
-								}
+								if (lastSaved) form.reset(lastSaved);
 							}}
 						>
 							<Translate text={localizationConstants.cancel} />
 						</Button>
 						<Button
 							type="submit"
+							disabled={updateProfileSettings.isPending}
 							className="w-[204px] bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)]"
 						>
-							<Save size={16} />
+							{updateProfileSettings.isPending ? (
+								<Loader2 size={16} className="animate-spin" />
+							) : (
+								<Save size={16} />
+							)}
 							<Translate text={localizationConstants.save} />
 						</Button>
 					</div>

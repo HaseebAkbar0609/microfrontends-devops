@@ -1,12 +1,16 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Tooltip } from "@/components/ui/tooltip";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
 export function ConsultantCard() {
+	const router = useRouter();
+
 	return (
 		<Card className="relative flex min-h-[258px] w-full overflow-hidden bg-white border p-0">
 			{/* Text & Action side */}
@@ -32,25 +36,17 @@ export function ConsultantCard() {
 				</div>
 
 				<div className="mt-[60px] w-fit">
-					<Tooltip
-						position="bottom"
-						content={
-							<Translate
-								text={localizationConstants.comingSoon}
-							/>
-						}
+					<Button
+						variant="primary"
+						className="w-fit cursor-pointer gap-2 bg-gray-900 text-base text-white shadow-md hover:bg-gray-800 active:opacity-90"
+						size="lg"
+						onClick={() => router.push("/business/consultant")}
 					>
-						<Button
-							variant="primary"
-							className="w-fit gap-2 bg-gray-900 text-base text-white shadow-md hover:bg-gray-800 active:opacity-90 cursor-default"
-							size="lg"
-						>
-							<Plus className="h-5 w-5" />
-							<Translate
-								text={localizationConstants.consultantButton}
-							/>
-						</Button>
-					</Tooltip>
+						<Plus className="h-5 w-5" />
+						<Translate
+							text={localizationConstants.consultantButton}
+						/>
+					</Button>
 				</div>
 			</div>
 

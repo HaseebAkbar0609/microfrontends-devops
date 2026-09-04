@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { LeadRow } from "@/features/leads/types";
 import { leadDetailTabs } from "@/features/leads/management/constants";
 import { useLeadRequestDetails } from "@/features/leads/queries/useLeadRequestDetails";
+import { previewRequestDetails } from "@/features/leads/management/constants/previewRequestDetails";
 import { useLeadQuoteList } from "@/features/leads/queries/useLeadQuoteList";
 import LeadDetailHeaderActions from "@/features/leads/management/components/LeadDetailHeaderActions";
 import LeadOverviewTab from "@/features/leads/management/components/LeadOverviewTab";
@@ -27,8 +28,8 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 
 	const title = `${lead.customer} - ${lead.category}`;
 	const requestDetailsQuery = useLeadRequestDetails(lead.id);
-	const quoteListQuery = useLeadQuoteList(lead.leadId);
-	const requestDetails = requestDetailsQuery.data;
+	const quoteListQuery = useLeadQuoteList(lead.id);
+	const requestDetails = requestDetailsQuery.data ?? previewRequestDetails;
 	const quoteRows = quoteListQuery.data ?? [];
 	const isMonitoringView = searchParams.get("source") === "monitoring";
 	const showArchiveAction =
@@ -36,13 +37,15 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 	const detailTabs = useMemo(() => {
 		if (!isMonitoringView) return leadDetailTabs;
 		return [
-			...leadDetailTabs,
-			{ value: "quote-list", labelKey: localizationConstants.quoteListTab },
+			leadDetailTabs[0],
+			leadDetailTabs[1],
+			leadDetailTabs[2],
+			{ value: "activity", labelKey: localizationConstants.activityLogsTab },
 		];
 	}, [isMonitoringView]);
 
 	return (
-		<div className="flex h-full flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+		<div className="flex flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
 			<div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 				<div className="flex flex-col gap-1">
 					<h1 className="text-2xl font-semibold text-slate-900">{title}</h1>
@@ -106,20 +109,13 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 					/>
 				</TabsContent>
 
-				{leadDetailTabs
-					.filter(
-						(
-							tab
-						): tab is (typeof leadDetailTabs)[number] =>
-							tab.value !== "overview" && tab.value !== "request"
-					)
-					.map((tab) => (
-						<TabsContent key={tab.value} value={tab.value} className="pt-6">
-							<div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500 ">
-								<Translate text={localizationConstants.comingSoon} />
-							</div>
-						</TabsContent>
-					))}
+				{["notes", "activity"].map((tabValue) => (
+					<TabsContent key={tabValue} value={tabValue} className="pt-6">
+						<div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500 ">
+							<Translate text={localizationConstants.comingSoon} />
+						</div>
+					</TabsContent>
+				))}
 			</Tabs>
 		</div>
 	);

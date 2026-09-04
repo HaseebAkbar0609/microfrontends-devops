@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const plans = [
   {
@@ -58,6 +59,8 @@ const plans = [
 ];
 
 const ProfessionalPricing2Content: React.FC = () => {
+  const { i18n } = useTranslation();
+  const currentLocale = i18n.language || "sv-SE";
   const [counts, setCounts] = useState<{ [key: string]: number }>({
     STANDARD: 1,
     PRO: 1,
@@ -125,7 +128,7 @@ const ProfessionalPricing2Content: React.FC = () => {
                 <p className="text-3xl font-bold text-[#FF914D] mb-4">
                   {plan.title === "Free plan"
                     ? plan.priceText
-                    : `${finalPrice} kr/mån`}
+                    : `${finalPrice.toLocaleString(currentLocale)} kr/mån`}
                 </p>
 
                 {/* Features */}
@@ -160,12 +163,12 @@ const ProfessionalPricing2Content: React.FC = () => {
 
                   {/* Price breakdown */}
                   <div className="text-sm text-center mt-3 text-gray-600">
-                    <p>Grund avgift: {plan.basePrice} kr</p>
+                    <p>Grund avgift: {(plan.basePrice || 0).toLocaleString(currentLocale)} kr</p>
                     <p>
-                      Licens: {plan.licensePrice} kr / användare
+                      Licens: {(plan.licensePrice || 0).toLocaleString(currentLocale)} kr / användare
                     </p>
                     <p className="font-semibold">
-                      Totalt: {finalPrice} kr / mån
+                      Totalt: {finalPrice.toLocaleString(currentLocale)} kr / mån
                     </p>
                   </div>
                 </div>

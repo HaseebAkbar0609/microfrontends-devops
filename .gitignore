@@ -18,6 +18,9 @@ node_modules/
 # Testing
 coverage/
 
+# Local pnpm config (machine-specific)
+.npmrc
+
 # Environment
 .env
 .env.local
@@ -51,3 +54,11 @@ next-env.d.ts
 apps/*/pnpm-lock.yaml
 apps/*/package-lock.json
 apps/*/yarn.lock
+
+# Playwright MCP
+.playwright-mcp/
+.mcp.json
+.claude
+.agents/
+.cursorrules
+skills-lock.json
