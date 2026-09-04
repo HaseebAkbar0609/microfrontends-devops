@@ -104,6 +104,7 @@ export default function SalesCrmPage() {
 				</div>
 
 				<ActionsToolbar
+					className="flex-wrap gap-y-3"
 					searchValue={query}
 					onSearchChange={setQuery}
 					searchPlaceholder={localizationConstants.salesSearchPlaceholder}

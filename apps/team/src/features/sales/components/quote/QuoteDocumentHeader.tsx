@@ -31,6 +31,8 @@ type PartyBlockProps = {
 	headingKey: string;
 	name: string;
 	lines: (string | null | undefined)[];
+	/** Rendered under the plain lines, for content that is not a bare string. */
+	extra?: ReactNode;
 	align?: "left" | "right";
 };
 
@@ -39,6 +41,7 @@ export function QuoteDocumentParty({
 	headingKey,
 	name,
 	lines,
+	extra,
 	align = "left",
 }: PartyBlockProps) {
 	return (
@@ -54,6 +57,7 @@ export function QuoteDocumentParty({
 						{line}
 					</p>
 				))}
+			{extra ? <p className="text-slate-500">{extra}</p> : null}
 		</div>
 	);
 }

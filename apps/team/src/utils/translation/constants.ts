@@ -877,7 +877,6 @@ export type SalesTranslation = {
 	salesSearchPlaceholder: string;
 	salesFilterCategoryLabel: string;
 	salesFilterRegionLabel: string;
-	salesFilterStatusLabel: string;
 	salesImportCsvButton: string;
 	salesExportCsvButton: string;
 	salesCreateCompanyButton: string;
@@ -923,7 +922,6 @@ export type SalesTranslation = {
 	salesFieldEmployees: string;
 	salesFieldRevenue: string;
 	salesFieldStartYear: string;
-	salesFieldNotes: string;
 	salesSelectCategoryPlaceholder: string;
 	salesSelectRegionPlaceholder: string;
 	salesNotesPlaceholder: string;

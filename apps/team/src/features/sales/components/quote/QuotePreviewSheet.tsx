@@ -69,6 +69,15 @@ export function QuotePreviewSheet({
 					headingKey={localizationConstants.salesQuoteSellerHeading}
 					name={draft.sellerName}
 					lines={[draft.sellerEmail, draft.sellerMobile]}
+					extra={
+						<>
+							{draft.users}{" "}
+							<Translate
+								text={localizationConstants.salesQuoteUsersSuffix}
+							/>{" "}
+							· <Translate text={term.labelKey} />
+						</>
+					}
 					align="right"
 				/>
 			</div>

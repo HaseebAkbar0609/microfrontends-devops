@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FileText, FilePlus2, Link2, ReceiptText } from "lucide-react";
+import { FileText, FilePlus2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import localizationConstants from "@/utils/translation/constants";
@@ -9,8 +9,8 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { getSalesStatusMeta } from "../../constants/salesStatuses";
 import { useCompanyWorkflow } from "../../hooks/useCompanyWorkflow";
 import type { SalesCompany } from "../../types";
-import { formatCurrency, formatDate } from "../../utils/salesFormatters";
 import { SalesSectionCard } from "../SalesSectionCard";
+import { CompanyPaymentPanel } from "./CompanyPaymentPanel";
 
 type CompanyNextStepCardProps = {
 	company: SalesCompany;
@@ -24,6 +24,9 @@ function Hint({ textKey }: { textKey: string }) {
 		</p>
 	);
 }
+
+const PRIMARY_BUTTON_CLASS =
+	"w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90";
 
 export function CompanyNextStepCard({
 	company,
@@ -50,7 +53,7 @@ export function CompanyNextStepCard({
 						<Hint textKey={localizationConstants.salesNextStepProspectHint} />
 						<Button
 							type="button"
-							className="w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
+							className={PRIMARY_BUTTON_CLASS}
 							onClick={moveToLead}
 						>
 							<Translate text={localizationConstants.salesMoveToLeadButton} />
@@ -61,10 +64,7 @@ export function CompanyNextStepCard({
 				{company.status === "lead" ? (
 					<>
 						<Hint textKey={localizationConstants.salesNextStepLeadHint} />
-						<Button
-							asChild
-							className="w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
-						>
+						<Button asChild className={PRIMARY_BUTTON_CLASS}>
 							<Link href={quoteHref}>
 								<FileText className="mr-2 h-4 w-4" />
 								<Translate
@@ -87,10 +87,7 @@ export function CompanyNextStepCard({
 							cancelText={t(localizationConstants.salesCancelButton)}
 							onConfirm={confirmCreateOrder}
 							trigger={
-								<Button
-									type="button"
-									className="w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
-								>
+								<Button type="button" className={PRIMARY_BUTTON_CLASS}>
 									<FilePlus2 className="mr-2 h-4 w-4" />
 									<Translate
 										text={localizationConstants.salesCreateOrderButton}
@@ -108,107 +105,17 @@ export function CompanyNextStepCard({
 
 				{company.status === "accepted" ? (
 					<>
-						{company.payment ? (
-							<div className="space-y-2 rounded-lg border border-slate-200 p-3">
-								<p className="text-sm font-medium text-slate-900">
-									<Translate
-										text={localizationConstants.salesPaymentStatusLabel}
-									/>
-									{": "}
-									<span
-										className={
-											company.payment.status === "paid"
-												? "text-emerald-700"
-												: "text-slate-500"
-										}
-									>
-										<Translate
-											text={
-												company.payment.status === "paid"
-													? localizationConstants.salesPaymentPaid
-													: localizationConstants.salesPaymentPending
-											}
-										/>
-									</span>
-								</p>
-								<p className="text-sm text-slate-700">
-									<Translate
-										text={localizationConstants.salesInvoicedAmountLabel}
-									/>
-									{": "}
-									<span className="tabular-nums">
-										{formatCurrency(company.payment.amount)}
-									</span>
-								</p>
-								<p className="flex items-start gap-1 break-all text-xs text-slate-500">
-									<Link2 className="mt-0.5 h-3 w-3 shrink-0" />
-									{company.payment.link}
-								</p>
-								<p className="flex items-start gap-1 text-xs text-slate-500">
-									<ReceiptText className="mt-0.5 h-3 w-3 shrink-0" />
-									<span>
-										<Translate
-											text={localizationConstants.salesOrderInvoiceLabel}
-										/>{" "}
-										{company.payment.invoiceNumber} ·{" "}
-										<Translate
-											text={localizationConstants.salesInvoiceSentLabel}
-										/>{" "}
-										{formatDate(company.payment.sentAt)}
-									</span>
-								</p>
-								{company.payment.status === "pending" ? (
-									<ConfirmDialog
-										title={t(localizationConstants.salesConfirmMarkPaidTitle)}
-										description={t(
-											localizationConstants.salesConfirmMarkPaidDescription,
-										)}
-										confirmText={t(localizationConstants.salesConfirmLabel)}
-										cancelText={t(localizationConstants.salesCancelButton)}
-										onConfirm={confirmMarkPaid}
-										trigger={
-											<Button
-												type="button"
-												size="sm"
-												className="w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
-											>
-												<Translate
-													text={localizationConstants.salesMarkPaidButton}
-												/>
-											</Button>
-										}
-									/>
-								) : null}
-							</div>
-						) : (
-							<>
-								<Hint
-									textKey={localizationConstants.salesNextStepAcceptedHint}
-								/>
-								<ConfirmDialog
-									title={t(localizationConstants.salesConfirmSendPaymentTitle)}
-									description={t(
-										localizationConstants.salesConfirmSendPaymentDescription,
-									)}
-									confirmText={t(localizationConstants.salesConfirmLabel)}
-									cancelText={t(localizationConstants.salesCancelButton)}
-									onConfirm={confirmSendPayment}
-									trigger={
-										<Button
-											type="button"
-											className="w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
-										>
-											<Link2 className="mr-2 h-4 w-4" />
-											<Translate
-												text={localizationConstants.salesSendPaymentButton}
-											/>
-										</Button>
-									}
-								/>
-							</>
-						)}
+						<CompanyPaymentPanel
+							payment={company.payment}
+							onSendPayment={confirmSendPayment}
+							onMarkPaid={confirmMarkPaid}
+						/>
 						{company.order ? (
-							<Button asChild variant="outline" className="w-full cursor-pointer">
+							<Button
+								asChild
+								variant="outline"
+								className="w-full cursor-pointer"
+							>
 								<Link href={orderHref}>
 									<Translate
 										text={localizationConstants.salesViewOrderButton}
