@@ -12,6 +12,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import { RotRutStatus, RotRutType, RotRutPeriod } from "../../types/rotRut.types";
 
@@ -46,6 +47,7 @@ export function RotRutToolbar({
 	onExportExcel,
 	onPrint,
 }: RotRutToolbarProps) {
+	const { t } = useTranslation();
 	return (
 		<div className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-4 mb-4">
 			<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
@@ -189,7 +191,7 @@ export function RotRutToolbar({
 						size="icon"
 						onClick={onExportExcel}
 						className="h-9 w-9 border-slate-200 text-slate-600 hover:text-slate-900 cursor-pointer"
-						title="Exportera till Excel"
+						title={t(localizationConstants.rotRutBtnExport)}
 					>
 						<Download className="w-4 h-4" />
 					</Button>
@@ -199,7 +201,7 @@ export function RotRutToolbar({
 						size="icon"
 						onClick={onPrint}
 						className="h-9 w-9 border-slate-200 text-slate-600 hover:text-slate-900 cursor-pointer"
-						title="Skriv ut"
+						title={t(localizationConstants.rotRutBtnPrint)}
 					>
 						<Printer className="w-4 h-4" />
 					</Button>

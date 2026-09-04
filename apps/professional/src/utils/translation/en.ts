@@ -6283,7 +6283,7 @@ export const enRotRut: RotRutTranslation = {
 	rotRutPeriodLastYear: "Last Year",
 	rotRutPeriodThisMonth: "This Month",
 	rotRutBtnSubmitSelected: "Submit to Skatteverket",
-	rotRutBtnRegister: "+ Register Deduction",
+	rotRutBtnRegister: "Register Deduction",
 	rotRutBtnExport: "Export",
 	rotRutBtnPrint: "Print",
 	rotRutColInvoiceNo: "Invoice No",

@@ -6305,7 +6305,7 @@ export const svRotRut: RotRutTranslation = {
 	rotRutPeriodLastYear: "Föregående år",
 	rotRutPeriodThisMonth: "Denna månad",
 	rotRutBtnSubmitSelected: "Skicka till Skatteverket",
-	rotRutBtnRegister: "+ Registrera avdrag",
+	rotRutBtnRegister: "Registrera avdrag",
 	rotRutBtnExport: "Exportera",
 	rotRutBtnPrint: "Skriv ut",
 	rotRutColInvoiceNo: "Fakturanr",
