@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -8,6 +7,7 @@ import { FileSpreadsheet, FileText, Scale } from "lucide-react";
 import {
 	REPORT_TAB_ACTIVE_CLASS,
 	REPORT_TAB_INACTIVE_CLASS,
+	financialReportsBreadcrumbs,
 } from "../../constants/financialReports.constants";
 import { useFinancialReports } from "../../hooks/useFinancialReports";
 import { ReportSummaryCards } from "./ReportSummaryCards";
@@ -38,25 +38,12 @@ export function FinancialReportsPage() {
 		handlePrint,
 	} = useFinancialReports();
 
-	const breadcrumbs = useMemo(
-		() => [
-			{ label: localizationConstants.home, href: "/" },
-			{ label: localizationConstants.module, href: "/module" },
-			{ label: localizationConstants.economy, href: "/module/financial-management/economy" },
-			{
-				label: localizationConstants.financialReportsBreadcrumb,
-				href: "/module/financial-management/economy/reports",
-			},
-		],
-		[]
-	);
-
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
 			{/* Top Page Header */}
 			<PageHeader
 				title={localizationConstants.financialReportsTitle}
-				breadcrumbs={breadcrumbs}
+				breadcrumbs={financialReportsBreadcrumbs}
 				className="border-b-0 px-8 pt-6 pb-2"
 			/>
 

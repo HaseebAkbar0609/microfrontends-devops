@@ -1,4 +1,14 @@
+import localizationConstants from "@/utils/translation/constants";
 import type { ReportPeriodType, ReportTabType } from "../types/financialReports.types";
+
+export const FINANCIAL_REPORTS_ROUTE = "/module/financial-management/forecast";
+
+export const financialReportsBreadcrumbs = [
+	{ label: localizationConstants.home, href: "/" },
+	{ label: localizationConstants.module, href: "/module" },
+	{ label: localizationConstants.forecast, href: FINANCIAL_REPORTS_ROUTE },
+	{ label: localizationConstants.financialReportsBreadcrumb },
+];
 
 export const DEFAULT_REPORT_TAB: ReportTabType = "income_statement";
 export const DEFAULT_REPORT_PERIOD_TYPE: ReportPeriodType = "yearly";

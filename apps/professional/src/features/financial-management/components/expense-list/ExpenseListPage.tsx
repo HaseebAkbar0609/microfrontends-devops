@@ -8,7 +8,6 @@ import {
 	EXPENSE_TOP_TAB_ACTIVE_CLASS,
 	EXPENSE_TOP_TAB_INACTIVE_CLASS,
 } from "../../constants/expense.constants";
-import Link from "next/link";
 import { SupplierInvoiceView } from "./SupplierInvoiceView";
 import { CustomerInvoiceView } from "./CustomerInvoiceView";
 
@@ -64,13 +63,6 @@ export function ExpenseListPage() {
 					>
 						<Translate text={localizationConstants.expenseTopTabSupplierInvoice} />
 					</button>
-
-					<Link
-						href="/module/financial-management/economy/reports"
-						className={EXPENSE_TOP_TAB_INACTIVE_CLASS}
-					>
-						<Translate text={localizationConstants.financialReportsBreadcrumb} />
-					</Link>
 				</div>
 			</div>
 
