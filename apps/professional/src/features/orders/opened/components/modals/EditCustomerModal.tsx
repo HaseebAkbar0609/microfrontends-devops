@@ -210,13 +210,13 @@ export function EditCustomerModal({
 								type="button"
 								variant="outline"
 								onClick={onClose}
-								className="w-[120px] h-10 min-w-[80px] px-3 py-2 rounded-md border-zinc-200 text-slate-700 bg-transparent hover:bg-transparent cursor-pointer font-medium text-sm shadow-none"
+								className="w-[120px] h-10 min-w-20 px-3 py-2 rounded-md border-zinc-200 text-slate-700 bg-transparent hover:bg-transparent cursor-pointer font-medium text-sm shadow-none"
 							>
 								{t(localizationConstants.buttonClose)}
 							</Button>
 							<Button
 								type="submit"
-								className="w-[120px] h-10 min-w-[80px] px-3 py-2 rounded-md bg-slate-900 text-white hover:bg-slate-800 cursor-pointer font-medium text-sm flex items-center justify-center gap-2"
+								className="w-[120px] h-10 min-w-20 px-3 py-2 rounded-md bg-slate-900 text-white hover:bg-slate-800 cursor-pointer font-medium text-sm flex items-center justify-center gap-2"
 							>
 								<Save className="h-4 w-4" />
 								<span>{t(localizationConstants.buttonSave)}</span>

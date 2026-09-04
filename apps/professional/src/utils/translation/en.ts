@@ -2131,6 +2131,7 @@ export const enOffer: OfferTranslation = {
 	kmaQualityPlanCreateSelectAllSub: "Select all in subcategory",
 	kmaQualityPlanCreateSelectAllCat: "Select all in category",
 	kmaQualityPlanCreateAvailable: "available documents",
+	kmaQualityPlanCreateSelected: "selected",
 	kmaQualityPlanCreateNewPanelTitle: "New control plan",
 	kmaQualityPlanCreateAddBtn: "Add",
 	kmaQualityPlanCreateRemoveBtn: "Remove",
