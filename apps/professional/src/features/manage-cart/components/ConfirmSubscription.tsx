@@ -4,6 +4,7 @@ import {
 	checkoutSubscriptionAction,
 	completeSubscriptionAction,
 } from "@/api-actions";
+import { createHostedCheckoutAction } from "@/api-actions/payment/hostedCheckout";
 import { LabeledCheckbox } from "@/components/common/LabeledCheckbox";
 import { Button } from "@/components/ui/button";
 import { useAuthStatus, type User } from "@/context/AuthContext";
@@ -49,6 +50,10 @@ export function ConfirmSubscription({
 
 	const isFreeOnlyCart =
 		items.length === 1 && items[0]?.planKey === MANAGE_PLANS_PLAN_IDS.FREE;
+	const useHostedCheckoutMvp =
+		process.env.NEXT_PUBLIC_TFS825_PAYMENT_MVP === "true" &&
+		mainItem?.planKey === "standard" &&
+		mainItem?.interval === "monthly";
 
 	if (view === "checkout") {
 		return (
@@ -307,6 +312,30 @@ export function ConfirmSubscription({
 										);
 										router.replace("/home");
 										router.refresh();
+									} finally {
+										setIsSubmitting(false);
+									}
+									return;
+								}
+
+								if (useHostedCheckoutMvp && mainItem) {
+									setIsSubmitting(true);
+									try {
+										const checkout =
+											await createHostedCheckoutAction({
+												planCode: mainItem.planKey,
+												billingInterval: "monthly",
+												quantity: mainItem.quantity,
+											});
+										if (!checkout.success || !checkout.data) {
+											showToast(
+												"error",
+												cartMessages.checkoutPayment
+													.checkoutFailed,
+											);
+											return;
+										}
+										window.location.assign(checkout.data.url);
 									} finally {
 										setIsSubmitting(false);
 									}
