@@ -1,3 +1,4 @@
+import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError } from "@/types/api";
 import type { ConsultantTypeItem } from "@/features/consultant/types/consultantType";
@@ -11,7 +12,7 @@ export async function getConsultantTypesAPIAction(
 ): Promise<ActionResult<ConsultantTypeItem[]>> {
   try {
     const queryParams = params.search ? `?search=${encodeURIComponent(params.search)}` : "";
-    const response = await axiosInstance.get(`/api/v1/customers/consultation/types${queryParams}`);
+    const response = await axiosInstance.get(`${API_PATH.CONSULTATION.TYPES}${queryParams}`);
 
     return {
       success: true,

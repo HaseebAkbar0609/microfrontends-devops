@@ -1,3 +1,4 @@
+import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 
@@ -34,7 +35,7 @@ export async function createConsultantRequestAPIAction(
 		};
 
 		const response = await axiosInstance.post(
-			"/api/v1/customers/consultation/create",
+			API_PATH.CONSULTATION.CREATE,
 			apiPayload,
 		);
 

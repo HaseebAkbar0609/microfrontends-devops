@@ -1,5 +1,4 @@
 import {
-	SupportTranslation,
 	Translation,
 	SidebarTranslation,
 	AuthTranslation,
@@ -163,14 +162,6 @@ export const enCommonFiles: CommonFiles = {
 	noFileChosen: "No file chosen",
 	unsupportedFileType: "Only PNG and JPG files are allowed.",
 	partialUploadWarning: "Some files uploaded successfully, others failed. Please retry the remaining files.",
-};
-
-export const enSupport: SupportTranslation = {
-	contactUs: "Contact us",
-	phone: "Phone",
-	email: "Email",
-	contactPhone: "+46 704261092",
-	contactEmail: "info@timeflowsystem.se",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {

@@ -11,6 +11,7 @@ const BASE_PATHS = {
 	TEAMS: "/api/v1/teams",
 	COMPANIES: "/api/v1/companies",
 	CONSULTANT: `${API_PREFIX}/consultants`,
+	CONSULTATION: `${API_PREFIX}/consultation`,
 	SUPPLIER: `${API_PREFIX}/suppliers`,
 	COST_CALCULATOR: "/api/v1/tools/cost-calculator",
 	CONTENT: "/api/v1/tools/content",
@@ -118,6 +119,12 @@ export const API_PATH = {
 		LIST: `${BASE_PATHS.CONSULTANT}/list`,
 		TYPES: `${BASE_PATHS.CONSULTANT}/types`,
 		REQUESTS: `${BASE_PATHS.CONSULTANT}/requests`,
+	},
+	CONSULTATION: {
+		CREATE: `${BASE_PATHS.CONSULTATION}/create`,
+		TYPES: `${BASE_PATHS.CONSULTATION}/types`,
+		LIST: `${BASE_PATHS.CONSULTATION}/list`,
+		APPLICATIONS_LIST: `${BASE_PATHS.CONSULTATION}/applications/list`,
 	},
 	COST_CALCULATOR: {
 		CONFIG: `${BASE_PATHS.COST_CALCULATOR}/config`,

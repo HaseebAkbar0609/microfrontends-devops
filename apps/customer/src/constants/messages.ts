@@ -54,3 +54,10 @@ export const projectMessages = {
 		failed: "Failed to delete project. Please try again.",
 	},
 };
+
+export const companyMessages = {
+	activeInactiveUser: {
+		success: "User status updated",
+		failed: "Failed to update user status",
+	},
+};

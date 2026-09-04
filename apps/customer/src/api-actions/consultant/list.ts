@@ -1,3 +1,4 @@
+import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError } from "@/types/api";
 import type { Consultant } from "@/features/consultant/types/consultant";
@@ -58,7 +59,7 @@ export async function getConsultantListAPIAction(
 		if (sortOrder) query.append("sort_order", sortOrder);
 
 		const response = await axiosInstance.get(
-			`/api/v1/customers/consultation/applications/list?${query.toString()}`,
+			`${API_PATH.CONSULTATION.APPLICATIONS_LIST}?${query.toString()}`,
 		);
 
 		const data = response.data?.data || [];

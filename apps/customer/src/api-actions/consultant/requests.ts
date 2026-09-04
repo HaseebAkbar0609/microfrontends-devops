@@ -1,3 +1,4 @@
+import { API_PATH } from "@/constants/api";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 import type { ConsultantRequest } from "@/features/consultant/types/consultantRequest";
@@ -51,7 +52,7 @@ export async function getConsultantRequestsAPIAction(
     if (sortOrder) query.append("sort_order", sortOrder);
 
     const response = await axiosInstance.get(
-      `/api/v1/customers/consultation/list?${query.toString()}`,
+      `${API_PATH.CONSULTATION.LIST}?${query.toString()}`,
     );
 
     const data = response.data?.data || [];

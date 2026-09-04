@@ -1395,18 +1395,9 @@ export type RotRutModule = {
 	deleteLabel: string;
 };
 
-export type SupportTranslation = {
-	contactUs: string;
-	phone: string;
-	email: string;
-	contactPhone: string;
-	contactEmail: string;
-};
-
 export type Translation = SidebarTranslation &
 	AuthTranslation &
 	CommonFiles &
-	SupportTranslation &
 	AppLauncherTranslation &
 	DashboardText &
 	OfferModule &
