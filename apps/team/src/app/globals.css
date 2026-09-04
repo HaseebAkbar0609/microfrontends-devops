@@ -146,3 +146,50 @@
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
 }
+
+/*
+ * Print support for the sales CRM documents (quote, order confirmation).
+ *
+ * The rules are scoped with :has(.print-sheet) so they only apply on a page that
+ * actually renders a printable document — printing any other page is unchanged.
+ */
+@media print {
+	@page {
+		size: A4;
+		margin: 14mm;
+	}
+
+	body:has(.print-sheet) {
+		background: #fff;
+		overflow: visible;
+	}
+
+	body:has(.print-sheet) * {
+		visibility: hidden;
+	}
+
+	body:has(.print-sheet) .print-sheet,
+	body:has(.print-sheet) .print-sheet * {
+		visibility: visible;
+	}
+
+	body:has(.print-sheet) .print-sheet {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		max-width: none !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		border: none !important;
+		box-shadow: none !important;
+	}
+
+	.no-print {
+		display: none !important;
+	}
+
+	.print-avoid-break {
+		break-inside: avoid;
+	}
+}
