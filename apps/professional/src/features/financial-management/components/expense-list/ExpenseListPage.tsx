@@ -8,6 +8,7 @@ import {
 	EXPENSE_TOP_TAB_ACTIVE_CLASS,
 	EXPENSE_TOP_TAB_INACTIVE_CLASS,
 } from "../../constants/expense.constants";
+import Link from "next/link";
 import { SupplierInvoiceView } from "./SupplierInvoiceView";
 import { CustomerInvoiceView } from "./CustomerInvoiceView";
 
@@ -37,7 +38,7 @@ export function ExpenseListPage() {
 				className="border-b-0 px-8 pt-5 pb-2"
 			/>
 
-			{/* Top Level Category Tabs: Kundfaktura / Leverantörsfaktura (Standard #1 & #3) */}
+			{/* Top Level Category Tabs: Kundfaktura / Leverantörsfaktura / Rapporter */}
 			<div className="px-8 border-b border-slate-200 bg-white">
 				<div className="flex items-center gap-6">
 					<button
@@ -63,6 +64,13 @@ export function ExpenseListPage() {
 					>
 						<Translate text={localizationConstants.expenseTopTabSupplierInvoice} />
 					</button>
+
+					<Link
+						href="/module/financial-management/economy/reports"
+						className={EXPENSE_TOP_TAB_INACTIVE_CLASS}
+					>
+						<Translate text={localizationConstants.financialReportsBreadcrumb} />
+					</Link>
 				</div>
 			</div>
 

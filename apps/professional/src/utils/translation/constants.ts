@@ -5892,6 +5892,100 @@ export type ExpenseTranslation = {
 	expenseConfirmMoveToSupplierListDesc: string;
 };
 
+export type FinancialReportsTranslation = {
+	financialReportsTitle: string;
+	financialReportsSubtitle: string;
+	financialReportsBreadcrumb: string;
+	reportTabIncomeStatement: string;
+	reportTabBalanceSheet: string;
+	reportTabVatReport: string;
+	reportTabCustomReports: string;
+	reportPeriodTypeMonthly: string;
+	reportPeriodTypeQuarterly: string;
+	reportPeriodTypeYearly: string;
+	reportFilterYear: string;
+	reportFilterMonth: string;
+	reportFilterQuarter: string;
+	reportFilterPeriod: string;
+	reportFilterAllPeriods: string;
+	reportActionExportExcel: string;
+	reportActionDownloadPdf: string;
+	reportActionPrint: string;
+	reportActionCreateReport: string;
+	reportActionFilter: string;
+	reportActionRefresh: string;
+	reportKpiTotalRevenue: string;
+	reportKpiTotalExpenses: string;
+	reportKpiOperatingResult: string;
+	reportKpiNetResult: string;
+	reportKpiVatBalance: string;
+	reportKpiOperatingMargin: string;
+	incomeStatementTitle: string;
+	incomeStatementSubtitle: string;
+	incomeStatementSecRevenue: string;
+	incomeStatementSecDirectCosts: string;
+	incomeStatementGrossProfit: string;
+	incomeStatementSecOperatingCosts: string;
+	incomeStatementOperatingResult: string;
+	incomeStatementSecFinancial: string;
+	incomeStatementResultBeforeTax: string;
+	incomeStatementTaxCost: string;
+	incomeStatementNetResult: string;
+	incomeStatementColAccount: string;
+	incomeStatementColDescription: string;
+	incomeStatementColCurrentPeriod: string;
+	incomeStatementColPreviousPeriod: string;
+	incomeStatementColVarianceSek: string;
+	incomeStatementColVariancePercent: string;
+	balanceSheetTitle: string;
+	balanceSheetSubtitle: string;
+	balanceSheetSecAssets: string;
+	balanceSheetSecFixedAssets: string;
+	balanceSheetSecCurrentAssets: string;
+	balanceSheetTotalAssets: string;
+	balanceSheetSecEquityAndLiab: string;
+	balanceSheetSecEquity: string;
+	balanceSheetTotalEquity: string;
+	balanceSheetSecLongTermLiab: string;
+	balanceSheetSecShortTermLiab: string;
+	balanceSheetTotalLiab: string;
+	balanceSheetTotalEquityAndLiab: string;
+	balanceSheetStatusBalanced: string;
+	balanceSheetStatusUnbalanced: string;
+	balanceSheetDifference: string;
+	vatReportTitle: string;
+	vatReportSubtitle: string;
+	vatReportSecOutput: string;
+	vatReportSecInput: string;
+	vatReportSecSummary: string;
+	vatReportColBox: string;
+	vatReportColSpecification: string;
+	vatReportColBaseAmount: string;
+	vatReportColRate: string;
+	vatReportColVatAmount: string;
+	vatReportBox05: string;
+	vatReportBox10: string;
+	vatReportBox11: string;
+	vatReportBox12: string;
+	vatReportTotalOutput: string;
+	vatReportBox48: string;
+	vatReportBox49: string;
+	vatReportPayableDesc: string;
+	vatReportRefundDesc: string;
+	reportsListTitle: string;
+	reportsListColName: string;
+	reportsListColType: string;
+	reportsListColPeriod: string;
+	reportsListColDate: string;
+	reportsListColAuthor: string;
+	reportsListColStatus: string;
+	reportsListColActions: string;
+	reportsListEmpty: string;
+	reportsListStatusReady: string;
+	reportExportSuccess: string;
+	reportLoading: string;
+};
+
 export type OrderInformationTranslation = {
 	projectDetailsTab: string;
 	offerTab: string;
@@ -6055,6 +6149,7 @@ export type Translation = HeaderTranslation &
 	MachineDashboardTranslation &
 	InvoiceTranslation &
 	ExpenseTranslation &
+	FinancialReportsTranslation &
 	OrderInformationTranslation &
 	OrderOrganisationTranslation;
 
