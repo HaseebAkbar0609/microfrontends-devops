@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RotateCcw, AlertTriangle, Building2, User, Receipt } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { RotRutItem } from "../../types/rotRut.types";
@@ -22,11 +23,11 @@ interface RotRutDetailModalProps {
 	onResubmit: (id: string, updatedFields: Partial<RotRutItem>) => void;
 }
 
-function formatSEK(amount: number): string {
-	return new Intl.NumberFormat("sv-SE", {
+function formatCurrency(amount: number, currency: string): string {
+	return `${new Intl.NumberFormat("sv-SE", {
 		style: "decimal",
 		maximumFractionDigits: 0,
-	}).format(amount) + " kr";
+	}).format(amount)} ${currency}`;
 }
 
 export function RotRutDetailModal({
@@ -35,6 +36,8 @@ export function RotRutDetailModal({
 	onClose,
 	onResubmit,
 }: RotRutDetailModalProps) {
+	const { t } = useTranslation();
+	const currency = t(localizationConstants.reportCurrencySek);
 	const [editablePropertyId, setEditablePropertyId] = useState("");
 	const [editableLaborCost, setEditableLaborCost] = useState<number>(0);
 
@@ -163,19 +166,19 @@ export function RotRutDetailModal({
 								<span className="text-slate-500">
 									<Translate text={localizationConstants.rotRutColLaborAmount} />:
 								</span>
-								<span className="font-mono font-medium">{formatSEK(item.laborCost)}</span>
+								<span className="font-mono font-medium">{formatCurrency(item.laborCost, currency)}</span>
 							</div>
 							<div className="flex justify-between">
 								<span className="text-slate-500">
 									<Translate text={localizationConstants.rotRutDetailMaterialAmount} />:
 								</span>
-								<span className="font-mono font-medium">{formatSEK(item.materialCost)}</span>
+								<span className="font-mono font-medium">{formatCurrency(item.materialCost, currency)}</span>
 							</div>
 							<div className="flex justify-between font-bold text-slate-900 pt-1 border-t border-slate-200">
 								<span>
 									<Translate text={localizationConstants.rotRutColDeduction} /> (30 %):
 								</span>
-								<span className="font-mono text-blue-600">-{formatSEK(item.deductionAmount)}</span>
+								<span className="font-mono text-blue-600">-{formatCurrency(item.deductionAmount, currency)}</span>
 							</div>
 						</div>
 					</div>

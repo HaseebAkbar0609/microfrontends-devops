@@ -11,7 +11,6 @@ import { RotRutToolbar } from "./RotRutToolbar";
 import { RotRutTable } from "./RotRutTable";
 import { RotRutDetailModal } from "./RotRutDetailModal";
 import { RotRutSubmitDialog } from "./RotRutSubmitDialog";
-import { RotRutRegisterModal } from "./RotRutRegisterModal";
 
 export function RotRutOverviewPage() {
 	const {
@@ -42,11 +41,8 @@ export function RotRutOverviewPage() {
 		setDetailItem,
 		isSubmitDialogOpen,
 		setIsSubmitDialogOpen,
-		isRegisterModalOpen,
-		setIsRegisterModalOpen,
 		handleBatchSubmit,
 		executeBatchSubmit,
-		handleRegister,
 		handleResubmit,
 		handleExportExcel,
 		handlePrint,
@@ -87,7 +83,6 @@ export function RotRutOverviewPage() {
 					onPeriodFilterChange={setPeriodFilter}
 					selectedCount={selectedIds.size}
 					onSubmitSelected={handleBatchSubmit}
-					onOpenRegisterModal={() => setIsRegisterModalOpen(true)}
 					onExportExcel={handleExportExcel}
 					onPrint={handlePrint}
 				/>
@@ -112,6 +107,7 @@ export function RotRutOverviewPage() {
 						toggleSelect(id);
 						setIsSubmitDialogOpen(true);
 					}}
+					customerLimits={customerLimits}
 				/>
 			</div>
 
@@ -130,13 +126,6 @@ export function RotRutOverviewPage() {
 				onConfirm={executeBatchSubmit}
 				selectedCount={selectedIds.size}
 				totalAmount={selectedAmount}
-			/>
-
-			{/* Modal: Register New Deduction */}
-			<RotRutRegisterModal
-				isOpen={isRegisterModalOpen}
-				onClose={() => setIsRegisterModalOpen(false)}
-				onRegister={handleRegister}
 			/>
 		</div>
 	);

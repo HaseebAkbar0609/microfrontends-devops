@@ -6369,6 +6369,8 @@ export const svRotRut: RotRutTranslation = {
 	rotRutSubmitWarning: "Efter inskick kan avdragen inte ändras förrän Skatteverket meddelat beslut.",
 	rotRutRegisterSubtitle: "Koppla skattereduktion till kundfaktura enligt Skatteverkets regler.",
 	rotRutResubmitPropertyHelp: "Fastighetsbeteckning (Korrigera vid behov)",
+	rotRutShowAll: "Visa alla",
+	rotRutHide: "Dölj",
 };
 
 export const sv: Translation = {

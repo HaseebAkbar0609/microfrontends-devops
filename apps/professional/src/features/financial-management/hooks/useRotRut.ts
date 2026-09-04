@@ -6,7 +6,6 @@ import {
 	RotRutStatus,
 	RotRutType,
 	RotRutPeriod,
-	RegisterRotRutFormData,
 } from "../types/rotRut.types";
 import { rotRutRepository } from "../utils/rotRutRepository";
 import { DEFAULT_PAGE_SIZE } from "../constants/rotRut.constants";
@@ -26,7 +25,6 @@ export function useRotRut() {
 
 	const [detailItem, setDetailItem] = useState<RotRutItem | null>(null);
 	const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
-	const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 	const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -146,11 +144,6 @@ export function useRotRut() {
 		setIsSubmitDialogOpen(false);
 	}, [selectedIds]);
 
-	const handleRegister = useCallback((formData: RegisterRotRutFormData) => {
-		rotRutRepository.createDeduction(formData);
-		setIsRegisterModalOpen(false);
-	}, []);
-
 	const handleResubmit = useCallback((id: string, updatedFields: Partial<RotRutItem>) => {
 		rotRutRepository.resubmitDeduction(id, updatedFields);
 		setDetailItem(null);
@@ -235,13 +228,10 @@ export function useRotRut() {
 		setDetailItem,
 		isSubmitDialogOpen,
 		setIsSubmitDialogOpen,
-		isRegisterModalOpen,
-		setIsRegisterModalOpen,
 		deleteConfirmId,
 		setDeleteConfirmId,
 		handleBatchSubmit,
 		executeBatchSubmit,
-		handleRegister,
 		handleResubmit,
 		handleDelete,
 		handleExportExcel,

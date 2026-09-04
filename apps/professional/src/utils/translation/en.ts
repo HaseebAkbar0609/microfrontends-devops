@@ -6347,6 +6347,8 @@ export const enRotRut: RotRutTranslation = {
 	rotRutSubmitWarning: "After submission, deductions cannot be modified until the Swedish Tax Agency announces a decision.",
 	rotRutRegisterSubtitle: "Link tax reduction to customer invoice according to Swedish Tax Agency regulations.",
 	rotRutResubmitPropertyHelp: "Property ID (Correct if needed)",
+	rotRutShowAll: "Show all",
+	rotRutHide: "Hide",
 };
 
 export const en: Translation = {

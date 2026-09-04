@@ -6303,6 +6303,8 @@ export type RotRutTranslation = {
 	rotRutSubmitWarning: string;
 	rotRutRegisterSubtitle: string;
 	rotRutResubmitPropertyHelp: string;
+	rotRutShowAll: string;
+	rotRutHide: string;
 };
 
 export type Translation = HeaderTranslation &

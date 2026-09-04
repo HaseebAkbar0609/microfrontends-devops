@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, Send, Plus, Download, Printer } from "lucide-react";
+import { Search, Send, Download, Printer } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -27,7 +27,6 @@ interface RotRutToolbarProps {
 	onPeriodFilterChange: (p: RotRutPeriod) => void;
 	selectedCount: number;
 	onSubmitSelected: () => void;
-	onOpenRegisterModal: () => void;
 	onExportExcel: () => void;
 	onPrint: () => void;
 }
@@ -43,7 +42,6 @@ export function RotRutToolbar({
 	onPeriodFilterChange,
 	selectedCount,
 	onSubmitSelected,
-	onOpenRegisterModal,
 	onExportExcel,
 	onPrint,
 }: RotRutToolbarProps) {
@@ -171,17 +169,6 @@ export function RotRutToolbar({
 								{selectedCount}
 							</span>
 						)}
-					</Button>
-
-					{/* Register New Deduction CTA */}
-					<Button
-						type="button"
-						size="sm"
-						onClick={onOpenRegisterModal}
-						className="h-9 text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-white gap-1.5 shadow-2xs cursor-pointer"
-					>
-						<Plus className="w-4 h-4" />
-						<Translate text={localizationConstants.rotRutBtnRegister} />
 					</Button>
 
 					{/* Export & Print Utilities */}

@@ -20,9 +20,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { RotRutItem, RotRutSortColumn } from "../../types/rotRut.types";
+import { RotRutItem, RotRutSortColumn, RotRutCustomerLimit } from "../../types/rotRut.types";
 import { PAGE_SIZE_OPTIONS } from "../../constants/rotRut.constants";
 
 interface RotRutTableProps {
@@ -41,13 +42,14 @@ interface RotRutTableProps {
 	onPageSizeChange: (size: number) => void;
 	onViewDetails: (item: RotRutItem) => void;
 	onSubmitSingle: (id: string) => void;
+	customerLimits?: RotRutCustomerLimit[];
 }
 
-function formatSEK(amount: number): string {
-	return new Intl.NumberFormat("sv-SE", {
+function formatCurrency(amount: number, currency: string): string {
+	return `${new Intl.NumberFormat("sv-SE", {
 		style: "decimal",
 		maximumFractionDigits: 0,
-	}).format(amount) + " kr";
+	}).format(amount)} ${currency}`;
 }
 
 export function RotRutTable({
@@ -66,7 +68,18 @@ export function RotRutTable({
 	onPageSizeChange,
 	onViewDetails,
 	onSubmitSingle,
+	customerLimits = [],
 }: RotRutTableProps) {
+	const { t } = useTranslation();
+	const currency = t(localizationConstants.reportCurrencySek);
+
+	const customerLimitMap = React.useMemo(() => {
+		const map = new Map<string, number>();
+		customerLimits.forEach((c) => {
+			map.set(c.customerName, c.remainingLimit);
+		});
+		return map;
+	}, [customerLimits]);
 	const allSelected = items.length > 0 && selectedIds.size === items.length;
 
 	const renderSortIcon = (col: RotRutSortColumn) => {
@@ -177,6 +190,12 @@ export function RotRutTable({
 											<div className="text-[11px] text-slate-400 font-mono">
 												{item.customerPersonalIdMasked}
 											</div>
+											{customerLimitMap.has(item.customerName) && (
+												<div className="text-[10px] text-emerald-600 font-medium mt-0.5">
+													{formatCurrency(customerLimitMap.get(item.customerName)!, currency)}{" "}
+													<Translate text={localizationConstants.rotRutRemaining} />
+												</div>
+											)}
 										</td>
 										<td className="py-3 px-4 text-slate-600 font-medium">
 											<span className="truncate max-w-[180px] block" title={item.propertyId}>
@@ -195,10 +214,10 @@ export function RotRutTable({
 											</span>
 										</td>
 										<td className="py-3 px-4 text-right font-medium text-slate-800 font-mono">
-											{formatSEK(item.laborCost)}
+											{formatCurrency(item.laborCost, currency)}
 										</td>
 										<td className="py-3 px-4 text-right font-bold text-slate-900 font-mono">
-											{formatSEK(item.deductionAmount)}
+											{formatCurrency(item.deductionAmount, currency)}
 										</td>
 										<td className="py-3 px-4 text-center">
 											<span
@@ -212,13 +231,17 @@ export function RotRutTable({
 																: "bg-amber-50 text-amber-700 border-amber-200"
 												}`}
 											>
-												{item.status === "approved"
-													? "Godkänd"
-													: item.status === "submitted"
-														? "Skickad"
-														: item.status === "rejected"
-															? "Avslagen"
-															: "Väntande"}
+												<Translate
+													text={
+														item.status === "approved"
+															? localizationConstants.rotRutFilterStatusApproved
+															: item.status === "submitted"
+																? localizationConstants.rotRutFilterStatusSubmitted
+																: item.status === "rejected"
+																	? localizationConstants.rotRutFilterStatusRejected
+																	: localizationConstants.rotRutFilterStatusPending
+													}
+												/>
 											</span>
 										</td>
 										<td className="py-3 px-4 text-right">
@@ -230,7 +253,7 @@ export function RotRutTable({
 														size="icon"
 														onClick={() => onViewDetails(item)}
 														className="h-7 w-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
-														title="Korrigera & Återinskicka"
+														title={t(localizationConstants.rotRutActionResubmit)}
 													>
 														<RotateCcw className="w-3.5 h-3.5" />
 													</Button>
@@ -242,7 +265,7 @@ export function RotRutTable({
 														size="icon"
 														onClick={() => onSubmitSingle(item.id)}
 														className="h-7 w-7 text-blue-600 hover:text-blue-700 hover:bg-blue-50 cursor-pointer"
-														title="Skicka in"
+														title={t(localizationConstants.rotRutActionSubmit)}
 													>
 														<Send className="w-3.5 h-3.5" />
 													</Button>
@@ -253,7 +276,7 @@ export function RotRutTable({
 													size="icon"
 													onClick={() => onViewDetails(item)}
 													className="h-7 w-7 text-slate-500 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
-													title="Visa detaljer"
+													title={t(localizationConstants.rotRutActionView)}
 												>
 													<Eye className="w-3.5 h-3.5" />
 												</Button>

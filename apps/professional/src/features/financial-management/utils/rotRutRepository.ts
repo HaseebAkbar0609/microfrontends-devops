@@ -2,13 +2,13 @@ import {
 	RotRutItem,
 	RotRutCustomerLimit,
 	RotRutKpiSummary,
-	RegisterRotRutFormData,
 } from "../types/rotRut.types";
 import {
 	ROT_RUT_ANNUAL_LIMIT,
 	ROT_RUT_DEDUCTION_RATE,
 	STORAGE_KEY_ROT_RUT,
 } from "../constants/rotRut.constants";
+import { invoiceRepository } from "./invoiceRepository";
 
 const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	{
@@ -207,6 +207,12 @@ class RotRutRepository {
 			this.items = [...SEED_ROT_RUT_DATA];
 		}
 		this.isInitialized = true;
+		this.syncWithInvoices();
+
+		// Keep synchronized with invoice repository changes (invoices created, updated, deleted)
+		invoiceRepository.subscribe(() => {
+			this.syncWithInvoices();
+		});
 	}
 
 	private persist(): void {
@@ -332,40 +338,96 @@ class RotRutRepository {
 		return result.sort((a, b) => b.percentUsed - a.percentUsed);
 	}
 
-	public createDeduction(formData: RegisterRotRutFormData): RotRutItem {
-		this.init();
-		const deductionAmount = Math.round(formData.laborCost * ROT_RUT_DEDUCTION_RATE);
-		const totalAmount = formData.laborCost + formData.materialCost;
-		const cleanPid = formData.customerPersonalId.replace(/\s+/g, "");
-		const masked =
-			cleanPid.length >= 8
-				? `${cleanPid.slice(0, 8)}-****`
-				: `${cleanPid.slice(0, 6)}-****`;
+	public syncWithInvoices(): void {
+		try {
+			const invoices = invoiceRepository.getInvoices();
+			let hasChanges = false;
 
-		const newItem: RotRutItem = {
-			id: `rotrut-${Date.now()}`,
-			invoiceId: formData.invoiceId,
-			invoiceNo: `F-2026-${String(this.items.length + 1).padStart(3, "0")}`,
-			customerName: formData.customerName,
-			customerPersonalId: cleanPid,
-			customerPersonalIdMasked: masked,
-			propertyId: formData.propertyId,
-			apartmentNo: formData.apartmentNo,
-			brfOrgNr: formData.brfOrgNr,
-			type: formData.type,
-			description: formData.description,
-			laborCost: formData.laborCost,
-			materialCost: formData.materialCost,
-			totalAmount,
-			deductionRate: ROT_RUT_DEDUCTION_RATE,
-			deductionAmount,
-			status: "pending",
-			createdAt: new Date().toISOString(),
-		};
+			invoices.forEach((inv) => {
+				const detail = invoiceRepository.getInvoiceDetail(inv.id);
+				if (!detail) return;
 
-		this.items = [newItem, ...this.items];
-		this.persist();
-		return newItem;
+				const hasRotRutLine = detail.lineItems?.some(
+					(l) => l.handlingType === "rot/rut",
+				);
+				const hasRotRutHeader =
+					detail.rotRut?.toLowerCase() === "rot" || detail.rotRut?.toLowerCase() === "rut";
+
+				if (hasRotRutLine || hasRotRutHeader) {
+					const existingIndex = this.items.findIndex(
+						(item) => item.invoiceId === inv.id || item.invoiceNo === inv.invoiceNo,
+					);
+
+					const rotRutType =
+						detail.rotRut?.toLowerCase() === "rut" ? "rut" : "rot";
+
+					let laborCost = 0;
+					detail.lineItems?.forEach((l) => {
+						if (l.handlingType === "rot/rut") {
+							laborCost += l.delsumma || l.total || 0;
+						}
+					});
+					if (laborCost === 0) {
+						laborCost = Math.round(inv.total * 0.7);
+					}
+
+					const deductionAmount = Math.round(laborCost * ROT_RUT_DEDUCTION_RATE);
+					const totalAmount = inv.total;
+					const materialCost = Math.max(0, totalAmount - laborCost);
+
+					const rawPid = detail.customerOrgNr || "19850101-1234";
+					const cleanPid = rawPid.replace(/\s+/g, "");
+					const maskedPid =
+						cleanPid.length >= 8
+							? `${cleanPid.slice(0, 8)}-****`
+							: `${cleanPid.slice(0, 6)}-****`;
+
+					if (existingIndex === -1) {
+						const newItem: RotRutItem = {
+							id: `rotrut-${inv.id}`,
+							invoiceId: inv.id,
+							invoiceNo: inv.invoiceNo,
+							customerName: detail.customer || inv.customer,
+							customerPersonalId: cleanPid,
+							customerPersonalIdMasked: maskedPid,
+							propertyId: detail.projectName || inv.location || "Stockholm 1:1",
+							type: rotRutType,
+							description: detail.lineItems[0]?.description || "ROT/RUT Arbete",
+							laborCost,
+							materialCost,
+							totalAmount,
+							deductionRate: ROT_RUT_DEDUCTION_RATE,
+							deductionAmount,
+							status: inv.status === "paid" ? "approved" : "pending",
+							createdAt: inv.invoiceDate
+								? `${inv.invoiceDate}T10:00:00Z`
+								: new Date().toISOString(),
+						};
+						this.items = [newItem, ...this.items];
+						hasChanges = true;
+					} else {
+						const existing = this.items[existingIndex];
+						if (
+							existing.invoiceNo !== inv.invoiceNo ||
+							existing.customerName !== (detail.customer || inv.customer)
+						) {
+							this.items[existingIndex] = {
+								...existing,
+								invoiceNo: inv.invoiceNo,
+								customerName: detail.customer || inv.customer,
+							};
+							hasChanges = true;
+						}
+					}
+				}
+			});
+
+			if (hasChanges) {
+				this.persist();
+			}
+		} catch (e) {
+			console.error("Failed to sync ROT/RUT with invoices", e);
+		}
 	}
 
 	public batchSubmitToSkatteverket(ids: string[]): {
