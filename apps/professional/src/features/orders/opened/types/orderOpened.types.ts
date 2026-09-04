@@ -43,6 +43,32 @@ export interface OrderDocumentItem {
 	fileType: "pdf" | "doc" | "xls";
 }
 
+export interface CompanyDetails {
+	companyId: string;
+	name: string;
+	email: string;
+	phone: string;
+	address: string;
+	orgNumber: string;
+}
+
+export interface ProjectDescriptionDetails {
+	projectName: string;
+	workLocation: string;
+	specifications: string;
+}
+
+export interface OfferInfoDetails {
+	offerNo: string;
+	work: string;
+	material: string;
+	totalOffer: string;
+	rotDeductionLabor: string;
+	paymentTerms: string;
+	rotDeductionSettled: string;
+	secondaryPaymentTerms?: string;
+}
+
 export interface OrderOpenedData {
 	id: string;
 	title: string;
@@ -56,5 +82,9 @@ export interface OrderOpenedData {
 	contactPerson: ContactPersonDetails;
 	orderDetails: OrderBasicDetails;
 	orderInfo: OrderMetaInformation;
+	companyInfo?: CompanyDetails;
+	projectDescription?: ProjectDescriptionDetails;
+	offerDetails?: OfferInfoDetails;
 	documents: OrderDocumentItem[];
 }
+

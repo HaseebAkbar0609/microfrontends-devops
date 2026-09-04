@@ -5635,6 +5635,58 @@ export type ExpenseTranslation = {
 	expenseKpiAccumulatedYear: string;
 };
 
+export type OrderInformationTranslation = {
+	projectDetailsTab: string;
+	offerTab: string;
+	companyNumberSection: string;
+	projectDescriptionSection: string;
+	workPlaceLabel: string;
+	specificationsLabel: string;
+	workLabel: string;
+	materialLabel: string;
+	totalOfferLabel: string;
+	rotDeductionLabel: string;
+	paymentTermsLabel: string;
+	rotDeductionSettled: string;
+	attachedDocumentsSection: string;
+	goToCompany: string;
+	productionMilestones: string;
+	productionStatusHeader: string;
+	printProductionSheet: string;
+	updateStatus: string;
+	addNote: string;
+	productionProgress: string;
+	editDocumentTitle: string;
+	confirmDeleteDocument: string;
+	statusInProduction: string;
+	statusReadyForDelivery: string;
+	statusCompleted: string;
+	editCustomerTitle: string;
+	editContactTitle: string;
+	editOrderTitle: string;
+	editOrderMetaTitle: string;
+	fieldRequired: string;
+	invalidEmail: string;
+	invalidPhone: string;
+	saveChanges: string;
+	productionSheetTitle: string;
+	milestoneCompleted: string;
+	milestoneInProgress: string;
+	milestonePending: string;
+	notePlaceholder: string;
+	noteAddedSuccess: string;
+	documentUploadedSuccess: string;
+	documentRenamedSuccess: string;
+	documentDeletedSuccess: string;
+	uploadDocumentTitle: string;
+	confirmStatusChangeTitle: string;
+	confirmStatusChangeDesc: string;
+	menuEditDocument: string;
+	menuDeleteDocument: string;
+	deleteDocumentTitle: string;
+	deleteDocumentDesc: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -5650,7 +5702,8 @@ export type Translation = HeaderTranslation &
 	MachinePurchaseTranslation &
 	MachineDashboardTranslation &
 	InvoiceTranslation &
-	ExpenseTranslation;
+	ExpenseTranslation &
+	OrderInformationTranslation;
 
 export type TranslationKeys = keyof Translation;
 

@@ -34,7 +34,7 @@ export const ORDER_MODULE_TABS: ModuleTabItem[] = [
     id: "order-overview",
     labelKey: localizationConstants.orderOverview,
     href: "/module/production/order/overview",
-    matchSubPaths: ["/module/production/order/create"],
+    matchSubPaths: ["/module/production/order/create", "/module/production/order/"],
   },
   {
     id: "order-direct",
