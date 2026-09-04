@@ -1,4 +1,5 @@
 import {
+	SupportTranslation,
 	Translation,
 	SidebarTranslation,
 	AuthTranslation,
@@ -208,6 +209,14 @@ export const svCommonFiles: CommonFiles = {
 	noFileChosen: "Ingen fil vald",
 	unsupportedFileType: "Endast PNG- och JPG-filer är tillåtna.",
 	partialUploadWarning: "Vissa filer laddades upp, andra misslyckades. Försök igen med de återstående filerna.",
+};
+
+export const svSupport: SupportTranslation = {
+	contactUs: "Kontakta oss",
+	phone: "Telefon",
+	email: "E-post",
+	contactPhone: "+46 704261092",
+	contactEmail: "info@timeflowsystem.se",
 };
 
 export const svDashboard: DashboardText = {
@@ -1485,6 +1494,7 @@ export const sv: Translation = {
 	...svSidebar,
 	...svAuth,
 	...svCommonFiles,
+	...svSupport,
 	...svHeader,
 	...svAppLauncher,
 	...svDashboard,
