@@ -22,7 +22,7 @@ export function CompanyKeyFiguresCard({
 }: CompanyCardProps) {
 	return (
 		<SalesSectionCard titleKey={localizationConstants.salesKeyFiguresTitle}>
-			<div className="grid gap-4 sm:grid-cols-3">
+			<div className="grid gap-4 @2xl:grid-cols-3">
 				<CompanyNumberField
 					company={company}
 					field="employees"
@@ -58,7 +58,7 @@ export function CompanyKeyFiguresCard({
 export function CompanyOwnersCard({ company, onChange }: CompanyCardProps) {
 	return (
 		<SalesSectionCard titleKey={localizationConstants.salesOwnersTitle}>
-			<div className="grid gap-4 sm:grid-cols-2">
+			<div className="grid gap-4 @lg:grid-cols-2">
 				<CompanyTextField
 					company={company}
 					field="accountManager"

@@ -228,6 +228,7 @@ export type DashboardTranslation = {
 };
 
 export type CommonFiles = {
+	goBackButton: string;
 	upload: string;
 	noFileChosen: string;
 	unsupportedFileType: string;
@@ -788,6 +789,7 @@ export type AdminTranslation = {
 };
 
 export type SalesTranslation = {
+	salesTabCompanyCard: string;
 	salesStatusProspectLabel: string;
 	salesStatusProspectHint: string;
 	salesStatusLeadLabel: string;

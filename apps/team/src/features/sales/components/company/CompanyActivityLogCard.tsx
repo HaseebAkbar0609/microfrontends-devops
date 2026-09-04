@@ -42,7 +42,7 @@ export function CompanyActivityLogCard({
 			titleKey={localizationConstants.salesActivityLogTitle}
 			icon={Phone}
 		>
-			<div className="grid gap-3 sm:grid-cols-[150px_minmax(0,1fr)_180px]">
+			<div className="grid gap-3 @2xl:grid-cols-[150px_minmax(0,1fr)_180px]">
 				<div className="space-y-1.5">
 					<Label htmlFor="activity-type">
 						<Translate text={localizationConstants.salesActivityTypeLabel} />

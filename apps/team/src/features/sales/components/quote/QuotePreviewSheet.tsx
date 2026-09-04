@@ -33,7 +33,7 @@ export function QuotePreviewSheet({
 	).toISOString();
 
 	return (
-		<section className="print-sheet rounded-xl border border-slate-200 bg-white p-8 shadow-2xs lg:sticky lg:top-6 lg:self-start">
+		<section className="@container print-sheet rounded-xl border border-slate-200 bg-white p-8 shadow-2xs @4xl:sticky @4xl:top-6 @4xl:self-start">
 			<QuoteDocumentHeader
 				meta={
 					<>
@@ -54,7 +54,7 @@ export function QuotePreviewSheet({
 
 			<div className="my-5 h-px bg-slate-200" />
 
-			<div className="grid gap-4 text-sm sm:grid-cols-2">
+			<div className="grid gap-4 text-sm @md:grid-cols-2">
 				<QuoteDocumentParty
 					headingKey={localizationConstants.salesQuoteCustomerHeading}
 					name={draft.customerName}

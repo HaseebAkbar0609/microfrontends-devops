@@ -66,7 +66,7 @@ export function QuoteModuleList({
 								: "border-slate-200 bg-white"
 						}`}
 					>
-						<div className="flex flex-col gap-3 lg:flex-row lg:items-start">
+						<div className="flex flex-col gap-3 @2xl:flex-row @2xl:items-start">
 							<Checkbox
 								className="mt-1 cursor-pointer"
 								checked={module.selected}

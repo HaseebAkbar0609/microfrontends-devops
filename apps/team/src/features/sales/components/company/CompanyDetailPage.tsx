@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { ModulePageHeader } from "@/components/layout/navigation";
 import {
 	Select,
 	SelectContent,
@@ -10,6 +11,12 @@ import {
 } from "@/components/ui/select";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import {
+	SALES_MODULE_HREF,
+	SALES_MODULE_TABS,
+	SALES_MODULE_TITLE_KEY,
+	getSalesRecordTabs,
+} from "../../constants/salesNav";
 import { SALES_STATUSES } from "../../constants/salesStatuses";
 import {
 	getSalesCategoryLabelKey,
@@ -18,7 +25,6 @@ import {
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
 import type { SalesCompany, SalesCompanyStatus } from "../../types";
 import { SalesNotFound } from "../SalesNotFound";
-import { SalesPageHeader } from "../SalesPageHeader";
 import { CompanyActivityLogCard } from "./CompanyActivityLogCard";
 import { CompanyCreditsafeCard } from "./CompanyCreditsafeCard";
 import { CompanyDetailsCard } from "./CompanyDetailsCard";
@@ -34,29 +40,6 @@ import { TrialAccountsCard } from "./TrialAccountsCard";
 type CompanyDetailPageProps = {
 	companyId: string;
 };
-
-function CompanySubtitle({ company }: { company: SalesCompany }) {
-	const categoryKey = getSalesCategoryLabelKey(company.category);
-	const regionKey = getSalesRegionLabelKey(company.region);
-	const parts = [
-		categoryKey ? <Translate key="category" text={categoryKey} /> : null,
-		regionKey ? <Translate key="region" text={regionKey} /> : null,
-		company.trade ? <span key="trade">{company.trade}</span> : null,
-	].filter(Boolean);
-
-	if (parts.length === 0) return null;
-
-	return (
-		<p className="flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
-			{parts.map((part, index) => (
-				<span key={index} className="inline-flex items-center gap-1.5">
-					{index > 0 ? <span aria-hidden>·</span> : null}
-					{part}
-				</span>
-			))}
-		</p>
-	);
-}
 
 export default function CompanyDetailPage({
 	companyId,
@@ -78,39 +61,52 @@ export default function CompanyDetailPage({
 		);
 	}
 
+	const categoryKey = getSalesCategoryLabelKey(company.category);
+	const regionKey = getSalesRegionLabelKey(company.region);
+	const description = [
+		categoryKey ? t(categoryKey) : null,
+		regionKey ? t(regionKey) : null,
+		company.trade || null,
+	]
+		.filter(Boolean)
+		.join(" · ");
+
 	return (
-		<div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto bg-white px-6 py-6">
-			<SalesPageHeader
-				title={
-					company.name || t(localizationConstants.salesUnnamedCompany)
-				}
-				subtitle={<CompanySubtitle company={company} />}
-				trail={[{ label: company.name || companyId }]}
-				actions={
-					<Select
-						value={company.status}
-						onValueChange={(value) =>
-							handleChange({ status: value as SalesCompanyStatus })
-						}
-					>
-						<SelectTrigger
-							aria-label={t(localizationConstants.salesStatusSelectLabel)}
-							className="h-10 w-48"
+		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
+			<ModulePageHeader
+				title={SALES_MODULE_TITLE_KEY}
+				tabs={SALES_MODULE_TABS}
+				record={{
+					title: company.name || t(localizationConstants.salesUnnamedCompany),
+					description,
+					backHref: SALES_MODULE_HREF,
+					actions: (
+						<Select
+							value={company.status}
+							onValueChange={(value) =>
+								handleChange({ status: value as SalesCompanyStatus })
+							}
 						>
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							{SALES_STATUSES.map((status) => (
-								<SelectItem key={status.id} value={status.id}>
-									<Translate text={status.labelKey} />
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				}
+							<SelectTrigger
+								aria-label={t(localizationConstants.salesStatusSelectLabel)}
+								className="h-9 w-48"
+							>
+								<SelectValue />
+							</SelectTrigger>
+							<SelectContent>
+								{SALES_STATUSES.map((status) => (
+									<SelectItem key={status.id} value={status.id}>
+										<Translate text={status.labelKey} />
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+					),
+				}}
+				secondaryTabs={getSalesRecordTabs(company)}
 			/>
 
-			<div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_360px]">
+			<div className="@container grid gap-5 px-5 py-5 @4xl:grid-cols-[minmax(0,1fr)_360px]">
 				<div className="flex flex-col gap-5">
 					<CompanyDetailsCard company={company} onChange={handleChange} />
 					<CompanyKeyFiguresCard company={company} onChange={handleChange} />

@@ -67,7 +67,7 @@ export function SalesStatusSummaryCards({
 }: SalesStatusSummaryCardsProps) {
 	return (
 		<div className="flex flex-col gap-2.5">
-			<div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+			<div className="grid grid-cols-1 gap-2.5 @2xl:grid-cols-2 @4xl:grid-cols-3 @6xl:grid-cols-5">
 				{SALES_STATUSES.map((status) => (
 					<SummaryCard
 						key={status.id}
@@ -81,7 +81,7 @@ export function SalesStatusSummaryCards({
 				))}
 			</div>
 
-			<div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+			<div className="grid grid-cols-1 gap-2.5 @2xl:grid-cols-2">
 				<SummaryCard
 					labelKey={localizationConstants.salesDemoAccountsTitle}
 					hintKey={localizationConstants.salesDemoAccountsHint}

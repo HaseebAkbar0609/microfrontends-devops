@@ -55,7 +55,7 @@ export function CompanyDetailsCard({
 		<SalesSectionCard
 			titleKey={localizationConstants.salesCompanyDetailsTitle}
 		>
-			<div className="grid gap-4 sm:grid-cols-2">
+			<div className="grid gap-4 @lg:grid-cols-2">
 				{TEXT_FIELDS.map((entry) => (
 					<CompanyTextField
 						key={entry.field}

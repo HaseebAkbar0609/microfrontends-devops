@@ -79,7 +79,7 @@ export function CompanyCreditsafeCard({
 			}
 		>
 			{creditsafe ? (
-				<div className="grid gap-2 sm:grid-cols-2">
+				<div className="grid gap-2 @lg:grid-cols-2">
 					<InfoRow labelKey={localizationConstants.salesCreditsafeFTax}>
 						<span
 							className={
@@ -116,7 +116,7 @@ export function CompanyCreditsafeCard({
 					<InfoRow labelKey={localizationConstants.salesCreditsafeAddress}>
 						{creditsafe.address || EMPTY_VALUE_PLACEHOLDER}
 					</InfoRow>
-					<p className="text-xs text-slate-500 sm:col-span-2">
+					<p className="text-xs text-slate-500 @lg:col-span-2">
 						<Translate text={localizationConstants.salesCreditsafeFetchedAt} />{" "}
 						{formatDate(creditsafe.fetchedAt)} ·{" "}
 						<Translate

@@ -247,6 +247,7 @@ export const sweDashboard: DashboardTranslation = {
 };
 
 export const sweCommonFiles: CommonFiles = {
+	goBackButton: "Gå tillbaka",
 	upload: "Ladda upp",
 	noFileChosen: "Ingen fil vald",
 	unsupportedFileType: "Endast PNG- och JPG-filer är tillåtna.",
@@ -812,6 +813,7 @@ export const sweAdmin: AdminTranslation = {
 };
 
 export const sweSales: SalesTranslation = {
+	salesTabCompanyCard: "Företagskort",
 	salesStatusProspectLabel: "Prospekt",
 	salesStatusProspectHint: "Ej kontaktad",
 	salesStatusLeadLabel: "Leads",

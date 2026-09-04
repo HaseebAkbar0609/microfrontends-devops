@@ -72,7 +72,7 @@ export function QuoteCustomerForm({
 		<SalesSectionCard
 			titleKey={localizationConstants.salesQuoteCustomerSectionTitle}
 		>
-			<div className="grid gap-4 sm:grid-cols-2">
+			<div className="grid gap-4 @lg:grid-cols-2">
 				{FIELDS.map((field) => (
 					<div key={field.name} className="space-y-1.5">
 						<Label htmlFor={`quote-${field.name}`}>

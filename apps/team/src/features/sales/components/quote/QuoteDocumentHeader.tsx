@@ -45,7 +45,7 @@ export function QuoteDocumentParty({
 	align = "left",
 }: PartyBlockProps) {
 	return (
-		<div className={align === "right" ? "sm:text-right" : undefined}>
+		<div className={align === "right" ? "@md:text-right" : undefined}>
 			<p className="text-xs uppercase tracking-wide text-slate-500">
 				<Translate text={headingKey} />
 			</p>

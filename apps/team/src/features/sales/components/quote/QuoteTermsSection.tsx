@@ -27,7 +27,7 @@ export function QuoteTermsSection({
 		<SalesSectionCard
 			titleKey={localizationConstants.salesQuoteTermsSectionTitle}
 		>
-			<div className="grid gap-4 sm:grid-cols-3">
+			<div className="grid gap-4 @2xl:grid-cols-3">
 				<div className="space-y-1.5">
 					<Label htmlFor="quote-users">
 						<Translate text={localizationConstants.salesQuoteUsersLabel} />
@@ -79,7 +79,7 @@ export function QuoteTermsSection({
 				</div>
 			</div>
 
-			<div className="mt-4 grid gap-3 sm:grid-cols-3">
+			<div className="mt-4 grid gap-3 @2xl:grid-cols-3">
 				{QUOTE_TERMS.map((term) => (
 					<button
 						key={term.id}

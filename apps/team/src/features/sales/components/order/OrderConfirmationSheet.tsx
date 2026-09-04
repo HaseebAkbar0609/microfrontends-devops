@@ -26,7 +26,7 @@ export function OrderConfirmationSheet({
 	const { quote, payment } = company;
 
 	return (
-		<section className="print-sheet rounded-xl border border-slate-200 bg-white p-8 shadow-2xs">
+		<section className="@container print-sheet rounded-xl border border-slate-200 bg-white p-8 shadow-2xs">
 			<QuoteDocumentHeader
 				meta={
 					<>
@@ -49,7 +49,7 @@ export function OrderConfirmationSheet({
 
 			<div className="my-5 h-px bg-slate-200" />
 
-			<div className="grid gap-4 text-sm sm:grid-cols-2">
+			<div className="grid gap-4 text-sm @md:grid-cols-2">
 				<QuoteDocumentParty
 					headingKey={localizationConstants.salesQuoteCustomerHeading}
 					name={company.name}
@@ -60,7 +60,7 @@ export function OrderConfirmationSheet({
 						company.email,
 					]}
 				/>
-				<div className="sm:text-right">
+				<div className="@md:text-right">
 					<p className="text-xs uppercase tracking-wide text-slate-500">
 						<Translate
 							text={localizationConstants.salesOrderOwnersHeading}

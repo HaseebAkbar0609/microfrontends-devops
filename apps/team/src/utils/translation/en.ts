@@ -134,6 +134,7 @@ export const enAuth: AuthTranslation = {
 };
 
 export const enCommonFiles: CommonFiles = {
+	goBackButton: "Go back",
 	upload: "Upload",
 	noFileChosen: "No file chosen",
 	unsupportedFileType: "Only PNG and JPG files are allowed.",
@@ -814,6 +815,7 @@ export const enAdmin: AdminTranslation = {
 };
 
 export const enSales: SalesTranslation = {
+	salesTabCompanyCard: "Company card",
 	salesStatusProspectLabel: "Prospect",
 	salesStatusProspectHint: "Not contacted",
 	salesStatusLeadLabel: "Leads",

@@ -12,7 +12,7 @@ export function QuoteSignatureBlock({
 	customerName,
 }: QuoteSignatureBlockProps) {
 	return (
-		<div className="mt-6 grid gap-6 pt-4 text-xs text-slate-500 sm:grid-cols-2">
+		<div className="mt-6 grid gap-6 pt-4 text-xs text-slate-500 @md:grid-cols-2">
 			<div>
 				<div className="h-8 border-b border-slate-300" />
 				<p className="mt-1">

@@ -5,8 +5,14 @@ import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
+import { ModulePageHeader } from "@/components/layout/navigation";
+import {
+	SALES_MODULE_HREF,
+	SALES_MODULE_TABS,
+	SALES_MODULE_TITLE_KEY,
+	getSalesRecordTabs,
+} from "../../constants/salesNav";
 import { SalesNotFound } from "../SalesNotFound";
-import { SalesPageHeader } from "../SalesPageHeader";
 import { OrderConfirmationSheet } from "./OrderConfirmationSheet";
 
 type OrderConfirmationPageProps = {
@@ -40,42 +46,30 @@ export default function OrderConfirmationPage({
 	}
 
 	return (
-		<div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto bg-white px-6 py-6">
-			<SalesPageHeader
+		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
+			<ModulePageHeader
 				className="no-print"
-				title={
-					<Translate
-						text={localizationConstants.salesOrderConfirmationTitle}
-					/>
-				}
-				subtitle={<p className="text-sm text-slate-500">{company.name}</p>}
-				trail={[
-					{
-						label: company.name || company.id,
-						href: `/module/sales/companies/${company.id}`,
-					},
-					{
-						label: (
-							<Translate
-								text={localizationConstants.salesOrderConfirmationTitle}
-							/>
-						),
-					},
-				]}
-				actions={
-					<Button
-						type="button"
-						variant="outline"
-						className="h-10 cursor-pointer gap-2"
-						onClick={() => window.print()}
-					>
-						<Printer className="h-4 w-4" />
-						<Translate text={localizationConstants.salesPrintButton} />
-					</Button>
-				}
+				title={SALES_MODULE_TITLE_KEY}
+				tabs={SALES_MODULE_TABS}
+				secondaryTabs={getSalesRecordTabs(company)}
+				record={{
+					title: company.name || company.id,
+					backHref: SALES_MODULE_HREF,
+					actions: (
+						<Button
+							type="button"
+							variant="outline"
+							className="h-9 cursor-pointer gap-2"
+							onClick={() => window.print()}
+						>
+							<Printer className="h-4 w-4" />
+							<Translate text={localizationConstants.salesPrintButton} />
+						</Button>
+					),
+				}}
 			/>
 
-			<div className="mx-auto w-full max-w-4xl">
+			<div className="mx-auto w-full max-w-4xl px-5 py-5">
 				<OrderConfirmationSheet company={company} order={company.order} />
 			</div>
 		</div>

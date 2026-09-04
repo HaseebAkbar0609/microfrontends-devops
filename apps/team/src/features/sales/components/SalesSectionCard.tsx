@@ -26,7 +26,7 @@ export function SalesSectionCard({
 	return (
 		<section
 			className={cn(
-				"rounded-xl border border-slate-200 bg-white p-5 shadow-2xs",
+				"@container rounded-xl border border-slate-200 bg-white p-5 shadow-2xs",
 				className,
 			)}
 		>
