@@ -1,5 +1,6 @@
 import { ExpenseItem, ExpenseStatus } from "../types/expense.types";
 import { initialExpensesMock } from "../mock/expenseMockData";
+import { DEFAULT_SUPPLIERS_LIST } from "../constants/expense.constants";
 
 /**
  * Expense Repository (Standard #6: Security & Sensitive Data)
@@ -13,6 +14,7 @@ const listeners = new Set<ExpenseListener>();
 
 // Strict in-memory store for PII and financial records
 let inMemoryExpenses: ExpenseItem[] = [...initialExpensesMock];
+let inMemorySuppliers: string[] = [...DEFAULT_SUPPLIERS_LIST];
 
 function notifyListeners(): void {
 	const current = [...inMemoryExpenses];
@@ -80,6 +82,32 @@ export const expenseRepository = {
 	},
 
 	/**
+	 * Add a new expense record with async API contract
+	 */
+	async addExpense(expense: ExpenseItem): Promise<ExpenseItem> {
+		inMemoryExpenses = [expense, ...inMemoryExpenses];
+		notifyListeners();
+		return expense;
+	},
+
+	/**
+	 * Get current list of suppliers
+	 */
+	getSuppliers(): string[] {
+		return [...inMemorySuppliers];
+	},
+
+	/**
+	 * Add a new supplier to the system
+	 */
+	addSupplier(name: string): void {
+		const trimmed = name.trim();
+		if (trimmed && !inMemorySuppliers.includes(trimmed)) {
+			inMemorySuppliers = [trimmed, ...inMemorySuppliers];
+		}
+	},
+
+	/**
 	 * Delete an expense record with async API contract
 	 */
 	async deleteExpense(id: string): Promise<boolean> {
@@ -97,6 +125,8 @@ export const expenseRepository = {
 	 */
 	reset(): void {
 		inMemoryExpenses = [...initialExpensesMock];
+		inMemorySuppliers = [...DEFAULT_SUPPLIERS_LIST];
 		notifyListeners();
 	},
 };
+

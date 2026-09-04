@@ -26,8 +26,75 @@ export const EXPENSE_CATEGORIES: { value: ExpenseCategory; labelKey: string }[] 
 	{ value: "labor", labelKey: localizationConstants.expenseCategoryLabor },
 	{ value: "equipment", labelKey: localizationConstants.expenseCategoryEquipment },
 	{ value: "travel", labelKey: localizationConstants.expenseCategoryTravel },
+	{ value: "subcontractor", labelKey: localizationConstants.expenseCategorySubcontractor },
 	{ value: "other", labelKey: localizationConstants.expenseCategoryOther },
 ];
+
+export const SWEDISH_VAT_RATES = [25, 12, 6, 0] as const;
+export const DEFAULT_VAT_RATE = 25;
+
+export const DEFAULT_EXPENSE_UNITS = [
+	{ value: "st", label: "st" },
+	{ value: "tim", label: "tim" },
+	{ value: "km", label: "km" },
+	{ value: "mån", label: "mån" },
+	{ value: "dagar", label: "dagar" },
+	{ value: "kg", label: "kg" },
+	{ value: "m", label: "m" },
+] as const;
+
+export const STANDARD_BAS_ACCOUNTS = [
+	{ code: "4010", name: "Inköp material och varor" },
+	{ code: "4011", name: "Inköp underentreprenader" },
+	{ code: "5010", name: "Lokalhyra" },
+	{ code: "5410", name: "Förbrukningsinventarier" },
+	{ code: "5610", name: "Personbilar och transportmedel" },
+	{ code: "5800", name: "Resekostnader" },
+	{ code: "6070", name: "Representation" },
+	{ code: "6540", name: "IT-tjänster och programvaror" },
+	{ code: "6990", name: "Övriga externa kostnader" },
+] as const;
+
+export const DEFAULT_SUPPLIERS_LIST = [
+	"Ahlsell Sverige AB",
+	"Biejer Byggmaterial AB",
+	"Bygg-Max AB",
+	"Cleaning Services AB",
+	"Cramo AB",
+	"Renta AB",
+	"Würth Svenska AB",
+	"Beijer Byggmaterial",
+	"Elektroskandia Sverige",
+];
+
+export const DEFAULT_PROJECTS_LIST = [
+	{ id: "PROJ-2025-001", name: "Projekt 2025-001 - Storgatan" },
+	{ id: "PROJ-2025-042", name: "PROJ-2025-042 - Kontorsstädning" },
+	{ id: "OR5001", name: "OR5001 - Ombyggnad badrum" },
+	{ id: "PROJ-2025-089", name: "PROJ-2025-089 - Fasader Renovering" },
+];
+
+export const DEFAULT_COST_CENTERS_LIST = [
+	{ id: "10", name: "10 - Ledning / Administration" },
+	{ id: "20", name: "20 - Produktion / Bygg" },
+	{ id: "30", name: "30 - Installation / El" },
+	{ id: "40", name: "40 - Fastighetsförvaltning" },
+];
+
+export const EXPENSE_LIST_ROUTE = "/module/financial-management/economy";
+export const CREATE_EXPENSE_ROUTE = "/module/financial-management/economy/create";
+
+export const registerExpenseBreadcrumbs = [
+	{ label: localizationConstants.home, href: "/" },
+	{ label: localizationConstants.module, href: "/module" },
+	{ label: localizationConstants.economy, href: EXPENSE_LIST_ROUTE },
+	{ label: localizationConstants.expenseOverviewTitle, href: EXPENSE_LIST_ROUTE },
+	{ label: localizationConstants.registerExpenseBreadcrumb, href: CREATE_EXPENSE_ROUTE },
+];
+
+export const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
+export const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/jpg"];
+
 
 export const EXPENSE_STATUSES: { value: ExpenseStatus; labelKey: string }[] = [
 	{ value: "klar", labelKey: localizationConstants.expenseStatusKlar },

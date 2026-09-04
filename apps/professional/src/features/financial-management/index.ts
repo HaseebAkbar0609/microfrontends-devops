@@ -33,5 +33,14 @@ export * from "./components/expense-list/ExpenseBadges";
 export * from "./types/expense.types";
 export * from "./constants/expense.constants";
 export * from "./hooks/useExpenseList";
+export * from "./hooks/useRegisterExpense";
 export * from "./utils/expenseRepository";
-
+export * from "./components/register-expense/RegisterExpensePage";
+export * from "./components/register-expense/RegisterExpenseHeaderForm";
+export * from "./components/register-expense/RegisterExpenseLineItemsTable";
+export * from "./components/register-expense/RegisterExpenseSummaryCard";
+export * from "./components/register-expense/RegisterExpenseAttachmentZone";
+export * from "./components/register-expense/ExpenseTimeReportTab";
+export * from "./components/register-expense/RegisterExpensePreviewModal";
+export * from "./components/register-expense/RegisterExpenseActions";
+export * from "./components/register-expense/AddNewSupplierModal";
