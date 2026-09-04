@@ -85,3 +85,94 @@ pipelines:
             - ssh -i ~/.ssh/dev_key ubuntu@$DEV_SERVER_IP "bash /home/ubuntu/deploy-frontend.sh"
             - echo "✅ All frontends deployed!"
 
+    main:
+      - step:
+          size: 2x
+          name: Build & Push Customer
+          services:
+            - docker-large
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-customer -f ./apps/customer/Dockerfile .
+            - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:prod-latest
+            - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:$BITBUCKET_COMMIT
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:prod-latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:$BITBUCKET_COMMIT
+            - echo "✅ Customer pushed"
+
+      - step:
+          name: Build & Push Professional
+          size: 2x
+          services:
+            - docker-large
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-professional -f ./apps/professional/Dockerfile .
+            - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:prod-latest
+            - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:$BITBUCKET_COMMIT
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:prod-latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:$BITBUCKET_COMMIT
+            - echo "✅ Professional pushed"
+
+      - step:
+          name: Build & Push Team
+          size: 2x
+          services:
+            - docker-large
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-team -f ./apps/team/Dockerfile .
+            - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:prod-latest
+            - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:$BITBUCKET_COMMIT
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:prod-latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:$BITBUCKET_COMMIT
+            - echo "✅ Team pushed"
+
+      - step:
+          name: Build & Push Landing
+          size: 2x
+          services:
+            - docker-large
+          script:
+            - apk add --no-cache aws-cli curl
+            - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            - aws configure set region eu-north-1
+            - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
+            - docker build -t timeflow-landing-page -f ./apps/landing/Dockerfile .
+            - docker tag timeflow-landing-page:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:prod-latest
+            - docker tag timeflow-landing-page:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:$BITBUCKET_COMMIT
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:prod-latest
+            - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-landing-page:$BITBUCKET_COMMIT
+            - echo "✅ Landing pushed"
+
+      - step:
+          name: Deploy All to Prod Server
+          image: python:3.12-slim
+          deployment: production
+          script:
+            - apt-get update -y && apt-get install -y openssh-client curl
+            - mkdir -p ~/.ssh
+            - echo $PROD_SSH_KEY | base64 --decode > ~/.ssh/prod_key
+            - chmod 600 ~/.ssh/prod_key
+            - ssh-keyscan -t rsa,ed25519 $PROD_SERVER_IP >> ~/.ssh/known_hosts
+            - ssh -i ~/.ssh/prod_key ubuntu@$PROD_SERVER_IP "bash /home/ubuntu/deploy-frontend.sh"
+            - sleep 5
+            - curl -f --retry 5 --retry-delay 3 --retry-connrefused https://customer.timeflowsystem.com
+            - curl -f --retry 5 --retry-delay 3 --retry-connrefused https://professional.timeflowsystem.com
+            - curl -f --retry 5 --retry-delay 3 --retry-connrefused https://teams.timeflowsystem.com
+            - curl -f --retry 5 --retry-delay 3 --retry-connrefused https://timeflowsystem.se
+            - echo "✅ All frontends deployed to Prod and health checks passed"
+
