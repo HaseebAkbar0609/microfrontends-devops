@@ -90,12 +90,12 @@ export function OrderOfferView({ data }: OrderOfferViewProps) {
 					<Field label={t(localizationConstants.addressLabel)} value={company.address} />
 					<Field label={t(localizationConstants.orgPersonNrLabel)} value={company.orgNumber} />
 				</div>
-				<div className="mt-6 flex justify-center border-t border-slate-100 pt-4">
+				<div className="mt-6 flex justify-center pt-2">
 					<Button
 						type="button"
 						variant="ghost"
 						size="sm"
-						onClick={() => router.push(`/module/production/order/b2b/company/${company.companyId}`)}
+						onClick={() => router.push(`/module/production/order/${data.id || "5000-001"}/organisation`)}
 						className="gap-2 text-sm font-medium text-slate-900 hover:text-slate-700 cursor-pointer"
 					>
 						<span>{t(localizationConstants.goToCompany)}</span>

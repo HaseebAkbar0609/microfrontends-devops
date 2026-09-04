@@ -17,6 +17,7 @@ import {
 	InvoiceTranslation,
 	ExpenseTranslation,
 	OrderInformationTranslation,
+	OrderOrganisationTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -6063,6 +6064,44 @@ const svOrderInformation: OrderInformationTranslation = {
 	invalidEmailError: "Ogiltig e-postadress",
 };
 
+export const svOrderOrganisation: OrderOrganisationTranslation = {
+	orderOrganisationTab: "Organisation",
+	orgGroupBestallare: "Beställare",
+	orgGroupArkitekt: "Arkitekt",
+	orgGroupByggentreprenor: "Byggentreprenör",
+	orgGroupElektriker: "Elektriker",
+	orgGroupOther: "Övrigt",
+	orgColForetag: "Företag",
+	orgColRoll: "Roll",
+	orgColKategori: "Kategori",
+	orgColAddress: "Address",
+	orgColPostNr: "Post nr",
+	orgColOrt: "Ort",
+	orgColKontakt: "Kontakt",
+	orgColMail: "Mail",
+	orgSearchPlaceholder: "Sök",
+	orgFilterButton: "Filter",
+	orgFilterAll: "Alla grupper",
+	orgAddButton: "Lägg till",
+	orgViewAction: "Visa detaljer",
+	orgEditAction: "Redigera",
+	orgDeleteAction: "Ta bort",
+	orgPrintButton: "Skriv ut",
+	orgAddModalTitle: "Lägg till kontakt",
+	orgEditModalTitle: "Redigera kontakt",
+	orgDeleteConfirmTitle: "Ta bort kontakt",
+	orgDeleteConfirmDesc: "Är du säker på att du vill ta bort denna kontakt? Åtgärden kan inte ångras.",
+	orgSelectGroupPlaceholder: "Välj organisation/kategori",
+	orgGroupLabel: "Organisation / Grupp",
+	orgMemberAddedSuccess: "Kontakten har lagts till",
+	orgMemberUpdatedSuccess: "Kontakten har uppdaterats",
+	orgMemberDeletedSuccess: "Kontakten har tagits bort",
+	orgNoMembersFound: "Inga kontakter hittades",
+	companyNameRequired: "Företagsnamn är obligatoriskt",
+	backToMainMenu: "Tillbaka till huvudmenyn",
+	noRecordsFound: "Inga uppgifter registrerade",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -6081,4 +6120,5 @@ export const sv: Translation = {
 	...svInvoice,
 	...svExpense,
 	...svOrderInformation,
+	...svOrderOrganisation,
 };
