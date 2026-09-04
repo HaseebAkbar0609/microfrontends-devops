@@ -1,8 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronRight } from "lucide-react";
-import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
 import {
 	ActionsToolbar,
 	type FilterConfig,
@@ -18,6 +16,7 @@ import { useSalesCompanyFilters } from "./hooks/useSalesCompanyFilters";
 import { CreateCompanyDialog } from "./components/CreateCompanyDialog";
 import { CsvImportExportActions } from "./components/CsvImportExportActions";
 import { SalesCompanyTable } from "./components/SalesCompanyTable";
+import { SalesPageHeader } from "./components/SalesPageHeader";
 import { SalesStatusSummaryCards } from "./components/SalesStatusSummaryCards";
 import { formatCurrency, getInvoicedAmount } from "./utils/salesFormatters";
 
@@ -74,25 +73,15 @@ export default function SalesCrmPage() {
 
 	return (
 		<div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto bg-white px-6 py-6">
-			<div className="flex flex-wrap items-start justify-between gap-4">
-				<div className="flex flex-col gap-2">
-					<h1 className="text-2xl font-semibold text-slate-900">
-						<Translate text={localizationConstants.salesCrmTitle} />
-					</h1>
-					<DynamicBreadcrumb
-						separator={<ChevronRight className="h-3 w-3" />}
-						items={[
-							{
-								label: <Translate text={localizationConstants.dashboard} />,
-								href: "/home",
-							},
-							{ label: <Translate text={localizationConstants.moduleItem} /> },
-							{ label: <Translate text={localizationConstants.salesCrmTitle} /> },
-						]}
-					/>
-				</div>
-				<CsvImportExportActions />
-			</div>
+			<SalesPageHeader
+				title={<Translate text={localizationConstants.salesCrmTitle} />}
+				subtitle={
+					<p className="text-sm text-slate-500">
+						<Translate text={localizationConstants.salesCrmSubtitle} />
+					</p>
+				}
+				actions={<CsvImportExportActions />}
+			/>
 
 			<SalesStatusSummaryCards
 				counts={counts}

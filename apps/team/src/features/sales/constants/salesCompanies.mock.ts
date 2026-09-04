@@ -92,7 +92,7 @@ export const SALES_COMPANIES_SEED: SalesCompany[] = [
 		email: "rania@malmomaleri.se",
 		mobile: "076-441 20 18",
 		city: "Malmö",
-		trade: "Måleri",
+		trade: "Fasadrenovering",
 		category: "painting",
 		region: "malmo",
 		employees: 16,
