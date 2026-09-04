@@ -121,14 +121,16 @@ export function CreatePlanningTaskModal({
 					<h3 className="text-sm font-semibold text-slate-900">
 						<Translate text={localizationConstants.addTaskModalTitle} />
 					</h3>
-					<button
+					<Button
 						type="button"
+						variant="ghost"
+						size="icon"
 						onClick={onClose}
-						className="text-slate-400 hover:text-slate-700 rounded-md p-1 cursor-pointer transition-colors"
+						className="h-8 w-8 text-slate-400 hover:text-slate-700 rounded-md p-1 cursor-pointer transition-colors"
 						aria-label="Close dialog"
 					>
 						<X className="w-4 h-4" />
-					</button>
+					</Button>
 				</div>
 
 				{/* Modal Form */}

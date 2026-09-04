@@ -34,6 +34,7 @@ import localizationConstants from "@/utils/translation/constants";
 import type { QualityDocument, QualityMainCategory, QualitySubCategory } from "../../types/quality";
 import { MOCK_ACTION_PLAN_CATEGORIES, MOCK_QUALITY_CATEGORIES, MOCK_QUALITY_PLAN_CATEGORIES } from "../../constants/qualityMock";
 import { CreateActionPlanPage } from "./CreateActionPlanPage";
+import { CreateActionPlanTemplatePage } from "./CreateActionPlanTemplatePage";
 import { MailListPage, NOTIFY_COLS } from "../mail-list/MailListPage";
 import type { MailList, MailRecipient, NotifyField } from "../mail-list/MailListPage";
 import { CategoryPanel } from "../shared/CategoryPanel";
@@ -3052,6 +3053,7 @@ function QualityPlanTab({
 	onCreateActionPlan,
 	onUseActionPlanTemplate,
 	onOpenActionPlanTemplate,
+	onCreateActionPlanTemplate,
 }: {
 	onCreateNew: () => void;
 	onUseTemplate: () => void;
@@ -3070,6 +3072,7 @@ function QualityPlanTab({
 	onCreateActionPlan: () => void;
 	onUseActionPlanTemplate: () => void;
 	onOpenActionPlanTemplate: (id: string) => void;
+	onCreateActionPlanTemplate: () => void;
 }) {
 	const t = useTranslate();
 	const [planType, setPlanType] = useState<PlanType>("kontrollplan");
@@ -3235,11 +3238,11 @@ function QualityPlanTab({
 				) : planType === "atgardsplaner" && viewMode === "mallar" ? (
 					<button
 						type="button"
-						onClick={onCreateActionPlan}
+						onClick={onCreateActionPlanTemplate}
 						className="flex cursor-pointer items-center gap-1.5 rounded-md bg-zinc-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-zinc-800"
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.kmaActionPlanCreateBtn} />
+						<Translate text={localizationConstants.kmaCreateActionPlanTemplateBtn} />
 					</button>
 				) : planType === "atgardsplaner" ? (
 					<div ref={createBtnRef} className="relative flex">
@@ -3382,6 +3385,7 @@ export function QualitySystemPage() {
 	const [createActionPlanOpen, setCreateActionPlanOpen] = useState(false);
 	const [createActionPlanWithTemplate, setCreateActionPlanWithTemplate] = useState(false);
 	const [openActionPlanTemplateId, setOpenActionPlanTemplateId] = useState<string | null>(null);
+	const [createActionPlanTemplateOpen, setCreateActionPlanTemplateOpen] = useState(false);
 
 	const TABS: { id: QualityTab; key: string }[] = [
 		{ id: "system", key: localizationConstants.kmaQualityTabSystem },
@@ -3466,8 +3470,17 @@ export function QualitySystemPage() {
 
 	if (openActionPlanTemplateId) {
 		return (
-			<CreateActionPlanPage
+			<CreateActionPlanTemplatePage
 				onBack={() => setOpenActionPlanTemplateId(null)}
+				templateId={openActionPlanTemplateId}
+			/>
+		);
+	}
+
+	if (createActionPlanTemplateOpen) {
+		return (
+			<CreateActionPlanTemplatePage
+				onBack={() => setCreateActionPlanTemplateOpen(false)}
 			/>
 		);
 	}
@@ -3543,6 +3556,7 @@ export function QualitySystemPage() {
 					onCreateActionPlan={() => setCreateActionPlanOpen(true)}
 					onUseActionPlanTemplate={() => { setCreateActionPlanWithTemplate(true); setCreateActionPlanOpen(true); }}
 					onOpenActionPlanTemplate={(id) => setOpenActionPlanTemplateId(id)}
+					onCreateActionPlanTemplate={() => setCreateActionPlanTemplateOpen(true)}
 				/>
 			)}
 		</div>

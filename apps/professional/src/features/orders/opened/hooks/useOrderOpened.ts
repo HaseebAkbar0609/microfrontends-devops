@@ -1,30 +1,49 @@
 "use client";
 
-import { useState } from "react";
-import { MOCK_ORDER_OPENED_DATA } from "../data/orderOpened.mock";
+import { useState, useEffect } from "react";
 import type { OrderOpenedData } from "../types/orderOpened.types";
+import { getOrderOpenedMockById } from "../data/orderOpened.mock";
+import { getOrderInformation } from "../api/orderInformation.api";
 
 export function useOrderOpened(orderId?: string) {
-	const [orderData, setOrderData] = useState<OrderOpenedData>(() => {
-		if (!orderId) return MOCK_ORDER_OPENED_DATA;
-		return {
-			...MOCK_ORDER_OPENED_DATA,
-			id: orderId,
-			orderDetails: {
-				...MOCK_ORDER_OPENED_DATA.orderDetails,
-				serialNo: orderId,
-			},
-		};
-	});
+	const [orderData, setOrderData] = useState<OrderOpenedData>(() =>
+		getOrderOpenedMockById(orderId)
+	);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
 
-	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+	useEffect(() => {
+		if (!orderId) return;
+		let isMounted = true;
+		setIsLoading(true);
+		setError(null);
+
+		getOrderInformation(orderId)
+			.then((data) => {
+				if (isMounted) {
+					setOrderData(data);
+				}
+			})
+			.catch((err) => {
+				if (isMounted) {
+					setError(err instanceof Error ? err.message : "Failed to load order");
+				}
+			})
+			.finally(() => {
+				if (isMounted) {
+					setIsLoading(false);
+				}
+			});
+
+		return () => {
+			isMounted = false;
+		};
+	}, [orderId]);
 
 	return {
 		orderData,
 		setOrderData,
-		isConfirmModalOpen,
-		setIsConfirmModalOpen,
-		openConfirmModal: () => setIsConfirmModalOpen(true),
-		closeConfirmModal: () => setIsConfirmModalOpen(false),
+		isLoading,
+		error,
 	};
 }

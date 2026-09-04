@@ -2296,6 +2296,11 @@ export type OfferTranslation = {
 	kmaActionPlanTemplateUseBtn: string;
 	kmaActionPlanUseTemplate: string;
 	kmaActionPlanMallarTableTitle: string;
+	// TFS-748 – Create Action Plan Template
+	kmaCreateActionPlanTemplateTitle: string;
+	kmaEditActionPlanTemplateTitle: string;
+	kmaCreateActionPlanTemplateBtn: string;
+	kmaActionPlanTemplateNote: string;
 	// TFS-730 – Open New Control Plan
 	kmaControlPlanOpenTitle: string;
 	kmaControlPlanGeneralInfo: string;
@@ -3597,6 +3602,10 @@ export type OfferTranslation = {
 	actionClose: string;
 	bastaTilldelade: string;
 	visaDetaljer: string;
+	namnHeader: string;
+	arbetstidHeader: string;
+	filterOver30Hours: string;
+	filterUnder30Hours: string;
 	overgripandeStatistik: string;
 	totaltAntalProjekt: string;
 	antalTilldelade: string;
@@ -3616,6 +3625,40 @@ export type OfferTranslation = {
 	timmarSuffix: string;
 	projektNamn: string;
 	status: string;
+	orderNr: string;
+	startDatum: string;
+	slutDatum: string;
+	startTid: string;
+	slutTid: string;
+	totalTim: string;
+	chooseTime: string;
+	chooseDate: string;
+	enterNr: string;
+	enterNamn: string;
+	selectStatus: string;
+	createNewPlan: string;
+	editPlan: string;
+	deletePlanConfirmTitle: string;
+	deletePlanConfirmDesc: string;
+	deleteConfirmButton: string;
+	projectBadrum: string;
+	projectKok: string;
+	projectOmbyggnad: string;
+	projectRenovering: string;
+	searchProjectName: string;
+	// Planning - Validation
+	planningValidationStartDateRequired: string;
+	planningValidationEndDateRequired: string;
+	planningValidationEndTimeBeforeStart: string;
+	planningValidationAssigneeRequired: string;
+	planningValidationStartTimeRequired: string;
+	planningValidationEndTimeRequired: string;
+	planningCreateSuccess: string;
+	planningCreateError: string;
+	planningUpdateSuccess: string;
+	planningUpdateError: string;
+	planningDeleteSuccess: string;
+	planningDeleteError: string;
 	// Offer - Dashboard widgets
 	offerWidgetOverviewTitle: string;
 	offerWidgetOverviewTotal: string;
@@ -5682,6 +5725,58 @@ export type ExpenseTranslation = {
 	registerExpenseSupplierNotFound: string;
 };
 
+export type OrderInformationTranslation = {
+	projectDetailsTab: string;
+	offerTab: string;
+	companyNumberSection: string;
+	projectDescriptionSection: string;
+	workPlaceLabel: string;
+	specificationsLabel: string;
+	workLabel: string;
+	materialLabel: string;
+	totalOfferLabel: string;
+	rotDeductionLabel: string;
+	paymentTermsLabel: string;
+	rotDeductionSettled: string;
+	attachedDocumentsSection: string;
+	goToCompany: string;
+	productionMilestones: string;
+	productionStatusHeader: string;
+	printProductionSheet: string;
+	updateStatus: string;
+	addNote: string;
+	productionProgress: string;
+	editDocumentTitle: string;
+	confirmDeleteDocument: string;
+	statusInProduction: string;
+	statusReadyForDelivery: string;
+	statusCompleted: string;
+	editCustomerTitle: string;
+	editContactTitle: string;
+	editOrderTitle: string;
+	editOrderMetaTitle: string;
+	fieldRequired: string;
+	invalidEmail: string;
+	invalidPhone: string;
+	saveChanges: string;
+	productionSheetTitle: string;
+	milestoneCompleted: string;
+	milestoneInProgress: string;
+	milestonePending: string;
+	notePlaceholder: string;
+	noteAddedSuccess: string;
+	documentUploadedSuccess: string;
+	documentRenamedSuccess: string;
+	documentDeletedSuccess: string;
+	uploadDocumentTitle: string;
+	confirmStatusChangeTitle: string;
+	confirmStatusChangeDesc: string;
+	menuEditDocument: string;
+	menuDeleteDocument: string;
+	deleteDocumentTitle: string;
+	deleteDocumentDesc: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -5697,7 +5792,8 @@ export type Translation = HeaderTranslation &
 	MachinePurchaseTranslation &
 	MachineDashboardTranslation &
 	InvoiceTranslation &
-	ExpenseTranslation;
+	ExpenseTranslation &
+	OrderInformationTranslation;
 
 export type TranslationKeys = keyof Translation;
 
