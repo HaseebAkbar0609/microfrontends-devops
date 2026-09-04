@@ -532,7 +532,7 @@ export function CreateBudgetPage() {
 									<table className="min-w-[1400px] w-full text-xs text-slate-700 border-collapse">
 										<thead>
 											<tr className="border-b border-slate-200 text-slate-500">
-												<th className="px-3 py-3 text-left font-medium whitespace-nowrap min-w-[80px]">
+												<th className="px-3 py-3 text-left font-medium whitespace-nowrap min-w-20">
 													<Translate text={localizationConstants.budgetAccountHeader} />
 												</th>
 												<th className="px-3 py-3 text-left font-medium whitespace-nowrap min-w-[120px]">
@@ -541,7 +541,7 @@ export function CreateBudgetPage() {
 												<th className="px-3 py-3 text-left font-medium whitespace-nowrap min-w-[100px]">
 													<Translate text={localizationConstants.budgetAnnualAmountHeader} />
 												</th>
-												<th className="px-3 py-3 text-left font-medium whitespace-nowrap min-w-[80px]">
+												<th className="px-3 py-3 text-left font-medium whitespace-nowrap min-w-20">
 													<Translate text={localizationConstants.budgetDistributionHeader} />
 												</th>
 												<th className="px-3 py-3 text-left font-medium whitespace-nowrap min-w-[40px]">

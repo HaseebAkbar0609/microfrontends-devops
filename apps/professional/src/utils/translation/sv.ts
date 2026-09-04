@@ -2135,6 +2135,7 @@ export const svOffer: OfferTranslation = {
 	kmaQualityPlanCreateSelectAllSub: "Välj alla i underkategori",
 	kmaQualityPlanCreateSelectAllCat: "Välj alla i kategori",
 	kmaQualityPlanCreateAvailable: "tillgängliga dokument",
+	kmaQualityPlanCreateSelected: "valda",
 	kmaQualityPlanCreateNewPanelTitle: "Ny kontrollplan",
 	kmaQualityPlanCreateAddBtn: "Lägg till",
 	kmaQualityPlanCreateRemoveBtn: "Ta bort",

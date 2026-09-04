@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, ChevronDown, ChevronRight, FileText } from "lucide-react";
+import { ArrowLeft, ChevronDown, ChevronRight, FileText, LayoutList, List } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -24,6 +24,7 @@ export function CreateActionPlanTemplatePage({
 	const [isSaving, setIsSaving] = useState(false);
 	const [isDirty, setIsDirty] = useState(false);
 	const [cancelConfirmOpen, setCancelConfirmOpen] = useState(false);
+	const [rightView, setRightView] = useState<"tree" | "list">("tree");
 
 	const [expandedCatIds, setExpandedCatIds] = useState<Set<string>>(
 		new Set(MOCK_ACTION_PLAN_CATEGORIES.map((c) => c.id)),
@@ -43,6 +44,22 @@ export function CreateActionPlanTemplatePage({
 	const availableCount = allDocs.length - addedDocs.length;
 	const allCheckable = allDocs.filter((d) => !addedIds.has(d.id));
 	const allChecked = allCheckable.length > 0 && allCheckable.every((d) => checkedDocIds.has(d.id));
+
+	// Group added docs by their position in the category tree for the right panel tree view
+	const addedGrouped = useMemo(() => {
+		const groups: { catId: string; catLabel: string; subId: string; subLabel: string; docs: { doc: QualityDocument; idx: number }[] }[] = [];
+		MOCK_ACTION_PLAN_CATEGORIES.forEach((cat) => {
+			cat.subcategories.forEach((sub) => {
+				const docs = sub.documents
+					.map((doc) => ({ doc, idx: addedDocs.findIndex((d) => d.id === doc.id) }))
+					.filter(({ idx }) => idx !== -1);
+				if (docs.length > 0) {
+					groups.push({ catId: cat.id, catLabel: cat.label, subId: sub.id, subLabel: sub.label, docs });
+				}
+			});
+		});
+		return groups;
+	}, [addedDocs]);
 
 	useEffect(() => {
 		if (!isDirty) return;
@@ -402,11 +419,42 @@ export function CreateActionPlanTemplatePage({
 
 					{/* Right: selected docs */}
 					<div className="flex w-72 shrink-0 flex-col">
-						<div className="border-b border-slate-200 px-5 py-3">
-							<h3 className="truncate text-xs font-semibold tracking-wide text-slate-500">
+						{/* Right panel header */}
+						<div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+							<h3 className="truncate text-xs font-semibold tracking-wide text-slate-600">
 								{name || <Translate text={localizationConstants.kmaActionPlanNewPanelTitle} />}
 							</h3>
+							<div className="flex items-center gap-0.5">
+								<button
+									type="button"
+									onClick={() => setRightView("tree")}
+									className={cn(
+										"cursor-pointer rounded p-1 transition-colors",
+										rightView === "tree"
+											? "bg-slate-200 text-slate-700"
+											: "text-slate-400 hover:bg-slate-100 hover:text-slate-600",
+									)}
+									aria-label="Tree view"
+								>
+									<LayoutList className="h-3.5 w-3.5" />
+								</button>
+								<button
+									type="button"
+									onClick={() => setRightView("list")}
+									className={cn(
+										"cursor-pointer rounded p-1 transition-colors",
+										rightView === "list"
+											? "bg-slate-200 text-slate-700"
+											: "text-slate-400 hover:bg-slate-100 hover:text-slate-600",
+									)}
+									aria-label="List view"
+								>
+									<List className="h-3.5 w-3.5" />
+								</button>
+							</div>
 						</div>
+
+						{/* Right panel body */}
 						<div className="flex-1 overflow-y-auto px-3 py-2">
 							{addedDocs.length === 0 ? (
 								<>
@@ -417,7 +465,46 @@ export function CreateActionPlanTemplatePage({
 									)}
 									{!errors.docs && <p className="mt-6 text-center text-xs text-slate-400">—</p>}
 								</>
+							) : rightView === "tree" ? (
+								/* Grouped tree display */
+								<div className="space-y-3">
+									{addedGrouped.map((group) => (
+										<div key={`${group.catId}-${group.subId}`}>
+											{/* Category label */}
+											<p className="mb-0.5 text-xs font-semibold text-slate-500">
+												{group.catLabel}
+											</p>
+											{/* Subcategory label */}
+											<div className="rounded-sm border-l-2 border-slate-200 pl-2">
+												<p className="mb-1 flex items-center justify-between text-xs font-medium text-slate-600">
+													<span>{group.subLabel}</span>
+													<span className="rounded-full bg-slate-100 px-1.5 py-0.5 text-slate-500">
+														{group.docs.length}
+													</span>
+												</p>
+												{/* Docs */}
+												{group.docs.map(({ doc, idx }) => (
+													<button
+														key={doc.id}
+														type="button"
+														onClick={() => setSelectedRightIdx(idx === selectedRightIdx ? null : idx)}
+														className={cn(
+															"mb-0.5 flex w-full cursor-pointer items-center gap-1.5 rounded px-2 py-1 text-left text-xs",
+															selectedRightIdx === idx
+																? "bg-slate-100 text-slate-900"
+																: "text-slate-600 hover:bg-slate-50",
+														)}
+													>
+														<FileText className="h-3 w-3 shrink-0 text-slate-400" />
+														<span className="truncate">{doc.title}</span>
+													</button>
+												))}
+											</div>
+										</div>
+									))}
+								</div>
 							) : (
+								/* Flat list display */
 								addedDocs.map((doc, i) => (
 									<button
 										key={doc.id}
@@ -436,8 +523,14 @@ export function CreateActionPlanTemplatePage({
 								))
 							)}
 						</div>
+
+						{/* Right panel footer */}
 						{addedDocs.length > 0 && (
-							<div className="border-t border-slate-200 px-3 py-2">
+							<div className="space-y-2 border-t border-slate-200 px-3 py-3">
+								<p className="text-xs text-slate-500">
+									{addedDocs.length}{" "}
+									<Translate text={localizationConstants.kmaQualityPlanCreateSelected} />
+								</p>
 								<p className="rounded border border-blue-100 bg-blue-50 px-3 py-2 text-xs text-blue-700">
 									<Translate text={localizationConstants.kmaActionPlanTemplateNote} />
 								</p>

@@ -2221,6 +2221,7 @@ export type OfferTranslation = {
 	kmaQualityPlanCreateSelectAllSub: string;
 	kmaQualityPlanCreateSelectAllCat: string;
 	kmaQualityPlanCreateAvailable: string;
+	kmaQualityPlanCreateSelected: string;
 	kmaQualityPlanCreateNewPanelTitle: string;
 	kmaQualityPlanCreateAddBtn: string;
 	kmaQualityPlanCreateRemoveBtn: string;
