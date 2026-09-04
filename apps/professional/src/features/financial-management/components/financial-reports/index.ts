@@ -1,4 +1,6 @@
 export { FinancialReportsPage } from "./FinancialReportsPage";
+export { FinancialReportsHubView } from "./FinancialReportsHubView";
+export { FinancialReportsDetailView } from "./FinancialReportsDetailView";
 export { IncomeStatementReport } from "./IncomeStatementReport";
 export { BalanceSheetReport } from "./BalanceSheetReport";
 export { VatReport } from "./VatReport";
@@ -6,3 +8,6 @@ export { ReportSummaryCards } from "./ReportSummaryCards";
 export { ReportPeriodSelector } from "./ReportPeriodSelector";
 export { ReportExportActions } from "./ReportExportActions";
 export { ReportsListTable } from "./ReportsListTable";
+export { CreateReportModal } from "./CreateReportModal";
+export { RevenueByProjectTable } from "./RevenueByProjectTable";
+export { ExpenseByCategoryTable } from "./ExpenseByCategoryTable";

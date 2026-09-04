@@ -1,21 +1,26 @@
 "use client";
 
-import { FileText, Download, Eye } from "lucide-react";
+import { FileText, Download, Eye, Printer } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { GeneratedReportListItem } from "../../types/financialReports.types";
 
 interface ReportsListTableProps {
 	reports: GeneratedReportListItem[];
+	onViewReport?: (report: GeneratedReportListItem) => void;
 	onDownload: () => void;
 	onPrint: () => void;
 }
 
 export function ReportsListTable({
 	reports,
+	onViewReport,
 	onDownload,
 	onPrint,
 }: ReportsListTableProps) {
+	const { t } = useTranslation();
+
 	if (reports.length === 0) {
 		return (
 			<div className="bg-white rounded-xl border border-slate-200 p-8 text-center text-slate-500 text-sm">
@@ -25,13 +30,13 @@ export function ReportsListTable({
 	}
 
 	return (
-		<div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mt-6">
+		<div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
 			<div className="p-4 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
 				<h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
 					<Translate text={localizationConstants.reportsListTitle} />
 				</h4>
 				<span className="text-xs text-slate-500 font-medium">
-					{reports.length} dokument
+					{reports.length}
 				</span>
 			</div>
 
@@ -64,17 +69,18 @@ export function ReportsListTable({
 						{reports.map((rep, idx) => (
 							<tr
 								key={rep.id}
-								className="border-b border-slate-100 hover:bg-slate-50/70 transition-colors text-xs"
+								onClick={() => onViewReport?.(rep)}
+								className="border-b border-slate-100 hover:bg-slate-50/70 transition-colors text-xs cursor-pointer group"
 							>
 								<td className="py-3 px-4 text-center text-slate-400 font-mono">
 									{idx + 1}
 								</td>
 								<td className="py-3 px-4">
 									<div className="flex items-center gap-3">
-										<div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100">
+										<div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 border border-rose-100 group-hover:scale-105 transition-transform">
 											<FileText className="w-4 h-4" />
 										</div>
-										<span className="font-semibold text-slate-900">
+										<span className="font-semibold text-slate-900 group-hover:text-primary transition-colors">
 											{rep.title}
 										</span>
 									</div>
@@ -93,12 +99,12 @@ export function ReportsListTable({
 										<Translate text={localizationConstants.reportsListStatusReady} />
 									</span>
 								</td>
-								<td className="py-3 px-4 text-right">
+								<td className="py-3 px-4 text-right" onClick={(e) => e.stopPropagation()}>
 									<div className="flex items-center justify-end gap-1">
 										<button
 											type="button"
-											onClick={onPrint}
-											title="Visa och skriv ut"
+											onClick={() => onViewReport?.(rep)}
+											aria-label={t(localizationConstants.reportViewDetail)}
 											className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
 										>
 											<Eye className="w-4 h-4" />
@@ -106,10 +112,18 @@ export function ReportsListTable({
 										<button
 											type="button"
 											onClick={onDownload}
-											title="Ladda ner"
+											aria-label={t(localizationConstants.reportActionExportExcel)}
 											className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
 										>
 											<Download className="w-4 h-4" />
+										</button>
+										<button
+											type="button"
+											onClick={onPrint}
+											aria-label={t(localizationConstants.reportActionPrint)}
+											className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
+										>
+											<Printer className="w-4 h-4" />
 										</button>
 									</div>
 								</td>

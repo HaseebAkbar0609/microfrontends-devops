@@ -1,27 +1,21 @@
 "use client";
 
 import { PageHeader } from "@/components/layout/PageHeader";
-import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { FileSpreadsheet, FileText, Scale } from "lucide-react";
-import {
-	REPORT_TAB_ACTIVE_CLASS,
-	REPORT_TAB_INACTIVE_CLASS,
-	financialReportsBreadcrumbs,
-} from "../../constants/financialReports.constants";
+import { financialReportsBreadcrumbs } from "../../constants/financialReports.constants";
 import { useFinancialReports } from "../../hooks/useFinancialReports";
-import { ReportSummaryCards } from "./ReportSummaryCards";
-import { ReportPeriodSelector } from "./ReportPeriodSelector";
-import { ReportExportActions } from "./ReportExportActions";
-import { IncomeStatementReport } from "./IncomeStatementReport";
-import { BalanceSheetReport } from "./BalanceSheetReport";
-import { VatReport } from "./VatReport";
-import { ReportsListTable } from "./ReportsListTable";
+import { FinancialReportsHubView } from "./FinancialReportsHubView";
+import { FinancialReportsDetailView } from "./FinancialReportsDetailView";
+import { CreateReportModal } from "./CreateReportModal";
 
 export function FinancialReportsPage() {
 	const {
-		activeTab,
+		viewMode,
+		activeMainTab,
+		activeDetailTab,
 		periodFilter,
+		searchQuery,
+		isCreateModalOpen,
 		isLoading,
 		isExporting,
 		incomeStatementData,
@@ -29,11 +23,18 @@ export function FinancialReportsPage() {
 		vatReportData,
 		kpiSummary,
 		reportList,
-		handleTabChange,
+		handleMainTabChange,
+		handleDetailTabChange,
+		handleViewReport,
+		handleBackToHub,
 		handlePeriodTypeChange,
 		handleYearChange,
 		handleMonthChange,
 		handleQuarterChange,
+		handleSearchChange,
+		handleOpenCreateModal,
+		handleCloseCreateModal,
+		handleCreateReport,
 		handleExportExcel,
 		handlePrint,
 	} = useFinancialReports();
@@ -47,103 +48,49 @@ export function FinancialReportsPage() {
 				className="border-b-0 px-8 pt-6 pb-2"
 			/>
 
-			{/* Top Category Tabs matching Figma: Resultaträkning | Balansräkning | Momsrapport */}
-			<div className="px-8 border-b border-slate-200 bg-white">
-				<div className="flex items-center gap-8">
-					<button
-						type="button"
-						onClick={() => handleTabChange("income_statement")}
-						className={
-							activeTab === "income_statement"
-								? REPORT_TAB_ACTIVE_CLASS
-								: REPORT_TAB_INACTIVE_CLASS
-						}
-					>
-						<FileText className="w-4 h-4" />
-						<Translate text={localizationConstants.reportTabIncomeStatement} />
-					</button>
-
-					<button
-						type="button"
-						onClick={() => handleTabChange("balance_sheet")}
-						className={
-							activeTab === "balance_sheet"
-								? REPORT_TAB_ACTIVE_CLASS
-								: REPORT_TAB_INACTIVE_CLASS
-						}
-					>
-						<Scale className="w-4 h-4" />
-						<Translate text={localizationConstants.reportTabBalanceSheet} />
-					</button>
-
-					<button
-						type="button"
-						onClick={() => handleTabChange("vat_report")}
-						className={
-							activeTab === "vat_report"
-								? REPORT_TAB_ACTIVE_CLASS
-								: REPORT_TAB_INACTIVE_CLASS
-						}
-					>
-						<FileSpreadsheet className="w-4 h-4" />
-						<Translate text={localizationConstants.reportTabVatReport} />
-					</button>
-				</div>
-			</div>
-
 			{/* Main Content Area */}
-			<div className="px-8 py-6 flex-1 max-w-7xl mx-auto w-full space-y-6">
-				{/* Top Controls: Period Selector & Export Actions */}
-				<div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-					<ReportPeriodSelector
+			<div className="px-8 py-6 flex-1 max-w-7xl mx-auto w-full">
+				{viewMode === "hub" ? (
+					<FinancialReportsHubView
+						activeMainTab={activeMainTab}
+						searchQuery={searchQuery}
+						reportList={reportList}
+						kpiSummary={kpiSummary}
+						onMainTabChange={handleMainTabChange}
+						onSearchChange={handleSearchChange}
+						onOpenCreateModal={handleOpenCreateModal}
+						onViewReport={handleViewReport}
+						onDownload={handleExportExcel}
+						onPrint={handlePrint}
+					/>
+				) : (
+					<FinancialReportsDetailView
+						activeTab={activeDetailTab}
 						periodFilter={periodFilter}
+						isLoading={isLoading}
+						isExporting={isExporting}
+						kpiSummary={kpiSummary}
+						incomeStatementData={incomeStatementData}
+						balanceSheetData={balanceSheetData}
+						vatReportData={vatReportData}
+						onBackToHub={handleBackToHub}
+						onTabChange={handleDetailTabChange}
 						onPeriodTypeChange={handlePeriodTypeChange}
 						onYearChange={handleYearChange}
 						onMonthChange={handleMonthChange}
 						onQuarterChange={handleQuarterChange}
-					/>
-
-					<ReportExportActions
 						onExportExcel={handleExportExcel}
 						onPrint={handlePrint}
-						isExporting={isExporting}
 					/>
-				</div>
-
-				{/* Quick Financial Summary KPI Cards */}
-				<ReportSummaryCards kpiSummary={kpiSummary} activeTab={activeTab} />
-
-				{/* Report View Area with Loading State */}
-				{isLoading ? (
-					<div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-						<div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-primary border-t-transparent mb-3" />
-						<p className="text-sm font-semibold text-slate-600">
-							<Translate text={localizationConstants.reportLoading} />
-						</p>
-					</div>
-				) : (
-					<div className="space-y-6">
-						{activeTab === "income_statement" && (
-							<IncomeStatementReport data={incomeStatementData} />
-						)}
-
-						{activeTab === "balance_sheet" && (
-							<BalanceSheetReport data={balanceSheetData} />
-						)}
-
-						{activeTab === "vat_report" && (
-							<VatReport data={vatReportData} />
-						)}
-
-						{/* Document History / Generated Report Downloads matching Figma left board */}
-						<ReportsListTable
-							reports={reportList}
-							onDownload={handleExportExcel}
-							onPrint={handlePrint}
-						/>
-					</div>
 				)}
 			</div>
+
+			{/* Modal for Creating Custom Reports */}
+			<CreateReportModal
+				isOpen={isCreateModalOpen}
+				onClose={handleCloseCreateModal}
+				onCreate={handleCreateReport}
+			/>
 		</div>
 	);
 }

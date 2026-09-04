@@ -73,24 +73,24 @@ export const SKATTEVERKET_BOXES = {
 	BOX_49: "49",
 } as const;
 
-export const MONTH_NAMES_MAP = [
-	{ value: 1, sv: "Januari", en: "January" },
-	{ value: 2, sv: "Februari", en: "February" },
-	{ value: 3, sv: "Mars", en: "March" },
-	{ value: 4, sv: "April", en: "April" },
-	{ value: 5, sv: "Maj", en: "May" },
-	{ value: 6, sv: "Juni", en: "June" },
-	{ value: 7, sv: "Juli", en: "July" },
-	{ value: 8, sv: "Augusti", en: "August" },
-	{ value: 9, sv: "September", en: "September" },
-	{ value: 10, sv: "Oktober", en: "October" },
-	{ value: 11, sv: "November", en: "November" },
-	{ value: 12, sv: "December", en: "December" },
+export const MONTH_TRANSLATION_KEYS = [
+	{ value: 1, key: localizationConstants.monthJanuary },
+	{ value: 2, key: localizationConstants.monthFebruary },
+	{ value: 3, key: localizationConstants.monthMarch },
+	{ value: 4, key: localizationConstants.monthApril },
+	{ value: 5, key: localizationConstants.monthMay },
+	{ value: 6, key: localizationConstants.monthJune },
+	{ value: 7, key: localizationConstants.monthJuly },
+	{ value: 8, key: localizationConstants.monthAugust },
+	{ value: 9, key: localizationConstants.monthSeptember },
+	{ value: 10, key: localizationConstants.monthOctober },
+	{ value: 11, key: localizationConstants.monthNovember },
+	{ value: 12, key: localizationConstants.monthDecember },
 ] as const;
 
-export const QUARTER_NAMES_MAP = [
-	{ value: 1, label: "Q1 (Jan - Mar)" },
-	{ value: 2, label: "Q2 (Apr - Jun)" },
-	{ value: 3, label: "Q3 (Jul - Sep)" },
-	{ value: 4, label: "Q4 (Okt - Dec)" },
+export const QUARTER_TRANSLATION_KEYS = [
+	{ value: 1, key: localizationConstants.quarterQ1 },
+	{ value: 2, key: localizationConstants.quarterQ2 },
+	{ value: 3, key: localizationConstants.quarterQ3 },
+	{ value: 4, key: localizationConstants.quarterQ4 },
 ] as const;

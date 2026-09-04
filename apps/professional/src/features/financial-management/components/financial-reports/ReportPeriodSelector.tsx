@@ -1,12 +1,13 @@
 "use client";
 
 import { Calendar } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	AVAILABLE_REPORT_YEARS,
-	MONTH_NAMES_MAP,
-	QUARTER_NAMES_MAP,
+	MONTH_TRANSLATION_KEYS,
+	QUARTER_TRANSLATION_KEYS,
 	REPORT_PERIOD_BTN_ACTIVE,
 	REPORT_PERIOD_BTN_INACTIVE,
 } from "../../constants/financialReports.constants";
@@ -27,6 +28,8 @@ export function ReportPeriodSelector({
 	onMonthChange,
 	onQuarterChange,
 }: ReportPeriodSelectorProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex flex-wrap items-center gap-3 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm">
 			{/* Period Type Segmented Switcher */}
@@ -72,7 +75,7 @@ export function ReportPeriodSelector({
 			<div className="flex items-center gap-2">
 				<Calendar className="w-4 h-4 text-slate-400" />
 				<select
-					aria-label="Välj räkenskapsår"
+					aria-label={t(localizationConstants.reportFilterYear)}
 					value={periodFilter.year}
 					onChange={(e) => onYearChange(Number(e.target.value))}
 					className="h-9 px-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20"
@@ -88,14 +91,14 @@ export function ReportPeriodSelector({
 			{/* Month Selector if Monthly */}
 			{periodFilter.periodType === "monthly" && (
 				<select
-					aria-label="Välj redovisningsmånad"
+					aria-label={t(localizationConstants.reportFilterMonth)}
 					value={periodFilter.month ?? 1}
 					onChange={(e) => onMonthChange(Number(e.target.value))}
 					className="h-9 px-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20"
 				>
-					{MONTH_NAMES_MAP.map((m) => (
+					{MONTH_TRANSLATION_KEYS.map((m) => (
 						<option key={m.value} value={m.value}>
-							{m.sv}
+							{t(m.key)}
 						</option>
 					))}
 				</select>
@@ -104,14 +107,14 @@ export function ReportPeriodSelector({
 			{/* Quarter Selector if Quarterly */}
 			{periodFilter.periodType === "quarterly" && (
 				<select
-					aria-label="Välj kvartal"
+					aria-label={t(localizationConstants.reportFilterQuarter)}
 					value={periodFilter.quarter ?? 1}
 					onChange={(e) => onQuarterChange(Number(e.target.value))}
 					className="h-9 px-3 py-1 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-primary/20"
 				>
-					{QUARTER_NAMES_MAP.map((q) => (
+					{QUARTER_TRANSLATION_KEYS.map((q) => (
 						<option key={q.value} value={q.value}>
-							{q.label}
+							{t(q.key)}
 						</option>
 					))}
 				</select>

@@ -1,4 +1,6 @@
 export type ReportTabType = "income_statement" | "balance_sheet" | "vat_report";
+export type ReportMainTab = "all" | "income_statement" | "balance_sheet" | "vat_report";
+export type ReportViewMode = "hub" | "detail";
 
 export type ReportPeriodType = "monthly" | "quarterly" | "yearly";
 
@@ -22,9 +24,27 @@ export interface IncomeStatementRow {
 	category?: "revenue" | "direct_costs" | "operating_costs" | "financial" | "taxes";
 }
 
+export interface ProjectRevenueBreakdown {
+	project: string;
+	clientName: string;
+	amount: number;
+	previousPeriodAmount: number;
+	varianceSek: number;
+	variancePercent: number;
+}
+
+export interface ExpenseCategoryBreakdown {
+	category: string;
+	labelKey: string;
+	amount: number;
+	previousPeriodAmount: number;
+	varianceSek: number;
+	variancePercent: number;
+}
+
 export interface IncomeStatementData {
-	periodLabel: string;
-	comparisonPeriodLabel: string;
+	filter: ReportPeriodFilter;
+	comparisonYear: number;
 	totalRevenue: number;
 	totalDirectCosts: number;
 	grossProfit: number;
@@ -36,7 +56,9 @@ export interface IncomeStatementData {
 	taxCost: number;
 	netResult: number; // Årets resultat
 	revenueRows: IncomeStatementRow[];
+	projectRevenueRows: ProjectRevenueBreakdown[];
 	directCostRows: IncomeStatementRow[];
+	categoryExpenseRows: ExpenseCategoryBreakdown[];
 	operatingCostRows: IncomeStatementRow[];
 	financialRows: IncomeStatementRow[];
 }
@@ -53,7 +75,8 @@ export interface BalanceSheetRow {
 }
 
 export interface BalanceSheetData {
-	periodLabel: string;
+	filter: ReportPeriodFilter;
+	comparisonYear: number;
 	totalAssets: number;
 	totalFixedAssets: number;
 	totalCurrentAssets: number;
@@ -82,7 +105,8 @@ export interface VatReportBox {
 }
 
 export interface VatReportData {
-	periodLabel: string;
+	filter: ReportPeriodFilter;
+	comparisonYear: number;
 	totalSalesMomspliktig: number;
 	outputVat25: number;
 	outputVat12: number;

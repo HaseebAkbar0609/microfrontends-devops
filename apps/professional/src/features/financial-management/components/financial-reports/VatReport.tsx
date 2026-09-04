@@ -1,22 +1,27 @@
 "use client";
 
 import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { formatPeriodLabel } from "../../services/financialReports.service";
 import type { VatReportBox, VatReportData } from "../../types/financialReports.types";
 
 interface VatReportProps {
 	data: VatReportData;
 }
 
-function formatSek(val: number): string {
-	return new Intl.NumberFormat("sv-SE", {
+function formatCurrency(val: number, currency: string): string {
+	return `${new Intl.NumberFormat("sv-SE", {
 		style: "decimal",
 		maximumFractionDigits: 0,
-	}).format(val) + " kr";
+	}).format(val)} ${currency}`;
 }
 
 export function VatReport({ data }: VatReportProps) {
+	const { t } = useTranslation();
+	const currency = t(localizationConstants.reportCurrencySek);
+	const periodStr = formatPeriodLabel(data.filter, t);
 	const isPayable = data.netVatPayable >= 0;
 
 	const renderBoxRow = (box: VatReportBox) => {
@@ -32,15 +37,15 @@ export function VatReport({ data }: VatReportProps) {
 						: "hover:bg-slate-50/70"
 				}`}
 			>
-				<td className="py-3 px-4 w-20">
+				<td className="py-3 px-4 w-28">
 					<span
-						className={`inline-flex items-center justify-center font-mono font-bold px-2.5 py-1 rounded-md text-xs ${
+						className={`inline-flex items-center justify-center font-mono font-bold px-2.5 py-1 rounded-md text-xs gap-1 ${
 							isResult
 								? "bg-amber-200 text-amber-950 shadow-sm"
 								: "bg-slate-100 text-slate-800"
 						}`}
 					>
-						Ruta {box.boxNumber}
+						<Translate text={localizationConstants.boxNumberPrefix} /> {box.boxNumber}
 					</span>
 				</td>
 				<td className="py-3 px-4">
@@ -52,13 +57,21 @@ export function VatReport({ data }: VatReportProps) {
 					</p>
 				</td>
 				<td className="py-3 px-4 text-right font-medium text-slate-700">
-					{box.baseAmount !== undefined ? formatSek(box.baseAmount) : "-"}
+					{box.baseAmount !== undefined ? formatCurrency(box.baseAmount, currency) : "-"}
 				</td>
 				<td className="py-3 px-4 text-center font-medium text-slate-600">
 					{rateText}
 				</td>
-				<td className={`py-3 px-4 text-right font-bold ${isResult ? (isPayable ? "text-amber-900 text-base" : "text-emerald-700 text-base") : "text-slate-900"}`}>
-					{formatSek(box.vatAmount)}
+				<td
+					className={`py-3 px-4 text-right font-bold ${
+						isResult
+							? isPayable
+								? "text-amber-900 text-base"
+								: "text-emerald-700 text-base"
+							: "text-slate-900"
+					}`}
+				>
+					{formatCurrency(box.vatAmount, currency)}
 				</td>
 			</tr>
 		);
@@ -82,14 +95,14 @@ export function VatReport({ data }: VatReportProps) {
 					)}
 					<div>
 						<p className="text-sm font-bold">
-							<Translate text={localizationConstants.vatReportBox49} /> ({data.periodLabel})
+							<Translate text={localizationConstants.vatReportBox49} /> ({periodStr})
 						</p>
 						<p className="text-xs text-slate-600 mt-0.5">
 							<Translate
 								text={
 									isPayable
-										? localizationConstants.vatReportPayableDesc
-										: localizationConstants.vatReportRefundDesc
+										? localizationConstants.vatPayableNotice
+										: localizationConstants.vatRefundNotice
 								}
 							/>
 						</p>
@@ -97,7 +110,7 @@ export function VatReport({ data }: VatReportProps) {
 				</div>
 				<div className="text-right">
 					<span className="text-lg font-black tracking-tight">
-						{formatSek(Math.abs(data.netVatPayable))}
+						{formatCurrency(Math.abs(data.netVatPayable), currency)}
 					</span>
 				</div>
 			</div>
@@ -114,7 +127,7 @@ export function VatReport({ data }: VatReportProps) {
 						</p>
 					</div>
 					<span className="text-xs font-semibold px-2.5 py-1 bg-white border border-slate-200 rounded-md text-slate-700 shadow-sm">
-						Skatteverket Standard (SKV 4700)
+						SKV 4700
 					</span>
 				</div>
 
@@ -122,7 +135,7 @@ export function VatReport({ data }: VatReportProps) {
 					<table className="w-full text-left border-collapse">
 						<thead>
 							<tr className="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-								<th className="py-2.5 px-4 w-24">
+								<th className="py-2.5 px-4 w-28">
 									<Translate text={localizationConstants.vatReportColBox} />
 								</th>
 								<th className="py-2.5 px-4">
