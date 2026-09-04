@@ -8,6 +8,51 @@ import { getOrderInformation, updateOrderInformation } from "../api/orderInforma
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
+/**
+ * Safe deep merge for order data that prevents prototype pollution
+ * and safely merges nested records.
+ */
+function safeMergeOrderData(
+	prev: OrderOpenedData,
+	updated: Partial<OrderOpenedData>
+): OrderOpenedData {
+	if (!updated || typeof updated !== "object") return prev;
+
+	const dangerousKeys = new Set(["__proto__", "constructor", "prototype"]);
+	const result = { ...prev };
+
+	for (const [key, value] of Object.entries(updated)) {
+		if (dangerousKeys.has(key)) continue;
+
+		const currentVal = prev[key as keyof OrderOpenedData];
+		if (
+			value &&
+			typeof value === "object" &&
+			!Array.isArray(value) &&
+			currentVal &&
+			typeof currentVal === "object" &&
+			!Array.isArray(currentVal)
+		) {
+			const sanitizedSub: Record<string, unknown> = {};
+			for (const [subKey, subVal] of Object.entries(value as unknown as Record<string, unknown>)) {
+				if (!dangerousKeys.has(subKey)) {
+					sanitizedSub[subKey] = subVal;
+				}
+			}
+			result[key as keyof OrderOpenedData] = {
+				...(currentVal as unknown as Record<string, unknown>),
+				...sanitizedSub,
+			} as never;
+		} else if (Array.isArray(value)) {
+			result[key as keyof OrderOpenedData] = [...value] as never;
+		} else {
+			result[key as keyof OrderOpenedData] = value as never;
+		}
+	}
+
+	return result;
+}
+
 export function useOrderOpened(orderId?: string) {
 	const t = useTranslate();
 	const [orderData, setOrderData] = useState<OrderOpenedData>(() =>
@@ -54,6 +99,7 @@ export function useOrderOpened(orderId?: string) {
 			orderDetails: { ...prev.orderDetails, ...updated.orderDetails },
 			orderInfo: { ...prev.orderInfo, ...updated.orderInfo },
 		}));
+		setOrderData((prev) => safeMergeOrderData(prev, updated));
 
 		if (orderId) {
 			try {

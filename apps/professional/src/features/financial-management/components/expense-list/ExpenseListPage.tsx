@@ -5,7 +5,6 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PageHeader } from "@/components/layout/PageHeader";
 import {
-	expenseBreadcrumbs,
 	EXPENSE_TOP_TAB_ACTIVE_CLASS,
 	EXPENSE_TOP_TAB_INACTIVE_CLASS,
 } from "../../constants/expense.constants";
@@ -16,12 +15,25 @@ export function ExpenseListPage() {
 	// Top Category Tab: "customer_invoice" (Kundfaktura) | "supplier_invoice" (Leverantörsfaktura)
 	const [topCategoryTab, setTopCategoryTab] = useState<"customer_invoice" | "supplier_invoice">("supplier_invoice");
 
+	const dynamicBreadcrumbs = React.useMemo(() => [
+		{ label: localizationConstants.home, href: "/" },
+		{ label: localizationConstants.module, href: "/module" },
+		{ label: localizationConstants.economy, href: "/module/financial-management/economy" },
+		{ label: localizationConstants.expenseOverviewTitle, href: "/module/financial-management/economy" },
+		{
+			label: topCategoryTab === "customer_invoice"
+				? localizationConstants.expenseTopTabCustomerInvoice
+				: localizationConstants.expenseTopTabSupplierInvoice,
+			href: "/module/financial-management/economy",
+		},
+	], [topCategoryTab]);
+
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
 			{/* Page Header with Breadcrumbs */}
 			<PageHeader
 				title={localizationConstants.expenseOverviewTitle}
-				breadcrumbs={expenseBreadcrumbs}
+				breadcrumbs={dynamicBreadcrumbs}
 				className="border-b-0 px-8 pt-5 pb-2"
 			/>
 
