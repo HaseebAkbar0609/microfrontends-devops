@@ -903,6 +903,7 @@ export type SalesTranslation = {
 	salesEmptyCompanies: string;
 	salesEmptyDemoCompanies: string;
 	salesEmptyTestCompanies: string;
+	salesTrialDayLeftSuffix: string;
 	salesTrialDaysLeftSuffix: string;
 	salesTrialExpired: string;
 	salesStatusSelectLabel: string;

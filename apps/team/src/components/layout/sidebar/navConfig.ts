@@ -52,7 +52,7 @@ const moduleBusinessItems: NavFlyoutItem[] = [
 	{
 		id: "module-business-sales",
 		label: localizationConstants.sales,
-		href: "/module/business/sales",
+		href: "/module/sales",
 		isFavoriteSupported: true,
 	},
 	{

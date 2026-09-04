@@ -927,6 +927,7 @@ export const sweSales: SalesTranslation = {
 	salesEmptyCompanies: "Inga företag att visa. Registrera eller importera företag för att komma igång.",
 	salesEmptyDemoCompanies: "Inga företag med demokonton hittades.",
 	salesEmptyTestCompanies: "Inga företag med testkonton hittades.",
+	salesTrialDayLeftSuffix: "dag kvar",
 	salesTrialDaysLeftSuffix: "dagar kvar",
 	salesTrialExpired: "Utgånget",
 	salesStatusSelectLabel: "Ändra status",

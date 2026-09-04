@@ -929,6 +929,7 @@ export const enSales: SalesTranslation = {
 	salesEmptyCompanies: "No companies to show. Register or import companies to get started.",
 	salesEmptyDemoCompanies: "No companies with demo accounts were found.",
 	salesEmptyTestCompanies: "No companies with test accounts were found.",
+	salesTrialDayLeftSuffix: "day left",
 	salesTrialDaysLeftSuffix: "days left",
 	salesTrialExpired: "Expired",
 	salesStatusSelectLabel: "Change status",
