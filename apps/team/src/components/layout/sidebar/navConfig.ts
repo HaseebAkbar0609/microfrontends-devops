@@ -48,13 +48,20 @@ export interface FlyoutSubSidebarConfig {
 	items: FlyoutSubSidebarItem[];
 }
 
+/**
+ * Sales navigates through its own tab rows (`ModulePageHeader`), the way the
+ * professional app does. Keeping it out of `flyoutItems` stops the flyout
+ * sub-sidebar from opening on top of that navigation and reclaims the 256px it
+ * would otherwise take from the content column.
+ */
+const moduleSalesItem: NavFlyoutItem = {
+	id: "module-business-sales",
+	label: localizationConstants.sales,
+	href: "/module/sales",
+	isFavoriteSupported: true,
+};
+
 const moduleBusinessItems: NavFlyoutItem[] = [
-	{
-		id: "module-business-sales",
-		label: localizationConstants.sales,
-		href: "/module/business/sales",
-		isFavoriteSupported: true,
-	},
 	{
 		id: "module-business-marketing",
 		label: localizationConstants.marketing,
@@ -130,6 +137,7 @@ const moduleGovernanceItems: NavFlyoutItem[] = [
 ];
 
 export const favoriteableNavItems: NavFlyoutItem[] = [
+	moduleSalesItem,
 	...moduleBusinessItems,
 	...moduleOperationsItems,
 	...moduleGovernanceItems,
@@ -222,6 +230,11 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			label: localizationConstants.moduleItem,
 			icon: LayoutGrid,
 			items: [
+				{
+					id: moduleSalesItem.id,
+					label: moduleSalesItem.label,
+					href: moduleSalesItem.href,
+				},
 				{
 					id: "module-business",
 					label: localizationConstants.moduleBusiness,
