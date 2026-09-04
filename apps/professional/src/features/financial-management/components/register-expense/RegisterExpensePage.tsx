@@ -63,7 +63,7 @@ export function RegisterExpensePage() {
 	} = useRegisterExpense();
 
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen pb-12">
+		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen pb-12 font-sans">
 			{/* Page Header with Back Button & Breadcrumbs */}
 			<div className="bg-white border-b border-slate-200 px-8 pt-4 pb-0 sticky top-0 z-20 shadow-xs">
 				<div className="flex items-center gap-3">
@@ -132,7 +132,7 @@ export function RegisterExpensePage() {
 						<RegisterExpenseSummaryCard calculations={calculations} />
 
 						{/* Comments Box */}
-						<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs">
+						<div className="bg-white rounded-lg border border-slate-200 p-6 mb-6 shadow-2xs">
 							<h3 className="text-sm font-semibold text-slate-900 mb-2">
 								<Translate text={localizationConstants.registerExpenseCommentsTitle} />
 							</h3>

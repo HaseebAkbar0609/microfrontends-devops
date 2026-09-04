@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { ExpenseTimeReportItem, RegisterExpenseFormData } from "../../types/expense.types";
+import { formatNum } from "../../utils/format";
 
 interface ExpenseTimeReportTabProps {
 	formData: RegisterExpenseFormData;
@@ -43,13 +44,6 @@ export function ExpenseTimeReportTab({
 	totals,
 }: ExpenseTimeReportTabProps) {
 	const { t } = useTranslation();
-
-	const formatNum = (num: number) => {
-		return num.toLocaleString("sv-SE", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		});
-	};
 
 	return (
 		<div className="space-y-6">

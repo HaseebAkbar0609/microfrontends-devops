@@ -20,6 +20,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { RegisterExpenseFormData, RegisterExpenseCalculations } from "../../types/expense.types";
+import { formatNum } from "../../utils/format";
 
 interface RegisterExpensePreviewModalProps {
 	open: boolean;
@@ -34,13 +35,6 @@ export function RegisterExpensePreviewModal({
 	formData,
 	calculations,
 }: RegisterExpensePreviewModalProps) {
-	const formatNum = (num: number) => {
-		return num.toLocaleString("sv-SE", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		});
-	};
-
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-white p-6 rounded-xl border border-slate-200 shadow-2xl">

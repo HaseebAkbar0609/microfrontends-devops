@@ -28,6 +28,7 @@ import {
 	SWEDISH_VAT_RATES,
 	STANDARD_BAS_ACCOUNTS,
 } from "../../constants/expense.constants";
+import { formatNum } from "../../utils/format";
 
 interface RegisterExpenseLineItemsTableProps {
 	items: ExpenseLineItem[];
@@ -45,15 +46,9 @@ export function RegisterExpenseLineItemsTable({
 	error,
 }: RegisterExpenseLineItemsTableProps) {
 	const { t } = useTranslation();
-	const formatNum = (num: number) => {
-		return num.toLocaleString("sv-SE", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		});
-	};
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs overflow-hidden">
+		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-6 shadow-2xs overflow-hidden">
 			<div className="flex items-center justify-between mb-4">
 				<h3 className="text-sm font-semibold text-slate-900">
 					<Translate text={localizationConstants.registerExpenseLineItemsTitle} />

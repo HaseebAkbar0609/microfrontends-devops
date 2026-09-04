@@ -48,8 +48,8 @@ export function RegisterExpenseHeaderForm({
 	const { t } = useTranslation();
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs">
-			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-5">
+		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-6 shadow-2xs font-sans">
+			<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
 				{/* 1. Supplier Field (Searchable Combobox Dropdown to select or add new) */}
 				<div className="lg:col-span-4">
 					<div className="flex items-center justify-between mb-1.5 h-5">

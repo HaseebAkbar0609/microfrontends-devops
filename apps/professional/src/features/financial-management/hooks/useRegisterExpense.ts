@@ -23,6 +23,8 @@ import {
 	ALLOWED_ATTACHMENT_TYPES,
 } from "../constants/expense.constants";
 import { expenseRepository } from "../utils/expenseRepository";
+import { generateSecureId, generateSecureExpenseNo } from "../utils/cryptoUtils";
+import { registerExpenseFormSchema } from "../schemas/registerExpense.schema";
 
 function getTodayString(): string {
 	return new Date().toISOString().split("T")[0];
@@ -36,7 +38,7 @@ function getDueDateString(days = 30): string {
 
 function createEmptyLineItem(): ExpenseLineItem {
 	return {
-		id: `line-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+		id: generateSecureId("line"),
 		description: "",
 		quantity: 1,
 		unit: "st",
@@ -49,7 +51,7 @@ function createEmptyLineItem(): ExpenseLineItem {
 
 function createEmptyTimeReportItem(): ExpenseTimeReportItem {
 	return {
-		id: `time-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+		id: generateSecureId("time"),
 		date: getTodayString(),
 		referenceName: "",
 		workedHours: 8,
@@ -109,7 +111,7 @@ export function useRegisterExpense() {
 		[],
 	);
 
-	// Line Item Operations
+	// Line item operations
 	const addLineItem = useCallback(() => {
 		setFormData((prev) => ({
 			...prev,
@@ -121,15 +123,19 @@ export function useRegisterExpense() {
 	const updateLineItem = useCallback(
 		(id: string, updates: Partial<ExpenseLineItem>) => {
 			setFormData((prev) => {
-				const nextItems = prev.lineItems.map((item) => {
+				const newLineItems = prev.lineItems.map((item) => {
 					if (item.id !== id) return item;
 					const updated = { ...item, ...updates };
-					const qty = Math.max(0, updated.quantity || 0);
-					const price = Math.max(0, updated.unitPrice || 0);
-					updated.total = Math.round(qty * price * 100) / 100;
+
+					// Auto-calculate line total: quantity * unitPrice
+					if ("quantity" in updates || "unitPrice" in updates) {
+						const qty = updated.quantity || 0;
+						const price = updated.unitPrice || 0;
+						updated.total = Math.round(qty * price * 100) / 100;
+					}
 					return updated;
 				});
-				return { ...prev, lineItems: nextItems };
+				return { ...prev, lineItems: newLineItems };
 			});
 			setIsDirty(true);
 			setErrors((prev) => {
@@ -145,23 +151,57 @@ export function useRegisterExpense() {
 	);
 
 	const removeLineItem = useCallback((id: string) => {
-		setFormData((prev) => {
-			if (prev.lineItems.length <= 1) {
-				return { ...prev, lineItems: [createEmptyLineItem()] };
-			}
-			return {
-				...prev,
-				lineItems: prev.lineItems.filter((i) => i.id !== id),
-			};
-		});
+		setFormData((prev) => ({
+			...prev,
+			lineItems: prev.lineItems.filter((item) => item.id !== id),
+		}));
 		setIsDirty(true);
 	}, []);
 
-	// Attachments handling
-	const addAttachments = useCallback((files: File[]) => {
+	// Time report operations
+	const addTimeReportRow = useCallback(() => {
+		setFormData((prev) => ({
+			...prev,
+			timeReportItems: [...prev.timeReportItems, createEmptyTimeReportItem()],
+		}));
+		setIsDirty(true);
+	}, []);
+
+	const updateTimeReportRow = useCallback(
+		(id: string, updates: Partial<ExpenseTimeReportItem>) => {
+			setFormData((prev) => {
+				const newTimeItems = prev.timeReportItems.map((item) => {
+					if (item.id !== id) return item;
+					const updated = { ...item, ...updates };
+
+					if ("workedHours" in updates || "hourlyRate" in updates) {
+						const hrs = updated.workedHours || 0;
+						const rate = updated.hourlyRate || 0;
+						updated.total = Math.round(hrs * rate * 100) / 100;
+					}
+					return updated;
+				});
+				return { ...prev, timeReportItems: newTimeItems };
+			});
+			setIsDirty(true);
+		},
+		[],
+	);
+
+	const removeTimeReportRow = useCallback((id: string) => {
+		setFormData((prev) => ({
+			...prev,
+			timeReportItems: prev.timeReportItems.filter((item) => item.id !== id),
+		}));
+		setIsDirty(true);
+	}, []);
+
+	// Attachment operations (using secure UUIDs)
+	const addAttachments = useCallback((files: FileList | File[]) => {
+		const fileArray = Array.from(files);
 		const newAttachments: ExpenseAttachment[] = [];
 
-		for (const file of files) {
+		for (const file of fileArray) {
 			if (!ALLOWED_ATTACHMENT_TYPES.includes(file.type)) {
 				continue;
 			}
@@ -170,7 +210,7 @@ export function useRegisterExpense() {
 			}
 
 			newAttachments.push({
-				id: `att-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+				id: generateSecureId("att"),
 				name: file.name,
 				size: file.size,
 				type: file.type,
@@ -195,54 +235,6 @@ export function useRegisterExpense() {
 		setIsDirty(true);
 	}, []);
 
-	// Time Report Operations
-	const addTimeReportRow = useCallback(() => {
-		setFormData((prev) => ({
-			...prev,
-			timeReportItems: [...prev.timeReportItems, createEmptyTimeReportItem()],
-		}));
-		setIsDirty(true);
-	}, []);
-
-	const updateTimeReportRow = useCallback(
-		(id: string, updates: Partial<ExpenseTimeReportItem>) => {
-			setFormData((prev) => {
-				const next = prev.timeReportItems.map((row) => {
-					if (row.id !== id) return row;
-					const updated = { ...row, ...updates };
-					const hrs = Math.max(0, updated.workedHours || 0);
-					const rate = Math.max(0, updated.hourlyRate || 0);
-					updated.total = Math.round(hrs * rate * 100) / 100;
-					return updated;
-				});
-				return { ...prev, timeReportItems: next };
-			});
-			setIsDirty(true);
-		},
-		[],
-	);
-
-	const removeTimeReportRow = useCallback((id: string) => {
-		setFormData((prev) => ({
-			...prev,
-			timeReportItems: prev.timeReportItems.filter((row) => row.id !== id),
-		}));
-		setIsDirty(true);
-	}, []);
-
-	// Time report totals memo
-	const timeReportTotals = useMemo(() => {
-		let totalHours = 0;
-		let totalAmount = 0;
-		for (const row of formData.timeReportItems) {
-			if (row.included) {
-				totalHours += row.workedHours || 0;
-				totalAmount += row.total || 0;
-			}
-		}
-		return { totalHours, totalAmount };
-	}, [formData.timeReportItems]);
-
 	// Supplier management
 	const handleAddSupplier = useCallback((name: string) => {
 		const trimmed = name.trim();
@@ -262,6 +254,30 @@ export function useRegisterExpense() {
 		setShowSupplierModal(false);
 	}, []);
 
+	// Time report totals memo
+	const timeReportTotals = useMemo(() => {
+		let totalHours = 0;
+		let totalAmount = 0;
+		for (const row of formData.timeReportItems) {
+			if (row.included) {
+				totalHours += row.workedHours || 0;
+				totalAmount += row.total || 0;
+			}
+		}
+		return { totalHours, totalAmount };
+	}, [formData.timeReportItems]);
+
+	// Granular calculation sub-memos (Standard #7 Performance Optimization)
+	const lineItemsSubtotal = useMemo(() => {
+		return formData.lineItems.reduce((sum, item) => sum + (item.total || 0), 0);
+	}, [formData.lineItems]);
+
+	const timeReportSubtotal = useMemo(() => {
+		return formData.timeReportItems.reduce((sum, row) => {
+			return row.included ? sum + (row.total || 0) : sum;
+		}, 0);
+	}, [formData.timeReportItems]);
+
 	// Real-time calculations with granular memoization (Standard #7)
 	const calculations: RegisterExpenseCalculations = useMemo(() => {
 		let subtotal = 0;
@@ -272,27 +288,20 @@ export function useRegisterExpense() {
 			0: { basis: 0, vat: 0 },
 		};
 
-		for (const item of formData.lineItems) {
-			const lineTotal = item.total || 0;
-			subtotal += lineTotal;
-
-			const rate = item.vatRate;
-			if (rate in vatMap) {
-				vatMap[rate].basis += lineTotal;
-				vatMap[rate].vat += (lineTotal * rate) / 100;
-			}
-		}
-
-		// If user logged time report items and has no line items, compute from time report
-		if (formData.lineItems.length === 0 && formData.timeReportItems.length > 0) {
-			for (const row of formData.timeReportItems) {
-				if (row.included) {
-					const lineTotal = row.total || 0;
-					subtotal += lineTotal;
-					vatMap[25].basis += lineTotal;
-					vatMap[25].vat += (lineTotal * 25) / 100;
+		if (formData.lineItems.length > 0) {
+			subtotal = lineItemsSubtotal;
+			for (const item of formData.lineItems) {
+				const lineTotal = item.total || 0;
+				const rate = item.vatRate;
+				if (rate in vatMap) {
+					vatMap[rate].basis += lineTotal;
+					vatMap[rate].vat += (lineTotal * rate) / 100;
 				}
 			}
+		} else if (formData.timeReportItems.length > 0) {
+			subtotal = timeReportSubtotal;
+			vatMap[25].basis += timeReportSubtotal;
+			vatMap[25].vat += (timeReportSubtotal * 25) / 100;
 		}
 
 		let totalVat = 0;
@@ -316,57 +325,34 @@ export function useRegisterExpense() {
 			totalVat: Math.round(totalVat * 100) / 100,
 			grandTotal,
 		};
-	}, [formData.lineItems, formData.timeReportItems]);
+	}, [formData.lineItems, formData.timeReportItems, lineItemsSubtotal, timeReportSubtotal]);
 
-	// Validation
+	// Validation using Zod schema (Technology Stack standard)
 	const validate = useCallback((): { isValid: boolean; errorMessage: string } => {
-		const newErrors: RegisterExpenseErrors = {};
-		let firstErrorMsg = "";
+		const result = registerExpenseFormSchema.safeParse(formData);
 
-		if (!formData.supplier.trim()) {
-			newErrors.supplier = t(localizationConstants.registerExpenseErrorSupplierRequired);
-			if (!firstErrorMsg) firstErrorMsg = newErrors.supplier;
-		}
+		if (!result.success) {
+			const newErrors: RegisterExpenseErrors = {};
+			let firstErrorMsg = "";
 
-		if (!formData.fakturaNo.trim()) {
-			newErrors.fakturaNo = t(localizationConstants.registerExpenseErrorInvoiceNoRequired);
-			if (!firstErrorMsg) firstErrorMsg = newErrors.fakturaNo;
-		}
+			for (const issue of result.error.issues) {
+				const pathKey = issue.path[0] as keyof RegisterExpenseErrors;
+				const issueKey = issue.message as keyof typeof localizationConstants;
+				const localizedMsg =
+					issueKey in localizationConstants
+						? t(localizationConstants[issueKey])
+						: issue.message;
 
-		if (!formData.date) {
-			newErrors.date = t(localizationConstants.registerExpenseErrorDateRequired);
-			if (!firstErrorMsg) firstErrorMsg = newErrors.date;
-		}
-
-		if (!formData.dueDate) {
-			newErrors.dueDate = t(localizationConstants.registerExpenseErrorDueDateRequired);
-			if (!firstErrorMsg) firstErrorMsg = newErrors.dueDate;
-		}
-
-		if (!formData.category) {
-			newErrors.category = t(localizationConstants.registerExpenseErrorCategoryRequired);
-			if (!firstErrorMsg) firstErrorMsg = newErrors.category;
-		}
-
-		const hasLineItems = formData.lineItems.length > 0;
-		const hasIncludedTimeReport = formData.timeReportItems.some((item) => item.included);
-
-		if (!hasLineItems && !hasIncludedTimeReport) {
-			newErrors.lineItems = t(localizationConstants.registerExpenseErrorLineItemsRequired);
-			if (!firstErrorMsg) firstErrorMsg = newErrors.lineItems;
-		} else if (hasLineItems) {
-			const hasInvalidLine = formData.lineItems.some(
-				(item) => !item.description.trim() || item.quantity <= 0 || item.unitPrice < 0,
-			);
-			if (hasInvalidLine) {
-				newErrors.lineItems = t(localizationConstants.registerExpenseErrorLineItemDesc);
-				if (!firstErrorMsg) firstErrorMsg = newErrors.lineItems;
+				if (pathKey && !newErrors[pathKey]) {
+					newErrors[pathKey] = localizedMsg;
+				}
+				if (!firstErrorMsg) {
+					firstErrorMsg = localizedMsg;
+				}
 			}
-		}
 
-		setErrors(newErrors);
+			setErrors(newErrors);
 
-		if (Object.keys(newErrors).length > 0) {
 			// Switch to the relevant tab so the user sees the highlighted red input
 			if (
 				newErrors.supplier ||
@@ -381,13 +367,14 @@ export function useRegisterExpense() {
 			return { isValid: false, errorMessage: firstErrorMsg };
 		}
 
+		setErrors({});
 		return { isValid: true, errorMessage: "" };
 	}, [formData, t]);
 
-	// Build ExpenseItem payload
+	// Build ExpenseItem payload using secure UUIDs and random numbers
 	const buildExpensePayload = useCallback((): ExpenseItem => {
-		const nextId = `exp-${Date.now()}`;
-		const expenseNo = `${Math.floor(100000 + Math.random() * 900000)}`;
+		const nextId = generateSecureId("exp");
+		const expenseNo = generateSecureExpenseNo(100000, 999999);
 
 		return {
 			id: nextId,
@@ -517,3 +504,5 @@ export function useRegisterExpense() {
 		confirmDiscard,
 	};
 }
+
+export default useRegisterExpense;

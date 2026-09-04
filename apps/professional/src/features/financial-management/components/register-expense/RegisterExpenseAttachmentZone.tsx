@@ -61,7 +61,7 @@ export function RegisterExpenseAttachmentZone({
 	};
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs">
+		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-6 shadow-2xs">
 			<h3 className="text-sm font-semibold text-slate-900 mb-3">
 				<Translate text={localizationConstants.registerExpenseAttachmentsTitle} />
 			</h3>

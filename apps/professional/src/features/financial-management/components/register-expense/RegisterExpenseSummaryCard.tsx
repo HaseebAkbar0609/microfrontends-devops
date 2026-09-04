@@ -4,6 +4,7 @@ import React from "react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { RegisterExpenseCalculations } from "../../types/expense.types";
+import { formatNum } from "../../utils/format";
 
 interface RegisterExpenseSummaryCardProps {
 	calculations: RegisterExpenseCalculations;
@@ -12,20 +13,14 @@ interface RegisterExpenseSummaryCardProps {
 export function RegisterExpenseSummaryCard({
 	calculations,
 }: RegisterExpenseSummaryCardProps) {
-	const formatNum = (num: number) => {
-		return num.toLocaleString("sv-SE", {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
-		});
-	};
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-5 shadow-2xs">
+		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-6 shadow-2xs font-sans">
 			<h3 className="text-sm font-semibold text-slate-900 mb-4">
 				<Translate text={localizationConstants.registerExpenseSummaryTitle} />
 			</h3>
 
-			<div className="space-y-2.5 max-w-md ml-auto text-xs">
+			<div className="space-y-2 max-w-md ml-auto text-xs">
 				{/* Subtotal (Delsumma exkl moms) */}
 				<div className="flex justify-between text-slate-600">
 					<span>

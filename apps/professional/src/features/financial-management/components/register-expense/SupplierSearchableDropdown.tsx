@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { Search, ChevronDown, Check, Plus, X, Building2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
@@ -35,16 +35,13 @@ export function SupplierSearchableDropdown({
 	const [searchQuery, setSearchQuery] = useState("");
 	const searchInputRef = useRef<HTMLInputElement>(null);
 
-	// Focus search input when popover opens
-	useEffect(() => {
-		if (open) {
-			setTimeout(() => {
-				searchInputRef.current?.focus();
-			}, 50);
-		} else {
+	// Clean search query when closed
+	const handleOpenChange = (isOpen: boolean) => {
+		setOpen(isOpen);
+		if (!isOpen) {
 			setSearchQuery("");
 		}
-	}, [open]);
+	};
 
 	// Filter suppliers list based on search query
 	const filteredSuppliers = useMemo(() => {
@@ -81,7 +78,7 @@ export function SupplierSearchableDropdown({
 	};
 
 	return (
-		<Popover open={open} onOpenChange={setOpen}>
+		<Popover open={open} onOpenChange={handleOpenChange}>
 			<PopoverTrigger asChild>
 				<button
 					type="button"
@@ -123,6 +120,10 @@ export function SupplierSearchableDropdown({
 			<PopoverContent
 				id="supplier-popover-content"
 				align="start"
+				onOpenAutoFocus={(e) => {
+					e.preventDefault();
+					searchInputRef.current?.focus();
+				}}
 				className="w-(--radix-popover-trigger-width) min-w-[300px] p-2 bg-white rounded-lg border border-slate-200 shadow-xl z-50"
 			>
 				{/* Search Input */}
