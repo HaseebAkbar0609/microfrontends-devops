@@ -234,7 +234,7 @@ export default function ProfessionalPricingContent() {
                 >
                   –
                 </button>
-                <span className="min-w-[80px] text-center">
+                <span className="min-w-20 text-center">
                   {anstallda} stycken
                 </span>
                 <button

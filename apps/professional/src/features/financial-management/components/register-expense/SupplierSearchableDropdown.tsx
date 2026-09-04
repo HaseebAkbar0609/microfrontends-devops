@@ -107,7 +107,7 @@ export function SupplierSearchableDropdown({
 									}
 								}}
 								className="p-0.5 text-slate-400 hover:text-slate-600 rounded-sm cursor-pointer"
-								aria-label="Rensa leverantör"
+								aria-label={t(localizationConstants.expenseDetailClearSupplierAria)}
 							>
 								<X className="h-3.5 w-3.5" />
 							</span>
