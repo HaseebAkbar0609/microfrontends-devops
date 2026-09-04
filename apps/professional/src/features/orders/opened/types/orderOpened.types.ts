@@ -88,3 +88,9 @@ export interface OrderOpenedData {
 	documents: OrderDocumentItem[];
 }
 
+export type CustomerInfo = CustomerDetails;
+export type ContactPerson = ContactPersonDetails;
+export type OrderDetails = OrderBasicDetails;
+export type OrderInfo = OrderMetaInformation;
+
+
