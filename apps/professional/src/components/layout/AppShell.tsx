@@ -21,7 +21,11 @@ const AUTH_ROUTE_PREFIXES = [
 	"/invitation",
 ];
 
-const PUBLIC_ROUTE_PREFIXES = ["/manage-plans", "/manage-cart"];
+const PUBLIC_ROUTE_PREFIXES = [
+	"/manage-plans",
+	"/manage-cart",
+	"/subscription/success",
+];
 
 function pathMatchesPrefixes(pathname: string, prefixes: string[]) {
 	return prefixes.some(

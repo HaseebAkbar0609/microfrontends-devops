@@ -2,16 +2,17 @@ import "server-only";
 
 import { z } from "zod";
 
-const profileSchema = z.object({
-	data: z.object({
-		user: z.object({ email: z.string().email() }),
-		company: z.object({ id: z.string().min(1) }),
-	}),
-});
-
 const checkoutResponseSchema = z.object({
 	checkout_session_id: z.string().min(1),
 	url: z.string().url(),
+});
+
+const checkoutStatusResponseSchema = z.object({
+	checkout_session_id: z.string().min(1),
+	checkout_status: z.enum(["open", "completed", "expired"]),
+	core_account_id: z.string().min(1),
+	payment_status: z.enum(["pending", "active", "restricted", "canceled"]),
+	subscription_status: z.string().nullable(),
 });
 
 type CallerHeaders = {
@@ -24,6 +25,7 @@ type CheckoutRequest = {
 	billingInterval: "monthly" | "annual";
 	quantity: number;
 	requestId: string;
+	email: string;
 };
 
 function requiredServerSetting(name: string): string {
@@ -36,10 +38,10 @@ function requiredServerUrl(name: string): string {
 	return requiredServerSetting(name).replace(/\/$/, "");
 }
 
-async function loadVerifiedProfile(headers: CallerHeaders) {
+async function verifySubscriptionContext(headers: CallerHeaders) {
 	const backendUrl = requiredServerUrl("TFS_BACKEND_URL");
 	const response = await fetch(
-		`${backendUrl}/api/v1/professionals/profile/me`,
+		`${backendUrl}/api/v1/professionals/cart/get`,
 		{
 			headers: {
 				Authorization: headers.authorization,
@@ -51,20 +53,17 @@ async function loadVerifiedProfile(headers: CallerHeaders) {
 	);
 
 	if (!response.ok) {
-		throw new Error(`Profile verification failed (${response.status})`);
+		throw new Error(
+			`Subscription context verification failed (${response.status})`,
+		);
 	}
-	const profile = profileSchema.parse(await response.json()).data;
-	if (profile.company.id !== headers.companyId) {
-		throw new Error("Company context mismatch");
-	}
-	return profile;
 }
 
 export async function createHostedCheckout(
 	headers: CallerHeaders,
 	request: CheckoutRequest,
 ) {
-	const profile = await loadVerifiedProfile(headers);
+	await verifySubscriptionContext(headers);
 	const serviceUrl = requiredServerUrl("PAYMENT_SERVICE_URL");
 	const serviceToken = requiredServerSetting("PAYMENT_SERVICE_TOKEN");
 	const response = await fetch(
@@ -76,9 +75,9 @@ export async function createHostedCheckout(
 				"X-Service-Token": serviceToken,
 			},
 			body: JSON.stringify({
-				core_account_id: profile.company.id,
+				core_account_id: headers.companyId,
 				account_type: "business",
-				email: profile.user.email,
+				email: request.email,
 				plan_code: request.planCode,
 				billing_interval: request.billingInterval,
 				quantity: request.quantity,
@@ -93,4 +92,31 @@ export async function createHostedCheckout(
 		throw new Error(`Payment service rejected checkout (${response.status})`);
 	}
 	return checkoutResponseSchema.parse(await response.json());
+}
+
+export async function getHostedCheckoutStatus(
+	headers: CallerHeaders,
+	checkoutSessionId: string,
+) {
+	await verifySubscriptionContext(headers);
+	const serviceUrl = requiredServerUrl("PAYMENT_SERVICE_URL");
+	const serviceToken = requiredServerSetting("PAYMENT_SERVICE_TOKEN");
+	const response = await fetch(
+		`${serviceUrl}/api/v1/payments/checkout-sessions/${encodeURIComponent(checkoutSessionId)}/status`,
+		{
+			headers: { "X-Service-Token": serviceToken },
+			cache: "no-store",
+			signal: AbortSignal.timeout(10_000),
+		},
+	);
+	if (!response.ok) {
+		throw new Error(
+			`Payment service rejected status lookup (${response.status})`,
+		);
+	}
+	const status = checkoutStatusResponseSchema.parse(await response.json());
+	if (status.core_account_id !== headers.companyId) {
+		throw new Error("Checkout Session company context mismatch");
+	}
+	return status;
 }

@@ -10,12 +10,54 @@ type HostedCheckoutRequest = {
 	planCode: string;
 	billingInterval: "monthly" | "annual";
 	quantity: number;
+	email: string;
+};
+
+export type HostedCheckoutStatus = {
+	checkout_session_id: string;
+	checkout_status: "open" | "completed" | "expired";
+	core_account_id: string;
+	payment_status: "pending" | "active" | "restricted" | "canceled";
+	subscription_status: string | null;
 };
 
 function readCompanyId(): string {
 	const company = authStorage.getCompanyData();
 	if (!company || typeof company !== "object" || !("id" in company)) return "";
 	return typeof company.id === "string" ? company.id.trim() : "";
+}
+
+export async function getHostedCheckoutStatusAction(
+	checkoutSessionId: string,
+): Promise<ActionResult<HostedCheckoutStatus>> {
+	const accessToken = authStorage.getAccessToken()?.trim() ?? "";
+	const companyId = readCompanyId();
+	if (!accessToken || !companyId) {
+		return { success: false, data: null, error: "Unauthorized" };
+	}
+
+	try {
+		const response = await fetch(
+			`/api/billing/checkout-session/${encodeURIComponent(checkoutSessionId)}`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					"X-Company-ID": companyId,
+				},
+				cache: "no-store",
+			},
+		);
+		if (!response.ok) {
+			return { success: false, data: null, error: "Unable to verify checkout" };
+		}
+		return {
+			success: true,
+			data: (await response.json()) as HostedCheckoutStatus,
+			error: null,
+		};
+	} catch {
+		return { success: false, data: null, error: "Unable to verify checkout" };
+	}
 }
 
 export async function createHostedCheckoutAction(

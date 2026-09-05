@@ -321,12 +321,13 @@ export function ConfirmSubscription({
 								if (useHostedCheckoutMvp && mainItem) {
 									setIsSubmitting(true);
 									try {
-										const checkout =
-											await createHostedCheckoutAction({
-												planCode: mainItem.planKey,
-												billingInterval: "monthly",
-												quantity: mainItem.quantity,
-											});
+									const checkout =
+										await createHostedCheckoutAction({
+											planCode: mainItem.planKey,
+											billingInterval: "monthly",
+											quantity: mainItem.quantity,
+											email: profile?.email ?? "",
+										});
 										if (!checkout.success || !checkout.data) {
 											showToast(
 												"error",

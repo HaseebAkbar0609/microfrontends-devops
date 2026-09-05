@@ -7,6 +7,7 @@ const requestSchema = z.object({
 	billingInterval: z.enum(["monthly", "annual"]),
 	quantity: z.number().int().min(1).max(1000),
 	requestId: z.string().uuid(),
+	email: z.string().email().max(320),
 });
 
 export async function POST(request: NextRequest) {

@@ -27,6 +27,7 @@ function isAllowedWhenSubscriptionRequired(pathname: string): boolean {
 		"/my-companies",
 		"/manage-plans",
 		"/manage-cart",
+		"/subscription/success",
 	]);
 
 	if (exact.has(pathname)) return true;
@@ -39,6 +40,7 @@ function isAllowedWhenSubscriptionRequired(pathname: string): boolean {
 		"/my-companies/",
 		"/manage-plans/",
 		"/manage-cart/",
+		"/subscription/success/",
 	];
 
 	return prefixes.some((p) => pathname.startsWith(p));
@@ -49,7 +51,9 @@ function isSubscriptionFunnelPath(pathname: string): boolean {
 		pathname === "/manage-plans" ||
 		pathname === "/manage-cart" ||
 		pathname.startsWith("/manage-plans/") ||
-		pathname.startsWith("/manage-cart/")
+		pathname.startsWith("/manage-cart/") ||
+		pathname === "/subscription/success" ||
+		pathname.startsWith("/subscription/success/")
 	);
 }
 
