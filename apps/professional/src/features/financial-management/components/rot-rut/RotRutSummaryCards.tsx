@@ -6,17 +6,10 @@ import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { RotRutKpiSummary } from "../../types/rotRut.types";
+import { formatCurrency } from "../../utils/rotRutFormatters";
 
 interface RotRutSummaryCardsProps {
 	summary: RotRutKpiSummary;
-}
-
-function formatCurrency(amount: number, currency: string, lang = "sv"): string {
-	const locale = lang === "sv" ? "sv-SE" : "en-US";
-	return `${new Intl.NumberFormat(locale, {
-		style: "decimal",
-		maximumFractionDigits: 0,
-	}).format(amount)} ${currency}`;
 }
 
 export function RotRutSummaryCards({ summary }: RotRutSummaryCardsProps) {

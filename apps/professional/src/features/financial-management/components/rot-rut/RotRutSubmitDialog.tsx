@@ -14,6 +14,7 @@ import { Send, AlertCircle } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
+import { formatCurrency } from "../../utils/rotRutFormatters";
 
 interface RotRutSubmitDialogProps {
 	isOpen: boolean;
@@ -21,14 +22,6 @@ interface RotRutSubmitDialogProps {
 	onConfirm: () => void;
 	selectedCount: number;
 	totalAmount: number;
-}
-
-function formatCurrency(amount: number, currency: string, lang = "sv"): string {
-	const locale = lang === "sv" ? "sv-SE" : "en-US";
-	return `${new Intl.NumberFormat(locale, {
-		style: "decimal",
-		maximumFractionDigits: 0,
-	}).format(amount)} ${currency}`;
 }
 
 export function RotRutSubmitDialog({

@@ -1,29 +1,14 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import {
-	ArrowUpDown,
-	RotateCcw,
-	Send,
-	FileText,
-	ChevronLeft,
-	ChevronRight,
-} from "lucide-react";
+import { ArrowUpDown, FileText } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { RotRutItem, RotRutSortColumn, RotRutCustomerLimit } from "../../types/rotRut.types";
-import { PAGE_SIZE_OPTIONS } from "../../constants/rotRut.constants";
+import { RotRutTableRow } from "./RotRutTableRow";
+import { RotRutTablePagination } from "./RotRutTablePagination";
 
 interface RotRutTableProps {
 	items: RotRutItem[];
@@ -42,14 +27,6 @@ interface RotRutTableProps {
 	onResubmit: (item: RotRutItem) => void;
 	onSubmitSingle: (id: string) => void;
 	customerLimits?: RotRutCustomerLimit[];
-}
-
-function formatCurrency(amount: number, currency: string, lang = "sv"): string {
-	const locale = lang === "sv" ? "sv-SE" : "en-US";
-	return `${new Intl.NumberFormat(locale, {
-		style: "decimal",
-		maximumFractionDigits: 0,
-	}).format(amount)} ${currency}`;
 }
 
 export function RotRutTable({
@@ -80,6 +57,7 @@ export function RotRutTable({
 		});
 		return map;
 	}, [customerLimits]);
+
 	const allSelected = items.length > 0 && selectedIds.size === items.length;
 
 	const renderSortIcon = (col: RotRutSortColumn) => {
@@ -97,7 +75,6 @@ export function RotRutTable({
 
 	return (
 		<div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
-			{/* Table Structure */}
 			<div className="overflow-x-auto">
 				<table className="w-full text-xs text-left">
 					<thead className="bg-slate-50 border-b border-slate-200/80 text-slate-500 font-medium">
@@ -164,188 +141,33 @@ export function RotRutTable({
 								</td>
 							</tr>
 						) : (
-							items.map((item) => {
-								const isSelected = selectedIds.has(item.id);
-								return (
-									<tr
-										key={item.id}
-										className={`hover:bg-slate-50/70 transition-colors ${
-											isSelected ? "bg-blue-50/30" : ""
-										}`}
-									>
-										<td className="py-3 px-4">
-											<Checkbox
-												checked={isSelected}
-												onCheckedChange={() => onToggleSelect(item.id)}
-												aria-label={`Select ${item.invoiceNo}`}
-											/>
-										</td>
-										<td className="py-3 px-4 font-mono font-semibold text-blue-600 hover:underline">
-											<Link href={`/module/financial-management/invoice/${item.invoiceId}`}>
-												{item.invoiceNo}
-											</Link>
-										</td>
-										<td className="py-3 px-4">
-											<div className="font-semibold text-slate-900">{item.customerName}</div>
-											<div className="text-[11px] text-slate-400 font-mono">
-												{item.customerPersonalIdMasked}
-											</div>
-											{customerLimitMap.has(item.customerName) && (
-												<div className="text-[10px] text-emerald-600 font-medium mt-0.5">
-													{formatCurrency(customerLimitMap.get(item.customerName)!, currency, i18n.language)}{" "}
-													<Translate text={localizationConstants.rotRutRemaining} />
-												</div>
-											)}
-										</td>
-										<td className="py-3 px-4 text-slate-600 font-medium">
-											<span className="truncate max-w-[180px] block" title={item.propertyId}>
-												{item.propertyId}
-											</span>
-										</td>
-										<td className="py-3 px-4 text-center">
-											<span
-												className={`inline-block font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider ${
-													item.type === "rot"
-														? "bg-indigo-50 text-indigo-700 border border-indigo-200"
-														: "bg-violet-50 text-violet-700 border border-violet-200"
-												}`}
-											>
-												{item.type.toUpperCase()}
-											</span>
-										</td>
-										<td className="py-3 px-4 text-right font-medium text-slate-800 font-mono">
-											{formatCurrency(item.laborCost, currency, i18n.language)}
-										</td>
-										<td className="py-3 px-4 text-right font-bold text-slate-900 font-mono">
-											{formatCurrency(item.deductionAmount, currency, i18n.language)}
-										</td>
-										<td className="py-3 px-4 text-center">
-											<div className="flex flex-col items-center justify-center gap-0.5">
-												<span
-													className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-														item.status === "approved"
-															? "bg-emerald-50 text-emerald-700 border-emerald-200"
-															: item.status === "submitted"
-																? "bg-blue-50 text-blue-700 border-blue-200"
-																: item.status === "rejected"
-																	? "bg-rose-50 text-rose-700 border-rose-200"
-																	: "bg-amber-50 text-amber-700 border-amber-200"
-													}`}
-												>
-													<Translate
-														text={
-															item.status === "approved"
-																? localizationConstants.rotRutFilterStatusApproved
-																: item.status === "submitted"
-																	? localizationConstants.rotRutFilterStatusSubmitted
-																	: item.status === "rejected"
-																		? localizationConstants.rotRutFilterStatusRejected
-																		: localizationConstants.rotRutFilterStatusPending
-														}
-													/>
-												</span>
-												{item.skatteverketReference && (
-													<span className="text-[10px] text-slate-500 font-mono" title={item.skatteverketReference}>
-														{item.skatteverketReference}
-													</span>
-												)}
-											</div>
-										</td>
-										<td className="py-3 px-4 text-right">
-											<div className="inline-flex items-center justify-end gap-1">
-												{item.status === "pending" && (
-													<Button
-														type="button"
-														variant="ghost"
-														size="icon"
-														onClick={() => onSubmitSingle(item.id)}
-														className="h-7 w-7 text-blue-600 hover:text-blue-700 hover:bg-blue-50 cursor-pointer"
-														title={t(localizationConstants.rotRutActionSubmit)}
-													>
-														<Send className="w-3.5 h-3.5" />
-													</Button>
-												)}
-												{item.status === "rejected" && (
-													<Button
-														type="button"
-														variant="ghost"
-														size="icon"
-														onClick={() => onResubmit(item)}
-														className="h-7 w-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
-														title={t(localizationConstants.rotRutActionResubmit)}
-													>
-														<RotateCcw className="w-3.5 h-3.5" />
-													</Button>
-												)}
-												<Link
-													href={`/module/financial-management/invoice/${item.invoiceId}`}
-													className="inline-flex items-center justify-center h-7 w-7 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
-													title={t(localizationConstants.rotRutActionViewInvoice)}
-												>
-													<FileText className="w-3.5 h-3.5" />
-												</Link>
-											</div>
-										</td>
-									</tr>
-								);
-							})
+							items.map((item) => (
+								<RotRutTableRow
+									key={item.id}
+									item={item}
+									isSelected={selectedIds.has(item.id)}
+									onToggleSelect={onToggleSelect}
+									currency={currency}
+									language={i18n.language}
+									customerLimit={customerLimitMap.get(item.customerName)}
+									onSubmitSingle={onSubmitSingle}
+									onResubmit={onResubmit}
+								/>
+							))
 						)}
 					</tbody>
 				</table>
 			</div>
 
-			{/* Table Footer with Pagination */}
-			<div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-t border-slate-200/80 text-xs text-slate-600">
-				<div className="flex items-center gap-2">
-					<Translate text={localizationConstants.rotRutPaginationShowing} />
-					<Select
-						value={String(pageSize)}
-						onValueChange={(val) => onPageSizeChange(Number(val))}
-					>
-						<SelectTrigger className="w-[70px] h-7 text-xs bg-white">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							{PAGE_SIZE_OPTIONS.map((opt) => (
-								<SelectItem key={opt} value={String(opt)}>
-									{opt}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-					<span>
-						<Translate text={localizationConstants.rotRutPaginationOf} /> {totalCount}{" "}
-						<Translate text={localizationConstants.rotRutPaginationRows} />
-					</span>
-				</div>
-
-				<div className="flex items-center gap-1">
-					<Button
-						type="button"
-						variant="outline"
-						size="icon"
-						disabled={currentPage <= 1}
-						onClick={() => onPageChange(currentPage - 1)}
-						className="h-7 w-7 border-slate-200"
-					>
-						<ChevronLeft className="w-3.5 h-3.5" />
-					</Button>
-					<span className="px-2 font-medium">
-						<Translate text={localizationConstants.rotRutPaginationPage} /> {currentPage}{" "}
-						<Translate text={localizationConstants.rotRutPaginationOf} /> {totalPages}
-					</span>
-					<Button
-						type="button"
-						variant="outline"
-						size="icon"
-						disabled={currentPage >= totalPages}
-						onClick={() => onPageChange(currentPage + 1)}
-						className="h-7 w-7 border-slate-200"
-					>
-						<ChevronRight className="w-3.5 h-3.5" />
-					</Button>
-				</div>
-			</div>
+			<RotRutTablePagination
+				currentPage={currentPage}
+				pageSize={pageSize}
+				totalCount={totalCount}
+				totalPages={totalPages}
+				onPageChange={onPageChange}
+				onPageSizeChange={onPageSizeChange}
+			/>
 		</div>
 	);
 }
+export default RotRutTable;
