@@ -9,13 +9,11 @@ import {
 } from "../constants/financialReports.constants";
 import type {
 	BalanceSheetData,
-	GeneratedReportListItem,
 	IncomeStatementData,
 	IncomeStatementRow,
 	ProjectRevenueBreakdown,
 	ExpenseCategoryBreakdown,
 	ReportKpiSummary,
-	ReportMainTab,
 	ReportPeriodFilter,
 	VatReportData,
 } from "../types/financialReports.types";
@@ -47,14 +45,49 @@ function isDateInPeriod(dateStr: string | undefined, filter: ReportPeriodFilter)
 	return true;
 }
 
+/**
+ * Dynamic seasonality multiplier according to Swedish fiscal quarters & vacation patterns
+ */
+function getPeriodSeasonalityFactor(filter: ReportPeriodFilter): number {
+	if (filter.periodType === "monthly" && filter.month) {
+		const monthFactors: Record<number, number> = {
+			1: 0.88,
+			2: 0.94,
+			3: 1.05,
+			4: 1.08,
+			5: 1.15,
+			6: 1.12,
+			7: 0.65, // Swedish summer vacation (industrisemester)
+			8: 0.90,
+			9: 1.18,
+			10: 1.14,
+			11: 1.10,
+			12: 1.02,
+		};
+		return monthFactors[filter.month] ?? 1.0;
+	}
+	if (filter.periodType === "quarterly" && filter.quarter) {
+		const quarterFactors: Record<number, number> = {
+			1: 0.96,
+			2: 1.12,
+			3: 0.91,
+			4: 1.09,
+		};
+		return quarterFactors[filter.quarter] ?? 1.0;
+	}
+	return 1.0;
+}
+
 export function getIncomeStatementData(filter: ReportPeriodFilter): IncomeStatementData {
-	// Scaling factor for baseline corporate figures
-	const multiplier =
+	// Scaling factor for baseline corporate figures with authentic period seasonality
+	const seasonality = getPeriodSeasonalityFactor(filter);
+	const baseMultiplier =
 		filter.periodType === "monthly"
 			? 0.0833
 			: filter.periodType === "quarterly"
 				? 0.25
 				: 1.0;
+	const multiplier = baseMultiplier * seasonality;
 
 	const yearFactor = filter.year === 2026 ? 1.0 : filter.year === 2025 ? 0.91 : 0.82;
 	const prevYear = filter.year - 1;
@@ -458,12 +491,14 @@ export function getBalanceSheetData(filter: ReportPeriodFilter): BalanceSheetDat
 }
 
 export function getVatReportData(filter: ReportPeriodFilter): VatReportData {
-	const multiplier =
+	const seasonality = getPeriodSeasonalityFactor(filter);
+	const baseMultiplier =
 		filter.periodType === "monthly"
 			? 0.0833
 			: filter.periodType === "quarterly"
 				? 0.25
 				: 1.0;
+	const multiplier = baseMultiplier * seasonality;
 	const yearFactor = filter.year === 2026 ? 1.0 : filter.year === 2025 ? 0.92 : 0.85;
 
 	// Invoiced sales and expenses from live repository
@@ -577,12 +612,6 @@ export function getReportKpis(filter: ReportPeriodFilter): ReportKpiSummary {
 	};
 }
 
-let customReportsList: GeneratedReportListItem[] = [];
-
-export function addGeneratedReport(report: GeneratedReportListItem) {
-	customReportsList = [report, ...customReportsList];
-}
-
 export function formatPeriodLabel(filter: ReportPeriodFilter, t: (key: string) => string): string {
 	if (filter.periodType === "monthly" && filter.month) {
 		const monthObj = MONTH_TRANSLATION_KEYS.find((m) => m.value === filter.month);
@@ -613,56 +642,5 @@ export function formatComparisonPeriodLabel(
 		return `${qName} ${comparisonYear}`;
 	}
 	return `${t(localizationConstants.periodFullYear)} ${comparisonYear}`;
-}
-
-export function getGeneratedReportsList(
-	tab: ReportMainTab,
-	filter: ReportPeriodFilter,
-): GeneratedReportListItem[] {
-	const defaultReports: GeneratedReportListItem[] = [
-		{
-			id: "rep-1",
-			reportType: "income_statement",
-			title: `Resultaträkning_${filter.year}.pdf`,
-			periodLabel: `${filter.year}-01-01 - ${filter.year}-12-31`,
-			generatedDate: `${filter.year}-12-31`,
-			generatedBy: "System",
-			status: "ready",
-		},
-		{
-			id: "rep-2",
-			reportType: "balance_sheet",
-			title: `Balansräkning_${filter.year}.pdf`,
-			periodLabel: `${filter.year}-01-01 - ${filter.year}-12-31`,
-			generatedDate: `${filter.year}-12-31`,
-			generatedBy: "System",
-			status: "ready",
-		},
-		{
-			id: "rep-3",
-			reportType: "vat_report",
-			title: `Momsrapport_Q1_${filter.year}.pdf`,
-			periodLabel: `${filter.year}-01-01 - ${filter.year}-03-31`,
-			generatedDate: `${filter.year}-04-12`,
-			generatedBy: "Skatteverket Sync",
-			status: "ready",
-		},
-		{
-			id: "rep-4",
-			reportType: "income_statement",
-			title: `Resultaträkning_${filter.year - 1}.pdf`,
-			periodLabel: `${filter.year - 1}-01-01 - ${filter.year - 1}-12-31`,
-			generatedDate: `${filter.year - 1}-12-31`,
-			generatedBy: "System",
-			status: "ready",
-		},
-	];
-
-	const all = [...customReportsList, ...defaultReports];
-
-	if (tab === "all") {
-		return all;
-	}
-	return all.filter((r) => r.reportType === tab);
 }
 
