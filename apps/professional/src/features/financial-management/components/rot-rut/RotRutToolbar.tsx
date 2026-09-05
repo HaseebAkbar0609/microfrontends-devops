@@ -58,7 +58,7 @@ export function RotRutToolbar({
 							type="text"
 							value={searchQuery}
 							onChange={(e) => onSearchChange(e.target.value)}
-							placeholder={localizationConstants.rotRutSearchPlaceholder}
+							placeholder={t(localizationConstants.rotRutSearchPlaceholder)}
 							className="pl-9 h-9 text-xs bg-slate-50/50 border-slate-200 rounded-lg focus-visible:ring-1 focus-visible:ring-slate-400"
 						/>
 					</div>
@@ -106,7 +106,7 @@ export function RotRutToolbar({
 						onValueChange={(val) => onStatusFilterChange(val as RotRutStatus | "all")}
 					>
 						<SelectTrigger className="w-[140px] h-9 text-xs bg-white border-slate-200">
-							<SelectValue placeholder={localizationConstants.rotRutFilterStatusAll} />
+							<SelectValue placeholder={t(localizationConstants.rotRutFilterStatusAll)} />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">
@@ -133,7 +133,7 @@ export function RotRutToolbar({
 						onValueChange={(val) => onPeriodFilterChange(val as RotRutPeriod)}
 					>
 						<SelectTrigger className="w-[140px] h-9 text-xs bg-white border-slate-200">
-							<SelectValue placeholder={localizationConstants.rotRutPeriodAll} />
+							<SelectValue placeholder={t(localizationConstants.rotRutPeriodAll)} />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="all">

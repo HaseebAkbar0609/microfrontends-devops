@@ -6371,6 +6371,12 @@ export const svRotRut: RotRutTranslation = {
 	rotRutResubmitPropertyHelp: "Fastighetsbeteckning (Korrigera vid behov)",
 	rotRutShowAll: "Visa alla",
 	rotRutHide: "Dölj",
+	rotRutPaginationShowing: "Visar",
+	rotRutPaginationOf: "av",
+	rotRutPaginationRows: "rader",
+	rotRutPaginationPage: "Sida",
+	rotRutSubmitSuccessToast: "Ansökan har skickats till Skatteverket",
+	rotRutSingleSubmitConfirmDesc: "Är du säker på att du vill skicka in detta avdrag till Skatteverket?",
 };
 
 export const sv: Translation = {

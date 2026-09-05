@@ -13,7 +13,7 @@ import { invoiceRepository } from "./invoiceRepository";
 const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	{
 		id: "rot-1",
-		invoiceId: "inv-1",
+		invoiceId: "inv-rot-1",
 		invoiceNo: "F-2026-001",
 		customerName: "Anna Lindberg",
 		customerPersonalId: "19850412-3829",
@@ -34,7 +34,7 @@ const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	},
 	{
 		id: "rot-2",
-		invoiceId: "inv-2",
+		invoiceId: "inv-rot-2",
 		invoiceNo: "F-2026-002",
 		customerName: "Lars Gustafsson",
 		customerPersonalId: "19780923-1492",
@@ -55,7 +55,7 @@ const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	},
 	{
 		id: "rut-1",
-		invoiceId: "inv-3",
+		invoiceId: "inv-rot-3",
 		invoiceNo: "F-2026-003",
 		customerName: "Sofia Bergman",
 		customerPersonalId: "19901105-8241",
@@ -77,7 +77,7 @@ const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	},
 	{
 		id: "rot-3",
-		invoiceId: "inv-4",
+		invoiceId: "inv-rot-4",
 		invoiceNo: "F-2026-004",
 		customerName: "Mikael Nilsson",
 		customerPersonalId: "19690318-5531",
@@ -97,7 +97,7 @@ const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	},
 	{
 		id: "rut-2",
-		invoiceId: "inv-5",
+		invoiceId: "inv-rot-5",
 		invoiceNo: "F-2026-005",
 		customerName: "Elin Wallin",
 		customerPersonalId: "19880709-6623",
@@ -115,7 +115,7 @@ const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	},
 	{
 		id: "rot-4",
-		invoiceId: "inv-6",
+		invoiceId: "inv-rot-6",
 		invoiceNo: "F-2026-006",
 		customerName: "Johan Ekström",
 		customerPersonalId: "19811230-7419",
@@ -133,7 +133,7 @@ const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	},
 	{
 		id: "rot-5",
-		invoiceId: "inv-7",
+		invoiceId: "inv-rot-7",
 		invoiceNo: "F-2026-007",
 		customerName: "Karl Svensson",
 		customerPersonalId: "19720401-2938",
@@ -155,7 +155,7 @@ const SEED_ROT_RUT_DATA: RotRutItem[] = [
 	},
 	{
 		id: "rut-3",
-		invoiceId: "inv-8",
+		invoiceId: "inv-rot-8",
 		invoiceNo: "F-2026-008",
 		customerName: "Karin Holmberg",
 		customerPersonalId: "19920814-4120",

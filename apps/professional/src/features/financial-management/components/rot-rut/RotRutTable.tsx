@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import {
 	ArrowUpDown,
-	Eye,
 	RotateCcw,
 	Send,
 	FileText,
@@ -32,21 +31,22 @@ interface RotRutTableProps {
 	selectedIds: Set<string>;
 	onToggleSelect: (id: string) => void;
 	onToggleSelectAll: () => void;
-	sortBy: keyof RotRutItem;
+	sortBy: RotRutSortColumn;
 	sortOrder: "asc" | "desc";
-	onSort: (field: keyof RotRutItem) => void;
+	onSort: (col: RotRutSortColumn) => void;
 	currentPage: number;
 	pageSize: number;
 	totalPages: number;
 	onPageChange: (page: number) => void;
 	onPageSizeChange: (size: number) => void;
-	onViewDetails: (item: RotRutItem) => void;
+	onResubmit: (item: RotRutItem) => void;
 	onSubmitSingle: (id: string) => void;
 	customerLimits?: RotRutCustomerLimit[];
 }
 
-function formatCurrency(amount: number, currency: string): string {
-	return `${new Intl.NumberFormat("sv-SE", {
+function formatCurrency(amount: number, currency: string, lang = "sv"): string {
+	const locale = lang === "sv" ? "sv-SE" : "en-US";
+	return `${new Intl.NumberFormat(locale, {
 		style: "decimal",
 		maximumFractionDigits: 0,
 	}).format(amount)} ${currency}`;
@@ -66,11 +66,11 @@ export function RotRutTable({
 	totalPages,
 	onPageChange,
 	onPageSizeChange,
-	onViewDetails,
+	onResubmit,
 	onSubmitSingle,
 	customerLimits = [],
 }: RotRutTableProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const currency = t(localizationConstants.reportCurrencySek);
 
 	const customerLimitMap = React.useMemo(() => {
@@ -192,7 +192,7 @@ export function RotRutTable({
 											</div>
 											{customerLimitMap.has(item.customerName) && (
 												<div className="text-[10px] text-emerald-600 font-medium mt-0.5">
-													{formatCurrency(customerLimitMap.get(item.customerName)!, currency)}{" "}
+													{formatCurrency(customerLimitMap.get(item.customerName)!, currency, i18n.language)}{" "}
 													<Translate text={localizationConstants.rotRutRemaining} />
 												</div>
 											)}
@@ -214,10 +214,10 @@ export function RotRutTable({
 											</span>
 										</td>
 										<td className="py-3 px-4 text-right font-medium text-slate-800 font-mono">
-											{formatCurrency(item.laborCost, currency)}
+											{formatCurrency(item.laborCost, currency, i18n.language)}
 										</td>
 										<td className="py-3 px-4 text-right font-bold text-slate-900 font-mono">
-											{formatCurrency(item.deductionAmount, currency)}
+											{formatCurrency(item.deductionAmount, currency, i18n.language)}
 										</td>
 										<td className="py-3 px-4 text-center">
 											<span
@@ -251,7 +251,7 @@ export function RotRutTable({
 														type="button"
 														variant="ghost"
 														size="icon"
-														onClick={() => onViewDetails(item)}
+														onClick={() => onResubmit(item)}
 														className="h-7 w-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
 														title={t(localizationConstants.rotRutActionResubmit)}
 													>
@@ -270,16 +270,6 @@ export function RotRutTable({
 														<Send className="w-3.5 h-3.5" />
 													</Button>
 												)}
-												<Button
-													type="button"
-													variant="ghost"
-													size="icon"
-													onClick={() => onViewDetails(item)}
-													className="h-7 w-7 text-slate-500 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
-													title={t(localizationConstants.rotRutActionView)}
-												>
-													<Eye className="w-3.5 h-3.5" />
-												</Button>
 											</div>
 										</td>
 									</tr>
@@ -293,7 +283,7 @@ export function RotRutTable({
 			{/* Table Footer with Pagination */}
 			<div className="flex items-center justify-between px-4 py-3 bg-slate-50 border-t border-slate-200/80 text-xs text-slate-600">
 				<div className="flex items-center gap-2">
-					<span>Visar</span>
+					<Translate text={localizationConstants.rotRutPaginationShowing} />
 					<Select
 						value={String(pageSize)}
 						onValueChange={(val) => onPageSizeChange(Number(val))}
@@ -309,7 +299,10 @@ export function RotRutTable({
 							))}
 						</SelectContent>
 					</Select>
-					<span>av {totalCount} rader</span>
+					<span>
+						<Translate text={localizationConstants.rotRutPaginationOf} /> {totalCount}{" "}
+						<Translate text={localizationConstants.rotRutPaginationRows} />
+					</span>
 				</div>
 
 				<div className="flex items-center gap-1">
@@ -324,7 +317,8 @@ export function RotRutTable({
 						<ChevronLeft className="w-3.5 h-3.5" />
 					</Button>
 					<span className="px-2 font-medium">
-						Sida {currentPage} av {totalPages}
+						<Translate text={localizationConstants.rotRutPaginationPage} /> {currentPage}{" "}
+						<Translate text={localizationConstants.rotRutPaginationOf} /> {totalPages}
 					</span>
 					<Button
 						type="button"

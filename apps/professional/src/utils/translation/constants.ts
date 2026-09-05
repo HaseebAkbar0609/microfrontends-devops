@@ -6305,6 +6305,12 @@ export type RotRutTranslation = {
 	rotRutResubmitPropertyHelp: string;
 	rotRutShowAll: string;
 	rotRutHide: string;
+	rotRutPaginationShowing: string;
+	rotRutPaginationOf: string;
+	rotRutPaginationRows: string;
+	rotRutPaginationPage: string;
+	rotRutSubmitSuccessToast: string;
+	rotRutSingleSubmitConfirmDesc: string;
 };
 
 export type Translation = HeaderTranslation &

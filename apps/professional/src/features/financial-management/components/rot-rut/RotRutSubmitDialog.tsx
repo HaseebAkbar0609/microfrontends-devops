@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Send, AlertCircle } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 
 interface RotRutSubmitDialogProps {
@@ -22,11 +23,12 @@ interface RotRutSubmitDialogProps {
 	totalAmount: number;
 }
 
-function formatSEK(amount: number): string {
-	return new Intl.NumberFormat("sv-SE", {
+function formatCurrency(amount: number, currency: string, lang = "sv"): string {
+	const locale = lang === "sv" ? "sv-SE" : "en-US";
+	return `${new Intl.NumberFormat(locale, {
 		style: "decimal",
 		maximumFractionDigits: 0,
-	}).format(amount) + " kr";
+	}).format(amount)} ${currency}`;
 }
 
 export function RotRutSubmitDialog({
@@ -36,6 +38,9 @@ export function RotRutSubmitDialog({
 	selectedCount,
 	totalAmount,
 }: RotRutSubmitDialogProps) {
+	const { t, i18n } = useTranslation();
+	const currency = t(localizationConstants.reportCurrencySek);
+
 	return (
 		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
 			<DialogContent className="max-w-md bg-white p-6 rounded-2xl shadow-2xl">
@@ -47,7 +52,13 @@ export function RotRutSubmitDialog({
 						<Translate text={localizationConstants.rotRutSubmitConfirmTitle} />
 					</DialogTitle>
 					<DialogDescription className="text-xs text-slate-600 mt-1.5 leading-relaxed">
-						<Translate text={localizationConstants.rotRutSubmitConfirmDesc} />
+						<Translate
+							text={
+								selectedCount === 1
+									? localizationConstants.rotRutSingleSubmitConfirmDesc
+									: localizationConstants.rotRutSubmitConfirmDesc
+							}
+						/>
 					</DialogDescription>
 				</DialogHeader>
 
@@ -57,14 +68,14 @@ export function RotRutSubmitDialog({
 						<span>
 							<Translate text={localizationConstants.rotRutSubmitCountSelected} />:
 						</span>
-						<span className="font-semibold text-slate-900">{selectedCount} st</span>
+						<span className="font-semibold text-slate-900 font-mono">{selectedCount}</span>
 					</div>
 					<div className="flex justify-between text-slate-600 pt-2 border-t border-slate-200">
 						<span>
 							<Translate text={localizationConstants.rotRutSubmitTotalDeduction} />:
 						</span>
 						<span className="font-bold text-blue-600 text-sm font-mono">
-							{formatSEK(totalAmount)}
+							{formatCurrency(totalAmount, currency, i18n.language)}
 						</span>
 					</div>
 				</div>

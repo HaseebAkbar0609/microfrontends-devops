@@ -9,7 +9,7 @@ import { RotRutSummaryCards } from "./RotRutSummaryCards";
 import { RotRutRulesCard } from "./RotRutRulesCard";
 import { RotRutToolbar } from "./RotRutToolbar";
 import { RotRutTable } from "./RotRutTable";
-import { RotRutDetailModal } from "./RotRutDetailModal";
+import { RotRutResubmitDialog } from "./RotRutResubmitDialog";
 import { RotRutSubmitDialog } from "./RotRutSubmitDialog";
 
 export function RotRutOverviewPage() {
@@ -37,22 +37,18 @@ export function RotRutOverviewPage() {
 		pageSize,
 		setPageSize,
 		totalPages,
-		detailItem,
-		setDetailItem,
+		resubmitItem,
+		setResubmitItem,
 		isSubmitDialogOpen,
 		setIsSubmitDialogOpen,
 		handleBatchSubmit,
+		handleSingleSubmit,
 		executeBatchSubmit,
+		submitSummary,
 		handleResubmit,
 		handleExportExcel,
 		handlePrint,
 	} = useRotRut();
-
-	const selectedAmount = React.useMemo(() => {
-		return items
-			.filter((i) => selectedIds.has(i.id))
-			.reduce((acc, curr) => acc + curr.deductionAmount, 0);
-	}, [items, selectedIds]);
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
@@ -69,7 +65,7 @@ export function RotRutOverviewPage() {
 				<RotRutSummaryCards summary={kpiSummary} />
 
 				{/* 2. Rules & Customer Quotas Display */}
-				<RotRutRulesCard customerLimits={customerLimits} />
+				<RotRutRulesCard />
 
 				{/* 3. Actions & Filters Toolbar */}
 				<RotRutToolbar
@@ -102,20 +98,17 @@ export function RotRutOverviewPage() {
 					totalPages={totalPages}
 					onPageChange={setCurrentPage}
 					onPageSizeChange={setPageSize}
-					onViewDetails={(item) => setDetailItem(item)}
-					onSubmitSingle={(id) => {
-						toggleSelect(id);
-						setIsSubmitDialogOpen(true);
-					}}
+					onResubmit={(item) => setResubmitItem(item)}
+					onSubmitSingle={handleSingleSubmit}
 					customerLimits={customerLimits}
 				/>
 			</div>
 
-			{/* Modal: View Details & Resubmit */}
-			<RotRutDetailModal
-				item={detailItem}
-				isOpen={detailItem !== null}
-				onClose={() => setDetailItem(null)}
+			{/* Dialog: Resubmit Rejected Deduction */}
+			<RotRutResubmitDialog
+				item={resubmitItem}
+				isOpen={resubmitItem !== null}
+				onClose={() => setResubmitItem(null)}
 				onResubmit={handleResubmit}
 			/>
 
@@ -124,8 +117,8 @@ export function RotRutOverviewPage() {
 				isOpen={isSubmitDialogOpen}
 				onClose={() => setIsSubmitDialogOpen(false)}
 				onConfirm={executeBatchSubmit}
-				selectedCount={selectedIds.size}
-				totalAmount={selectedAmount}
+				selectedCount={submitSummary.count}
+				totalAmount={submitSummary.amount}
 			/>
 		</div>
 	);

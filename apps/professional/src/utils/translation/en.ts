@@ -6349,6 +6349,12 @@ export const enRotRut: RotRutTranslation = {
 	rotRutResubmitPropertyHelp: "Property ID (Correct if needed)",
 	rotRutShowAll: "Show all",
 	rotRutHide: "Hide",
+	rotRutPaginationShowing: "Showing",
+	rotRutPaginationOf: "of",
+	rotRutPaginationRows: "rows",
+	rotRutPaginationPage: "Page",
+	rotRutSubmitSuccessToast: "Application submitted to Swedish Tax Agency (Skatteverket)",
+	rotRutSingleSubmitConfirmDesc: "Are you sure you want to submit this deduction to the Swedish Tax Agency (Skatteverket)?",
 };
 
 export const en: Translation = {

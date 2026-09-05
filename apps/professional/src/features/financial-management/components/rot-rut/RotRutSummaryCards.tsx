@@ -11,15 +11,16 @@ interface RotRutSummaryCardsProps {
 	summary: RotRutKpiSummary;
 }
 
-function formatCurrency(amount: number, currency: string): string {
-	return `${new Intl.NumberFormat("sv-SE", {
+function formatCurrency(amount: number, currency: string, lang = "sv"): string {
+	const locale = lang === "sv" ? "sv-SE" : "en-US";
+	return `${new Intl.NumberFormat(locale, {
 		style: "decimal",
 		maximumFractionDigits: 0,
 	}).format(amount)} ${currency}`;
 }
 
 export function RotRutSummaryCards({ summary }: RotRutSummaryCardsProps) {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const currency = t(localizationConstants.reportCurrencySek);
 	return (
 		<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-6">
@@ -34,7 +35,7 @@ export function RotRutSummaryCards({ summary }: RotRutSummaryCardsProps) {
 					</div>
 				</div>
 				<div className="text-xl font-bold text-slate-900 tracking-tight">
-					{formatCurrency(summary.totalRotApplied, currency)}
+					{formatCurrency(summary.totalRotApplied, currency, i18n.language)}
 				</div>
 				<p className="text-[11px] text-slate-500 mt-1">
 					<Translate text={localizationConstants.rotRutKpiTotalRotDesc} />
@@ -52,7 +53,7 @@ export function RotRutSummaryCards({ summary }: RotRutSummaryCardsProps) {
 					</div>
 				</div>
 				<div className="text-xl font-bold text-slate-900 tracking-tight">
-					{formatCurrency(summary.totalRutApplied, currency)}
+					{formatCurrency(summary.totalRutApplied, currency, i18n.language)}
 				</div>
 				<p className="text-[11px] text-slate-500 mt-1">
 					<Translate text={localizationConstants.rotRutKpiTotalRutDesc} />
@@ -71,7 +72,7 @@ export function RotRutSummaryCards({ summary }: RotRutSummaryCardsProps) {
 				</div>
 				<div className="flex items-baseline gap-2">
 					<span className="text-xl font-bold text-slate-900 tracking-tight">
-						{formatCurrency(summary.totalPending, currency)}
+						{formatCurrency(summary.totalPending, currency, i18n.language)}
 					</span>
 					<span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-amber-100/70 text-amber-800">
 						{summary.totalPendingCount}
@@ -94,7 +95,7 @@ export function RotRutSummaryCards({ summary }: RotRutSummaryCardsProps) {
 				</div>
 				<div className="flex items-baseline gap-2">
 					<span className="text-xl font-bold text-slate-900 tracking-tight">
-						{formatCurrency(summary.totalApproved, currency)}
+						{formatCurrency(summary.totalApproved, currency, i18n.language)}
 					</span>
 					<span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-emerald-100/70 text-emerald-800">
 						{summary.totalApprovedCount}
@@ -117,7 +118,7 @@ export function RotRutSummaryCards({ summary }: RotRutSummaryCardsProps) {
 				</div>
 				<div className="flex items-baseline gap-2">
 					<span className="text-xl font-bold text-slate-900 tracking-tight">
-						{formatCurrency(summary.totalRejected, currency)}
+						{formatCurrency(summary.totalRejected, currency, i18n.language)}
 					</span>
 					<span className="text-xs font-semibold px-1.5 py-0.5 rounded-full bg-rose-100/70 text-rose-800">
 						{summary.totalRejectedCount}

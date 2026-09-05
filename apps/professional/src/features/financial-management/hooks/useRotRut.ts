@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import localizationConstants from "@/utils/translation/constants";
 import {
 	RotRutItem,
 	RotRutStatus,
@@ -11,6 +14,7 @@ import { rotRutRepository } from "../utils/rotRutRepository";
 import { DEFAULT_PAGE_SIZE } from "../constants/rotRut.constants";
 
 export function useRotRut() {
+	const { t } = useTranslation();
 	const [items, setItems] = useState<RotRutItem[]>(() => rotRutRepository.getAll());
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState<RotRutStatus | "all">("all");
@@ -23,7 +27,8 @@ export function useRotRut() {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
 
-	const [detailItem, setDetailItem] = useState<RotRutItem | null>(null);
+	const [pendingSubmitIds, setPendingSubmitIds] = useState<string[]>([]);
+	const [resubmitItem, setResubmitItem] = useState<RotRutItem | null>(null);
 	const [isSubmitDialogOpen, setIsSubmitDialogOpen] = useState(false);
 	const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
 
@@ -133,27 +138,51 @@ export function useRotRut() {
 	}, [paginatedItems]);
 
 	const handleBatchSubmit = useCallback(() => {
-		if (selectedIds.size === 0) return;
+		const eligibleIds = items
+			.filter((i) => selectedIds.has(i.id) && (i.status === "pending" || i.status === "rejected"))
+			.map((i) => i.id);
+		if (eligibleIds.length === 0) return;
+		setPendingSubmitIds(eligibleIds);
 		setIsSubmitDialogOpen(true);
-	}, [selectedIds]);
+	}, [items, selectedIds]);
+
+	const handleSingleSubmit = useCallback((id: string) => {
+		setPendingSubmitIds([id]);
+		setIsSubmitDialogOpen(true);
+	}, []);
+
+	const submitSummary = useMemo(() => {
+		const targetSet = new Set(pendingSubmitIds);
+		const targetItems = items.filter((i) => targetSet.has(i.id));
+		const count = targetItems.length;
+		const amount = targetItems.reduce((acc, curr) => acc + curr.deductionAmount, 0);
+		return { count, amount };
+	}, [items, pendingSubmitIds]);
 
 	const executeBatchSubmit = useCallback(() => {
-		const idArray = Array.from(selectedIds);
-		rotRutRepository.batchSubmitToSkatteverket(idArray);
-		setSelectedIds(new Set());
+		if (pendingSubmitIds.length === 0) return;
+		rotRutRepository.batchSubmitToSkatteverket(pendingSubmitIds);
+		setSelectedIds((prev) => {
+			const next = new Set(prev);
+			pendingSubmitIds.forEach((id) => next.delete(id));
+			return next;
+		});
+		setPendingSubmitIds([]);
 		setIsSubmitDialogOpen(false);
-	}, [selectedIds]);
+		toast.success(t(localizationConstants.rotRutSubmitSuccessToast));
+	}, [pendingSubmitIds, t]);
 
 	const handleResubmit = useCallback((id: string, updatedFields: Partial<RotRutItem>) => {
 		rotRutRepository.resubmitDeduction(id, updatedFields);
-		setDetailItem(null);
-	}, []);
+		setResubmitItem(null);
+		toast.success(t(localizationConstants.rotRutSubmitSuccessToast));
+	}, [t]);
 
 	const handleDelete = useCallback((id: string) => {
 		rotRutRepository.deleteDeduction(id);
 		setDeleteConfirmId(null);
-		if (detailItem?.id === id) setDetailItem(null);
-	}, [detailItem]);
+		if (resubmitItem?.id === id) setResubmitItem(null);
+	}, [resubmitItem]);
 
 	const handleExportExcel = useCallback(() => {
 		const headers = [
@@ -224,14 +253,17 @@ export function useRotRut() {
 		pageSize,
 		setPageSize,
 		totalPages,
-		detailItem,
-		setDetailItem,
+		resubmitItem,
+		setResubmitItem,
 		isSubmitDialogOpen,
 		setIsSubmitDialogOpen,
 		deleteConfirmId,
 		setDeleteConfirmId,
+		pendingSubmitIds,
 		handleBatchSubmit,
+		handleSingleSubmit,
 		executeBatchSubmit,
+		submitSummary,
 		handleResubmit,
 		handleDelete,
 		handleExportExcel,
