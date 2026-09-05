@@ -5953,6 +5953,10 @@ export type FinancialReportsTranslation = {
 	balanceSheetStatusBalanced: string;
 	balanceSheetStatusUnbalanced: string;
 	balanceSheetDifference: string;
+	balanceSheetColAccount: string;
+	balanceSheetColDescription: string;
+	balanceSheetColCurrentPeriod: string;
+	balanceSheetColPreviousPeriod: string;
 	vatReportTitle: string;
 	vatReportSubtitle: string;
 	vatReportSecOutput: string;
@@ -6049,6 +6053,29 @@ export type FinancialReportsTranslation = {
 	basVatSettlement: string;
 	basPersonnelTaxes: string;
 	reportCustomer: string;
+	reportDrilldownTitle: string;
+	reportDrilldownSubtitle: string;
+	reportDrilldownAccount: string;
+	reportDrilldownPeriod: string;
+	reportDrilldownTotal: string;
+	reportDrilldownDate: string;
+	reportDrilldownDocNo: string;
+	reportDrilldownCounterparty: string;
+	reportDrilldownDescription: string;
+	reportDrilldownAmount: string;
+	reportDrilldownVat: string;
+	reportDrilldownType: string;
+	reportDrilldownStatus: string;
+	reportDrilldownEmpty: string;
+	reportDrilldownViewSource: string;
+	reportEmptyStateTitle: string;
+	reportEmptyStateDesc: string;
+	reportEmptyStateCreateInvoice: string;
+	reportEmptyStateRegisterExpense: string;
+	reportClickToDrilldown: string;
+	reportDrilldownClose: string;
+	reportDrilldownSourceInvoice: string;
+	reportDrilldownSourceExpense: string;
 };
 
 export type OrderInformationTranslation = {

@@ -7,3 +7,5 @@ export { ReportPeriodSelector } from "./ReportPeriodSelector";
 export { ReportExportActions } from "./ReportExportActions";
 export { RevenueByProjectTable } from "./RevenueByProjectTable";
 export { ExpenseByCategoryTable } from "./ExpenseByCategoryTable";
+export { TransactionDetailDrawer } from "./TransactionDetailDrawer";
+

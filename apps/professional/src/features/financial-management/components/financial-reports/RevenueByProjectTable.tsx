@@ -38,7 +38,7 @@ export function RevenueByProjectTable({ rows }: RevenueByProjectTableProps) {
 			</div>
 
 			<div className="overflow-x-auto">
-				<table className="w-full text-left border-collapse">
+				<table className="w-full text-left border-collapse min-w-[640px]">
 					<thead>
 						<tr className="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
 							<th className="py-2.5 px-4">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -12,14 +12,20 @@ import {
 	formatPeriodLabel,
 	getBalanceSheetData,
 	getIncomeStatementData,
-	getReportKpis,
+	getReportKpiSummary,
+	getTransactionsForAccount,
+	getTransactionsForVatBox,
 	getVatReportData,
 } from "../services/financialReports.service";
 import type {
+	DrilldownTarget,
 	ReportPeriodFilter,
 	ReportPeriodType,
 	ReportTabType,
+	TransactionDetailItem,
 } from "../types/financialReports.types";
+import { invoiceRepository } from "../utils/invoiceRepository";
+import { expenseRepository } from "../utils/expenseRepository";
 
 export function useFinancialReports() {
 	const { t } = useTranslation();
@@ -34,11 +40,30 @@ export function useFinancialReports() {
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isExporting, setIsExporting] = useState<boolean>(false);
+	const [repoRevision, setRepoRevision] = useState<number>(0);
+
+	// Drill-down drawer state
+	const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+	const [drilldownTarget, setDrilldownTarget] = useState<DrilldownTarget | null>(null);
+
+	// Reactive subscription to operational repositories
+	useEffect(() => {
+		const unsubInvoice = invoiceRepository.subscribe(() => {
+			setRepoRevision((prev) => prev + 1);
+		});
+		const unsubExpense = expenseRepository.subscribe(() => {
+			setRepoRevision((prev) => prev + 1);
+		});
+		return () => {
+			unsubInvoice();
+			unsubExpense();
+		};
+	}, []);
 
 	const handleTabChange = useCallback((tab: ReportTabType) => {
 		setIsLoading(true);
 		setActiveTab(tab);
-		setTimeout(() => setIsLoading(false), 80);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handlePeriodTypeChange = useCallback((periodType: ReportPeriodType) => {
@@ -47,7 +72,7 @@ export function useFinancialReports() {
 			...prev,
 			periodType,
 		}));
-		setTimeout(() => setIsLoading(false), 80);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handleYearChange = useCallback((year: number) => {
@@ -56,7 +81,7 @@ export function useFinancialReports() {
 			...prev,
 			year,
 		}));
-		setTimeout(() => setIsLoading(false), 80);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handleMonthChange = useCallback((month: number) => {
@@ -65,7 +90,7 @@ export function useFinancialReports() {
 			...prev,
 			month,
 		}));
-		setTimeout(() => setIsLoading(false), 80);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handleQuarterChange = useCallback((quarter: number) => {
@@ -74,25 +99,72 @@ export function useFinancialReports() {
 			...prev,
 			quarter,
 		}));
-		setTimeout(() => setIsLoading(false), 80);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	// Granular memoization for financial reports
 	const incomeStatementData = useMemo(() => {
+		void repoRevision;
 		return getIncomeStatementData(periodFilter);
-	}, [periodFilter]);
+	}, [periodFilter, repoRevision]);
 
 	const balanceSheetData = useMemo(() => {
+		void repoRevision;
 		return getBalanceSheetData(periodFilter);
-	}, [periodFilter]);
+	}, [periodFilter, repoRevision]);
 
 	const vatReportData = useMemo(() => {
+		void repoRevision;
 		return getVatReportData(periodFilter);
-	}, [periodFilter]);
+	}, [periodFilter, repoRevision]);
 
 	const kpiSummary = useMemo(() => {
-		return getReportKpis(periodFilter);
-	}, [periodFilter]);
+		void repoRevision;
+		return getReportKpiSummary(periodFilter);
+	}, [periodFilter, repoRevision]);
+
+	const periodLabel = useMemo(() => {
+		return formatPeriodLabel(periodFilter, t);
+	}, [periodFilter, t]);
+
+	// Drilldown actions
+	const handleAccountClick = useCallback(
+		(accountCode: string, labelKey: string, amount: number) => {
+			setDrilldownTarget({
+				accountCode,
+				labelKey,
+				totalAmount: amount,
+			});
+			setIsDrawerOpen(true);
+		},
+		[],
+	);
+
+	const handleVatBoxClick = useCallback(
+		(boxNumber: string, boxNameKey: string, amount: number) => {
+			setDrilldownTarget({
+				boxNumber,
+				labelKey: boxNameKey,
+				totalAmount: amount,
+			});
+			setIsDrawerOpen(true);
+		},
+		[],
+	);
+
+	const handleCloseDrawer = useCallback(() => {
+		setIsDrawerOpen(false);
+		setDrilldownTarget(null);
+	}, []);
+
+	const drilldownTransactions = useMemo<TransactionDetailItem[]>(() => {
+		void repoRevision;
+		if (!drilldownTarget) return [];
+		if (drilldownTarget.boxNumber) {
+			return getTransactionsForVatBox(drilldownTarget.boxNumber, periodFilter);
+		}
+		return getTransactionsForAccount(drilldownTarget.accountCode, periodFilter);
+	}, [drilldownTarget, periodFilter, repoRevision]);
 
 	// Export to Excel / CSV
 	const handleExportExcel = useCallback(() => {
@@ -167,18 +239,27 @@ export function useFinancialReports() {
 	return {
 		activeTab,
 		periodFilter,
+		periodLabel,
 		isLoading,
 		isExporting,
 		incomeStatementData,
 		balanceSheetData,
 		vatReportData,
 		kpiSummary,
+		isDrawerOpen,
+		drilldownTarget,
+		drilldownTransactions,
 		handleTabChange,
 		handlePeriodTypeChange,
 		handleYearChange,
 		handleMonthChange,
 		handleQuarterChange,
+		handleAccountClick,
+		handleVatBoxClick,
+		handleCloseDrawer,
 		handleExportExcel,
 		handlePrint,
 	};
 }
+
+export default useFinancialReports;

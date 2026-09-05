@@ -5,11 +5,12 @@ import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { TrendingUp, TrendingDown, DollarSign, Receipt } from "lucide-react";
-import type { ReportKpiSummary, ReportTabType } from "../../types/financialReports.types";
+import type { ReportKpiSummary, ReportTabType, VatReportData } from "../../types/financialReports.types";
 
 interface ReportSummaryCardsProps {
 	kpiSummary: ReportKpiSummary;
 	activeTab: ReportTabType;
+	vatReportData?: VatReportData;
 }
 
 function formatCurrency(amount: number, currency: string): string {
@@ -19,40 +20,40 @@ function formatCurrency(amount: number, currency: string): string {
 	}).format(amount)} ${currency}`;
 }
 
-export function ReportSummaryCards({ kpiSummary, activeTab }: ReportSummaryCardsProps) {
+export function ReportSummaryCards({ kpiSummary, activeTab, vatReportData }: ReportSummaryCardsProps) {
 	const { t } = useTranslation();
 	const currency = t(localizationConstants.reportCurrencySek);
 	const isProfit = kpiSummary.netResultSek >= 0;
 	const isVatToPay = kpiSummary.vatBalanceSek >= 0;
 
 	const cards = useMemo(() => {
-		if (activeTab === "vat_report") {
+		if (activeTab === "vat_report" && vatReportData) {
 			return [
 				{
 					id: "rev",
 					label: localizationConstants.reportKpiTotalRevenue,
-					value: formatCurrency(kpiSummary.totalRevenueSek, currency),
+					value: formatCurrency(vatReportData.totalSalesMomspliktig, currency),
 					icon: DollarSign,
 					color: "text-emerald-600 bg-emerald-50",
 				},
 				{
 					id: "out_vat",
 					label: localizationConstants.vatReportSecOutput,
-					value: formatCurrency(Math.round(kpiSummary.totalRevenueSek * 0.25), currency),
+					value: formatCurrency(vatReportData.totalOutputVat, currency),
 					icon: TrendingUp,
 					color: "text-blue-600 bg-blue-50",
 				},
 				{
 					id: "in_vat",
 					label: localizationConstants.vatReportBox48,
-					value: formatCurrency(Math.round(kpiSummary.totalRevenueSek * 0.25 * 0.62), currency),
+					value: formatCurrency(vatReportData.totalInputVatDeductible, currency),
 					icon: Receipt,
 					color: "text-amber-600 bg-amber-50",
 				},
 				{
 					id: "vat_net",
 					label: localizationConstants.vatReportBox49,
-					value: formatCurrency(Math.abs(kpiSummary.vatBalanceSek), currency),
+					value: formatCurrency(Math.abs(vatReportData.netVatPayable), currency),
 					subtext: isVatToPay
 						? localizationConstants.vatReportPayableDesc
 						: localizationConstants.vatReportRefundDesc,
@@ -61,6 +62,9 @@ export function ReportSummaryCards({ kpiSummary, activeTab }: ReportSummaryCards
 				},
 			];
 		}
+
+		// Calculate EBIT from service-layer operatingResultSek
+		const operatingMarginStr = `${kpiSummary.operatingMarginPercent}%`;
 
 		return [
 			{
@@ -80,7 +84,8 @@ export function ReportSummaryCards({ kpiSummary, activeTab }: ReportSummaryCards
 			{
 				id: "ebit",
 				label: localizationConstants.reportKpiOperatingResult,
-				value: formatCurrency(kpiSummary.netResultSek + Math.round(kpiSummary.netResultSek * 0.206), currency),
+				value: formatCurrency(kpiSummary.operatingResultSek, currency),
+				subtext: operatingMarginStr,
 				icon: TrendingUp,
 				color: "text-blue-600 bg-blue-50",
 			},
@@ -88,12 +93,11 @@ export function ReportSummaryCards({ kpiSummary, activeTab }: ReportSummaryCards
 				id: "net",
 				label: localizationConstants.reportKpiNetResult,
 				value: formatCurrency(kpiSummary.netResultSek, currency),
-				subtext: `${kpiSummary.operatingMarginPercent}%`,
 				icon: isProfit ? TrendingUp : TrendingDown,
 				color: isProfit ? "text-emerald-700 bg-emerald-50" : "text-rose-700 bg-rose-50",
 			},
 		];
-	}, [activeTab, kpiSummary, isProfit, isVatToPay, currency]);
+	}, [activeTab, kpiSummary, vatReportData, isProfit, isVatToPay, currency]);
 
 	return (
 		<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
@@ -102,7 +106,7 @@ export function ReportSummaryCards({ kpiSummary, activeTab }: ReportSummaryCards
 				return (
 					<div
 						key={card.id}
-						className="bg-white rounded-xl border border-slate-200 p-4 shadow-sm flex items-center justify-between transition-all hover:shadow-md"
+						className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs flex items-center justify-between transition-all hover:shadow-sm"
 					>
 						<div className="space-y-1">
 							<p className="text-xs font-medium text-slate-500">
@@ -130,3 +134,5 @@ export function ReportSummaryCards({ kpiSummary, activeTab }: ReportSummaryCards
 		</div>
 	);
 }
+
+export default ReportSummaryCards;
