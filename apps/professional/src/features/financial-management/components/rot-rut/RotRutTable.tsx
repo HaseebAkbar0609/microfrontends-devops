@@ -220,44 +220,39 @@ export function RotRutTable({
 											{formatCurrency(item.deductionAmount, currency, i18n.language)}
 										</td>
 										<td className="py-3 px-4 text-center">
-											<span
-												className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-													item.status === "approved"
-														? "bg-emerald-50 text-emerald-700 border-emerald-200"
-														: item.status === "submitted"
-															? "bg-blue-50 text-blue-700 border-blue-200"
-															: item.status === "rejected"
-																? "bg-rose-50 text-rose-700 border-rose-200"
-																: "bg-amber-50 text-amber-700 border-amber-200"
-												}`}
-											>
-												<Translate
-													text={
+											<div className="flex flex-col items-center justify-center gap-0.5">
+												<span
+													className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${
 														item.status === "approved"
-															? localizationConstants.rotRutFilterStatusApproved
+															? "bg-emerald-50 text-emerald-700 border-emerald-200"
 															: item.status === "submitted"
-																? localizationConstants.rotRutFilterStatusSubmitted
+																? "bg-blue-50 text-blue-700 border-blue-200"
 																: item.status === "rejected"
-																	? localizationConstants.rotRutFilterStatusRejected
-																	: localizationConstants.rotRutFilterStatusPending
-													}
-												/>
-											</span>
+																	? "bg-rose-50 text-rose-700 border-rose-200"
+																	: "bg-amber-50 text-amber-700 border-amber-200"
+													}`}
+												>
+													<Translate
+														text={
+															item.status === "approved"
+																? localizationConstants.rotRutFilterStatusApproved
+																: item.status === "submitted"
+																	? localizationConstants.rotRutFilterStatusSubmitted
+																	: item.status === "rejected"
+																		? localizationConstants.rotRutFilterStatusRejected
+																		: localizationConstants.rotRutFilterStatusPending
+														}
+													/>
+												</span>
+												{item.skatteverketReference && (
+													<span className="text-[10px] text-slate-500 font-mono" title={item.skatteverketReference}>
+														{item.skatteverketReference}
+													</span>
+												)}
+											</div>
 										</td>
 										<td className="py-3 px-4 text-right">
-											<div className="inline-flex items-center gap-1">
-												{item.status === "rejected" && (
-													<Button
-														type="button"
-														variant="ghost"
-														size="icon"
-														onClick={() => onResubmit(item)}
-														className="h-7 w-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
-														title={t(localizationConstants.rotRutActionResubmit)}
-													>
-														<RotateCcw className="w-3.5 h-3.5" />
-													</Button>
-												)}
+											<div className="inline-flex items-center justify-end gap-1">
 												{item.status === "pending" && (
 													<Button
 														type="button"
@@ -270,6 +265,25 @@ export function RotRutTable({
 														<Send className="w-3.5 h-3.5" />
 													</Button>
 												)}
+												{item.status === "rejected" && (
+													<Button
+														type="button"
+														variant="ghost"
+														size="icon"
+														onClick={() => onResubmit(item)}
+														className="h-7 w-7 text-rose-600 hover:text-rose-700 hover:bg-rose-50 cursor-pointer"
+														title={t(localizationConstants.rotRutActionResubmit)}
+													>
+														<RotateCcw className="w-3.5 h-3.5" />
+													</Button>
+												)}
+												<Link
+													href={`/module/financial-management/invoice/${item.invoiceId}`}
+													className="inline-flex items-center justify-center h-7 w-7 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors cursor-pointer"
+													title={t(localizationConstants.rotRutActionViewInvoice)}
+												>
+													<FileText className="w-3.5 h-3.5" />
+												</Link>
 											</div>
 										</td>
 									</tr>

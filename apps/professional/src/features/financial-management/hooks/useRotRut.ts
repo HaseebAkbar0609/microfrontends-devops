@@ -137,14 +137,25 @@ export function useRotRut() {
 		});
 	}, [paginatedItems]);
 
+	const submittableSelectedCount = useMemo(() => {
+		return items.filter(
+			(i) => selectedIds.has(i.id) && (i.status === "pending" || i.status === "rejected"),
+		).length;
+	}, [items, selectedIds]);
+
 	const handleBatchSubmit = useCallback(() => {
 		const eligibleIds = items
 			.filter((i) => selectedIds.has(i.id) && (i.status === "pending" || i.status === "rejected"))
 			.map((i) => i.id);
-		if (eligibleIds.length === 0) return;
+		if (eligibleIds.length === 0) {
+			if (selectedIds.size > 0) {
+				toast.info(t(localizationConstants.rotRutNoSubmittableSelected));
+			}
+			return;
+		}
 		setPendingSubmitIds(eligibleIds);
 		setIsSubmitDialogOpen(true);
-	}, [items, selectedIds]);
+	}, [items, selectedIds, t]);
 
 	const handleSingleSubmit = useCallback((id: string) => {
 		setPendingSubmitIds([id]);
@@ -229,6 +240,13 @@ export function useRotRut() {
 		}
 	}, []);
 
+	const handleResetSeedData = useCallback(() => {
+		rotRutRepository.resetToSeedData();
+		setSelectedIds(new Set());
+		setPendingSubmitIds([]);
+		toast.success(t(localizationConstants.rotRutResetSuccess));
+	}, [t]);
+
 	return {
 		items: paginatedItems,
 		totalCount: filteredItems.length,
@@ -246,6 +264,7 @@ export function useRotRut() {
 		sortOrder,
 		handleSort,
 		selectedIds,
+		submittableSelectedCount,
 		toggleSelect,
 		toggleSelectAll,
 		currentPage,
@@ -268,5 +287,6 @@ export function useRotRut() {
 		handleDelete,
 		handleExportExcel,
 		handlePrint,
+		handleResetSeedData,
 	};
 }

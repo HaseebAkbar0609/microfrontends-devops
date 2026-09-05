@@ -6377,6 +6377,11 @@ export const svRotRut: RotRutTranslation = {
 	rotRutPaginationPage: "Sida",
 	rotRutSubmitSuccessToast: "Ansökan har skickats till Skatteverket",
 	rotRutSingleSubmitConfirmDesc: "Är du säker på att du vill skicka in detta avdrag till Skatteverket?",
+	rotRutActionViewInvoice: "Visa faktura",
+	rotRutNoSubmittableSelected: "De valda avdragen är redan inskickade eller godkända",
+	rotRutResetData: "Återställ demodata",
+	rotRutResetSuccess: "Demodata har återställts till ursprungsläget",
+	rotRutSkvRef: "Ref",
 };
 
 export const sv: Translation = {

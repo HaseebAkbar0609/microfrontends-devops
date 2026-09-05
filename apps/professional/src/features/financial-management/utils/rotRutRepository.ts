@@ -500,6 +500,11 @@ class RotRutRepository {
 		}
 		return false;
 	}
+
+	public resetToSeedData(): void {
+		this.items = [...SEED_ROT_RUT_DATA];
+		this.persist();
+	}
 }
 
 export const rotRutRepository = new RotRutRepository();

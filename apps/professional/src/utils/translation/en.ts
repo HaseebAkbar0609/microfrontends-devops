@@ -6355,6 +6355,11 @@ export const enRotRut: RotRutTranslation = {
 	rotRutPaginationPage: "Page",
 	rotRutSubmitSuccessToast: "Application submitted to Swedish Tax Agency (Skatteverket)",
 	rotRutSingleSubmitConfirmDesc: "Are you sure you want to submit this deduction to the Swedish Tax Agency (Skatteverket)?",
+	rotRutActionViewInvoice: "View invoice",
+	rotRutNoSubmittableSelected: "The selected deductions are already submitted or approved",
+	rotRutResetData: "Reset demo data",
+	rotRutResetSuccess: "Demo data has been reset to default state",
+	rotRutSkvRef: "Ref",
 };
 
 export const en: Translation = {

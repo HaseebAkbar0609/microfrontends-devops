@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, Send, Download, Printer } from "lucide-react";
+import { Search, Send, Download, Printer, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -26,9 +26,11 @@ interface RotRutToolbarProps {
 	periodFilter: RotRutPeriod;
 	onPeriodFilterChange: (p: RotRutPeriod) => void;
 	selectedCount: number;
+	submittableCount: number;
 	onSubmitSelected: () => void;
 	onExportExcel: () => void;
 	onPrint: () => void;
+	onResetDemoData?: () => void;
 }
 
 export function RotRutToolbar({
@@ -40,10 +42,12 @@ export function RotRutToolbar({
 	onTypeFilterChange,
 	periodFilter,
 	onPeriodFilterChange,
-	selectedCount,
+	selectedCount: _selectedCount,
+	submittableCount,
 	onSubmitSelected,
 	onExportExcel,
 	onPrint,
+	onResetDemoData,
 }: RotRutToolbarProps) {
 	const { t } = useTranslation();
 	return (
@@ -159,14 +163,14 @@ export function RotRutToolbar({
 						type="button"
 						size="sm"
 						onClick={onSubmitSelected}
-						disabled={selectedCount === 0}
+						disabled={submittableCount === 0}
 						className="h-9 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-2xs cursor-pointer disabled:opacity-50"
 					>
 						<Send className="w-3.5 h-3.5" />
 						<Translate text={localizationConstants.rotRutBtnSubmitSelected} />
-						{selectedCount > 0 && (
+						{submittableCount > 0 && (
 							<span className="ml-1 px-1.5 py-0.2 bg-blue-800 text-white rounded-full text-[10px]">
-								{selectedCount}
+								{submittableCount}
 							</span>
 						)}
 					</Button>
@@ -192,6 +196,18 @@ export function RotRutToolbar({
 					>
 						<Printer className="w-4 h-4" />
 					</Button>
+					{onResetDemoData && (
+						<Button
+							type="button"
+							variant="outline"
+							size="icon"
+							onClick={onResetDemoData}
+							className="h-9 w-9 border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer"
+							title={t(localizationConstants.rotRutResetData)}
+						>
+							<RotateCcw className="w-4 h-4" />
+						</Button>
+					)}
 				</div>
 			</div>
 		</div>

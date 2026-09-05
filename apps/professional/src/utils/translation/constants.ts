@@ -6311,6 +6311,11 @@ export type RotRutTranslation = {
 	rotRutPaginationPage: string;
 	rotRutSubmitSuccessToast: string;
 	rotRutSingleSubmitConfirmDesc: string;
+	rotRutActionViewInvoice: string;
+	rotRutNoSubmittableSelected: string;
+	rotRutResetData: string;
+	rotRutResetSuccess: string;
+	rotRutSkvRef: string;
 };
 
 export type Translation = HeaderTranslation &

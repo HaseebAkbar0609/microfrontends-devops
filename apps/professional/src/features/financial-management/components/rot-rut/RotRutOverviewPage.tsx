@@ -30,6 +30,7 @@ export function RotRutOverviewPage() {
 		sortOrder,
 		handleSort,
 		selectedIds,
+		submittableSelectedCount,
 		toggleSelect,
 		toggleSelectAll,
 		currentPage,
@@ -48,6 +49,7 @@ export function RotRutOverviewPage() {
 		handleResubmit,
 		handleExportExcel,
 		handlePrint,
+		handleResetSeedData,
 	} = useRotRut();
 
 	return (
@@ -78,9 +80,11 @@ export function RotRutOverviewPage() {
 					periodFilter={periodFilter}
 					onPeriodFilterChange={setPeriodFilter}
 					selectedCount={selectedIds.size}
+					submittableCount={submittableSelectedCount}
 					onSubmitSelected={handleBatchSubmit}
 					onExportExcel={handleExportExcel}
 					onPrint={handlePrint}
+					onResetDemoData={handleResetSeedData}
 				/>
 
 				{/* 4. Deduction List Table */}
