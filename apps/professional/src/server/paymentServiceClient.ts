@@ -15,6 +15,21 @@ const checkoutStatusResponseSchema = z.object({
 	subscription_status: z.string().nullable(),
 });
 
+const setupIntentResponseSchema = z.object({
+	client_secret: z.string().min(1),
+});
+
+export const paymentMethodSchema = z.object({
+	id: z.string().regex(/^pm_[A-Za-z0-9_]+$/),
+	brand: z.string().nullable(),
+	last4: z.string().regex(/^\d{4}$/).nullable(),
+	exp_month: z.number().int().min(1).max(12).nullable(),
+	exp_year: z.number().int().min(2000).max(9999).nullable(),
+	is_default: z.boolean(),
+});
+
+const paymentMethodsSchema = z.array(paymentMethodSchema);
+
 const cartContextSchema = z.object({
 	data: z.object({
 		items: z.array(
@@ -72,6 +87,111 @@ async function loadSubscriptionContext(headers: CallerHeaders) {
 		);
 	}
 	return cartContextSchema.parse(await response.json()).data;
+}
+
+async function verifyCallerContext(headers: CallerHeaders) {
+	await loadSubscriptionContext(headers);
+}
+
+async function paymentServiceRequest(
+	path: string,
+	init: RequestInit = {},
+): Promise<Response> {
+	const serviceUrl = requiredServerUrl("PAYMENT_SERVICE_URL");
+	const serviceToken = requiredServerSetting("PAYMENT_SERVICE_TOKEN");
+	const headers = new Headers(init.headers);
+	headers.set("X-Service-Token", serviceToken);
+	return fetch(`${serviceUrl}${path}`, {
+		...init,
+		headers,
+		cache: "no-store",
+		signal: AbortSignal.timeout(15_000),
+	});
+}
+
+export async function createPaymentMethodSetup(
+	headers: CallerHeaders,
+	email: string,
+) {
+	await verifyCallerContext(headers);
+	const response = await paymentServiceRequest("/api/v1/payments/setup-intent", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			core_account_id: headers.companyId,
+			account_type: "business",
+			email,
+		}),
+	});
+	if (!response.ok) {
+		throw new Error(`Payment service rejected card setup (${response.status})`);
+	}
+	return setupIntentResponseSchema.parse(await response.json());
+}
+
+export async function completePaymentMethodSetup(
+	headers: CallerHeaders,
+	setupIntentId: string,
+) {
+	await verifyCallerContext(headers);
+	const response = await paymentServiceRequest(
+		`/api/v1/payments/setup-intents/${encodeURIComponent(setupIntentId)}/complete`,
+		{
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ core_account_id: headers.companyId }),
+		},
+	);
+	if (!response.ok) {
+		throw new Error(
+			`Payment service rejected card completion (${response.status})`,
+		);
+	}
+	return paymentMethodSchema.parse(await response.json());
+}
+
+export async function listPaymentMethods(headers: CallerHeaders) {
+	await verifyCallerContext(headers);
+	const response = await paymentServiceRequest(
+		`/api/v1/payments/accounts/${encodeURIComponent(headers.companyId)}/payment-methods`,
+	);
+	if (!response.ok) {
+		throw new Error(`Payment service rejected card list (${response.status})`);
+	}
+	return paymentMethodsSchema.parse(await response.json());
+}
+
+export async function setDefaultPaymentMethod(
+	headers: CallerHeaders,
+	paymentMethodId: string,
+) {
+	await verifyCallerContext(headers);
+	const response = await paymentServiceRequest(
+		`/api/v1/payments/accounts/${encodeURIComponent(headers.companyId)}/payment-methods/${encodeURIComponent(paymentMethodId)}/default`,
+		{ method: "POST" },
+	);
+	if (!response.ok) {
+		throw new Error(
+			`Payment service rejected default card update (${response.status})`,
+		);
+	}
+	return paymentMethodSchema.parse(await response.json());
+}
+
+export async function deletePaymentMethod(
+	headers: CallerHeaders,
+	paymentMethodId: string,
+) {
+	await verifyCallerContext(headers);
+	const response = await paymentServiceRequest(
+		`/api/v1/payments/accounts/${encodeURIComponent(headers.companyId)}/payment-methods/${encodeURIComponent(paymentMethodId)}`,
+		{ method: "DELETE" },
+	);
+	if (!response.ok) {
+		const error = new Error(`Payment service rejected card deletion (${response.status})`);
+		Object.assign(error, { status: response.status });
+		throw error;
+	}
 }
 
 export async function createHostedCheckout(

@@ -62,6 +62,15 @@ export {
 } from "./payment/payment";
 
 export {
+	completeBillingSetupIntentAction,
+	createBillingSetupIntentAction,
+	deleteBillingPaymentMethodAction,
+	listBillingPaymentMethodsAction,
+	setDefaultBillingPaymentMethodAction,
+	type BillingPaymentMethod,
+} from "./payment/paymentMethods";
+
+export {
   getCountriesAction,
   getCategoriesAction,
   type Country,

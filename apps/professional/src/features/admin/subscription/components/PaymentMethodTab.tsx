@@ -1,56 +1,85 @@
 "use client";
 
-import { useState } from "react";
-import { MoreVertical, Pencil, Plus, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Loader2, Plus } from "lucide-react";
+import { completeBillingSetupIntentAction } from "@/api-actions";
 import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
+import { RadioGroup } from "@/components/ui/radio-group";
+import { useAuthStatus } from "@/context/AuthContext";
+import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-import { PaymentCard } from "../constants/mockData";
-import { PaymentCardDraft, usePaymentCards } from "../hooks/usePaymentCards";
-import NewCardDialog from "./NewCardDialog";
+import { Translate, useTranslate } from "@/utils/translation/translate";
+import { useRouter, useSearchParams } from "next/navigation";
+import { usePaymentCards } from "../hooks/usePaymentCards";
+import { PaymentMethodRow } from "./PaymentMethodRow";
+import StripePaymentMethodDialog from "./StripePaymentMethodDialog";
 
 const PaymentMethodTab = () => {
 	const {
 		cards,
-		selectedCardId,
-		setSelectedCardId,
-		addCard,
-		updateCard,
-		removeCard,
+		isLoading,
+		error,
+		refreshCards,
+		setDefaultCard,
+		deleteCard,
+		isUpdating,
 	} = usePaymentCards();
-
+	const { user } = useAuthStatus();
+	const t = useTranslate();
+	const router = useRouter();
+	const searchParams = useSearchParams();
 	const [dialogOpen, setDialogOpen] = useState(false);
-	const [editingCard, setEditingCard] = useState<PaymentCard | null>(null);
+	const processedSetupIntent = useRef<string | null>(null);
+	const email =
+		user && typeof user === "object" && "email" in user && typeof user.email === "string"
+			? user.email.trim()
+			: "";
 
-	const openAddDialog = () => {
-		setEditingCard(null);
-		setDialogOpen(true);
+	useEffect(() => {
+		const setupIntentId = searchParams.get("setup_intent");
+		if (!setupIntentId || processedSetupIntent.current === setupIntentId) return;
+		processedSetupIntent.current = setupIntentId;
+		const redirectStatus = searchParams.get("redirect_status");
+		void (async () => {
+			if (redirectStatus !== "succeeded") {
+				showToast("error", t(localizationConstants.subscriptionPaymentSaveFailed));
+			} else {
+				const result = await completeBillingSetupIntentAction(setupIntentId);
+				if (result.success) {
+					await refreshCards();
+					showToast("success", t(localizationConstants.subscriptionPaymentSaved));
+				} else {
+					showToast("error", t(localizationConstants.subscriptionPaymentSaveFailed));
+				}
+			}
+			router.replace("/admin/subscription?tab=payment");
+		})();
+	}, [refreshCards, router, searchParams, t]);
+
+	const updateDefault = async (paymentMethodId: string) => {
+		if (cards.find((card) => card.id === paymentMethodId)?.is_default) return;
+		try {
+			await setDefaultCard(paymentMethodId);
+			showToast("success", t(localizationConstants.subscriptionPaymentDefaultUpdated));
+		} catch {
+			showToast("error", t(localizationConstants.subscriptionPaymentUpdateFailed));
+		}
 	};
 
-	const openEditDialog = (card: PaymentCard) => {
-		setEditingCard(card);
-		setDialogOpen(true);
+	const remove = async (paymentMethodId: string) => {
+		try {
+			await deleteCard(paymentMethodId);
+			showToast("success", t(localizationConstants.subscriptionPaymentDeleted));
+		} catch (mutationError) {
+			const message =
+				mutationError instanceof Error && mutationError.message === "LAST_PAYMENT_METHOD"
+					? localizationConstants.subscriptionPaymentLastCardRequired
+					: localizationConstants.subscriptionPaymentDeleteFailed;
+			showToast("error", t(message));
+		}
 	};
 
-	const handleSave = (draft: PaymentCardDraft) => {
-		if (editingCard) updateCard(editingCard.id, draft);
-		else addCard(draft);
-	};
+	const defaultCardId = cards.find((card) => card.is_default)?.id ?? "";
 
 	return (
 		<div className="flex flex-col gap-5">
@@ -60,33 +89,14 @@ const PaymentMethodTab = () => {
 				/>
 			</h2>
 
-			<div className="flex flex-wrap items-end gap-x-24 gap-y-4">
-				<div className="space-y-1.5">
-					<Label className="text-sm font-medium text-slate-900">
-						<Translate
-							text={
-								localizationConstants.subscriptionPaymentSelectLabel
-							}
-						/>
-					</Label>
-					<Select value="card" disabled>
-						<SelectTrigger className="h-10 w-48 border-slate-200 bg-slate-100 text-sm text-slate-500">
-							<SelectValue />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="card">
-								<Translate
-									text={
-										localizationConstants.subscriptionPaymentMethodCard
-									}
-								/>
-							</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
+			<div className="flex flex-wrap items-end justify-between gap-4">
+				<p className="max-w-xl text-sm text-slate-500">
+					<Translate text={localizationConstants.subscriptionPaymentSecureHint} />
+				</p>
 				<Button
 					type="button"
-					onClick={openAddDialog}
+					onClick={() => setDialogOpen(true)}
+					disabled={!email || isUpdating}
 					className="h-11 gap-2 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 				>
 					<Plus className="h-4 w-4" />
@@ -104,7 +114,18 @@ const PaymentMethodTab = () => {
 						}
 					/>
 				</p>
-				{cards.length === 0 ? (
+				{isLoading ? (
+					<div className="flex min-h-28 items-center justify-center">
+						<Loader2 className="h-5 w-5 animate-spin text-slate-500" />
+					</div>
+				) : error ? (
+					<div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+						<Translate text={localizationConstants.subscriptionPaymentLoadFailed} />
+						<Button type="button" variant="outline" className="ml-3" onClick={() => void refreshCards()}>
+							<Translate text={localizationConstants.retry} />
+						</Button>
+					</div>
+				) : cards.length === 0 ? (
 					<p className="text-sm text-slate-500">
 						<Translate
 							text={
@@ -114,74 +135,30 @@ const PaymentMethodTab = () => {
 					</p>
 				) : (
 					<RadioGroup
-						value={selectedCardId ?? ""}
-						onValueChange={setSelectedCardId}
+						value={defaultCardId}
+						onValueChange={(id) => void updateDefault(id)}
 						className="gap-4"
 					>
 						{cards.map((card) => (
-							<div
+							<PaymentMethodRow
 								key={card.id}
-								className="flex items-start justify-between gap-4 sm:max-w-xs"
-							>
-								<div>
-									<Label className="flex items-center gap-2.5 text-base font-medium text-slate-900">
-										<RadioGroupItem value={card.id} />
-										{card.cardName}
-									</Label>
-									<p className="mt-1 pl-7 text-sm text-slate-500">
-										{card.firstName} {card.lastName}
-									</p>
-								</div>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button
-											type="button"
-											variant="ghost"
-											size="icon"
-											className="h-8 w-8 rounded-md text-slate-500 hover:text-slate-900"
-										>
-											<MoreVertical className="h-4 w-4" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent
-										align="start"
-										className="w-40 rounded-md border border-slate-200 bg-white p-1 shadow-md"
-									>
-										<DropdownMenuItem
-											onClick={() => openEditDialog(card)}
-											className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
-										>
-											<Pencil className="h-4 w-4 text-slate-600" />
-											<Translate
-												text={
-													localizationConstants.subscriptionPaymentEdit
-												}
-											/>
-										</DropdownMenuItem>
-										<DropdownMenuItem
-											onClick={() => removeCard(card.id)}
-											className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
-										>
-											<Trash2 className="h-4 w-4 text-slate-600" />
-											<Translate
-												text={
-													localizationConstants.subscriptionPaymentDelete
-												}
-											/>
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</div>
+								card={card}
+								canDelete={cards.length > 1}
+								disabled={isUpdating}
+								onDelete={() => void remove(card.id)}
+							/>
 						))}
 					</RadioGroup>
 				)}
 			</div>
 
-			<NewCardDialog
+			<StripePaymentMethodDialog
 				open={dialogOpen}
-				editingCard={editingCard}
+				email={email}
 				onClose={() => setDialogOpen(false)}
-				onSave={handleSave}
+				onSaved={async () => {
+					await refreshCards();
+				}}
 			/>
 		</div>
 	);
