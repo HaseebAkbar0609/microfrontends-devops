@@ -15,6 +15,20 @@ const checkoutStatusResponseSchema = z.object({
 	subscription_status: z.string().nullable(),
 });
 
+const cartContextSchema = z.object({
+	data: z.object({
+		items: z.array(
+			z.object({
+				quantity: z.number().int().positive(),
+				subscription_plan: z.object({ plan_key: z.string() }),
+				subscription_plan_price: z.object({
+					interval: z.enum(["monthly", "quarterly", "yearly"]),
+				}),
+			}),
+		),
+	}),
+});
+
 type CallerHeaders = {
 	authorization: string;
 	companyId: string;
@@ -38,7 +52,7 @@ function requiredServerUrl(name: string): string {
 	return requiredServerSetting(name).replace(/\/$/, "");
 }
 
-async function verifySubscriptionContext(headers: CallerHeaders) {
+async function loadSubscriptionContext(headers: CallerHeaders) {
 	const backendUrl = requiredServerUrl("TFS_BACKEND_URL");
 	const response = await fetch(
 		`${backendUrl}/api/v1/professionals/cart/get`,
@@ -57,13 +71,24 @@ async function verifySubscriptionContext(headers: CallerHeaders) {
 			`Subscription context verification failed (${response.status})`,
 		);
 	}
+	return cartContextSchema.parse(await response.json()).data;
 }
 
 export async function createHostedCheckout(
 	headers: CallerHeaders,
 	request: CheckoutRequest,
 ) {
-	await verifySubscriptionContext(headers);
+	const context = await loadSubscriptionContext(headers);
+	const expectedInterval =
+		request.billingInterval === "annual" ? "yearly" : "monthly";
+	if (
+		context.items.length !== 1 ||
+		context.items[0].subscription_plan.plan_key !== request.planCode ||
+		context.items[0].subscription_plan_price.interval !== expectedInterval ||
+		context.items[0].quantity !== request.quantity
+	) {
+		throw new Error("Checkout request does not match the current cart");
+	}
 	const serviceUrl = requiredServerUrl("PAYMENT_SERVICE_URL");
 	const serviceToken = requiredServerSetting("PAYMENT_SERVICE_TOKEN");
 	const response = await fetch(
@@ -98,7 +123,7 @@ export async function getHostedCheckoutStatus(
 	headers: CallerHeaders,
 	checkoutSessionId: string,
 ) {
-	await verifySubscriptionContext(headers);
+	await loadSubscriptionContext(headers);
 	const serviceUrl = requiredServerUrl("PAYMENT_SERVICE_URL");
 	const serviceToken = requiredServerSetting("PAYMENT_SERVICE_TOKEN");
 	const response = await fetch(

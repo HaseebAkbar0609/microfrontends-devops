@@ -365,6 +365,11 @@ export interface CompleteSubscriptionResponse {
  */
 export type CompleteSubscriptionPayload = {
 	payment_token: string;
+	checkout_session_id?: string;
+};
+
+export type CompleteSubscriptionOptions = {
+	suppressErrorToast?: boolean;
 };
 
 function extractCompleteSubscriptionPayload(
@@ -396,6 +401,7 @@ function hasAccessToken(o: object): boolean {
 
 export async function completeSubscriptionAction(
 	payload: CompleteSubscriptionPayload,
+	options?: CompleteSubscriptionOptions,
 ): Promise<ActionResult<CompleteSubscriptionResponse>> {
 	try {
 		const response = await axiosInstance.post<
@@ -455,12 +461,12 @@ export async function completeSubscriptionAction(
 
 		if (errorCode) {
 			const msg = getErrorMessageByCode(String(errorCode));
-			showToast("error", msg);
+			if (!options?.suppressErrorToast) showToast("error", msg);
 			return { success: false, data: null, error: msg, errorCode };
 		}
 
 		const message = errorMessage ?? "Failed to complete subscription.";
-		showToast("error", message);
+		if (!options?.suppressErrorToast) showToast("error", message);
 		return { success: false, data: null, error: message };
 	}
 }

@@ -225,6 +225,19 @@ export const enManageCart: ManageCartTranslation = {
 	manageCartCheckoutValidationCountryRequired: "Country is required",
 	manageCartCheckoutValidationCityRequired: "City is required",
 	manageCartCheckoutValidationPostalCodeRequired: "Postal code is required",
+	subscriptionCheckoutConfirmingTitle: "Confirming your payment",
+	subscriptionCheckoutConfirmingBody:
+		"Stripe has returned you safely. We are waiting for the signed payment confirmation.",
+	subscriptionCheckoutConfirmedTitle: "Payment confirmed",
+	subscriptionCheckoutConfirmedBody:
+		"Your Standard monthly subscription payment was verified successfully.",
+	subscriptionCheckoutDelayedTitle:
+		"Confirmation is taking longer than expected",
+	subscriptionCheckoutFailedTitle: "We could not confirm this checkout",
+	subscriptionCheckoutRetryBody:
+		"Do not submit another payment. Retry the confirmation first.",
+	subscriptionCheckoutRetryButton: "Retry confirmation",
+	subscriptionCheckoutReturnToPlans: "Return to plans",
 };
 
 export const enAuth: AuthTranslation = {

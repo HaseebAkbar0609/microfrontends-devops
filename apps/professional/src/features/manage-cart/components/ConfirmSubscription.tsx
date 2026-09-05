@@ -52,6 +52,7 @@ export function ConfirmSubscription({
 		items.length === 1 && items[0]?.planKey === MANAGE_PLANS_PLAN_IDS.FREE;
 	const useHostedCheckoutMvp =
 		process.env.NEXT_PUBLIC_TFS825_PAYMENT_MVP === "true" &&
+		items.length === 1 &&
 		mainItem?.planKey === "standard" &&
 		mainItem?.interval === "monthly";
 
@@ -321,7 +322,7 @@ export function ConfirmSubscription({
 								if (useHostedCheckoutMvp && mainItem) {
 									setIsSubmitting(true);
 									try {
-									const checkout =
+										const checkout =
 										await createHostedCheckoutAction({
 											planCode: mainItem.planKey,
 											billingInterval: "monthly",

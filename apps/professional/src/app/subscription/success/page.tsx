@@ -1,16 +1,23 @@
 "use client";
 
+import { completeSubscriptionAction } from "@/api-actions";
 import { getHostedCheckoutStatusAction } from "@/api-actions/payment/hostedCheckout";
 import { Button } from "@/components/ui/button";
+import { useAuthStatus } from "@/context/AuthContext";
+import { authStorage } from "@/lib/authStorage";
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 import { CheckCircle2, CircleAlert, LoaderCircle } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 
 type ViewState = "checking" | "confirmed" | "delayed" | "failed";
 
 function SubscriptionSuccessContent() {
 	const searchParams = useSearchParams();
+	const router = useRouter();
+	const { hydrateFromStorage } = useAuthStatus();
 	const sessionId = searchParams.get("session_id")?.trim() ?? "";
 	const [state, setState] = useState<ViewState>("checking");
 	const [attempt, setAttempt] = useState(0);
@@ -31,7 +38,27 @@ function SubscriptionSuccessContent() {
 						result.data.subscription_status ?? "",
 					)
 				) {
+					const paymentToken = authStorage.getAccessToken()?.trim() ?? "";
+					if (!paymentToken) {
+						setState("failed");
+						return;
+					}
+					const complete = await completeSubscriptionAction(
+						{
+							payment_token: paymentToken,
+							checkout_session_id: sessionId,
+						},
+						{ suppressErrorToast: true },
+					);
+					if (!complete.success) {
+						setState("delayed");
+						return;
+					}
+					hydrateFromStorage();
 					setState("confirmed");
+					await new Promise((resolve) => window.setTimeout(resolve, 600));
+					router.replace("/home");
+					router.refresh();
 					return;
 				}
 				if (
@@ -45,7 +72,7 @@ function SubscriptionSuccessContent() {
 			await new Promise((resolve) => window.setTimeout(resolve, 1000));
 		}
 		setState("delayed");
-	}, [sessionId]);
+	}, [hydrateFromStorage, router, sessionId]);
 
 	useEffect(() => {
 		void verify();
@@ -60,11 +87,14 @@ function SubscriptionSuccessContent() {
 					<>
 						<LoaderCircle className="mx-auto size-14 animate-spin text-primary" />
 						<h1 className="mt-5 text-2xl font-semibold text-secondary">
-							Confirming your payment
+							<Translate
+								text={localizationConstants.subscriptionCheckoutConfirmingTitle}
+							/>
 						</h1>
 						<p className="mt-2 text-gray-600">
-							Stripe has returned you safely. We are waiting for the signed
-							payment confirmation.
+							<Translate
+								text={localizationConstants.subscriptionCheckoutConfirmingBody}
+							/>
 						</p>
 					</>
 				)}
@@ -73,11 +103,14 @@ function SubscriptionSuccessContent() {
 					<>
 						<CheckCircle2 className="mx-auto size-14 text-emerald-600" />
 						<h1 className="mt-5 text-2xl font-semibold text-secondary">
-							Payment confirmed
+							<Translate
+								text={localizationConstants.subscriptionCheckoutConfirmedTitle}
+							/>
 						</h1>
 						<p className="mt-2 text-gray-600">
-							Your Standard monthly subscription payment was verified
-							successfully.
+							<Translate
+								text={localizationConstants.subscriptionCheckoutConfirmedBody}
+							/>
 						</p>
 					</>
 				)}
@@ -86,22 +119,34 @@ function SubscriptionSuccessContent() {
 					<>
 						<CircleAlert className="mx-auto size-14 text-amber-600" />
 						<h1 className="mt-5 text-2xl font-semibold text-secondary">
-							{state === "delayed"
-								? "Confirmation is taking longer than expected"
-								: "We could not confirm this checkout"}
+							<Translate
+								text={
+									state === "delayed"
+										? localizationConstants.subscriptionCheckoutDelayedTitle
+										: localizationConstants.subscriptionCheckoutFailedTitle
+								}
+							/>
 						</h1>
 						<p className="mt-2 text-gray-600">
-							Do not submit another payment. Retry the confirmation first.
+							<Translate
+								text={localizationConstants.subscriptionCheckoutRetryBody}
+							/>
 						</p>
 						<Button className="mt-6" variant="primary" onClick={retry}>
-							Retry confirmation
+							<Translate
+								text={localizationConstants.subscriptionCheckoutRetryButton}
+							/>
 						</Button>
 					</>
 				)}
 
 				<div className="mt-8 border-t border-border pt-5">
 					<Button asChild variant="outline">
-						<Link href="/manage-plans">Return to plans</Link>
+						<Link href="/manage-plans">
+							<Translate
+								text={localizationConstants.subscriptionCheckoutReturnToPlans}
+							/>
+						</Link>
 					</Button>
 				</div>
 			</section>

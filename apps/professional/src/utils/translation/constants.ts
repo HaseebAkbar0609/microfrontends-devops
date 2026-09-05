@@ -437,6 +437,15 @@ export type ManageCartTranslation = {
 	manageCartCheckoutValidationCountryRequired: string;
 	manageCartCheckoutValidationCityRequired: string;
 	manageCartCheckoutValidationPostalCodeRequired: string;
+	subscriptionCheckoutConfirmingTitle: string;
+	subscriptionCheckoutConfirmingBody: string;
+	subscriptionCheckoutConfirmedTitle: string;
+	subscriptionCheckoutConfirmedBody: string;
+	subscriptionCheckoutDelayedTitle: string;
+	subscriptionCheckoutFailedTitle: string;
+	subscriptionCheckoutRetryBody: string;
+	subscriptionCheckoutRetryButton: string;
+	subscriptionCheckoutReturnToPlans: string;
 };
 
 export type DashboardTranslation = {

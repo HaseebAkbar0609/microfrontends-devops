@@ -348,6 +348,18 @@ export const svManageCart: ManageCartTranslation = {
 	manageCartCheckoutValidationCountryRequired: "Land krävs",
 	manageCartCheckoutValidationCityRequired: "Ort krävs",
 	manageCartCheckoutValidationPostalCodeRequired: "Postnummer krävs",
+	subscriptionCheckoutConfirmingTitle: "Bekräftar din betalning",
+	subscriptionCheckoutConfirmingBody:
+		"Stripe har skickat dig tillbaka säkert. Vi väntar på den signerade betalningsbekräftelsen.",
+	subscriptionCheckoutConfirmedTitle: "Betalningen är bekräftad",
+	subscriptionCheckoutConfirmedBody:
+		"Betalningen för din månatliga Standard-prenumeration har verifierats.",
+	subscriptionCheckoutDelayedTitle: "Bekräftelsen tar längre tid än väntat",
+	subscriptionCheckoutFailedTitle: "Vi kunde inte bekräfta köpet",
+	subscriptionCheckoutRetryBody:
+		"Gör ingen ny betalning. Försök först att bekräfta betalningen igen.",
+	subscriptionCheckoutRetryButton: "Försök bekräfta igen",
+	subscriptionCheckoutReturnToPlans: "Tillbaka till planer",
 };
 
 export const svDashboard: DashboardTranslation = {
