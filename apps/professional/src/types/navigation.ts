@@ -41,15 +41,38 @@ export function isRouteTabActive(
 }
 
 /**
- * Most-specific match wins: when several hrefs are prefixes of the pathname
- * (e.g. `/module/production/order` and `/module/production/order/overview`),
- * the longest one is the active tab.
+ * Most-specific match wins:
+ * 1. Exact match on item.href
+ * 2. Direct child match on item.href (e.g. pathname.startsWith(`${item.href}/`))
+ * 3. Match via matchSubPaths (longest matching prefix wins)
  */
 export function findActiveRouteTab(
 	items: RouteTabItem[],
 	pathname: string
 ): RouteTabItem | undefined {
-	return items
-		.filter((item) => isRouteTabActive(item, pathname))
-		.sort((a, b) => b.href.length - a.href.length)[0];
+	const activeItems = items.filter((item) => isRouteTabActive(item, pathname));
+	if (activeItems.length === 0) return undefined;
+	if (activeItems.length === 1) return activeItems[0];
+
+	// Priority 1: Exact match on item.href
+	const exactMatch = activeItems.find((item) => pathname === item.href);
+	if (exactMatch) return exactMatch;
+
+	// Priority 2: Direct child match on item.href (e.g. pathname.startsWith(`${item.href}/`))
+	const directChildMatches = activeItems.filter((item) =>
+		pathname.startsWith(`${item.href}/`)
+	);
+	if (directChildMatches.length > 0) {
+		return directChildMatches.sort((a, b) => b.href.length - a.href.length)[0];
+	}
+
+	// Priority 3: Match via matchSubPaths (longest matching subpath wins)
+	return activeItems.sort((a, b) => {
+		const getLongestSubMatch = (item: RouteTabItem) => {
+			const matchingSubs =
+				item.matchSubPaths?.filter((sub) => pathname.startsWith(sub)) || [];
+			return matchingSubs.reduce((max, sub) => Math.max(max, sub.length), 0);
+		};
+		return getLongestSubMatch(b) - getLongestSubMatch(a);
+	})[0];
 }
