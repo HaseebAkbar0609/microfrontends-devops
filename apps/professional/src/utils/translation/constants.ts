@@ -6492,6 +6492,138 @@ export type OrderInspectionTranslation = {
 	allStatusesFilter: string;
 };
 
+export type EconomyDashboardTranslation = {
+	economyDashboardTitle: string;
+	economyDashboardSubtitle: string;
+	economyOverviewTab: string;
+	financialHealthScoreTitle: string;
+	economyOverviewWidgetTitle: string;
+	kpiDashboardWidgetTitle: string;
+	cashFlowWidgetTitle: string;
+	profitabilityWidgetTitle: string;
+	incomeStatementWidgetTitle: string;
+	aiEconomyAssistantWidgetTitle: string;
+	financeCalendarWidgetTitle: string;
+	recentEconomyActivitiesWidgetTitle: string;
+	revenueDistributionWidgetTitle: string;
+	accountsReceivableWidgetTitle: string;
+	accountsPayableWidgetTitle: string;
+	costDistributionWidgetTitle: string;
+	invoicingWidgetTitle: string;
+	budgetWidgetTitle: string;
+	projectEconomyWidgetTitle: string;
+	orderEconomyWidgetTitle: string;
+	economyImageWidgetTitle: string;
+	economyNewsWidgetTitle: string;
+	healthScoreStatusGood: string;
+	healthScoreStatusMedium: string;
+	healthScoreStatusCritical: string;
+	healthScoreCashRunway: string;
+	healthScoreGrossMargin: string;
+	healthScoreOverdueAr: string;
+	healthScoreSuggestedAction: string;
+	healthScoreActionText: string;
+	monthsUnit: string;
+	invoicesCountSuffix: string;
+	econOverviewRevenue: string;
+	econOverviewCosts: string;
+	econOverviewContributionMargin: string;
+	econOverviewNetResult: string;
+	econOverviewOpenInvoices: string;
+	mtdBadge: string;
+	kpiBillableHours: string;
+	kpiUtilization: string;
+	kpiInvoiceLeadTime: string;
+	kpiQuoteConversion: string;
+	kpiOnTimePayments: string;
+	last30DaysBadge: string;
+	hoursShortUnit: string;
+	daysShortUnit: string;
+	cashFlowOpening: string;
+	cashFlowIn30Days: string;
+	cashFlowOut30Days: string;
+	cashFlowNet: string;
+	cashFlowForecast14Days: string;
+	profitabilityGrossMarginTrend: string;
+	profitabilityTopJobs: string;
+	incomeDirectCosts: string;
+	incomeGrossProfit: string;
+	incomeOverheads: string;
+	incomeEbit: string;
+	aiSuggestedQuestionsTitle: string;
+	aiQuestionMarginDrop: string;
+	aiQuestionOverdueCustomers: string;
+	aiQuestionCashForecast: string;
+	aiInsightTitle: string;
+	aiInsightSupplierInvoices: string;
+	aiAskAssistantPlaceholder: string;
+	calVatReminder: string;
+	calPayrollRun: string;
+	calSupplierBatch: string;
+	calCustomerFollowup: string;
+	next14DaysBadge: string;
+	actInvoiceSent: string;
+	actPaymentReceived: string;
+	actSupplierInvoiceApproved: string;
+	actBudgetUpdated: string;
+	actReminderSent: string;
+	actPurchaseOrderCreated: string;
+	revSegService: string;
+	revSegProjects: string;
+	revSegMaintenance: string;
+	arTotalOpen: string;
+	arNotDue: string;
+	arOverdue1to30: string;
+	arOverdue31to60: string;
+	arOverdue60Plus: string;
+	arTopOverdueCustomer: string;
+	daysOverdueSuffix: string;
+	apTotalOpen: string;
+	apDue7Days: string;
+	apDue8to30Days: string;
+	apOverdue: string;
+	apLargestPayment: string;
+	dueAug05: string;
+	costMaterials: string;
+	costLabor: string;
+	costSubcontractors: string;
+	costVehiclesFuel: string;
+	costOther: string;
+	invDrafts: string;
+	invReadyToSend: string;
+	invSentMtd: string;
+	invCreditNotes: string;
+	budgetRevenue: string;
+	budgetCost: string;
+	budgetEbit: string;
+	budgetActualLabel: string;
+	projProgressLabel: string;
+	projMarginLabel: string;
+	projForecastAtCompletion: string;
+	projAsaterSchool: string;
+	projStorgatanOffices: string;
+	projWarehouseExpansion: string;
+	orderNewOrders: string;
+	orderBacklogValue: string;
+	orderAvgExpectedMargin: string;
+	orderLargestOrder: string;
+	economyImageBannerTitle: string;
+	economyImageBannerSubtitle: string;
+	economyImageBannerCta: string;
+	economyImageCaption: string;
+	newsInvoiceAutomationTitle: string;
+	newsInvoiceAutomationDate: string;
+	newsMarginReportingTitle: string;
+	newsMarginReportingDate: string;
+	newsBankFeedTitle: string;
+	newsBankFeedDate: string;
+	newsReadMore: string;
+	viewInvoicesAction: string;
+	viewExpensesAction: string;
+	viewReportsAction: string;
+	viewRotRutAction: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -6513,7 +6645,8 @@ export type Translation = HeaderTranslation &
 	OrderOrganisationTranslation &
 	RotRutTranslation &
 	OrderPaymentPlanTranslation &
-	OrderInspectionTranslation;
+	OrderInspectionTranslation &
+	EconomyDashboardTranslation;
 
 export type TranslationKeys = keyof Translation;
 
