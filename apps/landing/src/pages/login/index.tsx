@@ -4,12 +4,16 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
 import {
+  getCustomerBaseUrl,
   getCustomerLoginUrl,
+  getProfessionalBaseUrl,
   getProfessionalLoginUrl,
 } from "@/utils/constants";
+import { loginWithHandoff } from "@/lib/auth/loginAction";
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -18,6 +22,7 @@ export default function LoginPage() {
   const [accountType, setAccountType] = useState<"professional" | "customer">("professional");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (router.query.type === "customer") {
@@ -29,16 +34,25 @@ export default function LoginPage() {
 
   const targetLoginUrl = accountType === "customer" ? getCustomerLoginUrl() : getProfessionalLoginUrl();
   const targetForgotUrl = targetLoginUrl.replace("/login", "/forgot-password");
+  const targetPortalBaseUrl = accountType === "customer" ? getCustomerBaseUrl() : getProfessionalBaseUrl();
 
-  const handlePasswordLogin = (e: React.FormEvent) => {
+  const handlePasswordLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const url = new URL(targetLoginUrl);
-      if (email) url.searchParams.set("email", email);
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    const result = await loginWithHandoff(accountType, email, password);
+
+    if (result.status === "handoff") {
+      const url = new URL("/auth/callback", targetPortalBaseUrl);
+      url.searchParams.set("code", result.code);
+      url.searchParams.set("next", "/home");
       window.location.href = url.toString();
-    } catch {
-      window.location.href = targetLoginUrl;
+      return; // keep the button disabled while the browser navigates away
     }
+
+    setIsSubmitting(false);
+    toast.error(result.message);
   };
 
   const handleBankIDLogin = () => {
@@ -184,9 +198,12 @@ export default function LoginPage() {
 
                   <button
                     type="submit"
-                    className="w-full bg-foreground text-background font-bold py-3 rounded-sm hover:bg-ink transition-colors text-sm"
+                    disabled={isSubmitting}
+                    className="w-full bg-foreground text-background font-bold py-3 rounded-sm hover:bg-ink transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {t("auth.loginBtn", "Logga in")}
+                    {isSubmitting
+                      ? t("auth.loginBtnPending", "Loggar in …")
+                      : t("auth.loginBtn", "Logga in")}
                   </button>
 
                   <div className="text-center">
