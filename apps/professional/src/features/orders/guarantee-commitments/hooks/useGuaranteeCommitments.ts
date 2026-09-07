@@ -66,6 +66,16 @@ export function useGuaranteeCommitments(orderId?: string) {
 		};
 	}, [orderId]);
 
+	const handleSearchChange = useCallback((query: string) => {
+		setSearchQuery(query);
+		setCurrentPage(1);
+	}, []);
+
+	const handleStatusFilterChange = useCallback((filter: string) => {
+		setStatusFilter(filter);
+		setCurrentPage(1);
+	}, []);
+
 	const handleSort = (field: GuaranteeSortField) => {
 		if (sortField === field) {
 			setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
@@ -75,20 +85,30 @@ export function useGuaranteeCommitments(orderId?: string) {
 		}
 	};
 
-	// Filter rows with sanitized search query
+	// Filter rows with sanitized search query & warranty/status filter
 	const filteredRows = useMemo(() => {
 		const cleanQuery = searchQuery.trim().toLowerCase();
-		if (!cleanQuery) return rows;
+		const cleanFilter = statusFilter.trim().toLowerCase();
 
 		return rows.filter((row) => {
-			return (
+			const matchesSearch =
+				!cleanQuery ||
 				(row.orderNo && row.orderNo.toLowerCase().includes(cleanQuery)) ||
 				(row.orderName && row.orderName.toLowerCase().includes(cleanQuery)) ||
 				(row.customer && row.customer.toLowerCase().includes(cleanQuery)) ||
-				(row.projectManager && row.projectManager.toLowerCase().includes(cleanQuery))
-			);
+				(row.projectManager && row.projectManager.toLowerCase().includes(cleanQuery)) ||
+				(row.warrantyPeriod && row.warrantyPeriod.toLowerCase().includes(cleanQuery)) ||
+				(row.startDate && row.startDate.toLowerCase().includes(cleanQuery)) ||
+				(row.approvedDate && row.approvedDate.toLowerCase().includes(cleanQuery));
+
+			const matchesFilter =
+				cleanFilter === "all" ||
+				(row.warrantyPeriod && row.warrantyPeriod.toLowerCase() === cleanFilter) ||
+				(row.projectManager && row.projectManager.toLowerCase() === cleanFilter);
+
+			return matchesSearch && matchesFilter;
 		});
-	}, [rows, searchQuery]);
+	}, [rows, searchQuery, statusFilter]);
 
 	// Null-safe sorting
 	const sortedRows = useMemo(() => {
@@ -165,8 +185,10 @@ export function useGuaranteeCommitments(orderId?: string) {
 		isLoading,
 		searchQuery,
 		setSearchQuery,
+		handleSearchChange,
 		statusFilter,
 		setStatusFilter,
+		handleStatusFilterChange,
 		selectedIds,
 		toggleSelectAll,
 		toggleSelectRow,

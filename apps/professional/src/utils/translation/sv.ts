@@ -23,6 +23,7 @@ import {
 	OrderPaymentPlanTranslation,
 	OrderInspectionTranslation,
 	EconomyDashboardTranslation,
+	OrderProtocolTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -6721,6 +6722,46 @@ export const svEconomyDashboard: EconomyDashboardTranslation = {
 	viewRotRutAction: "Öppna ROT & RUT",
 };
 
+export const svOrderProtocol: OrderProtocolTranslation = {
+	protocolOverviewTitle: "Protokoll",
+	protocolsTab: "Protokoll",
+	createProtocolButton: "Skapa protokoll",
+	protocolStandard: "Protokoll - Standard",
+	protocolAction: "Protokoll - Action",
+	protocolUpload: "Ladda upp",
+	protocolColDate: "Datum",
+	protocolColType: "Type",
+	protocolColPdf: "PDF",
+	protocolColHandling: "Handling",
+	protocolActionOpen: "Öppna",
+	protocolActionArchive: "Arkivera",
+	protocolActionDelete: "Delete",
+	viewDetailsButton: "Visa detaljer",
+	toastProtocolCreated: "Protokoll har skapats",
+	toastProtocolUpdated: "Protokoll har uppdaterats",
+	toastProtocolDeleted: "Protokoll har tagits bort",
+	toastProtocolArchived: "Protokoll har arkiverats",
+	toastDownloadingFile: "Laddar ner fil...",
+	downloadAction: "Ladda ner",
+	allowedFileTypesHelp: "Endast PDF, PNG eller JPG filer (max 10MB)",
+	closeButton: "Stäng",
+	deleteProtocolConfirmTitle: "Ta bort protokoll",
+	deleteProtocolConfirmDesc: "Är du säker på att du vill ta bort detta protokoll? Åtgärden kan inte ångras.",
+	validationProtocolDateRequired: "Datum är obligatoriskt",
+	validationProtocolTypeRequired: "Typ är obligatorisk",
+	createProtocolStandardTitle: "Skapa standardprotokoll",
+	createProtocolActionTitle: "Skapa åtgärdsprotokoll",
+	uploadProtocolTitle: "Ladda upp protokoll",
+	protocolNameLabel: "Protokollnamn",
+	protocolTypeLabel: "Typ",
+	protocolNotesLabel: "Anteckningar / Beskrivning",
+	protocolStatusNotStarted: "Ej påbörjad",
+	protocolStatusInProgress: "Pågår",
+	protocolStatusCompleted: "Klar",
+	protocolFilterAllTypes: "Alla typer",
+	protocolFilterAllStatuses: "Alla statusar",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -6745,4 +6786,6 @@ export const sv: Translation = {
 	...svOrderPaymentPlan,
 	...svOrderInspection,
 	...svEconomyDashboard,
+	...svOrderProtocol,
 };
+

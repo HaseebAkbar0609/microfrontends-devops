@@ -24,9 +24,9 @@ export function OrderGuaranteeCommitmentsPage({
 	const {
 		inspectionDates,
 		searchQuery,
-		setSearchQuery,
+		handleSearchChange,
 		statusFilter,
-		setStatusFilter,
+		handleStatusFilterChange,
 		selectedIds,
 		toggleSelectAll,
 		toggleSelectRow,
@@ -92,9 +92,9 @@ export function OrderGuaranteeCommitmentsPage({
 				sortOrder={sortOrder}
 				onSort={handleSort}
 				searchQuery={searchQuery}
-				onSearchChange={setSearchQuery}
+				onSearchChange={handleSearchChange}
 				statusFilter={statusFilter}
-				onStatusFilterChange={setStatusFilter}
+				onStatusFilterChange={handleStatusFilterChange}
 				currentPage={currentPage}
 				setCurrentPage={setCurrentPage}
 				pageSize={pageSize}
