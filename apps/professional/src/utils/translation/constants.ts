@@ -6225,6 +6225,61 @@ export type OrderOrganisationTranslation = {
 	noRecordsFound: string;
 };
 
+export type OrderInspectionTranslation = {
+	orderInspectionTab: string;
+	orderInspectionTitle: string;
+	inspectionSearchPlaceholder: string;
+	inspectionFilterButton: string;
+	inspectionAddButton: string;
+	inspectionColDate: string;
+	inspectionColType: string;
+	inspectionColInspectionDate: string;
+	inspectionColPdf: string;
+	inspectionColStatus: string;
+	inspectionColActions: string;
+	inspectionEmptyState: string;
+	inspectionEmptyStateDesc: string;
+	inspectionTypeByggmote: string;
+	inspectionTypeForbesiktning: string;
+	inspectionTypeSlutbesiktning: string;
+	inspectionTypeEfterbesiktning: string;
+	inspectionTypeGarantibesiktning: string;
+	inspectionTypeSarskild: string;
+	inspectionStatusPending: string;
+	inspectionStatusApproved: string;
+	inspectionStatusRejected: string;
+	addInspectionModalTitle: string;
+	editInspectionModalTitle: string;
+	inspectionDateFieldLabel: string;
+	inspectionTypeFieldLabel: string;
+	inspectionDateInspectFieldLabel: string;
+	inspectionDocumentFieldLabel: string;
+	inspectionUploadButton: string;
+	inspectionUploadNoFile: string;
+	inspectionAllowedFileTypes: string;
+	inspectionStatusFieldLabel: string;
+	inspectionCommentsFieldLabel: string;
+	inspectionCommentsPlaceholder: string;
+	menuEditInspection: string;
+	menuDeleteInspection: string;
+	menuDownloadInspection: string;
+	deleteInspectionTitle: string;
+	deleteInspectionDesc: string;
+	inspectionDeleteConfirm: string;
+	inspectionDeleteCancel: string;
+	inspectionDateRequired: string;
+	inspectionTypeRequired: string;
+	inspectionInspectDateRequired: string;
+	inspectionFileSizeError: string;
+	inspectionFileTypeError: string;
+	inspectionCreatedSuccess: string;
+	inspectionUpdatedSuccess: string;
+	inspectionDeletedSuccess: string;
+	inspectionActionFailed: string;
+	allTypesFilter: string;
+	allStatusesFilter: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -6243,7 +6298,8 @@ export type Translation = HeaderTranslation &
 	ExpenseTranslation &
 	FinancialReportsTranslation &
 	OrderInformationTranslation &
-	OrderOrganisationTranslation;
+	OrderOrganisationTranslation &
+	OrderInspectionTranslation;
 
 export type TranslationKeys = keyof Translation;
 
