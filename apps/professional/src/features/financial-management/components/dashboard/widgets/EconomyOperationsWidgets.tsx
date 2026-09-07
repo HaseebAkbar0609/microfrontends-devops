@@ -14,7 +14,6 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
 	WidgetContent as Content,
-	WidgetMockTag as MockTag,
 	WidgetRow as Row,
 } from "@/features/widgetdashboard/components/WidgetContent";
 import type { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
@@ -72,7 +71,8 @@ export function createEconomyOperationsWidgets(
 						<div className="flex items-baseline justify-between mt-0.5 font-medium text-slate-800">
 							<span>{accountsReceivable.topOverdueCustomer}</span>
 							<span>
-								{formatSek(accountsReceivable.topOverdueAmount)} ({accountsReceivable.topOverdueDays} {localizationConstants.daysShortUnit})
+								{formatSek(accountsReceivable.topOverdueAmount)} ({accountsReceivable.topOverdueDays}{" "}
+								<Translate text={localizationConstants.daysShortUnit} />)
 							</span>
 						</div>
 					</div>
@@ -85,7 +85,6 @@ export function createEconomyOperationsWidgets(
 							<Translate text={localizationConstants.viewInvoicesAction} />
 							<ArrowUpRight size={12} />
 						</Link>
-						<MockTag />
 					</div>
 				</Content>
 			),
@@ -138,7 +137,6 @@ export function createEconomyOperationsWidgets(
 							<Translate text={localizationConstants.viewExpensesAction} />
 							<ArrowUpRight size={12} />
 						</Link>
-						<MockTag />
 					</div>
 				</Content>
 			),
@@ -182,7 +180,6 @@ export function createEconomyOperationsWidgets(
 							<Translate text={localizationConstants.viewInvoicesAction} />
 							<ArrowUpRight size={12} />
 						</Link>
-						<MockTag />
 					</div>
 				</Content>
 			),
@@ -199,7 +196,7 @@ export function createEconomyOperationsWidgets(
 							<div className="flex items-baseline justify-between text-xs font-semibold text-slate-800">
 								<span>{proj.name}</span>
 								<span className="text-[11px] font-medium text-slate-500">
-									Marginal: {formatPercent(proj.marginPercent, 0)}
+									<Translate text={localizationConstants.orderAvgExpectedMargin} />: {formatPercent(proj.marginPercent, 0)}
 								</span>
 							</div>
 							<div className="h-1.5 w-full rounded-full bg-slate-200">
@@ -209,12 +206,15 @@ export function createEconomyOperationsWidgets(
 								/>
 							</div>
 							<div className="flex items-center justify-between text-[10px] text-slate-500">
-								<span>Framsteg: {proj.progressPercent}%</span>
-								<span>Prognos: {formatSek(proj.forecastCompletionAmount)}</span>
+								<span>
+									<Translate text={localizationConstants.projProgressLabel} />: {proj.progressPercent}%
+								</span>
+								<span>
+									<Translate text={localizationConstants.forecast} />: {formatSek(proj.forecastCompletionAmount)}
+								</span>
 							</div>
 						</div>
 					))}
-					<MockTag />
 				</Content>
 			),
 		},
@@ -246,7 +246,6 @@ export function createEconomyOperationsWidgets(
 							<span className="font-bold">{formatSek(orderEconomy.largestOrderAmount)}</span>
 						</div>
 					</div>
-					<MockTag />
 				</Content>
 			),
 		},

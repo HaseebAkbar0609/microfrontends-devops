@@ -3,18 +3,15 @@
 import React, { useMemo, useState } from "react";
 import { ModuleWidgetDashboard } from "@/features/widgetdashboard/components/ModuleWidgetDashboard";
 import { DashboardRearrangeRail } from "@/features/widgetdashboard/components/rail/DashboardRearrangeRail";
-import { showToast } from "@/lib/toast";
-import localizationConstants from "@/utils/translation/constants";
-import { useTranslate } from "@/utils/translation/translate";
 import { useEconomyDashboard } from "../../hooks/useEconomyDashboard";
 import {
 	buildEconomyInitialWidgets,
 	buildEconomyWidgetMap,
 	ECONOMY_SIDEBAR_ITEMS,
 } from "./EconomyDashboardConfig";
+import { ECONOMY_DASHBOARD_STORAGE_KEY } from "../../constants/economyDashboard.constants";
 
 export function EconomyDashboard() {
-	const t = useTranslate();
 	const { state, activeAiQuestion, handleSelectAiQuestion } = useEconomyDashboard();
 	const [isRearranging, setIsRearranging] = useState(false);
 
@@ -37,7 +34,9 @@ export function EconomyDashboard() {
 			widgetMap={widgetMap}
 			initialWidgets={initialWidgets}
 			sidebarItems={ECONOMY_SIDEBAR_ITEMS}
-			rail={({ selectedItem, onSelectItem, placedItemIds }) => (
+			storageKey={ECONOMY_DASHBOARD_STORAGE_KEY}
+			isRearranging={isRearranging}
+			rail={({ selectedItem, onSelectItem, placedItemIds, saveLayout, discardLayout }) => (
 				<DashboardRearrangeRail
 					items={ECONOMY_SIDEBAR_ITEMS}
 					selectedItem={selectedItem}
@@ -47,18 +46,13 @@ export function EconomyDashboard() {
 					onToggleRearrange={() =>
 						setIsRearranging((prev) => !prev)
 					}
-					onSave={() =>
-						showToast(
-							"success",
-							t(localizationConstants.widgetBoardLayoutSaved),
-						)
-					}
-					onDiscard={() => {
+					onSave={() => {
+						saveLayout?.();
 						setIsRearranging(false);
-						showToast(
-							"info",
-							t(localizationConstants.widgetRailDiscard),
-						);
+					}}
+					onDiscard={() => {
+						discardLayout?.();
+						setIsRearranging(false);
 					}}
 				/>
 			)}

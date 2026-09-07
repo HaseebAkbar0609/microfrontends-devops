@@ -15,7 +15,6 @@ import { Translate } from "@/utils/translation/translate";
 import {
 	WidgetBarRow,
 	WidgetContent as Content,
-	WidgetMockTag as MockTag,
 	WidgetRow as Row,
 } from "@/features/widgetdashboard/components/WidgetContent";
 import type { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
@@ -70,7 +69,6 @@ export function createEconomyPerformanceWidgets(
 							/>
 						))}
 					</div>
-					<MockTag />
 				</Content>
 			),
 		},
@@ -115,7 +113,6 @@ export function createEconomyPerformanceWidgets(
 							<Translate text={localizationConstants.viewReportsAction} />
 							<ArrowUpRight size={12} />
 						</Link>
-						<MockTag />
 					</div>
 				</Content>
 			),
@@ -150,7 +147,6 @@ export function createEconomyPerformanceWidgets(
 							</span>
 						</div>
 					))}
-					<MockTag />
 				</Content>
 			),
 		},
@@ -170,7 +166,6 @@ export function createEconomyPerformanceWidgets(
 							color={cost.color}
 						/>
 					))}
-					<MockTag />
 				</Content>
 			),
 		},
@@ -209,7 +204,6 @@ export function createEconomyPerformanceWidgets(
 							</p>
 						</div>
 					))}
-					<MockTag />
 				</Content>
 			),
 		},

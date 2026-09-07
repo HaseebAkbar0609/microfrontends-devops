@@ -19,7 +19,6 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
 	WidgetContent as Content,
-	WidgetMockTag as MockTag,
 } from "@/features/widgetdashboard/components/WidgetContent";
 import type { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
 import type { EconomyDashboardState } from "../../../types/economyDashboard.types";
@@ -79,7 +78,6 @@ export function createEconomyEngagementWidgets(
 							</div>
 						</div>
 					</div>
-					<MockTag />
 				</Content>
 			),
 		},
@@ -115,7 +113,6 @@ export function createEconomyEngagementWidgets(
 							</div>
 						))}
 					</div>
-					<MockTag />
 				</Content>
 			),
 		},
@@ -156,7 +153,6 @@ export function createEconomyEngagementWidgets(
 							</div>
 						))}
 					</div>
-					<MockTag />
 				</Content>
 			),
 		},
@@ -186,7 +182,6 @@ export function createEconomyEngagementWidgets(
 					<p className="text-[10px] text-slate-400 mt-1">
 						<Translate text={imageBanner.captionKey} />
 					</p>
-					<MockTag />
 				</Content>
 			),
 		},
@@ -220,7 +215,6 @@ export function createEconomyEngagementWidgets(
 							</div>
 						))}
 					</div>
-					<MockTag />
 				</Content>
 			),
 		},

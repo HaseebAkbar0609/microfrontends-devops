@@ -17,7 +17,6 @@ import { Translate } from "@/utils/translation/translate";
 import {
 	WidgetBarRow,
 	WidgetContent as Content,
-	WidgetMockTag as MockTag,
 	WidgetRow as Row,
 } from "@/features/widgetdashboard/components/WidgetContent";
 import type { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
@@ -60,7 +59,12 @@ export function createEconomyHealthWidgets(
 					<div className="space-y-1 pt-1 border-t border-slate-200/60">
 						<Row
 							label={localizationConstants.healthScoreCashRunway}
-							value={`${healthScore.cashRunwayMonths} ${localizationConstants.monthsUnit}`}
+							value={
+								<span>
+									{healthScore.cashRunwayMonths}{" "}
+									<Translate text={localizationConstants.monthsUnit} />
+								</span>
+							}
 						/>
 						<Row
 							label={localizationConstants.healthScoreGrossMargin}
@@ -68,7 +72,15 @@ export function createEconomyHealthWidgets(
 						/>
 						<Row
 							label={localizationConstants.healthScoreOverdueAr}
-							value={`${formatSek(healthScore.overdueArAmount)} (${healthScore.overdueInvoicesCount} ${localizationConstants.invoicesCountSuffix})`}
+							value={
+								<span>
+									{formatSek(healthScore.overdueArAmount)}{" "}
+									<span className="text-slate-500 font-normal">
+										({healthScore.overdueInvoicesCount}{" "}
+										<Translate text={localizationConstants.invoicesCountSuffix} />)
+									</span>
+								</span>
+							}
 						/>
 					</div>
 
@@ -94,7 +106,6 @@ export function createEconomyHealthWidgets(
 							<Translate text={localizationConstants.viewInvoicesAction} />
 							<ArrowUpRight size={12} />
 						</Link>
-						<MockTag />
 					</div>
 				</Content>
 			),
@@ -118,7 +129,7 @@ export function createEconomyHealthWidgets(
 						<WidgetBarRow
 							label={localizationConstants.econOverviewContributionMargin}
 							percent={Math.round(overview.contributionMarginPercent)}
-							value={`${formatSek(overview.contributionMargin)} (${formatPercent(overview.contributionMarginPercent)})`}
+							value={formatPercent(overview.contributionMarginPercent)}
 							color="bg-emerald-500"
 						/>
 					</div>
@@ -138,7 +149,6 @@ export function createEconomyHealthWidgets(
 							<Translate text={localizationConstants.viewReportsAction} />
 							<ArrowUpRight size={12} />
 						</Link>
-						<MockTag />
 					</div>
 				</Content>
 			),
@@ -152,7 +162,12 @@ export function createEconomyHealthWidgets(
 				<Content>
 					<Row
 						label={localizationConstants.kpiBillableHours}
-						value={`${formatNumber(kpis.billableHours)} ${localizationConstants.hoursShortUnit}`}
+						value={
+							<span>
+								{formatNumber(kpis.billableHours)}{" "}
+								<Translate text={localizationConstants.hoursShortUnit} />
+							</span>
+						}
 					/>
 					<div className="pt-0.5">
 						<WidgetBarRow
@@ -164,7 +179,12 @@ export function createEconomyHealthWidgets(
 					</div>
 					<Row
 						label={localizationConstants.kpiInvoiceLeadTime}
-						value={`${kpis.avgLeadTimeDays} ${localizationConstants.daysShortUnit}`}
+						value={
+							<span>
+								{kpis.avgLeadTimeDays}{" "}
+								<Translate text={localizationConstants.daysShortUnit} />
+							</span>
+						}
 					/>
 					<div className="pt-0.5">
 						<WidgetBarRow
@@ -182,7 +202,6 @@ export function createEconomyHealthWidgets(
 							color="bg-emerald-500"
 						/>
 					</div>
-					<MockTag />
 				</Content>
 			),
 		},
@@ -236,7 +255,6 @@ export function createEconomyHealthWidgets(
 						label={localizationConstants.cashFlowForecast14Days}
 						value={formatSek(cashFlow.forecastCash14Days)}
 					/>
-					<MockTag />
 				</Content>
 			),
 		},
