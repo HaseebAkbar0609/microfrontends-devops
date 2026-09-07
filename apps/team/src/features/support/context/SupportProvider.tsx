@@ -7,8 +7,6 @@ import {
 	useState,
 	type ReactNode,
 } from "react";
-import localizationConstants from "@/utils/translation/constants";
-import { SUPPORT_CURRENT_USER_ID } from "../constants/support.constants";
 import { SUPPORT_AGENTS_SEED } from "../constants/supportAgents.mock";
 import { SUPPORT_CRAFTSMEN_SEED } from "../constants/supportCraftsmen.mock";
 import { SUPPORT_TICKETS_SEED } from "../constants/supportTickets.mock";
@@ -20,11 +18,12 @@ import type {
 	TicketStatus,
 } from "../types";
 import {
-	appendAction,
-	getCreatedActionKey,
-	getSlaMinutesForPriority,
-	nextTicketId,
-} from "../utils/ticketFactories";
+	applyAssignment,
+	applyComment,
+	applyCraftsmanLink,
+	applyStatusChange,
+	buildNewTicket,
+} from "../utils/ticketMutations";
 
 export type SupportContextValue = {
 	tickets: SupportTicket[];
@@ -73,47 +72,16 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 
 	const createTicket = useCallback(
 		(draft: SupportTicketDraft) => {
-			const id = nextTicketId(tickets);
-			const createdAt = new Date().toISOString();
-			const ticket: SupportTicket = {
-				...draft,
-				id,
-				status: "new",
-				createdAt,
-				slaMinutesLeft: getSlaMinutesForPriority(draft.priority),
-				actions: [
-					{
-						id: `${id}-a0`,
-						at: createdAt,
-						authorId: null,
-						text: "",
-						messageKey: getCreatedActionKey(draft.channel),
-						type: "comment",
-					},
-				],
-			};
+			const ticket = buildNewTicket(tickets, draft);
 			setTickets((previous) => [ticket, ...previous]);
-			return id;
+			return ticket.id;
 		},
 		[tickets],
 	);
 
 	const setTicketStatus = useCallback(
 		(ticketId: string, status: TicketStatus) => {
-			patch(ticketId, (ticket) =>
-				appendAction(
-					{ ...ticket, status },
-					{
-						authorId: SUPPORT_CURRENT_USER_ID,
-						text: "",
-						messageKey: localizationConstants.supportActionStatusChanged,
-						// A status id, resolved to a label when the log renders, so the
-						// entry follows the language toggle.
-						messageValue: status,
-						type: status === "escalated" ? "escalation" : "status",
-					},
-				),
-			);
+			patch(ticketId, (ticket) => applyStatusChange(ticket, status));
 		},
 		[patch],
 	);
@@ -121,20 +89,7 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 	const assignTicket = useCallback(
 		(ticketId: string, agentId: string | null) => {
 			const agent = agents.find((candidate) => candidate.id === agentId);
-			patch(ticketId, (ticket) =>
-				appendAction(
-					{ ...ticket, assigneeId: agentId, line: agent?.line ?? ticket.line },
-					{
-						authorId: SUPPORT_CURRENT_USER_ID,
-						text: "",
-						messageKey: agent
-							? localizationConstants.supportActionAssigned
-							: localizationConstants.supportActionUnassigned,
-						messageValue: agent?.name,
-						type: "assignment",
-					},
-				),
-			);
+			patch(ticketId, (ticket) => applyAssignment(ticket, agent, agentId));
 		},
 		[agents, patch],
 	);
@@ -145,18 +100,7 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 				(candidate) => candidate.id === craftsmanId,
 			);
 			patch(ticketId, (ticket) =>
-				appendAction(
-					{ ...ticket, craftsmanId },
-					{
-						authorId: SUPPORT_CURRENT_USER_ID,
-						text: "",
-						messageKey: craftsman
-							? localizationConstants.supportActionCraftsmanLinked
-							: localizationConstants.supportActionCraftsmanUnlinked,
-						messageValue: craftsman?.name,
-						type: "comment",
-					},
-				),
+				applyCraftsmanLink(ticket, craftsman, craftsmanId),
 			);
 		},
 		[craftsmen, patch],
@@ -164,13 +108,7 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 
 	const addComment = useCallback(
 		(ticketId: string, text: string) => {
-			patch(ticketId, (ticket) =>
-				appendAction(ticket, {
-					authorId: SUPPORT_CURRENT_USER_ID,
-					text,
-					type: "comment",
-				}),
-			);
+			patch(ticketId, (ticket) => applyComment(ticket, text));
 		},
 		[patch],
 	);
