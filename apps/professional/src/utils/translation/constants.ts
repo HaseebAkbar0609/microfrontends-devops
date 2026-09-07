@@ -6225,6 +6225,98 @@ export type OrderOrganisationTranslation = {
 	noRecordsFound: string;
 };
 
+export type OrderPaymentPlanTranslation = {
+	paymentPlan: string;
+	paymentPlanTitle: string;
+	paymentPlanBestallareTab: string;
+	paymentPlanUeLevTab: string;
+	viewPaymentPlanBestallare: string;
+	viewPaymentPlanUeLev: string;
+	colPlan: string;
+	colBetalningsplan: string;
+	colFil: string;
+	colForetagsNamn: string;
+	colTotal: string;
+	colStatus: string;
+	colDatum: string;
+	colAktivitet: string;
+	colLyft: string;
+	colBelopp: string;
+	colInnehallet: string;
+	colAttErhalla: string;
+	colType: string;
+	colPdf: string;
+	btnSePlan: string;
+	btnVisaDetaljer: string;
+	btnView: string;
+	btnRedigera: string;
+	btnSkicka: string;
+	btnRadera: string;
+	btnLaggTill: string;
+	btnLaggaTill: string;
+	btnSkapaBetalningsplan: string;
+	btnLaddaUpp: string;
+	btnAvbryt: string;
+	btnSpara: string;
+	sectionProjectInfo: string;
+	sectionBetalningsplan: string;
+	sectionInnehollMedel: string;
+	sectionInnehallnaMedel: string;
+	sectionLaddaUppBetalningsplan: string;
+	lblProjektNr: string;
+	lblProjekt: string;
+	lblKvartersNamn: string;
+	lblBestallare: string;
+	lblKontraktsumma: string;
+	lblKontraktsummaAlt: string;
+	lblStartDatum: string;
+	lblSlutDatum: string;
+	lblSkapadAv: string;
+	lblDatum: string;
+	lblReviderad: string;
+	lblInnehallnaMedelPerAconto: string;
+	lblTotaltInnehalletAvKontraktsumma: string;
+	lblBelopp: string;
+	lblBeloppInnehalletTotalt: string;
+	lblTotalSum: string;
+	lblSkickat: string;
+	lblKvarAttSkicka: string;
+	lblLaddaUppDinaFiler: string;
+	lblNoFileChosen: string;
+	lblAllowedFileFormats: string;
+	lblUppladdadDokument: string;
+	lblByggmote: string;
+	lblPercentage: string;
+	lblDueDate: string;
+	statusEjFakturerad: string;
+	statusFakturerad: string;
+	statusBetald: string;
+	statusForsenad: string;
+	statusGodkand: string;
+	statusGranskas: string;
+	statusEjKlar: string;
+	modalAddMilestoneTitle: string;
+	modalEditMilestoneTitle: string;
+	modalAddPlanTitle: string;
+	modalAddUePlanTitle: string;
+	modalDeletePlanTitle: string;
+	modalDeletePlanDesc: string;
+	modalDeleteMilestoneTitle: string;
+	modalDeleteMilestoneDesc: string;
+	modalSendPlanTitle: string;
+	modalSendPlanDesc: string;
+	errMilestoneExceeds100: string;
+	errMilestoneNameRequired: string;
+	errMilestoneAmountRequired: string;
+	toastPlanSaved: string;
+	toastPlanSent: string;
+	toastPlanDeleted: string;
+	toastMilestoneAdded: string;
+	toastMilestoneDeleted: string;
+	toastDocumentUploaded: string;
+	toastDocumentDeleted: string;
+};
+
 export type OrderInspectionTranslation = {
 	orderInspectionTab: string;
 	orderInspectionTitle: string;
@@ -6299,6 +6391,7 @@ export type Translation = HeaderTranslation &
 	FinancialReportsTranslation &
 	OrderInformationTranslation &
 	OrderOrganisationTranslation &
+	OrderPaymentPlanTranslation &
 	OrderInspectionTranslation;
 
 export type TranslationKeys = keyof Translation;

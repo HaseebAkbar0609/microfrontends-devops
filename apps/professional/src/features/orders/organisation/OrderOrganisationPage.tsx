@@ -46,9 +46,11 @@ import { useOrderOpened } from "@/features/orders/opened/hooks/useOrderOpened";
 
 export interface OrderOrganisationPageProps {
 	orderId?: string;
+	/** When true, hides the RecordNavRow so the page can be embedded as a tab */
+	hideNavRow?: boolean;
 }
 
-export function OrderOrganisationPage({ orderId = "5000-001" }: OrderOrganisationPageProps) {
+export function OrderOrganisationPage({ orderId = "5000-001", hideNavRow = false }: OrderOrganisationPageProps) {
 	const t = useTranslate();
 	const router = useRouter();
 	const { orderData } = useOrderOpened(orderId);
@@ -175,13 +177,15 @@ export function OrderOrganisationPage({ orderId = "5000-001" }: OrderOrganisatio
 			<div className="flex-1 overflow-y-auto px-6 py-6">
 				<div className="w-full space-y-6">
 					{/* Record Back Navigation Bar */}
-					<RecordNavRow
-						title={recordTitle}
-						backHref={`${ORDER_MODULE_BASE_URL}/${orderId}`}
-						className="pt-0"
-						titleClassName="font-sans text-base sm:text-xl md:text-2xl leading-6 sm:leading-7 md:leading-8 tracking-normal align-middle"
-						backButtonClassName="mt-[2px] sm:mt-[5px]"
-					/>
+					{!hideNavRow && (
+						<RecordNavRow
+							title={recordTitle}
+							backHref={`${ORDER_MODULE_BASE_URL}/${orderId}`}
+							className="pt-0"
+							titleClassName="font-sans text-base sm:text-xl md:text-2xl leading-6 sm:leading-7 md:leading-8 tracking-normal align-middle"
+							backButtonClassName="mt-[2px] sm:mt-[5px]"
+						/>
+					)}
 
 					<div className="ml-0 sm:ml-7 space-y-4">
 						{/* Action Bar: Search, Filter, Print, Add */}
