@@ -6,8 +6,8 @@ export const FINANCIAL_REPORTS_ROUTE = "/module/financial-management/forecast";
 export const financialReportsBreadcrumbs = [
 	{ label: localizationConstants.home, href: "/" },
 	{ label: localizationConstants.module, href: "/module" },
-	{ label: localizationConstants.forecast, href: FINANCIAL_REPORTS_ROUTE },
-	{ label: localizationConstants.financialReportsBreadcrumb },
+	{ label: localizationConstants.financialManagement, href: "/module/financial-management" },
+	{ label: localizationConstants.financialReportsTitle },
 ];
 
 export const DEFAULT_REPORT_TAB: ReportTabType = "income_statement";
@@ -44,6 +44,7 @@ export const BAS_ACCOUNTS = {
 	TRAVEL_VEHICLES: "5600",
 	ADMIN_OTHER: "6000",
 	MARKETING_SALES: "6072",
+	SALARIES: "7010",
 	SALARIES_WAGES: "7010",
 	SOCIAL_SECURITY: "7510",
 	DEPRECIATION: "7830",

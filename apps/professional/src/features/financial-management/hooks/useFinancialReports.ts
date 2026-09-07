@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import {
@@ -9,66 +9,61 @@ import {
 	DEFAULT_REPORT_YEAR,
 } from "../constants/financialReports.constants";
 import {
-	addGeneratedReport,
 	formatPeriodLabel,
 	getBalanceSheetData,
-	getGeneratedReportsList,
 	getIncomeStatementData,
-	getReportKpis,
+	getReportKpiSummary,
+	getTransactionsForAccount,
+	getTransactionsForVatBox,
 	getVatReportData,
 } from "../services/financialReports.service";
 import type {
-	GeneratedReportListItem,
-	ReportMainTab,
+	DrilldownTarget,
 	ReportPeriodFilter,
 	ReportPeriodType,
 	ReportTabType,
-	ReportViewMode,
+	TransactionDetailItem,
 } from "../types/financialReports.types";
+import { invoiceRepository } from "../utils/invoiceRepository";
+import { expenseRepository } from "../utils/expenseRepository";
 
 export function useFinancialReports() {
 	const { t } = useTranslation();
-	const [viewMode, setViewMode] = useState<ReportViewMode>("hub");
-	const [activeMainTab, setActiveMainTab] = useState<ReportMainTab>("all");
-	const [activeDetailTab, setActiveDetailTab] = useState<ReportTabType>(DEFAULT_REPORT_TAB);
-	const [searchQuery, setSearchQuery] = useState<string>("");
-	const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+	const [activeTab, setActiveTab] = useState<ReportTabType>(DEFAULT_REPORT_TAB);
 
 	const [periodFilter, setPeriodFilter] = useState<ReportPeriodFilter>({
 		periodType: DEFAULT_REPORT_PERIOD_TYPE,
 		year: DEFAULT_REPORT_YEAR,
-		month: 6,
-		quarter: 2,
+		month: 3,
+		quarter: 1,
 	});
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isExporting, setIsExporting] = useState<boolean>(false);
-	const [customReports, setCustomReports] = useState<GeneratedReportListItem[]>([]);
+	const [repoRevision, setRepoRevision] = useState<number>(0);
 
-	const handleMainTabChange = useCallback((tab: ReportMainTab) => {
-		setIsLoading(true);
-		setActiveMainTab(tab);
-		if (tab !== "all") {
-			setActiveDetailTab(tab);
-		}
-		setTimeout(() => setIsLoading(false), 120);
+	// Drill-down drawer state
+	const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false);
+	const [drilldownTarget, setDrilldownTarget] = useState<DrilldownTarget | null>(null);
+
+	// Reactive subscription to operational repositories
+	useEffect(() => {
+		const unsubInvoice = invoiceRepository.subscribe(() => {
+			setRepoRevision((prev) => prev + 1);
+		});
+		const unsubExpense = expenseRepository.subscribe(() => {
+			setRepoRevision((prev) => prev + 1);
+		});
+		return () => {
+			unsubInvoice();
+			unsubExpense();
+		};
 	}, []);
 
-	const handleDetailTabChange = useCallback((tab: ReportTabType) => {
+	const handleTabChange = useCallback((tab: ReportTabType) => {
 		setIsLoading(true);
-		setActiveDetailTab(tab);
-		setTimeout(() => setIsLoading(false), 120);
-	}, []);
-
-	const handleViewReport = useCallback((report: GeneratedReportListItem) => {
-		setIsLoading(true);
-		setActiveDetailTab(report.reportType);
-		setViewMode("detail");
-		setTimeout(() => setIsLoading(false), 120);
-	}, []);
-
-	const handleBackToHub = useCallback(() => {
-		setViewMode("hub");
+		setActiveTab(tab);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handlePeriodTypeChange = useCallback((periodType: ReportPeriodType) => {
@@ -77,7 +72,7 @@ export function useFinancialReports() {
 			...prev,
 			periodType,
 		}));
-		setTimeout(() => setIsLoading(false), 120);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handleYearChange = useCallback((year: number) => {
@@ -86,7 +81,7 @@ export function useFinancialReports() {
 			...prev,
 			year,
 		}));
-		setTimeout(() => setIsLoading(false), 120);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handleMonthChange = useCallback((month: number) => {
@@ -95,7 +90,7 @@ export function useFinancialReports() {
 			...prev,
 			month,
 		}));
-		setTimeout(() => setIsLoading(false), 120);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
 	const handleQuarterChange = useCallback((quarter: number) => {
@@ -104,92 +99,81 @@ export function useFinancialReports() {
 			...prev,
 			quarter,
 		}));
-		setTimeout(() => setIsLoading(false), 120);
+		setTimeout(() => setIsLoading(false), 60);
 	}, []);
 
-	const handleSearchChange = useCallback((query: string) => {
-		setSearchQuery(query);
-	}, []);
-
-	const handleOpenCreateModal = useCallback(() => {
-		setIsCreateModalOpen(true);
-	}, []);
-
-	const handleCloseCreateModal = useCallback(() => {
-		setIsCreateModalOpen(false);
-	}, []);
-
-	const handleCreateReport = useCallback(
-		(reportType: ReportTabType, periodType: ReportPeriodType, year: number, month?: number, quarter?: number) => {
-			const filter: ReportPeriodFilter = { periodType, year, month, quarter };
-			const periodStr = formatPeriodLabel(filter, t);
-			const titlePrefix =
-				reportType === "income_statement"
-					? t(localizationConstants.reportTabIncomeStatement)
-					: reportType === "balance_sheet"
-						? t(localizationConstants.reportTabBalanceSheet)
-						: t(localizationConstants.reportTabVatReport);
-
-			const newReport: GeneratedReportListItem = {
-				id: `rep-custom-${Date.now()}`,
-				reportType,
-				title: `${titlePrefix}_${year}.pdf`,
-				periodLabel: periodStr,
-				generatedDate: new Date().toISOString().split("T")[0],
-				generatedBy: "System User",
-				status: "ready",
-			};
-
-			addGeneratedReport(newReport);
-			setCustomReports((prev) => [newReport, ...prev]);
-			setPeriodFilter(filter);
-			setActiveDetailTab(reportType);
-			setIsCreateModalOpen(false);
-			setViewMode("detail");
-		},
-		[t],
-	);
-
-	// Granular memoization for report data
+	// Granular memoization for financial reports
 	const incomeStatementData = useMemo(() => {
+		void repoRevision;
 		return getIncomeStatementData(periodFilter);
-	}, [periodFilter]);
+	}, [periodFilter, repoRevision]);
 
 	const balanceSheetData = useMemo(() => {
+		void repoRevision;
 		return getBalanceSheetData(periodFilter);
-	}, [periodFilter]);
+	}, [periodFilter, repoRevision]);
 
 	const vatReportData = useMemo(() => {
+		void repoRevision;
 		return getVatReportData(periodFilter);
-	}, [periodFilter]);
+	}, [periodFilter, repoRevision]);
 
 	const kpiSummary = useMemo(() => {
-		return getReportKpis(periodFilter);
-	}, [periodFilter]);
+		void repoRevision;
+		return getReportKpiSummary(periodFilter);
+	}, [periodFilter, repoRevision]);
 
-	const reportList = useMemo(() => {
-		const raw = getGeneratedReportsList(activeMainTab, periodFilter);
-		const combined = [...customReports, ...raw.filter((r) => !customReports.some((c) => c.id === r.id))];
-		if (!searchQuery.trim()) {
-			return combined;
+	const periodLabel = useMemo(() => {
+		return formatPeriodLabel(periodFilter, t);
+	}, [periodFilter, t]);
+
+	// Drilldown actions
+	const handleAccountClick = useCallback(
+		(accountCode: string, labelKey: string, amount: number) => {
+			setDrilldownTarget({
+				accountCode,
+				labelKey,
+				totalAmount: amount,
+			});
+			setIsDrawerOpen(true);
+		},
+		[],
+	);
+
+	const handleVatBoxClick = useCallback(
+		(boxNumber: string, boxNameKey: string, amount: number) => {
+			setDrilldownTarget({
+				boxNumber,
+				labelKey: boxNameKey,
+				totalAmount: amount,
+			});
+			setIsDrawerOpen(true);
+		},
+		[],
+	);
+
+	const handleCloseDrawer = useCallback(() => {
+		setIsDrawerOpen(false);
+		setDrilldownTarget(null);
+	}, []);
+
+	const drilldownTransactions = useMemo<TransactionDetailItem[]>(() => {
+		void repoRevision;
+		if (!drilldownTarget) return [];
+		if (drilldownTarget.boxNumber) {
+			return getTransactionsForVatBox(drilldownTarget.boxNumber, periodFilter);
 		}
-		const q = searchQuery.toLowerCase();
-		return combined.filter(
-			(r) =>
-				r.title.toLowerCase().includes(q) ||
-				r.periodLabel.toLowerCase().includes(q) ||
-				r.generatedBy.toLowerCase().includes(q),
-		);
-	}, [activeMainTab, periodFilter, searchQuery, customReports]);
+		return getTransactionsForAccount(drilldownTarget.accountCode, periodFilter);
+	}, [drilldownTarget, periodFilter, repoRevision]);
 
-	// Export functions
+	// Export to Excel / CSV
 	const handleExportExcel = useCallback(() => {
 		setIsExporting(true);
 		try {
 			let csvContent = "\uFEFF"; // UTF-8 BOM for Excel
 			const currentPeriodStr = formatPeriodLabel(periodFilter, t);
 
-			if (activeDetailTab === "income_statement") {
+			if (activeTab === "income_statement") {
 				csvContent += `${t(localizationConstants.incomeStatementTitle)};${currentPeriodStr}\r\n`;
 				csvContent += `${t(localizationConstants.incomeStatementColAccount)};${t(localizationConstants.incomeStatementColDescription)};${t(localizationConstants.incomeStatementColCurrentPeriod)};${t(localizationConstants.incomeStatementColPreviousPeriod)};${t(localizationConstants.incomeStatementColVarianceSek)};${t(localizationConstants.incomeStatementColVariancePercent)}\r\n`;
 				for (const row of incomeStatementData.revenueRows) {
@@ -203,7 +187,7 @@ export function useFinancialReports() {
 				}
 				csvContent += `;;${t(localizationConstants.incomeStatementOperatingResult)};${incomeStatementData.operatingResult};;;\r\n`;
 				csvContent += `;;${t(localizationConstants.incomeStatementNetResult)};${incomeStatementData.netResult};;;\r\n`;
-			} else if (activeDetailTab === "balance_sheet") {
+			} else if (activeTab === "balance_sheet") {
 				csvContent += `${t(localizationConstants.balanceSheetTitle)};${currentPeriodStr}\r\n`;
 				csvContent += `${t(localizationConstants.incomeStatementColAccount)};${t(localizationConstants.incomeStatementColDescription)};${t(localizationConstants.incomeStatementColCurrentPeriod)};${t(localizationConstants.incomeStatementColPreviousPeriod)}\r\n`;
 				for (const row of balanceSheetData.fixedAssetRows) {
@@ -236,7 +220,7 @@ export function useFinancialReports() {
 			const url = URL.createObjectURL(blob);
 			const link = document.createElement("a");
 			link.setAttribute("href", url);
-			link.setAttribute("download", `${activeDetailTab}_${periodFilter.year}.csv`);
+			link.setAttribute("download", `${activeTab}_${periodFilter.year}.csv`);
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
@@ -244,7 +228,7 @@ export function useFinancialReports() {
 		} finally {
 			setIsExporting(false);
 		}
-	}, [activeDetailTab, periodFilter, incomeStatementData, balanceSheetData, vatReportData, t]);
+	}, [activeTab, periodFilter, incomeStatementData, balanceSheetData, vatReportData, t]);
 
 	const handlePrint = useCallback(() => {
 		if (typeof window !== "undefined") {
@@ -253,32 +237,29 @@ export function useFinancialReports() {
 	}, []);
 
 	return {
-		viewMode,
-		activeMainTab,
-		activeDetailTab,
+		activeTab,
 		periodFilter,
-		searchQuery,
-		isCreateModalOpen,
+		periodLabel,
 		isLoading,
 		isExporting,
 		incomeStatementData,
 		balanceSheetData,
 		vatReportData,
 		kpiSummary,
-		reportList,
-		handleMainTabChange,
-		handleDetailTabChange,
-		handleViewReport,
-		handleBackToHub,
+		isDrawerOpen,
+		drilldownTarget,
+		drilldownTransactions,
+		handleTabChange,
 		handlePeriodTypeChange,
 		handleYearChange,
 		handleMonthChange,
 		handleQuarterChange,
-		handleSearchChange,
-		handleOpenCreateModal,
-		handleCloseCreateModal,
-		handleCreateReport,
+		handleAccountClick,
+		handleVatBoxClick,
+		handleCloseDrawer,
 		handleExportExcel,
 		handlePrint,
 	};
 }
+
+export default useFinancialReports;

@@ -42,6 +42,13 @@ export interface ExpenseCategoryBreakdown {
 	variancePercent: number;
 }
 
+export interface StatementSubtotal {
+	amount: number;
+	previousPeriodAmount: number;
+	varianceSek: number;
+	variancePercent: number;
+}
+
 export interface IncomeStatementData {
 	filter: ReportPeriodFilter;
 	comparisonYear: number;
@@ -55,12 +62,43 @@ export interface IncomeStatementData {
 	netProfitBeforeTax: number;
 	taxCost: number;
 	netResult: number; // Årets resultat
+	subtotals: {
+		revenue: StatementSubtotal;
+		directCosts: StatementSubtotal;
+		grossProfit: StatementSubtotal;
+		operatingCosts: StatementSubtotal;
+		operatingResult: StatementSubtotal;
+		resultBeforeTax: StatementSubtotal;
+		taxCost: StatementSubtotal;
+		netResult: StatementSubtotal;
+	};
 	revenueRows: IncomeStatementRow[];
 	projectRevenueRows: ProjectRevenueBreakdown[];
 	directCostRows: IncomeStatementRow[];
 	categoryExpenseRows: ExpenseCategoryBreakdown[];
 	operatingCostRows: IncomeStatementRow[];
 	financialRows: IncomeStatementRow[];
+}
+
+export interface TransactionDetailItem {
+	id: string;
+	date: string;
+	documentNo: string;
+	counterparty: string;
+	description: string;
+	netAmount: number;
+	vatAmount: number;
+	totalAmount: number;
+	sourceType: "invoice" | "expense";
+	status: string;
+	linkHref?: string;
+}
+
+export interface DrilldownTarget {
+	accountCode?: string;
+	labelKey: string;
+	totalAmount: number;
+	boxNumber?: string;
 }
 
 export interface BalanceSheetRow {
@@ -131,6 +169,7 @@ export interface GeneratedReportListItem {
 export interface ReportKpiSummary {
 	totalRevenueSek: number;
 	totalExpensesSek: number;
+	operatingResultSek: number; // EBIT from service — do not recompute in UI
 	operatingMarginPercent: number;
 	netResultSek: number;
 	vatBalanceSek: number;

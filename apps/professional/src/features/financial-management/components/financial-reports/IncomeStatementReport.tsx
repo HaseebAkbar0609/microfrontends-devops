@@ -1,18 +1,20 @@
 "use client";
 
 import { useTranslation } from "react-i18next";
+import { ArrowUpRight } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	formatComparisonPeriodLabel,
 	formatPeriodLabel,
 } from "../../services/financialReports.service";
-import type { IncomeStatementData, IncomeStatementRow } from "../../types/financialReports.types";
+import type { IncomeStatementData, IncomeStatementRow, StatementSubtotal } from "../../types/financialReports.types";
 import { RevenueByProjectTable } from "./RevenueByProjectTable";
 import { ExpenseByCategoryTable } from "./ExpenseByCategoryTable";
 
 interface IncomeStatementReportProps {
 	data: IncomeStatementData;
+	onAccountClick?: (accountCode: string, labelKey: string, amount: number) => void;
 }
 
 function formatCurrency(val: number, currency: string): string {
@@ -22,7 +24,7 @@ function formatCurrency(val: number, currency: string): string {
 	}).format(val)} ${currency}`;
 }
 
-export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
+export function IncomeStatementReport({ data, onAccountClick }: IncomeStatementReportProps) {
 	const { t } = useTranslation();
 	const currency = t(localizationConstants.reportCurrencySek);
 	const periodStr = formatPeriodLabel(data.filter, t);
@@ -30,10 +32,30 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 
 	const renderRow = (row: IncomeStatementRow) => {
 		const isPos = row.varianceSek >= 0;
+		const isClickable = Boolean(onAccountClick && row.accountCode);
+
 		return (
-			<tr key={row.id} className="border-b border-slate-100 hover:bg-slate-50/70 transition-colors text-xs">
-				<td className="py-2.5 px-4 font-mono font-medium text-slate-500">{row.accountCode}</td>
-				<td className="py-2.5 px-4 font-medium text-slate-800">
+			<tr
+				key={row.id}
+				onClick={() => {
+					if (isClickable && row.accountCode) {
+						onAccountClick?.(row.accountCode, row.labelKey, row.amount);
+					}
+				}}
+				className={`border-b border-slate-100 transition-colors text-xs ${
+					isClickable ? "cursor-pointer hover:bg-primary/5 group" : "hover:bg-slate-50/70"
+				}`}
+				title={isClickable ? t(localizationConstants.reportClickToDrilldown) : undefined}
+			>
+				<td className="py-2.5 px-4 font-mono font-medium text-slate-500">
+					<span className="flex items-center gap-1">
+						{row.accountCode}
+						{isClickable && (
+							<ArrowUpRight className="w-3 h-3 text-slate-400 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+						)}
+					</span>
+				</td>
+				<td className="py-2.5 px-4 font-medium text-slate-800 group-hover:text-primary transition-colors">
 					<Translate text={row.labelKey} />
 				</td>
 				<td className="py-2.5 px-4 text-right font-semibold text-slate-900">{formatCurrency(row.amount, currency)}</td>
@@ -48,10 +70,8 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 		);
 	};
 
-	const renderSubtotalRow = (labelKey: string, amount: number, prevAmount: number, isMajor = false) => {
-		const variance = amount - prevAmount;
-		const variancePct = prevAmount !== 0 ? Math.round((variance / prevAmount) * 1000) / 10 : 0;
-		const isPos = variance >= 0;
+	const renderSubtotalRow = (labelKey: string, subtotal: StatementSubtotal, isMajor = false) => {
+		const isPos = subtotal.varianceSek >= 0;
 
 		return (
 			<tr className={`border-y ${isMajor ? "bg-slate-100/90 font-bold text-slate-900 border-slate-300 text-sm" : "bg-slate-50 font-semibold text-slate-800 border-slate-200 text-xs"}`}>
@@ -59,13 +79,13 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 				<td className="py-3 px-4">
 					<Translate text={labelKey} />
 				</td>
-				<td className="py-3 px-4 text-right">{formatCurrency(amount, currency)}</td>
-				<td className="py-3 px-4 text-right text-slate-600">{formatCurrency(prevAmount, currency)}</td>
+				<td className="py-3 px-4 text-right">{formatCurrency(subtotal.amount, currency)}</td>
+				<td className="py-3 px-4 text-right text-slate-600">{formatCurrency(subtotal.previousPeriodAmount, currency)}</td>
 				<td className={`py-3 px-4 text-right ${isPos ? "text-emerald-700" : "text-rose-700"}`}>
-					{isPos ? "+" : ""}{formatCurrency(variance, currency)}
+					{isPos ? "+" : ""}{formatCurrency(subtotal.varianceSek, currency)}
 				</td>
 				<td className={`py-3 px-4 text-right ${isPos ? "text-emerald-700" : "text-rose-700"}`}>
-					{isPos ? "+" : ""}{variancePct}%
+					{isPos ? "+" : ""}{subtotal.variancePercent}%
 				</td>
 			</tr>
 		);
@@ -96,10 +116,10 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 				</div>
 
 				<div className="overflow-x-auto">
-					<table className="w-full text-left border-collapse">
+					<table className="w-full text-left border-collapse min-w-[640px]">
 						<thead>
 							<tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-								<th className="py-3 px-4 w-24">
+								<th className="py-3 px-4 w-28">
 									<Translate text={localizationConstants.incomeStatementColAccount} />
 								</th>
 								<th className="py-3 px-4">
@@ -129,8 +149,7 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 							{data.revenueRows.map(renderRow)}
 							{renderSubtotalRow(
 								localizationConstants.incomeStatementSecRevenue,
-								data.totalRevenue,
-								Math.round(data.totalRevenue * 0.93)
+								data.subtotals.revenue,
 							)}
 
 							{/* 2. Direkta kostnader */}
@@ -142,16 +161,14 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 							{data.directCostRows.map(renderRow)}
 							{renderSubtotalRow(
 								localizationConstants.incomeStatementSecDirectCosts,
-								data.totalDirectCosts,
-								Math.round(data.totalDirectCosts * 0.92)
+								data.subtotals.directCosts,
 							)}
 
 							{/* Bruttoresultat */}
 							{renderSubtotalRow(
 								localizationConstants.incomeStatementGrossProfit,
-								data.grossProfit,
-								Math.round(data.grossProfit * 0.94),
-								true
+								data.subtotals.grossProfit,
+								true,
 							)}
 
 							{/* 3. Rörelsekostnader */}
@@ -163,16 +180,14 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 							{data.operatingCostRows.map(renderRow)}
 							{renderSubtotalRow(
 								localizationConstants.incomeStatementSecOperatingCosts,
-								data.totalOperatingExpenses,
-								Math.round(data.totalOperatingExpenses * 0.94)
+								data.subtotals.operatingCosts,
 							)}
 
 							{/* Rörelseresultat (EBIT) */}
 							{renderSubtotalRow(
 								localizationConstants.incomeStatementOperatingResult,
-								data.operatingResult,
-								Math.round(data.operatingResult * 0.93),
-								true
+								data.subtotals.operatingResult,
+								true,
 							)}
 
 							{/* 4. Finansiella poster */}
@@ -186,20 +201,23 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 							{/* Resultat efter finansiella poster */}
 							{renderSubtotalRow(
 								localizationConstants.incomeStatementResultBeforeTax,
-								data.netProfitBeforeTax,
-								Math.round(data.netProfitBeforeTax * 0.92)
+								data.subtotals.resultBeforeTax,
 							)}
 
 							{/* Skatt */}
 							<tr className="border-b border-slate-100 text-xs">
 								<td className="py-2.5 px-4 font-mono font-medium text-slate-500">8910</td>
 								<td className="py-2.5 px-4 font-medium text-slate-800">
-									<Translate text={localizationConstants.incomeStatementTaxCost} /> (20.6%)
+									<Translate text={localizationConstants.incomeStatementTaxCost} />
 								</td>
 								<td className="py-2.5 px-4 text-right font-semibold text-slate-900">{formatCurrency(data.taxCost, currency)}</td>
-								<td className="py-2.5 px-4 text-right text-slate-500">{formatCurrency(Math.round(data.taxCost * 0.92), currency)}</td>
-								<td className="py-2.5 px-4 text-right font-medium text-slate-500">-</td>
-								<td className="py-2.5 px-4 text-right font-medium text-slate-500">-</td>
+								<td className="py-2.5 px-4 text-right text-slate-500">{formatCurrency(data.subtotals.taxCost.previousPeriodAmount, currency)}</td>
+								<td className="py-2.5 px-4 text-right font-medium text-slate-500">
+									{data.subtotals.taxCost.varianceSek !== 0 ? `${formatCurrency(data.subtotals.taxCost.varianceSek, currency)}` : "-"}
+								</td>
+								<td className="py-2.5 px-4 text-right font-medium text-slate-500">
+									{data.subtotals.taxCost.variancePercent !== 0 ? `${data.subtotals.taxCost.variancePercent}%` : "-"}
+								</td>
 							</tr>
 
 							{/* Årets resultat / Nettoresultat */}
@@ -209,9 +227,15 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 									<Translate text={localizationConstants.incomeStatementNetResult} />
 								</td>
 								<td className="py-3.5 px-4 text-right font-black text-emerald-800 text-base">{formatCurrency(data.netResult, currency)}</td>
-								<td className="py-3.5 px-4 text-right text-slate-600">{formatCurrency(Math.round(data.netResult * 0.9), currency)}</td>
-								<td className="py-3.5 px-4 text-right text-emerald-700">+{formatCurrency(Math.round(data.netResult * 0.1), currency)}</td>
-								<td className="py-3.5 px-4 text-right text-emerald-700">+10.0%</td>
+								<td className="py-3.5 px-4 text-right text-slate-600">{formatCurrency(data.subtotals.netResult.previousPeriodAmount, currency)}</td>
+								<td className="py-3.5 px-4 text-right text-emerald-700">
+									{data.subtotals.netResult.varianceSek >= 0 ? "+" : ""}
+									{formatCurrency(data.subtotals.netResult.varianceSek, currency)}
+								</td>
+								<td className="py-3.5 px-4 text-right text-emerald-700">
+									{data.subtotals.netResult.variancePercent >= 0 ? "+" : ""}
+									{data.subtotals.netResult.variancePercent}%
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -226,3 +250,5 @@ export function IncomeStatementReport({ data }: IncomeStatementReportProps) {
 		</div>
 	);
 }
+
+export default IncomeStatementReport;

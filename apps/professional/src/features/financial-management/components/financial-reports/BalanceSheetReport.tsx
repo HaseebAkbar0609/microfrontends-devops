@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle2, AlertCircle } from "lucide-react";
+import { CheckCircle2, AlertCircle, ArrowUpRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -9,6 +9,7 @@ import type { BalanceSheetData, BalanceSheetRow } from "../../types/financialRep
 
 interface BalanceSheetReportProps {
 	data: BalanceSheetData;
+	onAccountClick?: (accountCode: string, labelKey: string, amount: number) => void;
 }
 
 function formatCurrency(val: number, currency: string): string {
@@ -18,21 +19,43 @@ function formatCurrency(val: number, currency: string): string {
 	}).format(val)} ${currency}`;
 }
 
-export function BalanceSheetReport({ data }: BalanceSheetReportProps) {
+export function BalanceSheetReport({ data, onAccountClick }: BalanceSheetReportProps) {
 	const { t } = useTranslation();
 	const currency = t(localizationConstants.reportCurrencySek);
 	const periodStr = formatPeriodLabel(data.filter, t);
 
-	const renderRow = (row: BalanceSheetRow) => (
-		<tr key={row.id} className="border-b border-slate-100 hover:bg-slate-50/70 transition-colors text-xs">
-			<td className="py-2.5 px-3 font-mono font-medium text-slate-500 w-16">{row.accountCode}</td>
-			<td className="py-2.5 px-3 font-medium text-slate-800">
-				<Translate text={row.labelKey} />
-			</td>
-			<td className="py-2.5 px-3 text-right font-semibold text-slate-900">{formatCurrency(row.amount, currency)}</td>
-			<td className="py-2.5 px-3 text-right text-slate-500">{formatCurrency(row.previousPeriodAmount, currency)}</td>
-		</tr>
-	);
+	const renderRow = (row: BalanceSheetRow) => {
+		const isClickable = Boolean(onAccountClick && row.accountCode);
+
+		return (
+			<tr
+				key={row.id}
+				onClick={() => {
+					if (isClickable && row.accountCode) {
+						onAccountClick?.(row.accountCode, row.labelKey, row.amount);
+					}
+				}}
+				className={`border-b border-slate-100 transition-colors text-xs ${
+					isClickable ? "cursor-pointer hover:bg-primary/5 group" : "hover:bg-slate-50/70"
+				}`}
+				title={isClickable ? t(localizationConstants.reportClickToDrilldown) : undefined}
+			>
+				<td className="py-2.5 px-3 font-mono font-medium text-slate-500 w-20">
+					<span className="flex items-center gap-1">
+						{row.accountCode}
+						{isClickable && (
+							<ArrowUpRight className="w-3 h-3 text-slate-400 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+						)}
+					</span>
+				</td>
+				<td className="py-2.5 px-3 font-medium text-slate-800 group-hover:text-primary transition-colors">
+					<Translate text={row.labelKey} />
+				</td>
+				<td className="py-2.5 px-3 text-right font-semibold text-slate-900">{formatCurrency(row.amount, currency)}</td>
+				<td className="py-2.5 px-3 text-right text-slate-500">{formatCurrency(row.previousPeriodAmount, currency)}</td>
+			</tr>
+		);
+	};
 
 	return (
 		<div className="space-y-6">
@@ -88,41 +111,43 @@ export function BalanceSheetReport({ data }: BalanceSheetReportProps) {
 							<span className="text-xs font-bold text-slate-700">{periodStr}</span>
 						</div>
 
-						<table className="w-full text-left border-collapse">
-							<thead>
-								<tr className="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-									<th className="py-2.5 px-3">
-										<Translate text={localizationConstants.incomeStatementColAccount} />
-									</th>
-									<th className="py-2.5 px-3">
-										<Translate text={localizationConstants.incomeStatementColDescription} />
-									</th>
-									<th className="py-2.5 px-3 text-right">
-										<Translate text={localizationConstants.incomeStatementColCurrentPeriod} />
-									</th>
-									<th className="py-2.5 px-3 text-right">
-										<Translate text={localizationConstants.incomeStatementColPreviousPeriod} />
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{/* Fixed Assets */}
-								<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
-									<td colSpan={4} className="py-2 px-3">
-										<Translate text={localizationConstants.balanceSheetSecFixedAssets} />
-									</td>
-								</tr>
-								{data.fixedAssetRows.map(renderRow)}
+						<div className="overflow-x-auto">
+							<table className="w-full text-left border-collapse min-w-[360px]">
+								<thead>
+									<tr className="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+										<th className="py-2.5 px-3 w-20">
+											<Translate text={localizationConstants.balanceSheetColAccount} />
+										</th>
+										<th className="py-2.5 px-3">
+											<Translate text={localizationConstants.balanceSheetColDescription} />
+										</th>
+										<th className="py-2.5 px-3 text-right">
+											<Translate text={localizationConstants.balanceSheetColCurrentPeriod} />
+										</th>
+										<th className="py-2.5 px-3 text-right">
+											<Translate text={localizationConstants.balanceSheetColPreviousPeriod} />
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{/* Fixed Assets */}
+									<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
+										<td colSpan={4} className="py-2 px-3">
+											<Translate text={localizationConstants.balanceSheetSecFixedAssets} />
+										</td>
+									</tr>
+									{data.fixedAssetRows.map(renderRow)}
 
-								{/* Current Assets */}
-								<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
-									<td colSpan={4} className="py-2 px-3">
-										<Translate text={localizationConstants.balanceSheetSecCurrentAssets} />
-									</td>
-								</tr>
-								{data.currentAssetRows.map(renderRow)}
-							</tbody>
-						</table>
+									{/* Current Assets */}
+									<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
+										<td colSpan={4} className="py-2 px-3">
+											<Translate text={localizationConstants.balanceSheetSecCurrentAssets} />
+										</td>
+									</tr>
+									{data.currentAssetRows.map(renderRow)}
+								</tbody>
+							</table>
+						</div>
 					</div>
 
 					{/* Total Assets Footer */}
@@ -146,49 +171,51 @@ export function BalanceSheetReport({ data }: BalanceSheetReportProps) {
 							<span className="text-xs font-bold text-slate-700">{periodStr}</span>
 						</div>
 
-						<table className="w-full text-left border-collapse">
-							<thead>
-								<tr className="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-									<th className="py-2.5 px-3">
-										<Translate text={localizationConstants.incomeStatementColAccount} />
-									</th>
-									<th className="py-2.5 px-3">
-										<Translate text={localizationConstants.incomeStatementColDescription} />
-									</th>
-									<th className="py-2.5 px-3 text-right">
-										<Translate text={localizationConstants.incomeStatementColCurrentPeriod} />
-									</th>
-									<th className="py-2.5 px-3 text-right">
-										<Translate text={localizationConstants.incomeStatementColPreviousPeriod} />
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{/* Equity */}
-								<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
-									<td colSpan={4} className="py-2 px-3">
-										<Translate text={localizationConstants.balanceSheetSecEquity} />
-									</td>
-								</tr>
-								{data.equityRows.map(renderRow)}
+						<div className="overflow-x-auto">
+							<table className="w-full text-left border-collapse min-w-[360px]">
+								<thead>
+									<tr className="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+										<th className="py-2.5 px-3 w-20">
+											<Translate text={localizationConstants.balanceSheetColAccount} />
+										</th>
+										<th className="py-2.5 px-3">
+											<Translate text={localizationConstants.balanceSheetColDescription} />
+										</th>
+										<th className="py-2.5 px-3 text-right">
+											<Translate text={localizationConstants.balanceSheetColCurrentPeriod} />
+										</th>
+										<th className="py-2.5 px-3 text-right">
+											<Translate text={localizationConstants.balanceSheetColPreviousPeriod} />
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{/* Equity */}
+									<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
+										<td colSpan={4} className="py-2 px-3">
+											<Translate text={localizationConstants.balanceSheetSecEquity} />
+										</td>
+									</tr>
+									{data.equityRows.map(renderRow)}
 
-								{/* Long-term Liabilities */}
-								<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
-									<td colSpan={4} className="py-2 px-3">
-										<Translate text={localizationConstants.balanceSheetSecLongTermLiab} />
-									</td>
-								</tr>
-								{data.longTermLiabilityRows.map(renderRow)}
+									{/* Long-term Liabilities */}
+									<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
+										<td colSpan={4} className="py-2 px-3">
+											<Translate text={localizationConstants.balanceSheetSecLongTermLiab} />
+										</td>
+									</tr>
+									{data.longTermLiabilityRows.map(renderRow)}
 
-								{/* Short-term Liabilities */}
-								<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
-									<td colSpan={4} className="py-2 px-3">
-										<Translate text={localizationConstants.balanceSheetSecShortTermLiab} />
-									</td>
-								</tr>
-								{data.shortTermLiabilityRows.map(renderRow)}
-							</tbody>
-						</table>
+									{/* Short-term Liabilities */}
+									<tr className="bg-slate-100/50 text-[11px] font-bold text-slate-600 uppercase">
+										<td colSpan={4} className="py-2 px-3">
+											<Translate text={localizationConstants.balanceSheetSecShortTermLiab} />
+										</td>
+									</tr>
+									{data.shortTermLiabilityRows.map(renderRow)}
+								</tbody>
+							</table>
+						</div>
 					</div>
 
 					{/* Total Equity and Liabilities Footer */}
@@ -205,3 +232,5 @@ export function BalanceSheetReport({ data }: BalanceSheetReportProps) {
 		</div>
 	);
 }
+
+export default BalanceSheetReport;

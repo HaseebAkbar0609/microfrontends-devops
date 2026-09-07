@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import { AlertCircle, CheckCircle2, ArrowUpRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -9,6 +9,7 @@ import type { VatReportBox, VatReportData } from "../../types/financialReports.t
 
 interface VatReportProps {
 	data: VatReportData;
+	onVatBoxClick?: (boxNumber: string, boxNameKey: string, amount: number) => void;
 }
 
 function formatCurrency(val: number, currency: string): string {
@@ -18,7 +19,7 @@ function formatCurrency(val: number, currency: string): string {
 	}).format(val)} ${currency}`;
 }
 
-export function VatReport({ data }: VatReportProps) {
+export function VatReport({ data, onVatBoxClick }: VatReportProps) {
 	const { t } = useTranslation();
 	const currency = t(localizationConstants.reportCurrencySek);
 	const periodStr = formatPeriodLabel(data.filter, t);
@@ -27,29 +28,41 @@ export function VatReport({ data }: VatReportProps) {
 	const renderBoxRow = (box: VatReportBox) => {
 		const rateText = box.vatRate ? `${Math.round(box.vatRate * 100)}%` : "-";
 		const isResult = box.isResultBox;
+		const isClickable = Boolean(onVatBoxClick && box.boxNumber);
 
 		return (
 			<tr
 				key={box.boxNumber}
+				onClick={() => {
+					if (isClickable && box.boxNumber) {
+						onVatBoxClick?.(box.boxNumber, box.boxNameKey, box.vatAmount || box.baseAmount || 0);
+					}
+				}}
 				className={`border-b border-slate-100 text-xs transition-colors ${
 					isResult
 						? "bg-amber-50/70 border-t-2 border-amber-300 font-bold"
-						: "hover:bg-slate-50/70"
+						: isClickable
+							? "cursor-pointer hover:bg-primary/5 group"
+							: "hover:bg-slate-50/70"
 				}`}
+				title={isClickable ? t(localizationConstants.reportClickToDrilldown) : undefined}
 			>
-				<td className="py-3 px-4 w-28">
+				<td className="py-3 px-4 w-32">
 					<span
 						className={`inline-flex items-center justify-center font-mono font-bold px-2.5 py-1 rounded-md text-xs gap-1 ${
 							isResult
 								? "bg-amber-200 text-amber-950 shadow-sm"
-								: "bg-slate-100 text-slate-800"
+								: "bg-slate-100 text-slate-800 group-hover:bg-primary/10 group-hover:text-primary transition-colors"
 						}`}
 					>
 						<Translate text={localizationConstants.boxNumberPrefix} /> {box.boxNumber}
+						{isClickable && !isResult && (
+							<ArrowUpRight className="w-3 h-3 ml-0.5 text-slate-400 group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
+						)}
 					</span>
 				</td>
 				<td className="py-3 px-4">
-					<p className={`font-semibold ${isResult ? "text-amber-950 text-sm" : "text-slate-800"}`}>
+					<p className={`font-semibold ${isResult ? "text-amber-950 text-sm" : "text-slate-800 group-hover:text-primary transition-colors"}`}>
 						<Translate text={box.boxNameKey} />
 					</p>
 					<p className="text-[11px] text-slate-500 mt-0.5">
@@ -109,53 +122,63 @@ export function VatReport({ data }: VatReportProps) {
 					</div>
 				</div>
 				<div className="text-right">
-					<span className="text-lg font-black tracking-tight">
+					<span
+						className={`text-lg font-black px-4 py-1.5 rounded-lg border shadow-xs ${
+							isPayable
+								? "bg-white border-amber-300 text-amber-950"
+								: "bg-white border-emerald-300 text-emerald-950"
+						}`}
+					>
 						{formatCurrency(Math.abs(data.netVatPayable), currency)}
 					</span>
 				</div>
 			</div>
 
-			{/* Main Skatteverket table */}
+			{/* Skatteverket Official Format Table */}
 			<div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-				<div className="p-4 border-b border-slate-200 bg-slate-50/70 flex items-center justify-between">
+				<div className="p-6 border-b border-slate-200 bg-gradient-to-r from-slate-50/60 to-white flex flex-col sm:flex-row sm:items-center justify-between gap-4">
 					<div>
-						<h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+						<h3 className="text-lg font-bold text-slate-900 tracking-tight">
 							<Translate text={localizationConstants.vatReportTitle} />
 						</h3>
 						<p className="text-xs text-slate-500 mt-0.5">
 							<Translate text={localizationConstants.vatReportSubtitle} />
 						</p>
 					</div>
-					<span className="text-xs font-semibold px-2.5 py-1 bg-white border border-slate-200 rounded-md text-slate-700 shadow-sm">
-						SKV 4700
-					</span>
+					<div className="text-xs font-semibold px-3 py-1 bg-slate-100 text-slate-700 rounded-md">
+						{periodStr}
+					</div>
 				</div>
 
 				<div className="overflow-x-auto">
-					<table className="w-full text-left border-collapse">
+					<table className="w-full text-left border-collapse min-w-[640px]">
 						<thead>
-							<tr className="bg-slate-50/40 border-b border-slate-200 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-								<th className="py-2.5 px-4 w-28">
+							<tr className="bg-slate-50/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+								<th className="py-3 px-4 w-32">
 									<Translate text={localizationConstants.vatReportColBox} />
 								</th>
-								<th className="py-2.5 px-4">
+								<th className="py-3 px-4">
 									<Translate text={localizationConstants.vatReportColSpecification} />
 								</th>
-								<th className="py-2.5 px-4 text-right w-36">
+								<th className="py-3 px-4 text-right w-40">
 									<Translate text={localizationConstants.vatReportColBaseAmount} />
 								</th>
-								<th className="py-2.5 px-4 text-center w-24">
+								<th className="py-3 px-4 text-center w-28">
 									<Translate text={localizationConstants.vatReportColRate} />
 								</th>
-								<th className="py-2.5 px-4 text-right w-36">
+								<th className="py-3 px-4 text-right w-40">
 									<Translate text={localizationConstants.vatReportColVatAmount} />
 								</th>
 							</tr>
 						</thead>
-						<tbody>{data.boxes.map(renderBoxRow)}</tbody>
+						<tbody>
+							{data.boxes.map(renderBoxRow)}
+						</tbody>
 					</table>
 				</div>
 			</div>
 		</div>
 	);
 }
+
+export default VatReport;

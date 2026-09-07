@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { RecordNavRow } from "@/components/layout/navigation";
 import { ORDER_MODULE_BASE_URL } from "@/features/orders/data/orderNav.config";
 import { useTranslate } from "@/utils/translation/translate";
@@ -15,9 +16,11 @@ function sanitizeText(input?: string): string {
 
 export interface OrderOpenedPageProps {
   orderId?: string;
+  initialTab?: string;
 }
 
-export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
+export function OrderOpenedPage({ orderId, initialTab }: OrderOpenedPageProps) {
+  const [activeTab, setActiveTab] = useState<string>(initialTab || "project-details");
   const { orderData, updateOrderData, isLoading } = useOrderOpened(orderId);
   const t = useTranslate();
 
@@ -48,8 +51,8 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
             title={recordTitle}
             backHref={`${ORDER_MODULE_BASE_URL}/overview`}
             className="pt-0"
-            titleClassName="font-sans text-2xl leading-8 tracking-normal align-middle"
-            backButtonClassName="mt-[5px]"
+            titleClassName="font-sans text-base sm:text-xl md:text-2xl leading-6 sm:leading-7 md:leading-8 tracking-normal align-middle"
+            backButtonClassName="mt-0.5 sm:mt-[5px]"
           />
 
           {/* Sections with Tabs with refined left margin below back button */}
@@ -68,6 +71,8 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
               <OrderOpenedSections
                 data={orderData}
                 onUpdateData={updateOrderData}
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
               />
             )}
           </div>
