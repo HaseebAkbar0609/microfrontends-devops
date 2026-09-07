@@ -3121,6 +3121,13 @@ export const svOffer: OfferTranslation = {
 	machineSidebarPurchase: "Maskin inköp",
 	machineSidebarStatistics: "Statistik",
 	machineSidebarArchive: "Arkiv",
+	designDashboard: "Projektering Dashboard",
+	designSidebarRitningar: "Ritningar",
+	designSidebarBIM: "BIM",
+	designSidebarHandlingar: "Handlingar",
+	designSidebarGranskning: "Granskning",
+	designSidebarRevisioner: "Revisioner",
+	designSidebarArchive: "Arkiv",
 	// Machine Dashboard
 	machineDashRearrange: "Ordna om",
 	machineDashSave: "Spara",

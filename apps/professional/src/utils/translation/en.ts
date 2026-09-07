@@ -3231,6 +3231,13 @@ export const enOffer: OfferTranslation = {
 	machineSidebarPurchase: "Machine Purchase",
 	machineSidebarStatistics: "Statistics",
 	machineSidebarArchive: "Archive",
+	designDashboard: "Design Dashboard",
+	designSidebarRitningar: "Drawings",
+	designSidebarBIM: "BIM",
+	designSidebarHandlingar: "Documents",
+	designSidebarGranskning: "Reviews",
+	designSidebarRevisioner: "Revisions",
+	designSidebarArchive: "Archive",
 	// Machine Dashboard
 	machineDashRearrange: "Rearrange",
 	machineDashSave: "Save",
