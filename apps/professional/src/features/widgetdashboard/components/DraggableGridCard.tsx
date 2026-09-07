@@ -6,6 +6,7 @@ interface DraggableGridCardProps {
   className?: string;
   isSwapTarget?: boolean;
   disabled?: boolean;
+  cancel?: string;
   onDragStart: () => void;
   onDrag: (clientX: number, clientY: number) => void;
   onDragStop: (clientX: number, clientY: number) => void;
@@ -19,6 +20,7 @@ export const DraggableGridCard = ({
   className,
   isSwapTarget,
   disabled,
+  cancel = "a, button, [role='button'], input, textarea, select, .no-drag",
   onDragStart,
   onDrag,
   onDragStop,
@@ -55,6 +57,7 @@ export const DraggableGridCard = ({
     <Draggable
       key={dragKey}
       disabled={disabled}
+      cancel={cancel}
       nodeRef={nodeRef as React.RefObject<HTMLElement>}
       onStart={handleStart}
       onDrag={handleDrag}

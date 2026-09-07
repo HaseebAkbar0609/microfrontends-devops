@@ -70,3 +70,11 @@ export * from "./types/rotRut.types";
 export * from "./constants/rotRut.constants";
 export * from "./utils/rotRutRepository";
 export * from "./hooks/useRotRut";
+export * from "./components/dashboard/EconomyDashboard";
+export * from "./components/dashboard/EconomyDashboardPage";
+export * from "./components/dashboard/EconomyDashboardConfig";
+export * from "./hooks/useEconomyDashboard";
+export * from "./types/economyDashboard.types";
+export * from "./constants/economyDashboard.constants";
+export * from "./mock/economyDashboardMockData";
+

@@ -3,6 +3,12 @@ import localizationConstants from "@/utils/translation/constants";
 
 export const financialNavItems: RouteTabItem[] = [
 	{
+		id: "overview",
+		labelKey: localizationConstants.dashboard,
+		href: "/module/financial-management",
+		exact: true,
+	},
+	{
 		id: "invoice",
 		labelKey: localizationConstants.invoice,
 		href: "/module/financial-management/invoice",
