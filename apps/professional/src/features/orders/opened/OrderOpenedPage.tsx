@@ -23,23 +23,12 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
 
   const rawSerialNo = orderData.orderDetails.serialNo || orderData.id || "";
   const serialNo = sanitizeText(rawSerialNo);
-  const recordTitle = serialNo ? (
-    <span>
-      <span className="text-slate-400 font-normal">
-        {t(localizationConstants.order)} {serialNo} /{" "}
-      </span>
-      <span className="text-slate-900 font-semibold">
-        {t(localizationConstants.orderInfoSection)}
-      </span>
-    </span>
-  ) : (
-    <span className="text-slate-900 font-semibold">
-      {t(localizationConstants.orderInfoSection)}
-    </span>
-  );
+  const recordTitle = serialNo
+    ? `${t(localizationConstants.order)} ${serialNo}`
+    : t(localizationConstants.order);
 
   return (
-    <div className="flex h-full flex-col bg-slate-50/50 relative overflow-hidden">
+    <div className="flex h-full flex-col bg-white relative overflow-hidden">
       {/* Main Content Scrollable Container */}
       <div className="flex-1 overflow-y-auto px-6 py-6">
         <div className="w-full space-y-6">
@@ -52,7 +41,7 @@ export function OrderOpenedPage({ orderId }: OrderOpenedPageProps) {
             backButtonClassName="mt-[5px]"
           />
 
-          {/* Sections with Tabs with refined left margin below back button */}
+          {/* Sections with Tabs */}
           <div className="ml-7">
             {isLoading ? (
               <div className="space-y-4">

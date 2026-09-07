@@ -138,6 +138,9 @@ export const API_PATH = {
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		ORGANISATION: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}/organisation`,
+		PAYMENT_PLANS: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}/payment-plans`,
+		PAYMENT_PLAN_DETAIL: (orderId: string, planId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/payment-plans/${planId}`,
+		PAYMENT_PLAN_SEND: (orderId: string, planId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/payment-plans/${planId}/send`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {
