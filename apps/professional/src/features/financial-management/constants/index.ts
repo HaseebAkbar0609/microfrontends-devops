@@ -18,6 +18,11 @@ export const financialNavItems: RouteTabItem[] = [
 		href: "/module/financial-management/forecast",
 	},
 	{
+		id: "rot-rut",
+		labelKey: localizationConstants.rotRutNav,
+		href: "/module/financial-management/rot-rut",
+	},
+	{
 		id: "personnel",
 		labelKey: localizationConstants.personnel,
 		href: "/module/financial-management/personnel",
