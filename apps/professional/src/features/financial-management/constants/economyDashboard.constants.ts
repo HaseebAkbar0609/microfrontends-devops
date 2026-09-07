@@ -1,23 +1,9 @@
-import type { BreadcrumbItem } from "@/types/common";
-import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
-
 export const ECONOMY_DASHBOARD_ROUTE = "/module/financial-management";
+
 export const ECONOMY_DASHBOARD_STORAGE_KEY = "tfs_professional_economy_dashboard_layout_v1";
 
-/** Breadcrumb navigation for Economy Dashboard */
-export function economyDashboardBreadcrumbs(
-	section?: TranslationKeys,
-): BreadcrumbItem[] {
-	return [
-		{ label: localizationConstants.home, href: "/dashboard" },
-		{ label: localizationConstants.moduleItem },
-		{
-			label: localizationConstants.financialManagement,
-			href: ECONOMY_DASHBOARD_ROUTE,
-		},
-		{ label: section ?? localizationConstants.dashboard },
-	];
-}
+export { economyDashboardBreadcrumbs } from "./economyNav.config";
+
 
 /** Standard widget 3-column span class for responsive dashboard grid */
 export const ECONOMY_WIDGET_COL_SPAN = "col-span-12 md:col-span-6 xl:col-span-4";

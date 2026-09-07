@@ -58,11 +58,12 @@ export function RotRutOverviewPage() {
 			<PageHeader
 				title={localizationConstants.rotRutTitle}
 				breadcrumbs={rotRutBreadcrumbs}
-				className="border-b-0 px-8 pt-6 pb-2"
+				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
 			{/* Main Content Area */}
-			<div className="px-8 py-4 flex-1 max-w-7xl mx-auto w-full">
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto">
+
 				{/* 1. Summary KPI Cards */}
 				<RotRutSummaryCards summary={kpiSummary} />
 

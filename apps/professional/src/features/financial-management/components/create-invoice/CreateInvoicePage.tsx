@@ -54,11 +54,12 @@ export function CreateInvoicePage() {
 						<Button
 							variant="ghost"
 							size="icon"
-							aria-label="Tillbaka"
+							aria-label={t(localizationConstants.expenseDetailBack)}
 							className="h-8 w-8 text-slate-700 hover:text-slate-900 cursor-pointer -ml-2"
 						>
 							<ArrowLeft className="h-4 w-4" />
 						</Button>
+
 					</Link>
 					<div>
 						<h1 className="text-lg font-bold text-slate-900 leading-tight">

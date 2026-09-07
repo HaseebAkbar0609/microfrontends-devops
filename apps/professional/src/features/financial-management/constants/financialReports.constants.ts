@@ -3,12 +3,12 @@ import type { ReportPeriodType, ReportTabType } from "../types/financialReports.
 
 export const FINANCIAL_REPORTS_ROUTE = "/module/financial-management/forecast";
 
-export const financialReportsBreadcrumbs = [
-	{ label: localizationConstants.home, href: "/" },
-	{ label: localizationConstants.module, href: "/module" },
-	{ label: localizationConstants.financialManagement, href: "/module/financial-management" },
-	{ label: localizationConstants.financialReportsTitle },
-];
+import { economyBreadcrumbs } from "./economyNav.config";
+
+export const financialReportsBreadcrumbs = economyBreadcrumbs(
+	localizationConstants.financialReportsTitle,
+);
+
 
 export const DEFAULT_REPORT_TAB: ReportTabType = "income_statement";
 export const DEFAULT_REPORT_PERIOD_TYPE: ReportPeriodType = "yearly";

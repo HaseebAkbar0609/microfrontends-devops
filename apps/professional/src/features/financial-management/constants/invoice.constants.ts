@@ -48,9 +48,9 @@ export const REMINDER_TABLE_COLUMNS: ReminderColumnConfig[] = [
 	{ field: "status", labelKey: localizationConstants.invoiceRemindersColStatus },
 ];
 
-export const invoiceBreadcrumbs = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.moduleItem, href: "/module/financial-management" },
-	{ label: localizationConstants.invoice, href: "/module/financial-management/invoice" },
-	{ label: localizationConstants.invoiceOverviewTitle },
-];
+import { economyBreadcrumbs } from "./economyNav.config";
+
+export const invoiceBreadcrumbs = economyBreadcrumbs(
+	localizationConstants.invoiceOverviewTitle,
+);
+

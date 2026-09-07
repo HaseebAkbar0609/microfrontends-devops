@@ -11,9 +11,9 @@ export const ROT_RUT_ROUTE = "/module/financial-management/rot-rut";
 export const DEFAULT_PAGE_SIZE = 10;
 export const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
 
-export const rotRutBreadcrumbs: BreadcrumbItem[] = [
-	{ label: localizationConstants.home, href: "/" },
-	{ label: localizationConstants.module, href: "/module" },
-	{ label: localizationConstants.financialManagement, href: "/module/financial-management" },
-	{ label: localizationConstants.rotRutBreadcrumb, href: ROT_RUT_ROUTE },
-];
+import { economyBreadcrumbs } from "./economyNav.config";
+
+export const rotRutBreadcrumbs: BreadcrumbItem[] = economyBreadcrumbs(
+	localizationConstants.rotRutBreadcrumb,
+);
+

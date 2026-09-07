@@ -84,13 +84,12 @@ export const DEFAULT_COST_CENTERS_LIST = [
 export const EXPENSE_LIST_ROUTE = "/module/financial-management/economy";
 export const CREATE_EXPENSE_ROUTE = "/module/financial-management/economy/create";
 
-export const registerExpenseBreadcrumbs = [
-	{ label: localizationConstants.home, href: "/" },
-	{ label: localizationConstants.module, href: "/module" },
-	{ label: localizationConstants.economy, href: EXPENSE_LIST_ROUTE },
-	{ label: localizationConstants.expenseOverviewTitle, href: EXPENSE_LIST_ROUTE },
-	{ label: localizationConstants.registerExpenseBreadcrumb, href: CREATE_EXPENSE_ROUTE },
-];
+import { economyBreadcrumbs } from "./economyNav.config";
+
+export const registerExpenseBreadcrumbs = economyBreadcrumbs(
+	localizationConstants.registerExpenseBreadcrumb,
+);
+
 
 export const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024; // 10MB
 export const ALLOWED_ATTACHMENT_TYPES = ["application/pdf", "image/png", "image/jpeg", "image/jpg"];

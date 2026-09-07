@@ -6,7 +6,6 @@ import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
@@ -18,7 +17,8 @@ import {
 	DialogDescription,
 	DialogFooter,
 } from "@/components/ui/dialog";
-import { registerExpenseBreadcrumbs, EXPENSE_LIST_ROUTE } from "../../constants/expense.constants";
+import { EXPENSE_LIST_ROUTE } from "../../constants/expense.constants";
+
 import { useRegisterExpense } from "../../hooks/useRegisterExpense";
 import { RegisterExpenseHeaderForm } from "./RegisterExpenseHeaderForm";
 import { RegisterExpenseLineItemsTable } from "./RegisterExpenseLineItemsTable";
@@ -64,25 +64,23 @@ export function RegisterExpensePage() {
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen pb-12 font-sans">
-			{/* Page Header with Back Button & Breadcrumbs */}
+			{/* Page Header with Back Button & Record Title (Pattern 2/3: No Breadcrumbs per Rule 2 & 5) */}
 			<div className="bg-white border-b border-slate-200 px-8 pt-4 pb-0 sticky top-0 z-20 shadow-xs">
 				<div className="flex items-center gap-3">
 					<Link href={EXPENSE_LIST_ROUTE}>
 						<Button
 							variant="ghost"
 							size="icon"
-							aria-label="Back"
+							aria-label={t(localizationConstants.expenseDetailBack)}
 							className="h-8 w-8 text-slate-700 hover:text-slate-900 cursor-pointer -ml-2"
 						>
 							<ArrowLeft className="h-4 w-4" />
 						</Button>
 					</Link>
 					<div>
-						<PageHeader
-							title={localizationConstants.registerExpenseTitle}
-							breadcrumbs={registerExpenseBreadcrumbs}
-							className="border-b-0 p-0"
-						/>
+						<h1 className="font-sans font-semibold text-2xl leading-8 tracking-normal text-[#0A0A0A]">
+							<Translate text={localizationConstants.registerExpenseTitle} />
+						</h1>
 					</div>
 				</div>
 
@@ -106,6 +104,7 @@ export function RegisterExpensePage() {
 					</Tabs>
 				</div>
 			</div>
+
 
 			{/* Main Form Content */}
 			<div className="px-8 py-6 max-w-7xl mx-auto w-full flex-1">
