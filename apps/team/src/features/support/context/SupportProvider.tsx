@@ -8,6 +8,7 @@ import {
 	type ReactNode,
 } from "react";
 import localizationConstants from "@/utils/translation/constants";
+import { SUPPORT_CURRENT_USER_ID } from "../constants/support.constants";
 import { SUPPORT_AGENTS_SEED } from "../constants/supportAgents.mock";
 import { SUPPORT_CRAFTSMEN_SEED } from "../constants/supportCraftsmen.mock";
 import { SUPPORT_TICKETS_SEED } from "../constants/supportTickets.mock";
@@ -103,7 +104,7 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 				appendAction(
 					{ ...ticket, status },
 					{
-						authorId: null,
+						authorId: SUPPORT_CURRENT_USER_ID,
 						text: "",
 						messageKey: localizationConstants.supportActionStatusChanged,
 						// A status id, resolved to a label when the log renders, so the
@@ -124,7 +125,7 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 				appendAction(
 					{ ...ticket, assigneeId: agentId, line: agent?.line ?? ticket.line },
 					{
-						authorId: null,
+						authorId: SUPPORT_CURRENT_USER_ID,
 						text: "",
 						messageKey: agent
 							? localizationConstants.supportActionAssigned
@@ -147,7 +148,7 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 				appendAction(
 					{ ...ticket, craftsmanId },
 					{
-						authorId: null,
+						authorId: SUPPORT_CURRENT_USER_ID,
 						text: "",
 						messageKey: craftsman
 							? localizationConstants.supportActionCraftsmanLinked
@@ -164,7 +165,11 @@ export function SupportProvider({ children }: { children: ReactNode }) {
 	const addComment = useCallback(
 		(ticketId: string, text: string) => {
 			patch(ticketId, (ticket) =>
-				appendAction(ticket, { authorId: null, text, type: "comment" }),
+				appendAction(ticket, {
+					authorId: SUPPORT_CURRENT_USER_ID,
+					text,
+					type: "comment",
+				}),
 			);
 		},
 		[patch],

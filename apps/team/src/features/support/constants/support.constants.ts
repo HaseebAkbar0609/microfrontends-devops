@@ -41,3 +41,9 @@ export const SUPPORT_LOCALE = "sv-SE";
  * since that only happens in a client event handler.
  */
 export const SUPPORT_REFERENCE_DATE = "2026-09-03T09:00:00.000Z";
+
+/**
+ * Stands in for the signed-in agent until auth is wired up. Action-log entries
+ * written from the UI carry this id so they read as "You" rather than "System".
+ */
+export const SUPPORT_CURRENT_USER_ID = "me";

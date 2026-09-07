@@ -1,6 +1,9 @@
 import { z } from "zod";
 import localizationConstants from "@/utils/translation/constants";
 
+/** Selects cannot hold an empty value, so "none" stands in for null. */
+export const NO_SELECTION = "none";
+
 /** Ticket ids we generate look like `TF-2481`. */
 const TICKET_ID_PATTERN = /^[A-Za-z]{2,4}-\d{1,8}$/;
 
@@ -20,8 +23,8 @@ export const supportTicketDraftSchema = z.object({
 	priority: z.enum(["low", "medium", "high", "critical"]),
 	line: z.enum(["first", "second"]),
 	country: z.string().min(1),
-	assigneeId: z.string().nullable(),
-	craftsmanId: z.string().nullable(),
+	assigneeId: z.string(),
+	craftsmanId: z.string(),
 	description: z.string().trim(),
 });
 
@@ -36,8 +39,8 @@ export const EMPTY_SUPPORT_TICKET_DRAFT: SupportTicketFormValues = {
 	priority: "medium",
 	line: "first",
 	country: "Sverige",
-	assigneeId: null,
-	craftsmanId: null,
+	assigneeId: NO_SELECTION,
+	craftsmanId: NO_SELECTION,
 	description: "",
 };
 

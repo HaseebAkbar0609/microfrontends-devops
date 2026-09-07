@@ -10,6 +10,7 @@ import { useTranslate } from "@/utils/translation/translate";
 import { getTicketHref } from "../constants/supportNav";
 import {
 	EMPTY_SUPPORT_TICKET_DRAFT,
+	NO_SELECTION,
 	supportTicketDraftSchema,
 	type SupportTicketFormValues,
 } from "../schemas/supportTicket.schema";
@@ -38,19 +39,25 @@ export function useCreateTicketForm() {
 	const availableAgents = agents.filter((agent) => agent.line === line);
 
 	useEffect(() => {
-		if (!assigneeId) return;
+			if (assigneeId === NO_SELECTION) return;
 		if (availableAgents.some((agent) => agent.id === assigneeId)) return;
-		form.setValue("assigneeId", null);
+		form.setValue("assigneeId", NO_SELECTION);
 	}, [assigneeId, availableAgents, form]);
 
 	/** The craftsman link only applies to craftsman customers. */
 	useEffect(() => {
 		if (customerType === "craftsman") return;
-		form.setValue("craftsmanId", null);
+		form.setValue("craftsmanId", NO_SELECTION);
 	}, [customerType, form]);
 
 	const submit = form.handleSubmit((values) => {
-		const ticketId = createTicket(values);
+		const ticketId = createTicket({
+			...values,
+			assigneeId:
+				values.assigneeId === NO_SELECTION ? null : values.assigneeId,
+			craftsmanId:
+				values.craftsmanId === NO_SELECTION ? null : values.craftsmanId,
+		});
 		showToast("success", t(localizationConstants.supportTicketCreatedToast));
 		router.push(getTicketHref(ticketId));
 	});
