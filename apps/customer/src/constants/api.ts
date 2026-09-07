@@ -30,6 +30,8 @@ export const API_PATH = {
 		VERIFY_EMAIL: `${BASE_PATHS.AUTH}/verify-email`,
 		VALIDATE_OTP: `${BASE_PATHS.AUTH}/validate-otp`,
 		PROFILE: `${BASE_PATHS.USER}/profile`,
+		/** Shared across apps — not under /api/v1/customers */
+		HANDOFF_REDEEM: "/api/v1/auth/handoff/redeem",
 	},
 	PROFILE: {
 		BASE: `${BASE_PATHS.USER}/profile`,

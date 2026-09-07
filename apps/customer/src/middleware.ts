@@ -5,7 +5,14 @@ import { appConstants } from "@/constants/api";
 
 const SESSION_HINT_COOKIE = appConstants.LOCAL_SESSION_HINT_COOKIE_NAME;
 
-const AUTH_ROUTES = new Set(["/login", "/register", "/forgot-password"]);
+const AUTH_ROUTES = new Set([
+	"/login",
+	"/register",
+	"/forgot-password",
+	// Landing page's login redirects here with a handoff code; it must be
+	// reachable before a session exists, or this never gets to redeem it.
+	"/auth/callback",
+]);
 
 function isAuthRoute(pathname: string): boolean {
 	return AUTH_ROUTES.has(pathname);
