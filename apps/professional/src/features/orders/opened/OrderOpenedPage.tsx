@@ -33,8 +33,8 @@ export function OrderOpenedPage({ orderId, initialTab }: OrderOpenedPageProps) {
   return (
     <div className="flex h-full flex-col bg-white relative overflow-hidden">
       {/* Main Content Scrollable Container */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="w-full space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4">
+        <div className="w-full space-y-4">
           {/* Record Back Navigation Bar */}
           <RecordNavRow
             title={recordTitle}

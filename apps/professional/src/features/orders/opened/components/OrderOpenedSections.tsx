@@ -10,6 +10,7 @@ import { OrderOfferView } from "./OrderOfferView";
 import { OrderInspectionView } from "./inspection/OrderInspectionView";
 import { OrderOrganisationPage } from "@/features/orders/organisation/OrderOrganisationPage";
 import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
+import { OrderGuaranteeCommitmentsPage } from "@/features/orders/guarantee-commitments/OrderGuaranteeCommitmentsPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -23,7 +24,8 @@ type OrderTabValue =
 	| "offer"
 	| "inspection"
 	| "organisation"
-	| "payment-plan";
+	| "payment-plan"
+	| "guarantee";
 
 export function OrderOpenedSections({
 	data,
@@ -33,6 +35,7 @@ export function OrderOpenedSections({
 }: OrderOpenedSectionsProps) {
 	const t = useTranslate();
 	const [internalTab, setInternalTab] = useState<OrderTabValue>("project-details");
+	const [isGuaranteeDetailOpen, setIsGuaranteeDetailOpen] = useState(false);
 
 	const activeTab = (controlledActiveTab as OrderTabValue) || internalTab;
 
@@ -52,19 +55,22 @@ export function OrderOpenedSections({
 		inspection: t(localizationConstants.orderInspectionTab),
 		organisation: t(localizationConstants.orderOrganisationTab),
 		"payment-plan": t(localizationConstants.paymentPlanTitle),
+		guarantee: t(localizationConstants.warrantyCommitments),
 	};
+
+	const showSubtitle = !(activeTab === "guarantee" && isGuaranteeDetailOpen);
 
 	return (
 		<div className="flex flex-col">
-			<Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex flex-col">
+			<Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex flex-col gap-0">
 				{/*
 				  Tab bar: border spans full page width via negative margins.
 				  Parent context: ml-7 (1.75rem) inside page px-6 (1.5rem) = 3.25rem left, 1.5rem right.
 				  -ml-[3.25rem] -mr-6 pushes the div to page edges.
 				  pl-[3.25rem] restores tabs to their original horizontal position.
 				*/}
-				<div className="-ml-[3.25rem] -mr-6 mb-2 overflow-x-auto overflow-y-hidden scrollbar-none border-b border-slate-200 pl-[3.25rem]">
-					<TabsList variant="line" className="min-w-max">
+				<div className="-ml-[3.25rem] -mr-6 mb-0 overflow-x-auto overflow-y-hidden scrollbar-none border-b border-slate-200 pl-[3.25rem]">
+					<TabsList variant="line" className="min-w-max gap-3 sm:gap-6">
 						<TabsTrigger value="project-details" className="cursor-pointer">
 							{t(localizationConstants.projectDetailsTab)}
 						</TabsTrigger>
@@ -80,19 +86,24 @@ export function OrderOpenedSections({
 						<TabsTrigger value="payment-plan" className="cursor-pointer">
 							{t(localizationConstants.paymentPlanTitle)}
 						</TabsTrigger>
+						<TabsTrigger value="guarantee" className="cursor-pointer">
+							{t(localizationConstants.warrantyCommitments)}
+						</TabsTrigger>
 					</TabsList>
 				</div>
 
 				{/* Active tab subtitle: "Order {serialNo} / Section Name" */}
-				<p className="pt-4 mb-4 font-sans text-2xl font-semibold leading-8 tracking-normal align-middle">
-					{serialNo && (
-						<span className="text-slate-400">
-							{t(localizationConstants.order)} {serialNo}{" "}
-						</span>
-					)}
-					<span className="text-slate-400 font-normal">/ </span>
-					<span className="text-slate-900">{tabLabels[activeTab]}</span>
-				</p>
+				{showSubtitle && (
+					<p className="pt-4 mb-4 font-sans text-2xl font-semibold leading-8 tracking-normal align-middle">
+						{serialNo && (
+							<span className="text-slate-400">
+								{t(localizationConstants.order)} {serialNo}{" "}
+							</span>
+						)}
+						<span className="text-slate-400 font-normal">/ </span>
+						<span className="text-slate-900">{tabLabels[activeTab]}</span>
+					</p>
+				)}
 
 				{/* Tab 1: Projektuppgifter */}
 				<TabsContent value="project-details" className="mt-0 pb-6 focus-visible:outline-none">
@@ -119,6 +130,15 @@ export function OrderOpenedSections({
 				{/* Tab 5: Betalningsplan */}
 				<TabsContent value="payment-plan" className="mt-0 focus-visible:outline-none">
 					<OrderPaymentPlanListPage orderId={data.id} hideNavRow />
+				</TabsContent>
+
+				{/* Tab 6: Garantiåtaganden */}
+				<TabsContent value="guarantee" className="mt-0 focus-visible:outline-none">
+					<OrderGuaranteeCommitmentsPage
+						orderId={data.id}
+						hideNavRow
+						onDetailModeChange={setIsGuaranteeDetailOpen}
+					/>
 				</TabsContent>
 			</Tabs>
 		</div>

@@ -145,6 +145,9 @@ export const API_PATH = {
 		PAYMENT_PLAN_SEND: (orderId: string, planId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/payment-plans/${planId}/send`,
 		INSPECTIONS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/inspections`,
 		INSPECTION_DETAIL: (orderId: string, inspectionId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/inspections/${inspectionId}`,
+		GUARANTEE_COMMITMENTS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments`,
+		GUARANTEE_VISIT_DATES: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments/visit-dates`,
+		GUARANTEE_VISIT_DATE_DETAIL: (orderId: string, visitDateId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments/visit-dates/${visitDateId}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {
