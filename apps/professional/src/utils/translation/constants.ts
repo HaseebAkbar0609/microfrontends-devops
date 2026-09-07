@@ -3204,6 +3204,14 @@ export type OfferTranslation = {
 	machineSidebarPurchase: string;
 	machineSidebarStatistics: string;
 	machineSidebarArchive: string;
+	// TFS-936 – Design (Projektering) module tabs
+	designDashboard: string;
+	designSidebarRitningar: string;
+	designSidebarBIM: string;
+	designSidebarHandlingar: string;
+	designSidebarGranskning: string;
+	designSidebarRevisioner: string;
+	designSidebarArchive: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
