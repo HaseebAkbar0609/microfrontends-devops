@@ -4,11 +4,9 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { FileText, Scale, FileSpreadsheet } from "lucide-react";
-import {
-	REPORT_TAB_ACTIVE_CLASS,
-	REPORT_TAB_INACTIVE_CLASS,
-	financialReportsBreadcrumbs,
-} from "../../constants/financialReports.constants";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { financialReportsBreadcrumbs } from "../../constants/financialReports.constants";
+
 import { useFinancialReports } from "../../hooks/useFinancialReports";
 import { ReportPeriodSelector } from "./ReportPeriodSelector";
 import { ReportExportActions } from "./ReportExportActions";
@@ -50,40 +48,35 @@ export function FinancialReportsPage() {
 			<PageHeader
 				title={localizationConstants.financialReportsTitle}
 				breadcrumbs={financialReportsBreadcrumbs}
-				className="border-b-0 px-4 sm:px-8 pt-6 pb-2"
+				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
 			{/* Main Content Area */}
-			<div className="px-4 sm:px-8 py-4 flex-1 max-w-7xl mx-auto w-full space-y-6">
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto space-y-6">
 				{/* 1. Primary Report Statement Tab Navigation */}
-				<div className="flex items-center gap-2 sm:gap-4 border-b border-slate-200 overflow-x-auto pb-0">
-					<button
-						type="button"
-						onClick={() => handleTabChange("income_statement")}
-						className={activeTab === "income_statement" ? REPORT_TAB_ACTIVE_CLASS : REPORT_TAB_INACTIVE_CLASS}
-					>
-						<FileText className="w-4 h-4 shrink-0" />
-						<Translate text={localizationConstants.reportTabIncomeStatement} />
-					</button>
+				<Tabs
+					value={activeTab}
+					onValueChange={(val) => handleTabChange(val as "income_statement" | "balance_sheet" | "vat_report")}
+					className="w-full"
+				>
+					<div className="flex items-center border-b border-slate-200 mb-2 bg-white px-4 rounded-t-lg h-[44px]">
+						<TabsList variant="line" className="h-[36px]">
+							<TabsTrigger value="income_statement" className="cursor-pointer gap-2">
+								<FileText className="w-4 h-4 shrink-0" />
+								<Translate text={localizationConstants.reportTabIncomeStatement} />
+							</TabsTrigger>
+							<TabsTrigger value="balance_sheet" className="cursor-pointer gap-2">
+								<Scale className="w-4 h-4 shrink-0" />
+								<Translate text={localizationConstants.reportTabBalanceSheet} />
+							</TabsTrigger>
+							<TabsTrigger value="vat_report" className="cursor-pointer gap-2">
+								<FileSpreadsheet className="w-4 h-4 shrink-0" />
+								<Translate text={localizationConstants.reportTabVatReport} />
+							</TabsTrigger>
+						</TabsList>
+					</div>
+				</Tabs>
 
-					<button
-						type="button"
-						onClick={() => handleTabChange("balance_sheet")}
-						className={activeTab === "balance_sheet" ? REPORT_TAB_ACTIVE_CLASS : REPORT_TAB_INACTIVE_CLASS}
-					>
-						<Scale className="w-4 h-4 shrink-0" />
-						<Translate text={localizationConstants.reportTabBalanceSheet} />
-					</button>
-
-					<button
-						type="button"
-						onClick={() => handleTabChange("vat_report")}
-						className={activeTab === "vat_report" ? REPORT_TAB_ACTIVE_CLASS : REPORT_TAB_INACTIVE_CLASS}
-					>
-						<FileSpreadsheet className="w-4 h-4 shrink-0" />
-						<Translate text={localizationConstants.reportTabVatReport} />
-					</button>
-				</div>
 
 				{/* 2. Controls Row: Period Selector & Export Actions */}
 				<div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
