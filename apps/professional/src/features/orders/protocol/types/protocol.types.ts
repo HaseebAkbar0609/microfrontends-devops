@@ -7,8 +7,18 @@ import type {
 export interface ProtocolItem {
 	id: string;
 	orderId: string;
+	projectNumber?: string;
+	projectName?: string;
 	date: string;
 	type: ProtocolType | string;
+	category?: string;
+	address?: string;
+	postalCode?: string;
+	city?: string;
+	participants?: string[];
+	location?: string;
+	startTime?: string;
+	endTime?: string;
 	protocolName?: string;
 	documentName: string;
 	fileUrl?: string;
@@ -22,8 +32,18 @@ export interface ProtocolItem {
 
 export interface CreateProtocolPayload {
 	orderId?: string;
+	projectNumber?: string;
+	projectName?: string;
 	date: string;
 	type: ProtocolType | string;
+	category?: string;
+	address?: string;
+	postalCode?: string;
+	city?: string;
+	participants?: string[];
+	location?: string;
+	startTime?: string;
+	endTime?: string;
 	protocolName?: string;
 	documentName?: string;
 	templateType?: ProtocolTemplateType;
