@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { findActiveRouteTab, isRouteTabActive, type RouteTabItem } from "@/types/navigation";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { cn } from "@/lib/utils";
 
 export type { RouteTabItem };
@@ -17,6 +17,9 @@ export interface RouteTabsProps {
 
 export function RouteTabs({ items, ariaLabel = "Module Tabs", className }: RouteTabsProps) {
 	const pathname = usePathname();
+	// `ariaLabel` is normally a translation key; i18next returns plain strings
+	// unchanged, so the "Module Tabs" default still works.
+	const t = useTranslate();
 
 	if (items.length === 0) return null;
 
@@ -29,7 +32,7 @@ export function RouteTabs({ items, ariaLabel = "Module Tabs", className }: Route
 					"inline-flex items-center gap-1 sm:gap-2 min-w-max h-[36px]",
 					className,
 				)}
-				aria-label={ariaLabel}
+				aria-label={t(ariaLabel)}
 			>
 				{items.map((item) => {
 					const isActive = activeTab?.id === item.id;
