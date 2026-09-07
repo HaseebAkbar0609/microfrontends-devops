@@ -8,6 +8,8 @@ import type { OrderOpenedData } from "../types/orderOpened.types";
 import { OrderProjectDetailsView } from "./OrderProjectDetailsView";
 import { OrderOfferView } from "./OrderOfferView";
 import { OrderInspectionView } from "./inspection/OrderInspectionView";
+import { OrderOrganisationPage } from "@/features/orders/organisation/OrderOrganisationPage";
+import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -16,6 +18,13 @@ export interface OrderOpenedSectionsProps {
 	onTabChange?: (tab: string) => void;
 }
 
+type OrderTabValue =
+	| "project-details"
+	| "offer"
+	| "inspection"
+	| "organisation"
+	| "payment-plan";
+
 export function OrderOpenedSections({
 	data,
 	onUpdateData,
@@ -23,77 +32,93 @@ export function OrderOpenedSections({
 	onTabChange,
 }: OrderOpenedSectionsProps) {
 	const t = useTranslate();
-	const [internalTab, setInternalTab] = useState<string>("project-details");
+	const [internalTab, setInternalTab] = useState<OrderTabValue>("project-details");
 
-	const activeTab = controlledActiveTab !== undefined ? controlledActiveTab : internalTab;
+	const activeTab = (controlledActiveTab as OrderTabValue) || internalTab;
 
 	const handleTabChange = (val: string) => {
+		const tabVal = val as OrderTabValue;
 		if (onTabChange) {
-			onTabChange(val);
-		} else {
-			setInternalTab(val);
+			onTabChange(tabVal);
 		}
+		setInternalTab(tabVal);
+	};
+
+	const serialNo = (data.orderDetails?.serialNo || data.id || "").replace(/[<>'"` ]/g, "").trim();
+
+	const tabLabels: Record<OrderTabValue, string> = {
+		"project-details": t(localizationConstants.orderInfoSection),
+		offer: t(localizationConstants.orderInfoSection),
+		inspection: t(localizationConstants.orderInspectionTab),
+		organisation: t(localizationConstants.orderOrganisationTab),
+		"payment-plan": t(localizationConstants.paymentPlanTitle),
 	};
 
 	return (
-		<div className="flex flex-col gap-6">
-			<Tabs
-				value={activeTab}
-				onValueChange={handleTabChange}
-				className="w-full flex flex-col"
-			>
-				{/* TabBar with border line only spanning the tabbar width */}
-				<div className="mb-6 overflow-x-auto scrollbar-none">
-					<TabsList
-						variant="line"
-						className="h-[36px] bg-transparent p-0 gap-1 sm:gap-2 min-w-max inline-flex self-start border-b border-slate-200"
-					>
-						<TabsTrigger
-							value="project-details"
-							className="relative inline-flex items-center justify-center h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-semibold leading-none tracking-normal text-center whitespace-nowrap transition-colors cursor-pointer border-0 text-slate-500 hover:text-slate-900 data-[state=active]:text-slate-950 data-[state=active]:shadow-none after:hidden"
-						>
+		<div className="flex flex-col">
+			<Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex flex-col">
+				{/*
+				  Tab bar: border spans full page width via negative margins.
+				  Parent context: ml-7 (1.75rem) inside page px-6 (1.5rem) = 3.25rem left, 1.5rem right.
+				  -ml-[3.25rem] -mr-6 pushes the div to page edges.
+				  pl-[3.25rem] restores tabs to their original horizontal position.
+				*/}
+				<div className="-ml-[3.25rem] -mr-6 mb-2 overflow-x-auto overflow-y-hidden scrollbar-none border-b border-slate-200 pl-[3.25rem]">
+					<TabsList variant="line" className="min-w-max">
+						<TabsTrigger value="project-details" className="cursor-pointer">
 							{t(localizationConstants.projectDetailsTab)}
-							{activeTab === "project-details" && (
-								<span className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-950 z-10" />
-							)}
 						</TabsTrigger>
-						<TabsTrigger
-							value="offer"
-							className="relative inline-flex items-center justify-center h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-semibold leading-none tracking-normal text-center whitespace-nowrap transition-colors cursor-pointer border-0 text-slate-500 hover:text-slate-900 data-[state=active]:text-slate-950 data-[state=active]:shadow-none after:hidden"
-						>
+						<TabsTrigger value="offer" className="cursor-pointer">
 							{t(localizationConstants.offerTab)}
-							{activeTab === "offer" && (
-								<span className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-950 z-10" />
-							)}
 						</TabsTrigger>
-						<TabsTrigger
-							value="inspection"
-							className="relative inline-flex items-center justify-center h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-semibold leading-none tracking-normal text-center whitespace-nowrap transition-colors cursor-pointer border-0 text-slate-500 hover:text-slate-900 data-[state=active]:text-slate-950 data-[state=active]:shadow-none after:hidden"
-						>
+						<TabsTrigger value="inspection" className="cursor-pointer">
 							{t(localizationConstants.orderInspectionTab)}
-							{activeTab === "inspection" && (
-								<span className="absolute bottom-0 left-0 right-0 h-[3px] bg-slate-950 z-10" />
-							)}
+						</TabsTrigger>
+						<TabsTrigger value="organisation" className="cursor-pointer">
+							{t(localizationConstants.orderOrganisationTab)}
+						</TabsTrigger>
+						<TabsTrigger value="payment-plan" className="cursor-pointer">
+							{t(localizationConstants.paymentPlanTitle)}
 						</TabsTrigger>
 					</TabsList>
 				</div>
 
-				{/* Tab 1: Projektuppgifter (2x2 Grid matching Node 8533-80209) */}
-				<TabsContent
-					value="project-details"
-					className="mt-0 focus-visible:outline-none"
-				>
+				{/* Active tab subtitle: "Order {serialNo} / Section Name" */}
+				<p className="pt-4 mb-4 font-sans text-2xl font-semibold leading-8 tracking-normal align-middle">
+					{serialNo && (
+						<span className="text-slate-400">
+							{t(localizationConstants.order)} {serialNo}{" "}
+						</span>
+					)}
+					<span className="text-slate-400 font-normal">/ </span>
+					<span className="text-slate-900">{tabLabels[activeTab]}</span>
+				</p>
+
+				{/* Tab 1: Projektuppgifter */}
+				<TabsContent value="project-details" className="mt-0 pb-6 focus-visible:outline-none">
 					<OrderProjectDetailsView data={data} onUpdateData={onUpdateData} />
 				</TabsContent>
 
-				{/* Tab 2: Offert (Collapsible cards matching Node 8533-80423) */}
-				<TabsContent value="offer" className="mt-0 focus-visible:outline-none">
+				{/* Tab 2: Offert */}
+				<TabsContent value="offer" className="mt-0 pb-6 focus-visible:outline-none">
 					<OrderOfferView data={data} />
 				</TabsContent>
 
-				{/* Tab 3: Besiktning (Matching TFS-467) */}
-				<TabsContent value="inspection" className="mt-0 focus-visible:outline-none">
+				{/* Tab 3: Besiktning */}
+				<TabsContent value="inspection" className="mt-0 pb-6 focus-visible:outline-none">
 					<OrderInspectionView orderId={data.id} />
+				</TabsContent>
+
+				{/* Tab 4: Organisation — full-width full-bleed with bg-slate-50 */}
+				<TabsContent value="organisation" className="mt-0 focus-visible:outline-none">
+					<div className="-ml-[3.25rem] -mr-6">
+						<OrderOrganisationPage orderId={data.id} hideNavRow />
+					</div>
+				</TabsContent>
+
+				{/* Tab 5: Betalningsplan */}
+				<TabsContent value="payment-plan" className="mt-0 focus-visible:outline-none">
+					<OrderPaymentPlanListPage orderId={data.id} hideNavRow />
 				</TabsContent>
 			</Tabs>
 		</div>

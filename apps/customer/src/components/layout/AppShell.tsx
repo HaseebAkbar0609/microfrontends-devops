@@ -13,7 +13,16 @@ interface AppShellProps {
 	children: React.ReactNode;
 }
 
-const AUTH_PAGES = ["/login", "/forgot-password", "/register"];
+const AUTH_PAGES = [
+	"/login",
+	"/forgot-password",
+	"/register",
+	// Landing page's login redirects here with a handoff code; it isn't
+	// authenticated yet by definition, so it must be treated as an auth
+	// page here too or this redirects to /login before it can run. Keep
+	// in sync with the AUTH_ROUTES allowlist in middleware.ts.
+	"/auth/callback",
+];
 
 export function AppShell({ children }: AppShellProps) {
 	const pathname = usePathname();

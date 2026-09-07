@@ -12,13 +12,12 @@ export default function OrderLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-1 flex-col overflow-hidden">
+		<div className="flex flex-1 flex-col overflow-hidden min-h-0">
 			<ModuleHeader
 				titleKey={ORDER_MODULE_TITLE}
 				items={ORDER_MODULE_TABS}
-				autoHideOnSubRoutes={false}
 			/>
-			<div className="flex flex-1 flex-col overflow-y-auto">{children}</div>
+			<div className="flex flex-1 flex-col overflow-y-auto min-h-0">{children}</div>
 		</div>
 	);
 }

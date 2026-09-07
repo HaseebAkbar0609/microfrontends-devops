@@ -6,11 +6,55 @@ import { showToast } from "@/lib/toast";
 import type { AuthAPIOptions, ActionResult, ApiError, ApiResponse, AuthResponseData, AuthUserInfo } from "@/types/api";
 
 const LOGIN_PATH = API_PATH.AUTH.LOGIN;
+const HANDOFF_REDEEM_PATH = API_PATH.AUTH.HANDOFF_REDEEM;
 
 export type LoginAPIPayload = {
 	email: string;
 	password: string;
 };
+
+function userFromApiData(apiData: AuthResponseData): AuthUserInfo {
+	return {
+		id: apiData.id,
+		email: apiData.email,
+		first_name: apiData.first_name,
+		last_name: apiData.last_name,
+		is_active: apiData.is_active,
+		status: apiData.status,
+		user_profile: apiData.user_profile,
+	};
+}
+
+/**
+ * Persist a successful login payload (tokens + user) to local storage and,
+ * when provided, the in-memory auth context. Shared by the normal
+ * email/password login below and by the landing-page handoff redeem flow
+ * (exchangeHandoffCodeAction), so the two paths can't drift on what "being
+ * logged in" means.
+ */
+function applyLoginPayload(
+	apiData: AuthResponseData,
+	options?: AuthAPIOptions,
+): { accessToken: string } | null {
+	const accessToken = apiData.access_token ?? apiData.token;
+	const refreshToken = apiData.refresh_token;
+	const user = userFromApiData(apiData);
+
+	if (!accessToken) {
+		return null;
+	}
+
+	authStorage.setAuthData(accessToken);
+	if (refreshToken) {
+		authStorage.setRefreshToken(refreshToken);
+	}
+	if (user.id) {
+		authStorage.setUserData(user);
+	}
+	options?.setAccessToken?.(accessToken);
+	if (user.id) options?.setUser?.(user);
+	return { accessToken };
+}
 
 /** Login API body — accessToken, token, or access_token. */
 /**
@@ -38,36 +82,15 @@ export async function loginAPIAction(
 			return { success: false, data: null, error: errorMsg };
 		}
 
-		const accessToken = apiData.access_token ?? apiData.token;
-		const refreshToken = apiData.refresh_token;
-
-		const user: AuthUserInfo = {
-			id: apiData.id,
-			email: apiData.email,
-			first_name: apiData.first_name,
-			last_name: apiData.last_name,
-			is_active: apiData.is_active,
-			status: apiData.status,
-			user_profile: apiData.user_profile,
-		};
-
 		const serverMessage = (response.data as { message?: string })?.message;
+		const applied = applyLoginPayload(apiData, options);
 
-		if (!accessToken) {
+		if (!applied) {
 			const errorMsg = serverMessage || authMessages.login.tokenNotReceived;
 			showToast("error", errorMsg);
 			return { success: false, data: null, error: errorMsg };
 		}
 
-		authStorage.setAuthData(accessToken);
-		if (refreshToken) {
-			authStorage.setRefreshToken(refreshToken);
-		}
-		if (user.id) {
-			authStorage.setUserData(user);
-		}
-		options?.setAccessToken?.(accessToken);
-		if (user.id) options?.setUser?.(user);
 		showToast("success", authMessages.login.success);
 		return { success: true, data: apiData, error: null };
 	} catch (error: unknown) {
@@ -98,6 +121,46 @@ export async function loginAPIAction(
 			success: false,
 			data: null,
 			error: authMessages.login.failed,
+		};
+	}
+}
+
+/**
+ * Redeem a single-use handoff code (minted by the landing page's login)
+ * for the session it stands for. Used by the /auth/callback page — no
+ * credentials involved here, the login already happened elsewhere.
+ * POST /api/v1/auth/handoff/redeem
+ */
+export async function exchangeHandoffCodeAction(
+	code: string,
+	options?: AuthAPIOptions,
+): Promise<ActionResult<AuthResponseData>> {
+	try {
+		const response = await axiosInstance.post<
+			ApiResponse<AuthResponseData> | { data: AuthResponseData }
+		>(HANDOFF_REDEEM_PATH, { code });
+
+		const apiData =
+			"data" in response.data
+				? (response.data.data as AuthResponseData)
+				: (response.data as AuthResponseData);
+
+		if (!apiData || !applyLoginPayload(apiData, options)) {
+			return {
+				success: false,
+				data: null,
+				error: authMessages.login.invalidResponse,
+			};
+		}
+
+		return { success: true, data: apiData, error: null };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		const errorMessage = apiError.response?.data?.message;
+		return {
+			success: false,
+			data: null,
+			error: errorMessage || authMessages.login.failed,
 		};
 	}
 }

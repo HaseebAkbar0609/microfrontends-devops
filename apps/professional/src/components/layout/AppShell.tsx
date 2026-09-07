@@ -19,6 +19,11 @@ const AUTH_ROUTE_PREFIXES = [
 	"/forgot-password",
 	"/my-companies",
 	"/invitation",
+	// Landing page's login redirects here with a handoff code; it isn't
+	// authenticated yet by definition, so it must be treated as an auth
+	// route here too or this redirects to /login before it can run. Keep
+	// in sync with middleware.ts's isAllowedWhenSubscriptionRequired().
+	"/auth/callback",
 ];
 
 const PUBLIC_ROUTE_PREFIXES = ["/manage-plans", "/manage-cart"];

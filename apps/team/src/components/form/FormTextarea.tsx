@@ -1,6 +1,7 @@
 "use client";
 
 import type { Control, FieldPath, FieldValues } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import {
   FormControl,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { Translate } from "@/utils/translation/translate";
 
 export interface FormTextareaProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -53,18 +55,25 @@ export function FormTextarea<
   messageClassName,
   textareaProps,
 }: FormTextareaProps<TFieldValues, TName>) {
+  // Matches FormInput and FormSelect: a string label or placeholder is
+  // treated as a translation key, a ReactNode label is rendered as given.
+  const { t } = useTranslation();
+  const resolvedLabel =
+    typeof label === "string" ? <Translate text={label} /> : label;
+  const resolvedPlaceholder = placeholder != null ? t(placeholder) : undefined;
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem className={cn("grid gap-2", className)}>
-          {label && (
-            <FormLabel className={labelClassName}>{label}</FormLabel>
+          {label != null && (
+            <FormLabel className={labelClassName}>{resolvedLabel}</FormLabel>
           )}
           <FormControl>
             <Textarea
-              placeholder={placeholder}
+              placeholder={resolvedPlaceholder}
               disabled={disabled}
               rows={rows}
               className={textareaClassName}

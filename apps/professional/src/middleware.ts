@@ -27,6 +27,9 @@ function isAllowedWhenSubscriptionRequired(pathname: string): boolean {
 		"/my-companies",
 		"/manage-plans",
 		"/manage-cart",
+		// Landing page's login redirects here with a handoff code; it must
+		// stay reachable mid-funnel or this never gets to redeem it.
+		"/auth/callback",
 	]);
 
 	if (exact.has(pathname)) return true;
@@ -39,6 +42,7 @@ function isAllowedWhenSubscriptionRequired(pathname: string): boolean {
 		"/my-companies/",
 		"/manage-plans/",
 		"/manage-cart/",
+		"/auth/callback/",
 	];
 
 	return prefixes.some((p) => pathname.startsWith(p));
