@@ -37,7 +37,7 @@ export function ExpenseListPage() {
 				className="border-b-0 px-8 pt-5 pb-2"
 			/>
 
-			{/* Top Level Category Tabs: Kundfaktura / Leverantörsfaktura (Standard #1 & #3) */}
+			{/* Top Level Category Tabs: Kundfaktura / Leverantörsfaktura / Rapporter */}
 			<div className="px-8 border-b border-slate-200 bg-white">
 				<div className="flex items-center gap-6">
 					<button
