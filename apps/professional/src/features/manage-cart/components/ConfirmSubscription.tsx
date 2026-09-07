@@ -44,6 +44,12 @@ export function ConfirmSubscription({
 	const { company, user, hydrateFromStorage } = useAuthStatus();
 	const profile = user as User | null;
 	const mainItem = items[0];
+	const startItem = items.find(
+		(item) => item.planKey === MANAGE_PLANS_PLAN_IDS.START,
+	);
+	const standardItem = items.find(
+		(item) => item.planKey === MANAGE_PLANS_PLAN_IDS.STANDARD,
+	);
 	const [view, setView] = useState<"confirm" | "checkout">("confirm");
 	const [acceptedTerms, setAcceptedTerms] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,9 +58,10 @@ export function ConfirmSubscription({
 		items.length === 1 && items[0]?.planKey === MANAGE_PLANS_PLAN_IDS.FREE;
 	const useHostedCheckoutMvp =
 		process.env.NEXT_PUBLIC_TFS825_PAYMENT_MVP === "true" &&
-		items.length === 1 &&
-		mainItem?.planKey === "standard" &&
-		mainItem?.interval === "monthly";
+		items.length === 2 &&
+		startItem?.interval === "monthly" &&
+		startItem.quantity === 1 &&
+		standardItem?.interval === "monthly";
 
 	if (view === "checkout") {
 		return (
@@ -319,14 +326,14 @@ export function ConfirmSubscription({
 									return;
 								}
 
-								if (useHostedCheckoutMvp && mainItem) {
+								if (useHostedCheckoutMvp && standardItem) {
 									setIsSubmitting(true);
 									try {
 										const checkout =
 										await createHostedCheckoutAction({
-											planCode: mainItem.planKey,
+											planCode: standardItem.planKey,
 											billingInterval: "monthly",
-											quantity: mainItem.quantity,
+											quantity: standardItem.quantity,
 											email: profile?.email ?? "",
 										});
 										if (!checkout.success || !checkout.data) {

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { MANAGE_PLANS_PLAN_IDS } from "@/features/manage-plans/constants";
 import { z } from "zod";
 
 const checkoutResponseSchema = z.object({
@@ -201,11 +202,21 @@ export async function createHostedCheckout(
 	const context = await loadSubscriptionContext(headers);
 	const expectedInterval =
 		request.billingInterval === "annual" ? "yearly" : "monthly";
+	const startItem = context.items.find(
+		(item) => item.subscription_plan.plan_key === MANAGE_PLANS_PLAN_IDS.START,
+	);
+	const standardItem = context.items.find(
+		(item) => item.subscription_plan.plan_key === MANAGE_PLANS_PLAN_IDS.STANDARD,
+	);
 	if (
-		context.items.length !== 1 ||
-		context.items[0].subscription_plan.plan_key !== request.planCode ||
-		context.items[0].subscription_plan_price.interval !== expectedInterval ||
-		context.items[0].quantity !== request.quantity
+		request.planCode !== MANAGE_PLANS_PLAN_IDS.STANDARD ||
+		context.items.length !== 2 ||
+		!startItem ||
+		!standardItem ||
+		startItem.subscription_plan_price.interval !== expectedInterval ||
+		startItem.quantity !== 1 ||
+		standardItem.subscription_plan_price.interval !== expectedInterval ||
+		standardItem.quantity !== request.quantity
 	) {
 		throw new Error("Checkout request does not match the current cart");
 	}
