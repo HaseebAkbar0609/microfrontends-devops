@@ -1,5 +1,6 @@
-import { OrderOrganisationPage } from "@/features/orders/organisation/OrderOrganisationPage";
+import { redirect } from "next/navigation";
+import { ORDER_MODULE_BASE_URL } from "@/features/orders/data/orderNav.config";
 
 export default function OrderOrganisationRootPage() {
-	return <OrderOrganisationPage orderId="5000-001" />;
+	redirect(`${ORDER_MODULE_BASE_URL}/overview`);
 }

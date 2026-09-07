@@ -1,5 +1,6 @@
-import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
+import { redirect } from "next/navigation";
+import { ORDER_MODULE_BASE_URL } from "@/features/orders/data/orderNav.config";
 
 export default function OrderPaymentPlanRootPage() {
-	return <OrderPaymentPlanListPage orderId="5000-001" />;
+	redirect(`${ORDER_MODULE_BASE_URL}/overview`);
 }

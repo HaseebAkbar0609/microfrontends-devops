@@ -1,42 +1,62 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { OrderOpenedData } from "../types/orderOpened.types";
 import { OrderProjectDetailsView } from "./OrderProjectDetailsView";
 import { OrderOfferView } from "./OrderOfferView";
-import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
+import { OrderInspectionView } from "./inspection/OrderInspectionView";
 import { OrderOrganisationPage } from "@/features/orders/organisation/OrderOrganisationPage";
+import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
 	onUpdateData?: (updated: Partial<OrderOpenedData>) => void;
+	activeTab?: string;
+	onTabChange?: (tab: string) => void;
 }
 
 type OrderTabValue =
 	| "project-details"
 	| "offer"
+	| "inspection"
 	| "organisation"
 	| "payment-plan";
 
-export function OrderOpenedSections({ data, onUpdateData }: OrderOpenedSectionsProps) {
+export function OrderOpenedSections({
+	data,
+	onUpdateData,
+	activeTab: controlledActiveTab,
+	onTabChange,
+}: OrderOpenedSectionsProps) {
 	const t = useTranslate();
-	const [activeTab, setActiveTab] = useState<OrderTabValue>("project-details");
+	const [internalTab, setInternalTab] = useState<OrderTabValue>("project-details");
+
+	const activeTab = (controlledActiveTab as OrderTabValue) || internalTab;
+
+	const handleTabChange = (val: string) => {
+		const tabVal = val as OrderTabValue;
+		if (onTabChange) {
+			onTabChange(tabVal);
+		}
+		setInternalTab(tabVal);
+	};
 
 	const serialNo = (data.orderDetails?.serialNo || data.id || "").replace(/[<>'"` ]/g, "").trim();
 
 	const tabLabels: Record<OrderTabValue, string> = {
 		"project-details": t(localizationConstants.orderInfoSection),
 		offer: t(localizationConstants.orderInfoSection),
+		inspection: t(localizationConstants.orderInspectionTab),
 		organisation: t(localizationConstants.orderOrganisationTab),
 		"payment-plan": t(localizationConstants.paymentPlanTitle),
 	};
 
 	return (
 		<div className="flex flex-col">
-			<Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as OrderTabValue)} className="w-full flex flex-col">
+			<Tabs value={activeTab} onValueChange={handleTabChange} className="w-full flex flex-col">
 				{/*
 				  Tab bar: border spans full page width via negative margins.
 				  Parent context: ml-7 (1.75rem) inside page px-6 (1.5rem) = 3.25rem left, 1.5rem right.
@@ -50,6 +70,9 @@ export function OrderOpenedSections({ data, onUpdateData }: OrderOpenedSectionsP
 						</TabsTrigger>
 						<TabsTrigger value="offer" className="cursor-pointer">
 							{t(localizationConstants.offerTab)}
+						</TabsTrigger>
+						<TabsTrigger value="inspection" className="cursor-pointer">
+							{t(localizationConstants.orderInspectionTab)}
 						</TabsTrigger>
 						<TabsTrigger value="organisation" className="cursor-pointer">
 							{t(localizationConstants.orderOrganisationTab)}
@@ -81,14 +104,19 @@ export function OrderOpenedSections({ data, onUpdateData }: OrderOpenedSectionsP
 					<OrderOfferView data={data} />
 				</TabsContent>
 
-				{/* Tab 3: Organisation — full-width full-bleed with bg-slate-50 */}
+				{/* Tab 3: Besiktning */}
+				<TabsContent value="inspection" className="mt-0 pb-6 focus-visible:outline-none">
+					<OrderInspectionView orderId={data.id} />
+				</TabsContent>
+
+				{/* Tab 4: Organisation — full-width full-bleed with bg-slate-50 */}
 				<TabsContent value="organisation" className="mt-0 focus-visible:outline-none">
 					<div className="-ml-[3.25rem] -mr-6">
 						<OrderOrganisationPage orderId={data.id} hideNavRow />
 					</div>
 				</TabsContent>
 
-				{/* Tab 4: Betalningsplan */}
+				{/* Tab 5: Betalningsplan */}
 				<TabsContent value="payment-plan" className="mt-0 focus-visible:outline-none">
 					<OrderPaymentPlanListPage orderId={data.id} hideNavRow />
 				</TabsContent>

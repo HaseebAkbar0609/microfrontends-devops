@@ -1,12 +1,6 @@
-import { OrderPaymentPlanDetailPage } from "@/features/orders/payment-plan/OrderPaymentPlanDetailPage";
+import { redirect } from "next/navigation";
+import { ORDER_MODULE_BASE_URL } from "@/features/orders/data/orderNav.config";
 
-interface OrderPaymentPlanDetailRootPageRouteProps {
-	params: Promise<{ planId: string }>;
-}
-
-export default async function OrderPaymentPlanDetailRootPageRoute({
-	params,
-}: OrderPaymentPlanDetailRootPageRouteProps) {
-	const { planId } = await params;
-	return <OrderPaymentPlanDetailPage orderId="5000-001" planId={planId} />;
+export default function OrderPaymentPlanDetailRootPageRoute() {
+	redirect(`${ORDER_MODULE_BASE_URL}/overview`);
 }

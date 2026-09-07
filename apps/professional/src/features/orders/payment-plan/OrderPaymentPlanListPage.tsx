@@ -97,7 +97,7 @@ export function OrderPaymentPlanListPage({
 							onValueChange={(val) => setActiveTab(val as "bestallare" | "ue-lev")}
 							className="w-full flex flex-col"
 						>
-							<div className="overflow-x-auto overflow-y-hidden scrollbar-none border-b border-slate-200">
+							<div className="mb-4 overflow-x-auto overflow-y-hidden scrollbar-none border-b border-slate-200">
 								<TabsList variant="line" className="inline-flex items-center gap-1 sm:gap-2 min-w-max h-[36px]">
 									<TabsTrigger value="bestallare" className="cursor-pointer">
 										{t(localizationConstants.paymentPlanBestallareTab)}
