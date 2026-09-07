@@ -28,6 +28,8 @@ export const API_PATH = {
 		GET_PROFILE: `${PROFESSIONALS_BASE_PATH}/profile/me`,
 		SET_PASSWORD: `${BASE_PATHS.AUTH}/set-password`,
 		COMPLETE_SUBSCRIPTION: `${BASE_PATHS.AUTH}/complete-subscription`,
+		/** Shared across apps — not under /professionals */
+		HANDOFF_REDEEM: "/auth/handoff/redeem",
 	},
 	SUBSCRIPTIONS: {
 		LIST: `${BASE_PATHS.SUBSCRIPTIONS}/list`,
