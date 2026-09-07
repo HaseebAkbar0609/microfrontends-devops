@@ -140,6 +140,8 @@ export const API_PATH = {
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		ORGANISATION: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}/organisation`,
+		INSPECTIONS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/inspections`,
+		INSPECTION_DETAIL: (orderId: string, inspectionId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/inspections/${inspectionId}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {

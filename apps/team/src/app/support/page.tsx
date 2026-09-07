@@ -1,6 +1,5 @@
-import ComingSoonPage from "@/components/common/ComingSoonPage";
-import localizationConstants from "@/utils/translation/constants";
+import SupportOverviewPage from "@/features/support/SupportOverviewPage";
 
 export default function Page() {
-  return <ComingSoonPage titleKey={localizationConstants.support} />;
+	return <SupportOverviewPage />;
 }
