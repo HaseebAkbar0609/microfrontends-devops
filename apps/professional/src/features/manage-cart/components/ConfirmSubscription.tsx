@@ -119,7 +119,7 @@ export function ConfirmSubscription({
 									/>
 								</p>
 								<p className="text-gray-500">
-									{formatCurrency(mainItem?.unitPrice)}
+									{formatCurrency((mainItem?.unitPrice ?? 0) / 100)}
 								</p>
 							</div>
 							<div className="space-y-1">
