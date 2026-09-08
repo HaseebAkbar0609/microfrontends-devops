@@ -4,7 +4,6 @@ import {
 	checkoutSubscriptionAction,
 	completeSubscriptionAction,
 } from "@/api-actions";
-import { createHostedCheckoutAction } from "@/api-actions/payment/hostedCheckout";
 import { LabeledCheckbox } from "@/components/common/LabeledCheckbox";
 import { Button } from "@/components/ui/button";
 import { useAuthStatus, type User } from "@/context/AuthContext";
@@ -44,24 +43,12 @@ export function ConfirmSubscription({
 	const { company, user, hydrateFromStorage } = useAuthStatus();
 	const profile = user as User | null;
 	const mainItem = items[0];
-	const startItem = items.find(
-		(item) => item.planKey === MANAGE_PLANS_PLAN_IDS.START,
-	);
-	const standardItem = items.find(
-		(item) => item.planKey === MANAGE_PLANS_PLAN_IDS.STANDARD,
-	);
 	const [view, setView] = useState<"confirm" | "checkout">("confirm");
 	const [acceptedTerms, setAcceptedTerms] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const isFreeOnlyCart =
 		items.length === 1 && items[0]?.planKey === MANAGE_PLANS_PLAN_IDS.FREE;
-	const useHostedCheckoutMvp =
-		process.env.NEXT_PUBLIC_TFS825_PAYMENT_MVP === "true" &&
-		items.length === 2 &&
-		startItem?.interval === "monthly" &&
-		startItem.quantity === 1 &&
-		standardItem?.interval === "monthly";
 
 	if (view === "checkout") {
 		return (
@@ -320,31 +307,6 @@ export function ConfirmSubscription({
 										);
 										router.replace("/home");
 										router.refresh();
-									} finally {
-										setIsSubmitting(false);
-									}
-									return;
-								}
-
-								if (useHostedCheckoutMvp && standardItem) {
-									setIsSubmitting(true);
-									try {
-										const checkout =
-										await createHostedCheckoutAction({
-											planCode: standardItem.planKey,
-											billingInterval: "monthly",
-											quantity: standardItem.quantity,
-											email: profile?.email ?? "",
-										});
-										if (!checkout.success || !checkout.data) {
-											showToast(
-												"error",
-												cartMessages.checkoutPayment
-													.checkoutFailed,
-											);
-											return;
-										}
-										window.location.assign(checkout.data.url);
 									} finally {
 										setIsSubmitting(false);
 									}

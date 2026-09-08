@@ -11,7 +11,9 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import type { Stripe, StripeElements } from "@stripe/stripe-js";
 import type { Control } from "react-hook-form";
+import { useEffect } from "react";
 
 import type { PaymentDetailsFormValues } from "../types";
 
@@ -25,7 +27,7 @@ export function CheckoutPaymentStripeSection({
   onSaveCardOnly,
   isSavingCard,
   isPaying,
-  stripeReady,
+  onStripeReady,
 }: {
   control: Control<PaymentDetailsFormValues>;
   cards: UserCard[];
@@ -36,10 +38,18 @@ export function CheckoutPaymentStripeSection({
   onSaveCardOnly: () => void;
   isSavingCard: boolean;
   isPaying: boolean;
-  stripeReady: boolean;
+  onStripeReady: (
+    stripe: Stripe | null,
+    elements: StripeElements | null,
+  ) => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
+
+  useEffect(() => {
+    onStripeReady(stripe, elements);
+    return () => onStripeReady(null, null);
+  }, [elements, onStripeReady, stripe]);
 
   return (
     <div className="rounded-xl bg-white p-6 space-y-4">
@@ -188,7 +198,7 @@ export function CheckoutPaymentStripeSection({
               variant="outline"
               onClick={onSaveCardOnly}
               disabled={
-                !stripe || !elements || isSavingCard || isPaying || !stripeReady
+                !stripe || !elements || isSavingCard || isPaying
               }
             >
               {isSavingCard ? (
