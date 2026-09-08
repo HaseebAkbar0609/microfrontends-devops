@@ -18,6 +18,7 @@ services:
       - "127.0.0.1:22610:3000"
     networks:
       - payment-internal
+      - core-internal
       - frontend-egress
     cap_drop:
       - ALL
@@ -35,5 +36,8 @@ networks:
   payment-internal:
     external: true
     name: timeflow-dev_payment-internal
+  core-internal:
+    external: true
+    name: timeflow-core-dev_core-internal
   frontend-egress:
     driver: bridge
