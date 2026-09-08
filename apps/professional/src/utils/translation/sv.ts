@@ -25,6 +25,7 @@ import {
 	EconomyDashboardTranslation,
 	PersonnelDashboardTranslation,
 	OrderProtocolTranslation,
+	PersonnelOverviewTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -7017,6 +7018,55 @@ export const svOrderProtocol: OrderProtocolTranslation = {
 	protocolSaveButton: "Spara",
 };
 
+export const svPersonnelOverview: PersonnelOverviewTranslation = {
+	personalOverviewPageTitle: "Personal översikt",
+	colContractNumber: "Kontrakt nr",
+	colPerson: "Person",
+	colRole: "Befattning",
+	colIdNumber: "Id-nr",
+	colStatus: "Status",
+	colType: "Typ",
+	colStartDate: "Start datum",
+	colLocation: "Plats",
+	colCustomizeHeader: "Anpassa kolumner",
+	searchPlaceholder: "Sök",
+	filterButton: "Filter",
+	filterAll: "Alla",
+	filterStatusLabel: "Status",
+	filterTypeLabel: "Anställningstyp",
+	filterLocationLabel: "Plats",
+	filterReset: "Återställ filter",
+	newEmployeeButton: "Ny anställd",
+	viewProfileBtn: "Se profil",
+	menuViewProfile: "Visa profil",
+	menuEdit: "Redigera",
+	menuDeactivate: "Inaktivera",
+	statusActive: "Aktiv",
+	statusProbation: "Pågår provanställning",
+	statusSick: "Sjukskriven",
+	statusLeave: "Ledig",
+	statusNotStarted: "Ej påbörjad",
+	typeFullTime: "Heltid",
+	typePartTime: "På deltid",
+	rowsPerPageLabel: "Rader per sida",
+	pageOfLabel: "Sida {current} av {total}",
+	deactivateConfirmTitle: "Inaktivera anställd",
+	deactivateConfirmDesc: "Är du säker på att du vill inaktivera denna anställd? Statusen kommer att ändras till inaktiv.",
+	deactivateConfirmBtn: "Inaktivera",
+	cancelBtn: "Avbryt",
+	profileModalTitle: "Medarbetarprofil",
+	profileContactInfo: "Kontaktinformation",
+	profileEmailLabel: "E-post",
+	profilePhoneLabel: "Telefon",
+	profileDepartmentLabel: "Avdelning",
+	profileContractLabel: "Kontraktnummer",
+	profileStartDateLabel: "Startdatum",
+	profileStatusLabel: "Status",
+	profileCloseBtn: "Stäng",
+	toastEmployeeDeactivated: "Anställd har inaktiverats",
+	noEmployeesFound: "Inga anställda matchade dina sökkriterier",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -7043,5 +7093,7 @@ export const sv: Translation = {
 	...svEconomyDashboard,
 	...svPersonnelDashboard,
 	...svOrderProtocol,
+	...svPersonnelOverview,
 };
+
 

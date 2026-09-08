@@ -6,3 +6,8 @@ export * from "./hooks/usePersonnelDashboard";
 export * from "./components/dashboard/PersonnelDashboard";
 export * from "./components/dashboard/PersonnelDashboardConfig";
 export * from "./components/dashboard/PersonnelDashboardPage";
+export * from "./components/overview/PersonnelOverviewPage";
+export * from "./types/personnelOverview.types";
+export * from "./constants/personnelOverview.constants";
+export * from "./mock/personnelOverview.mock";
+export * from "./hooks/usePersonnelOverview";
