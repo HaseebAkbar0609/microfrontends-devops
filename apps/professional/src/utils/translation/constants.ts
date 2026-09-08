@@ -6981,6 +6981,7 @@ export type PersonnelOverviewTranslation = {
 	filterStatusLabel: string;
 	filterTypeLabel: string;
 	filterLocationLabel: string;
+	filterRoleLabel: string;
 	filterReset: string;
 	newEmployeeButton: string;
 	viewProfileBtn: string;
@@ -7011,6 +7012,7 @@ export type PersonnelOverviewTranslation = {
 	profileCloseBtn: string;
 	toastEmployeeDeactivated: string;
 	noEmployeesFound: string;
+	actionsMenuLabel: string;
 };
 
 export type Translation = HeaderTranslation &

@@ -1,9 +1,11 @@
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useDeferredValue } from "react";
 import { toast } from "sonner";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
 import {
 	EmployeeOverviewItem,
+	EmployeeStatus,
+	EmploymentType,
 	SortField,
 	SortOrder,
 } from "../types/personnelOverview.types";
@@ -11,11 +13,12 @@ import { MOCK_PERSONNEL_OVERVIEW } from "../mock/personnelOverview.mock";
 import { DEFAULT_PAGE_SIZE } from "../constants/personnelOverview.constants";
 
 export function usePersonnelOverview() {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 	const [employees, setEmployees] = useState<EmployeeOverviewItem[]>(MOCK_PERSONNEL_OVERVIEW);
 	const [searchTerm, setSearchTerm] = useState("");
-	const [statusFilter, setStatusFilter] = useState("all");
-	const [typeFilter, setTypeFilter] = useState("all");
+	const deferredSearchTerm = useDeferredValue(searchTerm);
+	const [statusFilter, setStatusFilter] = useState<EmployeeStatus | "all">("all");
+	const [typeFilter, setTypeFilter] = useState<EmploymentType | "all">("all");
 	const [locationFilter, setLocationFilter] = useState("all");
 	const [roleFilter, setRoleFilter] = useState("all");
 	const [sortField, setSortField] = useState<SortField>("contractNumber");
@@ -38,7 +41,7 @@ export function usePersonnelOverview() {
 	}, []);
 
 	const filteredEmployees = useMemo(() => {
-		const term = searchTerm.toLowerCase().trim();
+		const term = deferredSearchTerm.toLowerCase().trim();
 		return employees.filter((item) => {
 			const matchesSearch =
 				!term ||
@@ -55,16 +58,16 @@ export function usePersonnelOverview() {
 
 			return matchesSearch && matchesStatus && matchesType && matchesLocation && matchesRole;
 		});
-	}, [employees, searchTerm, statusFilter, typeFilter, locationFilter, roleFilter]);
+	}, [employees, deferredSearchTerm, statusFilter, typeFilter, locationFilter, roleFilter]);
 
 	const sortedEmployees = useMemo(() => {
 		return [...filteredEmployees].sort((a, b) => {
 			const aVal = a[sortField] || "";
 			const bVal = b[sortField] || "";
-			const comp = aVal.localeCompare(bVal, "sv", { numeric: true });
+			const comp = aVal.localeCompare(bVal, i18n.language || "sv", { numeric: true });
 			return sortOrder === "asc" ? comp : -comp;
 		});
-	}, [filteredEmployees, sortField, sortOrder]);
+	}, [filteredEmployees, sortField, sortOrder, i18n.language]);
 
 	const totalPages = useMemo(() => {
 		return Math.max(1, Math.ceil(sortedEmployees.length / pageSize));

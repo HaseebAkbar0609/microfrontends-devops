@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/select";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import { PAGE_SIZE_OPTIONS } from "../../../constants/personnelOverview.constants";
 
 interface PersonnelTablePaginationProps {
@@ -34,6 +35,8 @@ export function PersonnelTablePagination({
 	onPageChange,
 	onPageSizeChange,
 }: PersonnelTablePaginationProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex flex-wrap items-center justify-between gap-4 px-4 py-3 border-t border-slate-200 bg-white text-xs text-slate-600">
 			<div className="flex items-center gap-2">
@@ -62,7 +65,10 @@ export function PersonnelTablePagination({
 
 			<div className="flex items-center gap-4">
 				<span className="text-slate-700 font-medium">
-					Page {currentPage} of {totalPages}
+					<Translate
+						text={localizationConstants.pageOfLabel}
+						values={{ current: currentPage, page: currentPage, total: totalPages }}
+					/>
 				</span>
 
 				<div className="flex items-center gap-1">
@@ -73,7 +79,7 @@ export function PersonnelTablePagination({
 						disabled={currentPage <= 1}
 						onClick={() => onPageChange(1)}
 						className="h-7 w-7 p-0 border-slate-200 text-slate-600 hover:text-slate-900 disabled:opacity-40"
-						aria-label="First page"
+						aria-label={t(localizationConstants.paginationFirstPage)}
 					>
 						<ChevronsLeft className="w-3.5 h-3.5" />
 					</Button>
@@ -84,7 +90,7 @@ export function PersonnelTablePagination({
 						disabled={currentPage <= 1}
 						onClick={() => onPageChange(currentPage - 1)}
 						className="h-7 w-7 p-0 border-slate-200 text-slate-600 hover:text-slate-900 disabled:opacity-40"
-						aria-label="Previous page"
+						aria-label={t(localizationConstants.paginationPreviousPage)}
 					>
 						<ChevronLeft className="w-3.5 h-3.5" />
 					</Button>
@@ -95,7 +101,7 @@ export function PersonnelTablePagination({
 						disabled={currentPage >= totalPages}
 						onClick={() => onPageChange(currentPage + 1)}
 						className="h-7 w-7 p-0 border-slate-200 text-slate-600 hover:text-slate-900 disabled:opacity-40"
-						aria-label="Next page"
+						aria-label={t(localizationConstants.paginationNextPage)}
 					>
 						<ChevronRight className="w-3.5 h-3.5" />
 					</Button>
@@ -106,7 +112,7 @@ export function PersonnelTablePagination({
 						disabled={currentPage >= totalPages}
 						onClick={() => onPageChange(totalPages)}
 						className="h-7 w-7 p-0 border-slate-200 text-slate-600 hover:text-slate-900 disabled:opacity-40"
-						aria-label="Last page"
+						aria-label={t(localizationConstants.paginationLastPage)}
 					>
 						<ChevronsRight className="w-3.5 h-3.5" />
 					</Button>

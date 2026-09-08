@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import { EmployeeOverviewItem } from "../../../types/personnelOverview.types";
 import {
 	STATUS_STYLE_MAP,
@@ -29,6 +30,7 @@ export function PersonnelTableRow({
 	onViewProfile,
 	onDeactivate,
 }: PersonnelTableRowProps) {
+	const { t } = useTranslation();
 	const statusStyle = STATUS_STYLE_MAP[employee.status] || STATUS_STYLE_MAP.not_started;
 	const statusLabelKey = STATUS_LABEL_KEY_MAP[employee.status] || localizationConstants.statusNotStarted;
 	const typeLabelKey = TYPE_LABEL_KEY_MAP[employee.employmentType] || localizationConstants.typeFullTime;
@@ -82,7 +84,7 @@ export function PersonnelTableRow({
 								variant="ghost"
 								size="icon"
 								className="h-7 w-7 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-md cursor-pointer"
-								aria-label="Actions"
+								aria-label={t(localizationConstants.actionsMenuLabel)}
 							>
 								<MoreVertical className="w-3.5 h-3.5" />
 							</Button>

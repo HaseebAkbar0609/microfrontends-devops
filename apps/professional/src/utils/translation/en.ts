@@ -7013,6 +7013,7 @@ export const enPersonnelOverview: PersonnelOverviewTranslation = {
 	filterStatusLabel: "Status",
 	filterTypeLabel: "Employment Type",
 	filterLocationLabel: "Location",
+	filterRoleLabel: "Role",
 	filterReset: "Reset Filter",
 	newEmployeeButton: "New Employee",
 	viewProfileBtn: "View Profile",
@@ -7043,6 +7044,7 @@ export const enPersonnelOverview: PersonnelOverviewTranslation = {
 	profileCloseBtn: "Close",
 	toastEmployeeDeactivated: "Employee has been deactivated",
 	noEmployeesFound: "No employees matched your search criteria",
+	actionsMenuLabel: "Actions",
 };
 
 export const en: Translation = {

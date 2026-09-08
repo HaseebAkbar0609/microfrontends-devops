@@ -7035,6 +7035,7 @@ export const svPersonnelOverview: PersonnelOverviewTranslation = {
 	filterStatusLabel: "Status",
 	filterTypeLabel: "Anställningstyp",
 	filterLocationLabel: "Plats",
+	filterRoleLabel: "Befattning",
 	filterReset: "Återställ filter",
 	newEmployeeButton: "Ny anställd",
 	viewProfileBtn: "Se profil",
@@ -7065,6 +7066,7 @@ export const svPersonnelOverview: PersonnelOverviewTranslation = {
 	profileCloseBtn: "Stäng",
 	toastEmployeeDeactivated: "Anställd har inaktiverats",
 	noEmployeesFound: "Inga anställda matchade dina sökkriterier",
+	actionsMenuLabel: "Åtgärder",
 };
 
 export const sv: Translation = {

@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { Search, ChevronDown, Plus, RotateCcw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import {
 	Popover,
@@ -25,15 +26,18 @@ import {
 	TYPE_LABEL_KEY_MAP,
 } from "../../constants/personnelOverview.constants";
 import { EmployeeStatus, EmploymentType } from "../../types/personnelOverview.types";
-import { PERSONNEL_NAV_ITEMS } from "../../constants/personnelNav.config";
+import {
+	PERSONNEL_NAV_ITEMS,
+	PERSONNEL_MODULE_BASE_URL,
+} from "../../constants/personnelNav.config";
 
 interface PersonnelOverviewToolbarProps {
 	searchTerm: string;
 	onSearchChange: (val: string) => void;
-	statusFilter: string;
-	onStatusChange: (val: string) => void;
-	typeFilter: string;
-	onTypeChange: (val: string) => void;
+	statusFilter: EmployeeStatus | "all";
+	onStatusChange: (val: EmployeeStatus | "all") => void;
+	typeFilter: EmploymentType | "all";
+	onTypeChange: (val: EmploymentType | "all") => void;
 	locationFilter: string;
 	onLocationChange: (val: string) => void;
 	roleFilter: string;
@@ -54,6 +58,8 @@ export function PersonnelOverviewToolbar({
 	onRoleChange,
 	onResetFilters,
 }: PersonnelOverviewToolbarProps) {
+	const { t } = useTranslation();
+
 	const hasActiveFilters =
 		statusFilter !== "all" ||
 		typeFilter !== "all" ||
@@ -67,11 +73,16 @@ export function PersonnelOverviewToolbar({
 				{/* Search Field */}
 				<div className="relative flex-1">
 					<Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+					<label htmlFor="personnel-search-input" className="sr-only">
+						{t(localizationConstants.searchPlaceholder)}
+					</label>
 					<input
+						id="personnel-search-input"
 						type="text"
 						value={searchTerm}
 						onChange={(e) => onSearchChange(e.target.value)}
-						placeholder="Sök"
+						placeholder={t(localizationConstants.searchPlaceholder)}
+						aria-label={t(localizationConstants.searchPlaceholder)}
 						className="w-full h-8 pl-8 pr-3 text-xs bg-slate-50/50 border border-slate-200 rounded-md placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 focus:bg-white transition-all text-slate-900"
 					/>
 				</div>
@@ -115,9 +126,9 @@ export function PersonnelOverviewToolbar({
 							<label className="text-[11px] font-medium text-slate-600 block">
 								<Translate text={localizationConstants.filterStatusLabel} />
 							</label>
-							<Select value={statusFilter} onValueChange={onStatusChange}>
+							<Select value={statusFilter} onValueChange={(val) => onStatusChange(val as EmployeeStatus | "all")}>
 								<SelectTrigger className="h-7 text-xs bg-white border-slate-200">
-									<SelectValue placeholder="Alla statusar" />
+									<SelectValue placeholder={t(localizationConstants.filterAll)} />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="all" className="text-xs">
@@ -137,9 +148,9 @@ export function PersonnelOverviewToolbar({
 							<label className="text-[11px] font-medium text-slate-600 block">
 								<Translate text={localizationConstants.filterTypeLabel} />
 							</label>
-							<Select value={typeFilter} onValueChange={onTypeChange}>
+							<Select value={typeFilter} onValueChange={(val) => onTypeChange(val as EmploymentType | "all")}>
 								<SelectTrigger className="h-7 text-xs bg-white border-slate-200">
-									<SelectValue placeholder="Alla anställningstyper" />
+									<SelectValue placeholder={t(localizationConstants.filterAll)} />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="all" className="text-xs">
@@ -161,7 +172,7 @@ export function PersonnelOverviewToolbar({
 							</label>
 							<Select value={locationFilter} onValueChange={onLocationChange}>
 								<SelectTrigger className="h-7 text-xs bg-white border-slate-200">
-									<SelectValue placeholder="Alla platser" />
+									<SelectValue placeholder={t(localizationConstants.filterAll)} />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="all" className="text-xs">
@@ -179,11 +190,11 @@ export function PersonnelOverviewToolbar({
 						{/* Role Filter */}
 						<div className="space-y-1">
 							<label className="text-[11px] font-medium text-slate-600 block">
-								<Translate text={localizationConstants.colRole} />
+								<Translate text={localizationConstants.filterRoleLabel} />
 							</label>
 							<Select value={roleFilter} onValueChange={onRoleChange}>
 								<SelectTrigger className="h-7 text-xs bg-white border-slate-200">
-									<SelectValue placeholder="Alla befattningar" />
+									<SelectValue placeholder={t(localizationConstants.filterAll)} />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectItem value="all" className="text-xs">
@@ -206,7 +217,7 @@ export function PersonnelOverviewToolbar({
 				asChild
 				className="h-8 px-3.5 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-white rounded-md cursor-pointer gap-1.5 shadow-xs"
 			>
-				<Link href={PERSONNEL_NAV_ITEMS[2]?.href ?? "/module/financial-management/personnel/create"}>
+				<Link href={PERSONNEL_NAV_ITEMS[2]?.href ?? `${PERSONNEL_MODULE_BASE_URL}/create`}>
 					<Plus className="w-3.5 h-3.5" />
 					<Translate text={localizationConstants.newEmployeeButton} />
 				</Link>
