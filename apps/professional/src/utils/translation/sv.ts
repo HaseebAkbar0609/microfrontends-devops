@@ -6362,9 +6362,9 @@ export const svOrderOrganisation: OrderOrganisationTranslation = {
 };
 
 export const svRotRut: RotRutTranslation = {
-	rotRutTitle: "ROT & RUT Avdragsöversikt",
-	rotRutNav: "ROT & RUT",
-	rotRutBreadcrumb: "ROT & RUT Avdrag",
+	rotRutTitle: "Skattereduktion",
+	rotRutNav: "Skattereduktion",
+	rotRutBreadcrumb: "Skattereduktion",
 	rotRutSubtitle: "Hantera och följ upp skattereduktioner för utfört arbete enligt Skatteverkets regler",
 	rotRutKpiTotalRot: "Totalt sökt ROT",
 	rotRutKpiTotalRotDesc: "Ackumulerade ROT-avdrag (30 %)",
@@ -6757,7 +6757,7 @@ export const svEconomyDashboard: EconomyDashboardTranslation = {
 	viewInvoicesAction: "Gå till fakturor",
 	viewExpensesAction: "Gå till leverantörsfakturor",
 	viewReportsAction: "Öppna rapporter",
-	viewRotRutAction: "Öppna ROT & RUT",
+	viewRotRutAction: "Öppna skattereduktion",
 };
 
 const svPersonnelDashboard: PersonnelDashboardTranslation = {
