@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
+import { pickCountKey } from "@/utils/pluralLabel";
 import { useContentSections } from "../../hooks/useContentSections";
 import type { ContentGroupId, GuideCategory } from "../../types";
-import { pickCountKey } from "../../utils/countLabel";
 import { GuideSubcategoryRow } from "./GuideSubcategoryRow";
 
 type GuideCategoryRowProps = {

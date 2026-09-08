@@ -103,7 +103,7 @@ export function ActionsToolbar({
 }: ActionsToolbarProps) {
 	return (
 		<div className={cn("flex items-center justify-between gap-4 px-5 py-6", className)}>
-			<div className="flex max-w-2xl flex-1 items-center gap-3">
+			<div className="flex max-w-2xl flex-1 flex-wrap items-center gap-3">
 				<Search
 					value={searchValue}
 					onChange={onSearchChange}

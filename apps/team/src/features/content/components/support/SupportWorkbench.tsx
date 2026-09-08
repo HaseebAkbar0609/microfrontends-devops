@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { pickCountKey } from "@/utils/pluralLabel";
 import { useSupportGuide } from "../../hooks/useSupportGuide";
 import type { ContentGroupId, ContentSection } from "../../types";
-import { pickCountKey } from "../../utils/countLabel";
 import { GuideCategoryRow } from "./GuideCategoryRow";
 import { SupportContactCard } from "./SupportContactCard";
 
