@@ -1,4 +1,4 @@
-import { OrderOpenedPage } from "@/features/orders/opened/OrderOpenedPage";
+import { redirect } from "next/navigation";
 
 interface OrderDetailPageProps {
 	params: Promise<{ id: string }>;
@@ -6,5 +6,5 @@ interface OrderDetailPageProps {
 
 export default async function OrderDetailPage({ params }: OrderDetailPageProps) {
 	const { id } = await params;
-	return <OrderOpenedPage orderId={id} />;
+	redirect(`/module/production/order/${id}/order-information`);
 }

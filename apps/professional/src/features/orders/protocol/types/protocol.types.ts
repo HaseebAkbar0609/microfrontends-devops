@@ -47,6 +47,7 @@ export interface CreateProtocolPayload {
 	protocolName?: string;
 	documentName?: string;
 	templateType?: ProtocolTemplateType;
+	responsible?: string;
 	notes?: string;
 	file?: File;
 }

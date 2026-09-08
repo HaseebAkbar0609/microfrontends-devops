@@ -3526,8 +3526,11 @@ export const enOffer: OfferTranslation = {
 	viewDetailsButton: "View details",
 	viewDetailTitle: "View detail",
 	orderNumberSubtitle: "Order number",
+	orderNumberLabel: "Order number:",
 	warrantyInfoSection: "Warranty Information",
 	warrantyResponsibleLabel: "Warranty Responsible",
+	warrantyTimeLabel: "Warranty period",
+	mobilePhoneLabel: "Mobile phone:",
 	visitDatesSection: "Inspection / Visit Dates",
 	createVisitDateButton: "Add",
 	createVisitDateTitle: "Add visit date",
@@ -6155,6 +6158,7 @@ const enFinancialReports: FinancialReportsTranslation = {
 };
 
 const enOrderInformation: OrderInformationTranslation = {
+	orderInformationTab: "Order Information",
 	projectDetailsTab: "Project Details",
 	offerTab: "Offer",
 	companyNumberSection: "Company Number",
@@ -6766,6 +6770,10 @@ export const enOrderProtocol: OrderProtocolTranslation = {
 	ariaLabelCloseModal: "Close dialog",
 	ariaLabelAddParticipant: "Add participant",
 	ariaLabelRemoveFile: "Remove file",
+	protocolResponsibleLabel: "Responsible",
+	protocolSubjectLabel: "Subject",
+	validationProtocolSubjectRequired: "Subject is required",
+	protocolSaveButton: "Save",
 };
 
 export const en: Translation = {

@@ -98,6 +98,7 @@ export function OrderProtocolOverviewPage({ orderId }: OrderProtocolOverviewPage
 			<CreateProtocolModal
 				isOpen={isCreateOpen}
 				templateType={createTemplateType}
+				orderId={orderId}
 				onClose={() => setIsCreateOpen(false)}
 				onSave={handleSaveProtocol}
 			/>

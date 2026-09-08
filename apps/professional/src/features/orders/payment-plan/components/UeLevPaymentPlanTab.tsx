@@ -6,7 +6,6 @@ import {
 	ArrowUp,
 	ArrowDown,
 	MoreVertical,
-	Plus,
 	Check,
 	Clock,
 	PencilLine,
@@ -42,7 +41,6 @@ export interface UeLevPaymentPlanTabProps {
 	totalPages: number;
 	onPageChange: (page: number) => void;
 	onPageSizeChange: (size: number) => void;
-	onOpenAddModal: () => void;
 	onDelete: (planId: string) => void;
 	onSend: (planId: string) => void;
 }
@@ -82,7 +80,6 @@ export function UeLevPaymentPlanTab({
 	totalPages,
 	onPageChange,
 	onPageSizeChange,
-	onOpenAddModal,
 	onDelete,
 	onSend,
 }: UeLevPaymentPlanTabProps) {
@@ -128,13 +125,13 @@ export function UeLevPaymentPlanTab({
 
 	return (
 		<div className="w-full space-y-4">
-			<div className="w-full max-w-[720px] overflow-x-auto relative bg-white">
+			<div className="w-full overflow-x-auto relative bg-white">
 				<Table className="w-full table-auto border-collapse">
 					<TableHeader>
 						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
 							<TableHead
 								onClick={() => handleSort("companyName")}
-								className="py-3.5 px-4 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
+								className="w-[35%] py-3.5 px-4 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
 							>
 								<div className="flex items-center gap-1">
 									<span>{t(localizationConstants.colForetagsNamn)}</span>
@@ -143,7 +140,7 @@ export function UeLevPaymentPlanTab({
 							</TableHead>
 							<TableHead
 								onClick={() => handleSort("totalAmount")}
-								className="py-3.5 px-4 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
+								className="w-[20%] py-3.5 px-4 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
 							>
 								<div className="flex items-center gap-1">
 									<span>{t(localizationConstants.colTotal)}</span>
@@ -152,27 +149,15 @@ export function UeLevPaymentPlanTab({
 							</TableHead>
 							<TableHead
 								onClick={() => handleSort("status")}
-								className="py-3.5 px-4 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
+								className="w-[25%] py-3.5 px-4 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
 							>
 								<div className="flex items-center gap-1">
 									<span>{t(localizationConstants.colStatus)}</span>
 									{renderSortIcon("status")}
 								</div>
 							</TableHead>
-							<TableHead className="w-28 px-2 py-3.5 text-center font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B]" />
-							<TableHead className="w-10 px-2 py-3.5 text-right">
-								<Button
-									type="button"
-									variant="ghost"
-									size="icon"
-									onClick={onOpenAddModal}
-									className="h-7 w-7 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md cursor-pointer"
-									title={t(localizationConstants.btnLaggTill)}
-									aria-label={t(localizationConstants.btnLaggTill)}
-								>
-									<Plus className="h-4 w-4" />
-								</Button>
-							</TableHead>
+							<TableHead className="w-[140px] px-4 py-3.5 text-center font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B]" />
+							<TableHead className="w-12 px-3 py-3.5 text-right" />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -188,25 +173,25 @@ export function UeLevPaymentPlanTab({
 									key={plan.id}
 									className="group border-b border-slate-100 transition-colors hover:bg-slate-50/60"
 								>
-									<TableCell className="px-4 py-3.5 font-sans font-medium text-sm leading-5 tracking-normal text-slate-900 whitespace-nowrap">
+									<TableCell className="w-[35%] px-4 py-3.5 font-sans font-medium text-sm leading-5 tracking-normal text-slate-900 whitespace-nowrap">
 										{plan.companyName}
 									</TableCell>
-									<TableCell className="px-4 py-3.5 font-sans font-normal text-sm text-slate-800 whitespace-nowrap">
+									<TableCell className="w-[20%] px-4 py-3.5 font-sans font-normal text-sm text-slate-800 whitespace-nowrap">
 										{plan.totalAmount.toLocaleString("sv-SE")}
 									</TableCell>
-									<TableCell className="px-4 py-3.5 whitespace-nowrap">
+									<TableCell className="w-[25%] px-4 py-3.5 whitespace-nowrap">
 										<StatusBadge status={plan.status} />
 									</TableCell>
-									<TableCell className="px-2 py-3.5 text-center whitespace-nowrap">
+									<TableCell className="w-[140px] px-4 py-3.5 text-center whitespace-nowrap">
 										<Button
 											type="button"
 											variant="secondary"
-											className="h-8 px-3 text-xs font-medium rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 shadow-none cursor-pointer"
+											className="h-8 px-4 text-xs font-medium rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 shadow-none cursor-pointer"
 										>
 											{t(localizationConstants.btnVisaDetaljer)}
 										</Button>
 									</TableCell>
-									<TableCell className="px-3 py-3.5 text-right whitespace-nowrap">
+									<TableCell className="w-12 px-3 py-3.5 text-right whitespace-nowrap">
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
 												<Button
@@ -251,14 +236,13 @@ export function UeLevPaymentPlanTab({
 			</div>
 
 			{/* Pagination Controls */}
-			<div className="w-full flex justify-center pt-2">
+			<div className="w-full flex justify-end pt-2">
 				<TablePagination
 					currentPage={currentPage}
 					totalPages={totalPages}
 					pageSize={pageSize}
 					onPageChange={onPageChange}
 					onPageSizeChange={onPageSizeChange}
-					className="justify-center sm:justify-center"
 				/>
 			</div>
 

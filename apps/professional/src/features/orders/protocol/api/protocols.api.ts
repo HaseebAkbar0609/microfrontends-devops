@@ -4,6 +4,8 @@ import { MOCK_PROTOCOLS } from "../data/protocol.mock";
 import { PROTOCOL_CONSTANTS } from "../constants/protocol.constants";
 import type { ProtocolItem, CreateProtocolPayload } from "../types/protocol.types";
 
+const isDev = process.env.NODE_ENV !== "production";
+
 export const protocolsApi = {
 	async getProtocols(orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID): Promise<ProtocolItem[]> {
 		try {
@@ -11,10 +13,13 @@ export const protocolsApi = {
 			if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
 				return res.data;
 			}
-			return MOCK_PROTOCOLS;
+			return isDev ? MOCK_PROTOCOLS : [];
 		} catch (err) {
-			console.warn("[protocolsApi.getProtocols] Falling back to mock data:", err);
-			return MOCK_PROTOCOLS;
+			if (isDev) {
+				console.info("[protocolsApi.getProtocols] Using mock data in dev mode.");
+				return MOCK_PROTOCOLS;
+			}
+			throw err;
 		}
 	},
 
@@ -25,10 +30,12 @@ export const protocolsApi = {
 		try {
 			const res = await axiosInstance.get<ProtocolItem>(API_PATH.ORDERS.PROTOCOL_DETAIL(orderId, id));
 			if (res && res.data) return res.data;
-		} catch (err) {
-			console.warn("[protocolsApi.getProtocolDetail] Simulating get detail:", err);
+		} catch (_err) {
+			if (isDev) {
+				console.info("[protocolsApi.getProtocolDetail] Simulating get detail in dev mode.");
+			}
 		}
-		const fallback = MOCK_PROTOCOLS.find((p) => p.id === id) || null;
+		const fallback = isDev ? MOCK_PROTOCOLS.find((p) => p.id === id) || null : null;
 		return fallback;
 	},
 
@@ -47,8 +54,10 @@ export const protocolsApi = {
 				if (uploadRes && uploadRes.data && uploadRes.data.url) {
 					uploadedUrl = uploadRes.data.url;
 				}
-			} catch (uploadErr) {
-				console.warn("[protocolsApi.createProtocol] File upload error fallback:", uploadErr);
+			} catch (_uploadErr) {
+				if (isDev) {
+					console.info("[protocolsApi.createProtocol] File upload fallback in dev mode.");
+				}
 			}
 		}
 
@@ -59,8 +68,15 @@ export const protocolsApi = {
 			});
 			if (res && res.data) return res.data;
 		} catch (err) {
-			console.warn("[protocolsApi.createProtocol] Simulating created protocol:", err);
+			if (isDev) {
+				console.info("[protocolsApi.createProtocol] Simulating created protocol in dev mode.");
+			} else {
+				throw err;
+			}
 		}
+
+		const resolvedResponsible =
+			payload.responsible?.trim() || PROTOCOL_CONSTANTS.DEFAULT_RESPONSIBLE;
 
 		const newProtocol: ProtocolItem = {
 			id: `proto-${Date.now()}`,
@@ -83,7 +99,7 @@ export const protocolsApi = {
 			fileType: PROTOCOL_CONSTANTS.DEFAULT_FILE_TYPE,
 			status: "not_started",
 			lastUpdated: new Date().toISOString().slice(0, 16).replace("T", " "),
-			responsible: "Kalle Svensson",
+			responsible: resolvedResponsible,
 			isArchived: false,
 			notes: payload.notes || "",
 		};
@@ -103,7 +119,11 @@ export const protocolsApi = {
 			);
 			if (res && res.data) return res.data;
 		} catch (err) {
-			console.warn("[protocolsApi.updateProtocol] Simulating update:", err);
+			if (isDev) {
+				console.info("[protocolsApi.updateProtocol] Simulating update in dev mode.");
+			} else {
+				throw err;
+			}
 		}
 
 		return {
@@ -127,8 +147,11 @@ export const protocolsApi = {
 			await axiosInstance.delete(API_PATH.ORDERS.PROTOCOL_DETAIL(orderId, id));
 			return true;
 		} catch (err) {
-			console.warn("[protocolsApi.deleteProtocol] Simulating deletion:", err);
-			return true;
+			if (isDev) {
+				console.info("[protocolsApi.deleteProtocol] Simulating deletion in dev mode.");
+				return true;
+			}
+			throw err;
 		}
 	},
 
@@ -140,13 +163,11 @@ export const protocolsApi = {
 			await axiosInstance.post(API_PATH.ORDERS.PROTOCOL_ARCHIVE(orderId, id));
 			return true;
 		} catch (err) {
-			console.warn("[protocolsApi.archiveProtocol] Falling back to updateProtocol:", err);
-			try {
-				await axiosInstance.put(API_PATH.ORDERS.PROTOCOL_DETAIL(orderId, id), { isArchived: true });
-			} catch {
-				// Simulated success fallback
+			if (isDev) {
+				console.info("[protocolsApi.archiveProtocol] Falling back in dev mode.");
+				return true;
 			}
-			return true;
+			throw err;
 		}
 	},
 
@@ -161,8 +182,10 @@ export const protocolsApi = {
 			if (res && res.data) {
 				return res.data as Blob;
 			}
-		} catch (err) {
-			console.warn("[protocolsApi.downloadProtocol] API download endpoint fallback to client generator:", err);
+		} catch (_err) {
+			if (isDev) {
+				console.info("[protocolsApi.downloadProtocol] API download endpoint fallback to client generator in dev mode.");
+			}
 		}
 		return null;
 	},
@@ -177,8 +200,10 @@ export const protocolsApi = {
 			if (res && res.data) {
 				return res.data as Blob;
 			}
-		} catch (err) {
-			console.warn("[protocolsApi.downloadAllProtocols] API bulk download endpoint fallback to client generator:", err);
+		} catch (_err) {
+			if (isDev) {
+				console.info("[protocolsApi.downloadAllProtocols] API bulk download endpoint fallback to client generator in dev mode.");
+			}
 		}
 		return null;
 	},

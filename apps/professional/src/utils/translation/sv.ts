@@ -3416,8 +3416,11 @@ export const svOffer: OfferTranslation = {
 	viewDetailsButton: "Visa detaljer",
 	viewDetailTitle: "Visa detaljer",
 	orderNumberSubtitle: "Ordernummer",
+	orderNumberLabel: "Ordernummer:",
 	warrantyInfoSection: "Garantiinformation",
 	warrantyResponsibleLabel: "Garantiansvarig",
+	warrantyTimeLabel: "Garantitid",
+	mobilePhoneLabel: "Mobiltelefon:",
 	visitDatesSection: "Besöksdatum",
 	createVisitDateButton: "Lägg till",
 	createVisitDateTitle: "Lägg till besöksdatum",
@@ -6177,6 +6180,7 @@ const svFinancialReports: FinancialReportsTranslation = {
 };
 
 const svOrderInformation: OrderInformationTranslation = {
+	orderInformationTab: "Orderinformation",
 	projectDetailsTab: "Projektuppgifter",
 	offerTab: "Offert",
 	companyNumberSection: "Företagsnummer",
@@ -6788,6 +6792,10 @@ export const svOrderProtocol: OrderProtocolTranslation = {
 	ariaLabelCloseModal: "Stäng dialogruta",
 	ariaLabelAddParticipant: "Lägg till deltagare",
 	ariaLabelRemoveFile: "Ta bort fil",
+	protocolResponsibleLabel: "Ansvarig",
+	protocolSubjectLabel: "Rubrik",
+	validationProtocolSubjectRequired: "Rubrik är obligatorisk",
+	protocolSaveButton: "Spara",
 };
 
 export const sv: Translation = {

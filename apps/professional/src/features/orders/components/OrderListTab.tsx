@@ -242,8 +242,7 @@ export function OrderListTab() {
 							<TableHead className="py-3.5 px-4 text-right whitespace-nowrap font-medium text-slate-600">
 							</TableHead>
 							{/* Sticky Actions column header */}
-							<TableHead className="w-[60px] min-w-[60px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] z-20 text-center py-3.5 px-2 text-xs font-semibold text-slate-600">
-								<Translate text={localizationConstants.actionsHeader} />
+							<TableHead className="w-[60px] min-w-[60px] sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0] z-20 py-3.5 px-2">
 							</TableHead>
 						</TableRow>
 					</TableHeader>
@@ -290,7 +289,7 @@ export function OrderListTab() {
 									</TableCell>
 									{/* Separate non-sticky See Order column */}
 									<TableCell className="px-4 py-3.5 text-right whitespace-nowrap">
-										<Link href={`/module/production/order/${encodeURIComponent(order.id)}`}>
+										<Link href={`/module/production/order/${encodeURIComponent(order.id)}/order-information`}>
 											<Button
 												variant="outline"
 												size="sm"
@@ -316,7 +315,7 @@ export function OrderListTab() {
 												<PermissionGate permission="VIEW_ORDERS">
 													<DropdownMenuItem asChild>
 														<Link
-															href={`/module/production/order/${encodeURIComponent(order.id)}`}
+															href={`/module/production/order/${encodeURIComponent(order.id)}/order-information`}
 															className="flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50"
 														>
 															<Eye className="h-4 w-4 text-slate-500" />

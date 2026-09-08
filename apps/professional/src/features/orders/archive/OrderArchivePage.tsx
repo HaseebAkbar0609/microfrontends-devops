@@ -35,7 +35,7 @@ export function OrderArchivePage() {
 			<PageHeader
 				title={localizationConstants.archive}
 				breadcrumbs={orderBreadcrumbs(localizationConstants.archive)}
-				className="border-b-0 px-6 pt-5 pb-2"
+				className="border-b-0 px-6 pt-6 sm:pt-7 pb-2"
 			/>
 
 			{/* Archive Datatable */}

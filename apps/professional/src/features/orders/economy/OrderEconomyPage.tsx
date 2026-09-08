@@ -33,7 +33,7 @@ export function OrderEconomyPage() {
 			<PageHeader
 				title={localizationConstants.economicOverview}
 				breadcrumbs={orderBreadcrumbs(localizationConstants.economicOverview)}
-				className="border-b-0 px-6 pt-5 pb-2"
+				className="border-b-0 px-6 pt-6 sm:pt-7 pb-2"
 			/>
 
 			{/* Tabs & Table Content */}

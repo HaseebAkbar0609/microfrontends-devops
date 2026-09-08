@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { RecordNavRow } from "@/components/layout/navigation";
 import { ORDER_MODULE_BASE_URL } from "@/features/orders/data/orderNav.config";
 import { useTranslate } from "@/utils/translation/translate";
@@ -20,7 +19,6 @@ export interface OrderOpenedPageProps {
 }
 
 export function OrderOpenedPage({ orderId, initialTab }: OrderOpenedPageProps) {
-  const [activeTab, setActiveTab] = useState<string>(initialTab || "project-details");
   const { orderData, updateOrderData, isLoading } = useOrderOpened(orderId);
   const t = useTranslate();
 
@@ -41,13 +39,12 @@ export function OrderOpenedPage({ orderId, initialTab }: OrderOpenedPageProps) {
             backHref={`${ORDER_MODULE_BASE_URL}/overview`}
             className="pt-0"
             titleClassName="font-sans text-base sm:text-xl md:text-2xl leading-6 sm:leading-7 md:leading-8 tracking-normal align-middle"
-            backButtonClassName="mt-0.5 sm:mt-[5px]"
           />
 
           {/* Sections with Tabs */}
-          <div className="ml-7">
+          <div className="-mx-4 sm:-mx-6">
             {isLoading ? (
-              <div className="space-y-4">
+              <div className="px-4 sm:px-6 space-y-4">
                 <Skeleton className="h-9 w-48 bg-zinc-200" />
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   <Skeleton className="h-56 w-full bg-zinc-200 rounded-lg" />
@@ -59,9 +56,9 @@ export function OrderOpenedPage({ orderId, initialTab }: OrderOpenedPageProps) {
             ) : (
               <OrderOpenedSections
                 data={orderData}
+                orderId={orderId}
                 onUpdateData={updateOrderData}
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
+                initialTab={initialTab}
               />
             )}
           </div>

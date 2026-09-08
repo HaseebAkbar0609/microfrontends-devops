@@ -172,9 +172,9 @@ export function OrderOrganisationPage({ orderId = "5000-001", hideNavRow = false
 	);
 
 	return (
-		<div className="flex h-full flex-col bg-slate-50/50 relative overflow-hidden font-sans antialiased text-slate-900">
+		<div className="flex h-full flex-col bg-white relative overflow-hidden font-sans antialiased text-slate-900">
 			{/* Main Content Scrollable Container */}
-			<div className="flex-1 overflow-y-auto px-6 py-6">
+			<div className={hideNavRow ? "flex-1 overflow-y-auto" : "flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6"}>
 				<div className="w-full space-y-6">
 					{/* Record Back Navigation Bar */}
 					{!hideNavRow && (
@@ -183,11 +183,10 @@ export function OrderOrganisationPage({ orderId = "5000-001", hideNavRow = false
 							backHref={`${ORDER_MODULE_BASE_URL}/${orderId}`}
 							className="pt-0"
 							titleClassName="font-sans text-base sm:text-xl md:text-2xl leading-6 sm:leading-7 md:leading-8 tracking-normal align-middle"
-							backButtonClassName="mt-[2px] sm:mt-[5px]"
 						/>
 					)}
 
-					<div className="ml-0 sm:ml-7 space-y-4">
+					<div className={hideNavRow ? "space-y-4" : "ml-0 sm:ml-7 space-y-4"}>
 						{/* Action Bar: Search, Filter, Print, Add */}
 						<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 							<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
@@ -203,7 +202,7 @@ export function OrderOrganisationPage({ orderId = "5000-001", hideNavRow = false
 									<DropdownMenuTrigger asChild>
 										<Button
 											variant="outline"
-											className="h-10 w-full sm:w-[75px] sm:min-w-[75px] border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between cursor-pointer"
+											className="h-10 w-full sm:w-[90px] rounded-lg border-slate-200 text-slate-700 font-normal bg-white hover:bg-slate-50 gap-1.5 px-3 text-xs shadow-none justify-between cursor-pointer shrink-0"
 										>
 											<Translate text={localizationConstants.filter} />
 											<ChevronDown className="h-3.5 w-3.5 text-slate-500 shrink-0" />
@@ -232,21 +231,21 @@ export function OrderOrganisationPage({ orderId = "5000-001", hideNavRow = false
 							<div className="flex items-center justify-end sm:justify-start gap-3 w-full sm:w-auto">
 								<Button
 									type="button"
-									variant="outline"
+									variant="ghost"
 									size="icon"
 									onClick={handlePrint}
-									className="h-10 w-10 rounded-lg border-slate-200 bg-white text-slate-700 hover:bg-slate-50 shadow-none cursor-pointer"
+									className="h-10 w-10 rounded-lg bg-[#F4F4F5] text-slate-900 hover:bg-[#E4E4E7] shadow-none cursor-pointer border-none opacity-100 shrink-0"
 									title={t(localizationConstants.orgPrintButton)}
 									aria-label={t(localizationConstants.orgPrintButton)}
 								>
-									<Printer className="h-4 w-4" />
+									<Printer className="h-4 w-4 text-slate-900" />
 								</Button>
 
 								<Button
 									type="button"
-									className="h-10 px-5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium shadow-none gap-1.5 cursor-pointer"
+									className="h-10 min-h-[40px] px-4 sm:px-5 rounded-md bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium shadow-none gap-2 cursor-pointer shrink-0 whitespace-nowrap flex items-center justify-center"
 								>
-									<Plus className="h-4 w-4" />
+									<Plus className="h-4 w-4 shrink-0" />
 									<span>{t(localizationConstants.orgAddButton)}</span>
 								</Button>
 							</div>
