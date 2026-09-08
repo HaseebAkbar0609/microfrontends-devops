@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Layers, LayoutGrid } from "lucide-react";
 import {
 	AlertDialog,
@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Card } from "@/components/ui/card";
 import useModal from "@/features/auth/hooks/useModal";
+import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -32,6 +33,8 @@ export interface ModuleDashboardRailApi {
 	onSelectItem: (id: string) => void;
 	/** Ids already placed on the grid. */
 	placedItemIds: string[];
+	saveLayout?: () => void;
+	discardLayout?: () => void;
 }
 
 export interface ModuleWidgetDashboardProps {
@@ -48,6 +51,8 @@ export interface ModuleWidgetDashboardProps {
 	 */
 	rail?: (api: ModuleDashboardRailApi) => React.ReactNode;
 	className?: string;
+	storageKey?: string;
+	isRearranging?: boolean;
 }
 
 export function ModuleWidgetDashboard({
@@ -59,6 +64,8 @@ export function ModuleWidgetDashboard({
 	panelHeader,
 	rail,
 	className,
+	storageKey,
+	isRearranging,
 }: ModuleWidgetDashboardProps) {
 	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
@@ -73,6 +80,51 @@ export function ModuleWidgetDashboard({
 	const [highlightedWidgetUid, setHighlightedWidgetUid] = useState<
 		string | null
 	>(null);
+
+	const persistedWidgetsRef = useRef<PlacedWidgetEntry[]>(initialWidgets);
+
+	useEffect(() => {
+		if (!storageKey || typeof window === "undefined") return;
+		try {
+			const raw = localStorage.getItem(storageKey);
+			if (!raw) return;
+			const savedIds: string[] = JSON.parse(raw);
+			if (Array.isArray(savedIds) && savedIds.length > 0) {
+				const restored = initialWidgets.map((slot, idx) => {
+					const id = savedIds[idx];
+					if (!id) return slot;
+					return {
+						...slot,
+						sidebarId: id,
+						widgetProps:
+							widgetMap[id] ??
+							widgetMap.emptyPage ??
+							slot.widgetProps,
+					};
+				});
+				setPlacedWidgets(restored);
+				persistedWidgetsRef.current = restored;
+			}
+		} catch (err) {
+			console.error("Failed to restore saved widget dashboard layout", err);
+		}
+	}, [storageKey, initialWidgets, widgetMap, setPlacedWidgets]);
+
+	const saveLayout = () => {
+		if (storageKey && typeof window !== "undefined") {
+			const ids = placedWidgets.map((w) => w.sidebarId);
+			localStorage.setItem(storageKey, JSON.stringify(ids));
+		}
+		persistedWidgetsRef.current = placedWidgets;
+		showToast("success", t(localizationConstants.widgetBoardLayoutSaved));
+	};
+
+	const discardLayout = () => {
+		if (persistedWidgetsRef.current) {
+			setPlacedWidgets(persistedWidgetsRef.current);
+		}
+		showToast("info", t(localizationConstants.widgetRailDiscard));
+	};
 
 	const replacementModal = useModal<DashboardModalType>();
 	const [pendingReplacement, setPendingReplacement] = useState<{
@@ -295,6 +347,7 @@ export function ModuleWidgetDashboard({
 								<DraggableGridCard
 									key={entry.uid}
 									className={entry.colSpanClass}
+									disabled={isRearranging !== undefined ? !isRearranging : false}
 									isSwapTarget={gridDragOverIndex === index}
 									isEmpty={entry.sidebarId === "emptyPage"}
 									isHighlighted={
@@ -314,7 +367,7 @@ export function ModuleWidgetDashboard({
 									}
 								>
 									<DashboardWidget
-										{...entry.widgetProps}
+										{...((entry.sidebarId ? widgetMap[entry.sidebarId] : undefined) ?? entry.widgetProps)}
 										isEmpty={
 											entry.sidebarId === "emptyPage"
 										}
@@ -333,6 +386,8 @@ export function ModuleWidgetDashboard({
 							selectedItem,
 							onSelectItem: handleSidebarItemClick,
 							placedItemIds: placedSidebarIds,
+							saveLayout,
+							discardLayout,
 						})}
 					</div>
 				)}

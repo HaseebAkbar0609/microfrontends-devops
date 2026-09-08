@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ChevronDown, Printer } from "lucide-react";
+import { ChevronDown, Plus, Printer } from "lucide-react";
 import { RecordNavRow } from "@/components/layout/navigation";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
@@ -97,16 +97,14 @@ export function OrderPaymentPlanListPage({
 							onValueChange={(val) => setActiveTab(val as "bestallare" | "ue-lev")}
 							className="w-full flex flex-col"
 						>
-							<div className="mb-4 overflow-x-auto overflow-y-hidden scrollbar-none border-b border-slate-200">
-								<TabsList variant="line" className="inline-flex items-center gap-1 sm:gap-2 min-w-max h-[36px]">
-									<TabsTrigger value="bestallare" className="cursor-pointer">
-										{t(localizationConstants.paymentPlanBestallareTab)}
-									</TabsTrigger>
-									<TabsTrigger value="ue-lev" className="cursor-pointer">
-										{t(localizationConstants.paymentPlanUeLevTab)}
-									</TabsTrigger>
-								</TabsList>
-							</div>
+							<TabsList variant="line" className="mb-4">
+								<TabsTrigger value="bestallare" className="cursor-pointer">
+									<Translate text={localizationConstants.paymentPlanBestallareTab} />
+								</TabsTrigger>
+								<TabsTrigger value="ue-lev" className="cursor-pointer">
+									<Translate text={localizationConstants.paymentPlanUeLevTab} />
+								</TabsTrigger>
+							</TabsList>
 
 							{/* Controls Bar: Search, Filter on Left, Print on Right */}
 							<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between w-full pb-2">
@@ -164,12 +162,22 @@ export function OrderPaymentPlanListPage({
 										variant="ghost"
 										size="icon"
 										onClick={handlePrint}
-										className="h-10 w-10 rounded-lg bg-[#F4F4F5] text-slate-900 hover:bg-[#E4E4E7] shadow-none cursor-pointer border-none opacity-100"
+										className="h-10 w-10 rounded-lg bg-[#F4F4F5] text-slate-900 hover:bg-[#E4E4E7] shadow-none cursor-pointer border-none opacity-100 shrink-0"
 										title={t(localizationConstants.orgPrintButton)}
 										aria-label={t(localizationConstants.orgPrintButton)}
 									>
 										<Printer className="h-4 w-4 text-slate-900" />
 									</Button>
+									{activeTab === "ue-lev" && (
+										<Button
+											type="button"
+											onClick={() => setIsAddUeModalOpen(true)}
+											className="h-10 min-h-[40px] px-4 sm:px-5 rounded-md bg-slate-900 text-white hover:bg-slate-800 text-sm font-medium gap-2 cursor-pointer shrink-0 whitespace-nowrap flex items-center justify-center shadow-none"
+										>
+											<Plus className="h-4 w-4 shrink-0" />
+											<span>{t(localizationConstants.btnLaggTill)}</span>
+										</Button>
+									)}
 								</div>
 							</div>
 
@@ -202,7 +210,6 @@ export function OrderPaymentPlanListPage({
 											totalPages={totalPages}
 											onPageChange={setCurrentPage}
 											onPageSizeChange={setPageSize}
-											onOpenAddModal={() => setIsAddUeModalOpen(true)}
 											onDelete={(id) => handleDeletePlan(id, true)}
 											onSend={(id) => handleSendPlan(id)}
 										/>

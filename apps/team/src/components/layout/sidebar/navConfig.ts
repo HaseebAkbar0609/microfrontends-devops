@@ -350,6 +350,11 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 					label: localizationConstants.adminCompanyInformation,
 					href: "/admin/company-information",
 				},
+				{
+					id: "admin-content",
+					label: localizationConstants.contentModuleTitle,
+					href: "/admin/content",
+				},
 			],
 		},
 	];

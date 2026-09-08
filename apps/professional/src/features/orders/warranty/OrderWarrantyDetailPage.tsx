@@ -10,7 +10,7 @@ export interface OrderWarrantyDetailPageProps {
 }
 
 export function OrderWarrantyDetailPage({ id }: OrderWarrantyDetailPageProps) {
-	const { rows, inspectionDates, addInspectionDate } = useWarranty();
+	const { rows, inspectionDates, addInspectionDate, deleteInspectionDate } = useWarranty(id);
 
 	const targetWarranty = rows.find(
 		(r) => r.id === id || r.orderNo.replace("#", "").trim() === id.replace("#", "").trim()
@@ -19,7 +19,7 @@ export function OrderWarrantyDetailPage({ id }: OrderWarrantyDetailPageProps) {
 	// Explicit Not-Found Case handling instead of silent fallback
 	if (!targetWarranty) {
 		return (
-			<div className="flex flex-1 flex-col items-center justify-center p-12 text-slate-500 bg-slate-50/50">
+			<div className="flex flex-1 flex-col items-center justify-center p-12 text-slate-500 bg-white">
 				<p className="text-sm font-medium">
 					<Translate text={localizationConstants.noOrdersFound} />
 				</p>
@@ -32,6 +32,7 @@ export function OrderWarrantyDetailPage({ id }: OrderWarrantyDetailPageProps) {
 			warranty={targetWarranty}
 			inspectionDates={inspectionDates}
 			onAddInspectionDate={addInspectionDate}
+			onDeleteInspectionDate={deleteInspectionDate}
 		/>
 	);
 }

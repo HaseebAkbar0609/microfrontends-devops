@@ -4,44 +4,57 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useTranslation } from "react-i18next";
 import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { InspectionDateItem } from "../types/warranty.types";
 
-// Defined outside component body to avoid re-creation on every render
-const createVisitDateSchema = (isSv: boolean) =>
+const createVisitDateSchema = (
+	dateRequired: string,
+	emailRequired: string,
+	ruleRequired: string,
+	documentRequired: string
+) =>
 	z.object({
-		date: z.string().min(1, isSv ? "Datum krävs" : "Date is required"),
+		date: z.string().min(1, dateRequired),
 		reminderEmail: z
 			.string()
-			.min(1, isSv ? "E-post krävs" : "Email is required")
-			.email(isSv ? "Ogiltig e-postadress" : "Invalid email address"),
-		rule: z.string().min(1, isSv ? "Regel krävs" : "Rule is required"),
-		documentName: z.string().min(1, isSv ? "Dokumentnamn krävs" : "Document name is required"),
+			.min(1, emailRequired)
+			.email(emailRequired),
+		rule: z.string().min(1, ruleRequired),
+		documentName: z.string().min(1, documentRequired),
 	});
 
 export type VisitDateFormData = z.infer<ReturnType<typeof createVisitDateSchema>>;
 
 export interface CreateVisitDateModalProps {
 	isOpen: boolean;
+	initialData?: InspectionDateItem | null;
 	onClose: () => void;
 	onSave: (dateItem: Omit<InspectionDateItem, "id">) => void;
 }
 
 export function CreateVisitDateModal({
 	isOpen,
+	initialData,
 	onClose,
 	onSave,
 }: CreateVisitDateModalProps) {
-	const { i18n } = useTranslation();
-	const isSv = i18n.language === "sv";
+	const t = useTranslate();
 
-	const visitDateSchema = useMemo(() => createVisitDateSchema(isSv), [isSv]);
+	const visitDateSchema = useMemo(
+		() =>
+			createVisitDateSchema(
+				t(localizationConstants.validationVisitDateRequired),
+				t(localizationConstants.validationEmailRequired),
+				t(localizationConstants.ruleLabel),
+				t(localizationConstants.documentLabel)
+			),
+		[t]
+	);
 
 	const {
 		register,
@@ -58,17 +71,26 @@ export function CreateVisitDateModal({
 		},
 	});
 
-	// Reset form fields whenever modal is opened
+	// Reset form fields whenever modal is opened or initialData changes
 	useEffect(() => {
 		if (isOpen) {
-			reset({
-				date: "",
-				reminderEmail: "",
-				rule: "",
-				documentName: "",
-			});
+			if (initialData) {
+				reset({
+					date: initialData.date || "",
+					reminderEmail: initialData.reminderEmail || "",
+					rule: initialData.rule || "",
+					documentName: initialData.documentName || "",
+				});
+			} else {
+				reset({
+					date: "",
+					reminderEmail: "",
+					rule: "",
+					documentName: "",
+				});
+			}
 		}
-	}, [isOpen, reset]);
+	}, [isOpen, initialData, reset]);
 
 	if (!isOpen) return null;
 
@@ -130,7 +152,7 @@ export function CreateVisitDateModal({
 							</Label>
 							<Input
 								type="email"
-								placeholder={isSv ? "t.ex. info@byggbolaget.se" : "e.g. info@byggbolaget.se"}
+								placeholder="info@byggbolaget.se"
 								{...register("reminderEmail")}
 								className={`h-9 text-xs ${errors.reminderEmail ? "border-red-500 focus-visible:ring-red-500" : ""}`}
 							/>
@@ -145,7 +167,7 @@ export function CreateVisitDateModal({
 							</Label>
 							<Input
 								type="text"
-								placeholder={isSv ? "t.ex. 01 månad innan" : "e.g. 1 month before"}
+								placeholder="01 månad innan"
 								{...register("rule")}
 								className={`h-9 text-xs ${errors.rule ? "border-red-500 focus-visible:ring-red-500" : ""}`}
 							/>
@@ -160,7 +182,7 @@ export function CreateVisitDateModal({
 							</Label>
 							<Input
 								type="text"
-								placeholder={isSv ? "t.ex. Lönespecifikation Januari" : "e.g. Payslip January"}
+								placeholder="Lönespecifikation Januari"
 								{...register("documentName")}
 								className={`h-9 text-xs ${errors.documentName ? "border-red-500 focus-visible:ring-red-500" : ""}`}
 							/>
@@ -182,7 +204,7 @@ export function CreateVisitDateModal({
 						</Button>
 						<Button
 							type="submit"
-							className="h-9 px-5 gap-1.5 text-xs font-medium bg-[#111721] text-white hover:bg-slate-800 cursor-pointer"
+							className="h-9 px-5 gap-1.5 text-xs font-medium bg-slate-900 text-white hover:bg-slate-800 cursor-pointer"
 						>
 							<Check className="h-3.5 w-3.5" />
 							<span><Translate text={localizationConstants.saveButton} /></span>
