@@ -222,7 +222,17 @@ export default function ManagePlansPage() {
 									</Button>
 								</div>
 							</div>
-							<div className="flex flex-wrap justify-start gap-6 mt-4">
+							{currentStep === MANAGE_PLANS_STEPS.LICENSES && (
+								<div className="mx-auto mt-8 max-w-2xl text-center">
+									<h1 className="text-2xl font-bold text-slate-800">
+										<Translate text={localizationConstants.managePlansLicensesTitle} />
+									</h1>
+									<p className="mt-2 text-sm leading-6 text-slate-500">
+										<Translate text={localizationConstants.managePlansLicensesSubtitle} />
+									</p>
+								</div>
+							)}
+							<div className="mt-6 flex flex-wrap items-stretch justify-center gap-6">
 								{stepPlans.map((plan) => {
 									const selectedPrice =
 										getPriceForPaymentOption(
@@ -234,7 +244,7 @@ export default function ManagePlansPage() {
 									return (
 										<div
 											key={plan.id}
-											className="w-full max-w-sm"
+											className="flex w-full max-w-[330px]"
 										>
 											<PlanCard
 												plan={plan}

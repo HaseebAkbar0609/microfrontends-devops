@@ -264,6 +264,10 @@ export const svManagePlans: ManagePlansTranslation = {
 	managePlansPaymentOptionMonth: "Månad",
 	managePlansPaymentOptionQuarter: "Kvartal",
 	managePlansPaymentOptionYear: "År",
+	managePlansLicensesTitle: "Välj användarlicenser",
+	managePlansLicensesSubtitle:
+		"Ditt baspaket finns redan i kundvagnen. Välj licenstyp och antal användare som ska läggas till.",
+	managePlansAddLicensesButton: "Lägg till licenser",
 };
 
 export const svManageCart: ManageCartTranslation = {
@@ -1701,6 +1705,20 @@ export const svOffer: OfferTranslation = {
 	subscriptionColLicenses: "Antal licenser",
 	subscriptionColAddons: "Tillval",
 	subscriptionStatusActive: "Aktiv",
+	subscriptionItemType: "Typ",
+	subscriptionItemPlan: "Baspaket",
+	subscriptionItemLicense: "Användarlicens",
+	subscriptionColQuantity: "Antal",
+	subscriptionColUnitPrice: "Styckpris",
+	subscriptionColTotal: "Totalt",
+	subscriptionBillingTitle: "Faktureringsöversikt",
+	subscriptionNextBilling: "Nästa faktureringsdatum",
+	subscriptionCurrentTotal: "Nuvarande återkommande summa",
+	subscriptionLoadFailed: "Abonnemangsuppgifterna kunde inte hämtas.",
+	subscriptionEmptyTitle: "Inget aktivt abonnemang",
+	subscriptionEmptyText: "Välj ett paket och licenser för att aktivera TimeFlow-arbetsytan.",
+	subscriptionChoosePlan: "Välj ett paket",
+	subscriptionCancellationScheduled: "Abonnemanget är planerat att avslutas den",
 	subscriptionServiceBankId: "Bank ID:",
 	subscriptionServiceSms: "SMS:",
 	subscriptionServiceEmail: "Email:",

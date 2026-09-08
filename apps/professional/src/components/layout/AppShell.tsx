@@ -6,6 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthStatus } from "@/context/AuthContext";
 import { Loader } from "@/components/ui/loader";
 import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscriptionCookie";
+import { setRequiresSubscriptionCookie } from "@/lib/requiresSubscriptionCookie";
+import { getBillingAccountStatusAction } from "@/api-actions/payment/hostedCheckout";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 
@@ -88,6 +90,30 @@ export function AppShell({ children }: AppShellProps) {
 
 		setIsCheckingAuth(false);
 	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, pathname, router]);
+
+	useEffect(() => {
+		if (!isReady || !isAuthenticated || isAuthRoute || isPublicPage) return;
+		let active = true;
+
+		const checkBillingStatus = async () => {
+			const result = await getBillingAccountStatusAction();
+			if (!active || !result.success || !result.data) return;
+			const canceled =
+				result.data.payment_status === "canceled" ||
+				result.data.subscription_status === "canceled";
+			setRequiresSubscriptionCookie(canceled);
+			if (canceled) router.replace("/manage-plans");
+		};
+
+		void checkBillingStatus();
+		const intervalId = window.setInterval(() => void checkBillingStatus(), 15_000);
+		window.addEventListener("focus", checkBillingStatus);
+		return () => {
+			active = false;
+			window.clearInterval(intervalId);
+			window.removeEventListener("focus", checkBillingStatus);
+		};
+	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, router]);
 
 	if (!isReady) {
 		return <Loader />;

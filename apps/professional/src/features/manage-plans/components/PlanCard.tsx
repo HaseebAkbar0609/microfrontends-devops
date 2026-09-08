@@ -41,11 +41,16 @@ export function PlanCard({
 	const planName = plan.plan_key.replace(/-/g, " ").toUpperCase();
 
 	return (
-		<Card className="min-h-[600px] flex flex-col bg-card border border-border shadow-sm hover:shadow-md transition-shadow">
+		<Card className="flex min-h-[540px] w-full flex-col border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
 			<CardHeader className="pb-2">
 				<CardTitle className="text-xl text-gray-500 text-center font-bold">
 					{planName}
 				</CardTitle>
+				{showQuantitySelector && (
+					<p className="text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
+						<Translate text={localizationConstants.managePlansLicense} />
+					</p>
+				)}
 			</CardHeader>
 			<CardContent className="flex-1 space-y-4">
 				<ul className="space-y-2 list-disc list-outside pl-5">
@@ -114,7 +119,11 @@ export function PlanCard({
 					disabled={isLoading}
 				>
 					<Translate
-						text={localizationConstants.managePlansChoosePlanButton}
+						text={
+							showQuantitySelector
+								? localizationConstants.managePlansAddLicensesButton
+								: localizationConstants.managePlansChoosePlanButton
+						}
 					/>
 				</Button>
 			</CardFooter>

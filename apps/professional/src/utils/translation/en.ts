@@ -143,6 +143,10 @@ export const enManagePlans: ManagePlansTranslation = {
 	managePlansPaymentOptionMonth: "Month",
 	managePlansPaymentOptionQuarter: "Quarter",
 	managePlansPaymentOptionYear: "Year",
+	managePlansLicensesTitle: "Choose user licenses",
+	managePlansLicensesSubtitle:
+		"Your base plan is already in the cart. Choose a license type and the number of users to add.",
+	managePlansAddLicensesButton: "Add licenses",
 };
 
 export const enManageCart: ManageCartTranslation = {
@@ -1818,6 +1822,20 @@ export const enOffer: OfferTranslation = {
 	subscriptionColLicenses: "Number of licenses",
 	subscriptionColAddons: "Add-ons",
 	subscriptionStatusActive: "Active",
+	subscriptionItemType: "Type",
+	subscriptionItemPlan: "Base plan",
+	subscriptionItemLicense: "User license",
+	subscriptionColQuantity: "Quantity",
+	subscriptionColUnitPrice: "Unit price",
+	subscriptionColTotal: "Total",
+	subscriptionBillingTitle: "Billing summary",
+	subscriptionNextBilling: "Next billing date",
+	subscriptionCurrentTotal: "Current recurring total",
+	subscriptionLoadFailed: "Subscription details could not be loaded.",
+	subscriptionEmptyTitle: "No active subscription",
+	subscriptionEmptyText: "Choose a plan and licenses to activate the TimeFlow workspace.",
+	subscriptionChoosePlan: "Choose a plan",
+	subscriptionCancellationScheduled: "This subscription is scheduled to end on",
 	subscriptionServiceBankId: "Bank ID:",
 	subscriptionServiceSms: "SMS:",
 	subscriptionServiceEmail: "Email:",

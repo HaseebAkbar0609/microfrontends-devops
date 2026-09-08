@@ -357,6 +357,9 @@ export type ManagePlansTranslation = {
 	managePlansPaymentOptionMonth: string;
 	managePlansPaymentOptionQuarter: string;
 	managePlansPaymentOptionYear: string;
+	managePlansLicensesTitle: string;
+	managePlansLicensesSubtitle: string;
+	managePlansAddLicensesButton: string;
 };
 
 export type ManageCartTranslation = {
@@ -1787,6 +1790,20 @@ export type OfferTranslation = {
 	subscriptionColLicenses: string;
 	subscriptionColAddons: string;
 	subscriptionStatusActive: string;
+	subscriptionItemType: string;
+	subscriptionItemPlan: string;
+	subscriptionItemLicense: string;
+	subscriptionColQuantity: string;
+	subscriptionColUnitPrice: string;
+	subscriptionColTotal: string;
+	subscriptionBillingTitle: string;
+	subscriptionNextBilling: string;
+	subscriptionCurrentTotal: string;
+	subscriptionLoadFailed: string;
+	subscriptionEmptyTitle: string;
+	subscriptionEmptyText: string;
+	subscriptionChoosePlan: string;
+	subscriptionCancellationScheduled: string;
 	subscriptionServiceBankId: string;
 	subscriptionServiceSms: string;
 	subscriptionServiceEmail: string;

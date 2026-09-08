@@ -32,6 +32,7 @@ export const API_PATH = {
 	SUBSCRIPTIONS: {
 		LIST: `${BASE_PATHS.SUBSCRIPTIONS}/list`,
 		CHECKOUT: `${BASE_PATHS.SUBSCRIPTIONS}/checkout`,
+		OVERVIEW: "/subscriptions",
 	},
 	USER_CARDS: {
 		SETUP_INTENT: `${BASE_PATHS.USER_CARDS}/setup-intent`,

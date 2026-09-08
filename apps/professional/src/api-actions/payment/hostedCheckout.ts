@@ -21,10 +21,55 @@ export type HostedCheckoutStatus = {
 	subscription_status: string | null;
 };
 
+export type BillingAccountStatus = {
+	core_account_id: string;
+	payment_status: "pending" | "active" | "restricted" | "canceled";
+	subscription_status: string | null;
+	stripe_subscription_id: string | null;
+	plan_code: string | null;
+	billing_interval: "monthly" | "annual" | null;
+	quantity: number | null;
+	current_period_start: string | null;
+	current_period_end: string | null;
+	commitment_end: string | null;
+	cancel_at_period_end: boolean;
+	canceled_at: string | null;
+};
+
 function readCompanyId(): string {
 	const company = authStorage.getCompanyData();
 	if (!company || typeof company !== "object" || !("id" in company)) return "";
 	return typeof company.id === "string" ? company.id.trim() : "";
+}
+
+export async function getBillingAccountStatusAction(): Promise<
+	ActionResult<BillingAccountStatus>
+> {
+	const accessToken = authStorage.getAccessToken()?.trim() ?? "";
+	const companyId = readCompanyId();
+	if (!accessToken || !companyId) {
+		return { success: false, data: null, error: "Unauthorized" };
+	}
+
+	try {
+		const response = await fetch("/api/billing/account-status", {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				"X-Company-ID": companyId,
+			},
+			cache: "no-store",
+		});
+		if (!response.ok) {
+			return { success: false, data: null, error: "Unable to load billing status" };
+		}
+		return {
+			success: true,
+			data: (await response.json()) as BillingAccountStatus,
+			error: null,
+		};
+	} catch {
+		return { success: false, data: null, error: "Unable to load billing status" };
+	}
 }
 
 export async function getHostedCheckoutStatusAction(

@@ -16,6 +16,21 @@ const checkoutStatusResponseSchema = z.object({
 	subscription_status: z.string().nullable(),
 });
 
+const accountStatusResponseSchema = z.object({
+	core_account_id: z.string().min(1),
+	payment_status: z.enum(["pending", "active", "restricted", "canceled"]),
+	subscription_status: z.string().nullable(),
+	stripe_subscription_id: z.string().nullable(),
+	plan_code: z.string().nullable(),
+	billing_interval: z.enum(["monthly", "annual"]).nullable(),
+	quantity: z.number().int().positive().nullable(),
+	current_period_start: z.string().datetime({ offset: true }).nullable(),
+	current_period_end: z.string().datetime({ offset: true }).nullable(),
+	commitment_end: z.string().datetime({ offset: true }).nullable(),
+	cancel_at_period_end: z.boolean(),
+	canceled_at: z.string().datetime({ offset: true }).nullable(),
+});
+
 const setupIntentResponseSchema = z.object({
 	client_secret: z.string().min(1),
 });
@@ -273,6 +288,22 @@ export async function getHostedCheckoutStatus(
 	const status = checkoutStatusResponseSchema.parse(await response.json());
 	if (status.core_account_id !== headers.companyId) {
 		throw new Error("Checkout Session company context mismatch");
+	}
+	return status;
+}
+
+export async function getBillingAccountStatus(headers: CallerHeaders) {
+	await verifyCallerContext(headers);
+	const response = await paymentServiceRequest(
+		`/api/v1/payments/accounts/${encodeURIComponent(headers.companyId)}/status`,
+	);
+	if (response.status === 404) return null;
+	if (!response.ok) {
+		throw new Error(`Payment service rejected account status (${response.status})`);
+	}
+	const status = accountStatusResponseSchema.parse(await response.json());
+	if (status.core_account_id !== headers.companyId) {
+		throw new Error("Billing account company context mismatch");
 	}
 	return status;
 }
