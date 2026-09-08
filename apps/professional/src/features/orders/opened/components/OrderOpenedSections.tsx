@@ -11,6 +11,7 @@ import { OrderInspectionView } from "./inspection/OrderInspectionView";
 import { OrderOrganisationPage } from "@/features/orders/organisation/OrderOrganisationPage";
 import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
 import { OrderGuaranteeCommitmentsPage } from "@/features/orders/guarantee-commitments/OrderGuaranteeCommitmentsPage";
+import { OrderProtocolOverviewPage } from "@/features/orders/protocol/OrderProtocolOverviewPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -25,7 +26,8 @@ type OrderTabValue =
 	| "inspection"
 	| "organisation"
 	| "payment-plan"
-	| "guarantee";
+	| "guarantee"
+	| "protocol";
 
 export function OrderOpenedSections({
 	data,
@@ -56,6 +58,7 @@ export function OrderOpenedSections({
 		organisation: t(localizationConstants.orderOrganisationTab),
 		"payment-plan": t(localizationConstants.paymentPlanTitle),
 		guarantee: t(localizationConstants.warrantyCommitments),
+		protocol: t(localizationConstants.protocolsTab),
 	};
 
 	const showSubtitle = !(activeTab === "guarantee" && isGuaranteeDetailOpen);
@@ -88,6 +91,9 @@ export function OrderOpenedSections({
 						</TabsTrigger>
 						<TabsTrigger value="guarantee" className="cursor-pointer">
 							{t(localizationConstants.warrantyCommitments)}
+						</TabsTrigger>
+						<TabsTrigger value="protocol" className="cursor-pointer">
+							{t(localizationConstants.protocolsTab)}
 						</TabsTrigger>
 					</TabsList>
 				</div>
@@ -140,9 +146,15 @@ export function OrderOpenedSections({
 						onDetailModeChange={setIsGuaranteeDetailOpen}
 					/>
 				</TabsContent>
+
+				{/* Tab 7: Protokoll */}
+				<TabsContent value="protocol" className="mt-0 focus-visible:outline-none">
+					<OrderProtocolOverviewPage orderId={data.id} />
+				</TabsContent>
 			</Tabs>
 		</div>
 	);
 }
 
 export default OrderOpenedSections;
+

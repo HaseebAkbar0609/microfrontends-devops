@@ -148,6 +148,8 @@ export const API_PATH = {
 		GUARANTEE_COMMITMENTS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments`,
 		GUARANTEE_VISIT_DATES: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments/visit-dates`,
 		GUARANTEE_VISIT_DATE_DETAIL: (orderId: string, visitDateId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments/visit-dates/${visitDateId}`,
+		PROTOCOLS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols`,
+		PROTOCOL_DETAIL: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {

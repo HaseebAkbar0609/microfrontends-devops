@@ -23,6 +23,7 @@ import {
 	OrderPaymentPlanTranslation,
 	OrderInspectionTranslation,
 	EconomyDashboardTranslation,
+	OrderProtocolTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -6699,6 +6700,46 @@ export const enEconomyDashboard: EconomyDashboardTranslation = {
 	viewRotRutAction: "Open ROT & RUT",
 };
 
+export const enOrderProtocol: OrderProtocolTranslation = {
+	protocolOverviewTitle: "Protocols",
+	protocolsTab: "Protocols",
+	createProtocolButton: "Create protocol",
+	protocolStandard: "Protocol - Standard",
+	protocolAction: "Protocol - Action",
+	protocolUpload: "Upload",
+	protocolColDate: "Date",
+	protocolColType: "Type",
+	protocolColPdf: "PDF",
+	protocolColHandling: "Action",
+	protocolActionOpen: "Open",
+	protocolActionArchive: "Archive",
+	protocolActionDelete: "Delete",
+	viewDetailsButton: "View details",
+	toastProtocolCreated: "Protocol created successfully",
+	toastProtocolUpdated: "Protocol updated successfully",
+	toastProtocolDeleted: "Protocol deleted successfully",
+	toastProtocolArchived: "Protocol archived successfully",
+	toastDownloadingFile: "Downloading file...",
+	downloadAction: "Download",
+	allowedFileTypesHelp: "Only PDF, PNG or JPG files (max 10MB)",
+	closeButton: "Close",
+	deleteProtocolConfirmTitle: "Delete protocol",
+	deleteProtocolConfirmDesc: "Are you sure you want to delete this protocol? This action cannot be undone.",
+	validationProtocolDateRequired: "Date is required",
+	validationProtocolTypeRequired: "Type is required",
+	createProtocolStandardTitle: "Create Standard Protocol",
+	createProtocolActionTitle: "Create Action Protocol",
+	uploadProtocolTitle: "Upload Protocol",
+	protocolNameLabel: "Protocol Name",
+	protocolTypeLabel: "Type",
+	protocolNotesLabel: "Notes / Description",
+	protocolStatusNotStarted: "Not started",
+	protocolStatusInProgress: "In progress",
+	protocolStatusCompleted: "Completed",
+	protocolFilterAllTypes: "All types",
+	protocolFilterAllStatuses: "All statuses",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -6723,4 +6764,5 @@ export const en: Translation = {
 	...enOrderPaymentPlan,
 	...enOrderInspection,
 	...enEconomyDashboard,
+	...enOrderProtocol,
 };

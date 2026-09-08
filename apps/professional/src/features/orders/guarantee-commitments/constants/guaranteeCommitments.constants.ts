@@ -12,4 +12,5 @@ export const GUARANTEE_CONSTANTS = {
 	ALLOWED_FILE_TYPES: ".png,.jpg,.jpeg,.pdf,.txt",
 	SUPPORTED_IMAGE_EXTENSIONS: ["png", "jpg", "jpeg", "doc"] as const,
 	DEFAULT_FILE_TYPE: "pdf",
+	WARRANTY_PERIOD_FILTERS: ["2 år", "5 år", "10 år"] as const,
 } as const;

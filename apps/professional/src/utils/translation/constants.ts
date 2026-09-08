@@ -6653,6 +6653,46 @@ export type EconomyDashboardTranslation = {
 	viewRotRutAction: string;
 };
 
+export type OrderProtocolTranslation = {
+	protocolOverviewTitle: string;
+	protocolsTab: string;
+	createProtocolButton: string;
+	protocolStandard: string;
+	protocolAction: string;
+	protocolUpload: string;
+	protocolColDate: string;
+	protocolColType: string;
+	protocolColPdf: string;
+	protocolColHandling: string;
+	protocolActionOpen: string;
+	protocolActionArchive: string;
+	protocolActionDelete: string;
+	viewDetailsButton: string;
+	toastProtocolCreated: string;
+	toastProtocolUpdated: string;
+	toastProtocolDeleted: string;
+	toastProtocolArchived: string;
+	toastDownloadingFile: string;
+	downloadAction: string;
+	allowedFileTypesHelp: string;
+	closeButton: string;
+	deleteProtocolConfirmTitle: string;
+	deleteProtocolConfirmDesc: string;
+	validationProtocolDateRequired: string;
+	validationProtocolTypeRequired: string;
+	createProtocolStandardTitle: string;
+	createProtocolActionTitle: string;
+	uploadProtocolTitle: string;
+	protocolNameLabel: string;
+	protocolTypeLabel: string;
+	protocolNotesLabel: string;
+	protocolStatusNotStarted: string;
+	protocolStatusInProgress: string;
+	protocolStatusCompleted: string;
+	protocolFilterAllTypes: string;
+	protocolFilterAllStatuses: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -6675,7 +6715,8 @@ export type Translation = HeaderTranslation &
 	RotRutTranslation &
 	OrderPaymentPlanTranslation &
 	OrderInspectionTranslation &
-	EconomyDashboardTranslation;
+	EconomyDashboardTranslation &
+	OrderProtocolTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -6686,3 +6727,4 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+

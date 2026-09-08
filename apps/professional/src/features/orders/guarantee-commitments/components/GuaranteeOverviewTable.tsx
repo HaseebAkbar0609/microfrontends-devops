@@ -29,6 +29,7 @@ import {
 import { TablePagination } from "@/components/table/TablePagination";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { GUARANTEE_CONSTANTS } from "../constants/guaranteeCommitments.constants";
 import type { GuaranteeRow } from "../types/guaranteeCommitments.types";
 import type { GuaranteeSortField, SortOrder } from "../hooks/useGuaranteeCommitments";
 
@@ -63,6 +64,7 @@ export function GuaranteeOverviewTable({
 	onSort,
 	searchQuery,
 	onSearchChange,
+	statusFilter,
 	onStatusFilterChange,
 	currentPage,
 	setCurrentPage,
@@ -109,19 +111,34 @@ export function GuaranteeOverviewTable({
 						<DropdownMenuTrigger asChild>
 							<Button
 								variant="outline"
-								className="h-10 w-full sm:w-[90px] rounded-lg border-slate-200 text-slate-700 font-normal bg-white hover:bg-slate-50 gap-1.5 px-3 text-xs shadow-none justify-between cursor-pointer"
+								className="h-10 w-full sm:w-auto min-w-[90px] rounded-lg border-slate-200 text-slate-700 font-normal bg-white hover:bg-slate-50 gap-1.5 px-3 text-xs shadow-none justify-between cursor-pointer"
 							>
-								<Translate text={localizationConstants.filter} />
+								<span>
+									{statusFilter === "all" ? (
+										<Translate text={localizationConstants.filter} />
+									) : (
+										statusFilter
+									)}
+								</span>
 								<ChevronDown className="h-3.5 w-3.5 text-slate-500 shrink-0" />
 							</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent align="start" className="w-36 border border-slate-200 bg-white shadow-md rounded-lg p-1">
+						<DropdownMenuContent align="start" className="w-44 border border-slate-200 bg-white shadow-md rounded-lg p-1 z-50">
 							<DropdownMenuItem
 								onClick={() => onStatusFilterChange("all")}
 								className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
 							>
 								<Translate text={localizationConstants.filterAllStatuses} />
 							</DropdownMenuItem>
+							{GUARANTEE_CONSTANTS.WARRANTY_PERIOD_FILTERS.map((period) => (
+								<DropdownMenuItem
+									key={period}
+									onClick={() => onStatusFilterChange(period)}
+									className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
+								>
+									{period}
+								</DropdownMenuItem>
+							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
