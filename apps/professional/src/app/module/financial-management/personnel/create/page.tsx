@@ -1,13 +1,7 @@
 "use client";
 
-import { PersonnelSubRoutePage } from "@/features/personnel/components/common/PersonnelSubRoutePage";
-import localizationConstants from "@/utils/translation/constants";
+import { CreateEmployeePage } from "@/features/personnel";
 
-export default function CreateEmployeePage() {
-	return (
-		<PersonnelSubRoutePage
-			activeTabId="create"
-			titleKey={localizationConstants.createEmployeeTab}
-		/>
-	);
+export default function Page() {
+	return <CreateEmployeePage />;
 }

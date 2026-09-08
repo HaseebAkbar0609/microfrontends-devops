@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo, useCallback, useDeferredValue } from "react";
 import { toast } from "sonner";
 import localizationConstants from "@/utils/translation/constants";
