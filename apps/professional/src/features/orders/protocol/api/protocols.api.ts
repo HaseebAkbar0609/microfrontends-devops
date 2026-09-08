@@ -1,8 +1,12 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
-import { MOCK_PROTOCOLS } from "../data/protocol.mock";
+import { MOCK_PROTOCOLS, MOCK_MEETING_INFO, MOCK_NEXT_MEETING, MOCK_MEETING_POINTS } from "../data/protocol.mock";
 import { PROTOCOL_CONSTANTS } from "../constants/protocol.constants";
-import type { ProtocolItem, CreateProtocolPayload } from "../types/protocol.types";
+import type {
+	ProtocolItem,
+	CreateProtocolPayload,
+	ProtocolDetailData,
+} from "../types/protocol.types";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -38,6 +42,53 @@ export const protocolsApi = {
 		const fallback = isDev ? MOCK_PROTOCOLS.find((p) => p.id === id) || null : null;
 		return fallback;
 	},
+
+	async getProtocolFullDetail(
+		id: string,
+		orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID
+	): Promise<ProtocolDetailData> {
+		try {
+			const res = await axiosInstance.get<ProtocolDetailData>(API_PATH.ORDERS.PROTOCOL_DETAIL(orderId, id));
+			if (res && res.data && res.data.protocol) return res.data;
+		} catch (err) {
+			console.warn("[protocolsApi.getProtocolFullDetail] Simulating full detail:", err);
+		}
+
+		const protocol = MOCK_PROTOCOLS.find((p) => p.id === id) || {
+			id,
+			orderId,
+			date: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DATE,
+			type: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_TYPE,
+			protocolName: "Byggmöte Vecka 36",
+			documentName: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME,
+			fileType: PROTOCOL_CONSTANTS.DEFAULT_FILE_TYPE,
+			status: "completed" as const,
+			lastUpdated: "2025-09-01 14:30",
+			responsible: "Kalle Svensson",
+			isArchived: false,
+			notes: "Genomgång av framdrift och tidsplan för vecka 36.",
+		};
+
+		return {
+			protocol,
+			meetingInfo: {
+				...MOCK_MEETING_INFO,
+				host: protocol.responsible || MOCK_MEETING_INFO.host,
+				startDate: protocol.date || MOCK_MEETING_INFO.startDate,
+				endDate: protocol.date || MOCK_MEETING_INFO.endDate,
+				rubrik: protocol.protocolName || MOCK_MEETING_INFO.rubrik,
+				category: protocol.category || MOCK_MEETING_INFO.category,
+				location: protocol.location || MOCK_MEETING_INFO.location,
+				address: protocol.address || MOCK_MEETING_INFO.address,
+				postalCode: protocol.postalCode || MOCK_MEETING_INFO.postalCode,
+				city: protocol.city || MOCK_MEETING_INFO.city,
+				information: protocol.notes || MOCK_MEETING_INFO.information,
+			},
+			nextMeeting: MOCK_NEXT_MEETING,
+			points: [...MOCK_MEETING_POINTS],
+		};
+	},
+
 
 	async createProtocol(payload: CreateProtocolPayload): Promise<ProtocolItem> {
 		const orderId = payload.orderId || PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID;

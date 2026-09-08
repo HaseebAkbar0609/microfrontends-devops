@@ -75,10 +75,14 @@ export function OrderOpenedSections({
 		: (controlledActiveTab as OrderTabValue) || (initialTab as OrderTabValue) || "order-information";
 
 	const [isGuaranteeDetailOpen, setIsGuaranteeDetailOpen] = useState(false);
+	const [isProtocolDetailOpen, setIsProtocolDetailOpen] = useState(false);
 
 	useEffect(() => {
 		if (activeTab !== "guarantee") {
 			setIsGuaranteeDetailOpen(false);
+		}
+		if (activeTab !== "protocol") {
+			setIsProtocolDetailOpen(false);
 		}
 	}, [activeTab, routeOrderId]);
 
@@ -106,7 +110,9 @@ export function OrderOpenedSections({
 		protocol: t(localizationConstants.protocolsTab),
 	};
 
-	const showSubtitle = !(activeTab === "guarantee" && isGuaranteeDetailOpen);
+	const showSubtitle =
+		!(activeTab === "guarantee" && isGuaranteeDetailOpen) &&
+		!(activeTab === "protocol" && isProtocolDetailOpen);
 
 	const orderLabel = serialNo
 		? `${t(localizationConstants.order)} ${serialNo}`
@@ -244,9 +250,12 @@ export function OrderOpenedSections({
 					/>
 				</TabsContent>
 
-				{/* Tab 7: Protokoll */}
-				<TabsContent value="protocol" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 pb-6 focus-visible:outline-none">
-					<OrderProtocolOverviewPage orderId={routeOrderId} />
+				{/* Tab 6: Protokoll */}
+				<TabsContent value="protocol" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderProtocolOverviewPage
+						orderId={routeOrderId}
+						onDetailModeChange={setIsProtocolDetailOpen}
+					/>
 				</TabsContent>
 			</Tabs>
 		</div>
