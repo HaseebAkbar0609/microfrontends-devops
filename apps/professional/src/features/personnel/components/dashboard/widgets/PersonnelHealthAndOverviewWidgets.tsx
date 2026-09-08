@@ -31,6 +31,9 @@ export function createPersonnelHealthAndOverviewWidgets(
 		workforceHealthScore: {
 			title: localizationConstants.wHealthScoreTitle,
 			icon: Activity,
+			isLocked: true,
+			emptyTitle: localizationConstants.wHealthScoreTitle,
+			emptyDescription: localizationConstants.wHealthScoreDesc,
 			content: (
 				<Content>
 					<div className="flex items-center justify-between pb-1.5">
@@ -83,12 +86,74 @@ export function createPersonnelHealthAndOverviewWidgets(
 					</div>
 				</Content>
 			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+						<div className="p-3 rounded-lg bg-emerald-50/70 border border-emerald-200">
+							<span className="text-xs text-emerald-800 font-medium">Hälsopoäng Totalt</span>
+							<p className="text-2xl font-bold text-emerald-900 mt-1">82 / 100</p>
+							<p className="text-[11px] text-emerald-700 mt-0.5 font-medium">+3 pts jmf föregående månad</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-600 font-medium"><Translate text={localizationConstants.wHealthScoreAttendanceRate} /></span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">94%</p>
+							<p className="text-[11px] text-slate-500 mt-0.5">Målvärde: 92%</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-600 font-medium"><Translate text={localizationConstants.wHealthScoreCoverage} /></span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">87%</p>
+							<p className="text-[11px] text-slate-500 mt-0.5">Kritisk nivå: 75%</p>
+						</div>
+						<div className="p-3 rounded-lg bg-amber-50/70 border border-amber-200">
+							<span className="text-xs text-amber-800 font-medium"><Translate text={localizationConstants.wHealthScoreCompliance} /></span>
+							<p className="text-2xl font-bold text-amber-900 mt-1">76%</p>
+							<p className="text-[11px] text-amber-700 mt-0.5">3 certifikat kräver åtgärd</p>
+						</div>
+					</div>
+
+					<div className="rounded-lg border border-slate-200 p-4 space-y-3 bg-white">
+						<h4 className="font-semibold text-sm text-slate-900">Måluppfyllelse & Detaljerad Analys</h4>
+						<div className="space-y-2 text-xs">
+							<div>
+								<div className="flex justify-between py-1 font-medium text-slate-700">
+									<span>Närvaronivå (Attendance Rate)</span>
+									<span className="text-emerald-700">94% (Utmärkt)</span>
+								</div>
+								<div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+									<div className="h-full bg-emerald-500 rounded-full" style={{ width: "94%" }} />
+								</div>
+							</div>
+							<div>
+								<div className="flex justify-between py-1 font-medium text-slate-700">
+									<span>Bemanningstäckning (Staffing Coverage)</span>
+									<span className="text-emerald-700">87% (Tillräcklig)</span>
+								</div>
+								<div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+									<div className="h-full bg-emerald-500 rounded-full" style={{ width: "87%" }} />
+								</div>
+							</div>
+							<div>
+								<div className="flex justify-between py-1 font-medium text-slate-700">
+									<span>Regelefterlevnad & Certifieringar (Compliance)</span>
+									<span className="text-amber-700">76% (Uppmärksamhet krävs)</span>
+								</div>
+								<div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+									<div className="h-full bg-amber-500 rounded-full" style={{ width: "76%" }} />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			),
 		},
 
 		// 2) Personalöversikt
 		personalOverview: {
 			title: localizationConstants.wPersonalOverviewTitle,
 			icon: Users,
+			isLocked: true,
+			emptyTitle: localizationConstants.wPersonalOverviewTitle,
+			emptyDescription: localizationConstants.wPersonalOverviewDesc,
 			content: (
 				<Content>
 					<div className="flex items-center justify-between pb-1.5">
@@ -136,12 +201,54 @@ export function createPersonnelHealthAndOverviewWidgets(
 					</div>
 				</Content>
 			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Totalt anställda</span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">{overview.totalEmployees}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">I tjänst idag</span>
+							<p className="text-2xl font-bold text-emerald-700 mt-1">{overview.activeToday}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Lediga / Frånvarande</span>
+							<p className="text-2xl font-bold text-amber-700 mt-1">{overview.onLeave}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Nya denna månad</span>
+							<p className="text-2xl font-bold text-blue-700 mt-1">+{overview.newThisMonth}</p>
+						</div>
+					</div>
+
+					<div className="rounded-lg border border-slate-200 p-4 space-y-3 bg-white">
+						<h4 className="font-semibold text-sm text-slate-900">Anställningsformer & Fördelning</h4>
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+							<div className="p-2.5 rounded bg-slate-50 border border-slate-100 flex justify-between items-center">
+								<span>Heltid (100%)</span>
+								<span className="font-bold text-slate-900">26 st (81%)</span>
+							</div>
+							<div className="p-2.5 rounded bg-slate-50 border border-slate-100 flex justify-between items-center">
+								<span>Deltid (50-80%)</span>
+								<span className="font-bold text-slate-900">4 st (13%)</span>
+							</div>
+							<div className="p-2.5 rounded bg-slate-50 border border-slate-100 flex justify-between items-center">
+								<span>Timanställda</span>
+								<span className="font-bold text-slate-900">2 st (6%)</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			),
 		},
 
 		// 3) Närvaro
 		attendance: {
 			title: localizationConstants.wAttendanceTitle,
 			icon: CalendarCheck,
+			emptyTitle: localizationConstants.wAttendanceTitle,
+			emptyDescription: localizationConstants.wAttendanceDesc,
 			content: (
 				<Content>
 					<div className="flex items-center justify-between pb-1.5">
@@ -153,7 +260,7 @@ export function createPersonnelHealthAndOverviewWidgets(
 								/ {attendance.present + attendance.absentApproved + attendance.absentUnplanned}
 							</span>
 						</div>
-						<span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+						<span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
 							{attendance.weeklyRate}% <Translate text={localizationConstants.wAttendanceRateWeekly} />
 						</span>
 					</div>
@@ -188,12 +295,40 @@ export function createPersonnelHealthAndOverviewWidgets(
 					</div>
 				</Content>
 			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+						<div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+							<span className="text-xs text-emerald-800 font-medium">I tjänst (Närvarande)</span>
+							<p className="text-2xl font-bold text-emerald-900 mt-1">{attendance.present}</p>
+							<p className="text-[11px] text-emerald-700 mt-0.5">{attendance.onSite} på plats / {attendance.remote} distans</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-600 font-medium">Beviljad frånvaro</span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">{attendance.absentApproved}</p>
+							<p className="text-[11px] text-slate-500 mt-0.5">Semester & föräldraledighet</p>
+						</div>
+						<div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
+							<span className="text-xs text-amber-800 font-medium">Oplanerad frånvaro</span>
+							<p className="text-2xl font-bold text-amber-900 mt-1">{attendance.absentUnplanned}</p>
+							<p className="text-[11px] text-amber-700 mt-0.5">Sjukfrånvaro idag</p>
+						</div>
+						<div className="p-3 rounded-lg bg-blue-50 border border-blue-200">
+							<span className="text-xs text-blue-800 font-medium">Veckosnitt</span>
+							<p className="text-2xl font-bold text-blue-900 mt-1">{attendance.weeklyRate}%</p>
+							<p className="text-[11px] text-blue-700 mt-0.5">+1.5% mot föregående vecka</p>
+						</div>
+					</div>
+				</div>
+			),
 		},
 
 		// 4) Bemanning
 		staffing: {
 			title: localizationConstants.wStaffingTitle,
 			icon: HardHat,
+			emptyTitle: localizationConstants.wStaffingTitle,
+			emptyDescription: localizationConstants.wStaffingDesc,
 			content: (
 				<Content>
 					<div className="space-y-1.5 pb-1">
@@ -237,6 +372,36 @@ export function createPersonnelHealthAndOverviewWidgets(
 						</Link>
 					</div>
 				</Content>
+			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Aktiva Projekt</span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">6 st</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Tilldelad Personal</span>
+							<p className="text-2xl font-bold text-emerald-700 mt-1">32 / 36</p>
+						</div>
+						<div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
+							<span className="text-xs text-amber-800 font-medium">Öppna Resursbehov</span>
+							<p className="text-2xl font-bold text-amber-900 mt-1">{staffing.openPositions} st</p>
+						</div>
+					</div>
+
+					<div className="rounded-lg border border-slate-200 p-4 space-y-3 bg-white">
+						<h4 className="font-semibold text-sm text-slate-900">Bemanningsmatris per Yrkesroll</h4>
+						<div className="space-y-2 text-xs">
+							{staffing.roles.map((role) => (
+								<div key={role.id} className="flex items-center justify-between p-2 rounded bg-slate-50 border border-slate-100">
+									<span className="font-medium text-slate-800"><Translate text={role.roleKey} /></span>
+									<span className="font-bold text-slate-900">{role.assigned} tilldelade / {role.needed} behövda</span>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
 			),
 		},
 	};

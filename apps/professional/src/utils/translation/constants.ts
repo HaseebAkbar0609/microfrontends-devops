@@ -6792,6 +6792,26 @@ export type PersonnelDashboardTranslation = {
 	viewTimeReportingAction: string;
 	viewCompetencesAction: string;
 	viewCalendarAction: string;
+
+	// Unified Widget States & Actions
+	wStateActive: string;
+	wStateInactive: string;
+	wStateLoading: string;
+	wStateEmpty: string;
+	wChipLocked: string;
+	wActionExpand: string;
+	wActionRefresh: string;
+	wActionToggleState: string;
+	wActionToggleEmpty: string;
+	wActionToggleActive: string;
+	wActionRestoreData: string;
+	wEmptyDefaultTitle: string;
+	wEmptyDefaultDesc: string;
+	wModalClose: string;
+	wModalExport: string;
+	wToastRefreshError: string;
+	wChipLockedTooltip: string;
+	wWidgetOptions: string;
 };
 
 export type Translation = HeaderTranslation &

@@ -6823,6 +6823,26 @@ const enPersonnelDashboard: PersonnelDashboardTranslation = {
 	viewTimeReportingAction: "Review time reports",
 	viewCompetencesAction: "View skills matrix",
 	viewCalendarAction: "Open calendar",
+
+	// Unified Widget States & Actions
+	wStateActive: "Active",
+	wStateInactive: "Inactive",
+	wStateLoading: "Loading data...",
+	wStateEmpty: "No data",
+	wChipLocked: "Locked",
+	wActionExpand: "Expand view",
+	wActionRefresh: "Refresh",
+	wActionToggleState: "Toggle status",
+	wActionToggleEmpty: "Toggle empty state",
+	wActionToggleActive: "Enable / Disable",
+	wActionRestoreData: "Restore data",
+	wEmptyDefaultTitle: "No data available",
+	wEmptyDefaultDesc: "There are no active records or events to display for this period.",
+	wModalClose: "Close",
+	wModalExport: "Export",
+	wToastRefreshError: "Could not update widget",
+	wChipLockedTooltip: "This widget is locked by the administrator",
+	wWidgetOptions: "Widget options",
 };
 
 export const en: Translation = {

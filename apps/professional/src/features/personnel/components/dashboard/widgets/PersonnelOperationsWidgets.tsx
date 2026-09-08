@@ -31,6 +31,8 @@ export function createPersonnelOperationsWidgets(
 		personnelCalendar: {
 			title: localizationConstants.wCalendarTitle,
 			icon: CalendarDays,
+			emptyTitle: localizationConstants.wCalendarTitle,
+			emptyDescription: localizationConstants.wCalendarDesc,
 			content: (
 				<Content>
 					<div className="space-y-1.5 pb-1">
@@ -62,12 +64,36 @@ export function createPersonnelOperationsWidgets(
 					</div>
 				</Content>
 			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="rounded-lg border border-slate-200 p-4 space-y-3 bg-white text-xs">
+						<h4 className="font-semibold text-sm text-slate-900">Kommande Händelser & Möten</h4>
+						<div className="space-y-2">
+							{calendarEvents.map((evt) => (
+								<div key={evt.id} className="flex items-center justify-between p-2 rounded bg-slate-50 border border-slate-100">
+									<div className="flex items-center gap-2">
+										<span className="rounded bg-blue-100 text-blue-800 px-2 py-0.5 font-bold">
+											<Translate text={evt.dateKey} />
+										</span>
+										<span className="font-medium text-slate-900">
+											<Translate text={evt.titleKey} />
+										</span>
+									</div>
+									<span className="text-slate-500">Obligatorisk närvaro</span>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			),
 		},
 
 		// 9) Senaste aktiviteter
 		recentActivities: {
 			title: localizationConstants.wActivitiesTitle,
 			icon: Zap,
+			emptyTitle: localizationConstants.wActivitiesTitle,
+			emptyDescription: localizationConstants.wActivitiesDesc,
 			content: (
 				<Content>
 					<div className="space-y-1.5 pb-1">
@@ -111,12 +137,32 @@ export function createPersonnelOperationsWidgets(
 					</div>
 				</Content>
 			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="rounded-lg border border-slate-200 p-4 space-y-2 bg-white text-xs">
+						<h4 className="font-semibold text-sm text-slate-900">Fullständig Aktivitetslogg</h4>
+						<div className="space-y-2">
+							{recentActivities.map((act) => (
+								<div key={act.id} className="flex items-center justify-between p-2 rounded bg-slate-50 border border-slate-100">
+									<div className="flex items-center gap-2">
+										<span className="font-mono text-slate-400 font-semibold">{act.time}</span>
+										<span className="font-medium text-slate-800"><Translate text={act.textKey} /></span>
+									</div>
+									<span className="capitalize px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-semibold">{act.category}</span>
+								</div>
+							))}
+						</div>
+					</div>
+				</div>
+			),
 		},
 
 		// 10) Kompetenser
 		competences: {
 			title: localizationConstants.wCompetencesTitle,
 			icon: GraduationCap,
+			emptyTitle: localizationConstants.wCompetencesTitle,
+			emptyDescription: localizationConstants.wCompetencesDesc,
 			content: (
 				<Content>
 					<div className="space-y-1.5 pb-1 text-xs">
@@ -153,6 +199,24 @@ export function createPersonnelOperationsWidgets(
 						</Link>
 					</div>
 				</Content>
+			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+						{competences.map((comp) => (
+							<div key={comp.id} className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+								<div className="flex justify-between items-center">
+									<span className="text-xs font-bold text-slate-800"><Translate text={comp.nameKey} /></span>
+									<span className="font-bold text-slate-900">{comp.employeeCount} behöriga</span>
+								</div>
+								<div className="h-1.5 w-full bg-slate-200 rounded-full mt-2 overflow-hidden">
+									<div className={`h-full rounded-full ${comp.isGap ? "bg-amber-500" : "bg-emerald-500"}`} style={{ width: `${comp.employeeCount * 8}%` }} />
+								</div>
+								{comp.isGap && <p className="text-[10px] text-amber-700 font-medium mt-1">Kompetensgap identifierat — rekommenderad utbildning pågår</p>}
+							</div>
+						))}
+					</div>
+				</div>
 			),
 		},
 	};

@@ -6845,6 +6845,26 @@ const svPersonnelDashboard: PersonnelDashboardTranslation = {
 	viewTimeReportingAction: "Granska tidrapporter",
 	viewCompetencesAction: "Se kompetensmatris",
 	viewCalendarAction: "Öppna kalender",
+
+	// Unified Widget States & Actions
+	wStateActive: "Aktiv",
+	wStateInactive: "Inaktiv",
+	wStateLoading: "Laddar data...",
+	wStateEmpty: "Ingen data",
+	wChipLocked: "Låst",
+	wActionExpand: "Expandera vy",
+	wActionRefresh: "Uppdatera",
+	wActionToggleState: "Växla status",
+	wActionToggleEmpty: "Växla tom vy",
+	wActionToggleActive: "Aktivera / Inaktivera",
+	wActionRestoreData: "Återställ data",
+	wEmptyDefaultTitle: "Ingen data att visa",
+	wEmptyDefaultDesc: "Det finns inga aktiva registreringar eller händelser att visa för denna period.",
+	wModalClose: "Stäng",
+	wModalExport: "Exportera",
+	wToastRefreshError: "Kunde inte uppdatera widgeten",
+	wChipLockedTooltip: "Denna widget är låst av administratören",
+	wWidgetOptions: "Widget-alternativ",
 };
 
 export const sv: Translation = {

@@ -7,6 +7,17 @@ export interface WidgetProps {
     icon: LucideIcon;
     subtitle?: React.ReactNode;
     content?: React.ReactNode;
+    isLocked?: boolean;
+    expandedContent?: React.ReactNode;
+    emptyTitle?: string;
+    emptyDescription?: string;
+    emptyActionLabel?: string;
+    onEmptyAction?: () => void;
+    onRefresh?: () => Promise<void> | void;
+    isDisabled?: boolean;
+    isLoading?: boolean;
+    isEmpty?: boolean;
+    badge?: React.ReactNode;
 }
 
 export interface PlacedWidgetEntry {

@@ -131,6 +131,8 @@ export function createPersonnelTimeAndCostsWidgets(
 		timeReporting: {
 			title: localizationConstants.wTimeReportingTitle,
 			icon: Clock,
+			emptyTitle: localizationConstants.wTimeReportingTitle,
+			emptyDescription: localizationConstants.wTimeReportingDesc,
 			content: (
 				<Content>
 					<div className="flex items-center justify-between pb-1.5">
@@ -178,12 +180,48 @@ export function createPersonnelTimeAndCostsWidgets(
 					</div>
 				</Content>
 			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Inlämnade</span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">{timeReporting.submitted} / {timeReporting.total}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+							<span className="text-xs text-emerald-800 font-medium">Godkända rapporter</span>
+							<p className="text-2xl font-bold text-emerald-900 mt-1">{timeReporting.approved}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
+							<span className="text-xs text-amber-800 font-medium">Väntar på granskning</span>
+							<p className="text-2xl font-bold text-amber-900 mt-1">{timeReporting.pending}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-rose-50 border border-rose-200">
+							<span className="text-xs text-rose-800 font-medium">Saknade rapporter</span>
+							<p className="text-2xl font-bold text-rose-900 mt-1">{timeReporting.missing}</p>
+						</div>
+					</div>
+
+					<div className="rounded-lg border border-slate-200 p-4 space-y-2 bg-white text-xs">
+						<h4 className="font-semibold text-sm text-slate-900">Total Arbetstid denna vecka</h4>
+						<div className="flex justify-between py-1 border-b border-slate-100">
+							<span>Loggade timmar totalt</span>
+							<span className="font-bold text-slate-900">{timeReporting.totalHoursLogged} timmar</span>
+						</div>
+						<div className="flex justify-between py-1 border-b border-slate-100">
+							<span>Övertidstimmar</span>
+							<span className="font-bold text-amber-700">{timeReporting.overtimeHours} timmar</span>
+						</div>
+					</div>
+				</div>
+			),
 		},
 
 		// 6) Personalkostnader
 		personnelCosts: {
 			title: localizationConstants.wPersonnelCostsTitle,
 			icon: Coins,
+			emptyTitle: localizationConstants.wPersonnelCostsTitle,
+			emptyDescription: localizationConstants.wPersonnelCostsDesc,
 			content: (
 				<Content>
 					<div className="flex items-center justify-between pb-1.5">
@@ -228,13 +266,64 @@ export function createPersonnelTimeAndCostsWidgets(
 					</div>
 				</Content>
 			),
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Faktisk Kostnad Månad</span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">{formatSek(costs.totalCostSek)}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-slate-50 border border-slate-200">
+							<span className="text-xs text-slate-500 font-medium">Budgeterad Kostnad</span>
+							<p className="text-2xl font-bold text-slate-900 mt-1">{formatSek(costs.budgetSek)}</p>
+						</div>
+						<div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+							<span className="text-xs text-emerald-800 font-medium">Avvikelse</span>
+							<p className="text-2xl font-bold text-emerald-900 mt-1">{formatSek(costs.varianceSek)}</p>
+							<p className="text-[11px] text-emerald-700 mt-0.5 font-medium">Under budgeterad nivå</p>
+						</div>
+					</div>
+
+					<div className="rounded-lg border border-slate-200 p-4 space-y-2 bg-white text-xs">
+						<h4 className="font-semibold text-sm text-slate-900">Kostnadsspecifikation</h4>
+						<div className="flex justify-between py-1.5 border-b border-slate-100">
+							<span>Grundlöner & arvoden</span>
+							<span className="font-bold text-slate-900">{formatSek(costs.salariesSek)}</span>
+						</div>
+						<div className="flex justify-between py-1.5 border-b border-slate-100">
+							<span>Övertidskostnader</span>
+							<span className="font-bold text-slate-900">{formatSek(costs.overtimeSek)}</span>
+						</div>
+						<div className="flex justify-between py-1.5 border-b border-slate-100">
+							<span>Arbetsgivaravgifter & förmåner (Sociala avgifter)</span>
+							<span className="font-bold text-slate-900">{formatSek(costs.benefitsSek)}</span>
+						</div>
+					</div>
+				</div>
+			),
 		},
 
 		// 7) AI Personalassistent
 		aiPersonalAssistant: {
 			title: localizationConstants.wAiAssistantTitle,
 			icon: Bot,
+			emptyTitle: localizationConstants.wAiAssistantTitle,
+			emptyDescription: localizationConstants.wAiAssistantDesc,
 			content: <AiPersonalAssistantContent state={state} />,
+			expandedContent: (
+				<div className="space-y-4">
+					<div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/70">
+						<h4 className="text-sm font-bold text-blue-950 flex items-center gap-1.5">
+							<Bot className="h-4 w-4 text-blue-600" />
+							AI Personalassistent — Fullskärm
+						</h4>
+						<p className="text-xs text-blue-800/80 mt-1">
+							Ställ frågor om bemanning, lagstadgad vila, kollektivavtal eller sammanställning av tidrapporter.
+						</p>
+					</div>
+					<AiPersonalAssistantContent state={state} />
+				</div>
+			),
 		},
 	};
 }
