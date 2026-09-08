@@ -25,6 +25,7 @@ import {
 	EconomyDashboardTranslation,
 	PersonnelDashboardTranslation,
 	OrderProtocolTranslation,
+	PersonnelOverviewTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -6995,6 +6996,57 @@ export const enOrderProtocol: OrderProtocolTranslation = {
 	protocolSaveButton: "Save",
 };
 
+export const enPersonnelOverview: PersonnelOverviewTranslation = {
+	personalOverviewPageTitle: "Personal Overview",
+	colContractNumber: "Contract No.",
+	colPerson: "Person",
+	colRole: "Role",
+	colIdNumber: "ID No.",
+	colStatus: "Status",
+	colType: "Type",
+	colStartDate: "Start Date",
+	colLocation: "Location",
+	colCustomizeHeader: "Customize Columns",
+	searchPlaceholder: "Search",
+	filterButton: "Filter",
+	filterAll: "All",
+	filterStatusLabel: "Status",
+	filterTypeLabel: "Employment Type",
+	filterLocationLabel: "Location",
+	filterRoleLabel: "Role",
+	filterReset: "Reset Filter",
+	newEmployeeButton: "New Employee",
+	viewProfileBtn: "View Profile",
+	menuViewProfile: "View Profile",
+	menuEdit: "Edit",
+	menuDeactivate: "Deactivate",
+	statusActive: "Active",
+	statusProbation: "On Probation",
+	statusSick: "On Sick Leave",
+	statusLeave: "On Leave",
+	statusNotStarted: "Not Started",
+	typeFullTime: "Full-time",
+	typePartTime: "Part-time",
+	rowsPerPageLabel: "Rows per page",
+	pageOfLabel: "Page {current} of {total}",
+	deactivateConfirmTitle: "Deactivate Employee",
+	deactivateConfirmDesc: "Are you sure you want to deactivate this employee? Their status will be updated to inactive.",
+	deactivateConfirmBtn: "Deactivate",
+	cancelBtn: "Cancel",
+	profileModalTitle: "Employee Profile",
+	profileContactInfo: "Contact Information",
+	profileEmailLabel: "Email",
+	profilePhoneLabel: "Phone",
+	profileDepartmentLabel: "Department",
+	profileContractLabel: "Contract Number",
+	profileStartDateLabel: "Start Date",
+	profileStatusLabel: "Status",
+	profileCloseBtn: "Close",
+	toastEmployeeDeactivated: "Employee has been deactivated",
+	noEmployeesFound: "No employees matched your search criteria",
+	actionsMenuLabel: "Actions",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -7021,4 +7073,6 @@ export const en: Translation = {
 	...enEconomyDashboard,
 	...enPersonnelDashboard,
 	...enOrderProtocol,
+	...enPersonnelOverview,
 };
+

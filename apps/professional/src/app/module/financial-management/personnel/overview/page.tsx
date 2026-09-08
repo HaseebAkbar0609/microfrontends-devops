@@ -1,13 +1,7 @@
 "use client";
 
-import { PersonnelSubRoutePage } from "@/features/personnel/components/common/PersonnelSubRoutePage";
-import localizationConstants from "@/utils/translation/constants";
+import { PersonnelOverviewPage } from "@/features/personnel";
 
-export default function PersonnelOverviewPage() {
-	return (
-		<PersonnelSubRoutePage
-			activeTabId="overview"
-			titleKey={localizationConstants.personalOverviewTab}
-		/>
-	);
+export default function OverviewPage() {
+	return <PersonnelOverviewPage />;
 }

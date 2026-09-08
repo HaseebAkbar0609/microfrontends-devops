@@ -6964,6 +6964,57 @@ export type OrderProtocolTranslation = {
 	protocolSaveButton: string;
 };
 
+export type PersonnelOverviewTranslation = {
+	personalOverviewPageTitle: string;
+	colContractNumber: string;
+	colPerson: string;
+	colRole: string;
+	colIdNumber: string;
+	colStatus: string;
+	colType: string;
+	colStartDate: string;
+	colLocation: string;
+	colCustomizeHeader: string;
+	searchPlaceholder: string;
+	filterButton: string;
+	filterAll: string;
+	filterStatusLabel: string;
+	filterTypeLabel: string;
+	filterLocationLabel: string;
+	filterRoleLabel: string;
+	filterReset: string;
+	newEmployeeButton: string;
+	viewProfileBtn: string;
+	menuViewProfile: string;
+	menuEdit: string;
+	menuDeactivate: string;
+	statusActive: string;
+	statusProbation: string;
+	statusSick: string;
+	statusLeave: string;
+	statusNotStarted: string;
+	typeFullTime: string;
+	typePartTime: string;
+	rowsPerPageLabel: string;
+	pageOfLabel: string;
+	deactivateConfirmTitle: string;
+	deactivateConfirmDesc: string;
+	deactivateConfirmBtn: string;
+	cancelBtn: string;
+	profileModalTitle: string;
+	profileContactInfo: string;
+	profileEmailLabel: string;
+	profilePhoneLabel: string;
+	profileDepartmentLabel: string;
+	profileContractLabel: string;
+	profileStartDateLabel: string;
+	profileStatusLabel: string;
+	profileCloseBtn: string;
+	toastEmployeeDeactivated: string;
+	noEmployeesFound: string;
+	actionsMenuLabel: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -6988,7 +7039,8 @@ export type Translation = HeaderTranslation &
 	OrderInspectionTranslation &
 	EconomyDashboardTranslation &
 	PersonnelDashboardTranslation &
-	OrderProtocolTranslation;
+	OrderProtocolTranslation &
+	PersonnelOverviewTranslation;
 
 export type TranslationKeys = keyof Translation;
 
