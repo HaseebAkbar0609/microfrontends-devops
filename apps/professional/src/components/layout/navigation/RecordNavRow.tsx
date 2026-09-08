@@ -42,22 +42,24 @@ export function RecordNavRow({
   const router = useRouter();
   const t = useTranslate();
   const backLabel = t(localizationConstants.goBackButton);
+  const hasDescription = Boolean(description);
 
   return (
-    <div className={cn("flex items-start justify-between gap-4 pt-4", className)}>
-      <div className="flex min-w-0 items-start gap-2">
+    <div className={cn("flex justify-between gap-4 pt-4", hasDescription ? "items-start" : "items-center", className)}>
+      <div className={cn("flex min-w-0 gap-2", hasDescription ? "items-start" : "items-center")}>
         {backHref ? (
           <Button
             asChild
             variant="ghost"
             size="icon"
+            aria-label={backLabel}
             className={cn(
-              "size-6 shrink-0 rounded-md text-slate-900 hover:bg-slate-100",
+              "size-7 shrink-0 rounded-md text-slate-900 hover:bg-slate-100 flex items-center justify-center cursor-pointer",
               backButtonClassName
             )}
           >
-            <Link href={backHref} aria-label={backLabel}>
-              <ArrowLeft className="size-5" aria-hidden />
+            <Link href={backHref} aria-label={backLabel} className="flex items-center justify-center">
+              <ArrowLeft className="size-5" aria-hidden="true" />
             </Link>
           </Button>
         ) : (
@@ -68,11 +70,11 @@ export function RecordNavRow({
             onClick={() => router.back()}
             aria-label={backLabel}
             className={cn(
-              "size-6 shrink-0 rounded-md text-slate-900 hover:bg-slate-100 cursor-pointer",
+              "size-7 shrink-0 rounded-md text-slate-900 hover:bg-slate-100 cursor-pointer flex items-center justify-center",
               backButtonClassName
             )}
           >
-            <ArrowLeft className="size-5" aria-hidden />
+            <ArrowLeft className="size-5" aria-hidden="true" />
           </Button>
         )}
 

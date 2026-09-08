@@ -3204,6 +3204,47 @@ export type OfferTranslation = {
 	machineSidebarPurchase: string;
 	machineSidebarStatistics: string;
 	machineSidebarArchive: string;
+	// TFS-936 – Design (Projektering) module tabs
+	designDashboard: string;
+	designSidebarRitningar: string;
+	designSidebarBIM: string;
+	designSidebarHandlingar: string;
+	designSidebarGranskning: string;
+	designSidebarRevisioner: string;
+	designSidebarArchive: string;
+	// Design Dashboard Widgets
+	designWidgetOverviewTitle: string;
+	designWidgetOverviewActiveProjects: string;
+	designWidgetOverviewDrawings: string;
+	designWidgetOverviewReviews: string;
+	designWidgetOverviewCompleted: string;
+	designWidgetOverviewDeadline: string;
+	designWidgetOverviewViewAllCta: string;
+	designWidgetMeetingsTitle: string;
+	designWidgetMeetingsNextLabel: string;
+	designWidgetMeetingsParticipants: string;
+	designWidgetMeetingsThisWeek: string;
+	designWidgetMeetingsScheduleCta: string;
+	designWidgetActivitiesTitle: string;
+	designWidgetTimeTitle: string;
+	designWidgetTimeWeekTotal: string;
+	designWidgetTimeBillable: string;
+	designWidgetTimeNonBillable: string;
+	designWidgetTimeBudget: string;
+	designWidgetTimeUsed: string;
+	designWidgetTimeLogCta: string;
+	designWidgetAiTitle: string;
+	designWidgetAiInsightsHeader: string;
+	designWidgetAiInsight1: string;
+	designWidgetAiInsight2: string;
+	designWidgetAiQuestion1: string;
+	designWidgetAiQuestion2: string;
+	designWidgetAiOpenCta: string;
+	designWidgetCalendarTitle: string;
+	designWidgetImageTitle: string;
+	designWidgetImageLatestLabel: string;
+	designWidgetImageFilesLabel: string;
+	designWidgetNewsTitle: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
@@ -3492,12 +3533,36 @@ export type OfferTranslation = {
 	viewDetailsButton: string;
 	viewDetailTitle: string;
 	orderNumberSubtitle: string;
+	orderNumberLabel: string;
 	warrantyInfoSection: string;
 	warrantyResponsibleLabel: string;
+	warrantyTimeLabel: string;
+	mobilePhoneLabel: string;
 	visitDatesSection: string;
 	colOrderNo: string;
 	createVisitDateButton: string;
 	createVisitDateTitle: string;
+	editVisitDateTitle: string;
+	allowedFileTypesHelp: string;
+	uploadButton: string;
+	closeButton: string;
+	openButton: string;
+	reminderRuleLabel: string;
+	reminderRulePlaceholder: string;
+	previewButton: string;
+	addVisitDateButton: string;
+	uploadFilePlaceholder: string;
+	downloadAction: string;
+	toastVisitDateUpdated: string;
+	toastVisitDateAdded: string;
+	toastVisitDateDeleted: string;
+	deleteVisitDateConfirmTitle: string;
+	deleteVisitDateConfirmDesc: string;
+	toastChangesSaved: string;
+	toastDownloadingFile: string;
+	toastFileUploaded: string;
+	validationVisitDateRequired: string;
+	toastOpeningPreview: string;
 	reminderEmailLabel: string;
 	ruleLabel: string;
 	economicOverviewTabTB: string;
@@ -6079,6 +6144,7 @@ export type FinancialReportsTranslation = {
 };
 
 export type OrderInformationTranslation = {
+	orderInformationTab: string;
 	projectDetailsTab: string;
 	offerTab: string;
 	companyNumberSection: string;
@@ -6826,6 +6892,78 @@ export type PersonnelDashboardTranslation = {
 	wWidgetOptions: string;
 };
 
+export type OrderProtocolTranslation = {
+	protocolOverviewTitle: string;
+	protocolsTab: string;
+	createProtocolButton: string;
+	protocolStandard: string;
+	protocolAction: string;
+	protocolUpload: string;
+	protocolColDate: string;
+	protocolColType: string;
+	protocolColPdf: string;
+	protocolColHandling: string;
+	protocolActionOpen: string;
+	protocolActionArchive: string;
+	protocolActionDelete: string;
+	viewDetailsButton: string;
+	toastProtocolCreated: string;
+	toastProtocolUpdated: string;
+	toastProtocolDeleted: string;
+	toastProtocolArchived: string;
+	toastDownloadingFile: string;
+	downloadAction: string;
+	allowedFileTypesHelp: string;
+	closeButton: string;
+	deleteProtocolConfirmTitle: string;
+	deleteProtocolConfirmDesc: string;
+	validationProtocolDateRequired: string;
+	validationProtocolTypeRequired: string;
+	createProtocolStandardTitle: string;
+	createProtocolActionTitle: string;
+	uploadProtocolTitle: string;
+	protocolNameLabel: string;
+	protocolTypeLabel: string;
+	protocolNotesLabel: string;
+	protocolStatusNotStarted: string;
+	protocolStatusInProgress: string;
+	protocolStatusCompleted: string;
+	protocolFilterAllTypes: string;
+	protocolFilterAllStatuses: string;
+	protocolActionDownload: string;
+	protocolExportAll: string;
+	toastProtocolDownloaded: string;
+	toastProtocolDownloadFailed: string;
+	toastAllProtocolsDownloaded: string;
+	projectNumberLabel: string;
+	projectNameLabel: string;
+	protocolCategoryLabel: string;
+	protocolAddressLabel: string;
+	protocolPostalCodeLabel: string;
+	protocolCityLabel: string;
+	protocolAddParticipantsLabel: string;
+	protocolLocationLabel: string;
+	protocolStartTimeLabel: string;
+	protocolEndTimeLabel: string;
+	protocolMeetingInfoLabel: string;
+	protocolMeetingInfoPlaceholder: string;
+	protocolSignatureLabel: string;
+	protocolSignatureBtn: string;
+	protocolSignatureFileHelp: string;
+	protocolNextButton: string;
+	protocolLocationPlaceholder: string;
+	toastProtocolUploadFailed: string;
+	validationFileSizeLimit: string;
+	validationFileTypeInvalid: string;
+	ariaLabelCloseModal: string;
+	ariaLabelAddParticipant: string;
+	ariaLabelRemoveFile: string;
+	protocolResponsibleLabel: string;
+	protocolSubjectLabel: string;
+	validationProtocolSubjectRequired: string;
+	protocolSaveButton: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -6849,7 +6987,8 @@ export type Translation = HeaderTranslation &
 	OrderPaymentPlanTranslation &
 	OrderInspectionTranslation &
 	EconomyDashboardTranslation &
-	PersonnelDashboardTranslation;
+	PersonnelDashboardTranslation &
+	OrderProtocolTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -6860,3 +6999,4 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+

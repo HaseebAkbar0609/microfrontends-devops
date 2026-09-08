@@ -23,7 +23,7 @@ export function OrderDirectPage() {
 			<PageHeader
 				title={localizationConstants.orderDirect}
 				breadcrumbs={orderBreadcrumbs(localizationConstants.orderDirect)}
-				className="border-b-0 px-6 pt-5 pb-2"
+				className="border-b-0 px-6 pt-6 sm:pt-7 pb-2"
 			/>
 
 			{/* Main Content Area */}

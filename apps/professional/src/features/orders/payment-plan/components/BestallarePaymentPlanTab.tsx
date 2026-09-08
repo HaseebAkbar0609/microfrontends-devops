@@ -116,7 +116,7 @@ export function BestallarePaymentPlanTab({
 	};
 
 	return (
-		<div className="w-full max-w-4xl">
+		<div className="w-full">
 			<div className="w-full overflow-x-auto relative bg-white">
 				<Table className="w-full table-auto border-collapse">
 					<TableHeader>
@@ -131,7 +131,7 @@ export function BestallarePaymentPlanTab({
 							</TableHead>
 							<TableHead
 								onClick={() => handleSort("planNumber")}
-								className="w-24 px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
+								className="w-28 px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
 							>
 								<div className="flex items-center gap-1">
 									<span>{t(localizationConstants.colPlan)}</span>
@@ -140,7 +140,7 @@ export function BestallarePaymentPlanTab({
 							</TableHead>
 							<TableHead
 								onClick={() => handleSort("name")}
-								className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
+								className="w-[35%] px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
 							>
 								<div className="flex items-center gap-1">
 									<span>{t(localizationConstants.colBetalningsplan)}</span>
@@ -149,15 +149,15 @@ export function BestallarePaymentPlanTab({
 							</TableHead>
 							<TableHead
 								onClick={() => handleSort("fileName")}
-								className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
+								className="w-[40%] px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B] transition-colors select-none whitespace-nowrap cursor-pointer hover:text-slate-900"
 							>
 								<div className="flex items-center gap-1">
 									<span>{t(localizationConstants.colFil)}</span>
 									{renderSortIcon("fileName")}
 								</div>
 							</TableHead>
-							<TableHead className="w-28 px-4 py-3.5 text-center font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B]" />
-							<TableHead className="w-12 px-3 py-3.5" />
+							<TableHead className="w-[140px] px-4 py-3.5 text-center font-sans text-sm font-medium leading-6 tracking-normal text-[#64748B]" />
+							<TableHead className="w-12 px-3 py-3.5 text-right" />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -173,7 +173,7 @@ export function BestallarePaymentPlanTab({
 									key={plan.id}
 									className="group border-b border-slate-100 transition-colors hover:bg-slate-50/60"
 								>
-									<TableCell className="px-4 py-3.5">
+									<TableCell className="w-12 px-4 py-3.5">
 										<Checkbox
 											checked={selectedIds.includes(plan.id)}
 											onCheckedChange={() => toggleSelectRow(plan.id)}
@@ -181,13 +181,13 @@ export function BestallarePaymentPlanTab({
 											className="border-slate-400 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 data-[state=checked]:text-white focus-visible:ring-slate-900 cursor-pointer"
 										/>
 									</TableCell>
-									<TableCell className="px-4 py-3.5 font-sans font-normal text-sm text-slate-700 whitespace-nowrap">
+									<TableCell className="w-28 px-4 py-3.5 font-sans font-normal text-sm text-slate-700 whitespace-nowrap">
 										{plan.planNumber}
 									</TableCell>
-									<TableCell className="px-4 py-3.5 font-sans font-medium text-sm leading-5 tracking-normal text-slate-900 whitespace-nowrap">
+									<TableCell className="w-[35%] px-4 py-3.5 font-sans font-medium text-sm leading-5 tracking-normal text-slate-900 whitespace-nowrap">
 										{plan.name}
 									</TableCell>
-									<TableCell className="px-4 py-3.5">
+									<TableCell className="w-[40%] px-4 py-3.5">
 										<div className="flex items-center gap-2 min-w-0">
 											<DocTypeBadge label={plan.fileName} />
 											<span className="font-sans text-xs font-normal text-slate-900 truncate min-w-0 flex-1">
@@ -195,7 +195,7 @@ export function BestallarePaymentPlanTab({
 											</span>
 										</div>
 									</TableCell>
-									<TableCell className="px-4 py-3.5 text-center whitespace-nowrap">
+									<TableCell className="w-[140px] px-4 py-3.5 text-center whitespace-nowrap">
 										<Button
 											type="button"
 											variant="secondary"
@@ -205,7 +205,7 @@ export function BestallarePaymentPlanTab({
 											{t(localizationConstants.btnSePlan)}
 										</Button>
 									</TableCell>
-									<TableCell className="px-3 py-3.5 text-right whitespace-nowrap">
+									<TableCell className="w-12 px-3 py-3.5 text-right whitespace-nowrap">
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
 												<Button
