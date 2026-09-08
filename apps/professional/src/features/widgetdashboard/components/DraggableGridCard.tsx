@@ -71,16 +71,16 @@ export const DraggableGridCard = ({
         }}
         className={`${
           className ?? ""
-        } transition-[box-shadow,background-color,ring-color,border-color,transform] duration-150 ${
+        } transition-[box-shadow,background-color,ring-color,border-color,transform] duration-150 h-full flex flex-col ${
           isDragging
-            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-sm !transition-none [&_*]:!bg-transparent [&_*]:!text-white [&_*]:!border-none"
+            ? "bg-[#1E293B] text-white shadow-2xl cursor-grabbing ring-1 ring-white/10 rounded-lg !transition-none [&_*]:!bg-transparent [&_*]:!text-white [&_*]:!border-none"
             : isSwapTarget
-            ? "bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-sm min-h-35 shadow-inner"
+            ? "bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-lg min-h-35 shadow-inner"
             : isHighlighted
-            ? "ring-4 ring-blue-500 ring-offset-2 rounded-sm scale-[1.02] shadow-xl z-9997"
+            ? "ring-4 ring-blue-500 ring-offset-2 rounded-lg scale-[1.02] shadow-xl z-9997"
             : isEmpty
-            ? `bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-sm ${disabled ? "cursor-default" : "cursor-grab"}`
-            : `bg-white border border-slate-200 rounded-sm ${disabled ? "cursor-default" : "cursor-grab"}`
+            ? `bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-lg ${disabled ? "cursor-default" : "cursor-grab"}`
+            : `bg-white border border-slate-200/80 rounded-lg shadow-xs hover:shadow-md hover:border-slate-300 transition-all ${disabled ? "cursor-default" : "cursor-grab"}`
         }`}
         style={{
           position: "relative",
@@ -102,7 +102,7 @@ export const DraggableGridCard = ({
           </div>
         ) : (
           <div
-            className={`transition-transform duration-150 h-full ${
+            className={`transition-transform duration-150 h-full flex-1 flex flex-col ${
               isDragging ? "scale-95" : ""
             }`}
           >
