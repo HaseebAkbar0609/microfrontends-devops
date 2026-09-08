@@ -51,12 +51,15 @@ export function OrderOpenedSections({
 	const router = useRouter();
 	const pathname = usePathname() || "";
 
-	// Extract route orderId from props or pathname (e.g., /module/production/order/1 -> "1")
+	// Safely resolve order ID from props, pathname segment, or data
 	const pathSegments = pathname.split("/").filter(Boolean);
 	const orderIndex = pathSegments.indexOf("order");
-	const routeOrderId =
-		orderId ||
-		(orderIndex !== -1 && pathSegments[orderIndex + 1] ? pathSegments[orderIndex + 1] : data.id);
+	const extractedIdFromPath = orderIndex !== -1 && pathSegments[orderIndex + 1] ? pathSegments[orderIndex + 1] : undefined;
+	const routeOrderId = (orderId || extractedIdFromPath || data?.id || "").trim();
+
+	if (!routeOrderId) {
+		console.error("[OrderOpenedSections] Unable to determine a valid order ID from route, props, or data.");
+	}
 
 	const getTabFromPath = (path: string): OrderTabValue => {
 		if (path.includes("/inspection")) return "inspection";

@@ -3,10 +3,10 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { showToast } from "@/lib/toast";
 import {
 	Form,
 	FormField,
@@ -23,38 +23,18 @@ import {
 } from "@/components/ui/dialog";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { showToast } from "@/lib/toast";
 import { PROTOCOL_CONSTANTS, type ProtocolTemplateType } from "../constants/protocol.constants";
 import type { CreateProtocolPayload } from "../types/protocol.types";
+import {
+	createProtocolSchema,
+	type CreateProtocolFormData,
+} from "../validation/protocol.validation";
 import { MeetingProjectInfo } from "./create-meeting/MeetingProjectInfo";
 import { MeetingGeneralFields } from "./create-meeting/MeetingGeneralFields";
 import { MeetingParticipantsField } from "./create-meeting/MeetingParticipantsField";
 import { MeetingDateTimeFields } from "./create-meeting/MeetingDateTimeFields";
 
-const createProtocolSchema = (
-	dateRequiredMsg: string,
-	typeRequiredMsg: string,
-	subjectRequiredMsg: string
-) =>
-	z.object({
-		responsible: z.string().optional(),
-		rubrik: z.string().min(1, subjectRequiredMsg),
-		type: z.string().min(1, typeRequiredMsg),
-		category: z.string().optional(),
-		address: z.string().optional(),
-		postalCode: z.string().optional(),
-		city: z.string().optional(),
-		location: z.string().optional(),
-		startDate: z.string().min(1, dateRequiredMsg),
-		startTime: z.string().optional(),
-		endDate: z.string().optional(),
-		endTime: z.string().optional(),
-		notes: z.string().optional(),
-	});
-
-export type CreateProtocolFormData = z.infer<
-	ReturnType<typeof createProtocolSchema>
->;
+export type { CreateProtocolFormData };
 
 export interface CreateProtocolModalProps {
 	isOpen: boolean;

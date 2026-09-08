@@ -4,8 +4,10 @@ import { WARRANTY_CONSTANTS } from "../constants/warranty.constants";
 import { MOCK_WARRANTY_ROWS, MOCK_INSPECTION_DATES } from "../data/warranty.mock";
 import type { WarrantyRow, InspectionDateItem } from "../types/warranty.types";
 
+const isDev = process.env.NODE_ENV !== "production";
+
 /**
- * Fetches the list of warranty overview rows from the API with mock fallback
+ * Fetches the list of warranty overview rows from the API with mock fallback in dev
  */
 export async function getWarrantyOverview(orderId?: string): Promise<WarrantyRow[]> {
 	try {
@@ -31,13 +33,13 @@ export async function getWarrantyOverview(orderId?: string): Promise<WarrantyRow
 				email: String(item.email || WARRANTY_CONSTANTS.DEFAULT_EMAIL),
 			}));
 		}
-		return MOCK_WARRANTY_ROWS;
+		return isDev ? MOCK_WARRANTY_ROWS : [];
 	} catch (error) {
-		console.warn(
-			`[Warranty API] GET overview failed, using mock fallback:`,
-			error instanceof Error ? error.message : error
-		);
-		return MOCK_WARRANTY_ROWS;
+		if (isDev) {
+			console.info("[Warranty API] Using mock overview data in dev mode.");
+			return MOCK_WARRANTY_ROWS;
+		}
+		throw error;
 	}
 }
 
@@ -66,17 +68,17 @@ export async function getWarrantyDetail(orderId: string): Promise<{
 		}
 		return {
 			warranty: defaultWarranty,
-			visitDates: MOCK_INSPECTION_DATES,
+			visitDates: isDev ? MOCK_INSPECTION_DATES : [],
 		};
 	} catch (error) {
-		console.warn(
-			`[Warranty Detail API] GET failed for order ${orderId}, using fallback:`,
-			error instanceof Error ? error.message : error
-		);
-		return {
-			warranty: defaultWarranty,
-			visitDates: MOCK_INSPECTION_DATES,
-		};
+		if (isDev) {
+			console.info("[Warranty Detail API] Using fallback data in dev mode.");
+			return {
+				warranty: defaultWarranty,
+				visitDates: MOCK_INSPECTION_DATES,
+			};
+		}
+		throw error;
 	}
 }
 
@@ -91,14 +93,14 @@ export async function createVisitDateApi(
 		const res = await axiosInstance.post(API_PATH.ORDERS.GUARANTEE_VISIT_DATES(orderId), newItem);
 		return res.data?.data ?? res.data;
 	} catch (error) {
-		console.warn(
-			`[Warranty API] POST visit date failed, saving locally:`,
-			error instanceof Error ? error.message : error
-		);
-		return {
-			...newItem,
-			id: `v-${Date.now()}`,
-		};
+		if (isDev) {
+			console.info("[Warranty API] Simulated visit date creation in dev mode.");
+			return {
+				...newItem,
+				id: `v-${Date.now()}`,
+			};
+		}
+		throw error;
 	}
 }
 
@@ -113,10 +115,10 @@ export async function deleteVisitDateApi(
 		await axiosInstance.delete(API_PATH.ORDERS.GUARANTEE_VISIT_DATE_DETAIL(orderId, visitDateId));
 		return true;
 	} catch (error) {
-		console.warn(
-			`[Warranty API] DELETE visit date failed for order ${orderId} & id ${visitDateId}:`,
-			error instanceof Error ? error.message : error
-		);
-		return true;
+		if (isDev) {
+			console.info("[Warranty API] Simulated visit date deletion in dev mode.");
+			return true;
+		}
+		throw error;
 	}
 }

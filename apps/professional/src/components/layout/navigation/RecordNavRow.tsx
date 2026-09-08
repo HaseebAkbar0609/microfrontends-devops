@@ -52,13 +52,14 @@ export function RecordNavRow({
             asChild
             variant="ghost"
             size="icon"
+            aria-label={backLabel}
             className={cn(
               "size-7 shrink-0 rounded-md text-slate-900 hover:bg-slate-100 flex items-center justify-center cursor-pointer",
               backButtonClassName
             )}
           >
             <Link href={backHref} aria-label={backLabel} className="flex items-center justify-center">
-              <ArrowLeft className="size-5" aria-hidden />
+              <ArrowLeft className="size-5" aria-hidden="true" />
             </Link>
           </Button>
         ) : (
@@ -73,7 +74,7 @@ export function RecordNavRow({
               backButtonClassName
             )}
           >
-            <ArrowLeft className="size-5" aria-hidden />
+            <ArrowLeft className="size-5" aria-hidden="true" />
           </Button>
         )}
 

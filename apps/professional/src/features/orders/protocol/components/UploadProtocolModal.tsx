@@ -3,7 +3,6 @@
 import React, { useState, useRef, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
 	X,
 	Calendar as CalendarIcon,
@@ -50,6 +49,12 @@ import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import { PROTOCOL_CONSTANTS } from "../constants/protocol.constants";
 import type { CreateProtocolPayload } from "../types/protocol.types";
+import {
+	uploadProtocolSchema,
+	type UploadProtocolFormData,
+} from "../validation/protocol.validation";
+
+export type { UploadProtocolFormData };
 
 export interface AttachedProtocolDocument {
 	id: string;
@@ -59,28 +64,6 @@ export interface AttachedProtocolDocument {
 	fileSize?: string;
 	file?: File;
 }
-
-const uploadProtocolSchema = (
-	dateRequiredMsg: string,
-	typeRequiredMsg: string
-) =>
-	z.object({
-		type: z.string().min(1, typeRequiredMsg),
-		category: z.string().optional(),
-		address: z.string().optional(),
-		postalCode: z.string().optional(),
-		city: z.string().optional(),
-		location: z.string().optional(),
-		startDate: z.string().min(1, dateRequiredMsg),
-		startTime: z.string().optional(),
-		endDate: z.string().optional(),
-		endTime: z.string().optional(),
-		notes: z.string().optional(),
-	});
-
-export type UploadProtocolFormData = z.infer<
-	ReturnType<typeof uploadProtocolSchema>
->;
 
 export interface UploadProtocolModalProps {
 	isOpen: boolean;
