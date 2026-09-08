@@ -6737,6 +6737,7 @@ const svPersonnelDashboard: PersonnelDashboardTranslation = {
 	wHealthScoreCoverage: "Bemanningsgrad",
 	wHealthScoreCompliance: "Tidrapporteringsefterlevnad",
 	wHealthScoreTrend: "↑ +3 p vs förra veckan",
+	wTrendUpShort: "↑ +3 p",
 	wHealthScoreGood: "God nivå",
 	wHealthScoreWarning: "Uppmärksamhet krävs",
 	wHealthScoreCritical: "Kritisk nivå",
@@ -6754,6 +6755,7 @@ const svPersonnelDashboard: PersonnelDashboardTranslation = {
 	wRemoteWork: "Distansarbete",
 	wOnSiteWork: "På plats",
 	wAttendanceRateWeekly: "Närvarograd denna vecka",
+	wAttendanceRateShort: "Närvaro",
 
 	wElectricians: "Elektriker",
 	wPlumbers: "Rörmokare",
@@ -6845,6 +6847,16 @@ const svPersonnelDashboard: PersonnelDashboardTranslation = {
 	viewTimeReportingAction: "Granska tidrapporter",
 	viewCompetencesAction: "Se kompetensmatris",
 	viewCalendarAction: "Öppna kalender",
+
+	// Widget footer metrics & counts
+	wNewDepartures: "Nya / Avgångar",
+	wStaffAssigned: "Tilldelade",
+	wEventsCountLabel: "Händelser",
+	wRecentActionsLabel: "Senaste dygnet",
+	wCompetenceAreasLabel: "Områden",
+	wTrainingProgramsLabel: "Program",
+	wTotalCertificatesLabel: "Totalt",
+	wNewsCountLabel: "Nyheter",
 
 	// Unified Widget States & Actions
 	wStateActive: "Aktiv",

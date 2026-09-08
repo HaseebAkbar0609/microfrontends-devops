@@ -6715,6 +6715,7 @@ const enPersonnelDashboard: PersonnelDashboardTranslation = {
 	wHealthScoreCoverage: "Staffing coverage",
 	wHealthScoreCompliance: "Time compliance",
 	wHealthScoreTrend: "↑ +3 pts vs last week",
+	wTrendUpShort: "↑ +3 pts",
 	wHealthScoreGood: "Good level",
 	wHealthScoreWarning: "Attention needed",
 	wHealthScoreCritical: "Critical level",
@@ -6732,6 +6733,7 @@ const enPersonnelDashboard: PersonnelDashboardTranslation = {
 	wRemoteWork: "Remote",
 	wOnSiteWork: "On-site",
 	wAttendanceRateWeekly: "Attendance rate this week",
+	wAttendanceRateShort: "Attendance",
 
 	wElectricians: "Electricians",
 	wPlumbers: "Plumbers",
@@ -6823,6 +6825,16 @@ const enPersonnelDashboard: PersonnelDashboardTranslation = {
 	viewTimeReportingAction: "Review time reports",
 	viewCompetencesAction: "View skills matrix",
 	viewCalendarAction: "Open calendar",
+
+	// Widget footer metrics & counts
+	wNewDepartures: "New / Departures",
+	wStaffAssigned: "Assigned",
+	wEventsCountLabel: "Events",
+	wRecentActionsLabel: "Last 24 hours",
+	wCompetenceAreasLabel: "Areas",
+	wTrainingProgramsLabel: "Programs",
+	wTotalCertificatesLabel: "Total",
+	wNewsCountLabel: "News",
 
 	// Unified Widget States & Actions
 	wStateActive: "Active",

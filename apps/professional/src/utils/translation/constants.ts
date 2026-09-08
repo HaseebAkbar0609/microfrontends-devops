@@ -6670,6 +6670,7 @@ export type PersonnelDashboardTranslation = {
 	wHealthScoreCoverage: string;
 	wHealthScoreCompliance: string;
 	wHealthScoreTrend: string;
+	wTrendUpShort: string;
 	wHealthScoreGood: string;
 	wHealthScoreWarning: string;
 	wHealthScoreCritical: string;
@@ -6689,6 +6690,7 @@ export type PersonnelDashboardTranslation = {
 	wRemoteWork: string;
 	wOnSiteWork: string;
 	wAttendanceRateWeekly: string;
+	wAttendanceRateShort: string;
 
 	// 4. Bemanning
 	wElectricians: string;
@@ -6792,6 +6794,16 @@ export type PersonnelDashboardTranslation = {
 	viewTimeReportingAction: string;
 	viewCompetencesAction: string;
 	viewCalendarAction: string;
+
+	// Widget footer metrics & counts
+	wNewDepartures: string;
+	wStaffAssigned: string;
+	wEventsCountLabel: string;
+	wRecentActionsLabel: string;
+	wCompetenceAreasLabel: string;
+	wTrainingProgramsLabel: string;
+	wTotalCertificatesLabel: string;
+	wNewsCountLabel: string;
 
 	// Unified Widget States & Actions
 	wStateActive: string;

@@ -51,7 +51,7 @@ export function createPersonnelHealthAndOverviewWidgets(
 						</span>
 					</div>
 
-					<div className="space-y-1 pt-1.5 border-t border-slate-200/60">
+					<div className="space-y-1.5 pt-1.5 border-t border-slate-200/60">
 						<Row
 							label={localizationConstants.wHealthScoreAttendanceRate}
 							value={`${healthScore.attendanceRate}%`}
@@ -71,14 +71,14 @@ export function createPersonnelHealthAndOverviewWidgets(
 						/>
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
-						<span className="inline-flex items-center gap-1 font-medium text-emerald-700">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="inline-flex items-center gap-1 font-medium text-emerald-700 whitespace-nowrap">
 							<TrendingUp className="h-3.5 w-3.5" />
-							<Translate text={localizationConstants.wHealthScoreTrend} />
+							<Translate text={localizationConstants.wTrendUpShort} />
 						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/overview`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewPersonnelOverviewAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -171,29 +171,34 @@ export function createPersonnelHealthAndOverviewWidgets(
 						</span>
 					</div>
 
-					<div className="grid grid-cols-2 gap-2 pt-1.5 border-t border-slate-200/60 text-xs">
-						<div className="rounded-md bg-slate-50 p-2 border border-slate-200/60">
-							<p className="text-slate-500"><Translate text={localizationConstants.wActiveToday} /></p>
-							<p className="text-base font-semibold text-slate-900 mt-0.5">{overview.activeToday}</p>
-						</div>
-						<div className="rounded-md bg-slate-50 p-2 border border-slate-200/60">
-							<p className="text-slate-500"><Translate text={localizationConstants.wOnLeave} /></p>
-							<p className="text-base font-semibold text-slate-900 mt-0.5">{overview.onLeave}</p>
-						</div>
-						<div className="rounded-md bg-slate-50 p-2 border border-slate-200/60">
-							<p className="text-slate-500"><Translate text={localizationConstants.wNewThisMonth} /></p>
-							<p className="text-base font-semibold text-emerald-700 mt-0.5">+{overview.newThisMonth}</p>
-						</div>
-						<div className="rounded-md bg-slate-50 p-2 border border-slate-200/60">
-							<p className="text-slate-500"><Translate text={localizationConstants.wDeparturesThisMonth} /></p>
-							<p className="text-base font-semibold text-rose-700 mt-0.5">-{overview.departuresThisMonth}</p>
-						</div>
+					<div className="space-y-1.5 pt-1.5 border-t border-slate-200/60 text-xs">
+						<Row
+							label={localizationConstants.wActiveToday}
+							value={`${overview.activeToday}`}
+						/>
+						<Row
+							label={localizationConstants.wOnLeave}
+							value={`${overview.onLeave}`}
+						/>
+						<Row
+							label={localizationConstants.wNewDepartures}
+							value={
+								<span className="inline-flex items-center gap-1.5 font-semibold">
+									<span className="text-emerald-700">+{overview.newThisMonth}</span>
+									<span className="text-slate-400 font-normal">/</span>
+									<span className="text-rose-600">-{overview.departuresThisMonth}</span>
+								</span>
+							}
+						/>
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{overview.activeToday} <Translate text={localizationConstants.wActiveToday} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/overview`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewPersonnelOverviewAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -260,15 +265,16 @@ export function createPersonnelHealthAndOverviewWidgets(
 								/ {attendance.present + attendance.absentApproved + attendance.absentUnplanned}
 							</span>
 						</div>
-						<span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
-							{attendance.weeklyRate}% <Translate text={localizationConstants.wAttendanceRateWeekly} />
+						<span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 whitespace-nowrap">
+							<span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+							{attendance.weeklyRate}% <Translate text={localizationConstants.wAttendanceRateShort} />
 						</span>
 					</div>
 
-					<div className="space-y-1 pt-1.5 border-t border-slate-200/60 text-xs">
+					<div className="space-y-1.5 pt-1.5 border-t border-slate-200/60 text-xs">
 						<Row
 							label={localizationConstants.wPresentEmployees}
-							value={`${attendance.present} (${attendance.onSite} ${localizationConstants.wOnSiteWork ? "" : ""} / ${attendance.remote} distans)`}
+							value={`${attendance.present} (${attendance.onSite} / ${attendance.remote})`}
 						/>
 						<Row
 							label={localizationConstants.wAbsentApproved}
@@ -284,10 +290,13 @@ export function createPersonnelHealthAndOverviewWidgets(
 						/>
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{attendance.onSite} <Translate text={localizationConstants.wOnSiteWork} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/overview`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewAttendanceAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -331,11 +340,26 @@ export function createPersonnelHealthAndOverviewWidgets(
 			emptyDescription: localizationConstants.wStaffingDesc,
 			content: (
 				<Content>
-					<div className="space-y-1.5 pb-1">
+					<div className="flex items-center justify-between pb-1.5">
+						<div className="flex items-baseline gap-1.5">
+							<span className="text-2xl font-bold tracking-tight text-slate-900">
+								{staffing.roles.reduce((sum, r) => sum + r.assigned, 0)}
+							</span>
+							<span className="text-xs font-medium text-slate-500">
+								/ {staffing.roles.reduce((sum, r) => sum + r.needed, 0)}
+							</span>
+						</div>
+						<span className="inline-flex items-center gap-1 rounded-full border border-amber-200 bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 whitespace-nowrap">
+							<span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+							{staffing.openPositions} <Translate text={localizationConstants.wOpenPositions} />
+						</span>
+					</div>
+
+					<div className="space-y-1.5 pt-1.5 border-t border-slate-200/60 text-xs">
 						{staffing.roles.map((role) => (
 							<div
 								key={role.id}
-								className="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0"
+								className="flex items-center justify-between py-0.5"
 							>
 								<span className="text-slate-600 font-medium">
 									<Translate text={role.roleKey} />
@@ -358,14 +382,13 @@ export function createPersonnelHealthAndOverviewWidgets(
 						))}
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs">
-						<span className="text-slate-500 font-medium">
-							<Translate text={localizationConstants.wOpenPositions} />:{" "}
-							<span className="font-bold text-slate-800">{staffing.openPositions}</span>
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{staffing.roles.reduce((sum, r) => sum + r.assigned, 0)} <Translate text={localizationConstants.wStaffAssigned} />
 						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/overview`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewStaffingAction} />
 							<ArrowUpRight className="h-3 w-3" />

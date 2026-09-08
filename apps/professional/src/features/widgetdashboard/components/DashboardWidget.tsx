@@ -121,74 +121,62 @@ export const DashboardWidget = ({
         aria-disabled={effectiveDisabled || undefined}
         aria-busy={effectiveLoading || undefined}
         className={cn(
-          "rounded-sm p-4 overflow-hidden flex flex-col justify-between gap-2 transition-all duration-200 group relative",
+          "p-4 sm:p-5 overflow-hidden flex-1 h-full flex flex-col justify-between transition-all duration-200 group relative",
           !effectiveEmpty &&
             !effectiveDisabled &&
-            "hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-slate-100 focus-visible:ring-offset-2",
-          effectiveDisabled && "opacity-50 grayscale bg-slate-100/80 dark:bg-slate-800/80 border-dashed border-slate-300 select-none",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-slate-100 focus-visible:ring-offset-2",
+          effectiveDisabled && "opacity-50 grayscale bg-slate-100/80 dark:bg-slate-800/80 select-none",
           className
         )}
         style={{
-          backgroundColor: effectiveEmpty ? "transparent" : "#F8FAFC",
-          height: "100%",
-          minHeight: "180px",
+          minHeight: "220px",
         }}
       >
-        {/* Top Header Row: Icon, Title, Lock Chip & Action Menu */}
+        {/* Top Header Row: Icon (left), Admin Lock + Active Dot + Quick Actions (right) */}
         <div className="flex items-center justify-between gap-2">
-          {/* Left: Icon, Title and Status */}
-          <div className="flex items-center gap-2.5 min-w-0">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-white border border-slate-200/60 shadow-xs dark:bg-slate-800 dark:border-slate-700">
-              <Icon size={18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
-            </div>
-
-            <div className="flex flex-col min-w-0">
-              <div className="flex items-center gap-1.5 flex-wrap">
-                <h3 className="font-sans font-semibold text-sm leading-snug tracking-tight text-[#0A0A0A] dark:text-slate-100 truncate">
-                  <Translate text={title} />
-                </h3>
-
-                {/* Admin Lock Chip matching Figma node 13315:492241 */}
-                {isLocked && (
-                  <span
-                    className="inline-flex items-center gap-1 rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300 select-none"
-                    title={t(localizationConstants.wChipLockedTooltip)}
-                  >
-                    <Lock size={10} strokeWidth={2} />
-                    <Translate text={localizationConstants.wChipLocked} />
-                  </span>
-                )}
-
-                {/* Active / Inactive Status Dot */}
-                {!effectiveEmpty && !effectiveDisabled && (
-                  <span
-                    className="h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0"
-                    title={t(localizationConstants.wStateActive)}
-                  />
-                )}
-                {effectiveDisabled && (
-                  <span className="inline-flex items-center rounded-full bg-slate-200 dark:bg-slate-700 px-1.5 py-0.2 text-[9px] font-medium text-slate-500">
-                    <Translate text={localizationConstants.wStateInactive} />
-                  </span>
-                )}
-              </div>
-            </div>
+          {/* Left: Icon inside rounded white square matching Figma */}
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white border border-slate-200/80 shadow-xs dark:bg-slate-800 dark:border-slate-700">
+            <Icon size={18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
           </div>
 
-          {/* Right: Quick Actions & Dropdown Menu */}
+          {/* Right: Badges & Actions */}
           {!effectiveEmpty && (
-            <div className="flex items-center gap-1 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* Admin Lock Chip matching Figma node 13315:492241 */}
+              {isLocked && (
+                <span
+                  className="inline-flex items-center gap-1 rounded-full bg-slate-200 px-2 py-0.5 text-[10px] font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-300 select-none"
+                  title={t(localizationConstants.wChipLockedTooltip)}
+                >
+                  <Lock size={10} strokeWidth={2} />
+                  <Translate text={localizationConstants.wChipLocked} />
+                </span>
+              )}
+
+              {/* Active / Inactive Status Dot */}
+              {!effectiveDisabled && (
+                <span
+                  className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"
+                  title={t(localizationConstants.wStateActive)}
+                />
+              )}
+              {effectiveDisabled && (
+                <span className="inline-flex items-center rounded-full bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 text-[9px] font-medium text-slate-500">
+                  <Translate text={localizationConstants.wStateInactive} />
+                </span>
+              )}
+
               {/* Quick Expand Button */}
               <Button
                 variant="ghost"
                 size="icon"
                 type="button"
                 onClick={() => setIsModalOpen(true)}
-                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
+                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
                 title={t(localizationConstants.wActionExpand)}
                 aria-label={t(localizationConstants.wActionExpand)}
               >
-                <Maximize2 size={14} />
+                <Maximize2 size={13} />
               </Button>
 
               {/* Quick Refresh Button */}
@@ -198,11 +186,11 @@ export const DashboardWidget = ({
                 type="button"
                 onClick={handleRefresh}
                 disabled={effectiveLoading}
-                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
+                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
                 title={t(localizationConstants.wActionRefresh)}
                 aria-label={t(localizationConstants.wActionRefresh)}
               >
-                <RotateCw size={14} className={effectiveLoading ? "animate-spin text-blue-600" : ""} />
+                <RotateCw size={13} className={effectiveLoading ? "animate-spin text-blue-600" : ""} />
               </Button>
 
               {/* Action Dropdown Menu */}
@@ -216,7 +204,7 @@ export const DashboardWidget = ({
                     className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
                     aria-label={t(localizationConstants.wWidgetOptions)}
                   >
-                    <MoreVertical size={16} />
+                    <MoreVertical size={15} />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-white dark:bg-slate-900 shadow-md border border-slate-200 dark:border-slate-800">
@@ -276,11 +264,18 @@ export const DashboardWidget = ({
           )}
         </div>
 
-        {/* Content Area / States */}
-        <div className="mt-1 flex-1 flex flex-col justify-start">
+        {/* Title Row: Full width so title never truncates */}
+        <div className="mt-2.5">
+          <h3 className="font-semibold text-sm leading-snug tracking-tight text-slate-900 dark:text-slate-100 truncate" title={titleText}>
+            <Translate text={title} />
+          </h3>
           {subtitle && !effectiveLoading && !effectiveEmpty && (
-            <div className="text-xs text-slate-500 pb-1">{subtitle}</div>
+            <div className="text-xs text-slate-500 mt-0.5 truncate">{subtitle}</div>
           )}
+        </div>
+
+        {/* Content Area / States */}
+        <div className="mt-2 flex-1 flex flex-col justify-between">
 
           {/* 1. Loading State */}
           {effectiveLoading && (
@@ -340,7 +335,7 @@ export const DashboardWidget = ({
 
           {/* 4. Default / Active Data State */}
           {!effectiveLoading && !effectiveEmpty && !effectiveDisabled && content && (
-            <div className="flex-1">{content}</div>
+            <div className="flex-1 flex flex-col justify-between h-full">{content}</div>
           )}
         </div>
       </div>

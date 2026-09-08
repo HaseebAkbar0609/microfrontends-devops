@@ -150,29 +150,33 @@ export function createPersonnelTimeAndCostsWidgets(
 						</span>
 					</div>
 
-					<div className="space-y-1 pt-1.5 border-t border-slate-200/60 text-xs">
+					<div className="space-y-1.5 pt-1.5 border-t border-slate-200/60 text-xs">
 						<Row
 							label={localizationConstants.wApprovedReports}
 							value={`${timeReporting.approved}`}
 						/>
 						<Row
 							label={localizationConstants.wPendingReview}
-							value={`${timeReporting.pending}`}
+							value={
+								<span className="inline-flex items-center gap-1 font-semibold text-amber-700">
+									<span>{timeReporting.pending}</span>
+									<span className="h-2 w-2 rounded-full bg-amber-500" />
+								</span>
+							}
 						/>
 						<Row
 							label={localizationConstants.wTotalHoursLogged}
 							value={`${timeReporting.totalHoursLogged} h`}
 						/>
-						<Row
-							label={localizationConstants.wOvertimeHours}
-							value={`${timeReporting.overtimeHours} h`}
-						/>
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{timeReporting.overtimeHours} h <Translate text={localizationConstants.wOvertimeHours} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/worktime`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewTimeReportingAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -233,14 +237,14 @@ export function createPersonnelTimeAndCostsWidgets(
 								<Translate text={localizationConstants.wBudgetLabel} />: {formatSek(costs.budgetSek)}
 							</p>
 						</div>
-						<span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
+						<span className="inline-flex items-center gap-1 rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 whitespace-nowrap">
 							<span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
 							{formatSek(Math.abs(costs.varianceSek))}{" "}
 							<Translate text={localizationConstants.wUnderBudget} />
 						</span>
 					</div>
 
-					<div className="space-y-1 pt-1.5 border-t border-slate-200/60 text-xs">
+					<div className="space-y-1.5 pt-1.5 border-t border-slate-200/60 text-xs">
 						<Row
 							label={localizationConstants.wSalaries}
 							value={formatSek(costs.salariesSek)}
@@ -255,10 +259,13 @@ export function createPersonnelTimeAndCostsWidgets(
 						/>
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							<Translate text={localizationConstants.wBudgetLabel} />: {formatSek(costs.budgetSek)}
+						</span>
 						<Link
 							href="/module/financial-management/economy"
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewReportsAction} />
 							<ArrowUpRight className="h-3 w-3" />

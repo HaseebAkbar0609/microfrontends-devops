@@ -53,10 +53,13 @@ export function createPersonnelOperationsWidgets(
 						))}
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{calendarEvents.length} <Translate text={localizationConstants.wEventsCountLabel} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/overview`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewCalendarAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -126,10 +129,13 @@ export function createPersonnelOperationsWidgets(
 						))}
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							<Translate text={localizationConstants.wRecentActionsLabel} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/overview`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewPersonnelOverviewAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -189,10 +195,13 @@ export function createPersonnelOperationsWidgets(
 						))}
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{competences.length} <Translate text={localizationConstants.wCompetenceAreasLabel} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/competences`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewCompetencesAction} />
 							<ArrowUpRight className="h-3 w-3" />

@@ -60,10 +60,13 @@ export function createPersonnelDevelopmentWidgets(
 						))}
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{trainingPrograms.length} <Translate text={localizationConstants.wTrainingProgramsLabel} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/competences`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewCompetencesAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -140,10 +143,13 @@ export function createPersonnelDevelopmentWidgets(
 						</div>
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{(cert?.validCount ?? 112) + (cert?.expiring30DaysCount ?? 6) + (cert?.expiredCount ?? 2)} <Translate text={localizationConstants.wTotalCertificatesLabel} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/competences`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.viewCompetencesAction} />
 							<ArrowUpRight className="h-3 w-3" />
@@ -197,11 +203,11 @@ export function createPersonnelDevelopmentWidgets(
 						</div>
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500">
-						<span><Translate text={teamImage.captionKey} /></span>
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs text-slate-500 mt-auto">
+						<span className="truncate max-w-[180px]"><Translate text={teamImage.captionKey} /></span>
 						<button
 							type="button"
-							className="font-medium text-blue-600 hover:text-blue-800 transition-colors"
+							className="font-medium text-blue-600 hover:text-blue-800 transition-colors shrink-0 cursor-pointer"
 						>
 							<Translate text={localizationConstants.wChangeImage} />
 						</button>
@@ -254,10 +260,13 @@ export function createPersonnelDevelopmentWidgets(
 						))}
 					</div>
 
-					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-end text-xs">
+					<div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs mt-auto">
+						<span className="text-slate-500 font-medium whitespace-nowrap">
+							{news.length} <Translate text={localizationConstants.wNewsCountLabel} />
+						</span>
 						<Link
 							href={`${PERSONNEL_MODULE_BASE_URL}/overview`}
-							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium"
+							className="inline-flex items-center gap-0.5 text-blue-600 hover:text-blue-800 font-medium shrink-0"
 						>
 							<Translate text={localizationConstants.newsReadMore} />
 							<ArrowUpRight className="h-3 w-3" />
