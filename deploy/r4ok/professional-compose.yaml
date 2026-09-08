@@ -3,6 +3,8 @@ name: timeflow-professional-dev
 services:
   professional:
     build:
+      # NEXT_PUBLIC_* values are compiled into the Next.js bundle. Always run
+      # this Compose file with --env-file /etc/timeflow-dev/professional.env.
       context: ../..
       dockerfile: apps/professional/Dockerfile
       args:

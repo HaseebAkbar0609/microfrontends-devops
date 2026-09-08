@@ -15,11 +15,19 @@ def read_setting(path: Path, name: str) -> str:
     raise RuntimeError(f"{name} is missing from {path}")
 
 
-def render_environment(service_token: str) -> str:
+def require_test_publishable_key(value: str) -> str:
+    if not value.startswith("pk_test_"):
+        raise RuntimeError(
+            "STRIPE_PUBLISHABLE_KEY must be a Stripe test-mode publishable key"
+        )
+    return value
+
+
+def render_environment(service_token: str, stripe_publishable_key: str) -> str:
     return "\n".join(
         [
             "NEXT_PUBLIC_API_URL=https://dev.backend.timeflowsystem.com",
-            "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=",
+            f"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY={stripe_publishable_key}",
             "NEXT_PUBLIC_TFS825_PAYMENT_MVP=true",
             "TFS_BACKEND_URL=https://dev.backend.timeflowsystem.com",
             "PAYMENT_SERVICE_URL=http://timeflow-payment-api:8200",
@@ -32,10 +40,13 @@ def render_environment(service_token: str) -> str:
 
 def provision(payment_env: Path, output: Path) -> None:
     service_token = read_setting(payment_env, "SERVICE_TOKEN")
+    stripe_publishable_key = require_test_publishable_key(
+        read_setting(payment_env, "STRIPE_PUBLISHABLE_KEY")
+    )
     output.parent.mkdir(parents=True, exist_ok=True)
     descriptor = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(descriptor, "w", encoding="utf-8", newline="\n") as handle:
-        handle.write(render_environment(service_token))
+        handle.write(render_environment(service_token, stripe_publishable_key))
     print(f"Created protected frontend environment file: {output}")
 
 
