@@ -1,0 +1,38 @@
+/**
+ * Storage keys and numerical constants for Personnel Dashboard (TFS-973)
+ */
+export const PERSONNEL_DASHBOARD_STORAGE_KEY = "tfs_personnel_dashboard_layout_v1";
+
+export const WORKFORCE_HEALTH_SCORE_TARGET = 82;
+export const WORKFORCE_HEALTH_MAX = 100;
+export const WORKFORCE_ATTENDANCE_RATE = 94;
+export const WORKFORCE_STAFFING_COVERAGE = 87;
+export const WORKFORCE_COMPLIANCE_RATE = 76;
+export const WORKFORCE_SCORE_TREND = 3;
+
+export const PERSONNEL_TOTAL_EMPLOYEES = 48;
+export const PERSONNEL_ACTIVE_TODAY = 41;
+export const PERSONNEL_ON_LEAVE = 4;
+export const PERSONNEL_NEW_THIS_MONTH = 2;
+export const PERSONNEL_DEPARTURES_THIS_MONTH = 1;
+
+export const PERSONNEL_PRESENT_EMPLOYEES = 41;
+export const PERSONNEL_ABSENT_APPROVED = 4;
+export const PERSONNEL_ABSENT_UNPLANNED = 3;
+export const PERSONNEL_REMOTE_EMPLOYEES = 8;
+export const PERSONNEL_ONSITE_EMPLOYEES = 33;
+
+export const PERSONNEL_TOTAL_COST_SEK = 1240000;
+export const PERSONNEL_SALARIES_SEK = 980000;
+export const PERSONNEL_OVERTIME_SEK = 85000;
+export const PERSONNEL_BENEFITS_SEK = 175000;
+export const PERSONNEL_BUDGET_SEK = 1300000;
+export const PERSONNEL_VARIANCE_SEK = -60000;
+
+export const TIME_REPORTS_SUBMITTED = 38;
+export const TIME_REPORTS_TOTAL = 48;
+export const TIME_REPORTS_APPROVED = 35;
+export const TIME_REPORTS_PENDING = 3;
+export const TIME_REPORTS_MISSING = 10;
+export const TIME_HOURS_LOGGED = 1520;
+export const TIME_OVERTIME_HOURS = 64;

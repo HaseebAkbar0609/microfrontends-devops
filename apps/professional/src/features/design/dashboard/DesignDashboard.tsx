@@ -1,0 +1,88 @@
+"use client";
+
+import { useMemo, useState } from "react";
+
+import { ModuleWidgetDashboard } from "@/features/widgetdashboard/components/ModuleWidgetDashboard";
+import { DashboardRearrangeRail } from "@/features/widgetdashboard/components/rail/DashboardRearrangeRail";
+import { showToast } from "@/lib/toast";
+import localizationConstants from "@/utils/translation/constants";
+import { useTranslate } from "@/utils/translation/translate";
+import {
+	DesignDashboardModals,
+	type DesignModalType,
+} from "./components/DesignDashboardModals";
+import {
+	getDesignInitialWidgets,
+	getDesignWidgetMap,
+	DESIGN_SIDEBAR_ITEMS,
+} from "./DesignDashboardConfig";
+
+export const DesignDashboard = () => {
+	const t = useTranslate();
+	const [isRearranging, setIsRearranging] = useState(false);
+	const [activeModal, setActiveModal] = useState<DesignModalType>(null);
+	const [initialAiPrompt, setInitialAiPrompt] = useState<string | undefined>(undefined);
+
+	const handleOpenModal = (type: DesignModalType, prompt?: string) => {
+		setInitialAiPrompt(prompt);
+		setActiveModal(type);
+	};
+
+	const handleCloseModal = () => {
+		setActiveModal(null);
+		setInitialAiPrompt(undefined);
+	};
+
+	const widgetMap = useMemo(
+		() => getDesignWidgetMap(handleOpenModal),
+		[],
+	);
+
+	const initialWidgets = useMemo(
+		() => getDesignInitialWidgets(widgetMap),
+		[widgetMap],
+	);
+
+	return (
+		<div className="relative flex flex-1 flex-col min-h-0">
+			<ModuleWidgetDashboard
+				widgetMap={widgetMap}
+				initialWidgets={initialWidgets}
+				sidebarItems={DESIGN_SIDEBAR_ITEMS}
+				rail={({ selectedItem, onSelectItem, placedItemIds }) => (
+					<DashboardRearrangeRail
+						items={DESIGN_SIDEBAR_ITEMS}
+						selectedItem={selectedItem}
+						onSelectItem={onSelectItem}
+						placedItemIds={placedItemIds}
+						isRearranging={isRearranging}
+						onToggleRearrange={() =>
+							setIsRearranging((previous) => !previous)
+						}
+						onSave={() =>
+							showToast(
+								"success",
+								t(localizationConstants.widgetBoardLayoutSaved),
+							)
+						}
+						onDiscard={() => {
+							setIsRearranging(false);
+							showToast(
+								"info",
+								t(localizationConstants.widgetRailDiscard),
+							);
+						}}
+					/>
+				)}
+			/>
+
+			<DesignDashboardModals
+				activeModal={activeModal}
+				initialAiPrompt={initialAiPrompt}
+				onClose={handleCloseModal}
+			/>
+		</div>
+	);
+};
+
+export default DesignDashboard;

@@ -33,8 +33,21 @@ export const WidgetListItem = ({
 	</div>
 );
 
-export const WidgetContent = ({ children }: { children: React.ReactNode }) => (
-	<div className="space-y-1 text-sm text-slate-500">{children}</div>
+export const WidgetContent = ({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) => (
+	<div
+		className={cn(
+			"flex-1 h-full flex flex-col justify-between space-y-1 text-sm text-slate-500",
+			className,
+		)}
+	>
+		{children}
+	</div>
 );
 
 export const WidgetMockTag = () => (
