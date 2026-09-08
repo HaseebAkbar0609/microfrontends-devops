@@ -14,6 +14,8 @@ import {
 	Trash2,
 	FilePlus,
 	Upload,
+	Download,
+	Loader2,
 } from "lucide-react";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
@@ -48,9 +50,11 @@ import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 import { PROTOCOL_CONSTANTS, type ProtocolTemplateType } from "../constants/protocol.constants";
 import type { ProtocolItem, ProtocolSortField, SortOrder } from "../types/protocol.types";
+import { downloadProtocolPdf, downloadAllProtocolsPdf } from "../utils/generateProtocolPdf";
 
 export interface ProtocolOverviewTableProps {
 	rows: ProtocolItem[];
+	orderId?: string;
 	sortField: ProtocolSortField;
 	sortOrder: SortOrder;
 	onSort: (field: ProtocolSortField) => void;
@@ -71,6 +75,7 @@ export interface ProtocolOverviewTableProps {
 
 export function ProtocolOverviewTable({
 	rows,
+	orderId = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID,
 	sortField,
 	sortOrder,
 	onSort,
@@ -90,6 +95,8 @@ export function ProtocolOverviewTable({
 }: ProtocolOverviewTableProps) {
 	const t = useTranslate();
 	const [deletingId, setDeletingId] = useState<string | null>(null);
+	const [downloadingId, setDownloadingId] = useState<string | null>(null);
+	const [isDownloadingAll, setIsDownloadingAll] = useState(false);
 
 	const renderSortIcon = (field: ProtocolSortField) => {
 		if (sortField !== field) {
@@ -116,9 +123,44 @@ export function ProtocolOverviewTable({
 		}
 	};
 
+	const handleDownload = async (row: ProtocolItem) => {
+		try {
+			setDownloadingId(row.id);
+			const success = await downloadProtocolPdf(row, orderId);
+			if (success) {
+				showToast("success", t(localizationConstants.toastProtocolDownloaded));
+			} else {
+				showToast("error", t(localizationConstants.toastProtocolDownloadFailed));
+			}
+		} catch (error) {
+			console.error("[ProtocolOverviewTable] Failed to download protocol:", error);
+			showToast("error", t(localizationConstants.toastProtocolDownloadFailed));
+		} finally {
+			setDownloadingId(null);
+		}
+	};
+
+	const handleDownloadAll = async () => {
+		if (rows.length === 0) return;
+		try {
+			setIsDownloadingAll(true);
+			const success = await downloadAllProtocolsPdf(rows, orderId);
+			if (success) {
+				showToast("success", t(localizationConstants.toastAllProtocolsDownloaded));
+			} else {
+				showToast("error", t(localizationConstants.toastProtocolDownloadFailed));
+			}
+		} catch (error) {
+			console.error("[ProtocolOverviewTable] Failed to download all protocols:", error);
+			showToast("error", t(localizationConstants.toastProtocolDownloadFailed));
+		} finally {
+			setIsDownloadingAll(false);
+		}
+	};
+
 	return (
 		<div className="flex flex-col gap-4">
-			{/* Top Action Bar: Search + Filter on Left, + Skapa protokoll on Right */}
+			{/* Top Action Bar: Search + Filter on Left, Download All + Print + Skapa protokoll on Right */}
 			<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between print:hidden">
 				<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
 					<Search
@@ -166,6 +208,37 @@ export function ProtocolOverviewTable({
 				</div>
 
 				<div className="flex items-center justify-end gap-2 sm:gap-3 w-full sm:w-auto">
+					{/* Download All Button */}
+					<Button
+						type="button"
+						variant="outline"
+						size="icon"
+						onClick={handleDownloadAll}
+						disabled={isDownloadingAll || rows.length === 0}
+						className="h-10 w-10 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 cursor-pointer shadow-none shrink-0"
+						title={t(localizationConstants.protocolExportAll)}
+						aria-label={t(localizationConstants.protocolExportAll)}
+					>
+						{isDownloadingAll ? (
+							<Loader2 className="h-4 w-4 text-slate-700 animate-spin" />
+						) : (
+							<Download className="h-4 w-4 text-slate-700" />
+						)}
+					</Button>
+
+					{/* Print Button */}
+					<Button
+						type="button"
+						variant="outline"
+						size="icon"
+						onClick={handlePrint}
+						className="h-10 w-10 rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 cursor-pointer shadow-none shrink-0"
+						title={t(localizationConstants.print)}
+						aria-label={t(localizationConstants.print)}
+					>
+						<Printer className="h-4 w-4 text-slate-700" />
+					</Button>
+
 					{/* + Skapa protokoll Dropdown Menu */}
 					<DropdownMenu>
 						<DropdownMenuTrigger asChild>
@@ -296,10 +369,23 @@ export function ProtocolOverviewTable({
 												className="w-36 border border-slate-200 bg-white shadow-md rounded-lg p-1 z-50"
 											>
 												<DropdownMenuItem
+													onClick={() => (row.fileUrl ? window.open(row.fileUrl, "_blank") : handleDownload(row))}
 													className="flex items-center gap-2 cursor-pointer w-full text-slate-900 hover:bg-slate-50 text-xs font-normal"
 												>
 													<FolderOpen className="h-4 w-4 text-slate-900" />
 													<span className="text-slate-900"><Translate text={localizationConstants.protocolActionOpen} /></span>
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													onClick={() => handleDownload(row)}
+													disabled={downloadingId === row.id}
+													className="flex items-center gap-2 cursor-pointer w-full text-slate-900 hover:bg-slate-50 text-xs font-normal"
+												>
+													{downloadingId === row.id ? (
+														<Loader2 className="h-4 w-4 text-slate-900 animate-spin" />
+													) : (
+														<Download className="h-4 w-4 text-slate-900" />
+													)}
+													<span className="text-slate-900"><Translate text={localizationConstants.protocolActionDownload} /></span>
 												</DropdownMenuItem>
 												<DropdownMenuItem
 													onClick={() => {

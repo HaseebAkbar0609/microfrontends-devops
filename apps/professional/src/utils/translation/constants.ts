@@ -6691,6 +6691,34 @@ export type OrderProtocolTranslation = {
 	protocolStatusCompleted: string;
 	protocolFilterAllTypes: string;
 	protocolFilterAllStatuses: string;
+	protocolActionDownload: string;
+	protocolExportAll: string;
+	toastProtocolDownloaded: string;
+	toastProtocolDownloadFailed: string;
+	toastAllProtocolsDownloaded: string;
+	projectNumberLabel: string;
+	projectNameLabel: string;
+	protocolCategoryLabel: string;
+	protocolAddressLabel: string;
+	protocolPostalCodeLabel: string;
+	protocolCityLabel: string;
+	protocolAddParticipantsLabel: string;
+	protocolLocationLabel: string;
+	protocolStartTimeLabel: string;
+	protocolEndTimeLabel: string;
+	protocolMeetingInfoLabel: string;
+	protocolMeetingInfoPlaceholder: string;
+	protocolSignatureLabel: string;
+	protocolSignatureBtn: string;
+	protocolSignatureFileHelp: string;
+	protocolNextButton: string;
+	protocolLocationPlaceholder: string;
+	toastProtocolUploadFailed: string;
+	validationFileSizeLimit: string;
+	validationFileTypeInvalid: string;
+	ariaLabelCloseModal: string;
+	ariaLabelAddParticipant: string;
+	ariaLabelRemoveFile: string;
 };
 
 export type Translation = HeaderTranslation &

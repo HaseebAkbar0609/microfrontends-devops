@@ -75,6 +75,7 @@ export function OrderProtocolOverviewPage({ orderId }: OrderProtocolOverviewPage
 		<div className="w-full">
 			<ProtocolOverviewTable
 				rows={paginatedRows}
+				orderId={orderId}
 				sortField={sortField}
 				sortOrder={sortOrder}
 				onSort={handleSort}
@@ -104,6 +105,7 @@ export function OrderProtocolOverviewPage({ orderId }: OrderProtocolOverviewPage
 			{/* Upload Protocol Modal */}
 			<UploadProtocolModal
 				isOpen={isUploadOpen}
+				orderId={orderId}
 				onClose={() => setIsUploadOpen(false)}
 				onUpload={handleUploadProtocol}
 			/>
