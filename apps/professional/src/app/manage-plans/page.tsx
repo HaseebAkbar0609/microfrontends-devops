@@ -1,7 +1,6 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -171,109 +170,93 @@ export default function ManagePlansPage() {
 
 	return (
 		<>
-			<main className="p-6 md:p-8 md:px-12 h-[calc(100vh-72px)]  overflow-y-auto">
-				<div className="mx-auto space-y-8">
-					<div className="flex flex-col md:flex-row gap-8">
-						<div className="relative w-full md:w-1/3 max-w-md mx-auto md:mx-0">
-							<h2 className="text-2xl font-bold text-gray-700 mb-8">
-								Welcome to TimeFlow
-							</h2>
-							<Image
-								src="/manage-plans.png"
-								alt="TimeFlow plans overview"
-								width={600}
-								height={400}
-								className="w-full h-auto rounded-lg object-cover"
-								priority
-								sizes="(max-width: 768px) 100vw, 28rem"
-							/>
-						</div>
+			<main className="h-[calc(100vh-72px)] overflow-y-auto p-6 md:p-8 md:px-12">
+				<div className="mx-auto w-full">
+					<header className="grid items-start gap-6 xl:grid-cols-[minmax(14rem,1fr)_minmax(0,1038px)_minmax(14rem,1fr)]">
+						<h2 className="text-2xl font-bold text-gray-700">
+							Welcome to TimeFlow
+						</h2>
 
-						<div className="flex-1">
-							<div className="flex justify-between gap-4 items-center justify-between">
-								{currentStep === MANAGE_PLANS_STEPS.BASE && (
-									<PaymentOptionSelector
-										value={paymentOption}
-										onValueChange={setPaymentOption}
-									/>
-								)}
-
-								<div className="flex items-center justify-end flex-1">
-									<Button
-										variant="primary"
-										size="default"
-										asChild
-										className="w-fit"
-									>
-										<Link
-											href="/manage-cart"
-											className="inline-flex items-center gap-2"
-										>
-											<ShoppingCart
-												className="h-4 w-4"
-												aria-hidden
-											/>
-											<Translate
-												text={
-													localizationConstants.managePlansViewCartButton
-												}
-											/>
-										</Link>
-									</Button>
-								</div>
-							</div>
-							{currentStep === MANAGE_PLANS_STEPS.LICENSES && (
-								<div className="mx-auto mt-8 max-w-2xl text-center">
+						<div className="min-w-0">
+							{currentStep === MANAGE_PLANS_STEPS.BASE ? (
+								<PaymentOptionSelector
+									value={paymentOption}
+									onValueChange={setPaymentOption}
+								/>
+							) : (
+								<div className="mx-auto max-w-2xl text-center">
 									<h1 className="text-2xl font-bold text-slate-800">
-										<Translate text={localizationConstants.managePlansLicensesTitle} />
+										<Translate
+											text={
+												localizationConstants.managePlansLicensesTitle
+											}
+										/>
 									</h1>
 									<p className="mt-2 text-sm leading-6 text-slate-500">
-										<Translate text={localizationConstants.managePlansLicensesSubtitle} />
+										<Translate
+											text={
+												localizationConstants.managePlansLicensesSubtitle
+											}
+										/>
 									</p>
 								</div>
 							)}
-							<div className="mt-6 flex flex-wrap items-stretch justify-center gap-6">
-								{stepPlans.map((plan) => {
-									const selectedPrice =
-										getPriceForPaymentOption(
-											plan,
-											paymentOption,
-										);
-									if (!selectedPrice) return null;
-
-									return (
-										<div
-											key={plan.id}
-											className="flex w-full max-w-[330px]"
-										>
-											<PlanCard
-												plan={plan}
-												currentPrice={
-													selectedPrice.price / 100
-												}
-												quantity={
-													quantities[plan.id] ?? 1
-												}
-												onQuantityChange={(delta) =>
-													handleQuantityChange(
-														plan.id,
-														delta,
-													)
-												}
-												showQuantitySelector={
-													currentStep !==
-													MANAGE_PLANS_STEPS.BASE
-												}
-												onChoosePlan={() =>
-													handleChoosePlan(plan)
-												}
-												isLoading={isAddingToCart}
-											/>
-										</div>
-									);
-								})}
-							</div>
 						</div>
+
+						<div className="flex items-center xl:justify-end">
+							<Button
+								variant="primary"
+								size="default"
+								asChild
+								className="w-fit"
+							>
+								<Link
+									href="/manage-cart"
+									className="inline-flex items-center gap-2"
+								>
+									<ShoppingCart
+										className="h-4 w-4"
+										aria-hidden
+									/>
+									<Translate
+										text={
+											localizationConstants.managePlansViewCartButton
+										}
+									/>
+								</Link>
+							</Button>
+						</div>
+					</header>
+
+					<div className="mx-auto mt-6 flex w-full max-w-[1038px] flex-wrap items-stretch justify-center gap-6">
+						{stepPlans.map((plan) => {
+							const selectedPrice = getPriceForPaymentOption(
+								plan,
+								paymentOption,
+							);
+							if (!selectedPrice) return null;
+
+							return (
+								<div
+									key={plan.id}
+									className="flex w-full max-w-[330px]"
+								>
+									<PlanCard
+										plan={plan}
+										currentPrice={selectedPrice.price / 100}
+										quantity={quantities[plan.id] ?? 1}
+										onQuantityChange={(delta) =>
+											handleQuantityChange(plan.id, delta)
+										}
+										showQuantitySelector={
+											currentStep !== MANAGE_PLANS_STEPS.BASE
+										}
+										onChoosePlan={() => handleChoosePlan(plan)}
+										isLoading={isAddingToCart}
+									/>
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			</main>
