@@ -40,8 +40,8 @@ export function RouteTabs({ items, ariaLabel = "Module Tabs", className }: Route
 							className={cn(
 								"relative inline-flex items-center justify-center h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-semibold leading-none tracking-normal text-center whitespace-nowrap transition-colors",
 								isActive
-									? "text-slate-950"
-									: "text-slate-500 hover:text-slate-900",
+									? "text-slate-950 font-bold"
+									: "text-slate-600 hover:text-slate-900",
 							)}
 						>
 							{item.labelKey ? (

@@ -18,11 +18,12 @@ export const PROTOCOL_CONSTANTS = {
 	DEFAULT_UPLOAD_DATE: "2024-12-17",
 	DEFAULT_POSTAL_CODE: "-",
 	DEFAULT_CITY: "-",
-	DEFAULT_RESPONSIBLE: "Kalle Svensson",
+	DEFAULT_RESPONSIBLE: "Robert Hellgren",
 	DEFAULT_FALLBACK_FILE_NAME: "file.txt",
 	DAY_NAMES: ["Sön", "Mån", "Tis", "Ons", "Tor", "Fre", "Lör"] as const,
 	DEFAULT_PARTICIPANTS: ["Thao", "Robert"],
 	AVAILABLE_PARTICIPANTS: ["Thao", "Robert", "Anna", "Johan", "Kalle", "Sara"],
+	AVAILABLE_RESPONSIBLE: ["Robert Hellgren", "Kalle Svensson", "Thao", "Johan", "Anna", "Sara"],
 	CATEGORIES: ["Bygg", "Installation", "Mark & Anläggning", "Måleri", "El & VVS"] as const,
 	UPLOAD_PROTOCOL_TYPES: [
 		"Byggmöte 1",

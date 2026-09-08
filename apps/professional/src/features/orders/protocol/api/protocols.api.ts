@@ -83,7 +83,7 @@ export const protocolsApi = {
 			fileType: PROTOCOL_CONSTANTS.DEFAULT_FILE_TYPE,
 			status: "not_started",
 			lastUpdated: new Date().toISOString().slice(0, 16).replace("T", " "),
-			responsible: "Kalle Svensson",
+			responsible: payload.responsible || PROTOCOL_CONSTANTS.DEFAULT_RESPONSIBLE,
 			isArchived: false,
 			notes: payload.notes || "",
 		};

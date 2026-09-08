@@ -3500,8 +3500,11 @@ export type OfferTranslation = {
 	viewDetailsButton: string;
 	viewDetailTitle: string;
 	orderNumberSubtitle: string;
+	orderNumberLabel: string;
 	warrantyInfoSection: string;
 	warrantyResponsibleLabel: string;
+	warrantyTimeLabel: string;
+	mobilePhoneLabel: string;
 	visitDatesSection: string;
 	colOrderNo: string;
 	createVisitDateButton: string;
@@ -6108,6 +6111,7 @@ export type FinancialReportsTranslation = {
 };
 
 export type OrderInformationTranslation = {
+	orderInformationTab: string;
 	projectDetailsTab: string;
 	offerTab: string;
 	companyNumberSection: string;
@@ -6719,6 +6723,10 @@ export type OrderProtocolTranslation = {
 	ariaLabelCloseModal: string;
 	ariaLabelAddParticipant: string;
 	ariaLabelRemoveFile: string;
+	protocolResponsibleLabel: string;
+	protocolSubjectLabel: string;
+	validationProtocolSubjectRequired: string;
+	protocolSaveButton: string;
 };
 
 export type Translation = HeaderTranslation &

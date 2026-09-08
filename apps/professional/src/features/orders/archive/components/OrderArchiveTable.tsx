@@ -288,7 +288,7 @@ export function OrderArchiveTable({
 													</DropdownMenuItem>
 													<DropdownMenuItem asChild>
 														<Link
-															href={`/module/production/order/${encodeURIComponent(row.id)}`}
+															href={`/module/production/order/${encodeURIComponent(row.id)}/order-information`}
 															className="flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50"
 														>
 															<Eye className="h-4 w-4 text-slate-500" />

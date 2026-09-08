@@ -50,7 +50,7 @@ export function InspectionTable({
 
 	if (isLoading) {
 		return (
-			<div className="space-y-2 bg-transparent p-4 w-full md:w-[78%] lg:w-[80%] max-w-[960px]">
+			<div className="space-y-2 bg-transparent p-4 w-full">
 				<div className="h-8 bg-slate-100 animate-pulse rounded" />
 				<div className="h-12 bg-slate-100 animate-pulse rounded" />
 				<div className="h-12 bg-slate-100 animate-pulse rounded" />
@@ -60,7 +60,7 @@ export function InspectionTable({
 
 	if (items.length === 0) {
 		return (
-			<div className="flex flex-col items-center justify-center p-12 bg-white rounded-lg border border-slate-200 text-center w-full md:w-[78%] lg:w-[80%] max-w-[960px]">
+			<div className="flex flex-col items-center justify-center p-12 bg-white rounded-lg border border-slate-200 text-center w-full">
 				<p className="text-sm font-medium text-slate-800">
 					{t(localizationConstants.inspectionEmptyState)}
 				</p>
@@ -72,7 +72,7 @@ export function InspectionTable({
 	}
 
 	return (
-		<div className="overflow-x-auto w-full md:w-[78%] lg:w-[80%] max-w-[960px]">
+		<div className="overflow-x-auto w-full">
 			<Table className="w-full min-w-[600px]">
 				<TableHeader>
 					<TableRow className="border-b border-slate-200 bg-transparent hover:bg-transparent">

@@ -481,7 +481,7 @@ export function UploadProtocolModal({
 											{participants.map((p) => (
 												<span
 													key={p}
-													className="inline-flex items-center gap-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs px-2 py-0.5 rounded transition-colors"
+													className="inline-flex items-center gap-1 bg-zinc-100 hover:bg-zinc-200 text-zinc-900 text-xs px-2 py-0.5 rounded transition-colors"
 												>
 													<span>{p}</span>
 													<Button
