@@ -3,11 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import {
-	Award,
 	Clock,
-	Heart,
 	Layers,
-	Sparkles,
 	UserPlus,
 	Users,
 } from "lucide-react";
@@ -55,26 +52,8 @@ export function PersonnelDashboardPage() {
 									<Translate text={localizationConstants.createEmployeeTab} />
 								</Link>
 							</TabsTrigger>
-							<TabsTrigger value="competences" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[3]?.href ?? "#"}>
-									<Award className="w-3.5 h-3.5 shrink-0 text-slate-500" />
-									<Translate text={localizationConstants.competencesTab} />
-								</Link>
-							</TabsTrigger>
-							<TabsTrigger value="wellness" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[4]?.href ?? "#"}>
-									<Heart className="w-3.5 h-3.5 shrink-0 text-slate-500" />
-									<Translate text={localizationConstants.wellnessTab} />
-								</Link>
-							</TabsTrigger>
-							<TabsTrigger value="process" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[5]?.href ?? "#"}>
-									<Sparkles className="w-3.5 h-3.5 shrink-0 text-slate-500" />
-									<Translate text={localizationConstants.personalProcessesTab} />
-								</Link>
-							</TabsTrigger>
 							<TabsTrigger value="worktime" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[6]?.href ?? "#"}>
+								<Link href={PERSONNEL_NAV_ITEMS[3]?.href ?? "#"}>
 									<Clock className="w-3.5 h-3.5 shrink-0 text-slate-500" />
 									<Translate text={localizationConstants.worktimeTab} />
 								</Link>

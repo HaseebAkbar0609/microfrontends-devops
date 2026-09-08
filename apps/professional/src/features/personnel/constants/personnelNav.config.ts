@@ -21,21 +21,6 @@ export const PERSONNEL_NAV_ITEMS: RouteTabItem[] = [
 		href: `${PERSONNEL_MODULE_BASE_URL}/create`,
 	},
 	{
-		id: "competences",
-		labelKey: localizationConstants.competencesTab,
-		href: `${PERSONNEL_MODULE_BASE_URL}/competences`,
-	},
-	{
-		id: "wellness",
-		labelKey: localizationConstants.wellnessTab,
-		href: `${PERSONNEL_MODULE_BASE_URL}/wellness`,
-	},
-	{
-		id: "process",
-		labelKey: localizationConstants.personalProcessesTab,
-		href: `${PERSONNEL_MODULE_BASE_URL}/process`,
-	},
-	{
 		id: "worktime",
 		labelKey: localizationConstants.worktimeTab,
 		href: `${PERSONNEL_MODULE_BASE_URL}/worktime`,
