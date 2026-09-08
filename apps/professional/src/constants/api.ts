@@ -56,6 +56,10 @@ export const API_PATH = {
 	},
 	COMPANIES: {
 		INVITATION_ACCEPT: `${BASE_PATHS.COMPANIES}/validate/token`,
+		LIFECYCLE: (companyId: string) => `${BASE_PATHS.COMPANIES}/${companyId}/lifecycle`,
+		LIFECYCLE_POPUPS: (companyId: string) => `${BASE_PATHS.COMPANIES}/${companyId}/lifecycle/popups`,
+		LIFECYCLE_POPUP_ACK: (companyId: string, notificationId: string) =>
+			`${BASE_PATHS.COMPANIES}/${companyId}/lifecycle/popups/${notificationId}/ack`,
 	},
 	CUSTOMERS: {
 		LIST: BASE_PATHS.CUSTOMERS,

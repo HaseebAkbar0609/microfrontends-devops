@@ -6525,6 +6525,7 @@ export type OrderInspectionTranslation = {
 	allStatusesFilter: string;
 };
 
+<<<<<<< Updated upstream
 export type EconomyDashboardTranslation = {
 	economyDashboardTitle: string;
 	economyDashboardSubtitle: string;
@@ -6727,6 +6728,20 @@ export type OrderProtocolTranslation = {
 	protocolSubjectLabel: string;
 	validationProtocolSubjectRequired: string;
 	protocolSaveButton: string;
+=======
+export type AccountLifecycleTranslation = {
+	lifecycleBadgeDemo: string;
+	lifecycleBadgeTrial: string;
+	lifecycleDaysRemainingSuffix: string;
+	lifecycleExpiresToday: string;
+	lifecycleExpiredMessage: string;
+	lifecycleUpgradeCta: string;
+	lifecyclePopupDismiss: string;
+	lifecycleReadOnlyGuardTitle: string;
+	lifecycleReadOnlyGuardMessage: string;
+	lifecycleToastBlockedTitle: string;
+	lifecycleToastBlockedMessage: string;
+>>>>>>> Stashed changes
 };
 
 export type Translation = HeaderTranslation &
@@ -6748,11 +6763,16 @@ export type Translation = HeaderTranslation &
 	FinancialReportsTranslation &
 	OrderInformationTranslation &
 	OrderOrganisationTranslation &
+<<<<<<< Updated upstream
 	RotRutTranslation &
 	OrderPaymentPlanTranslation &
 	OrderInspectionTranslation &
 	EconomyDashboardTranslation &
 	OrderProtocolTranslation;
+=======
+	OrderInspectionTranslation &
+	AccountLifecycleTranslation;
+>>>>>>> Stashed changes
 
 export type TranslationKeys = keyof Translation;
 

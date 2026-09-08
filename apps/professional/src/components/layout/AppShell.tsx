@@ -6,6 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuthStatus } from "@/context/AuthContext";
 import { Loader } from "@/components/ui/loader";
 import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscriptionCookie";
+import {
+	AccountLifecycleBanner,
+	AccountLifecyclePopup,
+} from "@/features/account-lifecycle";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 
@@ -126,11 +130,13 @@ export function AppShell({ children }: AppShellProps) {
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
 			<div className="flex flex-1 flex-col overflow-hidden">
+				{!isPublicPage && <AccountLifecycleBanner />}
 				<Header />
 				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0">
 					{children}
 				</main>
 			</div>
+			{!isPublicPage && <AccountLifecyclePopup />}
 		</div>
 	);
 }

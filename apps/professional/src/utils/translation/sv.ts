@@ -22,8 +22,12 @@ import {
 	RotRutTranslation,
 	OrderPaymentPlanTranslation,
 	OrderInspectionTranslation,
+<<<<<<< Updated upstream
 	EconomyDashboardTranslation,
 	OrderProtocolTranslation,
+=======
+	AccountLifecycleTranslation,
+>>>>>>> Stashed changes
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -6594,6 +6598,7 @@ export const svOrderInspection: OrderInspectionTranslation = {
 	allStatusesFilter: "Alla statusar",
 };
 
+<<<<<<< Updated upstream
 export const svEconomyDashboard: EconomyDashboardTranslation = {
 	economyDashboardTitle: "Ekonomiöversikt",
 	economyDashboardSubtitle: "Realtidsöversikt över likviditet, lönsamhet, fakturering och ekonomiska nyckeltal",
@@ -6796,6 +6801,23 @@ export const svOrderProtocol: OrderProtocolTranslation = {
 	protocolSubjectLabel: "Rubrik",
 	validationProtocolSubjectRequired: "Rubrik är obligatorisk",
 	protocolSaveButton: "Spara",
+=======
+export const svAccountLifecycle: AccountLifecycleTranslation = {
+	lifecycleBadgeDemo: "Demo",
+	lifecycleBadgeTrial: "Provperiod",
+	lifecycleDaysRemainingSuffix: "dagar kvar",
+	lifecycleExpiresToday: "Går ut idag",
+	lifecycleExpiredMessage:
+		"Ditt konto har gått ut. Du kan fortfarande se din data, men du kan inte skapa nytt innehåll.",
+	lifecycleUpgradeCta: "Uppgradera nu",
+	lifecyclePopupDismiss: "OK, uppfattat",
+	lifecycleReadOnlyGuardTitle: "Det här kontot är skrivskyddat",
+	lifecycleReadOnlyGuardMessage:
+		"Din provperiod har gått ut. Uppgradera för att fortsätta skapa innehåll.",
+	lifecycleToastBlockedTitle: "Åtgärden blockerades",
+	lifecycleToastBlockedMessage:
+		"Det här kontot är skrivskyddat. Uppgradera för att fortsätta.",
+>>>>>>> Stashed changes
 };
 
 export const sv: Translation = {
@@ -6821,7 +6843,11 @@ export const sv: Translation = {
 	...svRotRut,
 	...svOrderPaymentPlan,
 	...svOrderInspection,
+<<<<<<< Updated upstream
 	...svEconomyDashboard,
 	...svOrderProtocol,
+=======
+	...svAccountLifecycle,
+>>>>>>> Stashed changes
 };
 

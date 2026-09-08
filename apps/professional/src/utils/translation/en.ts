@@ -22,8 +22,12 @@ import {
 	RotRutTranslation,
 	OrderPaymentPlanTranslation,
 	OrderInspectionTranslation,
+<<<<<<< Updated upstream
 	EconomyDashboardTranslation,
 	OrderProtocolTranslation,
+=======
+	AccountLifecycleTranslation,
+>>>>>>> Stashed changes
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -6572,6 +6576,7 @@ export const enOrderInspection: OrderInspectionTranslation = {
 	allStatusesFilter: "All statuses",
 };
 
+<<<<<<< Updated upstream
 export const enEconomyDashboard: EconomyDashboardTranslation = {
 	economyDashboardTitle: "Economy Overview",
 	economyDashboardSubtitle: "Real-time overview of liquidity, profitability, invoicing, and financial key metrics",
@@ -6774,6 +6779,22 @@ export const enOrderProtocol: OrderProtocolTranslation = {
 	protocolSubjectLabel: "Subject",
 	validationProtocolSubjectRequired: "Subject is required",
 	protocolSaveButton: "Save",
+=======
+export const enAccountLifecycle: AccountLifecycleTranslation = {
+	lifecycleBadgeDemo: "Demo",
+	lifecycleBadgeTrial: "Trial",
+	lifecycleDaysRemainingSuffix: "days remaining",
+	lifecycleExpiresToday: "Expires today",
+	lifecycleExpiredMessage:
+		"Your account has expired. You can still view your data, but you can't create new content.",
+	lifecycleUpgradeCta: "Upgrade now",
+	lifecyclePopupDismiss: "Got it",
+	lifecycleReadOnlyGuardTitle: "This account is read-only",
+	lifecycleReadOnlyGuardMessage:
+		"Your trial period has ended. Upgrade to keep creating content.",
+	lifecycleToastBlockedTitle: "Action blocked",
+	lifecycleToastBlockedMessage: "This account is read-only. Upgrade to continue.",
+>>>>>>> Stashed changes
 };
 
 export const en: Translation = {
@@ -6799,6 +6820,10 @@ export const en: Translation = {
 	...enRotRut,
 	...enOrderPaymentPlan,
 	...enOrderInspection,
+<<<<<<< Updated upstream
 	...enEconomyDashboard,
 	...enOrderProtocol,
+=======
+	...enAccountLifecycle,
+>>>>>>> Stashed changes
 };
