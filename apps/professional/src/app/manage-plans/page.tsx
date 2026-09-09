@@ -23,6 +23,7 @@ import {
 } from "@/features/manage-plans";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { SUBSCRIPTION_EDITOR_PATHS } from "@/features/admin/subscription/services/subscriptionSelection";
 
 const STEP_PLAN_KEYS = {
 	[MANAGE_PLANS_STEPS.BASE]: [
@@ -110,12 +111,16 @@ export default function ManagePlansPage() {
 	}, []);
 
 	useEffect(() => {
+		if (new URLSearchParams(window.location.search).get("change") === "1") {
+			router.replace(SUBSCRIPTION_EDITOR_PATHS.subscription);
+			return;
+		}
 		setIsPlanChange(
 			new URLSearchParams(window.location.search).get("change") === "1",
 		);
 		fetchPlans();
 		syncStepFromCart();
-	}, [syncStepFromCart]);
+	}, [router, syncStepFromCart]);
 
 	useEffect(() => {
 		mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });

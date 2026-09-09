@@ -12,6 +12,7 @@ export interface SubscriptionPlanPrice {
 }
 
 export interface SubscriptionPlan {
+  is_license?: boolean;
   id: string;
   plan_key: string;
   order_key: number;

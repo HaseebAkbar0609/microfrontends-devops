@@ -17,6 +17,7 @@ import {
 import { useSubscriptionOverview } from "../hooks/useSubscriptionOverview";
 import { getOpenInvoices, type SubscriptionOverviewItem } from "../services/subscriptionService";
 import PaymentMethodTab from "./PaymentMethodTab";
+import { SUBSCRIPTION_EDITOR_PATHS } from "../services/subscriptionSelection";
 
 const isSubscriptionTabId = (
 	value: string | null,
@@ -203,9 +204,14 @@ const AdminSubscription = () => {
 				</div>
 			) : (
 				<div className="space-y-6">
-					<div className="flex justify-end">
+					<div className="flex flex-wrap justify-end gap-3">
+						{subscription.subscription_id && ["active", "trialing"].includes(subscription.status?.stripe_status ?? "") && <Button asChild variant="primary" className="h-auto min-h-11 whitespace-normal">
+							<Link href={SUBSCRIPTION_EDITOR_PATHS.licenses}>
+								<Translate text={localizationConstants.subscriptionAddLicenses} />
+							</Link>
+						</Button>}
 						<Button asChild variant="outline">
-							<Link href="/manage-plans?change=1">
+							<Link href={SUBSCRIPTION_EDITOR_PATHS.subscription}>
 								<Translate text={localizationConstants.subscriptionChangePlan} />
 							</Link>
 						</Button>
