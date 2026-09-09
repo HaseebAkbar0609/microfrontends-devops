@@ -7164,6 +7164,7 @@ export const svCreateEmployee: CreateEmployeeTranslation = {
 	validationErrorRequiredField: "Detta fält är obligatoriskt",
 	validationErrorEmailInvalid: "Vänligen ange en giltig e-postadress",
 	validationErrorPersonalIdInvalid: "Ange personnummer (t.ex. 1985-05-05-1010)",
+	fieldCommentPlaceholder: "Valfri anteckning",
 };
 
 export const sv: Translation = {

@@ -1,5 +1,7 @@
 import { CreateEmployeeFormData } from "../types/createEmployee.types";
 
+export const TOTAL_CREATE_EMPLOYEE_STEPS = 5;
+
 export const CITY_OPTIONS = [
 	"Solna",
 	"Stockholm",

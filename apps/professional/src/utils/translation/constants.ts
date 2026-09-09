@@ -7109,6 +7109,7 @@ export type CreateEmployeeTranslation = {
 	validationErrorRequiredField: string;
 	validationErrorEmailInvalid: string;
 	validationErrorPersonalIdInvalid: string;
+	fieldCommentPlaceholder: string;
 };
 
 export type Translation = HeaderTranslation &

@@ -16,6 +16,7 @@ import {
 import { useCreateEmployee } from "../../hooks/useCreateEmployee";
 import { CreateEmployeeStepper } from "./CreateEmployeeStepper";
 import { CreateEmployeeActions } from "./CreateEmployeeActions";
+import { EmployeeStepProgressCard } from "./EmployeeStepProgressCard";
 import { CancelConfirmationDialog } from "./modals/CancelConfirmationDialog";
 import { Step1Grundinformation } from "./steps/Step1Grundinformation";
 import { Step2Kontaktperson } from "./steps/Step2Kontaktperson";
@@ -122,24 +123,7 @@ export function CreateEmployeePage() {
 
 				{/* Mobile Step Card (< lg): Displays above cards on small viewports */}
 				<div className="lg:hidden">
-					<div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-xs">
-						<div className="text-sm font-semibold text-slate-900 mb-2">
-							{`Step ${activeStep}/5`}
-						</div>
-						<div
-							className="w-full h-2 bg-slate-100 rounded-full overflow-hidden"
-							role="progressbar"
-							aria-valuenow={activeStep}
-							aria-valuemin={1}
-							aria-valuemax={5}
-							aria-label={`Step ${activeStep} of 5`}
-						>
-							<div
-								className="h-full bg-slate-900 rounded-full transition-all duration-300"
-								style={{ width: `${(activeStep / 5) * 100}%` }}
-							/>
-						</div>
-					</div>
+					<EmployeeStepProgressCard activeStep={activeStep} />
 				</div>
 
 				{/* 2-Column Responsive Layout Matching Figma Image 2 */}
@@ -208,24 +192,7 @@ export function CreateEmployeePage() {
 
 					{/* Right Column: Step Progress Card Matching Figma Image 2 */}
 					<div className="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-4">
-						<div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs">
-							<div className="text-sm font-semibold text-slate-900 mb-3">
-								{`Step ${activeStep}/5`}
-							</div>
-							<div
-								className="w-full h-2 bg-slate-100 rounded-full overflow-hidden"
-								role="progressbar"
-								aria-valuenow={activeStep}
-								aria-valuemin={1}
-								aria-valuemax={5}
-								aria-label={`Step ${activeStep} of 5`}
-							>
-								<div
-									className="h-full bg-slate-900 rounded-full transition-all duration-300"
-									style={{ width: `${(activeStep / 5) * 100}%` }}
-								/>
-							</div>
-						</div>
+						<EmployeeStepProgressCard activeStep={activeStep} />
 					</div>
 				</div>
 

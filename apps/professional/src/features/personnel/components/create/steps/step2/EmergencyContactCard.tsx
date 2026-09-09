@@ -146,7 +146,7 @@ export function EmergencyContactCard({
 						id={`contact-comm-${contact.id}`}
 						value={contact.comment}
 						onChange={(e) => onChange(contact.id, "comment", e.target.value)}
-						placeholder="Valfri anteckning"
+						placeholder={t(localizationConstants.fieldCommentPlaceholder)}
 						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 					/>
 				</div>

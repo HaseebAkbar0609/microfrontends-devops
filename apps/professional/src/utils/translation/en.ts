@@ -7142,6 +7142,7 @@ export const enCreateEmployee: CreateEmployeeTranslation = {
 	validationErrorRequiredField: "This field is required",
 	validationErrorEmailInvalid: "Please enter a valid email address",
 	validationErrorPersonalIdInvalid: "Enter personal ID (e.g. 1985-05-05-1010)",
+	fieldCommentPlaceholder: "Optional note",
 };
 
 export const en: Translation = {

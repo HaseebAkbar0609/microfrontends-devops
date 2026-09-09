@@ -171,7 +171,7 @@ export function PersonalInfoCard({ data, fieldErrors, onChange }: PersonalInfoCa
 					</Label>
 					<Select value={data.city} onValueChange={(val) => onChange("city", val)}>
 						<SelectTrigger id="city" className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm">
-							<SelectValue placeholder="Solna" />
+							<SelectValue placeholder={t(localizationConstants.fieldCity)} />
 						</SelectTrigger>
 						<SelectContent>
 							{CITY_OPTIONS.map((city) => (

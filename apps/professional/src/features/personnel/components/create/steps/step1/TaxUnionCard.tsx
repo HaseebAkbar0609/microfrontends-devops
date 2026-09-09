@@ -50,7 +50,7 @@ export function TaxUnionCard({ data, onChange }: TaxUnionCardProps) {
 						id="collectiveAgreement"
 						value={data.collectiveAgreement}
 						onChange={(e) => onChange("collectiveAgreement", e.target.value)}
-						placeholder="Yes"
+						placeholder={t(localizationConstants.radioYes)}
 						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 					/>
 				</div>

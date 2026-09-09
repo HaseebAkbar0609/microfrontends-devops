@@ -67,7 +67,7 @@ export function WorkDutiesCard({ data, fieldErrors, onChange }: WorkDutiesCardPr
 					</Label>
 					<Select value={data.category} onValueChange={(val) => onChange("category", val)}>
 						<SelectTrigger id="category" className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm">
-							<SelectValue placeholder="Tjänsteman / Kollektiv" />
+							<SelectValue placeholder={t(localizationConstants.fieldCategory)} />
 						</SelectTrigger>
 						<SelectContent>
 							{CATEGORY_OPTIONS.map((cat) => (
@@ -90,8 +90,7 @@ export function WorkDutiesCard({ data, fieldErrors, onChange }: WorkDutiesCardPr
 							type="date"
 							value={data.startDate}
 							onChange={(e) => onChange("startDate", e.target.value)}
-							placeholder="2026-01-01"
-							className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400 pr-10"
+							className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm pr-10"
 						/>
 						<Calendar className="h-4 w-4 absolute right-3 text-slate-400 pointer-events-none" />
 					</div>
@@ -103,7 +102,7 @@ export function WorkDutiesCard({ data, fieldErrors, onChange }: WorkDutiesCardPr
 					</Label>
 					<Select value={data.department} onValueChange={(val) => onChange("department", val)}>
 						<SelectTrigger id="department" className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm">
-							<SelectValue placeholder="Contract" />
+							<SelectValue placeholder={t(localizationConstants.fieldDepartment)} />
 						</SelectTrigger>
 						<SelectContent>
 							{DEPARTMENT_OPTIONS.map((dept) => (
@@ -122,7 +121,7 @@ export function WorkDutiesCard({ data, fieldErrors, onChange }: WorkDutiesCardPr
 					</Label>
 					<Select value={data.location} onValueChange={(val) => onChange("location", val)}>
 						<SelectTrigger id="workDutiesLocation" className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm">
-							<SelectValue placeholder="Stockholm" />
+							<SelectValue placeholder={t(localizationConstants.fieldCity)} />
 						</SelectTrigger>
 						<SelectContent>
 							{LOCATION_OPTIONS.map((loc) => (
