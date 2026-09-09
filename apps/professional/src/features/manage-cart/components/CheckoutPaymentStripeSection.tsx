@@ -52,7 +52,7 @@ export function CheckoutPaymentStripeSection({
   }, [elements, onStripeReady, stripe]);
 
   return (
-    <div className="rounded-xl bg-white p-6 space-y-4">
+    <div className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 [&_button]:min-h-11">
       <div className="flex items-center gap-3">
         <span className="text-lg font-semibold text-primary">3.</span>
         <h2 className="text-lg font-semibold text-primary">

@@ -461,9 +461,9 @@ export function CheckoutPaymentDetails({
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+					className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_23rem]"
 				>
-					<div className="space-y-4">
+					<div className="min-w-0 space-y-6">
 						<CheckoutContactSection control={form.control} />
 						<CheckoutBillingSection
 							control={form.control}
@@ -547,7 +547,7 @@ export function CheckoutPaymentDetails({
 									}
 								/>
 							</Button>
-							<div className="flex items-center gap-3">
+							<div className="flex items-center gap-3 [&_button]:h-11">
 								<Button
 									variant="outline"
 									type="button"
@@ -563,7 +563,7 @@ export function CheckoutPaymentDetails({
 								<Button
 									variant="primary"
 									type="submit"
-									className="min-w-[160px]"
+									className="h-11 w-full sm:min-w-[160px] sm:w-auto"
 									disabled={payDisabled}
 								>
 									<Translate

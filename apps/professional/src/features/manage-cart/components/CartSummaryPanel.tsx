@@ -20,8 +20,8 @@ export function CartSummaryPanel({
   const router = useRouter();
 
   return (
-    <div className="space-y-4 rounded-[10px] bg-white p-6">
-      <div className="space-y-2 flex justify-between gap-2 items-center">
+    <div className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <div className="flex flex-col gap-2">
         <h2 className="text-sm font-semibold text-secondary !mb-0">
           <Translate text={localizationConstants.manageCartDiscountTitle} />
         </h2>
@@ -29,7 +29,7 @@ export function CartSummaryPanel({
           value={discountCode}
           onChange={(e) => onDiscountCodeChange(e.target.value)}
           placeholder={t(localizationConstants.manageCartDiscountPlaceholder)}
-          className="h-9 max-w-[200px]"
+          className="h-11 w-full"
         />
       </div>
 
@@ -50,7 +50,7 @@ export function CartSummaryPanel({
         </div>
       </div>
 
-      <div className="flex justify-between gap-3 pt-2">
+      <div className="flex flex-col-reverse gap-3 pt-2 [&_button]:h-11 [&_button]:w-full [&_button]:whitespace-normal">
         <Button
           variant="outline"
           onClick={() =>

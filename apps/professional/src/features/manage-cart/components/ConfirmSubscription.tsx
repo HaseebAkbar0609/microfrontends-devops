@@ -69,9 +69,9 @@ export function ConfirmSubscription({
 
 	return (
 		<div className="space-y-6">
-			<div className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-				<div className="space-y-4">
-					<div className="rounded-xl bg-white p-6  space-y-4">
+			<div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_23rem]">
+				<div className="min-w-0 space-y-6 [&_p]:break-words">
+					<div className="space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 						<h2 className="text-lg font-semibold text-secondary">
 							<Translate
 								text={
@@ -130,7 +130,7 @@ export function ConfirmSubscription({
 						</div>
 					</div>
 
-					<div className="rounded-xl bg-white p-6 space-y-4">
+					<div className="space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 						<h2 className="text-lg font-semibold text-secondary">
 							<Translate
 								text={
@@ -138,7 +138,7 @@ export function ConfirmSubscription({
 								}
 							/>
 						</h2>
-						<div className="grid gap-4 text-sm text-secondary md:grid-cols-2">
+						<div className="grid gap-5 text-sm text-secondary sm:grid-cols-2 [&>div]:min-w-0 [&_p]:break-words">
 							<div className="space-y-1">
 								<p className="font-semibold text-gray-700">
 									<Translate
@@ -193,7 +193,7 @@ export function ConfirmSubscription({
 					</div>
 				</div>
 
-				<div className="space-y-4 rounded-[10px] bg-white p-6">
+				<div className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 					<h2 className="text-lg font-semibold text-secondary">
 						<Translate
 							text={
@@ -241,7 +241,7 @@ export function ConfirmSubscription({
 						checked={acceptedTerms}
 						onChange={setAcceptedTerms}
 					/>
-					<div className="flex justify-end gap-3 pt-2">
+					<div className="flex flex-col-reverse gap-3 pt-2 [&_button]:h-auto [&_button]:min-h-11 [&_button]:w-full [&_button]:whitespace-normal [&_button]:py-2">
 						<Button variant="outline" onClick={onBackToCart}>
 							<Translate
 								text={

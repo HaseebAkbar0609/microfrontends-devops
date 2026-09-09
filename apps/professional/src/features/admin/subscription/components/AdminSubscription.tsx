@@ -59,9 +59,9 @@ function statusClass(status: string | null): string {
 
 function SubscriptionItemsTable({ items }: { items: SubscriptionOverviewItem[] }) {
 	return (
-		<div className="overflow-x-auto">
-			<table className="w-full min-w-[680px] text-sm">
-				<thead>
+		<div className="min-w-0">
+			<table className="block w-full text-sm md:table">
+				<thead className="hidden md:table-header-group">
 					<tr className="border-b border-slate-200 text-left text-slate-500">
 						<th className="px-5 py-3 font-medium">
 							<Translate text={localizationConstants.subscriptionColPackage} />
@@ -80,11 +80,12 @@ function SubscriptionItemsTable({ items }: { items: SubscriptionOverviewItem[] }
 						</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody className="block md:table-row-group">
 					{items.map((item) => (
-						<tr key={item.id} className="border-b border-slate-100 last:border-0">
-							<td className="px-5 py-4 font-medium text-slate-900">{item.name}</td>
-							<td className="px-5 py-4 text-slate-600">
+						<tr key={item.id} className="grid grid-cols-2 gap-y-3 border-b border-slate-100 py-4 last:border-0 md:table-row md:py-0">
+							<td className="col-span-2 px-5 font-semibold text-slate-900 md:py-4">{item.name}</td>
+							<td className="px-5 text-slate-600 md:py-4">
+								<span className="mb-1 block text-xs text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionItemType} /></span>
 								<Translate
 									text={
 										item.is_license
@@ -93,11 +94,16 @@ function SubscriptionItemsTable({ items }: { items: SubscriptionOverviewItem[] }
 									}
 								/>
 							</td>
-							<td className="px-5 py-4 text-right text-slate-700">{item.quantity}</td>
-							<td className="px-5 py-4 text-right text-slate-700">
+							<td className="px-5 text-right tabular-nums text-slate-700 md:py-4">
+								<span className="mb-1 block text-xs text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionColQuantity} /></span>
+								{item.quantity}
+							</td>
+							<td className="px-5 tabular-nums text-slate-700 md:py-4 md:text-right">
+								<span className="mb-1 block text-xs text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionColUnitPrice} /></span>
 								{formatAmount(item.unit_amount, item.currency)}
 							</td>
-							<td className="px-5 py-4 text-right font-semibold text-slate-900">
+							<td className="px-5 text-right font-semibold tabular-nums text-slate-900 md:py-4">
+								<span className="mb-1 block text-xs font-normal text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionColTotal} /></span>
 								{formatAmount(item.total_amount, item.currency)}
 							</td>
 						</tr>
@@ -130,7 +136,7 @@ const AdminSubscription = () => {
 	);
 
 	return (
-		<div className="flex flex-col gap-6 p-6">
+		<div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 md:py-8">
 			<div>
 				<h1 className="mb-2 text-2xl font-semibold text-slate-900">
 					<Translate text={localizationConstants.adminSubscription} />
@@ -149,7 +155,7 @@ const AdminSubscription = () => {
 
 			<Tabs value={activeTab} onValueChange={setActiveTab}>
 				<div className="border-b border-slate-200">
-					<TabsList className="h-auto gap-6 rounded-none bg-transparent p-0">
+					<TabsList className="h-auto w-full flex-wrap justify-start gap-x-5 gap-y-1 rounded-none bg-transparent p-0">
 						{SUBSCRIPTION_TABS.map((tab) => (
 							<TabsTrigger
 								key={tab.id}
@@ -245,14 +251,14 @@ const AdminSubscription = () => {
 						</div>
 					)}
 
-					<div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-						<section className="overflow-hidden rounded-md border border-slate-200 bg-white xl:col-span-2">
-							<div className="flex flex-wrap items-center justify-between gap-3 bg-slate-100 px-5 py-4">
-								<div>
+					<div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-3">
+						<section className="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm xl:col-span-2">
+							<div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-5 py-5">
+								<div className="min-w-0">
 									<p className="text-sm text-slate-500">
 										<Translate text={localizationConstants.subscriptionDetailTitlePrefix} />
 									</p>
-									<h2 className="mt-0.5 text-lg font-semibold text-slate-900">
+									<h2 className="mt-1 break-all text-base font-semibold text-slate-900">
 										{subscription.subscription_id ?? "—"}
 									</h2>
 								</div>
@@ -263,7 +269,7 @@ const AdminSubscription = () => {
 							<SubscriptionItemsTable items={subscription.items} />
 						</section>
 
-						<aside className="rounded-md border border-slate-200 bg-white p-5">
+						<aside className="min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 							<h2 className="text-lg font-semibold text-slate-900">
 								<Translate text={localizationConstants.subscriptionBillingTitle} />
 							</h2>

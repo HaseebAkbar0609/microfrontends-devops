@@ -188,9 +188,9 @@ export default function ManagePlansPage() {
 				ref={mainRef}
 				className="h-[calc(100vh-72px)] overflow-y-auto px-4 py-6 sm:px-6 md:py-8 lg:px-10"
 			>
-				<div className="mx-auto w-full max-w-7xl">
-					<header className="relative flex flex-col items-center gap-4 text-center sm:min-h-11 sm:pr-36">
-						<div className="min-w-0 sm:pl-36">
+				<div className="mx-auto w-full max-w-6xl">
+					<header className="grid items-start justify-items-center gap-5 text-center lg:grid-cols-[1fr_minmax(0,40rem)_1fr]">
+						<div className="min-w-0 lg:col-start-2">
 							{currentStep === MANAGE_PLANS_STEPS.BASE ? (
 								<PaymentOptionSelector
 									value={paymentOption}
@@ -216,12 +216,12 @@ export default function ManagePlansPage() {
 							)}
 						</div>
 
-						<div className="flex items-center sm:absolute sm:right-0 sm:top-0">
+						<div className="flex items-center lg:justify-self-end">
 							<Button
 								variant="primary"
 								size="default"
 								asChild
-								className="w-fit"
+								className="h-11 w-fit rounded-lg"
 							>
 								<Link
 									href={cartHref}
@@ -241,7 +241,7 @@ export default function ManagePlansPage() {
 						</div>
 					</header>
 
-					<div className="mx-auto mt-8 flex w-full flex-wrap items-start justify-center gap-5 lg:gap-6">
+					<div className="mx-auto mt-8 flex w-full flex-wrap items-stretch justify-center gap-5 lg:gap-6">
 						{stepPlans.map((plan) => {
 							const selectedPrice = getPriceForPaymentOption(
 								plan,
@@ -252,7 +252,7 @@ export default function ManagePlansPage() {
 							return (
 								<div
 									key={plan.id}
-									className="w-full max-w-[21rem] min-w-0 sm:w-[20rem]"
+									className="flex w-full min-w-0 max-w-[22rem] sm:w-[20rem]"
 								>
 									<PlanCard
 										plan={plan}

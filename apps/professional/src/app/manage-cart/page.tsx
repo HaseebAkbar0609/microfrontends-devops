@@ -108,8 +108,8 @@ export default function ManageCartPage() {
 
 	return (
 		<>
-			<main className="flex-1 bg-background p-6 md:p-8 md:px-12 h-[calc(100vh-72px)] overflow-y-auto">
-				<div className="mx-auto space-y-4">
+			<main className="h-[calc(100vh-72px)] flex-1 overflow-y-auto bg-background px-4 py-6 sm:px-6 md:py-8">
+				<div className="mx-auto w-full max-w-6xl space-y-6">
 					<h1 className="text-2xl font-bold text-secondary">
 						<Translate
 							text={localizationConstants.manageCartTitle}
@@ -117,7 +117,7 @@ export default function ManageCartPage() {
 					</h1>
 
 					{step === "cart" ? (
-						<div className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+						<div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_23rem]">
 							<CartItemsPanel
 								items={items}
 								subtotal={subtotal}

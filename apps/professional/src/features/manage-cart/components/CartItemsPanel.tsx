@@ -16,8 +16,8 @@ export function CartItemsPanel({
 	removingItemIds = [],
 }: CartItemsPanelProps) {
 	return (
-		<div className="space-y-4 rounded-[10px] bg-white p-6">
-			<div className="flex items-center justify-between text-sm font-semibold text-foreground">
+		<div className="min-w-0 space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+			<div className="flex flex-wrap items-center justify-between gap-2 text-sm font-semibold text-foreground">
 				<span className="text-gray-700">
 					<Translate
 						text={localizationConstants.manageCartLicensesTitle}
@@ -47,8 +47,8 @@ export function CartItemsPanel({
 							key={item.id}
 							className="flex flex-col gap-2 border-b border-border pb-4 last:border-b-0 last:pb-0"
 						>
-							<div className="flex items-center justify-between">
-								<div>
+							<div className="flex items-start justify-between gap-4">
+								<div className="min-w-0 break-words">
 									<p className="font-semibold text-gray-700">
 										{item.name}
 									</p>
@@ -58,7 +58,7 @@ export function CartItemsPanel({
 										</p>
 									) : null}
 								</div>
-								<p className="text-sm font-medium text-secondary">
+								<p className="shrink-0 text-sm font-medium tabular-nums text-secondary">
 									{formatCartCurrencyFromOre(item.unitPrice)}
 								</p>
 							</div>
@@ -70,7 +70,7 @@ export function CartItemsPanel({
 									<div className="inline-flex items-center overflow-hidden rounded-md border border-input">
 										<button
 											type="button"
-											className="border-r border-input px-3 py-1.5 text-sm hover:bg-accent"
+											className="h-10 w-10 border-r border-input text-sm hover:bg-accent disabled:opacity-40"
 											onClick={() =>
 												onUpdateQuantity(item.id, -1)
 											}
@@ -83,12 +83,12 @@ export function CartItemsPanel({
 										>
 											-
 										</button>
-										<span className="px-4 py-1.5 text-sm">
+										<span className="min-w-12 px-3 py-2 text-center text-sm font-medium tabular-nums">
 											{item.quantity}
 										</span>
 										<button
 											type="button"
-											className="border-l border-input px-3 py-1.5 text-sm hover:bg-accent"
+											className="h-10 w-10 border-l border-input text-sm hover:bg-accent disabled:opacity-40"
 											onClick={() =>
 												onUpdateQuantity(item.id, 1)
 											}

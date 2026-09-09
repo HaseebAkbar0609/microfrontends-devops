@@ -25,7 +25,7 @@ export function CheckoutPaymentSavedSection({
   control: Control<PaymentDetailsFormValues>;
 }) {
   return (
-    <div className="rounded-xl bg-white p-6 space-y-4">
+    <div className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 [&_button]:min-h-11">
       <div className="flex items-center gap-3">
         <span className="text-lg font-semibold text-primary">3.</span>
         <h2 className="text-lg font-semibold text-primary">
@@ -59,7 +59,7 @@ export function CheckoutPaymentSavedSection({
               />
             </p>
           ) : cards.length === 0 ? (
-            <div className="flex items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-gray-500">
                 <Translate
                   text={localizationConstants.manageCartCheckoutNoSavedCardsText}
@@ -73,7 +73,7 @@ export function CheckoutPaymentSavedSection({
             </div>
           ) : (
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm font-medium text-secondary">
                   <Translate
                     text={localizationConstants.manageCartCheckoutSavedCardsTitle}

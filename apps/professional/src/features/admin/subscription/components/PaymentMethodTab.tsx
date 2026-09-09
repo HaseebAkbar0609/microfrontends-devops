@@ -82,7 +82,7 @@ const PaymentMethodTab = () => {
 	const defaultCardId = cards.find((card) => card.is_default)?.id ?? "";
 
 	return (
-		<div className="flex flex-col gap-5">
+		<div className="flex min-w-0 flex-col gap-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
 			<h2 className="text-lg font-semibold text-slate-600">
 				<Translate
 					text={localizationConstants.subscriptionPaymentHeading}
@@ -97,7 +97,8 @@ const PaymentMethodTab = () => {
 					type="button"
 					onClick={() => setDialogOpen(true)}
 					disabled={!email || isUpdating}
-					className="h-11 gap-2 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
+					variant="primary"
+					className="h-11 gap-2 rounded-lg px-5 text-sm font-medium"
 				>
 					<Plus className="h-4 w-4" />
 					<Translate

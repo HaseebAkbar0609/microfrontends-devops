@@ -13,7 +13,7 @@ export function CheckoutOrderSummary({
 	control,
 }: CheckoutOrderSummaryProps) {
 	return (
-		<aside className="space-y-4 rounded-[10px] bg-white p-6 h-fit sticky top-0">
+		<aside className="h-fit min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:sticky lg:top-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-lg font-semibold text-secondary">
 					<Translate
@@ -56,12 +56,12 @@ export function CheckoutOrderSummary({
 					key={item.id}
 					className="flex items-start justify-between gap-3 border-b border-border pb-4"
 				>
-					<div className="flex items-start gap-3">
-						<div className="mt-0.5 flex h-12 w-12 items-center justify-center rounded-md bg-primary/10 text-primary">
+					<div className="flex min-w-0 items-start gap-3">
+						<div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
 							<span className="text-sm font-semibold">TF</span>
 						</div>
 
-						<div className="space-y-1">
+						<div className="min-w-0 space-y-1 break-words">
 							<p className="text-sm font-semibold text-secondary">
 								<Translate
 									text={
@@ -81,14 +81,14 @@ export function CheckoutOrderSummary({
 						</div>
 					</div>
 
-					<p className="text-sm font-semibold text-secondary">
+					<p className="shrink-0 text-sm font-semibold tabular-nums text-secondary">
 						{formatCartCurrencyFromOre(item.itemTotalAmount ?? 0)}
 					</p>
 				</div>
 			))}
 
 			{showDiscountCode && control ? (
-				<div className="flex justify-between gap-2 items-center">
+				<div className="flex flex-col gap-2">
 					<p className="text-sm text-secondary font-semibold">
 						<Translate
 							text={
@@ -102,7 +102,7 @@ export function CheckoutOrderSummary({
 						placeholder={
 							localizationConstants.manageCartCheckoutDiscountCodePlaceholder
 						}
-						className="max-w-[200px]"
+						className="h-11 w-full"
 					/>
 				</div>
 			) : null}
