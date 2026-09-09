@@ -3,7 +3,7 @@
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
 	addSubscriptionToCartAction,
@@ -64,6 +64,7 @@ function getPriceForPaymentOption(
 
 export default function ManagePlansPage() {
 	const router = useRouter();
+	const mainRef = useRef<HTMLElement>(null);
 	const [isPlanChange, setIsPlanChange] = useState(false);
 	const cartHref = isPlanChange ? "/manage-cart?mode=change" : "/manage-cart";
 	const [paymentOption, setPaymentOption] = useState<PaymentOption>("month");
@@ -116,6 +117,10 @@ export default function ManagePlansPage() {
 		fetchPlans();
 		syncStepFromCart();
 	}, [syncStepFromCart]);
+
+	useEffect(() => {
+		mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+	}, [currentStep]);
 
 	const stepPlans = useMemo(() => {
 		const planKeys = STEP_PLAN_KEYS[currentStep] as readonly string[];
@@ -180,7 +185,10 @@ export default function ManagePlansPage() {
 
 	return (
 		<>
-			<main className="h-[calc(100vh-72px)] overflow-y-auto px-4 py-6 sm:px-6 md:py-8 lg:px-10">
+			<main
+				ref={mainRef}
+				className="h-[calc(100vh-72px)] overflow-y-auto px-4 py-6 sm:px-6 md:py-8 lg:px-10"
+			>
 				<div className="mx-auto w-full max-w-7xl">
 					<header className="grid items-start gap-5 lg:grid-cols-[minmax(12rem,1fr)_minmax(0,42rem)_minmax(12rem,1fr)]">
 						<h2 className="text-2xl font-bold text-gray-700">
