@@ -148,15 +148,15 @@ export function CreateProtocolModal({
 		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
 			<DialogContent
 				showCloseButton={false}
-				className="w-[calc(100vw-2rem)] sm:w-[620px] sm:max-w-[620px] rounded-2xl bg-white p-6 sm:p-7 border border-slate-200 shadow-2xl max-h-[90vh] overflow-y-auto"
+				className="w-[calc(100vw-2rem)] sm:w-[580px] sm:max-w-[580px] rounded-xl bg-white p-4 sm:p-5 border border-slate-200 shadow-xl max-h-[90vh] overflow-y-auto"
 			>
 				{/* Modal Header */}
-				<DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+				<DialogHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
 					<div>
-						<DialogTitle className="font-sans font-bold text-xl sm:text-2xl text-slate-900 tracking-tight">
+						<DialogTitle className="font-sans font-bold text-lg sm:text-xl text-slate-900 tracking-tight">
 							<Translate text={localizationConstants.protocolNewMeetingTitle} />
 						</DialogTitle>
-						<p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5">
+						<p className="text-xs sm:text-xs text-slate-500 font-normal mt-0.5">
 							<Translate text={subtitleKey} />
 						</p>
 					</div>
@@ -165,16 +165,16 @@ export function CreateProtocolModal({
 						variant="ghost"
 						size="icon"
 						onClick={onClose}
-						className="h-8 w-8 p-1 text-zinc-500 hover:text-zinc-900 hover:bg-slate-100 rounded-md cursor-pointer shrink-0"
+						className="h-7 w-7 p-1 -mt-1 -mr-1 text-zinc-500 hover:text-zinc-900 hover:bg-slate-100 rounded-md cursor-pointer shrink-0 self-start"
 						aria-label={t(localizationConstants.ariaLabelCloseModal)}
 					>
-						<X className="h-5 w-5 text-zinc-500" />
+						<X className="h-4 w-4 text-zinc-500" />
 					</Button>
 				</DialogHeader>
 
 				{/* Modal Form */}
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-1">
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3 pt-0.5">
 						{/* Row 1: Projekt nr & Projekt namn */}
 						<MeetingProjectInfo projectNumber={projectNumber} projectName={projectName} />
 
@@ -205,7 +205,7 @@ export function CreateProtocolModal({
 										<Textarea
 											{...field}
 											placeholder={t(localizationConstants.protocolMeetingInfoPlaceholder)}
-											className="min-h-[85px] rounded-lg border-slate-200 bg-white text-slate-900 text-sm p-3 shadow-none focus-visible:ring-slate-900 resize-y"
+											className="min-h-[65px] rounded-lg border-slate-200 bg-white text-slate-900 text-sm p-2.5 shadow-none focus-visible:ring-slate-900 resize-y"
 										/>
 									</FormControl>
 									<FormMessage />
@@ -214,19 +214,19 @@ export function CreateProtocolModal({
 						/>
 
 						{/* Footer Buttons */}
-						<div className="flex items-center justify-end gap-3 pt-4">
+						<div className="flex items-center justify-end gap-2.5 pt-2">
 							<Button
 								type="button"
 								variant="outline"
 								onClick={onClose}
-								className="h-10 px-6 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 text-sm font-normal cursor-pointer shadow-none"
+								className="h-9 px-5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 text-sm font-normal cursor-pointer shadow-none"
 							>
 								<Translate text={localizationConstants.closeButton} />
 							</Button>
 							<Button
 								type="submit"
 								disabled={isSubmitting}
-								className="h-10 px-8 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium cursor-pointer shadow-none flex items-center gap-2"
+								className="h-9 px-7 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium cursor-pointer shadow-none flex items-center gap-2"
 							>
 								{isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
 								<span>
