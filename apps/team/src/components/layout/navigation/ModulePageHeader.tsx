@@ -13,11 +13,18 @@ type ModulePageHeaderBaseProps = {
   className?: string;
 };
 
-/** Pattern 1 — a list/overview page reached straight from a primary tab. */
+/**
+ * Pattern 1 — a list/overview page reached straight from a primary tab.
+ *
+ * `secondaryTabs` is allowed here for a module whose primary row selects a
+ * group and whose secondary row selects a page inside it. Both rows are route
+ * tabs, so neither is drilling into a record and a back-navigation row would
+ * have nothing to go back to.
+ */
 type ListVariantProps = {
   breadcrumbs?: BreadcrumbItem[];
   record?: never;
-  secondaryTabs?: never;
+  secondaryTabs?: ModuleTabItem[];
 };
 
 /** Patterns 2-4 — a page reached by drilling into a specific record. */
@@ -39,8 +46,7 @@ export type ModulePageHeaderProps = ModulePageHeaderBaseProps &
  *
  * Order is H1 -> breadcrumb -> primary tabs -> back-navigation row, matching the
  * Figma frame. The prop types enforce rule 5: a breadcrumb and a record row can
- * never both be present, and secondary tabs are only reachable on the record
- * variant, so they can never appear without a back-navigation row above them.
+ * never both be present.
  */
 export function ModulePageHeader({
   title,
@@ -50,6 +56,10 @@ export function ModulePageHeader({
   secondaryTabs,
   className,
 }: ModulePageHeaderProps) {
+  // Two stacked tab rows collapse their margins, so the -1px that pulls a row
+  // onto the container's bottom border belongs to whichever row is last.
+  const hasSectionRow = !record && !!secondaryTabs?.length;
+
   return (
     <div className={cn("bg-white border-b border-slate-200 px-5", className)}>
       <PageHeader
@@ -59,14 +69,14 @@ export function ModulePageHeader({
       />
 
       {tabs && tabs.length > 0 && (
-        <div className="mt-3 -mb-[1px]">
+        <div className={cn("mt-3", !hasSectionRow && "-mb-[1px]")}>
           <ModuleTabs items={tabs} ariaLabel={title} />
         </div>
       )}
 
       {record && <RecordNavRow {...record} />}
 
-      {record && secondaryTabs && secondaryTabs.length > 0 && (
+      {secondaryTabs && secondaryTabs.length > 0 && (
         <div className="mt-3 -mb-[1px]">
           <ModuleTabs items={secondaryTabs} />
         </div>
