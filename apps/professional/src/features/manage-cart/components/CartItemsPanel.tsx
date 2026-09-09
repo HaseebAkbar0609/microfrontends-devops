@@ -30,7 +30,7 @@ export function CartItemsPanel({
 						}
 					/>
 					:&nbsp;
-					{formatCurrency(subtotal)}
+					{formatCurrency(subtotal / 100)}
 				</span>
 			</div>
 

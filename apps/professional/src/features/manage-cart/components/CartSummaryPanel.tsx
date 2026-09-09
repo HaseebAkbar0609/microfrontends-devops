@@ -38,20 +38,29 @@ export function CartSummaryPanel({
           <span className="text-gray-700">
             <Translate text={localizationConstants.manageCartSubtotalLabel} />
           </span>
-          <span className="text-secondary">{formatCurrency(subtotal)}</span>
+          <span className="text-secondary">{formatCurrency(subtotal / 100)}</span>
         </div>
         <div className="flex items-center justify-between font-semibold border-b border-border py-2">
           <span className="text-base text-gray-700">
             <Translate text={localizationConstants.manageCartTotalLabel} />
           </span>
           <span className="text-base text-secondary">
-            {formatCurrency(total)}
+            {formatCurrency(total / 100)}
           </span>
         </div>
       </div>
 
       <div className="flex justify-between gap-3 pt-2">
-        <Button variant="outline" onClick={() => router.push("/manage-plans")}>
+        <Button
+          variant="outline"
+          onClick={() =>
+            router.push(
+              new URLSearchParams(window.location.search).get("mode") === "change"
+                ? "/manage-plans?change=1"
+                : "/manage-plans",
+            )
+          }
+        >
           <Translate text={localizationConstants.manageCartBackToPlans} />
         </Button>
         <Button variant="primary" onClick={onProceed} disabled={disabled}>

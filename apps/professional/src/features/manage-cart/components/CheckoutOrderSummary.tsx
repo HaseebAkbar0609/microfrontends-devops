@@ -41,13 +41,13 @@ export function CheckoutOrderSummary({
 							{mainItem?.name ?? "—"}
 						</p>
 						<p className="text-xs text-gray-500">
-							{formatCurrency(mainItem?.unitPrice ?? 0)} · Billing{" "}
+							{formatCurrency((mainItem?.unitPrice ?? 0) / 100)} · Billing{" "}
 							{mainItem?.interval ?? "—"}
 						</p>
 					</div>
 				</div>
 				<p className="text-sm font-semibold text-secondary">
-					{formatCurrency(subtotal)}
+					{formatCurrency(subtotal / 100)}
 				</p>
 			</div> */}
 
@@ -115,7 +115,7 @@ export function CheckoutOrderSummary({
 						/>
 					</span>
 					<span className="text-secondary">
-						{formatCurrency(subtotal)}
+						{formatCurrency(subtotal / 100)}
 					</span>
 				</div>
 				<div className="flex items-center justify-between font-semibold border-b border-border py-2">
@@ -125,7 +125,7 @@ export function CheckoutOrderSummary({
 						/>
 					</span>
 					<span className="text-base text-secondary">
-						{formatCurrency(total)}
+						{formatCurrency(total / 100)}
 					</span>
 				</div>
 			</div>

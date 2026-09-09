@@ -44,17 +44,17 @@ export default function ManageCartPage() {
 				)}`,
 				description,
 				planKey,
-				unitPrice: item.subscription_plan_price.price / 100,
+				unitPrice: item.subscription_plan_price.price,
 				interval: item.subscription_plan_price.interval,
 				quantity: item.quantity,
-				itemTotalAmount: (item.item_total_amount ?? 0) / 100,
+				itemTotalAmount: item.item_total_amount ?? 0,
 			};
 		});
 
 		setItems(mappedItems);
 		setTotalCartAmount(
 			result.data.total_cart_amount
-				? result.data.total_cart_amount / 100 // divide here
+				? result.data.total_cart_amount
 				: mappedItems.reduce(
 						(sum, item) => sum + item.unitPrice * item.quantity,
 						0,

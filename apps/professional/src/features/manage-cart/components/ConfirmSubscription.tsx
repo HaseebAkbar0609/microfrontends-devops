@@ -111,7 +111,7 @@ export function ConfirmSubscription({
 									/>
 								</p>
 								<p className="text-gray-500">
-									{formatCurrency(mainItem?.unitPrice ?? 0)}
+									{formatCurrency((mainItem?.unitPrice ?? 0) / 100)}
 								</p>
 							</div>
 							<div className="space-y-1">
@@ -123,7 +123,7 @@ export function ConfirmSubscription({
 									/>
 								</p>
 								<p className="text-gray-700">
-									Billed {formatCurrency(subtotal)}{" "}
+									Billed {formatCurrency(subtotal / 100)}{" "}
 									{mainItem?.interval ?? "—"}
 								</p>
 							</div>
@@ -212,7 +212,7 @@ export function ConfirmSubscription({
 								/>
 							</span>
 							<span className="text-secondary">
-								{formatCurrency(subtotal)}
+								{formatCurrency(subtotal / 100)}
 							</span>
 						</div>
 						{/* <div className="flex items-center justify-between border-b border-border py-2">
@@ -232,7 +232,7 @@ export function ConfirmSubscription({
 								/>
 							</span>
 							<span className="text-base text-secondary">
-								{formatCurrency(total)}
+								{formatCurrency(total / 100)}
 							</span>
 						</div>
 					</div>
