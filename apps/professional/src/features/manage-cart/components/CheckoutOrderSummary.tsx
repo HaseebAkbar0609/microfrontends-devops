@@ -3,7 +3,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 import type { CheckoutOrderSummaryProps } from "../types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCartCurrencyFromOre } from "../utils/currency";
 
 export function CheckoutOrderSummary({
 	mainItem,
@@ -41,13 +41,13 @@ export function CheckoutOrderSummary({
 							{mainItem?.name ?? "—"}
 						</p>
 						<p className="text-xs text-gray-500">
-							{formatCurrency((mainItem?.unitPrice ?? 0) / 100)} · Billing{" "}
+							{formatCartCurrencyFromOre(mainItem?.unitPrice ?? 0)} · Billing{" "}
 							{mainItem?.interval ?? "—"}
 						</p>
 					</div>
 				</div>
 				<p className="text-sm font-semibold text-secondary">
-					{formatCurrency(subtotal / 100)}
+					{formatCartCurrencyFromOre(subtotal)}
 				</p>
 			</div> */}
 
@@ -75,14 +75,14 @@ export function CheckoutOrderSummary({
 							</p>
 
 							<p className="text-xs text-gray-500">
-								{formatCurrency((item.unitPrice ?? 0) / 100)} ·
+								{formatCartCurrencyFromOre(item.unitPrice ?? 0)} ·
 								Billing {item.interval ?? "—"}
 							</p>
 						</div>
 					</div>
 
 					<p className="text-sm font-semibold text-secondary">
-						{formatCurrency((item.itemTotalAmount ?? 0) / 100)}
+						{formatCartCurrencyFromOre(item.itemTotalAmount ?? 0)}
 					</p>
 				</div>
 			))}
@@ -115,7 +115,7 @@ export function CheckoutOrderSummary({
 						/>
 					</span>
 					<span className="text-secondary">
-						{formatCurrency(subtotal / 100)}
+						{formatCartCurrencyFromOre(subtotal)}
 					</span>
 				</div>
 				<div className="flex items-center justify-between font-semibold border-b border-border py-2">
@@ -125,7 +125,7 @@ export function CheckoutOrderSummary({
 						/>
 					</span>
 					<span className="text-base text-secondary">
-						{formatCurrency(total / 100)}
+						{formatCartCurrencyFromOre(total)}
 					</span>
 				</div>
 			</div>

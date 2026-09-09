@@ -6,7 +6,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useRouter } from "next/navigation";
 import { CartSummaryPanelProps } from "../types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCartCurrencyFromOre } from "../utils/currency";
 
 export function CartSummaryPanel({
   subtotal,
@@ -38,14 +38,14 @@ export function CartSummaryPanel({
           <span className="text-gray-700">
             <Translate text={localizationConstants.manageCartSubtotalLabel} />
           </span>
-          <span className="text-secondary">{formatCurrency(subtotal / 100)}</span>
+          <span className="text-secondary">{formatCartCurrencyFromOre(subtotal)}</span>
         </div>
         <div className="flex items-center justify-between font-semibold border-b border-border py-2">
           <span className="text-base text-gray-700">
             <Translate text={localizationConstants.manageCartTotalLabel} />
           </span>
           <span className="text-base text-secondary">
-            {formatCurrency(total / 100)}
+            {formatCartCurrencyFromOre(total)}
           </span>
         </div>
       </div>

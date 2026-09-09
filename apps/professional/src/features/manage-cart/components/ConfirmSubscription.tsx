@@ -12,7 +12,7 @@ import { useAuthStatus, type User } from "@/context/AuthContext";
 import { MANAGE_PLANS_PLAN_IDS } from "@/features/manage-plans";
 import { authStorage } from "@/lib/authStorage";
 import { showToast } from "@/lib/toast";
-import { formatCurrency } from "@/lib/utils";
+import { formatCartCurrencyFromOre } from "../utils/currency";
 import { cartMessages } from "@/constants/messages";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -111,7 +111,7 @@ export function ConfirmSubscription({
 									/>
 								</p>
 								<p className="text-gray-500">
-									{formatCurrency((mainItem?.unitPrice ?? 0) / 100)}
+									{formatCartCurrencyFromOre(mainItem?.unitPrice ?? 0)}
 								</p>
 							</div>
 							<div className="space-y-1">
@@ -123,7 +123,7 @@ export function ConfirmSubscription({
 									/>
 								</p>
 								<p className="text-gray-700">
-									Billed {formatCurrency(subtotal / 100)}{" "}
+									Billed {formatCartCurrencyFromOre(subtotal)}{" "}
 									{mainItem?.interval ?? "—"}
 								</p>
 							</div>
@@ -212,7 +212,7 @@ export function ConfirmSubscription({
 								/>
 							</span>
 							<span className="text-secondary">
-								{formatCurrency(subtotal / 100)}
+								{formatCartCurrencyFromOre(subtotal)}
 							</span>
 						</div>
 						{/* <div className="flex items-center justify-between border-b border-border py-2">
@@ -232,7 +232,7 @@ export function ConfirmSubscription({
 								/>
 							</span>
 							<span className="text-base text-secondary">
-								{formatCurrency(total / 100)}
+								{formatCartCurrencyFromOre(total)}
 							</span>
 						</div>
 					</div>

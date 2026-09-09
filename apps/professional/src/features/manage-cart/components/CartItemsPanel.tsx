@@ -5,7 +5,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { MANAGE_PLANS_PLAN_IDS } from "@/features/manage-plans";
 import { CartItemsPanelProps } from "../types";
-import { formatCurrency } from "@/lib/utils";
+import { formatCartCurrencyFromOre } from "../utils/currency";
 
 export function CartItemsPanel({
 	items,
@@ -30,7 +30,7 @@ export function CartItemsPanel({
 						}
 					/>
 					:&nbsp;
-					{formatCurrency(subtotal / 100)}
+					{formatCartCurrencyFromOre(subtotal)}
 				</span>
 			</div>
 
@@ -59,7 +59,7 @@ export function CartItemsPanel({
 									) : null}
 								</div>
 								<p className="text-sm font-medium text-secondary">
-									{formatCurrency(item.unitPrice / 100)}
+									{formatCartCurrencyFromOre(item.unitPrice)}
 								</p>
 							</div>
 
