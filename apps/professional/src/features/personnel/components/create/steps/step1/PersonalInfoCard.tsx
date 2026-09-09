@@ -18,10 +18,11 @@ import { CITY_OPTIONS } from "@/features/personnel/constants/createEmployee.cons
 
 interface PersonalInfoCardProps {
 	data: PersonalInfoForm;
+	fieldErrors?: Record<string, string>;
 	onChange: (field: keyof PersonalInfoForm, value: string) => void;
 }
 
-export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
+export function PersonalInfoCard({ data, fieldErrors, onChange }: PersonalInfoCardProps) {
 	const { t } = useTranslation();
 
 	return (
@@ -39,50 +40,65 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 				{/* Row 1: Förnamn & Efternamn */}
 				<div>
 					<Label htmlFor="firstName" className="text-xs font-medium text-slate-700 mb-1.5 block">
-						{t(localizationConstants.fieldFirstName)}
+						{t(localizationConstants.fieldFirstName)} <span className="text-red-500">*</span>
 					</Label>
 					<Input
 						id="firstName"
 						value={data.firstName}
 						onChange={(e) => onChange("firstName", e.target.value)}
 						placeholder="Johan"
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
+						className={`h-10 bg-white text-slate-900 rounded-lg text-sm placeholder:text-slate-400 ${
+							fieldErrors?.firstName ? "border-red-500 focus-visible:ring-red-500" : "border-slate-200"
+						}`}
 						required
 					/>
+					{fieldErrors?.firstName && (
+						<p className="text-xs text-red-500 mt-1">{fieldErrors.firstName}</p>
+					)}
 				</div>
 
 				<div>
 					<Label htmlFor="lastName" className="text-xs font-medium text-slate-700 mb-1.5 block">
-						{t(localizationConstants.fieldLastName)}
+						{t(localizationConstants.fieldLastName)} <span className="text-red-500">*</span>
 					</Label>
 					<Input
 						id="lastName"
 						value={data.lastName}
 						onChange={(e) => onChange("lastName", e.target.value)}
 						placeholder="Andersson"
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
+						className={`h-10 bg-white text-slate-900 rounded-lg text-sm placeholder:text-slate-400 ${
+							fieldErrors?.lastName ? "border-red-500 focus-visible:ring-red-500" : "border-slate-200"
+						}`}
 						required
 					/>
+					{fieldErrors?.lastName && (
+						<p className="text-xs text-red-500 mt-1">{fieldErrors.lastName}</p>
+					)}
 				</div>
 
 				{/* Row 2: Person nr & Mail företag */}
 				<div>
 					<Label htmlFor="personalId" className="text-xs font-medium text-slate-700 mb-1.5 block">
-						{t(localizationConstants.fieldPersonalId)}
+						{t(localizationConstants.fieldPersonalId)} <span className="text-red-500">*</span>
 					</Label>
 					<Input
 						id="personalId"
 						value={data.personalId}
 						onChange={(e) => onChange("personalId", e.target.value)}
 						placeholder="1985-05-05-1010"
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
+						className={`h-10 bg-white text-slate-900 rounded-lg text-sm placeholder:text-slate-400 ${
+							fieldErrors?.personalId ? "border-red-500 focus-visible:ring-red-500" : "border-slate-200"
+						}`}
 						required
 					/>
+					{fieldErrors?.personalId && (
+						<p className="text-xs text-red-500 mt-1">{fieldErrors.personalId}</p>
+					)}
 				</div>
 
 				<div>
 					<Label htmlFor="workEmail" className="text-xs font-medium text-slate-700 mb-1.5 block">
-						{t(localizationConstants.fieldWorkEmail)}
+						{t(localizationConstants.fieldWorkEmail)} <span className="text-red-500">*</span>
 					</Label>
 					<Input
 						id="workEmail"
@@ -90,9 +106,14 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 						value={data.workEmail}
 						onChange={(e) => onChange("workEmail", e.target.value)}
 						placeholder="info@byggbolaget.se"
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
+						className={`h-10 bg-white text-slate-900 rounded-lg text-sm placeholder:text-slate-400 ${
+							fieldErrors?.workEmail ? "border-red-500 focus-visible:ring-red-500" : "border-slate-200"
+						}`}
 						required
 					/>
+					{fieldErrors?.workEmail && (
+						<p className="text-xs text-red-500 mt-1">{fieldErrors.workEmail}</p>
+					)}
 				</div>
 
 				{/* Row 3: Mobil & Mail privat */}
@@ -120,8 +141,13 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 						value={data.privateEmail}
 						onChange={(e) => onChange("privateEmail", e.target.value)}
 						placeholder="john@gmail.com"
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
+						className={`h-10 bg-white text-slate-900 rounded-lg text-sm placeholder:text-slate-400 ${
+							fieldErrors?.privateEmail ? "border-red-500 focus-visible:ring-red-500" : "border-slate-200"
+						}`}
 					/>
+					{fieldErrors?.privateEmail && (
+						<p className="text-xs text-red-500 mt-1">{fieldErrors.privateEmail}</p>
+					)}
 				</div>
 
 				{/* Row 4: Adress (full width across both columns) */}

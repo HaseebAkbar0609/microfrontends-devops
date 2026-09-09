@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -21,7 +21,11 @@ import {
 	CompetenceDocItem,
 	AttachedDocItem,
 } from "../types/createEmployee.types";
+import { EmployeeOverviewItem } from "../types/personnelOverview.types";
 import { DEFAULT_CREATE_EMPLOYEE_DATA } from "../constants/createEmployee.constants";
+import { personnelRepository } from "../utils/personnelRepository";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function useCreateEmployee() {
 	const { t } = useTranslation();
@@ -31,6 +35,8 @@ export function useCreateEmployee() {
 	const [formData, setFormData] = useState<CreateEmployeeFormData>(DEFAULT_CREATE_EMPLOYEE_DATA);
 	const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 	const [validationError, setValidationError] = useState<string | null>(null);
+	const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	// Field Updaters
 	const updatePersonalInfo = useCallback((field: keyof PersonalInfoForm, value: string) => {
@@ -39,6 +45,12 @@ export function useCreateEmployee() {
 			personalInfo: { ...prev.personalInfo, [field]: value },
 		}));
 		setValidationError(null);
+		setFieldErrors((prev) => {
+			if (!prev[field]) return prev;
+			const next = { ...prev };
+			delete next[field];
+			return next;
+		});
 	}, []);
 
 	const updateBankInfo = useCallback((field: keyof BankInfoForm, value: string) => {
@@ -61,6 +73,12 @@ export function useCreateEmployee() {
 			workDuties: { ...prev.workDuties, [field]: value },
 		}));
 		setValidationError(null);
+		setFieldErrors((prev) => {
+			if (!prev[field]) return prev;
+			const next = { ...prev };
+			delete next[field];
+			return next;
+		});
 	}, []);
 
 	// Emergency Contacts
@@ -197,13 +215,38 @@ export function useCreateEmployee() {
 	const validateStep = useCallback(
 		(step: CreateEmployeeStep): boolean => {
 			if (step === 1) {
-				const { firstName, lastName, personalId, workEmail } = formData.personalInfo;
+				const errors: Record<string, string> = {};
+				const { firstName, lastName, personalId, workEmail, privateEmail } = formData.personalInfo;
 				const { role } = formData.workDuties;
-				if (!firstName.trim() || !lastName.trim() || !personalId.trim() || !workEmail.trim() || !role.trim()) {
+
+				if (!firstName.trim()) {
+					errors.firstName = t(localizationConstants.validationErrorRequiredField);
+				}
+				if (!lastName.trim()) {
+					errors.lastName = t(localizationConstants.validationErrorRequiredField);
+				}
+				if (!personalId.trim()) {
+					errors.personalId = t(localizationConstants.validationErrorRequiredField);
+				}
+				if (!workEmail.trim()) {
+					errors.workEmail = t(localizationConstants.validationErrorRequiredField);
+				} else if (!EMAIL_REGEX.test(workEmail.trim())) {
+					errors.workEmail = t(localizationConstants.validationErrorEmailInvalid);
+				}
+				if (privateEmail && privateEmail.trim() && !EMAIL_REGEX.test(privateEmail.trim())) {
+					errors.privateEmail = t(localizationConstants.validationErrorEmailInvalid);
+				}
+				if (!role.trim()) {
+					errors.role = t(localizationConstants.validationErrorRequiredField);
+				}
+
+				if (Object.keys(errors).length > 0) {
+					setFieldErrors(errors);
 					setValidationError(t(localizationConstants.validationErrorRequired));
 					return false;
 				}
 			}
+			setFieldErrors({});
 			setValidationError(null);
 			return true;
 		},
@@ -225,18 +268,67 @@ export function useCreateEmployee() {
 		}
 	}, [activeStep]);
 
-	const handleSave = useCallback(() => {
+	const handleSave = useCallback(async () => {
 		if (!validateStep(1)) {
 			setActiveStep(1);
 			return;
 		}
-		toast.success(t(localizationConstants.toastEmployeeCreated));
-		router.push("/module/financial-management/personnel/overview");
-	}, [validateStep, t, router]);
+
+		setIsSubmitting(true);
+		try {
+			const { firstName, lastName, personalId, workEmail, phone, city } = formData.personalInfo;
+			const { role, department, location, startDate } = formData.workDuties;
+
+			const newEmployee: EmployeeOverviewItem = {
+				id: `emp-${Date.now()}`,
+				contractNumber: personnelRepository.getNextContractNumber(),
+				name: `${firstName.trim()} ${lastName.trim()}`,
+				role: role.trim() || "Projektledare",
+				idNumber: personalId.trim(),
+				status: "active",
+				employmentType:
+					formData.workInfo.employmentForm === "Timanställning" ||
+					formData.workInfo.workingHours !== "40"
+						? "part_time"
+						: "full_time",
+				startDate: startDate || new Date().toISOString().split("T")[0],
+				location: location || city || "Stockholm",
+				email: workEmail.trim(),
+				phone: phone.trim() || "070-123 45 67",
+				department: department || "Allmänt",
+			};
+
+			await personnelRepository.addEmployee(newEmployee);
+			toast.success(t(localizationConstants.toastEmployeeCreated));
+			router.push("/module/financial-management/personnel/overview");
+		} catch (e) {
+			console.error("Failed to save employee", e);
+		} finally {
+			setIsSubmitting(false);
+		}
+	}, [validateStep, formData, t, router]);
+
+	const isDirty = useMemo(() => {
+		const { firstName, lastName, personalId, workEmail, phone, privateEmail, address } = formData.personalInfo;
+		return Boolean(
+			firstName.trim() ||
+			lastName.trim() ||
+			personalId.trim() ||
+			workEmail.trim() ||
+			phone.trim() ||
+			privateEmail.trim() ||
+			address.trim() ||
+			formData.workDuties.role.trim()
+		);
+	}, [formData.personalInfo, formData.workDuties]);
 
 	const handleCancel = useCallback(() => {
-		setIsCancelDialogOpen(true);
-	}, []);
+		if (isDirty) {
+			setIsCancelDialogOpen(true);
+		} else {
+			router.push("/module/financial-management/personnel/overview");
+		}
+	}, [isDirty, router]);
 
 	const confirmCancel = useCallback(() => {
 		setIsCancelDialogOpen(false);
@@ -252,6 +344,8 @@ export function useCreateEmployee() {
 		setActiveStep,
 		formData,
 		validationError,
+		fieldErrors,
+		isSubmitting,
 		isCancelDialogOpen,
 		updatePersonalInfo,
 		updateBankInfo,

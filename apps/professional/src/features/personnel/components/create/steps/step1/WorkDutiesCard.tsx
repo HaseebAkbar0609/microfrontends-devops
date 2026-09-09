@@ -22,10 +22,11 @@ import {
 
 interface WorkDutiesCardProps {
 	data: WorkDutiesForm;
+	fieldErrors?: Record<string, string>;
 	onChange: (field: keyof WorkDutiesForm, value: string) => void;
 }
 
-export function WorkDutiesCard({ data, onChange }: WorkDutiesCardProps) {
+export function WorkDutiesCard({ data, fieldErrors, onChange }: WorkDutiesCardProps) {
 	const { t } = useTranslation();
 
 	return (
@@ -43,16 +44,21 @@ export function WorkDutiesCard({ data, onChange }: WorkDutiesCardProps) {
 				{/* Row 1: Befattning & Kategori */}
 				<div>
 					<Label htmlFor="role" className="text-xs font-medium text-slate-700 mb-1.5 block">
-						{t(localizationConstants.fieldRole)}
+						{t(localizationConstants.fieldRole)} <span className="text-red-500">*</span>
 					</Label>
 					<Input
 						id="role"
 						value={data.role}
 						onChange={(e) => onChange("role", e.target.value)}
 						placeholder="Projektledare"
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
+						className={`h-10 bg-white text-slate-900 rounded-lg text-sm placeholder:text-slate-400 ${
+							fieldErrors?.role ? "border-red-500 focus-visible:ring-red-500" : "border-slate-200"
+						}`}
 						required
 					/>
+					{fieldErrors?.role && (
+						<p className="text-xs text-red-500 mt-1">{fieldErrors.role}</p>
+					)}
 				</div>
 
 				<div>

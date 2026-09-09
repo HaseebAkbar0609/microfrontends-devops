@@ -36,6 +36,8 @@ export function CreateEmployeePage() {
 		setActiveStep,
 		formData,
 		validationError,
+		fieldErrors,
+		isSubmitting,
 		isCancelDialogOpen,
 		updatePersonalInfo,
 		updateBankInfo,
@@ -69,10 +71,10 @@ export function CreateEmployeePage() {
 			<PageHeader
 				title={localizationConstants.personnel}
 				breadcrumbs={personnelBreadcrumbs(localizationConstants.createEmployeeTitle)}
-				className="border-b-0 px-6 pt-5 pb-2"
+				className="border-b-0 px-4 sm:px-6 pt-5 pb-2"
 			/>
 
-			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto space-y-6">
+			<div className="flex flex-1 flex-col px-4 sm:px-6 pt-2 pb-8 overflow-y-auto space-y-6">
 				{/* Level 1 Navigation Tabs: Personnel Overview is active */}
 				<div className="flex items-center border-b border-slate-200 bg-white px-4 rounded-t-lg h-[44px] shadow-2xs">
 					<Tabs defaultValue="overview" className="w-full">
@@ -118,6 +120,28 @@ export function CreateEmployeePage() {
 					onStepClick={setActiveStep}
 				/>
 
+				{/* Mobile Step Card (< lg): Displays above cards on small viewports */}
+				<div className="lg:hidden">
+					<div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-xs">
+						<div className="text-sm font-semibold text-slate-900 mb-2">
+							{`Step ${activeStep}/5`}
+						</div>
+						<div
+							className="w-full h-2 bg-slate-100 rounded-full overflow-hidden"
+							role="progressbar"
+							aria-valuenow={activeStep}
+							aria-valuemin={1}
+							aria-valuemax={5}
+							aria-label={`Step ${activeStep} of 5`}
+						>
+							<div
+								className="h-full bg-slate-900 rounded-full transition-all duration-300"
+								style={{ width: `${(activeStep / 5) * 100}%` }}
+							/>
+						</div>
+					</div>
+				</div>
+
 				{/* 2-Column Responsive Layout Matching Figma Image 2 */}
 				<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 					{/* Left Main Column: Form Cards stacked with full visibility */}
@@ -129,6 +153,7 @@ export function CreateEmployeePage() {
 								taxUnion={formData.taxUnion}
 								workDuties={formData.workDuties}
 								validationError={validationError}
+								fieldErrors={fieldErrors}
 								onUpdatePersonalInfo={updatePersonalInfo}
 								onUpdateBankInfo={updateBankInfo}
 								onUpdateTaxUnion={updateTaxUnion}
@@ -182,7 +207,7 @@ export function CreateEmployeePage() {
 					</div>
 
 					{/* Right Column: Step Progress Card Matching Figma Image 2 */}
-					<div className="lg:col-span-4 xl:col-span-3 sticky top-4">
+					<div className="hidden lg:block lg:col-span-4 xl:col-span-3 sticky top-4">
 						<div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs">
 							<div className="text-sm font-semibold text-slate-900 mb-3">
 								{`Step ${activeStep}/5`}
@@ -207,6 +232,7 @@ export function CreateEmployeePage() {
 				{/* Persistent Bottom Actions Matching Figma Image 4 */}
 				<CreateEmployeeActions
 					activeStep={activeStep}
+					isSubmitting={isSubmitting}
 					onCancel={handleCancel}
 					onSave={handleSave}
 					onPrev={handlePrevStep}

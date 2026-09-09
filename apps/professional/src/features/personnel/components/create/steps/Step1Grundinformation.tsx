@@ -19,6 +19,7 @@ interface Step1GrundinformationProps {
 	taxUnion: TaxUnionForm;
 	workDuties: WorkDutiesForm;
 	validationError: string | null;
+	fieldErrors?: Record<string, string>;
 	onUpdatePersonalInfo: (field: keyof PersonalInfoForm, value: string) => void;
 	onUpdateBankInfo: (field: keyof BankInfoForm, value: string) => void;
 	onUpdateTaxUnion: (field: keyof TaxUnionForm, value: string) => void;
@@ -31,6 +32,7 @@ export function Step1Grundinformation({
 	taxUnion,
 	workDuties,
 	validationError,
+	fieldErrors,
 	onUpdatePersonalInfo,
 	onUpdateBankInfo,
 	onUpdateTaxUnion,
@@ -50,6 +52,7 @@ export function Step1Grundinformation({
 
 			<PersonalInfoCard
 				data={personalInfo}
+				fieldErrors={fieldErrors}
 				onChange={onUpdatePersonalInfo}
 			/>
 
@@ -65,6 +68,7 @@ export function Step1Grundinformation({
 
 			<WorkDutiesCard
 				data={workDuties}
+				fieldErrors={fieldErrors}
 				onChange={onUpdateWorkDuties}
 			/>
 		</div>

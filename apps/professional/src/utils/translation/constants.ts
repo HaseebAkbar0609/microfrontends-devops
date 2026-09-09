@@ -7106,6 +7106,9 @@ export type CreateEmployeeTranslation = {
 	cancelDialogConfirm: string;
 	cancelDialogKeepEditing: string;
 	validationErrorRequired: string;
+	validationErrorRequiredField: string;
+	validationErrorEmailInvalid: string;
+	validationErrorPersonalIdInvalid: string;
 };
 
 export type Translation = HeaderTranslation &

@@ -7161,6 +7161,9 @@ export const svCreateEmployee: CreateEmployeeTranslation = {
 	cancelDialogConfirm: "Ja, avbryt",
 	cancelDialogKeepEditing: "Fortsätt redigera",
 	validationErrorRequired: "Vänligen fyll i alla obligatoriska fält (Förnamn, Efternamn, Personnummer, Företagsmail, Befattning)",
+	validationErrorRequiredField: "Detta fält är obligatoriskt",
+	validationErrorEmailInvalid: "Vänligen ange en giltig e-postadress",
+	validationErrorPersonalIdInvalid: "Ange personnummer (t.ex. 1985-05-05-1010)",
 };
 
 export const sv: Translation = {

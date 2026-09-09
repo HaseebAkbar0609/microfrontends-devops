@@ -7139,6 +7139,9 @@ export const enCreateEmployee: CreateEmployeeTranslation = {
 	cancelDialogConfirm: "Yes, cancel",
 	cancelDialogKeepEditing: "Keep editing",
 	validationErrorRequired: "Please fill in all required fields (First Name, Last Name, Personal ID, Work Email, Role)",
+	validationErrorRequiredField: "This field is required",
+	validationErrorEmailInvalid: "Please enter a valid email address",
+	validationErrorPersonalIdInvalid: "Enter personal ID (e.g. 1985-05-05-1010)",
 };
 
 export const en: Translation = {

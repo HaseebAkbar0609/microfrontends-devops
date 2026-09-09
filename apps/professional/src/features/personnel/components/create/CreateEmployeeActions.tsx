@@ -9,6 +9,7 @@ import { CreateEmployeeStep } from "../../types/createEmployee.types";
 
 interface CreateEmployeeActionsProps {
 	activeStep: CreateEmployeeStep;
+	isSubmitting?: boolean;
 	onCancel: () => void;
 	onSave: () => void;
 	onPrev: () => void;
@@ -17,6 +18,7 @@ interface CreateEmployeeActionsProps {
 
 export function CreateEmployeeActions({
 	activeStep,
+	isSubmitting = false,
 	onCancel,
 	onSave,
 	onPrev,
@@ -25,14 +27,15 @@ export function CreateEmployeeActions({
 	const { t } = useTranslation();
 
 	return (
-		<footer className="flex flex-wrap items-center justify-end gap-3 pt-6 pb-12 border-t border-slate-200 mt-8">
+		<footer className="flex flex-wrap items-center justify-end gap-2.5 sm:gap-3 pt-6 pb-12 border-t border-slate-200 mt-8">
 			{/* Optional Previous button when step > 1 */}
 			{activeStep > 1 && (
 				<Button
 					type="button"
 					variant="outline"
+					disabled={isSubmitting}
 					onClick={onPrev}
-					className="h-10 px-5 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium rounded-lg text-sm flex items-center gap-1.5 shadow-2xs"
+					className="h-10 px-4 sm:px-5 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 font-medium rounded-lg text-sm flex items-center gap-1.5 shadow-2xs"
 				>
 					<ArrowLeft className="h-4 w-4" />
 					{t(localizationConstants.btnPrevious)}
@@ -43,8 +46,9 @@ export function CreateEmployeeActions({
 			<Button
 				type="button"
 				variant="outline"
+				disabled={isSubmitting}
 				onClick={onCancel}
-				className="h-10 px-6 bg-white border-slate-200 text-slate-800 hover:bg-slate-50 font-medium rounded-lg text-sm shadow-2xs"
+				className="h-10 px-4 sm:px-6 bg-white border-slate-200 text-slate-800 hover:bg-slate-50 font-medium rounded-lg text-sm shadow-2xs"
 			>
 				{t(localizationConstants.btnCancel)}
 			</Button>
@@ -52,8 +56,9 @@ export function CreateEmployeeActions({
 			{/* Spara (Save) */}
 			<Button
 				type="button"
+				disabled={isSubmitting}
 				onClick={onSave}
-				className="h-10 px-6 bg-slate-900 text-white hover:bg-slate-800 font-medium rounded-lg text-sm flex items-center gap-2 shadow-xs"
+				className="h-10 px-5 sm:px-6 bg-slate-900 text-white hover:bg-slate-800 font-medium rounded-lg text-sm flex items-center gap-2 shadow-xs"
 			>
 				<Save className="h-4 w-4" />
 				{t(localizationConstants.btnSave)}

@@ -34,7 +34,7 @@ export function CreateEmployeeStepper({
 			aria-label="Create Employee Subnavigation Tabs"
 			className="border-b border-slate-200 bg-transparent pt-3"
 		>
-			<div className="flex items-center gap-8 overflow-x-auto pb-0 -mb-[1px]">
+			<div className="flex items-center gap-6 sm:gap-8 overflow-x-auto pb-0 -mb-[1px] no-scrollbar scroll-smooth">
 				{STEPS.map((item) => {
 					const isActive = activeStep === item.step;
 					return (
