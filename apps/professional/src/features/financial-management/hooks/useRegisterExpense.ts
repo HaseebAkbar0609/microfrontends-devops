@@ -70,6 +70,8 @@ function getInitialFormData(): RegisterExpenseFormData {
 		date: getTodayString(),
 		dueDate: getDueDateString(30),
 		category: "material",
+		currency: "SEK",
+		reference: "",
 		project: "",
 		costCenter: "",
 		lineItems: [createEmptyLineItem()],
@@ -236,10 +238,10 @@ export function useRegisterExpense() {
 	}, []);
 
 	// Supplier management
-	const handleAddSupplier = useCallback((name: string) => {
+	const handleAddSupplier = useCallback((name: string, details?: Partial<import("../types/expense.types").SupplierInfo>) => {
 		const trimmed = name.trim();
 		if (!trimmed) return;
-		expenseRepository.addSupplier(trimmed);
+		expenseRepository.addSupplier(trimmed, details);
 		setSuppliers(expenseRepository.getSuppliers());
 		setFormData((prev) => ({ ...prev, supplier: trimmed }));
 		setErrors((prev) => {
@@ -253,6 +255,11 @@ export function useRegisterExpense() {
 		setIsDirty(true);
 		setShowSupplierModal(false);
 	}, []);
+
+	// Active supplier details for verification card
+	const selectedSupplierDetails = useMemo(() => {
+		return expenseRepository.getSupplierDetails(formData.supplier);
+	}, [formData.supplier]);
 
 	// Time report totals memo
 	const timeReportTotals = useMemo(() => {
@@ -324,8 +331,9 @@ export function useRegisterExpense() {
 			vatBreakdown,
 			totalVat: Math.round(totalVat * 100) / 100,
 			grandTotal,
+			currency: formData.currency,
 		};
-	}, [formData.lineItems, formData.timeReportItems, lineItemsSubtotal, timeReportSubtotal]);
+	}, [formData.lineItems, formData.timeReportItems, formData.currency, lineItemsSubtotal, timeReportSubtotal]);
 
 	// Validation using Zod schema (Technology Stack standard)
 	const validate = useCallback((): { isValid: boolean; errorMessage: string } => {
@@ -375,12 +383,20 @@ export function useRegisterExpense() {
 	const buildExpensePayload = useCallback((): ExpenseItem => {
 		const nextId = generateSecureId("exp");
 		const expenseNo = generateSecureExpenseNo(100000, 999999);
+		const supplierInfo = expenseRepository.getSupplierDetails(formData.supplier);
 
 		return {
 			id: nextId,
 			expenseNo,
 			fakturaNo: formData.fakturaNo.trim(),
 			supplier: formData.supplier.trim(),
+			supplierOrgNo: supplierInfo?.orgNo,
+			supplierAddress: supplierInfo?.address,
+			supplierPostalCity: supplierInfo?.postalCity,
+			supplierPhone: supplierInfo?.phone,
+			supplierEmail: supplierInfo?.email,
+			bankgiro: supplierInfo?.bankgiro,
+			reference: formData.reference.trim() || undefined,
 			category: formData.category,
 			amount: calculations.grandTotal,
 			vatAmount: calculations.totalVat,
@@ -480,6 +496,7 @@ export function useRegisterExpense() {
 		formData,
 		updateField,
 		suppliers,
+		selectedSupplierDetails,
 		handleAddSupplier,
 		errors,
 		isDirty,

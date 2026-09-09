@@ -59,3 +59,26 @@ export const uploadProtocolSchema = (
 export type UploadProtocolFormData = z.infer<
 	ReturnType<typeof uploadProtocolSchema>
 >;
+
+export const meetingPointSchema = (
+	requiredMsg: string
+) =>
+	z.object({
+		nr: z.string().trim().min(1, requiredMsg).max(20),
+		responsible: z
+			.string()
+			.trim()
+			.min(1, requiredMsg)
+			.max(PROTOCOL_VALIDATION_LIMITS.MAX_RESPONSIBLE_LENGTH),
+		subject: z
+			.string()
+			.trim()
+			.min(1, requiredMsg)
+			.max(PROTOCOL_VALIDATION_LIMITS.MAX_SUBJECT_LENGTH),
+		description: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH).optional(),
+		decision: z.string().max(1000).optional(),
+	});
+
+export type MeetingPointFormData = z.infer<
+	ReturnType<typeof meetingPointSchema>
+>;

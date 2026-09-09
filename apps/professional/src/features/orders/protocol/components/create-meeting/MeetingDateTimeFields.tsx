@@ -40,13 +40,13 @@ export function MeetingDateTimeFields({ form }: MeetingDateTimeFieldsProps) {
 	};
 
 	return (
-		<div className="space-y-4">
+		<div className="space-y-2.5">
 			{/* Row 7: Start tid (Label on top, Date & Time side by side) */}
 			<div className="space-y-1">
 				<p className="text-xs font-semibold text-slate-900">
 					<Translate text={localizationConstants.protocolStartTimeLabel} />
 				</p>
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
 					{/* Start Date */}
 					<FormField
 						control={form.control}
@@ -59,7 +59,7 @@ export function MeetingDateTimeFields({ form }: MeetingDateTimeFieldsProps) {
 											<Button
 												type="button"
 												variant="outline"
-												className="h-10 w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm font-normal px-3 flex items-center justify-start gap-2 shadow-none hover:bg-slate-50 cursor-pointer"
+												className="h-9 w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm font-normal px-3 flex items-center justify-start gap-2 shadow-none hover:bg-slate-50 cursor-pointer"
 											>
 												<CalendarIcon className="h-4 w-4 text-zinc-500 shrink-0" />
 												<span>{formatDisplayDate(field.value || PROTOCOL_CONSTANTS.DEFAULT_UPLOAD_DATE)}</span>
@@ -95,7 +95,7 @@ export function MeetingDateTimeFields({ form }: MeetingDateTimeFieldsProps) {
 										value={field.value}
 										onChange={field.onChange}
 										placeholder={PROTOCOL_CONSTANTS.DEFAULT_START_TIME}
-										className="h-10 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+										className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
 									/>
 								</FormControl>
 								<FormMessage className="text-xs font-medium text-red-500 mt-1" />
@@ -110,7 +110,7 @@ export function MeetingDateTimeFields({ form }: MeetingDateTimeFieldsProps) {
 				<p className="text-xs font-semibold text-slate-900">
 					<Translate text={localizationConstants.protocolEndTimeLabel} />
 				</p>
-				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
 					{/* End Date */}
 					<FormField
 						control={form.control}
@@ -123,7 +123,7 @@ export function MeetingDateTimeFields({ form }: MeetingDateTimeFieldsProps) {
 											<Button
 												type="button"
 												variant="outline"
-												className="h-10 w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm font-normal px-3 flex items-center justify-start gap-2 shadow-none hover:bg-slate-50 cursor-pointer"
+												className="h-9 w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm font-normal px-3 flex items-center justify-start gap-2 shadow-none hover:bg-slate-50 cursor-pointer"
 											>
 												<CalendarIcon className="h-4 w-4 text-zinc-500 shrink-0" />
 												<span>{formatDisplayDate(field.value || PROTOCOL_CONSTANTS.DEFAULT_UPLOAD_DATE)}</span>
@@ -159,7 +159,7 @@ export function MeetingDateTimeFields({ form }: MeetingDateTimeFieldsProps) {
 										value={field.value}
 										onChange={field.onChange}
 										placeholder={PROTOCOL_CONSTANTS.DEFAULT_END_TIME}
-										className="h-10 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+										className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
 									/>
 								</FormControl>
 								<FormMessage className="text-xs font-medium text-red-500 mt-1" />

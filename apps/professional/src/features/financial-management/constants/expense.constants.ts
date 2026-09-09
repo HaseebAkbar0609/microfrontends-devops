@@ -55,17 +55,127 @@ export const STANDARD_BAS_ACCOUNTS = [
 	{ code: "6990", name: "Övriga externa kostnader" },
 ] as const;
 
+export const SUPPORTED_CURRENCIES = [
+	{ code: "SEK", symbol: "kr", label: "SEK - Svenska Kronor" },
+	{ code: "EUR", symbol: "€", label: "EUR - Euro" },
+	{ code: "USD", symbol: "$", label: "USD - US Dollar" },
+	{ code: "NOK", symbol: "kr", label: "NOK - Norska Kronor" },
+	{ code: "DKK", symbol: "kr", label: "DKK - Danska Kronor" },
+] as const;
+
 export const DEFAULT_SUPPLIERS_LIST = [
 	"Ahlsell Sverige AB",
-	"Biejer Byggmaterial AB",
+	"Beijer Byggmaterial AB",
 	"Bygg-Max AB",
 	"Cleaning Services AB",
 	"Cramo AB",
+	"Ramirent AB",
 	"Renta AB",
 	"Würth Svenska AB",
-	"Beijer Byggmaterial",
 	"Elektroskandia Sverige",
 ];
+
+export const DEFAULT_SUPPLIERS_METADATA: Record<string, {
+	name: string;
+	orgNo: string;
+	address: string;
+	postalCity?: string;
+	phone?: string;
+	email?: string;
+	bankgiro?: string;
+	fTax?: boolean;
+}> = {
+	"Ahlsell Sverige AB": {
+		name: "Ahlsell Sverige AB",
+		orgNo: "556012-9205",
+		address: "Rosterigränd 12",
+		postalCity: "117 98 Stockholm",
+		phone: "08-685 70 00",
+		email: "ekonomi@ahlsell.se",
+		bankgiro: "234-5678",
+		fTax: true,
+	},
+	"Beijer Byggmaterial AB": {
+		name: "Beijer Byggmaterial AB",
+		orgNo: "556013-1234",
+		address: "Kuskvägen 2",
+		postalCity: "191 62 Sollentuna",
+		phone: "075-241 10 00",
+		email: "faktura@beijerbygg.se",
+		bankgiro: "456-7890",
+		fTax: true,
+	},
+	"Ramirent AB": {
+		name: "Ramirent AB",
+		orgNo: "556123-9876",
+		address: "Depå Syd, Malmövägen 4",
+		postalCity: "213 77 Malmö",
+		phone: "031-57 84 00",
+		email: "inbox@ramirent.se",
+		bankgiro: "123-4567",
+		fTax: true,
+	},
+	"Cramo AB": {
+		name: "Cramo AB",
+		orgNo: "556098-7654",
+		address: "Industrigatan 10",
+		postalCity: "417 56 Göteborg",
+		phone: "08-623 54 00",
+		email: "faktura@cramo.com",
+		bankgiro: "567-8901",
+		fTax: true,
+	},
+	"Würth Svenska AB": {
+		name: "Würth Svenska AB",
+		orgNo: "556100-3456",
+		address: "Växthustorget 5",
+		postalCity: "702 27 Örebro",
+		phone: "019-35 10 00",
+		email: "order@wuerth.se",
+		bankgiro: "678-9012",
+		fTax: true,
+	},
+	"Elektroskandia Sverige": {
+		name: "Elektroskandia Sverige",
+		orgNo: "556023-4567",
+		address: "Norrviksvägen 15",
+		postalCity: "191 83 Sollentuna",
+		phone: "08-92 35 00",
+		email: "support@elektroskandia.se",
+		bankgiro: "789-0123",
+		fTax: true,
+	},
+	"Bygg-Max AB": {
+		name: "Bygg-Max AB",
+		orgNo: "556656-3531",
+		address: "Armégatan 38",
+		postalCity: "171 71 Solna",
+		phone: "0771-89 00 89",
+		email: "info@byggmax.se",
+		bankgiro: "890-1234",
+		fTax: true,
+	},
+	"Cleaning Services AB": {
+		name: "Cleaning Services AB",
+		orgNo: "556789-4321",
+		address: "Hantverkargatan 8",
+		postalCity: "112 21 Stockholm",
+		phone: "08-400 12 34",
+		email: "faktura@cleaningservices.se",
+		bankgiro: "901-2345",
+		fTax: true,
+	},
+	"Renta AB": {
+		name: "Renta AB",
+		orgNo: "559123-5678",
+		address: "Transportgatan 14",
+		postalCity: "422 46 Hisings Backa",
+		phone: "031-700 88 00",
+		email: "faktura@renta.se",
+		bankgiro: "345-6789",
+		fTax: true,
+	},
+};
 
 export const DEFAULT_PROJECTS_LIST = [
 	{ id: "PROJ-2025-001", name: "Projekt 2025-001 - Storgatan" },
