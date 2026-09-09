@@ -133,7 +133,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build -t timeflow-team -f ./apps/team/Dockerfile .
+            - docker build --build-arg NEXT_PUBLIC_API_URL=https://api.timeflowsystem.com/ -t timeflow-team -f ./apps/team/Dockerfile .
             - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:prod-latest
             - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:$BITBUCKET_COMMIT
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:prod-latest
