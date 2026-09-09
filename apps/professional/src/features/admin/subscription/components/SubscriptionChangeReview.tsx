@@ -33,6 +33,7 @@ export function SubscriptionChangeReview({ preview, mode, accepted, onAccept, on
         <div><p className="text-sm text-muted-foreground"><Translate text={localizationConstants.subscriptionRecurringTotal} /></p><p className="mt-1 text-2xl font-semibold tabular-nums">{money(preview.recurring_amount)}</p><p className="text-sm text-muted-foreground"><Translate text={intervalKey} /></p></div>
       </div>
       <p className="text-sm leading-6 text-muted-foreground"><Translate text={localizationConstants.subscriptionRecurringHint} /></p>
+      {preview.existing_schedule_preserved && <p role="note" className="rounded-lg bg-primary/10 p-3 text-sm leading-6"><Translate text={localizationConstants.subscriptionExistingScheduleHint} /></p>}
       {preview.change_type === "downgrade_scheduled" && <p className="rounded-lg bg-primary/10 p-3 text-sm leading-6"><Translate text={localizationConstants.subscriptionScheduledHint} /> {preview.effective_at && new Date(preview.effective_at).toLocaleDateString()}</p>}
       <p className="text-sm"><Translate text={localizationConstants.subscriptionReviewHint} /></p>
       <div className="flex items-start gap-3">

@@ -1857,6 +1857,7 @@ export const enOffer: OfferTranslation = {
 	subscriptionDueNow: "Due now (Stripe calculation)",
 	subscriptionRecurringTotal: "New recurring total",
 	subscriptionRecurringHint: "The recurring total includes your base plan and all licenses; it is not an additional charge today.",
+	subscriptionExistingScheduleHint: "Your previously scheduled subscription change remains in effect and may replace these quantities later. The recurring total above is the full-period price of this selection, not the amount of your next scheduled invoice.",
 	subscriptionNoChanges: "No changes selected. Nothing will be charged.",
 	subscriptionConfirmLicenses: "Confirm additional licenses",
 	subscriptionEditSelection: "Edit selection",

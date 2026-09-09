@@ -1824,6 +1824,7 @@ export type OfferTranslation = {
 	subscriptionDueNow: string;
 	subscriptionRecurringTotal: string;
 	subscriptionRecurringHint: string;
+	subscriptionExistingScheduleHint: string;
 	subscriptionNoChanges: string;
 	subscriptionConfirmLicenses: string;
 	subscriptionEditSelection: string;

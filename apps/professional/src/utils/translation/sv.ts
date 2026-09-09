@@ -1740,6 +1740,7 @@ export const svOffer: OfferTranslation = {
 	subscriptionDueNow: "Att betala nu (Stripes beräkning)",
 	subscriptionRecurringTotal: "Ny återkommande totalsumma",
 	subscriptionRecurringHint: "Den återkommande totalsumman inkluderar ditt baspaket och alla licenser; den är inte en extra debitering idag.",
+	subscriptionExistingScheduleHint: "Din tidigare schemalagda prenumerationsändring gäller fortfarande och kan ersätta dessa antal senare. Totalsumman ovan är priset för detta val under en hel faktureringsperiod, inte beloppet på din nästa schemalagda faktura.",
 	subscriptionNoChanges: "Inga ändringar har valts. Inget kommer att debiteras.",
 	subscriptionConfirmLicenses: "Bekräfta ytterligare licenser",
 	subscriptionEditSelection: "Ändra val",

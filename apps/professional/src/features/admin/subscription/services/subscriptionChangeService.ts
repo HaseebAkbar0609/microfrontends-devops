@@ -28,6 +28,7 @@ export interface SubscriptionChangePreview {
   currency: string;
   interval: string;
   effective_at?: number;
+  existing_schedule_preserved?: boolean;
   expected_revision: string;
   proration_date: number;
 }
