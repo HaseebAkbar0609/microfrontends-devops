@@ -3259,6 +3259,12 @@ export type OfferTranslation = {
 	designWidgetImageLatestLabel: string;
 	designWidgetImageFilesLabel: string;
 	designWidgetNewsTitle: string;
+	// Design Module – Projects Overview
+	designProjectsOversiktTitle: string;
+	designProjectsListTab: string;
+	designProjectsGanttTab: string;
+	designProjectsCreateNew: string;
+	designProjectsCreateToast: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
