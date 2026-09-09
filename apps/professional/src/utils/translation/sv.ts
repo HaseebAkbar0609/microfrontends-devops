@@ -3181,6 +3181,12 @@ export const svOffer: OfferTranslation = {
 	designWidgetImageLatestLabel: "Senaste fil",
 	designWidgetImageFilesLabel: "filer totalt",
 	designWidgetNewsTitle: "Nyheter",
+	// Design Module – Projects Overview
+	designProjectsOversiktTitle: "Projekterings - Översikt",
+	designProjectsListTab: "Projekterings lista",
+	designProjectsGanttTab: "Projekterings Gant Schema",
+	designProjectsCreateNew: "Skapa nytt",
+	designProjectsCreateToast: "Skapa nytt projekt (kommer snart)",
 	// Machine Dashboard
 	machineDashRearrange: "Ordna om",
 	machineDashSave: "Spara",

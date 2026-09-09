@@ -3291,6 +3291,12 @@ export const enOffer: OfferTranslation = {
 	designWidgetImageLatestLabel: "Latest file",
 	designWidgetImageFilesLabel: "files total",
 	designWidgetNewsTitle: "News",
+	// Design Module – Projects Overview
+	designProjectsOversiktTitle: "Project Overview",
+	designProjectsListTab: "Project List",
+	designProjectsGanttTab: "Project Gantt Chart",
+	designProjectsCreateNew: "Create new",
+	designProjectsCreateToast: "Create new project (coming soon)",
 	// Machine Dashboard
 	machineDashRearrange: "Rearrange",
 	machineDashSave: "Save",
