@@ -2,11 +2,10 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, Clock, Layers, UserPlus, Users } from "lucide-react";
+import { ArrowLeft, Clock, Layers, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
@@ -27,7 +26,6 @@ import { Step5Dokument } from "./steps/Step5Dokument";
 const TAB_ICON_MAP: Record<string, React.ElementType> = {
 	dashboard: Layers,
 	overview: Users,
-	create: UserPlus,
 	worktime: Clock,
 };
 
@@ -70,14 +68,14 @@ export function CreateEmployeePage() {
 			{/* Page Header */}
 			<PageHeader
 				title={localizationConstants.personnel}
-				breadcrumbs={personnelBreadcrumbs(localizationConstants.createEmployeeTab)}
+				breadcrumbs={personnelBreadcrumbs(localizationConstants.createEmployeeTitle)}
 				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
-			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto space-y-4">
-				{/* Level 1 Tabs matching Figma */}
-				<div className="flex items-center border-b border-slate-200 bg-white px-4 rounded-t-lg h-[44px] shadow-xs">
-					<Tabs defaultValue="create" className="w-full">
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto space-y-6">
+				{/* Level 1 Navigation Tabs: Personnel Overview is active */}
+				<div className="flex items-center border-b border-slate-200 bg-white px-4 rounded-t-lg h-[44px] shadow-2xs">
+					<Tabs defaultValue="overview" className="w-full">
 						<TabsList variant="line" className="h-[36px] overflow-x-auto">
 							{PERSONNEL_NAV_ITEMS.map((item) => {
 								const Icon = TAB_ICON_MAP[item.id] || Users;
@@ -94,38 +92,36 @@ export function CreateEmployeePage() {
 					</Tabs>
 				</div>
 
-				{/* Main Form Container */}
-				<div className="flex-1 flex flex-col bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
-					{/* Title Header with Back Button */}
-					<div className="flex items-center gap-4 px-6 py-5 border-b border-slate-200">
-						<Button
-							type="button"
-							variant="ghost"
-							size="sm"
-							onClick={handleCancel}
-							className="h-9 w-9 p-0 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100"
-							aria-label={t(localizationConstants.btnPrevious)}
-						>
-							<ArrowLeft className="h-5 w-5" />
-						</Button>
-						<div>
-							<h1 className="text-lg font-semibold text-slate-900 leading-tight">
-								{t(localizationConstants.createEmployeeTitle)}
-							</h1>
-							<p className="text-xs text-slate-500 mt-0.5">
-								{t(localizationConstants.createEmployeeSubtitle)}
-							</p>
-						</div>
+				{/* Title Header with Back Button (Matching Figma Image 2) */}
+				<div className="flex items-center gap-3.5 pt-1">
+					<button
+						type="button"
+						onClick={handleCancel}
+						className="p-1 text-slate-700 hover:text-slate-900 hover:bg-slate-200/60 rounded-md transition-colors cursor-pointer"
+						aria-label={t(localizationConstants.btnPrevious)}
+					>
+						<ArrowLeft className="h-5 w-5" />
+					</button>
+					<div>
+						<h1 className="text-xl font-bold text-slate-900 tracking-tight leading-none">
+							{t(localizationConstants.createEmployeeTitle)}
+						</h1>
+						<p className="text-xs text-slate-500 mt-1.5">
+							{t(localizationConstants.createEmployeeSubtitle)}
+						</p>
 					</div>
+				</div>
 
-					{/* Stepper Tabs */}
-					<CreateEmployeeStepper
-						activeStep={activeStep}
-						onStepClick={setActiveStep}
-					/>
+				{/* Stepper Sub-navigation Tabs (Matching Figma Image 2) */}
+				<CreateEmployeeStepper
+					activeStep={activeStep}
+					onStepClick={setActiveStep}
+				/>
 
-					{/* Active Step Content */}
-					<div className="flex-1 p-6 bg-slate-50/40">
+				{/* 2-Column Responsive Layout Matching Figma Image 2 */}
+				<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+					{/* Left Main Column: Form Cards stacked with full visibility */}
+					<div className="lg:col-span-8 xl:col-span-9 space-y-6">
 						{activeStep === 1 && (
 							<Step1Grundinformation
 								personalInfo={formData.personalInfo}
@@ -185,15 +181,37 @@ export function CreateEmployeePage() {
 						)}
 					</div>
 
-					{/* Persistent Bottom Actions */}
-					<CreateEmployeeActions
-						activeStep={activeStep}
-						onCancel={handleCancel}
-						onSave={handleSave}
-						onPrev={handlePrevStep}
-						onNext={handleNextStep}
-					/>
+					{/* Right Column: Step Progress Card Matching Figma Image 2 */}
+					<div className="lg:col-span-4 xl:col-span-3 sticky top-4">
+						<div className="bg-white border border-slate-200/90 rounded-xl p-5 shadow-xs">
+							<div className="text-sm font-semibold text-slate-900 mb-3">
+								{`Step ${activeStep}/5`}
+							</div>
+							<div
+								className="w-full h-2 bg-slate-100 rounded-full overflow-hidden"
+								role="progressbar"
+								aria-valuenow={activeStep}
+								aria-valuemin={1}
+								aria-valuemax={5}
+								aria-label={`Step ${activeStep} of 5`}
+							>
+								<div
+									className="h-full bg-slate-900 rounded-full transition-all duration-300"
+									style={{ width: `${(activeStep / 5) * 100}%` }}
+								/>
+							</div>
+						</div>
+					</div>
 				</div>
+
+				{/* Persistent Bottom Actions Matching Figma Image 4 */}
+				<CreateEmployeeActions
+					activeStep={activeStep}
+					onCancel={handleCancel}
+					onSave={handleSave}
+					onPrev={handlePrevStep}
+					onNext={handleNextStep}
+				/>
 			</div>
 
 			{/* Cancel Confirmation Dialog */}

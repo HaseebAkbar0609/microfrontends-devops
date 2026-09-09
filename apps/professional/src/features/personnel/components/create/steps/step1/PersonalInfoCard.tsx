@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { CircleUser } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,56 +25,63 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 	const { t } = useTranslation();
 
 	return (
-		<section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-			<h2 className="text-base font-semibold text-slate-900 mb-5">
-				{t(localizationConstants.sectionPersonalDetails)}
-			</h2>
+		<section className="bg-white rounded-xl border border-slate-200/90 p-6 shadow-xs">
+			<div className="flex items-center gap-2.5 mb-6">
+				<div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100/80 text-slate-700">
+					<CircleUser className="w-5 h-5 text-slate-600" />
+				</div>
+				<h2 className="text-base font-semibold text-slate-900">
+					{t(localizationConstants.sectionPersonalDetails)}
+				</h2>
+			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-				{/* Row 1 */}
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+				{/* Row 1: Förnamn & Efternamn */}
 				<div>
-					<Label htmlFor="firstName" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="firstName" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldFirstName)}
 					</Label>
 					<Input
 						id="firstName"
 						value={data.firstName}
 						onChange={(e) => onChange("firstName", e.target.value)}
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="Johan"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 						required
 					/>
 				</div>
 
 				<div>
-					<Label htmlFor="lastName" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="lastName" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldLastName)}
 					</Label>
 					<Input
 						id="lastName"
 						value={data.lastName}
 						onChange={(e) => onChange("lastName", e.target.value)}
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="Andersson"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 						required
 					/>
 				</div>
 
+				{/* Row 2: Person nr & Mail företag */}
 				<div>
-					<Label htmlFor="personalId" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="personalId" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldPersonalId)}
 					</Label>
 					<Input
 						id="personalId"
 						value={data.personalId}
 						onChange={(e) => onChange("personalId", e.target.value)}
-						placeholder="YYYYMMDD-XXXX"
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="1985-05-05-1010"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 						required
 					/>
 				</div>
 
-				{/* Row 2 */}
 				<div>
-					<Label htmlFor="workEmail" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="workEmail" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldWorkEmail)}
 					</Label>
 					<Input
@@ -81,13 +89,15 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 						type="email"
 						value={data.workEmail}
 						onChange={(e) => onChange("workEmail", e.target.value)}
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="info@byggbolaget.se"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 						required
 					/>
 				</div>
 
+				{/* Row 3: Mobil & Mail privat */}
 				<div>
-					<Label htmlFor="phone" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="phone" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldMobile)}
 					</Label>
 					<Input
@@ -95,12 +105,13 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 						type="tel"
 						value={data.phone}
 						onChange={(e) => onChange("phone", e.target.value)}
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="070-560 50 60"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 					/>
 				</div>
 
 				<div>
-					<Label htmlFor="privateEmail" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="privateEmail" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldPrivateEmail)}
 					</Label>
 					<Input
@@ -108,30 +119,33 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 						type="email"
 						value={data.privateEmail}
 						onChange={(e) => onChange("privateEmail", e.target.value)}
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="john@gmail.com"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 					/>
 				</div>
 
-				{/* Row 3 */}
-				<div>
-					<Label htmlFor="address" className="text-xs font-medium text-slate-600 mb-1.5 block">
+				{/* Row 4: Adress (full width across both columns) */}
+				<div className="col-span-1 md:col-span-2">
+					<Label htmlFor="address" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldAddress)}
 					</Label>
 					<Input
 						id="address"
 						value={data.address}
 						onChange={(e) => onChange("address", e.target.value)}
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="Stengatan 10"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 					/>
 				</div>
 
+				{/* Row 5: Ort & Post nr */}
 				<div>
-					<Label htmlFor="city" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="city" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldCity)}
 					</Label>
 					<Select value={data.city} onValueChange={(val) => onChange("city", val)}>
 						<SelectTrigger id="city" className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm">
-							<SelectValue placeholder={t(localizationConstants.fieldCity)} />
+							<SelectValue placeholder="Solna" />
 						</SelectTrigger>
 						<SelectContent>
 							{CITY_OPTIONS.map((city) => (
@@ -144,14 +158,15 @@ export function PersonalInfoCard({ data, onChange }: PersonalInfoCardProps) {
 				</div>
 
 				<div>
-					<Label htmlFor="postalCode" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="postalCode" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldPostalCode)}
 					</Label>
 					<Input
 						id="postalCode"
 						value={data.postalCode}
 						onChange={(e) => onChange("postalCode", e.target.value)}
-						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm"
+						placeholder="171 63"
+						className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm placeholder:text-slate-400"
 					/>
 				</div>
 			</div>

@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { CircleUser } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,14 +25,19 @@ export function WorkInfoCard({ data, onChange }: WorkInfoCardProps) {
 	const { t } = useTranslation();
 
 	return (
-		<section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-			<h2 className="text-base font-semibold text-slate-900 mb-5">
-				{t(localizationConstants.sectionWorkInfo)}
-			</h2>
+		<section className="bg-white rounded-xl border border-slate-200/90 p-6 shadow-xs">
+			<div className="flex items-center gap-2.5 mb-6">
+				<div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100/80 text-slate-700">
+					<CircleUser className="w-5 h-5 text-slate-600" />
+				</div>
+				<h2 className="text-base font-semibold text-slate-900">
+					{t(localizationConstants.sectionWorkInfo)}
+				</h2>
+			</div>
 
-			<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
 				<div>
-					<Label htmlFor="workingHours" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="workingHours" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldWorkingHours)}
 					</Label>
 					<div className="relative flex items-center">
@@ -39,7 +45,8 @@ export function WorkInfoCard({ data, onChange }: WorkInfoCardProps) {
 							id="workingHours"
 							value={data.workingHours}
 							onChange={(e) => onChange("workingHours", e.target.value)}
-							className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm pr-20"
+							placeholder="40"
+							className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm pr-20 placeholder:text-slate-400"
 						/>
 						<span className="absolute right-3 text-xs text-slate-500 font-medium pointer-events-none">
 							/ {t(localizationConstants.unitPerWeek)}
@@ -48,7 +55,7 @@ export function WorkInfoCard({ data, onChange }: WorkInfoCardProps) {
 				</div>
 
 				<div>
-					<Label htmlFor="employmentForm" className="text-xs font-medium text-slate-600 mb-1.5 block">
+					<Label htmlFor="employmentForm" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldEmploymentForm)}
 					</Label>
 					<Select
@@ -68,16 +75,17 @@ export function WorkInfoCard({ data, onChange }: WorkInfoCardProps) {
 					</Select>
 				</div>
 
-				<div>
-					<Label htmlFor="annualVacationDays" className="text-xs font-medium text-slate-600 mb-1.5 block">
+				<div className="col-span-1 md:col-span-2">
+					<Label htmlFor="annualVacationDays" className="text-xs font-medium text-slate-700 mb-1.5 block">
 						{t(localizationConstants.fieldAnnualVacation)}
 					</Label>
-					<div className="relative flex items-center">
+					<div className="relative flex items-center max-w-md">
 						<Input
 							id="annualVacationDays"
 							value={data.annualVacationDays}
 							onChange={(e) => onChange("annualVacationDays", e.target.value)}
-							className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm pr-16"
+							placeholder="25"
+							className="h-10 bg-white border-slate-200 text-slate-900 rounded-lg text-sm pr-16 placeholder:text-slate-400"
 						/>
 						<span className="absolute right-3 text-xs text-slate-500 font-medium pointer-events-none">
 							/ {t(localizationConstants.unitPerYear)}

@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Upload, X, Trash2, Eye } from "lucide-react";
+import { Upload, X, Trash2, Eye, CircleUser } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -71,10 +71,15 @@ export function Step5Dokument({
 	return (
 		<div className="space-y-6">
 			{/* Configurations & Upload Card */}
-			<section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-				<h2 className="text-base font-semibold text-slate-900 mb-5">
-					{t(localizationConstants.sectionPersonalDocs)}
-				</h2>
+			<section className="bg-white rounded-xl border border-slate-200/90 p-6 shadow-xs">
+				<div className="flex items-center gap-2.5 mb-6">
+					<div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100/80 text-slate-700">
+						<CircleUser className="w-5 h-5 text-slate-600" />
+					</div>
+					<h2 className="text-base font-semibold text-slate-900">
+						{t(localizationConstants.sectionPersonalDocs)}
+					</h2>
+				</div>
 
 				{/* 3 Select dropdowns */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
@@ -192,10 +197,15 @@ export function Step5Dokument({
 			</section>
 
 			{/* Attached Documents Table */}
-			<section className="bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
-				<h2 className="text-base font-semibold text-slate-900 mb-4">
-					{t(localizationConstants.tableSpecification)}
-				</h2>
+			<section className="bg-white rounded-xl border border-slate-200/90 p-6 shadow-xs">
+				<div className="flex items-center gap-2.5 mb-5">
+					<div className="flex items-center justify-center w-8 h-8 rounded-full bg-slate-100/80 text-slate-700">
+						<CircleUser className="w-5 h-5 text-slate-600" />
+					</div>
+					<h2 className="text-base font-semibold text-slate-900">
+						{t(localizationConstants.tableSpecification)}
+					</h2>
+				</div>
 
 				<div className="rounded-lg border border-slate-200 overflow-hidden">
 					<Table>
