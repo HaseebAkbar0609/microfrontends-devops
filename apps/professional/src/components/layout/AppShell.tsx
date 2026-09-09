@@ -10,6 +10,8 @@ import {
 	AccountLifecycleBanner,
 	AccountLifecyclePopup,
 } from "@/features/account-lifecycle";
+import { setRequiresSubscriptionCookie } from "@/lib/requiresSubscriptionCookie";
+import { getSubscriptionOverview } from "@/features/admin/subscription/services/subscriptionService";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 
@@ -30,7 +32,11 @@ const AUTH_ROUTE_PREFIXES = [
 	"/auth/callback",
 ];
 
-const PUBLIC_ROUTE_PREFIXES = ["/manage-plans", "/manage-cart"];
+const PUBLIC_ROUTE_PREFIXES = [
+	"/manage-plans",
+	"/manage-cart",
+	"/subscription/success",
+];
 
 function pathMatchesPrefixes(pathname: string, prefixes: string[]) {
 	return prefixes.some(
@@ -49,10 +55,15 @@ export function AppShell({ children }: AppShellProps) {
 
 	useEffect(() => {
 		if (!isReady) return;
+		const searchParams = new URLSearchParams(window.location.search);
+		const isPlanChange =
+			searchParams.get("change") === "1" ||
+			searchParams.get("mode") === "change";
 
 		if (
 			isAuthenticated &&
 			isPublicPage &&
+			!isPlanChange &&
 			!getRequiresSubscriptionFromBrowserCookie()
 		) {
 			router.replace("/home");
@@ -92,7 +103,41 @@ export function AppShell({ children }: AppShellProps) {
 		}
 
 		setIsCheckingAuth(false);
-	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, pathname, router]);
+	}, [
+		isReady,
+		isAuthenticated,
+		isAuthRoute,
+		isPublicPage,
+		pathname,
+		router,
+	]);
+
+	useEffect(() => {
+		if (!isReady || !isAuthenticated || isAuthRoute || isPublicPage) return;
+		let active = true;
+
+		const checkBillingStatus = async () => {
+			try {
+				const overview = await getSubscriptionOverview();
+				if (!active) return;
+				const requiresSubscription =
+					overview.status?.access_state === "INACTIVE";
+				setRequiresSubscriptionCookie(requiresSubscription);
+				if (requiresSubscription) router.replace("/manage-plans");
+			} catch {
+				// A transient billing-status failure must not eject an authenticated user.
+			}
+		};
+
+		void checkBillingStatus();
+		const intervalId = window.setInterval(() => void checkBillingStatus(), 15_000);
+		window.addEventListener("focus", checkBillingStatus);
+		return () => {
+			active = false;
+			window.clearInterval(intervalId);
+			window.removeEventListener("focus", checkBillingStatus);
+		};
+	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, router]);
 
 	if (!isReady) {
 		return <Loader />;

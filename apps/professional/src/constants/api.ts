@@ -33,7 +33,11 @@ export const API_PATH = {
 	},
 	SUBSCRIPTIONS: {
 		LIST: `${BASE_PATHS.SUBSCRIPTIONS}/list`,
+		CURRENT: `${BASE_PATHS.SUBSCRIPTIONS}/current`,
 		CHECKOUT: `${BASE_PATHS.SUBSCRIPTIONS}/checkout`,
+		CHANGE: `${BASE_PATHS.SUBSCRIPTIONS}/change`,
+		CHANGE_PREVIEW: `${BASE_PATHS.SUBSCRIPTIONS}/change/preview`,
+		OVERVIEW: "/subscriptions",
 	},
 	USER_CARDS: {
 		SETUP_INTENT: `${BASE_PATHS.USER_CARDS}/setup-intent`,

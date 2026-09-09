@@ -20,7 +20,7 @@ export function CheckoutBillingSection({
   });
 
   return (
-    <div className="rounded-xl bg-white p-6 space-y-2">
+    <div className="min-w-0 space-y-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 [&_input]:h-11 [&_[role=combobox]]:min-h-11">
       <div>
         <div className="flex items-center gap-3">
           <span className="text-lg font-semibold text-primary">2.</span>
