@@ -193,6 +193,10 @@ export const DEFAULT_COST_CENTERS_LIST = [
 
 export const EXPENSE_LIST_ROUTE = "/module/financial-management/economy";
 export const CREATE_EXPENSE_ROUTE = "/module/financial-management/economy/create";
+export const EXPENSE_LIST_TAB_QUERY_PARAM = "tab";
+export const EXPENSE_INBOX_TAB = "inbox";
+export const EXPENSE_SUPPLIER_LIST_TAB = "supplier_list";
+export const EXPENSE_DETAIL_ROUTE = (expenseId: string) => `${EXPENSE_LIST_ROUTE}/${expenseId}`;
 
 import { economyBreadcrumbs } from "./economyNav.config";
 
