@@ -201,7 +201,7 @@ export function ExpenseTimeReportTab({
 							<span>
 								<Translate text={localizationConstants.registerExpenseTimeTotalAmount} />{" "}
 							</span>
-							<span className="font-semibold text-emerald-600">{formatNum(totals.totalAmount)} SEK</span>
+							<span className="font-semibold text-emerald-600">{formatNum(totals.totalAmount)} {formData.currency || "SEK"}</span>
 						</div>
 					</div>
 				</div>

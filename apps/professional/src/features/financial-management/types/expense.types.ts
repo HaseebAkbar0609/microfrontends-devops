@@ -90,12 +90,28 @@ export interface ExpenseUnderlagItem {
 	comments?: string;
 }
 
+export type ExpenseCurrency = "SEK" | "EUR" | "USD" | "NOK" | "DKK";
+
+export interface SupplierInfo {
+	id?: string;
+	name: string;
+	orgNo: string;
+	address: string;
+	postalCity?: string;
+	phone?: string;
+	email?: string;
+	bankgiro?: string;
+	fTax?: boolean;
+}
+
 export interface RegisterExpenseFormData {
 	supplier: string;
 	fakturaNo: string;
 	date: string;
 	dueDate: string;
 	category: ExpenseCategory;
+	currency: ExpenseCurrency;
+	reference: string;
 	project: string;
 	costCenter: string;
 	lineItems: ExpenseLineItem[];
@@ -116,6 +132,7 @@ export interface RegisterExpenseCalculations {
 	vatBreakdown: VatRateBreakdown[];
 	totalVat: number;
 	grandTotal: number;
+	currency: ExpenseCurrency;
 }
 
 export interface RegisterExpenseErrors {
