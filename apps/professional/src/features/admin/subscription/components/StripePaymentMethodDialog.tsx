@@ -87,7 +87,7 @@ function SetupForm({ onClose, onSaved }: SetupFormProps) {
 	return (
 		<>
 			<PaymentElement onReady={() => setIsReady(true)} />
-			<DialogFooter>
+			<DialogFooter className="[&_button]:h-11">
 				<Button type="button" variant="outline" onClick={onClose} disabled={isSaving}>
 					<Translate text={localizationConstants.cancel} />
 				</Button>
@@ -138,7 +138,7 @@ export default function StripePaymentMethodDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={(value) => !value && onClose()}>
-			<DialogContent className="max-w-xl">
+			<DialogContent className="max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] overflow-y-auto bg-white sm:max-w-xl">
 				<DialogHeader>
 					<DialogTitle>
 						<Translate text={localizationConstants.subscriptionNewCardTitle} />
