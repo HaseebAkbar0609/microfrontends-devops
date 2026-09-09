@@ -56,6 +56,7 @@ export function CheckoutContactSection({
           type="email"
           className="w-full"
           disabled={emailLocked}
+          inputProps={emailLocked ? { value: verifiedEmail } : undefined}
         />
       </div>
     </div>

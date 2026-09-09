@@ -52,7 +52,7 @@ export function CheckoutPaymentStripeSection({
   }, [elements, onStripeReady, stripe]);
 
   return (
-    <div className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 [&_button]:min-h-11">
+    <div className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 [&_button:not([role=checkbox])]:min-h-11">
       <div className="flex items-center gap-3">
         <span className="text-lg font-semibold text-primary">3.</span>
         <h2 className="text-lg font-semibold text-primary">
@@ -112,7 +112,7 @@ export function CheckoutPaymentStripeSection({
             </p>
           ) : cards.length > 0 ? (
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm font-medium text-secondary">
                   <Translate
                     text={

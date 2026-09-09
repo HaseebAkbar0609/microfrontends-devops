@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
 	deleteCartItemAction,
@@ -15,6 +15,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 export default function ManageCartPage() {
+	const mainRef = useRef<HTMLElement>(null);
 	const [isPlanChange, setIsPlanChange] = useState(false);
 	const [items, setItems] = useState<CartItem[]>([]);
 	const [updatingItemIds, setUpdatingItemIds] = useState<string[]>([]);
@@ -23,6 +24,10 @@ export default function ManageCartPage() {
 
 	const [discountCode, setDiscountCode] = useState("");
 	const [step, setStep] = useState<CartStep>("cart");
+
+	useEffect(() => {
+		mainRef.current?.scrollTo({ top: 0 });
+	}, [step]);
 
 	const fetchCart = async () => {
 		const result = await getCartAction();
@@ -108,7 +113,7 @@ export default function ManageCartPage() {
 
 	return (
 		<>
-			<main className="h-[calc(100vh-72px)] flex-1 overflow-y-auto bg-background px-4 py-6 sm:px-6 md:py-8">
+			<main ref={mainRef} className="min-h-0 flex-1 overflow-y-auto bg-background px-4 py-6 sm:px-6 md:py-8">
 				<div className="mx-auto w-full max-w-6xl space-y-6">
 					<h1 className="text-2xl font-bold text-secondary">
 						<Translate

@@ -17,7 +17,7 @@ import { cartMessages } from "@/constants/messages";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { type ConfirmSubscriptionProps } from "../types";
 import { CheckoutPaymentDetails } from "./CheckoutPaymentDetails";
@@ -49,14 +49,20 @@ export function ConfirmSubscription({
 	const profile = user as User | null;
 	const mainItem = items[0];
 	const [view, setView] = useState<"confirm" | "checkout">("confirm");
+	const viewRef = useRef<HTMLDivElement>(null);
 	const [acceptedTerms, setAcceptedTerms] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+
+	useEffect(() => {
+		viewRef.current?.closest("main")?.scrollTo({ top: 0 });
+	}, [view]);
 
 	const isFreeOnlyCart =
 		items.length === 1 && items[0]?.planKey === MANAGE_PLANS_PLAN_IDS.FREE;
 
 	if (view === "checkout") {
 		return (
+			<div ref={viewRef}>
 			<CheckoutPaymentDetails
 				items={items}
 				subtotal={subtotal}
@@ -64,11 +70,12 @@ export function ConfirmSubscription({
 				onBack={() => setView("confirm")}
 				onCancelToCart={onBackToCart}
 			/>
+			</div>
 		);
 	}
 
 	return (
-		<div className="space-y-6">
+		<div ref={viewRef} className="space-y-6">
 			<div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_23rem]">
 				<div className="min-w-0 space-y-6 [&_p]:break-words">
 					<div className="space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">

@@ -186,7 +186,7 @@ export default function ManagePlansPage() {
 		<>
 			<main
 				ref={mainRef}
-				className="h-[calc(100vh-72px)] overflow-y-auto px-4 py-6 sm:px-6 md:py-8 lg:px-10"
+				className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 md:py-8 lg:px-10"
 			>
 				<div className="mx-auto w-full max-w-6xl">
 					<header className="grid items-start justify-items-center gap-5 text-center lg:grid-cols-[1fr_minmax(0,40rem)_1fr]">
