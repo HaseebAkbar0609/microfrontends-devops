@@ -1589,6 +1589,20 @@ export type OfferTranslation = {
 	protocolPointDeletedToast: string;
 	protocolNoteSavedToast: string;
 	protocolNoteDeletedToast: string;
+	protocolSaveAction: string;
+	protocolCancelAction: string;
+	protocolSendAction: string;
+	protocolEditProtocolAction: string;
+	protocolProjectInfoTitle: string;
+	protocolProjectNr: string;
+	protocolProjectName: string;
+	protocolPointSubject: string;
+	protocolPointDescription: string;
+	protocolPointHeading: string;
+	protocolDeletePointConfirmTitle: string;
+	protocolDeletePointConfirmDesc: string;
+	protocolEmptyPoints: string;
+	protocolDeleteAction: string;
 	// Tools - Diary
 	diaryPersonal: string;
 	diaryCreateNew: string;
@@ -3212,6 +3226,39 @@ export type OfferTranslation = {
 	designSidebarGranskning: string;
 	designSidebarRevisioner: string;
 	designSidebarArchive: string;
+	// Design Dashboard Widgets
+	designWidgetOverviewTitle: string;
+	designWidgetOverviewActiveProjects: string;
+	designWidgetOverviewDrawings: string;
+	designWidgetOverviewReviews: string;
+	designWidgetOverviewCompleted: string;
+	designWidgetOverviewDeadline: string;
+	designWidgetOverviewViewAllCta: string;
+	designWidgetMeetingsTitle: string;
+	designWidgetMeetingsNextLabel: string;
+	designWidgetMeetingsParticipants: string;
+	designWidgetMeetingsThisWeek: string;
+	designWidgetMeetingsScheduleCta: string;
+	designWidgetActivitiesTitle: string;
+	designWidgetTimeTitle: string;
+	designWidgetTimeWeekTotal: string;
+	designWidgetTimeBillable: string;
+	designWidgetTimeNonBillable: string;
+	designWidgetTimeBudget: string;
+	designWidgetTimeUsed: string;
+	designWidgetTimeLogCta: string;
+	designWidgetAiTitle: string;
+	designWidgetAiInsightsHeader: string;
+	designWidgetAiInsight1: string;
+	designWidgetAiInsight2: string;
+	designWidgetAiQuestion1: string;
+	designWidgetAiQuestion2: string;
+	designWidgetAiOpenCta: string;
+	designWidgetCalendarTitle: string;
+	designWidgetImageTitle: string;
+	designWidgetImageLatestLabel: string;
+	designWidgetImageFilesLabel: string;
+	designWidgetNewsTitle: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
@@ -3500,8 +3547,11 @@ export type OfferTranslation = {
 	viewDetailsButton: string;
 	viewDetailTitle: string;
 	orderNumberSubtitle: string;
+	orderNumberLabel: string;
 	warrantyInfoSection: string;
 	warrantyResponsibleLabel: string;
+	warrantyTimeLabel: string;
+	mobilePhoneLabel: string;
 	visitDatesSection: string;
 	colOrderNo: string;
 	createVisitDateButton: string;
@@ -6108,6 +6158,7 @@ export type FinancialReportsTranslation = {
 };
 
 export type OrderInformationTranslation = {
+	orderInformationTab: string;
 	projectDetailsTab: string;
 	offerTab: string;
 	companyNumberSection: string;
@@ -6653,6 +6704,208 @@ export type EconomyDashboardTranslation = {
 	viewRotRutAction: string;
 };
 
+export type PersonnelDashboardTranslation = {
+	// Module & Tabs
+	personnelModuleTitle: string;
+	personalDashboardTab: string;
+	personalOverviewTab: string;
+	createEmployeeTab: string;
+	competencesTab: string;
+	wellnessTab: string;
+	personalProcessesTab: string;
+	worktimeTab: string;
+
+	// Widget Titles & Descriptions
+	wHealthScoreTitle: string;
+	wHealthScoreDesc: string;
+	wPersonalOverviewTitle: string;
+	wPersonalOverviewDesc: string;
+	wAttendanceTitle: string;
+	wAttendanceDesc: string;
+	wStaffingTitle: string;
+	wStaffingDesc: string;
+	wTimeReportingTitle: string;
+	wTimeReportingDesc: string;
+	wPersonnelCostsTitle: string;
+	wPersonnelCostsDesc: string;
+	wAiAssistantTitle: string;
+	wAiAssistantDesc: string;
+	wCalendarTitle: string;
+	wCalendarDesc: string;
+	wActivitiesTitle: string;
+	wActivitiesDesc: string;
+	wCompetencesTitle: string;
+	wCompetencesDesc: string;
+	wTrainingsTitle: string;
+	wTrainingsDesc: string;
+	wCertificatesTitle: string;
+	wCertificatesDesc: string;
+	wImageTitle: string;
+	wImageDesc: string;
+	wNewsTitle: string;
+	wNewsDesc: string;
+
+	// 1. Workforce Health Score
+	wHealthScoreAttendanceRate: string;
+	wHealthScoreCoverage: string;
+	wHealthScoreCompliance: string;
+	wHealthScoreTrend: string;
+	wTrendUpShort: string;
+	wHealthScoreGood: string;
+	wHealthScoreWarning: string;
+	wHealthScoreCritical: string;
+
+	// 2. Personalöversikt
+	wTotalEmployees: string;
+	wActiveToday: string;
+	wOnLeave: string;
+	wNewThisMonth: string;
+	wDeparturesThisMonth: string;
+	employeesUnit: string;
+
+	// 3. Närvaro
+	wPresentEmployees: string;
+	wAbsentApproved: string;
+	wAbsentUnplanned: string;
+	wRemoteWork: string;
+	wOnSiteWork: string;
+	wAttendanceRateWeekly: string;
+	wAttendanceRateShort: string;
+
+	// 4. Bemanning
+	wElectricians: string;
+	wPlumbers: string;
+	wProjectManagers: string;
+	wApprentices: string;
+	wOpenPositions: string;
+	wNeededLabel: string;
+	wStatusMet: string;
+	wStatusShortage: string;
+	wStatusCriticalShortage: string;
+
+	// 5. Tidrapportering
+	wReportsSubmittedThisWeek: string;
+	wApprovedReports: string;
+	wPendingReview: string;
+	wMissingReports: string;
+	wTotalHoursLogged: string;
+	wOvertimeHours: string;
+	hoursUnit: string;
+
+	// 6. Personalkostnader
+	wTotalPersonnelCost: string;
+	wSalaries: string;
+	wOvertimeCost: string;
+	wBenefitsSocialFees: string;
+	wBudgetLabel: string;
+	wVarianceLabel: string;
+	wUnderBudget: string;
+	wOverBudget: string;
+
+	// 7. AI Personalassistent
+	wAiPromptMissingReports: string;
+	wAiPromptStaffingGap: string;
+	wAiPromptSendReminder: string;
+	wAiAskAssistantPlaceholder: string;
+	wAiSendButton: string;
+	wAiRecentAdvice: string;
+	wAiResponseReminderSent: string;
+	wAiResponseStaffingAnalysis: string;
+	wAiResponseGeneral: string;
+
+	// 8. Kalender
+	wCalEventParentalReturn: string;
+	wCalEventSafetyTraining: string;
+	wCalEventPayrollDeadline: string;
+	wCalEventSummerLeave: string;
+	wCalEventFirstAidCert: string;
+	wCalDateJul28: string;
+	wCalDateJul29: string;
+	wCalDateJul30: string;
+	wCalDateAug01: string;
+	wCalDateAug05: string;
+
+	// 9. Senaste aktiviteter
+	wActTimeApproved: string;
+	wActNewEmployee: string;
+	wActAbsenceRegistered: string;
+	wActOvertimeApproved: string;
+	wActStaffingUpdate: string;
+
+	// 10. Kompetenser
+	wCompElectrical: string;
+	wCompPlumbing: string;
+	wCompProjectMgmt: string;
+	wCompBimCad: string;
+	wCompSafetyOfficers: string;
+	wCompSkillGaps: string;
+
+	// 11. Utbildningar
+	wActiveTrainingPrograms: string;
+	wEmployeesInTraining: string;
+	wCompletedThisMonth: string;
+	wUpcomingTraining: string;
+	wOverdueTrainings: string;
+	wAug10Date: string;
+
+	// 12. Certifikat & Behörigheter
+	wValidCertificates: string;
+	wExpiring30Days: string;
+	wExpiredCertificates: string;
+	wPendingRenewal: string;
+	wCategoriesLabel: string;
+	wCertCategoriesList: string;
+
+	// 13. Bild
+	wTeamImageCaption: string;
+	wTeamImageTitle: string;
+	wChangeImage: string;
+
+	// 14. Nyheter
+	wNewsOvertimeTitle: string;
+	wNewsSummerSchedule: string;
+	wNewsWelcomeSara: string;
+	wNewsPerfReviews: string;
+
+	// Actions
+	viewPersonnelOverviewAction: string;
+	viewAttendanceAction: string;
+	viewStaffingAction: string;
+	viewTimeReportingAction: string;
+	viewCompetencesAction: string;
+	viewCalendarAction: string;
+
+	// Widget footer metrics & counts
+	wNewDepartures: string;
+	wStaffAssigned: string;
+	wEventsCountLabel: string;
+	wRecentActionsLabel: string;
+	wCompetenceAreasLabel: string;
+	wTrainingProgramsLabel: string;
+	wTotalCertificatesLabel: string;
+	wNewsCountLabel: string;
+
+	// Unified Widget States & Actions
+	wStateActive: string;
+	wStateInactive: string;
+	wStateLoading: string;
+	wStateEmpty: string;
+	wChipLocked: string;
+	wActionExpand: string;
+	wActionRefresh: string;
+	wActionToggleState: string;
+	wActionToggleEmpty: string;
+	wActionToggleActive: string;
+	wActionRestoreData: string;
+	wEmptyDefaultTitle: string;
+	wEmptyDefaultDesc: string;
+	wModalClose: string;
+	wModalExport: string;
+	wToastRefreshError: string;
+	wChipLockedTooltip: string;
+	wWidgetOptions: string;
+};
+
 export type OrderProtocolTranslation = {
 	protocolOverviewTitle: string;
 	protocolsTab: string;
@@ -6691,6 +6944,89 @@ export type OrderProtocolTranslation = {
 	protocolStatusCompleted: string;
 	protocolFilterAllTypes: string;
 	protocolFilterAllStatuses: string;
+	protocolActionDownload: string;
+	protocolExportAll: string;
+	toastProtocolDownloaded: string;
+	toastProtocolDownloadFailed: string;
+	toastAllProtocolsDownloaded: string;
+	projectNumberLabel: string;
+	projectNameLabel: string;
+	protocolCategoryLabel: string;
+	protocolAddressLabel: string;
+	protocolPostalCodeLabel: string;
+	protocolCityLabel: string;
+	protocolAddParticipantsLabel: string;
+	protocolLocationLabel: string;
+	protocolStartTimeLabel: string;
+	protocolEndTimeLabel: string;
+	protocolMeetingInfoLabel: string;
+	protocolMeetingInfoPlaceholder: string;
+	protocolSignatureLabel: string;
+	protocolSignatureBtn: string;
+	protocolSignatureFileHelp: string;
+	protocolNextButton: string;
+	protocolLocationPlaceholder: string;
+	toastProtocolUploadFailed: string;
+	validationFileSizeLimit: string;
+	validationFileTypeInvalid: string;
+	ariaLabelCloseModal: string;
+	ariaLabelAddParticipant: string;
+	ariaLabelRemoveFile: string;
+	protocolResponsibleLabel: string;
+	protocolSubjectLabel: string;
+	validationProtocolSubjectRequired: string;
+	protocolSaveButton: string;
+};
+
+export type PersonnelOverviewTranslation = {
+	personalOverviewPageTitle: string;
+	colContractNumber: string;
+	colPerson: string;
+	colRole: string;
+	colIdNumber: string;
+	colStatus: string;
+	colType: string;
+	colStartDate: string;
+	colLocation: string;
+	colCustomizeHeader: string;
+	searchPlaceholder: string;
+	filterButton: string;
+	filterAll: string;
+	filterStatusLabel: string;
+	filterTypeLabel: string;
+	filterLocationLabel: string;
+	filterRoleLabel: string;
+	filterReset: string;
+	newEmployeeButton: string;
+	viewProfileBtn: string;
+	menuViewProfile: string;
+	menuEdit: string;
+	menuDeactivate: string;
+	statusActive: string;
+	statusProbation: string;
+	statusSick: string;
+	statusLeave: string;
+	statusNotStarted: string;
+	typeFullTime: string;
+	typePartTime: string;
+	rowsPerPageLabel: string;
+	pageOfLabel: string;
+	deactivateConfirmTitle: string;
+	deactivateConfirmDesc: string;
+	deactivateConfirmBtn: string;
+	cancelBtn: string;
+	profileModalTitle: string;
+	profileContactInfo: string;
+	profileEmailLabel: string;
+	profilePhoneLabel: string;
+	profileDepartmentLabel: string;
+	profileContractLabel: string;
+	profileStartDateLabel: string;
+	profileStatusLabel: string;
+	profileCloseBtn: string;
+	toastEmployeeDeactivated: string;
+	noEmployeesFound: string;
+	actionsMenuLabel: string;
 };
 
 export type Translation = HeaderTranslation &
@@ -6716,7 +7052,9 @@ export type Translation = HeaderTranslation &
 	OrderPaymentPlanTranslation &
 	OrderInspectionTranslation &
 	EconomyDashboardTranslation &
-	OrderProtocolTranslation;
+	PersonnelDashboardTranslation &
+	OrderProtocolTranslation &
+	PersonnelOverviewTranslation;
 
 export type TranslationKeys = keyof Translation;
 

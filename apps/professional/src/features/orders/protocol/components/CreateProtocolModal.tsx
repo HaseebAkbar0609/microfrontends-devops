@@ -1,20 +1,12 @@
 "use client";
 
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import {
-	X,
-	Calendar as CalendarIcon,
-	ChevronDown,
-	Save,
-	FileText,
-	Upload,
-} from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { showToast } from "@/lib/toast";
 import {
 	Form,
 	FormField,
@@ -29,317 +21,217 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/ui/dialog";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { format } from "date-fns";
-import { parseDateValue } from "@/utils/date";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PROTOCOL_CONSTANTS, type ProtocolTemplateType } from "../constants/protocol.constants";
 import type { CreateProtocolPayload } from "../types/protocol.types";
+import {
+	createProtocolSchema,
+	type CreateProtocolFormData,
+} from "../validation/protocol.validation";
+import { MeetingProjectInfo } from "./create-meeting/MeetingProjectInfo";
+import { MeetingGeneralFields } from "./create-meeting/MeetingGeneralFields";
+import { MeetingParticipantsField } from "./create-meeting/MeetingParticipantsField";
+import { MeetingDateTimeFields } from "./create-meeting/MeetingDateTimeFields";
 
-const createProtocolSchema = (dateRequiredMsg: string, typeRequiredMsg: string) =>
-	z.object({
-		date: z.string().min(1, dateRequiredMsg),
-		type: z.string().min(1, typeRequiredMsg),
-		protocolName: z.string().optional(),
-		notes: z.string().optional(),
-	});
-
-export type CreateProtocolFormData = z.infer<ReturnType<typeof createProtocolSchema>>;
+export type { CreateProtocolFormData };
 
 export interface CreateProtocolModalProps {
 	isOpen: boolean;
 	templateType: ProtocolTemplateType;
+	orderId?: string;
+	projectNumber?: string;
+	projectName?: string;
 	onClose: () => void;
-	onSave: (data: CreateProtocolPayload) => void;
+	onSave: (data: CreateProtocolPayload) => Promise<void> | void;
 }
 
 export function CreateProtocolModal({
 	isOpen,
 	templateType,
+	orderId = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID,
+	projectNumber = PROTOCOL_CONSTANTS.DEFAULT_PROJECT_NUMBER,
+	projectName = PROTOCOL_CONSTANTS.DEFAULT_PROJECT_NAME,
 	onClose,
 	onSave,
 }: CreateProtocolModalProps) {
 	const t = useTranslate();
-	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [datePickerOpen, setDatePickerOpen] = useState(false);
-	const [selectedFile, setSelectedFile] = useState<File | null>(null);
-	const [uploadedFileName, setUploadedFileName] = useState<string>(
-		PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME
-	);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [participants, setParticipants] = useState<string[]>([
+		...PROTOCOL_CONSTANTS.DEFAULT_PARTICIPANTS,
+	]);
 
-	const protocolSchema = useMemo(
+	const schema = useMemo(
 		() =>
 			createProtocolSchema(
 				t(localizationConstants.validationProtocolDateRequired),
-				t(localizationConstants.validationProtocolTypeRequired)
+				t(localizationConstants.validationProtocolTypeRequired),
+				t(localizationConstants.validationProtocolSubjectRequired)
 			),
 		[t]
 	);
 
 	const form = useForm<CreateProtocolFormData>({
-		resolver: zodResolver(protocolSchema),
+		resolver: zodResolver(schema),
 		defaultValues: {
-			date: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DATE,
-			type: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_TYPE,
-			protocolName: "",
+			responsible: PROTOCOL_CONSTANTS.DEFAULT_RESPONSIBLE,
+			rubrik: "",
+			type: PROTOCOL_CONSTANTS.UPLOAD_PROTOCOL_TYPES[0],
+			category: PROTOCOL_CONSTANTS.CATEGORIES[0],
+			address: "",
+			postalCode: PROTOCOL_CONSTANTS.DEFAULT_POSTAL_CODE,
+			city: PROTOCOL_CONSTANTS.DEFAULT_CITY,
+			location: PROTOCOL_CONSTANTS.DEFAULT_LOCATION,
+			startDate: PROTOCOL_CONSTANTS.DEFAULT_UPLOAD_DATE,
+			startTime: PROTOCOL_CONSTANTS.DEFAULT_START_TIME,
+			endDate: PROTOCOL_CONSTANTS.DEFAULT_UPLOAD_DATE,
+			endTime: PROTOCOL_CONSTANTS.DEFAULT_END_TIME,
 			notes: "",
 		},
 	});
 
-	const currentDateVal = form.watch("date");
-	const currentTypeVal = form.watch("type");
-	const parsedSelectedDate = parseDateValue(currentDateVal);
+	useEffect(() => {
+		if (!isOpen) {
+			form.reset();
+			setParticipants([...PROTOCOL_CONSTANTS.DEFAULT_PARTICIPANTS]);
+		}
+	}, [isOpen, form]);
 
-	const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const files = e.target.files;
-		if (files && files.length > 0) {
-			const file = files[0];
-			setSelectedFile(file);
-			setUploadedFileName(file.name);
+	const handleRemoveParticipant = (name: string) => {
+		setParticipants((prev) => prev.filter((p) => p !== name));
+	};
+
+	const handleAddParticipant = (name: string) => {
+		if (!participants.includes(name)) {
+			setParticipants((prev) => [...prev, name]);
 		}
 	};
 
-	const onSubmit = (data: CreateProtocolFormData) => {
-		onSave({
-			date: data.date,
-			type: data.type,
-			protocolName: data.protocolName || `${data.type} ${data.date}`,
-			documentName: uploadedFileName || PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME,
-			templateType,
-			notes: data.notes || "",
-			file: selectedFile || undefined,
-		});
-		form.reset();
-		setSelectedFile(null);
-		setUploadedFileName(PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME);
-		onClose();
+	const onSubmit = async (values: CreateProtocolFormData) => {
+		try {
+			setIsSubmitting(true);
+			await onSave({
+				orderId,
+				projectNumber,
+				projectName,
+				date: values.startDate,
+				type: values.type,
+				category: values.category,
+				address: values.address,
+				postalCode: values.postalCode,
+				city: values.city,
+				participants,
+				location: values.location,
+				startTime: values.startTime,
+				endTime: values.endTime,
+				protocolName: values.rubrik,
+				documentName: `${values.rubrik}.pdf`,
+				responsible: values.responsible,
+				templateType,
+				notes: values.notes,
+			});
+			onClose();
+		} catch (error) {
+			console.error("[CreateProtocolModal] Submission error:", error);
+			showToast("error", t(localizationConstants.genericError));
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
-	const titleText =
+	const subtitleKey =
 		templateType === PROTOCOL_CONSTANTS.TEMPLATE_TYPES.ACTION
-			? localizationConstants.createProtocolActionTitle
-			: localizationConstants.createProtocolStandardTitle;
+			? localizationConstants.protocolAction
+			: localizationConstants.protocolStandard;
 
 	return (
 		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
 			<DialogContent
 				showCloseButton={false}
-				className="w-[calc(100vw-2rem)] sm:w-[580px] sm:max-w-[580px] max-h-[90vh] overflow-y-auto rounded-lg bg-white p-4 sm:p-7 border border-slate-200 shadow-xl gap-0 flex flex-col justify-between"
+				className="w-[calc(100vw-2rem)] sm:w-[620px] sm:max-w-[620px] rounded-2xl bg-white p-6 sm:p-7 border border-slate-200 shadow-2xl max-h-[90vh] overflow-y-auto"
 			>
 				{/* Modal Header */}
-				<DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b border-slate-100">
-					<div className="flex items-center gap-2">
-						<FileText className="h-5 w-5 text-slate-700 shrink-0" />
-						<DialogTitle className="font-sans font-semibold text-xl sm:text-2xl text-slate-900">
-							<Translate text={titleText} />
+				<DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+					<div>
+						<DialogTitle className="font-sans font-bold text-xl sm:text-2xl text-slate-900 tracking-tight">
+							<Translate text={localizationConstants.protocolNewMeetingTitle} />
 						</DialogTitle>
+						<p className="text-xs sm:text-sm text-slate-500 font-normal mt-0.5">
+							<Translate text={subtitleKey} />
+						</p>
 					</div>
 					<Button
 						type="button"
 						variant="ghost"
 						size="icon"
 						onClick={onClose}
-						className="h-8 w-8 p-1 text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer rounded-md"
-						aria-label="Close modal"
+						className="h-8 w-8 p-1 text-zinc-500 hover:text-zinc-900 hover:bg-slate-100 rounded-md cursor-pointer shrink-0"
+						aria-label={t(localizationConstants.ariaLabelCloseModal)}
 					>
-						<X className="h-5 w-5" />
+						<X className="h-5 w-5 text-zinc-500" />
 					</Button>
 				</DialogHeader>
 
 				{/* Modal Form */}
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4 flex-1 flex flex-col justify-between">
-						<div className="space-y-4">
-							{/* Field 1: Date */}
-							<FormField
-								control={form.control}
-								name="date"
-								render={({ field }) => (
-									<FormItem className="flex flex-col gap-1.5 space-y-0">
-										<FormLabel className="font-sans font-medium text-sm text-slate-900">
-											<Translate text={localizationConstants.protocolColDate} />
-										</FormLabel>
-										<FormControl>
-											<Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
-												<PopoverTrigger asChild>
-													<Button
-														type="button"
-														variant="outline"
-														className="relative flex items-center justify-start h-10 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-left text-sm text-slate-900 focus:outline-none focus:border-slate-900 cursor-pointer hover:bg-slate-50 gap-2.5 font-normal shadow-none"
-													>
-														<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0 pointer-events-none" />
-														<span className="font-normal truncate text-sm text-slate-900">
-															{field.value || "YYYY-MM-DD"}
-														</span>
-													</Button>
-												</PopoverTrigger>
-												<PopoverContent className="w-auto p-0 border border-slate-200 bg-white shadow-lg rounded-xl z-50" align="start">
-													<Calendar
-														mode="single"
-														selected={parsedSelectedDate}
-														onSelect={(date) => {
-															if (date) {
-																form.setValue("date", format(date, "yyyy-MM-dd"), { shouldValidate: true });
-															} else {
-																form.setValue("date", "", { shouldValidate: true });
-															}
-															setDatePickerOpen(false);
-														}}
-													/>
-												</PopoverContent>
-											</Popover>
-										</FormControl>
-										<FormMessage className="text-xs font-medium text-red-500" />
-									</FormItem>
-								)}
-							/>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-1">
+						{/* Row 1: Projekt nr & Projekt namn */}
+						<MeetingProjectInfo projectNumber={projectNumber} projectName={projectName} />
 
-							{/* Field 2: Type */}
-							<FormField
-								control={form.control}
-								name="type"
-								render={() => (
-									<FormItem className="flex flex-col gap-1.5 space-y-0">
-										<FormLabel className="font-sans font-medium text-sm text-slate-900">
-											<Translate text={localizationConstants.protocolTypeLabel} />
-										</FormLabel>
-										<FormControl>
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														type="button"
-														variant="outline"
-														className="h-10 w-full rounded-lg border-slate-200 bg-white px-3.5 text-left text-sm font-normal text-slate-900 hover:bg-slate-50 flex items-center justify-between cursor-pointer shadow-none"
-													>
-														<span>{currentTypeVal || PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_TYPE}</span>
-														<ChevronDown className="h-4 w-4 text-slate-500 shrink-0" />
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="start" className="w-full min-w-[280px] bg-white border border-slate-200 shadow-md">
-													{PROTOCOL_CONSTANTS.PROTOCOL_TYPES.map((pt) => (
-														<DropdownMenuItem
-															key={pt}
-															onClick={() => form.setValue("type", pt, { shouldValidate: true })}
-															className="cursor-pointer text-sm"
-														>
-															{pt}
-														</DropdownMenuItem>
-													))}
-												</DropdownMenuContent>
-											</DropdownMenu>
-										</FormControl>
-										<FormMessage className="text-xs font-medium text-red-500" />
-									</FormItem>
-								)}
-							/>
+						{/* Rows 2-5: Ansvarig, Rubrik, Typ, Kategori, Adress, Post nr, Ort */}
+						<MeetingGeneralFields form={form} />
 
-							{/* Field 3: Protocol Name */}
-							<FormField
-								control={form.control}
-								name="protocolName"
-								render={({ field }) => (
-									<FormItem className="flex flex-col gap-1.5 space-y-0">
-										<FormLabel className="font-sans font-medium text-sm text-slate-900">
-											<Translate text={localizationConstants.protocolNameLabel} />
-										</FormLabel>
-										<FormControl>
-											<Input
-												type="text"
-												placeholder={t(localizationConstants.protocolNameLabel)}
-												{...field}
-												className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 shadow-none"
-											/>
-										</FormControl>
-										<FormMessage className="text-xs font-medium text-red-500" />
-									</FormItem>
-								)}
-							/>
+						{/* Row 6: Lägg till deltagare & Plats */}
+						<MeetingParticipantsField
+							participants={participants}
+							onAddParticipant={handleAddParticipant}
+							onRemoveParticipant={handleRemoveParticipant}
+							form={form}
+						/>
 
-							{/* Field 4: Document File Upload */}
-							<div className="flex flex-col gap-1.5">
-								<FormLabel className="font-sans font-medium text-sm text-slate-900">
-									<Translate text={localizationConstants.protocolColPdf} />
-								</FormLabel>
-								<input
-									type="file"
-									ref={fileInputRef}
-									onChange={handleFileSelect}
-									accept={PROTOCOL_CONSTANTS.ALLOWED_FILE_TYPES}
-									className="hidden"
-								/>
-								<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full min-w-0">
-									<Button
-										type="button"
-										variant="outline"
-										onClick={() => fileInputRef.current?.click()}
-										className="flex-1 min-w-0 h-10 rounded-lg border border-slate-200 bg-white px-3.5 flex items-center justify-start gap-2 text-left cursor-pointer hover:bg-slate-50 shadow-none font-normal"
-									>
-										<Upload className="h-4 w-4 text-slate-500 shrink-0" />
-										<span className="text-sm text-slate-900 truncate min-w-0 flex-1">
-											{uploadedFileName}
-										</span>
-									</Button>
-									<Button
-										type="button"
-										onClick={() => fileInputRef.current?.click()}
-										className="w-full sm:w-auto h-10 px-4 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm cursor-pointer shrink-0 shadow-none whitespace-nowrap"
-									>
-										<Translate text={localizationConstants.protocolUpload} />
-									</Button>
-								</div>
-							</div>
+						{/* Rows 7-8: Start tid & Slut tid */}
+						<MeetingDateTimeFields form={form} />
 
-							{/* Field 5: Notes / Description */}
-							<FormField
-								control={form.control}
-								name="notes"
-								render={({ field }) => (
-									<FormItem className="flex flex-col gap-1.5 space-y-0">
-										<FormLabel className="font-sans font-medium text-sm text-slate-900">
-											<Translate text={localizationConstants.protocolNotesLabel} />
-										</FormLabel>
-										<FormControl>
-											<Textarea
-												placeholder={t(localizationConstants.protocolNotesLabel)}
-												{...field}
-												rows={3}
-												className="w-full min-h-[80px] rounded-lg border border-slate-200 bg-white p-3 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-900 resize-y shadow-none"
-											/>
-										</FormControl>
-										<FormMessage className="text-xs font-medium text-red-500" />
-									</FormItem>
-								)}
-							/>
-						</div>
+						{/* Row 9: Notes textarea */}
+						<FormField
+							control={form.control}
+							name="notes"
+							render={({ field }) => (
+								<FormItem className="space-y-1">
+									<FormLabel className="text-xs font-semibold text-slate-900">
+										<Translate text={localizationConstants.protocolMeetingInfoLabel} />
+									</FormLabel>
+									<FormControl>
+										<Textarea
+											{...field}
+											placeholder={t(localizationConstants.protocolMeetingInfoPlaceholder)}
+											className="min-h-[85px] rounded-lg border-slate-200 bg-white text-slate-900 text-sm p-3 shadow-none focus-visible:ring-slate-900 resize-y"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-						{/* Modal Footer */}
-						<div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 pt-4 border-t border-slate-100">
+						{/* Footer Buttons */}
+						<div className="flex items-center justify-end gap-3 pt-4">
 							<Button
 								type="button"
 								variant="outline"
 								onClick={onClose}
-								className="w-full sm:w-[120px] h-10 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 font-medium text-sm cursor-pointer shadow-none"
+								className="h-10 px-6 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 text-sm font-normal cursor-pointer shadow-none"
 							>
-								<Translate text={localizationConstants.cancel} />
+								<Translate text={localizationConstants.closeButton} />
 							</Button>
 							<Button
 								type="submit"
-								className="w-full sm:w-[120px] h-10 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm cursor-pointer flex items-center justify-center gap-2 shadow-none"
+								disabled={isSubmitting}
+								className="h-10 px-8 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium cursor-pointer shadow-none flex items-center gap-2"
 							>
-								<Save className="h-4 w-4" />
-								<span><Translate text={localizationConstants.saveButton} /></span>
+								{isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+								<span>
+									<Translate text={localizationConstants.protocolNextButton} />
+								</span>
 							</Button>
 						</div>
 					</form>
@@ -350,4 +242,3 @@ export function CreateProtocolModal({
 }
 
 export default CreateProtocolModal;
-

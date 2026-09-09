@@ -33,7 +33,7 @@ const tabsListVariants = cva(
     variants: {
       variant: {
         default: "bg-muted h-9",
-        line: "h-[36px] justify-start gap-1 sm:gap-2 overflow-x-auto rounded-none bg-transparent p-0 -mb-px no-scrollbar",
+        line: "w-full justify-start items-center gap-1 sm:gap-2 h-[36px] overflow-x-auto rounded-none bg-transparent p-0 border-b border-slate-200 no-scrollbar scrollbar-none",
       },
     },
     defaultVariants: {
@@ -61,14 +61,14 @@ function TabsList({
 }
 
 const tabsTriggerVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none",
+  "inline-flex items-center justify-center whitespace-nowrap transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 cursor-pointer select-none",
   {
     variants: {
       variant: {
         default:
           "gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium text-foreground/60 hover:text-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-xs",
         line:
-          "relative h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-medium leading-none tracking-normal text-center text-slate-500 hover:text-slate-900 data-[state=active]:font-bold data-[state=active]:text-slate-950 rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[3px] after:bg-slate-950 after:opacity-0 data-[state=active]:after:opacity-100 after:transition-opacity after:z-10",
+          "relative inline-flex items-center justify-center h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-semibold leading-none tracking-normal text-center whitespace-nowrap text-slate-600 hover:text-slate-900 data-[state=active]:font-bold data-[state=active]:text-slate-950 rounded-none bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none transition-colors data-[state=active]:after:content-[''] data-[state=active]:after:absolute data-[state=active]:after:bottom-0 data-[state=active]:after:left-0 data-[state=active]:after:right-0 data-[state=active]:after:h-[3px] data-[state=active]:after:bg-slate-950 data-[state=active]:after:z-10",
       },
     },
     defaultVariants: {
@@ -80,6 +80,7 @@ const tabsTriggerVariants = cva(
 function TabsTrigger({
   className,
   variant,
+  children,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Trigger> &
   VariantProps<typeof tabsTriggerVariants>) {
@@ -89,9 +90,14 @@ function TabsTrigger({
   return (
     <TabsPrimitive.Trigger
       data-slot="tabs-trigger"
-      className={cn(tabsTriggerVariants({ variant: resolvedVariant }), className)}
+      className={cn(
+        tabsTriggerVariants({ variant: resolvedVariant }),
+        className
+      )}
       {...props}
-    />
+    >
+      {children}
+    </TabsPrimitive.Trigger>
   )
 }
 

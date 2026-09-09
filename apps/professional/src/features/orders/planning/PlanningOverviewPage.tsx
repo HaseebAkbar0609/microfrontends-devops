@@ -26,29 +26,27 @@ export function PlanningOverviewPage() {
 			<PageHeader
 				title={localizationConstants.breadcrumbPlanning}
 				breadcrumbs={orderBreadcrumbs(localizationConstants.breadcrumbPlanning)}
-				className="border-b-0 px-6 pt-5 pb-2"
+				className="border-b-0 px-6 pt-6 sm:pt-7 pb-2"
 			/>
 
 			<div className="px-6 pt-2 pb-6 flex flex-col gap-3">
 				{/* Tab Bar Navigation with Accessible ARIA semantics & responsive horizontal scroll */}
-				<div className="border-b border-slate-200 h-[36px] -mb-[1px]">
-					<Tabs
-						value={activeTab}
-						onValueChange={(val) => setActiveTab(val as PlanningTab)}
-					>
-						<TabsList variant="line" className="h-[36px]">
-							{tabs.map((tab) => (
-								<TabsTrigger
-									key={tab.id}
-									value={tab.id}
-									className="cursor-pointer"
-								>
-									<Translate text={tab.labelKey} />
-								</TabsTrigger>
-							))}
-						</TabsList>
-					</Tabs>
-				</div>
+				<Tabs
+					value={activeTab}
+					onValueChange={(val) => setActiveTab(val as PlanningTab)}
+				>
+					<TabsList variant="line">
+						{tabs.map((tab) => (
+							<TabsTrigger
+								key={tab.id}
+								value={tab.id}
+								className="cursor-pointer"
+							>
+								<Translate text={tab.labelKey} />
+							</TabsTrigger>
+						))}
+					</TabsList>
+				</Tabs>
 
 				{/* Tab Content Container */}
 				<div
