@@ -1,6 +1,6 @@
 "use client";
 
-import { Minus, Plus } from "lucide-react";
+import { Check, Minus, Plus } from "lucide-react";
 
 import type { SubscriptionPlan } from "../types";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { formatPrice } from "../utils";
@@ -41,62 +41,74 @@ export function PlanCard({
 	const planName = plan.plan_key.replace(/-/g, " ").toUpperCase();
 
 	return (
-		<Card className="flex min-h-[540px] w-full flex-col border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
-			<CardHeader className="pb-2">
-				<CardTitle className="text-xl text-gray-500 text-center font-bold">
+		<Card
+			className={cn(
+				"group h-full w-full gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white pb-0 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg",
+				showQuantitySelector ? "min-h-[430px]" : "min-h-[330px]",
+			)}
+		>
+			<CardHeader className="border-b border-slate-100 bg-slate-50/70 px-6 py-6 text-center">
+				<CardTitle className="text-xl font-bold tracking-tight text-slate-800">
 					{planName}
 				</CardTitle>
 				{showQuantitySelector && (
-					<p className="text-center text-xs font-semibold uppercase tracking-wide text-slate-400">
+					<p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
 						<Translate text={localizationConstants.managePlansLicense} />
 					</p>
 				)}
 			</CardHeader>
-			<CardContent className="flex-1 space-y-4">
-				<ul className="space-y-2 list-disc list-outside pl-5">
+			<CardContent className="flex flex-1 flex-col px-6 py-6">
+				<ul className="space-y-3">
 					{PLAN_FEATURES[
 						plan.plan_key as keyof typeof PLAN_FEATURES
 					].map((feature, i) => (
-						<li key={i} className="text-sm text-gray-700">
-							{feature}
+						<li
+							key={i}
+							className="flex items-start gap-3 text-sm leading-5 text-slate-600"
+						>
+							<span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-600">
+								<Check className="h-3.5 w-3.5" aria-hidden />
+							</span>
+							<span>{feature}</span>
 						</li>
 					))}
 				</ul>
 				{showQuantitySelector && (
-					<div className="flex items-center gap-2 pt-2 justify-center">
+					<div className="mt-6 flex justify-center">
+						<div className="grid grid-cols-[2.5rem_4rem_2.5rem] items-center overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xs">
 						<Button
 							type="button"
-							variant="outline"
+							variant="ghost"
 							size="icon"
-							className="h-10 w-10 shrink-0"
+							className="h-10 w-10 rounded-none border-r border-slate-200"
 							onClick={() => onQuantityChange?.(-1)}
 							disabled={quantity <= 1}
 							aria-label="Decrease quantity"
 						>
 							<Minus className="h-4 w-4" />
 						</Button>
-						<Input
-							type="number"
-							min={1}
-							value={quantity}
-							readOnly
-							className="w-14 h-10 !text-center !justify-center"
-						/>
+						<output
+							className="flex h-10 min-w-0 items-center justify-center px-2 text-center text-sm font-semibold tabular-nums text-slate-800"
+							aria-live="polite"
+						>
+							{quantity}
+						</output>
 						<Button
 							type="button"
-							variant="outline"
+							variant="ghost"
 							size="icon"
-							className="h-10 w-10 shrink-0"
+							className="h-10 w-10 rounded-none border-l border-slate-200"
 							onClick={() => onQuantityChange?.(1)}
 							aria-label="Increase quantity"
 						>
 							<Plus className="h-4 w-4" />
 						</Button>
+						</div>
 					</div>
 				)}
 			</CardContent>
-			<CardFooter className="pt-4 flex-col items-start gap-6">
-				<div className="pt-2 space-y-1 text-sm">
+			<CardFooter className="mt-auto flex-col items-stretch gap-4 border-t border-slate-100 bg-slate-50/40 px-6 py-5">
+				<div className="space-y-1.5 text-sm text-slate-600">
 					<p>
 						<Translate
 							text={localizationConstants.managePlansPrice}
@@ -104,7 +116,7 @@ export function PlanCard({
 						: {formatPrice(currentPrice)}
 					</p>
 					{showQuantitySelector && (
-						<p className="font-medium text-foreground">
+						<p className="font-semibold text-slate-900">
 							<Translate
 								text={localizationConstants.managePlansTotal}
 							/>
@@ -114,7 +126,7 @@ export function PlanCard({
 				</div>
 				<Button
 					variant="primary"
-					className="w-full"
+					className="h-11 w-full rounded-lg font-semibold shadow-sm"
 					onClick={onChoosePlan}
 					disabled={isLoading}
 				>

@@ -17,14 +17,14 @@ export function PaymentOptionSelector({
   onValueChange,
 }: PaymentOptionSelectorProps) {
   return (
-    <div className="space-y-3">
-      <h2 className="text-xl font-semibold text-gray-500 !mb-1">
+    <div className="space-y-2">
+      <h2 className="text-lg font-semibold text-slate-700 sm:text-xl">
         <Translate text={localizationConstants.managePlansSelectPaymentOption} />
       </h2>
       <RadioGroup
         value={value}
         onValueChange={(v) => onValueChange(v as PaymentOption)}
-        className="flex flex-row gap-6 !mb-1"
+        className="flex flex-wrap gap-x-6 gap-y-2"
       >
         {PAYMENT_OPTIONS.map((opt) => (
           <div key={opt.value} className="flex items-center gap-2">
@@ -38,7 +38,7 @@ export function PaymentOptionSelector({
           </div>
         ))}
       </RadioGroup>
-      <p className="text-sm text-gray-700">
+      <p className="max-w-2xl text-sm leading-5 text-slate-600">
         <Translate text={localizationConstants.managePlansPaymentDiscountText} />
       </p>
     </div>
