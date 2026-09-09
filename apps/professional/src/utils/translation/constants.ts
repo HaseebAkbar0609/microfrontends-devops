@@ -7029,6 +7029,103 @@ export type PersonnelOverviewTranslation = {
 	actionsMenuLabel: string;
 };
 
+export type CreateEmployeeTranslation = {
+	createEmployeeTitle: string;
+	createEmployeeSubtitle: string;
+	stepIndicatorLabel: string;
+	tabInformation: string;
+	tabContactPerson: string;
+	tabEmploymentTerms: string;
+	tabCompetence: string;
+	tabDocuments: string;
+	sectionPersonalDetails: string;
+	fieldFirstName: string;
+	fieldLastName: string;
+	fieldPersonalId: string;
+	fieldWorkEmail: string;
+	fieldMobile: string;
+	fieldPrivateEmail: string;
+	fieldAddress: string;
+	fieldCity: string;
+	fieldPostalCode: string;
+	sectionBankInfo: string;
+	fieldBank: string;
+	fieldClearingNo: string;
+	fieldAccountNo: string;
+	fieldSwishNo: string;
+	fieldIban: string;
+	fieldBic: string;
+	sectionTaxUnion: string;
+	fieldTaxTable: string;
+	fieldCollectiveAgreement: string;
+	fieldUnionAffiliation: string;
+	sectionWorkDuties: string;
+	fieldRole: string;
+	fieldCategory: string;
+	fieldStartDate: string;
+	fieldDepartment: string;
+	addContactPersonBtn: string;
+	sectionContactPerson: string;
+	fieldRelation: string;
+	fieldComment: string;
+	contactInfoWhyTitle: string;
+	contactInfoWhyText: string;
+	sectionWorkInfo: string;
+	fieldWorkingHours: string;
+	fieldEmploymentForm: string;
+	fieldAnnualVacation: string;
+	unitPerWeek: string;
+	unitPerYear: string;
+	unitPerMonth: string;
+	sectionSalaryCompensation: string;
+	fieldPaymentDay: string;
+	fieldHourlyRate: string;
+	fieldGrossSalary: string;
+	fieldOvertimeCompensation: string;
+	fieldTravelCompensation: string;
+	radioYes: string;
+	radioNo: string;
+	sectionWorkHours: string;
+	fieldStartWorkDay: string;
+	fieldEndWorkDay: string;
+	fieldStartFlexTime: string;
+	fieldEndFlexTime: string;
+	sectionHealthSupport: string;
+	fieldWorkEnvProvider: string;
+	fieldCoverageStartDate: string;
+	fieldMedicalCheckRequired: string;
+	fieldWellnessAllowance: string;
+	fieldAmount: string;
+	addCompetenceBtn: string;
+	sectionPersonalDocs: string;
+	uploadFilesLabel: string;
+	uploadFilesSubtitle: string;
+	uploadBtn: string;
+	tableSpecification: string;
+	colDate: string;
+	colDocName: string;
+	colValidity: string;
+	colFile: string;
+	fieldHandbook: string;
+	fieldPolicy: string;
+	fieldJobDescription: string;
+	btnViewFile: string;
+	btnCancel: string;
+	btnSave: string;
+	btnNext: string;
+	btnPrevious: string;
+	toastEmployeeCreated: string;
+	cancelDialogTitle: string;
+	cancelDialogDesc: string;
+	cancelDialogConfirm: string;
+	cancelDialogKeepEditing: string;
+	validationErrorRequired: string;
+	validationErrorRequiredField: string;
+	validationErrorEmailInvalid: string;
+	validationErrorPersonalIdInvalid: string;
+	fieldCommentPlaceholder: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7054,7 +7151,8 @@ export type Translation = HeaderTranslation &
 	EconomyDashboardTranslation &
 	PersonnelDashboardTranslation &
 	OrderProtocolTranslation &
-	PersonnelOverviewTranslation;
+	PersonnelOverviewTranslation &
+	CreateEmployeeTranslation;
 
 export type TranslationKeys = keyof Translation;
 

@@ -1,4 +1,6 @@
-import { useState, useMemo, useCallback, useDeferredValue } from "react";
+"use client";
+
+import { useState, useMemo, useCallback, useDeferredValue, useEffect } from "react";
 import { toast } from "sonner";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
@@ -9,12 +11,22 @@ import {
 	SortField,
 	SortOrder,
 } from "../types/personnelOverview.types";
-import { MOCK_PERSONNEL_OVERVIEW } from "../mock/personnelOverview.mock";
+import { personnelRepository } from "../utils/personnelRepository";
 import { DEFAULT_PAGE_SIZE } from "../constants/personnelOverview.constants";
 
 export function usePersonnelOverview() {
 	const { t, i18n } = useTranslation();
-	const [employees, setEmployees] = useState<EmployeeOverviewItem[]>(MOCK_PERSONNEL_OVERVIEW);
+	const [employees, setEmployees] = useState<EmployeeOverviewItem[]>(() =>
+		personnelRepository.getAllEmployees()
+	);
+
+	useEffect(() => {
+		setEmployees(personnelRepository.getAllEmployees());
+		const unsubscribe = personnelRepository.subscribe((items) => {
+			setEmployees(items);
+		});
+		return unsubscribe;
+	}, []);
 	const [searchTerm, setSearchTerm] = useState("");
 	const deferredSearchTerm = useDeferredValue(searchTerm);
 	const [statusFilter, setStatusFilter] = useState<EmployeeStatus | "all">("all");
@@ -89,11 +101,7 @@ export function usePersonnelOverview() {
 
 	const handleConfirmDeactivate = useCallback(() => {
 		if (!employeeToDeactivate) return;
-		setEmployees((prev) =>
-			prev.map((emp) =>
-				emp.id === employeeToDeactivate.id ? { ...emp, status: "not_started" } : emp
-			)
-		);
+		personnelRepository.updateEmployeeStatus(employeeToDeactivate.id, "not_started");
 		toast.success(t(localizationConstants.toastEmployeeDeactivated));
 		setEmployeeToDeactivate(null);
 	}, [employeeToDeactivate, t]);

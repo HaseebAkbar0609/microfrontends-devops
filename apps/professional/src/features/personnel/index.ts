@@ -11,3 +11,7 @@ export * from "./types/personnelOverview.types";
 export * from "./constants/personnelOverview.constants";
 export * from "./mock/personnelOverview.mock";
 export * from "./hooks/usePersonnelOverview";
+export * from "./types/createEmployee.types";
+export * from "./constants/createEmployee.constants";
+export * from "./hooks/useCreateEmployee";
+export * from "./components/create/CreateEmployeePage";

@@ -27,7 +27,6 @@ import {
 } from "../../constants/personnelOverview.constants";
 import { EmployeeStatus, EmploymentType } from "../../types/personnelOverview.types";
 import {
-	PERSONNEL_NAV_ITEMS,
 	PERSONNEL_MODULE_BASE_URL,
 } from "../../constants/personnelNav.config";
 
@@ -217,7 +216,7 @@ export function PersonnelOverviewToolbar({
 				asChild
 				className="h-8 px-3.5 text-xs font-medium bg-slate-900 hover:bg-slate-800 text-white rounded-md cursor-pointer gap-1.5 shadow-xs"
 			>
-				<Link href={PERSONNEL_NAV_ITEMS[2]?.href ?? `${PERSONNEL_MODULE_BASE_URL}/create`}>
+				<Link href={`${PERSONNEL_MODULE_BASE_URL}/create`}>
 					<Plus className="w-3.5 h-3.5" />
 					<Translate text={localizationConstants.newEmployeeButton} />
 				</Link>
