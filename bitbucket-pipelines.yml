@@ -20,7 +20,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build -t timeflow-customer -f ./apps/customer/Dockerfile .
+            - docker build --build-arg NEXT_PUBLIC_API_URL=$DEV_API_URL -t timeflow-customer -f ./apps/customer/Dockerfile .
             - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:latest
             - echo "✅ Customer pushed"
@@ -36,7 +36,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build -t timeflow-professional -f ./apps/professional/Dockerfile .
+            - docker build --build-arg NEXT_PUBLIC_API_URL=$DEV_API_URL -t timeflow-professional -f ./apps/professional/Dockerfile .
             - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:latest
             - echo "✅ Professional pushed"
@@ -52,7 +52,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build -t timeflow-team -f ./apps/team/Dockerfile .
+            - docker build --build-arg NEXT_PUBLIC_API_URL=$DEV_API_URL -t timeflow-team -f ./apps/team/Dockerfile .
             - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:latest
             - echo "✅ Team pushed"
@@ -97,7 +97,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build -t timeflow-customer -f ./apps/customer/Dockerfile .
+            - docker build --build-arg NEXT_PUBLIC_API_URL=$PROD_API_URL -t timeflow-customer -f ./apps/customer/Dockerfile .
             - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:prod-latest
             - docker tag timeflow-customer:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:$BITBUCKET_COMMIT
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-customer:prod-latest
@@ -115,7 +115,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build -t timeflow-professional -f ./apps/professional/Dockerfile .
+            - docker build --build-arg NEXT_PUBLIC_API_URL=$PROD_API_URL -t timeflow-professional -f ./apps/professional/Dockerfile .
             - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:prod-latest
             - docker tag timeflow-professional:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:$BITBUCKET_COMMIT
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-professional:prod-latest
@@ -133,7 +133,7 @@ pipelines:
             - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             - aws configure set region eu-north-1
             - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 615299758615.dkr.ecr.eu-north-1.amazonaws.com
-            - docker build --build-arg NEXT_PUBLIC_API_URL=https://api.timeflowsystem.com/ -t timeflow-team -f ./apps/team/Dockerfile .
+            - docker build --build-arg NEXT_PUBLIC_API_URL=$PROD_API_URL -t timeflow-team -f ./apps/team/Dockerfile .
             - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:prod-latest
             - docker tag timeflow-team:latest 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:$BITBUCKET_COMMIT
             - docker push 615299758615.dkr.ecr.eu-north-1.amazonaws.com/timeflow-team:prod-latest
