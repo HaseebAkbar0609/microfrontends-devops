@@ -99,7 +99,7 @@ function MeetingAccordionCard({
 				type="button"
 				variant="ghost"
 				onClick={() => setIsOpen((prev) => !prev)}
-				className="flex h-[56px] min-h-[56px] w-full cursor-pointer items-center justify-between px-5 py-0 text-left transition-colors hover:bg-slate-50 font-normal rounded-none shadow-none focus:outline-none"
+				className="flex h-[56px] min-h-[56px] w-full cursor-pointer items-center justify-between px-6 sm:px-8 py-0 text-left transition-colors hover:bg-slate-50 font-normal rounded-none shadow-none focus:outline-none"
 				aria-expanded={isOpen}
 			>
 				<div className="flex items-center gap-3">
@@ -551,14 +551,14 @@ export function ProtocolDetailView({
 							{/* Mötesinformation Accordion */}
 							<MeetingAccordionCard
 								titleKey={localizationConstants.protocolMeetingInfo}
-								icon={<Info className="h-5 w-5 shrink-0 text-slate-900" />}
+								icon={<Info className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
 								info={detailData?.meetingInfo}
 							/>
 
 							{/* Nästa möte Accordion */}
 							<MeetingAccordionCard
 								titleKey={localizationConstants.protocolNextMeeting}
-								icon={<Video className="h-5 w-5 shrink-0 text-slate-900" />}
+								icon={<Video className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
 								info={detailData?.nextMeeting}
 							/>
 

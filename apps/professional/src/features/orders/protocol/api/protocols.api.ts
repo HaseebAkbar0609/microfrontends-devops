@@ -190,6 +190,79 @@ export const protocolsApi = {
 		};
 	},
 
+	async updateProtocolFull(
+		id: string,
+		payload: import("../types/protocol.types").UpdateProtocolFullPayload,
+		orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID
+	): Promise<ProtocolDetailData> {
+		try {
+			const res = await axiosInstance.put<ProtocolDetailData>(
+				API_PATH.ORDERS.PROTOCOL_DETAIL(orderId, id),
+				payload
+			);
+			if (res && res.data && res.data.protocol) return res.data;
+		} catch (err) {
+			if (isDev) {
+				console.info("[protocolsApi.updateProtocolFull] Simulating full update in dev mode.");
+			} else {
+				throw err;
+			}
+		}
+
+		const existing = await this.getProtocolFullDetail(id, orderId);
+		const updatedProtocol: ProtocolItem = {
+			...existing.protocol,
+			date: payload.startDate || existing.protocol.date,
+			startTime: payload.startTime || existing.protocol.startTime,
+			endTime: payload.endTime || existing.protocol.endTime,
+			responsible: payload.host || existing.protocol.responsible,
+			participants: payload.participants || existing.protocol.participants,
+			protocolName: payload.rubrik || existing.protocol.protocolName,
+			category: payload.category || existing.protocol.category,
+			location: payload.location || existing.protocol.location,
+			address: payload.address || existing.protocol.address,
+			postalCode: payload.postalCode || existing.protocol.postalCode,
+			city: payload.city || existing.protocol.city,
+			notes: payload.information || existing.protocol.notes,
+			lastUpdated: new Date().toISOString().slice(0, 16).replace("T", " "),
+		};
+
+		const updatedMeetingInfo: import("../types/protocol.types").ProtocolMeetingInfo = {
+			...existing.meetingInfo,
+			host: payload.host || existing.meetingInfo.host,
+			startDate: payload.startDate || existing.meetingInfo.startDate,
+			startTime: payload.startTime || existing.meetingInfo.startTime,
+			endDate: payload.endDate || existing.meetingInfo.endDate,
+			endTime: payload.endTime || existing.meetingInfo.endTime,
+			topic: payload.topic || existing.meetingInfo.topic,
+			protocolNumber: payload.protocolNumber || existing.meetingInfo.protocolNumber,
+			participants: payload.participants || existing.meetingInfo.participants,
+			rubrik: payload.rubrik || existing.meetingInfo.rubrik,
+			category: payload.category || existing.meetingInfo.category,
+			location: payload.location || existing.meetingInfo.location,
+			address: payload.address || existing.meetingInfo.address,
+			postalCode: payload.postalCode || existing.meetingInfo.postalCode,
+			city: payload.city || existing.meetingInfo.city,
+			information: payload.information || existing.meetingInfo.information,
+			comment: payload.comment || existing.meetingInfo.comment,
+		};
+
+		const targetProtoIndex = MOCK_PROTOCOLS.findIndex((p) => p.id === id);
+		if (targetProtoIndex !== -1) {
+			MOCK_PROTOCOLS[targetProtoIndex] = {
+				...MOCK_PROTOCOLS[targetProtoIndex],
+				...updatedProtocol,
+			};
+		}
+
+		return {
+			protocol: updatedProtocol,
+			meetingInfo: updatedMeetingInfo,
+			nextMeeting: payload.nextMeeting || existing.nextMeeting,
+			points: existing.points,
+		};
+	},
+
 	async deleteProtocol(
 		id: string,
 		orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID
