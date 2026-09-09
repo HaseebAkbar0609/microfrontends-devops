@@ -4,78 +4,58 @@ import React, { useState } from "react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PageHeader } from "@/components/layout/PageHeader";
-import {
-	EXPENSE_TOP_TAB_ACTIVE_CLASS,
-	EXPENSE_TOP_TAB_INACTIVE_CLASS,
-} from "../../constants/expense.constants";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { economyBreadcrumbs } from "../../constants/economyNav.config";
 import { SupplierInvoiceView } from "./SupplierInvoiceView";
+
 import { CustomerInvoiceView } from "./CustomerInvoiceView";
 
 export function ExpenseListPage() {
 	// Top Category Tab: "customer_invoice" (Kundfaktura) | "supplier_invoice" (Leverantörsfaktura)
 	const [topCategoryTab, setTopCategoryTab] = useState<"customer_invoice" | "supplier_invoice">("supplier_invoice");
 
-	const dynamicBreadcrumbs = React.useMemo(() => [
-		{ label: localizationConstants.home, href: "/" },
-		{ label: localizationConstants.module, href: "/module" },
-		{ label: localizationConstants.economy, href: "/module/financial-management/economy" },
-		{ label: localizationConstants.expenseOverviewTitle, href: "/module/financial-management/economy" },
-		{
-			label: topCategoryTab === "customer_invoice"
-				? localizationConstants.expenseTopTabCustomerInvoice
-				: localizationConstants.expenseTopTabSupplierInvoice,
-			href: "/module/financial-management/economy",
-		},
-	], [topCategoryTab]);
+	const breadcrumbSection = topCategoryTab === "customer_invoice"
+		? localizationConstants.expenseTopTabCustomerInvoice
+		: localizationConstants.expenseTopTabSupplierInvoice;
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
 			{/* Page Header with Breadcrumbs */}
 			<PageHeader
 				title={localizationConstants.expenseOverviewTitle}
-				breadcrumbs={dynamicBreadcrumbs}
-				className="border-b-0 px-8 pt-5 pb-2"
+				breadcrumbs={economyBreadcrumbs(breadcrumbSection)}
+				className="border-b-0 px-6 pt-5 pb-2"
 			/>
 
-			{/* Top Level Category Tabs: Kundfaktura / Leverantörsfaktura (Standard #1 & #3) */}
-			<div className="px-8 border-b border-slate-200 bg-white">
-				<div className="flex items-center gap-6">
-					<button
-						type="button"
-						onClick={() => setTopCategoryTab("customer_invoice")}
-						className={
-							topCategoryTab === "customer_invoice"
-								? EXPENSE_TOP_TAB_ACTIVE_CLASS
-								: EXPENSE_TOP_TAB_INACTIVE_CLASS
-						}
-					>
-						<Translate text={localizationConstants.expenseTopTabCustomerInvoice} />
-					</button>
+			{/* Main Content Area with 2-Level Line Tabs */}
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto">
+				<Tabs
+					value={topCategoryTab}
+					onValueChange={(val) => setTopCategoryTab(val as "customer_invoice" | "supplier_invoice")}
+					className="flex-1"
+				>
+					<div className="flex items-center border-b border-slate-200 mb-5 bg-white px-4 rounded-t-lg h-[44px]">
+						<TabsList variant="line" className="h-[36px]">
+							<TabsTrigger value="supplier_invoice" className="cursor-pointer">
+								<Translate text={localizationConstants.expenseTopTabSupplierInvoice} />
+							</TabsTrigger>
+							<TabsTrigger value="customer_invoice" className="cursor-pointer">
+								<Translate text={localizationConstants.expenseTopTabCustomerInvoice} />
+							</TabsTrigger>
+						</TabsList>
+					</div>
 
-					<button
-						type="button"
-						onClick={() => setTopCategoryTab("supplier_invoice")}
-						className={
-							topCategoryTab === "supplier_invoice"
-								? EXPENSE_TOP_TAB_ACTIVE_CLASS
-								: EXPENSE_TOP_TAB_INACTIVE_CLASS
-						}
-					>
-						<Translate text={localizationConstants.expenseTopTabSupplierInvoice} />
-					</button>
-				</div>
-			</div>
-
-			{/* Main Content Area */}
-			<div className="px-8 py-5 flex-1 max-w-7xl mx-auto w-full">
-				{topCategoryTab === "supplier_invoice" ? (
-					<SupplierInvoiceView />
-				) : (
-					<CustomerInvoiceView />
-				)}
+					<TabsContent value="supplier_invoice" className="mt-0">
+						<SupplierInvoiceView />
+					</TabsContent>
+					<TabsContent value="customer_invoice" className="mt-0">
+						<CustomerInvoiceView />
+					</TabsContent>
+				</Tabs>
 			</div>
 		</div>
 	);
 }
+
 
 export default ExpenseListPage;

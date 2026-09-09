@@ -23,6 +23,7 @@ import {
 	DialogDescription,
 	DialogFooter,
 } from "@/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 import { useInvoiceDetail } from "../../hooks/useInvoiceDetail";
 import { InvoiceDetailOverviewTab } from "./InvoiceDetailOverviewTab";
 import { InvoiceDetailTimeReportTab } from "./InvoiceDetailTimeReportTab";
@@ -35,6 +36,7 @@ interface InvoiceDetailPageProps {
 }
 
 export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
+	const { t } = useTranslation();
 	const {
 		activeTab,
 		setActiveTab,
@@ -118,12 +120,13 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 							<Button
 								variant="ghost"
 								size="icon"
-								aria-label="Back"
+								aria-label={t(localizationConstants.expenseDetailBack)}
 								className="h-8 w-8 text-slate-700 hover:text-slate-900 cursor-pointer -ml-2"
 							>
 								<ArrowLeft className="h-4 w-4" />
 							</Button>
 						</Link>
+
 						<div>
 							<h1 className="text-lg font-bold text-slate-900 leading-tight flex items-center gap-2">
 								<Translate text={localizationConstants.invoiceDetailTitle} />

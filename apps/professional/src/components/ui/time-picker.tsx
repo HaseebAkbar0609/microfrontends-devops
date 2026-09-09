@@ -3,9 +3,18 @@
 import { useState, useRef, useEffect } from "react";
 import { Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
+const HOURS_24 = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const HOURS_12 = ["12", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11"];
-const MINUTES = ["00", "15", "30", "45"];
+const MINUTES = ["00", "05", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55"];
 
 function to12Hour(time24: string): { hour: string; minute: string; period: "AM" | "PM" } {
 	if (!time24) return { hour: "", minute: "", period: "AM" };
@@ -24,8 +33,9 @@ function to24Hour(hour12: string, minute: string, period: "AM" | "PM"): string {
 	return `${String(h).padStart(2, "0")}:${minute}`;
 }
 
-function formatDisplay(time24: string): string {
+function formatDisplay(time24: string, format24 = false): string {
 	if (!time24) return "";
+	if (format24) return time24;
 	const { hour, minute, period } = to12Hour(time24);
 	return `${hour}:${minute} ${period}`;
 }
@@ -37,6 +47,7 @@ interface TimePickerProps {
 	disabled?: boolean;
 	className?: string;
 	id?: string;
+	format24?: boolean;
 }
 
 export function TimePicker({
@@ -46,9 +57,11 @@ export function TimePicker({
 	disabled = false,
 	className,
 	id,
+	format24 = true,
 }: TimePickerProps) {
 	const [open, setOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
+	const [hVal, mVal] = (value || "").split(":");
 	const { hour, minute, period } = to12Hour(value);
 
 	useEffect(() => {
@@ -63,6 +76,14 @@ export function TimePicker({
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, [open]);
 
+	const handleHourChange24 = (h: string) => {
+		onChange?.(`${h}:${mVal || "00"}`);
+	};
+
+	const handleMinuteChange24 = (m: string) => {
+		onChange?.(`${hVal || "12"}:${m}`);
+	};
+
 	const handleHourChange = (h: string) => {
 		onChange?.(to24Hour(h, minute || "00", period));
 	};
@@ -76,63 +97,94 @@ export function TimePicker({
 	};
 
 	return (
-		<div ref={ref} className="relative">
-			<button
+		<div ref={ref} className="relative w-full">
+			<Button
 				id={id}
 				type="button"
+				variant="outline"
 				disabled={disabled}
 				onClick={() => setOpen((prev) => !prev)}
 				className={cn(
-					"w-full flex items-center justify-start text-left font-normal h-10 px-3 border border-slate-200 bg-white text-sm rounded-md shadow-none hover:bg-slate-50 focus-visible:ring-1 focus-visible:ring-slate-900 cursor-pointer transition-colors",
-					!value ? "text-muted-foreground" : "text-slate-800",
-					disabled && "opacity-50 cursor-not-allowed",
+					"w-full flex items-center justify-start text-left font-normal h-10 px-3 bg-white text-sm shadow-none hover:bg-slate-50",
+					!value ? "text-muted-foreground" : "text-slate-900",
 					className,
 				)}
 			>
 				<Clock className="mr-2 h-4 w-4 text-zinc-500 stroke-[1.33] shrink-0" />
 				<span className="truncate">
-					{value ? formatDisplay(value) : placeholder}
+					{value ? formatDisplay(value, format24) : placeholder}
 				</span>
-			</button>
+			</Button>
 
 			{open && (
 				<div className="absolute top-full left-0 mt-1 p-3 bg-white border border-slate-200 rounded-lg shadow-xl z-[10000]">
-					<div className="flex items-center gap-2">
-						<select
-							value={hour}
-							onChange={(e) => handleHourChange(e.target.value)}
-							className="w-16 h-9 text-sm border border-slate-200 rounded-md bg-white text-slate-800 px-2 cursor-pointer focus:outline-none focus:ring-1 focus:ring-slate-900"
-						>
-							<option value="">--</option>
-							{HOURS_12.map((h) => (
-								<option key={h} value={h}>{h}</option>
-							))}
-						</select>
+					{format24 ? (
+						<div className="flex items-center gap-2">
+							<Select value={hVal || "12"} onValueChange={handleHourChange24}>
+								<SelectTrigger className="w-16 h-9 text-sm bg-white text-slate-900 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent className="min-w-[4rem]">
+									{HOURS_24.map((h) => (
+										<SelectItem key={h} value={h}>{h}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 
-						<span className="text-slate-400 font-medium text-sm">:</span>
+							<span className="text-slate-400 font-medium text-sm">:</span>
 
-						<select
-							value={minute}
-							onChange={(e) => handleMinuteChange(e.target.value)}
-							className="w-16 h-9 text-sm border border-slate-200 rounded-md bg-white text-slate-800 px-2 cursor-pointer focus:outline-none focus:ring-1 focus:ring-slate-900"
-						>
-							<option value="">--</option>
-							{MINUTES.map((m) => (
-								<option key={m} value={m}>{m}</option>
-							))}
-						</select>
+							<Select value={mVal || "00"} onValueChange={handleMinuteChange24}>
+								<SelectTrigger className="w-16 h-9 text-sm bg-white text-slate-900 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent className="min-w-[4rem]">
+									{MINUTES.map((m) => (
+										<SelectItem key={m} value={m}>{m}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						</div>
+					) : (
+						<div className="flex items-center gap-2">
+							<Select value={hour} onValueChange={handleHourChange}>
+								<SelectTrigger className="w-16 h-9 text-sm bg-white text-slate-800 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
+									<SelectValue placeholder="--" />
+								</SelectTrigger>
+								<SelectContent className="min-w-[4rem]">
+									{HOURS_12.map((h) => (
+										<SelectItem key={h} value={h}>{h}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 
-						<select
-							value={period}
-							onChange={(e) => handlePeriodChange(e.target.value as "AM" | "PM")}
-							className="w-18 h-9 text-sm border border-slate-200 rounded-md bg-white text-slate-800 px-2 cursor-pointer focus:outline-none focus:ring-1 focus:ring-slate-900"
-						>
-							<option value="AM">AM</option>
-							<option value="PM">PM</option>
-						</select>
-					</div>
+							<span className="text-slate-400 font-medium text-sm">:</span>
+
+							<Select value={minute} onValueChange={handleMinuteChange}>
+								<SelectTrigger className="w-16 h-9 text-sm bg-white text-slate-800 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
+									<SelectValue placeholder="--" />
+								</SelectTrigger>
+								<SelectContent className="min-w-[4rem]">
+									{MINUTES.map((m) => (
+										<SelectItem key={m} value={m}>{m}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+
+							<Select value={period} onValueChange={(val) => handlePeriodChange(val as "AM" | "PM")}>
+								<SelectTrigger className="w-18 h-9 text-sm bg-white text-slate-800 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
+									<SelectValue />
+								</SelectTrigger>
+								<SelectContent className="min-w-[4.5rem]">
+									<SelectItem value="AM">AM</SelectItem>
+									<SelectItem value="PM">PM</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+					)}
 				</div>
 			)}
 		</div>
 	);
 }
+
+export default TimePicker;

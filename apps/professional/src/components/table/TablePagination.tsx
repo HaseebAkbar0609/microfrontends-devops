@@ -38,7 +38,7 @@ export function TablePagination({
   return (
     <div
       className={cn(
-        "flex items-center justify-between sm:justify-end gap-4 py-4",
+        "flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-3 sm:gap-4 py-4 w-full",
         className,
       )}
     >

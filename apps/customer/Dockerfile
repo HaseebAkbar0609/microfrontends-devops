@@ -9,6 +9,13 @@ COPY apps/customer/package.json ./package.json
 RUN pnpm install --prefer-offline
 COPY apps/customer/. .
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# NEXT_PUBLIC_* vars are inlined into the client bundle at build time, not
+# read at container runtime — must be passed as a --build-arg. Without this,
+# the app silently falls back to same-origin API calls.
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
 RUN pnpm build
 
 # Stage 2: Runner

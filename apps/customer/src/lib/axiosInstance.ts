@@ -16,6 +16,7 @@ const AUTH_PATHS_NO_REFRESH = [
 	"/auth/register",
 	"/auth/forgot-password",
 	"/auth/refresh-token",
+	"/auth/handoff/redeem",
 ];
 
 function isPublicAuthUrl(url: string | undefined): boolean {

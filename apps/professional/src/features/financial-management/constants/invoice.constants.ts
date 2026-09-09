@@ -5,8 +5,8 @@ import { InvoiceSortField, ReminderSortField } from "../types/invoice.types";
 
 export const VAT_RATE = 0.25;
 
-export const INVOICES_STORAGE_KEY = "tfs_professional_invoices_v2";
-export const DETAILS_STORAGE_KEY = "tfs_professional_invoice_details_v2";
+export const INVOICES_STORAGE_KEY = "tfs_professional_invoices_v3";
+export const DETAILS_STORAGE_KEY = "tfs_professional_invoice_details_v3";
 
 export interface InvoiceColumnConfig {
 	field: InvoiceSortField;
@@ -48,9 +48,9 @@ export const REMINDER_TABLE_COLUMNS: ReminderColumnConfig[] = [
 	{ field: "status", labelKey: localizationConstants.invoiceRemindersColStatus },
 ];
 
-export const invoiceBreadcrumbs = [
-	{ label: localizationConstants.home, href: "/home" },
-	{ label: localizationConstants.moduleItem, href: "/module/financial-management" },
-	{ label: localizationConstants.invoice, href: "/module/financial-management/invoice" },
-	{ label: localizationConstants.invoiceOverviewTitle },
-];
+import { economyBreadcrumbs } from "./economyNav.config";
+
+export const invoiceBreadcrumbs = economyBreadcrumbs(
+	localizationConstants.invoiceOverviewTitle,
+);
+

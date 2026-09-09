@@ -28,6 +28,8 @@ export const API_PATH = {
 		GET_PROFILE: `${PROFESSIONALS_BASE_PATH}/profile/me`,
 		SET_PASSWORD: `${BASE_PATHS.AUTH}/set-password`,
 		COMPLETE_SUBSCRIPTION: `${BASE_PATHS.AUTH}/complete-subscription`,
+		/** Shared across apps — not under /professionals */
+		HANDOFF_REDEEM: "/auth/handoff/redeem",
 	},
 	SUBSCRIPTIONS: {
 		LIST: `${BASE_PATHS.SUBSCRIPTIONS}/list`,
@@ -138,6 +140,19 @@ export const API_PATH = {
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}`,
 		ORGANISATION: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}/organisation`,
+		PAYMENT_PLANS: (id: string) => `${PROFESSIONALS_BASE_PATH}/orders/${id}/payment-plans`,
+		PAYMENT_PLAN_DETAIL: (orderId: string, planId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/payment-plans/${planId}`,
+		PAYMENT_PLAN_SEND: (orderId: string, planId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/payment-plans/${planId}/send`,
+		INSPECTIONS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/inspections`,
+		INSPECTION_DETAIL: (orderId: string, inspectionId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/inspections/${inspectionId}`,
+		GUARANTEE_COMMITMENTS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments`,
+		GUARANTEE_VISIT_DATES: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments/visit-dates`,
+		GUARANTEE_VISIT_DATE_DETAIL: (orderId: string, visitDateId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/guarantee-commitments/visit-dates/${visitDateId}`,
+		PROTOCOLS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols`,
+		PROTOCOL_DETAIL: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}`,
+		PROTOCOL_DOWNLOAD: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/download`,
+		PROTOCOLS_DOWNLOAD_ALL: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/download-all`,
+		PROTOCOL_ARCHIVE: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/archive`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {

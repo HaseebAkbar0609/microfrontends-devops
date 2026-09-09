@@ -1,4 +1,8 @@
-export { loginAPIAction, type LoginAPIPayload } from "./auth/login";
+export {
+  loginAPIAction,
+  exchangeHandoffCodeAction,
+  type LoginAPIPayload,
+} from "./auth/login";
 export { registerAPIAction, type RegisterAPIPayload } from "./auth/register";
 export {
   forgotPasswordAPIAction,

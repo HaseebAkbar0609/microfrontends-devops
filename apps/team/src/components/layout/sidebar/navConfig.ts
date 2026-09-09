@@ -49,10 +49,11 @@ export interface FlyoutSubSidebarConfig {
 }
 
 /**
- * Sales navigates through its own tab rows (`ModulePageHeader`), the way the
- * professional app does. Keeping it out of `flyoutItems` stops the flyout
- * sub-sidebar from opening on top of that navigation and reclaims the 256px it
- * would otherwise take from the content column.
+ * Sales and Marketing navigate through their own tab rows
+ * (`ModulePageHeader`), the way the professional app does. Keeping them out of
+ * `flyoutItems` stops the flyout sub-sidebar from opening on top of that
+ * navigation and reclaims the 256px it would otherwise take from the content
+ * column.
  */
 const moduleSalesItem: NavFlyoutItem = {
 	id: "module-business-sales",
@@ -61,14 +62,12 @@ const moduleSalesItem: NavFlyoutItem = {
 	isFavoriteSupported: true,
 };
 
-const moduleBusinessItems: NavFlyoutItem[] = [
-	{
-		id: "module-business-marketing",
-		label: localizationConstants.marketing,
-		href: "/module/business/marketing",
-		isFavoriteSupported: true,
-	},
-];
+const moduleMarketingItem: NavFlyoutItem = {
+	id: "module-business-marketing",
+	label: localizationConstants.marketing,
+	href: "/module/business/marketing",
+	isFavoriteSupported: true,
+};
 
 const moduleOperationsItems: NavFlyoutItem[] = [
 	{
@@ -138,7 +137,7 @@ const moduleGovernanceItems: NavFlyoutItem[] = [
 
 export const favoriteableNavItems: NavFlyoutItem[] = [
 	moduleSalesItem,
-	...moduleBusinessItems,
+	moduleMarketingItem,
 	...moduleOperationsItems,
 	...moduleGovernanceItems,
 ];
@@ -236,10 +235,9 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 					href: moduleSalesItem.href,
 				},
 				{
-					id: "module-business",
-					label: localizationConstants.moduleBusiness,
-					href: "/module/business",
-					flyoutItems: moduleBusinessItems,
+					id: moduleMarketingItem.id,
+					label: moduleMarketingItem.label,
+					href: moduleMarketingItem.href,
 				},
 				{
 					id: "module-operations",
@@ -349,6 +347,11 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 					id: "admin-company-information",
 					label: localizationConstants.adminCompanyInformation,
 					href: "/admin/company-information",
+				},
+				{
+					id: "admin-content",
+					label: localizationConstants.contentModuleTitle,
+					href: "/admin/content",
 				},
 			],
 		},

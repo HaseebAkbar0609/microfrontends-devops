@@ -250,7 +250,7 @@ export function OrderDirectTable({ onOpenCreateModal }: OrderDirectTableProps) {
 
 									{/* Separate non-sticky See Order column */}
 									<TableCell className="px-4 py-3.5 text-right whitespace-nowrap">
-										<Link href={`/module/production/order/${encodeURIComponent(order.id)}`}>
+										<Link href={`/module/production/order/${encodeURIComponent(order.id)}/order-information`}>
 											<Button
 												variant="outline"
 												size="sm"
@@ -277,7 +277,7 @@ export function OrderDirectTable({ onOpenCreateModal }: OrderDirectTableProps) {
 												<PermissionGate permission="VIEW_ORDERS">
 													<DropdownMenuItem asChild>
 														<Link
-															href={`/module/production/order/${encodeURIComponent(order.id)}`}
+															href={`/module/production/order/${encodeURIComponent(order.id)}/order-information`}
 															className="flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50"
 														>
 															<Eye className="h-4 w-4 text-slate-500" />

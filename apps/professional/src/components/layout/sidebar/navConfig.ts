@@ -304,6 +304,11 @@ export const navConfig: NavGroup[] = [
 						href: "/module/financial-management/forecast",
 					},
 					{
+						id: "rot-rut",
+						label: localizationConstants.rotRutNav,
+						href: "/module/financial-management/rot-rut",
+					},
+					{
 						id: "personnel",
 						label: localizationConstants.personnel,
 						href: "/module/financial-management/personnel",
