@@ -9,6 +9,7 @@ import {
 	ChevronDown,
 	MoreVertical,
 	FolderOpen,
+	PencilLine,
 	Archive,
 	Printer,
 	Trash2,
@@ -72,6 +73,7 @@ export interface ProtocolOverviewTableProps {
 	onArchive: (id: string) => void;
 	onDelete: (id: string) => void;
 	onViewDetail?: (id: string) => void;
+	onEditProtocol?: (id: string) => void;
 }
 
 export function ProtocolOverviewTable({
@@ -94,6 +96,7 @@ export function ProtocolOverviewTable({
 	onArchive,
 	onDelete,
 	onViewDetail,
+	onEditProtocol,
 }: ProtocolOverviewTableProps) {
 	const t = useTranslate();
 	const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -386,6 +389,15 @@ export function ProtocolOverviewTable({
 													<FolderOpen className="h-4 w-4 text-slate-900" />
 													<span className="text-slate-900"><Translate text={localizationConstants.protocolActionOpen} /></span>
 												</DropdownMenuItem>
+												{onEditProtocol && (
+													<DropdownMenuItem
+														onClick={() => onEditProtocol(row.id)}
+														className="flex items-center gap-2 cursor-pointer w-full text-slate-900 hover:bg-slate-50 text-xs font-normal"
+													>
+														<PencilLine className="h-4 w-4 text-slate-900" />
+														<span className="text-slate-900"><Translate text={localizationConstants.protocolEditAction} /></span>
+													</DropdownMenuItem>
+												)}
 												<DropdownMenuItem
 													onClick={() => handleDownload(row)}
 													disabled={downloadingId === row.id}
