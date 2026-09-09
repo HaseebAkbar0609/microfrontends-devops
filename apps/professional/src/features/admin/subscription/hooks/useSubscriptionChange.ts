@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { loadStripe } from "@stripe/stripe-js";
+import type { ChangeSubscriptionResponse } from "@/api-actions/cart/subscriptions";
 import type { ApiError } from "@/types/api";
 import type { SubscriptionInterval, SubscriptionPlan } from "@/features/manage-plans/types";
 import localizationConstants from "@/utils/translation/constants";
@@ -23,6 +24,7 @@ export function useSubscriptionChange(current: CurrentSubscription, plans: Subsc
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [review, setReview] = useState<{ preview: SubscriptionChangePreview; request: SubscriptionChangeRequest } | null>(null);
   const [accepted, setAccepted] = useState(false);
+  const [pendingChange, setPendingChange] = useState<ChangeSubscriptionResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const submitting = useRef(false);
@@ -57,8 +59,9 @@ export function useSubscriptionChange(current: CurrentSubscription, plans: Subsc
       const key = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
       const stripe = key ? await loadStripe(key) : null;
       if (!stripe) throw new Error("STRIPE_UNAVAILABLE");
-      const result = await applySubscriptionChange(review.request);
+      const result = pendingChange ?? await applySubscriptionChange(review.request);
       if (result.client_secret) {
+        setPendingChange(result);
         const confirmation = await stripe.confirmCardPayment(result.client_secret);
         if (confirmation.error || confirmation.paymentIntent?.status !== "succeeded") {
           throw new Error("SUBSCRIPTION_PAYMENT_PENDING");
@@ -77,5 +80,5 @@ export function useSubscriptionChange(current: CurrentSubscription, plans: Subsc
     } finally { submitting.current = false; setBusy(false); }
   }
   return { base, baseId, setBaseId, interval, setInterval, quantities, setQuantities,
-    review, setReview, accepted, setAccepted, busy, error, preview, confirm };
+    review, setReview, accepted, setAccepted, pendingChange, busy, error, preview, confirm };
 }

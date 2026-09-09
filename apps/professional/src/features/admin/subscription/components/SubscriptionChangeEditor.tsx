@@ -26,9 +26,17 @@ function EditorForm({ current, plans, mode }: {
   const form = useSubscriptionChange(current, plans, mode);
   const paymentOption = (Object.keys(PAYMENT_INTERVALS) as PaymentOption[]).find(key => PAYMENT_INTERVALS[key] === form.interval)!;
   const bases = plans.filter(plan => !plan.is_license && plan.plan_key !== "free");
+  const reviewItems = [...new Set([...current.items.map(item => item.subscription_plan.id),
+    ...(form.review?.request.items.map(item => item.subscription_plan_id) ?? [])])].map(id => {
+    const old = current.items.find(item => item.subscription_plan.id === id);
+    return { name: old?.subscription_plan.plan_key ?? plans.find(plan => plan.id === id)?.plan_key ?? id,
+      before: old?.stripe_subscription_item_quantity ?? 0,
+      after: form.review?.request.items.find(item => item.subscription_plan_id === id)?.quantity ?? 0 };
+  }).filter(item => mode === "subscription" || item.before !== item.after);
   return <div className="space-y-6">
     {form.error && <p role="alert" className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">{form.error}</p>}
     {form.review ? <SubscriptionChangeReview preview={form.review.preview} mode={mode}
+      items={reviewItems} pendingPayment={!!form.pendingChange}
       accepted={form.accepted} onAccept={form.setAccepted} busy={form.busy}
       onBack={() => form.setReview(null)} onConfirm={() => void form.confirm()} /> : <>
       <fieldset disabled={form.busy} className="min-w-0 space-y-6">
