@@ -71,10 +71,9 @@ export const registerExpenseFormSchema = z
 			.string()
 			.trim()
 			.min(1, "registerExpenseErrorDueDateRequired"),
-		category: z.enum(["material", "underentreprenad", "omkostnad", "ovrigt"], {
-			required_error: "registerExpenseErrorCategoryRequired",
-			invalid_type_error: "registerExpenseErrorCategoryRequired",
-		}),
+		category: z.string().default("material"),
+		currency: z.enum(["SEK", "EUR", "USD", "NOK", "DKK"]).default("SEK"),
+		reference: z.string().optional().default(""),
 		project: z.string().optional().default(""),
 		costCenter: z.string().optional().default(""),
 		lineItems: z.array(expenseLineItemSchema).default([]),

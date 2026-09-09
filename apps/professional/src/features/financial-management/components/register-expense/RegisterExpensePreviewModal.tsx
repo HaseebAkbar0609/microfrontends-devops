@@ -132,11 +132,11 @@ export function RegisterExpensePreviewModal({
 										</TableCell>
 										<TableCell className="py-2 px-3 text-center">{item.quantity}</TableCell>
 										<TableCell className="py-2 px-3 text-center">{item.unit}</TableCell>
-										<TableCell className="py-2 px-3 text-right">{formatNum(item.unitPrice)} kr</TableCell>
+										<TableCell className="py-2 px-3 text-right">{formatNum(item.unitPrice)} {formData.currency || "SEK"}</TableCell>
 										<TableCell className="py-2 px-3 text-center">{item.vatRate} %</TableCell>
 										<TableCell className="py-2 px-3 text-center">{item.accountNumber}</TableCell>
 										<TableCell className="py-2 px-3 text-right font-semibold text-slate-900">
-											{formatNum(item.total)} kr
+											{formatNum(item.total)} {formData.currency || "SEK"}
 										</TableCell>
 									</TableRow>
 								))}
@@ -150,21 +150,21 @@ export function RegisterExpensePreviewModal({
 							<span>
 								<Translate text={localizationConstants.registerExpenseSubtotal} />:
 							</span>
-							<span className="font-semibold text-slate-900">{formatNum(calculations.subtotal)} SEK</span>
+							<span className="font-semibold text-slate-900">{formatNum(calculations.subtotal)} {formData.currency || "SEK"}</span>
 						</div>
 						{calculations.vatBreakdown.map((b) => (
 							<div key={b.rate} className="flex justify-between text-slate-500 pl-2">
 								<span>
 									<Translate text={localizationConstants.registerExpenseVatBreakdown} /> ({b.rate} %):
 								</span>
-								<span>{formatNum(b.vatAmount)} SEK</span>
+								<span>{formatNum(b.vatAmount)} {formData.currency || "SEK"}</span>
 							</div>
 						))}
 						<div className="border-t border-slate-200 pt-2 flex justify-between font-bold text-sm text-slate-900">
 							<span>
 								<Translate text={localizationConstants.registerExpenseGrandTotal} />:
 							</span>
-							<span className="text-emerald-600 font-bold">{formatNum(calculations.grandTotal)} SEK</span>
+							<span className="text-emerald-600 font-bold">{formatNum(calculations.grandTotal)} {formData.currency || "SEK"}</span>
 						</div>
 					</div>
 				</div>

@@ -5803,6 +5803,17 @@ export type ExpenseTranslation = {
 	registerExpenseSupplierSearchPlaceholder: string;
 	registerExpenseSupplierAddCustom: string;
 	registerExpenseSupplierNotFound: string;
+	registerExpenseSupplierOrgNo: string;
+	registerExpenseSupplierAddress: string;
+	registerExpenseSupplierBankgiro: string;
+	registerExpenseSupplierVerified: string;
+	registerExpenseCurrencyLabel: string;
+	registerExpenseReferenceLabel: string;
+	registerExpenseReferencePlaceholder: string;
+	registerExpenseModalSupplierAddressLabel: string;
+	registerExpenseModalSupplierCityLabel: string;
+	registerExpenseSplitPreviewBtn: string;
+	registerExpenseHidePreviewBtn: string;
 	expenseDetailBack: string;
 	expenseDetailTitle: string;
 	expenseDetailPrintBtn: string;
