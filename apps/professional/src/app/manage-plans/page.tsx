@@ -23,7 +23,6 @@ import {
 } from "@/features/manage-plans";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { cn } from "@/lib/utils";
 
 const STEP_PLAN_KEYS = {
 	[MANAGE_PLANS_STEPS.BASE]: [
@@ -190,12 +189,8 @@ export default function ManagePlansPage() {
 				className="h-[calc(100vh-72px)] overflow-y-auto px-4 py-6 sm:px-6 md:py-8 lg:px-10"
 			>
 				<div className="mx-auto w-full max-w-7xl">
-					<header className="grid items-start gap-5 lg:grid-cols-[minmax(12rem,1fr)_minmax(0,42rem)_minmax(12rem,1fr)]">
-						<h2 className="text-2xl font-bold text-gray-700">
-							Welcome to TimeFlow
-						</h2>
-
-						<div className="min-w-0 lg:justify-self-center">
+					<header className="relative flex flex-col items-center gap-4 text-center sm:min-h-11 sm:pr-36">
+						<div className="min-w-0 sm:pl-36">
 							{currentStep === MANAGE_PLANS_STEPS.BASE ? (
 								<PaymentOptionSelector
 									value={paymentOption}
@@ -221,7 +216,7 @@ export default function ManagePlansPage() {
 							)}
 						</div>
 
-						<div className="flex items-center lg:justify-end">
+						<div className="flex items-center sm:absolute sm:right-0 sm:top-0">
 							<Button
 								variant="primary"
 								size="default"
@@ -246,14 +241,7 @@ export default function ManagePlansPage() {
 						</div>
 					</header>
 
-					<div
-						className={cn(
-							"mx-auto mt-8 grid w-full items-stretch gap-6",
-							currentStep === MANAGE_PLANS_STEPS.BASE
-								? "max-w-3xl grid-cols-1 sm:grid-cols-2"
-								: "max-w-6xl grid-cols-1 md:grid-cols-2 xl:grid-cols-3",
-						)}
-					>
+					<div className="mx-auto mt-8 flex w-full flex-wrap items-start justify-center gap-5 lg:gap-6">
 						{stepPlans.map((plan) => {
 							const selectedPrice = getPriceForPaymentOption(
 								plan,
@@ -262,7 +250,10 @@ export default function ManagePlansPage() {
 							if (!selectedPrice) return null;
 
 							return (
-								<div key={plan.id} className="min-w-0">
+								<div
+									key={plan.id}
+									className="w-full max-w-[21rem] min-w-0 sm:w-[20rem]"
+								>
 									<PlanCard
 										plan={plan}
 										currentPrice={selectedPrice.price / 100}

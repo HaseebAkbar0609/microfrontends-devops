@@ -11,7 +11,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { formatPrice } from "../utils";
@@ -41,41 +40,36 @@ export function PlanCard({
 	const planName = plan.plan_key.replace(/-/g, " ").toUpperCase();
 
 	return (
-		<Card
-			className={cn(
-				"group h-full w-full gap-0 overflow-hidden rounded-2xl border border-slate-200 bg-white pb-0 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-lg",
-				showQuantitySelector ? "min-h-[430px]" : "min-h-[330px]",
-			)}
-		>
-			<CardHeader className="border-b border-slate-100 bg-slate-50/70 px-6 py-6 text-center">
-				<CardTitle className="text-xl font-bold tracking-tight text-slate-800">
+		<Card className="group w-full gap-0 overflow-hidden rounded-xl border border-slate-200 bg-white pb-0 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:border-orange-200 hover:shadow-md">
+			<CardHeader className="border-b border-slate-100 bg-slate-50/60 px-5 py-5 text-center">
+				<CardTitle className="text-lg font-bold tracking-tight text-slate-800">
 					{planName}
 				</CardTitle>
 				{showQuantitySelector && (
-					<p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">
+					<p className="mt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400">
 						<Translate text={localizationConstants.managePlansLicense} />
 					</p>
 				)}
 			</CardHeader>
-			<CardContent className="flex flex-1 flex-col px-6 py-6">
-				<ul className="space-y-3">
+			<CardContent className="px-5 py-5">
+				<ul className="space-y-2.5">
 					{PLAN_FEATURES[
 						plan.plan_key as keyof typeof PLAN_FEATURES
 					].map((feature, i) => (
 						<li
 							key={i}
-							className="flex items-start gap-3 text-sm leading-5 text-slate-600"
+							className="flex items-start gap-2.5 text-sm leading-5 text-slate-600"
 						>
-							<span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-600">
-								<Check className="h-3.5 w-3.5" aria-hidden />
+							<span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-orange-50 text-orange-600">
+								<Check className="h-3 w-3" aria-hidden />
 							</span>
 							<span>{feature}</span>
 						</li>
 					))}
 				</ul>
 				{showQuantitySelector && (
-					<div className="mt-6 flex justify-center">
-						<div className="grid grid-cols-[2.5rem_4rem_2.5rem] items-center overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xs">
+					<div className="mt-5 flex justify-center">
+						<div className="grid grid-cols-[2.5rem_3.5rem_2.5rem] items-center overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xs">
 						<Button
 							type="button"
 							variant="ghost"
@@ -107,8 +101,8 @@ export function PlanCard({
 					</div>
 				)}
 			</CardContent>
-			<CardFooter className="mt-auto flex-col items-stretch gap-4 border-t border-slate-100 bg-slate-50/40 px-6 py-5">
-				<div className="space-y-1.5 text-sm text-slate-600">
+			<CardFooter className="flex-col items-stretch gap-3 border-t border-slate-100 bg-slate-50/40 px-5 py-4">
+				<div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 text-sm text-slate-600">
 					<p>
 						<Translate
 							text={localizationConstants.managePlansPrice}
@@ -126,7 +120,7 @@ export function PlanCard({
 				</div>
 				<Button
 					variant="primary"
-					className="h-11 w-full rounded-lg font-semibold shadow-sm"
+					className="h-10 w-full rounded-lg font-semibold shadow-sm"
 					onClick={onChoosePlan}
 					disabled={isLoading}
 				>
