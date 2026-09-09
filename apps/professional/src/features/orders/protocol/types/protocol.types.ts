@@ -58,5 +58,41 @@ export interface ProtocolSummary {
 	pending: number;
 }
 
+export interface ProtocolMeetingPoint {
+	id: string;
+	nr: string;
+	subject: string;
+	description?: string;
+	decision?: string;
+	responsible?: string;
+	status?: "completed" | "in_progress" | "not_started" | string;
+}
+
+export interface ProtocolMeetingInfo {
+	host?: string;
+	startTime?: string;
+	startDate?: string;
+	endTime?: string;
+	endDate?: string;
+	topic?: string;
+	protocolNumber?: string;
+	participants?: string[];
+	rubrik?: string;
+	category?: string;
+	location?: string;
+	address?: string;
+	postalCode?: string;
+	city?: string;
+	information?: string;
+	comment?: string;
+}
+
+export interface ProtocolDetailData {
+	protocol: ProtocolItem;
+	meetingInfo: ProtocolMeetingInfo;
+	nextMeeting?: ProtocolMeetingInfo;
+	points: ProtocolMeetingPoint[];
+}
+
 export type ProtocolSortField = "date" | "type" | "documentName" | "status";
 export type SortOrder = "asc" | "desc";

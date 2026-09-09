@@ -10,9 +10,9 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
+import { pickCountKey } from "@/utils/pluralLabel";
 import { useContentSections } from "../../hooks/useContentSections";
 import type { ContentGroupId, GuideEntry } from "../../types";
-import { pickCountKey } from "../../utils/countLabel";
 import { MediaInput } from "../MediaInput";
 
 type GuideEntryCardProps = {

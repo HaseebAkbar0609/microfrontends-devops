@@ -71,6 +71,7 @@ export interface ProtocolOverviewTableProps {
 	onOpenUpload: () => void;
 	onArchive: (id: string) => void;
 	onDelete: (id: string) => void;
+	onViewDetail?: (id: string) => void;
 }
 
 export function ProtocolOverviewTable({
@@ -92,6 +93,7 @@ export function ProtocolOverviewTable({
 	onOpenUpload,
 	onArchive,
 	onDelete,
+	onViewDetail,
 }: ProtocolOverviewTableProps) {
 	const t = useTranslate();
 	const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -347,6 +349,7 @@ export function ProtocolOverviewTable({
 											type="button"
 											variant="outline"
 											size="sm"
+											onClick={() => onViewDetail?.(row.id)}
 											className="h-8 border-slate-200 bg-white px-3.5 text-xs font-medium text-slate-800 hover:bg-slate-50 rounded-lg cursor-pointer shadow-none"
 										>
 											<Translate text={localizationConstants.viewDetailsButton} />
@@ -369,7 +372,15 @@ export function ProtocolOverviewTable({
 												className="w-36 border border-slate-200 bg-white shadow-md rounded-lg p-1 z-50"
 											>
 												<DropdownMenuItem
-													onClick={() => (row.fileUrl ? window.open(row.fileUrl, "_blank") : handleDownload(row))}
+													onClick={() => {
+														if (onViewDetail) {
+															onViewDetail(row.id);
+														} else if (row.fileUrl) {
+															window.open(row.fileUrl, "_blank");
+														} else {
+															handleDownload(row);
+														}
+													}}
 													className="flex items-center gap-2 cursor-pointer w-full text-slate-900 hover:bg-slate-50 text-xs font-normal"
 												>
 													<FolderOpen className="h-4 w-4 text-slate-900" />

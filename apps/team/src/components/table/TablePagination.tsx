@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,6 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import localizationConstants from "@/utils/translation/constants";
+import { useTranslate } from "@/utils/translation/translate";
 
 interface TablePaginationProps {
   currentPage: number;
@@ -28,10 +32,14 @@ export function TablePagination({
   onPageChange,
   onPageSizeChange,
 }: TablePaginationProps) {
+  const t = useTranslate();
+
   return (
-    <div className="flex items-center justify-center gap-6 py-4">
+    <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-slate-700">Rows per page</span>
+        <span className="text-sm font-medium text-slate-700">
+          {t(localizationConstants.tableRowsPerPage)}
+        </span>
         <Select
           value={String(pageSize)}
           onValueChange={(value) => onPageSizeChange(Number(value))}
@@ -50,7 +58,9 @@ export function TablePagination({
       </div>
 
       <div className="text-sm font-medium text-slate-700">
-        Page {currentPage} of {totalPages || 1}
+        {`${t(localizationConstants.tablePageLabel)} ${currentPage} ${t(
+          localizationConstants.tablePageOf,
+        )} ${totalPages || 1}`}
       </div>
 
       <div className="flex items-center gap-1">
@@ -62,7 +72,7 @@ export function TablePagination({
           disabled={currentPage <= 1}
         >
           <ChevronsLeft className="h-4 w-4" />
-          <span className="sr-only">First page</span>
+          <span className="sr-only">{t(localizationConstants.tableFirstPage)}</span>
         </Button>
         <Button
           variant="outline"
@@ -72,7 +82,7 @@ export function TablePagination({
           disabled={currentPage <= 1}
         >
           <ChevronLeft className="h-4 w-4" />
-          <span className="sr-only">Previous page</span>
+          <span className="sr-only">{t(localizationConstants.tablePreviousPage)}</span>
         </Button>
         <Button
           variant="outline"
@@ -82,7 +92,7 @@ export function TablePagination({
           disabled={currentPage >= totalPages}
         >
           <ChevronRight className="h-4 w-4" />
-          <span className="sr-only">Next page</span>
+          <span className="sr-only">{t(localizationConstants.tableNextPage)}</span>
         </Button>
         <Button
           variant="outline"
@@ -92,7 +102,7 @@ export function TablePagination({
           disabled={currentPage >= totalPages}
         >
           <ChevronsRight className="h-4 w-4" />
-          <span className="sr-only">Last page</span>
+          <span className="sr-only">{t(localizationConstants.tableLastPage)}</span>
         </Button>
       </div>
     </div>

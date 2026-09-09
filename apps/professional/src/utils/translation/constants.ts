@@ -1589,6 +1589,20 @@ export type OfferTranslation = {
 	protocolPointDeletedToast: string;
 	protocolNoteSavedToast: string;
 	protocolNoteDeletedToast: string;
+	protocolSaveAction: string;
+	protocolCancelAction: string;
+	protocolSendAction: string;
+	protocolEditProtocolAction: string;
+	protocolProjectInfoTitle: string;
+	protocolProjectNr: string;
+	protocolProjectName: string;
+	protocolPointSubject: string;
+	protocolPointDescription: string;
+	protocolPointHeading: string;
+	protocolDeletePointConfirmTitle: string;
+	protocolDeletePointConfirmDesc: string;
+	protocolEmptyPoints: string;
+	protocolDeleteAction: string;
 	// Tools - Diary
 	diaryPersonal: string;
 	diaryCreateNew: string;
