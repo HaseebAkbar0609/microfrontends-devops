@@ -3,6 +3,7 @@ import { EmployeeStatus, EmploymentType } from "../types/personnelOverview.types
 
 export const DEFAULT_PAGE_SIZE = 10;
 export const PAGE_SIZE_OPTIONS = [10, 25, 50];
+export const PERSONNEL_STORAGE_KEY = "tfs_personnel_records_v1";
 
 export const STATUS_STYLE_MAP: Record<EmployeeStatus, { bg: string; text: string }> = {
 	active: {

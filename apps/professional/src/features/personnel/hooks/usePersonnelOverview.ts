@@ -21,6 +21,7 @@ export function usePersonnelOverview() {
 	);
 
 	useEffect(() => {
+		setEmployees(personnelRepository.getAllEmployees());
 		const unsubscribe = personnelRepository.subscribe((items) => {
 			setEmployees(items);
 		});

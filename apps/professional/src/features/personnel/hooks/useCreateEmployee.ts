@@ -253,14 +253,34 @@ export function useCreateEmployee() {
 		[formData.personalInfo, formData.workDuties, t]
 	);
 
+	const handleStepClick = useCallback(
+		(targetStep: CreateEmployeeStep) => {
+			if (targetStep === activeStep) return;
+
+			// If moving away from step 1 to any other step, step 1 mandatory fields must be valid
+			if (targetStep > 1) {
+				const isStep1Valid = validateStep(1);
+				if (!isStep1Valid) {
+					setActiveStep(1);
+					toast.error(t(localizationConstants.validationErrorRequired));
+					return;
+				}
+			}
+
+			setActiveStep(targetStep);
+		},
+		[activeStep, validateStep, t]
+	);
+
 	const handleNextStep = useCallback(() => {
-		if (!validateStep(activeStep)) {
+		if (activeStep === 1 && !validateStep(1)) {
+			toast.error(t(localizationConstants.validationErrorRequired));
 			return;
 		}
 		if (activeStep < 5) {
 			setActiveStep((prev) => (prev + 1) as CreateEmployeeStep);
 		}
-	}, [activeStep, validateStep]);
+	}, [activeStep, validateStep, t]);
 
 	const handlePrevStep = useCallback(() => {
 		if (activeStep > 1) {
@@ -271,6 +291,7 @@ export function useCreateEmployee() {
 	const handleSave = useCallback(async () => {
 		if (!validateStep(1)) {
 			setActiveStep(1);
+			toast.error(t(localizationConstants.validationErrorRequired));
 			return;
 		}
 
@@ -341,7 +362,8 @@ export function useCreateEmployee() {
 
 	return {
 		activeStep,
-		setActiveStep,
+		setActiveStep: handleStepClick,
+		handleStepClick,
 		formData,
 		validationError,
 		fieldErrors,

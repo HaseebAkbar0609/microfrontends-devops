@@ -33,7 +33,7 @@ export function CreateEmployeePage() {
 	const { t } = useTranslation();
 	const {
 		activeStep,
-		setActiveStep,
+		handleStepClick,
 		formData,
 		validationError,
 		fieldErrors,
@@ -117,7 +117,7 @@ export function CreateEmployeePage() {
 				{/* Stepper Sub-navigation Tabs (Matching Figma Image 2) */}
 				<CreateEmployeeStepper
 					activeStep={activeStep}
-					onStepClick={setActiveStep}
+					onStepClick={handleStepClick}
 				/>
 
 				{/* Mobile Step Card (< lg): Displays above cards on small viewports */}
