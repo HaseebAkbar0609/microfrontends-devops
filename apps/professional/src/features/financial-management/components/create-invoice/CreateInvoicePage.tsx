@@ -6,6 +6,7 @@ import { ArrowLeft, Save, ArrowRight, Eye } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { ContentCreationGuard } from "@/features/account-lifecycle";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -46,6 +47,7 @@ export function CreateInvoicePage() {
 	} = useCreateInvoice();
 
 	return (
+		<ContentCreationGuard>
 		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen pb-16">
 			{/* Page Header */}
 			<div className="bg-white border-b border-slate-200 px-8 py-4">
@@ -205,6 +207,7 @@ export function CreateInvoicePage() {
 				calculations={calculations}
 			/>
 		</div>
+		</ContentCreationGuard>
 	);
 }
 

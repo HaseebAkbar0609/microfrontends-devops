@@ -6989,6 +6989,20 @@ export type OrderProtocolTranslation = {
 	protocolSaveButton: string;
 };
 
+export type AccountLifecycleTranslation = {
+	lifecycleBadgeDemo: string;
+	lifecycleBadgeTrial: string;
+	lifecycleDaysRemainingSuffix: string;
+	lifecycleExpiresToday: string;
+	lifecycleExpiredMessage: string;
+	lifecycleUpgradeCta: string;
+	lifecyclePopupDismiss: string;
+	lifecycleReadOnlyGuardTitle: string;
+	lifecycleReadOnlyGuardMessage: string;
+	lifecycleToastBlockedTitle: string;
+	lifecycleToastBlockedMessage: string;
+};
+
 export type PersonnelOverviewTranslation = {
 	personalOverviewPageTitle: string;
 	colContractNumber: string;
@@ -7163,7 +7177,8 @@ export type Translation = HeaderTranslation &
 	PersonnelDashboardTranslation &
 	OrderProtocolTranslation &
 	PersonnelOverviewTranslation &
-	CreateEmployeeTranslation;
+	CreateEmployeeTranslation &
+	AccountLifecycleTranslation;
 
 export type TranslationKeys = keyof Translation;
 
