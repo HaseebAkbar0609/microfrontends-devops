@@ -27,6 +27,7 @@ import {
 	OrderProtocolTranslation,
 	PersonnelOverviewTranslation,
 	CreateEmployeeTranslation,
+	AccountLifecycleTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -7028,6 +7029,22 @@ export const enOrderProtocol: OrderProtocolTranslation = {
 	protocolSaveButton: "Save",
 };
 
+export const enAccountLifecycle: AccountLifecycleTranslation = {
+	lifecycleBadgeDemo: "Demo",
+	lifecycleBadgeTrial: "Trial",
+	lifecycleDaysRemainingSuffix: "days remaining",
+	lifecycleExpiresToday: "Expires today",
+	lifecycleExpiredMessage:
+		"Your account has expired. You can still view your data, but you can't create new content.",
+	lifecycleUpgradeCta: "Upgrade now",
+	lifecyclePopupDismiss: "Got it",
+	lifecycleReadOnlyGuardTitle: "This account is read-only",
+	lifecycleReadOnlyGuardMessage:
+		"Your trial period has ended. Upgrade to keep creating content.",
+	lifecycleToastBlockedTitle: "Action blocked",
+	lifecycleToastBlockedMessage: "This account is read-only. Upgrade to continue.",
+};
+
 export const enPersonnelOverview: PersonnelOverviewTranslation = {
 	personalOverviewPageTitle: "Personal Overview",
 	colContractNumber: "Contract No.",
@@ -7204,5 +7221,6 @@ export const en: Translation = {
 	...enOrderProtocol,
 	...enPersonnelOverview,
 	...enCreateEmployee,
+	...enAccountLifecycle,
 };
 

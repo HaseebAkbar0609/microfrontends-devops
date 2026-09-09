@@ -27,6 +27,7 @@ import {
 	OrderProtocolTranslation,
 	PersonnelOverviewTranslation,
 	CreateEmployeeTranslation,
+	AccountLifecycleTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -7050,6 +7051,23 @@ export const svOrderProtocol: OrderProtocolTranslation = {
 	protocolSaveButton: "Spara",
 };
 
+export const svAccountLifecycle: AccountLifecycleTranslation = {
+	lifecycleBadgeDemo: "Demo",
+	lifecycleBadgeTrial: "Provperiod",
+	lifecycleDaysRemainingSuffix: "dagar kvar",
+	lifecycleExpiresToday: "Går ut idag",
+	lifecycleExpiredMessage:
+		"Ditt konto har gått ut. Du kan fortfarande se din data, men du kan inte skapa nytt innehåll.",
+	lifecycleUpgradeCta: "Uppgradera nu",
+	lifecyclePopupDismiss: "OK, uppfattat",
+	lifecycleReadOnlyGuardTitle: "Det här kontot är skrivskyddat",
+	lifecycleReadOnlyGuardMessage:
+		"Din provperiod har gått ut. Uppgradera för att fortsätta skapa innehåll.",
+	lifecycleToastBlockedTitle: "Åtgärden blockerades",
+	lifecycleToastBlockedMessage:
+		"Det här kontot är skrivskyddat. Uppgradera för att fortsätta.",
+};
+
 export const svPersonnelOverview: PersonnelOverviewTranslation = {
 	personalOverviewPageTitle: "Personal översikt",
 	colContractNumber: "Kontrakt nr",
@@ -7226,6 +7244,7 @@ export const sv: Translation = {
 	...svOrderProtocol,
 	...svPersonnelOverview,
 	...svCreateEmployee,
+	...svAccountLifecycle,
 };
 
 
