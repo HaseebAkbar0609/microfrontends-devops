@@ -43,13 +43,13 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
-	const isPlanChange =
-		typeof window !== "undefined" &&
-		(new URLSearchParams(window.location.search).get("change") === "1" ||
-			new URLSearchParams(window.location.search).get("mode") === "change");
 
 	useEffect(() => {
 		if (!isReady) return;
+		const searchParams = new URLSearchParams(window.location.search);
+		const isPlanChange =
+			searchParams.get("change") === "1" ||
+			searchParams.get("mode") === "change";
 
 		if (
 			isAuthenticated &&
@@ -99,7 +99,6 @@ export function AppShell({ children }: AppShellProps) {
 		isAuthenticated,
 		isAuthRoute,
 		isPublicPage,
-		isPlanChange,
 		pathname,
 		router,
 	]);

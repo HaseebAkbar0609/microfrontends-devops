@@ -50,5 +50,7 @@ export const checkoutSchema = z.object({
 
   discountCode: z.string().trim().max(64),
   addNote: z.boolean(),
-  acceptTerms: z.boolean().refine(Boolean),
+  // Terms are accepted on the cart confirmation step before this payment form.
+  // Keep the field in the form shape, but do not silently block Pay here.
+  acceptTerms: z.boolean(),
 });
