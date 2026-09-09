@@ -14,14 +14,14 @@ WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@9.15.0 --activate
 COPY --from=deps /app/node_modules ./node_modules
 COPY apps/professional/. .
-ENV NEXT_TELEMETRY_DISABLED=1
-
-# NEXT_PUBLIC_* vars are inlined into the client bundle at build time, not
-# read at container runtime — must be passed as a --build-arg. Without this,
-# the app silently falls back to same-origin API calls.
+# NEXT_PUBLIC_* values are inlined at build time, not read at container runtime.
 ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
-
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+ARG NEXT_PUBLIC_TFS825_PAYMENT_MVP=false
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY \
+    NEXT_PUBLIC_TFS825_PAYMENT_MVP=$NEXT_PUBLIC_TFS825_PAYMENT_MVP
 RUN pnpm build
 
 # Stage 3: Runner
