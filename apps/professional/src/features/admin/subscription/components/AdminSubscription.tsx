@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, CreditCard, Loader2 } from "lucide-react";
+import { CalendarDays, CreditCard, ExternalLink, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { DynamicBreadcrumb } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,7 +15,7 @@ import {
 	SubscriptionTabId,
 } from "../constants/mockData";
 import { useSubscriptionOverview } from "../hooks/useSubscriptionOverview";
-import type { SubscriptionOverviewItem } from "../services/subscriptionService";
+import { getOpenInvoices, type SubscriptionOverviewItem } from "../services/subscriptionService";
 import PaymentMethodTab from "./PaymentMethodTab";
 
 const isSubscriptionTabId = (
@@ -44,11 +45,14 @@ function formatAmount(amount: number | null, currency = "SEK"): string {
 }
 
 function statusClass(status: string | null): string {
-	if (status === "active" || status === "trialing") {
+	if (status === "ACTIVE" || status === "DEMO") {
 		return "bg-emerald-50 text-emerald-700";
 	}
-	if (status === "past_due" || status === "unpaid") {
+	if (status === "ACTIVE_IN_GRACE") {
 		return "bg-amber-50 text-amber-800";
+	}
+	if (status === "RESTRICTED" || status === "INACTIVE") {
+		return "bg-red-50 text-red-700";
 	}
 	return "bg-slate-100 text-slate-700";
 }
@@ -115,7 +119,15 @@ const AdminSubscription = () => {
 		changeQueries({ tab: value === "my" ? null : value });
 	const subscriptionQuery = useSubscriptionOverview(activeTab === "my");
 	const subscription = subscriptionQuery.data;
-	const status = subscription?.status?.stripe_status ?? null;
+	const status = subscription?.status?.access_state ?? null;
+	const openInvoicesQuery = useQuery({
+		queryKey: ["subscription-open-invoices"],
+		queryFn: getOpenInvoices,
+		enabled: status === "RESTRICTED",
+	});
+	const payableInvoice = openInvoicesQuery.data?.find(
+		(invoice) => invoice.hosted_invoice_url,
+	);
 
 	return (
 		<div className="flex flex-col gap-6 p-6">
@@ -185,10 +197,51 @@ const AdminSubscription = () => {
 				</div>
 			) : (
 				<div className="space-y-6">
+					<div className="flex justify-end">
+						<Button asChild variant="outline">
+							<Link href="/manage-plans?change=1">
+								<Translate text={localizationConstants.subscriptionChangePlan} />
+							</Link>
+						</Button>
+					</div>
+					{subscription.status?.access_state === "ACTIVE_IN_GRACE" && (
+						<div className="rounded-md border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+							<Translate text={localizationConstants.subscriptionGraceWarning} />
+						</div>
+					)}
+					{subscription.status?.access_state === "RESTRICTED" && (
+						<div className="rounded-md border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800">
+							<Translate text={localizationConstants.subscriptionRestrictedWarning} />
+							{payableInvoice?.hosted_invoice_url && (
+								<Button asChild size="sm" className="ml-4">
+									<a
+										href={payableInvoice.hosted_invoice_url}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Translate text={localizationConstants.subscriptionPayOutstanding} />
+										<ExternalLink className="ml-2 h-4 w-4" />
+									</a>
+								</Button>
+							)}
+						</div>
+					)}
 					{subscription.status?.is_cancelled && subscription.status.cancel_at && (
 						<div className="rounded-md border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
 							<Translate text={localizationConstants.subscriptionCancellationScheduled} />{" "}
 							<strong>{formatDate(subscription.status.cancel_at)}</strong>.
+						</div>
+					)}
+					{subscription.status?.scheduled_change?.effective_at && (
+						<div className="rounded-md border border-blue-200 bg-blue-50 px-5 py-4 text-sm text-blue-900">
+							<Translate text={localizationConstants.subscriptionScheduledChange} />{" "}
+							<strong>
+								{formatDate(
+									new Date(
+										subscription.status.scheduled_change.effective_at,
+									).toISOString(),
+								)}
+							</strong>.
 						</div>
 					)}
 
@@ -224,6 +277,19 @@ const AdminSubscription = () => {
 										<p className="mt-0.5 text-slate-500">{formatDate(subscription.start_at)}</p>
 									</div>
 								</div>
+								{subscription.status?.commitment_end_at && (
+									<div className="flex gap-3">
+										<CalendarDays className="mt-0.5 h-4 w-4 text-slate-500" />
+										<div>
+											<p className="font-medium text-slate-900">
+												<Translate text={localizationConstants.subscriptionCommitmentLabel} />
+											</p>
+											<p className="mt-0.5 text-slate-500">
+												{formatDate(subscription.status.commitment_end_at)}
+											</p>
+										</div>
+									</div>
+								)}
 								<div className="flex gap-3">
 									<CreditCard className="mt-0.5 h-4 w-4 text-slate-500" />
 									<div>

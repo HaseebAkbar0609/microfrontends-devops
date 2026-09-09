@@ -44,9 +44,11 @@ export {
   deleteCartItemAction,
   clearCartAction,
   checkoutSubscriptionAction,
+  changeSubscriptionFromCartAction,
   completeSubscriptionAction,
   type CheckoutPayload,
   type CheckoutResponse,
+  type ChangeSubscriptionResponse,
   type CompleteSubscriptionPayload,
   type CompleteSubscriptionResponse,
 } from "./cart/subscriptions";

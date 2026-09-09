@@ -1,5 +1,6 @@
-import { authStorage } from "@/lib/authStorage";
+import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
+import type { ApiResponse } from "@/types/api";
 
 export type BillingPaymentMethod = {
 	id: string;
@@ -12,88 +13,64 @@ export type BillingPaymentMethod = {
 
 type SetupIntent = { client_secret: string };
 
-function callerHeaders(): Record<string, string> | null {
-	const accessToken = authStorage.getAccessToken()?.trim() ?? "";
-	const company = authStorage.getCompanyData();
-	const companyId =
-		company && typeof company === "object" && "id" in company && typeof company.id === "string"
-			? company.id.trim()
-			: "";
-	if (!accessToken || !companyId) return null;
-	return {
-		Authorization: `Bearer ${accessToken}`,
-		"X-Company-ID": companyId,
-	};
-}
-
-async function billingRequest<T>(
+async function coreBillingRequest<T>(
+	method: "get" | "post" | "delete",
 	path: string,
-	init: RequestInit = {},
 ): Promise<ActionResult<T>> {
-	const headers = callerHeaders();
-	if (!headers) return { success: false, data: null, error: "Unauthorized" };
-
 	try {
-		const requestHeaders = new Headers(init.headers);
-		for (const [name, value] of Object.entries(headers)) {
-			requestHeaders.set(name, value);
-		}
-		const response = await fetch(path, {
-			...init,
-			headers: requestHeaders,
-			cache: "no-store",
-		});
-		if (!response.ok) {
-			return {
-				success: false,
-				data: null,
-				error: response.status === 409 ? "LAST_PAYMENT_METHOD" : "PAYMENT_METHOD_REQUEST_FAILED",
-				errorCode: String(response.status),
-			};
-		}
+		const response = await axiosInstance.request<ApiResponse<T>>({ method, url: path });
 		return {
 			success: true,
-			data: (await response.json()) as T,
+			data: response.data.data,
 			error: null,
 		};
-	} catch {
+	} catch (error: unknown) {
+		const message = (error as { response?: { data?: { message?: string } } })
+			.response?.data?.message;
 		return {
 			success: false,
 			data: null,
-			error: "PAYMENT_METHOD_REQUEST_FAILED",
+			error:
+				message === "CANNOT_DELETE_DEFAULT_CARD"
+					? "LAST_PAYMENT_METHOD"
+					: message ?? "PAYMENT_METHOD_REQUEST_FAILED",
 		};
 	}
 }
 
-export function listBillingPaymentMethodsAction() {
-	return billingRequest<BillingPaymentMethod[]>("/api/billing/payment-methods");
+export async function listBillingPaymentMethodsAction() {
+	type CardListEnvelope = ApiResponse<BillingPaymentMethod[]>;
+	try {
+		const response = await axiosInstance.get<CardListEnvelope>(
+			"/professionals/user-cards/list?page=1&page_size=100",
+		);
+		return { success: true, data: response.data.data, error: null } satisfies ActionResult<BillingPaymentMethod[]>;
+	} catch {
+		return { success: false, data: null, error: "PAYMENT_METHOD_REQUEST_FAILED" } satisfies ActionResult<BillingPaymentMethod[]>;
+	}
 }
 
-export function createBillingSetupIntentAction(email: string) {
-	return billingRequest<SetupIntent>("/api/billing/payment-methods/setup-intent", {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ email }),
-	});
+export function createBillingSetupIntentAction(_email: string) {
+	return coreBillingRequest<SetupIntent>("post", "/professionals/user-cards/setup-intent");
 }
 
 export function completeBillingSetupIntentAction(setupIntentId: string) {
-	return billingRequest<BillingPaymentMethod>(
-		`/api/billing/payment-methods/setup-intent/${encodeURIComponent(setupIntentId)}`,
-		{ method: "POST" },
+	return coreBillingRequest<BillingPaymentMethod>(
+		"post",
+		`/professionals/user-cards/complete-setup-intent/${encodeURIComponent(setupIntentId)}`,
 	);
 }
 
 export function setDefaultBillingPaymentMethodAction(paymentMethodId: string) {
-	return billingRequest<BillingPaymentMethod>(
-		`/api/billing/payment-methods/${encodeURIComponent(paymentMethodId)}/default`,
-		{ method: "POST" },
+	return coreBillingRequest<BillingPaymentMethod>(
+		"post",
+		`/professionals/user-cards/set-default/${encodeURIComponent(paymentMethodId)}`,
 	);
 }
 
 export function deleteBillingPaymentMethodAction(paymentMethodId: string) {
-	return billingRequest<{ deleted: true }>(
-		`/api/billing/payment-methods/${encodeURIComponent(paymentMethodId)}`,
-		{ method: "DELETE" },
+	return coreBillingRequest<{ deleted: true }>(
+		"delete",
+		`/professionals/user-cards/delete/${encodeURIComponent(paymentMethodId)}`,
 	);
 }

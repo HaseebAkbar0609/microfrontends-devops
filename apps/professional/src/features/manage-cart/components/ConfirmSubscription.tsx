@@ -1,7 +1,9 @@
 "use client";
 
 import {
+	changeSubscriptionFromCartAction,
 	checkoutSubscriptionAction,
+	clearCartAction,
 	completeSubscriptionAction,
 } from "@/api-actions";
 import { LabeledCheckbox } from "@/components/common/LabeledCheckbox";
@@ -13,9 +15,10 @@ import { showToast } from "@/lib/toast";
 import { formatCurrency } from "@/lib/utils";
 import { cartMessages } from "@/constants/messages";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import { type ConfirmSubscriptionProps } from "../types";
 import { CheckoutPaymentDetails } from "./CheckoutPaymentDetails";
 
@@ -38,8 +41,10 @@ export function ConfirmSubscription({
 	subtotal,
 	total,
 	onBackToCart,
+	isPlanChange = false,
 }: ConfirmSubscriptionProps) {
 	const router = useRouter();
+	const t = useTranslate();
 	const { company, user, hydrateFromStorage } = useAuthStatus();
 	const profile = user as User | null;
 	const mainItem = items[0];
@@ -106,7 +111,7 @@ export function ConfirmSubscription({
 									/>
 								</p>
 								<p className="text-gray-500">
-									{formatCurrency((mainItem?.unitPrice ?? 0) / 100)}
+									{formatCurrency(mainItem?.unitPrice ?? 0)}
 								</p>
 							</div>
 							<div className="space-y-1">
@@ -313,6 +318,51 @@ export function ConfirmSubscription({
 									return;
 								}
 
+								if (isPlanChange) {
+									setIsSubmitting(true);
+									try {
+										const change =
+											await changeSubscriptionFromCartAction();
+										if (!change.success || !change.data) return;
+
+										if (change.data.client_secret) {
+											const publishableKey =
+												process.env
+													.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+											if (!publishableKey) {
+												showToast("error", "Stripe key is missing.");
+												return;
+											}
+											const stripe = await loadStripe(publishableKey);
+											const confirmation = await stripe?.confirmCardPayment(
+												change.data.client_secret,
+											);
+											if (confirmation?.error) {
+												showToast(
+													"error",
+													confirmation.error.message ??
+														"Authentication failed.",
+												);
+												return;
+											}
+											await clearCartAction();
+										}
+
+										showToast(
+											"success",
+											change.data.change_type ===
+											"downgrade_scheduled"
+												? t(localizationConstants.manageCartChangeScheduled)
+												: t(localizationConstants.manageCartChangeSucceeded),
+										);
+										router.replace("/admin/subscription");
+										router.refresh();
+									} finally {
+										setIsSubmitting(false);
+									}
+									return;
+								}
+
 								setView("checkout");
 							}}
 							disabled={
@@ -323,7 +373,9 @@ export function ConfirmSubscription({
 						>
 							<Translate
 								text={
-									localizationConstants.manageCartCheckoutButton
+									isPlanChange
+										? localizationConstants.manageCartApplyChangesButton
+										: localizationConstants.manageCartCheckoutButton
 								}
 							/>
 						</Button>

@@ -36,6 +36,16 @@ export interface SubscriptionOverview {
 		cancellable: boolean;
 		cancel_at: string | null;
 		end_at: string | null;
+		commitment_end_at: string | null;
+		failed_payment_attempts: number;
+		scheduled_change: {
+			effective_at?: number;
+			items?: Array<{
+				plan_key: string;
+				quantity: number;
+			}>;
+		} | null;
+		access_state: "ACTIVE" | "ACTIVE_IN_GRACE" | "RESTRICTED" | "INACTIVE" | "DEMO";
 	} | null;
 	billing: {
 		interval: string | null;
@@ -54,4 +64,20 @@ export async function getSubscriptionOverview(): Promise<SubscriptionOverview> {
 		throw new Error("SUBSCRIPTION_OVERVIEW_REQUEST_FAILED");
 	}
 	return response.data.data;
+}
+
+export interface OpenInvoice {
+	id: string;
+	number: string | null;
+	amount_due: number;
+	currency: string;
+	attempt_count: number;
+	hosted_invoice_url: string | null;
+}
+
+export async function getOpenInvoices(): Promise<OpenInvoice[]> {
+	const response = await axiosInstance.get<ApiResponse<OpenInvoice[]>>(
+		"/professionals/subscriptions/open-invoices",
+	);
+	return response.data?.data ?? [];
 }

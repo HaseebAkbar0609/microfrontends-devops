@@ -15,6 +15,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 export default function ManageCartPage() {
+	const [isPlanChange, setIsPlanChange] = useState(false);
 	const [items, setItems] = useState<CartItem[]>([]);
 	const [updatingItemIds, setUpdatingItemIds] = useState<string[]>([]);
 	const [removingItemIds, setRemovingItemIds] = useState<string[]>([]);
@@ -62,11 +63,14 @@ export default function ManageCartPage() {
 	};
 
 	useEffect(() => {
+		setIsPlanChange(
+			new URLSearchParams(window.location.search).get("mode") === "change",
+		);
 		fetchCart();
 	}, []);
 
-	const subtotal = totalCartAmount / 100;
-	const total = totalCartAmount / 100;
+	const subtotal = totalCartAmount;
+	const total = totalCartAmount;
 
 	const updateQuantity = async (id: string, delta: number) => {
 		if (updatingItemIds.includes(id)) return;
@@ -137,6 +141,7 @@ export default function ManageCartPage() {
 							subtotal={subtotal}
 							total={total}
 							onBackToCart={() => setStep("cart")}
+							isPlanChange={isPlanChange}
 						/>
 					)}
 				</div>

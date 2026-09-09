@@ -373,6 +373,9 @@ export type ManageCartTranslation = {
 	manageCartSubtotalLabel: string;
 	manageCartTotalLabel: string;
 	manageCartCheckoutButton: string;
+	manageCartApplyChangesButton: string;
+	manageCartChangeSucceeded: string;
+	manageCartChangeScheduled: string;
 	manageCartConfirmTitle: string;
 	manageCartSubscriptionPlanTitle: string;
 	manageCartSubscriptionMembershipLabel: string;
@@ -1804,6 +1807,12 @@ export type OfferTranslation = {
 	subscriptionEmptyText: string;
 	subscriptionChoosePlan: string;
 	subscriptionCancellationScheduled: string;
+	subscriptionGraceWarning: string;
+	subscriptionRestrictedWarning: string;
+	subscriptionCommitmentLabel: string;
+	subscriptionPayOutstanding: string;
+	subscriptionChangePlan: string;
+	subscriptionScheduledChange: string;
 	subscriptionServiceBankId: string;
 	subscriptionServiceSms: string;
 	subscriptionServiceEmail: string;

@@ -7,7 +7,7 @@ import { useAuthStatus } from "@/context/AuthContext";
 import { Loader } from "@/components/ui/loader";
 import { getRequiresSubscriptionFromBrowserCookie } from "@/lib/requiresSubscriptionCookie";
 import { setRequiresSubscriptionCookie } from "@/lib/requiresSubscriptionCookie";
-import { getBillingAccountStatusAction } from "@/api-actions/payment/hostedCheckout";
+import { getSubscriptionOverview } from "@/features/admin/subscription/services/subscriptionService";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 
@@ -43,6 +43,10 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
+	const isPlanChange =
+		typeof window !== "undefined" &&
+		(new URLSearchParams(window.location.search).get("change") === "1" ||
+			new URLSearchParams(window.location.search).get("mode") === "change");
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -50,6 +54,7 @@ export function AppShell({ children }: AppShellProps) {
 		if (
 			isAuthenticated &&
 			isPublicPage &&
+			!isPlanChange &&
 			!getRequiresSubscriptionFromBrowserCookie()
 		) {
 			router.replace("/home");
@@ -89,20 +94,31 @@ export function AppShell({ children }: AppShellProps) {
 		}
 
 		setIsCheckingAuth(false);
-	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, pathname, router]);
+	}, [
+		isReady,
+		isAuthenticated,
+		isAuthRoute,
+		isPublicPage,
+		isPlanChange,
+		pathname,
+		router,
+	]);
 
 	useEffect(() => {
 		if (!isReady || !isAuthenticated || isAuthRoute || isPublicPage) return;
 		let active = true;
 
 		const checkBillingStatus = async () => {
-			const result = await getBillingAccountStatusAction();
-			if (!active || !result.success || !result.data) return;
-			const canceled =
-				result.data.payment_status === "canceled" ||
-				result.data.subscription_status === "canceled";
-			setRequiresSubscriptionCookie(canceled);
-			if (canceled) router.replace("/manage-plans");
+			try {
+				const overview = await getSubscriptionOverview();
+				if (!active) return;
+				const requiresSubscription =
+					overview.status?.access_state === "INACTIVE";
+				setRequiresSubscriptionCookie(requiresSubscription);
+				if (requiresSubscription) router.replace("/manage-plans");
+			} catch {
+				// A transient billing-status failure must not eject an authenticated user.
+			}
 		};
 
 		void checkBillingStatus();

@@ -32,6 +32,7 @@ export const API_PATH = {
 	SUBSCRIPTIONS: {
 		LIST: `${BASE_PATHS.SUBSCRIPTIONS}/list`,
 		CHECKOUT: `${BASE_PATHS.SUBSCRIPTIONS}/checkout`,
+		CHANGE: `${BASE_PATHS.SUBSCRIPTIONS}/change`,
 		OVERVIEW: "/subscriptions",
 	},
 	USER_CARDS: {

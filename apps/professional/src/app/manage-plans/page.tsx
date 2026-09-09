@@ -63,6 +63,8 @@ function getPriceForPaymentOption(
 
 export default function ManagePlansPage() {
 	const router = useRouter();
+	const [isPlanChange, setIsPlanChange] = useState(false);
+	const cartHref = isPlanChange ? "/manage-cart?mode=change" : "/manage-cart";
 	const [paymentOption, setPaymentOption] = useState<PaymentOption>("month");
 	const [currentStep, setCurrentStep] = useState<
 		(typeof MANAGE_PLANS_STEPS)[keyof typeof MANAGE_PLANS_STEPS]
@@ -107,14 +109,21 @@ export default function ManagePlansPage() {
 	}, []);
 
 	useEffect(() => {
+		setIsPlanChange(
+			new URLSearchParams(window.location.search).get("change") === "1",
+		);
 		fetchPlans();
 		syncStepFromCart();
 	}, [syncStepFromCart]);
 
 	const stepPlans = useMemo(() => {
 		const planKeys = STEP_PLAN_KEYS[currentStep] as readonly string[];
-		return plans.filter((plan) => planKeys.includes(plan.plan_key));
-	}, [currentStep, plans]);
+		return plans.filter(
+			(plan) =>
+				planKeys.includes(plan.plan_key) &&
+				(!isPlanChange || plan.plan_key !== MANAGE_PLANS_PLAN_IDS.FREE),
+		);
+	}, [currentStep, isPlanChange, plans]);
 
 	const handleChoosePlan = useCallback(
 		async (plan: SubscriptionPlan) => {
@@ -153,7 +162,7 @@ export default function ManagePlansPage() {
 				currentStep === MANAGE_PLANS_STEPS.BASE &&
 				plan.plan_key === MANAGE_PLANS_PLAN_IDS.FREE
 			) {
-				router.push("/manage-cart");
+				router.push(cartHref);
 				return;
 			}
 
@@ -165,7 +174,7 @@ export default function ManagePlansPage() {
 				return;
 			}
 		},
-		[currentStep, paymentOption, quantities, router],
+		[cartHref, currentStep, paymentOption, quantities, router],
 	);
 
 	return (
@@ -211,7 +220,7 @@ export default function ManagePlansPage() {
 								className="w-fit"
 							>
 								<Link
-									href="/manage-cart"
+									href={cartHref}
 									className="inline-flex items-center gap-2"
 								>
 									<ShoppingCart
