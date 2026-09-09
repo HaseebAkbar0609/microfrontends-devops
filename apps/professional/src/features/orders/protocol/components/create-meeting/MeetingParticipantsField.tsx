@@ -39,15 +39,15 @@ export function MeetingParticipantsField({
     const t = useTranslate();
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
             {/* Lägg till deltagare */}
             <div className="space-y-1">
                 <p className="text-xs font-semibold text-slate-900">
                     <Translate text={localizationConstants.protocolAddParticipantsLabel} />
                 </p>
                 <DropdownMenu>
-                    <div className="min-h-[40px] rounded-lg border border-slate-200 bg-white p-1.5 flex flex-wrap items-center gap-1.5 justify-between">
-                        <div className="flex flex-wrap items-center gap-1.5 flex-1 min-w-0">
+                    <div className="min-h-[36px] rounded-lg border border-slate-200 bg-white p-1 flex flex-wrap items-center gap-1 justify-between">
+                        <div className="flex flex-wrap items-center gap-1 flex-1 min-w-0">
                             {participants.map((p) => (
                                 <span
                                     key={p}
@@ -110,7 +110,7 @@ export function MeetingParticipantsField({
                             <Input
                                 {...field}
                                 placeholder={t(localizationConstants.protocolLocationPlaceholder)}
-                                className="h-10 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+                                className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
                             />
                         </FormControl>
                         <FormMessage />

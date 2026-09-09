@@ -2,9 +2,14 @@
 
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
-import { ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import {
 	FormField,
 	FormItem,
@@ -12,12 +17,6 @@ import {
 	FormControl,
 	FormMessage,
 } from "@/components/ui/form";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PROTOCOL_CONSTANTS } from "../../constants/protocol.constants";
@@ -31,9 +30,9 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 	const t = useTranslate();
 
 	return (
-		<div className="space-y-4">
+		<div className="space-y-2.5">
 			{/* Row 2: Ansvarig & Rubrik */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
 				{/* Ansvarig */}
 				<FormField
 					control={form.control}
@@ -44,29 +43,11 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 								<Translate text={localizationConstants.protocolResponsibleLabel} />
 							</FormLabel>
 							<FormControl>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button
-											type="button"
-											variant="outline"
-											className="h-10 w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm font-normal px-3 flex justify-between items-center shadow-none hover:bg-slate-50 cursor-pointer"
-										>
-											<span className="truncate">{field.value || PROTOCOL_CONSTANTS.DEFAULT_RESPONSIBLE}</span>
-											<ChevronDown className="h-4 w-4 text-zinc-500 shrink-0 ml-1" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent align="start" className="w-56 bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50">
-										{PROTOCOL_CONSTANTS.AVAILABLE_RESPONSIBLE.map((resp) => (
-											<DropdownMenuItem
-												key={resp}
-												onClick={() => field.onChange(resp)}
-												className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
-											>
-												{resp}
-											</DropdownMenuItem>
-										))}
-									</DropdownMenuContent>
-								</DropdownMenu>
+								<Input
+									{...field}
+									placeholder={PROTOCOL_CONSTANTS.DEFAULT_RESPONSIBLE}
+									className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -86,7 +67,7 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 								<Input
 									{...field}
 									placeholder={t(localizationConstants.protocolSubjectLabel)}
-									className="h-10 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+									className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
 								/>
 							</FormControl>
 							<FormMessage />
@@ -96,7 +77,7 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 			</div>
 
 			{/* Row 3: Typ & Kategori */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
 				{/* Typ */}
 				<FormField
 					control={form.control}
@@ -106,31 +87,24 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 							<FormLabel className="text-xs font-semibold text-slate-900">
 								<Translate text={localizationConstants.protocolTypeLabel} />
 							</FormLabel>
-							<FormControl>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button
-											type="button"
-											variant="outline"
-											className="h-10 w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm font-normal px-3 flex justify-between items-center shadow-none hover:bg-slate-50 cursor-pointer"
+							<Select value={field.value} onValueChange={field.onChange}>
+								<FormControl>
+									<SelectTrigger className="w-full h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus:ring-slate-900 focus-visible:ring-slate-900 cursor-pointer">
+										<SelectValue placeholder={t(localizationConstants.protocolTypeLabel)} />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent className="bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50">
+									{PROTOCOL_CONSTANTS.UPLOAD_PROTOCOL_TYPES.map((tItem) => (
+										<SelectItem
+											key={tItem}
+											value={tItem}
+											className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
 										>
-											<span>{field.value || PROTOCOL_CONSTANTS.UPLOAD_PROTOCOL_TYPES[0]}</span>
-											<ChevronDown className="h-4 w-4 text-zinc-500 shrink-0" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent align="start" className="w-56 bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50">
-										{PROTOCOL_CONSTANTS.UPLOAD_PROTOCOL_TYPES.map((tItem) => (
-											<DropdownMenuItem
-												key={tItem}
-												onClick={() => field.onChange(tItem)}
-												className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
-											>
-												{tItem}
-											</DropdownMenuItem>
-										))}
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</FormControl>
+											{tItem}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -145,31 +119,24 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 							<FormLabel className="text-xs font-semibold text-slate-900">
 								<Translate text={localizationConstants.protocolCategoryLabel} />
 							</FormLabel>
-							<FormControl>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button
-											type="button"
-											variant="outline"
-											className="h-10 w-full rounded-lg border-slate-200 bg-white text-slate-900 text-sm font-normal px-3 flex justify-between items-center shadow-none hover:bg-slate-50 cursor-pointer"
+							<Select value={field.value} onValueChange={field.onChange}>
+								<FormControl>
+									<SelectTrigger className="w-full h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus:ring-slate-900 focus-visible:ring-slate-900 cursor-pointer">
+										<SelectValue placeholder={t(localizationConstants.protocolCategoryLabel)} />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent className="bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50">
+									{PROTOCOL_CONSTANTS.CATEGORIES.map((cat) => (
+										<SelectItem
+											key={cat}
+											value={cat}
+											className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
 										>
-											<span>{field.value || PROTOCOL_CONSTANTS.CATEGORIES[0]}</span>
-											<ChevronDown className="h-4 w-4 text-zinc-500 shrink-0" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent align="start" className="w-56 bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50">
-										{PROTOCOL_CONSTANTS.CATEGORIES.map((cat) => (
-											<DropdownMenuItem
-												key={cat}
-												onClick={() => field.onChange(cat)}
-												className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
-											>
-												{cat}
-											</DropdownMenuItem>
-										))}
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</FormControl>
+											{cat}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 							<FormMessage />
 						</FormItem>
 					)}
@@ -189,7 +156,7 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 							<Input
 								{...field}
 								placeholder={t(localizationConstants.protocolAddressLabel)}
-								className="h-10 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+								className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
 							/>
 						</FormControl>
 						<FormMessage />
@@ -198,7 +165,7 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 			/>
 
 			{/* Row 5: Post nr & Ort */}
-			<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-3 items-start">
 				<FormField
 					control={form.control}
 					name="postalCode"
@@ -211,7 +178,7 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 								<Input
 									{...field}
 									placeholder={PROTOCOL_CONSTANTS.DEFAULT_POSTAL_CODE}
-									className="h-10 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+									className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
 								/>
 							</FormControl>
 							<FormMessage />
@@ -230,7 +197,7 @@ export function MeetingGeneralFields({ form }: MeetingGeneralFieldsProps) {
 								<Input
 									{...field}
 									placeholder={PROTOCOL_CONSTANTS.DEFAULT_CITY}
-									className="h-10 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
+									className="h-9 rounded-lg border-slate-200 bg-white text-slate-900 text-sm shadow-none focus-visible:ring-slate-900"
 								/>
 							</FormControl>
 							<FormMessage />
