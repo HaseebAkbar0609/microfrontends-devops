@@ -3659,6 +3659,8 @@ export type OfferTranslation = {
 	validationVisitDateRequired: string;
 	toastOpeningPreview: string;
 	reminderEmailLabel: string;
+	addMoreReminderEmails: string;
+	removeReminderEmail: string;
 	ruleLabel: string;
 	economicOverviewTabTB: string;
 	economicOverviewTabResult: string;

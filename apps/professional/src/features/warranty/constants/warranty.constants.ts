@@ -15,6 +15,8 @@ export const WARRANTY_CONSTANTS = {
 	DEFAULT_FALLBACK_DOCUMENT_NAME: "file.txt",
 	DEFAULT_PAGE_SIZE: 10,
 	ALLOWED_FILE_TYPES: ".png,.jpg,.jpeg,.pdf,.txt",
+	/** Matches the ceiling the "max 10MB" help text under the picker promises. */
+	MAX_FILE_SIZE_BYTES: 10 * 1024 * 1024,
 	SUPPORTED_IMAGE_EXTENSIONS: ["png", "jpg", "jpeg", "doc"] as const,
 	DEFAULT_FILE_TYPE: "pdf",
 	WARRANTY_PERIOD_FILTERS: ["2 år", "5 år", "10 år"] as const,

@@ -3583,6 +3583,8 @@ export const svOffer: OfferTranslation = {
 	validationVisitDateRequired: "Datum krävs",
 	toastOpeningPreview: "Förhandsgranska öppnad",
 	reminderEmailLabel: "Påminnelse mail",
+	addMoreReminderEmails: "Lägg till fler mail",
+	removeReminderEmail: "Ta bort mail",
 	ruleLabel: "Regel",
 	colOrderNo: "Order nr",
 	economicOverviewTabTB: "Täckningsbidrag",
