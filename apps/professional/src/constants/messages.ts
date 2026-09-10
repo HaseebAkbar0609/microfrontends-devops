@@ -42,6 +42,8 @@ export const authMessages = {
 export const cartMessages = {
   checkoutPayment: {
     cardSetupFailed: "Card setup failed.",
+    paymentFormLoadFailed:
+      "The secure payment form could not be loaded. Please try again.",
     missingPaymentMethodId: "Missing payment method id.",
     checkoutCompleted: "Checkout completed.",
     licensePurchasedSuccess: "License purchased successfully.",

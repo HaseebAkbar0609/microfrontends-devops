@@ -8,6 +8,7 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { Button } from "@/components/ui/button";
 import { ExpenseItem } from "../../types/expense.types";
+import { EXPENSE_LIST_ROUTE } from "../../constants/expense.constants";
 
 interface ExpenseDetailHeaderProps {
 	expense: ExpenseItem;
@@ -31,7 +32,7 @@ export function ExpenseDetailHeader({
 		<div className="flex items-center justify-between pb-4">
 			{/* Left: Back Button & Detaljer Title matching Figma */}
 			<div className="flex items-center gap-2">
-				<Link href="/module/financial-management/economy">
+				<Link href={EXPENSE_LIST_ROUTE}>
 					<Button
 						variant="ghost"
 						size="icon"

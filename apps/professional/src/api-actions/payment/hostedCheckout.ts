@@ -1,0 +1,139 @@
+import { authStorage } from "@/lib/authStorage";
+import type { ActionResult } from "@/types/api";
+
+type HostedCheckoutResponse = {
+	checkout_session_id: string;
+	url: string;
+};
+
+type HostedCheckoutRequest = {
+	planCode: string;
+	billingInterval: "monthly" | "annual";
+	quantity: number;
+	email: string;
+};
+
+export type HostedCheckoutStatus = {
+	checkout_session_id: string;
+	checkout_status: "open" | "completed" | "expired";
+	core_account_id: string;
+	payment_status: "pending" | "active" | "restricted" | "canceled";
+	subscription_status: string | null;
+};
+
+export type BillingAccountStatus = {
+	core_account_id: string;
+	payment_status: "pending" | "active" | "restricted" | "canceled";
+	subscription_status: string | null;
+	stripe_subscription_id: string | null;
+	plan_code: string | null;
+	billing_interval: "monthly" | "annual" | null;
+	quantity: number | null;
+	current_period_start: string | null;
+	current_period_end: string | null;
+	commitment_end: string | null;
+	cancel_at_period_end: boolean;
+	canceled_at: string | null;
+};
+
+function readCompanyId(): string {
+	const company = authStorage.getCompanyData();
+	if (!company || typeof company !== "object" || !("id" in company)) return "";
+	return typeof company.id === "string" ? company.id.trim() : "";
+}
+
+export async function getBillingAccountStatusAction(): Promise<
+	ActionResult<BillingAccountStatus>
+> {
+	const accessToken = authStorage.getAccessToken()?.trim() ?? "";
+	const companyId = readCompanyId();
+	if (!accessToken || !companyId) {
+		return { success: false, data: null, error: "Unauthorized" };
+	}
+
+	try {
+		const response = await fetch("/api/billing/account-status", {
+			headers: {
+				Authorization: `Bearer ${accessToken}`,
+				"X-Company-ID": companyId,
+			},
+			cache: "no-store",
+		});
+		if (!response.ok) {
+			return { success: false, data: null, error: "Unable to load billing status" };
+		}
+		return {
+			success: true,
+			data: (await response.json()) as BillingAccountStatus,
+			error: null,
+		};
+	} catch {
+		return { success: false, data: null, error: "Unable to load billing status" };
+	}
+}
+
+export async function getHostedCheckoutStatusAction(
+	checkoutSessionId: string,
+): Promise<ActionResult<HostedCheckoutStatus>> {
+	const accessToken = authStorage.getAccessToken()?.trim() ?? "";
+	const companyId = readCompanyId();
+	if (!accessToken || !companyId) {
+		return { success: false, data: null, error: "Unauthorized" };
+	}
+
+	try {
+		const response = await fetch(
+			`/api/billing/checkout-session/${encodeURIComponent(checkoutSessionId)}`,
+			{
+				headers: {
+					Authorization: `Bearer ${accessToken}`,
+					"X-Company-ID": companyId,
+				},
+				cache: "no-store",
+			},
+		);
+		if (!response.ok) {
+			return { success: false, data: null, error: "Unable to verify checkout" };
+		}
+		return {
+			success: true,
+			data: (await response.json()) as HostedCheckoutStatus,
+			error: null,
+		};
+	} catch {
+		return { success: false, data: null, error: "Unable to verify checkout" };
+	}
+}
+
+export async function createHostedCheckoutAction(
+	payload: HostedCheckoutRequest,
+): Promise<ActionResult<HostedCheckoutResponse>> {
+	const accessToken = authStorage.getAccessToken()?.trim() ?? "";
+	const companyId = readCompanyId();
+	if (!accessToken || !companyId) {
+		return { success: false, data: null, error: "Unauthorized" };
+	}
+
+	try {
+		const response = await fetch("/api/billing/checkout-session", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${accessToken}`,
+				"X-Company-ID": companyId,
+			},
+			body: JSON.stringify({ ...payload, requestId: crypto.randomUUID() }),
+		});
+		if (!response.ok) {
+			return { success: false, data: null, error: "Unable to start checkout" };
+		}
+		const data = (await response.json()) as HostedCheckoutResponse;
+		const checkoutUrl = new URL(data.url);
+		if (checkoutUrl.protocol !== "https:" || checkoutUrl.hostname !== "checkout.stripe.com") {
+			return { success: false, data: null, error: "Invalid checkout URL" };
+		}
+		return { success: true, data, error: null };
+	} catch {
+		return { success: false, data: null, error: "Unable to start checkout" };
+	}
+}

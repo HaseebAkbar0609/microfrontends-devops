@@ -67,6 +67,8 @@ export * from "./utils/rotRutRepository";
 export * from "./hooks/useRotRut";
 export * from "./components/dashboard/EconomyDashboard";
 export * from "./components/dashboard/EconomyDashboardPage";
+export * from "./components/economy/EconomySectionHub";
+export * from "./components/economy/ComingSoonPage";
 export * from "./components/dashboard/EconomyDashboardConfig";
 export * from "./hooks/useEconomyDashboard";
 export * from "./types/economyDashboard.types";

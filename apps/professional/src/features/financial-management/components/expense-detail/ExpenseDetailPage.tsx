@@ -19,6 +19,7 @@ import { ExpenseDetailAttestCard } from "./ExpenseDetailAttestCard";
 import { ExpenseDetailInvoiceCard } from "./ExpenseDetailInvoiceCard";
 import { ExpenseDetailTimeReportAccordion } from "./ExpenseDetailTimeReportAccordion";
 import { ExpenseDetailAttachmentsAccordion } from "./ExpenseDetailAttachmentsAccordion";
+import { EXPENSE_LIST_ROUTE } from "../../constants/expense.constants";
 
 interface ExpenseDetailPageProps {
 	expenseId: string;
@@ -62,7 +63,7 @@ export function ExpenseDetailPage({ expenseId }: ExpenseDetailPageProps) {
 					<p className="font-semibold text-sm">
 						<Translate text={localizationConstants.expenseDetailNotFound} />
 					</p>
-					<Link href="/module/financial-management/economy" className="inline-block mt-4">
+					<Link href={EXPENSE_LIST_ROUTE} className="inline-block mt-4">
 						<Button variant="outline" size="sm" className="text-xs">
 							<Translate text={localizationConstants.expenseDetailBack} />
 						</Button>

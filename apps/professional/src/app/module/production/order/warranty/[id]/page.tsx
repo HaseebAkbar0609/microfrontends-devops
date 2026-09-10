@@ -1,3 +1,5 @@
+import { parseRecordIdParam } from "@/lib/routeParams";
+
 import { OrderWarrantyDetailPage } from "@/features/orders/warranty/OrderWarrantyDetailPage";
 
 interface PageProps {
@@ -6,5 +8,6 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
-	return <OrderWarrantyDetailPage id={id} />;
+
+	return <OrderWarrantyDetailPage id={parseRecordIdParam(id)} />;
 }
