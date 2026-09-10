@@ -29,18 +29,18 @@ import {
 import { TablePagination } from "@/components/table/TablePagination";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { GUARANTEE_CONSTANTS } from "../constants/guaranteeCommitments.constants";
-import type { GuaranteeRow } from "../types/guaranteeCommitments.types";
-import type { GuaranteeSortField, SortOrder } from "../hooks/useGuaranteeCommitments";
+import { WARRANTY_CONSTANTS } from "../constants/warranty.constants";
+import type { WarrantyRow } from "../types/warranty.types";
+import type { WarrantySortField, SortOrder } from "../hooks/useWarranty";
 
-export interface GuaranteeOverviewTableProps {
-	rows: GuaranteeRow[];
+export interface WarrantyOverviewTableProps {
+	rows: WarrantyRow[];
 	selectedIds: string[];
 	onToggleSelectAll: () => void;
 	onToggleSelectRow: (id: string) => void;
-	sortField: GuaranteeSortField;
+	sortField: WarrantySortField;
 	sortOrder: SortOrder;
-	onSort: (field: GuaranteeSortField) => void;
+	onSort: (field: WarrantySortField) => void;
 	searchQuery: string;
 	onSearchChange: (query: string) => void;
 	statusFilter: string;
@@ -50,11 +50,11 @@ export interface GuaranteeOverviewTableProps {
 	pageSize: number;
 	setPageSize: (size: number) => void;
 	totalPages: number;
-	onOpenDetail: (row: GuaranteeRow) => void;
+	onOpenDetail: (row: WarrantyRow) => void;
 	onOpenAdd?: () => void;
 }
 
-export function GuaranteeOverviewTable({
+export function WarrantyOverviewTable({
 	rows,
 	selectedIds,
 	onToggleSelectAll,
@@ -73,11 +73,11 @@ export function GuaranteeOverviewTable({
 	totalPages,
 	onOpenDetail,
 	onOpenAdd,
-}: GuaranteeOverviewTableProps) {
+}: WarrantyOverviewTableProps) {
 	const t = useTranslate();
 	const allSelected = rows.length > 0 && rows.every((r) => selectedIds.includes(r.id));
 
-	const renderSortIcon = (field: GuaranteeSortField) => {
+	const renderSortIcon = (field: WarrantySortField) => {
 		if (sortField !== field) {
 			return <ArrowUpDown className="h-3.5 w-3.5 text-slate-400 opacity-60 shrink-0 print:hidden" />;
 		}
@@ -130,7 +130,7 @@ export function GuaranteeOverviewTable({
 							>
 								<Translate text={localizationConstants.filterAllStatuses} />
 							</DropdownMenuItem>
-							{GUARANTEE_CONSTANTS.WARRANTY_PERIOD_FILTERS.map((period) => (
+							{WARRANTY_CONSTANTS.WARRANTY_PERIOD_FILTERS.map((period) => (
 								<DropdownMenuItem
 									key={period}
 									onClick={() => onStatusFilterChange(period)}
@@ -184,20 +184,20 @@ export function GuaranteeOverviewTable({
 							</TableHead>
 							<TableHead
 								className="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
-								onClick={() => onSort("orderNo")}
+								onClick={() => onSort("recordNo")}
 							>
 								<span className="flex items-center gap-1">
 									<Translate text={localizationConstants.colProjectNo} />
-									{renderSortIcon("orderNo")}
+									{renderSortIcon("recordNo")}
 								</span>
 							</TableHead>
 							<TableHead
 								className="cursor-pointer select-none whitespace-nowrap px-4 py-3 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
-								onClick={() => onSort("orderName")}
+								onClick={() => onSort("recordName")}
 							>
 								<span className="flex items-center gap-1">
 									<Translate text={localizationConstants.colProjectName} />
-									{renderSortIcon("orderName")}
+									{renderSortIcon("recordName")}
 								</span>
 							</TableHead>
 							<TableHead
@@ -269,15 +269,15 @@ export function GuaranteeOverviewTable({
 											<Checkbox
 												checked={isChecked}
 												onCheckedChange={() => onToggleSelectRow(row.id)}
-												aria-label={`Select row ${row.orderNo}`}
+												aria-label={`Select row ${row.recordNo}`}
 												className="border-slate-400 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 data-[state=checked]:text-white focus-visible:ring-slate-900 cursor-pointer"
 											/>
 										</TableCell>
 										<TableCell className="px-4 py-3.5 text-sm font-normal text-slate-900 whitespace-nowrap">
-											{row.orderNo}
+											{row.recordNo}
 										</TableCell>
 										<TableCell className="px-4 py-3.5 text-sm font-normal text-slate-900 whitespace-nowrap">
-											{row.orderName}
+											{row.recordName}
 										</TableCell>
 										<TableCell className="px-4 py-3.5 text-sm font-normal text-slate-900 whitespace-nowrap">
 											{row.startDate}
@@ -327,4 +327,4 @@ export function GuaranteeOverviewTable({
 	);
 }
 
-export default GuaranteeOverviewTable;
+export default WarrantyOverviewTable;

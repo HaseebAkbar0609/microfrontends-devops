@@ -1,8 +1,13 @@
 /**
- * Guarantee Commitments Feature Constants
+ * Shared warranty (Garantiåtaganden) feature constants.
+ *
+ * One set for all three consumers — the Order warranty route, the tab inside an
+ * opened order, and the Project module page. The two features this was merged
+ * from disagreed on the default record id ("5000" vs "5000-001"); the
+ * order-scoped one wins because the API paths are order-scoped.
  */
 
-export const GUARANTEE_CONSTANTS = {
+export const WARRANTY_CONSTANTS = {
 	DEFAULT_ORDER_ID: "5000-001",
 	DEFAULT_FALLBACK_EMAIL: "info@byggbolaget.se",
 	DEFAULT_FALLBACK_DATE: "2026-09-01",

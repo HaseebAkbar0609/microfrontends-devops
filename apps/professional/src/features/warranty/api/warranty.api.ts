@@ -1,15 +1,15 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
-import { GUARANTEE_CONSTANTS } from "../constants/guaranteeCommitments.constants";
-import { MOCK_GUARANTEE_ROWS, MOCK_INSPECTION_DATES } from "../data/guaranteeCommitments.mock";
-import type { GuaranteeRow, InspectionDateItem } from "../types/guaranteeCommitments.types";
+import { WARRANTY_CONSTANTS } from "../constants/warranty.constants";
+import { MOCK_WARRANTY_ROWS, MOCK_INSPECTION_DATES } from "../data/warranty.mock";
+import type { WarrantyRow, InspectionDateItem } from "../types/warranty.types";
 
 /**
  * Fetches the list of guarantee commitments overview rows from the API with mock fallback
  */
-export async function getGuaranteeCommitments(orderId?: string): Promise<GuaranteeRow[]> {
+export async function getWarrantyOverview(orderId?: string): Promise<WarrantyRow[]> {
 	if (!orderId) {
-		return MOCK_GUARANTEE_ROWS;
+		return MOCK_WARRANTY_ROWS;
 	}
 
 	try {
@@ -17,9 +17,9 @@ export async function getGuaranteeCommitments(orderId?: string): Promise<Guarant
 		const payload = res.data?.data ?? res.data;
 		if (Array.isArray(payload) && payload.length > 0) {
 			return payload.map((item: Record<string, unknown>, idx: number) => ({
-				id: String(item.id || item.orderNo || `guarantee-${idx}`),
-				orderNo: String(item.orderNo || item.order_no || `#${5000 + idx}`),
-				orderName: String(item.orderName || item.order_name || "Renovation"),
+				id: String(item.id || item.orderNo || `warranty-${idx}`),
+				recordNo: String(item.orderNo || item.order_no || `#${5000 + idx}`),
+				recordName: String(item.orderName || item.order_name || "Renovation"),
 				startDate: String(item.startDate || item.start_date || "2024/01/01"),
 				approvedDate: String(item.approvedDate || item.approved_date || "2024/01/01"),
 				warrantyPeriod: String(item.warrantyPeriod || item.warranty_period || "5 år"),
@@ -32,29 +32,29 @@ export async function getGuaranteeCommitments(orderId?: string): Promise<Guarant
 				email: String(item.email || "Ann@example.com"),
 			}));
 		}
-		return MOCK_GUARANTEE_ROWS;
+		return MOCK_WARRANTY_ROWS;
 	} catch (error) {
 		console.warn(
-			`[Guarantee API] GET ${API_PATH.ORDERS.GUARANTEE_COMMITMENTS(orderId)} failed, using mock fallback:`,
+			`[Warranty API] GET ${API_PATH.ORDERS.GUARANTEE_COMMITMENTS(orderId)} failed, using mock fallback:`,
 			error instanceof Error ? error.message : error
 		);
-		return MOCK_GUARANTEE_ROWS;
+		return MOCK_WARRANTY_ROWS;
 	}
 }
 
 /**
  * Fetches single guarantee detail and inspection dates
  */
-export async function getGuaranteeDetail(orderId: string): Promise<{
-	warranty: GuaranteeRow;
+export async function getWarrantyDetail(orderId: string): Promise<{
+	warranty: WarrantyRow;
 	visitDates: InspectionDateItem[];
 }> {
 	const defaultWarranty =
-		MOCK_GUARANTEE_ROWS.find(
+		MOCK_WARRANTY_ROWS.find(
 			(r) =>
 				r.id === orderId ||
-				r.orderNo.replace("#", "").trim() === orderId.replace("#", "").trim()
-		) || MOCK_GUARANTEE_ROWS[MOCK_GUARANTEE_ROWS.length - 1];
+				r.recordNo.replace("#", "").trim() === orderId.replace("#", "").trim()
+		) || MOCK_WARRANTY_ROWS[MOCK_WARRANTY_ROWS.length - 1];
 
 	try {
 		const res = await axiosInstance.get(API_PATH.ORDERS.GUARANTEE_VISIT_DATES(orderId));
@@ -71,7 +71,7 @@ export async function getGuaranteeDetail(orderId: string): Promise<{
 		};
 	} catch (error) {
 		console.warn(
-			`[Guarantee Detail API] GET failed for order ${orderId}, using fallback:`,
+			`[Warranty API] GET failed for order ${orderId}, using fallback:`,
 			error instanceof Error ? error.message : error
 		);
 		return {
@@ -93,7 +93,7 @@ export async function createVisitDateApi(
 		return res.data?.data ?? res.data;
 	} catch (error) {
 		console.warn(
-			`[Guarantee API] POST visit date failed, saving locally:`,
+			`[Warranty API] POST visit date failed, saving locally:`,
 			error instanceof Error ? error.message : error
 		);
 		return {
@@ -119,16 +119,16 @@ export async function updateVisitDateApi(
 		return res.data?.data ?? res.data;
 	} catch (error) {
 		console.warn(
-			`[Guarantee API] PUT visit date failed, updating locally:`,
+			`[Warranty API] PUT visit date failed, updating locally:`,
 			error instanceof Error ? error.message : error
 		);
 		return {
 			id: visitDateId,
-			date: updatedItem.date || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DATE,
-			reminderEmail: updatedItem.reminderEmail || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_EMAIL,
-			rule: updatedItem.rule || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_RULE,
-			documentName: updatedItem.documentName || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME,
-			fileType: updatedItem.fileType || GUARANTEE_CONSTANTS.DEFAULT_FILE_TYPE,
+			date: updatedItem.date || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DATE,
+			reminderEmail: updatedItem.reminderEmail || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_EMAIL,
+			rule: updatedItem.rule || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_RULE,
+			documentName: updatedItem.documentName || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME,
+			fileType: updatedItem.fileType || WARRANTY_CONSTANTS.DEFAULT_FILE_TYPE,
 			recipients: updatedItem.recipients,
 			documents: updatedItem.documents,
 		};
@@ -149,7 +149,7 @@ export async function deleteVisitDateApi(
 		return true;
 	} catch (error) {
 		console.warn(
-			`[Guarantee API] DELETE visit date failed:`,
+			`[Warranty API] DELETE visit date failed:`,
 			error instanceof Error ? error.message : error
 		);
 		return true;

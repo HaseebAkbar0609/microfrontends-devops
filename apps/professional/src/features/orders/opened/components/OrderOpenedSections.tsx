@@ -19,7 +19,7 @@ import { OrderInformationView } from "./OrderInformationView";
 import { OrderInspectionView } from "./inspection/OrderInspectionView";
 import { OrderOrganisationPage } from "@/features/orders/organisation/OrderOrganisationPage";
 import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
-import { OrderGuaranteeCommitmentsPage } from "@/features/orders/guarantee-commitments/OrderGuaranteeCommitmentsPage";
+import { WarrantyFeature } from "@/features/warranty/WarrantyFeature";
 import { OrderProtocolOverviewPage } from "@/features/orders/protocol/OrderProtocolOverviewPage";
 
 export interface OrderOpenedSectionsProps {
@@ -243,9 +243,8 @@ export function OrderOpenedSections({
 
 				{/* Tab 5: Garantiåtaganden */}
 				<TabsContent value="guarantee" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
-					<OrderGuaranteeCommitmentsPage
-						orderId={routeOrderId}
-						hideNavRow
+					<WarrantyFeature
+						recordId={routeOrderId}
 						onDetailModeChange={setIsGuaranteeDetailOpen}
 					/>
 				</TabsContent>

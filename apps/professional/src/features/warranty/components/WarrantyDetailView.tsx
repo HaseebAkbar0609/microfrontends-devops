@@ -41,11 +41,11 @@ import { PdfFileIcon } from "@/components/ui/PdfFileIcon";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import type { GuaranteeRow, InspectionDateItem } from "../types/guaranteeCommitments.types";
-import { CreateVisitDateModal } from "./CreateVisitDateModal";
+import type { WarrantyRow, InspectionDateItem } from "../types/warranty.types";
+import { VisitDateDialog } from "./visit-date/VisitDateDialog";
 
-export interface GuaranteeDetailViewProps {
-	warranty: GuaranteeRow;
+export interface WarrantyDetailViewProps {
+	warranty: WarrantyRow;
 	inspectionDates: InspectionDateItem[];
 	onBack: () => void;
 	onAddInspectionDate: (item: Omit<InspectionDateItem, "id">) => void;
@@ -53,14 +53,14 @@ export interface GuaranteeDetailViewProps {
 	onDeleteInspectionDate?: (id: string) => void;
 }
 
-export function GuaranteeDetailView({
+export function WarrantyDetailView({
 	warranty,
 	inspectionDates,
 	onBack,
 	onAddInspectionDate,
 	onUpdateInspectionDate,
 	onDeleteInspectionDate,
-}: GuaranteeDetailViewProps) {
+}: WarrantyDetailViewProps) {
 	const t = useTranslate();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<InspectionDateItem | null>(null);
@@ -86,7 +86,7 @@ export function GuaranteeDetailView({
 				showToast("success", t(localizationConstants.toastVisitDateAdded));
 			}
 		} catch (error) {
-			console.error("[GuaranteeDetailView] Failed to save visit date:", error);
+			console.error("[WarrantyDetailView] Failed to save visit date:", error);
 			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsModalOpen(false);
@@ -100,7 +100,7 @@ export function GuaranteeDetailView({
 				onDeleteInspectionDate(deletingId);
 				showToast("success", t(localizationConstants.toastVisitDateDeleted));
 			} catch (error) {
-				console.error("[GuaranteeDetailView] Failed to delete visit date:", error);
+				console.error("[WarrantyDetailView] Failed to delete visit date:", error);
 				showToast("error", t(localizationConstants.genericError));
 			} finally {
 				setDeletingId(null);
@@ -152,7 +152,7 @@ export function GuaranteeDetailView({
 								<Translate text={localizationConstants.projectLabel} />
 							</span>
 							<span className="font-sans text-sm font-normal leading-5 tracking-normal text-zinc-500 wrap-break-word">
-								{warranty.id === "5000-001" ? "2025-001" : warranty.orderNo}
+								{warranty.id === "5000-001" ? "2025-001" : warranty.recordNo}
 							</span>
 						</div>
 						<div className="flex flex-col gap-1">
@@ -180,7 +180,7 @@ export function GuaranteeDetailView({
 								<Translate text={localizationConstants.colProjectName} />
 							</span>
 							<span className="font-sans text-sm font-normal leading-5 tracking-normal text-zinc-500 wrap-break-word">
-								{warranty.id === "5000-001" ? "Ombyggnad villa" : warranty.orderName}
+								{warranty.id === "5000-001" ? "Ombyggnad villa" : warranty.recordName}
 							</span>
 						</div>
 						<div className="flex flex-col gap-1">
@@ -398,7 +398,7 @@ export function GuaranteeDetailView({
 			</div>
 
 			{/* Modal for Add / Edit visit date */}
-			<CreateVisitDateModal
+			<VisitDateDialog
 				isOpen={isModalOpen}
 				initialData={editingItem}
 				onClose={() => {
@@ -436,4 +436,4 @@ export function GuaranteeDetailView({
 	);
 }
 
-export default GuaranteeDetailView;
+export default WarrantyDetailView;

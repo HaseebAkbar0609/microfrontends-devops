@@ -2,19 +2,19 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import {
-	getGuaranteeCommitments,
-	getGuaranteeDetail,
+	getWarrantyOverview,
+	getWarrantyDetail,
 	createVisitDateApi,
 	updateVisitDateApi,
 	deleteVisitDateApi,
-} from "../api/guaranteeCommitments.api";
-import { GUARANTEE_CONSTANTS } from "../constants/guaranteeCommitments.constants";
-import { MOCK_GUARANTEE_ROWS, MOCK_INSPECTION_DATES } from "../data/guaranteeCommitments.mock";
-import type { GuaranteeRow, InspectionDateItem } from "../types/guaranteeCommitments.types";
+} from "../api/warranty.api";
+import { WARRANTY_CONSTANTS } from "../constants/warranty.constants";
+import { MOCK_WARRANTY_ROWS, MOCK_INSPECTION_DATES } from "../data/warranty.mock";
+import type { WarrantyRow, InspectionDateItem } from "../types/warranty.types";
 
-export type GuaranteeSortField =
-	| "orderNo"
-	| "orderName"
+export type WarrantySortField =
+	| "recordNo"
+	| "recordName"
 	| "startDate"
 	| "approvedDate"
 	| "warrantyPeriod"
@@ -22,14 +22,14 @@ export type GuaranteeSortField =
 	| "customer";
 export type SortOrder = "asc" | "desc";
 
-export function useGuaranteeCommitments(orderId?: string) {
-	const [rows, setRows] = useState<GuaranteeRow[]>(MOCK_GUARANTEE_ROWS);
+export function useWarranty(orderId?: string) {
+	const [rows, setRows] = useState<WarrantyRow[]>(MOCK_WARRANTY_ROWS);
 	const [inspectionDates, setInspectionDates] = useState<InspectionDateItem[]>(MOCK_INSPECTION_DATES);
 	const [isLoading, setIsLoading] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState("all");
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
-	const [sortField, setSortField] = useState<GuaranteeSortField>("orderNo");
+	const [sortField, setSortField] = useState<WarrantySortField>("recordNo");
 	const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(10);
@@ -40,7 +40,7 @@ export function useGuaranteeCommitments(orderId?: string) {
 		setIsLoading(true);
 
 		if (orderId) {
-			getGuaranteeDetail(orderId)
+			getWarrantyDetail(orderId)
 				.then((res) => {
 					if (isMounted) {
 						setInspectionDates(res.visitDates);
@@ -50,7 +50,7 @@ export function useGuaranteeCommitments(orderId?: string) {
 					if (isMounted) setIsLoading(false);
 				});
 		} else {
-			getGuaranteeCommitments()
+			getWarrantyOverview()
 				.then((res) => {
 					if (isMounted) {
 						setRows(res);
@@ -76,7 +76,7 @@ export function useGuaranteeCommitments(orderId?: string) {
 		setCurrentPage(1);
 	}, []);
 
-	const handleSort = (field: GuaranteeSortField) => {
+	const handleSort = (field: WarrantySortField) => {
 		if (sortField === field) {
 			setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
 		} else {
@@ -93,8 +93,8 @@ export function useGuaranteeCommitments(orderId?: string) {
 		return rows.filter((row) => {
 			const matchesSearch =
 				!cleanQuery ||
-				(row.orderNo && row.orderNo.toLowerCase().includes(cleanQuery)) ||
-				(row.orderName && row.orderName.toLowerCase().includes(cleanQuery)) ||
+				(row.recordNo && row.recordNo.toLowerCase().includes(cleanQuery)) ||
+				(row.recordName && row.recordName.toLowerCase().includes(cleanQuery)) ||
 				(row.customer && row.customer.toLowerCase().includes(cleanQuery)) ||
 				(row.projectManager && row.projectManager.toLowerCase().includes(cleanQuery)) ||
 				(row.warrantyPeriod && row.warrantyPeriod.toLowerCase().includes(cleanQuery)) ||
@@ -148,7 +148,7 @@ export function useGuaranteeCommitments(orderId?: string) {
 	const addInspectionDate = useCallback(
 		async (newDate: Omit<InspectionDateItem, "id">) => {
 			const created = await createVisitDateApi(
-				orderId || GUARANTEE_CONSTANTS.DEFAULT_ORDER_ID,
+				orderId || WARRANTY_CONSTANTS.DEFAULT_ORDER_ID,
 				newDate
 			);
 			setInspectionDates((prev) => [...prev, created]);
@@ -160,7 +160,7 @@ export function useGuaranteeCommitments(orderId?: string) {
 	const updateInspectionDate = useCallback(
 		async (id: string, updated: Partial<InspectionDateItem>) => {
 			const res = await updateVisitDateApi(
-				orderId || GUARANTEE_CONSTANTS.DEFAULT_ORDER_ID,
+				orderId || WARRANTY_CONSTANTS.DEFAULT_ORDER_ID,
 				id,
 				updated
 			);
@@ -174,7 +174,7 @@ export function useGuaranteeCommitments(orderId?: string) {
 
 	const deleteInspectionDate = useCallback(
 		async (id: string) => {
-			await deleteVisitDateApi(orderId || GUARANTEE_CONSTANTS.DEFAULT_ORDER_ID, id);
+			await deleteVisitDateApi(orderId || WARRANTY_CONSTANTS.DEFAULT_ORDER_ID, id);
 			setInspectionDates((prev) => prev.filter((item) => item.id !== id));
 		},
 		[orderId]

@@ -14,10 +14,10 @@ export interface AttachedDocumentItem {
 	url?: string;
 }
 
-export interface GuaranteeRow {
+export interface WarrantyRow {
 	id: string;
-	orderNo: string;
-	orderName: string;
+	recordNo: string;
+	recordName: string;
 	startDate: string;
 	approvedDate: string;
 	warrantyPeriod: string;

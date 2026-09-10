@@ -36,13 +36,13 @@ import { parseDateValue } from "@/utils/date";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import { GUARANTEE_CONSTANTS } from "../constants/guaranteeCommitments.constants";
-import { MOCK_RECIPIENTS } from "../data/guaranteeCommitments.mock";
+import { WARRANTY_CONSTANTS } from "../../constants/warranty.constants";
+import { MOCK_RECIPIENTS } from "../../data/warranty.mock";
 import type {
 	InspectionDateItem,
 	RecipientItem,
 	AttachedDocumentItem,
-} from "../types/guaranteeCommitments.types";
+} from "../../types/warranty.types";
 
 const createVisitDateSchema = (errorMessage: string) =>
 	z.object({
@@ -52,26 +52,26 @@ const createVisitDateSchema = (errorMessage: string) =>
 
 export type VisitDateFormData = z.infer<ReturnType<typeof createVisitDateSchema>>;
 
-export interface CreateVisitDateModalProps {
+export interface VisitDateDialogProps {
 	isOpen: boolean;
 	initialData?: InspectionDateItem | null;
 	onClose: () => void;
 	onSave: (dateItem: Omit<InspectionDateItem, "id">) => void;
 }
 
-export function CreateVisitDateModal({
+export function VisitDateDialog({
 	isOpen,
 	initialData,
 	onClose,
 	onSave,
-}: CreateVisitDateModalProps) {
+}: VisitDateDialogProps) {
 	const t = useTranslate();
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [selectedRecipients, setSelectedRecipients] = useState<RecipientItem[]>([]);
 	const [attachedDocuments, setAttachedDocuments] = useState<AttachedDocumentItem[]>([]);
 	const [uploadedFileName, setUploadedFileName] = useState<string>(
-		GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME
+		WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME
 	);
 
 	const [datePickerOpen, setDatePickerOpen] = useState(false);
@@ -91,7 +91,7 @@ export function CreateVisitDateModal({
 	} = useForm<VisitDateFormData>({
 		resolver: zodResolver(visitDateSchema),
 		defaultValues: {
-			date: GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DATE,
+			date: WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DATE,
 			rule: "",
 		},
 	});
@@ -103,7 +103,7 @@ export function CreateVisitDateModal({
 	useEffect(() => {
 		if (isOpen) {
 			if (initialData) {
-				setValue("date", initialData.date || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DATE);
+				setValue("date", initialData.date || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DATE);
 				setValue("rule", initialData.rule || "");
 				setSelectedRecipients(
 					initialData.recipients && initialData.recipients.length > 0
@@ -125,11 +125,11 @@ export function CreateVisitDateModal({
 						  ]
 				);
 				setUploadedFileName(
-					initialData.documentName || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME
+					initialData.documentName || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME
 				);
 			} else {
 				reset({
-					date: GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DATE,
+					date: WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DATE,
 					rule: "",
 				});
 				setSelectedRecipients([
@@ -143,7 +143,7 @@ export function CreateVisitDateModal({
 					{ id: "doc-1", name: "Document 1.pdf", fileType: "pdf" },
 					{ id: "doc-2", name: "Document 2.pdf", fileType: "pdf" },
 				]);
-				setUploadedFileName(GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME);
+				setUploadedFileName(WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME);
 			}
 		}
 	}, [isOpen, initialData, reset, setValue]);
@@ -175,7 +175,7 @@ export function CreateVisitDateModal({
 	const handleUploadAction = async () => {
 		if (
 			!uploadedFileName ||
-			(uploadedFileName === GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME && !selectedFile)
+			(uploadedFileName === WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME && !selectedFile)
 		) {
 			fileInputRef.current?.click();
 			return;
@@ -185,14 +185,14 @@ export function CreateVisitDateModal({
 		try {
 			const ext =
 				uploadedFileName.split(".").pop()?.toLowerCase() ||
-				GUARANTEE_CONSTANTS.DEFAULT_FILE_TYPE;
+				WARRANTY_CONSTANTS.DEFAULT_FILE_TYPE;
 			const newDoc: AttachedDocumentItem = {
 				id: `doc-${Date.now()}`,
 				name: uploadedFileName,
 				fileType:
 					ext === "png" || ext === "jpg" || ext === "doc"
 						? ext
-						: GUARANTEE_CONSTANTS.DEFAULT_FILE_TYPE,
+						: WARRANTY_CONSTANTS.DEFAULT_FILE_TYPE,
 				fileSize: selectedFile
 					? `${(selectedFile.size / 1024).toFixed(1)} KB`
 					: "1.2 MB",
@@ -202,7 +202,7 @@ export function CreateVisitDateModal({
 			setSelectedFile(null);
 			if (fileInputRef.current) fileInputRef.current.value = "";
 		} catch (error) {
-			console.error("[CreateVisitDateModal] Failed to upload file:", error);
+			console.error("[VisitDateDialog] Failed to upload file:", error);
 			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsUploading(false);
@@ -212,16 +212,16 @@ export function CreateVisitDateModal({
 	const onSubmit = (data: VisitDateFormData) => {
 		const emails =
 			selectedRecipients.map((r) => r.email).join(", ") ||
-			GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_EMAIL;
+			WARRANTY_CONSTANTS.DEFAULT_FALLBACK_EMAIL;
 		const docName =
-			uploadedFileName || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME;
+			uploadedFileName || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME;
 
 		onSave({
 			date: data.date,
 			reminderEmail: emails,
-			rule: data.rule || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_RULE,
+			rule: data.rule || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_RULE,
 			documentName: docName,
-			fileType: GUARANTEE_CONSTANTS.DEFAULT_FILE_TYPE,
+			fileType: WARRANTY_CONSTANTS.DEFAULT_FILE_TYPE,
 			recipients: selectedRecipients,
 			documents: attachedDocuments,
 		});
@@ -406,7 +406,7 @@ export function CreateVisitDateModal({
 								type="file"
 								ref={fileInputRef}
 								onChange={handleFileSelect}
-								accept={GUARANTEE_CONSTANTS.ALLOWED_FILE_TYPES}
+								accept={WARRANTY_CONSTANTS.ALLOWED_FILE_TYPES}
 								className="hidden"
 							/>
 
@@ -417,13 +417,13 @@ export function CreateVisitDateModal({
 									variant="outline"
 									onClick={() => fileInputRef.current?.click()}
 									className="flex-1 min-w-0 h-11 rounded-lg border border-slate-200 bg-white px-4 flex items-center justify-start gap-2 text-left cursor-pointer hover:bg-slate-50 transition-colors focus:outline-none focus:border-slate-900 shadow-none font-normal"
-									title={uploadedFileName || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME}
+									title={uploadedFileName || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME}
 								>
 									<span className="font-semibold text-sm text-slate-900 shrink-0">
 										<Translate text={localizationConstants.uploadButton} />
 									</span>
 									<span className="text-sm text-slate-900 truncate min-w-0 flex-1">
-										{uploadedFileName || GUARANTEE_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME}
+										{uploadedFileName || WARRANTY_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME}
 									</span>
 								</Button>
 								<Button
@@ -493,4 +493,4 @@ export function CreateVisitDateModal({
 	);
 }
 
-export default CreateVisitDateModal;
+export default VisitDateDialog;

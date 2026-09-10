@@ -1,8 +1,8 @@
 import type {
-	GuaranteeRow,
+	WarrantyRow,
 	InspectionDateItem,
 	RecipientItem,
-} from "../types/guaranteeCommitments.types";
+} from "../types/warranty.types";
 
 export const MOCK_RECIPIENTS: RecipientItem[] = [
 	{
@@ -35,11 +35,11 @@ export const MOCK_RECIPIENTS: RecipientItem[] = [
 	},
 ];
 
-export const MOCK_GUARANTEE_ROWS: GuaranteeRow[] = [
+export const MOCK_WARRANTY_ROWS: WarrantyRow[] = [
 	{
 		id: "5000",
-		orderNo: "#5000",
-		orderName: "Renovation",
+		recordNo: "#5000",
+		recordName: "Renovation",
 		startDate: "2024/01/01",
 		approvedDate: "2024/01/01",
 		warrantyPeriod: "5 år",
@@ -53,8 +53,8 @@ export const MOCK_GUARANTEE_ROWS: GuaranteeRow[] = [
 	},
 	{
 		id: "5001",
-		orderNo: "#5001",
-		orderName: "Renovation",
+		recordNo: "#5001",
+		recordName: "Renovation",
 		startDate: "2024/01/01",
 		approvedDate: "2024/01/01",
 		warrantyPeriod: "5 år",
@@ -68,8 +68,8 @@ export const MOCK_GUARANTEE_ROWS: GuaranteeRow[] = [
 	},
 	{
 		id: "5002",
-		orderNo: "#5002",
-		orderName: "Renovation",
+		recordNo: "#5002",
+		recordName: "Renovation",
 		startDate: "2024/01/03",
 		approvedDate: "2024/01/01",
 		warrantyPeriod: "5 år",
@@ -83,8 +83,8 @@ export const MOCK_GUARANTEE_ROWS: GuaranteeRow[] = [
 	},
 	{
 		id: "5003",
-		orderNo: "#5003",
-		orderName: "Renovation",
+		recordNo: "#5003",
+		recordName: "Renovation",
 		startDate: "2024/01/04",
 		approvedDate: "2024/01/01",
 		warrantyPeriod: "5 år",
@@ -98,8 +98,8 @@ export const MOCK_GUARANTEE_ROWS: GuaranteeRow[] = [
 	},
 	{
 		id: "5004",
-		orderNo: "#5004",
-		orderName: "Renovation",
+		recordNo: "#5004",
+		recordName: "Renovation",
 		startDate: "2024/01/05",
 		approvedDate: "2024/01/01",
 		warrantyPeriod: "5 år",
@@ -113,8 +113,8 @@ export const MOCK_GUARANTEE_ROWS: GuaranteeRow[] = [
 	},
 	{
 		id: "5005",
-		orderNo: "#5005",
-		orderName: "Renovation",
+		recordNo: "#5005",
+		recordName: "Renovation",
 		startDate: "2024/01/06",
 		approvedDate: "2024/01/01",
 		warrantyPeriod: "5 år",
@@ -128,8 +128,8 @@ export const MOCK_GUARANTEE_ROWS: GuaranteeRow[] = [
 	},
 	{
 		id: "5000-001",
-		orderNo: "5000–001",
-		orderName: "Ombyggnad villa",
+		recordNo: "5000–001",
+		recordName: "Ombyggnad villa",
 		startDate: "2025-09-01",
 		approvedDate: "2026-02-28",
 		warrantyPeriod: "5 år",
