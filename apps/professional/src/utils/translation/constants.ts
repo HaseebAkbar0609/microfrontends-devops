@@ -3529,6 +3529,9 @@ export type OfferTranslation = {
 	projectListDeleteConfirmDescription: string;
 	projectListArchivedToast: string;
 	projectListDeletedToast: string;
+	projectListUnarchiveAction: string;
+	projectListRestoredToast: string;
+	projectArchiveEmpty: string;
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: string;

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, Glasses, Send, Briefcase, MapPin, FileText, CheckCircle2 } from "lucide-react";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { Button } from "@/components/ui/button";
-import { Translate, useTranslate } from "@/utils/translation/translate";
+import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
 import { showToast } from "@/lib/toast";
@@ -98,6 +98,8 @@ export function CreateAgreementView({ offerId, data }: Props) {
     const newErrors: Record<string, Record<string, string>> = {};
     let isValid = true;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[+0-9().\-\s]{7,32}$/;
+    const identifierRegex = /^[A-Za-z0-9-]{4,20}$/;
 
     parties.forEach((p) => {
       const partyErrors: Record<string, string> = {};
@@ -126,6 +128,9 @@ export function CreateAgreementView({ offerId, data }: Props) {
       if (!p.phone?.trim()) {
         partyErrors.phone = "Phone number is required";
         isValid = false;
+      } else if (!phoneRegex.test(p.phone.trim())) {
+        partyErrors.phone = "Please enter a valid phone number";
+        isValid = false;
       }
 
       if (!p.email?.trim()) {
@@ -138,6 +143,16 @@ export function CreateAgreementView({ offerId, data }: Props) {
 
       if (!p.address?.trim()) {
         partyErrors.address = "Address is required";
+        isValid = false;
+      }
+
+      if (p.orgNumber?.trim() && !identifierRegex.test(p.orgNumber.trim())) {
+        partyErrors.orgNumber = "Use 4–20 letters, numbers or hyphens";
+        isValid = false;
+      }
+
+      if (p.personalNumber?.trim() && !identifierRegex.test(p.personalNumber.trim())) {
+        partyErrors.personalNumber = "Use 4–20 letters, numbers or hyphens";
         isValid = false;
       }
 
@@ -163,6 +178,7 @@ export function CreateAgreementView({ offerId, data }: Props) {
     setIsSending(true);
     try {
       const res = await createAgreementFromOfferAPIAction(offerId, {
+        mappingId: data.mappingId,
         parties: parties.map((p) => ({
           id: p.id,
           name: p.name,
@@ -177,20 +193,20 @@ export function CreateAgreementView({ offerId, data }: Props) {
         price: data.price,
         startDate: data.startDate,
         endDate: data.endDate,
+        projectName: data.projectName,
+        quoteNumber: data.quoteNumber,
       });
 
-      if (res && !res.success && res.error) {
-        showToast("info", res.error);
-      } else {
-        showToast("success", "Agreement sent successfully!");
+      if (!res.success) {
+        showToast("error", res.error || "Failed to create agreement");
+        return;
       }
-    } catch {
       showToast("success", "Agreement sent successfully!");
+      router.push(OFFER_ROUTES.agreed());
+    } catch {
+      showToast("error", "Failed to create agreement");
     } finally {
       setIsSending(false);
-      setTimeout(() => {
-        router.push(OFFER_ROUTES.accepted());
-      }, 800);
     }
   }
 
@@ -234,15 +250,11 @@ export function CreateAgreementView({ offerId, data }: Props) {
           <div className="flex items-center gap-2 flex-wrap">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-xs font-normal text-sky-700">
               <Briefcase size={12} className="text-sky-600" />
-              <Translate text={localizationConstants.offerDetailExpressJobBadge} />
+              {data.contractType || "—"}
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-normal text-emerald-700">
               <MapPin size={12} className="text-emerald-600" />
-              <Translate text={localizationConstants.tagStockholm} />
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-xs font-normal text-amber-700">
-              <MapPin size={12} className="text-amber-600" />
-              <Translate text={localizationConstants.tagJarfalla} />
+              {data.address || "—"}
             </span>
           </div>
         </div>

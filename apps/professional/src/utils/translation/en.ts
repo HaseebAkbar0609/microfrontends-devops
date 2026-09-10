@@ -3567,6 +3567,9 @@ export const enOffer: OfferTranslation = {
 		"The project will be removed permanently. This action cannot be undone.",
 	projectListArchivedToast: "The project has been archived.",
 	projectListDeletedToast: "The project has been deleted.",
+	projectListUnarchiveAction: "Unarchive",
+	projectListRestoredToast: "The project has been restored.",
+	projectArchiveEmpty: "No archived projects.",
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: "Register new project",

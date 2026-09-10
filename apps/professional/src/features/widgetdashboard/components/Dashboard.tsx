@@ -14,6 +14,7 @@ const Dashboard = () => (
 			widgetMap={SIDEBAR_WIDGET_MAP}
 			items={HOME_BOARD_LIBRARY_ITEMS}
 			standardWidgetIds={HOME_STANDARD_WIDGET_IDS}
+			persistenceLocation="dashboard"
 			belowGrid={<ModulesSection />}
 		/>
 	</div>

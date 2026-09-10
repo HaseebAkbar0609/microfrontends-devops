@@ -1,44 +1,70 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { AlertCircle, Building2 } from "lucide-react";
+import { useAuthStatus } from "@/context/AuthContext";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { COMPANY_NAME, COMPANY_ORG_NR } from "../constants/mockData";
-import { getCompanyInfoRows } from "../services/companyService";
+import { getCompanyInfo } from "../services/companyService";
+import type { CompanyInfo } from "../types";
 
 const CompanyInfoTab = () => {
-	const rows = getCompanyInfoRows();
+	const { company } = useAuthStatus();
+	const [info, setInfo] = useState<CompanyInfo | null>(null);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(false);
+
+	useEffect(() => {
+		let cancelled = false;
+		if (!company?.id) {
+			setLoading(false);
+			return;
+		}
+		setLoading(true);
+		setError(false);
+		getCompanyInfo(company.id)
+			.then((data) => !cancelled && setInfo(data))
+			.catch(() => !cancelled && setError(true))
+			.finally(() => !cancelled && setLoading(false));
+		return () => {
+			cancelled = true;
+		};
+	}, [company?.id]);
+
+	if (loading) {
+		return <div className="h-40 animate-pulse rounded-xl bg-slate-100" aria-label="Loading company information" />;
+	}
+
+	if (error || !info) {
+		return (
+			<div className="flex min-h-48 flex-col items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 px-6 text-center text-red-700">
+				<AlertCircle className="h-6 w-6" />
+				<p>Company information could not be loaded.</p>
+			</div>
+		);
+	}
+
+	const fields = [
+		{ label: localizationConstants.companyInfoName, value: info.company_name },
+		{ label: localizationConstants.companyInfoOrgNr, value: info.organization_number || "—" },
+		{ label: localizationConstants.offerQuotedCategory, value: info.category_info?.name || "—" },
+	];
 
 	return (
-		<div className="overflow-hidden rounded-md border border-slate-200 bg-white">
-			<div className="flex flex-wrap items-center gap-2.5 bg-slate-200/60 px-5 py-3.5">
-				<h2 className="text-base font-medium text-slate-800">
-					<Translate text={localizationConstants.companyTabInfo} /> -{" "}
-					<span className="font-bold">{COMPANY_NAME}</span>
-				</h2>
-				<span className="rounded-full bg-green-600 px-2.5 py-0.5 text-xs font-medium text-white">
-					{COMPANY_ORG_NR}
-				</span>
-			</div>
-			<div className="flex flex-col gap-5 px-5 py-4">
-				{rows.map((row) => (
-					<div
-						key={row[0].id}
-						className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
-					>
-						{row.map((field) => (
-							<div key={field.id}>
-								<p className="text-sm font-medium text-slate-900">
-									<Translate text={field.labelKey} />
-								</p>
-								<p className="mt-1 break-words text-sm text-slate-500">
-									{field.value}
-								</p>
-							</div>
-						))}
+		<section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+			<header className="flex flex-wrap items-center gap-3 border-b border-slate-200 bg-slate-50 px-6 py-5">
+				<span className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-50 text-orange-600"><Building2 className="h-5 w-5" /></span>
+				<div><h2 className="text-lg font-semibold text-slate-900">{info.company_name}</h2><p className="text-sm text-slate-500"><Translate text={localizationConstants.companyTabInfo} /></p></div>
+			</header>
+			<div className="grid grid-cols-1 gap-6 px-6 py-6 sm:grid-cols-2 lg:grid-cols-3">
+				{fields.map((field) => (
+					<div key={field.label} className="rounded-lg border border-slate-100 bg-slate-50/60 p-4">
+						<p className="text-xs font-semibold uppercase tracking-wide text-slate-500"><Translate text={field.label} /></p>
+						<p className="mt-2 break-words text-sm font-medium text-slate-900">{field.value}</p>
 					</div>
 				))}
 			</div>
-		</div>
+		</section>
 	);
 };
 
