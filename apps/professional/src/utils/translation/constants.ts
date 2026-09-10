@@ -187,6 +187,14 @@ export type SidebarTranslation = {
 	adminLicence: string;
 	adminUser: string;
 	adminEconomy: string;
+	certificates: string;
+	budget: string;
+	authorities: string;
+	yearEnd: string;
+	claims: string;
+	cases: string;
+	economyOpenModule: string;
+	economyComingSoon: string;
 	quote: string;
 	accountPlan: string;
 	wageTypes: string;

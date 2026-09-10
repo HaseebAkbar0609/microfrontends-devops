@@ -1,5 +1,5 @@
-import { EconomyDashboardPage } from "@/features/financial-management";
+import { EconomySectionHub } from "@/features/financial-management";
 
 export default function EconomyPage() {
-	return <EconomyDashboardPage />;
+	return <EconomySectionHub />;
 }
