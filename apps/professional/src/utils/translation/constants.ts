@@ -1977,6 +1977,9 @@ export type OfferTranslation = {
 	licensesIndustryPipe: string;
 	licensesIndustryVent: string;
 	licensesIndustryConstruction: string;
+	licensesQuickAICalcFee: string;
+	licensesQuickAICalcModules: string;
+	licensesQuickAICalcIndustry: string;
 	licensesOrderDirectFee: string;
 	licensesOrderDirectModules: string;
 	licensesStorageFee: string;
