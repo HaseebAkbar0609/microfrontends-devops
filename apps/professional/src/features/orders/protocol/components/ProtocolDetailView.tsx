@@ -14,6 +14,11 @@ import {
 	Save,
 	Send,
 } from "lucide-react";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -99,7 +104,7 @@ function MeetingAccordionCard({
 				type="button"
 				variant="ghost"
 				onClick={() => setIsOpen((prev) => !prev)}
-				className="flex h-[56px] min-h-[56px] w-full cursor-pointer items-center justify-between px-6 sm:px-8 py-0 text-left transition-colors hover:bg-slate-50 font-normal rounded-none shadow-none focus:outline-none"
+				className="flex h-14 min-h-14 w-full cursor-pointer items-center justify-between px-6 sm:px-8 py-0 text-left transition-colors hover:bg-slate-50 font-normal rounded-none shadow-none focus:outline-none"
 				aria-expanded={isOpen}
 			>
 				<div className="flex items-center gap-3">
@@ -177,6 +182,127 @@ function ProjectInfoCard({
 }
 
 /* -------------------------------------------------------------------------- */
+/* Sub-component: Status Legend Popover                                        */
+/* -------------------------------------------------------------------------- */
+const STATUS_OPTIONS = [
+	{ key: "in_progress", color: "bg-orange-500", inactiveColor: "bg-orange-300", translationKey: "protocolPointStatusOngoing" as const },
+	{ key: "completed", color: "bg-green-600", inactiveColor: "bg-green-300", translationKey: "protocolPointStatusDone" as const },
+	{ key: "not_started", color: "bg-red-600", inactiveColor: "bg-red-300", translationKey: "protocolPointStatusNotDone" as const },
+] as const;
+
+function StatusLegendPopover() {
+	const [isOpen, setIsOpen] = useState(false);
+	const t = useTranslate();
+
+	return (
+		<Popover open={isOpen} onOpenChange={setIsOpen}>
+			<PopoverTrigger asChild>
+				<Button
+					type="button"
+					variant="ghost"
+					size="icon"
+					onMouseEnter={() => setIsOpen(true)}
+					onMouseLeave={() => setIsOpen(false)}
+					onFocus={() => setIsOpen(true)}
+					onBlur={() => setIsOpen(false)}
+					className="h-4 w-4 cursor-pointer shrink-0 p-0 hover:bg-slate-200"
+					aria-label={t(localizationConstants.ariaLabelStatusLegend)}
+				>
+					<Info className="h-4 w-4 text-slate-500" />
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent
+				align="start"
+				sideOffset={4}
+				onMouseEnter={() => setIsOpen(true)}
+				onMouseLeave={() => setIsOpen(false)}
+				className="w-36 p-0 rounded-lg shadow-lg border-0"
+			>
+				<div className="relative bg-slate-900 text-white rounded-lg py-2 px-3">
+					<div className="absolute -top-[5px] left-3 h-0 w-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[5px] border-b-slate-900" />
+					<p className="text-xs font-medium mb-2 font-sans leading-4 tracking-normal">
+						<Translate text={localizationConstants.protocolPointStatusPick} />
+					</p>
+					<div className="flex flex-col gap-1.5">
+						{STATUS_OPTIONS.map((opt) => (
+							<div key={opt.key} className="flex items-center gap-2">
+								<span className={cn("h-3.5 w-3.5 rounded-[3px] shrink-0", opt.color)} />
+								<span className="text-xs font-medium font-sans leading-4 tracking-normal">
+									<Translate text={localizationConstants[opt.translationKey]} />
+								</span>
+							</div>
+						))}
+					</div>
+				</div>
+			</PopoverContent>
+		</Popover>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Sub-component: Status Circles for a row                                    */
+/* -------------------------------------------------------------------------- */
+function StatusCircles({
+	status,
+	onChangeStatus,
+	pointId,
+}: {
+	status?: string;
+	onChangeStatus: (pointId: string, status: string) => void;
+	pointId: string;
+}) {
+	const t = useTranslate();
+	return (
+		<div className="flex items-center gap-5">
+			{STATUS_OPTIONS.map((opt) => {
+				const isActive = status === opt.key;
+				const bgColor = isActive ? opt.color : opt.inactiveColor;
+				const colorMap: Record<string, string> = {
+					"bg-orange-500": "#f97316",
+					"bg-orange-300": "#fdba74",
+					"bg-green-600": "#16a34a",
+					"bg-green-300": "#86efac",
+					"bg-red-600": "#dc2626",
+					"bg-red-300": "#fca5a5",
+				};
+				return (
+					<Button
+						key={opt.key}
+						type="button"
+						variant="ghost"
+						size="icon"
+						onClick={() => onChangeStatus(pointId, opt.key)}
+						style={{ backgroundColor: colorMap[bgColor] || "transparent" }}
+						className={cn(
+							"h-3.5 w-3.5 rounded-[3px] flex items-center justify-center cursor-pointer shrink-0 p-0 border border-solid",
+							"focus-visible:ring-0 focus-visible:ring-offset-0",
+							isActive ? "border-slate-900" : "border-slate-400"
+						)}
+						aria-label={t(localizationConstants[opt.translationKey])}
+					>
+						{isActive && (
+							<span className="flex items-center justify-center leading-none" style={{ width: "8px", height: "5.5px" }}>
+								<svg
+									viewBox="0 0 12 8"
+									fill="none"
+									stroke="white"
+									strokeWidth="1.5"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									style={{ width: "100%", height: "100%" }}
+								>
+									<polyline points="1 4 4.5 7 11 1" />
+								</svg>
+							</span>
+						)}
+					</Button>
+				);
+			})}
+		</div>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
 /* Sub-component: Points Table Card                                           */
 /* -------------------------------------------------------------------------- */
 interface PointsSectionProps {
@@ -203,174 +329,217 @@ function PointsSection({
 	const currentPoints = points.slice(startIndex, startIndex + pageSize);
 
 	return (
-		<div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xs w-full flex flex-col">
-			{/* Header bar */}
-			<div className="flex h-[56px] min-h-[56px] w-full items-center justify-between border-b border-slate-200 bg-slate-200 px-5">
-				<span className="font-sans text-base font-medium leading-6 tracking-normal text-slate-900">
-					<Translate text={localizationConstants.protocolPointsTableTitle} />
-				</span>
-				<Button
-					type="button"
-					onClick={onAddPoint}
-					className="h-9 gap-1.5 rounded-lg bg-slate-900 px-4 text-xs font-medium text-white hover:bg-slate-800 cursor-pointer shadow-none"
-				>
-					<Translate text={localizationConstants.protocolCreatePoint} />
-					<Plus className="h-3.5 w-3.5 shrink-0 text-white" />
-				</Button>
-			</div>
+    <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xs w-full flex flex-col">
+      {/* Header bar */}
+      <div className="flex h-14 min-h-14 w-full items-center justify-between border-b border-slate-200 bg-slate-200 px-5">
+        <span className="font-sans text-base font-medium leading-6 tracking-normal text-slate-900">
+          <Translate text={localizationConstants.protocolPointsTableTitle} />
+        </span>
+        <Button
+          type="button"
+          onClick={onAddPoint}
+          className="h-9 gap-1.5 rounded-lg bg-slate-900 px-4 text-xs font-medium text-white hover:bg-slate-800 cursor-pointer shadow-none"
+        >
+          <Translate text={localizationConstants.protocolCreatePoint} />
+          <Plus className="h-3.5 w-3.5 shrink-0 text-white" />
+        </Button>
+      </div>
 
-			{/* Points Table */}
-			{points.length === 0 ? (
-				<div className="text-center py-12 px-4 text-slate-400 text-xs">
-					<Translate text={localizationConstants.protocolEmptyPoints} />
-				</div>
-			) : (
-				<div className="overflow-x-auto w-full">
-					<table className="w-full min-w-[650px] text-left">
-						<thead>
-							<tr className="border-b border-slate-200 text-xs text-slate-500 font-medium">
-								<th className="py-3.5 px-6 w-20 font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
-									<Translate text={localizationConstants.protocolPointColNr} />
-								</th>
-								<th className="py-3.5 px-4 min-w-[240px] font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
-									<Translate text={localizationConstants.protocolPointSubject} />
-								</th>
-								<th className="py-3.5 px-4 min-w-[140px] font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
-									<Translate text={localizationConstants.protocolPointColDecision} />
-								</th>
-								<th className="py-3.5 px-4 min-w-[140px] font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
-									<Translate text={localizationConstants.protocolFieldResponsible} />
-								</th>
-								<th className="py-3.5 px-4 w-12 text-right font-sans text-sm font-medium text-slate-500 whitespace-nowrap"></th>
-							</tr>
-						</thead>
-						<tbody className="divide-y divide-slate-100 text-sm">
-							{currentPoints.map((point) => (
-								<tr
-									key={point.id}
-									className="hover:bg-slate-50/50 transition-colors group"
-								>
-									{/* Nr */}
-									<td className="py-4 px-6 text-slate-900 align-top whitespace-nowrap font-sans text-sm font-normal">
-										{point.nr || "0001"}
-									</td>
+      {/* Points Table */}
+      {points.length === 0 ? (
+        <div className="text-center py-12 px-4 text-slate-400 text-xs">
+          <Translate text={localizationConstants.protocolEmptyPoints} />
+        </div>
+      ) : (
+        <div className="overflow-x-auto w-full">
+          <table className="w-full min-w-187.5 text-left">
+            <thead>
+              <tr className="border-b border-slate-200 text-xs text-slate-500 font-medium">
+                <th className="py-3.5 px-6 w-20 font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
+                  <Translate text={localizationConstants.protocolPointColNr} />
+                </th>
+                <th className="py-3.5 px-4 min-w-60 font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
+                  <Translate
+                    text={localizationConstants.protocolPointSubject}
+                  />
+                </th>
+                <th className="py-3.5 px-4 min-w-35 font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
+                  <Translate
+                    text={localizationConstants.protocolPointColDecision}
+                  />
+                </th>
+                <th className="py-3.5 px-4 min-w-35 font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
+                  <Translate
+                    text={localizationConstants.protocolFieldResponsible}
+                  />
+                </th>
+                <th className="py-3.5 px-4 font-sans text-sm font-medium text-slate-500 whitespace-nowrap">
+                  <div className="flex items-center gap-1.5">
+                    <Translate
+                      text={localizationConstants.protocolPointColStatus}
+                    />
+                    <StatusLegendPopover />
+                  </div>
+                </th>
+                <th className="py-3.5 px-4 w-12 text-right font-sans text-sm font-medium text-slate-500 whitespace-nowrap"></th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-sm">
+              {currentPoints.map((point) => (
+                <tr
+                  key={point.id}
+                  className="hover:bg-slate-50/50 transition-colors group"
+                >
+                  {/* Nr */}
+                  <td className="py-4 px-6 text-slate-900 align-middle whitespace-nowrap font-sans text-sm font-normal">
+                    {point.nr || "0001"}
+                  </td>
 
-									{/* Ämne & Description */}
-									<td className="py-4 px-4 align-top whitespace-nowrap">
-										<div className="font-sans text-sm font-semibold text-slate-900 whitespace-nowrap">
-											{point.subject}
-										</div>
-										{point.description && (
-											<div className="font-sans text-xs text-slate-400 mt-0.5 leading-normal whitespace-nowrap">
-												{point.description}
-											</div>
-										)}
-									</td>
+                  {/* Ämne & Description */}
+                  <td className="py-4 px-4 align-middle whitespace-nowrap">
+                    <div className="font-sans text-sm font-semibold text-slate-900 whitespace-nowrap">
+                      {point.subject}
+                    </div>
+                    {point.description && (
+                      <div className="font-sans text-xs text-slate-400 mt-0.5 leading-normal whitespace-nowrap">
+                        {point.description}
+                      </div>
+                    )}
+                  </td>
 
-									{/* Beslut */}
-									<td className="py-4 px-4 text-slate-900 align-top whitespace-nowrap font-sans text-sm font-normal">
-										{point.decision || "Anna Carlsson"}
-									</td>
+                  {/* Beslut */}
+                  <td className="py-4 px-4 text-slate-900 align-middle whitespace-nowrap font-sans text-sm font-normal">
+                    {point.decision || "—"}
+                  </td>
 
-									{/* Ansvarig */}
-									<td className="py-4 px-4 text-slate-900 align-top whitespace-nowrap font-sans text-sm font-normal">
-										{point.responsible || "Anna Carlsson"}
-									</td>
+                  {/* Ansvarig */}
+                  <td className="py-4 px-4 text-slate-900 align-middle whitespace-nowrap font-sans text-sm font-normal">
+                    {point.responsible || "—"}
+                  </td>
 
-									{/* Row Actions */}
-									<td className="py-3.5 px-4 align-top text-right whitespace-nowrap">
-										<DropdownMenu>
-											<DropdownMenuTrigger asChild>
-												<Button
-													variant="ghost"
-													size="icon"
-													className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg cursor-pointer"
-												>
-													<MoreVertical className="h-4 w-4 shrink-0" />
-												</Button>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent
-												align="end"
-												className="w-40 bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50 text-xs"
-											>
-												<DropdownMenuItem
-													onClick={() => onEditPoint(point)}
-													className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
-												>
-													<PencilLine className="h-4 w-4 shrink-0 text-slate-900" />
-													<Translate text={localizationConstants.btnRedigera} />
-												</DropdownMenuItem>
+                  {/* Status Circles */}
+                  <td className="py-4 px-4 align-middle whitespace-nowrap">
+                    <StatusCircles
+                      status={point.status}
+                      onChangeStatus={onChangeStatus}
+                      pointId={point.id}
+                    />
+                  </td>
 
-												<DropdownMenuItem
-													onClick={() => onChangeStatus(point.id, point.status === "completed" ? "not_started" : "completed")}
-													className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
-												>
-													<Archive className="h-4 w-4 shrink-0 text-slate-900" />
-													<Translate text={localizationConstants.protocolChangeStatus} />
-												</DropdownMenuItem>
+                  {/* Row Actions */}
+                  <td className="py-3.5 px-4 align-top text-right whitespace-nowrap">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg cursor-pointer"
+                        >
+                          <MoreVertical className="h-4 w-4 shrink-0" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent
+                        align="end"
+                        className="w-40 bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50 text-xs"
+                      >
+                        <DropdownMenuItem
+                          onClick={() => onEditPoint(point)}
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-normal text-black cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
+                        >
+                          <PencilLine className="h-4 w-4 shrink-0 text-black" />
+                          <Translate text={localizationConstants.btnRedigera} />
+                        </DropdownMenuItem>
 
-												<DropdownMenuItem
-													onClick={() => setDeletingPointId(point.id)}
-													className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
-												>
-													<Trash2 className="h-4 w-4 shrink-0 text-slate-900" />
-													<Translate text={localizationConstants.btnRadera} />
-												</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			)}
+                        <DropdownMenuItem
+                          onClick={() => {
+                            const nextStatus =
+                              point.status === "completed"
+                                ? "in_progress"
+                                : point.status === "in_progress"
+                                  ? "not_started"
+                                  : "completed";
+                            onChangeStatus(point.id, nextStatus);
+                          }}
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-normal text-black cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
+                        >
+                          <Archive className="h-4 w-4 shrink-0 text-black" />
+                          <Translate
+                            text={localizationConstants.protocolChangeStatus}
+                          />
+                        </DropdownMenuItem>
 
-			{/* Pagination Footer */}
-			<div className="px-5 border-t border-slate-200">
-				<TablePagination
-					currentPage={currentPage}
-					totalPages={totalPages}
-					pageSize={pageSize}
-					onPageChange={setCurrentPage}
-					onPageSizeChange={(size) => {
-						setPageSize(size);
-						setCurrentPage(1);
-					}}
-				/>
-			</div>
+                        <DropdownMenuItem
+                          onClick={() => setDeletingPointId(point.id)}
+                          className="flex items-center gap-2.5 px-2.5 py-2 text-xs font-normal text-black cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
+                        >
+                          <Trash2 className="h-4 w-4 shrink-0 text-black" />
+                          <Translate text={localizationConstants.btnRadera} />
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
 
-			{/* Delete Point Confirmation Dialog */}
-			<AlertDialog open={!!deletingPointId} onOpenChange={(val) => !val && setDeletingPointId(null)}>
-				<AlertDialogContent className="w-[calc(100vw-2rem)] max-w-md bg-white border border-slate-200 shadow-xl rounded-xl p-5 sm:p-6">
-					<AlertDialogHeader>
-						<AlertDialogTitle className="font-sans text-lg font-semibold text-slate-900">
-							<Translate text={localizationConstants.protocolDeletePointConfirmTitle} />
-						</AlertDialogTitle>
-						<AlertDialogDescription className="font-sans text-sm text-slate-500">
-							<Translate text={localizationConstants.protocolDeletePointConfirmDesc} />
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 pt-2">
-						<AlertDialogCancel onClick={() => setDeletingPointId(null)} className="rounded-lg border-slate-200 hover:bg-slate-50 text-slate-900 text-sm cursor-pointer shadow-none">
-							<Translate text={localizationConstants.protocolCancelAction} />
-						</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={() => {
-								if (deletingPointId) {
-									onDeletePoint(deletingPointId);
-									setDeletingPointId(null);
-								}
-							}}
-							className="!bg-red-600 hover:!bg-red-700 !text-white rounded-lg text-sm border-0 cursor-pointer shadow-none font-medium"
-						>
-							<Translate text={localizationConstants.protocolDeleteAction} />
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
-		</div>
-	);
+      {/* Pagination Footer */}
+      <div className="px-5 border-t border-slate-200">
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={setCurrentPage}
+          onPageSizeChange={(size) => {
+            setPageSize(size);
+            setCurrentPage(1);
+          }}
+        />
+      </div>
+
+      {/* Delete Point Confirmation Dialog */}
+      <AlertDialog
+        open={!!deletingPointId}
+        onOpenChange={(val) => !val && setDeletingPointId(null)}
+      >
+        <AlertDialogContent className="w-[calc(100vw-2rem)] max-w-md bg-white border border-slate-200 shadow-xl rounded-xl p-5 sm:p-6">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="font-sans text-lg font-semibold text-slate-900">
+              <Translate
+                text={localizationConstants.protocolDeletePointConfirmTitle}
+              />
+            </AlertDialogTitle>
+            <AlertDialogDescription className="font-sans text-sm text-slate-500">
+              <Translate
+                text={localizationConstants.protocolDeletePointConfirmDesc}
+              />
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 pt-2">
+            <AlertDialogCancel
+              onClick={() => setDeletingPointId(null)}
+              className="rounded-lg border-slate-200 hover:bg-slate-50 text-slate-900 text-sm cursor-pointer shadow-none"
+            >
+              <Translate text={localizationConstants.protocolCancelAction} />
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => {
+                if (deletingPointId) {
+                  onDeletePoint(deletingPointId);
+                  setDeletingPointId(null);
+                }
+              }}
+              className="bg-red-600! hover:bg-red-700! text-white! rounded-lg text-sm border-0 cursor-pointer shadow-none font-medium"
+            >
+              <Translate text={localizationConstants.protocolDeleteAction} />
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
 }
 
 /* -------------------------------------------------------------------------- */
@@ -433,41 +602,78 @@ export function ProtocolDetailView({
 		setEditingPoint(point);
 	};
 
-	const handleSaveNewPoint = (point: ProtocolMeetingPoint) => {
+	const handleSaveNewPoint = async (point: ProtocolMeetingPoint) => {
 		if (!detailData) return;
-		setDetailData({
-			...detailData,
-			points: [...detailData.points, point],
-		});
-		toast.success(t(localizationConstants.protocolPointSavedToast) || "Punkt sparad");
+		try {
+			const saved = await protocolsApi.createPoint(protocolId, {
+				nr: point.nr,
+				subject: point.subject,
+				description: point.description,
+				decision: point.decision,
+				responsible: point.responsible,
+				status: point.status,
+			}, orderId);
+			setDetailData({
+				...detailData,
+				points: [...detailData.points, saved],
+			});
+			toast.success(t(localizationConstants.protocolPointSavedToast));
+		} catch (err) {
+			console.error("Failed to create point", err);
+			toast.error(t(localizationConstants.protocolPointSavedToast));
+		}
 	};
 
-	const handleSaveEditedPoint = (point: ProtocolMeetingPoint) => {
+	const handleSaveEditedPoint = async (point: ProtocolMeetingPoint) => {
 		if (!detailData) return;
-		const updatedPoints = detailData.points.map((p) => (p.id === point.id ? point : p));
-		setDetailData({
-			...detailData,
-			points: updatedPoints,
-		});
-		toast.success(t(localizationConstants.protocolPointSavedToast) || "Punkt sparad");
+		try {
+			const saved = await protocolsApi.updatePoint(protocolId, point.id, {
+				subject: point.subject,
+				description: point.description,
+				decision: point.decision,
+				responsible: point.responsible,
+				status: point.status,
+			}, orderId);
+			const updatedPoints = detailData.points.map((p) => (p.id === point.id ? saved : p));
+			setDetailData({
+				...detailData,
+				points: updatedPoints,
+			});
+			toast.success(t(localizationConstants.protocolPointSavedToast));
+		} catch (err) {
+			console.error("Failed to update point", err);
+			toast.error(t(localizationConstants.protocolPointSavedToast));
+		}
 	};
 
-	const handleDeletePoint = (pointId: string) => {
+	const handleDeletePoint = async (pointId: string) => {
 		if (!detailData) return;
-		setDetailData({
-			...detailData,
-			points: detailData.points.filter((p) => p.id !== pointId),
-		});
-		toast.success(t(localizationConstants.protocolPointDeletedToast) || "Punkt raderad");
+		try {
+			await protocolsApi.deletePoint(protocolId, pointId, orderId);
+			setDetailData({
+				...detailData,
+				points: detailData.points.filter((p) => p.id !== pointId),
+			});
+			toast.success(t(localizationConstants.protocolPointDeletedToast));
+		} catch (err) {
+			console.error("Failed to delete point", err);
+			toast.error(t(localizationConstants.protocolPointDeletedToast));
+		}
 	};
 
-	const handleChangeStatus = (pointId: string, status: string) => {
+	const handleChangeStatus = async (pointId: string, status: string) => {
 		if (!detailData) return;
-		setDetailData({
-			...detailData,
-			points: detailData.points.map((p) => (p.id === pointId ? { ...p, status } : p)),
-		});
-		toast.success(t(localizationConstants.protocolPointSavedToast) || "Punkt sparad");
+		try {
+			const saved = await protocolsApi.updatePointStatus(protocolId, pointId, status, orderId);
+			setDetailData({
+				...detailData,
+				points: detailData.points.map((p) => (p.id === pointId ? { ...p, ...saved } : p)),
+			});
+			toast.success(t(localizationConstants.protocolPointSavedToast));
+		} catch (err) {
+			console.error("Failed to update point status", err);
+			toast.error(t(localizationConstants.protocolPointSavedToast));
+		}
 	};
 
 	const handleSaveProtocol = async () => {
@@ -481,7 +687,7 @@ export function ProtocolDetailView({
 				},
 				orderId
 			);
-			toast.success(t(localizationConstants.protocolSavedToast) || "Protokoll sparat");
+			toast.success(t(localizationConstants.protocolSavedToast));
 		} catch (err) {
 			console.error("Failed to save protocol", err);
 		} finally {
@@ -490,7 +696,7 @@ export function ProtocolDetailView({
 	};
 
 	const handleSendProtocol = () => {
-		toast.success(t(localizationConstants.protocolSentToast) || "Protokoll skickat");
+		toast.success(t(localizationConstants.protocolSentToast));
 	};
 
 	const nextPointNr = useMemo(() => {
@@ -501,153 +707,169 @@ export function ProtocolDetailView({
 
 	if (isLoading) {
 		return (
-			<div className="flex flex-col flex-1 min-h-[calc(100vh-140px)] -ml-4 sm:-ml-[3.25rem] -mr-4 sm:-mr-6 -mt-px px-3 sm:px-6 pt-5 sm:pt-7 pb-0 bg-slate-50">
-				<div className="flex items-center gap-2 pb-1 animate-pulse">
-					<Skeleton className="size-7 rounded-md" />
-					<Skeleton className="h-7 w-48" />
-				</div>
-				<div className="space-y-4 w-full pl-0 sm:pl-7 pt-4">
-					<div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-						<div className="order-2 lg:order-1 lg:col-span-9 space-y-4 sm:space-y-6">
-							<Skeleton className="h-64 w-full rounded-lg" />
-							<Skeleton className="h-48 w-full rounded-lg" />
-							<Skeleton className="h-64 w-full rounded-lg" />
-						</div>
-						<div className="order-1 lg:order-2 lg:col-span-3">
-							<Skeleton className="h-48 w-full rounded-lg" />
-						</div>
-					</div>
-				</div>
-			</div>
-		);
+      <div className="flex flex-col flex-1 min-h-[calc(100vh-140px)] -ml-4 sm:-ml-13 -mr-4 sm:-mr-6 -mt-px px-3 sm:px-6 pt-5 sm:pt-7 pb-0 bg-slate-50">
+        <div className="flex items-center gap-2 pb-1 animate-pulse">
+          <Skeleton className="size-7 rounded-md" />
+          <Skeleton className="h-7 w-48" />
+        </div>
+        <div className="space-y-4 w-full pl-0 sm:pl-7 pt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
+            <div className="order-2 lg:order-1 lg:col-span-9 space-y-4 sm:space-y-6">
+              <Skeleton className="h-64 w-full rounded-lg" />
+              <Skeleton className="h-48 w-full rounded-lg" />
+              <Skeleton className="h-64 w-full rounded-lg" />
+            </div>
+            <div className="order-1 lg:order-2 lg:col-span-3">
+              <Skeleton className="h-48 w-full rounded-lg" />
+            </div>
+          </div>
+        </div>
+      </div>
+    );
 	}
 
 	return (
-		<div className="flex flex-col flex-1 min-h-[calc(100vh-140px)] -ml-4 sm:-ml-[3.25rem] -mr-4 sm:-mr-6 -mt-px -mb-4 px-3 sm:px-6 pt-5 sm:pt-7 pb-0 bg-slate-50 justify-between">
-			<div className="space-y-4 w-full pb-8">
-				{/* Back button & Page Title */}
-				<div className="flex items-center gap-2 pb-1">
-					<Button
-						type="button"
-						variant="ghost"
-						size="icon"
-						onClick={onBack}
-						className="size-7 shrink-0 rounded-md text-slate-900 hover:bg-slate-100 cursor-pointer flex items-center justify-center p-0 shadow-none"
-						aria-label={t(localizationConstants.goBackButton) || "Tillbaka"}
-					>
-						<ArrowLeft className="size-5 text-slate-900" aria-hidden="true" />
-					</Button>
-					<h1 className="font-sans text-lg sm:text-xl md:text-2xl font-semibold leading-[100%] tracking-[-0.6px] text-slate-900">
-						<Translate text={localizationConstants.protocolViewTitle} />
-					</h1>
-				</div>
+    <div className="flex flex-col flex-1 min-h-[calc(100vh-140px)] -ml-4 sm:-ml-13 -mr-4 sm:-mr-6 -mt-px -mb-4 px-3 sm:px-6 pt-5 sm:pt-7 pb-0 bg-slate-50 justify-between">
+      <div className="space-y-4 w-full pb-8">
+        {/* Back button & Page Title */}
+        <div className="flex items-center gap-2 pb-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            onClick={onBack}
+            className="size-7 shrink-0 rounded-md text-slate-900 hover:bg-slate-100 cursor-pointer flex items-center justify-center p-0 shadow-none"
+            aria-label={t(localizationConstants.goBackButton)}
+          >
+            <ArrowLeft className="size-5 text-slate-900" aria-hidden="true" />
+          </Button>
+          <h1 className="font-sans text-lg sm:text-xl md:text-2xl font-semibold leading-[100%] tracking-[-0.6px] text-slate-900">
+            <Translate text={localizationConstants.protocolViewTitle} />
+          </h1>
+        </div>
 
-				{/* Cards Container with left margin */}
-				<div className="space-y-4 w-full pl-0 sm:pl-7">
-					{/* Main Grid Layout: Left Column (Mötesinformation, Nästa möte, Mötespunkter) + Right Sidebar (Project info) */}
-					<div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
-						{/* Left Column */}
-						<div className="order-2 lg:order-1 lg:col-span-9 space-y-4 sm:space-y-6">
-							{/* Mötesinformation Accordion */}
-							<MeetingAccordionCard
-								titleKey={localizationConstants.protocolMeetingInfo}
-								icon={<Info className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
-								info={detailData?.meetingInfo}
-							/>
+        {/* Cards Container with left margin */}
+        <div className="space-y-4 w-full pl-0 sm:pl-7">
+          {/* Main Grid Layout: Left Column (Mötesinformation, Nästa möte, Mötespunkter) + Right Sidebar (Project info) */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+            {/* Left Column */}
+            <div className="order-2 lg:order-1 lg:col-span-9 space-y-4 sm:space-y-6">
+              {/* Mötesinformation Accordion */}
+              <MeetingAccordionCard
+                titleKey={localizationConstants.protocolMeetingInfo}
+                icon={
+                  <Info
+                    className="h-6 w-6 size-6 text-slate-800 shrink-0"
+                    strokeWidth={1.75}
+                  />
+                }
+                info={detailData?.meetingInfo}
+              />
 
-							{/* Nästa möte Accordion */}
-							<MeetingAccordionCard
-								titleKey={localizationConstants.protocolNextMeeting}
-								icon={<Video className="h-6 w-6 size-6 text-slate-800 shrink-0" strokeWidth={1.75} />}
-								info={detailData?.nextMeeting}
-							/>
+              {/* Nästa möte Accordion */}
+              <MeetingAccordionCard
+                titleKey={localizationConstants.protocolNextMeeting}
+                icon={
+                  <Video
+                    className="h-6 w-6 size-6 text-slate-800 shrink-0"
+                    strokeWidth={1.75}
+                  />
+                }
+                info={detailData?.nextMeeting}
+              />
 
-							{/* Mötespunkter Table */}
-							<PointsSection
-								points={detailData?.points || []}
-								onAddPoint={handleAddPointClick}
-								onEditPoint={handleEditPointClick}
-								onDeletePoint={handleDeletePoint}
-								onChangeStatus={handleChangeStatus}
-							/>
-						</div>
+              {/* Mötespunkter Table */}
+              <PointsSection
+                points={detailData?.points || []}
+                onAddPoint={handleAddPointClick}
+                onEditPoint={handleEditPointClick}
+                onDeletePoint={handleDeletePoint}
+                onChangeStatus={handleChangeStatus}
+              />
+            </div>
 
-						{/* Right Sidebar */}
-						<div className="order-1 lg:order-2 lg:col-span-3 lg:mt-[56px] w-full">
-							<ProjectInfoCard
-								projectNumber={detailData?.protocol.projectNumber || "5001"}
-								projectName={detailData?.protocol.projectName || "Kv Skatan, Storgatan 10"}
-							/>
-						</div>
-					</div>
-				</div>
-			</div>
+            {/* Right Sidebar */}
+            <div className="order-1 lg:order-2 lg:col-span-3 lg:mt-[56px] w-full">
+              <ProjectInfoCard
+                projectNumber={detailData?.protocol.projectNumber || "5001"}
+                projectName={
+                  detailData?.protocol.projectName || "Kv Skatan, Storgatan 10"
+                }
+              />
+            </div>
+          </div>
+        </div>
+      </div>
 
-			{/* Bottom Action Bar — Sticky to bottom */}
-			<div className="mt-auto sticky -bottom-4 -mx-3 sm:-mx-6 -mb-4 px-4 sm:px-6 py-3 bg-white border-t border-slate-200 z-30 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3 shadow-md">
-				{/* Left Buttons: Avbryt & Ändra */}
-				<div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 w-full lg:w-auto">
-					<Button
-						type="button"
-						variant="ghost"
-						onClick={onBack}
-						className="w-full sm:w-auto sm:min-w-[140px] h-[40px] px-4 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-slate-900 text-sm font-medium border-0 cursor-pointer shadow-none flex items-center justify-center shrink-0"
-					>
-						<Translate text={localizationConstants.protocolCancelAction} />
-					</Button>
+      {/* Bottom Action Bar — Sticky to bottom */}
+      <div className="mt-auto sticky -bottom-4 -mx-3 sm:-mx-6 -mb-4 px-4 sm:px-6 py-3 bg-white border-t border-slate-200 z-30 flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3 shadow-md">
+        {/* Left Buttons: Avbryt & Ändra */}
+        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 w-full lg:w-auto">
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onBack}
+            className="w-full sm:w-auto sm:min-w-35 h-10 px-4 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-slate-900 text-sm font-medium border-0 cursor-pointer shadow-none flex items-center justify-center shrink-0"
+          >
+            <Translate text={localizationConstants.protocolCancelAction} />
+          </Button>
 
-					<Button
-						type="button"
-						variant="outline"
-						onClick={() => onEditProtocol?.(detailData?.protocol || ({} as ProtocolItem))}
-						className="w-full sm:w-auto sm:min-w-[140px] h-[40px] px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 text-sm font-medium gap-2 cursor-pointer shadow-none flex items-center justify-center shrink-0"
-					>
-						<PencilLine className="h-4 w-4 shrink-0 text-slate-900" />
-						<Translate text={localizationConstants.protocolEditProtocolAction} />
-					</Button>
-				</div>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() =>
+              onEditProtocol?.(detailData?.protocol || ({} as ProtocolItem))
+            }
+            className="w-full sm:w-auto sm:min-w-[140px] h-[40px] px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-900 text-sm font-medium gap-2 cursor-pointer shadow-none flex items-center justify-center shrink-0"
+          >
+            <PencilLine className="h-4 w-4 shrink-0 text-slate-900" />
+            <Translate
+              text={localizationConstants.protocolEditProtocolAction}
+            />
+          </Button>
+        </div>
 
-				{/* Right Buttons: Spara & Skicka */}
-				<div className="flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-2 w-full lg:w-auto">
-					<Button
-						type="button"
-						variant="ghost"
-						disabled={isSaving}
-						onClick={handleSaveProtocol}
-						className="w-full sm:w-auto sm:min-w-[140px] h-[40px] px-4 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-slate-900 text-sm font-medium border-0 gap-2 cursor-pointer shadow-none flex items-center justify-center shrink-0"
-					>
-						<Save className="h-4 w-4 shrink-0 text-slate-900" />
-						<Translate text={localizationConstants.protocolSaveAction} />
-					</Button>
+        {/* Right Buttons: Spara & Skicka */}
+        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-end gap-2 w-full lg:w-auto">
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={isSaving}
+            onClick={handleSaveProtocol}
+            className="w-full sm:w-auto sm:min-w-[140px] h-[40px] px-4 py-2 rounded-lg bg-zinc-100 hover:bg-zinc-200 text-slate-900 text-sm font-medium border-0 gap-2 cursor-pointer shadow-none flex items-center justify-center shrink-0"
+          >
+            <Save className="h-4 w-4 shrink-0 text-slate-900" />
+            <Translate text={localizationConstants.protocolSaveAction} />
+          </Button>
 
-					<Button
-						type="button"
-						onClick={handleSendProtocol}
-						className="w-full sm:w-auto sm:min-w-[140px] h-[40px] px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium border-0 gap-2 cursor-pointer shadow-none flex items-center justify-center shrink-0"
-					>
-						<Send className="h-4 w-4 shrink-0 text-white" />
-						<Translate text={localizationConstants.protocolSendAction} />
-					</Button>
-				</div>
-			</div>
+          <Button
+            type="button"
+            onClick={handleSendProtocol}
+            className="w-full sm:w-auto sm:min-w-[140px] h-[40px] px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium border-0 gap-2 cursor-pointer shadow-none flex items-center justify-center shrink-0"
+          >
+            <Send className="h-4 w-4 shrink-0 text-white" />
+            <Translate text={localizationConstants.protocolSendAction} />
+          </Button>
+        </div>
+      </div>
 
-			{/* 1. Create Meeting Point Modal (Separate component) */}
-			<CreateMeetingPointModal
-				open={isCreatePointOpen}
-				onClose={() => setIsCreatePointOpen(false)}
-				onSave={handleSaveNewPoint}
-				nextPointNr={nextPointNr}
-			/>
+      {/* 1. Create Meeting Point Modal (Separate component) */}
+      <CreateMeetingPointModal
+        open={isCreatePointOpen}
+        onClose={() => setIsCreatePointOpen(false)}
+        onSave={handleSaveNewPoint}
+        nextPointNr={nextPointNr}
+      />
 
-			{/* 2. Edit Meeting Point Modal (Separate component) */}
-			<EditMeetingPointModal
-				open={!!editingPoint}
-				onClose={() => setEditingPoint(null)}
-				onSave={handleSaveEditedPoint}
-				point={editingPoint}
-			/>
-		</div>
-	);
+      {/* 2. Edit Meeting Point Modal (Separate component) */}
+      <EditMeetingPointModal
+        open={!!editingPoint}
+        onClose={() => setEditingPoint(null)}
+        onSave={handleSaveEditedPoint}
+        point={editingPoint}
+      />
+    </div>
+  );
 }
 
 export default ProtocolDetailView;

@@ -7127,6 +7127,7 @@ export const svOrderProtocol: OrderProtocolTranslation = {
 	ariaLabelCloseModal: "Stäng dialogruta",
 	ariaLabelAddParticipant: "Lägg till deltagare",
 	ariaLabelRemoveFile: "Ta bort fil",
+	ariaLabelStatusLegend: "Statuslegend",
 	protocolResponsibleLabel: "Ansvarig",
 	protocolSubjectLabel: "Rubrik",
 	validationProtocolSubjectRequired: "Rubrik är obligatorisk",
