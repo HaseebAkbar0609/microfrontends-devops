@@ -310,6 +310,8 @@ export const enAuth: AuthTranslation = {
 	myCompaniesSubtitle: "Select company to log in to",
 	myCompaniesCreateNew: "Create new company",
 	myCompaniesLogIn: "Log in",
+	myCompaniesEmpty: "No active companies found.",
+	myCompaniesLoadError: "Companies could not be loaded. Please try again.",
 	registerWelcomeTitle: "Welcome to Timeflow business account",
 	registerWelcomeSubtitle:
 		"Timeflow saves time, gives full control, and makes trade jobs easier and more profitable.",
@@ -4077,6 +4079,7 @@ export const enOffer: OfferTranslation = {
 	viewProject: "View project",
 	takeJob: "Take job",
 	noQuotesFound: "No quotes found",
+	offerLoadError: "Available projects could not be loaded. Please try again.",
 	// Offer - Detail
 	offerDetailPostedLabel: "Posted",
 	offerDetailExpressJobBadge: "Express job",

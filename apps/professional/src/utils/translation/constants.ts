@@ -97,6 +97,8 @@ export interface AuthTranslation {
 	myCompaniesSubtitle: string;
 	myCompaniesCreateNew: string;
 	myCompaniesLogIn: string;
+	myCompaniesEmpty: string;
+	myCompaniesLoadError: string;
 	registerWelcomeTitle: string;
 	registerWelcomeSubtitle: string;
 	registerCompanyNameLabel: string;
@@ -4041,6 +4043,7 @@ export type OfferTranslation = {
 	viewProject: string;
 	takeJob: string;
 	noQuotesFound: string;
+	offerLoadError: string;
 	// Offer - Detail
 	offerDetailPostedLabel: string;
 	offerDetailExpressJobBadge: string;
