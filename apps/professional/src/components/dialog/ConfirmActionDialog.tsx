@@ -28,12 +28,16 @@ export interface ConfirmActionDialogProps {
 }
 
 /**
- * Confirmation step for the purchase module's archive and delete actions.
+ * Confirmation step for a destructive or archiving action.
  *
  * Controlled rather than trigger-based: these open from a `DropdownMenuItem`,
  * and a nested Radix trigger fights the menu's own focus and dismiss handling.
- * `components/dialog/ConfirmDialog.tsx` is the trigger-based variant and has no
- * importers for that reason.
+ * `ConfirmDialog.tsx` alongside is the trigger-based variant, which is why it
+ * has only one importer.
+ *
+ * It started in the purchase module and moved here when the warranty feature
+ * needed the same dialog — copying it would have been the fourth confirm
+ * dialog in the app.
  */
 export function ConfirmActionDialog({
 	open,
