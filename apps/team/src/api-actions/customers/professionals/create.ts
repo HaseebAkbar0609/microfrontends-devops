@@ -12,6 +12,8 @@ export interface CreateProfessionalPayload {
 	contact_name: string;
 	email: string;
 	phone: string;
+	/** Omit for the default 30-day Demo; set for a Sales-chosen Trial (1–~183 days). */
+	trial_duration_days?: number;
 }
 
 export interface CreateProfessionalResult {

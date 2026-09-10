@@ -7164,12 +7164,11 @@ export const enAccountLifecycle: AccountLifecycleTranslation = {
 	lifecycleDaysRemainingSuffix: "days remaining",
 	lifecycleExpiresToday: "Expires today",
 	lifecycleExpiredMessage:
-		"Your account has expired. You can still view your data, but you can't create new content.",
+		"This account has ended. You can still see everything you've created, but you won't be able to add anything new until you upgrade.",
 	lifecycleUpgradeCta: "Upgrade now",
 	lifecyclePopupDismiss: "Got it",
 	lifecycleReadOnlyGuardTitle: "This account is read-only",
-	lifecycleReadOnlyGuardMessage:
-		"Your trial period has ended. Upgrade to keep creating content.",
+	lifecycleReadOnlyGuardMessage: "Upgrade to start creating content again.",
 	lifecycleToastBlockedTitle: "Action blocked",
 	lifecycleToastBlockedMessage: "This account is read-only. Upgrade to continue.",
 };

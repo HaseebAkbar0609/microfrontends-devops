@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useCallback, useEffect, useRef } from "react";
 import { AlertTriangle, Clock } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -8,7 +9,51 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { useAccountLifecycle } from "../hooks/useAccountLifecycle";
-import { LIFECYCLE_UPGRADE_PATH, LIFECYCLE_URGENT_DAYS_THRESHOLD } from "../constants";
+import {
+	LIFECYCLE_BANNER_HEIGHT_CSS_VAR,
+	LIFECYCLE_UPGRADE_PATH,
+	LIFECYCLE_URGENT_DAYS_THRESHOLD,
+} from "../constants";
+
+/**
+ * Reports this element's rendered height on `document.documentElement` as
+ * `LIFECYCLE_BANNER_HEIGHT_CSS_VAR`, cleared whenever there's no element (not
+ * just on unmount — this component renders `null` while lifecycle data is
+ * loading and then a div once it resolves, so a plain useRef+useEffect with
+ * empty deps would never re-measure that transition). A callback ref fires on
+ * every attach/detach, which is what makes that transition work correctly.
+ * Header.tsx reads the variable so its viewport-`fixed` centered logo stays
+ * correctly positioned whether or not the banner is showing.
+ */
+function useReportBannerHeight() {
+	const observerRef = useRef<ResizeObserver | null>(null);
+
+	const setRef = useCallback((el: HTMLElement | null) => {
+		observerRef.current?.disconnect();
+		const root = document.documentElement;
+		if (!el) {
+			root.style.setProperty(LIFECYCLE_BANNER_HEIGHT_CSS_VAR, "0px");
+			return;
+		}
+		const report = () =>
+			root.style.setProperty(LIFECYCLE_BANNER_HEIGHT_CSS_VAR, `${el.offsetHeight}px`);
+		report();
+		const observer = new ResizeObserver(report);
+		observer.observe(el);
+		observerRef.current = observer;
+	}, []);
+
+	// Also reset if the whole component unmounts (e.g. route change tears
+	// down AppShell) while an observer is still attached.
+	useEffect(() => {
+		return () => {
+			observerRef.current?.disconnect();
+			document.documentElement.style.setProperty(LIFECYCLE_BANNER_HEIGHT_CSS_VAR, "0px");
+		};
+	}, []);
+
+	return setRef;
+}
 
 /**
  * Permanent banner shown throughout the Demo/Trial period, driven entirely
@@ -18,6 +63,7 @@ import { LIFECYCLE_UPGRADE_PATH, LIFECYCLE_URGENT_DAYS_THRESHOLD } from "../cons
 export function AccountLifecycleBanner() {
 	const { t } = useTranslation();
 	const { lifecycle } = useAccountLifecycle();
+	const bannerRef = useReportBannerHeight();
 
 	if (!lifecycle || lifecycle.accountType === "standard") return null;
 
@@ -35,6 +81,7 @@ export function AccountLifecycleBanner() {
 
 	return (
 		<div
+			ref={bannerRef}
 			role="status"
 			className={cn(
 				"flex w-full items-center justify-between gap-3 px-4 py-2 text-sm",
@@ -49,8 +96,7 @@ export function AccountLifecycleBanner() {
 				) : (
 					<Clock className="h-4 w-4 shrink-0" />
 				)}
-				<span className="font-medium">{accountTypeLabel}</span>
-				<span aria-hidden="true">—</span>
+				<span className="font-medium">{accountTypeLabel}:</span>
 				<LifecycleMessage
 					isExpired={isExpired}
 					daysRemaining={daysRemaining}

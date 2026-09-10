@@ -554,9 +554,17 @@ export type ProfessionalTranslation = {
 	testPeriodLabel: string;
 	startLabel: string;
 	endLabel: string;
+	accountAccessLabel: string;
+	demoAccessOptionLabel: string;
+	trialAccessOptionLabel: string;
+	demoAccessHelp: string;
+	trialAccessHelp: string;
+	trialDurationLabel: string;
+	trialDurationDaysSuffix: string;
 	validationOrgNumberInvalid: string;
 	validationContactNameRequired: string;
 	validationPlanRequired: string;
+	validationTrialDurationInvalid: string;
 	validationStatusRequired: string;
 	contactNamePlaceholder: string;
 	emailPlaceholder: string;
