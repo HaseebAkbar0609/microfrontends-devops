@@ -97,6 +97,8 @@ export interface AuthTranslation {
 	myCompaniesSubtitle: string;
 	myCompaniesCreateNew: string;
 	myCompaniesLogIn: string;
+	myCompaniesEmpty: string;
+	myCompaniesLoadError: string;
 	registerWelcomeTitle: string;
 	registerWelcomeSubtitle: string;
 	registerCompanyNameLabel: string;
@@ -1969,6 +1971,15 @@ export type OfferTranslation = {
 	licensesConnectSupplierModules: string;
 	licensesCalculationProFee: string;
 	licensesCalculationProModules: string;
+	licensesCalculationProAdvanceFee: string;
+	licensesCalculationProAdvanceModules: string;
+	licensesIndustryElectric: string;
+	licensesIndustryPipe: string;
+	licensesIndustryVent: string;
+	licensesIndustryConstruction: string;
+	licensesQuickAICalcFee: string;
+	licensesQuickAICalcModules: string;
+	licensesQuickAICalcIndustry: string;
 	licensesOrderDirectFee: string;
 	licensesOrderDirectModules: string;
 	licensesStorageFee: string;
@@ -4071,6 +4082,7 @@ export type OfferTranslation = {
 	viewProject: string;
 	takeJob: string;
 	noQuotesFound: string;
+	offerLoadError: string;
 	// Offer - Detail
 	offerDetailPostedLabel: string;
 	offerDetailExpressJobBadge: string;
