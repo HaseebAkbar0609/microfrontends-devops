@@ -7116,6 +7116,7 @@ export const enOrderProtocol: OrderProtocolTranslation = {
 	ariaLabelCloseModal: "Close dialog",
 	ariaLabelAddParticipant: "Add participant",
 	ariaLabelRemoveFile: "Remove file",
+	ariaLabelStatusLegend: "Status legend",
 	protocolResponsibleLabel: "Responsible",
 	protocolSubjectLabel: "Subject",
 	validationProtocolSubjectRequired: "Subject is required",

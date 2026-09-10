@@ -7076,6 +7076,7 @@ export type OrderProtocolTranslation = {
 	ariaLabelCloseModal: string;
 	ariaLabelAddParticipant: string;
 	ariaLabelRemoveFile: string;
+	ariaLabelStatusLegend: string;
 	protocolResponsibleLabel: string;
 	protocolSubjectLabel: string;
 	validationProtocolSubjectRequired: string;

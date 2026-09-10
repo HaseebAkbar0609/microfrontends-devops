@@ -137,7 +137,7 @@ export const MOCK_MEETING_POINTS = [
 		description: "Presidenten granskar listan över deltagare och gäster.",
 		decision: "Anna Carlsson",
 		responsible: "Anna Carlsson",
-		status: "completed",
+		status: "in_progress",
 	},
 	{
 		id: "point-4",
@@ -146,7 +146,7 @@ export const MOCK_MEETING_POINTS = [
 		description: "Dagordningen för det aktuella mötet granskas.",
 		decision: "Anna Carlsson",
 		responsible: "Anna Carlsson",
-		status: "completed",
+		status: "in_progress",
 	},
 	{
 		id: "point-5",
@@ -155,7 +155,7 @@ export const MOCK_MEETING_POINTS = [
 		description: "",
 		decision: "Anna Carlsson",
 		responsible: "Anna Carlsson",
-		status: "completed",
+		status: "in_progress",
 	},
 	{
 		id: "point-6",
@@ -164,7 +164,7 @@ export const MOCK_MEETING_POINTS = [
 		description: "",
 		decision: "Anna Carlsson",
 		responsible: "Anna Carlsson",
-		status: "completed",
+		status: "not_started",
 	},
 	{
 		id: "point-7",
@@ -173,7 +173,7 @@ export const MOCK_MEETING_POINTS = [
 		description: "",
 		decision: "Anna Carlsson",
 		responsible: "Anna Carlsson",
-		status: "completed",
+		status: "not_started",
 	},
 ];
 
