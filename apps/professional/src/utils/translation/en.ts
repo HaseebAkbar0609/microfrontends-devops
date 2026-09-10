@@ -5901,6 +5901,8 @@ const enExpense: ExpenseTranslation = {
 	registerExpenseErrorLineItemDesc: "Description is required for all line items",
 	registerExpenseErrorLineItemQty: "Quantity must be greater than 0",
 	registerExpenseErrorLineItemPrice: "Price cannot be negative",
+	registerExpenseErrorTotalRequired: "Total must be greater than 0",
+	registerExpenseUploadFailed: "Some files were rejected. Use PDF, PNG, or JPG files up to 10MB.",
 	registerExpenseSuccessSaved: "Expense registered successfully",
 	registerExpenseSuccessSavedAndNext: "Expense saved. You can now register the next expense.",
 	registerExpenseConfirmDiscardTitle: "Discard changes?",

@@ -103,6 +103,32 @@ export const registerExpenseFormSchema = z
 					path: ["lineItems"],
 				});
 			}
+
+			const lineItemsTotal = data.lineItems.reduce(
+				(sum, item) => sum + item.quantity * item.unitPrice,
+				0,
+			);
+			if (lineItemsTotal <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "registerExpenseErrorTotalRequired",
+					path: ["lineItems"],
+				});
+			}
+		}
+
+		if (!hasLineItems && hasIncludedTimeReport) {
+			const timeReportTotal = data.timeReportItems.reduce(
+				(sum, item) => (item.included ? sum + item.workedHours * item.hourlyRate : sum),
+				0,
+			);
+			if (timeReportTotal <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "registerExpenseErrorTotalRequired",
+					path: ["lineItems"],
+				});
+			}
 		}
 	});
 

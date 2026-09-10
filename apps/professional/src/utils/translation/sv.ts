@@ -5922,6 +5922,8 @@ const svExpense: ExpenseTranslation = {
 	registerExpenseErrorLineItemDesc: "Beskrivning krävs för alla rader",
 	registerExpenseErrorLineItemQty: "Antal måste vara större än 0",
 	registerExpenseErrorLineItemPrice: "Pris kan inte vara negativt",
+	registerExpenseErrorTotalRequired: "Totalbeloppet måste vara större än 0",
+	registerExpenseUploadFailed: "Vissa filer avvisades. Använd PDF-, PNG- eller JPG-filer upp till 10 MB.",
 	registerExpenseSuccessSaved: "Utgiften har registrerats framgångsrikt",
 	registerExpenseSuccessSavedAndNext: "Utgiften sparades. Du kan nu registrera nästa utgift.",
 	registerExpenseConfirmDiscardTitle: "Avbryt registrering?",

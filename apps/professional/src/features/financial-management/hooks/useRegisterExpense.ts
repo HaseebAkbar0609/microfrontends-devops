@@ -209,12 +209,15 @@ export function useRegisterExpense() {
 	const addAttachments = useCallback((files: FileList | File[]) => {
 		const fileArray = Array.from(files);
 		const newAttachments: ExpenseAttachment[] = [];
+		let rejectedFileCount = 0;
 
 		for (const file of fileArray) {
 			if (!ALLOWED_ATTACHMENT_TYPES.includes(file.type)) {
+				rejectedFileCount += 1;
 				continue;
 			}
 			if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+				rejectedFileCount += 1;
 				continue;
 			}
 
@@ -234,7 +237,10 @@ export function useRegisterExpense() {
 			}));
 			setIsDirty(true);
 		}
-	}, []);
+		if (rejectedFileCount > 0) {
+			showToast("error", t(localizationConstants.registerExpenseUploadFailed));
+		}
+	}, [t]);
 
 	const removeAttachment = useCallback((id: string) => {
 		setFormData((prev) => ({
