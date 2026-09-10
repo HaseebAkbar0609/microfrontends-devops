@@ -9,7 +9,11 @@ import { WarrantyDetailView } from "./components/WarrantyDetailView";
 import { WarrantyOverviewTable } from "./components/WarrantyOverviewTable";
 import { VisitDateDialog } from "./components/visit-date/VisitDateDialog";
 import { useWarranty } from "./hooks/useWarranty";
-import type { InspectionDateItem, WarrantyRow } from "./types/warranty.types";
+import type {
+	InspectionDateItem,
+	WarrantyRow,
+	WarrantyScope,
+} from "./types/warranty.types";
 
 export interface WarrantyFeatureProps {
 	/**
@@ -21,6 +25,12 @@ export interface WarrantyFeatureProps {
 	initialView?: "table" | "detail";
 	/** The opened-order tab hides its own nav row while a detail is showing. */
 	onDetailModeChange?: (isDetail: boolean) => void;
+	/**
+	 * Which module's wording the list's record columns take. Defaults to
+	 * `"order"`, so a caller that forgets cannot silently reword the two Order
+	 * screens this feature was merged out of.
+	 */
+	scope?: WarrantyScope;
 }
 
 /**
@@ -36,6 +46,7 @@ export function WarrantyFeature({
 	recordId,
 	initialView = "table",
 	onDetailModeChange,
+	scope = "order",
 }: WarrantyFeatureProps) {
 	const t = useTranslate();
 	const {
@@ -133,6 +144,7 @@ export function WarrantyFeature({
 	return (
 		<div className="w-full">
 			<WarrantyOverviewTable
+				scope={scope}
 				rows={paginatedRows}
 				selectedIds={selectedIds}
 				onToggleSelectAll={toggleSelectAll}

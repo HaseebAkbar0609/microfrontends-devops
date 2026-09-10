@@ -35,6 +35,7 @@ export function ProjectWarrantyPage({ recordId }: ProjectWarrantyPageProps) {
 			/>
 
 			<WarrantyFeature
+				scope="project"
 				recordId={recordId}
 				initialView={recordId ? "detail" : "table"}
 			/>

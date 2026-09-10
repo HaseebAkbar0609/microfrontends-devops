@@ -5,28 +5,59 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import type { WarrantyRow } from "../../types/warranty.types";
+import type { WarrantyRow, WarrantyScope } from "../../types/warranty.types";
 
 const CHECKBOX_CLASS =
 	"border-slate-400 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 data-[state=checked]:text-white focus-visible:ring-slate-900 cursor-pointer";
 
 /**
+ * The three headings that name the record, which each module words its own way.
+ *
+ * The rest are the same on both screens. Without this the consolidation would
+ * have quietly relabelled two shipped Order screens from "Order nr" to
+ * "Projekt Nr".
+ */
+const SCOPED_LABELS: Record<
+	WarrantyScope,
+	{ recordNo: TranslationKeys; recordName: TranslationKeys; period: TranslationKeys }
+> = {
+	order: {
+		recordNo: localizationConstants.colOrderNo,
+		recordName: localizationConstants.orderName,
+		period: localizationConstants.colWarrantyPeriod,
+	},
+	project: {
+		recordNo: localizationConstants.colProjectNo,
+		recordName: localizationConstants.colProjectName,
+		period: localizationConstants.warrantyCommitments,
+	},
+};
+
+/**
  * The frame's seven data columns, in order.
  *
  * `key` is the field it reads and the sort key the hook receives, so a column
- * cannot drift from what sorting it.
+ * cannot drift from what sorts it.
  */
-const DATA_COLUMNS: { key: keyof WarrantyRow; label: TranslationKeys }[] = [
-	{ key: "recordNo", label: localizationConstants.colProjectNo },
-	{ key: "recordName", label: localizationConstants.colProjectName },
-	{ key: "startDate", label: localizationConstants.orderStart },
-	{ key: "approvedDate", label: localizationConstants.colApproved },
-	{ key: "warrantyPeriod", label: localizationConstants.warrantyCommitments },
-	{ key: "projectManager", label: localizationConstants.colProjectManager },
-	{ key: "customer", label: localizationConstants.orderCustomer },
-];
+function dataColumns(
+	scope: WarrantyScope,
+): { key: keyof WarrantyRow; label: TranslationKeys }[] {
+	const scoped = SCOPED_LABELS[scope];
+
+	return [
+		{ key: "recordNo", label: scoped.recordNo },
+		{ key: "recordName", label: scoped.recordName },
+		{ key: "startDate", label: localizationConstants.orderStart },
+		{ key: "approvedDate", label: localizationConstants.colApproved },
+		{ key: "warrantyPeriod", label: scoped.period },
+		{ key: "projectManager", label: localizationConstants.colProjectManager },
+		{ key: "customer", label: localizationConstants.orderCustomer },
+	];
+}
 
 export interface WarrantyColumnOptions {
+	/** Which module's wording the record columns take. */
+	scope: WarrantyScope;
 	selectedIds: string[];
 	allSelected: boolean;
 	onToggleSelectAll: () => void;
@@ -44,6 +75,7 @@ export interface WarrantyColumnOptions {
  * paper.
  */
 export function buildWarrantyColumns({
+	scope,
 	selectedIds,
 	allSelected,
 	onToggleSelectAll,
@@ -75,7 +107,7 @@ export function buildWarrantyColumns({
 			),
 		},
 
-		...DATA_COLUMNS.map(({ key, label }) => ({
+		...dataColumns(scope).map(({ key, label }) => ({
 			key,
 			label,
 			sortable: true,

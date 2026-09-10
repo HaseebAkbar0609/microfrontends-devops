@@ -1,3 +1,13 @@
+/**
+ * Which module is showing the feature.
+ *
+ * The rows are the same either way; only what the list calls a record differs
+ * — an Order screen heads the column "Order nr", the Project frame "Projekt
+ * Nr". Defaulting to `"order"` keeps the wording the two merged Order screens
+ * already shipped.
+ */
+export type WarrantyScope = "order" | "project";
+
 export interface RecipientItem {
 	id: string;
 	name: string;

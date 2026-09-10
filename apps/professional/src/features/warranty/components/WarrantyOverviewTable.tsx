@@ -5,11 +5,13 @@ import { TablePagination } from "@/components/table/TablePagination";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import type { SortOrder, WarrantySortField } from "../hooks/useWarranty";
-import type { WarrantyRow } from "../types/warranty.types";
+import type { WarrantyRow, WarrantyScope } from "../types/warranty.types";
 import { buildWarrantyColumns } from "./overview/warrantyColumns";
 import { WarrantyTableToolbar } from "./overview/WarrantyTableToolbar";
 
 export interface WarrantyOverviewTableProps {
+	/** Which module's wording the record columns take. */
+	scope: WarrantyScope;
 	rows: WarrantyRow[];
 	selectedIds: string[];
 	onToggleSelectAll: () => void;
@@ -40,6 +42,7 @@ export interface WarrantyOverviewTableProps {
  * two already-merged Order screens for no gain.
  */
 export function WarrantyOverviewTable({
+	scope,
 	rows,
 	selectedIds,
 	onToggleSelectAll,
@@ -62,6 +65,7 @@ export function WarrantyOverviewTable({
 	const t = useTranslate();
 
 	const columns = buildWarrantyColumns({
+		scope,
 		selectedIds,
 		allSelected:
 			rows.length > 0 && rows.every((row) => selectedIds.includes(row.id)),
