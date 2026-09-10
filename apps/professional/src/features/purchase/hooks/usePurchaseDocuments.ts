@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import type { PendingUploadFile } from "@/components/form";
+import { isAllowedUpload } from "@/lib/validation/fileUpload";
 import { MOCK_PURCHASE_AGREEMENT_DOCS } from "../data/purchaseAgreementDocs.mock";
 import type {
 	PurchaseAgreementDocument,
@@ -23,11 +24,10 @@ export interface PurchaseDocumentUploadDefaults {
 	purchaseNo?: string;
 	reference?: string;
 	/**
-	 * Extensions the picker will actually take, e.g. `[".pdf", ".png"]`. The
-	 * input's `accept` attribute only filters the OS dialog — it is advisory
-	 * and a drag-and-drop or a renamed file walks straight past it — so the
-	 * list is enforced here too. Omitted means unrestricted, which is what the
-	 * callers that predate this did.
+	 * Extensions the picker will actually take, e.g. `[".pdf", ".png"]`,
+	 * enforced by `checkUploadedFile` rather than by the input's advisory
+	 * `accept`. Omitted means unrestricted, which is what the callers that
+	 * predate this did.
 	 */
 	acceptExtensions?: string[];
 	/** Per-file ceiling in bytes. Omitted means unrestricted. */
@@ -38,23 +38,6 @@ export interface PurchaseDocumentUploadDefaults {
 export interface SelectFilesResult {
 	added: number;
 	rejected: string[];
-}
-
-function isAllowed(
-	file: File,
-	acceptExtensions?: string[],
-	maxFileSizeBytes?: number,
-): boolean {
-	if (maxFileSizeBytes !== undefined && file.size > maxFileSizeBytes) {
-		return false;
-	}
-
-	if (!acceptExtensions || acceptExtensions.length === 0) return true;
-
-	const name = file.name.toLowerCase();
-	return acceptExtensions.some((extension) =>
-		name.endsWith(extension.toLowerCase()),
-	);
 }
 
 const FALLBACK_UPLOAD_DEFAULTS: Required<
@@ -109,7 +92,7 @@ export function usePurchaseDocuments(
 			const rejected: string[] = [];
 
 			for (const file of files) {
-				if (isAllowed(file, acceptExtensions, maxFileSizeBytes)) {
+				if (isAllowedUpload(file, { acceptExtensions, maxFileSizeBytes })) {
 					allowed.push(file);
 				} else {
 					rejected.push(file.name);

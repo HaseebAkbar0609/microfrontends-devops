@@ -23,7 +23,7 @@ import type {
 	PurchaseQaMessage,
 	PurchaseQaStatus,
 } from "../../types/purchase.types";
-import { ConfirmActionDialog } from "../shared/ConfirmActionDialog";
+import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 import { PurchaseQaCreateDialog } from "./PurchaseQaCreateDialog";
 import { PurchaseQaFilters } from "./PurchaseQaFilters";
 

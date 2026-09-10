@@ -1,38 +1,14 @@
 "use client";
 
-import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
-import { WarrantyDetailView } from "./components/WarrantyDetailView";
-import { useWarranty } from "./hooks/useWarranty";
+import { WarrantyFeature } from "@/features/warranty/WarrantyFeature";
 
 export interface OrderWarrantyDetailPageProps {
 	id: string;
 }
 
+/** The Order module's `/warranty/[id]` route: the shared detail, entered directly. */
 export function OrderWarrantyDetailPage({ id }: OrderWarrantyDetailPageProps) {
-	const { rows, inspectionDates, addInspectionDate, deleteInspectionDate } = useWarranty(id);
-
-	const targetWarranty = rows.find(
-		(r) => r.id === id || r.orderNo.replace("#", "").trim() === id.replace("#", "").trim()
-	);
-
-	// Explicit Not-Found Case handling instead of silent fallback
-	if (!targetWarranty) {
-		return (
-			<div className="flex flex-1 flex-col items-center justify-center p-12 text-slate-500 bg-white">
-				<p className="text-sm font-medium">
-					<Translate text={localizationConstants.noOrdersFound} />
-				</p>
-			</div>
-		);
-	}
-
-	return (
-		<WarrantyDetailView
-			warranty={targetWarranty}
-			inspectionDates={inspectionDates}
-			onAddInspectionDate={addInspectionDate}
-			onDeleteInspectionDate={deleteInspectionDate}
-		/>
-	);
+	return <WarrantyFeature recordId={id} initialView="detail" />;
 }
+
+export default OrderWarrantyDetailPage;
