@@ -31,6 +31,11 @@ export type OfferConfirmationModalProps = {
 
 export interface OfferList {
   id: string;
+  projectId?: string;
+  mappingId?: string;
+  quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   idNumber: string;
   jobName: string;
   date: string;
@@ -39,6 +44,12 @@ export interface OfferList {
   municipality: string;
   category: string;
   isFavorite?: boolean;
+  totalPrice?: number;
+  contactName?: string;
+  contactPhone?: string;
+  contactEmail?: string;
+  seenStatus?: string;
+  openedAt?: string;
 }
 
 export interface OfferListColumn {
@@ -67,6 +78,10 @@ export type OfferSendFile = {
 
 export type OfferSendData = {
   id: string;
+  mappingId?: string;
+  quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   title: string;
   postedDate: string;
   type: string;
@@ -79,6 +94,7 @@ export type OfferSendData = {
   drawings: OfferSendFile[];
   preliminaryBudgetPrice: string;
   offerDateLatest: string;
+  isFavorite?: boolean;
 };
 
 export type OfferSendCustomerDetailsProps = {
@@ -113,6 +129,9 @@ export type OfferQuotedContactPerson = {
 
 export type OfferQuotedItem = {
   id: string;
+  projectId?: string;
+  mappingId?: string;
+  quoteId?: string;
   offertNr: string;
   job: string;
   customerName: string;
@@ -134,6 +153,9 @@ export type OfferAcceptedContactPerson = {
 
 export type OfferAcceptedItem = {
   id: string;
+  projectId?: string;
+  mappingId?: string;
+  quoteId?: string;
   offertNr: string;
   job: string;
   customerName: string;
@@ -148,6 +170,11 @@ export type OfferAgreedStatus = "signed" | "waiting_signature";
 
 export type OfferAgreedItem = {
   id: string;
+  projectId?: string;
+  mappingId?: string;
+  quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   contractNr: string;
   jobName: string;
   customerName: string;
@@ -174,6 +201,10 @@ export type AgreementParty = {
 
 export type OfferArchivedItem = {
   id: string;
+  mappingId?: string;
+  quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   contractNr: string;
   jobName: string;
   customerName: string;
@@ -240,6 +271,7 @@ export type ProjectData = {
 
 export type AgreementData = {
   id: string;
+  mappingId?: string;
   projectName: string;
   projectNumber: string;
   quoteNumber: string;

@@ -53,6 +53,12 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferArchivedItem, OfferAgreedStatus } from "../types/offer";
 import { OfferArchivedCommentModal } from "./OfferArchivedCommentModal";
+import {
+  addOfferCommentAPIAction,
+  deleteOfferAPIAction,
+  OFFER_API_STATUS,
+  updateOfferStatusAPIAction,
+} from "@/api-actions/offers";
 
 type SortField = keyof Pick<
   OfferArchivedItem,
@@ -108,11 +114,13 @@ function ArchivedStatusActionButton({
   status,
   rowId,
   offerId,
+  agreementId,
   onNavigate,
 }: {
   status: OfferAgreedStatus;
   rowId: string;
   offerId: string;
+  agreementId?: string;
   onNavigate: (path: string) => void;
 }) {
   const isSigned = status === "signed";
@@ -125,7 +133,13 @@ function ArchivedStatusActionButton({
       size="sm"
       variant="outline"
       className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
-      onClick={() => onNavigate(OFFER_ROUTES.createAgreement(rowId || offerId))}
+      onClick={() =>
+        onNavigate(
+          isSigned && agreementId
+            ? `/module/business-support/agreement/${agreementId}`
+            : OFFER_ROUTES.createAgreement(rowId || offerId),
+        )
+      }
     >
       <Translate text={actionLabelKey} />
     </Button>
@@ -136,9 +150,10 @@ interface Props {
   offerId: string;
   items: OfferArchivedItem[];
   isLoading?: boolean;
+  onSearchChange?: (value: string) => void;
 }
 
-export function OfferArchivedView({ offerId, items, isLoading = false }: Props) {
+export function OfferArchivedView({ offerId, items, isLoading = false, onSearchChange }: Props) {
   const t = useTranslate();
   const router = useRouter();
 
@@ -153,13 +168,15 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
     open: boolean;
     offertNr: string;
     job: string;
-  }>({ open: false, offertNr: "", job: "" });
+    mappingId?: string;
+  }>({ open: false, offertNr: "", job: "", mappingId: undefined });
 
   useEffect(() => {
     setArchivedList(items);
   }, [items]);
 
   const debouncedSearch = useDebounce(search, 300);
+  useEffect(() => onSearchChange?.(debouncedSearch), [debouncedSearch, onSearchChange]);
   const activeFilterCount = selectedStatuses.length;
 
   const signedLabel = t(localizationConstants.offerAgreedStatusSigned);
@@ -190,7 +207,10 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize));
   const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
 
-  function handleDelete(row: OfferArchivedItem) {
+  async function handleDelete(row: OfferArchivedItem) {
+    if (!row.mappingId) return showToast("error", "Offer identifier is missing");
+    const result = await deleteOfferAPIAction(row.mappingId);
+    if (!result.success) return showToast("error", result.error || "Offer could not be deleted");
     setArchivedList((prev) => prev.filter((i) => i.id !== row.id));
     showToast(
       "success",
@@ -198,7 +218,10 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
     );
   }
 
-  function handleUnarchive(row: OfferArchivedItem) {
+  async function handleUnarchive(row: OfferArchivedItem) {
+    if (!row.mappingId) return showToast("error", "Offer identifier is missing");
+    const result = await updateOfferStatusAPIAction(row.mappingId, OFFER_API_STATUS.OFFERED);
+    if (!result.success) return showToast("error", result.error || "Offer could not be restored");
     setArchivedList((prev) => prev.filter((i) => i.id !== row.id));
     showToast(
       "success",
@@ -440,6 +463,7 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
                             status={row.status}
                             rowId={row.id}
                             offerId={offerId}
+                            agreementId={row.agreementId}
                             onNavigate={router.push}
                           />
                         </td>
@@ -464,7 +488,7 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
                               >
                                 <DropdownMenuItem
                                   className="cursor-pointer gap-2 text-slate-800"
-                                  onClick={() => handleDelete(row)}
+                                  onClick={() => void handleDelete(row)}
                                 >
                                   <Trash2 className="h-3.5 w-3.5 text-slate-700" />
                                   <Translate
@@ -473,7 +497,7 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   className="cursor-pointer gap-2 text-slate-800"
-                                  onClick={() => handleUnarchive(row)}
+                                  onClick={() => void handleUnarchive(row)}
                                 >
                                   <ArchiveX className="h-3.5 w-3.5 text-slate-700" />
                                   <Translate
@@ -487,6 +511,7 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
                                       open: true,
                                       offertNr: row.contractNr,
                                       job: row.jobName,
+                                      mappingId: row.mappingId,
                                     })
                                   }
                                 >
@@ -633,7 +658,12 @@ export function OfferArchivedView({ offerId, items, isLoading = false }: Props) 
         open={commentModal.open}
         offertNr={commentModal.offertNr}
         job={commentModal.job}
-        onClose={() => setCommentModal({ open: false, offertNr: "", job: "" })}
+        onClose={() => setCommentModal({ open: false, offertNr: "", job: "", mappingId: undefined })}
+        onSubmit={async (comment) => {
+          if (!commentModal.mappingId) return false;
+          const result = await addOfferCommentAPIAction(commentModal.mappingId, comment);
+          return result.success;
+        }}
       />
     </div>
   );

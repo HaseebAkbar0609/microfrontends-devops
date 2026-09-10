@@ -9,65 +9,10 @@ import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { getOfferDetailByIdAPIAction } from "@/api-actions/offers";
-import { DUMMY_OFFER_SEND } from "@/features/offer/constants/offerSend";
-import { DUMMY_OFFER_REQUESTS } from "@/features/offer/constants/offerRequests.mock";
-import { DUMMY_QUOTED_ITEMS } from "@/features/offer/constants/offerQuoted.mock";
-
-function getOfferFallback(offerId: string) {
-	const reqMatch = DUMMY_OFFER_REQUESTS.find((r) => r.id === offerId);
-	if (reqMatch) {
-		return {
-			...DUMMY_OFFER_SEND,
-			id: reqMatch.id,
-			title: reqMatch.job,
-			type: reqMatch.type,
-			badges: [reqMatch.type, reqMatch.category, reqMatch.municipality],
-			customer: {
-				name: reqMatch.customerName,
-				email: "",
-				phone: "",
-				address: reqMatch.municipality || "",
-			},
-			preliminaryBudgetPrice: reqMatch.price ? reqMatch.price.toLocaleString("en-US") : "",
-			offerDateLatest: "",
-		};
-	}
-
-	const quotedMatch = DUMMY_QUOTED_ITEMS.find((q) => q.id === offerId);
-	if (quotedMatch) {
-		return {
-			...DUMMY_OFFER_SEND,
-			id: quotedMatch.id,
-			title: quotedMatch.job,
-			type: quotedMatch.type,
-			badges: [quotedMatch.type, quotedMatch.category, quotedMatch.municipality],
-			customer: {
-				name: quotedMatch.customerName,
-				email: quotedMatch.contactPerson.email || "",
-				phone: quotedMatch.contactPerson.phone || "",
-				address: quotedMatch.municipality || "",
-			},
-			preliminaryBudgetPrice: quotedMatch.price ? quotedMatch.price.toLocaleString("en-US") : "",
-			offerDateLatest: "",
-		};
-	}
-
-	return {
-		...DUMMY_OFFER_SEND,
-		id: offerId,
-		customer: {
-			name: "",
-			email: "",
-			phone: "",
-			address: "",
-		},
-		preliminaryBudgetPrice: "",
-		offerDateLatest: "",
-	};
-}
+import type { OfferSendData } from "@/features/offer/types";
 
 function mapOfferToState(
-	offer: Partial<typeof DUMMY_OFFER_SEND> | null,
+	offer: Partial<OfferSendData> | null,
 	offerId: string,
 	setKontakt: React.Dispatch<React.SetStateAction<KalkylKontaktData>>,
 	setProjekt: React.Dispatch<React.SetStateAction<KalkylProjektData>>,
@@ -179,7 +124,7 @@ const DEFAULT_PROJEKT: KalkylProjektData = {
 	offertNr: "",
 	startDatum: "",
 	slutDatum: "",
-	senatsDatum: "2026-01-15",
+	senatsDatum: "",
 };
 
 // ── Main component ─────────────────────────────────────────────────────────
@@ -192,6 +137,7 @@ export function CreateKalkylPage() {
 
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [offerLoadError, setOfferLoadError] = useState(false);
 	const [showErrors, setShowErrors] = useState(false);
 
 	// Form state lifted to parent so steps don't lose state on navigation
@@ -206,17 +152,16 @@ export function CreateKalkylPage() {
 		if (!offerId) return;
 
 		async function loadOfferData() {
+			setOfferLoadError(false);
 			try {
 				const res = await getOfferDetailByIdAPIAction(offerId as string);
 				if (res.success && res.data) {
 					mapOfferToState(res.data, offerId as string, setKontakt, setProjekt);
 				} else {
-					const fallbackOffer = getOfferFallback(offerId as string);
-					mapOfferToState(fallbackOffer, offerId as string, setKontakt, setProjekt);
+					setOfferLoadError(true);
 				}
 			} catch {
-				const fallbackOffer = getOfferFallback(offerId as string);
-				mapOfferToState(fallbackOffer, offerId as string, setKontakt, setProjekt);
+				setOfferLoadError(true);
 			}
 		}
 
@@ -285,6 +230,11 @@ export function CreateKalkylPage() {
 	return (
 		<div className="flex h-full flex-col overflow-hidden bg-slate-50">
 			<div className="flex-1 overflow-y-auto px-4 py-4">
+				{offerLoadError && (
+					<div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+						Offer data could not be loaded. Please return to the offer and try again.
+					</div>
+				)}
 				{/* Header */}
 				<div className="mb-1 flex items-center gap-2">
 					<button

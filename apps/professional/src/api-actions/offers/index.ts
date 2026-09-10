@@ -1,11 +1,12 @@
 import axiosInstance from "@/lib/axiosInstance";
-import { OfferList, OfferSendData, OfferSendImage, OfferSendFile } from "@/features/offer/types";
+import { OfferList, OfferSendData } from "@/features/offer/types";
 import {
 	AvailableOffersApiResponse,
 	OfferApiResponseItem,
 	OffersListApiResponse,
 } from "@/types/offer";
 import { ApiResponse, ActionResult } from "@/types/api";
+import { authStorage } from "@/lib/authStorage";
 
 const OFFERS_LIST_PATH = "/professionals/quotes/quote-listing/offer_listing_by_status";
 const AVAILABLE_OFFERS_PATH = "/professionals/quotes/quote-listing/offer_listing_to_quote";
@@ -50,7 +51,12 @@ export function mapItemToOfferList(item: OfferApiResponseItem): OfferList {
 	const hasAvailabilityMetrics = item.taken_count !== undefined || item.hit_count !== undefined;
 
 	return {
-		id: item.id || item.project_id || item.offer_id || "",
+		id: item.project_id || item.id || item.offer_id || "",
+		projectId: item.project_id || item.id || "",
+		mappingId: item.mapping_id,
+		quoteId: item.quote_id,
+		agreementId: item.agreement_id,
+		agreementStatus: item.agreement_status,
 		idNumber: item.offer_code || item.project_code || "—",
 		jobName: item.project_name || item.project_title || item.title || "—",
 		date: formatOfferDate(item.created_at),
@@ -61,6 +67,12 @@ export function mapItemToOfferList(item: OfferApiResponseItem): OfferList {
 		municipality: item.municipality || item.city_name || item.city || "—",
 		category: categories || item.category || "—",
 		isFavorite: Boolean(item.is_bookmark),
+		totalPrice: Number(item.total_quote_price ?? item.preliminary_budget ?? 0) || 0,
+		contactName: [item.project_contact_first_name, item.project_contact_last_name].filter(Boolean).join(" "),
+		contactPhone: item.project_contact_phone || "",
+		contactEmail: item.project_contact_email || "",
+		seenStatus: typeof item.seen_status === "object" && item.seen_status ? item.seen_status.status || "" : String(item.seen_status || ""),
+		openedAt: typeof item.seen_status === "object" && item.seen_status?.opened_at ? formatOfferDate(item.seen_status.opened_at) : undefined,
 	};
 }
 
@@ -135,7 +147,7 @@ export async function getOfferByIdAPIAction(
 ): Promise<ActionResult<OfferList | null>> {
 	try {
 		const response = await axiosInstance.get<ApiResponse<OfferApiResponseItem>>(
-			`/professionals/quotes/${offerId}`,
+			`/professionals/quotes/quote-listing/project/${offerId}`,
 		);
 		if (response.data?.data) {
 			return {
@@ -155,56 +167,39 @@ export async function getOfferDetailByIdAPIAction(
 ): Promise<ActionResult<OfferSendData | null>> {
 	try {
 		const response = await axiosInstance.get<ApiResponse<OfferApiResponseItem>>(
-			`/professionals/quotes/${offerId}`,
+			`/professionals/quotes/quote-listing/project/${offerId}`,
+			{ params: { required_preliminary_budget: true } },
 		);
 		if (response.data?.data) {
 			const item = response.data.data;
 			return {
 				success: true,
 				data: {
-					id: item.id || item.offer_id || offerId,
-					title: item.project_title || item.title || "Köksrenoveringsjobb",
-					postedDate: item.created_at ? new Date(item.created_at).toISOString().split("T")[0] : "2024-12-18",
-					type: item.project_type || "Express",
-					badges: [
-						(item.project_type as string) || "Expressen är bättre",
-						(item.region as string) || "Stockholm",
-						(item.city as string) || "Järfälla",
-					],
+					id: item.project_id || item.id || offerId,
+					mappingId: item.mapping_id,
+					quoteId: item.quote_id,
+					agreementId: item.agreement_id,
+					agreementStatus: item.agreement_status,
+					title: item.project_name || item.project_title || item.title || "—",
+					postedDate: formatOfferDate(item.created_at),
+					type: item.project_type || item.type || "—",
+					badges: [item.project_type, item.city_name, item.country_name].filter(Boolean) as string[],
 					customer: {
-						name: (item.customer_name as string) || "Anna Andersson",
-						email: (item.customer_email as string) || "anna@example.com",
-						phone: (item.customer_phone as string) || "076000000",
-						address: (item.customer_address as string) || "Storgatan 16, 18880 Stockholm.",
+						name: [item.contact_details?.first_name, item.contact_details?.last_name].filter(Boolean).join(" ") || "—",
+						email: item.contact_details?.email || "—",
+						phone: item.contact_details?.phone || "—",
+						address: item.contact_details?.address || item.address || "—",
 					},
-					description:
-						(item.description as string) ||
-						"Företaget behöver Beprövad erfarenhet av köksrenovering eller inredning. Ett skarpt öga för designtrender och en passion för att skapa snygga och funktionella utrymmen.",
-					images: Array.isArray(item.images)
-						? (item.images as OfferSendImage[])
-						: [
-								{ id: "img-1", label: "Photo.img", src: "/offer-details.png" },
-								{ id: "img-2", label: "Photo.img", src: "/offer-details.png" },
-								{ id: "img-3", label: "Photo.img", src: "/offer-details.png" },
-						  ],
-					extraImagesCount: (item.extra_images_count as number) || 6,
-					documents: Array.isArray(item.documents)
-						? (item.documents as OfferSendFile[])
-						: [
-								{ id: "doc-1", label: "Förmulärsmall #1.doc" },
-								{ id: "doc-2", label: "Förmulärsmall #1.doc" },
-								{ id: "doc-3", label: "projekt.pdf" },
-						  ],
-					drawings: Array.isArray(item.drawings)
-						? (item.drawings as OfferSendFile[])
-						: [
-								{ id: "drawing-1", label: "projekt.pdf" },
-								{ id: "drawing-2", label: "bild 1" },
-								{ id: "drawing-3", label: "bild 1" },
-								{ id: "drawing-4", label: "bild 1" },
-						  ],
-					preliminaryBudgetPrice: (item.preliminary_budget as string) || "550,000",
-					offerDateLatest: (item.latest_offer_date as string) || "2025-04-15",
+					description: item.project_description || "—",
+					images: (item.media ?? []).filter((file) => file.content_type?.startsWith("image/") && file.url).map((file) => ({ id: file.media_id || file.url || "", label: file.file_name || "Image", src: file.url })),
+					extraImagesCount: 0,
+					documents: (item.media ?? []).filter((file) => !file.content_type?.startsWith("image/") && file.url).map((file) => ({ id: file.media_id || file.url || "", label: file.file_name || "Document", src: file.url })),
+					drawings: [],
+					preliminaryBudgetPrice: typeof item.preliminary_budget === "object" && item.preliminary_budget
+						? String(item.preliminary_budget.preliminary_budget ?? item.total_quote_price ?? "—")
+						: String(item.preliminary_budget ?? item.total_quote_price ?? "—"),
+					offerDateLatest: typeof item.preliminary_budget === "object" && item.preliminary_budget?.budget_date ? formatOfferDate(item.preliminary_budget.budget_date) : "—",
+					isFavorite: Boolean(item.is_bookmark),
 				},
 				error: null,
 			};
@@ -220,12 +215,54 @@ export async function toggleOfferFavoriteAPIAction(
 	isFavorite: boolean,
 ): Promise<ActionResult<boolean>> {
 	try {
-		await axiosInstance.post(`/professionals/quotes/${offerId}/favorite`, {
-			isFavorite,
+		await axiosInstance.post(`/professionals/quotes/project-bookmark/toggle`, {
+			project_id: offerId,
+			is_bookmark: isFavorite,
 		});
 		return { success: true, data: isFavorite, error: null };
 	} catch {
 		return { success: false, data: isFavorite, error: null };
+	}
+}
+
+export async function updateOfferStatusAPIAction(
+	mappingId: string,
+	status: OfferApiStatus,
+): Promise<ActionResult<string>> {
+	try {
+		await axiosInstance.patch(`/professionals/quotes/quote-listing/offer/${mappingId}/status`, {
+			status: status.toLowerCase(),
+		});
+		return { success: true, data: status, error: null };
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
+		return { success: false, data: null, error: apiError.response?.data?.message || "Failed to update offer" };
+	}
+}
+
+export async function deleteOfferAPIAction(mappingId: string): Promise<ActionResult<void>> {
+	try {
+		await axiosInstance.delete(`/professionals/quotes/quote-listing/offer/${mappingId}`);
+		return { success: true, data: undefined, error: null };
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
+		return { success: false, data: null, error: apiError.response?.data?.message || "Failed to delete offer" };
+	}
+}
+
+export async function addOfferCommentAPIAction(mappingId: string, body: string): Promise<ActionResult<void>> {
+	try {
+		const company = authStorage.getCompanyData() as { id?: string } | null;
+		if (!company?.id) throw new Error("Company is not selected");
+		await axiosInstance.post(`/companies/${company.id}/content`, {
+			kind: "offer_comment",
+			reference_id: mappingId,
+			body,
+		});
+		return { success: true, data: undefined, error: null };
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } }; message?: string };
+		return { success: false, data: null, error: apiError.response?.data?.message || apiError.message || "Failed to save comment" };
 	}
 }
 
@@ -240,6 +277,7 @@ export interface AgreementPartyPayload {
 }
 
 export interface AgreementRequestPayload {
+	mappingId?: string;
 	parties: AgreementPartyPayload[];
 	documents: string[];
 	templates: string[];
@@ -262,9 +300,29 @@ export async function createAgreementFromOfferAPIAction(
 	data: AgreementRequestPayload,
 ): Promise<ActionResult<AgreementResponseData>> {
 	try {
+		const contacts = data.parties.map((party) => {
+			const parts = party.name.trim().split(/\s+/);
+			return {
+				first_name: parts.shift() || party.role,
+				last_name: parts.join(" ") || "—",
+				email: party.email || null,
+				mobile: party.phone || null,
+				role: party.role,
+			};
+		});
 		const response = await axiosInstance.post<ApiResponse<AgreementResponseData>>(
-			`/professionals/quotes/${offerId}/agreement`,
-			data,
+			`/professionals/agreement/create`,
+			{
+				offerMappingId: data.mappingId || null,
+				avdelning: "Offer",
+				objekt: data.projectName || `Offer ${offerId}`,
+				motpart: data.parties.find((party) => party.role === "customer")?.name || null,
+				anteckning: data.quoteNumber || offerId,
+				startdatum: data.startDate || null,
+				slutdatum: data.endDate || null,
+				contacts,
+				documents: data.documents.map((id) => ({ id })),
+			},
 		);
 		return { success: true, data: response.data?.data || { id: offerId }, error: null };
 	} catch (error: unknown) {

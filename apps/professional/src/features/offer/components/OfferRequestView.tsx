@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -50,6 +50,8 @@ import { OfferRequest } from "../constants/offerRequests";
 import { OfferQuotedStatusBadge } from "./OfferQuotedStatusBadge";
 import { OfferQuotedCommentModal } from "./OfferQuotedCommentModal";
 import { OfferQuotedAnswerModal } from "./OfferQuotedAnswerModal";
+import { addOfferCommentAPIAction } from "@/api-actions/offers";
+import { showToast } from "@/lib/toast";
 
 type SortField = keyof Pick<
 	OfferRequest,
@@ -64,7 +66,7 @@ type SortField = keyof Pick<
 	| "contactPerson"
 >;
 
-type CommentModal = { open: boolean; offertNr: string; job: string };
+type CommentModal = { open: boolean; offertNr: string; job: string; mappingId?: string };
 type AnswerModal = {
 	open: boolean;
 	offertNr: string;
@@ -75,9 +77,10 @@ type AnswerModal = {
 interface Props {
 	requests: OfferRequest[];
 	totalSum?: number;
+	onSearchChange?: (value: string) => void;
 }
 
-export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
+export function OfferRequestView({ requests, totalSum: totalSumProp, onSearchChange }: Props) {
 	const t = useTranslate();
 	const router = useRouter();
 
@@ -94,6 +97,7 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
 		open: false,
 		offertNr: "",
 		job: "",
+		mappingId: undefined,
 	});
 
 	const [answerModal, setAnswerModal] = useState<AnswerModal>({
@@ -104,6 +108,7 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
 	});
 
 	const debouncedSearch = useDebounce(search, 300);
+	useEffect(() => onSearchChange?.(debouncedSearch), [debouncedSearch, onSearchChange]);
 
 	const uniqueCategories = useMemo(
 		() => [...new Set(requests.map((r) => r.category).filter(Boolean))],
@@ -395,6 +400,7 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
               <Button
                 size="sm"
                 className="h-9 px-4 gap-1.5 bg-[#111721] hover:bg-slate-800 text-white text-xs font-medium rounded-md cursor-pointer transition-colors shadow-xs"
+                onClick={() => router.push("/module/production/project")}
               >
                 <Plus size={14} aria-hidden={true} />
                 <Translate text={localizationConstants.offerRequestAddProject} />
@@ -518,21 +524,12 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
                           >
                             <DropdownMenuItem
                               className="cursor-pointer"
-                              onClick={() =>
-                                router.push(
-                                  `/module/business/offer/request/${row.id}`,
-                                )
-                              }
-                            >
-                              {t(localizationConstants.viewProject)}
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              className="cursor-pointer"
                               onClick={() => {
                                 setCommentModal({
                                   open: true,
                                   offertNr: row.offertNr,
                                   job: row.job,
+                                  mappingId: row.mappingId,
                                 });
                               }}
                             >
@@ -657,6 +654,12 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
         offertNr={commentModal.offertNr}
         job={commentModal.job}
         onClose={() => setCommentModal((prev) => ({ ...prev, open: false }))}
+        onSubmit={async (comment) => {
+          if (!commentModal.mappingId) return false;
+          const result = await addOfferCommentAPIAction(commentModal.mappingId, comment);
+          if (result.success) showToast("success", "Comment saved");
+          return result.success;
+        }}
       />
 
       {/* Answer Modal */}
@@ -672,6 +675,7 @@ export function OfferRequestView({ requests, totalSum: totalSumProp }: Props) {
             open: true,
             offertNr: answerModal.offertNr,
             job: answerModal.job,
+            mappingId: undefined,
           });
         }}
       />

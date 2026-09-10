@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
 	Heart,
-	ChevronDown,
 	X,
 	Plus,
 } from "lucide-react";
@@ -13,12 +12,7 @@ import { OfferListTable } from "./OfferListTable";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
 	Breadcrumb,
 	BreadcrumbItem as BreadcrumbUIItem,
@@ -37,14 +31,6 @@ import { ProfessionalRow } from "@/types/company";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 
-type ChipId = "alla-jobb" | "label-1" | "label-2";
-
-const FILTER_CHIPS: { id: ChipId; labelKey: string; addable?: boolean }[] = [
-	{ id: "alla-jobb", labelKey: localizationConstants.allJobs, addable: true },
-	{ id: "label-1", labelKey: localizationConstants.filterLabel1, addable: false },
-	{ id: "label-2", labelKey: localizationConstants.filterLabel2, addable: false },
-];
-
 export default function OfferList() {
 	const t = useTranslate();
 	const { search, changeQuery, changeQueries, page = 1, query } = useQueryParams();
@@ -54,9 +40,6 @@ export default function OfferList() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [hasLoadError, setHasLoadError] = useState(false);
 	const [reloadSequence, setReloadSequence] = useState(0);
-	const [activeChips, setActiveChips] = useState<Set<ChipId>>(
-		new Set<ChipId>(["label-1", "label-2"]),
-	);
 	const [selectedCategory, setSelectedCategory] = useState<string>("all");
 	const [selectedMunicipality, setSelectedMunicipality] = useState<string>("all");
 	const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
@@ -86,19 +69,9 @@ export default function OfferList() {
 			}
 		}
 		fetchOffers();
-	}, [search, page, page_size, reloadSequence]);
-
-	const toggleChip = (id: ChipId) => {
-		setActiveChips((prev) => {
-			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
-			return next;
-		});
-	};
+	}, [search, page, page_size, reloadSequence, selectedCategory, selectedMunicipality, showFavoritesOnly]);
 
 	const resetFilters = () => {
-		setActiveChips(new Set<ChipId>());
 		setSelectedCategory("all");
 		setSelectedMunicipality("all");
 		setShowFavoritesOnly(false);
@@ -141,7 +114,6 @@ export default function OfferList() {
 	}, [offers, showFavoritesOnly, selectedCategory, selectedMunicipality, search]);
 
 	const isAnyFilterActive =
-		activeChips.size > 0 ||
 		selectedCategory !== "all" ||
 		selectedMunicipality !== "all" ||
 		showFavoritesOnly ||
@@ -203,72 +175,6 @@ export default function OfferList() {
 							wrapperClassName="w-full sm:w-[220px] flex-shrink-0"
 							className="h-9 text-xs"
 						/>
-
-						{/* Filter Dropdown */}
-						<DropdownMenu>
-							<DropdownMenuTrigger asChild>
-								<Button
-									variant="outline"
-									className="h-9 px-3 gap-1.5 border border-slate-200 bg-white text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer shrink-0"
-								>
-									<Translate text={localizationConstants.filter} />
-									<ChevronDown className="h-3.5 w-3.5 text-slate-400" />
-								</Button>
-							</DropdownMenuTrigger>
-							<DropdownMenuContent align="start" className="w-44 text-xs">
-								{FILTER_CHIPS.map((chip) => (
-									<DropdownMenuItem
-										key={chip.id}
-										onClick={() => toggleChip(chip.id)}
-										className="text-xs cursor-pointer"
-									>
-										<Translate text={chip.labelKey} />
-									</DropdownMenuItem>
-								))}
-							</DropdownMenuContent>
-						</DropdownMenu>
-
-						{/* Dotted Pill Group */}
-						<div className="h-9 flex items-center border border-dotted border-slate-300 rounded-md overflow-hidden flex-shrink-0 bg-transparent">
-							<button
-								type="button"
-								onClick={() => toggleChip("alla-jobb")}
-								className={cn(
-									"h-full flex items-center gap-1 px-2.5 text-xs font-medium transition-colors cursor-pointer",
-									activeChips.has("alla-jobb")
-										? "bg-slate-900 text-white"
-										: "bg-transparent text-slate-700 hover:bg-slate-100"
-								)}
-							>
-								<Plus className="w-3.5 h-3.5" />
-								<Translate text={localizationConstants.allJobs} />
-							</button>
-							<div className="w-px h-5 bg-slate-300 flex-shrink-0" />
-							<button
-								type="button"
-								onClick={() => toggleChip("label-1")}
-								className={cn(
-									"h-6 my-auto mx-1 px-2 text-xs font-medium flex items-center rounded-sm transition-colors cursor-pointer",
-									activeChips.has("label-1")
-										? "bg-slate-900 text-white"
-										: "bg-slate-100 text-slate-700 hover:bg-slate-200"
-								)}
-							>
-								<Translate text={localizationConstants.filterLabel1} />
-							</button>
-							<button
-								type="button"
-								onClick={() => toggleChip("label-2")}
-								className={cn(
-									"h-6 my-auto mx-1 px-2 text-xs font-medium flex items-center rounded-sm transition-colors cursor-pointer",
-									activeChips.has("label-2")
-										? "bg-slate-900 text-white"
-										: "bg-slate-100 text-slate-700 hover:bg-slate-200"
-								)}
-							>
-								<Translate text={localizationConstants.filterLabel2} />
-							</button>
-						</div>
 
 						{/* Category Filter */}
 						<DropdownMenu>

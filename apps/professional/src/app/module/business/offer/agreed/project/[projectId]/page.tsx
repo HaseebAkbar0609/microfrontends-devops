@@ -1,5 +1,4 @@
-import { OfferSeeProjectView } from "@/features/offer/components/OfferSeeProjectView";
-import { getAgreedProjectData } from "@/features/offer/utils/agreedProject";
+import { OfferProjectDetailClient } from "@/features/offer/components/OfferProjectDetailClient";
 
 export default async function OfferAgreedProjectPage({
   params,
@@ -7,7 +6,5 @@ export default async function OfferAgreedProjectPage({
   params: Promise<{ projectId: string }>;
 }) {
   const { projectId } = await params;
-  const projectData = getAgreedProjectData(projectId);
-
-  return <OfferSeeProjectView offerId="" data={projectData} />;
+  return <OfferProjectDetailClient projectId={projectId} />;
 }

@@ -37,6 +37,7 @@ function InputField({
   value = "",
   onChange,
   error,
+  required = false,
   fullWidth = false,
   name,
   type = "text",
@@ -57,10 +58,11 @@ function InputField({
   inputRef?: React.RefObject<HTMLInputElement | null>;
 }) {
   const id = useId();
+  const effectiveMaxLength = maxLength ?? (type === "email" ? 254 : type === "tel" ? 32 : 255);
   return (
     <div className={`flex flex-col gap-1${fullWidth ? " col-span-1 md:col-span-2" : ""}`}>
       <label htmlFor={id} className="text-sm font-medium text-zinc-950">
-        {label}
+        {label}{required && <span className="ml-1 text-red-600" aria-hidden="true">*</span>}
       </label>
       <input
         ref={inputRef}
@@ -69,8 +71,10 @@ function InputField({
         type={type}
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
-        maxLength={maxLength}
+        maxLength={effectiveMaxLength}
         pattern={pattern}
+        required={required}
+        aria-invalid={Boolean(error)}
         className={cn(
           "h-9 w-full rounded border bg-white px-3 text-sm text-zinc-950 transition-colors focus-visible:outline-none focus-visible:ring-2",
           error

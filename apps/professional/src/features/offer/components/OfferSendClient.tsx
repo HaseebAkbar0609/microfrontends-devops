@@ -3,10 +3,10 @@
 import { useEffect, useState } from "react";
 import { OfferModuleHeader } from "@/features/offer/components/OfferModuleHeader";
 import { OfferFormPage } from "@/features/offer/components/OfferFormPage";
-import { DUMMY_OFFER_FORMS } from "@/features/offer/constants/offerForm.mock";
 import { getOfferDetailByIdAPIAction } from "@/api-actions/offers";
 import { OfferFormData, OfferFormType } from "@/features/offer/types";
 import { Loader } from "@/components/ui/loader";
+import { authStorage } from "@/lib/authStorage";
 
 type Props = {
   offerId: string;
@@ -31,12 +31,9 @@ export function parseOfferFormType(type?: string): OfferFormType {
 export function OfferSendClient({ offerId, type }: Props) {
   const formType = parseOfferFormType(type);
 
-  const [data, setData] = useState<OfferFormData>({
-    ...(DUMMY_OFFER_FORMS[formType] || DUMMY_OFFER_FORMS.b2c),
-    type: formType,
-    offerId,
-  });
+  const [data, setData] = useState<OfferFormData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -49,6 +46,11 @@ export function OfferSendClient({ offerId, type }: Props) {
 
         if (result.success && result.data) {
           const offerData = result.data;
+          const company = authStorage.getCompanyData() as {
+            company_name?: string;
+            name?: string;
+            organization_number?: string;
+          } | null;
           setData({
             offerId: offerData.id,
             type: formType,
@@ -61,16 +63,16 @@ export function OfferSendClient({ offerId, type }: Props) {
               address: offerData.customer.address,
             },
             company: {
-              name: "Nesse Bygg AB",
-              email: "per@nessebygg.com",
-              orgNumber: "7060070-0000 - Nesse",
-              phone: "76000000",
-              address: "Storgatan 23, 18877 Stockholm",
+              name: company?.company_name || company?.name || "—",
+              email: "",
+              orgNumber: company?.organization_number || "",
+              phone: "",
+              address: "",
             },
           });
-        }
+        } else setHasError(true);
       } catch {
-        // Keep mock data on error
+        setHasError(true);
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -89,6 +91,10 @@ export function OfferSendClient({ offerId, type }: Props) {
         </div>
       </div>
     );
+  }
+
+  if (hasError || !data) {
+    return <div className="m-6 rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-700">Offer form could not be loaded. Please try again.</div>;
   }
 
   return (
