@@ -7,6 +7,7 @@ import localizationConstants, {
 export const ECONOMY_MODULE_BASE_URL = "/module/financial-management";
 export const ECONOMY_INVOICE_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/invoice`;
 export const ECONOMY_EXPENSE_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/economy`;
+export const ECONOMY_SUPPLIER_INVOICES_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/supplier-invoices`;
 export const ECONOMY_FORECAST_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/forecast`;
 export const ECONOMY_ROT_RUT_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/rot-rut`;
 export const ECONOMY_PERSONNEL_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/personnel`;
