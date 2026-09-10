@@ -24,6 +24,7 @@ import { WidgetProps } from "../../types/dashboard";
 import { useWidgetBoard } from "../../hooks/useWidgetBoard";
 import BoardWidgetCard from "./BoardWidgetCard";
 import WidgetLibraryPanel from "./WidgetLibraryPanel";
+import { Loader } from "@/components/ui/loader";
 
 const BOARD_GRID_CLASS = "grid grid-cols-12 gap-2.5";
 const BOARD_CELL_CLASS = "col-span-12 md:col-span-6 xl:col-span-4";
@@ -34,6 +35,7 @@ export interface WidgetBoardProps {
 	standardWidgetIds: string[];
 	header?: React.ReactNode;
 	belowGrid?: React.ReactNode;
+	persistenceLocation?: string;
 }
 
 const WidgetBoard = ({
@@ -42,9 +44,10 @@ const WidgetBoard = ({
 	standardWidgetIds,
 	header,
 	belowGrid,
+	persistenceLocation = "dashboard",
 }: WidgetBoardProps) => {
 	const t = useTranslate();
-	const board = useWidgetBoard(items, standardWidgetIds);
+	const board = useWidgetBoard(items, standardWidgetIds, persistenceLocation);
 	const isAdmin = useIsTeamAdmin();
 	const [libraryOpen, setLibraryOpen] = useState(true);
 	const [discardOpen, setDiscardOpen] = useState(false);
@@ -82,9 +85,11 @@ const WidgetBoard = ({
 		else board.exitToView();
 	};
 
-	const handleSave = () => {
-		board.save();
-		showToast("success", t(localizationConstants.widgetBoardLayoutSaved));
+	const handleSave = async () => {
+		const saved = await board.save();
+		if (saved) {
+			showToast("success", t(localizationConstants.widgetBoardLayoutSaved));
+		}
 	};
 
 	const handleRowDrag = (clientX: number, clientY: number) =>
@@ -112,7 +117,11 @@ const WidgetBoard = ({
 	return (
 		<div className="min-h-screen">
 			{header}
-			{editing ? (
+			{board.isHydrating ? (
+				<div className="flex min-h-64 items-center justify-center" aria-label="Loading dashboard widgets">
+					<Loader />
+				</div>
+			) : editing ? (
 				<div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-md bg-slate-100 px-4 py-3">
 					<div className="flex items-center gap-3">
 						<LayoutGrid size={18} className="text-slate-600" />
@@ -307,7 +316,7 @@ const WidgetBoard = ({
 											<BoardWidgetCard
 												widget={widget}
 												onMove={board.enterEdit}
-												onRemove={board.enterEdit}
+												onRemove={() => board.beginRemoveWidget(slot.uid)}
 											/>
 										</div>
 									);

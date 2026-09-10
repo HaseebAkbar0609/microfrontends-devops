@@ -18,6 +18,7 @@ interface Props {
   offertNr: string;
   job: string;
   onClose: () => void;
+  onSubmit?: (comment: string) => Promise<boolean>;
 }
 
 export function OfferArchivedCommentModal({
@@ -25,6 +26,7 @@ export function OfferArchivedCommentModal({
   offertNr,
   job,
   onClose,
+  onSubmit,
 }: Props) {
   const t = useTranslate();
   const [commentText, setCommentText] = useState("");
@@ -36,12 +38,17 @@ export function OfferArchivedCommentModal({
     onClose();
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (!commentText.trim()) {
       setError(true);
       return;
     }
     setError(false);
+    const saved = await onSubmit?.(commentText.trim());
+    if (saved === false) {
+      setError(true);
+      return;
+    }
     showToast("success", t(localizationConstants.offerCommentSavedToast));
     setCommentText("");
     onClose();

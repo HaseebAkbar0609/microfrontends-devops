@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -52,6 +52,7 @@ import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferAgreedItem, OfferAgreedStatus } from "../types/offer";
+import { OFFER_API_STATUS, updateOfferStatusAPIAction } from "@/api-actions/offers";
 import { generateAndDownloadAgreedPdf } from "../utils/agreedPdf";
 
 type SortField = keyof Pick<
@@ -125,7 +126,7 @@ function AgreedStatusActionButton({
       size="sm"
       variant="outline"
       className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
-      onClick={() => onNavigate(OFFER_ROUTES.createAgreement(rowId || offerId))}
+      onClick={() => onNavigate(isSigned ? "/module/business/b2b/agreements" : OFFER_ROUTES.createAgreement(rowId || offerId))}
     >
       <Translate text={actionLabelKey} />
     </Button>
@@ -136,9 +137,10 @@ interface Props {
   offerId: string;
   items: OfferAgreedItem[];
   isLoading?: boolean;
+  onSearchChange?: (value: string) => void;
 }
 
-export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
+export function OfferAgreedView({ offerId, items, isLoading = false, onSearchChange }: Props) {
   const t = useTranslate();
   const router = useRouter();
 
@@ -147,8 +149,12 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [visibleItems, setVisibleItems] = useState(items);
+
+  useEffect(() => setVisibleItems(items), [items]);
 
   const debouncedSearch = useDebounce(search, 300);
+  useEffect(() => onSearchChange?.(debouncedSearch), [debouncedSearch, onSearchChange]);
   const activeFilterCount = selectedStatuses.length;
 
   const signedLabel = t(localizationConstants.offerAgreedStatusSigned);
@@ -156,7 +162,7 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
 
   const filtered = useMemo(() => {
     const q = debouncedSearch.toLowerCase().trim();
-    return items.filter((item) => {
+    return visibleItems.filter((item) => {
       const matchesSearch =
         !q ||
         item.contractNr.toLowerCase().includes(q) ||
@@ -167,7 +173,15 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
         selectedStatuses.length === 0 || selectedStatuses.includes(item.status);
       return matchesSearch && matchesStatus;
     });
-  }, [debouncedSearch, selectedStatuses, items]);
+  }, [debouncedSearch, selectedStatuses, visibleItems]);
+
+  async function handleArchive(row: OfferAgreedItem) {
+    if (!row.mappingId) return showToast("error", "Offer identifier is missing");
+    const result = await updateOfferStatusAPIAction(row.mappingId, OFFER_API_STATUS.ARCHIVED);
+    if (!result.success) return showToast("error", result.error || "Offer could not be archived");
+    setVisibleItems((current) => current.filter((item) => item.id !== row.id));
+    showToast("success", "Offer archived");
+  }
 
   const sorted = useMemo(
     () =>
@@ -459,9 +473,7 @@ export function OfferAgreedView({ offerId, items, isLoading = false }: Props) {
                                 </DropdownMenuItem>
                                 <DropdownMenuItem
                                   className="cursor-pointer gap-2 text-slate-800"
-                                  onClick={() => {
-                                    router.push(OFFER_ROUTES.archived(offerId));
-                                  }}
+                                  onClick={() => void handleArchive(row)}
                                 >
                                   <Archive className="h-3.5 w-3.5 text-slate-700" />
                                   <Translate

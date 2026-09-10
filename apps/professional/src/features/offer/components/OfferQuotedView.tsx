@@ -59,11 +59,18 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Translate } from "@/utils/translation/translate";
-import { listOffersAPIAction } from "@/api-actions/offers";
+import {
+  addOfferCommentAPIAction,
+  deleteOfferAPIAction,
+  listOffersAPIAction,
+  OFFER_API_STATUS,
+  updateOfferStatusAPIAction,
+} from "@/api-actions/offers";
 import { authStorage } from "@/lib/authStorage";
 import { ProfessionalRow } from "@/types/company";
 import { Loader } from "@/components/ui/loader";
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
 
 type SortField = keyof Pick<
   OfferQuotedItem,
@@ -78,7 +85,7 @@ type SortField = keyof Pick<
   | "contactPerson"
 >;
 
-type CommentModal = { open: boolean; offertNr: string; job: string };
+type CommentModal = { open: boolean; offertNr: string; job: string; mappingId?: string };
 type AnswerModal = {
   open: boolean;
   offertNr: string;
@@ -110,6 +117,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     open: false,
     offertNr: "",
     job: "",
+    mappingId: undefined,
   });
 
   const [answerModal, setAnswerModal] = useState<AnswerModal>({
@@ -135,34 +143,37 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
           companyId: companyData?.id,
         });
         if (!isMounted) return;
-        if (result && result.items && result.items.length > 0) {
-          const mapped: OfferQuotedItem[] = result.items.map((item, idx) => ({
-            id: item.id || String(idx),
+        if (result && result.items) {
+          const mapped: OfferQuotedItem[] = result.items.map((item) => ({
+            id: item.id,
+            projectId: item.projectId,
+            mappingId: item.mappingId,
+            quoteId: item.quoteId,
             offertNr: item.idNumber,
             job: item.jobName,
-            customerName: "Kund " + (idx + 1),
-            category: item.category || "Bygg",
-            municipality: item.municipality || "Stockholm",
-            type: item.type || "Fast pris",
-            price: 50000 + idx * 5000,
-            status: idx % 2 === 0 ? "opened" : "notReviewed",
-            openedAt: idx % 2 === 0 ? "14:30" : undefined,
+            customerName: item.contactName || "—",
+            category: item.category || "—",
+            municipality: item.municipality || "—",
+            type: item.type || "—",
+            price: item.totalPrice || 0,
+            status: item.seenStatus?.toLowerCase().includes("open") ? "opened" : "notReviewed",
+            openedAt: item.openedAt,
             contactPerson: {
-              name: "Anders Svensson",
-              phone: "",
-              email: "",
+              name: item.contactName || "",
+              phone: item.contactPhone || "",
+              email: item.contactEmail || "",
             },
           }));
           setItems(mapped);
           setTotalItems(result.totalItems);
         } else {
-          setItems(initialItems);
-          setTotalItems(initialItems.length);
+          setItems([]);
+          setTotalItems(0);
         }
       } catch {
         if (isMounted) {
-          setItems(initialItems);
-          setTotalItems(initialItems.length);
+          setItems([]);
+          setTotalItems(0);
         }
       } finally {
         if (isMounted) setIsLoading(false);
@@ -170,7 +181,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     }
     fetchQuotedOffers();
     return () => { isMounted = false; };
-  }, [page, pageSize, debouncedSearch, initialItems, t]);
+  }, [page, pageSize, debouncedSearch]);
 
   const uniqueTypes = useMemo(
     () => [...new Set(items.map((i) => i.type).filter(Boolean))],
@@ -211,11 +222,39 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
   );
 
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
+  const paginated = sorted;
   const totalSum = filtered.reduce((sum, i) => sum + i.price, 0);
 
   function openCommentModal(item: OfferQuotedItem) {
-    setCommentModal({ open: true, offertNr: item.offertNr, job: item.job });
+    setCommentModal({ open: true, offertNr: item.offertNr, job: item.job, mappingId: item.mappingId });
+  }
+
+  async function changeStatus(item: OfferQuotedItem, status: typeof OFFER_API_STATUS.ACCEPTED | typeof OFFER_API_STATUS.ARCHIVED) {
+    if (!item.mappingId) {
+      showToast("error", "Offer identifier is missing");
+      return;
+    }
+    const result = await updateOfferStatusAPIAction(item.mappingId, status);
+    if (!result.success) {
+      showToast("error", result.error || "Offer could not be updated");
+      return;
+    }
+    setItems((current) => current.filter((candidate) => candidate.id !== item.id));
+    showToast("success", "Offer updated");
+  }
+
+  async function deleteOffer(item: OfferQuotedItem) {
+    if (!item.mappingId) {
+      showToast("error", "Offer identifier is missing");
+      return;
+    }
+    const result = await deleteOfferAPIAction(item.mappingId);
+    if (!result.success) {
+      showToast("error", result.error || "Offer could not be deleted");
+      return;
+    }
+    setItems((current) => current.filter((candidate) => candidate.id !== item.id));
+    showToast("success", "Offer deleted");
   }
 
   function openAnswerModal(item: OfferQuotedItem) {
@@ -476,15 +515,15 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-[170px]">
-                                <DropdownMenuItem className="cursor-pointer">
+                                <DropdownMenuItem className="cursor-pointer" onClick={() => void deleteOffer(row)}>
                                   <Trash2 size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
                                   {t(localizationConstants.offerQuotedActionDelete)}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer">
+                                <DropdownMenuItem className="cursor-pointer" onClick={() => void changeStatus(row, OFFER_API_STATUS.ARCHIVED)}>
                                   <Archive size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
                                   {t(localizationConstants.offerQuotedActionArchive)}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer">
+                                <DropdownMenuItem className="cursor-pointer" onClick={() => void changeStatus(row, OFFER_API_STATUS.ACCEPTED)}>
                                   <CheckCircle size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
                                   {t(localizationConstants.offerQuotedActionAccept)}
                                 </DropdownMenuItem>
@@ -620,6 +659,12 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
         offertNr={commentModal.offertNr}
         job={commentModal.job}
         onClose={() => setCommentModal((prev) => ({ ...prev, open: false }))}
+        onSubmit={async (comment) => {
+          if (!commentModal.mappingId) return false;
+          const result = await addOfferCommentAPIAction(commentModal.mappingId, comment);
+          if (result.success) showToast("success", "Comment saved");
+          return result.success;
+        }}
       />
 
       <OfferQuotedAnswerModal

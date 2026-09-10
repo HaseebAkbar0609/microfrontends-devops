@@ -1,7 +1,7 @@
 "use client";
 
 import { FileText, PlayCircle, Sheet } from "lucide-react";
-import { MessageFileKind } from "../constants/mockData";
+import type { MessageFileKind } from "../types";
 
 const MessageFileIcon = ({ kind }: { kind: MessageFileKind }) => {
 	if (kind === "video")

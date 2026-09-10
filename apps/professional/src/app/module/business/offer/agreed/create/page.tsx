@@ -1,6 +1,5 @@
-import { CreateAgreementView } from "@/features/offer/components/CreateAgreementView";
-import { DUMMY_AGREEMENT_DATA } from "@/features/offer/constants/offerAgreement.mock";
+import { redirect } from "next/navigation";
 
 export default function CreateAgreementDirectPage() {
-  return <CreateAgreementView offerId="default" data={DUMMY_AGREEMENT_DATA} />;
+  redirect("/module/business/offer/accepted");
 }
