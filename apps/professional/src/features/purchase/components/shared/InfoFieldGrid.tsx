@@ -71,6 +71,7 @@ export function InfoFieldGrid({
 	icon,
 	action,
 	columns = 2,
+	collapsed = false,
 	children,
 	className,
 }: {
@@ -79,6 +80,8 @@ export function InfoFieldGrid({
 	/** Right-aligned header slot, e.g. an Edit button. */
 	action?: React.ReactNode;
 	columns?: 2 | 3 | 4;
+	/** Hides the field grid, leaving the titled header as a collapsed row. */
+	collapsed?: boolean;
 	children: React.ReactNode;
 	className?: string;
 }) {
@@ -97,6 +100,7 @@ export function InfoFieldGrid({
 				{action}
 			</CardHeader>
 
+			{!collapsed && (
 			<CardContent className="p-6">
 				<dl
 					className={cn(
@@ -109,6 +113,7 @@ export function InfoFieldGrid({
 					{children}
 				</dl>
 			</CardContent>
+			)}
 		</Card>
 	);
 }

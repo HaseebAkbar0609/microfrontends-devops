@@ -3529,7 +3529,27 @@ export type OfferTranslation = {
 	projectListDeleteConfirmDescription: string;
 	projectListArchivedToast: string;
 	projectListDeletedToast: string;
-	projectListCreateToast: string;
+
+	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
+	projectCreateTitle: string;
+	projectCreateDetailsTab: string;
+	projectCreateLinkSection: string;
+	projectCreateLinkedNoLabel: string;
+	projectCreateInfoSection: string;
+	projectCreateContractorTypeLabel: string;
+	projectCreateContactsHeader: string;
+	projectCreateChangeOrAdd: string;
+	projectCreateEditContactTitle: string;
+	projectCreateOrgInfoTitle: string;
+	projectCreateSubmit: string;
+	projectCreateValidationNoRequired: string;
+	projectCreateValidationNameRequired: string;
+	projectCreateValidationContractorTypeRequired: string;
+	projectCreateSuccessToast: string;
+	projectCreateDraftToast: string;
+	projectCreateDeleteDocTitle: string;
+	projectCreateDeleteContactTitle: string;
+	projectCreateDeleteDesc: string;
 	// Project economic overview
 	projectEconomyTbTab: string;
 	projectEconomyTotalTb: string;
