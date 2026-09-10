@@ -185,6 +185,23 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 			action: "add",
 		},
 		{
+			id: "calculation-pro-advance",
+			name: "Calculation PRO Advance",
+			priceLabel: "599 kr/månad",
+			price: 599,
+			feeKey: localizationConstants.licensesCalculationProAdvanceFee,
+			modulesKey: localizationConstants.licensesCalculationProAdvanceModules,
+			versionText: "Calculation PRO - Advance",
+			industryOptionKeys: [
+				localizationConstants.licensesIndustryElectric,
+				localizationConstants.licensesIndustryPipe,
+				localizationConstants.licensesIndustryVent,
+				localizationConstants.licensesIndustryConstruction,
+			],
+			categoryId: "calculation",
+			action: "add",
+		},
+		{
 			id: "order-direct",
 			name: "Order Direct",
 			priceLabel: "159",

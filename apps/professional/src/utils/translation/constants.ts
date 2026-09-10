@@ -1971,6 +1971,12 @@ export type OfferTranslation = {
 	licensesConnectSupplierModules: string;
 	licensesCalculationProFee: string;
 	licensesCalculationProModules: string;
+	licensesCalculationProAdvanceFee: string;
+	licensesCalculationProAdvanceModules: string;
+	licensesIndustryElectric: string;
+	licensesIndustryPipe: string;
+	licensesIndustryVent: string;
+	licensesIndustryConstruction: string;
 	licensesOrderDirectFee: string;
 	licensesOrderDirectModules: string;
 	licensesStorageFee: string;
