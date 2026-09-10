@@ -37,6 +37,12 @@ export interface FormDatePickerProps<
 	inputClassName?: string;
 	messageClassName?: string;
 	translateError?: (message: string) => string;
+	/**
+	 * Earliest selectable day, as `yyyy-MM-dd`. Use it for a "to" field so the
+	 * range cannot be inverted in the picker — the value stays typeable through
+	 * the form, so pair it with a schema rule rather than relying on it alone.
+	 */
+	minDate?: string;
 }
 
 export function FormDatePicker<
@@ -53,12 +59,17 @@ export function FormDatePicker<
 	inputClassName,
 	messageClassName,
 	translateError,
+	minDate,
 }: FormDatePickerProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
 
 	const resolvedLabel =
 		typeof label === "string" ? <Translate text={label} /> : label;
+
+	const minimum =
+		minDate && minDate.trim().length > 0 ? parseISO(minDate) : undefined;
+	const validMinimum = minimum && isValid(minimum) ? minimum : undefined;
 
 	return (
 		<FormField
@@ -114,6 +125,11 @@ export function FormDatePicker<
 										startMonth={new Date(2015, 0)}
 										endMonth={new Date(2035, 11)}
 										selected={validDate}
+										disabled={
+											validMinimum
+												? (date: Date) => date < validMinimum
+												: undefined
+										}
 										onSelect={(date: Date | undefined) => {
 											if (date) {
 												field.onChange(format(date, "yyyy-MM-dd"));
