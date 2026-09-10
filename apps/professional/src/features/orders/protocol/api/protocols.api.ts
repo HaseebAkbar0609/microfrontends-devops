@@ -6,9 +6,46 @@ import type {
 	ProtocolItem,
 	CreateProtocolPayload,
 	ProtocolDetailData,
+	ProtocolMeetingPoint,
 } from "../types/protocol.types";
 
 const isDev = process.env.NODE_ENV !== "production";
+
+function buildMockFullDetail(id: string, orderId: string): ProtocolDetailData {
+	const protocol = MOCK_PROTOCOLS.find((p) => p.id === id) || {
+		id,
+		orderId,
+		date: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DATE,
+		type: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_TYPE,
+		protocolName: "Byggmöte Vecka 36",
+		documentName: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME,
+		fileType: PROTOCOL_CONSTANTS.DEFAULT_FILE_TYPE,
+		status: "completed" as const,
+		lastUpdated: "2025-09-01 14:30",
+		responsible: "Kalle Svensson",
+		isArchived: false,
+		notes: "Genomgång av framdrift och tidsplan för vecka 36.",
+	};
+
+	return {
+		protocol,
+		meetingInfo: {
+			...MOCK_MEETING_INFO,
+			host: protocol.responsible || MOCK_MEETING_INFO.host,
+			startDate: protocol.date || MOCK_MEETING_INFO.startDate,
+			endDate: protocol.date || MOCK_MEETING_INFO.endDate,
+			rubrik: protocol.protocolName || MOCK_MEETING_INFO.rubrik,
+			category: protocol.category || MOCK_MEETING_INFO.category,
+			location: protocol.location || MOCK_MEETING_INFO.location,
+			address: protocol.address || MOCK_MEETING_INFO.address,
+			postalCode: protocol.postalCode || MOCK_MEETING_INFO.postalCode,
+			city: protocol.city || MOCK_MEETING_INFO.city,
+			information: protocol.notes || MOCK_MEETING_INFO.information,
+		},
+		nextMeeting: MOCK_NEXT_MEETING,
+		points: [...MOCK_MEETING_POINTS],
+	};
+}
 
 export const protocolsApi = {
 	async getProtocols(orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID): Promise<ProtocolItem[]> {
@@ -36,11 +73,10 @@ export const protocolsApi = {
 			if (res && res.data) return res.data;
 		} catch (_err) {
 			if (isDev) {
-				console.info("[protocolsApi.getProtocolDetail] Simulating get detail in dev mode.");
+				console.info("[protocolsApi.getProtocolDetail] Using mock data in dev mode.");
 			}
 		}
-		const fallback = isDev ? MOCK_PROTOCOLS.find((p) => p.id === id) || null : null;
-		return fallback;
+		return isDev ? MOCK_PROTOCOLS.find((p) => p.id === id) || null : null;
 	},
 
 	async getProtocolFullDetail(
@@ -51,42 +87,11 @@ export const protocolsApi = {
 			const res = await axiosInstance.get<ProtocolDetailData>(API_PATH.ORDERS.PROTOCOL_DETAIL(orderId, id));
 			if (res && res.data && res.data.protocol) return res.data;
 		} catch (err) {
-			console.warn("[protocolsApi.getProtocolFullDetail] Simulating full detail:", err);
+			if (!isDev) throw err;
+			console.info("[protocolsApi.getProtocolFullDetail] Using mock data in dev mode:", err);
 		}
 
-		const protocol = MOCK_PROTOCOLS.find((p) => p.id === id) || {
-			id,
-			orderId,
-			date: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DATE,
-			type: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_TYPE,
-			protocolName: "Byggmöte Vecka 36",
-			documentName: PROTOCOL_CONSTANTS.DEFAULT_FALLBACK_DOCUMENT_NAME,
-			fileType: PROTOCOL_CONSTANTS.DEFAULT_FILE_TYPE,
-			status: "completed" as const,
-			lastUpdated: "2025-09-01 14:30",
-			responsible: "Kalle Svensson",
-			isArchived: false,
-			notes: "Genomgång av framdrift och tidsplan för vecka 36.",
-		};
-
-		return {
-			protocol,
-			meetingInfo: {
-				...MOCK_MEETING_INFO,
-				host: protocol.responsible || MOCK_MEETING_INFO.host,
-				startDate: protocol.date || MOCK_MEETING_INFO.startDate,
-				endDate: protocol.date || MOCK_MEETING_INFO.endDate,
-				rubrik: protocol.protocolName || MOCK_MEETING_INFO.rubrik,
-				category: protocol.category || MOCK_MEETING_INFO.category,
-				location: protocol.location || MOCK_MEETING_INFO.location,
-				address: protocol.address || MOCK_MEETING_INFO.address,
-				postalCode: protocol.postalCode || MOCK_MEETING_INFO.postalCode,
-				city: protocol.city || MOCK_MEETING_INFO.city,
-				information: protocol.notes || MOCK_MEETING_INFO.information,
-			},
-			nextMeeting: MOCK_NEXT_MEETING,
-			points: [...MOCK_MEETING_POINTS],
-		};
+		return buildMockFullDetail(id, orderId);
 	},
 
 
@@ -330,5 +335,81 @@ export const protocolsApi = {
 			}
 		}
 		return null;
+	},
+
+	async createPoint(
+		protocolId: string,
+		point: Omit<ProtocolMeetingPoint, "id">,
+		orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID
+	): Promise<ProtocolMeetingPoint> {
+		try {
+			const res = await axiosInstance.post<ProtocolMeetingPoint>(
+				API_PATH.ORDERS.PROTOCOL_POINTS(orderId, protocolId),
+				point
+			);
+			if (res && res.data) return res.data;
+		} catch (err) {
+			if (!isDev) throw err;
+			console.info("[protocolsApi.createPoint] Using mock in dev mode.");
+		}
+
+		return { ...point, id: `point-${Date.now()}` };
+	},
+
+	async updatePoint(
+		protocolId: string,
+		pointId: string,
+		payload: Partial<ProtocolMeetingPoint>,
+		orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID
+	): Promise<ProtocolMeetingPoint> {
+		try {
+			const res = await axiosInstance.put<ProtocolMeetingPoint>(
+				API_PATH.ORDERS.PROTOCOL_POINT_DETAIL(orderId, protocolId, pointId),
+				payload
+			);
+			if (res && res.data) return res.data;
+		} catch (err) {
+			if (!isDev) throw err;
+			console.info("[protocolsApi.updatePoint] Using mock in dev mode.");
+		}
+
+		return { id: pointId, nr: "", subject: "", ...payload };
+	},
+
+	async deletePoint(
+		protocolId: string,
+		pointId: string,
+		orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID
+	): Promise<boolean> {
+		try {
+			await axiosInstance.delete(
+				API_PATH.ORDERS.PROTOCOL_POINT_DETAIL(orderId, protocolId, pointId)
+			);
+			return true;
+		} catch (err) {
+			if (!isDev) throw err;
+			console.info("[protocolsApi.deletePoint] Using mock in dev mode.");
+			return true;
+		}
+	},
+
+	async updatePointStatus(
+		protocolId: string,
+		pointId: string,
+		status: string,
+		orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID
+	): Promise<ProtocolMeetingPoint> {
+		try {
+			const res = await axiosInstance.patch<ProtocolMeetingPoint>(
+				API_PATH.ORDERS.PROTOCOL_POINT_STATUS(orderId, protocolId, pointId),
+				{ status }
+			);
+			if (res && res.data) return res.data;
+		} catch (err) {
+			if (!isDev) throw err;
+			console.info("[protocolsApi.updatePointStatus] Using mock in dev mode.");
+		}
+
+		return { id: pointId, nr: "", subject: "", status };
 	},
 };

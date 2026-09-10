@@ -189,6 +189,14 @@ export type SidebarTranslation = {
 	adminLicence: string;
 	adminUser: string;
 	adminEconomy: string;
+	certificates: string;
+	budget: string;
+	authorities: string;
+	yearEnd: string;
+	claims: string;
+	cases: string;
+	economyOpenModule: string;
+	economyComingSoon: string;
 	quote: string;
 	accountPlan: string;
 	wageTypes: string;
@@ -3661,6 +3669,8 @@ export type OfferTranslation = {
 	validationVisitDateRequired: string;
 	toastOpeningPreview: string;
 	reminderEmailLabel: string;
+	addMoreReminderEmails: string;
+	removeReminderEmail: string;
 	ruleLabel: string;
 	economicOverviewTabTB: string;
 	economicOverviewTabResult: string;
@@ -7069,6 +7079,7 @@ export type OrderProtocolTranslation = {
 	ariaLabelCloseModal: string;
 	ariaLabelAddParticipant: string;
 	ariaLabelRemoveFile: string;
+	ariaLabelStatusLegend: string;
 	protocolResponsibleLabel: string;
 	protocolSubjectLabel: string;
 	validationProtocolSubjectRequired: string;
