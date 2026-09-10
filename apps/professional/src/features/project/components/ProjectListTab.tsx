@@ -25,6 +25,7 @@ import { TablePagination } from "@/components/table/TablePagination";
 import { cn } from "@/lib/utils";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
+import { PROJECT_MODULE_BASE_URL } from "../data/projectNav.config";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { ProjectListItem } from "../data/projectsOverview.mock";
 import { useProjectOverviewFilters } from "../hooks/useProjectOverviewFilters";
@@ -69,10 +70,8 @@ const ProjectListTab = () => {
 		showToast("success", t(localizationConstants.projectListDeletedToast));
 	};
 
-	// Mock-phase handler — no create-project endpoint exists yet; replace
-	// with the create flow once the backend and design are ready.
 	const handleCreate = () =>
-		showToast("info", t(localizationConstants.projectListCreateToast));
+		router.push(`${PROJECT_MODULE_BASE_URL}/create`);
 
 	return (
 		<div className="flex flex-col gap-5">

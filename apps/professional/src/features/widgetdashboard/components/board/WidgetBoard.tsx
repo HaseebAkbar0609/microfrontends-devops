@@ -182,28 +182,22 @@ const WidgetBoard = ({
 				</div>
 			) : (
 				<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-					<p className="text-sm text-slate-500">
-						{board.savedAtLabel ? (
-							<>
-								<Translate
-									text={
-										localizationConstants.widgetBoardSavedLayout
-									}
-								/>
-								{" · "}
-								<Translate
-									text={
-										localizationConstants.widgetBoardUpdatedToday
-									}
-								/>{" "}
-								{board.savedAtLabel}
-							</>
-						) : (
+					{board.savedAtLabel && (
+						<p className="text-sm text-slate-500">
 							<Translate
-								text={localizationConstants.widgetBoardNoLayout}
+								text={
+									localizationConstants.widgetBoardSavedLayout
+								}
 							/>
-						)}
-					</p>
+							{" · "}
+							<Translate
+								text={
+									localizationConstants.widgetBoardUpdatedToday
+								}
+							/>{" "}
+							{board.savedAtLabel}
+						</p>
+					)}
 					<Button
 						type="button"
 						variant="outline"
