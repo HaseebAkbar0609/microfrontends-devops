@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import type { UseFormReturn } from "react-hook-form";
 import { ChevronDown, Pencil } from "lucide-react";
 
 import {
@@ -15,13 +16,19 @@ import localizationConstants, {
 import { useTranslate } from "@/utils/translation/translate";
 import type { ProjectCreateStep } from "../constants";
 import { buildSummarySections } from "../summarySections";
-import type { CreateProjectFormData, ProjectContactPerson } from "../types";
+import type {
+	CreateProjectFormData,
+	ProjectContactPerson,
+	ProjectDocumentItem,
+} from "../types";
 import { OrganisationInfoDialog } from "../components/OrganisationInfoDialog";
 import { SummaryDocumentsCard } from "../components/SummaryDocumentsCard";
 import { SummaryOrganisationCard } from "../components/SummaryOrganisationCard";
 
 export interface Step5SummaryProps {
-	data: CreateProjectFormData;
+	form: UseFormReturn<CreateProjectFormData>;
+	/** Attachments live outside the form, so they arrive separately. */
+	documents: ProjectDocumentItem[];
 	onEditSection: (step: ProjectCreateStep) => void;
 }
 
@@ -33,7 +40,11 @@ export interface Step5SummaryProps {
  * with an `sr-only` "Saknas" rather than a literal "-" that a screen reader
  * announces as a hyphen.
  */
-export function Step5Summary({ data, onEditSection }: Step5SummaryProps) {
+export function Step5Summary({
+	form,
+	documents,
+	onEditSection,
+}: Step5SummaryProps) {
 	const t = useTranslate();
 	const [closedSections, setClosedSections] = useState<Record<string, boolean>>(
 		{},
@@ -42,6 +53,18 @@ export function Step5Summary({ data, onEditSection }: Step5SummaryProps) {
 		null,
 	);
 	const [isInfoOpen, setIsInfoOpen] = useState(false);
+
+	/**
+	 * A snapshot, not a subscription: this step is read-only and only mounts
+	 * once the user reaches it, so reading the values here avoids re-rendering
+	 * the whole wizard on every keystroke in the four steps before it.
+	 */
+	const data = useMemo<CreateProjectFormData>(
+		() => ({ ...form.getValues(), documents }),
+		[form, documents],
+	);
+
+	const sections = useMemo(() => buildSummarySections(data), [data]);
 
 	const isOpen = (key: string) => !closedSections[key];
 
@@ -89,7 +112,7 @@ export function Step5Summary({ data, onEditSection }: Step5SummaryProps) {
 
 	return (
 		<div className="space-y-4">
-			{buildSummarySections(data).map((section) => (
+			{sections.map((section) => (
 				<InfoFieldGrid
 					key={section.key}
 					titleKey={section.titleKey}

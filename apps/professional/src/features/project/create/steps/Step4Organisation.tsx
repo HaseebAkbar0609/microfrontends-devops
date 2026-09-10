@@ -12,11 +12,14 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { CONTRACTOR_TYPE_OPTIONS } from "../data/projectCreateOptions.mock";
+import { CONTRACTOR_TYPE_OPTIONS } from "../data/projectCreate.config";
 import type { CreateProjectFormData, ProjectContactPerson } from "../types";
 import { ContactPersonDialog } from "../components/ContactPersonDialog";
 import { ContactPersonsTable } from "../components/ContactPersonsTable";
 import { OrganisationDetailsCard } from "../components/OrganisationDetailsCard";
+
+/** Ties the label to the combobox, which is a button rather than an input. */
+const CONTRACTOR_TYPE_FIELD_ID = "project-create-contractor-type";
 
 export interface Step4OrganisationProps {
 	form: UseFormReturn<CreateProjectFormData>;
@@ -70,12 +73,17 @@ export function Step4Organisation({
 
 				<CardContent className="p-6">
 					<div className="space-y-1 sm:max-w-[calc(50%-1rem)]">
-						<Label className="text-sm font-medium text-slate-700">
+						<Label
+							htmlFor={CONTRACTOR_TYPE_FIELD_ID}
+							className="text-sm font-medium text-slate-700"
+						>
 							<Translate
 								text={
 									localizationConstants.projectCreateContractorTypeLabel
 								}
 							/>{" "}
+							{/* Decoration; `aria-required` below is what assistive
+							    tech actually hears. */}
 							<span className="text-red-500" aria-hidden>
 								*
 							</span>
@@ -85,6 +93,8 @@ export function Step4Organisation({
 							name="organisation.contractorType"
 							render={({ field }) => (
 								<SearchableSelect
+									id={CONTRACTOR_TYPE_FIELD_ID}
+									required
 									value={field.value}
 									onChange={field.onChange}
 									options={CONTRACTOR_TYPE_OPTIONS}

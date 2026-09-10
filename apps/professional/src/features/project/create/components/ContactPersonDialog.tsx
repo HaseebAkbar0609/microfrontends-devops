@@ -17,7 +17,7 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { ROLE_OPTIONS } from "../data/projectCreateOptions.mock";
+import { ROLE_OPTIONS } from "../data/projectCreate.config";
 import type { ProjectContactPerson } from "../types";
 
 const FIELD_CLASS = "h-11 rounded-lg border-slate-200 text-sm shadow-none";

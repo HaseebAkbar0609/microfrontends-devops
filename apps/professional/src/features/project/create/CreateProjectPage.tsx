@@ -57,6 +57,7 @@ export function CreateProjectPage() {
 
 	const isLastStep = currentStep === PROJECT_CREATE_CONSTANTS.TOTAL_STEPS;
 
+
 	return (
 		<div className="flex h-full flex-col bg-slate-50/50">
 			<div className="flex flex-col gap-4 px-4 pt-5 sm:px-6 sm:pt-7">
@@ -142,7 +143,8 @@ export function CreateProjectPage() {
 					)}
 					{currentStep === 5 && (
 						<Step5Summary
-							data={{ ...form.getValues(), documents }}
+							form={form}
+							documents={documents}
 							onEditSection={(step) => void goToStep(step)}
 						/>
 					)}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 
 import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
@@ -72,6 +72,14 @@ export function AttachedDocumentsTable({
 	const [sortField, setSortField] = useState<SortField>("date");
 	const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 	const [deletingId, setDeletingId] = useState<string | null>(null);
+	/** One entry per rendered row, so Redigera can focus without a DOM lookup. */
+	const nameInputs = useRef(new Map<string, HTMLInputElement | null>());
+
+	const focusName = useCallback((id: string) => {
+		const input = nameInputs.current.get(id);
+		input?.focus();
+		input?.select();
+	}, []);
 
 	const sorted = useMemo(
 		() =>
@@ -150,6 +158,9 @@ export function AttachedDocumentsTable({
 										{/* Editable in the frame, so the cell is
 										    the input itself. */}
 										<Input
+											ref={(node) => {
+												nameInputs.current.set(doc.id, node);
+											}}
 											value={doc.documentName}
 											onChange={(event) =>
 												onRename(doc.id, event.target.value)
@@ -173,6 +184,7 @@ export function AttachedDocumentsTable({
 									<TableCell className="px-4 py-3 text-center">
 										<DocumentRowMenu
 											document={doc}
+											onEdit={focusName}
 											onDelete={setDeletingId}
 										/>
 									</TableCell>

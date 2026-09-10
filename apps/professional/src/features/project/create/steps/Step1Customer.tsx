@@ -11,7 +11,7 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { ROLE_OPTIONS } from "../data/projectCreateOptions.mock";
+import { ROLE_OPTIONS } from "../data/projectCreate.config";
 import type { CreateProjectFormData } from "../types";
 
 const FIELD_CLASS =

@@ -27,6 +27,9 @@ const ALLOWED_EXTENSIONS = extensionsFromAccept(
 	PROJECT_CREATE_CONSTANTS.ALLOWED_FILE_TYPES,
 );
 
+/** Where Avbryt and a finished Skapa both land. */
+const OVERVIEW_URL = `${PROJECT_MODULE_BASE_URL}/overview`;
+
 /** Which fields each step owns, so `trigger` validates only that step. */
 const STEP_FIELDS: Record<number, (keyof CreateProjectFormData)[]> = {
 	1: ["customer", "contactPerson"],
@@ -216,9 +219,19 @@ export function useCreateProjectForm() {
 		return rows;
 	}, [pendingFiles]);
 
+	/**
+	 * The name cell is free text that reaches the payload, so it is bounded
+	 * here rather than trusting the input to stay reasonable.
+	 */
 	const renameDocument = useCallback((id: string, documentName: string) => {
+		const bounded = documentName.slice(
+			0,
+			PROJECT_CREATE_CONSTANTS.MAX_DOCUMENT_NAME_LENGTH,
+		);
 		setDocuments((previous) =>
-			previous.map((row) => (row.id === id ? { ...row, documentName } : row)),
+			previous.map((row) =>
+				row.id === id ? { ...row, documentName: bounded } : row,
+			),
 		);
 	}, []);
 
@@ -284,7 +297,7 @@ export function useCreateProjectForm() {
 		try {
 			await createProjectApi(collect(), { isDraft: false });
 			showToast("success", t(localizationConstants.projectCreateSuccessToast));
-			router.push(`${PROJECT_MODULE_BASE_URL}/overview`);
+			router.push(OVERVIEW_URL);
 		} catch (error) {
 			console.error("[CreateProject] Failed to create project:", error);
 			showToast("error", t(localizationConstants.genericError));
@@ -294,7 +307,7 @@ export function useCreateProjectForm() {
 	}, [collect, form, router, t]);
 
 	const cancel = useCallback(
-		() => router.push(`${PROJECT_MODULE_BASE_URL}/overview`),
+		() => router.push(OVERVIEW_URL),
 		[router],
 	);
 

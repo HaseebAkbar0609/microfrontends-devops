@@ -15,6 +15,8 @@ import type { ProjectDocumentItem } from "../types";
 
 export interface DocumentRowMenuProps {
 	document: ProjectDocumentItem;
+	/** Puts the caret in this row's name field, which the table owns. */
+	onEdit: (id: string) => void;
 	onDelete: (id: string) => void;
 }
 
@@ -24,20 +26,16 @@ const ITEM_CLASS =
 /**
  * The frames' Redigera / Radera menu on an attached document.
  *
- * Redigera focuses the row's name field rather than opening a dialog — the
- * name is the only editable thing on the row and it is already an input.
+ * Redigera focuses the row's name field rather than opening a dialog — the name
+ * is the only editable thing on the row and it is already an input. The table
+ * holds the ref and does the focusing; this only says which row.
  */
-export function DocumentRowMenu({ document, onDelete }: DocumentRowMenuProps) {
+export function DocumentRowMenu({
+	document,
+	onEdit,
+	onDelete,
+}: DocumentRowMenuProps) {
 	const t = useTranslate();
-
-	const focusNameField = () => {
-		const label = `${t(localizationConstants.orderDocumentNameHeader)} ${document.fileName}`;
-		const input = window.document.querySelector<HTMLInputElement>(
-			`input[aria-label="${CSS.escape(label)}"]`,
-		);
-		input?.focus();
-		input?.select();
-	};
 
 	return (
 		<DropdownMenu>
@@ -58,7 +56,10 @@ export function DocumentRowMenu({ document, onDelete }: DocumentRowMenuProps) {
 				align="end"
 				className="w-36 rounded-lg border border-slate-200 bg-white p-1 shadow-md"
 			>
-				<DropdownMenuItem onClick={focusNameField} className={ITEM_CLASS}>
+				<DropdownMenuItem
+					onClick={() => onEdit(document.id)}
+					className={ITEM_CLASS}
+				>
 					<Pencil className="h-4 w-4 text-slate-500" />
 					<Translate text={localizationConstants.actionEdit} />
 				</DropdownMenuItem>

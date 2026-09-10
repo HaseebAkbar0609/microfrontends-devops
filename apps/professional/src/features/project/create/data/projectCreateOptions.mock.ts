@@ -1,58 +1,19 @@
 import { PROJECT_LIST_ROWS } from "../../data/projectsOverview.mock";
 
 /**
- * Option lists for the wizard's pickers.
+ * Rows that stand in for a register the app does not have yet.
  *
- * These were literals inside the order wizard's step 4; they are collected
- * here so the two flows can be pointed at one register once an endpoint
- * exists, rather than drifting apart in two component bodies.
+ * The taxonomies the form offers are configuration and live in
+ * `projectCreate.config.ts`; what is left here is data a query will replace.
  */
 
-export const CONTRACTOR_TYPE_OPTIONS = [
-	"Elektriker",
-	"Rörmokare",
-	"Snickare",
-	"Målare",
-	"Plattsättare",
-	"Ventilation",
-	"Mark & Anläggning",
-];
-
+/** Contractor companies, until a supplier register backs the picker. */
 export const ORGANISATION_OPTIONS = [
 	"Elbolaget AB",
 	"Rörbolaget AB",
 	"ByggTeam Stockholm AB",
 	"Målerifirman Svensson AB",
 	"Nordic VVS & El AB",
-];
-
-export const ROLE_OPTIONS = [
-	"Beställare",
-	"Arbetsledare",
-	"Montör",
-	"Projektledare",
-	"Platschef",
-];
-
-export const PROJECT_TYPE_OPTIONS = [
-	"Totalentreprenad",
-	"Utförandeentreprenad",
-	"Löpande räkning",
-	"Fastpris",
-];
-
-export const PROJECT_CATEGORY_OPTIONS = [
-	"Nyproduktion",
-	"Renovering",
-	"Ombyggnad",
-	"Service",
-];
-
-export const DEPARTMENT_OPTIONS = [
-	"Nyproduktion",
-	"Service",
-	"Projektering",
-	"Anläggning",
 ];
 
 /** "Koppla projekt" offers the projects that already exist. */

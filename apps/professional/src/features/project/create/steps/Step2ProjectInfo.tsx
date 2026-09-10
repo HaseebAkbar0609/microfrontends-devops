@@ -12,7 +12,7 @@ import {
 	DEPARTMENT_OPTIONS,
 	PROJECT_CATEGORY_OPTIONS,
 	PROJECT_TYPE_OPTIONS,
-} from "../data/projectCreateOptions.mock";
+} from "../data/projectCreate.config";
 import type { CreateProjectFormData } from "../types";
 import { LinkedProjectCard } from "../components/LinkedProjectCard";
 
@@ -47,15 +47,6 @@ export function Step2ProjectInfo({ form }: Step2ProjectInfoProps) {
 	const t = useTranslate();
 	const { control, watch } = form;
 
-	const required = (labelKey: TranslationKeys) => (
-		<>
-			<Translate text={labelKey} />{" "}
-			<span className="text-red-500" aria-hidden>
-				*
-			</span>
-		</>
-	);
-
 	const toOptions = (values: string[]) =>
 		values.map((value) => ({ value, label: value }));
 
@@ -65,14 +56,16 @@ export function Step2ProjectInfo({ form }: Step2ProjectInfoProps) {
 				<FormInput
 					control={control}
 					name="details.projectNo"
-					label={required(localizationConstants.projectNumberLabel)}
+					label={localizationConstants.projectNumberLabel}
+					required
 					placeholder={localizationConstants.projectNumberLabel}
 					translateError={(message) => t(message as TranslationKeys)}
 				/>
 				<FormInput
 					control={control}
 					name="details.projectName"
-					label={required(localizationConstants.projectNameLabel)}
+					label={localizationConstants.projectNameLabel}
+					required
 					placeholder={localizationConstants.projectNameLabel}
 					translateError={(message) => t(message as TranslationKeys)}
 				/>

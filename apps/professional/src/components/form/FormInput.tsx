@@ -34,6 +34,15 @@ export interface FormInputProps<
 	inputClassName?: string;
 	messageClassName?: string;
 	translateError?: (message: string) => string;
+	/**
+	 * Marks the field mandatory: draws the asterisk after the label and sets
+	 * `aria-required` on the control.
+	 *
+	 * Callers used to append their own `<span className="text-red-500">*</span>`,
+	 * which a screen reader never hears — the asterisk is decoration, and
+	 * nothing else told assistive tech the field was required.
+	 */
+	required?: boolean;
 	inputProps?: Omit<
 		React.ComponentProps<"input"> & React.ComponentProps<"textarea">,
 		"name" | "placeholder" | "type" | "disabled" | "className" | "ref"
@@ -57,6 +66,7 @@ export function FormInput<
 	inputClassName,
 	messageClassName,
 	translateError,
+	required = false,
 	inputProps,
 }: FormInputProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
@@ -81,6 +91,11 @@ export function FormInput<
 					{label != null && (
 						<FormLabel className={labelClassName}>
 							{resolvedLabel}
+							{required && (
+								<span className="text-red-500" aria-hidden>
+									*
+								</span>
+							)}
 						</FormLabel>
 					)}
 
@@ -99,6 +114,7 @@ export function FormInput<
 									"border border-gray-300 focus-visible:border-gray-300 focus-visible:outline-none",
 									inputClassName,
 								)}
+								aria-required={required || undefined}
 								{...field}
 								value={field.value ?? ""}
 								{...(inputProps as React.ComponentProps<"textarea">)}
@@ -114,6 +130,7 @@ export function FormInput<
 										"pr-10 focus-visible:border-gray-300 focus-visible:outline-none",
 										inputClassName,
 									)}
+									aria-required={required || undefined}
 									{...field}
 									value={field.value ?? ""}
 									{...inputProps}
