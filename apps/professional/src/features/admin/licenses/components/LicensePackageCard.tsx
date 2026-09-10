@@ -204,6 +204,17 @@ const LicensePackageCard = ({
 					</div>
 				)}
 
+				{pkg.industryText && (
+					<div className="border-t border-slate-100 pt-3">
+						<SectionLabel
+							text={localizationConstants.licensesIndustryLabel}
+						/>
+						<p className="mt-1 text-sm text-slate-600">
+							<Translate text={pkg.industryText} />
+						</p>
+					</div>
+				)}
+
 				<div className="flex justify-end">
 					<Button
 						type="button"

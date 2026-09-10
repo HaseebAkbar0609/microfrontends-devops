@@ -70,6 +70,7 @@ export interface LicensePackage {
 	versionChecklist?: LicenseVersionOption[];
 	connectedSystems?: string;
 	industryOptionKeys?: string[];
+	industryText?: string;
 	categoryId?: LicenseCategoryId;
 	action: "upgrade" | "add";
 }
@@ -181,6 +182,35 @@ export const LICENSE_PACKAGES: Record<LicenseTabId, LicensePackage[]> = {
 			modulesKey: localizationConstants.licensesCalculationProModules,
 			versionText: "Calculation PRO BAS",
 			industryOptionKeys: INDUSTRY_OPTION_KEYS,
+			categoryId: "calculation",
+			action: "add",
+		},
+		{
+			id: "calculation-pro-advance",
+			name: "Calculation PRO Advance",
+			priceLabel: "599 kr/månad",
+			price: 599,
+			feeKey: localizationConstants.licensesCalculationProAdvanceFee,
+			modulesKey: localizationConstants.licensesCalculationProAdvanceModules,
+			versionText: "Calculation PRO - Advance",
+			industryOptionKeys: [
+				localizationConstants.licensesIndustryElectric,
+				localizationConstants.licensesIndustryPipe,
+				localizationConstants.licensesIndustryVent,
+				localizationConstants.licensesIndustryConstruction,
+			],
+			categoryId: "calculation",
+			action: "add",
+		},
+		{
+			id: "quickaicalc",
+			name: "QuickAICalc",
+			priceLabel: "2995 kr/månad",
+			price: 2995,
+			feeKey: localizationConstants.licensesQuickAICalcFee,
+			modulesKey: localizationConstants.licensesQuickAICalcModules,
+			versionText: "QuickAICalc",
+			industryText: localizationConstants.licensesQuickAICalcIndustry,
 			categoryId: "calculation",
 			action: "add",
 		},
