@@ -7,6 +7,7 @@ import { ExpenseItem, ExpenseLineItem } from "../types/expense.types";
 import { expenseRepository } from "../utils/expenseRepository";
 import localizationConstants from "@/utils/translation/constants";
 import { toast } from "sonner";
+import { EXPENSE_LIST_ROUTE } from "../constants/expense.constants";
 
 export interface ExpenseDetailCalculations {
 	netTotal: number;
@@ -173,7 +174,7 @@ export function useExpenseDetail(expenseId: string) {
 			await expenseRepository.deleteExpense(expense.id);
 			toast.success(t(localizationConstants.expenseConfirmDeleteTitle));
 			setConfirmDeleteOpen(false);
-			router.push("/module/financial-management/economy");
+			router.push(EXPENSE_LIST_ROUTE);
 		} catch (err) {
 			console.error("Failed to delete expense", err);
 		} finally {
