@@ -1,9 +1,14 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { OfferList, OfferSendData, OfferSendImage, OfferSendFile } from "@/features/offer/types";
-import { OfferApiResponseItem, OffersListApiResponse } from "@/types/offer";
+import {
+	AvailableOffersApiResponse,
+	OfferApiResponseItem,
+	OffersListApiResponse,
+} from "@/types/offer";
 import { ApiResponse, ActionResult } from "@/types/api";
 
 const OFFERS_LIST_PATH = "/professionals/quotes/quote-listing/offer_listing_by_status";
+const AVAILABLE_OFFERS_PATH = "/professionals/quotes/quote-listing/offer_listing_to_quote";
 const DEFAULT_PAGE_SIZE = 10;
 
 export const OFFER_API_STATUS = {
@@ -31,17 +36,31 @@ export interface OffersListResult {
 	currentPage: number;
 }
 
-function mapItemToOfferList(item: OfferApiResponseItem): OfferList {
+function formatOfferDate(value?: string | number): string {
+	if (!value) return "—";
+	const normalized = typeof value === "number" && value < 10_000_000_000 ? value * 1000 : value;
+	const date = new Date(normalized);
+	return Number.isNaN(date.getTime()) ? "—" : date.toISOString().split("T")[0];
+}
+
+export function mapItemToOfferList(item: OfferApiResponseItem): OfferList {
+	const categories = Array.isArray(item.categories)
+		? item.categories.map((category) => category.name).filter(Boolean).join(", ")
+		: "";
+	const hasAvailabilityMetrics = item.taken_count !== undefined || item.hit_count !== undefined;
+
 	return {
-		id: item.id || item.offer_id || "",
-		idNumber: item.project_code || "N/A",
-		jobName: item.project_title || item.title || "Unknown Job",
-		date: item.created_at ? new Date(item.created_at).toISOString().split("T")[0] : "",
-		type: item.project_type || "Standard",
-		request: item.status || "Unknown",
-		municipality: item.city || "",
-		category: item.category || "",
-		isFavorite: false,
+		id: item.id || item.project_id || item.offer_id || "",
+		idNumber: item.offer_code || item.project_code || "—",
+		jobName: item.project_name || item.project_title || item.title || "—",
+		date: formatOfferDate(item.created_at),
+		type: item.project_type || item.type || "—",
+		request: hasAvailabilityMetrics
+			? `${item.taken_count ?? 0}/${item.hit_count ?? 0}`
+			: item.professional_status || item.status || "—",
+		municipality: item.municipality || item.city_name || item.city || "—",
+		category: categories || item.category || "—",
+		isFavorite: Boolean(item.is_bookmark),
 	};
 }
 
@@ -61,6 +80,7 @@ export async function listOffersAPIAction(
 				page_size: params.pageSize ?? DEFAULT_PAGE_SIZE,
 				search: params.search || undefined,
 			},
+			headers: params.companyId ? { "X-Company-ID": params.companyId } : undefined,
 		},
 	);
 	
@@ -71,6 +91,42 @@ export async function listOffersAPIAction(
 		totalItems: payload.total_items ?? 0,
 		totalPages: payload.total_pages ?? 1,
 		currentPage: payload.current_page ?? (params.page ?? 1),
+	};
+}
+
+export interface ListAvailableOffersParams {
+	page?: number;
+	pageSize?: number;
+	search?: string;
+	companyId?: string;
+}
+
+export async function listAvailableOffersAPIAction(
+	params: ListAvailableOffersParams,
+): Promise<OffersListResult> {
+	if (!params.companyId) {
+		throw new Error("A company must be selected to fetch available offers");
+	}
+
+	const page = params.page ?? 1;
+	const response = await axiosInstance.get<AvailableOffersApiResponse>(
+		AVAILABLE_OFFERS_PATH,
+		{
+			params: {
+				page,
+				page_size: params.pageSize ?? DEFAULT_PAGE_SIZE,
+				search: params.search || undefined,
+			},
+			headers: { "X-Company-ID": params.companyId },
+		},
+	);
+	const payload = response.data?.data;
+
+	return {
+		items: (payload?.items ?? []).map(mapItemToOfferList),
+		totalItems: payload?.total_items ?? 0,
+		totalPages: payload?.total_pages ?? 0,
+		currentPage: payload?.current_page ?? page,
 	};
 }
 

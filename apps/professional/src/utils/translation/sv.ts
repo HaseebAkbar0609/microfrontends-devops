@@ -128,6 +128,8 @@ export const svAuth: AuthTranslation = {
 	myCompaniesSubtitle: "Välj företag att logga in på",
 	myCompaniesCreateNew: "Skapa nytt företag",
 	myCompaniesLogIn: "Logga in",
+	myCompaniesEmpty: "Inga aktiva företag hittades.",
+	myCompaniesLoadError: "Företagen kunde inte laddas. Försök igen.",
 	registerWelcomeTitle: "Välkommen till Timeflow företagskonto",
 	registerWelcomeSubtitle:
 		"Timeflow sparar tid, ger full kontroll och gör hantverksjobben enklare och mer lönsamma",
@@ -3976,6 +3978,7 @@ export const svOffer: OfferTranslation = {
 	viewProject: "Visa projekt",
 	takeJob: "Ta jobb",
 	noQuotesFound: "Inga offerter hittades",
+	offerLoadError: "Tillgängliga projekt kunde inte laddas. Försök igen.",
 	// Offer - Detail
 	offerDetailPostedLabel: "Publicerad",
 	offerDetailExpressJobBadge: "Expressjobb",
