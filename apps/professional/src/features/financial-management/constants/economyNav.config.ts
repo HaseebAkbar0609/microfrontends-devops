@@ -40,6 +40,15 @@ export const ECONOMY_SECTIONS = [
 	{ id: "cost-centers", labelKey: localizationConstants.costCentre, href: ECONOMY_COST_CENTERS_BASE_URL, implemented: false },
 	{ id: "wage-types", labelKey: localizationConstants.wageTypes, href: ECONOMY_WAGE_TYPES_BASE_URL, implemented: false },
 ] as const;
+
+export const ECONOMY_NAV_ITEMS: RouteTabItem[] = [
+	{ id: "dashboard", labelKey: localizationConstants.dashboard, href: ECONOMY_EXPENSE_BASE_URL, exact: true },
+	...ECONOMY_SECTIONS.map((section) => ({
+		id: section.id,
+		labelKey: section.labelKey,
+		href: section.href,
+	})),
+];
 export const ECONOMY_FORECAST_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/forecast`;
 export const ECONOMY_ROT_RUT_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/rot-rut`;
 export const ECONOMY_PERSONNEL_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/personnel`;
