@@ -27,9 +27,9 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { BREADCRUMBS, DUMMY_OFFERS } from "../constants";
+import { BREADCRUMBS } from "../constants";
 import localizationConstants from "@/utils/translation/constants";
-import { listOffersAPIAction } from "@/api-actions/offers";
+import { listAvailableOffersAPIAction } from "@/api-actions/offers";
 import { OfferList as OfferListType } from "../types";
 import { Loader } from "@/components/ui/loader";
 import { authStorage } from "@/lib/authStorage";
@@ -49,9 +49,11 @@ export default function OfferList() {
 	const t = useTranslate();
 	const { search, changeQuery, changeQueries, page = 1, query } = useQueryParams();
 	const page_size = query.get("page_size") || "10";
-	const [offers, setOffers] = useState<OfferListType[]>(DUMMY_OFFERS);
-	const [totalItems, setTotalItems] = useState(DUMMY_OFFERS.length);
-	const [isLoading, setIsLoading] = useState(false);
+	const [offers, setOffers] = useState<OfferListType[]>([]);
+	const [totalItems, setTotalItems] = useState(0);
+	const [isLoading, setIsLoading] = useState(true);
+	const [hasLoadError, setHasLoadError] = useState(false);
+	const [reloadSequence, setReloadSequence] = useState(0);
 	const [activeChips, setActiveChips] = useState<Set<ChipId>>(
 		new Set<ChipId>(["label-1", "label-2"]),
 	);
@@ -62,33 +64,29 @@ export default function OfferList() {
 	useEffect(() => {
 		async function fetchOffers() {
 			setIsLoading(true);
+			setHasLoadError(false);
 			try {
 				const companyData =
 					authStorage.getCompanyData() as ProfessionalRow | null;
 
-				const result = await listOffersAPIAction({
-					status: "REQUESTED",
+				const result = await listAvailableOffersAPIAction({
 					page: Number(page) || 1,
 					pageSize: Number(page_size) || 10,
 					search: search,
 					companyId: companyData?.id,
 				});
-				if (result && result.items && result.items.length > 0) {
-					setOffers(result.items);
-					setTotalItems(result.totalItems);
-				} else {
-					setOffers(DUMMY_OFFERS);
-					setTotalItems(DUMMY_OFFERS.length);
-				}
+				setOffers(result.items);
+				setTotalItems(result.totalItems);
 			} catch {
-				setOffers(DUMMY_OFFERS);
-				setTotalItems(DUMMY_OFFERS.length);
+				setOffers([]);
+				setTotalItems(0);
+				setHasLoadError(true);
 			} finally {
 				setIsLoading(false);
 			}
 		}
 		fetchOffers();
-	}, [search, page, page_size]);
+	}, [search, page, page_size, reloadSequence]);
 
 	const toggleChip = (id: ChipId) => {
 		setActiveChips((prev) => {
@@ -377,10 +375,23 @@ export default function OfferList() {
 						<div className="flex justify-center items-center h-64">
 							<Loader />
 						</div>
+					) : hasLoadError ? (
+						<div className="flex h-64 flex-col items-center justify-center gap-4 rounded-lg border border-red-200 bg-red-50 px-6 text-center">
+							<p className="text-sm text-red-700">
+								<Translate text={localizationConstants.offerLoadError} />
+							</p>
+							<Button
+								type="button"
+								variant="outline"
+								onClick={() => setReloadSequence((value) => value + 1)}
+							>
+								<Translate text={localizationConstants.retry} />
+							</Button>
+						</div>
 					) : (
 						<OfferListTable
 							data={filteredOffers}
-							totalItems={filteredOffers.length || totalItems}
+							totalItems={totalItems}
 						/>
 					)}
 				</div>

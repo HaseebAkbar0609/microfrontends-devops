@@ -45,9 +45,11 @@ export {
   deleteCartItemAction,
   clearCartAction,
   checkoutSubscriptionAction,
+  changeSubscriptionFromCartAction,
   completeSubscriptionAction,
   type CheckoutPayload,
   type CheckoutResponse,
+  type ChangeSubscriptionResponse,
   type CompleteSubscriptionPayload,
   type CompleteSubscriptionResponse,
 } from "./cart/subscriptions";
@@ -61,6 +63,15 @@ export {
   type AttachedCard,
   type UserCard,
 } from "./payment/payment";
+
+export {
+	completeBillingSetupIntentAction,
+	createBillingSetupIntentAction,
+	deleteBillingPaymentMethodAction,
+	listBillingPaymentMethodsAction,
+	setDefaultBillingPaymentMethodAction,
+	type BillingPaymentMethod,
+} from "./payment/paymentMethods";
 
 export {
   getCountriesAction,

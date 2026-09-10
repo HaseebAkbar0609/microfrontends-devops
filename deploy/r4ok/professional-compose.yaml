@@ -1,0 +1,43 @@
+name: timeflow-professional-dev
+
+services:
+  professional:
+    build:
+      # NEXT_PUBLIC_* values are compiled into the Next.js bundle. Always run
+      # this Compose file with --env-file /etc/timeflow-dev/professional.env.
+      context: ../..
+      dockerfile: apps/professional/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+        NEXT_PUBLIC_TFS825_PAYMENT_MVP: ${NEXT_PUBLIC_TFS825_PAYMENT_MVP:-true}
+    restart: unless-stopped
+    env_file:
+      - ${TIMEFLOW_FRONTEND_ENV_FILE:-/etc/timeflow-dev/professional.env}
+    ports:
+      - "127.0.0.1:22610:3000"
+    networks:
+      - payment-internal
+      - core-internal
+      - frontend-egress
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1536m
+    cpus: 2.0
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  payment-internal:
+    external: true
+    name: timeflow-dev_payment-internal
+  core-internal:
+    external: true
+    name: timeflow-core-dev_core-internal
+  frontend-egress:
+    driver: bridge

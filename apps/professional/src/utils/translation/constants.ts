@@ -97,6 +97,8 @@ export interface AuthTranslation {
 	myCompaniesSubtitle: string;
 	myCompaniesCreateNew: string;
 	myCompaniesLogIn: string;
+	myCompaniesEmpty: string;
+	myCompaniesLoadError: string;
 	registerWelcomeTitle: string;
 	registerWelcomeSubtitle: string;
 	registerCompanyNameLabel: string;
@@ -187,6 +189,14 @@ export type SidebarTranslation = {
 	adminLicence: string;
 	adminUser: string;
 	adminEconomy: string;
+	certificates: string;
+	budget: string;
+	authorities: string;
+	yearEnd: string;
+	claims: string;
+	cases: string;
+	economyOpenModule: string;
+	economyComingSoon: string;
 	quote: string;
 	accountPlan: string;
 	wageTypes: string;
@@ -357,6 +367,9 @@ export type ManagePlansTranslation = {
 	managePlansPaymentOptionMonth: string;
 	managePlansPaymentOptionQuarter: string;
 	managePlansPaymentOptionYear: string;
+	managePlansLicensesTitle: string;
+	managePlansLicensesSubtitle: string;
+	managePlansAddLicensesButton: string;
 };
 
 export type ManageCartTranslation = {
@@ -370,6 +383,9 @@ export type ManageCartTranslation = {
 	manageCartSubtotalLabel: string;
 	manageCartTotalLabel: string;
 	manageCartCheckoutButton: string;
+	manageCartApplyChangesButton: string;
+	manageCartChangeSucceeded: string;
+	manageCartChangeScheduled: string;
 	manageCartConfirmTitle: string;
 	manageCartSubscriptionPlanTitle: string;
 	manageCartSubscriptionMembershipLabel: string;
@@ -437,6 +453,15 @@ export type ManageCartTranslation = {
 	manageCartCheckoutValidationCountryRequired: string;
 	manageCartCheckoutValidationCityRequired: string;
 	manageCartCheckoutValidationPostalCodeRequired: string;
+	subscriptionCheckoutConfirmingTitle: string;
+	subscriptionCheckoutConfirmingBody: string;
+	subscriptionCheckoutConfirmedTitle: string;
+	subscriptionCheckoutConfirmedBody: string;
+	subscriptionCheckoutDelayedTitle: string;
+	subscriptionCheckoutFailedTitle: string;
+	subscriptionCheckoutRetryBody: string;
+	subscriptionCheckoutRetryButton: string;
+	subscriptionCheckoutReturnToPlans: string;
 };
 
 export type DashboardTranslation = {
@@ -1792,6 +1817,53 @@ export type OfferTranslation = {
 	subscriptionColLicenses: string;
 	subscriptionColAddons: string;
 	subscriptionStatusActive: string;
+	subscriptionItemType: string;
+	subscriptionItemPlan: string;
+	subscriptionItemLicense: string;
+	subscriptionColQuantity: string;
+	subscriptionColUnitPrice: string;
+	subscriptionColTotal: string;
+	subscriptionBillingTitle: string;
+	subscriptionNextBilling: string;
+	subscriptionCurrentTotal: string;
+	subscriptionLoadFailed: string;
+	subscriptionEmptyTitle: string;
+	subscriptionEmptyText: string;
+	subscriptionChoosePlan: string;
+	subscriptionCancellationScheduled: string;
+	subscriptionGraceWarning: string;
+	subscriptionRestrictedWarning: string;
+	subscriptionCommitmentLabel: string;
+	subscriptionPayOutstanding: string;
+	subscriptionChangePlan: string;
+	subscriptionAddLicenses: string;
+	subscriptionEditTitle: string;
+	subscriptionAddHint: string;
+	subscriptionEditHint: string;
+	subscriptionCurrentPlan: string;
+	subscriptionExistingQuantity: string;
+	subscriptionAdditionalQuantity: string;
+	subscriptionResultQuantity: string;
+	subscriptionReviewChanges: string;
+	subscriptionDueNow: string;
+	subscriptionRecurringTotal: string;
+	subscriptionRecurringHint: string;
+	subscriptionExistingScheduleHint: string;
+	subscriptionNoChanges: string;
+	subscriptionConfirmLicenses: string;
+	subscriptionEditSelection: string;
+	subscriptionReturn: string;
+	subscriptionSelectionInvalid: string;
+	subscriptionPreviewFailed: string;
+	subscriptionRefreshRequired: string;
+	subscriptionPaymentPending: string;
+	subscriptionUpdateFailed: string;
+	subscriptionChangeUnavailable: string;
+	subscriptionScheduledHint: string;
+	subscriptionUnitPrice: string;
+	subscriptionQuantityHelp: string;
+	subscriptionReviewHint: string;
+	subscriptionScheduledChange: string;
 	subscriptionServiceBankId: string;
 	subscriptionServiceSms: string;
 	subscriptionServiceEmail: string;
@@ -1819,6 +1891,19 @@ export type OfferTranslation = {
 	subscriptionCardPreviewName: string;
 	subscriptionSuccessText: string;
 	subscriptionOkAction: string;
+	subscriptionPaymentSecureHint: string;
+	subscriptionPaymentLoadFailed: string;
+	subscriptionPaymentSaveFailed: string;
+	subscriptionPaymentSaved: string;
+	subscriptionPaymentDefault: string;
+	subscriptionPaymentExpires: string;
+	subscriptionPaymentDefaultUpdated: string;
+	subscriptionPaymentUpdateFailed: string;
+	subscriptionPaymentDeleted: string;
+	subscriptionPaymentDeleteTitle: string;
+	subscriptionPaymentDeleteDescription: string;
+	subscriptionPaymentLastCardRequired: string;
+	subscriptionPaymentDeleteFailed: string;
 	subscriptionValCardNameRequired: string;
 	subscriptionValFirstNameRequired: string;
 	subscriptionValLastNameRequired: string;
@@ -3590,6 +3675,8 @@ export type OfferTranslation = {
 	validationVisitDateRequired: string;
 	toastOpeningPreview: string;
 	reminderEmailLabel: string;
+	addMoreReminderEmails: string;
+	removeReminderEmail: string;
 	ruleLabel: string;
 	economicOverviewTabTB: string;
 	economicOverviewTabResult: string;
@@ -3972,6 +4059,7 @@ export type OfferTranslation = {
 	viewProject: string;
 	takeJob: string;
 	noQuotesFound: string;
+	offerLoadError: string;
 	// Offer - Detail
 	offerDetailPostedLabel: string;
 	offerDetailExpressJobBadge: string;
@@ -5775,6 +5863,8 @@ export type ExpenseTranslation = {
 	registerExpenseErrorLineItemDesc: string;
 	registerExpenseErrorLineItemQty: string;
 	registerExpenseErrorLineItemPrice: string;
+	registerExpenseErrorTotalRequired: string;
+	registerExpenseUploadFailed: string;
 	registerExpenseSuccessSaved: string;
 	registerExpenseSuccessSavedAndNext: string;
 	registerExpenseConfirmDiscardTitle: string;
@@ -6995,10 +7085,25 @@ export type OrderProtocolTranslation = {
 	ariaLabelCloseModal: string;
 	ariaLabelAddParticipant: string;
 	ariaLabelRemoveFile: string;
+	ariaLabelStatusLegend: string;
 	protocolResponsibleLabel: string;
 	protocolSubjectLabel: string;
 	validationProtocolSubjectRequired: string;
 	protocolSaveButton: string;
+};
+
+export type AccountLifecycleTranslation = {
+	lifecycleBadgeDemo: string;
+	lifecycleBadgeTrial: string;
+	lifecycleDaysRemainingSuffix: string;
+	lifecycleExpiresToday: string;
+	lifecycleExpiredMessage: string;
+	lifecycleUpgradeCta: string;
+	lifecyclePopupDismiss: string;
+	lifecycleReadOnlyGuardTitle: string;
+	lifecycleReadOnlyGuardMessage: string;
+	lifecycleToastBlockedTitle: string;
+	lifecycleToastBlockedMessage: string;
 };
 
 export type PersonnelOverviewTranslation = {
@@ -7175,7 +7280,8 @@ export type Translation = HeaderTranslation &
 	PersonnelDashboardTranslation &
 	OrderProtocolTranslation &
 	PersonnelOverviewTranslation &
-	CreateEmployeeTranslation;
+	CreateEmployeeTranslation &
+	AccountLifecycleTranslation;
 
 export type TranslationKeys = keyof Translation;
 

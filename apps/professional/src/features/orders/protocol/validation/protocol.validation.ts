@@ -82,3 +82,49 @@ export const meetingPointSchema = (
 export type MeetingPointFormData = z.infer<
 	ReturnType<typeof meetingPointSchema>
 >;
+
+export const editProtocolSchema = (
+	requiredMsg: string
+) =>
+	z.object({
+		// Time section
+		startDate: z.string().min(1, requiredMsg),
+		startTime: z.string().optional(),
+		endDate: z.string().min(1, requiredMsg),
+		endTime: z.string().optional(),
+
+		// Participants section
+		host: z.string().min(1, requiredMsg),
+		participants: z.array(z.string()),
+
+		// Other information section
+		protocolNumber: z.string().max(50).optional(),
+		topic: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH).optional(),
+		rubrik: z.string().min(1, requiredMsg).max(PROTOCOL_VALIDATION_LIMITS.MAX_SUBJECT_LENGTH),
+		category: z.string().optional(),
+		location: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_LOCATION_LENGTH).optional(),
+		address: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_ADDRESS_LENGTH).optional(),
+		postalCode: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_POSTAL_CODE_LENGTH).optional(),
+		city: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_CITY_LENGTH).optional(),
+		information: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH).optional(),
+		comment: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH).optional(),
+
+		// Next meeting section
+		nextMeetingResponsible: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_RESPONSIBLE_LENGTH).optional(),
+		nextMeetingRubrik: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_SUBJECT_LENGTH).optional(),
+		nextMeetingCategory: z.string().optional(),
+		nextMeetingAddress: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_ADDRESS_LENGTH).optional(),
+		nextMeetingPostalCode: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_POSTAL_CODE_LENGTH).optional(),
+		nextMeetingCity: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_CITY_LENGTH).optional(),
+		nextMeetingParticipants: z.array(z.string()),
+		nextMeetingLocation: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_LOCATION_LENGTH).optional(),
+		nextMeetingStartDate: z.string().optional(),
+		nextMeetingStartTime: z.string().optional(),
+		nextMeetingEndDate: z.string().optional(),
+		nextMeetingEndTime: z.string().optional(),
+		nextMeetingInfo: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH).optional(),
+	});
+
+export type EditProtocolFormData = z.infer<
+	ReturnType<typeof editProtocolSchema>
+>;

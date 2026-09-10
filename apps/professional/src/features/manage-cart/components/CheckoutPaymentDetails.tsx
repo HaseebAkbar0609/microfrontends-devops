@@ -23,7 +23,7 @@ import { formatOptions } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Elements, ElementsConsumer } from "@stripe/react-stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import {
 	loadStripe,
 	type Stripe,
@@ -68,6 +68,9 @@ export function CheckoutPaymentDetails({
 	});
 
 	const [clientSecret, setClientSecret] = useState<string | null>(null);
+	const [isSetupIntentLoading, setIsSetupIntentLoading] = useState(false);
+	const [setupIntentError, setSetupIntentError] = useState<string | null>(null);
+	const [isStripeReady, setIsStripeReady] = useState(false);
 	const [cards, setCards] = useState<UserCard[]>([]);
 	const [isCardsLoading, setIsCardsLoading] = useState(false);
 	const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
@@ -79,6 +82,7 @@ export function CheckoutPaymentDetails({
 
 	const stripeRef = useRef<Stripe | null>(null);
 	const elementsRef = useRef<StripeElements | null>(null);
+	const setupIntentRequestRef = useRef<Promise<string | null> | null>(null);
 
 	const [countries, setCountries] = useState<Country[]>([]);
 
@@ -154,11 +158,40 @@ export function CheckoutPaymentDetails({
 
 	const ensureSetupIntent = useCallback(async () => {
 		if (clientSecret) return clientSecret;
-		const result = await createSetupIntentAction();
-		if (!result.success || !result.data?.client_secret) return null;
-		setClientSecret(result.data.client_secret);
-		return result.data.client_secret;
+		if (setupIntentRequestRef.current) return setupIntentRequestRef.current;
+
+		setIsSetupIntentLoading(true);
+		setSetupIntentError(null);
+		const request = (async () => {
+			const result = await createSetupIntentAction();
+			if (!result.success || !result.data?.client_secret) {
+				setSetupIntentError(
+					result.error ?? cartMessages.checkoutPayment.paymentFormLoadFailed,
+				);
+				return null;
+			}
+
+			setClientSecret(result.data.client_secret);
+			return result.data.client_secret;
+		})();
+		setupIntentRequestRef.current = request;
+
+		try {
+			return await request;
+		} finally {
+			setupIntentRequestRef.current = null;
+			setIsSetupIntentLoading(false);
+		}
 	}, [clientSecret]);
+
+	const handleStripeReady = useCallback(
+		(stripe: Stripe | null, elements: StripeElements | null) => {
+			stripeRef.current = stripe;
+			elementsRef.current = elements;
+			setIsStripeReady(Boolean(stripe && elements));
+		},
+		[],
+	);
 
 	useEffect(() => {
 		if (paymentMode === PAYMENT_MODES.NEW && !clientSecret) {
@@ -170,6 +203,7 @@ export function CheckoutPaymentDetails({
 		if (paymentMode !== PAYMENT_MODES.NEW) {
 			stripeRef.current = null;
 			elementsRef.current = null;
+			setIsStripeReady(false);
 		}
 	}, [paymentMode]);
 
@@ -404,7 +438,7 @@ export function CheckoutPaymentDetails({
 		isPaying ||
 		(paymentMode === PAYMENT_MODES.SAVED
 			? !selectedCardId
-			: !(stripeRef.current && elementsRef.current));
+			: !isStripeReady);
 
 	if (!stripePromise) {
 		return (
@@ -427,9 +461,9 @@ export function CheckoutPaymentDetails({
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="grid gap-4 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]"
+					className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_23rem]"
 				>
-					<div className="space-y-4">
+					<div className="min-w-0 space-y-6">
 						<CheckoutContactSection control={form.control} />
 						<CheckoutBillingSection
 							control={form.control}
@@ -456,50 +490,47 @@ export function CheckoutPaymentDetails({
 								stripe={stripePromise}
 								options={{ clientSecret }}
 							>
-								<ElementsConsumer>
-									{({ stripe, elements }) => {
-										stripeRef.current = stripe;
-										elementsRef.current = elements;
-
-										return (
-											<CheckoutPaymentStripeSection
-												control={form.control}
-												cards={cards}
-												isCardsLoading={isCardsLoading}
-												selectedCardId={selectedCardId}
-												onSelectCard={(id: string) => {
-													setSelectedCardId(id);
-													setPaymentMode(
-														PAYMENT_MODES.SAVED,
-													);
-												}}
-												onChooseNewCard={() => {
-													if (cards.length > 0) {
-														const preferred =
-															cards.find(
-																(c) =>
-																	c.is_default,
-															)?.id ??
-															cards[0].id;
-														setSelectedCardId(
-															preferred,
-														);
-														setPaymentMode(
-															PAYMENT_MODES.SAVED,
-														);
-													}
-												}}
-												onSaveCardOnly={saveCardOnly}
-												isSavingCard={isSavingCard}
-												isPaying={isPaying}
-												stripeReady={
-													!!stripe && !!elements
-												}
-											/>
-										);
+								<CheckoutPaymentStripeSection
+									control={form.control}
+									cards={cards}
+									isCardsLoading={isCardsLoading}
+									selectedCardId={selectedCardId}
+									onSelectCard={(id: string) => {
+										setSelectedCardId(id);
+										setPaymentMode(PAYMENT_MODES.SAVED);
 									}}
-								</ElementsConsumer>
+									onChooseNewCard={() => {
+										if (cards.length > 0) {
+											const preferred =
+												cards.find((c) => c.is_default)?.id ??
+												cards[0].id;
+											setSelectedCardId(preferred);
+											setPaymentMode(PAYMENT_MODES.SAVED);
+										}
+									}}
+									onSaveCardOnly={saveCardOnly}
+									isSavingCard={isSavingCard}
+									isPaying={isPaying}
+									onStripeReady={handleStripeReady}
+								/>
 							</Elements>
+						) : setupIntentError ? (
+							<div
+								className="space-y-4 rounded-xl bg-white p-6"
+								role="alert"
+							>
+								<p className="text-sm text-red-700">
+									{setupIntentError}
+								</p>
+								<Button
+									type="button"
+									variant="outline"
+									onClick={() => void ensureSetupIntent()}
+									disabled={isSetupIntentLoading}
+								>
+									<Translate text={localizationConstants.retry} />
+								</Button>
+							</div>
 						) : (
 							<CheckoutPaymentSectionSkeleton />
 						)}
@@ -516,7 +547,7 @@ export function CheckoutPaymentDetails({
 									}
 								/>
 							</Button>
-							<div className="flex items-center gap-3">
+							<div className="flex items-center gap-3 [&_button]:h-11">
 								<Button
 									variant="outline"
 									type="button"
@@ -532,7 +563,7 @@ export function CheckoutPaymentDetails({
 								<Button
 									variant="primary"
 									type="submit"
-									className="min-w-[160px]"
+									className="h-11 w-full sm:min-w-[160px] sm:w-auto"
 									disabled={payDisabled}
 								>
 									<Translate

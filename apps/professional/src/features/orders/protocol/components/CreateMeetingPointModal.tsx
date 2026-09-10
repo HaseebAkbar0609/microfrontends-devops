@@ -51,7 +51,7 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 	nextPointNr = PROTOCOL_CONSTANTS.DEFAULT_POINT_NR,
 }) => {
 	const t = useTranslate();
-	const requiredMsg = t(localizationConstants.protocolValRequired) || "Detta fält är obligatoriskt";
+	const requiredMsg = t(localizationConstants.protocolValRequired);
 
 	const form = useForm<MeetingPointFormData>({
 		resolver: zodResolver(meetingPointSchema(requiredMsg)),
@@ -106,40 +106,40 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 							<Translate text={localizationConstants.protocolCreateStandard} />
 						</p>
 					</div>
-					<Button
-						type="button"
-						variant="ghost"
-						size="icon"
-						onClick={onClose}
-						className="h-7 w-7 p-0 text-slate-900 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
-						aria-label="Close"
-					>
-						<X className="w-4 h-4 text-slate-900" />
-					</Button>
-				</DialogHeader>
+						<Button
+							type="button"
+							variant="ghost"
+							size="icon"
+							onClick={onClose}
+							className="h-7 w-7 p-0 text-slate-900 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+							aria-label={t(localizationConstants.closeButton)}
+						>
+							<X className="w-4 h-4 text-slate-900" />
+						</Button>
+					</DialogHeader>
 
-				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleSubmit)} className="px-6 pb-6 pt-2 space-y-3.5 overflow-y-auto flex-1">
-						{/* Nr */}
-						<FormField
-							control={form.control}
-							name="nr"
-							render={({ field }) => (
-								<FormItem className="space-y-1">
-									<FormLabel className="text-xs font-semibold text-slate-900">
-										<Translate text={localizationConstants.protocolPointColNr} />
-									</FormLabel>
-									<FormControl>
-										<Input
-											{...field}
-											placeholder="008"
-											className="h-10 bg-white border-slate-200 text-xs rounded-lg text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 shadow-none"
-										/>
-									</FormControl>
-									<FormMessage className="text-[11px] text-red-500 font-normal" />
-								</FormItem>
-							)}
-						/>
+					<Form {...form}>
+						<form onSubmit={form.handleSubmit(handleSubmit)} className="px-6 pb-6 pt-2 space-y-3.5 overflow-y-auto flex-1">
+							{/* Nr */}
+							<FormField
+								control={form.control}
+								name="nr"
+								render={({ field }) => (
+									<FormItem className="space-y-1">
+										<FormLabel className="text-xs font-semibold text-slate-900">
+											<Translate text={localizationConstants.protocolPointColNr} />
+										</FormLabel>
+										<FormControl>
+											<Input
+												{...field}
+												placeholder={PROTOCOL_CONSTANTS.DEFAULT_POINT_NR}
+												className="h-10 bg-white border-slate-200 text-xs rounded-lg text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 shadow-none"
+											/>
+										</FormControl>
+										<FormMessage className="text-[11px] text-red-500 font-normal" />
+									</FormItem>
+								)}
+							/>
 
 						{/* Ansvarig */}
 						<FormField

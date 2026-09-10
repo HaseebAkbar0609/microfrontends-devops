@@ -22,8 +22,8 @@ const Header = () => {
 			{/* Left spacer */}
 			<div className="flex items-center gap-2" />
 
-			{/* Exact Center Logo (Always centered to the screen viewport) */}
-			<div className="fixed left-1/2 top-8 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-auto z-30">
+			{/* Keep the compact mark clear of controls on mobile; center it from tablet up. */}
+			<div className="pointer-events-auto absolute left-3 top-1/2 z-30 flex -translate-y-1/2 items-center justify-center md:fixed md:left-1/2 md:top-8 md:-translate-x-1/2">
 				<CompanyLogo name={company?.company_name || "PhiloMetric"} logoUrl={null} />
 			</div>
 

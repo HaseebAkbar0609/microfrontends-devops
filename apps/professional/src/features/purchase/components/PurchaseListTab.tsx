@@ -50,7 +50,7 @@ import { Translate } from "@/utils/translation/translate";
 import { PURCHASE_MODULE_BASE_URL } from "../data/purchaseNav.config";
 import { usePurchases, type PurchaseSortField } from "../hooks/usePurchases";
 import type { PurchaseRow } from "../types/purchase.types";
-import { ConfirmActionDialog } from "./shared/ConfirmActionDialog";
+import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 import {
 	PurchaseCategoryBadge,
 	PurchaseStatusBadge,

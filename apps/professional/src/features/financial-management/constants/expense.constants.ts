@@ -1,4 +1,5 @@
 import localizationConstants from "@/utils/translation/constants";
+import { ECONOMY_SUPPLIER_INVOICES_BASE_URL } from "./economyNav.config";
 import { ExpenseCategory, ExpenseStatus, ExpenseSortField } from "../types/expense.types";
 
 export const DEFAULT_ANNUAL_EXPENSE_BUDGET = 1500000; // 1.5 Mkr in SEK
@@ -17,8 +18,8 @@ export const expenseBreadcrumbs = [
 	{ label: localizationConstants.home, href: "/" },
 	{ label: localizationConstants.module, href: "/module" },
 	{ label: localizationConstants.economy, href: "/module/financial-management/economy" },
-	{ label: localizationConstants.expenseOverviewTitle, href: "/module/financial-management/economy" },
-	{ label: localizationConstants.expenseTopTabSupplierInvoice, href: "/module/financial-management/economy" },
+	{ label: localizationConstants.expenseOverviewTitle, href: ECONOMY_SUPPLIER_INVOICES_BASE_URL },
+	{ label: localizationConstants.expenseTopTabSupplierInvoice, href: ECONOMY_SUPPLIER_INVOICES_BASE_URL },
 ];
 
 export const EXPENSE_CATEGORIES: { value: ExpenseCategory; labelKey: string }[] = [
@@ -191,8 +192,12 @@ export const DEFAULT_COST_CENTERS_LIST = [
 	{ id: "40", name: "40 - Fastighetsförvaltning" },
 ];
 
-export const EXPENSE_LIST_ROUTE = "/module/financial-management/economy";
-export const CREATE_EXPENSE_ROUTE = "/module/financial-management/economy/create";
+export const EXPENSE_LIST_ROUTE = ECONOMY_SUPPLIER_INVOICES_BASE_URL;
+export const CREATE_EXPENSE_ROUTE = `${EXPENSE_LIST_ROUTE}/create`;
+export const EXPENSE_LIST_TAB_QUERY_PARAM = "tab";
+export const EXPENSE_INBOX_TAB = "inbox";
+export const EXPENSE_SUPPLIER_LIST_TAB = "supplier_list";
+export const EXPENSE_DETAIL_ROUTE = (expenseId: string) => `${EXPENSE_LIST_ROUTE}/${expenseId}`;
 
 import { economyBreadcrumbs } from "./economyNav.config";
 

@@ -1,5 +1,5 @@
-import { ExpenseListPage } from "@/features/financial-management/components/expense-list/ExpenseListPage";
+import { EconomySectionHub } from "@/features/financial-management";
 
 export default function EconomyPage() {
-	return <ExpenseListPage />;
+	return <EconomySectionHub />;
 }
