@@ -34,6 +34,8 @@ export interface OfferList {
   projectId?: string;
   mappingId?: string;
   quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   idNumber: string;
   jobName: string;
   date: string;
@@ -76,6 +78,10 @@ export type OfferSendFile = {
 
 export type OfferSendData = {
   id: string;
+  mappingId?: string;
+  quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   title: string;
   postedDate: string;
   type: string;
@@ -167,6 +173,8 @@ export type OfferAgreedItem = {
   projectId?: string;
   mappingId?: string;
   quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   contractNr: string;
   jobName: string;
   customerName: string;
@@ -195,6 +203,8 @@ export type OfferArchivedItem = {
   id: string;
   mappingId?: string;
   quoteId?: string;
+  agreementId?: string;
+  agreementStatus?: string;
   contractNr: string;
   jobName: string;
   customerName: string;
@@ -261,6 +271,7 @@ export type ProjectData = {
 
 export type AgreementData = {
   id: string;
+  mappingId?: string;
   projectName: string;
   projectNumber: string;
   quoteNumber: string;

@@ -55,6 +55,8 @@ export function mapItemToOfferList(item: OfferApiResponseItem): OfferList {
 		projectId: item.project_id || item.id || "",
 		mappingId: item.mapping_id,
 		quoteId: item.quote_id,
+		agreementId: item.agreement_id,
+		agreementStatus: item.agreement_status,
 		idNumber: item.offer_code || item.project_code || "—",
 		jobName: item.project_name || item.project_title || item.title || "—",
 		date: formatOfferDate(item.created_at),
@@ -174,6 +176,10 @@ export async function getOfferDetailByIdAPIAction(
 				success: true,
 				data: {
 					id: item.project_id || item.id || offerId,
+					mappingId: item.mapping_id,
+					quoteId: item.quote_id,
+					agreementId: item.agreement_id,
+					agreementStatus: item.agreement_status,
 					title: item.project_name || item.project_title || item.title || "—",
 					postedDate: formatOfferDate(item.created_at),
 					type: item.project_type || item.type || "—",
@@ -189,7 +195,9 @@ export async function getOfferDetailByIdAPIAction(
 					extraImagesCount: 0,
 					documents: (item.media ?? []).filter((file) => !file.content_type?.startsWith("image/") && file.url).map((file) => ({ id: file.media_id || file.url || "", label: file.file_name || "Document", src: file.url })),
 					drawings: [],
-					preliminaryBudgetPrice: typeof item.preliminary_budget === "object" && item.preliminary_budget ? String(item.preliminary_budget.preliminary_budget ?? "—") : String(item.preliminary_budget ?? "—"),
+					preliminaryBudgetPrice: typeof item.preliminary_budget === "object" && item.preliminary_budget
+						? String(item.preliminary_budget.preliminary_budget ?? item.total_quote_price ?? "—")
+						: String(item.preliminary_budget ?? item.total_quote_price ?? "—"),
 					offerDateLatest: typeof item.preliminary_budget === "object" && item.preliminary_budget?.budget_date ? formatOfferDate(item.preliminary_budget.budget_date) : "—",
 					isFavorite: Boolean(item.is_bookmark),
 				},
@@ -269,6 +277,7 @@ export interface AgreementPartyPayload {
 }
 
 export interface AgreementRequestPayload {
+	mappingId?: string;
 	parties: AgreementPartyPayload[];
 	documents: string[];
 	templates: string[];
@@ -304,6 +313,7 @@ export async function createAgreementFromOfferAPIAction(
 		const response = await axiosInstance.post<ApiResponse<AgreementResponseData>>(
 			`/professionals/agreement/create`,
 			{
+				offerMappingId: data.mappingId || null,
 				avdelning: "Offer",
 				objekt: data.projectName || `Offer ${offerId}`,
 				motpart: data.parties.find((party) => party.role === "customer")?.name || null,

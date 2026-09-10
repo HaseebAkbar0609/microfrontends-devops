@@ -8,6 +8,8 @@ export interface OfferApiResponseItem {
 	mapping_id?: string;
 	project_id?: string;
 	quote_id?: string;
+	agreement_id?: string;
+	agreement_status?: string;
 	offer_id?: string;
 	offer_code?: string;
 	project_code?: string;

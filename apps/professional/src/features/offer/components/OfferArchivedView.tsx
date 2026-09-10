@@ -114,11 +114,13 @@ function ArchivedStatusActionButton({
   status,
   rowId,
   offerId,
+  agreementId,
   onNavigate,
 }: {
   status: OfferAgreedStatus;
   rowId: string;
   offerId: string;
+  agreementId?: string;
   onNavigate: (path: string) => void;
 }) {
   const isSigned = status === "signed";
@@ -131,7 +133,13 @@ function ArchivedStatusActionButton({
       size="sm"
       variant="outline"
       className="h-8 px-3 text-xs font-medium bg-white text-slate-900 border border-slate-200 hover:bg-slate-50 rounded-md cursor-pointer shadow-xs"
-      onClick={() => onNavigate(isSigned ? "/module/business/b2b/agreements" : OFFER_ROUTES.createAgreement(rowId || offerId))}
+      onClick={() =>
+        onNavigate(
+          isSigned && agreementId
+            ? `/module/business-support/agreement/${agreementId}`
+            : OFFER_ROUTES.createAgreement(rowId || offerId),
+        )
+      }
     >
       <Translate text={actionLabelKey} />
     </Button>
@@ -455,6 +463,7 @@ export function OfferArchivedView({ offerId, items, isLoading = false, onSearchC
                             status={row.status}
                             rowId={row.id}
                             offerId={offerId}
+                            agreementId={row.agreementId}
                             onNavigate={router.push}
                           />
                         </td>

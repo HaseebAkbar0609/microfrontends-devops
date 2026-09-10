@@ -36,9 +36,10 @@ export default function CreateAgreementPage() {
       const offer = result.data;
       setData({
         id: offer.id,
+        mappingId: offer.mappingId,
         projectName: offer.title,
         projectNumber: offer.id,
-        quoteNumber: offerId,
+        quoteNumber: offer.quoteId || offerId,
         address: offer.customer.address,
         contractType: offer.type,
         customerName: offer.customer.name,

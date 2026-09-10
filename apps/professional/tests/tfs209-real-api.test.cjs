@@ -9,6 +9,25 @@ const axiosCalls = [];
 const axiosMock = {
   async get(url, config) {
     axiosCalls.push({ url, config });
+    if (url.includes('/quote-listing/project/')) {
+      return {
+        data: {
+          success: true,
+          data: {
+            project_id: 'project-1',
+            mapping_id: 'mapping-1',
+            quote_id: 'quote-1',
+            agreement_id: 'agreement-1',
+            agreement_status: 'active',
+            project_name: 'Kitchen renovation',
+            project_type: 'b2c',
+            total_quote_price: 12500,
+            contact_details: {},
+            media: [],
+          },
+        },
+      };
+    }
     return {
       data: {
         success: true,
@@ -52,6 +71,7 @@ vm.runInNewContext(compiled, {
   exports: exportsObject,
   require(name) {
     if (name === '@/lib/axiosInstance') return { __esModule: true, default: axiosMock };
+    if (name === '@/lib/authStorage') return { authStorage: { getCompanyData: () => ({ id: 'company-2' }) } };
     throw new Error(`Unexpected runtime import: ${name}`);
   },
 });
@@ -69,6 +89,7 @@ test('available offers use the dedicated API and preserve the selected company',
   assert.equal(axiosCalls[0].config.params.search, 'Kitchen');
   assert.deepEqual(JSON.parse(JSON.stringify(result.items[0])), {
     id: 'project-1',
+    projectId: 'project-1',
     idNumber: 'PRJ-001',
     jobName: 'Kitchen renovation',
     date: '2026-01-01',
@@ -77,6 +98,11 @@ test('available offers use the dedicated API and preserve the selected company',
     municipality: 'Stockholm',
     category: 'Renovation',
     isFavorite: true,
+    totalPrice: 0,
+    contactName: '',
+    contactPhone: '',
+    contactEmail: '',
+    seenStatus: '',
   });
   assert.equal(result.totalItems, 1);
 });
@@ -86,6 +112,17 @@ test('available offers fail closed when no company is selected', async () => {
     exportsObject.listAvailableOffersAPIAction({ page: 1 }),
     /company must be selected/i,
   );
+});
+
+test('project details expose the real quote id and price for contract creation', async () => {
+  const result = await exportsObject.getOfferDetailByIdAPIAction('project-1');
+
+  assert.equal(result.success, true);
+  assert.equal(result.data.mappingId, 'mapping-1');
+  assert.equal(result.data.quoteId, 'quote-1');
+  assert.equal(result.data.agreementId, 'agreement-1');
+  assert.equal(result.data.agreementStatus, 'active');
+  assert.equal(result.data.preliminaryBudgetPrice, '12500');
 });
 
 test('the available-offers screen never imports dummy rows', () => {
