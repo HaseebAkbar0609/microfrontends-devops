@@ -1,9 +1,7 @@
-import OrderDashboard from "@/features/order/components/OrderDashboard";
+import { OrderOverviewPage } from "@/features/orders/OrderOverviewPage";
+
+export const dynamic = "force-dynamic";
 
 export default function Page() {
-	return (
-		<div className="p-6">
-			<OrderDashboard />
-		</div>
-	);
+	return <OrderOverviewPage />;
 }
