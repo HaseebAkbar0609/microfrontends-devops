@@ -61,22 +61,23 @@ export type UploadProtocolFormData = z.infer<
 >;
 
 export const meetingPointSchema = (
-	requiredMsg: string
+	requiredMsg: string,
+	maxLengthMsg?: string
 ) =>
 	z.object({
-		nr: z.string().trim().min(1, requiredMsg).max(20),
+		nr: z.string().trim().min(1, requiredMsg).max(20, maxLengthMsg),
 		responsible: z
 			.string()
 			.trim()
 			.min(1, requiredMsg)
-			.max(PROTOCOL_VALIDATION_LIMITS.MAX_RESPONSIBLE_LENGTH),
+			.max(PROTOCOL_VALIDATION_LIMITS.MAX_RESPONSIBLE_LENGTH, maxLengthMsg),
 		subject: z
 			.string()
 			.trim()
 			.min(1, requiredMsg)
-			.max(PROTOCOL_VALIDATION_LIMITS.MAX_SUBJECT_LENGTH),
-		description: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH).optional(),
-		decision: z.string().max(1000).optional(),
+			.max(PROTOCOL_VALIDATION_LIMITS.MAX_SUBJECT_LENGTH, maxLengthMsg),
+		description: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH, maxLengthMsg).optional(),
+		decision: z.string().max(1000, maxLengthMsg).optional(),
 	});
 
 export type MeetingPointFormData = z.infer<
