@@ -113,7 +113,7 @@ export function SupplierRegisterTable() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [page, pageSize, searchQuery, statusFilter, sortBy, sortOrder, t]);
+	}, [page, pageSize, searchQuery, statusFilter, sortBy, sortOrder]);
 
 	const handleDelete = useCallback(
 		async (id: string) => {
@@ -126,7 +126,7 @@ export function SupplierRegisterTable() {
 				setDeletingId((currentId) => (currentId === id ? null : currentId));
 			}
 		},
-		[fetchSuppliers, t],
+		[fetchSuppliers],
 	);
 
 	useEffect(() => {
