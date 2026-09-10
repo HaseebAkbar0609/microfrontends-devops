@@ -1,7 +1,7 @@
-"use client";
+import { redirect } from "next/navigation";
+import { ECONOMY_ROT_RUT_BASE_URL } from "@/features/financial-management/constants/economyNav.config";
 
-import { RotRutOverviewPage } from "@/features/financial-management";
-
-export default function RotRutPage() {
-	return <RotRutOverviewPage />;
+export default function RotRutRedirectPage() {
+	redirect(ECONOMY_ROT_RUT_BASE_URL);
 }
+

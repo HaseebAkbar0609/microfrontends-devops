@@ -8,6 +8,7 @@ export const ECONOMY_MODULE_BASE_URL = "/module/financial-management";
 export const ECONOMY_INVOICE_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/invoice`;
 export const ECONOMY_EXPENSE_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/economy`;
 export const ECONOMY_SUPPLIER_INVOICES_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/supplier-invoices`;
+export const ECONOMY_ROT_RUT_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/rot-rut`;
 export const ECONOMY_CERTIFICATES_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/certificates`;
 export const ECONOMY_BUDGET_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/budget`;
 export const ECONOMY_BANK_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/bank`;
@@ -25,6 +26,7 @@ export const ECONOMY_WAGE_TYPES_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/wage-typ
 
 export const ECONOMY_SECTIONS = [
 	{ id: "supplier-invoices", labelKey: localizationConstants.expenseTopTabSupplierInvoice, href: ECONOMY_SUPPLIER_INVOICES_BASE_URL, implemented: true },
+	{ id: "rot-rut", labelKey: localizationConstants.rotRutNav, href: ECONOMY_ROT_RUT_BASE_URL, implemented: true },
 	{ id: "certificates", labelKey: localizationConstants.certificates, href: ECONOMY_CERTIFICATES_BASE_URL, implemented: false },
 	{ id: "budget", labelKey: localizationConstants.budget, href: ECONOMY_BUDGET_BASE_URL, implemented: false },
 	{ id: "bank", labelKey: localizationConstants.bank, href: ECONOMY_BANK_BASE_URL, implemented: false },
@@ -50,7 +52,6 @@ export const ECONOMY_NAV_ITEMS: RouteTabItem[] = [
 	})),
 ];
 export const ECONOMY_FORECAST_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/forecast`;
-export const ECONOMY_ROT_RUT_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/rot-rut`;
 export const ECONOMY_PERSONNEL_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/personnel`;
 export const ECONOMY_LAW_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/law`;
 export const ECONOMY_DEBT_COLLECTION_BASE_URL = `${ECONOMY_MODULE_BASE_URL}/debt-collection`;
@@ -112,11 +113,6 @@ export const ECONOMY_MODULE_TABS: RouteTabItem[] = [
 		id: "forecast",
 		labelKey: localizationConstants.forecast,
 		href: ECONOMY_FORECAST_BASE_URL,
-	},
-	{
-		id: "rot-rut",
-		labelKey: localizationConstants.rotRutNav,
-		href: ECONOMY_ROT_RUT_BASE_URL,
 	},
 	{
 		id: "personnel",
