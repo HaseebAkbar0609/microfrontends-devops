@@ -5844,6 +5844,8 @@ export type ExpenseTranslation = {
 	registerExpenseErrorLineItemDesc: string;
 	registerExpenseErrorLineItemQty: string;
 	registerExpenseErrorLineItemPrice: string;
+	registerExpenseErrorTotalRequired: string;
+	registerExpenseUploadFailed: string;
 	registerExpenseSuccessSaved: string;
 	registerExpenseSuccessSavedAndNext: string;
 	registerExpenseConfirmDiscardTitle: string;
