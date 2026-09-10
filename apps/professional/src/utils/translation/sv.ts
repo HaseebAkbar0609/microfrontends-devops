@@ -3456,6 +3456,9 @@ export const svOffer: OfferTranslation = {
 		"Projektet tas bort permanent. Denna åtgärd kan inte ångras.",
 	projectListArchivedToast: "Projektet har arkiverats.",
 	projectListDeletedToast: "Projektet har raderats.",
+	projectListUnarchiveAction: "Avarkivera",
+	projectListRestoredToast: "Projektet har återställts.",
+	projectArchiveEmpty: "Inga arkiverade projekt.",
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: "Registrera nytt projekt",

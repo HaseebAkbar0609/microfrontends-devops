@@ -1,3 +1,5 @@
+import { parseRecordIdParam } from "@/lib/routeParams";
+
 import ProjectDetailPage from "@/features/project/components/ProjectDetailPage";
 
 interface PageProps {
@@ -6,5 +8,6 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
-	return <ProjectDetailPage projectId={id} />;
+
+	return <ProjectDetailPage projectId={parseRecordIdParam(id)} />;
 }
