@@ -1,9 +1,6 @@
 "use client";
 
 import React from "react";
-import { PageHeader } from "@/components/layout/PageHeader";
-import localizationConstants from "@/utils/translation/constants";
-import { rotRutBreadcrumbs } from "../../constants/rotRut.constants";
 import { useRotRut } from "../../hooks/useRotRut";
 import { RotRutSummaryCards } from "./RotRutSummaryCards";
 import { RotRutRulesCard } from "./RotRutRulesCard";
@@ -53,61 +50,50 @@ export function RotRutOverviewPage() {
 	} = useRotRut();
 
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
-			{/* Top Page Header with Breadcrumbs */}
-			<PageHeader
-				title={localizationConstants.rotRutTitle}
-				breadcrumbs={rotRutBreadcrumbs}
-				className="border-b-0 px-6 pt-5 pb-2"
+		<div className="flex flex-1 flex-col bg-slate-50/50 px-6 pt-5 pb-8">
+			{/* 1. Summary KPI Cards */}
+			<RotRutSummaryCards summary={kpiSummary} />
+
+			{/* 2. Rules & Customer Quotas Display */}
+			<RotRutRulesCard />
+
+			{/* 3. Actions & Filters Toolbar */}
+			<RotRutToolbar
+				searchQuery={searchQuery}
+				onSearchChange={setSearchQuery}
+				statusFilter={statusFilter}
+				onStatusFilterChange={setStatusFilter}
+				typeFilter={typeFilter}
+				onTypeFilterChange={setTypeFilter}
+				periodFilter={periodFilter}
+				onPeriodFilterChange={setPeriodFilter}
+				selectedCount={selectedIds.size}
+				submittableCount={submittableSelectedCount}
+				onSubmitSelected={handleBatchSubmit}
+				onExportExcel={handleExportExcel}
+				onPrint={handlePrint}
+				onResetDemoData={handleResetSeedData}
 			/>
 
-			{/* Main Content Area */}
-			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto">
-
-				{/* 1. Summary KPI Cards */}
-				<RotRutSummaryCards summary={kpiSummary} />
-
-				{/* 2. Rules & Customer Quotas Display */}
-				<RotRutRulesCard />
-
-				{/* 3. Actions & Filters Toolbar */}
-				<RotRutToolbar
-					searchQuery={searchQuery}
-					onSearchChange={setSearchQuery}
-					statusFilter={statusFilter}
-					onStatusFilterChange={setStatusFilter}
-					typeFilter={typeFilter}
-					onTypeFilterChange={setTypeFilter}
-					periodFilter={periodFilter}
-					onPeriodFilterChange={setPeriodFilter}
-					selectedCount={selectedIds.size}
-					submittableCount={submittableSelectedCount}
-					onSubmitSelected={handleBatchSubmit}
-					onExportExcel={handleExportExcel}
-					onPrint={handlePrint}
-					onResetDemoData={handleResetSeedData}
-				/>
-
-				{/* 4. Deduction List Table */}
-				<RotRutTable
-					items={items}
-					totalCount={totalCount}
-					selectedIds={selectedIds}
-					onToggleSelect={toggleSelect}
-					onToggleSelectAll={toggleSelectAll}
-					sortBy={sortBy}
-					sortOrder={sortOrder}
-					onSort={handleSort}
-					currentPage={currentPage}
-					pageSize={pageSize}
-					totalPages={totalPages}
-					onPageChange={setCurrentPage}
-					onPageSizeChange={setPageSize}
-					onResubmit={(item) => setResubmitItem(item)}
-					onSubmitSingle={handleSingleSubmit}
-					customerLimits={customerLimits}
-				/>
-			</div>
+			{/* 4. Deduction List Table */}
+			<RotRutTable
+				items={items}
+				totalCount={totalCount}
+				selectedIds={selectedIds}
+				onToggleSelect={toggleSelect}
+				onToggleSelectAll={toggleSelectAll}
+				sortBy={sortBy}
+				sortOrder={sortOrder}
+				onSort={handleSort}
+				currentPage={currentPage}
+				pageSize={pageSize}
+				totalPages={totalPages}
+				onPageChange={setCurrentPage}
+				onPageSizeChange={setPageSize}
+				onResubmit={(item) => setResubmitItem(item)}
+				onSubmitSingle={handleSingleSubmit}
+				customerLimits={customerLimits}
+			/>
 
 			{/* Dialog: Resubmit Rejected Deduction */}
 			<RotRutResubmitDialog

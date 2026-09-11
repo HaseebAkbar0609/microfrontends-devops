@@ -1,4 +1,12 @@
 import localizationConstants from "@/utils/translation/constants";
+import {
+	CONTACT_FIELDS,
+	CUSTOMER_FIELDS,
+	PROJECT_FIELDS,
+	PROJECT_INFO_FIELDS,
+	PROJECT_LINKED_FIELD,
+	toInfoPairs,
+} from "../shared/projectInfoFields";
 import type {
 	CreateProjectFormData,
 	ProjectCreateSummarySection,
@@ -7,8 +15,9 @@ import type {
 /**
  * The four key/value blocks on the Sammanställning step, in the frames' order.
  *
- * Kept out of the component so the step reads as layout: which fields belong to
- * which section, and which step each pencil returns to, is data.
+ * The field lists live in `shared/projectInfoFields`, because the
+ * Projektinformation record screen draws the same four blocks and edits them.
+ * All this adds is which step each pencil returns to.
  */
 export function buildSummarySections(
 	data: CreateProjectFormData,
@@ -20,61 +29,26 @@ export function buildSummarySections(
 			key: "customer",
 			step: 1,
 			titleKey: localizationConstants.orderKunduppgifterSection,
-			fields: [
-				[localizationConstants.orderKundLabel, customer.customer],
-				[localizationConstants.agreementAddress, customer.address],
-				[localizationConstants.orderPostNrLabel, customer.postalCode],
-				[localizationConstants.orderCityLabel, customer.city],
-				[localizationConstants.orderMailLabel, customer.email],
-				[localizationConstants.orderTelefonLabel, customer.phone],
-				[
-					localizationConstants.orderOrgPersonNrLabel,
-					customer.orgOrPersonalNo,
-				],
-			],
+			fields: toInfoPairs(CUSTOMER_FIELDS, customer),
 		},
 		{
 			key: "contact",
 			step: 1,
 			titleKey: localizationConstants.orderKontaktpersonSection,
-			fields: [
-				[localizationConstants.orderFornamLabel, contactPerson.firstName],
-				[localizationConstants.orderEfternamnLabel, contactPerson.lastName],
-				[localizationConstants.orderMailLabel, contactPerson.email],
-				[localizationConstants.orderMobilLabel, contactPerson.mobile],
-				[localizationConstants.orderRollLabel, contactPerson.role],
-			],
+			fields: toInfoPairs(CONTACT_FIELDS, contactPerson),
 		},
 		{
 			key: "project",
 			step: 2,
 			titleKey: localizationConstants.projectLabel,
-			fields: [
-				[localizationConstants.projectNumberLabel, details.projectNo],
-				[localizationConstants.projectNameLabel, details.projectName],
-				[localizationConstants.orderBlockNameLabel, details.blockName],
-				[localizationConstants.agreementAddress, details.projectAddress],
-				[localizationConstants.orderPostNrLabel, details.postalCode],
-				[localizationConstants.orderCityLabel, details.city],
-				[
-					localizationConstants.projectCreateLinkedNoLabel,
-					details.linkedProjectNo,
-				],
-			],
+			/* The wizard also collects "Koppla projekt"; the record card does not. */
+			fields: toInfoPairs([...PROJECT_FIELDS, PROJECT_LINKED_FIELD], details),
 		},
 		{
 			key: "projectInfo",
 			step: 2,
 			titleKey: localizationConstants.projectCreateInfoSection,
-			fields: [
-				[localizationConstants.orderTypLabel, details.type],
-				[localizationConstants.orderKategoriLabel, details.category],
-				[localizationConstants.orderAvdelningLabel, details.department],
-				[localizationConstants.orderKontraktsummaLabel, details.contractSum],
-				[localizationConstants.orderOffertNrLabel, details.offerNo],
-				[localizationConstants.orderStartDatumLabel, details.startDate],
-				[localizationConstants.orderSlutDatumLabel, details.endDate],
-			],
+			fields: toInfoPairs(PROJECT_INFO_FIELDS, details),
 		},
 	];
 }

@@ -11,7 +11,7 @@ import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PROTOCOL_CONSTANTS } from "../constants/protocol.constants";
-import { protocolsApi } from "../api/protocols.api";
+import { getProtocolFullDetailAction, updateProtocolFullAction } from "@/api-actions/orders/protocols";
 import type { ProtocolDetailData } from "../types/protocol.types";
 import {
 	MOCK_MEETING_INFO,
@@ -127,10 +127,11 @@ export function EditProtocolView({
 		let isMounted = true;
 		const loadDetail = async () => {
 			setIsLoading(true);
-			try {
-				const data = await protocolsApi.getProtocolFullDetail(protocolId, orderId);
-				if (isMounted && data) {
-					setDetailData(data);
+			const result = await getProtocolFullDetailAction(orderId, protocolId);
+			if (isMounted) {
+				if (result.success && result.data) {
+					setDetailData(result.data);
+					const data = result.data;
 					const protocol = data.protocol || ({} as Partial<ProtocolDetailData["protocol"]>);
 					const meetingInfo = data.meetingInfo || ({} as Partial<ProtocolDetailData["meetingInfo"]>);
 					const nextMeeting = data.nextMeeting || ({} as Partial<ProtocolDetailData["nextMeeting"]>);
@@ -165,14 +166,10 @@ export function EditProtocolView({
 						nextMeetingEndTime: nextMeeting?.endTime || MOCK_NEXT_MEETING.endTime,
 						nextMeetingInfo: nextMeeting?.information || MOCK_NEXT_MEETING.information,
 					});
+				} else {
+					showToast("error", t(localizationConstants.genericError));
 				}
-			} catch (err) {
-				console.error("[EditProtocolView] Failed to load protocol detail:", err);
-				showToast("error", t(localizationConstants.genericError));
-			} finally {
-				if (isMounted) {
-					setIsLoading(false);
-				}
+				setIsLoading(false);
 			}
 		};
 
@@ -184,54 +181,48 @@ export function EditProtocolView({
 	}, [protocolId, orderId]);
 
 	const onSubmit = async (values: EditProtocolFormData) => {
-		try {
-			setIsSubmitting(true);
-			const updated = await protocolsApi.updateProtocolFull(
-				protocolId,
-				{
-					startDate: values.startDate,
-					startTime: values.startTime,
-					endDate: values.endDate,
-					endTime: values.endTime,
-					host: values.host,
-					participants: values.participants,
-					protocolNumber: values.protocolNumber,
-					topic: values.topic,
-					rubrik: values.rubrik,
-					category: values.category,
-					location: values.location,
-					address: values.address,
-					postalCode: values.postalCode,
-					city: values.city,
-					information: values.information,
-					comment: values.comment,
-					nextMeeting: {
-						host: values.nextMeetingResponsible,
-						rubrik: values.nextMeetingRubrik,
-						category: values.nextMeetingCategory,
-						address: values.nextMeetingAddress,
-						postalCode: values.nextMeetingPostalCode,
-						city: values.nextMeetingCity,
-						participants: values.nextMeetingParticipants,
-						location: values.nextMeetingLocation,
-						startDate: values.nextMeetingStartDate,
-						startTime: values.nextMeetingStartTime,
-						endDate: values.nextMeetingEndDate,
-						endTime: values.nextMeetingEndTime,
-						information: values.nextMeetingInfo,
-					},
-				},
-				orderId
-			);
+		setIsSubmitting(true);
+		const result = await updateProtocolFullAction(orderId, protocolId, {
+			startDate: values.startDate,
+			startTime: values.startTime,
+			endDate: values.endDate,
+			endTime: values.endTime,
+			host: values.host,
+			participants: values.participants,
+			protocolNumber: values.protocolNumber,
+			topic: values.topic,
+			rubrik: values.rubrik,
+			category: values.category,
+			location: values.location,
+			address: values.address,
+			postalCode: values.postalCode,
+			city: values.city,
+			information: values.information,
+			comment: values.comment,
+			nextMeeting: {
+				host: values.nextMeetingResponsible,
+				rubrik: values.nextMeetingRubrik,
+				category: values.nextMeetingCategory,
+				address: values.nextMeetingAddress,
+				postalCode: values.nextMeetingPostalCode,
+				city: values.nextMeetingCity,
+				participants: values.nextMeetingParticipants,
+				location: values.nextMeetingLocation,
+				startDate: values.nextMeetingStartDate,
+				startTime: values.nextMeetingStartTime,
+				endDate: values.nextMeetingEndDate,
+				endTime: values.nextMeetingEndTime,
+				information: values.nextMeetingInfo,
+			},
+		});
+		if (result.success && result.data) {
 			showToast("success", t(localizationConstants.protocolSavedToast));
-			onSaved?.(updated);
+			onSaved?.(result.data);
 			onBack();
-		} catch (error) {
-			console.error("[EditProtocolView] Failed to save protocol changes:", error);
+		} else {
 			showToast("error", t(localizationConstants.genericError));
-		} finally {
-			setIsSubmitting(false);
 		}
+		setIsSubmitting(false);
 	};
 
 	if (isLoading) {
