@@ -513,6 +513,9 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                         </td>
                         <td className="sticky right-0 bg-white px-4 py-3 group-hover:bg-slate-50" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }}>
                           <div className="flex items-center justify-end gap-2">
+                            <Button asChild size="sm" variant="outline"><Link href={`/module/business/offer/send/${row.projectId || row.id}`}>
+                              {t(localizationConstants.offerFormViewOffer)}
+                            </Link></Button>
                             <Button
                               size="sm"
                               className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"

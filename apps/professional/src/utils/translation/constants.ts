@@ -607,6 +607,27 @@ export type AdminPageTranslation = {
 };
 
 export type OfferTranslation = {
+  offerEditorTitle: string;
+  offerEditorNameRequired: string;
+  offerEditorPositiveAmount: string;
+  offerEditorInvalidDate: string;
+  offerEditorDateOrder: string;
+  offerEditorTotal: string;
+  offerEditorItemized: string;
+  offerEditorPriceHelp: string;
+  offerEditorBack: string;
+  offerEditorSaving: string;
+  offerEditorSaveDraft: string;
+  offerEditorDraftSaved: string;
+  offerEditorSaveError: string;
+  offerEditorLoadError: string;
+  offerEditorReload: string;
+  offerEditorSent: string;
+  offerEditorSendHelp: string;
+  offerEditorUploadHelp: string;
+  offerEditorUploading: string;
+  offerEditorUploadError: string;
+  offerEditorRemoveAttachment: string;
 	commissionTitle: string;
 	commissionDescription: string;
 	commissionAcceptTitle: string;
