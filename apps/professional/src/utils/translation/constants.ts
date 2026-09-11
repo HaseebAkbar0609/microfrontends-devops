@@ -3418,6 +3418,30 @@ export type OfferTranslation = {
 	designProjectsGanttTab: string;
 	designProjectsCreateNew: string;
 	designProjectsCreateToast: string;
+	// Design Module – Register New Project
+	designRegNewTitle: string;
+	designRegNewStep1Tab: string;
+	designRegNewStep2Tab: string;
+	designRegNewStep3Tab: string;
+	designRegNewExternKund: string;
+	designRegNewProjektAnsvarig: string;
+	designRegNewAndraLaggTill: string;
+	designRegNewProjektering: string;
+	designRegNewProjekteringNr: string;
+	designRegNewProjekteringNamn: string;
+	designRegNewKvarteraNamn: string;
+	designRegNewProjekteringAdress: string;
+	designRegNewProjekteringInfo: string;
+	designRegNewCreateSuccess: string;
+	designRegNewPlaceholderProjekteringNr: string;
+	designRegNewPlaceholderProjekteringNamn: string;
+	designRegNewPlaceholderKvarteraNamn: string;
+	designRegNewPlaceholderProjekteringAdress: string;
+	designRegNewPlaceholderTyp: string;
+	designRegNewPlaceholderKategori: string;
+	designRegNewPlaceholderAvdelning: string;
+	designRegNewPlaceholderStartDatum: string;
+	designRegNewPlaceholderSlutDatum: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
