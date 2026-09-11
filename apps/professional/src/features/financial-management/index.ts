@@ -84,5 +84,21 @@ export * from "./types/budget.types";
 export * from "./constants/budget.constants";
 export * from "./utils/budgetRepository";
 export * from "./hooks/useBudgets";
+export * from "./components/bank";
+export type {
+	BankTabType,
+	BankDetailTabType,
+	BankContactPerson,
+	BankAccountItem,
+	BankDocumentItem,
+	BankLoanItem,
+	BankLoanFormData,
+	BankAccountFormData,
+	BankSortField,
+	BankSortOrder,
+} from "./types/bank.types";
+export * from "./constants/bank.constants";
+export * from "./utils/bankRepository";
+export * from "./hooks/useBank";
 
 

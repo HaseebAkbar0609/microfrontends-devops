@@ -29,7 +29,7 @@ export const ECONOMY_SECTIONS = [
 	{ id: "rot-rut", labelKey: localizationConstants.rotRutNav, href: ECONOMY_ROT_RUT_BASE_URL, implemented: true },
 	{ id: "certificates", labelKey: localizationConstants.certificatesNav, href: ECONOMY_CERTIFICATES_BASE_URL, implemented: true },
 	{ id: "budget", labelKey: localizationConstants.budget, href: ECONOMY_BUDGET_BASE_URL, implemented: true },
-	{ id: "bank", labelKey: localizationConstants.bank, href: ECONOMY_BANK_BASE_URL, implemented: false },
+	{ id: "bank", labelKey: localizationConstants.bank, href: ECONOMY_BANK_BASE_URL, implemented: true },
 	{ id: "authorities", labelKey: localizationConstants.authorities, href: ECONOMY_AUTHORITIES_BASE_URL, implemented: false },
 	{ id: "year-end", labelKey: localizationConstants.yearEnd, href: ECONOMY_YEAR_END_BASE_URL, implemented: false },
 	{ id: "claims", labelKey: localizationConstants.claims, href: ECONOMY_CLAIMS_BASE_URL, implemented: false },
