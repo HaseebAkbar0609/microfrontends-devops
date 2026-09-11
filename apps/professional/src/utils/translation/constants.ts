@@ -7280,6 +7280,86 @@ export type CreateEmployeeTranslation = {
 	fieldCommentPlaceholder: string;
 };
 
+export type CertificatesTranslation = {
+	certificatesTitle: string;
+	certificatesNav: string;
+	certificatesBreadcrumb: string;
+	certificatesSubtitle: string;
+	colCertId: string;
+	colCertObject: string;
+	colCertName: string;
+	colCertResponsible: string;
+	colCertMaster: string;
+	colCertStatus: string;
+	colCertActions: string;
+	colCertCategory: string;
+	colCertObjectId: string;
+	colCertObjectName: string;
+	btnCreateCertificate: string;
+	btnEditCertificate: string;
+	btnArchiveCertificate: string;
+	btnDeleteCertificate: string;
+	btnViewCertificate: string;
+	btnDownloadCertificate: string;
+	btnSaveCertificate: string;
+	btnCancelCertificate: string;
+	btnBackToList: string;
+	certNotFound: string;
+	sectionBasicInfo: string;
+	sectionAttestFlow: string;
+	sectionDocPreview: string;
+	tabAttest: string;
+	tabBudget: string;
+	titleNewCertificate: string;
+	titleCertificateDetails: string;
+	fieldCertId: string;
+	fieldCertCategory: string;
+	fieldCertName: string;
+	fieldCertObject: string;
+	fieldCertObjectId: string;
+	fieldCertObjectName: string;
+	fieldCertResponsible: string;
+	fieldCertResponsibleRole: string;
+	fieldCertMaster: string;
+	fieldCertMasterRole: string;
+	fieldCertIssueDate: string;
+	fieldCertExpiryDate: string;
+	fieldCertDescription: string;
+	fieldCertDocUpload: string;
+	fieldCertDocUploadSubtitle: string;
+	fieldCertInfoPlaceholder: string;
+	fieldCertSelectPlaceholder: string;
+	fieldCertUnassigned: string;
+	confirmDeleteCertTitle: string;
+	confirmDeleteCertDesc: string;
+	confirmDeleteCertBtn: string;
+	toastCertCreated: string;
+	toastCertUpdated: string;
+	toastCertDeleted: string;
+	toastCertArchived: string;
+	valCertNameRequired: string;
+	valCertObjectRequired: string;
+	valCertCategoryRequired: string;
+	valCertResponsibleRequired: string;
+	valCertExpiryAfterIssue: string;
+	searchCertificatesPlaceholder: string;
+	filterAllCertificates: string;
+	rowsPerPageLabel: string;
+	pageOfLabel: string;
+	pageLabel: string;
+	firstPageLabel: string;
+	previousPageLabel: string;
+	nextPageLabel: string;
+	lastPageLabel: string;
+	emptyCertificatesTitle: string;
+	emptyCertificatesDesc: string;
+	btnResetSeedData: string;
+	loadingLabel: string;
+	actionsAriaLabel: string;
+	backAriaLabel: string;
+	fileUploadSuccess: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7307,7 +7387,8 @@ export type Translation = HeaderTranslation &
 	OrderProtocolTranslation &
 	PersonnelOverviewTranslation &
 	CreateEmployeeTranslation &
-	AccountLifecycleTranslation;
+	AccountLifecycleTranslation &
+	CertificatesTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -7318,4 +7399,5 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+
 
