@@ -7566,6 +7566,10 @@ export type EconomyBankTranslation = {
 	toastItemDeleted: string;
 	confirmDeleteBankItemTitle: string;
 	confirmDeleteBankItemDesc: string;
+	optionNoLoanDoc: string;
+	uploadFilePlaceholder: string;
+	uploadFileFormatLimit: string;
+	breadcrumbBank: string;
 };
 
 export type Translation = HeaderTranslation &

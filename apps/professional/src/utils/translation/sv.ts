@@ -7632,6 +7632,10 @@ export const svEconomyBank: EconomyBankTranslation = {
 	toastItemDeleted: "Objektet har raderats",
 	confirmDeleteBankItemTitle: "Ta bort",
 	confirmDeleteBankItemDesc: "Är du säker på att du vill ta bort detta objekt? Åtgärden kan inte ångras.",
+	optionNoLoanDoc: "Inget lån (Allmänt bankdokument)",
+	uploadFilePlaceholder: "Klicka eller dra fil hit",
+	uploadFileFormatLimit: "PDF, DOCX, XLSX upp till 10MB",
+	breadcrumbBank: "Bank",
 };
 
 export const sv: Translation = {

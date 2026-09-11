@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type { BankDocumentItem, BankLoanItem } from "../../types/bank.types";
-import { UploadCloud } from "lucide-react";
+import { BankDocumentUploadArea } from "./BankDocumentUploadArea";
 
 interface AddBankDocumentModalProps {
 	isOpen: boolean;
@@ -31,6 +32,7 @@ export function AddBankDocumentModal({
 	loans = [],
 	defaultLoanId = "",
 }: AddBankDocumentModalProps) {
+	const { t } = useTranslation();
 	const [name, setName] = useState("");
 	const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 	const [fileType, setFileType] = useState("PDF");
@@ -52,7 +54,7 @@ export function AddBankDocumentModal({
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!name.trim()) {
-			setError("valTitleRequired");
+			setError(t(localizationConstants.valTitleRequired));
 			return;
 		}
 
@@ -98,15 +100,13 @@ export function AddBankDocumentModal({
 								setName(e.target.value);
 								if (error) setError("");
 							}}
-							placeholder="t.ex. skuldebrev.pdf"
+							placeholder="skuldebrev.pdf"
 							className={`h-11 rounded-lg border text-sm ${
 								error ? "border-red-500" : "border-[#E2E8F0]"
 							}`}
 						/>
 						{error && (
-							<p className="text-xs text-red-500 mt-1">
-								<Translate text={localizationConstants.valTitleRequired} />
-							</p>
+							<p className="text-xs text-red-500 mt-1">{error}</p>
 						)}
 					</div>
 
@@ -150,7 +150,7 @@ export function AddBankDocumentModal({
 								onChange={(e) => setLoanId(e.target.value)}
 								className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
 							>
-								<option value="">-- Inget lån (Allmänt bankdokument) --</option>
+								<option value="">-- {t(localizationConstants.optionNoLoanDoc)} --</option>
 								{loans.map((l) => (
 									<option key={l.id} value={l.id}>
 										{l.loanNr} - {l.title}
@@ -160,27 +160,11 @@ export function AddBankDocumentModal({
 						</div>
 					)}
 
-					{/* Drag & drop upload area simulation */}
-					<div>
-						<Label className="text-xs font-semibold text-[#475569] mb-1 block">
-							<Translate text={localizationConstants.colDocFileType} />
-						</Label>
-						<label className="flex flex-col items-center justify-center p-4 border-2 border-dashed border-[#CBD5E1] hover:border-[#0D9488] rounded-xl cursor-pointer bg-slate-50 transition-colors">
-							<UploadCloud className="w-8 h-8 text-slate-400 mb-2" />
-							<span className="text-xs font-medium text-slate-600">
-								{fileName || "Klicka eller dra fil hit"}
-							</span>
-							<span className="text-[10px] text-slate-400 mt-0.5">
-								PDF, DOCX, XLSX upp till 10MB
-							</span>
-							<input
-								type="file"
-								className="hidden"
-								onChange={handleFileSelect}
-								accept=".pdf,.docx,.xlsx,.png,.jpg"
-							/>
-						</label>
-					</div>
+					{/* Drag & drop upload area */}
+					<BankDocumentUploadArea
+						fileName={fileName}
+						onFileSelect={handleFileSelect}
+					/>
 
 					<DialogFooter className="pt-3 gap-2 flex justify-end">
 						<Button

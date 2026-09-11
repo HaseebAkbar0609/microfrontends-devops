@@ -9,22 +9,13 @@ import {
 	DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { Translate } from "@/utils/translation/translate";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
-import {
-	LOAN_TYPE_OPTIONS,
-	BANK_NAME_OPTIONS,
-} from "../../constants/bank.constants";
 import type { BankLoanItem, BankLoanFormData } from "../../types/bank.types";
+import { BankLoanBasicFields } from "./BankLoanBasicFields";
+import { BankLoanFinancialFields } from "./BankLoanFinancialFields";
+import { BankContactPersonFields } from "./BankContactPersonFields";
 
 export interface CreateBankLoanModalProps {
 	isOpen: boolean;
@@ -50,7 +41,7 @@ export function CreateBankLoanModal({
 		loanNr: "#5000",
 		title: "",
 		loanType: "Fastighetsfinansiering",
-		bank: "SEB",
+		bank: "SEB (Skandinaviska Enskilda Banken)",
 		startDate: "2025-06-01",
 		endDate: "2026-06-01",
 		status: "active",
@@ -97,7 +88,7 @@ export function CreateBankLoanModal({
 				loanNr: "#5000",
 				title: "",
 				loanType: "Fastighetsfinansiering",
-				bank: "SEB",
+				bank: "SEB (Skandinaviska Enskilda Banken)",
 				startDate: new Date().toISOString().slice(0, 10),
 				endDate: new Date(Date.now() + 365 * 24 * 3600 * 1000)
 					.toISOString()
@@ -148,208 +139,36 @@ export function CreateBankLoanModal({
 				</DialogHeader>
 
 				<form onSubmit={handleSubmit} className="space-y-4 py-2">
-					{/* Titel & Lån nr */}
-					<div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-						<div className="sm:col-span-2">
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.colLoanTitle} /> *
-							</label>
-							<Input
-								type="text"
-								value={formData.title}
-								onChange={(e) =>
-									setFormData((p) => ({ ...p, title: e.target.value }))
-								}
-								placeholder="Fastighetslån 1"
-								className={`h-9 text-sm ${
-									errors.title ? "border-rose-500 bg-rose-50/20" : ""
-								}`}
-							/>
-							{errors.title && (
-								<p className="text-xs text-rose-600 mt-1">{errors.title}</p>
-							)}
-						</div>
+					<BankLoanBasicFields
+						formData={formData}
+						errors={errors}
+						onChange={setFormData}
+						onClearError={(field) => setErrors({ ...errors, [field]: "" })}
+					/>
 
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.colLoanId} />
-							</label>
-							<Input
-								type="text"
-								value={formData.loanNr}
-								onChange={(e) =>
-									setFormData((p) => ({ ...p, loanNr: e.target.value }))
-								}
-								placeholder="#5000"
-								className="h-9 text-sm font-mono"
-							/>
-						</div>
-					</div>
+					<BankLoanFinancialFields
+						formData={formData}
+						onChange={setFormData}
+					/>
 
-					{/* Lånetyp & Bank */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.colLoanType} />
-							</label>
-							<Select
-								value={formData.loanType}
-								onValueChange={(val) => setFormData((p) => ({ ...p, loanType: val }))}
-							>
-								<SelectTrigger className="h-9 text-sm bg-white border-slate-200">
-									<SelectValue />
-								</SelectTrigger>
-								<SelectContent>
-									{LOAN_TYPE_OPTIONS.map((opt) => (
-										<SelectItem key={opt.value} value={opt.value}>
-											{opt.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
+					{/* Contact Person Sub-section */}
+					<BankContactPersonFields
+						contactPerson={formData.contactPerson || { name: "", role: "", email: "", phone: "" }}
+						onChange={(cp) => setFormData({ ...formData, contactPerson: cp })}
+					/>
 
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.colBank} />
-							</label>
-							<Select
-								value={formData.bank}
-								onValueChange={(val) => setFormData((p) => ({ ...p, bank: val }))}
-							>
-								<SelectTrigger className="h-9 text-sm bg-white border-slate-200">
-									<SelectValue />
-								</SelectTrigger>
-								<SelectContent>
-									{BANK_NAME_OPTIONS.map((opt) => (
-										<SelectItem key={opt.value} value={opt.value}>
-											{opt.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-					</div>
-
-					{/* Start Datum & Slut Datum */}
-					<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.colStartDate} />
-							</label>
-							<Input
-								type="date"
-								value={formData.startDate}
-								onChange={(e) =>
-									setFormData((p) => ({ ...p, startDate: e.target.value }))
-								}
-								className="h-9 text-sm"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.colEndDate} />
-							</label>
-							<Input
-								type="date"
-								value={formData.endDate}
-								onChange={(e) =>
-									setFormData((p) => ({ ...p, endDate: e.target.value }))
-								}
-								className="h-9 text-sm"
-							/>
-						</div>
-					</div>
-
-					{/* Ränta, Månadskostnad, Ursprungligt belopp, Kvarstående skuld */}
-					<div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.fieldInterestRate} /> (%)
-							</label>
-							<Input
-								type="number"
-								step="0.01"
-								value={formData.interestRate || ""}
-								onChange={(e) =>
-									setFormData((p) => ({
-										...p,
-										interestRate: Number(e.target.value) || 0,
-									}))
-								}
-								placeholder="3.25"
-								className="h-9 text-sm font-mono"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.fieldMonthlyCost} />
-							</label>
-							<Input
-								type="number"
-								value={formData.monthlyCost || ""}
-								onChange={(e) =>
-									setFormData((p) => ({
-										...p,
-										monthlyCost: Number(e.target.value) || 0,
-									}))
-								}
-								placeholder="48500"
-								className="h-9 text-sm font-mono"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.fieldOriginalAmount} />
-							</label>
-							<Input
-								type="number"
-								value={formData.originalAmount || ""}
-								onChange={(e) =>
-									setFormData((p) => ({
-										...p,
-										originalAmount: Number(e.target.value) || 0,
-									}))
-								}
-								placeholder="5000000"
-								className="h-9 text-sm font-mono"
-							/>
-						</div>
-
-						<div>
-							<label className="block text-xs font-semibold text-slate-700 mb-1">
-								<Translate text={localizationConstants.fieldRemainingDebt} />
-							</label>
-							<Input
-								type="number"
-								value={formData.remainingDebt || ""}
-								onChange={(e) =>
-									setFormData((p) => ({
-										...p,
-										remainingDebt: Number(e.target.value) || 0,
-									}))
-								}
-								placeholder="3750000"
-								className="h-9 text-sm font-mono"
-							/>
-						</div>
-					</div>
-
-					<DialogFooter className="pt-3 gap-2">
+					<DialogFooter className="pt-4 gap-2">
 						<Button
 							type="button"
 							variant="outline"
 							onClick={onClose}
-							className="cursor-pointer"
+							className="text-xs h-9"
 						>
 							<Translate text={localizationConstants.btnCancel} />
 						</Button>
 						<Button
 							type="submit"
-							className="bg-slate-900 hover:bg-slate-800 text-white cursor-pointer"
+							className="bg-slate-900 hover:bg-slate-800 text-white text-xs h-9 px-4"
 						>
 							<Translate text={localizationConstants.btnSave} />
 						</Button>

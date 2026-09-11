@@ -7610,6 +7610,10 @@ export const enEconomyBank: EconomyBankTranslation = {
 	toastItemDeleted: "Item deleted",
 	confirmDeleteBankItemTitle: "Delete",
 	confirmDeleteBankItemDesc: "Are you sure you want to delete this item? This action cannot be undone.",
+	optionNoLoanDoc: "No loan (General bank document)",
+	uploadFilePlaceholder: "Click or drag file here",
+	uploadFileFormatLimit: "PDF, DOCX, XLSX up to 10MB",
+	breadcrumbBank: "Bank",
 };
 
 export const en: Translation = {
