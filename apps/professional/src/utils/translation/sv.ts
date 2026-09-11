@@ -7186,12 +7186,11 @@ export const svAccountLifecycle: AccountLifecycleTranslation = {
 	lifecycleDaysRemainingSuffix: "dagar kvar",
 	lifecycleExpiresToday: "Går ut idag",
 	lifecycleExpiredMessage:
-		"Ditt konto har gått ut. Du kan fortfarande se din data, men du kan inte skapa nytt innehåll.",
+		"Det här kontot har avslutats. Du kan fortfarande se allt du har skapat, men du kan inte lägga till något nytt förrän du uppgraderar.",
 	lifecycleUpgradeCta: "Uppgradera nu",
 	lifecyclePopupDismiss: "OK, uppfattat",
 	lifecycleReadOnlyGuardTitle: "Det här kontot är skrivskyddat",
-	lifecycleReadOnlyGuardMessage:
-		"Din provperiod har gått ut. Uppgradera för att fortsätta skapa innehåll.",
+	lifecycleReadOnlyGuardMessage: "Uppgradera för att börja skapa innehåll igen.",
 	lifecycleToastBlockedTitle: "Åtgärden blockerades",
 	lifecycleToastBlockedMessage:
 		"Det här kontot är skrivskyddat. Uppgradera för att fortsätta.",

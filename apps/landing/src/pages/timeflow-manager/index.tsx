@@ -154,27 +154,27 @@ export default function TimeflowManagerPage() {
         </section>
 
         {/* AI Robert */}
-        <section className="py-24 px-6">
+        <section className="bg-dark-section text-white py-24 px-6">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <div>
               <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("timeflowManager.robertLabel")}</p>
               <h2 className="font-display text-4xl md:text-5xl font-bold mb-6 tracking-tight">
                 {t("timeflowManager.robertTitle")}
               </h2>
-              <p className="text-muted text-lg mb-8 max-w-md">
+              <p className="text-stone-400 text-lg mb-8 max-w-md">
                 {t("timeflowManager.robertDesc")}
               </p>
-              <ul className="space-y-3 mb-8 text-sm">
+              <ul className="space-y-4 mb-8 text-sm">
                 {[1, 2, 3, 4].map((i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-primary/20 text-primary grid place-items-center text-xs">✓</span>
+                    <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground grid place-items-center text-xs shrink-0">✓</span>
                     {t(`timeflowManager.robertP${i}`)}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="aspect-[4/5] bg-gradient-to-br from-stone-100 via-surface to-background rounded-md border border-border grid place-items-center">
-              <span className="font-mono text-xs text-muted uppercase tracking-widest">{t("timeflowManager.robertPreview")}</span>
+            <div className="aspect-[4/5] bg-gradient-to-br from-dark-card via-dark-card to-dark-section rounded-lg border border-white/10 grid place-items-center">
+              <span className="font-mono text-xs text-stone-500 uppercase tracking-widest">{t("timeflowManager.robertPreview")}</span>
             </div>
           </div>
         </section>
