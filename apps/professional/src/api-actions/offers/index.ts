@@ -269,6 +269,9 @@ export async function addOfferCommentAPIAction(mappingId: string, body: string):
 export interface AgreementPartyPayload {
 	id?: string;
 	name: string;
+	contactPerson?: string;
+	authorizedSignatory?: string;
+	company?: string;
 	role: string;
 	email?: string;
 	phone?: string;
@@ -301,7 +304,10 @@ export async function createAgreementFromOfferAPIAction(
 ): Promise<ActionResult<AgreementResponseData>> {
 	try {
 		const contacts = data.parties.map((party) => {
-			const parts = party.name.trim().split(/\s+/);
+			const contactName = party.role === "supplier"
+				? party.authorizedSignatory?.trim() || party.name.trim() || party.company?.trim()
+				: party.contactPerson?.trim() || party.name.trim();
+			const parts = (contactName || "").split(/\s+/);
 			return {
 				first_name: parts.shift() || party.role,
 				last_name: parts.join(" ") || "—",

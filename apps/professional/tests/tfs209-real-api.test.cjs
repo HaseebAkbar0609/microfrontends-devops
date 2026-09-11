@@ -53,7 +53,8 @@ const axiosMock = {
       },
     };
   },
-  async post() {
+  async post(url, data) {
+    axiosCalls.push({ url, data });
     return { data: {} };
   },
 };
@@ -185,4 +186,22 @@ test('company selection refreshes subscription routing before navigation', () =>
   assert.ok(selectCompany >= 0 && selectCompany < refreshStatus);
   assert.ok(updateContext > selectCompany && updateContext < refreshStatus);
   assert.ok(refreshStatus < setCookie && setCookie < navigate);
+});
+
+test('agreement persists actual customer contact and supplier signatory', async () => {
+  const result = await exportsObject.createAgreementFromOfferAPIAction('project-1', {
+    mappingId: 'mapping-1', documents: [], templates: [],
+    parties: [
+      { role: 'customer', name: 'Customer AB', contactPerson: 'Customer Contact' },
+      { role: 'supplier', name: '', company: 'Supplier AB', authorizedSignatory: 'QA Signatory' },
+    ],
+  });
+  assert.equal(result.success, true);
+  const request = axiosCalls.at(-1);
+  assert.equal(request.url, '/professionals/agreement/create');
+  assert.equal(request.data.motpart, 'Customer AB');
+  assert.equal(request.data.contacts[0].first_name, 'Customer');
+  assert.equal(request.data.contacts[0].last_name, 'Contact');
+  assert.equal(request.data.contacts[1].first_name, 'QA');
+  assert.equal(request.data.contacts[1].last_name, 'Signatory');
 });
