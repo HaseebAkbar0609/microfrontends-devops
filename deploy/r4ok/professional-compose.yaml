@@ -6,7 +6,7 @@ services:
       # NEXT_PUBLIC_* values are compiled into the Next.js bundle. Always run
       # this Compose file with --env-file /etc/timeflow-dev/professional.env.
       context: ../..
-      dockerfile: apps/professional/Dockerfile
+      dockerfile: deploy/r4ok/Dockerfile
       args:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
@@ -17,8 +17,7 @@ services:
     ports:
       - "127.0.0.1:22610:3000"
     networks:
-      - payment-internal
-      - core-internal
+      - app-http
       - frontend-egress
     cap_drop:
       - ALL
@@ -33,11 +32,8 @@ services:
         max-file: "3"
 
 networks:
-  payment-internal:
+  app-http:
     external: true
-    name: timeflow-dev_payment-internal
-  core-internal:
-    external: true
-    name: timeflow-core-dev_core-internal
+    name: timeflow-dev_app-http
   frontend-egress:
     driver: bridge

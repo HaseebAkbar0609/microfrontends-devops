@@ -269,11 +269,31 @@ export async function addOfferCommentAPIAction(mappingId: string, body: string):
 export interface AgreementPartyPayload {
 	id?: string;
 	name: string;
+	contactPerson?: string;
+	authorizedSignatory?: string;
+	company?: string;
 	role: string;
 	email?: string;
 	phone?: string;
 	address?: string;
 	orgNumber?: string;
+}
+
+export async function savePreliminaryBudgetAPIAction(
+	projectId: string, amount: number, budgetDate: number,
+): Promise<ActionResult<void>> {
+	if (!projectId || !Number.isFinite(amount) || amount <= 0 || !Number.isSafeInteger(budgetDate) || budgetDate <= 0) {
+		return { success: false, data: null, error: "Enter a positive budget and select an offer date." };
+	}
+	try {
+		await axiosInstance.post("/professionals/quotes/preliminary-budget/create", {
+			project_id: projectId, preliminary_budget: amount, budget_date: budgetDate,
+		});
+		return { success: true, data: undefined, error: null };
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
+		return { success: false, data: null, error: apiError.response?.data?.message || "Could not save the preliminary budget." };
+	}
 }
 
 export interface AgreementRequestPayload {
@@ -301,7 +321,10 @@ export async function createAgreementFromOfferAPIAction(
 ): Promise<ActionResult<AgreementResponseData>> {
 	try {
 		const contacts = data.parties.map((party) => {
-			const parts = party.name.trim().split(/\s+/);
+			const contactName = party.role === "supplier"
+				? party.authorizedSignatory?.trim() || party.name.trim() || party.company?.trim()
+				: party.contactPerson?.trim() || party.name.trim();
+			const parts = (contactName || "").split(/\s+/);
 			return {
 				first_name: parts.shift() || party.role,
 				last_name: parts.join(" ") || "—",

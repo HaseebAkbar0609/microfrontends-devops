@@ -250,6 +250,7 @@ export type MyPagesTranslation = {
 	swift: string;
 	bankIban: string;
 	profilePostalCity: string;
+	profileCountry: string;
 	securityPrivacyTitle: string;
 	twoFactorAuth: string;
 	twoFactorEnable: string;
@@ -316,6 +317,7 @@ export type MyPagesTranslation = {
 	noFileChosen: string;
 	fileTypesAllowed: string;
 	unsupportedFileType: string;
+	fileTooLarge: string;
 
 	languagePreference: string;
 	swedish: string;
@@ -607,6 +609,56 @@ export type AdminPageTranslation = {
 };
 
 export type OfferTranslation = {
+  offerEditorTitle: string;
+  offerEditorNameRequired: string;
+  offerEditorPositiveAmount: string;
+  offerEditorInvalidDate: string;
+  offerEditorDateOrder: string;
+  offerEditorTotal: string;
+  offerEditorItemized: string;
+  offerEditorPriceHelp: string;
+  offerEditorBack: string;
+  offerEditorSaving: string;
+  offerEditorSaveDraft: string;
+  offerEditorDraftSaved: string;
+  offerEditorSaveError: string;
+  offerEditorLoadError: string;
+  offerEditorReload: string;
+  offerEditorSent: string;
+  offerEditorSendHelp: string;
+  offerEditorUploadHelp: string;
+  offerEditorUploading: string;
+  offerEditorUploadError: string;
+  offerEditorRemoveAttachment: string;
+	commissionTitle: string;
+	commissionDescription: string;
+	commissionAcceptTitle: string;
+	commissionAcceptConfirm: string;
+	commissionAcceptDescription: string;
+	commissionExistingFee: string;
+	commissionAcceptanceSeparate: string;
+	commissionCalculation: string;
+	commissionCancel: string;
+	commissionProcessing: string;
+	commissionLoading: string;
+	commissionAcceptError: string;
+	commissionRefresh: string;
+	commissionCards: string;
+	commissionRecoveryError: string;
+	commissionLoadError: string;
+	commissionEmpty: string;
+	commissionPaid: string;
+	commissionUnpaid: string;
+	commissionFailed: string;
+	commissionAuthentication: string;
+	commissionQuote: string;
+	commissionCardHelp: string;
+	commissionRecover: string;
+	commissionRecoveryDescription: string;
+	commissionRecoverConfirm: string;
+	commissionAcceptedPaid: string;
+	commissionAcceptedPending: string;
+	commissionRestoreError: string;
 	openQuotes: string;
 	quickActions: string;
 	kpiStatus: string;
@@ -3367,6 +3419,30 @@ export type OfferTranslation = {
 	designProjectsGanttTab: string;
 	designProjectsCreateNew: string;
 	designProjectsCreateToast: string;
+	// Design Module – Register New Project
+	designRegNewTitle: string;
+	designRegNewStep1Tab: string;
+	designRegNewStep2Tab: string;
+	designRegNewStep3Tab: string;
+	designRegNewExternKund: string;
+	designRegNewProjektAnsvarig: string;
+	designRegNewAndraLaggTill: string;
+	designRegNewProjektering: string;
+	designRegNewProjekteringNr: string;
+	designRegNewProjekteringNamn: string;
+	designRegNewKvarteraNamn: string;
+	designRegNewProjekteringAdress: string;
+	designRegNewProjekteringInfo: string;
+	designRegNewCreateSuccess: string;
+	designRegNewPlaceholderProjekteringNr: string;
+	designRegNewPlaceholderProjekteringNamn: string;
+	designRegNewPlaceholderKvarteraNamn: string;
+	designRegNewPlaceholderProjekteringAdress: string;
+	designRegNewPlaceholderTyp: string;
+	designRegNewPlaceholderKategori: string;
+	designRegNewPlaceholderAvdelning: string;
+	designRegNewPlaceholderStartDatum: string;
+	designRegNewPlaceholderSlutDatum: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
@@ -3541,6 +3617,16 @@ export type OfferTranslation = {
 	projectListRestoredToast: string;
 	projectArchiveEmpty: string;
 	projectSectionTidsplan: string;
+	projectCompanyDetailsSection: string;
+	commonYes: string;
+	commonNo: string;
+
+	/* TFS-697 — Organisation (the project record's third section). */
+	projectOrgEmpty: string;
+	projectOrgNoMatches: string;
+	projectOrgDeleteConfirmTitle: string;
+	projectOrgDeleteConfirmDescription: string;
+	projectOrgDeletedToast: string;
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: string;
@@ -3576,6 +3662,20 @@ export type OfferTranslation = {
 	projectDetailColStart: string;
 	projectDetailColEnd: string;
 	projectDetailAddToast: string;
+
+	/* TFS-698 — Personal-liggare (the project record's fourth section). */
+	projectStaffLedgerTitle: string;
+	projectStaffLedgerSupplierLabel: string;
+	projectStaffLedgerLoggedInNow: string;
+	projectStaffLedgerColOwnStaff: string;
+	projectStaffLedgerColSupplier: string;
+	projectStaffLedgerColLoggedIn: string;
+	projectStaffLedgerColLoggedOut: string;
+	projectStaffLedgerColTool: string;
+	projectStaffLedgerStillOnSite: string;
+	projectStaffLedgerEmpty: string;
+	projectStaffLedgerNoMatches: string;
+	projectStaffLedgerDateRangeInvalid: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
@@ -7289,6 +7389,235 @@ export type CreateEmployeeTranslation = {
 	fieldCommentPlaceholder: string;
 };
 
+export type CertificatesTranslation = {
+	certificatesTitle: string;
+	certificatesNav: string;
+	certificatesBreadcrumb: string;
+	certificatesSubtitle: string;
+	colCertId: string;
+	colCertObject: string;
+	colCertName: string;
+	colCertResponsible: string;
+	colCertMaster: string;
+	colCertStatus: string;
+	colCertActions: string;
+	colCertCategory: string;
+	colCertObjectId: string;
+	colCertObjectName: string;
+	btnCreateCertificate: string;
+	btnEditCertificate: string;
+	btnArchiveCertificate: string;
+	btnDeleteCertificate: string;
+	btnViewCertificate: string;
+	btnDownloadCertificate: string;
+	btnSaveCertificate: string;
+	btnCancelCertificate: string;
+	btnBackToList: string;
+	certNotFound: string;
+	sectionBasicInfo: string;
+	sectionAttestFlow: string;
+	sectionDocPreview: string;
+	tabAttest: string;
+	tabBudget: string;
+	titleNewCertificate: string;
+	titleCertificateDetails: string;
+	fieldCertId: string;
+	fieldCertCategory: string;
+	fieldCertName: string;
+	fieldCertObject: string;
+	fieldCertObjectId: string;
+	fieldCertObjectName: string;
+	fieldCertResponsible: string;
+	fieldCertResponsibleRole: string;
+	fieldCertMaster: string;
+	fieldCertMasterRole: string;
+	fieldCertIssueDate: string;
+	fieldCertExpiryDate: string;
+	fieldCertDescription: string;
+	fieldCertDocUpload: string;
+	fieldCertDocUploadSubtitle: string;
+	fieldCertInfoPlaceholder: string;
+	fieldCertSelectPlaceholder: string;
+	fieldCertUnassigned: string;
+	confirmDeleteCertTitle: string;
+	confirmDeleteCertDesc: string;
+	confirmDeleteCertBtn: string;
+	toastCertCreated: string;
+	toastCertUpdated: string;
+	toastCertDeleted: string;
+	toastCertArchived: string;
+	valCertNameRequired: string;
+	valCertObjectRequired: string;
+	valCertCategoryRequired: string;
+	valCertResponsibleRequired: string;
+	valCertExpiryAfterIssue: string;
+	searchCertificatesPlaceholder: string;
+	filterAllCertificates: string;
+	rowsPerPageLabel: string;
+	pageOfLabel: string;
+	pageLabel: string;
+	firstPageLabel: string;
+	previousPageLabel: string;
+	nextPageLabel: string;
+	lastPageLabel: string;
+	emptyCertificatesTitle: string;
+	emptyCertificatesDesc: string;
+	btnResetSeedData: string;
+	loadingLabel: string;
+	actionsAriaLabel: string;
+	backAriaLabel: string;
+	fileUploadSuccess: string;
+};
+
+export type EconomyBudgetTranslation = {
+	tabBudgetList: string;
+	btnCreateBudget: string;
+	btnEditBudget: string;
+	btnDeleteBudget: string;
+	btnSaveBudget: string;
+	btnCancelBudget: string;
+	btnAddBudgetRow: string;
+	btnActivateBudget: string;
+	btnDeactivateBudget: string;
+	selectedCountLabel: string;
+	colBudgetNr: string;
+	colBudgetName: string;
+	colBudgetDate: string;
+	colBudgetTotalCost: string;
+	colBudgetTotalIncome: string;
+	colBudgetActions: string;
+	colBudgetKonto: string;
+	colBudgetKostnadsstalle: string;
+	colBudgetAnnual: string;
+	colBudgetFordelning: string;
+	colBudgetPercent: string;
+	sectionBudgetInfo: string;
+	sectionBudgetDetails: string;
+	fieldBudgetNr: string;
+	fieldBudgetName: string;
+	fieldBudgetDescription: string;
+	fieldBudgetComment: string;
+	fieldBudgetTags: string;
+	fieldActiveBudget: string;
+	fieldOverheadBudget: string;
+	fieldBudgetDistribution: string;
+	summaryIncome: string;
+	summaryCosts: string;
+	summaryTotalContribution: string;
+	titleBudgetDetails: string;
+	titleNewBudget: string;
+	titleEditBudget: string;
+	confirmDeleteBudgetTitle: string;
+	confirmDeleteBudgetDesc: string;
+	confirmDeleteBudgetBtn: string;
+	toastBudgetCreated: string;
+	toastBudgetUpdated: string;
+	toastBudgetDeleted: string;
+	toastBudgetStatusUpdated: string;
+	toastBudgetBulkUpdated: string;
+	valBudgetNameRequired: string;
+	valBudgetKontoRequired: string;
+	searchBudgetsPlaceholder: string;
+	filterAllBudgets: string;
+	filterActiveBudgets: string;
+	filterInactiveBudgets: string;
+	filterOverheadBudgets: string;
+	emptyBudgetsTitle: string;
+	emptyBudgetsDesc: string;
+	budgetNotFound: string;
+	totalBudgetedKpi: string;
+	actualSpentKpi: string;
+	remainingBudgetKpi: string;
+	utilizationKpi: string;
+	summaryMonthlyTotal: string;
+};
+
+export type EconomyBankTranslation = {
+	titleBank: string;
+	tabBankkonton: string;
+	tabLanFinansiering: string;
+	tabBankDokument: string;
+	tabBankAccounts: string;
+	tabBankLoans: string;
+	tabBankDocs: string;
+	tabGrundlaggandeInfo: string;
+	tabDokument: string;
+	btnCreateNew: string;
+	btnEdit: string;
+	btnSave: string;
+	btnCancel: string;
+	btnDelete: string;
+	btnViewFile: string;
+	btnBackToList: string;
+	colAccountNumber: string;
+	colIban: string;
+	colSwiftBic: string;
+	colCurrency: string;
+	colBalance: string;
+	accountTypeForetagskonto: string;
+	accountTypeSparkonto: string;
+	accountTypeTransaktionskonto: string;
+	contactPersonHeader: string;
+	fieldContactName: string;
+	fieldContactRole: string;
+	fieldContactEmail: string;
+	fieldContactPhone: string;
+	colLoanId: string;
+	colLoanTitle: string;
+	colLoanType: string;
+	colBank: string;
+	colStartDate: string;
+	colEndDate: string;
+	colLoanStatus: string;
+	loanTypeFastighetsfinansiering: string;
+	loanTypeHardvara: string;
+	loanTypeForetagslan: string;
+	loanTypeLeasing: string;
+	statusActive: string;
+	statusInactive: string;
+	fieldInterestRate: string;
+	fieldMonthlyCost: string;
+	fieldOriginalAmount: string;
+	fieldRemainingDebt: string;
+	fieldRepaidPercent: string;
+	titleLoanDetails: string;
+	sectionDocuments: string;
+	colDocDate: string;
+	colDocName: string;
+	colBankDocName: string;
+	colDocFileType: string;
+	colDocActions: string;
+	searchBankPlaceholder: string;
+	filterBankPlaceholder: string;
+	filterAll: string;
+	emptyBankAccountsTitle: string;
+	emptyBankAccountsDesc: string;
+	emptyLoansTitle: string;
+	emptyLoansDesc: string;
+	emptyBankDocsTitle: string;
+	emptyBankDocsDesc: string;
+	bankLoanNotFound: string;
+	modalCreateAccountTitle: string;
+	modalCreateLoanTitle: string;
+	modalAddDocumentTitle: string;
+	valTitleRequired: string;
+	valBankRequired: string;
+	valAccountNumberRequired: string;
+	valOriginalAmountRequired: string;
+	toastAccountCreated: string;
+	toastAccountUpdated: string;
+	toastLoanCreated: string;
+	toastLoanUpdated: string;
+	toastDocumentAdded: string;
+	toastItemDeleted: string;
+	confirmDeleteBankItemTitle: string;
+	confirmDeleteBankItemDesc: string;
+	optionNoLoanDoc: string;
+	uploadFilePlaceholder: string;
+	uploadFileFormatLimit: string;
+	breadcrumbBank: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7316,7 +7645,10 @@ export type Translation = HeaderTranslation &
 	OrderProtocolTranslation &
 	PersonnelOverviewTranslation &
 	CreateEmployeeTranslation &
-	AccountLifecycleTranslation;
+	AccountLifecycleTranslation &
+	CertificatesTranslation &
+	EconomyBudgetTranslation &
+	EconomyBankTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -7327,4 +7659,5 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+
 

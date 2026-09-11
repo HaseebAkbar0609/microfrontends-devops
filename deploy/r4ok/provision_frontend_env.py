@@ -26,10 +26,10 @@ def require_test_publishable_key(value: str) -> str:
 def render_environment(service_token: str, stripe_publishable_key: str) -> str:
     return "\n".join(
         [
-            "NEXT_PUBLIC_API_URL=https://dev.backend.timeflowsystem.com",
+            "NEXT_PUBLIC_API_URL=https://timeflow-api-dev.r4ok.com",
             f"NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY={stripe_publishable_key}",
             "NEXT_PUBLIC_TFS825_PAYMENT_MVP=true",
-            "TFS_BACKEND_URL=https://dev.backend.timeflowsystem.com",
+            "TFS_BACKEND_URL=https://timeflow-api-dev.r4ok.com",
             "PAYMENT_SERVICE_URL=http://timeflow-payment-api:8200",
             f"PAYMENT_SERVICE_TOKEN={service_token}",
             "PORT=3000",

@@ -15,7 +15,8 @@ export type OfferTabId =
 	| "quoted"
 	| "accepted"
 	| "agreed"
-	| "archived";
+	| "archived"
+	| "commissions";
 
 interface OfferModuleHeaderProps {
 	activeTab?: OfferTabId;
@@ -23,6 +24,11 @@ interface OfferModuleHeaderProps {
 }
 
 export const OFFER_TABS: RouteTabItem[] = [
+	{
+		id: "commissions",
+		labelKey: localizationConstants.commissionTitle,
+		href: `${OFFER_MODULE_BASE_URL}/commissions`,
+	},
 	{
 		id: "dashboard",
 		labelKey: localizationConstants.offerTabDashboard,

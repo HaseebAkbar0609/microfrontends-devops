@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronDown, Plus, Printer, Search } from "lucide-react";
 import {
 	AlertDialog,
@@ -36,6 +37,7 @@ import DesignProjectsTable from "./DesignProjectsTable";
 
 const DesignProjectsListTab = () => {
 	const t = useTranslate();
+	const router = useRouter();
 	const [projects, setProjects] = useState<DesignProjectItem[]>(() =>
 		listDesignProjects(),
 	);
@@ -68,7 +70,7 @@ const DesignProjectsListTab = () => {
 	};
 
 	const handleCreate = () =>
-		showToast("info", t(localizationConstants.designProjectsCreateToast));
+		router.push("/module/production/design/new");
 
 	return (
 		<div className="flex flex-col gap-5">

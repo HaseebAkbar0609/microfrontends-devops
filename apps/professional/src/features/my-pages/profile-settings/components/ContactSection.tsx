@@ -1,10 +1,15 @@
 "use client";
 
-import { useForm, Controller, useFieldArray } from "react-hook-form";
+import {
+	useForm,
+	Controller,
+	useFieldArray,
+	type UseFormReturn,
+} from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
 	BriefcaseBusiness,
 	Loader2,
@@ -23,15 +28,57 @@ import {
 	FormInput,
 	FormCheckbox,
 	FormSelect,
+	FormCitySelect,
 	FormFileUpload,
 } from "@/components/form";
 import { showToast } from "@/lib/toast";
 import { CollapsibleSection } from "@/components/common/CollapsibleSection";
+import { getCountriesAction, type Country } from "@/api-actions";
+import { formatOptions } from "@/lib/utils";
 import {
 	useProfileSettings,
 	useUpdateProfileSettings,
 	type ProfileSettingsData,
 } from "../hooks/useProfileSettings";
+
+const MAX_PROFILE_PICTURE_BYTES = 5 * 1024 * 1024; // keep in sync with tfs-backend's _MAX_IMAGE_SIZE
+
+/** Field-level messages the backend can return on PATCH /professionals/profile/me, keyed by form field. */
+type BackendFieldErrors = Record<string, string[]>;
+
+interface ProfileSaveError {
+	response?: {
+		data?: {
+			message?: string;
+			errors?: BackendFieldErrors;
+		};
+	};
+}
+
+function applyBackendFieldErrors(
+	form: UseFormReturn<ContactFormValues>,
+	errors: BackendFieldErrors,
+) {
+	for (const [field, messages] of Object.entries(errors)) {
+		const message = messages[0];
+		if (!message) continue;
+		if (field === "city_id") form.setError("cityId", { message });
+		else if (field === "country_id") form.setError("countryId", { message });
+		else if (field === "phone_number") form.setError("phone", { message });
+		else if (field === "postal_code") form.setError("postalCode", { message });
+		else if (field === "address") form.setError("streetAddress", { message });
+		else if (field === "personal_id") form.setError("personalId", { message });
+		else if (field === "profile_picture_media_id")
+			form.setError("profilePicture", { message });
+		else if (field.startsWith("next_of_kin.")) {
+			// e.g. "next_of_kin.0.phone" -> "nextOfKin.0.phone"
+			const path = field.replace(/^next_of_kin\./, "nextOfKin.");
+			form.setError(path as never, { message });
+		} else if (field in form.getValues()) {
+			form.setError(field as keyof ContactFormValues, { message });
+		}
+	}
+}
 
 const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 	nextOfKin: [{ name: "", relation: "", phone: "", email: "" }],
@@ -45,7 +92,6 @@ const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 	email: "",
 	countryId: "",
 	cityId: "",
-	postalCity: "",
 	personalId: "",
 	phone: "",
 	streetAddress: "",
@@ -59,6 +105,9 @@ const DEFAULT_CONTACT_VALUES: ContactFormValues = {
 
 export default function ContactSection() {
 	const lastSavedRef = useRef<ContactFormValues | null>(null);
+	// The city id/name the profile loaded with, so FormCitySelect can show it
+	// immediately (and not reset it) before its own city list has finished loading.
+	const initialCityRef = useRef<{ id: string; name: string }>({ id: "", name: "" });
 
 	const form = useForm<ContactFormValues>({
 		resolver: zodResolver(contactSchema),
@@ -71,13 +120,41 @@ export default function ContactSection() {
 
 	const { fields, append } = useFieldArray({ control, name: "nextOfKin" });
 
+	const [countries, setCountries] = useState<Country[]>([]);
+	const countryOptions = useMemo(() => formatOptions(countries), [countries]);
+	const selectedCountryId = watch("countryId");
+
+	useEffect(() => {
+		let cancelled = false;
+		getCountriesAction().then((result) => {
+			if (!cancelled && result.success && result.data) {
+				setCountries(result.data);
+			}
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, []);
+
 	const onSubmit = async (data: ContactFormValues) => {
 		try {
 			await updateProfileSettings.mutateAsync(data);
 			lastSavedRef.current = data;
 			showToast("success", localizationConstants.profileUpdated);
-		} catch (_error) {
-			showToast("error", localizationConstants.profileUpdateFailed);
+		} catch (error) {
+			const apiError = error as ProfileSaveError;
+			const backendErrors = apiError.response?.data?.errors;
+			if (backendErrors && Object.keys(backendErrors).length > 0) {
+				applyBackendFieldErrors(form, backendErrors);
+			}
+			// The backend already returns a translated, human-readable message
+			// (e.g. "That file is too large...") for every failure, including
+			// field validation errors — prefer it over a one-size-fits-all toast.
+			const backendMessage = apiError.response?.data?.message;
+			showToast(
+				"error",
+				backendMessage || localizationConstants.profileUpdateFailed,
+			);
 		}
 	};
 
@@ -86,11 +163,14 @@ export default function ContactSection() {
 		if (!profileSettingsQuery.data) return;
 
 		const incoming = profileSettingsQuery.data as ProfileSettingsData;
+		initialCityRef.current = {
+			id: incoming.cityId ?? "",
+			name: incoming.cityName ?? "",
+		};
 
 		const merged: ContactFormValues = {
 			...DEFAULT_CONTACT_VALUES,
 			...incoming,
-			postalCity: incoming.cityName ?? "",
 			notifications: {
 				...DEFAULT_CONTACT_VALUES.notifications,
 				...incoming.notifications,
@@ -127,6 +207,7 @@ export default function ContactSection() {
 									label={localizationConstants.firstName}
 									placeholder={localizationConstants.firstName}
 									messageClassName="text-xs text-red-600 mt-1"
+									required
 								/>
 								<FormInput
 									control={control}
@@ -134,6 +215,7 @@ export default function ContactSection() {
 									label={localizationConstants.lastName}
 									placeholder={localizationConstants.lastName}
 									messageClassName="text-xs text-red-600 mt-1"
+									required
 								/>
 								<FormInput
 									control={control}
@@ -160,6 +242,8 @@ export default function ContactSection() {
 									label={localizationConstants.email}
 									placeholder={localizationConstants.email}
 									messageClassName="text-xs text-red-600 mt-1"
+									inputClassName="!bg-[#f4f4f5]"
+									inputProps={{ readOnly: true }}
 								/>
 								<FormInput
 									control={control}
@@ -181,11 +265,24 @@ export default function ContactSection() {
 									label={localizationConstants.postalCode}
 									placeholder={localizationConstants.postalCode}
 								/>
-								<FormInput
+								<FormSelect
 									control={control}
-									name="postalCity"
-									label={localizationConstants.profilePostalCity}
+									name="countryId"
+									label={<Translate text={localizationConstants.profileCountry} />}
+									placeholder={localizationConstants.profileCountry}
+									triggerClassName="w-full"
+									options={countryOptions}
+								/>
+								<FormCitySelect
+									name="cityId"
+									countryId={selectedCountryId}
+									label={<Translate text={localizationConstants.profilePostalCity} />}
 									placeholder={localizationConstants.profilePostalCity}
+									triggerClassName="w-full"
+									disabled={!selectedCountryId}
+									skipCityResetWhenValue={initialCityRef.current.id}
+									ensureOptionIfMissing={initialCityRef.current.id}
+									ensureOptionLabelIfMissing={initialCityRef.current.name}
 								/>
 							</div>
 						</div>
@@ -311,11 +408,15 @@ export default function ContactSection() {
 								label={<Translate text={localizationConstants.profilePicture} />}
 								accept="image/png, image/jpeg, image/jpg"
 								allowedTypes={["image/png", "image/jpeg", "image/jpg"]}
+								maxSizeBytes={MAX_PROFILE_PICTURE_BYTES}
 								buttonLabel={<Translate text={localizationConstants.upload} />}
 								placeholder={<Translate text={localizationConstants.noFileChosen} />}
 								helperText={<Translate text={localizationConstants.fileTypesAllowed} />}
 								invalidTypeMessage={
 									<Translate text={localizationConstants.unsupportedFileType} />
+								}
+								tooLargeMessage={
+									<Translate text={localizationConstants.fileTooLarge} />
 								}
 								buttonClassName="bg-slate-900 px-6 !text-white hover:bg-slate-900/90"
 								showPreview
