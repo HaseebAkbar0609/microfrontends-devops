@@ -74,4 +74,10 @@ export * from "./hooks/useEconomyDashboard";
 export * from "./types/economyDashboard.types";
 export * from "./constants/economyDashboard.constants";
 export * from "./mock/economyDashboardMockData";
+export * from "./components/certificates";
+export * from "./types/certificates.types";
+export * from "./constants/certificates.constants";
+export * from "./utils/certificatesRepository";
+export * from "./hooks/useCertificates";
+
 
