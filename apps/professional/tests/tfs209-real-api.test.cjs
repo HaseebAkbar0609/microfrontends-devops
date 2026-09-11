@@ -205,3 +205,22 @@ test('agreement persists actual customer contact and supplier signatory', async 
   assert.equal(request.data.contacts[1].first_name, 'QA');
   assert.equal(request.data.contacts[1].last_name, 'Signatory');
 });
+
+test('preliminary budget save persists the project amount and date through API', async () => {
+  const result = await exportsObject.savePreliminaryBudgetAPIAction('project-1', 10000, 1789776000000);
+  assert.equal(result.success, true);
+  const request = axiosCalls.at(-1);
+  assert.equal(request.url, '/professionals/quotes/preliminary-budget/create');
+  assert.equal(request.data.project_id, 'project-1');
+  assert.equal(request.data.preliminary_budget, 10000);
+  assert.equal(request.data.budget_date, 1789776000000);
+  assert.equal(request.data.company_id, undefined);
+});
+
+test('invalid preliminary budget never reaches API', async () => {
+  const before = axiosCalls.length;
+  for (const [project, amount, date] of [['', 1, 1], ['p', 0, 1], ['p', -1, 1], ['p', Infinity, 1], ['p', 1, NaN]]) {
+    assert.equal((await exportsObject.savePreliminaryBudgetAPIAction(project, amount, date)).success, false);
+  }
+  assert.equal(axiosCalls.length, before);
+});

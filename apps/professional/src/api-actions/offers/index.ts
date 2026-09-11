@@ -279,6 +279,23 @@ export interface AgreementPartyPayload {
 	orgNumber?: string;
 }
 
+export async function savePreliminaryBudgetAPIAction(
+	projectId: string, amount: number, budgetDate: number,
+): Promise<ActionResult<void>> {
+	if (!projectId || !Number.isFinite(amount) || amount <= 0 || !Number.isSafeInteger(budgetDate) || budgetDate <= 0) {
+		return { success: false, data: null, error: "Enter a positive budget and select an offer date." };
+	}
+	try {
+		await axiosInstance.post("/professionals/quotes/preliminary-budget/create", {
+			project_id: projectId, preliminary_budget: amount, budget_date: budgetDate,
+		});
+		return { success: true, data: undefined, error: null };
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
+		return { success: false, data: null, error: apiError.response?.data?.message || "Could not save the preliminary budget." };
+	}
+}
+
 export interface AgreementRequestPayload {
 	mappingId?: string;
 	parties: AgreementPartyPayload[];

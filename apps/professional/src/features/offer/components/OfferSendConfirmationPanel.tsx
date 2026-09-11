@@ -13,6 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendConfirmationPanelProps } from "../types";
+import { savePreliminaryBudgetAPIAction } from "@/api-actions/offers";
 
 function resolveFormType(type: string): "rent" | "express" | "b2c" {
   const lower = type.toLowerCase();
@@ -31,6 +32,9 @@ export function OfferSendConfirmationPanel({
   const [budget, setBudget] = useState("");
   const [offerDate, setOfferDate] = useState<Date | undefined>(undefined);
   const [datePickerOpen, setDatePickerOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [isSaved, setIsSaved] = useState(false);
 
   const formType = resolveFormType(data.type);
 
@@ -38,18 +42,25 @@ export function OfferSendConfirmationPanel({
     router.push(`/module/business/offer/send/${data.id}?type=${formType}`);
   }
 
-  function handleSave() {
-    if (budget.trim()) {
-      const num = Number(budget.replace(/[^0-9]/g, ""));
-      if (!isNaN(num)) {
-        setDisplayBudget(num.toLocaleString("en-US"));
-      } else {
-        setDisplayBudget(budget.trim());
-      }
+  async function handleSave() {
+    if (isSaving) return;
+    setSaveError(null);
+    setIsSaved(false);
+    if (!offerDate || !budget.trim() || Number(budget) <= 0) {
+      setSaveError("Enter a positive budget and select an offer date.");
+      return;
     }
-    if (offerDate) {
-      setDisplayOfferDate(format(offerDate, "yyyy-MM-dd"));
+    setIsSaving(true);
+    const dateOnly = Date.UTC(offerDate.getFullYear(), offerDate.getMonth(), offerDate.getDate());
+    const result = await savePreliminaryBudgetAPIAction(data.id, Number(budget), dateOnly);
+    setIsSaving(false);
+    if (!result.success) {
+      setSaveError(result.error || "Could not save the preliminary budget.");
+      return;
     }
+    setDisplayBudget(Number(budget).toLocaleString("en-US"));
+    setDisplayOfferDate(format(offerDate, "yyyy-MM-dd"));
+    setIsSaved(true);
   }
 
   return (
@@ -98,14 +109,9 @@ export function OfferSendConfirmationPanel({
           type="text"
           value={budget}
           onChange={(e) => {
+            setIsSaved(false);
             const val = e.target.value.replace(/[^0-9]/g, "");
             setBudget(val);
-            if (val) {
-              const num = Number(val);
-              setDisplayBudget(!isNaN(num) ? num.toLocaleString("en-US") : val);
-            } else {
-              setDisplayBudget(data.preliminaryBudgetPrice);
-            }
           }}
           inputMode="numeric"
           placeholder={t(localizationConstants.offerSendPreliminaryBudgetPlaceholder)}
@@ -143,10 +149,8 @@ export function OfferSendConfirmationPanel({
               endMonth={new Date(2035, 11)}
               selected={offerDate}
               onSelect={(date) => {
+                setIsSaved(false);
                 setOfferDate(date);
-                if (date) {
-                  setDisplayOfferDate(format(date, "yyyy-MM-dd"));
-                }
                 setDatePickerOpen(false);
               }}
             />
@@ -155,6 +159,8 @@ export function OfferSendConfirmationPanel({
       </div>
 
       {/* Action buttons */}
+      {saveError && <p role="alert" className="text-sm text-red-600">{saveError}</p>}
+      {isSaved && <p role="status" className="text-sm text-emerald-700">Preliminary budget saved.</p>}
       <div className="flex flex-col gap-2 pt-2">
         <Button
           type="button"
@@ -170,6 +176,7 @@ export function OfferSendConfirmationPanel({
           variant="outline"
           className="h-10 w-full rounded-lg border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50 cursor-pointer shadow-xs gap-2"
           onClick={handleSave}
+          disabled={isSaving}
         >
           <Save className="w-[15px] h-[15px] text-[#18181B] shrink-0" strokeWidth={1.67} />
           <Translate text={localizationConstants.offerSendSave} />
