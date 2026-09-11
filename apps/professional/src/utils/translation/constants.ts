@@ -7368,6 +7368,68 @@ export type CertificatesTranslation = {
 	fileUploadSuccess: string;
 };
 
+export type EconomyBudgetTranslation = {
+	tabBudgetList: string;
+	btnCreateBudget: string;
+	btnEditBudget: string;
+	btnDeleteBudget: string;
+	btnSaveBudget: string;
+	btnCancelBudget: string;
+	btnAddBudgetRow: string;
+	btnActivateBudget: string;
+	btnDeactivateBudget: string;
+	selectedCountLabel: string;
+	colBudgetNr: string;
+	colBudgetName: string;
+	colBudgetDate: string;
+	colBudgetTotalCost: string;
+	colBudgetTotalIncome: string;
+	colBudgetActions: string;
+	colBudgetKonto: string;
+	colBudgetKostnadsstalle: string;
+	colBudgetAnnual: string;
+	colBudgetFordelning: string;
+	colBudgetPercent: string;
+	sectionBudgetInfo: string;
+	sectionBudgetDetails: string;
+	fieldBudgetNr: string;
+	fieldBudgetName: string;
+	fieldBudgetDescription: string;
+	fieldBudgetComment: string;
+	fieldBudgetTags: string;
+	fieldActiveBudget: string;
+	fieldOverheadBudget: string;
+	fieldBudgetDistribution: string;
+	summaryIncome: string;
+	summaryCosts: string;
+	summaryTotalContribution: string;
+	titleBudgetDetails: string;
+	titleNewBudget: string;
+	titleEditBudget: string;
+	confirmDeleteBudgetTitle: string;
+	confirmDeleteBudgetDesc: string;
+	confirmDeleteBudgetBtn: string;
+	toastBudgetCreated: string;
+	toastBudgetUpdated: string;
+	toastBudgetDeleted: string;
+	toastBudgetStatusUpdated: string;
+	toastBudgetBulkUpdated: string;
+	valBudgetNameRequired: string;
+	valBudgetKontoRequired: string;
+	searchBudgetsPlaceholder: string;
+	filterAllBudgets: string;
+	filterActiveBudgets: string;
+	filterInactiveBudgets: string;
+	filterOverheadBudgets: string;
+	emptyBudgetsTitle: string;
+	emptyBudgetsDesc: string;
+	budgetNotFound: string;
+	totalBudgetedKpi: string;
+	actualSpentKpi: string;
+	remainingBudgetKpi: string;
+	utilizationKpi: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7396,7 +7458,8 @@ export type Translation = HeaderTranslation &
 	PersonnelOverviewTranslation &
 	CreateEmployeeTranslation &
 	AccountLifecycleTranslation &
-	CertificatesTranslation;
+	CertificatesTranslation &
+	EconomyBudgetTranslation;
 
 export type TranslationKeys = keyof Translation;
 
