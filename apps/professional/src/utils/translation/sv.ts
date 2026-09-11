@@ -4321,6 +4321,7 @@ export const svMyPage: MyPagesTranslation = {
 	swift: "SWIFT/BIC",
 	bankIban: "Bankkonto (IBAN)",
 	profilePostalCity: "Postort",
+	profileCountry: "Land",
 	securityPrivacyTitle: "Säkerhet & Integritet",
 	twoFactorAuth: "Tvåfaktorsautentisering",
 	twoFactorEnable: "Aktivera tvåfaktorsautentisering",
@@ -4386,6 +4387,7 @@ export const svMyPage: MyPagesTranslation = {
 	noFileChosen: "Ingen fil vald",
 	fileTypesAllowed: "PNG-, JPG-filer är tillåtna.",
 	unsupportedFileType: "Endast PNG- och JPG-filer är tillåtna.",
+	fileTooLarge: "Filen är för stor. Välj en bild under 5 MB.",
 
 	languagePreference: "Språkpreferens",
 	swedish: "Svenska",
