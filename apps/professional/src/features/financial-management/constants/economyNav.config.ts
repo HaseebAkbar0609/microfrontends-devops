@@ -27,7 +27,7 @@ export const ECONOMY_WAGE_TYPES_BASE_URL = `${ECONOMY_EXPENSE_BASE_URL}/wage-typ
 export const ECONOMY_SECTIONS = [
 	{ id: "supplier-invoices", labelKey: localizationConstants.expenseTopTabSupplierInvoice, href: ECONOMY_SUPPLIER_INVOICES_BASE_URL, implemented: true },
 	{ id: "rot-rut", labelKey: localizationConstants.rotRutNav, href: ECONOMY_ROT_RUT_BASE_URL, implemented: true },
-	{ id: "certificates", labelKey: localizationConstants.certificates, href: ECONOMY_CERTIFICATES_BASE_URL, implemented: false },
+	{ id: "certificates", labelKey: localizationConstants.certificatesNav, href: ECONOMY_CERTIFICATES_BASE_URL, implemented: true },
 	{ id: "budget", labelKey: localizationConstants.budget, href: ECONOMY_BUDGET_BASE_URL, implemented: false },
 	{ id: "bank", labelKey: localizationConstants.bank, href: ECONOMY_BANK_BASE_URL, implemented: false },
 	{ id: "authorities", labelKey: localizationConstants.authorities, href: ECONOMY_AUTHORITIES_BASE_URL, implemented: false },
