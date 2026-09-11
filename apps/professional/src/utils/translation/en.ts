@@ -7471,6 +7471,7 @@ export const enEconomyBudget: EconomyBudgetTranslation = {
 	actualSpentKpi: "Actual Spent",
 	remainingBudgetKpi: "Remaining Budget",
 	utilizationKpi: "Utilization %",
+	summaryMonthlyTotal: "Monthly sum",
 };
 
 export const en: Translation = {

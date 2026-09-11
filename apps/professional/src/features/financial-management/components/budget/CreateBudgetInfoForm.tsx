@@ -4,6 +4,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type { BudgetFormData } from "../../types/budget.types";
 
@@ -18,6 +19,8 @@ export function CreateBudgetInfoForm({
 	onChange,
 	errors,
 }: CreateBudgetInfoFormProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-6 space-y-5">
 			<h2 className="text-base font-semibold text-slate-900 border-b border-slate-100 pb-3">
@@ -37,7 +40,7 @@ export function CreateBudgetInfoForm({
 					type="text"
 					value={formData.budgetnr}
 					onChange={(e) => onChange({ budgetnr: e.target.value })}
-					placeholder={localizationConstants.budgetNrPlaceholder}
+					placeholder={t(localizationConstants.budgetNrPlaceholder)}
 					className="h-10 bg-slate-50/70 border-slate-200 text-sm rounded-lg"
 				/>
 			</div>
@@ -57,7 +60,7 @@ export function CreateBudgetInfoForm({
 						type="text"
 						value={formData.budgetName}
 						onChange={(e) => onChange({ budgetName: e.target.value })}
-						placeholder={localizationConstants.budgetNamePlaceholder}
+						placeholder={t(localizationConstants.budgetNamePlaceholder)}
 						className={`h-10 text-sm rounded-lg ${
 							errors.budgetName ? "border-rose-500 bg-rose-50/20" : "border-slate-200"
 						}`}
@@ -79,7 +82,7 @@ export function CreateBudgetInfoForm({
 						type="text"
 						value={formData.description || ""}
 						onChange={(e) => onChange({ description: e.target.value })}
-						placeholder={localizationConstants.budgetDescriptionPlaceholder}
+						placeholder={t(localizationConstants.budgetDescriptionPlaceholder)}
 						className="h-10 border-slate-200 text-sm rounded-lg"
 					/>
 				</div>
@@ -98,7 +101,7 @@ export function CreateBudgetInfoForm({
 					type="text"
 					value={formData.comment || ""}
 					onChange={(e) => onChange({ comment: e.target.value })}
-					placeholder={localizationConstants.budgetKommentarPlaceholder}
+					placeholder={t(localizationConstants.budgetKommentarPlaceholder)}
 					className="h-10 border-slate-200 text-sm rounded-lg"
 				/>
 			</div>
@@ -116,7 +119,7 @@ export function CreateBudgetInfoForm({
 					type="text"
 					value={formData.tags || ""}
 					onChange={(e) => onChange({ tags: e.target.value })}
-					placeholder={localizationConstants.budgetTaggarPlaceholder}
+					placeholder={t(localizationConstants.budgetTaggarPlaceholder)}
 					className="h-10 border-slate-200 text-sm rounded-lg"
 				/>
 			</div>

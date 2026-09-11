@@ -11,6 +11,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 
 interface BudgetToolbarProps {
@@ -32,6 +33,8 @@ export function BudgetToolbar({
 	onCreateClick,
 	onResetSeedData,
 }: BudgetToolbarProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
 			{/* Left side: Search & Filter */}
@@ -43,7 +46,7 @@ export function BudgetToolbar({
 						type="text"
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
-						placeholder={localizationConstants.searchBudgetsPlaceholder}
+						placeholder={t(localizationConstants.searchBudgetsPlaceholder)}
 						className="pl-9 h-10 bg-white border-slate-200 text-sm placeholder:text-slate-400 rounded-lg shadow-2xs focus-visible:ring-slate-400"
 					/>
 				</div>
@@ -107,7 +110,7 @@ export function BudgetToolbar({
 					size="sm"
 					onClick={onResetSeedData}
 					className="h-10 text-xs text-slate-500 hover:text-slate-800 gap-1.5 cursor-pointer"
-					title="Reset demo data"
+					title={t(localizationConstants.btnResetSeedData)}
 				>
 					<RotateCcw className="w-3.5 h-3.5" />
 					<Translate text={localizationConstants.btnResetSeedData} />

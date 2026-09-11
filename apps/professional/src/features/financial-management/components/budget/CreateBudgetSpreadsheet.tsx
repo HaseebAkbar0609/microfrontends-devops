@@ -12,6 +12,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	MONTH_KEYS,
@@ -33,6 +34,7 @@ export function CreateBudgetSpreadsheet({
 	formData,
 	onChange,
 }: CreateBudgetSpreadsheetProps) {
+	const { t } = useTranslation();
 	const handleAddRow = () => {
 		const newRow: BudgetLineItem = {
 			id: String(Date.now()),
@@ -174,7 +176,9 @@ export function CreateBudgetSpreadsheet({
 								</th>
 							))}
 							<th className="w-10 px-2 py-2.5 text-center">
-								<span className="sr-only">Radera</span>
+								<span className="sr-only">
+									<Translate text={localizationConstants.btnDeleteBudget} />
+								</span>
 							</th>
 						</tr>
 					</thead>
@@ -311,7 +315,7 @@ export function CreateBudgetSpreadsheet({
 										type="button"
 										onClick={() => handleRemoveRow(row.id)}
 										className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer transition-colors"
-										aria-label={localizationConstants.btnDeleteBudget}
+										aria-label={t(localizationConstants.btnDeleteBudget)}
 									>
 										<Trash2 className="w-3.5 h-3.5" />
 									</button>
@@ -323,7 +327,7 @@ export function CreateBudgetSpreadsheet({
 						{formData.rows && formData.rows.length > 0 && (
 							<tr className="bg-slate-100/70 font-semibold text-slate-900 border-t border-slate-200">
 								<td colSpan={5} className="px-3 py-2 text-right">
-									Summa månad:
+									<Translate text={localizationConstants.summaryMonthlyTotal} />:
 								</td>
 								{monthlySums.map((sum, mIdx) => (
 									<td

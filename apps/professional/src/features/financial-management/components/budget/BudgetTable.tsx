@@ -4,6 +4,7 @@ import React from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type {
 	EconomyBudgetItem,
@@ -56,6 +57,7 @@ export function BudgetTable({
 	onDelete,
 	onCreateClick,
 }: BudgetTableProps) {
+	const { t } = useTranslation();
 	const allSelected =
 		items.length > 0 && items.every((i) => selectedIds.includes(i.id));
 	const someSelected =
@@ -88,7 +90,7 @@ export function BudgetTable({
 								<Checkbox
 									checked={allSelected ? true : someSelected ? "indeterminate" : false}
 									onCheckedChange={onToggleSelectAll}
-									aria-label={localizationConstants.ariaSelectRow}
+									aria-label={t(localizationConstants.ariaSelectRow)}
 									className="cursor-pointer"
 								/>
 							</th>

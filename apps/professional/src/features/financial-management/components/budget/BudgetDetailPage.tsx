@@ -5,6 +5,7 @@ import { ArrowLeft, Edit2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import { BUDGETS_BASE_ROUTE } from "../../constants/budget.constants";
 import type { EconomyBudgetItem } from "../../types/budget.types";
@@ -19,6 +20,7 @@ interface BudgetDetailPageProps {
 
 export function BudgetDetailPage({ item, onEdit }: BudgetDetailPageProps) {
 	const router = useRouter();
+	const { t } = useTranslation();
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
@@ -30,7 +32,7 @@ export function BudgetDetailPage({ item, onEdit }: BudgetDetailPageProps) {
 							type="button"
 							onClick={() => router.push(BUDGETS_BASE_ROUTE)}
 							className="p-1.5 -ml-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
-							aria-label={localizationConstants.backAriaLabel}
+							aria-label={t(localizationConstants.backAriaLabel)}
 						>
 							<ArrowLeft className="w-5 h-5" />
 						</button>

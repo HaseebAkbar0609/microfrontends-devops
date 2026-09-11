@@ -8,6 +8,7 @@ import {
 	CREATE_BUDGET_ROUTE,
 } from "../../constants/budget.constants";
 import { BudgetToolbar } from "./BudgetToolbar";
+import { BudgetKpiCards } from "./BudgetKpiCards";
 import { BudgetTable } from "./BudgetTable";
 import { BudgetBulkActionBar } from "./BudgetBulkActionBar";
 import { BudgetDeleteDialog } from "./BudgetDeleteDialog";
@@ -40,6 +41,7 @@ export function BudgetOverviewPage() {
 		toggleStatus,
 		bulkSetStatus,
 		resetSeedData,
+		kpis,
 	} = useBudgets();
 
 	const [budgetToDelete, setBudgetToDelete] = useState<EconomyBudgetItem | null>(null);
@@ -67,6 +69,9 @@ export function BudgetOverviewPage() {
 					<Translate text={localizationConstants.tabBudgetList} />
 				</button>
 			</div>
+
+			{/* KPI Summary Cards */}
+			<BudgetKpiCards kpis={kpis} />
 
 			{/* Toolbar (Search, Filter, Create CTA) */}
 			<BudgetToolbar

@@ -1,5 +1,6 @@
 export * from "./BudgetOverviewPage";
 export * from "./BudgetToolbar";
+export * from "./BudgetKpiCards";
 export * from "./BudgetTable";
 export * from "./BudgetTableRow";
 export * from "./BudgetBulkActionBar";

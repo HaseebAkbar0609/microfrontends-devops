@@ -11,6 +11,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import { BUDGET_PAGE_SIZE_OPTIONS } from "../../constants/budget.constants";
 
@@ -31,6 +32,8 @@ export function BudgetTablePagination({
 	onPageChange,
 	onPageSizeChange,
 }: BudgetTablePaginationProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4 bg-white border-t border-slate-100 text-xs text-slate-600">
 			{/* Left: Rows per page selector */}
@@ -70,7 +73,7 @@ export function BudgetTablePagination({
 					disabled={currentPage <= 1}
 					onClick={() => onPageChange(1)}
 					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
-					aria-label={localizationConstants.firstPageLabel}
+					aria-label={t(localizationConstants.firstPageLabel)}
 				>
 					<ChevronsLeft className="w-4 h-4" />
 				</Button>
@@ -81,7 +84,7 @@ export function BudgetTablePagination({
 					disabled={currentPage <= 1}
 					onClick={() => onPageChange(currentPage - 1)}
 					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
-					aria-label={localizationConstants.previousPageLabel}
+					aria-label={t(localizationConstants.previousPageLabel)}
 				>
 					<ChevronLeft className="w-4 h-4" />
 				</Button>
@@ -92,7 +95,7 @@ export function BudgetTablePagination({
 					disabled={currentPage >= totalPages}
 					onClick={() => onPageChange(currentPage + 1)}
 					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
-					aria-label={localizationConstants.nextPageLabel}
+					aria-label={t(localizationConstants.nextPageLabel)}
 				>
 					<ChevronRight className="w-4 h-4" />
 				</Button>
@@ -103,7 +106,7 @@ export function BudgetTablePagination({
 					disabled={currentPage >= totalPages}
 					onClick={() => onPageChange(totalPages)}
 					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
-					aria-label={localizationConstants.lastPageLabel}
+					aria-label={t(localizationConstants.lastPageLabel)}
 				>
 					<ChevronsRight className="w-4 h-4" />
 				</Button>

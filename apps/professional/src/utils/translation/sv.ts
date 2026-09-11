@@ -7493,6 +7493,7 @@ export const svEconomyBudget: EconomyBudgetTranslation = {
 	actualSpentKpi: "Faktisk kostnad",
 	remainingBudgetKpi: "Kvarvarande budget",
 	utilizationKpi: "Utnyttjandegrad",
+	summaryMonthlyTotal: "Summa månad",
 };
 
 export const sv: Translation = {

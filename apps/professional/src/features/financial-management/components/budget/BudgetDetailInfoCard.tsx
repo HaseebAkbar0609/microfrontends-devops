@@ -65,7 +65,7 @@ export function BudgetDetailInfoCard({
 							<Translate text={localizationConstants.fieldBudgetComment} />
 						</span>
 						<span className="text-sm font-medium text-slate-800">
-							{item.comment || "info"}
+							{item.comment || "—"}
 						</span>
 					</div>
 
@@ -74,7 +74,7 @@ export function BudgetDetailInfoCard({
 							<Translate text={localizationConstants.fieldBudgetTags} />
 						</span>
 						<span className="text-sm font-medium text-slate-800">
-							{item.tags || "info"}
+							{item.tags || "—"}
 						</span>
 					</div>
 				</div>

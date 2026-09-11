@@ -12,6 +12,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type { EconomyBudgetItem } from "../../types/budget.types";
 
@@ -36,6 +37,8 @@ export function BudgetTableRow({
 	onEdit,
 	onDelete,
 }: BudgetTableRowProps) {
+	const { t } = useTranslation();
+
 	const formatCurrency = (val: number) => {
 		return val.toLocaleString("sv-SE");
 	};
@@ -54,8 +57,8 @@ export function BudgetTableRow({
 					className="text-slate-300 hover:text-amber-400 focus:outline-hidden transition-colors cursor-pointer"
 					aria-label={
 						item.isFavorite
-							? localizationConstants.ariaUnfavoriteBudget
-							: localizationConstants.ariaFavoriteBudget
+							? t(localizationConstants.ariaUnfavoriteBudget)
+							: t(localizationConstants.ariaFavoriteBudget)
 					}
 				>
 					<Star
@@ -73,7 +76,7 @@ export function BudgetTableRow({
 				<Checkbox
 					checked={isSelected}
 					onCheckedChange={() => onToggleSelect(item.id)}
-					aria-label={`${localizationConstants.ariaSelectRow} ${item.budgetnr}`}
+					aria-label={`${t(localizationConstants.ariaSelectRow)} ${item.budgetnr}`}
 					className="cursor-pointer"
 				/>
 			</td>
@@ -106,7 +109,7 @@ export function BudgetTableRow({
 
 			{/* Total inkomst */}
 			<td className="px-4 py-3.5 text-sm text-slate-600 whitespace-nowrap">
-				{item.totalInkomst ? formatCurrency(item.totalInkomst) : "info"}
+				{item.totalInkomst ? formatCurrency(item.totalInkomst) : "—"}
 			</td>
 
 			{/* Actions */}
@@ -118,7 +121,7 @@ export function BudgetTableRow({
 						size="icon"
 						onClick={() => onView(item)}
 						className="h-8 w-8 text-slate-400 hover:text-slate-800 cursor-pointer"
-						aria-label={localizationConstants.ariaViewBudgetDetails}
+						aria-label={t(localizationConstants.ariaViewBudgetDetails)}
 					>
 						<Eye className="w-4 h-4" />
 					</Button>
@@ -130,7 +133,7 @@ export function BudgetTableRow({
 								variant="ghost"
 								size="icon"
 								className="h-8 w-8 text-slate-400 hover:text-slate-800 cursor-pointer"
-								aria-label={localizationConstants.actionsAriaLabel}
+								aria-label={t(localizationConstants.actionsAriaLabel)}
 							>
 								<MoreVertical className="w-4 h-4" />
 							</Button>

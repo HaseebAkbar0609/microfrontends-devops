@@ -141,7 +141,7 @@ export function BudgetDetailSpreadsheet({
 							{item.rows && item.rows.length > 0 && (
 								<tr className="bg-slate-100/70 font-semibold text-slate-900 border-t border-slate-200">
 									<td colSpan={5} className="px-3 py-2 text-right">
-										Summa månad:
+										<Translate text={localizationConstants.summaryMonthlyTotal} />:
 									</td>
 									{monthlySums.map((sum, mIdx) => (
 										<td

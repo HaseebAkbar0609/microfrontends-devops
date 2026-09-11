@@ -144,7 +144,7 @@ export function CreateBudgetPage({
 							type="button"
 							onClick={() => router.push(BUDGETS_BASE_ROUTE)}
 							className="p-1.5 -ml-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer"
-							aria-label={localizationConstants.backAriaLabel}
+							aria-label={t(localizationConstants.backAriaLabel)}
 						>
 							<ArrowLeft className="w-5 h-5" />
 						</button>

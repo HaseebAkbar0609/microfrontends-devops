@@ -7428,6 +7428,7 @@ export type EconomyBudgetTranslation = {
 	actualSpentKpi: string;
 	remainingBudgetKpi: string;
 	utilizationKpi: string;
+	summaryMonthlyTotal: string;
 };
 
 export type Translation = HeaderTranslation &
