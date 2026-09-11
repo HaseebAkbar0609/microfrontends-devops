@@ -7486,6 +7486,88 @@ export type EconomyBudgetTranslation = {
 	summaryMonthlyTotal: string;
 };
 
+export type EconomyBankTranslation = {
+	titleBank: string;
+	tabBankkonton: string;
+	tabLanFinansiering: string;
+	tabBankDokument: string;
+	tabBankAccounts: string;
+	tabBankLoans: string;
+	tabBankDocs: string;
+	tabGrundlaggandeInfo: string;
+	tabDokument: string;
+	btnCreateNew: string;
+	btnEdit: string;
+	btnSave: string;
+	btnCancel: string;
+	btnDelete: string;
+	btnViewFile: string;
+	btnBackToList: string;
+	colAccountNumber: string;
+	colIban: string;
+	colSwiftBic: string;
+	colCurrency: string;
+	colBalance: string;
+	accountTypeForetagskonto: string;
+	accountTypeSparkonto: string;
+	accountTypeTransaktionskonto: string;
+	contactPersonHeader: string;
+	fieldContactName: string;
+	fieldContactRole: string;
+	fieldContactEmail: string;
+	fieldContactPhone: string;
+	colLoanId: string;
+	colLoanTitle: string;
+	colLoanType: string;
+	colBank: string;
+	colStartDate: string;
+	colEndDate: string;
+	colLoanStatus: string;
+	loanTypeFastighetsfinansiering: string;
+	loanTypeHardvara: string;
+	loanTypeForetagslan: string;
+	loanTypeLeasing: string;
+	statusActive: string;
+	statusInactive: string;
+	fieldInterestRate: string;
+	fieldMonthlyCost: string;
+	fieldOriginalAmount: string;
+	fieldRemainingDebt: string;
+	fieldRepaidPercent: string;
+	titleLoanDetails: string;
+	sectionDocuments: string;
+	colDocDate: string;
+	colDocName: string;
+	colBankDocName: string;
+	colDocFileType: string;
+	colDocActions: string;
+	searchBankPlaceholder: string;
+	filterBankPlaceholder: string;
+	filterAll: string;
+	emptyBankAccountsTitle: string;
+	emptyBankAccountsDesc: string;
+	emptyLoansTitle: string;
+	emptyLoansDesc: string;
+	emptyBankDocsTitle: string;
+	emptyBankDocsDesc: string;
+	bankLoanNotFound: string;
+	modalCreateAccountTitle: string;
+	modalCreateLoanTitle: string;
+	modalAddDocumentTitle: string;
+	valTitleRequired: string;
+	valBankRequired: string;
+	valAccountNumberRequired: string;
+	valOriginalAmountRequired: string;
+	toastAccountCreated: string;
+	toastAccountUpdated: string;
+	toastLoanCreated: string;
+	toastLoanUpdated: string;
+	toastDocumentAdded: string;
+	toastItemDeleted: string;
+	confirmDeleteBankItemTitle: string;
+	confirmDeleteBankItemDesc: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7515,7 +7597,8 @@ export type Translation = HeaderTranslation &
 	CreateEmployeeTranslation &
 	AccountLifecycleTranslation &
 	CertificatesTranslation &
-	EconomyBudgetTranslation;
+	EconomyBudgetTranslation &
+	EconomyBankTranslation;
 
 export type TranslationKeys = keyof Translation;
 
