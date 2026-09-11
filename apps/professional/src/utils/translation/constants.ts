@@ -250,6 +250,7 @@ export type MyPagesTranslation = {
 	swift: string;
 	bankIban: string;
 	profilePostalCity: string;
+	profileCountry: string;
 	securityPrivacyTitle: string;
 	twoFactorAuth: string;
 	twoFactorEnable: string;
@@ -316,6 +317,7 @@ export type MyPagesTranslation = {
 	noFileChosen: string;
 	fileTypesAllowed: string;
 	unsupportedFileType: string;
+	fileTooLarge: string;
 
 	languagePreference: string;
 	swedish: string;

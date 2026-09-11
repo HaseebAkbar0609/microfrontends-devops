@@ -36,6 +36,11 @@ export function Step1PersonalInformation({
 				user.user_profile?.phone_number || "",
 			);
 			form.setValue("address", user.user_profile?.address || "");
+			// FormCitySelect only fetches once it has a countryId — without this,
+			// "country" stays at its "" default forever and the city dropdown
+			// silently shows "No results found" even though "city" above holds
+			// a valid saved id.
+			form.setValue("country", user.user_profile?.country || "");
 			form.setValue("city", user.user_profile?.city || "");
 			form.setValue("pincode", user.user_profile?.postal_code || "");
 		}
