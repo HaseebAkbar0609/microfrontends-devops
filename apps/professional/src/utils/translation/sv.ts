@@ -3459,6 +3459,7 @@ export const svOffer: OfferTranslation = {
 	projectListUnarchiveAction: "Avarkivera",
 	projectListRestoredToast: "Projektet har återställts.",
 	projectArchiveEmpty: "Inga arkiverade projekt.",
+	projectSectionTidsplan: "Tidsplan",
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: "Registrera nytt projekt",
