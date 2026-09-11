@@ -114,7 +114,7 @@ export function CustomerRegisterTable() {
 		} finally {
 			setIsLoading(false);
 		}
-	}, [page, pageSize, searchQuery, statusFilter, sortBy, sortOrder]);
+	}, [page, pageSize, searchQuery, statusFilter, sortBy, sortOrder, t]);
 
 	const handleDelete = useCallback(
 		async (id: string) => {
@@ -127,7 +127,7 @@ export function CustomerRegisterTable() {
 				setDeletingId((currentId) => (currentId === id ? null : currentId));
 			}
 		},
-		[fetchCustomers],
+		[fetchCustomers, t],
 	);
 
 	useEffect(() => {

@@ -11,6 +11,7 @@ export interface ProtocolItem {
 	projectName?: string;
 	date: string;
 	type: ProtocolType | string;
+	templateType?: ProtocolTemplateType;
 	category?: string;
 	address?: string;
 	postalCode?: string;
