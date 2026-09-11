@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { OfferModuleHeader } from "@/features/offer/components/OfferModuleHeader";
 import { OfferEditorPage } from "./quote-form/OfferEditorPage";
-import { loadOfferContext, type OfferContext } from "../services/offerFormService";
-import { OfferFormType } from "@/features/offer/types";
+import { loadOfferContext, resolveOfferVariant, type OfferContext } from "../services/offerFormService";
 import { Loader } from "@/components/ui/loader";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
@@ -14,24 +13,8 @@ type Props = {
   type?: string;
 };
 
-const FORM_TYPE_MAP: Record<string, OfferFormType> = {
-  rent: "rent",
-  hyra: "rent",
-  b2b: "rent",
-  express: "express",
-  snabb: "express",
-  b2c: "b2c",
-};
-
-export function parseOfferFormType(type?: string): OfferFormType {
-  if (!type) return "b2c";
-  const normalized = type.toLowerCase().trim();
-  return FORM_TYPE_MAP[normalized] ?? "b2c";
-}
-
 export function OfferSendClient({ offerId, type }: Props) {
   const t = useTranslate();
-  const formType = parseOfferFormType(type);
 
   const [data, setData] = useState<OfferContext | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,7 +39,7 @@ export function OfferSendClient({ offerId, type }: Props) {
 
     fetchOffer();
     return () => { cancelled = true; };
-  }, [offerId, formType]);
+  }, [offerId]);
 
   if (isLoading) {
     return (
@@ -76,7 +59,7 @@ export function OfferSendClient({ offerId, type }: Props) {
   return (
     <div className="flex flex-1 flex-col">
       <OfferModuleHeader activeTab="request" />
-      <OfferEditorPage key={offerId} context={data} variant={formType} />
+      <OfferEditorPage key={offerId} context={data} variant={resolveOfferVariant(data, type)} />
     </div>
   );
 }

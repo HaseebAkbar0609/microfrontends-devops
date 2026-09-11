@@ -14,13 +14,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { OfferSendConfirmationPanelProps } from "../types";
 import { savePreliminaryBudgetAPIAction } from "@/api-actions/offers";
-
-function resolveFormType(type: string): "rent" | "express" | "b2c" {
-  const lower = type.toLowerCase();
-  if (lower.includes("rent") || lower.includes("hyra")) return "rent";
-  if (lower.includes("express")) return "express";
-  return "b2c";
-}
+import { parseOfferFormType } from "../services/offerFormService";
 
 export function OfferSendConfirmationPanel({
   data,
@@ -36,7 +30,7 @@ export function OfferSendConfirmationPanel({
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
-  const formType = resolveFormType(data.type);
+  const formType = parseOfferFormType(data.type);
 
   function handleCreateOffer() {
     router.push(`/module/business/offer/send/${data.id}?type=${formType}`);

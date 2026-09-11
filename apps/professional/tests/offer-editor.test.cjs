@@ -30,6 +30,16 @@ function load(response = {}) {
 const context = { quote: null, project: { id: 'project', project_name: 'Original', project_address: 'Address', project_type: 'b2c' } };
 const plain = value => JSON.parse(JSON.stringify(value));
 
+test('server project type selects Rent even when an older link says b2c; saved variants remain authoritative', () => {
+  const { api } = load();
+  const rental = { ...context, project: { ...context.project, project_type: 'b2b' } };
+  assert.equal(api.resolveOfferVariant(rental, 'b2c'), 'rent');
+  assert.equal(api.resolveOfferVariant({ ...rental, quote: { offer_details: { variant: 'express' } } }, 'rent'), 'express');
+  assert.equal(api.resolveOfferVariant(context, 'rent'), 'b2c');
+  for (const type of ['b2b', 'RENT', 'hyra']) assert.equal(api.parseOfferFormType(type), 'rent');
+  for (const type of ['express', 'snabb']) assert.equal(api.parseOfferFormType(type), 'express');
+});
+
 test('local signed attachment URLs resolve against API origin and unsafe links are rejected', () => {
   const { api } = load();
   assert.equal(api.resolveOfferMediaUrl('/api/v1/media/files/test?signature=abc', 'https://api.example.com/api/v1'), 'https://api.example.com/api/v1/media/files/test?signature=abc');

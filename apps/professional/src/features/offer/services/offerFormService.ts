@@ -14,6 +14,15 @@ export function resolveOfferMediaUrl(raw?: string, apiBase?: string): string | u
   } catch { return undefined; }
 }
 export type OfferVariant = "b2c" | "express" | "rent";
+export function parseOfferFormType(type?: string): OfferVariant {
+  const normalized = type?.toLowerCase().trim() || "";
+  if (normalized === "b2b" || normalized.includes("rent") || normalized.includes("hyra")) return "rent";
+  if (normalized.includes("express") || normalized === "snabb") return "express";
+  return "b2c";
+}
+export function resolveOfferVariant(context: OfferContext, routeType?: string): OfferVariant {
+  return context.quote?.offer_details?.variant || parseOfferFormType(context.project.project_type || routeType);
+}
 export type OfferDetails = {
   variant: OfferVariant; project_name: string; work_location: string; specifications: string;
   work: string; material: string; personnel: string; hourly_rate: number | null;
