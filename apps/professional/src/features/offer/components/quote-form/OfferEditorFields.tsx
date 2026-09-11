@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { OfferFields, OfferErrors } from "../../services/offerFormService";
+import { OfferEditorDate } from "./OfferEditorDate";
 
 type Props = { value: OfferFields; errors: OfferErrors; update: (next: Partial<OfferFields>) => void; itemized?: boolean };
 export function OfferEditorFields({ value, errors, update, itemized }: Props) {
@@ -32,7 +33,8 @@ export function OfferEditorFields({ value, errors, update, itemized }: Props) {
     <Card className="space-y-4 p-5 shadow-none">
       <h2 className="font-semibold">{t(localizationConstants.offerFormSchedule)}</h2>
       <div className="grid min-w-0 gap-4 md:grid-cols-2">
-        {field("start", "offerFormStartDate", { type: "date" })}{field("end", "offerFormEndDate", { type: "date" })}
+        <OfferEditorDate id="offer-start" label={t(localizationConstants.offerFormStartDate)} value={value.start} error={errors.start} change={(start) => update({ start })} />
+        <OfferEditorDate id="offer-end" label={t(localizationConstants.offerFormEndDate)} value={value.end} error={errors.end} change={(end) => update({ end })} />
       </div>
     </Card>
     <Card className="space-y-4 p-5 shadow-none">

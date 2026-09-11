@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { uploadOfferFile, type OfferMedia } from "../../services/offerFormService";
+import { uploadOfferFile, resolveOfferMediaUrl, type OfferMedia } from "../../services/offerFormService";
 type Props = { media: OfferMedia[]; change: (media: OfferMedia[]) => void; busy: boolean; setBusy: (busy: boolean) => void; disabled: boolean };
 export function OfferEditorDocuments({ media, change, busy, setBusy, disabled }: Props) {
   const t = useTranslate();
@@ -21,7 +21,7 @@ export function OfferEditorDocuments({ media, change, busy, setBusy, disabled }:
     {busy && <p role="status">{t(localizationConstants.offerEditorUploading)}</p>}
     {error && <p role="alert" className="text-sm text-red-700">{t(localizationConstants.offerEditorUploadError)}</p>}
     <ul className="space-y-2">{media.map((file) => <li key={file.media_id} className="flex min-w-0 items-center justify-between gap-2 text-sm">
-      {file.file_url ? <a href={file.file_url} target="_blank" rel="noopener noreferrer" className="min-w-0 break-all underline">{file.file_name}</a> : <span className="min-w-0 break-all">{file.file_name}</span>}
+      {resolveOfferMediaUrl(file.file_url, process.env.NEXT_PUBLIC_API_URL) ? <a href={resolveOfferMediaUrl(file.file_url, process.env.NEXT_PUBLIC_API_URL)} target="_blank" rel="noopener noreferrer" className="min-w-0 break-all underline">{file.file_name}</a> : <span className="min-w-0 break-all">{file.file_name}</span>}
       {!disabled && <Button type="button" variant="outline" disabled={busy} onClick={() => change(media.filter((item) => item.media_id !== file.media_id))}>{t(localizationConstants.offerEditorRemoveAttachment)}</Button>}
     </li>)}</ul>
   </Card>;

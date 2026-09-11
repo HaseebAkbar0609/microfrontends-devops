@@ -17,13 +17,25 @@ function load(response = {}) {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
   }).outputText;
   const exports = {};
-  vm.runInNewContext(compiled, { exports, FormData, require(name) {
+  vm.runInNewContext(compiled, { exports, FormData, URL, require(name) {
+    if (name === '@/lib/safeUrl') {
+      const safe = {};
+      vm.runInNewContext(ts.transpileModule(fs.readFileSync(path.resolve(__dirname, '../src/lib/safeUrl.ts'), 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, { exports: safe, URL });
+      return safe;
+    }
     assert.equal(name, '@/lib/axiosInstance'); return { __esModule: true, default: axios };
   } });
   return { api: exports, calls };
 }
 const context = { quote: null, project: { id: 'project', project_name: 'Original', project_address: 'Address', project_type: 'b2c' } };
 const plain = value => JSON.parse(JSON.stringify(value));
+
+test('local signed attachment URLs resolve against API origin and unsafe links are rejected', () => {
+  const { api } = load();
+  assert.equal(api.resolveOfferMediaUrl('/api/v1/media/files/test?signature=abc', 'https://api.example.com/api/v1'), 'https://api.example.com/api/v1/media/files/test?signature=abc');
+  assert.equal(api.resolveOfferMediaUrl('https://bucket.amazonaws.com/file', 'https://api.example.com'), 'https://bucket.amazonaws.com/file');
+  for (const url of ['javascript:alert(1)', 'data:text/html,bad', '//evil.example/file']) assert.equal(api.resolveOfferMediaUrl(url, 'https://api.example.com'), undefined);
+});
 
 for (const variant of ['b2c', 'express', 'rent']) test(`${variant}: draft and send preserve all form fields and identity`, () => {
   const { api, calls } = load();

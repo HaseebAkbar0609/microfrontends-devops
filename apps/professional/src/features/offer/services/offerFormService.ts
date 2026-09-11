@@ -1,9 +1,18 @@
 import axiosInstance from "@/lib/axiosInstance";
+import { safeExternalUrl } from "@/lib/safeUrl";
 
 export const QUOTE_API = "/professionals/quotes/quote-management";
 export const QUOTE_CURRENCY = "SEK";
 export const DEFAULT_QUOTE_TAX = 0;
 export const MAX_QUOTE_FILE_BYTES = 10 * 1024 * 1024;
+export function resolveOfferMediaUrl(raw?: string, apiBase?: string): string | undefined {
+  const safe = safeExternalUrl(raw);
+  if (!safe) return undefined;
+  try {
+    const url = new URL(safe, apiBase);
+    return ["http:", "https:"].includes(url.protocol) ? url.href : undefined;
+  } catch { return undefined; }
+}
 export type OfferVariant = "b2c" | "express" | "rent";
 export type OfferDetails = {
   variant: OfferVariant; project_name: string; work_location: string; specifications: string;
