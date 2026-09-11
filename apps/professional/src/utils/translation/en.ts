@@ -3636,6 +3636,14 @@ export const enOffer: OfferTranslation = {
 	commonYes: "Yes",
 	commonNo: "No",
 
+	/* TFS-697 — Organisation (the project record's third section). */
+	projectOrgEmpty: "No organisation has been registered for this project.",
+	projectOrgNoMatches: "No organisations match the search.",
+	projectOrgDeleteConfirmTitle: "Delete organisation?",
+	projectOrgDeleteConfirmDescription:
+		"The row is removed from the project's organisation. This cannot be undone.",
+	projectOrgDeletedToast: "The organisation has been deleted.",
+
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: "Register new project",
 	projectCreateDetailsTab: "Project details",

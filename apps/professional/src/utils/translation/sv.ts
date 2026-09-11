@@ -3523,6 +3523,14 @@ export const svOffer: OfferTranslation = {
 	commonYes: "Ja",
 	commonNo: "Nej",
 
+	/* TFS-697 — Organisation (the project record's third section). */
+	projectOrgEmpty: "Ingen organisation är registrerad för projektet.",
+	projectOrgNoMatches: "Inga organisationer matchar sökningen.",
+	projectOrgDeleteConfirmTitle: "Radera organisation?",
+	projectOrgDeleteConfirmDescription:
+		"Raden tas bort från projektets organisation. Åtgärden kan inte ångras.",
+	projectOrgDeletedToast: "Organisationen har raderats.",
+
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: "Registrera nytt projekt",
 	projectCreateDetailsTab: "Projekt uppgifter",
