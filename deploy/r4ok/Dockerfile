@@ -17,7 +17,7 @@ ENV NEXT_TELEMETRY_DISABLED=1 TFS_WORKSPACE_BUILD=true
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=$NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY \
     NEXT_PUBLIC_TFS825_PAYMENT_MVP=$NEXT_PUBLIC_TFS825_PAYMENT_MVP
-RUN node apps/professional/node_modules/next/dist/bin/next build apps/professional
+RUN cd apps/professional && node node_modules/next/dist/bin/next build
 
 FROM node:20-alpine AS runner
 WORKDIR /app
