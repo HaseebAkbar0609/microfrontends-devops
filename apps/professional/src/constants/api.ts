@@ -169,6 +169,9 @@ export const API_PATH = {
 		PROTOCOL_POINTS: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/points`,
 		PROTOCOL_POINT_DETAIL: (orderId: string, protocolId: string, pointId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/points/${pointId}`,
 		PROTOCOL_POINT_STATUS: (orderId: string, protocolId: string, pointId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/points/${pointId}/status`,
+		ATAS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas`,
+		ATA_DETAIL: (orderId: string, ataId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas/${ataId}`,
+		ATA_SEND: (orderId: string, ataId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas/${ataId}/send`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {
