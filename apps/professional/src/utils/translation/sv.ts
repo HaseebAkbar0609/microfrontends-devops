@@ -1501,6 +1501,7 @@ export const svOffer: OfferTranslation = {
 	protocolSend: "Skicka",
 	protocolViewTitle: "Visa protokoll",
 	protocolEditTitle: "Redigera protokoll",
+	protocolEditActionTitle: "Redigera åtgärdsprotokoll",
 	protocolMeetingInfo: "Mötesinformation",
 	protocolNextMeeting: "Nästa möte",
 	protocolFieldHost: "Värd",

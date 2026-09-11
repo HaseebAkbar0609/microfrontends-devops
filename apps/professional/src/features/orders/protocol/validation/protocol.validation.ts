@@ -8,6 +8,7 @@ export const PROTOCOL_VALIDATION_LIMITS = {
 	MAX_CITY_LENGTH: 50,
 	MAX_RESPONSIBLE_LENGTH: 100,
 	MAX_NOTES_LENGTH: 2000,
+	MAX_DECISION_LENGTH: 1000,
 } as const;
 
 export const createProtocolSchema = (
@@ -77,7 +78,7 @@ export const meetingPointSchema = (
 			.min(1, requiredMsg)
 			.max(PROTOCOL_VALIDATION_LIMITS.MAX_SUBJECT_LENGTH, maxLengthMsg),
 		description: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_NOTES_LENGTH, maxLengthMsg).optional(),
-		decision: z.string().max(1000, maxLengthMsg).optional(),
+		decision: z.string().max(PROTOCOL_VALIDATION_LIMITS.MAX_DECISION_LENGTH, maxLengthMsg).optional(),
 	});
 
 export type MeetingPointFormData = z.infer<

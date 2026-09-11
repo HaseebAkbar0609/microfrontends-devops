@@ -10,7 +10,7 @@ import { Form } from "@/components/ui/form";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { PROTOCOL_CONSTANTS } from "../constants/protocol.constants";
+import { PROTOCOL_CONSTANTS, type ProtocolTemplateType } from "../constants/protocol.constants";
 import { getProtocolFullDetailAction, updateProtocolFullAction } from "@/api-actions/orders/protocols";
 import type { ProtocolDetailData } from "../types/protocol.types";
 import {
@@ -25,44 +25,7 @@ import { EditProtocolTimeSection } from "./edit-protocol/EditProtocolTimeSection
 import { EditProtocolParticipantsSection } from "./edit-protocol/EditProtocolParticipantsSection";
 import { EditProtocolOtherInfoSection } from "./edit-protocol/EditProtocolOtherInfoSection";
 import { EditProtocolNextMeetingSection } from "./edit-protocol/EditProtocolNextMeetingSection";
-
-/* -------------------------------------------------------------------------- */
-/* Sub-component: Project Information Sidebar Card                           */
-/* -------------------------------------------------------------------------- */
-function ProjectInfoCard({
-	projectNumber = PROTOCOL_CONSTANTS.DEFAULT_PROJECT_NUMBER,
-	projectName = PROTOCOL_CONSTANTS.DEFAULT_PROJECT_NAME,
-}: {
-	projectNumber?: string;
-	projectName?: string;
-}) {
-	const t = useTranslate();
-	return (
-		<div className="overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-2xs p-4 sm:p-6 h-fit space-y-4">
-			<h3 className="font-sans text-base font-medium leading-6 tracking-normal text-slate-900">
-				<Translate text={localizationConstants.protocolProjectInfoTitle} />
-			</h3>
-			<div className="space-y-4">
-				<div className="flex flex-col gap-1">
-					<span className="font-sans text-sm font-medium leading-5 tracking-normal text-slate-900">
-						{t(localizationConstants.protocolProjectNr)}
-					</span>
-					<span className="font-sans text-sm font-normal leading-5 tracking-normal text-zinc-500 wrap-break-word">
-						{projectNumber}
-					</span>
-				</div>
-				<div className="flex flex-col gap-1">
-					<span className="font-sans text-sm font-medium leading-5 tracking-normal text-slate-900">
-						{t(localizationConstants.protocolProjectName)}
-					</span>
-					<span className="font-sans text-sm font-normal leading-5 tracking-normal text-zinc-500 wrap-break-word">
-						{projectName}
-					</span>
-				</div>
-			</div>
-		</div>
-	);
-}
+import { ProjectInfoCard } from "./ProtocolSharedComponents";
 
 /* -------------------------------------------------------------------------- */
 /* Main Component: EditProtocolView                                           */
@@ -70,6 +33,7 @@ function ProjectInfoCard({
 export interface EditProtocolViewProps {
 	protocolId: string;
 	orderId?: string;
+	templateType?: ProtocolTemplateType;
 	onBack: () => void;
 	onSaved?: (updated: ProtocolDetailData) => void;
 }
@@ -77,6 +41,7 @@ export interface EditProtocolViewProps {
 export function EditProtocolView({
 	protocolId,
 	orderId = PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID,
+	templateType = PROTOCOL_CONSTANTS.TEMPLATE_TYPES.STANDARD,
 	onBack,
 	onSaved,
 }: EditProtocolViewProps) {
@@ -84,6 +49,8 @@ export function EditProtocolView({
 	const [isLoading, setIsLoading] = useState(true);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [detailData, setDetailData] = useState<ProtocolDetailData | null>(null);
+
+	const isAction = templateType === PROTOCOL_CONSTANTS.TEMPLATE_TYPES.ACTION;
 
 	const requiredMsg = t(localizationConstants.protocolValRequired);
 	const schema = useMemo(() => editProtocolSchema(requiredMsg), [requiredMsg]);
@@ -236,14 +203,14 @@ export function EditProtocolView({
 					</div>
 				</div>
 				<div className="space-y-4 w-full pl-0 sm:pl-7 pt-4">
-					<div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6">
-						<div className="order-2 lg:order-1 lg:col-span-9 space-y-4 sm:space-y-6">
+					<div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+						<div className="order-2 lg:order-1 flex-1 min-w-0 space-y-4 sm:space-y-6">
 							<Skeleton className="h-48 w-full rounded-lg" />
 							<Skeleton className="h-48 w-full rounded-lg" />
 							<Skeleton className="h-64 w-full rounded-lg" />
 							<Skeleton className="h-64 w-full rounded-lg" />
 						</div>
-						<div className="order-1 lg:order-2 lg:col-span-3">
+						<div className="order-1 lg:order-2 w-full lg:w-[333px] shrink-0">
 							<Skeleton className="h-48 w-full rounded-lg" />
 						</div>
 					</div>
@@ -270,19 +237,19 @@ export function EditProtocolView({
 						</Button>
 						<div className="flex flex-col">
 							<h1 className="font-sans text-lg sm:text-xl md:text-2xl font-semibold leading-tight tracking-[-0.6px] text-slate-900">
-								<Translate text={localizationConstants.protocolEditTitle} />
+								<Translate text={isAction ? localizationConstants.protocolEditActionTitle : localizationConstants.protocolEditTitle} />
 							</h1>
 							<p className="font-sans text-xs text-slate-500 font-normal mt-0.5">
-								<Translate text={localizationConstants.protocolCreateStandard} />
+								<Translate text={isAction ? localizationConstants.protocolCreateAction : localizationConstants.protocolCreateStandard} />
 							</p>
 						</div>
 					</div>
 
 					{/* Main Grid Container */}
 					<div className="space-y-4 w-full pl-0 sm:pl-7">
-						<div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
+						<div className="flex flex-col lg:flex-row gap-4 sm:gap-6 items-start">
 							{/* Left Column (4 Accordion Sections) */}
-							<div className="order-2 lg:order-1 lg:col-span-9 space-y-4 sm:space-y-6">
+							<div className="order-2 lg:order-1 flex-1 min-w-0 space-y-4 sm:space-y-6">
 								{/* 1. Tid */}
 								<EditProtocolTimeSection form={form} />
 
@@ -297,7 +264,7 @@ export function EditProtocolView({
 							</div>
 
 							{/* Right Sidebar: Project information */}
-							<div className="order-1 lg:order-2 lg:col-span-3 lg:mt-[56px] w-full">
+							<div className="order-1 lg:order-2 w-full lg:w-[333px] shrink-0 lg:mt-[56px]">
 								<ProjectInfoCard
 									projectNumber={detailData?.protocol?.projectNumber || PROTOCOL_CONSTANTS.DEFAULT_PROJECT_NUMBER}
 									projectName={detailData?.protocol?.projectName || PROTOCOL_CONSTANTS.DEFAULT_PROJECT_NAME}
@@ -306,7 +273,7 @@ export function EditProtocolView({
 						</div>
 					</div>
 
-					{/* Sticky Bottom Action Bar — matches view page footer */}
+					{/* Sticky Bottom Action Bar */}
 					<div className="mt-auto sticky -bottom-4 -mx-3 sm:-mx-6 -mb-4 px-4 sm:px-6 py-3 bg-white border-t border-slate-200 z-30 flex items-center justify-end gap-3 shadow-md">
 						<Button
 							type="button"
