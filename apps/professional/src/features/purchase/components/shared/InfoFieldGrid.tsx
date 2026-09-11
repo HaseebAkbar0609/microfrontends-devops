@@ -101,7 +101,7 @@ export function InfoFieldGrid({
 			</CardHeader>
 
 			{!collapsed && (
-			<CardContent className="p-6">
+				<CardContent className="p-6">
 				<dl
 					className={cn(
 						"grid grid-cols-1 gap-x-8 gap-y-5",

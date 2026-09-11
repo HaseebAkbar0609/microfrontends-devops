@@ -3532,6 +3532,7 @@ export type OfferTranslation = {
 	projectListUnarchiveAction: string;
 	projectListRestoredToast: string;
 	projectArchiveEmpty: string;
+	projectSectionTidsplan: string;
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: string;
