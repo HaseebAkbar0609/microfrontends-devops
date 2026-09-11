@@ -1606,6 +1606,7 @@ export type OfferTranslation = {
 	protocolDeleteConfirmTitle: string;
 	protocolDeleteConfirmDesc: string;
 	protocolValRequired: string;
+	protocolValMaxLength: string;
 	protocolSavedToast: string;
 	protocolSentToast: string;
 	protocolArchivedToast: string;
@@ -1614,6 +1615,12 @@ export type OfferTranslation = {
 	protocolPointDeletedToast: string;
 	protocolNoteSavedToast: string;
 	protocolNoteDeletedToast: string;
+	protocolLoadError: string;
+	protocolPointCreateError: string;
+	protocolPointUpdateError: string;
+	protocolPointDeleteError: string;
+	protocolPointStatusUpdateError: string;
+	protocolSaveError: string;
 	protocolSaveAction: string;
 	protocolCancelAction: string;
 	protocolSendAction: string;
@@ -3532,6 +3539,7 @@ export type OfferTranslation = {
 	projectListUnarchiveAction: string;
 	projectListRestoredToast: string;
 	projectArchiveEmpty: string;
+	projectSectionTidsplan: string;
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: string;

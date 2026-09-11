@@ -1,13 +1,16 @@
-import { parseRecordIdParam } from "@/lib/routeParams";
+import { redirect } from "next/navigation";
 
-import ProjectDetailPage from "@/features/project/components/ProjectDetailPage";
+import { parseRecordIdParam } from "@/lib/routeParams";
 
 interface PageProps {
 	params: Promise<{ id: string }>;
 }
 
+/** A project record opens on its first section, as an order record does. */
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
 
-	return <ProjectDetailPage projectId={parseRecordIdParam(id)} />;
+	redirect(
+		`/module/production/project/${encodeURIComponent(parseRecordIdParam(id))}/projektinformation`,
+	);
 }

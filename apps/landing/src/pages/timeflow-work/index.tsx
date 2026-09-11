@@ -87,7 +87,7 @@ export default function TimeflowWorkPage() {
         </section>
 
         {/* SecureCheck highlight */}
-        <section className="bg-ink text-white py-24 px-6">
+        <section className="bg-dark-section text-white py-24 px-6">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <div>
               <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">{t("timeflowWork.secureLabel")}</p>
@@ -97,16 +97,16 @@ export default function TimeflowWorkPage() {
               <p className="text-stone-400 text-lg mb-8 max-w-md">
                 {t("timeflowWork.secureDesc")}
               </p>
-              <ul className="space-y-3 mb-8 text-sm">
+              <ul className="space-y-4 mb-8 text-sm">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-primary/20 text-primary grid place-items-center text-xs">✓</span>
+                    <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground grid place-items-center text-xs shrink-0">✓</span>
                     {t(`timeflowWork.secureP${i}`)}
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="aspect-[4/5] bg-gradient-to-br from-stone-800 via-stone-900 to-ink rounded-md border border-white/10 grid place-items-center">
+            <div className="aspect-[4/5] bg-gradient-to-br from-dark-card via-dark-card to-dark-section rounded-lg border border-white/10 grid place-items-center">
               <span className="font-mono text-xs text-stone-500 uppercase tracking-widest">{t("timeflowWork.securePreview")}</span>
             </div>
           </div>

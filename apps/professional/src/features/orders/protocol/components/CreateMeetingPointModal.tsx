@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,8 +40,9 @@ import {
 interface CreateMeetingPointModalProps {
 	open: boolean;
 	onClose: () => void;
-	onSave: (point: ProtocolMeetingPoint) => void;
+	onSave: (point: ProtocolMeetingPoint) => Promise<void>;
 	nextPointNr?: string;
+	subtitleTranslationKey?: string;
 }
 
 export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = ({
@@ -49,12 +50,15 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 	onClose,
 	onSave,
 	nextPointNr = PROTOCOL_CONSTANTS.DEFAULT_POINT_NR,
+	subtitleTranslationKey = localizationConstants.protocolCreateStandard,
 }) => {
 	const t = useTranslate();
 	const requiredMsg = t(localizationConstants.protocolValRequired);
+	const maxLengthMsg = t(localizationConstants.protocolValMaxLength);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const form = useForm<MeetingPointFormData>({
-		resolver: zodResolver(meetingPointSchema(requiredMsg)),
+		resolver: zodResolver(meetingPointSchema(requiredMsg, maxLengthMsg)),
 		defaultValues: {
 			nr: nextPointNr,
 			responsible: "",
@@ -76,7 +80,7 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 		}
 	}, [open, nextPointNr, form]);
 
-	const handleSubmit = (values: MeetingPointFormData) => {
+	const handleSubmit = async (values: MeetingPointFormData) => {
 		const newPoint: ProtocolMeetingPoint = {
 			id: `point-${Date.now()}`,
 			nr: values.nr,
@@ -86,8 +90,13 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 			responsible: values.responsible || PROTOCOL_CONSTANTS.DEFAULT_RESPONSIBLE,
 			status: "completed",
 		};
-		onSave(newPoint);
-		onClose();
+		setIsSubmitting(true);
+		try {
+			await onSave(newPoint);
+			onClose();
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	return (
@@ -96,52 +105,51 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 				showCloseButton={false}
 				className="w-[calc(100vw-2rem)] max-w-[480px] p-0 bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-2xl max-h-[90vh] flex flex-col"
 			>
-				{/* Modal Header */}
 				<DialogHeader className="flex flex-row items-start justify-between px-6 pt-5 pb-2 shrink-0">
 					<div>
 						<DialogTitle className="text-lg font-bold text-slate-900 leading-tight">
 							<Translate text={localizationConstants.protocolNewPointTitle} />
 						</DialogTitle>
 						<p className="text-xs text-slate-500 font-normal mt-0.5">
-							<Translate text={localizationConstants.protocolCreateStandard} />
+							<Translate text={subtitleTranslationKey} />
 						</p>
 					</div>
-						<Button
-							type="button"
-							variant="ghost"
-							size="icon"
-							onClick={onClose}
-							className="h-7 w-7 p-0 text-slate-900 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
-							aria-label={t(localizationConstants.closeButton)}
-						>
-							<X className="w-4 h-4 text-slate-900" />
-						</Button>
-					</DialogHeader>
+					<Button
+						type="button"
+						variant="ghost"
+						size="icon"
+						onClick={onClose}
+						disabled={isSubmitting}
+						className="h-7 w-7 p-0 text-slate-900 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+						aria-label={t(localizationConstants.closeButton)}
+					>
+						<X className="w-4 h-4 text-slate-900" />
+					</Button>
+				</DialogHeader>
 
-					<Form {...form}>
-						<form onSubmit={form.handleSubmit(handleSubmit)} className="px-6 pb-6 pt-2 space-y-3.5 overflow-y-auto flex-1">
-							{/* Nr */}
-							<FormField
-								control={form.control}
-								name="nr"
-								render={({ field }) => (
-									<FormItem className="space-y-1">
-										<FormLabel className="text-xs font-semibold text-slate-900">
-											<Translate text={localizationConstants.protocolPointColNr} />
-										</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												placeholder={PROTOCOL_CONSTANTS.DEFAULT_POINT_NR}
-												className="h-10 bg-white border-slate-200 text-xs rounded-lg text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 shadow-none"
-											/>
-										</FormControl>
-										<FormMessage className="text-[11px] text-red-500 font-normal" />
-									</FormItem>
-								)}
-							/>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(handleSubmit)} className="px-6 pb-6 pt-2 space-y-3.5 overflow-y-auto flex-1">
+						<FormField
+							control={form.control}
+							name="nr"
+							render={({ field }) => (
+								<FormItem className="space-y-1">
+									<FormLabel className="text-xs font-semibold text-slate-900">
+										<Translate text={localizationConstants.protocolPointColNr} />
+									</FormLabel>
+									<FormControl>
+										<Input
+											{...field}
+											placeholder={PROTOCOL_CONSTANTS.DEFAULT_POINT_NR}
+											disabled={isSubmitting}
+											className="h-10 bg-white border-slate-200 text-xs rounded-lg text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 shadow-none"
+										/>
+									</FormControl>
+									<FormMessage className="text-[11px] text-red-500 font-normal" />
+								</FormItem>
+							)}
+						/>
 
-						{/* Ansvarig */}
 						<FormField
 							control={form.control}
 							name="responsible"
@@ -150,7 +158,7 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 									<FormLabel className="text-xs font-semibold text-slate-900">
 										<Translate text={localizationConstants.protocolFieldResponsible} />
 									</FormLabel>
-									<Select onValueChange={field.onChange} value={field.value}>
+									<Select onValueChange={field.onChange} value={field.value} disabled={isSubmitting}>
 										<FormControl>
 											<SelectTrigger className="w-full h-10 bg-white border-slate-200 text-xs rounded-lg text-slate-900 shadow-none [&>svg]:text-slate-900">
 												<SelectValue placeholder={t(localizationConstants.protocolFieldResponsible)} />
@@ -169,7 +177,6 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 							)}
 						/>
 
-						{/* Rubrik */}
 						<FormField
 							control={form.control}
 							name="subject"
@@ -182,6 +189,7 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 										<Input
 											{...field}
 											placeholder={t(localizationConstants.protocolFieldTitle)}
+											disabled={isSubmitting}
 											className="h-10 bg-white border-slate-200 text-xs rounded-lg text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 shadow-none"
 										/>
 									</FormControl>
@@ -190,7 +198,6 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 							)}
 						/>
 
-						{/* Beskrivning */}
 						<FormField
 							control={form.control}
 							name="description"
@@ -204,6 +211,7 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 											{...field}
 											rows={3}
 											placeholder={t(localizationConstants.protocolPointDescription)}
+											disabled={isSubmitting}
 											className="min-h-[72px] bg-white border-slate-200 text-xs rounded-lg text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 resize-y shadow-none"
 										/>
 									</FormControl>
@@ -212,7 +220,6 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 							)}
 						/>
 
-						{/* Beslut */}
 						<FormField
 							control={form.control}
 							name="decision"
@@ -226,6 +233,7 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 											{...field}
 											rows={3}
 											placeholder={t(localizationConstants.protocolPointColDecision)}
+											disabled={isSubmitting}
 											className="min-h-[72px] bg-white border-slate-200 text-xs rounded-lg text-slate-900 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-900 resize-y shadow-none"
 										/>
 									</FormControl>
@@ -234,20 +242,22 @@ export const CreateMeetingPointModal: React.FC<CreateMeetingPointModalProps> = (
 							)}
 						/>
 
-						{/* Footer buttons */}
 						<div className="flex items-center justify-end gap-2.5 pt-3">
 							<Button
 								type="button"
 								variant="outline"
 								onClick={onClose}
+								disabled={isSubmitting}
 								className="h-9 px-6 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 text-xs font-medium cursor-pointer shadow-none"
 							>
 								<Translate text={localizationConstants.protocolCancelAction} />
 							</Button>
 							<Button
 								type="submit"
+								disabled={isSubmitting}
 								className="h-9 px-6 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-medium cursor-pointer shadow-none border-0"
 							>
+								{isSubmitting && <Loader2 className="h-4 w-4 animate-spin mr-1.5" />}
 								<Translate text={localizationConstants.protocolSaveAction} />
 							</Button>
 						</div>
