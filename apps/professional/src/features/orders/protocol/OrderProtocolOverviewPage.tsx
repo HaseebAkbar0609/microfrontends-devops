@@ -16,6 +16,17 @@ import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
+const VALID_TEMPLATE_TYPES = new Set<string>(
+	Object.values(PROTOCOL_CONSTANTS.TEMPLATE_TYPES)
+);
+
+function toTemplateType(value: string | undefined): ProtocolTemplateType | null {
+	if (value && VALID_TEMPLATE_TYPES.has(value)) {
+		return value as ProtocolTemplateType;
+	}
+	return null;
+}
+
 export interface OrderProtocolOverviewPageProps {
 	orderId?: string;
 	onDetailModeChange?: (isOpen: boolean) => void;
@@ -80,15 +91,19 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 	}, [queryProtocolId, queryAction, onDetailModeChange]);
 
 	useEffect(() => {
-		if (viewMode === "detail" && activeProtocolId && !activeProtocolType) {
+		if ((viewMode === "detail" || viewMode === "edit") && activeProtocolId && !activeProtocolType) {
 			const found = paginatedRows.find((r) => r.id === activeProtocolId);
-			if (found?.templateType) {
-				setActiveProtocolType(found.templateType as ProtocolTemplateType);
+			const resolved = toTemplateType(found?.templateType);
+			if (resolved) {
+				setActiveProtocolType(resolved);
 			} else {
 				const targetOrderId = orderId || PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID;
 				getProtocolDetailAction(targetOrderId, activeProtocolId).then((result) => {
-					if (result.success && result.data?.templateType) {
-						setActiveProtocolType(result.data.templateType as ProtocolTemplateType);
+					if (result.success) {
+						const apiResolved = toTemplateType(result.data?.templateType);
+						if (apiResolved) {
+							setActiveProtocolType(apiResolved);
+						}
 					}
 				});
 			}
@@ -100,7 +115,7 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 		setViewMode("detail");
 		onDetailModeChange?.(true);
 		const found = paginatedRows.find((r) => r.id === id);
-		setActiveProtocolType((found?.templateType as ProtocolTemplateType) || null);
+		setActiveProtocolType(toTemplateType(found?.templateType));
 		const basePath = getBasePath();
 		router.push(`${basePath}?protocolId=${encodeURIComponent(id)}`);
 	};
@@ -110,6 +125,11 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 		setActiveProtocolId(targetId);
 		setViewMode("edit");
 		onDetailModeChange?.(true);
+		const found = paginatedRows.find((r) => r.id === targetId);
+		const resolved = toTemplateType(found?.templateType);
+		if (resolved) {
+			setActiveProtocolType(resolved);
+		}
 		const basePath = getBasePath();
 		router.push(`${basePath}?protocolId=${encodeURIComponent(targetId)}&action=edit`);
 	};
@@ -177,6 +197,7 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 			<EditProtocolView
 				protocolId={activeProtocolId}
 				orderId={orderId}
+				templateType={activeProtocolType || PROTOCOL_CONSTANTS.TEMPLATE_TYPES.STANDARD}
 				onBack={handleBackToDetail}
 				onSaved={handleSavedEdit}
 			/>

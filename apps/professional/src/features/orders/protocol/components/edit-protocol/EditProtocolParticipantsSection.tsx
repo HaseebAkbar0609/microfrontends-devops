@@ -198,32 +198,34 @@ export function EditProtocolParticipantsSection({
 									<Translate text={localizationConstants.protocolFieldParticipants} />
 								</FormLabel>
 								<div className="min-h-[52px] w-full rounded-lg border border-slate-200 bg-white p-2.5 sm:p-3 flex items-center justify-between gap-2 sm:gap-3">
-									<div className="flex flex-wrap flex-1 min-w-0 pr-1">
+									<div className="flex flex-wrap flex-1 min-w-0 gap-y-1 pr-1">
 										{selectedParticipants.length > 0 ? (
 											selectedParticipants.map((participant, idx) => {
 												const info = getUserInfo(participant);
 												const isLast = idx === selectedParticipants.length - 1;
 												return (
-													<div
-														key={participant}
-														className={`flex items-center justify-between gap-2 w-[215px] min-w-0 py-1 ${!isLast ? "border-r border-slate-200 pr-2 mr-2" : ""}`}
-													>
-														<div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
-															<UserAvatarBadge initials={info.initials} avatarUrl={info.avatarUrl} size="md" />
-															<span className="font-medium text-slate-900 truncate text-xs sm:text-sm">{info.name}</span>
-															<span className="text-zinc-500 font-normal truncate text-xs sm:text-sm">{info.handle}</span>
-														</div>
-														<Button
-															type="button"
-															variant="ghost"
-															size="icon"
-															onClick={() => handleRemoveParticipant(participant)}
-															className="h-6 w-6 p-0 text-slate-400 hover:text-slate-700 hover:bg-transparent cursor-pointer shrink-0 ml-0.5"
-															aria-label={t(localizationConstants.btnRadera)}
+													<React.Fragment key={participant}>
+														<div
+															className="flex items-center gap-2 py-1 px-2 whitespace-nowrap"
 														>
-															<X className="h-3.5 w-3.5" />
-														</Button>
-													</div>
+															<UserAvatarBadge initials={info.initials} avatarUrl={info.avatarUrl} size="md" />
+															<span className="font-medium text-slate-900 text-xs sm:text-sm">{info.name}</span>
+															<span className="text-[#71717A] font-inter font-normal text-sm leading-5">{info.handle}</span>
+															<Button
+																type="button"
+																variant="ghost"
+																size="icon"
+																onClick={() => handleRemoveParticipant(participant)}
+																className="h-4 w-4 p-0 text-slate-400 hover:text-slate-700 hover:bg-transparent cursor-pointer shrink-0 ml-0.5"
+																aria-label={t(localizationConstants.btnRadera)}
+															>
+																<X className="h-3 w-3" />
+															</Button>
+														</div>
+														{!isLast && (
+															<span className="self-center h-4 w-px bg-[#E5E5E5] shrink-0" />
+														)}
+													</React.Fragment>
 												);
 											})
 										) : (
@@ -241,12 +243,12 @@ export function EditProtocolParticipantsSection({
 												variant="ghost"
 												size="icon"
 												className="h-7 w-7 p-1 text-slate-400 hover:text-slate-700 hover:bg-transparent cursor-pointer shrink-0 self-center shadow-none"
-												aria-label="Add participant"
+												aria-label={t(localizationConstants.protocolFieldAddParticipants)}
 											>
 												<ChevronDown className="h-4 w-4" />
 											</Button>
 										</DropdownMenuTrigger>
-										<DropdownMenuContent align="end" className="w-56 bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50">
+										<DropdownMenuContent align="end" className="w-64 bg-white border border-slate-200 shadow-md rounded-lg p-1 z-50">
 											{PROTOCOL_CONSTANTS.AVAILABLE_USERS.map((user) => (
 												<DropdownMenuItem
 													key={user.name}

@@ -1673,6 +1673,7 @@ export const enOffer: OfferTranslation = {
 	protocolSend: "Send",
 	protocolViewTitle: "View protocol",
 	protocolEditTitle: "Edit protocol",
+	protocolEditActionTitle: "Edit action protocol",
 	protocolMeetingInfo: "Meeting information",
 	protocolNextMeeting: "Next meeting",
 	protocolFieldHost: "Host",

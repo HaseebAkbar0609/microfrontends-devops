@@ -1630,6 +1630,7 @@ export type OfferTranslation = {
 	protocolSend: string;
 	protocolViewTitle: string;
 	protocolEditTitle: string;
+	protocolEditActionTitle: string;
 	protocolMeetingInfo: string;
 	protocolNextMeeting: string;
 	protocolFieldHost: string;
