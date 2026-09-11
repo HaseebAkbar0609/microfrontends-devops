@@ -3578,6 +3578,9 @@ export const enOffer: OfferTranslation = {
 	projectListRestoredToast: "The project has been restored.",
 	projectArchiveEmpty: "No archived projects.",
 	projectSectionTidsplan: "Timeline",
+	projectCompanyDetailsSection: "Company details",
+	commonYes: "Yes",
+	commonNo: "No",
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: "Register new project",

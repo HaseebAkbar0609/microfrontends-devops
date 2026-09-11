@@ -3467,6 +3467,9 @@ export const svOffer: OfferTranslation = {
 	projectListRestoredToast: "Projektet har återställts.",
 	projectArchiveEmpty: "Inga arkiverade projekt.",
 	projectSectionTidsplan: "Tidsplan",
+	projectCompanyDetailsSection: "Företagsuppgifter",
+	commonYes: "Ja",
+	commonNo: "Nej",
 
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: "Registrera nytt projekt",
@@ -6395,7 +6398,7 @@ const svOrderInformation: OrderInformationTranslation = {
 	totalOfferLabel: "Total - Offert",
 	rotDeductionLabel: "Rot-avdrag 30% på arbetskostnaden",
 	paymentTermsLabel: "Betalningsvillkor",
-	rotDeductionSettled: "Rot-avdrag är avräknad i offrten",
+	rotDeductionSettled: "Rot-avdrag är avräknad i offerten",
 	attachedDocumentsSection: "Bifogade dokument",
 	goToCompany: "Gå till företag",
 	productionMilestones: "Produktionsmilstolpar",

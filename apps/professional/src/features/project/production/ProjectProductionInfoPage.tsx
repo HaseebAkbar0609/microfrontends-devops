@@ -42,8 +42,15 @@ export function ProjectProductionInfoPage({
 	projectId,
 }: ProjectProductionInfoPageProps) {
 	const t = useTranslate();
-	const { info, editing, setEditing, closeEditor, saveSection } =
-		useProjectRecordInfo(projectId);
+	const {
+		info,
+		editing,
+		setEditing,
+		closeEditor,
+		saveSection,
+		renameDocument,
+		removeDocument,
+	} = useProjectRecordInfo(projectId);
 
 	/** An id that matches no project is a 404, not an empty record. */
 	if (!info) notFound();
@@ -94,7 +101,11 @@ export function ProjectProductionInfoPage({
 						</TabsContent>
 
 						<TabsContent value="offert" className="mt-4">
-							<ProjectOfferPanel info={info} />
+							<ProjectOfferPanel
+								info={info}
+								onRenameDocument={renameDocument}
+								onRemoveDocument={removeDocument}
+							/>
 						</TabsContent>
 					</SectionTabs>
 				</Suspense>

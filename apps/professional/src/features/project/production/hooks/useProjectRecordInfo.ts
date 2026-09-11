@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
+import { PROJECT_CREATE_CONSTANTS } from "../../create/constants";
 import { buildProjectRecordInfo } from "../data/projectRecordInfo.mock";
 import type { ProjectInfoSectionKey, ProjectRecordInfo } from "../types";
 
@@ -61,5 +62,45 @@ export function useProjectRecordInfo(projectId: string) {
 		[t],
 	);
 
-	return { info, editing, setEditing, closeEditor, saveSection };
+	/**
+	 * The offer's attachments. Bounded by the same limit the create wizard
+	 * applies, so a name cannot be longer here than where it was first typed.
+	 */
+	const renameDocument = useCallback((id: string, documentName: string) => {
+		const bounded = documentName.slice(
+			0,
+			PROJECT_CREATE_CONSTANTS.MAX_DOCUMENT_NAME_LENGTH,
+		);
+		setInfo((previous) =>
+			previous
+				? {
+						...previous,
+						documents: previous.documents.map((row) =>
+							row.id === id ? { ...row, documentName: bounded } : row,
+						),
+					}
+				: previous,
+		);
+	}, []);
+
+	const removeDocument = useCallback((id: string) => {
+		setInfo((previous) =>
+			previous
+				? {
+						...previous,
+						documents: previous.documents.filter((row) => row.id !== id),
+					}
+				: previous,
+		);
+	}, []);
+
+	return {
+		info,
+		editing,
+		setEditing,
+		closeEditor,
+		saveSection,
+		renameDocument,
+		removeDocument,
+	};
 }

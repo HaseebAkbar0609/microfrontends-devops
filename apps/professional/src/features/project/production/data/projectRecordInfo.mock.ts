@@ -1,5 +1,29 @@
 import { PROJECT_LIST_ROWS } from "../../data/projectsOverview.mock";
+import type { ProjectDocumentItem } from "../../create/types";
 import type { ProjectRecordInfo } from "../types";
+
+/**
+ * The offer's attachments.
+ *
+ * Literal ISO dates — `new Date()` evaluated while rendering desynchronises the
+ * server and client markup.
+ */
+const OFFER_DOCUMENTS: ProjectDocumentItem[] = [
+	{
+		id: "offer-doc-1",
+		date: "2024-05-10",
+		documentName: "Kontrakt",
+		fileName: "Kontrakt.pdf",
+		fileType: "pdf",
+	},
+	{
+		id: "offer-doc-2",
+		date: "2024-05-10",
+		documentName: "Underlag",
+		fileName: "Underlag.doc",
+		fileType: "doc",
+	},
+];
 
 /**
  * The fields a project record shows that its list row does not carry.
@@ -31,6 +55,15 @@ const SEEDED: Record<
 		projectPostalCode: string;
 		projectCity: string;
 		type: string;
+		/* Offert tab */
+		workLocation: string;
+		specifications: string;
+		work: string;
+		material: string;
+		totalOffer: string;
+		rotDeductionLabor: string;
+		paymentTerms: string;
+		rotDeductionSettled: boolean;
 	}
 > = {
 	"5000": {
@@ -50,6 +83,14 @@ const SEEDED: Record<
 		projectPostalCode: "111 35",
 		projectCity: "Stockholm",
 		type: "Totalentreprenad",
+		workLocation: "Kungsgatan 3, Stockholm",
+		specifications: "Rivning, nytt kök, el och VVS enligt bifogad ritning.",
+		work: "Total kostnad för projektet, inklusive material och arbete.",
+		material: "120 000 kr",
+		totalOffer: "410 000 kr",
+		rotDeductionLabor: "87 000 kr",
+		paymentTerms: "30 dagar netto",
+		rotDeductionSettled: true,
 	},
 	"5001": {
 		address: "Hantverkargatan 8",
@@ -68,6 +109,14 @@ const SEEDED: Record<
 		projectPostalCode: "113 59",
 		projectCity: "Stockholm",
 		type: "Generalentreprenad",
+		workLocation: "Sveavägen 44, Stockholm",
+		specifications: "Stambyte samt ytskikt i badrum, 12 lägenheter.",
+		work: "Total kostnad för projektet, inklusive material och arbete.",
+		material: "260 000 kr",
+		totalOffer: "890 000 kr",
+		rotDeductionLabor: "---",
+		paymentTerms: "Betalplan enligt avtal",
+		rotDeductionSettled: false,
 	},
 	"5002": {
 		address: "Drottninggatan 21",
@@ -86,6 +135,14 @@ const SEEDED: Record<
 		projectPostalCode: "113 51",
 		projectCity: "Stockholm",
 		type: "Löpande räkning",
+		workLocation: "Odengatan 15, Stockholm",
+		specifications: "Löpande serviceåtgärder enligt överenskommelse.",
+		work: "Debiteras löpande per timme.",
+		material: "Enligt självkostnad",
+		totalOffer: "Löpande räkning",
+		rotDeductionLabor: "---",
+		paymentTerms: "15 dagar netto",
+		rotDeductionSettled: false,
 	},
 };
 
@@ -136,5 +193,34 @@ export function buildProjectRecordInfo(
 			startDate: row.startDate,
 			endDate: row.endDate,
 		},
+		/*
+		 * The contracting company's own details. There is no Production-side
+		 * source for these: `useCompanyInformation` is a react-query hook against
+		 * the live API used only by the admin screen, and
+		 * `authStorage.getCompanyData()` returns `unknown` out of localStorage.
+		 * Seeded here until one exists.
+		 */
+		company: {
+			name: "Byggbolaget AB",
+			email: "offert@byggbolaget.se",
+			phone: "+46 8 400 120 00",
+			address: "Verkstadsgatan 4, 112 45 Stockholm",
+			orgNo: "556712-3344",
+		},
+		projectDescription: {
+			projectName: row.name,
+			workLocation: extra?.workLocation ?? "",
+			specifications: extra?.specifications ?? "",
+		},
+		offer: {
+			offerNo: row.offerNr,
+			work: extra?.work ?? "",
+			material: extra?.material ?? "",
+			totalOffer: extra?.totalOffer ?? "",
+			rotDeductionLabor: extra?.rotDeductionLabor ?? "",
+			paymentTerms: extra?.paymentTerms ?? "",
+			rotDeductionSettled: extra?.rotDeductionSettled ?? false,
+		},
+		documents: extra ? [...OFFER_DOCUMENTS] : [],
 	};
 }
