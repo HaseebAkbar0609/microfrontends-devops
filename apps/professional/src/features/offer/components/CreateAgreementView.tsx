@@ -182,6 +182,9 @@ export function CreateAgreementView({ offerId, data }: Props) {
         parties: parties.map((p) => ({
           id: p.id,
           name: p.name,
+          contactPerson: p.contactPerson,
+          authorizedSignatory: p.authorizedSignatory,
+          company: p.company,
           role: p.role,
           email: p.email,
           phone: p.phone,
