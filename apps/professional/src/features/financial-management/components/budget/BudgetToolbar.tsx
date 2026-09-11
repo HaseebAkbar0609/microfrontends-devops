@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Search, Plus, Filter, RotateCcw } from "lucide-react";
+import { Search, Plus, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -22,7 +22,6 @@ interface BudgetToolbarProps {
 		val: "all" | "active" | "inactive" | "overhead",
 	) => void;
 	onCreateClick: () => void;
-	onResetSeedData: () => void;
 }
 
 export function BudgetToolbar({
@@ -31,7 +30,6 @@ export function BudgetToolbar({
 	statusFilter,
 	onStatusFilterChange,
 	onCreateClick,
-	onResetSeedData,
 }: BudgetToolbarProps) {
 	const { t } = useTranslation();
 
@@ -104,18 +102,6 @@ export function BudgetToolbar({
 
 			{/* Right side: Actions */}
 			<div className="flex items-center gap-2">
-				<Button
-					type="button"
-					variant="ghost"
-					size="sm"
-					onClick={onResetSeedData}
-					className="h-10 text-xs text-slate-500 hover:text-slate-800 gap-1.5 cursor-pointer"
-					title={t(localizationConstants.btnResetSeedData)}
-				>
-					<RotateCcw className="w-3.5 h-3.5" />
-					<Translate text={localizationConstants.btnResetSeedData} />
-				</Button>
-
 				<Button
 					type="button"
 					onClick={onCreateClick}

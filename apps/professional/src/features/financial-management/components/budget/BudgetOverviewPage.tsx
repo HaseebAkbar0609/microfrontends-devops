@@ -8,7 +8,6 @@ import {
 	CREATE_BUDGET_ROUTE,
 } from "../../constants/budget.constants";
 import { BudgetToolbar } from "./BudgetToolbar";
-import { BudgetKpiCards } from "./BudgetKpiCards";
 import { BudgetTable } from "./BudgetTable";
 import { BudgetBulkActionBar } from "./BudgetBulkActionBar";
 import { BudgetDeleteDialog } from "./BudgetDeleteDialog";
@@ -40,8 +39,6 @@ export function BudgetOverviewPage() {
 		toggleFavorite,
 		toggleStatus,
 		bulkSetStatus,
-		resetSeedData,
-		kpis,
 	} = useBudgets();
 
 	const [budgetToDelete, setBudgetToDelete] = useState<EconomyBudgetItem | null>(null);
@@ -70,9 +67,6 @@ export function BudgetOverviewPage() {
 				</button>
 			</div>
 
-			{/* KPI Summary Cards */}
-			<BudgetKpiCards kpis={kpis} />
-
 			{/* Toolbar (Search, Filter, Create CTA) */}
 			<BudgetToolbar
 				searchQuery={searchQuery}
@@ -80,7 +74,6 @@ export function BudgetOverviewPage() {
 				statusFilter={statusFilter}
 				onStatusFilterChange={setStatusFilter}
 				onCreateClick={handleCreate}
-				onResetSeedData={resetSeedData}
 			/>
 
 			{/* Main Table */}
