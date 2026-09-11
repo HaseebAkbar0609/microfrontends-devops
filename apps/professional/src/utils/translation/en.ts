@@ -3700,6 +3700,21 @@ export const enOffer: OfferTranslation = {
 	projectDetailColStart: "Start",
 	projectDetailColEnd: "End",
 	projectDetailAddToast: "Add is coming soon.",
+
+	/* TFS-698 — Personal-liggare (the project record's fourth section). */
+	projectStaffLedgerTitle: "Personnel ledger",
+	projectStaffLedgerSupplierLabel: "Selected supplier / subcontractor",
+	projectStaffLedgerLoggedInNow: "Logged in NOW",
+	projectStaffLedgerColOwnStaff: "Own staff",
+	projectStaffLedgerColSupplier: "Subcontractor",
+	projectStaffLedgerColLoggedIn: "Logged in",
+	projectStaffLedgerColLoggedOut: "Logged out",
+	projectStaffLedgerColTool: "Tool",
+	projectStaffLedgerStillOnSite: "Still logged in",
+	projectStaffLedgerEmpty: "No staff has been registered for this project.",
+	projectStaffLedgerNoMatches: "No entries match the filter.",
+	projectStaffLedgerDateRangeInvalid:
+		"The end date cannot be before the start date.",
 	orderNumber: "Order No.",
 	orderName: "Order Name",
 	orderCustomer: "Customer",

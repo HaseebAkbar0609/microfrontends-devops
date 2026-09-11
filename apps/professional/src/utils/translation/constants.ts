@@ -3661,6 +3661,20 @@ export type OfferTranslation = {
 	projectDetailColStart: string;
 	projectDetailColEnd: string;
 	projectDetailAddToast: string;
+
+	/* TFS-698 — Personal-liggare (the project record's fourth section). */
+	projectStaffLedgerTitle: string;
+	projectStaffLedgerSupplierLabel: string;
+	projectStaffLedgerLoggedInNow: string;
+	projectStaffLedgerColOwnStaff: string;
+	projectStaffLedgerColSupplier: string;
+	projectStaffLedgerColLoggedIn: string;
+	projectStaffLedgerColLoggedOut: string;
+	projectStaffLedgerColTool: string;
+	projectStaffLedgerStillOnSite: string;
+	projectStaffLedgerEmpty: string;
+	projectStaffLedgerNoMatches: string;
+	projectStaffLedgerDateRangeInvalid: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;

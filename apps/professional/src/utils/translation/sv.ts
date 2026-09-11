@@ -3587,6 +3587,21 @@ export const svOffer: OfferTranslation = {
 	projectDetailColStart: "Start",
 	projectDetailColEnd: "Slut",
 	projectDetailAddToast: "Lägg till kommer snart.",
+
+	/* TFS-698 — Personal-liggare (the project record's fourth section). */
+	projectStaffLedgerTitle: "Personal-liggare",
+	projectStaffLedgerSupplierLabel: "Vald leverantör/ UE",
+	projectStaffLedgerLoggedInNow: "Inloggade NU",
+	projectStaffLedgerColOwnStaff: "Egen personal",
+	projectStaffLedgerColSupplier: "UE",
+	projectStaffLedgerColLoggedIn: "Inloggad",
+	projectStaffLedgerColLoggedOut: "Utloggad",
+	projectStaffLedgerColTool: "Verktyg",
+	projectStaffLedgerStillOnSite: "Fortfarande inloggad",
+	projectStaffLedgerEmpty: "Ingen personal är registrerad för projektet.",
+	projectStaffLedgerNoMatches: "Inga poster matchar filtret.",
+	projectStaffLedgerDateRangeInvalid:
+		"Slutdatum kan inte vara före startdatum.",
 	orderNumber: "Order nr",
 	orderName: "Order Namn",
 	orderCustomer: "Kund",
