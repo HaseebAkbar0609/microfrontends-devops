@@ -12,6 +12,17 @@ SPEC.loader.exec_module(MODULE)
 
 
 class ProvisionFrontendEnvTests(unittest.TestCase):
+    def test_nested_environment_and_private_keys_stay_out_of_build_context(self) -> None:
+        repository_root = MODULE_PATH.parents[2]
+        patterns = (repository_root / ".dockerignore").read_text(
+            encoding="utf-8"
+        ).splitlines()
+        for pattern in (
+            "**/.env", "**/.env.*", "**/*.env", "**/*.env.*",
+            "**/*.key", "**/*.pem",
+        ):
+            self.assertIn(pattern, patterns)
+
     def test_provisions_matching_service_token_and_test_publishable_key(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -31,6 +42,13 @@ class ProvisionFrontendEnvTests(unittest.TestCase):
                 "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_example", contents
             )
             self.assertIn("NEXT_PUBLIC_TFS825_PAYMENT_MVP=true", contents)
+            self.assertIn(
+                "NEXT_PUBLIC_API_URL=https://timeflow-api-dev.r4ok.com", contents
+            )
+            self.assertIn(
+                "TFS_BACKEND_URL=https://timeflow-api-dev.r4ok.com", contents
+            )
+            self.assertNotIn("dev.backend.timeflowsystem.com", contents)
 
     def test_rejects_missing_publishable_key(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

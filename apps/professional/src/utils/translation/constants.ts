@@ -607,6 +607,35 @@ export type AdminPageTranslation = {
 };
 
 export type OfferTranslation = {
+	commissionTitle: string;
+	commissionDescription: string;
+	commissionAcceptTitle: string;
+	commissionAcceptConfirm: string;
+	commissionAcceptDescription: string;
+	commissionExistingFee: string;
+	commissionAcceptanceSeparate: string;
+	commissionCalculation: string;
+	commissionCancel: string;
+	commissionProcessing: string;
+	commissionLoading: string;
+	commissionAcceptError: string;
+	commissionRefresh: string;
+	commissionCards: string;
+	commissionRecoveryError: string;
+	commissionLoadError: string;
+	commissionEmpty: string;
+	commissionPaid: string;
+	commissionUnpaid: string;
+	commissionFailed: string;
+	commissionAuthentication: string;
+	commissionQuote: string;
+	commissionCardHelp: string;
+	commissionRecover: string;
+	commissionRecoveryDescription: string;
+	commissionRecoverConfirm: string;
+	commissionAcceptedPaid: string;
+	commissionAcceptedPending: string;
+	commissionRestoreError: string;
 	openQuotes: string;
 	quickActions: string;
 	kpiStatus: string;

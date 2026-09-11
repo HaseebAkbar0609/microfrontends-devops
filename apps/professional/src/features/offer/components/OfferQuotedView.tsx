@@ -71,6 +71,8 @@ import { ProfessionalRow } from "@/types/company";
 import { Loader } from "@/components/ui/loader";
 import Link from "next/link";
 import { showToast } from "@/lib/toast";
+import { OfferAcceptDialog } from "./OfferAcceptDialog";
+import { COMMISSIONS_PATH } from "../services/commissionService";
 
 type SortField = keyof Pick<
   OfferQuotedItem,
@@ -105,6 +107,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
   const [items, setItems] = useState<OfferQuotedItem[]>(initialItems);
   const [totalItems, setTotalItems] = useState(initialItems.length);
   const [isLoading, setIsLoading] = useState(false);
+  const [acceptingItem, setAcceptingItem] = useState<OfferQuotedItem | null>(null);
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
@@ -234,6 +237,14 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
       showToast("error", "Offer identifier is missing");
       return;
     }
+    if (status === OFFER_API_STATUS.ACCEPTED) {
+      if (!item.projectId || !item.quoteId) {
+        showToast("error", t(localizationConstants.commissionAcceptError));
+        return;
+      }
+      setAcceptingItem(item);
+      return;
+    }
     const result = await updateOfferStatusAPIAction(item.mappingId, status);
     if (!result.success) {
       showToast("error", result.error || "Offer could not be updated");
@@ -280,6 +291,17 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
 
   return (
     <div className="flex flex-1 flex-col bg-white">
+      {acceptingItem?.projectId && acceptingItem.quoteId && <OfferAcceptDialog
+        item={{ projectId: acceptingItem.projectId, quoteId: acceptingItem.quoteId, job: acceptingItem.job }}
+        onClose={() => setAcceptingItem(null)}
+        onAccepted={result => {
+          setItems(current => current.filter(item => item.mappingId !== result.mapping_id));
+          setAcceptingItem(null);
+          const paid = result.commission.payment_status === "paid";
+          showToast(paid ? "success" : "info", t(paid ? localizationConstants.commissionAcceptedPaid : localizationConstants.commissionAcceptedPending));
+          router.push(paid ? OFFER_ROUTES.accepted() : COMMISSIONS_PATH);
+        }}
+      />}
       <div className="flex flex-col gap-1.5 px-6 pt-5 pb-2">
         <div className="flex items-center gap-2">
           <button

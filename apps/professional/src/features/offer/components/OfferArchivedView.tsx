@@ -56,9 +56,8 @@ import { OfferArchivedCommentModal } from "./OfferArchivedCommentModal";
 import {
   addOfferCommentAPIAction,
   deleteOfferAPIAction,
-  OFFER_API_STATUS,
-  updateOfferStatusAPIAction,
 } from "@/api-actions/offers";
+import { restoreOffer } from "../services/commissionService";
 
 type SortField = keyof Pick<
   OfferArchivedItem,
@@ -220,8 +219,8 @@ export function OfferArchivedView({ offerId, items, isLoading = false, onSearchC
 
   async function handleUnarchive(row: OfferArchivedItem) {
     if (!row.mappingId) return showToast("error", "Offer identifier is missing");
-    const result = await updateOfferStatusAPIAction(row.mappingId, OFFER_API_STATUS.OFFERED);
-    if (!result.success) return showToast("error", result.error || "Offer could not be restored");
+    try { await restoreOffer(row.mappingId); }
+    catch { return showToast("error", t(localizationConstants.commissionRestoreError)); }
     setArchivedList((prev) => prev.filter((i) => i.id !== row.id));
     showToast(
       "success",
