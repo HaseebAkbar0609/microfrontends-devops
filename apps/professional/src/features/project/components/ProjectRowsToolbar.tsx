@@ -22,6 +22,11 @@ export interface ProjectRowsToolbarProps {
 	filterOptions: string[];
 	/** Right-hand slot — the list puts "Skapa nytt" here; Arkiv has nothing. */
 	action?: React.ReactNode;
+	/**
+	 * Skriv ut, which the list and Arkiv both draw. Organisation does not, so
+	 * it opts out rather than the screen growing a control its frame omits.
+	 */
+	showPrint?: boolean;
 }
 
 /**
@@ -39,6 +44,7 @@ export function ProjectRowsToolbar({
 	onFilterChange,
 	filterOptions,
 	action,
+	showPrint = true,
 }: ProjectRowsToolbarProps) {
 	const t = useTranslate();
 
@@ -98,17 +104,19 @@ export function ProjectRowsToolbar({
 			</div>
 
 			<div className="flex flex-wrap items-center gap-3">
-				<Button
-					type="button"
-					variant="outline"
-					size="icon"
-					onClick={() => window.print()}
-					title={t(localizationConstants.projectListPrint)}
-					aria-label={t(localizationConstants.projectListPrint)}
-					className="h-10 w-10 cursor-pointer rounded-md border-slate-200 text-slate-700"
-				>
-					<Printer className="h-4 w-4" />
-				</Button>
+				{showPrint && (
+					<Button
+						type="button"
+						variant="outline"
+						size="icon"
+						onClick={() => window.print()}
+						title={t(localizationConstants.projectListPrint)}
+						aria-label={t(localizationConstants.projectListPrint)}
+						className="h-10 w-10 cursor-pointer rounded-md border-slate-200 text-slate-700"
+					>
+						<Printer className="h-4 w-4" />
+					</Button>
+				)}
 				{action}
 			</div>
 		</div>

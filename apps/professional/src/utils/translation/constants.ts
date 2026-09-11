@@ -3596,6 +3596,13 @@ export type OfferTranslation = {
 	commonYes: string;
 	commonNo: string;
 
+	/* TFS-697 — Organisation (the project record's third section). */
+	projectOrgEmpty: string;
+	projectOrgNoMatches: string;
+	projectOrgDeleteConfirmTitle: string;
+	projectOrgDeleteConfirmDescription: string;
+	projectOrgDeletedToast: string;
+
 	/* TFS-693 — Registrera nytt projekt (the 5-step create wizard). */
 	projectCreateTitle: string;
 	projectCreateDetailsTab: string;
