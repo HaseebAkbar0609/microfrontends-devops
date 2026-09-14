@@ -3727,6 +3727,35 @@ export const enOffer: OfferTranslation = {
 	projectStaffLedgerNoMatches: "No entries match the filter.",
 	projectStaffLedgerDateRangeInvalid:
 		"The end date cannot be before the start date.",
+
+	/* TFS-699 — Tidsplan (the project record's timeplans). */
+	projectTimeplanCreateTitle: "Create new timeplan",
+	projectTimeplanEditTitle: "Edit timeplan",
+	projectTimeplanViewTitle: "View timeplan",
+	projectTimeplanKindMain: "Main timeplan",
+	projectTimeplanKindSub: "Sub-timeplan",
+	projectTimeplanTypeStandard: "Standard",
+	projectTimeplanOtherInfoSection: "Other information",
+	projectTimeplanRevisedDate: "Revised date",
+	projectTimeplanDescription: "Description",
+	projectTimeplanDescriptionPlaceholder: "Describe the timeplan",
+	projectTimeplanEmpty:
+		"No timeplans have been created for this project.",
+	projectTimeplanNoTasks: "The timeplan has no activities yet.",
+	projectTimeplanDeleteConfirmTitle: "Delete timeplan?",
+	projectTimeplanDeleteConfirmDescription:
+		"The timeplan and all its activities are removed. This cannot be undone.",
+	projectTimeplanDeletedToast: "The timeplan has been deleted.",
+	projectTimeplanSavedToast: "The timeplan has been saved.",
+	projectTimeplanDiscardTitle: "Discard unsaved changes?",
+	projectTimeplanDiscardDescription:
+		"Activities you have added since you last saved will be lost.",
+	projectTimeplanDiscardConfirm: "Discard changes",
+	projectTimeplanTaskNameRequired: "Enter the activity name",
+	projectTimeplanAddTaskUnder: "Add activity under {name}",
+	projectTimeplanAddPhase: "Add phase",
+	projectTimeplanColumnPicker: "Choose columns",
+	projectTimeplanCreatedByRequired: "Choose who created the timeplan",
 	orderNumber: "Order No.",
 	orderName: "Order Name",
 	orderCustomer: "Customer",

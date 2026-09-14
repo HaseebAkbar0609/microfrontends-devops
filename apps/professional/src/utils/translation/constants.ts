@@ -3684,6 +3684,32 @@ export type OfferTranslation = {
 	projectStaffLedgerEmpty: string;
 	projectStaffLedgerNoMatches: string;
 	projectStaffLedgerDateRangeInvalid: string;
+
+	/* TFS-699 — Tidsplan (the project record's timeplans). */
+	projectTimeplanCreateTitle: string;
+	projectTimeplanEditTitle: string;
+	projectTimeplanViewTitle: string;
+	projectTimeplanKindMain: string;
+	projectTimeplanKindSub: string;
+	projectTimeplanTypeStandard: string;
+	projectTimeplanOtherInfoSection: string;
+	projectTimeplanRevisedDate: string;
+	projectTimeplanDescription: string;
+	projectTimeplanDescriptionPlaceholder: string;
+	projectTimeplanEmpty: string;
+	projectTimeplanNoTasks: string;
+	projectTimeplanDeleteConfirmTitle: string;
+	projectTimeplanDeleteConfirmDescription: string;
+	projectTimeplanDeletedToast: string;
+	projectTimeplanSavedToast: string;
+	projectTimeplanDiscardTitle: string;
+	projectTimeplanDiscardDescription: string;
+	projectTimeplanDiscardConfirm: string;
+	projectTimeplanTaskNameRequired: string;
+	projectTimeplanAddTaskUnder: string;
+	projectTimeplanAddPhase: string;
+	projectTimeplanColumnPicker: string;
+	projectTimeplanCreatedByRequired: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
