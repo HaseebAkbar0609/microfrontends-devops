@@ -13,13 +13,25 @@ import { Input } from "@/components/ui/input";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 
+/**
+ * A Filter entry. A plain string is its own value and label; an object carries
+ * an already-translated label for a value that is not display text.
+ */
+export type ProjectRowsFilterOption = string | { value: string; label: string };
+
+const optionValue = (option: ProjectRowsFilterOption) =>
+	typeof option === "string" ? option : option.value;
+
+const optionLabel = (option: ProjectRowsFilterOption) =>
+	typeof option === "string" ? option : option.label;
+
 export interface ProjectRowsToolbarProps {
 	search: string;
 	onSearchChange: (value: string) => void;
 	filter: string | null;
 	onFilterChange: (value: string | null) => void;
 	/** Values drawn from the rows themselves, so the list cannot drift. */
-	filterOptions: string[];
+	filterOptions: ProjectRowsFilterOption[];
 	/** Right-hand slot — the list puts "Skapa nytt" here; Arkiv has nothing. */
 	action?: React.ReactNode;
 	/**
@@ -47,10 +59,15 @@ export function ProjectRowsToolbar({
 	showPrint = true,
 }: ProjectRowsToolbarProps) {
 	const t = useTranslate();
+	const selected = filterOptions.find(
+		(option) => optionValue(option) === filter,
+	);
 
 	return (
 		<div className="flex flex-wrap items-center justify-between gap-4">
-			<div className="flex flex-wrap items-center gap-4">
+			{/* `max-w-full` here too, or the 288px search sets this group's width
+			    and overflows a phone-width content column. */}
+			<div className="flex max-w-full min-w-0 flex-wrap items-center gap-4">
 				<div className="relative w-72 max-w-full">
 					<Search
 						aria-hidden
@@ -72,7 +89,9 @@ export function ProjectRowsToolbar({
 							variant="outline"
 							className="h-10 cursor-pointer gap-2 rounded-md border-slate-200 text-sm font-normal text-slate-700"
 						>
-							{filter ?? (
+							{selected ? (
+								optionLabel(selected)
+							) : (
 								<Translate text={localizationConstants.filter} />
 							)}
 							<ChevronDown className="h-4 w-4 text-slate-500" />
@@ -92,11 +111,11 @@ export function ProjectRowsToolbar({
 						</DropdownMenuItem>
 						{filterOptions.map((option) => (
 							<DropdownMenuItem
-								key={option}
-								onClick={() => onFilterChange(option)}
+								key={optionValue(option)}
+								onClick={() => onFilterChange(optionValue(option))}
 								className="cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
 							>
-								{option}
+								{optionLabel(option)}
 							</DropdownMenuItem>
 						))}
 					</DropdownMenuContent>

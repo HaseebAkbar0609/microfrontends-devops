@@ -80,10 +80,11 @@ function QAColumn({
       label={label}
       icon={icon}
       className={className}
-      // This board only ever badged the New column, so the count is passed
-      // only where a badgeNumber was. The shared column derives the figure
-      // rather than taking the hard-coded string this file used.
-      count={badgeNumber ? items.length : 0}
+      // This board only ever badged the New column, so the pill shows only
+      // where a badgeNumber was. The count itself is always the real one:
+      // passing 0 to hide the pill also hid every card in Opened and Answered.
+      count={items.length}
+      showCount={Boolean(badgeNumber)}
     >
       {items.map((msg) => (
         <QAThreadCard
@@ -350,7 +351,7 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
         <QAColumn
           status="new"
           label={t(localizationConstants.b2bPMQANew)}
-          icon={<Mail size={18} className="text-slate-900" aria-hidden={true} />}
+          icon={<Mail size={24} className="text-zinc-950" aria-hidden={true} />}
           badgeNumber="02"
           messages={filteredQA}
           onSendReply={handleSendReply}
@@ -363,7 +364,7 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
         <QAColumn
           status="opened"
           label={t(localizationConstants.b2bPMQAOpened)}
-          icon={<MailOpen size={18} className="text-slate-900" aria-hidden={true} />}
+          icon={<MailOpen size={24} className="text-zinc-950" aria-hidden={true} />}
           messages={filteredQA}
           onSendReply={handleSendReply}
           onMarkAsRead={handleMarkAsRead}
@@ -375,7 +376,7 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
         <QAColumn
           status="answered"
           label={t(localizationConstants.b2bPMQAAnswered)}
-          icon={<CheckCheck size={18} className="text-slate-900" aria-hidden={true} />}
+          icon={<CheckCheck size={24} className="text-zinc-950" aria-hidden={true} />}
           messages={filteredQA}
           className="md:col-span-2 xl:col-span-1"
           onSendReply={handleSendReply}
