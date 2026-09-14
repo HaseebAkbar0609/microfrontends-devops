@@ -18,11 +18,11 @@ interface BankDeleteDialogProps {
 	item: {
 		id: string;
 		title: string;
-		type: "loan" | "document";
+		type: "loan" | "document" | "account";
 	} | null;
 	isOpen: boolean;
 	onClose: () => void;
-	onConfirm: (id: string, type: "loan" | "document") => void;
+	onConfirm: (id: string, type: "loan" | "document" | "account") => void;
 }
 
 export function BankDeleteDialog({

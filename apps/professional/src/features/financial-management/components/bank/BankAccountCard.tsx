@@ -25,26 +25,33 @@ export function BankAccountCard({ account, onEdit }: BankAccountCardProps) {
 					<div className="p-1.5 bg-slate-100 rounded-md text-slate-700">
 						<FileText className="w-5 h-5" />
 					</div>
-					<div className="flex items-center gap-2.5">
+					<div className="flex items-center gap-2.5 flex-wrap">
 						<h3 className="text-base font-semibold text-slate-900">
-							{account.bankName}
+							{account.title || account.bankName}
 						</h3>
 						<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
 							{account.accountType}
 						</span>
+						{account.isConnected && (
+							<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
+								BankID Verified
+							</span>
+						)}
 					</div>
 				</div>
 
-				<Button
-					type="button"
-					variant="ghost"
-					size="sm"
-					onClick={() => onEdit(account)}
-					className="h-8 text-xs text-slate-600 hover:text-slate-900 gap-1.5 cursor-pointer"
-				>
-					<Edit2 className="w-3.5 h-3.5" />
-					<Translate text={localizationConstants.btnEdit} />
-				</Button>
+				<div className="flex items-center gap-2">
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						onClick={() => onEdit(account)}
+						className="h-8 text-xs text-slate-600 hover:text-slate-900 gap-1.5 cursor-pointer"
+					>
+						<Edit2 className="w-3.5 h-3.5" />
+						<Translate text={localizationConstants.btnEdit} />
+					</Button>
+				</div>
 			</div>
 
 			{/* Account Details */}

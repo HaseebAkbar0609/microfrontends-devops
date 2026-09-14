@@ -60,8 +60,8 @@ export function BankLoansTabView({
 	onPageSizeChange,
 	onView,
 	onViewLoan,
-	onEditLoan: _onEditLoan,
-	onDeleteLoan: _onDeleteLoan,
+	onEditLoan,
+	onDeleteLoan,
 	onCreateClick,
 }: BankLoansTabViewProps) {
 	const { t } = useTranslation();
@@ -151,6 +151,8 @@ export function BankLoansTabView({
 				sortOrder={sortOrder}
 				onSort={onSort}
 				onView={handleView}
+				onEdit={onEditLoan}
+				onDelete={onDeleteLoan}
 				onCreateClick={onCreateClick}
 			/>
 
