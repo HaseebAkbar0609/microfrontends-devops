@@ -113,3 +113,30 @@ export interface CreateAtaSummary {
 	totalAtaSupplier: number;
 }
 
+export interface SupplierAtaGroup {
+	supplierId: string;
+	supplierName: string;
+	totalAmount: number;
+	totalCount: number;
+	approvedCount: number;
+	inReviewCount: number;
+	notApprovedCount: number;
+}
+
+export type SupplierGroupSortField =
+	| "supplierName"
+	| "totalAmount"
+	| "totalCount"
+	| "approvedCount"
+	| "inReviewCount"
+	| "notApprovedCount";
+
+export type SupplierDetailSortField =
+	| "date"
+	| "ataNumber"
+	| "linkedLevAta"
+	| "amount"
+	| "status"
+	| "attested"
+	| "attestedDate";
+

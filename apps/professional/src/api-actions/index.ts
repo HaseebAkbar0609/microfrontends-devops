@@ -119,6 +119,7 @@ export {
 
 export {
   getAtasAction,
+  getSupplierAtasAction,
   getAtaDetailAction,
   createAtaAction,
   sendAtaAction,
@@ -126,5 +127,4 @@ export {
   uploadAtaDocumentAction,
   type CreateAtaPayload,
 } from "./orders/ata";
-
 

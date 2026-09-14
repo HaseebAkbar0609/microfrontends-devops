@@ -33,6 +33,7 @@ import {
 	EconomyBankTranslation,
 	AtaTranslation,
 	CreateAtaTranslation,
+	SupplierAtaTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -7857,6 +7858,27 @@ export const enCreateAta: CreateAtaTranslation = {
 	createAtaLocationFallbackJarfalla: "Järfälla",
 };
 
+export const enSupplierAta: SupplierAtaTranslation = {
+	ataSupplierSelectedSupplierLabel: "Selected supplier / subcontractor",
+	ataSupplierAllSuppliers: "All",
+	ataSupplierTotalAta: "Total ATA",
+	ataSupplierCountAta: "Count ATA",
+	ataSupplierColCompanyName: "Company Name",
+	ataSupplierColTotal: "Total",
+	ataSupplierColCount: "Count",
+	ataSupplierColApproved: "Approved",
+	ataSupplierColInReview: "In Review",
+	ataSupplierColNotApproved: "Not Approved",
+	ataSupplierColLinkedAta: "Linked ATA",
+	ataSupplierColAttested: "Attested",
+	ataSupplierColAttestDate: "Attest Date",
+	ataSupplierViewDetails: "View details",
+	ataSupplierDownloadDocs: "Download documentation",
+	ataSupplierStatusNotReviewed: "Not reviewed",
+	ataSupplierLinkedYes: "Yes",
+	ataSupplierLinkedNo: "No",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -7891,6 +7913,7 @@ export const en: Translation = {
 	...enEconomyBank,
 	...enAta,
 	...enCreateAta,
+	...enSupplierAta,
 };
 
 

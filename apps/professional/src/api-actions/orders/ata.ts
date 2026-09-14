@@ -22,7 +22,7 @@ export const ataItemSchema = z.object({
 	amount: z.number().default(0),
 	vatAmount: z.number().optional(),
 	totalAmount: z.number().optional(),
-	status: z.enum(["ok", "redovisad", "forhandling", "pending", "approved", "rejected", "draft"]).default("ok"),
+	status: z.enum(["ok", "redovisad", "forhandling", "ej_granskad", "pending", "approved", "rejected", "draft"]).default("ok"),
 	attested: z.enum(["ja", "nej", "ej_klart"]).default("ej_klart"),
 	attestedDate: z.string().optional(),
 	notes: z.string().optional(),
@@ -129,6 +129,46 @@ export async function getAtasAction(
 		return {
 			success: true,
 			data: filtered,
+			error: apiError.response?.data?.message || null,
+		};
+	}
+}
+
+export async function getSupplierAtasAction(
+	orderId: string,
+	supplier?: string
+): Promise<ActionResult<AtaItem[]>> {
+	try {
+		const basePath = API_PATH.ORDERS.ATAS(orderId);
+		const url = supplier && supplier !== "all"
+			? `${basePath}?category=ue-lev&supplier=${encodeURIComponent(supplier)}`
+			: `${basePath}?category=ue-lev`;
+		const res = await axiosInstance.get<ApiResponse<unknown>>(url);
+		const raw = res.data?.data ?? res.data;
+		const parsed = ataListSchema.safeParse(raw);
+		if (parsed.success) {
+			return { success: true, data: parsed.data, error: null };
+		}
+		const supplierFiltered = MOCK_ATAS.filter((a) => {
+			if (a.category !== "ue-lev") return false;
+			if (!supplier || supplier === "all") return true;
+			return a.supplier?.toLowerCase() === supplier.toLowerCase() ||
+				(supplier.toLowerCase() === "pelles måleri" && a.supplier?.toLowerCase() === "pelle målare") ||
+				(supplier.toLowerCase() === "pelle målare" && a.supplier?.toLowerCase() === "pelles måleri");
+		});
+		return { success: true, data: supplierFiltered, error: null };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		const supplierFiltered = MOCK_ATAS.filter((a) => {
+			if (a.category !== "ue-lev") return false;
+			if (!supplier || supplier === "all") return true;
+			return a.supplier?.toLowerCase() === supplier.toLowerCase() ||
+				(supplier.toLowerCase() === "pelles måleri" && a.supplier?.toLowerCase() === "pelle målare") ||
+				(supplier.toLowerCase() === "pelle målare" && a.supplier?.toLowerCase() === "pelles måleri");
+		});
+		return {
+			success: true,
+			data: supplierFiltered,
 			error: apiError.response?.data?.message || null,
 		};
 	}

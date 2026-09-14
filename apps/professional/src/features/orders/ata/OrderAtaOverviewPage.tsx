@@ -9,6 +9,7 @@ import { ATA_CONSTANTS, type AtaCategory } from "./constants/ata.constants";
 import { useAta } from "./hooks/useAta";
 import { AtaOverviewTable } from "./components/AtaOverviewTable";
 import { CreateAtaView } from "./components/CreateAtaView";
+import { AtaSupplierOverview } from "./components/AtaSupplierOverview";
 
 export interface OrderAtaOverviewPageProps {
 	orderId?: string;
@@ -103,7 +104,7 @@ export function OrderAtaOverviewPage({
 					</TabsTrigger>
 				</TabsList>
 
-				<TabsContent value={activeCategory} className="mt-0 focus-visible:outline-none">
+				<TabsContent value={ATA_CONSTANTS.CATEGORIES.CUSTOMER} className="mt-0 focus-visible:outline-none">
 					<AtaOverviewTable
 						rows={paginatedRows}
 						summary={summary}
@@ -125,6 +126,10 @@ export function OrderAtaOverviewPage({
 						onSend={sendAta}
 						onOpenCreate={handleOpenCreate}
 					/>
+				</TabsContent>
+
+				<TabsContent value={ATA_CONSTANTS.CATEGORIES.SUPPLIER} className="mt-0 focus-visible:outline-none">
+					<AtaSupplierOverview orderId={orderId} />
 				</TabsContent>
 			</Tabs>
 		</div>
