@@ -52,6 +52,11 @@ export interface FormFileUploadProps<
   previewClassName?: string;
   previewContainerClassName?: string;
   helperClassName?: string;
+  /**
+   * Turns a schema's error into display text. zod messages in this app are
+   * translation keys, so without it the key itself would be shown.
+   */
+  translateError?: (message: string) => string;
 }
 
 export function FormFileUpload<
@@ -85,6 +90,7 @@ export function FormFileUpload<
   previewClassName,
   previewContainerClassName,
   helperClassName,
+  translateError,
 }: FormFileUploadProps<TFieldValues, TName>) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -364,7 +370,7 @@ export function FormFileUpload<
             </p>
           )}
 
-          <FormMessage className={messageClassName} />
+          <FormMessage className={messageClassName} translate={translateError} />
         </FormItem>
       )}
     />
