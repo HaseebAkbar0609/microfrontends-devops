@@ -69,7 +69,7 @@ interface SectionEditDialogProps<TSection> {
 	onClose: () => void;
 }
 
-function SectionEditDialog<TSection extends Record<string, string>>({
+function SectionEditDialog<TSection extends { [K in keyof TSection]: string }>({
 	open,
 	titleKey,
 	fields,
