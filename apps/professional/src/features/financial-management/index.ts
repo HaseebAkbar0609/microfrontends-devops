@@ -101,5 +101,11 @@ export type {
 export * from "./constants/bank.constants";
 export * from "./utils/bankRepository";
 export * from "./hooks/useBank";
+export * from "./components/authorities";
+export * from "./types/authorities.types";
+export * from "./constants/authorities.constants";
+export * from "./utils/authoritiesRepository";
+export * from "./hooks/useAuthorities";
+export * from "./hooks/useAuthorityDetail";
 
 
