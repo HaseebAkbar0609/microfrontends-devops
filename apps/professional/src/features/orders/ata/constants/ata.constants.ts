@@ -11,6 +11,7 @@ export const ATA_CONSTANTS = {
 		OK: "ok",
 		ACCOUNTED: "redovisad",
 		NEGOTIATION: "forhandling",
+		NOT_REVIEWED: "ej_granskad",
 		PENDING: "pending",
 		APPROVED: "approved",
 		REJECTED: "rejected",
@@ -35,6 +36,7 @@ export const ATA_CONSTANTS = {
 		STEP_2: 2,
 		TOTAL_STEPS: 2,
 	} as const,
+	ALL_SUPPLIERS_VALUE: "all",
 };
 
 export type AtaCategory = (typeof ATA_CONSTANTS.CATEGORIES)[keyof typeof ATA_CONSTANTS.CATEGORIES];

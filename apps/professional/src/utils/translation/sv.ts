@@ -33,6 +33,7 @@ import {
 	EconomyBankTranslation,
 	AtaTranslation,
 	CreateAtaTranslation,
+	SupplierAtaTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -7879,6 +7880,27 @@ export const svCreateAta: CreateAtaTranslation = {
 	createAtaLocationFallbackJarfalla: "Järfälla",
 };
 
+export const svSupplierAta: SupplierAtaTranslation = {
+	ataSupplierSelectedSupplierLabel: "Vald leverantör/ UE",
+	ataSupplierAllSuppliers: "All",
+	ataSupplierTotalAta: "Totalt ÄTA",
+	ataSupplierCountAta: "Antal Äta",
+	ataSupplierColCompanyName: "Företags Namn",
+	ataSupplierColTotal: "Total",
+	ataSupplierColCount: "Antal",
+	ataSupplierColApproved: "Godkända",
+	ataSupplierColInReview: "Granskning",
+	ataSupplierColNotApproved: "Ej godkänd",
+	ataSupplierColLinkedAta: "Kopplad äta",
+	ataSupplierColAttested: "Attesterad",
+	ataSupplierColAttestDate: "Attest datum",
+	ataSupplierViewDetails: "Visa detaljer",
+	ataSupplierDownloadDocs: "Ladda ner underlag",
+	ataSupplierStatusNotReviewed: "Ej granskad",
+	ataSupplierLinkedYes: "Ja",
+	ataSupplierLinkedNo: "Nej",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -7913,6 +7935,7 @@ export const sv: Translation = {
 	...svEconomyBank,
 	...svAta,
 	...svCreateAta,
+	...svSupplierAta,
 };
 
 

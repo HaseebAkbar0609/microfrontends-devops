@@ -7810,6 +7810,27 @@ export type CreateAtaTranslation = {
 	createAtaLocationFallbackJarfalla: string;
 };
 
+export type SupplierAtaTranslation = {
+	ataSupplierSelectedSupplierLabel: string;
+	ataSupplierAllSuppliers: string;
+	ataSupplierTotalAta: string;
+	ataSupplierCountAta: string;
+	ataSupplierColCompanyName: string;
+	ataSupplierColTotal: string;
+	ataSupplierColCount: string;
+	ataSupplierColApproved: string;
+	ataSupplierColInReview: string;
+	ataSupplierColNotApproved: string;
+	ataSupplierColLinkedAta: string;
+	ataSupplierColAttested: string;
+	ataSupplierColAttestDate: string;
+	ataSupplierViewDetails: string;
+	ataSupplierDownloadDocs: string;
+	ataSupplierStatusNotReviewed: string;
+	ataSupplierLinkedYes: string;
+	ataSupplierLinkedNo: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7842,7 +7863,8 @@ export type Translation = HeaderTranslation &
 	EconomyBudgetTranslation &
 	EconomyBankTranslation &
 	AtaTranslation &
-	CreateAtaTranslation;
+	CreateAtaTranslation &
+	SupplierAtaTranslation;
 
 export type TranslationKeys = keyof Translation;
 

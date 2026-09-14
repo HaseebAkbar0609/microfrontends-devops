@@ -15,23 +15,19 @@ export function AtaSummaryCard({ summary }: AtaSummaryCardProps) {
 	);
 
 	return (
-		<div className="w-[192px] h-[68px] bg-slate-100 rounded-lg px-4 py-2 flex flex-col justify-center gap-2">
-			<div className="flex items-center justify-between">
-				<span className="font-sans font-semibold text-sm leading-none tracking-normal text-slate-900">
-					<Translate text={localizationConstants.ataTotalAta} />
-				</span>
-				<span className="font-sans font-semibold text-base leading-6 tracking-normal text-slate-500 text-center">
-					{formattedTotal}
-				</span>
-			</div>
-			<div className="flex items-center justify-between">
-				<span className="font-sans font-semibold text-sm leading-none tracking-normal text-slate-900">
-					<Translate text={localizationConstants.ataCountAta} />
-				</span>
-				<span className="font-sans font-semibold text-base leading-6 tracking-normal text-slate-500 text-center">
-					{summary.countAta}
-				</span>
-			</div>
+		<div className="bg-slate-100 rounded-lg px-4 py-3 grid grid-cols-[auto_1fr] items-center gap-x-6 gap-y-2.5 min-w-[210px] w-fit">
+			<span className="font-sans font-semibold text-sm leading-none tracking-normal text-slate-900">
+				<Translate text={localizationConstants.ataTotalAta} />
+			</span>
+			<span className="font-sans font-semibold text-sm leading-none tracking-normal text-slate-600 text-left">
+				{formattedTotal}
+			</span>
+			<span className="font-sans font-semibold text-sm leading-none tracking-normal text-slate-900">
+				<Translate text={localizationConstants.ataCountAta} />
+			</span>
+			<span className="font-sans font-semibold text-sm leading-none tracking-normal text-slate-600 text-left">
+				{summary.countAta}
+			</span>
 		</div>
 	);
 }

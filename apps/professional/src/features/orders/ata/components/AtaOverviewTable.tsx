@@ -382,8 +382,10 @@ export function AtaOverviewTable({
 								</div>
 							</TableHead>
 
-							{/* Actions / Visa detaljer & 3-dots */}
-							<TableHead className="w-[160px] px-4 py-3.5 text-right font-sans text-sm font-medium leading-6 tracking-normal text-slate-500" />
+							{/* Actions / Visa detaljer */}
+							<TableHead className="w-28 px-4 py-3.5 text-right font-sans text-sm font-medium leading-6 tracking-normal text-slate-500" />
+							{/* 3-dots */}
+							<TableHead className="w-12 px-2 py-3.5 text-center border-l border-slate-200" />
 						</TableRow>
 					</TableHeader>
 
@@ -399,11 +401,12 @@ export function AtaOverviewTable({
 									<TableCell className="px-4 py-3.5"><Skeleton className="h-4 w-12" /></TableCell>
 									<TableCell className="px-4 py-3.5"><Skeleton className="h-4 w-20" /></TableCell>
 									<TableCell className="px-4 py-3.5 text-right"><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
+									<TableCell className="w-12 px-2 py-3.5 border-l border-slate-200"><Skeleton className="h-8 w-8 mx-auto" /></TableCell>
 								</TableRow>
 							))
 						) : rows.length === 0 ? (
 							<TableRow className="h-[56px]">
-								<TableCell colSpan={8} className="h-[56px] text-center text-xs text-slate-400 py-6">
+								<TableCell colSpan={9} className="h-[56px] text-center text-xs text-slate-400 py-6">
 									{t(localizationConstants.noRecordsFound)}
 								</TableCell>
 							</TableRow>
@@ -450,67 +453,68 @@ export function AtaOverviewTable({
 										{row.attestedDate || row.date}
 									</TableCell>
 
-									{/* Visa detaljer button & 3 dots */}
-									<TableCell className="px-4 py-3.5 text-right">
-										<div className="flex items-center justify-end gap-1.5">
-											<Button
-												type="button"
-												variant="ghost"
-												size="sm"
-												onClick={() => onViewDetail?.(row)}
-												className="h-8 px-3 rounded bg-slate-100/70 hover:bg-slate-200/80 text-slate-800 font-sans text-xs font-medium cursor-pointer shadow-none"
-											>
-												<Translate text={localizationConstants.ataViewDetails} />
-											</Button>
+									{/* Visa detaljer button */}
+									<TableCell className="px-4 py-3.5 whitespace-nowrap text-right">
+										<Button
+											type="button"
+											variant="ghost"
+											size="sm"
+											onClick={() => onViewDetail?.(row)}
+											className="h-8 px-3 rounded bg-slate-100/70 hover:bg-slate-200/80 text-slate-800 font-sans text-xs font-medium cursor-pointer shadow-none"
+										>
+											<Translate text={localizationConstants.ataViewDetails} />
+										</Button>
+									</TableCell>
 
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														type="button"
-														variant="ghost"
-														size="icon"
-														className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md cursor-pointer"
-													>
-														<MoreVertical className="h-4 w-4 text-slate-900" />
-														<span className="sr-only">
-															<Translate text={localizationConstants.ataColActions} />
-														</span>
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent
-													align="end"
-													className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1"
+									{/* 3 dots with vertical line */}
+									<TableCell className="w-12 px-2 py-3.5 whitespace-nowrap text-center border-l border-slate-200">
+										<DropdownMenu>
+											<DropdownMenuTrigger asChild>
+												<Button
+													type="button"
+													variant="ghost"
+													size="icon"
+													className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md cursor-pointer mx-auto"
 												>
-													<DropdownMenuItem
-														onClick={() => onEdit?.(row)}
-														className="flex items-center gap-2.5 px-2.5 py-2 font-sans text-[14px] font-normal leading-[20px] tracking-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
-													>
-														<PencilLine className="h-4 w-4 text-slate-900 shrink-0" strokeWidth={1.75} />
-														<span>
-															<Translate text={localizationConstants.ataActionEdit} />
-														</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => setDeletingItem(row)}
-														className="flex items-center gap-2.5 px-2.5 py-2 font-sans text-[14px] font-normal leading-[20px] tracking-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
-													>
-														<Trash2 className="h-4 w-4 text-slate-900 shrink-0" strokeWidth={1.75} />
-														<span>
-															<Translate text={localizationConstants.ataActionDelete} />
-														</span>
-													</DropdownMenuItem>
-													<DropdownMenuItem
-														onClick={() => handleSendAta(row.id)}
-														className="flex items-center gap-2.5 px-2.5 py-2 font-sans text-[14px] font-normal leading-[20px] tracking-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
-													>
-														<Send className="h-4 w-4 text-slate-900 shrink-0" strokeWidth={1.75} />
-														<span>
-															<Translate text={localizationConstants.ataActionSend} />
-														</span>
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										</div>
+													<MoreVertical className="h-4 w-4 text-slate-900" />
+													<span className="sr-only">
+														<Translate text={localizationConstants.ataColActions} />
+													</span>
+												</Button>
+											</DropdownMenuTrigger>
+											<DropdownMenuContent
+												align="end"
+												className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1"
+											>
+												<DropdownMenuItem
+													onClick={() => onEdit?.(row)}
+													className="flex items-center gap-2.5 px-2.5 py-2 font-sans text-[14px] font-normal leading-[20px] tracking-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
+												>
+													<PencilLine className="h-4 w-4 text-slate-900 shrink-0" strokeWidth={1.75} />
+													<span>
+														<Translate text={localizationConstants.ataActionEdit} />
+													</span>
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													onClick={() => setDeletingItem(row)}
+													className="flex items-center gap-2.5 px-2.5 py-2 font-sans text-[14px] font-normal leading-[20px] tracking-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
+												>
+													<Trash2 className="h-4 w-4 text-slate-900 shrink-0" strokeWidth={1.75} />
+													<span>
+														<Translate text={localizationConstants.ataActionDelete} />
+													</span>
+												</DropdownMenuItem>
+												<DropdownMenuItem
+													onClick={() => handleSendAta(row.id)}
+													className="flex items-center gap-2.5 px-2.5 py-2 font-sans text-[14px] font-normal leading-[20px] tracking-normal text-slate-900 cursor-pointer rounded-md hover:bg-slate-100 transition-colors"
+												>
+													<Send className="h-4 w-4 text-slate-900 shrink-0" strokeWidth={1.75} />
+													<span>
+														<Translate text={localizationConstants.ataActionSend} />
+													</span>
+												</DropdownMenuItem>
+											</DropdownMenuContent>
+										</DropdownMenu>
 									</TableCell>
 								</TableRow>
 							))
