@@ -3443,6 +3443,14 @@ export type OfferTranslation = {
 	designRegNewPlaceholderAvdelning: string;
 	designRegNewPlaceholderStartDatum: string;
 	designRegNewPlaceholderSlutDatum: string;
+	// Design Module — Projekt Information
+	designProjektNrLabel: string;
+	designInfoTabProjektuppgifter: string;
+	designProjektAnsvarigSection: string;
+	designOrgSkapaBtn: string;
+	designOrgKontaktpersoner: string;
+	designOrgEmpty: string;
+	designOrgNoMatches: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;

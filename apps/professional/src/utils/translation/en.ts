@@ -3486,6 +3486,14 @@ export const enOffer: OfferTranslation = {
 	designRegNewPlaceholderAvdelning: "Enter Department",
 	designRegNewPlaceholderStartDatum: "Enter start date",
 	designRegNewPlaceholderSlutDatum: "Enter end date",
+	// Design Module — Projekt Information
+	designProjektNrLabel: "Project No.",
+	designInfoTabProjektuppgifter: "Project Details",
+	designProjektAnsvarigSection: "Project Responsible",
+	designOrgSkapaBtn: "Create New",
+	designOrgKontaktpersoner: "Contact Persons",
+	designOrgEmpty: "No organisations added yet.",
+	designOrgNoMatches: "No organisations match the search.",
 	// Machine Dashboard
 	machineDashRearrange: "Rearrange",
 	machineDashSave: "Save",

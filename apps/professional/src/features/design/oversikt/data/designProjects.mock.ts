@@ -13,6 +13,15 @@ export interface DesignProjectItem {
 
 export const DESIGN_PROJECT_ROWS: DesignProjectItem[] = [
 	{
+		id: "6001",
+		projectNr: "#6001",
+		name: "Renovation",
+		category: "Totalentreprenad",
+		department: "Nyproduktion",
+		projectManager: "Lindsey Philips",
+		customer: "Fastighetsbolaget AB",
+	},
+	{
 		id: "5000",
 		projectNr: "#5000",
 		name: "Renovation",
