@@ -3372,6 +3372,14 @@ export const svOffer: OfferTranslation = {
 	designRegNewPlaceholderAvdelning: "Ange Avdelning",
 	designRegNewPlaceholderStartDatum: "Ange start datum",
 	designRegNewPlaceholderSlutDatum: "Ange slut datum",
+	// Design Module — Projekt Information
+	designProjektNrLabel: "Projektering nr",
+	designInfoTabProjektuppgifter: "Projektinguppgifter",
+	designProjektAnsvarigSection: "Projekterings ansvarig",
+	designOrgSkapaBtn: "Skapa nytt",
+	designOrgKontaktpersoner: "Kontaktpersoner",
+	designOrgEmpty: "Inga organisationer tillagda ännu.",
+	designOrgNoMatches: "Inga organisationer matchar sökningen.",
 	// Machine Dashboard
 	machineDashRearrange: "Ordna om",
 	machineDashSave: "Spara",

@@ -55,7 +55,7 @@ const DesignProjectsListTab = () => {
 	}, [projects]);
 
 	const openProject = (project: DesignProjectItem) =>
-		showToast("info", project.projectNr);
+		router.push(`/module/production/design/${encodeURIComponent(project.id)}/projektinformation`);
 
 	const handleArchive = (project: DesignProjectItem) => {
 		setProjects(archiveDesignProject(project.id));

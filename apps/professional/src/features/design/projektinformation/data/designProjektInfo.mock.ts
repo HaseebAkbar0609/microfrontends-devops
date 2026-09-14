@@ -1,0 +1,155 @@
+import type {
+	DesignOrgMember,
+	DesignProjektRecord,
+} from "../types/designProjektInfo";
+
+const PROJEKT_RECORDS: DesignProjektRecord[] = [
+	{
+		projektId: "6001",
+		projektNr: "6001",
+		kunduppgifter: {
+			foretag: "Fastighetsbolaget AB",
+			address: "Ange adressen",
+			postNr: "12344432",
+			ort: "Info",
+			mail: "contact@email.com",
+			telefon: "",
+			orgNr: "",
+		},
+		projektAnsvarig: {
+			fornamn: "Fastighetsbolaget AB",
+			efternamn: "Name",
+			mail: "ahia@example.com",
+			mobil: "000-7961248",
+			roll: "",
+		},
+		projektering: {
+			projekteringNr: "ORD-0002",
+			projekteringNamn: "Renovation",
+			kvarteraNamn: "",
+			projekteringAdress: "Storgatan 16, 18800 Stockholm",
+			postNr: "000002",
+			ort: "",
+		},
+		projekteringInfo: {
+			typ: "",
+			kategori: "",
+			avdelning: "",
+			startDatum: "12/10/2025",
+			slutDatum: "01/10/2026",
+		},
+	},
+	...["5000", "5001", "5002", "5003", "5004", "5005"].map((id) => ({
+		projektId: id,
+		projektNr: id,
+		kunduppgifter: {
+			foretag: "Fastighetsbolaget AB",
+			address: "Storgatan 10",
+			postNr: "11752",
+			ort: "Solna",
+			mail: "info@fastighets.se",
+			telefon: "08-555 1234",
+			orgNr: "556123-4567",
+		},
+		projektAnsvarig: {
+			fornamn: "Sara",
+			efternamn: "Nilsson",
+			mail: "sara@fastighets.se",
+			mobil: "070-123 4567",
+			roll: "Projektledare",
+		},
+		projektering: {
+			projekteringNr: `ORD-00${id}`,
+			projekteringNamn: "Renovation",
+			kvarteraNamn: "",
+			projekteringAdress: "Storgatan 16, 18800 Stockholm",
+			postNr: "11752",
+			ort: "Stockholm",
+		},
+		projekteringInfo: {
+			typ: "Totalentreprenad",
+			kategori: "Bygg",
+			avdelning: "Nyproduktion",
+			startDatum: "2025-01-10",
+			slutDatum: "2026-01-10",
+		},
+	})),
+];
+
+export function getDesignProjektRecord(
+	projektId: string,
+): DesignProjektRecord | null {
+	return PROJEKT_RECORDS.find((r) => r.projektId === projektId) ?? null;
+}
+
+export const DESIGN_ORG_MEMBERS: DesignOrgMember[] = [
+	{
+		id: "org-1",
+		foretag: "Fastighetsbolaget",
+		roll: "Beställare",
+		kategori: "Beställare",
+		address: "Storgatan 10",
+		postNr: "11752",
+		ort: "Solna",
+		kontakt: "Sture Blomgren",
+		mail: "kalle@gmail.com",
+		group: "bestallare",
+		kontaktpersoner: [],
+	},
+	{
+		id: "org-2",
+		foretag: "Nässjaget AB",
+		roll: "Arkitekt",
+		kategori: "Beställare",
+		address: "Storgatan 10",
+		postNr: "11752",
+		ort: "Solna",
+		kontakt: "Sara Nilsson",
+		mail: "kalle@gmail.com",
+		group: "arkitekt",
+		kontaktpersoner: [
+			{
+				id: "kp-1",
+				fornamn: "Lars",
+				efternamn: "Svensson",
+				mail: "lars.svensson@byg.se",
+				mobil: "070-6306345",
+				roll: "Arkitekt",
+			},
+			{
+				id: "kp-2",
+				fornamn: "Lars",
+				efternamn: "Svensson",
+				mail: "lars.svensson@byg.se",
+				mobil: "070-9876543",
+				roll: "Projektledare",
+			},
+		],
+	},
+	{
+		id: "org-3",
+		foretag: "Nässjaget AB",
+		roll: "Arkitekt",
+		kategori: "Beställare",
+		address: "Storgatan 10",
+		postNr: "11752",
+		ort: "Solna",
+		kontakt: "Sara Nilsson",
+		mail: "kalle@gmail.com",
+		group: "byggentreprenor",
+		kontaktpersoner: [],
+	},
+	{
+		id: "org-4",
+		foretag: "Fastighetsbolaget",
+		roll: "Beställare",
+		kategori: "Beställare",
+		address: "Storgatan 10",
+		postNr: "11752",
+		ort: "Solna",
+		kontakt: "Sara Nilsson",
+		mail: "kalle@gmail.com",
+		group: "elektriker",
+		kontaktpersoner: [],
+	},
+];
