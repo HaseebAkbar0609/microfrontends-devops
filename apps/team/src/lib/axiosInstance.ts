@@ -4,8 +4,9 @@ import axios, {
 } from "axios";
 
 import { authStorage } from "@/lib/authStorage";
+import { API_PATH } from "@/constants/api";
 
-const REFRESH_PATH = "/auth/refresh-token";
+const REFRESH_PATH = API_PATH.AUTH.REFRESH_TOKEN;
 
 /** Same origin as main client; no auth interceptors on this instance. */
 function getApiBaseURL(): string | undefined {
@@ -109,7 +110,7 @@ axiosInstance.interceptors.response.use(
     const bodyStatus = response.data?.status;
     if (bodyStatus !== undefined && bodyStatus !== 200 && bodyStatus !== 201) {
       const message = response.data?.message || "Something went wrong";
-      return Promise.reject({ response: { data: { message } } });
+      return Promise.reject({ response: { data: { ...response.data, message } } });
     }
     return response;
   },
