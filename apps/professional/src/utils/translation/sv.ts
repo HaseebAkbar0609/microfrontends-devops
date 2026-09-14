@@ -34,6 +34,7 @@ import {
 	AtaTranslation,
 	CreateAtaTranslation,
 	SupplierAtaTranslation,
+	ViewAtaTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -7929,6 +7930,57 @@ export const svSupplierAta: SupplierAtaTranslation = {
 	ataSupplierLinkedNo: "Nej",
 };
 
+export const svViewAta: ViewAtaTranslation = {
+	viewAtaTitle: "Visa ÄTA",
+	viewAtaBtnBackTo: "Tillbaka till",
+	viewAtaBtnCancel: "Avbryt",
+	viewAtaBtnSave: "Spara",
+	viewAtaBtnConfirm: "Bekräfta",
+	viewAtaBtnApprove: "Godkänna",
+	viewAtaBtnReject: "Avböj",
+	viewAtaBtnEdit: "Redigera",
+	viewAtaBtnSendForApproval: "Skicka för godkännande",
+	viewAtaLinkAtaLabel: "Koppla Äta",
+	viewAtaAttachedInvoicesDocs: "Bifogade fakturor / dokument",
+	viewAtaDocName: "Dokumentets namn",
+	viewAtaDocFile: "Fil",
+	viewAtaBtnViewDoc: "View",
+	viewAtaProfitFee: "Vinstar arvode",
+	viewAtaTotalStaff: "Total egen personal",
+	viewAtaTotalMaterial: "Total material",
+	viewAtaTotalMachines: "Total maskiner",
+	viewAtaTotalUe: "Total UE",
+	viewAtaTotalSupplierAta: "Total ÄTA leverantör",
+	viewAtaLossToDamage: "Förlust till skador",
+	viewAtaActionOnDamage: "Åtgärd",
+	viewAtaEditSectionModalTitle: "Redigera rader",
+	viewAtaApproveConfirmTitle: "Godkänn ÄTA",
+	viewAtaApproveConfirmDesc: "Är du säker på att du vill godkänna denna ÄTA?",
+	viewAtaRejectConfirmTitle: "Avböj ÄTA",
+	viewAtaRejectConfirmDesc: "Är du säker på att du vill avböja denna ÄTA?",
+	viewAtaApproveSuccess: "ÄTA har godkänts",
+	viewAtaRejectSuccess: "ÄTA har avböjts",
+	viewAtaSaveSuccess: "Ändringar har sparats",
+	viewAtaActiveBadge: "Aktiv",
+	viewAtaStatusApproved: "Godkänd",
+	viewAtaStatusPending: "Väntar",
+	viewAtaStatusRejected: "Avböjd",
+	viewAtaStatusDraft: "Utkast",
+	viewAtaTagAtaUte: "ÄTA-Ute",
+	viewAtaTagAddition: "Tillkommande",
+	viewAtaTagChange: "Ändring",
+	viewAtaTagDeduction: "Avgående",
+	viewAtaAddRow: "Lägg till rad",
+	viewAtaDeleteRow: "Radera rad",
+	viewAtaColActions: "Åtgärder",
+	viewAtaNoLineItems: "Inga rader att visa",
+	viewAtaNoDocuments: "Inga bifogade dokument",
+	viewAtaSelectAtaPlaceholder: "Välj ÄTA",
+	viewAtaRowSingular: "rad",
+	viewAtaRowPlural: "rader",
+	viewAtaColPricePerUnit: "A-pris/enhet",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -7964,6 +8016,7 @@ export const sv: Translation = {
 	...svAta,
 	...svCreateAta,
 	...svSupplierAta,
+	...svViewAta,
 };
 
 
