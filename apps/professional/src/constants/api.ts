@@ -172,6 +172,8 @@ export const API_PATH = {
 		ATAS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas`,
 		ATA_DETAIL: (orderId: string, ataId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas/${ataId}`,
 		ATA_SEND: (orderId: string, ataId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas/${ataId}/send`,
+		STAFF: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/staff-ledger`,
+		STAFF_DETAIL: (orderId: string, staffId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/staff-ledger/${staffId}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {
