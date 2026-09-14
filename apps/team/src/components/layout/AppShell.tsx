@@ -19,7 +19,7 @@ export function AppShell({ children }: AppShellProps) {
 
 	// This is for temporary purposes to hide the sidebar and header on auth routes to match the requirements of the project
 	const authRoutes = ["/login", "/register", "/forgot-password", "/my-companies", "/manage-plans"];
-	const isAuthRoute = authRoutes.some((route) => pathname.startsWith(route));
+	const isAuthRoute = pathname === "/teams/invitation" || authRoutes.some((route) => pathname.startsWith(route));
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const hasFlyoutSubSidebar = !!flyoutSubSidebarConfig;
 	const hasSubSidebar = hasFlyoutSubSidebar;
