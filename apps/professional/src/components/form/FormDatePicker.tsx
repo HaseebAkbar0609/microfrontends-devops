@@ -43,6 +43,11 @@ export interface FormDatePickerProps<
 	 * the form, so pair it with a schema rule rather than relying on it alone.
 	 */
 	minDate?: string;
+	/**
+	 * Which side of the value the calendar icon sits. Defaults to `"end"`, as
+	 * every existing form draws it; the Tidsplan frames draw it at the start.
+	 */
+	iconPosition?: "start" | "end";
 }
 
 export function FormDatePicker<
@@ -60,6 +65,7 @@ export function FormDatePicker<
 	messageClassName,
 	translateError,
 	minDate,
+	iconPosition = "end",
 }: FormDatePickerProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
@@ -104,18 +110,24 @@ export function FormDatePicker<
 										disabled={disabled}
 										className={cn(
 											"h-10 w-full justify-between text-left font-normal border-slate-200 bg-white px-3 shadow-2xs hover:bg-slate-50 focus:ring-1 focus:ring-slate-950 text-sm",
+											iconPosition === "start" && "justify-start gap-2",
 											!validDate && "text-slate-400",
 											inputClassName,
 										)}
 									>
-										<span>
+										{iconPosition === "start" && (
+											<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										)}
+										<span className={cn(iconPosition === "start" && "flex-1")}>
 											{validDate
 												? format(validDate, "yyyy-MM-dd")
 												: placeholder
 													? t(placeholder)
 													: "YYYY-MM-DD"}
 										</span>
-										<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										{iconPosition === "end" && (
+											<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										)}
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent align="start" className="w-auto p-0 border-0 bg-transparent shadow-none">

@@ -132,6 +132,7 @@ const ProjectListTable = ({
 
 						<TableHead className="w-16 px-4 py-3 text-right">
 							<ProjectColumnPicker
+								columns={PROJECT_COLUMNS}
 								visibleColumns={visibleColumns}
 								onToggleColumn={(key) =>
 									setVisibleColumns((previous) =>

@@ -11,19 +11,31 @@ import {
 } from "@/components/ui/popover";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import type { ProjectSortField } from "../hooks/useProjectOverviewFilters";
-import { PROJECT_COLUMNS } from "./projectColumns";
 
-export interface ProjectColumnPickerProps {
-	visibleColumns: Set<ProjectSortField>;
-	onToggleColumn: (key: ProjectSortField) => void;
+export interface ProjectColumnPickerProps<TKey extends string> {
+	/** The columns on offer, in display order. */
+	columns: readonly { key: TKey; labelKey: string }[];
+	visibleColumns: ReadonlySet<TKey>;
+	onToggleColumn: (key: TKey) => void;
+	/**
+	 * The trigger's accessible name. Defaults to "Filter", which the project
+	 * list has always used; a caller can name it for what it does.
+	 */
+	ariaLabelKey?: string;
 }
 
-/** The `+` in the last header cell: which of the ten columns to show. */
-export function ProjectColumnPicker({
+/**
+ * The `+` in a project table's last header cell: which columns to show.
+ *
+ * Generic over the column key since the Tidsplan list draws the same `+`. The
+ * project list passes its own ten columns and renders exactly as before.
+ */
+export function ProjectColumnPicker<TKey extends string>({
+	columns,
 	visibleColumns,
 	onToggleColumn,
-}: ProjectColumnPickerProps) {
+	ariaLabelKey = localizationConstants.filter,
+}: ProjectColumnPickerProps<TKey>) {
 	const t = useTranslate();
 
 	return (
@@ -33,7 +45,7 @@ export function ProjectColumnPicker({
 					type="button"
 					variant="ghost"
 					size="icon"
-					aria-label={t(localizationConstants.filter)}
+					aria-label={t(ariaLabelKey)}
 					className="h-8 w-8 cursor-pointer rounded-md text-slate-500 hover:text-slate-900"
 				>
 					<Plus className="h-4 w-4" />
@@ -44,7 +56,7 @@ export function ProjectColumnPicker({
 				align="end"
 				className="w-56 rounded-md border border-slate-200 bg-white p-2 shadow-md"
 			>
-				{PROJECT_COLUMNS.map((column) => (
+				{columns.map((column) => (
 					<label
 						key={column.key}
 						className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-normal text-slate-700 hover:bg-slate-50"
