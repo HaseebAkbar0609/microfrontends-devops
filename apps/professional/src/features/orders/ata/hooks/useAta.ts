@@ -29,11 +29,14 @@ export function useAta(orderId: string = ATA_CONSTANTS.DEFAULT_ORDER_ID) {
 
 	const loadAtas = useCallback(async () => {
 		setIsLoading(true);
-		const result = await getAtasAction(orderId);
-		if (result.success && result.data) {
-			setAtas(result.data);
+		try {
+			const res = await getAtasAction(orderId);
+			if (res.success && res.data) {
+				setAtas(res.data);
+			}
+		} finally {
+			setIsLoading(false);
 		}
-		setIsLoading(false);
 	}, [orderId]);
 
 	useEffect(() => {

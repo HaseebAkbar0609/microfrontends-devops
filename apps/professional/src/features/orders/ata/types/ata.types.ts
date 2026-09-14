@@ -41,3 +41,75 @@ export interface AtaSummary {
 	approvedAta: number;
 	rejectedAta: number;
 }
+
+export type AtaType = "andring" | "tillagg" | "avgaende";
+
+export interface CreateAtaFormData {
+	orderId: string;
+	// Orderer (Beställare)
+	orderer: string;
+	ordererName: string;
+	address: string;
+	postalCode: string;
+	city: string;
+	// Order Information
+	eatingNumber: string;
+	title: string;
+	subTitle: string;
+	proposedAction: string;
+	action: string;
+	qualityStatus: string;
+	reason: string;
+	economicStatus: string;
+	location: string;
+	description: string;
+	ataType: AtaType;
+	date: string;
+	responsible: string;
+	amount: number;
+	vat: number;
+	status: AtaStatus;
+	supplierInvoices: string[];
+	timeReports: string[];
+}
+
+export interface DetailedLineItem {
+	id: string;
+	date: string;
+	personOrSupplier: string;
+	team: string;
+	description?: string;
+	amount: number;
+	quantityOrInvoice?: string | number;
+	unit?: string;
+	netPrice?: number | string;
+	netSum?: number | string;
+	percentage?: string | number;
+	contracted?: string;
+	n2?: string;
+	activity?: string;
+	position?: string;
+}
+
+export interface AttachedDocument {
+	id: string;
+	date: string;
+	referenceNumber: string;
+	fileName: string;
+	fileType: "pdf" | "doc" | "ppt" | "image";
+	fileSize?: string;
+	fileUrl?: string;
+	url?: string;
+}
+
+export interface CreateAtaSummary {
+	ataNr: string;
+	projectCode: string;
+	locations: string[];
+	ownStaffCount: number;
+	totalMaterial: number;
+	totalMachines: number;
+	totalUe: number;
+	totalAtaSupplier: number;
+}
+

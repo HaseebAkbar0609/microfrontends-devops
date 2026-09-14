@@ -7719,6 +7719,89 @@ export type AtaTranslation = {
 	ataPrintLabel: string;
 };
 
+export type CreateAtaTranslation = {
+	createAtaTitle: string;
+	createAtaOrderer: string;
+	createAtaOrdererName: string;
+	createAtaAddress: string;
+	createAtaPostalCode: string;
+	createAtaCity: string;
+	createAtaOrderInformation: string;
+	createAtaEatingNumber: string;
+	createAtaFieldTitle: string;
+	createAtaProposedAction: string;
+	createAtaAction: string;
+	createAtaQualityStatus: string;
+	createAtaReason: string;
+	createAtaEconomicStatus: string;
+	createAtaLocation: string;
+	createAtaDescription: string;
+	createAtaDescriptionPlaceholder: string;
+	createAtaStepProgress: string;
+	createAtaNumberPrefix: string;
+	createAtaOwnStaff: string;
+	createAtaTotalMaterial: string;
+	createAtaTotalMachines: string;
+	createAtaTotalUe: string;
+	createAtaTotalAtaSupplier: string;
+	createAtaBtnSend: string;
+	createAtaBtnPreview: string;
+	createAtaBtnBack: string;
+	createAtaBtnCancel: string;
+	createAtaBtnSave: string;
+	createAtaBtnSaveDraft: string;
+	createAtaBtnSendApproval: string;
+	createAtaDetailedInfo: string;
+	createAtaColDate: string;
+	createAtaColPerson: string;
+	createAtaColSupplier: string;
+	createAtaColTeam: string;
+	createAtaColDescription: string;
+	createAtaColAmount: string;
+	createAtaColQuantity: string;
+	createAtaColInvoice: string;
+	createAtaColUnit: string;
+	createAtaColNetPrice: string;
+	createAtaColNetSum: string;
+	createAtaColPercentage: string;
+	createAtaColContracted: string;
+	createAtaColN2: string;
+	createAtaColActivity: string;
+	createAtaColPosition: string;
+	createAtaBtnChange: string;
+	createAtaPurchaseSumIncVat: string;
+	createAtaDocuments: string;
+	createAtaUploadYourFiles: string;
+	createAtaUploadBtn: string;
+	createAtaUploadHint: string;
+	createAtaSupplierInvoice: string;
+	createAtaTimeReport: string;
+	createAtaSearchPlaceholder: string;
+	createAtaAttachedDocs: string;
+	createAtaColDocRefNo: string;
+	createAtaColFile: string;
+	createAtaActionEdit: string;
+	createAtaActionDelete: string;
+	createAtaCreatedSuccess: string;
+	createAtaSavedDraftSuccess: string;
+	createAtaSentSuccess: string;
+	createAtaValidationTitleRequired: string;
+	createAtaValidationEatingNoRequired: string;
+	createAtaValidationOrdererRequired: string;
+	createAtaCreatedBy: string;
+	createAtaFinancialStatus: string;
+	createAtaCustomField: string;
+	createAtaRevisedDate: string;
+	createAtaSelectOption: string;
+	createAtaNoResultsFound: string;
+	createAtaSaveFailed: string;
+	createAtaSendFailed: string;
+	createAtaDeleteFailed: string;
+	createAtaLoadFailed: string;
+	createAtaLocationFallbackStockholm: string;
+	createAtaLocationFallbackJarfalla: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7750,7 +7833,8 @@ export type Translation = HeaderTranslation &
 	CertificatesTranslation &
 	EconomyBudgetTranslation &
 	EconomyBankTranslation &
-	AtaTranslation;
+	AtaTranslation &
+	CreateAtaTranslation;
 
 export type TranslationKeys = keyof Translation;
 

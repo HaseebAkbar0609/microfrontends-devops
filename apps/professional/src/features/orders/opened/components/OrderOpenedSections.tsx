@@ -259,7 +259,7 @@ export function OrderOpenedSections({
 				</TabsContent>
 
 				{/* Tab 5: ÄTA */}
-				<TabsContent value="ata" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 pb-6 focus-visible:outline-none">
+				<TabsContent value="ata" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderAtaOverviewPage
 						orderId={routeOrderId}
 						onDetailModeChange={setIsAtaDetailOpen}
