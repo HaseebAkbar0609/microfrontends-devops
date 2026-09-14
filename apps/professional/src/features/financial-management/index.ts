@@ -95,6 +95,7 @@ export type {
 	BankLoanFormData,
 	BankAccountFormData,
 	BankSortField,
+	BankDocSortField,
 	BankSortOrder,
 } from "./types/bank.types";
 export * from "./constants/bank.constants";

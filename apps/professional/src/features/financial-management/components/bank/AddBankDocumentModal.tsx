@@ -22,7 +22,9 @@ interface AddBankDocumentModalProps {
 	onClose: () => void;
 	onSubmit: (data: Omit<BankDocumentItem, "id">) => void;
 	loans?: BankLoanItem[];
+	accounts?: import("../../types/bank.types").BankAccountItem[];
 	defaultLoanId?: string;
+	defaultAccountId?: string;
 }
 
 export function AddBankDocumentModal({
@@ -30,13 +32,16 @@ export function AddBankDocumentModal({
 	onClose,
 	onSubmit,
 	loans = [],
+	accounts = [],
 	defaultLoanId = "",
+	defaultAccountId = "",
 }: AddBankDocumentModalProps) {
 	const { t } = useTranslation();
 	const [name, setName] = useState("");
 	const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 	const [fileType, setFileType] = useState("PDF");
 	const [loanId, setLoanId] = useState(defaultLoanId);
+	const [accountId, setAccountId] = useState(defaultAccountId);
 	const [fileName, setFileName] = useState("");
 	const [error, setError] = useState("");
 
@@ -46,10 +51,11 @@ export function AddBankDocumentModal({
 			setDate(new Date().toISOString().split("T")[0]);
 			setFileType("PDF");
 			setLoanId(defaultLoanId);
+			setAccountId(defaultAccountId);
 			setFileName("");
 			setError("");
 		}
-	}, [isOpen, defaultLoanId]);
+	}, [isOpen, defaultLoanId, defaultAccountId]);
 
 	const handleSubmit = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -63,6 +69,7 @@ export function AddBankDocumentModal({
 			date,
 			fileType,
 			loanId: loanId || undefined,
+			accountId: accountId || undefined,
 			fileSize: "1.2 MB",
 		});
 		onClose();
@@ -140,7 +147,27 @@ export function AddBankDocumentModal({
 						</div>
 					</div>
 
-					{loans.length > 0 && !defaultLoanId && (
+					{accounts.length > 0 && !defaultAccountId && !loanId && (
+						<div>
+							<Label className="text-xs font-semibold text-[#475569] mb-1 block">
+								<Translate text={localizationConstants.tabBankAccounts} />
+							</Label>
+							<select
+								value={accountId}
+								onChange={(e) => setAccountId(e.target.value)}
+								className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-white px-3 text-sm text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+							>
+								<option value="">-- {t(localizationConstants.optionNoLoanDoc)} --</option>
+								{accounts.map((a) => (
+									<option key={a.id} value={a.id}>
+										{a.bankName} ({a.accountNumber || a.iban})
+									</option>
+								))}
+							</select>
+						</div>
+					)}
+
+					{loans.length > 0 && !defaultLoanId && !accountId && (
 						<div>
 							<Label className="text-xs font-semibold text-[#475569] mb-1 block">
 								<Translate text={localizationConstants.tabBankLoans} />
