@@ -31,6 +31,7 @@ import {
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
+	AtaTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -7685,6 +7686,55 @@ export const svEconomyBank: EconomyBankTranslation = {
 	breadcrumbBank: "Bank",
 };
 
+export const svAta: AtaTranslation = {
+	ataTitle: "ÄTA",
+	ataOverview: "ÄTA Översikt",
+	ataCustomerTab: "ÄTA - kund",
+	ataSupplierTab: "ÄTA-Leverantör /UE",
+	ataCreateButton: "Skapa ÄTA",
+	ataTotalAta: "Totalt ÄTA",
+	ataCountAta: "Antal Äta",
+	ataActiveAta: "Aktiva ÄTA",
+	ataPendingApproval: "Väntande godkännande",
+	ataApprovedAta: "Godkända ÄTA",
+	ataRejectedAta: "Avvisade",
+	ataTotalAtaValue: "Totalt ÄTA-värde",
+	ataColDate: "Datum",
+	ataColNumber: "Äta - nummer",
+	ataColLinkedLevAta: "Kopplad Lev-äta",
+	ataColSupplier: "Leverantör / UE",
+	ataColTitle: "Titel/Beskrivning",
+	ataColAmount: "Belopp",
+	ataColStatus: "Status",
+	ataColAttested: "Attesterad",
+	ataColAttestedDate: "Datum",
+	ataColActions: "Åtgärder",
+	ataViewDetails: "Visa detaljer",
+	ataActionEdit: "Redigera",
+	ataActionDelete: "Radera",
+	ataActionSend: "Skicka",
+	ataStatusOk: "OK",
+	ataStatusAccounted: "Redovisad",
+	ataStatusNegotiation: "Förhandling",
+	ataStatusPending: "Väntande",
+	ataStatusApproved: "Godkänd",
+	ataStatusRejected: "Avvisad",
+	ataStatusDraft: "Utkast",
+	ataAttestedYes: "Ja",
+	ataAttestedNo: "Nej",
+	ataAttestedPending: "Ej klart",
+	ataFilterAll: "Alla",
+	ataFilterStatus: "Filter status",
+	ataDeleteConfirmTitle: "Radera ÄTA",
+	ataDeleteConfirmDesc: "Är du säker på att du vill radera denna ÄTA? Denna åtgärd kan inte ångras.",
+	ataDeleteSuccess: "ÄTA har raderats",
+	ataSendSuccess: "ÄTA har skickats",
+	ataEmptyStateTitle: "Inga ÄTA hittades",
+	ataEmptyStateDesc: "Det finns inga registrerade ÄTA för denna order ännu.",
+	ataAmountSekSuffix: "SEK",
+	ataPrintLabel: "Skriv ut",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -7717,6 +7767,7 @@ export const sv: Translation = {
 	...svCertificates,
 	...svEconomyBudget,
 	...svEconomyBank,
+	...svAta,
 };
 
 

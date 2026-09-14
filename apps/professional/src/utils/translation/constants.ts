@@ -7618,6 +7618,55 @@ export type EconomyBankTranslation = {
 	breadcrumbBank: string;
 };
 
+export type AtaTranslation = {
+	ataTitle: string;
+	ataOverview: string;
+	ataCustomerTab: string;
+	ataSupplierTab: string;
+	ataCreateButton: string;
+	ataTotalAta: string;
+	ataCountAta: string;
+	ataActiveAta: string;
+	ataPendingApproval: string;
+	ataApprovedAta: string;
+	ataRejectedAta: string;
+	ataTotalAtaValue: string;
+	ataColDate: string;
+	ataColNumber: string;
+	ataColLinkedLevAta: string;
+	ataColSupplier: string;
+	ataColTitle: string;
+	ataColAmount: string;
+	ataColStatus: string;
+	ataColAttested: string;
+	ataColAttestedDate: string;
+	ataColActions: string;
+	ataViewDetails: string;
+	ataActionEdit: string;
+	ataActionDelete: string;
+	ataActionSend: string;
+	ataStatusOk: string;
+	ataStatusAccounted: string;
+	ataStatusNegotiation: string;
+	ataStatusPending: string;
+	ataStatusApproved: string;
+	ataStatusRejected: string;
+	ataStatusDraft: string;
+	ataAttestedYes: string;
+	ataAttestedNo: string;
+	ataAttestedPending: string;
+	ataFilterAll: string;
+	ataFilterStatus: string;
+	ataDeleteConfirmTitle: string;
+	ataDeleteConfirmDesc: string;
+	ataDeleteSuccess: string;
+	ataSendSuccess: string;
+	ataEmptyStateTitle: string;
+	ataEmptyStateDesc: string;
+	ataAmountSekSuffix: string;
+	ataPrintLabel: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7648,7 +7697,8 @@ export type Translation = HeaderTranslation &
 	AccountLifecycleTranslation &
 	CertificatesTranslation &
 	EconomyBudgetTranslation &
-	EconomyBankTranslation;
+	EconomyBankTranslation &
+	AtaTranslation;
 
 export type TranslationKeys = keyof Translation;
 

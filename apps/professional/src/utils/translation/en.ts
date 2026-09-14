@@ -31,6 +31,7 @@ import {
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
+	AtaTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -7663,6 +7664,55 @@ export const enEconomyBank: EconomyBankTranslation = {
 	breadcrumbBank: "Bank",
 };
 
+export const enAta: AtaTranslation = {
+	ataTitle: "ATA",
+	ataOverview: "ATA Overview",
+	ataCustomerTab: "ATA - Customer",
+	ataSupplierTab: "ATA - Supplier / Subcontractor",
+	ataCreateButton: "Create ATA",
+	ataTotalAta: "Total ATA",
+	ataCountAta: "Number of ATA",
+	ataActiveAta: "Active ATA",
+	ataPendingApproval: "Pending Approval",
+	ataApprovedAta: "Approved ATA",
+	ataRejectedAta: "Rejected",
+	ataTotalAtaValue: "Total ATA Value",
+	ataColDate: "Date",
+	ataColNumber: "ATA - Number",
+	ataColLinkedLevAta: "Linked Supplier ATA",
+	ataColSupplier: "Supplier / Subcontractor",
+	ataColTitle: "Title/Description",
+	ataColAmount: "Amount",
+	ataColStatus: "Status",
+	ataColAttested: "Attested",
+	ataColAttestedDate: "Date",
+	ataColActions: "Actions",
+	ataViewDetails: "View Details",
+	ataActionEdit: "Edit",
+	ataActionDelete: "Delete",
+	ataActionSend: "Send",
+	ataStatusOk: "OK",
+	ataStatusAccounted: "Accounted",
+	ataStatusNegotiation: "Negotiation",
+	ataStatusPending: "Pending",
+	ataStatusApproved: "Approved",
+	ataStatusRejected: "Rejected",
+	ataStatusDraft: "Draft",
+	ataAttestedYes: "Yes",
+	ataAttestedNo: "No",
+	ataAttestedPending: "Pending",
+	ataFilterAll: "All",
+	ataFilterStatus: "Filter status",
+	ataDeleteConfirmTitle: "Delete ATA",
+	ataDeleteConfirmDesc: "Are you sure you want to delete this ATA? This action cannot be undone.",
+	ataDeleteSuccess: "ATA has been deleted",
+	ataSendSuccess: "ATA has been sent",
+	ataEmptyStateTitle: "No ATA found",
+	ataEmptyStateDesc: "There are no registered ATAs for this order yet.",
+	ataAmountSekSuffix: "SEK",
+	ataPrintLabel: "Print",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -7695,6 +7745,7 @@ export const en: Translation = {
 	...enCertificates,
 	...enEconomyBudget,
 	...enEconomyBank,
+	...enAta,
 };
 
 
