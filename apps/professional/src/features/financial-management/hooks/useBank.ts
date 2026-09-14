@@ -40,16 +40,27 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState(BANK_DEFAULT_PAGE_SIZE);
 
+	// Filters & Pagination for Documents
+	const [docSearchQuery, setDocSearchQuery] = useState("");
+	const [docFileTypeFilter, setDocFileTypeFilter] = useState<string>("all");
+	const [docSortBy, setDocSortBy] = useState<import("../types/bank.types").BankDocSortField>("date");
+	const [docSortOrder, setDocSortOrder] = useState<SortOrder>("desc");
+	const [docCurrentPage, setDocCurrentPage] = useState(1);
+	const [docPageSize, setDocPageSize] = useState(BANK_DEFAULT_PAGE_SIZE);
+
 	// Modals
 	const [isCreateAccountOpen, setIsCreateAccountOpen] = useState(false);
 	const [isCreateLoanOpen, setIsCreateLoanOpen] = useState(false);
 	const [isAddDocOpen, setIsAddDocOpen] = useState(false);
+	const [isSelectBankOpen, setIsSelectBankOpen] = useState(false);
+	const [isBankIdModalOpen, setIsBankIdModalOpen] = useState(false);
+	const [selectedBankForConnect, setSelectedBankForConnect] = useState<string>("SEB (Skandinaviska Enskilda Banken)");
 	const [editingAccount, setEditingAccount] = useState<BankAccountItem | null>(null);
 	const [editingLoan, setEditingLoan] = useState<BankLoanItem | null>(null);
 	const [itemToDelete, setItemToDelete] = useState<{
 		id: string;
 		title: string;
-		type: "loan" | "document";
+		type: "loan" | "document" | "account";
 	} | null>(null);
 
 	const refreshData = useCallback(() => {
@@ -139,6 +150,70 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 		[sortBy],
 	);
 
+	// Filtered documents
+	const filteredDocs = useMemo(() => {
+		return documents.filter((doc) => {
+			if (docSearchQuery.trim()) {
+				const q = docSearchQuery.toLowerCase();
+				const matchName = doc.name.toLowerCase().includes(q);
+				const matchDate = doc.date.toLowerCase().includes(q);
+				const matchType = doc.fileType.toLowerCase().includes(q);
+				if (!matchName && !matchDate && !matchType) return false;
+			}
+			if (docFileTypeFilter !== "all" && doc.fileType.toUpperCase() !== docFileTypeFilter.toUpperCase()) {
+				return false;
+			}
+			return true;
+		});
+	}, [documents, docSearchQuery, docFileTypeFilter]);
+
+	// Sorted documents
+	const sortedDocs = useMemo(() => {
+		return [...filteredDocs].sort((a, b) => {
+			let valA = "";
+			let valB = "";
+			switch (docSortBy) {
+				case "date":
+					valA = a.date;
+					valB = b.date;
+					break;
+				case "name":
+					valA = a.name.toLowerCase();
+					valB = b.name.toLowerCase();
+					break;
+				case "fileType":
+					valA = a.fileType.toLowerCase();
+					valB = b.fileType.toLowerCase();
+					break;
+				default:
+					return 0;
+			}
+			if (valA < valB) return docSortOrder === "asc" ? -1 : 1;
+			if (valA > valB) return docSortOrder === "asc" ? 1 : -1;
+			return 0;
+		});
+	}, [filteredDocs, docSortBy, docSortOrder]);
+
+	// Paginated documents
+	const docTotalCount = sortedDocs.length;
+	const docTotalPages = Math.max(1, Math.ceil(docTotalCount / docPageSize));
+	const paginatedDocuments = useMemo(() => {
+		const start = (docCurrentPage - 1) * docPageSize;
+		return sortedDocs.slice(start, start + docPageSize);
+	}, [sortedDocs, docCurrentPage, docPageSize]);
+
+	const handleDocSort = useCallback(
+		(field: import("../types/bank.types").BankDocSortField) => {
+			if (docSortBy === field) {
+				setDocSortOrder((prev: SortOrder) => (prev === "asc" ? "desc" : "asc"));
+			} else {
+				setDocSortBy(field);
+				setDocSortOrder("asc");
+			}
+		},
+		[docSortBy],
+	);
+
 	// Mutations
 	const createAccount = useCallback(
 		(formData: BankAccountFormData) => {
@@ -158,6 +233,63 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 			setEditingAccount(null);
 			toast.success(t(localizationConstants.toastAccountUpdated));
 			return updated;
+		},
+		[refreshData, t],
+	);
+
+	const connectWithBankId = useCallback(
+		(bankName: string, personalNumber?: string) => {
+			const randomAccNum = `5${Math.floor(100 + Math.random() * 900)} ${Math.floor(1000000 + Math.random() * 9000000)}`;
+			const cleanIban = `SE${Math.floor(10 + Math.random() * 89)} 5000 0000 ${randomAccNum.replace(/\s+/g, "")}`;
+			const created = bankRepository.createAccount({
+				title: `${bankName.split(" ")[0]} Företagskonto`,
+				bankName: bankName,
+				accountType: "Företagskonto",
+				accountNumber: randomAccNum,
+				iban: cleanIban,
+				swiftBic: "ESSESESS",
+				currency: "SEK",
+				balance: 1500000,
+				isConnected: true,
+				connectionType: "bankid",
+				autoDailySync: true,
+				contactPerson: {
+					name: personalNumber ? `Verifierad användare (${personalNumber.slice(0, 8)}-****)` : "Verifierad BankID Användare",
+					role: "Kontoinnehavare",
+					email: "kontakt@foretaget.se",
+					phone: "+46 8 123 45 67",
+				},
+			});
+			refreshData();
+			setIsBankIdModalOpen(false);
+			setIsSelectBankOpen(false);
+			toast.success(t(localizationConstants.bankIdSuccessTitle));
+			return created;
+		},
+		[refreshData, t],
+	);
+
+	const syncAccount = useCallback(
+		(id: string) => {
+			const updated = bankRepository.updateAccount(id, {
+				lastSync: new Date().toISOString(),
+				syncStatus: "synced",
+			});
+			refreshData();
+			toast.success(t(localizationConstants.lblSyncedStatus));
+			return updated;
+		},
+		[refreshData, t],
+	);
+
+	const deleteAccount = useCallback(
+		(id: string) => {
+			const success = bankRepository.deleteAccount(id);
+			if (success) {
+				refreshData();
+				toast.success(t(localizationConstants.toastItemDeleted));
+			}
+			return success;
 		},
 		[refreshData, t],
 	);
@@ -223,9 +355,9 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 		activeTab,
 		setActiveTab,
 		accounts,
+		// Loans
 		loans: paginatedLoans,
 		allLoans: loans,
-		documents,
 		totalCount,
 		currentPage,
 		setCurrentPage,
@@ -239,6 +371,22 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 		sortBy,
 		sortOrder,
 		handleSort,
+		// Documents
+		documents: paginatedDocuments,
+		allDocuments: documents,
+		docTotalCount,
+		docCurrentPage,
+		setDocCurrentPage,
+		docPageSize,
+		setDocPageSize,
+		docTotalPages,
+		docSearchQuery,
+		setDocSearchQuery,
+		docFileTypeFilter,
+		setDocFileTypeFilter,
+		docSortBy,
+		docSortOrder,
+		handleDocSort,
 		// Modals
 		isCreateAccountOpen,
 		setIsCreateAccountOpen,
@@ -246,6 +394,12 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 		setIsCreateLoanOpen,
 		isAddDocOpen,
 		setIsAddDocOpen,
+		isSelectBankOpen,
+		setIsSelectBankOpen,
+		isBankIdModalOpen,
+		setIsBankIdModalOpen,
+		selectedBankForConnect,
+		setSelectedBankForConnect,
 		editingAccount,
 		setEditingAccount,
 		editingLoan,
@@ -255,6 +409,9 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 		// Actions
 		createAccount,
 		updateAccount,
+		deleteAccount,
+		connectWithBankId,
+		syncAccount,
 		createLoan,
 		updateLoan,
 		deleteLoan,
