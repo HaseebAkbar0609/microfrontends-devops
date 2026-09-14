@@ -6,17 +6,19 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { ATA_CONSTANTS, type AtaCategory } from "./constants/ata.constants";
+import type { AtaItem } from "./types/ata.types";
 import { useAta } from "./hooks/useAta";
 import { AtaOverviewTable } from "./components/AtaOverviewTable";
 import { CreateAtaView } from "./components/CreateAtaView";
 import { AtaSupplierOverview } from "./components/AtaSupplierOverview";
+import { ViewAtaView } from "./components/ViewAtaView";
 
 export interface OrderAtaOverviewPageProps {
 	orderId?: string;
 	onDetailModeChange?: (isOpen: boolean) => void;
 }
 
-export type AtaViewMode = "table" | "create";
+export type AtaViewMode = "table" | "create" | "view";
 
 export function OrderAtaOverviewPage({
 	orderId = ATA_CONSTANTS.DEFAULT_ORDER_ID,
@@ -25,10 +27,15 @@ export function OrderAtaOverviewPage({
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const queryAction = searchParams?.get("action") || null;
+	const queryAtaId = searchParams?.get("ataId") || "1";
 
-	const [viewMode, setViewMode] = useState<AtaViewMode>(
-		queryAction === "create" ? "create" : "table"
-	);
+	const [viewMode, setViewMode] = useState<AtaViewMode>(() => {
+		if (queryAction === "create") return "create";
+		if (queryAction === "view") return "view";
+		return "table";
+	});
+
+	const [selectedAtaId, setSelectedAtaId] = useState<string>(queryAtaId);
 
 	const {
 		activeCategory,
@@ -57,13 +64,28 @@ export function OrderAtaOverviewPage({
 		if (queryAction === "create") {
 			setViewMode("create");
 			onDetailModeChange?.(true);
+		} else if (queryAction === "view") {
+			setViewMode("view");
+			setSelectedAtaId(queryAtaId);
+			onDetailModeChange?.(true);
+		} else {
+			setViewMode("table");
+			onDetailModeChange?.(false);
 		}
-	}, [queryAction, onDetailModeChange]);
+	}, [queryAction, queryAtaId, onDetailModeChange]);
 
 	const handleOpenCreate = () => {
 		setViewMode("create");
 		onDetailModeChange?.(true);
 		router.push(`/module/production/order/${orderId}/ata?action=create`);
+	};
+
+	const handleOpenView = (ata: AtaItem) => {
+		const targetId = ata.id || "1";
+		setSelectedAtaId(targetId);
+		setViewMode("view");
+		onDetailModeChange?.(true);
+		router.push(`/module/production/order/${orderId}/ata?action=view&ataId=${targetId}`);
 	};
 
 	const handleBackToTable = () => {
@@ -81,6 +103,17 @@ export function OrderAtaOverviewPage({
 		return (
 			<CreateAtaView
 				orderId={orderId}
+				onBack={handleBackToTable}
+				onSaved={handleSaved}
+			/>
+		);
+	}
+
+	if (viewMode === "view") {
+		return (
+			<ViewAtaView
+				orderId={orderId}
+				ataId={selectedAtaId}
 				onBack={handleBackToTable}
 				onSaved={handleSaved}
 			/>
@@ -125,6 +158,7 @@ export function OrderAtaOverviewPage({
 						onDelete={removeAta}
 						onSend={sendAta}
 						onOpenCreate={handleOpenCreate}
+						onViewDetail={handleOpenView}
 					/>
 				</TabsContent>
 

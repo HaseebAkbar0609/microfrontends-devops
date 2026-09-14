@@ -140,3 +140,52 @@ export type SupplierDetailSortField =
 	| "attested"
 	| "attestedDate";
 
+export interface ViewAtaGeneralInfo {
+	supplier?: string;
+	economicStatus?: string;
+	location?: string;
+	reason?: string;
+	title?: string;
+	subTitle?: string;
+	responsible?: string;
+	qualityStatus?: string;
+	date?: string;
+	revisedDate?: string;
+	description?: string;
+	proposedAction?: string;
+	action?: string;
+	lossToDamage?: string;
+	actionOnDamage?: string;
+}
+
+export interface ViewAtaOrdererInfo {
+	orderer: string;
+	ordererName: string;
+	address: string;
+	postalCode: string;
+	city: string;
+}
+
+export interface ViewAtaDetailData {
+	id: string;
+	orderId: string;
+	ataNumber: string;
+	title: string;
+	status: AtaStatus;
+	activeBadge?: string;
+	tagBadges?: string[];
+	linkedLevAta?: string;
+	linkedAtaOptions?: string[];
+	ordererInfo: ViewAtaOrdererInfo;
+	generalInfo: ViewAtaGeneralInfo;
+	summary: CreateAtaSummary;
+	staffItems: DetailedLineItem[];
+	materialItems: DetailedLineItem[];
+	machineItems: DetailedLineItem[];
+	ueItems: DetailedLineItem[];
+	supplierAtaItems: DetailedLineItem[];
+	attachedDocs: AttachedDocument[];
+	createdAt?: string;
+	updatedAt?: string;
+}
+

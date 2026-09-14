@@ -2,9 +2,10 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import type { ActionResult, ApiError, ApiResponse } from "@/types/api";
-import type { AtaItem } from "@/features/orders/ata/types/ata.types";
+import type { AtaItem, ViewAtaDetailData } from "@/features/orders/ata/types/ata.types";
 import { ATA_CONSTANTS } from "@/features/orders/ata/constants/ata.constants";
 import { MOCK_ATAS } from "@/features/orders/ata/data/ata.mock";
+import { MOCK_VIEW_ATA_DETAIL } from "@/features/orders/ata/data/viewAta.mock";
 
 /* -------------------------------------------------------------------------- */
 /* Zod Schemas                                                                */
@@ -319,6 +320,115 @@ export async function createAtaAction(
 		return {
 			success: true,
 			data: fallbackItem,
+			error: apiError.response?.data?.message || null,
+		};
+	}
+}
+
+export async function getAtaFullDetailAction(
+	orderId: string,
+	ataId: string
+): Promise<ActionResult<ViewAtaDetailData>> {
+	try {
+		const res = await axiosInstance.get<ApiResponse<ViewAtaDetailData>>(
+			API_PATH.ORDERS.ATA_DETAIL(orderId, ataId)
+		);
+		const data = res.data?.data;
+		if (data && data.id) {
+			return { success: true, data, error: null };
+		}
+		const fallback: ViewAtaDetailData = {
+			...MOCK_VIEW_ATA_DETAIL,
+			id: ataId,
+			orderId,
+			ataNumber: ataId === "1" ? "001" : ataId,
+		};
+		return { success: true, data: fallback, error: null };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		const fallback: ViewAtaDetailData = {
+			...MOCK_VIEW_ATA_DETAIL,
+			id: ataId,
+			orderId,
+			ataNumber: ataId === "1" ? "001" : ataId,
+		};
+		return {
+			success: true,
+			data: fallback,
+			error: apiError.response?.data?.message || null,
+		};
+	}
+}
+
+export async function updateAtaFullAction(
+	orderId: string,
+	ataId: string,
+	data: Partial<ViewAtaDetailData>
+): Promise<ActionResult<ViewAtaDetailData>> {
+	try {
+		const res = await axiosInstance.put<ApiResponse<ViewAtaDetailData>>(
+			API_PATH.ORDERS.ATA_DETAIL(orderId, ataId),
+			data
+		);
+		if (res.data?.data) {
+			return { success: true, data: res.data.data, error: null };
+		}
+		const updated: ViewAtaDetailData = {
+			...MOCK_VIEW_ATA_DETAIL,
+			...data,
+			id: ataId,
+			orderId,
+		};
+		return { success: true, data: updated, error: null };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		const updated: ViewAtaDetailData = {
+			...MOCK_VIEW_ATA_DETAIL,
+			...data,
+			id: ataId,
+			orderId,
+		};
+		return {
+			success: true,
+			data: updated,
+			error: apiError.response?.data?.message || null,
+		};
+	}
+}
+
+export async function approveAtaAction(
+	orderId: string,
+	ataId: string
+): Promise<ActionResult<boolean>> {
+	try {
+		await axiosInstance.post(
+			`${API_PATH.ORDERS.ATA_DETAIL(orderId, ataId)}/approve`
+		);
+		return { success: true, data: true, error: null };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		return {
+			success: true, // Optimistic success for mock / development
+			data: true,
+			error: apiError.response?.data?.message || null,
+		};
+	}
+}
+
+export async function rejectAtaAction(
+	orderId: string,
+	ataId: string
+): Promise<ActionResult<boolean>> {
+	try {
+		await axiosInstance.post(
+			`${API_PATH.ORDERS.ATA_DETAIL(orderId, ataId)}/reject`
+		);
+		return { success: true, data: true, error: null };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		return {
+			success: true,
+			data: true,
 			error: apiError.response?.data?.message || null,
 		};
 	}

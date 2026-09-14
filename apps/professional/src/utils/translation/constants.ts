@@ -7857,6 +7857,57 @@ export type SupplierAtaTranslation = {
 	ataSupplierLinkedNo: string;
 };
 
+export type ViewAtaTranslation = {
+	viewAtaTitle: string;
+	viewAtaBtnBackTo: string;
+	viewAtaBtnCancel: string;
+	viewAtaBtnSave: string;
+	viewAtaBtnConfirm: string;
+	viewAtaBtnApprove: string;
+	viewAtaBtnReject: string;
+	viewAtaBtnEdit: string;
+	viewAtaBtnSendForApproval: string;
+	viewAtaLinkAtaLabel: string;
+	viewAtaAttachedInvoicesDocs: string;
+	viewAtaDocName: string;
+	viewAtaDocFile: string;
+	viewAtaBtnViewDoc: string;
+	viewAtaProfitFee: string;
+	viewAtaTotalStaff: string;
+	viewAtaTotalMaterial: string;
+	viewAtaTotalMachines: string;
+	viewAtaTotalUe: string;
+	viewAtaTotalSupplierAta: string;
+	viewAtaLossToDamage: string;
+	viewAtaActionOnDamage: string;
+	viewAtaEditSectionModalTitle: string;
+	viewAtaApproveConfirmTitle: string;
+	viewAtaApproveConfirmDesc: string;
+	viewAtaRejectConfirmTitle: string;
+	viewAtaRejectConfirmDesc: string;
+	viewAtaApproveSuccess: string;
+	viewAtaRejectSuccess: string;
+	viewAtaSaveSuccess: string;
+	viewAtaActiveBadge: string;
+	viewAtaStatusApproved: string;
+	viewAtaStatusPending: string;
+	viewAtaStatusRejected: string;
+	viewAtaStatusDraft: string;
+	viewAtaTagAtaUte: string;
+	viewAtaTagAddition: string;
+	viewAtaTagChange: string;
+	viewAtaTagDeduction: string;
+	viewAtaAddRow: string;
+	viewAtaDeleteRow: string;
+	viewAtaColActions: string;
+	viewAtaNoLineItems: string;
+	viewAtaNoDocuments: string;
+	viewAtaSelectAtaPlaceholder: string;
+	viewAtaRowSingular: string;
+	viewAtaRowPlural: string;
+	viewAtaColPricePerUnit: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -7890,7 +7941,8 @@ export type Translation = HeaderTranslation &
 	EconomyBankTranslation &
 	AtaTranslation &
 	CreateAtaTranslation &
-	SupplierAtaTranslation;
+	SupplierAtaTranslation &
+	ViewAtaTranslation;
 
 export type TranslationKeys = keyof Translation;
 

@@ -34,6 +34,7 @@ import {
 	AtaTranslation,
 	CreateAtaTranslation,
 	SupplierAtaTranslation,
+	ViewAtaTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -7908,6 +7909,57 @@ export const enSupplierAta: SupplierAtaTranslation = {
 	ataSupplierLinkedNo: "No",
 };
 
+export const enViewAta: ViewAtaTranslation = {
+	viewAtaTitle: "View ATA",
+	viewAtaBtnBackTo: "Back to",
+	viewAtaBtnCancel: "Cancel",
+	viewAtaBtnSave: "Save",
+	viewAtaBtnConfirm: "Confirm",
+	viewAtaBtnApprove: "Approve",
+	viewAtaBtnReject: "Reject",
+	viewAtaBtnEdit: "Edit",
+	viewAtaBtnSendForApproval: "Send for Approval",
+	viewAtaLinkAtaLabel: "Link ATA",
+	viewAtaAttachedInvoicesDocs: "Attached Invoices / Documents",
+	viewAtaDocName: "Document name",
+	viewAtaDocFile: "File",
+	viewAtaBtnViewDoc: "View",
+	viewAtaProfitFee: "Profit fee",
+	viewAtaTotalStaff: "Total own staff",
+	viewAtaTotalMaterial: "Total material",
+	viewAtaTotalMachines: "Total machines",
+	viewAtaTotalUe: "Total UE",
+	viewAtaTotalSupplierAta: "Total supplier ATA",
+	viewAtaLossToDamage: "Loss to damage",
+	viewAtaActionOnDamage: "Action",
+	viewAtaEditSectionModalTitle: "Edit Line Items",
+	viewAtaApproveConfirmTitle: "Approve ATA",
+	viewAtaApproveConfirmDesc: "Are you sure you want to approve this ATA?",
+	viewAtaRejectConfirmTitle: "Reject ATA",
+	viewAtaRejectConfirmDesc: "Are you sure you want to reject this ATA?",
+	viewAtaApproveSuccess: "ATA has been approved",
+	viewAtaRejectSuccess: "ATA has been rejected",
+	viewAtaSaveSuccess: "Changes have been saved",
+	viewAtaActiveBadge: "Active",
+	viewAtaStatusApproved: "Approved",
+	viewAtaStatusPending: "Pending",
+	viewAtaStatusRejected: "Rejected",
+	viewAtaStatusDraft: "Draft",
+	viewAtaTagAtaUte: "ATA-Out",
+	viewAtaTagAddition: "Addition",
+	viewAtaTagChange: "Change",
+	viewAtaTagDeduction: "Deduction",
+	viewAtaAddRow: "Add row",
+	viewAtaDeleteRow: "Delete row",
+	viewAtaColActions: "Actions",
+	viewAtaNoLineItems: "No line items to display",
+	viewAtaNoDocuments: "No attached documents",
+	viewAtaSelectAtaPlaceholder: "Select ATA",
+	viewAtaRowSingular: "row",
+	viewAtaRowPlural: "rows",
+	viewAtaColPricePerUnit: "Unit price",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -7943,6 +7995,7 @@ export const en: Translation = {
 	...enAta,
 	...enCreateAta,
 	...enSupplierAta,
+	...enViewAta,
 };
 
 
