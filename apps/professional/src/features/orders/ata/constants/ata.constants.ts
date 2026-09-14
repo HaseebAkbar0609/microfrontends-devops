@@ -25,8 +25,20 @@ export const ATA_CONSTANTS = {
 		NO: "nej",
 		PENDING: "ej_klart",
 	} as const,
+	TYPES: {
+		CHANGE: "andring",
+		ADDITION: "tillagg",
+		DEDUCTION: "avgaende",
+	} as const,
+	STEPS: {
+		STEP_1: 1,
+		STEP_2: 2,
+		TOTAL_STEPS: 2,
+	} as const,
 };
 
 export type AtaCategory = (typeof ATA_CONSTANTS.CATEGORIES)[keyof typeof ATA_CONSTANTS.CATEGORIES];
 export type AtaStatus = (typeof ATA_CONSTANTS.STATUSES)[keyof typeof ATA_CONSTANTS.STATUSES];
 export type AtaAttestedStatus = (typeof ATA_CONSTANTS.ATTESTED)[keyof typeof ATA_CONSTANTS.ATTESTED];
+export type AtaTypeValue = (typeof ATA_CONSTANTS.TYPES)[keyof typeof ATA_CONSTANTS.TYPES];
+

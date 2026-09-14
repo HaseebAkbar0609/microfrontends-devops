@@ -1,22 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { ATA_CONSTANTS, type AtaCategory } from "./constants/ata.constants";
 import { useAta } from "./hooks/useAta";
 import { AtaOverviewTable } from "./components/AtaOverviewTable";
+import { CreateAtaView } from "./components/CreateAtaView";
 
 export interface OrderAtaOverviewPageProps {
 	orderId?: string;
 	onDetailModeChange?: (isOpen: boolean) => void;
 }
 
+export type AtaViewMode = "table" | "create";
+
 export function OrderAtaOverviewPage({
 	orderId = ATA_CONSTANTS.DEFAULT_ORDER_ID,
-	onDetailModeChange: _onDetailModeChange,
+	onDetailModeChange,
 }: OrderAtaOverviewPageProps) {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const queryAction = searchParams?.get("action") || null;
+
+	const [viewMode, setViewMode] = useState<AtaViewMode>(
+		queryAction === "create" ? "create" : "table"
+	);
+
 	const {
 		activeCategory,
 		setActiveCategory,
@@ -37,7 +49,42 @@ export function OrderAtaOverviewPage({
 		summary,
 		removeAta,
 		sendAta,
+		reload,
 	} = useAta(orderId);
+
+	useEffect(() => {
+		if (queryAction === "create") {
+			setViewMode("create");
+			onDetailModeChange?.(true);
+		}
+	}, [queryAction, onDetailModeChange]);
+
+	const handleOpenCreate = () => {
+		setViewMode("create");
+		onDetailModeChange?.(true);
+		router.push(`/module/production/order/${orderId}/ata?action=create`);
+	};
+
+	const handleBackToTable = () => {
+		setViewMode("table");
+		onDetailModeChange?.(false);
+		router.push(`/module/production/order/${orderId}/ata`);
+	};
+
+	const handleSaved = () => {
+		reload();
+		handleBackToTable();
+	};
+
+	if (viewMode === "create") {
+		return (
+			<CreateAtaView
+				orderId={orderId}
+				onBack={handleBackToTable}
+				onSaved={handleSaved}
+			/>
+		);
+	}
 
 	return (
 		<div className="w-full">
@@ -76,6 +123,7 @@ export function OrderAtaOverviewPage({
 						totalPages={totalPages}
 						onDelete={removeAta}
 						onSend={sendAta}
+						onOpenCreate={handleOpenCreate}
 					/>
 				</TabsContent>
 			</Tabs>
@@ -84,3 +132,4 @@ export function OrderAtaOverviewPage({
 }
 
 export default OrderAtaOverviewPage;
+

@@ -117,4 +117,14 @@ export {
   deletePaymentPlanAction,
 } from "./orders/paymentPlan";
 
+export {
+  getAtasAction,
+  getAtaDetailAction,
+  createAtaAction,
+  sendAtaAction,
+  deleteAtaAction,
+  uploadAtaDocumentAction,
+  type CreateAtaPayload,
+} from "./orders/ata";
+
 
