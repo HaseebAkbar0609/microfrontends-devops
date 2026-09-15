@@ -7965,6 +7965,65 @@ export type ViewAtaTranslation = {
 	viewAtaColPricePerUnit: string;
 };
 
+export type StaffRegistrationTranslation = {
+	staffLedgerTab: string;
+	staffLedgerTitle: string;
+	staffSelectSupplier: string;
+	staffSelectSupplierPlaceholder: string;
+	staffSelectDate: string;
+	staffLoggedInNow: string;
+	staffWorkingHours: string;
+	staffColDatum: string;
+	staffColPersonNr: string;
+	staffColName: string;
+	staffColRole: string;
+	staffColOwnStaff: string;
+	staffColUe: string;
+	staffColTimeIn: string;
+	staffColTimeOut: string;
+	staffColTool: string;
+	staffColPhone: string;
+	staffColEmail: string;
+	staffColStatus: string;
+	staffColActions: string;
+	staffBtnAdd: string;
+	staffBtnSave: string;
+	staffBtnCancel: string;
+	staffAddModalTitle: string;
+	staffEditModalTitle: string;
+	staffDeleteConfirmTitle: string;
+	staffDeleteConfirmDesc: string;
+	staffDeleteBtnConfirm: string;
+	staffRoleSnickare: string;
+	staffRoleMalare: string;
+	staffRoleElektriker: string;
+	staffRoleRormokare: string;
+	staffRoleStadare: string;
+	staffRoleProjektledare: string;
+	staffRolePlatschef: string;
+	staffRoleTekniker: string;
+	staffStatusActive: string;
+	staffStatusPending: string;
+	staffStatusCompleted: string;
+	staffBadgeYes: string;
+	staffBadgeNo: string;
+	staffAppTimeflowWork: string;
+	staffAllSuppliers: string;
+	staffNoDataFound: string;
+	staffAddSuccess: string;
+	staffDeleteSuccess: string;
+	staffUpdateSuccess: string;
+	staffRequiredName: string;
+	staffRequiredRole: string;
+	staffRequiredPersonNr: string;
+	staffPlaceholderName: string;
+	staffPlaceholderPersonNr: string;
+	staffPlaceholderUe: string;
+	staffPlaceholderPhone: string;
+	staffPlaceholderEmail: string;
+	staffGenericError: string;
+};
+
 export type AuthoritiesTranslation = {
 	titleAuthorities: string;
 	breadcrumbAuthorities: string;
@@ -8125,7 +8184,8 @@ export type Translation = HeaderTranslation &
 	AtaTranslation &
 	CreateAtaTranslation &
 	SupplierAtaTranslation &
-	ViewAtaTranslation;
+	ViewAtaTranslation &
+	StaffRegistrationTranslation;
 
 export type TranslationKeys = keyof Translation;
 
