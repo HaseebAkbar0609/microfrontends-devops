@@ -14,6 +14,13 @@ export const PROD_PROFESSIONAL_URL = "https://professional.timeflowsystem.com";
 export const LOCAL_PROFESSIONAL_URL = "http://localhost:3002";
 
 export const getCustomerBaseUrl = (): string => {
+	// Authoritative when set: baked in per-environment at build time (see
+	// apps/landing/Dockerfile), so it's correct regardless of what hostname
+	// this page happens to be reached through (an IP, a preview domain, a
+	// load balancer's own name — none of which match the sniffing below).
+	if (process.env.NEXT_PUBLIC_CUSTOMER_URL) {
+		return process.env.NEXT_PUBLIC_CUSTOMER_URL;
+	}
 	if (typeof window !== "undefined") {
 		const hostname = window.location.hostname.toLowerCase();
 		if (hostname.includes("dev.")) {
@@ -30,6 +37,10 @@ export const getCustomerBaseUrl = (): string => {
 };
 
 export const getProfessionalBaseUrl = (): string => {
+	// See getCustomerBaseUrl — same reasoning.
+	if (process.env.NEXT_PUBLIC_PROFESSIONAL_URL) {
+		return process.env.NEXT_PUBLIC_PROFESSIONAL_URL;
+	}
 	if (typeof window !== "undefined") {
 		const hostname = window.location.hostname.toLowerCase();
 		if (hostname.includes("dev.")) {
