@@ -3451,6 +3451,18 @@ export type OfferTranslation = {
 	designOrgKontaktpersoner: string;
 	designOrgEmpty: string;
 	designOrgNoMatches: string;
+	// Design Module — Tidsplan
+	designTidsplanTabProjektering: string;
+	designTidsplanTabProduktion: string;
+	designTidsplanSkapaBtn: string;
+	designTidsplanViewBtn: string;
+	designTidsplanHuvudtidsplan: string;
+	designTidsplanDeltidsplan: string;
+	designTidsplanOtherInfoSection: string;
+	designTidsplanRevDatum: string;
+	designTidsplanDatumLabel: string;
+	designTidsplanOrderNr: string;
+	designTidsplanEmpty: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
