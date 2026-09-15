@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
-import { createOrderTimeplanAction } from "@/api-actions/orders/timeplan";
+import React, { useState, useEffect } from "react";
+import {
+	createOrderTimeplanAction,
+	getOrderTimeplanTasksAction,
+} from "@/api-actions/orders/timeplan";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -72,6 +75,19 @@ export function OrderTimeplanCreateWizard({
 	}, [orderData, orderId]);
 
 	const [tasks, setTasks] = useState<OrderTimeplanTask[]>(MOCK_GANTT_TASKS_FIGMA);
+
+	// Load tasks from API with mock fallback
+	useEffect(() => {
+		let isMounted = true;
+		getOrderTimeplanTasksAction(orderId).then((res) => {
+			if (isMounted && res.success && res.data && res.data.length > 0) {
+				setTasks(res.data);
+			}
+		});
+		return () => {
+			isMounted = false;
+		};
+	}, [orderId]);
 
 	const handleFormChange = (field: keyof OrderTimeplanFormData, value: string) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));

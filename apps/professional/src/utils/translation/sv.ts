@@ -8408,6 +8408,10 @@ export const svOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanValidationStartDateRequired: "Startdatum är obligatoriskt",
 	orderTimeplanValidationEndDateRequired: "Slutdatum är obligatoriskt",
 	orderTimeplanValidationTaskNameRequired: "Aktivitetsnamn är obligatoriskt",
+	orderTimeplanSubTabTimeline: "Tidsplan",
+	orderTimeplanSubTabInfo: "Tidsplaninformation",
+	orderTimeplanDefaultTitle: "Etablerings tidsplan över byggnation",
+	orderTimeplanViewPageTitle: "View tidsplan",
 };
 
 export const sv: Translation = {
