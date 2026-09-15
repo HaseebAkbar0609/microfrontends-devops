@@ -139,4 +139,10 @@ export {
   updateStaffRegistrationAction,
 } from "./orders/staff";
 
+export {
+  getOrderTimeplansAction,
+  deleteOrderTimeplanAction,
+} from "./orders/timeplan";
+
+
 

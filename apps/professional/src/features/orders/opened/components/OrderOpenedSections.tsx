@@ -23,6 +23,7 @@ import { WarrantyFeature } from "@/features/warranty/WarrantyFeature";
 import { OrderProtocolOverviewPage } from "@/features/orders/protocol/OrderProtocolOverviewPage";
 import { OrderAtaOverviewPage } from "@/features/orders/ata/OrderAtaOverviewPage";
 import { OrderStaffOverviewPage } from "@/features/orders/staff/OrderStaffOverviewPage";
+import { OrderTimeplanOverviewPage } from "@/features/orders/timeplan/OrderTimeplanOverviewPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -41,7 +42,8 @@ type OrderTabValue =
 	| "ata"
 	| "guarantee"
 	| "protocol"
-	| "staff";
+	| "staff"
+	| "tidsplan";
 
 export function OrderOpenedSections({
 	data,
@@ -73,6 +75,7 @@ export function OrderOpenedSections({
 		if (path.includes("/guarantee")) return "guarantee";
 		if (path.includes("/protocol")) return "protocol";
 		if (path.includes("/staff")) return "staff";
+		if (path.includes("/tidsplan") || path.includes("/timeplan")) return "tidsplan";
 		return "order-information";
 	};
 
@@ -120,6 +123,7 @@ export function OrderOpenedSections({
 		guarantee: t(localizationConstants.warrantyCommitments),
 		protocol: t(localizationConstants.protocolsTab),
 		staff: t(localizationConstants.staffLedgerTab),
+		tidsplan: t(localizationConstants.orderTimeplanTab),
 	};
 
 	const showSubtitle =
@@ -206,6 +210,14 @@ export function OrderOpenedSections({
 							className="cursor-pointer"
 						>
 							<Translate text={localizationConstants.staffLedgerTab} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="tidsplan" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/tidsplan`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderTimeplanTab} />
 						</Link>
 					</TabsTrigger>
 				</TabsList>
@@ -298,10 +310,16 @@ export function OrderOpenedSections({
 				<TabsContent value="staff" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderStaffOverviewPage orderId={routeOrderId} />
 				</TabsContent>
+
+				{/* Tab 9: Tidsplan */}
+				<TabsContent value="tidsplan" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderTimeplanOverviewPage
+						orderId={routeOrderId}
+					/>
+				</TabsContent>
 			</Tabs>
 		</div>
 	);
 }
 
 export default OrderOpenedSections;
-
