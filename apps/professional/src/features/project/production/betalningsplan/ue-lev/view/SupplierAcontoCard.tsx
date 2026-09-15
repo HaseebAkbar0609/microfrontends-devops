@@ -10,8 +10,8 @@ import localizationConstants, { type TranslationKeys } from "@/utils/translation
 import { Translate } from "@/utils/translation/translate";
 import { toReceive, type PaymentPlanSummary } from "../../paymentPlanMath";
 import { AcontoSummary, type AcontoSummaryLabels } from "../../view/AcontoSummary";
-import { PlanCard } from "../../view/PlanCard";
-import { SortableHead } from "../../view/SortableHead";
+import { ProjectSectionCard } from "../../../components/ProjectSectionCard";
+import { SortableHead } from "../../../components/SortableHead";
 import type { SupplierAconto } from "../types";
 import { SupplierAcontoRow } from "./SupplierAcontoRow";
 
@@ -52,7 +52,7 @@ export function SupplierAcontoCard({ acontos, summary, onMarkPaid, onViewInvoice
 	const rows = useMemo(() => sortItems(acontos, sortField, sortDir, sortValue), [acontos, sortField, sortDir]);
 
 	return (
-		<PlanCard
+		<ProjectSectionCard
 			titleKey={localizationConstants.projectSupplierPlanAcontoLift}
 			icon={<Folder className="h-5 w-5 text-slate-700" aria-hidden />}
 			contentClassName="flex flex-col gap-4"
@@ -95,7 +95,7 @@ export function SupplierAcontoCard({ acontos, summary, onMarkPaid, onViewInvoice
 				</Table>
 			</div>
 			<AcontoSummary summary={summary} labels={SUMMARY_LABELS} />
-		</PlanCard>
+		</ProjectSectionCard>
 	);
 }
 

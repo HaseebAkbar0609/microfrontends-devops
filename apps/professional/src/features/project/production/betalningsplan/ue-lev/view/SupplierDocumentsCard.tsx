@@ -17,8 +17,8 @@ import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { PlanCard } from "../../view/PlanCard";
-import { SortableHead } from "../../view/SortableHead";
+import { ProjectSectionCard } from "../../../components/ProjectSectionCard";
+import { SortableHead } from "../../../components/SortableHead";
 import type { SupplierPlanDocument } from "../types";
 
 type DocumentSortKey = "planNumber" | "name" | "fileName";
@@ -59,7 +59,7 @@ export function SupplierDocumentsCard({ documents, locked, onReview }: SupplierD
 	});
 
 	return (
-		<PlanCard titleKey={localizationConstants.sectionBetalningsplan} icon={<Folder className="h-5 w-5 text-slate-700" aria-hidden />}>
+		<ProjectSectionCard titleKey={localizationConstants.sectionBetalningsplan} icon={<Folder className="h-5 w-5 text-slate-700" aria-hidden />}>
 			<div className="w-full overflow-x-auto">
 				<Table className="min-w-[40rem]">
 					<TableHeader>
@@ -156,7 +156,7 @@ export function SupplierDocumentsCard({ documents, locked, onReview }: SupplierD
 					</TableBody>
 				</Table>
 			</div>
-		</PlanCard>
+		</ProjectSectionCard>
 	);
 }
 
