@@ -38,6 +38,7 @@ import {
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
 	OrderTimeplanTranslation,
+	YearEndTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -8389,6 +8390,49 @@ export const enOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanValidationTaskNameRequired: "Task name is required",
 };
 
+export const enYearEnd: YearEndTranslation = {
+	titleYearEnd: "Year End",
+	tabBokslut: "Year End",
+	tabChecklist: "Checklist",
+	colSrNr: "Sr. Nr",
+	colCategory: "Category",
+	colNameOrPeriod: "Description",
+	colFile: "File",
+	labelYear: "Year",
+	catAnnualReport: "Annual Report",
+	catTaxDeclaration: "Tax Declaration",
+	catBalanceIncome: "Balance & Income",
+	catGeneralLedger: "General Ledger",
+	catSupplierList: "Supplier List",
+	catCustomerReceivables: "Accounts Receivable",
+	catVatTax: "VAT & Tax",
+	catOther: "Other",
+	statusNotStarted: "Not started",
+	statusInProgress: "In progress",
+	statusCompleted: "Completed",
+	titleAddYearEndItem: "Add new year-end document",
+	titleEditYearEndItem: "Edit year-end document",
+	titleYearEndDetails: "Year End Details",
+	fieldFiscalYear: "Fiscal Year",
+	fieldCategory: "Category",
+	fieldNameOrPeriod: "Description / Period",
+	fieldNotes: "Notes",
+	fieldDropFileOrBrowse: "Drop your file here, or browse",
+	emptyYearEndTitle: "No documents found",
+	emptyYearEndDesc: "Click \"+ Add new\" to create a new year-end document or checklist task.",
+	toastYearEndCreated: "Year-end document created!",
+	toastYearEndUpdated: "Year-end document updated!",
+	toastYearEndDeleted: "Year-end document deleted.",
+	confirmDeleteYearEndTitle: "Delete year-end document?",
+	confirmDeleteYearEndDesc: "Are you sure you want to delete this document? This action cannot be undone.",
+	valYearRequired: "Fiscal year is required",
+	valNameRequired: "Description is required",
+	valCategoryRequiredYearEnd: "Category is required",
+	btnLockAccountingYear: "Lock accounting year",
+	btnDownloadReport: "Download report",
+	btnStartYearEnd: "Start year-end account",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -8428,4 +8472,6 @@ export const en: Translation = {
 	...enViewAta,
 	...enStaffRegistration,
 	...enOrderTimeplan,
+	...enYearEnd,
 };
+

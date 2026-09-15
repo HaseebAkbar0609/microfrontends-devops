@@ -38,6 +38,7 @@ import {
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
 	OrderTimeplanTranslation,
+	YearEndTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -8410,6 +8411,49 @@ export const svOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanValidationTaskNameRequired: "Aktivitetsnamn är obligatoriskt",
 };
 
+export const svYearEnd: YearEndTranslation = {
+	titleYearEnd: "Bokslut",
+	tabBokslut: "Bokslut",
+	tabChecklist: "Checklist",
+	colSrNr: "Sr. Nr",
+	colCategory: "Kategori",
+	colNameOrPeriod: "Benämning",
+	colFile: "Fil",
+	labelYear: "År",
+	catAnnualReport: "Årsredovisning",
+	catTaxDeclaration: "Deklaration",
+	catBalanceIncome: "Balans & Resultat",
+	catGeneralLedger: "Huvudbok",
+	catSupplierList: "Leverantörslista",
+	catCustomerReceivables: "Kundfordringar",
+	catVatTax: "Moms & Skatt",
+	catOther: "Övrigt",
+	statusNotStarted: "Ej påbörjad",
+	statusInProgress: "Pågår",
+	statusCompleted: "Klar",
+	titleAddYearEndItem: "Lägg till nytt bokslutsdokument",
+	titleEditYearEndItem: "Redigera bokslutsdokument",
+	titleYearEndDetails: "Bokslutsdetaljer",
+	fieldFiscalYear: "Räkenskapsår",
+	fieldCategory: "Kategori",
+	fieldNameOrPeriod: "Benämning / Period",
+	fieldNotes: "Anteckningar",
+	fieldDropFileOrBrowse: "Släpp din fil här, eller bläddra",
+	emptyYearEndTitle: "Inga dokument hittades",
+	emptyYearEndDesc: "Klicka på \"+ Lägg till nytt\" för att lägga till ett nytt bokslutsdokument eller checklisteuppgift.",
+	toastYearEndCreated: "Bokslutsdokument har skapats!",
+	toastYearEndUpdated: "Bokslutsdokument har uppdaterats!",
+	toastYearEndDeleted: "Bokslutsdokument har tagits bort.",
+	confirmDeleteYearEndTitle: "Ta bort bokslutsdokument?",
+	confirmDeleteYearEndDesc: "Är du säker på att du vill ta bort detta dokument? Denna åtgärd kan inte ångras.",
+	valYearRequired: "Räkenskapsår måste anges",
+	valNameRequired: "Benämning måste anges",
+	valCategoryRequiredYearEnd: "Kategori måste väljas",
+	btnLockAccountingYear: "Lås bokföringsår",
+	btnDownloadReport: "Ladda ner rapport",
+	btnStartYearEnd: "Starta årsbokslut",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -8449,7 +8493,9 @@ export const sv: Translation = {
 	...svViewAta,
 	...svStaffRegistration,
 	...svOrderTimeplan,
+	...svYearEnd,
 };
+
 
 
 
