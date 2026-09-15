@@ -7883,6 +7883,14 @@ export type EconomyBankTranslation = {
 	filterPdf: string;
 	filterImage: string;
 	filterOffice: string;
+	badgeBankIdVerified: string;
+	sectionAccountInfo: string;
+	sectionLoanTerms: string;
+	sectionFinancials: string;
+	valStartDateRequired: string;
+	valEndDateRequired: string;
+	valIbanRequired: string;
+	valSwiftRequired: string;
 };
 
 export type AtaTranslation = {
@@ -8271,6 +8279,18 @@ export type AuthoritiesTranslation = {
 	validationDocumentNameRequired: string;
 	fieldAuthorityDropFiles: string;
 	fieldAuthorityBrowse: string;
+	catGovtDocs: string;
+	catFinancial: string;
+	catTaxAuthority: string;
+	catLegal: string;
+	catInsurance: string;
+	filterAllCategoriesAuthority: string;
+	btnAddAuthority: string;
+	searchPlaceholderAuthority: string;
+	sectionBasicInfoAuthority: string;
+	sectionFileAttachmentAuthority: string;
+	sectionStatusNotesAuthority: string;
+	notesPlaceholderAuthority: string;
 };
 
 export type OrderTimeplanTranslation = {
@@ -8376,6 +8396,39 @@ export type YearEndTranslation = {
 	btnLockAccountingYear: string;
 	btnDownloadReport: string;
 	btnStartYearEnd: string;
+	btnAddYearEnd: string;
+	searchPlaceholderYearEnd: string;
+	filterAllCategoriesYearEnd: string;
+	selectedFileLabelYearEnd: string;
+	notesPlaceholderYearEnd: string;
+	actionViewDetailsYearEnd: string;
+	actionEditYearEnd: string;
+	actionDownloadYearEnd: string;
+	actionDeleteYearEnd: string;
+	rowsPerPageLabelYearEnd: string;
+	pageLabelYearEnd: string;
+	pageOfLabelYearEnd: string;
+	colActionsYearEnd: string;
+	titleCreateYearEndPage: string;
+	titleEditYearEndPage: string;
+	createYearEndDesc: string;
+	editYearEndDesc: string;
+	breadcrumbCreateYearEnd: string;
+	breadcrumbEditYearEnd: string;
+	breadcrumbDetailYearEnd: string;
+	labelFileFormat: string;
+	labelUploadFile: string;
+	fileUploadHintYearEnd: string;
+	btnBackToOverviewYearEnd: string;
+	fieldStatusYearEnd: string;
+	sectionBasicInfoYearEnd: string;
+	sectionFileAttachmentYearEnd: string;
+	sectionAdditionalInfoYearEnd: string;
+	titleCreateYearEndBokslut: string;
+	titleCreateYearEndChecklist: string;
+	fieldNameOrTask: string;
+	placeholderBokslutName: string;
+	placeholderChecklistName: string;
 };
 
 export type Translation = HeaderTranslation &

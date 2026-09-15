@@ -3,6 +3,7 @@
 import React from "react";
 import { ArrowUpDown, Plus } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import { YearEndTableRow } from "./YearEndTableRow";
 import type {
@@ -17,8 +18,6 @@ interface YearEndTableProps {
 	sortBy: YearEndSortField;
 	sortOrder: YearEndSortOrder;
 	onSort: (field: YearEndSortField) => void;
-	onView: (item: YearEndItem) => void;
-	onEdit: (item: YearEndItem) => void;
 	onDelete: (item: YearEndItem) => void;
 	onCreateClick: () => void;
 }
@@ -29,11 +28,11 @@ export function YearEndTable({
 	sortBy: _sortBy,
 	sortOrder: _sortOrder,
 	onSort,
-	onView,
-	onEdit,
 	onDelete,
 	onCreateClick,
 }: YearEndTableProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="bg-white rounded-xl border border-slate-200/80 shadow-2xs overflow-hidden">
 			<div className="overflow-x-auto">
@@ -45,43 +44,43 @@ export function YearEndTable({
 								<button
 									type="button"
 									onClick={() => onSort("srNr")}
-									className="flex items-center gap-1 hover:text-slate-900 transition-colors"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colSrNr} />
 									<ArrowUpDown className="h-3 w-3" />
 								</button>
 							</th>
 
-							{/* Kategori */}
+							{/* Category */}
 							<th className="py-3 px-4">
 								<button
 									type="button"
 									onClick={() => onSort("category")}
-									className="flex items-center gap-1 hover:text-slate-900 transition-colors"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colCategory} />
 									<ArrowUpDown className="h-3 w-3" />
 								</button>
 							</th>
 
-							{/* Benämning */}
+							{/* Description / Period */}
 							<th className="py-3 px-4">
 								<button
 									type="button"
 									onClick={() => onSort("name")}
-									className="flex items-center gap-1 hover:text-slate-900 transition-colors"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colNameOrPeriod} />
 									<ArrowUpDown className="h-3 w-3" />
 								</button>
 							</th>
 
-							{/* Fil */}
+							{/* File */}
 							<th className="py-3 px-4">
 								<button
 									type="button"
 									onClick={() => onSort("fileName")}
-									className="flex items-center gap-1 hover:text-slate-900 transition-colors"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colFile} />
 									<ArrowUpDown className="h-3 w-3" />
@@ -93,8 +92,9 @@ export function YearEndTable({
 								<button
 									type="button"
 									onClick={onCreateClick}
-									title="Lägg till nytt"
-									className="p-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition-colors"
+									title={t(localizationConstants.btnAddYearEnd)}
+									aria-label={t(localizationConstants.btnAddYearEnd)}
+									className="p-1 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-200/60 transition-colors cursor-pointer"
 								>
 									<Plus className="h-4 w-4" />
 								</button>
@@ -113,8 +113,6 @@ export function YearEndTable({
 								<YearEndTableRow
 									key={item.id}
 									item={item}
-									onView={onView}
-									onEdit={onEdit}
 									onDelete={onDelete}
 								/>
 							))

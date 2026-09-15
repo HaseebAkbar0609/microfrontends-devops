@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { yearEndRepository } from "../utils/yearEndRepository";
 import {
 	DEFAULT_FISCAL_YEAR,
@@ -16,11 +16,15 @@ import type {
 
 interface UseYearEndProps {
 	initialTab?: YearEndTabType;
+	initialYear?: number;
 }
 
-export function useYearEnd({ initialTab = "bokslut" }: UseYearEndProps = {}) {
+export function useYearEnd({
+	initialTab = "bokslut",
+	initialYear = DEFAULT_FISCAL_YEAR,
+}: UseYearEndProps = {}) {
 	const [activeTab, setActiveTab] = useState<YearEndTabType>(initialTab);
-	const [selectedYear, setSelectedYear] = useState<number>(DEFAULT_FISCAL_YEAR);
+	const [selectedYear, setSelectedYear] = useState<number>(initialYear);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [categoryFilter, setCategoryFilter] = useState<string>("all");
 	const [sortBy, setSortBy] = useState<YearEndSortField>("srNr");
@@ -29,19 +33,35 @@ export function useYearEnd({ initialTab = "bokslut" }: UseYearEndProps = {}) {
 	const [pageSize, setPageSize] = useState(YEAR_END_DEFAULT_PAGE_SIZE);
 	const [version, setVersion] = useState(0);
 
-	// Modals
-	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-	const [itemToEdit, setItemToEdit] = useState<YearEndItem | null>(null);
-	const [itemToView, setItemToView] = useState<YearEndItem | null>(null);
+	// Deletion Confirmation Dialog State
 	const [itemToDelete, setItemToDelete] = useState<YearEndItem | null>(null);
 
 	const triggerUpdate = useCallback(() => {
 		setVersion((v) => v + 1);
 	}, []);
 
+	// Subscribe to repository updates for real-time reactivity
+	useEffect(() => {
+		const unsubscribe = yearEndRepository.subscribe(triggerUpdate);
+		return () => unsubscribe();
+	}, [triggerUpdate]);
+
+	// Sync activeTab when initialTab prop updates
+	useEffect(() => {
+		if (initialTab) {
+			setActiveTab(initialTab);
+		}
+	}, [initialTab]);
+
+	// Sync selectedYear when initialYear prop updates
+	useEffect(() => {
+		if (initialYear) {
+			setSelectedYear(initialYear);
+		}
+	}, [initialYear]);
+
 	// Raw items filtered by Tab and Fiscal Year
 	const rawItems = useMemo(() => {
-		// version dependency triggers reload
 		void version;
 		return yearEndRepository.getByTabAndYear(activeTab, selectedYear);
 	}, [activeTab, selectedYear, version]);
@@ -84,7 +104,7 @@ export function useYearEnd({ initialTab = "bokslut" }: UseYearEndProps = {}) {
 		return result;
 	}, [rawItems, categoryFilter, searchQuery, sortBy, sortOrder]);
 
-	// Pagination
+	// Pagination calculations
 	const totalCount = filteredItems.length;
 	const totalPages = Math.max(1, Math.ceil(totalCount / pageSize));
 
@@ -172,19 +192,13 @@ export function useYearEnd({ initialTab = "bokslut" }: UseYearEndProps = {}) {
 		totalPages,
 		totalCount,
 		items: paginatedItems,
-		// Modals
-		isAddModalOpen,
-		setIsAddModalOpen,
-		itemToEdit,
-		setItemToEdit,
-		itemToView,
-		setItemToView,
 		itemToDelete,
 		setItemToDelete,
-		// CRUD
 		createItem,
 		updateItem,
 		deleteItem,
 		resetSeedData,
 	};
 }
+
+export default useYearEnd;

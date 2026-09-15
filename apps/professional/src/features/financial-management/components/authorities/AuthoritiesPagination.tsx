@@ -73,8 +73,15 @@ export function AuthoritiesPagination({
 			</div>
 
 			{/* Page X of Y */}
-			<div>
-				<span>Page {currentPage} of {totalPages}</span>
+			<div className="flex items-center gap-1">
+				<span>
+					<Translate text={localizationConstants.pageLabelYearEnd} />
+				</span>
+				<span>{currentPage}</span>
+				<span>
+					<Translate text={localizationConstants.pageOfLabelYearEnd} />
+				</span>
+				<span>{totalPages}</span>
 			</div>
 
 			{/* Navigation Buttons */}

@@ -1,24 +1,31 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useYearEnd } from "../../hooks/useYearEnd";
+import {
+	YEAR_END_BASE_ROUTE,
+	DEFAULT_FISCAL_YEAR,
+} from "../../constants/yearEnd.constants";
 import { YearEndHeader } from "./YearEndHeader";
 import { YearEndToolbar } from "./YearEndToolbar";
 import { YearEndYearSelector } from "./YearEndYearSelector";
 import { YearEndTable } from "./YearEndTable";
 import { YearEndPagination } from "./YearEndPagination";
-import { AddYearEndItemModal } from "./AddYearEndItemModal";
-import { YearEndDetailModal } from "./YearEndDetailModal";
 import { YearEndDeleteDialog } from "./YearEndDeleteDialog";
 import type { YearEndTabType } from "../../types/yearEnd.types";
 
 interface YearEndOverviewPageProps {
 	initialTab?: YearEndTabType;
+	initialYear?: number;
 }
 
 export function YearEndOverviewPage({
 	initialTab = "bokslut",
+	initialYear = DEFAULT_FISCAL_YEAR,
 }: YearEndOverviewPageProps) {
+	const router = useRouter();
+
 	const {
 		activeTab,
 		setActiveTab,
@@ -38,42 +45,49 @@ export function YearEndOverviewPage({
 		totalPages,
 		totalCount,
 		items,
-		// Modals
-		isAddModalOpen,
-		setIsAddModalOpen,
-		itemToEdit,
-		setItemToEdit,
-		itemToView,
-		setItemToView,
 		itemToDelete,
 		setItemToDelete,
-		// Actions
-		createItem,
-		updateItem,
 		deleteItem,
-	} = useYearEnd({ initialTab });
+	} = useYearEnd({ initialTab, initialYear });
+
+	const handleNavigateToCreate = () => {
+		router.push(
+			`${YEAR_END_BASE_ROUTE}/create?tab=${activeTab}&year=${selectedYear}`,
+		);
+	};
+
+	const handleTabChange = (tab: YearEndTabType) => {
+		setActiveTab(tab);
+		router.push(`${YEAR_END_BASE_ROUTE}?tab=${tab}&year=${selectedYear}`, {
+			scroll: false,
+		});
+	};
+
+	const handleYearChange = (year: number) => {
+		setSelectedYear(year);
+		router.push(`${YEAR_END_BASE_ROUTE}?tab=${activeTab}&year=${year}`, {
+			scroll: false,
+		});
+	};
 
 	return (
 		<div className="flex flex-1 flex-col bg-white px-6 pt-5 pb-8 min-h-screen space-y-4">
 			{/* Header with Breadcrumbs & Tabs */}
-			<YearEndHeader activeTab={activeTab} onTabChange={setActiveTab} />
+			<YearEndHeader activeTab={activeTab} onTabChange={handleTabChange} />
 
-			{/* Search, Filter & Add New */}
+			{/* Search, Filter & Add New Screen Trigger */}
 			<YearEndToolbar
 				searchQuery={searchQuery}
 				onSearchChange={setSearchQuery}
 				categoryFilter={categoryFilter}
 				onCategoryFilterChange={setCategoryFilter}
-				onCreateClick={() => {
-					setItemToEdit(null);
-					setIsAddModalOpen(true);
-				}}
+				onCreateClick={handleNavigateToCreate}
 			/>
 
 			{/* Year Selector */}
 			<YearEndYearSelector
 				selectedYear={selectedYear}
-				onYearChange={setSelectedYear}
+				onYearChange={handleYearChange}
 			/>
 
 			{/* Main Data Table */}
@@ -83,16 +97,8 @@ export function YearEndOverviewPage({
 				sortBy={sortBy}
 				sortOrder={sortOrder}
 				onSort={handleSort}
-				onView={(item) => setItemToView(item)}
-				onEdit={(item) => {
-					setItemToEdit(item);
-					setIsAddModalOpen(true);
-				}}
 				onDelete={(item) => setItemToDelete(item)}
-				onCreateClick={() => {
-					setItemToEdit(null);
-					setIsAddModalOpen(true);
-				}}
+				onCreateClick={handleNavigateToCreate}
 			/>
 
 			{/* Bottom Pagination */}
@@ -102,36 +108,6 @@ export function YearEndOverviewPage({
 				pageSize={pageSize}
 				onPageChange={setCurrentPage}
 				onPageSizeChange={setPageSize}
-			/>
-
-			{/* Add / Edit Modal */}
-			<AddYearEndItemModal
-				isOpen={isAddModalOpen}
-				onClose={() => {
-					setIsAddModalOpen(false);
-					setItemToEdit(null);
-				}}
-				onSave={(data) => {
-					if (itemToEdit) {
-						updateItem(itemToEdit.id, data);
-					} else {
-						createItem(data);
-					}
-				}}
-				editingItem={itemToEdit}
-				activeTab={activeTab}
-				selectedYear={selectedYear}
-			/>
-
-			{/* Detail Modal */}
-			<YearEndDetailModal
-				item={itemToView}
-				isOpen={itemToView !== null}
-				onClose={() => setItemToView(null)}
-				onEdit={(item) => {
-					setItemToEdit(item);
-					setIsAddModalOpen(true);
-				}}
 			/>
 
 			{/* Delete Confirmation Dialog */}

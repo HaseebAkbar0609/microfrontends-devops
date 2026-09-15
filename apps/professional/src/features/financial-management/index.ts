@@ -105,12 +105,13 @@ export * from "./components/authorities";
 export * from "./types/authorities.types";
 export * from "./constants/authorities.constants";
 export * from "./utils/authoritiesRepository";
+export * from "./utils/authoritiesLocalization";
 export * from "./hooks/useAuthorities";
-export * from "./hooks/useAuthorityDetail";
 export * from "./components/year-end";
 export * from "./types/yearEnd.types";
 export * from "./constants/yearEnd.constants";
 export * from "./utils/yearEndRepository";
+export * from "./utils/yearEndLocalization";
 export * from "./hooks/useYearEnd";
 
 

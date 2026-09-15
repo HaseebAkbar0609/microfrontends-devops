@@ -3,6 +3,7 @@
 import React from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown, Plus } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type {
 	AuthorityItem,
@@ -16,9 +17,7 @@ interface AuthoritiesTableProps {
 	sortBy: AuthoritySortField;
 	sortOrder: AuthoritySortOrder;
 	onSort: (field: AuthoritySortField) => void;
-	onView: (item: AuthorityItem) => void;
-	onEdit: (item: AuthorityItem) => void;
-	onDelete: (id: string, title: string) => void;
+	onDelete: (item: AuthorityItem) => void;
 	onCreateClick: () => void;
 }
 
@@ -27,11 +26,11 @@ export function AuthoritiesTable({
 	sortBy,
 	sortOrder,
 	onSort,
-	onView,
-	onEdit,
 	onDelete,
 	onCreateClick,
 }: AuthoritiesTableProps) {
+	const { t } = useTranslation();
+
 	const renderSortIcon = (field: AuthoritySortField) => {
 		if (sortBy !== field) {
 			return <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />;
@@ -44,65 +43,77 @@ export function AuthoritiesTable({
 	};
 
 	return (
-		<div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden flex flex-col">
+		<div className="bg-white border border-slate-200/80 rounded-xl shadow-2xs overflow-hidden flex flex-col">
 			<div className="overflow-x-auto">
 				<table className="w-full border-collapse text-left text-xs">
 					<thead>
-						<tr className="border-b border-slate-200 bg-slate-50/75 font-semibold text-slate-600 select-none">
+						<tr className="border-b border-slate-200 bg-slate-50/50 font-semibold text-slate-500 uppercase tracking-wider text-[11px] select-none">
 							{/* ID */}
-							<th className="px-4 py-3.5">
+							<th className="px-4 py-3">
 								<button
 									type="button"
 									onClick={() => onSort("caseNr")}
-									className="flex items-center gap-1.5 hover:text-slate-900 cursor-pointer font-semibold"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colAuthorityId} />
 									{renderSortIcon("caseNr")}
 								</button>
 							</th>
 
-							{/* Kategori */}
-							<th className="px-4 py-3.5">
+							{/* Authority */}
+							<th className="px-4 py-3">
+								<button
+									type="button"
+									onClick={() => onSort("authorityName")}
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
+								>
+									<Translate text={localizationConstants.fieldAuthorityName} />
+									{renderSortIcon("authorityName")}
+								</button>
+							</th>
+
+							{/* Category */}
+							<th className="px-4 py-3">
 								<button
 									type="button"
 									onClick={() => onSort("category")}
-									className="flex items-center gap-1.5 hover:text-slate-900 cursor-pointer font-semibold"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colAuthorityCategory} />
 									{renderSortIcon("category")}
 								</button>
 							</th>
 
-							{/* Datum */}
-							<th className="px-4 py-3.5">
+							{/* Date */}
+							<th className="px-4 py-3">
 								<button
 									type="button"
 									onClick={() => onSort("date")}
-									className="flex items-center gap-1.5 hover:text-slate-900 cursor-pointer font-semibold"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colAuthorityDate} />
 									{renderSortIcon("date")}
 								</button>
 							</th>
 
-							{/* Dockumentets namn */}
-							<th className="px-4 py-3.5">
+							{/* Document Name */}
+							<th className="px-4 py-3">
 								<button
 									type="button"
 									onClick={() => onSort("documentName")}
-									className="flex items-center gap-1.5 hover:text-slate-900 cursor-pointer font-semibold"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colAuthorityDocName} />
 									{renderSortIcon("documentName")}
 								</button>
 							</th>
 
-							{/* Fil */}
-							<th className="px-4 py-3.5">
+							{/* File */}
+							<th className="px-4 py-3">
 								<button
 									type="button"
 									onClick={() => onSort("fileName")}
-									className="flex items-center gap-1.5 hover:text-slate-900 cursor-pointer font-semibold"
+									className="flex items-center gap-1 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Translate text={localizationConstants.colAuthorityFile} />
 									{renderSortIcon("fileName")}
@@ -110,12 +121,13 @@ export function AuthoritiesTable({
 							</th>
 
 							{/* Header Actions & Plus Button */}
-							<th className="w-16 px-4 py-3.5 text-right">
+							<th className="w-16 px-4 py-3 text-right">
 								<button
 									type="button"
 									onClick={onCreateClick}
-									className="p-1 hover:bg-slate-200 rounded text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
-									aria-label="Add"
+									title={t(localizationConstants.btnAddAuthority)}
+									aria-label={t(localizationConstants.btnAddAuthority)}
+									className="p-1 hover:bg-slate-200/60 rounded text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
 								>
 									<Plus className="w-4 h-4" />
 								</button>
@@ -126,22 +138,8 @@ export function AuthoritiesTable({
 					<tbody className="divide-y divide-slate-100 bg-white">
 						{items.length === 0 ? (
 							<tr>
-								<td colSpan={6} className="py-12 text-center text-slate-500">
-									<div className="flex flex-col items-center justify-center gap-2">
-										<p className="font-semibold text-sm text-slate-700">
-											<Translate text={localizationConstants.emptyAuthoritiesTitle} />
-										</p>
-										<p className="text-xs text-slate-500 max-w-sm">
-											<Translate text={localizationConstants.emptyAuthoritiesDesc} />
-										</p>
-										<button
-											type="button"
-											onClick={onCreateClick}
-											className="mt-2 text-xs font-semibold text-blue-600 hover:text-blue-700 underline cursor-pointer"
-										>
-											<Translate text={localizationConstants.btnCreateNew} />
-										</button>
-									</div>
+								<td colSpan={7} className="py-12 text-center text-slate-400">
+									<Translate text={localizationConstants.emptyAuthoritiesTitle} />
 								</td>
 							</tr>
 						) : (
@@ -149,8 +147,6 @@ export function AuthoritiesTable({
 								<AuthoritiesTableRow
 									key={item.id}
 									item={item}
-									onView={onView}
-									onEdit={onEdit}
 									onDelete={onDelete}
 								/>
 							))

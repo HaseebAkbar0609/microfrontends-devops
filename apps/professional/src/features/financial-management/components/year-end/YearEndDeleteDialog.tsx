@@ -12,8 +12,10 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type { YearEndItem } from "../../types/yearEnd.types";
+import { getYearEndCategoryLabel } from "../../utils/yearEndLocalization";
 
 interface YearEndDeleteDialogProps {
 	item: YearEndItem | null;
@@ -28,6 +30,7 @@ export function YearEndDeleteDialog({
 	onClose,
 	onConfirm,
 }: YearEndDeleteDialogProps) {
+	const { t } = useTranslation();
 	if (!item) return null;
 
 	return (
@@ -40,7 +43,7 @@ export function YearEndDeleteDialog({
 					<AlertDialogDescription className="text-xs text-slate-500 leading-relaxed">
 						<Translate text={localizationConstants.confirmDeleteYearEndDesc} />
 						<span className="block mt-2 font-semibold text-slate-700">
-							{item.name} ({item.category})
+							{item.name} ({getYearEndCategoryLabel(item.category, t)})
 						</span>
 					</AlertDialogDescription>
 				</AlertDialogHeader>

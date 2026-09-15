@@ -10,7 +10,14 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { YEAR_END_CATEGORIES_LIST } from "../../constants/yearEnd.constants";
+import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
+import localizationConstants from "@/utils/translation/constants";
+import {
+	YEAR_END_CATEGORY_OPTIONS,
+	getYearEndCategoryLabel,
+} from "../../utils/yearEndLocalization";
+import type { YearEndCategory } from "../../types/yearEnd.types";
 
 interface YearEndToolbarProps {
 	searchQuery: string;
@@ -27,6 +34,13 @@ export function YearEndToolbar({
 	onCategoryFilterChange,
 	onCreateClick,
 }: YearEndToolbarProps) {
+	const { t } = useTranslation();
+
+	const filterDisplayLabel =
+		categoryFilter !== "all"
+			? getYearEndCategoryLabel(categoryFilter as YearEndCategory, t)
+			: t(localizationConstants.filter);
+
 	return (
 		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
 			{/* Left: Search & Filter */}
@@ -38,7 +52,7 @@ export function YearEndToolbar({
 						type="text"
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
-						placeholder="Sök"
+						placeholder={t(localizationConstants.searchPlaceholderYearEnd)}
 						className="pl-9 h-9 bg-white border-slate-200 text-xs rounded-lg shadow-2xs focus-visible:ring-1 focus-visible:ring-slate-400"
 					/>
 				</div>
@@ -49,14 +63,10 @@ export function YearEndToolbar({
 						<Button
 							variant="outline"
 							size="sm"
-							className="h-9 gap-1.5 border-slate-200 bg-white text-xs text-slate-700 shadow-2xs hover:bg-slate-50"
+							className="h-9 gap-1.5 border-slate-200 bg-white text-xs text-slate-700 shadow-2xs hover:bg-slate-50 cursor-pointer"
 						>
 							<Filter className="h-3.5 w-3.5 text-slate-500" />
-							<span>
-								{categoryFilter !== "all"
-									? categoryFilter
-									: "Filter"}
-							</span>
+							<span>{filterDisplayLabel}</span>
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="start" className="w-48">
@@ -64,30 +74,32 @@ export function YearEndToolbar({
 							onClick={() => onCategoryFilterChange("all")}
 							className="cursor-pointer text-xs"
 						>
-							Alla kategorier
+							<Translate text={localizationConstants.filterAllCategoriesYearEnd} />
 						</DropdownMenuItem>
-						{YEAR_END_CATEGORIES_LIST.map((cat) => (
+						{YEAR_END_CATEGORY_OPTIONS.map((opt) => (
 							<DropdownMenuItem
-								key={cat}
-								onClick={() => onCategoryFilterChange(cat)}
+								key={opt.value}
+								onClick={() => onCategoryFilterChange(opt.value)}
 								className="cursor-pointer text-xs"
 							>
-								{cat}
+								{getYearEndCategoryLabel(opt.value, t)}
 							</DropdownMenuItem>
 						))}
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
 
-			{/* Right: + Lägg till nytt */}
+			{/* Right: + Add new */}
 			<div>
 				<Button
 					onClick={onCreateClick}
 					size="sm"
-					className="h-9 px-4 bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 rounded-lg shadow-2xs gap-1.5"
+					className="h-9 px-4 bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 rounded-lg shadow-2xs gap-1.5 cursor-pointer"
 				>
 					<Plus className="h-4 w-4" />
-					<span>Lägg till nytt</span>
+					<span>
+						<Translate text={localizationConstants.btnAddYearEnd} />
+					</span>
 				</Button>
 			</div>
 		</div>

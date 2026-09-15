@@ -8,6 +8,8 @@ import {
 	ChevronsRight,
 	ChevronDown,
 } from "lucide-react";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 import { YEAR_END_PAGE_SIZE_OPTIONS } from "../../constants/yearEnd.constants";
 
 interface YearEndPaginationProps {
@@ -29,7 +31,9 @@ export function YearEndPagination({
 		<div className="flex flex-col sm:flex-row items-center justify-end gap-6 pt-4 text-xs text-slate-600">
 			{/* Rows per page */}
 			<div className="flex items-center gap-2">
-				<span>Rader per sida</span>
+				<span>
+					<Translate text={localizationConstants.rowsPerPageLabelYearEnd} />
+				</span>
 				<div className="relative inline-block">
 					<select
 						value={pageSize}
@@ -51,7 +55,8 @@ export function YearEndPagination({
 
 			{/* Page counter */}
 			<div className="font-medium text-slate-700">
-				Page {currentPage} of {totalPages}
+				<Translate text={localizationConstants.pageLabelYearEnd} /> {currentPage}{" "}
+				<Translate text={localizationConstants.pageOfLabelYearEnd} /> {totalPages}
 			</div>
 
 			{/* Nav buttons */}
@@ -61,7 +66,8 @@ export function YearEndPagination({
 					type="button"
 					onClick={() => onPageChange(1)}
 					disabled={currentPage <= 1}
-					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+					aria-label="First page"
+					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
 				>
 					<ChevronsLeft className="h-4 w-4" />
 				</button>
@@ -71,7 +77,8 @@ export function YearEndPagination({
 					type="button"
 					onClick={() => onPageChange(currentPage - 1)}
 					disabled={currentPage <= 1}
-					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+					aria-label="Previous page"
+					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
 				>
 					<ChevronLeft className="h-4 w-4" />
 				</button>
@@ -81,7 +88,8 @@ export function YearEndPagination({
 					type="button"
 					onClick={() => onPageChange(currentPage + 1)}
 					disabled={currentPage >= totalPages}
-					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+					aria-label="Next page"
+					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
 				>
 					<ChevronRight className="h-4 w-4" />
 				</button>
@@ -91,7 +99,8 @@ export function YearEndPagination({
 					type="button"
 					onClick={() => onPageChange(totalPages)}
 					disabled={currentPage >= totalPages}
-					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+					aria-label="Last page"
+					className="p-1 rounded-md text-slate-500 hover:text-slate-900 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
 				>
 					<ChevronsRight className="h-4 w-4" />
 				</button>
