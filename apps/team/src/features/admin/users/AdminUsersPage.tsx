@@ -17,6 +17,7 @@ import { allowedUserActions, listParams } from "./utils/adminUserTable";
 import { adminErrorMessage } from "./utils/adminUserErrors";
 import { AdminUsersTable, adminStatusLabels } from "./components/AdminUsersTable";
 import { AdminQueryState } from "./components/AdminQueryState";
+import { StripeCatalogLink } from "../stripe-catalog/StripeCatalogLink";
 
 export function AdminUsersPage() {
   const { t } = useTranslation();
@@ -85,6 +86,7 @@ export function AdminUsersPage() {
     <div className="flex h-full min-w-0 flex-col">
       <PageHeader title={t(localizationConstants.adminUsers)} breadcrumbs={[{ label: t(localizationConstants.breadcrumbHome), href: "/home" }, { label: t(localizationConstants.adminUsers) }]} />
       <div className="flex min-w-0 flex-col gap-6 px-4 pt-6 pb-8 sm:px-8">
+        <StripeCatalogLink />
         <div className="min-w-0 overflow-hidden rounded-lg border border-[#E5E5E5] bg-white" aria-busy={query.isFetching}>
           <div className="flex min-h-14 flex-col justify-between gap-4 border-b border-[#E4E4E7] bg-slate-200 px-4 py-3 sm:flex-row sm:items-center">
             <h2 className="text-base font-medium text-[#09090B]">{t(localizationConstants.adminUsersListTitle)}</h2>
