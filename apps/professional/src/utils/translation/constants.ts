@@ -3871,6 +3871,26 @@ export type OfferTranslation = {
 	projectSupplierPlanNoMatches: string;
 	projectSupplierPlanAcontosEmpty: string;
 	projectSupplierPlanDocumentsEmpty: string;
+	/* TFS-704 — Besiktning on the project record (inspections, archive, documents). */
+	projectInspectionTitle: string;
+	projectInspectionFilterArchived: string;
+	projectInspectionArchivedToast: string;
+	projectInspectionRestoredToast: string;
+	projectInspectionDeleteTitle: string;
+	projectInspectionDeleteBody: string;
+	projectInspectionNoMatches: string;
+	projectInspectionArchivedEmpty: string;
+	projectInspectionRowActions: string;
+	projectInspectionOpenFile: string;
+	projectInspectionNoPreview: string;
+	projectInspectionMoreFiles: string;
+	projectInspectionRemoveFile: string;
+	projectInspectionShowAllFiles: string;
+	projectInspectionShowFewerFiles: string;
+	projectInspectionFileDuplicate: string;
+	projectInspectionTooManyFiles: string;
+	projectInspectionInvalidDate: string;
+	projectInspectionDeletedToast: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;

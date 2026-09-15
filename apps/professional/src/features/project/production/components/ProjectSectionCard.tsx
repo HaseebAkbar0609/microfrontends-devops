@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import type { TranslationKeys } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
-export interface PlanCardProps {
+export interface ProjectSectionCardProps {
 	titleKey: TranslationKeys;
 	icon: React.ReactNode;
 	/** Right-aligned header slot — a pencil or "Lägga till". */
@@ -15,13 +15,19 @@ export interface PlanCardProps {
 }
 
 /**
- * The plan view's card: an icon and title with an optional header action over
- * free content.
+ * A project record section's card: an icon and title with an optional header
+ * action over free content — a table, grey panels, an upload row.
  *
- * `InfoFieldGrid`'s header, for the cards whose body is not a single field
- * grid — a table, grey panels, an upload row.
+ * Shared by the record's sections (Betalningsplan, Besiktning), so it lives
+ * beside `ProjectRecordTitle` rather than inside any one of them.
  */
-export function PlanCard({ titleKey, icon, action, children, contentClassName }: PlanCardProps) {
+export function ProjectSectionCard({
+	titleKey,
+	icon,
+	action,
+	children,
+	contentClassName,
+}: ProjectSectionCardProps) {
 	return (
 		<Card className="gap-0 rounded-lg border border-slate-200 bg-white py-0 shadow-none">
 			<CardHeader className="flex min-h-14 flex-row items-center justify-between gap-3 border-b border-slate-200 px-4 py-2 sm:px-6 [.border-b]:pb-2">
@@ -36,4 +42,4 @@ export function PlanCard({ titleKey, icon, action, children, contentClassName }:
 	);
 }
 
-export default PlanCard;
+export default ProjectSectionCard;

@@ -18,8 +18,8 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import type { PaymentPlanDocument } from "../types";
 import { DocumentUploadRow } from "./DocumentUploadRow";
-import { PlanCard } from "./PlanCard";
-import { SortableHead } from "./SortableHead";
+import { ProjectSectionCard } from "../../components/ProjectSectionCard";
+import { SortableHead } from "../../components/SortableHead";
 
 type DocumentSortKey = "date" | "typeKey" | "fileName";
 
@@ -53,7 +53,7 @@ export function PlanDocumentsCard({ documents, onAdd, onDelete }: PlanDocumentsC
 	);
 
 	return (
-		<PlanCard
+		<ProjectSectionCard
 			titleKey={localizationConstants.sectionLaddaUppBetalningsplan}
 			icon={<Upload className="h-5 w-5 text-slate-700" aria-hidden />}
 			contentClassName="flex flex-col gap-6"
@@ -118,7 +118,7 @@ export function PlanDocumentsCard({ documents, onAdd, onDelete }: PlanDocumentsC
 					</TableBody>
 				</Table>
 			</div>
-		</PlanCard>
+		</ProjectSectionCard>
 	);
 }
 

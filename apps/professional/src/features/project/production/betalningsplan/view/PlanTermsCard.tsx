@@ -7,7 +7,7 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import localizationConstants from "@/utils/translation/constants";
 import { retentionCap } from "../paymentPlanMath";
 import type { PaymentTerms } from "../types";
-import { PlanCard } from "./PlanCard";
+import { ProjectSectionCard } from "../../components/ProjectSectionCard";
 import { PlanCardHeaderAction } from "./PlanCardHeaderAction";
 
 export interface PlanTermsCardProps {
@@ -40,7 +40,7 @@ function RetentionPanel({ children }: { children: React.ReactNode }) {
 export function PlanTermsCard({ terms, createdBy, createdDate, revisedDate, onEdit }: PlanTermsCardProps) {
 
 	return (
-		<PlanCard
+		<ProjectSectionCard
 			titleKey={localizationConstants.sectionBetalningsplan}
 			icon={<Folder className="h-5 w-5 text-slate-700" aria-hidden />}
 			action={
@@ -76,7 +76,7 @@ export function PlanTermsCard({ terms, createdBy, createdDate, revisedDate, onEd
 					/>
 				</RetentionPanel>
 			</div>
-		</PlanCard>
+		</ProjectSectionCard>
 	);
 }
 

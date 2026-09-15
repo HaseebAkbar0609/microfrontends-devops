@@ -5,7 +5,7 @@ import { Folder } from "lucide-react";
 import { InfoField } from "@/features/purchase/components/shared/InfoFieldGrid";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import type { ProjectRecordInfo } from "../../types";
-import { PlanCard } from "./PlanCard";
+import { ProjectSectionCard } from "../../components/ProjectSectionCard";
 import { PlanCardHeaderAction } from "./PlanCardHeaderAction";
 
 export interface PlanProjectInfoCardProps {
@@ -35,7 +35,7 @@ export function PlanProjectInfoCard({ info, counterparty, editHref }: PlanProjec
 	};
 
 	return (
-		<PlanCard
+		<ProjectSectionCard
 			titleKey={localizationConstants.sectionProjectInfo}
 			icon={<Folder className="h-5 w-5 text-slate-700" aria-hidden />}
 			action={
@@ -56,7 +56,7 @@ export function PlanProjectInfoCard({ info, counterparty, editHref }: PlanProjec
 				<InfoField labelKey={localizationConstants.lblStartDatum} value={details?.startDate} />
 				<InfoField labelKey={localizationConstants.lblSlutDatum} value={details?.endDate} />
 			</dl>
-		</PlanCard>
+		</ProjectSectionCard>
 	);
 }
 
