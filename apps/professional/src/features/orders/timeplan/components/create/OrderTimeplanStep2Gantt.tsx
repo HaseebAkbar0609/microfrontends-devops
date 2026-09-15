@@ -3,10 +3,22 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { ArrowLeft, ChevronDown, ChevronRight, Plus, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+	Table,
+	TableHeader,
+	TableBody,
+	TableRow,
+	TableHead,
+	TableCell,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { OrderTimeplanTask } from "../../types/timeplan.types";
+import {
+	generateTimelineGrid,
+	computeTaskGanttMetrics,
+} from "../../utils/timeplan.utils";
 import { OrderTimeplanAddTaskModal } from "./OrderTimeplanAddTaskModal";
 
 interface OrderTimeplanStep2GanttProps {
@@ -18,15 +30,6 @@ interface OrderTimeplanStep2GanttProps {
 	onToggleExpand: (taskId: string) => void;
 	isSubmitting?: boolean;
 }
-
-const WEEKS_DATA = [
-	{ label: "Week 10", days: [8, 9, 10, 11, 12, 13, 14] },
-	{ label: "Week 11", days: [8, 9, 10, 11, 12, 13, 14] },
-	{ label: "Week 12", days: [8, 9, 10, 11, 12, 13, 14] },
-	{ label: "Week 12", days: [8, 9, 10, 11, 12, 13, 14] },
-];
-
-const TOTAL_DAYS = 28;
 
 export function OrderTimeplanStep2Gantt({
 	tasks,
@@ -40,6 +43,12 @@ export function OrderTimeplanStep2Gantt({
 	const [collapsedRows, setCollapsedRows] = useState<Record<string, boolean>>({});
 	const [selectedParentTask, setSelectedParentTask] = useState<OrderTimeplanTask | null>(null);
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+	// Generate dynamic calendar timeline grid based on earliest task date
+	const baseStartDate = tasks.length > 0 ? tasks[0].startDate : null;
+	const timelineGrid = useMemo(() => {
+		return generateTimelineGrid(baseStartDate, 4);
+	}, [baseStartDate]);
 
 	const toggleCollapse = useCallback((id: string) => {
 		setCollapsedRows((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -90,65 +99,70 @@ export function OrderTimeplanStep2Gantt({
 					</div>
 				</div>
 
-				{/* Pixel-Perfect Gantt Matrix Table: Indented with pl-0 sm:pl-7 to preserve cards/table left position */}
+				{/* Dynamic Gantt Matrix Table: Indented with pl-0 sm:pl-7 to preserve cards/table left position */}
 				<div className="w-full pl-0 sm:pl-7">
 					<div className="flex flex-col border border-slate-200 bg-white overflow-hidden rounded-xl shadow-2xs w-full">
-					<div className="overflow-x-auto w-full">
-						<table className="w-full border-collapse text-left text-sm min-w-[1100px]">
-							<thead>
-								{/* Top Row: Task, Start, (+), and Month Header */}
-								<tr className="bg-white">
-									<th
+						<Table className="w-full border-collapse text-left text-sm min-w-[1100px]">
+							<TableHeader className="bg-white">
+								{/* Top Row: Task, Start, (+), and Dynamic Month Headers */}
+								<TableRow className="bg-white hover:bg-white border-b-0">
+									<TableHead
 										rowSpan={3}
 										className="p-3.5 font-semibold text-slate-900 w-52 border-r border-b border-slate-200 text-xs align-middle"
 									>
 										<Translate text={localizationConstants.orderTimeplanGanttColTask} />
-									</th>
-									<th
+									</TableHead>
+									<TableHead
 										rowSpan={3}
 										className="p-3.5 font-semibold text-slate-900 w-32 border-r border-b border-slate-200 text-xs align-middle"
 									>
 										<Translate text={localizationConstants.orderTimeplanGanttColStart} />
-									</th>
-									<th
+									</TableHead>
+									<TableHead
 										rowSpan={3}
 										className="p-2 font-semibold text-slate-900 w-10 border-r border-b border-slate-200 text-center text-xs align-middle"
 									/>
-									<th
-										colSpan={TOTAL_DAYS}
-										className="p-2.5 font-semibold text-slate-900 text-center text-xs border-b border-r border-slate-200"
-									>
-										<Translate text={localizationConstants.orderTimeplanGanttMonthMarch} /> 2024
-									</th>
-								</tr>
+									{timelineGrid.months.map((month, mIdx) => (
+										<TableHead
+											key={mIdx}
+											colSpan={month.colSpan}
+											className="p-2.5 font-semibold text-slate-900 text-center text-xs border-b border-r border-slate-200 last:border-r-0"
+										>
+											{month.monthName} {month.year}
+										</TableHead>
+									))}
+								</TableRow>
 
-								{/* Middle Row: Weeks */}
-								<tr className="border-b border-slate-200 bg-white">
-									{WEEKS_DATA.map((week, idx) => (
-										<th
+								{/* Middle Row: Dynamic ISO Weeks */}
+								<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+									{timelineGrid.weeks.map((week, idx) => (
+										<TableHead
 											key={idx}
-											colSpan={7}
+											colSpan={week.days.length}
 											className="p-2 font-semibold text-slate-900 text-center text-xs border-r border-slate-200 last:border-r-0"
 										>
-											<Translate text={localizationConstants.orderTimeplanGanttWeekPrefix} /> {idx === 3 ? 12 : idx + 10}
-										</th>
+											<Translate text={localizationConstants.orderTimeplanGanttWeekPrefix} /> {week.weekNumber}
+										</TableHead>
 									))}
-								</tr>
+								</TableRow>
 
-								{/* Bottom Header Row: Days */}
-								<tr className="border-b border-slate-200 bg-white">
-									{WEEKS_DATA.flatMap((w) => w.days).map((day, dIdx) => (
-										<th
+								{/* Bottom Header Row: Dynamic Calendar Days */}
+								<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
+									{timelineGrid.weeks.flatMap((w) => w.days).map((day, dIdx) => (
+										<TableHead
 											key={dIdx}
-											className="w-8 h-7 text-center font-medium text-slate-700 text-[11px] border-r border-slate-100 last:border-r-0"
+											className={cn(
+												"w-8 h-7 text-center font-medium text-slate-700 text-[11px] border-r border-slate-100 last:border-r-0 p-0",
+												day.isToday && "bg-amber-50 text-amber-900 font-bold"
+											)}
 										>
-											{day}
-										</th>
+											{day.dayNumber}
+										</TableHead>
 									))}
-								</tr>
-							</thead>
+								</TableRow>
+							</TableHeader>
 
-							<tbody>
+							<TableBody>
 								{visibleRows.map((task) => {
 									const isCollapsed = collapsedRows[task.id];
 									const isLevel0 = task.level === 0;
@@ -161,13 +175,19 @@ export function OrderTimeplanStep2Gantt({
 										? "bg-slate-100 group-hover:bg-slate-200"
 										: "bg-white group-hover:bg-slate-50";
 
+									const metrics = computeTaskGanttMetrics(
+										task,
+										timelineGrid.startDate,
+										timelineGrid.totalDays
+									);
+
 									return (
-										<tr
+										<TableRow
 											key={task.id}
-											className="group border-b border-slate-200 last:border-b-0 transition-colors"
+											className="group border-b border-slate-200 last:border-b-0 transition-colors hover:bg-transparent"
 										>
 											{/* 1. Task Column with Tree Indentation & Chevron */}
-											<td className="py-1 pl-2 pr-0">
+											<TableCell className="py-1 pl-2 pr-0">
 												<div
 													className={`${leftBgClass} h-10 flex items-center px-3 rounded-l-md transition-colors text-slate-900 text-xs`}
 												>
@@ -176,10 +196,12 @@ export function OrderTimeplanStep2Gantt({
 														{task.level === 2 && <span className="w-6 shrink-0" />}
 
 														{task.hasChildren ? (
-															<button
+															<Button
 																type="button"
+																variant="ghost"
+																size="icon"
 																onClick={() => toggleCollapse(task.id)}
-																className="p-0.5 text-slate-600 hover:text-slate-900 rounded cursor-pointer shrink-0"
+																className="h-5 w-5 p-0.5 text-slate-600 hover:text-slate-900 rounded cursor-pointer shrink-0"
 																aria-label={isCollapsed ? "Expand row" : "Collapse row"}
 															>
 																{isCollapsed ? (
@@ -187,7 +209,7 @@ export function OrderTimeplanStep2Gantt({
 																) : (
 																	<ChevronDown className="h-3.5 w-3.5" />
 																)}
-															</button>
+															</Button>
 														) : (
 															<span className="w-3 shrink-0" />
 														)}
@@ -205,10 +227,10 @@ export function OrderTimeplanStep2Gantt({
 														</span>
 													</div>
 												</div>
-											</td>
+											</TableCell>
 
 											{/* 2. Start Date Column */}
-											<td className="py-1 px-0">
+											<TableCell className="py-1 px-0">
 												<div
 													className={`${leftBgClass} h-10 flex items-center px-3 transition-colors text-xs ${
 														task.level === 0
@@ -220,49 +242,55 @@ export function OrderTimeplanStep2Gantt({
 												>
 													{task.startDate}
 												</div>
-											</td>
+											</TableCell>
 
 											{/* 3. Add (+) Button Column */}
-											<td className="py-1 px-0">
+											<TableCell className="py-1 px-0">
 												<div
 													className={`${leftBgClass} h-10 flex items-center justify-center px-1 transition-colors`}
 												>
-													<button
+													<Button
 														type="button"
+														variant="ghost"
+														size="icon"
 														onClick={() => handleOpenAddModal(task)}
-														className="h-5 w-5 rounded flex items-center justify-center hover:bg-slate-300/60 text-slate-600 hover:text-slate-900 mx-auto cursor-pointer transition-colors"
+														className="h-5 w-5 rounded flex items-center justify-center hover:bg-slate-300/60 text-slate-600 hover:text-slate-900 mx-auto cursor-pointer transition-colors p-0"
 														title={t(localizationConstants.orderTimeplanAddTaskTooltip)}
+														aria-label={t(localizationConstants.orderTimeplanAddTaskTooltip)}
 													>
 														<Plus className="h-3.5 w-3.5" />
-													</button>
+													</Button>
 												</div>
-											</td>
+											</TableCell>
 
-											{/* 4. Timeline Grid Cell with Gantt Bar & Tag */}
-											<td colSpan={TOTAL_DAYS} className="py-1 pl-0 pr-2">
+											{/* 4. Timeline Grid Cell with Dynamically Positioned Gantt Bar & Tag */}
+											<TableCell colSpan={timelineGrid.totalDays} className="py-1 pl-0 pr-2">
 												<div
 													className={`${gridBgClass} h-10 relative rounded-r-md overflow-visible transition-colors`}
 												>
 													{/* Vertical Day Lines */}
 													<div className="absolute inset-0 flex pointer-events-none">
-														{Array.from({ length: TOTAL_DAYS }).map((_, colIdx) => (
+														{Array.from({ length: timelineGrid.totalDays }).map((_, colIdx) => (
 															<div
 																key={colIdx}
-																className="flex-1 border-r border-slate-100 last:border-r-0 h-full"
+																className={cn(
+																	"flex-1 border-r border-slate-100 last:border-r-0 h-full",
+																	colIdx === timelineGrid.todayIndex && "border-r-amber-400 bg-amber-50/20"
+																)}
 															/>
 														))}
 													</div>
 
-													{/* Timeline Bar & Attached Pill Tag matching exact Figma layout */}
-													{task.durationDays && task.durationDays > 0 && task.color && task.color !== "transparent" ? (
+													{/* Timeline Bar & Attached Pill Tag */}
+													{metrics.isWithinRange && task.color && task.color !== "transparent" ? (
 														<div
 															className="absolute top-2 bottom-2 flex items-center z-10 pointer-events-none"
 															style={{
-																left: `${((task.startDayIndex || 0) / TOTAL_DAYS) * 100}%`,
-																width: `${((task.durationDays || 1) / TOTAL_DAYS) * 100}%`,
+																left: `${metrics.leftPercent}%`,
+																width: `${metrics.widthPercent}%`,
 															}}
 														>
-															{/* Left Tag (e.g. for Rough framing 'Pour concrete' tag) */}
+															{/* Left Tag */}
 															{task.tag && task.tagPosition === "left" && (
 																<div className="absolute right-full mr-2 top-1/2 -translate-y-1/2 h-5 px-2 rounded-[3px] bg-slate-900 text-white text-[11px] font-medium flex items-center justify-center shadow-xs whitespace-nowrap z-20 pointer-events-auto leading-none">
 																	{task.tag}
@@ -276,7 +304,7 @@ export function OrderTimeplanStep2Gantt({
 																	task.color?.startsWith("bg-") ? task.color : "bg-cyan-500"
 																)}
 															>
-																{Array.from({ length: task.durationDays }).map((_, segmentIdx) => (
+																{Array.from({ length: metrics.durationDays }).map((_, segmentIdx) => (
 																	<div
 																		key={segmentIdx}
 																		className="flex-1 border-r border-white/50 last:border-r-0 h-full"
@@ -284,7 +312,7 @@ export function OrderTimeplanStep2Gantt({
 																))}
 															</div>
 
-															{/* Right Tag (Standard attached black badge at the end of the bar) */}
+															{/* Right Tag */}
 															{task.tag && task.tagPosition !== "left" && (
 																<div className="absolute left-full ml-2 top-1/2 -translate-y-1/2 h-5 px-2 rounded-[3px] bg-slate-900 text-white text-[11px] font-medium flex items-center justify-center shadow-xs whitespace-nowrap z-20 pointer-events-auto leading-none">
 																	{task.tag}
@@ -293,15 +321,14 @@ export function OrderTimeplanStep2Gantt({
 														</div>
 													) : null}
 												</div>
-											</td>
-										</tr>
+											</TableCell>
+										</TableRow>
 									);
 								})}
-							</tbody>
-						</table>
+							</TableBody>
+						</Table>
 					</div>
 				</div>
-			</div>
 			</div>
 
 			{/* Sticky Bottom Action Footer matching exact Figma Screenshot */}
@@ -346,3 +373,5 @@ export function OrderTimeplanStep2Gantt({
 		</div>
 	);
 }
+
+export default OrderTimeplanStep2Gantt;

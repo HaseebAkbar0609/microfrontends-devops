@@ -11,6 +11,7 @@ import { TIMEPLAN_CONSTANTS } from "./constants/timeplan.constants";
 import { useOrderTimeplans } from "./hooks/useOrderTimeplans";
 import { TimeplanListTable } from "./components/TimeplanListTable";
 import { OrderTimeplanCreateWizard } from "./components/create/OrderTimeplanCreateWizard";
+import { OrderTimeplanDetailView } from "./components/view/OrderTimeplanDetailView";
 import type { OrderTimeplan } from "./types/timeplan.types";
 
 export interface OrderTimeplanOverviewPageProps {
@@ -45,7 +46,11 @@ export function OrderTimeplanOverviewPage({
 		handleAddOrUpdatePlan,
 	} = useOrderTimeplans({ orderId });
 
-	const [isWizardOpen, setIsWizardOpen] = useState(() => Boolean(queryAction));
+	const [viewMode, setViewMode] = useState<"list" | "create" | "view">(() => {
+		if (queryAction === "view") return "view";
+		if (queryAction === "create") return "create";
+		return "list";
+	});
 	const [activePlan, setActivePlan] = useState<OrderTimeplan | null>(() => {
 		if (queryAction === "view" && queryTimeplanId) {
 			return plans.find((p) => p.id === queryTimeplanId) || null;
@@ -57,17 +62,17 @@ export function OrderTimeplanOverviewPage({
 	useEffect(() => {
 		if (queryAction === "create") {
 			setActivePlan(null);
-			setIsWizardOpen(true);
+			setViewMode("create");
 			onDetailModeChange?.(true);
 		} else if (queryAction === "view") {
 			const matchedPlan =
 				plans.find((p) => p.id === queryTimeplanId) ||
 				(queryTimeplanId ? { id: queryTimeplanId, name: "", kind: TIMEPLAN_CONSTANTS.KINDS.MAIN, date: "", createdBy: "" } : null);
 			setActivePlan(matchedPlan);
-			setIsWizardOpen(true);
+			setViewMode("view");
 			onDetailModeChange?.(true);
 		} else {
-			setIsWizardOpen(false);
+			setViewMode("list");
 			setActivePlan(null);
 			onDetailModeChange?.(false);
 		}
@@ -75,20 +80,20 @@ export function OrderTimeplanOverviewPage({
 
 	const handleOpenCreate = () => {
 		setActivePlan(null);
-		setIsWizardOpen(true);
+		setViewMode("create");
 		onDetailModeChange?.(true);
 		router.push(`/module/production/order/${orderId}/tidsplan?action=create`);
 	};
 
 	const handleOpenView = (plan: OrderTimeplan) => {
 		setActivePlan(plan);
-		setIsWizardOpen(true);
+		setViewMode("view");
 		onDetailModeChange?.(true);
 		router.push(`/module/production/order/${orderId}/tidsplan?action=view&timeplanId=${plan.id}`);
 	};
 
-	const handleCloseWizard = () => {
-		setIsWizardOpen(false);
+	const handleClose = () => {
+		setViewMode("list");
 		setActivePlan(null);
 		onDetailModeChange?.(false);
 		router.push(`/module/production/order/${orderId}/tidsplan`);
@@ -96,15 +101,24 @@ export function OrderTimeplanOverviewPage({
 
 	const handleSaveComplete = (newPlan: OrderTimeplan) => {
 		handleAddOrUpdatePlan(newPlan);
-		handleCloseWizard();
+		handleClose();
 	};
 
-	if (isWizardOpen) {
+	if (viewMode === "view") {
+		return (
+			<OrderTimeplanDetailView
+				orderId={orderId}
+				plan={activePlan}
+				onClose={handleClose}
+			/>
+		);
+	}
+
+	if (viewMode === "create") {
 		return (
 			<OrderTimeplanCreateWizard
 				orderId={orderId}
-				initialPlan={activePlan}
-				onClose={handleCloseWizard}
+				onClose={handleClose}
 				onSaveComplete={handleSaveComplete}
 			/>
 		);

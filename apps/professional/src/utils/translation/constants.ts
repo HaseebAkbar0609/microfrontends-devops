@@ -8333,6 +8333,10 @@ export type OrderTimeplanTranslation = {
 	orderTimeplanValidationStartDateRequired: string;
 	orderTimeplanValidationEndDateRequired: string;
 	orderTimeplanValidationTaskNameRequired: string;
+	orderTimeplanSubTabTimeline: string;
+	orderTimeplanSubTabInfo: string;
+	orderTimeplanDefaultTitle: string;
+	orderTimeplanViewPageTitle: string;
 };
 
 export type Translation = HeaderTranslation &

@@ -8387,6 +8387,10 @@ export const enOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanValidationStartDateRequired: "Start date is required",
 	orderTimeplanValidationEndDateRequired: "End date is required",
 	orderTimeplanValidationTaskNameRequired: "Task name is required",
+	orderTimeplanSubTabTimeline: "Timeplan",
+	orderTimeplanSubTabInfo: "Timeplan information",
+	orderTimeplanDefaultTitle: "Establishment schedule for construction",
+	orderTimeplanViewPageTitle: "View timeplan",
 };
 
 export const en: Translation = {
