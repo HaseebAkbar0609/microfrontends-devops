@@ -6,13 +6,17 @@ import { InfoField } from "@/features/purchase/components/shared/InfoFieldGrid";
 import { formatCurrency } from "@/utils/formatCurrency";
 import localizationConstants from "@/utils/translation/constants";
 import { retentionCap } from "../paymentPlanMath";
-import type { ProjectPaymentPlan } from "../types";
+import type { PaymentTerms } from "../types";
 import { PlanCard } from "./PlanCard";
 import { PlanCardHeaderAction } from "./PlanCardHeaderAction";
 
 export interface PlanTermsCardProps {
-	plan: ProjectPaymentPlan;
-	onEdit: () => void;
+	terms: PaymentTerms;
+	createdBy: string;
+	createdDate: string;
+	revisedDate: string;
+	/** Opens the terms editor. Omit for a read-only card. */
+	onEdit?: () => void;
 }
 
 /**
@@ -33,22 +37,23 @@ function RetentionPanel({ children }: { children: React.ReactNode }) {
  * "Belopp innehållet totalt" is derived from the contract and the ceiling
  * percentage, never typed, so it always matches the terms above it.
  */
-export function PlanTermsCard({ plan, onEdit }: PlanTermsCardProps) {
-	const { terms } = plan;
+export function PlanTermsCard({ terms, createdBy, createdDate, revisedDate, onEdit }: PlanTermsCardProps) {
 
 	return (
 		<PlanCard
 			titleKey={localizationConstants.sectionBetalningsplan}
 			icon={<Folder className="h-5 w-5 text-slate-700" aria-hidden />}
 			action={
-				<PlanCardHeaderAction labelKey={localizationConstants.projectPaymentPlanTermsTitle} onClick={onEdit} />
+				onEdit ? (
+					<PlanCardHeaderAction labelKey={localizationConstants.projectPaymentPlanTermsTitle} onClick={onEdit} />
+				) : undefined
 			}
 		>
 			<dl className="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 xl:grid-cols-4">
 				<InfoField labelKey={localizationConstants.lblKontraktsummaAlt} value={`${formatCurrency(terms.contractSum)} kr`} />
-				<InfoField labelKey={localizationConstants.lblSkapadAv} value={plan.createdBy} />
-				<InfoField labelKey={localizationConstants.lblDatum} value={plan.createdDate} />
-				<InfoField labelKey={localizationConstants.lblReviderad} value={plan.revisedDate} />
+				<InfoField labelKey={localizationConstants.lblSkapadAv} value={createdBy} />
+				<InfoField labelKey={localizationConstants.lblDatum} value={createdDate} />
+				<InfoField labelKey={localizationConstants.lblReviderad} value={revisedDate} />
 			</dl>
 
 			<div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">

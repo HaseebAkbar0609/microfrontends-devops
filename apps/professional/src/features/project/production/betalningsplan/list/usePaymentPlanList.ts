@@ -146,3 +146,5 @@ export function usePaymentPlanList(projectId: string) {
 		create,
 	};
 }
+
+export type PaymentPlanListState = ReturnType<typeof usePaymentPlanList>;

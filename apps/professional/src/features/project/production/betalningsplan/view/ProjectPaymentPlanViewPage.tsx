@@ -55,8 +55,14 @@ export function ProjectPaymentPlanViewPage({ projectId, planId }: ProjectPayment
 			/>
 
 			<div className="flex flex-1 flex-col gap-4 p-4 sm:p-6">
-				<PlanProjectInfoCard projectId={projectId} info={editor.projectInfo} />
-				<PlanTermsCard plan={plan} onEdit={() => dialogs.open({ kind: "editTerms" })} />
+				<PlanProjectInfoCard info={editor.projectInfo} editHref={paymentPlanUrls.projectInfo(projectId)} />
+				<PlanTermsCard
+					terms={plan.terms}
+					createdBy={plan.createdBy}
+					createdDate={plan.createdDate}
+					revisedDate={plan.revisedDate}
+					onEdit={() => dialogs.open({ kind: "editTerms" })}
+				/>
 				<AcontoCard editor={editor} dialogs={dialogs} />
 				<PlanDocumentsCard
 					documents={plan.documents}
