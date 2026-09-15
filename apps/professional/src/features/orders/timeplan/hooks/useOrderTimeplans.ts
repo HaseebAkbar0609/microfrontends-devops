@@ -94,6 +94,16 @@ export function useOrderTimeplans({
 		[orderId, t]
 	);
 
+	const handleAddOrUpdatePlan = useCallback((newPlan: OrderTimeplan) => {
+		setPlans((prev) => {
+			const exists = prev.some((p) => p.id === newPlan.id);
+			if (exists) {
+				return prev.map((p) => (p.id === newPlan.id ? newPlan : p));
+			}
+			return [newPlan, ...prev];
+		});
+	}, []);
+
 	return {
 		isLoading,
 		plans: paginatedPlans,
@@ -107,8 +117,10 @@ export function useOrderTimeplans({
 		sortOrder,
 		handleSort,
 		handleDeletePlan,
+		handleAddOrUpdatePlan,
 		refreshData: loadData,
 	};
 }
+
 
 

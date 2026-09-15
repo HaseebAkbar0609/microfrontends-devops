@@ -159,7 +159,13 @@ export function TimeplanListTable({
 
 								{/* Tidsplan */}
 								<TableCell className="px-4 py-3.5 whitespace-nowrap font-sans text-sm font-semibold text-slate-900">
-									{plan.kind}
+									<Translate
+										text={
+											plan.kind === "Huvudtidsplan"
+												? localizationConstants.orderTimeplanKindMain
+												: localizationConstants.orderTimeplanKindPartial
+										}
+									/>
 								</TableCell>
 
 								{/* Skapad av */}
@@ -187,24 +193,24 @@ export function TimeplanListTable({
 												type="button"
 												variant="ghost"
 												size="icon"
-												className="h-8 w-8 text-black hover:text-black hover:bg-slate-100 rounded cursor-pointer"
+												className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded cursor-pointer"
 											>
-												<MoreVertical className="h-4 w-4 text-black" />
+												<MoreVertical className="h-4 w-4 text-slate-700" />
 											</Button>
 										</DropdownMenuTrigger>
 										<DropdownMenuContent align="end" className="w-40 bg-white border border-slate-200 shadow-lg rounded-lg font-sans">
 											<DropdownMenuItem
 												onClick={() => onView(plan)}
-												className="flex items-center gap-2 text-xs font-medium text-black hover:text-black cursor-pointer"
+												className="flex items-center gap-2 text-xs font-medium text-slate-900 hover:text-slate-900 cursor-pointer"
 											>
-												<Eye className="h-3.5 w-3.5 text-black" />
+												<Eye className="h-3.5 w-3.5 text-slate-700" />
 												<Translate text={localizationConstants.orderTimeplanViewBtn} />
 											</DropdownMenuItem>
 											<DropdownMenuItem
 												onClick={() => onDelete(plan)}
-												className="flex items-center gap-2 text-xs font-medium text-black hover:text-black hover:bg-slate-50 cursor-pointer"
+												className="flex items-center gap-2 text-xs font-medium text-slate-900 hover:text-slate-900 hover:bg-slate-50 cursor-pointer"
 											>
-												<Trash2 className="h-3.5 w-3.5 text-black" />
+												<Trash2 className="h-3.5 w-3.5 text-slate-700" />
 												<Translate text={localizationConstants.orderTimeplanDeleteAction} />
 											</DropdownMenuItem>
 										</DropdownMenuContent>
