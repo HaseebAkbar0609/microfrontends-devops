@@ -4,24 +4,43 @@ import { InfoField } from "@/features/purchase/components/shared/InfoFieldGrid";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatCurrency } from "@/utils/formatCurrency";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { acontoEconomyKey } from "../paymentPlan.config";
-import { deduction, toReceive } from "../paymentPlanMath";
-import type { PaymentAconto } from "../types";
+import { deduction } from "../paymentPlanMath";
 
 export interface InvoiceSummaryDialogProps {
-	aconto: PaymentAconto;
+	activity: string;
+	lift: string;
+	/** `yyyy-MM-dd`. */
+	date?: string;
+	amount: number;
+	retained: number;
+	economyKey: TranslationKeys;
+	/** Defaults to "Fakturadatum"; a supplier's paid aconto reads "Betaldatum". */
+	dateLabelKey?: TranslationKeys;
+	/** Defaults to "Att erhålla"; a supplier's plan reads "Att betala". */
+	toReceiveLabelKey?: TranslationKeys;
 	onClose: () => void;
 }
 
 /**
- * "Se Faktura" — what was invoiced for one aconto.
+ * "Se Faktura" — the figures behind one aconto's invoice.
  *
  * Read-only and local: the invoicing module has no invoice to open for an
- * aconto yet, so this shows the figures the invoice was raised on. Flagged.
+ * aconto yet, so this shows what the invoice was raised on. Flagged. Shared by
+ * the Beställare plan and a supplier's plan, which word two fields differently.
  */
-export function InvoiceSummaryDialog({ aconto, onClose }: InvoiceSummaryDialogProps) {
+export function InvoiceSummaryDialog({
+	activity,
+	lift,
+	date,
+	amount,
+	retained,
+	economyKey,
+	dateLabelKey = localizationConstants.projectPaymentPlanInvoiceDate,
+	toReceiveLabelKey = localizationConstants.colAttErhalla,
+	onClose,
+}: InvoiceSummaryDialogProps) {
 	const t = useTranslate();
 
 	return (
@@ -30,20 +49,17 @@ export function InvoiceSummaryDialog({ aconto, onClose }: InvoiceSummaryDialogPr
 				<DialogHeader>
 					<DialogTitle className="text-lg font-semibold text-slate-900">
 						<Translate text={localizationConstants.projectPaymentPlanInvoiceSummaryTitle} />
-						{` — ${aconto.activity}`}
+						{` — ${activity}`}
 					</DialogTitle>
 				</DialogHeader>
 
 				<dl className="grid grid-cols-2 gap-x-6 gap-y-4">
-					<InfoField labelKey={localizationConstants.colLyft} value={aconto.lift} />
-					<InfoField labelKey={localizationConstants.projectPaymentPlanInvoiceDate} value={aconto.invoicedDate} />
-					<InfoField labelKey={localizationConstants.colBelopp} value={`${formatCurrency(aconto.amount)} kr`} />
-					<InfoField labelKey={localizationConstants.colInnehallet} value={`${formatCurrency(deduction(aconto.retained))} kr`} />
-					<InfoField labelKey={localizationConstants.colAttErhalla} value={`${formatCurrency(toReceive(aconto))} kr`} />
-					<InfoField
-						labelKey={localizationConstants.projectPaymentPlanColEconomy}
-						value={t(acontoEconomyKey(aconto))}
-					/>
+					<InfoField labelKey={localizationConstants.colLyft} value={lift} />
+					<InfoField labelKey={dateLabelKey} value={date} />
+					<InfoField labelKey={localizationConstants.colBelopp} value={`${formatCurrency(amount)} kr`} />
+					<InfoField labelKey={localizationConstants.colInnehallet} value={`${formatCurrency(deduction(retained))} kr`} />
+					<InfoField labelKey={toReceiveLabelKey} value={`${formatCurrency(amount - retained)} kr`} />
+					<InfoField labelKey={localizationConstants.projectPaymentPlanColEconomy} value={t(economyKey)} />
 				</dl>
 
 				<DialogFooter>

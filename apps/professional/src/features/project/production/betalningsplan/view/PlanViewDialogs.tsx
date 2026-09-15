@@ -2,6 +2,7 @@
 
 import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 import localizationConstants from "@/utils/translation/constants";
+import { acontoEconomyKey } from "../paymentPlan.config";
 import type { PaymentPlanEditor } from "./usePaymentPlanEditor";
 import type { PlanViewDialogs as Dialogs } from "./usePlanViewDialogs";
 import { AcontoDialog } from "./AcontoDialog";
@@ -58,7 +59,17 @@ export function PlanViewDialogs({ editor, dialogs }: PlanViewDialogsProps) {
 				/>
 			)}
 
-			{dialog?.kind === "viewInvoice" && <InvoiceSummaryDialog aconto={dialog.aconto} onClose={close} />}
+			{dialog?.kind === "viewInvoice" && (
+				<InvoiceSummaryDialog
+					activity={dialog.aconto.activity}
+					lift={dialog.aconto.lift}
+					date={dialog.aconto.invoicedDate}
+					amount={dialog.aconto.amount}
+					retained={dialog.aconto.retained}
+					economyKey={acontoEconomyKey(dialog.aconto)}
+					onClose={close}
+				/>
+			)}
 
 			<ConfirmActionDialog
 				open={dialog?.kind === "deleteAconto"}
