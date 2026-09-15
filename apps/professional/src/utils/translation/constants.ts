@@ -1,4 +1,5 @@
 import { sv } from "./sv";
+import type { AdminLiveTranslation } from "./adminLive";
 
 export type HeaderTranslation = {
 	home: string;
@@ -8305,7 +8306,7 @@ export type Translation = HeaderTranslation &
 	SupplierAtaTranslation &
 	ViewAtaTranslation &
 	StaffRegistrationTranslation &
-	OrderTimeplanTranslation;
+	OrderTimeplanTranslation & AdminLiveTranslation;
 
 export type TranslationKeys = keyof Translation;
 
