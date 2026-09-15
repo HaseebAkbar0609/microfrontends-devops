@@ -11,12 +11,12 @@ import { useQAThreadFilters } from "@/hooks/useQAThreadFilters";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { PROJECT_LIST_ROWS } from "../../../data/projectsOverview.mock";
+import { todayIso } from "../../../shared/todayIso";
 import {
 	matchesQaFilter,
 	PROJECT_QA_FUNCTION_OPTIONS,
 	PROJECT_QA_TYPE_OPTIONS,
 } from "../projectQa.config";
-import { todayIso } from "../qaDate";
 import * as store from "../services/projectQaService";
 import type { ProjectQuestion } from "../types";
 
