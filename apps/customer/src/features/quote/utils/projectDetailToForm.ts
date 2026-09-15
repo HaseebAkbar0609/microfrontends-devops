@@ -274,9 +274,19 @@ function suppliersFromRow(row: Record<string, unknown>): QuoteSupplier[] {
 	for (const item of raw) {
 		if (item == null || typeof item !== "object") continue;
 		const r = item as Record<string, unknown>;
+		const companyName = s(r.company_name ?? r.companyName);
 		out.push({
-			id: s(r.company_id ?? r.id) || Math.random().toString(36).slice(2),
-			companyName: s(r.company_name ?? r.companyName),
+			// A supplier invited by filling in company details directly (not
+			// selected from an existing registered company) has no
+			// company_id/id from the backend. The "View Offer" detail page
+			// (app/business/offer/[id]/[supplierId]/page.tsx) matches by id
+			// OR by companyName, so falling back to companyName here keeps
+			// the link stable across refetches. A `Math.random()` fallback
+			// previously regenerated a new id on every fetch, so the link
+			// built from one render never matched a later refetch and
+			// always showed "Supplier quote not found".
+			id: s(r.company_id ?? r.id) || companyName,
+			companyName,
 			category: s(r.category ?? r.subcategory_id ?? ""),
 			orgNumber: s(r.organization_number ?? r.orgNumber),
 			contactFirstName: s(r.first_name ?? r.contact_first_name),
