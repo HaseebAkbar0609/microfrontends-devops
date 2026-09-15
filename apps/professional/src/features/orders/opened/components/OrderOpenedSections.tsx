@@ -24,6 +24,7 @@ import { OrderProtocolOverviewPage } from "@/features/orders/protocol/OrderProto
 import { OrderAtaOverviewPage } from "@/features/orders/ata/OrderAtaOverviewPage";
 import { OrderStaffOverviewPage } from "@/features/orders/staff/OrderStaffOverviewPage";
 import { OrderTimeplanOverviewPage } from "@/features/orders/timeplan/OrderTimeplanOverviewPage";
+import { OrderQaOverviewPage } from "@/features/orders/qa/OrderQaOverviewPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -43,7 +44,8 @@ type OrderTabValue =
 	| "guarantee"
 	| "protocol"
 	| "staff"
-	| "tidsplan";
+	| "tidsplan"
+	| "fraga-svar";
 
 export function OrderOpenedSections({
 	data,
@@ -76,6 +78,7 @@ export function OrderOpenedSections({
 		if (path.includes("/protocol")) return "protocol";
 		if (path.includes("/staff")) return "staff";
 		if (path.includes("/tidsplan") || path.includes("/timeplan")) return "tidsplan";
+		if (path.includes("/fraga-svar") || path.includes("/qa")) return "fraga-svar";
 		return "order-information";
 	};
 
@@ -128,6 +131,7 @@ export function OrderOpenedSections({
 		protocol: t(localizationConstants.protocolsTab),
 		staff: t(localizationConstants.staffLedgerTab),
 		tidsplan: t(localizationConstants.orderTimeplanTab),
+		"fraga-svar": t(localizationConstants.orderQaTab),
 	};
 
 	const showSubtitle =
@@ -223,6 +227,14 @@ export function OrderOpenedSections({
 							className="cursor-pointer"
 						>
 							<Translate text={localizationConstants.orderTimeplanTab} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="fraga-svar" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/fraga-svar`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderQaTab} />
 						</Link>
 					</TabsTrigger>
 				</TabsList>
@@ -322,6 +334,11 @@ export function OrderOpenedSections({
 						orderId={routeOrderId}
 						onDetailModeChange={setIsTimeplanDetailOpen}
 					/>
+				</TabsContent>
+
+				{/* Tab 10: Fråga/Svar (Q&A) */}
+				<TabsContent value="fraga-svar" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderQaOverviewPage orderId={routeOrderId} />
 				</TabsContent>
 			</Tabs>
 		</div>

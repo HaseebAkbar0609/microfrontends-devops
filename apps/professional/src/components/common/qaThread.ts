@@ -85,8 +85,8 @@ export interface QAThreadDraft {
 	description: string;
 }
 
-export interface QAThreadOption {
-	value: string;
+export interface QAThreadOption<T extends string = string> {
+	value: T;
 	label: TranslationKeys;
 }
 
@@ -99,4 +99,5 @@ export interface QAThreadCreateDialogLabels {
 	descriptionPlaceholder?: TranslationKeys;
 	cancel: TranslationKeys;
 	send: TranslationKeys;
+	submit?: TranslationKeys;
 }

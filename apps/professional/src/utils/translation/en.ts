@@ -38,6 +38,7 @@ import {
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
 	OrderTimeplanTranslation,
+	OrderQaTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -8393,6 +8394,11 @@ export const enOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanViewPageTitle: "View timeplan",
 };
 
+export const enOrderQa: OrderQaTranslation = {
+	orderQaTab: "Q&A",
+	orderQaTitle: "Q&A",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -8432,4 +8438,5 @@ export const en: Translation = {
 	...enViewAta,
 	...enStaffRegistration,
 	...enOrderTimeplan,
+	...enOrderQa,
 };

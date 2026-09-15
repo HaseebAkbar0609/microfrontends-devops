@@ -38,6 +38,7 @@ import {
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
 	OrderTimeplanTranslation,
+	OrderQaTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -8414,6 +8415,11 @@ export const svOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanViewPageTitle: "View tidsplan",
 };
 
+export const svOrderQa: OrderQaTranslation = {
+	orderQaTab: "Fråga/Svar",
+	orderQaTitle: "Fråga/Svar",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -8453,6 +8459,7 @@ export const sv: Translation = {
 	...svViewAta,
 	...svStaffRegistration,
 	...svOrderTimeplan,
+	...svOrderQa,
 };
 
 

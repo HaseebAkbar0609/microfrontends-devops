@@ -2,7 +2,7 @@
 
 import {
 	Archive,
-	CircleCheck,
+	CircleCheckBig,
 	EllipsisVertical,
 	Trash2,
 	type LucideIcon,
@@ -54,7 +54,7 @@ export function QAThreadCardMenu({
 	const actions: MenuAction[] = [
 		{
 			key: "read",
-			icon: CircleCheck,
+			icon: CircleCheckBig,
 			label: labels.markAsRead,
 			handler: onMarkAsRead,
 		},

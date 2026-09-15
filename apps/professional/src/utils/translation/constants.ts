@@ -8339,6 +8339,11 @@ export type OrderTimeplanTranslation = {
 	orderTimeplanViewPageTitle: string;
 };
 
+export type OrderQaTranslation = {
+	orderQaTab: string;
+	orderQaTitle: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8376,7 +8381,8 @@ export type Translation = HeaderTranslation &
 	SupplierAtaTranslation &
 	ViewAtaTranslation &
 	StaffRegistrationTranslation &
-	OrderTimeplanTranslation;
+	OrderTimeplanTranslation &
+	OrderQaTranslation;
 
 export type TranslationKeys = keyof Translation;
 
