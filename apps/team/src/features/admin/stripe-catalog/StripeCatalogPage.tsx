@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { RefreshCw } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { isAxiosError } from "axios";
@@ -10,11 +9,17 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { PageHeader } from "@/components/common/PageHeader";
 import localizationConstants from "@/utils/translation/constants";
 import { CatalogTable } from "./CatalogTable";
-import { catalogCapabilityKey, getCatalogCapability, previewCatalog, syncCatalog, type CatalogPreview } from "./stripeCatalog.api";
+import { previewCatalog, syncCatalog, type CatalogPreview } from "./stripeCatalog.api";
+import { useCatalogAccess } from "./useCatalogAccess";
 
 export function StripeCatalogPage() {
+  const { scope } = useCatalogAccess();
+  return <CatalogSession key={scope} />;
+}
+
+function CatalogSession() {
   const { t } = useTranslation();
-  const access = useQuery({ queryKey: catalogCapabilityKey, queryFn: getCatalogCapability, retry: false });
+  const { access } = useCatalogAccess();
   const [preview, setPreview] = useState<CatalogPreview | null>(null);
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState(false);
