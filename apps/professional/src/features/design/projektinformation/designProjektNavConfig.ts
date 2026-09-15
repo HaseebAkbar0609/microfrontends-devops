@@ -14,5 +14,10 @@ export function designProjektTabs(projektId: string): ModuleTabItem[] {
 			labelKey: localizationConstants.agreementProjectInfo,
 			href: `${base}/projektinformation`,
 		},
+		{
+			id: "tidsplan",
+			labelKey: localizationConstants.projectSectionTidsplan,
+			href: `${base}/tidsplan`,
+		},
 	];
 }

@@ -3451,6 +3451,18 @@ export type OfferTranslation = {
 	designOrgKontaktpersoner: string;
 	designOrgEmpty: string;
 	designOrgNoMatches: string;
+	// Design Module — Tidsplan
+	designTidsplanTabProjektering: string;
+	designTidsplanTabProduktion: string;
+	designTidsplanSkapaBtn: string;
+	designTidsplanViewBtn: string;
+	designTidsplanHuvudtidsplan: string;
+	designTidsplanDeltidsplan: string;
+	designTidsplanOtherInfoSection: string;
+	designTidsplanRevDatum: string;
+	designTidsplanDatumLabel: string;
+	designTidsplanOrderNr: string;
+	designTidsplanEmpty: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
@@ -3770,7 +3782,6 @@ export type OfferTranslation = {
 	/* TFS-701 — Betalningsplan (the project record's payment plans). */
 	projectPaymentPlanViewTitle: string;
 	projectPaymentPlanCreate: string;
-	projectPaymentPlanUeLevUnavailable: string;
 	projectPaymentPlanStatusDraft: string;
 	projectPaymentPlanStatusSent: string;
 	projectPaymentPlanEmpty: string;
@@ -3826,6 +3837,40 @@ export type OfferTranslation = {
 	projectPaymentPlanDiscardBody: string;
 	projectPaymentPlanDiscardConfirm: string;
 	projectPaymentPlanYou: string;
+	/* TFS-703 — Betalningsplan UE / Lev (plans received from subcontractors and suppliers). */
+	projectSupplierPlanViewTitle: string;
+	projectSupplierPlanSupplier: string;
+	projectSupplierPlanAcontoLift: string;
+	projectSupplierPlanToPay: string;
+	projectSupplierPlanNotDue: string;
+	projectSupplierPlanReceived: string;
+	projectSupplierPlanRemaining: string;
+	projectSupplierPlanApprove: string;
+	projectSupplierPlanMarkPaid: string;
+	projectSupplierPlanMarkReviewed: string;
+	projectSupplierPlanUnmarkReviewed: string;
+	projectSupplierPlanReviewAll: string;
+	projectSupplierPlanReviewDocument: string;
+	projectSupplierPlanReviewFirst: string;
+	projectSupplierPlanAlreadyApproved: string;
+	projectSupplierPlanNotReady: string;
+	projectSupplierPlanOpenToReview: string;
+	projectSupplierPlanNoPreview: string;
+	projectSupplierPlanAlreadyPaid: string;
+	projectSupplierPlanNoInvoice: string;
+	projectSupplierPlanApproveTitle: string;
+	projectSupplierPlanApproveBody: string;
+	projectSupplierPlanApprovedToast: string;
+	projectSupplierPlanMarkPaidTitle: string;
+	projectSupplierPlanMarkPaidBody: string;
+	projectSupplierPlanPaidToast: string;
+	projectSupplierPlanReviewedToast: string;
+	projectSupplierPlanPaidDate: string;
+	projectSupplierPlanColumnPicker: string;
+	projectSupplierPlanEmpty: string;
+	projectSupplierPlanNoMatches: string;
+	projectSupplierPlanAcontosEmpty: string;
+	projectSupplierPlanDocumentsEmpty: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
