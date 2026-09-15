@@ -8024,6 +8024,131 @@ export type StaffRegistrationTranslation = {
 	staffGenericError: string;
 };
 
+export type AuthoritiesTranslation = {
+	titleAuthorities: string;
+	breadcrumbAuthorities: string;
+	colAuthorityId: string;
+	colAuthorityCategory: string;
+	colAuthorityDate: string;
+	colAuthorityDocName: string;
+	colAuthorityFile: string;
+	colAuthorityActions: string;
+	colAuthorityResponsible: string;
+	colAuthorityStatus: string;
+	colAuthorityDeadline: string;
+	categoryGovtDocs: string;
+	categoryFinancial: string;
+	categoryTax: string;
+	categoryLegal: string;
+	categoryInsurance: string;
+	statusPending: string;
+	statusSubmitted: string;
+	statusApproved: string;
+	statusActionRequired: string;
+	titleCreateAuthority: string;
+	titleAuthorityDetails: string;
+	titleAuthorityOverview: string;
+	fieldAuthorityName: string;
+	fieldAuthorityCategory: string;
+	fieldAuthorityCaseNumber: string;
+	fieldAuthorityResponsible: string;
+	fieldAuthorityStatus: string;
+	fieldAuthorityDeadline: string;
+	fieldAuthorityDescription: string;
+	fieldAuthoritySubject: string;
+	fieldAuthorityDocumentName: string;
+	fieldAuthorityReference: string;
+	fieldAuthorityInvoiceNr: string;
+	fieldAuthorityContractNr: string;
+	fieldAuthorityPaymentTerms: string;
+	sectionAttachedDocuments: string;
+	uploadAuthorityDocsTitle: string;
+	uploadAuthorityDocsSubtitle: string;
+	sectionCustomerHeader: string;
+	sectionSupplierHeader: string;
+	sectionProjectHeader: string;
+	sectionCompanyDetailsHeader: string;
+	sectionCommentsHeader: string;
+	placeholderWriteComment: string;
+	btnSendComment: string;
+	colLineArticle: string;
+	colLineDescription: string;
+	colLineDebQuantity: string;
+	colLineUnit: string;
+	colLinePrice: string;
+	colLineSubtotal: string;
+	colLineHandling: string;
+	lblSubtotal: string;
+	lblFreightFee: string;
+	lblInvoiceFee: string;
+	lblTotalExclVat: string;
+	lblVat25: string;
+	lblInvoiceNumber: string;
+	lblInvoiceDate: string;
+	lblDueDate: string;
+	lblPaymentTermsNetto: string;
+	lblContractNumber: string;
+	lblProjectNumber: string;
+	lblProjectName: string;
+	lblVatNr: string;
+	lblOrgNr: string;
+	lblFTax: string;
+	lblBank: string;
+	lblBankNumber: string;
+	lblIban: string;
+	lblBic: string;
+	lblSwishNr: string;
+	lblEmail: string;
+	lblPhone: string;
+	lblAddress: string;
+	lblCompanyName: string;
+	lblContactPerson: string;
+	emptyAuthoritiesTitle: string;
+	emptyAuthoritiesDesc: string;
+	toastAuthorityCreated: string;
+	toastAuthorityUpdated: string;
+	toastAuthorityDeleted: string;
+	toastCommentAdded: string;
+	confirmDeleteAuthorityTitle: string;
+	confirmDeleteAuthorityDesc: string;
+	valAuthorityNameRequired: string;
+	valDocumentNameRequired: string;
+	valCategoryRequired: string;
+	tabGrundlaggandeInfoShort: string;
+	authoritiesTitle: string;
+	createAuthorityTitle: string;
+	authorityCaseDetailsTitle: string;
+	actionCancel: string;
+	actionPrevious: string;
+	actionNext: string;
+	actionSave: string;
+	actionPrint: string;
+	actionDownloadPdf: string;
+	actionSend: string;
+	commentsTitle: string;
+	partyCustomer: string;
+	partySupplier: string;
+	authorityProject: string;
+	authorityProjectNumber: string;
+	authorityArticleLines: string;
+	colArticleNumber: string;
+	colDescription: string;
+	colQuantity: string;
+	colUnit: string;
+	colUnitPrice: string;
+	colAmount: string;
+	authorityNotes: string;
+	authoritySubtotal: string;
+	authorityVat: string;
+	authorityTotal: string;
+	authorityCompanyDetails: string;
+	validationAuthorityRequired: string;
+	validationCategoryRequired: string;
+	validationDocumentNameRequired: string;
+	fieldAuthorityDropFiles: string;
+	fieldAuthorityBrowse: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8055,6 +8180,7 @@ export type Translation = HeaderTranslation &
 	CertificatesTranslation &
 	EconomyBudgetTranslation &
 	EconomyBankTranslation &
+	AuthoritiesTranslation &
 	AtaTranslation &
 	CreateAtaTranslation &
 	SupplierAtaTranslation &
