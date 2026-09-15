@@ -111,7 +111,7 @@ function PaymentPlanTable({
   const totalRot      = rows.reduce((a, r) => a + r.rgt, 0);
   const grandTotal    = totalAmount - totalWithheld - totalRot;
 
-  function cellInput(row: PaymentPlanRow, field: keyof PaymentPlanRow, type: "text" | "number" = "text") {
+  function cellInput(row: PaymentPlanRow, field: keyof PaymentPlanRow, type: "text" | "number" | "date" = "text") {
     return (
       <input type={type} value={(row[field] ?? "") as string | number}
         onChange={(e) => onChange?.(row.id, field, type === "number" ? Number(e.target.value) : e.target.value)}
@@ -149,7 +149,7 @@ function PaymentPlanTable({
               return (
                 <tr key={row.id} className="border-b border-[#E8EEF3] last:border-0">
                   <td className="px-3 py-2 h-12 min-w-32">
-                    {editable ? cellInput(row, "date") : <span className="text-sm text-[#374151]">{row.date || "—"}</span>}
+                    {editable ? cellInput(row, "date", "date") : <span className="text-sm text-[#374151]">{row.date || "—"}</span>}
                   </td>
                   <td className="px-3 py-2 h-12 min-w-36">
                     {editable ? cellInput(row, "paymentItem") : <span className="text-sm text-[#374151]">{row.paymentItem || "—"}</span>}
@@ -372,7 +372,7 @@ export function PaymentPlanCreate({
   const totalRot      = rows.reduce((a, r) => a + r.rgt, 0);
   const grandTotal    = totalAmount - totalWithheld - totalRot;
 
-  function cellInput(row: PaymentPlanRow, field: keyof PaymentPlanRow, type: "text" | "number" = "text") {
+  function cellInput(row: PaymentPlanRow, field: keyof PaymentPlanRow, type: "text" | "number" | "date" = "text") {
     return (
       <input type={type} value={(row[field] ?? "") as string | number}
         onChange={(e) => updateRow(row.id, field, type === "number" ? Number(e.target.value) : e.target.value)}
@@ -460,7 +460,7 @@ export function PaymentPlanCreate({
                 const total = row.amount - row.withheldFunds - row.rgt;
                 return (
                   <tr key={row.id} className="border-b border-[#E8EEF3] last:border-0">
-                    <td className="px-3 py-2 h-12 min-w-32">{cellInput(row, "date")}</td>
+                    <td className="px-3 py-2 h-12 min-w-32">{cellInput(row, "date", "date")}</td>
                     <td className="px-3 py-2 h-12 min-w-36">{cellInput(row, "paymentItem")}</td>
                     <td className="px-3 py-2 h-12">{cellInput(row, "description")}</td>
                     <td className="px-3 py-2 h-12 min-w-28">{cellInput(row, "amount", "number")}</td>
