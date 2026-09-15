@@ -38,11 +38,3 @@ export function formatQaDate(
 
 	return `${date.getUTCDate()} ${t(MONTH_KEYS[date.getUTCMonth()])}`;
 }
-
-/** Today as `yyyy-MM-dd` in the user's own calendar. Call from a handler only. */
-export function todayIso(): string {
-	const now = new Date();
-	const month = String(now.getMonth() + 1).padStart(2, "0");
-	const day = String(now.getDate()).padStart(2, "0");
-	return `${now.getFullYear()}-${month}-${day}`;
-}

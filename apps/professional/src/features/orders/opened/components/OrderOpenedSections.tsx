@@ -22,6 +22,7 @@ import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPa
 import { WarrantyFeature } from "@/features/warranty/WarrantyFeature";
 import { OrderProtocolOverviewPage } from "@/features/orders/protocol/OrderProtocolOverviewPage";
 import { OrderAtaOverviewPage } from "@/features/orders/ata/OrderAtaOverviewPage";
+import { OrderStaffOverviewPage } from "@/features/orders/staff/OrderStaffOverviewPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -39,7 +40,8 @@ type OrderTabValue =
 	| "payment-plan"
 	| "ata"
 	| "guarantee"
-	| "protocol";
+	| "protocol"
+	| "staff";
 
 export function OrderOpenedSections({
 	data,
@@ -70,6 +72,7 @@ export function OrderOpenedSections({
 		if (path.includes("/ata")) return "ata";
 		if (path.includes("/guarantee")) return "guarantee";
 		if (path.includes("/protocol")) return "protocol";
+		if (path.includes("/staff")) return "staff";
 		return "order-information";
 	};
 
@@ -116,6 +119,7 @@ export function OrderOpenedSections({
 		ata: t(localizationConstants.ataTitle),
 		guarantee: t(localizationConstants.warrantyCommitments),
 		protocol: t(localizationConstants.protocolsTab),
+		staff: t(localizationConstants.staffLedgerTab),
 	};
 
 	const showSubtitle =
@@ -194,6 +198,14 @@ export function OrderOpenedSections({
 							className="cursor-pointer"
 						>
 							<Translate text={localizationConstants.protocolsTab} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="staff" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/staff`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.staffLedgerTab} />
 						</Link>
 					</TabsTrigger>
 				</TabsList>
@@ -280,6 +292,11 @@ export function OrderOpenedSections({
 						orderId={routeOrderId}
 						onDetailModeChange={setIsProtocolDetailOpen}
 					/>
+				</TabsContent>
+
+				{/* Tab 8: Personal-liggare */}
+				<TabsContent value="staff" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderStaffOverviewPage orderId={routeOrderId} />
 				</TabsContent>
 			</Tabs>
 		</div>

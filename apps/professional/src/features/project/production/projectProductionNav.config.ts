@@ -15,10 +15,10 @@ export const projectRecordUrl = (projectId: string) =>
  * `secondaryTabs` on the record variant instead — the slot that exists for
  * exactly this and had no caller until now. Flagged on the ticket.
  *
- * Only the sections that exist are listed. The other seven in the frame — ÄTA,
- * Betalningsplan, Dagbok, Handlingar, Protokoll, Besiktning, Garantiåtaganden —
- * have no project-scoped implementation, and three of them have none anywhere
- * in the app. Each joins this list as its own ticket lands, rather than
+ * Only the sections that exist are listed. The other six in the frame — ÄTA,
+ * Dagbok, Handlingar, Protokoll, Besiktning, Garantiåtaganden — have no
+ * project-scoped implementation, and three of them have none anywhere in the
+ * app. Each joins this list as its own ticket lands, rather than
  * shipping as a dead tab.
  */
 export function projectProductionTabs(projectId: string): ModuleTabItem[] {
@@ -29,6 +29,11 @@ export function projectProductionTabs(projectId: string): ModuleTabItem[] {
 			id: "projektinformation",
 			labelKey: localizationConstants.agreementProjectInfo,
 			href: `${base}/projektinformation`,
+		},
+		{
+			id: "betalningsplan",
+			labelKey: localizationConstants.paymentPlanTitle,
+			href: `${base}/betalningsplan`,
 		},
 		{
 			id: "tidsplan",
