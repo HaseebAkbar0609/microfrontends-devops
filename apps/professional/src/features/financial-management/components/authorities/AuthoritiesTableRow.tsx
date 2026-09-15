@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { MoreVertical, Eye, Edit2, Trash2, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MoreVertical, Trash2, Download } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,29 +9,27 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
+import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type { AuthorityItem } from "../../types/authorities.types";
+import { getAuthorityCategoryLabel } from "../../utils/authoritiesLocalization";
 
 interface AuthoritiesTableRowProps {
 	item: AuthorityItem;
-	onView: (item: AuthorityItem) => void;
-	onEdit: (item: AuthorityItem) => void;
-	onDelete: (id: string, title: string) => void;
+	onDelete: (item: AuthorityItem) => void;
 }
 
 export function AuthoritiesTableRow({
 	item,
-	onView,
-	onEdit,
 	onDelete,
 }: AuthoritiesTableRowProps) {
+	const { t } = useTranslation();
+
 	const handleDownload = () => {
-		const sampleUrl =
-			item.fileUrl ||
-			"https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+		const sampleUrl = item.fileUrl || "#";
 		const link = window.document.createElement("a");
 		link.href = sampleUrl;
-		link.download = item.fileName || "Kontrakt.pdf";
+		link.download = item.fileName || "Dokument.pdf";
 		window.document.body.appendChild(link);
 		link.click();
 		window.document.body.removeChild(link);
@@ -41,14 +38,19 @@ export function AuthoritiesTableRow({
 	const ext = (item.fileType || "PDF").toUpperCase();
 
 	return (
-		<tr className="border-b border-slate-100 hover:bg-slate-50/70 transition-colors text-xs text-slate-700">
+		<tr className="hover:bg-slate-50/70 transition-colors border-b border-slate-100 last:border-b-0 text-xs">
 			{/* ID */}
-			<td className="px-4 py-3.5 font-medium text-slate-900 whitespace-nowrap">
+			<td className="py-3.5 px-4 font-medium text-slate-700 whitespace-nowrap">
 				{item.caseNr || item.id}
 			</td>
 
-			{/* Kategori Badge */}
-			<td className="px-4 py-3.5 whitespace-nowrap">
+			{/* Authority */}
+			<td className="py-3.5 px-4 font-medium text-slate-900 whitespace-nowrap">
+				{item.authorityName}
+			</td>
+
+			{/* Category (Localized Badge) */}
+			<td className="py-3.5 px-4 whitespace-nowrap">
 				<span
 					className={`inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium ${
 						item.category === "Govt Docs"
@@ -60,28 +62,22 @@ export function AuthoritiesTableRow({
 									: "bg-blue-50 text-blue-700 border border-blue-200"
 					}`}
 				>
-					{item.category}
+					{getAuthorityCategoryLabel(item.category, t)}
 				</span>
 			</td>
 
-			{/* Datum */}
-			<td className="px-4 py-3.5 text-slate-600 whitespace-nowrap font-mono">
+			{/* Date */}
+			<td className="py-3.5 px-4 text-slate-600 whitespace-nowrap font-mono">
 				{item.date}
 			</td>
 
-			{/* Dockumentets namn */}
-			<td className="px-4 py-3.5 font-medium text-slate-800 whitespace-nowrap">
-				<button
-					type="button"
-					onClick={() => onView(item)}
-					className="hover:underline text-left cursor-pointer hover:text-slate-900"
-				>
-					{item.documentName || item.subject}
-				</button>
+			{/* Document Name */}
+			<td className="py-3.5 px-4 font-medium text-slate-800 truncate max-w-[220px]">
+				{item.documentName || item.subject}
 			</td>
 
-			{/* Fil */}
-			<td className="px-4 py-3.5 whitespace-nowrap">
+			{/* File */}
+			<td className="py-3.5 px-4 whitespace-nowrap">
 				<div className="flex items-center gap-2">
 					<div
 						className={`w-6 h-6 rounded flex items-center justify-center text-[9px] font-bold shrink-0 ${
@@ -92,52 +88,42 @@ export function AuthoritiesTableRow({
 					>
 						{ext.slice(0, 3)}
 					</div>
-					<span className="text-slate-700 font-medium">{item.fileName || "Kontrakt.pdf"}</span>
+					<span className="text-slate-700 font-medium truncate max-w-[140px]">
+						{item.fileName || "Dokument.pdf"}
+					</span>
 				</div>
 			</td>
 
 			{/* 3 Dots Actions Menu */}
-			<td className="px-4 py-3.5 text-right whitespace-nowrap">
+			<td className="py-3.5 px-4 text-right whitespace-nowrap">
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
-						<Button
+						<button
 							type="button"
-							variant="ghost"
-							size="icon"
-							className="h-8 w-8 text-slate-500 hover:text-slate-900 cursor-pointer"
+							className="p-1 rounded-md text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
 							aria-label="Actions"
 						>
 							<MoreVertical className="w-4 h-4" />
-						</Button>
+						</button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end" className="w-38">
-						<DropdownMenuItem
-							onClick={() => onView(item)}
-							className="gap-2 cursor-pointer text-xs"
-						>
-							<Eye className="w-3.5 h-3.5" />
-							<Translate text={localizationConstants.titleAuthorityDetails} />
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => onEdit(item)}
-							className="gap-2 cursor-pointer text-xs"
-						>
-							<Edit2 className="w-3.5 h-3.5" />
-							<Translate text={localizationConstants.btnEdit} />
-						</DropdownMenuItem>
+					<DropdownMenuContent align="end" className="w-36">
 						<DropdownMenuItem
 							onClick={handleDownload}
 							className="gap-2 cursor-pointer text-xs"
 						>
-							<Download className="w-3.5 h-3.5" />
-							<Translate text={localizationConstants.btnDownload} />
+							<Download className="w-3.5 h-3.5 text-slate-500" />
+							<span>
+								<Translate text={localizationConstants.actionDownloadPdf} />
+							</span>
 						</DropdownMenuItem>
 						<DropdownMenuItem
-							onClick={() => onDelete(item.id, item.documentName || item.subject)}
-							className="gap-2 cursor-pointer text-xs text-rose-600 hover:text-rose-700"
+							onClick={() => onDelete(item)}
+							className="gap-2 cursor-pointer text-xs text-rose-600 focus:text-rose-600 focus:bg-rose-50"
 						>
-							<Trash2 className="w-3.5 h-3.5" />
-							<Translate text={localizationConstants.btnDelete} />
+							<Trash2 className="w-3.5 h-3.5 text-rose-600" />
+							<span>
+								<Translate text={localizationConstants.btnDelete} />
+							</span>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

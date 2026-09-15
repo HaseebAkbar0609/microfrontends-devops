@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import type {
 	BankTabType,
 	BankAccountItem,
@@ -68,6 +68,12 @@ export function useBank(initialTab: BankTabType = "bankkonton") {
 		setLoans(bankRepository.getLoans());
 		setDocuments(bankRepository.getDocuments());
 	}, []);
+
+	// Subscribe to bankRepository changes for real-time sync across pages
+	useEffect(() => {
+		const unsubscribe = bankRepository.subscribe(refreshData);
+		return () => unsubscribe();
+	}, [refreshData]);
 
 	// Filtered loans
 	const filteredLoans = useMemo(() => {

@@ -140,96 +140,12 @@ const SEED_DATA: StoredBankData = {
 			createdAt: "2026-01-01T08:00:00Z",
 			updatedAt: "2026-01-01T08:00:00Z",
 		},
-		{
-			id: "5000-003",
-			loanNr: "#5000",
-			title: "Standard leverantörsvillkor",
-			supplier: "Alla leverantörer",
-			paymentTerms: "30 dagar...",
-			discount: "2% (10 dagar)..",
-			overdueInterest: "8%",
-			loanType: "Leverantörskredit",
-			bank: "Alla leverantörer",
-			startDate: "2026-01-01",
-			endDate: "2026-01-01",
-			status: "active",
-			interestRate: 4.5,
-			monthlyCost: 18000,
-			originalAmount: 900000,
-			remainingDebt: 720000,
-			repaidPercent: 20.0,
-			contactPerson: {
-				name: "Karl Andersson",
-				role: "info",
-				email: "karl.andersson@seb.se",
-				phone: "+46 8 763 80 00",
-			},
-			documents: [],
-			createdAt: "2026-01-01T08:00:00Z",
-			updatedAt: "2026-01-01T08:00:00Z",
-		},
-		{
-			id: "5000-004",
-			loanNr: "#5000",
-			title: "Standard leverantörsvillkor",
-			supplier: "Alla leverantörer",
-			paymentTerms: "30 dagar...",
-			discount: "2% (10 dagar)..",
-			overdueInterest: "8%",
-			loanType: "Leverantörskredit",
-			bank: "Alla leverantörer",
-			startDate: "2026-01-01",
-			endDate: "2026-01-01",
-			status: "active",
-			interestRate: 4.5,
-			monthlyCost: 9500,
-			originalAmount: 400000,
-			remainingDebt: 310000,
-			repaidPercent: 22.5,
-			contactPerson: {
-				name: "Karl Andersson",
-				role: "info",
-				email: "karl.andersson@seb.se",
-				phone: "+46 8 763 80 00",
-			},
-			documents: [],
-			createdAt: "2026-01-01T08:00:00Z",
-			updatedAt: "2026-01-01T08:00:00Z",
-		},
-		{
-			id: "5000-005",
-			loanNr: "#5000",
-			title: "Standard leverantörsvillkor",
-			supplier: "Alla leverantörer",
-			paymentTerms: "30 dagar...",
-			discount: "2% (10 dagar)..",
-			overdueInterest: "8%",
-			loanType: "Leverantörskredit",
-			bank: "Alla leverantörer",
-			startDate: "2026-01-01",
-			endDate: "2026-01-01",
-			status: "active",
-			interestRate: 4.5,
-			monthlyCost: 11000,
-			originalAmount: 550000,
-			remainingDebt: 440000,
-			repaidPercent: 20.0,
-			contactPerson: {
-				name: "Karl Andersson",
-				role: "info",
-				email: "karl.andersson@seb.se",
-				phone: "+46 8 763 80 00",
-			},
-			documents: [],
-			createdAt: "2026-01-01T08:00:00Z",
-			updatedAt: "2026-01-01T08:00:00Z",
-		},
 	],
 	documents: [
 		{
 			id: "bdoc-0",
 			date: "2026-09-14",
-			name: "7th semester chalan form (1).pdf",
+			name: "Bankavtal_SEB_2026.pdf",
 			fileType: "PDF",
 		},
 		{
@@ -250,6 +166,7 @@ const SEED_DATA: StoredBankData = {
 class BankRepository {
 	private data: StoredBankData = { accounts: [], loans: [], documents: [] };
 	private initialized = false;
+	private listeners: Set<() => void> = new Set();
 
 	private init() {
 		if (this.initialized) return;
@@ -280,9 +197,26 @@ class BankRepository {
 					JSON.stringify(this.data),
 				);
 			} catch {
-				// storage error ignored
+				// Storage error ignored
 			}
 		}
+	}
+
+	subscribe(listener: () => void): () => void {
+		this.listeners.add(listener);
+		return () => {
+			this.listeners.delete(listener);
+		};
+	}
+
+	private notify() {
+		this.listeners.forEach((listener) => {
+			try {
+				listener();
+			} catch {
+				// Ignore listener callback errors
+			}
+		});
 	}
 
 	// Accounts
@@ -298,8 +232,8 @@ class BankRepository {
 
 	createAccount(payload: BankAccountFormData): BankAccountItem {
 		this.init();
-		const newId = payload.id || `acc-${Date.now()}`;
-		const attachedDocs = (payload.documents || []).map((doc) => ({
+		const newId = payload.id?.trim() || `acc-${Date.now()}`;
+		const attachedDocs: BankDocumentItem[] = (payload.documents || []).map((doc) => ({
 			...doc,
 			id: doc.id || `bdoc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
 			accountId: newId,
@@ -307,7 +241,7 @@ class BankRepository {
 
 		const newItem: BankAccountItem = {
 			id: newId,
-			title: payload.title || payload.bankName,
+			title: payload.title?.trim() || payload.bankName,
 			bankName: payload.bankName,
 			accountType: payload.accountType,
 			accountNumber: payload.accountNumber,
@@ -332,12 +266,12 @@ class BankRepository {
 		};
 		this.data.accounts.unshift(newItem);
 
-		// Synchronize documents to global bank documents list
 		if (attachedDocs.length > 0) {
 			this.data.documents.unshift(...attachedDocs);
 		}
 
 		this.saveToStorage();
+		this.notify();
 		return newItem;
 	}
 
@@ -351,6 +285,7 @@ class BankRepository {
 			updatedAt: new Date().toISOString(),
 		};
 		this.saveToStorage();
+		this.notify();
 		return this.data.accounts[idx];
 	}
 
@@ -361,6 +296,7 @@ class BankRepository {
 		this.data.documents = this.data.documents.filter((d) => d.accountId !== id);
 		if (this.data.accounts.length !== before) {
 			this.saveToStorage();
+			this.notify();
 			return true;
 		}
 		return false;
@@ -379,8 +315,8 @@ class BankRepository {
 
 	createLoan(payload: BankLoanFormData): BankLoanItem {
 		this.init();
-		const newId = String(Date.now());
-		const attachedDocs = (payload.documents || []).map((doc) => ({
+		const newId = payload.id?.trim() || String(Date.now());
+		const attachedDocs: BankDocumentItem[] = (payload.documents || []).map((doc) => ({
 			...doc,
 			id: doc.id || `bdoc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
 			loanId: newId,
@@ -393,8 +329,8 @@ class BankRepository {
 			loanType: payload.loanType,
 			bank: payload.bank,
 			supplier: payload.supplier || payload.bank || "Alla leverantörer",
-			paymentTerms: payload.paymentTerms || "30 dagar...",
-			discount: payload.discount || "2% (10 dagar)..",
+			paymentTerms: payload.paymentTerms || "30 dagar",
+			discount: payload.discount || "2% (10 dagar)",
 			overdueInterest: payload.overdueInterest || "8%",
 			startDate: payload.startDate,
 			endDate: payload.endDate,
@@ -416,12 +352,12 @@ class BankRepository {
 		};
 		this.data.loans.unshift(newItem);
 
-		// Synchronize documents to global bank documents list
 		if (attachedDocs.length > 0) {
 			this.data.documents.unshift(...attachedDocs);
 		}
 
 		this.saveToStorage();
+		this.notify();
 		return newItem;
 	}
 
@@ -435,6 +371,7 @@ class BankRepository {
 			updatedAt: new Date().toISOString(),
 		};
 		this.saveToStorage();
+		this.notify();
 		return this.data.loans[idx];
 	}
 
@@ -445,6 +382,7 @@ class BankRepository {
 		this.data.documents = this.data.documents.filter((d) => d.loanId !== id);
 		if (this.data.loans.length !== before) {
 			this.saveToStorage();
+			this.notify();
 			return true;
 		}
 		return false;
@@ -460,7 +398,7 @@ class BankRepository {
 		this.init();
 		const newDoc: BankDocumentItem = {
 			...doc,
-			id: String(Date.now()),
+			id: `bdoc-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
 		};
 		this.data.documents.unshift(newDoc);
 
@@ -479,6 +417,7 @@ class BankRepository {
 		}
 
 		this.saveToStorage();
+		this.notify();
 		return newDoc;
 	}
 
@@ -498,6 +437,7 @@ class BankRepository {
 		}
 		if (this.data.documents.length !== before) {
 			this.saveToStorage();
+			this.notify();
 			return true;
 		}
 		return false;
@@ -506,6 +446,7 @@ class BankRepository {
 	resetData(): void {
 		this.data = JSON.parse(JSON.stringify(SEED_DATA));
 		this.saveToStorage();
+		this.notify();
 	}
 }
 
