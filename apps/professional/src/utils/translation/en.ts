@@ -37,6 +37,7 @@ import {
 	SupplierAtaTranslation,
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
+	OrderTimeplanTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -8262,6 +8263,21 @@ export const enAuthorities: AuthoritiesTranslation = {
 	fieldAuthorityBrowse: "Browse",
 };
 
+export const enOrderTimeplan: OrderTimeplanTranslation = {
+	orderTimeplanTab: "Timeplan",
+	orderTimeplanTitle: "Timeplan",
+	orderTimeplanCreateBtn: "Create new timeplan",
+	orderTimeplanPrintBtn: "Print",
+	orderTimeplanColDatum: "Date",
+	orderTimeplanColTidsplan: "Timeplan",
+	orderTimeplanColCreatedBy: "Created by",
+	orderTimeplanViewBtn: "View timeplan",
+	orderTimeplanDeleteAction: "Delete",
+	orderTimeplanEmpty: "No timeplans found for this order.",
+	orderTimeplanDeleteConfirmTitle: "Delete timeplan",
+	orderTimeplanDeleteSuccess: "Timeplan deleted successfully",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -8300,6 +8316,5 @@ export const en: Translation = {
 	...enSupplierAta,
 	...enViewAta,
 	...enStaffRegistration,
+	...enOrderTimeplan,
 };
-
-

@@ -8208,6 +8208,21 @@ export type AuthoritiesTranslation = {
 	fieldAuthorityBrowse: string;
 };
 
+export type OrderTimeplanTranslation = {
+	orderTimeplanTab: string;
+	orderTimeplanTitle: string;
+	orderTimeplanCreateBtn: string;
+	orderTimeplanPrintBtn: string;
+	orderTimeplanColDatum: string;
+	orderTimeplanColTidsplan: string;
+	orderTimeplanColCreatedBy: string;
+	orderTimeplanViewBtn: string;
+	orderTimeplanDeleteAction: string;
+	orderTimeplanEmpty: string;
+	orderTimeplanDeleteConfirmTitle: string;
+	orderTimeplanDeleteSuccess: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8244,7 +8259,8 @@ export type Translation = HeaderTranslation &
 	CreateAtaTranslation &
 	SupplierAtaTranslation &
 	ViewAtaTranslation &
-	StaffRegistrationTranslation;
+	StaffRegistrationTranslation &
+	OrderTimeplanTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -8255,5 +8271,3 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
-
-

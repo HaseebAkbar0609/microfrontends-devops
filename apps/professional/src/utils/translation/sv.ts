@@ -37,6 +37,7 @@ import {
 	SupplierAtaTranslation,
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
+	OrderTimeplanTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -8283,6 +8284,21 @@ export const svAuthorities: AuthoritiesTranslation = {
 	fieldAuthorityBrowse: "Bläddra",
 };
 
+export const svOrderTimeplan: OrderTimeplanTranslation = {
+	orderTimeplanTab: "Tidsplan",
+	orderTimeplanTitle: "Tidsplan",
+	orderTimeplanCreateBtn: "Skapa ny tidsplan",
+	orderTimeplanPrintBtn: "Skriv ut",
+	orderTimeplanColDatum: "Datum",
+	orderTimeplanColTidsplan: "Tidsplan",
+	orderTimeplanColCreatedBy: "Skapad av",
+	orderTimeplanViewBtn: "Visa tidsplan",
+	orderTimeplanDeleteAction: "Ta bort",
+	orderTimeplanEmpty: "Inga tidsplaner hittades för denna order.",
+	orderTimeplanDeleteConfirmTitle: "Ta bort tidsplan",
+	orderTimeplanDeleteSuccess: "Tidsplanen har tagits bort",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -8321,7 +8337,9 @@ export const sv: Translation = {
 	...svSupplierAta,
 	...svViewAta,
 	...svStaffRegistration,
+	...svOrderTimeplan,
 };
+
 
 
 
