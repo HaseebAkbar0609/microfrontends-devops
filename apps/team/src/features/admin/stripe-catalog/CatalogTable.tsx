@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type { CatalogPreview, CatalogStatus } from "./stripeCatalog.api";
