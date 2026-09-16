@@ -17,6 +17,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:title" content={t("seo.homeOgTitle")} />
         <meta property="og:description" content={t("seo.homeOgDesc")} />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview: large, max-video-preview:-1" />
       </Head>
 
       <div className="min-h-screen bg-background text-foreground font-body">
@@ -108,6 +109,16 @@ export default function Home() {
               ))}
             </div>
           </div>
+        </section>
+
+         {/* Complete business system */}
+        <section className="max-w-3xl mx-auto pt-16 pb-16 px-6">
+          <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh text-center">
+            {t("home.completeBusinessTitle")}{" "}
+            <span className="text-primary italic">
+              {t("home.completeBusinessTitle2")}
+            </span> 
+           </h2>
         </section>
 
         {/* Audience Split */}

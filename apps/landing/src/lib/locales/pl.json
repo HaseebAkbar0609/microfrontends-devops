@@ -99,7 +99,9 @@
         "heroTitle1": "Cała praca w jednym",
         "heroTitle2": "spójnym widoku.",
         "ctaTitle1": "Zacznij prosto.",
-        "ctaTitle2": "Rozwijaj się kiedy chcesz."
+        "ctaTitle2": "Rozwijaj się kiedy chcesz.",
+        "completeBusinessTitle":"Kompleksowy system biznesowy dla",
+        "completeBusinessTitle2":"rzemieślników i firm budowlanych"
     },
     "professional": {
         "heroLabel": "Dla firm budowlanych i wykończeniowych we wszystkich branżach",
@@ -179,7 +181,10 @@
         "startAccount": "Załóż konto",
         "tryDemo": "Wypróbuj demo",
         "workTag": "(opcjonalnie)",
-        "managerTag": "(w zestawie Standard / PRO)."
+        "managerTag": "(w zestawie Standard / PRO).",
+        "professionalBusinessLabel":"KOMPLEKSOWE ROZWIĄZANIE",
+        "professionalBusinessTitle":"Profesjonalny system biznesowy dla",
+        "professionalBusinessTitle2":"rzemieślników i firm budowlanych"
     },
     "consumer": {
         "heroLabel": "Dla klientów indywidualnych",
@@ -324,7 +329,10 @@
         "trustF5": "Informacje o projekcie dostępne, gdy ich potrzebujesz",
         "trustF6": "TimeFlow Home jest zawsze bezpłatny dla klientów indywidualnych",
         "finalCtaTitle": "Gotowy, aby zacząć?",
-        "finalCtaDesc": "Opisz swój projekt już dziś i otrzymaj do 5 ofert od wykwalifikowanych firm."
+        "finalCtaDesc": "Opisz swój projekt już dziś i otrzymaj do 5 ofert od wykwalifikowanych firm.",
+        "businessManagementLabel": "DLA FIRM",
+        "businessManagementTitle": "System biznesowy zaprojektowany dla",
+        "businessManagementTitle2": "rzemieślników i małych firm budowlanych"
     },
     "solutions": {
         "heroLabel": "Rozwiązania",
@@ -652,7 +660,10 @@
         "refTitle": "TimeFlow wchodzi właśnie na rynek szwedzki.",
         "refDesc": "W ciągu roku 2026 opublikujemy potwierdzone historie klientów i wywiady z firmami korzystającymi z platformy w codziennej działalności. Skontaktuj się z nami — chętnie opowiemy więcej.",
         "ctaDesc": "Wypróbuj TimeFlow przez 30 dni za darmo — bez karty kredytowej. Tylko 3 miesiące minimalnego zobowiązania.",
-        "startNow": "Zacznij teraz"
+        "startNow": "Zacznij teraz",
+        "successStoriesLabel": "PRAWDZIWE WYNIKI",
+        "successStoriesTitle": "Prawdziwe historie sukcesu:",
+        "successStoriesTitle2": "Jak firmy budowlane rozwijają się z Timeflow"
     },
     "pricing": {
         "heroLabel": "Ceny",
