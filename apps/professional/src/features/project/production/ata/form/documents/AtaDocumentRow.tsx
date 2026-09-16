@@ -8,11 +8,11 @@ import { openSafeUrl } from "@/lib/safeUrl";
 import { showToast } from "@/lib/toast";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import { ATA_DOCUMENT_NAME_MAX_LENGTH } from "../../projectAta.config";
+import { RecordFileIcon } from "../../../components/RecordFileIcon";
+import { ATA_DOCUMENT_NAME_MAX_LENGTH, ATA_FILE_RULES } from "../../projectAta.config";
 import type { AtaDocumentInput } from "../../types";
 import { AtaDocumentRowMenu } from "./AtaDocumentRowMenu";
 import { AtaDocumentViewButton } from "./AtaDocumentViewButton";
-import { AtaFileIcon } from "./AtaFileIcon";
 
 /** Any form holding attached documents — the project's own ÄTA or a supplier's. */
 export interface AtaDocumentsFormValues {
@@ -63,7 +63,7 @@ export function AtaDocumentRow<T extends AtaDocumentsFormValues>({ control, docu
 			</TableCell>
 			<TableCell className="px-4 py-3 text-sm text-slate-900">
 				<span className="flex min-w-0 items-center gap-3">
-					<AtaFileIcon fileName={document.fileName} />
+					<RecordFileIcon fileName={document.fileName} types={ATA_FILE_RULES.types} />
 					{actions.mode === "manage" && url ? (
 						<button
 							type="button"

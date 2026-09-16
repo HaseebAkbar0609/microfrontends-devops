@@ -4,14 +4,19 @@ import { FileImage } from "lucide-react";
 
 import { DocFileIcon } from "@/components/ui/DocFileIcon";
 import { PdfFileIcon } from "@/components/ui/PdfFileIcon";
-import { extensionOf, isImageFile } from "../../../../shared/recordFiles";
-import { ATA_FILE_RULES } from "../../projectAta.config";
+import { extensionOf, isImageFile, type RecordFileTypes } from "../../shared/recordFiles";
 
 const WORD_EXTENSIONS: ReadonlySet<string> = new Set([".doc", ".docx"]);
 
-/** A document's icon by its extension: a photo, a Word file (suppliers send those), or PDF. */
-export function AtaFileIcon({ fileName }: { fileName: string }) {
-	if (isImageFile(fileName, ATA_FILE_RULES.types)) {
+export interface RecordFileIconProps {
+	fileName: string;
+	/** The section's allowed types, which decide what counts as a photo. */
+	types: RecordFileTypes;
+}
+
+/** A record file's icon by its extension: a photo, a Word file (suppliers send those), or PDF. */
+export function RecordFileIcon({ fileName, types }: RecordFileIconProps) {
+	if (isImageFile(fileName, types)) {
 		return <FileImage className="h-8 w-8 shrink-0 text-slate-500" aria-hidden />;
 	}
 	if (WORD_EXTENSIONS.has(extensionOf(fileName))) {
@@ -20,4 +25,4 @@ export function AtaFileIcon({ fileName }: { fileName: string }) {
 	return <PdfFileIcon className="h-10 w-8 shrink-0" />;
 }
 
-export default AtaFileIcon;
+export default RecordFileIcon;

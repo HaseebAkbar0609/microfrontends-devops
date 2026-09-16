@@ -12,7 +12,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { SortableHead } from "../../../components/SortableHead";
 import { ataUrls } from "../../ataNav";
 import type { AtaEmptyState } from "../../list/useProjectAtaList";
-import { AtaActionMenu, AtaMenuAction } from "../../list/AtaRowMenu";
+import { RowActionMenu, RowMenuAction } from "../../../components/RowActionMenu";
 import { SUPPLIER_GROUP_COLUMNS, type SupplierGroupSortField } from "../supplierAta.config";
 import type { SupplierGroupRow } from "../types";
 
@@ -78,9 +78,9 @@ export function SupplierGroupTable({ projectId, rows, sortField, sortDir, onSort
 									</Button>
 								</TableCell>
 								<TableCell className="w-12 border-l border-slate-200 px-2 py-3 text-right">
-									<AtaActionMenu ariaLabel={t(localizationConstants.projectAtaRowActions, { label: row.supplier.name })}>
-										<AtaMenuAction icon={Eye} labelKey={localizationConstants.ataViewDetails} reasonKey={null} onSelect={() => onSelect(row.supplier.id)} />
-									</AtaActionMenu>
+									<RowActionMenu ariaLabel={t(localizationConstants.projectAtaRowActions, { label: row.supplier.name })}>
+										<RowMenuAction icon={Eye} labelKey={localizationConstants.ataViewDetails} reasonKey={null} onSelect={() => onSelect(row.supplier.id)} />
+									</RowActionMenu>
 								</TableCell>
 							</TableRow>
 						))
