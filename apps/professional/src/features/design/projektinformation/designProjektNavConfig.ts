@@ -19,5 +19,10 @@ export function designProjektTabs(projektId: string): ModuleTabItem[] {
 			labelKey: localizationConstants.projectSectionTidsplan,
 			href: `${base}/tidsplan`,
 		},
+		{
+			id: "ekonomi",
+			labelKey: localizationConstants.designEkonomiTab,
+			href: `${base}/ekonomi`,
+		},
 	];
 }
