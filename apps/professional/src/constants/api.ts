@@ -176,6 +176,11 @@ export const API_PATH = {
 		STAFF_DETAIL: (orderId: string, staffId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/staff-ledger/${staffId}`,
 		TIMEPLANS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/timeplans`,
 		TIMEPLAN_DETAIL: (orderId: string, planId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/timeplans/${planId}`,
+		QA: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa`,
+		QA_DETAIL: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}`,
+		QA_REPLY: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/reply`,
+		QA_STATUS: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/status`,
+		QA_ARCHIVE: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/archive`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {

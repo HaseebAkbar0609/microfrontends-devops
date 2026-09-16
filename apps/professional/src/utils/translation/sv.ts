@@ -39,6 +39,7 @@ import {
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
 	OrderTimeplanTranslation,
+	OrderQaTranslation,
 	YearEndTranslation,
 } from "./constants";
 
@@ -8436,6 +8437,11 @@ export const svOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanViewPageTitle: "View tidsplan",
 };
 
+export const svOrderQa: OrderQaTranslation = {
+	orderQaTab: "Fråga/Svar",
+	orderQaTitle: "Fråga/Svar",
+};
+
 export const svYearEnd: YearEndTranslation = {
 	titleYearEnd: "Bokslut",
 	tabBokslut: "Bokslut",
@@ -8551,6 +8557,7 @@ export const sv: Translation = {
 	...svViewAta,
 	...svStaffRegistration,
 	...svOrderTimeplan,
+	...svOrderQa,
 	...svYearEnd,
 	...svAdminLive,
 };

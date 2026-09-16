@@ -8360,6 +8360,11 @@ export type OrderTimeplanTranslation = {
 	orderTimeplanViewPageTitle: string;
 };
 
+export type OrderQaTranslation = {
+	orderQaTab: string;
+	orderQaTitle: string;
+};
+
 export type YearEndTranslation = {
 	titleYearEnd: string;
 	tabBokslut: string;
@@ -8474,6 +8479,7 @@ export type Translation = HeaderTranslation &
 	ViewAtaTranslation &
 	StaffRegistrationTranslation &
 	OrderTimeplanTranslation &
+	OrderQaTranslation &
 	YearEndTranslation &
 	AdminLiveTranslation;
 

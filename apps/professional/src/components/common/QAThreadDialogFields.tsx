@@ -16,7 +16,7 @@ interface QAThreadTypeFieldProps {
 	/** Shared by the radios, so they form one group. */
 	name: string;
 	legend: TranslationKeys;
-	options: QAThreadOption[];
+	options: readonly QAThreadOption[];
 	value: string;
 	onChange: (value: string) => void;
 }
@@ -34,7 +34,7 @@ export function QAThreadTypeField({
 			<legend className="mb-2 text-sm font-medium text-slate-900">
 				<Translate text={legend} />
 			</legend>
-			<div className="flex gap-6">
+			<div className="flex flex-col gap-2.5">
 				{options.map((option) => (
 					<label
 						key={option.value}
@@ -46,7 +46,7 @@ export function QAThreadTypeField({
 							value={option.value}
 							checked={value === option.value}
 							onChange={() => onChange(option.value)}
-							className="cursor-pointer accent-slate-900"
+							className="h-4 w-4 cursor-pointer accent-slate-900"
 						/>
 						<Translate text={option.label} />
 					</label>
@@ -60,7 +60,7 @@ interface QAThreadSubjectFieldProps {
 	id: string;
 	label: TranslationKeys;
 	placeholder: TranslationKeys;
-	options: QAThreadOption[];
+	options: readonly QAThreadOption[];
 	value: string;
 	onChange: (value: string) => void;
 }

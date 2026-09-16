@@ -39,6 +39,7 @@ import {
 	ViewAtaTranslation,
 	StaffRegistrationTranslation,
 	OrderTimeplanTranslation,
+	OrderQaTranslation,
 	YearEndTranslation,
 } from "./constants";
 
@@ -8415,6 +8416,11 @@ export const enOrderTimeplan: OrderTimeplanTranslation = {
 	orderTimeplanViewPageTitle: "View timeplan",
 };
 
+export const enOrderQa: OrderQaTranslation = {
+	orderQaTab: "Q&A",
+	orderQaTitle: "Q&A",
+};
+
 export const enYearEnd: YearEndTranslation = {
 	titleYearEnd: "Year End",
 	tabBokslut: "Year End",
@@ -8530,6 +8536,7 @@ export const en: Translation = {
 	...enViewAta,
 	...enStaffRegistration,
 	...enOrderTimeplan,
+	...enOrderQa,
 	...enYearEnd,
 	...enAdminLive,
 };
