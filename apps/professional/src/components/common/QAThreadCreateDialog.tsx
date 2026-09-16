@@ -19,8 +19,10 @@ import { QAThreadSubjectField, QAThreadTypeField } from "./QAThreadDialogFields"
 /* Existing importers reach these through the dialog. */
 export type {
 	QAThreadCreateDialogLabels,
+	QAThreadCreateDialogLabels as QAThreadCreateLabels,
 	QAThreadDraft,
 	QAThreadOption,
+	QAThreadOption as QAThreadCreateOption,
 } from "./qaThread";
 
 /** Long enough for any real question; stops a paste from growing without bound. */
@@ -31,9 +33,9 @@ export interface QAThreadCreateDialogProps {
 	onOpenChange: (open: boolean) => void;
 	onSubmit: (draft: QAThreadDraft) => void;
 	/** The Typ radios. The first is selected when the dialog opens. */
-	typeOptions: QAThreadOption[];
+	typeOptions: readonly QAThreadOption[];
 	/** The select under Typ — Ämne on purchase, Funktion on a project. */
-	subjectOptions: QAThreadOption[];
+	subjectOptions: readonly QAThreadOption[];
 	labels: QAThreadCreateDialogLabels;
 	/** Draws the send icon on Skicka, as the project frame does. */
 	showSendIcon?: boolean;
@@ -84,10 +86,10 @@ export function QAThreadCreateDialog({
 		<Dialog open={open} onOpenChange={(next) => !next && close()}>
 			<DialogContent
 				showCloseButton={false}
-				className={cn("max-w-lg rounded-lg bg-white p-6", contentClassName)}
+				className={cn("w-full max-w-[690px] min-h-[418px] rounded-[8px] border border-slate-200 bg-white p-6 shadow-lg", contentClassName)}
 			>
 				<div className="flex items-center justify-between">
-					<DialogTitle className="text-lg font-semibold text-slate-900">
+					<DialogTitle className="text-base font-semibold text-slate-900">
 						<Translate text={labels.title} />
 					</DialogTitle>
 					<button
@@ -103,7 +105,7 @@ export function QAThreadCreateDialog({
 				{/* A real form, so Enter submits and the radio group is grouped
 				    the way assistive tech expects. */}
 				<form onSubmit={submit}>
-					<div className="mt-4 flex flex-col gap-4">
+					<div className="mt-4 flex flex-col gap-3.5">
 						<QAThreadTypeField
 							name={`${fieldId}-type`}
 							legend={labels.type}
@@ -144,28 +146,28 @@ export function QAThreadCreateDialog({
 								placeholder={
 									labels.descriptionPlaceholder
 										? t(labels.descriptionPlaceholder)
-										: undefined
+										: t(labels.description)
 								}
 								maxLength={QA_QUESTION_MAX_LENGTH}
 								rows={4}
-								className="resize-none rounded-md border-slate-200 text-sm shadow-none"
+								className="resize-y rounded-md border-slate-200 text-sm shadow-none focus-visible:border-slate-900 focus-visible:ring-0"
 							/>
 						</div>
 					</div>
 
-					<div className="mt-6 flex justify-end gap-3">
+					<div className="mt-5 flex justify-end gap-3">
 						<Button
 							type="button"
 							variant="outline"
 							onClick={close}
-							className="h-10 cursor-pointer border-slate-200 px-6 text-sm"
+							className="h-10 cursor-pointer border-slate-200 bg-transparent px-5 text-sm font-medium text-slate-900 shadow-none hover:bg-slate-100"
 						>
 							<Translate text={labels.cancel} />
 						</Button>
 						<Button
 							type="submit"
 							disabled={!description}
-							className="h-10 cursor-pointer gap-2 bg-[#111721] px-6 text-sm text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+							className="h-10 cursor-pointer gap-2 bg-zinc-900 px-5 text-sm font-medium text-white shadow-xs hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							{showSendIcon && <Send className="h-4 w-4" aria-hidden />}
 							<Translate text={labels.send} />

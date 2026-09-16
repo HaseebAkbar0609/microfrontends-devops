@@ -1,4 +1,5 @@
 import { sv } from "./sv";
+import type { AdminLiveTranslation } from "./adminLive";
 
 export type HeaderTranslation = {
 	home: string;
@@ -3891,6 +3892,79 @@ export type OfferTranslation = {
 	projectInspectionTooManyFiles: string;
 	projectInspectionInvalidDate: string;
 	projectInspectionDeletedToast: string;
+	/* TFS-705 — ÄTA - kund on the project record (list, two-step form, line items, documents). */
+	projectAtaSupplierUnavailable: string;
+	projectAtaEditTitle: string;
+	projectAtaLabel: string;
+	projectAtaRowActions: string;
+	projectAtaEmpty: string;
+	projectAtaEmptyDesc: string;
+	projectAtaNoMatches: string;
+	projectAtaNoLinkedAta: string;
+	projectAtaSendTitle: string;
+	projectAtaSendBody: string;
+	projectAtaLocked: string;
+	projectAtaAlreadySent: string;
+	projectAtaSendNeedsRows: string;
+	projectAtaClient: string;
+	projectAtaClientRequired: string;
+	projectAtaPostalCode: string;
+	projectAtaPostalCodeInvalid: string;
+	projectAtaProjectInfo: string;
+	projectAtaNumber: string;
+	projectAtaHeading: string;
+	projectAtaHeadingRequired: string;
+	projectAtaSubheading: string;
+	projectAtaProposedAction: string;
+	projectAtaEconomyStatus: string;
+	projectAtaCreatedBy: string;
+	projectAtaRevisedDate: string;
+	projectAtaYou: string;
+	projectAtaTooLong: string;
+	projectAtaSavedToast: string;
+	projectAtaDiscardTitle: string;
+	projectAtaDiscardBody: string;
+	projectAtaDiscardConfirm: string;
+	projectAtaProjectCity: string;
+	projectAtaClientCity: string;
+	projectAtaSectionStaff: string;
+	projectAtaSectionMaterial: string;
+	projectAtaSectionMachines: string;
+	projectAtaSectionUe: string;
+	projectAtaSectionSupplierAta: string;
+	projectAtaColResourceNo: string;
+	projectAtaColInvoiceNo: string;
+	projectAtaColNetPrice: string;
+	projectAtaColSecondaryPercent: string;
+	projectAtaOfWhichFee: string;
+	projectAtaEditRowsTitle: string;
+	projectAtaFormulaHint: string;
+	projectAtaRowLegend: string;
+	projectAtaRemoveRow: string;
+	projectAtaDateRequired: string;
+	projectAtaPersonRequired: string;
+	projectAtaSupplierRequired: string;
+	projectAtaQuantityInvalid: string;
+	projectAtaAmountInvalid: string;
+	projectAtaPercentInvalid: string;
+	projectAtaTooManyRows: string;
+	projectAtaTooManyFiles: string;
+	projectAtaSupplierInvoices: string;
+	projectAtaTimeReports: string;
+	projectAtaChooseInvoices: string;
+	projectAtaChooseTimeReports: string;
+	projectAtaNoReferenceOptions: string;
+	projectAtaRemoveReference: string;
+	projectAtaChooseFiles: string;
+	projectAtaFileTypeError: string;
+	projectAtaFileSizeError: string;
+	projectAtaFileDuplicate: string;
+	projectAtaNoFilePicked: string;
+	projectAtaDocumentNameRequired: string;
+	projectAtaOpenFile: string;
+	projectAtaNoPreview: string;
+	projectAtaDocumentDeleteTitle: string;
+	projectAtaDocumentDeleteBody: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
@@ -8359,6 +8433,11 @@ export type OrderTimeplanTranslation = {
 	orderTimeplanViewPageTitle: string;
 };
 
+export type OrderQaTranslation = {
+	orderQaTab: string;
+	orderQaTitle: string;
+};
+
 export type YearEndTranslation = {
 	titleYearEnd: string;
 	tabBokslut: string;
@@ -8568,7 +8647,9 @@ export type Translation = HeaderTranslation &
 	ViewAtaTranslation &
 	StaffRegistrationTranslation &
 	OrderTimeplanTranslation &
+	OrderQaTranslation &
 	YearEndTranslation &
+	AdminLiveTranslation &
 	ClaimsTranslation;
 
 export type TranslationKeys = keyof Translation;
