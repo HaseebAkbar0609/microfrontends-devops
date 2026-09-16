@@ -1,7 +1,12 @@
 "use client";
 
 import { useState, useMemo, useEffect, useCallback } from "react";
-import { protocolsApi } from "../api/protocols.api";
+import {
+	getProtocolsAction,
+	createProtocolAction,
+	updateProtocolAction,
+	deleteProtocolAction,
+} from "@/api-actions/orders/protocols";
 import { PROTOCOL_CONSTANTS } from "../constants/protocol.constants";
 import type {
 	ProtocolItem,
@@ -24,14 +29,11 @@ export function useProtocols(orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_
 
 	const loadProtocols = useCallback(async () => {
 		setIsLoading(true);
-		try {
-			const data = await protocolsApi.getProtocols(orderId);
-			setProtocols(data);
-		} catch (err) {
-			console.error("[useProtocols] Failed to load protocols:", err);
-		} finally {
-			setIsLoading(false);
+		const result = await getProtocolsAction(orderId);
+		if (result.success && result.data) {
+			setProtocols(result.data);
 		}
+		setIsLoading(false);
 	}, [orderId]);
 
 	useEffect(() => {
@@ -95,34 +97,42 @@ export function useProtocols(orderId: string = PROTOCOL_CONSTANTS.DEFAULT_ORDER_
 	}, [protocols]);
 
 	const addProtocol = async (payload: CreateProtocolPayload): Promise<ProtocolItem> => {
-		const created = await protocolsApi.createProtocol({ ...payload, orderId });
-		setProtocols((prev) => [created, ...prev]);
-		return created;
+		const result = await createProtocolAction(orderId, { ...payload, orderId });
+		if (result.success && result.data) {
+			setProtocols((prev) => [result.data!, ...prev]);
+			return result.data;
+		}
+		throw new Error(result.error || "Failed to create protocol");
 	};
 
 	const updateProtocol = async (
 		id: string,
 		payload: Partial<ProtocolItem>
 	): Promise<ProtocolItem> => {
-		const updated = await protocolsApi.updateProtocol(id, payload, orderId);
-		setProtocols((prev) => prev.map((p) => (p.id === id ? { ...p, ...updated } : p)));
-		return updated;
+		const result = await updateProtocolAction(orderId, id, payload);
+		if (result.success && result.data) {
+			setProtocols((prev) => prev.map((p) => (p.id === id ? { ...p, ...result.data! } : p)));
+			return result.data;
+		}
+		throw new Error(result.error || "Failed to update protocol");
 	};
 
 	const deleteProtocol = async (id: string): Promise<boolean> => {
-		const success = await protocolsApi.deleteProtocol(id, orderId);
-		if (success) {
+		const result = await deleteProtocolAction(orderId, id);
+		if (result.success) {
 			setProtocols((prev) => prev.filter((p) => p.id !== id));
+			return true;
 		}
-		return success;
+		return false;
 	};
 
 	const archiveProtocol = async (id: string): Promise<boolean> => {
-		const updated = await protocolsApi.updateProtocol(id, { isArchived: true }, orderId);
-		if (updated) {
+		const result = await updateProtocolAction(orderId, id, { isArchived: true });
+		if (result.success) {
 			setProtocols((prev) => prev.map((p) => (p.id === id ? { ...p, isArchived: true } : p)));
+			return true;
 		}
-		return true;
+		return false;
 	};
 
 	return {

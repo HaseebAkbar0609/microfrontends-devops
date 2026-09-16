@@ -6,6 +6,9 @@ export interface OfferRequestContact {
 
 export interface OfferRequest {
 	id: string;
+	projectId?: string;
+	mappingId?: string;
+	quoteId?: string;
 	offertNr: string;
 	job: string;
 	customerName: string;

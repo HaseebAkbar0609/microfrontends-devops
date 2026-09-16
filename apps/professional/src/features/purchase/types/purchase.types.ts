@@ -1,3 +1,5 @@
+import type { QAThreadStatus } from "@/components/common/QAThreadColumn";
+
 export type PurchaseStatus =
 	| "not_started"
 	| "ongoing"
@@ -94,8 +96,11 @@ export interface PurchaseComplaintRow {
 	archived: boolean;
 }
 
-/** Which column of the Fråga/Svar board a question sits in. */
-export type PurchaseQaStatus = "new" | "opened" | "answered";
+/**
+ * Which column of the Fråga/Svar board a question sits in — the shared board's
+ * three.
+ */
+export type PurchaseQaStatus = QAThreadStatus;
 
 /**
  * One question on the purchase module's Fråga/Svar board.

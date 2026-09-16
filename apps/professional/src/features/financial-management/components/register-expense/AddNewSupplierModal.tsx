@@ -15,10 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
+import { SupplierInfo } from "../../types/expense.types";
+
 interface AddNewSupplierModalProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	onAddSupplier: (name: string) => void;
+	onAddSupplier: (name: string, details?: Partial<SupplierInfo>) => void;
 }
 
 export function AddNewSupplierModal({
@@ -29,6 +31,9 @@ export function AddNewSupplierModal({
 	const { t } = useTranslation();
 	const [name, setName] = useState("");
 	const [orgNo, setOrgNo] = useState("");
+	const [address, setAddress] = useState("");
+	const [postalCity, setPostalCity] = useState("");
+	const [bankgiro, setBankgiro] = useState("");
 	const [error, setError] = useState("");
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -38,15 +43,28 @@ export function AddNewSupplierModal({
 			setError(t(localizationConstants.registerExpenseErrorSupplierRequired));
 			return;
 		}
-		onAddSupplier(trimmed);
+		onAddSupplier(trimmed, {
+			name: trimmed,
+			orgNo: orgNo.trim() || "556000-0000",
+			address: address.trim() || "",
+			postalCity: postalCity.trim() || "",
+			bankgiro: bankgiro.trim() || "",
+			fTax: true,
+		});
 		setName("");
 		setOrgNo("");
+		setAddress("");
+		setPostalCity("");
+		setBankgiro("");
 		setError("");
 	};
 
 	const handleClose = () => {
 		setName("");
 		setOrgNo("");
+		setAddress("");
+		setPostalCity("");
+		setBankgiro("");
 		setError("");
 		onOpenChange(false);
 	};
@@ -60,7 +78,7 @@ export function AddNewSupplierModal({
 					</DialogTitle>
 				</DialogHeader>
 
-				<form onSubmit={handleSubmit} className="space-y-4 py-2">
+				<form onSubmit={handleSubmit} className="space-y-3.5 py-2">
 					<div>
 						<Label className="text-xs font-semibold text-slate-700 block mb-1">
 							<Translate text={localizationConstants.registerExpenseModalSupplierNameLabel} /> *
@@ -80,16 +98,54 @@ export function AddNewSupplierModal({
 						{error && <p className="text-[11px] text-rose-500 mt-1">{error}</p>}
 					</div>
 
-					<div>
-						<Label className="text-xs font-semibold text-slate-700 block mb-1">
-							<Translate text={localizationConstants.registerExpenseModalSupplierOrgNoLabel} />
-						</Label>
-						<Input
-							value={orgNo}
-							onChange={(e) => setOrgNo(e.target.value)}
-							placeholder={t(localizationConstants.registerExpenseModalSupplierOrgNoPlaceholder)}
-							className="h-9 text-xs border-slate-200 bg-white rounded-md"
-						/>
+					<div className="grid grid-cols-2 gap-3">
+						<div>
+							<Label className="text-xs font-semibold text-slate-700 block mb-1">
+								<Translate text={localizationConstants.registerExpenseModalSupplierOrgNoLabel} />
+							</Label>
+							<Input
+								value={orgNo}
+								onChange={(e) => setOrgNo(e.target.value)}
+								placeholder={t(localizationConstants.registerExpenseModalSupplierOrgNoPlaceholder)}
+								className="h-9 text-xs border-slate-200 bg-white rounded-md"
+							/>
+						</div>
+						<div>
+							<Label className="text-xs font-semibold text-slate-700 block mb-1">
+								<Translate text={localizationConstants.registerExpenseSupplierBankgiro} />
+							</Label>
+							<Input
+								value={bankgiro}
+								onChange={(e) => setBankgiro(e.target.value)}
+								placeholder="e.g. 5050-1234"
+								className="h-9 text-xs border-slate-200 bg-white rounded-md"
+							/>
+						</div>
+					</div>
+
+					<div className="grid grid-cols-2 gap-3">
+						<div>
+							<Label className="text-xs font-semibold text-slate-700 block mb-1">
+								<Translate text={localizationConstants.registerExpenseModalSupplierAddressLabel} />
+							</Label>
+							<Input
+								value={address}
+								onChange={(e) => setAddress(e.target.value)}
+								placeholder="Storgatan 10"
+								className="h-9 text-xs border-slate-200 bg-white rounded-md"
+							/>
+						</div>
+						<div>
+							<Label className="text-xs font-semibold text-slate-700 block mb-1">
+								<Translate text={localizationConstants.registerExpenseModalSupplierCityLabel} />
+							</Label>
+							<Input
+								value={postalCity}
+								onChange={(e) => setPostalCity(e.target.value)}
+								placeholder="111 22 Stockholm"
+								className="h-9 text-xs border-slate-200 bg-white rounded-md"
+							/>
+						</div>
 					</div>
 
 					<DialogFooter className="mt-5 flex justify-end gap-2">

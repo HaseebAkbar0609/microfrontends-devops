@@ -21,7 +21,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useAuthStatus } from "@/context/AuthContext";
+import { useCurrentUserName } from "@/hooks/useCurrentUserName";
 import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import localizationConstants, {
@@ -120,19 +120,15 @@ export function ComplaintHandlingTab({
 	messages,
 }: ComplaintHandlingTabProps) {
 	const t = useTranslate();
-	const { user } = useAuthStatus();
+	const currentUserName = useCurrentUserName(
+		localizationConstants.purchaseComplaintQaYou,
+	);
 	const { resolution, patch, errors, save, reset } = useComplaintHandlingForm(
 		complaintId,
 		detail.resolution,
 	);
 
 	const [thread, setThread] = useState(messages);
-
-	const currentUser = (user as { first_name?: string; last_name?: string }) ?? {};
-	const currentUserName =
-		[currentUser.first_name, currentUser.last_name]
-			.filter(Boolean)
-			.join(" ") || t(localizationConstants.purchaseComplaintQaYou);
 
 	/** No endpoint yet: the reply is acknowledged and shown on the thread. */
 	const handleSendReply = (id: string, text: string) => {

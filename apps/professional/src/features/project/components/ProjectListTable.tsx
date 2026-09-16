@@ -1,27 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import {
-	ArrowUpDown,
-	Archive,
-	MoreVertical,
-	Pencil,
-	Plus,
-	Trash2,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
 import {
 	Table,
 	TableBody,
@@ -30,53 +12,50 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { ProjectListItem } from "../data/projectsOverview.mock";
 import { ProjectSortField } from "../hooks/useProjectOverviewFilters";
+import type { ProjectRowsMode } from "../hooks/useProjectRows";
+import { ProjectColumnPicker } from "./ProjectColumnPicker";
+import { ProjectListRow } from "./ProjectListRow";
+import { PROJECT_COLUMNS } from "./projectColumns";
 
-export const PROJECT_COLUMNS: { key: ProjectSortField; labelKey: string }[] = [
-	{ key: "projectNr", labelKey: localizationConstants.projectListColNr },
-	{ key: "name", labelKey: localizationConstants.projectListColName },
-	{ key: "category", labelKey: localizationConstants.projectListColCategory },
-	{
-		key: "department",
-		labelKey: localizationConstants.projectListColDepartment,
-	},
-	{
-		key: "contractSum",
-		labelKey: localizationConstants.projectListColContractSum,
-	},
-	{
-		key: "projectManager",
-		labelKey: localizationConstants.projectListColManager,
-	},
-	{ key: "customer", labelKey: localizationConstants.projectListColCustomer },
-	{ key: "offerNr", labelKey: localizationConstants.projectListColOfferNr },
-	{ key: "startDate", labelKey: localizationConstants.projectListColStart },
-	{ key: "endDate", labelKey: localizationConstants.projectListColEnd },
-];
-
-const formatDate = (value: string) => value.replaceAll("-", "/");
-
-interface ProjectListTableProps {
+export interface ProjectListTableProps {
 	projects: ProjectListItem[];
 	sortField: ProjectSortField | null;
+	/** Which way the active column sorts, so the header can show it. */
+	sortDir?: "asc" | "desc" | null;
 	onToggleSort: (field: ProjectSortField) => void;
 	onOpen: (project: ProjectListItem) => void;
-	onArchive: (project: ProjectListItem) => void;
+	/** Arkivera in `"list"` mode, Avarkivera in `"archive"` mode. */
+	onToggleArchived: (project: ProjectListItem) => void;
 	onDelete: (project: ProjectListItem) => void;
+	/**
+	 * Which list this is. Defaults to `"list"`, so a caller that forgets cannot
+	 * turn the shipped project list into an archive.
+	 */
+	mode?: ProjectRowsMode;
 }
 
+/**
+ * The project table, shared by the active list and Arkiv.
+ *
+ * The two screens draw the same columns, the same Kategori pill and the same
+ * column picker; only the middle item of the row menu differs, which `mode`
+ * decides.
+ */
 const ProjectListTable = ({
 	projects,
 	sortField,
+	sortDir,
 	onToggleSort,
 	onOpen,
-	onArchive,
+	onToggleArchived,
 	onDelete,
+	mode = "list",
 }: ProjectListTableProps) => {
+	const t = useTranslate();
 	const [visibleColumns, setVisibleColumns] = useState<Set<ProjectSortField>>(
 		() => new Set(PROJECT_COLUMNS.map((column) => column.key)),
 	);
@@ -89,31 +68,19 @@ const ProjectListTable = ({
 		projects.length > 0 &&
 		projects.every((project) => selectedIds.has(project.id));
 
-	const toggleColumn = (key: ProjectSortField) => {
-		setVisibleColumns((prev) => {
-			const next = new Set(prev);
-			if (next.has(key)) next.delete(key);
-			else next.add(key);
-			return next;
-		});
+	const toggleIn = <T,>(set: Set<T>, value: T) => {
+		const next = new Set(set);
+		if (next.has(value)) next.delete(value);
+		else next.add(value);
+		return next;
 	};
 
-	const toggleRow = (id: string) => {
-		setSelectedIds((prev) => {
-			const next = new Set(prev);
-			if (next.has(id)) next.delete(id);
-			else next.add(id);
-			return next;
-		});
-	};
-
-	const toggleAll = () => {
+	const toggleAll = () =>
 		setSelectedIds(
 			allSelected
 				? new Set()
 				: new Set(projects.map((project) => project.id)),
 		);
-	};
 
 	return (
 		<div className="w-full overflow-x-auto">
@@ -124,161 +91,92 @@ const ProjectListTable = ({
 							<Checkbox
 								checked={allSelected}
 								onCheckedChange={toggleAll}
-								aria-label="Select all"
+								aria-label={t(localizationConstants.selectAllLabel)}
 							/>
 						</TableHead>
-						{columns.map((column) => (
-							<TableHead
-								key={column.key}
-								className="px-4 py-3 text-sm font-medium text-slate-500"
-							>
-								<button
-									type="button"
-									onClick={() => onToggleSort(column.key)}
-									className="flex cursor-pointer items-center gap-1"
+
+						{columns.map((column) => {
+							const isSorted = sortField === column.key;
+
+							return (
+								<TableHead
+									key={column.key}
+									aria-sort={
+										isSorted && sortDir
+											? sortDir === "asc"
+												? "ascending"
+												: "descending"
+											: "none"
+									}
+									className="px-4 py-3 text-sm font-medium text-slate-500"
 								>
-									<Translate text={column.labelKey} />
-									<ArrowUpDown
-										className={cn(
-											"h-3.5 w-3.5",
-											sortField === column.key
-												? "text-slate-900"
-												: "opacity-50",
-										)}
-									/>
-								</button>
-							</TableHead>
-						))}
-						<TableHead className="w-16 px-4 py-3 text-right">
-							<Popover>
-								<PopoverTrigger asChild>
-									<Button
+									<button
 										type="button"
-										variant="ghost"
-										size="icon"
-										className="h-8 w-8 rounded-md text-slate-500 hover:text-slate-900"
+										onClick={() => onToggleSort(column.key)}
+										className="flex cursor-pointer items-center gap-1"
 									>
-										<Plus className="h-4 w-4" />
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent
-									align="end"
-									className="w-56 rounded-md border border-slate-200 bg-white p-2 shadow-md"
-								>
-									{PROJECT_COLUMNS.map((column) => (
-										<label
-											key={column.key}
-											className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm font-normal text-slate-700 hover:bg-slate-50"
-										>
-											<Checkbox
-												checked={visibleColumns.has(
-													column.key,
-												)}
-												onCheckedChange={() =>
-													toggleColumn(column.key)
-												}
-											/>
-											<Translate text={column.labelKey} />
-										</label>
-									))}
-								</PopoverContent>
-							</Popover>
+										<Translate text={column.labelKey} />
+										{isSorted && sortDir ? (
+											sortDir === "asc" ? (
+												<ArrowUp className="h-3.5 w-3.5 text-slate-900" />
+											) : (
+												<ArrowDown className="h-3.5 w-3.5 text-slate-900" />
+											)
+										) : (
+											<ArrowUpDown className="h-3.5 w-3.5 opacity-50" />
+										)}
+									</button>
+								</TableHead>
+							);
+						})}
+
+						<TableHead className="w-16 px-4 py-3 text-right">
+							<ProjectColumnPicker
+								columns={PROJECT_COLUMNS}
+								visibleColumns={visibleColumns}
+								onToggleColumn={(key) =>
+									setVisibleColumns((previous) =>
+										toggleIn(previous, key),
+									)
+								}
+							/>
 						</TableHead>
 					</TableRow>
 				</TableHeader>
+
 				<TableBody>
-					{projects.map((project) => (
-						<TableRow
-							key={project.id}
-							onClick={() => onOpen(project)}
-							className="cursor-pointer border-b border-slate-100 hover:bg-slate-50/60"
-						>
+					{projects.length === 0 ? (
+						<TableRow className="hover:bg-transparent">
 							<TableCell
-								onClick={(event) => event.stopPropagation()}
-								className="w-12 px-4 py-3.5"
+								colSpan={columns.length + 2}
+								className="py-10 text-center text-sm text-slate-500"
 							>
-								<Checkbox
-									checked={selectedIds.has(project.id)}
-									onCheckedChange={() =>
-										toggleRow(project.id)
+								<Translate
+									text={
+										mode === "archive"
+											? localizationConstants.projectArchiveEmpty
+											: localizationConstants.noRecordsFound
 									}
-									aria-label={project.projectNr}
 								/>
 							</TableCell>
-							{columns.map((column) => (
-								<TableCell
-									key={column.key}
-									className="px-4 py-3.5 text-sm text-slate-700"
-								>
-									{column.key === "category" ? (
-										<span className="inline-flex rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
-											{project.category}
-										</span>
-									) : column.key === "startDate" ||
-									  column.key === "endDate" ? (
-										formatDate(project[column.key])
-									) : (
-										project[column.key]
-									)}
-								</TableCell>
-							))}
-							<TableCell
-								onClick={(event) => event.stopPropagation()}
-								className="px-4 py-3.5 text-right"
-							>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild>
-										<Button
-											type="button"
-											variant="ghost"
-											size="icon"
-											className="h-8 w-8 rounded-md text-slate-500 hover:text-slate-900"
-										>
-											<MoreVertical className="h-4 w-4" />
-										</Button>
-									</DropdownMenuTrigger>
-									<DropdownMenuContent
-										align="end"
-										className="w-40 rounded-md border border-slate-200 bg-white p-1 shadow-md"
-									>
-										<DropdownMenuItem
-											onClick={() => onOpen(project)}
-											className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
-										>
-											<Pencil className="h-4 w-4 text-slate-600" />
-											<Translate
-												text={
-													localizationConstants.projectListOpen
-												}
-											/>
-										</DropdownMenuItem>
-										<DropdownMenuItem
-											onClick={() => onArchive(project)}
-											className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
-										>
-											<Archive className="h-4 w-4 text-slate-600" />
-											<Translate
-												text={
-													localizationConstants.projectListArchiveAction
-												}
-											/>
-										</DropdownMenuItem>
-										<DropdownMenuItem
-											onClick={() => onDelete(project)}
-											className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
-										>
-											<Trash2 className="h-4 w-4 text-slate-600" />
-											<Translate
-												text={
-													localizationConstants.projectListDeleteAction
-												}
-											/>
-										</DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
-							</TableCell>
 						</TableRow>
-					))}
+					) : (
+						projects.map((project) => (
+							<ProjectListRow
+								key={project.id}
+								project={project}
+								columns={columns}
+								selected={selectedIds.has(project.id)}
+								onToggleSelected={(id) =>
+									setSelectedIds((previous) => toggleIn(previous, id))
+								}
+								onOpen={onOpen}
+								onToggleArchived={onToggleArchived}
+								onDelete={onDelete}
+								mode={mode}
+							/>
+						))
+					)}
 				</TableBody>
 			</Table>
 		</div>

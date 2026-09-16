@@ -8,11 +8,6 @@ import { OfferAcceptedView } from "@/features/offer/components/OfferAcceptedView
 import { OfferAgreedView } from "@/features/offer/components/OfferAgreedView";
 import { OfferArchivedView } from "@/features/offer/components/OfferArchivedView";
 import { listOffersAPIAction, OffersListResult } from "@/api-actions/offers";
-import { DUMMY_OFFER_REQUESTS } from "@/features/offer/constants/offerRequests.mock";
-import { DUMMY_QUOTED_ITEMS } from "@/features/offer/constants/offerQuoted.mock";
-import { DUMMY_ACCEPTED_ITEMS } from "@/features/offer/constants/offerAccepted.mock";
-import { DUMMY_AGREED_ITEMS } from "@/features/offer/constants/offerAgreed.mock";
-import { DUMMY_ARCHIVED_ITEMS } from "@/features/offer/constants/offerArchived.mock";
 import { OfferRequest } from "@/features/offer/constants/offerRequests";
 import {
   OfferQuotedItem,
@@ -48,15 +43,18 @@ const STATUS_API_MAP: Partial<Record<OfferTabId, OfferApiStatus>> = {
 function mapToRequestItems(result: OffersListResult): OfferRequest[] {
   return result.items.map((item: OfferList) => ({
     id: item.id,
+    projectId: item.projectId,
+    mappingId: item.mappingId,
+    quoteId: item.quoteId,
     offertNr: item.idNumber,
     job: item.jobName,
-    customerName: item.jobName,
+    customerName: item.contactName || "—",
     category: item.category,
     municipality: item.municipality,
     type: item.type,
-    price: 0,
+    price: item.totalPrice || 0,
     status: item.request === "opened" ? "opened" : "notReviewed",
-    contactPerson: { name: "" },
+    contactPerson: { name: item.contactName || "" },
     trackingNumber: item.idNumber,
     jobName: item.jobName,
   }));
@@ -65,56 +63,72 @@ function mapToRequestItems(result: OffersListResult): OfferRequest[] {
 function mapToQuotedItems(result: OffersListResult): OfferQuotedItem[] {
   return result.items.map((item: OfferList) => ({
     id: item.id,
+    projectId: item.projectId,
+    mappingId: item.mappingId,
+    quoteId: item.quoteId,
     offertNr: item.idNumber,
     job: item.jobName,
-    customerName: item.jobName,
+    customerName: item.contactName || "—",
     category: item.category,
     municipality: item.municipality,
     type: item.type,
-    price: 0,
-    status: "notReviewed" as const,
-    contactPerson: { name: "", phone: "", email: "" },
+    price: item.totalPrice || 0,
+    status: item.seenStatus?.toLowerCase().includes("open") ? "opened" as const : "notReviewed" as const,
+    openedAt: item.openedAt,
+    contactPerson: { name: item.contactName || "", phone: item.contactPhone || "", email: item.contactEmail || "" },
   }));
 }
 
 function mapToAcceptedItems(result: OffersListResult): OfferAcceptedItem[] {
   return result.items.map((item: OfferList) => ({
     id: item.id,
+    projectId: item.projectId,
+    mappingId: item.mappingId,
+    quoteId: item.quoteId,
     offertNr: item.idNumber,
     job: item.jobName,
-    customerName: item.jobName,
+    customerName: item.contactName || "—",
     category: item.category,
     municipality: item.municipality,
-    acceptedPrice: 0,
+    acceptedPrice: item.totalPrice || 0,
     type: item.type,
-    contactPerson: { name: "", phone: "", email: "" },
+    contactPerson: { name: item.contactName || "", phone: item.contactPhone || "", email: item.contactEmail || "" },
   }));
 }
 
 function mapToAgreedItems(result: OffersListResult): OfferAgreedItem[] {
   return result.items.map((item: OfferList) => ({
     id: item.id,
+    projectId: item.projectId,
+    mappingId: item.mappingId,
+    quoteId: item.quoteId,
+    agreementId: item.agreementId,
+    agreementStatus: item.agreementStatus,
     contractNr: item.idNumber || item.id || "—",
     jobName: item.jobName,
-    customerName: item.jobName,
-    status: (item.request === "opened" || item.isFavorite ? "signed" : "waiting_signature") as OfferAgreedStatus,
+    customerName: item.contactName || "—",
+    status: (item.agreementId && item.agreementStatus === "active" ? "signed" : "waiting_signature") as OfferAgreedStatus,
     municipality: item.municipality || "-",
     jobType: item.type || "-",
-    agreedPrice: 0,
+    agreedPrice: item.totalPrice || 0,
   }));
 }
 
 function mapToArchivedItems(result: OffersListResult): OfferArchivedItem[] {
   return result.items.map((item: OfferList) => ({
     id: item.id,
+    mappingId: item.mappingId,
+    quoteId: item.quoteId,
+    agreementId: item.agreementId,
+    agreementStatus: item.agreementStatus,
     contractNr: item.idNumber,
     jobName: item.jobName,
-    customerName: item.jobName,
-    status: "waiting_signature" as const,
+    customerName: item.contactName || "—",
+    status: (item.agreementId && item.agreementStatus === "active" ? "signed" : "waiting_signature") as OfferAgreedStatus,
     municipality: item.municipality,
     jobType: item.type,
-    agreedPrice: 0,
-    projectId: item.id,
+    agreedPrice: item.totalPrice || 0,
+    projectId: item.projectId || item.id,
   }));
 }
 
@@ -125,11 +139,13 @@ interface OfferStatusPageProps {
 
 export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageProps) {
   const [isLoading, setIsLoading] = useState(true);
-  const [requestItems, setRequestItems] = useState<OfferRequest[]>(DUMMY_OFFER_REQUESTS);
-  const [quotedItems, setQuotedItems] = useState<OfferQuotedItem[]>(DUMMY_QUOTED_ITEMS);
-  const [acceptedItems, setAcceptedItems] = useState<OfferAcceptedItem[]>(DUMMY_ACCEPTED_ITEMS);
-  const [agreedItems, setAgreedItems] = useState<OfferAgreedItem[]>(DUMMY_AGREED_ITEMS);
-  const [archivedItems, setArchivedItems] = useState<OfferArchivedItem[]>(DUMMY_ARCHIVED_ITEMS);
+  const [hasError, setHasError] = useState(false);
+  const [requestItems, setRequestItems] = useState<OfferRequest[]>([]);
+  const [quotedItems, setQuotedItems] = useState<OfferQuotedItem[]>([]);
+  const [acceptedItems, setAcceptedItems] = useState<OfferAcceptedItem[]>([]);
+  const [agreedItems, setAgreedItems] = useState<OfferAgreedItem[]>([]);
+  const [archivedItems, setArchivedItems] = useState<OfferArchivedItem[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const status = STATUS_API_MAP[tabId];
@@ -140,6 +156,7 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
 
     async function fetchOffers() {
       setIsLoading(true);
+      setHasError(false);
       try {
         const companyData = authStorage.getCompanyData() as ProfessionalRow | null;
         const result = await listOffersAPIAction({
@@ -147,12 +164,12 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
           page: 1,
           pageSize: 50,
           companyId: companyData?.id,
+          search,
         });
 
         if (cancelled) return;
 
-        if (result.items.length > 0) {
-          switch (tabId) {
+        switch (tabId) {
             case "request":
               setRequestItems(mapToRequestItems(result));
               break;
@@ -168,10 +185,9 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
             case "archived":
               setArchivedItems(mapToArchivedItems(result));
               break;
-          }
         }
       } catch {
-        // Keep mock data on error
+        if (!cancelled) setHasError(true);
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -179,7 +195,7 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
 
     fetchOffers();
     return () => { cancelled = true; };
-  }, [tabId]);
+  }, [tabId, search]);
 
   return (
     <div className="flex flex-1 flex-col min-h-screen">
@@ -189,10 +205,14 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
         <div className="flex flex-1 items-center justify-center">
           <Loader />
         </div>
+      ) : hasError ? (
+        <div className="mx-6 mt-6 rounded-xl border border-red-200 bg-red-50 px-6 py-10 text-center text-red-700">
+          Offers could not be loaded. Please refresh the page and try again.
+        </div>
       ) : (
         <>
           {tabId === "request" && (
-            <OfferRequestView requests={requestItems} />
+            <OfferRequestView requests={requestItems} onSearchChange={setSearch} />
           )}
 
           {tabId === "quoted" && (
@@ -200,15 +220,15 @@ export function OfferStatusPageContent({ tabId, offerId = "" }: OfferStatusPageP
           )}
 
           {tabId === "accepted" && (
-            <OfferAcceptedView offerId={offerId} items={acceptedItems} />
+            <OfferAcceptedView offerId={offerId} items={acceptedItems} onSearchChange={setSearch} />
           )}
 
           {tabId === "agreed" && (
-            <OfferAgreedView offerId={offerId} items={agreedItems} />
+            <OfferAgreedView offerId={offerId} items={agreedItems} onSearchChange={setSearch} />
           )}
 
           {tabId === "archived" && (
-            <OfferArchivedView offerId={offerId} items={archivedItems} />
+            <OfferArchivedView offerId={offerId} items={archivedItems} onSearchChange={setSearch} />
           )}
         </>
       )}

@@ -17,19 +17,34 @@ interface Props {
   offertNr: string;
   job: string;
   onClose: () => void;
+  onSubmit?: (comment: string) => Promise<boolean>;
 }
 
-export function OfferQuotedCommentModal({ open, offertNr, job, onClose }: Props) {
+export function OfferQuotedCommentModal({ open, offertNr, job, onClose, onSubmit }: Props) {
   const t = useTranslate();
   const [commentText, setCommentText] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState("");
 
   function handleClose() {
     setCommentText("");
     onClose();
   }
 
-  function handleSend() {
+  async function handleSend() {
+    if (!commentText.trim()) {
+      setError("Comment is required");
+      return;
+    }
+    setIsSending(true);
+    const saved = await onSubmit?.(commentText.trim());
+    setIsSending(false);
+    if (saved === false) {
+      setError("Comment could not be saved");
+      return;
+    }
     setCommentText("");
+    setError("");
     onClose();
   }
 
@@ -51,6 +66,7 @@ export function OfferQuotedCommentModal({ open, offertNr, job, onClose }: Props)
             placeholder={t(localizationConstants.offerQuotedCommentPlaceholder)}
             className="min-h-14 max-h-[45vh] resize-y bg-white text-sm"
           />
+          {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
         </div>
         <div className="flex items-center justify-between bg-white px-6 py-3 shrink-0">
           <Button
@@ -63,8 +79,9 @@ export function OfferQuotedCommentModal({ open, offertNr, job, onClose }: Props)
           <Button
             className="h-9 cursor-pointer bg-neutral-950 px-5 text-sm text-white hover:bg-neutral-800"
             onClick={handleSend}
+            disabled={isSending}
           >
-            {t(localizationConstants.offerQuotedCommentSend)}
+            {isSending ? "Saving…" : t(localizationConstants.offerQuotedCommentSend)}
           </Button>
         </div>
       </DialogContent>

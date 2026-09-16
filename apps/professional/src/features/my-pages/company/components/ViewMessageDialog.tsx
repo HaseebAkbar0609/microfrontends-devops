@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { CompanyMessage } from "../constants/mockData";
+import { CompanyMessage } from "../types";
 
 const initials = (name: string) =>
 	name

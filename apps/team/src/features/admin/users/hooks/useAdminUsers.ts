@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import type { AdminUsersParams } from "../types/adminUsers.types";
 import {
 	getAdminUsers,
 	getAdminUsersSummary,
@@ -6,6 +7,7 @@ import {
 	updateAdminUser,
 	getAdminRoleOptions,
 	getAdminTypeOptions,
+	getAdminAccessOptions,
 	getAdminGroups,
 	createAdminGroup,
 	updateAdminGroup,
@@ -21,7 +23,7 @@ import {
 	resendInvitation,
 } from "../api/adminUsers.api";
 
-export const useAdminUsers = (params: Record<string, unknown>) =>
+export const useAdminUsers = (params: AdminUsersParams) =>
 	useQuery({
 		queryKey: ["admin-users", params],
 		queryFn: () => getAdminUsers(params),
@@ -45,12 +47,17 @@ export const useAdminTypeOptions = () =>
 		queryFn: () => getAdminTypeOptions(),
 	});
 
+export const useAdminAccessOptions = () => useQuery({
+  queryKey: ["admin-access-options"], queryFn: getAdminAccessOptions,
+});
+
 export const useCreateAdminUser = () => {
 	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: createAdminUser,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
 			queryClient.invalidateQueries({ queryKey: ["admin-users-summary"] });
 		},
 	});
@@ -62,6 +69,7 @@ export const useUpdateAdminUser = () => {
 		mutationFn: updateAdminUser,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
 			queryClient.invalidateQueries({ queryKey: ["admin-users-summary"] });
 		},
 	});
@@ -125,6 +133,7 @@ export const useUpdateUserPermissions = () => {
 		mutationFn: updateUserPermissions,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
 		},
 	});
 };
@@ -135,6 +144,7 @@ export const useAssignUserLicense = () => {
 		mutationFn: assignUserLicense,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
 		},
 	});
 };
@@ -145,6 +155,7 @@ export const useDeleteAdminUser = () => {
 		mutationFn: deleteAdminUser,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
 			queryClient.invalidateQueries({ queryKey: ["admin-users-summary"] });
 		},
 	});
@@ -156,6 +167,7 @@ export const useActivateAdminUser = () => {
 		mutationFn: activateAdminUser,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
 			queryClient.invalidateQueries({ queryKey: ["admin-users-summary"] });
 		},
 	});
@@ -167,13 +179,20 @@ export const useDeactivateAdminUser = () => {
 		mutationFn: deactivateAdminUser,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
 			queryClient.invalidateQueries({ queryKey: ["admin-users-summary"] });
 		},
 	});
 };
 
 export const useResendInvitation = () => {
+	const queryClient = useQueryClient();
 	return useMutation({
 		mutationFn: resendInvitation,
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-user-detail"] });
+			queryClient.invalidateQueries({ queryKey: ["admin-users-summary"] });
+		},
 	});
 };

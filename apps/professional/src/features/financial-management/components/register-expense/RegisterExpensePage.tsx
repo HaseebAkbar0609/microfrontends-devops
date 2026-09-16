@@ -39,6 +39,7 @@ export function RegisterExpensePage() {
 		formData,
 		updateField,
 		suppliers,
+		selectedSupplierDetails,
 		handleAddSupplier,
 		errors,
 		isSaving,
@@ -115,6 +116,7 @@ export function RegisterExpensePage() {
 							formData={formData}
 							updateField={updateField}
 							suppliers={suppliers}
+							selectedSupplierDetails={selectedSupplierDetails}
 							onAddSupplier={handleAddSupplier}
 							onOpenAddSupplier={() => setShowSupplierModal(true)}
 							errors={errors}

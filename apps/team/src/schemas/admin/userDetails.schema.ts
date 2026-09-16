@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const userDetailsSchema = z.object({
-  isAdmin: z.boolean(),
+  accessRole: z.enum(["owner", "manage", "worker"]),
   group: z.string(),
   role: z.string(),
   type: z.string(),

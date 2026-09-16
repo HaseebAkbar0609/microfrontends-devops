@@ -34,6 +34,7 @@ interface ExpenseToolbarProps {
 	onProjectFilterChange: (val: string | "all") => void;
 	availableProjects: string[];
 	onRegisterClick?: () => void;
+	createRoute?: string;
 }
 
 export function ExpenseToolbar({
@@ -47,6 +48,7 @@ export function ExpenseToolbar({
 	onProjectFilterChange,
 	availableProjects,
 	onRegisterClick,
+	createRoute = CREATE_EXPENSE_ROUTE,
 }: ExpenseToolbarProps) {
 	const { t } = useTranslation();
 
@@ -151,7 +153,7 @@ export function ExpenseToolbar({
 
 			{/* Right: Primary CTA "+ Lägg till leverantörsfaktura" matching Figma */}
 			<div className="flex items-center gap-2">
-				<Link href={CREATE_EXPENSE_ROUTE}>
+				<Link href={createRoute}>
 					<Button
 						size="sm"
 						onClick={onRegisterClick}

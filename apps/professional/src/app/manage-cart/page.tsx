@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
 	deleteCartItemAction,
@@ -15,6 +15,8 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 export default function ManageCartPage() {
+	const mainRef = useRef<HTMLElement>(null);
+	const [isPlanChange, setIsPlanChange] = useState(false);
 	const [items, setItems] = useState<CartItem[]>([]);
 	const [updatingItemIds, setUpdatingItemIds] = useState<string[]>([]);
 	const [removingItemIds, setRemovingItemIds] = useState<string[]>([]);
@@ -22,6 +24,10 @@ export default function ManageCartPage() {
 
 	const [discountCode, setDiscountCode] = useState("");
 	const [step, setStep] = useState<CartStep>("cart");
+
+	useEffect(() => {
+		mainRef.current?.scrollTo({ top: 0 });
+	}, [step]);
 
 	const fetchCart = async () => {
 		const result = await getCartAction();
@@ -43,17 +49,17 @@ export default function ManageCartPage() {
 				)}`,
 				description,
 				planKey,
-				unitPrice: item.subscription_plan_price.price / 100,
+				unitPrice: item.subscription_plan_price.price,
 				interval: item.subscription_plan_price.interval,
 				quantity: item.quantity,
-				itemTotalAmount: (item.item_total_amount ?? 0) / 100,
+				itemTotalAmount: item.item_total_amount ?? 0,
 			};
 		});
 
 		setItems(mappedItems);
 		setTotalCartAmount(
 			result.data.total_cart_amount
-				? result.data.total_cart_amount / 100 // divide here
+				? result.data.total_cart_amount
 				: mappedItems.reduce(
 						(sum, item) => sum + item.unitPrice * item.quantity,
 						0,
@@ -62,11 +68,14 @@ export default function ManageCartPage() {
 	};
 
 	useEffect(() => {
+		setIsPlanChange(
+			new URLSearchParams(window.location.search).get("mode") === "change",
+		);
 		fetchCart();
 	}, []);
 
-	const subtotal = totalCartAmount / 100;
-	const total = totalCartAmount / 100;
+	const subtotal = totalCartAmount;
+	const total = totalCartAmount;
 
 	const updateQuantity = async (id: string, delta: number) => {
 		if (updatingItemIds.includes(id)) return;
@@ -104,8 +113,8 @@ export default function ManageCartPage() {
 
 	return (
 		<>
-			<main className="flex-1 bg-background p-6 md:p-8 md:px-12 h-[calc(100vh-72px)] overflow-y-auto">
-				<div className="mx-auto space-y-4">
+			<main ref={mainRef} className="min-h-0 flex-1 overflow-y-auto bg-background px-4 py-6 sm:px-6 md:py-8">
+				<div className="mx-auto w-full max-w-6xl space-y-6">
 					<h1 className="text-2xl font-bold text-secondary">
 						<Translate
 							text={localizationConstants.manageCartTitle}
@@ -113,7 +122,7 @@ export default function ManageCartPage() {
 					</h1>
 
 					{step === "cart" ? (
-						<div className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+						<div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_23rem]">
 							<CartItemsPanel
 								items={items}
 								subtotal={subtotal}
@@ -137,6 +146,7 @@ export default function ManageCartPage() {
 							subtotal={subtotal}
 							total={total}
 							onBackToCart={() => setStep("cart")}
+							isPlanChange={isPlanChange}
 						/>
 					)}
 				</div>

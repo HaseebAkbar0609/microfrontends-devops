@@ -59,11 +59,20 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Translate } from "@/utils/translation/translate";
-import { listOffersAPIAction } from "@/api-actions/offers";
+import {
+  addOfferCommentAPIAction,
+  deleteOfferAPIAction,
+  listOffersAPIAction,
+  OFFER_API_STATUS,
+  updateOfferStatusAPIAction,
+} from "@/api-actions/offers";
 import { authStorage } from "@/lib/authStorage";
 import { ProfessionalRow } from "@/types/company";
 import { Loader } from "@/components/ui/loader";
 import Link from "next/link";
+import { showToast } from "@/lib/toast";
+import { OfferAcceptDialog } from "./OfferAcceptDialog";
+import { COMMISSIONS_PATH } from "../services/commissionService";
 
 type SortField = keyof Pick<
   OfferQuotedItem,
@@ -78,7 +87,7 @@ type SortField = keyof Pick<
   | "contactPerson"
 >;
 
-type CommentModal = { open: boolean; offertNr: string; job: string };
+type CommentModal = { open: boolean; offertNr: string; job: string; mappingId?: string };
 type AnswerModal = {
   open: boolean;
   offertNr: string;
@@ -98,6 +107,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
   const [items, setItems] = useState<OfferQuotedItem[]>(initialItems);
   const [totalItems, setTotalItems] = useState(initialItems.length);
   const [isLoading, setIsLoading] = useState(false);
+  const [acceptingItem, setAcceptingItem] = useState<OfferQuotedItem | null>(null);
 
   const [search, setSearch] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
@@ -110,6 +120,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     open: false,
     offertNr: "",
     job: "",
+    mappingId: undefined,
   });
 
   const [answerModal, setAnswerModal] = useState<AnswerModal>({
@@ -135,34 +146,37 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
           companyId: companyData?.id,
         });
         if (!isMounted) return;
-        if (result && result.items && result.items.length > 0) {
-          const mapped: OfferQuotedItem[] = result.items.map((item, idx) => ({
-            id: item.id || String(idx),
+        if (result && result.items) {
+          const mapped: OfferQuotedItem[] = result.items.map((item) => ({
+            id: item.id,
+            projectId: item.projectId,
+            mappingId: item.mappingId,
+            quoteId: item.quoteId,
             offertNr: item.idNumber,
             job: item.jobName,
-            customerName: "Kund " + (idx + 1),
-            category: item.category || "Bygg",
-            municipality: item.municipality || "Stockholm",
-            type: item.type || "Fast pris",
-            price: 50000 + idx * 5000,
-            status: idx % 2 === 0 ? "opened" : "notReviewed",
-            openedAt: idx % 2 === 0 ? "14:30" : undefined,
+            customerName: item.contactName || "—",
+            category: item.category || "—",
+            municipality: item.municipality || "—",
+            type: item.type || "—",
+            price: item.totalPrice || 0,
+            status: item.seenStatus?.toLowerCase().includes("open") ? "opened" : "notReviewed",
+            openedAt: item.openedAt,
             contactPerson: {
-              name: "Anders Svensson",
-              phone: "",
-              email: "",
+              name: item.contactName || "",
+              phone: item.contactPhone || "",
+              email: item.contactEmail || "",
             },
           }));
           setItems(mapped);
           setTotalItems(result.totalItems);
         } else {
-          setItems(initialItems);
-          setTotalItems(initialItems.length);
+          setItems([]);
+          setTotalItems(0);
         }
       } catch {
         if (isMounted) {
-          setItems(initialItems);
-          setTotalItems(initialItems.length);
+          setItems([]);
+          setTotalItems(0);
         }
       } finally {
         if (isMounted) setIsLoading(false);
@@ -170,7 +184,7 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
     }
     fetchQuotedOffers();
     return () => { isMounted = false; };
-  }, [page, pageSize, debouncedSearch, initialItems, t]);
+  }, [page, pageSize, debouncedSearch]);
 
   const uniqueTypes = useMemo(
     () => [...new Set(items.map((i) => i.type).filter(Boolean))],
@@ -211,11 +225,47 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
   );
 
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-  const paginated = sorted.slice((page - 1) * pageSize, page * pageSize);
+  const paginated = sorted;
   const totalSum = filtered.reduce((sum, i) => sum + i.price, 0);
 
   function openCommentModal(item: OfferQuotedItem) {
-    setCommentModal({ open: true, offertNr: item.offertNr, job: item.job });
+    setCommentModal({ open: true, offertNr: item.offertNr, job: item.job, mappingId: item.mappingId });
+  }
+
+  async function changeStatus(item: OfferQuotedItem, status: typeof OFFER_API_STATUS.ACCEPTED | typeof OFFER_API_STATUS.ARCHIVED) {
+    if (!item.mappingId) {
+      showToast("error", "Offer identifier is missing");
+      return;
+    }
+    if (status === OFFER_API_STATUS.ACCEPTED) {
+      if (!item.projectId || !item.quoteId) {
+        showToast("error", t(localizationConstants.commissionAcceptError));
+        return;
+      }
+      setAcceptingItem(item);
+      return;
+    }
+    const result = await updateOfferStatusAPIAction(item.mappingId, status);
+    if (!result.success) {
+      showToast("error", result.error || "Offer could not be updated");
+      return;
+    }
+    setItems((current) => current.filter((candidate) => candidate.id !== item.id));
+    showToast("success", "Offer updated");
+  }
+
+  async function deleteOffer(item: OfferQuotedItem) {
+    if (!item.mappingId) {
+      showToast("error", "Offer identifier is missing");
+      return;
+    }
+    const result = await deleteOfferAPIAction(item.mappingId);
+    if (!result.success) {
+      showToast("error", result.error || "Offer could not be deleted");
+      return;
+    }
+    setItems((current) => current.filter((candidate) => candidate.id !== item.id));
+    showToast("success", "Offer deleted");
   }
 
   function openAnswerModal(item: OfferQuotedItem) {
@@ -241,6 +291,17 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
 
   return (
     <div className="flex flex-1 flex-col bg-white">
+      {acceptingItem?.projectId && acceptingItem.quoteId && <OfferAcceptDialog
+        item={{ projectId: acceptingItem.projectId, quoteId: acceptingItem.quoteId, job: acceptingItem.job }}
+        onClose={() => setAcceptingItem(null)}
+        onAccepted={result => {
+          setItems(current => current.filter(item => item.mappingId !== result.mapping_id));
+          setAcceptingItem(null);
+          const paid = result.commission.payment_status === "paid";
+          showToast(paid ? "success" : "info", t(paid ? localizationConstants.commissionAcceptedPaid : localizationConstants.commissionAcceptedPending));
+          router.push(paid ? OFFER_ROUTES.accepted() : COMMISSIONS_PATH);
+        }}
+      />}
       <div className="flex flex-col gap-1.5 px-6 pt-5 pb-2">
         <div className="flex items-center gap-2">
           <button
@@ -452,6 +513,9 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                         </td>
                         <td className="sticky right-0 bg-white px-4 py-3 group-hover:bg-slate-50" style={{ boxShadow: "inset 1px 0 0 0 #e2e8f0" }}>
                           <div className="flex items-center justify-end gap-2">
+                            <Button asChild size="sm" variant="outline"><Link href={`/module/business/offer/send/${row.projectId || row.id}`}>
+                              {t(localizationConstants.offerFormViewOffer)}
+                            </Link></Button>
                             <Button
                               size="sm"
                               className="h-8 cursor-pointer bg-slate-100 px-3 text-xs font-medium text-slate-900 hover:bg-slate-200"
@@ -476,15 +540,15 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-[170px]">
-                                <DropdownMenuItem className="cursor-pointer">
+                                <DropdownMenuItem className="cursor-pointer" onClick={() => void deleteOffer(row)}>
                                   <Trash2 size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
                                   {t(localizationConstants.offerQuotedActionDelete)}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer">
+                                <DropdownMenuItem className="cursor-pointer" onClick={() => void changeStatus(row, OFFER_API_STATUS.ARCHIVED)}>
                                   <Archive size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
                                   {t(localizationConstants.offerQuotedActionArchive)}
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="cursor-pointer">
+                                <DropdownMenuItem className="cursor-pointer" onClick={() => void changeStatus(row, OFFER_API_STATUS.ACCEPTED)}>
                                   <CheckCircle size={12} strokeWidth={1.33} className="mr-2 h-[13.33px] w-3 text-[#18181B]" />
                                   {t(localizationConstants.offerQuotedActionAccept)}
                                 </DropdownMenuItem>
@@ -620,6 +684,12 @@ export function OfferQuotedView({ offerId, items: initialItems }: Props) {
         offertNr={commentModal.offertNr}
         job={commentModal.job}
         onClose={() => setCommentModal((prev) => ({ ...prev, open: false }))}
+        onSubmit={async (comment) => {
+          if (!commentModal.mappingId) return false;
+          const result = await addOfferCommentAPIAction(commentModal.mappingId, comment);
+          if (result.success) showToast("success", "Comment saved");
+          return result.success;
+        }}
       />
 
       <OfferQuotedAnswerModal

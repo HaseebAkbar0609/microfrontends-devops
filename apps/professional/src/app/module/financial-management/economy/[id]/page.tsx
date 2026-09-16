@@ -1,5 +1,5 @@
-import React from "react";
-import { ExpenseDetailPage } from "@/features/financial-management";
+import { redirect } from "next/navigation";
+import { EXPENSE_DETAIL_ROUTE } from "@/features/financial-management/constants/expense.constants";
 
 interface PageProps {
 	params: Promise<{
@@ -11,5 +11,5 @@ export const dynamic = "force-dynamic";
 
 export default async function ExpenseDetailRoute({ params }: PageProps) {
 	const { id } = await params;
-	return <ExpenseDetailPage expenseId={id} />;
+	redirect(EXPENSE_DETAIL_ROUTE(id));
 }

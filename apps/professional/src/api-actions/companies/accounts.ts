@@ -7,7 +7,7 @@ import {
 } from "@/types/company";
 
 const PROFESSIONALS_ACCOUNTS_PATH = "/companies/list";
-const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_SIZE = 100;
 
 
 export interface ListProfessionalsParams {
@@ -24,18 +24,52 @@ export interface ProfessionalsListResult<T = ProfessionalRow> {
 	currentPage: number;
 }
 
-function mapItemToRow(item: ProfessionalAccountItem): ProfessionalRow {
+
+export function mapItemToRow(item: ProfessionalAccountItem): ProfessionalRow {
+	const id = item.id || item.company_id || "";
+	const companyName = item.company_name ?? "";
+	const organizationNumber = item.organization_number ?? "";
+	const category =
+		item.category_info?.name ||
+		item.company_category?.name ||
+		item.category?.name ||
+		"";
+
 	return {
-		id: item.id || item.company_id || "",
+		id,
+		company_id: id,
 		contactUserId: item.contact_user_id ?? "",
-		companyName: item.company_name ?? "",
-		orgNo: item.organization_number ?? "",
-		category: item.company_category?.name || item.category?.name || "",
+		companyName,
+		company_name: companyName,
+		company_category: category,
+		orgNo: organizationNumber,
+		organization_number: organizationNumber,
+		created_at: item.created_at ?? null,
+		updated_at: item.updated_at ?? null,
+		category,
 		contactPerson: item.contact_person ?? "",
 		email: item.email ?? "",
 		phone: item.phone ?? "",
 		city: item.city ?? "",
-		status: (item.status ?? "pending") as ProfessionalStatus,
+		status: (item.status ?? "active") as ProfessionalStatus,
+	};
+}
+
+export async function listAllProfessionalsAPIAction(
+	params: Omit<ListProfessionalsParams, "page"> = {},
+): Promise<ProfessionalsListResult<ProfessionalRow>> {
+	const firstPage = await listProfessionalsAPIAction({ ...params, page: 1 });
+	if (firstPage.totalPages <= 1) return firstPage;
+
+	const remainingPages = await Promise.all(
+		Array.from({ length: firstPage.totalPages - 1 }, (_, index) =>
+			listProfessionalsAPIAction({ ...params, page: index + 2 }),
+		),
+	);
+
+	return {
+		...firstPage,
+		items: [firstPage, ...remainingPages].flatMap((page) => page.items),
 	};
 }
 

@@ -1,6 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getWidgetsAction, syncWidgetsAction } from "@/api-actions/widgets/widgets";
+import { useAuthStatus } from "@/context/AuthContext";
 import { generateTempId } from "@/lib/tempId";
 import { WidgetItem } from "../components/DraggableSidebarItem";
 
@@ -30,7 +32,9 @@ const padDraft = (slots: OwnSlot[]): OwnSlot[] => {
 export function useWidgetBoard(
 	allItems: WidgetItem[],
 	initialStandardIds: string[],
+	location: string,
 ) {
+	const { company } = useAuthStatus();
 	const [mode, setMode] = useState<"view" | "edit">("view");
 	const [savedSlots, setSavedSlots] = useState<OwnSlot[]>([]);
 	const [savedAtLabel, setSavedAtLabel] = useState<string | null>(null);
@@ -38,6 +42,33 @@ export function useWidgetBoard(
 	const [dirty, setDirty] = useState(false);
 	const [standardIds, setStandardIds] = useState<string[]>(initialStandardIds);
 	const [hiddenIds, setHiddenIds] = useState<string[]>([]);
+	const [isHydrating, setIsHydrating] = useState(true);
+
+	useEffect(() => {
+		let cancelled = false;
+		if (!company?.id) {
+			setIsHydrating(false);
+			return;
+		}
+		setIsHydrating(true);
+		getWidgetsAction(company.id, location)
+			.then((result) => {
+				if (cancelled || !result.success || !result.data) return;
+				const persistedKeys = result.data
+					.sort((a, b) => a.order - b.order)
+					.map((widget) => widget.key)
+					.filter((key) => allItems.some((item) => item.id === key));
+				if (persistedKeys.length === 0) return;
+				const persistedStandards = initialStandardIds.filter((key) => persistedKeys.includes(key));
+				const ownKeys = persistedKeys.filter((key) => !persistedStandards.includes(key));
+				setStandardIds(persistedStandards);
+				setSavedSlots(ownKeys.map((key) => makeSlot(key)));
+			})
+			.finally(() => !cancelled && setIsHydrating(false));
+		return () => {
+			cancelled = true;
+		};
+	}, [allItems, company?.id, initialStandardIds, location]);
 
 	const slots = mode === "edit" ? draftSlots : savedSlots;
 	const placedIds = useMemo(
@@ -78,8 +109,22 @@ export function useWidgetBoard(
 		setDirty(false);
 	};
 
-	const save = () => {
+	const save = async () => {
 		const trimmed = draftSlots.filter((slot) => slot.widgetId !== null);
+		if (company?.id) {
+			const keys = [
+				...standardIds,
+				...trimmed
+					.map((slot) => slot.widgetId)
+					.filter((key): key is string => key !== null),
+			];
+			const result = await syncWidgetsAction(
+				company.id,
+				location,
+				keys.map((key, order) => ({ key, order })),
+			);
+			if (!result.success) return false;
+		}
 		setSavedSlots(trimmed);
 		setSavedAtLabel(
 			new Date().toLocaleTimeString("sv-SE", {
@@ -88,6 +133,7 @@ export function useWidgetBoard(
 			}),
 		);
 		exitToView();
+		return true;
 	};
 
 	const addWidget = (widgetId: string) => {
@@ -144,6 +190,18 @@ export function useWidgetBoard(
 		setDirty(true);
 	};
 
+	const beginRemoveWidget = (uid: string) => {
+		setDraftSlots(
+			padDraft(
+				savedSlots.map((slot) =>
+					slot.uid === uid ? { ...slot, widgetId: null } : slot,
+				),
+			),
+		);
+		setDirty(true);
+		setMode("edit");
+	};
+
 	const setAsStandard = (widgetId: string) => {
 		setStandardIds((prev) =>
 			prev.includes(widgetId) ? prev : [...prev, widgetId],
@@ -177,6 +235,7 @@ export function useWidgetBoard(
 		libraryItems,
 		standardItems,
 		standardIds,
+		isHydrating,
 		enterEdit,
 		exitToView,
 		save,
@@ -184,6 +243,7 @@ export function useWidgetBoard(
 		dropWidget,
 		moveWidget,
 		removeWidget,
+		beginRemoveWidget,
 		setAsStandard,
 		removeStandard,
 		hideForTeam,

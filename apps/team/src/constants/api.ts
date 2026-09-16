@@ -13,6 +13,9 @@ export const API_PATH = {
  	AUTH: {
 		 BASE: BASE_PATHS.AUTH,
     LOGIN: `${BASE_PATHS.AUTH}/login`,
+    REFRESH_TOKEN: `${BASE_PATHS.AUTH}/refresh-token`,
+    VALIDATE_INVITATION: `${BASE_PATHS.AUTH}/validate-invitation`,
+    ACCEPT_INVITATION: `${BASE_PATHS.AUTH}/accept-invitation`,
     RESET_PASSWORD: `${BASE_PATHS.AUTH}/reset-password`,
     VALIDATE_OTP: `${BASE_PATHS.AUTH}/validate-otp`,
     FORGOT_PASSWORD: `${BASE_PATHS.AUTH}/forgot-password`,

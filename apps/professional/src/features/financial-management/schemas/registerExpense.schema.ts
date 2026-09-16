@@ -71,10 +71,9 @@ export const registerExpenseFormSchema = z
 			.string()
 			.trim()
 			.min(1, "registerExpenseErrorDueDateRequired"),
-		category: z.enum(["material", "underentreprenad", "omkostnad", "ovrigt"], {
-			required_error: "registerExpenseErrorCategoryRequired",
-			invalid_type_error: "registerExpenseErrorCategoryRequired",
-		}),
+		category: z.string().default("material"),
+		currency: z.enum(["SEK", "EUR", "USD", "NOK", "DKK"]).default("SEK"),
+		reference: z.string().optional().default(""),
 		project: z.string().optional().default(""),
 		costCenter: z.string().optional().default(""),
 		lineItems: z.array(expenseLineItemSchema).default([]),
@@ -101,6 +100,32 @@ export const registerExpenseFormSchema = z
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
 					message: "registerExpenseErrorLineItemDesc",
+					path: ["lineItems"],
+				});
+			}
+
+			const lineItemsTotal = data.lineItems.reduce(
+				(sum, item) => sum + item.quantity * item.unitPrice,
+				0,
+			);
+			if (lineItemsTotal <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "registerExpenseErrorTotalRequired",
+					path: ["lineItems"],
+				});
+			}
+		}
+
+		if (!hasLineItems && hasIncludedTimeReport) {
+			const timeReportTotal = data.timeReportItems.reduce(
+				(sum, item) => (item.included ? sum + item.workedHours * item.hourlyRate : sum),
+				0,
+			);
+			if (timeReportTotal <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "registerExpenseErrorTotalRequired",
 					path: ["lineItems"],
 				});
 			}

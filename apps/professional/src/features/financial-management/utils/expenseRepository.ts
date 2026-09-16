@@ -1,6 +1,6 @@
-import { ExpenseItem, ExpenseStatus } from "../types/expense.types";
+import { ExpenseItem, ExpenseStatus, SupplierInfo } from "../types/expense.types";
 import { initialExpensesMock } from "../mock/expenseMockData";
-import { DEFAULT_SUPPLIERS_LIST } from "../constants/expense.constants";
+import { DEFAULT_SUPPLIERS_LIST, DEFAULT_SUPPLIERS_METADATA } from "../constants/expense.constants";
 
 /**
  * Expense Repository (Standard #6: Security & Sensitive Data)
@@ -15,6 +15,7 @@ const listeners = new Set<ExpenseListener>();
 // Strict in-memory store for PII and financial records
 let inMemoryExpenses: ExpenseItem[] = [...initialExpensesMock];
 let inMemorySuppliers: string[] = [...DEFAULT_SUPPLIERS_LIST];
+const inMemorySupplierDetails: Record<string, SupplierInfo> = { ...DEFAULT_SUPPLIERS_METADATA };
 
 function notifyListeners(): void {
 	const current = [...inMemoryExpenses];
@@ -120,12 +121,32 @@ export const expenseRepository = {
 	},
 
 	/**
+	 * Get supplier details by name
+	 */
+	getSupplierDetails(name: string): SupplierInfo | undefined {
+		if (!name) return undefined;
+		return inMemorySupplierDetails[name];
+	},
+
+	/**
 	 * Add a new supplier to the system
 	 */
-	addSupplier(name: string): void {
+	addSupplier(name: string, details?: Partial<SupplierInfo>): void {
 		const trimmed = name.trim();
-		if (trimmed && !inMemorySuppliers.includes(trimmed)) {
-			inMemorySuppliers = [trimmed, ...inMemorySuppliers];
+		if (trimmed) {
+			if (!inMemorySuppliers.includes(trimmed)) {
+				inMemorySuppliers = [trimmed, ...inMemorySuppliers];
+			}
+			inMemorySupplierDetails[trimmed] = {
+				name: trimmed,
+				orgNo: details?.orgNo || "—",
+				address: details?.address || "—",
+				postalCity: details?.postalCity || "",
+				phone: details?.phone || "",
+				email: details?.email || "",
+				bankgiro: details?.bankgiro || "",
+				fTax: details?.fTax ?? true,
+			};
 		}
 	},
 

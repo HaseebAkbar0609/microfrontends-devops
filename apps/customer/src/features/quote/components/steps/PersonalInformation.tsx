@@ -9,6 +9,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { CreateOfferFormValues } from "../../types/form";
 import { useAuthStatus } from "@/context/AuthContext";
+import { getCountriesAPIAction } from "@/api-actions";
 
 interface Step1Props {
 	form: UseFormReturn<CreateOfferFormValues>;
@@ -38,6 +39,30 @@ export function Step1PersonalInformation({
 			form.setValue("address", user.user_profile?.address || "");
 			form.setValue("city", user.user_profile?.city || "");
 			form.setValue("pincode", user.user_profile?.postal_code || "");
+
+			// FormCitySelect only fetches once it has a countryId — without this,
+			// "country" stays at its "" default forever and the city dropdown
+			// silently shows "No results found" even though "city" above holds
+			// a valid saved id. Country is optional at signup though, so a
+			// customer who skipped it there has no country here either — this
+			// screen has no country selector of its own, so fall back to the
+			// platform's default country (Sweden), mirroring the same default
+			// the backend applies in LocationService.get_cities.
+			const profileCountry = user.user_profile?.country || "";
+			if (profileCountry) {
+				form.setValue("country", profileCountry);
+				return;
+			}
+			let cancelled = false;
+			getCountriesAPIAction().then((result) => {
+				if (cancelled || !result.success || !result.data) return;
+				const fallback =
+					result.data.find((c) => c.code === "SE") ?? result.data[0];
+				if (fallback) form.setValue("country", fallback.id);
+			});
+			return () => {
+				cancelled = true;
+			};
 		}
 	}, [user, form]);
 

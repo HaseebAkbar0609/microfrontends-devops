@@ -19,8 +19,12 @@ import { OrderInformationView } from "./OrderInformationView";
 import { OrderInspectionView } from "./inspection/OrderInspectionView";
 import { OrderOrganisationPage } from "@/features/orders/organisation/OrderOrganisationPage";
 import { OrderPaymentPlanListPage } from "@/features/orders/payment-plan/OrderPaymentPlanListPage";
-import { OrderGuaranteeCommitmentsPage } from "@/features/orders/guarantee-commitments/OrderGuaranteeCommitmentsPage";
+import { WarrantyFeature } from "@/features/warranty/WarrantyFeature";
 import { OrderProtocolOverviewPage } from "@/features/orders/protocol/OrderProtocolOverviewPage";
+import { OrderAtaOverviewPage } from "@/features/orders/ata/OrderAtaOverviewPage";
+import { OrderStaffOverviewPage } from "@/features/orders/staff/OrderStaffOverviewPage";
+import { OrderTimeplanOverviewPage } from "@/features/orders/timeplan/OrderTimeplanOverviewPage";
+import { OrderQaOverviewPage } from "@/features/orders/qa/OrderQaOverviewPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -36,8 +40,12 @@ type OrderTabValue =
 	| "inspection"
 	| "organisation"
 	| "payment-plan"
+	| "ata"
 	| "guarantee"
-	| "protocol";
+	| "protocol"
+	| "staff"
+	| "tidsplan"
+	| "fraga-svar";
 
 export function OrderOpenedSections({
 	data,
@@ -65,8 +73,12 @@ export function OrderOpenedSections({
 		if (path.includes("/inspection")) return "inspection";
 		if (path.includes("/organisation")) return "organisation";
 		if (path.includes("/payment-plan")) return "payment-plan";
+		if (path.includes("/ata")) return "ata";
 		if (path.includes("/guarantee")) return "guarantee";
 		if (path.includes("/protocol")) return "protocol";
+		if (path.includes("/staff")) return "staff";
+		if (path.includes("/tidsplan") || path.includes("/timeplan")) return "tidsplan";
+		if (path.includes("/fraga-svar") || path.includes("/qa")) return "fraga-svar";
 		return "order-information";
 	};
 
@@ -76,6 +88,8 @@ export function OrderOpenedSections({
 
 	const [isGuaranteeDetailOpen, setIsGuaranteeDetailOpen] = useState(false);
 	const [isProtocolDetailOpen, setIsProtocolDetailOpen] = useState(false);
+	const [isAtaDetailOpen, setIsAtaDetailOpen] = useState(false);
+	const [isTimeplanDetailOpen, setIsTimeplanDetailOpen] = useState(false);
 
 	useEffect(() => {
 		if (activeTab !== "guarantee") {
@@ -83,6 +97,12 @@ export function OrderOpenedSections({
 		}
 		if (activeTab !== "protocol") {
 			setIsProtocolDetailOpen(false);
+		}
+		if (activeTab !== "ata") {
+			setIsAtaDetailOpen(false);
+		}
+		if (activeTab !== "tidsplan") {
+			setIsTimeplanDetailOpen(false);
 		}
 	}, [activeTab, routeOrderId]);
 
@@ -106,13 +126,19 @@ export function OrderOpenedSections({
 		inspection: t(localizationConstants.orderInspectionTab),
 		organisation: t(localizationConstants.orderOrganisationTab),
 		"payment-plan": t(localizationConstants.paymentPlanTitle),
+		ata: t(localizationConstants.ataTitle),
 		guarantee: t(localizationConstants.warrantyCommitments),
 		protocol: t(localizationConstants.protocolsTab),
+		staff: t(localizationConstants.staffLedgerTab),
+		tidsplan: t(localizationConstants.orderTimeplanTab),
+		"fraga-svar": t(localizationConstants.orderQaTab),
 	};
 
 	const showSubtitle =
 		!(activeTab === "guarantee" && isGuaranteeDetailOpen) &&
-		!(activeTab === "protocol" && isProtocolDetailOpen);
+		!(activeTab === "protocol" && isProtocolDetailOpen) &&
+		!(activeTab === "ata" && isAtaDetailOpen) &&
+		!(activeTab === "tidsplan" && isTimeplanDetailOpen);
 
 	const orderLabel = serialNo
 		? `${t(localizationConstants.order)} ${serialNo}`
@@ -163,6 +189,14 @@ export function OrderOpenedSections({
 							<Translate text={localizationConstants.paymentPlanTitle} />
 						</Link>
 					</TabsTrigger>
+					<TabsTrigger value="ata" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/ata`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.ataTitle} />
+						</Link>
+					</TabsTrigger>
 					<TabsTrigger value="guarantee" asChild>
 						<Link
 							href={`/module/production/order/${routeOrderId}/guarantee`}
@@ -177,6 +211,30 @@ export function OrderOpenedSections({
 							className="cursor-pointer"
 						>
 							<Translate text={localizationConstants.protocolsTab} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="staff" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/staff`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.staffLedgerTab} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="tidsplan" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/tidsplan`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderTimeplanTab} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="fraga-svar" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/fraga-svar`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderQaTab} />
 						</Link>
 					</TabsTrigger>
 				</TabsList>
@@ -241,21 +299,46 @@ export function OrderOpenedSections({
 					<OrderPaymentPlanListPage orderId={routeOrderId} hideNavRow />
 				</TabsContent>
 
-				{/* Tab 5: Garantiåtaganden */}
-				<TabsContent value="guarantee" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
-					<OrderGuaranteeCommitmentsPage
+				{/* Tab 5: ÄTA */}
+				<TabsContent value="ata" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderAtaOverviewPage
 						orderId={routeOrderId}
-						hideNavRow
+						onDetailModeChange={setIsAtaDetailOpen}
+					/>
+				</TabsContent>
+
+				{/* Tab 6: Garantiåtaganden */}
+				<TabsContent value="guarantee" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<WarrantyFeature
+						recordId={routeOrderId}
 						onDetailModeChange={setIsGuaranteeDetailOpen}
 					/>
 				</TabsContent>
 
-				{/* Tab 6: Protokoll */}
+				{/* Tab 7: Protokoll */}
 				<TabsContent value="protocol" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderProtocolOverviewPage
 						orderId={routeOrderId}
 						onDetailModeChange={setIsProtocolDetailOpen}
 					/>
+				</TabsContent>
+
+				{/* Tab 8: Personal-liggare */}
+				<TabsContent value="staff" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderStaffOverviewPage orderId={routeOrderId} />
+				</TabsContent>
+
+				{/* Tab 9: Tidsplan */}
+				<TabsContent value="tidsplan" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderTimeplanOverviewPage
+						orderId={routeOrderId}
+						onDetailModeChange={setIsTimeplanDetailOpen}
+					/>
+				</TabsContent>
+
+				{/* Tab 10: Fråga/Svar (Q&A) */}
+				<TabsContent value="fraga-svar" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderQaOverviewPage orderId={routeOrderId} />
 				</TabsContent>
 			</Tabs>
 		</div>
@@ -263,4 +346,3 @@ export function OrderOpenedSections({
 }
 
 export default OrderOpenedSections;
-

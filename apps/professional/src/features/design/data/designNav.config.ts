@@ -15,6 +15,11 @@ export const DESIGN_MODULE_TABS: RouteTabItem[] = [
 		exact: true,
 	},
 	{
+		id: "oversikt",
+		labelKey: localizationConstants.designProjectsOversiktTitle,
+		href: `${DESIGN_MODULE_BASE_URL}/oversikt`,
+	},
+	{
 		id: "ritningar",
 		labelKey: localizationConstants.designSidebarRitningar,
 		href: `${DESIGN_MODULE_BASE_URL}/ritningar`,

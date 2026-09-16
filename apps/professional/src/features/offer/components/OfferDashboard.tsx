@@ -12,6 +12,7 @@ const OfferDashboard = () => (
 		widgetMap={OFFER_SIDEBAR_WIDGET_MAP}
 		items={OFFER_BOARD_LIBRARY_ITEMS}
 		standardWidgetIds={OFFER_STANDARD_WIDGET_IDS}
+		persistenceLocation="offer_dashboard"
 	/>
 );
 

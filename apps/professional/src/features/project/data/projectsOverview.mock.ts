@@ -12,6 +12,13 @@ export interface ProjectListItem {
 	offerNr: string;
 	startDate: string;
 	endDate: string;
+	/**
+	 * Archived rows leave the active list and appear under Arkiv.
+	 *
+	 * Optional so a row created without it — the create wizard appends one —
+	 * is active, which is what a new project should be.
+	 */
+	archived?: boolean;
 }
 
 export const PROJECT_LIST_ROWS: ProjectListItem[] = [
@@ -92,5 +99,54 @@ export const PROJECT_LIST_ROWS: ProjectListItem[] = [
 		offerNr: "12000",
 		startDate: mockDate(-15),
 		endDate: mockDate(45),
+	},
+
+	/*
+	 * Archived. Appended rather than flagging existing rows, so the active list
+	 * still shows the six it always has and Arkiv is not empty on first load.
+	 * Older dates and varied categories, managers and customers, so the Sök box
+	 * and the Filter dropdown have something to narrow.
+	 */
+	{
+		id: "5006",
+		projectNr: "#5006",
+		name: "Fasadrenovering",
+		category: "Totalentreprenad",
+		department: "ROT",
+		contractSum: "8.500",
+		projectManager: "Carla Calzoni",
+		customer: "Locum",
+		offerNr: "11800",
+		startDate: mockDate(-400),
+		endDate: mockDate(-120),
+		archived: true,
+	},
+	{
+		id: "5007",
+		projectNr: "#5007",
+		name: "Stambyte Kv Eken",
+		category: "Generalentreprenad",
+		department: "Service",
+		contractSum: "14.200",
+		projectManager: "Wilson Dokidis",
+		customer: "Sisab",
+		offerNr: "11750",
+		startDate: mockDate(-360),
+		endDate: mockDate(-90),
+		archived: true,
+	},
+	{
+		id: "5008",
+		projectNr: "#5008",
+		name: "Takomläggning",
+		category: "Löpande",
+		department: "Nyproduktion",
+		contractSum: "6.900",
+		projectManager: "Jocelyn Gouse",
+		customer: "Fabege",
+		offerNr: "11690",
+		startDate: mockDate(-320),
+		endDate: mockDate(-60),
+		archived: true,
 	},
 ];

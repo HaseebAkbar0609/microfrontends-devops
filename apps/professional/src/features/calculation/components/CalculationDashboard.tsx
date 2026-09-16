@@ -12,6 +12,7 @@ const CalculationDashboard = () => (
 		widgetMap={CALCULATION_SIDEBAR_WIDGET_MAP}
 		items={CALCULATION_BOARD_LIBRARY_ITEMS}
 		standardWidgetIds={CALCULATION_STANDARD_WIDGET_IDS}
+		persistenceLocation="calculation_dashboard"
 	/>
 );
 

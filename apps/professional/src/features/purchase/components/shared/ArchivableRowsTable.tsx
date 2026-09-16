@@ -29,7 +29,7 @@ import {
 	useArchivableRows,
 	type ArchivableRow,
 } from "../../hooks/useArchivableRows";
-import { ConfirmActionDialog } from "./ConfirmActionDialog";
+import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 
 export interface ArchivableFilterOption {
 	value: string;
