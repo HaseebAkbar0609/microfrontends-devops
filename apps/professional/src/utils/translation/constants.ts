@@ -610,27 +610,27 @@ export type AdminPageTranslation = {
 };
 
 export type OfferTranslation = {
-  offerEditorTitle: string;
-  offerEditorNameRequired: string;
-  offerEditorPositiveAmount: string;
-  offerEditorInvalidDate: string;
-  offerEditorDateOrder: string;
-  offerEditorTotal: string;
-  offerEditorItemized: string;
-  offerEditorPriceHelp: string;
-  offerEditorBack: string;
-  offerEditorSaving: string;
-  offerEditorSaveDraft: string;
-  offerEditorDraftSaved: string;
-  offerEditorSaveError: string;
-  offerEditorLoadError: string;
-  offerEditorReload: string;
-  offerEditorSent: string;
-  offerEditorSendHelp: string;
-  offerEditorUploadHelp: string;
-  offerEditorUploading: string;
-  offerEditorUploadError: string;
-  offerEditorRemoveAttachment: string;
+	offerEditorTitle: string;
+	offerEditorNameRequired: string;
+	offerEditorPositiveAmount: string;
+	offerEditorInvalidDate: string;
+	offerEditorDateOrder: string;
+	offerEditorTotal: string;
+	offerEditorItemized: string;
+	offerEditorPriceHelp: string;
+	offerEditorBack: string;
+	offerEditorSaving: string;
+	offerEditorSaveDraft: string;
+	offerEditorDraftSaved: string;
+	offerEditorSaveError: string;
+	offerEditorLoadError: string;
+	offerEditorReload: string;
+	offerEditorSent: string;
+	offerEditorSendHelp: string;
+	offerEditorUploadHelp: string;
+	offerEditorUploading: string;
+	offerEditorUploadError: string;
+	offerEditorRemoveAttachment: string;
 	commissionTitle: string;
 	commissionDescription: string;
 	commissionAcceptTitle: string;
@@ -3872,6 +3872,26 @@ export type OfferTranslation = {
 	projectSupplierPlanNoMatches: string;
 	projectSupplierPlanAcontosEmpty: string;
 	projectSupplierPlanDocumentsEmpty: string;
+	/* TFS-704 — Besiktning on the project record (inspections, archive, documents). */
+	projectInspectionTitle: string;
+	projectInspectionFilterArchived: string;
+	projectInspectionArchivedToast: string;
+	projectInspectionRestoredToast: string;
+	projectInspectionDeleteTitle: string;
+	projectInspectionDeleteBody: string;
+	projectInspectionNoMatches: string;
+	projectInspectionArchivedEmpty: string;
+	projectInspectionRowActions: string;
+	projectInspectionOpenFile: string;
+	projectInspectionNoPreview: string;
+	projectInspectionMoreFiles: string;
+	projectInspectionRemoveFile: string;
+	projectInspectionShowAllFiles: string;
+	projectInspectionShowFewerFiles: string;
+	projectInspectionFileDuplicate: string;
+	projectInspectionTooManyFiles: string;
+	projectInspectionInvalidDate: string;
+	projectInspectionDeletedToast: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
@@ -7864,6 +7884,14 @@ export type EconomyBankTranslation = {
 	filterPdf: string;
 	filterImage: string;
 	filterOffice: string;
+	badgeBankIdVerified: string;
+	sectionAccountInfo: string;
+	sectionLoanTerms: string;
+	sectionFinancials: string;
+	valStartDateRequired: string;
+	valEndDateRequired: string;
+	valIbanRequired: string;
+	valSwiftRequired: string;
 };
 
 export type AtaTranslation = {
@@ -8252,6 +8280,18 @@ export type AuthoritiesTranslation = {
 	validationDocumentNameRequired: string;
 	fieldAuthorityDropFiles: string;
 	fieldAuthorityBrowse: string;
+	catGovtDocs: string;
+	catFinancial: string;
+	catTaxAuthority: string;
+	catLegal: string;
+	catInsurance: string;
+	filterAllCategoriesAuthority: string;
+	btnAddAuthority: string;
+	searchPlaceholderAuthority: string;
+	sectionBasicInfoAuthority: string;
+	sectionFileAttachmentAuthority: string;
+	sectionStatusNotesAuthority: string;
+	notesPlaceholderAuthority: string;
 };
 
 export type OrderTimeplanTranslation = {
@@ -8267,6 +8307,133 @@ export type OrderTimeplanTranslation = {
 	orderTimeplanEmpty: string;
 	orderTimeplanDeleteConfirmTitle: string;
 	orderTimeplanDeleteSuccess: string;
+	orderTimeplanStep1Title: string;
+	orderTimeplanCardDetailsTitle: string;
+	orderTimeplanFieldPlanName: string;
+	orderTimeplanFieldPlanNamePlaceholder: string;
+	orderTimeplanFieldType: string;
+	orderTimeplanFieldTypePlaceholder: string;
+	orderTimeplanFieldStartDate: string;
+	orderTimeplanFieldEndDate: string;
+	orderTimeplanCardOtherInfoTitle: string;
+	orderTimeplanFieldOrderNr: string;
+	orderTimeplanFieldCustomer: string;
+	orderTimeplanFieldCreatedBy: string;
+	orderTimeplanFieldDate: string;
+	orderTimeplanFieldRevisedDate: string;
+	orderTimeplanFieldDescription: string;
+	orderTimeplanFieldDescriptionPlaceholder: string;
+	orderTimeplanBtnCancel: string;
+	orderTimeplanBtnSave: string;
+	orderTimeplanBtnNextTimeplan: string;
+	orderTimeplanBtnBackTo: string;
+	orderTimeplanGanttViewTitle: string;
+	orderTimeplanGanttSubtitle: string;
+	orderTimeplanGanttColProject: string;
+	orderTimeplanGanttColTask: string;
+	orderTimeplanGanttColStart: string;
+	orderTimeplanGanttMonthMarch: string;
+	orderTimeplanGanttMonthApril: string;
+	orderTimeplanGanttMonthMay: string;
+	orderTimeplanGanttWeekPrefix: string;
+	orderTimeplanAddTaskModalTitle: string;
+	orderTimeplanAddTaskName: string;
+	orderTimeplanAddTaskCategory: string;
+	orderTimeplanAddTaskBtn: string;
+	orderTimeplanSaveSuccess: string;
+	orderTimeplanSaveError: string;
+	orderTimeplanValidationRequired: string;
+	orderTimeplanSubtask: string;
+	orderTimeplanMilestone: string;
+	orderTimeplanNewTaskFallback: string;
+	orderTimeplanAddTaskTooltip: string;
+	orderTimeplanKindMain: string;
+	orderTimeplanKindPartial: string;
+	orderTimeplanTypeStandard: string;
+	orderTimeplanValidationNameRequired: string;
+	orderTimeplanValidationStartDateRequired: string;
+	orderTimeplanValidationEndDateRequired: string;
+	orderTimeplanValidationTaskNameRequired: string;
+	orderTimeplanSubTabTimeline: string;
+	orderTimeplanSubTabInfo: string;
+	orderTimeplanDefaultTitle: string;
+	orderTimeplanViewPageTitle: string;
+};
+
+export type YearEndTranslation = {
+	titleYearEnd: string;
+	tabBokslut: string;
+	tabChecklist: string;
+	colSrNr: string;
+	colCategory: string;
+	colNameOrPeriod: string;
+	colFile: string;
+	labelYear: string;
+	catAnnualReport: string;
+	catTaxDeclaration: string;
+	catBalanceIncome: string;
+	catGeneralLedger: string;
+	catSupplierList: string;
+	catCustomerReceivables: string;
+	catVatTax: string;
+	catOther: string;
+	statusNotStarted: string;
+	statusInProgress: string;
+	statusCompleted: string;
+	titleAddYearEndItem: string;
+	titleEditYearEndItem: string;
+	titleYearEndDetails: string;
+	fieldFiscalYear: string;
+	fieldCategory: string;
+	fieldNameOrPeriod: string;
+	fieldNotes: string;
+	fieldDropFileOrBrowse: string;
+	emptyYearEndTitle: string;
+	emptyYearEndDesc: string;
+	toastYearEndCreated: string;
+	toastYearEndUpdated: string;
+	toastYearEndDeleted: string;
+	confirmDeleteYearEndTitle: string;
+	confirmDeleteYearEndDesc: string;
+	valYearRequired: string;
+	valNameRequired: string;
+	valCategoryRequiredYearEnd: string;
+	btnLockAccountingYear: string;
+	btnDownloadReport: string;
+	btnStartYearEnd: string;
+	btnAddYearEnd: string;
+	searchPlaceholderYearEnd: string;
+	filterAllCategoriesYearEnd: string;
+	selectedFileLabelYearEnd: string;
+	notesPlaceholderYearEnd: string;
+	actionViewDetailsYearEnd: string;
+	actionEditYearEnd: string;
+	actionDownloadYearEnd: string;
+	actionDeleteYearEnd: string;
+	rowsPerPageLabelYearEnd: string;
+	pageLabelYearEnd: string;
+	pageOfLabelYearEnd: string;
+	colActionsYearEnd: string;
+	titleCreateYearEndPage: string;
+	titleEditYearEndPage: string;
+	createYearEndDesc: string;
+	editYearEndDesc: string;
+	breadcrumbCreateYearEnd: string;
+	breadcrumbEditYearEnd: string;
+	breadcrumbDetailYearEnd: string;
+	labelFileFormat: string;
+	labelUploadFile: string;
+	fileUploadHintYearEnd: string;
+	btnBackToOverviewYearEnd: string;
+	fieldStatusYearEnd: string;
+	sectionBasicInfoYearEnd: string;
+	sectionFileAttachmentYearEnd: string;
+	sectionAdditionalInfoYearEnd: string;
+	titleCreateYearEndBokslut: string;
+	titleCreateYearEndChecklist: string;
+	fieldNameOrTask: string;
+	placeholderBokslutName: string;
+	placeholderChecklistName: string;
 };
 
 export type Translation = HeaderTranslation &
@@ -8306,7 +8473,9 @@ export type Translation = HeaderTranslation &
 	SupplierAtaTranslation &
 	ViewAtaTranslation &
 	StaffRegistrationTranslation &
-	OrderTimeplanTranslation & AdminLiveTranslation;
+	OrderTimeplanTranslation &
+	YearEndTranslation &
+	AdminLiveTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -8317,3 +8486,4 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+

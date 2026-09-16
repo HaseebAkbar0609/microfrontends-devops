@@ -16,7 +16,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { ProjectColumnPicker } from "../../../../components/ProjectColumnPicker";
 import { paymentPlanUrls } from "../../paymentPlanNav";
-import { SortableHead } from "../../view/SortableHead";
+import { SortableHead } from "../../../components/SortableHead";
 import { SupplierStatusBadge } from "../SupplierStatusBadge";
 import { approveBlockedReason, SUPPLIER_LIST_COLUMNS } from "../supplierPlan.config";
 import type { SupplierPaymentPlan } from "../types";

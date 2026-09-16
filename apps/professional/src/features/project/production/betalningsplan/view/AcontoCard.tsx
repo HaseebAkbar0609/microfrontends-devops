@@ -9,7 +9,7 @@ import type { PaymentPlanEditor } from "./usePaymentPlanEditor";
 import type { PlanViewDialogs } from "./usePlanViewDialogs";
 import { AcontoSummary } from "./AcontoSummary";
 import { AcontoTable } from "./AcontoTable";
-import { PlanCard } from "./PlanCard";
+import { ProjectSectionCard } from "../../components/ProjectSectionCard";
 import { PlanCardHeaderAction } from "./PlanCardHeaderAction";
 
 export interface AcontoCardProps {
@@ -47,7 +47,7 @@ export function AcontoCard({ editor, dialogs }: AcontoCardProps) {
 	);
 
 	return (
-		<PlanCard
+		<ProjectSectionCard
 			titleKey={localizationConstants.sectionInnehollMedel}
 			icon={<Folder className="h-5 w-5 text-slate-700" aria-hidden />}
 			action={action}
@@ -64,7 +64,7 @@ export function AcontoCard({ editor, dialogs }: AcontoCardProps) {
 				onViewInvoice={(aconto) => dialogs.open({ kind: "viewInvoice", aconto })}
 			/>
 			<AcontoSummary summary={editor.summary} />
-		</PlanCard>
+		</ProjectSectionCard>
 	);
 }
 

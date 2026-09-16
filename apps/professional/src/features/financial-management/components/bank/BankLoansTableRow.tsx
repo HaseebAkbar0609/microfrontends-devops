@@ -1,30 +1,19 @@
 "use client";
 
 import React from "react";
-import { Eye, MoreVertical, Edit2, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useTranslation } from "react-i18next";
-import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { BankLoanItem } from "../../types/bank.types";
 
 interface BankLoansTableRowProps {
 	loan: BankLoanItem;
-	onView: (loan: BankLoanItem) => void;
-	onEdit?: (loan: BankLoanItem) => void;
 	onDelete?: (id: string, title: string) => void;
 }
 
 export function BankLoansTableRow({
 	loan,
-	onView,
-	onEdit,
 	onDelete,
 }: BankLoansTableRowProps) {
 	const { t } = useTranslation();
@@ -38,13 +27,7 @@ export function BankLoansTableRow({
 
 			{/* Villkorsnamn */}
 			<td className="px-4 py-3.5 font-medium text-slate-800 whitespace-nowrap">
-				<button
-					type="button"
-					onClick={() => onView(loan)}
-					className="hover:underline text-left cursor-pointer hover:text-slate-900"
-				>
-					{loan.title || "Standard leverantörsvillkor"}
-				</button>
+				{loan.title || "Standard leverantörsvillkor"}
 			</td>
 
 			{/* Leverantör */}
@@ -57,75 +40,33 @@ export function BankLoansTableRow({
 				{loan.paymentTerms || `${loan.startDate}...`}
 			</td>
 
-			{/* Rabatt (Green font as in Figma) */}
+			{/* Rabatt */}
 			<td className="px-4 py-3.5 whitespace-nowrap text-emerald-600 font-medium">
 				{loan.discount || "2% (10 dagar).."}
 			</td>
 
-			{/* Dröjsmål (Red font as in Figma) */}
+			{/* Dröjsmål */}
 			<td className="px-4 py-3.5 whitespace-nowrap text-rose-600 font-medium">
 				{loan.overdueInterest || "8%"}
 			</td>
 
-			{/* Action: Eye + 3 Dots Menu */}
+			{/* Action: Delete */}
 			<td className="px-4 py-3.5 text-right whitespace-nowrap">
-				<div className="flex items-center justify-end gap-1">
+				{onDelete && (
 					<Button
 						type="button"
 						variant="ghost"
 						size="icon"
-						onClick={() => onView(loan)}
-						className="h-8 w-8 text-slate-500 hover:text-slate-900 cursor-pointer"
-						aria-label={t(localizationConstants.titleLoanDetails)}
+						onClick={() => onDelete(loan.id, loan.title)}
+						className="h-8 w-8 text-slate-400 hover:text-rose-600 hover:bg-rose-50 cursor-pointer"
+						aria-label={t(localizationConstants.btnDelete)}
 					>
-						<Eye className="w-4 h-4" />
+						<Trash2 className="w-4 h-4" />
 					</Button>
-
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								type="button"
-								variant="ghost"
-								size="icon"
-								className="h-8 w-8 text-slate-500 hover:text-slate-900 cursor-pointer"
-								aria-label="Actions"
-							>
-								<MoreVertical className="w-4 h-4" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="end" className="w-36">
-							<DropdownMenuItem
-								onClick={() => onView(loan)}
-								className="gap-2 cursor-pointer text-xs"
-							>
-								<Eye className="w-3.5 h-3.5" />
-								<Translate text={localizationConstants.titleLoanDetails} />
-							</DropdownMenuItem>
-							{onEdit && (
-								<DropdownMenuItem
-									onClick={() => onEdit(loan)}
-									className="gap-2 cursor-pointer text-xs"
-								>
-									<Edit2 className="w-3.5 h-3.5" />
-									<Translate text={localizationConstants.btnEdit} />
-								</DropdownMenuItem>
-							)}
-							{onDelete && (
-								<DropdownMenuItem
-									onClick={() => onDelete(loan.id, loan.title)}
-									className="gap-2 cursor-pointer text-xs text-rose-600 hover:text-rose-700"
-								>
-									<Trash2 className="w-3.5 h-3.5" />
-									<Translate text={localizationConstants.btnDelete} />
-								</DropdownMenuItem>
-							)}
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
+				)}
 			</td>
 		</tr>
 	);
 }
 
 export default BankLoansTableRow;
-

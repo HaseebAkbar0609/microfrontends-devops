@@ -20,20 +20,16 @@ export interface BankkontonTabViewProps {
 	accounts: BankAccountItem[];
 	searchQuery?: string;
 	onSearchChange?: (val: string) => void;
-	onCreateClick?: () => void;
 	onCreateAccount?: () => void;
-	onEditClick?: (account: BankAccountItem) => void;
-	onEditAccount?: (account: BankAccountItem) => void;
+	onCreateClick?: () => void;
 }
 
 export function BankkontonTabView({
 	accounts,
 	searchQuery: externalSearch,
 	onSearchChange: externalOnSearchChange,
-	onCreateClick,
 	onCreateAccount,
-	onEditClick,
-	onEditAccount,
+	onCreateClick,
 }: BankkontonTabViewProps) {
 	const { t } = useTranslation();
 	const [internalSearch, setInternalSearch] = useState("");
@@ -48,15 +44,15 @@ export function BankkontonTabView({
 	};
 
 	const handleCreate = onCreateAccount || onCreateClick || (() => {});
-	const handleEdit = onEditAccount || onEditClick || (() => {});
 
 	const filteredAccounts = accounts.filter((acc) => {
 		if (!searchQuery.trim()) return true;
 		const q = searchQuery.toLowerCase();
 		return (
-			acc.bankName.toLowerCase().includes(q) ||
-			acc.accountNumber.toLowerCase().includes(q) ||
-			acc.iban.toLowerCase().includes(q)
+			(acc.bankName && acc.bankName.toLowerCase().includes(q)) ||
+			(acc.accountNumber && acc.accountNumber.toLowerCase().includes(q)) ||
+			(acc.iban && acc.iban.toLowerCase().includes(q)) ||
+			(acc.title && acc.title.toLowerCase().includes(q))
 		);
 	});
 
@@ -131,7 +127,6 @@ export function BankkontonTabView({
 						<BankAccountCard
 							key={account.id}
 							account={account}
-							onEdit={handleEdit}
 						/>
 					))}
 				</div>
@@ -139,3 +134,5 @@ export function BankkontonTabView({
 		</div>
 	);
 }
+
+export default BankkontonTabView;

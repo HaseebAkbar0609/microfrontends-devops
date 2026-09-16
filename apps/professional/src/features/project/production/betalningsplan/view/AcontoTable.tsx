@@ -11,7 +11,7 @@ import { acontoEconomyKey } from "../paymentPlan.config";
 import { toReceive } from "../paymentPlanMath";
 import type { PaymentAconto } from "../types";
 import { AcontoRow } from "./AcontoRow";
-import { SortableHead } from "./SortableHead";
+import { SortableHead } from "../../components/SortableHead";
 
 type AcontoSortKey = "date" | "activity" | "lift" | "amount" | "retained" | "toReceive" | "status" | "economy";
 

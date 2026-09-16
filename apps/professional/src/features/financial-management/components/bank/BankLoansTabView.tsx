@@ -36,9 +36,6 @@ export interface BankLoansTabViewProps {
 	onSort: (field: BankSortField) => void;
 	onPageChange: (page: number) => void;
 	onPageSizeChange: (size: number) => void;
-	onView?: (loan: BankLoanItem) => void;
-	onViewLoan?: (id: string) => void;
-	onEditLoan?: (loan: BankLoanItem) => void;
 	onDeleteLoan?: (id: string, title: string) => void;
 	onCreateClick: () => void;
 }
@@ -58,21 +55,10 @@ export function BankLoansTabView({
 	onSort,
 	onPageChange,
 	onPageSizeChange,
-	onView,
-	onViewLoan,
-	onEditLoan,
 	onDeleteLoan,
 	onCreateClick,
 }: BankLoansTabViewProps) {
 	const { t } = useTranslation();
-
-	const handleView = (loan: BankLoanItem) => {
-		if (onViewLoan) {
-			onViewLoan(loan.id);
-		} else if (onView) {
-			onView(loan);
-		}
-	};
 
 	return (
 		<div className="space-y-4">
@@ -150,8 +136,6 @@ export function BankLoansTabView({
 				sortBy={sortBy}
 				sortOrder={sortOrder}
 				onSort={onSort}
-				onView={handleView}
-				onEdit={onEditLoan}
 				onDelete={onDeleteLoan}
 				onCreateClick={onCreateClick}
 			/>
@@ -168,3 +152,5 @@ export function BankLoansTabView({
 		</div>
 	);
 }
+
+export default BankLoansTabView;

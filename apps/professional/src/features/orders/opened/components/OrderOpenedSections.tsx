@@ -86,6 +86,7 @@ export function OrderOpenedSections({
 	const [isGuaranteeDetailOpen, setIsGuaranteeDetailOpen] = useState(false);
 	const [isProtocolDetailOpen, setIsProtocolDetailOpen] = useState(false);
 	const [isAtaDetailOpen, setIsAtaDetailOpen] = useState(false);
+	const [isTimeplanDetailOpen, setIsTimeplanDetailOpen] = useState(false);
 
 	useEffect(() => {
 		if (activeTab !== "guarantee") {
@@ -96,6 +97,9 @@ export function OrderOpenedSections({
 		}
 		if (activeTab !== "ata") {
 			setIsAtaDetailOpen(false);
+		}
+		if (activeTab !== "tidsplan") {
+			setIsTimeplanDetailOpen(false);
 		}
 	}, [activeTab, routeOrderId]);
 
@@ -129,7 +133,8 @@ export function OrderOpenedSections({
 	const showSubtitle =
 		!(activeTab === "guarantee" && isGuaranteeDetailOpen) &&
 		!(activeTab === "protocol" && isProtocolDetailOpen) &&
-		!(activeTab === "ata" && isAtaDetailOpen);
+		!(activeTab === "ata" && isAtaDetailOpen) &&
+		!(activeTab === "tidsplan" && isTimeplanDetailOpen);
 
 	const orderLabel = serialNo
 		? `${t(localizationConstants.order)} ${serialNo}`
@@ -315,6 +320,7 @@ export function OrderOpenedSections({
 				<TabsContent value="tidsplan" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderTimeplanOverviewPage
 						orderId={routeOrderId}
+						onDetailModeChange={setIsTimeplanDetailOpen}
 					/>
 				</TabsContent>
 			</Tabs>

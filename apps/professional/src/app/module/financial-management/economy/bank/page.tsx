@@ -14,7 +14,7 @@ function BankPageContent() {
 
 export default function EconomyBankPage() {
 	return (
-		<Suspense fallback={<div className="p-6">Laddar...</div>}>
+		<Suspense fallback={<div className="p-6 flex items-center justify-center min-h-[200px]" />}>
 			<BankPageContent />
 		</Suspense>
 	);
