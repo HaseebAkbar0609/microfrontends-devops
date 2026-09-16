@@ -13,6 +13,7 @@ export interface AgreementDetailDocument {
 	namn: string;
 	fil: string;
 	type: "pdf" | "doc";
+	url?: string;
 }
 
 export interface AgreementDetail {
@@ -25,6 +26,7 @@ export interface AgreementDetail {
 	slutdatum: string;
 	aktionDatum: string;
 	paminnelseDatum: string;
+	paminnelseText?: string;
 	avtalsPrioritet: string;
 	meddelande: string;
 	status?: string;

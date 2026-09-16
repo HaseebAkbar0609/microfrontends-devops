@@ -3464,6 +3464,39 @@ export type OfferTranslation = {
 	designTidsplanDatumLabel: string;
 	designTidsplanOrderNr: string;
 	designTidsplanEmpty: string;
+	// Design Module — Ekonomi
+	designEkonomiTab: string;
+	designEkonomiKalkylTab: string;
+	designEkonomiBudgetTab: string;
+	designEkonomiLaggTillNy: string;
+	designEkonomiBenamning: string;
+	designEkonomiBelopp: string;
+	designEkonomiPdf: string;
+	designEkonomiVisaBudget: string;
+	designEkonomiSkapaBudget: string;
+	designEkonomiProjektInfoTab: string;
+	designEkonomiBuildBudgetTab: string;
+	designEkonomiBestellare: string;
+	designEkonomiBestellareName: string;
+	designEkonomiMall: string;
+	designEkonomiAnvandMall: string;
+	designEkonomiLaddaUpp: string;
+	designEkonomiSkapaNy: string;
+	designEkonomiValjMall: string;
+	designEkonomiForhandsgranskar: string;
+	designEkonomiSkicka: string;
+	designEkonomiEmpty: string;
+	designEkonomiOppna: string;
+	designEkonomiArkivera: string;
+	designEkonomiKonsulter: string;
+	designEkonomiMarkKostnader: string;
+	designEkonomiHusKostnader: string;
+	designEkonomiSumma: string;
+	designEkonomiByggMall: string;
+	designEkonomiAntal: string;
+	designEkonomiEnhet: string;
+	designEkonomiAPris: string;
+	designEkonomiDelsumma: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
@@ -8514,6 +8547,50 @@ export type YearEndTranslation = {
 	placeholderChecklistName: string;
 };
 
+export type OrderHandlingarTranslation = {
+	orderHandlingarTab: string;
+	orderHandlingarTitle: string;
+	orderHandlingarSubtabHandlingar: string;
+	orderHandlingarSubtabRitningar: string;
+	orderHandlingarSubtabArkivera: string;
+	orderHandlingarColDate: string;
+	orderHandlingarColName: string;
+	orderHandlingarColDocument: string;
+	orderHandlingarColDrawingNumber: string;
+	orderHandlingarColCategory: string;
+	orderHandlingarColCreatedBy: string;
+	orderHandlingarBtnUpload: string;
+	orderHandlingarUploadModalTitle: string;
+	orderHandlingarFieldName: string;
+	orderHandlingarFieldDocument: string;
+	orderHandlingarFieldPlaceholderName: string;
+	orderHandlingarUploadFileBtn: string;
+	orderHandlingarFileHint: string;
+	orderHandlingarBtnCancel: string;
+	orderHandlingarBtnSave: string;
+	orderHandlingarActionDelete: string;
+	orderHandlingarActionArchive: string;
+	orderHandlingarActionRestore: string;
+	orderHandlingarSearchPlaceholder: string;
+	orderHandlingarFilterDropdown: string;
+	orderHandlingarFilterAll: string;
+	orderHandlingarEmptyStateTitle: string;
+	orderHandlingarEmptyStateDesc: string;
+	orderHandlingarToastCreated: string;
+	orderHandlingarToastDeleted: string;
+	orderHandlingarToastArchived: string;
+	orderHandlingarToastRestored: string;
+	orderHandlingarDeleteModalTitle: string;
+	orderHandlingarDeleteModalDesc: string;
+	orderHandlingarValNameRequired: string;
+	orderHandlingarValFileRequired: string;
+	orderHandlingarValInvalidFileType: string;
+	orderHandlingarValFileSizeExceeded: string;
+	orderHandlingarValFileEmpty: string;
+	orderHandlingarToastUploadError: string;
+	orderHandlingarStatusUploaded: string;
+};
+
 export type ClaimsTranslation = {
 	claimsTitle: string;
 	claimsListTab: string;
@@ -8747,6 +8824,7 @@ export type Translation = HeaderTranslation &
 	OrderQaTranslation &
 	YearEndTranslation &
 	AdminLiveTranslation &
+	OrderHandlingarTranslation &
 	ClaimsTranslation;
 
 export type TranslationKeys = keyof Translation;
