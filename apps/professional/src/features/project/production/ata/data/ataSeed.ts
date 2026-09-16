@@ -1,6 +1,6 @@
 import { mockDate } from "../../../constants/mockData";
 import { ataTotal } from "../ataMath";
-import type { AtaLineItem, AtaLineItems, AtaProjectInfo, ProjectAta } from "../types";
+import type { AtaLineItem, AtaLineItems, AtaProjectInfo, AtaSection, ProjectAta } from "../types";
 
 /**
  * Helpers for the ÄTA seeds. Only the mock files import these.
@@ -40,13 +40,15 @@ export function balancedLineItems(
 	target: number,
 	rows: Partial<AtaLineItems>,
 	balance: { supplier: string; invoiceNo: string },
+	/** Where the balancing row goes — ÄTA leverantör unless a seed says otherwise. */
+	section: AtaSection = "supplierAta",
 ): AtaLineItems {
 	const items = { ...emptyLineItems(), ...rows };
 	const remainder = target - ataTotal(items);
 	if (remainder <= 0) throw new Error(`ÄTA seed ${key} overshoots its total of ${target}`);
 
-	items.supplierAta = [
-		...items.supplierAta,
+	items[section] = [
+		...items[section],
 		seedRow(`${key}-balance`, {
 			party: balance.supplier,
 			invoiceNo: balance.invoiceNo,
@@ -59,7 +61,7 @@ export function balancedLineItems(
 	return items;
 }
 
-const SEED_INFO: AtaProjectInfo = {
+export const SEED_INFO: AtaProjectInfo = {
 	heading: "Extra jobb i badrum",
 	subheading: "",
 	proposedAction: "",
@@ -73,7 +75,7 @@ const SEED_INFO: AtaProjectInfo = {
 
 /** The fields every seeded ÄTA shares, with the frame's Beställare. */
 export function seedAta(
-	spec: Pick<ProjectAta, "id" | "projectId" | "number" | "status" | "attested" | "linkedSupplierAta" | "lineItems"> &
+	spec: Pick<ProjectAta, "id" | "projectId" | "number" | "status" | "attested" | "lineItems"> &
 		Partial<ProjectAta>,
 ): ProjectAta {
 	return {

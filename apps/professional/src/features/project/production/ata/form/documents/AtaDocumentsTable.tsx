@@ -10,8 +10,7 @@ import localizationConstants, { type TranslationKeys } from "@/utils/translation
 import { Translate } from "@/utils/translation/translate";
 import { SortableHead } from "../../../components/SortableHead";
 import type { AtaDocumentInput } from "../../types";
-import type { AtaFormValues } from "../ataFormSchema";
-import { AtaDocumentRow } from "./AtaDocumentRow";
+import { AtaDocumentRow, type AtaDocumentActions, type AtaDocumentsFormValues } from "./AtaDocumentRow";
 
 type SortKey = "date" | "documentName" | "fileName";
 
@@ -21,18 +20,21 @@ const COLUMNS: { key: SortKey; labelKey: TranslationKeys }[] = [
 	{ key: "fileName", labelKey: localizationConstants.createAtaColFile },
 ];
 
-export interface AtaDocumentsTableProps {
-	control: Control<AtaFormValues>;
+export interface AtaDocumentsTableProps<T extends AtaDocumentsFormValues> {
+	control: Control<T>;
 	documents: AtaDocumentInput[];
 	urls: ReadonlyMap<string, string>;
 	lockReason: TranslationKeys | null;
 	translateError: (message: string) => string;
-	onFocusName: (index: number) => void;
-	onDelete: (document: AtaDocumentInput) => void;
+	actions: AtaDocumentActions;
 }
 
-/** "Bifogade fakturor / dokument": the attached files, sortable, each keeping its place in the form. */
-export function AtaDocumentsTable({ control, documents, urls, lockReason, translateError, onFocusName, onDelete }: AtaDocumentsTableProps) {
+/**
+ * "Bifogade fakturor / dokument": the attached files, sortable, each keeping its
+ * place in the form. The last column is ⋮ on the project's own ÄTA and "Visa" on
+ * a supplier's (see `AtaDocumentActions`).
+ */
+export function AtaDocumentsTable<T extends AtaDocumentsFormValues>({ control, documents, urls, lockReason, translateError, actions }: AtaDocumentsTableProps<T>) {
 	const { sortField, sortDir, toggleSort } = useTableSort<SortKey>();
 	const rows = useMemo(
 		() =>
@@ -63,7 +65,7 @@ export function AtaDocumentsTable({ control, documents, urls, lockReason, transl
 									dir={sortDir}
 								/>
 							))}
-							<TableHead className="w-12" />
+							<TableHead className={actions.mode === "manage" ? "w-12" : "w-24"} />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -75,7 +77,7 @@ export function AtaDocumentsTable({ control, documents, urls, lockReason, transl
 							</TableRow>
 						) : (
 							rows.map(({ document, index }) => (
-								<AtaDocumentRow
+								<AtaDocumentRow<T>
 									key={document.id}
 									control={control}
 									document={document}
@@ -83,8 +85,7 @@ export function AtaDocumentsTable({ control, documents, urls, lockReason, transl
 									url={urls.get(document.id)}
 									lockReason={lockReason}
 									translateError={translateError}
-									onFocusName={onFocusName}
-									onDelete={onDelete}
+									actions={actions}
 								/>
 							))
 						)}

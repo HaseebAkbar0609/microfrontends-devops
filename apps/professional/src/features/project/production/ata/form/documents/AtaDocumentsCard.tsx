@@ -76,8 +76,11 @@ export function AtaDocumentsCard({ form, documents, stored, invoiceOptions, time
 					urls={urls}
 					lockReason={lockReason}
 					translateError={translateError}
-					onFocusName={(index) => form.setFocus(`documents.${index}.documentName`)}
-					onDelete={(document) => defer(() => setDeleting(document))}
+					actions={{
+						mode: "manage",
+						onFocusName: (index) => form.setFocus(`documents.${index}.documentName`),
+						onDelete: (document) => defer(() => setDeleting(document)),
+					}}
 				/>
 			</div>
 

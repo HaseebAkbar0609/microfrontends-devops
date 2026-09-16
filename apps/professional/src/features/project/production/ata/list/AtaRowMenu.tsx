@@ -63,18 +63,16 @@ export function AtaMenuAction({ icon: Icon, labelKey, reasonKey, destructive = f
 	);
 }
 
-export interface AtaRowMenuProps {
+export interface AtaActionMenuProps {
+	/** Names the ⋮ for a screen reader, including which row it is for. */
 	ariaLabel: string;
-	editReason: TranslationKeys | null;
-	deleteReason: TranslationKeys | null;
-	sendReason: TranslationKeys | null;
-	onEdit: () => void;
-	onDelete: () => void;
-	onSend: () => void;
+	children: React.ReactNode;
+	/** Radix returns focus to ⋮ on close; a caller that moves focus elsewhere prevents it here. */
+	onCloseAutoFocus?: (event: Event) => void;
 }
 
-/** A row's ⋮, as the frame draws it: Redigera, Radera, Skicka (the frame's "Send"). */
-export function AtaRowMenu({ ariaLabel, editReason, deleteReason, sendReason, onEdit, onDelete, onSend }: AtaRowMenuProps) {
+/** The ⋮ trigger and its menu, shared by the ÄTA tables' row menus. */
+export function AtaActionMenu({ ariaLabel, children, onCloseAutoFocus }: AtaActionMenuProps) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -88,12 +86,35 @@ export function AtaRowMenu({ ariaLabel, editReason, deleteReason, sendReason, on
 					<MoreVertical className="h-4 w-4" aria-hidden />
 				</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end" className="w-60 border border-slate-200 bg-white p-1 shadow-md">
-				<AtaMenuAction icon={PencilLine} labelKey={localizationConstants.ataActionEdit} reasonKey={editReason} onSelect={onEdit} />
-				<AtaMenuAction icon={Trash2} labelKey={localizationConstants.ataActionDelete} reasonKey={deleteReason} destructive onSelect={onDelete} />
-				<AtaMenuAction icon={Send} labelKey={localizationConstants.ataActionSend} reasonKey={sendReason} onSelect={onSend} />
+			<DropdownMenuContent
+				align="end"
+				className="w-60 border border-slate-200 bg-white p-1 shadow-md"
+				onCloseAutoFocus={onCloseAutoFocus}
+			>
+				{children}
 			</DropdownMenuContent>
 		</DropdownMenu>
+	);
+}
+
+export interface AtaRowMenuProps {
+	ariaLabel: string;
+	editReason: TranslationKeys | null;
+	deleteReason: TranslationKeys | null;
+	sendReason: TranslationKeys | null;
+	onEdit: () => void;
+	onDelete: () => void;
+	onSend: () => void;
+}
+
+/** A row's ⋮, as the frame draws it: Redigera, Radera, Skicka (the frame's "Send"). */
+export function AtaRowMenu({ ariaLabel, editReason, deleteReason, sendReason, onEdit, onDelete, onSend }: AtaRowMenuProps) {
+	return (
+		<AtaActionMenu ariaLabel={ariaLabel}>
+			<AtaMenuAction icon={PencilLine} labelKey={localizationConstants.ataActionEdit} reasonKey={editReason} onSelect={onEdit} />
+			<AtaMenuAction icon={Trash2} labelKey={localizationConstants.ataActionDelete} reasonKey={deleteReason} destructive onSelect={onDelete} />
+			<AtaMenuAction icon={Send} labelKey={localizationConstants.ataActionSend} reasonKey={sendReason} onSelect={onSend} />
+		</AtaActionMenu>
 	);
 }
 

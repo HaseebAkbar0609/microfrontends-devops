@@ -8,7 +8,8 @@ import { showToast } from "@/lib/toast";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { PROJECT_LIST_ROWS } from "../../../data/projectsOverview.mock";
 import { ataTotal } from "../ataMath";
-import { linkedLabel, matchesAta, sortAtaRows, type AtaLabels, type AtaListRow } from "../ataView";
+import { linkedLabels, matchesAta, sortAtaRows, type AtaLabels, type AtaListRow } from "../ataView";
+import * as supplierStore from "../leverantor/services/supplierAtaService";
 import {
 	ATA_ATTESTED_LABELS,
 	ATA_STATUSES,
@@ -37,6 +38,8 @@ export function useProjectAtaList(projectId: string) {
 	const project = PROJECT_LIST_ROWS.find((row) => row.id === projectId);
 
 	const [atas, setAtas] = useState(() => store.listAtas(projectId));
+	/* "Kopplad Lev-äta" is stored on the supplier ÄTAs; read it from there. */
+	const [links, setLinks] = useState(() => supplierStore.listCustomerLinks(projectId));
 	const [search, setSearch] = useState("");
 	const [filter, setFilter] = useState<AtaStatus | null>(null);
 	const { sortField, sortDir, toggleSort } = useTableSort<AtaListSortField>();
@@ -55,10 +58,12 @@ export function useProjectAtaList(projectId: string) {
 		[labels],
 	);
 
-	const allRows = useMemo<AtaListRow[]>(
-		() => atas.map((ata) => ({ ata, amount: ataTotal(ata.lineItems), linked: linkedLabel(ata) })),
-		[atas],
-	);
+	const allRows = useMemo<AtaListRow[]>(() => {
+		const labels = linkedLabels(links, (label, count) =>
+			t(localizationConstants.projectAtaSupplierLinkedMore).replace("{label}", label).replace("{count}", String(count)),
+		);
+		return atas.map((ata) => ({ ata, amount: ataTotal(ata.lineItems), linked: labels.get(ata.id) ?? "" }));
+	}, [atas, links, t]);
 
 	const rows = useMemo(
 		() =>
@@ -86,7 +91,10 @@ export function useProjectAtaList(projectId: string) {
 	/* The toolbar hands back its option value; only statuses are offered. */
 	const changeFilter = useCallback((value: string | null) => setFilter(value as AtaStatus | null), []);
 
-	const refresh = useCallback(() => setAtas(store.listAtas(projectId)), [projectId]);
+	const refresh = useCallback(() => {
+		setAtas(store.listAtas(projectId));
+		setLinks(supplierStore.listCustomerLinks(projectId));
+	}, [projectId]);
 
 	const send = useCallback(
 		(ata: ProjectAta) => {
@@ -100,6 +108,8 @@ export function useProjectAtaList(projectId: string) {
 	const remove = useCallback(
 		(ata: ProjectAta) => {
 			const removed = store.removeAta(projectId, ata.id);
+			/* Supplier ÄTAs linked to it would otherwise point at nothing. */
+			if (removed) supplierStore.unlinkCustomerAta(projectId, ata.id);
 			refresh();
 			showToast(removed ? "success" : "error", t(removed ? localizationConstants.ataDeleteSuccess : localizationConstants.projectAtaLocked));
 		},
