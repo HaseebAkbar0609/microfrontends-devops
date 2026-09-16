@@ -41,6 +41,7 @@ import {
 	OrderTimeplanTranslation,
 	OrderQaTranslation,
 	YearEndTranslation,
+	OrderHandlingarTranslation,
 	ClaimsTranslation,
 } from "./constants";
 
@@ -8592,7 +8593,51 @@ export const svYearEnd: YearEndTranslation = {
 	placeholderChecklistName: "t.ex. Checklista 01 - Årsbokslut",
 };
 
-const svClaims: ClaimsTranslation = {
+export const svOrderHandlingar: OrderHandlingarTranslation = {
+	orderHandlingarTab: "Handlingar",
+	orderHandlingarTitle: "Handlingar",
+	orderHandlingarSubtabHandlingar: "Handlingar",
+	orderHandlingarSubtabRitningar: "Ritningar",
+	orderHandlingarSubtabArkivera: "Arkivera",
+	orderHandlingarColDate: "Datum",
+	orderHandlingarColName: "Benämning",
+	orderHandlingarColDocument: "Handlingar",
+	orderHandlingarColDrawingNumber: "Ritnings nummer",
+	orderHandlingarColCategory: "Kategori",
+	orderHandlingarColCreatedBy: "Skapad av",
+	orderHandlingarBtnUpload: "Ladda upp handling",
+	orderHandlingarUploadModalTitle: "Ladda upp handling",
+	orderHandlingarFieldName: "Benämning",
+	orderHandlingarFieldDocument: "Handlingar",
+	orderHandlingarFieldPlaceholderName: "Input field",
+	orderHandlingarUploadFileBtn: "Ladda upp",
+	orderHandlingarFileHint: "PNG-, JPG- och PDF-filer är tillåtna.",
+	orderHandlingarBtnCancel: "Avbryt",
+	orderHandlingarBtnSave: "Spara",
+	orderHandlingarActionDelete: "Radera",
+	orderHandlingarActionArchive: "Arkivera",
+	orderHandlingarActionRestore: "Återställ",
+	orderHandlingarSearchPlaceholder: "Sök",
+	orderHandlingarFilterDropdown: "Filter",
+	orderHandlingarFilterAll: "Alla",
+	orderHandlingarEmptyStateTitle: "Inga handlingar hittades",
+	orderHandlingarEmptyStateDesc: "Klicka på \"+ Ladda upp handling\" för att ladda upp ditt första dokument.",
+	orderHandlingarToastCreated: "Handlingen har laddats upp!",
+	orderHandlingarToastDeleted: "Handlingen har raderats.",
+	orderHandlingarToastArchived: "Handlingen har arkiverats.",
+	orderHandlingarToastRestored: "Handlingen har återställts.",
+	orderHandlingarDeleteModalTitle: "Radera handling?",
+	orderHandlingarDeleteModalDesc: "Är du säker på att du vill radera denna handling? Åtgärden kan inte ångras.",
+	orderHandlingarValNameRequired: "Benämning är obligatoriskt",
+	orderHandlingarValFileRequired: "Vänligen välj en fil att ladda upp",
+	orderHandlingarValInvalidFileType: "Ogiltig filtyp. Endast PNG, JPG och PDF är tillåtna.",
+	orderHandlingarValFileSizeExceeded: "Filstorleken får inte överstiga 50 MB.",
+	orderHandlingarValFileEmpty: "Filen är tom och kan inte laddas upp.",
+	orderHandlingarToastUploadError: "Ett fel uppstod vid uppladdning av filen.",
+	orderHandlingarStatusUploaded: "Uppladdad",
+};
+
+export const svClaims: ClaimsTranslation = {
 	claimsTitle: "Reklamationer",
 	claimsListTab: "Reklamationerlista",
 	claimsTemplatesTab: "Mallar",
@@ -8730,6 +8775,7 @@ export const sv: Translation = {
 	...svYearEnd,
 	...svClaims,
 	...svAdminLive,
+	...svOrderHandlingar,
 };
 
 

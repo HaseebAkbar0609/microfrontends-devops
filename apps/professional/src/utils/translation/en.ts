@@ -41,6 +41,7 @@ import {
 	OrderTimeplanTranslation,
 	OrderQaTranslation,
 	YearEndTranslation,
+	OrderHandlingarTranslation,
 	ClaimsTranslation,
 } from "./constants";
 
@@ -8571,7 +8572,51 @@ export const enYearEnd: YearEndTranslation = {
 	placeholderChecklistName: "e.g. Checklist 01 - Annual Closing",
 };
 
-const enClaims: ClaimsTranslation = {
+export const enOrderHandlingar: OrderHandlingarTranslation = {
+	orderHandlingarTab: "Documents",
+	orderHandlingarTitle: "Documents",
+	orderHandlingarSubtabHandlingar: "Documents",
+	orderHandlingarSubtabRitningar: "Drawings",
+	orderHandlingarSubtabArkivera: "Archive",
+	orderHandlingarColDate: "Date",
+	orderHandlingarColName: "Description",
+	orderHandlingarColDocument: "Documents",
+	orderHandlingarColDrawingNumber: "Drawing Number",
+	orderHandlingarColCategory: "Category",
+	orderHandlingarColCreatedBy: "Created By",
+	orderHandlingarBtnUpload: "Upload Document",
+	orderHandlingarUploadModalTitle: "Upload Document",
+	orderHandlingarFieldName: "Description",
+	orderHandlingarFieldDocument: "Documents",
+	orderHandlingarFieldPlaceholderName: "Input field",
+	orderHandlingarUploadFileBtn: "Upload",
+	orderHandlingarFileHint: "PNG, JPG and PDF files are allowed.",
+	orderHandlingarBtnCancel: "Cancel",
+	orderHandlingarBtnSave: "Save",
+	orderHandlingarActionDelete: "Delete",
+	orderHandlingarActionArchive: "Archive",
+	orderHandlingarActionRestore: "Restore",
+	orderHandlingarSearchPlaceholder: "Search",
+	orderHandlingarFilterDropdown: "Filter",
+	orderHandlingarFilterAll: "All",
+	orderHandlingarEmptyStateTitle: "No documents found",
+	orderHandlingarEmptyStateDesc: "Click \"+ Upload Document\" to upload your first document.",
+	orderHandlingarToastCreated: "Document uploaded successfully!",
+	orderHandlingarToastDeleted: "Document deleted.",
+	orderHandlingarToastArchived: "Document archived.",
+	orderHandlingarToastRestored: "Document restored.",
+	orderHandlingarDeleteModalTitle: "Delete document?",
+	orderHandlingarDeleteModalDesc: "Are you sure you want to delete this document? This action cannot be undone.",
+	orderHandlingarValNameRequired: "Description is required",
+	orderHandlingarValFileRequired: "Please select a file to upload",
+	orderHandlingarValInvalidFileType: "Invalid file type. Only PNG, JPG, and PDF are allowed.",
+	orderHandlingarValFileSizeExceeded: "File size must not exceed 50 MB.",
+	orderHandlingarValFileEmpty: "The file is empty and cannot be uploaded.",
+	orderHandlingarToastUploadError: "An error occurred while uploading the file.",
+	orderHandlingarStatusUploaded: "Uploaded",
+};
+
+export const enClaims: ClaimsTranslation = {
 	claimsTitle: "Claims",
 	claimsListTab: "Claims list",
 	claimsTemplatesTab: "Templates",
@@ -8709,6 +8754,7 @@ export const en: Translation = {
 	...enYearEnd,
 	...enClaims,
 	...enAdminLive,
+	...enOrderHandlingar,
 };
 
 
