@@ -7883,6 +7883,14 @@ export type EconomyBankTranslation = {
 	filterPdf: string;
 	filterImage: string;
 	filterOffice: string;
+	badgeBankIdVerified: string;
+	sectionAccountInfo: string;
+	sectionLoanTerms: string;
+	sectionFinancials: string;
+	valStartDateRequired: string;
+	valEndDateRequired: string;
+	valIbanRequired: string;
+	valSwiftRequired: string;
 };
 
 export type AtaTranslation = {
@@ -8271,6 +8279,18 @@ export type AuthoritiesTranslation = {
 	validationDocumentNameRequired: string;
 	fieldAuthorityDropFiles: string;
 	fieldAuthorityBrowse: string;
+	catGovtDocs: string;
+	catFinancial: string;
+	catTaxAuthority: string;
+	catLegal: string;
+	catInsurance: string;
+	filterAllCategoriesAuthority: string;
+	btnAddAuthority: string;
+	searchPlaceholderAuthority: string;
+	sectionBasicInfoAuthority: string;
+	sectionFileAttachmentAuthority: string;
+	sectionStatusNotesAuthority: string;
+	notesPlaceholderAuthority: string;
 };
 
 export type OrderTimeplanTranslation = {
@@ -8344,6 +8364,82 @@ export type OrderQaTranslation = {
 	orderQaTitle: string;
 };
 
+export type YearEndTranslation = {
+	titleYearEnd: string;
+	tabBokslut: string;
+	tabChecklist: string;
+	colSrNr: string;
+	colCategory: string;
+	colNameOrPeriod: string;
+	colFile: string;
+	labelYear: string;
+	catAnnualReport: string;
+	catTaxDeclaration: string;
+	catBalanceIncome: string;
+	catGeneralLedger: string;
+	catSupplierList: string;
+	catCustomerReceivables: string;
+	catVatTax: string;
+	catOther: string;
+	statusNotStarted: string;
+	statusInProgress: string;
+	statusCompleted: string;
+	titleAddYearEndItem: string;
+	titleEditYearEndItem: string;
+	titleYearEndDetails: string;
+	fieldFiscalYear: string;
+	fieldCategory: string;
+	fieldNameOrPeriod: string;
+	fieldNotes: string;
+	fieldDropFileOrBrowse: string;
+	emptyYearEndTitle: string;
+	emptyYearEndDesc: string;
+	toastYearEndCreated: string;
+	toastYearEndUpdated: string;
+	toastYearEndDeleted: string;
+	confirmDeleteYearEndTitle: string;
+	confirmDeleteYearEndDesc: string;
+	valYearRequired: string;
+	valNameRequired: string;
+	valCategoryRequiredYearEnd: string;
+	btnLockAccountingYear: string;
+	btnDownloadReport: string;
+	btnStartYearEnd: string;
+	btnAddYearEnd: string;
+	searchPlaceholderYearEnd: string;
+	filterAllCategoriesYearEnd: string;
+	selectedFileLabelYearEnd: string;
+	notesPlaceholderYearEnd: string;
+	actionViewDetailsYearEnd: string;
+	actionEditYearEnd: string;
+	actionDownloadYearEnd: string;
+	actionDeleteYearEnd: string;
+	rowsPerPageLabelYearEnd: string;
+	pageLabelYearEnd: string;
+	pageOfLabelYearEnd: string;
+	colActionsYearEnd: string;
+	titleCreateYearEndPage: string;
+	titleEditYearEndPage: string;
+	createYearEndDesc: string;
+	editYearEndDesc: string;
+	breadcrumbCreateYearEnd: string;
+	breadcrumbEditYearEnd: string;
+	breadcrumbDetailYearEnd: string;
+	labelFileFormat: string;
+	labelUploadFile: string;
+	fileUploadHintYearEnd: string;
+	btnBackToOverviewYearEnd: string;
+	fieldStatusYearEnd: string;
+	sectionBasicInfoYearEnd: string;
+	sectionFileAttachmentYearEnd: string;
+	sectionAdditionalInfoYearEnd: string;
+	titleCreateYearEndBokslut: string;
+	titleCreateYearEndChecklist: string;
+	fieldNameOrTask: string;
+	placeholderBokslutName: string;
+	placeholderChecklistName: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8382,7 +8478,8 @@ export type Translation = HeaderTranslation &
 	ViewAtaTranslation &
 	StaffRegistrationTranslation &
 	OrderTimeplanTranslation &
-	OrderQaTranslation;
+	OrderQaTranslation &
+	YearEndTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -8393,3 +8490,4 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+

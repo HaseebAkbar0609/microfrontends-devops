@@ -11,102 +11,25 @@ export type AuthorityStatus =
 	| "approved"
 	| "action_required";
 
-export interface AuthorityPartyContact {
-	companyName: string;
-	contactPerson: string;
-	address: string;
-	postalCodeCity: string;
-	email: string;
-	phone: string;
-}
-
-export interface AuthorityProjectInfo {
-	projectNumber: string;
-	projectName: string;
-}
-
-export interface AuthorityLineItem {
-	id: string;
-	articleNumber: string;
-	description: string;
-	quantity: number;
-	unit: string;
-	price: number;
-	subtotal: number;
-	handling?: string;
-}
-
-export interface AuthorityFinancialSummary {
-	subtotal: number;
-	freightFee: number;
-	invoiceFee: number;
-	totalExclVat: number;
-	vatRate: number;
-	vatAmount: number;
-	note?: string;
-}
-
-export interface AuthorityCompanyDetails {
-	companyName: string;
-	address: string;
-	vatNumber: string;
-	orgNumber: string;
-	fTax: boolean;
-	bankName: string;
-	bankNumber: string;
-	iban: string;
-	bic: string;
-	swishNumber: string;
-	email: string;
-	phone: string;
-	paymentTermsNotice?: string;
-}
-
-export interface AuthorityComment {
-	id: string;
-	author: string;
-	avatarUrl?: string;
-	date: string;
-	message: string;
-}
-
-export interface AuthorityAttachment {
-	id: string;
-	name: string;
-	fileType: "PDF" | "DOC" | "DOCX" | "PNG" | "JPG" | "XLSX";
-	fileUrl?: string;
-	fileSize?: string;
-	date?: string;
-	uploadDate?: string;
-}
+export type AuthorityFileType = "PDF" | "DOC" | "DOCX" | "PNG" | "JPG" | "XLSX";
 
 export interface AuthorityItem {
 	id: string;
 	caseNr: string;
-	category: AuthorityCategory;
 	authorityName: string;
-	subject: string;
+	category: AuthorityCategory;
 	documentName: string;
+	subject: string;
 	date: string;
 	dueDate?: string;
 	status: AuthorityStatus;
-	responsiblePerson: string;
+	responsiblePerson?: string;
 	referenceNumber?: string;
-	invoiceNumber?: string;
-	paymentTerms?: string;
-	contractNumber?: string;
-	fileType?: "PDF" | "DOC" | "DOCX" | "PNG" | "JPG" | "XLSX";
+	fileType?: AuthorityFileType;
 	fileName?: string;
 	fileUrl?: string;
-	// Detailed Case View properties (Screenshots 3, 4, 5)
-	customer?: AuthorityPartyContact;
-	supplier?: AuthorityPartyContact;
-	project?: AuthorityProjectInfo;
-	lineItems?: AuthorityLineItem[];
-	totals?: AuthorityFinancialSummary;
-	companyDetails?: AuthorityCompanyDetails;
-	comments?: AuthorityComment[];
-	attachments?: AuthorityAttachment[];
+	fileSize?: string;
+	notes?: string;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -114,31 +37,29 @@ export interface AuthorityItem {
 export interface AuthorityFormData {
 	id?: string;
 	caseNr?: string;
-	category: AuthorityCategory;
 	authorityName: string;
-	subject: string;
+	category: AuthorityCategory;
 	documentName: string;
+	subject?: string;
 	date: string;
 	dueDate?: string;
 	status?: AuthorityStatus;
 	responsiblePerson?: string;
 	referenceNumber?: string;
-	invoiceNumber?: string;
-	paymentTerms?: string;
-	contractNumber?: string;
-	fileType?: "PDF" | "DOC" | "DOCX" | "PNG" | "JPG" | "XLSX";
+	fileType?: AuthorityFileType;
 	fileName?: string;
 	fileUrl?: string;
-	attachments?: AuthorityAttachment[];
+	fileSize?: string;
+	notes?: string;
 }
 
 export type AuthoritySortField =
 	| "caseNr"
+	| "authorityName"
 	| "category"
 	| "date"
 	| "documentName"
 	| "fileName"
-	| "status"
-	| "authorityName";
+	| "status";
 
 export type AuthoritySortOrder = "asc" | "desc";

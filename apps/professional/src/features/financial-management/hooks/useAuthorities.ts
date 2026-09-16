@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import type {
 	AuthorityItem,
 	AuthorityFormData,
@@ -41,6 +41,12 @@ export function useAuthorities() {
 	const refreshData = useCallback(() => {
 		setItems(authoritiesRepository.getAll());
 	}, []);
+
+	// Subscribe to repository updates for real-time reactivity
+	useEffect(() => {
+		const unsubscribe = authoritiesRepository.subscribe(refreshData);
+		return () => unsubscribe();
+	}, [refreshData]);
 
 	// Filtered items
 	const filteredItems = useMemo(() => {
@@ -193,3 +199,5 @@ export function useAuthorities() {
 		refreshData,
 	};
 }
+
+export default useAuthorities;

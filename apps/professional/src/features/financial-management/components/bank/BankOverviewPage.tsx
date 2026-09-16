@@ -3,17 +3,12 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useBank } from "../../hooks/useBank";
-import { BANK_BASE_ROUTE } from "../../constants/bank.constants";
 import { BankOverviewHeader } from "./BankOverviewHeader";
 import { BankkontonTabView } from "./BankkontonTabView";
 import { BankLoansTabView } from "./BankLoansTabView";
 import { BankDocumentsTabView } from "./BankDocumentsTabView";
-import { CreateBankAccountModal } from "./CreateBankAccountModal";
-import { CreateBankLoanModal } from "./CreateBankLoanModal";
 import { AddBankDocumentModal } from "./AddBankDocumentModal";
 import { BankDeleteDialog } from "./BankDeleteDialog";
-import { BankSelectionModal } from "./BankSelectionModal";
-import { BankIdConnectModal } from "./BankIdConnectModal";
 import { BANK_CREATE_ROUTE, BANK_LOANS_CREATE_ROUTE } from "../../constants/bank.constants";
 import type { BankTabType } from "../../types/bank.types";
 
@@ -57,32 +52,13 @@ export function BankOverviewPage({ initialTab = "bankkonton" }: BankOverviewPage
 		docSortBy,
 		docSortOrder,
 		handleDocSort,
-		// Modals
-		isCreateAccountOpen,
-		setIsCreateAccountOpen,
-		isCreateLoanOpen,
-		setIsCreateLoanOpen,
+		// Modals & Dialogs
 		isAddDocOpen,
 		setIsAddDocOpen,
-		isSelectBankOpen,
-		setIsSelectBankOpen,
-		isBankIdModalOpen,
-		setIsBankIdModalOpen,
-		selectedBankForConnect,
-		setSelectedBankForConnect,
-		editingAccount,
-		setEditingAccount,
-		editingLoan,
-		setEditingLoan,
 		itemToDelete,
 		setItemToDelete,
 		// Actions
-		createAccount,
-		updateAccount,
 		deleteAccount,
-		connectWithBankId,
-		createLoan,
-		updateLoan,
 		deleteLoan,
 		addDocument,
 		deleteDocument,
@@ -99,7 +75,6 @@ export function BankOverviewPage({ initialTab = "bankkonton" }: BankOverviewPage
 			{activeTab === "bankkonton" && (
 				<BankkontonTabView
 					accounts={accounts}
-					onEditAccount={(acc) => setEditingAccount(acc)}
 					onCreateAccount={() => router.push(BANK_CREATE_ROUTE)}
 				/>
 			)}
@@ -121,8 +96,6 @@ export function BankOverviewPage({ initialTab = "bankkonton" }: BankOverviewPage
 					onPageChange={setCurrentPage}
 					onPageSizeChange={setPageSize}
 					onCreateClick={() => router.push(BANK_LOANS_CREATE_ROUTE)}
-					onViewLoan={(id) => router.push(`${BANK_BASE_ROUTE}/loans/${id}`)}
-					onEditLoan={(loan) => setEditingLoan(loan)}
 					onDeleteLoan={(id, title) =>
 						setItemToDelete({ id, title, type: "loan" })
 					}
@@ -152,64 +125,7 @@ export function BankOverviewPage({ initialTab = "bankkonton" }: BankOverviewPage
 				/>
 			)}
 
-			{/* Bank Selection Modal */}
-			<BankSelectionModal
-				isOpen={isSelectBankOpen}
-				onClose={() => setIsSelectBankOpen(false)}
-				onSelectBankForBankId={(bankName) => {
-					setSelectedBankForConnect(bankName);
-					setIsSelectBankOpen(false);
-					setIsBankIdModalOpen(true);
-				}}
-				onSelectManual={() => {
-					setIsSelectBankOpen(false);
-					router.push(BANK_CREATE_ROUTE);
-				}}
-			/>
-
-			{/* BankID PSD2 Connect Modal */}
-			<BankIdConnectModal
-				isOpen={isBankIdModalOpen}
-				onClose={() => setIsBankIdModalOpen(false)}
-				bankName={selectedBankForConnect}
-				onSuccess={(bankName, pNum) => {
-					connectWithBankId(bankName, pNum);
-				}}
-			/>
-
-			{/* Modals & Dialogs */}
-			<CreateBankAccountModal
-				isOpen={isCreateAccountOpen || editingAccount !== null}
-				onClose={() => {
-					setIsCreateAccountOpen(false);
-					setEditingAccount(null);
-				}}
-				onSubmit={(data) => {
-					if (editingAccount) {
-						updateAccount(editingAccount.id, data);
-					} else {
-						createAccount(data);
-					}
-				}}
-				initialData={editingAccount}
-			/>
-
-			<CreateBankLoanModal
-				isOpen={isCreateLoanOpen || editingLoan !== null}
-				onClose={() => {
-					setIsCreateLoanOpen(false);
-					setEditingLoan(null);
-				}}
-				onSubmit={(data) => {
-					if (editingLoan) {
-						updateLoan(editingLoan.id, data);
-					} else {
-						createLoan(data as import("../../types/bank.types").BankLoanFormData);
-					}
-				}}
-				initialData={editingLoan}
-			/>
-
+			{/* Upload Document Modal */}
 			<AddBankDocumentModal
 				isOpen={isAddDocOpen}
 				onClose={() => setIsAddDocOpen(false)}
@@ -218,6 +134,7 @@ export function BankOverviewPage({ initialTab = "bankkonton" }: BankOverviewPage
 				accounts={accounts}
 			/>
 
+			{/* Delete Confirmation Dialog */}
 			<BankDeleteDialog
 				item={itemToDelete}
 				isOpen={itemToDelete !== null}

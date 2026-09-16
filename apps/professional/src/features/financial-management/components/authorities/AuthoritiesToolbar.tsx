@@ -13,6 +13,12 @@ import {
 import { Translate } from "@/utils/translation/translate";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
+import {
+	AUTHORITY_CATEGORY_OPTIONS,
+	getAuthorityCategoryLabel,
+	type AuthorityCategoryOption,
+} from "../../utils/authoritiesLocalization";
+import type { AuthorityCategory } from "../../types/authorities.types";
 
 interface AuthoritiesToolbarProps {
 	searchQuery: string;
@@ -31,6 +37,11 @@ export function AuthoritiesToolbar({
 }: AuthoritiesToolbarProps) {
 	const { t } = useTranslation();
 
+	const activeFilterLabel =
+		categoryFilter === "all"
+			? t(localizationConstants.filterAllCategoriesAuthority)
+			: getAuthorityCategoryLabel(categoryFilter as AuthorityCategory, t);
+
 	return (
 		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
 			<div className="flex items-center gap-2.5 flex-1 max-w-xl">
@@ -40,8 +51,8 @@ export function AuthoritiesToolbar({
 						type="text"
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
-						placeholder={t(localizationConstants.searchPlaceholder)}
-						className="pl-9 h-10 bg-white border-slate-200 text-sm placeholder:text-slate-400 rounded-lg shadow-2xs focus-visible:ring-slate-400"
+						placeholder={t(localizationConstants.searchPlaceholderAuthority)}
+						className="pl-9 h-10 bg-white border-slate-200 text-xs placeholder:text-slate-400 rounded-lg shadow-2xs focus-visible:ring-slate-400"
 					/>
 				</div>
 
@@ -50,55 +61,28 @@ export function AuthoritiesToolbar({
 						<Button
 							type="button"
 							variant="outline"
-							className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-2xs gap-1.5 cursor-pointer"
+							className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium rounded-lg shadow-2xs gap-1.5 cursor-pointer"
 						>
-							<Filter className="w-4 h-4 text-slate-500" />
-							<Translate
-								text={
-									categoryFilter === "Govt Docs"
-										? localizationConstants.categoryGovtDocs
-										: categoryFilter === "Financial"
-											? localizationConstants.categoryFinancial
-											: categoryFilter === "Tax"
-												? localizationConstants.categoryTax
-												: categoryFilter === "Legal"
-													? localizationConstants.categoryLegal
-													: localizationConstants.fieldAuthorityCategory
-								}
-							/>
+							<Filter className="w-3.5 h-3.5 text-slate-500" />
+							<span>{activeFilterLabel}</span>
 						</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align="start" className="w-44">
+					<DropdownMenuContent align="start" className="w-48">
 						<DropdownMenuItem
 							onClick={() => onCategoryFilterChange("all")}
 							className="cursor-pointer text-xs"
 						>
-							<Translate text={localizationConstants.filterAll} />
+							<Translate text={localizationConstants.filterAllCategoriesAuthority} />
 						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => onCategoryFilterChange("Govt Docs")}
-							className="cursor-pointer text-xs"
-						>
-							<Translate text={localizationConstants.categoryGovtDocs} />
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => onCategoryFilterChange("Financial")}
-							className="cursor-pointer text-xs"
-						>
-							<Translate text={localizationConstants.categoryFinancial} />
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => onCategoryFilterChange("Tax")}
-							className="cursor-pointer text-xs"
-						>
-							<Translate text={localizationConstants.categoryTax} />
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => onCategoryFilterChange("Legal")}
-							className="cursor-pointer text-xs"
-						>
-							<Translate text={localizationConstants.categoryLegal} />
-						</DropdownMenuItem>
+						{AUTHORITY_CATEGORY_OPTIONS.map((opt: AuthorityCategoryOption) => (
+							<DropdownMenuItem
+								key={opt.value}
+								onClick={() => onCategoryFilterChange(opt.value)}
+								className="cursor-pointer text-xs"
+							>
+								{getAuthorityCategoryLabel(opt.value, t)}
+							</DropdownMenuItem>
+						))}
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</div>
@@ -107,10 +91,10 @@ export function AuthoritiesToolbar({
 				<Button
 					type="button"
 					onClick={onCreateClick}
-					className="h-10 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-lg shadow-sm gap-2 cursor-pointer transition-colors"
+					className="h-10 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium text-xs rounded-lg shadow-sm gap-1.5 cursor-pointer transition-colors"
 				>
 					<Plus className="w-4 h-4" />
-					<Translate text={localizationConstants.btnCreateNew} />
+					<Translate text={localizationConstants.btnAddAuthority} />
 				</Button>
 			</div>
 		</div>

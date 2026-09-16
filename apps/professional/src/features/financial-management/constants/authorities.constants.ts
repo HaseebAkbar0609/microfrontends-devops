@@ -29,5 +29,3 @@ export const AUTHORITY_CATEGORIES_LIST = [
 	"Legal",
 	"Insurance",
 ] as const;
-
-export const AUTHORITY_DEFAULT_VAT_RATE = 0.25;

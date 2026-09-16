@@ -1,20 +1,25 @@
 "use client";
 
 import React from "react";
-import { FileText, Edit2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { FileText } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { BankAccountItem } from "../../types/bank.types";
 
 interface BankAccountCardProps {
 	account: BankAccountItem;
-	onEdit: (account: BankAccountItem) => void;
 }
 
-export function BankAccountCard({ account, onEdit }: BankAccountCardProps) {
+export function BankAccountCard({ account }: BankAccountCardProps) {
 	const formatCurrency = (val: number, curr = "SEK") => {
 		return `${val.toLocaleString("sv-SE")} ${curr}`;
+	};
+
+	const getLocalizedAccountType = (type: string) => {
+		if (type === "Företagskonto") return localizationConstants.accountTypeForetagskonto;
+		if (type === "Sparkonto") return localizationConstants.accountTypeSparkonto;
+		if (type === "Transaktionskonto") return localizationConstants.accountTypeTransaktionskonto;
+		return type;
 	};
 
 	return (
@@ -30,27 +35,14 @@ export function BankAccountCard({ account, onEdit }: BankAccountCardProps) {
 							{account.title || account.bankName}
 						</h3>
 						<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/60">
-							{account.accountType}
+							<Translate text={getLocalizedAccountType(account.accountType)} />
 						</span>
 						{account.isConnected && (
 							<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200/60">
-								BankID Verified
+								<Translate text={localizationConstants.badgeBankIdVerified} />
 							</span>
 						)}
 					</div>
-				</div>
-
-				<div className="flex items-center gap-2">
-					<Button
-						type="button"
-						variant="ghost"
-						size="sm"
-						onClick={() => onEdit(account)}
-						className="h-8 text-xs text-slate-600 hover:text-slate-900 gap-1.5 cursor-pointer"
-					>
-						<Edit2 className="w-3.5 h-3.5" />
-						<Translate text={localizationConstants.btnEdit} />
-					</Button>
 				</div>
 			</div>
 
@@ -105,7 +97,7 @@ export function BankAccountCard({ account, onEdit }: BankAccountCardProps) {
 				</div>
 
 				{/* Contact Person Sub-section */}
-				{account.contactPerson && (
+				{account.contactPerson && (account.contactPerson.name || account.contactPerson.email) && (
 					<div className="pt-4 border-t border-slate-100 space-y-3">
 						<span className="inline-block px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-700">
 							<Translate text={localizationConstants.contactPersonHeader} />
@@ -134,12 +126,16 @@ export function BankAccountCard({ account, onEdit }: BankAccountCardProps) {
 								<span className="block text-xs font-semibold text-slate-500 mb-1">
 									<Translate text={localizationConstants.fieldContactEmail} />
 								</span>
-								<a
-									href={`mailto:${account.contactPerson.email}`}
-									className="text-sm font-medium text-blue-600 hover:underline"
-								>
-									{account.contactPerson.email || "—"}
-								</a>
+								{account.contactPerson.email ? (
+									<a
+										href={`mailto:${account.contactPerson.email}`}
+										className="text-sm font-medium text-blue-600 hover:underline"
+									>
+										{account.contactPerson.email}
+									</a>
+								) : (
+									<span className="text-sm font-medium text-slate-800">—</span>
+								)}
 							</div>
 
 							<div>
@@ -157,3 +153,5 @@ export function BankAccountCard({ account, onEdit }: BankAccountCardProps) {
 		</div>
 	);
 }
+
+export default BankAccountCard;

@@ -16,8 +16,6 @@ interface BankLoansTableProps {
 	sortBy: BankSortField;
 	sortOrder: SortOrder;
 	onSort: (field: BankSortField) => void;
-	onView: (loan: BankLoanItem) => void;
-	onEdit?: (loan: BankLoanItem) => void;
 	onDelete?: (id: string, title: string) => void;
 	onCreateClick: () => void;
 }
@@ -27,8 +25,6 @@ export function BankLoansTable({
 	sortBy,
 	sortOrder,
 	onSort,
-	onView,
-	onEdit,
 	onDelete,
 	onCreateClick,
 }: BankLoansTableProps) {
@@ -161,8 +157,6 @@ export function BankLoansTable({
 								<BankLoansTableRow
 									key={loan.id}
 									loan={loan}
-									onView={onView}
-									onEdit={onEdit}
 									onDelete={onDelete}
 								/>
 							))
