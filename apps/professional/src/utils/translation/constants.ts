@@ -8514,6 +8514,50 @@ export type YearEndTranslation = {
 	placeholderChecklistName: string;
 };
 
+export type OrderHandlingarTranslation = {
+	orderHandlingarTab: string;
+	orderHandlingarTitle: string;
+	orderHandlingarSubtabHandlingar: string;
+	orderHandlingarSubtabRitningar: string;
+	orderHandlingarSubtabArkivera: string;
+	orderHandlingarColDate: string;
+	orderHandlingarColName: string;
+	orderHandlingarColDocument: string;
+	orderHandlingarColDrawingNumber: string;
+	orderHandlingarColCategory: string;
+	orderHandlingarColCreatedBy: string;
+	orderHandlingarBtnUpload: string;
+	orderHandlingarUploadModalTitle: string;
+	orderHandlingarFieldName: string;
+	orderHandlingarFieldDocument: string;
+	orderHandlingarFieldPlaceholderName: string;
+	orderHandlingarUploadFileBtn: string;
+	orderHandlingarFileHint: string;
+	orderHandlingarBtnCancel: string;
+	orderHandlingarBtnSave: string;
+	orderHandlingarActionDelete: string;
+	orderHandlingarActionArchive: string;
+	orderHandlingarActionRestore: string;
+	orderHandlingarSearchPlaceholder: string;
+	orderHandlingarFilterDropdown: string;
+	orderHandlingarFilterAll: string;
+	orderHandlingarEmptyStateTitle: string;
+	orderHandlingarEmptyStateDesc: string;
+	orderHandlingarToastCreated: string;
+	orderHandlingarToastDeleted: string;
+	orderHandlingarToastArchived: string;
+	orderHandlingarToastRestored: string;
+	orderHandlingarDeleteModalTitle: string;
+	orderHandlingarDeleteModalDesc: string;
+	orderHandlingarValNameRequired: string;
+	orderHandlingarValFileRequired: string;
+	orderHandlingarValInvalidFileType: string;
+	orderHandlingarValFileSizeExceeded: string;
+	orderHandlingarValFileEmpty: string;
+	orderHandlingarToastUploadError: string;
+	orderHandlingarStatusUploaded: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8554,7 +8598,8 @@ export type Translation = HeaderTranslation &
 	OrderTimeplanTranslation &
 	OrderQaTranslation &
 	YearEndTranslation &
-	AdminLiveTranslation;
+	AdminLiveTranslation &
+	OrderHandlingarTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -8565,4 +8610,5 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+
 

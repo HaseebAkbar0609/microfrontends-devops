@@ -25,6 +25,7 @@ import { OrderAtaOverviewPage } from "@/features/orders/ata/OrderAtaOverviewPage
 import { OrderStaffOverviewPage } from "@/features/orders/staff/OrderStaffOverviewPage";
 import { OrderTimeplanOverviewPage } from "@/features/orders/timeplan/OrderTimeplanOverviewPage";
 import { OrderQaOverviewPage } from "@/features/orders/qa/OrderQaOverviewPage";
+import { OrderDocumentsOverviewPage } from "@/features/orders/documents";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -42,6 +43,7 @@ type OrderTabValue =
 	| "payment-plan"
 	| "ata"
 	| "guarantee"
+	| "handlingar"
 	| "protocol"
 	| "staff"
 	| "tidsplan"
@@ -75,6 +77,7 @@ export function OrderOpenedSections({
 		if (path.includes("/payment-plan")) return "payment-plan";
 		if (path.includes("/ata")) return "ata";
 		if (path.includes("/guarantee")) return "guarantee";
+		if (path.includes("/handlingar") || path.includes("/documents")) return "handlingar";
 		if (path.includes("/protocol")) return "protocol";
 		if (path.includes("/staff")) return "staff";
 		if (path.includes("/tidsplan") || path.includes("/timeplan")) return "tidsplan";
@@ -128,6 +131,7 @@ export function OrderOpenedSections({
 		"payment-plan": t(localizationConstants.paymentPlanTitle),
 		ata: t(localizationConstants.ataTitle),
 		guarantee: t(localizationConstants.warrantyCommitments),
+		handlingar: t(localizationConstants.orderHandlingarTab),
 		protocol: t(localizationConstants.protocolsTab),
 		staff: t(localizationConstants.staffLedgerTab),
 		tidsplan: t(localizationConstants.orderTimeplanTab),
@@ -203,6 +207,14 @@ export function OrderOpenedSections({
 							className="cursor-pointer"
 						>
 							<Translate text={localizationConstants.warrantyCommitments} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="handlingar" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/documents`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderHandlingarTab} />
 						</Link>
 					</TabsTrigger>
 					<TabsTrigger value="protocol" asChild>
@@ -315,7 +327,12 @@ export function OrderOpenedSections({
 					/>
 				</TabsContent>
 
-				{/* Tab 7: Protokoll */}
+				{/* Tab 7: Handlingar */}
+				<TabsContent value="handlingar" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderDocumentsOverviewPage orderId={routeOrderId} hideNavRow />
+				</TabsContent>
+
+				{/* Tab 8: Protokoll */}
 				<TabsContent value="protocol" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderProtocolOverviewPage
 						orderId={routeOrderId}
@@ -323,12 +340,12 @@ export function OrderOpenedSections({
 					/>
 				</TabsContent>
 
-				{/* Tab 8: Personal-liggare */}
+				{/* Tab 9: Personal-liggare */}
 				<TabsContent value="staff" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderStaffOverviewPage orderId={routeOrderId} />
 				</TabsContent>
 
-				{/* Tab 9: Tidsplan */}
+				{/* Tab 10: Tidsplan */}
 				<TabsContent value="tidsplan" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderTimeplanOverviewPage
 						orderId={routeOrderId}
@@ -346,3 +363,4 @@ export function OrderOpenedSections({
 }
 
 export default OrderOpenedSections;
+
