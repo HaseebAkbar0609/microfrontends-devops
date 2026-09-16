@@ -83,6 +83,8 @@ export function useCreateClaim({
 					...prev,
 					templateId: tpl.id,
 					templateName: tpl.name,
+					deficiencyType: tpl.deficiencyType,
+					desiredAction: tpl.desiredAction,
 					title: tpl.title,
 					description: tpl.description,
 				}));
@@ -122,11 +124,15 @@ export function useCreateClaim({
 				...prev,
 				templateId: tpl.id,
 				templateName: tpl.name,
+				deficiencyType: tpl.deficiencyType,
+				desiredAction: tpl.desiredAction,
 				title: tpl.title,
 				description: tpl.description,
 			}));
 			setErrors((prev) => {
 				const next = { ...prev };
+				delete next.deficiencyType;
+				delete next.desiredAction;
 				delete next.title;
 				return next;
 			});

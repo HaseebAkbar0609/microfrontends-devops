@@ -118,7 +118,6 @@ export * from "./types/claims.types";
 export * from "./constants/claims.constants";
 export * from "./utils/claimsRepository";
 export * from "./hooks/useClaims";
-export * from "./hooks/useClaimTemplates";
 
 
 

@@ -1,77 +1,37 @@
 "use client";
 
 import React from "react";
-import type {
-	ClaimTemplate,
-	ClaimTemplateSortColumn,
-} from "../../../types/claims.types";
-import { ClaimTemplatesToolbar } from "./ClaimTemplatesToolbar";
-import { ClaimTemplatesTable } from "./ClaimTemplatesTable";
-import { ClaimTemplatesPagination } from "./ClaimTemplatesPagination";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
+import type { ClaimTemplate } from "../../../types/claims.types";
+import { ClaimTemplateCard } from "./ClaimTemplateCard";
 
 interface ClaimTemplatesListProps {
 	templates: ClaimTemplate[];
-	searchQuery: string;
-	sortColumn: ClaimTemplateSortColumn;
-	sortDirection: "asc" | "desc";
-	currentPage: number;
-	totalPages: number;
-	pageSize: number;
-	onSearchChange: (q: string) => void;
-	onSort: (col: ClaimTemplateSortColumn) => void;
-	onPageChange: (page: number) => void;
-	onPageSizeChange: (size: number) => void;
-	onCreateClick: () => void;
-	onViewTemplate: (template: ClaimTemplate) => void;
-	onEditTemplate: (template: ClaimTemplate) => void;
-	onDeleteTemplate: (template: ClaimTemplate) => void;
+	onUseTemplate: (template: ClaimTemplate) => void;
 }
 
 export function ClaimTemplatesList({
 	templates,
-	searchQuery,
-	sortColumn,
-	sortDirection,
-	currentPage,
-	totalPages,
-	pageSize,
-	onSearchChange,
-	onSort,
-	onPageChange,
-	onPageSizeChange,
-	onCreateClick,
-	onViewTemplate,
-	onEditTemplate,
-	onDeleteTemplate,
+	onUseTemplate,
 }: ClaimTemplatesListProps) {
+	if (templates.length === 0) {
+		return (
+			<div className="bg-white rounded-xl border border-slate-200 p-12 text-center text-xs text-slate-500 shadow-2xs">
+				<Translate text={localizationConstants.claimsNoTemplatesFound} />
+			</div>
+		);
+	}
+
 	return (
-		<div className="space-y-4">
-			{/* Toolbar with Search, Filter, and + skapa mall */}
-			<ClaimTemplatesToolbar
-				searchQuery={searchQuery}
-				onSearchChange={onSearchChange}
-				onCreateClick={onCreateClick}
-			/>
-
-			{/* Table matching Figma Image 2 */}
-			<ClaimTemplatesTable
-				items={templates}
-				sortColumn={sortColumn}
-				sortDirection={sortDirection}
-				onSort={onSort}
-				onView={onViewTemplate}
-				onEdit={onEditTemplate}
-				onDelete={onDeleteTemplate}
-			/>
-
-			{/* Pagination matching Figma Image 2 */}
-			<ClaimTemplatesPagination
-				currentPage={currentPage}
-				totalPages={totalPages}
-				pageSize={pageSize}
-				onPageChange={onPageChange}
-				onPageSizeChange={onPageSizeChange}
-			/>
+		<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+			{templates.map((tpl) => (
+				<ClaimTemplateCard
+					key={tpl.id}
+					template={tpl}
+					onUseTemplate={onUseTemplate}
+				/>
+			))}
 		</div>
 	);
 }

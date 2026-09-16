@@ -1,7 +1,6 @@
 import type {
 	ClaimItem,
 	ClaimTemplate,
-	ClaimTemplateFormData,
 	ClaimFormData,
 	ClaimDocument,
 } from "../types/claims.types";
@@ -60,15 +59,7 @@ class ClaimsRepository {
 
 				const savedTemplates = window.localStorage.getItem(STORAGE_KEY_CLAIM_TEMPLATES);
 				if (savedTemplates) {
-					const parsed = JSON.parse(savedTemplates);
-					// Validate parsed templates have the Figma shape (title and date, without laborItems)
-					if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].title && !parsed[0].laborItems) {
-						this.templates = parsed;
-					} else {
-						// Old-format or empty templates — reset to Figma seeds
-						this.templates = [...SEED_CLAIM_TEMPLATES];
-						this.persistTemplates();
-					}
+					this.templates = JSON.parse(savedTemplates);
 				} else {
 					this.templates = [...SEED_CLAIM_TEMPLATES];
 					this.persistTemplates();
@@ -123,8 +114,6 @@ class ClaimsRepository {
 		};
 	}
 
-	// ──────── Claims CRUD ────────
-
 	public getAll(): ClaimItem[] {
 		this.init();
 		return [...this.items];
@@ -133,6 +122,16 @@ class ClaimsRepository {
 	public getById(id: string): ClaimItem | undefined {
 		this.init();
 		return this.items.find((item) => item.id === id);
+	}
+
+	public getTemplates(): ClaimTemplate[] {
+		this.init();
+		return [...this.templates];
+	}
+
+	public getTemplateById(id: string): ClaimTemplate | undefined {
+		this.init();
+		return this.templates.find((tpl) => tpl.id === id);
 	}
 
 	public getNextId(): string {
@@ -278,100 +277,6 @@ class ClaimsRepository {
 		}
 		return false;
 	}
-
-	// ──────── Templates CRUD ────────
-
-	public getTemplates(): ClaimTemplate[] {
-		this.init();
-		return [...this.templates];
-	}
-
-	private normalizeTemplateId(rawId: string): string {
-		if (!rawId) return "";
-		let decoded = rawId;
-		try {
-			decoded = decodeURIComponent(rawId);
-		} catch {
-			decoded = rawId;
-		}
-		return decoded.trim().replace(/^#/, "").toLowerCase();
-	}
-
-	public getTemplateById(id: string): ClaimTemplate | undefined {
-		this.init();
-		if (!id) return undefined;
-		const target = this.normalizeTemplateId(id);
-		return this.templates.find((tpl) => this.normalizeTemplateId(tpl.id) === target);
-	}
-
-	public getNextTemplateId(): string {
-		this.init();
-		const existingNumbers = this.templates
-			.map((t) => {
-				const match = t.id.match(/(\d+)$/);
-				return match ? parseInt(match[1], 10) : 0;
-			})
-			.filter((n) => !isNaN(n));
-		const max = existingNumbers.length > 0 ? Math.max(...existingNumbers) : 0;
-		return `#MA${String(max + 1).padStart(3, "0")}`;
-	}
-
-	public createTemplate(formData: ClaimTemplateFormData): ClaimTemplate {
-		this.init();
-		const now = new Date();
-		const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}`;
-		const newTemplate: ClaimTemplate = {
-			id: this.getNextTemplateId(),
-			name: formData.name.trim() || "Mall Namn",
-			title: formData.title.trim() || "Mall Title",
-			date: formData.date.trim() || dateStr,
-			description: formData.description.trim(),
-			updatedAt: dateStr,
-		};
-
-		this.templates = [newTemplate, ...this.templates];
-		this.persistTemplates();
-		return newTemplate;
-	}
-
-	public updateTemplate(id: string, formData: Partial<ClaimTemplateFormData>): ClaimTemplate | undefined {
-		this.init();
-		if (!id) return undefined;
-		const target = this.normalizeTemplateId(id);
-		const index = this.templates.findIndex((tpl) => this.normalizeTemplateId(tpl.id) === target);
-		if (index === -1) return undefined;
-
-		const current = this.templates[index];
-		const now = new Date();
-		const dateStr = `${now.getFullYear()}/${String(now.getMonth() + 1).padStart(2, "0")}/${String(now.getDate()).padStart(2, "0")}`;
-		const updated: ClaimTemplate = {
-			...current,
-			name: formData.name !== undefined ? formData.name.trim() : current.name,
-			title: formData.title !== undefined ? formData.title.trim() : current.title,
-			date: formData.date !== undefined ? formData.date.trim() : current.date,
-			description: formData.description !== undefined ? formData.description.trim() : current.description,
-			updatedAt: dateStr,
-		};
-
-		this.templates[index] = updated;
-		this.persistTemplates();
-		return updated;
-	}
-
-	public deleteTemplate(id: string): boolean {
-		this.init();
-		if (!id) return false;
-		const target = this.normalizeTemplateId(id);
-		const prevLen = this.templates.length;
-		this.templates = this.templates.filter((tpl) => this.normalizeTemplateId(tpl.id) !== target);
-		if (this.templates.length !== prevLen) {
-			this.persistTemplates();
-			return true;
-		}
-		return false;
-	}
-
-	// ──────── Reset ────────
 
 	public resetToSeedData(): void {
 		this.items = [...SEED_CLAIMS];
