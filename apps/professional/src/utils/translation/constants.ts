@@ -8435,6 +8435,101 @@ export type YearEndTranslation = {
 	placeholderChecklistName: string;
 };
 
+export type ClaimsTranslation = {
+	claimsTitle: string;
+	claimsListTab: string;
+	claimsTemplatesTab: string;
+	claimsCreateNew: string;
+	claimsSearchPlaceholder: string;
+	claimsFilter: string;
+	claimsFilterAll: string;
+	claimsFilterSent: string;
+	claimsFilterDraft: string;
+	claimsFilterApproved: string;
+	claimsFilterPaid: string;
+	claimsFilterRejected: string;
+	claimsColId: string;
+	claimsColDate: string;
+	claimsColObject: string;
+	claimsColType: string;
+	claimsColSupplier: string;
+	claimsColResponsible: string;
+	claimsColAmount: string;
+	claimsColStatus: string;
+	claimsColDocName: string;
+	claimsColFileType: string;
+	claimsColActions: string;
+	claimsStatusSent: string;
+	claimsStatusDraft: string;
+	claimsStatusApproved: string;
+	claimsStatusPaid: string;
+	claimsStatusRejected: string;
+	claimsTitleCreate: string;
+	claimsTitleEdit: string;
+	claimsTitleDetail: string;
+	claimsTabBasic: string;
+	claimsTabDocuments: string;
+	claimsStep1Of2: string;
+	claimsStep2Of2: string;
+	claimsSectionConnection: string;
+	claimsFieldId: string;
+	claimsFieldSupplier: string;
+	claimsFieldLinkedInvoice: string;
+	claimsFieldObject: string;
+	claimsFieldObjectId: string;
+	claimsFieldObjectName: string;
+	claimsSectionDeficiency: string;
+	claimsFieldDeficiencyType: string;
+	claimsFieldIncidentDate: string;
+	claimsFieldSupplierContact: string;
+	claimsFieldDeadline: string;
+	claimsFieldDeficiencyDesc: string;
+	claimsSectionDemand: string;
+	claimsFieldDisputedAmount: string;
+	claimsFieldDesiredAction: string;
+	claimsSectionClaimText: string;
+	claimsFieldTemplates: string;
+	claimsFieldTitle: string;
+	claimsFieldTextDesc: string;
+	claimsUploadTitle: string;
+	claimsUploadSubtitle: string;
+	claimsBtnUpload: string;
+	claimsBtnViewFile: string;
+	claimsBtnCancel: string;
+	claimsBtnSave: string;
+	claimsBtnEdit: string;
+	claimsBtnDelete: string;
+	claimsBtnSend: string;
+	claimsBtnUseTemplate: string;
+	claimsDeleteConfirmTitle: string;
+	claimsDeleteConfirmDesc: string;
+	claimsNoItemsFound: string;
+	claimsNoTemplatesFound: string;
+	claimsNotFound: string;
+	claimsValidationRequired: string;
+	claimsValidationAmount: string;
+	claimsPlaceholderInfo: string;
+	claimsDocViewerTitle: string;
+	claimsBtnClose: string;
+	claimsBtnDownload: string;
+	claimsTabBudget: string;
+	claimsSelectFiles: string;
+	claimsNoDocsUploaded: string;
+	claimsValidationSupplier: string;
+	claimsValidationObject: string;
+	claimsValidationDeficiencyType: string;
+	claimsValidationDesiredAction: string;
+	claimsTitleTabDokuments: string;
+	claimsDocViewerPreviewDesc: string;
+	claimsBtnNext: string;
+	claimsBtnPrevious: string;
+	claimsValidationDocsRequired: string;
+	claimsValidationLinkedInvoice: string;
+	claimsValidationIncidentDate: string;
+	claimsValidationDeficiencyDesc: string;
+	claimsValidationTitle: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8473,7 +8568,8 @@ export type Translation = HeaderTranslation &
 	ViewAtaTranslation &
 	StaffRegistrationTranslation &
 	OrderTimeplanTranslation &
-	YearEndTranslation;
+	YearEndTranslation &
+	ClaimsTranslation;
 
 export type TranslationKeys = keyof Translation;
 
@@ -8484,4 +8580,5 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+
 
