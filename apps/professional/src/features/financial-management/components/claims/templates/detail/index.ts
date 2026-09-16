@@ -1,0 +1,1 @@
+export { ClaimTemplateDetailPage } from "./ClaimTemplateDetailPage";
