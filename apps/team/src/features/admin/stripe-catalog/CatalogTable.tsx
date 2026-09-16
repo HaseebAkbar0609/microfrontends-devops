@@ -16,7 +16,7 @@ const periods: Record<string, string> = { monthly: localizationConstants.salesTe
 
 export function CatalogTable({ preview }: { preview: CatalogPreview }) {
   const { t, i18n } = useTranslation();
-  const money = new Intl.NumberFormat(i18n.language, { style: "currency", currency: "SEK" });
+  const money = useMemo(() => new Intl.NumberFormat(i18n.language, { style: "currency", currency: "SEK" }), [i18n.language]);
   return <div className="overflow-x-auto rounded-md border">
     <table className="w-full table-fixed text-left text-sm">
       <thead className="bg-muted"><tr>{[localizationConstants.stripeCatalogPlan, localizationConstants.stripeCatalogCurrent, localizationConstants.stripeCatalogProposed, localizationConstants.stripeCatalogStatus].map(key => <th key={key} className="p-3 align-top font-medium">{t(key)}</th>)}</tr></thead>
