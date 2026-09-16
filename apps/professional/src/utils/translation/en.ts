@@ -1,3 +1,4 @@
+import { enAdminLive } from "./adminLive";
 import {
 	HeaderTranslation,
 	Translation,
@@ -8530,5 +8531,6 @@ export const en: Translation = {
 	...enStaffRegistration,
 	...enOrderTimeplan,
 	...enYearEnd,
+	...enAdminLive,
 };
 

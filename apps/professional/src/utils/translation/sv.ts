@@ -1,3 +1,4 @@
+import { svAdminLive } from "./adminLive";
 import {
 	HeaderTranslation,
 	Translation,
@@ -8551,6 +8552,7 @@ export const sv: Translation = {
 	...svStaffRegistration,
 	...svOrderTimeplan,
 	...svYearEnd,
+	...svAdminLive,
 };
 
 
