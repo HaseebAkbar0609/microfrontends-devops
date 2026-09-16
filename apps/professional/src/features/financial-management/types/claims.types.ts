@@ -4,6 +4,30 @@ export type ClaimTabType = "reklamationerlista" | "mallar";
 
 export type ClaimCreateStep = 1 | 2;
 
+export type ClaimTemplateType = "rot" | "rut";
+
+export type ClaimTemplateServiceCategory =
+	// ROT categories
+	| "bygg"
+	| "el"
+	| "glas"
+	| "mark"
+	| "murning"
+	| "målning"
+	| "plåt"
+	| "vvs"
+	| "dränering"
+	| "takarbete"
+	// RUT categories
+	| "städning"
+	| "trädgård"
+	| "barnpassning"
+	| "flytt"
+	| "it"
+	| "tvätt"
+	| "personlig_omsorg"
+	| "reparation";
+
 export interface ClaimDocument {
 	id: string;
 	date: string;
@@ -42,12 +66,20 @@ export interface ClaimItem {
 export interface ClaimTemplate {
 	id: string;
 	name: string;
-	deficiencyType: string;
-	desiredAction: string;
 	title: string;
+	date: string;
 	description: string;
-	createdAt: string;
+	updatedAt: string;
 }
+
+export interface ClaimTemplateFormData {
+	name: string;
+	title: string;
+	date: string;
+	description: string;
+}
+
+export type ClaimTemplateSortColumn = "id" | "name" | "title" | "updatedAt";
 
 export interface ClaimFormData {
 	id?: string;
