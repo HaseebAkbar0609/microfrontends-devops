@@ -8863,6 +8863,126 @@ export type ClaimsTranslation = {
 	claimTplCustomerNetToPay: string;
 };
 
+
+export type CasesTranslation = {
+	casesOverviewTitle: string;
+	casesOverviewTabList: string;
+	casesCreateButton: string;
+	casesBtnCreateCase: string;
+	casesSearchPlaceholder: string;
+	casesFilterBtn: string;
+	casesStatusAll: string;
+	casesCategoryAll: string;
+	casesColId: string;
+	casesColCaseNumber: string;
+	casesColTitle: string;
+	casesColCategory: string;
+	casesColCreatedBy: string;
+	casesColDate: string;
+	casesColStatus: string;
+	casesColActions: string;
+	casesLoading: string;
+	casesNoItemsFound: string;
+	casesActionView: string;
+	casesActionEdit: string;
+	casesActionDelete: string;
+	casesPageOf: string;
+	casesRowsPerPage: string;
+	casesShowing: string;
+	casesItems: string;
+	casesStatusNotStarted: string;
+	casesStatusOngoing: string;
+	casesStatusCompleted: string;
+	casesStatusClosed: string;
+	casesStatusRejected: string;
+	casesCategoryInfo: string;
+	casesCategoryBilling: string;
+	casesCategorySupport: string;
+	casesCategoryTechnical: string;
+	casesCategoryAdministrative: string;
+	casesCategoryOther: string;
+	casesDetailTitle: string;
+	casesCreateTitle: string;
+	casesEditTitle: string;
+	casesDetailCloseCase: string;
+	casesDetailChangeStatus: string;
+	casesTabBasicInfo: string;
+	casesTabDocuments: string;
+	casesTabConversation: string;
+	casesTabActivityLog: string;
+	casesCardBasicInfo: string;
+	casesCardBasicInfoFull: string;
+	casesCardGeneralInfo: string;
+	casesCardMessages: string;
+	casesCardContentMessage: string;
+	casesCardCaseInfo: string;
+	casesFieldCreatedBy: string;
+	casesFieldCategory: string;
+	casesFieldAttachments: string;
+	casesFieldId: string;
+	casesFieldTitle: string;
+	casesFieldDescription: string;
+	casesFieldDate: string;
+	casesFieldYourMessage: string;
+	casesPlaceholderWriteHere: string;
+	casesConversationReplyPlaceholder: string;
+	casesBtnAttach: string;
+	casesBtnSend: string;
+	casesBtnCancel: string;
+	casesBtnSave: string;
+	casesBtnNext: string;
+	casesBtnBack: string;
+	casesBtnPrevious: string;
+	casesBtnSaveChanges: string;
+	casesBtnEdit: string;
+	casesBtnDelete: string;
+	casesBtnUpload: string;
+	casesBtnViewFile: string;
+	casesDocumentsSectionTitle: string;
+	casesUploadYourFiles: string;
+	casesUploadFormats: string;
+	casesImagesSectionTitle: string;
+	casesUploadImages: string;
+	casesImageFormats: string;
+	casesColDocDate: string;
+	casesColDocName: string;
+	casesColDocFile: string;
+	casesSelectDocType: string;
+	casesSelectDocSubType: string;
+	casesSelectImage: string;
+	casesDeleteTitle: string;
+	casesDeleteDesc: string;
+	casesStatusConfirmTitle: string;
+	casesStatusConfirmDesc: string;
+	casesValidationTitle: string;
+	casesValidationCategory: string;
+	casesValidationDescription: string;
+	casesValidationCreatedBy: string;
+	casesValidationMessage: string;
+	casesValidationDocuments: string;
+	casesValidationFillBothTabs: string;
+	casesPlaceholderTitle: string;
+	casesPlaceholderCreatedBy: string;
+	casesPlaceholderDescription: string;
+	casesBtnBackToOverview: string;
+	casesNoMessagesYet: string;
+	casesNoAttachments: string;
+	casesSelectFiles: string;
+	casesSelectImages: string;
+	casesToastCreated: string;
+	casesToastUpdated: string;
+	casesToastDeleted: string;
+	casesToastStatusChanged: string;
+	casesToastMessageSent: string;
+	casesToastFileUploaded: string;
+	casesActivityLogTitle: string;
+	casesActivityLogEmpty: string;
+	casesActivityStatusChangedTo: string;
+	casesActivityCaseCreated: string;
+	casesActivityMessageAdded: string;
+	casesActivityFileUploaded: string;
+};
+
 export type OrderDagbokTranslation = {
 	orderDagbokTab: string;
 	orderDagbokTitle: string;
@@ -8975,6 +9095,7 @@ export type Translation = HeaderTranslation &
 	AdminLiveTranslation & MyPagesLiveTranslation &
 	OrderHandlingarTranslation &
 	ClaimsTranslation &
+	CasesTranslation &
 	OrderDagbokTranslation;
 
 export type TranslationKeys = keyof Translation;
@@ -8986,5 +9107,6 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+
 
 
