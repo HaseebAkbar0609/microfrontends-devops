@@ -9,7 +9,7 @@ import {
 
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { acceptAttribute, type RecordFileRules } from "../../shared/recordFiles";
-import type { AtaAttested, AtaSection, AtaStatus } from "./types";
+import type { AtaAttested, AtaSection, AtaStatus, SupplierAtaStatus } from "./types";
 
 /* ─── Sections ─────────────────────────────────────────────────────────── */
 
@@ -102,12 +102,17 @@ export const ATA_LINE_COLUMN_LABELS: Record<Exclude<AtaLineColumn, "party">, Tra
 
 export const ATA_STATUSES = ["utkast", "forhandling", "ok", "redovisad"] as const satisfies readonly AtaStatus[];
 
-/** Label, badge tone (`null` = plain text) and lifecycle rank for sorting. */
+/**
+ * Label, badge tone (`null` = plain text) and lifecycle rank for sorting, for a
+ * customer ÄTA's statuses and a supplier ÄTA's. `utkast` and `ej_granskad`
+ * never share a list, so both rank first.
+ */
 export const ATA_STATUS_META: Record<
-	AtaStatus,
-	{ labelKey: TranslationKeys; badge: "success" | "info" | "warning" | null; rank: number }
+	AtaStatus | SupplierAtaStatus,
+	{ labelKey: TranslationKeys; badge: "success" | "info" | "warning" | "danger" | null; rank: number }
 > = {
 	utkast: { labelKey: localizationConstants.ataStatusDraft, badge: null, rank: 0 },
+	ej_granskad: { labelKey: localizationConstants.ataSupplierStatusNotReviewed, badge: "danger", rank: 0 },
 	forhandling: { labelKey: localizationConstants.ataStatusNegotiation, badge: "warning", rank: 1 },
 	ok: { labelKey: localizationConstants.ataStatusOk, badge: "success", rank: 2 },
 	redovisad: { labelKey: localizationConstants.ataStatusAccounted, badge: "info", rank: 3 },
@@ -146,6 +151,8 @@ export const ATA_TEXT_MAX_LENGTH = 120;
 export const ATA_LONG_TEXT_MAX_LENGTH = 2000;
 /** "Egen personal 02": the count is zero-padded to two digits. */
 export const ATA_COUNT_DIGITS = 2;
+/** A supplier ÄTA's own number, "001". */
+export const ATA_SUPPLIER_NUMBER_DIGITS = 3;
 
 /** Line-item bounds, checked by the row dialog's schema. */
 export const ATA_LINE_LIMITS = {

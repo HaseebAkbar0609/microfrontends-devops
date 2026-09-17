@@ -26,6 +26,7 @@ import { OrderStaffOverviewPage } from "@/features/orders/staff/OrderStaffOvervi
 import { OrderTimeplanOverviewPage } from "@/features/orders/timeplan/OrderTimeplanOverviewPage";
 import { OrderQaOverviewPage } from "@/features/orders/qa/OrderQaOverviewPage";
 import { OrderDocumentsOverviewPage } from "@/features/orders/documents";
+import { OrderConstructionLogOverviewPage } from "@/features/orders/construction-log/OrderConstructionLogOverviewPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -47,7 +48,8 @@ type OrderTabValue =
 	| "protocol"
 	| "staff"
 	| "tidsplan"
-	| "fraga-svar";
+	| "fraga-svar"
+	| "dagbok";
 
 export function OrderOpenedSections({
 	data,
@@ -82,6 +84,7 @@ export function OrderOpenedSections({
 		if (path.includes("/staff")) return "staff";
 		if (path.includes("/tidsplan") || path.includes("/timeplan")) return "tidsplan";
 		if (path.includes("/fraga-svar") || path.includes("/qa")) return "fraga-svar";
+		if (path.includes("/dagbok") || path.includes("/construction-log")) return "dagbok";
 		return "order-information";
 	};
 
@@ -136,6 +139,7 @@ export function OrderOpenedSections({
 		staff: t(localizationConstants.staffLedgerTab),
 		tidsplan: t(localizationConstants.orderTimeplanTab),
 		"fraga-svar": t(localizationConstants.orderQaTab),
+		dagbok: t(localizationConstants.orderDagbokTab),
 	};
 
 	const showSubtitle =
@@ -249,6 +253,14 @@ export function OrderOpenedSections({
 							<Translate text={localizationConstants.orderQaTab} />
 						</Link>
 					</TabsTrigger>
+					<TabsTrigger value="dagbok" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/construction-log`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderDagbokTab} />
+						</Link>
+					</TabsTrigger>
 				</TabsList>
 
 				{/* Active tab title & Breadcrumbs */}
@@ -356,6 +368,11 @@ export function OrderOpenedSections({
 				{/* Tab 10: Fråga/Svar (Q&A) */}
 				<TabsContent value="fraga-svar" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderQaOverviewPage orderId={routeOrderId} />
+				</TabsContent>
+
+				{/* Tab 11: Dagbok (Construction Log) */}
+				<TabsContent value="dagbok" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderConstructionLogOverviewPage orderId={routeOrderId} hideTitle />
 				</TabsContent>
 			</Tabs>
 		</div>

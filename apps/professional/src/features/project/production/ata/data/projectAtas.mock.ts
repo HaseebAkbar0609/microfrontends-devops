@@ -5,9 +5,10 @@ import { balancedLineItems, emptyLineItems, seedAta, seedRow } from "./ataSeed";
 /**
  * ÄTAs on each project's record.
  *
- * 5001 carries the frame's six rows with their exact Belopp, statuses,
- * attestations and linked supplier ÄTAs; each is built from staff, material,
- * machine and UE rows plus a balancing ÄTA-leverantör row (see `ataSeed`).
+ * 5001 carries the frame's six rows with their exact Belopp, statuses and
+ * attestations; each is built from staff, material, machine and UE rows plus a
+ * balancing ÄTA-leverantör row (see `ataSeed`). Their "Kopplad Lev-äta" is not
+ * stored here: it is read from the supplier ÄTAs that link to them.
  * 5000 has a draft and one sent for negotiation; 5002 has none, for the empty
  * state. Dates come from `mockDate` — never `new Date()` in a mock.
  */
@@ -31,7 +32,6 @@ const ue = (id: string, net: number) =>
 export const SEEDED_PROJECT_ATAS: ProjectAta[] = [
 	seedAta({
 		id: "ata-5001-100", projectId: "5001", number: 100, status: "ok", attested: "ja",
-		linkedSupplierAta: { supplier: PELLE.supplier, ataNumber: PELLE.invoiceNo },
 		createdDate: mockDate(-60),
 		lineItems: balancedLineItems("5001-100", 158_680, {
 			staff: [alex("a100-s1", 40), sara("a100-s2", 24)],
@@ -48,7 +48,6 @@ export const SEEDED_PROJECT_ATAS: ProjectAta[] = [
 	}),
 	seedAta({
 		id: "ata-5001-101", projectId: "5001", number: 101, status: "redovisad", attested: "ja",
-		linkedSupplierAta: { supplier: PELLE.supplier, ataNumber: PELLE.invoiceNo },
 		createdDate: mockDate(-52),
 		lineItems: balancedLineItems("5001-101", 145_630, {
 			staff: [alex("a101-s1", 16), sara("a101-s2", 16)],
@@ -58,7 +57,6 @@ export const SEEDED_PROJECT_ATAS: ProjectAta[] = [
 	}),
 	seedAta({
 		id: "ata-5001-102", projectId: "5001", number: 102, status: "ok", attested: "ja",
-		linkedSupplierAta: { supplier: ROR.supplier, ataNumber: ROR.invoiceNo },
 		createdDate: mockDate(-45),
 		lineItems: balancedLineItems("5001-102", 56_250, {
 			staff: [alex("a102-s1", 8)],
@@ -67,7 +65,6 @@ export const SEEDED_PROJECT_ATAS: ProjectAta[] = [
 	}),
 	seedAta({
 		id: "ata-5001-103", projectId: "5001", number: 103, status: "forhandling", attested: "ej_klart",
-		linkedSupplierAta: { supplier: ROR.supplier, ataNumber: ROR.invoiceNo },
 		createdDate: mockDate(-30),
 		revisedDate: mockDate(-25),
 		lineItems: balancedLineItems("5001-103", 25_690, {
@@ -77,7 +74,6 @@ export const SEEDED_PROJECT_ATAS: ProjectAta[] = [
 	}),
 	seedAta({
 		id: "ata-5001-104", projectId: "5001", number: 104, status: "ok", attested: "ej_klart",
-		linkedSupplierAta: { supplier: ROR.supplier, ataNumber: ROR.invoiceNo },
 		createdDate: mockDate(-20),
 		lineItems: balancedLineItems("5001-104", 158_680, {
 			staff: [alex("a104-s1", 40), sara("a104-s2", 40), johan("a104-s3", 20)],
@@ -86,7 +82,6 @@ export const SEEDED_PROJECT_ATAS: ProjectAta[] = [
 	}),
 	seedAta({
 		id: "ata-5001-105", projectId: "5001", number: 105, status: "redovisad", attested: "ej_klart",
-		linkedSupplierAta: { supplier: ROR.supplier, ataNumber: ROR.invoiceNo },
 		createdDate: mockDate(-10),
 		lineItems: balancedLineItems("5001-105", 158_680, {
 			material: [material("a105-m1", 80_000)],
@@ -95,13 +90,11 @@ export const SEEDED_PROJECT_ATAS: ProjectAta[] = [
 	}),
 	seedAta({
 		id: "ata-5000-1", projectId: "5000", number: 1, status: "utkast", attested: "ej_klart",
-		linkedSupplierAta: null,
 		createdDate: mockDate(-6),
 		lineItems: { ...emptyLineItems(), staff: [johan("a5000-1-s1", 8)], material: [material("a5000-1-m1", 2_000)] },
 	}),
 	seedAta({
 		id: "ata-5000-2", projectId: "5000", number: 2, status: "forhandling", attested: "ej_klart",
-		linkedSupplierAta: null,
 		createdDate: mockDate(-3),
 		lineItems: { ...emptyLineItems(), ue: [ue("a5000-2-u1", 15_000)], machines: [machine("a5000-2-k1", 2)] },
 	}),
