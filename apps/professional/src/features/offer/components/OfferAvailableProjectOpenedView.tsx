@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -9,7 +9,6 @@ import {
 	Briefcase,
 	FileText,
 	Heart,
-	Image as ImageIcon,
 	Map,
 	MapPin,
 } from "lucide-react";
@@ -27,8 +26,6 @@ import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { OfferSendData } from "../types";
-import { DUMMY_OFFERS } from "../constants/offerList";
-import { DUMMY_OFFER_SEND } from "../constants/offerSend";
 import {
 	getOfferDetailByIdAPIAction,
 	toggleOfferFavoriteAPIAction,
@@ -52,64 +49,35 @@ export function OfferAvailableProjectOpenedView({
 	const t = useTranslate();
 	const router = useRouter();
 
-	const matchedOffer = useMemo(() => {
-		return DUMMY_OFFERS.find((o) => o.id === offerId) ?? DUMMY_OFFERS[0];
-	}, [offerId]);
-
-	const [projectData, setProjectData] = useState<OfferSendData>(() => {
-		if (initialData) return initialData;
-
-		return {
-			...DUMMY_OFFER_SEND,
-			id: offerId,
-			title: matchedOffer?.jobName || "Köksrenoveringsjobb",
-			postedDate: "2024-12-18",
-			type: matchedOffer?.type || "Express",
-			badges: [
-				"Expressen är bättre",
-				"Stockholm",
-				matchedOffer?.municipality || "Järfälla",
-			],
-			description:
-				"Företaget behöver Beprövad erfarenhet av köksrenovering eller inredning. Ett skarpt öga för designtrender och en passion för att skapa snygga och funktionella utrymmen.",
-			images: [
-				{ id: "img-1", label: "Photo.img", src: "/offer-details.png" },
-				{ id: "img-2", label: "Photo.img", src: "/offer-details.png" },
-				{ id: "img-3", label: "Photo.img", src: "/offer-details.png" },
-			],
-			extraImagesCount: 6,
-			documents: [
-				{ id: "doc-1", label: "Förmulärsmall #1.doc" },
-				{ id: "doc-2", label: "Förmulärsmall #1.doc" },
-				{ id: "doc-3", label: "projekt.pdf" },
-			],
-			drawings: [
-				{ id: "drawing-1", label: "projekt.pdf" },
-				{ id: "drawing-2", label: "bild 1" },
-				{ id: "drawing-3", label: "bild 1" },
-				{ id: "drawing-4", label: "bild 1" },
-			],
-		};
-	});
+	const [projectData, setProjectData] = useState<OfferSendData | null>(
+		initialData ?? null,
+	);
+	const [isLoading, setIsLoading] = useState(!initialData);
+	const [hasError, setHasError] = useState(false);
+	const [isFavorite, setIsFavorite] = useState(Boolean(initialData?.isFavorite));
 
 	// Fetch dynamic data from API if initialData was not passed from server
 	useEffect(() => {
 		let isMounted = true;
 		if (!initialData && offerId) {
-			getOfferDetailByIdAPIAction(offerId).then((res) => {
-				if (isMounted && res.success && res.data) {
-					setProjectData(res.data);
-				}
-			});
+			setIsLoading(true);
+			getOfferDetailByIdAPIAction(offerId)
+				.then((res) => {
+					if (!isMounted) return;
+					if (res.success && res.data) {
+						setProjectData(res.data);
+						setIsFavorite(Boolean(res.data.isFavorite));
+					} else {
+						setHasError(true);
+					}
+				})
+				.catch(() => isMounted && setHasError(true))
+				.finally(() => isMounted && setIsLoading(false));
 		}
 		return () => {
 			isMounted = false;
 		};
 	}, [offerId, initialData]);
-
-	const [isFavorite, setIsFavorite] = useState<boolean>(
-		matchedOffer?.isFavorite ?? false,
-	);
 
 	const { isOpen, openModal, closeModal, type } = useModal<ModalType>();
 
@@ -139,6 +107,7 @@ export function OfferAvailableProjectOpenedView({
 	};
 
 	const handleOpenTakeJobModal = () => {
+		if (!projectData) return;
 		const typeStr = projectData.type.toLowerCase();
 		const isExpress = typeStr.includes("express");
 		const isRent = typeStr.includes("rent") || typeStr.includes("hyra");
@@ -166,6 +135,7 @@ export function OfferAvailableProjectOpenedView({
 	};
 
 	const handleModalConfirm = () => {
+		if (!projectData) return;
 		closeModal();
 		const formType =
 			projectData.type.toLowerCase().includes("rent") ||
@@ -177,7 +147,10 @@ export function OfferAvailableProjectOpenedView({
 		router.push(`/module/business/offer/send/${offerId}?type=${formType}`);
 	};
 
-	const projectCode = matchedOffer?.idNumber || "OFN001";
+	if (isLoading) return <div className="flex min-h-screen items-center justify-center">Loading project…</div>;
+	if (hasError) return <div className="m-6 rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-700">Project could not be loaded. Please try again.</div>;
+	if (!projectData) return null;
+	const projectCode = projectData.id;
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen font-sans">
@@ -236,17 +209,17 @@ export function OfferAvailableProjectOpenedView({
 								<div className="flex flex-wrap items-center gap-2 mt-3">
 									<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
 										<Briefcase className="h-3.5 w-3.5 stroke-2" />
-										<span>{projectData.badges[0] || "Expressen är bättre"}</span>
+										<span>{projectData.badges[0] || "—"}</span>
 									</span>
 
 									<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700">
 										<Map className="h-3.5 w-3.5 stroke-2" />
-										<span>{projectData.badges[1] || "Stockholm"}</span>
+										<span>{projectData.badges[1] || "—"}</span>
 									</span>
 
 									<span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
 										<MapPin className="h-3.5 w-3.5 stroke-2" />
-										<span>{projectData.badges[2] || "Järfälla"}</span>
+										<span>{projectData.badges[2] || "—"}</span>
 									</span>
 								</div>
 							</div>
@@ -320,11 +293,14 @@ export function OfferAvailableProjectOpenedView({
 								</h3>
 
 								<div className="flex flex-wrap gap-4">
+									{projectData.images.length === 0 && (
+										<p className="text-xs text-slate-500">No images attached.</p>
+									)}
 									{projectData.images.map((img) => (
 										<div key={img.id} className="flex flex-col items-center w-27">
 											<div className="h-22 w-27 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center">
-												<Image
-													src={img.src || "/offer-details.png"}
+											<Image
+												src={img.src ?? ""}
 													alt={img.label}
 													width={108}
 													height={88}
@@ -336,34 +312,6 @@ export function OfferAvailableProjectOpenedView({
 											</span>
 										</div>
 									))}
-
-									{/* Placeholder boxes */}
-									<div className="flex flex-col items-center w-27">
-										<div className="flex h-22 w-27 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-											<ImageIcon className="h-6 w-6 text-slate-400 stroke-[1.5]" />
-										</div>
-										<span className="mt-2 w-full truncate text-center text-xs text-slate-500">
-											Photo.img
-										</span>
-									</div>
-
-									<div className="flex flex-col items-center w-27">
-										<div className="flex h-22 w-27 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-											<ImageIcon className="h-6 w-6 text-slate-400 stroke-[1.5]" />
-										</div>
-										<span className="mt-2 w-full truncate text-center text-xs text-slate-500">
-											Photo.img
-										</span>
-									</div>
-
-									<div className="flex flex-col items-center w-27">
-										<div className="flex h-22 w-27 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-											<ImageIcon className="h-6 w-6 text-slate-400 stroke-[1.5]" />
-										</div>
-										<span className="mt-2 w-full truncate text-center text-xs text-slate-500 font-medium">
-											+{projectData.extraImagesCount || 6} more
-										</span>
-									</div>
 								</div>
 							</div>
 
@@ -379,6 +327,9 @@ export function OfferAvailableProjectOpenedView({
 								</h3>
 
 								<div className="flex flex-wrap gap-4">
+									{projectData.documents.length === 0 && (
+										<p className="text-xs text-slate-500">No documents attached.</p>
+									)}
 									{projectData.documents.map((doc) => (
 										<div key={doc.id} className="flex flex-col items-center w-27">
 											<div className="flex h-18 w-27 items-center justify-center rounded-lg bg-transparent">
@@ -410,6 +361,9 @@ export function OfferAvailableProjectOpenedView({
 								</h3>
 
 								<div className="flex flex-wrap gap-4">
+									{projectData.drawings.length === 0 && (
+										<p className="text-xs text-slate-500">No drawings attached.</p>
+									)}
 									{projectData.drawings.map((drawing) => {
 										const isPdf = drawing.label.toLowerCase().endsWith(".pdf");
 										return (

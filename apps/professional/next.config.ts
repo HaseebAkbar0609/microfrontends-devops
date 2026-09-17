@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	output: "standalone",
+	// output: "standalone",
+	// r4ok's frozen workspace build must include hoisted dependencies.
+	...(process.env.TFS_WORKSPACE_BUILD === "true"
+		? { outputFileTracingRoot: require("node:path").resolve(__dirname, "../..") }
+		: {}),
 	images: {
 		remotePatterns: [
 			{ protocol: "https", hostname: "images.unsplash.com" },

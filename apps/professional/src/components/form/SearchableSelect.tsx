@@ -26,6 +26,10 @@ export interface SearchableSelectProps {
 	className?: string;
 	allowCustom?: boolean;
 	hasError?: boolean;
+	/** Lets a `<Label htmlFor>` point at the trigger, which is a button. */
+	id?: string;
+	/** Announces the field as mandatory; the asterisk beside it is decoration. */
+	required?: boolean;
 }
 
 export function SearchableSelect({
@@ -37,6 +41,8 @@ export function SearchableSelect({
 	className,
 	allowCustom = true,
 	hasError = false,
+	id,
+	required,
 }: SearchableSelectProps) {
 	const [open, setOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
@@ -69,8 +75,10 @@ export function SearchableSelect({
 			<PopoverTrigger asChild>
 				<button
 					type="button"
+					id={id}
 					role="combobox"
 					aria-expanded={open}
+					aria-required={required || undefined}
 					aria-controls="searchable-options-list"
 					className={cn(
 						"flex h-10 w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm text-slate-900 shadow-none transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-50",

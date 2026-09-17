@@ -1,71 +1,145 @@
 "use client";
 
-import { useMemo } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
+import { CalendarDays, CreditCard, ExternalLink, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { DynamicBreadcrumb } from "@/components/common";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
 	SUBSCRIPTION_TAB_IDS,
 	SUBSCRIPTION_TABS,
-	SubscriptionLicenseRow,
 	SubscriptionTabId,
 } from "../constants/mockData";
-import { getSubscriptionOverview } from "../services/subscriptionService";
+import { useSubscriptionOverview } from "../hooks/useSubscriptionOverview";
+import { getOpenInvoices, type SubscriptionOverviewItem } from "../services/subscriptionService";
 import PaymentMethodTab from "./PaymentMethodTab";
+import { SUBSCRIPTION_EDITOR_PATHS } from "../services/subscriptionSelection";
 
 const isSubscriptionTabId = (
 	value: string | null,
 ): value is SubscriptionTabId =>
 	SUBSCRIPTION_TAB_IDS.includes(value as SubscriptionTabId);
 
-const LicenseTable = ({
-	headerKey,
-	rows,
-}: {
-	headerKey: string;
-	rows: SubscriptionLicenseRow[];
-}) => (
-	<table className="w-full text-sm">
-		<thead>
-			<tr className="text-left text-slate-500">
-				<th className="pb-2 pr-4 font-medium">
-					<Translate text={headerKey} />
-				</th>
-				<th className="pb-2 font-medium">
-					<Translate
-						text={localizationConstants.subscriptionColLicenses}
-					/>
-				</th>
-			</tr>
-		</thead>
-		<tbody>
-			{rows.map((row) => (
-				<tr key={row.name} className="border-t border-slate-200">
-					<td className="py-3 pr-4 text-slate-800">{row.name}</td>
-					<td className="py-3 text-slate-800">{row.licenseCount}</td>
-				</tr>
-			))}
-		</tbody>
-	</table>
-);
+function formatDate(value: string | null): string {
+	if (!value) return "—";
+	const date = new Date(value);
+	if (Number.isNaN(date.getTime())) return "—";
+	return new Intl.DateTimeFormat(undefined, {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	}).format(date);
+}
+
+function formatAmount(amount: number | null, currency = "SEK"): string {
+	if (amount === null) return "—";
+	return new Intl.NumberFormat(undefined, {
+		style: "currency",
+		currency,
+		minimumFractionDigits: amount % 100 === 0 ? 0 : 2,
+		maximumFractionDigits: 2,
+	}).format(amount / 100);
+}
+
+function statusClass(status: string | null): string {
+	if (status === "ACTIVE" || status === "DEMO") {
+		return "bg-emerald-50 text-emerald-700";
+	}
+	if (status === "ACTIVE_IN_GRACE") {
+		return "bg-amber-50 text-amber-800";
+	}
+	if (status === "RESTRICTED" || status === "INACTIVE") {
+		return "bg-red-50 text-red-700";
+	}
+	return "bg-slate-100 text-slate-700";
+}
+
+function SubscriptionItemsTable({ items }: { items: SubscriptionOverviewItem[] }) {
+	return (
+		<div className="min-w-0">
+			<table className="block w-full text-sm md:table">
+				<thead className="hidden md:table-header-group">
+					<tr className="border-b border-slate-200 text-left text-slate-500">
+						<th className="px-5 py-3 font-medium">
+							<Translate text={localizationConstants.subscriptionColPackage} />
+						</th>
+						<th className="px-5 py-3 font-medium">
+							<Translate text={localizationConstants.subscriptionItemType} />
+						</th>
+						<th className="px-5 py-3 text-right font-medium">
+							<Translate text={localizationConstants.subscriptionColQuantity} />
+						</th>
+						<th className="px-5 py-3 text-right font-medium">
+							<Translate text={localizationConstants.subscriptionColUnitPrice} />
+						</th>
+						<th className="px-5 py-3 text-right font-medium">
+							<Translate text={localizationConstants.subscriptionColTotal} />
+						</th>
+					</tr>
+				</thead>
+				<tbody className="block md:table-row-group">
+					{items.map((item) => (
+						<tr key={item.id} className="grid grid-cols-2 gap-y-3 border-b border-slate-100 py-4 last:border-0 md:table-row md:py-0">
+							<td className="col-span-2 px-5 font-semibold text-slate-900 md:py-4">{item.name}</td>
+							<td className="px-5 text-slate-600 md:py-4">
+								<span className="mb-1 block text-xs text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionItemType} /></span>
+								<Translate
+									text={
+										item.is_license
+											? localizationConstants.subscriptionItemLicense
+											: localizationConstants.subscriptionItemPlan
+									}
+								/>
+							</td>
+							<td className="px-5 text-right tabular-nums text-slate-700 md:py-4">
+								<span className="mb-1 block text-xs text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionColQuantity} /></span>
+								{item.quantity}
+							</td>
+							<td className="px-5 tabular-nums text-slate-700 md:py-4 md:text-right">
+								<span className="mb-1 block text-xs text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionColUnitPrice} /></span>
+								{formatAmount(item.unit_amount, item.currency)}
+							</td>
+							<td className="px-5 text-right font-semibold tabular-nums text-slate-900 md:py-4">
+								<span className="mb-1 block text-xs font-normal text-slate-500 md:hidden"><Translate text={localizationConstants.subscriptionColTotal} /></span>
+								{formatAmount(item.total_amount, item.currency)}
+							</td>
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	);
+}
 
 const AdminSubscription = () => {
 	const { query, changeQueries } = useQueryParams();
+	const t = useTranslate();
 	const tabParam = query.get("tab");
 	const activeTab: SubscriptionTabId = isSubscriptionTabId(tabParam)
 		? tabParam
 		: "my";
 	const setActiveTab = (value: string) =>
 		changeQueries({ tab: value === "my" ? null : value });
-
-	const subscription = useMemo(() => getSubscriptionOverview(), []);
+	const subscriptionQuery = useSubscriptionOverview(activeTab === "my");
+	const subscription = subscriptionQuery.data;
+	const status = subscription?.status?.access_state ?? null;
+	const openInvoicesQuery = useQuery({
+		queryKey: ["subscription-open-invoices"],
+		queryFn: getOpenInvoices,
+		enabled: status === "RESTRICTED",
+	});
+	const payableInvoice = openInvoicesQuery.data?.find(
+		(invoice) => invoice.hosted_invoice_url,
+	);
 
 	return (
-		<div className="flex flex-col gap-6 p-6">
+		<div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 md:py-8">
 			<div>
-				<h1 className="text-2xl font-semibold text-slate-900 mb-2">
+				<h1 className="mb-2 text-2xl font-semibold text-slate-900">
 					<Translate text={localizationConstants.adminSubscription} />
 				</h1>
 				<DynamicBreadcrumb
@@ -75,17 +149,14 @@ const AdminSubscription = () => {
 							translationKey: localizationConstants.adminItem,
 							href: "/admin/settings",
 						},
-						{
-							translationKey:
-								localizationConstants.adminSubscription,
-						},
+						{ translationKey: localizationConstants.adminSubscription },
 					]}
 				/>
 			</div>
 
 			<Tabs value={activeTab} onValueChange={setActiveTab}>
 				<div className="border-b border-slate-200">
-					<TabsList className="h-auto gap-6 rounded-none bg-transparent p-0">
+					<TabsList className="h-auto w-full flex-wrap justify-start gap-x-5 gap-y-1 rounded-none bg-transparent p-0">
 						{SUBSCRIPTION_TABS.map((tab) => (
 							<TabsTrigger
 								key={tab.id}
@@ -99,106 +170,164 @@ const AdminSubscription = () => {
 				</div>
 			</Tabs>
 
-			{activeTab === "my" ? (
-				<div className="grid grid-cols-12 items-stretch gap-6">
-					<div className="col-span-12 flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white lg:col-span-4 xl:col-span-3">
-						<div className="bg-slate-200/60 px-5 py-3.5">
-							<h2 className="text-lg font-semibold text-slate-800">
-								<Translate
-									text={
-										localizationConstants.subscriptionTabMy
-									}
-								/>
-							</h2>
-						</div>
-						<div className="space-y-4 px-5 py-4 text-sm">
-							<div>
-								<p className="font-semibold text-slate-900">
-									<Translate
-										text={
-											localizationConstants.subscriptionNumberLabel
-										}
-									/>
-								</p>
-								<p className="mt-0.5 text-slate-600">
-									{subscription.subscriptionNumber}
-								</p>
-							</div>
-							<div>
-								<p className="font-semibold text-slate-900">
-									<Translate
-										text={
-											localizationConstants.subscriptionStartLabel
-										}
-									/>
-								</p>
-								<p className="mt-0.5 text-slate-600">
-									{subscription.startDate}
-								</p>
-							</div>
-						</div>
-					</div>
-
-					<div className="col-span-12 flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white lg:col-span-8 xl:col-span-9">
-						<div className="bg-slate-200/60 px-5 py-3.5">
-							<h2 className="text-lg font-semibold text-slate-800">
-								<Translate
-									text={
-										localizationConstants.subscriptionDetailTitlePrefix
-									}
-								/>{" "}
-								{subscription.agreementNumber}
-							</h2>
-						</div>
-						<div className="grid flex-1 grid-cols-12 gap-6 px-5 py-4">
-							<div className="col-span-12 md:col-span-4 xl:col-span-3">
-								<LicenseTable
-									headerKey={
-										localizationConstants.subscriptionColPackage
-									}
-									rows={subscription.packages}
-								/>
-							</div>
-							<div
-								className="col-span-12 hidden min-h-56 self-stretch rounded-sm bg-slate-200/80 md:col-span-4 md:block xl:col-span-5"
-								aria-hidden
-							/>
-							<div className="col-span-12 md:col-span-4 xl:col-span-4">
-								<LicenseTable
-									headerKey={
-										localizationConstants.subscriptionColAddons
-									}
-									rows={subscription.addons}
-								/>
-								<div className="mt-4 space-y-3 rounded-md bg-slate-50 p-4 text-sm">
-									{subscription.services.map((service) => (
-										<div
-											key={service.id}
-											className="flex items-center justify-between"
-										>
-											<span className="font-semibold text-slate-900">
-												<Translate
-													text={service.labelKey}
-												/>
-											</span>
-											{service.active && (
-												<span className="rounded-full border border-green-400 px-2.5 py-0.5 text-xs font-medium text-green-600">
-													<Translate
-														text={
-															localizationConstants.subscriptionStatusActive
-														}
-													/>
-												</span>
-											)}
-										</div>
-									))}
-								</div>
-							</div>
-						</div>
-					</div>
+			{activeTab === "payment" ? (
+				<PaymentMethodTab />
+			) : subscriptionQuery.isLoading ? (
+				<div className="flex min-h-64 items-center justify-center rounded-md border border-slate-200 bg-white">
+					<Loader2 className="h-6 w-6 animate-spin text-slate-500" />
+				</div>
+			) : subscriptionQuery.isError ? (
+				<div className="rounded-md border border-red-200 bg-red-50 p-5 text-sm text-red-700">
+					<Translate text={localizationConstants.subscriptionLoadFailed} />
+					<Button
+						type="button"
+						variant="outline"
+						className="ml-3"
+						onClick={() => void subscriptionQuery.refetch()}
+					>
+						<Translate text={localizationConstants.retry} />
+					</Button>
+				</div>
+			) : !subscription?.has_subscription ? (
+				<div className="rounded-md border border-slate-200 bg-white p-8 text-center">
+					<h2 className="text-lg font-semibold text-slate-900">
+						<Translate text={localizationConstants.subscriptionEmptyTitle} />
+					</h2>
+					<p className="mx-auto mt-2 max-w-xl text-sm text-slate-500">
+						<Translate text={localizationConstants.subscriptionEmptyText} />
+					</p>
+					<Button asChild className="mt-5 bg-slate-900 text-white hover:bg-slate-800">
+						<Link href="/manage-plans">
+							<Translate text={localizationConstants.subscriptionChoosePlan} />
+						</Link>
+					</Button>
 				</div>
 			) : (
-				<PaymentMethodTab />
+				<div className="space-y-6">
+					<div className="flex flex-wrap justify-end gap-3">
+						{subscription.subscription_id && ["active", "trialing"].includes(subscription.status?.stripe_status ?? "") && <Button asChild variant="primary" className="h-auto min-h-11 whitespace-normal">
+							<Link href={SUBSCRIPTION_EDITOR_PATHS.licenses}>
+								<Translate text={localizationConstants.subscriptionAddLicenses} />
+							</Link>
+						</Button>}
+						<Button asChild variant="outline">
+							<Link href={SUBSCRIPTION_EDITOR_PATHS.subscription}>
+								<Translate text={localizationConstants.subscriptionChangePlan} />
+							</Link>
+						</Button>
+					</div>
+					{subscription.status?.access_state === "ACTIVE_IN_GRACE" && (
+						<div className="rounded-md border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+							<Translate text={localizationConstants.subscriptionGraceWarning} />
+						</div>
+					)}
+					{subscription.status?.access_state === "RESTRICTED" && (
+						<div className="rounded-md border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800">
+							<Translate text={localizationConstants.subscriptionRestrictedWarning} />
+							{payableInvoice?.hosted_invoice_url && (
+								<Button asChild size="sm" className="ml-4">
+									<a
+										href={payableInvoice.hosted_invoice_url}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Translate text={localizationConstants.subscriptionPayOutstanding} />
+										<ExternalLink className="ml-2 h-4 w-4" />
+									</a>
+								</Button>
+							)}
+						</div>
+					)}
+					{subscription.status?.is_cancelled && subscription.status.cancel_at && (
+						<div className="rounded-md border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900">
+							<Translate text={localizationConstants.subscriptionCancellationScheduled} />{" "}
+							<strong>{formatDate(subscription.status.cancel_at)}</strong>.
+						</div>
+					)}
+					{subscription.status?.scheduled_change?.effective_at && (
+						<div className="rounded-md border border-blue-200 bg-blue-50 px-5 py-4 text-sm text-blue-900">
+							<Translate text={localizationConstants.subscriptionScheduledChange} />{" "}
+							<strong>
+								{formatDate(
+									new Date(
+										subscription.status.scheduled_change.effective_at,
+									).toISOString(),
+								)}
+							</strong>.
+						</div>
+					)}
+
+					<div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-3">
+						<section className="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm xl:col-span-2">
+							<div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-5 py-5">
+								<div className="min-w-0">
+									<p className="text-sm text-slate-500">
+										<Translate text={localizationConstants.subscriptionDetailTitlePrefix} />
+									</p>
+									<h2 className="mt-1 break-all text-base font-semibold text-slate-900">
+										{subscription.subscription_id ?? "—"}
+									</h2>
+								</div>
+								<span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusClass(status)}`}>
+									{status ? status.replaceAll("_", " ") : t(localizationConstants.subscriptionStatusActive)}
+								</span>
+							</div>
+							<SubscriptionItemsTable items={subscription.items} />
+						</section>
+
+						<aside className="min-w-0 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+							<h2 className="text-lg font-semibold text-slate-900">
+								<Translate text={localizationConstants.subscriptionBillingTitle} />
+							</h2>
+							<div className="mt-5 space-y-5 text-sm">
+								<div className="flex gap-3">
+									<CalendarDays className="mt-0.5 h-4 w-4 text-slate-500" />
+									<div>
+										<p className="font-medium text-slate-900">
+											<Translate text={localizationConstants.subscriptionStartLabel} />
+										</p>
+										<p className="mt-0.5 text-slate-500">{formatDate(subscription.start_at)}</p>
+									</div>
+								</div>
+								{subscription.status?.commitment_end_at && (
+									<div className="flex gap-3">
+										<CalendarDays className="mt-0.5 h-4 w-4 text-slate-500" />
+										<div>
+											<p className="font-medium text-slate-900">
+												<Translate text={localizationConstants.subscriptionCommitmentLabel} />
+											</p>
+											<p className="mt-0.5 text-slate-500">
+												{formatDate(subscription.status.commitment_end_at)}
+											</p>
+										</div>
+									</div>
+								)}
+								<div className="flex gap-3">
+									<CreditCard className="mt-0.5 h-4 w-4 text-slate-500" />
+									<div>
+										<p className="font-medium text-slate-900">
+											<Translate text={localizationConstants.subscriptionNextBilling} />
+										</p>
+										<p className="mt-0.5 text-slate-500">
+											{formatDate(subscription.billing?.next_billing_at ?? null)}
+										</p>
+									</div>
+								</div>
+							</div>
+							<div className="mt-6 border-t border-slate-200 pt-5">
+								<p className="text-sm text-slate-500">
+									<Translate text={localizationConstants.subscriptionCurrentTotal} />
+								</p>
+								<p className="mt-1 text-2xl font-semibold text-slate-900">
+									{formatAmount(subscription.billing?.amount ?? null, subscription.billing?.currency ?? "SEK")}
+								</p>
+								<p className="mt-1 text-xs text-slate-500">
+									{subscription.billing?.interval ?? "—"}
+								</p>
+							</div>
+						</aside>
+					</div>
+				</div>
 			)}
 		</div>
 	);

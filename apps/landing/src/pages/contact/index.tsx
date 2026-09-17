@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
+import { Button } from "@/components/ui/button";
 
 export default function ContactPage() {
   const { t } = useTranslation();
@@ -31,27 +32,27 @@ export default function ContactPage() {
           <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 md:gap-12">
             <form
               className="space-y-4 bg-background border border-border p-5 sm:p-8"
-              onSubmit={(e) => { e.preventDefault(); alert(t("contact.thankYou")); }}
+              onSubmit={(e) => { e.preventDefault(); const fd = new FormData(e.target as HTMLFormElement); window.location.href = `mailto:info@timeflowsystem.se?subject=${encodeURIComponent(fd.get("subject") as string)}&body=${encodeURIComponent(`Namn: ${fd.get("name")}\nFöretag: ${fd.get("company")}\nE-post: ${fd.get("email")}\nTelefon: ${fd.get("phone")}\n\n${fd.get("message")}`)}`; }}
             >
               <div>
                 <label htmlFor="contact-name" className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("contact.nameLabel")}</label>
-                <input id="contact-name" required className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
+                <input id="contact-name" name="name" required className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
               </div>
               <div>
                 <label htmlFor="contact-company" className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("contact.companyLabel")}</label>
-                <input id="contact-company" className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
+                <input id="contact-company" name="company" className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
               </div>
               <div>
                 <label htmlFor="contact-email" className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("contact.emailLabel")}</label>
-                <input id="contact-email" type="email" required className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
+                <input id="contact-email" name="email" type="email" required className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
               </div>
               <div>
                 <label htmlFor="contact-phone" className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("contact.phoneLabel")}</label>
-                <input id="contact-phone" className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
+                <input id="contact-phone" name="phone" className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary" />
               </div>
               <div>
                 <label htmlFor="contact-subject" className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("contact.subjectLabel")}</label>
-                <select id="contact-subject" className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary">
+                <select id="contact-subject" name="subject" className="w-full h-11 px-4 border border-border bg-background outline-none focus:border-primary">
                   <option>{t("contact.subjectOpt1")}</option>
                   <option>{t("contact.subjectOpt2")}</option>
                   <option>{t("contact.subjectOpt3")}</option>
@@ -61,11 +62,11 @@ export default function ContactPage() {
               </div>
               <div>
                 <label htmlFor="contact-message" className="font-mono text-xs uppercase tracking-widest text-muted block mb-2">{t("contact.messageLabel")}</label>
-                <textarea id="contact-message" rows={5} className="w-full p-4 border border-border bg-background outline-none focus:border-primary" />
+                <textarea id="contact-message" name="message" rows={5} className="w-full p-4 border border-border bg-background outline-none focus:border-primary" />
               </div>
-              <button className="w-full py-4 bg-primary text-primary-foreground font-bold rounded-sm cursor-pointer hover:shadow-lg hover:shadow-primary/20 transition-all">
+              <Button type="submit" className="w-full cursor-pointer" size="lg">
                 {t("contact.sendBtn")}
-              </button>
+              </Button>
             </form>
 
             <div className="space-y-8">
@@ -87,9 +88,13 @@ export default function ContactPage() {
               <div className="border border-border p-6 bg-surface">
                 <p className="font-mono text-xs text-primary uppercase tracking-widest mb-2">{t("contact.demoLabel")}</p>
                 <p className="text-sm text-muted mb-4">{t("contact.demoDesc")}</p>
-                <button className="px-5 py-3 bg-foreground text-background font-bold rounded-sm text-sm cursor-pointer hover:bg-ink transition-colors">
+                <Button
+                  variant="outline"
+                  className="bg-foreground hover:bg-ink border-foreground cursor-pointer text-background!"
+                  onClick={() => window.open("https://calendly.com/timeflowsystem/har-kan-du-boka-30-min-mote-med-timeflowsystem?month=2026-09", "_blank")}
+                >
                   {t("contact.findTime")}
-                </button>
+                </Button>
               </div>
             </div>
           </div>

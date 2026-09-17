@@ -11,7 +11,9 @@ import {
   useElements,
   useStripe,
 } from "@stripe/react-stripe-js";
+import type { Stripe, StripeElements } from "@stripe/stripe-js";
 import type { Control } from "react-hook-form";
+import { useEffect } from "react";
 
 import type { PaymentDetailsFormValues } from "../types";
 
@@ -25,7 +27,7 @@ export function CheckoutPaymentStripeSection({
   onSaveCardOnly,
   isSavingCard,
   isPaying,
-  stripeReady,
+  onStripeReady,
 }: {
   control: Control<PaymentDetailsFormValues>;
   cards: UserCard[];
@@ -36,13 +38,21 @@ export function CheckoutPaymentStripeSection({
   onSaveCardOnly: () => void;
   isSavingCard: boolean;
   isPaying: boolean;
-  stripeReady: boolean;
+  onStripeReady: (
+    stripe: Stripe | null,
+    elements: StripeElements | null,
+  ) => void;
 }) {
   const stripe = useStripe();
   const elements = useElements();
 
+  useEffect(() => {
+    onStripeReady(stripe, elements);
+    return () => onStripeReady(null, null);
+  }, [elements, onStripeReady, stripe]);
+
   return (
-    <div className="rounded-xl bg-white p-6 space-y-4">
+    <div className="min-w-0 space-y-5 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 [&_button:not([role=checkbox])]:min-h-11">
       <div className="flex items-center gap-3">
         <span className="text-lg font-semibold text-primary">3.</span>
         <h2 className="text-lg font-semibold text-primary">
@@ -102,7 +112,7 @@ export function CheckoutPaymentStripeSection({
             </p>
           ) : cards.length > 0 ? (
             <div className="space-y-2">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-sm font-medium text-secondary">
                   <Translate
                     text={
@@ -188,7 +198,7 @@ export function CheckoutPaymentStripeSection({
               variant="outline"
               onClick={onSaveCardOnly}
               disabled={
-                !stripe || !elements || isSavingCard || isPaying || !stripeReady
+                !stripe || !elements || isSavingCard || isPaying
               }
             >
               {isSavingCard ? (

@@ -37,6 +37,17 @@ export interface FormDatePickerProps<
 	inputClassName?: string;
 	messageClassName?: string;
 	translateError?: (message: string) => string;
+	/**
+	 * Earliest selectable day, as `yyyy-MM-dd`. Use it for a "to" field so the
+	 * range cannot be inverted in the picker — the value stays typeable through
+	 * the form, so pair it with a schema rule rather than relying on it alone.
+	 */
+	minDate?: string;
+	/**
+	 * Which side of the value the calendar icon sits. Defaults to `"end"`, as
+	 * every existing form draws it; the Tidsplan frames draw it at the start.
+	 */
+	iconPosition?: "start" | "end";
 }
 
 export function FormDatePicker<
@@ -53,12 +64,18 @@ export function FormDatePicker<
 	inputClassName,
 	messageClassName,
 	translateError,
+	minDate,
+	iconPosition = "end",
 }: FormDatePickerProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
 
 	const resolvedLabel =
 		typeof label === "string" ? <Translate text={label} /> : label;
+
+	const minimum =
+		minDate && minDate.trim().length > 0 ? parseISO(minDate) : undefined;
+	const validMinimum = minimum && isValid(minimum) ? minimum : undefined;
 
 	return (
 		<FormField
@@ -93,18 +110,24 @@ export function FormDatePicker<
 										disabled={disabled}
 										className={cn(
 											"h-10 w-full justify-between text-left font-normal border-slate-200 bg-white px-3 shadow-2xs hover:bg-slate-50 focus:ring-1 focus:ring-slate-950 text-sm",
+											iconPosition === "start" && "justify-start gap-2",
 											!validDate && "text-slate-400",
 											inputClassName,
 										)}
 									>
-										<span>
+										{iconPosition === "start" && (
+											<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										)}
+										<span className={cn(iconPosition === "start" && "flex-1")}>
 											{validDate
 												? format(validDate, "yyyy-MM-dd")
 												: placeholder
 													? t(placeholder)
 													: "YYYY-MM-DD"}
 										</span>
-										<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										{iconPosition === "end" && (
+											<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										)}
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent align="start" className="w-auto p-0 border-0 bg-transparent shadow-none">
@@ -114,6 +137,11 @@ export function FormDatePicker<
 										startMonth={new Date(2015, 0)}
 										endMonth={new Date(2035, 11)}
 										selected={validDate}
+										disabled={
+											validMinimum
+												? (date: Date) => date < validMinimum
+												: undefined
+										}
 										onSelect={(date: Date | undefined) => {
 											if (date) {
 												field.onChange(format(date, "yyyy-MM-dd"));

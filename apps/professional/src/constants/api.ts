@@ -1,4 +1,9 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "";
+// Trim a trailing slash so a misconfigured NEXT_PUBLIC_API_URL (e.g.
+// "https://api.example.com/") can never produce a double slash before
+// "/api/v1" — the backend's auth-exclusion allowlist matches paths by exact
+// string, so "//api/v1/..." silently falls through to "auth required" for
+// otherwise-public endpoints instead of erroring loudly.
+const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
 export const BASE_API_VERSION = `${BASE_URL}/api/v1`;
 
 const PROFESSIONALS_BASE_PATH = "/professionals";
@@ -33,7 +38,11 @@ export const API_PATH = {
 	},
 	SUBSCRIPTIONS: {
 		LIST: `${BASE_PATHS.SUBSCRIPTIONS}/list`,
+		CURRENT: `${BASE_PATHS.SUBSCRIPTIONS}/current`,
 		CHECKOUT: `${BASE_PATHS.SUBSCRIPTIONS}/checkout`,
+		CHANGE: `${BASE_PATHS.SUBSCRIPTIONS}/change`,
+		CHANGE_PREVIEW: `${BASE_PATHS.SUBSCRIPTIONS}/change/preview`,
+		OVERVIEW: "/subscriptions",
 	},
 	USER_CARDS: {
 		SETUP_INTENT: `${BASE_PATHS.USER_CARDS}/setup-intent`,
@@ -56,6 +65,10 @@ export const API_PATH = {
 	},
 	COMPANIES: {
 		INVITATION_ACCEPT: `${BASE_PATHS.COMPANIES}/validate/token`,
+		LIFECYCLE: (companyId: string) => `${BASE_PATHS.COMPANIES}/${companyId}/lifecycle`,
+		LIFECYCLE_POPUPS: (companyId: string) => `${BASE_PATHS.COMPANIES}/${companyId}/lifecycle/popups`,
+		LIFECYCLE_POPUP_ACK: (companyId: string, notificationId: string) =>
+			`${BASE_PATHS.COMPANIES}/${companyId}/lifecycle/popups/${notificationId}/ack`,
 	},
 	CUSTOMERS: {
 		LIST: BASE_PATHS.CUSTOMERS,
@@ -153,6 +166,27 @@ export const API_PATH = {
 		PROTOCOL_DOWNLOAD: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/download`,
 		PROTOCOLS_DOWNLOAD_ALL: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/download-all`,
 		PROTOCOL_ARCHIVE: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/archive`,
+		PROTOCOL_POINTS: (orderId: string, protocolId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/points`,
+		PROTOCOL_POINT_DETAIL: (orderId: string, protocolId: string, pointId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/points/${pointId}`,
+		PROTOCOL_POINT_STATUS: (orderId: string, protocolId: string, pointId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/protocols/${protocolId}/points/${pointId}/status`,
+		ATAS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas`,
+		ATA_DETAIL: (orderId: string, ataId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas/${ataId}`,
+		ATA_SEND: (orderId: string, ataId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/atas/${ataId}/send`,
+		STAFF: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/staff-ledger`,
+		STAFF_DETAIL: (orderId: string, staffId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/staff-ledger/${staffId}`,
+		TIMEPLANS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/timeplans`,
+		TIMEPLAN_DETAIL: (orderId: string, planId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/timeplans/${planId}`,
+		QA: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa`,
+		QA_DETAIL: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}`,
+		QA_REPLY: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/reply`,
+		QA_STATUS: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/status`,
+		QA_ARCHIVE: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/archive`,
+		DOCUMENTS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents`,
+		DOCUMENT_DETAIL: (orderId: string, docId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents/${docId}`,
+		DOCUMENT_ARCHIVE: (orderId: string, docId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents/${docId}/archive`,
+		DOCUMENT_RESTORE: (orderId: string, docId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents/${docId}/restore`,
+		CONSTRUCTION_LOGS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/construction-logs`,
+		CONSTRUCTION_LOG_DETAIL: (orderId: string, logId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/construction-logs/${logId}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {

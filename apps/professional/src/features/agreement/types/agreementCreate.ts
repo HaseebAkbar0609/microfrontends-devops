@@ -35,6 +35,7 @@ export interface AgreementDocument {
 	namn: string;
 	fil: string;
 	type: "pdf" | "doc";
+	url?: string;
 }
 
 export type CreateAgreementFullData = CreateAgreementFormData & {

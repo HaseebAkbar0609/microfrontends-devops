@@ -13,11 +13,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { SupplierInfo } from "../../types/expense.types";
+
 interface SupplierSearchableDropdownProps {
 	value: string;
 	onChange: (val: string) => void;
 	suppliers: string[];
-	onAddSupplier: (name: string) => void;
+	onAddSupplier: (name: string, details?: Partial<SupplierInfo>) => void;
 	onOpenAddSupplierModal: () => void;
 	hasError?: boolean;
 }

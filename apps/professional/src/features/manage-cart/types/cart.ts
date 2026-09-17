@@ -69,6 +69,7 @@ export interface ConfirmSubscriptionProps {
 	subtotal: number;
 	total: number;
 	onBackToCart: () => void;
+	isPlanChange?: boolean;
 }
 
 export interface CheckoutOrderSummaryProps {

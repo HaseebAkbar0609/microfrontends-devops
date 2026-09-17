@@ -14,6 +14,8 @@ export function RegisterExpenseSummaryCard({
 	calculations,
 }: RegisterExpenseSummaryCardProps) {
 
+	const currency = calculations.currency || "SEK";
+
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 p-6 mb-6 shadow-2xs font-sans">
 			<h3 className="text-sm font-semibold text-slate-900 mb-4">
@@ -27,7 +29,7 @@ export function RegisterExpenseSummaryCard({
 						<Translate text={localizationConstants.registerExpenseSubtotal} />
 					</span>
 					<span className="text-slate-800 font-medium">
-						{formatNum(calculations.subtotal)} SEK
+						{formatNum(calculations.subtotal)} {currency}
 					</span>
 				</div>
 
@@ -37,7 +39,7 @@ export function RegisterExpenseSummaryCard({
 						<span>
 							<Translate text={localizationConstants.registerExpenseVatBreakdown} /> ({b.rate} %)
 						</span>
-						<span>{formatNum(b.vatAmount)} SEK</span>
+						<span>{formatNum(b.vatAmount)} {currency}</span>
 					</div>
 				))}
 
@@ -46,7 +48,7 @@ export function RegisterExpenseSummaryCard({
 					<span>
 						<Translate text={localizationConstants.registerExpenseTotalVat} />
 					</span>
-					<span>{formatNum(calculations.totalVat)} SEK</span>
+					<span>{formatNum(calculations.totalVat)} {currency}</span>
 				</div>
 
 				<div className="border-t border-slate-200 my-2 pt-2" />
@@ -57,7 +59,7 @@ export function RegisterExpenseSummaryCard({
 						<Translate text={localizationConstants.registerExpenseGrandTotal} />
 					</span>
 					<span className="text-base text-emerald-600 font-bold">
-						{formatNum(calculations.grandTotal)} SEK
+						{formatNum(calculations.grandTotal)} {currency}
 					</span>
 				</div>
 			</div>

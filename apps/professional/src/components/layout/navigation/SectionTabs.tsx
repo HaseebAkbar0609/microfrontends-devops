@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { cn } from "@/lib/utils";
 import type { TranslationKeys } from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { TAB_LIST_CLASS, TAB_TRIGGER_CLASS } from "./tabRowStyles";
 
 export interface SectionTabItem {
@@ -13,6 +13,13 @@ export interface SectionTabItem {
   labelKey?: TranslationKeys;
   /** Literal label, for values that are not translatable. */
   label?: string;
+  /**
+   * A section the design draws but that cannot be opened yet. It stays in the
+   * row, disabled, with `disabledReasonKey` as its tooltip — never a tab that
+   * silently shows nothing.
+   */
+  disabled?: boolean;
+  disabledReasonKey?: TranslationKeys;
 }
 
 interface SectionTabsProps {
@@ -43,12 +50,14 @@ export function SectionTabs({
   children,
 }: SectionTabsProps) {
   const { query, changeQueries } = useQueryParams();
+  const t = useTranslate();
 
   if (items.length === 0) return null;
 
   const fallbackId = defaultId ?? items[0].id;
   const paramValue = query.get(paramName);
-  const activeId = items.some((item) => item.id === paramValue)
+  /* A disabled section cannot be reached by editing the query string either. */
+  const activeId = items.some((item) => item.id === paramValue && !item.disabled)
     ? (paramValue as string)
     : fallbackId;
 
@@ -73,7 +82,16 @@ export function SectionTabs({
             <TabsTrigger
               key={item.id}
               value={item.id}
-              className={TAB_TRIGGER_CLASS}
+              disabled={item.disabled}
+              title={
+                item.disabled && item.disabledReasonKey
+                  ? t(item.disabledReasonKey)
+                  : undefined
+              }
+              className={cn(
+                TAB_TRIGGER_CLASS,
+                item.disabled && "disabled:pointer-events-auto disabled:cursor-not-allowed",
+              )}
             >
               {item.labelKey ? <Translate text={item.labelKey} /> : item.label}
             </TabsTrigger>

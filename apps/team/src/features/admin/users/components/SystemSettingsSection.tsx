@@ -8,12 +8,16 @@ import { FormSelect } from "@/components/form/FormSelect";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { AddUserFormValues } from "@/schemas/admin/addUser.schema";
+import { ADMIN_OPTION_NONE } from "../constants/adminUsers.constants";
+import { parseLogout } from "../utils/adminUserForms";
+import type { AdminUserDetail } from "../types/adminUsers.types";
 
 interface SystemSettingsSectionProps {
   form: UseFormReturn<AddUserFormValues>;
+  user?: AdminUserDetail;
 }
 
-export function SystemSettingsSection({ form }: SystemSettingsSectionProps) {
+export function SystemSettingsSection({ form, user }: SystemSettingsSectionProps) {
   const { t } = useTranslation();
 
   const languageOptions = [
@@ -22,12 +26,17 @@ export function SystemSettingsSection({ form }: SystemSettingsSectionProps) {
   ];
 
   const logoutOptions = [
+    { value: ADMIN_OPTION_NONE, label: t(localizationConstants.adminNone) },
     { value: "30m", label: t(localizationConstants.logout30m) },
     { value: "1h", label: t(localizationConstants.logout1h) },
     { value: "2h", label: t(localizationConstants.logout2h) },
     { value: "4h", label: t(localizationConstants.logout4h) },
     { value: "8h", label: t(localizationConstants.logout8h) },
   ];
+  const logout = form.watch("automaticLogout");
+  if (logout && !logoutOptions.some((option) => option.value === logout)) {
+    logoutOptions.push({ value: logout, label: t(localizationConstants.adminLogoutMinutes, { minutes: parseLogout(logout) }) });
+  }
 
   return (
     <div>
@@ -42,7 +51,9 @@ export function SystemSettingsSection({ form }: SystemSettingsSectionProps) {
         <FormSelect
           control={form.control}
           name="language"
+          disabled={!!user && !user.editable_fields?.includes("language")}
           label={localizationConstants.addUserLanguageLabel}
+          placeholder={localizationConstants.adminNone}
           options={languageOptions}
           className="grid gap-1"
           triggerClassName="w-full"
@@ -50,6 +61,7 @@ export function SystemSettingsSection({ form }: SystemSettingsSectionProps) {
         <FormSelect
           control={form.control}
           name="automaticLogout"
+          disabled={!!user && !user.editable_fields?.includes("auto_logout")}
           label={localizationConstants.addUserAutomaticLogoutLabel}
           options={logoutOptions}
           className="grid gap-1"

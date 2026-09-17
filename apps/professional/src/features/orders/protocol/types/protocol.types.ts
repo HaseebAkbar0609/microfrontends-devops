@@ -11,6 +11,7 @@ export interface ProtocolItem {
 	projectName?: string;
 	date: string;
 	type: ProtocolType | string;
+	templateType?: ProtocolTemplateType;
 	category?: string;
 	address?: string;
 	postalCode?: string;
@@ -92,6 +93,26 @@ export interface ProtocolDetailData {
 	meetingInfo: ProtocolMeetingInfo;
 	nextMeeting?: ProtocolMeetingInfo;
 	points: ProtocolMeetingPoint[];
+}
+
+export interface UpdateProtocolFullPayload {
+	startDate?: string;
+	startTime?: string;
+	endDate?: string;
+	endTime?: string;
+	host?: string;
+	participants?: string[];
+	protocolNumber?: string;
+	topic?: string;
+	rubrik?: string;
+	category?: string;
+	location?: string;
+	address?: string;
+	postalCode?: string;
+	city?: string;
+	information?: string;
+	comment?: string;
+	nextMeeting?: ProtocolMeetingInfo;
 }
 
 export type ProtocolSortField = "date" | "type" | "documentName" | "status";

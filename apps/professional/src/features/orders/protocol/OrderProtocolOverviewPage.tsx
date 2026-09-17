@@ -7,22 +7,39 @@ import { ProtocolOverviewTable } from "./components/ProtocolOverviewTable";
 import { CreateProtocolModal } from "./components/CreateProtocolModal";
 import { UploadProtocolModal } from "./components/UploadProtocolModal";
 import { ProtocolDetailView } from "./components/ProtocolDetailView";
+import { ActionProtocolDetailView } from "./components/ActionProtocolDetailView";
+import { EditProtocolView } from "./components/EditProtocolView";
 import { PROTOCOL_CONSTANTS, type ProtocolTemplateType } from "./constants/protocol.constants";
-import type { CreateProtocolPayload, ProtocolItem } from "./types/protocol.types";
+import type { CreateProtocolPayload } from "./types/protocol.types";
+import { getProtocolDetailAction } from "@/api-actions/orders/protocols";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+
+const VALID_TEMPLATE_TYPES = new Set<string>(
+	Object.values(PROTOCOL_CONSTANTS.TEMPLATE_TYPES)
+);
+
+function toTemplateType(value: string | undefined): ProtocolTemplateType | null {
+	if (value && VALID_TEMPLATE_TYPES.has(value)) {
+		return value as ProtocolTemplateType;
+	}
+	return null;
+}
 
 export interface OrderProtocolOverviewPageProps {
 	orderId?: string;
 	onDetailModeChange?: (isOpen: boolean) => void;
 }
 
+export type ProtocolViewMode = "table" | "detail" | "edit";
+
 export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: OrderProtocolOverviewPageProps) {
 	const t = useTranslate();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const queryProtocolId = searchParams?.get("protocolId") || null;
+	const queryAction = searchParams?.get("action") || null;
 
 	const {
 		paginatedRows,
@@ -41,27 +58,107 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 		addProtocol,
 		archiveProtocol,
 		deleteProtocol,
+		reload,
 	} = useProtocols(orderId);
 
-	const [selectedProtocolId, setSelectedProtocolId] = useState<string | null>(queryProtocolId);
+	const getBasePath = () => {
+		if (orderId) return `/module/production/order/${orderId}/protocol`;
+		if (typeof window !== "undefined" && window.location.pathname) {
+			return window.location.pathname;
+		}
+		return "/module/production/order/protocol";
+	};
+
+	const initialViewMode: ProtocolViewMode =
+		queryAction === "edit" ? "edit" : queryProtocolId ? "detail" : "table";
+
+	const [viewMode, setViewMode] = useState<ProtocolViewMode>(initialViewMode);
+	const [activeProtocolId, setActiveProtocolId] = useState<string | null>(
+		queryProtocolId || (initialViewMode === "edit" ? "proto-1" : null)
+	);
+	const [activeProtocolType, setActiveProtocolType] = useState<ProtocolTemplateType | null>(null);
 
 	useEffect(() => {
-		setSelectedProtocolId(queryProtocolId);
-		onDetailModeChange?.(!!queryProtocolId);
-	}, [queryProtocolId, onDetailModeChange]);
+		if (queryAction === "edit") {
+			setViewMode("edit");
+			setActiveProtocolId((prev) => queryProtocolId || prev || "proto-1");
+			onDetailModeChange?.(true);
+		} else if (queryProtocolId) {
+			setViewMode("detail");
+			setActiveProtocolId(queryProtocolId);
+			onDetailModeChange?.(true);
+		}
+	}, [queryProtocolId, queryAction, onDetailModeChange]);
 
-	const handleSelectProtocol = (id: string | null) => {
-		setSelectedProtocolId(id);
-		onDetailModeChange?.(!!id);
-		if (orderId) {
-			const basePath = `/module/production/order/${orderId}/protocol`;
-			if (id) {
-				router.push(`${basePath}?protocolId=${encodeURIComponent(id)}`);
+	useEffect(() => {
+		if ((viewMode === "detail" || viewMode === "edit") && activeProtocolId && !activeProtocolType) {
+			const found = paginatedRows.find((r) => r.id === activeProtocolId);
+			const resolved = toTemplateType(found?.templateType);
+			if (resolved) {
+				setActiveProtocolType(resolved);
 			} else {
-				router.push(basePath);
+				const targetOrderId = orderId || PROTOCOL_CONSTANTS.DEFAULT_ORDER_ID;
+				getProtocolDetailAction(targetOrderId, activeProtocolId).then((result) => {
+					if (result.success) {
+						const apiResolved = toTemplateType(result.data?.templateType);
+						if (apiResolved) {
+							setActiveProtocolType(apiResolved);
+						}
+					}
+				});
 			}
 		}
+	}, [viewMode, activeProtocolId, activeProtocolType, paginatedRows, orderId]);
+
+	const handleOpenDetail = (id: string) => {
+		setActiveProtocolId(id);
+		setViewMode("detail");
+		onDetailModeChange?.(true);
+		const found = paginatedRows.find((r) => r.id === id);
+		setActiveProtocolType(toTemplateType(found?.templateType));
+		const basePath = getBasePath();
+		router.push(`${basePath}?protocolId=${encodeURIComponent(id)}`);
 	};
+
+	const handleOpenEdit = (id: string) => {
+		const targetId = id || activeProtocolId || paginatedRows[0]?.id || "proto-1";
+		setActiveProtocolId(targetId);
+		setViewMode("edit");
+		onDetailModeChange?.(true);
+		const found = paginatedRows.find((r) => r.id === targetId);
+		const resolved = toTemplateType(found?.templateType);
+		if (resolved) {
+			setActiveProtocolType(resolved);
+		}
+		const basePath = getBasePath();
+		router.push(`${basePath}?protocolId=${encodeURIComponent(targetId)}&action=edit`);
+	};
+
+	const handleBackToTable = () => {
+		setViewMode("table");
+		setActiveProtocolId(null);
+		setActiveProtocolType(null);
+		onDetailModeChange?.(false);
+		const basePath = getBasePath();
+		router.push(basePath);
+	};
+
+	const handleBackToDetail = () => {
+		if (activeProtocolId) {
+			setViewMode("detail");
+			onDetailModeChange?.(true);
+			const basePath = getBasePath();
+			router.push(`${basePath}?protocolId=${encodeURIComponent(activeProtocolId)}`);
+		} else {
+			handleBackToTable();
+		}
+	};
+
+	const handleSavedEdit = () => {
+		reload();
+		handleBackToDetail();
+	};
+
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
 	const [createTemplateType, setCreateTemplateType] = useState<ProtocolTemplateType>(
 		PROTOCOL_CONSTANTS.TEMPLATE_TYPES.STANDARD
@@ -77,8 +174,7 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 		try {
 			await addProtocol(payload);
 			showToast("success", t(localizationConstants.toastProtocolCreated));
-		} catch (error) {
-			console.error("[OrderProtocolOverviewPage] Failed to create protocol:", error);
+		} catch {
 			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsCreateOpen(false);
@@ -89,25 +185,42 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 		try {
 			await addProtocol(payload);
 			showToast("success", t(localizationConstants.toastProtocolCreated));
-		} catch (error) {
-			console.error("[OrderProtocolOverviewPage] Failed to upload protocol:", error);
+		} catch {
 			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsUploadOpen(false);
 		}
 	};
 
-	const handleEditProtocolFromDetail = (_protocol: ProtocolItem) => {
-		setIsCreateOpen(true);
-	};
+	if (viewMode === "edit" && activeProtocolId) {
+		return (
+			<EditProtocolView
+				protocolId={activeProtocolId}
+				orderId={orderId}
+				templateType={activeProtocolType || PROTOCOL_CONSTANTS.TEMPLATE_TYPES.STANDARD}
+				onBack={handleBackToDetail}
+				onSaved={handleSavedEdit}
+			/>
+		);
+	}
 
-	if (selectedProtocolId) {
+	if (viewMode === "detail" && activeProtocolId) {
+		if (activeProtocolType === PROTOCOL_CONSTANTS.TEMPLATE_TYPES.ACTION) {
+			return (
+				<ActionProtocolDetailView
+					protocolId={activeProtocolId}
+					orderId={orderId}
+					onBack={handleBackToTable}
+					onEditProtocol={(proto) => handleOpenEdit(proto.id || activeProtocolId)}
+				/>
+			);
+		}
 		return (
 			<ProtocolDetailView
-				protocolId={selectedProtocolId}
+				protocolId={activeProtocolId}
 				orderId={orderId}
-				onBack={() => handleSelectProtocol(null)}
-				onEditProtocol={handleEditProtocolFromDetail}
+				onBack={handleBackToTable}
+				onEditProtocol={(proto) => handleOpenEdit(proto.id || activeProtocolId)}
 			/>
 		);
 	}
@@ -133,7 +246,8 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 				onOpenUpload={() => setIsUploadOpen(true)}
 				onArchive={archiveProtocol}
 				onDelete={deleteProtocol}
-				onViewDetail={(id) => handleSelectProtocol(id)}
+				onViewDetail={handleOpenDetail}
+				onEditProtocol={handleOpenEdit}
 			/>
 
 			{/* Create Standard / Action Protocol Modal */}
@@ -157,4 +271,3 @@ export function OrderProtocolOverviewPage({ orderId, onDetailModeChange }: Order
 }
 
 export default OrderProtocolOverviewPage;
-

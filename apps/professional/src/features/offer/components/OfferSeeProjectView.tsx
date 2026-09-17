@@ -100,9 +100,11 @@ function AccordionSection({
 function CreateOrderProjectModal({
   open,
   onClose,
+  onGo,
 }: {
   open: boolean;
   onClose: () => void;
+  onGo: (selection: "project" | "order") => void;
 }) {
   const t = useTranslate();
   const [selected, setSelected] = useState<"project" | "order">("project");
@@ -163,7 +165,7 @@ function CreateOrderProjectModal({
           </Button>
           <Button
             className="h-9 cursor-pointer gap-2 bg-zinc-900 px-4 text-sm font-medium text-white shadow-sm hover:bg-zinc-700"
-            onClick={onClose}
+            onClick={() => onGo(selected)}
           >
             <Check size={14} aria-hidden={true} />
             {t(localizationConstants.goToButton)}
@@ -526,6 +528,14 @@ export function OfferSeeProjectView({ offerId: _offerId, data }: Props) {
       <CreateOrderProjectModal
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
+        onGo={(selection) => {
+          setCreateModalOpen(false);
+          router.push(
+            selection === "order"
+              ? `/module/production/order/create?projectId=${data.id}`
+              : `/module/production/project?sourceProjectId=${data.id}`,
+          );
+        }}
       />
     </div>
   );

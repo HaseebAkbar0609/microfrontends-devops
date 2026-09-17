@@ -1,0 +1,10 @@
+export const ADMIN_PAGE_SIZE = 10;
+export const OPTION_PAGE_SIZE = 30;
+export const MAX_MEMBERS_PER_REQUEST = 100;
+export const NAME_MAX_LENGTH = 100;
+export const TEXT_MAX_LENGTH = 255;
+export const DESCRIPTION_MAX_LENGTH = 2000;
+export const PASSWORD_MIN_LENGTH = 8;
+export const PASSWORD_MAX_BYTES = 72;
+export const LOGOUT_MIN_MINUTES = 1;
+export const LOGOUT_MAX_MINUTES = 1440;
