@@ -4,7 +4,7 @@ import React from "react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { TranslationKeys } from "@/utils/translation/constants";
-import type { CaseStatus } from "../../types/cases.types";
+import type { CaseStatus } from "../../../types/cases.types";
 
 interface CaseStatusBadgeProps {
 	status: CaseStatus;

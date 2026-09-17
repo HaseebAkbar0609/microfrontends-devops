@@ -74,7 +74,6 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 			author: "Stefan Eriksson",
 			authorRole: "Kund",
 			content,
-			createdAt: `${new Date().toISOString().split("T")[0]} | ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`,
 		});
 		showToast("success", t(localizationConstants.casesToastMessageSent));
 	};

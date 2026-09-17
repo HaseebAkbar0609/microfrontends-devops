@@ -1,6 +1,6 @@
 import localizationConstants from "@/utils/translation/constants";
 import type { TranslationKeys } from "@/utils/translation/constants";
-import type { CaseCategory } from "../../types/cases.types";
+import type { CaseCategory } from "../../../types/cases.types";
 
 export function getCategoryLabelKey(category: CaseCategory): TranslationKeys {
 	switch (category) {

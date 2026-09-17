@@ -3,7 +3,9 @@
 import React from "react";
 import { CheckCircle2, MessageSquare, FileText, PlusCircle } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, {
+	type TranslationKeys,
+} from "@/utils/translation/constants";
 import type { CaseItem } from "../../../types/cases.types";
 import { CaseStatusBadge } from "../shared";
 
@@ -13,11 +15,11 @@ interface CaseActivityLogViewProps {
 
 interface TimelineEvent {
 	id: string;
-	titleKey: any;
+	titleKey: TranslationKeys;
 	description: string;
 	date: string;
 	author: string;
-	icon: any;
+	icon: React.ComponentType<{ className?: string }>;
 	statusBadge?: CaseItem["status"];
 }
 

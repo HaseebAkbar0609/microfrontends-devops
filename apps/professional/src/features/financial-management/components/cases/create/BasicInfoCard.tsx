@@ -5,12 +5,11 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { CASE_CATEGORIES } from "../../../constants/cases.constants";
 import type { CaseCategory, CaseFormData } from "../../../types/cases.types";
-import { getCategoryLabelKey } from "../shared";
 
 interface BasicInfoCardProps {
 	formData: CaseFormData;
 	errors: Partial<Record<keyof CaseFormData, string>>;
-	onChange: (field: keyof CaseFormData, value: any) => void;
+	onChange: (field: keyof CaseFormData, value: string) => void;
 }
 
 export function BasicInfoCard({

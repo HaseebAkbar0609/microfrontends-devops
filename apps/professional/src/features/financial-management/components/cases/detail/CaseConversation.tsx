@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Paperclip, Send, User } from "lucide-react";
+import { Paperclip, Send } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { CaseMessage } from "../../../types/cases.types";

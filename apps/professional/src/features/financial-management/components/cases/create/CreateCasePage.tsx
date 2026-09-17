@@ -7,7 +7,7 @@ import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useCases } from "../../../hooks/useCases";
 import { CASES_BASE_ROUTE } from "../../../constants/cases.constants";
-import type { CaseCategory, CaseFormData, CaseDocument } from "../../../types/cases.types";
+import type { CaseFormData } from "../../../types/cases.types";
 import { CreateCaseHeader } from "./CreateCaseHeader";
 import { CreateCaseTabs, type CreateCaseTab } from "./CreateCaseTabs";
 import { BasicInfoCard } from "./BasicInfoCard";
@@ -66,7 +66,10 @@ export function CreateCasePage() {
 		};
 	});
 
-	const handleFieldChange = (field: keyof CaseFormData, value: any) => {
+	const handleFieldChange = <K extends keyof CaseFormData>(
+		field: K,
+		value: CaseFormData[K]
+	) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
 		if (errors[field]) {
 			setErrors((prev) => ({ ...prev, [field]: undefined }));
@@ -97,25 +100,13 @@ export function CreateCasePage() {
 		setIsSubmitting(true);
 		try {
 			const newCase = addCase({
-				caseNumber: formData.id.replace("#", ""),
+				id: formData.id.replace("#", ""),
 				title: formData.title,
 				category: formData.category,
 				createdBy: formData.createdBy,
-				createdRole: "Kund",
 				date: formData.date,
-				status: "not_started",
 				description: formData.description,
-				messages: formData.initialMessage?.trim()
-					? [
-							{
-								id: `msg-${Date.now()}`,
-								caseId: formData.id,
-								author: formData.createdBy,
-								content: formData.initialMessage,
-								createdAt: `${formData.date} | 12:00 pm`,
-							},
-					  ]
-					: [],
+				initialMessage: formData.initialMessage,
 				documents: formData.documents,
 				images: formData.images,
 			});

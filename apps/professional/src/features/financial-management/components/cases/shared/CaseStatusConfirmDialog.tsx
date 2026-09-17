@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { CaseStatus } from "../../types/cases.types";
+import type { CaseStatus } from "../../../types/cases.types";
 import { CaseStatusBadge } from "./CaseStatusBadge";
 
 interface CaseStatusConfirmDialogProps {

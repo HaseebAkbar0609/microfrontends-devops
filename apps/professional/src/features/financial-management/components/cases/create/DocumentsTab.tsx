@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { FileText, Trash2, Eye, UploadCloud, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
+import { FileText, Trash2, UploadCloud, Image as ImageIcon } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { CaseDocument } from "../../../types/cases.types";
@@ -206,12 +207,14 @@ export function DocumentsTab({
 								key={img.id}
 								className="relative group w-28 border border-slate-200 rounded-lg overflow-hidden bg-slate-50 shadow-2xs"
 							>
-								<div className="h-20 bg-slate-200 flex items-center justify-center overflow-hidden">
+								<div className="relative h-20 bg-slate-200 flex items-center justify-center overflow-hidden">
 									{img.url ? (
-										<img
+										<Image
 											src={img.url}
 											alt={img.name}
-											className="w-full h-full object-cover"
+											fill
+											unoptimized
+											className="object-cover"
 										/>
 									) : (
 										<ImageIcon className="w-8 h-8 text-slate-400" />

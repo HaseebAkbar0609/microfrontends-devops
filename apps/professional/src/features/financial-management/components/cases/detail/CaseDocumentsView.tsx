@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { FileText, Image as ImageIcon } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -91,12 +92,14 @@ export function CaseDocumentsView({
 								className="w-32 border border-slate-200 rounded-lg overflow-hidden bg-slate-50 shadow-2xs cursor-pointer hover:border-slate-400 transition-colors"
 								onClick={() => alert(`Visar bild: ${img.name}`)}
 							>
-								<div className="h-24 bg-slate-100 flex items-center justify-center overflow-hidden">
+								<div className="relative h-24 bg-slate-100 flex items-center justify-center overflow-hidden">
 									{img.url ? (
-										<img
+										<Image
 											src={img.url}
 											alt={img.name}
-											className="w-full h-full object-cover"
+											fill
+											unoptimized
+											className="object-cover"
 										/>
 									) : (
 										<ImageIcon className="w-8 h-8 text-slate-300" />

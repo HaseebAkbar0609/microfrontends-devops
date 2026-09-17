@@ -3,7 +3,9 @@
 import React from "react";
 import { MessageSquare, Info, FileText, History } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, {
+	type TranslationKeys,
+} from "@/utils/translation/constants";
 
 export type CaseDetailTab =
 	| "konversation"
@@ -20,7 +22,11 @@ export function CaseDetailTabs({
 	activeTab,
 	onTabChange,
 }: CaseDetailTabsProps) {
-	const tabs: { id: CaseDetailTab; labelKey: any; icon: any }[] = [
+	const tabs: {
+		id: CaseDetailTab;
+		labelKey: TranslationKeys;
+		icon: React.ComponentType<{ className?: string }>;
+	}[] = [
 		{
 			id: "konversation",
 			labelKey: localizationConstants.casesTabConversation,
