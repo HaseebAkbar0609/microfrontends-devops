@@ -119,6 +119,8 @@ export * from "./constants/claims.constants";
 export * from "./utils/claimsRepository";
 export * from "./hooks/useClaims";
 export * from "./hooks/useClaimTemplates";
-
-
-
+export * from "./components/cases";
+export * from "./types/cases.types";
+export * from "./constants/cases.constants";
+export * from "./utils/casesRepository";
+export * from "./hooks/useCases";
