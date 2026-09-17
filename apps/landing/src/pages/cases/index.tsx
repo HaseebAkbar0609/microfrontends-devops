@@ -41,6 +41,20 @@ export default function CasesPage() {
           </div>
         </header>
 
+         {/* Real Success Stories */}
+        <section className="max-w-3xl mx-auto pt-16 px-6 text-center">
+          <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">
+            {t("cases.successStoriesLabel")}
+          </p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+            {t("cases.successStoriesTitle")}{" "}
+            <span className="text-primary italic">
+              {t("cases.successStoriesTitle2")}
+            </span> 
+           </h2>
+        </section>
+
+
         <section className="py-16 px-6">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-6">
             {industries.map((ind) => {

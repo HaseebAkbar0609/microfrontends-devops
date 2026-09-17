@@ -40,11 +40,11 @@ import {
 } from "@/components/ui/table";
 import { TablePagination } from "@/components/table/TablePagination";
 import { cn } from "@/lib/utils";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
-import { showToast } from "@/lib/toast";
+import { saveRecord, deleteRecord } from "@/features/my-pages/shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "@/features/my-pages/shared/feedback";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { Protocol, ProtocolType } from "../constants/mockData";
+import { EMPTY_MEETING, ProtocolType } from "../constants/data";
 import {
 	PROTOCOL_STATUS_CLASS,
 	PROTOCOL_STATUS_ICON,
@@ -57,11 +57,7 @@ import {
 	useProtocolFilters,
 } from "../hooks/useProtocolFilters";
 import { MeetingValues } from "../schemas/protocol.schema";
-import {
-	createProtocol,
-	listProtocols,
-	removeProtocol,
-} from "../services/protocolService";
+import { updateProtocol } from "../services/protocolService";
 import NewMeetingDialog from "./NewMeetingDialog";
 
 const COLUMNS = [
@@ -79,6 +75,7 @@ const COLUMNS = [
 ] as const;
 
 const FILTER_OPTIONS: { value: ProtocolFilter; labelKey: string }[] = [
+	{ value: "archived", labelKey: localizationConstants.protocolArchiveAction },
 	{ value: "all", labelKey: localizationConstants.protocolFilterAll },
 	{
 		value: "notSent",
@@ -99,18 +96,18 @@ const FILTER_OPTIONS: { value: ProtocolFilter; labelKey: string }[] = [
 const MeetingProtocolsTab = () => {
 	const t = useTranslate();
 	const router = useRouter();
-	const [protocols, setProtocols] = useState<Protocol[]>(() =>
-		listProtocols(),
-	);
+	const filters = useProtocolFilters();
+	const { queryResult, paged: protocols } = filters;
+	const action = useMyPagesAction();
 	const [createType, setCreateType] = useState<ProtocolType | null>(null);
 	const [deletingId, setDeletingId] = useState<string | null>(null);
-	const filters = useProtocolFilters(protocols);
+	const [archiveMode, setArchiveMode] = useState(false);
+ const restoring = !!protocols.find(item => item.id === deletingId)?.archived;
+ const archiveLabel = restoring ? localizationConstants.myPagesRestore : localizationConstants.myPagesArchive;
 
-	const handleCreate = (values: MeetingValues, type: ProtocolType) => {
-		setProtocols(
-			createProtocol({
-				id: `temp-${crypto.randomUUID()}`,
-				date: values.startDate || mockDate(0),
+	const handleCreate = (values: MeetingValues, type: ProtocolType) => action.run(
+			() => saveRecord("protocol", {
+				date: values.startDate,
 				title: values.title,
 				status: "sent",
 				department: values.category,
@@ -133,44 +130,27 @@ const MeetingProtocolsTab = () => {
 					information: values.information,
 					comment: "",
 				},
-				nextMeeting: {
-					host: "",
-					startDate: "",
-					startTime: "",
-					endDate: "",
-					endTime: "",
-					subject: "",
-					protocolNumber: "",
-					participantIds: [],
-					title: "",
-					category: "",
-					location: "",
-					address: "",
-					postalCode: "",
-					city: "",
-					information: "",
-					comment: "",
-				},
+				nextMeeting: EMPTY_MEETING,
 				points: [],
 			}),
+			localizationConstants.protocolSentToast,
 		);
-		showToast("success", t(localizationConstants.protocolSentToast));
-	};
 
 	const handleArchive = (id: string) => {
-		setProtocols(removeProtocol(id));
-		showToast("success", t(localizationConstants.protocolArchivedToast));
+		setArchiveMode(true);
+		setDeletingId(id);
 	};
 
-	const handleDelete = () => {
+	const handleDelete = async () => {
 		if (!deletingId) return;
-		setProtocols(removeProtocol(deletingId));
-		setDeletingId(null);
-		showToast("success", t(localizationConstants.protocolDeletedToast));
+		const protocol = protocols.find((item) => item.id === deletingId);
+		if (protocol && await action.run(() => archiveMode ? updateProtocol(protocol, { archived: !protocol.archived }) : deleteRecord(protocol),
+			archiveMode ? localizationConstants.protocolSavedToast : localizationConstants.protocolDeletedToast)) setDeletingId(null);
 	};
 
 	return (
 		<div className="flex flex-col gap-5">
+			<MyPagesQueryState query={queryResult} />
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<div className="flex flex-wrap items-center gap-4">
 					<div className="relative w-full max-w-xs">
@@ -365,6 +345,7 @@ const MeetingProtocolsTab = () => {
 												className="w-40 rounded-md border border-slate-200 bg-white p-1 shadow-md"
 											>
 												<DropdownMenuItem
+ disabled={!protocol.canEdit || action.pending}
 													onClick={() =>
 														router.push(
 															`/tools/my-pages/protocol/${protocol.id}/edit`,
@@ -380,6 +361,7 @@ const MeetingProtocolsTab = () => {
 													/>
 												</DropdownMenuItem>
 												<DropdownMenuItem
+ disabled={!protocol.canEdit || action.pending}
 													onClick={() =>
 														handleArchive(
 															protocol.id,
@@ -390,15 +372,14 @@ const MeetingProtocolsTab = () => {
 													<Archive className="h-4 w-4 text-slate-600" />
 													<Translate
 														text={
-															localizationConstants.protocolArchiveAction
+															(protocol.archived ? localizationConstants.myPagesRestore : localizationConstants.protocolArchiveAction)
 														}
 													/>
 												</DropdownMenuItem>
 												<DropdownMenuItem
+ disabled={!protocol.canEdit || action.pending}
 													onClick={() =>
-														setDeletingId(
-															protocol.id,
-														)
+														{ setArchiveMode(false); setDeletingId(protocol.id); }
 													}
 													className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
 												>
@@ -438,33 +419,33 @@ const MeetingProtocolsTab = () => {
 
 			<AlertDialog
 				open={deletingId !== null}
-				onOpenChange={(value) => !value && setDeletingId(null)}
+				onOpenChange={(value) => !value && !action.pending && setDeletingId(null)}
 			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
 							<Translate
 								text={
-									localizationConstants.protocolDeleteConfirmTitle
+									archiveMode ? archiveLabel : localizationConstants.protocolDeleteConfirmTitle
 								}
 							/>
 						</AlertDialogTitle>
 						<AlertDialogDescription>
 							<Translate
 								text={
-									localizationConstants.protocolDeleteConfirmDesc
+									archiveMode ? (restoring ? localizationConstants.myPagesRestoreDescription : localizationConstants.myPagesArchiveDescription) : localizationConstants.protocolDeleteConfirmDesc
 								}
 							/>
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel>
+						<AlertDialogCancel disabled={action.pending}>
 							<Translate text={localizationConstants.cancel} />
 						</AlertDialogCancel>
-						<AlertDialogAction onClick={handleDelete}>
+						<AlertDialogAction disabled={action.pending} onClick={(event) => { event.preventDefault(); void handleDelete(); }}>
 							<Translate
 								text={
-									localizationConstants.subscriptionPaymentDelete
+									archiveMode ? archiveLabel : localizationConstants.subscriptionPaymentDelete
 								}
 							/>
 						</AlertDialogAction>

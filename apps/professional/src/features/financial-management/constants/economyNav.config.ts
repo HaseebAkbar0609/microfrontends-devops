@@ -33,7 +33,7 @@ export const ECONOMY_SECTIONS = [
 	{ id: "authorities", labelKey: localizationConstants.authorities, href: ECONOMY_AUTHORITIES_BASE_URL, implemented: true },
 	{ id: "year-end", labelKey: localizationConstants.yearEnd, href: ECONOMY_YEAR_END_BASE_URL, implemented: true },
 	{ id: "claims", labelKey: localizationConstants.claims, href: ECONOMY_CLAIMS_BASE_URL, implemented: true },
-	{ id: "cases", labelKey: localizationConstants.cases, href: ECONOMY_CASES_BASE_URL, implemented: false },
+	{ id: "cases", labelKey: localizationConstants.cases, href: ECONOMY_CASES_BASE_URL, implemented: true },
 	{ id: "customers", labelKey: localizationConstants.customerRegister, href: ECONOMY_CUSTOMERS_BASE_URL, implemented: false },
 	{ id: "suppliers", labelKey: localizationConstants.supplierRegister, href: ECONOMY_SUPPLIERS_BASE_URL, implemented: false },
 	{ id: "articles", labelKey: localizationConstants.registerArtiklar, href: ECONOMY_ARTICLES_BASE_URL, implemented: false },

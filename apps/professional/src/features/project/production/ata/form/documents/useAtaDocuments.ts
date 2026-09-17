@@ -5,7 +5,7 @@ import type { UseFormReturn } from "react-hook-form";
 
 import { generateTempId } from "@/lib/tempId";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
-import { sortPickedFiles, type PickRejection } from "../../../../shared/recordFiles";
+import { baseNameOf, sortPickedFiles, type PickRejection } from "../../../../shared/recordFiles";
 import { todayIso } from "../../../../shared/todayIso";
 import { ATA_FILE_RULES } from "../../projectAta.config";
 import type { AtaFormValues } from "../ataFormSchema";
@@ -21,12 +21,6 @@ const PICK_MESSAGES: Record<PickRejection["reason"] | "none", TranslationKeys> =
 export interface AtaPickMessage {
 	key: TranslationKeys;
 	name?: string;
-}
-
-/** "Tidrapport v28.pdf" → "Tidrapport v28", the name a new document starts with. */
-function baseName(fileName: string): string {
-	const dot = fileName.lastIndexOf(".");
-	return dot > 0 ? fileName.slice(0, dot) : fileName;
 }
 
 /**
@@ -60,7 +54,7 @@ export function useAtaDocuments(form: UseFormReturn<AtaFormValues>) {
 		const added = pending.map((file) => ({
 			id: generateTempId(),
 			date: today,
-			documentName: baseName(file.name),
+			documentName: baseNameOf(file.name),
 			fileName: file.name,
 			file,
 		}));

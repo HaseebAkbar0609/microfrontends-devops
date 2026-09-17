@@ -9,7 +9,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { distinctPeople, padCount, sectionTotals } from "../../ataMath";
 import { ATA_SECTION_CONFIG } from "../../projectAta.config";
 import type { AtaLineItem, AtaSection } from "../../types";
-import { AtaCollapsibleCard } from "./AtaCollapsibleCard";
+import { RecordCollapsibleCard } from "../../../components/RecordCollapsibleCard";
 import { AtaLineItemsTable } from "./AtaLineItemsTable";
 
 export interface AtaLineItemsCardProps {
@@ -31,7 +31,7 @@ export function AtaLineItemsCard({ section, items, editReason, onEdit }: AtaLine
 	const totals = sectionTotals(items);
 
 	return (
-		<AtaCollapsibleCard titleKey={config.titleKey} icon={config.icon}>
+		<RecordCollapsibleCard titleKey={config.titleKey} icon={config.icon}>
 			<div className="flex flex-col gap-4">
 				<AtaLineItemsTable section={section} items={items} />
 
@@ -70,7 +70,7 @@ export function AtaLineItemsCard({ section, items, editReason, onEdit }: AtaLine
 					</span>
 				</div>
 			</div>
-		</AtaCollapsibleCard>
+		</RecordCollapsibleCard>
 	);
 }
 

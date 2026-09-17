@@ -39,6 +39,33 @@ const lineItemSchema = z.object({
 
 const section = z.array(lineItemSchema).max(ATA_LINE_LIMITS.rows, localizationConstants.projectAtaTooManyRows);
 
+/** The five sections' rows, shared by the customer and the supplier ÄTA forms. */
+export const ataLineItemsSchema = z.object({ staff: section, material: section, machines: section, ue: section, supplierAta: section });
+
+/** Attached documents: names required, picked files re-checked by type and size. */
+export const ataDocumentsSchema = z
+	.array(
+		z.object({
+			id: z.string().min(1),
+			date: z.string(),
+			documentName: text(ATA_DOCUMENT_NAME_MAX_LENGTH).min(1, localizationConstants.projectAtaDocumentNameRequired),
+			fileName: z.string().min(1),
+			file: fileSchema.optional(),
+		}),
+	)
+	.max(ATA_FILE_RULES.maxCount, localizationConstants.projectAtaTooManyFiles)
+	.superRefine((documents, ctx) => {
+		const refused = documents.find((doc) => doc.file && fileRejection(doc.file, ATA_FILE_RULES));
+		if (!refused?.file) return;
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message:
+				fileRejection(refused.file, ATA_FILE_RULES) === "size"
+					? localizationConstants.projectAtaFileSizeError
+					: localizationConstants.projectAtaFileTypeError,
+		});
+	});
+
 /**
  * "Skapa ÄTA", both steps. Messages are translation keys.
  *
@@ -69,29 +96,8 @@ export const ataFormSchema = z.object({
 		location: text(),
 		description: text(ATA_LONG_TEXT_MAX_LENGTH),
 	}),
-	lineItems: z.object({ staff: section, material: section, machines: section, ue: section, supplierAta: section }),
-	documents: z
-		.array(
-			z.object({
-				id: z.string().min(1),
-				date: z.string(),
-				documentName: text(ATA_DOCUMENT_NAME_MAX_LENGTH).min(1, localizationConstants.projectAtaDocumentNameRequired),
-				fileName: z.string().min(1),
-				file: fileSchema.optional(),
-			}),
-		)
-		.max(ATA_FILE_RULES.maxCount, localizationConstants.projectAtaTooManyFiles)
-		.superRefine((documents, ctx) => {
-			const refused = documents.find((doc) => doc.file && fileRejection(doc.file, ATA_FILE_RULES));
-			if (!refused?.file) return;
-			ctx.addIssue({
-				code: z.ZodIssueCode.custom,
-				message:
-					fileRejection(refused.file, ATA_FILE_RULES) === "size"
-						? localizationConstants.projectAtaFileSizeError
-						: localizationConstants.projectAtaFileTypeError,
-			});
-		}),
+	lineItems: ataLineItemsSchema,
+	documents: ataDocumentsSchema,
 	supplierInvoiceIds: z.array(z.string()),
 	timeReportIds: z.array(z.string()),
 });

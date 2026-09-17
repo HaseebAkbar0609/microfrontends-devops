@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import {
 	ArrowUpDown,
 	ChevronDown,
@@ -29,12 +29,12 @@ import {
 } from "@/components/ui/table";
 import { TablePagination } from "@/components/table/TablePagination";
 import { cn } from "@/lib/utils";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
-import { showToast } from "@/lib/toast";
+import { today, saveRecord, deleteRecord, recordPage, useMyPagesQuery } from "@/features/my-pages/shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "@/features/my-pages/shared/feedback";
+import { ConfirmRecordDelete } from "../../shared/ConfirmRecordDelete";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { IT_TICKET_STATUS_KEY, ItTicket } from "../constants/mockData";
-import { listItTickets } from "../services/itSupportService";
+import { IT_TICKET_STATUS_KEY, ItTicket } from "../constants/data";
 import { ItTicketValues } from "../schemas/itTicket";
 import ItTicketForm from "./ItTicketForm";
 
@@ -46,7 +46,8 @@ const STATUS_CLASS: Record<ItTicket["status"], string> = {
 
 const ItSupportPage = () => {
 	const t = useTranslate();
-	const [tickets, setTickets] = useState<ItTicket[]>(() => listItTickets());
+	const action = useMyPagesAction();
+	const [deletingTicket, setDeletingTicket] = useState<ItTicket | null>(null);
 	const [search, setSearch] = useState("");
 	const [sortBy, setSortBy] = useState<"date" | "name" | "status" | null>(
 		null,
@@ -57,21 +58,11 @@ const ItSupportPage = () => {
 	const [formOpen, setFormOpen] = useState(false);
 	const [editingTicket, setEditingTicket] = useState<ItTicket | null>(null);
 
-	const filtered = useMemo(() => {
-		const term = search.trim().toLowerCase();
-		let rows = tickets;
-		if (term)
-			rows = rows.filter((ticket) =>
-				ticket.name.toLowerCase().includes(term),
-			);
-		if (sortBy) {
-			const direction = sortAsc ? 1 : -1;
-			rows = [...rows].sort(
-				(a, b) => a[sortBy].localeCompare(b[sortBy]) * direction,
-			);
-		}
-		return rows;
-	}, [tickets, search, sortBy, sortAsc]);
+	const [status, setStatus] = useState<ItTicket["status"] | "all">("all");
+ const params = { page, page_size: pageSize, search: search.trim(), sort: sortBy === "name" ? "title" : sortBy ?? "date",
+   direction: sortAsc ? "asc" : "desc", status: status === "all" ? undefined : status };
+ const queryResult = useMyPagesQuery(["tickets", params], () => recordPage<ItTicket>("ticket", params));
+ const tickets = queryResult.data?.items ?? [];
 
 	const toggleSort = (field: "date" | "name" | "status") => {
 		if (sortBy === field) setSortAsc((value) => !value);
@@ -81,11 +72,8 @@ const ItSupportPage = () => {
 		}
 	};
 
-	const paged = useMemo(
-		() => filtered.slice((page - 1) * pageSize, page * pageSize),
-		[filtered, page, pageSize],
-	);
-	const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+	const paged = tickets;
+ const totalPages = Math.max(1, Math.ceil((queryResult.data?.total ?? 0) / pageSize));
 
 	const openCreate = () => {
 		setEditingTicket(null);
@@ -101,73 +89,35 @@ const ItSupportPage = () => {
 		values: ItTicketValues,
 		files: string[],
 		status: ItTicket["status"],
-	) => {
-		if (editingTicket) {
-			setTickets((current) =>
-				current.map((ticket) =>
-					ticket.id === editingTicket.id
-						? {
-								...ticket,
-								name: values.subject,
-								description: values.description,
-								files,
-							}
-						: ticket,
-				),
-			);
-			return;
-		}
-		setTickets((current) => [
-			{
-				id: `temp-${crypto.randomUUID()}`,
-				date: mockDate(0),
-				name: values.subject,
-				status,
-				description: values.description,
-				files,
-			},
-			...current,
-		]);
-	};
+	) => action.run(() => saveRecord("ticket", {
+		date: editingTicket?.date ?? today(), name: values.subject, description: values.description, files,
+		status: editingTicket?.status === "ongoing" ? "ongoing" : status,
+	}, editingTicket ?? undefined), status === "ongoing" ? localizationConstants.itSupportSentToast : localizationConstants.itSupportSavedToast);
 
 	const sendTicket = (id: string) => {
-		setTickets((current) =>
-			current.map((ticket) =>
-				ticket.id === id && ticket.status === "notSent"
-					? { ...ticket, status: "ongoing" }
-					: ticket,
-			),
-		);
-		showToast("success", t(localizationConstants.itSupportSentToast));
+		const ticket = tickets.find((item) => item.id === id);
+		if (ticket) void action.run(() => saveRecord("ticket", { ...ticket, status: "ongoing" }, ticket), localizationConstants.itSupportSentToast);
 	};
 
 	const deleteTicket = (id: string) =>
-		setTickets((current) => current.filter((ticket) => ticket.id !== id));
+		setDeletingTicket(tickets.find((ticket) => ticket.id === id) ?? null);
 
 	if (formOpen)
 		return (
 			<ItTicketForm
 				editingTicket={editingTicket}
 				onBack={() => setFormOpen(false)}
-				onSave={(values, files) => {
-					upsertTicket(values, files, "notSent");
-					showToast(
-						"success",
-						t(localizationConstants.itSupportSavedToast),
-					);
-				}}
-				onSend={(values, files) => {
-					upsertTicket(values, files, "ongoing");
-					showToast(
-						"success",
-						t(localizationConstants.itSupportSentToast),
-					);
-				}}
+				onSave={(values, files) => upsertTicket(values, files, "notSent")}
+				onSend={(values, files) => upsertTicket(values, files, "ongoing")}
 			/>
 		);
 
 	return (
 		<div className="flex flex-col gap-5">
+			<MyPagesQueryState query={queryResult} />
+			<ConfirmRecordDelete open={!!deletingTicket} pending={action.pending} onClose={() => setDeletingTicket(null)} onConfirm={async () => {
+				if (deletingTicket && await action.run(() => deleteRecord(deletingTicket))) setDeletingTicket(null);
+			}} />
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<div className="flex flex-wrap items-center gap-4">
 					<div className="relative w-full max-w-xs">
@@ -199,13 +149,14 @@ const ItSupportPage = () => {
 							align="start"
 							className="w-40 rounded-md border border-slate-200 bg-white p-1 shadow-md"
 						>
-							<DropdownMenuItem className="cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700">
+							<DropdownMenuItem onClick={() => { setStatus("all"); setPage(1); }} className="cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700">
 								<Translate
 									text={
 										localizationConstants.itSupportFilterAll
 									}
 								/>
 							</DropdownMenuItem>
+							{(["notSent", "ongoing", "done"] as const).map(value => <DropdownMenuItem key={value} onClick={() => { setStatus(value); setPage(1); }}><Translate text={IT_TICKET_STATUS_KEY[value]} /></DropdownMenuItem>)}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>

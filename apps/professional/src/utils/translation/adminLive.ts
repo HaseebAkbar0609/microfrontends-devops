@@ -1,4 +1,14 @@
 export const enAdminLive = {
+  staffLicenseAssign: "Assign or change license", staffLicenseNone: "No license assigned",
+  staffLicenseAvailable: "{{count}} available",
+  staffLicenseNoSeats: "No unassigned licenses are available. Contact the subscription owner to purchase additional seats.",
+  staffLicenseConfirmHint: "Confirm to apply this assignment. Removing a license will restrict the user's access. No purchase or payment is made here.",
+  staffLicenseWaiting: "License not assigned yet",
+  staffLicenseWaitingText: "You have not been assigned a license yet. Please contact your company administrator. You do not need to purchase a personal subscription.",
+  staffLicenseUnavailable: "License unavailable",
+  staffLicenseUnavailableText: "Your assigned license is currently unavailable. Please contact your company administrator.",
+  staffLicenseReady: "Your company license", staffLicenseManaged: "Your license is managed by your company administrator.",
+  staffLicenseCheck: "Check access", staffLicenseContinue: "Continue to workspace",
   proAdminUsers: "Users", proAdminGroups: "Groups", proAdminCreate: "Create", proAdminEdit: "Edit",
   proAdminSave: "Save", proAdminCancel: "Cancel", proAdminConfirm: "Confirm", proAdminSearch: "Search",
   proAdminLoading: "Loading...", proAdminSaving: "Saving...", proAdminRetry: "Retry", proAdminEmpty: "No results",
@@ -26,6 +36,16 @@ export const enAdminLive = {
 };
 export type AdminLiveTranslation = Record<keyof typeof enAdminLive, string>;
 export const svAdminLive: AdminLiveTranslation = {
+  staffLicenseAssign: "Tilldela eller byt licens", staffLicenseNone: "Ingen licens tilldelad",
+  staffLicenseAvailable: "{{count}} tillgängliga",
+  staffLicenseNoSeats: "Det finns inga lediga licenser. Kontakta abonnemangsägaren för att köpa fler licenser.",
+  staffLicenseConfirmHint: "Bekräfta tilldelningen. Om licensen tas bort begränsas användarens åtkomst. Inget köp eller betalning görs här.",
+  staffLicenseWaiting: "Licens ännu inte tilldelad",
+  staffLicenseWaitingText: "Du har ännu inte tilldelats en licens. Kontakta företagets administratör. Du behöver inte köpa ett eget abonnemang.",
+  staffLicenseUnavailable: "Licensen är inte tillgänglig",
+  staffLicenseUnavailableText: "Din tilldelade licens är för närvarande inte tillgänglig. Kontakta företagets administratör.",
+  staffLicenseReady: "Din företagslicens", staffLicenseManaged: "Din licens hanteras av företagets administratör.",
+  staffLicenseCheck: "Kontrollera åtkomst", staffLicenseContinue: "Fortsätt till arbetsytan",
   proAdminUsers: "Användare", proAdminGroups: "Grupper", proAdminCreate: "Skapa", proAdminEdit: "Redigera",
   proAdminSave: "Spara", proAdminCancel: "Avbryt", proAdminConfirm: "Bekräfta", proAdminSearch: "Sök",
   proAdminLoading: "Laddar...", proAdminSaving: "Sparar...", proAdminRetry: "Försök igen", proAdminEmpty: "Inga resultat",

@@ -5,9 +5,9 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
 	MeetingDetails,
-	PROTOCOL_PARTICIPANTS,
-} from "../constants/mockData";
+} from "../constants/data";
 import SectionCard from "./SectionCard";
+import { useParticipants } from "../../shared/api";
 
 interface MeetingInfoCardProps {
 	icon: LucideIcon;
@@ -32,6 +32,8 @@ const MeetingInfoCard = ({
 	titleKey,
 	details,
 }: MeetingInfoCardProps) => {
+	const participantQuery = useParticipants();
+	const PROTOCOL_PARTICIPANTS = participantQuery.data ?? [];
 	const participants = PROTOCOL_PARTICIPANTS.filter((participant) =>
 		details.participantIds.includes(participant.id),
 	)

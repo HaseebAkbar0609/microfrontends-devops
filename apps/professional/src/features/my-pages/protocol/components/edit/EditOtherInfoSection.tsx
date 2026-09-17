@@ -3,11 +3,9 @@
 import { Control } from "react-hook-form";
 import { Info } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
-import { PROTOCOL_CATEGORIES } from "../../constants/mockData";
 import { EditProtocolValues } from "../../schemas/protocol.schema";
 import SectionCard from "../SectionCard";
 import {
-	EditSelectField,
 	EditTextField,
 	EditTextareaField,
 } from "./EditFields";
@@ -37,11 +35,10 @@ const EditOtherInfoSection = ({
 				name="title"
 				labelKey={localizationConstants.protocolFieldTitle}
 			/>
-			<EditSelectField
+			<EditTextField
 				control={control}
 				name="category"
 				labelKey={localizationConstants.protocolFieldCategory}
-				options={PROTOCOL_CATEGORIES}
 			/>
 			<EditTextField
 				control={control}

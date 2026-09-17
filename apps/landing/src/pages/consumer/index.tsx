@@ -148,6 +148,21 @@ export default function ConsumerPage() {
           </div>
         </section>
 
+        {/* Business management system */}
+        <section className="pt-16 pb-16 px-6 text-center border-b ">
+          <div className="max-w-3xl mx-auto">
+            <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">
+              {t("consumer.businessManagementLabel")}
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+              {t("consumer.businessManagementTitle")}{" "}
+              <span className="text-primary italic">
+                {t("consumer.businessManagementTitle2")}
+              </span> 
+            </h2>
+          </div>
+        </section>
+
         {/* Full control */}
         <section className="py-24 px-6">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">

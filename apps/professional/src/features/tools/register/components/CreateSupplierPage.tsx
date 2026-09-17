@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { ApiError } from "@/types/api";
 import { SupplierBasicInfoStep } from "./steps/SupplierBasicInfoStep";
 import { SupplierContactStep } from "./steps/SupplierContactStep";
 import { SupplierAssessmentStep } from "./steps/SupplierAssessmentStep";
@@ -174,8 +175,9 @@ export function CreateSupplierPage() {
 						setSupplierId(result.id);
 						showToast("success", t(localizationConstants.supplierCreatedSuccess));
 						router.push("/tools/register?tab=supplier");
-					} catch {
-						showToast("error", t(localizationConstants.supplierCreateError));
+					} catch (error) {
+						const backendMessage = (error as ApiError).response?.data?.message;
+						showToast("error", backendMessage || t(localizationConstants.supplierCreateError));
 					}
 				},
 				(errors) => {
@@ -211,8 +213,9 @@ export function CreateSupplierPage() {
 			const result = await saveSupplierDraftAPIAction(fullData);
 			setSupplierId(result.id);
 			showToast("info", t(localizationConstants.draftSaved));
-		} catch {
-			showToast("error", t(localizationConstants.supplierCreateError));
+		} catch (error) {
+			const backendMessage = (error as ApiError).response?.data?.message;
+			showToast("error", backendMessage || t(localizationConstants.supplierCreateError));
 		} finally {
 			setIsSavingDraft(false);
 		}

@@ -1,6 +1,19 @@
 const ConsumerFaqContent: React.FC = () => {
   return (
+
     <div className="container mx-auto py-10 md:py-20 px-4">
+      {/* FAQ */}
+        <section className="pt-16 pb-16">
+          <div className="max-w-3xl ">
+            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+              Vanliga frågor om
+              <span className="text-primary italic">
+                Timeflow byggsystem
+              </span> 
+            </h2>
+          </div>
+        </section>
+        
       <div className="flex flex-col gap-6 md:gap-10">
         <div className="flex flex-col gap-4 md:gap-6">
           <p className="font-bold text-primary-500 header-secondary-size">

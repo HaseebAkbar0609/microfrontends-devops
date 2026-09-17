@@ -1,7 +1,7 @@
 import { checkUploadedFile } from "@/lib/validation/fileUpload";
 
 /**
- * Files attached on a project record's sections (Besiktning, ÄTA).
+ * Files attached on a project record's sections (Besiktning, ÄTA, Handlingar).
  *
  * There is no upload endpoint, so a section's in-memory store stands in for
  * one and serves a saved file from a `blob:` URL. These helpers are the rules
@@ -30,9 +30,16 @@ export interface PickRejection {
 
 const FALLBACK_CONTENT_TYPE = "application/octet-stream";
 
-function extensionOf(name: string): string {
+/** ".PDF" → ".pdf"; `""` when the name has no extension. */
+export function extensionOf(name: string): string {
 	const dot = name.lastIndexOf(".");
 	return dot < 0 ? "" : name.slice(dot).toLowerCase();
+}
+
+/** "Tidrapport v28.pdf" → "Tidrapport v28", the name a new document starts with. */
+export function baseNameOf(fileName: string): string {
+	const dot = fileName.lastIndexOf(".");
+	return dot > 0 ? fileName.slice(0, dot) : fileName;
 }
 
 /** The content type an allowed file is served as, from its extension alone. */

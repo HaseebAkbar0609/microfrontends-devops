@@ -1,78 +1,31 @@
 "use client";
-
-import { useRouter } from "next/navigation";
-import { ArrowLeft, Download, Printer } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { ArrowLeft, ExternalLink, RefreshCw, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
-import { useTranslate } from "@/utils/translation/translate";
-import { EmploymentContract } from "../constants/mockData";
-import { downloadContractPdf } from "../utils/generateContractPdf";
-import "./contract-print.css";
+import { Translate, useTranslate } from "@/utils/translation/translate";
+import { useMyPagesQuery } from "../../shared/api";
+import { MyPagesQueryState } from "../../shared/feedback";
+import { openDocument } from "../services/employmentService";
 
-const ContractViewer = ({ contract }: { contract: EmploymentContract }) => {
-	const router = useRouter();
-	const t = useTranslate();
-
-	return (
-		<div className="flex min-h-full flex-col bg-slate-600">
-			<div className="flex items-center justify-between bg-slate-800 px-4 py-2.5 text-white">
-				<div className="flex items-center gap-3">
-					<Button
-						type="button"
-						variant="ghost"
-						size="icon"
-						className="h-8 w-8 text-white hover:bg-slate-700 hover:text-white"
-						onClick={() =>
-							router.push("/tools/my-pages/employment")
-						}
-						aria-label={t(localizationConstants.myPagesEmpBack)}
-					>
-						<ArrowLeft className="h-4 w-4" />
-					</Button>
-					<span className="text-sm font-medium">
-						{`Anstallningsavtal-${contract.employmentNumber}.pdf`}
-					</span>
-				</div>
-				<div className="flex items-center gap-1">
-					<Button
-						type="button"
-						variant="ghost"
-						size="icon"
-						className="h-8 w-8 text-white hover:bg-slate-700 hover:text-white"
-						onClick={() => downloadContractPdf(contract)}
-						aria-label={t(localizationConstants.myPagesEmpDownload)}
-					>
-						<Download className="h-4 w-4" />
-					</Button>
-					<Button
-						type="button"
-						variant="ghost"
-						size="icon"
-						className="h-8 w-8 text-white hover:bg-slate-700 hover:text-white"
-						onClick={() => window.print()}
-						aria-label={t(
-							localizationConstants.invoicePreviewPrint,
-						)}
-					>
-						<Printer className="h-4 w-4" />
-					</Button>
-				</div>
-			</div>
-
-			<div className="flex flex-1 justify-center overflow-y-auto px-4 py-8">
-				<div className="contract-print-area flex h-fit w-full max-w-2xl flex-col gap-6">
-					{contract.documentPages.map((page) => (
-						<div
-							key={page.id}
-							className="contract-print-page whitespace-pre-line bg-white px-14 py-12 text-sm leading-relaxed text-slate-800 shadow-xl"
-						>
-							{page.text}
-						</div>
-					))}
-				</div>
-			</div>
-		</div>
-	);
-};
-
-export default ContractViewer;
+export default function ContractViewer() {
+  const t = useTranslate();
+  const id = useSearchParams().get("id");
+  const query = useMyPagesQuery(["employment", "open", id], () => openDocument(id!), !!id);
+  if (!id) return <p className="p-6"><Translate text={localizationConstants.myPagesNotFound} /></p>;
+  return <div className="flex min-h-full flex-col">
+    <div className="flex flex-wrap items-center gap-3 bg-slate-800 p-3 text-white">
+      <Button asChild variant="ghost" size="icon" aria-label={t(localizationConstants.myPagesEmpBack)}><Link href="/tools/my-pages/employment"><ArrowLeft /></Link></Button>
+      <span className="min-w-0 flex-1 break-words">{query.data?.fileName}</span>
+      <Button type="button" variant="ghost" size="icon" disabled={query.isFetching} onClick={() => void query.refetch()} aria-label={t(localizationConstants.myPagesRetry)}><RefreshCw /></Button>
+      {query.data && <a href={query.data.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm"><ExternalLink className="size-4" /><Translate text={localizationConstants.myPagesEmpOpenBadge} /></a>}
+    </div>
+    <MyPagesQueryState query={query} />
+    {query.data && <div className="flex min-h-72 flex-col items-center justify-center gap-5 p-6">
+      <FileText className="size-16 text-slate-500" aria-hidden="true" />
+      <p className="max-w-full break-words text-center font-medium">{query.data.fileName}</p>
+      <Button asChild><a href={query.data.url} target="_blank" rel="noopener noreferrer"><ExternalLink className="mr-2 size-4" /><Translate text={localizationConstants.myPagesEmpOpenBadge} /></a></Button>
+    </div>}
+  </div>;
+}

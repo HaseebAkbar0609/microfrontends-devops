@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -14,6 +14,7 @@ import * as store from "../services/projectAtaService";
 import type { AtaLineItem, AtaSection } from "../types";
 import type { AtaDocumentsState } from "./documents/useAtaDocuments";
 import type { AtaFormState } from "./useAtaForm";
+import { useBeforeUnloadWarning } from "../../hooks/useBeforeUnloadWarning";
 
 /**
  * What the footer and the rail do: Spara, Skicka (behind a confirm), Avbryt
@@ -33,13 +34,7 @@ export function useAtaFormActions(projectId: string, ata: AtaFormState, document
 	const sendReason = sendBlockReason(status, lineItems);
 	const dirty = form.formState.isDirty || documents.pending.length > 0;
 
-	/* A reload or closed tab would drop the draft. In-app links cannot be intercepted. */
-	useEffect(() => {
-		if (!dirty) return;
-		const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-		window.addEventListener("beforeunload", warn);
-		return () => window.removeEventListener("beforeunload", warn);
-	}, [dirty]);
+	useBeforeUnloadWarning(dirty);
 
 	const leave = useCallback(() => router.push(ataUrls.list(projectId)), [projectId, router]);
 
@@ -57,14 +52,11 @@ export function useAtaFormActions(projectId: string, ata: AtaFormState, document
 		}, revealErrors)();
 	}, [documents, form, leave, locked, persist, revealErrors, t]);
 
-	const requestSend = useCallback(async () => {
+	/* `handleSubmit` hands `revealErrors` the errors it just found; `formState.errors` after a `trigger` is the last render's. */
+	const requestSend = useCallback(() => {
 		if (sendReason || savedRef.current) return;
 		documents.commit();
-		if (!(await form.trigger())) {
-			revealErrors(form.formState.errors);
-			return;
-		}
-		setSendOpen(true);
+		void form.handleSubmit(() => setSendOpen(true), revealErrors)();
 	}, [documents, form, revealErrors, sendReason]);
 
 	const confirmSend = useCallback(() => {

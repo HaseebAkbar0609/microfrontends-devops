@@ -99,7 +99,9 @@
         "heroTitle1": "Die gesamte Arbeit in einer",
         "heroTitle2": "einzigen Ansicht.",
         "ctaTitle1": "Einfach starten.",
-        "ctaTitle2": "Skalieren wann Sie wollen."
+        "ctaTitle2": "Skalieren wann Sie wollen.",
+        "completeBusinessTitle":"Komplettes Geschäftssystem für",
+        "completeBusinessTitle2":"Handwerker und Bauunternehmen"
     },
     "professional": {
         "heroLabel": "Für Handwerksbetriebe aller Branchen",
@@ -179,7 +181,10 @@
         "startAccount": "Konto starten",
         "tryDemo": "Demo-Konto testen",
         "workTag": "(Zusatzoption)",
-        "managerTag": "(enthalten in Standard / PRO)."
+        "managerTag": "(enthalten in Standard / PRO).",
+        "professionalBusinessLabel":"DIE KOMPLETTLÖSUNG",
+        "professionalBusinessTitle":"Professionelles Geschäftssystem für",
+        "professionalBusinessTitle2":"Handwerker und Bauunternehmen"
     },
     "consumer": {
         "heroLabel": "Für Privatkunden",
@@ -324,7 +329,10 @@
         "trustF5": "Projektinformationen verfügbar, wenn Sie sie benötigen",
         "trustF6": "TimeFlow Home ist für Privatpersonen immer kostenlos",
         "finalCtaTitle": "Bereit loszulegen?",
-        "finalCtaDesc": "Beschreiben Sie noch heute Ihr Projekt und erhalten Sie bis zu 5 Angebote von qualifizierten Unternehmen."
+        "finalCtaDesc": "Beschreiben Sie noch heute Ihr Projekt und erhalten Sie bis zu 5 Angebote von qualifizierten Unternehmen.",
+        "businessManagementLabel": "FÜR UNTERNEHMEN",
+        "businessManagementTitle": "Geschäftssystem für",
+        "businessManagementTitle2": "Handwerker und kleine Bauunternehmen"
     },
     "solutions": {
         "heroLabel": "Lösungen",
@@ -652,7 +660,10 @@
         "refTitle": "TimeFlow startet jetzt auf dem schwedischen Markt.",
         "refDesc": "Im Laufe des Jahres 2026 veröffentlichen wir verifizierte Kundencases und Interviews mit Unternehmen, die die Plattform in ihrem täglichen Betrieb nutzen. Kontaktieren Sie uns — wir erzählen Ihnen gerne mehr.",
         "ctaDesc": "Testen Sie TimeFlow 30 Tage kostenlos — ohne Kreditkarte. Nur 3 Monate Mindestlaufzeit.",
-        "startNow": "Loslegen"
+        "startNow": "Loslegen",
+        "successStoriesLabel": "ECHTE ERGEBNISSE",
+        "successStoriesTitle": "Echte Erfolgsgeschichten:",
+        "successStoriesTitle2": "Wie Bauunternehmen mit Timeflow wachsen"
     },
     "pricing": {
         "heroLabel": "Preise",

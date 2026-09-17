@@ -25,7 +25,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { PROTOCOL_CATEGORIES, ProtocolType } from "../constants/mockData";
+import { ProtocolType } from "../constants/data";
+import { useParticipants } from "../../shared/api";
+import { MyPagesQueryState } from "../../shared/feedback";
 import { MeetingValues, meetingSchema } from "../schemas/protocol.schema";
 import ParticipantSelect from "./ParticipantSelect";
 
@@ -54,7 +56,7 @@ interface NewMeetingDialogProps {
 	open: boolean;
 	type: ProtocolType;
 	onClose: () => void;
-	onSend: (values: MeetingValues) => void;
+	onSend: (values: MeetingValues) => Promise<boolean>;
 }
 
 const NewMeetingDialog = ({
@@ -64,6 +66,7 @@ const NewMeetingDialog = ({
 	onSend,
 }: NewMeetingDialogProps) => {
 	const t = useTranslate();
+	const participants = useParticipants();
 	const form = useForm<MeetingValues>({
 		resolver: zodResolver(meetingSchema),
 		defaultValues: EMPTY_VALUES,
@@ -73,14 +76,14 @@ const NewMeetingDialog = ({
 		if (open) form.reset(EMPTY_VALUES);
 	}, [open, form]);
 
-	const handleSend = form.handleSubmit((values) => {
-		onSend(values);
-		onClose();
+	const handleSend = form.handleSubmit(async (values) => {
+		if (await onSend(values)) onClose();
 	});
 
 	return (
-		<Dialog open={open} onOpenChange={(value) => !value && onClose()}>
+		<Dialog open={open} onOpenChange={(value) => !value && !form.formState.isSubmitting && onClose()}>
 			<DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto rounded-lg bg-white p-7">
+				<MyPagesQueryState query={participants} />
 				<div>
 					<DialogTitle className="text-xl font-bold text-slate-900">
 						<Translate
@@ -107,12 +110,10 @@ const NewMeetingDialog = ({
 												}
 											/>
 										</FormLabel>
-										<FormControl>
-											<Input
-												{...field}
-												className="h-10 border-slate-200 text-sm"
-											/>
-										</FormControl>
+										<Select value={field.value} onValueChange={field.onChange}>
+											<FormControl><SelectTrigger className="h-10 w-full border-slate-200 text-sm"><SelectValue /></SelectTrigger></FormControl>
+											<SelectContent>{(participants.data ?? []).map((person) => <SelectItem key={person.id} value={person.name}>{person.name}</SelectItem>)}</SelectContent>
+										</Select>
 										<FormMessage translate={t} />
 									</FormItem>
 								)}
@@ -151,28 +152,7 @@ const NewMeetingDialog = ({
 												}
 											/>
 										</FormLabel>
-										<Select
-											value={field.value}
-											onValueChange={field.onChange}
-										>
-											<FormControl>
-												<SelectTrigger className="h-10 w-full border-slate-200 text-sm">
-													<SelectValue />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{PROTOCOL_CATEGORIES.map(
-													(category) => (
-														<SelectItem
-															key={category}
-															value={category}
-														>
-															{category}
-														</SelectItem>
-													),
-												)}
-											</SelectContent>
-										</Select>
+										<FormControl><Input {...field} className="h-10 border-slate-200 text-sm" /></FormControl>
 										<FormMessage translate={t} />
 									</FormItem>
 								)}
@@ -422,6 +402,7 @@ const NewMeetingDialog = ({
 							</Button>
 							<Button
 								type="submit"
+ disabled={form.formState.isSubmitting}
 								className="h-10 gap-2 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 							>
 								<Send className="h-4 w-4" />

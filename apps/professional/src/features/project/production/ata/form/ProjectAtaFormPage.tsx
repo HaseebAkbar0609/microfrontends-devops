@@ -104,7 +104,7 @@ export function ProjectAtaFormPage({ projectId, ataId, initialStep }: ProjectAta
 							projectNo={ata.project.projectNr.replace(/^#/, "")}
 							projectCity={ata.recordInfo?.details.city ?? ""}
 							sendReason={actions.sendReason}
-							onSend={() => void actions.requestSend()}
+							onSend={actions.requestSend}
 						/>
 					</div>
 

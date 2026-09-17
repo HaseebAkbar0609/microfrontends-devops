@@ -14,7 +14,7 @@ export type AdminUser = Option & {
   phone_number?: string; personal_id?: string; user_credentials?: string;
   language_preference?: string; sms_authentication?: boolean; auto_logout?: number;
   pending_email?: string; module_permissions?: Record<string, boolean>;
-  license?: string; created_at?: string; last_login?: string;
+  license?: string; license_plan_id?: string | null; created_at?: string; last_login?: string;
 };
 export type Group = Option & {
   name: string; description?: string; status: string; parent_group_id?: string;
@@ -49,6 +49,7 @@ export function fieldErrors(error: unknown): Record<string, string> {
     [item.field ?? item.loc?.at(-1) ?? "form", item.msg ?? ""]));
 }
 export function errorKey(error: unknown) {
+  if (axios.isAxiosError(error) && error.response?.data?.details?.code === "NO_AVAILABLE_LICENSES") return "staffLicenseNoSeats";
   const status = axios.isAxiosError(error) ? error.response?.status : undefined;
   return status === 403 ? "proAdminForbidden" : status === 404 ? "proAdminNotFound" :
     status === 409 ? "proAdminConflict" : status === 422 ? "proAdminInvalid" : "proAdminError";

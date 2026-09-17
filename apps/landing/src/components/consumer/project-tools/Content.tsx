@@ -4,9 +4,9 @@ const ProfessionalProjectToolsContent: React.FC = () => {
   return (
     <div className="w-full">
       {/* Content Wrapper */}
-      <div className="container mx-auto px-4 py-16 md:py-24">
+      <div className="container mx-auto px-4 py-10 pt-16">
         {/* Title Section */}
-        <div className="text-center mb-16 max-w-3xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             TimeFlow System – Projektverktyg för Privatpersoner
           </h2>
@@ -17,7 +17,7 @@ const ProfessionalProjectToolsContent: React.FC = () => {
         </div>
 
         {/* Features Section */}
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+        <div className="grid md:grid-cols-2 gap-12 items-center pb-16">
           {/* Left – Dashboard Image */}
           <div className="flex justify-center">
             <img
@@ -53,9 +53,23 @@ const ProfessionalProjectToolsContent: React.FC = () => {
             </ul>
           </div>
         </div>
+      </div>
+            
+        {/* Project tools */}
+        <section className="pt-16 pb-16 px-6 text-center border-y ">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+              Kompletta projektverktyg
+              <span className="text-primary italic">
+                för byggföretag
+              </span>
+            </h2>
+          </div>
+        </section>
 
+      <div className="container mx-auto px-4 py-10 ">        
         {/* Why Choose Section */}
-        <div className="mt-24 grid md:grid-cols-2 gap-12 items-center">
+        <div className="mb-10 grid md:grid-cols-2 gap-12 items-center">
           {/* Left – Reasons */}
           <div>
             <h3 className="text-3xl font-bold mb-6">
@@ -76,26 +90,26 @@ const ProfessionalProjectToolsContent: React.FC = () => {
             </ul>
           </div>
 
-          	{/* Video embed (desktop) */}
-        <div className="relative flex-2/5">
-          <div style={{ position: "relative", aspectRatio: "16/9" }}>
-            <iframe
-              loading="lazy"
-              title="Gumlet video player"
-              src="https://play.gumlet.io/embed/68f1eb226b5c1015aceee6b0"
-              style={{
-                border: "none",
-                position: "absolute",
-                top: 0,
-                left: 0,
-                height: "100%",
-                width: "100%",
-              }}
-              className="rounded-xl"
-              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
-            ></iframe>
+          {/* Video embed (desktop) */}
+          <div className="relative flex-2/5">
+            <div style={{ position: "relative", aspectRatio: "16/9" }}>
+              <iframe
+                loading="lazy"
+                title="Gumlet video player"
+                src="https://play.gumlet.io/embed/68f1eb226b5c1015aceee6b0"
+                style={{
+                  border: "none",
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  height: "100%",
+                  width: "100%",
+                }}
+                className="rounded-xl"
+                allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+              ></iframe>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

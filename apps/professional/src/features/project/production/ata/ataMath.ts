@@ -1,4 +1,4 @@
-import { ATA_COUNT_DIGITS, ATA_SECTIONS } from "./projectAta.config";
+import { ATA_COUNT_DIGITS, ATA_SECTIONS, ATA_SUPPLIER_NUMBER_DIGITS } from "./projectAta.config";
 import type { AtaLineItem, AtaLineItems } from "./types";
 
 /**
@@ -65,6 +65,11 @@ export function distinctPeople(items: readonly AtaLineItem[]): number {
 
 export function padCount(count: number): string {
 	return String(count).padStart(ATA_COUNT_DIGITS, "0");
+}
+
+/** A supplier ÄTA's number as its sender writes it: 1 → "001". */
+export function padAtaNumber(number: number): string {
+	return String(number).padStart(ATA_SUPPLIER_NUMBER_DIGITS, "0");
 }
 
 export interface AtaSummaryFigures {

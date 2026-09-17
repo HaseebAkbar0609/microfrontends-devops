@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { DiaryEntry } from "../constants/mockData";
+import { DiaryEntry } from "../constants/data";
 
 interface DiaryTableProps {
 	entries: DiaryEntry[];

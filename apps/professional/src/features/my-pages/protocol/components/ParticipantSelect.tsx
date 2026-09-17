@@ -7,7 +7,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import { PROTOCOL_PARTICIPANTS } from "../constants/mockData";
+import { useParticipants } from "../../shared/api";
+import { MyPagesQueryState } from "../../shared/feedback";
 
 interface ParticipantSelectProps {
 	value: string[];
@@ -28,6 +29,8 @@ const ParticipantSelect = ({
 	onChange,
 	showHandles = false,
 }: ParticipantSelectProps) => {
+	const query = useParticipants();
+	const PROTOCOL_PARTICIPANTS = query.data ?? [];
 	const selected = PROTOCOL_PARTICIPANTS.filter((participant) =>
 		value.includes(participant.id),
 	);
@@ -40,7 +43,7 @@ const ParticipantSelect = ({
 		);
 
 	return (
-		<Popover>
+		<><MyPagesQueryState query={query} /><Popover>
 			<PopoverTrigger asChild>
 				<button
 					type="button"
@@ -109,7 +112,7 @@ const ParticipantSelect = ({
 					</label>
 				))}
 			</PopoverContent>
-		</Popover>
+		</Popover></>
 	);
 };
 
