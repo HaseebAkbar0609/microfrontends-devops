@@ -12,7 +12,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { padAtaNumber } from "../../ataMath";
 import { supplierApproveBlockReason } from "../../ataRules";
 import { ataUrls } from "../../ataNav";
-import { AtaActionMenu, AtaMenuAction } from "../../list/AtaRowMenu";
+import { RowActionMenu, RowMenuAction } from "../../../components/RowActionMenu";
 import { AtaStatusBadge } from "../../list/AtaStatusBadge";
 import { ATA_ATTESTED_LABELS } from "../../projectAta.config";
 import type { SupplierAtaRow } from "../types";
@@ -64,15 +64,15 @@ export function SupplierAtaTableRow({ row, label, onApprove }: SupplierAtaTableR
 				</Button>
 			</TableCell>
 			<TableCell className="w-12 border-l border-slate-200 px-2 py-3 text-right">
-				<AtaActionMenu ariaLabel={t(localizationConstants.projectAtaRowActions, { label })}>
-					<AtaMenuAction icon={Eye} labelKey={localizationConstants.ataViewDetails} reasonKey={null} onSelect={() => router.push(viewUrl)} />
-					<AtaMenuAction
+				<RowActionMenu ariaLabel={t(localizationConstants.projectAtaRowActions, { label })}>
+					<RowMenuAction icon={Eye} labelKey={localizationConstants.ataViewDetails} reasonKey={null} onSelect={() => router.push(viewUrl)} />
+					<RowMenuAction
 						icon={CircleCheck}
 						labelKey={localizationConstants.viewAtaBtnApprove}
 						reasonKey={supplierApproveBlockReason(ata.status, ata.lineItems)}
 						onSelect={onApprove}
 					/>
-				</AtaActionMenu>
+				</RowActionMenu>
 			</TableCell>
 		</TableRow>
 	);

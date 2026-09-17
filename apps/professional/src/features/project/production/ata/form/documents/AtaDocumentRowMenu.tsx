@@ -5,7 +5,7 @@ import { PencilLine, Trash2 } from "lucide-react";
 
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import { AtaActionMenu, AtaMenuAction } from "../../list/AtaRowMenu";
+import { RowActionMenu, RowMenuAction } from "../../../components/RowActionMenu";
 
 export interface AtaDocumentRowMenuProps {
 	fileName: string;
@@ -21,7 +21,7 @@ export function AtaDocumentRowMenu({ fileName, lockReason, onFocusName, onDelete
 	const focusNameOnClose = useRef(false);
 
 	return (
-		<AtaActionMenu
+		<RowActionMenu
 			ariaLabel={t(localizationConstants.projectAtaRowActions, { label: fileName })}
 			onCloseAutoFocus={(event) => {
 				/* Radix returns focus to ⋮ on close; Redigera wants it in the name field. */
@@ -31,7 +31,7 @@ export function AtaDocumentRowMenu({ fileName, lockReason, onFocusName, onDelete
 				onFocusName();
 			}}
 		>
-			<AtaMenuAction
+			<RowMenuAction
 				icon={PencilLine}
 				labelKey={localizationConstants.ataActionEdit}
 				reasonKey={lockReason}
@@ -39,14 +39,14 @@ export function AtaDocumentRowMenu({ fileName, lockReason, onFocusName, onDelete
 					focusNameOnClose.current = true;
 				}}
 			/>
-			<AtaMenuAction
+			<RowMenuAction
 				icon={Trash2}
 				labelKey={localizationConstants.ataActionDelete}
 				reasonKey={lockReason}
 				destructive
 				onSelect={onDelete}
 			/>
-		</AtaActionMenu>
+		</RowActionMenu>
 	);
 }
 
