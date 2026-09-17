@@ -99,10 +99,10 @@ export function WarrantyDetailView({
 						variant="ghost"
 						size="icon"
 						onClick={onBack}
-						className="h-6 w-6 p-0 text-slate-900 hover:text-slate-700 hover:bg-slate-200/60 rounded-lg cursor-pointer shrink-0 shadow-none"
+						className="h-8 w-8 p-0 text-slate-900 hover:text-slate-700 hover:bg-slate-200/60 rounded-lg cursor-pointer shrink-0 shadow-none"
 						aria-label={t(localizationConstants.goBackButton)}
 					>
-						<ArrowLeft className="h-5 w-5" />
+						<ArrowLeft className="h-6 w-6" strokeWidth={2.5} />
 					</Button>
 					<h1 className="font-sans text-xl sm:text-2xl font-semibold leading-[100%] tracking-[-0.6px] text-slate-900">
 						<Translate text={localizationConstants.viewDetailTitle} />
@@ -156,7 +156,6 @@ export function WarrantyDetailView({
 				title={localizationConstants.deleteVisitDateConfirmTitle}
 				description={localizationConstants.deleteVisitDateConfirmDesc}
 				confirmLabel={localizationConstants.actionDelete}
-				destructive
 				onConfirm={handleConfirmDelete}
 			/>
 		</div>

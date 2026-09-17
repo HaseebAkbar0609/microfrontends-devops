@@ -39,6 +39,7 @@ import {
 import { TablePagination } from "@/components/table/TablePagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { ATA_CONSTANTS } from "../constants/ata.constants";
 import { useSupplierAta } from "../hooks/useSupplierAta";
@@ -622,7 +623,7 @@ export function AtaSupplierOverview({
 											<Button
 												type="button"
 												variant="ghost"
-												onClick={() => onViewDetail?.(item)}
+												onClick={() => showToast("info", t(localizationConstants.comingSoon))}
 												className="h-8 px-3 rounded bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-medium cursor-pointer shadow-none"
 											>
 												<Translate text={localizationConstants.ataSupplierViewDetails} />
