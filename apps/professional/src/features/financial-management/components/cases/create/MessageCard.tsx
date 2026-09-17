@@ -7,10 +7,11 @@ import { useTranslation } from "react-i18next";
 
 interface MessageCardProps {
 	message: string;
+	error?: string;
 	onChange: (value: string) => void;
 }
 
-export function MessageCard({ message, onChange }: MessageCardProps) {
+export function MessageCard({ message, error, onChange }: MessageCardProps) {
 	const { t } = useTranslation();
 
 	return (
@@ -22,14 +23,18 @@ export function MessageCard({ message, onChange }: MessageCardProps) {
 			<div className="space-y-1.5 text-xs">
 				<label className="block font-medium text-slate-700">
 					<Translate text={localizationConstants.casesFieldYourMessage} />
+					<span className="text-rose-500 ml-0.5">*</span>
 				</label>
 				<textarea
 					rows={4}
 					value={message}
 					onChange={(e) => onChange(e.target.value)}
 					placeholder={t(localizationConstants.casesPlaceholderWriteHere)}
-					className="w-full p-3 bg-white border border-slate-200 rounded-lg text-slate-800 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 resize-none"
+					className={`w-full p-3 bg-white border rounded-lg text-slate-800 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 resize-none ${
+						error ? "border-rose-400 bg-rose-50/20" : "border-slate-200"
+					}`}
 				/>
+				{error && <p className="text-[11px] text-rose-600">{error}</p>}
 			</div>
 		</div>
 	);

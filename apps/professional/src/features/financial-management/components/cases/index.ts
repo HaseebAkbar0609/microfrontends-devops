@@ -6,4 +6,5 @@ export * from "./CasesTablePagination";
 export * from "./CaseDeleteDialog";
 export * from "./create";
 export * from "./detail";
+export * from "./conversation";
 export * from "./shared";

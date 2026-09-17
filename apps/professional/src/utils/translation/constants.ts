@@ -8852,6 +8852,8 @@ export type CasesTranslation = {
 	casesBtnSave: string;
 	casesBtnNext: string;
 	casesBtnBack: string;
+	casesBtnPrevious: string;
+	casesBtnSaveChanges: string;
 	casesBtnEdit: string;
 	casesBtnDelete: string;
 	casesBtnUpload: string;
@@ -8876,6 +8878,17 @@ export type CasesTranslation = {
 	casesValidationCategory: string;
 	casesValidationDescription: string;
 	casesValidationCreatedBy: string;
+	casesValidationMessage: string;
+	casesValidationDocuments: string;
+	casesValidationFillBothTabs: string;
+	casesPlaceholderTitle: string;
+	casesPlaceholderCreatedBy: string;
+	casesPlaceholderDescription: string;
+	casesBtnBackToOverview: string;
+	casesNoMessagesYet: string;
+	casesNoAttachments: string;
+	casesSelectFiles: string;
+	casesSelectImages: string;
 	casesToastCreated: string;
 	casesToastUpdated: string;
 	casesToastDeleted: string;

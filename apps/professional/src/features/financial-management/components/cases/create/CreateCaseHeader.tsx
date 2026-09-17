@@ -6,12 +6,12 @@ import { useRouter } from "next/navigation";
 import { CASES_BASE_ROUTE } from "../../../constants/cases.constants";
 
 interface CreateCaseHeaderProps {
-	title?: string;
+	title: string;
 	onBack?: () => void;
 }
 
 export function CreateCaseHeader({
-	title = "Skapa Ärende",
+	title,
 	onBack,
 }: CreateCaseHeaderProps) {
 	const router = useRouter();

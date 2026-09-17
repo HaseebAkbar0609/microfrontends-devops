@@ -38,12 +38,14 @@ export function CaseStatusConfirmDialog({
 					<AlertDialogTitle className="text-base font-bold text-slate-900">
 						<Translate text={localizationConstants.casesStatusConfirmTitle} />
 					</AlertDialogTitle>
-					<AlertDialogDescription className="text-xs text-slate-500 pt-2 space-y-2">
-						<span>
-							<Translate text={localizationConstants.casesStatusConfirmDesc} />
-						</span>
-						<div className="pt-2">
-							<CaseStatusBadge status={newStatus} />
+					<AlertDialogDescription asChild>
+						<div className="text-xs text-slate-500 pt-2 space-y-2">
+							<p>
+								<Translate text={localizationConstants.casesStatusConfirmDesc} />
+							</p>
+							<div className="pt-2">
+								<CaseStatusBadge status={newStatus} />
+							</div>
 						</div>
 					</AlertDialogDescription>
 				</AlertDialogHeader>

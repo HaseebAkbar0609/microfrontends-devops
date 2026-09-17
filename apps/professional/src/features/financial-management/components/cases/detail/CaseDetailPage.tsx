@@ -13,11 +13,8 @@ import {
 import type { CaseStatus } from "../../../types/cases.types";
 import { CaseDetailHeader } from "./CaseDetailHeader";
 import { CaseDetailTabs, type CaseDetailTab } from "./CaseDetailTabs";
-import { CaseInfoSidebar } from "./CaseInfoSidebar";
-import { CaseConversation } from "./CaseConversation";
 import { CaseBasicInfoView } from "./CaseBasicInfoView";
 import { CaseDocumentsView } from "./CaseDocumentsView";
-import { CaseActivityLogView } from "./CaseActivityLogView";
 
 interface CaseDetailPageProps {
 	id: string;
@@ -28,22 +25,19 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 	const searchParams = useSearchParams();
 	const tabParam = searchParams.get("tab") as CaseDetailTab | null;
 	const { t } = useTranslation();
-	const { getCaseById, updateCaseStatus, addMessage, isLoading } = useCases();
+	const { getCaseById, updateCaseStatus, isLoading } = useCases();
 
 	const caseItem = getCaseById(id);
 
 	const [activeTab, setActiveTab] = useState<CaseDetailTab>(() => {
-		if (tabParam && ["grundlaggande_info", "dokument", "konversation", "aktivitetslogg"].includes(tabParam)) {
+		if (tabParam && ["grundlaggande_info", "dokument"].includes(tabParam)) {
 			return tabParam;
-		}
-		if (caseItem && caseItem.messages && caseItem.messages.length > 0) {
-			return "konversation";
 		}
 		return "grundlaggande_info";
 	});
 
 	useEffect(() => {
-		if (tabParam && ["grundlaggande_info", "dokument", "konversation", "aktivitetslogg"].includes(tabParam)) {
+		if (tabParam && ["grundlaggande_info", "dokument"].includes(tabParam)) {
 			setActiveTab(tabParam);
 		}
 	}, [tabParam]);
@@ -67,7 +61,7 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 					onClick={() => router.push(CASES_BASE_ROUTE)}
 					className="h-8 px-4 bg-slate-900 text-white rounded-lg text-xs cursor-pointer hover:bg-slate-800 transition-colors"
 				>
-					Tillbaka till översikten
+					{t(localizationConstants.casesBtnBackToOverview)}
 				</button>
 			</div>
 		);
@@ -78,24 +72,15 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 		showToast("success", t(localizationConstants.casesToastStatusChanged));
 	};
 
-	const handleSendMessage = (content: string) => {
-		addMessage(caseItem.id, {
-			author: "Stefan Eriksson",
-			authorRole: "SE",
-			content,
-		});
-		showToast("success", t(localizationConstants.casesToastMessageSent));
-	};
-
 	return (
-		<div className="p-6 max-w-6xl mx-auto space-y-6">
-			{/* Top Header matching Figma Image 2 and 5 */}
+		<div className="p-6 w-full space-y-6">
+			{/* Top Header matching Figma Image 5 */}
 			<CaseDetailHeader
 				caseItem={caseItem}
 				onStatusChange={handleStatusChange}
 			/>
 
-			{/* Sub Tabs matching Figma Image 5: Grundläggande info | Dokuments | Konversation | Aktivitetslogg */}
+			{/* Sub Tabs matching Figma Image 5: Grundläggande info | Dokuments */}
 			<CaseDetailTabs activeTab={activeTab} onTabChange={setActiveTab} />
 
 			{/* Tab 1: Grundläggande info matching Figma Image 5 Left */}
@@ -112,29 +97,6 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 					documents={caseItem.documents || []}
 					images={caseItem.images || []}
 				/>
-			)}
-
-			{/* Tab 3: Konversation matching Figma Image 2 */}
-			{activeTab === "konversation" && (
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-					{/* Left Column: Allmän information */}
-					<div className="lg:col-span-1">
-						<CaseInfoSidebar caseItem={caseItem} />
-					</div>
-
-					{/* Right Column: Konversation Thread */}
-					<div className="lg:col-span-2">
-						<CaseConversation
-							messages={caseItem.messages || []}
-							onSendMessage={handleSendMessage}
-						/>
-					</div>
-				</div>
-			)}
-
-			{/* Tab 4: Aktivitetslogg / Timeline */}
-			{activeTab === "aktivitetslogg" && (
-				<CaseActivityLogView caseItem={caseItem} />
 			)}
 		</div>
 	);

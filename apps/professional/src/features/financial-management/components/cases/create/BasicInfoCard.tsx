@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { CASE_CATEGORIES } from "../../../constants/cases.constants";
@@ -17,6 +18,7 @@ export function BasicInfoCard({
 	errors,
 	onChange,
 }: BasicInfoCardProps) {
+	const { t } = useTranslation();
 	return (
 		<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-4">
 			<h2 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-3">
@@ -69,7 +71,7 @@ export function BasicInfoCard({
 						type="text"
 						value={formData.title}
 						onChange={(e) => onChange("title", e.target.value)}
-						placeholder="info"
+						placeholder={t(localizationConstants.casesPlaceholderTitle)}
 						className={`w-full h-9 px-3 bg-white border rounded-lg text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 ${
 							errors.title ? "border-rose-400 bg-rose-50/20" : "border-slate-200"
 						}`}
@@ -89,7 +91,7 @@ export function BasicInfoCard({
 						type="text"
 						value={formData.createdBy}
 						onChange={(e) => onChange("createdBy", e.target.value)}
-						placeholder="info"
+						placeholder={t(localizationConstants.casesPlaceholderCreatedBy)}
 						className={`w-full h-9 px-3 bg-white border rounded-lg text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 ${
 							errors.createdBy ? "border-rose-400 bg-rose-50/20" : "border-slate-200"
 						}`}
@@ -109,7 +111,7 @@ export function BasicInfoCard({
 						type="text"
 						value={formData.description}
 						onChange={(e) => onChange("description", e.target.value)}
-						placeholder="info"
+						placeholder={t(localizationConstants.casesPlaceholderDescription)}
 						className={`w-full h-9 px-3 bg-white border rounded-lg text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 ${
 							errors.description ? "border-rose-400 bg-rose-50/20" : "border-slate-200"
 						}`}

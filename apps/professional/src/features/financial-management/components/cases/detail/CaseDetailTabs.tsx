@@ -6,11 +6,7 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 
-export type CaseDetailTab =
-	| "grundlaggande_info"
-	| "dokument"
-	| "konversation"
-	| "aktivitetslogg";
+export type CaseDetailTab = "grundlaggande_info" | "dokument";
 
 interface CaseDetailTabsProps {
 	activeTab: CaseDetailTab;
@@ -32,14 +28,6 @@ export function CaseDetailTabs({
 		{
 			id: "dokument",
 			labelKey: localizationConstants.casesTabDocuments,
-		},
-		{
-			id: "konversation",
-			labelKey: localizationConstants.casesTabConversation,
-		},
-		{
-			id: "aktivitetslogg",
-			labelKey: localizationConstants.casesTabActivityLog,
 		},
 	];
 

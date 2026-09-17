@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@/lib/toast";
@@ -20,13 +20,14 @@ export function CreateCasePage() {
 	const searchParams = useSearchParams();
 	const editId = searchParams.get("edit") || searchParams.get("id");
 	const { t } = useTranslation();
-	const { addCase, updateCase, getCaseById } = useCases();
+	const { addCase, updateCase, getCaseById, getNextCaseNumber } = useCases();
 
 	const [activeTab, setActiveTab] = useState<CreateCaseTab>("basic_info");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [errors, setErrors] = useState<Partial<Record<keyof CaseFormData, string>>>({});
+	const [documentsError, setDocumentsError] = useState<string>("");
 
-	// Initialize form data (either new case M005 or prefill from editId)
+	// Initialize clean blank form data for new cases, or load existing for edit
 	const [formData, setFormData] = useState<CaseFormData>(() => {
 		if (editId) {
 			const existing = getCaseById(editId);
@@ -46,41 +47,15 @@ export function CreateCasePage() {
 		}
 
 		return {
-			id: "M005",
+			id: getNextCaseNumber(),
 			title: "",
 			category: "info",
-			createdBy: "Stefan Eriksson",
+			createdBy: "",
 			date: new Date().toISOString().split("T")[0],
 			description: "",
 			initialMessage: "",
-			documents: [
-				{
-					id: "doc-init-1",
-					name: "filename.pdf",
-					date: "2024-05-10",
-					fileType: "application/pdf",
-					fileSize: "PDF",
-					category: "document",
-				},
-				{
-					id: "doc-init-2",
-					name: "filename.pdf",
-					date: "2024-05-10",
-					fileType: "application/pdf",
-					fileSize: "PDF",
-					category: "document",
-				},
-			],
-			images: [
-				{
-					id: "img-init-1",
-					name: "Photo.img",
-					date: "2024-05-10",
-					fileType: "image/png",
-					fileSize: "520 KB",
-					category: "image",
-				},
-			],
+			documents: [],
+			images: [],
 		};
 	});
 
@@ -113,24 +88,68 @@ export function CreateCasePage() {
 		}
 	};
 
-	const validateBasicInfo = (): boolean => {
+	const validateBasicInfo = useCallback((): boolean => {
 		const errs: Partial<Record<keyof CaseFormData, string>> = {};
 		if (!formData.title.trim()) {
 			errs.title = t(localizationConstants.casesValidationTitle);
 		}
-		if (!formData.description.trim()) {
-			errs.description = t(localizationConstants.casesValidationDescription);
+		if (!formData.category) {
+			errs.category = t(localizationConstants.casesValidationCategory);
 		}
 		if (!formData.createdBy.trim()) {
 			errs.createdBy = t(localizationConstants.casesValidationCreatedBy);
 		}
+		if (!formData.description.trim()) {
+			errs.description = t(localizationConstants.casesValidationDescription);
+		}
+		if (!formData.initialMessage?.trim()) {
+			errs.initialMessage = t(localizationConstants.casesValidationMessage);
+		}
 		setErrors(errs);
 		return Object.keys(errs).length === 0;
+	}, [formData, t]);
+
+	const validateDocuments = useCallback((): boolean => {
+		const hasAttachments =
+			formData.documents.length > 0 || formData.images.length > 0;
+		if (!hasAttachments) {
+			const msg = t(localizationConstants.casesValidationDocuments);
+			setDocumentsError(msg);
+			return false;
+		}
+		setDocumentsError("");
+		return true;
+	}, [formData.documents.length, formData.images.length, t]);
+
+	const validateBothTabs = useCallback((): boolean => {
+		const basicValid = validateBasicInfo();
+		const docsValid = validateDocuments();
+
+		if (!basicValid) {
+			setActiveTab("basic_info");
+			showToast("error", t(localizationConstants.casesValidationFillBothTabs));
+			return false;
+		}
+
+		if (!docsValid) {
+			setActiveTab("documents");
+			showToast("error", t(localizationConstants.casesValidationDocuments));
+			return false;
+		}
+
+		return true;
+	}, [validateBasicInfo, validateDocuments, t]);
+
+	const handleBack = () => {
+		if (editId) {
+			router.push(`${CASES_BASE_ROUTE}/${editId}`);
+		} else {
+			router.push(CASES_BASE_ROUTE);
+		}
 	};
 
 	const handleSave = () => {
-		if (!validateBasicInfo()) {
-			setActiveTab("basic_info");
+		if (!validateBothTabs()) {
 			return;
 		}
 
@@ -172,6 +191,8 @@ export function CreateCasePage() {
 		if (activeTab === "basic_info") {
 			if (validateBasicInfo()) {
 				setActiveTab("documents");
+			} else {
+				showToast("error", t(localizationConstants.casesValidationFillBothTabs));
 			}
 		} else {
 			handleSave();
@@ -183,9 +204,9 @@ export function CreateCasePage() {
 		: t(localizationConstants.casesCreateTitle);
 
 	return (
-		<div className="p-6 max-w-5xl mx-auto space-y-6">
-			{/* Top Header */}
-			<CreateCaseHeader title={pageTitle} />
+		<div className="p-6 w-full space-y-6">
+			{/* Top Header with consistent back navigation */}
+			<CreateCaseHeader title={pageTitle} onBack={handleBack} />
 
 			{/* Sub Tabs matching Figma */}
 			<CreateCaseTabs activeTab={activeTab} onTabChange={setActiveTab} />
@@ -200,6 +221,7 @@ export function CreateCasePage() {
 					/>
 					<MessageCard
 						message={formData.initialMessage || ""}
+						error={errors.initialMessage}
 						onChange={(val) => handleFieldChange("initialMessage", val)}
 					/>
 				</div>
@@ -207,24 +229,27 @@ export function CreateCasePage() {
 				<DocumentsTab
 					documents={formData.documents}
 					images={formData.images}
-					onAddDocument={(doc) =>
+					error={documentsError}
+					onAddDocument={(doc) => {
+						setDocumentsError("");
 						setFormData((prev) => ({
 							...prev,
 							documents: [...prev.documents, doc],
-						}))
-					}
+						}));
+					}}
 					onRemoveDocument={(id) =>
 						setFormData((prev) => ({
 							...prev,
 							documents: prev.documents.filter((d) => d.id !== id),
 						}))
 					}
-					onAddImage={(img) =>
+					onAddImage={(img) => {
+						setDocumentsError("");
 						setFormData((prev) => ({
 							...prev,
 							images: [...prev.images, img],
-						}))
-					}
+						}));
+					}}
 					onRemoveImage={(id) =>
 						setFormData((prev) => ({
 							...prev,
@@ -234,11 +259,13 @@ export function CreateCasePage() {
 				/>
 			)}
 
-			{/* Bottom Action Buttons */}
+			{/* Bottom Action Buttons with consistent cancel handler */}
 			<FormActions
 				activeTab={activeTab}
 				isSubmitting={isSubmitting}
-				onCancel={() => router.push(CASES_BASE_ROUTE)}
+				isEditMode={Boolean(editId)}
+				onCancel={handleBack}
+				onPrevious={() => setActiveTab("basic_info")}
 				onSave={handleSave}
 				onNext={handleNext}
 			/>

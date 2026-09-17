@@ -11,7 +11,7 @@ export default function EconomyLayout({ children }: { children: React.ReactNode 
 	const isSubRoute =
 		pathname.includes("/create") ||
 		pathname.includes("/edit") ||
-		/\/(claims|certificates|budget|bank|authorities|cases)\/[^/]+$/.test(pathname);
+		/\/(claims|certificates|budget|bank|authorities|cases)\/.+$/.test(pathname);
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden">

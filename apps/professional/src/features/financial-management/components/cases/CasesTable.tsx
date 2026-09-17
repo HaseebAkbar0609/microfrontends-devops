@@ -13,6 +13,7 @@ interface CasesTableProps {
 	onView: (id: string) => void;
 	onEdit: (id: string) => void;
 	onDelete: (id: string) => void;
+	onConversation?: (id: string) => void;
 	onStatusChange?: (id: string, newStatus: CaseStatus) => void;
 }
 
@@ -22,6 +23,7 @@ export function CasesTable({
 	onView,
 	onEdit,
 	onDelete,
+	onConversation,
 	onStatusChange,
 }: CasesTableProps) {
 	if (isLoading) {
@@ -87,6 +89,7 @@ export function CasesTable({
 							onView={onView}
 							onEdit={onEdit}
 							onDelete={onDelete}
+							onConversation={onConversation}
 							onStatusChange={onStatusChange}
 						/>
 					))}

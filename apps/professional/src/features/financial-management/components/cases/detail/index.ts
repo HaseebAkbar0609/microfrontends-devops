@@ -4,5 +4,4 @@ export * from "./CaseInfoSidebar";
 export * from "./CaseConversation";
 export * from "./CaseBasicInfoView";
 export * from "./CaseDocumentsView";
-export * from "./CaseActivityLogView";
 export * from "./CaseDetailPage";

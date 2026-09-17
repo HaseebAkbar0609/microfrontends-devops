@@ -17,7 +17,7 @@ export function CaseBasicInfoView({
 	onEdit,
 }: CaseBasicInfoViewProps) {
 	const initialMsg =
-		caseItem.messages[0]?.content || caseItem.description || "info";
+		caseItem.messages[0]?.content || caseItem.description || "-";
 
 	return (
 		<div className="space-y-6">
@@ -81,7 +81,7 @@ export function CaseBasicInfoView({
 							<Translate text={localizationConstants.casesFieldDescription} />
 						</p>
 						<p className="text-slate-800 leading-relaxed">
-							{caseItem.description || "info"}
+							{caseItem.description || "-"}
 						</p>
 					</div>
 

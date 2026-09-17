@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Eye, MoreVertical, Edit2, Trash2, CheckCircle2 } from "lucide-react";
+import { Eye, MoreVertical, Edit2, Trash2, CheckCircle2, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import {
 	DropdownMenu,
@@ -23,6 +23,7 @@ interface CasesTableRowProps {
 	onView: (id: string) => void;
 	onEdit: (id: string) => void;
 	onDelete: (id: string) => void;
+	onConversation?: (id: string) => void;
 	onStatusChange?: (id: string, newStatus: CaseStatus) => void;
 }
 
@@ -31,6 +32,7 @@ export function CasesTableRow({
 	onView,
 	onEdit,
 	onDelete,
+	onConversation,
 	onStatusChange,
 }: CasesTableRowProps) {
 	const { t } = useTranslation();
@@ -103,6 +105,16 @@ export function CasesTableRow({
 								<Eye className="w-3.5 h-3.5 text-slate-500" />
 								<Translate text={localizationConstants.casesActionView} />
 							</DropdownMenuItem>
+
+							{onConversation && (
+								<DropdownMenuItem
+									onClick={() => onConversation(item.id)}
+									className="cursor-pointer gap-2 py-2"
+								>
+									<MessageSquare className="w-3.5 h-3.5 text-slate-500" />
+									<Translate text={localizationConstants.casesTabConversation} />
+								</DropdownMenuItem>
+							)}
 
 							<DropdownMenuItem
 								onClick={() => onEdit(item.id)}

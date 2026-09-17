@@ -39,10 +39,10 @@ export function CaseInfoSidebar({ caseItem }: CaseInfoSidebarProps) {
 					</div>
 					<div className="min-w-0">
 						<p className="text-xs font-bold text-slate-900 truncate">
-							{caseItem.createdBy || "Kalle Svensson"}
+							{caseItem.createdBy || "-"}
 						</p>
 						<p className="text-[11px] text-slate-500 truncate">
-							{caseItem.createdRole || "Pelles Måleri"}
+							{caseItem.createdRole || "-"}
 						</p>
 					</div>
 				</div>
@@ -64,10 +64,9 @@ export function CaseInfoSidebar({ caseItem }: CaseInfoSidebarProps) {
 					<Translate text={localizationConstants.casesFieldAttachments} />
 				</p>
 				{attachments.length === 0 ? (
-					<div className="flex items-center gap-2 p-2.5 bg-white border border-slate-200 rounded-lg text-xs text-slate-600 shadow-2xs">
-						<Paperclip className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-						<span className="truncate font-mono text-[11px]">screenshooter_png</span>
-					</div>
+					<p className="text-xs text-slate-400 italic">
+						<Translate text={localizationConstants.casesNoAttachments} />
+					</p>
 				) : (
 					<div className="space-y-2">
 						{attachments.map((file) => (

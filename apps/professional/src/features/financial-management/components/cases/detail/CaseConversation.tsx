@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Paperclip } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
+import { showToast } from "@/lib/toast";
 import type { CaseMessage } from "../../../types/cases.types";
 
 interface CaseConversationProps {
@@ -18,6 +19,18 @@ export function CaseConversation({
 }: CaseConversationProps) {
 	const { t } = useTranslation();
 	const [replyText, setReplyText] = useState("");
+	const attachInputRef = useRef<HTMLInputElement>(null);
+
+	const handleAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (!files || files.length === 0) return;
+		const fileNames = Array.from(files).map((f) => f.name).join(", ");
+		setReplyText((prev) => (prev ? `${prev} [${fileNames}]` : `[${fileNames}]`));
+		showToast("success", t(localizationConstants.casesToastFileUploaded));
+		if (attachInputRef.current) {
+			attachInputRef.current.value = "";
+		}
+	};
 
 	const handleSend = () => {
 		if (replyText.trim()) {
@@ -44,7 +57,7 @@ export function CaseConversation({
 			<div className="flex-1 overflow-y-auto space-y-6 max-h-[520px] pr-1">
 				{messages.length === 0 ? (
 					<p className="text-xs text-slate-400 italic py-8 text-center">
-						Inga meddelanden ännu.
+						<Translate text={localizationConstants.casesNoMessagesYet} />
 					</p>
 				) : (
 					messages.map((msg, index) => {
@@ -114,10 +127,18 @@ export function CaseConversation({
 					className="w-full text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none resize-none leading-relaxed"
 				/>
 
+				<input
+					ref={attachInputRef}
+					type="file"
+					multiple
+					className="hidden"
+					onChange={handleAttach}
+				/>
+
 				<div className="flex items-center justify-between pt-2 border-t border-slate-100">
 					<button
 						type="button"
-						onClick={() => alert("Bifoga fil...")}
+						onClick={() => attachInputRef.current?.click()}
 						className="flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 cursor-pointer font-medium"
 					>
 						<Paperclip className="w-3.5 h-3.5" />

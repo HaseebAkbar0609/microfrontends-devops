@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, ChevronDown } from "lucide-react";
+import { ArrowLeft, ChevronDown, MessageSquare, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -12,11 +12,17 @@ import { CaseStatusBadge, CaseStatusConfirmDialog } from "../shared";
 interface CaseDetailHeaderProps {
 	caseItem: CaseItem;
 	onStatusChange: (status: CaseStatus) => void;
+	showConversationLink?: boolean;
+	showDetailsLink?: boolean;
+	onBack?: () => void;
 }
 
 export function CaseDetailHeader({
 	caseItem,
 	onStatusChange,
+	showConversationLink = true,
+	showDetailsLink = false,
+	onBack,
 }: CaseDetailHeaderProps) {
 	const router = useRouter();
 	const [pendingStatus, setPendingStatus] = useState<CaseStatus | null>(null);
@@ -29,13 +35,21 @@ export function CaseDetailHeader({
 		}
 	};
 
+	const handleBack = () => {
+		if (onBack) {
+			onBack();
+		} else {
+			router.push(CASES_BASE_ROUTE);
+		}
+	};
+
 	return (
 		<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
 			{/* Left side: Back arrow, Title, Status Badge, and #ID */}
 			<div className="flex items-center gap-3">
 				<button
 					type="button"
-					onClick={() => router.push(CASES_BASE_ROUTE)}
+					onClick={handleBack}
 					className="p-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md cursor-pointer transition-colors"
 					aria-label="Back"
 				>
@@ -55,8 +69,39 @@ export function CaseDetailHeader({
 				</div>
 			</div>
 
-			{/* Right side: Status transition button matching Figma Image 2 */}
-			<div className="relative">
+			{/* Right side: Action link and Status transition button */}
+			<div className="flex items-center gap-3">
+				{showConversationLink && (
+					<button
+						type="button"
+						onClick={() =>
+							router.push(`${CASES_BASE_ROUTE}/${caseItem.id}/conversation`)
+						}
+						className="h-9 px-3.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
+					>
+						<MessageSquare className="w-3.5 h-3.5 text-slate-500" />
+						<span>
+							<Translate text={localizationConstants.casesTabConversation} />
+						</span>
+					</button>
+				)}
+
+				{showDetailsLink && (
+					<button
+						type="button"
+						onClick={() =>
+							router.push(`${CASES_BASE_ROUTE}/${caseItem.id}`)
+						}
+						className="h-9 px-3.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
+					>
+						<FileText className="w-3.5 h-3.5 text-slate-500" />
+						<span>
+							<Translate text={localizationConstants.casesTabBasicInfo} />
+						</span>
+					</button>
+				)}
+
+				<div className="relative">
 				<button
 					type="button"
 					onClick={() => setShowMenu((prev) => !prev)}
@@ -103,6 +148,7 @@ export function CaseDetailHeader({
 						)}
 					</div>
 				)}
+				</div>
 			</div>
 
 			{/* Status change confirmation dialog */}

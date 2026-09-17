@@ -100,10 +100,15 @@ class CasesRepository {
 
 		if (typeof window !== "undefined") {
 			try {
-				window.localStorage.removeItem("tfs_economy_cases_data");
-				window.localStorage.removeItem("tfs_economy_cases_data_v2");
-				window.localStorage.removeItem("tfs_economy_cases_data_v3");
-				window.localStorage.removeItem("tfs_economy_cases_data_v4");
+				[
+					"tfs_economy_cases_data",
+					"tfs_economy_cases_data_v2",
+					"tfs_economy_cases_data_v3",
+					"tfs_economy_cases_data_v4",
+					"tfs_economy_cases_data_v5",
+					"tfs_economy_cases_data_v6",
+					"tfs_economy_cases_data_v7",
+				].forEach((k) => window.localStorage.removeItem(k));
 
 				const savedCases = window.localStorage.getItem(STORAGE_KEY_CASES);
 				if (savedCases) {
@@ -191,17 +196,24 @@ class CasesRepository {
 		this.init();
 		let maxNum = 5000;
 		for (const item of this.items) {
-			const parsed = parseInt(item.caseNumber.replace(/\D/g, ""), 10);
-			if (!isNaN(parsed) && parsed > maxNum) {
-				maxNum = parsed;
+			const idToTest = item.caseNumber || item.id;
+			const match = idToTest.match(/\d+/);
+			if (match) {
+				const val = parseInt(match[0], 10);
+				if (!isNaN(val) && val >= maxNum) {
+					maxNum = val + 1;
+				}
 			}
 		}
-		return `M${String(maxNum - 4900).padStart(3, "0")}`;
+		return String(maxNum);
 	}
 
 	public create(data: CaseFormData): CaseItem {
 		this.init();
-		const id = data.id?.trim() || this.getNextCaseNumber();
+		let id = data.id?.trim().replace(/^#/, "");
+		if (!id || this.items.some((c) => c.id === id || c.caseNumber === id)) {
+			id = this.getNextCaseNumber();
+		}
 		const now = new Date().toISOString();
 
 		const initialMessages: CaseMessage[] = data.initialMessage?.trim()
