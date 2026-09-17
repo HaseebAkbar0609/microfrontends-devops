@@ -68,6 +68,19 @@ const ProfessionalAboutUsContent: React.FC = () => {
           />
         </div>
       </div>
+
+       {/* About Timeflow */}
+        <section className="pt-24 pb-10 px-6 text-center">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+              Om Timeflow: Byggt för
+              <span className="text-primary italic">
+                svenska hantverkare och byggare
+              </span> 
+            </h2>
+          </div>
+        </section>
+
       <div className="grid md:grid-cols-2 gap-6 md:gap-12 mt-5 md:mt-10">
         <div>
           <img

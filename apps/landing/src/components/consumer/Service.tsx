@@ -148,9 +148,9 @@ export default function Service() {
     <div className="w-full px-4" id="industries">
       {/* Heading */}
       <div className="flex flex-col gap-4 items-center text-center">
-        <h1 className="font-bold text-2xl md:text-3xl mt-20">
+        <h2 className="font-bold text-2xl md:text-3xl mt-20">
           Tjänster våra hantverkare erbjuder
-        </h1>
+        </h2>
         <p className="text-gray-600 max-w-2xl">
           Hitta erfarna och pålitliga hantverkare i ditt närområde – snabbt,
           enkelt och tryggt.

@@ -50,6 +50,16 @@ const ProfessionalHowItWorksContent: React.FC = () => {
         </p>
       </div>
 
+      {/* How Timeflow works */}
+      <section className="max-w-3xl pt-10 pb-10">
+        <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+          Hur Timeflow fungerar:
+          <span className="text-primary italic">
+           Komplett systemguide för byggteam
+          </span> 
+          </h2>
+      </section>
+
       {/* Section 4 */}
       <div className="mb-12">
         <h3 className="text-xl font-bold mb-3">Hantera inställningar och kom igång snabbt</h3>
