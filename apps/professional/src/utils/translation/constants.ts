@@ -8798,6 +8798,75 @@ export type ClaimsTranslation = {
 	claimTplCustomerNetToPay: string;
 };
 
+export type OrderDagbokTranslation = {
+	orderDagbokTab: string;
+	orderDagbokTitle: string;
+	orderDagbokBtnNew: string;
+	orderDagbokProject: string;
+	orderDagbokProjectNo: string;
+	orderDagbokDate: string;
+	orderDagbokConstructionDay: string;
+	orderDagbokAddress: string;
+	orderDagbokSectionWeather: string;
+	orderDagbokCardWeatherTitle: string;
+	orderDagbokFieldLocation: string;
+	orderDagbokFieldTemperature: string;
+	orderDagbokFieldWeather: string;
+	orderDagbokFieldDescription: string;
+	orderDagbokFieldOtherNote: string;
+	orderDagbokBtnAdd: string;
+	orderDagbokFotnot: string;
+	orderDagbokLegendSelected: string;
+	orderDagbokLegendFullTime: string;
+	orderDagbokLegendPartTime: string;
+	orderDagbokSectionDetailed: string;
+	orderDagbokCardWorkforce: string;
+	orderDagbokCardWorks: string;
+	orderDagbokCardMachines: string;
+	orderDagbokCardDeviations: string;
+	orderDagbokColRole: string;
+	orderDagbokColOwn: string;
+	orderDagbokColSubcontractor: string;
+	orderDagbokColHours: string;
+	orderDagbokColNote: string;
+	orderDagbokColStatus: string;
+	orderDagbokColNotes: string;
+	orderDagbokColQuantity: string;
+	orderDagbokColHoursShort: string;
+	orderDagbokColNumber: string;
+	orderDagbokColType: string;
+	orderDagbokBtnMoreRows: string;
+	orderDagbokNotesGeneral: string;
+	orderDagbokNotesSelfInspection: string;
+	orderDagbokSectionSignatures: string;
+	orderDagbokSignature: string;
+	orderDagbokRole: string;
+	orderDagbokClarification: string;
+	orderDagbokStatusInProgress: string;
+	orderDagbokStatusPending: string;
+	orderDagbokStatusDone: string;
+	orderDagbokTypeAta: string;
+	orderDagbokTypeError: string;
+	orderDagbokTypeObstacle: string;
+	orderDagbokWeatherSunny: string;
+	orderDagbokWeatherCloudy: string;
+	orderDagbokWeatherRain: string;
+	orderDagbokWeatherSnow: string;
+	orderDagbokWeatherWindy: string;
+	orderDagbokToastSaved: string;
+	orderDagbokToastSaveError: string;
+	orderDagbokToastAddRowComingSoon: string;
+	orderDagbokToastNewLogComingSoon: string;
+	orderDagbokFilterNormal: string;
+	orderDagbokPlaceholderPickDate: string;
+	orderDagbokPlaceholderDescription: string;
+	orderDagbokPlaceholderSolna: string;
+	orderDagbokWeatherCelsius: string;
+	orderDagbokWeatherFahrenheit: string;
+	orderDagbokEmptyTable: string;
+	orderDagbokToastLoadError: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8840,7 +8909,8 @@ export type Translation = HeaderTranslation &
 	YearEndTranslation &
 	AdminLiveTranslation &
 	OrderHandlingarTranslation &
-	ClaimsTranslation;
+	ClaimsTranslation &
+	OrderDagbokTranslation;
 
 export type TranslationKeys = keyof Translation;
 
