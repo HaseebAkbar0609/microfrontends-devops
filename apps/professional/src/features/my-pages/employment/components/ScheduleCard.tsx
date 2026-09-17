@@ -1,227 +1,56 @@
 "use client";
-
 import { useState } from "react";
-import { ChevronsUpDown } from "lucide-react";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { cn } from "@/lib/utils";
+import { eachDayOfInterval, startOfWeek, endOfWeek, startOfMonth, endOfMonth, startOfYear, endOfYear, parseISO, isValid, format } from "date-fns";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
-import {
-	SCHEDULE_DAYS,
-	SCHEDULE_HOURS,
-	ScheduleEvent,
-	ScheduleEventKind,
-} from "../constants/mockData";
+import { Translate, useTranslate } from "@/utils/translation/translate";
+import { today } from "../../shared/api";
+import { ABSENCE_TYPE_KEY, LEAVE_STATUS_KEY, Absence } from "../constants/data";
 
-const EVENT_CLASS: Record<ScheduleEventKind, string> = {
-	sick: "bg-orange-500 text-white",
-	vab: "bg-green-500 text-white",
-	leave: "bg-slate-700 text-white",
+const RANGE_LABEL = {
+  today: localizationConstants.myPagesEmpToday, week: localizationConstants.myPagesEmpWeek,
+  month: localizationConstants.myPagesEmpMonth, year: localizationConstants.myPagesEmpYear,
 };
-
-type ScheduleView = "calendar" | "list";
-
-const RANGE_IDS = ["today", "week", "month", "year"] as const;
-
-const RANGE_LABEL: Record<(typeof RANGE_IDS)[number], string> = {
-	today: localizationConstants.myPagesEmpToday,
-	week: localizationConstants.myPagesEmpWeek,
-	month: localizationConstants.myPagesEmpMonth,
-	year: localizationConstants.myPagesEmpYear,
-};
-
-const formatHour = (hour: number) => `${String(hour).padStart(2, "0")}:00`;
-
-const ScheduleCard = ({ events }: { events: ScheduleEvent[] }) => {
-	const [view, setView] = useState<ScheduleView>("calendar");
-	const [range, setRange] = useState<(typeof RANGE_IDS)[number]>("today");
-
-	const rangeIds =
-		view === "calendar"
-			? RANGE_IDS
-			: RANGE_IDS.filter((id) => id !== "today");
-
-	return (
-		<div className="overflow-hidden rounded-md border border-slate-200 bg-white">
-			<div className="flex flex-wrap items-center justify-between gap-3 bg-slate-200/60 px-5 py-3">
-				<h2 className="text-base font-semibold text-slate-800">
-					<Translate
-						text={localizationConstants.myPagesEmpScheduleTitle}
-					/>
-				</h2>
-				<Select
-					value={view}
-					onValueChange={(value) => setView(value as ScheduleView)}
-				>
-					<SelectTrigger className="h-9 w-44 border-slate-200 bg-white text-sm font-medium text-slate-900 focus:ring-0">
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="calendar">
-							<Translate
-								text={
-									localizationConstants.myPagesEmpCalendarView
-								}
-							/>
-						</SelectItem>
-						<SelectItem value="list">
-							<Translate
-								text={localizationConstants.myPagesEmpListView}
-							/>
-						</SelectItem>
-					</SelectContent>
-				</Select>
-			</div>
-
-			<div className="flex flex-wrap items-center gap-4 border-b border-slate-200 px-5 py-4">
-				<button
-					type="button"
-					className="flex h-10 w-full max-w-sm cursor-pointer items-center justify-between rounded-md border border-slate-200 px-3 text-sm text-slate-900"
-				>
-					11:e Februari
-					<ChevronsUpDown className="h-4 w-4 text-slate-500" />
-				</button>
-				<div className="flex items-center gap-1 rounded-md bg-slate-100 p-1">
-					{rangeIds.map((id) => (
-						<button
-							key={id}
-							type="button"
-							onClick={() => setRange(id)}
-							className={cn(
-								"cursor-pointer rounded-md px-4 py-1.5 text-sm font-medium",
-								range === id
-									? "bg-white text-slate-900 shadow-sm"
-									: "text-slate-600",
-							)}
-						>
-							<Translate text={RANGE_LABEL[id]} />
-						</button>
-					))}
-				</div>
-			</div>
-
-			{view === "calendar" ? (
-				<div className="overflow-x-auto">
-					<table className="w-full min-w-[46rem] table-fixed border-collapse">
-						<thead>
-							<tr>
-								<th className="w-20 px-2 py-3" />
-								{SCHEDULE_DAYS.map((day) => (
-									<th
-										key={day.day}
-										className="px-2 py-3 text-left align-top"
-									>
-										<p className="text-lg font-semibold text-slate-900">
-											{day.day}
-										</p>
-										<p className="truncate text-xs font-normal text-slate-500">
-											{day.label}
-										</p>
-									</th>
-								))}
-							</tr>
-						</thead>
-						<tbody>
-							{SCHEDULE_HOURS.map((hour) => (
-								<tr
-									key={hour}
-									className="border-t border-dashed border-slate-200"
-								>
-									<td className="px-2 py-1 align-top text-sm text-slate-500">
-										{formatHour(hour)}
-									</td>
-									{SCHEDULE_DAYS.map((day) => {
-										const event = events.find(
-											(entry) =>
-												entry.day === day.day &&
-												entry.startHour === hour,
-										);
-										return (
-											<td
-												key={day.day}
-												className="h-12 px-1 py-1 align-top"
-											>
-												{event && (
-													<span
-														className={cn(
-															"block min-h-6 rounded-md px-2 py-1 text-xs font-medium leading-snug",
-															EVENT_CLASS[
-																event.kind
-															],
-														)}
-													>
-														{event.labelKey && (
-															<Translate
-																text={
-																	event.labelKey
-																}
-															/>
-														)}
-													</span>
-												)}
-											</td>
-										);
-									})}
-								</tr>
-							))}
-						</tbody>
-					</table>
-				</div>
-			) : (
-				<div>
-					{SCHEDULE_DAYS.map((day) => {
-						const event = events.find(
-							(entry) => entry.day === day.day,
-						);
-						return (
-							<div
-								key={day.day}
-								className="flex items-stretch gap-3 border-t border-slate-100 px-5 py-2"
-							>
-								<div className="w-28 shrink-0 py-1">
-									<p className="text-base font-semibold text-slate-900">
-										{day.day}
-									</p>
-									<p className="text-xs text-slate-500">
-										{day.label}
-									</p>
-								</div>
-								<div className="flex-1 py-1">
-									{event && (
-										<div
-											className={cn(
-												"min-h-8 rounded-md px-3 py-1.5 text-sm font-medium",
-												EVENT_CLASS[event.kind],
-											)}
-										>
-											{event.labelKey && (
-												<Translate
-													text={event.labelKey}
-												/>
-											)}
-											<span className="block text-xs font-normal">
-												{formatHour(event.startHour)} -{" "}
-												{formatHour(
-													event.startHour +
-														event.durationHours,
-												)}
-											</span>
-										</div>
-									)}
-								</div>
-							</div>
-						);
-					})}
-				</div>
-			)}
-		</div>
-	);
-};
-
-export default ScheduleCard;
+const EVENT_CLASS = { sick: "bg-orange-50 text-orange-900", vab: "bg-green-50 text-green-900", leave: "bg-slate-100 text-slate-800" };
+type Range = keyof typeof RANGE_LABEL;
+export default function ScheduleCard({ events }: { events: Absence[] }) {
+  const t = useTranslate();
+  const [date, setDate] = useState(today);
+  const [range, setRange] = useState<Range>("week");
+  const [view, setView] = useState("calendar");
+  const parsed = parseISO(date);
+  const selected = isValid(parsed) ? parsed : parseISO(today());
+  const start = range === "week" ? startOfWeek(selected, { weekStartsOn: 1 }) : range === "month" ? startOfMonth(selected) : range === "year" ? startOfYear(selected) : selected;
+  const end = range === "week" ? endOfWeek(selected, { weekStartsOn: 1 }) : range === "month" ? endOfMonth(selected) : range === "year" ? endOfYear(selected) : selected;
+  const days = eachDayOfInterval({ start, end });
+  const active = events.filter(entry => entry.status !== "rejected");
+  const matching = (day: string) => active.filter(entry => entry.startDate <= day && (!entry.endDate || entry.endDate >= day));
+  return <div className="overflow-hidden rounded-md border border-slate-200 bg-white">
+    <div className="flex flex-wrap items-center justify-between gap-3 bg-slate-200/60 px-5 py-3">
+      <h2 className="text-base font-semibold"><Translate text={localizationConstants.myPagesAbsenceTitle} /></h2>
+      <Select value={view} onValueChange={setView}><SelectTrigger className="w-44"><SelectValue /></SelectTrigger><SelectContent>
+        <SelectItem value="calendar"><Translate text={localizationConstants.myPagesEmpCalendarView} /></SelectItem>
+        <SelectItem value="list"><Translate text={localizationConstants.myPagesEmpListView} /></SelectItem>
+      </SelectContent></Select>
+    </div>
+    <div className="flex flex-wrap gap-3 border-b p-4">
+      <Input type="date" value={date} aria-label={t(localizationConstants.myPagesEmpSickDate)} onChange={event => setDate(event.target.value)} className="w-44" />
+      <div className="flex flex-wrap gap-1 rounded-md bg-slate-100 p-1">{(Object.keys(RANGE_LABEL) as Range[]).map(id =>
+        <button type="button" key={id} aria-pressed={range === id} onClick={() => setRange(id)} className={`rounded px-3 py-1 text-sm ${range === id ? "bg-white shadow-sm" : ""}`}><Translate text={RANGE_LABEL[id]} /></button>)}</div>
+    </div>
+    <div className="overflow-x-auto">
+      <div className={view === "calendar" ? "grid min-w-[40rem] grid-cols-7" : "divide-y"}>
+        {days.map(day => { const key = format(day, "yyyy-MM-dd"); const entries = matching(key);
+          return <div key={key} className={view === "calendar" ? "min-h-28 border-b border-r p-2" : "flex gap-4 p-3"}>
+            <time dateTime={key} className="text-xs font-medium">{key}</time>
+            <div className="mt-1 space-y-1">{entries.map(entry => <div key={entry.id} className={`rounded p-2 text-xs ${EVENT_CLASS[entry.type]}`}>
+              <Translate text={ABSENCE_TYPE_KEY[entry.type]} /><span className="block"><Translate text={LEAVE_STATUS_KEY[entry.status]} /></span>
+              <span className="block"><Translate text={localizationConstants.myPagesAllDay} /></span>
+            </div>)}</div>
+          </div>;
+        })}
+      </div>
+    </div>
+  </div>;
+}

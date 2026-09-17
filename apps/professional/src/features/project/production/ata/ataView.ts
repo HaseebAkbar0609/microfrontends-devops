@@ -1,4 +1,5 @@
 import type { SortDir } from "@/utils/tableSort";
+import { padAtaNumber } from "./ataMath";
 import { ATA_STATUS_META, type AtaListSortField } from "./projectAta.config";
 import type { AtaAttested, AtaStatus, ProjectAta } from "./types";
 
@@ -16,16 +17,38 @@ export interface AtaLabels {
 	number: (number: number) => string;
 }
 
-/** "Pelle Målare 001", or `""` when the ÄTA is not paired with a supplier's. */
-export function linkedLabel(ata: ProjectAta): string {
-	return ata.linkedSupplierAta
-		? `${ata.linkedSupplierAta.supplier} ${ata.linkedSupplierAta.ataNumber}`
-		: "";
+/** A supplier ÄTA's link to a customer ÄTA, as the kund list reads it. */
+export interface SupplierAtaLinkRef {
+	customerAtaId: string;
+	supplierName: string;
+	number: number;
+}
+
+/**
+ * Each customer ÄTA's "Kopplad Lev-äta", from the supplier ÄTAs that link to
+ * it: "Pelle Målare 001", or "Pelle Målare 001 +1" when more than one does.
+ * The link is stored once, on the supplier ÄTA, so the two lists cannot
+ * disagree. `links` arrive in the supplier store's order; the first names the cell.
+ */
+export function linkedLabels(
+	links: readonly SupplierAtaLinkRef[],
+	more: (label: string, count: number) => string,
+): Map<string, string> {
+	const grouped = new Map<string, SupplierAtaLinkRef[]>();
+	for (const link of links) {
+		grouped.set(link.customerAtaId, [...(grouped.get(link.customerAtaId) ?? []), link]);
+	}
+	return new Map(
+		Array.from(grouped, ([customerAtaId, refs]) => {
+			const label = `${refs[0].supplierName} ${padAtaNumber(refs[0].number)}`;
+			return [customerAtaId, refs.length > 1 ? more(label, refs.length - 1) : label];
+		}),
+	);
 }
 
 /* Whitespace is dropped on both sides: amounts render with a (non-breaking)
    thousands space, and a reader typing "158 680" should still find 158680. */
-const compact = (value: string) => value.replace(/\s/g, "").toLocaleLowerCase();
+export const compact = (value: string) => value.replace(/\s/g, "").toLocaleLowerCase();
 
 export function matchesAta(
 	row: AtaListRow,
@@ -49,7 +72,7 @@ export function matchesAta(
 	].some((value) => compact(value).includes(needle));
 }
 
-function compareText(left: string, right: string, locale: string): number {
+export function compareText(left: string, right: string, locale: string): number {
 	if (!left || !right) return left === right ? 0 : left ? -1 : 1;
 	return left.localeCompare(right, locale, { sensitivity: "base", numeric: true });
 }

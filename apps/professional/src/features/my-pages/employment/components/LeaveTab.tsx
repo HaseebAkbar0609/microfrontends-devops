@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -30,16 +29,15 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
+import { saveRecord } from "../../shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "../../shared/feedback";
+import { useAbsences } from "../services/employmentService";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
-	LEAVE_REQUESTS,
-	LEAVE_SCHEDULE_EVENTS,
 	LEAVE_STATUS_KEY,
-	LeaveRequest,
 	LeaveStatus,
-} from "../constants/mockData";
+} from "../constants/data";
 import { LEAVE_STATUS_CLASS } from "../constants/statusStyles";
 import { leaveRequestSchema, LeaveRequestValues } from "../schemas/absence";
 import ScheduleCard from "./ScheduleCard";
@@ -61,29 +59,30 @@ const EMPTY_VALUES: LeaveRequestValues = {
 
 const LeaveTab = () => {
 	const t = useTranslate();
-	const [requests, setRequests] = useState<LeaveRequest[]>(LEAVE_REQUESTS);
+	const query = useAbsences();
+	const action = useMyPagesAction();
+	const absences = (query.data ?? []).filter((entry) => entry.type === "leave");
+	const requests = absences.map((entry) => ({
+		id: entry.id, listDate: new Date(entry.createdAt).toLocaleDateString(),
+		requestedPeriod: `${entry.startDate} - ${entry.endDate ?? ""}`,
+		status: entry.status, comment: entry.message || "-",
+	}));
 	const form = useForm<LeaveRequestValues>({
 		resolver: zodResolver(leaveRequestSchema),
 		defaultValues: EMPTY_VALUES,
 	});
 
-	const handleSubmit = form.handleSubmit((values) => {
-		setRequests((current) => [
-			{
-				id: `lr-${crypto.randomUUID()}`,
-				listDate: mockDate(0).replace(/-/g, "/"),
-				requestedPeriod: `${values.fromDate.replace(/-/g, "/")} - ${values.toDate.replace(/-/g, "/")}`,
-				status: "review",
-				comment: values.message.trim() || "-",
-			},
-			...current,
-		]);
-		form.reset(EMPTY_VALUES);
+	const handleSubmit = form.handleSubmit(async (values) => {
+		if (await action.run(() => saveRecord("absence", {
+			type: "leave", startDate: values.fromDate, endDate: values.toDate,
+			message: values.message.trim(), status: "review",
+		}), localizationConstants.myPagesEmpSuccess)) form.reset(EMPTY_VALUES);
 	});
 
 	return (
 		<div className="grid grid-cols-12 items-start gap-6">
 			<div className="col-span-12 flex flex-col gap-6 xl:col-span-8">
+				<MyPagesQueryState query={query} />
 				<div className="overflow-hidden rounded-md border border-slate-200 bg-white">
 					<div className="flex items-center gap-2.5 bg-slate-200/60 px-5 py-3.5">
 						<h2 className="text-base font-semibold text-slate-800">
@@ -122,6 +121,7 @@ const LeaveTab = () => {
 								</TableRow>
 							</TableHeader>
 							<TableBody>
+								{!query.isPending && !query.isError && requests.length === 0 && <TableRow><TableCell colSpan={4}><Translate text={localizationConstants.myPagesNoRecords} /></TableCell></TableRow>}
 								{requests.map((request) => {
 									const Icon = STATUS_ICON[request.status];
 									return (
@@ -163,7 +163,7 @@ const LeaveTab = () => {
 					</div>
 				</div>
 
-				<ScheduleCard events={LEAVE_SCHEDULE_EVENTS} />
+				<ScheduleCard events={absences} />
 			</div>
 
 			<div className="col-span-12 xl:col-span-4">
@@ -285,6 +285,7 @@ const LeaveTab = () => {
 								</Button>
 								<Button
 									type="submit"
+									disabled={action.pending}
 									className="h-10 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 								>
 									<Translate

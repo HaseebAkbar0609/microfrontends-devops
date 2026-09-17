@@ -98,6 +98,18 @@ const Content: React.FC = () => {
         </div>
       </section>
 
+      {/* Construction system */}
+        <section className="pt-16 pb-16 px-6 text-center border-y ">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+              Byggsystem byggt för
+              <span className="text-primary italic">
+                byggare och projektteam
+              </span> 
+            </h2>
+          </div>
+        </section>
+
       {/* ================== Benefits ================== */}
       <section className="py-16 bg-white">
         <div className="container mx-auto max-w-6xl px-4">

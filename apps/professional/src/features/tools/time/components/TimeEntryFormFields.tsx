@@ -21,11 +21,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import {
-	ATA_OPTIONS,
-	ORDER_OPTIONS,
-	PROJECT_OPTIONS,
-} from "../constants/mockData";
+import { useTimeReferences } from "../services/timeService";
+import { MyPagesQueryState } from "@/features/my-pages/shared/feedback";
 import { TimeRowValues } from "../schemas/time.schema";
 import { diffMinutes, formatDuration } from "../utils/time";
 
@@ -35,6 +32,13 @@ const TimeEntryFormFields = ({
 	form: UseFormReturn<TimeRowValues>;
 }) => {
 	const t = useTranslate();
+	const references = useTimeReferences();
+	const type = form.watch("type");
+	const refNr = form.watch("refNr");
+	const selectedProject = references.data?.find((project) => (type === "order" ? project.order : project.code) === refNr);
+	const ORDER_OPTIONS = [...new Set(references.data?.map((project) => project.order).filter(Boolean) ?? [])];
+	const PROJECT_OPTIONS = references.data?.map((project) => project.code) ?? [];
+	const ATA_OPTIONS = selectedProject?.ata ?? [];
 	const ata = form.watch("ata");
 	const start = form.watch("start");
 	const end = form.watch("end");
@@ -43,6 +47,7 @@ const TimeEntryFormFields = ({
 
 	return (
 		<div className="flex flex-col gap-4">
+			<MyPagesQueryState query={references} />
 			<div className="flex flex-wrap items-end gap-4">
 				<div className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-3">
 					<FormField
@@ -134,7 +139,7 @@ const TimeEntryFormFields = ({
 					render={({ field }) => (
 						<RadioGroup
 							value={field.value}
-							onValueChange={field.onChange}
+							onValueChange={(value) => { field.onChange(value); form.setValue("refNr", ""); form.setValue("ata", false); form.setValue("ataNr", ""); }}
 							className="grid grid-cols-1 gap-4 sm:grid-cols-3 [--primary:var(--color-primary-black)]"
 						>
 							<div className="flex flex-col gap-2">
@@ -279,6 +284,7 @@ const TimeEntryFormFields = ({
 						<label className="flex items-center gap-2 text-sm font-medium text-slate-900">
 							<Checkbox
 								checked={field.value}
+                disabled={type === "overhead"}
 								onCheckedChange={field.onChange}
 							/>
 							<Translate
@@ -368,6 +374,8 @@ const TimeEntryFormFields = ({
 							render={({ field }) => (
 								<FormControl>
 									<Input
+                    aria-label={t(localizationConstants.timeFieldTravel)}
+                    type="number" min="0" max="100000" step="any"
 										{...field}
 										className="h-full flex-1 rounded-none border-0 text-sm shadow-none focus-visible:ring-0"
 									/>
@@ -375,6 +383,7 @@ const TimeEntryFormFields = ({
 							)}
 						/>
 					</div>
+          {form.formState.errors.travelValue && <p role="alert" className="text-sm text-red-600"><Translate text={localizationConstants.myPagesInvalid} /></p>}
 				</div>
 				<Controller
 					control={form.control}

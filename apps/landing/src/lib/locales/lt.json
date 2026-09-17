@@ -99,7 +99,9 @@
         "heroTitle1": "Visas darbas viename",
         "heroTitle2": "vieninteliame lange.",
         "ctaTitle1": "Pradėkite lengvai.",
-        "ctaTitle2": "Augkite kada norite."
+        "ctaTitle2": "Augkite kada norite.",
+        "completeBusinessTitle":"Pilna verslo valdymo sistema",
+        "completeBusinessTitle2":"amatininkams ir statybos įmonėms"
     },
     "professional": {
         "heroLabel": "Statybos ir meistrų įmonėms visuose sektoriuose",
@@ -179,7 +181,10 @@
         "startAccount": "Pradėti sąskaitą",
         "tryDemo": "Išbandyti demo",
         "workTag": "(pasirinktinai)",
-        "managerTag": "(įtraukta į Standard / PRO)."
+        "managerTag": "(įtraukta į Standard / PRO).",
+        "professionalBusinessLabel":"VISAPUSIS SPRENDIMAS",
+        "professionalBusinessTitle":"Profesionalus verslo valdymo",
+        "professionalBusinessTitle2":"sistema amatininkams ir statybos įmonėms"
     },
     "consumer": {
         "heroLabel": "Privatiems klientams",
@@ -324,7 +329,10 @@
         "trustF5": "Projekto informacija prieinama, kai reikia",
         "trustF6": "„TimeFlow Home“ privatiems asmenims visada nemokama",
         "finalCtaTitle": "Pasiruošę pradėti?",
-        "finalCtaDesc": "Aprašyk savo projektą jau šiandien ir gauk iki 5 pasiūlymų iš kvalifikuotų įmonių."
+        "finalCtaDesc": "Aprašyk savo projektą jau šiandien ir gauk iki 5 pasiūlymų iš kvalifikuotų įmonių.",
+        "businessManagementLabel": "ĮMONĖMS",
+        "businessManagementTitle": "Verslo valdymo sistema, sukurta",
+        "businessManagementTitle2": "amatininkams ir mažoms statybos įmonėms"
     },
     "solutions": {
         "heroLabel": "Sprendimai",
@@ -652,7 +660,10 @@
         "refTitle": "„TimeFlow“ dabar pradedamas diegti Švedijos rinkoje.",
         "refDesc": "Per 2026 m. paskelbsime patvirtintas klientų istorijas ir interviu su įmonėmis, kurios platformą naudoja kasdienėje veikloje. Susisiekite su mumis — mielai papasakosime daugiau.",
         "ctaDesc": "Išbandyk „TimeFlow“ 30 dienų nemokamai — be kredito kortelės. Tik 3 mėnesių minimalus įsipareigojimas.",
-        "startNow": "Pradėk dabar"
+        "startNow": "Pradėk dabar",
+        "successStoriesLabel": "TIKRI REZULTATA",
+        "successStoriesTitle": "Tikros sėkmės istorijos:",
+        "successStoriesTitle2": "Kaip statybos įmonės auga su Timeflow"
     },
     "pricing": {
         "heroLabel": "Kainos",

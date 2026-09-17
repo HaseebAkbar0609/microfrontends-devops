@@ -99,7 +99,9 @@
         "heroTitle1": "Hele jobbet i én",
         "heroTitle2": "enkelt visning.",
         "ctaTitle1": "Start enkelt.",
-        "ctaTitle2": "Voks når du vil."
+        "ctaTitle2": "Voks når du vil.",
+        "completeBusinessTitle":"Komplet forretningssystem til",
+        "completeBusinessTitle2":"håndværkere og byggevirksomheder"
     },
     "professional": {
         "heroLabel": "For håndværksvirksomheder i alle brancher",
@@ -179,7 +181,10 @@
         "startAccount": "Start konto",
         "tryDemo": "Prøv demo-konto",
         "workTag": "(tilvalg)",
-        "managerTag": "(indgår i Standard / PRO)."
+        "managerTag": "(indgår i Standard / PRO).",
+        "professionalBusinessLabel":"DEN KOMPLETTE LØSNING",
+        "professionalBusinessTitle":"Professionelt forretningssystem til",
+        "professionalBusinessTitle2":"håndværkere og byggevirksomheder"
     },
     "consumer": {
         "heroLabel": "For privatpersoner",
@@ -324,7 +329,10 @@
         "trustF5": "Projektinformation tilgængelig, når du har brug for den",
         "trustF6": "TimeFlow Home er altid gratis for privatpersoner",
         "finalCtaTitle": "Klar til at komme i gang?",
-        "finalCtaDesc": "Beskriv dit projekt i dag og få op til 5 tilbud fra kvalificerede firmaer."
+        "finalCtaDesc": "Beskriv dit projekt i dag og få op til 5 tilbud fra kvalificerede firmaer.",
+        "businessManagementLabel": "TIL VIRKSOMHEDER",
+        "businessManagementTitle": "Forretningssystem designet til",
+        "businessManagementTitle2": "håndværkere og små byggevirksomheder"
     },
     "solutions": {
         "heroLabel": "Løsninger",
@@ -652,7 +660,10 @@
         "refTitle": "TimeFlow lanceres nu på det svenske marked.",
         "refDesc": "I løbet af 2026 offentliggør vi verificerede kundecases og interviews med virksomheder, der bruger platformen i deres daglige drift. Kontakt os, så fortæller vi mere.",
         "ctaDesc": "Prøv TimeFlow gratis i 30 dage — uden kreditkort. Kun 3 måneders binding.",
-        "startNow": "Kom godt i gang"
+        "startNow": "Kom godt i gang",
+        "successStoriesLabel": "VIRKELIGE RESULTATER",
+        "successStoriesTitle": "Ægte succeshistorier:",
+        "successStoriesTitle2": "Sådan vokser byggevirksomheder med Timeflow"
     },
     "pricing": {
         "heroLabel": "Priser",

@@ -133,6 +133,22 @@ export default function ProfessionalPage() {
           </div>
         </section>
 
+        {/* Professional business management system*/}
+        <section className="pt-16 pb-16 px-6 text-center border-t">
+          <div className="max-w-3xl mx-auto">
+            <p className="font-mono text-xs text-primary uppercase tracking-widest mb-4">
+              {t("professional.professionalBusinessLabel")} 
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tigh ">
+              {t("professional.professionalBusinessTitle")}{" "}
+              <span className="text-primary italic">
+                {t("professional.professionalBusinessTitle2")}
+              </span> 
+            </h2>
+          </div>
+        </section>
+
+
         {/* App promo */}
         <section className="bg-ink text-white py-24 px-6">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">

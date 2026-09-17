@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { ApiError } from "@/types/api";
 import { BasicInfoStep } from "./steps/BasicInfoStep";
 import { ContactStep } from "./steps/ContactStep";
 import { AssessmentStep } from "./steps/AssessmentStep";
@@ -212,8 +213,9 @@ export function CreateCustomerPage() {
 						setCustomerId(result.id);
 						showToast("success", t(localizationConstants.customerCreatedSuccess));
 						router.push("/tools/register?tab=kund");
-					} catch {
-						showToast("error", t(localizationConstants.customerCreateError));
+					} catch (error) {
+						const backendMessage = (error as ApiError).response?.data?.message;
+						showToast("error", backendMessage || t(localizationConstants.customerCreateError));
 					}
 				},
 				(errors) => {
@@ -250,8 +252,9 @@ export function CreateCustomerPage() {
 			const result = await saveDraftAPIAction(fullData);
 			setCustomerId(result.id);
 			showToast("info", t(localizationConstants.draftSaved));
-		} catch {
-			showToast("error", t(localizationConstants.customerCreateError));
+		} catch (error) {
+			const backendMessage = (error as ApiError).response?.data?.message;
+			showToast("error", backendMessage || t(localizationConstants.customerCreateError));
 		} finally {
 			setIsSavingDraft(false);
 		}

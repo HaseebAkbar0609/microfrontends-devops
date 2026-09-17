@@ -8,6 +8,14 @@ export type AtaSection = "staff" | "material" | "machines" | "ue" | "supplierAta
  */
 export type AtaStatus = "utkast" | "forhandling" | "ok" | "redovisad";
 
+/**
+ * Where a subcontractor's or supplier's ÄTA stands with the project. It
+ * arrives `ej_granskad`; Godkänna makes it `ok`. `forhandling` and
+ * `redovisad` (invoiced) are not reached from any drawn control — only seeded
+ * rows carry them.
+ */
+export type SupplierAtaStatus = "ej_granskad" | "forhandling" | "ok" | "redovisad";
+
 export type AtaAttested = "ja" | "ej_klart";
 
 /**
@@ -94,8 +102,6 @@ export interface ProjectAta {
 	number: number;
 	status: AtaStatus;
 	attested: AtaAttested;
-	/** The subcontractor's or supplier's ÄTA this one is paired with, e.g. Pelle Målare 001. */
-	linkedSupplierAta: { supplier: string; ataNumber: string } | null;
 	client: AtaClient;
 	info: AtaProjectInfo;
 	createdBy: string;

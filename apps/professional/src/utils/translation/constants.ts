@@ -1,5 +1,6 @@
 import { sv } from "./sv";
 import type { AdminLiveTranslation } from "./adminLive";
+import type { MyPagesLiveTranslation } from "./myPagesLive";
 
 export type HeaderTranslation = {
 	home: string;
@@ -3926,7 +3927,6 @@ export type OfferTranslation = {
 	projectInspectionInvalidDate: string;
 	projectInspectionDeletedToast: string;
 	/* TFS-705 — ÄTA - kund on the project record (list, two-step form, line items, documents). */
-	projectAtaSupplierUnavailable: string;
 	projectAtaEditTitle: string;
 	projectAtaLabel: string;
 	projectAtaRowActions: string;
@@ -3998,6 +3998,22 @@ export type OfferTranslation = {
 	projectAtaNoPreview: string;
 	projectAtaDocumentDeleteTitle: string;
 	projectAtaDocumentDeleteBody: string;
+	/* TFS-706 — ÄTA-Leverantör /UE (supplier ÄTAs: grouped list, detail list, View ÄTA, link and approve). */
+	projectAtaSupplierInfoTitle: string;
+	projectAtaSupplierLinkedTo: string;
+	projectAtaSupplierLinkedMore: string;
+	projectAtaSupplierNoLink: string;
+	projectAtaSupplierLinkInvalid: string;
+	projectAtaSupplierNotAttested: string;
+	projectAtaSupplierEmpty: string;
+	projectAtaSupplierEmptyDesc: string;
+	projectAtaSupplierNoAtas: string;
+	projectAtaSupplierApproveBody: string;
+	projectAtaSupplierApproveSaveBody: string;
+	projectAtaSupplierAlreadyApproved: string;
+	projectAtaSupplierApproveNeedsRows: string;
+	projectAtaSupplierBackToList: string;
+	projectAtaSupplierViewDocument: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;
@@ -5162,6 +5178,8 @@ export type RegisterTranslation = {
 	articleKalkylkostnad: string;
 	articleBestallningspunkt: string;
 	articleILager: string;
+	articleStockLabel: string;
+	articleReservedLabel: string;
 	articleViktLabel: string;
 	articleLangdLabel: string;
 	articleBreddLabel: string;
@@ -5227,6 +5245,8 @@ export type RegisterTranslation = {
 	placeholderArticleKalkylkostnad: string;
 	placeholderSelectBestallningspunkt: string;
 	placeholderArticleILager: string;
+	placeholderArticleStock: string;
+	placeholderArticleReserved: string;
 	placeholderArticleVikt: string;
 	placeholderArticleLangd: string;
 	placeholderArticleBredd: string;
@@ -8903,6 +8923,75 @@ export type CasesTranslation = {
 	casesActivityFileUploaded: string;
 };
 
+export type OrderDagbokTranslation = {
+	orderDagbokTab: string;
+	orderDagbokTitle: string;
+	orderDagbokBtnNew: string;
+	orderDagbokProject: string;
+	orderDagbokProjectNo: string;
+	orderDagbokDate: string;
+	orderDagbokConstructionDay: string;
+	orderDagbokAddress: string;
+	orderDagbokSectionWeather: string;
+	orderDagbokCardWeatherTitle: string;
+	orderDagbokFieldLocation: string;
+	orderDagbokFieldTemperature: string;
+	orderDagbokFieldWeather: string;
+	orderDagbokFieldDescription: string;
+	orderDagbokFieldOtherNote: string;
+	orderDagbokBtnAdd: string;
+	orderDagbokFotnot: string;
+	orderDagbokLegendSelected: string;
+	orderDagbokLegendFullTime: string;
+	orderDagbokLegendPartTime: string;
+	orderDagbokSectionDetailed: string;
+	orderDagbokCardWorkforce: string;
+	orderDagbokCardWorks: string;
+	orderDagbokCardMachines: string;
+	orderDagbokCardDeviations: string;
+	orderDagbokColRole: string;
+	orderDagbokColOwn: string;
+	orderDagbokColSubcontractor: string;
+	orderDagbokColHours: string;
+	orderDagbokColNote: string;
+	orderDagbokColStatus: string;
+	orderDagbokColNotes: string;
+	orderDagbokColQuantity: string;
+	orderDagbokColHoursShort: string;
+	orderDagbokColNumber: string;
+	orderDagbokColType: string;
+	orderDagbokBtnMoreRows: string;
+	orderDagbokNotesGeneral: string;
+	orderDagbokNotesSelfInspection: string;
+	orderDagbokSectionSignatures: string;
+	orderDagbokSignature: string;
+	orderDagbokRole: string;
+	orderDagbokClarification: string;
+	orderDagbokStatusInProgress: string;
+	orderDagbokStatusPending: string;
+	orderDagbokStatusDone: string;
+	orderDagbokTypeAta: string;
+	orderDagbokTypeError: string;
+	orderDagbokTypeObstacle: string;
+	orderDagbokWeatherSunny: string;
+	orderDagbokWeatherCloudy: string;
+	orderDagbokWeatherRain: string;
+	orderDagbokWeatherSnow: string;
+	orderDagbokWeatherWindy: string;
+	orderDagbokToastSaved: string;
+	orderDagbokToastSaveError: string;
+	orderDagbokToastAddRowComingSoon: string;
+	orderDagbokToastNewLogComingSoon: string;
+	orderDagbokFilterNormal: string;
+	orderDagbokPlaceholderPickDate: string;
+	orderDagbokPlaceholderDescription: string;
+	orderDagbokPlaceholderSolna: string;
+	orderDagbokWeatherCelsius: string;
+	orderDagbokWeatherFahrenheit: string;
+	orderDagbokEmptyTable: string;
+	orderDagbokToastLoadError: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -8943,10 +9032,11 @@ export type Translation = HeaderTranslation &
 	OrderTimeplanTranslation &
 	OrderQaTranslation &
 	YearEndTranslation &
-	AdminLiveTranslation &
+	AdminLiveTranslation & MyPagesLiveTranslation &
 	OrderHandlingarTranslation &
 	ClaimsTranslation &
-	CasesTranslation;
+	CasesTranslation &
+	OrderDagbokTranslation;
 
 export type TranslationKeys = keyof Translation;
 

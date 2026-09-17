@@ -78,7 +78,6 @@ export function createAta(projectId: string, input: AtaInput, meta: { createdBy:
 		number: nextAtaNumber(projectId),
 		status: "utkast",
 		attested: "ej_klart",
-		linkedSupplierAta: null,
 		createdBy: meta.createdBy,
 		createdDate: meta.today,
 		revisedDate: "",

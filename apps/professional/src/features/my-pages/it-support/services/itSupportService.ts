@@ -1,5 +1,4 @@
-import { IT_TICKETS, ItTicket } from "../constants/mockData";
+import { listRecords } from "../../shared/api";
+import { ItTicket } from "../constants/data";
 
-export function listItTickets(): ItTicket[] {
-	return IT_TICKETS;
-}
+export const listItTickets = () => listRecords<ItTicket>("ticket");

@@ -99,7 +99,9 @@
         "heroTitle1": "Koko työ yhdessä",
         "heroTitle2": "ainoassa näkymässä.",
         "ctaTitle1": "Aloita helposti.",
-        "ctaTitle2": "Kasva milloin haluat."
+        "ctaTitle2": "Kasva milloin haluat.",
+        "completeBusinessTitle":"Täydellinen toiminnanohjausjärjestelmä",
+        "completeBusinessTitle2":"käsityöläisille ja rakennusyrityksille"
     },
     "professional": {
         "heroLabel": "Rakennus- ja talotekniikka-alan yrityksille",
@@ -179,7 +181,10 @@
         "startAccount": "Aloita tili",
         "tryDemo": "Kokeile demoa",
         "workTag": "(lisäosa)",
-        "managerTag": "(sisältyy Standard / PRO -pakettiin)."
+        "managerTag": "(sisältyy Standard / PRO -pakettiin).",
+        "professionalBusinessLabel":"KOKONAISRATKAISU",
+        "professionalBusinessTitle":"Ammattimainen toiminnanohjausjärjestelmä",
+        "professionalBusinessTitle2":"käsityöläisille ja rakennusyrityksille"
     },
     "consumer": {
         "heroLabel": "Yksityisasiakkaille",
@@ -324,7 +329,10 @@
         "trustF5": "Projektitiedot saatavilla silloin kun tarvitset",
         "trustF6": "TimeFlow Home on aina ilmainen kuluttajille",
         "finalCtaTitle": "Valmiina aloittamaan?",
-        "finalCtaDesc": "Kuvaile projektisi jo tänään ja saat jopa 5 tarjousta päteviltä yrityksiltä."
+        "finalCtaDesc": "Kuvaile projektisi jo tänään ja saat jopa 5 tarjousta päteviltä yrityksiltä.",
+        "businessManagementLabel": "YRITYKSILLE",
+        "businessManagementTitle": "Käsityöläisille ja pienille",
+        "businessManagementTitle2": "rakennusyrityksille suunniteltu toiminnanohjausjärjestelmä"
     },
     "solutions": {
         "heroLabel": "Ratkaisut",
@@ -652,7 +660,10 @@
         "refTitle": "TimeFlow lanseerataan nyt Ruotsin markkinoille.",
         "refDesc": "Vuoden 2026 aikana julkaisemme vahvistettuja asiakastapauksia ja haastatteluja yrityksistä, jotka käyttävät alustaa päivittäisessä toiminnassaan. Ota yhteyttä — kerromme mielellämme lisää.",
         "ctaDesc": "Kokeile TimeFlow'ta 30 päivää ilmaiseksi — ilman luottokorttia. Vain 3 kuukauden vähimmäissitoumus.",
-        "startNow": "Aloita nyt"
+        "startNow": "Aloita nyt",
+        "successStoriesLabel": "TODelliset TULOKSET",
+        "successStoriesTitle": "Todellisia menestystarinoita:",
+        "successStoriesTitle2": "Näin rakennusyritykset kasvavat Timeflow avulla"
     },
     "pricing": {
         "heroLabel": "Hinnat",
