@@ -9,7 +9,7 @@ import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { todayIso } from "../../../../shared/todayIso";
 import { supplierApproveBlockReason } from "../../ataRules";
-import { useBeforeUnloadWarning } from "../../form/useBeforeUnloadWarning";
+import { useBeforeUnloadWarning } from "../../../hooks/useBeforeUnloadWarning";
 import type { AtaLineItem, AtaSection } from "../../types";
 import * as store from "../services/supplierAtaService";
 import type { SupplierAtaViewState } from "./useSupplierAtaView";
