@@ -18,14 +18,10 @@ import { getUserLanguage } from "@/utils/userLanguage";
 import localizationConstants from "@/utils/translation/constants";
 import { ACCOUNT_EXPIRED_ERROR_CODE } from "@/types/lifecycle";
 import { LIFECYCLE_UPGRADE_PATH } from "@/features/account-lifecycle/constants";
+import { STAFF_LICENSE_ERROR_CODE } from "@/features/admin/users/live/license.constants";
+import { setRequiresSubscriptionCookie } from "@/lib/requiresSubscriptionCookie";
 
 const REFRESH_PATH = "/professionals/auth/refresh-token";
-
-/** Same origin as main client; no auth interceptors on this instance. */
-function getApiBaseURL(): string | undefined {
-  const u = process.env.NEXT_PUBLIC_API_URL?.trim().replace(/\/$/, "");
-  return u || undefined;
-}
 
 const AUTH_PATHS_NO_REFRESH = [
   "/auth/login",
@@ -69,7 +65,7 @@ async function callRefreshTokenAPI(): Promise<string> {
   }
 
   const client = axios.create({
-    baseURL: getApiBaseURL(),
+    baseURL: BASE_API_VERSION,
     headers: { "Content-Type": "application/json" },
   });
 
@@ -98,7 +94,7 @@ async function callRefreshTokenAPI(): Promise<string> {
   return access;
 }
 
-function ensureRefreshedAccessToken(): Promise<string> {
+export function ensureRefreshedAccessToken(): Promise<string> {
   if (!refreshPromise) {
     refreshPromise = callRefreshTokenAPI().finally(() => {
       refreshPromise = null;
@@ -149,6 +145,13 @@ axiosInstance.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const originalRequest = error.config as RetryableConfig | undefined;
+
+    const details = (error.response?.data as { details?: { code?: string } })?.details;
+    if (error.response?.status === 403 && details?.code === STAFF_LICENSE_ERROR_CODE) {
+      setRequiresSubscriptionCookie(true);
+      if (typeof window !== "undefined" && window.location.pathname !== "/manage-plans") window.location.href = "/manage-plans";
+      return Promise.reject(error);
+    }
 
     if (isAccountExpiredReadOnlyError(error)) {
       toast.error(i18n.t(localizationConstants.lifecycleToastBlockedTitle), {

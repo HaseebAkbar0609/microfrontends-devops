@@ -33,7 +33,7 @@ export default function UserDirectory() {
   const metrics: [keyof Summary, string][] = [["total_users", "proAdminTotal"], ["active_users", "proAdminActive"], ["pending_users", "proAdminPending"], ["deactivated_users", "proAdminInactive"]];
   return <div className="space-y-5">
     <LicenseSummary />
-    <div className="flex flex-wrap justify-between gap-3"><Button asChild><Link href="/admin/user/create"><Plus className="mr-2 h-4 w-4" />{t("proAdminCreate")}</Link></Button><Button asChild variant="outline"><Link href="/admin/licenses">{t("proAdminLicenses")}</Link></Button></div>
+    <div className="flex flex-wrap justify-between gap-3"><Button asChild><Link href="/admin/user/create"><Plus className="mr-2 h-4 w-4" />{t("proAdminCreate")}</Link></Button><Button asChild variant="outline"><Link href="/admin/subscription">{t("proAdminLicenses")}</Link></Button></div>
     <State loading={summary.isPending} error={summary.error} retry={() => void summary.refetch()} />
     {summary.data && !summary.isError && <dl className="grid grid-cols-2 gap-4 border-y py-4 md:grid-cols-4">{metrics.map(([key, label]) => <div key={key}><dt className="text-sm text-slate-600">{t(label)}</dt><dd className="text-2xl font-semibold">{summary.data.data[key]}</dd></div>)}</dl>}
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
@@ -47,7 +47,7 @@ export default function UserDirectory() {
     </div>
     <State loading={query.isPending} error={query.error} retry={() => void query.refetch()} empty={!query.isPending && !query.data?.data.length} />
     {!query.isError && !!query.data?.data.length && <div className="overflow-x-auto rounded-md border bg-white"><table className="w-full min-w-[900px] text-left text-sm"><thead className="bg-slate-100"><tr>{["proAdminName", "proAdminEmail", "proAdminRole", "proAdminStatus", "proAdminDepartment", "proAdminGroups", "proAdminPermissionRole", "proAdminLicense", "proAdminActions"].map(key => <th key={key} className="p-3 font-medium">{t(key)}</th>)}</tr></thead><tbody>{query.data.data.map(user => <tr key={user.id} className="border-t">
-      <td className="p-3">{user.display_name || t("proAdminPending")}</td><td className="max-w-56 break-all p-3">{user.email}</td><td className="p-3">{t(roleKey[user.role] || user.role)}</td><td className="p-3">{t(statusKey[user.status] || user.status)}</td><td className="p-3">{user.department || t("proAdminNone")}</td><td className="p-3">{user.groups.map(g => g.name).join(", ") || t("proAdminNone")}</td><td className="p-3">{user.permission_role_name || t("proAdminNone")}</td><td className="p-3">{user.license || t("proAdminNone")}</td><td className="p-3"><UserActions user={user} /></td>
+      <td className="p-3">{user.display_name || t("proAdminPending")}</td><td className="max-w-56 break-all p-3">{user.email}</td><td className="p-3">{t(roleKey[user.role] || user.role)}</td><td className="p-3">{t(statusKey[user.status] || user.status)}</td><td className="p-3">{user.department || t("proAdminNone")}</td><td className="p-3">{user.groups.map(g => g.name).join(", ") || t("proAdminNone")}</td><td className="p-3">{user.permission_role_name || t("proAdminNone")}</td><td className="p-3">{user.license || t("staffLicenseNone")}</td><td className="p-3"><UserActions user={user} /></td>
     </tr>)}</tbody></table></div>}
     <TablePagination currentPage={page} totalPages={query.data?.total_pages ?? 1} pageSize={pageSize} onPageChange={setPage} onPageSizeChange={setPageSize} />
   </div>;
