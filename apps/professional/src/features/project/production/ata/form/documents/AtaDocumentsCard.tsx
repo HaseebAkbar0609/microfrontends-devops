@@ -9,7 +9,7 @@ import localizationConstants, { type TranslationKeys } from "@/utils/translation
 import { Translate } from "@/utils/translation/translate";
 import type { AtaDocument, AtaDocumentInput, AtaReferenceOption } from "../../types";
 import type { AtaFormValues } from "../ataFormSchema";
-import { AtaCollapsibleCard } from "../step2/AtaCollapsibleCard";
+import { RecordCollapsibleCard } from "../../../components/RecordCollapsibleCard";
 import { AtaDocumentsTable } from "./AtaDocumentsTable";
 import { AtaReferenceSelect } from "./AtaReferenceSelect";
 import { AtaUploadRow } from "./AtaUploadRow";
@@ -44,7 +44,7 @@ export function AtaDocumentsCard({ form, documents, stored, invoiceOptions, time
 	);
 
 	return (
-		<AtaCollapsibleCard titleKey={localizationConstants.createAtaDocuments} icon={FilePlus}>
+		<RecordCollapsibleCard titleKey={localizationConstants.createAtaDocuments} icon={FilePlus}>
 			<div className="flex flex-col gap-5">
 				{lockReason && (
 					<p role="status" className="text-sm text-slate-500">
@@ -97,7 +97,7 @@ export function AtaDocumentsCard({ form, documents, stored, invoiceOptions, time
 					setDeleting(null);
 				}}
 			/>
-		</AtaCollapsibleCard>
+		</RecordCollapsibleCard>
 	);
 }
 

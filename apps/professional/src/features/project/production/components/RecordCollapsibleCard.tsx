@@ -7,15 +7,15 @@ import { cn } from "@/lib/utils";
 import type { TranslationKeys } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
-export interface AtaCollapsibleCardProps {
+export interface RecordCollapsibleCardProps {
 	titleKey: TranslationKeys;
 	icon: LucideIcon;
 	children: React.ReactNode;
 	contentClassName?: string;
 }
 
-/** Step 2's card: the shared `CollapsibleSection` in the record's card frame, open by default. */
-export function AtaCollapsibleCard({ titleKey, icon: Icon, children, contentClassName }: AtaCollapsibleCardProps) {
+/** A record section card: the shared `CollapsibleSection` in the record's card frame, open by default. */
+export function RecordCollapsibleCard({ titleKey, icon: Icon, children, contentClassName }: RecordCollapsibleCardProps) {
 	return (
 		<CollapsibleSection
 			title={<Translate text={titleKey} />}
@@ -30,4 +30,4 @@ export function AtaCollapsibleCard({ titleKey, icon: Icon, children, contentClas
 	);
 }
 
-export default AtaCollapsibleCard;
+export default RecordCollapsibleCard;

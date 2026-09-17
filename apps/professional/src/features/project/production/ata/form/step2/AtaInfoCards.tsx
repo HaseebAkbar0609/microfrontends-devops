@@ -5,7 +5,7 @@ import { Info, Users } from "lucide-react";
 import { InfoField } from "@/features/purchase/components/shared/InfoFieldGrid";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import type { AtaClient, AtaProjectInfo } from "../../types";
-import { AtaCollapsibleCard } from "./AtaCollapsibleCard";
+import { RecordCollapsibleCard } from "../../../components/RecordCollapsibleCard";
 
 const GRID = "grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2 xl:grid-cols-3";
 
@@ -27,7 +27,7 @@ export interface AtaInfoCardsProps {
 export function AtaInfoCards({ client, info, meta, infoTitleKey, supplierName }: AtaInfoCardsProps) {
 	return (
 		<>
-			<AtaCollapsibleCard titleKey={localizationConstants.projectAtaClient} icon={Users}>
+			<RecordCollapsibleCard titleKey={localizationConstants.projectAtaClient} icon={Users}>
 				<dl className={GRID}>
 					<InfoField labelKey={localizationConstants.projectAtaClient} value={client.client} />
 					<InfoField labelKey={localizationConstants.createAtaOrdererName} value={client.name} />
@@ -35,9 +35,9 @@ export function AtaInfoCards({ client, info, meta, infoTitleKey, supplierName }:
 					<InfoField labelKey={localizationConstants.projectAtaPostalCode} value={client.postalCode} />
 					<InfoField labelKey={localizationConstants.createAtaCity} value={client.city} />
 				</dl>
-			</AtaCollapsibleCard>
+			</RecordCollapsibleCard>
 
-			<AtaCollapsibleCard titleKey={infoTitleKey} icon={Info}>
+			<RecordCollapsibleCard titleKey={infoTitleKey} icon={Info}>
 				<dl className={GRID}>
 					{supplierName !== undefined && (
 						<InfoField labelKey={localizationConstants.createAtaColSupplier} value={supplierName} />
@@ -55,7 +55,7 @@ export function AtaInfoCards({ client, info, meta, infoTitleKey, supplierName }:
 					<InfoField labelKey={localizationConstants.projectAtaProposedAction} value={info.proposedAction} />
 					<InfoField labelKey={localizationConstants.createAtaAction} value={info.action} />
 				</dl>
-			</AtaCollapsibleCard>
+			</RecordCollapsibleCard>
 		</>
 	);
 }

@@ -14,7 +14,7 @@ import * as store from "../services/projectAtaService";
 import type { AtaLineItem, AtaSection } from "../types";
 import type { AtaDocumentsState } from "./documents/useAtaDocuments";
 import type { AtaFormState } from "./useAtaForm";
-import { useBeforeUnloadWarning } from "./useBeforeUnloadWarning";
+import { useBeforeUnloadWarning } from "../../hooks/useBeforeUnloadWarning";
 
 /**
  * What the footer and the rail do: Spara, Skicka (behind a confirm), Avbryt

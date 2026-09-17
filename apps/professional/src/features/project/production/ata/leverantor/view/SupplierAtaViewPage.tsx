@@ -12,7 +12,7 @@ import { PROJECT_MODULE_TABS, PROJECT_MODULE_TITLE } from "../../../../data/proj
 import { projectProductionTabs } from "../../../projectProductionNav.config";
 import { padAtaNumber } from "../../ataMath";
 import { AtaDocumentsTable } from "../../form/documents/AtaDocumentsTable";
-import { AtaCollapsibleCard } from "../../form/step2/AtaCollapsibleCard";
+import { RecordCollapsibleCard } from "../../../components/RecordCollapsibleCard";
 import { AtaInfoCards } from "../../form/step2/AtaInfoCards";
 import { AtaLineItemSections } from "../../form/step2/AtaLineItemSections";
 import { ATA_FILE_RULES, ATA_LINE_LIMITS } from "../../projectAta.config";
@@ -73,7 +73,7 @@ export function SupplierAtaViewPage({ projectId, ataId }: SupplierAtaViewPagePro
 								supplierName={supplier.name}
 							/>
 							<AtaLineItemSections lineItems={lineItems} editReason={view.lockReason} onEditSection={actions.openLineItems}>
-								<AtaCollapsibleCard titleKey={localizationConstants.createAtaDocuments} icon={FilePlus}>
+								<RecordCollapsibleCard titleKey={localizationConstants.createAtaDocuments} icon={FilePlus}>
 									<AtaDocumentsTable
 										control={view.form.control}
 										documents={documents}
@@ -82,7 +82,7 @@ export function SupplierAtaViewPage({ projectId, ataId }: SupplierAtaViewPagePro
 										translateError={translateError}
 										actions={{ mode: "review" }}
 									/>
-								</AtaCollapsibleCard>
+								</RecordCollapsibleCard>
 							</AtaLineItemSections>
 						</div>
 
