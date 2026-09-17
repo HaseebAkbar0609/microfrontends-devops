@@ -16,7 +16,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { ProtocolNote } from "../constants/mockData";
+import { ProtocolNote } from "../constants/data";
 import { NoteValues, noteSchema } from "../schemas/protocol.schema";
 
 const EMPTY_VALUES: NoteValues = { description: "" };
@@ -25,7 +25,7 @@ interface AddNoteDialogProps {
 	open: boolean;
 	editingNote: ProtocolNote | null;
 	onClose: () => void;
-	onSend: (values: NoteValues) => void;
+	onSend: (values: NoteValues) => Promise<boolean>;
 }
 
 const AddNoteDialog = ({
@@ -49,13 +49,12 @@ const AddNoteDialog = ({
 			);
 	}, [open, editingNote, form]);
 
-	const handleSend = form.handleSubmit((values) => {
-		onSend(values);
-		onClose();
+	const handleSend = form.handleSubmit(async (values) => {
+		if (await onSend(values)) onClose();
 	});
 
 	return (
-		<Dialog open={open} onOpenChange={(value) => !value && onClose()}>
+		<Dialog open={open} onOpenChange={(value) => !value && !form.formState.isSubmitting && onClose()}>
 			<DialogContent className="max-w-md rounded-lg bg-white p-6">
 				<DialogTitle className="text-lg font-bold text-slate-900">
 					<Translate text={localizationConstants.protocolNoteTitle} />
@@ -99,6 +98,7 @@ const AddNoteDialog = ({
 							</Button>
 							<Button
 								type="submit"
+ disabled={form.formState.isSubmitting}
 								className="h-10 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 							>
 								<Translate

@@ -1,4 +1,5 @@
-import { DocumentStatus, LeaveStatus } from "./mockData";
+import { LeaveStatus } from "./data";
+type DocumentStatus = "read" | "needsSign" | "notOpened" | "signed";
 
 export const LEAVE_STATUS_CLASS: Record<LeaveStatus, string> = {
 	review: "text-amber-600",

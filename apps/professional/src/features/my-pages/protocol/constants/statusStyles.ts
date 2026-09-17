@@ -1,6 +1,6 @@
 import { ArrowUpRight, Check, CircleDashed, LucideIcon } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
-import { PointStatus, ProtocolStatus, ProtocolType } from "./mockData";
+import { PointStatus, ProtocolStatus, ProtocolType } from "./data";
 
 export const PROTOCOL_STATUS_KEY: Record<ProtocolStatus, string> = {
 	notSent: localizationConstants.protocolStatusNotSent,

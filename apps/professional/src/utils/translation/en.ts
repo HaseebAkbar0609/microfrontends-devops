@@ -1,4 +1,5 @@
 import { enAdminLive } from "./adminLive";
+import { enMyPagesLive } from "./myPagesLive";
 import {
 	HeaderTranslation,
 	Translation,
@@ -1791,7 +1792,7 @@ export const enOffer: OfferTranslation = {
 	timeTypeOrder: "Order",
 	timeTypeProject: "Project",
 	timeTypeOverhead: "Overhead",
-	timeTypeAta: "Ã„TA",
+	timeTypeAta: "ÄTA",
 	timeAtaTime: "Ã„TA time",
 	timeViewAction: "View",
 	timeFilterAll: "All working hours",
@@ -8973,6 +8974,7 @@ export const en: Translation = {
 	...enYearEnd,
 	...enClaims,
 	...enAdminLive,
+	...enMyPagesLive,
 	...enOrderHandlingar,
 	...enOrderDagbok,
 };

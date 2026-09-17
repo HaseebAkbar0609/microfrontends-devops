@@ -1,4 +1,4 @@
-import { DiaryEntry, WEEKDAY_KEYS } from "../constants/mockData";
+import { DiaryEntry, WEEKDAY_KEYS } from "../constants/data";
 
 export interface CalendarDay {
 	day: number;

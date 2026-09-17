@@ -1,4 +1,5 @@
 import { svAdminLive } from "./adminLive";
+import { svMyPagesLive } from "./myPagesLive";
 import {
 	HeaderTranslation,
 	Translation,
@@ -8994,6 +8995,7 @@ export const sv: Translation = {
 	...svYearEnd,
 	...svClaims,
 	...svAdminLive,
+	...svMyPagesLive,
 	...svOrderHandlingar,
 	...svOrderDagbok,
 };

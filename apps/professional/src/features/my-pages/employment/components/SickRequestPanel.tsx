@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { format, parseISO, subDays } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CalendarDays, Check, ChevronUp } from "lucide-react";
@@ -21,6 +22,8 @@ import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { sickRequestSchema, SickRequestValues } from "../schemas/absence";
+import { saveRecord } from "../../shared/api";
+import { useMyPagesAction } from "../../shared/feedback";
 
 const EMPTY_VALUES: SickRequestValues = {
 	startDate: "",
@@ -36,6 +39,7 @@ const TYPE_LABEL: Record<SickRequestValues["type"], string> = {
 
 const SickRequestPanel = () => {
 	const t = useTranslate();
+	const action = useMyPagesAction();
 	const [collapsed, setCollapsed] = useState(false);
 	const [submitted, setSubmitted] = useState<SickRequestValues | null>(null);
 
@@ -44,8 +48,12 @@ const SickRequestPanel = () => {
 		defaultValues: EMPTY_VALUES,
 	});
 
-	const handleSubmit = form.handleSubmit((values) => {
-		setSubmitted(values);
+	const handleSubmit = form.handleSubmit(async (values) => {
+		if (await action.run(() => saveRecord("absence", {
+			type: values.type, startDate: values.startDate,
+			endDate: values.expectedBack ? format(subDays(parseISO(values.expectedBack), 1), "yyyy-MM-dd") : null,
+			message: values.message.trim(), status: "review",
+		}))) setSubmitted(values);
 	});
 
 	const handleReset = () => {
@@ -295,6 +303,7 @@ const SickRequestPanel = () => {
 							</Button>
 							<Button
 								type="submit"
+								disabled={action.pending}
 								className="h-10 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 							>
 								<Translate

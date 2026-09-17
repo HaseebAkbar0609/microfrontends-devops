@@ -18,8 +18,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { ItTicket } from "../constants/mockData";
+import { ItTicket } from "../constants/data";
 import { ItTicketValues, itTicketSchema } from "../schemas/itTicket";
+import { uploadMedia } from "../../profile-settings/api/profileSettings.api";
+import { readMyPages, useMyPagesQuery } from "../../shared/api";
+import { MyPagesQueryState, myPagesError } from "../../shared/feedback";
+import { resolveMyPagesMediaUrl } from "../../shared/media";
+import { showToast } from "@/lib/toast";
 
 const EMPTY_VALUES: ItTicketValues = { subject: "", description: "" };
 
@@ -31,12 +36,16 @@ const ItTicketForm = ({
 }: {
 	editingTicket: ItTicket | null;
 	onBack: () => void;
-	onSave: (values: ItTicketValues, files: string[]) => void;
-	onSend: (values: ItTicketValues, files: string[]) => void;
+	onSave: (values: ItTicketValues, files: string[]) => Promise<boolean>;
+	onSend: (values: ItTicketValues, files: string[]) => Promise<boolean>;
 }) => {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [files, setFiles] = useState<string[]>([]);
+	const [names, setNames] = useState<Record<string, string>>({});
+	const [uploading, setUploading] = useState(false);
+	const attachments = useMyPagesQuery(["ticket-attachments", editingTicket?.id, editingTicket?.version], () =>
+		Promise.all((editingTicket?.files ?? []).map((id) => readMyPages<{ id: string; name: string; url: string }>(`entries/${editingTicket!.id}/attachments/${id}`))), !!editingTicket?.files.length);
 	const form = useForm<ItTicketValues>({
 		resolver: zodResolver(itTicketSchema),
 		defaultValues: EMPTY_VALUES,
@@ -54,31 +63,39 @@ const ItTicketForm = ({
 		setFiles(editingTicket ? editingTicket.files : []);
 	}, [editingTicket, form]);
 
-	const handleFilesSelected = (list: FileList | null) => {
-		if (!list) return;
-		const names = Array.from(list, (file) => file.name);
-		setFiles((current) => {
-			const seen = new Set(current);
-			return [...current, ...names.filter((name) => !seen.has(name))];
-		});
+	const handleFilesSelected = async (list: FileList | null) => {
+		if (!list || uploading) return;
+		const selected = Array.from(list);
+		if (files.length + selected.length > 10 || selected.some((file) => file.type !== "application/pdf" || file.size > 20 * 1024 * 1024 || file.size === 0)) {
+			showToast("error", t(localizationConstants.myPagesAttachmentLimit));
+			return;
+		}
+		setUploading(true);
+		try {
+			for (const file of selected) {
+				const id = await uploadMedia(file, "my_pages_attachment");
+				setFiles((current) => [...current, id]);
+				setNames((current) => ({ ...current, [id]: file.name }));
+			}
+		} catch (error) { showToast("error", t(myPagesError(error))); }
+		finally { setUploading(false); }
 	};
 
 	const removeFile = (name: string) =>
 		setFiles((current) => current.filter((file) => file !== name));
 
-	const handleSave = form.handleSubmit((values) => {
-		onSave(values, files);
-		onBack();
+	const handleSave = form.handleSubmit(async (values) => {
+		if (!uploading && await onSave(values, files)) onBack();
 	});
 
-	const handleSend = form.handleSubmit((values) => {
-		onSend(values, files);
-		onBack();
+	const handleSend = form.handleSubmit(async (values) => {
+		if (!uploading && await onSend(values, files)) onBack();
 	});
 
 	return (
 		<Form {...form}>
 			<form onSubmit={handleSave} className="flex flex-col gap-6">
+				{!!editingTicket?.files.length && <MyPagesQueryState query={attachments} />}
 				<div className="flex items-start gap-3">
 					<Button
 						type="button"
@@ -96,9 +113,7 @@ const ItTicketForm = ({
 							/>
 						</h2>
 						<p className="mt-1 text-sm text-slate-500">
-							<Translate
-								text={localizationConstants.itSupportJustNow}
-							/>
+							{editingTicket ? new Date(editingTicket.createdAt).toLocaleDateString() : null}
 						</p>
 					</div>
 				</div>
@@ -178,6 +193,8 @@ const ItTicketForm = ({
 									<input
 										ref={fileInputRef}
 										type="file"
+										accept="application/pdf"
+										disabled={uploading || form.formState.isSubmitting}
 										multiple
 										className="hidden"
 										onChange={(event) => {
@@ -212,7 +229,7 @@ const ItTicketForm = ({
 							<p className="text-sm text-blue-500">
 								<Translate
 									text={
-										localizationConstants.companyMsgPdfHint
+										localizationConstants.myPagesAttachmentLimit
 									}
 								/>
 							</p>
@@ -224,7 +241,9 @@ const ItTicketForm = ({
 									key={file}
 									className="flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs text-slate-700"
 								>
-									{file}
+									{attachments.data?.find(item => item.id === file)?.url ?
+ <a href={resolveMyPagesMediaUrl(attachments.data.find(item => item.id === file)!.url)} target="_blank" rel="noopener noreferrer" className="underline">{attachments.data.find(item => item.id === file)!.name}</a> :
+ names[file] ?? "PDF"}
 									<button
 										type="button"
 										onClick={() => removeFile(file)}
@@ -251,6 +270,7 @@ const ItTicketForm = ({
 							type="button"
 							variant="outline"
 							onClick={handleSend}
+							disabled={uploading || form.formState.isSubmitting || editingTicket?.status === "done"}
 							className="h-11 rounded-md border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50"
 						>
 							<Translate
@@ -259,6 +279,7 @@ const ItTicketForm = ({
 						</Button>
 						<Button
 							type="submit"
+							disabled={uploading || form.formState.isSubmitting || editingTicket?.status === "done"}
 							className="h-11 gap-2 rounded-md bg-slate-900 text-sm font-medium text-white hover:bg-slate-900/90"
 						>
 							<Save className="h-4 w-4" />
