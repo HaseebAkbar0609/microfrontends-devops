@@ -32,6 +32,11 @@ const MOMS_OPTIONS = [
 	{ value: "0", label: "0%" },
 ];
 
+const ARTICLE_STATUS_OPTIONS = [
+	{ value: "active", label: <Translate text={localizationConstants.activeStatus} /> },
+	{ value: "inactive", label: <Translate text={localizationConstants.inactiveStatus} /> },
+];
+
 export function ArticleStructuredInfoStep({ control }: ArticleStructuredInfoStepProps) {
 	const t = useTranslate();
 	const [bokoringUppgifterOpen, setBokoringUppgifterOpen] = useState(true);
@@ -132,7 +137,30 @@ export function ArticleStructuredInfoStep({ control }: ArticleStructuredInfoStep
 								label={localizationConstants.articleILager}
 								placeholder={t(localizationConstants.placeholderArticleILager)}
 								labelClassName={LABEL_CLASS}
-								className="lg:col-span-2"
+							/>
+							<FormSelect
+								control={control}
+								name="status"
+								label={localizationConstants.statusLabel}
+								placeholder={t(localizationConstants.placeholderSelectStatus)}
+								options={ARTICLE_STATUS_OPTIONS}
+								labelClassName={LABEL_CLASS}
+							/>
+							<FormInput
+								control={control}
+								name="stock"
+								type="number"
+								label={localizationConstants.articleStockLabel}
+								placeholder={t(localizationConstants.placeholderArticleStock)}
+								labelClassName={LABEL_CLASS}
+							/>
+							<FormInput
+								control={control}
+								name="reserved"
+								type="number"
+								label={localizationConstants.articleReservedLabel}
+								placeholder={t(localizationConstants.placeholderArticleReserved)}
+								labelClassName={LABEL_CLASS}
 							/>
 						</div>
 

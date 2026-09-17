@@ -5177,6 +5177,8 @@ export type RegisterTranslation = {
 	articleKalkylkostnad: string;
 	articleBestallningspunkt: string;
 	articleILager: string;
+	articleStockLabel: string;
+	articleReservedLabel: string;
 	articleViktLabel: string;
 	articleLangdLabel: string;
 	articleBreddLabel: string;
@@ -5242,6 +5244,8 @@ export type RegisterTranslation = {
 	placeholderArticleKalkylkostnad: string;
 	placeholderSelectBestallningspunkt: string;
 	placeholderArticleILager: string;
+	placeholderArticleStock: string;
+	placeholderArticleReserved: string;
 	placeholderArticleVikt: string;
 	placeholderArticleLangd: string;
 	placeholderArticleBredd: string;
