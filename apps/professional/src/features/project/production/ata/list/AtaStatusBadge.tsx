@@ -3,13 +3,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Translate } from "@/utils/translation/translate";
 import { ATA_STATUS_META } from "../projectAta.config";
-import type { AtaStatus } from "../types";
+import type { AtaStatus, SupplierAtaStatus } from "../types";
 
 /**
- * The frame's status pills: OK green, Redovisad blue, Förhandling amber. A
- * draft has no pill in the frame, so Utkast reads as plain text.
+ * The frames' status pills: OK green, Redovisad blue, Förhandling amber, a
+ * supplier's unreviewed Ej granskad red. A draft has no pill in the frame, so
+ * Utkast reads as plain text.
  */
-export function AtaStatusBadge({ status }: { status: AtaStatus }) {
+export function AtaStatusBadge({ status }: { status: AtaStatus | SupplierAtaStatus }) {
 	const meta = ATA_STATUS_META[status];
 
 	if (!meta.badge) {

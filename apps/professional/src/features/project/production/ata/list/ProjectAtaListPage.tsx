@@ -10,6 +10,8 @@ import { useTranslate } from "@/utils/translation/translate";
 import { PROJECT_MODULE_BASE_URL, PROJECT_MODULE_TABS, PROJECT_MODULE_TITLE } from "../../../data/projectNav.config";
 import { ProjectRecordTitle } from "../../components/ProjectRecordTitle";
 import { projectProductionTabs } from "../../projectProductionNav.config";
+import { SupplierAtaTab } from "../leverantor/list/SupplierAtaTab";
+import { ATA_SUPPLIER_SECTION } from "../leverantor/supplierAta.config";
 import { AtaCustomerTab } from "./AtaCustomerTab";
 import { useProjectAtaList } from "./useProjectAtaList";
 
@@ -20,11 +22,10 @@ export interface ProjectAtaListPageProps {
 /**
  * ÄTA — the project's change and additional works.
  *
- * Built to the frames: ÄTA - kund with its summary and table. ÄTA-Leverantör
- * /UE has no frame of its own, so its tab is shown but disabled, with the
- * reason, until its ticket lands. The ticket's description — types, a
- * Skickad/Godkänd/Avböjd workflow, signatures, a payment-plan link — is not
- * drawn and not built.
+ * Built to the frames: ÄTA - kund (TFS-705), the project's own ÄTAs, and
+ * ÄTA-Leverantör /UE (TFS-706), the ÄTAs its subcontractors and suppliers send
+ * it. The tickets' descriptions — summary cards, a Skickad/Godkänd/Avböjd
+ * workflow, signatures, a payment-plan link — are not drawn and not built.
  */
 export function ProjectAtaListPage({ projectId }: ProjectAtaListPageProps) {
 	const t = useTranslate();
@@ -51,17 +52,15 @@ export function ProjectAtaListPage({ projectId }: ProjectAtaListPageProps) {
 					<SectionTabs
 						items={[
 							{ id: "kund", labelKey: localizationConstants.ataCustomerTab },
-							{
-								id: "leverantor",
-								labelKey: localizationConstants.ataSupplierTab,
-								disabled: true,
-								disabledReasonKey: localizationConstants.projectAtaSupplierUnavailable,
-							},
+							{ id: ATA_SUPPLIER_SECTION, labelKey: localizationConstants.ataSupplierTab },
 						]}
 						ariaLabel={t(localizationConstants.ataTitle)}
 					>
 						<TabsContent value="kund" className="mt-4">
 							<AtaCustomerTab projectId={projectId} list={list} />
+						</TabsContent>
+						<TabsContent value={ATA_SUPPLIER_SECTION} className="mt-4">
+							<SupplierAtaTab projectId={projectId} />
 						</TabsContent>
 					</SectionTabs>
 				</Suspense>

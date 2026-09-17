@@ -3926,7 +3926,6 @@ export type OfferTranslation = {
 	projectInspectionInvalidDate: string;
 	projectInspectionDeletedToast: string;
 	/* TFS-705 — ÄTA - kund on the project record (list, two-step form, line items, documents). */
-	projectAtaSupplierUnavailable: string;
 	projectAtaEditTitle: string;
 	projectAtaLabel: string;
 	projectAtaRowActions: string;
@@ -3998,6 +3997,22 @@ export type OfferTranslation = {
 	projectAtaNoPreview: string;
 	projectAtaDocumentDeleteTitle: string;
 	projectAtaDocumentDeleteBody: string;
+	/* TFS-706 — ÄTA-Leverantör /UE (supplier ÄTAs: grouped list, detail list, View ÄTA, link and approve). */
+	projectAtaSupplierInfoTitle: string;
+	projectAtaSupplierLinkedTo: string;
+	projectAtaSupplierLinkedMore: string;
+	projectAtaSupplierNoLink: string;
+	projectAtaSupplierLinkInvalid: string;
+	projectAtaSupplierNotAttested: string;
+	projectAtaSupplierEmpty: string;
+	projectAtaSupplierEmptyDesc: string;
+	projectAtaSupplierNoAtas: string;
+	projectAtaSupplierApproveBody: string;
+	projectAtaSupplierApproveSaveBody: string;
+	projectAtaSupplierAlreadyApproved: string;
+	projectAtaSupplierApproveNeedsRows: string;
+	projectAtaSupplierBackToList: string;
+	projectAtaSupplierViewDocument: string;
 	orderNumber: string;
 	orderName: string;
 	orderCustomer: string;

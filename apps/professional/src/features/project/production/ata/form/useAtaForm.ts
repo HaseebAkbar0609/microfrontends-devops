@@ -19,6 +19,7 @@ import {
 	emptyAtaDraft,
 	type AtaFormValues,
 } from "./ataFormSchema";
+import { firstErrorPath } from "./firstErrorPath";
 
 export type AtaStep = 1 | 2;
 
@@ -27,18 +28,6 @@ export interface UseAtaFormOptions {
 	/** The saved ÄTA being opened; omit to create one. */
 	ataId?: string;
 	initialStep: AtaStep;
-}
-
-/** The first field path that carries an error, for focusing after a failed save. */
-function firstErrorPath(errors: FieldErrors<AtaFormValues>, prefix = ""): string | null {
-	for (const [key, value] of Object.entries(errors)) {
-		if (!value || typeof value !== "object") continue;
-		const path = prefix ? `${prefix}.${key}` : key;
-		if ("message" in value && typeof value.message === "string") return path;
-		const nested = firstErrorPath(value as FieldErrors<AtaFormValues>, path);
-		if (nested) return nested;
-	}
-	return null;
 }
 
 /**
