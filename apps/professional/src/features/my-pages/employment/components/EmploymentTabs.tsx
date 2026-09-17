@@ -7,8 +7,7 @@ import {
 	EMPLOYMENT_TAB_IDS,
 	EMPLOYMENT_TABS,
 	EmploymentTabId,
-} from "../constants/mockData";
-import { getEmploymentContract } from "../services/employmentService";
+} from "../constants/data";
 import DocumentsTab from "./DocumentsTab";
 import EmploymentContractCard from "./EmploymentContractCard";
 import LeaveTab from "./LeaveTab";
@@ -19,7 +18,6 @@ const isEmploymentTabId = (value: string | null): value is EmploymentTabId =>
 	EMPLOYMENT_TAB_IDS.includes(value as EmploymentTabId);
 
 export default function EmploymentTabs() {
-	const contract = getEmploymentContract();
 	const { query, changeQueries } = useQueryParams();
 	const tabParam = query.get("tab");
 	const activeTab: EmploymentTabId = isEmploymentTabId(tabParam)
@@ -53,7 +51,7 @@ export default function EmploymentTabs() {
 				</div>
 				<div className="px-6 pb-6">
 					<TabsContent value="contract">
-						<EmploymentContractCard contract={contract} />
+						<EmploymentContractCard />
 					</TabsContent>
 					<TabsContent value="sickReport">
 						<SickReportTab />

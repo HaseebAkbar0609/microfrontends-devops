@@ -1,5 +1,6 @@
 import { sv } from "./sv";
 import type { AdminLiveTranslation } from "./adminLive";
+import type { MyPagesLiveTranslation } from "./myPagesLive";
 
 export type HeaderTranslation = {
 	home: string;
@@ -8911,7 +8912,7 @@ export type Translation = HeaderTranslation &
 	OrderTimeplanTranslation &
 	OrderQaTranslation &
 	YearEndTranslation &
-	AdminLiveTranslation &
+	AdminLiveTranslation & MyPagesLiveTranslation &
 	OrderHandlingarTranslation &
 	ClaimsTranslation &
 	OrderDagbokTranslation;

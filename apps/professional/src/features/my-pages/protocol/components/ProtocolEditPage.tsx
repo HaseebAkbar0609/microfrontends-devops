@@ -1,21 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Calendar, Save, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { showToast } from "@/lib/toast";
+import { useMyPagesQuery, useParticipants } from "../../shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "../../shared/feedback";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate, useTranslate } from "@/utils/translation/translate";
+import { Translate } from "@/utils/translation/translate";
 import {
 	MeetingDetails,
-	PROTOCOL_PARTICIPANTS,
 	Protocol,
 	ProtocolType,
-} from "../constants/mockData";
+} from "../constants/data";
 import {
 	EditProtocolValues,
 	editProtocolSchema,
@@ -106,37 +106,42 @@ const toNextMeeting = (values: EditProtocolValues): MeetingDetails => ({
 	comment: "",
 });
 
-const PARTICIPANT_NAMES = PROTOCOL_PARTICIPANTS.map(
-	(participant) => participant.name,
-);
-
 const ProtocolEditPage = ({ protocolId }: { protocolId: string }) => {
-	const t = useTranslate();
 	const router = useRouter();
-	const [protocol] = useState(() => getProtocol(protocolId));
+	const queryResult = useMyPagesQuery(["protocol", protocolId], () => getProtocol(protocolId));
+	const protocol = queryResult.data;
+	const participants = useParticipants();
+	const PARTICIPANT_NAMES = [...new Set((participants.data ?? []).map((participant) => participant.name))];
+	const action = useMyPagesAction();
+	const loaded = useRef<string | null>(null);
+	const baseline = useRef<Protocol | null>(null);
 	const form = useForm<EditProtocolValues>({
 		resolver: zodResolver(editProtocolSchema),
 		defaultValues: protocol ? toFormValues(protocol) : undefined,
 	});
 
 	useEffect(() => {
-		if (!protocol) router.replace(LIST_ROUTE);
-	}, [protocol, router]);
+		if (protocol && loaded.current !== protocol.id) {
+			form.reset(toFormValues(protocol));
+			loaded.current = protocol.id;
+			baseline.current = protocol;
+		}
+	}, [protocol, form]);
 
-	if (!protocol) return null;
+	if (!protocol) return <MyPagesQueryState query={queryResult} />;
+	if (!protocol.canEdit) return <p><Translate text={localizationConstants.myPagesReadOnly} /></p>;
 
 	const viewRoute = `${LIST_ROUTE}/${protocol.id}`;
 
-	const handleSave = form.handleSubmit((values) => {
-		updateProtocol(protocol.id, {
+	const handleSave = form.handleSubmit(async (values) => {
+		const saved = await action.run(() => updateProtocol(baseline.current ?? protocol, {
 			date: values.startDate,
 			title: values.title,
 			department: values.category,
 			meeting: toMeeting(values),
 			nextMeeting: toNextMeeting(values),
-		});
-		showToast("success", t(localizationConstants.protocolSavedToast));
-		router.push(viewRoute);
+		}), localizationConstants.protocolSavedToast);
+		if (saved) router.push(viewRoute);
 	});
 
 	return (

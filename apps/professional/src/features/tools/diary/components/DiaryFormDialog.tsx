@@ -18,8 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
-import { DiaryEntry } from "../constants/mockData";
+import { today } from "@/features/my-pages/shared/api";
+import { DiaryEntry } from "../constants/data";
 import { DiaryValues, diarySchema } from "../schemas/diary.schema";
 
 const EMPTY_VALUES: DiaryValues = {
@@ -33,7 +33,7 @@ interface DiaryFormDialogProps {
 	open: boolean;
 	editingEntry: DiaryEntry | null;
 	onClose: () => void;
-	onSave: (values: DiaryValues) => void;
+	onSave: (values: DiaryValues) => Promise<boolean>;
 }
 
 const DiaryFormDialog = ({
@@ -58,17 +58,16 @@ const DiaryFormDialog = ({
 							date: editingEntry.date,
 							description: editingEntry.description,
 						}
-					: { ...EMPTY_VALUES, date: mockDate(0) },
+					: { ...EMPTY_VALUES, date: today() },
 			);
 	}, [open, editingEntry, form]);
 
-	const handleSave = form.handleSubmit((values) => {
-		onSave(values);
-		onClose();
+	const handleSave = form.handleSubmit(async (values) => {
+		if (await onSave(values)) onClose();
 	});
 
 	return (
-		<Dialog open={open} onOpenChange={(value) => !value && onClose()}>
+		<Dialog open={open} onOpenChange={(value) => !value && !form.formState.isSubmitting && onClose()}>
 			<DialogContent className="max-h-[90vh] max-w-xl overflow-y-auto rounded-lg bg-white p-7">
 				<DialogTitle className="text-xl font-bold text-slate-900">
 					<Translate
@@ -191,6 +190,7 @@ const DiaryFormDialog = ({
 							</Button>
 							<Button
 								type="submit"
+ disabled={form.formState.isSubmitting}
 								className="h-10 gap-2 rounded-md bg-slate-900 px-6 text-sm font-medium text-white hover:bg-slate-900/90"
 							>
 								<Save className="h-4 w-4" />

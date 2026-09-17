@@ -22,12 +22,10 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
 	ATA_BADGE_CLASS,
-	MOCK_OB_MINUTES,
-	STANDARD_WORKDAY,
 	TIME_TYPE_CLASS,
 	TIME_TYPE_KEY,
 	TimeRow,
-} from "../constants/mockData";
+} from "../constants/data";
 import { diffMinutes, formatDuration } from "../utils/time";
 
 interface AddedTimeTableProps {
@@ -62,15 +60,11 @@ const AddedTimeTable = ({ rows, onEdit, onDelete }: AddedTimeTableProps) => {
 		(sum, row) => sum + diffMinutes(row.start, row.end),
 		0,
 	);
-	const overtimeMinutes = Math.max(
-		0,
-		totalMinutes - STANDARD_WORKDAY.hours * 60,
-	);
-	const typeCounts = rows.reduce<Record<string, number>>((counts, row) => {
-		counts[row.type] = (counts[row.type] ?? 0) + 1;
+	const typeMinutes = rows.reduce<Record<string, number>>((counts, row) => {
+		counts[row.type] = (counts[row.type] ?? 0) + diffMinutes(row.start, row.end);
 		return counts;
 	}, {});
-	const ataCount = rows.filter((row) => row.ata).length;
+	const ataMinutes = rows.filter((row) => row.ata).reduce((sum, row) => sum + diffMinutes(row.start, row.end), 0);
 	const registeredStart = rows.map((row) => row.start).sort()[0];
 	const registeredEnd = [...rows.map((row) => row.end)].sort().at(-1);
 
@@ -127,9 +121,7 @@ const AddedTimeTable = ({ rows, onEdit, onDelete }: AddedTimeTableProps) => {
 									{row.refNr || "-"}
 								</TableCell>
 								<TableCell className="px-4 py-3.5 text-sm text-slate-700">
-									{Math.floor(
-										diffMinutes(row.start, row.end) / 60,
-									)}
+									{formatDuration(diffMinutes(row.start, row.end))}
 								</TableCell>
 								<TableCell className="px-4 py-3.5">
 									<Checkbox checked={row.ata} disabled />
@@ -202,12 +194,12 @@ const AddedTimeTable = ({ rows, onEdit, onDelete }: AddedTimeTableProps) => {
 				<div className="flex flex-wrap items-center gap-4">
 					{(["order", "project", "overhead"] as const).map(
 						(type) =>
-							(typeCounts[type] ?? 0) > 0 && (
+							(typeMinutes[type] ?? 0) > 0 && (
 								<span
 									key={type}
 									className="flex items-center gap-1.5 text-sm font-semibold text-slate-900"
 								>
-									{typeCounts[type]}
+									{formatDuration(typeMinutes[type])}
 									<span
 										className={cn(
 											"inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium",
@@ -221,9 +213,9 @@ const AddedTimeTable = ({ rows, onEdit, onDelete }: AddedTimeTableProps) => {
 								</span>
 							),
 					)}
-					{ataCount > 0 && (
+					{ataMinutes > 0 && (
 						<span className="flex items-center gap-1.5 text-sm font-semibold text-slate-900">
-							{ataCount}
+							{formatDuration(ataMinutes)}
 							<span
 								className={cn(
 									"inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium",
@@ -244,24 +236,24 @@ const AddedTimeTable = ({ rows, onEdit, onDelete }: AddedTimeTableProps) => {
 					<span className="font-semibold">
 						<Translate text={localizationConstants.timeTotalHour} />
 					</span>
-					<span>{Math.floor(totalMinutes / 60)}</span>
+					<span>{formatDuration(totalMinutes)}</span>
 					<span className="font-semibold">
 						<Translate text={localizationConstants.timeOvertime} />
 					</span>
-					<span>{Math.floor(overtimeMinutes / 60)}</span>
+					<span><Translate text={localizationConstants.myPagesUnavailable} /></span>
 					<span className="font-semibold">
 						<Translate text={localizationConstants.timeOfWhichOB} />
 					</span>
-					<span>{Math.floor(MOCK_OB_MINUTES / 60)}</span>
+					<span><Translate text={localizationConstants.myPagesUnavailable} /></span>
 				</div>
 				<div className="grid grid-cols-[auto_auto_auto] gap-x-6 gap-y-1 rounded-md bg-slate-800 px-5 py-4 text-sm text-white">
 					<span className="font-semibold">
 						<Translate text={localizationConstants.timeWorkHours} />
 					</span>
 					<span>
-						{STANDARD_WORKDAY.start}-{STANDARD_WORKDAY.end}
+						<Translate text={localizationConstants.myPagesUnavailable} />
 					</span>
-					<span>{STANDARD_WORKDAY.hours}</span>
+					<span>-</span>
 					<span className="font-semibold">
 						<Translate
 							text={localizationConstants.timeRegisteredHours}

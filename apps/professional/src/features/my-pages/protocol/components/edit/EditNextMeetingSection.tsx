@@ -4,13 +4,14 @@ import { Control, Controller } from "react-hook-form";
 import { Video } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { PROTOCOL_CATEGORIES } from "../../constants/mockData";
 import { EditProtocolValues } from "../../schemas/protocol.schema";
 import ParticipantSelect from "../ParticipantSelect";
+import { useParticipants } from "../../../shared/api";
+import { MyPagesQueryState } from "../../../shared/feedback";
 import SectionCard from "../SectionCard";
 import {
-	EditSelectField,
 	EditTextField,
+	EditSelectField,
 	EditTextareaField,
 } from "./EditFields";
 
@@ -18,14 +19,18 @@ const EditNextMeetingSection = ({
 	control,
 }: {
 	control: Control<EditProtocolValues>;
-}) => (
+}) => {
+ const people = useParticipants();
+ return (
 	<SectionCard
 		icon={Video}
 		titleKey={localizationConstants.protocolNextMeeting}
 	>
 		<div className="flex flex-col gap-4">
+   <MyPagesQueryState query={people} />
 			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-				<EditTextField
+				<EditSelectField
+					options={[...new Set((people.data ?? []).map(person => person.name))]}
 					control={control}
 					name="next.responsible"
 					labelKey={localizationConstants.protocolFieldResponsible}
@@ -35,11 +40,10 @@ const EditNextMeetingSection = ({
 					name="next.title"
 					labelKey={localizationConstants.protocolFieldTitle}
 				/>
-				<EditSelectField
+				<EditTextField
 					control={control}
 					name="next.category"
 					labelKey={localizationConstants.protocolFieldCategory}
-					options={PROTOCOL_CATEGORIES}
 				/>
 				<EditTextField
 					control={control}
@@ -132,5 +136,6 @@ const EditNextMeetingSection = ({
 		</div>
 	</SectionCard>
 );
+};
 
 export default EditNextMeetingSection;

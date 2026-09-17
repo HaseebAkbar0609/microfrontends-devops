@@ -31,17 +31,16 @@ import {
 import { TablePagination } from "@/components/table/TablePagination";
 import { DynamicBreadcrumb } from "@/components/common";
 import { cn } from "@/lib/utils";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
-import { MONTH_KEYS } from "@/features/tools/diary/constants/mockData";
-import { showToast } from "@/lib/toast";
+import { today, deleteRecord } from "@/features/my-pages/shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "@/features/my-pages/shared/feedback";
+import { MONTH_KEYS } from "@/features/tools/diary/constants/data";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { WorkDay } from "../constants/mockData";
+import { WorkDay } from "../constants/data";
 import { TimeFilter, useTimeFilters } from "../hooks/useTimeFilters";
-import { listWorkDays, removeWorkDay } from "../services/timeService";
 import TimeTable from "./TimeTable";
 
-const REF_YEAR = Number(mockDate(0).slice(0, 4));
+const REF_YEAR = Number(today().slice(0, 4));
 const YEAR_OPTIONS = [REF_YEAR - 1, REF_YEAR, REF_YEAR + 1];
 
 const FILTER_OPTIONS: { value: TimeFilter; labelKey: string }[] = [
@@ -56,9 +55,10 @@ const FILTER_OPTIONS: { value: TimeFilter; labelKey: string }[] = [
 const TimePage = () => {
 	const t = useTranslate();
 	const router = useRouter();
-	const [workDays, setWorkDays] = useState<WorkDay[]>(() => listWorkDays());
+	const filters = useTimeFilters();
+	const { queryResult } = filters;
+	const action = useMyPagesAction();
 	const [deletingDay, setDeletingDay] = useState<WorkDay | null>(null);
-	const filters = useTimeFilters(workDays);
 
 	const monthOptions = useMemo(
 		() => MONTH_KEYS.map((key, index) => ({ key, value: index + 1 })),
@@ -68,15 +68,14 @@ const TimePage = () => {
 	const openDay = (day: WorkDay) =>
 		router.push(`/tools/time/register?id=${day.id}`);
 
-	const handleDelete = () => {
+	const handleDelete = async () => {
 		if (!deletingDay) return;
-		setWorkDays(removeWorkDay(deletingDay.id));
-		setDeletingDay(null);
-		showToast("success", t(localizationConstants.timeDeletedToast));
+		if (await action.run(() => deleteRecord(deletingDay), localizationConstants.timeDeletedToast)) setDeletingDay(null);
 	};
 
 	return (
 		<div className="flex flex-col gap-5 p-6">
+			<MyPagesQueryState query={queryResult} />
 			<div>
 				<h1 className="text-2xl font-bold text-slate-900">
 					<Translate text={localizationConstants.timePageTitle} />

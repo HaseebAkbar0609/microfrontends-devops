@@ -3,14 +3,14 @@
 import { useMemo, useState } from "react";
 import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
-import { DiaryEntry } from "../constants/mockData";
+import { today, listRecords, useMyPagesQuery } from "@/features/my-pages/shared/api";
+import { DiaryEntry } from "../constants/data";
 
 export type DiaryFilter = string | null;
 
-const [REF_YEAR, REF_MONTH] = mockDate(0).split("-").map(Number);
+const [REF_YEAR, REF_MONTH] = today().split("-").map(Number);
 
-export function useDiaryFilters(entries: DiaryEntry[]) {
+export function useDiaryFilters() {
 	const [search, setSearchState] = useState("");
 	const [filter, setFilterState] = useState<DiaryFilter>(null);
 	const [month, setMonthState] = useState(REF_MONTH);
@@ -20,6 +20,10 @@ export function useDiaryFilters(entries: DiaryEntry[]) {
 	const [pageSize, setPageSizeState] = useState(10);
 
 	const monthPrefix = `${year}-${String(month).padStart(2, "0")}`;
+	const queryResult = useMyPagesQuery(["diary", year, month], () => listRecords<DiaryEntry>("diary", {
+		date_from: monthPrefix + "-01", date_to: monthPrefix + "-" + new Date(year, month, 0).getDate(),
+	}));
+	const entries = useMemo(() => queryResult.data ?? [], [queryResult.data]);
 
 	const filtered = useMemo(() => {
 		const term = search.trim().toLowerCase();
@@ -67,6 +71,7 @@ export function useDiaryFilters(entries: DiaryEntry[]) {
 	};
 
 	return {
+		queryResult, entries,
 		search,
 		setSearch,
 		filter,
