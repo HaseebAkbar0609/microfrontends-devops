@@ -7,8 +7,8 @@ const slug = "b2b";
 const found = findModule(slug);
 
 export default function ProfessionalB2bPagePage() {
-  if (!found) return null;
   const { t } = useTranslation();
+  if (!found) return null;
 
   return (
     <>
@@ -19,9 +19,9 @@ export default function ProfessionalB2bPagePage() {
       <meta property="og:title" content={t("seo.professionalB2bOgTitle")} />
       <meta property="og:description" content={t("seo.professionalB2bOgDesc")} />
     </Head>
-    <DynamicModulePage slug={slug} item={found.item} section={found.section} />;
+    <DynamicModulePage slug={slug} item={found.item} section={found.section} />
     </>
   );
-};
+}
 
 export const getStaticProps = async () => ({ props: { hasHeader: false } });
