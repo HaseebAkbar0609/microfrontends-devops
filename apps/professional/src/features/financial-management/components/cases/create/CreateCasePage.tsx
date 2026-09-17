@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
@@ -17,18 +17,36 @@ import { FormActions } from "./FormActions";
 
 export function CreateCasePage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const editId = searchParams.get("edit") || searchParams.get("id");
 	const { t } = useTranslation();
-	const { addCase } = useCases();
+	const { addCase, updateCase, getCaseById } = useCases();
 
 	const [activeTab, setActiveTab] = useState<CreateCaseTab>("basic_info");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [errors, setErrors] = useState<Partial<Record<keyof CaseFormData, string>>>({});
 
-	// Generate auto ID matching Figma e.g. #M105
+	// Initialize form data (either new case M005 or prefill from editId)
 	const [formData, setFormData] = useState<CaseFormData>(() => {
-		const autoId = `M${Math.floor(100 + Math.random() * 900)}`;
+		if (editId) {
+			const existing = getCaseById(editId);
+			if (existing) {
+				return {
+					id: existing.caseNumber || existing.id,
+					title: existing.title,
+					category: existing.category,
+					createdBy: existing.createdBy,
+					date: existing.date,
+					description: existing.description || "",
+					initialMessage: existing.messages[0]?.content || "",
+					documents: existing.documents || [],
+					images: existing.images || [],
+				};
+			}
+		}
+
 		return {
-			id: autoId,
+			id: "M005",
 			title: "",
 			category: "info",
 			createdBy: "Stefan Eriksson",
@@ -56,15 +74,34 @@ export function CreateCasePage() {
 			images: [
 				{
 					id: "img-init-1",
-					name: "17066.jpeg",
+					name: "Photo.img",
 					date: "2024-05-10",
-					fileType: "image/jpeg",
+					fileType: "image/png",
 					fileSize: "520 KB",
 					category: "image",
 				},
 			],
 		};
 	});
+
+	useEffect(() => {
+		if (editId) {
+			const existing = getCaseById(editId);
+			if (existing) {
+				setFormData({
+					id: existing.caseNumber || existing.id,
+					title: existing.title,
+					category: existing.category,
+					createdBy: existing.createdBy,
+					date: existing.date,
+					description: existing.description || "",
+					initialMessage: existing.messages[0]?.content || "",
+					documents: existing.documents || [],
+					images: existing.images || [],
+				});
+			}
+		}
+	}, [editId, getCaseById]);
 
 	const handleFieldChange = <K extends keyof CaseFormData>(
 		field: K,
@@ -99,20 +136,33 @@ export function CreateCasePage() {
 
 		setIsSubmitting(true);
 		try {
-			const newCase = addCase({
-				id: formData.id.replace("#", ""),
-				title: formData.title,
-				category: formData.category,
-				createdBy: formData.createdBy,
-				date: formData.date,
-				description: formData.description,
-				initialMessage: formData.initialMessage,
-				documents: formData.documents,
-				images: formData.images,
-			});
-
-			showToast("success", t(localizationConstants.casesToastCreated));
-			router.push(`${CASES_BASE_ROUTE}/${newCase.id}`);
+			if (editId) {
+				updateCase(editId, {
+					title: formData.title,
+					category: formData.category,
+					createdBy: formData.createdBy,
+					date: formData.date,
+					description: formData.description,
+					documents: formData.documents,
+					images: formData.images,
+				});
+				showToast("success", t(localizationConstants.casesToastUpdated));
+				router.push(`${CASES_BASE_ROUTE}/${editId}`);
+			} else {
+				const newCase = addCase({
+					id: formData.id.replace("#", ""),
+					title: formData.title,
+					category: formData.category,
+					createdBy: formData.createdBy,
+					date: formData.date,
+					description: formData.description,
+					initialMessage: formData.initialMessage,
+					documents: formData.documents,
+					images: formData.images,
+				});
+				showToast("success", t(localizationConstants.casesToastCreated));
+				router.push(`${CASES_BASE_ROUTE}/${newCase.id}`);
+			}
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -128,10 +178,14 @@ export function CreateCasePage() {
 		}
 	};
 
+	const pageTitle = editId
+		? t(localizationConstants.casesEditTitle)
+		: t(localizationConstants.casesCreateTitle);
+
 	return (
 		<div className="p-6 max-w-5xl mx-auto space-y-6">
 			{/* Top Header */}
-			<CreateCaseHeader />
+			<CreateCaseHeader title={pageTitle} />
 
 			{/* Sub Tabs matching Figma */}
 			<CreateCaseTabs activeTab={activeTab} onTabChange={setActiveTab} />

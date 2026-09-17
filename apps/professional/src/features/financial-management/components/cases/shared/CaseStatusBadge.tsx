@@ -13,37 +13,32 @@ interface CaseStatusBadgeProps {
 
 const STATUS_CONFIG: Record<
 	CaseStatus,
-	{ labelKey: TranslationKeys; bgClass: string; textClass: string; borderClass: string }
+	{ labelKey: TranslationKeys; bgClass: string; textClass: string }
 > = {
 	not_started: {
 		labelKey: localizationConstants.casesStatusNotStarted,
-		bgClass: "bg-slate-100",
-		textClass: "text-slate-700",
-		borderClass: "border-slate-200",
+		bgClass: "bg-sky-400",
+		textClass: "text-white",
 	},
 	ongoing: {
 		labelKey: localizationConstants.casesStatusOngoing,
-		bgClass: "bg-blue-50",
-		textClass: "text-blue-700",
-		borderClass: "border-blue-200",
+		bgClass: "bg-orange-500",
+		textClass: "text-white",
 	},
 	completed: {
 		labelKey: localizationConstants.casesStatusCompleted,
-		bgClass: "bg-emerald-50",
-		textClass: "text-emerald-700",
-		borderClass: "border-emerald-200",
+		bgClass: "bg-emerald-500",
+		textClass: "text-white",
 	},
 	closed: {
 		labelKey: localizationConstants.casesStatusClosed,
-		bgClass: "bg-slate-100",
-		textClass: "text-slate-600",
-		borderClass: "border-slate-200",
+		bgClass: "bg-slate-500",
+		textClass: "text-white",
 	},
 	rejected: {
 		labelKey: localizationConstants.casesStatusRejected,
-		bgClass: "bg-rose-50",
-		textClass: "text-rose-700",
-		borderClass: "border-rose-200",
+		bgClass: "bg-rose-500",
+		textClass: "text-white",
 	},
 };
 
@@ -52,7 +47,7 @@ export function CaseStatusBadge({ status, className = "" }: CaseStatusBadgeProps
 
 	return (
 		<span
-			className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border uppercase tracking-wider ${config.bgClass} ${config.textClass} ${config.borderClass} ${className}`}
+			className={`inline-flex items-center justify-center px-3 py-0.5 rounded-full text-[11px] font-semibold whitespace-nowrap shadow-2xs ${config.bgClass} ${config.textClass} ${className}`}
 		>
 			<Translate text={config.labelKey} />
 		</span>

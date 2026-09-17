@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { ArrowLeft, CheckCircle2, ChevronDown } from "lucide-react";
+import { ArrowLeft, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -31,6 +31,7 @@ export function CaseDetailHeader({
 
 	return (
 		<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200">
+			{/* Left side: Back arrow, Title, Status Badge, and #ID */}
 			<div className="flex items-center gap-3">
 				<button
 					type="button"
@@ -48,33 +49,36 @@ export function CaseDetailHeader({
 						</h1>
 						<CaseStatusBadge status={caseItem.status} />
 					</div>
-					<p className="text-xs text-slate-400 font-mono mt-0.5">
+					<p className="text-xs text-slate-400 font-normal mt-0.5">
 						#{caseItem.caseNumber || caseItem.id}
 					</p>
 				</div>
 			</div>
 
-			{/* Top right blue action button matching Figma Image 1 */}
+			{/* Right side: Status transition button matching Figma Image 2 */}
 			<div className="relative">
 				<button
 					type="button"
 					onClick={() => setShowMenu((prev) => !prev)}
-					className="h-9 px-4 bg-sky-500 hover:bg-sky-600 text-white text-xs font-semibold rounded-lg flex items-center gap-2 shadow-2xs cursor-pointer transition-colors"
+					className="h-9 px-4 bg-sky-400 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg flex items-center gap-2 shadow-2xs cursor-pointer transition-colors"
 				>
-					<CheckCircle2 className="w-4 h-4" />
 					<span>
-						{caseItem.status === "completed"
-							? "Klart"
-							: caseItem.status === "closed"
-							? "Stängd"
-							: "Avsluta ärende"}
+						<Translate
+							text={
+								caseItem.status === "completed"
+									? localizationConstants.casesStatusCompleted
+									: caseItem.status === "ongoing"
+									? localizationConstants.casesStatusOngoing
+									: localizationConstants.casesStatusNotStarted
+							}
+						/>
 					</span>
-					<ChevronDown className="w-3.5 h-3.5 opacity-80" />
+					<ChevronDown className="w-3.5 h-3.5" />
 				</button>
 
 				{showMenu && (
-					<div className="absolute right-0 mt-1.5 w-44 bg-white border border-slate-200 rounded-lg shadow-lg z-20 py-1 text-xs">
-						<div className="px-3 py-1.5 font-semibold text-slate-400 text-[10px] uppercase">
+					<div className="absolute right-0 mt-1.5 w-44 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1.5 text-xs">
+						<div className="px-3 py-1 font-semibold text-slate-400 text-[10px] uppercase">
 							<Translate text={localizationConstants.casesDetailChangeStatus} />
 						</div>
 						{(["not_started", "ongoing", "completed", "closed", "rejected"] as CaseStatus[]).map(
@@ -88,11 +92,11 @@ export function CaseDetailHeader({
 											setPendingStatus(st);
 										}
 									}}
-									className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center justify-between cursor-pointer"
+									className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center justify-between cursor-pointer transition-colors"
 								>
 									<CaseStatusBadge status={st} />
 									{caseItem.status === st && (
-										<span className="text-[10px] text-slate-400">✓</span>
+										<span className="text-[10px] text-slate-500 font-bold">✓</span>
 									)}
 								</button>
 							)

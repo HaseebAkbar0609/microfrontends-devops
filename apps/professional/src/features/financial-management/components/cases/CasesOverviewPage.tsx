@@ -23,7 +23,7 @@ import { CaseDeleteDialog } from "./CaseDeleteDialog";
 export function CasesOverviewPage() {
 	const router = useRouter();
 	const { t } = useTranslation();
-	const { cases, isLoading, deleteCase } = useCases();
+	const { cases, isLoading, deleteCase, updateCaseStatus } = useCases();
 
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState<CaseStatus | "all">("all");
@@ -60,45 +60,52 @@ export function CasesOverviewPage() {
 		}
 	};
 
+	const handleStatusChange = (id: string, newStatus: CaseStatus) => {
+		updateCaseStatus(id, newStatus);
+		showToast("success", t(localizationConstants.casesToastStatusChanged));
+	};
+
 	return (
 		<div className="p-6 space-y-6">
-			{/* Top Bar matching Figma */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-				<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.casesOverviewTitle} />
-				</h1>
-
-				<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-					<CasesToolbar
-						searchQuery={searchQuery}
-						onSearchChange={(q) => {
-							setSearchQuery(q);
-							setPage(1);
-						}}
-						statusFilter={statusFilter}
-						onStatusFilterChange={(s) => {
-							setStatusFilter(s);
-							setPage(1);
-						}}
-						categoryFilter={categoryFilter}
-						onCategoryFilterChange={(c) => {
-							setCategoryFilter(c);
-							setPage(1);
-						}}
-					/>
-
-					<Button
-						type="button"
-						onClick={() => router.push(CREATE_CASE_ROUTE)}
-						className="h-9 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold gap-2 rounded-lg cursor-pointer transition-colors shrink-0"
-					>
-						<Plus className="w-4 h-4" />
-						<Translate text={localizationConstants.casesCreateButton} />
-					</Button>
+			{/* Top Tab matching Figma Image 1: Ärende lista */}
+			<div className="border-b border-slate-200">
+				<div className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight">
+					<Translate text={localizationConstants.casesOverviewTabList} />
 				</div>
 			</div>
 
-			{/* Main Table Card */}
+			{/* Toolbar & Action matching Figma Image 1 */}
+			<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+				<CasesToolbar
+					searchQuery={searchQuery}
+					onSearchChange={(q) => {
+						setSearchQuery(q);
+						setPage(1);
+					}}
+					statusFilter={statusFilter}
+					onStatusFilterChange={(s) => {
+						setStatusFilter(s);
+						setPage(1);
+					}}
+					categoryFilter={categoryFilter}
+					onCategoryFilterChange={(c) => {
+						setCategoryFilter(c);
+						setPage(1);
+					}}
+				/>
+
+				{/* + Skapa Fall button matching Figma Image 1 */}
+				<Button
+					type="button"
+					onClick={() => router.push(CREATE_CASE_ROUTE)}
+					className="h-9 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold gap-1.5 rounded-lg cursor-pointer transition-colors shrink-0 shadow-2xs"
+				>
+					<Plus className="w-4 h-4" />
+					<Translate text={localizationConstants.casesBtnCreateCase} />
+				</Button>
+			</div>
+
+			{/* Main Table Card matching Figma Image 1 */}
 			<div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
 				<CasesTable
 					items={paginatedCases}
@@ -106,6 +113,7 @@ export function CasesOverviewPage() {
 					onView={(id) => router.push(`${CASES_BASE_ROUTE}/${id}`)}
 					onEdit={(id) => router.push(`${CREATE_CASE_ROUTE}?edit=${id}`)}
 					onDelete={(id) => setDeleteTargetId(id)}
+					onStatusChange={handleStatusChange}
 				/>
 
 				<CasesTablePagination

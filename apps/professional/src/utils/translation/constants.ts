@@ -8786,11 +8786,15 @@ export type ClaimsTranslation = {
 
 export type CasesTranslation = {
 	casesOverviewTitle: string;
+	casesOverviewTabList: string;
 	casesCreateButton: string;
+	casesBtnCreateCase: string;
 	casesSearchPlaceholder: string;
+	casesFilterBtn: string;
 	casesStatusAll: string;
 	casesCategoryAll: string;
 	casesColId: string;
+	casesColCaseNumber: string;
 	casesColTitle: string;
 	casesColCategory: string;
 	casesColCreatedBy: string;
@@ -8818,6 +8822,8 @@ export type CasesTranslation = {
 	casesCategoryAdministrative: string;
 	casesCategoryOther: string;
 	casesDetailTitle: string;
+	casesCreateTitle: string;
+	casesEditTitle: string;
 	casesDetailCloseCase: string;
 	casesDetailChangeStatus: string;
 	casesTabBasicInfo: string;
@@ -8826,7 +8832,9 @@ export type CasesTranslation = {
 	casesTabActivityLog: string;
 	casesCardBasicInfo: string;
 	casesCardBasicInfoFull: string;
+	casesCardGeneralInfo: string;
 	casesCardMessages: string;
+	casesCardContentMessage: string;
 	casesCardCaseInfo: string;
 	casesFieldCreatedBy: string;
 	casesFieldCategory: string;
@@ -8836,6 +8844,7 @@ export type CasesTranslation = {
 	casesFieldDescription: string;
 	casesFieldDate: string;
 	casesFieldYourMessage: string;
+	casesPlaceholderWriteHere: string;
 	casesConversationReplyPlaceholder: string;
 	casesBtnAttach: string;
 	casesBtnSend: string;
