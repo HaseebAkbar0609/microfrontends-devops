@@ -597,6 +597,10 @@ export const createArticleSchema = z.object({
 	kalkylkostnad: z.string().optional(),
 	bestallningspunkt: z.string().optional(),
 	iLager: z.string().optional(),
+	// Lager (stock quantities)
+	stock: z.string().optional(),
+	reserved: z.string().optional(),
+	status: z.string().optional(),
 	// Lagerplats
 	vikt: z.string().optional(),
 	langd: z.string().optional(),
@@ -654,6 +658,9 @@ export interface ArticleDetail {
 	kalkylkostnad: string;
 	bestallningspunkt: string;
 	iLager: string;
+	stock: string;
+	reserved: string;
+	status: string;
 	vikt: string;
 	langd: string;
 	bredd: string;

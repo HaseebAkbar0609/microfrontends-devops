@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { ApiError } from "@/types/api";
 import { PriceListBasicInfoStep } from "./steps/PriceListBasicInfoStep";
 import { PriceListArticleStep } from "./steps/PriceListArticleStep";
 import { PriceListReviewStep } from "./steps/PriceListReviewStep";
@@ -95,8 +96,9 @@ export function CreatePriceListPage() {
 			await createPriceListAPIAction(data, selectedArticles);
 			showToast("success", t(localizationConstants.priceListCreatedSuccess));
 			router.push("/tools/register?tab=prislista");
-		} catch {
-			showToast("error", t(localizationConstants.priceListCreateError));
+		} catch (error) {
+			const backendMessage = (error as ApiError).response?.data?.message;
+			showToast("error", backendMessage || t(localizationConstants.priceListCreateError));
 		} finally {
 			setIsSubmitting(false);
 		}
