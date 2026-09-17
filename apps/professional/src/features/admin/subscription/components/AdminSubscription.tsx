@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { CalendarDays, CreditCard, ExternalLink, Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { CalendarDays, CreditCard, Loader2 } from "lucide-react";
 import { DynamicBreadcrumb } from "@/components/common";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,7 +14,8 @@ import {
 	SubscriptionTabId,
 } from "../constants/mockData";
 import { useSubscriptionOverview } from "../hooks/useSubscriptionOverview";
-import { getOpenInvoices, type SubscriptionOverviewItem } from "../services/subscriptionService";
+import { type SubscriptionOverviewItem } from "../services/subscriptionService";
+import { OutstandingInvoices } from "./OutstandingInvoices";
 import PaymentMethodTab from "./PaymentMethodTab";
 import { SUBSCRIPTION_EDITOR_PATHS } from "../services/subscriptionSelection";
 
@@ -127,14 +127,6 @@ const AdminSubscription = () => {
 	const subscriptionQuery = useSubscriptionOverview(activeTab === "my");
 	const subscription = subscriptionQuery.data;
 	const status = subscription?.status?.access_state ?? null;
-	const openInvoicesQuery = useQuery({
-		queryKey: ["subscription-open-invoices"],
-		queryFn: getOpenInvoices,
-		enabled: status === "RESTRICTED",
-	});
-	const payableInvoice = openInvoicesQuery.data?.find(
-		(invoice) => invoice.hosted_invoice_url,
-	);
 
 	return (
 		<div className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 md:py-8">
@@ -170,6 +162,8 @@ const AdminSubscription = () => {
 				</div>
 			</Tabs>
 
+			{activeTab === "my" && <OutstandingInvoices onRefresh={() => void subscriptionQuery.refetch()} />}
+
 			{activeTab === "payment" ? (
 				<PaymentMethodTab />
 			) : subscriptionQuery.isLoading ? (
@@ -187,6 +181,11 @@ const AdminSubscription = () => {
 					>
 						<Translate text={localizationConstants.retry} />
 					</Button>
+				</div>
+			) : subscription?.sales_onboarding_pending ? (
+				<div className="space-y-4 border-y py-5">
+					<p><Translate text={localizationConstants.billingSalesPending} /></p>
+					<Button variant="outline" onClick={() => setActiveTab("payment")}><CreditCard size={16} /><Translate text={localizationConstants.subscriptionPaymentMethodCard} /></Button>
 				</div>
 			) : !subscription?.has_subscription ? (
 				<div className="rounded-md border border-slate-200 bg-white p-8 text-center">
@@ -224,18 +223,6 @@ const AdminSubscription = () => {
 					{subscription.status?.access_state === "RESTRICTED" && (
 						<div className="rounded-md border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800">
 							<Translate text={localizationConstants.subscriptionRestrictedWarning} />
-							{payableInvoice?.hosted_invoice_url && (
-								<Button asChild size="sm" className="ml-4">
-									<a
-										href={payableInvoice.hosted_invoice_url}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										<Translate text={localizationConstants.subscriptionPayOutstanding} />
-										<ExternalLink className="ml-2 h-4 w-4" />
-									</a>
-								</Button>
-							)}
 						</div>
 					)}
 					{subscription.status?.is_cancelled && subscription.status.cancel_at && (

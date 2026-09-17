@@ -1,4 +1,5 @@
 "use client";
+import { billingReturnPath } from "@/lib/billingReturnPath";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LogIn } from "lucide-react";
@@ -50,9 +51,9 @@ export default function LoginPage() {
         setAccessToken(authStorage.getAccessToken());
         setCompany(authStorage.getCompanyData() as Company);
       });
-      const destination = getRequiresSubscriptionFromBrowserCookie()
+      const destination = billingReturnPath(new URLSearchParams(window.location.search).get("returnTo")) ?? (getRequiresSubscriptionFromBrowserCookie()
         ? "/manage-plans"
-        : "/home";
+        : "/home");
       router.push(destination);
     }
   };

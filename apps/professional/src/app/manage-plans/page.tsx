@@ -24,6 +24,7 @@ import {
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { SUBSCRIPTION_EDITOR_PATHS } from "@/features/admin/subscription/services/subscriptionSelection";
+import { getSubscriptionOverview } from "@/features/admin/subscription/services/subscriptionService";
 
 const STEP_PLAN_KEYS = {
 	[MANAGE_PLANS_STEPS.BASE]: [
@@ -118,8 +119,14 @@ export default function ManagePlansPage() {
 		setIsPlanChange(
 			new URLSearchParams(window.location.search).get("change") === "1",
 		);
-		fetchPlans();
-		syncStepFromCart();
+		void getSubscriptionOverview().then(overview => {
+			if (overview.sales_onboarding_pending) {
+				router.replace("/admin/subscription");
+				return;
+			}
+			void fetchPlans();
+			void syncStepFromCart();
+		}).catch(() => { void fetchPlans(); });
 	}, [router, syncStepFromCart]);
 
 	useEffect(() => {

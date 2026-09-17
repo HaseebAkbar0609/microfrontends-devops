@@ -8,6 +8,7 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { getProfessionalAPIAction, type ProfessionalDetail } from "@/api-actions";
 import { OverviewTab } from "./OverviewTab";
+import { SalesBillingPanel } from "./SalesBillingPanel";
 
 interface ProfessionalOverviewPageProps {
 	readonly id: string;
@@ -16,16 +17,20 @@ interface ProfessionalOverviewPageProps {
 export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) {
 	const [data, setData] = useState<ProfessionalDetail | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
+	const [failed, setFailed] = useState(false);
 	const [activeTab, setActiveTab] = useState("overview");
 
 	useEffect(() => {
 		let cancelled = false;
 		setIsLoading(true);
+		setFailed(false);
 
 		void getProfessionalAPIAction(id).then((result) => {
 			if (cancelled) return;
 			setData(result);
 			setIsLoading(false);
+		}).catch(() => {
+			if (!cancelled) { setFailed(true); setIsLoading(false); }
 		});
 
 		return () => {
@@ -33,6 +38,7 @@ export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) 
 		};
 	}, [id]);
 
+	if (failed) return <p role="alert" className="p-8 text-red-700"><Translate text={localizationConstants.billingLoadFailed} /></p>;
 	if (isLoading || !data) {
 		return (
 			<div className="flex min-h-[400px] items-center justify-center">
@@ -53,6 +59,7 @@ export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) 
 				</h1>
 
 				<Button
+					onClick={() => setActiveTab("invoices")}
 					variant="outline"
 					className="h-10 gap-2 rounded-lg border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 shadow-xs hover:bg-slate-50"
 				>
@@ -107,9 +114,7 @@ export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) 
 				</TabsContent>
 
 				<TabsContent value="invoices" className="pt-6">
-					<div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-						<Translate text={localizationConstants.invoicesTab} />
-					</div>
+					<SalesBillingPanel companyId={id} />
 				</TabsContent>
 
 				<TabsContent value="support" className="pt-6">
