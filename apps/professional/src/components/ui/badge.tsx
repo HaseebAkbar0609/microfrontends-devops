@@ -20,6 +20,7 @@ const badgeVariants = cva(
         success: "border-transparent bg-emerald-50 text-emerald-700 font-medium",
         info: "border-transparent bg-blue-50 text-blue-700 font-medium",
         warning: "border-transparent bg-amber-50 text-amber-900 font-medium",
+        danger: "border-transparent bg-red-50 text-red-700 font-medium",
         // Offer - List (Type pill variants) - intentionally no hover styles
         typeDark:
           "border-transparent bg-slate-900 text-white font-semibold",

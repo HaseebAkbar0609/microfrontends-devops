@@ -1,6 +1,7 @@
 import { generateTempId } from "@/lib/tempId";
 import { SEEDED_PROJECT_INSPECTIONS } from "../data/projectInspections.mock";
-import { mimeTypeFor } from "../inspectionFiles";
+import { mintTypedUrl, revokeUrls } from "../../../shared/recordFiles";
+import { INSPECTION_FILE_TYPES } from "../projectInspection.config";
 import type {
 	InspectionDocumentInput,
 	InspectionInput,
@@ -31,12 +32,6 @@ function find(projectId: string, id: string): ProjectInspection | undefined {
 	return inspections.find((row) => row.projectId === projectId && row.id === id);
 }
 
-function revokeUrls(documents: ProjectInspectionDocument[]): void {
-	for (const doc of documents) {
-		if (doc.url) URL.revokeObjectURL(doc.url);
-	}
-}
-
 /**
  * Turns the dialog's documents into stored ones. A newly picked file gets a URL
  * served as its extension's content type — so a renamed file never opens as
@@ -51,8 +46,7 @@ function storeDocuments(
 
 	return inputs.flatMap((input): ProjectInspectionDocument[] => {
 		if (input.file) {
-			const typed = input.file.slice(0, input.file.size, mimeTypeFor(input.name));
-			return [{ id: input.id, name: input.name, url: URL.createObjectURL(typed) }];
+			return [{ id: input.id, name: input.name, url: mintTypedUrl(input.file, INSPECTION_FILE_TYPES) }];
 		}
 		const kept = stored.get(input.id);
 		return kept ? [kept] : [];

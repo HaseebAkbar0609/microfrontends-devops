@@ -20,9 +20,14 @@ export default function SupportPage() {
   return (
     <>
       <Head>
-        <title>{`${t("support.heroLabel")} — TimeFlow`}</title>
+        {/* <title>{`${t("support.heroLabel")} — TimeFlow`}</title>
         <meta name="description" content={t("support.heroDesc")} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" /> */}
+        <title>{t("seo.supportTitle")}</title>
+        <meta name="description" content={t("seo.supportDesc")} />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content={t("seo.supportOgTitle")} />
+        <meta property="og:description" content={t("seo.supportOgDesc")} />
       </Head>
 
       <div className="min-h-screen bg-background text-foreground font-body">

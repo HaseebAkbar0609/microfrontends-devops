@@ -99,7 +99,9 @@
         "heroTitle1": "Viss darbs vienā",
         "heroTitle2": "vienīgajā skatā.",
         "ctaTitle1": "Sāciet vienkārši.",
-        "ctaTitle2": "Augiet, kad vēlaties."
+        "ctaTitle2": "Augiet, kad vēlaties.",
+        "completeBusinessTitle":"Pilnīga biznesa vadības sistēma",
+        "completeBusinessTitle2":"amatniekiem un būvniecības uzņēmumiem"
     },
     "professional": {
         "heroLabel": "Būvniecības un meistaru uzņēmumiem visās nozarēs",
@@ -179,7 +181,10 @@
         "startAccount": "Sākt kontu",
         "tryDemo": "Izmēģināt demo",
         "workTag": "(pēc izvēles)",
-        "managerTag": "(iekļauts Standard / PRO)."
+        "managerTag": "(iekļauts Standard / PRO).",
+        "professionalBusinessLabel":"PILNĪGS RISINĀJUMS",
+        "professionalBusinessTitle":"Profesionāla biznesa vadības",
+        "professionalBusinessTitle2":"sistēma amatniekiem un būvniecības uzņēmumiem"
     },
     "consumer": {
         "heroLabel": "Privātpersonām",
@@ -324,7 +329,10 @@
         "trustF5": "Projekta informācija pieejama, kad vajag",
         "trustF6": "TimeFlow Home privātpersonām vienmēr ir bezmaksas",
         "finalCtaTitle": "Gatavs sākt?",
-        "finalCtaDesc": "Apraksti savu projektu jau šodien un saņem līdz 5 piedāvājumiem no kvalificētiem uzņēmumiem."
+        "finalCtaDesc": "Apraksti savu projektu jau šodien un saņem līdz 5 piedāvājumiem no kvalificētiem uzņēmumiem.",
+        "businessManagementLabel": "UZŅĒMUMIEM",
+        "businessManagementTitle": "Biznesa vadības sistēma, kas",
+        "businessManagementTitle2": "izstrādāta amatniekiem un maziem būvniecības uzņēmumiem"
     },
     "solutions": {
         "heroLabel": "Risinājumi",
@@ -652,7 +660,10 @@
         "refTitle": "TimeFlow tagad tiek laists Zviedrijas tirgū.",
         "refDesc": "2026. gada laikā publicēsim apstiprinātus klientu stāstus un intervijas ar uzņēmumiem, kas platformu izmanto ikdienas darbā. Sazinies ar mums — ar prieku pastāstīsim vairāk.",
         "ctaDesc": "Izmēģini TimeFlow 30 dienas bez maksas — bez kredītkartes. Tikai 3 mēnešu minimālā saistība.",
-        "startNow": "Sāc tagad"
+        "startNow": "Sāc tagad",
+        "successStoriesLabel": "ĪSTI REZULTĀTI",
+        "successStoriesTitle": "Patiesi veiksmes stāsti:",
+        "successStoriesTitle2": "Kā būvniecības uzņēmumi aug kopā ar Timeflow"
     },
     "pricing": {
         "heroLabel": "Cenas",

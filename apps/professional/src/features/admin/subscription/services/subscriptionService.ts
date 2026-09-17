@@ -15,6 +15,8 @@ export interface SubscriptionOverviewItem {
 }
 
 export interface SubscriptionOverview {
+  managed_license?: boolean;
+  license_required?: boolean;
 	company_id: string;
 	subscription_id: string | null;
 	start_at: string | null;

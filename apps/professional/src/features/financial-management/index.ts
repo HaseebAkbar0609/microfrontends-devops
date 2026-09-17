@@ -113,5 +113,12 @@ export * from "./constants/yearEnd.constants";
 export * from "./utils/yearEndRepository";
 export * from "./utils/yearEndLocalization";
 export * from "./hooks/useYearEnd";
+export * from "./components/claims";
+export * from "./types/claims.types";
+export * from "./constants/claims.constants";
+export * from "./utils/claimsRepository";
+export * from "./hooks/useClaims";
+export * from "./hooks/useClaimTemplates";
+
 
 

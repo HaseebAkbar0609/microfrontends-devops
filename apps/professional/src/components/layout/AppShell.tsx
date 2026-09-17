@@ -12,6 +12,7 @@ import {
 } from "@/features/account-lifecycle";
 import { setRequiresSubscriptionCookie } from "@/lib/requiresSubscriptionCookie";
 import { getSubscriptionOverview } from "@/features/admin/subscription/services/subscriptionService";
+import StaffLicenseGate from "@/features/admin/users/live/StaffLicenseGate";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 
@@ -52,6 +53,7 @@ export function AppShell({ children }: AppShellProps) {
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
 	const isPublicPage = pathMatchesPrefixes(pathname, PUBLIC_ROUTE_PREFIXES);
+	const isBillingPage = isPublicPage || pathMatchesPrefixes(pathname, ["/admin/subscription", "/admin/licenses"]);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -178,7 +180,7 @@ export function AppShell({ children }: AppShellProps) {
 				{!isPublicPage && <AccountLifecycleBanner />}
 				<Header />
 				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0">
-					{children}
+					{isAuthenticated && isBillingPage ? <StaffLicenseGate>{children}</StaffLicenseGate> : children}
 				</main>
 			</div>
 			{!isPublicPage && <AccountLifecyclePopup />}

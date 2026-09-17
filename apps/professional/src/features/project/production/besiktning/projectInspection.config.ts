@@ -1,4 +1,5 @@
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
+import { acceptAttribute } from "../../shared/recordFiles";
 import type { InspectionType } from "./types";
 
 /**
@@ -50,13 +51,8 @@ export const INSPECTION_FILE_TYPES: Record<string, string> = {
 	".jpeg": "image/jpeg",
 };
 
-export const INSPECTION_FILE_EXTENSIONS = Object.keys(INSPECTION_FILE_TYPES);
-
 /** The picker's advisory filter: extensions and content types together. */
-export const INSPECTION_FILE_ACCEPT = [
-	...INSPECTION_FILE_EXTENSIONS,
-	...Array.from(new Set(Object.values(INSPECTION_FILE_TYPES))),
-].join(",");
+export const INSPECTION_FILE_ACCEPT = acceptAttribute(INSPECTION_FILE_TYPES);
 
 /** Chips shown before the dialog's chevron collapses the rest — the frame draws two. */
 export const INSPECTION_CHIPS_COLLAPSED = 2;

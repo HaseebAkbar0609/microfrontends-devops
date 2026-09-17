@@ -24,6 +24,7 @@ export interface ConfirmActionDialogProps {
 	/** Named record, appended to the description so the user sees what is affected. */
 	subject?: string;
 	destructive?: boolean;
+	confirmButtonClassName?: string;
 	onConfirm: () => void;
 }
 
@@ -47,6 +48,7 @@ export function ConfirmActionDialog({
 	confirmLabel,
 	subject,
 	destructive = false,
+	confirmButtonClassName,
 	onConfirm,
 }: ConfirmActionDialogProps) {
 	return (
@@ -62,15 +64,17 @@ export function ConfirmActionDialog({
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>
-					<AlertDialogCancel className="cursor-pointer border-slate-200 bg-white text-slate-700 hover:bg-slate-50">
+					<AlertDialogCancel className="cursor-pointer border-slate-200 bg-transparent text-slate-700 hover:bg-slate-100 shadow-none">
 						<Translate text={localizationConstants.cancel} />
 					</AlertDialogCancel>
 					<AlertDialogAction
 						onClick={onConfirm}
 						className={
-							destructive
-								? "cursor-pointer bg-red-600 text-white hover:bg-red-700"
-								: "cursor-pointer bg-[#111721] text-white hover:bg-slate-800"
+							confirmButtonClassName
+								? `cursor-pointer ${confirmButtonClassName}`
+								: destructive
+									? "cursor-pointer bg-red-600 text-white hover:bg-red-700"
+									: "cursor-pointer bg-zinc-900 text-white hover:bg-zinc-800"
 						}
 					>
 						<Translate text={confirmLabel} />

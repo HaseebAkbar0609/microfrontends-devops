@@ -36,6 +36,14 @@ export function DocumentStep({
 
 	const displayDocuments = documents;
 
+	const handleSeeFile = (url?: string) => {
+		if (!url) {
+			showToast("error", "File is not available yet.");
+			return;
+		}
+		window.open(url, "_blank", "noopener,noreferrer");
+	};
+
 	const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const files = e.target.files;
 		if (!files || files.length === 0) return;
@@ -59,6 +67,7 @@ export function DocumentStep({
 						namn: file.name,
 						fil: file.name,
 						type: isPdf ? "pdf" : "doc",
+						url: res.data.file_url_path,
 					});
 				} else {
 					// Remove from pending if failed
@@ -219,6 +228,7 @@ export function DocumentStep({
 														type="button"
 														variant="outline"
 														size="sm"
+														onClick={() => handleSeeFile(doc.url)}
 														className="h-8 border border-slate-300 bg-white text-xs hover:bg-slate-50 cursor-pointer"
 													>
 														<Translate
