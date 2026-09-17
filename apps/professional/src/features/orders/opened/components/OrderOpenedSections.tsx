@@ -25,6 +25,8 @@ import { OrderAtaOverviewPage } from "@/features/orders/ata/OrderAtaOverviewPage
 import { OrderStaffOverviewPage } from "@/features/orders/staff/OrderStaffOverviewPage";
 import { OrderTimeplanOverviewPage } from "@/features/orders/timeplan/OrderTimeplanOverviewPage";
 import { OrderQaOverviewPage } from "@/features/orders/qa/OrderQaOverviewPage";
+import { OrderDocumentsOverviewPage } from "@/features/orders/documents";
+import { OrderConstructionLogOverviewPage } from "@/features/orders/construction-log/OrderConstructionLogOverviewPage";
 
 export interface OrderOpenedSectionsProps {
 	data: OrderOpenedData;
@@ -42,10 +44,12 @@ type OrderTabValue =
 	| "payment-plan"
 	| "ata"
 	| "guarantee"
+	| "handlingar"
 	| "protocol"
 	| "staff"
 	| "tidsplan"
-	| "fraga-svar";
+	| "fraga-svar"
+	| "dagbok";
 
 export function OrderOpenedSections({
 	data,
@@ -75,10 +79,12 @@ export function OrderOpenedSections({
 		if (path.includes("/payment-plan")) return "payment-plan";
 		if (path.includes("/ata")) return "ata";
 		if (path.includes("/guarantee")) return "guarantee";
+		if (path.includes("/handlingar") || path.includes("/documents")) return "handlingar";
 		if (path.includes("/protocol")) return "protocol";
 		if (path.includes("/staff")) return "staff";
 		if (path.includes("/tidsplan") || path.includes("/timeplan")) return "tidsplan";
 		if (path.includes("/fraga-svar") || path.includes("/qa")) return "fraga-svar";
+		if (path.includes("/dagbok") || path.includes("/construction-log")) return "dagbok";
 		return "order-information";
 	};
 
@@ -128,10 +134,12 @@ export function OrderOpenedSections({
 		"payment-plan": t(localizationConstants.paymentPlanTitle),
 		ata: t(localizationConstants.ataTitle),
 		guarantee: t(localizationConstants.warrantyCommitments),
+		handlingar: t(localizationConstants.orderHandlingarTab),
 		protocol: t(localizationConstants.protocolsTab),
 		staff: t(localizationConstants.staffLedgerTab),
 		tidsplan: t(localizationConstants.orderTimeplanTab),
 		"fraga-svar": t(localizationConstants.orderQaTab),
+		dagbok: t(localizationConstants.orderDagbokTab),
 	};
 
 	const showSubtitle =
@@ -205,6 +213,14 @@ export function OrderOpenedSections({
 							<Translate text={localizationConstants.warrantyCommitments} />
 						</Link>
 					</TabsTrigger>
+					<TabsTrigger value="handlingar" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/documents`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderHandlingarTab} />
+						</Link>
+					</TabsTrigger>
 					<TabsTrigger value="protocol" asChild>
 						<Link
 							href={`/module/production/order/${routeOrderId}/protocol`}
@@ -235,6 +251,14 @@ export function OrderOpenedSections({
 							className="cursor-pointer"
 						>
 							<Translate text={localizationConstants.orderQaTab} />
+						</Link>
+					</TabsTrigger>
+					<TabsTrigger value="dagbok" asChild>
+						<Link
+							href={`/module/production/order/${routeOrderId}/construction-log`}
+							className="cursor-pointer"
+						>
+							<Translate text={localizationConstants.orderDagbokTab} />
 						</Link>
 					</TabsTrigger>
 				</TabsList>
@@ -315,7 +339,12 @@ export function OrderOpenedSections({
 					/>
 				</TabsContent>
 
-				{/* Tab 7: Protokoll */}
+				{/* Tab 7: Handlingar */}
+				<TabsContent value="handlingar" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderDocumentsOverviewPage orderId={routeOrderId} hideNavRow />
+				</TabsContent>
+
+				{/* Tab 8: Protokoll */}
 				<TabsContent value="protocol" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderProtocolOverviewPage
 						orderId={routeOrderId}
@@ -323,12 +352,12 @@ export function OrderOpenedSections({
 					/>
 				</TabsContent>
 
-				{/* Tab 8: Personal-liggare */}
+				{/* Tab 9: Personal-liggare */}
 				<TabsContent value="staff" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderStaffOverviewPage orderId={routeOrderId} />
 				</TabsContent>
 
-				{/* Tab 9: Tidsplan */}
+				{/* Tab 10: Tidsplan */}
 				<TabsContent value="tidsplan" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderTimeplanOverviewPage
 						orderId={routeOrderId}
@@ -340,9 +369,15 @@ export function OrderOpenedSections({
 				<TabsContent value="fraga-svar" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
 					<OrderQaOverviewPage orderId={routeOrderId} />
 				</TabsContent>
+
+				{/* Tab 11: Dagbok (Construction Log) */}
+				<TabsContent value="dagbok" className="px-4 sm:px-6 ml-0 sm:ml-7 mt-0 focus-visible:outline-none">
+					<OrderConstructionLogOverviewPage orderId={routeOrderId} hideTitle />
+				</TabsContent>
 			</Tabs>
 		</div>
 	);
 }
 
 export default OrderOpenedSections;
+

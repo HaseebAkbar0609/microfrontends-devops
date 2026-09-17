@@ -39,6 +39,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { showToast } from "@/lib/toast";
 
 function InfoRow({ labelKey, value }: { labelKey: string; value?: string }) {
 	return (
@@ -189,6 +190,14 @@ export default function AgreementDetailView({ data }: Props) {
 		if (res.success) {
 			setDocuments((prev) => prev.filter((d) => d.id !== documentId));
 		}
+	};
+
+	const handleSeeFile = (url?: string) => {
+		if (!url) {
+			showToast("error", "File is not available.");
+			return;
+		}
+		window.open(url, "_blank", "noopener,noreferrer");
 	};
 
 	const handleSortDocuments = (key: keyof AgreementDetailDocument) => {
@@ -390,7 +399,12 @@ export default function AgreementDetailView({ data }: Props) {
 											</span>
 										</td>
 										<td className="px-4 py-2 font-sans text-sm font-normal leading-5 tracking-normal text-slate-600">
-											<div className="flex items-center gap-2">
+											<button
+												type="button"
+												onClick={() => handleSeeFile(doc.url)}
+												title={doc.fil}
+												className="flex items-center gap-2 rounded-md text-left hover:underline cursor-pointer"
+											>
 												<div className="relative flex h-16 w-12 shrink-0 items-center justify-center">
 													<File className="h-16 w-12 text-slate-300" strokeWidth={1.5} />
 													<span className={`absolute -left-0.5 top-[60%] -translate-y-1/2 rounded-[2px] px-1.5 py-0.5 text-[10px] font-bold leading-none text-white ${doc.type === "pdf" ? "bg-red-600" : "bg-blue-600"}`}>
@@ -398,7 +412,7 @@ export default function AgreementDetailView({ data }: Props) {
 													</span>
 												</div>
 												<span className="truncate text-sm">{doc.fil}</span>
-											</div>
+											</button>
 										</td>
 										<td className="px-2 py-2">
 											<DropdownMenu>

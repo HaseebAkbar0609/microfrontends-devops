@@ -181,6 +181,12 @@ export const API_PATH = {
 		QA_REPLY: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/reply`,
 		QA_STATUS: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/status`,
 		QA_ARCHIVE: (orderId: string, messageId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/qa/${messageId}/archive`,
+		DOCUMENTS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents`,
+		DOCUMENT_DETAIL: (orderId: string, docId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents/${docId}`,
+		DOCUMENT_ARCHIVE: (orderId: string, docId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents/${docId}/archive`,
+		DOCUMENT_RESTORE: (orderId: string, docId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/documents/${docId}/restore`,
+		CONSTRUCTION_LOGS: (orderId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/construction-logs`,
+		CONSTRUCTION_LOG_DETAIL: (orderId: string, logId: string) => `${PROFESSIONALS_BASE_PATH}/orders/${orderId}/construction-logs/${logId}`,
 		UPLOAD_FILE: `/media/upload`,
 	},
 	B2B: {
