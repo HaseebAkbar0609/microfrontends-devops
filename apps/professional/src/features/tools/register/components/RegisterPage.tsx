@@ -100,19 +100,19 @@ function RegisterContent({ defaultRegister }: RegisterPageProps) {
 							value="kund"
 							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
 						>
-							<Translate text={localizationConstants.registerKunder} />
+							<Translate text={localizationConstants.customerOption} />
 						</SelectItem>
 						<SelectItem
 							value="supplier"
 							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
 						>
-							<Translate text={localizationConstants.registerLeverantorer} />
+							<Translate text={localizationConstants.supplierOption} />
 						</SelectItem>
 						<SelectItem
 							value="artikel"
 							className="focus:bg-slate-100 focus:text-slate-900 data-[state=checked]:bg-slate-100 data-[state=checked]:text-slate-900 cursor-pointer"
 						>
-							<Translate text={localizationConstants.registerArtiklar} />
+							<Translate text={localizationConstants.articleOption} />
 						</SelectItem>
 					</SelectContent>
 				</Select>

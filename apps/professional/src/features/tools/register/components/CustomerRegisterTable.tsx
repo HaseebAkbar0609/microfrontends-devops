@@ -215,12 +215,6 @@ export function CustomerRegisterTable() {
 				sortable: true,
 			},
 			{
-				key: "dateAdded",
-				label: localizationConstants.dateAddedHeader,
-				sortable: true,
-				render: (row) => <span className="text-slate-700">{row.dateAdded}</span>,
-			},
-			{
 				key: "status",
 				label: localizationConstants.statusHeader,
 				sortable: true,
