@@ -78,9 +78,11 @@ export function CustomerCardPanel({
 				<p className="text-sm text-slate-500">
 					{company.contactPerson}
 					{company.contactPerson && company.mobile ? " · " : ""}
-					<a className="hover:underline" href={`tel:${company.mobile}`}>
-						{company.mobile}
-					</a>
+					{company.mobile && (
+						<a className="hover:underline" href={`tel:${company.mobile}`}>
+							{company.mobile}
+						</a>
+					)}
 				</p>
 			</div>
 

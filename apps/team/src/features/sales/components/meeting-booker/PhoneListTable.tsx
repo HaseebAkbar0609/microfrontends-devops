@@ -97,9 +97,11 @@ export function PhoneListTable({
 										{company.contactPerson}
 									</TableCell>
 									<TableCell className="px-5 tabular-nums text-slate-600">
-										<a className="hover:underline" href={`tel:${company.mobile}`}>
-											{company.mobile}
-										</a>
+										{company.mobile && (
+											<a className="hover:underline" href={`tel:${company.mobile}`}>
+												{company.mobile}
+											</a>
+										)}
 									</TableCell>
 									<TableCell className="px-5 text-slate-600">
 										{label(SALES_CATEGORIES, company.category)}

@@ -131,15 +131,19 @@ export function TeamTable({
 											{regionKey ? t(regionKey) : member.region}
 										</TableCell>
 										<TableCell className="px-5 text-slate-600">
-											<a className="block hover:underline" href={`mailto:${member.email}`}>
-												{member.email}
-											</a>
-											<a
-												className="block text-xs tabular-nums text-slate-500 hover:underline"
-												href={`tel:${member.phone}`}
-											>
-												{member.phone}
-											</a>
+											{member.email && (
+												<a className="block hover:underline" href={`mailto:${member.email}`}>
+													{member.email}
+												</a>
+											)}
+											{member.phone && (
+												<a
+													className="block text-xs tabular-nums text-slate-500 hover:underline"
+													href={`tel:${member.phone}`}
+												>
+													{member.phone}
+												</a>
+											)}
 										</TableCell>
 										<TableCell className={NUMBER_CLASS}>{row.customers}</TableCell>
 										<TableCell className={NUMBER_CLASS}>{row.quotes}</TableCell>
