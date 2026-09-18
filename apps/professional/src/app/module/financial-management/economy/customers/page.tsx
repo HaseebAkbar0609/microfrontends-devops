@@ -1,5 +1,7 @@
-import { CustomersOverviewPage } from "@/features/financial-management";
+import { CustomerOverviewPage } from "@/features/financial-management";
 
-export default function CustomersRoute() {
-	return <CustomersOverviewPage />;
+export const dynamic = "force-dynamic";
+
+export default function EconomyCustomersPage() {
+	return <CustomerOverviewPage />;
 }

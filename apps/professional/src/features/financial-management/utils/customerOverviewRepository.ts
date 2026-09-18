@@ -1,96 +1,29 @@
 import type {
-	CustomerOverviewItem,
-	CustomerFilters,
-} from "../types/customers.types";
-import { STORAGE_KEY_CUSTOMERS } from "../constants/customerOverview.constants";
+	CustomerOverviewRow,
+	GetCustomerOverviewListParams,
+	GetCustomerOverviewListResponse,
+} from "../types/customerOverview.types";
+import {
+	STORAGE_KEY_CUSTOMERS,
+	DEFAULT_CUSTOMER_PAGE_SIZE,
+} from "../constants/customerOverview.constants";
+import { MOCK_CUSTOMER_OVERVIEW_LIST } from "../mock/customerOverviewMockData";
 
-const SEED_CUSTOMERS: CustomerOverviewItem[] = [
-	{
-		id: "cust-1",
-		customerNo: "#M101",
-		name: "Byggmästarna i Stockholm AB",
-		orgNo: "556123-4567",
-		address: "Sveavägen 45",
-		postNr: "111 34",
-		city: "Stockholm",
-		country: "Sverige",
-		phone: "08-123 45 67",
-		email: "ekonomi@byggmastarna.se",
-		status: "active",
-		dateAdded: "2024-01-15",
-		category: "Bygg & Anläggning",
-	},
-	{
-		id: "cust-2",
-		customerNo: "#M102",
-		name: "Nordic Tech Solutions AB",
-		orgNo: "556789-0123",
-		address: "Kungsgatan 12",
-		postNr: "111 43",
-		city: "Stockholm",
-		country: "Sverige",
-		phone: "08-765 43 21",
-		email: "kontakt@nordictech.se",
-		status: "active",
-		dateAdded: "2024-02-10",
-		category: "Konsulttjänster",
-	},
-	{
-		id: "cust-3",
-		customerNo: "#M103",
-		name: "Anders Lindström",
-		orgNo: "19820412-2391",
-		address: "Strandvägen 8B",
-		postNr: "114 56",
-		city: "Stockholm",
-		country: "Sverige",
-		phone: "070-112 23 34",
-		email: "anders.lindstrom@gmail.com",
-		status: "active",
-		dateAdded: "2024-03-01",
-		category: "Privatperson",
-	},
-	{
-		id: "cust-4",
-		customerNo: "#M104",
-		name: "Mälardalens Fastigheter AB",
-		orgNo: "556456-7890",
-		address: "Hamngatan 3",
-		postNr: "722 12",
-		city: "Västerås",
-		country: "Sverige",
-		phone: "021-34 56 78",
-		email: "info@malardalensfast.se",
-		status: "prospect",
-		dateAdded: "2024-03-12",
-		category: "Fastighet",
-	},
-	{
-		id: "cust-5",
-		customerNo: "#M105",
-		name: "Karin Bergqvist",
-		orgNo: "19781105-4428",
-		address: "Vasagatan 22",
-		postNr: "411 24",
-		city: "Göteborg",
-		country: "Sverige",
-		phone: "073-987 65 43",
-		email: "karin.bergqvist@outlook.com",
-		status: "active",
-		dateAdded: "2024-04-05",
-		category: "Privatperson",
-	},
-];
+type Listener = () => void;
 
 class CustomerOverviewRepository {
-	private items: CustomerOverviewItem[] = [];
-	private initialized = false;
+	private items: CustomerOverviewRow[] = [];
+	private listeners: Set<Listener> = new Set();
+	private isInitialized = false;
+
+	constructor() {
+		this.init();
+	}
 
 	private init(): void {
-		if (this.initialized) return;
 		if (typeof window === "undefined") {
-			this.items = [...SEED_CUSTOMERS];
-			this.initialized = true;
+			this.items = [...MOCK_CUSTOMER_OVERVIEW_LIST];
+			this.isInitialized = true;
 			return;
 		}
 
@@ -100,90 +33,139 @@ class CustomerOverviewRepository {
 				const parsed = JSON.parse(stored);
 				if (Array.isArray(parsed) && parsed.length > 0) {
 					this.items = parsed;
-					this.initialized = true;
+					this.isInitialized = true;
 					return;
 				}
 			}
 		} catch {
-			// fallback to seed
+			// localStorage error fallback
 		}
 
-		this.items = [...SEED_CUSTOMERS];
-		this.save();
-		this.initialized = true;
+		this.items = [...MOCK_CUSTOMER_OVERVIEW_LIST];
+		this.persist();
+		this.isInitialized = true;
 	}
 
-	private save(): void {
-		if (typeof window !== "undefined") {
+	private ensureInitialized(): void {
+		if (!this.isInitialized) {
+			this.init();
+		}
+	}
+
+	private persist(): void {
+		if (typeof window === "undefined") return;
+		try {
+			localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(this.items));
+		} catch {
+			// Ignore localStorage write error
+		}
+	}
+
+	private notify(): void {
+		for (const listener of this.listeners) {
 			try {
-				localStorage.setItem(STORAGE_KEY_CUSTOMERS, JSON.stringify(this.items));
+				listener();
 			} catch {
-				// storage error fallback
+				// Ignore listener errors
 			}
 		}
 	}
 
-	public getAll(): CustomerOverviewItem[] {
-		this.init();
+	public subscribe(listener: Listener): () => void {
+		this.listeners.add(listener);
+		return () => {
+			this.listeners.delete(listener);
+		};
+	}
+
+	public getAll(): CustomerOverviewRow[] {
+		this.ensureInitialized();
 		return [...this.items];
 	}
 
-	public getById(id: string): CustomerOverviewItem | undefined {
-		this.init();
-		return this.items.find((item) => item.id === id);
-	}
-
-	public add(customer: Omit<CustomerOverviewItem, "id">): CustomerOverviewItem {
-		this.init();
-		const newItem: CustomerOverviewItem = {
-			...customer,
-			id: `cust-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-		};
-		this.items = [newItem, ...this.items];
-		this.save();
-		return newItem;
-	}
-
-	public update(id: string, updates: Partial<CustomerOverviewItem>): CustomerOverviewItem | null {
-		this.init();
-		const index = this.items.findIndex((item) => item.id === id);
-		if (index === -1) return null;
-
-		this.items[index] = { ...this.items[index], ...updates };
-		this.save();
-		return this.items[index];
+	public getById(id: string): CustomerOverviewRow | undefined {
+		this.ensureInitialized();
+		return this.items.find((c) => c.id === id);
 	}
 
 	public delete(id: string): boolean {
-		this.init();
-		const initialLength = this.items.length;
-		this.items = this.items.filter((item) => item.id !== id);
-		if (this.items.length !== initialLength) {
-			this.save();
-			return true;
-		}
-		return false;
+		this.ensureInitialized();
+		const index = this.items.findIndex((c) => c.id === id);
+		if (index === -1) return false;
+
+		this.items.splice(index, 1);
+		this.persist();
+		this.notify();
+		return true;
 	}
 
-	public query(filters: Partial<CustomerFilters>): CustomerOverviewItem[] {
-		this.init();
-		return this.items.filter((item) => {
-			if (filters.status && filters.status !== "all" && item.status !== filters.status) {
-				return false;
-			}
-			if (filters.search) {
-				const q = filters.search.toLowerCase();
-				const matchName = item.name.toLowerCase().includes(q);
-				const matchNo = item.customerNo.toLowerCase().includes(q);
-				const matchOrg = item.orgNo.toLowerCase().includes(q);
-				const matchEmail = item.email.toLowerCase().includes(q);
-				const matchCity = item.city.toLowerCase().includes(q);
-				if (!matchName && !matchNo && !matchOrg && !matchEmail && !matchCity) {
-					return false;
-				}
-			}
-			return true;
-		});
+	public add(customer: Omit<CustomerOverviewRow, "id">): CustomerOverviewRow {
+		this.ensureInitialized();
+		const newCustomer: CustomerOverviewRow = {
+			...customer,
+			id: `cust-${Date.now()}`,
+		};
+		this.items.unshift(newCustomer);
+		this.persist();
+		this.notify();
+		return newCustomer;
+	}
+
+	public update(id: string, updates: Partial<CustomerOverviewRow>): CustomerOverviewRow | undefined {
+		this.ensureInitialized();
+		const index = this.items.findIndex((c) => c.id === id);
+		if (index === -1) return undefined;
+
+		this.items[index] = { ...this.items[index], ...updates };
+		this.persist();
+		this.notify();
+		return this.items[index];
+	}
+
+	public query(params?: GetCustomerOverviewListParams): GetCustomerOverviewListResponse {
+		this.ensureInitialized();
+		let filtered = [...this.items];
+
+		if (params?.search) {
+			const q = params.search.toLowerCase();
+			filtered = filtered.filter(
+				(c) =>
+					c.name.toLowerCase().includes(q) ||
+					c.customerNo.toLowerCase().includes(q) ||
+					c.orgNo.toLowerCase().includes(q) ||
+					c.city.toLowerCase().includes(q) ||
+					c.address.toLowerCase().includes(q) ||
+					c.email.toLowerCase().includes(q) ||
+					c.phone.toLowerCase().includes(q),
+			);
+		}
+
+		if (params?.status && params.status !== "all") {
+			filtered = filtered.filter((c) => c.status === params.status);
+		}
+
+		if (params?.sortBy) {
+			const key = params.sortBy as keyof CustomerOverviewRow;
+			const isAsc = params.sortOrder !== "desc";
+			filtered.sort((a, b) => {
+				const aVal = String(a[key] ?? "");
+				const bVal = String(b[key] ?? "");
+				return isAsc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+			});
+		}
+
+		const page = params?.page ?? 1;
+		const limit = params?.limit ?? DEFAULT_CUSTOMER_PAGE_SIZE;
+		const start = (page - 1) * limit;
+		const paged = filtered.slice(start, start + limit);
+
+		return {
+			data: paged,
+			total: filtered.length,
+			page,
+			limit,
+			totalPages: Math.ceil(filtered.length / limit) || 1,
+		};
 	}
 }
 

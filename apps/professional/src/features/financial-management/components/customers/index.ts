@@ -1,4 +1,5 @@
-export { CustomersOverviewPage } from "./CustomersOverviewPage";
-export { CustomersTable } from "./CustomersTable";
-export { CustomersToolbar } from "./CustomersToolbar";
+export * from "./CustomerOverviewPage";
+export * from "./CustomerOverviewTable";
+export * from "./CustomerOverviewToolbar";
+export * from "./CustomerDeleteDialog";
 export * from "./create";

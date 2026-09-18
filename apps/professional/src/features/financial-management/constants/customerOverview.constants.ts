@@ -1,9 +1,14 @@
-import { ECONOMY_CUSTOMERS_BASE_URL } from "./economyNav.config";
+export const DEFAULT_CUSTOMER_PAGE_SIZE = 10;
 
-export const CUSTOMER_OVERVIEW_BASE_ROUTE = ECONOMY_CUSTOMERS_BASE_URL;
-export const CUSTOMER_CREATE_ROUTE = `${ECONOMY_CUSTOMERS_BASE_URL}/create`;
+export const CUSTOMER_OVERVIEW_BASE_ROUTE = "/module/financial-management/economy/customers";
+export const CUSTOMER_CREATE_ROUTE = "/module/financial-management/economy/customers/create";
 
-export const STORAGE_KEY_CUSTOMERS = "tf_professional_customers_v1";
+export const STORAGE_KEY_CUSTOMERS = "tf_professional_economy_customers";
 export const STORAGE_KEY_CUSTOMER_FILTERS = "tf_professional_customer_filters_v1";
 
-export const DEFAULT_CUSTOMER_PAGE_SIZE = 10;
+export const CUSTOMER_PAGE_PARAM = "customer_page";
+export const CUSTOMER_LIMIT_PARAM = "customer_limit";
+export const CUSTOMER_SEARCH_PARAM = "customer_search";
+export const CUSTOMER_STATUS_PARAM = "customer_status";
+export const CUSTOMER_SORT_BY_PARAM = "customer_sortBy";
+export const CUSTOMER_SORT_ORDER_PARAM = "customer_sortOrder";
