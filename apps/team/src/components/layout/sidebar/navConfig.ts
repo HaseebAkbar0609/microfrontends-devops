@@ -1,3 +1,4 @@
+import { getContentSectionHref } from "@/features/content/constants/contentNav";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	Heart,
@@ -152,6 +153,54 @@ const moduleGovernanceItems: NavFlyoutItem[] = [
 		label: localizationConstants.kma,
 		href: "/module/governance/kma",
 		isFavoriteSupported: true,
+	},
+];
+
+/**
+ * Settings for the customer and workspace dashboards. FAQ, tips and support are
+ * edited in the admin content console, so these items open its sections; the
+ * support section holds both the contact details and the help guide. Those
+ * pages bring their own tab rows, hence `hideSubSidebar` on both parents. The
+ * parent hrefs only group the leaves for path matching and have no page.
+ */
+const customerDashboardItems: NavFlyoutItem[] = [
+	{
+		id: "customer-dashboard-cost-calculator",
+		label: localizationConstants.costCalculatorItem,
+		href: "/timeflow-dashboard/customer/cost-calculator",
+	},
+	{
+		id: "customer-dashboard-faq",
+		label: localizationConstants.faqItem,
+		href: getContentSectionHref("kund", "fragor-svar"),
+	},
+	{
+		id: "customer-dashboard-tips",
+		label: localizationConstants.tipsInspirationItem,
+		href: getContentSectionHref("kund", "inspiration"),
+	},
+	{
+		id: "customer-dashboard-support",
+		label: localizationConstants.supportContactItem,
+		href: getContentSectionHref("kund", "support"),
+	},
+	{
+		id: "customer-dashboard-help-guide",
+		label: localizationConstants.contentGuideTitle,
+		href: getContentSectionHref("kund", "support"),
+	},
+];
+
+const workspaceDashboardItems: NavFlyoutItem[] = [
+	{
+		id: "workspace-dashboard-help-guide",
+		label: localizationConstants.contentGuideTitle,
+		href: getContentSectionHref("workspace", "support"),
+	},
+	{
+		id: "workspace-dashboard-support",
+		label: localizationConstants.supportContactItem,
+		href: getContentSectionHref("workspace", "support"),
 	},
 ];
 
@@ -356,19 +405,18 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			icon: Smartphone,
 			items: [
 				{
-					id: "timeflow-home",
-					label: localizationConstants.timeflowHome,
-					href: "/timeflow-app/home",
+					id: "customer-dashboard",
+					label: localizationConstants.contentGroupKundTitle,
+					href: "/timeflow-dashboard/customer",
+					flyoutItems: customerDashboardItems,
+					hideSubSidebar: true,
 				},
 				{
-					id: "timeflow-work",
-					label: localizationConstants.timeflowWork,
-					href: "/timeflow-app/work",
-				},
-				{
-					id: "timeflow-team",
-					label: localizationConstants.timeflowTeam,
-					href: "/timeflow-app/team",
+					id: "workspace-dashboard",
+					label: localizationConstants.contentGroupWorkspaceTitle,
+					href: "/timeflow-dashboard/workspace",
+					flyoutItems: workspaceDashboardItems,
+					hideSubSidebar: true,
 				},
 			],
 		},

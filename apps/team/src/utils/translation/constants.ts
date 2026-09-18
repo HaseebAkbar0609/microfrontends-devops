@@ -99,9 +99,10 @@ export type SidebarTranslation = {
 	private: string;
 	leadsManagement: string;
 	settings: string;
-	timeflowHome: string;
-	timeflowWork: string;
-	timeflowTeam: string;
+	costCalculatorItem: string;
+	faqItem: string;
+	tipsInspirationItem: string;
+	supportContactItem: string;
 	employment: string;
 	companyItem: string;
 	timeItem: string;
