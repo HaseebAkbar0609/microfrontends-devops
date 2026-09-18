@@ -10,7 +10,7 @@ import {
   ANALYTICS_SAMPLE_SIZE,
   ANALYTICS_STALE_TIME_MS,
 } from "@/features/customers/analytics/analytics.constants";
-import { countById } from "@/features/customers/analytics/analyticsStats";
+import { countByText } from "@/features/customers/analytics/analyticsStats";
 import { AnalyticsBarList } from "@/features/customers/analytics/AnalyticsBarList";
 import { AnalyticsKpiCard } from "@/features/customers/analytics/AnalyticsKpiCard";
 import { AnalyticsError, AnalyticsPanel } from "@/features/customers/analytics/AnalyticsPanel";
@@ -36,15 +36,15 @@ export function PrivateAnalyticsTab() {
   });
 
   const customerItems = customers.data?.items;
-  const cityRows = useMemo(() => {
-    const cities = (customerItems ?? []).map((customer) => {
-      const city = customer.city.trim();
-      return city && city !== MISSING_CITY
-        ? { id: city.toLocaleLowerCase(), label: city }
-        : { id: "", label: t(localizationConstants.analyticsUnknownCity) };
-    });
-    return countById(cities, t(localizationConstants.analyticsOther));
-  }, [customerItems, t]);
+  const cityRows = useMemo(
+    () =>
+      countByText(
+        (customerItems ?? []).map((customer) => customer.city),
+        { unknown: t(localizationConstants.analyticsUnknownCity), other: t(localizationConstants.analyticsOther) },
+        MISSING_CITY
+      ),
+    [customerItems, t]
+  );
 
   const kpis = [
     { id: "active", labelKey: localizationConstants.activeCustomersTab, value: summary.data?.active_customers, accentClassName: "bg-emerald-50 text-emerald-700" },

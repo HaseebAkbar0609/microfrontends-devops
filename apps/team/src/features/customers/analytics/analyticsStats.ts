@@ -21,13 +21,32 @@ export function countById(
   otherLabel: string,
   topRows = ANALYTICS_TOP_ROWS
 ): AnalyticsBarRow[] {
-  const labels = new Map(entries.map((entry) => [entry.id, entry.label]));
+  const labels = new Map<string, string>();
+  for (const entry of entries) if (!labels.has(entry.id)) labels.set(entry.id, entry.label);
   const sorted = [...tally(entries.map((entry) => entry.id))]
     .map(([id, value]) => ({ id, label: labels.get(id) ?? id, value }))
     .sort((a, b) => b.value - a.value || a.label.localeCompare(b.label));
   const rest = sorted.slice(topRows).reduce((sum, row) => sum + row.value, 0);
   const top = sorted.slice(0, topRows);
   return rest > 0 ? [...top, { id: OTHER_ROW_ID, label: otherLabel, value: rest }] : top;
+}
+
+/**
+ * Counts free-text values such as city names. Case and surrounding spaces are
+ * ignored when grouping; blanks and `missingValue` count as `unknownLabel`.
+ */
+export function countByText(
+  values: string[],
+  labels: { unknown: string; other: string },
+  missingValue = ""
+): AnalyticsBarRow[] {
+  const entries = values.map((value) => {
+    const text = value.trim();
+    return text && text !== missingValue
+      ? { id: text.toLocaleLowerCase(), label: text }
+      : { id: "", label: labels.unknown };
+  });
+  return countById(entries, labels.other);
 }
 
 /** Parses an API timestamp (epoch ms or ISO string); null when unusable. */
