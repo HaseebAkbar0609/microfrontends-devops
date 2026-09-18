@@ -201,8 +201,6 @@ export type DashboardTranslation = {
 	keysLineOne: string;
 	keysLineTwo: string;
 	keysLineThree: string;
-	rearrange: string;
-	addMenu: string;
 	save: string;
 	discard: string;
 	newsTitle: string;
@@ -212,20 +210,8 @@ export type DashboardTranslation = {
 	newsSwedenTitle: string;
 	newsSwedenDate: string;
 	newsSwedenBody: string;
-	menuEconomy: string;
-	menuKpiStatus: string;
-	menuUsers: string;
-	menuNewsGlobal: string;
-	menuNewsSweden: string;
 	menuGraph: string;
 	menuImage: string;
-	availableProjectsTitle: string;
-	availableProjectsDescription: string;
-	emptyPageLabel: string;
-	removeWidgetTitle: string;
-	removeWidgetDescription: string;
-	confirmRemove: string;
-	confirmClose: string;
 	widgetBoardCustomize: string;
 	widgetBoardEditMode: string;
 	widgetBoardEditModeHint: string;
@@ -267,7 +253,6 @@ export type CommonFiles = {
 	comingSoon: string;
 	open: string;
 	delete: string;
-	placeHere: string;
 	tableFirstPage: string;
 	tableLastPage: string;
 	tableNextPage: string;
