@@ -15,7 +15,8 @@ import {
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import { DUMMY_PARTNER_REGISTER } from "../constants/partners";
+import { DUMMY_PARTNER_REGISTER, type PartnerCategoryRow } from "../constants/partners";
+import { AddCategoryDialog } from "./AddCategoryDialog";
 
 const COLUMNS = [
 	{ key: "date", labelKey: localizationConstants.dateLabel, width: "w-28" },
@@ -25,16 +26,10 @@ const COLUMNS = [
 
 type SortKey = (typeof COLUMNS)[number]["key"];
 
-interface CategoryRow {
-	id: string;
-	date: string;
-	category: string;
-	type: string;
-}
-
 export function KategoriTab() {
 	const t = useTranslate();
-	const [categories] = useState<CategoryRow[]>(() =>
+	const [isAddOpen, setIsAddOpen] = useState(false);
+	const [categories, setCategories] = useState<PartnerCategoryRow[]>(() =>
 		DUMMY_PARTNER_REGISTER.map((partner) => ({
 			id: partner.id,
 			date: partner.date,
@@ -73,7 +68,7 @@ export function KategoriTab() {
 				</h2>
 				<Button
 					className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90"
-					onClick={() => showToast("info", t(localizationConstants.partnerAddCategoryButton))}
+					onClick={() => setIsAddOpen(true)}
 				>
 					<Plus className="h-4 w-4" />
 					<Translate text={localizationConstants.partnerAddCategoryButton} />
@@ -126,6 +121,13 @@ export function KategoriTab() {
 					))}
 				</TableBody>
 			</Table>
+
+			<AddCategoryDialog
+				open={isAddOpen}
+				onOpenChange={setIsAddOpen}
+				existingNames={categories.map((row) => row.category)}
+				onCreated={(category) => setCategories((previous) => [...previous, category])}
+			/>
 		</div>
 	);
 }

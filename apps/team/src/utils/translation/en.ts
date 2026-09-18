@@ -900,6 +900,10 @@ export const enAdmin: AdminTranslation = {
 	approvalStatusPending: "Pending",
 	approvalStatusArchived: "Archived",
 	partnerAddCategoryButton: "Add New Category",
+	partnerAddCategoryDescription: "The category becomes available to choose for partners.",
+	partnerCategoryNameRequired: "Enter a category name.",
+	partnerCategoryNameTaken: "That category already exists.",
+	partnerCategoryAddedToast: "Category added",
 };
 
 export const enSales: SalesTranslation = {

@@ -13,6 +13,16 @@ export interface PartnerRegisterRow {
 	approvalStatus: PartnerApprovalStatus;
 }
 
+/** Business models a partner category can serve. */
+export const PARTNER_CATEGORY_TYPES = ["B2B", "B2C", "B2B - B2C"] as const;
+
+export interface PartnerCategoryRow {
+	id: string;
+	date: string;
+	category: string;
+	type: string;
+}
+
 export const DUMMY_PARTNER_REGISTER: PartnerRegisterRow[] = [
 	{
 		id: "partner-1",

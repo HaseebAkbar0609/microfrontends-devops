@@ -871,6 +871,10 @@ export type AdminTranslation = {
 	approvalStatusPending: string;
 	approvalStatusArchived: string;
 	partnerAddCategoryButton: string;
+	partnerAddCategoryDescription: string;
+	partnerCategoryNameRequired: string;
+	partnerCategoryNameTaken: string;
+	partnerCategoryAddedToast: string;
 };
 
 export type SalesTranslation = {
