@@ -9,7 +9,6 @@ import type {
 } from "../types/customerDetail.types";
 import {
 	CUSTOMER_OVERVIEW_BASE_ROUTE,
-	CUSTOMER_CREATE_ROUTE,
 } from "../constants/customerOverview.constants";
 import { customerDetailRepository } from "../utils/customerDetailRepository";
 import { customerOverviewRepository } from "../utils/customerOverviewRepository";
@@ -33,13 +32,7 @@ export function useCustomerDetail(id: string) {
 		router.push(CUSTOMER_OVERVIEW_BASE_ROUTE);
 	}, [router]);
 
-	const handleEditSection = useCallback(
-		(step: number) => {
-			if (!id) return;
-			router.push(`${CUSTOMER_CREATE_ROUTE}?id=${encodeURIComponent(id)}&step=${step}`);
-		},
-		[id, router],
-	);
+
 
 	const updateCustomer = useCallback(
 		(updates: Partial<CustomerDetailData>) => {
@@ -92,7 +85,6 @@ export function useCustomerDetail(id: string) {
 		activeTab,
 		setActiveTab,
 		handleBack,
-		handleEditSection,
 		updateCustomer,
 		handleDeleteContactPerson,
 		handleDeleteDocument,
