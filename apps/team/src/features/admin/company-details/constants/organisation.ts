@@ -25,8 +25,11 @@ export interface OrganisationMember {
 export const CONTACT_NO_PREFIX = "A";
 export const CONTACT_NO_DIGITS = 3;
 
-/** Swedish personal identity number, short or long form: YYMMDD-XXXX or YYYYMMDD-XXXX. */
-export const ID_NUMBER_PATTERN = /^(\d{2})?\d{6}[-+]\d{4}$/;
+/**
+ * Swedish personal identity number: YYMMDD-XXXX, YYYYMMDD-XXXX or either without
+ * the hyphen. The short form takes + instead of - from age 100.
+ */
+export const ID_NUMBER_PATTERN = /^(\d{6}[-+]?|\d{8}-?)\d{4}$/;
 
 export const EMPLOYEE_STATUS_CONFIG: Record<
 	EmployeeStatus,

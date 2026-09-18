@@ -690,7 +690,7 @@ export const enAdmin: AdminTranslation = {
 	adminNewEmployeeDescription: "Add a new employee to the organisation.",
 	adminEmployeeNameRequired: "Enter a name.",
 	adminEmployeePositionRequired: "Enter a position.",
-	adminEmployeeIdNumberInvalid: "Enter the ID number as YYMMDD-XXXX or YYYYMMDD-XXXX.",
+	adminEmployeeIdNumberInvalid: "Enter the ID number as YYMMDD-XXXX or YYYYMMDD-XXXX. The hyphen is optional, and the short form takes + from age 100.",
 	adminEmployeeStartDateRequired: "Choose a start date.",
 	adminEmployeeAddedToast: "Employee added",
 	adminContactNoLabel: "Contact No.",
