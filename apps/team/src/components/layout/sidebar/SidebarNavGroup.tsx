@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SidebarSubItem } from "./SidebarSubItem";
+import { SidebarSubItemList } from "./SidebarSubItemList";
 import { SidebarFlyout } from "./SidebarFlyout";
 import { navGroupMatchesPath, type NavFlyoutItem, type NavGroup } from "./navConfig";
 import { SIDEBAR_FLYOUT_CLOSE_DELAY_MS } from "./sidebar.constants";
@@ -185,13 +185,7 @@ export function SidebarNavGroup({
 			)}
 
 			{hasItems && isOpen && !collapsed && (
-				<div className="flex flex-row self-stretch pl-5">
-					<div className="flex flex-1 flex-col gap-1 border-l border-[#364157] py-1 pl-2">
-						{group.items.map((item) => (
-							<SidebarSubItem key={item.id} item={item} />
-						))}
-					</div>
-				</div>
+				<SidebarSubItemList items={group.items} />
 			)}
 
 			{collapsed && hasItems && flyoutOpen && anchorRect && (

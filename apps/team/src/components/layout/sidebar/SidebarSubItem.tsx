@@ -12,11 +12,13 @@ import { Translate } from "@/utils/translation/translate";
 
 interface SidebarSubItemProps {
 	item: NavSubItem;
+	/** Owned by the list so only one sub-item flyout is open at a time. */
+	flyoutOpen: boolean;
+	onFlyoutOpenChange: (open: boolean) => void;
 }
 
-export function SidebarSubItem({ item }: SidebarSubItemProps) {
+export function SidebarSubItem({ item, flyoutOpen, onFlyoutOpenChange }: SidebarSubItemProps) {
 	const pathname = usePathname();
-	const [flyoutOpen, setFlyoutOpen] = useState(false);
 	const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
 	const itemRef = useRef<HTMLButtonElement>(null);
 	const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -38,7 +40,7 @@ export function SidebarSubItem({ item }: SidebarSubItemProps) {
 		const rect = itemRef.current?.getBoundingClientRect();
 		if (rect) {
 			setAnchorRect(rect);
-			setFlyoutOpen(true);
+			onFlyoutOpenChange(true);
 		}
 	};
 
@@ -47,14 +49,14 @@ export function SidebarSubItem({ item }: SidebarSubItemProps) {
 	const scheduleClose = () => {
 		cancelClose();
 		closeTimeoutRef.current = setTimeout(
-			() => setFlyoutOpen(false),
+			() => onFlyoutOpenChange(false),
 			SIDEBAR_FLYOUT_CLOSE_DELAY_MS,
 		);
 	};
 
 	const closeFlyout = () => {
 		cancelClose();
-		setFlyoutOpen(false);
+		onFlyoutOpenChange(false);
 	};
 
 	useEffect(() => {
