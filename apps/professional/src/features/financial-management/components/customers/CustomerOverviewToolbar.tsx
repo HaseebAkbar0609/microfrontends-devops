@@ -12,20 +12,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import Link from "next/link";
+import type { CustomerStatus } from "../../types/customerOverview.types";
 
 interface CustomerOverviewToolbarProps {
 	searchQuery: string;
 	onSearchChange: (value: string) => void;
-	statusFilter: "all" | "active" | "inactive";
-	onStatusFilterChange: (status: "all" | "active" | "inactive") => void;
+	statusFilter: "all" | CustomerStatus;
+	onStatusFilterChange: (status: "all" | CustomerStatus) => void;
+	onRegisterNew?: () => void;
+	onImportCustomer?: () => void;
 }
 
 export function CustomerOverviewToolbar({
 	searchQuery,
 	onSearchChange,
-	statusFilter: _statusFilter,
 	onStatusFilterChange,
+	onRegisterNew,
+	onImportCustomer,
 }: CustomerOverviewToolbarProps) {
 	return (
 		<div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between mb-4">
@@ -49,7 +52,10 @@ export function CustomerOverviewToolbar({
 							<ChevronDown className="h-3.5 w-3.5 text-slate-500 shrink-0" />
 						</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align="start" className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1">
+					<DropdownMenuContent
+						align="start"
+						className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1"
+					>
 						<DropdownMenuItem
 							onClick={() => onStatusFilterChange("all")}
 							className="cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
@@ -75,21 +81,23 @@ export function CustomerOverviewToolbar({
 			{/* Action Buttons Right Group */}
 			<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full xl:w-auto justify-start xl:justify-end">
 				<Button
+					type="button"
 					variant="outline"
-					className="h-10 w-full sm:w-auto gap-2 border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50 shadow-2xs justify-center"
+					onClick={onImportCustomer}
+					className="h-10 w-full sm:w-auto gap-2 border-slate-200 bg-white px-4 text-sm font-medium text-slate-900 hover:bg-slate-50 shadow-2xs justify-center cursor-pointer"
 				>
 					<Import className="h-4 w-4 text-slate-700" aria-hidden />
 					<Translate text={localizationConstants.importCustomer} />
 				</Button>
 
-				<Link href="/tools/register/create-customer">
-					<Button
-						className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center"
-					>
-						<Plus className="h-4 w-4" aria-hidden />
-						<Translate text={localizationConstants.registerNew} />
-					</Button>
-				</Link>
+				<Button
+					type="button"
+					onClick={onRegisterNew}
+					className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
+				>
+					<Plus className="h-4 w-4" aria-hidden />
+					<Translate text={localizationConstants.registerNew} />
+				</Button>
 			</div>
 		</div>
 	);

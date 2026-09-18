@@ -125,3 +125,7 @@ export * from "./constants/cases.constants";
 export * from "./utils/casesRepository";
 export * from "./hooks/useCases";
 export * from "./components/customers";
+export * from "./types/customerOverview.types";
+export * from "./constants/customerOverview.constants";
+export * from "./utils/customerOverviewRepository";
+export * from "./hooks/useCustomerOverview";

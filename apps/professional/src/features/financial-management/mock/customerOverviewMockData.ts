@@ -1,6 +1,6 @@
-import type { CustomerRegisterRow } from "../types";
+import type { CustomerOverviewRow } from "../types/customerOverview.types";
 
-export const MOCK_CUSTOMERS: CustomerRegisterRow[] = [
+export const MOCK_CUSTOMER_OVERVIEW_LIST: CustomerOverviewRow[] = [
 	{
 		id: "cust-1",
 		customerNo: "#M101",

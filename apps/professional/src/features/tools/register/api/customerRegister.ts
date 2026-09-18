@@ -148,8 +148,6 @@ const mapCustomerToApi = (data: CreateCustomerFullData): Record<string, unknown>
 	project: data.project || null,
 });
 
-import { MOCK_CUSTOMERS } from "../mockdata/customers";
-
 export async function getCustomerRegisterListAPIAction(
 	params?: GetCustomerRegisterListParams,
 ): Promise<GetCustomerRegisterListResponse> {
@@ -161,51 +159,19 @@ export async function getCustomerRegisterListAPIAction(
 	if (params?.sortBy) queryParams.sort_by = CUSTOMER_SORT_MAP[params.sortBy] ?? params.sortBy;
 	if (params?.sortOrder) queryParams.sort_order = params.sortOrder;
 
-	try {
-		const res = await axiosInstance.get(API_PATH.CUSTOMERS.LIST, { params: queryParams });
-		const items = res.data?.data;
-		if (Array.isArray(items) && items.length > 0) {
-			return {
-				data: (items as Record<string, unknown>[]).map(mapCustomerFromApi),
-				total: Number(res.data?.total_items ?? items.length),
-				page: Number(res.data?.current_page ?? params?.page ?? 1),
-				limit: Number(res.data?.page_size ?? params?.limit ?? 10),
-				totalPages: Number(res.data?.total_pages ?? 1),
-			};
-		}
-	} catch {
-		// Fallback to mock data for resilient client preview / offline testing
-	}
+	const res = await axiosInstance.get(API_PATH.CUSTOMERS.LIST, { params: queryParams });
 
-	let filtered = [...MOCK_CUSTOMERS];
-	if (params?.search) {
-		const q = params.search.toLowerCase();
-		filtered = filtered.filter(
-			(c) =>
-				c.name.toLowerCase().includes(q) ||
-				c.customerNo.toLowerCase().includes(q) ||
-				c.orgNo.toLowerCase().includes(q) ||
-				c.city.toLowerCase().includes(q) ||
-				c.address.toLowerCase().includes(q) ||
-				c.email.toLowerCase().includes(q) ||
-				c.phone.toLowerCase().includes(q),
-		);
+	const items = res.data?.data;
+	if (!Array.isArray(items)) {
+		throw new Error("Invalid customer list response");
 	}
-	if (params?.status && params.status !== "all") {
-		filtered = filtered.filter((c) => c.status === params.status);
-	}
-
-	const page = params?.page ?? 1;
-	const limit = params?.limit ?? 10;
-	const start = (page - 1) * limit;
-	const paged = filtered.slice(start, start + limit);
 
 	return {
-		data: paged,
-		total: filtered.length,
-		page,
-		limit,
-		totalPages: Math.ceil(filtered.length / limit) || 1,
+		data: (items as Record<string, unknown>[]).map(mapCustomerFromApi),
+		total: Number(res.data?.total_items ?? items.length),
+		page: Number(res.data?.current_page ?? params?.page ?? 1),
+		limit: Number(res.data?.page_size ?? params?.limit ?? 10),
+		totalPages: Number(res.data?.total_pages ?? 1),
 	};
 }
 

@@ -1,7 +1,5 @@
-import { RegisterPage } from "@/features/tools/register/components/RegisterPage";
-
-export const dynamic = "force-dynamic";
+import CustomerRegisterFeature from "@/features/register/customer-register";
 
 export default function CustomerRegisterPage() {
-	return <RegisterPage defaultRegister="kund" />;
+	return <CustomerRegisterFeature />;
 }

@@ -101,7 +101,7 @@ export const navConfig: NavGroup[] = [
 					{
 						id: "kunder",
 						label: localizationConstants.registerKunder,
-						href: "/module/financial-management/economy/customers",
+						href: "/tools/register/customer",
 						icon: UserRound,
 					},
 					{
