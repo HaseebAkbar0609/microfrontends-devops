@@ -9296,6 +9296,49 @@ export type OrderDagbokTranslation = {
 	orderDagbokPlaceholderDeviationAction: string;
 };
 
+export type ToolsDiscountTranslation = {
+	discountsItem: string;
+	discountsAllTitle: string;
+	discountsSubtitle: string;
+	discountsFilterSupplierPlaceholder: string;
+	discountsAllSuppliers: string;
+	discountsFilterCategoryPlaceholder: string;
+	discountsAllCategories: string;
+	discountsFilterStatusPlaceholder: string;
+	discountsAllStatuses: string;
+	discountsStatusActive: string;
+	discountsStatusUpcoming: string;
+	discountsStatusExpired: string;
+	discountsLoading: string;
+	discountsOff: string;
+	discountsViewOffer: string;
+	discountsValidFrom: string;
+	discountsValidUntil: string;
+	discountsEmptyTitle: string;
+	discountsEmptyDescription: string;
+	discountsNoResultsTitle: string;
+	discountsNoResultsDescription: string;
+	discountsClearFilters: string;
+	discountsLoadError: string;
+	discountDetailSubtitle: string;
+	discountDetailNotFound: string;
+	discountDetailBack: string;
+	discountCopyCode: string;
+	discountCodeCopied: string;
+	discountCopyFailed: string;
+	discountPartnerVerified: string;
+	discountPartnerTopSupplier: string;
+	discountPartnerMessage: string;
+	discountPartnerMoreActions: string;
+	discountPartnerReviewCount: string;
+	discountPartnerLabelPhone: string;
+	discountPartnerLabelEmail: string;
+	discountPartnerLabelWebsite: string;
+	discountPartnerLabelLanguage: string;
+	discountPartnerLabelAvailability: string;
+	discountBannerGoToSlide: string;
+}
+
 export type CustomerManagementTranslation = {
 	customerOverviewTitle: string;
 	customerListTab: string;
@@ -9486,7 +9529,8 @@ export type Translation = HeaderTranslation &
 	ClaimsTranslation &
 	CasesTranslation &
 	OrderDagbokTranslation &
-	CustomerManagementTranslation;
+	CustomerManagementTranslation &
+	ToolsDiscountTranslation
 
 export type TranslationKeys = keyof Translation;
 

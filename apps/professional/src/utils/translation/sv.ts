@@ -47,6 +47,7 @@ import {
 	CasesTranslation,
 	OrderDagbokTranslation,
 	CustomerManagementTranslation,
+	ToolsDiscountTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -9377,6 +9378,54 @@ export const svOrderDagbok: OrderDagbokTranslation = {
 	orderDagbokPlaceholderDeviationAction: "Atgärd",
 };
 
+
+const svToolsDiscount: ToolsDiscountTranslation = {
+	discountsItem: "Erbjudande",
+	discountsAllTitle: "Alla erbjudanden",
+	discountsSubtitle:
+		"Vi har samarbetat med leverantörer för att ge dig de bästa erbjudandena.",
+	discountsFilterSupplierPlaceholder: "Leverantör",
+	discountsAllSuppliers: "Alla leverantörer",
+	discountsFilterCategoryPlaceholder: "Kategori",
+	discountsAllCategories: "Alla kategorier",
+	discountsFilterStatusPlaceholder: "Status",
+	discountsAllStatuses: "Alla statusar",
+	discountsStatusActive: "Aktiv",
+	discountsStatusUpcoming: "Kommande",
+	discountsStatusExpired: "Utgången",
+	discountsLoading: "Laddar erbjudanden...",
+	discountsOff: "Rabatt",
+	discountsViewOffer: "Se erbjudande",
+	discountsValidFrom: "Gäller från {from}",
+	discountsValidUntil: "Gäller till {to}",
+	discountsEmptyTitle: "Inga erbjudanden tillgängliga än",
+	discountsEmptyDescription:
+		"Vi förhandlar nya partnererbjudanden. Kom tillbaka snart för att se vad som finns för ditt företag.",
+	discountsNoResultsTitle: "Inga erbjudanden matchar dina filter",
+	discountsNoResultsDescription:
+		"Prova en annan leverantör, kategori eller status för att se fler erbjudanden.",
+	discountsClearFilters: "Rensa filter",
+	discountsLoadError: "Det gick inte att ladda erbjudanden.",
+	discountDetailSubtitle:
+		"Vi har samarbetat med leverantörer för att ge dig bästa erbjudanden.",
+	discountDetailNotFound: "Leverantören kunde inte hittas.",
+	discountDetailBack: "Gå tillbaka",
+	discountCopyCode: "Kopiera kod",
+	discountCodeCopied: "Kopierad",
+	discountCopyFailed: "Koden kunde inte kopieras. Kopiera den manuellt i stället.",
+	discountPartnerVerified: "Verifierad",
+	discountPartnerTopSupplier: "Toppleverantör",
+	discountPartnerMessage: "Meddelande",
+	discountPartnerMoreActions: "Fler åtgärder",
+	discountPartnerReviewCount: "omdömen",
+	discountPartnerLabelPhone: "Telefon",
+	discountPartnerLabelEmail: "E-post",
+	discountPartnerLabelWebsite: "Webbplats",
+	discountPartnerLabelLanguage: "Språk",
+	discountPartnerLabelAvailability: "Tillgänglighet",
+	discountBannerGoToSlide: "Gå till bild {index}",
+}
+
 export const svCustomerManagement: CustomerManagementTranslation = {
 	customerOverviewTitle: "Kunder",
 	customerListTab: "Kundlista",
@@ -9570,4 +9619,5 @@ export const sv: Translation = {
 	...svOrderHandlingar,
 	...svOrderDagbok,
 	...svCustomerManagement,
+	...svToolsDiscount,
 };

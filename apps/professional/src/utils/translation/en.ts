@@ -47,6 +47,7 @@ import {
 	CasesTranslation,
 	OrderDagbokTranslation,
 	CustomerManagementTranslation,
+	ToolsDiscountTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -9356,6 +9357,54 @@ export const enOrderDagbok: OrderDagbokTranslation = {
 	orderDagbokPlaceholderDeviationAction: "Action taken",
 };
 
+
+const enToolsDiscount: ToolsDiscountTranslation = {
+	discountsItem: "Discounts",
+	discountsAllTitle: "All discounts",
+	discountsSubtitle:
+		"We have collaborated with suppliers to give you the best offers.",
+	discountsFilterSupplierPlaceholder: "Supplier",
+	discountsAllSuppliers: "All suppliers",
+	discountsFilterCategoryPlaceholder: "Category",
+	discountsAllCategories: "All categories",
+	discountsFilterStatusPlaceholder: "Status",
+	discountsAllStatuses: "All statuses",
+	discountsStatusActive: "Active",
+	discountsStatusUpcoming: "Upcoming",
+	discountsStatusExpired: "Expired",
+	discountsLoading: "Loading discounts...",
+	discountsOff: "Off",
+	discountsViewOffer: "View offer",
+	discountsValidFrom: "Valid from {from}",
+	discountsValidUntil: "Valid until {to}",
+	discountsEmptyTitle: "No discounts available yet",
+	discountsEmptyDescription:
+		"We are negotiating new partner offers. Check back soon to see what is available to your company.",
+	discountsNoResultsTitle: "No discounts match your filters",
+	discountsNoResultsDescription:
+		"Try a different supplier, category or status to see more offers.",
+	discountsClearFilters: "Clear filters",
+	discountsLoadError: "Failed to load discounts.",
+	discountDetailSubtitle:
+		"We have collaborated with suppliers to get your best offers.",
+	discountDetailNotFound: "This partner could not be found.",
+	discountDetailBack: "Go back",
+	discountCopyCode: "Copy code",
+	discountCodeCopied: "Copied",
+	discountCopyFailed: "Could not copy the code. Copy it manually instead.",
+	discountPartnerVerified: "Verified",
+	discountPartnerTopSupplier: "Top supplier",
+	discountPartnerMessage: "Message",
+	discountPartnerMoreActions: "More actions",
+	discountPartnerReviewCount: "reviews",
+	discountPartnerLabelPhone: "Phone",
+	discountPartnerLabelEmail: "Email",
+	discountPartnerLabelWebsite: "Website",
+	discountPartnerLabelLanguage: "Language",
+	discountPartnerLabelAvailability: "Availability",
+	discountBannerGoToSlide: "Go to slide {index}",
+}
+
 export const enCustomerManagement: CustomerManagementTranslation = {
 	customerOverviewTitle: "Customers",
 	customerListTab: "Customer List",
@@ -9549,4 +9598,5 @@ export const en: Translation = {
 	...enOrderHandlingar,
 	...enOrderDagbok,
 	...enCustomerManagement,
+	...enToolsDiscount,
 };
