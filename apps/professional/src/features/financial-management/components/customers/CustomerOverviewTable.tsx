@@ -1,16 +1,19 @@
 "use client";
 
 import React, { useMemo, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useCustomerOverview } from "../../hooks/useCustomerOverview";
 import type { CustomerOverviewRow } from "../../types/customerOverview.types";
+import { CUSTOMER_CREATE_ROUTE } from "../../constants/customerOverview.constants";
 import { CustomerOverviewToolbar } from "./CustomerOverviewToolbar";
 import { CustomerDeleteDialog } from "./CustomerDeleteDialog";
 
 export function CustomerOverviewTable() {
+	const router = useRouter();
 	const {
 		customers,
 		totalItems,
@@ -115,12 +118,12 @@ export function CustomerOverviewTable() {
 			{
 				label: localizationConstants.viewLabel,
 				icon: <Eye className="h-4 w-4" />,
-				onClick: () => {},
+				onClick: (row) => router.push(`${CUSTOMER_CREATE_ROUTE}?id=${row.id}`),
 			},
 			{
 				label: localizationConstants.editLabel,
 				icon: <Pencil className="h-4 w-4" />,
-				onClick: () => {},
+				onClick: (row) => router.push(`${CUSTOMER_CREATE_ROUTE}?id=${row.id}`),
 			},
 			{
 				label: localizationConstants.deleteLabel,
@@ -129,7 +132,7 @@ export function CustomerOverviewTable() {
 				onClick: (row) => setDeleteTargetId(row.id),
 			},
 		],
-		[],
+		[router],
 	);
 
 	return (
@@ -146,6 +149,7 @@ export function CustomerOverviewTable() {
 					setStatusFilter(s);
 					setPage(1);
 				}}
+				onRegisterNew={() => router.push(CUSTOMER_CREATE_ROUTE)}
 			/>
 
 			{/* Reusable DataTable Component */}
