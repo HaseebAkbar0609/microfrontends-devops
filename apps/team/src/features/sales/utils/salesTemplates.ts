@@ -38,12 +38,11 @@ export function renderTemplate(
 	};
 }
 
-/** True for a link the browser can actually open. */
+/** True for an empty value or an https link. */
 export function isValidLink(value: string): boolean {
 	if (!value.trim()) return true;
 	try {
-		const url = new URL(value);
-		return url.protocol === "https:" || url.protocol === "http:";
+		return new URL(value).protocol === "https:";
 	} catch {
 		return false;
 	}
