@@ -954,7 +954,6 @@ export type SalesTranslation = {
 	salesCreditsafeRegisteredAt: string;
 	salesCreditsafeAddress: string;
 	salesCrmTitle: string;
-	salesCrmSubtitle: string;
 	salesDemoAccountsTitle: string;
 	salesDemoAccountsHint: string;
 	salesTestAccountsTitle: string;
@@ -966,7 +965,6 @@ export type SalesTranslation = {
 	salesFilterRegionLabel: string;
 	salesImportCsvButton: string;
 	salesExportCsvButton: string;
-	salesCreateCompanyButton: string;
 	salesColumnCompany: string;
 	salesColumnOrgNumber: string;
 	salesColumnCategory: string;
@@ -1197,7 +1195,6 @@ export type SalesTranslation = {
 	salesBookerPhoneListTitle: string;
 	salesBookerPhoneListEmpty: string;
 	salesBookerOpenCardButton: string;
-	salesBookerCardTitle: string;
 	salesBookerCardEmpty: string;
 	salesBookerLogCallButton: string;
 	salesBookerBookMeetingButton: string;

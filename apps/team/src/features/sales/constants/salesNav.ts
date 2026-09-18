@@ -9,7 +9,6 @@ import {
 	type LucideIcon,
 } from "lucide-react";
 import type { ModuleTabItem } from "@/components/layout/navigation";
-import type { BreadcrumbItem } from "@/types/common";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -37,13 +36,6 @@ export const SALES_MODULE_TABS: ModuleTabItem[] = [
 		labelKey: localizationConstants.salesCompaniesTitle,
 		href: SALES_CRM_HREF,
 	},
-];
-
-/** Breadcrumb for the module's list page (pattern 1). */
-export const SALES_OVERVIEW_BREADCRUMBS: BreadcrumbItem[] = [
-	{ label: localizationConstants.dashboard, href: "/home" },
-	{ label: localizationConstants.moduleItem },
-	{ label: localizationConstants.sales },
 ];
 
 export function getSalesCompanyHref(companyId: string): string {

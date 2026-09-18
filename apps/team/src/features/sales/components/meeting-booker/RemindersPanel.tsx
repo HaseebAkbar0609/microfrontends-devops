@@ -13,7 +13,7 @@ type RemindersPanelProps = {
 	onComplete: (companyId: string, activityId: string) => void;
 };
 
-/** Follow-ups that are due, newest deadline first. */
+/** Open follow-ups, overdue and upcoming, earliest date first. */
 export function RemindersPanel({ reminders, todayKey, onComplete }: RemindersPanelProps) {
 	return (
 		<section className="rounded-xl border border-slate-200 bg-white shadow-2xs">

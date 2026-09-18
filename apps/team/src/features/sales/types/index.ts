@@ -1,4 +1,5 @@
 import type { TranslationKeys } from "@/utils/translation/constants";
+import type { SalesDocumentType } from "../constants/salesDocumentTypes";
 
 export type SalesCompanyStatus =
 	| "prospect"
@@ -112,8 +113,6 @@ export type SalesCompany = {
 	order: SalesOrder | null;
 	payment: SalesPayment | null;
 };
-
-import type { SalesDocumentType } from "../constants/salesDocumentTypes";
 
 /** One presentation email the sales team can send from a customer card. */
 export type SalesEmailTemplate = {
