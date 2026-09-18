@@ -898,6 +898,10 @@ export const sweAdmin: AdminTranslation = {
 	approvalStatusPending: "Väntar",
 	approvalStatusArchived: "Arkiverad",
 	partnerAddCategoryButton: "Lägg till ny kategori",
+	partnerAddCategoryDescription: "Kategorin läggs till i kategorilistan.",
+	partnerCategoryNameRequired: "Ange ett kategorinamn.",
+	partnerCategoryNameTaken: "Kategorin finns redan.",
+	partnerCategoryAddedToast: "Kategorin har lagts till",
 };
 
 export const sweSales: SalesTranslation = {

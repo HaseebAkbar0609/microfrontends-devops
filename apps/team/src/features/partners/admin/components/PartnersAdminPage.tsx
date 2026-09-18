@@ -10,6 +10,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { PartnersRegisterTab } from "./PartnersRegisterTab";
 import { ApprovalCenterTab } from "./ApprovalCenterTab";
 import { KategoriTab } from "./KategoriTab";
+import { DUMMY_PARTNER_CATEGORIES } from "../constants/partners";
 
 const MAIN_TABS = [
 	{ value: "register", label: localizationConstants.partnersRegisterTab },
@@ -19,6 +20,8 @@ const MAIN_TABS = [
 
 export default function PartnersAdminPage() {
 	const [activeTab, setActiveTab] = useState("register");
+	// Held here because inactive tab panels unmount, which would drop added categories.
+	const [categories, setCategories] = useState(DUMMY_PARTNER_CATEGORIES);
 
 	return (
 		<div className="flex flex-col gap-0 px-6 pt-6 pb-10">
@@ -57,7 +60,10 @@ export default function PartnersAdminPage() {
 					<ApprovalCenterTab />
 				</TabsContent>
 				<TabsContent value="category" className="mt-6">
-					<KategoriTab />
+					<KategoriTab
+						categories={categories}
+						onCategoryCreated={(category) => setCategories((previous) => [...previous, category])}
+					/>
 				</TabsContent>
 			</Tabs>
 		</div>
