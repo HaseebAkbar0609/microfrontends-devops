@@ -17,6 +17,9 @@ interface SidebarNavGroupProps {
 	collapsed?: boolean;
 	isOpen?: boolean;
 	onToggle?: () => void;
+	/** Owned by the sidebar so only one collapsed group flyout is open at a time. */
+	flyoutOpen: boolean;
+	onFlyoutOpenChange: (open: boolean) => void;
 }
 
 export function SidebarNavGroup({
@@ -24,10 +27,11 @@ export function SidebarNavGroup({
 	collapsed = false,
 	isOpen = false,
 	onToggle,
+	flyoutOpen,
+	onFlyoutOpenChange,
 }: SidebarNavGroupProps) {
 	const pathname = usePathname();
 	const router = useRouter();
-	const [flyoutOpen, setFlyoutOpen] = useState(false);
 	const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
 	const groupRef = useRef<HTMLElement | null>(null);
 	const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -55,7 +59,7 @@ export function SidebarNavGroup({
 		const rect = groupRef.current?.getBoundingClientRect();
 		if (rect) {
 			setAnchorRect(rect);
-			setFlyoutOpen(true);
+			onFlyoutOpenChange(true);
 		}
 	};
 
@@ -65,19 +69,9 @@ export function SidebarNavGroup({
 			clearTimeout(closeTimeoutRef.current);
 		}
 		closeTimeoutRef.current = setTimeout(() => {
-			setFlyoutOpen(false);
+			onFlyoutOpenChange(false);
 		}, delay);
 	};
-
-	useEffect(() => {
-		if (!collapsed) {
-			setFlyoutOpen(false);
-		}
-	}, [collapsed]);
-
-	useEffect(() => {
-		setFlyoutOpen(false);
-	}, [pathname]);
 
 	useEffect(() => {
 		return () => {
@@ -194,7 +188,7 @@ export function SidebarNavGroup({
 					anchorRect={anchorRect}
 					anchorEl={groupRef.current}
 					leftOffset={22}
-					onClose={() => setFlyoutOpen(false)}
+					onClose={() => onFlyoutOpenChange(false)}
 					onMouseEnter={cancelCollapsedFlyoutClose}
 					onMouseLeave={() => closeCollapsedFlyout()}
 				/>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { SidebarSubItem } from "./SidebarSubItem";
+import { useExclusiveFlyout } from "./useExclusiveFlyout";
 import type { NavSubItem } from "./navConfig";
 
 interface SidebarSubItemListProps {
@@ -9,7 +9,7 @@ interface SidebarSubItemListProps {
 }
 
 export function SidebarSubItemList({ items }: SidebarSubItemListProps) {
-	const [openFlyoutId, setOpenFlyoutId] = useState<string | null>(null);
+	const { openFlyoutId, setFlyoutOpen } = useExclusiveFlyout();
 
 	return (
 		<div className="flex flex-row self-stretch pl-5">
@@ -19,14 +19,7 @@ export function SidebarSubItemList({ items }: SidebarSubItemListProps) {
 						key={item.id}
 						item={item}
 						flyoutOpen={openFlyoutId === item.id}
-						onFlyoutOpenChange={(open) =>
-							setOpenFlyoutId((currentId) => {
-								if (open) return item.id;
-								// A late close from an item the pointer already left must
-								// not shut the flyout that has opened since.
-								return currentId === item.id ? null : currentId;
-							})
-						}
+						onFlyoutOpenChange={(open) => setFlyoutOpen(item.id, open)}
 					/>
 				))}
 			</div>

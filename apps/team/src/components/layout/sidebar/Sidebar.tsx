@@ -11,6 +11,7 @@ import {
 } from "./navConfig";
 import { SidebarNavGroup } from "./SidebarNavGroup";
 import { DashboardLogo } from "./DashboardLogo";
+import { useExclusiveFlyout } from "./useExclusiveFlyout";
 import { SLATE } from "@/constants/colors";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
@@ -35,12 +36,22 @@ export default function Sidebar({ autoCollapse = false }: SidebarProps) {
 	// pages with their own sub-sidebar, where two open menus would crowd the page.
 	const [manualCollapsed, setManualCollapsed] = useState<boolean | null>(null);
 	const collapsed = manualCollapsed ?? autoCollapse;
+	const {
+		openFlyoutId: openFlyoutGroupId,
+		setOpenFlyoutId: setOpenFlyoutGroupId,
+		setFlyoutOpen: setGroupFlyoutOpen,
+	} = useExclusiveFlyout();
 
 	// The sidebar lives in the root layout and never remounts, so entering or
 	// leaving a sub-sidebar page drops the toggle choice and follows autoCollapse.
 	useEffect(() => {
 		setManualCollapsed(null);
 	}, [autoCollapse]);
+
+	// Group flyouts only exist while collapsed and close once a link is followed.
+	useEffect(() => {
+		setOpenFlyoutGroupId(null);
+	}, [collapsed, pathname, setOpenFlyoutGroupId]);
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
@@ -151,6 +162,8 @@ export default function Sidebar({ autoCollapse = false }: SidebarProps) {
 								group={group}
 								collapsed={collapsed}
 								isOpen={openGroupId === group.id}
+								flyoutOpen={openFlyoutGroupId === group.id}
+								onFlyoutOpenChange={(open) => setGroupFlyoutOpen(group.id, open)}
 								onToggle={() =>
 									setOpenGroupId((previousOpenGroupId) =>
 										previousOpenGroupId === group.id ? null : group.id
