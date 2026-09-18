@@ -157,9 +157,11 @@ export function getMeetingBookerStats(
 			activity.booker &&
 			(bookers.get(activity.booker) ?? emptyBookerStats(activity.booker));
 		if (stats && activity.booker) bookers.set(activity.booker, stats);
+		// Calls and bookings count on the day they were logged. The meeting's
+		// own time only orders the list of booked meetings.
+		const dayKey = toDateKey(activity.date);
 
 		if (activity.type === "call") {
-			const dayKey = toDateKey(activity.date);
 			callsTotal += 1;
 			if (dayKey === todayKey) callsToday += 1;
 			if (stats) {
@@ -168,9 +170,8 @@ export function getMeetingBookerStats(
 			}
 		}
 
-		if (activity.type === "meeting" && activity.meetingAt) {
-			const dayKey = toDateKey(activity.meetingAt);
-			bookedMeetings.push(row);
+		if (activity.type === "meeting") {
+			if (activity.meetingAt) bookedMeetings.push(row);
 			if (dayKey === todayKey) meetingsToday += 1;
 			if (weekKeys.has(dayKey)) meetingsThisWeek += 1;
 			dayCounts.set(dayKey, (dayCounts.get(dayKey) ?? 0) + 1);

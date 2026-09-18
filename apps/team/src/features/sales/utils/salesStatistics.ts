@@ -75,15 +75,16 @@ export function getSalesStatistics(
 		invoiced += getInvoicedAmount(company);
 
 		for (const activity of company.activities) {
+			// Counted on the day the call or booking was logged.
+			const dayKey = toDateKey(activity.date);
+
 			if (activity.type === "call") {
 				calls += 1;
-				const dayKey = toDateKey(activity.date);
 				callsByDay.set(dayKey, (callsByDay.get(dayKey) ?? 0) + 1);
 			}
 
-			if (activity.type === "meeting" && activity.meetingAt) {
+			if (activity.type === "meeting") {
 				meetings += 1;
-				const dayKey = toDateKey(activity.meetingAt);
 				meetingsByDay.set(dayKey, (meetingsByDay.get(dayKey) ?? 0) + 1);
 			}
 		}
