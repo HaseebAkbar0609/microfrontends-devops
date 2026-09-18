@@ -67,17 +67,24 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 	const [onlyTrialAccounts, setOnlyTrialAccounts] = useState(false);
 	const [sort, setSort] = useState<SalesSort>({ key: "name", direction: 1 });
 
+	/** The selected seller's companies, or the whole team's without one. */
+	const sellerCompanies = useMemo(
+		() =>
+			seller ? companies.filter((company) => company.seller === seller) : companies,
+		[companies, seller],
+	);
+
 	const counts = useMemo(() => {
 		const result: Record<string, number> = {};
 		for (const status of SALES_STATUS_IDS) {
-			result[status] = companies.filter(
+			result[status] = sellerCompanies.filter(
 				(company) => company.status === status,
 			).length;
 		}
-		result.demo = companies.filter(hasActiveDemoAccount).length;
-		result.test = companies.filter(hasActiveTestAccount).length;
+		result.demo = sellerCompanies.filter(hasActiveDemoAccount).length;
+		result.test = sellerCompanies.filter(hasActiveTestAccount).length;
 		return result;
-	}, [companies]);
+	}, [sellerCompanies]);
 
 	/** Sellers present in the data, for the seller filter. */
 	const sellers = useMemo(
@@ -90,13 +97,12 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 
 	const visibleCompanies = useMemo(() => {
 		const normalisedQuery = query.trim().toLowerCase();
-		const filtered = companies.filter(
+		const filtered = sellerCompanies.filter(
 			(company) =>
 				matchesStatusFilter(company, statusFilter) &&
 				matchesQuery(company, normalisedQuery) &&
 				(!category || company.category === category) &&
 				(!region || company.region === region) &&
-				(!seller || company.seller === seller) &&
 				(!onlyTrialAccounts ||
 					hasActiveDemoAccount(company) ||
 					hasActiveTestAccount(company)),
@@ -111,12 +117,11 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 			return compareText(String(left), String(right)) * sort.direction;
 		});
 	}, [
-		companies,
+		sellerCompanies,
 		statusFilter,
 		query,
 		category,
 		region,
-		seller,
 		onlyTrialAccounts,
 		sort,
 	]);
