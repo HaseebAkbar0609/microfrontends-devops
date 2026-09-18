@@ -1,4 +1,8 @@
 export const enAdminLive = {
+  billingSalesPending: "Your subscription has already been arranged. Save a card for renewals and pay the invoice below when it is issued. Do not purchase another plan.",
+  billingNoDebt: "No outstanding invoices.",
+  billingAllDebt: "Pay every outstanding invoice to restore full access. Refresh after payment.",
+  billingInvoiceUnavailable: "Payment link unavailable. Contact your administrator.",
   staffLicenseAssign: "Assign or change license", staffLicenseNone: "No license assigned",
   staffLicenseAvailable: "{{count}} available",
   staffLicenseNoSeats: "No unassigned licenses are available. Contact the subscription owner to purchase additional seats.",
@@ -36,6 +40,10 @@ export const enAdminLive = {
 };
 export type AdminLiveTranslation = Record<keyof typeof enAdminLive, string>;
 export const svAdminLive: AdminLiveTranslation = {
+  billingSalesPending: "Ditt abonnemang är redan beställt. Spara ett kort för förnyelser och betala fakturan nedan när den har skapats. Köp inte ett nytt abonnemang.",
+  billingNoDebt: "Inga obetalda fakturor.",
+  billingAllDebt: "Betala alla obetalda fakturor för att återfå full åtkomst. Uppdatera efter betalning.",
+  billingInvoiceUnavailable: "Betalningslänken är inte tillgänglig. Kontakta din administratör.",
   staffLicenseAssign: "Tilldela eller byt licens", staffLicenseNone: "Ingen licens tilldelad",
   staffLicenseAvailable: "{{count}} tillgängliga",
   staffLicenseNoSeats: "Det finns inga lediga licenser. Kontakta abonnemangsägaren för att köpa fler licenser.",

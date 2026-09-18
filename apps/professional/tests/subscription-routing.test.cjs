@@ -37,6 +37,12 @@ for (const route of ['/auth/callback', '/auth/callback/redeem', '/subscription/s
   });
 }
 
+for (const route of ['/admin/subscription', '/admin/subscription?tab=payment', '/module/business/offer/commissions']) {
+  test(`unpaid users can recover their existing payment at ${route}`, () => {
+    assert.equal(exportsObject.middleware(request(route)).kind, 'next');
+  });
+}
+
 test('unpaid users remain in the checkout funnel', () => {
   assert.equal(exportsObject.middleware(request('/home')).pathname, '/manage-plans');
 });
