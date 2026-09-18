@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { Download, MoreVertical, PencilLine, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,9 +16,9 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import type { InspectionDateItem } from "../../types/warranty.types";
 
 const ITEM_CLASS =
-	"flex items-center gap-2 cursor-pointer w-full text-slate-700 hover:bg-slate-50 text-xs";
+	"flex items-center gap-2 cursor-pointer w-full text-slate-900 hover:bg-slate-50 text-xs";
 
-const ICON_CLASS = "h-4 w-4 text-slate-500";
+const ICON_CLASS = "h-4 w-4 text-slate-900";
 
 export interface VisitDateRowMenuProps {
 	item: InspectionDateItem;
@@ -43,7 +43,7 @@ export function VisitDateRowMenu({
 	}[] = [
 		{
 			labelKey: localizationConstants.actionEdit,
-			icon: <Pencil className={ICON_CLASS} />,
+			icon: <PencilLine className={ICON_CLASS} />,
 			onSelect: () => onEdit(item),
 		},
 		{
@@ -64,7 +64,7 @@ export function VisitDateRowMenu({
 				<Button
 					variant="ghost"
 					size="icon"
-					className="h-8 w-8 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg cursor-pointer"
+					className="h-8 w-8 text-slate-900 hover:text-slate-900 hover:bg-slate-100 rounded-lg cursor-pointer"
 					/* Named per row — an unlabelled trigger leaves a screen
 					   reader unable to tell one row's menu from the next. The
 					   document name rather than the date: the frame's rows all

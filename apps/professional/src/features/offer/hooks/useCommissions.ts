@@ -4,17 +4,21 @@ import { useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { loadStripe } from "@stripe/stripe-js";
 import { authStorage } from "@/lib/authStorage";
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { COMMISSIONS_QUERY_KEY, listCommissions, recoverCommission } from "../services/commissionService";
 
 export function useCommissions() {
+  const { query: params } = useQueryParams();
+  const requested = params.get("commission");
+  const commissionId = requested && /^[0-9a-f-]{36}$/i.test(requested) ? requested : undefined;
   const company = authStorage.getCompanyData() as { id?: string } | null;
   const companyId = company?.id ?? "";
   const [busyId, setBusyId] = useState<string | null>(null);
   const [recoveryError, setRecoveryError] = useState(false);
   const recovering = useRef(false);
   const query = useQuery({
-    queryKey: [COMMISSIONS_QUERY_KEY, companyId],
-    queryFn: () => listCommissions(companyId),
+    queryKey: [COMMISSIONS_QUERY_KEY, companyId, commissionId],
+    queryFn: () => listCommissions(companyId, commissionId),
     enabled: Boolean(companyId),
     retry: false,
     refetchOnWindowFocus: true,

@@ -22,8 +22,7 @@ function getStorageLogs(): ConstructionLogEntry[] {
 			return [INITIAL_MOCK_CONSTRUCTION_LOG];
 		}
 		return JSON.parse(raw) as ConstructionLogEntry[];
-	} catch (e) {
-		console.error("[constructionLog.api] Failed to read storage:", e);
+	} catch {
 		return [INITIAL_MOCK_CONSTRUCTION_LOG];
 	}
 }
@@ -35,8 +34,8 @@ function setStorageLogs(logs: ConstructionLogEntry[]): void {
 			CONSTRUCTION_LOG_CONSTANTS.STORAGE_KEY,
 			JSON.stringify(logs)
 		);
-	} catch (e) {
-		console.error("[constructionLog.api] Failed to write storage:", e);
+	} catch {
+		// Storage write failed silently
 	}
 }
 
@@ -52,8 +51,8 @@ export async function getConstructionLogs(orderId?: string): Promise<Constructio
 			setStorageLogs(items);
 			return items;
 		}
-	} catch (err) {
-		console.warn("[constructionLog.api] Fetching from API failed, using storage cache:", err);
+	} catch {
+		// API failed — fallback to storage cache
 	}
 	return getStorageLogs();
 }
@@ -74,6 +73,7 @@ export async function getConstructionLogByDate(
 			...INITIAL_MOCK_CONSTRUCTION_LOG.weather,
 			date,
 		},
+		status: "draft",
 		createdAt: new Date().toISOString(),
 		updatedAt: new Date().toISOString(),
 	};
@@ -107,8 +107,8 @@ export async function saveConstructionLog(
 			setStorageLogs(updated);
 			return saved;
 		}
-	} catch (err) {
-		console.warn("[constructionLog.api] API save failed, updating locally:", err);
+	} catch {
+		// API failed — fallback to local storage
 	}
 
 	const updated = index >= 0
@@ -140,4 +140,37 @@ export async function getCalendarDays(
 	}
 
 	return days;
+}
+
+export async function createConstructionLog(
+	log: ConstructionLogEntry,
+	orderId?: string
+): Promise<ConstructionLogEntry> {
+	const targetOrderId = orderId || CONSTRUCTION_LOG_CONSTANTS.DEFAULT_ORDER_ID;
+	const logs = getStorageLogs();
+
+	const newLog: ConstructionLogEntry = {
+		...log,
+		id: `log-${targetOrderId}-${log.date.replace(/-/g, "")}-${Date.now()}`,
+		orderId: targetOrderId,
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString(),
+	};
+
+	try {
+		const res = await axiosInstance.post<{ data?: ConstructionLogEntry }>(
+			API_PATH.ORDERS.CONSTRUCTION_LOGS(targetOrderId),
+			newLog,
+			{ timeout: 5000 }
+		);
+		if (res.data?.data) {
+			setStorageLogs([res.data.data, ...logs]);
+			return res.data.data;
+		}
+	} catch {
+		// API failed — fallback to local storage
+	}
+
+	setStorageLogs([newLog, ...logs]);
+	return newLog;
 }

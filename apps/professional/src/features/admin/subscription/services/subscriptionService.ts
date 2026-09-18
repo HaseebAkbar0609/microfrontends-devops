@@ -15,6 +15,7 @@ export interface SubscriptionOverviewItem {
 }
 
 export interface SubscriptionOverview {
+  sales_onboarding_pending?: boolean;
   managed_license?: boolean;
   license_required?: boolean;
 	company_id: string;

@@ -659,6 +659,13 @@ export type AdminTranslation = {
 	adminSwitchboardLabel: string;
 	adminHomepageLabel: string;
 	adminNewEmployeeLabel: string;
+	adminNewEmployeeDescription: string;
+	adminEmployeeNameRequired: string;
+	adminEmployeePositionRequired: string;
+	adminEmployeeIdNumberInvalid: string;
+	adminEmployeeIdNumberTaken: string;
+	adminEmployeeStartDateRequired: string;
+	adminEmployeeAddedToast: string;
 	adminContactNoLabel: string;
 	adminPositionLabel: string;
 	adminIdNumberLabel: string;
@@ -872,6 +879,10 @@ export type AdminTranslation = {
 	approvalStatusPending: string;
 	approvalStatusArchived: string;
 	partnerAddCategoryButton: string;
+	partnerAddCategoryDescription: string;
+	partnerCategoryNameRequired: string;
+	partnerCategoryNameTaken: string;
+	partnerCategoryAddedToast: string;
 };
 
 export type SalesTranslation = {
@@ -1795,6 +1806,7 @@ export type MarketingTranslation = {
 };
 
 export type Translation = SidebarTranslation &
+  { billingLoadFailed: string; billingStartDate: string; billingPlan: string; billingQuantity: string; billingCreate: string; billingConfirm: string; billingTerms: string; billingSent: string; billingActivate: string; billingActivationSent: string; billingError: string; billingRefresh: string; billingOpenInvoices: string; billingEmpty: string; billingPending: string; billingCancel: string; billingOverrides: string; billingReason: string; billingExpiry: string; billingGrant: string; billingRevoke: string; billingOverrideSaved: string; billingSelect: string; billingNoCatalog: string; } &
 	AuthTranslation &
 	DashboardTranslation &
 	CommonFiles &

@@ -31,6 +31,8 @@ function isAllowedWhenSubscriptionRequired(pathname: string): boolean {
 		// stay reachable mid-funnel or this never gets to redeem it.
 		"/auth/callback",
 		"/subscription/success",
+		"/admin/subscription",
+		"/module/business/offer/commissions",
 	]);
 
 	if (exact.has(pathname)) return true;

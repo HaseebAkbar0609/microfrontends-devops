@@ -403,11 +403,11 @@ export function ConstructionLogWeatherView({
 								}
 
 								if (isSelected) {
-									bgClass = "bg-slate-900 text-white font-semibold hover:bg-slate-800";
+									bgClass = "bg-slate-900 text-white font-semibold hover:bg-slate-800 hover:text-white";
 								} else if (isFullTime) {
-									bgClass = "bg-[#8D3B1B] text-white font-semibold hover:bg-[#783216]";
+									bgClass = "bg-orange-900 text-white font-semibold hover:bg-orange-950 hover:text-white";
 								} else if (isPartTime) {
-									bgClass = "bg-[#F97316] text-white font-semibold hover:bg-[#EA580C]";
+									bgClass = "bg-orange-500 text-white font-semibold hover:bg-orange-600 hover:text-white";
 								}
 
 								return (
@@ -439,13 +439,13 @@ export function ConstructionLogWeatherView({
 								</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<span className="w-3.5 h-3.5 bg-[#8D3B1B] rounded-2xs shrink-0" />
+								<span className="w-3.5 h-3.5 bg-orange-900 rounded-2xs shrink-0" />
 								<span className="whitespace-nowrap">
 									<Translate text={localizationConstants.orderDagbokLegendFullTime} />
 								</span>
 							</div>
 							<div className="flex items-center gap-2">
-								<span className="w-3.5 h-3.5 bg-[#F97316] rounded-2xs shrink-0" />
+								<span className="w-3.5 h-3.5 bg-orange-500 rounded-2xs shrink-0" />
 								<span className="whitespace-nowrap">
 									<Translate text={localizationConstants.orderDagbokLegendPartTime} />
 								</span>

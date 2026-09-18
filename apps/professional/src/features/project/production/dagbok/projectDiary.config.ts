@@ -1,4 +1,6 @@
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
+import { CONTRACTOR_TYPE_OPTIONS } from "../../create/data/projectCreate.config";
+import { acceptAttribute, type RecordFileRules } from "../../shared/recordFiles";
 import type {
 	DeviationStatus,
 	DeviationType,
@@ -133,3 +135,39 @@ export const DIARY_LIMITS = {
 
 /** Average hours per person at or above which a day counts as a full workday. */
 export const FULL_WORKDAY_HOURS = 8;
+
+/**
+ * What the wizard offers under Benämning. Suggestions, not a closed list: the
+ * fields stay typable, since a site has trades and machines no config knows of.
+ */
+export const WORKFORCE_ROLE_SUGGESTIONS: readonly string[] = [...CONTRACTOR_TYPE_OPTIONS, "Städare"];
+
+export const MACHINE_SUGGESTIONS: readonly string[] = [
+	"Grävmaskin",
+	"Hjullastare",
+	"Minigrävare",
+	"Mobilkran",
+	"Bygghiss",
+	"Byggtork",
+	"Vibratorplatta",
+	"Skåpbil",
+];
+
+/**
+ * The Bekräftelse modal's Underskrift. One file, as the hint says; there is no
+ * file store, so only its name is kept. `projectDiaryFileSizeError` says
+ * "10 MB" — change both together.
+ */
+export const SIGNATURE_FILE_RULES: RecordFileRules = {
+	types: { ".pdf": "application/pdf", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" },
+	maxBytes: 10 * 1024 * 1024,
+	maxCount: 1,
+};
+
+export const SIGNATURE_FILE_ACCEPT = acceptAttribute(SIGNATURE_FILE_RULES.types);
+
+/** The wizard's two steps, as the rail names them. */
+export const DIARY_WIZARD_STEPS: TranslationKeys[] = [
+	localizationConstants.projectDiaryWizardOverview,
+	localizationConstants.projectDiarySectionDetails,
+];

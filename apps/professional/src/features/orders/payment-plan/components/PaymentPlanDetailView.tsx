@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
 	Info,
@@ -9,6 +10,7 @@ import {
 	Upload,
 	ChevronUp,
 	ArrowUpDown,
+	ArrowLeft,
 	CircleFadingPlus,
 	MoreVertical,
 	Trash2,
@@ -17,6 +19,7 @@ import {
 	Sigma,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import {
 	Table,
@@ -37,7 +40,7 @@ import { PdfFileIcon } from "@/components/ui/PdfFileIcon";
 import { RecordNavRow } from "@/components/layout/navigation";
 import { cn } from "@/lib/utils";
 import { ORDER_MODULE_BASE_URL } from "@/features/orders/data/orderNav.config";
-import { useTranslate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { usePaymentPlanDetail } from "../hooks/usePaymentPlan";
 import { AddMilestoneModal, ConfirmModal } from "./PaymentPlanModals";
@@ -82,11 +85,13 @@ function InfoField({
 export interface PaymentPlanDetailViewProps {
 	orderId?: string;
 	planId?: string;
+	serialNo?: string;
 }
 
 export function PaymentPlanDetailView({
 	orderId = PAYMENT_PLAN_CONSTANTS.DEFAULT_ORDER_ID,
 	planId = "1",
+	serialNo,
 }: PaymentPlanDetailViewProps) {
 	const t = useTranslate();
 	const router = useRouter();
@@ -148,6 +153,7 @@ export function PaymentPlanDetailView({
 		if (fileInputRef.current) fileInputRef.current.value = "";
 	};
 
+	const basePath = `/module/production/order/${orderId}`;
 	const recordTitle = (
 		<span className="font-sans text-base sm:text-xl md:text-2xl font-semibold leading-tight tracking-[-0.6px] text-slate-900 truncate">
 			{t(localizationConstants.viewPaymentPlanBestallare)}
@@ -181,6 +187,89 @@ export function PaymentPlanDetailView({
 
 	return (
 		<div className="flex h-full flex-col bg-slate-50 relative overflow-hidden font-sans antialiased text-slate-900">
+			{/* Top Header: Back + Order Title + Tabs */}
+			<div className="bg-white px-4 sm:px-6 pt-4">
+				<div className="flex justify-between gap-4 items-center pt-0 pb-4">
+					<div className="flex min-w-0 gap-2 items-center">
+						<Button asChild variant="ghost" size="icon" aria-label="Back"
+							className="size-7 shrink-0 rounded-md text-slate-900 hover:bg-slate-100 flex items-center justify-center cursor-pointer">
+							<Link href="/module/production/order/overview" aria-label="Back" className="flex items-center justify-center">
+								<ArrowLeft className="size-5" />
+							</Link>
+						</Button>
+						<div className="min-w-0">
+							<h2 className="truncate font-sans text-base sm:text-xl md:text-2xl font-semibold leading-6 sm:leading-7 md:leading-8 tracking-normal text-slate-900">
+								{t(localizationConstants.order)} {serialNo || orderId}
+							</h2>
+						</div>
+					</div>
+				</div>
+				<Tabs value="payment-plan" className="w-full flex flex-col gap-0">
+					<TabsList variant="line" className="pl-4 sm:pl-[3.25rem] pr-4 sm:pr-6">
+						<TabsTrigger value="order-information" asChild>
+							<Link href={`${basePath}/order-information`} className="cursor-pointer">
+								<Translate text={localizationConstants.orderInformationTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="inspection" asChild>
+							<Link href={`${basePath}/inspection`} className="cursor-pointer">
+								<Translate text={localizationConstants.orderInspectionTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="organisation" asChild>
+							<Link href={`${basePath}/organisation`} className="cursor-pointer">
+								<Translate text={localizationConstants.orderOrganisationTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="payment-plan" asChild>
+							<Link href={`${basePath}/payment-plan`} className="cursor-pointer">
+								<Translate text={localizationConstants.paymentPlanTitle} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="ata" asChild>
+							<Link href={`${basePath}/ata`} className="cursor-pointer">
+								<Translate text={localizationConstants.ataTitle} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="guarantee" asChild>
+							<Link href={`${basePath}/guarantee`} className="cursor-pointer">
+								<Translate text={localizationConstants.warrantyCommitments} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="handlingar" asChild>
+							<Link href={`${basePath}/handlingar`} className="cursor-pointer">
+								<Translate text={localizationConstants.orderHandlingarTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="protocol" asChild>
+							<Link href={`${basePath}/protocol`} className="cursor-pointer">
+								<Translate text={localizationConstants.protocolsTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="staff" asChild>
+							<Link href={`${basePath}/staff`} className="cursor-pointer">
+								<Translate text={localizationConstants.staffLedgerTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="tidsplan" asChild>
+							<Link href={`${basePath}/tidsplan`} className="cursor-pointer">
+								<Translate text={localizationConstants.orderTimeplanTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="fraga-svar" asChild>
+							<Link href={`${basePath}/fraga-svar`} className="cursor-pointer">
+								<Translate text={localizationConstants.orderQaTab} />
+							</Link>
+						</TabsTrigger>
+						<TabsTrigger value="dagbok" asChild>
+							<Link href={`${basePath}/construction-log`} className="cursor-pointer">
+								<Translate text={localizationConstants.orderDagbokTab} />
+							</Link>
+						</TabsTrigger>
+					</TabsList>
+				</Tabs>
+			</div>
+
 			{/* Main Scrollable Content */}
 			<div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 sm:py-6 pb-28">
 				<div className="w-full space-y-6">

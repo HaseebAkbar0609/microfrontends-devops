@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -19,6 +20,7 @@ export function OrderConstructionLogOverviewPage({
 	orderId,
 	hideTitle = false,
 }: OrderConstructionLogOverviewPageProps) {
+	const router = useRouter();
 	const {
 		log,
 		selectedDate,
@@ -49,8 +51,9 @@ export function OrderConstructionLogOverviewPage({
 	);
 
 	const handleOpenNewLogModal = useCallback(() => {
-		toast.info(t(localizationConstants.orderDagbokToastNewLogComingSoon));
-	}, [t]);
+		const id = log.orderId || "5000-001";
+		router.push(`/module/production/order/${id}/construction-log/create`);
+	}, [router, log.orderId]);
 
 	return (
 		<div className="w-full flex flex-col gap-6 pb-16">

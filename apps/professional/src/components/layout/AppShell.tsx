@@ -1,4 +1,7 @@
 "use client";
+import { billingReturnPath } from "@/lib/billingReturnPath";
+import { completeSubscriptionAction } from "@/api-actions";
+import { authStorage } from "@/lib/authStorage";
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -48,7 +51,7 @@ function pathMatchesPrefixes(pathname: string, prefixes: string[]) {
 export function AppShell({ children }: AppShellProps) {
 	const pathname = usePathname();
 	const router = useRouter();
-	const { isAuthenticated, isReady } = useAuthStatus();
+	const { isAuthenticated, isReady, hydrateFromStorage } = useAuthStatus();
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
 	const isAuthRoute = pathMatchesPrefixes(pathname, AUTH_ROUTE_PREFIXES);
@@ -87,15 +90,16 @@ export function AppShell({ children }: AppShellProps) {
 
 			const subscriptionRequired =
 				getRequiresSubscriptionFromBrowserCookie();
-			const destination = subscriptionRequired
+			const destination = billingReturnPath(searchParams.get("returnTo")) ?? (subscriptionRequired
 				? "/manage-plans"
-				: "/home";
+				: "/home");
 			router.replace(destination);
 			return;
 		}
 
 		if (!isAuthenticated && !isAuthRoute && !isPublicPage) {
-			router.replace("/login");
+			const returnTo = billingReturnPath(pathname + window.location.search);
+			router.replace(returnTo ? "/login?returnTo=" + encodeURIComponent(returnTo) : "/login");
 			return;
 		}
 
@@ -124,8 +128,15 @@ export function AppShell({ children }: AppShellProps) {
 				if (!active) return;
 				const requiresSubscription =
 					overview.status?.access_state === "INACTIVE";
+				if (getRequiresSubscriptionFromBrowserCookie() && !requiresSubscription) {
+					const paymentToken = authStorage.getAccessToken();
+					if (!paymentToken) return;
+					const completed = await completeSubscriptionAction({ payment_token: paymentToken }, { suppressErrorToast: true });
+					if (!completed.success) return;
+					hydrateFromStorage();
+				}
 				setRequiresSubscriptionCookie(requiresSubscription);
-				if (requiresSubscription) router.replace("/manage-plans");
+				if (requiresSubscription && !isBillingPage) router.replace("/manage-plans");
 			} catch {
 				// A transient billing-status failure must not eject an authenticated user.
 			}
@@ -139,7 +150,7 @@ export function AppShell({ children }: AppShellProps) {
 			window.clearInterval(intervalId);
 			window.removeEventListener("focus", checkBillingStatus);
 		};
-	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, router]);
+	}, [isReady, isAuthenticated, isAuthRoute, isPublicPage, isBillingPage, router, hydrateFromStorage]);
 
 	if (!isReady) {
 		return <Loader />;
@@ -177,13 +188,13 @@ export function AppShell({ children }: AppShellProps) {
 		<div className="flex h-screen flex-1 overflow-hidden">
 			{!isPublicPage && <Sidebar autoCollapse />}
 			<div className="flex flex-1 flex-col overflow-hidden">
-				{!isPublicPage && <AccountLifecycleBanner />}
+				{!isPublicPage && !getRequiresSubscriptionFromBrowserCookie() && <AccountLifecycleBanner />}
 				<Header />
 				<main className="flex flex-1 flex-col bg-white overflow-y-auto min-h-0">
 					{isAuthenticated && isBillingPage ? <StaffLicenseGate>{children}</StaffLicenseGate> : children}
 				</main>
 			</div>
-			{!isPublicPage && <AccountLifecyclePopup />}
+			{!isPublicPage && !getRequiresSubscriptionFromBrowserCookie() && <AccountLifecyclePopup />}
 		</div>
 	);
 }
