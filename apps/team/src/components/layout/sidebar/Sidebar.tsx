@@ -2,13 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Search } from "lucide-react";
-import { getFavoriteNavItems, getNavConfig, type NavGroup } from "./navConfig";
+import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import {
+	getFavoriteNavItems,
+	getNavConfig,
+	navSubItemMatchesPath,
+	type NavGroup,
+} from "./navConfig";
 import { SidebarNavGroup } from "./SidebarNavGroup";
 import { DashboardLogo } from "./DashboardLogo";
 import { SLATE } from "@/constants/colors";
+import localizationConstants from "@/utils/translation/constants";
+import { useTranslate } from "@/utils/translation/translate";
 
 interface SidebarProps {
+	/** Start collapsed, for pages that bring their own sub-sidebar. */
 	autoCollapse?: boolean;
 }
 
@@ -18,9 +26,7 @@ function matchesGroupPath(group: NavGroup, pathname: string) {
 	if (group.href && (pathname === group.href || pathname.startsWith(`${group.href}/`))) {
 		return true;
 	}
-	return group.items.some(
-		(item) => pathname === item.href || pathname.startsWith(`${item.href}/`)
-	);
+	return group.items.some((item) => navSubItemMatchesPath(item, pathname));
 }
 
 function getDefaultOpenGroupId(groups: NavGroup[]) {
@@ -29,9 +35,13 @@ function getDefaultOpenGroupId(groups: NavGroup[]) {
 
 export default function Sidebar({ autoCollapse = false }: SidebarProps) {
 	const pathname = usePathname();
-	const [isHovered, setIsHovered] = useState(false);
+	const t = useTranslate();
 	const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
 	const [openGroupId, setOpenGroupId] = useState<string | null>(null);
+	// Null until the toggle is pressed. Until then the menu is open, except on
+	// pages with their own sub-sidebar, where two open menus would crowd the page.
+	const [manualCollapsed, setManualCollapsed] = useState<boolean | null>(null);
+	const collapsed = manualCollapsed ?? autoCollapse;
 
 	useEffect(() => {
 		if (typeof window === "undefined") return;
@@ -97,51 +107,43 @@ export default function Sidebar({ autoCollapse = false }: SidebarProps) {
 		});
 	}, [navGroups, pathname]);
 
-	void autoCollapse;
-	const collapsed = !isHovered;
+	const ToggleIcon = collapsed ? PanelLeftOpen : PanelLeftClose;
+	const toggleLabel = t(
+		collapsed
+			? localizationConstants.sidebarExpand
+			: localizationConstants.sidebarCollapse
+	);
 
 	return (
 		<aside
-			onMouseEnter={() => setIsHovered(true)}
-			onMouseLeave={() => setIsHovered(false)}
-			className={`flex h-full shrink-0 flex-col bg-slate-800 pb-3 transition-all duration-300 ${collapsed ? "w-16" : "w-60"}`}
+			className={`flex h-full shrink-0 flex-col bg-slate-800 pb-3 transition-[width] duration-200 ease-out motion-reduce:transition-none ${collapsed ? "w-16" : "w-60"}`}
 		>
-			{/* Inner container with rounded corners */}
-			<div className="flex h-full flex-col p-2.5 rounded-lg bg-gray-800">
-				{/* Header: Logo + Search */}
-				<div className="flex flex-col gap-2 p-2">
-					{/* Logo row */}
-					<div
-						className={`flex items-center gap-4 p-2 ${collapsed ? "flex-col justify-center" : "justify-between"}`}
+			<div className="flex h-full flex-col rounded-lg bg-gray-800 p-2.5">
+				{/* Header: logotype and the collapse toggle */}
+				<div
+					className={`flex items-center gap-2 p-2 ${collapsed ? "flex-col" : "justify-between"}`}
+				>
+					<DashboardLogo collapsed={collapsed} />
+					<button
+						type="button"
+						onClick={() => setManualCollapsed(!collapsed)}
+						aria-label={toggleLabel}
+						aria-expanded={!collapsed}
+						title={toggleLabel}
+						className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-md border border-slate-600 text-slate-300 transition-colors hover:bg-slate-700 hover:text-slate-100 active:scale-[0.97]"
 					>
-						{/* Logo */}
-						<DashboardLogo collapsed={collapsed} />
-
-						{collapsed && (
-							<hr
-								className="w-full border-t "
-								style={{ borderTopColor: SLATE[700] }}
-							/>
-						)}
-					</div>
-
-					{/* Search bar — hidden when collapsed */}
-					{!collapsed && (
-						<div className="relative flex items-center">
-							<Search
-								size={16}
-								className="pointer-events-none absolute left-[9px] top-1/2 -translate-y-1/2 text-slate-400"
-							/>
-							<input
-								type="text"
-								placeholder="Search"
-								className="w-full rounded-md border border-slate-600 bg-slate-700 py-1 pl-8 pr-3 text-sm text-slate-200 outline-none placeholder:text-slate-400 focus:border-slate-500"
-							/>
-						</div>
-					)}
+						<ToggleIcon size={16} />
+					</button>
 				</div>
 
-					{/* Navigation */}
+				{collapsed && (
+					<hr
+						className="mx-2 mb-2 border-t"
+						style={{ borderTopColor: SLATE[700] }}
+					/>
+				)}
+
+				{/* Navigation */}
 				<nav className="flex flex-1 flex-col gap-2 overflow-y-auto pb-2 hide-scrollbar">
 					<div className={`flex flex-col ${collapsed ? "px-0" : "px-2"}`}>
 						{navGroups.map((group) => (

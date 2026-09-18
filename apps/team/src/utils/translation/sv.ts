@@ -145,7 +145,7 @@ export const sweAppLauncher: AppLauncherTranslation = {
 
 export const sweSidebar: SidebarTranslation = {
 	dashboard: "Hem",
-	favorites: "Favoriter",
+	favorites: "Favorit",
 	tools: "Verktyg",
 	toolsItem: "Verktyg",
 	register: "Register",
@@ -163,7 +163,7 @@ export const sweSidebar: SidebarTranslation = {
 	moduleBusiness: "Affär",
 	moduleOperations: "Verksamhet",
 	moduleGovernance: "Styrning",
-	customerUsers: "Användare",
+	customerUsers: "Kunder",
 	customerPrivatePersons: "Privatpersoner",
 	professional: "Professional",
 	private: "Privat",
@@ -183,6 +183,8 @@ export const sweSidebar: SidebarTranslation = {
 	leads: "Leads",
 	support: "Support",
 	timeflowApp: "Timeflow App",
+	sidebarCollapse: "Fäll ihop menyn",
+	sidebarExpand: "Fäll ut menyn",
 	partners: "Partners",
 	adminItem: "Admin",
 	backToMainMenu: "Tillbaka till huvudmenyn",
