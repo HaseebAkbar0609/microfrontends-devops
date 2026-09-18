@@ -9,6 +9,7 @@ import type {
 	CustomerStatus,
 } from "../types/customerOverview.types";
 import { customerOverviewRepository } from "../utils/customerOverviewRepository";
+import { customerDetailRepository } from "../utils/customerDetailRepository";
 import { DEFAULT_CUSTOMER_PAGE_SIZE } from "../constants/customerOverview.constants";
 
 export function useCustomerOverview() {
@@ -54,6 +55,7 @@ export function useCustomerOverview() {
 
 	const deleteCustomer = useCallback(
 		(id: string) => {
+			customerDetailRepository.delete(id);
 			const success = customerOverviewRepository.delete(id);
 			if (success) {
 				showToast("success", t(localizationConstants.deleteLabel));

@@ -2,13 +2,16 @@
 
 import React, { useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Trash2 } from "lucide-react";
 import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useCustomerOverview } from "../../hooks/useCustomerOverview";
 import type { CustomerOverviewRow } from "../../types/customerOverview.types";
-import { CUSTOMER_CREATE_ROUTE } from "../../constants/customerOverview.constants";
+import {
+	CUSTOMER_CREATE_ROUTE,
+	CUSTOMER_DETAIL_BASE_ROUTE,
+} from "../../constants/customerOverview.constants";
 import { CustomerOverviewToolbar } from "./CustomerOverviewToolbar";
 import { CustomerDeleteDialog } from "./CustomerDeleteDialog";
 
@@ -47,13 +50,29 @@ export function CustomerOverviewTable() {
 				key: "customerNo",
 				label: localizationConstants.customerNoHeader,
 				sortable: true,
-				render: (row) => <span className="text-slate-700">{row.customerNo}</span>,
+				render: (row) => (
+					<button
+						type="button"
+						onClick={() => router.push(`${CUSTOMER_DETAIL_BASE_ROUTE}/${encodeURIComponent(row.id)}`)}
+						className="font-medium text-slate-900 transition-colors hover:text-blue-600"
+					>
+						{row.customerNo}
+					</button>
+				),
 			},
 			{
 				key: "name",
 				label: localizationConstants.customerHeader,
 				sortable: true,
-				render: (row) => <span className="text-slate-700">{row.name}</span>,
+				render: (row) => (
+					<button
+						type="button"
+						onClick={() => router.push(`${CUSTOMER_DETAIL_BASE_ROUTE}/${encodeURIComponent(row.id)}`)}
+						className="text-left font-medium text-slate-700 transition-colors hover:text-blue-600"
+					>
+						{row.name}
+					</button>
+				),
 			},
 			{
 				key: "orgNo",
@@ -110,7 +129,7 @@ export function CustomerOverviewTable() {
 				),
 			},
 		],
-		[],
+		[router],
 	);
 
 	const actions: DataTableAction<CustomerOverviewRow>[] = useMemo(
@@ -118,12 +137,7 @@ export function CustomerOverviewTable() {
 			{
 				label: localizationConstants.viewLabel,
 				icon: <Eye className="h-4 w-4" />,
-				onClick: (row) => router.push(`${CUSTOMER_CREATE_ROUTE}?id=${row.id}`),
-			},
-			{
-				label: localizationConstants.editLabel,
-				icon: <Pencil className="h-4 w-4" />,
-				onClick: (row) => router.push(`${CUSTOMER_CREATE_ROUTE}?id=${row.id}`),
+				onClick: (row) => router.push(`${CUSTOMER_DETAIL_BASE_ROUTE}/${encodeURIComponent(row.id)}`),
 			},
 			{
 				label: localizationConstants.deleteLabel,

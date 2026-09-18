@@ -89,6 +89,7 @@ export interface CreateCustomerFormData {
 	interestInvoicing: string;
 	priceList: string;
 	currency: string;
+	creditLimit: string;
 	invoiceDiscount: string;
 	invoiceFee: string;
 	shippingFee: string;

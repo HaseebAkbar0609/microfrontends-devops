@@ -21,6 +21,8 @@ import {
 	STORAGE_KEY_CUSTOMER_DRAFT,
 } from "../constants/createCustomer.constants";
 import { customerOverviewRepository } from "../utils/customerOverviewRepository";
+import { customerDetailRepository } from "../utils/customerDetailRepository";
+import type { CustomerDetailData } from "../types/customerDetail.types";
 import { CUSTOMER_OVERVIEW_BASE_ROUTE } from "../constants/customerOverview.constants";
 
 export const TOTAL_CUSTOMER_WIZARD_STEPS = 4;
@@ -229,7 +231,7 @@ export function useCreateCustomerForm() {
 						? formData.orgNo || ""
 						: formData.personnummer || "";
 
-				customerOverviewRepository.add({
+				const newCustomerRow = customerOverviewRepository.add({
 					customerNo: formData.customerNo || `#M${Math.floor(100 + Math.random() * 900)}`,
 					name: displayName,
 					orgNo: regNumber,
@@ -242,6 +244,71 @@ export function useCreateCustomerForm() {
 					status: formData.status === "inactive" ? "inactive" : "active",
 					dateAdded: new Date().toISOString().slice(0, 10),
 				});
+
+				// Persist full customer detail record in customerDetailRepository
+				const detailRecord: CustomerDetailData = {
+					id: newCustomerRow.id,
+					customerNo: newCustomerRow.customerNo,
+					entityType: formData.entityType,
+					name: displayName,
+					orgNo: regNumber,
+					vatRegNo: formData.vatRegNo || "",
+					bankName: formData.bankName || "",
+					bankAccount: formData.bankAccount || "",
+					bankgiro: formData.bankgiro || "",
+					plusgiro: formData.plusgiro || "",
+					iban: formData.iban || "",
+					bic: formData.bic || "",
+					visitingAddress: formData.visitingAddress,
+					visitingPostalCode: formData.visitingPostalCode,
+					visitingCity: formData.visitingCity,
+					visitingCountry: "Sverige",
+					invoiceAddress: formData.invoiceAddress || formData.visitingAddress,
+					invoicePostalCode: formData.invoicePostalCode || formData.visitingPostalCode,
+					invoiceCity: formData.invoiceCity || formData.visitingCity,
+					invoiceCountry: "Sverige",
+					phone: formData.phone,
+					email: formData.email,
+					website: formData.website || "",
+					contactPersons: formData.contactPersons || [],
+					ratings: {
+						solvency: formData.ratings?.economy || 4,
+						cooperation: formData.ratings?.collaboration || 5,
+						clarity: formData.ratings?.service || 4,
+						availability: formData.ratings?.punctuality || 5,
+						environment: formData.ratings?.environment || 5,
+						timeliness: formData.ratings?.quality || 4,
+					},
+					documents: formData.documents || [],
+					notes: formData.contactNotes || formData.notes || "",
+					paymentTerms: formData.paymentTerms ? `${formData.paymentTerms} dagar` : "30 dagar",
+					deliveryTerms: formData.deliveryTerms || "Fritt vårt lager",
+					deliveryMethod: formData.deliveryMethod || "Post",
+					overdueInterest: "8.5 %",
+					invoiceMethod: "E-postfaktura",
+					invoiceEmail: formData.email,
+					priceList: formData.priceList || "Standardprislista",
+					invoiceDiscount: formData.invoiceDiscount ? `${formData.invoiceDiscount} %` : "0 %",
+					invoiceFee: formData.invoiceFee ? `${formData.invoiceFee} kr` : "0,00 kr",
+					shippingFee: formData.shippingFee ? `${formData.shippingFee} kr` : "0,00 kr",
+					pricesInclVat: formData.pricesInclVat === "inkl" ? "Inkl. moms" : "Exkl. moms",
+					interestInvoicing: formData.interestInvoicing || "Ja",
+					ourReference: formData.ourReference || "",
+					customerResponsible: formData.customerResponsible || "",
+					yourReference: formData.yourReference || "",
+					externalReference: formData.externalReference || "",
+					vatNumber: formData.vatNumber || formData.vatRegNo || "",
+					vatType: formData.vatType || "SE MOMS 25%",
+					salesAccount: formData.salesAccount || "3001 - Försäljning inom Sverige",
+					costCenter: formData.costCenter || "",
+					project: formData.project || "",
+					isRotRutEnabled: formData.isRotRutEnabled || false,
+					rotRutType: formData.isRotRutEnabled ? "ROT" : "-",
+					propertyDesignation: formData.propertyDesignation || "",
+					apartmentNumber: formData.apartmentNumber || "",
+					brfOrgNo: "",
+				};
+				customerDetailRepository.save(detailRecord);
 
 				if (typeof window !== "undefined") {
 					localStorage.removeItem(STORAGE_KEY_CUSTOMER_DRAFT);

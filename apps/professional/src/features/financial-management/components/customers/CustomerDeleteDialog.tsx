@@ -30,10 +30,10 @@ export function CustomerDeleteDialog({
 			<AlertDialogContent>
 				<AlertDialogHeader>
 					<AlertDialogTitle>
-						<Translate text={localizationConstants.deleteLabel} />
+						<Translate text={localizationConstants.customerDeleteConfirmTitle} />
 					</AlertDialogTitle>
 					<AlertDialogDescription>
-						<Translate text={localizationConstants.protocolDeleteConfirmDesc} />
+						<Translate text={localizationConstants.customerDeleteConfirmDesc} />
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>

@@ -104,7 +104,7 @@ export function Step4Invoice({
 							<Translate text={localizationConstants.customerCreditLimitLabel} />
 						</label>
 						<Input
-							{...register("invoiceDiscount")}
+							{...register("creditLimit")}
 							placeholder="50000"
 							className="h-10 text-xs bg-white"
 						/>
