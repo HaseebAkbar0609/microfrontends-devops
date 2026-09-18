@@ -10,6 +10,7 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import localizationConstants from "@/utils/translation/constants";
+import { SALES_STICKY_ACTION_HEAD_CLASS } from "../constants/salesTheme";
 import { Translate } from "@/utils/translation/translate";
 import type {
 	SalesCompany,
@@ -58,7 +59,7 @@ const COLUMNS: ColumnConfig[] = [
 	{ labelKey: localizationConstants.salesColumnTestAccount },
 	{
 		labelKey: localizationConstants.salesColumnAction,
-		className: "text-right",
+		className: `text-right ${SALES_STICKY_ACTION_HEAD_CLASS}`,
 	},
 ];
 

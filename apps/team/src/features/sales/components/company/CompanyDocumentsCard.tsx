@@ -13,6 +13,10 @@ type CompanyDocumentsCardProps = {
 	company: SalesCompany;
 };
 
+/**
+ * Quote and order confirmation for this company, with the links that reach
+ * them. The record tab row no longer carries that navigation.
+ */
 export function CompanyDocumentsCard({ company }: CompanyDocumentsCardProps) {
 	const { quote, order } = company;
 	if (!quote && !order) return null;
@@ -36,6 +40,16 @@ export function CompanyDocumentsCard({ company }: CompanyDocumentsCardProps) {
 						{": "}
 						{formatCurrency(quote.firstInvoice)}
 					</p>
+					<Button
+						asChild
+						variant="outline"
+						size="sm"
+						className="mt-2 w-full cursor-pointer"
+					>
+						<Link href={`/module/sales/companies/${company.id}/quote`}>
+							<Translate text={localizationConstants.salesEditQuoteButton} />
+						</Link>
+					</Button>
 				</div>
 			) : null}
 

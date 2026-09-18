@@ -39,7 +39,7 @@ function SummaryCard({
 			aria-pressed={isActive}
 			className={`cursor-pointer rounded-xl border p-4 text-left transition-colors ${
 				isActive
-					? "border-slate-900 bg-slate-50"
+					? "border-teal-600 bg-teal-50/50 ring-1 ring-teal-600"
 					: "border-slate-200 bg-white hover:bg-slate-50"
 			}`}
 		>

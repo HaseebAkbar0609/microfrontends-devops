@@ -12,6 +12,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import localizationConstants from "@/utils/translation/constants";
+import { SALES_STICKY_ACTION_CELL_CLASS } from "../constants/salesTheme";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { SALES_STATUSES, getSalesStatusMeta } from "../constants/salesStatuses";
 import {
@@ -50,7 +51,7 @@ export function SalesCompanyRow({
 	const companyHref = `/module/sales/companies/${company.id}`;
 
 	return (
-		<TableRow className="hover:bg-slate-50/70">
+		<TableRow className="group hover:bg-slate-50/70">
 			<TableCell>
 				<Link
 					href={companyHref}
@@ -147,7 +148,7 @@ export function SalesCompanyRow({
 			<TableCell>
 				<TrialAccountBadge accounts={company.testAccounts} kind="test" />
 			</TableCell>
-			<TableCell className="text-right">
+			<TableCell className={`text-right ${SALES_STICKY_ACTION_CELL_CLASS}`}>
 				<Button asChild variant="outline" size="sm" className="cursor-pointer">
 					<Link href={companyHref}>
 						<Translate text={localizationConstants.salesOpenAction} />

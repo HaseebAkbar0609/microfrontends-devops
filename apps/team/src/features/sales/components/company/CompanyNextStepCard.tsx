@@ -11,6 +11,7 @@ import { useCompanyWorkflow } from "../../hooks/useCompanyWorkflow";
 import type { SalesCompany } from "../../types";
 import { SalesSectionCard } from "../SalesSectionCard";
 import { CompanyPaymentPanel } from "./CompanyPaymentPanel";
+import { SALES_PRIMARY_BUTTON_CLASS } from "../../constants/salesTheme";
 
 type CompanyNextStepCardProps = {
 	company: SalesCompany;
@@ -26,7 +27,7 @@ function Hint({ textKey }: { textKey: string }) {
 }
 
 const PRIMARY_BUTTON_CLASS =
-	"w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90";
+	`w-full cursor-pointer ${SALES_PRIMARY_BUTTON_CLASS}`;
 
 export function CompanyNextStepCard({
 	company,

@@ -10,7 +10,7 @@ import { useSalesCompanies } from "../../hooks/useSalesCompanies";
 import type { SalesCompany } from "../../types";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import {
-	SALES_MODULE_HREF,
+	SALES_CRM_HREF,
 	SALES_MODULE_TABS,
 	SALES_MODULE_TITLE_KEY,
 	getSalesRecordTabs,
@@ -20,6 +20,7 @@ import { QuoteCustomerForm } from "./QuoteCustomerForm";
 import { QuoteModuleList } from "./QuoteModuleList";
 import { QuotePreviewSheet } from "./QuotePreviewSheet";
 import { QuoteTermsSection } from "./QuoteTermsSection";
+import { SALES_PRIMARY_BUTTON_CLASS } from "../../constants/salesTheme";
 
 type QuoteBuilderPageProps = {
 	companyId: string;
@@ -54,7 +55,7 @@ function QuoteBuilder({ company }: { company: SalesCompany }) {
 				secondaryTabs={getSalesRecordTabs(company)}
 				record={{
 					title: company.name || company.id,
-					backHref: SALES_MODULE_HREF,
+					backHref: SALES_CRM_HREF,
 					actions: (
 						<>
 							<Button
@@ -68,7 +69,7 @@ function QuoteBuilder({ company }: { company: SalesCompany }) {
 							</Button>
 							<Button
 								type="button"
-								className="h-9 cursor-pointer gap-2 bg-[#18181B] text-white hover:bg-[#18181B]/90"
+								className={`h-9 cursor-pointer gap-2 ${SALES_PRIMARY_BUTTON_CLASS}`}
 								onClick={save}
 							>
 								<Save className="h-4 w-4" />

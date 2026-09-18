@@ -7,6 +7,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import type { SalesPayment } from "../../types";
 import { formatCurrency, formatDate } from "../../utils/salesFormatters";
+import { SALES_PRIMARY_BUTTON_CLASS } from "../../constants/salesTheme";
 
 type CompanyPaymentPanelProps = {
 	payment: SalesPayment | null;
@@ -41,7 +42,7 @@ export function CompanyPaymentPanel({
 					trigger={
 						<Button
 							type="button"
-							className="w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
+							className={`w-full cursor-pointer ${SALES_PRIMARY_BUTTON_CLASS}`}
 						>
 							<Link2 className="mr-2 h-4 w-4" />
 							<Translate
@@ -108,7 +109,7 @@ export function CompanyPaymentPanel({
 						<Button
 							type="button"
 							size="sm"
-							className="w-full cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
+							className={`w-full cursor-pointer ${SALES_PRIMARY_BUTTON_CLASS}`}
 						>
 							<Translate text={localizationConstants.salesMarkPaidButton} />
 						</Button>
