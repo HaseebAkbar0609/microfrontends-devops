@@ -31,6 +31,10 @@ export type SalesActivity = {
 	text: string;
 	followUpAt: string;
 	done: boolean;
+	/** Who logged the call or booked the meeting. Absent on older rows. */
+	booker?: string;
+	/** When a booked meeting takes place. Only set for `type: "meeting"`. */
+	meetingAt?: string;
 };
 
 export type CreditsafeInfo = {
@@ -107,6 +111,39 @@ export type SalesCompany = {
 	quote: SalesQuote | null;
 	order: SalesOrder | null;
 	payment: SalesPayment | null;
+};
+
+import type { SalesDocumentType } from "../constants/salesDocumentTypes";
+
+/** One presentation email the sales team can send from a customer card. */
+export type SalesEmailTemplate = {
+	id: string;
+	name: string;
+	subject: string;
+	body: string;
+};
+
+/** A document added by hand, as opposed to one the CRM produced. */
+export type SalesCustomDocument = {
+	id: string;
+	type: SalesDocumentType;
+	number: string;
+	companyId: string;
+	companyName: string;
+	date: string;
+	amount: number;
+};
+
+export type SalesTeamRole = "seller" | "meeting-booker" | "account-manager";
+
+export type SalesTeamMember = {
+	id: string;
+	name: string;
+	role: SalesTeamRole;
+	/** Region id from the sales taxonomy. */
+	region: string;
+	email: string;
+	phone: string;
 };
 
 export type SalesCompanyDraft = Pick<

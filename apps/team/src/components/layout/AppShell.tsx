@@ -7,6 +7,8 @@ import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import { useAuthStatus } from "@/context/AuthContext";
 import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
+import { SalesSubSidebar } from "@/features/sales/components/layout/SalesSubSidebar";
+import { isSalesModulePath } from "@/features/sales/constants/salesNav";
 interface AppShellProps {
 	children: React.ReactNode;
 }
@@ -22,7 +24,8 @@ export function AppShell({ children }: AppShellProps) {
 	const isAuthRoute = pathname === "/teams/invitation" || authRoutes.some((route) => pathname.startsWith(route));
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const hasFlyoutSubSidebar = !!flyoutSubSidebarConfig;
-	const hasSubSidebar = hasFlyoutSubSidebar;
+	const isSalesModule = isSalesModulePath(pathname);
+	const hasSubSidebar = hasFlyoutSubSidebar || isSalesModule;
 
 	useEffect(() => {
 		if (!isReady || didRedirect.current) return;
@@ -43,6 +46,7 @@ export function AppShell({ children }: AppShellProps) {
 			<div className="flex h-screen flex-1 flex-col overflow-hidden">
 				<div className="flex flex-1 overflow-hidden">
 					<Sidebar autoCollapse={hasSubSidebar} />
+					{isSalesModule && <SalesSubSidebar />}
 					{flyoutSubSidebarConfig && (
 						<MyPagesSubSidebar
 							titleKey={flyoutSubSidebarConfig.titleKey}
@@ -53,7 +57,7 @@ export function AppShell({ children }: AppShellProps) {
 					<div className="flex flex-1 flex-col overflow-hidden">
 						<Header />
 						<main
-							className={`flex flex-1 flex-col bg-white hide-scrollbar ${hasFlyoutSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
+							className={`flex flex-1 flex-col bg-white hide-scrollbar ${hasSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
 						>
 							{children}
 						</main>

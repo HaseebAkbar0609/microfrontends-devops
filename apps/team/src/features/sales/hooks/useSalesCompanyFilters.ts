@@ -63,6 +63,8 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 	const [query, setQuery] = useState("");
 	const [category, setCategory] = useState("");
 	const [region, setRegion] = useState("");
+	const [seller, setSeller] = useState("");
+	const [onlyTrialAccounts, setOnlyTrialAccounts] = useState(false);
 	const [sort, setSort] = useState<SalesSort>({ key: "name", direction: 1 });
 
 	const counts = useMemo(() => {
@@ -77,6 +79,15 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 		return result;
 	}, [companies]);
 
+	/** Sellers present in the data, for the seller filter. */
+	const sellers = useMemo(
+		() =>
+			[
+				...new Set(companies.map((company) => company.seller).filter(Boolean)),
+			].sort(compareText),
+		[companies],
+	);
+
 	const visibleCompanies = useMemo(() => {
 		const normalisedQuery = query.trim().toLowerCase();
 		const filtered = companies.filter(
@@ -84,7 +95,11 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 				matchesStatusFilter(company, statusFilter) &&
 				matchesQuery(company, normalisedQuery) &&
 				(!category || company.category === category) &&
-				(!region || company.region === region),
+				(!region || company.region === region) &&
+				(!seller || company.seller === seller) &&
+				(!onlyTrialAccounts ||
+					hasActiveDemoAccount(company) ||
+					hasActiveTestAccount(company)),
 		);
 
 		return [...filtered].sort((a, b) => {
@@ -95,7 +110,16 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 			}
 			return compareText(String(left), String(right)) * sort.direction;
 		});
-	}, [companies, statusFilter, query, category, region, sort]);
+	}, [
+		companies,
+		statusFilter,
+		query,
+		category,
+		region,
+		seller,
+		onlyTrialAccounts,
+		sort,
+	]);
 
 	const toggleStatusFilter = useCallback((next: SalesStatusFilter) => {
 		setStatusFilter((current) => (current === next ? "all" : next));
@@ -118,12 +142,17 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 		query,
 		category,
 		region,
+		seller,
+		onlyTrialAccounts,
+		sellers,
 		sort,
 		counts,
 		visibleCompanies,
 		setQuery,
 		setCategory,
 		setRegion,
+		setSeller,
+		setOnlyTrialAccounts,
 		setStatus,
 		toggleStatusFilter,
 		toggleSort,

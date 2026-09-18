@@ -57,6 +57,9 @@ export const CSV_FILE_NAME_PREFIX = "timeflow-sales-companies";
 /** Milliseconds in one day, used for trial expiry maths. */
 export const MS_PER_DAY = 86_400_000;
 
+/** Days in one calendar week, used for the dashboard's "this week" figures. */
+export const DAYS_PER_WEEK = 7;
+
 /**
  * "Today" for everything derived from the seed data (trial days remaining,
  * quote validity). Mirrors `mockDates.ts` in the professional app: deriving

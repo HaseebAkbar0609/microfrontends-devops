@@ -1,0 +1,125 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { showToast } from "@/lib/toast";
+import localizationConstants from "@/utils/translation/constants";
+import { useTranslate } from "@/utils/translation/translate";
+import { MEETING_BOOKERS } from "../constants/meetingBooker.constants";
+import { SALES_REFERENCE_DATE } from "../constants/sales.constants";
+import type { SalesActivity, SalesCompany } from "../types";
+import { createId } from "../utils/salesFactories";
+import { getCallList, getMeetingBookerStats } from "../utils/meetingBooker";
+import { useSalesCompanies } from "./useSalesCompanies";
+
+/**
+ * State and actions for the meeting booker workspace.
+ *
+ * Everything is derived from the shared CRM companies, so a logged call shows
+ * up in the counters, the reminders and the statistics at once.
+ */
+export function useMeetingBooker() {
+	const { companies, updateCompany } = useSalesCompanies();
+	const t = useTranslate();
+	const [booker, setBooker] = useState(MEETING_BOOKERS[0] ?? "");
+	const [category, setCategory] = useState("");
+	const [region, setRegion] = useState("");
+	const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+
+	// The seed data's fixed date renders first so server and client markup
+	// match, then the real day takes over once mounted.
+	const [todayKey, setTodayKey] = useState(() => SALES_REFERENCE_DATE.slice(0, 10));
+	useEffect(() => {
+		setTodayKey(new Date().toISOString().slice(0, 10));
+	}, []);
+
+	const callList = useMemo(
+		() => getCallList(companies, { category, region }),
+		[companies, category, region],
+	);
+	const stats = useMemo(
+		() => getMeetingBookerStats(companies, todayKey),
+		[companies, todayKey],
+	);
+	const selectedCompany = useMemo(
+		() => companies.find((company) => company.id === selectedCompanyId) ?? null,
+		[companies, selectedCompanyId],
+	);
+
+	const addActivity = useCallback(
+		(company: SalesCompany, patch: Partial<SalesActivity>) => {
+			const activity: SalesActivity = {
+				id: createId("sa"),
+				date: new Date().toISOString(),
+				type: "note",
+				text: "",
+				followUpAt: "",
+				done: false,
+				booker,
+				...patch,
+			};
+			updateCompany(company.id, {
+				activities: [activity, ...company.activities],
+			});
+		},
+		[booker, updateCompany],
+	);
+
+	const logCall = useCallback(
+		(company: SalesCompany, text: string) => {
+			addActivity(company, { type: "call", text: text.trim() });
+			showToast("success", t(localizationConstants.salesBookerCallLoggedToast));
+		},
+		[addActivity, t],
+	);
+
+	const bookMeeting = useCallback(
+		(company: SalesCompany, meetingAt: string, text: string) => {
+			addActivity(company, {
+				type: "meeting",
+				text: text.trim(),
+				meetingAt: new Date(meetingAt).toISOString(),
+			});
+			showToast("success", t(localizationConstants.salesBookerMeetingBookedToast));
+		},
+		[addActivity, t],
+	);
+
+	const saveReminder = useCallback(
+		(company: SalesCompany, followUpAt: string, text: string) => {
+			addActivity(company, { type: "note", text: text.trim(), followUpAt });
+			showToast("success", t(localizationConstants.salesBookerReminderSavedToast));
+		},
+		[addActivity, t],
+	);
+
+	const completeReminder = useCallback(
+		(companyId: string, activityId: string) => {
+			const company = companies.find((item) => item.id === companyId);
+			if (!company) return;
+			updateCompany(companyId, {
+				activities: company.activities.map((activity) =>
+					activity.id === activityId ? { ...activity, done: true } : activity,
+				),
+			});
+		},
+		[companies, updateCompany],
+	);
+
+	return {
+		booker,
+		setBooker,
+		category,
+		setCategory,
+		region,
+		setRegion,
+		callList,
+		stats,
+		todayKey,
+		selectedCompany,
+		selectCompany: setSelectedCompanyId,
+		logCall,
+		bookMeeting,
+		saveReminder,
+		completeReminder,
+	};
+}
