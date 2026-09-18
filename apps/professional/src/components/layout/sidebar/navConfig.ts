@@ -172,6 +172,11 @@ export const navConfig: NavGroup[] = [
 				href: "/tools/templates",
 			},
 			{
+				id: "discount",
+				label: localizationConstants.discountsItem,
+				href: "/tools/discount",
+			},
+			{
 				id: "my-pages",
 				label: localizationConstants.myPages,
 				href: "/tools/my-pages",
