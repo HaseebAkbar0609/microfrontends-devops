@@ -29,7 +29,9 @@ export type BookerStats = {
 };
 
 export type DayCount = { dateKey: string; count: number };
-export type WeekCount = { week: number; count: number };
+/** An ISO week. `id` is `yyyy-Www`: unique across years and sorts by date. */
+export type IsoWeek = { id: string; week: number };
+export type WeekCount = IsoWeek & { count: number };
 
 export type MeetingBookerStats = {
 	callsToday: number;
@@ -60,21 +62,23 @@ export function toDateKey(iso: string | undefined): string {
 	return toLocalDateKey(parsed);
 }
 
-/** ISO-8601 week number of a `yyyy-mm-dd` key. */
-export function getIsoWeek(dateKey: string): number {
+/** ISO-8601 week of a `yyyy-mm-dd` key, or null for an invalid key. */
+export function getIsoWeek(dateKey: string): IsoWeek | null {
 	const date = new Date(`${dateKey}T00:00:00.000Z`);
-	if (Number.isNaN(date.getTime())) return 0;
+	if (Number.isNaN(date.getTime())) return null;
 	const dayIndex = (date.getUTCDay() + DAYS_PER_WEEK - 1) % DAYS_PER_WEEK;
+	// The Thursday of the week decides which year the week belongs to.
 	date.setUTCDate(date.getUTCDate() - dayIndex + 3);
-	const firstThursday = new Date(Date.UTC(date.getUTCFullYear(), 0, 4));
+	const year = date.getUTCFullYear();
+	const firstThursday = new Date(Date.UTC(year, 0, 4));
 	const firstIndex = (firstThursday.getUTCDay() + DAYS_PER_WEEK - 1) % DAYS_PER_WEEK;
 	firstThursday.setUTCDate(firstThursday.getUTCDate() - firstIndex + 3);
-	return (
+	const week =
 		1 +
 		Math.round(
 			(date.getTime() - firstThursday.getTime()) / (DAYS_PER_WEEK * MS_PER_DAY),
-		)
-	);
+		);
+	return { id: `${year}-W${String(week).padStart(2, "0")}`, week };
 }
 
 /** The `count` calendar days ending on `todayKey`, oldest first. */
@@ -136,7 +140,7 @@ export function getMeetingBookerStats(
 	const rows = toRows(companies);
 	const weekKeys = new Set(getWeekDayKeys(todayKey));
 	const dayCounts = new Map<string, number>();
-	const weekCounts = new Map<number, number>();
+	const weekCounts = new Map<string, WeekCount>();
 	const bookers = new Map<string, BookerStats>(
 		bookerNames.map((name) => [name, emptyBookerStats(name)]),
 	);
@@ -170,8 +174,12 @@ export function getMeetingBookerStats(
 			if (dayKey === todayKey) meetingsToday += 1;
 			if (weekKeys.has(dayKey)) meetingsThisWeek += 1;
 			dayCounts.set(dayKey, (dayCounts.get(dayKey) ?? 0) + 1);
-			const week = getIsoWeek(dayKey);
-			weekCounts.set(week, (weekCounts.get(week) ?? 0) + 1);
+			const isoWeek = getIsoWeek(dayKey);
+			if (isoWeek) {
+				const weekCount = weekCounts.get(isoWeek.id) ?? { ...isoWeek, count: 0 };
+				weekCount.count += 1;
+				weekCounts.set(isoWeek.id, weekCount);
+			}
 			if (stats) {
 				stats.meetings += 1;
 				if (weekKeys.has(dayKey)) stats.meetingsWeek += 1;
@@ -208,9 +216,7 @@ export function getMeetingBookerStats(
 			dateKey,
 			count: dayCounts.get(dateKey) ?? 0,
 		})),
-		perWeek: [...weekCounts.entries()]
-			.map(([week, count]) => ({ week, count }))
-			.sort((a, b) => a.week - b.week),
+		perWeek: [...weekCounts.values()].sort((a, b) => a.id.localeCompare(b.id)),
 		perBooker: [...bookers.values()].sort(
 			(a, b) =>
 				b.meetings - a.meetings || b.calls - a.calls || compareText(a.name, b.name),

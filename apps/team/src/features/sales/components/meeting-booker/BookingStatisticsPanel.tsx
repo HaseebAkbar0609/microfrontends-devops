@@ -46,7 +46,7 @@ export function BookingStatisticsPanel({ stats }: { stats: MeetingBookerStats })
 					) : (
 						<ul className="mt-2">
 							{stats.perWeek.map((week) => (
-								<li key={week.week} className={ROW_CLASS}>
+								<li key={week.id} className={ROW_CLASS}>
 									<span className="tabular-nums text-slate-700">
 										<Translate text={localizationConstants.salesBookerWeekPrefix} />{" "}
 										{week.week}

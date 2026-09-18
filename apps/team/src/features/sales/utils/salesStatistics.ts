@@ -5,7 +5,6 @@ import {
 } from "../constants/salesTaxonomy";
 import type { SalesCompany } from "../types";
 import {
-	getIsoWeek,
 	getMeetingBookerStats,
 	getRecentDayKeys,
 	toDateKey,
@@ -68,7 +67,6 @@ export function getSalesStatistics(
 	const dayKeys = getRecentDayKeys(todayKey, STATISTICS_DAYS);
 	const meetingsByDay = new Map<string, number>();
 	const callsByDay = new Map<string, number>();
-	const meetingsByWeek = new Map<number, number>();
 	let meetings = 0;
 	let calls = 0;
 	let invoiced = 0;
@@ -87,8 +85,6 @@ export function getSalesStatistics(
 				meetings += 1;
 				const dayKey = toDateKey(activity.meetingAt);
 				meetingsByDay.set(dayKey, (meetingsByDay.get(dayKey) ?? 0) + 1);
-				const week = getIsoWeek(dayKey);
-				meetingsByWeek.set(week, (meetingsByWeek.get(week) ?? 0) + 1);
 			}
 		}
 	}
@@ -100,6 +96,8 @@ export function getSalesStatistics(
 			label: dateKey.slice(5),
 			value: source.get(dateKey) ?? 0,
 		}));
+
+	const bookerStats = getMeetingBookerStats(companies, todayKey, bookerNames);
 
 	return {
 		companies: companies.length,
@@ -113,16 +111,16 @@ export function getSalesStatistics(
 		})),
 		meetingsPerDay: perDay(meetingsByDay),
 		callsPerDay: perDay(callsByDay),
-		meetingsPerWeek: [...meetingsByWeek.entries()]
-			.map(([week, value]) => ({ id: String(week), label: String(week), value }))
-			.sort((a, b) => Number(a.id) - Number(b.id)),
+		meetingsPerWeek: bookerStats.perWeek.map((week) => ({
+			id: week.id,
+			label: String(week.week),
+			value: week.count,
+		})),
 		byCategory: countBy(companies, "category", SALES_CATEGORIES),
 		byRegion: countBy(companies, "region", SALES_REGIONS),
-		bookerResults: getMeetingBookerStats(companies, todayKey, bookerNames).perBooker.map(
-			(booker) => ({
-				...booker,
-				bookingRate: booker.calls > 0 ? booker.meetings / booker.calls : 0,
-			}),
-		),
+		bookerResults: bookerStats.perBooker.map((booker) => ({
+			...booker,
+			bookingRate: booker.calls > 0 ? booker.meetings / booker.calls : 0,
+		})),
 	};
 }
