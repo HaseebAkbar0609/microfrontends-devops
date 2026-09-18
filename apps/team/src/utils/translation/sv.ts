@@ -905,6 +905,10 @@ export const sweAdmin: AdminTranslation = {
 	approvalStatusPending: "Väntar",
 	approvalStatusArchived: "Arkiverad",
 	partnerAddCategoryButton: "Lägg till ny kategori",
+	partnerAddCategoryDescription: "Kategorin läggs till i kategorilistan.",
+	partnerCategoryNameRequired: "Ange ett kategorinamn.",
+	partnerCategoryNameTaken: "Kategorin finns redan.",
+	partnerCategoryAddedToast: "Kategorin har lagts till",
 };
 
 export const sweSales: SalesTranslation = {
@@ -1828,6 +1832,30 @@ export const sweMarketing: MarketingTranslation = {
 };
 
 export const swe: Translation = {
+  billingLoadFailed: "Faktureringen kunde inte hämtas. Försök igen.",
+  billingStartDate: "Startdatum",
+  billingPlan: "Abonnemang",
+  billingQuantity: "Antal",
+  billingCreate: "Skapa och skicka faktura",
+  billingConfirm: "Bekräfta faktura och abonnemang",
+  billingTerms: "Betalning ska ske inom 10 dagar. Förnyelser debiteras det sparade kortet. Abonnemanget har tre månaders bindningstid.",
+  billingSent: "Fakturabegäran sparad.",
+  billingActivate: "Skicka aktiveringslänk",
+  billingActivationSent: "Aktiveringslänk skickad.",
+  billingError: "Begäran misslyckades. Uppdatera och kontrollera status innan du försöker igen.",
+  billingRefresh: "Uppdatera",
+  billingOpenInvoices: "Obetalda fakturor",
+  billingEmpty: "Inga obetalda fakturor.",
+  billingPending: "Ett abonnemang har redan begärts för företaget.",
+  billingCancel: "Avbryt",
+  billingOverrides: "Tillfällig åtkomst",
+  billingReason: "Orsak",
+  billingExpiry: "Åtkomst upphör",
+  billingGrant: "Bevilja åtkomst",
+  billingRevoke: "Återkalla åtkomst",
+  billingOverrideSaved: "Åtkomstundantag sparat.",
+  billingSelect: "Välj ett abonnemang",
+  billingNoCatalog: "Inga betalda priser tillgängliga. Synkronisera Stripe-katalogen först.",
 	...sweSidebar,
 	...sweAuth,
 	...sweCommonFiles,

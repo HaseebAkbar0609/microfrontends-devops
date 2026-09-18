@@ -82,12 +82,12 @@ export function ConstructionLogDetailsView({
 	const t = useTranslate();
 
 	const [wfSortAsc, setWfSortAsc] = useState(true);
+	const [wfSortCol, setWfSortCol] = useState<"role" | "own">("role");
 	const [actSortAsc, setActSortAsc] = useState(true);
-	const [actSortField, setActSortField] = useState<"title" | "status">(
-		"title",
-	);
+	const [actSortField, setActSortField] = useState<"title" | "status">("title");
 	const [machSortAsc, setMachSortAsc] = useState(true);
 	const [devSortAsc, setDevSortAsc] = useState(true);
+	const [devSortCol, setDevSortCol] = useState<"number" | "type" | "status">("number");
 
 	const [wfOpen, setWfOpen] = useState(true);
 	const [actOpen, setActOpen] = useState(true);
@@ -96,10 +96,12 @@ export function ConstructionLogDetailsView({
 
 	const sortedWorkforce = useMemo(() => {
 		return [...workforce].sort((a, b) => {
-			const res = a.role.localeCompare(b.role);
+			const res = wfSortCol === "role"
+				? a.role.localeCompare(b.role)
+				: (a.ownCount ?? 0) - (b.ownCount ?? 0);
 			return wfSortAsc ? res : -res;
 		});
-	}, [workforce, wfSortAsc]);
+	}, [workforce, wfSortAsc, wfSortCol]);
 
 	const sortedActivities = useMemo(() => {
 		return [...activities].sort((a, b) => {
@@ -120,9 +122,13 @@ export function ConstructionLogDetailsView({
 
 	const sortedDeviations = useMemo(() => {
 		return [...deviations].sort((a, b) => {
-			return devSortAsc ? a.number - b.number : b.number - a.number;
+			let res = 0;
+			if (devSortCol === "number") res = a.number - b.number;
+			else if (devSortCol === "type") res = a.type.localeCompare(b.type);
+			else if (devSortCol === "status") res = a.status.localeCompare(b.status);
+			return devSortAsc ? res : -res;
 		});
-	}, [deviations, devSortAsc]);
+	}, [deviations, devSortAsc, devSortCol]);
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -160,13 +166,16 @@ export function ConstructionLogDetailsView({
 									<TableHeader>
 										<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 whitespace-nowrap">
-												<Button type="button" variant="ghost" size="sm" onClick={() => setWfSortAsc(!wfSortAsc)} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
+												<Button type="button" variant="ghost" size="sm" onClick={() => { setWfSortCol("role"); setWfSortAsc(wfSortCol === "role" ? !wfSortAsc : true); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
 													<span>{t(localizationConstants.orderDagbokColRole)}</span>
 													<ArrowUpDown className="w-3.5 h-3.5" />
 												</Button>
 											</TableHead>
 										<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 text-center whitespace-nowrap">
-											<span>{t(localizationConstants.orderDagbokColOwn)}</span>
+											<Button type="button" variant="ghost" size="sm" onClick={() => { setWfSortCol("own"); setWfSortAsc(wfSortCol === "own" ? !wfSortAsc : true); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
+												<span>{t(localizationConstants.orderDagbokColOwn)}</span>
+												<ArrowUpDown className="w-3.5 h-3.5" />
+											</Button>
 										</TableHead>
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 text-center whitespace-nowrap">
 												<span>{t(localizationConstants.orderDagbokColSubcontractor)}</span>
@@ -235,13 +244,13 @@ export function ConstructionLogDetailsView({
 									<TableHeader>
 										<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 whitespace-nowrap min-w-[140px]">
-												<Button type="button" variant="ghost" size="sm" onClick={() => { setActSortField("title"); setActSortAsc(!actSortAsc); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
+												<Button type="button" variant="ghost" size="sm" onClick={() => { setActSortField("title"); setActSortAsc(actSortField === "title" ? !actSortAsc : true); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
 													<span>{t(localizationConstants.orderDagbokColRole)}</span>
 													<ArrowUpDown className="w-3.5 h-3.5" />
 												</Button>
 											</TableHead>
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 text-center whitespace-nowrap min-w-[100px]">
-												<Button type="button" variant="ghost" size="sm" onClick={() => { setActSortField("status"); setActSortAsc(!actSortAsc); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
+												<Button type="button" variant="ghost" size="sm" onClick={() => { setActSortField("status"); setActSortAsc(actSortField === "status" ? !actSortAsc : true); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
 													<span>{t(localizationConstants.orderDagbokColStatus)}</span>
 													<ArrowUpDown className="w-3.5 h-3.5" />
 												</Button>
@@ -376,16 +385,22 @@ export function ConstructionLogDetailsView({
 									<TableHeader>
 										<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 text-center whitespace-nowrap w-16">
-												<Button type="button" variant="ghost" size="sm" onClick={() => setDevSortAsc(!devSortAsc)} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
+												<Button type="button" variant="ghost" size="sm" onClick={() => { setDevSortCol("number"); setDevSortAsc(devSortCol === "number" ? !devSortAsc : true); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
 													<span>{t(localizationConstants.orderDagbokColNumber)}</span>
 													<ArrowUpDown className="w-3.5 h-3.5" />
 												</Button>
 											</TableHead>
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 text-center whitespace-nowrap min-w-[90px]">
-												<span>{t(localizationConstants.orderDagbokColType)}</span>
+												<Button type="button" variant="ghost" size="sm" onClick={() => { setDevSortCol("type"); setDevSortAsc(devSortCol === "type" ? !devSortAsc : true); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
+													<span>{t(localizationConstants.orderDagbokColType)}</span>
+													<ArrowUpDown className="w-3.5 h-3.5" />
+												</Button>
 											</TableHead>
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 text-center whitespace-nowrap min-w-[100px]">
-												<span>{t(localizationConstants.orderDagbokColStatus)}</span>
+												<Button type="button" variant="ghost" size="sm" onClick={() => { setDevSortCol("status"); setDevSortAsc(devSortCol === "status" ? !devSortAsc : true); }} className="p-0 h-auto font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 hover:text-slate-900 transition-colors cursor-pointer hover:bg-transparent">
+													<span>{t(localizationConstants.orderDagbokColStatus)}</span>
+													<ArrowUpDown className="w-3.5 h-3.5" />
+												</Button>
 											</TableHead>
 											<TableHead className="px-4 py-3.5 font-sans text-sm font-medium leading-6 tracking-normal text-slate-500 whitespace-nowrap min-w-[160px]">
 												<span>{t(localizationConstants.orderDagbokColNote)}</span>

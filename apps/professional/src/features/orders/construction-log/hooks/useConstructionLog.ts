@@ -62,6 +62,7 @@ export function useConstructionLog(orderId?: string) {
 					id: `log-${targetOrderId}-${selectedDate.replace(/-/g, "")}`,
 					date: selectedDate,
 					weather: { ...INITIAL_MOCK_CONSTRUCTION_LOG.weather, date: selectedDate },
+					status: "draft",
 					createdAt: new Date().toISOString(),
 					updatedAt: new Date().toISOString(),
 				};
@@ -113,18 +114,18 @@ export function useConstructionLog(orderId?: string) {
 		}));
 	}, []);
 
-	const handleSave = async () => {
+	const handleSave = useCallback(async () => {
 		try {
 			await saveConstructionLog(log, targetOrderId);
 			toast.success(t(localizationConstants.orderDagbokToastSaved));
 		} catch {
 			toast.error(t(localizationConstants.orderDagbokToastSaveError));
 		}
-	};
+	}, [log, targetOrderId, t]);
 
-	const handlePrint = () => {
+	const handlePrint = useCallback(() => {
 		window.print();
-	};
+	}, []);
 
 	// Filtered sub-lists according to search query and category filter
 	const filteredWorkforce = useMemo(

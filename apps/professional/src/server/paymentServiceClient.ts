@@ -105,6 +105,16 @@ async function loadSubscriptionContext(headers: CallerHeaders) {
 	return cartContextSchema.parse(await response.json()).data;
 }
 
+async function assertNoSalesOnboarding(headers: CallerHeaders) {
+	const response = await fetch(`${requiredServerUrl("TFS_BACKEND_URL")}/api/v1/subscriptions`, {
+		headers: { Authorization: headers.authorization, "X-Company-ID": headers.companyId },
+		cache: "no-store", signal: AbortSignal.timeout(10_000),
+	});
+	if (!response.ok || (await response.json()).data?.sales_onboarding_pending) {
+		throw new Error("Existing sales invoice must be completed before checkout");
+	}
+}
+
 async function verifyCallerContext(headers: CallerHeaders) {
 	await loadSubscriptionContext(headers);
 }
@@ -214,6 +224,7 @@ export async function createHostedCheckout(
 	headers: CallerHeaders,
 	request: CheckoutRequest,
 ) {
+	await assertNoSalesOnboarding(headers);
 	const context = await loadSubscriptionContext(headers);
 	const expectedInterval =
 		request.billingInterval === "annual" ? "yearly" : "monthly";

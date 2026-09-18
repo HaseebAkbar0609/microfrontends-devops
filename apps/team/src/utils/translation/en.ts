@@ -907,6 +907,10 @@ export const enAdmin: AdminTranslation = {
 	approvalStatusPending: "Pending",
 	approvalStatusArchived: "Archived",
 	partnerAddCategoryButton: "Add New Category",
+	partnerAddCategoryDescription: "The category is added to the category list.",
+	partnerCategoryNameRequired: "Enter a category name.",
+	partnerCategoryNameTaken: "That category already exists.",
+	partnerCategoryAddedToast: "Category added",
 };
 
 export const enSales: SalesTranslation = {
@@ -1830,6 +1834,30 @@ export const enMarketing: MarketingTranslation = {
 };
 
 export const en: Translation = {
+  billingLoadFailed: "Billing could not be loaded. Please try again.",
+  billingStartDate: "Start date",
+  billingPlan: "Plan",
+  billingQuantity: "Quantity",
+  billingCreate: "Create and send invoice",
+  billingConfirm: "Confirm invoice and subscription",
+  billingTerms: "Payment is due in 10 days. Renewals use the saved card. The subscription has a three-month commitment.",
+  billingSent: "Invoice request saved.",
+  billingActivate: "Send activation link",
+  billingActivationSent: "Activation link sent.",
+  billingError: "The request failed. Refresh to check its status before retrying.",
+  billingRefresh: "Refresh",
+  billingOpenInvoices: "Outstanding invoices",
+  billingEmpty: "No outstanding invoices.",
+  billingPending: "A subscription has already been requested for this company.",
+  billingCancel: "Cancel",
+  billingOverrides: "Temporary access",
+  billingReason: "Reason",
+  billingExpiry: "Access expires",
+  billingGrant: "Grant access",
+  billingRevoke: "Revoke access",
+  billingOverrideSaved: "Access override saved.",
+  billingSelect: "Select a plan",
+  billingNoCatalog: "No paid prices available. Synchronize the Stripe catalog first.",
 	...enSidebar,
 	...enAuth,
 	...enHeader,

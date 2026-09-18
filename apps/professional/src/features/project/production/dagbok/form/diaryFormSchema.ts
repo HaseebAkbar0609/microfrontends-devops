@@ -46,10 +46,3 @@ export function toDiaryContent(values: DiaryFormValues): DiaryContent {
 		selfControlNote: values.selfControlNote.trim(),
 	};
 }
-
-/** Ny dagbok: the day to open a diary for. `taken` is refined by the caller, which knows the project's days. */
-export const newDiarySchema = z.object({
-	date: z.string().min(1, M.projectDiaryDateRequired),
-});
-
-export type NewDiaryValues = z.infer<typeof newDiarySchema>;

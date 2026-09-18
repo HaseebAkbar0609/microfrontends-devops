@@ -2,6 +2,16 @@ import { generateTempId } from "@/lib/tempId";
 import { SEEDED_PROJECT_DIARIES } from "../data/projectDiaries.mock";
 import type { DiaryContent, DiarySignerRole, ProjectDiary } from "../types";
 
+const EMPTY_CONTENT: DiaryContent = {
+	weather: [],
+	workforce: [],
+	works: [],
+	machines: [],
+	deviations: [],
+	generalNotes: "",
+	selfControlNote: "",
+};
+
 /**
  * The project diaries, in memory.
  *
@@ -34,11 +44,16 @@ export function listDiaries(projectId: string): ProjectDiary[] {
 		.map((diary) => structuredClone(diary));
 }
 
-/** An empty draft for a day the project has no diary for yet; `undefined` when it has one. */
+/**
+ * A draft for a day the project has no diary for yet; `undefined` when it has
+ * one. Ny dagbok hands over the content it collected; the day page creates an
+ * empty one and fills it in afterwards.
+ */
 export function createDiary(
 	projectId: string,
 	date: string,
 	meta: { createdBy: string; today: string },
+	content: DiaryContent = EMPTY_CONTENT,
 ): ProjectDiary | undefined {
 	if (diaries.some((diary) => diary.projectId === projectId && diary.date === date)) return undefined;
 
@@ -47,13 +62,7 @@ export function createDiary(
 		projectId,
 		date,
 		status: "utkast",
-		weather: [],
-		workforce: [],
-		works: [],
-		machines: [],
-		deviations: [],
-		generalNotes: "",
-		selfControlNote: "",
+		...structuredClone(content),
 		signatures: { platschef: null, bestallare: null },
 		createdBy: meta.createdBy,
 		updatedDate: meta.today,
@@ -90,17 +99,24 @@ export function publishDiary(projectId: string, id: string, today: string): Proj
 	return replace({ ...previous, status: "publicerad", publishedDate: today });
 }
 
-/** Records a signature. Refused for a missing diary or a role that has already signed. */
+/**
+ * Records a signature. Refused for a missing diary or a role that has already
+ * signed. `fileName` is the uploaded signature's name, which Ny dagbok collects;
+ * the file itself is never stored.
+ */
 export function signDiary(
 	projectId: string,
 	id: string,
 	role: DiarySignerRole,
-	signature: { name: string; today: string },
+	signature: { name: string; today: string; fileName?: string },
 ): ProjectDiary | undefined {
 	const previous = find(projectId, id);
 	if (!previous || previous.signatures[role] || !signature.name.trim()) return undefined;
 	return replace({
 		...previous,
-		signatures: { ...previous.signatures, [role]: { name: signature.name, signedDate: signature.today } },
+		signatures: {
+			...previous.signatures,
+			[role]: { name: signature.name.trim(), signedDate: signature.today, fileName: signature.fileName },
+		},
 	});
 }

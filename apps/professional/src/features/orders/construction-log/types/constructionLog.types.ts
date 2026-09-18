@@ -82,6 +82,27 @@ export interface ConstructionLogEntry {
 	generalNotes: string;
 	selfInspectionNote: string;
 	signatures: SignaturesInfo;
+	status: "draft" | "published";
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface CreateLogStep1Data {
+	date: string;
+	author: string;
+	weather: WeatherInfo;
+}
+
+export interface CreateLogStep2Data {
+	workforce: WorkforceItem[];
+	activities: ActivityItem[];
+	machines: MachineItem[];
+	deviations: DeviationItem[];
+	generalNotes: string;
+	selfInspectionNote: string;
+}
+
+export interface CreateLogFormData {
+	step1: CreateLogStep1Data;
+	step2: CreateLogStep2Data;
 }

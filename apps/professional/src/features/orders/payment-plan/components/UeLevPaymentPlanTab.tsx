@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TablePagination } from "@/components/table/TablePagination";
 import { useTranslate } from "@/utils/translation/translate";
+import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import type { UeLevPaymentPlan, UeLevStatus } from "../types/paymentPlan.types";
 import { ConfirmModal } from "./PaymentPlanModals";
@@ -186,6 +187,7 @@ export function UeLevPaymentPlanTab({
 										<Button
 											type="button"
 											variant="secondary"
+											onClick={() => showToast("info", t(localizationConstants.comingSoon))}
 											className="h-8 px-4 text-xs font-medium rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 shadow-none cursor-pointer"
 										>
 											{t(localizationConstants.btnVisaDetaljer)}

@@ -53,10 +53,10 @@ export async function acceptOffer(projectId: string, quoteId: string) {
   return response.data.data;
 }
 
-export async function listCommissions(companyId: string) {
+export async function listCommissions(companyId: string, commissionId?: string) {
   if (!companyId) throw new Error("COMPANY_REQUIRED");
   const response = await axiosInstance.get<ApiResponse<{ items: CommissionSummary[] }>>(
-    `${QUOTE_MANAGEMENT}/commissions`, { headers: { "X-Company-ID": companyId } },
+    `${QUOTE_MANAGEMENT}/commissions`, { headers: { "X-Company-ID": companyId }, params: { commission_id: commissionId } },
   );
   if (!Array.isArray(response.data.data?.items)) throw new Error("COMMISSION_LIST_UNAVAILABLE");
   return response.data.data.items;

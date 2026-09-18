@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/table";
 import { ORDER_MODULE_BASE_URL } from "@/features/orders/data/orderNav.config";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { showToast } from "@/lib/toast";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import {
 	type MemberItem,
@@ -243,6 +244,7 @@ export function OrderOrganisationPage({ orderId = "5000-001", hideNavRow = false
 
 								<Button
 									type="button"
+									onClick={() => showToast("info", t(localizationConstants.comingSoon))}
 									className="h-10 min-h-[40px] px-4 sm:px-5 rounded-md bg-slate-900 hover:bg-slate-800 text-white text-sm font-medium shadow-none gap-2 cursor-pointer shrink-0 whitespace-nowrap flex items-center justify-center"
 								>
 									<Plus className="h-4 w-4 shrink-0" />
@@ -374,7 +376,7 @@ export function OrderOrganisationPage({ orderId = "5000-001", hideNavRow = false
 																				<Translate text={localizationConstants.orgViewAction} />
 																			</DropdownMenuItem>
 																			<DropdownMenuItem
-																				onClick={() => router.push(`${ORDER_MODULE_BASE_URL}/${orderId}`)}
+																				onClick={() => showToast("info", t(localizationConstants.comingSoon))}
 																				className="flex items-center gap-2 cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900"
 																			>
 																				<PencilLine className="h-3.5 w-3.5 text-slate-500 shrink-0" />
