@@ -51,10 +51,10 @@ export function AddCategoryDialog({
 		onOpenChange(nextOpen);
 	};
 
+	// The schema has already trimmed `category` by the time this runs.
 	const submit = form.handleSubmit(({ category, type }) => {
-		const name = category.trim();
 		const taken = existingNames.some(
-			(existing) => existing.trim().toLowerCase() === name.toLowerCase(),
+			(existing) => existing.trim().toLowerCase() === category.toLowerCase(),
 		);
 		if (taken) {
 			form.setError("category", { message: localizationConstants.partnerCategoryNameTaken });
@@ -63,7 +63,7 @@ export function AddCategoryDialog({
 		onCreated({
 			id: crypto.randomUUID(),
 			date: new Date().toISOString().slice(0, 10),
-			category: name,
+			category,
 			type,
 		});
 		showToast("success", t(localizationConstants.partnerCategoryAddedToast));

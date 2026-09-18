@@ -1,26 +1,27 @@
 export type PartnerRegisterStatus = "active" | "closed";
 export type PartnerApprovalStatus = "approved" | "declined" | "pending" | "archived";
 
+/** Business models a partner category can serve. */
+export const PARTNER_CATEGORY_TYPES = ["B2B", "B2C", "B2B - B2C"] as const;
+export type PartnerCategoryType = (typeof PARTNER_CATEGORY_TYPES)[number];
+
 export interface PartnerRegisterRow {
 	id: string;
 	company: string;
 	category: string;
 	contact: string;
 	mobile: string;
-	type: string;
+	type: PartnerCategoryType;
 	status: PartnerRegisterStatus;
 	date: string;
 	approvalStatus: PartnerApprovalStatus;
 }
 
-/** Business models a partner category can serve. */
-export const PARTNER_CATEGORY_TYPES = ["B2B", "B2C", "B2B - B2C"] as const;
-
 export interface PartnerCategoryRow {
 	id: string;
 	date: string;
 	category: string;
-	type: string;
+	type: PartnerCategoryType;
 }
 
 export const DUMMY_PARTNER_REGISTER: PartnerRegisterRow[] = [
@@ -52,7 +53,7 @@ export const DUMMY_PARTNER_REGISTER: PartnerRegisterRow[] = [
 		category: "Golv",
 		contact: "Johan Larsson",
 		mobile: "070-578 90 90",
-		type: "B2B-B2C",
+		type: "B2B - B2C",
 		status: "active",
 		date: "2026-01-01",
 		approvalStatus: "pending",
