@@ -2,6 +2,7 @@
 
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Translate } from "@/utils/translation/translate";
@@ -14,13 +15,13 @@ import type {
 } from "../../../../types/createCustomer.types";
 import { DocumentUploadZone } from "../sections/DocumentUploadZone";
 
-const RATING_CRITERIA: { field: CustomerRatingField; labelKey: string }[] = [
-	{ field: "economy", labelKey: "economyLabel" },
-	{ field: "environment", labelKey: "environmentLabel" },
-	{ field: "quality", labelKey: "qualityLabel" },
-	{ field: "collaboration", labelKey: "collaborationLabel" },
-	{ field: "punctuality", labelKey: "punctualityLabel" },
-	{ field: "service", labelKey: "serviceLabel" },
+const RATING_CRITERIA: { field: CustomerRatingField; labelKey: keyof typeof localizationConstants }[] = [
+	{ field: "economy", labelKey: "customerRatingEconomy" },
+	{ field: "environment", labelKey: "customerRatingEnvironment" },
+	{ field: "quality", labelKey: "customerRatingQuality" },
+	{ field: "collaboration", labelKey: "customerRatingCollaboration" },
+	{ field: "punctuality", labelKey: "customerRatingPunctuality" },
+	{ field: "service", labelKey: "customerRatingService" },
 ];
 
 interface Step3AssessmentProps {
@@ -40,6 +41,7 @@ export function Step3Assessment({
 	onAddDocument,
 	onRemoveDocument,
 }: Step3AssessmentProps) {
+	const { t } = useTranslation();
 	const { register } = form;
 
 	return (
@@ -47,7 +49,9 @@ export function Step3Assessment({
 			{/* Card 1: Bedömning (5-stjärnigt betyg) */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
 				<div className="border-b border-slate-100 pb-4">
-					<h3 className="text-sm font-bold text-slate-900 tracking-tight">Assessment</h3>
+					<h3 className="text-sm font-bold text-slate-900 tracking-tight">
+						<Translate text={localizationConstants.customerCardAssessment} />
+					</h3>
 				</div>
 
 				<div className="divide-y divide-slate-100">
@@ -59,7 +63,7 @@ export function Step3Assessment({
 								className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
 							>
 								<span className="text-xs font-medium text-slate-700">
-									<Translate text={criterion.labelKey} />
+									<Translate text={localizationConstants[criterion.labelKey]} />
 								</span>
 								<div className="flex items-center gap-1.5">
 									{[1, 2, 3, 4, 5].map((star) => (
@@ -68,7 +72,7 @@ export function Step3Assessment({
 											type="button"
 											onClick={() => onRatingChange(criterion.field, star)}
 											className="p-1 cursor-pointer transition-transform hover:scale-110 focus:outline-none"
-											aria-label={`Betygsätt ${star} stjärnor`}
+											aria-label={`Rate ${star} stars`}
 										>
 											<Star
 												className={`h-5 w-5 ${
@@ -96,16 +100,13 @@ export function Step3Assessment({
 			{/* Card 3: Tilläggsinformation */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-3">
 				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.additionalInfoSection} />
+					<Translate text={localizationConstants.customerAssessmentNotesLabel} />
 				</h3>
 				<div className="space-y-1.5">
-					<label className="text-xs font-medium text-slate-700">
-						<Translate text={localizationConstants.notesLabel} />
-					</label>
 					<Textarea
 						{...register("notes")}
-						placeholder="Övrig information eller historik om kunden..."
-						className="text-xs min-h-[100px]"
+						placeholder={t(localizationConstants.customerNotesPlaceholder)}
+						className="text-xs min-h-[100px] bg-white"
 					/>
 				</div>
 			</div>

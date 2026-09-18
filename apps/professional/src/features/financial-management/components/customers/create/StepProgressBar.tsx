@@ -2,6 +2,9 @@
 
 import React from "react";
 
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
+
 interface StepProgressBarProps {
 	currentStep: number;
 	totalSteps: number;
@@ -21,7 +24,7 @@ export function StepProgressBar({
 		>
 			<div className="flex items-center justify-between text-xs font-medium">
 				<span className="font-semibold text-slate-900">
-					Step {currentStep}/{totalSteps}
+					<Translate text={localizationConstants.customerStepPrefix} /> {currentStep}/{totalSteps}
 				</span>
 				<span className="font-normal text-slate-500">{progressPercent}%</span>
 			</div>

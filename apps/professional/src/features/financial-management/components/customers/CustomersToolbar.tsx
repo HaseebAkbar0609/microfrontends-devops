@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Search, ChevronDown, Download, Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
@@ -25,6 +26,8 @@ export function CustomersToolbar({
 	onRegisterNew,
 	onImportCustomer,
 }: CustomersToolbarProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
 			{/* Left controls: Search & Filter */}
@@ -34,7 +37,7 @@ export function CustomersToolbar({
 					<Input
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
-						placeholder="Sök"
+						placeholder={t(localizationConstants.customerSearchPlaceholder)}
 						className="h-10 pl-9 text-xs bg-white border-slate-200 rounded-lg placeholder:text-slate-400 focus-visible:ring-slate-900"
 					/>
 				</div>
@@ -47,10 +50,10 @@ export function CustomersToolbar({
 						}
 						className="h-10 appearance-none rounded-lg border border-slate-200 bg-white pl-4 pr-9 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-50 focus:outline-hidden focus:ring-2 focus:ring-slate-900 cursor-pointer"
 					>
-						<option value="all">Filter</option>
-						<option value="active">Aktiva</option>
-						<option value="prospect">Prospekt</option>
-						<option value="inactive">Inaktiva</option>
+						<option value="all">{t(localizationConstants.customerFilterBtn)}</option>
+						<option value="active">{t(localizationConstants.customerStatusActive)}</option>
+						<option value="prospect">{t(localizationConstants.customerStatusProspect)}</option>
+						<option value="inactive">{t(localizationConstants.customerStatusInactive)}</option>
 					</select>
 					<ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
 				</div>
@@ -66,7 +69,7 @@ export function CustomersToolbar({
 					className="h-10 px-4 text-xs font-semibold gap-2 border-slate-200 bg-white hover:bg-slate-50 text-slate-800 rounded-lg shadow-2xs cursor-pointer"
 				>
 					<Download className="h-4 w-4 text-slate-500" />
-					<Translate text={localizationConstants.customerRegisterImportCustomer} />
+					<Translate text={localizationConstants.customerImportButton} />
 				</Button>
 
 				<Button
@@ -76,7 +79,7 @@ export function CustomersToolbar({
 					className="h-10 px-5 text-xs font-semibold gap-2 bg-[#111827] hover:bg-slate-800 text-white rounded-lg shadow-2xs cursor-pointer"
 				>
 					<Plus className="h-4 w-4" />
-					<Translate text={localizationConstants.customerRegisterRegisterNew} />
+					<Translate text={localizationConstants.customerRegisterNewButton} />
 				</Button>
 			</div>
 		</div>

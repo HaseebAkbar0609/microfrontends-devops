@@ -34,10 +34,10 @@ export function DocumentUploadZone({
 		<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-5">
 			<div>
 				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.companyDetailsSection} />
+					<Translate text={localizationConstants.customerCardDocuments} />
 				</h3>
 				<p className="text-xs text-slate-500 mt-1">
-					<Translate text={localizationConstants.fileUploadHelper} />
+					<Translate text={localizationConstants.customerDropzoneSubtext} />
 				</p>
 			</div>
 
@@ -56,7 +56,7 @@ export function DocumentUploadZone({
 					className="h-10 px-5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold gap-2 rounded-lg cursor-pointer transition-colors shadow-2xs shrink-0"
 				>
 					<Upload className="h-4 w-4" />
-					<span>Ladda upp dokument</span>
+					<Translate text={localizationConstants.customerDropzoneText} />
 				</Button>
 			</div>
 
@@ -65,10 +65,18 @@ export function DocumentUploadZone({
 					<table className="w-full text-left text-xs">
 						<thead className="bg-slate-50 text-slate-600 border-b border-slate-200">
 							<tr>
-								<th className="py-2.5 px-4 font-semibold">Datum</th>
-								<th className="py-2.5 px-4 font-semibold">Dokumentnamn</th>
-								<th className="py-2.5 px-4 font-semibold">Storlek</th>
-								<th className="py-2.5 px-4 font-semibold text-right">Åtgärd</th>
+								<th className="py-2.5 px-4 font-semibold">
+									<Translate text={localizationConstants.customerDocColDate} />
+								</th>
+								<th className="py-2.5 px-4 font-semibold">
+									<Translate text={localizationConstants.customerDocColName} />
+								</th>
+								<th className="py-2.5 px-4 font-semibold">
+									<Translate text={localizationConstants.customerDocColSize} />
+								</th>
+								<th className="py-2.5 px-4 font-semibold text-right">
+									<Translate text={localizationConstants.customerDocColActions} />
+								</th>
 							</tr>
 						</thead>
 						<tbody className="divide-y divide-slate-100 text-slate-800">
@@ -89,7 +97,7 @@ export function DocumentUploadZone({
 											type="button"
 											onClick={() => onRemoveDocument(doc.id)}
 											className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer transition-colors"
-											aria-label="Ta bort dokument"
+											aria-label="Remove document"
 										>
 											<Trash2 className="h-4 w-4" />
 										</button>

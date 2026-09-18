@@ -33,7 +33,7 @@ export function CustomersTable({
 		return (
 			<div className="flex flex-col items-center justify-center py-16 px-4 text-center">
 				<p className="text-sm font-semibold text-slate-700">
-					<Translate text={localizationConstants.noDataFound} />
+					<Translate text={localizationConstants.customerTableNoResults} />
 				</p>
 			</div>
 		);
@@ -46,61 +46,81 @@ export function CustomersTable({
 					<tr className="border-b border-slate-200 text-slate-500 font-medium text-xs">
 						<th className="py-3.5 pl-6 pr-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>kund nr</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColNo} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Kund</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColName} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Org nr:</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColOrgNo} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Adress</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColAddress} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Post nr</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColPostalCode} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Ort</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColCity} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Land</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColCountry} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Telefon</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColPhone} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Mail</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColEmail} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
 						<th className="py-3.5 px-4 font-normal">
 							<div className="flex items-center gap-1.5 cursor-pointer hover:text-slate-900">
-								<span>Status</span>
+								<span>
+									<Translate text={localizationConstants.customerTableColStatus} />
+								</span>
 								<ArrowUpDown className="h-3 w-3 text-slate-400" />
 							</div>
 						</th>
@@ -132,7 +152,7 @@ export function CustomersTable({
 								{item.city || "—"}
 							</td>
 							<td className="py-4 px-4 text-slate-600">
-								{item.country || "Sverige"}
+								{item.country || "Sweden"}
 							</td>
 							<td className="py-4 px-4 text-slate-600">
 								{item.phone || "—"}
@@ -150,11 +170,13 @@ export function CustomersTable({
 												: "bg-slate-300 text-slate-800"
 									}`}
 								>
-									{item.status === "active"
-										? "Aktive"
-										: item.status === "prospect"
-											? "Prospekt"
-											: "Inaktiv"}
+									{item.status === "active" ? (
+										<Translate text={localizationConstants.customerStatusActive} />
+									) : item.status === "prospect" ? (
+										<Translate text={localizationConstants.customerStatusProspect} />
+									) : (
+										<Translate text={localizationConstants.customerStatusInactive} />
+									)}
 								</span>
 							</td>
 							<td className="py-4 pl-4 pr-6 text-right">
@@ -163,7 +185,7 @@ export function CustomersTable({
 										type="button"
 										onClick={() => onView?.(item.id)}
 										className="p-1 hover:text-slate-800 rounded transition-colors cursor-pointer"
-										title="Visa"
+										title="View"
 									>
 										<Eye className="h-4 w-4" />
 									</button>
@@ -171,7 +193,7 @@ export function CustomersTable({
 										type="button"
 										onClick={() => onMore?.(item.id)}
 										className="p-1 hover:text-slate-800 rounded transition-colors cursor-pointer"
-										title="Mer"
+										title="More"
 									>
 										<MoreVertical className="h-4 w-4" />
 									</button>

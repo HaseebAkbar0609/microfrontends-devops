@@ -3,6 +3,8 @@
 import React from "react";
 import { ArrowLeft, ArrowRight, Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 import { useCreateCustomerForm } from "../../../hooks/useCreateCustomerForm";
 import { CreateCustomerTabs, type CustomerWizardTab } from "./CreateCustomerTabs";
 import { StepProgressBar } from "./StepProgressBar";
@@ -17,8 +19,6 @@ export function CreateCustomerWizard() {
 		currentStep,
 		totalSteps,
 		isSubmitting,
-		isSavingDraft,
-		entityType,
 		ratings,
 		documents,
 		contactPersons,
@@ -33,7 +33,6 @@ export function CreateCustomerWizard() {
 		handleRemoveContactPerson,
 		handleAddAssociatedPerson,
 		handleRemoveAssociatedPerson,
-		handleSaveDraft,
 		handleCancel,
 		submitForm,
 	} = useCreateCustomerForm();
@@ -73,10 +72,10 @@ export function CreateCustomerWizard() {
 					</button>
 					<div>
 						<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-							Create New Customer
+							<Translate text={localizationConstants.customerCreateTitle} />
 						</h1>
 						<p className="text-xs text-slate-500 font-medium">
-							Step {currentStep}/{totalSteps}
+							<Translate text={localizationConstants.customerStepPrefix} /> {currentStep}/{totalSteps}
 						</p>
 					</div>
 				</div>
@@ -92,15 +91,7 @@ export function CreateCustomerWizard() {
 			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 				{/* Left Main Form Column */}
 				<div className="lg:col-span-8 xl:col-span-9 space-y-6">
-					{currentStep === 1 && (
-						<Step1BasicInfo
-							form={form}
-							entityType={entityType}
-							onEntityTypeChange={(type) =>
-								form.setValue("entityType", type, { shouldDirty: true })
-							}
-						/>
-					)}
+					{currentStep === 1 && <Step1BasicInfo form={form} />}
 
 					{currentStep === 2 && (
 						<Step2Contact
@@ -163,18 +154,7 @@ export function CreateCustomerWizard() {
 					onClick={handleCancel}
 					className="h-10 px-5 text-xs font-semibold text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer rounded-lg shadow-2xs"
 				>
-					Cancel
-				</Button>
-
-				<Button
-					type="button"
-					size="sm"
-					onClick={handleSaveDraft}
-					disabled={isSavingDraft}
-					className="h-10 px-6 text-xs font-semibold gap-2 bg-[#111827] hover:bg-slate-800 text-white cursor-pointer rounded-lg shadow-2xs"
-				>
-					<Save className="h-4 w-4" />
-					<span>Save</span>
+					<Translate text={localizationConstants.customerBtnCancel} />
 				</Button>
 
 				{currentStep < totalSteps ? (
@@ -184,7 +164,7 @@ export function CreateCustomerWizard() {
 						onClick={handleNext}
 						className="h-10 px-6 text-xs font-semibold gap-2 bg-[#111827] hover:bg-slate-800 text-white cursor-pointer rounded-lg shadow-2xs"
 					>
-						<span>Next</span>
+						<Translate text={localizationConstants.customerBtnNext} />
 						<ArrowRight className="h-4 w-4" />
 					</Button>
 				) : (
@@ -193,10 +173,14 @@ export function CreateCustomerWizard() {
 						size="sm"
 						onClick={submitForm}
 						disabled={isSubmitting}
-						className="h-10 px-6 text-xs font-semibold gap-2 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer rounded-lg shadow-2xs"
+						className="h-10 px-6 text-xs font-semibold gap-2 bg-[#111827] hover:bg-slate-800 text-white cursor-pointer rounded-lg shadow-2xs"
 					>
-						{isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-						<span>Save & Create</span>
+						{isSubmitting ? (
+							<Loader2 className="h-4 w-4 animate-spin" />
+						) : (
+							<Save className="h-4 w-4" />
+						)}
+						<Translate text={localizationConstants.customerBtnSave} />
 					</Button>
 				)}
 			</div>

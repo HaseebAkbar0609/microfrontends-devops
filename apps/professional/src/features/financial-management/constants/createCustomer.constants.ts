@@ -83,34 +83,36 @@ export const DEFAULT_INITIAL_CUSTOMER_FORM_VALUES: CreateCustomerFormData = {
 	associatedPersons: [],
 };
 
-export const CUSTOMER_STATUS_OPTIONS = [
-	{ value: "active", labelKey: "activeStatus" },
-	{ value: "prospect", labelKey: "prospectStatus" },
-	{ value: "inactive", labelKey: "inactiveStatus" },
+import localizationConstants from "@/utils/translation/constants";
+
+export const CUSTOMER_STATUS_OPTIONS: { value: string; labelKey: keyof typeof localizationConstants }[] = [
+	{ value: "active", labelKey: "customerStatusActive" },
+	{ value: "prospect", labelKey: "customerStatusProspect" },
+	{ value: "inactive", labelKey: "customerStatusInactive" },
 ];
 
-export const MAIN_CATEGORY_OPTIONS = [
-	{ value: "bygg", label: "Bygg & Anläggning" },
-	{ value: "el", label: "El & Belysning" },
-	{ value: "vvs", label: "VVS & Sanitet" },
-	{ value: "konsult", label: "Konsulttjänster" },
-	{ value: "other", label: "Övrigt" },
+export const MAIN_CATEGORY_OPTIONS: { value: string; labelKey: keyof typeof localizationConstants }[] = [
+	{ value: "bygg", labelKey: "customerCategoryBygg" },
+	{ value: "el", labelKey: "customerCategoryEl" },
+	{ value: "vvs", labelKey: "customerCategoryVvs" },
+	{ value: "konsult", labelKey: "customerCategoryKonsult" },
+	{ value: "other", labelKey: "customerCategoryOther" },
 ];
 
-export const CONTACT_ROLE_OPTIONS = [
-	{ value: "Beställare", label: "Beställare" },
-	{ value: "Ekonomiansvarig", label: "Ekonomiansvarig" },
-	{ value: "Projektledare", label: "Projektledare" },
-	{ value: "Platschef", label: "Platschef" },
-	{ value: "Övrig", label: "Övrig" },
+export const CONTACT_ROLE_OPTIONS: { value: string; labelKey: keyof typeof localizationConstants }[] = [
+	{ value: "Beställare", labelKey: "customerRolePurchaser" },
+	{ value: "Ekonomiansvarig", labelKey: "customerRoleFinance" },
+	{ value: "Projektledare", labelKey: "customerRoleProjectLeader" },
+	{ value: "Platschef", labelKey: "customerRoleSiteManager" },
+	{ value: "Övrig", labelKey: "customerRoleOther" },
 ];
 
-export const PAYMENT_TERMS_OPTIONS = [
-	{ value: "10", label: "10 dagar" },
-	{ value: "15", label: "15 dagar" },
-	{ value: "20", label: "20 dagar" },
-	{ value: "30", label: "30 dagar" },
-	{ value: "60", label: "60 dagar" },
+export const PAYMENT_TERMS_OPTIONS: { value: string; labelKey: keyof typeof localizationConstants }[] = [
+	{ value: "10", labelKey: "customerPaymentTerms10" },
+	{ value: "15", labelKey: "customerPaymentTerms15" },
+	{ value: "20", labelKey: "customerPaymentTerms20" },
+	{ value: "30", labelKey: "customerPaymentTerms30" },
+	{ value: "60", labelKey: "customerPaymentTerms60" },
 ];
 
 export const CURRENCY_OPTIONS = [
@@ -120,9 +122,9 @@ export const CURRENCY_OPTIONS = [
 	{ value: "NOK", label: "NOK" },
 ];
 
-export const VAT_TYPE_OPTIONS = [
-	{ value: "25%", label: "25 % (Standard)" },
-	{ value: "12%", label: "12 % (Livsmedel / Hotell)" },
-	{ value: "6%", label: "6 % (Kultur / Böcker)" },
-	{ value: "0%", label: "0 % (Momsfri / Export)" },
+export const VAT_TYPE_OPTIONS: { value: string; labelKey: keyof typeof localizationConstants }[] = [
+	{ value: "25%", labelKey: "customerVatStandard" },
+	{ value: "12%", labelKey: "customerVatReduced12" },
+	{ value: "6%", labelKey: "customerVatReduced6" },
+	{ value: "0%", labelKey: "customerVatZero" },
 ];

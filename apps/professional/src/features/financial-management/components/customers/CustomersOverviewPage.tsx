@@ -2,6 +2,8 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 import { customerOverviewRepository } from "../../utils/customerOverviewRepository";
 import { CUSTOMER_CREATE_ROUTE } from "../../constants/customerOverview.constants";
 import type { CustomerStatus, CustomerOverviewItem } from "../../types/customers.types";
@@ -48,7 +50,7 @@ export function CustomersOverviewPage() {
 			{/* Top Tab matching Figma Image 2: Kundlista */}
 			<div className="border-b border-slate-200">
 				<div className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight">
-					<span>Kundlista</span>
+					<Translate text={localizationConstants.customerListTab} />
 				</div>
 			</div>
 

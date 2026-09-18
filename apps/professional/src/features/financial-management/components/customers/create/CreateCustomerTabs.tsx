@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { Translate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 
 export type CustomerWizardTab = "basic_info" | "contact" | "assessment" | "invoice";
 
@@ -9,11 +11,11 @@ interface CreateCustomerTabsProps {
 	onTabChange: (tab: CustomerWizardTab) => void;
 }
 
-const TABS: { id: CustomerWizardTab; label: string; step: number }[] = [
-	{ id: "basic_info", label: "Basic Info", step: 1 },
-	{ id: "contact", label: "Contact", step: 2 },
-	{ id: "assessment", label: "Assessment", step: 3 },
-	{ id: "invoice", label: "Invoice", step: 4 },
+const TABS: { id: CustomerWizardTab; labelKey: keyof typeof localizationConstants; step: number }[] = [
+	{ id: "basic_info", labelKey: "customerTabBasicInfo", step: 1 },
+	{ id: "contact", labelKey: "customerTabContact", step: 2 },
+	{ id: "assessment", labelKey: "customerTabAssessment", step: 3 },
+	{ id: "invoice", labelKey: "customerTabInvoice", step: 4 },
 ];
 
 export function CreateCustomerTabs({
@@ -36,7 +38,7 @@ export function CreateCustomerTabs({
 									: "border-transparent text-slate-500 hover:border-slate-300 hover:text-slate-700"
 							}`}
 						>
-							{tab.label}
+							<Translate text={localizationConstants[tab.labelKey]} />
 						</button>
 					);
 				})}

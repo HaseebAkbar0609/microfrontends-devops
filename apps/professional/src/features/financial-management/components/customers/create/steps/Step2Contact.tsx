@@ -2,6 +2,7 @@
 
 import React from "react";
 import type { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,6 +30,7 @@ export function Step2Contact({
 	onRemoveContactPerson,
 	onUpdateContactPerson,
 }: Step2ContactProps) {
+	const { t } = useTranslation();
 	const {
 		register,
 		formState: { errors },
@@ -39,58 +41,64 @@ export function Step2Contact({
 			{/* Card 1: Allmän Kontaktinformation */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
 				<div className="border-b border-slate-100 pb-4">
-					<h3 className="text-sm font-bold text-slate-900 tracking-tight">Contact Information</h3>
+					<h3 className="text-sm font-bold text-slate-900 tracking-tight">
+						<Translate text={localizationConstants.customerCardContactInfo} />
+					</h3>
 				</div>
 
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div className="space-y-1.5">
 						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.phoneLabel} /> *
+							<Translate text={localizationConstants.customerPhoneLabel} /> *
 						</label>
 						<Input
 							{...register("phone")}
-							placeholder="070-510 10 00"
-							className={`h-10 text-xs ${errors.phone ? "border-rose-500" : ""}`}
+							placeholder={t(localizationConstants.customerPhonePlaceholder)}
+							className={`h-10 text-xs bg-white ${errors.phone ? "border-rose-500" : ""}`}
 						/>
 						{errors.phone && (
 							<p className="text-[11px] text-rose-500">
-								<Translate text={errors.phone.message || ""} />
+								<Translate text={errors.phone.message || localizationConstants.customerValidationPhone} />
 							</p>
 						)}
 					</div>
 
 					<div className="space-y-1.5">
 						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.emailLabel} /> *
+							<Translate text={localizationConstants.customerEmailLabel} /> *
 						</label>
 						<Input
 							type="email"
 							{...register("email")}
-							placeholder="info@kund.se"
-							className={`h-10 text-xs ${errors.email ? "border-rose-500" : ""}`}
+							placeholder={t(localizationConstants.customerEmailPlaceholder)}
+							className={`h-10 text-xs bg-white ${errors.email ? "border-rose-500" : ""}`}
 						/>
 						{errors.email && (
 							<p className="text-[11px] text-rose-500">
-								<Translate text={errors.email.message || ""} />
+								<Translate text={errors.email.message || localizationConstants.customerValidationEmail} />
 							</p>
 						)}
 					</div>
 
 					<div className="space-y-1.5">
 						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.websiteLabel} />
+							<Translate text={localizationConstants.customerWebsiteLabel} />
 						</label>
-						<Input {...register("website")} placeholder="www.kund.se" className="h-10 text-xs" />
+						<Input
+							{...register("website")}
+							placeholder={t(localizationConstants.customerWebsitePlaceholder)}
+							className="h-10 text-xs bg-white"
+						/>
 					</div>
 
 					<div className="space-y-1.5 sm:col-span-2">
 						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.notesLabel} />
+							<Translate text={localizationConstants.customerNotesLabel} />
 						</label>
 						<Textarea
 							{...register("contactNotes")}
-							placeholder="Anteckningar om kundens kontaktpersoner..."
-							className="text-xs min-h-[80px]"
+							placeholder={t(localizationConstants.customerNotesPlaceholder)}
+							className="text-xs min-h-[80px] bg-white"
 						/>
 					</div>
 				</div>
@@ -101,11 +109,8 @@ export function Step2Contact({
 				<div className="flex items-center justify-between">
 					<div>
 						<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-							<Translate text={localizationConstants.contactPersonsSection} />
+							<Translate text={localizationConstants.customerCardContactPersons} />
 						</h3>
-						<p className="text-xs text-slate-500 mt-0.5">
-							Hantera nyckelpersoner och roller hos kunden
-						</p>
 					</div>
 					<Button
 						type="button"
@@ -115,7 +120,7 @@ export function Step2Contact({
 						className="h-9 px-4 text-xs font-semibold gap-1.5 border-slate-200 hover:bg-slate-50 cursor-pointer"
 					>
 						<Plus className="h-4 w-4" />
-						<Translate text={localizationConstants.addContactButton} />
+						<Translate text={localizationConstants.customerAddContactPersonButton} />
 					</Button>
 				</div>
 

@@ -90,7 +90,7 @@ export function CasesToolbar({
 								className="text-[11px] text-slate-500 hover:text-slate-800 flex items-center gap-1 cursor-pointer"
 							>
 								<X className="w-3 h-3" />
-								<span>Reset</span>
+								<Translate text={localizationConstants.resetFilter} />
 							</button>
 						)}
 					</div>
