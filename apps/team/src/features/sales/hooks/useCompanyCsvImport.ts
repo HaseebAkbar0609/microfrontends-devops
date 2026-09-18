@@ -2,7 +2,9 @@
 
 import { useRef, type ChangeEvent } from "react";
 import { showToast } from "@/lib/toast";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, {
+	type TranslationKeys,
+} from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { parseCompaniesCsv } from "../utils/salesCsv";
 import { useSalesCompanies } from "./useSalesCompanies";
@@ -12,7 +14,7 @@ import { useSalesCompanies } from "./useSalesCompanies";
  * without a name are skipped. `emptyToastKey`, when given, is shown for a file
  * that holds no companies.
  */
-export function useCompanyCsvImport(emptyToastKey?: string) {
+export function useCompanyCsvImport(emptyToastKey?: TranslationKeys) {
 	const { addCompanies } = useSalesCompanies();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const t = useTranslate();
