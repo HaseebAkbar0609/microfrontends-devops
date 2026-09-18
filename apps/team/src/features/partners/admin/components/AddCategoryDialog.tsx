@@ -25,6 +25,14 @@ import {
 // Business model codes read the same in Swedish and English.
 const TYPE_OPTIONS = PARTNER_CATEGORY_TYPES.map((type) => ({ value: type, label: type }));
 
+/** Today as YYYY-MM-DD in the user's time zone, not UTC. */
+function todayLocalDateKey() {
+	const now = new Date();
+	const month = String(now.getMonth() + 1).padStart(2, "0");
+	const day = String(now.getDate()).padStart(2, "0");
+	return `${now.getFullYear()}-${month}-${day}`;
+}
+
 type AddCategoryDialogProps = {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
@@ -62,7 +70,7 @@ export function AddCategoryDialog({
 		}
 		onCreated({
 			id: crypto.randomUUID(),
-			date: new Date().toISOString().slice(0, 10),
+			date: todayLocalDateKey(),
 			category,
 			type,
 		});
