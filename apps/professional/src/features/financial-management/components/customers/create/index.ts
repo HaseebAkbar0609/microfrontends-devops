@@ -1,4 +1,5 @@
 export { CreateCustomerWizard } from "./CreateCustomerWizard";
+export { CreateCustomerTabs, type CustomerWizardTab } from "./CreateCustomerTabs";
 export { StepProgressBar } from "./StepProgressBar";
 export { Step1BasicInfo } from "./steps/Step1BasicInfo";
 export { Step2Contact } from "./steps/Step2Contact";

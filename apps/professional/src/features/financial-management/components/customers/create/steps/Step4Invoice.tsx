@@ -13,6 +13,7 @@ import {
 	VAT_TYPE_OPTIONS,
 } from "../../../../constants/createCustomer.constants";
 import { RotRutSection } from "../sections/RotRutSection";
+import { StepProgressBar } from "../StepProgressBar";
 
 interface Step4InvoiceProps {
 	form: UseFormReturn<CreateCustomerFormData>;
@@ -41,9 +42,10 @@ export function Step4Invoice({
 		<div className="space-y-6">
 			{/* Betal- och leveransvillkor */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
-				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					Betal- och leveransvillkor
-				</h3>
+				<div className="flex items-center justify-between border-b border-slate-100 pb-4">
+					<h3 className="text-sm font-bold text-slate-900 tracking-tight">Invoice</h3>
+					<StepProgressBar currentStep={4} totalSteps={4} />
+				</div>
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<div className="space-y-1.5">
 						<label className="text-xs font-medium text-slate-700">Betalningsvillkor</label>

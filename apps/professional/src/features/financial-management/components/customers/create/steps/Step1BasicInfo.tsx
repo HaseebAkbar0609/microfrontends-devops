@@ -10,8 +10,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
 import type {
 	CreateCustomerFormData,
 	CustomerEntityType,
@@ -21,6 +19,7 @@ import {
 	MAIN_CATEGORY_OPTIONS,
 } from "../../../../constants/createCustomer.constants";
 import { CompanyOrPrivateSelector } from "../sections/CompanyOrPrivateSelector";
+import { StepProgressBar } from "../StepProgressBar";
 
 interface Step1BasicInfoProps {
 	form: UseFormReturn<CreateCustomerFormData>;
@@ -56,45 +55,48 @@ export function Step1BasicInfo({
 
 	return (
 		<div className="space-y-6">
-			{/* Entity Type Selector */}
-			<CompanyOrPrivateSelector
-				value={entityType}
-				onChange={onEntityTypeChange}
-			/>
+			{/* Card 1: Customer matching Figma Image 4 */}
+			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-5">
+				<div className="flex items-center justify-between border-b border-slate-100 pb-4">
+					<h3 className="text-sm font-bold text-slate-900 tracking-tight">Customer</h3>
+					<StepProgressBar currentStep={1} totalSteps={4} />
+				</div>
 
-			{/* Card 1: Kund Information */}
-			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
-				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.customerSection} />
-				</h3>
+				{/* Entity Type Toggle */}
+				<CompanyOrPrivateSelector
+					value={entityType}
+					onChange={onEntityTypeChange}
+				/>
 
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+					{/* Customer No */}
 					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.customerNoLabel} />
-						</label>
+						<label className="text-xs font-medium text-slate-700">Customer No.</label>
 						<Input
 							{...register("customerNo")}
-							placeholder="Genereras automatiskt (t.ex. #M102)"
-							className="h-10 text-xs bg-slate-50/50"
+							placeholder="Enter customer no."
+							className="h-10 text-xs bg-white"
 						/>
 					</div>
 
+					{/* Status */}
 					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.statusLabel} />
-						</label>
+						<label className="text-xs font-medium text-slate-700">Status</label>
 						<Select
 							value={watch("status") || "prospect"}
-							onValueChange={(val) => setValue("status", val)}
+							onValueChange={(val) => setValue("status", val, { shouldDirty: true })}
 						>
 							<SelectTrigger className="h-10 text-xs bg-white">
-								<SelectValue placeholder="Välj status" />
+								<SelectValue placeholder="Select status" />
 							</SelectTrigger>
 							<SelectContent className="bg-white">
 								{CUSTOMER_STATUS_OPTIONS.map((opt) => (
 									<SelectItem key={opt.value} value={opt.value} className="text-xs cursor-pointer">
-										<Translate text={opt.labelKey} />
+										{opt.value === "active"
+											? "Aktiv"
+											: opt.value === "prospect"
+												? "Prospekt"
+												: "Inaktiv"}
 									</SelectItem>
 								))}
 							</SelectContent>
@@ -103,35 +105,33 @@ export function Step1BasicInfo({
 
 					{entityType === "company" ? (
 						<>
+							{/* Company Name */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.companyNameLabel} /> *
-								</label>
+								<label className="text-xs font-medium text-slate-700">Company Name *</label>
 								<Input
 									{...register("companyName")}
-									placeholder="Företagsnamn AB"
-									className={`h-10 text-xs ${errors.companyName ? "border-rose-500" : ""}`}
+									placeholder="Enter company name"
+									className={`h-10 text-xs bg-white ${
+										errors.companyName ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
 								/>
 								{errors.companyName && (
-									<p className="text-[11px] text-rose-500">
-										<Translate text={errors.companyName.message || ""} />
-									</p>
+									<p className="text-[11px] text-rose-500 font-medium">Företagsnamn krävs</p>
 								)}
 							</div>
 
+							{/* Main Category */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.mainCategoryLabel} />
-								</label>
+								<label className="text-xs font-medium text-slate-700">Main Category</label>
 								<Select
 									value={watch("mainCategory") || ""}
-									onValueChange={(val) => setValue("mainCategory", val)}
+									onValueChange={(val) => setValue("mainCategory", val, { shouldDirty: true })}
 								>
 									<SelectTrigger className="h-10 text-xs bg-white">
-										<SelectValue placeholder="Välj huvudkategori" />
+										<SelectValue placeholder="Select category" />
 									</SelectTrigger>
 									<SelectContent className="bg-white">
-										{MAIN_CATEGORY_OPTIONS.map((opt) => (
+										{MAIN_CATEGORY_OPTIONS.map((opt: { value: string; label: string }) => (
 											<SelectItem key={opt.value} value={opt.value} className="text-xs cursor-pointer">
 												{opt.label}
 											</SelectItem>
@@ -140,112 +140,110 @@ export function Step1BasicInfo({
 								</Select>
 							</div>
 
+							{/* Department */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.departmentLabel} />
-								</label>
+								<label className="text-xs font-medium text-slate-700">Department</label>
 								<Input
 									{...register("department")}
-									placeholder="Avdelning"
-									className="h-10 text-xs"
+									placeholder="Enter department"
+									className="h-10 text-xs bg-white"
 								/>
 							</div>
 
+							{/* Region */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.regionLabel} />
-								</label>
-								<Input {...register("region")} placeholder="Region" className="h-10 text-xs" />
+								<label className="text-xs font-medium text-slate-700">Region</label>
+								<Input
+									{...register("region")}
+									placeholder="Enter region"
+									className="h-10 text-xs bg-white"
+								/>
 							</div>
 
+							{/* Org No */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.orgNoLabel} /> *
-								</label>
+								<label className="text-xs font-medium text-slate-700">Organisationsnummer *</label>
 								<Input
 									{...register("orgNo")}
-									placeholder="556010-1020"
-									className={`h-10 text-xs ${errors.orgNo ? "border-rose-500" : ""}`}
+									placeholder="XXXXXX-XXXX"
+									className={`h-10 text-xs bg-white ${
+										errors.orgNo ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
 								/>
 								{errors.orgNo && (
-									<p className="text-[11px] text-rose-500">
-										<Translate text={errors.orgNo.message || ""} />
-									</p>
+									<p className="text-[11px] text-rose-500 font-medium">Ogiltigt organisationsnummer</p>
 								)}
 							</div>
 
+							{/* VAT Reg No */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.vatRegNoLabel} />
-								</label>
+								<label className="text-xs font-medium text-slate-700">VAT Reg No</label>
 								<Input
 									{...register("vatRegNo")}
-									placeholder="SE556010102001"
-									className="h-10 text-xs"
+									placeholder="SE123456789001"
+									className="h-10 text-xs bg-white"
 								/>
 							</div>
 						</>
 					) : (
 						<>
+							{/* First Name */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.firstNameLabel} /> *
-								</label>
+								<label className="text-xs font-medium text-slate-700">Förnamn *</label>
 								<Input
 									{...register("firstName")}
-									placeholder="Förnamn"
-									className={`h-10 text-xs ${errors.firstName ? "border-rose-500" : ""}`}
+									placeholder="Enter first name"
+									className={`h-10 text-xs bg-white ${
+										errors.firstName ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
 								/>
 								{errors.firstName && (
-									<p className="text-[11px] text-rose-500">
-										<Translate text={errors.firstName.message || ""} />
-									</p>
+									<p className="text-[11px] text-rose-500 font-medium">Förnamn krävs</p>
 								)}
 							</div>
 
+							{/* Last Name */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.lastNameLabel} /> *
-								</label>
+								<label className="text-xs font-medium text-slate-700">Efternamn *</label>
 								<Input
 									{...register("lastName")}
-									placeholder="Efternamn"
-									className={`h-10 text-xs ${errors.lastName ? "border-rose-500" : ""}`}
+									placeholder="Enter last name"
+									className={`h-10 text-xs bg-white ${
+										errors.lastName ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
 								/>
 								{errors.lastName && (
-									<p className="text-[11px] text-rose-500">
-										<Translate text={errors.lastName.message || ""} />
-									</p>
+									<p className="text-[11px] text-rose-500 font-medium">Efternamn krävs</p>
 								)}
 							</div>
 
+							{/* Personnummer */}
 							<div className="space-y-1.5">
 								<label className="text-xs font-medium text-slate-700">Personnummer *</label>
 								<Input
 									{...register("personnummer")}
 									placeholder="YYYYMMDD-XXXX"
-									className={`h-10 text-xs ${errors.personnummer ? "border-rose-500" : ""}`}
+									className={`h-10 text-xs bg-white ${
+										errors.personnummer ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
 								/>
 								{errors.personnummer && (
-									<p className="text-[11px] text-rose-500">
-										<Translate text={errors.personnummer.message || ""} />
-									</p>
+									<p className="text-[11px] text-rose-500 font-medium">Ogiltigt personnummer</p>
 								)}
 							</div>
 
+							{/* Main Category */}
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.mainCategoryLabel} />
-								</label>
+								<label className="text-xs font-medium text-slate-700">Main Category</label>
 								<Select
 									value={watch("mainCategory") || ""}
-									onValueChange={(val) => setValue("mainCategory", val)}
+									onValueChange={(val) => setValue("mainCategory", val, { shouldDirty: true })}
 								>
 									<SelectTrigger className="h-10 text-xs bg-white">
-										<SelectValue placeholder="Välj kategori" />
+										<SelectValue placeholder="Select category" />
 									</SelectTrigger>
 									<SelectContent className="bg-white">
-										{MAIN_CATEGORY_OPTIONS.map((opt) => (
+										{MAIN_CATEGORY_OPTIONS.map((opt: { value: string; label: string }) => (
 											<SelectItem key={opt.value} value={opt.value} className="text-xs cursor-pointer">
 												{opt.label}
 											</SelectItem>
@@ -259,87 +257,82 @@ export function Step1BasicInfo({
 			</div>
 
 			{/* Card 2: Adresser */}
-			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-5">
-				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.addressesSection} />
-				</h3>
-
-				<div className="space-y-4">
-					<div className="rounded-md bg-slate-50 p-2 text-xs font-semibold text-slate-700">
-						<Translate text={localizationConstants.visitingAddressLabel} />
+			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
+				<h3 className="text-sm font-bold text-slate-900 tracking-tight">Adresser</h3>
+				
+				<div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+					<div className="space-y-1.5 sm:col-span-3">
+						<label className="text-xs font-medium text-slate-700">Besöksadress *</label>
+						<Input
+							{...register("visitingAddress")}
+							placeholder="Gatuadress"
+							className={`h-10 text-xs bg-white ${
+								errors.visitingAddress ? "border-rose-500" : ""
+							}`}
+						/>
 					</div>
 
-					<div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-						<div className="sm:col-span-1 space-y-1.5">
-							<label className="text-xs font-medium text-slate-700">Gatuadress *</label>
-							<Input
-								{...register("visitingAddress")}
-								placeholder="Stengatan 11"
-								className={`h-10 text-xs ${errors.visitingAddress ? "border-rose-500" : ""}`}
-							/>
-						</div>
-						<div className="space-y-1.5">
-							<label className="text-xs font-medium text-slate-700">
-								<Translate text={localizationConstants.postalCodeLabel} /> *
-							</label>
-							<Input
-								{...register("visitingPostalCode")}
-								placeholder="171 62"
-								className={`h-10 text-xs ${errors.visitingPostalCode ? "border-rose-500" : ""}`}
-							/>
-						</div>
-						<div className="space-y-1.5">
-							<label className="text-xs font-medium text-slate-700">
-								<Translate text={localizationConstants.cityLabel} /> *
-							</label>
-							<Input
-								{...register("visitingCity")}
-								placeholder="Stockholm"
-								className={`h-10 text-xs ${errors.visitingCity ? "border-rose-500" : ""}`}
-							/>
-						</div>
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-slate-700">Postnummer *</label>
+						<Input
+							{...register("visitingPostalCode")}
+							placeholder="123 45"
+							className={`h-10 text-xs bg-white ${
+								errors.visitingPostalCode ? "border-rose-500" : ""
+							}`}
+						/>
 					</div>
 
-					<div className="pt-2 flex items-center justify-between">
-						<div className="rounded-md bg-slate-50 p-2 text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.invoiceAddressLabel} />
-						</div>
-						<label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-600">
-							<input
-								type="checkbox"
-								checked={sameAsVisiting}
-								onChange={(e) => handleSameAddressToggle(e.target.checked)}
-								className="h-3.5 w-3.5 rounded border-slate-300"
-							/>
-							<span>Samma som besöksadress</span>
-						</label>
+					<div className="space-y-1.5 sm:col-span-2">
+						<label className="text-xs font-medium text-slate-700">Ort *</label>
+						<Input
+							{...register("visitingCity")}
+							placeholder="Stad"
+							className={`h-10 text-xs bg-white ${
+								errors.visitingCity ? "border-rose-500" : ""
+							}`}
+						/>
 					</div>
+				</div>
+
+				<div className="pt-2 border-t border-slate-100">
+					<label className="flex items-center gap-2 cursor-pointer py-1">
+						<input
+							type="checkbox"
+							checked={sameAsVisiting}
+							onChange={(e) => handleSameAddressToggle(e.target.checked)}
+							className="h-4 w-4 rounded border-slate-300 text-slate-900 focus:ring-slate-900"
+						/>
+						<span className="text-xs font-semibold text-slate-800">Samma som besöksadress</span>
+					</label>
 
 					{!sameAsVisiting && (
-						<div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-							<div className="sm:col-span-1 space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">Gatuadress</label>
+						<div className="grid grid-cols-1 gap-4 sm:grid-cols-3 pt-3">
+							<div className="space-y-1.5 sm:col-span-3">
+								<label className="text-xs font-medium text-slate-700">Fakturaadress</label>
 								<Input
 									{...register("invoiceAddress")}
-									placeholder="Box 123"
-									className="h-10 text-xs"
+									placeholder="Fakturering Gatuadress"
+									className="h-10 text-xs bg-white"
 								/>
 							</div>
+
 							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.postalCodeLabel} />
-								</label>
+								<label className="text-xs font-medium text-slate-700">Postnummer</label>
 								<Input
 									{...register("invoicePostalCode")}
-									placeholder="171 00"
-									className="h-10 text-xs"
+									placeholder="123 45"
+									className="h-10 text-xs bg-white"
 								/>
 							</div>
-							<div className="space-y-1.5">
-								<label className="text-xs font-medium text-slate-700">
-									<Translate text={localizationConstants.cityLabel} />
-								</label>
-								<Input {...register("invoiceCity")} placeholder="Stockholm" className="h-10 text-xs" />
+
+							<div className="space-y-1.5 sm:col-span-2">
+								<label className="text-xs font-medium text-slate-700">Ort</label>
+								<Input
+									{...register("invoiceCity")}
+									placeholder="Stad"
+									className="h-10 text-xs bg-white"
+								/>
 							</div>
 						</div>
 					)}
@@ -348,46 +341,60 @@ export function Step1BasicInfo({
 
 			{/* Card 3: Bank Information */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
-				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.bankInfoSection} />
-				</h3>
+				<h3 className="text-sm font-bold text-slate-900 tracking-tight">Bank Information</h3>
+				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+					<div className="space-y-1.5">
+						<label className="text-xs font-medium text-slate-700">Banknamn</label>
+						<Input
+							{...register("bankName")}
+							placeholder="T.ex. Swedbank, SEB"
+							className="h-10 text-xs bg-white"
+						/>
+					</div>
 
-				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.bankNameLabel} />
-						</label>
-						<Input {...register("bankName")} placeholder="Swedbank" className="h-10 text-xs" />
+						<label className="text-xs font-medium text-slate-700">Bankkonto</label>
+						<Input
+							{...register("bankAccount")}
+							placeholder="Kontonummer"
+							className="h-10 text-xs bg-white"
+						/>
 					</div>
+
 					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.bankAccountLabel} />
-						</label>
-						<Input {...register("bankAccount")} placeholder="8327-9, 123 456 789-0" className="h-10 text-xs" />
+						<label className="text-xs font-medium text-slate-700">Bankgiro</label>
+						<Input
+							{...register("bankgiro")}
+							placeholder="123-4567"
+							className="h-10 text-xs bg-white"
+						/>
 					</div>
+
 					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.bankgiroLabel} />
-						</label>
-						<Input {...register("bankgiro")} placeholder="123-4567" className="h-10 text-xs" />
+						<label className="text-xs font-medium text-slate-700">Plusgiro</label>
+						<Input
+							{...register("plusgiro")}
+							placeholder="12 34 56-7"
+							className="h-10 text-xs bg-white"
+						/>
 					</div>
+
 					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.plusgiroLabel} />
-						</label>
-						<Input {...register("plusgiro")} placeholder="12 34 56-7" className="h-10 text-xs" />
+						<label className="text-xs font-medium text-slate-700">IBAN</label>
+						<Input
+							{...register("iban")}
+							placeholder="SE0000000000000000000000"
+							className="h-10 text-xs bg-white"
+						/>
 					</div>
+
 					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.ibanLabel} />
-						</label>
-						<Input {...register("iban")} placeholder="SE00 0000 0000 0000 0000 0000" className="h-10 text-xs" />
-					</div>
-					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.bicLabel} />
-						</label>
-						<Input {...register("bic")} placeholder="SWEDSESS" className="h-10 text-xs" />
+						<label className="text-xs font-medium text-slate-700">BIC / SWIFT</label>
+						<Input
+							{...register("bic")}
+							placeholder="SWEDESSX"
+							className="h-10 text-xs bg-white"
+						/>
 					</div>
 				</div>
 			</div>

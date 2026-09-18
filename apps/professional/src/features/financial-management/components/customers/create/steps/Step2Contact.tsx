@@ -13,6 +13,7 @@ import type {
 	CustomerContactPerson,
 } from "../../../../types/createCustomer.types";
 import { ContactPersonCard } from "../sections/ContactPersonCard";
+import { StepProgressBar } from "../StepProgressBar";
 
 interface Step2ContactProps {
 	form: UseFormReturn<CreateCustomerFormData>;
@@ -38,9 +39,10 @@ export function Step2Contact({
 		<div className="space-y-6">
 			{/* Card 1: Allmän Kontaktinformation */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
-				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.contactSection} />
-				</h3>
+				<div className="flex items-center justify-between border-b border-slate-100 pb-4">
+					<h3 className="text-sm font-bold text-slate-900 tracking-tight">Contact Information</h3>
+					<StepProgressBar currentStep={2} totalSteps={4} />
+				</div>
 
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					<div className="space-y-1.5">

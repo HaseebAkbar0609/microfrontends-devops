@@ -2,10 +2,6 @@
 
 import React, { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTranslate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
 import { customerOverviewRepository } from "../../utils/customerOverviewRepository";
 import { CUSTOMER_CREATE_ROUTE } from "../../constants/customerOverview.constants";
 import type { CustomerStatus, CustomerOverviewItem } from "../../types/customers.types";
@@ -14,7 +10,6 @@ import { CustomersTable } from "./CustomersTable";
 
 export function CustomersOverviewPage() {
 	const router = useRouter();
-	const t = useTranslate();
 
 	const [customers, setCustomers] = useState<CustomerOverviewItem[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -36,7 +31,8 @@ export function CustomersOverviewPage() {
 				const matchOrg = item.orgNo.toLowerCase().includes(query);
 				const matchCity = item.city.toLowerCase().includes(query);
 				const matchEmail = item.email.toLowerCase().includes(query);
-				if (!matchName && !matchNo && !matchOrg && !matchCity && !matchEmail) {
+				const matchAddress = item.address.toLowerCase().includes(query);
+				if (!matchName && !matchNo && !matchOrg && !matchCity && !matchEmail && !matchAddress) {
 					return false;
 				}
 			}
@@ -49,29 +45,29 @@ export function CustomersOverviewPage() {
 
 	return (
 		<div className="p-6 w-full space-y-6">
-			{/* Top Bar / Subheader matching Economy modules */}
-			<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-				<CustomersToolbar
-					searchQuery={searchQuery}
-					onSearchChange={setSearchQuery}
-					statusFilter={statusFilter}
-					onStatusFilterChange={setStatusFilter}
-				/>
-
-				{/* + Registrera nytt / Skapa kund button */}
-				<Button
-					type="button"
-					onClick={() => router.push(CUSTOMER_CREATE_ROUTE)}
-					className="h-9 px-4 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold gap-1.5 rounded-lg cursor-pointer transition-colors shrink-0 shadow-2xs"
-				>
-					<Plus className="h-4 w-4" />
-					<span>{t(localizationConstants.customerRegisterRegisterNew)}</span>
-				</Button>
+			{/* Top Tab matching Figma Image 2: Kundlista */}
+			<div className="border-b border-slate-200">
+				<div className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight">
+					<span>Kundlista</span>
+				</div>
 			</div>
 
-			{/* Main Table Card */}
+			{/* Toolbar with Search, Filter, and Action buttons */}
+			<CustomersToolbar
+				searchQuery={searchQuery}
+				onSearchChange={setSearchQuery}
+				statusFilter={statusFilter}
+				onStatusFilterChange={setStatusFilter}
+				onRegisterNew={() => router.push(CUSTOMER_CREATE_ROUTE)}
+			/>
+
+			{/* Main Table matching Figma Image 2 */}
 			<div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden">
-				<CustomersTable items={filteredCustomers} isLoading={isLoading} />
+				<CustomersTable
+					items={filteredCustomers}
+					isLoading={isLoading}
+					onView={(id) => router.push(`${CUSTOMER_CREATE_ROUTE}?id=${id}`)}
+				/>
 			</div>
 		</div>
 	);

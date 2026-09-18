@@ -13,6 +13,7 @@ import type {
 	CustomerAttachedDocument,
 } from "../../../../types/createCustomer.types";
 import { DocumentUploadZone } from "../sections/DocumentUploadZone";
+import { StepProgressBar } from "../StepProgressBar";
 
 const RATING_CRITERIA: { field: CustomerRatingField; labelKey: string }[] = [
 	{ field: "economy", labelKey: "economyLabel" },
@@ -46,9 +47,10 @@ export function Step3Assessment({
 		<div className="space-y-6">
 			{/* Card 1: Bedömning (5-stjärnigt betyg) */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-4">
-				<h3 className="text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.assessmentSection} />
-				</h3>
+				<div className="flex items-center justify-between border-b border-slate-100 pb-4">
+					<h3 className="text-sm font-bold text-slate-900 tracking-tight">Assessment</h3>
+					<StepProgressBar currentStep={3} totalSteps={4} />
+				</div>
 
 				<div className="divide-y divide-slate-100">
 					{RATING_CRITERIA.map((criterion) => {
