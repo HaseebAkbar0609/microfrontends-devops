@@ -6,7 +6,7 @@ import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import {
 	getFavoriteNavItems,
 	getNavConfig,
-	navSubItemMatchesPath,
+	navGroupMatchesPath,
 	type NavGroup,
 } from "./navConfig";
 import { SidebarNavGroup } from "./SidebarNavGroup";
@@ -21,13 +21,6 @@ interface SidebarProps {
 }
 
 const FAVORITE_NAV_STORAGE_KEY = "sidebar-favorite-items";
-
-function matchesGroupPath(group: NavGroup, pathname: string) {
-	if (group.href && (pathname === group.href || pathname.startsWith(`${group.href}/`))) {
-		return true;
-	}
-	return group.items.some((item) => navSubItemMatchesPath(item, pathname));
-}
 
 function getDefaultOpenGroupId(groups: NavGroup[]) {
 	return groups.find((group) => group.defaultOpen && group.items.length > 0)?.id ?? null;
@@ -87,7 +80,7 @@ export default function Sidebar({ autoCollapse = false }: SidebarProps) {
 		setOpenGroupId((previousOpenGroupId) => {
 			const activeGroupId =
 				navGroups.find(
-					(group) => group.items.length > 0 && matchesGroupPath(group, pathname)
+					(group) => group.items.length > 0 && navGroupMatchesPath(group, pathname)
 				)?.id ?? null;
 
 			if (activeGroupId) {

@@ -7,7 +7,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarSubItem } from "./SidebarSubItem";
 import { SidebarFlyout } from "./SidebarFlyout";
-import { navSubItemMatchesPath, type NavGroup } from "./navConfig";
+import { navGroupMatchesPath, type NavGroup } from "./navConfig";
 import { SIDEBAR_FLYOUT_CLOSE_DELAY_MS } from "./sidebar.constants";
 import { Translate } from "@/utils/translation/translate";
 import { Button } from "@/components/ui/button";
@@ -35,9 +35,7 @@ export function SidebarNavGroup({
 	const Icon = group.icon;
 	const hasItems = group.items.length > 0;
 	const isLink = !hasItems && !!group.href;
-	const isActive =
-		(group.href && (pathname === group.href || pathname.startsWith(group.href + "/"))) ||
-		group.items.some((item) => navSubItemMatchesPath(item, pathname));
+	const isActive = navGroupMatchesPath(group, pathname);
 
 	const collapsedFlyoutItems = group.items.map((item) => ({
 		id: item.id,

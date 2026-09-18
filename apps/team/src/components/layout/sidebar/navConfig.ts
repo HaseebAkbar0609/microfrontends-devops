@@ -39,7 +39,7 @@ export interface NavGroup {
 	items: NavSubItem[];
 }
 
-function matchesNavHref(href: string, pathname: string) {
+export function matchesNavHref(href: string, pathname: string) {
 	return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -48,6 +48,14 @@ export function navSubItemMatchesPath(item: NavSubItem, pathname: string) {
 	return (
 		matchesNavHref(item.href, pathname) ||
 		!!item.flyoutItems?.some((flyoutItem) => matchesNavHref(flyoutItem.href, pathname))
+	);
+}
+
+/** True when `pathname` is the group's own route or belongs to one of its items. */
+export function navGroupMatchesPath(group: NavGroup, pathname: string) {
+	return (
+		(!!group.href && matchesNavHref(group.href, pathname)) ||
+		group.items.some((item) => navSubItemMatchesPath(item, pathname))
 	);
 }
 
@@ -382,17 +390,13 @@ export function getFlyoutSubSidebarConfigByPath(
 
 	for (const group of groups) {
 		for (const item of group.items) {
-			if (!item.flyoutItems?.length || item.hideSubSidebar) continue;
-
-			const isParentMatch =
-				pathname === item.href || pathname.startsWith(item.href + "/");
-			const isFlyoutMatch = item.flyoutItems.some(
-				(flyoutItem) =>
-					pathname === flyoutItem.href ||
-					pathname.startsWith(flyoutItem.href + "/"),
-			);
-
-			if (!isParentMatch && !isFlyoutMatch) continue;
+			if (
+				!item.flyoutItems?.length ||
+				item.hideSubSidebar ||
+				!navSubItemMatchesPath(item, pathname)
+			) {
+				continue;
+			}
 
 			return {
 				titleKey: item.label,
