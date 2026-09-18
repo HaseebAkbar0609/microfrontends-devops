@@ -17,18 +17,8 @@ import { ActionsToolbar } from "@/components/table/ActionsToolbar";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import {
-	DUMMY_PARTNER_OFFERS,
-	type OfferPartyStatus,
-	type PartnerOfferRow,
-} from "../constants/offers";
-
-const PARTY_STATUS_CONFIG: Record<OfferPartyStatus, { labelKey: string; className: string } | null> = {
-	approved: { labelKey: localizationConstants.offerApprovedLabel, className: "bg-[#DCFCE7] text-[#16A34A]" },
-	pending: { labelKey: localizationConstants.offerPendingLabel, className: "bg-[#FEF3C7] text-[#D97706]" },
-	cancelled: { labelKey: localizationConstants.offerCancelLabel, className: "bg-[#FEE2E2] text-[#DC2626]" },
-	"n/a": null,
-};
+import { DUMMY_PARTNER_OFFERS, type PartnerOfferRow } from "../constants/offers";
+import { PartyStatusCell } from "./PartyStatusCell";
 
 const COLUMNS = [
 	{ key: "startDate", labelKey: localizationConstants.startDateLabel, width: "w-32" },
@@ -40,18 +30,6 @@ const COLUMNS = [
 ] as const;
 
 type SortKey = (typeof COLUMNS)[number]["key"];
-
-function PartyStatusCell({ status }: { status: OfferPartyStatus }) {
-	const config = PARTY_STATUS_CONFIG[status];
-	if (!config) {
-		return <Translate text={localizationConstants.notApplicableLabel} />;
-	}
-	return (
-		<span className={`inline-flex items-center rounded-[6px] px-2.5 py-1 text-xs font-semibold ${config.className}`}>
-			<Translate text={config.labelKey} />
-		</span>
-	);
-}
 
 export function OfferTab() {
 	const t = useTranslate();
