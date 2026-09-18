@@ -7,7 +7,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarSubItem } from "./SidebarSubItem";
 import { SidebarFlyout } from "./SidebarFlyout";
-import { navGroupMatchesPath, type NavGroup } from "./navConfig";
+import { navGroupMatchesPath, type NavFlyoutItem, type NavGroup } from "./navConfig";
 import { SIDEBAR_FLYOUT_CLOSE_DELAY_MS } from "./sidebar.constants";
 import { Translate } from "@/utils/translation/translate";
 import { Button } from "@/components/ui/button";
@@ -37,11 +37,10 @@ export function SidebarNavGroup({
 	const isLink = !hasItems && !!group.href;
 	const isActive = navGroupMatchesPath(group, pathname);
 
-	const collapsedFlyoutItems = group.items.map((item) => ({
-		id: item.id,
-		label: item.label,
-		href: item.href,
-	}));
+	// The collapsed menu has no room for nested flyouts, so list the leaf pages.
+	const collapsedFlyoutItems = group.items.flatMap<NavFlyoutItem>((item) =>
+		item.flyoutItems?.length ? item.flyoutItems : [item]
+	);
 
 	const cancelCollapsedFlyoutClose = () => {
 		if (closeTimeoutRef.current) {
@@ -162,7 +161,7 @@ export function SidebarNavGroup({
 					onClick={() => {
 						if (collapsed && hasItems) {
 							openCollapsedFlyout();
-							const firstHref = group.items[0]?.href;
+							const firstHref = collapsedFlyoutItems[0]?.href;
 							if (firstHref) {
 								router.push(firstHref);
 							}
