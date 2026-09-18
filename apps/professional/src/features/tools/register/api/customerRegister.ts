@@ -164,7 +164,7 @@ export async function getCustomerRegisterListAPIAction(
 	try {
 		const res = await axiosInstance.get(API_PATH.CUSTOMERS.LIST, { params: queryParams });
 		const items = res.data?.data;
-		if (Array.isArray(items)) {
+		if (Array.isArray(items) && items.length > 0) {
 			return {
 				data: (items as Record<string, unknown>[]).map(mapCustomerFromApi),
 				total: Number(res.data?.total_items ?? items.length),
