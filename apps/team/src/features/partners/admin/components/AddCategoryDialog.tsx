@@ -40,7 +40,7 @@ type AddCategoryDialogProps = {
 	onCreated: (category: PartnerCategoryRow) => void;
 };
 
-/** Adds a category that partners can be placed in. */
+/** Adds a category to the partner category list. */
 export function AddCategoryDialog({
 	open,
 	onOpenChange,
