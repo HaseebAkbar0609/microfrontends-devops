@@ -44,12 +44,9 @@ import {
 	YearEndTranslation,
 	OrderHandlingarTranslation,
 	ClaimsTranslation,
-<<<<<<< Updated upstream
 	CasesTranslation,
 	OrderDagbokTranslation,
-=======
 	ToolsDiscountTranslation,
->>>>>>> Stashed changes
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -9472,11 +9469,8 @@ export const sv: Translation = {
 	...svClaims,
 	...svCases,
 	...svAdminLive,
-<<<<<<< Updated upstream
 	...svMyPagesLive,
 	...svOrderHandlingar,
 	...svOrderDagbok,
-=======
 	...svToolsDiscount,
->>>>>>> Stashed changes
 };

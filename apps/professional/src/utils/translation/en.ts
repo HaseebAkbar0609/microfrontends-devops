@@ -44,12 +44,9 @@ import {
 	YearEndTranslation,
 	OrderHandlingarTranslation,
 	ClaimsTranslation,
-<<<<<<< Updated upstream
 	CasesTranslation,
 	OrderDagbokTranslation,
-=======
 	ToolsDiscountTranslation,
->>>>>>> Stashed changes
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -9451,11 +9448,8 @@ export const en: Translation = {
 	...enClaims,
 	...enCases,
 	...enAdminLive,
-<<<<<<< Updated upstream
 	...enMyPagesLive,
 	...enOrderHandlingar,
 	...enOrderDagbok,
-=======
 	...enToolsDiscount,
->>>>>>> Stashed changes
 };

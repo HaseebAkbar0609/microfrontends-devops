@@ -9379,17 +9379,12 @@ export type Translation = HeaderTranslation &
 	OrderTimeplanTranslation &
 	OrderQaTranslation &
 	YearEndTranslation &
-<<<<<<< Updated upstream
 	AdminLiveTranslation & MyPagesLiveTranslation &
 	OrderHandlingarTranslation &
 	ClaimsTranslation &
 	CasesTranslation &
-	OrderDagbokTranslation;
-=======
-	AdminLiveTranslation &
-	ClaimsTranslation &
+	OrderDagbokTranslation &
 	ToolsDiscountTranslation;
->>>>>>> Stashed changes
 
 export type TranslationKeys = keyof Translation;
 
