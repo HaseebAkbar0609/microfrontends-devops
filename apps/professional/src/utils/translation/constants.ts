@@ -9484,6 +9484,103 @@ export type CustomerManagementTranslation = {
 	customerDocColActions: string;
 };
 
+export type CustomerDetailTranslation = {
+	customerDetailBackTitle: string;
+	customerDetailHeaderTitle: string;
+	customerDetailTabBasicInfo: string;
+	customerDetailTabContact: string;
+	customerDetailTabAssessment: string;
+	customerDetailTabInvoice: string;
+	customerDetailCardCustomer: string;
+	customerDetailCardBank: string;
+	customerDetailCardVisitingAddress: string;
+	customerDetailCardInvoiceAddress: string;
+	customerDetailCardContact: string;
+	customerDetailCardContactPersons: string;
+	customerDetailCardAssessment: string;
+	customerDetailCardDocuments: string;
+	customerDetailCardAdditionalInfo: string;
+	customerDetailCardInvoiceTerms: string;
+	customerDetailCardInvoicing: string;
+	customerDetailCardReferences: string;
+	customerDetailCardAccounting: string;
+	customerDetailCardRotRut: string;
+	customerDetailActionEdit: string;
+	customerDetailCustomerNoLabel: string;
+	customerDetailCustomerTypeLabel: string;
+	customerDetailCustomerNameLabel: string;
+	customerDetailOrgNumberLabel: string;
+	customerDetailVatNumberLabel: string;
+	customerDetailGlnLabel: string;
+	customerDetailPeppolIdLabel: string;
+	customerDetailBankgiroLabel: string;
+	customerDetailPlusgiroLabel: string;
+	customerDetailIbanLabel: string;
+	customerDetailBicSwiftLabel: string;
+	customerDetailAddressLabel: string;
+	customerDetailPostcodeLabel: string;
+	customerDetailCityLabel: string;
+	customerDetailCountryLabel: string;
+	customerDetailPhoneLabel: string;
+	customerDetailEmailLabel: string;
+	customerDetailWebsiteLabel: string;
+	customerDetailPaymentTermsLabel: string;
+	customerDetailDeliveryTermsLabel: string;
+	customerDetailDeliveryMethodLabel: string;
+	customerDetailOverdueInterestLabel: string;
+	customerDetailInvoiceMethodLabel: string;
+	customerDetailInvoiceEmailLabel: string;
+	customerDetailInterestInvoicingLabel: string;
+	customerDetailPriceListLabel: string;
+	customerDetailInvoiceDiscountLabel: string;
+	customerDetailInvoiceFeeLabel: string;
+	customerDetailFreightFeeLabel: string;
+	customerDetailPricesDisplayLabel: string;
+	customerDetailOurReferenceLabel: string;
+	customerDetailCustomerManagerLabel: string;
+	customerDetailExternalReferenceLabel: string;
+	customerDetailYourReferenceLabel: string;
+	customerDetailVatNumberAccountingLabel: string;
+	customerDetailVatTypeLabel: string;
+	customerDetailSalesAccountLabel: string;
+	customerDetailCostCenterLabel: string;
+	customerDetailProjectLabel: string;
+	customerDetailRotRutActiveLabel: string;
+	customerDetailRotRutTypeLabel: string;
+	customerDetailPropertyDesignationLabel: string;
+	customerDetailApartmentNoLabel: string;
+	customerDetailBrfOrgNoLabel: string;
+	customerDetailRatingSolvency: string;
+	customerDetailRatingCooperation: string;
+	customerDetailRatingClarity: string;
+	customerDetailRatingAvailability: string;
+	customerDetailRatingEnvironment: string;
+	customerDetailRatingTimeliness: string;
+	customerDetailAssessmentScore: string;
+	customerDetailNotesEmpty: string;
+	customerDetailColFirstName: string;
+	customerDetailColLastName: string;
+	customerDetailColMobile: string;
+	customerDetailColEmail: string;
+	customerDetailColRole: string;
+	customerDetailColPersonalId: string;
+	customerDetailColActions: string;
+	customerDetailColDate: string;
+	customerDetailColName: string;
+	customerDetailColSize: string;
+	customerDetailColFile: string;
+	customerDetailDocumentsEmpty: string;
+	customerDetailNotFound: string;
+	customerDetailBackToList: string;
+	customerDetailCompanyType: string;
+	customerDetailIndividualType: string;
+	customerDetailYes: string;
+	customerDetailNo: string;
+	customerDetailExclVat: string;
+	customerDetailInclVat: string;
+	customerDetailNone: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -9530,7 +9627,8 @@ export type Translation = HeaderTranslation &
 	CasesTranslation &
 	OrderDagbokTranslation &
 	CustomerManagementTranslation &
-	ToolsDiscountTranslation
+	CustomerDetailTranslation &
+	ToolsDiscountTranslation;
 
 export type TranslationKeys = keyof Translation;
 
