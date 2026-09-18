@@ -5,7 +5,9 @@ import type {
 	LeadsListQueryParams,
 	LeadsListResult,
 } from "@/features/leads/types";
-import { mapLeadListItemToRow } from "@/api-actions/leads/shared";
+import { mapLeadListItemToRow, mapLeadStatusToApiStatus } from "@/api-actions/leads/shared";
+
+type ApiLeadStatus = ReturnType<typeof mapLeadStatusToApiStatus>;
 
 const LEADS_LIST_PATH = "/api/v1/teams/lead/list";
 const DEFAULT_PAGE_SIZE = 10;
@@ -35,12 +37,16 @@ export async function listLeadsAPIAction(
 /**
  * The newest leads exactly as the API returns them, for analytics that need the
  * raw timestamp and each category rather than the formatted table row.
+ * `statuses` are API status values; the backend reads them as a repeated
+ * `status` query parameter.
  */
 export async function listLeadItemsAPIAction(
-	pageSize: number
+	pageSize: number,
+	statuses?: readonly ApiLeadStatus[]
 ): Promise<{ items: LeadApiItem[]; totalItems: number }> {
 	const response = await axiosInstance.get<LeadsListApiResponse>(LEADS_LIST_PATH, {
-		params: { page: 1, page_size: pageSize },
+		params: { page: 1, page_size: pageSize, status: statuses },
+		paramsSerializer: { indexes: null },
 	});
 	const items = response.data.data ?? [];
 	return { items, totalItems: response.data.total_items ?? items.length };
