@@ -17,8 +17,10 @@ import { ActionsToolbar } from "@/components/table/ActionsToolbar";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import { DUMMY_PARTNER_OFFERS, type PartnerOfferRow } from "../constants/offers";
+import type { PartnerOfferRow } from "../constants/offers";
+import type { PartnerImage } from "../constants/imageBank";
 import { PartyStatusCell } from "./PartyStatusCell";
+import { AddOfferDialog } from "./AddOfferDialog";
 
 const COLUMNS = [
 	{ key: "startDate", labelKey: localizationConstants.startDateLabel, width: "w-32" },
@@ -31,10 +33,17 @@ const COLUMNS = [
 
 type SortKey = (typeof COLUMNS)[number]["key"];
 
-export function OfferTab() {
+type OfferTabProps = {
+	offers: PartnerOfferRow[];
+	images: PartnerImage[];
+	onOfferCreated: (offer: PartnerOfferRow) => void;
+	onGoToImageBank: () => void;
+};
+
+export function OfferTab({ offers, images, onOfferCreated, onGoToImageBank }: OfferTabProps) {
 	const t = useTranslate();
 	const router = useRouter();
-	const [offers] = useState<PartnerOfferRow[]>(DUMMY_PARTNER_OFFERS);
+	const [isAddOpen, setIsAddOpen] = useState(false);
 	const [search, setSearch] = useState("");
 	const [statusFilter, setStatusFilter] = useState("");
 	const [sortKey, setSortKey] = useState<SortKey | null>(null);
@@ -77,7 +86,10 @@ export function OfferTab() {
 				<h2 className="text-base font-medium text-[#09090B]">
 					<Translate text={localizationConstants.partnerOfferTab} />
 				</h2>
-				<Button className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90">
+				<Button
+					className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90"
+					onClick={() => setIsAddOpen(true)}
+				>
 					<Plus className="h-4 w-4" />
 					<Translate text={localizationConstants.addOfferButton} />
 				</Button>
@@ -176,6 +188,15 @@ export function OfferTab() {
 					))}
 				</TableBody>
 			</Table>
+
+			<AddOfferDialog
+				open={isAddOpen}
+				onOpenChange={setIsAddOpen}
+				existingNames={offers.map((offer) => offer.offerName)}
+				images={images}
+				onCreated={onOfferCreated}
+				onGoToImageBank={onGoToImageBank}
+			/>
 		</div>
 	);
 }

@@ -897,6 +897,21 @@ export type AdminTranslation = {
 	imageBankRemoveImage: string;
 	imageBankRemoveTitle: string;
 	imageBankRemoveDescription: string;
+	partnerAddOfferDescription: string;
+	partnerOfferDiscountPercentLabel: string;
+	partnerOfferChannelsLabel: string;
+	partnerOfferImageLabel: string;
+	partnerOfferImageBankEmpty: string;
+	partnerOfferGoToImageBank: string;
+	partnerOfferNameRequired: string;
+	partnerOfferNameTaken: string;
+	partnerOfferStartDateRequired: string;
+	partnerOfferEndDateRequired: string;
+	partnerOfferEndBeforeStart: string;
+	partnerOfferDiscountInvalid: string;
+	partnerOfferChannelRequired: string;
+	partnerOfferImageRequired: string;
+	partnerOfferAddedToast: string;
 };
 
 export type SalesTranslation = {

@@ -20,6 +20,7 @@ import {
 } from "../schemas/companyProfile.schema";
 import { DEFAULT_VALUES } from "../constants";
 import type { PartnerImage } from "../constants/imageBank";
+import { DUMMY_PARTNER_OFFERS } from "../constants/offers";
 
 const MAIN_TABS = [
 	{ value: "company-profile", label: localizationConstants.companyProfileTab },
@@ -37,8 +38,9 @@ export default function PartnerDashboard() {
 	const lastSavedRef = useRef<PartnerCompanyProfileFormValues | null>(DEFAULT_VALUES);
 	const [activeMainTab, setActiveMainTab] = useState("company-profile");
 	const [activeProfileTab, setActiveProfileTab] = useState("company-details");
-	// Held here because inactive tab panels unmount, which would drop uploaded images.
+	// Held here because inactive tab panels unmount, which would drop uploaded images and added offers.
 	const [images, setImages] = useState<PartnerImage[]>([]);
+	const [offers, setOffers] = useState(DUMMY_PARTNER_OFFERS);
 
 	const form = useForm<PartnerCompanyProfileFormValues>({
 		resolver: zodResolver(partnerCompanyProfileSchema),
@@ -110,7 +112,12 @@ export default function PartnerDashboard() {
 				</TabsContent>
 
 				<TabsContent value="offer" className="mt-6 min-h-0 flex-1">
-					<OfferTab />
+					<OfferTab
+						offers={offers}
+						images={images}
+						onOfferCreated={(offer) => setOffers((previous) => [...previous, offer])}
+						onGoToImageBank={() => setActiveMainTab("image-bank")}
+					/>
 				</TabsContent>
 				<TabsContent value="image-bank" className="mt-6 min-h-0 flex-1">
 					<ImageBankTab

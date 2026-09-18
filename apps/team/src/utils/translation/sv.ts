@@ -924,6 +924,21 @@ export const sweAdmin: AdminTranslation = {
 	imageBankRemoveImage: "Ta bort {{name}}",
 	imageBankRemoveTitle: "Ta bort bilden?",
 	imageBankRemoveDescription: "{{name}} tas bort från bildbanken.",
+	partnerAddOfferDescription: "Erbjudandet skickas för godkännande i de kanaler du väljer.",
+	partnerOfferDiscountPercentLabel: "Rabatt (%)",
+	partnerOfferChannelsLabel: "Kanaler",
+	partnerOfferImageLabel: "Bild",
+	partnerOfferImageBankEmpty: "Bildbanken är tom. Ladda upp bilder under fliken Bild-Bank först.",
+	partnerOfferGoToImageBank: "Gå till Bild-Bank",
+	partnerOfferNameRequired: "Ange ett namn på erbjudandet.",
+	partnerOfferNameTaken: "Det finns redan ett erbjudande med det namnet.",
+	partnerOfferStartDateRequired: "Välj ett startdatum.",
+	partnerOfferEndDateRequired: "Välj ett slutdatum.",
+	partnerOfferEndBeforeStart: "Slutdatum kan inte vara före startdatum.",
+	partnerOfferDiscountInvalid: "Ange en rabatt i hela procent mellan {{min}} och {{max}}.",
+	partnerOfferChannelRequired: "Välj minst en kanal.",
+	partnerOfferImageRequired: "Välj en bild från bildbanken.",
+	partnerOfferAddedToast: "Erbjudandet har lagts till",
 };
 
 export const sweSales: SalesTranslation = {
