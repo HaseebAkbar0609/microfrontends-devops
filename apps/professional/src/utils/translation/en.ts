@@ -9549,6 +9549,17 @@ export const enCustomerManagement: CustomerManagementTranslation = {
 	customerDocColName: "Document Name",
 	customerDocColSize: "Size",
 	customerDocColActions: "Actions",
+	customerEntityTypeLabel: "Customer Type",
+	customerTypeCompany: "Company",
+	customerTypePrivate: "Private Individual",
+	customerFirstNameLabel: "First Name",
+	customerFirstNamePlaceholder: "Enter first name",
+	customerLastNameLabel: "Last Name",
+	customerLastNamePlaceholder: "Enter last name",
+	customerPersonnummerLabel: "Personal Identity No.",
+	customerPersonnummerPlaceholder: "YYYYMMDD-XXXX",
+	customerDeleteConfirmTitle: "Delete Customer",
+	customerDeleteConfirmDesc: "Are you sure you want to delete this customer? This action cannot be undone.",
 };
 
 export const enCustomerDetail: CustomerDetailTranslation = {

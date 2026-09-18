@@ -56,6 +56,37 @@ export function Step1BasicInfo({ form }: Step1BasicInfoProps) {
 					</h3>
 				</div>
 
+				{/* Entity Type Toggle (Företag / Privatperson) */}
+				<div className="space-y-1.5">
+					<label className="text-xs font-medium text-slate-700">
+						<Translate text={localizationConstants.customerEntityTypeLabel} />
+					</label>
+					<div className="flex gap-2">
+						<button
+							type="button"
+							onClick={() => setValue("entityType", "company", { shouldDirty: true, shouldValidate: true })}
+							className={`flex-1 rounded-lg border py-2 text-xs font-medium transition-colors cursor-pointer ${
+								(watch("entityType") || "company") === "company"
+									? "border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900"
+									: "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+							}`}
+						>
+							<Translate text={localizationConstants.customerTypeCompany} />
+						</button>
+						<button
+							type="button"
+							onClick={() => setValue("entityType", "private", { shouldDirty: true, shouldValidate: true })}
+							className={`flex-1 rounded-lg border py-2 text-xs font-medium transition-colors cursor-pointer ${
+								watch("entityType") === "private"
+									? "border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-900"
+									: "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+							}`}
+						>
+							<Translate text={localizationConstants.customerTypePrivate} />
+						</button>
+					</div>
+				</div>
+
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 					{/* Customer No */}
 					<div className="space-y-1.5">
@@ -95,101 +126,164 @@ export function Step1BasicInfo({ form }: Step1BasicInfoProps) {
 						</Select>
 					</div>
 
-					{/* Company Name */}
-					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.customerCompanyNameLabel} /> *
-						</label>
-						<Input
-							{...register("companyName")}
-							placeholder={t(localizationConstants.customerCompanyNamePlaceholder)}
-							className={`h-10 text-xs bg-white ${
-								errors.companyName ? "border-rose-500 focus-visible:ring-rose-500" : ""
-							}`}
-						/>
-						{errors.companyName && (
-							<p className="text-[11px] text-rose-500 font-medium">
-								<Translate text={errors.companyName.message || localizationConstants.customerValidationCompanyName} />
-							</p>
-						)}
-					</div>
+					{watch("entityType") === "private" ? (
+						<>
+							{/* First Name */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerFirstNameLabel} /> *
+								</label>
+								<Input
+									{...register("firstName")}
+									placeholder={t(localizationConstants.customerFirstNamePlaceholder)}
+									className={`h-10 text-xs bg-white ${
+										errors.firstName ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
+								/>
+								{errors.firstName && (
+									<p className="text-[11px] text-rose-500 font-medium">
+										<Translate text={errors.firstName.message || localizationConstants.customerValidationRequired} />
+									</p>
+								)}
+							</div>
 
-					{/* Main Category */}
-					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.customerMainCategoryLabel} />
-						</label>
-						<Select
-							value={watch("mainCategory") || ""}
-							onValueChange={(val) => setValue("mainCategory", val, { shouldDirty: true })}
-						>
-							<SelectTrigger className="h-10 text-xs bg-white">
-								<SelectValue placeholder={t(localizationConstants.customerMainCategoryPlaceholder)} />
-							</SelectTrigger>
-							<SelectContent className="bg-white">
-								{MAIN_CATEGORY_OPTIONS.map((opt) => (
-									<SelectItem key={opt.value} value={opt.value} className="text-xs cursor-pointer">
-										<Translate text={localizationConstants[opt.labelKey]} />
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
+							{/* Last Name */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerLastNameLabel} /> *
+								</label>
+								<Input
+									{...register("lastName")}
+									placeholder={t(localizationConstants.customerLastNamePlaceholder)}
+									className={`h-10 text-xs bg-white ${
+										errors.lastName ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
+								/>
+								{errors.lastName && (
+									<p className="text-[11px] text-rose-500 font-medium">
+										<Translate text={errors.lastName.message || localizationConstants.customerValidationRequired} />
+									</p>
+								)}
+							</div>
 
-					{/* Department */}
-					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.customerDepartmentLabel} />
-						</label>
-						<Input
-							{...register("department")}
-							placeholder={t(localizationConstants.customerDepartmentPlaceholder)}
-							className="h-10 text-xs bg-white"
-						/>
-					</div>
+							{/* Personnummer */}
+							<div className="space-y-1.5 sm:col-span-2">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerPersonnummerLabel} /> *
+								</label>
+								<Input
+									{...register("personnummer")}
+									placeholder={t(localizationConstants.customerPersonnummerPlaceholder)}
+									className={`h-10 text-xs bg-white ${
+										errors.personnummer ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
+								/>
+								{errors.personnummer && (
+									<p className="text-[11px] text-rose-500 font-medium">
+										<Translate text={errors.personnummer.message || localizationConstants.customerValidationOrgNo} />
+									</p>
+								)}
+							</div>
+						</>
+					) : (
+						<>
+							{/* Company Name */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerCompanyNameLabel} /> *
+								</label>
+								<Input
+									{...register("companyName")}
+									placeholder={t(localizationConstants.customerCompanyNamePlaceholder)}
+									className={`h-10 text-xs bg-white ${
+										errors.companyName ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
+								/>
+								{errors.companyName && (
+									<p className="text-[11px] text-rose-500 font-medium">
+										<Translate text={errors.companyName.message || localizationConstants.customerValidationCompanyName} />
+									</p>
+								)}
+							</div>
 
-					{/* Region */}
-					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.customerRegionLabel} />
-						</label>
-						<Input
-							{...register("region")}
-							placeholder={t(localizationConstants.customerRegionPlaceholder)}
-							className="h-10 text-xs bg-white"
-						/>
-					</div>
+							{/* Main Category */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerMainCategoryLabel} />
+								</label>
+								<Select
+									value={watch("mainCategory") || ""}
+									onValueChange={(val) => setValue("mainCategory", val, { shouldDirty: true })}
+								>
+									<SelectTrigger className="h-10 text-xs bg-white">
+										<SelectValue placeholder={t(localizationConstants.customerMainCategoryPlaceholder)} />
+									</SelectTrigger>
+									<SelectContent className="bg-white">
+										{MAIN_CATEGORY_OPTIONS.map((opt) => (
+											<SelectItem key={opt.value} value={opt.value} className="text-xs cursor-pointer">
+												<Translate text={localizationConstants[opt.labelKey]} />
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
 
-					{/* Org No */}
-					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.customerOrgNoLabel} /> *
-						</label>
-						<Input
-							{...register("orgNo")}
-							placeholder={t(localizationConstants.customerOrgNoPlaceholder)}
-							className={`h-10 text-xs bg-white ${
-								errors.orgNo ? "border-rose-500 focus-visible:ring-rose-500" : ""
-							}`}
-						/>
-						{errors.orgNo && (
-							<p className="text-[11px] text-rose-500 font-medium">
-								<Translate text={errors.orgNo.message || localizationConstants.customerValidationOrgNo} />
-							</p>
-						)}
-					</div>
+							{/* Department */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerDepartmentLabel} />
+								</label>
+								<Input
+									{...register("department")}
+									placeholder={t(localizationConstants.customerDepartmentPlaceholder)}
+									className="h-10 text-xs bg-white"
+								/>
+							</div>
 
-					{/* VAT Reg No */}
-					<div className="space-y-1.5">
-						<label className="text-xs font-medium text-slate-700">
-							<Translate text={localizationConstants.customerVatRegNoLabel} />
-						</label>
-						<Input
-							{...register("vatRegNo")}
-							placeholder={t(localizationConstants.customerVatRegNoPlaceholder)}
-							className="h-10 text-xs bg-white"
-						/>
-					</div>
+							{/* Region */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerRegionLabel} />
+								</label>
+								<Input
+									{...register("region")}
+									placeholder={t(localizationConstants.customerRegionPlaceholder)}
+									className="h-10 text-xs bg-white"
+								/>
+							</div>
+
+							{/* Org No */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerOrgNoLabel} /> *
+								</label>
+								<Input
+									{...register("orgNo")}
+									placeholder={t(localizationConstants.customerOrgNoPlaceholder)}
+									className={`h-10 text-xs bg-white ${
+										errors.orgNo ? "border-rose-500 focus-visible:ring-rose-500" : ""
+									}`}
+								/>
+								{errors.orgNo && (
+									<p className="text-[11px] text-rose-500 font-medium">
+										<Translate text={errors.orgNo.message || localizationConstants.customerValidationOrgNo} />
+									</p>
+								)}
+							</div>
+
+							{/* VAT Reg No */}
+							<div className="space-y-1.5">
+								<label className="text-xs font-medium text-slate-700">
+									<Translate text={localizationConstants.customerVatRegNoLabel} />
+								</label>
+								<Input
+									{...register("vatRegNo")}
+									placeholder={t(localizationConstants.customerVatRegNoPlaceholder)}
+									className="h-10 text-xs bg-white"
+								/>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 

@@ -9482,6 +9482,17 @@ export type CustomerManagementTranslation = {
 	customerDocColName: string;
 	customerDocColSize: string;
 	customerDocColActions: string;
+	customerEntityTypeLabel: string;
+	customerTypeCompany: string;
+	customerTypePrivate: string;
+	customerFirstNameLabel: string;
+	customerFirstNamePlaceholder: string;
+	customerLastNameLabel: string;
+	customerLastNamePlaceholder: string;
+	customerPersonnummerLabel: string;
+	customerPersonnummerPlaceholder: string;
+	customerDeleteConfirmTitle: string;
+	customerDeleteConfirmDesc: string;
 };
 
 export type CustomerDetailTranslation = {

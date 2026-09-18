@@ -64,6 +64,7 @@ export const DEFAULT_INITIAL_CUSTOMER_FORM_VALUES: CreateCustomerFormData = {
 	interestInvoicing: "Ja",
 	priceList: "Standard",
 	currency: "SEK",
+	creditLimit: "50000",
 	invoiceDiscount: "0",
 	invoiceFee: "0",
 	shippingFee: "0",

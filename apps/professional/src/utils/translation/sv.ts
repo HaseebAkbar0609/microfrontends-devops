@@ -9570,6 +9570,17 @@ export const svCustomerManagement: CustomerManagementTranslation = {
 	customerDocColName: "Dokumentnamn",
 	customerDocColSize: "Storlek",
 	customerDocColActions: "Åtgärder",
+	customerEntityTypeLabel: "Kundtyp",
+	customerTypeCompany: "Företag",
+	customerTypePrivate: "Privatperson",
+	customerFirstNameLabel: "Förnamn",
+	customerFirstNamePlaceholder: "Ange förnamn",
+	customerLastNameLabel: "Efternamn",
+	customerLastNamePlaceholder: "Ange efternamn",
+	customerPersonnummerLabel: "Personnummer",
+	customerPersonnummerPlaceholder: "ÅÅÅÅMMDD-XXXX",
+	customerDeleteConfirmTitle: "Ta bort kund",
+	customerDeleteConfirmDesc: "Är du säker på att du vill ta bort den här kunden? Denna åtgärd kan inte ångras.",
 };
 
 export const svCustomerDetail: CustomerDetailTranslation = {

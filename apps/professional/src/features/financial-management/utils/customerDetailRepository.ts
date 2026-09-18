@@ -92,6 +92,14 @@ class CustomerDetailRepository {
 		this.customDetails[detail.id] = detail;
 		this.persist();
 	}
+
+	public delete(id: string): void {
+		this.ensureInitialized();
+		if (this.customDetails[id]) {
+			delete this.customDetails[id];
+			this.persist();
+		}
+	}
 }
 
 export const customerDetailRepository = new CustomerDetailRepository();

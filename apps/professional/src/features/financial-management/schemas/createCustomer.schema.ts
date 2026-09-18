@@ -72,6 +72,7 @@ export const createCustomerSchema = z
 		interestInvoicing: z.string().optional(),
 		priceList: z.string().optional(),
 		currency: z.string().optional(),
+		creditLimit: z.string().optional(),
 		invoiceDiscount: z.string().optional(),
 		invoiceFee: z.string().optional(),
 		shippingFee: z.string().optional(),
