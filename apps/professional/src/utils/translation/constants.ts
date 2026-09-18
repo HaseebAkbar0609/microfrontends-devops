@@ -4221,6 +4221,26 @@ export type OfferTranslation = {
 	projectDiaryLeaveConfirm: string;
 	projectDiaryUploadButton: string;
 	projectDiaryAllowedFiles: string;
+	/* TFS-710 — Garantiåtaganden, the record's warranty commitments. */
+	projectWarrantyTitle: string;
+	projectWarrantyColDate: string;
+	projectWarrantyColName: string;
+	projectWarrantyCreateNew: string;
+	projectWarrantyDialogAdd: string;
+	projectWarrantyDialogEdit: string;
+	projectWarrantyNameRequired: string;
+	projectWarrantyDateRequired: string;
+	projectWarrantyTooLong: string;
+	projectWarrantyRowActions: string;
+	projectWarrantyRowEdit: string;
+	projectWarrantyRowDelete: string;
+	projectWarrantyDeleteTitle: string;
+	projectWarrantyDeleteBody: string;
+	projectWarrantyEmpty: string;
+	projectWarrantyEmptyDesc: string;
+	projectWarrantyNoMatches: string;
+	projectWarrantySavedToast: string;
+	projectWarrantyDeletedToast: string;
 	projectDiaryFileTypeError: string;
 	projectDiaryFileSizeError: string;
 	projectDiaryRemoveFile: string;
