@@ -182,7 +182,6 @@ export const sweSidebar: SidebarTranslation = {
 	customers: "Kunder",
 	leads: "Leads",
 	support: "Support",
-	timeflowApp: "Timeflow App",
 	sidebarCollapse: "Fäll ihop menyn",
 	sidebarExpand: "Fäll ut menyn",
 	partners: "Partners",

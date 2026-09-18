@@ -55,7 +55,6 @@ export const enSidebar: SidebarTranslation = {
 	customers: "Customers",
 	leads: "Leads",
 	support: "Support",
-	timeflowApp: "Timeflow App",
 	sidebarCollapse: "Collapse menu",
 	sidebarExpand: "Expand menu",
 	partners: "Partners",
