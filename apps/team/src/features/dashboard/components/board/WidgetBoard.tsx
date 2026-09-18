@@ -11,7 +11,7 @@ import type { HomeWidgetId } from "../../types";
 import { DraggableGridCard } from "../DraggableGridCard";
 import BoardEmptyState from "./BoardEmptyState";
 import BoardToolbar from "./BoardToolbar";
-import BoardWidgetCard from "./BoardWidgetCard";
+import BoardWidgetCard, { WIDGET_CARD_MIN_HEIGHT_CLASS } from "./BoardWidgetCard";
 import DiscardChangesDialog from "./DiscardChangesDialog";
 import WidgetLibraryPanel from "./WidgetLibraryPanel";
 
@@ -125,7 +125,8 @@ const WidgetBoard = () => {
 										) : (
 											<div
 												className={cn(
-													"flex min-h-[281px] flex-col items-center justify-center gap-2 text-sm",
+													"flex flex-col items-center justify-center gap-2 text-sm",
+													WIDGET_CARD_MIN_HEIGHT_CLASS,
 													isTarget ? "text-blue-600" : "text-slate-400"
 												)}
 											>

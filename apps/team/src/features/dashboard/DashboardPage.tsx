@@ -1,5 +1,3 @@
-"use client";
-
 import WidgetBoard from "./components/board/WidgetBoard";
 
 export default function DashboardPage() {
