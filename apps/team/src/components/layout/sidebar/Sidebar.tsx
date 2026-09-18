@@ -36,6 +36,12 @@ export default function Sidebar({ autoCollapse = false }: SidebarProps) {
 	const [manualCollapsed, setManualCollapsed] = useState<boolean | null>(null);
 	const collapsed = manualCollapsed ?? autoCollapse;
 
+	// The sidebar lives in the root layout and never remounts, so entering or
+	// leaving a sub-sidebar page drops the toggle choice and follows autoCollapse.
+	useEffect(() => {
+		setManualCollapsed(null);
+	}, [autoCollapse]);
+
 	useEffect(() => {
 		if (typeof window === "undefined") return;
 
