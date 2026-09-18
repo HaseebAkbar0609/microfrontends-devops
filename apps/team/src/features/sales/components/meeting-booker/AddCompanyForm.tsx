@@ -15,6 +15,10 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { SALES_CATEGORIES, SALES_REGIONS } from "../../constants/salesTaxonomy";
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
+import {
+	EMPTY_SALES_COMPANY_DRAFT,
+	salesCompanyDraftSchema,
+} from "../../schemas/salesCompany.schema";
 
 type CompanyDraft = {
 	name: string;
@@ -44,6 +48,8 @@ const TEXT_FIELDS = [
 	{ name: "email", labelKey: localizationConstants.salesFieldEmail },
 ] as const;
 
+type FieldErrors = Partial<Record<(typeof TEXT_FIELDS)[number]["name"], string>>;
+
 /**
  * Adds one company straight into the call list. A new company defaults to
  * prospect, which is what puts it in the list without any extra step.
@@ -52,19 +58,29 @@ export function AddCompanyForm({ onClose }: { onClose: () => void }) {
 	const { addCompany } = useSalesCompanies();
 	const t = useTranslate();
 	const [draft, setDraft] = useState<CompanyDraft>(EMPTY_DRAFT);
-	const [error, setError] = useState<string | null>(null);
+	const [errors, setErrors] = useState<FieldErrors>({});
 
 	const update = (patch: Partial<CompanyDraft>) => {
 		setDraft((previous) => ({ ...previous, ...patch }));
-		setError(null);
+		setErrors({});
 	};
 
 	const handleSave = () => {
-		if (!draft.name.trim()) {
-			setError(localizationConstants.salesValidationCompanyNameRequired);
+		// Same rules as the CRM's register dialog: trimmed values, valid email.
+		const result = salesCompanyDraftSchema.safeParse({
+			...EMPTY_SALES_COMPANY_DRAFT,
+			...draft,
+		});
+		if (!result.success) {
+			const { fieldErrors } = result.error.flatten();
+			setErrors(
+				Object.fromEntries(
+					TEXT_FIELDS.map((field) => [field.name, fieldErrors[field.name]?.[0]]),
+				),
+			);
 			return;
 		}
-		addCompany({ ...draft, name: draft.name.trim() });
+		addCompany(result.data);
 		showToast("success", t(localizationConstants.salesBookerCompanyAddedToast));
 		setDraft(EMPTY_DRAFT);
 		onClose();
@@ -96,21 +112,30 @@ export function AddCompanyForm({ onClose }: { onClose: () => void }) {
 			</h2>
 
 			<div className="mt-4 grid grid-cols-1 gap-4 @2xl:grid-cols-2 @5xl:grid-cols-3">
-				{TEXT_FIELDS.map((field) => (
-					<div key={field.name} className="flex flex-col gap-1.5">
-						<label
-							className="text-sm font-medium text-slate-700"
-							htmlFor={`add-company-${field.name}`}
-						>
-							<Translate text={field.labelKey} />
-						</label>
-						<Input
-							id={`add-company-${field.name}`}
-							value={draft[field.name]}
-							onChange={(event) => update({ [field.name]: event.target.value })}
-						/>
-					</div>
-				))}
+				{TEXT_FIELDS.map((field) => {
+					const error = errors[field.name];
+					return (
+						<div key={field.name} className="flex flex-col gap-1.5">
+							<label
+								className="text-sm font-medium text-slate-700"
+								htmlFor={`add-company-${field.name}`}
+							>
+								<Translate text={field.labelKey} />
+							</label>
+							<Input
+								id={`add-company-${field.name}`}
+								value={draft[field.name]}
+								aria-invalid={Boolean(error)}
+								onChange={(event) => update({ [field.name]: event.target.value })}
+							/>
+							{error && (
+								<p className="text-sm text-red-600">
+									<Translate text={error} />
+								</p>
+							)}
+						</div>
+					);
+				})}
 
 				{selects.map((select) => (
 					<div key={select.id} className="flex flex-col gap-1.5">
@@ -132,8 +157,6 @@ export function AddCompanyForm({ onClose }: { onClose: () => void }) {
 					</div>
 				))}
 			</div>
-
-			{error && <p className="mt-3 text-sm text-red-600"><Translate text={error} /></p>}
 
 			<div className="mt-4 flex flex-wrap items-center gap-3">
 				<Button
