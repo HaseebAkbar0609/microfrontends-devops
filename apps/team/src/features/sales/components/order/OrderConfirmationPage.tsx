@@ -7,7 +7,7 @@ import { Translate } from "@/utils/translation/translate";
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import {
-	SALES_MODULE_HREF,
+	SALES_CRM_HREF,
 	SALES_MODULE_TABS,
 	SALES_MODULE_TITLE_KEY,
 	getSalesRecordTabs,
@@ -34,7 +34,7 @@ export default function OrderConfirmationPage({
 						: localizationConstants.salesCompanyNotFoundTitle
 				}
 				backHref={
-					company ? `/module/sales/companies/${company.id}` : "/module/sales"
+					company ? `/module/sales/companies/${company.id}` : SALES_CRM_HREF
 				}
 				backLabelKey={
 					company
@@ -54,7 +54,7 @@ export default function OrderConfirmationPage({
 				secondaryTabs={getSalesRecordTabs(company)}
 				record={{
 					title: company.name || company.id,
-					backHref: SALES_MODULE_HREF,
+					backHref: SALES_CRM_HREF,
 					actions: (
 						<Button
 							type="button"

@@ -1,30 +1,21 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-	ActionsToolbar,
-	type FilterConfig,
-} from "@/components/table/ActionsToolbar";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import {
-	SALES_MODULE_TABS,
-	SALES_MODULE_TITLE_KEY,
-	SALES_OVERVIEW_BREADCRUMBS,
-} from "./constants/salesNav";
-import {
-	SALES_CATEGORIES,
-	SALES_REGIONS,
-} from "./constants/salesTaxonomy";
 import { useSalesCompanies } from "./hooks/useSalesCompanies";
 import { useSalesCompanyFilters } from "./hooks/useSalesCompanyFilters";
+import { CompaniesCardHeader } from "./components/CompaniesCardHeader";
 import { CreateCompanyDialog } from "./components/CreateCompanyDialog";
 import { CsvImportExportActions } from "./components/CsvImportExportActions";
-import { ModulePageHeader } from "@/components/layout/navigation";
 import { SalesCompanyTable } from "./components/SalesCompanyTable";
 import { SalesStatusSummaryCards } from "./components/SalesStatusSummaryCards";
-import { formatCurrency, getInvoicedAmount } from "./utils/salesFormatters";
+import { SellerFilterBar } from "./components/SellerFilterBar";
+import { getInvoicedAmount } from "./utils/salesFormatters";
 
+/** Prospects, leads, quotes and order confirmations in one flow. */
 export default function SalesCrmPage() {
 	const { companies, updateCompany } = useSalesCompanies();
 	const {
@@ -32,12 +23,17 @@ export default function SalesCrmPage() {
 		query,
 		category,
 		region,
+		seller,
+		onlyTrialAccounts,
+		sellers,
 		sort,
 		counts,
 		visibleCompanies,
 		setQuery,
 		setCategory,
 		setRegion,
+		setSeller,
+		setOnlyTrialAccounts,
 		toggleStatusFilter,
 		toggleSort,
 	} = useSalesCompanyFilters(companies);
@@ -52,45 +48,42 @@ export default function SalesCrmPage() {
 		[visibleCompanies],
 	);
 
-	const filters = useMemo<FilterConfig[]>(
-		() => [
-			{
-				label: localizationConstants.salesFilterCategoryLabel,
-				value: category,
-				onFilterChange: setCategory,
-				options: SALES_CATEGORIES.map((option) => ({
-					label: option.labelKey,
-					value: option.id,
-				})),
-			},
-			{
-				label: localizationConstants.salesFilterRegionLabel,
-				value: region,
-				onFilterChange: setRegion,
-				options: SALES_REGIONS.map((option) => ({
-					label: option.labelKey,
-					value: option.id,
-				})),
-			},
-		],
-		[category, region, setCategory, setRegion],
-	);
-
 	return (
-		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
-			<ModulePageHeader
-				title={SALES_MODULE_TITLE_KEY}
-				tabs={SALES_MODULE_TABS}
-				breadcrumbs={SALES_OVERVIEW_BREADCRUMBS}
-			/>
-
-			<div className="flex flex-col gap-5 px-5 py-5">
-				<div className="flex flex-wrap items-center justify-between gap-3">
+		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-slate-50">
+			<header className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 bg-white px-6 py-4">
+				<div>
+					<h1 className="text-2xl font-semibold text-slate-900">
+						<Translate text={localizationConstants.salesCrmOrgTitle} />
+					</h1>
 					<p className="text-sm text-slate-500">
-						<Translate text={localizationConstants.salesCrmSubtitle} />
+						<Translate text={localizationConstants.salesCrmTitle} />
 					</p>
-					<CsvImportExportActions />
 				</div>
+
+				<div className="flex flex-wrap items-center gap-3">
+					<CsvImportExportActions />
+					<Button
+						type="button"
+						variant="primary"
+						className="h-10 gap-2 active:scale-[0.98]"
+						onClick={() => setIsCreateOpen(true)}
+					>
+						<Plus className="h-4 w-4" />
+						<Translate
+							text={localizationConstants.salesRegisterNewCompanyButton}
+						/>
+					</Button>
+				</div>
+			</header>
+
+			<div className="flex flex-col gap-5 p-6">
+				<SellerFilterBar
+					sellers={sellers}
+					seller={seller}
+					onSellerChange={setSeller}
+					onlyTrialAccounts={onlyTrialAccounts}
+					onOnlyTrialAccountsChange={setOnlyTrialAccounts}
+				/>
 
 				<SalesStatusSummaryCards
 					counts={counts}
@@ -98,30 +91,16 @@ export default function SalesCrmPage() {
 					onFilterChange={toggleStatusFilter}
 				/>
 
-				<section className="rounded-xl border border-slate-200 bg-white shadow-2xs">
-					<div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-slate-200 px-5 pt-5">
-						<h2 className="text-base font-semibold text-slate-900">
-							<Translate text={localizationConstants.salesCompaniesTitle} />
-						</h2>
-						<p className="pb-4 text-xs text-slate-500">
-							<Translate
-								text={localizationConstants.salesInvoicedInSelection}
-							/>
-							{": "}
-							<span className="font-medium tabular-nums text-slate-700">
-								{formatCurrency(invoicedTotal)}
-							</span>
-						</p>
-					</div>
-
-					<ActionsToolbar
-						className="flex-wrap gap-y-3"
-						searchValue={query}
-						onSearchChange={setQuery}
-						searchPlaceholder={localizationConstants.salesSearchPlaceholder}
-						filters={filters}
-						onCreateClick={() => setIsCreateOpen(true)}
-						createButtonLabel={localizationConstants.salesCreateCompanyButton}
+				<section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xs">
+					<CompaniesCardHeader
+						statusFilter={statusFilter}
+						invoicedTotal={invoicedTotal}
+						category={category}
+						onCategoryChange={setCategory}
+						region={region}
+						onRegionChange={setRegion}
+						query={query}
+						onQueryChange={setQuery}
 					/>
 
 					<SalesCompanyTable
@@ -136,10 +115,7 @@ export default function SalesCrmPage() {
 				</section>
 			</div>
 
-			<CreateCompanyDialog
-				open={isCreateOpen}
-				onOpenChange={setIsCreateOpen}
-			/>
+			<CreateCompanyDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
 		</div>
 	);
 }

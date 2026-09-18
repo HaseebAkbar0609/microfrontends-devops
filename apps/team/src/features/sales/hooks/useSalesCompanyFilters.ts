@@ -63,28 +63,49 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 	const [query, setQuery] = useState("");
 	const [category, setCategory] = useState("");
 	const [region, setRegion] = useState("");
+	const [seller, setSeller] = useState("");
+	const [onlyTrialAccounts, setOnlyTrialAccounts] = useState(false);
 	const [sort, setSort] = useState<SalesSort>({ key: "name", direction: 1 });
+
+	/** The selected seller's companies, or the whole team's without one. */
+	const sellerCompanies = useMemo(
+		() =>
+			seller ? companies.filter((company) => company.seller === seller) : companies,
+		[companies, seller],
+	);
 
 	const counts = useMemo(() => {
 		const result: Record<string, number> = {};
 		for (const status of SALES_STATUS_IDS) {
-			result[status] = companies.filter(
+			result[status] = sellerCompanies.filter(
 				(company) => company.status === status,
 			).length;
 		}
-		result.demo = companies.filter(hasActiveDemoAccount).length;
-		result.test = companies.filter(hasActiveTestAccount).length;
+		result.demo = sellerCompanies.filter(hasActiveDemoAccount).length;
+		result.test = sellerCompanies.filter(hasActiveTestAccount).length;
 		return result;
-	}, [companies]);
+	}, [sellerCompanies]);
+
+	/** Sellers present in the data, for the seller filter. */
+	const sellers = useMemo(
+		() =>
+			[
+				...new Set(companies.map((company) => company.seller).filter(Boolean)),
+			].sort(compareText),
+		[companies],
+	);
 
 	const visibleCompanies = useMemo(() => {
 		const normalisedQuery = query.trim().toLowerCase();
-		const filtered = companies.filter(
+		const filtered = sellerCompanies.filter(
 			(company) =>
 				matchesStatusFilter(company, statusFilter) &&
 				matchesQuery(company, normalisedQuery) &&
 				(!category || company.category === category) &&
-				(!region || company.region === region),
+				(!region || company.region === region) &&
+				(!onlyTrialAccounts ||
+					hasActiveDemoAccount(company) ||
+					hasActiveTestAccount(company)),
 		);
 
 		return [...filtered].sort((a, b) => {
@@ -95,7 +116,15 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 			}
 			return compareText(String(left), String(right)) * sort.direction;
 		});
-	}, [companies, statusFilter, query, category, region, sort]);
+	}, [
+		sellerCompanies,
+		statusFilter,
+		query,
+		category,
+		region,
+		onlyTrialAccounts,
+		sort,
+	]);
 
 	const toggleStatusFilter = useCallback((next: SalesStatusFilter) => {
 		setStatusFilter((current) => (current === next ? "all" : next));
@@ -118,12 +147,17 @@ export function useSalesCompanyFilters(companies: SalesCompany[]) {
 		query,
 		category,
 		region,
+		seller,
+		onlyTrialAccounts,
+		sellers,
 		sort,
 		counts,
 		visibleCompanies,
 		setQuery,
 		setCategory,
 		setRegion,
+		setSeller,
+		setOnlyTrialAccounts,
 		setStatus,
 		toggleStatusFilter,
 		toggleSort,

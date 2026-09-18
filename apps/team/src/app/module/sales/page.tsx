@@ -1,5 +1,5 @@
-import SalesCrmPage from "@/features/sales/SalesCrmPage";
+import SalesDashboardPage from "@/features/sales/components/dashboard/SalesDashboardPage";
 
 export default function Page() {
-	return <SalesCrmPage />;
+	return <SalesDashboardPage />;
 }

@@ -21,6 +21,7 @@ import { useActivityLogForm } from "../../hooks/useActivityLogForm";
 import type { SalesActivityType, SalesCompany } from "../../types";
 import { formatDate } from "../../utils/salesFormatters";
 import { SalesSectionCard } from "../SalesSectionCard";
+import { SALES_PRIMARY_BUTTON_CLASS } from "../../constants/salesTheme";
 
 type CompanyActivityLogCardProps = {
 	company: SalesCompany;
@@ -104,7 +105,7 @@ export function CompanyActivityLogCard({
 			<Button
 				type="button"
 				size="sm"
-				className="mt-3 cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
+				className={`mt-3 cursor-pointer ${SALES_PRIMARY_BUTTON_CLASS}`}
 				onClick={submit}
 			>
 				<Translate text={localizationConstants.salesActivityAddButton} />

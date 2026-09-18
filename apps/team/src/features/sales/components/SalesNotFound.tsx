@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { SALES_CRM_HREF } from "../constants/salesNav";
 
 type SalesNotFoundProps = {
 	titleKey: string;
@@ -14,7 +15,7 @@ type SalesNotFoundProps = {
 /** Shown when a company, quote or order confirmation cannot be resolved. */
 export function SalesNotFound({
 	titleKey,
-	backHref = "/module/sales",
+	backHref = SALES_CRM_HREF,
 	backLabelKey = localizationConstants.salesBackToCrmButton,
 }: SalesNotFoundProps) {
 	return (
