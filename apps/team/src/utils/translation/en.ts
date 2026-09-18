@@ -916,6 +916,16 @@ export const enAdmin: AdminTranslation = {
 	partnerCategoryNameRequired: "Enter a category name.",
 	partnerCategoryNameTaken: "That category already exists.",
 	partnerCategoryAddedToast: "Category added",
+	imageBankDropPrompt: "Drag and drop images here",
+	imageBankChooseImages: "Choose images",
+	imageBankFileRules: "JPG, PNG, WEBP or GIF, up to {{max}} MB each.",
+	imageBankInvalidType: "{{name}} is not an allowed image type. Use JPG, PNG, WEBP or GIF.",
+	imageBankFileTooLarge: "{{name}} is larger than {{max}} MB.",
+	imageBankEmptyTitle: "No images yet",
+	imageBankEmptyDescription: "Upload images you can use in your offers.",
+	imageBankRemoveImage: "Remove {{name}}",
+	imageBankRemoveTitle: "Remove image?",
+	imageBankRemoveDescription: "{{name}} will be removed from the image bank.",
 };
 
 export const enSales: SalesTranslation = {

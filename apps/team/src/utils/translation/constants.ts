@@ -887,6 +887,16 @@ export type AdminTranslation = {
 	partnerCategoryNameRequired: string;
 	partnerCategoryNameTaken: string;
 	partnerCategoryAddedToast: string;
+	imageBankDropPrompt: string;
+	imageBankChooseImages: string;
+	imageBankFileRules: string;
+	imageBankInvalidType: string;
+	imageBankFileTooLarge: string;
+	imageBankEmptyTitle: string;
+	imageBankEmptyDescription: string;
+	imageBankRemoveImage: string;
+	imageBankRemoveTitle: string;
+	imageBankRemoveDescription: string;
 };
 
 export type SalesTranslation = {
