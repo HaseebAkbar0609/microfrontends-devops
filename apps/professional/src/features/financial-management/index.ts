@@ -124,3 +124,12 @@ export * from "./types/cases.types";
 export * from "./constants/cases.constants";
 export * from "./utils/casesRepository";
 export * from "./hooks/useCases";
+export * from "./components/customers";
+export * from "./types/customers.types";
+export * from "./types/createCustomer.types";
+export * from "./constants/customerOverview.constants";
+export * from "./constants/createCustomer.constants";
+export * from "./schemas/createCustomer.schema";
+export * from "./utils/customerOverviewRepository";
+export * from "./hooks/useCreateCustomerForm";
+
