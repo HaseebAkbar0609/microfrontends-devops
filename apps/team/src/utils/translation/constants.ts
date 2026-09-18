@@ -112,7 +112,8 @@ export type SidebarTranslation = {
 	customers: string;
 	leads: string;
 	support: string;
-	timeflowApp: string;
+	sidebarCollapse: string;
+	sidebarExpand: string;
 	partners: string;
 	adminItem: string;
 	backToMainMenu: string,

@@ -5,9 +5,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SidebarSubItem } from "./SidebarSubItem";
+import { SidebarSubItemList } from "./SidebarSubItemList";
 import { SidebarFlyout } from "./SidebarFlyout";
-import type { NavGroup } from "./navConfig";
+import { navGroupMatchesPath, type NavFlyoutItem, type NavGroup } from "./navConfig";
+import { SIDEBAR_FLYOUT_CLOSE_DELAY_MS } from "./sidebar.constants";
 import { Translate } from "@/utils/translation/translate";
 import { Button } from "@/components/ui/button";
 
@@ -16,6 +17,9 @@ interface SidebarNavGroupProps {
 	collapsed?: boolean;
 	isOpen?: boolean;
 	onToggle?: () => void;
+	/** Owned by the sidebar so only one collapsed group flyout is open at a time. */
+	flyoutOpen: boolean;
+	onFlyoutOpenChange: (open: boolean) => void;
 }
 
 export function SidebarNavGroup({
@@ -23,10 +27,11 @@ export function SidebarNavGroup({
 	collapsed = false,
 	isOpen = false,
 	onToggle,
+	flyoutOpen,
+	onFlyoutOpenChange,
 }: SidebarNavGroupProps) {
 	const pathname = usePathname();
 	const router = useRouter();
-	const [flyoutOpen, setFlyoutOpen] = useState(false);
 	const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
 	const groupRef = useRef<HTMLElement | null>(null);
 	const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -34,50 +39,39 @@ export function SidebarNavGroup({
 	const Icon = group.icon;
 	const hasItems = group.items.length > 0;
 	const isLink = !hasItems && !!group.href;
-	const isActive =
-		(group.href && (pathname === group.href || pathname.startsWith(group.href + "/"))) ||
-		group.items.some(
-			(item) => pathname === item.href || pathname.startsWith(item.href + "/")
-		);
+	const isActive = navGroupMatchesPath(group, pathname);
 
-	const collapsedFlyoutItems = group.items.map((item) => ({
-		id: item.id,
-		label: item.label,
-		href: item.href,
-	}));
+	// The collapsed menu has no room for nested flyouts, so list the leaf pages.
+	const collapsedFlyoutItems = group.items.flatMap<NavFlyoutItem>((item) =>
+		item.flyoutItems?.length ? item.flyoutItems : [item]
+	);
 
-	const openCollapsedFlyout = () => {
-		if (!collapsed || !hasItems) return;
+	const cancelCollapsedFlyoutClose = () => {
 		if (closeTimeoutRef.current) {
 			clearTimeout(closeTimeoutRef.current);
 			closeTimeoutRef.current = null;
 		}
+	};
+
+	const openCollapsedFlyout = () => {
+		if (!collapsed || !hasItems) return;
+		cancelCollapsedFlyoutClose();
 		const rect = groupRef.current?.getBoundingClientRect();
 		if (rect) {
 			setAnchorRect(rect);
-			setFlyoutOpen(true);
+			onFlyoutOpenChange(true);
 		}
 	};
 
-	const closeCollapsedFlyout = (delay = 120) => {
+	const closeCollapsedFlyout = (delay = SIDEBAR_FLYOUT_CLOSE_DELAY_MS) => {
 		if (!collapsed || !hasItems) return;
 		if (closeTimeoutRef.current) {
 			clearTimeout(closeTimeoutRef.current);
 		}
 		closeTimeoutRef.current = setTimeout(() => {
-			setFlyoutOpen(false);
+			onFlyoutOpenChange(false);
 		}, delay);
 	};
-
-	useEffect(() => {
-		if (!collapsed) {
-			setFlyoutOpen(false);
-		}
-	}, [collapsed]);
-
-	useEffect(() => {
-		setFlyoutOpen(false);
-	}, [pathname]);
 
 	useEffect(() => {
 		return () => {
@@ -161,7 +155,7 @@ export function SidebarNavGroup({
 					onClick={() => {
 						if (collapsed && hasItems) {
 							openCollapsedFlyout();
-							const firstHref = group.items[0]?.href;
+							const firstHref = collapsedFlyoutItems[0]?.href;
 							if (firstHref) {
 								router.push(firstHref);
 							}
@@ -185,13 +179,7 @@ export function SidebarNavGroup({
 			)}
 
 			{hasItems && isOpen && !collapsed && (
-				<div className="flex flex-row self-stretch pl-5">
-					<div className="flex flex-1 flex-col gap-1 border-l border-[#364157] py-1 pl-2">
-						{group.items.map((item) => (
-							<SidebarSubItem key={item.id} item={item} />
-						))}
-					</div>
-				</div>
+				<SidebarSubItemList items={group.items} />
 			)}
 
 			{collapsed && hasItems && flyoutOpen && anchorRect && (
@@ -200,7 +188,9 @@ export function SidebarNavGroup({
 					anchorRect={anchorRect}
 					anchorEl={groupRef.current}
 					leftOffset={22}
-					onClose={() => setFlyoutOpen(false)}
+					onClose={() => onFlyoutOpenChange(false)}
+					onMouseEnter={cancelCollapsedFlyoutClose}
+					onMouseLeave={() => closeCollapsedFlyout()}
 				/>
 			)}
 		</div>
