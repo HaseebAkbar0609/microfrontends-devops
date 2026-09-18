@@ -116,6 +116,7 @@ export const INITIAL_MOCK_CONSTRUCTION_LOG: ConstructionLogEntry = {
 			signedAt: "2026-01-11",
 		},
 	},
+	status: "published",
 	createdAt: "2026-01-11T08:00:00.000Z",
 	updatedAt: "2026-01-11T16:30:00.000Z",
 };
