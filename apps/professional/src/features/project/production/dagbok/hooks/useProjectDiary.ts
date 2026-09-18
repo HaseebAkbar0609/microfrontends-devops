@@ -88,8 +88,6 @@ export function useProjectDiary(projectId: string, facts: DiaryProjectFacts) {
 		diaries,
 		selectedDate,
 		diary,
-		/** Days that already have a diary, for Ny dagbok's check and the calendar. */
-		takenDates: new Set(diaries.map((entry) => entry.date)),
 		selectDate,
 		create,
 		save,

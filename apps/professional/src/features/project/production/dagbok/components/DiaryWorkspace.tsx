@@ -1,12 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { CalendarPlus, Plus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { ProjectRowsToolbar } from "../../../components/ProjectRowsToolbar";
+import { diaryUrls } from "../diaryNav";
 import { workdayKind } from "../diaryDates";
 import type { DiaryProjectFacts } from "../hooks/useDiaryProject";
 import { useProjectDiary } from "../hooks/useProjectDiary";
@@ -14,7 +16,6 @@ import { DIARY_ROW_KIND_META, DIARY_ROW_KINDS } from "../projectDiary.config";
 import type { DiaryRowKind } from "../types";
 import { DiaryEditor } from "./DiaryEditor";
 import { DiaryRecordBar } from "./DiaryRecordBar";
-import { NewDiaryDialog } from "./NewDiaryDialog";
 import { DiaryMonthCalendar, type WorkdayKind } from "./weather/DiaryMonthCalendar";
 
 const PRIMARY = "h-10 cursor-pointer gap-2 rounded-md bg-[#111721] px-4 text-sm font-medium text-white hover:bg-slate-800";
@@ -39,7 +40,6 @@ export function DiaryWorkspace({ projectId, facts }: { projectId: string; facts:
 	const state = useProjectDiary(projectId, facts);
 	const [query, setQuery] = useState("");
 	const [section, setSection] = useState<DiaryRowKind | null>(null);
-	const [creating, setCreating] = useState(false);
 
 	const filterOptions = DIARY_ROW_KINDS.map((kind) => ({ value: kind, label: t(DIARY_ROW_KIND_META[kind].filterKey) }));
 	const kinds = useMemo(
@@ -59,9 +59,12 @@ export function DiaryWorkspace({ projectId, facts }: { projectId: string; facts:
 				onFilterChange={(value) => setSection(value as DiaryRowKind | null)}
 				filterOptions={filterOptions}
 				action={
-					<Button type="button" onClick={() => setCreating(true)} className={PRIMARY}>
-						<Plus className="h-4 w-4 shrink-0" aria-hidden />
-						<Translate text={localizationConstants.projectDiaryNewDiary} />
+					<Button asChild className={PRIMARY}>
+						{/* Ny dagbok is its own two-step page; the day on screen starts it off. */}
+						<Link href={diaryUrls.create(projectId, state.selectedDate)}>
+							<Plus className="h-4 w-4 shrink-0" aria-hidden />
+							<Translate text={localizationConstants.projectDiaryNewDiary} />
+						</Link>
 					</Button>
 				}
 			/>
@@ -90,15 +93,6 @@ export function DiaryWorkspace({ projectId, facts }: { projectId: string; facts:
 						</div>
 					)}
 				</>
-			)}
-
-			{creating && (
-				<NewDiaryDialog
-					initialDate={state.selectedDate ?? ""}
-					takenDates={state.takenDates}
-					onCreate={state.create}
-					onClose={() => setCreating(false)}
-				/>
 			)}
 		</div>
 	);

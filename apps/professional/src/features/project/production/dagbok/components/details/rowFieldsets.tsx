@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import type { Control } from "react-hook-form";
 
 import { FormInput, FormSelect, FormTextarea } from "@/components/form";
@@ -12,8 +13,10 @@ import {
 	DEVIATION_TYPE_META,
 	DEVIATION_TYPES,
 	DIARY_LIMITS,
+	MACHINE_SUGGESTIONS,
 	WORK_STATUS_META,
 	WORK_STATUSES,
+	WORKFORCE_ROLE_SUGGESTIONS,
 	type EnumMeta,
 } from "../../projectDiary.config";
 import type { DiaryRowKind } from "../../types";
@@ -30,6 +33,25 @@ const DEVIATION_STATUS_OPTIONS = options(DEVIATION_STATUSES, DEVIATION_STATUS_ME
 interface FieldsetProps<K extends DiaryRowKind> {
 	control: Control<DiaryRowDraftByKind[K]>;
 	translateError: (message: string) => string;
+	/**
+	 * Offers the config's trades and machines under Benämning while leaving it
+	 * typable — a site has names no list knows. Ny dagbok draws them; the day
+	 * page's dialog does not.
+	 */
+	suggestions?: boolean;
+	/** The dialog focuses its first field on opening; the wizard's four cards must not. */
+	autoFocus?: boolean;
+}
+
+/** The list behind a Benämning field. Native, so the field keeps taking free text. */
+function Suggestions({ id, values }: { id: string; values: readonly string[] }) {
+	return (
+		<datalist id={id}>
+			{values.map((value) => (
+				<option key={value} value={value} />
+			))}
+		</datalist>
+	);
 }
 
 const TEXT = { maxLength: DIARY_LIMITS.text };
@@ -49,10 +71,13 @@ function NoteField({ control, labelKey }: { control: unknown; labelKey: string }
 	);
 }
 
-export function WorkforceFields({ control, translateError }: FieldsetProps<"workforce">) {
+export function WorkforceFields({ control, translateError, suggestions = false, autoFocus = true }: FieldsetProps<"workforce">) {
+	const listId = useId();
+
 	return (
 		<div className="grid gap-4 sm:grid-cols-2">
-			<FormInput control={control} name="role" label={M.projectDiaryColName} required inputProps={{ ...TEXT, autoFocus: true }} translateError={translateError} className="sm:col-span-2" />
+			{suggestions && <Suggestions id={listId} values={WORKFORCE_ROLE_SUGGESTIONS} />}
+			<FormInput control={control} name="role" label={M.projectDiaryColName} required inputProps={{ ...TEXT, autoFocus, list: suggestions ? listId : undefined }} translateError={translateError} className="sm:col-span-2" />
 			<FormInput control={control} name="own" label={M.projectDiaryColOwn} inputProps={NUMBER} translateError={translateError} />
 			<FormInput control={control} name="ue" label={M.projectDiaryColUe} inputProps={NUMBER} translateError={translateError} />
 			<FormInput control={control} name="hours" label={M.projectDiaryColHours} required inputProps={NUMBER} translateError={translateError} />
@@ -61,20 +86,24 @@ export function WorkforceFields({ control, translateError }: FieldsetProps<"work
 	);
 }
 
-export function WorksFields({ control, translateError }: FieldsetProps<"works">) {
+export function WorksFields({ control, translateError, autoFocus = true }: FieldsetProps<"works">) {
 	return (
 		<div className="grid gap-4 sm:grid-cols-2">
-			<FormInput control={control} name="name" label={M.projectDiaryColName} required inputProps={{ ...TEXT, autoFocus: true }} translateError={translateError} />
+			{/* No suggestions: a day's work is named for that day, and no list exists. */}
+			<FormInput control={control} name="name" label={M.projectDiaryColName} required inputProps={{ ...TEXT, autoFocus }} translateError={translateError} />
 			<FormSelect control={control} name="status" label={M.projectDiaryColStatus} placeholder={M.projectDiarySelectPlaceholder} options={WORK_STATUS_OPTIONS} translateError={translateError} />
 			<NoteField control={control} labelKey={M.projectDiaryColNotes} />
 		</div>
 	);
 }
 
-export function MachinesFields({ control, translateError }: FieldsetProps<"machines">) {
+export function MachinesFields({ control, translateError, suggestions = false, autoFocus = true }: FieldsetProps<"machines">) {
+	const listId = useId();
+
 	return (
 		<div className="grid gap-4 sm:grid-cols-2">
-			<FormInput control={control} name="name" label={M.projectDiaryColName} required inputProps={{ ...TEXT, autoFocus: true }} translateError={translateError} className="sm:col-span-2" />
+			{suggestions && <Suggestions id={listId} values={MACHINE_SUGGESTIONS} />}
+			<FormInput control={control} name="name" label={M.projectDiaryColName} required inputProps={{ ...TEXT, autoFocus, list: suggestions ? listId : undefined }} translateError={translateError} className="sm:col-span-2" />
 			<FormInput control={control} name="quantity" label={M.projectDiaryColQuantity} required inputProps={NUMBER} translateError={translateError} />
 			<FormInput control={control} name="hours" label={M.projectDiaryColHoursShort} required inputProps={NUMBER} translateError={translateError} />
 			<NoteField control={control} labelKey={M.projectDiaryColNote} />
