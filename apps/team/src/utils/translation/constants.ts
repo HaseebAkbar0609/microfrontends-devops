@@ -658,6 +658,13 @@ export type AdminTranslation = {
 	adminSwitchboardLabel: string;
 	adminHomepageLabel: string;
 	adminNewEmployeeLabel: string;
+	adminNewEmployeeDescription: string;
+	adminEmployeeNameRequired: string;
+	adminEmployeePositionRequired: string;
+	adminEmployeeIdNumberInvalid: string;
+	adminEmployeeIdNumberTaken: string;
+	adminEmployeeStartDateRequired: string;
+	adminEmployeeAddedToast: string;
 	adminContactNoLabel: string;
 	adminPositionLabel: string;
 	adminIdNumberLabel: string;

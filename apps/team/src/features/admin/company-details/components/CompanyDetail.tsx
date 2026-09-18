@@ -70,13 +70,13 @@ export default function CompanyDetail() {
 					</TabsList>
 				</div>
 
-				<TabsContent value="company" className="mt-6 min-h-0 flex-1">
+				<TabsContent value="company" forceMount className="mt-6 min-h-0 flex-1 data-[state=inactive]:hidden">
 					<CompanyInformationTab form={form} onSubmit={onSubmit} lastSavedRef={lastSavedRef} />
 				</TabsContent>
-				<TabsContent value="bank" className="mt-6 min-h-0 flex-1">
+				<TabsContent value="bank" forceMount className="mt-6 min-h-0 flex-1 data-[state=inactive]:hidden">
 					<BankTab />
 				</TabsContent>
-				<TabsContent value="organisation" className="mt-6 min-h-0 flex-1">
+				<TabsContent value="organisation" forceMount className="mt-6 min-h-0 flex-1 data-[state=inactive]:hidden">
 					<OrganisationTab />
 				</TabsContent>
 			</Tabs>

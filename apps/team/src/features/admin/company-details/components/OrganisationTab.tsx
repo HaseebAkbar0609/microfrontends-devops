@@ -29,6 +29,7 @@ import {
 	type EmployeeStatus,
 	type OrganisationMember,
 } from "../constants/organisation";
+import { NewEmployeeDialog } from "./NewEmployeeDialog";
 
 const COLUMNS = [
 	{ key: "contactNo", labelKey: localizationConstants.adminContactNoLabel, width: "w-[110px]" },
@@ -54,7 +55,8 @@ function StatusBadge({ status }: { status: EmployeeStatus }) {
 
 export function OrganisationTab() {
 	const t = useTranslate();
-	const [members] = useState<OrganisationMember[]>(DUMMY_ORGANISATION_MEMBERS);
+	const [members, setMembers] = useState<OrganisationMember[]>(DUMMY_ORGANISATION_MEMBERS);
+	const [isNewEmployeeOpen, setIsNewEmployeeOpen] = useState(false);
 	const [search, setSearch] = useState("");
 	const [statusFilter, setStatusFilter] = useState("");
 	const [sortKey, setSortKey] = useState<SortKey | null>(null);
@@ -114,7 +116,7 @@ export function OrganisationTab() {
 						})),
 					},
 				]}
-				onCreateClick={() => showToast("info", t(localizationConstants.adminNewEmployeeLabel))}
+				onCreateClick={() => setIsNewEmployeeOpen(true)}
 				createButtonLabel={localizationConstants.adminNewEmployeeLabel}
 			/>
 			</div>
@@ -227,6 +229,13 @@ export function OrganisationTab() {
 					<Translate text={localizationConstants.save} />
 				</Button>
 			</div>
+
+			<NewEmployeeDialog
+				open={isNewEmployeeOpen}
+				onOpenChange={setIsNewEmployeeOpen}
+				members={members}
+				onCreated={(member) => setMembers((previous) => [...previous, member])}
+			/>
 		</div>
 	);
 }
