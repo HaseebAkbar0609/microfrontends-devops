@@ -22,7 +22,7 @@ export const CustomerDetailPage: React.FC<CustomerDetailPageProps> = ({ id }) =>
 		activeTab,
 		setActiveTab,
 		handleBack,
-		handleEditSection,
+		updateCustomer,
 		handleDeleteContactPerson,
 		handleDeleteDocument,
 	} = useCustomerDetail(id);
@@ -53,7 +53,7 @@ export const CustomerDetailPage: React.FC<CustomerDetailPageProps> = ({ id }) =>
 	}
 
 	return (
-		<div className="space-y-6 pb-12">
+		<div className="p-6 md:p-8 w-full space-y-6 pb-16">
 			{/* Top Header */}
 			<CustomerDetailHeader
 				customerNo={customer.customerNo}
@@ -69,24 +69,24 @@ export const CustomerDetailPage: React.FC<CustomerDetailPageProps> = ({ id }) =>
 			{/* Active Tab View */}
 			<div>
 				{activeTab === "basic" && (
-					<BasicInfoTab customer={customer} onEdit={handleEditSection} />
+					<BasicInfoTab customer={customer} onUpdate={updateCustomer} />
 				)}
 				{activeTab === "contact" && (
 					<ContactTab
 						customer={customer}
-						onEdit={handleEditSection}
+						onUpdate={updateCustomer}
 						onDeleteContactPerson={handleDeleteContactPerson}
 					/>
 				)}
 				{activeTab === "assessment" && (
 					<AssessmentTab
 						customer={customer}
-						onEdit={handleEditSection}
+						onUpdate={updateCustomer}
 						onDeleteDocument={handleDeleteDocument}
 					/>
 				)}
 				{activeTab === "invoice" && (
-					<InvoiceTab customer={customer} onEdit={handleEditSection} />
+					<InvoiceTab customer={customer} onUpdate={updateCustomer} />
 				)}
 			</div>
 		</div>

@@ -9667,6 +9667,7 @@ export const svCustomerDetail: CustomerDetailTranslation = {
 	customerDetailExclVat: "Exkl. moms",
 	customerDetailInclVat: "Inkl. moms",
 	customerDetailNone: "Ingen",
+	customerDetailCardSaved: "Ändringarna har sparats",
 };
 
 export const sv: Translation = {

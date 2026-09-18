@@ -9646,6 +9646,7 @@ export const enCustomerDetail: CustomerDetailTranslation = {
 	customerDetailExclVat: "Excl. VAT",
 	customerDetailInclVat: "Incl. VAT",
 	customerDetailNone: "None",
+	customerDetailCardSaved: "Changes saved successfully",
 };
 
 export const en: Translation = {

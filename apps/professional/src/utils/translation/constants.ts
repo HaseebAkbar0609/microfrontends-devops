@@ -9579,6 +9579,7 @@ export type CustomerDetailTranslation = {
 	customerDetailExclVat: string;
 	customerDetailInclVat: string;
 	customerDetailNone: string;
+	customerDetailCardSaved: string;
 };
 
 export type Translation = HeaderTranslation &

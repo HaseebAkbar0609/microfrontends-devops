@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { showToast } from "@/lib/toast";
+import localizationConstants from "@/utils/translation/constants";
 import type {
 	CustomerDetailData,
 	CustomerDetailTab,
@@ -9,9 +12,11 @@ import {
 	CUSTOMER_CREATE_ROUTE,
 } from "../constants/customerOverview.constants";
 import { customerDetailRepository } from "../utils/customerDetailRepository";
+import { customerOverviewRepository } from "../utils/customerOverviewRepository";
 
 export function useCustomerDetail(id: string) {
 	const router = useRouter();
+	const { t } = useTranslation();
 	const [activeTab, setActiveTab] = useState<CustomerDetailTab>("basic");
 	const [customer, setCustomer] = useState<CustomerDetailData | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -34,6 +39,29 @@ export function useCustomerDetail(id: string) {
 			router.push(`${CUSTOMER_CREATE_ROUTE}?id=${encodeURIComponent(id)}&step=${step}`);
 		},
 		[id, router],
+	);
+
+	const updateCustomer = useCallback(
+		(updates: Partial<CustomerDetailData>) => {
+			if (!customer) return;
+			const updatedCustomer: CustomerDetailData = { ...customer, ...updates };
+			setCustomer(updatedCustomer);
+			customerDetailRepository.save(updatedCustomer);
+
+			// Also sync overview repository if primary fields changed
+			customerOverviewRepository.update(customer.id, {
+				name: updatedCustomer.name,
+				orgNo: updatedCustomer.orgNo,
+				address: updatedCustomer.visitingAddress,
+				postNr: updatedCustomer.visitingPostalCode,
+				city: updatedCustomer.visitingCity,
+				phone: updatedCustomer.phone,
+				email: updatedCustomer.email,
+			});
+
+			showToast("success", t(localizationConstants.customerDetailCardSaved));
+		},
+		[customer, t],
 	);
 
 	const handleDeleteContactPerson = useCallback(
@@ -65,6 +93,7 @@ export function useCustomerDetail(id: string) {
 		setActiveTab,
 		handleBack,
 		handleEditSection,
+		updateCustomer,
 		handleDeleteContactPerson,
 		handleDeleteDocument,
 	};
