@@ -68,30 +68,33 @@ export function formatLeadDate(value: string | number) {
 	return date.toISOString().slice(0, 10);
 }
 
+export function getLeadCategoryName(category: LeadApiCategory) {
+	return (
+		category.name?.trim() ||
+		category.english_name?.trim() ||
+		category.swedish_name?.trim() ||
+		""
+	);
+}
+
 export function formatLeadCategory(categories: LeadApiCategory[]) {
 	if (!Array.isArray(categories)) return "-";
+	return categories.map(getLeadCategoryName).filter(Boolean).join(", ") || "-";
+}
+
+/** The lead's creation time, under whichever known field spelling the payload uses. */
+export function getLeadCreatedAt(item: LeadApiItem): string | number {
+	const candidates = [item.created_at, item.creatd_at, item.createdAt];
 	return (
-		categories
-			.map(
-				(category) =>
-					category.name?.trim() ||
-					category.english_name?.trim() ||
-					category.swedish_name?.trim()
-			)
-			.filter(Boolean)
-			.join(", ") || "-"
+		candidates.find(
+			(value): value is string | number =>
+				typeof value === "string" || typeof value === "number"
+		) ?? ""
 	);
 }
 
 export function mapLeadListItemToRow(item: LeadApiItem): LeadRow {
-	const createdAt =
-		typeof item.created_at === "string" || typeof item.created_at === "number"
-			? item.created_at
-			: typeof item.creatd_at === "string" || typeof item.creatd_at === "number"
-				? item.creatd_at
-				: typeof item.createdAt === "string" || typeof item.createdAt === "number"
-					? item.createdAt
-					: "";
+	const createdAt = getLeadCreatedAt(item);
 	const customerName =
 		typeof item.customer_name === "string" && item.customer_name.trim()
 			? item.customer_name
