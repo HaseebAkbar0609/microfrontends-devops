@@ -11,6 +11,7 @@ import {
 	CSV_FILE_NAME_PREFIX,
 } from "../constants/sales.constants";
 import { useSalesCompanies } from "../hooks/useSalesCompanies";
+import { toLocalDateKey } from "../utils/meetingBooker";
 import { companiesToCsv, parseCompaniesCsv } from "../utils/salesCsv";
 
 /** CSV round-trip for the company list. */
@@ -26,7 +27,7 @@ export function CsvImportExportActions() {
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");
 		link.href = url;
-		link.download = `${CSV_FILE_NAME_PREFIX}-${new Date().toISOString().slice(0, 10)}.csv`;
+		link.download = `${CSV_FILE_NAME_PREFIX}-${toLocalDateKey(new Date())}.csv`;
 		link.click();
 		URL.revokeObjectURL(url);
 		showToast("success", t(localizationConstants.salesCsvExportedToast));

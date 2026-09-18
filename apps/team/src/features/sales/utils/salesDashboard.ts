@@ -1,12 +1,6 @@
-import {
-	DAYS_PER_WEEK,
-	MS_PER_DAY,
-	SALES_REFERENCE_DATE,
-} from "../constants/sales.constants";
 import type { SalesActivityType, SalesCompany } from "../types";
+import { getWeekDayKeys, toDateKey } from "./meetingBooker";
 import { compareText, getInvoicedAmount } from "./salesFormatters";
-
-export type WeekRange = { start: number; end: number };
 
 export type SellerStats = {
 	name: string;
@@ -44,31 +38,15 @@ export type SalesDashboardStats = {
 	deals: WeekDeal[];
 };
 
-/**
- * Monday 00:00 UTC up to the next Monday, for the week holding `referenceIso`.
- * Defaults to the seed data's reference date, so server and client agree.
- */
-export function getWeekRange(referenceIso = SALES_REFERENCE_DATE): WeekRange {
-	const reference = new Date(referenceIso);
-	const daysSinceMonday = (reference.getUTCDay() + DAYS_PER_WEEK - 1) % DAYS_PER_WEEK;
-	const start = Date.UTC(
-		reference.getUTCFullYear(),
-		reference.getUTCMonth(),
-		reference.getUTCDate() - daysSinceMonday,
-	);
-	return { start, end: start + DAYS_PER_WEEK * MS_PER_DAY };
-}
-
-export function isInWeek(iso: string | undefined, week: WeekRange): boolean {
-	if (!iso) return false;
-	const time = new Date(iso).getTime();
-	return !Number.isNaN(time) && time >= week.start && time < week.end;
+/** True when `iso` falls on one of the week's local calendar days. */
+function isInWeek(iso: string | undefined, week: Set<string>): boolean {
+	return week.has(toDateKey(iso));
 }
 
 function countActivities(
 	company: SalesCompany,
 	type: SalesActivityType,
-	week?: WeekRange,
+	week?: Set<string>,
 ): number {
 	return company.activities.filter(
 		(activity) =>
@@ -76,11 +54,15 @@ function countActivities(
 	).length;
 }
 
-/** Everything the sales dashboard shows, derived from the CRM companies. */
+/**
+ * Everything the sales dashboard shows, derived from the CRM companies. "This
+ * week" is the Monday-to-Sunday week holding `todayKey`.
+ */
 export function getSalesDashboardStats(
 	companies: SalesCompany[],
-	week: WeekRange = getWeekRange(),
+	todayKey: string,
 ): SalesDashboardStats {
+	const week = new Set(getWeekDayKeys(todayKey));
 	const sellers = new Map<string, SellerStats>();
 	const meetings: WeekMeeting[] = [];
 	const deals: WeekDeal[] = [];

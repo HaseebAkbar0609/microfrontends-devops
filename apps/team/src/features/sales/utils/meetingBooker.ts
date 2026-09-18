@@ -45,12 +45,19 @@ export type MeetingBookerStats = {
 
 export type CallListFilters = { category: string; region: string };
 
-/** The calendar day of an ISO timestamp, as `yyyy-mm-dd`. */
+/** The local calendar day of a date, as `yyyy-mm-dd`. */
+export function toLocalDateKey(date: Date): string {
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	return `${date.getFullYear()}-${month}-${day}`;
+}
+
+/** The local calendar day of an ISO timestamp, as `yyyy-mm-dd`. */
 export function toDateKey(iso: string | undefined): string {
 	if (!iso) return "";
 	const parsed = new Date(iso);
 	if (Number.isNaN(parsed.getTime())) return "";
-	return parsed.toISOString().slice(0, 10);
+	return toLocalDateKey(parsed);
 }
 
 /** ISO-8601 week number of a `yyyy-mm-dd` key. */
@@ -77,6 +84,15 @@ export function getRecentDayKeys(todayKey: string, count = BOOKING_STATS_DAYS): 
 	return Array.from({ length: count }, (_, index) =>
 		new Date(today - (count - 1 - index) * MS_PER_DAY).toISOString().slice(0, 10),
 	);
+}
+
+/** The Monday-to-Sunday calendar days of the week holding `todayKey`. */
+export function getWeekDayKeys(todayKey: string): string[] {
+	const today = new Date(`${todayKey}T00:00:00.000Z`);
+	if (Number.isNaN(today.getTime())) return [];
+	const daysUntilSunday = (DAYS_PER_WEEK - today.getUTCDay()) % DAYS_PER_WEEK;
+	const sunday = new Date(today.getTime() + daysUntilSunday * MS_PER_DAY);
+	return getRecentDayKeys(sunday.toISOString().slice(0, 10), DAYS_PER_WEEK);
 }
 
 /** Companies to call, narrowed by the category and region filters. */
@@ -118,7 +134,7 @@ export function getMeetingBookerStats(
 	bookerNames: string[],
 ): MeetingBookerStats {
 	const rows = toRows(companies);
-	const weekKeys = new Set(getRecentDayKeys(todayKey, DAYS_PER_WEEK));
+	const weekKeys = new Set(getWeekDayKeys(todayKey));
 	const dayCounts = new Map<string, number>();
 	const weekCounts = new Map<number, number>();
 	const bookers = new Map<string, BookerStats>(

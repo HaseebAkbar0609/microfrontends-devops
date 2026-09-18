@@ -1,15 +1,15 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import { SALES_REFERENCE_DATE } from "../constants/sales.constants";
 import type { SalesActivity, SalesCompany } from "../types";
 import { createId } from "../utils/salesFactories";
 import { getCallList, getMeetingBookerStats } from "../utils/meetingBooker";
 import { useSalesCompanies } from "./useSalesCompanies";
 import { useMeetingBookerNames } from "./useSalesTeam";
+import { useTodayKey } from "./useTodayKey";
 
 /**
  * State and actions for the meeting booker workspace.
@@ -31,12 +31,7 @@ export function useMeetingBooker() {
 	const [region, setRegion] = useState("");
 	const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
 
-	// The seed data's fixed date renders first so server and client markup
-	// match, then the real day takes over once mounted.
-	const [todayKey, setTodayKey] = useState(() => SALES_REFERENCE_DATE.slice(0, 10));
-	useEffect(() => {
-		setTodayKey(new Date().toISOString().slice(0, 10));
-	}, []);
+	const todayKey = useTodayKey();
 
 	const callList = useMemo(
 		() => getCallList(companies, { category, region }),

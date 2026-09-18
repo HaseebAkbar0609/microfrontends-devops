@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { SALES_REFERENCE_DATE } from "../../constants/sales.constants";
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
 import { useMeetingBookerNames } from "../../hooks/useSalesTeam";
+import { useTodayKey } from "../../hooks/useTodayKey";
 import { getSalesStatistics } from "../../utils/salesStatistics";
 import { BookerResultsTable } from "./BookerResultsTable";
 import { StatBarList } from "./StatBarList";
@@ -15,13 +15,7 @@ import { StatKpis } from "./StatKpis";
 export default function SalesStatisticsPage() {
 	const { companies } = useSalesCompanies();
 	const bookerNames = useMeetingBookerNames();
-
-	// The seed's fixed date renders first so server and client markup match,
-	// then the real day takes over once mounted.
-	const [todayKey, setTodayKey] = useState(() => SALES_REFERENCE_DATE.slice(0, 10));
-	useEffect(() => {
-		setTodayKey(new Date().toISOString().slice(0, 10));
-	}, []);
+	const todayKey = useTodayKey();
 
 	const statistics = useMemo(
 		() => getSalesStatistics(companies, todayKey, bookerNames),
