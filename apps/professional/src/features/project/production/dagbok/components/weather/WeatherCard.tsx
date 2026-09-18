@@ -43,6 +43,7 @@ export function WeatherCard({ editor, city, date }: WeatherCardProps) {
 		mode: "onTouched",
 	});
 	const readings = useWatch({ control: editor.form.control, name: "weather" });
+	const unit = useWatch({ control: readingForm.control, name: "unit" });
 	const full = readings.length >= DIARY_LIMITS.rows;
 
 	const add = readingForm.handleSubmit((draft) => {
@@ -54,7 +55,7 @@ export function WeatherCard({ editor, city, date }: WeatherCardProps) {
 		<RecordCollapsibleCard titleKey={localizationConstants.projectDiaryCardWeather} icon={CloudSun} contentClassName="flex flex-col gap-4">
 			{!editor.locked && (
 				<Form {...readingForm}>
-					<WeatherReadingFields form={readingForm} city={city} date={date} />
+					<WeatherReadingFields control={readingForm.control} unit={unit} context={{ city, date }} />
 					<div>
 						<Button
 							type="button"

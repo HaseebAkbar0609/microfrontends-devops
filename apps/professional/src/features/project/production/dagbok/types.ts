@@ -61,6 +61,8 @@ export interface DiarySignature {
 	name: string;
 	/** `yyyy-MM-dd`. */
 	signedDate: string;
+	/** The uploaded signature's file name. There is no file store, so the file itself is not kept. */
+	fileName?: string;
 }
 
 /** Everything a draft can change. */
