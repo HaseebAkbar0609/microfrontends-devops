@@ -5133,7 +5133,7 @@ export const svRegister: RegisterTranslation = {
 	registerNew: "Registrera nytt",
 	customerNoHeader: "kund nr",
 	customerHeader: "Kund",
-	orgNoHeader: "Org nr:",
+	orgNoHeader: "Org nr",
 	addressHeader: "Adress",
 	postNrHeader: "Post nr",
 	ortHeader: "Ort",
