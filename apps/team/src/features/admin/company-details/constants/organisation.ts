@@ -21,6 +21,13 @@ export interface OrganisationMember {
 	location: string;
 }
 
+/** Contact numbers read A001, A002 and so on. */
+export const CONTACT_NO_PREFIX = "A";
+export const CONTACT_NO_DIGITS = 3;
+
+/** Swedish personal identity number, short or long form: YYMMDD-XXXX or YYYYMMDD-XXXX. */
+export const ID_NUMBER_PATTERN = /^(\d{2})?\d{6}[-+]\d{4}$/;
+
 export const EMPLOYEE_STATUS_CONFIG: Record<
 	EmployeeStatus,
 	{ labelKey: string; className: string }
