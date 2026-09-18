@@ -1,13 +1,17 @@
 "use client";
 
 import { Save } from "lucide-react";
+import type { UseFormReturn } from "react-hook-form";
 
 import { Form, FormInput, FormSelect } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { RecordFileField, type RecordFileFieldValues } from "../../components/RecordFileField";
 import {
+	DOCUMENT_FILE_ACCEPT,
+	DOCUMENT_FILE_RULES,
 	DOCUMENT_KIND_META,
 	DOCUMENT_NAME_MAX_LENGTH,
 	DRAWING_CATEGORIES,
@@ -15,7 +19,6 @@ import {
 	DRAWING_NUMBER_MAX_LENGTH,
 } from "../projectDocuments.config";
 import type { ProjectDocumentInput, ProjectDocumentKind } from "../types";
-import { DocumentFileField } from "./DocumentFileField";
 import { useDocumentUploadForm } from "./useDocumentUploadForm";
 
 /** Module constant: the categories, labelled in the reader's language when rendered. */
@@ -73,7 +76,20 @@ export function DocumentUploadDialog({ kind, onUpload, onClose }: DocumentUpload
 							/>
 						)}
 
-						<DocumentFileField form={form} />
+						{/* This form carries the field's three names plus Kategori and the kind,
+						    which react-hook-form's types cannot express as "at least these". */}
+						<RecordFileField
+							form={form as unknown as UseFormReturn<RecordFileFieldValues>}
+							labelKey={DOCUMENT_KIND_META[kind].fileLabelKey}
+							hintKey={localizationConstants.projectDocumentsAllowedFiles}
+							typeErrorKey={localizationConstants.projectDocumentsFileTypeError}
+							sizeErrorKey={localizationConstants.projectDocumentsFileSizeError}
+							uploadKey={localizationConstants.projectDocumentsUploadButton}
+							removeKey={localizationConstants.projectDocumentsRemoveFile}
+							rules={DOCUMENT_FILE_RULES}
+							accept={DOCUMENT_FILE_ACCEPT}
+							nameMaxLength={drawing ? DRAWING_NUMBER_MAX_LENGTH : DOCUMENT_NAME_MAX_LENGTH}
+						/>
 
 						<DialogFooter className="gap-2 sm:gap-3">
 							<Button type="button" variant="outline" onClick={onClose} className="cursor-pointer border-slate-200">
