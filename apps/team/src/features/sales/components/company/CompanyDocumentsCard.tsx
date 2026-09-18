@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { getQuoteTermMeta } from "../../constants/quoteModules";
+import { getSalesOrderHref, getSalesQuoteHref } from "../../constants/salesNav";
 import type { SalesCompany } from "../../types";
 import { formatCurrency, formatDate } from "../../utils/salesFormatters";
 import { SalesSectionCard } from "../SalesSectionCard";
@@ -46,7 +47,7 @@ export function CompanyDocumentsCard({ company }: CompanyDocumentsCardProps) {
 						size="sm"
 						className="mt-2 w-full cursor-pointer"
 					>
-						<Link href={`/module/sales/companies/${company.id}/quote`}>
+						<Link href={getSalesQuoteHref(company.id)}>
 							<Translate text={localizationConstants.salesEditQuoteButton} />
 						</Link>
 					</Button>
@@ -66,9 +67,7 @@ export function CompanyDocumentsCard({ company }: CompanyDocumentsCardProps) {
 						size="sm"
 						className="mt-2 w-full cursor-pointer"
 					>
-						<Link
-							href={`/module/sales/companies/${company.id}/order-confirmation`}
-						>
+						<Link href={getSalesOrderHref(company.id)}>
 							<Translate text={localizationConstants.salesViewOrderButton} />
 						</Link>
 					</Button>

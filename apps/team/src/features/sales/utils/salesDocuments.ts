@@ -1,4 +1,5 @@
 import localizationConstants from "@/utils/translation/constants";
+import { getSalesOrderHref, getSalesQuoteHref } from "../constants/salesNav";
 import { getSalesStatusMeta } from "../constants/salesStatuses";
 import type { SalesDocumentType } from "../constants/salesDocumentTypes";
 import type { SalesCompany, SalesCustomDocument } from "../types";
@@ -17,10 +18,6 @@ export type SalesDocument = {
 };
 
 export type DocumentFilters = { type: SalesDocumentType | "all"; query: string };
-
-function companyHref(companyId: string, suffix: string): string {
-	return `/module/sales/companies/${companyId}${suffix}`;
-}
 
 /**
  * Every document in the sales system: the quotes, order confirmations and
@@ -45,7 +42,7 @@ export function getSalesDocuments(
 				date: company.quote.createdAt,
 				statusKey,
 				amount: company.quote.firstInvoice,
-				href: companyHref(company.id, "/quote"),
+				href: getSalesQuoteHref(company.id),
 			});
 		}
 
@@ -59,7 +56,7 @@ export function getSalesDocuments(
 				date: company.order.createdAt,
 				statusKey,
 				amount: company.quote?.firstInvoice ?? 0,
-				href: companyHref(company.id, "/order-confirmation"),
+				href: getSalesOrderHref(company.id),
 			});
 		}
 
@@ -76,7 +73,7 @@ export function getSalesDocuments(
 						? localizationConstants.salesPaymentPaid
 						: localizationConstants.salesPaymentPending,
 				amount: company.payment.amount,
-				href: companyHref(company.id, "/order-confirmation"),
+				href: getSalesOrderHref(company.id),
 			});
 		}
 	}
