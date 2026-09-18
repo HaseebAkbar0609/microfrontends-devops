@@ -911,6 +911,14 @@ export type AdminTranslation = {
 	partnerOfferChannelRequired: string;
 	partnerOfferImageRequired: string;
 	partnerOfferAddedToast: string;
+	partnerReviewDescription: string;
+	partnerOffersHeading: string;
+	partnerNoOffers: string;
+	partnerDeclineButton: string;
+	partnerDeclineConfirmTitle: string;
+	partnerArchiveConfirmTitle: string;
+	partnerOfferDeclineConfirmTitle: string;
+	partnerApprovalUpdatedToast: string;
 };
 
 export type SalesTranslation = {

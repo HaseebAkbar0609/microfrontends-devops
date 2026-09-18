@@ -12,10 +12,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { Translate, useTranslate } from "@/utils/translation/translate";
+import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { showToast } from "@/lib/toast";
-import { DUMMY_PARTNER_REGISTER, type PartnerApprovalStatus, type PartnerRegisterRow } from "../constants/partners";
+import type { PartnerOfferRow } from "@/features/partners/dashboard/constants/offers";
+import type { PartnerApprovalStatus, PartnerRegisterRow } from "../constants/partners";
+import type { OfferChannel, OfferDecision } from "../constants/partnerOffers";
+import { ApprovalStatusBadge } from "./ApprovalStatusBadge";
+import { PartnerApprovalDialog } from "./PartnerApprovalDialog";
 
 const COLUMNS = [
 	{ key: "date", labelKey: localizationConstants.dateLabel, width: "w-28" },
@@ -28,17 +31,23 @@ const COLUMNS = [
 
 type SortKey = (typeof COLUMNS)[number]["key"];
 
-const APPROVAL_STATUS_STYLES: Record<PartnerApprovalStatus, { className: string; labelKey: string }> = {
-	approved: { className: "bg-green-500", labelKey: localizationConstants.approvalStatusApproved },
-	declined: { className: "bg-red-500", labelKey: localizationConstants.approvalStatusDeclined },
-	pending: { className: "bg-orange-500", labelKey: localizationConstants.approvalStatusPending },
-	archived: { className: "bg-slate-400", labelKey: localizationConstants.approvalStatusArchived },
+type ApprovalCenterTabProps = {
+	partners: PartnerRegisterRow[];
+	offersByPartner: Record<string, PartnerOfferRow[]>;
+	onApprovalStatusChange: (partnerId: string, approvalStatus: PartnerApprovalStatus) => void;
+	onOfferDecision: (partnerId: string, offerId: string, channel: OfferChannel, decision: OfferDecision) => void;
 };
 
-export function ApprovalCenterTab() {
-	const t = useTranslate();
+export function ApprovalCenterTab({
+	partners,
+	offersByPartner,
+	onApprovalStatusChange,
+	onOfferDecision,
+}: ApprovalCenterTabProps) {
 	const router = useRouter();
-	const [partners] = useState<PartnerRegisterRow[]>(DUMMY_PARTNER_REGISTER);
+	const [reviewedPartnerId, setReviewedPartnerId] = useState<string | null>(null);
+	// Looked up from props so the dialog shows each decision as soon as it is made.
+	const reviewedPartner = partners.find((partner) => partner.id === reviewedPartnerId);
 	const [sortKey, setSortKey] = useState<SortKey | null>(null);
 	const [sortAsc, setSortAsc] = useState(true);
 
@@ -98,47 +107,51 @@ export function ApprovalCenterTab() {
 							</TableCell>
 						</TableRow>
 					)}
-					{sortedPartners.map((partner) => {
-						const statusStyle = APPROVAL_STATUS_STYLES[partner.approvalStatus];
-
-						return (
-							<TableRow
-								key={partner.id}
-								className="h-14 cursor-pointer border-slate-200 hover:bg-slate-50"
-								onClick={() => router.push(`/partners/admin/${partner.id}`)}
-							>
-								<TableCell className="px-4 text-sm text-slate-600">{partner.date}</TableCell>
-								<TableCell className="px-4 text-sm font-semibold text-slate-900">{partner.company}</TableCell>
-								<TableCell className="px-4 text-sm text-slate-600">{partner.category}</TableCell>
-								<TableCell className="px-4 text-sm text-slate-600">
-									<div className="flex items-center gap-2">
-										<UserRound className="h-3.5 w-3.5 text-slate-400" />
-										{partner.contact}
-									</div>
-								</TableCell>
-								<TableCell className="px-4 text-sm text-slate-600">{partner.mobile}</TableCell>
-								<TableCell className="px-4 text-sm text-slate-600">{partner.type}</TableCell>
-								<TableCell className="px-4" onClick={(event) => event.stopPropagation()}>
-									<div className="flex items-center gap-3">
-										<span
-											className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold text-white ${statusStyle.className}`}
-										>
-											<Translate text={statusStyle.labelKey} />
-										</span>
-										<button
-											type="button"
-											className="cursor-pointer rounded-md border border-slate-200 bg-white px-4 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
-											onClick={() => showToast("info", t(localizationConstants.editLabel))}
-										>
-											<Translate text={localizationConstants.editLabel} />
-										</button>
-									</div>
-								</TableCell>
-							</TableRow>
-						);
-					})}
+					{sortedPartners.map((partner) => (
+						<TableRow
+							key={partner.id}
+							className="h-14 cursor-pointer border-slate-200 hover:bg-slate-50"
+							onClick={() => router.push(`/partners/admin/${partner.id}`)}
+						>
+							<TableCell className="px-4 text-sm text-slate-600">{partner.date}</TableCell>
+							<TableCell className="px-4 text-sm font-semibold text-slate-900">{partner.company}</TableCell>
+							<TableCell className="px-4 text-sm text-slate-600">{partner.category}</TableCell>
+							<TableCell className="px-4 text-sm text-slate-600">
+								<div className="flex items-center gap-2">
+									<UserRound className="h-3.5 w-3.5 text-slate-400" />
+									{partner.contact}
+								</div>
+							</TableCell>
+							<TableCell className="px-4 text-sm text-slate-600">{partner.mobile}</TableCell>
+							<TableCell className="px-4 text-sm text-slate-600">{partner.type}</TableCell>
+							<TableCell className="px-4" onClick={(event) => event.stopPropagation()}>
+								<div className="flex items-center gap-3">
+									<ApprovalStatusBadge approvalStatus={partner.approvalStatus} />
+									<button
+										type="button"
+										className="cursor-pointer rounded-md border border-slate-200 bg-white px-4 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50"
+										onClick={() => setReviewedPartnerId(partner.id)}
+									>
+										<Translate text={localizationConstants.editLabel} />
+									</button>
+								</div>
+							</TableCell>
+						</TableRow>
+					))}
 				</TableBody>
 			</Table>
+
+			{reviewedPartner && (
+				<PartnerApprovalDialog
+					partner={reviewedPartner}
+					offers={offersByPartner[reviewedPartner.id] ?? []}
+					onClose={() => setReviewedPartnerId(null)}
+					onApprovalStatusChange={(approvalStatus) => onApprovalStatusChange(reviewedPartner.id, approvalStatus)}
+					onOfferDecision={(offerId, channel, decision) =>
+						onOfferDecision(reviewedPartner.id, offerId, channel, decision)
+					}
+				/>
+			)}
 		</div>
 	);
 }

@@ -938,6 +938,14 @@ export const sweAdmin: AdminTranslation = {
 	partnerOfferChannelRequired: "Välj minst en kanal.",
 	partnerOfferImageRequired: "Välj en bild från bildbanken.",
 	partnerOfferAddedToast: "Erbjudandet har lagts till",
+	partnerReviewDescription: "Granska partnerns erbjudanden och godkänn eller avböj dem per kanal.",
+	partnerOffersHeading: "Erbjudanden",
+	partnerNoOffers: "Partnern har inga erbjudanden ännu.",
+	partnerDeclineButton: "Avböj",
+	partnerDeclineConfirmTitle: "Avböja partnern?",
+	partnerArchiveConfirmTitle: "Arkivera partnern?",
+	partnerOfferDeclineConfirmTitle: "Avböja erbjudandet för den här kanalen?",
+	partnerApprovalUpdatedToast: "Statusen har uppdaterats",
 };
 
 export const sweSales: SalesTranslation = {
