@@ -37,7 +37,7 @@ const EMPTY_DRAFT: MemberDraft = {
 
 /** Adds one person to the sales organisation. */
 export function AddTeamMemberForm({ onClose }: { onClose: () => void }) {
-	const { addMember } = useSalesTeam();
+	const { members, addMember } = useSalesTeam();
 	const t = useTranslate();
 	const [draft, setDraft] = useState<MemberDraft>(EMPTY_DRAFT);
 	const [error, setError] = useState<string | null>(null);
@@ -48,11 +48,21 @@ export function AddTeamMemberForm({ onClose }: { onClose: () => void }) {
 	};
 
 	const handleSave = () => {
-		if (!draft.name.trim()) {
+		const name = draft.name.trim();
+		if (!name) {
 			setError(localizationConstants.salesTeamNameRequired);
 			return;
 		}
-		addMember({ ...draft, name: draft.name.trim() });
+		// Results are matched to people by name, because the CRM records a seller
+		// as a name. Two members sharing a name would silently share their numbers.
+		const taken = members.some(
+			(member) => member.name.trim().toLowerCase() === name.toLowerCase(),
+		);
+		if (taken) {
+			setError(localizationConstants.salesTeamNameTaken);
+			return;
+		}
+		addMember({ ...draft, name });
 		showToast("success", t(localizationConstants.salesTeamMemberAddedToast));
 		setDraft(EMPTY_DRAFT);
 		onClose();

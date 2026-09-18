@@ -1278,6 +1278,7 @@ export const enSales: SalesTranslation = {
 	salesTeamAddFormTitle: "New team member",
 	salesTeamSaveButton: "Save team member",
 	salesTeamNameRequired: "Enter a name.",
+	salesTeamNameTaken: "A team member with that name already exists.",
 	salesTeamEmpty: "No team members yet.",
 	salesTeamRemoveAction: "Remove team member",
 	salesTeamRemoveConfirmTitle: "Remove team member?",

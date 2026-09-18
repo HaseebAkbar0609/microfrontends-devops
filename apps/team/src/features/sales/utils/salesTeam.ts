@@ -25,6 +25,9 @@ const EMPTY_STATS: TeamMemberStats = {
  * Customers, quotes, deals and invoiced come from the companies they sell to.
  * Meetings and calls come from the activities they booked, which is what the
  * meeting booker page records.
+ *
+ * Matching is by name, because the CRM stores a seller as a name rather than
+ * an id. Names must therefore be unique; AddTeamMemberForm rejects duplicates.
  */
 export function getTeamStats(
 	companies: SalesCompany[],

@@ -1276,6 +1276,7 @@ export const sweSales: SalesTranslation = {
 	salesTeamAddFormTitle: "Ny medarbetare",
 	salesTeamSaveButton: "Spara medarbetare",
 	salesTeamNameRequired: "Ange ett namn.",
+	salesTeamNameTaken: "Det finns redan en medarbetare med det namnet.",
 	salesTeamEmpty: "Inga medarbetare ännu.",
 	salesTeamRemoveAction: "Ta bort medarbetare",
 	salesTeamRemoveConfirmTitle: "Ta bort medarbetare?",

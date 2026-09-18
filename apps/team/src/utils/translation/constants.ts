@@ -1249,6 +1249,7 @@ export type SalesTranslation = {
 	salesTeamAddFormTitle: string;
 	salesTeamSaveButton: string;
 	salesTeamNameRequired: string;
+	salesTeamNameTaken: string;
 	salesTeamEmpty: string;
 	salesTeamRemoveAction: string;
 	salesTeamRemoveConfirmTitle: string;
