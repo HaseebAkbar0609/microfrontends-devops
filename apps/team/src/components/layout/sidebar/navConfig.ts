@@ -46,15 +46,15 @@ export function matchesNavHref(href: string, pathname: string) {
 /** True when `pathname` is the item's own route or one of its flyout routes. */
 export function navSubItemMatchesPath(item: NavSubItem, pathname: string) {
 	return (
-		matchesNavHref(item.href, pathname) ||
-		!!item.flyoutItems?.some((flyoutItem) => matchesNavHref(flyoutItem.href, pathname))
+		isActiveNavHref(item.href, pathname) ||
+		!!item.flyoutItems?.some((flyoutItem) => isActiveNavHref(flyoutItem.href, pathname))
 	);
 }
 
 /** True when `pathname` is the group's own route or belongs to one of its items. */
 export function navGroupMatchesPath(group: NavGroup, pathname: string) {
 	return (
-		(!!group.href && matchesNavHref(group.href, pathname)) ||
+		(!!group.href && isActiveNavHref(group.href, pathname)) ||
 		group.items.some((item) => navSubItemMatchesPath(item, pathname))
 	);
 }
@@ -412,3 +412,27 @@ export function getFlyoutSubSidebarConfigByPath(
 }
 
 export const navConfig: NavGroup[] = getNavConfig();
+
+/** Every route the menu points at. Favorites reuse module routes, so the default config covers them. */
+const navHrefs = navConfig.flatMap((group) => [
+	...(group.href ? [group.href] : []),
+	...group.items.flatMap((item) => [
+		item.href,
+		...(item.flyoutItems?.map((flyoutItem) => flyoutItem.href) ?? []),
+	]),
+]);
+
+/**
+ * True when `href` is the menu's most specific match for `pathname`. A parent
+ * route such as `/admin` stays unlit on `/admin/users`, because a deeper menu
+ * entry owns that page.
+ */
+export function isActiveNavHref(href: string, pathname: string) {
+	return (
+		matchesNavHref(href, pathname) &&
+		!navHrefs.some(
+			(otherHref) =>
+				otherHref.length > href.length && matchesNavHref(otherHref, pathname),
+		)
+	);
+}
