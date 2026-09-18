@@ -43,12 +43,16 @@ export function SidebarNavGroup({
 		href: item.href,
 	}));
 
-	const openCollapsedFlyout = () => {
-		if (!collapsed || !hasItems) return;
+	const cancelCollapsedFlyoutClose = () => {
 		if (closeTimeoutRef.current) {
 			clearTimeout(closeTimeoutRef.current);
 			closeTimeoutRef.current = null;
 		}
+	};
+
+	const openCollapsedFlyout = () => {
+		if (!collapsed || !hasItems) return;
+		cancelCollapsedFlyoutClose();
 		const rect = groupRef.current?.getBoundingClientRect();
 		if (rect) {
 			setAnchorRect(rect);
@@ -198,6 +202,8 @@ export function SidebarNavGroup({
 					anchorEl={groupRef.current}
 					leftOffset={22}
 					onClose={() => setFlyoutOpen(false)}
+					onMouseEnter={cancelCollapsedFlyoutClose}
+					onMouseLeave={() => closeCollapsedFlyout()}
 				/>
 			)}
 		</div>
