@@ -15,7 +15,7 @@ import {
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import { DUMMY_PARTNER_REGISTER, type PartnerCategoryRow } from "../constants/partners";
+import type { PartnerCategoryRow } from "../constants/partners";
 import { AddCategoryDialog } from "./AddCategoryDialog";
 
 const COLUMNS = [
@@ -26,17 +26,14 @@ const COLUMNS = [
 
 type SortKey = (typeof COLUMNS)[number]["key"];
 
-export function KategoriTab() {
+type KategoriTabProps = {
+	categories: PartnerCategoryRow[];
+	onCategoryCreated: (category: PartnerCategoryRow) => void;
+};
+
+export function KategoriTab({ categories, onCategoryCreated }: KategoriTabProps) {
 	const t = useTranslate();
 	const [isAddOpen, setIsAddOpen] = useState(false);
-	const [categories, setCategories] = useState<PartnerCategoryRow[]>(() =>
-		DUMMY_PARTNER_REGISTER.map((partner) => ({
-			id: partner.id,
-			date: partner.date,
-			category: partner.category,
-			type: partner.type,
-		}))
-	);
 	const [sortKey, setSortKey] = useState<SortKey | null>(null);
 	const [sortAsc, setSortAsc] = useState(true);
 
@@ -126,7 +123,7 @@ export function KategoriTab() {
 				open={isAddOpen}
 				onOpenChange={setIsAddOpen}
 				existingNames={categories.map((row) => row.category)}
-				onCreated={(category) => setCategories((previous) => [...previous, category])}
+				onCreated={onCategoryCreated}
 			/>
 		</div>
 	);

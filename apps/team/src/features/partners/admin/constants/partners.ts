@@ -92,3 +92,7 @@ export const DUMMY_PARTNER_REGISTER: PartnerRegisterRow[] = [
 		approvalStatus: "approved",
 	},
 ];
+
+export const DUMMY_PARTNER_CATEGORIES: PartnerCategoryRow[] = DUMMY_PARTNER_REGISTER.map(
+	({ id, date, category, type }) => ({ id, date, category, type }),
+);
