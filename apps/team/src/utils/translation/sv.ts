@@ -1258,7 +1258,7 @@ export const sweSales: SalesTranslation = {
 	salesCrmSellerFilterAll: "Alla säljare",
 	salesCrmPipelineAllHint: "Visar hela teamets pipeline.",
 	salesCrmPipelineSellerHint: "Visar vald säljares pipeline.",
-	salesCrmOnlyTrialAccounts: "Visa bara mina demo-/testkonton",
+	salesCrmOnlyTrialAccounts: "Visa bara demo-/testkonton",
 	salesRegisterNewCompanyButton: "Registrera nytt företag",
 	salesTeamSubtitle: "Team, roller och resultat",
 	salesTeamAddButton: "Lägg till medarbetare",

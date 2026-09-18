@@ -1260,7 +1260,7 @@ export const enSales: SalesTranslation = {
 	salesCrmSellerFilterAll: "All sellers",
 	salesCrmPipelineAllHint: "Showing the whole team's pipeline.",
 	salesCrmPipelineSellerHint: "Showing the selected seller's pipeline.",
-	salesCrmOnlyTrialAccounts: "Show only my demo and test accounts",
+	salesCrmOnlyTrialAccounts: "Show only demo and test accounts",
 	salesRegisterNewCompanyButton: "Register new company",
 	salesTeamSubtitle: "Team, roles and results",
 	salesTeamAddButton: "Add team member",
