@@ -16,10 +16,14 @@ export function StepProgressBar({
 	const progressPercent = Math.round((currentStep / totalSteps) * 100);
 
 	return (
-		<div className={`w-48 space-y-1.5 ${className || ""}`}>
-			<div className="flex items-center justify-between text-xs font-semibold">
-				<span className="text-slate-800">Step {currentStep}/{totalSteps}</span>
-				<span className="text-slate-500 font-normal">{progressPercent}%</span>
+		<div
+			className={`rounded-xl border border-slate-200 bg-white p-5 shadow-2xs space-y-2.5 ${className || ""}`}
+		>
+			<div className="flex items-center justify-between text-xs font-medium">
+				<span className="font-semibold text-slate-900">
+					Step {currentStep}/{totalSteps}
+				</span>
+				<span className="font-normal text-slate-500">{progressPercent}%</span>
 			</div>
 			<div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
 				<div

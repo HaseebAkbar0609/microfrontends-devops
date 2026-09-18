@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
-import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCreateCustomerForm } from "../../../hooks/useCreateCustomerForm";
 import { CreateCustomerTabs, type CustomerWizardTab } from "./CreateCustomerTabs";
+import { StepProgressBar } from "./StepProgressBar";
 import { Step1BasicInfo } from "./steps/Step1BasicInfo";
 import { Step2Contact } from "./steps/Step2Contact";
 import { Step3Assessment } from "./steps/Step3Assessment";
@@ -58,40 +59,39 @@ export function CreateCustomerWizard() {
 					: "invoice";
 
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50 min-h-screen">
-			{/* Header matching Figma Image 4 */}
-			<div className="bg-white border-b border-slate-200 px-8 pt-6 pb-0">
-				<div className="mx-auto max-w-5xl space-y-4">
-					{/* Title + Back button */}
-					<div className="flex items-center gap-3">
-						<button
-							type="button"
-							onClick={handleCancel}
-							className="text-slate-600 hover:text-slate-900 transition-colors p-1 -ml-1 cursor-pointer"
-						>
-							<ArrowLeft className="h-5 w-5" />
-						</button>
-						<div>
-							<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-								Create New Customer
-							</h1>
-							<p className="text-xs text-slate-500 font-medium">
-								Step {currentStep}/{totalSteps}
-							</p>
-						</div>
+		<div className="p-6 w-full space-y-6">
+			{/* Top Header matching Figma */}
+			<div className="space-y-4">
+				{/* Title + Back button */}
+				<div className="flex items-center gap-3">
+					<button
+						type="button"
+						onClick={handleCancel}
+						className="text-slate-600 hover:text-slate-900 transition-colors p-1 -ml-1 cursor-pointer"
+					>
+						<ArrowLeft className="h-5 w-5" />
+					</button>
+					<div>
+						<h1 className="text-xl font-bold text-slate-900 tracking-tight">
+							Create New Customer
+						</h1>
+						<p className="text-xs text-slate-500 font-medium">
+							Step {currentStep}/{totalSteps}
+						</p>
 					</div>
-
-					{/* Clean Horizontal Tabs matching Figma Image 4 */}
-					<CreateCustomerTabs
-						activeTab={currentTab}
-						onTabChange={handleTabChange}
-					/>
 				</div>
+
+				{/* Clean Horizontal Tabs matching Figma */}
+				<CreateCustomerTabs
+					activeTab={currentTab}
+					onTabChange={handleTabChange}
+				/>
 			</div>
 
-			{/* Main Content Area */}
-			<div className="mx-auto w-full max-w-5xl px-8 py-8 flex-1 space-y-6">
-				<div className="transition-all duration-200">
+			{/* Main Content Area in 2-Column Grid */}
+			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+				{/* Left Main Form Column */}
+				<div className="lg:col-span-8 xl:col-span-9 space-y-6">
 					{currentStep === 1 && (
 						<Step1BasicInfo
 							form={form}
@@ -148,51 +148,57 @@ export function CreateCustomerWizard() {
 					)}
 				</div>
 
-				{/* Wizard Navigation Footer matching Figma Image 4 */}
-				<div className="flex items-center justify-end gap-3 pt-6 pb-12">
-					<Button
-						type="button"
-						variant="outline"
-						size="sm"
-						onClick={handleCancel}
-						className="h-10 px-5 text-xs font-semibold text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer rounded-lg shadow-2xs"
-					>
-						Cancel
-					</Button>
-
-					<Button
-						type="button"
-						size="sm"
-						onClick={handleSaveDraft}
-						disabled={isSavingDraft}
-						className="h-10 px-6 text-xs font-semibold bg-[#111827] hover:bg-slate-800 text-white cursor-pointer rounded-lg shadow-2xs"
-					>
-						Save
-					</Button>
-
-					{currentStep < totalSteps ? (
-						<Button
-							type="button"
-							size="sm"
-							onClick={handleNext}
-							className="h-10 px-6 text-xs font-semibold gap-2 bg-[#111827] hover:bg-slate-800 text-white cursor-pointer rounded-lg shadow-2xs"
-						>
-							<span>Next</span>
-							<ArrowRight className="h-4 w-4" />
-						</Button>
-					) : (
-						<Button
-							type="button"
-							size="sm"
-							onClick={submitForm}
-							disabled={isSubmitting}
-							className="h-10 px-6 text-xs font-semibold gap-2 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer rounded-lg shadow-2xs"
-						>
-							{isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
-							<span>Save & Create</span>
-						</Button>
-					)}
+				{/* Right Sidebar Column with Step Progress Card */}
+				<div className="lg:col-span-4 xl:col-span-3">
+					<StepProgressBar currentStep={currentStep} totalSteps={totalSteps} />
 				</div>
+			</div>
+
+			{/* Wizard Navigation Footer matching Figma */}
+			<div className="flex items-center justify-end gap-3 pt-4 pb-12">
+				<Button
+					type="button"
+					variant="outline"
+					size="sm"
+					onClick={handleCancel}
+					className="h-10 px-5 text-xs font-semibold text-slate-700 border-slate-200 hover:bg-slate-50 cursor-pointer rounded-lg shadow-2xs"
+				>
+					Cancel
+				</Button>
+
+				<Button
+					type="button"
+					size="sm"
+					onClick={handleSaveDraft}
+					disabled={isSavingDraft}
+					className="h-10 px-6 text-xs font-semibold gap-2 bg-[#111827] hover:bg-slate-800 text-white cursor-pointer rounded-lg shadow-2xs"
+				>
+					<Save className="h-4 w-4" />
+					<span>Save</span>
+				</Button>
+
+				{currentStep < totalSteps ? (
+					<Button
+						type="button"
+						size="sm"
+						onClick={handleNext}
+						className="h-10 px-6 text-xs font-semibold gap-2 bg-[#111827] hover:bg-slate-800 text-white cursor-pointer rounded-lg shadow-2xs"
+					>
+						<span>Next</span>
+						<ArrowRight className="h-4 w-4" />
+					</Button>
+				) : (
+					<Button
+						type="button"
+						size="sm"
+						onClick={submitForm}
+						disabled={isSubmitting}
+						className="h-10 px-6 text-xs font-semibold gap-2 bg-emerald-600 hover:bg-emerald-700 text-white cursor-pointer rounded-lg shadow-2xs"
+					>
+						{isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+						<span>Save & Create</span>
+					</Button>
+				)}
 			</div>
 		</div>
 	);

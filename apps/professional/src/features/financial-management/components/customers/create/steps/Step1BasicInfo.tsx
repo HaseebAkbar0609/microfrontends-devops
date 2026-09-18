@@ -19,7 +19,6 @@ import {
 	MAIN_CATEGORY_OPTIONS,
 } from "../../../../constants/createCustomer.constants";
 import { CompanyOrPrivateSelector } from "../sections/CompanyOrPrivateSelector";
-import { StepProgressBar } from "../StepProgressBar";
 
 interface Step1BasicInfoProps {
 	form: UseFormReturn<CreateCustomerFormData>;
@@ -57,9 +56,8 @@ export function Step1BasicInfo({
 		<div className="space-y-6">
 			{/* Card 1: Customer matching Figma Image 4 */}
 			<div className="rounded-xl border border-slate-200 bg-white p-6 shadow-2xs space-y-5">
-				<div className="flex items-center justify-between border-b border-slate-100 pb-4">
+				<div className="border-b border-slate-100 pb-4">
 					<h3 className="text-sm font-bold text-slate-900 tracking-tight">Customer</h3>
-					<StepProgressBar currentStep={1} totalSteps={4} />
 				</div>
 
 				{/* Entity Type Toggle */}
