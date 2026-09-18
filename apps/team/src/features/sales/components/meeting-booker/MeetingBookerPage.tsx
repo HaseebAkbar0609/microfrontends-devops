@@ -63,6 +63,7 @@ export default function MeetingBookerPage() {
 						onSelect={booker.selectCompany}
 					/>
 					<CustomerCardPanel
+						key={booker.selectedCompany?.id}
 						company={booker.selectedCompany}
 						onLogCall={booker.logCall}
 						onBookMeeting={booker.bookMeeting}
