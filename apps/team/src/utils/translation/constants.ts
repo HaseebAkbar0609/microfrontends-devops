@@ -662,6 +662,7 @@ export type AdminTranslation = {
 	adminEmployeeNameRequired: string;
 	adminEmployeePositionRequired: string;
 	adminEmployeeIdNumberInvalid: string;
+	adminEmployeeIdNumberTaken: string;
 	adminEmployeeStartDateRequired: string;
 	adminEmployeeAddedToast: string;
 	adminContactNoLabel: string;

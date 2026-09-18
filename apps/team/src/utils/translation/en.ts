@@ -691,6 +691,7 @@ export const enAdmin: AdminTranslation = {
 	adminEmployeeNameRequired: "Enter a name.",
 	adminEmployeePositionRequired: "Enter a position.",
 	adminEmployeeIdNumberInvalid: "Enter the ID number as YYMMDD-XXXX or YYYYMMDD-XXXX. The hyphen is optional, and the short form takes + from age 100.",
+	adminEmployeeIdNumberTaken: "An employee with this ID number already exists.",
 	adminEmployeeStartDateRequired: "Choose a start date.",
 	adminEmployeeAddedToast: "Employee added",
 	adminContactNoLabel: "Contact No.",

@@ -9,6 +9,7 @@ import { useTranslate } from "@/utils/translation/translate";
 import {
 	CONTACT_NO_DIGITS,
 	CONTACT_NO_PREFIX,
+	ID_NUMBER_SHORT_DIGITS,
 	type OrganisationMember,
 } from "../constants/organisation";
 import {
@@ -28,6 +29,11 @@ export function getNextContactNo(members: OrganisationMember[]): string {
 	return `${CONTACT_NO_PREFIX}${String(highest + 1).padStart(CONTACT_NO_DIGITS, "0")}`;
 }
 
+/** Digits of the short form, so 19680805-0500 and 6808050500 compare equal. */
+function normaliseIdNumber(idNumber: string): string {
+	return idNumber.replace(/\D/g, "").slice(-ID_NUMBER_SHORT_DIGITS);
+}
+
 type UseNewEmployeeFormOptions = {
 	members: OrganisationMember[];
 	onCreated: (member: OrganisationMember) => void;
@@ -45,6 +51,11 @@ export function useNewEmployeeForm({ members, onCreated }: UseNewEmployeeFormOpt
 	const reset = useCallback(() => form.reset(EMPTY_NEW_EMPLOYEE), [form]);
 
 	const submit = form.handleSubmit((values) => {
+		const idNumber = normaliseIdNumber(values.idNumber);
+		if (idNumber && members.some((member) => normaliseIdNumber(member.idNumber) === idNumber)) {
+			form.setError("idNumber", { message: localizationConstants.adminEmployeeIdNumberTaken });
+			return;
+		}
 		onCreated({
 			...values,
 			id: crypto.randomUUID(),

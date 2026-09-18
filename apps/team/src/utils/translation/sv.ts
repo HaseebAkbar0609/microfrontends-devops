@@ -689,6 +689,7 @@ export const sweAdmin: AdminTranslation = {
 	adminEmployeeNameRequired: "Ange ett namn.",
 	adminEmployeePositionRequired: "Ange en befattning.",
 	adminEmployeeIdNumberInvalid: "Ange id-nr som ÅÅMMDD-XXXX eller ÅÅÅÅMMDD-XXXX. Bindestrecket är valfritt, och kortformen har + från 100 år.",
+	adminEmployeeIdNumberTaken: "Det finns redan en medarbetare med detta id-nr.",
 	adminEmployeeStartDateRequired: "Välj ett startdatum.",
 	adminEmployeeAddedToast: "Medarbetaren har lagts till",
 	adminContactNoLabel: "Kontakt.nr",

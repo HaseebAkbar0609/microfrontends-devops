@@ -30,6 +30,8 @@ export const CONTACT_NO_DIGITS = 3;
  * the hyphen. The short form takes + instead of - from age 100.
  */
 export const ID_NUMBER_PATTERN = /^(\d{6}[-+]?|\d{8}-?)\d{4}$/;
+/** Digits in the short form; the long form only adds the century. */
+export const ID_NUMBER_SHORT_DIGITS = 10;
 
 export const EMPLOYEE_STATUS_CONFIG: Record<
 	EmployeeStatus,
