@@ -2,7 +2,6 @@ import { DAYS_PER_WEEK, MS_PER_DAY } from "../constants/sales.constants";
 import {
 	BOOKING_STATS_DAYS,
 	CALL_LIST_STATUSES,
-	MEETING_BOOKERS,
 } from "../constants/meetingBooker.constants";
 import type { SalesActivity, SalesCompany } from "../types";
 import { compareText } from "./salesFormatters";
@@ -108,17 +107,22 @@ function emptyBookerStats(name: string): BookerStats {
 	return { name, calls: 0, callsWeek: 0, meetings: 0, meetingsWeek: 0 };
 }
 
-/** Everything the meeting booker page counts, derived from the CRM companies. */
+/**
+ * Everything the meeting booker page counts, derived from the CRM companies.
+ * `bookerNames` are the current meeting bookers, listed even before they log
+ * anything; anyone else who booked still gets a row.
+ */
 export function getMeetingBookerStats(
 	companies: SalesCompany[],
 	todayKey: string,
+	bookerNames: string[],
 ): MeetingBookerStats {
 	const rows = toRows(companies);
 	const weekKeys = new Set(getRecentDayKeys(todayKey, DAYS_PER_WEEK));
 	const dayCounts = new Map<string, number>();
 	const weekCounts = new Map<number, number>();
 	const bookers = new Map<string, BookerStats>(
-		MEETING_BOOKERS.map((name) => [name, emptyBookerStats(name)]),
+		bookerNames.map((name) => [name, emptyBookerStats(name)]),
 	);
 	const reminderRows: ActivityRow[] = [];
 	const bookedMeetings: ActivityRow[] = [];

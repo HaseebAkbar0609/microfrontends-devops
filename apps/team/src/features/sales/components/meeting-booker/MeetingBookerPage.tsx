@@ -43,6 +43,7 @@ export default function MeetingBookerPage() {
 
 				<MeetingBookerFilters
 					booker={booker.booker}
+					bookerNames={booker.bookerNames}
 					onBookerChange={booker.setBooker}
 					category={booker.category}
 					onCategoryChange={booker.setCategory}

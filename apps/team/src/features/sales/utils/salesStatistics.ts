@@ -63,6 +63,7 @@ function countBy(
 export function getSalesStatistics(
 	companies: SalesCompany[],
 	todayKey: string,
+	bookerNames: string[],
 ): SalesStatistics {
 	const dayKeys = getRecentDayKeys(todayKey, STATISTICS_DAYS);
 	const meetingsByDay = new Map<string, number>();
@@ -117,7 +118,7 @@ export function getSalesStatistics(
 			.sort((a, b) => Number(a.id) - Number(b.id)),
 		byCategory: countBy(companies, "category", SALES_CATEGORIES),
 		byRegion: countBy(companies, "region", SALES_REGIONS),
-		bookerResults: getMeetingBookerStats(companies, todayKey).perBooker.map(
+		bookerResults: getMeetingBookerStats(companies, todayKey, bookerNames).perBooker.map(
 			(booker) => ({
 				...booker,
 				bookingRate: booker.calls > 0 ? booker.meetings / booker.calls : 0,

@@ -4,12 +4,12 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import { MEETING_BOOKERS } from "../constants/meetingBooker.constants";
 import { SALES_REFERENCE_DATE } from "../constants/sales.constants";
 import type { SalesActivity, SalesCompany } from "../types";
 import { createId } from "../utils/salesFactories";
 import { getCallList, getMeetingBookerStats } from "../utils/meetingBooker";
 import { useSalesCompanies } from "./useSalesCompanies";
+import { useMeetingBookerNames } from "./useSalesTeam";
 
 /**
  * State and actions for the meeting booker workspace.
@@ -20,7 +20,13 @@ import { useSalesCompanies } from "./useSalesCompanies";
 export function useMeetingBooker() {
 	const { companies, updateCompany } = useSalesCompanies();
 	const t = useTranslate();
-	const [booker, setBooker] = useState(MEETING_BOOKERS[0] ?? "");
+	const bookerNames = useMeetingBookerNames();
+	const [selectedBooker, setBooker] = useState("");
+	// Falls back to the first booker when none is picked yet, or when the picked
+	// one is removed or given another role on the sales organisation page.
+	const booker = bookerNames.includes(selectedBooker)
+		? selectedBooker
+		: (bookerNames[0] ?? "");
 	const [category, setCategory] = useState("");
 	const [region, setRegion] = useState("");
 	const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
@@ -37,8 +43,8 @@ export function useMeetingBooker() {
 		[companies, category, region],
 	);
 	const stats = useMemo(
-		() => getMeetingBookerStats(companies, todayKey),
-		[companies, todayKey],
+		() => getMeetingBookerStats(companies, todayKey, bookerNames),
+		[companies, todayKey, bookerNames],
 	);
 	const selectedCompany = useMemo(
 		() => companies.find((company) => company.id === selectedCompanyId) ?? null,
@@ -107,6 +113,7 @@ export function useMeetingBooker() {
 
 	return {
 		booker,
+		bookerNames,
 		setBooker,
 		category,
 		setCategory,

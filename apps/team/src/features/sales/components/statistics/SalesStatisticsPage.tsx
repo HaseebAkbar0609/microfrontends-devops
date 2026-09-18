@@ -5,6 +5,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { SALES_REFERENCE_DATE } from "../../constants/sales.constants";
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
+import { useMeetingBookerNames } from "../../hooks/useSalesTeam";
 import { getSalesStatistics } from "../../utils/salesStatistics";
 import { BookerResultsTable } from "./BookerResultsTable";
 import { StatBarList } from "./StatBarList";
@@ -13,6 +14,7 @@ import { StatKpis } from "./StatKpis";
 /** Pipeline, activity and results across the whole sales system. */
 export default function SalesStatisticsPage() {
 	const { companies } = useSalesCompanies();
+	const bookerNames = useMeetingBookerNames();
 
 	// The seed's fixed date renders first so server and client markup match,
 	// then the real day takes over once mounted.
@@ -22,8 +24,8 @@ export default function SalesStatisticsPage() {
 	}, []);
 
 	const statistics = useMemo(
-		() => getSalesStatistics(companies, todayKey),
-		[companies, todayKey],
+		() => getSalesStatistics(companies, todayKey, bookerNames),
+		[companies, todayKey, bookerNames],
 	);
 
 	return (

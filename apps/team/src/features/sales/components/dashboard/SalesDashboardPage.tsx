@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
+import { useMeetingBookerNames } from "../../hooks/useSalesTeam";
 import { getSalesDashboardStats } from "../../utils/salesDashboard";
 import { getMeetingBookerStats } from "../../utils/meetingBooker";
 import { SALES_REFERENCE_DATE } from "../../constants/sales.constants";
@@ -16,13 +17,18 @@ import { SalesWeekList } from "./SalesWeekList";
 /** Landing page of the sales system: this week's figures at a glance. */
 export default function SalesDashboardPage() {
 	const { companies } = useSalesCompanies();
+	const bookerNames = useMeetingBookerNames();
 	const stats = useMemo(() => getSalesDashboardStats(companies), [companies]);
 	// Same fixed "today" as the rest of the dashboard, so every figure on the
 	// page describes the same week.
 	const bookers = useMemo(
 		() =>
-			getMeetingBookerStats(companies, SALES_REFERENCE_DATE.slice(0, 10)).perBooker,
-		[companies],
+			getMeetingBookerStats(
+				companies,
+				SALES_REFERENCE_DATE.slice(0, 10),
+				bookerNames,
+			).perBooker,
+		[companies, bookerNames],
 	);
 
 	const meetingRows = useMemo(

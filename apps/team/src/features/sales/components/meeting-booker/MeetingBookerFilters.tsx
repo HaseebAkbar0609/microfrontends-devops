@@ -9,13 +9,13 @@ import {
 } from "@/components/ui/select";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { MEETING_BOOKERS } from "../../constants/meetingBooker.constants";
 import { SALES_CATEGORIES, SALES_REGIONS } from "../../constants/salesTaxonomy";
 
 const ALL_VALUE = "all";
 
 type MeetingBookerFiltersProps = {
 	booker: string;
+	bookerNames: string[];
 	onBookerChange: (value: string) => void;
 	category: string;
 	onCategoryChange: (value: string) => void;
@@ -26,6 +26,7 @@ type MeetingBookerFiltersProps = {
 /** Who is calling, and which slice of the call list they are working through. */
 export function MeetingBookerFilters({
 	booker,
+	bookerNames,
 	onBookerChange,
 	category,
 	onCategoryChange,
@@ -64,7 +65,7 @@ export function MeetingBookerFilters({
 						<SelectValue />
 					</SelectTrigger>
 					<SelectContent>
-						{MEETING_BOOKERS.map((name) => (
+						{bookerNames.map((name) => (
 							<SelectItem key={name} value={name}>
 								{name}
 							</SelectItem>

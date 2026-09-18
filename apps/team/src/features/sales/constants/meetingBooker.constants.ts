@@ -1,4 +1,3 @@
-import { SALES_TEAM_SEED } from "./salesTeam.mock";
 import type { SalesCompanyStatus } from "../types";
 
 /**
@@ -9,8 +8,3 @@ export const CALL_LIST_STATUSES: SalesCompanyStatus[] = ["prospect", "lead"];
 
 /** Days shown in the per-day booking statistics. */
 export const BOOKING_STATS_DAYS = 7;
-
-/** The meeting bookers who can be selected in the filter row. */
-export const MEETING_BOOKERS = SALES_TEAM_SEED.filter(
-	(member) => member.role === "meeting-booker",
-).map((member) => member.name);
