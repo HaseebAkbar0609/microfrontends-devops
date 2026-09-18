@@ -552,6 +552,12 @@ export type ProfessionalTranslation = {
 	professionalActionDeactivate: string;
 	professionalActionActivate: string;
 	professionalNoDataFound: string;
+	analyticsAcceptedLeads: string;
+	analyticsAcceptedLeadsHint: string;
+	analyticsLicenseIncome: string;
+	analyticsLicenseIncomeHint: string;
+	analyticsProfessionalsByCity: string;
+	analyticsProfessionalsByCategory: string;
 	dueDateLabel: string;
 	deleteCannotUndoneLabel: string;
 	stepOfLabel: string;
