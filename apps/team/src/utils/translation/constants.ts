@@ -226,6 +226,37 @@ export type DashboardTranslation = {
 	removeWidgetDescription: string;
 	confirmRemove: string;
 	confirmClose: string;
+	widgetBoardCustomize: string;
+	widgetBoardEditMode: string;
+	widgetBoardEditModeHint: string;
+	widgetBoardShowLibrary: string;
+	widgetBoardHideLibrary: string;
+	widgetBoardSaveLayout: string;
+	widgetBoardLayoutSaved: string;
+	widgetBoardSaveFailed: string;
+	widgetBoardBuildTitle: string;
+	widgetBoardBuildBody: string;
+	widgetBoardAddWidgets: string;
+	widgetBoardBuildHint: string;
+	widgetBoardDragHere: string;
+	widgetBoardDropHere: string;
+	widgetBoardDiscardTitle: string;
+	widgetBoardDiscardBody: string;
+	widgetBoardDiscard: string;
+	widgetBoardLibraryTitle: string;
+	widgetBoardLibraryHint: string;
+	widgetBoardSearchWidget: string;
+	widgetBoardAllWidgets: string;
+	widgetBoardAdded: string;
+	widgetBoardAddToDashboard: string;
+	widgetBoardNoMatches: string;
+	widgetBoardLibraryFooter: string;
+	widgetBoardOptions: string;
+	widgetBoardOpenFullscreen: string;
+	widgetBoardMoveWidget: string;
+	widgetBoardRemoveWidget: string;
+	widgetBoardEmptyTitle: string;
+	widgetBoardEmptyBody: string;
 };
 
 export type CommonFiles = {
