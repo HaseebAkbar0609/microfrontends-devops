@@ -15,11 +15,11 @@ export const projectRecordUrl = (projectId: string) =>
  * `secondaryTabs` on the record variant instead — the slot that exists for
  * exactly this and had no caller until now. Flagged on the ticket.
  *
- * Only the sections that exist are listed. The one left in the frame —
- * Protokoll — has no project-scoped implementation yet. It joins this list as
- * its own ticket lands, rather than shipping as a dead tab, as Besiktning did
- * with TFS-704, ÄTA with TFS-705, Handlingar with TFS-707, Dagbok with TFS-708
- * and Garantiåtaganden with TFS-710.
+ * Only the sections that exist are listed; each joined as its own ticket
+ * landed rather than shipping as a dead tab — Besiktning with TFS-704, ÄTA
+ * with TFS-705, Handlingar with TFS-707, Dagbok with TFS-708,
+ * Garantiåtaganden with TFS-710 and Protokoll, the last one the frame draws,
+ * with TFS-713. Protokoll sits between Handlingar and Besiktning, as drawn.
  */
 export function projectProductionTabs(projectId: string): ModuleTabItem[] {
 	const base = projectRecordUrl(projectId);
@@ -69,6 +69,11 @@ export function projectProductionTabs(projectId: string): ModuleTabItem[] {
 			id: "handlingar",
 			labelKey: localizationConstants.projectDocumentsTitle,
 			href: `${base}/handlingar`,
+		},
+		{
+			id: "protokoll",
+			labelKey: localizationConstants.projectProtocolTitle,
+			href: `${base}/protokoll`,
 		},
 		{
 			id: "besiktning",

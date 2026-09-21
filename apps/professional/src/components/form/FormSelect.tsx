@@ -49,6 +49,12 @@ export interface FormSelectProps<
   contentClassName?: string;
   messageClassName?: string;
   translateError?: (message: string) => string;
+  /**
+   * Marks the field mandatory: draws the asterisk after the label and sets
+   * `aria-required` on the trigger, as `FormInput` and `FormDatePicker` do. The
+   * asterisk alone is decoration a screen reader never hears.
+   */
+  required?: boolean;
   /** Fires when the dropdown is scrolled near the bottom (e.g. load more options). */
   onSelectContentNearEnd?: () => void;
   selectContentFooter?: ReactNode;
@@ -80,6 +86,7 @@ export function FormSelect<
   contentClassName,
   messageClassName,
   translateError,
+  required = false,
   onSelectContentNearEnd,
   selectContentFooter,
   hasMore,
@@ -127,7 +134,14 @@ export function FormSelect<
       render={({ field }) => (
         <FormItem className={cn("grid gap-1", className)}>
           {label && (
-            <FormLabel className={labelClassName}>{resolvedLabel}</FormLabel>
+            <FormLabel className={labelClassName}>
+              {resolvedLabel}
+              {required && (
+                <span className="text-red-500" aria-hidden>
+                  *
+                </span>
+              )}
+            </FormLabel>
           )}
           <Select
             onValueChange={(value) => {
@@ -143,7 +157,7 @@ export function FormSelect<
             disabled={disabled}
           >
             <FormControl>
-              <SelectTrigger className={cn("w-full h-10", triggerClassName)}>
+              <SelectTrigger aria-required={required || undefined} className={cn("w-full h-10", triggerClassName)}>
                 <SelectValue placeholder={<Translate text={placeholder ?? ""} />} />
               </SelectTrigger>
             </FormControl>
