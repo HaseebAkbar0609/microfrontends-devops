@@ -3560,6 +3560,11 @@ export const enOffer: OfferTranslation = {
 	designEkonomiEnhet: "Unit",
 	designEkonomiAPris: "Unit price",
 	designEkonomiDelsumma: "Subtotal",
+	designHandlingarFoto: "Photo",
+	designHandlingarArkiverade: "Archived",
+	designHandlingarRitningsNr: "Drawing number",
+	designHandlingarLaddaUpp: "Upload document",
+	designHandlingarEmpty: "No documents added yet.",
 	// Machine Dashboard
 	machineDashRearrange: "Rearrange",
 	machineDashSave: "Save",
