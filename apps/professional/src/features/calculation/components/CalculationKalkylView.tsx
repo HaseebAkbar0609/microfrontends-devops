@@ -79,7 +79,7 @@ export function CalculationKalkylView() {
 
 				<TabsContent
 					value="pro"
-					className="flex flex-1 flex-col bg-slate-50 p-5"
+					className="flex flex-1 flex-col bg-white p-4 sm:p-5"
 				>
 					<CalculationProContent />
 				</TabsContent>
