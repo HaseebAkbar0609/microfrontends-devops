@@ -202,6 +202,11 @@ export const API_PATH = {
 		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}`,
 		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}`,
 		ARCHIVE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/archive`,
+		STANDARD: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/standard`,
+		STANDARD_MARKUP: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/standard/markup`,
+		STANDARD_BASE_COSTS: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/standard/base-costs`,
+		STANDARD_LABOR_COSTS: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/standard/labor-costs`,
+		STANDARD_SECTION_DELETE: (id: string, sectionId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/standard/sections/${sectionId}`,
 	},
 };
 
