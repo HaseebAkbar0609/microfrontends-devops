@@ -4,16 +4,7 @@ import type {
 	SupplierRatings,
 } from "./createSupplier.types";
 
-export type SupplierDetailTab = "basic" | "contact" | "assessment" | "invoices";
-
-export interface SupplierInvoiceRow {
-	id: string;
-	invoiceNumber: string;
-	date: string;
-	dueDate: string;
-	totalAmount: string;
-	status: "paid" | "pending" | "overdue";
-}
+export type SupplierDetailTab = "basic" | "contact" | "assessment";
 
 export interface SupplierDetailData {
 	id: string;
@@ -63,7 +54,4 @@ export interface SupplierDetailData {
 	ratings: SupplierRatings;
 	documents: SupplierAttachedDocument[];
 	additionalNotes?: string;
-
-	// Invoices
-	invoices?: SupplierInvoiceRow[];
 }
