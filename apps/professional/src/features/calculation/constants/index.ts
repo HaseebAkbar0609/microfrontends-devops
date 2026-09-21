@@ -21,7 +21,7 @@ export const calculationNavItems: RouteTabItem[] = [
 	{
 		id: "overview",
 		labelKey: localizationConstants.calcOverview,
-		href: "/module/business/calculation",
+		href: "/module/business/calculation/dashboard",
 		exact: true,
 	},
 	{
