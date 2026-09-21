@@ -1,6 +1,5 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Select,
 	SelectContent,
@@ -17,8 +16,6 @@ type SellerFilterBarProps = {
 	sellers: string[];
 	seller: string;
 	onSellerChange: (value: string) => void;
-	onlyTrialAccounts: boolean;
-	onOnlyTrialAccountsChange: (value: boolean) => void;
 };
 
 /** Whose pipeline is on screen, and whether to narrow it to trial accounts. */
@@ -26,8 +23,6 @@ export function SellerFilterBar({
 	sellers,
 	seller,
 	onSellerChange,
-	onlyTrialAccounts,
-	onOnlyTrialAccountsChange,
 }: SellerFilterBarProps) {
 	const t = useTranslate();
 
@@ -68,13 +63,6 @@ export function SellerFilterBar({
 				</p>
 			</div>
 
-			<label className="flex cursor-pointer items-center gap-2 text-sm text-slate-700">
-				<Checkbox
-					checked={onlyTrialAccounts}
-					onCheckedChange={(checked) => onOnlyTrialAccountsChange(checked === true)}
-				/>
-				<Translate text={localizationConstants.salesCrmOnlyTrialAccounts} />
-			</label>
 		</div>
 	);
 }

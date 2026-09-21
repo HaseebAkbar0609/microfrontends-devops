@@ -109,7 +109,10 @@ function QuoteBuilder({ company }: { company: SalesCompany }) {
 }
 
 export default function QuoteBuilderPage({ companyId }: QuoteBuilderPageProps) {
-	const { getCompany } = useSalesCompanies();
+	const { getCompany, isLoading, isError } = useSalesCompanies();
+	if (isLoading || isError) {
+		return <p className="p-6 text-sm text-slate-600"><Translate text={isLoading ? localizationConstants.salesRecordLoading : localizationConstants.salesRecordLoadFailed} /></p>;
+	}
 	const company = getCompany(companyId);
 
 	if (!company) {

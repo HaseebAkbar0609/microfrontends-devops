@@ -31,7 +31,7 @@ function clampDiscount(value: number): number {
  */
 export function useQuoteBuilderForm(
 	company: SalesCompany,
-	onChange: (patch: Partial<SalesCompany>) => void,
+	onChange: (patch: Partial<SalesCompany>) => Promise<boolean>,
 ) {
 	const t = useTranslate();
 	const router = useRouter();
@@ -108,7 +108,7 @@ export function useQuoteBuilderForm(
 		}));
 	}, []);
 
-	const save = useCallback(() => {
+	const save = useCallback(async () => {
 		const quote: SalesQuote = {
 			quoteNumber,
 			createdAt: draft.createdAt,
@@ -121,7 +121,7 @@ export function useQuoteBuilderForm(
 			notes: draft.notes,
 		};
 
-		onChange({
+		const saved = await onChange({
 			name: draft.customerName || company.name,
 			organisationNumber: draft.organisationNumber,
 			contactPerson: draft.contactPerson,
@@ -132,8 +132,10 @@ export function useQuoteBuilderForm(
 			quote,
 		});
 
-		showToast("success", t(localizationConstants.salesQuoteSavedToast));
-		router.push(`/module/sales/companies/${company.id}`);
+		if (saved) {
+			showToast("success", t(localizationConstants.salesQuoteSavedToast));
+			router.push(`/module/sales/companies/${company.id}`);
+		}
 	}, [company.id, company.name, draft, onChange, quoteNumber, router, t, totals]);
 
 	return {

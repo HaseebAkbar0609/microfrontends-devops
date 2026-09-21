@@ -28,7 +28,7 @@ export function useCompanyCsvImport(emptyToastKey?: TranslationKeys) {
 				if (emptyToastKey) showToast("error", t(emptyToastKey));
 				return;
 			}
-			addCompanies(rows);
+			await addCompanies(rows);
 			showToast("success", t(localizationConstants.salesCompaniesImportedToast));
 		} catch {
 			showToast("error", t(localizationConstants.salesCsvImportFailedToast));

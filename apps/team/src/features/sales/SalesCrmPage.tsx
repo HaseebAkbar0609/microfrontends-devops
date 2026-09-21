@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
@@ -13,18 +13,16 @@ import { CsvImportExportActions } from "./components/CsvImportExportActions";
 import { SalesCompanyTable } from "./components/SalesCompanyTable";
 import { SalesStatusSummaryCards } from "./components/SalesStatusSummaryCards";
 import { SellerFilterBar } from "./components/SellerFilterBar";
-import { getInvoicedAmount } from "./utils/salesFormatters";
 
 /** Prospects, leads, quotes and order confirmations in one flow. */
 export default function SalesCrmPage() {
-	const { companies, updateCompany } = useSalesCompanies();
+	const { companies, updateCompany, isLoading, isError } = useSalesCompanies();
 	const {
 		statusFilter,
 		query,
 		category,
 		region,
 		seller,
-		onlyTrialAccounts,
 		sellers,
 		sort,
 		counts,
@@ -33,20 +31,10 @@ export default function SalesCrmPage() {
 		setCategory,
 		setRegion,
 		setSeller,
-		setOnlyTrialAccounts,
 		toggleStatusFilter,
 		toggleSort,
 	} = useSalesCompanyFilters(companies);
 	const [isCreateOpen, setIsCreateOpen] = useState(false);
-
-	const invoicedTotal = useMemo(
-		() =>
-			visibleCompanies.reduce(
-				(total, company) => total + getInvoicedAmount(company),
-				0,
-			),
-		[visibleCompanies],
-	);
 
 	return (
 		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-slate-50">
@@ -77,12 +65,11 @@ export default function SalesCrmPage() {
 			</header>
 
 			<div className="flex flex-col gap-5 p-6">
+				{(isLoading || isError) && <p className="text-sm text-slate-600"><Translate text={isLoading ? localizationConstants.salesRecordLoading : localizationConstants.salesRecordLoadFailed} /></p>}
 				<SellerFilterBar
 					sellers={sellers}
 					seller={seller}
 					onSellerChange={setSeller}
-					onlyTrialAccounts={onlyTrialAccounts}
-					onOnlyTrialAccountsChange={setOnlyTrialAccounts}
 				/>
 
 				<SalesStatusSummaryCards
@@ -94,7 +81,6 @@ export default function SalesCrmPage() {
 				<section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xs">
 					<CompaniesCardHeader
 						statusFilter={statusFilter}
-						invoicedTotal={invoicedTotal}
 						category={category}
 						onCategoryChange={setCategory}
 						region={region}
