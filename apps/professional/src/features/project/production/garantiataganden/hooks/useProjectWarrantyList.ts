@@ -7,6 +7,7 @@ import { useTableSort } from "@/hooks/useTableSort";
 import { showToast } from "@/lib/toast";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { PROJECT_LIST_ROWS } from "../../../data/projectsOverview.mock";
+import { todayIso } from "../../../shared/todayIso";
 import type { WarrantySortField } from "../projectWarranty.config";
 import * as store from "../services/projectWarrantyService";
 import type { WarrantyCommitment, WarrantyCommitmentInput } from "../types";
@@ -57,11 +58,22 @@ export function useProjectWarrantyList(projectId: string) {
 
 	const refresh = useCallback(() => setCommitments(store.listCommitments(projectId)), [projectId]);
 
-	/** Adds or updates. A new row the search or filter would hide clears them, so it shows. */
+	/**
+	 * Adds or updates, dating any file attached in the dialog today. A new row
+	 * the search or filter would hide clears them, so it shows. `false` when the
+	 * store refused it, which keeps the dialog open on what was typed.
+	 */
 	const save = useCallback(
-		(input: WarrantyCommitmentInput, id?: string) => {
-			const saved = id ? store.updateCommitment(projectId, id, input) : store.createCommitment(projectId, input);
-			if (!saved) return;
+		(input: WarrantyCommitmentInput, id?: string): boolean => {
+			const today = todayIso();
+			const saved = id
+				? store.updateCommitment(projectId, id, input, today)
+				: store.createCommitment(projectId, input, today);
+
+			if (!saved) {
+				showToast("error", t(localizationConstants.projectWarrantyChangeFailed));
+				return false;
+			}
 
 			if (!matchesCommitment(saved, filter, search)) {
 				setFilter(null);
@@ -69,6 +81,7 @@ export function useProjectWarrantyList(projectId: string) {
 			}
 			refresh();
 			showToast("success", t(localizationConstants.projectWarrantySavedToast));
+			return true;
 		},
 		[projectId, filter, search, refresh, t],
 	);

@@ -2,7 +2,13 @@ import { generateTempId } from "@/lib/tempId";
 import { fileRejection, mintTypedUrl, revokeUrls } from "../../../shared/recordFiles";
 import { SEEDED_WARRANTY_COMMITMENTS } from "../data/projectWarrantyCommitments.mock";
 import { WARRANTY_FILE_RULES, WARRANTY_NAME_MAX_LENGTH } from "../projectWarranty.config";
-import type { WarrantyCommitment, WarrantyCommitmentInput, WarrantyDocument, WarrantyDocumentInput } from "../types";
+import type {
+	WarrantyCommitment,
+	WarrantyCommitmentInput,
+	WarrantyDocument,
+	WarrantyDocumentDraft,
+	WarrantyDocumentInput,
+} from "../types";
 
 /** A copy, so neither the seed nor a caller holding a row can be written through. */
 const copy = (row: WarrantyCommitment): WarrantyCommitment => ({
@@ -27,7 +33,48 @@ const copy = (row: WarrantyCommitment): WarrantyCommitment => ({
  */
 let commitments: WarrantyCommitment[] = SEEDED_WARRANTY_COMMITMENTS.map(copy);
 
-const clean = (input: WarrantyCommitmentInput) => ({ date: input.date, name: input.name.trim() });
+const clean = (input: WarrantyCommitmentInput) => ({
+	date: input.date,
+	name: input.name.trim(),
+	reminderDate: input.reminderDate,
+	reminderEmails: input.reminderEmails.map((value) => value.trim()).filter(Boolean),
+});
+
+/**
+ * Turns the dialog's documents into stored ones. A file picked in this session
+ * gets a URL served as its extension's content type and today's date; a
+ * document the commitment already holds keeps its URL and date, looked up by
+ * id, and takes the name it came back with. An id this commitment never had is
+ * dropped rather than trusted.
+ */
+function storeDocuments(
+	drafts: readonly WarrantyDocumentDraft[],
+	previous: readonly WarrantyDocument[],
+	today: string,
+): WarrantyDocument[] {
+	const stored = new Map(previous.map((doc) => [doc.id, doc]));
+
+	return drafts.flatMap((draft): WarrantyDocument[] => {
+		const name = draft.name.trim();
+		if (!name || name.length > WARRANTY_NAME_MAX_LENGTH) return [];
+
+		if (draft.file) {
+			if (fileRejection(draft.file, WARRANTY_FILE_RULES)) return [];
+			return [
+				{
+					id: draft.id,
+					date: today,
+					name,
+					fileName: draft.file.name,
+					url: mintTypedUrl(draft.file, WARRANTY_FILE_RULES.types),
+				},
+			];
+		}
+
+		const kept = stored.get(draft.id);
+		return kept ? [{ ...kept, name }] : [];
+	});
+}
 
 /** Newest day first: ISO dates sort as text, and ties keep their stored order. */
 export function listCommitments(projectId: string): WarrantyCommitment[] {
@@ -44,11 +91,16 @@ export function getCommitment(projectId: string, id: string): WarrantyCommitment
 }
 
 /**
- * Refused (`undefined`) when the dialog's checks were somehow skipped. The
- * detail page's fields start empty: the frame's create dialog asks only for the
- * day and the name, and nothing else has a source to fill them from.
+ * Refused (`undefined`) when the dialog's checks were somehow skipped — only
+ * the day and the name are required. Garantiansvarig, Godkänd, Garantitid and
+ * Kontaktperson start empty: no frame asks for them and the project data has no
+ * source to fill them from.
  */
-export function createCommitment(projectId: string, input: WarrantyCommitmentInput): WarrantyCommitment | undefined {
+export function createCommitment(
+	projectId: string,
+	input: WarrantyCommitmentInput,
+	today: string,
+): WarrantyCommitment | undefined {
 	const values = clean(input);
 	if (!values.date || !values.name) return undefined;
 
@@ -60,26 +112,34 @@ export function createCommitment(projectId: string, input: WarrantyCommitmentInp
 		approvedDate: "",
 		periodLabel: "",
 		endDate: "",
-		reminderDate: "",
-		reminderEmails: [],
 		reminderContacts: [],
-		documents: [],
+		documents: storeDocuments(input.documents, [], today),
 	};
 	commitments = [...commitments, commitment];
 	return copy(commitment);
 }
 
+/**
+ * Writes the five fields the dialog asks for, leaving the rest of the
+ * commitment as it was, and revokes the URLs of documents the save dropped —
+ * after the write, so a refused save never revokes a live file.
+ */
 export function updateCommitment(
 	projectId: string,
 	id: string,
 	input: WarrantyCommitmentInput,
+	today: string,
 ): WarrantyCommitment | undefined {
 	const previous = commitments.find((row) => row.projectId === projectId && row.id === id);
 	const values = clean(input);
 	if (!previous || !values.date || !values.name) return undefined;
 
-	const next: WarrantyCommitment = { ...previous, ...values };
+	const documents = storeDocuments(input.documents, previous.documents, today);
+	const next: WarrantyCommitment = { ...previous, ...values, documents };
 	commitments = commitments.map((row) => (row === previous ? next : row));
+
+	const kept = new Set(documents.map((doc) => doc.id));
+	revokeUrls(previous.documents.filter((doc) => !kept.has(doc.id)));
 	return copy(next);
 }
 
@@ -111,6 +171,8 @@ export function addDocument(
 	const previous = commitments.find((row) => row.projectId === projectId && row.id === id);
 	const name = input.name.trim();
 	if (!previous || !name || name.length > WARRANTY_NAME_MAX_LENGTH) return undefined;
+	/* The same ceiling the create form's picker enforces, so neither way past it. */
+	if (previous.documents.length >= WARRANTY_FILE_RULES.maxCount) return undefined;
 	if (fileRejection(input.file, WARRANTY_FILE_RULES)) return undefined;
 
 	const document: WarrantyDocument = {

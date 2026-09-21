@@ -32,7 +32,11 @@ const MEGABYTE = 1024 * 1024;
 export const WARRANTY_FILE_RULES: RecordFileRules = {
 	types: { ".pdf": "application/pdf", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" },
 	maxBytes: 10 * MEGABYTE,
-	maxCount: 1,
+	/* The create form attaches several at once; the detail page's card adds one. */
+	maxCount: 10,
 };
 
 export const WARRANTY_FILE_ACCEPT = acceptAttribute(WARRANTY_FILE_RULES.types);
+
+/** How many attached files the create form's box shows before "+N fler". */
+export const WARRANTY_CHIPS_COLLAPSED = 2;
