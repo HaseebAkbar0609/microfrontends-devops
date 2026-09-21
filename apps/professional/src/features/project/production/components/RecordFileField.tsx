@@ -56,7 +56,8 @@ export interface RecordFileFieldProps {
  * the file's, which the reader can still change.
  *
  * Shared by the record's sections that upload a single file (Handlingar,
- * Garantiåtaganden), which differ only in their labels, rules and limits.
+ * Garantiåtaganden, Protokoll), which differ only in their labels, rules and
+ * limits.
  */
 export function RecordFileField({
 	form,
