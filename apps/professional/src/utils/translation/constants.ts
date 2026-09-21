@@ -4291,6 +4291,12 @@ export type OfferTranslation = {
 	projectWarrantyUploadButton: string;
 	projectWarrantyRemoveFile: string;
 	projectWarrantyDocumentsEmpty: string;
+	/* TFS-712 — the create form's own file rules and its attached-file chips. */
+	projectWarrantyFileDuplicate: string;
+	projectWarrantyTooManyFiles: string;
+	projectWarrantyMoreFiles: string;
+	projectWarrantyShowAllFiles: string;
+	projectWarrantyShowFewerFiles: string;
 	projectDiaryFileTypeError: string;
 	projectDiaryFileSizeError: string;
 	projectDiaryRemoveFile: string;

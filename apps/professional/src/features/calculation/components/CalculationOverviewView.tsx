@@ -113,7 +113,7 @@ export function CalculationOverviewView({ items }: Props) {
           items={[
             { translationKey: localizationConstants.home, href: "/home" },
             { translationKey: localizationConstants.moduleItem, href: "/module/business" },
-            { translationKey: localizationConstants.calculation, href: "/module/business/calculation" },
+            { translationKey: localizationConstants.calculation, href: "/module/business/calculation/dashboard" },
             { translationKey: localizationConstants.calcOverviewPage },
           ]}
         />

@@ -10,7 +10,6 @@ import { SupplierDetailTabs } from "./SupplierDetailTabs";
 import { BasicInfoTab } from "./tabs/BasicInfoTab";
 import { ContactTab } from "./tabs/ContactTab";
 import { AssessmentTab } from "./tabs/AssessmentTab";
-import { InvoicesTab } from "./tabs/InvoicesTab";
 
 interface SupplierDetailPageProps {
 	id: string;
@@ -94,10 +93,6 @@ export function SupplierDetailPage({ id }: SupplierDetailPageProps) {
 						onAddDocument={handleAddDocument}
 						onDeleteDocument={handleDeleteDocument}
 					/>
-				)}
-
-				{activeTab === "invoices" && (
-					<InvoicesTab supplier={supplier} />
 				)}
 			</div>
 		</div>

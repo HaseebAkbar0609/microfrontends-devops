@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/form";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { RecordFileChips, type RecordFileChipsLabels } from "../../components/RecordFileChips";
 import { acceptPickedFiles, type PickedFilesResult } from "../inspectionFiles";
 import {
 	INSPECTION_CHIPS_COLLAPSED,
@@ -20,7 +21,15 @@ import {
 	INSPECTION_FILE_ACCEPT,
 } from "../projectInspection.config";
 import type { InspectionFormValues } from "./inspectionSchema";
-import { InspectionFileChips } from "./InspectionFileChips";
+
+/** Module constant: Besiktning's wording for the shared chips. */
+const CHIP_LABELS: RecordFileChipsLabels = {
+	list: localizationConstants.inspectionDocumentFieldLabel,
+	remove: localizationConstants.projectInspectionRemoveFile,
+	more: localizationConstants.projectInspectionMoreFiles,
+	showAll: localizationConstants.projectInspectionShowAllFiles,
+	showFewer: localizationConstants.projectInspectionShowFewerFiles,
+};
 
 export interface InspectionDocumentsFieldProps {
 	control: Control<InspectionFormValues>;
@@ -109,13 +118,15 @@ export function InspectionDocumentsField({ control, translateError }: Inspection
 							</p>
 						)}
 						<FormMessage translate={translateError} />
-						<InspectionFileChips
+						<RecordFileChips
 							documents={field.value}
 							onRemove={remove}
 							expanded={expanded}
 							onToggle={() => setExpanded((open) => !open)}
 							listId={`${id}-files`}
 							onFocusFallback={focusUpload}
+							labels={CHIP_LABELS}
+							collapsedCount={INSPECTION_CHIPS_COLLAPSED}
 						/>
 					</FormItem>
 				);

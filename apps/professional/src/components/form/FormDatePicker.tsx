@@ -48,6 +48,12 @@ export interface FormDatePickerProps<
 	 * every existing form draws it; the Tidsplan frames draw it at the start.
 	 */
 	iconPosition?: "start" | "end";
+	/**
+	 * Marks the field mandatory: draws the asterisk after the label and sets
+	 * `aria-required` on the trigger, as `FormInput` does. The asterisk alone is
+	 * decoration a screen reader never hears.
+	 */
+	required?: boolean;
 }
 
 export function FormDatePicker<
@@ -66,6 +72,7 @@ export function FormDatePicker<
 	translateError,
 	minDate,
 	iconPosition = "end",
+	required = false,
 }: FormDatePickerProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
@@ -99,6 +106,11 @@ export function FormDatePicker<
 						{label != null && (
 							<FormLabel className={labelClassName}>
 								{resolvedLabel}
+								{required && (
+									<span className="text-red-500" aria-hidden>
+										*
+									</span>
+								)}
 							</FormLabel>
 						)}
 						<FormControl>
@@ -108,6 +120,7 @@ export function FormDatePicker<
 										type="button"
 										variant="outline"
 										disabled={disabled}
+										aria-required={required || undefined}
 										className={cn(
 											"h-10 w-full justify-between text-left font-normal border-slate-200 bg-white px-3 shadow-2xs hover:bg-slate-50 focus:ring-1 focus:ring-slate-950 text-sm",
 											iconPosition === "start" && "justify-start gap-2",

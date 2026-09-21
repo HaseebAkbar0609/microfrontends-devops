@@ -4237,6 +4237,12 @@ export const svOffer: OfferTranslation = {
 	projectWarrantyUploadButton: "Ladda upp",
 	projectWarrantyRemoveFile: "Ta bort {name}",
 	projectWarrantyDocumentsEmpty: "Inga dokument ännu",
+	/* TFS-712 — the create form's own file rules and its attached-file chips. */
+	projectWarrantyFileDuplicate: "Filen har redan lagts till",
+	projectWarrantyTooManyFiles: "Högst {max} filer per garantiåtagande",
+	projectWarrantyMoreFiles: "+{count} fler",
+	projectWarrantyShowAllFiles: "Visa alla filer",
+	projectWarrantyShowFewerFiles: "Visa färre filer",
 	projectDiaryFileTypeError: "Endast PNG-, JPG- och PDF-filer är tillåtna",
 	projectDiaryFileSizeError: "Filen är större än 10 MB",
 	projectDiaryRemoveFile: "Ta bort {name}",
