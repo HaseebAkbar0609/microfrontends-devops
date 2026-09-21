@@ -11,6 +11,7 @@ import { useCurrentUserName } from "@/hooks/useCurrentUserName";
 import localizationConstants from "@/utils/translation/constants";
 import { PROJECT_MODULE_BASE_URL, PROJECT_MODULE_TABS, PROJECT_MODULE_TITLE } from "../../../data/projectNav.config";
 import { ProjectRecordTitle } from "../../components/ProjectRecordTitle";
+import { useProjectPeople } from "../../hooks/useProjectPeople";
 import { projectProductionTabs } from "../../projectProductionNav.config";
 import { isIsoDate } from "../diaryDates";
 import { useDiaryProject, type DiaryProjectFacts } from "../hooks/useDiaryProject";
@@ -20,13 +21,12 @@ import { WizardFooter } from "./components/WizardFooter";
 import { WizardOverviewCard } from "./components/WizardOverviewCard";
 import { WizardRowsSection } from "./components/WizardRowsSection";
 import { WizardWeatherCard } from "./components/WizardWeatherCard";
-import { useDiaryPeople } from "./hooks/useDiaryPeople";
 import { useNewDiaryWizard } from "./useNewDiaryWizard";
 
 function Wizard({ projectId, facts }: { projectId: string; facts: DiaryProjectFacts }) {
 	const searchParams = useSearchParams();
 	const requested = searchParams.get(DIARY_DATE_PARAM);
-	const people = useDiaryPeople(projectId, facts);
+	const people = useProjectPeople(projectId, localizationConstants.projectDiaryYou);
 	const currentUser = useCurrentUserName(localizationConstants.projectDiaryYou);
 
 	const wizard = useNewDiaryWizard(projectId, facts, isIsoDate(requested) ? requested : "", currentUser);

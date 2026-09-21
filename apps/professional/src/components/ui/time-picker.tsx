@@ -48,6 +48,13 @@ interface TimePickerProps {
 	className?: string;
 	id?: string;
 	format24?: boolean;
+	/** Names for the hour and minute selects, which otherwise read only their number. */
+	hourLabel?: string;
+	minuteLabel?: string;
+	/* Handed down by `FormControl`, so a form field's error reaches the button. */
+	"aria-invalid"?: boolean | "true" | "false";
+	"aria-describedby"?: string;
+	"aria-required"?: boolean;
 }
 
 export function TimePicker({
@@ -58,6 +65,11 @@ export function TimePicker({
 	className,
 	id,
 	format24 = true,
+	hourLabel,
+	minuteLabel,
+	"aria-invalid": ariaInvalid,
+	"aria-describedby": ariaDescribedBy,
+	"aria-required": ariaRequired,
 }: TimePickerProps) {
 	const [open, setOpen] = useState(false);
 	const ref = useRef<HTMLDivElement>(null);
@@ -66,9 +78,13 @@ export function TimePicker({
 
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
-			if (ref.current && !ref.current.contains(e.target as Node)) {
-				setOpen(false);
-			}
+			const target = e.target as Element | null;
+			if (!ref.current || ref.current.contains(target)) return;
+			/* The hour and minute lists render in a portal, outside `ref`. A press on
+			   one is not outside the picker — closing here unmounted the select
+			   before it could take the choice. */
+			if (target?.closest?.('[data-slot="select-content"]')) return;
+			setOpen(false);
 		};
 		if (open) {
 			document.addEventListener("mousedown", handleClickOutside);
@@ -103,6 +119,10 @@ export function TimePicker({
 				type="button"
 				variant="outline"
 				disabled={disabled}
+				aria-expanded={open}
+				aria-invalid={ariaInvalid}
+				aria-describedby={ariaDescribedBy}
+				aria-required={ariaRequired}
 				onClick={() => setOpen((prev) => !prev)}
 				className={cn(
 					"w-full flex items-center justify-start text-left font-normal h-10 px-3 bg-white text-sm shadow-none hover:bg-slate-50",
@@ -121,7 +141,7 @@ export function TimePicker({
 					{format24 ? (
 						<div className="flex items-center gap-2">
 							<Select value={hVal || "12"} onValueChange={handleHourChange24}>
-								<SelectTrigger className="w-16 h-9 text-sm bg-white text-slate-900 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
+								<SelectTrigger aria-label={hourLabel} className="w-16 h-9 text-sm bg-white text-slate-900 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent className="min-w-[4rem]">
@@ -134,7 +154,7 @@ export function TimePicker({
 							<span className="text-slate-400 font-medium text-sm">:</span>
 
 							<Select value={mVal || "00"} onValueChange={handleMinuteChange24}>
-								<SelectTrigger className="w-16 h-9 text-sm bg-white text-slate-900 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
+								<SelectTrigger aria-label={minuteLabel} className="w-16 h-9 text-sm bg-white text-slate-900 px-2 cursor-pointer focus:ring-1 focus:ring-slate-900 shadow-none">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent className="min-w-[4rem]">
