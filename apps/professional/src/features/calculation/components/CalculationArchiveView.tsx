@@ -203,7 +203,7 @@ export function CalculationArchiveView() {
 						},
 						{
 							translationKey: localizationConstants.calculation,
-							href: "/module/business/calculation",
+							href: "/module/business/calculation/dashboard",
 						},
 						{ translationKey: localizationConstants.archive },
 					]}

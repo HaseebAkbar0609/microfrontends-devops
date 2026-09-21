@@ -54,7 +54,7 @@ export const APP_GROUPS: AppGroup[] = [
 			{
 				label: localizationConstants.calculation,
 				icon: Calculator,      // Calculator with + and =
-				href: "/module/business/calculation",
+				href: "/module/business/calculation/dashboard",
 			},
 		],
 	},

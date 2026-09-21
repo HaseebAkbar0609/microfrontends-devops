@@ -39,7 +39,7 @@ export function CalculationKalkylView() {
 						},
 						{
 							translationKey: localizationConstants.calculation,
-							href: "/module/business/calculation",
+							href: "/module/business/calculation/dashboard",
 						},
 						{ translationKey: localizationConstants.calcKalkyl },
 					]}

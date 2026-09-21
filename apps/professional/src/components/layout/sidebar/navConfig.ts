@@ -232,7 +232,7 @@ export const navConfig: NavGroup[] = [
 					{
 						id: "calculation",
 						label: localizationConstants.calculation,
-						href: "/module/business/calculation",
+						href: "/module/business/calculation/dashboard",
 					},
 				],
 			},
