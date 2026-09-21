@@ -199,6 +199,14 @@ export const API_PATH = {
 		PRO_SAVE: `${PROFESSIONALS_BASE_PATH}/calculation/pro/save`,
 		PRO_PURCHASE_LICENSE: `${PROFESSIONALS_BASE_PATH}/calculation/pro/purchase-license`,
 		PRO_DELETE_ROW: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/pro/industry-row/${id}`,
+		QUICK_AI: `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai`,
+		QUICK_AI_SAVE: `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/save`,
+		QUICK_AI_PURCHASE_LICENSE: `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/purchase-license`,
+		QUICK_AI_ADD_COMPONENT: `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/components`,
+		QUICK_AI_CREATE_SECTION: `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/sections`,
+		QUICK_AI_DELETE_SECTION: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/sections/${id}`,
+		QUICK_AI_CREATE_ROW: (sectionId: string) => `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/sections/${sectionId}/rows`,
+		QUICK_AI_DELETE_ROW: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/rows/${id}`,
 	},
 };
 

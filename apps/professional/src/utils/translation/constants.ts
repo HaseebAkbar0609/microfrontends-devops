@@ -1119,6 +1119,24 @@ export type OfferTranslation = {
 	calcProIndustrySettings: string;
 	calcProType: string;
 	calcProVacant: string;
+	// Calculation QuickAICalc tab
+	calcQuickAiLicenseTitle: string;
+	calcQuickAiBuild: string;
+	calcQuickAiEl: string;
+	calcQuickAiComponents: string;
+	calcQuickAiAddComponent: string;
+	calcQuickAiDoor: string;
+	calcQuickAiWindow: string;
+	calcQuickAiWallType: string;
+	calcQuickAiDocuments: string;
+	calcQuickAiDrawings: string;
+	calcQuickAiSelectAll: string;
+	calcQuickAiArchitecturalDrawings: string;
+	calcQuickAiKDrawings: string;
+	calcQuickAiHvacDrawings: string;
+	calcQuickAiAdminRegulations: string;
+	calcQuickAiRoomDescription: string;
+	calcQuickAiConstructionDescription: string;
 	// Calculation - A-price tab
 	calcAPrisNaming: string;
 	calcAPrisSpecification: string;
