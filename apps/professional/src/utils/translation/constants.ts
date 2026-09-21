@@ -2063,6 +2063,10 @@ export type OfferTranslation = {
 	licensesExternAccessModules: string;
 	licensesAppWorkFee: string;
 	licensesAppWorkModules: string;
+	licensesCatalogLoading: string;
+	licensesCatalogError: string;
+	licensesCatalogEmpty: string;
+	licensesCatalogRetry: string;
 	// Project - Dashboard widgets
 	projectDashboardTitle: string;
 	projWidgetOverviewTitle: string;

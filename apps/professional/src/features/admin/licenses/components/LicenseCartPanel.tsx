@@ -29,7 +29,7 @@ import {
 	LicenseTabId,
 	PAYMENT_CYCLES,
 	PaymentCycleId,
-} from "../constants/mockData";
+} from "../constants/licenseCatalog.constants";
 
 const BADGE_CLASS: Record<LicenseTabId, string> = {
 	system: "border-blue-300 text-blue-600",

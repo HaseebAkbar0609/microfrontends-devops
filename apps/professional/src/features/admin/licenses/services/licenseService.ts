@@ -1,15 +1,6 @@
-import {
-	INITIAL_CART_ITEMS,
-	LICENSE_PACKAGES,
-	LicenseCartItem,
-	LicensePackage,
-	LicenseTabId,
-} from "../constants/mockData";
+import { LicenseCartItem } from "../constants/licenseCatalog.constants";
 
-export function listLicensePackages(tab: LicenseTabId): LicensePackage[] {
-	return LICENSE_PACKAGES[tab];
-}
-
+/** The cart always starts empty — there is no persisted "current cart" on the backend. */
 export function getInitialCartItems(): LicenseCartItem[] {
-	return INITIAL_CART_ITEMS;
+	return [];
 }

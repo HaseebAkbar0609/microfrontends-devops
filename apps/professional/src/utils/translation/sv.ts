@@ -2006,6 +2006,10 @@ export const svOffer: OfferTranslation = {
 	licensesExternAccessModules: "Anslut 5 valfria moduler, kopplad till extern användare. Extern användare kopplas mot bolag. Lämplig för konsulter, bokföringsbyrå, jurist, dataföretag",
 	licensesAppWorkFee: "159 kr / månad per användare",
 	licensesAppWorkModules: "Allt i Start, Koppling mot Standard eller PRO ger access till funktioner. krävs att man har licens Standard eller PRO",
+	licensesCatalogLoading: "Laddar produkter och licenser…",
+	licensesCatalogError: "Det gick inte att hämta produkter och licenser.",
+	licensesCatalogEmpty: "Inga produkter eller licenser är tillgängliga just nu.",
+	licensesCatalogRetry: "Försök igen",
 	// Project - Dashboard widgets
 	projectDashboardTitle: "Projekt - Översikt",
 	projWidgetOverviewTitle: "Projektöversikt",

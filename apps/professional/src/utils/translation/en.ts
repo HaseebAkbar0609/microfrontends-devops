@@ -2125,6 +2125,10 @@ export const enOffer: OfferTranslation = {
 	licensesExternAccessModules: "Connect 5 optional modules, linked to external users. External users are linked to companies. Suitable for consultants, accounting firms, legal firms, IT companies",
 	licensesAppWorkFee: "159 SEK / month per user",
 	licensesAppWorkModules: "Everything in Start. Connection to Standard or PRO gives access to functions. Requires a Standard or PRO license",
+	licensesCatalogLoading: "Loading products and licenses…",
+	licensesCatalogError: "Could not load products and licenses.",
+	licensesCatalogEmpty: "No products or licenses are available right now.",
+	licensesCatalogRetry: "Try again",
 	// KMA - Dashboard widgets
 	kmaDashboardTitle: "KMA - Overview",
 	kmaCtaSeeMore: "See more",
