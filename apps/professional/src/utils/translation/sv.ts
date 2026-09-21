@@ -3447,6 +3447,11 @@ export const svOffer: OfferTranslation = {
 	designEkonomiEnhet: "Enhet",
 	designEkonomiAPris: "A-pris",
 	designEkonomiDelsumma: "Delsumma",
+	designHandlingarFoto: "Foto",
+	designHandlingarArkiverade: "Arkiverade",
+	designHandlingarRitningsNr: "Ritningsnummer",
+	designHandlingarLaddaUpp: "Ladda upp handling",
+	designHandlingarEmpty: "Inga handlingar tillagda ännu.",
 	// Machine Dashboard
 	machineDashRearrange: "Ordna om",
 	machineDashSave: "Spara",

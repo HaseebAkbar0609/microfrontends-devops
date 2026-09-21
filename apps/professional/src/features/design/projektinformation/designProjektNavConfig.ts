@@ -24,5 +24,10 @@ export function designProjektTabs(projektId: string): ModuleTabItem[] {
 			labelKey: localizationConstants.designEkonomiTab,
 			href: `${base}/ekonomi`,
 		},
+		{
+			id: "handlingar",
+			labelKey: localizationConstants.designSidebarHandlingar,
+			href: `${base}/handlingar`,
+		},
 	];
 }

@@ -3502,6 +3502,11 @@ export type OfferTranslation = {
 	designEkonomiEnhet: string;
 	designEkonomiAPris: string;
 	designEkonomiDelsumma: string;
+	designHandlingarFoto: string;
+	designHandlingarArkiverade: string;
+	designHandlingarRitningsNr: string;
+	designHandlingarLaddaUpp: string;
+	designHandlingarEmpty: string;
 	// Machine Dashboard
 	machineDashRearrange: string;
 	machineDashSave: string;
