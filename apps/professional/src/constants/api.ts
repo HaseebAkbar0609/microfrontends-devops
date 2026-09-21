@@ -194,6 +194,15 @@ export const API_PATH = {
 		COMPANY_DETAIL: (id: string) => `${PROFESSIONALS_BASE_PATH}/b2b/companies/${id}`,
 		COMPANY_VERIFY: (id: string) => `${PROFESSIONALS_BASE_PATH}/b2b/companies/${id}/verify`,
 	},
+	CALCULATIONS: {
+		BASE: `${PROFESSIONALS_BASE_PATH}/calculations`,
+		LIST: `${PROFESSIONALS_BASE_PATH}/calculations`,
+		CREATE: `${PROFESSIONALS_BASE_PATH}/calculations`,
+		GET: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}`,
+		UPDATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}`,
+		DELETE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}`,
+		ARCHIVE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/archive`,
+	},
 };
 
 export const appConstants = {
