@@ -178,14 +178,21 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
         if (!cancelled) {
           const mapped: OfferAcceptedItem[] = result.items.map((item) => ({
             id: item.id,
+            projectId: item.projectId,
+            mappingId: item.mappingId,
+            quoteId: item.quoteId,
             offertNr: item.idNumber || "N/A",
             job: item.jobName,
-            customerName: item.jobName,
+            customerName: item.contactName || "—",
             category: item.category,
             municipality: item.municipality,
-            acceptedPrice: 0,
+            acceptedPrice: item.totalPrice || 0,
             type: item.type,
-            contactPerson: { name: "", phone: "", email: "" },
+            contactPerson: {
+              name: item.contactName || "",
+              phone: item.contactPhone || "",
+              email: item.contactEmail || "",
+            },
           }));
           setItems(mapped);
         }

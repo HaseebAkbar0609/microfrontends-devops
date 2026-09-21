@@ -65,7 +65,7 @@ export function AddCompanyForm({ onClose }: { onClose: () => void }) {
 		setErrors({});
 	};
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		// Same rules as the CRM's register dialog: trimmed values, valid email.
 		const result = salesCompanyDraftSchema.safeParse({
 			...EMPTY_SALES_COMPANY_DRAFT,
@@ -80,10 +80,14 @@ export function AddCompanyForm({ onClose }: { onClose: () => void }) {
 			);
 			return;
 		}
-		addCompany(result.data);
-		showToast("success", t(localizationConstants.salesBookerCompanyAddedToast));
-		setDraft(EMPTY_DRAFT);
-		onClose();
+		try {
+			await addCompany(result.data);
+			showToast("success", t(localizationConstants.salesBookerCompanyAddedToast));
+			setDraft(EMPTY_DRAFT);
+			onClose();
+		} catch {
+			showToast("error", t(localizationConstants.salesRecordSaveFailed));
+		}
 	};
 
 	const selects = [

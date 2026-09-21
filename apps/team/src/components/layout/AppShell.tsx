@@ -7,7 +7,7 @@ import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
 import { useAuthStatus } from "@/context/AuthContext";
 import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
-import { SalesSubSidebar } from "@/features/sales/components/layout/SalesSubSidebar";
+import { SalesMobileNav, SalesSubSidebar } from "@/features/sales/components/layout/SalesSubSidebar";
 import { isSalesModulePath } from "@/features/sales/constants/salesNav";
 interface AppShellProps {
 	children: React.ReactNode;
@@ -54,10 +54,11 @@ export function AppShell({ children }: AppShellProps) {
 						/>
 					)}
 
-					<div className="flex flex-1 flex-col overflow-hidden">
+					<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 						<Header />
+						{isSalesModule && <SalesMobileNav />}
 						<main
-							className={`flex flex-1 flex-col bg-white hide-scrollbar ${hasSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
+							className={`flex min-w-0 flex-1 flex-col bg-white hide-scrollbar ${hasSubSidebar ? "overflow-hidden" : "overflow-auto"}`}
 						>
 							{children}
 						</main>

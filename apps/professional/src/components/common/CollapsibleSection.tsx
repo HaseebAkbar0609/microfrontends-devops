@@ -16,6 +16,9 @@ interface CollapsibleSectionProps {
   title: ReactNode;
   icon?: ReactNode;
   defaultOpen?: boolean;
+  /** Controls the section from outside — a form reopening one that hides an error. Omit to let it keep its own state. */
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   className?: string;
   headerClassName?: string;
   titleClassName?: string;
@@ -27,13 +30,20 @@ export function CollapsibleSection({
   title,
   icon,
   defaultOpen = true,
+  open: openProp,
+  onOpenChange,
   className,
   headerClassName,
   titleClassName,
   contentClassName,
   children,
 }: CollapsibleSectionProps) {
-  const [open, setOpen] = useState(defaultOpen);
+  const [openState, setOpenState] = useState(defaultOpen);
+  const open = openProp ?? openState;
+  const setOpen = (next: boolean) => {
+    setOpenState(next);
+    onOpenChange?.(next);
+  };
 
   return (
     <Collapsible open={open} onOpenChange={setOpen} className={className}>

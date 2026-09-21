@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
 import { openSafeUrl } from "@/lib/safeUrl";
@@ -9,9 +10,11 @@ import localizationConstants from "@/utils/translation/constants";
 import { PROJECT_LIST_ROWS } from "../../../data/projectsOverview.mock";
 import { disposePrintFrame, printStoredFile } from "../../../shared/printStoredFile";
 import { PROTOCOL_TYPE_LABELS } from "../projectProtocol.config";
-import type { ProtocolTypeLabel } from "../protocolView";
+import { protocolUrls } from "../protocolNav";
+import { hasMeeting, type ProtocolTypeLabel } from "../protocolView";
 import * as store from "../services/projectProtocolService";
-import type { ProjectProtocol, ProjectProtocolInput } from "../types";
+import type { NewMeetingInput, ProjectProtocol, ProjectProtocolInput } from "../types";
+import { useProtocolProject } from "./useProtocolProject";
 
 /** A stored protocol and the list it now sits in, which the table reads to find its page. */
 export interface ProtocolCreated {
@@ -29,7 +32,10 @@ export interface ProtocolCreated {
  */
 export function useProjectProtocols(projectId: string) {
 	const { t } = useTranslation();
+	const router = useRouter();
 	const project = PROJECT_LIST_ROWS.find((row) => row.id === projectId);
+	/** Projekt nr and namn as Nytt möte shows them. */
+	const facts = useProtocolProject(projectId);
 	const [protocols, setProtocols] = useState(() => store.listProtocols(projectId));
 
 	const typeLabel: ProtocolTypeLabel = useCallback((type) => t(PROTOCOL_TYPE_LABELS[type]), [t]);
@@ -55,6 +61,26 @@ export function useProjectProtocols(projectId: string) {
 		[projectId, t],
 	);
 
+	/**
+	 * Nytt möte's Nästa: stores the meeting and opens its protocol, where the
+	 * points are written. `false` when the store refused it, which keeps the
+	 * dialog open.
+	 */
+	const createMeeting = useCallback(
+		(input: NewMeetingInput): boolean => {
+			const created = facts ? store.createMeeting(projectId, facts.projectNo, input) : undefined;
+			if (!created) {
+				showToast("error", t(localizationConstants.projectProtocolSaveFailed));
+				return false;
+			}
+			refresh();
+			showToast("success", t(localizationConstants.projectProtocolCreatedToast));
+			router.push(protocolUrls.view(projectId, created.id));
+			return true;
+		},
+		[facts, projectId, refresh, router, t],
+	);
+
 	/** Reversible, so no confirm — as Besiktning archives. */
 	const toggleArchive = useCallback(
 		(row: ProjectProtocol) => {
@@ -77,12 +103,19 @@ export function useProjectProtocols(projectId: string) {
 		[projectId, refresh, t],
 	);
 
-	/** Visa detaljer and ⋮ Öppna. Only a URL the store minted gets here, and `openSafeUrl` checks it again. */
+	/**
+	 * Visa detaljer and ⋮ Öppna: a Standard protocol's meeting, or the PDF. Only
+	 * a URL the store minted gets here, and `openSafeUrl` checks it again.
+	 */
 	const open = useCallback(
 		(row: ProjectProtocol) => {
+			if (hasMeeting(row)) {
+				router.push(protocolUrls.view(projectId, row.id));
+				return;
+			}
 			if (!openSafeUrl(row.url)) showToast("error", t(localizationConstants.projectProtocolNoFile));
 		},
-		[t],
+		[projectId, router, t],
 	);
 
 	/** ⋮ Skriv ut — that protocol's PDF, not the page. Runs in the click, so a fallback tab is not blocked. */
@@ -98,7 +131,7 @@ export function useProjectProtocols(projectId: string) {
 		[t],
 	);
 
-	return { project, protocols, typeLabel, create, toggleArchive, remove, open, print };
+	return { project, facts, protocols, typeLabel, create, createMeeting, toggleArchive, remove, open, print };
 }
 
 export type ProjectProtocolsState = ReturnType<typeof useProjectProtocols>;

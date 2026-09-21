@@ -1,8 +1,6 @@
 "use client";
 
-import { Beaker, FlaskConical } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { SALES_STATUSES } from "../constants/salesStatuses";
 import type { SalesStatusFilter } from "../types";
@@ -81,26 +79,6 @@ export function SalesStatusSummaryCards({
 				))}
 			</div>
 
-			<div className="grid grid-cols-1 gap-2.5 @2xl:grid-cols-2">
-				<SummaryCard
-					labelKey={localizationConstants.salesDemoAccountsTitle}
-					hintKey={localizationConstants.salesDemoAccountsHint}
-					count={counts.demo ?? 0}
-					accentClassName="bg-sky-50 text-sky-700"
-					isActive={activeFilter === "demo"}
-					icon={FlaskConical}
-					onClick={() => onFilterChange("demo")}
-				/>
-				<SummaryCard
-					labelKey={localizationConstants.salesTestAccountsTitle}
-					hintKey={localizationConstants.salesTestAccountsHint}
-					count={counts.test ?? 0}
-					accentClassName="bg-violet-50 text-violet-700"
-					isActive={activeFilter === "test"}
-					icon={Beaker}
-					onClick={() => onFilterChange("test")}
-				/>
-			</div>
 		</div>
 	);
 }
