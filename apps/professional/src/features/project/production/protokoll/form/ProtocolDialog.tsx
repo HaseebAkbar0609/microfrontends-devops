@@ -12,35 +12,29 @@ import localizationConstants, { type TranslationKeys } from "@/utils/translation
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { RecordFileField, type RecordFileFieldValues } from "../../components/RecordFileField";
 import {
+	PROTOCOL_DIALOG_TITLE_KEYS,
 	PROTOCOL_FILE_ACCEPT,
 	PROTOCOL_FILE_RULES,
-	PROTOCOL_KIND_META,
 	PROTOCOL_NAME_MAX_LENGTH,
-	PROTOCOL_TYPE_LABELS,
-	PROTOCOL_TYPES,
 } from "../projectProtocol.config";
-import type { ProjectProtocolInput, ProtocolKind } from "../types";
+import type { DialogProtocolKind, ProjectProtocolInput } from "../types";
+import { TYPE_OPTIONS } from "./protocolOptions";
 import { emptyProtocolDraft, protocolSchema, type ProtocolFormValues } from "./protocolSchema";
 
-/** Module constant: the types, labelled in the reader's language when rendered. */
-const TYPE_OPTIONS = PROTOCOL_TYPES.map((value) => ({
-	value,
-	label: <Translate text={PROTOCOL_TYPE_LABELS[value]} />,
-}));
-
 export interface ProtocolDialogProps {
-	kind: ProtocolKind;
+	kind: DialogProtocolKind;
 	/** Stores the protocol; `false` when the store refused it and the dialog should stay open. */
 	onSave: (input: ProjectProtocolInput) => boolean;
 	onClose: () => void;
 }
 
 /**
- * "Skapa protokoll": Datum, Typ and Benämning, titled for the menu item that
- * opened it. Ladda upp adds the PDF row, which fills an empty Benämning from
- * the file's name. Standard and Action create a protocol with no PDF — their
- * meeting form is not drawn yet. The caller mounts it only while open, so each
- * opening starts empty; a double press never stores it twice.
+ * "Skapa protokoll" for Action and Ladda upp: Datum, Typ and Benämning, titled
+ * for the menu item that opened it. Ladda upp adds the PDF row, which fills an
+ * empty Benämning from the file's name. Action creates a protocol with no PDF —
+ * its meeting form is not drawn yet; Standard has its own Nytt möte dialog.
+ * The caller mounts it only while open, so each opening starts empty; a double
+ * press never stores it twice.
  */
 export function ProtocolDialog({ kind, onSave, onClose }: ProtocolDialogProps) {
 	const t = useTranslate();
@@ -66,7 +60,7 @@ export function ProtocolDialog({ kind, onSave, onClose }: ProtocolDialogProps) {
 			<DialogContent className="max-h-[90vh] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-slate-200 bg-white p-6 sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle className="text-lg font-semibold text-slate-900">
-						<Translate text={PROTOCOL_KIND_META[kind].titleKey} />
+						<Translate text={PROTOCOL_DIALOG_TITLE_KEYS[kind]} />
 					</DialogTitle>
 				</DialogHeader>
 

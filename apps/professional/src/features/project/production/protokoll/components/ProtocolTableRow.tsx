@@ -1,17 +1,21 @@
 "use client";
 
+import Link from "next/link";
+
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { RecordFileIcon } from "../../components/RecordFileIcon";
 import { PROTOCOL_FILE_RULES } from "../projectProtocol.config";
-import type { ProtocolTypeLabel } from "../protocolView";
+import { protocolUrls } from "../protocolNav";
+import { hasMeeting, type ProtocolTypeLabel } from "../protocolView";
 import type { ProjectProtocol } from "../types";
 import { ProtocolRowMenu } from "./ProtocolRowMenu";
 
 /* Narrower padding below lg keeps the columns upright on a tablet. */
 const CELL = "px-3 py-3 text-sm text-slate-900 lg:px-4";
+const DETAILS_BUTTON = "h-9 cursor-pointer bg-slate-100 px-3 text-sm font-medium text-slate-900 hover:bg-slate-200";
 
 export interface ProtocolTableRowProps {
 	protocol: ProjectProtocol;
@@ -25,7 +29,8 @@ export interface ProtocolTableRowProps {
 /**
  * One protocol: its day, its type, its PDF, "Visa detaljer" and the ⋮. The PDF
  * column prints the file's full name, as the frame does; a Standard or Action
- * protocol has no PDF yet and shows the missing-value mark.
+ * protocol has no PDF and shows the missing-value mark. A Standard protocol's
+ * Visa detaljer is a link to its meeting; otherwise it opens the PDF.
  */
 export function ProtocolTableRow({ protocol, typeLabel, onOpen, onToggleArchive, onPrint, onDelete }: ProtocolTableRowProps) {
 	return (
@@ -50,23 +55,28 @@ export function ProtocolTableRow({ protocol, typeLabel, onOpen, onToggleArchive,
 				)}
 			</TableCell>
 			<TableCell className={CELL}>
-				{/* Opens the PDF until a detail page is drawn. The name tells a screen
-				    reader which protocol, since every row's button reads the same. */}
-				<Button
-					type="button"
-					variant="secondary"
-					onClick={onOpen}
-					className="h-9 cursor-pointer bg-slate-100 px-3 text-sm font-medium text-slate-900 hover:bg-slate-200"
-				>
-					<Translate text={localizationConstants.viewDetailsButton} />
-					<span className="sr-only"> {protocol.name}</span>
-				</Button>
+				{/* The name tells a screen reader which protocol, since every row's
+				    button reads the same. */}
+				{hasMeeting(protocol) ? (
+					<Button asChild variant="secondary" className={DETAILS_BUTTON}>
+						<Link href={protocolUrls.view(protocol.projectId, protocol.id)}>
+							<Translate text={localizationConstants.viewDetailsButton} />
+							<span className="sr-only"> {protocol.name}</span>
+						</Link>
+					</Button>
+				) : (
+					<Button type="button" variant="secondary" onClick={onOpen} className={DETAILS_BUTTON}>
+						<Translate text={localizationConstants.viewDetailsButton} />
+						<span className="sr-only"> {protocol.name}</span>
+					</Button>
+				)}
 			</TableCell>
 			<TableCell className="w-12 px-1 py-3 text-right lg:px-2">
 				<ProtocolRowMenu
 					label={protocol.name}
 					archived={protocol.archived}
-					hasFile={Boolean(protocol.url)}
+					canOpen={Boolean(protocol.url) || hasMeeting(protocol)}
+					canPrint={Boolean(protocol.url)}
 					onOpen={onOpen}
 					onToggleArchive={onToggleArchive}
 					onPrint={onPrint}

@@ -54,6 +54,12 @@ export interface FormDatePickerProps<
 	 * decoration a screen reader never hears.
 	 */
 	required?: boolean;
+	/**
+	 * How a chosen day reads on the trigger. Defaults to `yyyy-MM-dd`; the
+	 * protocol frames prefix the weekday ("Tis 2024-12-17"). The field's value
+	 * stays `yyyy-MM-dd` either way.
+	 */
+	formatValue?: (isoDate: string) => string;
 }
 
 export function FormDatePicker<
@@ -73,6 +79,7 @@ export function FormDatePicker<
 	minDate,
 	iconPosition = "end",
 	required = false,
+	formatValue,
 }: FormDatePickerProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
@@ -100,6 +107,7 @@ export function FormDatePicker<
 
 				const validDate =
 					selectedDate && isValid(selectedDate) ? selectedDate : undefined;
+				const shownDate = validDate ? format(validDate, "yyyy-MM-dd") : "";
 
 				return (
 					<FormItem className={cn("grid gap-1", className)}>
@@ -132,8 +140,10 @@ export function FormDatePicker<
 											<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
 										)}
 										<span className={cn(iconPosition === "start" && "flex-1")}>
-											{validDate
-												? format(validDate, "yyyy-MM-dd")
+											{shownDate
+												? formatValue
+													? formatValue(shownDate)
+													: shownDate
 												: placeholder
 													? t(placeholder)
 													: "YYYY-MM-DD"}

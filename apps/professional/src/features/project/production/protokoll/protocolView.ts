@@ -1,9 +1,14 @@
 import type { SortDir } from "@/utils/tableSort";
 import { PROTOCOL_ARCHIVED_FILTER, type ProtocolSortField } from "./projectProtocol.config";
-import type { ProjectProtocol, ProtocolType } from "./types";
+import type { MeetingProtocol, ProjectProtocol, ProtocolType } from "./types";
 
 /** Turns a type code into the reader's label. */
 export type ProtocolTypeLabel = (type: ProtocolType) => string;
+
+/** A Standard protocol, whose Visa detaljer opens its meeting rather than a PDF. */
+export function hasMeeting(row: ProjectProtocol): row is MeetingProtocol {
+	return row.meeting !== undefined;
+}
 
 /**
  * Whether a row belongs in the list as filtered and searched.

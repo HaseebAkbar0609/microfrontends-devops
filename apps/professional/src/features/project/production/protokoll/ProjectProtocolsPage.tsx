@@ -13,6 +13,7 @@ import { ProjectRecordTitle } from "../components/ProjectRecordTitle";
 import { projectProductionTabs } from "../projectProductionNav.config";
 import { CreateProtocolMenu } from "./components/CreateProtocolMenu";
 import { ProtocolTableCard } from "./components/ProtocolTableCard";
+import { NewMeetingDialog } from "./form/NewMeetingDialog";
 import { ProtocolDialog } from "./form/ProtocolDialog";
 import { useProjectProtocols } from "./hooks/useProjectProtocols";
 import { useProtocolList } from "./hooks/useProtocolList";
@@ -35,7 +36,8 @@ export interface ProjectProtocolsPageProps {
  * Built to the frame: Sök, Filter and "Skapa protokoll" (Standard, Action,
  * Ladda upp) over a card of Datum, Typ and PDF, each row with "Visa detaljer"
  * and ⋮ Öppna, Arkivera, Skriv ut and Radera, and paging underneath. Archived
- * protocols leave the list and are found under Filter → Arkiverade. The
+ * protocols leave the list and are found under Filter → Arkiverade. Standard
+ * opens Nytt möte, and a meeting's Visa detaljer opens its protocol. The
  * orders module's own protocol feature is left untouched.
  */
 export function ProjectProtocolsPage({ projectId }: ProjectProtocolsPageProps) {
@@ -90,7 +92,17 @@ export function ProjectProtocolsPage({ projectId }: ProjectProtocolsPageProps) {
 				/>
 			</div>
 
-			{creating && (
+			{creating === "standard" && protocols.facts && (
+				<NewMeetingDialog
+					projectId={projectId}
+					projectNo={protocols.facts.projectNo}
+					projectName={protocols.facts.projectName}
+					onCreate={protocols.createMeeting}
+					onClose={() => setCreating(null)}
+				/>
+			)}
+
+			{creating && creating !== "standard" && (
 				<ProtocolDialog
 					kind={creating}
 					onSave={(input) => {

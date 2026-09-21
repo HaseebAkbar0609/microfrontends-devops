@@ -12,13 +12,13 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { RecordCollapsibleCard } from "../../../components/RecordCollapsibleCard";
 import { constructionDay } from "../../diaryDates";
 import type { DiaryProjectFacts } from "../../hooks/useDiaryProject";
-import type { DiaryPerson } from "../hooks/useDiaryPeople";
+import type { ProjectPerson } from "../../../hooks/useProjectPeople";
 import type { DiaryWizardValues } from "../wizardSchema";
 
 export interface WizardOverviewCardProps {
 	form: UseFormReturn<DiaryWizardValues>;
 	facts: DiaryProjectFacts;
-	people: DiaryPerson[];
+	people: ProjectPerson[];
 }
 
 /** A field the project decides: shown as the frame draws it, disabled. */

@@ -3,7 +3,7 @@ import { z } from "zod";
 import localizationConstants from "@/utils/translation/constants";
 import { fileRejection } from "../../../shared/recordFiles";
 import { PROTOCOL_FILE_RULES, PROTOCOL_NAME_MAX_LENGTH, PROTOCOL_TYPES } from "../projectProtocol.config";
-import type { ProtocolKind } from "../types";
+import type { DialogProtocolKind } from "../types";
 
 const M = localizationConstants;
 
@@ -55,6 +55,6 @@ export const protocolSchema = z
 export type ProtocolFormValues = z.infer<typeof protocolSchema>;
 
 /** An empty protocol of this kind — each opening of the dialog starts from it. */
-export function emptyProtocolDraft(kind: ProtocolKind): ProtocolFormValues {
+export function emptyProtocolDraft(kind: DialogProtocolKind): ProtocolFormValues {
 	return { withFile: kind === "upload", date: "", type: null, name: "", file: null, pendingFile: null };
 }
