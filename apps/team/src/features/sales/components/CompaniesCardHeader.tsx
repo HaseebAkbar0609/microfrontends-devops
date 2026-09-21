@@ -13,7 +13,6 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { getSalesStatusMeta } from "../constants/salesStatuses";
 import { SALES_CATEGORIES, SALES_REGIONS } from "../constants/salesTaxonomy";
 import type { SalesStatusFilter } from "../types";
-import { formatCurrency } from "../utils/salesFormatters";
 
 const ALL_VALUE = "all";
 
@@ -27,7 +26,6 @@ function getSelectionLabelKey(filter: SalesStatusFilter): string | null {
 
 type CompaniesCardHeaderProps = {
 	statusFilter: SalesStatusFilter;
-	invoicedTotal: number;
 	category: string;
 	onCategoryChange: (value: string) => void;
 	region: string;
@@ -38,7 +36,6 @@ type CompaniesCardHeaderProps = {
 
 export function CompaniesCardHeader({
 	statusFilter,
-	invoicedTotal,
 	category,
 	onCategoryChange,
 	region,
@@ -78,13 +75,6 @@ export function CompaniesCardHeader({
 						</>
 					)}
 				</h2>
-				<p className="text-xs text-slate-500">
-					<Translate text={localizationConstants.salesInvoicedInSelection} />
-					{": "}
-					<span className="font-medium tabular-nums text-slate-700">
-						{formatCurrency(invoicedTotal)}
-					</span>
-				</p>
 			</div>
 
 			<div className="flex flex-wrap items-center gap-3">

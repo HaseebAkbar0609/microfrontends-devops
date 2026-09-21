@@ -23,7 +23,6 @@ import { useSalesCompanies } from "../../hooks/useSalesCompanies";
 import type { SalesCompany, SalesCompanyStatus } from "../../types";
 import { SalesNotFound } from "../SalesNotFound";
 import { CompanyActivityLogCard } from "./CompanyActivityLogCard";
-import { CompanyCreditsafeCard } from "./CompanyCreditsafeCard";
 import { CompanyDetailsCard } from "./CompanyDetailsCard";
 import { CompanyDocumentsCard } from "./CompanyDocumentsCard";
 import {
@@ -32,7 +31,6 @@ import {
 	CompanyOwnersCard,
 } from "./CompanyKeyFiguresCard";
 import { CompanyNextStepCard } from "./CompanyNextStepCard";
-import { TrialAccountsCard } from "./TrialAccountsCard";
 
 type CompanyDetailPageProps = {
 	companyId: string;
@@ -41,14 +39,16 @@ type CompanyDetailPageProps = {
 export default function CompanyDetailPage({
 	companyId,
 }: CompanyDetailPageProps) {
-	const { getCompany, updateCompany } = useSalesCompanies();
+	const { getCompany, updateCompany, isLoading, isError } = useSalesCompanies();
 	const t = useTranslate();
 	const company = getCompany(companyId);
-
 	const handleChange = useCallback(
 		(patch: Partial<SalesCompany>) => updateCompany(companyId, patch),
 		[companyId, updateCompany],
 	);
+	if (isLoading || isError) {
+		return <p className="p-6 text-sm text-slate-600"><Translate text={isLoading ? localizationConstants.salesRecordLoading : localizationConstants.salesRecordLoadFailed} /></p>;
+	}
 
 	if (!company) {
 		return (
@@ -115,7 +115,6 @@ export default function CompanyDetailPage({
 				<div className="flex flex-col gap-5">
 					<CompanyDetailsCard company={company} onChange={handleChange} />
 					<CompanyKeyFiguresCard company={company} onChange={handleChange} />
-					<CompanyCreditsafeCard company={company} onChange={handleChange} />
 					<CompanyActivityLogCard company={company} onChange={handleChange} />
 					<CompanyOwnersCard company={company} onChange={handleChange} />
 					<CompanyNotesCard company={company} onChange={handleChange} />
@@ -124,16 +123,6 @@ export default function CompanyDetailPage({
 				<aside className="flex flex-col gap-5">
 					<CompanyNextStepCard company={company} onChange={handleChange} />
 					<CompanyDocumentsCard company={company} />
-					<TrialAccountsCard
-						company={company}
-						kind="demo"
-						onChange={handleChange}
-					/>
-					<TrialAccountsCard
-						company={company}
-						kind="test"
-						onChange={handleChange}
-					/>
 				</aside>
 			</div>
 		</div>

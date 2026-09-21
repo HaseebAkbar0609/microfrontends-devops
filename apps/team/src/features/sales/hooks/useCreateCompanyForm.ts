@@ -38,11 +38,15 @@ export function useCreateCompanyForm({
 		form.reset(EMPTY_SALES_COMPANY_DRAFT);
 	}, [form]);
 
-	const submit = form.handleSubmit((values) => {
-		const company = addCompany(values);
-		showToast("success", t(localizationConstants.salesCompanyCreatedToast));
-		reset();
-		onCreated?.(company);
+	const submit = form.handleSubmit(async (values) => {
+		try {
+			const company = await addCompany(values);
+			showToast("success", t(localizationConstants.salesCompanyCreatedToast));
+			reset();
+			onCreated?.(company);
+		} catch {
+			showToast("error", t(localizationConstants.salesRecordSaveFailed));
+		}
 	});
 
 	return { form, submit, reset };

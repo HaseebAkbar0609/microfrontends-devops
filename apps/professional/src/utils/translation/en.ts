@@ -1122,6 +1122,13 @@ export const enOffer: OfferTranslation = {
 	calcOverviewStatusNotStarted: "Not started",
 	calcOverviewStatusInProgress: "In progress",
 	calcOverviewStatusCompleted: "Completed",
+	calcOverviewActionOpen: "Open",
+	calcOverviewActionArchive: "Archive",
+	calcOverviewActionDelete: "Delete",
+	calcOverviewDeleteConfirmTitle: "Delete Calculation",
+	calcOverviewDeleteConfirmDescription: "Are you sure you want to delete this calculation? This action cannot be undone.",
+	calcOverviewArchiveSuccess: "Calculation has been archived",
+	calcOverviewDeleteSuccess: "Calculation has been deleted",
 	calcKalkyl: "Calculation",
 	// Calculation - Kalkyl form
 	calcTabStandard: "Standard Calculation",
