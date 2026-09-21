@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { LicensePackage } from "../constants/mockData";
+import { LicensePackage } from "../constants/licenseCatalog.constants";
 import { AddPackageSelection } from "../hooks/useLicenseCart";
 
 const SectionLabel = ({ text }: { text: string }) => (
