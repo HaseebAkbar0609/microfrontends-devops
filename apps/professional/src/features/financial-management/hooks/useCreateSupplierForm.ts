@@ -265,7 +265,6 @@ export function useCreateSupplierForm() {
 					},
 					documents: data.documents || [],
 					additionalNotes: data.additionalNotes || "",
-					invoices: [],
 				};
 
 				supplierDetailRepository.save(fullDetail);
