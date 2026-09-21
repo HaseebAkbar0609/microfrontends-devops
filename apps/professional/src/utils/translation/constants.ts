@@ -1062,6 +1062,13 @@ export type OfferTranslation = {
 	calcOverviewStatusNotStarted: string;
 	calcOverviewStatusInProgress: string;
 	calcOverviewStatusCompleted: string;
+	calcOverviewActionOpen: string;
+	calcOverviewActionArchive: string;
+	calcOverviewActionDelete: string;
+	calcOverviewDeleteConfirmTitle: string;
+	calcOverviewDeleteConfirmDescription: string;
+	calcOverviewArchiveSuccess: string;
+	calcOverviewDeleteSuccess: string;
 	calcKalkyl: string;
 	// Calculation - Kalkyl form
 	calcTabStandard: string;

@@ -1003,6 +1003,13 @@ export const svOffer: OfferTranslation = {
 	calcOverviewStatusNotStarted: "Ej påbörjad",
 	calcOverviewStatusInProgress: "Pågår",
 	calcOverviewStatusCompleted: "Avslutad",
+	calcOverviewActionOpen: "Öppna",
+	calcOverviewActionArchive: "Arkiv",
+	calcOverviewActionDelete: "Ta bort",
+	calcOverviewDeleteConfirmTitle: "Ta bort kalkyl",
+	calcOverviewDeleteConfirmDescription: "Är du säker på att du vill ta bort denna kalkyl? Denna åtgärd kan inte ångras.",
+	calcOverviewArchiveSuccess: "Kalkylen har arkiverats",
+	calcOverviewDeleteSuccess: "Kalkylen har tagits bort",
 	calcKalkyl: "Kalkyl",
 	// Calculation - Kalkyl form
 	calcTabStandard: "Standard kalkyl",
