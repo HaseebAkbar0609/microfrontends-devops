@@ -33,8 +33,13 @@ export function WarrantyTableRow({ commitment, onEdit, onDelete }: WarrantyTable
 	return (
 		<TableRow
 			onClick={(event) => {
-				/* The name's link and the ⋮ handle their own clicks. */
-				if ((event.target as HTMLElement).closest("a,button")) return;
+				const target = event.target as HTMLElement;
+				/* The ⋮ menu renders in a portal, but React bubbles its clicks through
+				   this row all the same — without this the row would navigate as a menu
+				   item was chosen, losing Redigera and Radera. Only a click on the row's
+				   own cells opens the commitment, and the name's link handles itself. */
+				if (!event.currentTarget.contains(target)) return;
+				if (target.closest("a,button")) return;
 				router.push(viewUrl);
 			}}
 			className="cursor-pointer"

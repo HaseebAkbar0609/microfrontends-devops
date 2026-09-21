@@ -4346,6 +4346,12 @@ export const enOffer: OfferTranslation = {
 	projectWarrantyUploadButton: "Upload",
 	projectWarrantyRemoveFile: "Remove {name}",
 	projectWarrantyDocumentsEmpty: "No documents yet",
+	/* TFS-712 — the create form's own file rules and its attached-file chips. */
+	projectWarrantyFileDuplicate: "The file has already been added",
+	projectWarrantyTooManyFiles: "At most {max} files per warranty commitment",
+	projectWarrantyMoreFiles: "+{count} more",
+	projectWarrantyShowAllFiles: "Show all files",
+	projectWarrantyShowFewerFiles: "Show fewer files",
 	projectDiaryFileTypeError: "Only PNG, JPG and PDF files are allowed",
 	projectDiaryFileSizeError: "The file is larger than 10 MB",
 	projectDiaryRemoveFile: "Remove {name}",

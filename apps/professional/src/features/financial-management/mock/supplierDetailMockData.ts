@@ -77,23 +77,5 @@ export const MOCK_SUPPLIER_DETAIL_MAP: Record<string, SupplierDetailData> = {
 			},
 		],
 		additionalNotes: "Årlig avtalsomförhandling sker i november.",
-		invoices: [
-			{
-				id: "inv-1",
-				invoiceNumber: "INV-2024-089",
-				date: "2024-02-01",
-				dueDate: "2024-03-02",
-				totalAmount: "45 250,00 kr",
-				status: "paid",
-			},
-			{
-				id: "inv-2",
-				invoiceNumber: "INV-2024-112",
-				date: "2024-02-15",
-				dueDate: "2024-03-16",
-				totalAmount: "12 800,00 kr",
-				status: "pending",
-			},
-		],
 	},
 };
