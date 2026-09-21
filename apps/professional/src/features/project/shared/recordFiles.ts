@@ -1,7 +1,8 @@
 import { checkUploadedFile } from "@/lib/validation/fileUpload";
 
 /**
- * Files attached on a project record's sections (Besiktning, ÄTA, Handlingar).
+ * Files attached on a project record's sections (Besiktning, ÄTA, Handlingar,
+ * Dagbok, Garantiåtaganden, Protokoll).
  *
  * There is no upload endpoint, so a section's in-memory store stands in for
  * one and serves a saved file from a `blob:` URL. These helpers are the rules
