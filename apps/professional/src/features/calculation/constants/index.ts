@@ -30,9 +30,9 @@ export const calculationNavItems: RouteTabItem[] = [
 		href: "/module/business/calculation/overview",
 	},
 	{
-		id: "kalkyl",
+		id: "standard-calculation",
 		labelKey: localizationConstants.calcKalkyl,
-		href: "/module/business/calculation/kalkyl",
+		href: "/module/business/calculation/standard-calculation",
 	},
 	{
 		id: "statistics",
