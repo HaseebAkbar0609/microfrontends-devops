@@ -74,15 +74,20 @@ export function SalesCrmProvider({ children }: { children: ReactNode }) {
 
 	const updateCompany = useCallback(async (companyId: string, patch: Partial<SalesCompany>) => {
 		const previous = pendingUpdates.current.get(companyId) ?? Promise.resolve();
+		client.setQueryData<SalesCompany[]>(QUERY_KEY, (current = []) =>
+			current.map((company) => company.id === companyId ? { ...company, ...patch } : company),
+		);
 		const operation = previous.catch(() => undefined).then(async () => {
 			const {
 				id: _id, createdAt: _createdAt, order: _order, payment: _payment,
 				version: _version, professionalCompanyId: _professionalCompanyId, ...body
 			} = patch;
 			const updated = await patchSalesCompany(companyId, body);
-			client.setQueryData<SalesCompany[]>(QUERY_KEY, (previous = []) =>
-				previous.map((company) => company.id === companyId ? updated : company),
-			);
+			if (pendingUpdates.current.get(companyId) === operation) {
+				client.setQueryData<SalesCompany[]>(QUERY_KEY, (current = []) =>
+					current.map((company) => company.id === companyId ? updated : company),
+				);
+			}
 			return true;
 		});
 		pendingUpdates.current.set(companyId, operation);
@@ -90,6 +95,9 @@ export function SalesCrmProvider({ children }: { children: ReactNode }) {
 			return await operation;
 		} catch {
 			showToast("error", t(localizationConstants.salesRecordSaveFailed));
+			if (pendingUpdates.current.get(companyId) === operation) {
+				await client.invalidateQueries({ queryKey: QUERY_KEY });
+			}
 			return false;
 		} finally {
 			if (pendingUpdates.current.get(companyId) === operation) {

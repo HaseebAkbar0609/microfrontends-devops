@@ -14,7 +14,7 @@ import { SalesCompanyTable } from "./components/SalesCompanyTable";
 import { SalesStatusSummaryCards } from "./components/SalesStatusSummaryCards";
 import { SellerFilterBar } from "./components/SellerFilterBar";
 
-/** Prospects, leads, quotes and order confirmations in one flow. */
+/** Sales prospects, leads and quote drafts. */
 export default function SalesCrmPage() {
 	const { companies, updateCompany, isLoading, isError } = useSalesCompanies();
 	const {
