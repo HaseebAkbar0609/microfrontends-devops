@@ -14,7 +14,6 @@ const TABS: { id: SupplierDetailTab; labelKey: keyof typeof localizationConstant
 	{ id: "basic", labelKey: "supplierDetailTabBasicInfo" },
 	{ id: "contact", labelKey: "supplierDetailTabContact" },
 	{ id: "assessment", labelKey: "supplierDetailTabAssessment" },
-	{ id: "invoices", labelKey: "supplierDetailTabInvoices" },
 ];
 
 export function SupplierDetailTabs({
