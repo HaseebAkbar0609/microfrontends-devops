@@ -9,7 +9,7 @@ import { Translate } from "@/utils/translation/translate";
 import { RecordFileIcon } from "../../components/RecordFileIcon";
 import { PROTOCOL_FILE_RULES } from "../projectProtocol.config";
 import { protocolUrls } from "../protocolNav";
-import { hasMeeting, type ProtocolTypeLabel } from "../protocolView";
+import { hasDetailsPage, hasMeeting, type ProtocolTypeLabel } from "../protocolView";
 import type { ProjectProtocol } from "../types";
 import { ProtocolRowMenu } from "./ProtocolRowMenu";
 
@@ -27,10 +27,11 @@ export interface ProtocolTableRowProps {
 }
 
 /**
- * One protocol: its day, its type, its PDF, "Visa detaljer" and the ⋮. The PDF
+ * One protocol: its day, its type, its file, "Visa detaljer" and the ⋮. The PDF
  * column prints the file's full name, as the frame does; a Standard or Action
- * protocol has no PDF and shows the missing-value mark. A Standard protocol's
- * Visa detaljer is a link to its meeting; otherwise it opens the PDF.
+ * protocol has no file and shows the missing-value mark. A Standard or uploaded
+ * protocol's Visa detaljer is a link to its page; an Action protocol's opens
+ * its file, which it does not have yet.
  */
 export function ProtocolTableRow({ protocol, typeLabel, onOpen, onToggleArchive, onPrint, onDelete }: ProtocolTableRowProps) {
 	return (
@@ -57,7 +58,7 @@ export function ProtocolTableRow({ protocol, typeLabel, onOpen, onToggleArchive,
 			<TableCell className={CELL}>
 				{/* The name tells a screen reader which protocol, since every row's
 				    button reads the same. */}
-				{hasMeeting(protocol) ? (
+				{hasDetailsPage(protocol) ? (
 					<Button asChild variant="secondary" className={DETAILS_BUTTON}>
 						<Link href={protocolUrls.view(protocol.projectId, protocol.id)}>
 							<Translate text={localizationConstants.viewDetailsButton} />

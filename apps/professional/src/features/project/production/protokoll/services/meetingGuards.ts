@@ -10,7 +10,7 @@ import {
 	PROTOCOL_POSTAL_CODE_MAX_LENGTH,
 	PROTOCOL_TYPES,
 } from "../projectProtocol.config";
-import type { MeetingCategory, MeetingDetails, MeetingPlan, MeetingPoint, NextMeeting } from "../types";
+import type { MeetingCategory, MeetingDetails, MeetingPlan, MeetingPoint, NextMeeting, UploadDetails } from "../types";
 
 /*
  * The store's own checks on a meeting — where an endpoint's would stand. The
@@ -76,6 +76,19 @@ export function acceptDetails(details: MeetingDetails): MeetingDetails | undefin
 	if (!plan || !number || subject === undefined || comment === undefined) return undefined;
 	if (!(PROTOCOL_TYPES as readonly string[]).includes(details.type) || !isCategory(details.category)) return undefined;
 	return { ...plan, type: details.type, category: details.category, number, subject, comment };
+}
+
+/**
+ * An uploaded protocol's details: Rubrik, Typ and both moments required, the
+ * rest as a meeting's. It has no Ansvarig, so the plan is checked without one.
+ */
+export function acceptUploadDetails(details: UploadDetails): UploadDetails | undefined {
+	const plan = acceptPlan({ ...details, host: "" }, false);
+	if (!plan || !plan.title) return undefined;
+	if ([plan.startDate, plan.startTime, plan.endDate, plan.endTime].some((value) => !value)) return undefined;
+	if (!(PROTOCOL_TYPES as readonly string[]).includes(details.type)) return undefined;
+	const { host: _host, ...rest } = plan;
+	return { ...rest, type: details.type };
 }
 
 /** Nästa möte: any field may be empty; Kategori, when set, is one of the list's. */

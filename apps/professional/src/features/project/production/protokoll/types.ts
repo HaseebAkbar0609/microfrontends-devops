@@ -1,12 +1,9 @@
 /**
  * How a protocol came to be: a Standard meeting written in the app, an Action
- * protocol (its meeting form is not drawn yet), or an existing PDF uploaded as
+ * protocol (its meeting form is not drawn yet), or an existing file uploaded as
  * it is.
  */
 export type ProtocolKind = "standard" | "action" | "upload";
-
-/** The kinds the short "Skapa protokoll" dialog creates. Standard has its own Nytt möte dialog. */
-export type DialogProtocolKind = Exclude<ProtocolKind, "standard">;
 
 /** What the protocol records — the orders module's vocabulary, so both name things alike. */
 export type ProtocolType = "byggmote" | "egenkontroll" | "slutbesiktning" | "kvalitetskontroll" | "skyddsrond";
@@ -75,12 +72,19 @@ export interface ProtocolMeeting {
 }
 
 /**
- * One protocol on the project record. `fileName` is the PDF the list shows;
- * `url` is the `blob:` the store minted for an upload — a seeded row has a file
- * name but no stored file, so it cannot be opened. A Standard protocol carries
- * its `meeting` instead of a file; the store keeps `date`, `type` and `name` in
- * step with the meeting's start day, Typ and Rubrik, so the list reads it like
- * any other row.
+ * What "Nytt protokoll" (Ladda upp) records beside the file: the meeting's
+ * fields without Ansvarig, and its Typ. It has no Kategori, Protokoll nr or
+ * points — the frame draws none.
+ */
+export type UploadDetails = Omit<MeetingPlan, "host"> & { type: ProtocolType };
+
+/**
+ * One protocol on the project record. `fileName` is the file the list's PDF
+ * column shows; `url` is the `blob:` the store minted for an upload — a seeded
+ * row has a file name but no stored file, so it cannot be opened. A Standard
+ * protocol carries its `meeting`, an uploaded one its `upload` details; the
+ * store keeps `date`, `type` and `name` in step with their start day, Typ and
+ * Rubrik, so the list reads every kind alike.
  */
 export interface ProjectProtocol {
 	id: string;
@@ -89,7 +93,7 @@ export interface ProjectProtocol {
 	/** `yyyy-MM-dd` — the day the meeting or inspection took place. */
 	date: string;
 	type: ProtocolType;
-	/** Benämning — a meeting's Rubrik. The frame draws no column for it; search, the menus and the delete confirm use it. */
+	/** Benämning — a meeting's or an upload's Rubrik. The frame draws no column for it; search, the menus and the delete confirm use it. */
 	name: string;
 	fileName?: string;
 	url?: string;
@@ -97,6 +101,8 @@ export interface ProjectProtocol {
 	archived: boolean;
 	/** A Standard protocol's meeting. */
 	meeting?: ProtocolMeeting;
+	/** An uploaded protocol's details. A seeded upload may have none. */
+	upload?: UploadDetails;
 	/** `yyyy-MM-dd` — the last time Skicka sent it. */
 	sentAt?: string;
 }
@@ -107,11 +113,9 @@ export type MeetingProtocol = ProjectProtocol & { meeting: ProtocolMeeting };
 /** What Nytt möte hands over. The store assigns Protokoll nr; Ämne and Kommentar wait for the edit page. */
 export type NewMeetingInput = Omit<MeetingDetails, "number" | "subject" | "comment">;
 
-/** A protocol as the short dialog hands it over. `file` only for Ladda upp. */
+/** An Action protocol as the short dialog hands it over. */
 export interface ProjectProtocolInput {
-	kind: DialogProtocolKind;
 	date: string;
 	type: ProtocolType;
 	name: string;
-	file?: File;
 }

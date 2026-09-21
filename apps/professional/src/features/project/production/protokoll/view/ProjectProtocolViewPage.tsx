@@ -40,7 +40,7 @@ export function ProjectProtocolViewPage({ projectId, protocolId }: ProjectProtoc
 	const dialogs = useProtocolViewDialogs();
 
 	/* An unknown project, a protocol that is not this project's, or one with no
-	   meeting — an Action or an uploaded PDF — is a 404. After the hooks:
+	   meeting — an Action or an uploaded protocol — is a 404. After the hooks:
 	   `notFound()` throws. */
 	if (!project || !view.meeting) notFound();
 

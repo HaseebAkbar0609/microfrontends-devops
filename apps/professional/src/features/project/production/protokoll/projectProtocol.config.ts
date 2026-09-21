@@ -1,6 +1,6 @@
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { acceptAttribute, type RecordFileRules } from "../../shared/recordFiles";
-import type { DialogProtocolKind, MeetingCategory, ProtocolKind, ProtocolType } from "./types";
+import type { MeetingCategory, ProtocolKind, ProtocolType } from "./types";
 
 /** The kinds of protocol, in the order a build meets them. A tuple, so the schema and the Typ select both read it. */
 export const PROTOCOL_TYPES = [
@@ -26,14 +26,6 @@ export const PROTOCOL_KIND_MENU_KEYS: Record<ProtocolKind, TranslationKeys> = {
 	standard: localizationConstants.projectProtocolCreateStandard,
 	action: localizationConstants.projectProtocolCreateAction,
 	upload: localizationConstants.projectProtocolUpload,
-};
-
-/** The kinds the short dialog creates, and what it is titled for each. Standard opens Nytt möte. */
-export const PROTOCOL_DIALOG_KINDS = ["action", "upload"] as const satisfies readonly DialogProtocolKind[];
-
-export const PROTOCOL_DIALOG_TITLE_KEYS: Record<DialogProtocolKind, TranslationKeys> = {
-	action: localizationConstants.projectProtocolDialogAction,
-	upload: localizationConstants.projectProtocolDialogUpload,
 };
 
 /** Kategori's choices, in the order the select lists them. */
@@ -103,11 +95,12 @@ export const PROTOCOL_PAGE_SIZE = 10;
 const MEGABYTE = 1024 * 1024;
 
 /**
- * Ladda upp takes an existing protocol — a PDF, as the list's PDF column says.
- * `projectProtocolFileSizeError` says "10 MB" — change both.
+ * Ladda upp takes an existing protocol: a PDF, or a photo or scan of a signed
+ * one, as the frame's hint says. `projectProtocolFileSizeError` says "10 MB" —
+ * change both.
  */
 export const PROTOCOL_FILE_RULES: RecordFileRules = {
-	types: { ".pdf": "application/pdf" },
+	types: { ".pdf": "application/pdf", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg" },
 	maxBytes: 10 * MEGABYTE,
 	maxCount: 1,
 };

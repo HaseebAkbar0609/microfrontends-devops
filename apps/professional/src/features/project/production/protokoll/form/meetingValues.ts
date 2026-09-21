@@ -8,7 +8,7 @@ import type { EditMeetingValues, NewMeetingValues } from "./meetingSchema";
  */
 
 /** Only the shared fields, so a form's extra keys never ride along into the store. */
-function planOf(values: MeetingPlan): MeetingPlan {
+export function planOf(values: MeetingPlan): MeetingPlan {
 	const { host, title, address, postalCode, city, location, participants, startDate, startTime, endDate, endTime, information } = values;
 	return {
 		host,

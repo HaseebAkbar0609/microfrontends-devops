@@ -3,7 +3,6 @@ import { fileRejection, mintTypedUrl, revokeUrls } from "../../../shared/recordF
 import { SEEDED_PROJECT_PROTOCOLS } from "../data/projectProtocols.mock";
 import { emptyNextMeeting } from "../meetingDefaults";
 import {
-	PROTOCOL_DIALOG_KINDS,
 	PROTOCOL_FILE_RULES,
 	PROTOCOL_NAME_MAX_LENGTH,
 	PROTOCOL_NUMBER_SEQUENCE_DIGITS,
@@ -16,8 +15,9 @@ import type {
 	NextMeeting,
 	ProjectProtocol,
 	ProjectProtocolInput,
+	UploadDetails,
 } from "../types";
-import { acceptDetails, acceptNext, acceptPoints } from "./meetingGuards";
+import { acceptDetails, acceptNext, acceptPoints, acceptUploadDetails } from "./meetingGuards";
 
 /**
  * The project's protocols, in memory.
@@ -30,7 +30,7 @@ import { acceptDetails, acceptNext, acceptPoints } from "./meetingGuards";
  * rule 6). Rows go in and out as deep copies, so a caller never holds the
  * store's own meeting.
  *
- * It also stands in for the upload endpoint, so it owns the PDFs' `blob:`
+ * It also stands in for the upload endpoint, so it owns the files' `blob:`
  * URLs: minted when an upload is stored, revoked when the protocol is deleted.
  * Archiving keeps them, since the protocol can come back.
  */
@@ -45,8 +45,12 @@ const replace = (target: ProjectProtocol, next: ProjectProtocol) => {
 	return copy(next);
 };
 
-/** The list's columns follow the meeting: its start day, Typ and Rubrik. */
-const rowFields = (details: MeetingDetails) => ({ date: details.startDate, type: details.type, name: details.title });
+/** The list's columns follow a meeting's or an upload's details: the start day, Typ and Rubrik. */
+const rowFields = (details: Pick<MeetingDetails, "startDate" | "type" | "title">) => ({
+	date: details.startDate,
+	type: details.type,
+	name: details.title,
+});
 
 /** Newest first: ISO dates sort as text, and ties keep their stored order. */
 export function listProtocols(projectId: string): ProjectProtocol[] {
@@ -63,33 +67,47 @@ export function getProtocol(projectId: string, id: string): ProjectProtocol | un
 }
 
 /**
- * Stores an Action or uploaded protocol, or refuses one the dialog should
- * already have stopped: a missing day, an unknown kind or type, a blank or
- * overlong name, an upload without a valid PDF, or a PDF on an Action
- * protocol. Standard protocols carry a meeting and come through
- * `createMeeting`. The form's checks run in the browser; these stand where the
- * endpoint's would.
+ * Stores an Action protocol, or refuses one the dialog should already have
+ * stopped: a missing day, an unknown type, a blank or overlong name. Standard
+ * protocols come through `createMeeting`, uploads through `createUpload`. The
+ * form's checks run in the browser; these stand where the endpoint's would.
  */
 export function createProtocol(projectId: string, input: ProjectProtocolInput): ProjectProtocol | undefined {
 	const name = input.name.trim();
 	if (!input.date || !name || name.length > PROTOCOL_NAME_MAX_LENGTH) return undefined;
-	if (!(PROTOCOL_DIALOG_KINDS as readonly string[]).includes(input.kind)) return undefined;
 	if (!(PROTOCOL_TYPES as readonly string[]).includes(input.type)) return undefined;
-
-	const upload = input.kind === "upload";
-	if (upload !== Boolean(input.file)) return undefined;
-	if (input.file && fileRejection(input.file, PROTOCOL_FILE_RULES)) return undefined;
 
 	const protocol: ProjectProtocol = {
 		id: generateTempId(),
 		projectId,
-		kind: input.kind,
+		kind: "action",
 		date: input.date,
 		type: input.type,
 		name,
-		fileName: input.file?.name,
-		url: input.file ? mintTypedUrl(input.file, PROTOCOL_FILE_RULES.types) : undefined,
 		archived: false,
+	};
+	protocols = [protocol, ...protocols];
+	return copy(protocol);
+}
+
+/**
+ * Stores an uploaded protocol from "Nytt protokoll": its details and its file,
+ * or refuses either. The file's URL is minted last, so a refused save leaves
+ * none behind.
+ */
+export function createUpload(projectId: string, details: UploadDetails, file: File): ProjectProtocol | undefined {
+	const accepted = acceptUploadDetails(details);
+	if (!accepted || fileRejection(file, PROTOCOL_FILE_RULES)) return undefined;
+
+	const protocol: ProjectProtocol = {
+		id: generateTempId(),
+		projectId,
+		kind: "upload",
+		...rowFields(accepted),
+		fileName: file.name,
+		url: mintTypedUrl(file, PROTOCOL_FILE_RULES.types),
+		archived: false,
+		upload: accepted,
 	};
 	protocols = [protocol, ...protocols];
 	return copy(protocol);
