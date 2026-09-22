@@ -23,7 +23,7 @@ export const timeRowSchema = z
 		description: z.string().trim().max(20000),
 	})
 	.refine((values) => toMinutes(values.end) > toMinutes(values.start), {
-		message: localizationConstants.protocolValRequired,
+		message: localizationConstants.timeInvalidInterval,
 		path: ["end"],
 	})
 	.refine(

@@ -10,13 +10,16 @@ import { Translate } from "@/utils/translation/translate";
 import type { ProjectPerson } from "../../hooks/useProjectPeople";
 import { MeetingPersonSelect } from "../form/fields/MeetingPersonSelect";
 import { PROTOCOL_FIELD_MAX_LENGTH, PROTOCOL_NOTE_MAX_LENGTH, PROTOCOL_POINT_NR_MAX_LENGTH } from "../projectProtocol.config";
-import type { MeetingPoint } from "../types";
+import { PROTOCOL_KIND_MENU_KEYS } from "../projectProtocol.config";
+import type { MeetingKind, MeetingPoint } from "../types";
 import type { PointValues } from "./meetingPointSchema";
 import { useMeetingPointForm } from "./useMeetingPointForm";
 
 const M = localizationConstants;
 
 export interface MeetingPointDialogProps {
+	/** Standard or Action — the subtitle. */
+	kind: MeetingKind;
 	/** The point to edit; omit to add one. */
 	point?: MeetingPoint;
 	/** Nr a new point starts with. */
@@ -31,7 +34,7 @@ export interface MeetingPointDialogProps {
  * and Beslut. The point joins the protocol's unsaved changes; the page's Spara
  * stores them. Mounted only while open, so it starts from the point each time.
  */
-export function MeetingPointDialog({ point, nextNr, people, onSave, onClose }: MeetingPointDialogProps) {
+export function MeetingPointDialog({ kind, point, nextNr, people, onSave, onClose }: MeetingPointDialogProps) {
 	const { form, submit, translateError } = useMeetingPointForm(point, nextNr, onSave);
 	const { control } = form;
 
@@ -43,7 +46,7 @@ export function MeetingPointDialog({ point, nextNr, people, onSave, onClose }: M
 						<Translate text={point ? M.protocolEditPointTitle : M.protocolNewPointTitle} />
 					</DialogTitle>
 					<DialogDescription className="text-sm text-slate-500">
-						<Translate text={M.projectProtocolCreateStandard} />
+						<Translate text={PROTOCOL_KIND_MENU_KEYS[kind]} />
 					</DialogDescription>
 				</DialogHeader>
 

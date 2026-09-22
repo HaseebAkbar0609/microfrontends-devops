@@ -1,6 +1,6 @@
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { acceptAttribute, type RecordFileRules } from "../../shared/recordFiles";
-import type { MeetingCategory, ProtocolKind, ProtocolType } from "./types";
+import type { MeetingCategory, PointStatus, ProtocolKind, ProtocolType } from "./types";
 
 /** The kinds of protocol, in the order a build meets them. A tuple, so the schema and the Typ select both read it. */
 export const PROTOCOL_TYPES = [
@@ -26,6 +26,18 @@ export const PROTOCOL_KIND_MENU_KEYS: Record<ProtocolKind, TranslationKeys> = {
 	standard: localizationConstants.projectProtocolCreateStandard,
 	action: localizationConstants.projectProtocolCreateAction,
 	upload: localizationConstants.projectProtocolUpload,
+};
+
+/** An Action point's statuses, in the order its toggles are drawn: Pågående, Klart, Ej klart. */
+export const POINT_STATUSES = ["ongoing", "done", "notDone"] as const satisfies readonly PointStatus[];
+
+/** The status legend's order, as the frame draws it: Klart, Pågående, Ej klart. */
+export const POINT_STATUS_LEGEND_ORDER = ["done", "ongoing", "notDone"] as const satisfies readonly PointStatus[];
+
+export const POINT_STATUS_LABELS: Record<PointStatus, TranslationKeys> = {
+	ongoing: localizationConstants.protocolPointStatusOngoing,
+	done: localizationConstants.protocolPointStatusDone,
+	notDone: localizationConstants.protocolPointStatusNotDone,
 };
 
 /** Kategori's choices, in the order the select lists them. */

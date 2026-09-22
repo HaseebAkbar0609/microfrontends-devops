@@ -22,6 +22,7 @@ import { DiaryEntry } from "../constants/data";
 
 interface DiaryTableProps {
 	entries: DiaryEntry[];
+	showEmptyState: boolean;
 	sortField: "date" | null;
 	onToggleSort: () => void;
 	onOpen: (entry: DiaryEntry) => void;
@@ -30,6 +31,7 @@ interface DiaryTableProps {
 
 const DiaryTable = ({
 	entries,
+	showEmptyState,
 	sortField,
 	onToggleSort,
 	onOpen,
@@ -69,6 +71,13 @@ const DiaryTable = ({
 				</TableRow>
 			</TableHeader>
 			<TableBody>
+				{showEmptyState && entries.length === 0 && (
+					<TableRow>
+						<TableCell colSpan={4} className="px-4 py-8 text-center text-sm text-slate-500">
+							<Translate text={localizationConstants.noDataFound} />
+						</TableCell>
+					</TableRow>
+				)}
 				{entries.map((entry) => (
 					<TableRow
 						key={entry.id}

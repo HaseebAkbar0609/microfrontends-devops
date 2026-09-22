@@ -10,6 +10,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { PROJECT_MODULE_TABS, PROJECT_MODULE_TITLE } from "../../../data/projectNav.config";
 import { projectProductionTabs } from "../../projectProductionNav.config";
+import { PROTOCOL_KIND_MENU_KEYS } from "../projectProtocol.config";
 import { protocolUrls } from "../protocolNav";
 import { EditNextMeetingSection } from "./EditNextMeetingSection";
 import { EditOtherInfoSection } from "./EditOtherInfoSection";
@@ -27,7 +28,7 @@ export interface ProjectProtocolEditPageProps {
 }
 
 /**
- * Redigera protokoll — Ändra on a Standard protocol: Tid, Deltagare, Övrig
+ * Redigera protokoll — Ändra on a Standard or Action protocol: Tid, Deltagare, Övrig
  * information and Nästa möte, each collapsible, over a sticky Avbryt / Spara.
  * The frame titles it "Edit Protokoll", English inside Swedish copy, so Swedish
  * reads "Redigera protokoll". The discard confirm renders outside the form, so
@@ -39,7 +40,7 @@ export function ProjectProtocolEditPage({ projectId, protocolId }: ProjectProtoc
 	const [discarding, setDiscarding] = useState(false);
 
 	/* A protocol that is not this project's, or has no meeting, is a 404. After the hooks. */
-	if (!edit.meeting) notFound();
+	if (!edit.meeting || !edit.kind) notFound();
 
 	const section = (key: EditSection): EditSectionProps => ({
 		form: edit.form,
@@ -56,7 +57,7 @@ export function ProjectProtocolEditPage({ projectId, protocolId }: ProjectProtoc
 				tabs={PROJECT_MODULE_TABS}
 				record={{
 					title: t(M.protocolEditTitle),
-					description: t(M.projectProtocolCreateStandard),
+					description: t(PROTOCOL_KIND_MENU_KEYS[edit.kind]),
 					backHref: protocolUrls.view(projectId, protocolId),
 				}}
 				secondaryTabs={projectProductionTabs(projectId)}

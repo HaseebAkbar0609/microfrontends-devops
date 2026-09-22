@@ -34,6 +34,8 @@ export function useProtocolEditForm(projectId: string, protocolId: string) {
 
 	const [existing] = useState(() => store.getProtocol(projectId, protocolId));
 	const meeting = existing?.meeting;
+	/** Standard or Action — only a meeting has an edit page. */
+	const kind = existing && existing.kind !== "upload" ? existing.kind : undefined;
 
 	const form = useForm<EditMeetingValues>({
 		resolver: zodResolver(editMeetingSchema) as Resolver<EditMeetingValues>,
@@ -82,5 +84,5 @@ export function useProtocolEditForm(projectId: string, protocolId: string) {
 	/** Back to the protocol without saving — the page asks first when anything changed. */
 	const leave = useCallback(() => router.push(protocolUrls.view(projectId, protocolId)), [projectId, protocolId, router]);
 
-	return { meeting, form, people, sections, setSectionOpen, dirty, save, leave, translateError };
+	return { kind, meeting, form, people, sections, setSectionOpen, dirty, save, leave, translateError };
 }

@@ -52,7 +52,7 @@ const EditTimeRowDialog = ({
 
 	const handleSave = form.handleSubmit((values) => {
 		if (onSave(values)) onClose();
-		else form.setError("start", { message: localizationConstants.myPagesInvalid });
+		else form.setError("start", { message: localizationConstants.timeOverlapError });
 	});
 
 	return (

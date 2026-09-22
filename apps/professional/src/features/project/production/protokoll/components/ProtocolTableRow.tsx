@@ -29,9 +29,9 @@ export interface ProtocolTableRowProps {
 /**
  * One protocol: its day, its type, its file, "Visa detaljer" and the ⋮. The PDF
  * column prints the file's full name, as the frame does; a Standard or Action
- * protocol has no file and shows the missing-value mark. A Standard or uploaded
- * protocol's Visa detaljer is a link to its page; an Action protocol's opens
- * its file, which it does not have yet.
+ * protocol has no file and shows the missing-value mark. Every kind's Visa
+ * detaljer is a link to its page; the button that opens the file instead
+ * stays for a row without one.
  */
 export function ProtocolTableRow({ protocol, typeLabel, onOpen, onToggleArchive, onPrint, onDelete }: ProtocolTableRowProps) {
 	return (

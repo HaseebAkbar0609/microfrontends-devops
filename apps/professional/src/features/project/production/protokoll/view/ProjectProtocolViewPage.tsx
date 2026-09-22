@@ -10,6 +10,7 @@ import { PROJECT_MODULE_TABS, PROJECT_MODULE_TITLE } from "../../../data/project
 import { projectProductionTabs } from "../../projectProductionNav.config";
 import { ProtocolProjectLine } from "../components/ProtocolProjectLine";
 import { useProtocolProject } from "../hooks/useProtocolProject";
+import { PROTOCOL_KIND_MENU_KEYS } from "../projectProtocol.config";
 import { protocolUrls } from "../protocolNav";
 import { MeetingDetailsCard } from "./MeetingDetailsCard";
 import { detailFields, nextFields } from "./meetingDetailFields";
@@ -28,9 +29,10 @@ export interface ProjectProtocolViewPageProps {
 }
 
 /**
- * Visa protokoll — a Standard protocol: its meeting, the next one, and the
- * agenda written here. The frame titles it "View Protokoll", English inside
- * Swedish copy, so Swedish reads "Visa protokoll".
+ * Visa protokoll — a Standard or Action protocol: its meeting, the next one,
+ * and the agenda written here — an Action protocol's with each point's
+ * status. The frame titles it "View Protokoll", English inside Swedish copy,
+ * so Swedish reads "Visa protokoll".
  */
 export function ProjectProtocolViewPage({ projectId, protocolId }: ProjectProtocolViewPageProps) {
 	const t = useTranslate();
@@ -40,10 +42,11 @@ export function ProjectProtocolViewPage({ projectId, protocolId }: ProjectProtoc
 	const dialogs = useProtocolViewDialogs();
 
 	/* An unknown project, a protocol that is not this project's, or one with no
-	   meeting — an Action or an uploaded protocol — is a 404. After the hooks:
+	   meeting — an uploaded protocol — is a 404. After the hooks:
 	   `notFound()` throws. */
-	if (!project || !view.meeting) notFound();
+	if (!project || !view.meeting || !view.kind) notFound();
 
+	const { kind } = view;
 	const { details, next } = view.meeting;
 	const leave = (target: ProtocolLeaveTarget) =>
 		view.dirty ? dialogs.open({ kind: "discard", then: target }) : view.leave(target);
@@ -55,7 +58,7 @@ export function ProjectProtocolViewPage({ projectId, protocolId }: ProjectProtoc
 				tabs={PROJECT_MODULE_TABS}
 				record={{
 					title: t(M.protocolViewTitle),
-					description: t(M.projectProtocolCreateStandard),
+					description: t(PROTOCOL_KIND_MENU_KEYS[kind]),
 					backHref: protocolUrls.list(projectId),
 				}}
 				secondaryTabs={projectProductionTabs(projectId)}
@@ -67,10 +70,13 @@ export function ProjectProtocolViewPage({ projectId, protocolId }: ProjectProtoc
 					<MeetingDetailsCard titleKey={M.protocolMeetingInfo} icon={Info} fields={detailFields(details, t)} />
 					<MeetingDetailsCard titleKey={M.protocolNextMeeting} icon={Video} fields={nextFields(next, t)} />
 					<MeetingPointsCard
+						kind={kind}
 						page={pointsPage}
 						onAdd={() => dialogs.open({ kind: "addPoint" })}
 						onEdit={(point) => dialogs.open({ kind: "editPoint", point })}
 						onDelete={(point) => dialogs.open({ kind: "deletePoint", point })}
+						onSetStatus={(point, status) => view.setPointStatus(point.id, status)}
+						onCycleStatus={(point) => view.cyclePointStatus(point.id)}
 					/>
 				</div>
 			</div>
@@ -82,7 +88,7 @@ export function ProjectProtocolViewPage({ projectId, protocolId }: ProjectProtoc
 				onSend={() => dialogs.open({ kind: "send" })}
 			/>
 
-			<ProtocolViewDialogs view={view} dialogs={dialogs} pointsPage={pointsPage} />
+			<ProtocolViewDialogs kind={kind} view={view} dialogs={dialogs} pointsPage={pointsPage} />
 		</div>
 	);
 }
