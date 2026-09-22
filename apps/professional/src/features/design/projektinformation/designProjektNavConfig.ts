@@ -29,5 +29,10 @@ export function designProjektTabs(projektId: string): ModuleTabItem[] {
 			labelKey: localizationConstants.designSidebarHandlingar,
 			href: `${base}/handlingar`,
 		},
+		{
+			id: "fraga-svar",
+			labelKey: localizationConstants.projectQaTitle,
+			href: `${base}/fraga-svar`,
+		},
 	];
 }
