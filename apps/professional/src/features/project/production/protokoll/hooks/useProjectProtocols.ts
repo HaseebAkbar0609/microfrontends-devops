@@ -1,19 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
-import { openSafeUrl } from "@/lib/safeUrl";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { PROJECT_LIST_ROWS } from "../../../data/projectsOverview.mock";
-import { disposePrintFrame, printStoredFile } from "../../../shared/printStoredFile";
 import { PROTOCOL_TYPE_LABELS } from "../projectProtocol.config";
 import { protocolUrls } from "../protocolNav";
 import { hasMeeting, type ProtocolTypeLabel } from "../protocolView";
 import * as store from "../services/projectProtocolService";
-import type { NewMeetingInput, ProjectProtocol, ProjectProtocolInput } from "../types";
+import type { NewMeetingInput, ProjectProtocol, ProjectProtocolInput, UploadDetails } from "../types";
+import { useProtocolFileActions } from "./useProtocolFileActions";
 import { useProtocolProject } from "./useProtocolProject";
 
 /** A stored protocol and the list it now sits in, which the table reads to find its page. */
@@ -41,14 +40,11 @@ export function useProjectProtocols(projectId: string) {
 	const typeLabel: ProtocolTypeLabel = useCallback((type) => t(PROTOCOL_TYPE_LABELS[type]), [t]);
 
 	const refresh = useCallback(() => setProtocols(store.listProtocols(projectId)), [projectId]);
+	const { openFile, printFile } = useProtocolFileActions();
 
-	/* The print frame, if one was used, leaves with the section. */
-	useEffect(() => disposePrintFrame, []);
-
-	/** Stores a new protocol; `undefined` when the store refuses it, which keeps the dialog open. */
-	const create = useCallback(
-		(input: ProjectProtocolInput): ProtocolCreated | undefined => {
-			const created = store.createProtocol(projectId, input);
+	/** After a create: the new list and a toast, or the refusal's toast. `undefined` keeps the dialog open. */
+	const afterCreate = useCallback(
+		(created: ProjectProtocol | undefined): ProtocolCreated | undefined => {
 			if (!created) {
 				showToast("error", t(localizationConstants.projectProtocolSaveFailed));
 				return undefined;
@@ -59,6 +55,18 @@ export function useProjectProtocols(projectId: string) {
 			return { row: created, protocols: next };
 		},
 		[projectId, t],
+	);
+
+	/** The Action protocol's short dialog. */
+	const create = useCallback(
+		(input: ProjectProtocolInput) => afterCreate(store.createProtocol(projectId, input)),
+		[afterCreate, projectId],
+	);
+
+	/** Nytt protokoll (Ladda upp): its details and the attached file. */
+	const createUpload = useCallback(
+		(details: UploadDetails, file: File) => afterCreate(store.createUpload(projectId, details, file)),
+		[afterCreate, projectId],
 	);
 
 	/**
@@ -104,8 +112,8 @@ export function useProjectProtocols(projectId: string) {
 	);
 
 	/**
-	 * Visa detaljer and ⋮ Öppna: a Standard protocol's meeting, or the PDF. Only
-	 * a URL the store minted gets here, and `openSafeUrl` checks it again.
+	 * ⋮ Öppna, and Visa detaljer on an Action row: a Standard protocol's meeting,
+	 * or the stored file. An upload's Visa detaljer is a link to its page.
 	 */
 	const open = useCallback(
 		(row: ProjectProtocol) => {
@@ -113,25 +121,15 @@ export function useProjectProtocols(projectId: string) {
 				router.push(protocolUrls.view(projectId, row.id));
 				return;
 			}
-			if (!openSafeUrl(row.url)) showToast("error", t(localizationConstants.projectProtocolNoFile));
+			openFile(row.url);
 		},
-		[projectId, router, t],
+		[openFile, projectId, router],
 	);
 
-	/** ⋮ Skriv ut — that protocol's PDF, not the page. Runs in the click, so a fallback tab is not blocked. */
-	const print = useCallback(
-		(row: ProjectProtocol) => {
-			if (!row.url) {
-				showToast("error", t(localizationConstants.projectProtocolNoFile));
-				return;
-			}
-			const failed = () => showToast("error", t(localizationConstants.projectProtocolPrintFailed));
-			if (!printStoredFile(row.url, failed)) failed();
-		},
-		[t],
-	);
+	/** ⋮ Skriv ut — that protocol's file, not the page. */
+	const print = useCallback((row: ProjectProtocol) => printFile(row.url), [printFile]);
 
-	return { project, facts, protocols, typeLabel, create, createMeeting, toggleArchive, remove, open, print };
+	return { project, facts, protocols, typeLabel, create, createUpload, createMeeting, toggleArchive, remove, open, print };
 }
 
 export type ProjectProtocolsState = ReturnType<typeof useProjectProtocols>;

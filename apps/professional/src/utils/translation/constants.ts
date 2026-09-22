@@ -4311,7 +4311,6 @@ export type OfferTranslation = {
 	projectProtocolCreateAction: string;
 	projectProtocolUpload: string;
 	projectProtocolDialogAction: string;
-	projectProtocolDialogUpload: string;
 	projectProtocolColDate: string;
 	projectProtocolColType: string;
 	projectProtocolColPdf: string;
@@ -4377,6 +4376,10 @@ export type OfferTranslation = {
 	projectProtocolDiscardConfirm: string;
 	projectProtocolHour: string;
 	projectProtocolMinute: string;
+	/* TFS-715 — Protokoll: Ladda upp */
+	projectProtocolNewTitle: string;
+	projectProtocolFileLabel: string;
+	projectProtocolUploadedSubtitle: string;
 	projectDiaryFileTypeError: string;
 	projectDiaryFileSizeError: string;
 	projectDiaryRemoveFile: string;
