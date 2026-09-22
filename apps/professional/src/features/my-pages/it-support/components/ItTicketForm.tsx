@@ -266,17 +266,17 @@ const ItTicketForm = ({
 						>
 							<Translate text={localizationConstants.cancel} />
 						</Button>
-						<Button
-							type="button"
-							variant="outline"
-							onClick={handleSend}
-							disabled={uploading || form.formState.isSubmitting || editingTicket?.status === "done"}
-							className="h-11 rounded-md border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50"
-						>
-							<Translate
-								text={localizationConstants.offerFormSubmit}
-							/>
-						</Button>
+						{(!editingTicket || editingTicket.status === "notSent") && (
+							<Button
+								type="button"
+								variant="outline"
+								onClick={handleSend}
+								disabled={uploading || form.formState.isSubmitting}
+								className="h-11 rounded-md border-slate-200 bg-white text-sm font-medium text-slate-900 hover:bg-slate-50"
+							>
+								<Translate text={localizationConstants.offerFormSubmit} />
+							</Button>
+						)}
 						<Button
 							type="submit"
 							disabled={uploading || form.formState.isSubmitting || editingTicket?.status === "done"}
