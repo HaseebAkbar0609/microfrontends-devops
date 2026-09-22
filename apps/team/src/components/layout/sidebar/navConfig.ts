@@ -1,4 +1,4 @@
-import { getContentGroupHref } from "@/features/content/constants/contentNav";
+import { CONTENT_BASE_HREF } from "@/features/content/constants/content.constants";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	Heart,
@@ -351,24 +351,15 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 				},
 			],
 		},
+		// One entry, like Support: the console brings its own sidebar, which owns
+		// both dashboards and their sections. Listing them here as well would put
+		// two menus for the same thing on screen at once.
 		{
 			id: "settings",
 			label: localizationConstants.settings,
 			icon: Smartphone,
-			items: [
-				// Links only: the console brings its own sidebar, which lists the
-				// sections. Repeating them here would show the same menu twice.
-				{
-					id: "customer-dashboard",
-					label: localizationConstants.contentGroupKundTitle,
-					href: getContentGroupHref("kund"),
-				},
-				{
-					id: "workspace-dashboard",
-					label: localizationConstants.contentGroupWorkspaceTitle,
-					href: getContentGroupHref("workspace"),
-				},
-			],
+			href: CONTENT_BASE_HREF,
+			items: [],
 		},
 	];
 }
