@@ -51,6 +51,7 @@ import {
 	SupplierManagementTranslation,
 	SupplierDetailTranslation,
 	ToolsDiscountTranslation,
+	ForecastDashboardTranslation,
 } from "./constants";
 
 export const enHeader: HeaderTranslation = {
@@ -9963,6 +9964,40 @@ export const enSupplierDetail: SupplierDetailTranslation = {
 	supplierInvoiceStatusOverdue: "Overdue",
 };
 
+const enForecastDashboard: ForecastDashboardTranslation = {
+	forecastDashboardTitle: "Forecast dashboard",
+	forecastWidgetKpiTitle: "KPI forecast overview",
+	forecastWidgetProjectOrderTitle: "Project/Order forecasts",
+	forecastWidgetActionsTitle: "Actions & warnings",
+	forecastWidgetOccupancyTitle: "Utilization next 6 weeks",
+	forecastWidgetAvailableHoursTitle: "Available hours",
+	forecastKpiCompanyOccupancy: "Company utilization",
+	forecastKpiAvailableHours: "Available hours in the coming weeks",
+	forecastKpiOverUnderLoad: "Overload / underload",
+	forecastPlannedVsForecast: "Planned time vs forecast",
+	forecastActualToDate: "Actual time to date",
+	forecastCostAndWorkTime: "Forecast cost / work time",
+	forecastRiskProjects: "Risk projects (− time, + cost)",
+	forecastWarnNoResources: "Projects without assigned resources",
+	forecastWarnOverloaded: "Employees above 100 % load",
+	forecastWarnMissingSkills: "Missing skills for upcoming jobs",
+	forecastWarnBlockingCertificates: "Certificates blocking planning",
+	forecastWarnOnboarding: "Onboarding / new staff joining",
+	forecastDeptProduction: "Production department",
+	forecastDeptService: "Service department",
+	forecastPeriodToggleLabel: "Show by",
+	forecastPeriodWeek: "Week",
+	forecastPeriodMonth: "Month",
+	forecastWeekLabel: "Week {week}",
+	forecastHoursFreeCapacity: "{hours} free capacity",
+	forecastHoursOverload: "{hours} overload",
+	forecastColProjectOrder: "Project / Order",
+	forecastColPlannedTime: "Planned time",
+	forecastColWorkedTime: "Worked time",
+	forecastStatusOnTrack: "On track",
+	forecastRailDiscard: "Discard",
+};
+
 export const en: Translation = {
 	...enHeader,
 	...enAppLauncher,
@@ -10015,4 +10050,5 @@ export const en: Translation = {
 	...enSupplierManagement,
 	...enSupplierDetail,
 	...enToolsDiscount,
+	...enForecastDashboard,
 };
