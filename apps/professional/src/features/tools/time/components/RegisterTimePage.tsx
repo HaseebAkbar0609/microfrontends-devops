@@ -80,7 +80,7 @@ const RegisterTimePage = () => {
 
 	const handleAddRow = form.handleSubmit((values) => {
 		if (rows.some(row => row.start < values.end && row.end > values.start)) {
-			form.setError("start", { message: localizationConstants.myPagesInvalid });
+			form.setError("start", { message: localizationConstants.timeOverlapError });
 			return;
 		}
 		setRows((current) => [
