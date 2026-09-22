@@ -4991,6 +4991,9 @@ export const enOffer: OfferTranslation = {
 	actions: "Actions",
 	viewProject: "View project",
 	takeJob: "Take job",
+	demoLeadTitle: "Upgrade to access this lead",
+	demoLeadDescription: "Your Demo account can preview projects, but contact details and lead claims require a Start license.",
+	demoLeadUpgrade: "View Start license",
 	noQuotesFound: "No quotes found",
 	offerLoadError: "Available projects could not be loaded. Please try again.",
 	// Offer - Detail

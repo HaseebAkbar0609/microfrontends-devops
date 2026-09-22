@@ -14,6 +14,14 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import { OfferModuleHeader } from "./OfferModuleHeader";
 import { BusinessOfferModal } from "./BusinessOfferModal";
 import { BusinessExpressModal } from "./BusinessExpressModal";
@@ -55,6 +63,7 @@ export function OfferAvailableProjectOpenedView({
 	const [isLoading, setIsLoading] = useState(!initialData);
 	const [hasError, setHasError] = useState(false);
 	const [isFavorite, setIsFavorite] = useState(Boolean(initialData?.isFavorite));
+	const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
 
 	// Fetch dynamic data from API if initialData was not passed from server
 	useEffect(() => {
@@ -108,6 +117,10 @@ export function OfferAvailableProjectOpenedView({
 
 	const handleOpenTakeJobModal = () => {
 		if (!projectData) return;
+		if (projectData.contactMasked) {
+			setUpgradeDialogOpen(true);
+			return;
+		}
 		const typeStr = projectData.type.toLowerCase();
 		const isExpress = typeStr.includes("express");
 		const isRent = typeStr.includes("rent") || typeStr.includes("hyra");
@@ -403,6 +416,19 @@ export function OfferAvailableProjectOpenedView({
 			</div>
 
 			{/* Modal Dialogs */}
+			<Dialog open={upgradeDialogOpen} onOpenChange={setUpgradeDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle><Translate text={localizationConstants.demoLeadTitle} /></DialogTitle>
+						<DialogDescription><Translate text={localizationConstants.demoLeadDescription} /></DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button type="button" onClick={() => router.push("/manage-plans")}>
+							<Translate text={localizationConstants.demoLeadUpgrade} />
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 			{isOpen && type === MODAL_CONSTANTS.BUSINESS_OFFER && (
 				<BusinessOfferModal
 					open={isOpen}

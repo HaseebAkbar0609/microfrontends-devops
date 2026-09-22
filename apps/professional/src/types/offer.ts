@@ -41,6 +41,7 @@ export interface OfferApiResponseItem {
 		address?: string | null;
 		postal_code?: string | null;
 	};
+	contact_masked?: boolean;
 	media?: Array<{
 		media_id?: string;
 		file_name?: string;

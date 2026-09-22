@@ -4877,6 +4877,9 @@ export const svOffer: OfferTranslation = {
 	actions: "Åtgärder",
 	viewProject: "Visa projekt",
 	takeJob: "Ta jobb",
+	demoLeadTitle: "Uppgradera för att få tillgång till uppdraget",
+	demoLeadDescription: "Med ett demokonto kan du förhandsgranska projekt, men kontaktuppgifter och uppdragsanspråk kräver en Start-licens.",
+	demoLeadUpgrade: "Visa Start-licens",
 	noQuotesFound: "Inga offerter hittades",
 	offerLoadError: "Tillgängliga projekt kunde inte laddas. Försök igen.",
 	// Offer - Detail

@@ -4930,6 +4930,9 @@ export type OfferTranslation = {
 	actions: string;
 	viewProject: string;
 	takeJob: string;
+	demoLeadTitle: string;
+	demoLeadDescription: string;
+	demoLeadUpgrade: string;
 	noQuotesFound: string;
 	offerLoadError: string;
 	// Offer - Detail
