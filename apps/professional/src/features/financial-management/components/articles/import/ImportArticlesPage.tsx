@@ -4,6 +4,7 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 import { useArticleImport } from "../../../hooks/useArticleImport";
 import { ArticleFileDropzone } from "./ArticleFileDropzone";
 import { ArticleImportMappingForms } from "./ArticleImportMappingForms";
