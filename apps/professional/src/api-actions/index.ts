@@ -196,4 +196,10 @@ export {
 	type UpdateAPricePayload,
 } from "@/features/calculation/api/aPriceApi";
 
+export {
+	getCalculationStatisticsAPIAction,
+	getCalculationStatisticsKpisAPIAction,
+	mapStatRowFromApi,
+} from "@/features/calculation/api/statisticsApi";
+
 
