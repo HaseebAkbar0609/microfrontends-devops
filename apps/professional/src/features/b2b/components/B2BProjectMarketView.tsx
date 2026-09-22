@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -117,6 +117,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
 
   const [projectList, setProjectList] = useState<ProjectMarket[]>(projects);
   const [loading, setLoading] = useState(isLoading || projects.length === 0);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectMarketStatus[]>([]);
   const [projectToRemove, setProjectToRemove] = useState<ProjectMarket | null>(null);
@@ -130,28 +131,33 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
   const debouncedSearch = useDebounce(search, 300);
   const activeFilterCount = selectedStatuses.length;
 
+  const fetchProjects = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      const res = await getB2BProjectsAction({
+        page,
+        pageSize: rowsPerPage,
+        search: debouncedSearch,
+      });
+      setProjectList(res.projects);
+      if (res.error) {
+        setLoadError(res.error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [page, rowsPerPage, debouncedSearch]);
+
   useEffect(() => {
     let isMounted = true;
-    async function fetchProjects() {
-      setLoading(true);
-      try {
-        const res = await getB2BProjectsAction({
-          page,
-          pageSize: rowsPerPage,
-          search: debouncedSearch,
-        });
-        if (isMounted && res && res.projects) {
-          setProjectList(res.projects);
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-    fetchProjects();
+    (async () => {
+      if (isMounted) await fetchProjects();
+    })();
     return () => {
       isMounted = false;
     };
-  }, [page, rowsPerPage, debouncedSearch]);
+  }, [fetchProjects]);
 
   const handleConfirmRemove = async () => {
     if (!projectToRemove) return;
@@ -404,6 +410,20 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
           <TableBody>
             {loading ? (
               <SkeletonRows count={rowsPerPage} />
+            ) : loadError ? (
+              <TableRow>
+                <TableCell colSpan={TABLE_COLUMNS_COUNT} className="px-4 py-12 text-center">
+                  <p className="mb-3 text-sm text-slate-500">{t(localizationConstants.genericError)}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchProjects()}
+                    className="cursor-pointer"
+                  >
+                    {t(localizationConstants.retry)}
+                  </Button>
+                </TableCell>
+              </TableRow>
             ) : (
               <>
                 {paginated.map((row) => (

@@ -3,7 +3,8 @@ import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult } from "@/types/api";
 import { ProjectMarket } from "@/features/b2b/types/projectMarket";
 import type { B2BArchiveItem } from "@/features/b2b/types/archive";
-import { DUMMY_PROJECTS } from "@/features/b2b/constants/projectMarketMock";
+// NOTE: Archive (M3) is not yet backed by a real endpoint, so its action below
+// still falls back to mock data. Overview (M1, below) no longer does.
 import { DUMMY_ARCHIVE_ITEMS } from "@/features/b2b/constants/archiveMock";
 
 export interface ListB2BProjectsParams {
@@ -19,6 +20,7 @@ export interface B2BProjectsListResult {
 	totalItems: number;
 	totalPages: number;
 	currentPage: number;
+	error?: string | null;
 }
 
 export const b2bProjectItemSchema = z.object({
@@ -52,8 +54,7 @@ export const b2bProjectsResponseSchema = z.object({
 const B2B_PROJECTS_PATH = "/professionals/b2b/projects";
 
 /**
- * Fetch B2B Project Market / Overview projects from backend API with Zod validation.
- * Falls back to mock projects when backend endpoint is unseeded or offline.
+ * Fetch B2B Project Market / Overview projects from the backend API.
  */
 export async function getB2BProjectsAction(
 	params?: ListB2BProjectsParams
@@ -65,43 +66,50 @@ export async function getB2BProjectsAction(
 				page_size: params?.pageSize ?? 10,
 				search: params?.search || undefined,
 				status: params?.status || undefined,
-				company_id: params?.companyId || undefined,
 			},
 		});
 
 		const parsed = b2bProjectsResponseSchema.safeParse(response.data);
-		if (parsed.success && parsed.data.data.length > 0) {
-			const items: ProjectMarket[] = parsed.data.data.map((item) => ({
-				id: item.id || item.project_id || "",
-				refNr: item.ref_nr || item.project_code || "-",
-				project: item.project_name || item.title || "-",
-				date: item.created_at ? item.created_at.split("T")[0] : "-",
-				type: item.type || "-",
-				requests: item.requests || item.inquiry_count || 0,
-				municipality: item.municipality || item.city || "-",
-				lowestOffer: item.lowest_offer || item.lowest_quote || 0,
-				status: item.status,
-			}));
-
+		if (!parsed.success) {
 			return {
-				projects: items,
-				totalItems: parsed.data.total ?? items.length,
-				totalPages:
-					parsed.data.total_pages ??
-					Math.max(1, Math.ceil(items.length / (params?.pageSize ?? 10))),
+				projects: [],
+				totalItems: 0,
+				totalPages: 1,
 				currentPage: params?.page ?? 1,
+				error: "Unexpected response from server",
 			};
 		}
-	} catch {
-		// Non-blocking fallback to mock projects for development / preview
-	}
 
-	return {
-		projects: DUMMY_PROJECTS,
-		totalItems: DUMMY_PROJECTS.length,
-		totalPages: Math.ceil(DUMMY_PROJECTS.length / (params?.pageSize ?? 10)),
-		currentPage: params?.page ?? 1,
-	};
+		const items: ProjectMarket[] = parsed.data.data.map((item) => ({
+			id: item.id || item.project_id || "",
+			refNr: item.ref_nr || item.project_code || "-",
+			project: item.project_name || item.title || "-",
+			date: item.created_at ? item.created_at.split("T")[0] : "-",
+			type: item.type || "-",
+			requests: item.requests || item.inquiry_count || 0,
+			municipality: item.municipality || item.city || "-",
+			lowestOffer: item.lowest_offer || item.lowest_quote || 0,
+			status: item.status,
+		}));
+
+		return {
+			projects: items,
+			totalItems: parsed.data.total ?? items.length,
+			totalPages:
+				parsed.data.total_pages ??
+				Math.max(1, Math.ceil(items.length / (params?.pageSize ?? 10))),
+			currentPage: params?.page ?? 1,
+		};
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
+		return {
+			projects: [],
+			totalItems: 0,
+			totalPages: 1,
+			currentPage: params?.page ?? 1,
+			error: apiError.response?.data?.message || "Failed to load projects",
+		};
+	}
 }
 
 /**
@@ -120,14 +128,12 @@ export async function archiveB2BProjectAction(
 			},
 			error: null,
 		};
-	} catch {
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
 		return {
-			success: true,
-			data: {
-				success: true,
-				message: "Project archived successfully",
-			},
-			error: null,
+			success: false,
+			data: null,
+			error: apiError.response?.data?.message || "Failed to archive project",
 		};
 	}
 }
@@ -148,14 +154,12 @@ export async function deleteB2BProjectAction(
 			},
 			error: null,
 		};
-	} catch {
+	} catch (error: unknown) {
+		const apiError = error as { response?: { data?: { message?: string } } };
 		return {
-			success: true,
-			data: {
-				success: true,
-				message: "Project removed successfully",
-			},
-			error: null,
+			success: false,
+			data: null,
+			error: apiError.response?.data?.message || "Failed to remove project",
 		};
 	}
 }

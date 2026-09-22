@@ -2,7 +2,6 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiResponse } from "@/types/api";
 import { ProjectMarket, ProjectMarketDetail } from "@/features/b2b/types/projectMarket";
-import { DUMMY_PROJECTS, getMockProjectDetail } from "@/features/b2b/constants/projectMarketMock";
 
 const B2B_BASE_PATH = "/professionals/b2b";
 
@@ -91,7 +90,6 @@ export const projectMarketDetailSchema = z.object({
 
 /**
  * Fetch all Project Market projects.
- * Falls back to mock data if backend route is not ready.
  */
 export async function getProjectMarketListAction(): Promise<ActionResult<ProjectMarket[]>> {
   try {
@@ -101,16 +99,19 @@ export async function getProjectMarketListAction(): Promise<ActionResult<Project
     if (parsed.success) {
       return { success: true, data: parsed.data, error: null };
     }
-    return { success: true, data: DUMMY_PROJECTS, error: null };
-  } catch (_error: unknown) {
-    // Fallback to mock data gracefully until backend endpoint is deployed
-    return { success: true, data: DUMMY_PROJECTS, error: null };
+    return { success: false, data: null, error: "Unexpected response from server" };
+  } catch (error: unknown) {
+    const apiError = error as { response?: { data?: { message?: string } } };
+    return {
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to load projects",
+    };
   }
 }
 
 /**
  * Fetch Project Market detail by ID.
- * Falls back to mock data if backend route is not ready.
  */
 export async function getProjectMarketDetailAction(id: string): Promise<ActionResult<ProjectMarketDetail>> {
   try {
@@ -120,9 +121,13 @@ export async function getProjectMarketDetailAction(id: string): Promise<ActionRe
     if (parsed.success) {
       return { success: true, data: parsed.data, error: null };
     }
-    return { success: true, data: getMockProjectDetail(id), error: null };
-  } catch (_error: unknown) {
-    // Fallback to mock data gracefully until backend endpoint is deployed
-    return { success: true, data: getMockProjectDetail(id), error: null };
+    return { success: false, data: null, error: "Unexpected response from server" };
+  } catch (error: unknown) {
+    const apiError = error as { response?: { data?: { message?: string } } };
+    return {
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to load project",
+    };
   }
 }
