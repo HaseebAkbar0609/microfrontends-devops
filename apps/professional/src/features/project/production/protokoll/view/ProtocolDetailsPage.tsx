@@ -13,9 +13,9 @@ export interface ProtocolDetailsPageProps {
 }
 
 /**
- * Visa detaljer: a Standard protocol opens its meeting, an uploaded one its
- * details and file. An Action protocol has no page yet, and an id that is not
- * this project's has none — both 404, after the hook.
+ * Visa detaljer: a Standard or Action protocol opens its meeting, an uploaded
+ * one its details and file. An id that is not this project's has no page — a
+ * 404, after the hook.
  */
 export function ProtocolDetailsPage({ projectId, protocolId }: ProtocolDetailsPageProps) {
 	const protocol = useStoredProtocol(projectId, protocolId);

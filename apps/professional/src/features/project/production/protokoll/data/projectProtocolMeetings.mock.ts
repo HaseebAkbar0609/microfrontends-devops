@@ -1,6 +1,6 @@
 import { mockDate } from "../../../constants/mockData";
 import { emptyNextMeeting } from "../meetingDefaults";
-import type { MeetingPlan, MeetingPoint, ProtocolMeeting } from "../types";
+import type { MeetingPlan, MeetingPoint, PointStatus, ProtocolMeeting } from "../types";
 
 /*
  * The meetings behind 5001's Standard protocols. People are 5001's own — its
@@ -10,13 +10,22 @@ import type { MeetingPlan, MeetingPoint, ProtocolMeeting } from "../types";
 
 const SITE = { address: "Sveavägen 44", postalCode: "112 21", city: "Stockholm" };
 
-const point = (nr: string, title: string, responsible: string, description = "", decision = ""): MeetingPoint => ({
+/** A seeded point. Only an Action meeting's points pass a status. */
+export const point = (
+	nr: string,
+	title: string,
+	responsible: string,
+	description = "",
+	decision = "",
+	status: PointStatus | null = null,
+): MeetingPoint => ({
 	id: `point-${nr}`,
 	nr,
 	title,
 	responsible,
 	description,
 	decision,
+	status,
 });
 
 /** A self-check held on site, with a short agenda and no follow-up planned yet. */

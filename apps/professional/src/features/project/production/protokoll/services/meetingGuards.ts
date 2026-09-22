@@ -9,8 +9,9 @@ import {
 	PROTOCOL_POINT_NR_MAX_LENGTH,
 	PROTOCOL_POSTAL_CODE_MAX_LENGTH,
 	PROTOCOL_TYPES,
+	POINT_STATUSES,
 } from "../projectProtocol.config";
-import type { MeetingCategory, MeetingDetails, MeetingPlan, MeetingPoint, NextMeeting, UploadDetails } from "../types";
+import type { MeetingCategory, MeetingDetails, MeetingPlan, MeetingPoint, NextMeeting, PointStatus, UploadDetails } from "../types";
 
 /*
  * The store's own checks on a meeting — where an endpoint's would stand. The
@@ -25,6 +26,8 @@ function text(value: string, max: number): string | undefined {
 }
 
 const isCategory = (value: string): value is MeetingCategory => (MEETING_CATEGORIES as readonly string[]).includes(value);
+
+const isPointStatus = (value: unknown): value is PointStatus => (POINT_STATUSES as readonly unknown[]).includes(value);
 
 /** Each name once, none blank, none overlong, at most the cap. */
 function acceptNames(names: string[]): string[] | undefined {
@@ -67,7 +70,7 @@ function acceptPlan(plan: MeetingPlan, required: boolean): MeetingPlan | undefin
 	};
 }
 
-/** The meeting a Standard protocol records: its plan plus Typ, Kategori and Protokoll nr, all required. */
+/** The meeting a Standard or Action protocol records: its plan plus Typ, Kategori and Protokoll nr, all required. */
 export function acceptDetails(details: MeetingDetails): MeetingDetails | undefined {
 	const plan = acceptPlan(details, true);
 	const number = text(details.number, PROTOCOL_NUMBER_MAX_LENGTH);
@@ -98,7 +101,7 @@ export function acceptNext(next: NextMeeting): NextMeeting | undefined {
 	return { ...plan, category: next.category };
 }
 
-/** The agenda: every point with an id, a Nr and a Rubrik; ids unique. */
+/** The agenda: every point with an id, a Nr and a Rubrik; ids unique; a status one of the three, or none. */
 export function acceptPoints(points: MeetingPoint[]): MeetingPoint[] | undefined {
 	const accepted: MeetingPoint[] = [];
 	for (const point of points) {
@@ -110,7 +113,8 @@ export function acceptPoints(points: MeetingPoint[]): MeetingPoint[] | undefined
 		if (!point.id || !nr || !title || responsible === undefined || description === undefined || decision === undefined) {
 			return undefined;
 		}
-		accepted.push({ id: point.id, nr, title, responsible, description, decision });
+		if (point.status !== null && !isPointStatus(point.status)) return undefined;
+		accepted.push({ id: point.id, nr, title, responsible, description, decision, status: point.status });
 	}
 	return new Set(accepted.map((point) => point.id)).size === accepted.length ? accepted : undefined;
 }

@@ -2,6 +2,7 @@
 
 import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 import localizationConstants from "@/utils/translation/constants";
+import type { MeetingKind } from "../types";
 import { MeetingPointDialog } from "./MeetingPointDialog";
 import type { PointsPage } from "./usePointsPage";
 import type { ProtocolViewState } from "./useProtocolView";
@@ -10,6 +11,7 @@ import type { ProtocolViewDialogState } from "./useProtocolViewDialogs";
 const M = localizationConstants;
 
 export interface ProtocolViewDialogsProps {
+	kind: MeetingKind;
 	view: ProtocolViewState;
 	dialogs: ProtocolViewDialogState;
 	pointsPage: PointsPage;
@@ -20,7 +22,7 @@ export interface ProtocolViewDialogsProps {
  * each opening starts from the point; the confirms stay mounted so they
  * animate closed.
  */
-export function ProtocolViewDialogs({ view, dialogs, pointsPage }: ProtocolViewDialogsProps) {
+export function ProtocolViewDialogs({ kind, view, dialogs, pointsPage }: ProtocolViewDialogsProps) {
 	const { dialog, close } = dialogs;
 	const onOpenChange = (open: boolean) => !open && close();
 	const point = dialog && "point" in dialog ? dialog.point : undefined;
@@ -29,6 +31,7 @@ export function ProtocolViewDialogs({ view, dialogs, pointsPage }: ProtocolViewD
 		<>
 			{(dialog?.kind === "addPoint" || dialog?.kind === "editPoint") && (
 				<MeetingPointDialog
+					kind={kind}
 					point={point}
 					nextNr={view.nextPointNr}
 					people={view.people}

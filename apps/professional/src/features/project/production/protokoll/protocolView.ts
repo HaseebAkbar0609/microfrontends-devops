@@ -5,12 +5,12 @@ import type { MeetingProtocol, ProjectProtocol, ProtocolType, UploadDetails } fr
 /** Turns a type code into the reader's label. */
 export type ProtocolTypeLabel = (type: ProtocolType) => string;
 
-/** A Standard protocol, whose Visa detaljer and Öppna open its meeting rather than a file. */
+/** A Standard or Action protocol, whose Visa detaljer and Öppna open its meeting rather than a file. */
 export function hasMeeting(row: ProjectProtocol): row is MeetingProtocol {
 	return row.meeting !== undefined;
 }
 
-/** A protocol with a page of its own: a Standard meeting, or an upload's details. An Action protocol has none yet. */
+/** A protocol with a page of its own: a Standard or Action meeting, or an upload's details. */
 export function hasDetailsPage(row: ProjectProtocol): boolean {
 	return hasMeeting(row) || row.kind === "upload";
 }

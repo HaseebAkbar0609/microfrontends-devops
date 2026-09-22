@@ -16,8 +16,8 @@ export interface CreateProtocolMenuProps {
 
 /**
  * "+ Skapa protokoll" and its menu, as the frame draws it: Protokoll -
- * Standard opens Nytt möte, Ladda upp Nytt protokoll, and Protokoll - Action
- * the short dialog.
+ * Standard and Protokoll - Action open Nytt möte, subtitled for which;
+ * Ladda upp opens Nytt protokoll.
  */
 export function CreateProtocolMenu({ onCreate }: CreateProtocolMenuProps) {
 	return (

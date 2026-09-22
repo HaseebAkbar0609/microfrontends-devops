@@ -2,21 +2,8 @@ import { generateTempId } from "@/lib/tempId";
 import { fileRejection, mintTypedUrl, revokeUrls } from "../../../shared/recordFiles";
 import { SEEDED_PROJECT_PROTOCOLS } from "../data/projectProtocols.mock";
 import { emptyNextMeeting } from "../meetingDefaults";
-import {
-	PROTOCOL_FILE_RULES,
-	PROTOCOL_NAME_MAX_LENGTH,
-	PROTOCOL_NUMBER_SEQUENCE_DIGITS,
-	PROTOCOL_TYPES,
-} from "../projectProtocol.config";
-import type {
-	MeetingDetails,
-	MeetingPoint,
-	NewMeetingInput,
-	NextMeeting,
-	ProjectProtocol,
-	ProjectProtocolInput,
-	UploadDetails,
-} from "../types";
+import { PROTOCOL_FILE_RULES, PROTOCOL_NUMBER_SEQUENCE_DIGITS } from "../projectProtocol.config";
+import type { MeetingDetails, MeetingKind, MeetingPoint, NewMeetingInput, NextMeeting, ProjectProtocol, UploadDetails } from "../types";
 import { acceptDetails, acceptNext, acceptPoints, acceptUploadDetails } from "./meetingGuards";
 
 /**
@@ -67,30 +54,6 @@ export function getProtocol(projectId: string, id: string): ProjectProtocol | un
 }
 
 /**
- * Stores an Action protocol, or refuses one the dialog should already have
- * stopped: a missing day, an unknown type, a blank or overlong name. Standard
- * protocols come through `createMeeting`, uploads through `createUpload`. The
- * form's checks run in the browser; these stand where the endpoint's would.
- */
-export function createProtocol(projectId: string, input: ProjectProtocolInput): ProjectProtocol | undefined {
-	const name = input.name.trim();
-	if (!input.date || !name || name.length > PROTOCOL_NAME_MAX_LENGTH) return undefined;
-	if (!(PROTOCOL_TYPES as readonly string[]).includes(input.type)) return undefined;
-
-	const protocol: ProjectProtocol = {
-		id: generateTempId(),
-		projectId,
-		kind: "action",
-		date: input.date,
-		type: input.type,
-		name,
-		archived: false,
-	};
-	protocols = [protocol, ...protocols];
-	return copy(protocol);
-}
-
-/**
  * Stores an uploaded protocol from "Nytt protokoll": its details and its file,
  * or refuses either. The file's URL is minted last, so a refused save leaves
  * none behind.
@@ -115,8 +78,8 @@ export function createUpload(projectId: string, details: UploadDetails, file: Fi
 
 /**
  * The next Protokoll nr: the project number and a sequence one past the
- * project's highest — "5001-03" after "5001-02". A number edited into another
- * shape is not counted.
+ * project's highest — "5001-03" after "5001-02". Standard and Action meetings
+ * share it; a number edited into another shape is not counted.
  */
 function nextProtocolNumber(projectId: string, projectNo: string): string {
 	const prefix = `${projectNo}-`;
@@ -128,15 +91,25 @@ function nextProtocolNumber(projectId: string, projectNo: string): string {
 	return `${prefix}${String(highest + 1).padStart(PROTOCOL_NUMBER_SEQUENCE_DIGITS, "0")}`;
 }
 
-/** Stores a Standard protocol from Nytt möte, numbered, with an empty Nästa möte and no points. */
-export function createMeeting(projectId: string, projectNo: string, input: NewMeetingInput): ProjectProtocol | undefined {
+/**
+ * Stores a Standard or Action protocol from Nytt möte, numbered, with an empty
+ * Nästa möte and no points. The forms check the input in the browser; the
+ * store refuses what they should have stopped, as an endpoint would.
+ */
+export function createMeeting(
+	projectId: string,
+	projectNo: string,
+	kind: MeetingKind,
+	input: NewMeetingInput,
+): ProjectProtocol | undefined {
+	if (kind !== "standard" && kind !== "action") return undefined;
 	const details = acceptDetails({ ...input, number: nextProtocolNumber(projectId, projectNo), subject: "", comment: "" });
 	if (!details) return undefined;
 
 	const protocol: ProjectProtocol = {
 		id: generateTempId(),
 		projectId,
-		kind: "standard",
+		kind,
 		...rowFields(details),
 		archived: false,
 		meeting: { details, next: emptyNextMeeting(), points: [] },
@@ -164,13 +137,14 @@ export function updateMeeting(
 	});
 }
 
-/** The view's Spara: the whole agenda at once. */
+/** The view's Spara: the whole agenda at once. Only an Action protocol's points keep a status. */
 export function savePoints(projectId: string, id: string, points: MeetingPoint[]): ProjectProtocol | undefined {
 	const target = find(projectId, id);
 	const accepted = acceptPoints(points);
 	if (!target?.meeting || !accepted) return undefined;
 
-	return replace(target, { ...target, meeting: { ...target.meeting, points: accepted } });
+	const stored = target.kind === "action" ? accepted : accepted.map((point) => ({ ...point, status: null }));
+	return replace(target, { ...target, meeting: { ...target.meeting, points: stored } });
 }
 
 /** Skicka: records the day it was sent. */
