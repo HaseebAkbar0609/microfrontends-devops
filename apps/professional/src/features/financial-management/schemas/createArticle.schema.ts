@@ -1,0 +1,53 @@
+import { z } from "zod";
+
+export const priceListRowSchema = z.object({
+	id: z.string(),
+	name: z.string().min(1, "validationRequired"),
+	price: z.string().min(1, "validationRequired"),
+	currency: z.string().min(1, "validationRequired"),
+	validFrom: z.string().optional(),
+	validTo: z.string().optional(),
+});
+
+export const createArticleSchema = z.object({
+	articleNr: z.string().optional(),
+	benamning: z.string().min(1, "validationRequired"),
+	ean: z.string().optional(),
+	leverantor: z.string().min(1, "validationRequired"),
+	husarbete: z.string().optional(),
+	supplierArticleNo: z.string().optional(),
+	typHusarbete: z.string().optional(),
+	enhet: z.string().min(1, "validationRequired"),
+	typAvArtikel: z.string().min(1, "validationRequired"),
+	lagerVara: z.string().optional(),
+	forsaljning: z.string().min(1, "validationRequired"),
+	moms: z.string().min(1, "validationRequired"),
+	forsaljningSE: z.string().optional(),
+	forsaljningEU: z.string().optional(),
+	lagerkonto: z.string().optional(),
+	forsaljningEUMoms: z.string().optional(),
+	forsaljningExport: z.string().optional(),
+	inkop: z.string().optional(),
+	priserA: z.string().optional(),
+	europrislista: z.string().optional(),
+	kampanj: z.string().optional(),
+	vipPriser: z.string().optional(),
+	kalkylkostnad: z.string().optional(),
+	bestallningspunkt: z.string().optional(),
+	iLager: z.string().optional(),
+	stock: z.string().optional(),
+	reserved: z.string().optional(),
+	status: z.enum(["active", "inactive"]).optional(),
+	vikt: z.string().optional(),
+	langd: z.string().optional(),
+	bredd: z.string().optional(),
+	hojd: z.string().optional(),
+	material: z.string().optional(),
+	forsaljningSESkattskyldighet: z.string().min(1, "validationRequired"),
+	momsSESkattskyldighet: z.string().optional(),
+	forsaljningEUSkattskyldighet: z.string().optional(),
+	lagerforandring: z.string().optional(),
+	priceListRows: z.array(priceListRowSchema).optional(),
+});
+
+export type CreateArticleSchemaType = z.infer<typeof createArticleSchema>;
