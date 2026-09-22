@@ -51,6 +51,7 @@ import {
 	SupplierManagementTranslation,
 	SupplierDetailTranslation,
 	ToolsDiscountTranslation,
+	ForecastDashboardTranslation,
 } from "./constants";
 
 export const svHeader: HeaderTranslation = {
@@ -9992,6 +9993,40 @@ export const svSupplierDetail: SupplierDetailTranslation = {
 	supplierInvoiceStatusOverdue: "Förfallen",
 };
 
+const svForecastDashboard: ForecastDashboardTranslation = {
+	forecastDashboardTitle: "Prognos dashboard",
+	forecastWidgetKpiTitle: "KPI-Prognos-Översikt",
+	forecastWidgetProjectOrderTitle: "Projekt/Order-prognoser",
+	forecastWidgetActionsTitle: "Åtgärder & varningar",
+	forecastWidgetOccupancyTitle: "Beläggning kommande 6 veckor",
+	forecastWidgetAvailableHoursTitle: "Tillgängliga timmar",
+	forecastKpiCompanyOccupancy: "Beläggning företag",
+	forecastKpiAvailableHours: "Tillgängliga timmar kommande veckor",
+	forecastKpiOverUnderLoad: "Över-/underbelastning",
+	forecastPlannedVsForecast: "Planerad tid vs prognos",
+	forecastActualToDate: "Faktisk tid hittills",
+	forecastCostAndWorkTime: "Prognos kostnad/arbetstid",
+	forecastRiskProjects: "Riskprojekt (− tid, + kostnad)",
+	forecastWarnNoResources: "Projekt utan resurstilldelning",
+	forecastWarnOverloaded: "Medarbetare över 100 % belastning",
+	forecastWarnMissingSkills: "Saknad kompetens för kommande jobb",
+	forecastWarnBlockingCertificates: "Certifikat som blockerar planering",
+	forecastWarnOnboarding: "Onboarding / ny personal som tillkommer",
+	forecastDeptProduction: "Avdelning Produktion",
+	forecastDeptService: "Avdelning Service",
+	forecastPeriodToggleLabel: "Visa per",
+	forecastPeriodWeek: "Vecka",
+	forecastPeriodMonth: "Månad",
+	forecastWeekLabel: "Vecka {week}",
+	forecastHoursFreeCapacity: "{hours} ledig kapacitet",
+	forecastHoursOverload: "{hours} överbelastning",
+	forecastColProjectOrder: "Projekt / Order",
+	forecastColPlannedTime: "Planerad tid",
+	forecastColWorkedTime: "Arbetad tid",
+	forecastStatusOnTrack: "I fas",
+	forecastRailDiscard: "Kasta bort",
+};
+
 export const sv: Translation = {
 	...svHeader,
 	...svAppLauncher,
@@ -10044,4 +10079,5 @@ export const sv: Translation = {
 	...svSupplierManagement,
 	...svSupplierDetail,
 	...svToolsDiscount,
+	...svForecastDashboard,
 };

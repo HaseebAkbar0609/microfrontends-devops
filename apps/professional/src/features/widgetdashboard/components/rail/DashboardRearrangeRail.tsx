@@ -4,7 +4,7 @@ import { Check, Layers, LayoutList, Loader2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { WidgetItem } from "../DraggableSidebarItem";
 
@@ -18,6 +18,8 @@ export interface DashboardRearrangeRailProps {
 	onToggleRearrange: () => void;
 	onSave: () => void;
 	onDiscard: () => void;
+	/** The discard button's label; "Avbryt" unless a dashboard names it otherwise. */
+	discardLabel?: TranslationKeys;
 	isSaving?: boolean;
 	/** Ids already placed on the grid; they render muted and are not selectable. */
 	placedItemIds?: string[];
@@ -39,6 +41,7 @@ export function DashboardRearrangeRail({
 	onToggleRearrange,
 	onSave,
 	onDiscard,
+	discardLabel = localizationConstants.widgetRailDiscard,
 	isSaving = false,
 	placedItemIds = [],
 	className,
@@ -90,9 +93,7 @@ export function DashboardRearrangeRail({
 				>
 					<X size={16} />
 					<span>
-						<Translate
-							text={localizationConstants.widgetRailDiscard}
-						/>
+						<Translate text={discardLabel} />
 					</span>
 				</Button>
 			</div>

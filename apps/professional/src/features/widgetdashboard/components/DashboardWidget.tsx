@@ -33,6 +33,7 @@ import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { WidgetCardVariant } from "../types/dashboard";
 import { WidgetLoadingState } from "./WidgetContent";
 
 export interface DashboardWidgetProps {
@@ -55,6 +56,8 @@ export interface DashboardWidgetProps {
   /** Swap the content for a skeleton while the widget's data is being fetched. */
   isLoading?: boolean;
   onRefresh?: () => Promise<void> | void;
+  /** `muted`: the grey card — a larger icon tile and title, and a header of only the lock chip and ⋮. */
+  variant?: WidgetCardVariant;
 }
 
 export const DashboardWidget = ({
@@ -75,9 +78,11 @@ export const DashboardWidget = ({
   isDisabled,
   isLoading,
   onRefresh,
+  variant = "default",
 }: DashboardWidgetProps) => {
   const t = useTranslate();
   const titleText = t(title) || title;
+  const isMuted = variant === "muted";
 
   // Interactive states for unified UX testing & control
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -126,6 +131,7 @@ export const DashboardWidget = ({
             !effectiveDisabled &&
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-slate-100 focus-visible:ring-offset-2",
           effectiveDisabled && "opacity-50 grayscale bg-slate-100/80 dark:bg-slate-800/80 select-none",
+          isMuted && "rounded-sm",
           className
         )}
         style={{
@@ -135,8 +141,15 @@ export const DashboardWidget = ({
         {/* Top Header Row: Icon (left), Admin Lock + Active Dot + Quick Actions (right) */}
         <div className="flex items-center justify-between gap-2">
           {/* Left: Icon inside rounded white square matching Figma */}
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white border border-slate-200/80 shadow-xs dark:bg-slate-800 dark:border-slate-700">
-            <Icon size={18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
+          <div
+            className={cn(
+              "flex shrink-0 items-center justify-center bg-white dark:bg-slate-800",
+              isMuted
+                ? "h-10 w-10 rounded-sm"
+                : "h-9 w-9 rounded-md border border-slate-200/80 shadow-xs dark:border-slate-700"
+            )}
+          >
+            <Icon size={isMuted ? 20 : 18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
           </div>
 
           {/* Right: Badges & Actions */}
@@ -153,45 +166,50 @@ export const DashboardWidget = ({
                 </span>
               )}
 
-              {/* Active / Inactive Status Dot */}
-              {!effectiveDisabled && (
+              {/* Active / Inactive Status Dot, and the quick buttons — the muted
+                  card leaves them to the ⋮ menu */}
+              {!isMuted && !effectiveDisabled && (
                 <span
                   className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"
                   title={t(localizationConstants.wStateActive)}
                 />
               )}
-              {effectiveDisabled && (
+              {!isMuted && effectiveDisabled && (
                 <span className="inline-flex items-center rounded-full bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 text-[9px] font-medium text-slate-500">
                   <Translate text={localizationConstants.wStateInactive} />
                 </span>
               )}
 
-              {/* Quick Expand Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
-                title={t(localizationConstants.wActionExpand)}
-                aria-label={t(localizationConstants.wActionExpand)}
-              >
-                <Maximize2 size={13} />
-              </Button>
+              {!isMuted && (
+                <>
+                  {/* Quick Expand Button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
+                    title={t(localizationConstants.wActionExpand)}
+                    aria-label={t(localizationConstants.wActionExpand)}
+                  >
+                    <Maximize2 size={13} />
+                  </Button>
 
-              {/* Quick Refresh Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={handleRefresh}
-                disabled={effectiveLoading}
-                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
-                title={t(localizationConstants.wActionRefresh)}
-                aria-label={t(localizationConstants.wActionRefresh)}
-              >
-                <RotateCw size={13} className={effectiveLoading ? "animate-spin text-blue-600" : ""} />
-              </Button>
+                  {/* Quick Refresh Button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    type="button"
+                    onClick={handleRefresh}
+                    disabled={effectiveLoading}
+                    className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
+                    title={t(localizationConstants.wActionRefresh)}
+                    aria-label={t(localizationConstants.wActionRefresh)}
+                  >
+                    <RotateCw size={13} className={effectiveLoading ? "animate-spin text-blue-600" : ""} />
+                  </Button>
+                </>
+              )}
 
               {/* Action Dropdown Menu */}
               <DropdownMenu>
@@ -266,7 +284,13 @@ export const DashboardWidget = ({
 
         {/* Title Row: Full width so title never truncates */}
         <div className="mt-2.5">
-          <h3 className="font-semibold text-sm leading-snug tracking-tight text-slate-900 dark:text-slate-100 truncate" title={titleText}>
+          <h3
+            className={cn(
+              "font-semibold leading-snug tracking-tight text-slate-900 dark:text-slate-100 truncate",
+              isMuted ? "text-base" : "text-sm"
+            )}
+            title={titleText}
+          >
             <Translate text={title} />
           </h3>
           {subtitle && !effectiveLoading && !effectiveEmpty && (

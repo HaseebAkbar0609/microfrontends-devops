@@ -27,3 +27,13 @@ export function formatNumber(value: number): string {
 export function formatPercent(value: number, decimals: number = 1): string {
 	return `${value.toFixed(decimals)} %`;
 }
+
+export function formatHours(hours: number): string {
+	return `${formatNumber(Math.round(hours))} h`;
+}
+
+/** Hours with their sign, written with the minus sign (−) as the Prognos frame does. */
+export function formatSignedHours(hours: number): string {
+	const prefix = hours > 0 ? "+" : hours < 0 ? "−" : "";
+	return `${prefix}${formatHours(Math.abs(hours))}`;
+}

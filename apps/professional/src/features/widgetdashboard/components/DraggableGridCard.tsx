@@ -1,6 +1,9 @@
 "use client";
 import React, { useRef, useState } from "react";
 import Draggable, { DraggableEvent } from "react-draggable";
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
+import type { WidgetCardVariant } from "../types/dashboard";
 
 interface DraggableGridCardProps {
   className?: string;
@@ -13,6 +16,8 @@ interface DraggableGridCardProps {
   containerRef: (el: HTMLDivElement | null) => void;
   isHighlighted?: boolean;
   isEmpty?: boolean;
+  /** `muted`: the grey card surface, kept while the card is highlighted. */
+  variant?: WidgetCardVariant;
   children: React.ReactNode;
 }
 
@@ -27,11 +32,13 @@ export const DraggableGridCard = ({
   containerRef,
   isHighlighted,
   isEmpty,
+  variant = "default",
   children,
 }: DraggableGridCardProps) => {
   const nodeRef = useRef<HTMLDivElement>(null);
   const [dragKey, setDragKey] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const isMuted = variant === "muted";
 
   const handleStart = () => {
     if (disabled) return false;
@@ -77,9 +84,13 @@ export const DraggableGridCard = ({
             : isSwapTarget
             ? "bg-slate-50/80 border-2 border-dashed border-slate-300 rounded-lg min-h-35 shadow-inner"
             : isHighlighted
-            ? "ring-4 ring-blue-500 ring-offset-2 rounded-lg scale-[1.02] shadow-xl z-9997"
+            ? isMuted
+              ? "ring-4 ring-blue-500 ring-offset-2 bg-slate-100 rounded-sm scale-[1.02] shadow-xl z-9997"
+              : "ring-4 ring-blue-500 ring-offset-2 rounded-lg scale-[1.02] shadow-xl z-9997"
             : isEmpty
             ? `bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-lg ${disabled ? "cursor-default" : "cursor-grab"}`
+            : isMuted
+            ? `bg-slate-100 rounded-sm transition-all ${disabled ? "cursor-default" : "cursor-grab"}`
             : `bg-white border border-slate-200/80 rounded-lg shadow-xs hover:shadow-md hover:border-slate-300 transition-all ${disabled ? "cursor-default" : "cursor-grab"}`
         }`}
         style={{
@@ -98,7 +109,9 @@ export const DraggableGridCard = ({
             <div className="w-10 h-10 border-2 border-dashed border-slate-300 rounded-lg flex items-center justify-center animate-pulse">
               <div className="w-4 h-4 bg-slate-200 rounded-sm" />
             </div>
-            <span className="text-xs tracking-wider uppercase text-secondary">Place here</span>
+            <span className="text-xs tracking-wider uppercase text-secondary">
+              <Translate text={localizationConstants.placeHere} />
+            </span>
           </div>
         ) : (
           <div

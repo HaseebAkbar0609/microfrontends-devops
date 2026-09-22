@@ -9902,6 +9902,40 @@ export type SupplierDetailTranslation = {
 	supplierInvoiceStatusOverdue: string;
 };
 
+export type ForecastDashboardTranslation = {
+	forecastDashboardTitle: string;
+	forecastWidgetKpiTitle: string;
+	forecastWidgetProjectOrderTitle: string;
+	forecastWidgetActionsTitle: string;
+	forecastWidgetOccupancyTitle: string;
+	forecastWidgetAvailableHoursTitle: string;
+	forecastKpiCompanyOccupancy: string;
+	forecastKpiAvailableHours: string;
+	forecastKpiOverUnderLoad: string;
+	forecastPlannedVsForecast: string;
+	forecastActualToDate: string;
+	forecastCostAndWorkTime: string;
+	forecastRiskProjects: string;
+	forecastWarnNoResources: string;
+	forecastWarnOverloaded: string;
+	forecastWarnMissingSkills: string;
+	forecastWarnBlockingCertificates: string;
+	forecastWarnOnboarding: string;
+	forecastDeptProduction: string;
+	forecastDeptService: string;
+	forecastPeriodToggleLabel: string;
+	forecastPeriodWeek: string;
+	forecastPeriodMonth: string;
+	forecastWeekLabel: string;
+	forecastHoursFreeCapacity: string;
+	forecastHoursOverload: string;
+	forecastColProjectOrder: string;
+	forecastColPlannedTime: string;
+	forecastColWorkedTime: string;
+	forecastStatusOnTrack: string;
+	forecastRailDiscard: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -9951,7 +9985,8 @@ export type Translation = HeaderTranslation &
 	CustomerDetailTranslation &
 	SupplierManagementTranslation &
 	SupplierDetailTranslation &
-	ToolsDiscountTranslation;
+	ToolsDiscountTranslation &
+	ForecastDashboardTranslation;
 
 export type TranslationKeys = keyof Translation;
 
