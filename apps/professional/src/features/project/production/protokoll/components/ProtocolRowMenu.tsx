@@ -10,8 +10,10 @@ export interface ProtocolRowMenuProps {
 	/** The protocol's Benämning, so a screen reader knows which row the ⋮ is for. */
 	label: string;
 	archived: boolean;
-	/** A seeded or template-made protocol has no stored PDF, so Öppna and Skriv ut say why they can't. */
-	hasFile: boolean;
+	/** Öppna opens a stored file or a Standard meeting; a seeded file or an Action protocol has neither. */
+	canOpen: boolean;
+	/** Skriv ut prints a stored file only. */
+	canPrint: boolean;
 	onOpen: () => void;
 	onToggleArchive: () => void;
 	onPrint: () => void;
@@ -23,20 +25,20 @@ export interface ProtocolRowMenuProps {
  * the frame's "Print" and "Delate" in the record's Swedish. Under Arkiverade,
  * Arkivera becomes Återställ, which is how an archived protocol comes back.
  */
-export function ProtocolRowMenu({ label, archived, hasFile, onOpen, onToggleArchive, onPrint, onDelete }: ProtocolRowMenuProps) {
+export function ProtocolRowMenu({ label, archived, canOpen, canPrint, onOpen, onToggleArchive, onPrint, onDelete }: ProtocolRowMenuProps) {
 	const t = useTranslate();
-	const noFile = hasFile ? null : localizationConstants.projectProtocolNoFile;
+	const noFile = localizationConstants.projectProtocolNoFile;
 
 	return (
 		<RowActionMenu ariaLabel={t(localizationConstants.projectProtocolRowActions, { label })}>
-			<RowMenuAction icon={Eye} labelKey={localizationConstants.projectListOpen} reasonKey={noFile} onSelect={onOpen} />
+			<RowMenuAction icon={Eye} labelKey={localizationConstants.projectListOpen} reasonKey={canOpen ? null : noFile} onSelect={onOpen} />
 			<RowMenuAction
 				icon={archived ? ArchiveRestore : Archive}
 				labelKey={archived ? localizationConstants.actionRestore : localizationConstants.projectListArchiveAction}
 				reasonKey={null}
 				onSelect={onToggleArchive}
 			/>
-			<RowMenuAction icon={Printer} labelKey={localizationConstants.projectListPrint} reasonKey={noFile} onSelect={onPrint} />
+			<RowMenuAction icon={Printer} labelKey={localizationConstants.projectListPrint} reasonKey={canPrint ? null : noFile} onSelect={onPrint} />
 			<RowMenuAction
 				icon={Trash2}
 				labelKey={localizationConstants.projectListDeleteAction}

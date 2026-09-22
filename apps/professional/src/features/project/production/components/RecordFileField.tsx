@@ -46,6 +46,11 @@ export interface RecordFileFieldProps {
 	accept: string;
 	/** Cuts the name filled from the file to what the section's Benämning allows. */
 	nameMaxLength: number;
+	/**
+	 * Draws the asterisk the form's other required labels carry. Decoration: the
+	 * row's message says a file is missing when Spara finds none.
+	 */
+	required?: boolean;
 }
 
 /**
@@ -70,6 +75,7 @@ export function RecordFileField({
 	rules,
 	accept,
 	nameMaxLength,
+	required = false,
 }: RecordFileFieldProps) {
 	const t = useTranslate();
 	const id = useId();
@@ -110,8 +116,13 @@ export function RecordFileField({
 				const message = pickError ?? (fieldState.error?.message as TranslationKeys | undefined);
 				return (
 					<div className="grid gap-2">
-						<span id={`${id}-label`} className="text-sm font-medium text-slate-900">
+						<span id={`${id}-label`} className="flex items-center gap-2 text-sm font-medium text-slate-900">
 							<Translate text={labelKey} />
+							{required && (
+								<span className="text-red-500" aria-hidden>
+									*
+								</span>
+							)}
 						</span>
 						<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
 							<input

@@ -163,3 +163,21 @@ export type APriceRow = {
 	enhet: string;
 	aPrice: number;
 };
+
+export type CostSectionData = {
+	id: string;
+	titleKey?: string;
+	title?: string;
+	isOpen?: boolean;
+	rows: LaborRow[];
+};
+
+export type StandardCalculationData = {
+	id?: string;
+	calcNo?: string;
+	projectName?: string;
+	markups: MarkupRow[];
+	baseCosts: MarkupRow[];
+	laborCosts: LaborRow[];
+	sections?: CostSectionData[];
+};

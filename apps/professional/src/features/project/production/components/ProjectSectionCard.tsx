@@ -12,6 +12,8 @@ export interface ProjectSectionCardProps {
 	action?: React.ReactNode;
 	children: React.ReactNode;
 	contentClassName?: string;
+	/** Extra classes for the header bar — a tinted background, as the protocol's points card. */
+	headerClassName?: string;
 }
 
 /**
@@ -27,10 +29,16 @@ export function ProjectSectionCard({
 	action,
 	children,
 	contentClassName,
+	headerClassName,
 }: ProjectSectionCardProps) {
 	return (
 		<Card className="gap-0 rounded-lg border border-slate-200 bg-white py-0 shadow-none">
-			<CardHeader className="flex min-h-14 flex-row items-center justify-between gap-3 border-b border-slate-200 px-4 py-2 sm:px-6 [.border-b]:pb-2">
+			<CardHeader
+				className={cn(
+					"flex min-h-14 flex-row items-center justify-between gap-3 border-b border-slate-200 px-4 py-2 sm:px-6 [.border-b]:pb-2",
+					headerClassName,
+				)}
+			>
 				<CardTitle className="flex items-center gap-2 text-base font-medium text-slate-900">
 					{icon}
 					<Translate text={titleKey} />

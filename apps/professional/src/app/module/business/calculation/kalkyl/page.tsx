@@ -1,5 +1,5 @@
-import { CalculationKalkylView } from "@/features/calculation/components/CalculationKalkylView";
+import { redirect } from "next/navigation";
 
 export default function Page() {
-	return <CalculationKalkylView />;
+	redirect("/module/business/calculation/standard-calculation");
 }

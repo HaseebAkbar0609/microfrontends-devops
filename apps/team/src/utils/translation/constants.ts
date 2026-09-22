@@ -1030,6 +1030,16 @@ export type SalesTranslation = {
 	salesValidationEmailInvalid: string;
 	salesValidationOrgNumberInvalid: string;
 	salesCompanyCreatedToast: string;
+	salesRecordSaveFailed: string;
+	salesRecordArchiveFailed: string;
+	salesRecordLoading: string;
+	salesRecordLoadFailed: string;
+	salesOpenBillingButton: string;
+	salesLinkProfessionalLabel: string;
+	salesLinkProfessionalButton: string;
+	salesCreateProfessionalButton: string;
+	salesNoMatchingProfessional: string;
+	salesAccountLinkedToast: string;
 	salesCompaniesImportedToast: string;
 	salesCsvImportFailedToast: string;
 	salesCsvExportedToast: string;

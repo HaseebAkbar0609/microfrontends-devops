@@ -1,36 +1,65 @@
 import { mockDate } from "../../../constants/mockData";
-import type { ProjectProtocol } from "../types";
+import type { ProjectProtocol, ProtocolMeeting, UploadDetails } from "../types";
+import { MEETING_5001_SELF_CHECK, MEETING_5001_SITE_MEETING } from "./projectProtocolMeetings.mock";
+
+/** A Standard row reads its day, Typ and Benämning from its meeting, as the store keeps them. */
+const standard = (id: string, projectId: string, meeting: ProtocolMeeting, extra: Partial<ProjectProtocol> = {}): ProjectProtocol => ({
+	id,
+	projectId,
+	kind: "standard",
+	date: meeting.details.startDate,
+	type: meeting.details.type,
+	name: meeting.details.title,
+	archived: false,
+	meeting,
+	...extra,
+});
+
+/** An uploaded row, likewise read from its details. Seeded files have no stored URL. */
+const uploaded = (id: string, projectId: string, upload: UploadDetails, fileName: string): ProjectProtocol => ({
+	id,
+	projectId,
+	kind: "upload",
+	date: upload.startDate,
+	type: upload.type,
+	name: upload.title,
+	fileName,
+	archived: false,
+	upload,
+});
 
 /**
  * Each project's protocols.
  *
- * 5001 carries the frame's Byggmöte rows plus a Skyddsrond, a Standard
- * protocol written without a PDF yet, and one archived row so Filter →
- * Arkiverade has something to show. 5000 has two; 5002 none, for the empty
- * state. The frame's "filename.pdf" and 2025-09-01 are placeholder copy; these
+ * 5001 carries the frame's Byggmöte rows plus a Skyddsrond, two Standard
+ * meetings — one with its Nästa möte planned and sent, one without — and one
+ * archived row so Filter → Arkiverade has something to show. 5000 has two;
+ * 5002 none, for the empty state. The frame's "filename.pdf" and 2025-09-01 are placeholder copy; these
  * count days from `mockDate`, which is deterministic — never `new Date()` in a
  * mock. Seeded files have no stored URL, so they cannot be opened.
  */
 export const SEEDED_PROJECT_PROTOCOLS: ProjectProtocol[] = [
-	{
-		id: "protocol-5001-1",
-		projectId: "5001",
-		kind: "upload",
-		date: mockDate(-7),
-		type: "byggmote",
-		name: "Byggmöte 4",
-		fileName: "Byggmöte 4.pdf",
-		archived: false,
-	},
-	{
-		id: "protocol-5001-2",
-		projectId: "5001",
-		kind: "standard",
-		date: mockDate(-2),
-		type: "egenkontroll",
-		name: "Egenkontroll badrum plan 2",
-		archived: false,
-	},
+	uploaded(
+		"protocol-5001-1",
+		"5001",
+		{
+			type: "byggmote",
+			title: "Byggmöte 4",
+			address: "Sveavägen 44",
+			postalCode: "112 21",
+			city: "Stockholm",
+			location: "Kontoret",
+			participants: ["Anders Svensson", "Johan Berg", "Kalle Svensson"],
+			startDate: mockDate(-7),
+			startTime: "15:00",
+			endDate: mockDate(-7),
+			endTime: "17:00",
+			information: "Protokollet skannades in efter mötet.",
+		},
+		"Byggmöte 4.pdf",
+	),
+	standard("protocol-5001-2", "5001", MEETING_5001_SELF_CHECK),
+	standard("protocol-5001-7", "5001", MEETING_5001_SITE_MEETING, { sentAt: mockDate(-1) }),
 	{
 		id: "protocol-5001-3",
 		projectId: "5001",

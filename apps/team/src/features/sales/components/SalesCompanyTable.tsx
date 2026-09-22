@@ -51,13 +51,6 @@ const COLUMNS: ColumnConfig[] = [
 	{ labelKey: localizationConstants.salesColumnStatus, sortKey: "status" },
 	{ labelKey: localizationConstants.salesColumnQuote },
 	{
-		labelKey: localizationConstants.salesColumnInvoiced,
-		sortKey: "invoiced",
-		className: "text-right",
-	},
-	{ labelKey: localizationConstants.salesColumnDemoAccount },
-	{ labelKey: localizationConstants.salesColumnTestAccount },
-	{
 		labelKey: localizationConstants.salesColumnAction,
 		className: `text-right ${SALES_STICKY_ACTION_HEAD_CLASS}`,
 	},

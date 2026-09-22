@@ -11,6 +11,7 @@ import { CalculationQuickAiContent } from "./CalculationQuickAiContent";
 import { CalculationAPriceContent } from "./CalculationAPriceContent";
 import { CalculationSkallKravContent } from "./CalculationSkallKravContent";
 import { DUMMY_APRICE_LIST } from "../constants/apriceMock";
+import { useStandardCalculation } from "../hooks/useStandardCalculation";
 
 const TABS = [
 	{ value: "standard", labelKey: localizationConstants.calcTabStandard },
@@ -21,8 +22,42 @@ const TABS = [
 ];
 
 export function CalculationKalkylView() {
+	const {
+		markupRows,
+		isSavingMarkup,
+		handleAddMarkupRow,
+		handleChangeMarkupTitle,
+		handleChangeMarkupPercentage,
+		handleDeleteMarkupRow,
+		handleSaveMarkup,
+		handleCancelMarkup,
+		baseCostRows,
+		isSavingBaseCosts,
+		handleAddBaseCostRow,
+		handleChangeBaseCostTitle,
+		handleChangeBaseCostPercentage,
+		handleDeleteBaseCostRow,
+		handleSaveBaseCosts,
+		handleCancelBaseCosts,
+		sortedLaborRows,
+		isLaborOpen,
+		setIsLaborOpen,
+		isLaborDeleted,
+		isSavingLabor,
+		sortField,
+		sortDir,
+		toggleSort,
+		handleAddLaborRow,
+		handleChangeLaborCell,
+		handleDeleteLaborRow,
+		handleSaveLaborCosts,
+		handleCancelLaborCosts,
+		handleDeleteLaborSectionConfirm,
+	} = useStandardCalculation();
+
 	return (
-		<div className="flex flex-1 flex-col">
+		<div className="flex flex-1 flex-col bg-white">
+			{/* Top Page Header */}
 			<div className="px-5 pt-4 pb-2">
 				<h1 className="mb-0.5 text-2xl font-semibold tracking-tight text-slate-950">
 					<Translate text={localizationConstants.calcKalkyl} />
@@ -47,37 +82,70 @@ export function CalculationKalkylView() {
 				/>
 			</div>
 
+			{/* Top Navigation Tabs */}
 			<Tabs defaultValue="standard" className="flex flex-1 flex-col">
-				<div className="border-b border-slate-200 px-5">
-					<TabsList
-						variant="line"
-						className="h-auto gap-0 rounded-none bg-transparent px-0 pb-0"
-					>
+				<div className="px-5 border-b border-slate-200">
+					<TabsList variant="line">
 						{TABS.map((tab) => (
-							<TabsTrigger
-								key={tab.value}
-								value={tab.value}
-								className="cursor-pointer rounded-none px-4 py-3 text-sm text-slate-600 data-[state=active]:text-slate-900"
-							>
+							<TabsTrigger key={tab.value} value={tab.value}>
 								<Translate text={tab.labelKey} />
 							</TabsTrigger>
 						))}
 					</TabsList>
 				</div>
 
+				{/* Standard Calculation Content */}
 				<TabsContent
 					value="standard"
-					className="flex flex-1 flex-col gap-4 bg-slate-50 p-5"
+					className="flex flex-1 flex-col gap-4 bg-white p-5"
 				>
+					{/* Markup Section */}
 					<CalculationMarkupSection
 						titleKey={localizationConstants.calcMarkup}
+						rows={markupRows}
+						isSaving={isSavingMarkup}
+						onAddRow={handleAddMarkupRow}
+						onChangeTitle={handleChangeMarkupTitle}
+						onChangePercentage={handleChangeMarkupPercentage}
+						onDeleteRowConfirm={handleDeleteMarkupRow}
+						onSave={() => void handleSaveMarkup()}
+						onCancel={handleCancelMarkup}
 					/>
+
+					{/* Base costs Section */}
 					<CalculationMarkupSection
 						titleKey={localizationConstants.calcBaseCosts}
+						rows={baseCostRows}
+						isSaving={isSavingBaseCosts}
+						onAddRow={handleAddBaseCostRow}
+						onChangeTitle={handleChangeBaseCostTitle}
+						onChangePercentage={handleChangeBaseCostPercentage}
+						onDeleteRowConfirm={handleDeleteBaseCostRow}
+						onSave={() => void handleSaveBaseCosts()}
+						onCancel={handleCancelBaseCosts}
 					/>
-					<CalculationLaborSection />
+
+					{/* Labor cost Section */}
+					{!isLaborDeleted && (
+						<CalculationLaborSection
+							rows={sortedLaborRows}
+							isOpen={isLaborOpen}
+							isSaving={isSavingLabor}
+							sortField={sortField}
+							sortDir={sortDir}
+							onToggleOpen={() => setIsLaborOpen((prev) => !prev)}
+							onToggleSort={toggleSort}
+							onAddRow={handleAddLaborRow}
+							onChangeCell={handleChangeLaborCell}
+							onDeleteRowConfirm={handleDeleteLaborRow}
+							onDeleteSectionConfirm={() => void handleDeleteLaborSectionConfirm()}
+							onSave={() => void handleSaveLaborCosts()}
+							onCancel={handleCancelLaborCosts}
+						/>
+					)}
 				</TabsContent>
 
+				{/* Other Calculation Tabs */}
 				<TabsContent
 					value="pro"
 					className="flex flex-1 flex-col bg-white p-4 sm:p-5"

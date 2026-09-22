@@ -1062,6 +1062,13 @@ export type OfferTranslation = {
 	calcOverviewStatusNotStarted: string;
 	calcOverviewStatusInProgress: string;
 	calcOverviewStatusCompleted: string;
+	calcOverviewActionOpen: string;
+	calcOverviewActionArchive: string;
+	calcOverviewActionDelete: string;
+	calcOverviewDeleteConfirmTitle: string;
+	calcOverviewDeleteConfirmDescription: string;
+	calcOverviewArchiveSuccess: string;
+	calcOverviewDeleteSuccess: string;
 	calcKalkyl: string;
 	// Calculation - Kalkyl form
 	calcTabStandard: string;
@@ -4321,9 +4328,7 @@ export type OfferTranslation = {
 	projectProtocolCreateStandard: string;
 	projectProtocolCreateAction: string;
 	projectProtocolUpload: string;
-	projectProtocolDialogStandard: string;
 	projectProtocolDialogAction: string;
-	projectProtocolDialogUpload: string;
 	projectProtocolColDate: string;
 	projectProtocolColType: string;
 	projectProtocolColPdf: string;
@@ -4360,6 +4365,39 @@ export type OfferTranslation = {
 	projectProtocolPrintFailed: string;
 	projectProtocolDeleteTitle: string;
 	projectProtocolDeleteBody: string;
+	/* TFS-714 — Protokoll - Standard: the meeting protocol */
+	projectProtocolYou: string;
+	projectProtocolCategoryBygg: string;
+	projectProtocolCategoryEkonomi: string;
+	projectProtocolCategoryElVvs: string;
+	projectProtocolCategoryInstallation: string;
+	projectProtocolCategoryMarkAnlaggning: string;
+	projectProtocolCategoryMaleri: string;
+	projectProtocolCategoryPlaceholder: string;
+	projectProtocolPersonPlaceholder: string;
+	projectProtocolParticipantsPlaceholder: string;
+	projectProtocolNoPeople: string;
+	projectProtocolRemoveParticipant: string;
+	projectProtocolPersonRequired: string;
+	projectProtocolTitleRequired: string;
+	projectProtocolCategoryRequired: string;
+	projectProtocolTimeRequired: string;
+	projectProtocolEndBeforeStart: string;
+	projectProtocolNumberRequired: string;
+	projectProtocolPointsTitle: string;
+	projectProtocolSavedToast: string;
+	projectProtocolSentToast: string;
+	projectProtocolSendTitle: string;
+	projectProtocolSendBody: string;
+	projectProtocolDiscardTitle: string;
+	projectProtocolDiscardBody: string;
+	projectProtocolDiscardConfirm: string;
+	projectProtocolHour: string;
+	projectProtocolMinute: string;
+	/* TFS-715 — Protokoll: Ladda upp */
+	projectProtocolNewTitle: string;
+	projectProtocolFileLabel: string;
+	projectProtocolUploadedSubtitle: string;
 	projectDiaryFileTypeError: string;
 	projectDiaryFileSizeError: string;
 	projectDiaryRemoveFile: string;

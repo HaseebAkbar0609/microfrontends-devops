@@ -87,6 +87,8 @@ export type SalesPayment = {
 
 export type SalesCompany = {
 	id: string;
+	version?: number;
+	professionalCompanyId?: string | null;
 	name: string;
 	organisationNumber: string;
 	contactPerson: string;

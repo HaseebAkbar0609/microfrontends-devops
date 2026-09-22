@@ -1,9 +1,42 @@
 import type { SortDir } from "@/utils/tableSort";
 import { PROTOCOL_ARCHIVED_FILTER, type ProtocolSortField } from "./projectProtocol.config";
-import type { ProjectProtocol, ProtocolType } from "./types";
+import type { MeetingProtocol, ProjectProtocol, ProtocolType, UploadDetails } from "./types";
 
 /** Turns a type code into the reader's label. */
 export type ProtocolTypeLabel = (type: ProtocolType) => string;
+
+/** A Standard protocol, whose Visa detaljer and Öppna open its meeting rather than a file. */
+export function hasMeeting(row: ProjectProtocol): row is MeetingProtocol {
+	return row.meeting !== undefined;
+}
+
+/** A protocol with a page of its own: a Standard meeting, or an upload's details. An Action protocol has none yet. */
+export function hasDetailsPage(row: ProjectProtocol): boolean {
+	return hasMeeting(row) || row.kind === "upload";
+}
+
+/**
+ * An upload's details. A seeded upload carries none, so they are read from its
+ * row — Rubrik, Typ and the day — and the rest shows the missing-value mark.
+ */
+export function uploadDetailsOf(row: ProjectProtocol): UploadDetails {
+	return (
+		row.upload ?? {
+			type: row.type,
+			title: row.name,
+			address: "",
+			postalCode: "",
+			city: "",
+			location: "",
+			participants: [],
+			startDate: row.date,
+			startTime: "",
+			endDate: "",
+			endTime: "",
+			information: "",
+		}
+	);
+}
 
 /**
  * Whether a row belongs in the list as filtered and searched.

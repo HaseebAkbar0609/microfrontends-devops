@@ -13,7 +13,9 @@ import { ProjectRecordTitle } from "../components/ProjectRecordTitle";
 import { projectProductionTabs } from "../projectProductionNav.config";
 import { CreateProtocolMenu } from "./components/CreateProtocolMenu";
 import { ProtocolTableCard } from "./components/ProtocolTableCard";
+import { NewMeetingDialog } from "./form/NewMeetingDialog";
 import { ProtocolDialog } from "./form/ProtocolDialog";
+import { UploadProtocolDialog } from "./form/UploadProtocolDialog";
 import { useProjectProtocols } from "./hooks/useProjectProtocols";
 import { useProtocolList } from "./hooks/useProtocolList";
 import type { ProjectProtocol, ProtocolKind } from "./types";
@@ -35,8 +37,10 @@ export interface ProjectProtocolsPageProps {
  * Built to the frame: Sök, Filter and "Skapa protokoll" (Standard, Action,
  * Ladda upp) over a card of Datum, Typ and PDF, each row with "Visa detaljer"
  * and ⋮ Öppna, Arkivera, Skriv ut and Radera, and paging underneath. Archived
- * protocols leave the list and are found under Filter → Arkiverade. The
- * orders module's own protocol feature is left untouched.
+ * protocols leave the list and are found under Filter → Arkiverade. Standard
+ * opens Nytt möte, Ladda upp Nytt protokoll and Action the short dialog; a
+ * meeting's or an upload's Visa detaljer opens its page. The orders module's
+ * own protocol feature is left untouched.
  */
 export function ProjectProtocolsPage({ projectId }: ProjectProtocolsPageProps) {
 	const protocols = useProjectProtocols(projectId);
@@ -66,7 +70,7 @@ export function ProjectProtocolsPage({ projectId }: ProjectProtocolsPageProps) {
 					filter={list.filter}
 					onFilterChange={list.setFilter}
 					filterOptions={list.filterOptions}
-					/* The frame draws no page print — each row prints its own PDF. */
+					/* The frame draws no page print — each row prints its own file. */
 					showPrint={false}
 					action={<CreateProtocolMenu onCreate={(kind) => defer(() => setCreating(kind))} />}
 				/>
@@ -90,9 +94,32 @@ export function ProjectProtocolsPage({ projectId }: ProjectProtocolsPageProps) {
 				/>
 			</div>
 
-			{creating && (
+			{creating === "standard" && protocols.facts && (
+				<NewMeetingDialog
+					projectId={projectId}
+					projectNo={protocols.facts.projectNo}
+					projectName={protocols.facts.projectName}
+					onCreate={protocols.createMeeting}
+					onClose={() => setCreating(null)}
+				/>
+			)}
+
+			{creating === "upload" && protocols.facts && (
+				<UploadProtocolDialog
+					projectId={projectId}
+					projectNo={protocols.facts.projectNo}
+					projectName={protocols.facts.projectName}
+					onSave={(details, file) => {
+						const created = protocols.createUpload(details, file);
+						if (created) list.reveal(created.row, created.protocols);
+						return Boolean(created);
+					}}
+					onClose={() => setCreating(null)}
+				/>
+			)}
+
+			{creating === "action" && (
 				<ProtocolDialog
-					kind={creating}
 					onSave={(input) => {
 						const created = protocols.create(input);
 						if (created) list.reveal(created.row, created.protocols);

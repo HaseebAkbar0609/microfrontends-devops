@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { PROTOCOL_KIND_META, PROTOCOL_KINDS } from "../projectProtocol.config";
+import { PROTOCOL_KIND_MENU_KEYS, PROTOCOL_KINDS } from "../projectProtocol.config";
 import type { ProtocolKind } from "../types";
 
 export interface CreateProtocolMenuProps {
@@ -16,8 +16,8 @@ export interface CreateProtocolMenuProps {
 
 /**
  * "+ Skapa protokoll" and its menu, as the frame draws it: Protokoll -
- * Standard, Protokoll - Action and Ladda upp. Each opens the one dialog, titled
- * for what it creates.
+ * Standard opens Nytt möte, Ladda upp Nytt protokoll, and Protokoll - Action
+ * the short dialog.
  */
 export function CreateProtocolMenu({ onCreate }: CreateProtocolMenuProps) {
 	return (
@@ -41,7 +41,7 @@ export function CreateProtocolMenu({ onCreate }: CreateProtocolMenuProps) {
 							className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm text-slate-900"
 						>
 							<Icon className="h-4 w-4 shrink-0" aria-hidden />
-							<Translate text={PROTOCOL_KIND_META[kind].menuKey} />
+							<Translate text={PROTOCOL_KIND_MENU_KEYS[kind]} />
 						</DropdownMenuItem>
 					);
 				})}
