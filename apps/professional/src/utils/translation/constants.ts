@@ -1149,6 +1149,10 @@ export type OfferTranslation = {
 	calcAPrisSpecification: string;
 	calcAPrisOpen: string;
 	calcAPrisCreate: string;
+	calcAPrisEdit: string;
+	edit: string;
+	required: string;
+	invalidNumber: string;
 	// Calculation - Skall krav tab
 	calcSkallKravViewFile: string;
 	calcSkallKravUploadTitle: string;

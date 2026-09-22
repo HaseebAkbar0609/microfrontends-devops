@@ -1209,6 +1209,10 @@ export const enOffer: OfferTranslation = {
 	calcAPrisSpecification: "Specification",
 	calcAPrisOpen: "Open",
 	calcAPrisCreate: "Create new",
+	calcAPrisEdit: "Edit A-price",
+	edit: "Edit",
+	required: "This field is required",
+	invalidNumber: "Please enter a valid number",
 	// Calculation - Skall krav tab
 	calcSkallKravViewFile: "View file",
 	calcSkallKravUploadTitle: "Upload Mandatory Requirements",
