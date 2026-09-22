@@ -1,7 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import type { ApiError } from "@/types/api";
 
-const CATEGORIES_PATH = "/api/v1/teams/professionals/categories/list";
+const CATEGORIES_PATH = "/api/v1/teams/professionals/subcategories/list";
 const CITIES_PATH = "/api/v1/location/cities";
 
 export interface SelectOption {
@@ -19,10 +19,10 @@ interface ListResponse {
 	page_size: number;
 }
 
-export async function getProfessionalCategoriesAPIAction(): Promise<SelectOption[]> {
+export async function getProfessionalCategoriesAPIAction(search = ""): Promise<SelectOption[]> {
 	try {
 		const response = await axiosInstance.get<ListResponse>(CATEGORIES_PATH, {
-			params: { page: 1, page_size: 100 },
+			params: { page: 1, page_size: 20, search },
 		});
 		return response.data?.data ?? [];
 	} catch (error: unknown) {
@@ -31,10 +31,10 @@ export async function getProfessionalCategoriesAPIAction(): Promise<SelectOption
 	}
 }
 
-export async function getCitiesAPIAction(): Promise<SelectOption[]> {
+export async function getCitiesAPIAction(search = ""): Promise<SelectOption[]> {
 	try {
 		const response = await axiosInstance.get<ListResponse>(CITIES_PATH, {
-			params: { page: 1, page_size: 200 },
+			params: { page: 1, page_size: 20, search },
 		});
 		return response.data?.data ?? [];
 	} catch (error: unknown) {

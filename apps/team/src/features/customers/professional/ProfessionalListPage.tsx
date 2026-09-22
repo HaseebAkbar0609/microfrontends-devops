@@ -147,13 +147,13 @@ function ProfessionalListPageInner() {
 	};
 
 	return (
-		<div className="flex h-full flex-col gap-6 px-8 pt-6 pb-8">
+		<div className="flex h-full min-w-0 flex-col gap-6 px-4 pt-6 pb-8 sm:px-8">
 			<h1 className="text-2xl font-semibold text-slate-900">
 				<Translate text={localizationConstants.professional} />
 			</h1>
 
-			<Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-				<TabsList variant="line" className="w-full justify-start gap-1 border-b border-slate-200 p-0">
+			<Tabs value={activeTab} onValueChange={handleTabChange} className="min-w-0 w-full">
+				<TabsList variant="line" className="w-full justify-start gap-1 overflow-x-auto border-b border-slate-200 p-0 no-scrollbar">
 					{TABS.map((tab) => (
 						<TabsTrigger key={tab.key} value={tab.key} className="w-fit flex-none px-4">
 							<Translate text={tab.labelKey} />
@@ -161,7 +161,7 @@ function ProfessionalListPageInner() {
 					))}
 				</TabsList>
 
-				<TabsContent value="active" className="pt-4">
+				<TabsContent value="active" className="min-w-0 pt-4">
 					<ActiveProfessionalsTab
 						rows={rows}
 						isLoading={isLoading}
@@ -178,7 +178,7 @@ function ProfessionalListPageInner() {
 					/>
 				</TabsContent>
 
-				<TabsContent value="pending" className="pt-4">
+				<TabsContent value="pending" className="min-w-0 pt-4">
 					<PendingProfessionalsTab
 						rows={pendingRows}
 						isLoading={isLoading}

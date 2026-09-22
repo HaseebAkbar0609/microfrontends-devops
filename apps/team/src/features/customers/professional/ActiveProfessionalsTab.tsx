@@ -86,17 +86,17 @@ export function ActiveProfessionalsTab({
 				searchPlaceholder={localizationConstants.searchPlaceholder}
 				onCreateClick={onCreateClick}
 				createButtonLabel={localizationConstants.professionalCreateButton}
-				className="px-0 py-4"
+				className="flex-col items-stretch px-0 py-4 sm:flex-row sm:items-center [&>button]:w-full sm:[&>button]:w-auto"
 			/>
 
-			<div className="overflow-hidden rounded-md border border-slate-200 bg-white">
+			<div className="min-w-0 rounded-md border border-slate-200 bg-white">
 				<Table>
 					<TableHeader className="bg-slate-50/50">
 						<TableRow className="hover:bg-transparent border-slate-200">
 							{columns.map((col) => (
 								<TableHead
 									key={col.id}
-									className={`whitespace-nowrap py-3.5 px-4 text-sm font-medium text-slate-500 ${col.sortable ? "cursor-pointer select-none" : ""} ${col.id === "actions" ? "border-l border-slate-200 w-16" : ""}`}
+									className={`whitespace-nowrap py-3.5 px-4 text-sm font-medium text-slate-500 ${col.sortable ? "cursor-pointer select-none" : ""} ${col.id === "contactUserId" ? "hidden xl:table-cell" : ""} ${col.id === "actions" ? "border-l border-slate-200 w-16" : ""}`}
 									onClick={() => col.sortable && col.key && onSort(col.key)}
 								>
 									<span className="inline-flex items-center gap-1">
@@ -128,8 +128,10 @@ export function ActiveProfessionalsTab({
 						)}
 						{!isLoading && rows.map((row) => (
 							<TableRow key={row.id} className="hover:bg-slate-50/70 odd:bg-white even:bg-slate-50/40">
-								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.contactUserId}</TableCell>
-								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">{row.companyName}</TableCell>
+								<TableCell className="hidden whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900 xl:table-cell">{row.contactUserId}</TableCell>
+								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm font-medium text-slate-900">
+									<button type="button" className="text-left hover:underline focus-visible:underline" onClick={() => onOpenClick?.(row.id)}>{row.companyName}</button>
+								</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.orgNo}</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.category}</TableCell>
 								<TableCell className="whitespace-nowrap px-4 py-3.5 text-sm text-slate-600">{row.contactPerson}</TableCell>

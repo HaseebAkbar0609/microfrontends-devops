@@ -48,7 +48,7 @@ export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) 
 	}
 
 	return (
-		<div className="flex h-full flex-col gap-6 px-8 pt-6 pb-8 overflow-y-auto">
+		<div className="flex h-full min-w-0 flex-col gap-6 overflow-y-auto px-4 pt-6 pb-8 sm:px-8">
 			{/* Top Header Row */}
 			<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<h1 className="text-2xl font-bold tracking-tight text-slate-900">
@@ -69,8 +69,8 @@ export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) 
 			</div>
 
 			{/* Tabs Section */}
-			<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-				<TabsList variant="line" className="w-full justify-start gap-1 border-b border-slate-200 p-0">
+			<Tabs value={activeTab} onValueChange={setActiveTab} className="min-w-0 w-full">
+				<TabsList variant="line" className="w-full justify-start gap-1 overflow-x-auto border-b border-slate-200 p-0 no-scrollbar">
 					<TabsTrigger value="overview" className="w-fit flex-none px-4">
 						<Translate text={localizationConstants.overviewTab} />
 					</TabsTrigger>
@@ -91,33 +91,33 @@ export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) 
 					</TabsTrigger>
 				</TabsList>
 
-				<TabsContent value="overview" className="pt-6">
+				<TabsContent value="overview" className="min-w-0 pt-6">
 					<OverviewTab data={data} />
 				</TabsContent>
 
-				<TabsContent value="company" className="pt-6">
+				<TabsContent value="company" className="min-w-0 pt-6">
 					<div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
 						<Translate text={localizationConstants.companyTab} />
 					</div>
 				</TabsContent>
 
-				<TabsContent value="licens" className="pt-6">
+				<TabsContent value="licens" className="min-w-0 pt-6">
 					<div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
 						<Translate text={localizationConstants.licensTab} />
 					</div>
 				</TabsContent>
 
-				<TabsContent value="leads" className="pt-6">
+				<TabsContent value="leads" className="min-w-0 pt-6">
 					<div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
 						<Translate text={localizationConstants.leadsTab} />
 					</div>
 				</TabsContent>
 
-				<TabsContent value="invoices" className="pt-6">
+				<TabsContent value="invoices" className="min-w-0 pt-6">
 					<SalesBillingPanel companyId={id} />
 				</TabsContent>
 
-				<TabsContent value="support" className="pt-6">
+				<TabsContent value="support" className="min-w-0 pt-6">
 					<div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
 						<Translate text={localizationConstants.supportTab} />
 					</div>
