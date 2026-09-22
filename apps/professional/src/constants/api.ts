@@ -225,6 +225,8 @@ export const API_PATH = {
 		SKALL_KRAV_DOC: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/skall-krav/${id}`,
 		A_PRICE: `${PROFESSIONALS_BASE_PATH}/calculation/a-price`,
 		A_PRICE_ITEM: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/a-price/${id}`,
+		STATISTICS: `${PROFESSIONALS_BASE_PATH}/calculation/statistics`,
+		STATISTICS_KPIS: `${PROFESSIONALS_BASE_PATH}/calculation/statistics/kpis`,
 	},
 };
 
