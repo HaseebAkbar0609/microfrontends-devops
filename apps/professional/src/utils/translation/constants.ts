@@ -5416,6 +5416,13 @@ export type RegisterTranslation = {
 	allSuppliers: string;
 	selectSupplier: string;
 	selectRegisterPlaceholder: string;
+	// Article KPI Metrics
+	totalArticlesKPI: string;
+	activeProductsKPI: string;
+	mappedArticlesKPI: string;
+	totalArticlesSubtitle: string;
+	activeProductsSubtitle: string;
+	mappedArticlesSubtitle: string;
 	// Customer Detail Page Translations (TFS-431)
 	dateAddedHeader: string;
 	detailTitle: string;
@@ -5569,6 +5576,21 @@ export type RegisterTranslation = {
 	articleUpdatedSuccess: string;
 	articleUpdateError: string;
 	articleDeletedSuccess: string;
+	deleteSuccessMessage: string;
+	importSuccessArticlesCreated: string;
+	importFailedTitle: string;
+	importFailedArticlesCount: string;
+	importArticlesPageTitle: string;
+	unitHeader: string;
+	typAvArtikelLabel: string;
+	viktLabel: string;
+	dimensionsLabel: string;
+	basicInfoSectionTitle: string;
+	productSpecificationsSectionTitle: string;
+	productImagesSectionTitle: string;
+	noImagesUploaded: string;
+	allSuppliersFilter: string;
+	updateArticlesAction: string;
 	editArticleTitle: string;
 	editSupplierArticleTitle: string;
 	supplierArticleUpdatedSuccess: string;
