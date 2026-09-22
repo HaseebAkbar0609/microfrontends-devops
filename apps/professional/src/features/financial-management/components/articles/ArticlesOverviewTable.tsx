@@ -10,7 +10,6 @@ import type { ArticleRow } from "../../types/article.types";
 import {
 	ARTICLE_DETAIL_BASE_ROUTE,
 } from "../../constants/article.constants";
-import { ArticleKpiCards } from "./ArticleKpiCards";
 import { ArticlesOverviewToolbar } from "./ArticlesOverviewToolbar";
 import { ArticleDeleteDialog } from "./ArticleDeleteDialog";
 
@@ -27,7 +26,6 @@ export function ArticlesOverviewTable() {
 		pageSize,
 		deletingId,
 		setDeletingId,
-		kpiStats,
 		handleSearchChange,
 		handleStatusFilterChange,
 		handleSort,
@@ -123,8 +121,18 @@ export function ArticlesOverviewTable() {
 				sortable: true,
 			},
 			{
-				key: "status",
+				key: "country",
 				label: localizationConstants.countryHeader,
+				sortable: true,
+				render: (row) => (
+					<span className="text-xs font-medium text-slate-700">
+						{row.country || "SE"}
+					</span>
+				),
+			},
+			{
+				key: "status",
+				label: localizationConstants.statusHeader,
 				sortable: true,
 				render: (row) => (
 					<span
@@ -186,9 +194,6 @@ export function ArticlesOverviewTable() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			{/* Summary KPI Cards */}
-			<ArticleKpiCards stats={kpiStats} />
-
 			{/* Search, Filter & Actions Toolbar */}
 			<ArticlesOverviewToolbar
 				searchQuery={searchQuery}

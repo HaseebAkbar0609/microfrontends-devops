@@ -66,6 +66,47 @@ function parseXLSX(workbook: XLSX.WorkBook): ParsedFileData {
 	return { columns, rows, totalRows: rows.length };
 }
 
+function autoMatchColumns(columns: string[]): ArticleImportMapping {
+	const mapping: ArticleImportMapping = {};
+
+	const rules: Record<string, string[]> = {
+		articleNr: ["artikelnummer", "artikelnr", "artikel nr", "article no", "item no", "art nr", "id"],
+		benamning: ["benämning", "beskrivning", "namn", "description", "name", "titel", "artikel"],
+		ean: ["ean", "barcode", "streckkod", "ean-kod"],
+		leverantor: ["leverantör", "supplier", "leverantor", "vendor"],
+		supplierArticleNo: ["leverantörens artikelnr", "supplier article no", "lev artnr", "lev.artnr"],
+		enhet: ["enhet", "unit", "måttenhet"],
+		typAvArtikel: ["artikeltyp", "typ av artikel", "typ", "type"],
+		lagerVara: ["lagervara", "stock item", "lagerartikel"],
+		forsaljning: ["försäljningskonto", "försäljning", "sales account", "intäktskonto"],
+		moms: ["moms", "vat", "momssats", "skatt"],
+		priserA: ["pris a", "utpris", "pris", "price", "prislista a"],
+		kalkylkostnad: ["kalkylkostnad", "inköpspris", "cost", "purchase price", "kostnad"],
+		iLager: ["lager", "i lager", "stock", "saldo", "lagersaldo"],
+		vikt: ["vikt", "weight"],
+		langd: ["längd", "length"],
+		bredd: ["bredd", "width"],
+		hojd: ["höjd", "height"],
+		material: ["material"],
+	};
+
+	columns.forEach((col) => {
+		const normalized = col.toLowerCase().replace(/[^a-z0-9åäö]/g, "");
+		Object.entries(rules).forEach(([targetField, keywords]) => {
+			if (mapping[targetField]) return;
+			for (const kw of keywords) {
+				const normKw = kw.toLowerCase().replace(/[^a-z0-9åäö]/g, "");
+				if (normalized === normKw || normalized.includes(normKw)) {
+					mapping[targetField] = col;
+					break;
+				}
+			}
+		});
+	});
+
+	return mapping;
+}
+
 export function useArticleImport() {
 	const router = useRouter();
 	const t = useTranslate();
@@ -96,16 +137,17 @@ export function useArticleImport() {
 			setImportResult(null);
 
 			try {
+				let parsed: ParsedFileData;
 				if (ext === "csv") {
 					const text = await file.text();
-					const parsed = parseCSV(text);
-					setParsedData(parsed);
+					parsed = parseCSV(text);
 				} else {
 					const arrayBuffer = await file.arrayBuffer();
 					const workbook = XLSX.read(arrayBuffer, { type: "array" });
-					const parsed = parseXLSX(workbook);
-					setParsedData(parsed);
+					parsed = parseXLSX(workbook);
 				}
+				setParsedData(parsed);
+				setMapping(autoMatchColumns(parsed.columns));
 			} catch {
 				showToast("error", t(localizationConstants.fileParseError));
 				setSelectedFile(null);
@@ -147,22 +189,22 @@ export function useArticleImport() {
 	}, []);
 
 	const handleImport = useCallback(async () => {
-		if (!selectedFile) return;
+		if (!selectedFile || !parsedData) return;
 
 		setIsImporting(true);
 		try {
-			const result = await importArticleAPIAction(selectedFile, mapping);
+			const result = await importArticleAPIAction(selectedFile, mapping, parsedData.rows);
 			setImportResult({
-				success: result.failureCount === 0,
+				success: result.successCount > 0,
 				successCount: result.successCount,
 				failureCount: result.failureCount,
 			});
 
-			if (result.failureCount === 0) {
-				showToast("success", t(localizationConstants.importSuccessMessage));
+			if (result.successCount > 0) {
+				showToast("success", `${result.successCount} ${t(localizationConstants.importSuccessArticlesCreated)}`);
 				setTimeout(() => {
 					router.push(ARTICLE_OVERVIEW_BASE_ROUTE);
-				}, 1500);
+				}, 1200);
 			} else {
 				showToast("error", t(localizationConstants.importErrorMessage));
 			}
@@ -171,7 +213,7 @@ export function useArticleImport() {
 		} finally {
 			setIsImporting(false);
 		}
-	}, [selectedFile, mapping, t, router]);
+	}, [selectedFile, parsedData, mapping, t, router]);
 
 	const handleDownloadTemplate = useCallback(async () => {
 		try {

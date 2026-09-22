@@ -6,500 +6,453 @@ import type {
 	CreateArticleFormData,
 	ArticleImportMapping,
 } from "../types/article.types";
+import {
+	STORAGE_KEY_ARTICLES,
+	STORAGE_KEY_SUPPLIER_ARTICLES,
+} from "../constants/article.constants";
+import {
+	MOCK_ARTICLE_LIST,
+	MOCK_SUPPLIER_ARTICLE_LIST,
+} from "../mock/articleMockData";
 
-const MOCK_ARTICLES: ArticleDetail[] = [
-	{
-		id: "art_001",
-		isFavorite: true,
-		articleNo: "1001",
-		description: "Konsulttimme Senior Utvecklare",
-		benamning: "Konsulttimme Senior Utvecklare",
-		ean: "7350012345678",
-		leverantor: "Acme Nordic AB",
-		husarbete: "nej",
-		supplierArticleNo: "ACME-1001",
-		typHusarbete: "",
-		enhet: "Tim",
-		typAvArtikel: "Tjänst",
-		lagerVara: "Nej",
-		forsaljning: "3001",
-		moms: "25%",
-		forsaljningSE: "3001",
-		forsaljningEU: "3002",
-		lagerkonto: "1460",
-		forsaljningEUMoms: "3003",
-		forsaljningExport: "3004",
-		inkop: "4001",
-		priserA: "1 250,00",
-		europrislista: "120,00",
-		kampanj: "1 100,00",
-		vipPriser: "1 050,00",
-		kalkylkostnad: "650,00",
-		bestallningspunkt: "0",
-		iLager: "0",
-		outPriceListA: "1 250,00 kr",
-		calculatedCost: "650,00 kr",
-		stock: "0",
-		reserved: "0",
-		available: "0",
-		stockValue: "0,00 kr",
-		status: "active",
-		vikt: "0",
-		langd: "0",
-		bredd: "0",
-		hojd: "0",
-		material: "N/A",
-		forsaljningSESkattskyldighet: "3001",
-		momsSESkattskyldighet: "25%",
-		forsaljningEUSkattskyldighet: "3002",
-		lagerforandring: "4990",
-		priceListRows: [
-			{ id: "pl_001", name: "Standardprislista A", price: "1 250,00", currency: "SEK", validFrom: "2024-01-01" },
-			{ id: "pl_002", name: "VIP-Kunder 2024", price: "1 050,00", currency: "SEK", validFrom: "2024-01-01" },
-		],
-	},
-	{
-		id: "art_002",
-		isFavorite: false,
-		articleNo: "1002",
-		description: "Programvarulicens Årskvot",
-		benamning: "Programvarulicens Årskvot",
-		ean: "7350098765432",
-		leverantor: "Nordic Cloud Solutions",
-		husarbete: "nej",
-		supplierArticleNo: "NCS-LIC-01",
-		typHusarbete: "",
-		enhet: "Styck",
-		typAvArtikel: "Vara",
-		lagerVara: "Ja",
-		forsaljning: "3010",
-		moms: "25%",
-		forsaljningSE: "3010",
-		forsaljningEU: "3011",
-		lagerkonto: "1460",
-		forsaljningEUMoms: "3012",
-		forsaljningExport: "3013",
-		inkop: "4010",
-		priserA: "4 500,00",
-		europrislista: "400,00",
-		kampanj: "3 900,00",
-		vipPriser: "3 800,00",
-		kalkylkostnad: "2 500,00",
-		bestallningspunkt: "10",
-		iLager: "25",
-		outPriceListA: "4 500,00 kr",
-		calculatedCost: "2 500,00 kr",
-		stock: "25",
-		reserved: "5",
-		available: "20",
-		stockValue: "62 500,00 kr",
-		status: "active",
-		vikt: "0.1",
-		langd: "10",
-		bredd: "5",
-		hojd: "2",
-		material: "Digital",
-		forsaljningSESkattskyldighet: "3010",
-		momsSESkattskyldighet: "25%",
-		forsaljningEUSkattskyldighet: "3011",
-		lagerforandring: "4990",
-		priceListRows: [
-			{ id: "pl_003", name: "Standardprislista A", price: "4 500,00", currency: "SEK" },
-		],
-	},
-	{
-		id: "art_003",
-		isFavorite: false,
-		articleNo: "1003",
-		description: "Projektledning & Arkitektur",
-		benamning: "Projektledning & Arkitektur",
-		ean: "7350024681357",
-		leverantor: "Acme Nordic AB",
-		husarbete: "nej",
-		supplierArticleNo: "ACME-1003",
-		typHusarbete: "",
-		enhet: "Tim",
-		typAvArtikel: "Tjänst",
-		lagerVara: "Nej",
-		forsaljning: "3001",
-		moms: "25%",
-		forsaljningSE: "3001",
-		forsaljningEU: "3002",
-		lagerkonto: "1460",
-		forsaljningEUMoms: "3003",
-		forsaljningExport: "3004",
-		inkop: "4001",
-		priserA: "1 500,00",
-		europrislista: "140,00",
-		kampanj: "1 350,00",
-		vipPriser: "1 300,00",
-		kalkylkostnad: "800,00",
-		bestallningspunkt: "0",
-		iLager: "0",
-		outPriceListA: "1 500,00 kr",
-		calculatedCost: "800,00 kr",
-		stock: "0",
-		reserved: "0",
-		available: "0",
-		stockValue: "0,00 kr",
-		status: "active",
-		vikt: "0",
-		langd: "0",
-		bredd: "0",
-		hojd: "0",
-		material: "N/A",
-		forsaljningSESkattskyldighet: "3001",
-		momsSESkattskyldighet: "25%",
-		forsaljningEUSkattskyldighet: "3002",
-		lagerforandring: "4990",
-	},
-	{
-		id: "art_004",
-		isFavorite: true,
-		articleNo: "1004",
-		description: "Nätverkskabel Cat6A 50m",
-		benamning: "Nätverkskabel Cat6A 50m",
-		ean: "7350055544332",
-		leverantor: "Kabel Grossisten AB",
-		husarbete: "nej",
-		supplierArticleNo: "KG-C6A-50",
-		typHusarbete: "",
-		enhet: "Styck",
-		typAvArtikel: "Vara",
-		lagerVara: "Ja",
-		forsaljning: "3020",
-		moms: "25%",
-		forsaljningSE: "3020",
-		forsaljningEU: "3021",
-		lagerkonto: "1460",
-		forsaljningEUMoms: "3022",
-		forsaljningExport: "3023",
-		inkop: "4020",
-		priserA: "499,00",
-		europrislista: "45,00",
-		kampanj: "399,00",
-		vipPriser: "350,00",
-		kalkylkostnad: "180,00",
-		bestallningspunkt: "15",
-		iLager: "45",
-		outPriceListA: "499,00 kr",
-		calculatedCost: "180,00 kr",
-		stock: "45",
-		reserved: "10",
-		available: "35",
-		stockValue: "8 100,00 kr",
-		status: "active",
-		vikt: "2.5",
-		langd: "5000",
-		bredd: "1",
-		hojd: "1",
-		material: "Koppar/PVC",
-		forsaljningSESkattskyldighet: "3020",
-		momsSESkattskyldighet: "25%",
-		forsaljningEUSkattskyldighet: "3021",
-		lagerforandring: "4990",
-	},
-	{
-		id: "art_005",
-		isFavorite: false,
-		articleNo: "1005",
-		description: "Installation & Driftsättning",
-		benamning: "Installation & Driftsättning",
-		ean: "7350066778899",
-		leverantor: "Acme Nordic AB",
-		husarbete: "ja",
-		supplierArticleNo: "ACME-INST",
-		typHusarbete: "RUT",
-		enhet: "Tim",
-		typAvArtikel: "Tjänst",
-		lagerVara: "Nej",
-		forsaljning: "3005",
-		moms: "25%",
-		forsaljningSE: "3005",
-		forsaljningEU: "3006",
-		lagerkonto: "1460",
-		forsaljningEUMoms: "3007",
-		forsaljningExport: "3008",
-		inkop: "4001",
-		priserA: "950,00",
-		europrislista: "90,00",
-		kampanj: "850,00",
-		vipPriser: "800,00",
-		kalkylkostnad: "450,00",
-		bestallningspunkt: "0",
-		iLager: "0",
-		outPriceListA: "950,00 kr",
-		calculatedCost: "450,00 kr",
-		stock: "0",
-		reserved: "0",
-		available: "0",
-		stockValue: "0,00 kr",
-		status: "inactive",
-		vikt: "0",
-		langd: "0",
-		bredd: "0",
-		hojd: "0",
-		material: "N/A",
-		forsaljningSESkattskyldighet: "3005",
-		momsSESkattskyldighet: "25%",
-		forsaljningEUSkattskyldighet: "3006",
-		lagerforandring: "4990",
-	},
-];
+type Listener = () => void;
 
-const MOCK_SUPPLIER_ARTICLES: SupplierArticleDetail[] = [
-	{
-		id: "sup_art_001",
-		supplierArticleNo: "ACME-1001",
-		supplierName: "Acme Nordic AB",
-		supplierDescription: "Senior Konsulttimme IT & Utveckling",
-		purchasePrice: "650,00 kr",
-		linkedToArticle: "1001 - Konsulttimme Senior",
-		status: "mapped",
-		ean: "7350012345678",
-		unit: "Tim",
-		category: "Tjänster",
-		weight: "0 kg",
-		dimensions: "0 x 0 x 0 mm",
-		material: "Tjänst",
-		leadTimeDays: 0,
-		images: [
-			"https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&auto=format&fit=crop&q=80",
-			"https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=600&auto=format&fit=crop&q=80",
-		],
-	},
-	{
-		id: "sup_art_002",
-		supplierArticleNo: "NCS-LIC-01",
-		supplierName: "Nordic Cloud Solutions",
-		supplierDescription: "Enterprise Cloud License 1-Year Tier 1",
-		purchasePrice: "2 500,00 kr",
-		linkedToArticle: "1002 - Programvarulicens",
-		status: "mapped",
-		ean: "7350098765432",
-		unit: "Styck",
-		category: "Mjukvara",
-		weight: "0.1 kg",
-		dimensions: "10 x 5 x 2 mm",
-		material: "Digital",
-		leadTimeDays: 1,
-		images: [
-			"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=80",
-		],
-	},
-	{
-		id: "sup_art_003",
-		supplierArticleNo: "KG-C6A-50",
-		supplierName: "Kabel Grossisten AB",
-		supplierDescription: "Cat6A U/FTP LSZH Grå 50m rulle",
-		purchasePrice: "180,00 kr",
-		linkedToArticle: "1004 - Nätverkskabel Cat6A",
-		status: "mapped",
-		ean: "7350055544332",
-		unit: "Styck",
-		category: "Hårdvara",
-		weight: "2.5 kg",
-		dimensions: "300 x 300 x 100 mm",
-		material: "Koppar/PVC",
-		leadTimeDays: 2,
-		images: [
-			"https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&auto=format&fit=crop&q=80",
-		],
-	},
-	{
-		id: "sup_art_004",
-		supplierArticleNo: "KG-PATCH-2M",
-		supplierName: "Kabel Grossisten AB",
-		supplierDescription: "Patchkabel Cat6 RJ45 Blå 2m",
-		purchasePrice: "25,00 kr",
-		linkedToArticle: "-",
-		status: "unmapped",
-		ean: "7350077889900",
-		unit: "Styck",
-		category: "Hårdvara",
-		weight: "0.08 kg",
-		dimensions: "2000 x 10 x 10 mm",
-		material: "Koppar/PVC",
-		leadTimeDays: 1,
-	},
-];
+class ArticleRepository {
+	private articles: ArticleDetail[] = [];
+	private supplierArticles: SupplierArticleDetail[] = [];
+	private listeners: Set<Listener> = new Set();
+	private isInitialized = false;
 
+	constructor() {
+		this.init();
+	}
+
+	private init(): void {
+		if (typeof window === "undefined") {
+			this.articles = [...MOCK_ARTICLE_LIST];
+			this.supplierArticles = [...MOCK_SUPPLIER_ARTICLE_LIST];
+			this.isInitialized = true;
+			return;
+		}
+
+		try {
+			const storedArticles = localStorage.getItem(STORAGE_KEY_ARTICLES);
+			if (storedArticles) {
+				const parsed = JSON.parse(storedArticles);
+				if (Array.isArray(parsed) && parsed.length > 0) {
+					this.articles = parsed;
+				} else {
+					this.articles = [...MOCK_ARTICLE_LIST];
+					this.persistArticles();
+				}
+			} else {
+				this.articles = [...MOCK_ARTICLE_LIST];
+				this.persistArticles();
+			}
+
+			const storedSupplier = localStorage.getItem(STORAGE_KEY_SUPPLIER_ARTICLES);
+			if (storedSupplier) {
+				const parsed = JSON.parse(storedSupplier);
+				if (Array.isArray(parsed) && parsed.length > 0) {
+					this.supplierArticles = parsed;
+				} else {
+					this.supplierArticles = [...MOCK_SUPPLIER_ARTICLE_LIST];
+					this.persistSupplierArticles();
+				}
+			} else {
+				this.supplierArticles = [...MOCK_SUPPLIER_ARTICLE_LIST];
+				this.persistSupplierArticles();
+			}
+		} catch {
+			this.articles = [...MOCK_ARTICLE_LIST];
+			this.supplierArticles = [...MOCK_SUPPLIER_ARTICLE_LIST];
+		}
+
+		this.isInitialized = true;
+	}
+
+	private ensureInitialized(): void {
+		if (!this.isInitialized) {
+			this.init();
+		}
+	}
+
+	private persistArticles(): void {
+		if (typeof window === "undefined") return;
+		try {
+			localStorage.setItem(STORAGE_KEY_ARTICLES, JSON.stringify(this.articles));
+		} catch {
+			// localStorage error fallback
+		}
+	}
+
+	private persistSupplierArticles(): void {
+		if (typeof window === "undefined") return;
+		try {
+			localStorage.setItem(STORAGE_KEY_SUPPLIER_ARTICLES, JSON.stringify(this.supplierArticles));
+		} catch {
+			// localStorage error fallback
+		}
+	}
+
+	private notify(): void {
+		for (const listener of this.listeners) {
+			try {
+				listener();
+			} catch {
+				// Ignore listener errors
+			}
+		}
+	}
+
+	public subscribe(listener: Listener): () => void {
+		this.listeners.add(listener);
+		return () => {
+			this.listeners.delete(listener);
+		};
+	}
+
+	public getAll(): ArticleDetail[] {
+		this.ensureInitialized();
+		return [...this.articles];
+	}
+
+	public getById(id: string): ArticleDetail | undefined {
+		this.ensureInitialized();
+		return this.articles.find((a) => a.id === id || a.articleNo === id);
+	}
+
+	public add(formData: CreateArticleFormData): ArticleDetail {
+		this.ensureInitialized();
+		const newId = `art_${Date.now()}`;
+		const nextNr = String(1000 + this.articles.length + 1);
+
+		const newArticle: ArticleDetail = {
+			id: newId,
+			isFavorite: false,
+			articleNo: formData.articleNr || nextNr,
+			description: formData.benamning,
+			benamning: formData.benamning,
+			ean: formData.ean || "",
+			leverantor: formData.leverantor || "",
+			husarbete: formData.husarbete || "nej",
+			supplierArticleNo: formData.supplierArticleNo || "",
+			typHusarbete: formData.typHusarbete || "",
+			enhet: formData.enhet || "Styck",
+			typAvArtikel: formData.typAvArtikel || "Vara",
+			lagerVara: formData.lagerVara || "Nej",
+			forsaljning: formData.forsaljning || "3001",
+			moms: formData.moms || "25%",
+			forsaljningSE: formData.forsaljningSE || "",
+			forsaljningEU: formData.forsaljningEU || "",
+			lagerkonto: formData.lagerkonto || "",
+			forsaljningEUMoms: formData.forsaljningEUMoms || "",
+			forsaljningExport: formData.forsaljningExport || "",
+			inkop: formData.inkop || "",
+			priserA: formData.priserA || "0,00",
+			europrislista: formData.europrislista || "",
+			kampanj: formData.kampanj || "",
+			vipPriser: formData.vipPriser || "",
+			kalkylkostnad: formData.kalkylkostnad || "0,00",
+			bestallningspunkt: formData.bestallningspunkt || "0",
+			iLager: formData.iLager || "0",
+			outPriceListA: `${formData.priserA || "0,00"} kr`,
+			calculatedCost: `${formData.kalkylkostnad || "0,00"} kr`,
+			stock: formData.stock || formData.iLager || "0",
+			reserved: formData.reserved || "0",
+			available: formData.stock || formData.iLager || "0",
+			stockValue: "0,00 kr",
+			status: formData.status || "active",
+			vikt: formData.vikt || "",
+			langd: formData.langd || "",
+			bredd: formData.bredd || "",
+			hojd: formData.hojd || "",
+			material: formData.material || "",
+			forsaljningSESkattskyldighet: formData.forsaljningSESkattskyldighet || "",
+			momsSESkattskyldighet: formData.momsSESkattskyldighet || "",
+			forsaljningEUSkattskyldighet: formData.forsaljningEUSkattskyldighet || "",
+			lagerforandring: formData.lagerforandring || "",
+			priceListRows: formData.priceListRows || [],
+		};
+
+		this.articles.unshift(newArticle);
+		this.persistArticles();
+		this.notify();
+		return newArticle;
+	}
+
+	public update(id: string, updates: Partial<CreateArticleFormData>): ArticleDetail | undefined {
+		this.ensureInitialized();
+		const index = this.articles.findIndex((a) => a.id === id || a.articleNo === id);
+		if (index === -1) return undefined;
+
+		const existing = this.articles[index];
+		const updated: ArticleDetail = {
+			...existing,
+			...updates,
+			description: updates.benamning ?? existing.description,
+			benamning: updates.benamning ?? existing.benamning,
+			outPriceListA: updates.priserA ? `${updates.priserA} kr` : existing.outPriceListA,
+			calculatedCost: updates.kalkylkostnad ? `${updates.kalkylkostnad} kr` : existing.calculatedCost,
+		};
+
+		this.articles[index] = updated;
+		this.persistArticles();
+		this.notify();
+		return updated;
+	}
+
+	public delete(id: string): boolean {
+		this.ensureInitialized();
+		const index = this.articles.findIndex((a) => a.id === id || a.articleNo === id);
+		if (index === -1) return false;
+
+		this.articles.splice(index, 1);
+		this.persistArticles();
+		this.notify();
+		return true;
+	}
+
+	public toggleFavorite(id: string): boolean {
+		this.ensureInitialized();
+		const found = this.articles.find((a) => a.id === id || a.articleNo === id);
+		if (!found) return false;
+
+		found.isFavorite = !found.isFavorite;
+		this.persistArticles();
+		this.notify();
+		return found.isFavorite;
+	}
+
+	public importArticles(items: Partial<CreateArticleFormData>[]): number {
+		this.ensureInitialized();
+		let addedCount = 0;
+
+		items.forEach((item, idx) => {
+			if (!item.benamning && !item.articleNr) return;
+			const newId = `art_imported_${Date.now()}_${idx}`;
+			const nextNr = item.articleNr || String(1000 + this.articles.length + 1);
+
+			const newArticle: ArticleDetail = {
+				id: newId,
+				isFavorite: false,
+				articleNo: nextNr,
+				description: item.benamning || `Importerad artikel ${nextNr}`,
+				benamning: item.benamning || `Importerad artikel ${nextNr}`,
+				ean: item.ean || "",
+				leverantor: item.leverantor || "Allmän leverantör",
+				husarbete: item.husarbete || "nej",
+				supplierArticleNo: item.supplierArticleNo || "",
+				typHusarbete: item.typHusarbete || "",
+				enhet: item.enhet || "Styck",
+				typAvArtikel: item.typAvArtikel || "Vara",
+				lagerVara: item.lagerVara || "Ja",
+				forsaljning: item.forsaljning || "3001",
+				moms: item.moms || "25%",
+				forsaljningSE: item.forsaljningSE || "",
+				forsaljningEU: item.forsaljningEU || "",
+				lagerkonto: item.lagerkonto || "",
+				forsaljningEUMoms: item.forsaljningEUMoms || "",
+				forsaljningExport: item.forsaljningExport || "",
+				inkop: item.inkop || "",
+				priserA: item.priserA || "0,00",
+				europrislista: item.europrislista || "",
+				kampanj: item.kampanj || "",
+				vipPriser: item.vipPriser || "",
+				kalkylkostnad: item.kalkylkostnad || "0,00",
+				bestallningspunkt: item.bestallningspunkt || "0",
+				iLager: item.iLager || "0",
+				outPriceListA: `${item.priserA || "0,00"} kr`,
+				calculatedCost: `${item.kalkylkostnad || "0,00"} kr`,
+				stock: item.stock || item.iLager || "0",
+				reserved: "0",
+				available: item.stock || item.iLager || "0",
+				stockValue: "0,00 kr",
+				status: item.status || "active",
+				vikt: item.vikt || "",
+				langd: item.langd || "",
+				bredd: item.bredd || "",
+				hojd: item.hojd || "",
+				material: item.material || "",
+				forsaljningSESkattskyldighet: item.forsaljningSESkattskyldighet || "",
+				momsSESkattskyldighet: item.momsSESkattskyldighet || "",
+				forsaljningEUSkattskyldighet: item.forsaljningEUSkattskyldighet || "",
+				lagerforandring: item.lagerforandring || "",
+				priceListRows: [],
+			};
+
+			this.articles.unshift(newArticle);
+			addedCount++;
+		});
+
+		if (addedCount > 0) {
+			this.persistArticles();
+			this.notify();
+		}
+
+		return addedCount;
+	}
+
+	public getAllSupplierArticles(): SupplierArticleDetail[] {
+		this.ensureInitialized();
+		return [...this.supplierArticles];
+	}
+
+	public getSupplierArticleById(id: string): SupplierArticleDetail | undefined {
+		this.ensureInitialized();
+		return this.supplierArticles.find(
+			(a) => a.id === id || a.supplierArticleNo === id,
+		);
+	}
+
+	public deleteSupplierArticle(id: string): boolean {
+		this.ensureInitialized();
+		const index = this.supplierArticles.findIndex(
+			(a) => a.id === id || a.supplierArticleNo === id,
+		);
+		if (index === -1) return false;
+
+		this.supplierArticles.splice(index, 1);
+		this.persistSupplierArticles();
+		this.notify();
+		return true;
+	}
+}
+
+export const articleRepository = new ArticleRepository();
+
+// API Action bridge functions for components & hooks
 export async function getArticlesAPIAction(): Promise<{ data: ArticleRow[]; totalItems: number }> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
+			const data = articleRepository.getAll();
 			resolve({
-				data: [...MOCK_ARTICLES],
-				totalItems: MOCK_ARTICLES.length,
+				data,
+				totalItems: data.length,
 			});
-		}, 150);
+		}, 100);
 	});
 }
 
 export async function getArticleDetailAPIAction(id: string): Promise<ArticleDetail> {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
-			const found = MOCK_ARTICLES.find((a) => a.id === id || a.articleNo === id);
+			const found = articleRepository.getById(id);
 			if (found) {
 				resolve(found);
 			} else {
 				reject(new Error("Article not found"));
 			}
-		}, 150);
+		}, 100);
 	});
 }
 
 export async function createArticleAPIAction(formData: CreateArticleFormData): Promise<ArticleDetail> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
-			const newId = `art_${Date.now()}`;
-			const newArticle: ArticleDetail = {
-				id: newId,
-				isFavorite: false,
-				articleNo: formData.articleNr || String(1000 + MOCK_ARTICLES.length + 1),
-				description: formData.benamning,
-				benamning: formData.benamning,
-				ean: formData.ean || "",
-				leverantor: formData.leverantor,
-				husarbete: formData.husarbete || "nej",
-				supplierArticleNo: formData.supplierArticleNo || "",
-				typHusarbete: formData.typHusarbete || "",
-				enhet: formData.enhet,
-				typAvArtikel: formData.typAvArtikel,
-				lagerVara: formData.lagerVara || "Nej",
-				forsaljning: formData.forsaljning,
-				moms: formData.moms,
-				forsaljningSE: formData.forsaljningSE || "",
-				forsaljningEU: formData.forsaljningEU || "",
-				lagerkonto: formData.lagerkonto || "",
-				forsaljningEUMoms: formData.forsaljningEUMoms || "",
-				forsaljningExport: formData.forsaljningExport || "",
-				inkop: formData.inkop || "",
-				priserA: formData.priserA || "0,00",
-				europrislista: formData.europrislista || "",
-				kampanj: formData.kampanj || "",
-				vipPriser: formData.vipPriser || "",
-				kalkylkostnad: formData.kalkylkostnad || "0,00",
-				bestallningspunkt: formData.bestallningspunkt || "0",
-				iLager: formData.iLager || "0",
-				outPriceListA: `${formData.priserA || "0,00"} kr`,
-				calculatedCost: `${formData.kalkylkostnad || "0,00"} kr`,
-				stock: formData.stock || "0",
-				reserved: formData.reserved || "0",
-				available: formData.stock || "0",
-				stockValue: "0,00 kr",
-				status: formData.status || "active",
-				vikt: formData.vikt || "",
-				langd: formData.langd || "",
-				bredd: formData.bredd || "",
-				hojd: formData.hojd || "",
-				material: formData.material || "",
-				forsaljningSESkattskyldighet: formData.forsaljningSESkattskyldighet || "",
-				momsSESkattskyldighet: formData.momsSESkattskyldighet || "",
-				forsaljningEUSkattskyldighet: formData.forsaljningEUSkattskyldighet || "",
-				lagerforandring: formData.lagerforandring || "",
-				priceListRows: formData.priceListRows || [],
-			};
-			MOCK_ARTICLES.unshift(newArticle);
-			resolve(newArticle);
-		}, 200);
+			const created = articleRepository.add(formData);
+			resolve(created);
+		}, 150);
 	});
 }
 
-export async function updateArticleAPIAction(id: string, formData: Partial<CreateArticleFormData>): Promise<ArticleDetail> {
+export async function updateArticleAPIAction(
+	id: string,
+	formData: Partial<CreateArticleFormData>,
+): Promise<ArticleDetail> {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
-			const index = MOCK_ARTICLES.findIndex((a) => a.id === id || a.articleNo === id);
-			if (index !== -1) {
-				const existing = MOCK_ARTICLES[index];
-				const updated: ArticleDetail = {
-					...existing,
-					...formData,
-					description: formData.benamning ?? existing.description,
-					outPriceListA: formData.priserA ? `${formData.priserA} kr` : existing.outPriceListA,
-					calculatedCost: formData.kalkylkostnad ? `${formData.kalkylkostnad} kr` : existing.calculatedCost,
-				};
-				MOCK_ARTICLES[index] = updated;
+			const updated = articleRepository.update(id, formData);
+			if (updated) {
 				resolve(updated);
 			} else {
 				reject(new Error("Article not found"));
 			}
-		}, 200);
+		}, 150);
 	});
 }
 
 export async function deleteArticleAPIAction(id: string): Promise<void> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
-			const index = MOCK_ARTICLES.findIndex((a) => a.id === id || a.articleNo === id);
-			if (index !== -1) {
-				MOCK_ARTICLES.splice(index, 1);
-			}
+			articleRepository.delete(id);
 			resolve();
-		}, 150);
+		}, 100);
 	});
 }
 
 export async function toggleArticleFavoriteAPIAction(id: string): Promise<boolean> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
-			const found = MOCK_ARTICLES.find((a) => a.id === id || a.articleNo === id);
-			if (found) {
-				found.isFavorite = !found.isFavorite;
-				resolve(found.isFavorite);
-			} else {
-				resolve(false);
-			}
-		}, 100);
+			const newState = articleRepository.toggleFavorite(id);
+			resolve(newState);
+		}, 80);
 	});
 }
 
 export async function getSupplierArticlesAPIAction(): Promise<{ data: SupplierArticleRow[]; totalItems: number }> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
+			const data = articleRepository.getAllSupplierArticles();
 			resolve({
-				data: [...MOCK_SUPPLIER_ARTICLES],
-				totalItems: MOCK_SUPPLIER_ARTICLES.length,
+				data,
+				totalItems: data.length,
 			});
-		}, 150);
+		}, 100);
 	});
 }
 
 export async function getSupplierArticleDetailAPIAction(id: string): Promise<SupplierArticleDetail> {
 	return new Promise((resolve, reject) => {
 		setTimeout(() => {
-			const found = MOCK_SUPPLIER_ARTICLES.find((a) => a.id === id || a.supplierArticleNo === id);
+			const found = articleRepository.getSupplierArticleById(id);
 			if (found) {
 				resolve(found);
 			} else {
 				reject(new Error("Supplier article not found"));
 			}
-		}, 150);
+		}, 100);
 	});
 }
 
 export async function deleteSupplierArticleAPIAction(id: string): Promise<void> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
-			const index = MOCK_SUPPLIER_ARTICLES.findIndex((a) => a.id === id || a.supplierArticleNo === id);
-			if (index !== -1) {
-				MOCK_SUPPLIER_ARTICLES.splice(index, 1);
-			}
+			articleRepository.deleteSupplierArticle(id);
 			resolve();
-		}, 150);
+		}, 100);
 	});
 }
 
 export async function importArticleAPIAction(
 	_file: File,
-	_mapping: ArticleImportMapping,
+	mapping: ArticleImportMapping,
+	rows?: Record<string, string>[],
 ): Promise<{ successCount: number; failureCount: number }> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
-			resolve({
-				successCount: 15,
-				failureCount: 0,
+			if (!rows || rows.length === 0) {
+				resolve({ successCount: 0, failureCount: 0 });
+				return;
+			}
+
+			// Map each row according to the mapping
+			const mappedArticles: Partial<CreateArticleFormData>[] = rows.map((row) => {
+				const item: Record<string, string> = {};
+				Object.entries(mapping).forEach(([fieldKey, fileCol]) => {
+					if (fileCol && row[fileCol] !== undefined) {
+						item[fieldKey] = row[fileCol];
+					}
+				});
+				return item as Partial<CreateArticleFormData>;
 			});
-		}, 400);
+
+			const importedCount = articleRepository.importArticles(mappedArticles);
+			resolve({
+				successCount: importedCount,
+				failureCount: rows.length - importedCount,
+			});
+		}, 250);
 	});
 }
 
@@ -507,7 +460,10 @@ export async function downloadArticleImportTemplateAPIAction(): Promise<void> {
 	return new Promise((resolve) => {
 		setTimeout(() => {
 			const templateCsv =
-				"Artikelnummer;Benämning;EAN;Leverantör;Enhet;Typ;Försäljning;Moms;Pris A;Kalkylkostnad\n1001;Exempelartikel;7350000000000;Acme AB;Styck;Vara;3001;25%;100,00;50,00";
+				"Artikelnummer;Benämning;EAN;Leverantör;Enhet;Typ;Försäljning;Moms;Pris A;Kalkylkostnad;Lager;Vikt;Material\n" +
+				"1001;Konsulttimme Senior Utvecklare;7350012345678;Acme Nordic AB;Tim;Tjänst;3001;25%;1250,00;650,00;0;0;N/A\n" +
+				"1002;Nätverkskabel Cat6A 50m;7350055544332;Kabel Grossisten AB;Styck;Vara;3020;25%;499,00;180,00;45;2.5;Koppar/PVC\n" +
+				"1003;Programvarulicens Årskvot;7350098765432;Nordic Cloud Solutions;Styck;Vara;3010;25%;4500,00;2500,00;25;0.1;Digital";
 			const blob = new Blob([templateCsv], { type: "text/csv;charset=utf-8;" });
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement("a");
@@ -518,6 +474,6 @@ export async function downloadArticleImportTemplateAPIAction(): Promise<void> {
 			document.body.removeChild(a);
 			URL.revokeObjectURL(url);
 			resolve();
-		}, 200);
+		}, 150);
 	});
 }

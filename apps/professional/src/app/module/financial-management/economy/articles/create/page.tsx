@@ -1,7 +1,7 @@
-import { CreateArticlePage } from "@/features/tools/register/components/CreateArticlePage";
+import { CreateArticleWizard } from "@/features/financial-management";
 
 export const dynamic = "force-dynamic";
 
 export default function EconomyCreateArticlePage() {
-	return <CreateArticlePage />;
+	return <CreateArticleWizard />;
 }

@@ -2,6 +2,7 @@ import type { CaseItem, CaseCategory } from "../types/cases.types";
 
 export const CASES_BASE_ROUTE = "/module/financial-management/economy/cases";
 export const CREATE_CASE_ROUTE = `${CASES_BASE_ROUTE}/create`;
+export const CASES_IMPORT_ROUTE = `${CASES_BASE_ROUTE}/import`;
 
 export const STORAGE_KEY_CASES = "tfs_economy_cases_data_v8";
 

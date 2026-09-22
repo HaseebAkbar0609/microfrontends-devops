@@ -4,10 +4,8 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
 import { useArticleImport } from "../../../hooks/useArticleImport";
 import { ArticleFileDropzone } from "./ArticleFileDropzone";
-import { ArticleImportFileSummary } from "./ArticleImportFileSummary";
 import { ArticleImportMappingForms } from "./ArticleImportMappingForms";
 import { ArticleImportResultBanner } from "./ArticleImportResultBanner";
 import { ArticleImportActionsBar } from "./ArticleImportActionsBar";
@@ -55,34 +53,37 @@ export function ImportArticlesPage() {
 				</h1>
 			</div>
 
-			{/* Dropzone */}
-			<ArticleFileDropzone
-				isDragging={isDragging}
-				selectedFile={selectedFile}
-				fileInputRef={fileInputRef}
-				onDragOver={handleDragOver}
-				onDragLeave={handleDragLeave}
-				onDrop={handleDrop}
-				onInputChange={handleInputChange}
-				onDownloadTemplate={handleDownloadTemplate}
-			/>
+			{/* Dropzone (shown when no file is selected) */}
+			{!selectedFile && (
+				<ArticleFileDropzone
+					isDragging={isDragging}
+					selectedFile={selectedFile}
+					fileInputRef={fileInputRef}
+					onDragOver={handleDragOver}
+					onDragLeave={handleDragLeave}
+					onDrop={handleDrop}
+					onInputChange={handleInputChange}
+					onDownloadTemplate={handleDownloadTemplate}
+				/>
+			)}
 
-			{/* File Summary & Mapping Section */}
+			{/* File Summary & 2-Column Mapping Section matching Figma */}
 			{selectedFile && parsedData && (
 				<div className="flex flex-col gap-6">
-					<ArticleImportFileSummary
+					<ArticleImportMappingForms
 						file={selectedFile}
 						parsedData={parsedData}
-					/>
-
-					<ArticleImportMappingForms
-						columns={parsedData.columns}
 						mapping={mapping}
 						basicInfoOpen={basicInfoOpen}
 						measurementsOpen={measurementsOpen}
 						onToggleBasicInfo={() => setBasicInfoOpen((prev) => !prev)}
 						onToggleMeasurements={() => setMeasurementsOpen((prev) => !prev)}
 						onMappingChange={handleMappingChange}
+						onRemoveFile={() => {
+							if (fileInputRef.current) fileInputRef.current.value = "";
+							window.location.reload();
+						}}
+						onReupload={() => fileInputRef.current?.click()}
 					/>
 				</div>
 			)}

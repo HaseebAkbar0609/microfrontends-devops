@@ -1,7 +1,12 @@
-import { CreateArticlePage } from "@/features/tools/register/components/CreateArticlePage";
+import { CreateArticleWizard } from "@/features/financial-management";
 
 export const dynamic = "force-dynamic";
 
-export default function EconomyEditArticlePage() {
-	return <CreateArticlePage />;
+interface PageProps {
+	params: Promise<{ id: string }>;
+}
+
+export default async function EconomyEditArticlePage({ params }: PageProps) {
+	const { id } = await params;
+	return <CreateArticleWizard articleId={id} />;
 }

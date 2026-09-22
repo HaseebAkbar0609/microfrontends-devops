@@ -28,8 +28,16 @@ export const ARTICLE_FORM_TABS = [
 export const TOTAL_ARTICLE_STEPS = 2;
 
 export const STEP_FIELDS: Record<number, (keyof CreateArticleFormData)[]> = {
-	1: ["benamning", "leverantor", "enhet", "typAvArtikel", "forsaljning", "moms"],
-	2: ["forsaljningSESkattskyldighet"],
+	1: [
+		"articleNr",
+		"benamning",
+		"typAvArtikel",
+		"enhet",
+		"kalkylkostnad",
+		"moms",
+		"forsaljning",
+	],
+	2: [],
 };
 
 export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
@@ -37,31 +45,22 @@ export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
 	benamning: "",
 	ean: "",
 	leverantor: "",
-	husarbete: "nej",
-	supplierArticleNo: "",
-	typHusarbete: "",
-	enhet: "",
-	typAvArtikel: "",
-	lagerVara: "",
-	forsaljning: "",
-	moms: "",
-	forsaljningSE: "",
-	forsaljningEU: "",
-	lagerkonto: "",
-	forsaljningEUMoms: "",
-	forsaljningExport: "",
-	inkop: "",
-	priserA: "",
-	europrislista: "",
-	kampanj: "",
-	vipPriser: "",
+	enhet: "st",
+	typAvArtikel: "Standardartikel",
 	kalkylkostnad: "",
-	bestallningspunkt: "",
-	iLager: "",
-	stock: "0",
-	reserved: "0",
-	status: "active",
+	moms: "25%",
+	forsaljning: "",
+	prisSek: "",
+	rabattProcent: "",
+	avrundning: "Ingen",
+	bruttovinstProcent: "",
+	valuta: "SEK",
+	marginal: "",
+	streckkod: "",
+	artikelgrupp: "",
+	avdelning: "",
 	vikt: "",
+	volym: "",
 	langd: "",
 	bredd: "",
 	hojd: "",
@@ -76,7 +75,10 @@ export function useCreateArticleForm(articleIdProp?: string) {
 	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
-	const articleId = articleIdProp ?? (params?.id ? String(params.id) : undefined);
+	const rawId =
+		articleIdProp ?? (params?.id ? String(params.id) : undefined);
+	const articleId =
+		rawId && rawId !== "create" && rawId !== "import" ? rawId : undefined;
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoading, setIsLoading] = useState(Boolean(articleId));
