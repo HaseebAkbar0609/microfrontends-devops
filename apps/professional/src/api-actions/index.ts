@@ -177,3 +177,12 @@ export {
 	mapQuickAiToApi,
 } from "./calculation";
 
+export {
+	getSkallKravListAPIAction,
+	uploadSkallKravDocAPIAction,
+	deleteSkallKravDocAPIAction,
+	type GetSkallKravParams,
+	type GetSkallKravResponse,
+} from "@/features/calculation/api/skallKravApi";
+
+
