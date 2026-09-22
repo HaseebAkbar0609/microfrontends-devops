@@ -264,7 +264,7 @@ const DiaryPage = () => {
 				{view === "table" ? (
 					<DiaryTable
 						entries={filters.paged}
-						showEmptyState={!queryResult.isPending && !queryResult.isError}
+                        showEmptyState={queryResult.isSuccess}
 						sortField={filters.sortField}
 						onToggleSort={() => filters.toggleSort("date")}
 						onOpen={openEntry}
