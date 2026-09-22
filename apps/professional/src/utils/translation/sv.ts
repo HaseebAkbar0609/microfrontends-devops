@@ -1090,6 +1090,10 @@ export const svOffer: OfferTranslation = {
 	calcAPrisSpecification: "Specifikation",
 	calcAPrisOpen: "Öppna",
 	calcAPrisCreate: "Skapa nytt",
+	calcAPrisEdit: "Redigera A-pris",
+	edit: "Redigera",
+	required: "Detta fält är obligatoriskt",
+	invalidNumber: "Ange ett giltigt nummer",
 	// Calculation - Skall krav tab
 	calcSkallKravViewFile: "Se fil",
 	calcSkallKravUploadTitle: "Ladda upp Skall Krav",

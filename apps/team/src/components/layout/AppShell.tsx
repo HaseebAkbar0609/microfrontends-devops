@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
@@ -18,6 +18,7 @@ export function AppShell({ children }: AppShellProps) {
 	const router = useRouter();
 	const { isAuthenticated, isReady } = useAuthStatus();
 	const didRedirect = useRef(false);
+	const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false);
 
 	// This is for temporary purposes to hide the sidebar and header on auth routes to match the requirements of the project
 	const authRoutes = ["/login", "/register", "/forgot-password", "/my-companies", "/manage-plans"];
@@ -35,6 +36,10 @@ export function AppShell({ children }: AppShellProps) {
 		}
 	}, [isReady, isAuthenticated, isAuthRoute, router]);
 
+	useEffect(() => {
+		setMobileNavigationOpen(false);
+	}, [pathname]);
+
 	if (!isReady) return null;
 	if (!isAuthenticated && !isAuthRoute) return null;
 
@@ -45,7 +50,22 @@ export function AppShell({ children }: AppShellProps) {
 		return (
 			<div className="flex h-screen flex-1 flex-col overflow-hidden">
 				<div className="flex flex-1 overflow-hidden">
-					<Sidebar autoCollapse={hasSubSidebar} />
+					<div className="hidden h-full md:block">
+						<Sidebar autoCollapse={hasSubSidebar} />
+					</div>
+					{mobileNavigationOpen && (
+						<div className="fixed inset-0 z-40 md:hidden">
+							<button
+								type="button"
+								aria-label="Close navigation"
+								className="absolute inset-y-0 left-60 right-0 bg-black/40"
+								onClick={() => setMobileNavigationOpen(false)}
+							/>
+							<div className="absolute inset-y-0 left-0 w-60 shadow-xl">
+								<Sidebar />
+							</div>
+						</div>
+					)}
 					{isSalesModule && <SalesSubSidebar />}
 					{flyoutSubSidebarConfig && (
 						<MyPagesSubSidebar
@@ -55,7 +75,7 @@ export function AppShell({ children }: AppShellProps) {
 					)}
 
 					<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
-						<Header />
+						<Header onOpenNavigation={() => setMobileNavigationOpen(true)} />
 						{isSalesModule && <SalesMobileNav />}
 						<main
 							className={`flex min-w-0 flex-1 flex-col bg-white hide-scrollbar ${hasSubSidebar ? "overflow-hidden" : "overflow-auto"}`}

@@ -181,3 +181,13 @@ export type StandardCalculationData = {
 	laborCosts: LaborRow[];
 	sections?: CostSectionData[];
 };
+
+export type SkallKravDoc = {
+	id: string;
+	datum: string;
+	typ: string;
+	filename: string;
+	fileUrl?: string;
+	fileSize?: string;
+};
+

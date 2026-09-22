@@ -33,9 +33,9 @@ export function BillingOverridePanel({ companyId }: { companyId: string }) {
     <h2 className="font-semibold">{t(c.billingOverrides)}</h2>
     {(error || query.isError) && <p role="alert" className="text-red-700">{error || t(c.billingLoadFailed)}</p>}
     <form className="flex flex-wrap items-end gap-3" onSubmit={e => { e.preventDefault(); setConfirmation("grant"); }}>
-      <label className="grid flex-1 gap-1">{t(c.billingReason)}<input required minLength={5} maxLength={1000} value={reason} onChange={e => setReason(e.target.value)} className="h-11 min-w-0 rounded border px-3" /></label>
-      <label className="grid gap-1">{t(c.billingExpiry)}<input required type="datetime-local" value={expiry} onChange={e => setExpiry(e.target.value)} className="h-11 rounded border px-3" /></label>
-      <Button disabled={busy || query.isError || query.isPending || reason.trim().length < 5 || !(expiresAt > Date.now())}>{t(c.billingGrant)}</Button>
+      <label className="grid w-full min-w-0 gap-1 lg:w-auto lg:flex-1">{t(c.billingReason)}<input required minLength={5} maxLength={1000} value={reason} onChange={e => setReason(e.target.value)} className="h-11 min-w-0 rounded border px-3" /></label>
+      <label className="grid w-full min-w-0 gap-1 lg:w-auto">{t(c.billingExpiry)}<input required type="datetime-local" value={expiry} onChange={e => setExpiry(e.target.value)} className="h-11 min-w-0 rounded border px-3" /></label>
+      <Button className="w-full lg:w-auto" disabled={busy || query.isError || query.isPending || reason.trim().length < 5 || !(expiresAt > Date.now())}>{t(c.billingGrant)}</Button>
     </form>
     {(query.data ?? []).map(row => <div className="flex flex-wrap items-center justify-between gap-3 border-b py-3" key={row.id}>
       <span className="min-w-0 flex-1 break-words">{row.reason} · {new Date(row.expires_at).toLocaleString()}</span>
