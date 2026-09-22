@@ -262,19 +262,15 @@ const ItSupportPage = () => {
 											align="end"
 											className="w-40 rounded-md border border-slate-200 bg-white p-1 shadow-md"
 										>
-											<DropdownMenuItem
-												onClick={() =>
-													sendTicket(ticket.id)
-												}
-												className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
-											>
-												<Send className="h-4 w-4 text-slate-600" />
-												<Translate
-													text={
-														localizationConstants.offerFormSubmit
-													}
-												/>
-											</DropdownMenuItem>
+											{ticket.status === "notSent" && (
+												<DropdownMenuItem
+													onClick={() => sendTicket(ticket.id)}
+													className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
+												>
+													<Send className="h-4 w-4 text-slate-600" />
+													<Translate text={localizationConstants.offerFormSubmit} />
+												</DropdownMenuItem>
+											)}
 											<DropdownMenuItem
 												onClick={() => openEdit(ticket)}
 												className="gap-2 cursor-pointer rounded-md px-3 py-2 text-sm text-slate-700"
