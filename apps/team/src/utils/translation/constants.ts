@@ -1514,6 +1514,9 @@ export type SupportTranslation = {
 
 export type ContentTranslation = {
 	contentModuleTitle: string;
+	contentConsoleOpen: string;
+	contentConsoleSubtitle: string;
+	contentConsoleSummary: string;
 	contentGroupKundTitle: string;
 	contentGroupKundSummary: string;
 	contentGroupWorkspaceTitle: string;

@@ -1,4 +1,5 @@
-import { getContentSectionHref } from "@/features/content/constants/contentNav";
+import { CONTENT_NAV_GROUPS } from "@/features/content/constants/contentNav";
+import type { ContentGroupId } from "@/features/content/types";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	Heart,
@@ -157,52 +158,19 @@ const moduleGovernanceItems: NavFlyoutItem[] = [
 ];
 
 /**
- * Settings for the customer and workspace dashboards. FAQ, tips and support are
- * edited in the admin content console, so these items open its sections; the
- * support section holds both the contact details and the help guide. Those
- * pages bring their own tab rows, hence `hideSubSidebar` on both parents. The
- * parent hrefs only group the leaves for path matching and have no page.
+ * Settings for the customer and workspace dashboards. Both open the settings
+ * console, which administers every section customers and tradespeople see and
+ * brings its own sub-sidebar, hence `hideSubSidebar` on the two parents. The
+ * lists mirror that sidebar so the two navigations never disagree.
  */
-const customerDashboardItems: NavFlyoutItem[] = [
-	{
-		id: "customer-dashboard-cost-calculator",
-		label: localizationConstants.costCalculatorItem,
-		href: "/timeflow-dashboard/customer/cost-calculator",
-	},
-	{
-		id: "customer-dashboard-faq",
-		label: localizationConstants.faqItem,
-		href: getContentSectionHref("kund", "fragor-svar"),
-	},
-	{
-		id: "customer-dashboard-tips",
-		label: localizationConstants.tipsInspirationItem,
-		href: getContentSectionHref("kund", "inspiration"),
-	},
-	{
-		id: "customer-dashboard-support",
-		label: localizationConstants.supportContactItem,
-		href: getContentSectionHref("kund", "support"),
-	},
-	{
-		id: "customer-dashboard-help-guide",
-		label: localizationConstants.contentGuideTitle,
-		href: getContentSectionHref("kund", "support"),
-	},
-];
-
-const workspaceDashboardItems: NavFlyoutItem[] = [
-	{
-		id: "workspace-dashboard-help-guide",
-		label: localizationConstants.contentGuideTitle,
-		href: getContentSectionHref("workspace", "support"),
-	},
-	{
-		id: "workspace-dashboard-support",
-		label: localizationConstants.supportContactItem,
-		href: getContentSectionHref("workspace", "support"),
-	},
-];
+const dashboardFlyoutItems = (groupId: ContentGroupId): NavFlyoutItem[] =>
+	CONTENT_NAV_GROUPS.filter((group) => group.id === groupId).flatMap((group) =>
+		group.items.map((item) => ({
+			id: item.id,
+			label: item.labelKey,
+			href: item.href,
+		})),
+	);
 
 export const favoriteableNavItems: NavFlyoutItem[] = [
 	moduleSalesItem,
@@ -407,15 +375,15 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 				{
 					id: "customer-dashboard",
 					label: localizationConstants.contentGroupKundTitle,
-					href: "/timeflow-dashboard/customer",
-					flyoutItems: customerDashboardItems,
+					href: "/admin/content/kund",
+					flyoutItems: dashboardFlyoutItems("kund"),
 					hideSubSidebar: true,
 				},
 				{
 					id: "workspace-dashboard",
 					label: localizationConstants.contentGroupWorkspaceTitle,
-					href: "/timeflow-dashboard/workspace",
-					flyoutItems: workspaceDashboardItems,
+					href: "/admin/content/workspace",
+					flyoutItems: dashboardFlyoutItems("workspace"),
 					hideSubSidebar: true,
 				},
 			],

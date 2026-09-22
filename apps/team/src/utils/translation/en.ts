@@ -1543,6 +1543,9 @@ export const enSupport: SupportTranslation = {
 
 export const enContent: ContentTranslation = {
 	contentModuleTitle: "Content",
+	contentConsoleOpen: "Open",
+	contentConsoleSubtitle: "Administration",
+	contentConsoleSummary: "Choose which dashboard to administer. Everything customers and tradespeople see is controlled from here.",
 	contentGroupKundTitle: "Customer dashboard",
 	contentGroupKundSummary: "Content and settings that shape the customer experience.",
 	contentGroupWorkspaceTitle: "Workspace dashboard",

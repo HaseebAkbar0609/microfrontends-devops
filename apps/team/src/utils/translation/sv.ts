@@ -1541,6 +1541,9 @@ export const sweSupport: SupportTranslation = {
 
 export const sweContent: ContentTranslation = {
 	contentModuleTitle: "Innehåll",
+	contentConsoleOpen: "Öppna",
+	contentConsoleSubtitle: "Administration",
+	contentConsoleSummary: "Välj vilken dashboard du vill administrera. Allt innehåll som kunder och hantverkare ser styrs härifrån.",
 	contentGroupKundTitle: "Kund-dashboard",
 	contentGroupKundSummary: "Innehåll och inställningar som styr kundens upplevelse.",
 	contentGroupWorkspaceTitle: "Workspace-dashboard",
