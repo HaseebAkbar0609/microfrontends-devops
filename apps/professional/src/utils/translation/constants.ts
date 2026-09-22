@@ -4332,12 +4332,10 @@ export type OfferTranslation = {
 	projectProtocolCreateStandard: string;
 	projectProtocolCreateAction: string;
 	projectProtocolUpload: string;
-	projectProtocolDialogAction: string;
 	projectProtocolColDate: string;
 	projectProtocolColType: string;
 	projectProtocolColPdf: string;
 	projectProtocolColHandling: string;
-	projectProtocolColName: string;
 	projectProtocolRowActions: string;
 	projectProtocolTypeByggmote: string;
 	projectProtocolTypeEgenkontroll: string;
@@ -4353,7 +4351,6 @@ export type OfferTranslation = {
 	projectProtocolNoFile: string;
 	projectProtocolDateRequired: string;
 	projectProtocolTypeRequired: string;
-	projectProtocolNameRequired: string;
 	projectProtocolTooLong: string;
 	projectProtocolAllowedFiles: string;
 	projectProtocolFileTypeError: string;
@@ -4402,6 +4399,9 @@ export type OfferTranslation = {
 	projectProtocolNewTitle: string;
 	projectProtocolFileLabel: string;
 	projectProtocolUploadedSubtitle: string;
+	/* TFS-716 — Protokoll - Action */
+	projectProtocolStatusLegend: string;
+	projectProtocolPointStatusFor: string;
 	projectDiaryFileTypeError: string;
 	projectDiaryFileSizeError: string;
 	projectDiaryRemoveFile: string;

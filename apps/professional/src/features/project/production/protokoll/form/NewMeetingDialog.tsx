@@ -9,11 +9,14 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { ProtocolProjectLine } from "../components/ProtocolProjectLine";
 import { useMeetingPeople } from "../hooks/useMeetingPeople";
-import type { NewMeetingInput } from "../types";
+import { PROTOCOL_KIND_MENU_KEYS } from "../projectProtocol.config";
+import type { MeetingKind, NewMeetingInput } from "../types";
 import { NewMeetingFields } from "./NewMeetingFields";
 import { useNewMeetingForm } from "./useNewMeetingForm";
 
 export interface NewMeetingDialogProps {
+	/** Standard or Action — the subtitle, and what Nästa creates. */
+	kind: MeetingKind;
 	projectId: string;
 	projectNo: string;
 	projectName: string;
@@ -23,12 +26,13 @@ export interface NewMeetingDialogProps {
 }
 
 /**
- * "Nytt möte" — Skapa protokoll → Protokoll - Standard. Nästa stores the
- * meeting and opens its protocol, where the points are written; it carries an
- * arrow rather than the frame's send icon, since nothing is sent. The caller
- * mounts it only while open, so each opening starts empty.
+ * "Nytt möte" — Skapa protokoll → Protokoll - Standard or Protokoll - Action.
+ * Nästa stores the meeting and opens its protocol, where the points are
+ * written; it carries an arrow rather than the frame's send icon, since
+ * nothing is sent. The caller mounts it only while open, so each opening
+ * starts empty.
  */
-export function NewMeetingDialog({ projectId, projectNo, projectName, onCreate, onClose }: NewMeetingDialogProps) {
+export function NewMeetingDialog({ kind, projectId, projectNo, projectName, onCreate, onClose }: NewMeetingDialogProps) {
 	const people = useMeetingPeople(projectId);
 	const { form, submit, translateError } = useNewMeetingForm(onCreate);
 
@@ -40,7 +44,7 @@ export function NewMeetingDialog({ projectId, projectNo, projectName, onCreate, 
 						<Translate text={localizationConstants.protocolNewMeetingTitle} />
 					</DialogTitle>
 					<DialogDescription className="text-sm text-slate-500">
-						<Translate text={localizationConstants.projectProtocolCreateStandard} />
+						<Translate text={PROTOCOL_KIND_MENU_KEYS[kind]} />
 					</DialogDescription>
 				</DialogHeader>
 				<ProtocolProjectLine projectNo={projectNo} projectName={projectName} />

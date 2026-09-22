@@ -11,7 +11,7 @@ import { PROTOCOL_TYPE_LABELS } from "../projectProtocol.config";
 import { protocolUrls } from "../protocolNav";
 import { hasMeeting, type ProtocolTypeLabel } from "../protocolView";
 import * as store from "../services/projectProtocolService";
-import type { NewMeetingInput, ProjectProtocol, ProjectProtocolInput, UploadDetails } from "../types";
+import type { MeetingKind, NewMeetingInput, ProjectProtocol, UploadDetails } from "../types";
 import { useProtocolFileActions } from "./useProtocolFileActions";
 import { useProtocolProject } from "./useProtocolProject";
 
@@ -57,12 +57,6 @@ export function useProjectProtocols(projectId: string) {
 		[projectId, t],
 	);
 
-	/** The Action protocol's short dialog. */
-	const create = useCallback(
-		(input: ProjectProtocolInput) => afterCreate(store.createProtocol(projectId, input)),
-		[afterCreate, projectId],
-	);
-
 	/** Nytt protokoll (Ladda upp): its details and the attached file. */
 	const createUpload = useCallback(
 		(details: UploadDetails, file: File) => afterCreate(store.createUpload(projectId, details, file)),
@@ -70,13 +64,13 @@ export function useProjectProtocols(projectId: string) {
 	);
 
 	/**
-	 * Nytt möte's Nästa: stores the meeting and opens its protocol, where the
-	 * points are written. `false` when the store refused it, which keeps the
-	 * dialog open.
+	 * Nytt möte's Nästa, for a Standard or an Action protocol: stores the
+	 * meeting and opens its protocol, where the points are written. `false` when
+	 * the store refused it, which keeps the dialog open.
 	 */
 	const createMeeting = useCallback(
-		(input: NewMeetingInput): boolean => {
-			const created = facts ? store.createMeeting(projectId, facts.projectNo, input) : undefined;
+		(kind: MeetingKind, input: NewMeetingInput): boolean => {
+			const created = facts ? store.createMeeting(projectId, facts.projectNo, kind, input) : undefined;
 			if (!created) {
 				showToast("error", t(localizationConstants.projectProtocolSaveFailed));
 				return false;
@@ -112,8 +106,8 @@ export function useProjectProtocols(projectId: string) {
 	);
 
 	/**
-	 * ⋮ Öppna, and Visa detaljer on an Action row: a Standard protocol's meeting,
-	 * or the stored file. An upload's Visa detaljer is a link to its page.
+	 * ⋮ Öppna: a Standard or Action protocol's meeting, or an upload's stored
+	 * file. Visa detaljer is a link to the protocol's page.
 	 */
 	const open = useCallback(
 		(row: ProjectProtocol) => {
@@ -129,7 +123,7 @@ export function useProjectProtocols(projectId: string) {
 	/** ⋮ Skriv ut — that protocol's file, not the page. */
 	const print = useCallback((row: ProjectProtocol) => printFile(row.url), [printFile]);
 
-	return { project, facts, protocols, typeLabel, create, createUpload, createMeeting, toggleArchive, remove, open, print };
+	return { project, facts, protocols, typeLabel, createUpload, createMeeting, toggleArchive, remove, open, print };
 }
 
 export type ProjectProtocolsState = ReturnType<typeof useProjectProtocols>;
