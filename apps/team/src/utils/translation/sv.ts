@@ -515,7 +515,7 @@ export const sweLeads: LeadsTranslation = {
 	discountPercentLabel: "Rabatt (%)",
 	startDateLabel: "Startdatum",
 	sendInvoiceLabel: "Skicka faktura",
-	invoiceNoteText: "En faktura kommer att genereras och skickas till kontaktpersonen. Kunden får status \"Pending\" tills betalning bekräftas.",
+	invoiceNoteText: "Ingen faktura skapas för Demo eller Trial. Konfigurera fakturering separat efter att kontot har skapats.",
 };
 
 export const sweCustomers: CustomersTranslation = {

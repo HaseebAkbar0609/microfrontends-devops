@@ -27,7 +27,7 @@ function GroupForm({ group, onClose, setBlocked }: { group?: Group; onClose: () 
   const [name, setName] = useState(group?.name ?? "");
   const [description, setDescription] = useState(group?.description ?? "");
   const [status, setStatus] = useState(group?.status ?? "active");
-  const [parent, setParent] = useState<Option[]>(group?.parent_group_id ? [{ id: group.parent_group_id }] : []);
+  const [parent, setParent] = useState<Option[]>(group?.parent_group_id ? [{ id: group.parent_group_id, name: group.parent_group_name }] : []);
   const [members, setMembers] = useState<Option[]>([]);
   const [permissions, setPermissions] = useState(group?.module_permissions ?? {});
   const [busy, setBusy] = useState(false);

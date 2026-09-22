@@ -17,7 +17,7 @@ export type AdminUser = Option & {
   license?: string; license_plan_id?: string | null; created_at?: string; last_login?: string;
 };
 export type Group = Option & {
-  name: string; description?: string; status: string; parent_group_id?: string;
+  name: string; description?: string; status: string; parent_group_id?: string; parent_group_name?: string;
   member_count: number; users: Option[]; members_truncated?: boolean;
   module_permissions: Record<string, boolean>;
 };
