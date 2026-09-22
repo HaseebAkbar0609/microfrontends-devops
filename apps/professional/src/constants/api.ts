@@ -208,6 +208,12 @@ export const API_PATH = {
 		STANDARD_LABOR_COSTS: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/standard/labor-costs`,
 		STANDARD_SECTION_DELETE: (id: string, sectionId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/standard/sections/${sectionId}`,
 	},
+	CALCULATION: {
+		PRO: `${PROFESSIONALS_BASE_PATH}/calculation/pro`,
+		PRO_SAVE: `${PROFESSIONALS_BASE_PATH}/calculation/pro/save`,
+		PRO_PURCHASE_LICENSE: `${PROFESSIONALS_BASE_PATH}/calculation/pro/purchase-license`,
+		PRO_DELETE_ROW: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/pro/industry-row/${id}`,
+	},
 };
 
 export const appConstants = {
