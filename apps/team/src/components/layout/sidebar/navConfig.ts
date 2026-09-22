@@ -1,5 +1,4 @@
-import { CONTENT_NAV_GROUPS } from "@/features/content/constants/contentNav";
-import type { ContentGroupId } from "@/features/content/types";
+import { getContentGroupHref } from "@/features/content/constants/contentNav";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	Heart,
@@ -156,21 +155,6 @@ const moduleGovernanceItems: NavFlyoutItem[] = [
 		isFavoriteSupported: true,
 	},
 ];
-
-/**
- * Settings for the customer and workspace dashboards. Both open the settings
- * console, which administers every section customers and tradespeople see and
- * brings its own sub-sidebar, hence `hideSubSidebar` on the two parents. The
- * lists mirror that sidebar so the two navigations never disagree.
- */
-const dashboardFlyoutItems = (groupId: ContentGroupId): NavFlyoutItem[] =>
-	CONTENT_NAV_GROUPS.filter((group) => group.id === groupId).flatMap((group) =>
-		group.items.map((item) => ({
-			id: item.id,
-			label: item.labelKey,
-			href: item.href,
-		})),
-	);
 
 export const favoriteableNavItems: NavFlyoutItem[] = [
 	moduleSalesItem,
@@ -372,19 +356,17 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			label: localizationConstants.settings,
 			icon: Smartphone,
 			items: [
+				// Links only: the console brings its own sidebar, which lists the
+				// sections. Repeating them here would show the same menu twice.
 				{
 					id: "customer-dashboard",
 					label: localizationConstants.contentGroupKundTitle,
-					href: "/admin/content/kund",
-					flyoutItems: dashboardFlyoutItems("kund"),
-					hideSubSidebar: true,
+					href: getContentGroupHref("kund"),
 				},
 				{
 					id: "workspace-dashboard",
 					label: localizationConstants.contentGroupWorkspaceTitle,
-					href: "/admin/content/workspace",
-					flyoutItems: dashboardFlyoutItems("workspace"),
-					hideSubSidebar: true,
+					href: getContentGroupHref("workspace"),
 				},
 			],
 		},
