@@ -5599,6 +5599,9 @@ export type RegisterTranslation = {
 	importFailedTitle: string;
 	importFailedArticlesCount: string;
 	importArticlesPageTitle: string;
+	fileMappingSubtext: string;
+	filesHeader: string;
+	documentsTitle: string;
 	unitHeader: string;
 	typAvArtikelLabel: string;
 	viktLabel: string;

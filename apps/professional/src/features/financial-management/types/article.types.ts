@@ -9,6 +9,7 @@ export interface ArticleRow {
 	reserved: string;
 	available: string;
 	stockValue: string;
+	country?: string;
 	status: "active" | "inactive";
 }
 
@@ -26,9 +27,18 @@ export interface PriceListRow {
 	id: string;
 	name: string;
 	price: string;
-	currency: string;
+	currency?: string;
 	validFrom?: string;
 	validTo?: string;
+	isFavorite?: boolean;
+	benamning?: string;
+	prisUt?: string;
+	prisKalkyl?: string;
+	tgPercent?: string;
+	tbSek?: string;
+	kostnad?: string;
+	andringsDatum?: string;
+	statistik?: string;
 }
 
 export interface ArticleDetail extends ArticleRow {

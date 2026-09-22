@@ -15,7 +15,7 @@ interface SupplierArticleDetailPageProps {
 
 export function SupplierArticleDetailPage({ id }: SupplierArticleDetailPageProps) {
 	const t = useTranslate();
-	const { article, isLoading, handleEdit, handleBack } = useSupplierArticleDetail(id);
+	const { article, isLoading, updateSupplierArticle, handleBack } = useSupplierArticleDetail(id);
 
 	if (isLoading) {
 		return (
@@ -82,7 +82,7 @@ export function SupplierArticleDetailPage({ id }: SupplierArticleDetailPageProps
 				</TabsList>
 
 				<TabsContent value="basic">
-					<SupplierArticleBasicTab article={article} onEdit={handleEdit} />
+					<SupplierArticleBasicTab article={article} onUpdate={updateSupplierArticle} />
 				</TabsContent>
 			</Tabs>
 		</div>

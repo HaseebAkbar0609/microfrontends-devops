@@ -2,11 +2,20 @@ import { z } from "zod";
 
 export const priceListRowSchema = z.object({
 	id: z.string(),
-	name: z.string().min(1, "validationRequired"),
-	price: z.string().min(1, "validationRequired"),
-	currency: z.string().min(1, "validationRequired"),
+	name: z.string().optional(),
+	price: z.string().optional(),
+	currency: z.string().optional(),
 	validFrom: z.string().optional(),
 	validTo: z.string().optional(),
+	isFavorite: z.boolean().optional(),
+	benamning: z.string().optional(),
+	prisUt: z.string().optional(),
+	prisKalkyl: z.string().optional(),
+	tgPercent: z.string().optional(),
+	tbSek: z.string().optional(),
+	kostnad: z.string().optional(),
+	andringsDatum: z.string().optional(),
+	statistik: z.string().optional(),
 });
 
 export const createArticleSchema = z.object({

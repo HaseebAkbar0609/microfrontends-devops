@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
@@ -45,22 +45,31 @@ export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
 	benamning: "",
 	ean: "",
 	leverantor: "",
+	husarbete: "nej",
+	supplierArticleNo: "",
+	typHusarbete: "",
 	enhet: "st",
 	typAvArtikel: "Standardartikel",
-	kalkylkostnad: "",
-	moms: "25%",
+	lagerVara: "nej",
 	forsaljning: "",
-	prisSek: "",
-	rabattProcent: "",
-	avrundning: "Ingen",
-	bruttovinstProcent: "",
-	valuta: "SEK",
-	marginal: "",
-	streckkod: "",
-	artikelgrupp: "",
-	avdelning: "",
+	moms: "25%",
+	forsaljningSE: "",
+	forsaljningEU: "",
+	lagerkonto: "",
+	forsaljningEUMoms: "",
+	forsaljningExport: "",
+	inkop: "",
+	priserA: "",
+	europrislista: "",
+	kampanj: "",
+	vipPriser: "",
+	kalkylkostnad: "",
+	bestallningspunkt: "",
+	iLager: "",
+	stock: "",
+	reserved: "",
+	status: "active",
 	vikt: "",
-	volym: "",
 	langd: "",
 	bredd: "",
 	hojd: "",
@@ -69,6 +78,7 @@ export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
 	momsSESkattskyldighet: "",
 	forsaljningEUSkattskyldighet: "",
 	lagerforandring: "",
+	priceListRows: [],
 };
 
 export function useCreateArticleForm(articleIdProp?: string) {
@@ -87,7 +97,7 @@ export function useCreateArticleForm(articleIdProp?: string) {
 	const isEdit = Boolean(articleId);
 
 	const methods = useForm<CreateArticleFormData>({
-		resolver: zodResolver(createArticleSchema),
+		resolver: zodResolver(createArticleSchema) as unknown as Resolver<CreateArticleFormData>,
 		defaultValues: EMPTY_ARTICLE_DEFAULTS,
 	});
 
@@ -182,7 +192,7 @@ export function useCreateArticleForm(articleIdProp?: string) {
 		[currentStep, validateStep],
 	);
 
-	const handleSubmit = methods.handleSubmit(async (data: CreateArticleFormData) => {
+	const handleSubmit = methods.handleSubmit(async (data) => {
 		setIsSubmitting(true);
 		try {
 			const formData: CreateArticleFormData = { ...data, priceListRows };

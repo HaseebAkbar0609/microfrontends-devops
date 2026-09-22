@@ -19,21 +19,19 @@ export function ArticleBasicInfoStep({
 }: ArticleBasicInfoStepProps) {
 	return (
 		<div className="flex flex-col gap-6">
-			{/* Card 1: Grund information */}
-			<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xs">
+			{/* Card 1: Grund information with Prislista */}
+			<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xs space-y-6">
 				<ArticleBasicInfoFields />
+				<div className="pt-2">
+					<PriceListSubTable
+						rows={priceListRows}
+						onAddRow={onAddPriceListRow}
+						onRemoveRow={onRemovePriceListRow}
+					/>
+				</div>
 			</div>
 
-			{/* Card 2: Prislista */}
-			<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xs">
-				<PriceListSubTable
-					rows={priceListRows}
-					onAddRow={onAddPriceListRow}
-					onRemoveRow={onRemovePriceListRow}
-				/>
-			</div>
-
-			{/* Card 3: Bokförings uppgifter */}
+			{/* Card 2: Bokförings uppgifter */}
 			<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xs">
 				<ArticleAccountingStep1Fields />
 			</div>

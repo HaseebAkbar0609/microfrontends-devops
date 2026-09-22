@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Star, Eye, Pencil, Trash2 } from "lucide-react";
+import { Star, Eye, Trash2 } from "lucide-react";
 import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -176,11 +176,6 @@ export function ArticlesOverviewTable() {
 				label: localizationConstants.viewLabel,
 				icon: <Eye className="h-4 w-4" />,
 				onClick: (row) => router.push(`${ARTICLE_DETAIL_BASE_ROUTE}/${encodeURIComponent(row.id)}`),
-			},
-			{
-				label: localizationConstants.editLabel,
-				icon: <Pencil className="h-4 w-4" />,
-				onClick: (row) => router.push(`${ARTICLE_DETAIL_BASE_ROUTE}/${encodeURIComponent(row.id)}/edit`),
 			},
 			{
 				label: localizationConstants.deleteLabel,

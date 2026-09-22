@@ -432,11 +432,14 @@ class CasesRepository {
 					new Date().toISOString().split("T")[0];
 
 				this.create({
+					id: "",
 					title,
 					category,
 					createdBy,
 					description,
 					date,
+					documents: [],
+					images: [],
 				});
 				successCount++;
 			} catch {

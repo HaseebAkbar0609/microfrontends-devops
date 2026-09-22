@@ -70,24 +70,6 @@ export function CreateArticleWizard({ articleId }: CreateArticleWizardProps) {
 							</h1>
 						</div>
 					</div>
-
-					{/* Top-Right Step Progress Bar matching Figma */}
-					<div className="flex flex-col items-end gap-1.5">
-						<div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-							<span>
-								<Translate text={localizationConstants.customerStepPrefix} /> {currentStep}/{TOTAL_ARTICLE_STEPS}
-							</span>
-							<span className="text-slate-400 font-normal">
-								({currentStep === 1 ? "50%" : "100%"})
-							</span>
-						</div>
-						<div className="w-44 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-							<div
-								className="h-full bg-slate-900 transition-all duration-300 rounded-full"
-								style={{ width: currentStep === 1 ? "50%" : "100%" }}
-							/>
-						</div>
-					</div>
 				</div>
 
 				{/* Horizontal Tabs matching Figma */}
@@ -96,19 +78,36 @@ export function CreateArticleWizard({ articleId }: CreateArticleWizardProps) {
 					onTabChange={(tab) => handleTabClick(tab === "basic_info" ? 1 : 2)}
 				/>
 
-				{/* Full-Width Form Step Content */}
-				<div className="w-full space-y-6">
-					{currentStep === 1 && (
-						<ArticleBasicInfoStep
-							priceListRows={priceListRows}
-							onAddPriceListRow={handleAddPriceListRow}
-							onRemovePriceListRow={handleRemovePriceListRow}
-						/>
-					)}
+				{/* 2-Column Responsive Form Layout matching Figma Image 5 */}
+				<div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+					{/* Left Column: Form Step Cards */}
+					<div className="lg:col-span-8 space-y-6">
+						{currentStep === 1 && (
+							<ArticleBasicInfoStep
+								priceListRows={priceListRows}
+								onAddPriceListRow={handleAddPriceListRow}
+								onRemovePriceListRow={handleRemovePriceListRow}
+							/>
+						)}
 
-					{currentStep === 2 && <ArticleStructuredInfoStep />}
+						{currentStep === 2 && <ArticleStructuredInfoStep />}
+					</div>
+
+					{/* Right Column: Step Progress Bar matching Figma Image 5 */}
+					<div className="lg:col-span-4 flex flex-col gap-2 pt-1">
+						<div className="flex items-center justify-between text-xs font-semibold text-slate-800">
+							<span>
+								<Translate text={localizationConstants.customerStepPrefix} /> {currentStep}/{TOTAL_ARTICLE_STEPS}
+							</span>
+						</div>
+						<div className="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+							<div
+								className="h-full bg-slate-900 transition-all duration-300 rounded-full"
+								style={{ width: currentStep === 1 ? "50%" : "100%" }}
+							/>
+						</div>
+					</div>
 				</div>
-
 				{/* Navigation Footer */}
 				<div className="flex items-center justify-end gap-3 pt-4 pb-12 border-t border-slate-100">
 					<Button

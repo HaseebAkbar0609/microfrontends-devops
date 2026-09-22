@@ -3,23 +3,66 @@
 import React from "react";
 import localizationConstants from "@/utils/translation/constants";
 import type { ArticleDetail } from "../../../../types/article.types";
-import { ArticleDetailSectionCard } from "../ArticleDetailSectionCard";
+import {
+	ArticleDetailSectionCard,
+	type ArticleDetailFieldItem,
+} from "../ArticleDetailSectionCard";
 import { ArticlePriceListTable } from "../ArticlePriceListTable";
 
 interface ArticleGrundInfoTabProps {
 	readonly article: ArticleDetail;
-	readonly onEdit: () => void;
+	readonly onUpdate: (updates: Partial<ArticleDetail>) => void;
 }
 
-export function ArticleGrundInfoTab({ article, onEdit }: ArticleGrundInfoTabProps) {
-	const basicItems = [
-		{ label: localizationConstants.articleNrLabel, value: article.articleNo },
-		{ label: localizationConstants.articleBenamningLabel, value: article.benamning },
-		{ label: localizationConstants.articleEanLabel, value: article.ean },
-		{ label: localizationConstants.articleLeverantorLabel, value: article.leverantor },
-		{ label: localizationConstants.articleEnhetLabel, value: article.enhet },
-		{ label: localizationConstants.articleTypAvArtikelLabel, value: article.typAvArtikel },
+export function ArticleGrundInfoTab({ article, onUpdate }: ArticleGrundInfoTabProps) {
+	const basicItems: ArticleDetailFieldItem[] = [
 		{
+			key: "articleNo",
+			label: localizationConstants.articleNrLabel,
+			value: article.articleNo,
+			readOnly: true,
+		},
+		{
+			key: "benamning",
+			label: localizationConstants.articleBenamningLabel,
+			value: article.benamning,
+		},
+		{
+			key: "ean",
+			label: localizationConstants.articleEanLabel,
+			value: article.ean,
+		},
+		{
+			key: "leverantor",
+			label: localizationConstants.articleLeverantorLabel,
+			value: article.leverantor,
+		},
+		{
+			key: "enhet",
+			label: localizationConstants.articleEnhetLabel,
+			value: article.enhet,
+			type: "select",
+			options: [
+				{ label: "Styck (st)", value: "Styck" },
+				{ label: "Timme (tim)", value: "Tim" },
+				{ label: "Meter (m)", value: "Meter" },
+				{ label: "Kilogram (kg)", value: "Kg" },
+				{ label: "Liter (l)", value: "Liter" },
+				{ label: "Månad (mån)", value: "Månad" },
+			],
+		},
+		{
+			key: "typAvArtikel",
+			label: localizationConstants.articleTypAvArtikelLabel,
+			value: article.typAvArtikel,
+			type: "select",
+			options: [
+				{ label: "Vara", value: "Vara" },
+				{ label: "Tjänst", value: "Tjänst" },
+			],
+		},
+		{
+			key: "status",
 			label: localizationConstants.statusLabel,
 			value:
 				article.status === "active"
@@ -29,16 +72,52 @@ export function ArticleGrundInfoTab({ article, onEdit }: ArticleGrundInfoTabProp
 			badgeVariant: (article.status === "active" ? "success" : "secondary") as
 				| "success"
 				| "secondary",
+			type: "select",
+			options: [
+				{ label: "Aktiv", value: "active" },
+				{ label: "Inaktiv", value: "inactive" },
+			],
 		},
 	];
 
-	const accountingItems = [
-		{ label: localizationConstants.articleForsaljningLabel, value: article.forsaljning },
-		{ label: localizationConstants.articleMomsLabel, value: article.moms },
-		{ label: localizationConstants.articleForsaljningSELabel, value: article.forsaljningSE },
-		{ label: localizationConstants.articleForsaljningEULabel, value: article.forsaljningEU },
-		{ label: localizationConstants.articleLagerkontoLabel, value: article.lagerkonto },
-		{ label: localizationConstants.articleInkopLabel, value: article.inkop },
+	const accountingItems: ArticleDetailFieldItem[] = [
+		{
+			key: "forsaljning",
+			label: localizationConstants.articleForsaljningLabel,
+			value: article.forsaljning,
+		},
+		{
+			key: "moms",
+			label: localizationConstants.articleMomsLabel,
+			value: article.moms,
+			type: "select",
+			options: [
+				{ label: "25%", value: "25%" },
+				{ label: "12%", value: "12%" },
+				{ label: "6%", value: "6%" },
+				{ label: "0% (Momsfri)", value: "0%" },
+			],
+		},
+		{
+			key: "forsaljningSE",
+			label: localizationConstants.articleForsaljningSELabel,
+			value: article.forsaljningSE,
+		},
+		{
+			key: "forsaljningEU",
+			label: localizationConstants.articleForsaljningEULabel,
+			value: article.forsaljningEU,
+		},
+		{
+			key: "lagerkonto",
+			label: localizationConstants.articleLagerkontoLabel,
+			value: article.lagerkonto,
+		},
+		{
+			key: "inkop",
+			label: localizationConstants.articleInkopLabel,
+			value: article.inkop,
+		},
 	];
 
 	return (
@@ -46,18 +125,18 @@ export function ArticleGrundInfoTab({ article, onEdit }: ArticleGrundInfoTabProp
 			<ArticleDetailSectionCard
 				title={localizationConstants.createArticleGrundInfoSection}
 				items={basicItems}
-				onEdit={onEdit}
+				onSave={onUpdate}
 			/>
 
 			<ArticlePriceListTable
 				rows={article.priceListRows}
-				onEdit={onEdit}
+				onEdit={() => {}}
 			/>
 
 			<ArticleDetailSectionCard
 				title={localizationConstants.createArticleBokforingsUppgifterSection}
 				items={accountingItems}
-				onEdit={onEdit}
+				onSave={onUpdate}
 			/>
 		</div>
 	);

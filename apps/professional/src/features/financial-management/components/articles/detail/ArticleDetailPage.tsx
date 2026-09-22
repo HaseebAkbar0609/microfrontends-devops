@@ -16,7 +16,7 @@ interface ArticleDetailPageProps {
 
 export function ArticleDetailPage({ id }: ArticleDetailPageProps) {
 	const t = useTranslate();
-	const { article, isLoading, handleEdit, handleBack } = useArticleDetail(id);
+	const { article, isLoading, updateArticle, handleBack } = useArticleDetail(id);
 
 	if (isLoading) {
 		return (
@@ -73,7 +73,7 @@ export function ArticleDetailPage({ id }: ArticleDetailPageProps) {
 			</div>
 
 			<p className="mb-2 ml-10 text-sm font-normal leading-5 text-zinc-500">
-				#{article.articleNo}
+				#{article.articleNo} • {article.benamning}
 			</p>
 
 			<Tabs defaultValue="basic" className="ml-0 sm:ml-10">
@@ -93,11 +93,11 @@ export function ArticleDetailPage({ id }: ArticleDetailPageProps) {
 				</TabsList>
 
 				<TabsContent value="basic">
-					<ArticleGrundInfoTab article={article} onEdit={handleEdit} />
+					<ArticleGrundInfoTab article={article} onUpdate={updateArticle} />
 				</TabsContent>
 
 				<TabsContent value="structured">
-					<ArticleStruktureradInfoTab article={article} onEdit={handleEdit} />
+					<ArticleStruktureradInfoTab article={article} onUpdate={updateArticle} />
 				</TabsContent>
 			</Tabs>
 		</div>

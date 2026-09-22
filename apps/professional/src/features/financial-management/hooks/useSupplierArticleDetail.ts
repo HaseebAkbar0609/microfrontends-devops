@@ -7,10 +7,7 @@ import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { SupplierArticleDetail } from "../types/article.types";
 import { getSupplierArticleDetailAPIAction } from "../utils/articleRepository";
-import {
-	ARTICLE_OVERVIEW_BASE_ROUTE,
-	SUPPLIER_ARTICLE_DETAIL_BASE_ROUTE,
-} from "../constants/article.constants";
+import { ARTICLE_OVERVIEW_BASE_ROUTE } from "../constants/article.constants";
 
 export function useSupplierArticleDetail(supplierArticleIdProp?: string) {
 	const t = useTranslate();
@@ -38,11 +35,14 @@ export function useSupplierArticleDetail(supplierArticleIdProp?: string) {
 		fetchArticle();
 	}, [fetchArticle]);
 
-	const handleEdit = useCallback(() => {
-		if (id) {
-			router.push(`${SUPPLIER_ARTICLE_DETAIL_BASE_ROUTE}/${encodeURIComponent(id)}/edit`);
-		}
-	}, [id, router]);
+	const updateSupplierArticle = useCallback(
+		(updates: Partial<SupplierArticleDetail>) => {
+			if (!id) return;
+			setArticle((prev) => (prev ? { ...prev, ...updates } : null));
+			showToast("success", t(localizationConstants.supplierArticleUpdatedSuccess));
+		},
+		[id, t],
+	);
 
 	const handleBack = useCallback(() => {
 		router.push(`${ARTICLE_OVERVIEW_BASE_ROUTE}?subtab=leverantorsArtiklar`);
@@ -52,7 +52,7 @@ export function useSupplierArticleDetail(supplierArticleIdProp?: string) {
 		article,
 		isLoading,
 		id,
-		handleEdit,
+		updateSupplierArticle,
 		handleBack,
 		router,
 	};
