@@ -10,7 +10,6 @@ import { CalculationProContent } from "./CalculationProContent";
 import { CalculationQuickAiContent } from "./CalculationQuickAiContent";
 import { CalculationAPriceContent } from "./CalculationAPriceContent";
 import { CalculationSkallKravContent } from "./CalculationSkallKravContent";
-import { DUMMY_APRICE_LIST } from "../constants/apriceMock";
 import { useStandardCalculation } from "../hooks/useStandardCalculation";
 
 const TABS = [
@@ -161,7 +160,7 @@ export function CalculationKalkylView() {
 				</TabsContent>
 
 				<TabsContent value="a-price" className="flex flex-1 flex-col">
-					<CalculationAPriceContent items={DUMMY_APRICE_LIST} />
+					<CalculationAPriceContent />
 				</TabsContent>
 
 				<TabsContent value="required" className="flex flex-1 flex-col">

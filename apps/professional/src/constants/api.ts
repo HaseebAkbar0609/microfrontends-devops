@@ -223,6 +223,8 @@ export const API_PATH = {
 		QUICK_AI_DELETE_ROW: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/quick-ai/rows/${id}`,
 		SKALL_KRAV: `${PROFESSIONALS_BASE_PATH}/calculation/skall-krav`,
 		SKALL_KRAV_DOC: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/skall-krav/${id}`,
+		A_PRICE: `${PROFESSIONALS_BASE_PATH}/calculation/a-price`,
+		A_PRICE_ITEM: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculation/a-price/${id}`,
 	},
 };
 
