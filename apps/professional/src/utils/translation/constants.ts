@@ -1179,6 +1179,14 @@ export type OfferTranslation = {
 	calcArchiveSeProject: string;
 	calcArchiveUnarchive: string;
 	calcArchiveDelete: string;
+	calcArchiveOpen: string;
+	calcArchiveDeleteConfirmTitle: string;
+	calcArchiveDeleteConfirmDescription: string;
+	calcArchiveRestoreConfirmTitle: string;
+	calcArchiveRestoreConfirmDescription: string;
+	calcArchiveRestoreSuccess: string;
+	calcArchiveDeleteSuccess: string;
+	calcArchiveEmpty: string;
 	// Calculation - Skapa nytt
 	calcNewTitle: string;
 	calcNewStep1Tab: string;
