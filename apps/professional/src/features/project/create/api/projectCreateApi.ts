@@ -1,14 +1,12 @@
-import { PROJECT_LIST_ROWS } from "../../data/projectsOverview.mock";
+import { saveProfessionalProject } from "../../services/professionalProjectService";
 import type { ProjectListItem } from "../../data/projectsOverview.mock";
 import type { CreateProjectFormData } from "../types";
 
 /**
  * Payload mappers for the create wizard.
  *
- * There is no create endpoint — `projectOverviewService` mutates a module-level
- * array and nothing in the project module speaks HTTP yet. The payload is built
- * in full anyway, in the repo's camelCase-to-snake_case shape, so there is one
- * obvious call site to swap for a request rather than a shape to invent later.
+ * The API now accepts the same validated camelCase wizard data. The legacy
+ * mapper remains for callers that need a snake_case export of that data.
  */
 
 export interface ProjectCreatePayload {
@@ -105,22 +103,10 @@ export function toProjectListItem(data: CreateProjectFormData): ProjectListItem 
 	};
 }
 
-/**
- * Stands in for `POST /projects`. Resolves with the payload it would send.
- *
- * The new row is pushed onto the same in-memory array the overview reads, so
- * the project appears in the list after the redirect — which is what the
- * ticket's acceptance criteria describe.
- */
+/** Create or finish a persisted Professional project. */
 export async function createProjectApi(
 	data: CreateProjectFormData,
-	{ isDraft }: { isDraft: boolean },
-): Promise<ProjectCreatePayload> {
-	const payload = buildProjectPayload(data, { isDraft });
-
-	if (!isDraft) {
-		PROJECT_LIST_ROWS.unshift(toProjectListItem(data));
-	}
-
-	return payload;
+	{ isDraft, existing }: { isDraft: boolean; existing?: { id: string; version: number } },
+) {
+	return saveProfessionalProject(data, isDraft, existing);
 }

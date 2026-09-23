@@ -27,13 +27,14 @@ export interface ProjectInfoEditDialogProps<TSection> {
 	titleKey: TranslationKeys;
 	fields: ProjectInfoField<TSection>[];
 	value: TSection;
+	isSaving?: boolean;
 	/**
 	 * Checks the draft before it is saved. Returning any entry keeps the dialog
 	 * open with the messages shown against their fields.
 	 */
 	validate?: (values: TSection) => Record<string, string>;
 	onClose: () => void;
-	onSave: (values: TSection) => void;
+	onSave: (values: TSection) => void | Promise<void>;
 }
 
 /**
@@ -49,6 +50,7 @@ export function ProjectInfoEditDialog<TSection extends object>({
 	titleKey,
 	fields,
 	value,
+	isSaving = false,
 	validate,
 	onClose,
 	onSave,
@@ -80,7 +82,7 @@ export function ProjectInfoEditDialog<TSection extends object>({
 	const read = (name: string) => String((draft as Record<string, unknown>)[name] ?? "");
 
 	return (
-		<Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+		<Dialog open={isOpen} onOpenChange={(open) => !open && !isSaving && onClose()}>
 			<DialogContent
 				showCloseButton={false}
 				className="max-h-[85vh] w-[calc(100vw-2rem)] overflow-y-auto rounded-lg border border-slate-200 bg-white p-4 shadow-xl sm:w-[619px] sm:max-w-[619px] sm:p-7"
@@ -94,6 +96,7 @@ export function ProjectInfoEditDialog<TSection extends object>({
 						variant="ghost"
 						size="icon"
 						onClick={onClose}
+						disabled={isSaving}
 						aria-label={t(localizationConstants.closeButton)}
 						className="h-8 w-8 cursor-pointer rounded-md p-1 text-slate-900 hover:bg-slate-100"
 					>
@@ -115,7 +118,7 @@ export function ProjectInfoEditDialog<TSection extends object>({
 							setErrors(found);
 							return;
 						}
-						onSave(draft);
+						void onSave(draft);
 					}}
 					className="space-y-4"
 				>
@@ -179,12 +182,14 @@ export function ProjectInfoEditDialog<TSection extends object>({
 							type="button"
 							variant="outline"
 							onClick={onClose}
+							disabled={isSaving}
 							className="h-11 w-full cursor-pointer rounded-lg border border-slate-200 bg-white text-sm font-medium text-slate-900 shadow-none hover:bg-slate-50 sm:w-[120px]"
 						>
 							<Translate text={localizationConstants.closeButton} />
 						</Button>
 						<Button
 							type="submit"
+							disabled={isSaving}
 							className="h-11 w-full cursor-pointer gap-2 rounded-lg bg-slate-900 text-sm font-medium text-white shadow-none hover:bg-slate-800 sm:w-[120px]"
 						>
 							<Save className="h-4 w-4" aria-hidden />

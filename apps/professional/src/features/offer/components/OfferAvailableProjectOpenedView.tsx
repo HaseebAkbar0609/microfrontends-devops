@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { LIFECYCLE_UPGRADE_PATH } from "@/features/account-lifecycle/constants";
 import {
 	Dialog,
 	DialogContent,
@@ -423,7 +424,7 @@ export function OfferAvailableProjectOpenedView({
 						<DialogDescription><Translate text={localizationConstants.demoLeadDescription} /></DialogDescription>
 					</DialogHeader>
 					<DialogFooter>
-						<Button type="button" onClick={() => router.push("/manage-plans")}>
+						<Button type="button" onClick={() => router.push(LIFECYCLE_UPGRADE_PATH)}>
 							<Translate text={localizationConstants.demoLeadUpgrade} />
 						</Button>
 					</DialogFooter>

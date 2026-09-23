@@ -111,6 +111,7 @@ export function useCreateProjectForm() {
 	const [documents, setDocuments] = useState<ProjectDocumentItem[]>([]);
 	const [pendingFiles, setPendingFiles] = useState<PendingUploadFile[]>([]);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [savedDraft, setSavedDraft] = useState<{ id: string; version: number } | null>(null);
 
 	const form = useForm<CreateProjectFormData>({
 		/* Every optional field carries `.default("")`, so the schema's input and
@@ -263,7 +264,8 @@ export function useCreateProjectForm() {
 	const saveDraft = useCallback(async () => {
 		setIsSubmitting(true);
 		try {
-			await createProjectApi(collect(), { isDraft: true });
+			const saved = await createProjectApi(collect(), { isDraft: true, existing: savedDraft ?? undefined });
+			setSavedDraft({ id: saved.id, version: saved.version });
 			showToast("success", t(localizationConstants.projectCreateDraftToast));
 		} catch (error) {
 			console.error("[CreateProject] Failed to save draft:", error);
@@ -271,7 +273,7 @@ export function useCreateProjectForm() {
 		} finally {
 			setIsSubmitting(false);
 		}
-	}, [collect, t]);
+	}, [collect, savedDraft, t]);
 
 	const submit = useCallback(async () => {
 		const valid = await form.trigger();
@@ -295,7 +297,7 @@ export function useCreateProjectForm() {
 
 		setIsSubmitting(true);
 		try {
-			await createProjectApi(collect(), { isDraft: false });
+			await createProjectApi(collect(), { isDraft: false, existing: savedDraft ?? undefined });
 			showToast("success", t(localizationConstants.projectCreateSuccessToast));
 			router.push(OVERVIEW_URL);
 		} catch (error) {
@@ -304,7 +306,7 @@ export function useCreateProjectForm() {
 		} finally {
 			setIsSubmitting(false);
 		}
-	}, [collect, form, router, t]);
+	}, [collect, form, router, savedDraft, t]);
 
 	const cancel = useCallback(
 		() => router.push(OVERVIEW_URL),

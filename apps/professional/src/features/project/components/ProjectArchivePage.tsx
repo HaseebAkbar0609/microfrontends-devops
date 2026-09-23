@@ -1,9 +1,11 @@
 "use client";
 
 import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
+import { Button } from "@/components/ui/button";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import { TablePagination } from "@/components/table/TablePagination";
 import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 import {
 	PROJECT_MODULE_TABS,
 	PROJECT_MODULE_TITLE,
@@ -31,6 +33,9 @@ export function ProjectArchivePage() {
 		requestDelete,
 		cancelDelete,
 		confirmDelete,
+		isLoading,
+		isError,
+		refresh,
 	} = useProjectRows("archive");
 
 	return (
@@ -52,7 +57,12 @@ export function ProjectArchivePage() {
 					filterOptions={filterOptions}
 				/>
 
-				<div className="rounded-md border border-slate-200 bg-white">
+				{isLoading && <p className="px-2 text-sm text-slate-600"><Translate text={localizationConstants.genericLoading} /></p>}
+				{isError && <div className="flex items-center gap-3 px-2 text-sm text-red-700">
+					<Translate text={localizationConstants.genericError} />
+					<Button type="button" variant="outline" onClick={() => void refresh()}><Translate text={localizationConstants.retry} /></Button>
+				</div>}
+				{!isLoading && !isError && <div className="rounded-md border border-slate-200 bg-white">
 					<ProjectListTable
 						mode="archive"
 						projects={filters.paged}
@@ -63,16 +73,16 @@ export function ProjectArchivePage() {
 						onToggleArchived={toggleArchived}
 						onDelete={requestDelete}
 					/>
-				</div>
+				</div>}
 
-				<TablePagination
+				{!isLoading && !isError && <TablePagination
 					currentPage={filters.page}
 					totalPages={filters.totalPages}
 					pageSize={filters.pageSize}
 					onPageChange={filters.setPage}
 					onPageSizeChange={filters.setPageSize}
 					className="justify-center sm:justify-center"
-				/>
+				/>}
 			</div>
 
 			<ConfirmActionDialog

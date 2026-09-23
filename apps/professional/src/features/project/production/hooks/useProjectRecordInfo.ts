@@ -1,98 +1,69 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+import { useAuthStatus } from "@/context/AuthContext";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import { PROJECT_CREATE_CONSTANTS } from "../../create/constants";
-import { buildProjectRecordInfo } from "../data/projectRecordInfo.mock";
+import { getProfessionalProject, saveProfessionalProject } from "../../services/professionalProjectService";
+import { projectRecordFromApi } from "../projectRecordFromApi";
 import type { ProjectInfoSectionKey, ProjectRecordInfo } from "../types";
 
-/**
- * The record's four blocks, and which one is being edited.
- *
- * Edits stay in memory: there is no projects endpoint, and the module's other
- * screens read a module-level array. Nothing is written to `localStorage` —
- * the customer block carries an organisation or personal number, which
- * AGENTS.md rule 6 keeps out of browser storage.
- */
 export function useProjectRecordInfo(projectId: string) {
 	const t = useTranslate();
-
-	const [info, setInfo] = useState<ProjectRecordInfo | null>(() =>
-		buildProjectRecordInfo(projectId),
-	);
+	const { company, isAuthenticated } = useAuthStatus();
+	const queryClient = useQueryClient();
 	const [editing, setEditing] = useState<ProjectInfoSectionKey | null>(null);
-
+	const [isSaving, setIsSaving] = useState(false);
+	const queryKey = ["professional-project", company?.id, projectId];
+	const query = useQuery({
+		queryKey,
+		queryFn: () => getProfessionalProject(projectId),
+		enabled: Boolean(company?.id && isAuthenticated && projectId),
+		retry: false,
+	});
+	const info = useMemo(
+		() => query.data ? projectRecordFromApi(query.data, company) : null,
+		[query.data, company],
+	);
 	const closeEditor = useCallback(() => setEditing(null), []);
 
-	/**
-	 * Replaces one block. The dialog hands back the whole section, already
-	 * validated, so a half-saved card is not possible.
-	 */
-	const saveSection = useCallback(
-		(
-			section: ProjectInfoSectionKey,
-			values: Partial<
-				ProjectRecordInfo["customer"] &
-					ProjectRecordInfo["contactPerson"] &
-					ProjectRecordInfo["details"]
-			>,
-		) => {
-			setInfo((previous) => {
-				if (!previous) return previous;
-
-				if (section === "customer") {
-					return { ...previous, customer: { ...previous.customer, ...values } };
-				}
-				if (section === "contact") {
-					return {
-						...previous,
-						contactPerson: { ...previous.contactPerson, ...values },
-					};
-				}
-				/* "project" and "projectInfo" are two cards over one block. */
-				return { ...previous, details: { ...previous.details, ...values } };
+	const saveSection = useCallback(async (
+		section: ProjectInfoSectionKey,
+		values: Partial<
+			ProjectRecordInfo["customer"] &
+			ProjectRecordInfo["contactPerson"] &
+			ProjectRecordInfo["details"]
+		>,
+	) => {
+		const record = query.data;
+		if (!record || isSaving) return;
+		const data = { ...record.data };
+		if (section === "customer") data.customer = { ...data.customer, ...values };
+		else if (section === "contact") data.contactPerson = { ...data.contactPerson, ...values };
+		else data.details = { ...data.details, ...values };
+		setIsSaving(true);
+		try {
+			const updated = await saveProfessionalProject(data, record.isDraft, {
+				id: record.id,
+				version: record.version,
 			});
-
+			queryClient.setQueryData(queryKey, updated);
+			await queryClient.invalidateQueries({ queryKey: ["professional-projects", company?.id] });
 			setEditing(null);
 			showToast("success", t(localizationConstants.toastChangesSaved));
-		},
-		[t],
-	);
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
+		} finally {
+			setIsSaving(false);
+		}
+	}, [company?.id, isSaving, query.data, queryClient, queryKey, t]);
 
-	/**
-	 * The offer's attachments. Bounded by the same limit the create wizard
-	 * applies, so a name cannot be longer here than where it was first typed.
-	 */
-	const renameDocument = useCallback((id: string, documentName: string) => {
-		const bounded = documentName.slice(
-			0,
-			PROJECT_CREATE_CONSTANTS.MAX_DOCUMENT_NAME_LENGTH,
-		);
-		setInfo((previous) =>
-			previous
-				? {
-						...previous,
-						documents: previous.documents.map((row) =>
-							row.id === id ? { ...row, documentName: bounded } : row,
-						),
-					}
-				: previous,
-		);
-	}, []);
-
-	const removeDocument = useCallback((id: string) => {
-		setInfo((previous) =>
-			previous
-				? {
-						...previous,
-						documents: previous.documents.filter((row) => row.id !== id),
-					}
-				: previous,
-		);
-	}, []);
+	const unsupportedDocumentEdit = useCallback(() => {
+		showToast("error", t(localizationConstants.genericError));
+	}, [t]);
 
 	return {
 		info,
@@ -100,7 +71,11 @@ export function useProjectRecordInfo(projectId: string) {
 		setEditing,
 		closeEditor,
 		saveSection,
-		renameDocument,
-		removeDocument,
+		renameDocument: unsupportedDocumentEdit,
+		removeDocument: unsupportedDocumentEdit,
+		isLoading: query.isLoading || !company,
+		isError: query.isError,
+		refresh: query.refetch,
+		isSaving,
 	};
 }

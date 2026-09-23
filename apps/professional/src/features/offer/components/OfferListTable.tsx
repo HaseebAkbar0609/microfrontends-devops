@@ -36,6 +36,7 @@ import useModal from "@/features/auth/hooks/useModal";
 import { toggleOfferFavoriteAPIAction } from "@/api-actions/offers";
 import { showToast } from "@/lib/toast";
 import { useAccountLifecycle } from "@/features/account-lifecycle";
+import { LIFECYCLE_UPGRADE_PATH } from "@/features/account-lifecycle/constants";
 
 const SortIconElement = ({
 	field,
@@ -382,7 +383,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 						<DialogDescription><Translate text={localizationConstants.demoLeadDescription} /></DialogDescription>
 					</DialogHeader>
 					<DialogFooter>
-						<Button type="button" onClick={() => router.push("/manage-plans")}>
+						<Button type="button" onClick={() => router.push(LIFECYCLE_UPGRADE_PATH)}>
 							<Translate text={localizationConstants.demoLeadUpgrade} />
 						</Button>
 					</DialogFooter>
