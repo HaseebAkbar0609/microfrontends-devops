@@ -28,6 +28,10 @@ export const calculationNavItems: RouteTabItem[] = [
 		id: "calc-overview",
 		labelKey: localizationConstants.calcOverviewPage,
 		href: "/module/business/calculation/overview",
+		matchSubPaths: [
+			"/module/business/calculation/overview",
+			"/module/business/calculation/new",
+		],
 	},
 	{
 		id: "standard-calculation",
@@ -114,3 +118,8 @@ export const CALCULATION_SIDEBAR_ITEMS: WidgetItem[] = [
 		icon: ImageIcon,
 	},
 ];
+
+export const TYPE_OPTIONS = ["Total", "General", "Löpande", "Samverkan"] as const;
+export const KATEGORI_OPTIONS = ["Bygg", "El", "VVS", "Mark"] as const;
+export const AVDELNING_OPTIONS = ["Avdelning 1", "Avdelning 2", "Avdelning 3"] as const;
+
