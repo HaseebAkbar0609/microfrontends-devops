@@ -10018,7 +10018,6 @@ const enForecastDashboard: ForecastDashboardTranslation = {
 	forecastOverviewTabsLabel: "Forecast views",
 	forecastListTab: "Forecast list",
 	forecastResultTab: "Forecast result",
-	forecastResultUnavailable: "Not available yet",
 	forecastColObject: "Object",
 	forecastColCustomer: "Customer",
 	forecastColCategory: "Category",
@@ -10048,6 +10047,15 @@ const enForecastDashboard: ForecastDashboardTranslation = {
 	forecastDetailsTitle: "Forecast {object}",
 	forecastListNoMatches: "No forecasts match the search or filter",
 	forecastListEmpty: "There are no forecasts",
+	forecastResultPeriodYearly: "Yearly",
+	forecastResultViewLabel: "Show result by",
+	forecastResultColRole: "Role",
+	forecastResultColStart: "Start",
+	forecastResultSummaryRow: "Forecast result",
+	forecastResultTotalsLabel: "Total for all objects",
+	forecastResultFilterGroup: "Result",
+	forecastResultFilterPositive: "Positive result",
+	forecastResultFilterNegative: "Negative result",
 };
 
 export const en: Translation = {
