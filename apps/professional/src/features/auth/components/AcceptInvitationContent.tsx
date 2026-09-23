@@ -16,6 +16,8 @@ import localizationConstants, { TranslationKeys } from "@/utils/translation/cons
 import { Translate } from "@/utils/translation/translate";
 import { Company, useAuthStatus, User } from "@/context/AuthContext";
 import { authStorage } from "@/lib/authStorage";
+import { getSubscriptionOverview } from "@/features/admin/subscription/services/subscriptionService";
+import { loginDestination } from "@/features/auth/utils/loginDestination";
 import {
 	extractRequiresSubscriptionFlag,
 	setRequiresSubscriptionCookie,
@@ -136,6 +138,12 @@ export function AcceptInvitationContent() {
 				result.data,
 			);
 			setRequiresSubscriptionCookie(requiresSubscription);
+			let salesOnboardingPending = false;
+			try {
+				salesOnboardingPending = Boolean((await getSubscriptionOverview()).sales_onboarding_pending);
+			} catch {
+				// A temporary billing-status failure must not block invitation acceptance.
+			}
 
 			flushSync(() => {
 				setUser(authStorage.getUserData() as User);
@@ -143,9 +151,7 @@ export function AcceptInvitationContent() {
 				setCompany(authStorage.getCompanyData() as Company);
 			});
 
-			router.replace(
-				requiresSubscription ? "/manage-plans" : "/home",
-			);
+			router.replace(loginDestination(null, requiresSubscription, salesOnboardingPending));
 			router.refresh();
 		}
 	};

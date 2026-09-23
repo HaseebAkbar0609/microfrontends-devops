@@ -4,9 +4,10 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
 import { ModulePageHeader, SectionTabs } from "@/components/layout/navigation";
+import { Button } from "@/components/ui/button";
 import { TabsContent } from "@/components/ui/tabs";
 import localizationConstants from "@/utils/translation/constants";
-import { useTranslate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
 	PROJECT_MODULE_BASE_URL,
 	PROJECT_MODULE_TABS,
@@ -50,8 +51,17 @@ export function ProjectProductionInfoPage({
 		saveSection,
 		renameDocument,
 		removeDocument,
+		isLoading,
+		isError,
+		refresh,
+		isSaving,
 	} = useProjectRecordInfo(projectId);
 
+	if (isLoading) return <div className="p-6 text-sm text-slate-600"><Translate text={localizationConstants.genericLoading} /></div>;
+	if (isError) return <div className="flex items-center gap-3 p-6 text-sm text-red-700">
+		<Translate text={localizationConstants.genericError} />
+		<Button type="button" variant="outline" onClick={() => void refresh()}><Translate text={localizationConstants.retry} /></Button>
+	</div>;
 	/** An id that matches no project is a 404, not an empty record. */
 	if (!info) notFound();
 
@@ -113,6 +123,7 @@ export function ProjectProductionInfoPage({
 
 			<ProjectInfoEditDialog
 				isOpen={editing === "customer"}
+				isSaving={isSaving}
 				titleKey={localizationConstants.editCustomerModalTitle}
 				fields={CUSTOMER_FIELDS}
 				value={info.customer}
@@ -123,6 +134,7 @@ export function ProjectProductionInfoPage({
 
 			<ProjectInfoEditDialog
 				isOpen={editing === "contact"}
+				isSaving={isSaving}
 				titleKey={localizationConstants.editContactModalTitle}
 				fields={CONTACT_FIELDS}
 				value={info.contactPerson}
@@ -133,6 +145,7 @@ export function ProjectProductionInfoPage({
 
 			<ProjectInfoEditDialog
 				isOpen={editing === "project"}
+				isSaving={isSaving}
 				titleKey={localizationConstants.projectLabel}
 				fields={PROJECT_FIELDS}
 				value={info.details}
@@ -143,6 +156,7 @@ export function ProjectProductionInfoPage({
 
 			<ProjectInfoEditDialog
 				isOpen={editing === "projectInfo"}
+				isSaving={isSaving}
 				titleKey={localizationConstants.projectCreateInfoSection}
 				fields={PROJECT_INFO_FIELDS}
 				value={info.details}

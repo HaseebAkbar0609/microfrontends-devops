@@ -22,6 +22,8 @@ import { LOGIN_DEFAULT_VALUES } from "@/features/auth/constants";
 import useModal from "@/features/auth/hooks/useModal";
 import { loginSchema } from "@/features/auth/schemas";
 import type { LoginFormValues } from "@/features/auth/types";
+import { loginDestination } from "@/features/auth/utils/loginDestination";
+import { getSubscriptionOverview } from "@/features/admin/subscription/services/subscriptionService";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { authStorage } from "@/lib/authStorage";
@@ -44,18 +46,29 @@ export default function LoginPage() {
       email: data.email,
       password: data.password,
     });
-    setIsSubmitting(false);
     if (result.success) {
+      const returnTo = billingReturnPath(new URLSearchParams(window.location.search).get("returnTo"));
+      let salesOnboardingPending = false;
+      if (!returnTo) {
+        try {
+          salesOnboardingPending = Boolean((await getSubscriptionOverview()).sales_onboarding_pending);
+        } catch {
+          // A temporary billing-status failure must not block sign-in.
+        }
+      }
+      const destination = loginDestination(
+        returnTo,
+        getRequiresSubscriptionFromBrowserCookie(),
+        salesOnboardingPending,
+      );
       flushSync(() => {
         setUser(authStorage.getUserData() as User);
         setAccessToken(authStorage.getAccessToken());
         setCompany(authStorage.getCompanyData() as Company);
       });
-      const destination = billingReturnPath(new URLSearchParams(window.location.search).get("returnTo")) ?? (getRequiresSubscriptionFromBrowserCookie()
-        ? "/manage-plans"
-        : "/home");
       router.push(destination);
     }
+    setIsSubmitting(false);
   };
 
   return (

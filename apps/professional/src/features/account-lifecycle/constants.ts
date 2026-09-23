@@ -12,7 +12,7 @@ export const LIFECYCLE_POPUP_REFETCH_INTERVAL_MS = 2 * 60 * 1000; // 2 minutes
 export const LIFECYCLE_URGENT_DAYS_THRESHOLD = 3;
 
 /** Where the banner's / popup's upgrade CTA links to. */
-export const LIFECYCLE_UPGRADE_PATH = "/manage-plans";
+export const LIFECYCLE_UPGRADE_PATH = "/manage-plans?mode=new";
 
 /**
  * CSS custom property the banner writes its own rendered height to, on

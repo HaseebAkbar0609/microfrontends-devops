@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CalendarDays, CreditCard, Loader2 } from "lucide-react";
 import { DynamicBreadcrumb } from "@/components/common";
 import { Button } from "@/components/ui/button";
+import { LIFECYCLE_UPGRADE_PATH } from "@/features/account-lifecycle/constants";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import localizationConstants from "@/utils/translation/constants";
@@ -196,7 +197,7 @@ const AdminSubscription = () => {
 						<Translate text={localizationConstants.subscriptionEmptyText} />
 					</p>
 					<Button asChild className="mt-5 bg-slate-900 text-white hover:bg-slate-800">
-						<Link href="/manage-plans">
+						<Link href={LIFECYCLE_UPGRADE_PATH}>
 							<Translate text={localizationConstants.subscriptionChoosePlan} />
 						</Link>
 					</Button>

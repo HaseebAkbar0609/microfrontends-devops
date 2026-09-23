@@ -67,7 +67,12 @@ export default function ManagePlansPage() {
 	const router = useRouter();
 	const mainRef = useRef<HTMLElement>(null);
 	const [isPlanChange, setIsPlanChange] = useState(false);
-	const cartHref = isPlanChange ? "/manage-cart?mode=change" : "/manage-cart";
+	const [isNewPurchase, setIsNewPurchase] = useState(false);
+	const cartHref = isPlanChange
+		? "/manage-cart?mode=change"
+		: isNewPurchase
+			? "/manage-cart?mode=new"
+			: "/manage-cart";
 	const [paymentOption, setPaymentOption] = useState<PaymentOption>("month");
 	const [currentStep, setCurrentStep] = useState<
 		(typeof MANAGE_PLANS_STEPS)[keyof typeof MANAGE_PLANS_STEPS]
@@ -112,15 +117,23 @@ export default function ManagePlansPage() {
 	}, []);
 
 	useEffect(() => {
-		if (new URLSearchParams(window.location.search).get("change") === "1") {
+		const params = new URLSearchParams(window.location.search);
+		if (params.get("change") === "1") {
 			router.replace(SUBSCRIPTION_EDITOR_PATHS.subscription);
 			return;
 		}
-		setIsPlanChange(
-			new URLSearchParams(window.location.search).get("change") === "1",
-		);
+		setIsPlanChange(false);
+		setIsNewPurchase(params.get("mode") === "new");
 		void getSubscriptionOverview().then(overview => {
 			if (overview.sales_onboarding_pending) {
+				router.replace("/admin/subscription");
+				return;
+			}
+			if (
+				params.get("mode") === "new" &&
+				overview.has_subscription &&
+				overview.status?.access_state !== "DEMO"
+			) {
 				router.replace("/admin/subscription");
 				return;
 			}

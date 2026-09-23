@@ -95,6 +95,7 @@ export type OfferSendData = {
   preliminaryBudgetPrice: string;
   offerDateLatest: string;
   isFavorite?: boolean;
+  contactMasked?: boolean;
 };
 
 export type OfferSendCustomerDetailsProps = {
