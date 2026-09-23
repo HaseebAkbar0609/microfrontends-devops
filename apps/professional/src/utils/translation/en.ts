@@ -1338,6 +1338,13 @@ export const enOffer: OfferTranslation = {
 	calcNewSuccessCreate: "Calculation created successfully",
 	calcNewValidationNameRequired: "Project name is required",
 	calcNewOffersLoadError: "Could not load offers",
+	calcNewPreviewTitle: "Preview",
+	calcNewBackTo: "Back to",
+	calcNewSkapaBtn: "Create",
+	calcNewDocumentsHeader: "Documents",
+	calcNewSenasteOffertDatum: "Latest quote date",
+	calcNewCreateError: "Could not create calculation",
+	calcNewGenericError: "An unexpected error occurred",
 	// Calculation - Detail view
 	calcDetailProjekteringNr: "Project no.",
 	calcDetailProjekteringNamn: "Project name",
