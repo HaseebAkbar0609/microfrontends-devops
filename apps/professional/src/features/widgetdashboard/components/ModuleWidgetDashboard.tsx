@@ -385,7 +385,11 @@ export function ModuleWidgetDashboard({
 										}
 										isLoading={sources.loading && entry.sidebarId !== "emptyPage"}
 										sourceError={sources.error && entry.sidebarId !== "emptyPage"}
-										variant={cardVariant}
+										variant={
+											(entry.sidebarId
+												? widgetMap[entry.sidebarId]?.variant
+												: entry.widgetProps.variant) ?? cardVariant
+										}
 									/>
 								</DraggableGridCard>
 							))}
