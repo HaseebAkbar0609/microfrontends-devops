@@ -584,6 +584,10 @@ export type ProfessionalTranslation = {
 	supportTab: string;
 	sendInvoiceButton: string;
 	activeSeatsLabel: string;
+	licenseNoSeats: string;
+	licensePurchased: string;
+	licenseAllocated: string;
+	licenseAvailable: string;
 	recentActivityTitle: string;
 	kundNrLabel: string;
 	activityCustomerLoggedIn: string;

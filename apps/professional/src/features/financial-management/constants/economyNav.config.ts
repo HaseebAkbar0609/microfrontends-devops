@@ -91,6 +91,42 @@ export function economyBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
 	];
 }
 
+/**
+ * `Home > Modul > Prognos > Section` breadcrumb for the Prognos tab's pages;
+ * with no section it ends on Prognos dashboard.
+ */
+export function forecastBreadcrumbs(section?: TranslationKeys): BreadcrumbItem[] {
+	return [
+		{ label: localizationConstants.home, href: "/dashboard" },
+		{ label: localizationConstants.moduleItem },
+		{
+			label: localizationConstants.forecast,
+			href: ECONOMY_FORECAST_BASE_URL,
+		},
+		{ label: section ?? localizationConstants.forecastDashboardTitle },
+	];
+}
+
+export const ECONOMY_FORECAST_OVERVIEW_URL = `${ECONOMY_FORECAST_BASE_URL}/overview`;
+
+/**
+ * The Prognos tab's own row: the pages built so far. The frame draws them as
+ * a left sidebar of fourteen; each joins the row as it is built.
+ */
+export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
+	{
+		id: "dashboard",
+		labelKey: localizationConstants.forecastDashboardTitle,
+		href: ECONOMY_FORECAST_BASE_URL,
+		exact: true,
+	},
+	{
+		id: "overview",
+		labelKey: localizationConstants.forecastOverviewTitle,
+		href: ECONOMY_FORECAST_OVERVIEW_URL,
+	},
+];
+
 /** Primary tab row for the Economi (Financial Management) module (Rule 1). */
 export const ECONOMY_MODULE_TABS: RouteTabItem[] = [
 	{

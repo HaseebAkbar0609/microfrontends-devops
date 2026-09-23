@@ -12,7 +12,8 @@ export interface RecentActivityItem {
 
 export interface ProfessionalDetail extends ProfessionalRow {
 	plan: string;
-	activeSeats: number | null;
+	allocatedSeats: number;
+	licensePools: Array<{ plan_key: string; purchased: number; allocated: number; available: number }>;
 	recentActivities: RecentActivityItem[];
 }
 
@@ -22,5 +23,13 @@ export async function getProfessionalAPIAction(
 		const response = await axiosInstance.get<{ data: ProfessionalAccountItem }>(
 			`${PROFESSIONALS_ACCOUNTS_PATH}/${id}`,
 		);
-		return { ...mapItemToRow(response.data.data), plan: "-", activeSeats: null, recentActivities: [] };
+		const item = response.data.data;
+		const licensePools = item.license_pools ?? [];
+		return {
+			...mapItemToRow(item),
+			plan: item.plan ?? "-",
+			allocatedSeats: licensePools.reduce((total, pool) => total + pool.allocated, 0),
+			licensePools,
+			recentActivities: [],
+		};
 }

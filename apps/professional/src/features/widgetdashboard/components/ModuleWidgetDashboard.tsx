@@ -23,7 +23,7 @@ import { DraggableGridCard } from "./DraggableGridCard";
 import { WidgetItem } from "./DraggableSidebarItem";
 import { SidebarWidgetList } from "./SidebarWidgetList";
 import { useWidgetToggle } from "../hooks/useWidgetToggle";
-import { PlacedWidgetEntry, WidgetProps } from "../types/dashboard";
+import { PlacedWidgetEntry, WidgetCardVariant, WidgetProps } from "../types/dashboard";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
 
@@ -53,6 +53,8 @@ export interface ModuleWidgetDashboardProps {
 	className?: string;
 	storageKey?: string;
 	isRearranging?: boolean;
+	/** The cards' surface; `muted` is the grey card. Defaults to the white card. */
+	cardVariant?: WidgetCardVariant;
 }
 
 export function ModuleWidgetDashboard({
@@ -66,6 +68,7 @@ export function ModuleWidgetDashboard({
 	className,
 	storageKey,
 	isRearranging,
+	cardVariant = "default",
 }: ModuleWidgetDashboardProps) {
 	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
@@ -350,6 +353,7 @@ export function ModuleWidgetDashboard({
 									disabled={isRearranging !== undefined ? !isRearranging : false}
 									isSwapTarget={gridDragOverIndex === index}
 									isEmpty={entry.sidebarId === "emptyPage"}
+									variant={cardVariant}
 									isHighlighted={
 										highlightedWidgetUid === entry.uid
 									}
@@ -371,6 +375,7 @@ export function ModuleWidgetDashboard({
 										isEmpty={
 											entry.sidebarId === "emptyPage"
 										}
+										variant={cardVariant}
 									/>
 								</DraggableGridCard>
 							))}
@@ -458,17 +463,16 @@ export function ModuleWidgetDashboard({
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
-							Are you sure you want to replace this widget?
+							<Translate text={localizationConstants.replaceWidgetTitle} />
 						</AlertDialogTitle>
 						<AlertDialogDescription>
-							This action will remove the existing widget and
-							replace it with{" "}
+							<Translate text={localizationConstants.replaceWidgetDescription} />{" "}
 							<strong>
 								<Translate
 									text={pendingReplacement?.item.label ?? ""}
 								/>
 							</strong>
-							. This cannot be undone.
+							<Translate text={localizationConstants.replaceWidgetUndone} />
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -476,13 +480,13 @@ export function ModuleWidgetDashboard({
 							onClick={confirmReplacement}
 							className="bg-[#18181B] hover:bg-[#18181B]/90 cursor-pointer"
 						>
-							Save
+							<Translate text={localizationConstants.confirmSave} />
 						</AlertDialogAction>
 						<AlertDialogCancel
 							onClick={cancelDialog}
 							className="cursor-pointer border-none bg-[#1018280D] shadow-sm hover:bg-[#1018280D]"
 						>
-							Close
+							<Translate text={localizationConstants.confirmClose} />
 						</AlertDialogCancel>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -498,11 +502,10 @@ export function ModuleWidgetDashboard({
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
-							Are you sure you want to remove this widget?
+							<Translate text={localizationConstants.removeWidgetTitle} />
 						</AlertDialogTitle>
 						<AlertDialogDescription>
-							This action will remove the widget from the grid and
-							replace it with an empty slot.
+							<Translate text={localizationConstants.removeWidgetDescription} />
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -510,13 +513,13 @@ export function ModuleWidgetDashboard({
 							onClick={confirmRemoval}
 							className="bg-[#18181B] hover:bg-[#18181B]/90 cursor-pointer"
 						>
-							Save
+							<Translate text={localizationConstants.confirmRemove} />
 						</AlertDialogAction>
 						<AlertDialogCancel
 							onClick={cancelDialog}
 							className="cursor-pointer border-none bg-[#1018280D] shadow-sm hover:bg-[#1018280D]"
 						>
-							Close
+							<Translate text={localizationConstants.confirmClose} />
 						</AlertDialogCancel>
 					</AlertDialogFooter>
 				</AlertDialogContent>

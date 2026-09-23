@@ -55,6 +55,11 @@ test('legacy explicit change links stay reachable for existing subscribers', () 
   assert.equal(exportsObject.middleware(request('/manage-plans?change=1', '0')).kind, 'next');
 });
 
+test('active Demo can enter and continue a new-purchase checkout funnel', () => {
+  assert.equal(exportsObject.middleware(request('/manage-plans?mode=new', '0')).kind, 'next');
+  assert.equal(exportsObject.middleware(request('/manage-cart?mode=new', '0')).kind, 'next');
+});
+
 test('a paid user is not sent back to a first-purchase flow', () => {
   assert.equal(exportsObject.middleware(request('/manage-plans', '0')).pathname, '/home');
 });

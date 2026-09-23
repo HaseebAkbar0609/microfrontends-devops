@@ -11,7 +11,7 @@ import { ProjectListItem } from "../data/projectsOverview.mock";
  * `archived` is excluded deliberately: this type also types `visibleColumns`
  * and indexes the cell render, and a boolean has no column.
  */
-export type ProjectSortField = keyof Omit<ProjectListItem, "id" | "archived">;
+export type ProjectSortField = keyof Omit<ProjectListItem, "id" | "archived" | "version">;
 
 export function useProjectOverviewFilters(projects: ProjectListItem[]) {
 	const [search, setSearchState] = useState("");

@@ -47,6 +47,8 @@ interface ProfessionalCategoryInfo {
 
 export interface ProfessionalAccountItem {
 	company_id: string;
+	plan?: string | null;
+	license_pools?: Array<{ plan_key: string; purchased: number; allocated: number; available: number }>;
 	company_name?: string | null;
 	organization_number?: string | null;
 	category?: ProfessionalCategoryInfo | null;

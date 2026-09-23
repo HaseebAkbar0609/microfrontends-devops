@@ -31,6 +31,9 @@ const ProjectListTab = () => {
 		requestDelete,
 		cancelDelete,
 		confirmDelete,
+		isLoading,
+		isError,
+		refresh,
 	} = useProjectRows("list");
 
 	return (
@@ -57,7 +60,12 @@ const ProjectListTab = () => {
 				}
 			/>
 
-			<div className="rounded-md border border-slate-200 bg-white">
+			{isLoading && <p className="px-2 text-sm text-slate-600"><Translate text={localizationConstants.genericLoading} /></p>}
+			{isError && <div className="flex items-center gap-3 px-2 text-sm text-red-700">
+				<Translate text={localizationConstants.genericError} />
+				<Button type="button" variant="outline" onClick={() => void refresh()}><Translate text={localizationConstants.retry} /></Button>
+			</div>}
+			{!isLoading && !isError && <div className="rounded-md border border-slate-200 bg-white">
 				<ProjectListTable
 					projects={filters.paged}
 					sortField={filters.sortField}
@@ -67,16 +75,16 @@ const ProjectListTab = () => {
 					onToggleArchived={toggleArchived}
 					onDelete={requestDelete}
 				/>
-			</div>
+			</div>}
 
-			<TablePagination
+			{!isLoading && !isError && <TablePagination
 				currentPage={filters.page}
 				totalPages={filters.totalPages}
 				pageSize={filters.pageSize}
 				onPageChange={filters.setPage}
 				onPageSizeChange={filters.setPageSize}
 				className="justify-center sm:justify-center"
-			/>
+			/>}
 
 			<ConfirmActionDialog
 				open={Boolean(deletingProject)}

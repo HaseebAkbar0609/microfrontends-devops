@@ -1179,6 +1179,14 @@ export type OfferTranslation = {
 	calcArchiveSeProject: string;
 	calcArchiveUnarchive: string;
 	calcArchiveDelete: string;
+	calcArchiveOpen: string;
+	calcArchiveDeleteConfirmTitle: string;
+	calcArchiveDeleteConfirmDescription: string;
+	calcArchiveRestoreConfirmTitle: string;
+	calcArchiveRestoreConfirmDescription: string;
+	calcArchiveRestoreSuccess: string;
+	calcArchiveDeleteSuccess: string;
+	calcArchiveEmpty: string;
 	// Calculation - Skapa nytt
 	calcNewTitle: string;
 	calcNewStep1Tab: string;
@@ -4922,6 +4930,9 @@ export type OfferTranslation = {
 	actions: string;
 	viewProject: string;
 	takeJob: string;
+	demoLeadTitle: string;
+	demoLeadDescription: string;
+	demoLeadUpgrade: string;
 	noQuotesFound: string;
 	offerLoadError: string;
 	// Offer - Detail
@@ -9897,6 +9908,75 @@ export type SupplierDetailTranslation = {
 	supplierInvoiceStatusOverdue: string;
 };
 
+export type ForecastDashboardTranslation = {
+	forecastDashboardTitle: string;
+	forecastWidgetKpiTitle: string;
+	forecastWidgetProjectOrderTitle: string;
+	forecastWidgetActionsTitle: string;
+	forecastWidgetOccupancyTitle: string;
+	forecastWidgetAvailableHoursTitle: string;
+	forecastKpiCompanyOccupancy: string;
+	forecastKpiAvailableHours: string;
+	forecastKpiOverUnderLoad: string;
+	forecastPlannedVsForecast: string;
+	forecastActualToDate: string;
+	forecastCostAndWorkTime: string;
+	forecastRiskProjects: string;
+	forecastWarnNoResources: string;
+	forecastWarnOverloaded: string;
+	forecastWarnMissingSkills: string;
+	forecastWarnBlockingCertificates: string;
+	forecastWarnOnboarding: string;
+	forecastDeptProduction: string;
+	forecastDeptService: string;
+	forecastPeriodToggleLabel: string;
+	forecastPeriodWeek: string;
+	forecastPeriodMonth: string;
+	forecastWeekLabel: string;
+	forecastHoursFreeCapacity: string;
+	forecastHoursOverload: string;
+	forecastColProjectOrder: string;
+	forecastColPlannedTime: string;
+	forecastColWorkedTime: string;
+	forecastStatusOnTrack: string;
+	forecastRailDiscard: string;
+	forecastOverviewTitle: string;
+	forecastPagesLabel: string;
+	forecastOverviewTabsLabel: string;
+	forecastListTab: string;
+	forecastResultTab: string;
+	forecastResultUnavailable: string;
+	forecastColObject: string;
+	forecastColCustomer: string;
+	forecastColCategory: string;
+	forecastColType: string;
+	forecastColProjectName: string;
+	forecastColStartDate: string;
+	forecastColEndDate: string;
+	forecastColCostCentre: string;
+	forecastColResponsible: string;
+	forecastColRevenue: string;
+	forecastColCosts: string;
+	forecastColContribution: string;
+	forecastCategoryNewBuild: string;
+	forecastCategoryService: string;
+	forecastCategoryContracting: string;
+	forecastTypeB2b: string;
+	forecastTypePrivate: string;
+	forecastStatusDone: string;
+	forecastFilterAll: string;
+	forecastFilterActiveCount: string;
+	forecastRowActions: string;
+	forecastViewDetailsFor: string;
+	forecastDelete: string;
+	forecastDeleteTitle: string;
+	forecastDeleteDescription: string;
+	forecastDeletedToast: string;
+	forecastDetailsTitle: string;
+	forecastListNoMatches: string;
+	forecastListEmpty: string;
+};
+
 export type Translation = HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
@@ -9946,7 +10026,8 @@ export type Translation = HeaderTranslation &
 	CustomerDetailTranslation &
 	SupplierManagementTranslation &
 	SupplierDetailTranslation &
-	ToolsDiscountTranslation;
+	ToolsDiscountTranslation &
+	ForecastDashboardTranslation;
 
 export type TranslationKeys = keyof Translation;
 
