@@ -7,6 +7,7 @@ export function CalculationModuleHeader() {
 		<ModuleHeader
 			titleKey={localizationConstants.calculation}
 			items={calculationNavItems}
+			autoHideOnSubRoutes={false}
 		/>
 	);
 }

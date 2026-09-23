@@ -1,8 +1,8 @@
 export type KalkylKontaktData = {
 	mode: "eigen" | "extend";
 	offert: string;
-	// Entreprenör
-	kunduppgifter: boolean;
+	// Entreprenör Kunduppgifter
+	kunduppgifter?: boolean;
 	foretag: string;
 	address: string;
 	postNr: string;
@@ -10,25 +10,89 @@ export type KalkylKontaktData = {
 	mail: string;
 	telefon: string;
 	orgNr: string;
-	// Kalkylansvarig (eigen mode)
+	// Kalkylansvarig
 	kontaktperson: string;
 	fornamn: string;
 	efternamn: string;
 	kontaktMail: string;
 	mobil: string;
 	roll: string;
-	// Beställare (extend mode)
-	bestellareKunduppgifter: boolean;
-	bestellareFoetag: string;
+	// Beställare Kunduppgifter (extend mode)
+	bestellareKunduppgifter?: boolean;
+	bestellareForetag: string;
 	bestellareAddress: string;
 	bestellarePostNr: string;
 	bestellareOrt: string;
 	bestellareMail: string;
 	bestellareTelefon: string;
+	bestellareOrgNr: string;
+	// Beställare Kontaktperson (extend mode)
+	bestellareKontaktperson: string;
 	bestellareFornamn: string;
 	bestellareEfternamn: string;
+	bestellareKontaktAddress: string;
+	bestellareKontaktPostnummer: string;
 	bestellareKontaktMail: string;
-	bestellareMobil: string;
+	bestellareTelefonDirect: string;
+	bestellareKontaktOrt: string;
+	bestellareRoll: string;
+};
+
+export type CreateCalculationPayload = {
+	mode: "eigen" | "extend";
+	offer_id?: string;
+	client_name?: string;
+	project_name: string;
+	project_number?: string;
+	block_name?: string;
+	project_address?: string;
+	postal_code?: string;
+	city?: string;
+	type?: string;
+	category?: string;
+	department?: string;
+	contract_sum?: number;
+	offer_number?: string;
+	start_date?: string;
+	end_date?: string;
+	latest_offer_date?: string;
+	contractor: {
+		company_name?: string;
+		address?: string;
+		postal_code?: string;
+		city?: string;
+		email?: string;
+		phone?: string;
+		org_number?: string;
+		responsible?: {
+			contact_person?: string;
+			first_name?: string;
+			last_name?: string;
+			email?: string;
+			mobile?: string;
+			role?: string;
+		};
+	};
+	client?: {
+		company_name?: string;
+		address?: string;
+		postal_code?: string;
+		city?: string;
+		email?: string;
+		phone?: string;
+		org_number?: string;
+		contact?: {
+			contact_person?: string;
+			first_name?: string;
+			last_name?: string;
+			address?: string;
+			postal_code?: string;
+			city?: string;
+			email?: string;
+			phone?: string;
+			role?: string;
+		};
+	};
 };
 
 export type KalkylProjektData = {
@@ -45,7 +109,7 @@ export type KalkylProjektData = {
 	offertNr: string;
 	startDatum: string;
 	slutDatum: string;
-	senatsDatum: string;
+	senasteDatum: string;
 };
 
 export type KalkylDocItem = {

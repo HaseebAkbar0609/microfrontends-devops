@@ -37,7 +37,7 @@ const DEFAULT_PROJEKT: KalkylProjektData = {
 	offertNr: "",
 	startDatum: "",
 	slutDatum: "",
-	senatsDatum: "",
+	senasteDatum: "",
 };
 
 const DEFAULT_LEVERANTOR: ForfragnLeverantorData = {
