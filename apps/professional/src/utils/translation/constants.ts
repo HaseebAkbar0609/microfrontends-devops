@@ -2721,6 +2721,9 @@ export type OfferTranslation = {
 	calcWidgetImageTitle: string;
 	calcWidgetImageDescription: string;
 	widgetNoData: string;
+	widgetSourceUnavailableTitle: string;
+	widgetSourceUnavailableDescription: string;
+	widgetSourceLoadError: string;
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: string;
 	widgetRailDiscard: string;

@@ -13,6 +13,7 @@ const ProjectDashboard = () => {
 
 	return (
 		<ModuleWidgetDashboard
+			sourceLocation="project_dashboard"
 			widgetMap={PROJECT_SIDEBAR_WIDGET_MAP}
 			initialWidgets={initialWidgets}
 			sidebarItems={PROJECT_SIDEBAR_ITEMS}

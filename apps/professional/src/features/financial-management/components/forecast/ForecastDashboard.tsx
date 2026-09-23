@@ -25,6 +25,7 @@ export function ForecastDashboard() {
 
 	return (
 		<ModuleWidgetDashboard
+			sourceLocation="forecast_dashboard"
 			widgetMap={widgetMap}
 			initialWidgets={initialWidgets}
 			sidebarItems={FORECAST_SIDEBAR_ITEMS}

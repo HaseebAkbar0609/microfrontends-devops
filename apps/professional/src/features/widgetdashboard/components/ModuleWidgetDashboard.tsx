@@ -23,6 +23,7 @@ import { DraggableGridCard } from "./DraggableGridCard";
 import { WidgetItem } from "./DraggableSidebarItem";
 import { SidebarWidgetList } from "./SidebarWidgetList";
 import { useWidgetToggle } from "../hooks/useWidgetToggle";
+import { useWidgetSources } from "../hooks/useWidgetSources";
 import { PlacedWidgetEntry, WidgetCardVariant, WidgetProps } from "../types/dashboard";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
@@ -55,6 +56,7 @@ export interface ModuleWidgetDashboardProps {
 	isRearranging?: boolean;
 	/** The cards' surface; `muted` is the grey card. Defaults to the white card. */
 	cardVariant?: WidgetCardVariant;
+	sourceLocation: string;
 }
 
 export function ModuleWidgetDashboard({
@@ -69,8 +71,10 @@ export function ModuleWidgetDashboard({
 	storageKey,
 	isRearranging,
 	cardVariant = "default",
+	sourceLocation,
 }: ModuleWidgetDashboardProps) {
 	const t = useTranslate();
+	const sources = useWidgetSources(sourceLocation);
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [panelOpen, setPanelOpen] = useState(true);
 	const {
@@ -375,6 +379,12 @@ export function ModuleWidgetDashboard({
 										isEmpty={
 											entry.sidebarId === "emptyPage"
 										}
+										sourceUnavailable={
+											entry.sidebarId !== "emptyPage" &&
+											!sources.liveWidgetIds.includes(entry.sidebarId ?? "")
+										}
+										isLoading={sources.loading && entry.sidebarId !== "emptyPage"}
+										sourceError={sources.error && entry.sidebarId !== "emptyPage"}
 										variant={cardVariant}
 									/>
 								</DraggableGridCard>
