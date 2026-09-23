@@ -19,6 +19,8 @@ import { useProjectOverviewFilters } from "./useProjectOverviewFilters";
 
 export type ProjectRowsMode = "list" | "archive";
 
+const EMPTY_PROJECTS: ProjectListItem[] = [];
+
 export function useProjectRows(mode: ProjectRowsMode) {
 	const t = useTranslate();
 	const router = useRouter();
@@ -34,7 +36,7 @@ export function useProjectRows(mode: ProjectRowsMode) {
 		enabled: Boolean(company?.id && isAuthenticated),
 		retry: false,
 	});
-	const projects = query.data ?? [];
+	const projects = query.data ?? EMPTY_PROJECTS;
 	const filters = useProjectOverviewFilters(projects);
 	const filterOptions = useMemo(() => {
 		const values = new Set<string>();

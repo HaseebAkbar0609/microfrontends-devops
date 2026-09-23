@@ -17,7 +17,10 @@ export function useProjectRecordInfo(projectId: string) {
 	const queryClient = useQueryClient();
 	const [editing, setEditing] = useState<ProjectInfoSectionKey | null>(null);
 	const [isSaving, setIsSaving] = useState(false);
-	const queryKey = ["professional-project", company?.id, projectId];
+	const queryKey = useMemo(
+		() => ["professional-project", company?.id, projectId],
+		[company?.id, projectId],
+	);
 	const query = useQuery({
 		queryKey,
 		queryFn: () => getProfessionalProject(projectId),
