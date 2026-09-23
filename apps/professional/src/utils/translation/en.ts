@@ -96,7 +96,7 @@ export const enAppLauncher: AppLauncherTranslation = {
 	marketingSales: "Marketing",
 	dataIT: "Data-IT",
 	managementSupport: "Management Support",
-	access: "Smart Access",
+	access: "Smart Accession",
 	economy: "Economy",
 };
 
