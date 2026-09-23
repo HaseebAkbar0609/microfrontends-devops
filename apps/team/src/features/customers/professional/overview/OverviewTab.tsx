@@ -39,7 +39,7 @@ export function OverviewTab({ data }: OverviewTabProps) {
 								<Translate text={localizationConstants.activeSeatsLabel} />
 							</span>
 							<span className="text-[18px] font-semibold text-slate-900 leading-[28px] tracking-[-0.44px]">
-								{data.activeSeats}
+								{data.allocatedSeats}
 							</span>
 						</div>
 						<Users className="h-8 w-8 text-[#009966]" aria-hidden />

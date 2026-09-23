@@ -36,6 +36,8 @@ export default function RegisterForm() {
 	});
 
 	const searchParams = useSearchParams();
+	const rawNext = searchParams.get("next");
+	const redirectTo = rawNext?.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/home";
 	const prefillEmail = searchParams.get("email") || "";
 	const prefillPhone = searchParams.get("phone") || "";
 
@@ -79,7 +81,7 @@ export default function RegisterForm() {
 			return;
 		}
 		setIsSubmitting(false);
-		router.push("/home");
+		router.push(redirectTo);
 	};
 
 	useEffect(() => {
@@ -309,7 +311,7 @@ export default function RegisterForm() {
 											/>
 										</Link>
 										<Link
-											href="/login"
+											href={rawNext ? `/login?next=${encodeURIComponent(redirectTo)}` : "/login"}
 											className="text-[13px] text-primary hover:underline font-medium"
 										>
 											<Translate

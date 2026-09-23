@@ -102,9 +102,31 @@ export function ProfessionalOverviewPage({ id }: ProfessionalOverviewPageProps) 
 				</TabsContent>
 
 				<TabsContent value="licens" className="min-w-0 pt-6">
-					<div className="rounded-lg border border-slate-200 bg-white p-8 text-center text-sm text-slate-500">
-						<Translate text={localizationConstants.licensTab} />
-					</div>
+					<section className="space-y-6">
+						<div>
+							<p className="text-sm text-slate-500"><Translate text={localizationConstants.planLabel} /></p>
+							<p className="text-xl font-semibold text-slate-900">{data.plan}</p>
+						</div>
+						{data.licensePools.length === 0 ? (
+							<p className="text-sm text-slate-500"><Translate text={localizationConstants.licenseNoSeats} /></p>
+						) : data.licensePools.map((pool) => (
+							<div key={pool.plan_key} className="space-y-3 border-t border-slate-200 pt-4">
+								<h2 className="text-base font-medium capitalize text-slate-900">{pool.plan_key}</h2>
+								<dl className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+									{([
+										[localizationConstants.licensePurchased, pool.purchased],
+										[localizationConstants.licenseAllocated, pool.allocated],
+										[localizationConstants.licenseAvailable, pool.available],
+									] as const).map(([label, value]) => (
+										<div key={label} className="min-w-0">
+											<dt className="text-sm text-slate-500"><Translate text={label} /></dt>
+											<dd className="text-lg font-semibold text-slate-900">{value}</dd>
+										</div>
+									))}
+								</dl>
+							</div>
+						))}
+					</section>
 				</TabsContent>
 
 				<TabsContent value="leads" className="min-w-0 pt-6">
