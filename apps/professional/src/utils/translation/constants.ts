@@ -9979,7 +9979,6 @@ export type ForecastDashboardTranslation = {
 	forecastOverviewTabsLabel: string;
 	forecastListTab: string;
 	forecastResultTab: string;
-	forecastResultUnavailable: string;
 	forecastColObject: string;
 	forecastColCustomer: string;
 	forecastColCategory: string;
@@ -10009,6 +10008,15 @@ export type ForecastDashboardTranslation = {
 	forecastDetailsTitle: string;
 	forecastListNoMatches: string;
 	forecastListEmpty: string;
+	forecastResultPeriodYearly: string;
+	forecastResultViewLabel: string;
+	forecastResultColRole: string;
+	forecastResultColStart: string;
+	forecastResultSummaryRow: string;
+	forecastResultTotalsLabel: string;
+	forecastResultFilterGroup: string;
+	forecastResultFilterPositive: string;
+	forecastResultFilterNegative: string;
 };
 
 export type Translation = HeaderTranslation &

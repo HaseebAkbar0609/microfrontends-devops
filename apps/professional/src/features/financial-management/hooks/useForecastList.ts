@@ -81,9 +81,9 @@ export function useForecastList() {
 		[t],
 	);
 
-	const activeFilterCount = Number(filters.category !== null) + Number(filters.customerType !== null);
+	const narrowed = Boolean(search.trim()) || filters.category !== null || filters.customerType !== null;
 	const emptyKey =
-		search.trim() || activeFilterCount > 0
+		narrowed
 			? localizationConstants.forecastListNoMatches
 			: localizationConstants.forecastListEmpty;
 
@@ -98,7 +98,6 @@ export function useForecastList() {
 		setSearch,
 		filters,
 		setFilter,
-		activeFilterCount,
 		sortField,
 		sortDir,
 		onSort,

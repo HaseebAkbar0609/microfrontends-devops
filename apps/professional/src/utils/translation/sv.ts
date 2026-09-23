@@ -10070,7 +10070,6 @@ const svForecastDashboard: ForecastDashboardTranslation = {
 	forecastOverviewTabsLabel: "Prognosvyer",
 	forecastListTab: "Prognoslista",
 	forecastResultTab: "Resultat prognos",
-	forecastResultUnavailable: "Inte tillgängligt ännu",
 	forecastColObject: "Objekt",
 	forecastColCustomer: "Kund",
 	forecastColCategory: "Kategori",
@@ -10100,6 +10099,15 @@ const svForecastDashboard: ForecastDashboardTranslation = {
 	forecastDetailsTitle: "Prognos {object}",
 	forecastListNoMatches: "Inga prognoser matchar sökningen eller filtret",
 	forecastListEmpty: "Det finns inga prognoser",
+	forecastResultPeriodYearly: "Årlig",
+	forecastResultViewLabel: "Visa resultat per",
+	forecastResultColRole: "Roll",
+	forecastResultColStart: "Start",
+	forecastResultSummaryRow: "Prognos resultat",
+	forecastResultTotalsLabel: "Summa för alla objekt",
+	forecastResultFilterGroup: "Resultat",
+	forecastResultFilterPositive: "Positivt resultat",
+	forecastResultFilterNegative: "Negativt resultat",
 };
 
 export const sv: Translation = {
