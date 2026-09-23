@@ -1,12 +1,17 @@
 "use client";
 
 import { TablePagination } from "@/components/table/TablePagination";
+import localizationConstants from "@/utils/translation/constants";
+import {
+	FORECAST_CATEGORY_LABELS,
+	FORECAST_CUSTOMER_TYPE_LABELS,
+} from "../../../constants/forecastList.constants";
 import { useForecastList } from "../../../hooks/useForecastList";
 import { useForecastListDialogs } from "../../../hooks/useForecastListDialogs";
+import { ForecastToolbar, forecastFilterGroup } from "../ForecastToolbar";
 import { ForecastDeleteDialog } from "./ForecastDeleteDialog";
 import { ForecastDetailsDialog } from "./ForecastDetailsDialog";
 import { ForecastListTable } from "./ForecastListTable";
-import { ForecastListToolbar } from "./ForecastListToolbar";
 
 /** Prognoslista: Sök and Filter, the table, and the frame's centred pagination. */
 export function ForecastListPanel() {
@@ -15,12 +20,23 @@ export function ForecastListPanel() {
 
 	return (
 		<div className="flex flex-col gap-5">
-			<ForecastListToolbar
+			<ForecastToolbar
 				search={list.search}
 				onSearchChange={list.setSearch}
-				filters={list.filters}
-				onFilterChange={list.setFilter}
-				activeFilterCount={list.activeFilterCount}
+				groups={[
+					forecastFilterGroup(
+						localizationConstants.forecastColCategory,
+						FORECAST_CATEGORY_LABELS,
+						list.filters.category,
+						(value) => list.setFilter("category", value),
+					),
+					forecastFilterGroup(
+						localizationConstants.forecastColType,
+						FORECAST_CUSTOMER_TYPE_LABELS,
+						list.filters.customerType,
+						(value) => list.setFilter("customerType", value),
+					),
+				]}
 			/>
 
 			<ForecastListTable
