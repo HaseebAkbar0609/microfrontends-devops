@@ -1,10 +1,20 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ArrowUpDown, ChevronDown, File, Folders, MoreHorizontal, Trash2, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -64,13 +74,12 @@ export function KalkylDokumentStep({
 }: KalkylDokumentStepProps) {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [pendingFiles, setPendingFiles] = useState<{ name: string }[]>([]);
 
 	function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
 		const files = e.target.files;
 		if (!files) return;
 		const today = new Date().toISOString().split("T")[0];
-		Array.from(files).forEach((file) => {
+		Array.from(files).forEach((file, index) => {
 			const lower = file.name.toLowerCase();
 			const fileType: KalkylDocItem["fileType"] = lower.endsWith(".pdf")
 				? "pdf"
@@ -78,53 +87,48 @@ export function KalkylDokumentStep({
 					? "doc"
 					: "img";
 			onAddDocument({
-				id: Date.now().toString() + Math.random().toString(36).substring(2, 6),
+				id: `doc_${Date.now()}_${index}_${Math.random().toString(36).substring(2, 6)}`,
 				datum: today,
 				namn: file.name,
 				typ: fileType === "pdf" ? "PDF" : fileType === "doc" ? "DOC" : "IMG",
 				fileType,
 			});
-			setPendingFiles((prev) => [...prev, { name: file.name }]);
 		});
 		if (fileInputRef.current) fileInputRef.current.value = "";
 	}
 
-	function handleRemovePending(name: string) {
-		setPendingFiles((prev) => prev.filter((f) => f.name !== name));
-	}
-
 	return (
 		<div className="flex flex-col gap-4">
-			<Card>
+			<Card className="gap-0 overflow-hidden rounded-lg border border-slate-200 bg-white py-0 pb-0 shadow-none">
 				<CardHeader className="h-14 flex flex-row items-center border-b border-slate-200 px-6 py-0 [.border-b]:pb-0">
 					<CardTitle className="flex items-center gap-2 text-base font-medium">
 						<Folders className="h-5 w-5 text-slate-700" />
 						<Translate text={localizationConstants.calcNewStep3Tab} />
 					</CardTitle>
 				</CardHeader>
-				<CardContent className="p-6">
+				<CardContent className="px-6 py-5">
 					{/* Date period */}
 					<div className="mb-5">
-						<p className="mb-2 text-sm font-medium text-slate-900">
+						<Label className="mb-2 block text-sm font-medium text-slate-900">
 							<Translate text={localizationConstants.calcNewDatumPeriod} />
-						</p>
+						</Label>
 						<div className="flex items-center gap-3">
 							<div className="relative flex-1">
-								<input
+								<Input
 									type="date"
 									value={datumFran}
 									onChange={(e) => onDatumFranChange(e.target.value)}
 									placeholder={t(localizationConstants.calcNewFranDatum)}
-									className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus-visible:border-slate-400 focus-visible:outline-none"
+									className="h-10 w-full rounded-md border-slate-200 bg-white px-3 text-sm text-slate-700 focus-visible:border-slate-400 focus-visible:ring-0"
 								/>
 							</div>
 							<div className="relative flex-1">
-								<input
+								<Input
 									type="date"
 									value={datumTill}
 									onChange={(e) => onDatumTillChange(e.target.value)}
 									placeholder={t(localizationConstants.calcNewTillDatum)}
-									className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-700 focus-visible:border-slate-400 focus-visible:outline-none"
+									className="h-10 w-full rounded-md border-slate-200 bg-white px-3 text-sm text-slate-700 focus-visible:border-slate-400 focus-visible:ring-0"
 								/>
 							</div>
 						</div>
@@ -132,29 +136,30 @@ export function KalkylDokumentStep({
 
 					{/* Upload */}
 					<div className="mb-5">
-						<p className="mb-1 text-sm font-medium text-slate-900">
+						<Label className="mb-1 block text-sm font-medium text-slate-900">
 							<Translate text={localizationConstants.agreementUploadFiles} />
-						</p>
+						</Label>
 						<p className="mb-3 text-sm text-slate-500">
 							<Translate text={localizationConstants.agreementFileTypes} />
 						</p>
 						<div className="flex items-center gap-3">
 							<div className="flex flex-1 items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2">
 								<div className="flex flex-1 flex-wrap items-center gap-2">
-									{pendingFiles.length === 0 ? (
+									{documents.length === 0 ? (
 										<span className="text-sm text-slate-400">
 											<Translate text={localizationConstants.agreementNoFile} />
 										</span>
 									) : (
-										pendingFiles.map((pf) => (
+										documents.map((doc) => (
 											<span
-												key={pf.name}
+												key={doc.id}
 												className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-700"
 											>
-												{pf.name}
+												{doc.namn}
 												<button
 													type="button"
-													onClick={() => handleRemovePending(pf.name)}
+													aria-label={t(localizationConstants.remove)}
+													onClick={() => onRemoveDocument(doc.id)}
 													className="ml-1 cursor-pointer text-slate-400 hover:text-slate-600"
 												>
 													<X className="h-3 w-3" />
@@ -163,12 +168,13 @@ export function KalkylDokumentStep({
 										))
 									)}
 								</div>
-								<ChevronDown className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
+								<ChevronDown className="h-4 w-4 shrink-0 text-slate-900" aria-hidden />
 							</div>
 							<input
 								ref={fileInputRef}
 								type="file"
 								multiple
+								aria-label={t(localizationConstants.agreementUploadFiles)}
 								accept=".png,.jpg,.jpeg,.pdf,.doc,.docx"
 								className="hidden"
 								onChange={handleFileSelect}
@@ -176,7 +182,7 @@ export function KalkylDokumentStep({
 							<Button
 								type="button"
 								onClick={() => fileInputRef.current?.click()}
-								className="h-9 min-w-25 cursor-pointer bg-[#111721] text-white hover:bg-slate-800"
+								className="h-9 min-w-25 cursor-pointer bg-slate-900 text-white hover:bg-slate-800"
 							>
 								<Translate text={localizationConstants.agreementUpload} />
 							</Button>
@@ -191,7 +197,7 @@ export function KalkylDokumentStep({
 							onCheckedChange={(c) => onGdprChange(Boolean(c))}
 							className="mt-0.5"
 						/>
-						<label htmlFor="gdpr-accept" className="cursor-pointer text-sm text-slate-600">
+						<Label htmlFor="gdpr-accept" className="cursor-pointer text-sm font-normal text-slate-600">
 							<Translate text={localizationConstants.calcNewGdprText} />{" "}
 							<button
 								type="button"
@@ -200,7 +206,7 @@ export function KalkylDokumentStep({
 								<Translate text={localizationConstants.calcNewGdprLink} />
 							</button>{" "}
 							<Translate text={localizationConstants.calcNewGdprSuffix} />
-						</label>
+						</Label>
 					</div>
 
 					{/* Attached documents table */}
@@ -209,63 +215,63 @@ export function KalkylDokumentStep({
 							<Translate text={localizationConstants.agreementCreateBifogadeDokument} />
 						</p>
 						<div className="overflow-x-auto rounded border border-slate-200">
-							<table className="w-full min-w-max border-collapse text-sm">
-								<thead>
-									<tr className="h-11 border-b border-slate-200">
-										<th className="px-4 text-left font-medium text-slate-500">
+							<Table>
+								<TableHeader>
+									<TableRow className="h-11 border-b border-slate-200">
+										<TableHead className="px-4 text-left font-medium text-slate-500">
 											<div className="flex items-center gap-1">
 												<Translate text={localizationConstants.agreementDetailDatum} />
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 											</div>
-										</th>
-										<th className="px-4 text-left font-medium text-slate-500">
+										</TableHead>
+										<TableHead className="px-4 text-left font-medium text-slate-500">
 											<div className="flex items-center gap-1">
 												<Translate
 													text={localizationConstants.agreementDetailDokumentetsNamn}
 												/>
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 											</div>
-										</th>
-										<th className="px-4 text-left font-medium text-slate-500">
+										</TableHead>
+										<TableHead className="px-4 text-left font-medium text-slate-500">
 											<div className="flex items-center gap-1">
 												<Translate text={localizationConstants.calcProType} />
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 											</div>
-										</th>
-										<th className="px-4 text-left font-medium text-slate-500">
+										</TableHead>
+										<TableHead className="px-4 text-left font-medium text-slate-500">
 											<div className="flex items-center gap-1">
 												<Translate text={localizationConstants.agreementDetailFil} />
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 											</div>
-										</th>
-										<th className="w-10" />
-									</tr>
-								</thead>
-								<tbody>
+										</TableHead>
+										<TableHead className="w-10" />
+									</TableRow>
+								</TableHeader>
+								<TableBody>
 									{documents.length === 0 ? (
-										<tr>
-											<td
+										<TableRow>
+											<TableCell
 												colSpan={5}
 												className="h-24 text-center text-sm text-slate-400"
 											>
 												<Translate text={localizationConstants.agreementNoDocuments} />
-											</td>
-										</tr>
+											</TableCell>
+										</TableRow>
 									) : (
 										documents.map((doc) => (
-											<tr
+											<TableRow
 												key={doc.id}
 												className="border-b border-slate-100 last:border-b-0"
 											>
-												<td className="px-4 py-2 text-slate-600">{doc.datum}</td>
-												<td className="px-4 py-2">
+												<TableCell className="px-4 py-2 text-slate-600">{doc.datum}</TableCell>
+												<TableCell className="px-4 py-2">
 													<span className="inline-flex items-center gap-2 text-slate-700">
 														<DocFileBadge fileType={doc.fileType} />
 														{doc.namn}
 													</span>
-												</td>
-												<td className="px-4 py-2 text-slate-600">{doc.typ}</td>
-												<td className="px-4 py-2">
+												</TableCell>
+												<TableCell className="px-4 py-2 text-slate-600">{doc.typ}</TableCell>
+												<TableCell className="px-4 py-2">
 													<Button
 														type="button"
 														variant="outline"
@@ -274,12 +280,13 @@ export function KalkylDokumentStep({
 													>
 														<Translate text={localizationConstants.agreementCreateSeFil} />
 													</Button>
-												</td>
-												<td className="px-2 py-2">
+												</TableCell>
+												<TableCell className="px-2 py-2">
 													<DropdownMenu>
 														<DropdownMenuTrigger asChild>
 															<button
 																type="button"
+																aria-label={t(localizationConstants.actions)}
 																className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-500 hover:bg-slate-100"
 															>
 																<MoreHorizontal className="h-4 w-4 rotate-90" />
@@ -295,12 +302,12 @@ export function KalkylDokumentStep({
 															</DropdownMenuItem>
 														</DropdownMenuContent>
 													</DropdownMenu>
-												</td>
-											</tr>
+												</TableCell>
+											</TableRow>
 										))
 									)}
-								</tbody>
-							</table>
+								</TableBody>
+							</Table>
 						</div>
 					</div>
 				</CardContent>
@@ -308,3 +315,4 @@ export function KalkylDokumentStep({
 		</div>
 	);
 }
+
