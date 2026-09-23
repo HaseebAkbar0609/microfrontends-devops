@@ -96,7 +96,7 @@ export const svAppLauncher: AppLauncherTranslation = {
 	dataIT: "Data-IT",
 	managementSupport: "Ledning",
 	vehicle: "Fordon",
-	access: "Smart Åtkomst",
+	access: "Smart Access",
 	economy: "Ekonomi",
 };
 
