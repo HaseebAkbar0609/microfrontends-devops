@@ -5,13 +5,12 @@ import { useRouter, useParams } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { ArticleDetail } from "../types/article.types";
-import { getArticleDetailAPIAction } from "../utils/articleRepository";
+import type { ArticleDetail, CreateArticleFormData } from "../types/article.types";
 import {
-	ARTICLE_OVERVIEW_BASE_ROUTE,
-	ARTICLE_DETAIL_BASE_ROUTE,
-	ARTICLE_CREATE_ROUTE,
-} from "../constants/article.constants";
+	getArticleDetailAPIAction,
+	updateArticleAPIAction,
+} from "../utils/articleRepository";
+import { ARTICLE_OVERVIEW_BASE_ROUTE } from "../constants/article.constants";
 
 export function useArticleDetail(articleIdProp?: string) {
 	const t = useTranslate();
@@ -39,13 +38,22 @@ export function useArticleDetail(articleIdProp?: string) {
 		fetchArticle();
 	}, [fetchArticle]);
 
-	const handleEdit = useCallback(() => {
-		if (id) {
-			router.push(`${ARTICLE_DETAIL_BASE_ROUTE}/${encodeURIComponent(id)}/edit`);
-		} else {
-			router.push(ARTICLE_CREATE_ROUTE);
-		}
-	}, [id, router]);
+	const updateArticle = useCallback(
+		async (updates: Partial<ArticleDetail>) => {
+			if (!id) return;
+			try {
+				const updated = await updateArticleAPIAction(
+					id,
+					updates as Partial<CreateArticleFormData>,
+				);
+				setArticle(updated);
+				showToast("success", t(localizationConstants.articleUpdatedSuccess));
+			} catch {
+				showToast("error", t(localizationConstants.genericError));
+			}
+		},
+		[id, t],
+	);
 
 	const handleBack = useCallback(() => {
 		router.push(ARTICLE_OVERVIEW_BASE_ROUTE);
@@ -55,7 +63,7 @@ export function useArticleDetail(articleIdProp?: string) {
 		article,
 		isLoading,
 		id,
-		handleEdit,
+		updateArticle,
 		handleBack,
 		router,
 	};

@@ -396,6 +396,59 @@ class CasesRepository {
 		this.notify();
 		return true;
 	}
+
+	public importCases(
+		rows: Record<string, string>[],
+		mapping: Record<string, string>
+	): { successCount: number; failureCount: number } {
+		this.init();
+		let successCount = 0;
+		let failureCount = 0;
+
+		for (const row of rows) {
+			try {
+				const title =
+					(mapping.title ? row[mapping.title] : row.title || row.rubrik || row.titel) ||
+					"Importerat ärende";
+				const rawCategory = (
+					mapping.category ? row[mapping.category] : row.kategori || row.category || "info"
+				).toLowerCase();
+				const category = [
+					"reklamation",
+					"avvikelse",
+					"info",
+					"support",
+				].includes(rawCategory)
+					? (rawCategory as CaseItem["category"])
+					: "info";
+				const createdBy =
+					(mapping.createdBy ? row[mapping.createdBy] : row.skapadAv || row.createdBy) ||
+					"Kalle Andersson";
+				const description =
+					(mapping.description ? row[mapping.description] : row.beskrivning || row.description) ||
+					"";
+				const date =
+					(mapping.date ? row[mapping.date] : row.datum || row.date) ||
+					new Date().toISOString().split("T")[0];
+
+				this.create({
+					id: "",
+					title,
+					category,
+					createdBy,
+					description,
+					date,
+					documents: [],
+					images: [],
+				});
+				successCount++;
+			} catch {
+				failureCount++;
+			}
+		}
+
+		return { successCount, failureCount };
+	}
 }
 
 export const casesRepository = new CasesRepository();

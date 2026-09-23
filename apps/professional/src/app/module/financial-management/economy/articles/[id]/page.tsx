@@ -1,7 +1,12 @@
-import { ArticleDetailPage } from "@/features/tools/register/components/ArticleDetailPage";
+import { ArticleDetailPage } from "@/features/financial-management";
 
 export const dynamic = "force-dynamic";
 
-export default function EconomyArticleDetailPage() {
-	return <ArticleDetailPage />;
+interface PageProps {
+	params: Promise<{ id: string }>;
+}
+
+export default async function EconomyArticleDetailPage({ params }: PageProps) {
+	const { id } = await params;
+	return <ArticleDetailPage id={id} />;
 }

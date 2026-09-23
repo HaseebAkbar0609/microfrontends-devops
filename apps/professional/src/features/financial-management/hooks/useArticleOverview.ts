@@ -7,6 +7,7 @@ import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { ArticleRow, ArticleKpiStats } from "../types/article.types";
 import {
+	articleRepository,
 	getArticlesAPIAction,
 	deleteArticleAPIAction,
 	toggleArticleFavoriteAPIAction,
@@ -55,6 +56,10 @@ export function useArticleOverview() {
 
 	useEffect(() => {
 		fetchArticles();
+		const unsubscribe = articleRepository.subscribe(fetchArticles);
+		return () => {
+			unsubscribe();
+		};
 	}, [fetchArticles]);
 
 	const updateSearchParams = useCallback(

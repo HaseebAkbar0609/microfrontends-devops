@@ -1,7 +1,7 @@
-import { ImportArticlePage } from "@/features/tools/register/components/ImportArticlePage";
+import { ImportArticlesPage } from "@/features/financial-management";
 
 export const dynamic = "force-dynamic";
 
 export default function EconomyImportArticlePage() {
-	return <ImportArticlePage />;
+	return <ImportArticlesPage />;
 }

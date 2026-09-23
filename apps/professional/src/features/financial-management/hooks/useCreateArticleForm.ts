@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
@@ -28,8 +28,16 @@ export const ARTICLE_FORM_TABS = [
 export const TOTAL_ARTICLE_STEPS = 2;
 
 export const STEP_FIELDS: Record<number, (keyof CreateArticleFormData)[]> = {
-	1: ["benamning", "leverantor", "enhet", "typAvArtikel", "forsaljning", "moms"],
-	2: ["forsaljningSESkattskyldighet"],
+	1: [
+		"articleNr",
+		"benamning",
+		"typAvArtikel",
+		"enhet",
+		"kalkylkostnad",
+		"moms",
+		"forsaljning",
+	],
+	2: [],
 };
 
 export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
@@ -40,11 +48,11 @@ export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
 	husarbete: "nej",
 	supplierArticleNo: "",
 	typHusarbete: "",
-	enhet: "",
-	typAvArtikel: "",
-	lagerVara: "",
+	enhet: "st",
+	typAvArtikel: "Standardartikel",
+	lagerVara: "nej",
 	forsaljning: "",
-	moms: "",
+	moms: "25%",
 	forsaljningSE: "",
 	forsaljningEU: "",
 	lagerkonto: "",
@@ -58,8 +66,8 @@ export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
 	kalkylkostnad: "",
 	bestallningspunkt: "",
 	iLager: "",
-	stock: "0",
-	reserved: "0",
+	stock: "",
+	reserved: "",
 	status: "active",
 	vikt: "",
 	langd: "",
@@ -70,13 +78,17 @@ export const EMPTY_ARTICLE_DEFAULTS: CreateArticleFormData = {
 	momsSESkattskyldighet: "",
 	forsaljningEUSkattskyldighet: "",
 	lagerforandring: "",
+	priceListRows: [],
 };
 
 export function useCreateArticleForm(articleIdProp?: string) {
 	const t = useTranslate();
 	const router = useRouter();
 	const params = useParams();
-	const articleId = articleIdProp ?? (params?.id ? String(params.id) : undefined);
+	const rawId =
+		articleIdProp ?? (params?.id ? String(params.id) : undefined);
+	const articleId =
+		rawId && rawId !== "create" && rawId !== "import" ? rawId : undefined;
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoading, setIsLoading] = useState(Boolean(articleId));
@@ -85,7 +97,7 @@ export function useCreateArticleForm(articleIdProp?: string) {
 	const isEdit = Boolean(articleId);
 
 	const methods = useForm<CreateArticleFormData>({
-		resolver: zodResolver(createArticleSchema),
+		resolver: zodResolver(createArticleSchema) as unknown as Resolver<CreateArticleFormData>,
 		defaultValues: EMPTY_ARTICLE_DEFAULTS,
 	});
 
@@ -180,7 +192,7 @@ export function useCreateArticleForm(articleIdProp?: string) {
 		[currentStep, validateStep],
 	);
 
-	const handleSubmit = methods.handleSubmit(async (data: CreateArticleFormData) => {
+	const handleSubmit = methods.handleSubmit(async (data) => {
 		setIsSubmitting(true);
 		try {
 			const formData: CreateArticleFormData = { ...data, priceListRows };

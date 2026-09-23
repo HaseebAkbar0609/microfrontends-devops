@@ -3,49 +3,56 @@
 import React from "react";
 import localizationConstants from "@/utils/translation/constants";
 import type { ArticleDetail } from "../../../../types/article.types";
-import { ArticleDetailSectionCard } from "../ArticleDetailSectionCard";
+import {
+	ArticleDetailSectionCard,
+	type ArticleDetailFieldItem,
+} from "../ArticleDetailSectionCard";
 
 interface ArticleStruktureradInfoTabProps {
 	readonly article: ArticleDetail;
-	readonly onEdit: () => void;
+	readonly onUpdate: (updates: Partial<ArticleDetail>) => void;
 }
 
 export function ArticleStruktureradInfoTab({
 	article,
-	onEdit,
+	onUpdate,
 }: ArticleStruktureradInfoTabProps) {
-	const pricesItems = [
-		{ label: localizationConstants.articlePriserA, value: article.priserA },
-		{ label: localizationConstants.articleEuroprislista, value: article.europrislista },
-		{ label: localizationConstants.articleKampanj, value: article.kampanj },
-		{ label: localizationConstants.articleVipPriser, value: article.vipPriser },
-		{ label: localizationConstants.articleKalkylkostnad, value: article.kalkylkostnad },
+	const pricesItems: ArticleDetailFieldItem[] = [
+		{ key: "priserA", label: localizationConstants.articlePriserA, value: article.priserA },
+		{ key: "europrislista", label: localizationConstants.articleEuroprislista, value: article.europrislista },
+		{ key: "kampanj", label: localizationConstants.articleKampanj, value: article.kampanj },
+		{ key: "vipPriser", label: localizationConstants.articleVipPriser, value: article.vipPriser },
+		{ key: "kalkylkostnad", label: localizationConstants.articleKalkylkostnad, value: article.kalkylkostnad },
 	];
 
-	const orderWarehouseItems = [
-		{ label: localizationConstants.articleBestallningspunkt, value: article.bestallningspunkt },
-		{ label: localizationConstants.articleILager, value: article.iLager },
-		{ label: localizationConstants.articleViktLabel, value: article.vikt },
-		{ label: localizationConstants.articleLangdLabel, value: article.langd },
-		{ label: localizationConstants.articleBreddLabel, value: article.bredd },
-		{ label: localizationConstants.articleHojdLabel, value: article.hojd },
-		{ label: localizationConstants.articleMaterialLabel, value: article.material },
+	const orderWarehouseItems: ArticleDetailFieldItem[] = [
+		{ key: "bestallningspunkt", label: localizationConstants.articleBestallningspunkt, value: article.bestallningspunkt },
+		{ key: "iLager", label: localizationConstants.articleILager, value: article.iLager },
+		{ key: "vikt", label: localizationConstants.articleViktLabel, value: article.vikt },
+		{ key: "langd", label: localizationConstants.articleLangdLabel, value: article.langd },
+		{ key: "bredd", label: localizationConstants.articleBreddLabel, value: article.bredd },
+		{ key: "hojd", label: localizationConstants.articleHojdLabel, value: article.hojd },
+		{ key: "material", label: localizationConstants.articleMaterialLabel, value: article.material },
 	];
 
-	const accountingItems = [
+	const accountingItems: ArticleDetailFieldItem[] = [
 		{
+			key: "forsaljningSESkattskyldighet",
 			label: localizationConstants.articleForsaljningSELabel,
 			value: article.forsaljningSESkattskyldighet,
 		},
 		{
+			key: "momsSESkattskyldighet",
 			label: localizationConstants.articleMomsLabel,
 			value: article.momsSESkattskyldighet,
 		},
 		{
+			key: "forsaljningEUSkattskyldighet",
 			label: localizationConstants.articleForsaljningEULabel,
 			value: article.forsaljningEUSkattskyldighet,
 		},
 		{
+			key: "lagerforandring",
 			label: localizationConstants.articleLagerforandringLabel,
 			value: article.lagerforandring,
 		},
@@ -56,19 +63,19 @@ export function ArticleStruktureradInfoTab({
 			<ArticleDetailSectionCard
 				title={localizationConstants.createArticlePriserSection}
 				items={pricesItems}
-				onEdit={onEdit}
+				onSave={onUpdate}
 			/>
 
 			<ArticleDetailSectionCard
 				title={localizationConstants.createArticleLagerplatsSection}
 				items={orderWarehouseItems}
-				onEdit={onEdit}
+				onSave={onUpdate}
 			/>
 
 			<ArticleDetailSectionCard
 				title={localizationConstants.createArticleBokforingsUppgifterSection}
 				items={accountingItems}
-				onEdit={onEdit}
+				onSave={onUpdate}
 			/>
 		</div>
 	);

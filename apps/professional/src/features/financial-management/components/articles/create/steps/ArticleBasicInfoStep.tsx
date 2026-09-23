@@ -18,14 +18,23 @@ export function ArticleBasicInfoStep({
 	onRemovePriceListRow,
 }: ArticleBasicInfoStepProps) {
 	return (
-		<div className="flex flex-col gap-6 bg-white p-6 rounded-xl border border-slate-200 shadow-2xs">
-			<ArticleBasicInfoFields />
-			<PriceListSubTable
-				rows={priceListRows}
-				onAddRow={onAddPriceListRow}
-				onRemoveRow={onRemovePriceListRow}
-			/>
-			<ArticleAccountingStep1Fields />
+		<div className="flex flex-col gap-6">
+			{/* Card 1: Grund information with Prislista */}
+			<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xs space-y-6">
+				<ArticleBasicInfoFields />
+				<div className="pt-2">
+					<PriceListSubTable
+						rows={priceListRows}
+						onAddRow={onAddPriceListRow}
+						onRemoveRow={onRemovePriceListRow}
+					/>
+				</div>
+			</div>
+
+			{/* Card 2: Bokförings uppgifter */}
+			<div className="bg-white p-6 rounded-xl border border-slate-200 shadow-2xs">
+				<ArticleAccountingStep1Fields />
+			</div>
 		</div>
 	);
 }
