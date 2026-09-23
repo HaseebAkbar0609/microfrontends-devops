@@ -30,7 +30,7 @@ export function LoginForm() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const rawNext = searchParams.get("next");
-	const redirectTo = rawNext?.startsWith("/") ? rawNext : "/home";
+	const redirectTo = rawNext?.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/home";
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isOtpVisible, setIsOtpVisible] = useState(false);
 	const [email, setEmail] = useState("");
@@ -197,7 +197,7 @@ export function LoginForm() {
 										</Button>
 										<div className="flex justify-center pt-4">
 											<Link
-												href="/register"
+												href={rawNext ? `/register?next=${encodeURIComponent(redirectTo)}` : "/register"}
 												className="text-[13px] text-primary hover:underline font-medium"
 											>
 												<Translate

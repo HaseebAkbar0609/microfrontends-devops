@@ -14,6 +14,8 @@ const AUTH_ROUTES = new Set([
 	"/auth/callback",
 ]);
 
+const PUBLIC_ROUTES = new Set(["/create-offer"]);
+
 function isAuthRoute(pathname: string): boolean {
 	return AUTH_ROUTES.has(pathname);
 }
@@ -41,7 +43,7 @@ export function middleware(request: NextRequest) {
 	}
 
 	// Unauthenticated user visiting a protected page → send to login
-	if (!hasSession && !isAuthRoute(pathname)) {
+	if (!hasSession && !isAuthRoute(pathname) && !PUBLIC_ROUTES.has(pathname)) {
 		const url = request.nextUrl.clone();
 		url.pathname = "/login";
 		url.search = "";

@@ -24,17 +24,24 @@ const AUTH_PAGES = [
 	"/auth/callback",
 ];
 
+const PUBLIC_PAGES = ["/create-offer"];
+
 export function AppShell({ children }: AppShellProps) {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { isAuthenticated, isReady } = useAuthStatus();
 	const isMyPages = pathname.startsWith("/tools/my-pages");
 	const isAuthPage = AUTH_PAGES.includes(pathname);
+	const isPublicPage = PUBLIC_PAGES.includes(pathname);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
 	useEffect(() => {
 		if (!isReady) return;
 
+		if (isPublicPage) {
+			setIsCheckingAuth(false);
+			return;
+		}
 		if (isAuthPage) {
 			if (isAuthenticated) {
 				// Navigation handled by LoginForm (router.push) + middleware server-side.
@@ -50,7 +57,7 @@ export function AppShell({ children }: AppShellProps) {
 		} else {
 			setIsCheckingAuth(false);
 		}
-	}, [isReady, isAuthenticated, isAuthPage, pathname, router]);
+	}, [isReady, isAuthenticated, isAuthPage, isPublicPage, pathname, router]);
 
 	if (!isReady) {
 		return <Loader />;
@@ -62,6 +69,7 @@ export function AppShell({ children }: AppShellProps) {
 		}
 		return <>{children}</>;
 	}
+	if (isPublicPage) return <>{children}</>;
 
 	if (isCheckingAuth) {
 		return <Loader />;
