@@ -31,6 +31,7 @@ export function EconomyDashboard() {
 
 	return (
 		<ModuleWidgetDashboard
+			sourceLocation="economy_dashboard"
 			widgetMap={widgetMap}
 			initialWidgets={initialWidgets}
 			sidebarItems={ECONOMY_SIDEBAR_ITEMS}

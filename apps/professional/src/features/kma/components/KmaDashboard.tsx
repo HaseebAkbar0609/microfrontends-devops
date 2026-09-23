@@ -13,6 +13,7 @@ const KmaDashboard = () => {
 
 	return (
 		<ModuleWidgetDashboard
+			sourceLocation="kma_dashboard"
 			widgetMap={KMA_SIDEBAR_WIDGET_MAP}
 			initialWidgets={initialWidgets}
 			sidebarItems={KMA_SIDEBAR_ITEMS}

@@ -2780,6 +2780,9 @@ export const enOffer: OfferTranslation = {
 	calcWidgetImageDescription:
 		"Placeholder banner for the calculation module â€” replace with your own media later.",
 	widgetNoData: "No data to show yet",
+	widgetSourceUnavailableTitle: "Data not available yet",
+	widgetSourceUnavailableDescription: "This module does not have a connected data source yet.",
+	widgetSourceLoadError: "Widget data sources could not be loaded.",
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: "Menu",
 	widgetRailDiscard: "Discard",

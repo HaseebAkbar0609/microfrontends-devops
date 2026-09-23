@@ -22,6 +22,7 @@ import { useIsTeamAdmin } from "@/hooks/useIsTeamAdmin";
 import { WidgetItem } from "../DraggableSidebarItem";
 import { WidgetProps } from "../../types/dashboard";
 import { useWidgetBoard } from "../../hooks/useWidgetBoard";
+import { useWidgetSources } from "../../hooks/useWidgetSources";
 import BoardWidgetCard from "./BoardWidgetCard";
 import WidgetLibraryPanel from "./WidgetLibraryPanel";
 import { Loader } from "@/components/ui/loader";
@@ -48,6 +49,7 @@ const WidgetBoard = ({
 }: WidgetBoardProps) => {
 	const t = useTranslate();
 	const board = useWidgetBoard(items, standardWidgetIds, persistenceLocation);
+	const sources = useWidgetSources(persistenceLocation);
 	const isAdmin = useIsTeamAdmin();
 	const [libraryOpen, setLibraryOpen] = useState(true);
 	const [discardOpen, setDiscardOpen] = useState(false);
@@ -229,6 +231,9 @@ const WidgetBoard = ({
 								<BoardWidgetCard
 									locked
 									editMode={editing}
+									sourceUnavailable={!sources.liveWidgetIds.includes(item.id)}
+									sourceLoading={sources.loading}
+									sourceError={sources.error}
 									widget={
 										widgetMap[item.id] ?? {
 											title: item.label,
@@ -309,6 +314,9 @@ const WidgetBoard = ({
 										>
 											<BoardWidgetCard
 												widget={widget}
+												sourceUnavailable={!sources.liveWidgetIds.includes(slot.widgetId ?? "")}
+												sourceLoading={sources.loading}
+												sourceError={sources.error}
 												onMove={board.enterEdit}
 												onRemove={() => board.beginRemoveWidget(slot.uid)}
 											/>
@@ -341,6 +349,9 @@ const WidgetBoard = ({
 										{widget ? (
 											<BoardWidgetCard
 												widget={widget}
+												sourceUnavailable={!sources.liveWidgetIds.includes(slot.widgetId ?? "")}
+												sourceLoading={sources.loading}
+												sourceError={sources.error}
 												editMode
 												onRemove={() =>
 													board.removeWidget(slot.uid)

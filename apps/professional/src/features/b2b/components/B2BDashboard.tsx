@@ -20,6 +20,7 @@ import { DashboardWidget } from "@/features/widgetdashboard/components/Dashboard
 import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import { useWidgetToggle } from "@/features/widgetdashboard/hooks/useWidgetToggle";
+import { useWidgetSources } from "@/features/widgetdashboard/hooks/useWidgetSources";
 import { showToast } from "@/lib/toast";
 import { useAuthStatus } from "@/context/AuthContext";
 import {
@@ -27,18 +28,12 @@ import {
 	syncWidgetsAction,
 	type WidgetSyncItem,
 } from "@/api-actions/widgets/widgets";
-import {
-	getB2BDashboardKpisAction,
-	EMPTY_B2B_KPIS,
-	type B2BDashboardKpis,
-} from "@/api-actions/b2b/b2b";
 import { PlacedWidgetEntry } from "@/features/widgetdashboard/types/dashboard";
 import { cn } from "@/lib/utils";
 import {
 	B2B_INITIAL_WIDGETS,
 	B2B_SIDEBAR_WIDGET_MAP,
 	B2B_DASHBOARD_SIDEBAR_ITEMS,
-	buildB2BWidgetMap,
 } from "./B2BDashboardConfig";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
@@ -47,8 +42,7 @@ export function B2BDashboard() {
 	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [isRearranging, setIsRearranging] = useState(false);
-	const [kpiData, setKpiData] = useState<B2BDashboardKpis>(EMPTY_B2B_KPIS);
-	const [isLoadingKpis, setIsLoadingKpis] = useState(true);
+	const currentWidgetMap = B2B_SIDEBAR_WIDGET_MAP;
 
 	const {
 		placedWidgets,
@@ -64,6 +58,7 @@ export function B2BDashboard() {
 	} | null>(null);
 
 	const { company } = useAuthStatus();
+	const sources = useWidgetSources("b2b_dashboard");
 	const [isSavingLayout, setIsSavingLayout] = useState(false);
 	const persistedLayoutRef = useRef<PlacedWidgetEntry[]>(B2B_INITIAL_WIDGETS);
 
@@ -73,26 +68,6 @@ export function B2BDashboard() {
 	const sidebarRef = useRef<HTMLDivElement>(null);
 	const [gridDragOverIndex, setGridDragOverIndex] = useState<number | null>(null);
 
-	// Fetch real B2B KPIs from Backend API
-	useEffect(() => {
-		async function fetchKpis() {
-			setIsLoadingKpis(true);
-			const res = await getB2BDashboardKpisAction();
-			if (res.success && res.data) {
-				setKpiData(res.data);
-				const dynamicMap = buildB2BWidgetMap(res.data);
-				setPlacedWidgets((prev) =>
-					prev.map((w) => ({
-						...w,
-						widgetProps: dynamicMap[w.sidebarId || "emptyPage"] || dynamicMap.emptyPage,
-					}))
-				);
-			}
-			setIsLoadingKpis(false);
-		}
-		fetchKpis();
-	}, [setPlacedWidgets]);
-
 	// Load user's saved layout from Backend DB
 	useEffect(() => {
 		async function fetchLayout() {
@@ -101,15 +76,13 @@ export function B2BDashboard() {
 			if (res.success && res.data && res.data.length > 0) {
 				const sorted = [...res.data].sort((a, b) => a.order - b.order);
 				const ordered: PlacedWidgetEntry[] = [];
-				const dynamicMap = buildB2BWidgetMap(kpiData);
-
 				sorted.forEach((w, idx) => {
 					const defaultSlot = B2B_INITIAL_WIDGETS[idx];
 					if (defaultSlot) {
 						ordered.push({
 							...defaultSlot,
 							sidebarId: w.key,
-							widgetProps: dynamicMap[w.key] || dynamicMap.emptyPage,
+							widgetProps: currentWidgetMap[w.key] || currentWidgetMap.emptyPage,
 						});
 					}
 				});
@@ -125,9 +98,7 @@ export function B2BDashboard() {
 			}
 		}
 		fetchLayout();
-	}, [company, kpiData, setPlacedWidgets]);
-
-	const currentWidgetMap = buildB2BWidgetMap(kpiData);
+	}, [company, currentWidgetMap, setPlacedWidgets]);
 
 	const handleSidebarItemClick = (id: string) => {
 		setSelectedItem(id);
@@ -290,13 +261,6 @@ export function B2BDashboard() {
 
 	return (
 		<div className="flex flex-col gap-6">
-			{isLoadingKpis && (
-				<div className="flex items-center gap-2 text-xs text-slate-400">
-					<Loader2 className="w-3.5 h-3.5 animate-spin" />
-					<span>Updating live KPIs...</span>
-				</div>
-			)}
-
 			{/* Main Layout: Widgets Grid (Left) & Control Sidebar (Right) */}
 			<div className="flex flex-col gap-4 xl:flex-row xl:gap-5 lg:pr-44">
 				{/* Left Grid */}
@@ -321,6 +285,9 @@ export function B2BDashboard() {
 									{...entry.widgetProps}
 									className={entry.colSpanClass}
 									isEmpty={entry.sidebarId === "emptyPage"}
+									sourceUnavailable={entry.sidebarId !== "emptyPage" && !sources.liveWidgetIds.includes(entry.sidebarId ?? "")}
+									isLoading={sources.loading && entry.sidebarId !== "emptyPage"}
+									sourceError={sources.error && entry.sidebarId !== "emptyPage"}
 									onRemove={() => {
 										setPendingReplacement({
 											item: { id: "emptyPage", label: localizationConstants.emptyPageLabel, icon: Layers },

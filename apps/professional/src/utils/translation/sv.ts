@@ -2665,6 +2665,9 @@ export const svOffer: OfferTranslation = {
 	calcWidgetImageDescription:
 		"Platshållarbanner för kalkylmodulen – byt till egen media senare.",
 	widgetNoData: "Ingen data att visa ännu",
+	widgetSourceUnavailableTitle: "Data är inte tillgängliga ännu",
+	widgetSourceUnavailableDescription: "Den här modulen har ännu ingen ansluten datakälla.",
+	widgetSourceLoadError: "Det gick inte att läsa in widgetarnas datakällor.",
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: "Meny",
 	widgetRailDiscard: "Avbryt",

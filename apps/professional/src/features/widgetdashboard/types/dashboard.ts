@@ -17,6 +17,7 @@ export interface WidgetProps {
     isDisabled?: boolean;
     isLoading?: boolean;
     isEmpty?: boolean;
+    sourceUnavailable?: boolean;
     badge?: React.ReactNode;
 }
 

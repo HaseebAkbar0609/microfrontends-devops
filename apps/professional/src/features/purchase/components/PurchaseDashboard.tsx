@@ -20,6 +20,7 @@ const PurchaseDashboard = () => {
 
 	return (
 		<ModuleWidgetDashboard
+			sourceLocation="purchase_dashboard"
 			widgetMap={PURCHASE_WIDGET_MAP}
 			initialWidgets={initialWidgets}
 			sidebarItems={PURCHASE_SIDEBAR_ITEMS}
