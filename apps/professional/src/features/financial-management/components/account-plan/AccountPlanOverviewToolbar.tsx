@@ -44,21 +44,21 @@ export function AccountPlanOverviewToolbar({
 						onClick={() => router.push(ACCOUNT_PLAN_BASE_ROUTE)}
 						className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight cursor-pointer"
 					>
-						<Translate text={localizationConstants.accountPlanHeader} />
+						<Translate text={localizationConstants.accountPlanTab} />
 					</button>
 					<button
 						type="button"
 						onClick={() => router.push(ACCOUNT_PLAN_IMPORT_ROUTE)}
 						className="inline-flex items-center gap-2 pb-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
 					>
-						<Translate text={localizationConstants.importAccountPlan} />
+						<Translate text={localizationConstants.importAccountPlanTab} />
 					</button>
 				</div>
 			</div>
 
 			{/* Page Title */}
 			<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-				<Translate text={localizationConstants.basAccountPlan} />
+				<Translate text={localizationConstants.accountPlanTitle} />
 			</h1>
 
 			{/* Search, Filter & Actions Bar */}

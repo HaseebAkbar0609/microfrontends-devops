@@ -34,13 +34,13 @@ export function AccountPlanImportPage() {
 						onClick={handleCancel}
 						className="inline-flex items-center gap-2 pb-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
 					>
-						<Translate text={localizationConstants.accountPlanHeader} />
+						<Translate text={localizationConstants.accountPlanTab} />
 					</button>
 					<button
 						type="button"
 						className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight cursor-default"
 					>
-						<Translate text={localizationConstants.importAccountPlan} />
+						<Translate text={localizationConstants.importAccountPlanTab} />
 					</button>
 				</div>
 			</div>

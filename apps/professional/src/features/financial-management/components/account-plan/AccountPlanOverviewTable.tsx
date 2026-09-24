@@ -76,7 +76,7 @@ export function AccountPlanOverviewTable() {
 									onClick={() => handleSort("kontoNr")}
 								>
 									<div className="flex items-center gap-1.5">
-										<Translate text={localizationConstants.accountNrHeader} />
+										<Translate text={localizationConstants.accountNumberHeader} />
 										<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 									</div>
 								</th>
@@ -85,7 +85,7 @@ export function AccountPlanOverviewTable() {
 									onClick={() => handleSort("benamning")}
 								>
 									<div className="flex items-center gap-1.5">
-										<Translate text={localizationConstants.nameHeader} />
+										<Translate text={localizationConstants.accountNameHeader} />
 										<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 									</div>
 								</th>
@@ -121,7 +121,7 @@ export function AccountPlanOverviewTable() {
 									onClick={() => handleSort("ingaendeBalans")}
 								>
 									<div className="flex items-center gap-1.5">
-										<Translate text={localizationConstants.incomingBalanceHeader} />
+										<Translate text={localizationConstants.openingBalanceHeader} />
 										<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 									</div>
 								</th>
@@ -243,7 +243,7 @@ export function AccountPlanOverviewTable() {
 					{/* Batch selection status & actions */}
 					<div className="flex items-center gap-3">
 						<span className="text-xs text-slate-500 font-medium">
-							({selectedIds.length} <Translate text={localizationConstants.selectedCount} />)
+							({selectedIds.length} <Translate text={localizationConstants.selectedCountLabel} />)
 						</span>
 						<Button
 							variant="outline"
