@@ -7,7 +7,12 @@ import type { SalesActivity, SalesCompany } from "../types";
 import { compareText } from "./salesFormatters";
 
 export type ActivityRow = {
+	/** The activity's own id. Only unique within its company, so never use it
+	 *  as a React key; `onComplete` needs it in this raw form. */
 	id: string;
+	/** Unique across every company, because these rows are flattened from all
+	 *  of them. This is the one to render with. */
+	rowKey: string;
 	companyId: string;
 	companyName: string;
 	activity: SalesActivity;
@@ -116,6 +121,7 @@ function toRows(companies: SalesCompany[]): ActivityRow[] {
 	return companies.flatMap((company) =>
 		company.activities.map((activity) => ({
 			id: activity.id,
+			rowKey: `${company.id}:${activity.id}`,
 			companyId: company.id,
 			companyName: company.name,
 			activity,

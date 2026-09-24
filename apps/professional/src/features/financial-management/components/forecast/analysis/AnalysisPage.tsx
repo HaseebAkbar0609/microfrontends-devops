@@ -74,7 +74,14 @@ export function AnalysisPage() {
 							onReset={analysis.reset}
 						/>
 						<AnalysisDashboard
-							kpis={analysis.kpis}
+							data={{
+								kpis: analysis.kpis,
+								summaryRows: analysis.summaryRows,
+								performance: analysis.performance,
+								trend: analysis.trend,
+								opportunities: analysis.opportunities,
+								risks: analysis.risks,
+							}}
 							isRearranging={isRearranging}
 							onToggleRearrange={toggleRearrange}
 						/>

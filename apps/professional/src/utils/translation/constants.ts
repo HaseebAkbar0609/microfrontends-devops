@@ -1277,6 +1277,13 @@ export type OfferTranslation = {
 	calcNewSuccessCreate: string;
 	calcNewValidationNameRequired: string;
 	calcNewOffersLoadError: string;
+	calcNewPreviewTitle: string;
+	calcNewBackTo: string;
+	calcNewSkapaBtn: string;
+	calcNewDocumentsHeader: string;
+	calcNewSenasteOffertDatum: string;
+	calcNewCreateError: string;
+	calcNewGenericError: string;
 	// Calculation - Detail view
 	calcDetailProjekteringNr: string;
 	calcDetailProjekteringNamn: string;
@@ -5899,6 +5906,11 @@ export type RegisterTranslation = {
 	validationCostCenterCodeRequired: string;
 	validationCostCenterNameRequired: string;
 	costCenterCreatedSuccess: string;
+	costCenterUpdatedSuccess: string;
+	costCenterDeletedSuccess: string;
+	costCenterStatusUpdatedSuccess: string;
+	costCenterDeleteConfirmTitle: string;
+	costCenterDeleteConfirmDesc: string;
 	// Account Plan Translations (TFS-443)
 	accountPlanTab: string;
 	importAccountPlanTab: string;
@@ -10071,6 +10083,37 @@ export type ForecastDashboardTranslation = {
 	forecastAnalysisRiskModerate: string;
 	forecastAnalysisRiskHigh: string;
 	forecastAnalysisObjectsSelected: string;
+	forecastAnalysisCardFinancialSummary: string;
+	forecastAnalysisCardProjectPerformance: string;
+	forecastAnalysisCardTrends: string;
+	forecastAnalysisCardRisks: string;
+	forecastAnalysisCardOpportunities: string;
+	forecastAnalysisColBudget: string;
+	forecastAnalysisColActual: string;
+	forecastAnalysisColForecast: string;
+	forecastAnalysisRowRevenue: string;
+	forecastAnalysisRowCosts: string;
+	forecastAnalysisRowGrossProfit: string;
+	forecastAnalysisRowVariance: string;
+	forecastAnalysisActiveProjects: string;
+	forecastAnalysisOnBudget: string;
+	forecastAnalysisOverBudget: string;
+	forecastAnalysisTopOverruns: string;
+	forecastAnalysisAmountOverBudget: string;
+	forecastAnalysisNoOverruns: string;
+	forecastAnalysisNoActiveProjects: string;
+	forecastAnalysisTrendSubtitle: string;
+	forecastAnalysisTrendChartLabel: string;
+	forecastAnalysisTrendNote: string;
+	forecastAnalysisTrendCurrent: string;
+	forecastAnalysisTrendEmpty: string;
+	forecastAnalysisPotentialRisks: string;
+	forecastAnalysisRiskRegulation: string;
+	forecastAnalysisRiskDeliveries: string;
+	forecastAnalysisOpportunityUpside: string;
+	forecastAnalysisNetImpact: string;
+	forecastAnalysisOpportunityNewClient: string;
+	forecastAnalysisOpportunitySavings: string;
 };
 
 export type Translation = HeaderTranslation &
