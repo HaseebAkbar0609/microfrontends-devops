@@ -6008,6 +6008,11 @@ export const enRegister: RegisterTranslation = {
 	validationCostCenterCodeRequired: "CODE is required",
 	validationCostCenterNameRequired: "Name is required",
 	costCenterCreatedSuccess: "Cost center created successfully",
+	costCenterUpdatedSuccess: "Cost center updated successfully",
+	costCenterDeletedSuccess: "Cost center deleted successfully",
+	costCenterStatusUpdatedSuccess: "Status updated successfully",
+	costCenterDeleteConfirmTitle: "Delete Cost Center",
+	costCenterDeleteConfirmDesc: "Are you sure you want to delete this cost center? This action cannot be undone.",
 
 	// Account Plan Translations (TFS-443)
 	accountPlanTab: "Account Plan",

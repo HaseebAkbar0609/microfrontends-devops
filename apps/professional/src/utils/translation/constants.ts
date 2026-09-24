@@ -5898,6 +5898,11 @@ export type RegisterTranslation = {
 	validationCostCenterCodeRequired: string;
 	validationCostCenterNameRequired: string;
 	costCenterCreatedSuccess: string;
+	costCenterUpdatedSuccess: string;
+	costCenterDeletedSuccess: string;
+	costCenterStatusUpdatedSuccess: string;
+	costCenterDeleteConfirmTitle: string;
+	costCenterDeleteConfirmDesc: string;
 	// Account Plan Translations (TFS-443)
 	accountPlanTab: string;
 	importAccountPlanTab: string;

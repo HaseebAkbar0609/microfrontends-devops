@@ -5998,6 +5998,11 @@ export const svRegister: RegisterTranslation = {
 	validationCostCenterCodeRequired: "KOD är obligatoriskt",
 	validationCostCenterNameRequired: "Benämning är obligatoriskt",
 	costCenterCreatedSuccess: "Kostnadsställe har skapats",
+	costCenterUpdatedSuccess: "Kostnadsställe har uppdaterats",
+	costCenterDeletedSuccess: "Kostnadsställe har tagits bort",
+	costCenterStatusUpdatedSuccess: "Status har uppdaterats",
+	costCenterDeleteConfirmTitle: "Ta bort kostnadsställe",
+	costCenterDeleteConfirmDesc: "Är du säker på att du vill ta bort detta kostnadsställe? Denna åtgärd kan inte ångras.",
 
 	// Account Plan Translations (TFS-443)
 	accountPlanTab: "Kontoplan",
