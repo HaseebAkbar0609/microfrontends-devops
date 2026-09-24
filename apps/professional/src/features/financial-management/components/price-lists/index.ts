@@ -9,6 +9,7 @@ export * from "./create/CreatePriceListPage";
 export * from "./create/CreatePriceListWizard";
 export * from "./create/steps/Step1GrundInfo";
 export * from "./create/steps/Step2ArtikelLista";
+export * from "./create/PriceListStepProgressBar";
 export * from "./detail/PriceListDetailPage";
 export * from "./detail/tabs/PriceListGrundInfoTab";
 export * from "./detail/tabs/PriceListArtikelListaTab";

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useCreatePriceListForm } from "../../../hooks/useCreatePriceListForm";
+import { PriceListStepProgressBar } from "./PriceListStepProgressBar";
 import { Step1GrundInfo } from "./steps/Step1GrundInfo";
 import { Step2ArtikelLista } from "./steps/Step2ArtikelLista";
 import { PRICE_LISTS_BASE_ROUTE } from "../../../constants/priceLists.constants";
@@ -30,8 +31,8 @@ export function CreatePriceListWizard() {
 
 	return (
 		<div className="space-y-6">
-			{/* Top Header Row: Subtabs on left + Steg 1/2 Progress Bar on right */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 gap-4">
+			{/* Subtabs Bar */}
+			<div className="border-b border-slate-200">
 				<div className="flex gap-8 -mb-px">
 					<button
 						type="button"
@@ -56,38 +57,38 @@ export function CreatePriceListWizard() {
 						<Translate text={localizationConstants.priceListArticleListTab} />
 					</button>
 				</div>
-
-				{/* Progress Indicator matching Figma Image 5 */}
-				<div className="flex flex-col items-end gap-1.5 pb-2">
-					<span className="text-xs font-semibold text-slate-700">
-						<Translate text={localizationConstants.stepLabel} /> {currentStep}/2
-					</span>
-					<div className="w-28 h-1.5 bg-slate-200 rounded-full overflow-hidden">
-						<div
-							className="h-full bg-slate-900 transition-all duration-300 rounded-full"
-							style={{ width: currentStep === 1 ? "50%" : "100%" }}
-						/>
-					</div>
-				</div>
 			</div>
 
-			{/* Step Body */}
-			{currentStep === 1 ? (
-				<Step1GrundInfo
-					formData={formData}
-					errors={errors}
-					onUpdateField={updateField}
-				/>
-			) : (
-				<Step2ArtikelLista
-					articles={filteredArticles}
-					selectedArticleIds={formData.selectedArticleIds}
-					searchQuery={articlesSearchQuery}
-					onSearchChange={setArticlesSearchQuery}
-					onToggleArticle={toggleArticleSelection}
-					onToggleSelectAll={toggleSelectAllArticles}
-				/>
-			)}
+			{/* Main 2-Column Content Grid matching Figma Image 2 */}
+			<div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+				{/* Left Main Form Column (Col Span 8 / 9) */}
+				<div className="lg:col-span-8 xl:col-span-9 space-y-6">
+					{currentStep === 1 ? (
+						<Step1GrundInfo
+							formData={formData}
+							errors={errors}
+							onUpdateField={updateField}
+						/>
+					) : (
+						<Step2ArtikelLista
+							articles={filteredArticles}
+							selectedArticleIds={formData.selectedArticleIds}
+							searchQuery={articlesSearchQuery}
+							onSearchChange={setArticlesSearchQuery}
+							onToggleArticle={toggleArticleSelection}
+							onToggleSelectAll={toggleSelectAllArticles}
+						/>
+					)}
+				</div>
+
+				{/* Right Sidebar Column (Col Span 4 / 3) with Step Progress Card */}
+				<div className="lg:col-span-4 xl:col-span-3 space-y-6">
+					<PriceListStepProgressBar
+						currentStep={currentStep}
+						totalSteps={2}
+					/>
+				</div>
+			</div>
 
 			{/* Bottom Action Footer (Right-aligned Avbryt & Spara buttons) */}
 			<div className="flex items-center justify-end gap-3 pt-6 border-t border-slate-200">
