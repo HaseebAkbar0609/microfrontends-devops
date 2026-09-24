@@ -79,10 +79,20 @@ export interface ArticleDetail extends ArticleRow {
 }
 
 export interface SupplierArticleDetail extends SupplierArticleRow {
+	supplierNo?: string;
+	supplierName: string;
 	ean?: string;
 	unit?: string;
 	category?: string;
+	description?: string;
 	weight?: string;
+	length?: string;
+	width?: string;
+	height?: string;
+	vikt?: string;
+	langd?: string;
+	bredd?: string;
+	hojd?: string;
 	dimensions?: string;
 	material?: string;
 	leadTimeDays?: number;
