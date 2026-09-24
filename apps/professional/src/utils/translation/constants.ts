@@ -1277,6 +1277,13 @@ export type OfferTranslation = {
 	calcNewSuccessCreate: string;
 	calcNewValidationNameRequired: string;
 	calcNewOffersLoadError: string;
+	calcNewPreviewTitle: string;
+	calcNewBackTo: string;
+	calcNewSkapaBtn: string;
+	calcNewDocumentsHeader: string;
+	calcNewSenasteOffertDatum: string;
+	calcNewCreateError: string;
+	calcNewGenericError: string;
 	// Calculation - Detail view
 	calcDetailProjekteringNr: string;
 	calcDetailProjekteringNamn: string;

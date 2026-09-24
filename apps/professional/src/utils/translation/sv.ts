@@ -1219,6 +1219,13 @@ export const svOffer: OfferTranslation = {
 	calcNewSuccessCreate: "Kalkylen har skapats",
 	calcNewValidationNameRequired: "Projektnamn är obligatoriskt",
 	calcNewOffersLoadError: "Kunde inte läsa in offerter",
+	calcNewPreviewTitle: "Preview",
+	calcNewBackTo: "Tillbaka till",
+	calcNewSkapaBtn: "Skapa",
+	calcNewDocumentsHeader: "Dokuments",
+	calcNewSenasteOffertDatum: "Senaste offert datum",
+	calcNewCreateError: "Kunde inte skapa kalkylen",
+	calcNewGenericError: "Ett oväntat fel inträffade",
 	// Calculation - Detail view
 	calcDetailProjekteringNr: "Projektering nr",
 	calcDetailProjekteringNamn: "Projektering namn",

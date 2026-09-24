@@ -19,7 +19,7 @@ import type {
 	KalkylProjektData,
 } from "../types/kalkyl";
 
-export const TOTAL_STEPS = 3;
+export const TOTAL_STEPS = 4;
 
 export const DEFAULT_KONTAKT: KalkylKontaktData = {
 	mode: "extend", // Defaults to Extern Kund as per Figma screen 1
@@ -315,10 +315,15 @@ export function useCreateKalkylForm() {
 				showToast("success", t(localizationConstants.calcNewSuccessCreate));
 				router.push("/module/business/calculation/overview");
 			} else {
-				showToast("error", res.error || "Failed to create calculation");
+				showToast(
+					"error",
+					res.error && res.error !== "CALCULATION_CREATE_FAILED" && res.error !== "INVALID_RESPONSE"
+						? res.error
+						: t(localizationConstants.calcNewCreateError),
+				);
 			}
 		} catch {
-			showToast("error", "An error occurred");
+			showToast("error", t(localizationConstants.calcNewGenericError));
 		} finally {
 			setIsSubmitting(false);
 		}
