@@ -194,4 +194,11 @@ export * from "./utils/costCentersRepository";
 export * from "./hooks/useCostCentersOverview";
 export * from "./hooks/useCreateCostCenterForm";
 export * from "./hooks/useCostCenterDetail";
-
+export * from "./components/wage-types";
+export * from "./types/wageTypes.types";
+export * from "./constants/wageTypes.constants";
+export * from "./mock/wageTypesMockData";
+export * from "./utils/wageTypesRepository";
+export * from "./hooks/useWageTypesOverview";
+export * from "./hooks/useCreateWageTypeForm";
+export * from "./hooks/useWageTypeDetail";
