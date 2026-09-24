@@ -15,6 +15,7 @@ export interface AnalysisMonth {
 	revenue: number;
 	cost: number;
 	forecastRevenue: number;
+	forecastCost: number;
 	budgetRevenue: number;
 	budgetCost: number;
 	billableHours: number;
@@ -33,6 +34,20 @@ export interface AnalysisObject {
 	riskExposure: number;
 	/** A risk raised this period, which the card counts separately. */
 	isNewRisk: boolean;
+}
+
+/** What drives the exposure the risk card totals; company-wide, so filters leave it alone. */
+export interface AnalysisRiskItem {
+	id: string;
+	labelKey: TranslationKeys;
+}
+
+/** An upside worth chasing, and what chasing it costs. */
+export interface AnalysisOpportunity {
+	id: string;
+	labelKey: TranslationKeys;
+	upside: number;
+	costToRealise: number;
 }
 
 /** The Analys val card; `null` and an empty list mean everything. */
@@ -67,4 +82,40 @@ export interface AnalysisKpis {
 	riskLevel: AnalysisRiskLevel;
 	/** How many objects the filters left, which the filter card reports. */
 	objectCount: number;
+}
+
+/** Financial Summary: one metric read three ways, and how the outcome sits against budget. */
+export interface AnalysisSummaryRow {
+	labelKey: TranslationKeys;
+	budget: number;
+	actual: number;
+	forecast: number;
+	/** Actual less budget; `true` when a rise is the good news. */
+	variance: number;
+	riseIsGood: boolean;
+}
+
+/** Project Performance, over the active objects the filters leave. */
+export interface AnalysisProjectPerformance {
+	activeCount: number;
+	onBudgetCount: number;
+	overBudgetCount: number;
+	/** The worst overruns first, each by how far its cost passed its budget. */
+	overruns: { id: string; name: string; amountOver: number }[];
+}
+
+/** One month on the trend chart. */
+export interface AnalysisTrendPoint {
+	/** The month key, so the axis follows the language. */
+	monthKey: TranslationKeys;
+	budget: number;
+	actual: number;
+	forecast: number;
+}
+
+/** The Möjligheter card: what is on offer, and what is left after chasing it. */
+export interface AnalysisOpportunitySummary {
+	upside: number;
+	netImpact: number;
+	items: AnalysisOpportunity[];
 }
