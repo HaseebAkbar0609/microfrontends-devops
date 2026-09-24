@@ -34,6 +34,9 @@ export interface AnalysisObject {
 	riskExposure: number;
 	/** A risk raised this period, which the card counts separately. */
 	isNewRisk: boolean;
+	/** How often the forecast has been rewritten, this period and the one before. */
+	forecastRevisions: number;
+	forecastRevisionsPrevious: number;
 }
 
 /** What drives the exposure the risk card totals; company-wide, so filters leave it alone. */
@@ -118,4 +121,45 @@ export interface AnalysisOpportunitySummary {
 	upside: number;
 	netImpact: number;
 	items: AnalysisOpportunity[];
+}
+
+/** Prognoskvalitet: how close the forecast ran, and how often it was rewritten. */
+export interface AnalysisForecastQuality {
+	accuracyPercent: number;
+	/** The average miss, which is what accuracy leaves. */
+	mapePercent: number;
+	revisions: number;
+	revisionsPrevious: number;
+	revisionChangePercent: number;
+}
+
+/** Projektlönsamhet, over the objects the filters leave. */
+export interface AnalysisProfitability {
+	averageMarginPercent: number;
+	lowest: { name: string; percent: number } | null;
+	highest: { name: string; percent: number } | null;
+}
+
+/** Debiteringsgrad against its target, and what an hour brings in. */
+export interface AnalysisUtilization {
+	utilizationPercent: number;
+	targetPercent: number;
+	billableHours: number;
+	capacityHours: number;
+	revenuePerBillableHour: number;
+}
+
+/** Kassaflöde, which is company-wide and so stands apart from the filters. */
+export interface AnalysisCashFlow {
+	accountsReceivable: number;
+	dsoDays: number;
+	dsoPreviousDays: number;
+	workInProgress: number;
+	uninvoicedHours: number;
+}
+
+/** One month of the cumulative curve: the TB-bidrag earned by the end of it. */
+export interface AnalysisCumulativePoint {
+	monthKey: TranslationKeys;
+	cumulative: number;
 }

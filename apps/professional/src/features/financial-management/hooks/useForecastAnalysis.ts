@@ -4,17 +4,22 @@ import { useCallback, useMemo, useState } from "react";
 
 import { INITIAL_ANALYSIS_FILTERS } from "../constants/forecastAnalysis.constants";
 import {
+	ANALYSIS_CASH_FLOW,
 	ANALYSIS_OPPORTUNITIES,
 	ANALYSIS_RISK_ITEMS,
 	INITIAL_ANALYSIS_OBJECTS,
 } from "../mock/forecastAnalysis.mock";
 import type { AnalysisFilters } from "../types/forecastAnalysis.types";
 import {
+	analysisCumulativeProfit,
+	analysisForecastQuality,
 	analysisKpis,
 	analysisOpportunities,
+	analysisProfitability,
 	analysisProjectPerformance,
 	analysisSummaryRows,
 	analysisTrend,
+	analysisUtilization,
 	filterAnalysisObjects,
 } from "../utils/forecastAnalysis";
 
@@ -35,6 +40,10 @@ export function useForecastAnalysis() {
 	const performance = useMemo(() => analysisProjectPerformance(objects, applied.period), [objects, applied.period]);
 	const trend = useMemo(() => analysisTrend(objects, applied.period), [objects, applied.period]);
 	const opportunities = useMemo(() => analysisOpportunities(ANALYSIS_OPPORTUNITIES), []);
+	const quality = useMemo(() => analysisForecastQuality(objects, applied.period), [objects, applied.period]);
+	const profitability = useMemo(() => analysisProfitability(objects, applied.period), [objects, applied.period]);
+	const utilization = useMemo(() => analysisUtilization(objects, applied.period), [objects, applied.period]);
+	const cumulative = useMemo(() => analysisCumulativeProfit(objects, applied.period), [objects, applied.period]);
 
 	const setFilter = useCallback(<K extends keyof AnalysisFilters>(key: K, value: AnalysisFilters[K]) => {
 		setDraft((prev) => ({ ...prev, [key]: value }));
@@ -72,8 +81,14 @@ export function useForecastAnalysis() {
 		performance,
 		trend,
 		opportunities,
+		quality,
+		profitability,
+		utilization,
+		cumulative,
 		/** What drives the exposure; named here so no component reads the mock. */
 		risks: ANALYSIS_RISK_ITEMS,
+		/** Company-wide, so it stands outside the filters. */
+		cashFlow: ANALYSIS_CASH_FLOW,
 		isRearranging,
 		setIsRearranging,
 	};

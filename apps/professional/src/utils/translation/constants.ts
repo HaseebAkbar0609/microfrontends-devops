@@ -10159,6 +10159,34 @@ export type ForecastDashboardTranslation = {
 	forecastAnalysisNetImpact: string;
 	forecastAnalysisOpportunityNewClient: string;
 	forecastAnalysisOpportunitySavings: string;
+	forecastKeyFiguresFilterTitle: string;
+	forecastKeyFiguresCardQuality: string;
+	forecastKeyFiguresCardRisks: string;
+	forecastKeyFiguresCardCashFlow: string;
+	forecastKeyFiguresCardProfitability: string;
+	forecastKeyFiguresCardUtilization: string;
+	forecastKeyFiguresCardCumulative: string;
+	forecastKeyFiguresMape: string;
+	forecastKeyFiguresRevisions: string;
+	forecastKeyFiguresRevisionsThisPeriod: string;
+	forecastKeyFiguresRevisionsChange: string;
+	forecastKeyFiguresForecastRisk: string;
+	forecastKeyFiguresAccountsReceivable: string;
+	forecastKeyFiguresDso: string;
+	forecastKeyFiguresDsoPrevious: string;
+	forecastKeyFiguresWorkInProgress: string;
+	forecastKeyFiguresUninvoicedHours: string;
+	forecastKeyFiguresAverageMargin: string;
+	forecastKeyFiguresLowestMargin: string;
+	forecastKeyFiguresHighestMargin: string;
+	forecastKeyFiguresUtilizationTarget: string;
+	forecastKeyFiguresBillableHours: string;
+	forecastKeyFiguresCapacityHours: string;
+	forecastKeyFiguresRevenuePerHour: string;
+	forecastKeyFiguresCumulativeSubtitle: string;
+	forecastKeyFiguresCumulativeSeries: string;
+	forecastKeyFiguresCumulativeChartLabel: string;
+	forecastKeyFiguresNoProjects: string;
 };
 
 export type Translation = HeaderTranslation &

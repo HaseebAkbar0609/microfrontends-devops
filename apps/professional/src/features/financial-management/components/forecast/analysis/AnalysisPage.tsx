@@ -13,17 +13,11 @@ import { forecastBreadcrumbs } from "../../../constants/economyNav.config";
 import { useForecastAnalysis } from "../../../hooks/useForecastAnalysis";
 import { AnalysisDashboard } from "./AnalysisDashboard";
 import { AnalysisFilterCard } from "./AnalysisFilterCard";
+import { KeyFiguresDashboard } from "./keyfigures/KeyFiguresDashboard";
 
-/* Nyckeltal is the next page the frames draw but has none of its own yet, so it
-   stays in the row, disabled, and says why. */
 const ANALYSIS_TABS: SectionTabItem[] = [
 	{ id: "analysis", labelKey: localizationConstants.forecastAnalysisTitle },
-	{
-		id: "keyFigures",
-		labelKey: localizationConstants.forecastAnalysisTabKeyFigures,
-		disabled: true,
-		disabledReasonKey: localizationConstants.forecastAnalysisTabUnavailable,
-	},
+	{ id: "keyFigures", labelKey: localizationConstants.forecastAnalysisTabKeyFigures },
 ];
 
 /** Prognos › Analys: the selection, and what the figures make of it. */
@@ -81,6 +75,35 @@ export function AnalysisPage() {
 								trend: analysis.trend,
 								opportunities: analysis.opportunities,
 								risks: analysis.risks,
+							}}
+							isRearranging={isRearranging}
+							onToggleRearrange={toggleRearrange}
+						/>
+					</TabsContent>
+
+					{/* Its own board, reading the same selection; the engine unmounts
+					    whichever tab is not open. */}
+					<TabsContent value="keyFigures" className="flex flex-col gap-5 pt-5">
+						<AnalysisFilterCard
+							titleKey={localizationConstants.forecastKeyFiguresFilterTitle}
+							filters={analysis.draft}
+							objects={analysis.allObjects}
+							onChange={analysis.setFilter}
+							onToggleObject={analysis.toggleObject}
+							onApply={analysis.apply}
+							onReset={analysis.reset}
+						/>
+						<KeyFiguresDashboard
+							data={{
+								kpis: analysis.kpis,
+								quality: analysis.quality,
+								opportunities: analysis.opportunities,
+								risks: analysis.risks,
+								cashFlow: analysis.cashFlow,
+								profitability: analysis.profitability,
+								performance: analysis.performance,
+								utilization: analysis.utilization,
+								cumulative: analysis.cumulative,
 							}}
 							isRearranging={isRearranging}
 							onToggleRearrange={toggleRearrange}

@@ -4,10 +4,15 @@ import {
 	FORECAST_ANALYSIS_OVERRUN_LIMIT,
 	FORECAST_ANALYSIS_PERIOD_MONTHS,
 	FORECAST_ANALYSIS_RISK_THRESHOLDS,
+	FORECAST_ANALYSIS_UTILIZATION_TARGET_PERCENT,
 } from "../constants/forecastAnalysis.constants";
 import type {
+	AnalysisCumulativePoint,
 	AnalysisFilters,
+	AnalysisForecastQuality,
 	AnalysisKpis,
+	AnalysisProfitability,
+	AnalysisUtilization,
 	AnalysisMonth,
 	AnalysisObject,
 	AnalysisOpportunity,
@@ -172,4 +177,81 @@ export function analysisOpportunities(items: AnalysisOpportunity[]): AnalysisOpp
 	const upside = items.reduce((sum, item) => sum + item.upside, 0);
 	const cost = items.reduce((sum, item) => sum + item.costToRealise, 0);
 	return { upside, netImpact: upside - cost, items };
+}
+
+/**
+ * Prognoskvalitet: how close the forecast came, the average miss it leaves,
+ * and how often the forecast was rewritten against the period before.
+ */
+export function analysisForecastQuality(objects: AnalysisObject[], period: AnalysisPeriod): AnalysisForecastQuality {
+	const { accuracyPercent } = analysisKpis(objects, period);
+	const revisions = objects.reduce((sum, object) => sum + object.forecastRevisions, 0);
+	const revisionsPrevious = objects.reduce((sum, object) => sum + object.forecastRevisionsPrevious, 0);
+
+	return {
+		accuracyPercent,
+		mapePercent: 100 - accuracyPercent,
+		revisions,
+		revisionsPrevious,
+		revisionChangePercent: revisionsPrevious === 0 ? 0 : ((revisions - revisionsPrevious) / revisionsPrevious) * 100,
+	};
+}
+
+/** What an object keeps of what it earns, over the months the period reads. */
+function marginPercentOf(object: AnalysisObject, period: AnalysisPeriod): number {
+	const months = monthsInPeriod(object, period);
+	const revenue = sumMonths(months, "revenue");
+	return percent(revenue - sumMonths(months, "cost"), revenue);
+}
+
+/** Projektlönsamhet: the average project, and the weakest and strongest of them. */
+export function analysisProfitability(objects: AnalysisObject[], period: AnalysisPeriod): AnalysisProfitability {
+	if (objects.length === 0) return { averageMarginPercent: 0, lowest: null, highest: null };
+
+	const margins = objects.map((object) => {
+		const months = monthsInPeriod(object, period);
+		return {
+			name: object.name,
+			amount: sumMonths(months, "revenue") - sumMonths(months, "cost"),
+			percent: marginPercentOf(object, period),
+		};
+	});
+	const ranked = [...margins].sort((a, b) => a.percent - b.percent);
+
+	return {
+		/* The average project's margin, on the same scale as the two extremes below it. */
+		averageMarginPercent: margins.reduce((sum, margin) => sum + margin.percent, 0) / margins.length,
+		lowest: { name: ranked[0].name, percent: ranked[0].percent },
+		highest: { name: ranked[ranked.length - 1].name, percent: ranked[ranked.length - 1].percent },
+	};
+}
+
+/** Debiteringsgrad against its target, and what one billable hour brings in. */
+export function analysisUtilization(objects: AnalysisObject[], period: AnalysisPeriod): AnalysisUtilization {
+	const months = objects.flatMap((object) => monthsInPeriod(object, period));
+	const billableHours = sumMonths(months, "billableHours");
+	const revenue = sumMonths(months, "revenue");
+
+	return {
+		utilizationPercent: percent(billableHours, sumMonths(months, "capacityHours")),
+		targetPercent: FORECAST_ANALYSIS_UTILIZATION_TARGET_PERCENT,
+		billableHours,
+		capacityHours: sumMonths(months, "capacityHours"),
+		revenuePerBillableHour: billableHours === 0 ? 0 : revenue / billableHours,
+	};
+}
+
+/** The cumulative curve: what each month leaves, added to everything before it. */
+export function analysisCumulativeProfit(objects: AnalysisObject[], period: AnalysisPeriod): AnalysisCumulativePoint[] {
+	const { from, to } = windowRange(period);
+	let running = 0;
+
+	return FORECAST_ANALYSIS_MONTH_KEYS.slice(from, to).map((monthKey, index) => {
+		const cells = objects
+			.map((object) => object.months[from + index])
+			.filter((cell): cell is AnalysisMonth => Boolean(cell));
+		/* TB-bidrag, not revenue: what each month left after its own costs. */
+		running += sumMonths(cells, "revenue") - sumMonths(cells, "cost");
+		return { monthKey, cumulative: running };
+	});
 }

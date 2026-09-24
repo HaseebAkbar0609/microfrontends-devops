@@ -72,6 +72,8 @@ function FilterSelect<T extends string>({
 }
 
 export interface AnalysisFilterCardProps {
+	/** The card's heading; Analys calls it Analys val, Nyckeltal Statistik val. */
+	titleKey?: TranslationKeys;
 	filters: AnalysisFilters;
 	objects: AnalysisObject[];
 	onChange: <K extends keyof AnalysisFilters>(key: K, value: AnalysisFilters[K]) => void;
@@ -85,7 +87,15 @@ export interface AnalysisFilterCardProps {
  * so the page does not redraw halfway through choosing. Objekt lists every
  * object by name; the rest are one choice each, or Alla.
  */
-export function AnalysisFilterCard({ filters, objects, onChange, onToggleObject, onApply, onReset }: AnalysisFilterCardProps) {
+export function AnalysisFilterCard({
+	titleKey = localizationConstants.forecastAnalysisFilterTitle,
+	filters,
+	objects,
+	onChange,
+	onToggleObject,
+	onApply,
+	onReset,
+}: AnalysisFilterCardProps) {
 	const t = useTranslate();
 	const selectedNames = objects.filter((object) => filters.objectIds.includes(object.id)).map((object) => object.name);
 
@@ -93,7 +103,7 @@ export function AnalysisFilterCard({ filters, objects, onChange, onToggleObject,
 		<Card className="gap-3 p-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-base font-bold text-slate-900">
-					<Translate text={localizationConstants.forecastAnalysisFilterTitle} />
+					<Translate text={titleKey} />
 				</h2>
 				<button
 					type="button"
