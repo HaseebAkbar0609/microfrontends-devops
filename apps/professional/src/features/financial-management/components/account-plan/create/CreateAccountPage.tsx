@@ -34,14 +34,14 @@ export function CreateAccountPage() {
 					<ArrowLeft className="h-5 w-5" />
 				</button>
 				<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.createAccountTitle} />
+					<Translate text={localizationConstants.createAccountHeaderTitle} />
 				</h1>
 			</div>
 
 			{/* Sub Navigation Tab */}
 			<div className="flex items-center gap-8 border-b border-slate-200">
 				<span className="pb-3 text-sm font-semibold text-slate-900 border-b-2 border-slate-900 cursor-default">
-					<Translate text={localizationConstants.basicInfoTab} />
+					<Translate text={localizationConstants.grundInformationSection} />
 				</span>
 			</div>
 

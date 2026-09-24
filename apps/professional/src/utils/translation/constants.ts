@@ -5950,6 +5950,7 @@ export type RegisterTranslation = {
 	importFileNow: string;
 	importButtonText: string;
 	grundlaggandeInfoTab: string;
+	grundInformationSection: string;
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: string;
 	additionalDetailsSection: string;

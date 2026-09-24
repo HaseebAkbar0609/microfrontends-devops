@@ -228,7 +228,11 @@ class AccountPlanRepository {
 					benamning:
 						settings.anvandBenamningFran === "sie_fil"
 							? row.sourceBenamning
-							: existing.benamning,
+							: (row.targetBenamning || existing.benamning),
+					momskod:
+						row.momskodPercent && row.momskodPercent !== "-"
+							? row.momskodPercent
+							: existing.momskod,
 					updatedAt: now,
 				};
 				count++;
@@ -244,7 +248,7 @@ class AccountPlanRepository {
 					ingaendeBalans: "0",
 					budget: "0",
 					status: "active",
-					aktivt: "Beijer",
+					aktivt: "Aktiv",
 					kostnadsstalleMode: "obligatoriskt",
 					projektMode: "obligatoriskt",
 					foreslaKostnadsstalle: "Kontor 10",
@@ -256,6 +260,10 @@ class AccountPlanRepository {
 				count++;
 			}
 		});
+
+		this.items.sort((a, b) =>
+			a.kontoNr.localeCompare(b.kontoNr, undefined, { numeric: true }),
+		);
 
 		this.saveToStorage();
 		return count;

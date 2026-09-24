@@ -6061,6 +6061,7 @@ export const enRegister: RegisterTranslation = {
 	importFileNow: "Import file now",
 	importButtonText: "Import",
 	grundlaggandeInfoTab: "Basic info.",
+	grundInformationSection: "Basic information",
 
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: "Create new Account",

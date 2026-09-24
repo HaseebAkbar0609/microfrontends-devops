@@ -67,7 +67,7 @@ export function AccountDetailPage({ id }: AccountDetailPageProps) {
 						<ArrowLeft className="h-5 w-5" />
 					</button>
 					<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-						<Translate text={localizationConstants.detailsTitle} />
+						<Translate text={localizationConstants.detaljerHeaderTitle} />
 					</h1>
 				</div>
 				<span className="text-xs text-slate-400 font-medium pl-8">
@@ -78,7 +78,7 @@ export function AccountDetailPage({ id }: AccountDetailPageProps) {
 			{/* Sub Navigation Tab */}
 			<div className="flex items-center gap-8 border-b border-slate-200">
 				<span className="pb-3 text-sm font-semibold text-slate-900 border-b-2 border-slate-900 cursor-default">
-					<Translate text={localizationConstants.basicInfoTab} />
+					<Translate text={localizationConstants.grundlaggandeInfoTab} />
 				</span>
 			</div>
 

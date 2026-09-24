@@ -20,14 +20,14 @@ export function AccountPlanImportStep2SettingsCard({
 	return (
 		<div className="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col gap-6">
 			<h3 className="text-base font-semibold text-slate-900 border-b border-slate-100 pb-3">
-				<Translate text={localizationConstants.importSettingsSection} />
+				Import
 			</h3>
 
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 				{/* 1. Importera endast använda */}
 				<div className="flex flex-col gap-3">
 					<label className="text-xs font-semibold text-slate-900">
-						<Translate text={localizationConstants.importOnlyUsedAccounts} />
+						<Translate text={localizationConstants.importOnlyUsedLabel} />
 					</label>
 					<div className="flex items-center gap-4">
 						<label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
@@ -40,7 +40,7 @@ export function AccountPlanImportStep2SettingsCard({
 								}
 								className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 							/>
-							<Translate text={localizationConstants.allAccountsOption} />
+							<Translate text={localizationConstants.allLabel} />
 						</label>
 						<label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
 							<input
@@ -52,7 +52,7 @@ export function AccountPlanImportStep2SettingsCard({
 								}
 								className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 							/>
-							<Translate text={localizationConstants.onlyUsedOption} />
+							<Translate text={localizationConstants.onlyUsedLabel} />
 						</label>
 					</div>
 				</div>
@@ -60,7 +60,7 @@ export function AccountPlanImportStep2SettingsCard({
 				{/* 2. Använd benämning från */}
 				<div className="flex flex-col gap-3">
 					<label className="text-xs font-semibold text-slate-900">
-						<Translate text={localizationConstants.useNameFrom} />
+						<Translate text={localizationConstants.useNameFromLabel} />
 					</label>
 					<div className="flex items-center gap-4">
 						<label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
@@ -73,7 +73,7 @@ export function AccountPlanImportStep2SettingsCard({
 								}
 								className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 							/>
-							<Translate text={localizationConstants.sieFileOption} />
+							<Translate text={localizationConstants.sieFileLabel} />
 						</label>
 						<label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
 							<input
@@ -87,7 +87,7 @@ export function AccountPlanImportStep2SettingsCard({
 								}
 								className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 							/>
-							<Translate text={localizationConstants.existingAccountPlanOption} />
+							<Translate text={localizationConstants.existingAccountPlanLabel} />
 						</label>
 					</div>
 				</div>
@@ -95,7 +95,7 @@ export function AccountPlanImportStep2SettingsCard({
 				{/* 3. Använd SRU från */}
 				<div className="flex flex-col gap-3">
 					<label className="text-xs font-semibold text-slate-900">
-						<Translate text={localizationConstants.useSruFrom} />
+						<Translate text={localizationConstants.useSruFromLabel} />
 					</label>
 					<div className="flex items-center gap-4">
 						<label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
@@ -106,7 +106,7 @@ export function AccountPlanImportStep2SettingsCard({
 								onChange={() => onUpdateSettings("anvandSruFran", "sie_fil")}
 								className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 							/>
-							<Translate text={localizationConstants.sieFileOption} />
+							<Translate text={localizationConstants.sieFileLabel} />
 						</label>
 						<label className="flex items-center gap-2 text-xs text-slate-700 cursor-pointer">
 							<input
@@ -118,7 +118,7 @@ export function AccountPlanImportStep2SettingsCard({
 								}
 								className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 							/>
-							<Translate text={localizationConstants.existingAccountPlanOption} />
+							<Translate text={localizationConstants.existingAccountPlanLabel} />
 						</label>
 					</div>
 				</div>

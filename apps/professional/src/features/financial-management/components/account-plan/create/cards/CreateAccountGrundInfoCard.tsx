@@ -23,14 +23,14 @@ export function CreateAccountGrundInfoCard({
 	return (
 		<div className="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-xs flex flex-col gap-5">
 			<h3 className="text-sm font-bold text-slate-900">
-				<Translate text={localizationConstants.basicInfoSection} />
+				<Translate text={localizationConstants.grundInformationSection} />
 			</h3>
 
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 				{/* Kontonummer */}
 				<div className="flex flex-col gap-1.5">
-					<label className="text-xs font-semibold text-slate-700">
-						<Translate text={localizationConstants.accountNumberField} />{" "}
+					<label className="text-xs font-semibold text-slate-700 flex items-center gap-0.5">
+						<Translate text={localizationConstants.accountNumberLabel} />
 						<span className="text-red-500">*</span>
 					</label>
 					<input
@@ -51,8 +51,8 @@ export function CreateAccountGrundInfoCard({
 
 				{/* Benämning */}
 				<div className="flex flex-col gap-1.5">
-					<label className="text-xs font-semibold text-slate-700">
-						<Translate text={localizationConstants.designationField} />{" "}
+					<label className="text-xs font-semibold text-slate-700 flex items-center gap-0.5">
+						<Translate text={localizationConstants.accountNameLabel} />
 						<span className="text-red-500">*</span>
 					</label>
 					<input
@@ -74,7 +74,7 @@ export function CreateAccountGrundInfoCard({
 				{/* Ingående balans */}
 				<div className="flex flex-col gap-1.5">
 					<label className="text-xs font-semibold text-slate-700">
-						<Translate text={localizationConstants.incomingBalanceField} />
+						<Translate text={localizationConstants.openingBalanceLabel} />
 					</label>
 					<input
 						type="text"
@@ -88,7 +88,7 @@ export function CreateAccountGrundInfoCard({
 				{/* Aktivt */}
 				<div className="flex flex-col gap-1.5">
 					<label className="text-xs font-semibold text-slate-700">
-						<Translate text={localizationConstants.activeField} />
+						<Translate text={localizationConstants.activeStatusLabel} />
 					</label>
 					<select
 						value={formData.aktivt}

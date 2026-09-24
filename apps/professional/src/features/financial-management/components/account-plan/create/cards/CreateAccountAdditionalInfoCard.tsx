@@ -37,7 +37,7 @@ export function CreateAccountAdditionalInfoCard({
 				className="flex items-center justify-between text-left cursor-pointer w-full"
 			>
 				<h3 className="text-sm font-bold text-slate-900">
-					<Translate text={localizationConstants.additionalInfoSection} />
+					<Translate text={localizationConstants.additionalDetailsSection} />
 				</h3>
 				{isOpen ? (
 					<ChevronUp className="h-4 w-4 text-slate-500" />
@@ -51,7 +51,7 @@ export function CreateAccountAdditionalInfoCard({
 					{/* SRU-kod */}
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.sruCodeField} />
+							<Translate text={localizationConstants.sruLabel} />
 						</label>
 						<input
 							type="text"
@@ -65,7 +65,7 @@ export function CreateAccountAdditionalInfoCard({
 					{/* Momkod */}
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.vatCodeField} />
+							<Translate text={localizationConstants.vatCodeLabel} />
 						</label>
 						<select
 							value={formData.momskod}
@@ -83,7 +83,7 @@ export function CreateAccountAdditionalInfoCard({
 					{/* Kostnadsställe (Radio) */}
 					<div className="flex flex-col gap-2">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.costCenterField} />
+							<Translate text={localizationConstants.costCenterLabel} />
 						</label>
 						<div className="flex flex-wrap items-center gap-4">
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
@@ -96,7 +96,7 @@ export function CreateAccountAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.mandatoryOption} />
+								<Translate text={localizationConstants.radioObligatoriskt} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -108,7 +108,7 @@ export function CreateAccountAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.allowedOption} />
+								<Translate text={localizationConstants.radioTillatet} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -120,7 +120,7 @@ export function CreateAccountAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.notAllowedOption} />
+								<Translate text={localizationConstants.radioEjTillatet} />
 							</label>
 						</div>
 					</div>
@@ -128,7 +128,7 @@ export function CreateAccountAdditionalInfoCard({
 					{/* Projekt (Radio) */}
 					<div className="flex flex-col gap-2">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.projectField} />
+							<Translate text={localizationConstants.projectLabel} />
 						</label>
 						<div className="flex flex-wrap items-center gap-4">
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
@@ -141,7 +141,7 @@ export function CreateAccountAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.mandatoryOption} />
+								<Translate text={localizationConstants.radioObligatoriskt} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -153,7 +153,7 @@ export function CreateAccountAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.allowedOption} />
+								<Translate text={localizationConstants.radioTillatet} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -165,7 +165,7 @@ export function CreateAccountAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.notAllowedOption} />
+								<Translate text={localizationConstants.radioEjTillatet} />
 							</label>
 						</div>
 					</div>
@@ -173,7 +173,7 @@ export function CreateAccountAdditionalInfoCard({
 					{/* Föreslå kostnadsställe */}
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.suggestCostCenterField} />
+							<Translate text={localizationConstants.suggestedCostCenterLabel} />
 						</label>
 						<select
 							value={formData.foreslaKostnadsstalle}
@@ -193,7 +193,7 @@ export function CreateAccountAdditionalInfoCard({
 					{/* Föreslå projekt */}
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.suggestProjectField} />
+							<Translate text={localizationConstants.suggestedProjectLabel} />
 						</label>
 						<input
 							type="text"

@@ -38,7 +38,7 @@ export function AccountDetailGrundInfoCard({
 			<div className="flex items-center justify-between border-b border-slate-100 pb-4">
 				<div className="flex items-center gap-2 text-slate-900 font-semibold text-sm">
 					<UserCheck className="h-5 w-5 text-slate-700" />
-					<Translate text={localizationConstants.basicInfoSection} />
+					<Translate text={localizationConstants.grundInformationSection} />
 				</div>
 
 				{isEditing ? (
@@ -83,7 +83,7 @@ export function AccountDetailGrundInfoCard({
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-5">
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.accountNumberField} />
+							<Translate text={localizationConstants.accountNumberLabel} />
 						</label>
 						<input
 							type="text"
@@ -95,7 +95,7 @@ export function AccountDetailGrundInfoCard({
 
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.designationField} />
+							<Translate text={localizationConstants.accountNameLabel} />
 						</label>
 						<input
 							type="text"
@@ -107,7 +107,7 @@ export function AccountDetailGrundInfoCard({
 
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.incomingBalanceField} />
+							<Translate text={localizationConstants.openingBalanceLabel} />
 						</label>
 						<input
 							type="text"
@@ -119,7 +119,7 @@ export function AccountDetailGrundInfoCard({
 
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.activeField} />
+							<Translate text={localizationConstants.activeStatusLabel} />
 						</label>
 						<select
 							value={editFormData.aktivt}
@@ -138,7 +138,7 @@ export function AccountDetailGrundInfoCard({
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.accountNumberField} />
+							<Translate text={localizationConstants.accountNumberLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.kontoNr || "-"}
@@ -147,7 +147,7 @@ export function AccountDetailGrundInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.designationField} />
+							<Translate text={localizationConstants.accountNameLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.benamning || "-"}
@@ -156,7 +156,7 @@ export function AccountDetailGrundInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.incomingBalanceField} />
+							<Translate text={localizationConstants.openingBalanceLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.ingaendeBalans || "0"}
@@ -165,7 +165,7 @@ export function AccountDetailGrundInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.activeField} />
+							<Translate text={localizationConstants.activeStatusLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.aktivt || (account.status === "active" ? "Aktiv" : "Inaktiv")}

@@ -40,10 +40,10 @@ export function AccountDetailAdditionalInfoCard({
 	onUpdateField,
 }: AccountDetailAdditionalInfoCardProps) {
 	const getRadioLabel = (mode?: RadioMode) => {
-		if (mode === "obligatoriskt") return localizationConstants.mandatoryOption;
-		if (mode === "tillatet") return localizationConstants.allowedOption;
-		if (mode === "ej_tillatet") return localizationConstants.notAllowedOption;
-		return localizationConstants.mandatoryOption;
+		if (mode === "obligatoriskt") return localizationConstants.radioObligatoriskt;
+		if (mode === "tillatet") return localizationConstants.radioTillatet;
+		if (mode === "ej_tillatet") return localizationConstants.radioEjTillatet;
+		return localizationConstants.radioObligatoriskt;
 	};
 
 	return (
@@ -52,7 +52,7 @@ export function AccountDetailAdditionalInfoCard({
 			<div className="flex items-center justify-between border-b border-slate-100 pb-4">
 				<div className="flex items-center gap-2 text-slate-900 font-semibold text-sm">
 					<UserCheck className="h-5 w-5 text-slate-700" />
-					<Translate text={localizationConstants.additionalInfoSection} />
+					<Translate text={localizationConstants.additionalDetailsSection} />
 				</div>
 
 				{isEditing ? (
@@ -97,7 +97,7 @@ export function AccountDetailAdditionalInfoCard({
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.sruCodeField} />
+							<Translate text={localizationConstants.sruLabel} />
 						</label>
 						<input
 							type="text"
@@ -109,7 +109,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.vatCodeField} />
+							<Translate text={localizationConstants.vatCodeLabel} />
 						</label>
 						<select
 							value={editFormData.momskod}
@@ -126,7 +126,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-2">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.costCenterField} />
+							<Translate text={localizationConstants.costCenterLabel} />
 						</label>
 						<div className="flex flex-wrap items-center gap-4">
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
@@ -139,7 +139,7 @@ export function AccountDetailAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.mandatoryOption} />
+								<Translate text={localizationConstants.radioObligatoriskt} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -151,7 +151,7 @@ export function AccountDetailAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.allowedOption} />
+								<Translate text={localizationConstants.radioTillatet} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -163,14 +163,14 @@ export function AccountDetailAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.notAllowedOption} />
+								<Translate text={localizationConstants.radioEjTillatet} />
 							</label>
 						</div>
 					</div>
 
 					<div className="flex flex-col gap-2">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.projectField} />
+							<Translate text={localizationConstants.projectLabel} />
 						</label>
 						<div className="flex flex-wrap items-center gap-4">
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
@@ -183,7 +183,7 @@ export function AccountDetailAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.mandatoryOption} />
+								<Translate text={localizationConstants.radioObligatoriskt} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -195,7 +195,7 @@ export function AccountDetailAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.allowedOption} />
+								<Translate text={localizationConstants.radioTillatet} />
 							</label>
 							<label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
 								<input
@@ -207,14 +207,14 @@ export function AccountDetailAdditionalInfoCard({
 									}
 									className="h-4 w-4 text-slate-900 focus:ring-slate-900"
 								/>
-								<Translate text={localizationConstants.notAllowedOption} />
+								<Translate text={localizationConstants.radioEjTillatet} />
 							</label>
 						</div>
 					</div>
 
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.suggestCostCenterField} />
+							<Translate text={localizationConstants.suggestedCostCenterLabel} />
 						</label>
 						<select
 							value={editFormData.foreslaKostnadsstalle}
@@ -233,7 +233,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-1.5">
 						<label className="text-xs font-semibold text-slate-700">
-							<Translate text={localizationConstants.suggestProjectField} />
+							<Translate text={localizationConstants.suggestedProjectLabel} />
 						</label>
 						<input
 							type="text"
@@ -247,7 +247,7 @@ export function AccountDetailAdditionalInfoCard({
 				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.sruCodeField} />
+							<Translate text={localizationConstants.sruLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.sru || "-"}
@@ -256,7 +256,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.vatCodeField} />
+							<Translate text={localizationConstants.vatCodeLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.momskod || "-"}
@@ -265,7 +265,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.costCenterField} />
+							<Translate text={localizationConstants.costCenterLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							<Translate text={getRadioLabel(account.kostnadsstalleMode)} />
@@ -274,7 +274,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.projectField} />
+							<Translate text={localizationConstants.projectLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							<Translate text={getRadioLabel(account.projektMode)} />
@@ -283,7 +283,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.suggestCostCenterField} />
+							<Translate text={localizationConstants.suggestedCostCenterLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.foreslaKostnadsstalle || "-"}
@@ -292,7 +292,7 @@ export function AccountDetailAdditionalInfoCard({
 
 					<div className="flex flex-col gap-1">
 						<span className="text-xs font-semibold text-slate-900">
-							<Translate text={localizationConstants.suggestProjectField} />
+							<Translate text={localizationConstants.suggestedProjectLabel} />
 						</span>
 						<span className="text-xs text-slate-600 font-normal">
 							{account.foreslaProjekt || "-"}

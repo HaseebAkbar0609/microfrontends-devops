@@ -10,6 +10,7 @@ import type {
 	ImportAccountSettings,
 } from "../types/accountPlan.types";
 import { accountPlanRepository } from "../utils/accountPlanRepository";
+import { parseAccountPlanFile } from "../utils/accountPlanFileParser";
 import { ACCOUNT_PLAN_BASE_ROUTE } from "../constants/accountPlan.constants";
 
 export function useAccountPlanImport() {
@@ -33,14 +34,25 @@ export function useAccountPlanImport() {
 		setMappingRows(rows);
 	}, []);
 
-	const handleFileSelect = useCallback((file: File) => {
-		setSelectedFile(file);
-		setStep(2);
-		showToast(
-			"success",
-			`${file.name} ${t(localizationConstants.fileUploadedSuccess || localizationConstants.saveSuccessMessage)}`,
-		);
-	}, [t]);
+	const handleFileSelect = useCallback(
+		async (file: File) => {
+			setSelectedFile(file);
+			try {
+				const existingAccounts = accountPlanRepository.getAll();
+				const existingSet = new Set(existingAccounts.map((a) => a.kontoNr));
+				const rows = await parseAccountPlanFile(file, existingSet);
+				setMappingRows(rows);
+			} catch (e) {
+				console.error("File parse error:", e);
+			}
+			setStep(2);
+			showToast(
+				"success",
+				`${file.name} ${t(localizationConstants.fileUploadedSuccess || localizationConstants.saveSuccessMessage)}`,
+			);
+		},
+		[t],
+	);
 
 	const updateSettings = useCallback(
 		<K extends keyof ImportAccountSettings>(
