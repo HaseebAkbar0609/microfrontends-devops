@@ -2762,6 +2762,7 @@ export type OfferTranslation = {
 	widgetSourceUnavailableTitle: string;
 	widgetSourceUnavailableDescription: string;
 	widgetSourceLoadError: string;
+	widgetDataLoadError: string;
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: string;
 	widgetRailDiscard: string;
