@@ -1290,6 +1290,28 @@ export type OfferTranslation = {
 	calcDetailProjekteringAdress: string;
 	calcDetailSenasteDatumOffert: string;
 	calcDetailNewDocument: string;
+	calcDetailEditProject: string;
+	calcDetailEditProjectInfo: string;
+	calcDetailEditKunduppgifter: string;
+	calcDetailEditKontaktperson: string;
+	calcDetailEditEntreprenor: string;
+	calcDetailEditKalkylansvarig: string;
+	calcDetailAddDocument: string;
+	calcDetailDocName: string;
+	calcDetailDocType: string;
+	calcDetailDocDate: string;
+	calcDetailDocFile: string;
+	calcDetailUploadFile: string;
+	calcDetailDragDropFile: string;
+	calcDetailFileFormatNote: string;
+	calcDetailSaveSuccess: string;
+	calcDetailSaveError: string;
+	calcDetailDocAddSuccess: string;
+	calcDetailDocAddError: string;
+	calcDetailDocDeleteSuccess: string;
+	calcDetailDocDeleteError: string;
+	calcDetailDocDeleteConfirmTitle: string;
+	calcDetailDocDeleteConfirmDesc: string;
 	// Calculation - Detail layout sidebar
 	calcDetailSidebarHeader: string;
 	calcDetailSidebarForfragan: string;
