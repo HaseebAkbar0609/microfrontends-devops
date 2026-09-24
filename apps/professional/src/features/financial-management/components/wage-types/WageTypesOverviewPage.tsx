@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useWageTypesOverview } from "../../hooks/useWageTypesOverview";
-import { WageTypesRegisterHeader } from "./WageTypesRegisterHeader";
 import { WageTypesOverviewToolbar } from "./WageTypesOverviewToolbar";
 import { WageTypesOverviewTable } from "./WageTypesOverviewTable";
 import { WageTypeDeleteDialog } from "./WageTypeDeleteDialog";
@@ -42,9 +41,6 @@ export function WageTypesOverviewPage() {
 
 	return (
 		<div className="p-6 w-full space-y-6">
-			{/* Top Register Breadcrumb / Dropdown Header */}
-			<WageTypesRegisterHeader />
-
 			{/* Toolbar (Subtabs, Search, Filters, Create Button) */}
 			<WageTypesOverviewToolbar
 				searchQuery={searchQuery}
