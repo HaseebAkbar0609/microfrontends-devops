@@ -10,6 +10,7 @@ import {
 	updateSupplierArticleAPIAction,
 } from "../utils/articleRepository";
 import { ARTICLE_OVERVIEW_BASE_ROUTE } from "../constants/article.constants";
+import type { SupplierArticleDetail } from "../types/article.types";
 
 export function useSupplierArticleDetail(supplierArticleIdProp?: string) {
 	const t = useTranslate();
