@@ -5943,6 +5943,12 @@ export type RegisterTranslation = {
 	selectRowLabel: string;
 	goBackToAccountPlanLabel: string;
 	detaljerHeaderTitle: string;
+	deleteAccountConfirmTitle: string;
+	deleteAccountConfirmDesc: string;
+	accountDeletedSuccess: string;
+	importFileTitle: string;
+	importFileNow: string;
+	importButtonText: string;
 	grundlaggandeInfoTab: string;
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: string;

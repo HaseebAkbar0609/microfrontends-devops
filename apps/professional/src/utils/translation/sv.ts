@@ -6044,6 +6044,12 @@ export const svRegister: RegisterTranslation = {
 	selectRowLabel: "Markera rad",
 	goBackToAccountPlanLabel: "Gå tillbaka till kontoplan",
 	detaljerHeaderTitle: "detaljer",
+	deleteAccountConfirmTitle: "Ta bort konto",
+	deleteAccountConfirmDesc: "Är du säker på att du vill ta bort detta konto? Denna åtgärd kan inte ångras.",
+	accountDeletedSuccess: "Konto raderat",
+	importFileTitle: "Import File",
+	importFileNow: "Import file now",
+	importButtonText: "importera",
 	grundlaggandeInfoTab: "Grundläggande info.",
 
 	// Create Account Translations (TFS-444)
