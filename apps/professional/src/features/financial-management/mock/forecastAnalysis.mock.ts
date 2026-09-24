@@ -1,5 +1,10 @@
+import localizationConstants from "@/utils/translation/constants";
 import { FORECAST_ANALYSIS_MONTH_COUNT } from "../constants/forecastAnalysis.constants";
-import type { AnalysisObject } from "../types/forecastAnalysis.types";
+import type {
+	AnalysisObject,
+	AnalysisOpportunity,
+	AnalysisRiskItem,
+} from "../types/forecastAnalysis.types";
 
 /**
  * How a year's figure falls across January to September: money builds towards
@@ -25,6 +30,7 @@ interface AnalysisObjectTotals {
 	revenue: number;
 	cost: number;
 	forecastRevenue: number;
+	forecastCost: number;
 	budgetRevenue: number;
 	budgetCost: number;
 	billableHours: number;
@@ -40,18 +46,19 @@ interface AnalysisObjectTotals {
  * kr, 42.5 %, 87.5 %, 76.8 %, three high-risk projects and 380 000 kr at stake.
  */
 const ANALYSIS_TOTALS: AnalysisObjectTotals[] = [
-	{ id: "an-2025-01", name: "Projekt 2025-01", department: "production", status: "active", revenue: 1200000, cost: 700000, forecastRevenue: 1000000, budgetRevenue: 1100000, budgetCost: 620000, billableHours: 2880, capacityHours: 3600, riskLevel: "high", riskExposure: 150000, isNewRisk: true },
-	{ id: "an-2022-002", name: "Projekt 2022-002", department: "production", status: "active", revenue: 690000, cost: 400000, forecastRevenue: 600000, budgetRevenue: 650000, budgetCost: 360000, billableHours: 2160, capacityHours: 2700, riskLevel: "high", riskExposure: 120000, isNewRisk: false },
-	{ id: "an-2022-003", name: "Projekt 2022-003", department: "service", status: "active", revenue: 770000, cost: 450000, forecastRevenue: 700000, budgetRevenue: 700000, budgetCost: 400000, billableHours: 1800, capacityHours: 2250, riskLevel: "moderate", riskExposure: 60000, isNewRisk: false },
-	{ id: "an-kv-solen", name: "Kv Solen", department: "production", status: "paused", revenue: 665000, cost: 380000, forecastRevenue: 700000, budgetRevenue: 650000, budgetCost: 340000, billableHours: 1400, capacityHours: 1800, riskLevel: "high", riskExposure: 50000, isNewRisk: false },
-	{ id: "an-kv-manen", name: "Kv Månen", department: "service", status: "active", revenue: 450000, cost: 260000, forecastRevenue: 500000, budgetRevenue: 400000, budgetCost: 200000, billableHours: 1000, capacityHours: 1350, riskLevel: "low", riskExposure: 0, isNewRisk: false },
-	{ id: "an-service-nord", name: "Serviceavtal Nord", department: "service", status: "closed", revenue: 425000, cost: 225000, forecastRevenue: 500000, budgetRevenue: 400000, budgetCost: 198000, billableHours: 360, capacityHours: 800, riskLevel: "low", riskExposure: 0, isNewRisk: false },
+	{ id: "an-2025-01", name: "Projekt 2025-01", department: "production", status: "active", revenue: 1200000, cost: 700000, forecastRevenue: 1000000, forecastCost: 730000, budgetRevenue: 1100000, budgetCost: 450000, billableHours: 2880, capacityHours: 3600, riskLevel: "high", riskExposure: 150000, isNewRisk: true },
+	{ id: "an-2022-002", name: "Projekt 2022-002", department: "production", status: "active", revenue: 690000, cost: 400000, forecastRevenue: 600000, forecastCost: 415000, budgetRevenue: 650000, budgetCost: 420000, billableHours: 2160, capacityHours: 2700, riskLevel: "high", riskExposure: 120000, isNewRisk: false },
+	{ id: "an-2022-003", name: "Projekt 2022-003", department: "service", status: "active", revenue: 770000, cost: 450000, forecastRevenue: 700000, forecastCost: 470000, budgetRevenue: 700000, budgetCost: 353000, billableHours: 1800, capacityHours: 2250, riskLevel: "moderate", riskExposure: 60000, isNewRisk: false },
+	{ id: "an-kv-solen", name: "Kv Solen", department: "production", status: "paused", revenue: 665000, cost: 380000, forecastRevenue: 700000, forecastCost: 395000, budgetRevenue: 650000, budgetCost: 395000, billableHours: 1400, capacityHours: 1800, riskLevel: "high", riskExposure: 50000, isNewRisk: false },
+	{ id: "an-kv-manen", name: "Kv Månen", department: "service", status: "active", revenue: 450000, cost: 260000, forecastRevenue: 500000, forecastCost: 275000, budgetRevenue: 400000, budgetCost: 270000, billableHours: 1000, capacityHours: 1350, riskLevel: "low", riskExposure: 0, isNewRisk: false },
+	{ id: "an-service-nord", name: "Serviceavtal Nord", department: "service", status: "closed", revenue: 425000, cost: 225000, forecastRevenue: 500000, forecastCost: 235000, budgetRevenue: 400000, budgetCost: 230000, billableHours: 360, capacityHours: 800, riskLevel: "low", riskExposure: 0, isNewRisk: false },
 ];
 
 export const INITIAL_ANALYSIS_OBJECTS: AnalysisObject[] = ANALYSIS_TOTALS.map((totals) => {
 	const revenue = split(totals.revenue, MONEY_WEIGHTS);
 	const cost = split(totals.cost, MONEY_WEIGHTS);
 	const forecastRevenue = split(totals.forecastRevenue, MONEY_WEIGHTS);
+	const forecastCost = split(totals.forecastCost, MONEY_WEIGHTS);
 	const budgetRevenue = split(totals.budgetRevenue, MONEY_WEIGHTS);
 	const budgetCost = split(totals.budgetCost, MONEY_WEIGHTS);
 	const billableHours = split(totals.billableHours, BILLABLE_WEIGHTS);
@@ -69,6 +76,7 @@ export const INITIAL_ANALYSIS_OBJECTS: AnalysisObject[] = ANALYSIS_TOTALS.map((t
 			revenue: revenue[month],
 			cost: cost[month],
 			forecastRevenue: forecastRevenue[month],
+			forecastCost: forecastCost[month],
 			budgetRevenue: budgetRevenue[month],
 			budgetCost: budgetCost[month],
 			billableHours: billableHours[month],
@@ -76,3 +84,19 @@ export const INITIAL_ANALYSIS_OBJECTS: AnalysisObject[] = ANALYSIS_TOTALS.map((t
 		})),
 	};
 });
+
+/**
+ * What the exposure on the risk card is made of. The amounts stay on the
+ * objects, so the card's total follows the filters while these lines name the
+ * drivers behind it.
+ */
+export const ANALYSIS_RISK_ITEMS: AnalysisRiskItem[] = [
+	{ id: "regulation", labelKey: localizationConstants.forecastAnalysisRiskRegulation },
+	{ id: "deliveries", labelKey: localizationConstants.forecastAnalysisRiskDeliveries },
+];
+
+/** Company-wide upside: what each opportunity is worth, less what chasing it costs. */
+export const ANALYSIS_OPPORTUNITIES: AnalysisOpportunity[] = [
+	{ id: "newClient", labelKey: localizationConstants.forecastAnalysisOpportunityNewClient, upside: 140000, costToRealise: 25000 },
+	{ id: "savings", labelKey: localizationConstants.forecastAnalysisOpportunitySavings, upside: 70000, costToRealise: 15000 },
+];

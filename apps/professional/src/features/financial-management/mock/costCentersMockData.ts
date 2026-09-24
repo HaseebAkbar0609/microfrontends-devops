@@ -1,0 +1,58 @@
+import type { CostCenterItem } from "../types/costCenters.types";
+
+export const MOCK_COST_CENTERS: CostCenterItem[] = [
+	{
+		id: "cc_101",
+		kod: "1",
+		benamning: "Stockholm",
+		anteckningar: "info",
+		status: "active",
+		createdAt: "2026-01-15",
+		updatedAt: "2026-01-20",
+	},
+	{
+		id: "cc_102",
+		kod: "2",
+		benamning: "info",
+		anteckningar: "info",
+		status: "active",
+		createdAt: "2026-01-16",
+		updatedAt: "2026-01-20",
+	},
+	{
+		id: "cc_103",
+		kod: "3",
+		benamning: "info",
+		anteckningar: "info",
+		status: "active",
+		createdAt: "2026-01-17",
+		updatedAt: "2026-01-20",
+	},
+	{
+		id: "cc_104",
+		kod: "4",
+		benamning: "info",
+		anteckningar: "info",
+		status: "active",
+		createdAt: "2026-01-18",
+		updatedAt: "2026-01-20",
+	},
+	{
+		id: "cc_105",
+		kod: "5",
+		benamning: "info",
+		anteckningar: "info",
+		status: "active",
+		createdAt: "2026-01-19",
+		updatedAt: "2026-01-20",
+	},
+	{
+		id: "cc_106",
+		kod: "6",
+		benamning: "info",
+		anteckningar: "info",
+		status: "active",
+		createdAt: "2026-01-20",
+		updatedAt: "2026-01-20",
+	},
+];

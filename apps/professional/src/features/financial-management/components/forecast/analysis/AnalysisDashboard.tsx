@@ -9,15 +9,15 @@ import {
 	FORECAST_ANALYSIS_SOURCE_LOCATION,
 	FORECAST_ANALYSIS_STORAGE_KEY,
 } from "../../../constants/forecastAnalysis.constants";
-import type { AnalysisKpis } from "../../../types/forecastAnalysis.types";
 import {
 	ANALYSIS_SIDEBAR_ITEMS,
 	buildAnalysisInitialWidgets,
 	buildAnalysisWidgetMap,
+	type AnalysisWidgetData,
 } from "./AnalysisDashboardConfig";
 
 export interface AnalysisDashboardProps {
-	kpis: AnalysisKpis;
+	data: AnalysisWidgetData;
 	isRearranging: boolean;
 	onToggleRearrange: () => void;
 }
@@ -27,8 +27,8 @@ export interface AnalysisDashboardProps {
  * it — the page keeps the Ordna om button itself — but the engine's rail slot
  * stays mounted either way, so a card dragged onto it is still removed.
  */
-export function AnalysisDashboard({ kpis, isRearranging, onToggleRearrange }: AnalysisDashboardProps) {
-	const widgetMap = useMemo(() => buildAnalysisWidgetMap(kpis), [kpis]);
+export function AnalysisDashboard({ data, isRearranging, onToggleRearrange }: AnalysisDashboardProps) {
+	const widgetMap = useMemo(() => buildAnalysisWidgetMap(data), [data]);
 	const initialWidgets = useMemo(() => buildAnalysisInitialWidgets(widgetMap), [widgetMap]);
 
 	return (
