@@ -381,7 +381,7 @@ export function AgreementDashboard() {
 												}
 												return null;
 											})()
-										) : <WidgetErrorState message={localizationConstants.widgetSourceLoadError} />
+										) : <WidgetErrorState message={localizationConstants.widgetDataLoadError} />
 									) : null
 								}
 							/>

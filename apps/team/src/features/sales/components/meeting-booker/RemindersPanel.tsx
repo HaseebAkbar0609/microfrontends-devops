@@ -43,7 +43,7 @@ export function RemindersPanel({ reminders, todayKey, onComplete }: RemindersPan
 
 						return (
 							<li
-								key={row.id}
+								key={row.rowKey}
 								className="flex flex-wrap items-center justify-between gap-3 px-5 py-3"
 							>
 								<div className="min-w-0">

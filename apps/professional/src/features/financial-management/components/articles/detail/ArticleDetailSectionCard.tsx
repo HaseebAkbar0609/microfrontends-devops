@@ -33,6 +33,7 @@ interface ArticleDetailSectionCardProps {
 	items: ArticleDetailFieldItem[];
 	onSave?: (updates: Record<string, string | number>) => void;
 	columns?: 2 | 3 | 4;
+	icon?: React.ReactNode;
 }
 
 export function ArticleDetailSectionCard({
@@ -40,6 +41,7 @@ export function ArticleDetailSectionCard({
 	items,
 	onSave,
 	columns = 3,
+	icon,
 }: ArticleDetailSectionCardProps) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [draft, setDraft] = useState<Record<string, string>>({});
@@ -80,9 +82,10 @@ export function ArticleDetailSectionCard({
 				: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 
 	return (
-		<Card className="rounded-xl border border-slate-200 bg-white shadow-2xs overflow-hidden">
-			<CardHeader className="flex flex-row items-center justify-between border-b border-slate-100 px-4 sm:px-6 py-3">
-				<CardTitle className="text-sm font-semibold text-zinc-950">
+		<Card className="rounded-xl border border-slate-200/90 bg-white shadow-none overflow-hidden">
+			<CardHeader className="flex flex-row items-center justify-between border-b border-slate-100/80 px-6 py-4">
+				<CardTitle className="text-sm font-semibold text-zinc-900 flex items-center gap-2.5">
+					{icon && <span className="text-slate-600 flex items-center">{icon}</span>}
 					<Translate text={title} />
 				</CardTitle>
 				{onSave && (
@@ -94,7 +97,7 @@ export function ArticleDetailSectionCard({
 									variant="outline"
 									size="sm"
 									onClick={handleCancel}
-									className="h-8 px-3 text-xs gap-1 border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer rounded-lg"
+									className="h-7 px-2.5 text-xs gap-1 border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer rounded-lg font-medium"
 								>
 									<X className="h-3.5 w-3.5" />
 									<Translate text={localizationConstants.customerBtnCancel} />
@@ -103,7 +106,7 @@ export function ArticleDetailSectionCard({
 									type="button"
 									size="sm"
 									onClick={handleSave}
-									className="h-8 px-3 text-xs gap-1 bg-[#111721] hover:bg-slate-800 text-white cursor-pointer rounded-lg"
+									className="h-7 px-2.5 text-xs gap-1 bg-[#111721] hover:bg-slate-800 text-white cursor-pointer rounded-lg font-medium"
 								>
 									<Check className="h-3.5 w-3.5" />
 									<Translate text={localizationConstants.customerBtnSave} />
@@ -112,24 +115,24 @@ export function ArticleDetailSectionCard({
 						) : (
 							<Button
 								type="button"
-								variant="ghost"
+								variant="outline"
 								size="sm"
 								onClick={handleEdit}
 								aria-label="Edit section"
-								className="h-8 px-2.5 text-xs gap-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 cursor-pointer rounded-lg"
+								className="h-7 px-3 text-xs gap-1.5 border-slate-200/80 text-slate-700 hover:bg-slate-50 hover:text-slate-900 cursor-pointer rounded-lg font-medium shadow-none"
 							>
-								<Pencil className="h-3.5 w-3.5" />
-								<Translate text={localizationConstants.editLabel} />
+								<Pencil className="h-3.5 w-3.5 text-slate-500" />
+								<Translate text={localizationConstants.supplierArticleEditBtn} />
 							</Button>
 						)}
 					</div>
 				)}
 			</CardHeader>
-			<CardContent className="px-4 sm:px-6 py-4">
-				<div className={`grid gap-4 sm:gap-6 ${gridColsClass}`}>
+			<CardContent className="px-6 py-5">
+				<div className={`grid gap-y-6 gap-x-8 ${gridColsClass}`}>
 					{items.map((item) => (
 						<div key={item.key || item.label} className="flex flex-col gap-1.5 min-w-0">
-							<span className="text-xs font-medium text-slate-500">
+							<span className="text-xs font-semibold text-slate-900 tracking-tight">
 								<Translate text={item.label} />
 							</span>
 							{isEditing && !item.readOnly ? (
@@ -140,7 +143,7 @@ export function ArticleDetailSectionCard({
 											setDraft((prev) => ({ ...prev, [item.key]: val }))
 										}
 									>
-										<SelectTrigger className="h-9 border-slate-200 bg-white text-xs">
+										<SelectTrigger className="h-8 border-slate-200 bg-white text-xs">
 											<SelectValue placeholder="Välj..." />
 										</SelectTrigger>
 										<SelectContent className="bg-white border-slate-200 shadow-md">
@@ -157,7 +160,7 @@ export function ArticleDetailSectionCard({
 										onChange={(e) =>
 											setDraft((prev) => ({ ...prev, [item.key]: e.target.value }))
 										}
-										className="h-9 text-xs bg-white border-slate-200"
+										className="h-8 text-xs bg-white border-slate-200"
 									/>
 								)
 							) : item.isBadge ? (
@@ -171,7 +174,7 @@ export function ArticleDetailSectionCard({
 									{item.value ? <Translate text={String(item.value)} /> : "-"}
 								</span>
 							) : (
-								<span className="text-sm font-medium text-slate-900 break-words">
+								<span className="text-xs font-normal text-slate-500 break-words">
 									{item.value || item.value === 0 ? String(item.value) : "-"}
 								</span>
 							)}

@@ -15,60 +15,47 @@ import {
 } from "@/components/ui/dropdown-menu";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import {
-	FORECAST_CATEGORY_LABELS,
-	FORECAST_CUSTOMER_TYPE_LABELS,
-} from "../../../constants/forecastList.constants";
-import type { ForecastListFilters } from "../../../types/forecastList.types";
 
 /** The radio value for Alla; a group's filter is `null` then. */
 const ALL = "all";
 const ITEM = "cursor-pointer text-xs text-slate-700 focus:bg-slate-100 focus:text-slate-900";
 
-function FilterGroup<T extends string>({
-	labelKey,
-	labels,
-	value,
-	onChange,
-}: {
+export interface ForecastFilterGroup {
 	labelKey: TranslationKeys;
-	labels: Record<T, TranslationKeys>;
-	value: T | null;
-	onChange: (value: T | null) => void;
-}) {
-	return (
-		<>
-			<DropdownMenuLabel className="text-xs font-medium text-slate-500">
-				<Translate text={labelKey} />
-			</DropdownMenuLabel>
-			<DropdownMenuRadioGroup
-				value={value ?? ALL}
-				onValueChange={(next) => onChange(next === ALL ? null : (next as T))}
-			>
-				<DropdownMenuRadioItem value={ALL} className={ITEM}>
-					<Translate text={localizationConstants.forecastFilterAll} />
-				</DropdownMenuRadioItem>
-				{(Object.keys(labels) as T[]).map((option) => (
-					<DropdownMenuRadioItem key={option} value={option} className={ITEM}>
-						<Translate text={labels[option]} />
-					</DropdownMenuRadioItem>
-				))}
-			</DropdownMenuRadioGroup>
-		</>
-	);
+	options: { value: string; labelKey: TranslationKeys }[];
+	value: string | null;
+	onChange: (value: string | null) => void;
 }
 
-export interface ForecastListToolbarProps {
+/**
+ * A Filter group from a value → label map, so a list keeps its own union
+ * type and only this function widens it to the menu's strings.
+ */
+export function forecastFilterGroup<T extends string>(
+	labelKey: TranslationKeys,
+	labels: Record<T, TranslationKeys>,
+	value: T | null,
+	onChange: (value: T | null) => void,
+): ForecastFilterGroup {
+	return {
+		labelKey,
+		options: (Object.keys(labels) as T[]).map((option) => ({ value: option, labelKey: labels[option] })),
+		value,
+		onChange: (next) => onChange(next as T | null),
+	};
+}
+
+export interface ForecastToolbarProps {
 	search: string;
 	onSearchChange: (value: string) => void;
-	filters: ForecastListFilters;
-	onFilterChange: <K extends keyof ForecastListFilters>(key: K, value: ForecastListFilters[K]) => void;
-	activeFilterCount: number;
+	/** Each group narrows the list on its own; Alla clears that one. */
+	groups: ForecastFilterGroup[];
 }
 
-/** Sök and Filter above Prognoslista; Filter narrows by Kategori and Typ, and counts what is set. */
-export function ForecastListToolbar({ search, onSearchChange, filters, onFilterChange, activeFilterCount }: ForecastListToolbarProps) {
+/** Sök and Filter above a Prognos list: Prognoslista's and Resultat prognos's alike. */
+export function ForecastToolbar({ search, onSearchChange, groups }: ForecastToolbarProps) {
 	const t = useTranslate();
+	const activeFilterCount = groups.filter((group) => group.value !== null).length;
 
 	return (
 		<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -102,23 +89,31 @@ export function ForecastListToolbar({ search, onSearchChange, filters, onFilterC
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" className="w-52 border border-slate-200 bg-white p-1 shadow-md">
-					<FilterGroup
-						labelKey={localizationConstants.forecastColCategory}
-						labels={FORECAST_CATEGORY_LABELS}
-						value={filters.category}
-						onChange={(value) => onFilterChange("category", value)}
-					/>
-					<DropdownMenuSeparator />
-					<FilterGroup
-						labelKey={localizationConstants.forecastColType}
-						labels={FORECAST_CUSTOMER_TYPE_LABELS}
-						value={filters.customerType}
-						onChange={(value) => onFilterChange("customerType", value)}
-					/>
+					{groups.map((group, index) => (
+						<div key={group.labelKey}>
+							{index > 0 && <DropdownMenuSeparator />}
+							<DropdownMenuLabel className="text-xs font-medium text-slate-500">
+								<Translate text={group.labelKey} />
+							</DropdownMenuLabel>
+							<DropdownMenuRadioGroup
+								value={group.value ?? ALL}
+								onValueChange={(next) => group.onChange(next === ALL ? null : next)}
+							>
+								<DropdownMenuRadioItem value={ALL} className={ITEM}>
+									<Translate text={localizationConstants.forecastFilterAll} />
+								</DropdownMenuRadioItem>
+								{group.options.map((option) => (
+									<DropdownMenuRadioItem key={option.value} value={option.value} className={ITEM}>
+										<Translate text={option.labelKey} />
+									</DropdownMenuRadioItem>
+								))}
+							</DropdownMenuRadioGroup>
+						</div>
+					))}
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>
 	);
 }
 
-export default ForecastListToolbar;
+export default ForecastToolbar;

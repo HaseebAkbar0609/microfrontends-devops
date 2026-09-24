@@ -16,6 +16,8 @@ export interface DashboardRearrangeRailProps {
 	onSelectItem: (id: string) => void;
 	isRearranging: boolean;
 	onToggleRearrange: () => void;
+	/** False when the page draws the Ordna om button itself, as the Analys frame does. */
+	showToggle?: boolean;
 	onSave: () => void;
 	onDiscard: () => void;
 	/** The discard button's label; "Avbryt" unless a dashboard names it otherwise. */
@@ -39,6 +41,7 @@ export function DashboardRearrangeRail({
 	onSelectItem,
 	isRearranging,
 	onToggleRearrange,
+	showToggle = true,
 	onSave,
 	onDiscard,
 	discardLabel = localizationConstants.widgetRailDiscard,
@@ -48,26 +51,28 @@ export function DashboardRearrangeRail({
 }: DashboardRearrangeRailProps) {
 	return (
 		<div className={cn("w-full shrink-0 space-y-4 xl:w-90", className)}>
-			<div className="flex justify-end">
-				<Button
-					type="button"
-					variant={isRearranging ? "default" : "secondary"}
-					size="sm"
-					onClick={onToggleRearrange}
-					aria-pressed={isRearranging}
-					className={cn(
-						"flex cursor-pointer items-center gap-2 rounded-sm px-4 py-2 text-sm font-medium transition-all",
-						isRearranging
-							? "bg-[#111827] text-white shadow-xs hover:bg-black"
-							: "bg-[#F4F4F5] text-slate-700 hover:bg-slate-200",
-					)}
-				>
-					<LayoutList size={16} />
-					<span>
-						<Translate text={localizationConstants.rearrange} />
-					</span>
-				</Button>
-			</div>
+			{showToggle && (
+				<div className="flex justify-end">
+					<Button
+						type="button"
+						variant={isRearranging ? "default" : "secondary"}
+						size="sm"
+						onClick={onToggleRearrange}
+						aria-pressed={isRearranging}
+						className={cn(
+							"flex cursor-pointer items-center gap-2 rounded-sm px-4 py-2 text-sm font-medium transition-all",
+							isRearranging
+								? "bg-[#111827] text-white shadow-xs hover:bg-black"
+								: "bg-[#F4F4F5] text-slate-700 hover:bg-slate-200",
+						)}
+					>
+						<LayoutList size={16} />
+						<span>
+							<Translate text={localizationConstants.rearrange} />
+						</span>
+					</Button>
+				</div>
+			)}
 
 			<div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
 				<Button

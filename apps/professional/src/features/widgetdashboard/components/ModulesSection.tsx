@@ -3,7 +3,7 @@ import { Folders } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { NewsItem } from "./NewsItem";
+import { WidgetSourceUnavailable } from "./WidgetContent";
 
 export const ModulesSection = () => (
 	<Card className="p-6 gap-2.5 ">
@@ -16,16 +16,7 @@ export const ModulesSection = () => (
 			</CardTitle>
 		</CardHeader>
 		<CardContent className="px-0">
-			<NewsItem
-				title="Karles Bygg AB is growing – opening a new office in Västerås"
-				date="35 items"
-				content="The local construction company Karles Bygg AB announced today that they are opening a new office in Västerås. The company, which was previously based in Enköping, is expanding due to increased demand for smaller renovation and new construction projects in the region."
-			/>
-			<NewsItem
-				title="Karles Bygg AB is growing – opening a new office in Västerås"
-				date="35 items"
-				content="The local construction company Karles Bygg AB announced today that they are opening a new office in Västerås. The company, which was previously based in Enköping, is expanding due to increased demand for smaller renovation and new construction projects in the region."
-			/>
+			<WidgetSourceUnavailable />
 		</CardContent>
 	</Card>
 );

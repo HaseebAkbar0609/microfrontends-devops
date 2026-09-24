@@ -29,6 +29,8 @@ interface SectionTabsProps {
   /** Section shown when the query param is absent. Defaults to the first item. */
   defaultId?: string;
   ariaLabel?: string;
+  /** Controls that belong beside the row, such as an Ordna om button. */
+  actions?: React.ReactNode;
   className?: string;
   /** `TabsContent` panels, one per item. */
   children?: React.ReactNode;
@@ -46,6 +48,7 @@ export function SectionTabs({
   paramName = "section",
   defaultId,
   ariaLabel,
+  actions,
   className,
   children,
 }: SectionTabsProps) {
@@ -72,10 +75,10 @@ export function SectionTabs({
       onValueChange={handleValueChange}
       className={cn("w-full", className)}
     >
-      <div className="border-b border-slate-200">
+      <div className={cn("flex items-center justify-between gap-3 border-b border-slate-200", actions && "flex-wrap sm:flex-nowrap")}>
         <TabsList
           variant="line"
-          className={TAB_LIST_CLASS}
+          className={cn(TAB_LIST_CLASS, actions && "min-w-0 sm:w-auto")}
           aria-label={ariaLabel}
         >
           {items.map((item) => (
@@ -97,6 +100,7 @@ export function SectionTabs({
             </TabsTrigger>
           ))}
         </TabsList>
+        {actions}
       </div>
       {children}
     </Tabs>
