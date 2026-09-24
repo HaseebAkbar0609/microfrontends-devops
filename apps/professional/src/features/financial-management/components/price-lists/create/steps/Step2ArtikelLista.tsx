@@ -1,10 +1,16 @@
 "use client";
 
 import React from "react";
-import { Download, Check } from "lucide-react";
+import { Download, ChevronDown, ArrowUpDown } from "lucide-react";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { PriceListArticleItem } from "../../../../types/priceLists.types";
@@ -32,23 +38,44 @@ export function Step2ArtikelLista({
 
 	return (
 		<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-6">
-			{/* Toolbar */}
+			{/* Toolbar matching Figma Image 5 */}
 			<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-				<Search
-					value={searchQuery}
-					onChange={onSearchChange}
-					placeholder={localizationConstants.priceListSearchPlaceholder}
-					className="h-10 w-full"
-					wrapperClassName="w-full sm:w-[280px]"
-				/>
+				<div className="flex items-center gap-3">
+					<Search
+						value={searchQuery}
+						onChange={onSearchChange}
+						placeholder={localizationConstants.priceListSearchPlaceholder}
+						className="h-10 w-full"
+						wrapperClassName="w-full sm:w-[260px]"
+					/>
+
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button
+								variant="outline"
+								className="h-10 px-3 border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 text-xs shadow-2xs cursor-pointer"
+							>
+								<Translate text={localizationConstants.filter} />
+								<ChevronDown className="h-3.5 w-3.5 opacity-50" />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="start" className="w-40 bg-white border-slate-200 shadow-md">
+							<DropdownMenuItem className="text-xs cursor-pointer">
+								<Translate text={localizationConstants.priceListCategoryFilterAll} />
+							</DropdownMenuItem>
+							<DropdownMenuItem className="text-xs cursor-pointer">
+								<Translate text={localizationConstants.priceListCategoryFilterService} />
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 
 				<div className="flex items-center gap-3">
 					<Button
 						type="button"
-						variant="outline"
-						className="h-10 px-4 text-xs font-medium border-slate-200 gap-2 hover:bg-slate-50 cursor-pointer"
+						className="h-10 px-4 text-xs font-semibold bg-[#111721] hover:bg-slate-800 text-white gap-2 rounded-lg shadow-2xs cursor-pointer"
 					>
-						<Download className="h-4 w-4 text-slate-600" />
+						<Download className="h-4 w-4" />
 						<Translate text={localizationConstants.priceListImportArticlesButton} />
 					</Button>
 				</div>
@@ -68,25 +95,40 @@ export function Step2ArtikelLista({
 									/>
 								</th>
 								<th className="py-3 px-4">
-									<Translate text={localizationConstants.priceListArticleNoHeader} />
+									<div className="flex items-center gap-1">
+										<Translate text={localizationConstants.priceListArticleNoHeader} />
+										<ArrowUpDown className="h-3 w-3 text-slate-400" />
+									</div>
 								</th>
 								<th className="py-3 px-4">
-									<Translate text={localizationConstants.priceListDescriptionHeader} />
+									<div className="flex items-center gap-1">
+										<Translate text={localizationConstants.priceListDescriptionHeader} />
+										<ArrowUpDown className="h-3 w-3 text-slate-400" />
+									</div>
 								</th>
 								<th className="py-3 px-4 text-right">
-									<Translate text={localizationConstants.priceListOutPriceListAHeader} />
+									<div className="flex items-center justify-end gap-1">
+										<Translate text={localizationConstants.priceListOutPriceListAHeader} />
+										<ArrowUpDown className="h-3 w-3 text-slate-400" />
+									</div>
 								</th>
 								<th className="py-3 px-4 text-right">
-									<Translate text={localizationConstants.priceListCustomPriceHeader} />
-								</th>
-								<th className="py-3 px-4 text-right">
-									<Translate text={localizationConstants.priceListCalcCostHeader} />
+									<div className="flex items-center justify-end gap-1">
+										<Translate text={localizationConstants.priceListCalcCostHeader} />
+										<ArrowUpDown className="h-3 w-3 text-slate-400" />
+									</div>
 								</th>
 								<th className="py-3 px-4 text-center">
-									<Translate text={localizationConstants.priceListStockHeader} />
+									<div className="flex items-center justify-center gap-1">
+										<Translate text={localizationConstants.priceListStockHeader} />
+										<ArrowUpDown className="h-3 w-3 text-slate-400" />
+									</div>
 								</th>
 								<th className="py-3 px-4 text-center">
-									<Translate text={localizationConstants.priceListReservedHeader} />
+									<div className="flex items-center justify-center gap-1">
+										<Translate text={localizationConstants.priceListReservedHeader} />
+										<ArrowUpDown className="h-3 w-3 text-slate-400" />
+									</div>
 								</th>
 							</tr>
 						</thead>
@@ -117,13 +159,10 @@ export function Step2ArtikelLista({
 											{article.benamning}
 										</td>
 										<td className="py-3 px-4 text-right font-bold text-slate-900">
-											{article.outPriceListA} kr
-										</td>
-										<td className="py-3 px-4 text-right text-blue-600 font-medium">
-											{article.customPrice || article.outPriceListA} kr
+											{article.outPriceListA}
 										</td>
 										<td className="py-3 px-4 text-right text-slate-600">
-											{article.calculatedCost} kr
+											{article.calculatedCost}
 										</td>
 										<td className="py-3 px-4 text-center text-slate-700">
 											{article.stock}
@@ -136,17 +175,6 @@ export function Step2ArtikelLista({
 							})}
 						</tbody>
 					</table>
-				</div>
-			</div>
-
-			{/* Selected Articles Summary Count */}
-			<div className="flex items-center justify-between text-xs text-slate-500 pt-2">
-				<div className="flex items-center gap-1.5 font-medium text-slate-700">
-					<Check className="h-4 w-4 text-emerald-600" />
-					<span>
-						{selectedArticleIds.length} <Translate text={localizationConstants.priceListReviewSelected} /> (
-						{articles.length} <Translate text={localizationConstants.priceListReviewArticlesCount} />)
-					</span>
 				</div>
 			</div>
 		</div>

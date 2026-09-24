@@ -1,8 +1,7 @@
 "use client";
 
 import React from "react";
-import { Edit2, Eye, Star } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Edit2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -15,10 +14,8 @@ import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useBulkPriceUpdate } from "../../../hooks/useBulkPriceUpdate";
 import { BulkPriceUpdateModal } from "./BulkPriceUpdateModal";
-import { PRICE_LISTS_DETAIL_BASE_ROUTE } from "../../../constants/priceLists.constants";
 
 export function UpdatePriceListTab() {
-	const router = useRouter();
 	const {
 		priceLists,
 		selectedPriceListId,
@@ -35,147 +32,136 @@ export function UpdatePriceListTab() {
 
 	return (
 		<div className="space-y-6">
-			{/* Top Selector & Action Row */}
-			<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
-				<div className="w-full sm:w-64">
-					<Select
-						value={selectedPriceListId}
-						onValueChange={setSelectedPriceListId}
-					>
-						<SelectTrigger className="h-10 w-full bg-white border-slate-200 text-sm">
-							<SelectValue placeholder={localizationConstants.priceListAOption} />
-						</SelectTrigger>
-						<SelectContent className="bg-white border-slate-200">
-							{priceLists.map((pl) => (
-								<SelectItem key={pl.id} value={pl.id}>
-									{pl.name} ({pl.code})
-								</SelectItem>
-							))}
-						</SelectContent>
-					</Select>
-				</div>
-
-				<Button
-					onClick={openModal}
-					className="h-10 px-4 bg-[#111721] hover:bg-slate-800 text-white text-xs font-semibold gap-1.5 rounded-lg shadow-2xs cursor-pointer"
+			{/* Price List Selector with Label */}
+			<div className="space-y-1.5 w-full sm:w-72">
+				<label className="text-xs font-semibold text-slate-800">
+					<Translate text={localizationConstants.priceListLabel} />
+				</label>
+				<Select
+					value={selectedPriceListId}
+					onValueChange={setSelectedPriceListId}
 				>
-					<Edit2 className="h-3.5 w-3.5" />
-					<Translate text={localizationConstants.priceListEditButton} />
-				</Button>
+					<SelectTrigger className="h-10 w-full bg-white border-slate-200 text-sm shadow-2xs">
+						<SelectValue placeholder={localizationConstants.priceListAOption} />
+					</SelectTrigger>
+					<SelectContent className="bg-white border-slate-200">
+						{priceLists.map((pl) => (
+							<SelectItem key={pl.id} value={pl.id}>
+								{pl.name}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
 			</div>
 
-			{/* 4-Column Summary Card */}
-			{selectedPriceList && (
-				<div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs">
-					<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-						<div className="space-y-1">
-							<span className="text-xs text-slate-500 font-medium">
-								<Translate text={localizationConstants.priceListCodeHeader} />
-							</span>
-							<p className="text-base font-bold text-slate-900">
-								{selectedPriceList.code} - {selectedPriceList.name}
-							</p>
-						</div>
-
-						<div className="space-y-1">
-							<span className="text-xs text-slate-500 font-medium">
-								<Translate text={localizationConstants.priceListCategoryHeader} />
-							</span>
-							<p className="text-base font-semibold text-slate-800">
-								{selectedPriceList.category}
-							</p>
-						</div>
-
-						<div className="space-y-1">
-							<span className="text-xs text-slate-500 font-medium">
-								<Translate text={localizationConstants.priceListLinkedHeader} />
-							</span>
-							<p className="text-base font-semibold text-slate-800">
-								{selectedPriceList.articles?.length ?? selectedPriceList.linkedCount} st
-							</p>
-						</div>
-
-						<div className="space-y-1">
-							<span className="text-xs text-slate-500 font-medium">
-								<Translate text={localizationConstants.priceListLastUpdatedHeader} />
-							</span>
-							<p className="text-base font-semibold text-slate-800">
-								{selectedPriceList.lastUpdated || selectedPriceList.date}
-							</p>
-						</div>
-					</div>
-				</div>
-			)}
-
-			{/* Article List Preview Table */}
-			{selectedPriceList && (
-				<div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-2xs">
-					<div className="p-4 border-b border-slate-200 flex items-center justify-between">
+			{/* Figma Card: Prisuppdatering with summary fields */}
+			<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-6">
+				{/* Card Header with Icon + Title on left, Edit button on right */}
+				<div className="flex items-center justify-between border-b border-slate-100 pb-4">
+					<div className="flex items-center gap-2">
+						<UserPlus className="h-5 w-5 text-slate-700" />
 						<h3 className="text-sm font-bold text-slate-900">
-							<Translate text={localizationConstants.priceListArticleListTab} />
+							<Translate text={localizationConstants.priceListUpdateTitle} />
 						</h3>
-						<Button
-							variant="ghost"
-							onClick={() => router.push(`${PRICE_LISTS_DETAIL_BASE_ROUTE}/${encodeURIComponent(selectedPriceList.id)}`)}
-							className="text-xs font-semibold text-slate-700 hover:text-slate-900 gap-1 cursor-pointer"
-						>
-							<Eye className="h-3.5 w-3.5" />
-							<Translate text={localizationConstants.viewLabel} />
-						</Button>
 					</div>
 
-					<div className="overflow-x-auto">
-						<table className="w-full text-left border-collapse">
-							<thead>
-								<tr className="border-b border-slate-200 bg-slate-50/50 text-xs font-semibold text-slate-500">
-									<th className="py-3 px-4 w-10 text-center">#</th>
-									<th className="py-3 px-4">
-										<Translate text={localizationConstants.priceListArticleNoHeader} />
-									</th>
-									<th className="py-3 px-4">
-										<Translate text={localizationConstants.priceListDescriptionHeader} />
-									</th>
-									<th className="py-3 px-4 text-right">
-										<Translate text={localizationConstants.priceListOutPriceListAHeader} />
-									</th>
-									<th className="py-3 px-4 text-right">
-										<Translate text={localizationConstants.priceListCalcCostHeader} />
-									</th>
-									<th className="py-3 px-4 text-center">
-										<Translate text={localizationConstants.priceListStockHeader} />
-									</th>
-								</tr>
-							</thead>
-							<tbody className="divide-y divide-slate-100 text-xs">
-								{selectedPriceList.articles?.map((article) => (
-									<tr key={article.id} className="hover:bg-slate-50/70 transition-colors">
-										<td className="py-3 px-4 text-center">
-											<Star className="h-3.5 w-3.5 text-slate-300 mx-auto" />
-										</td>
-										<td className="py-3 px-4 font-semibold text-slate-900">
-											{article.articleNo}
-										</td>
-										<td className="py-3 px-4 text-slate-700">
-											{article.benamning}
-										</td>
-										<td className="py-3 px-4 text-right font-bold text-slate-900">
-											{article.outPriceListA} kr
-										</td>
-										<td className="py-3 px-4 text-right text-slate-600">
-											{article.calculatedCost} kr
-										</td>
-										<td className="py-3 px-4 text-center text-slate-700">
-											{article.stock}
-										</td>
-									</tr>
-								))}
-							</tbody>
-						</table>
+					<Button
+						variant="outline"
+						onClick={openModal}
+						className="h-8 px-3.5 bg-white border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-medium gap-1.5 rounded-lg shadow-2xs cursor-pointer"
+					>
+						<Edit2 className="h-3.5 w-3.5 text-slate-500" />
+						<Translate text={localizationConstants.priceListEditButton} />
+					</Button>
+				</div>
+
+				{/* 4-Column / 2-Row Metric Grid matching Figma Image 2 */}
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8 text-xs">
+					{/* Row 1 */}
+					<div className="space-y-1">
+						<p className="font-semibold text-slate-900">
+							<Translate text={localizationConstants.priceListBaseCalculationLabel} />
+						</p>
+						<p className="text-slate-400 font-normal">
+							{formData.baseCalculationOn || <Translate text={localizationConstants.priceListInfoPlaceholder} />}
+						</p>
+					</div>
+
+					<div className="space-y-1">
+						<p className="font-semibold text-slate-900">
+							<Translate text={localizationConstants.priceListUpdatePriceListLabel} />
+						</p>
+						<p className="text-slate-400 font-normal">
+							{selectedPriceList?.name || formData.updatePriceListId || <Translate text={localizationConstants.priceListInfoPlaceholder} />}
+						</p>
+					</div>
+
+					<div className="space-y-1">
+						<p className="font-semibold text-slate-900">
+							<Translate text={localizationConstants.priceListCalculationLabel} />
+						</p>
+						<p className="text-slate-400 font-normal">
+							{formData.calculationType ? (
+								formData.calculationType === "procent" ? (
+									<Translate text={localizationConstants.priceListProcentOption} />
+								) : formData.calculationType === "index" ? (
+									<Translate text={localizationConstants.priceListIndexOption} />
+								) : (
+									<Translate text={localizationConstants.priceListSekOption} />
+								)
+							) : (
+								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+							)}
+						</p>
+					</div>
+
+					<div className="space-y-1">
+						<p className="font-semibold text-slate-900">
+							<Translate text={localizationConstants.priceListRoundingLabel} />
+						</p>
+						<p className="text-slate-400 font-normal">
+							{formData.rounding ? (
+								formData.rounding === "helkrona" ? (
+									<Translate text={localizationConstants.priceListHelKronaOption} />
+								) : (
+									<Translate text={localizationConstants.priceList2DecimalOption} />
+								)
+							) : (
+								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+							)}
+						</p>
+					</div>
+
+					{/* Row 2 */}
+					<div className="space-y-1">
+						<p className="font-semibold text-slate-900">
+							<Translate text={localizationConstants.priceListIncreaseDecreaseLabel} />
+						</p>
+						<p className="text-slate-400 font-normal">
+							{formData.direction ? (
+								formData.direction === "increase" ? (
+									<Translate text={localizationConstants.priceListOkaOption} />
+								) : (
+									<Translate text={localizationConstants.priceListMinskaOption} />
+								)
+							) : (
+								<Translate text={localizationConstants.priceListInfoPlaceholder} />
+							)}
+						</p>
+					</div>
+
+					<div className="space-y-1">
+						<p className="font-semibold text-slate-900">
+							<Translate text={localizationConstants.priceListPercentageLabel} />
+						</p>
+						<p className="text-slate-400 font-normal">
+							{formData.percentage ? `${formData.percentage}%` : <Translate text={localizationConstants.priceListInfoPlaceholder} />}
+						</p>
 					</div>
 				</div>
-			)}
+			</div>
 
-			{/* Prisuppdatering Modal */}
+			{/* Prisuppdatering Recalculation Modal */}
 			<BulkPriceUpdateModal
 				isOpen={isModalOpen}
 				priceLists={priceLists}

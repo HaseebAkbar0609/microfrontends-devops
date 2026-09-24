@@ -5,7 +5,6 @@ import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { PriceListsRegisterHeader } from "./PriceListsRegisterHeader";
 import { PriceListsOverviewTable } from "./PriceListsOverviewTable";
 import { UpdatePriceListTab } from "./update-tab/UpdatePriceListTab";
 
@@ -26,9 +25,6 @@ export function PriceListsOverviewPage() {
 
 	return (
 		<div className="p-6 w-full space-y-6">
-			{/* Top Register Selector Header */}
-			<PriceListsRegisterHeader />
-
 			{/* Sub Tabs Bar matching Figma */}
 			<div className="border-b border-slate-200">
 				<Tabs value={activeSubTab} onValueChange={handleSubTabChange}>
