@@ -22,7 +22,7 @@ export function CreateAccountPage() {
 	} = useCreateAccountForm();
 
 	return (
-		<div className="w-full flex flex-col gap-6 py-4 pb-20">
+		<div className="p-6 w-full space-y-6 pb-20">
 			{/* Page Header */}
 			<div className="flex items-center gap-3">
 				<button

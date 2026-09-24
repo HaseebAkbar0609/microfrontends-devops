@@ -54,7 +54,7 @@ export function AccountDetailPage({ id }: AccountDetailPageProps) {
 	}
 
 	return (
-		<div className="w-full flex flex-col gap-6 py-4 pb-12">
+		<div className="p-6 w-full space-y-6 pb-12">
 			{/* Page Header */}
 			<div className="flex flex-col gap-1">
 				<div className="flex items-center gap-3">
