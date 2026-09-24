@@ -67,27 +67,20 @@ export function PriceListDetailPage({ id }: PriceListDetailPageProps) {
 	return (
 		<div className="p-6 w-full space-y-6">
 			{/* Top Bar with Back Button & Details Header */}
-			<div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-				<div className="flex items-center gap-3">
-					<Button
-						variant="ghost"
-						onClick={() => router.push(PRICE_LISTS_BASE_ROUTE)}
-						className="h-9 px-2 text-slate-600 hover:text-slate-900 gap-1.5 cursor-pointer"
-					>
-						<ArrowLeft className="h-4 w-4" />
-						<span className="text-xs font-semibold uppercase tracking-wider">
-							<Translate text={localizationConstants.priceListDetailTitle} />
-						</span>
-					</Button>
-					<span className="text-slate-300">|</span>
-					<div className="flex items-center gap-2">
-						<h1 className="text-lg font-bold text-slate-900">
-							#{priceList.code} {priceList.name}
-						</h1>
-						<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-							{priceList.category}
-						</span>
-					</div>
+			<div className="flex items-start gap-3">
+				<Button
+					variant="ghost"
+					size="icon"
+					onClick={() => router.push(PRICE_LISTS_BASE_ROUTE)}
+					className="h-8 w-8 text-slate-900 hover:bg-slate-100 cursor-pointer mt-0.5"
+				>
+					<ArrowLeft className="h-5 w-5" />
+				</Button>
+				<div>
+					<h1 className="text-xl font-bold text-slate-900 leading-tight">
+						<Translate text={localizationConstants.priceListDetailTitle} />
+					</h1>
+					<p className="text-xs text-slate-400 font-normal mt-0.5">#{priceList.code}</p>
 				</div>
 			</div>
 

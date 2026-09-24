@@ -13,3 +13,5 @@ export * from "./create/PriceListStepProgressBar";
 export * from "./detail/PriceListDetailPage";
 export * from "./detail/tabs/PriceListGrundInfoTab";
 export * from "./detail/tabs/PriceListArtikelListaTab";
+export * from "./detail/cards/PriceListGrundInfoCard";
+export * from "./detail/cards/PriceListSettingsCard";
