@@ -5497,7 +5497,7 @@ export type RegisterTranslation = {
 	documentSection: string;
 	editComingSoon: string;
 	documentNotAvailable: string;
-	// Supplier Article Detail Page (TFS-436)
+	// Supplier Article Detail Page (TFS-436 & TFS-1015)
 	articleDetailTitle: string;
 	grundInformationSection: string;
 	artikelInformationSection: string;
@@ -5509,6 +5509,24 @@ export type RegisterTranslation = {
 	linkedArticleLabel: string;
 	articleDescriptionLabel: string;
 	leadTimeLabel: string;
+	supplierArticleDetailTabBasic: string;
+	supplierArticleDetailTabList: string;
+	supplierArticleGrundInfoCard: string;
+	supplierArticleArtikelinfoCard: string;
+	supplierArticleBilderCard: string;
+	supplierArticleArtikelnr: string;
+	supplierArticleLeverantorNr: string;
+	supplierArticleLeverantorensNamn: string;
+	supplierArticleInkopskostnad: string;
+	supplierArticleKoppladTillArtikel: string;
+	supplierArticleBeskrivning: string;
+	supplierArticleVikt: string;
+	supplierArticleLangd: string;
+	supplierArticleBredd: string;
+	supplierArticleHojd: string;
+	supplierArticleMaterial: string;
+	supplierArticleEditBtn: string;
+	supplierArticlePhotoLabel: string;
 	// Import Article Translations (TFS-437)
 	importFileTitle: string;
 	yourFileSection: string;
