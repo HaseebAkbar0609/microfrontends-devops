@@ -6128,11 +6128,9 @@ export const enRegister: RegisterTranslation = {
 	deleteAccountConfirmTitle: "Delete Account",
 	deleteAccountConfirmDesc: "Are you sure you want to delete this account? This action cannot be undone.",
 	accountDeletedSuccess: "Account deleted",
-	importFileTitle: "Import File",
 	importFileNow: "Import file now",
 	importButtonText: "Import",
 	grundlaggandeInfoTab: "Basic info.",
-	grundInformationSection: "Basic information",
 
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: "Create new Account",

@@ -6017,11 +6017,9 @@ export type RegisterTranslation = {
 	deleteAccountConfirmTitle: string;
 	deleteAccountConfirmDesc: string;
 	accountDeletedSuccess: string;
-	importFileTitle: string;
 	importFileNow: string;
 	importButtonText: string;
 	grundlaggandeInfoTab: string;
-	grundInformationSection: string;
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: string;
 	additionalDetailsSection: string;
