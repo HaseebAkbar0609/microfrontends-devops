@@ -76,10 +76,10 @@ export function AccountDetailPage({ id }: AccountDetailPageProps) {
 			</div>
 
 			{/* Sub Navigation Tab */}
-			<div className="flex items-center gap-8 border-b border-slate-200">
-				<span className="pb-3 text-sm font-semibold text-slate-900 border-b-2 border-slate-900 cursor-default">
+			<div className="border-b border-slate-200">
+				<div className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight">
 					<Translate text={localizationConstants.grundlaggandeInfoTab} />
-				</span>
+				</div>
 			</div>
 
 			{/* Cards */}

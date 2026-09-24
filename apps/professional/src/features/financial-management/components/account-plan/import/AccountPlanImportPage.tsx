@@ -26,6 +26,25 @@ export function AccountPlanImportPage() {
 
 	return (
 		<div className="w-full flex flex-col gap-6 py-4 pb-20">
+			{/* Sub Navigation Tabs */}
+			<div className="border-b border-slate-200">
+				<div className="flex items-center gap-8">
+					<button
+						type="button"
+						onClick={handleCancel}
+						className="inline-flex items-center gap-2 pb-3 px-1 text-sm font-medium text-slate-500 hover:text-slate-800 transition-colors cursor-pointer"
+					>
+						<Translate text={localizationConstants.accountPlanHeader} />
+					</button>
+					<button
+						type="button"
+						className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight cursor-default"
+					>
+						<Translate text={localizationConstants.importAccountPlan} />
+					</button>
+				</div>
+			</div>
+
 			{/* Page Header */}
 			<div className="flex items-center gap-3">
 				<button
