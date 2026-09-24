@@ -10104,7 +10104,36 @@ export type Translation = HeaderTranslation &
 	SupplierManagementTranslation &
 	SupplierDetailTranslation &
 	ToolsDiscountTranslation &
-	ForecastDashboardTranslation;
+	ForecastDashboardTranslation &
+	CostCentersTranslation;
+
+export type CostCentersTranslation = {
+	costCenterTitle: string;
+	costCenterSubTitle: string;
+	createCostCenterButtonText: string;
+	costCenterCodeHeader: string;
+	costCenterNameHeader: string;
+	costCenterNotesHeader: string;
+	inactivateButton: string;
+	activateButton: string;
+	markedCountText: string;
+	costCenterAllStatus: string;
+	costCenterActiveStatus: string;
+	costCenterInactiveStatus: string;
+	noCostCentersMessage: string;
+	createCostCenterHeaderTitle: string;
+	costCenterCodePlaceholder: string;
+	costCenterNamePlaceholder: string;
+	costCenterNotesPlaceholder: string;
+	validationCostCenterCodeRequired: string;
+	validationCostCenterNameRequired: string;
+	costCenterCreatedSuccess: string;
+	costCenterUpdatedSuccess: string;
+	costCenterDeletedSuccess: string;
+	costCenterStatusUpdatedSuccess: string;
+	costCenterDeleteConfirmTitle: string;
+	costCenterDeleteConfirmDesc: string;
+};
 
 export type TranslationKeys = keyof Translation;
 
