@@ -89,6 +89,9 @@ export const DashboardWidget = ({
   const t = useTranslate();
   const titleText = t(title) || title;
   const isMuted = variant === "muted";
+  /* The Analys frame's figure card: the title labels the figure, and the header
+     keeps only the ⋮, so a KPI reads as one number rather than as a panel. */
+  const isKpi = variant === "kpi";
 
   // Interactive states for unified UX testing & control
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -139,26 +142,28 @@ export const DashboardWidget = ({
           className
         )}
         style={{
-          minHeight: "220px",
+          minHeight: isKpi ? "120px" : "220px",
         }}
       >
         {/* Top Header Row: Icon (left), Admin Lock + Active Dot + Quick Actions (right) */}
         <div className="flex items-center justify-between gap-2">
           {/* Left: Icon inside rounded white square matching Figma */}
-          <div
-            className={cn(
-              "flex shrink-0 items-center justify-center bg-white dark:bg-slate-800",
-              isMuted
-                ? "h-10 w-10 rounded-sm"
-                : "h-9 w-9 rounded-md border border-slate-200/80 shadow-xs dark:border-slate-700"
-            )}
-          >
-            <Icon size={isMuted ? 20 : 18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
-          </div>
+          {!isKpi && (
+            <div
+              className={cn(
+                "flex shrink-0 items-center justify-center bg-white dark:bg-slate-800",
+                isMuted
+                  ? "h-10 w-10 rounded-sm"
+                  : "h-9 w-9 rounded-md border border-slate-200/80 shadow-xs dark:border-slate-700"
+              )}
+            >
+              <Icon size={isMuted ? 20 : 18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
+            </div>
+          )}
 
           {/* Right: Badges & Actions */}
           {!effectiveEmpty && (
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0 ml-auto">
               {/* Admin Lock Chip matching Figma node 13315:492241 */}
               {isLocked && (
                 <span
@@ -184,7 +189,7 @@ export const DashboardWidget = ({
                 </span>
               )}
 
-              {!isMuted && (
+              {!isMuted && !isKpi && (
                 <>
                   {/* Quick Expand Button */}
                   <Button
@@ -287,11 +292,13 @@ export const DashboardWidget = ({
         </div>
 
         {/* Title Row: Full width so title never truncates */}
-        <div className="mt-2.5">
+        <div className={isKpi ? "mt-1" : "mt-2.5"}>
           <h3
             className={cn(
-              "font-semibold leading-snug tracking-tight text-slate-900 dark:text-slate-100 truncate",
-              isMuted ? "text-base" : "text-sm"
+              "leading-snug tracking-tight truncate",
+              isKpi
+                ? "text-sm font-medium text-slate-500 dark:text-slate-400"
+                : cn("font-semibold text-slate-900 dark:text-slate-100", isMuted ? "text-base" : "text-sm")
             )}
             title={titleText}
           >

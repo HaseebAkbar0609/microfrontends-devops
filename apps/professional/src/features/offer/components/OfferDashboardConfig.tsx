@@ -21,22 +21,23 @@ import {
 	listAvailableOffersAPIAction,
 	listOffersAPIAction,
 	OFFER_API_STATUS,
+	type OffersListResult,
 } from "@/api-actions/offers";
 import { useAuthStatus } from "@/context/AuthContext";
 import localizationConstants from "@/utils/translation/constants";
 import type { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
 import {
 	WidgetContent as Content,
+	WidgetErrorState,
 	WidgetRow as Row,
 } from "@/features/widgetdashboard/components/WidgetContent";
 
 type OfferDashboardCounts = {
-	available: number;
-	requested: number;
-	offered: number;
-	accepted: number;
-	agreed: number;
-	archived: number;
+	available: number | null;
+	requested: number | null;
+	offered: number | null;
+	accepted: number | null;
+	archived: number | null;
 };
 
 const cachedCounts = new Map<string, { value: OfferDashboardCounts; expiresAt: number }>();
@@ -47,23 +48,25 @@ const loadCounts = (companyId: string): Promise<OfferDashboardCounts> => {
 	if (cached && cached.expiresAt > Date.now()) return Promise.resolve(cached.value);
 	const pending = pendingCounts.get(companyId);
 	if (pending) return pending;
-	const request = Promise.all([
+	const request = Promise.allSettled([
 		listAvailableOffersAPIAction({ companyId, page: 1, pageSize: 1 }),
 		listOffersAPIAction({ status: OFFER_API_STATUS.REQUESTED, companyId, page: 1, pageSize: 1 }),
 		listOffersAPIAction({ status: OFFER_API_STATUS.OFFERED, companyId, page: 1, pageSize: 1 }),
 		listOffersAPIAction({ status: OFFER_API_STATUS.ACCEPTED, companyId, page: 1, pageSize: 1 }),
-		listOffersAPIAction({ status: OFFER_API_STATUS.AGREED, companyId, page: 1, pageSize: 1 }),
 		listOffersAPIAction({ status: OFFER_API_STATUS.ARCHIVED, companyId, page: 1, pageSize: 1 }),
-	]).then(([available, requested, offered, accepted, agreed, archived]) => {
+	]).then(([available, requested, offered, accepted, archived]) => {
+		const total = (result: PromiseSettledResult<OffersListResult>) =>
+			result.status === "fulfilled" ? result.value.totalItems : null;
 		const counts = {
-			available: available.totalItems,
-			requested: requested.totalItems,
-			offered: offered.totalItems,
-			accepted: accepted.totalItems,
-			agreed: agreed.totalItems,
-			archived: archived.totalItems,
+			available: total(available),
+			requested: total(requested),
+			offered: total(offered),
+			accepted: total(accepted),
+			archived: total(archived),
 		};
-		cachedCounts.set(companyId, { value: counts, expiresAt: Date.now() + 60_000 });
+		if (Object.values(counts).every((count) => count !== null)) {
+			cachedCounts.set(companyId, { value: counts, expiresAt: Date.now() + 60_000 });
+		}
 		return counts;
 	}).finally(() => pendingCounts.delete(companyId));
 	pendingCounts.set(companyId, request);
@@ -78,7 +81,11 @@ const LiveOfferWidget = ({ focus }: { focus: keyof OfferDashboardCounts }) => {
 
 	useEffect(() => {
 		let cancelled = false;
-		if (!company?.id) return;
+		if (!company?.id) {
+			setError(true);
+			setLoading(false);
+			return;
+		}
 		setLoading(true);
 		setError(false);
 		loadCounts(company.id)
@@ -91,8 +98,9 @@ const LiveOfferWidget = ({ focus }: { focus: keyof OfferDashboardCounts }) => {
 	}, [company?.id, focus]);
 
 	if (loading) return <div className="my-4 h-20 animate-pulse rounded-lg bg-white/70" />;
-	if (error) return <p className="py-6 text-sm text-red-600">Live offer data could not be loaded.</p>;
-	if (!counts) return null;
+	if (error || !counts || counts[focus] === null) {
+		return <WidgetErrorState message={localizationConstants.widgetDataLoadError} />;
+	}
 
 	return (
 		<Content>

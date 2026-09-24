@@ -37,9 +37,9 @@ export const ECONOMY_SECTIONS = [
 	{ id: "customers", labelKey: localizationConstants.customerRegister, href: ECONOMY_CUSTOMERS_BASE_URL, implemented: true },
 	{ id: "suppliers", labelKey: localizationConstants.supplierRegister, href: ECONOMY_SUPPLIERS_BASE_URL, implemented: true },
 	{ id: "articles", labelKey: localizationConstants.registerArtiklar, href: ECONOMY_ARTICLES_BASE_URL, implemented: true },
-	{ id: "price-lists", labelKey: localizationConstants.priceList, href: ECONOMY_PRICE_LISTS_BASE_URL, implemented: false },
-	{ id: "account-plan", labelKey: localizationConstants.accountPlan, href: ECONOMY_ACCOUNT_PLAN_BASE_URL, implemented: false },
-	{ id: "cost-centers", labelKey: localizationConstants.costCentre, href: ECONOMY_COST_CENTERS_BASE_URL, implemented: false },
+	{ id: "price-lists", labelKey: localizationConstants.priceList, href: ECONOMY_PRICE_LISTS_BASE_URL, implemented: true },
+	{ id: "account-plan", labelKey: localizationConstants.accountPlan, href: ECONOMY_ACCOUNT_PLAN_BASE_URL, implemented: true },
+	{ id: "cost-centers", labelKey: localizationConstants.costCentre, href: ECONOMY_COST_CENTERS_BASE_URL, implemented: true },
 	{ id: "wage-types", labelKey: localizationConstants.wageTypes, href: ECONOMY_WAGE_TYPES_BASE_URL, implemented: false },
 ] as const;
 
@@ -108,6 +108,7 @@ export function forecastBreadcrumbs(section?: TranslationKeys): BreadcrumbItem[]
 }
 
 export const ECONOMY_FORECAST_OVERVIEW_URL = `${ECONOMY_FORECAST_BASE_URL}/overview`;
+export const ECONOMY_FORECAST_ANALYSIS_URL = `${ECONOMY_FORECAST_BASE_URL}/analysis`;
 
 /**
  * The Prognos tab's own row: the pages built so far. The frame draws them as
@@ -124,6 +125,11 @@ export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
 		id: "overview",
 		labelKey: localizationConstants.forecastOverviewTitle,
 		href: ECONOMY_FORECAST_OVERVIEW_URL,
+	},
+	{
+		id: "analysis",
+		labelKey: localizationConstants.forecastAnalysisTitle,
+		href: ECONOMY_FORECAST_ANALYSIS_URL,
 	},
 ];
 
