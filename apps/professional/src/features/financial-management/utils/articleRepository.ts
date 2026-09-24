@@ -305,6 +305,28 @@ class ArticleRepository {
 		);
 	}
 
+	public updateSupplierArticle(
+		id: string,
+		updates: Partial<SupplierArticleDetail>,
+	): SupplierArticleDetail | null {
+		this.ensureInitialized();
+		const index = this.supplierArticles.findIndex(
+			(a) => a.id === id || a.supplierArticleNo === id,
+		);
+		if (index === -1) return null;
+
+		const existing = this.supplierArticles[index];
+		const updated: SupplierArticleDetail = {
+			...existing,
+			...updates,
+		};
+
+		this.supplierArticles[index] = updated;
+		this.persistSupplierArticles();
+		this.notify();
+		return updated;
+	}
+
 	public deleteSupplierArticle(id: string): boolean {
 		this.ensureInitialized();
 		const index = this.supplierArticles.findIndex(
@@ -408,6 +430,22 @@ export async function getSupplierArticleDetailAPIAction(id: string): Promise<Sup
 			const found = articleRepository.getSupplierArticleById(id);
 			if (found) {
 				resolve(found);
+			} else {
+				reject(new Error("Supplier article not found"));
+			}
+		}, 100);
+	});
+}
+
+export async function updateSupplierArticleAPIAction(
+	id: string,
+	updates: Partial<SupplierArticleDetail>,
+): Promise<SupplierArticleDetail> {
+	return new Promise((resolve, reject) => {
+		setTimeout(() => {
+			const updated = articleRepository.updateSupplierArticle(id, updates);
+			if (updated) {
+				resolve(updated);
 			} else {
 				reject(new Error("Supplier article not found"));
 			}
