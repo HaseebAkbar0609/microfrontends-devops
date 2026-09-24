@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, MonitorPlay, Save, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,11 +15,19 @@ import { CollapsibleSection } from "@/components/common/CollapsibleSection";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { getAdminUserOptions } from "@/features/admin/users/api/adminUsers.api";
 import {
-	DEFAULT_SELECTED_TEAM_IDS,
-	PRESENTATION_ALLOWED_TYPES,
-	TEAM_MEMBER_OPTIONS,
-} from "../constants/presentationMock";
+	usePresentation,
+	useUpdatePresentation,
+} from "../hooks/useCompanyInformation";
+import { uploadCompanyMedia } from "../api/companyInformation.api";
+import { PRESENTATION_ALLOWED_TYPES } from "../constants";
+
+interface TeamMemberOption {
+	id: string;
+	display_name: string;
+	email: string;
+}
 
 const initials = (name: string) =>
 	name
@@ -31,13 +40,28 @@ const initials = (name: string) =>
 export function CompanyPresentationTab() {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [text, setText] = useState("");
-	const [selectedIds, setSelectedIds] = useState<string[]>(
-		DEFAULT_SELECTED_TEAM_IDS,
-	);
-	const [fileName, setFileName] = useState("");
+	const presentationQuery = usePresentation();
+	const updatePresentation = useUpdatePresentation();
+	const teamOptionsQuery = useQuery({
+		queryKey: ["admin-users", "options"],
+		queryFn: () => getAdminUserOptions({ limit: 100 }),
+	});
+	const teamOptions: TeamMemberOption[] = teamOptionsQuery.data?.data ?? [];
 
-	const selected = TEAM_MEMBER_OPTIONS.filter((member) =>
+	const [text, setText] = useState("");
+	const [selectedIds, setSelectedIds] = useState<string[]>([]);
+	const [file, setFile] = useState<File | null>(null);
+	const [existingFileName, setExistingFileName] = useState("");
+
+	useEffect(() => {
+		if (!presentationQuery.data) return;
+		setText(presentationQuery.data.text ?? "");
+		setSelectedIds(presentationQuery.data.teamMemberIds ?? []);
+		setExistingFileName(presentationQuery.data.file?.fileName ?? "");
+		setFile(null);
+	}, [presentationQuery.data]);
+
+	const selected = teamOptions.filter((member) =>
 		selectedIds.includes(member.id),
 	);
 
@@ -49,14 +73,30 @@ export function CompanyPresentationTab() {
 		);
 
 	const handleReset = () => {
-		setText("");
-		setSelectedIds(DEFAULT_SELECTED_TEAM_IDS);
-		setFileName("");
+		setText(presentationQuery.data?.text ?? "");
+		setSelectedIds(presentationQuery.data?.teamMemberIds ?? []);
+		setFile(null);
+		setExistingFileName(presentationQuery.data?.file?.fileName ?? "");
 	};
 
-	const handleSave = () => {
-		showToast("success", t(localizationConstants.profileUpdated));
+	const handleSave = async () => {
+		try {
+			const payload: Record<string, unknown> = {
+				text,
+				teamMemberIds: selectedIds,
+			};
+			if (file) {
+				const uploaded = await uploadCompanyMedia(file);
+				payload.fileMediaId = uploaded.mediaId;
+			}
+			await updatePresentation.mutateAsync(payload);
+			showToast("success", t(localizationConstants.profileUpdated));
+		} catch (_error) {
+			showToast("error", t(localizationConstants.profileUpdateFailed));
+		}
 	};
+
+	const fileName = file?.name || existingFileName;
 
 	return (
 		<div className="flex min-h-[calc(100vh-320px)] flex-col gap-6">
@@ -112,19 +152,21 @@ export function CompanyPresentationTab() {
 												className="flex items-center gap-1.5 border-r border-slate-200 py-0.5 pl-1 pr-2 text-sm text-slate-900 last:border-r-0"
 											>
 												<span className="flex h-6 w-6 items-center justify-center rounded-full bg-slate-200 text-[10px] font-medium text-slate-600">
-													{initials(member.name)}
+													{initials(
+														member.display_name ||
+															member.email,
+													)}
 												</span>
 												<span className="font-medium">
-													{member.role} |{" "}
-													{member.name}
+													{member.display_name}
 												</span>
 												<span className="text-slate-400">
-													{member.handle}
+													{member.email}
 												</span>
 												<span
 													role="button"
 													tabIndex={0}
-													aria-label={`${member.role} ${member.name}`}
+													aria-label={member.display_name}
 													onClick={(event) => {
 														event.stopPropagation();
 														toggleMember(member.id);
@@ -156,7 +198,7 @@ export function CompanyPresentationTab() {
 								align="start"
 								className="w-[var(--radix-popover-trigger-width)] rounded-md border border-slate-200 bg-white p-1 shadow-md"
 							>
-								{TEAM_MEMBER_OPTIONS.map((member) => (
+								{teamOptions.map((member) => (
 									<label
 										key={member.id}
 										className="flex cursor-pointer items-center gap-2 rounded-md px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
@@ -169,9 +211,9 @@ export function CompanyPresentationTab() {
 												toggleMember(member.id)
 											}
 										/>
-										{member.role} | {member.name}
+										{member.display_name}
 										<span className="text-slate-400">
-											{member.handle}
+											{member.email}
 										</span>
 									</label>
 								))}
@@ -202,9 +244,7 @@ export function CompanyPresentationTab() {
 									)}
 									className="hidden"
 									onChange={(event) => {
-										setFileName(
-											event.target.files?.[0]?.name ?? "",
-										);
+										setFile(event.target.files?.[0] ?? null);
 										event.target.value = "";
 									}}
 								/>
@@ -253,6 +293,7 @@ export function CompanyPresentationTab() {
 					<Button
 						type="button"
 						onClick={handleSave}
+						disabled={updatePresentation.isPending}
 						className="w-[204px] bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)]"
 					>
 						<Save size={16} />

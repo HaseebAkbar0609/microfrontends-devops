@@ -39,14 +39,14 @@ export function CompanyInformationTab({
               name="companyName"
               label={localizationConstants.companyName}
               placeholder={localizationConstants.companyName}
-             
+              disabled
             />
             <FormInput
               control={control}
               name="orgNumber"
               label={localizationConstants.orgNumber}
               placeholder={localizationConstants.orgNumber}
-              
+              disabled
             />
             <FormInput
               control={control}

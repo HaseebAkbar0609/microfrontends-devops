@@ -79,3 +79,8 @@ export const createCheckoutSession = async ({ items }: { items: { plan_key: stri
 	const res = await axiosInstance.post(`/professionals/admin/licenses/checkout`, { items });
 	return res.data;
 };
+
+export const getAdminUserOptions = async (params?: Record<string, unknown>) => {
+	const res = await axiosInstance.get("/professionals/admin/users/options", { params });
+	return res.data;
+};

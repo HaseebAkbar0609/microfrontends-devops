@@ -6,7 +6,6 @@ import {
 	MoreVertical,
 	Pencil,
 	Plus,
-	Save,
 	Trash2,
 } from "lucide-react";
 import {
@@ -34,15 +33,17 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { generateTempId } from "@/lib/tempId";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import {
-	COMPANY_REFERENCES,
-	CompanyReference,
-} from "../constants/referencesMock";
+import { CompanyReference } from "../types";
 import { CompanyReferenceValues } from "../schemas/companyReference.schema";
+import {
+	useCreateReference,
+	useDeleteReference,
+	useReferences,
+	useUpdateReference,
+} from "../hooks/useCompanyInformation";
 import ReferenceFormDialog from "./ReferenceFormDialog";
 
 const COLUMN_KEYS = [
@@ -56,10 +57,12 @@ const COLUMN_KEYS = [
 
 export function CompanyReferencesTab() {
 	const t = useTranslate();
-	// Static phase: references are UI state only until the backend exposes a
-	// company-references endpoint.
-	const [references, setReferences] =
-		useState<CompanyReference[]>(COMPANY_REFERENCES);
+	const referencesQuery = useReferences();
+	const createReference = useCreateReference();
+	const updateReference = useUpdateReference();
+	const deleteReference = useDeleteReference();
+
+	const references: CompanyReference[] = referencesQuery.data ?? [];
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editingReference, setEditingReference] =
 		useState<CompanyReference | null>(null);
@@ -76,48 +79,42 @@ export function CompanyReferencesTab() {
 		setDialogOpen(true);
 	};
 
-	const handleSaveReference = (
-		values: CompanyReferenceValues,
-		fileName: string,
+	const handleSaveReference = async (
+		values: CompanyReferenceValues & { fileMediaId: string | null },
 	) => {
-		if (editingReference) {
-			setReferences((current) =>
-				current.map((reference) =>
-					reference.id === editingReference.id
-						? { ...reference, ...values, fileName }
-						: reference,
-				),
-			);
-			showToast("success", t(localizationConstants.companyRefSavedToast));
-			return;
+		try {
+			if (editingReference) {
+				await updateReference.mutateAsync({
+					id: editingReference.id,
+					data: values,
+				});
+				showToast("success", t(localizationConstants.companyRefSavedToast));
+			} else {
+				await createReference.mutateAsync(values);
+				showToast(
+					"success",
+					t(localizationConstants.companyRefCreatedToast),
+				);
+			}
+			setDialogOpen(false);
+		} catch (_error) {
+			showToast("error", t(localizationConstants.profileUpdateFailed));
 		}
-		setReferences((current) => [
-			{
-				id: generateTempId(),
-				...values,
-				fileName,
-			},
-			...current,
-		]);
-		showToast("success", t(localizationConstants.companyRefCreatedToast));
 	};
 
-	const handleDelete = () => {
+	const handleDelete = async () => {
 		if (!deletingReference) return;
-		setReferences((current) =>
-			current.filter(
-				(reference) => reference.id !== deletingReference.id,
-			),
-		);
-		setDeletingReference(null);
-		showToast("success", t(localizationConstants.companyRefDeletedToast));
-	};
-
-	// Static phase: the backend has no references endpoint yet, so Spara only
-	// confirms the local UI state. When the API lands, replace this with a
-	// mutation + error toast following the CompanyDetail.onSubmit pattern.
-	const handleSavePage = () => {
-		showToast("success", t(localizationConstants.profileUpdated));
+		try {
+			await deleteReference.mutateAsync(deletingReference.id);
+			showToast(
+				"success",
+				t(localizationConstants.companyRefDeletedToast),
+			);
+		} catch (_error) {
+			showToast("error", t(localizationConstants.profileUpdateFailed));
+		} finally {
+			setDeletingReference(null);
+		}
 	};
 
 	return (
@@ -178,14 +175,32 @@ export function CompanyReferencesTab() {
 										{reference.phone}
 									</TableCell>
 									<TableCell className="px-4 py-3.5">
-										<span className="flex items-center gap-2 text-sm text-slate-700">
-											<span className="flex h-8 w-7 items-center justify-center rounded-sm border border-slate-200 bg-white">
-												<span className="rounded-sm bg-red-600 px-0.5 text-[8px] font-bold text-white">
-													PDF
+										{reference.file ? (
+											<a
+												href={reference.file.url ?? undefined}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="flex items-center gap-2 text-sm text-slate-700 hover:underline"
+											>
+												<span className="flex h-8 w-7 items-center justify-center rounded-sm border border-slate-200 bg-white">
+													<span className="rounded-sm bg-red-600 px-0.5 text-[8px] font-bold text-white">
+														{(reference.file.fileName ?? "")
+															.split(".")
+															.pop()
+															?.toUpperCase() || "FILE"}
+													</span>
 												</span>
+												{reference.file.fileName}
+											</a>
+										) : (
+											<span className="text-sm text-slate-400">
+												<Translate
+													text={
+														localizationConstants.noFileChosen
+													}
+												/>
 											</span>
-											{reference.fileName}
-										</span>
+										)}
 									</TableCell>
 									<TableCell className="px-4 py-3.5 text-right">
 										<DropdownMenu>
@@ -241,32 +256,12 @@ export function CompanyReferencesTab() {
 				</div>
 			</section>
 
-			<div className="sticky bottom-0 mt-auto -mx-6 border-t border-slate-200 bg-slate-50 px-6 py-4">
-				<div className="flex justify-end gap-2">
-					<Button
-						type="button"
-						variant="outline"
-						onClick={() => setReferences(COMPANY_REFERENCES)}
-						className="w-full border border-slate-200 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)] sm:w-52"
-					>
-						<Translate text={localizationConstants.cancel} />
-					</Button>
-					<Button
-						type="button"
-						onClick={handleSavePage}
-						className="w-full bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)] sm:w-52"
-					>
-						<Save size={16} />
-						<Translate text={localizationConstants.save} />
-					</Button>
-				</div>
-			</div>
-
 			<ReferenceFormDialog
 				open={dialogOpen}
 				editingReference={editingReference}
 				onClose={() => setDialogOpen(false)}
 				onSave={handleSaveReference}
+				isSaving={createReference.isPending || updateReference.isPending}
 			/>
 
 			<AlertDialog

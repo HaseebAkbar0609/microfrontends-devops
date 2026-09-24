@@ -1,19 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { MessagesSquare, Save } from "lucide-react";
+import { MessagesSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MONTH_KEYS } from "@/features/tools/diary/constants/mockData";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import {
-	ANSWERED_REVIEWS,
-	CompanyReview,
-	PENDING_REVIEWS,
-	REPLY_PLACEHOLDER,
-} from "../constants/reviewsMock";
+import { CompanyReview } from "../types";
+import { useReplyToReview, useReviews } from "../hooks/useCompanyInformation";
 import ReviewStars from "./ReviewStars";
 
 const initials = (name: string) =>
@@ -31,7 +27,7 @@ const ReviewHeader = ({
 }: {
 	review: CompanyReview;
 	showChip: boolean;
-	formatDate: (date: string) => string;
+	formatDate: (date: number) => string;
 }) => (
 	<>
 		<div className="flex flex-wrap items-center justify-between gap-2">
@@ -58,52 +54,41 @@ const ReviewHeader = ({
 			{formatDate(review.date)}
 		</p>
 		<p className="text-sm text-slate-700">{review.text}</p>
-		<div className="mt-3 flex items-center gap-2 border-t border-slate-100 pt-3">
-			<span className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-xs font-medium text-slate-600">
-				{initials(review.companyName)}
-			</span>
-			<span className="text-sm font-semibold text-slate-900">
-				{review.companyName}
-			</span>
-		</div>
 	</>
 );
 
 export function CompanyReviewsTab() {
 	const t = useTranslate();
-	// Static phase: reviews are UI state only until the backend exposes a
-	// company-reviews endpoint.
-	const [pending, setPending] = useState<CompanyReview[]>(PENDING_REVIEWS);
-	const [answered, setAnswered] =
-		useState<CompanyReview[]>(ANSWERED_REVIEWS);
+	const reviewsQuery = useReviews();
+	const replyToReview = useReplyToReview();
 	const [drafts, setDrafts] = useState<Record<string, string>>({});
 
-	const formatDate = (date: string) => {
-		const [, month, day] = date.split("-").map(Number);
-		return `${day} ${t(MONTH_KEYS[month - 1]).toLowerCase()}`;
+	const reviews: CompanyReview[] = reviewsQuery.data ?? [];
+	const pending = reviews.filter((review) => !review.reply);
+	const answered = reviews.filter((review) => review.reply);
+
+	const formatDate = (date: number) => {
+		if (!date) return "";
+		const parsed = new Date(date);
+		return `${parsed.getDate()} ${t(
+			MONTH_KEYS[parsed.getMonth()],
+		).toLowerCase()}`;
 	};
 
-	const handleSend = (review: CompanyReview) => {
-		const replyText = drafts[review.id]?.trim() || REPLY_PLACEHOLDER;
-		setPending((current) =>
-			current.filter((item) => item.id !== review.id),
-		);
-		setAnswered((current) => [
-			{ ...review, reply: { text: replyText, date: review.date } },
-			...current,
-		]);
-		showToast("success", t(localizationConstants.companyReviewsSentToast));
+	const handleSend = async (review: CompanyReview) => {
+		const replyText = drafts[review.id]?.trim();
+		if (!replyText) return;
+		try {
+			await replyToReview.mutateAsync({ id: review.id, reply: replyText });
+			clearDraft(review.id);
+			showToast("success", t(localizationConstants.companyReviewsSentToast));
+		} catch (_error) {
+			showToast("error", t(localizationConstants.profileUpdateFailed));
+		}
 	};
 
 	const clearDraft = (reviewId: string) =>
 		setDrafts((current) => ({ ...current, [reviewId]: "" }));
-
-	// Static phase: the backend has no reviews endpoint yet, so Spara only
-	// confirms the local UI state. When the API lands, replace this with a
-	// mutation + error toast following the CompanyDetail.onSubmit pattern.
-	const handleSavePage = () => {
-		showToast("success", t(localizationConstants.profileUpdated));
-	};
 
 	return (
 		<div className="flex min-h-[calc(100vh-320px)] flex-col gap-6">
@@ -145,7 +130,6 @@ export function CompanyReviewsTab() {
 											}))
 										}
 										rows={3}
-										placeholder={REPLY_PLACEHOLDER}
 										className="mt-3 border-slate-200 text-sm"
 									/>
 									<p className="mt-1 text-xs text-slate-400">
@@ -173,6 +157,10 @@ export function CompanyReviewsTab() {
 										<Button
 											type="button"
 											onClick={() => handleSend(review)}
+											disabled={
+												replyToReview.isPending ||
+												!drafts[review.id]?.trim()
+											}
 											className="h-10 rounded-md bg-slate-900 px-6 text-sm font-medium text-white hover:bg-slate-900/90"
 										>
 											<Translate
@@ -224,27 +212,6 @@ export function CompanyReviewsTab() {
 					</div>
 				</div>
 			</section>
-
-			<div className="sticky bottom-0 mt-auto -mx-6 border-t border-slate-200 bg-slate-50 px-6 py-4">
-				<div className="flex justify-end gap-2">
-					<Button
-						type="button"
-						variant="outline"
-						onClick={() => setDrafts({})}
-						className="w-[204px] border border-slate-200 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
-					>
-						<Translate text={localizationConstants.cancel} />
-					</Button>
-					<Button
-						type="button"
-						onClick={handleSavePage}
-						className="w-[204px] bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)]"
-					>
-						<Save size={16} />
-						<Translate text={localizationConstants.save} />
-					</Button>
-				</div>
-			</div>
 		</div>
 	);
 }
