@@ -138,7 +138,7 @@ export function B2BProjectMarketDetailView({ projectId }: Props) {
 
       {/* Tab Content */}
       <div className="flex-1 bg-slate-50">
-        {activeTab === "offers" && <ProjectMarketOfferTab data={data} />}
+        {activeTab === "offers" && <ProjectMarketOfferTab data={data} onRefresh={fetchDetail} />}
         {activeTab === "project-info" && <ProjectMarketInfoTab data={data} />}
         {activeTab === "qa" && <ProjectMarketQATab data={data} onRefresh={fetchDetail} />}
       </div>

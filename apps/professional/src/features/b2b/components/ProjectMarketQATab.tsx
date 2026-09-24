@@ -21,14 +21,14 @@ import { formatApiDateTime } from "@/utils/date";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
   DropdownMenuLabel,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { QAThreadCard, type QAThreadLabels } from "@/components/common/QAThreadCard";
 import { QAThreadColumn } from "@/components/common/QAThreadColumn";
 import { ProjectMarketDetail, QAStatus, QAMessage } from "../types/projectMarket";
@@ -44,14 +44,124 @@ const QA_LABELS: QAThreadLabels = {
   leaveComment: localizationConstants.b2bPMQALeaveComment,
   send: localizationConstants.b2bPMQASend,
   cancel: localizationConstants.cancel,
-  answerBadge: localizationConstants.b2bPMQAAdmin,
-  answerSubLabel: localizationConstants.b2bPMQAYou,
+  // No answer chip or "You": any engaged company's user can answer, and the
+  // payload does not say who that was relative to the viewer — a fixed
+  // "Admin" / "You" labelled every answer wrongly.
   badges: {
     UE: localizationConstants.b2bPMQAUE,
     "Beställare": localizationConstants.b2bPMQABestallare,
     "Fråga": localizationConstants.b2bPMQAFraga,
   },
 };
+
+type CompanyFilter = "own" | "other";
+type RoleFilter = "UE" | "Beställare";
+
+const STATUSES: QAStatus[] = ["new", "opened", "answered"];
+const STATUS_LABELS: Record<QAStatus, TranslationKeys> = {
+  new: localizationConstants.b2bPMQANew,
+  opened: localizationConstants.b2bPMQAOpened,
+  answered: localizationConstants.b2bPMQAAnswered,
+};
+const COMPANY_LABELS: Record<CompanyFilter, TranslationKeys> = {
+  own: localizationConstants.b2bPMQAOwnCompany,
+  other: localizationConstants.b2bPMQAOtherCompanies,
+};
+
+/**
+ * Who asked, in the terms the filters use. A bidder's question is from "your
+ * company" or from "other companies" — the API never names competitors — and
+ * a customer's question belongs to no company.
+ */
+function companyOf(q: QAMessage): CompanyFilter | null {
+  if (q.role !== "professional") return null;
+  return q.ownCompany ? "own" : "other";
+}
+
+function roleOf(q: QAMessage): RoleFilter | null {
+  if (q.role === "professional") return "UE";
+  if (q.role === "customer") return "Beställare";
+  return null;
+}
+
+type FilterOption<T extends string> = { value: T; label: string };
+
+function FilterMenuSection<T extends string>({
+  label,
+  options,
+  selected,
+  onToggle,
+}: {
+  label: string;
+  options: FilterOption<T>[];
+  selected: T[];
+  onToggle: (value: T, on: boolean) => void;
+}) {
+  return (
+    <>
+      <DropdownMenuLabel className="text-xs font-semibold text-slate-500">{label}</DropdownMenuLabel>
+      {options.map((o) => (
+        <DropdownMenuCheckboxItem
+          key={o.value}
+          checked={selected.includes(o.value)}
+          onCheckedChange={(checked) => onToggle(o.value, checked === true)}
+          // Keep the menu open so several values can be picked in one go.
+          onSelect={(e) => e.preventDefault()}
+          className="cursor-pointer text-xs"
+        >
+          {o.label}
+        </DropdownMenuCheckboxItem>
+      ))}
+    </>
+  );
+}
+
+/** A dashed "+ Label" pill that opens its options and lists what is picked. */
+function FilterPill<T extends string>({
+  label,
+  options,
+  selected,
+  onToggle,
+}: {
+  label: string;
+  options: FilterOption<T>[];
+  selected: T[];
+  onToggle: (value: T, on: boolean) => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="outline"
+          className="flex h-9 cursor-pointer items-center gap-2 rounded-md border border-dashed border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 transition-colors"
+        >
+          <PlusCircle size={14} className="text-slate-700 shrink-0" aria-hidden={true} />
+          <span>{label}</span>
+          {selected.length > 0 && (
+            <>
+              <div className="h-4 w-px bg-slate-200 shrink-0" />
+              <div className="flex items-center gap-1.5">
+                {options
+                  .filter((o) => selected.includes(o.value))
+                  .map((o) => (
+                    <span
+                      key={o.value}
+                      className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-900"
+                    >
+                      {o.label}
+                    </span>
+                  ))}
+              </div>
+            </>
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-52 bg-white shadow-lg border border-slate-200 rounded-lg">
+        <FilterMenuSection label={label} options={options} selected={selected} onToggle={onToggle} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 function QAColumn({
   status,
@@ -61,6 +171,7 @@ function QAColumn({
   className,
   currentUserName,
   onMarkAsRead,
+  describeCompany,
 }: {
   status: QAStatus;
   label: string;
@@ -69,6 +180,8 @@ function QAColumn({
   className?: string;
   currentUserName: string;
   onMarkAsRead: (id: string) => void;
+  /** The line under the sender's name: their company as the viewer may see it. */
+  describeCompany: (q: QAMessage) => string;
 }) {
   const items = messages.filter((m) => m.status === status);
 
@@ -86,8 +199,9 @@ function QAColumn({
           message={{
             id: msg.id,
             sender: msg.sender,
-            company: msg.company,
+            company: describeCompany(msg),
             role: msg.role,
+            // No role chip: the line under the name already says who asked.
             badge: msg.badge,
             message: msg.message,
             date: formatApiDateTime(msg.date),
@@ -127,8 +241,9 @@ export function ProjectMarketQATab({
 
   const qaMessages = data.qa;
   const [qaSearch, setQaSearch] = useState("");
-  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [selectedCompanies, setSelectedCompanies] = useState<CompanyFilter[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<RoleFilter[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<QAStatus[]>([]);
   const [question, setQuestion] = useState("");
   const [isPosting, setIsPosting] = useState(false);
 
@@ -158,14 +273,27 @@ export function ProjectMarketQATab({
     }
   }
 
-  const allCompanies = Array.from(
-    new Set(
-      qaMessages
-        .map((q) => (q.company ? q.company.split(":")[0].trim() : q.role))
-        .filter(Boolean)
-    )
+  // Only the values present in this thread, in a fixed order.
+  const allCompanies = (["own", "other"] as CompanyFilter[]).filter((c) =>
+    qaMessages.some((q) => companyOf(q) === c)
   );
-  const allRoles = Array.from(new Set(qaMessages.map((q) => q.badge || q.role).filter(Boolean)));
+  const allRoles = (["UE", "Beställare"] as RoleFilter[]).filter((r) =>
+    qaMessages.some((q) => roleOf(q) === r)
+  );
+  const roleLabel = (r: RoleFilter) => t(QA_LABELS.badges?.[r] ?? localizationConstants.b2bPMQAKund);
+  const companyOptions = allCompanies.map((c) => ({ value: c, label: t(COMPANY_LABELS[c]) }));
+  const roleOptions = allRoles.map((r) => ({ value: r, label: roleLabel(r) }));
+  const statusOptions = STATUSES.map((st) => ({ value: st, label: t(STATUS_LABELS[st]) }));
+  const activeFilterCount = selectedCompanies.length + selectedRoles.length + selectedStatuses.length;
+
+  const describeCompany = (q: QAMessage) => {
+    const company = companyOf(q);
+    if (company) return t(COMPANY_LABELS[company]);
+    return q.role === "customer" ? t(localizationConstants.b2bPMQABestallare) : "";
+  };
+
+  const toggle = <T,>(setter: React.Dispatch<React.SetStateAction<T[]>>, value: T, on: boolean) =>
+    setter((prev) => (on ? [...prev, value] : prev.filter((v) => v !== value)));
 
   const filteredQA = qaMessages.filter((q) => {
     const needle = qaSearch.toLowerCase();
@@ -173,15 +301,13 @@ export function ProjectMarketQATab({
       !qaSearch ||
       q.sender.toLowerCase().includes(needle) ||
       q.message.toLowerCase().includes(needle);
-
-    const company = q.company ? q.company.split(":")[0].trim() : q.role;
+    const company = companyOf(q);
+    const role = roleOf(q);
     const matchesCompany =
-      selectedCompanies.length === 0 || selectedCompanies.includes(company);
-
-    const matchesRole =
-      selectedRoles.length === 0 || selectedRoles.includes(q.badge || q.role);
-
-    return matchesSearch && matchesCompany && matchesRole;
+      selectedCompanies.length === 0 || (company !== null && selectedCompanies.includes(company));
+    const matchesRole = selectedRoles.length === 0 || (role !== null && selectedRoles.includes(role));
+    const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(q.status);
+    return matchesSearch && matchesCompany && matchesRole && matchesStatus;
   });
 
   return (
@@ -199,7 +325,7 @@ export function ProjectMarketQATab({
             className="h-10 text-xs bg-white"
           />
 
-          {/* Reusable Filter dropdown button */}
+          {/* Every filter in one menu — the same choices as the pills below */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -207,133 +333,67 @@ export function ProjectMarketQATab({
                 className="h-10 border-slate-200 text-slate-700 font-normal bg-white hover:bg-slate-50 gap-1.5 px-3 text-xs shadow-2xs justify-between cursor-pointer shrink-0"
               >
                 <Translate text={localizationConstants.filter} />
+                {activeFilterCount > 0 && (
+                  <span className="flex h-4 min-w-4 items-center justify-center rounded-full bg-slate-900 px-1 text-[10px] text-white">
+                    {activeFilterCount}
+                  </span>
+                )}
                 <ChevronDown className="h-3.5 w-3.5 text-slate-500 shrink-0" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-48 bg-white shadow-lg border border-slate-200 rounded-lg">
-              <DropdownMenuLabel className="text-xs font-semibold text-slate-500">
-                <Translate text={localizationConstants.filter} />
-              </DropdownMenuLabel>
-              <DropdownMenuItem className="cursor-pointer text-xs">
-                <Translate text={localizationConstants.b2bPMQAForetag} />
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer text-xs">
-                <Translate text={localizationConstants.b2bPMQAKund} />
-              </DropdownMenuItem>
+            <DropdownMenuContent align="start" className="w-52 bg-white shadow-lg border border-slate-200 rounded-lg">
+              <FilterMenuSection
+                label={t(localizationConstants.b2bPMQAForetag)}
+                options={companyOptions}
+                selected={selectedCompanies}
+                onToggle={(value, on) => toggle(setSelectedCompanies, value, on)}
+              />
+              <DropdownMenuSeparator />
+              <FilterMenuSection
+                label={t(localizationConstants.b2bPMQAKund)}
+                options={roleOptions}
+                selected={selectedRoles}
+                onToggle={(value, on) => toggle(setSelectedRoles, value, on)}
+              />
+              <DropdownMenuSeparator />
+              <FilterMenuSection
+                label={t(localizationConstants.b2bPMQAStatus)}
+                options={statusOptions}
+                selected={selectedStatuses}
+                onToggle={(value, on) => toggle(setSelectedStatuses, value, on)}
+              />
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
 
         {/* Row 2: Filter Tag Pills (Dashed border, rounded-md, h-9 / 36px height) */}
         <div className="flex flex-wrap items-center gap-2.5">
-          {/* Filter tag: + Företag */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex h-9 cursor-pointer items-center gap-2 rounded-md border border-dashed border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 transition-colors"
-              >
-                <PlusCircle size={14} className="text-slate-700 shrink-0" aria-hidden={true} />
-                <span>{t(localizationConstants.b2bPMQAForetag)}</span>
-                {selectedCompanies.length > 0 && (
-                  <>
-                    <div className="h-4 w-px bg-slate-200 shrink-0" />
-                    <div className="flex items-center gap-1.5">
-                      {selectedCompanies.map((c) => (
-                        <span
-                          key={c}
-                          className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-900"
-                        >
-                          {c}
-                        </span>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-52 bg-white shadow-lg border border-slate-200 rounded-lg">
-              <DropdownMenuLabel className="text-xs font-semibold text-slate-500">
-                {t(localizationConstants.b2bPMQAForetag)}
-              </DropdownMenuLabel>
-              {allCompanies.map((comp) => (
-                <DropdownMenuCheckboxItem
-                  key={comp}
-                  checked={selectedCompanies.includes(comp)}
-                  onCheckedChange={(checked) =>
-                    setSelectedCompanies((prev) =>
-                      checked ? [...prev, comp] : prev.filter((c) => c !== comp)
-                    )
-                  }
-                  className="cursor-pointer text-xs"
-                >
-                  {comp}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <FilterPill
+            label={t(localizationConstants.b2bPMQAForetag)}
+            options={companyOptions}
+            selected={selectedCompanies}
+            onToggle={(value, on) => toggle(setSelectedCompanies, value, on)}
+          />
 
           {/* External Separator Line */}
           <div className="h-5 w-px bg-slate-200 mx-0.5 shrink-0" />
 
-          {/* Filter tag: + Kund */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="flex h-9 cursor-pointer items-center gap-2 rounded-md border border-dashed border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 transition-colors"
-              >
-                <PlusCircle size={14} className="text-slate-700 shrink-0" aria-hidden={true} />
-                <span>{t(localizationConstants.b2bPMQAKund)}</span>
-                {selectedRoles.length > 0 && (
-                  <>
-                    <div className="h-4 w-px bg-slate-200 shrink-0" />
-                    <div className="flex items-center gap-1.5">
-                      {selectedRoles.map((r) => (
-                        <span
-                          key={r}
-                          className="rounded bg-slate-100 px-1.5 py-0.5 text-[11px] font-medium text-slate-900"
-                        >
-                          {r}
-                        </span>
-                      ))}
-                    </div>
-                  </>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-44 bg-white shadow-lg border border-slate-200 rounded-lg">
-              <DropdownMenuLabel className="text-xs font-semibold text-slate-500">
-                {t(localizationConstants.b2bPMQAKund)}
-              </DropdownMenuLabel>
-              {allRoles.map((role) => (
-                <DropdownMenuCheckboxItem
-                  key={role}
-                  checked={selectedRoles.includes(role)}
-                  onCheckedChange={(checked) =>
-                    setSelectedRoles((prev) =>
-                      checked ? [...prev, role] : prev.filter((r) => r !== role)
-                    )
-                  }
-                  className="cursor-pointer text-xs"
-                >
-                  {role}
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <FilterPill
+            label={t(localizationConstants.b2bPMQAKund)}
+            options={roleOptions}
+            selected={selectedRoles}
+            onToggle={(value, on) => toggle(setSelectedRoles, value, on)}
+          />
 
           {/* External Separator Line */}
           <div className="h-5 w-px bg-slate-200 mx-0.5 shrink-0" />
 
-          {/* Filter tag: + Status */}
-          <Button
-            variant="outline"
-            className="flex h-9 cursor-pointer items-center gap-2 rounded-md border border-dashed border-slate-200 bg-white px-3 text-xs font-medium text-slate-700 shadow-2xs hover:bg-slate-50 hover:border-slate-300 transition-colors"
-          >
-            <PlusCircle size={14} className="text-slate-700 shrink-0" aria-hidden={true} />
-            <span>{t(localizationConstants.b2bPMQAStatus)}</span>
-          </Button>
+          <FilterPill
+            label={t(localizationConstants.b2bPMQAStatus)}
+            options={statusOptions}
+            selected={selectedStatuses}
+            onToggle={(value, on) => toggle(setSelectedStatuses, value, on)}
+          />
 
           {/* External Separator Line */}
           <div className="h-5 w-px bg-slate-200 mx-0.5 shrink-0" />
@@ -345,6 +405,7 @@ export function ProjectMarketQATab({
               setQaSearch("");
               setSelectedCompanies([]);
               setSelectedRoles([]);
+              setSelectedStatuses([]);
             }}
             className="flex h-9 cursor-pointer items-center gap-1.5 px-2.5 text-xs font-medium text-slate-900 hover:text-red-600 hover:bg-slate-100 transition-colors"
           >
@@ -392,6 +453,7 @@ export function ProjectMarketQATab({
           messages={filteredQA}
           currentUserName={currentUserName}
           onMarkAsRead={handleMarkAsRead}
+          describeCompany={describeCompany}
         />
 
         {/* Column 2: Opened */}
@@ -402,6 +464,7 @@ export function ProjectMarketQATab({
           messages={filteredQA}
           currentUserName={currentUserName}
           onMarkAsRead={handleMarkAsRead}
+          describeCompany={describeCompany}
         />
 
         {/* Column 3: Answered — spans full width (2 cols) when in 2-column mode */}
@@ -413,6 +476,7 @@ export function ProjectMarketQATab({
           className="md:col-span-2 xl:col-span-1"
           currentUserName={currentUserName}
           onMarkAsRead={handleMarkAsRead}
+          describeCompany={describeCompany}
         />
       </div>
     </div>

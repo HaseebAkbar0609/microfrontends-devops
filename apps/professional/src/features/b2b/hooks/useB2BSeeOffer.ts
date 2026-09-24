@@ -68,6 +68,24 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
     }
   }, [initialData, fetchOfferDetail]);
 
+  /**
+   * Re-read the offer without the full-page spinner. Run after accept / decline
+   * so the badge and buttons show what the server now holds — they used to stay
+   * on "Waiting" with both buttons until the page was reloaded.
+   */
+  const reloadQuietly = useCallback(async () => {
+    const res = await getB2BOfferDetailAction(projectId, offerId);
+    if (res.success && res.data) setData(res.data);
+  }, [projectId, offerId]);
+
+  /** Worded from the HTTP status — the API message can be a raw error code. */
+  const offerActionError = (code: string | undefined, fallback: string | null) => {
+    if (code === "forbidden") return t(localizationConstants.b2bErrorOfferNoPermission);
+    if (code === "conflict") return t(localizationConstants.b2bErrorOfferSettled);
+    if (code === "not_found") return t(localizationConstants.b2bErrorProjectGone);
+    return fallback || t(localizationConstants.genericError);
+  };
+
   const handleAcceptOffer = async (onSuccess?: () => void) => {
     setIsSubmitting(true);
     setSubmittingAction("accept");
@@ -75,13 +93,16 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
       const res = await acceptB2BOfferAction(offerId);
       if (res.success) {
         showToast("success", t(localizationConstants.b2bPMAcceptOffer));
+        await reloadQuietly();
         if (onSuccess) onSuccess();
       } else {
-        showToast("error", res.error || "Failed to accept offer");
+        showToast("error", offerActionError(res.errorCode, res.error));
+        // A refused accept can still mean the offer changed (e.g. another user
+        // settled it first) — show the offer as it is now.
+        await reloadQuietly();
       }
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Failed to accept offer";
-      showToast("error", errorMsg);
+    } catch {
+      showToast("error", t(localizationConstants.genericError));
     } finally {
       setIsSubmitting(false);
       setSubmittingAction(null);
@@ -96,11 +117,11 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
       if (res.success) {
         showToast("info", t(localizationConstants.b2bPMDeclineOffer));
       } else {
-        showToast("error", res.error || "Failed to decline offer");
+        showToast("error", offerActionError(res.errorCode, res.error));
       }
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Failed to decline offer";
-      showToast("error", errorMsg);
+      await reloadQuietly();
+    } catch {
+      showToast("error", t(localizationConstants.genericError));
     } finally {
       setIsSubmitting(false);
       setSubmittingAction(null);

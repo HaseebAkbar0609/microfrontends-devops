@@ -25,6 +25,16 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
 import {
   DropdownMenu,
@@ -248,16 +258,12 @@ function QACard({
                 : userInitials}
             </div>
             <div className="flex flex-1 flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
-                  {message.answerUser || currentUserName}
-                </span>
-                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium text-slate-700">
-                  {t(localizationConstants.b2bPMQAAdmin)}
-                </span>
-              </div>
-              <span className="text-[11px] text-slate-400 font-normal">
-                {t(localizationConstants.b2bPMQAYou)}
+              {/*
+                Only the answerer's name: any engaged company's user can answer,
+                so a fixed "Admin" chip and "You" label were wrong for most answers.
+              */}
+              <span className="font-sans text-sm font-semibold leading-5 tracking-normal text-slate-900">
+                {message.answerUser || currentUserName}
               </span>
               <div className="mt-1 flex items-baseline justify-between gap-3">
                 <p className="font-sans text-sm font-normal leading-5 tracking-normal text-slate-950">
@@ -396,6 +402,10 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
     data.statusBadge === "declined" ||
     data.statusBadge === "contract_signed" ||
     data.statusBadge === "archived";
+
+  // Accepting awards the project and charges the platform commission, and a
+  // decline is final — both ask first, like the Offers tab does.
+  const [confirmAction, setConfirmAction] = useState<"accept" | "decline" | null>(null);
 
   const onAccept = () => {
     handleAcceptOffer(() => {
@@ -720,7 +730,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                     type="button"
                     disabled={isSubmitting}
                     className="h-10 w-full cursor-pointer gap-2 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs disabled:opacity-60 disabled:cursor-not-allowed"
-                    onClick={onAccept}
+                    onClick={() => setConfirmAction("accept")}
                   >
                     {submittingAction === "accept" ? (
                       <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden={true} />
@@ -734,7 +744,7 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                     variant="outline"
                     disabled={isSubmitting}
                     className="h-10 w-full cursor-pointer gap-2 border-0 bg-zinc-100 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-colors rounded-lg shadow-none disabled:opacity-60 disabled:cursor-not-allowed"
-                    onClick={handleDeclineOffer}
+                    onClick={() => setConfirmAction("decline")}
                   >
                     {submittingAction === "decline" ? (
                       <Loader2 className="h-4 w-4 animate-spin shrink-0 text-slate-800" aria-hidden={true} />
@@ -802,6 +812,53 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
         document={previewDoc}
         onClose={() => setPreviewDoc(null)}
       />
+
+      <AlertDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => !open && !isSubmitting && setConfirmAction(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t(
+                confirmAction === "decline"
+                  ? localizationConstants.b2bOfferDeclineConfirmTitle
+                  : localizationConstants.b2bOfferAcceptConfirmTitle
+              )}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t(
+                confirmAction === "decline"
+                  ? localizationConstants.b2bOfferDeclineConfirmDesc
+                  : localizationConstants.b2bOfferAcceptConfirmDesc
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isSubmitting} className="cursor-pointer">
+              {t(localizationConstants.cancel)}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isSubmitting}
+              onClick={async (e) => {
+                e.preventDefault();
+                if (confirmAction === "decline") await handleDeclineOffer();
+                else onAccept();
+                setConfirmAction(null);
+              }}
+              className={`cursor-pointer text-white ${
+                confirmAction === "decline" ? "bg-red-600 hover:bg-red-700" : "bg-slate-900 hover:bg-slate-800"
+              }`}
+            >
+              {t(
+                confirmAction === "decline"
+                  ? localizationConstants.b2bArchiveDecline
+                  : localizationConstants.b2bArchiveAcceptOffer
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

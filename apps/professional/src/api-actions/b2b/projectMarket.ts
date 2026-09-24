@@ -5,6 +5,22 @@ import { ProjectMarket, ProjectMarketDetail } from "@/features/b2b/types/project
 
 const B2B_BASE_PATH = "/professionals/b2b";
 
+/**
+ * Why a B2B mutation (archive / remove / restore) was refused, from the HTTP
+ * status. The response `message` is translated by the backend when it has a
+ * translation, so the status — not the message text — is what the screens map
+ * to their own wording.
+ */
+export type B2BMutationErrorCode = "forbidden" | "not_found" | "conflict" | "unknown";
+
+export function b2bMutationErrorCode(error: unknown): B2BMutationErrorCode {
+  const status = (error as { response?: { status?: number } })?.response?.status;
+  if (status === 403) return "forbidden";
+  if (status === 404) return "not_found";
+  if (status === 409) return "conflict";
+  return "unknown";
+}
+
 export const projectMarketStatusSchema = z.enum([
   "contract_signed",
   "waiting",
@@ -54,6 +70,7 @@ export const qaMessageSchema = z.object({
   id: z.string(),
   sender: z.string(),
   role: z.string(),
+  ownCompany: z.boolean().default(false),
   company: optionalApiText,
   badge: optionalApiText,
   replyFrom: optionalApiText,
@@ -67,6 +84,13 @@ export const qaMessageSchema = z.object({
   date: z.string(),
   status: qaStatusSchema,
   avatar: optionalApiText,
+});
+
+export const projectDocumentSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  type: z.string().default(""),
+  url: z.string().default(""),
 });
 
 export const projectMarketDetailSchema = z.object({
@@ -99,9 +123,9 @@ export const projectMarketDetailSchema = z.object({
     address: z.string(),
   }),
   documents: z.object({
-    images: z.array(z.object({ id: z.string(), label: z.string() })).default([]),
-    docs: z.array(z.object({ id: z.string(), label: z.string(), type: z.string() })).default([]),
-    drawings: z.array(z.object({ id: z.string(), label: z.string(), type: z.string() })).default([]),
+    images: z.array(projectDocumentSchema).default([]),
+    docs: z.array(projectDocumentSchema).default([]),
+    drawings: z.array(projectDocumentSchema).default([]),
   }),
   qa: z.array(qaMessageSchema).default([]),
 });

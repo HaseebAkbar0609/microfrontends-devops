@@ -1,21 +1,14 @@
 "use client";
 
-import React from "react";
-import {
-  PenLine,
-  CircleUserRound,
-  ClipboardList,
-  FilePlus,
-  File,
-  Image as ImageIcon,
-} from "lucide-react";
-import Image from "next/image";
+import React, { useState } from "react";
+import { PenLine, CircleUserRound, ClipboardList, FilePlus } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { formatApiDate } from "@/utils/date";
-import { ProjectMarketDetail } from "../types/projectMarket";
+import { ProjectDocument, ProjectMarketDetail } from "../types/projectMarket";
+import { FileTile, ImageTile, ProjectDocumentPreview } from "./ProjectDocuments";
 
 function InfoField({ label, value }: { label: string; value?: string }) {
   return (
@@ -67,27 +60,6 @@ function SectionCard({
   );
 }
 
-function FileItem({ label, type }: { label: string; type?: string }) {
-  return (
-    <div className="flex flex-col items-center gap-1.5">
-      <div className="flex h-12 w-12 items-center justify-center">
-        {type === "pdf" || type === "doc" ? (
-          <Image
-            src={type === "pdf" ? "/file-type-pdf.png" : "/file-type-doc.png"}
-            alt={label}
-            width={36}
-            height={36}
-            className="h-9 w-9 object-contain"
-          />
-        ) : (
-          <File size={36} className="text-slate-400" aria-hidden={true} />
-        )}
-      </div>
-      <span className="max-w-24 truncate text-xs font-medium text-slate-800">{label}</span>
-    </div>
-  );
-}
-
 function DocumentGroup({
   title,
   emptyLabel,
@@ -111,6 +83,7 @@ function DocumentGroup({
 
 export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
   const t = useTranslate();
+  const [previewDoc, setPreviewDoc] = useState<ProjectDocument | null>(null);
 
   return (
     <div className="flex flex-col gap-3 pl-4 sm:pl-6 md:pl-11 pr-4 sm:pr-5 md:pr-6 py-3.5">
@@ -202,12 +175,7 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
             emptyLabel={t(localizationConstants.b2bPMNoFiles)}
           >
             {data.documents.images.map((img) => (
-              <div key={img.id} className="flex flex-col items-center">
-                <div className="flex h-24 w-24 items-center justify-center rounded-lg border border-slate-200 bg-slate-100/80 shadow-2xs">
-                  <ImageIcon size={24} className="text-slate-400" aria-hidden={true} />
-                </div>
-                <span className="mt-1.5 max-w-24 truncate text-xs text-slate-500">{img.label}</span>
-              </div>
+              <ImageTile key={img.id} doc={img} onOpen={() => setPreviewDoc(img)} />
             ))}
           </DocumentGroup>
 
@@ -216,7 +184,7 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
             emptyLabel={t(localizationConstants.b2bPMNoFiles)}
           >
             {data.documents.docs.map((doc) => (
-              <FileItem key={doc.id} label={doc.label} type={doc.type} />
+              <FileTile key={doc.id} doc={doc} onOpen={() => setPreviewDoc(doc)} />
             ))}
           </DocumentGroup>
 
@@ -225,11 +193,13 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
             emptyLabel={t(localizationConstants.b2bPMNoFiles)}
           >
             {data.documents.drawings.map((drawing) => (
-              <FileItem key={drawing.id} label={drawing.label} type={drawing.type} />
+              <FileTile key={drawing.id} doc={drawing} onOpen={() => setPreviewDoc(drawing)} />
             ))}
           </DocumentGroup>
         </div>
       </SectionCard>
+
+      <ProjectDocumentPreview doc={previewDoc} onClose={() => setPreviewDoc(null)} />
     </div>
   );
 }

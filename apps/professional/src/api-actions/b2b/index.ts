@@ -6,6 +6,7 @@ import type { B2BArchiveItem } from "@/features/b2b/types/archive";
 import type { B2BSeeOfferDetail } from "@/features/b2b/types/seeOffer";
 import { formatApiDate } from "@/utils/date";
 import { b2bSeeOfferDetailSchema } from "./seeOffer";
+import { b2bMutationErrorCode, projectMarketStatusSchema } from "./projectMarket";
 
 export interface ListB2BProjectsParams {
 	page?: number;
@@ -38,10 +39,9 @@ export const b2bProjectItemSchema = z.object({
 	city: z.string().optional().default(""),
 	lowest_offer: z.number().optional().default(0),
 	lowest_quote: z.number().optional().default(0),
-	status: z
-		.enum(["contract_signed", "waiting", "open", "closing_soon"])
-		.optional()
-		.default("waiting"),
+	// The same statuses the detail schema accepts — a status missing here fails
+	// the whole list (a declined row once blanked the Overview with an error).
+	status: projectMarketStatusSchema.optional().default("waiting"),
 });
 
 export const b2bProjectsResponseSchema = z.object({
@@ -163,6 +163,7 @@ export async function archiveB2BProjectAction(
 			success: false,
 			data: null,
 			error: apiError.response?.data?.message || "Failed to archive project",
+			errorCode: b2bMutationErrorCode(error),
 		};
 	}
 }
@@ -189,6 +190,7 @@ export async function deleteB2BProjectAction(
 			success: false,
 			data: null,
 			error: apiError.response?.data?.message || "Failed to remove project",
+			errorCode: b2bMutationErrorCode(error),
 		};
 	}
 }

@@ -2,7 +2,7 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError, ApiResponse } from "@/types/api";
 import { B2BSeeOfferDetail } from "@/features/b2b/types/seeOffer";
-import { optionalApiText } from "./projectMarket";
+import { b2bMutationErrorCode, optionalApiText } from "./projectMarket";
 
 const B2B_BASE_PATH = "/professionals/b2b";
 
@@ -124,6 +124,7 @@ export async function acceptB2BOfferAction(
       success: false,
       data: null,
       error: apiError.response?.data?.message || "Failed to accept offer",
+      errorCode: b2bMutationErrorCode(error),
     };
   }
 }
@@ -152,6 +153,7 @@ export async function declineB2BOfferAction(
       success: false,
       data: null,
       error: apiError.response?.data?.message || "Failed to decline offer",
+      errorCode: b2bMutationErrorCode(error),
     };
   }
 }

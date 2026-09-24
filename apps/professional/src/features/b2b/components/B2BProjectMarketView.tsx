@@ -185,6 +185,18 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     };
   }, [fetchProjects]);
 
+  /**
+   * What to tell the user when archive / remove is refused. Worded from the
+   * HTTP status, because the API's own message can be a raw code such as
+   * ACCEPTED_OFFER_CANNOT_BE_DELETED.
+   */
+  const mutationErrorMessage = (code: string | undefined, fallback: string) => {
+    if (code === "forbidden") return t(localizationConstants.b2bErrorNoPermission);
+    if (code === "conflict") return t(localizationConstants.b2bErrorContractSignedRemove);
+    if (code === "not_found") return t(localizationConstants.b2bErrorProjectGone);
+    return fallback;
+  };
+
   const handleConfirmRemove = async () => {
     if (!projectToRemove) return;
     setIsRemoving(true);
@@ -194,7 +206,10 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
         setProjectList((prev) => prev.filter((p) => p.id !== projectToRemove.id));
         showToast("success", t(localizationConstants.b2bRemoveSuccessToast));
       } else {
-        showToast("error", res.error || t(localizationConstants.b2bRemoveErrorToast));
+        showToast(
+          "error",
+          mutationErrorMessage(res.errorCode, t(localizationConstants.b2bRemoveErrorToast)),
+        );
       }
     } catch {
       showToast("error", t(localizationConstants.b2bRemoveErrorToast));
@@ -213,7 +228,10 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
         setProjectList((prev) => prev.filter((p) => p.id !== projectToArchive.id));
         showToast("success", t(localizationConstants.b2bArchiveSuccessToast));
       } else {
-        showToast("error", res.error || t(localizationConstants.b2bArchiveErrorToast));
+        showToast(
+          "error",
+          mutationErrorMessage(res.errorCode, t(localizationConstants.b2bArchiveErrorToast)),
+        );
       }
     } catch {
       showToast("error", t(localizationConstants.b2bArchiveErrorToast));
