@@ -1389,6 +1389,24 @@ export type OfferTranslation = {
 	calcBerVinstProcent: string;
 	calcBerOffert: string;
 	calcBerSaveAsTemplate: string;
+	// Calculation - Template (TFS-903A)
+	calcTemplateSupplierPriceLists: string;
+	calcTemplateLevArtikelCol: string;
+	calcTemplateLeverantorCol: string;
+	calcTemplateSelectMall: string;
+	calcTemplateMallPlaceholder: string;
+	calcTemplateSavedSuccessfully: string;
+	calcTemplatePriceListLoaded: string;
+	calcTemplateKonsulter: string;
+	calcTemplateArbete: string;
+	calcTemplateMaterial: string;
+	calcTemplateUC: string;
+	calcTemplateDatumCol: string;
+	calcBerStandardSuffix: string;
+	calcTemplatePriceListDialogDesc: string;
+	calcTemplateAddTo: string;
+	calcTemplateSelectSection: string;
+	calcTemplateAddedToast: string;
 	// Calculation - Fråga/Svar (Q&A)
 	calcQATitle: string;
 	calcQANewQuestion: string;
