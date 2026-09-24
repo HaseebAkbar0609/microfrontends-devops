@@ -21,7 +21,7 @@ import {
 
 /**
  * Maps a sidebar item id → widget render props for the Calculation dashboard.
- * Mock content only — replace with API data when available.
+ * Widget metadata only; data is shown when a source is connected.
  */
 export const CALCULATION_SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 	emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
