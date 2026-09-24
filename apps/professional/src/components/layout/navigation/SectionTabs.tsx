@@ -75,10 +75,10 @@ export function SectionTabs({
       onValueChange={handleValueChange}
       className={cn("w-full", className)}
     >
-      <div className="flex items-center justify-between gap-3 border-b border-slate-200">
+      <div className={cn("flex items-center justify-between gap-3 border-b border-slate-200", actions && "flex-wrap sm:flex-nowrap")}>
         <TabsList
           variant="line"
-          className={TAB_LIST_CLASS}
+          className={cn(TAB_LIST_CLASS, actions && "min-w-0 sm:w-auto")}
           aria-label={ariaLabel}
         >
           {items.map((item) => (
