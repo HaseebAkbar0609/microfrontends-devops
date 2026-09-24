@@ -2699,6 +2699,7 @@ export const svOffer: OfferTranslation = {
 	widgetSourceUnavailableTitle: "Data är inte tillgängliga ännu",
 	widgetSourceUnavailableDescription: "Den här modulen har ännu ingen ansluten datakälla.",
 	widgetSourceLoadError: "Det gick inte att läsa in widgetarnas datakällor.",
+	widgetDataLoadError: "Det gick inte att läsa in widgetens data. Försök igen.",
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: "Meny",
 	widgetRailDiscard: "Avbryt",

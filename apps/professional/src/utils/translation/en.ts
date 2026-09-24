@@ -2814,6 +2814,7 @@ export const enOffer: OfferTranslation = {
 	widgetSourceUnavailableTitle: "Data not available yet",
 	widgetSourceUnavailableDescription: "This module does not have a connected data source yet.",
 	widgetSourceLoadError: "Widget data sources could not be loaded.",
+	widgetDataLoadError: "Widget data could not be loaded. Please try again.",
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: "Menu",
 	widgetRailDiscard: "Discard",
