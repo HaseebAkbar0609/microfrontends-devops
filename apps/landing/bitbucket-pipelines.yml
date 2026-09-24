@@ -8,7 +8,7 @@ pipelines:
               variables:
                 SSH_USER: $DEPLOY_USER
                 SERVER: $PROD_DEPLOY_HOST
-                COMMAND: $PROD_DEPLOY_SCRIPT_PATH
+                COMMAND: "NEXT_PUBLIC_GA_MEASUREMENT_ID=$LANDING_GA_MEASUREMENT_ID_PROD $PROD_DEPLOY_SCRIPT_PATH"
                 PORT: '22'
                 SSH_KEY: $SSH_PRIVATE_KEY
                 DEBUG: 'true'
@@ -33,7 +33,7 @@ pipelines:
               variables:
                 SSH_USER: $DEPLOY_USER
                 SERVER: $DEV_DEPLOY_HOST
-                COMMAND: $DEV_DEPLOY_SCRIPT_PATH
+                COMMAND: "NEXT_PUBLIC_GA_MEASUREMENT_ID=$LANDING_GA_MEASUREMENT_ID_DEV $DEV_DEPLOY_SCRIPT_PATH"
                 PORT: '22'
                 SSH_KEY: $SSH_PRIVATE_KEY
                 DEBUG: 'true'

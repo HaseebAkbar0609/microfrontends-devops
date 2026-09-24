@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { SegmentedToggle } from "@/components/ui/SegmentedToggle";
 import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
@@ -38,29 +39,13 @@ export function ForecastAvailableHoursContent({ weeks, months }: ForecastAvailab
 
 	return (
 		<ForecastWidgetBody className="gap-3">
-			<div
-				role="group"
-				aria-label={t(localizationConstants.forecastPeriodToggleLabel)}
-				className="inline-flex self-start rounded-sm bg-white p-0.5"
-			>
-				{FORECAST_PERIODS.map((option) => {
-					const active = period === option.id;
-					return (
-						<button
-							key={option.id}
-							type="button"
-							aria-pressed={active}
-							onClick={() => setPeriod(option.id)}
-							className={cn(
-								"cursor-pointer rounded-sm px-3 py-1 text-xs font-medium transition-colors focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none",
-								active ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100",
-							)}
-						>
-							{t(option.labelKey)}
-						</button>
-					);
-				})}
-			</div>
+			<SegmentedToggle
+				options={FORECAST_PERIODS}
+				value={period}
+				onChange={setPeriod}
+				ariaLabel={t(localizationConstants.forecastPeriodToggleLabel)}
+				className="self-start"
+			/>
 
 			<ul className="space-y-1.5">
 				{rows.map(({ id, label, hours }) => (

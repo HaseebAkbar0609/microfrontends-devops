@@ -7,19 +7,14 @@ import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { forecastBreadcrumbs } from "../../../constants/economyNav.config";
 import { ForecastListPanel } from "./ForecastListPanel";
+import { ForecastResultPanel } from "./result/ForecastResultPanel";
 
-/* Resultat prognos has no frame yet, so it stays in the row, disabled, and says why. */
 const OVERVIEW_TABS: SectionTabItem[] = [
 	{ id: "list", labelKey: localizationConstants.forecastListTab },
-	{
-		id: "result",
-		labelKey: localizationConstants.forecastResultTab,
-		disabled: true,
-		disabledReasonKey: localizationConstants.forecastResultUnavailable,
-	},
+	{ id: "result", labelKey: localizationConstants.forecastResultTab },
 ];
 
-/** Prognos › Prognos Översikt: Prognoslista, and Resultat prognos once it is drawn. */
+/** Prognos › Prognos Översikt: the forecasts themselves, and what they result in. */
 export function ForecastOverviewPage() {
 	const t = useTranslate();
 
@@ -34,6 +29,9 @@ export function ForecastOverviewPage() {
 				<SectionTabs items={OVERVIEW_TABS} paramName="tab" ariaLabel={t(localizationConstants.forecastOverviewTabsLabel)}>
 					<TabsContent value="list" className="pt-5">
 						<ForecastListPanel />
+					</TabsContent>
+					<TabsContent value="result" className="pt-5">
+						<ForecastResultPanel />
 					</TabsContent>
 				</SectionTabs>
 			</div>
