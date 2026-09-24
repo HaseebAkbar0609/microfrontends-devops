@@ -38,7 +38,7 @@ export const ECONOMY_SECTIONS = [
 	{ id: "suppliers", labelKey: localizationConstants.supplierRegister, href: ECONOMY_SUPPLIERS_BASE_URL, implemented: true },
 	{ id: "articles", labelKey: localizationConstants.registerArtiklar, href: ECONOMY_ARTICLES_BASE_URL, implemented: true },
 	{ id: "price-lists", labelKey: localizationConstants.priceList, href: ECONOMY_PRICE_LISTS_BASE_URL, implemented: true },
-	{ id: "account-plan", labelKey: localizationConstants.accountPlan, href: ECONOMY_ACCOUNT_PLAN_BASE_URL, implemented: false },
+	{ id: "account-plan", labelKey: localizationConstants.accountPlan, href: ECONOMY_ACCOUNT_PLAN_BASE_URL, implemented: true },
 	{ id: "cost-centers", labelKey: localizationConstants.costCentre, href: ECONOMY_COST_CENTERS_BASE_URL, implemented: true },
 	{ id: "wage-types", labelKey: localizationConstants.wageTypes, href: ECONOMY_WAGE_TYPES_BASE_URL, implemented: false },
 ] as const;
