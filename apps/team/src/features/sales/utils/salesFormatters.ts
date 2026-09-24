@@ -20,9 +20,24 @@ const dateFormatter = new Intl.DateTimeFormat(SALES_LOCALE, {
 
 export const EMPTY_VALUE_PLACEHOLDER = "—";
 
+const dateTimeFormatter = new Intl.DateTimeFormat(SALES_LOCALE, {
+	dateStyle: "short",
+	timeStyle: "short",
+});
+
 /** Formats an amount as whole Swedish kronor. */
 export function formatCurrency(amount: number): string {
 	return currencyFormatter.format(amount);
+}
+
+const percentFormatter = new Intl.NumberFormat(SALES_LOCALE, {
+	style: "percent",
+	maximumFractionDigits: 0,
+});
+
+/** Formats a 0-1 ratio as a whole percentage. */
+export function formatPercent(ratio: number): string {
+	return percentFormatter.format(ratio);
 }
 
 /** Formats an ISO string as a short date, or a dash when absent. */
@@ -31,6 +46,14 @@ export function formatDate(iso: string): string {
 	const parsed = new Date(iso);
 	if (Number.isNaN(parsed.getTime())) return EMPTY_VALUE_PLACEHOLDER;
 	return dateFormatter.format(parsed);
+}
+
+/** Formats an ISO string as a short date and time, or a dash when absent. */
+export function formatDateTime(iso: string | undefined): string {
+	if (!iso) return EMPTY_VALUE_PLACEHOLDER;
+	const parsed = new Date(iso);
+	if (Number.isNaN(parsed.getTime())) return EMPTY_VALUE_PLACEHOLDER;
+	return dateTimeFormatter.format(parsed);
 }
 
 /**

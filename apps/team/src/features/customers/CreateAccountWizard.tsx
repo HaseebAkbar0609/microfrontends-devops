@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -8,56 +8,44 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { createProfessionalAPIAction } from "@/api-actions";
+import {
+  createProfessionalAPIAction,
+  getCitiesAPIAction,
+  getProfessionalCategoriesAPIAction,
+} from "@/api-actions";
+import type { SelectOption } from "@/api-actions/customers/professionals/options";
 
 type Step = 1 | 2 | 3 | 4;
-
-interface LicenseEntry {
-  name: string;
-  quantity: number;
-  amountPerMonth: number;
-}
 
 interface FormData {
   companyName: string;
   orgNumber: string;
+  categoryId: string;
   categoryName: string;
+  cityId: string;
   cityName: string;
   contactName: string;
   email: string;
   phone: string;
-  plan: string;
-  planAmount: number;
-  licenses: LicenseEntry[];
-  testPeriodStart: string;
-  testPeriodEnd: string;
+  /** Account access is created now; billing is configured separately. */
+  accountAccess: "demo" | "trial";
+  trialDurationDays: number;
 }
 
 const INITIAL_FORM: FormData = {
   companyName: "",
   orgNumber: "",
+  categoryId: "",
   categoryName: "",
+  cityId: "",
   cityName: "",
   contactName: "",
   email: "",
   phone: "",
-  plan: "startTest",
-  planAmount: 2995,
-  licenses: [
-    { name: "Standard", quantity: 4, amountPerMonth: 995 },
-    { name: "PRO", quantity: 4, amountPerMonth: 995 },
-  ],
-  testPeriodStart: "2026-06-01",
-  testPeriodEnd: "2026-06-01",
+  accountAccess: "demo",
+  trialDurationDays: 30,
 };
 
 const step1Schema = z.object({
@@ -66,8 +54,8 @@ const step1Schema = z.object({
     .string()
     .min(1, localizationConstants.validationRegisterOrganisationNumberRequired as string)
     .regex(/^\d{6}-\d{4}$/, localizationConstants.validationOrgNumberInvalid as string),
-  categoryName: z.string().min(1, localizationConstants.validationRegisterCategoryRequired as string),
-  cityName: z.string().min(1, localizationConstants.validationRegisterCityRequired as string),
+  categoryId: z.string().uuid(localizationConstants.validationRegisterCategoryRequired as string),
+  cityId: z.string().uuid(localizationConstants.validationRegisterCityRequired as string),
 });
 
 const step2Schema = z.object({
@@ -79,9 +67,20 @@ const step2Schema = z.object({
   phone: z.string().min(1, localizationConstants.validationRegisterPhoneRequired as string),
 });
 
-const step3Schema = z.object({
-  plan: z.string().min(1, localizationConstants.validationPlanRequired as string),
-});
+const step3Schema = z
+  .object({
+    accountAccess: z.enum(["demo", "trial"]),
+    trialDurationDays: z.number(),
+  })
+  .refine(
+    (val) =>
+      val.accountAccess !== "trial" ||
+      (val.trialDurationDays >= 1 && val.trialDurationDays <= 183),
+    {
+      message: localizationConstants.validationTrialDurationInvalid as string,
+      path: ["trialDurationDays"],
+    },
+  );
 
 function formatZodErrors(error: z.ZodError): Record<string, string> {
   const errors: Record<string, string> = {};
@@ -103,9 +102,6 @@ const labelClass =
 const stepTitleClass =
   "text-[18px] font-medium text-slate-900 leading-[28px] tracking-[-0.44px]";
 
-const dateDisplayClass =
-  "mt-1 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal";
-
 function ProgressBar({ step }: { step: Step }) {
   return (
     <div className="flex items-center gap-2 bg-white px-8 py-3">
@@ -116,6 +112,103 @@ function ProgressBar({ step }: { step: Step }) {
           style={{ backgroundColor: s <= step ? "#111721" : "#E2E8F0" }}
         />
       ))}
+    </div>
+  );
+}
+
+function ReferenceField({
+  label,
+  placeholder,
+  value,
+  selectedId,
+  error,
+  fetchOptions,
+  onChange,
+  onSelect,
+}: {
+  label: string;
+  placeholder: string;
+  value: string;
+  selectedId: string;
+  error?: string;
+  fetchOptions: (search: string) => Promise<SelectOption[]>;
+  onChange: (value: string) => void;
+  onSelect: (option: SelectOption) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState<SelectOption[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!open || selectedId) return;
+    let active = true;
+    const timer = setTimeout(async () => {
+      setLoading(true);
+      const results = await fetchOptions(value.trim());
+      if (active) {
+        setOptions(results);
+        setLoading(false);
+      }
+    }, 250);
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [fetchOptions, open, selectedId, value]);
+
+  return (
+    <div
+      className="relative flex flex-col gap-1.5"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setOpen(false);
+      }}
+    >
+      <Label className={labelClass}>{label} *</Label>
+      <Input
+        className={inputClass}
+        role="combobox"
+        aria-expanded={open}
+        aria-autocomplete="list"
+        aria-label={label}
+        placeholder={placeholder}
+        value={value}
+        onFocus={() => setOpen(true)}
+        onChange={(event) => {
+          onChange(event.target.value);
+          setOpen(true);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setOpen(false);
+        }}
+      />
+      {open && !selectedId && (
+        <div className="absolute left-0 right-0 top-full z-50 max-h-44 overflow-y-auto rounded-md border border-slate-200 bg-white shadow-lg">
+          {loading ? (
+            <div className="px-3 py-2 text-sm text-slate-500">...</div>
+          ) : options.length ? (
+            options.map((option) => (
+              <button
+                key={option.id}
+                type="button"
+                className="block w-full px-3 py-2 text-left text-sm text-slate-900 hover:bg-slate-100 focus:bg-slate-100"
+                onClick={() => {
+                  onSelect(option);
+                  setOpen(false);
+                }}
+              >
+                {option.name}
+              </button>
+            ))
+          ) : (
+            <div className="px-3 py-2 text-sm text-slate-500">{placeholder}</div>
+          )}
+        </div>
+      )}
+      {error && (
+        <span className="text-xs font-medium text-red-500">
+          <Translate text={error} />
+        </span>
+      )}
     </div>
   );
 }
@@ -167,39 +260,27 @@ function Step1({
         )}
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <Label className={labelClass}>
-          <Translate text={localizationConstants.categoryLabel} /> *
-        </Label>
-        <Input
-          className={inputClass}
-          placeholder={t(localizationConstants.categoryPlaceholder)}
-          value={data.categoryName}
-          onChange={(e) => onChange({ categoryName: e.target.value })}
-        />
-        {errors.categoryName && (
-          <span className="text-xs font-medium text-red-500">
-            <Translate text={errors.categoryName} />
-          </span>
-        )}
-      </div>
+      <ReferenceField
+        label={t(localizationConstants.categoryLabel)}
+        placeholder={t(localizationConstants.categoryPlaceholder)}
+        value={data.categoryName}
+        selectedId={data.categoryId}
+        error={errors.categoryId}
+        fetchOptions={getProfessionalCategoriesAPIAction}
+        onChange={(categoryName) => onChange({ categoryName, categoryId: "" })}
+        onSelect={(option) => onChange({ categoryName: option.name, categoryId: option.id })}
+      />
 
-      <div className="flex flex-col gap-1.5">
-        <Label className={labelClass}>
-          <Translate text={localizationConstants.cityLabel} /> *
-        </Label>
-        <Input
-          className={inputClass}
-          placeholder={t(localizationConstants.cityPlaceholder)}
-          value={data.cityName}
-          onChange={(e) => onChange({ cityName: e.target.value })}
-        />
-        {errors.cityName && (
-          <span className="text-xs font-medium text-red-500">
-            <Translate text={errors.cityName} />
-          </span>
-        )}
-      </div>
+      <ReferenceField
+        label={t(localizationConstants.cityLabel)}
+        placeholder={t(localizationConstants.cityPlaceholder)}
+        value={data.cityName}
+        selectedId={data.cityId}
+        error={errors.cityId}
+        fetchOptions={getCitiesAPIAction}
+        onChange={(cityName) => onChange({ cityName, cityId: "" })}
+        onSelect={(option) => onChange({ cityName: option.name, cityId: option.id })}
+      />
     </div>
   );
 }
@@ -282,163 +363,65 @@ function Step3({
   errors: Record<string, string>;
 }) {
   const t = useTranslate();
-  const startRef = useRef<HTMLInputElement>(null);
-  const endRef = useRef<HTMLInputElement>(null);
-
-  const PLAN_OPTIONS = [
-    { value: "startTest", label: t(localizationConstants.startTestPlanLabel) },
-    { value: "start", label: "Start" },
-    { value: "standard", label: "Standard" },
-    { value: "premium", label: "Premium" },
-  ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-      {/* Left Column: Form Controls */}
-      <div className="md:col-span-7 flex flex-col gap-5">
-        {/* Välj plan */}
-        <div className="flex flex-col gap-1.5">
-          <Label className={labelClass}>
-            <Translate text={localizationConstants.choosePlanSectionTitle} />
-          </Label>
-          <Select
-            value={data.plan}
-            onValueChange={(val) => onChange({ plan: val })}
-          >
-            <SelectTrigger className="h-[42px] w-full rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal focus:border-slate-400 focus:ring-0">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="z-50 bg-white">
-              {PLAN_OPTIONS.map((p) => (
-                <SelectItem key={p.value} value={p.value}>
-                  {p.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {errors.plan && (
-            <span className="text-xs font-medium text-red-500">
-              <Translate text={errors.plan} />
-            </span>
-          )}
-        </div>
-
-        {/* License Rows */}
-        {data.licenses.map((lic) => (
-          <div key={lic.name} className="flex flex-col gap-1.5">
-            <Label className={labelClass}>
-              <Translate text={localizationConstants.licensesLabel} />
-            </Label>
-            <div className="flex items-center gap-2">
-              <Input
-                readOnly
-                className="h-[42px] flex-1 rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal"
-                value={lic.name}
-              />
-              <div className="h-[42px] w-[42px] shrink-0 rounded-[8px] bg-[#D9D9D9] flex items-center justify-center text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal">
-                {lic.quantity}
-              </div>
-            </div>
-          </div>
-        ))}
-
-        {/* Test Period */}
+    <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-2 mt-1">
           <Label className={labelClass}>
-            <Translate text={localizationConstants.testPeriodLabel} />
+            <Translate text={localizationConstants.accountAccessLabel} />
           </Label>
-          <div className="flex flex-col gap-3">
-            {/* Start Date */}
-            <div>
-              <input
-                type="date"
-                ref={startRef}
-                className="absolute pointer-events-none h-0 w-0 opacity-0"
-                value={data.testPeriodStart}
-                onChange={(e) => onChange({ testPeriodStart: e.target.value })}
-              />
+          <div className="flex gap-2" role="radiogroup">
+            {(["demo", "trial"] as const).map((option) => (
               <button
+                key={option}
                 type="button"
-                onClick={() =>
-                  (startRef.current as HTMLInputElement & { showPicker?: () => void })?.showPicker?.()
-                }
-                className="flex h-[38px] w-[130px] cursor-pointer items-center justify-between rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal"
+                role="radio"
+                aria-checked={data.accountAccess === option}
+                onClick={() => onChange({ accountAccess: option })}
+                className={`h-[42px] flex-1 rounded-[10px] border px-3 text-[14px] font-medium leading-[20px] tracking-normal transition-colors ${
+                  data.accountAccess === option
+                    ? "border-slate-900 bg-slate-900 text-white"
+                    : "border-[#CAD5E2] bg-white text-[#0A0A0A] hover:border-slate-400"
+                }`}
               >
-                <span>{t(localizationConstants.startLabel)}</span>
+                {option === "demo"
+                  ? t(localizationConstants.demoAccessOptionLabel)
+                  : t(localizationConstants.trialAccessOptionLabel)}
               </button>
-              <div className={dateDisplayClass}>
-                {data.testPeriodStart}
-              </div>
-            </div>
-
-            {/* End Date */}
-            <div>
-              <input
-                type="date"
-                ref={endRef}
-                className="absolute pointer-events-none h-0 w-0 opacity-0"
-                value={data.testPeriodEnd}
-                onChange={(e) => onChange({ testPeriodEnd: e.target.value })}
-              />
-              <button
-                type="button"
-                onClick={() =>
-                  (endRef.current as HTMLInputElement & { showPicker?: () => void })?.showPicker?.()
-                }
-                className="flex h-[38px] w-[130px] cursor-pointer items-center justify-between rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal"
-              >
-                <span>{t(localizationConstants.endLabel)}</span>
-              </button>
-              <div className={dateDisplayClass}>
-                {data.testPeriodEnd}
-              </div>
-            </div>
+            ))}
           </div>
-        </div>
-      </div>
+          <span className="text-xs font-normal text-slate-500">
+            {data.accountAccess === "demo"
+              ? t(localizationConstants.demoAccessHelp)
+              : t(localizationConstants.trialAccessHelp)}
+          </span>
 
-      {/* Right Column: Pricing Summary */}
-      <div className="md:col-span-5 flex flex-col gap-5 pt-6 sm:pt-7">
-        {/* Plan Amount */}
-        <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-          <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-            <Translate text={localizationConstants.amountLabel} />:
-          </span>
-          <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-            {data.planAmount} {t(localizationConstants.sekPerMonthLabel)}
-          </span>
+          {data.accountAccess === "trial" && (
+            <div className="flex flex-col gap-1.5 mt-1">
+              <Label className={labelClass}>
+                <Translate text={localizationConstants.trialDurationLabel} />
+              </Label>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  min={1}
+                  max={183}
+                  className="h-[42px] w-[100px] rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal focus-visible:ring-0 focus-visible:border-slate-400"
+                  value={data.trialDurationDays}
+                  onChange={(e) => onChange({ trialDurationDays: Number(e.target.value) })}
+                />
+                <span className="text-[14px] font-normal text-slate-500">
+                  {t(localizationConstants.trialDurationDaysSuffix)}
+                </span>
+              </div>
+              {errors.trialDurationDays && (
+                <span className="text-xs font-medium text-red-500">
+                  <Translate text={errors.trialDurationDays} />
+                </span>
+              )}
+            </div>
+          )}
         </div>
-
-        {/* License 1 Amount */}
-        <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-          <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-            <Translate text={localizationConstants.amountLabel} />:
-          </span>
-          <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-            995 {t(localizationConstants.sekPerMonthLabel)}
-          </span>
-        </div>
-
-        {/* License 2 Amount */}
-        <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-          <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-            <Translate text={localizationConstants.amountLabel} />:
-          </span>
-          <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-            995 {t(localizationConstants.sekPerMonthLabel)}
-          </span>
-        </div>
-
-        {/* Total Amount */}
-        <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-          <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-            <Translate text={localizationConstants.totalLabel} />
-          </span>
-          <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-            12,155 {t(localizationConstants.sekPerMonthLabel)}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
@@ -456,15 +439,10 @@ function ReviewRow({ labelKey, value }: { labelKey: string; value: string }) {
 
 function Step4({ data }: { data: FormData }) {
   const t = useTranslate();
-  const startRef = useRef<HTMLInputElement>(null);
-  const endRef = useRef<HTMLInputElement>(null);
-
-  const PLAN_OPTIONS = [
-    { value: "startTest", label: t(localizationConstants.startTestPlanLabel) },
-    { value: "start", label: "Start" },
-    { value: "standard", label: "Standard" },
-    { value: "premium", label: "Premium" },
-  ];
+  const accessLabel =
+    data.accountAccess === "demo"
+      ? `${t(localizationConstants.demoAccessOptionLabel)} (30 ${t(localizationConstants.trialDurationDaysSuffix)})`
+      : `${t(localizationConstants.trialAccessOptionLabel)} (${data.trialDurationDays} ${t(localizationConstants.trialDurationDaysSuffix)})`;
 
   return (
     <div className="flex flex-col gap-5">
@@ -476,129 +454,7 @@ function Step4({ data }: { data: FormData }) {
         <ReviewRow labelKey={localizationConstants.nameLabel} value={data.contactName} />
         <ReviewRow labelKey={localizationConstants.emailLabel} value={data.email} />
         <ReviewRow labelKey={localizationConstants.phoneLabel} value={data.phone} />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-        <div className="md:col-span-7 flex flex-col gap-5">
-          <div className="flex flex-col gap-1.5">
-            <Label className={labelClass}>
-              <Translate text={localizationConstants.choosePlanSectionTitle} />
-            </Label>
-            <Select value={data.plan} disabled>
-              <SelectTrigger className="h-[42px] w-full rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal opacity-80">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="z-50 bg-white">
-                {PLAN_OPTIONS.map((p) => (
-                  <SelectItem key={p.value} value={p.value}>
-                    {p.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {data.licenses.map((lic) => (
-            <div key={lic.name} className="flex flex-col gap-1.5">
-              <Label className={labelClass}>
-                <Translate text={localizationConstants.licensesLabel} />
-              </Label>
-              <div className="flex items-center gap-2">
-                <Input
-                  readOnly
-                  className="h-[42px] flex-1 rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal"
-                  value={lic.name}
-                />
-                <div className="h-[42px] w-[42px] shrink-0 rounded-[8px] bg-[#D9D9D9] flex items-center justify-center text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal">
-                  {lic.quantity}
-                </div>
-              </div>
-            </div>
-          ))}
-
-          <div className="flex flex-col gap-2 mt-1">
-            <Label className={labelClass}>
-              <Translate text={localizationConstants.testPeriodLabel} />
-            </Label>
-            <div className="flex flex-col gap-3">
-              <div>
-                <input
-                  type="date"
-                  ref={startRef}
-                  readOnly
-                  className="absolute pointer-events-none h-0 w-0 opacity-0"
-                  value={data.testPeriodStart}
-                />
-                <button
-                  type="button"
-                  className="flex h-[38px] w-[130px] items-center justify-between rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal"
-                >
-                  <span>{t(localizationConstants.startLabel)}</span>
-                </button>
-                <div className={dateDisplayClass}>
-                  {data.testPeriodStart}
-                </div>
-              </div>
-
-              <div>
-                <input
-                  type="date"
-                  ref={endRef}
-                  readOnly
-                  className="absolute pointer-events-none h-0 w-0 opacity-0"
-                  value={data.testPeriodEnd}
-                />
-                <button
-                  type="button"
-                  className="flex h-[38px] w-[130px] items-center justify-between rounded-[10px] border border-[#CAD5E2] bg-white px-3 text-[14px] font-normal text-[#0A0A0A] leading-[20px] tracking-normal"
-                >
-                  <span>{t(localizationConstants.endLabel)}</span>
-                </button>
-                <div className={dateDisplayClass}>
-                  {data.testPeriodEnd}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="md:col-span-5 flex flex-col gap-5 pt-6 sm:pt-7">
-          <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-            <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-              <Translate text={localizationConstants.amountLabel} />:
-            </span>
-            <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-              {data.planAmount} {t(localizationConstants.sekPerMonthLabel)}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-            <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-              <Translate text={localizationConstants.amountLabel} />:
-            </span>
-            <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-              995 {t(localizationConstants.sekPerMonthLabel)}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-            <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-              <Translate text={localizationConstants.amountLabel} />:
-            </span>
-            <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-              995 {t(localizationConstants.sekPerMonthLabel)}
-            </span>
-          </div>
-
-          <div className="flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-            <span className="text-[14px] font-normal text-slate-500 leading-[20px] tracking-[-0.15px]">
-              <Translate text={localizationConstants.totalLabel} />
-            </span>
-            <span className="text-[14px] font-medium text-slate-900 leading-[20px] tracking-[-0.15px]">
-              12,155 {t(localizationConstants.sekPerMonthLabel)}
-            </span>
-          </div>
-        </div>
+        <ReviewRow labelKey={localizationConstants.accountAccessLabel} value={accessLabel} />
       </div>
 
       <div className="rounded-[10px] border border-[#BEDBFF] bg-[#EFF6FF] p-3 text-[14px] font-normal text-[#111721] leading-[20px] tracking-[-0.15px] mt-2">
@@ -675,11 +531,15 @@ export function CreateAccountWizard({ open, onOpenChange, onSuccess }: Props) {
         await createProfessionalAPIAction({
           company_name: formData.companyName,
           organization_number: formData.orgNumber,
-          company_category: formData.categoryName,
-          city: formData.cityName,
+          company_category: formData.categoryId,
+          city: formData.cityId,
           contact_name: formData.contactName,
           email: formData.email,
           phone: formData.phone,
+          // Omit for the default 30-day Demo; set only for a Sales-chosen
+          // Trial — the backend validates the 1 day–6 month range itself.
+          trial_duration_days:
+            formData.accountAccess === "trial" ? formData.trialDurationDays : undefined,
         });
         onSuccess?.();
         onOpenChange(false);
@@ -706,7 +566,7 @@ export function CreateAccountWizard({ open, onOpenChange, onSuccess }: Props) {
       : step === 2
       ? localizationConstants.contactInfoSectionTitle
       : step === 3
-      ? localizationConstants.choosePlanSectionTitle
+      ? localizationConstants.accountAccessLabel
       : localizationConstants.reviewSectionTitle;
 
   return (
@@ -726,11 +586,9 @@ export function CreateAccountWizard({ open, onOpenChange, onSuccess }: Props) {
         </div>
 
         <div className="flex-1 min-h-0 overflow-y-auto bg-white px-5 sm:px-8 py-4 sm:py-5 flex flex-col gap-5">
-          {step !== 3 && (
-            <h3 className={stepTitleClass}>
-              <Translate text={stepTitle} />
-            </h3>
-          )}
+          <h3 className={stepTitleClass}>
+            <Translate text={stepTitle} />
+          </h3>
 
           {step === 1 && (
             <Step1

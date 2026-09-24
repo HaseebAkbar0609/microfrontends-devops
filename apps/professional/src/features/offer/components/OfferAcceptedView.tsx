@@ -37,7 +37,6 @@ import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { OFFER_ROUTES } from "../constants/offerRoutes";
 import { OfferAcceptedItem } from "../types/offer";
-import { DUMMY_ACCEPTED_ITEMS } from "../constants/offerAccepted.mock";
 import { OFFER_ACCEPTED_BREADCRUMBS } from "../constants/offerAccepted";
 import { authStorage } from "@/lib/authStorage";
 import { ProfessionalRow } from "@/types/company";
@@ -142,9 +141,10 @@ interface Props {
   initialItems?: OfferAcceptedItem[];
   items?: OfferAcceptedItem[];
   offerId?: string;
+  onSearchChange?: (value: string) => void;
 }
 
-export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _offerId }: Props) {
+export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _offerId, onSearchChange }: Props) {
   const t = useTranslate();
   const router = useRouter();
 
@@ -153,7 +153,7 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
   const { sortField, sortDir, toggleSort } = useTableSort<SortField>();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [items, setItems] = useState<OfferAcceptedItem[]>(itemsProp ?? initialItems ?? DUMMY_ACCEPTED_ITEMS);
+  const [items, setItems] = useState<OfferAcceptedItem[]>(itemsProp ?? initialItems ?? []);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -175,22 +175,29 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
           companyId: companyData?.id,
         });
 
-        if (!cancelled && result.items.length > 0) {
+        if (!cancelled) {
           const mapped: OfferAcceptedItem[] = result.items.map((item) => ({
             id: item.id,
+            projectId: item.projectId,
+            mappingId: item.mappingId,
+            quoteId: item.quoteId,
             offertNr: item.idNumber || "N/A",
             job: item.jobName,
-            customerName: item.jobName,
+            customerName: item.contactName || "—",
             category: item.category,
             municipality: item.municipality,
-            acceptedPrice: 0,
+            acceptedPrice: item.totalPrice || 0,
             type: item.type,
-            contactPerson: { name: "", phone: "", email: "" },
+            contactPerson: {
+              name: item.contactName || "",
+              phone: item.contactPhone || "",
+              email: item.contactEmail || "",
+            },
           }));
           setItems(mapped);
         }
       } catch {
-        // keep dummy data
+        if (!cancelled) setItems([]);
       } finally {
         if (!cancelled) setIsLoading(false);
       }
@@ -200,6 +207,7 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
   }, [initialItems, itemsProp]);
 
   const debouncedSearch = useDebounce(search, 300);
+  useEffect(() => onSearchChange?.(debouncedSearch), [debouncedSearch, onSearchChange]);
   const uniqueTypes = useMemo(
     () => [...new Set(items.map((i) => i.type))],
     [items],
@@ -377,7 +385,7 @@ export function OfferAcceptedView({ initialItems, items: itemsProp, offerId: _of
                         createContractLabel={t(localizationConstants.offerAcceptedCreateContract)}
                         viewOfferLabel={t(localizationConstants.offerAcceptedViewOffer)}
                         onCreateContract={(id) => router.push(OFFER_ROUTES.createAgreement(id))}
-                        onViewOffer={() => router.push(OFFER_ROUTES.quoted())}
+                        onViewOffer={() => router.push(OFFER_ROUTES.requestDetail(row.projectId || row.id))}
                       />
                     ))}
 

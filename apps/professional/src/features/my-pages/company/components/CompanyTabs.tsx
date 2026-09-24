@@ -7,7 +7,7 @@ import {
 	COMPANY_TAB_IDS,
 	COMPANY_TABS,
 	CompanyTabId,
-} from "../constants/mockData";
+} from "../types";
 import CompanyInfoTab from "./CompanyInfoTab";
 import MessagesTab from "./MessagesTab";
 import NewsTab from "./NewsTab";

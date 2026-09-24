@@ -1,34 +1,6 @@
-import { WORK_DAYS, WorkDay } from "../constants/mockData";
-
-let workDays: WorkDay[] = WORK_DAYS.map((day) => ({
-	...day,
-	rows: day.rows.map((row) => ({ ...row })),
-}));
-
-export function listWorkDays(): WorkDay[] {
-	return [...workDays];
-}
-
-export function getWorkDay(id: string): WorkDay | undefined {
-	return workDays.find((day) => day.id === id);
-}
-
-export function createWorkDay(day: WorkDay): WorkDay[] {
-	workDays = [day, ...workDays];
-	return [...workDays];
-}
-
-export function updateWorkDay(
-	id: string,
-	changes: Partial<WorkDay>,
-): WorkDay[] {
-	workDays = workDays.map((day) =>
-		day.id === id ? { ...day, ...changes } : day,
-	);
-	return [...workDays];
-}
-
-export function removeWorkDay(id: string): WorkDay[] {
-	workDays = workDays.filter((day) => day.id !== id);
-	return [...workDays];
-}
+import { getRecord, listRecords, readMyPages, useMyPagesQuery } from "@/features/my-pages/shared/api";
+import { WorkDay } from "../constants/data";
+export const listWorkDays = () => listRecords<WorkDay>("time");
+export const getWorkDay = (id: string) => getRecord<WorkDay>(id);
+export type TimeReference = { id: string; code: string; name: string; order: string; ata: string[] };
+export const useTimeReferences = () => useMyPagesQuery(["time-references"], () => readMyPages<TimeReference[]>("time/references"));

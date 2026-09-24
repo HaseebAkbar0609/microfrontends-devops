@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { getQuoteTermMeta } from "../../constants/quoteModules";
+import { getSalesOrderHref, getSalesQuoteHref } from "../../constants/salesNav";
 import type { SalesCompany } from "../../types";
 import { formatCurrency, formatDate } from "../../utils/salesFormatters";
 import { SalesSectionCard } from "../SalesSectionCard";
@@ -13,6 +14,10 @@ type CompanyDocumentsCardProps = {
 	company: SalesCompany;
 };
 
+/**
+ * Quote and order confirmation for this company, with the links that reach
+ * them. The record tab row no longer carries that navigation.
+ */
 export function CompanyDocumentsCard({ company }: CompanyDocumentsCardProps) {
 	const { quote, order } = company;
 	if (!quote && !order) return null;
@@ -36,6 +41,16 @@ export function CompanyDocumentsCard({ company }: CompanyDocumentsCardProps) {
 						{": "}
 						{formatCurrency(quote.firstInvoice)}
 					</p>
+					<Button
+						asChild
+						variant="outline"
+						size="sm"
+						className="mt-2 w-full cursor-pointer"
+					>
+						<Link href={getSalesQuoteHref(company.id)}>
+							<Translate text={localizationConstants.salesEditQuoteButton} />
+						</Link>
+					</Button>
 				</div>
 			) : null}
 
@@ -52,9 +67,7 @@ export function CompanyDocumentsCard({ company }: CompanyDocumentsCardProps) {
 						size="sm"
 						className="mt-2 w-full cursor-pointer"
 					>
-						<Link
-							href={`/module/sales/companies/${company.id}/order-confirmation`}
-						>
+						<Link href={getSalesOrderHref(company.id)}>
 							<Translate text={localizationConstants.salesViewOrderButton} />
 						</Link>
 					</Button>

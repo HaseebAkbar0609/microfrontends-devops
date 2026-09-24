@@ -1,4 +1,5 @@
 import React from "react";
+import { Inbox } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { cn } from "@/lib/utils";
@@ -169,6 +170,18 @@ export const WidgetEmptyState = ({ message }: { message?: string }) => (
 	<p className="py-4 text-center text-sm text-slate-400">
 		<Translate text={message ?? localizationConstants.widgetNoData} />
 	</p>
+);
+
+export const WidgetSourceUnavailable = () => (
+	<div className="flex min-h-28 flex-1 flex-col items-center justify-center gap-1.5 px-3 py-5 text-center text-slate-500" role="status">
+		<Inbox size={18} aria-hidden="true" />
+		<p className="text-xs font-medium text-slate-700">
+			<Translate text={localizationConstants.widgetSourceUnavailableTitle} />
+		</p>
+		<p className="text-xs">
+			<Translate text={localizationConstants.widgetSourceUnavailableDescription} />
+		</p>
+	</div>
 );
 
 export const WidgetLoadingState = ({ rows = 3 }: { rows?: number }) => (

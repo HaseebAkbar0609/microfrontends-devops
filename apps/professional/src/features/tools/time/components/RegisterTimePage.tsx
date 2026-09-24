@@ -1,23 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, ChevronUp, CirclePlus, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
+import { today, saveRecord, useMyPagesQuery } from "@/features/my-pages/shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "@/features/my-pages/shared/feedback";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { TimeRow } from "../constants/mockData";
+import { TimeRow, WorkDay } from "../constants/data";
 import { TimeRowValues, timeRowSchema } from "../schemas/time.schema";
-import {
-	createWorkDay,
-	getWorkDay,
-	updateWorkDay,
-} from "../services/timeService";
+import { getWorkDay } from "../services/timeService";
 import AddedTimeTable from "./AddedTimeTable";
 import EditTimeRowDialog from "./EditTimeRowDialog";
 import TimeEntryFormFields from "./TimeEntryFormFields";
@@ -45,7 +42,7 @@ const valuesToRow = (values: TimeRowValues, id: string): TimeRow => ({
 	end: values.end,
 	type: values.type,
 	refNr: values.type === "overhead" ? "" : values.refNr,
-	projectName: values.title || `Projekt ${values.refNr}`,
+	projectName: "",
 	ata: values.ata,
 	ataNr: values.ata ? values.ataNr : "",
 	travelUnit: values.travelUnit,
@@ -60,34 +57,49 @@ const RegisterTimePage = () => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const editingDayId = searchParams.get("id");
-	const [existingDay] = useState(() =>
-		editingDayId ? getWorkDay(editingDayId) : undefined,
-	);
+	const queryResult = useMyPagesQuery(["time", editingDayId], () => getWorkDay(editingDayId!), !!editingDayId);
+	const existingDay = queryResult.data;
+	const action = useMyPagesAction();
+	const loaded = useRef<string | null>(null);
+	const baseline = useRef<WorkDay | undefined>(undefined);
 
 	const [rows, setRows] = useState<TimeRow[]>(existingDay?.rows ?? []);
 	const [editingRow, setEditingRow] = useState<TimeRow | null>(null);
 	const form = useForm<TimeRowValues>({
 		resolver: zodResolver(timeRowSchema),
-		defaultValues: emptyValues(existingDay?.date ?? mockDate(0)),
+		defaultValues: emptyValues(existingDay?.date ?? today()),
 	});
+	useEffect(() => {
+		if (existingDay && loaded.current !== existingDay.id) {
+			setRows(existingDay.rows);
+			form.reset(emptyValues(existingDay.date));
+			loaded.current = existingDay.id;
+			baseline.current = existingDay;
+		}
+	}, [existingDay, form]);
 
 	const handleAddRow = form.handleSubmit((values) => {
+		if (rows.some(row => row.start < values.end && row.end > values.start)) {
+			form.setError("start", { message: localizationConstants.timeOverlapError });
+			return;
+		}
 		setRows((current) => [
 			...current,
-			valuesToRow(values, `temp-${crypto.randomUUID()}`),
+			valuesToRow(values, crypto.randomUUID()),
 		]);
 		form.reset({ ...emptyValues(values.date) });
 		showToast("success", t(localizationConstants.timeRowAddedToast));
 	});
 
 	const handleEditRow = (values: TimeRowValues) => {
-		if (!editingRow) return;
+		if (!editingRow || rows.some(row => row.id !== editingRow.id && row.start < values.end && row.end > values.start)) return false;
 		setRows((current) =>
 			current.map((row) =>
 				row.id === editingRow.id ? valuesToRow(values, row.id) : row,
 			),
 		);
 		showToast("success", t(localizationConstants.timeRowSavedToast));
+		return true;
 	};
 
 	const handleDeleteRow = (row: TimeRow) => {
@@ -95,23 +107,12 @@ const RegisterTimePage = () => {
 		showToast("success", t(localizationConstants.timeRowDeletedToast));
 	};
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		if (rows.length === 0) return;
-		const date = form.getValues("date") || mockDate(0);
-		if (existingDay) {
-			updateWorkDay(existingDay.id, { date, rows });
-		} else {
-			createWorkDay({
-				// UI-state-only id; the backend generates real ids at integration
-				id: `temp-${crypto.randomUUID()}`,
-				date,
-				status: "pending",
-				rows,
-			});
-		}
-		showToast("success", t(localizationConstants.timeSavedToast));
-		router.push(LIST_ROUTE);
+		const date = form.getValues("date") || today();
+		if (await action.run(() => saveRecord("time", { date, rows, status: "pending" }, baseline.current), localizationConstants.timeSavedToast)) router.push(LIST_ROUTE);
 	};
+	if (editingDayId && (queryResult.isPending || queryResult.isError)) return <MyPagesQueryState query={queryResult} />;
 
 	return (
 		<div className="flex flex-col gap-5 p-6">
@@ -190,7 +191,7 @@ const RegisterTimePage = () => {
 				<Button
 					type="button"
 					onClick={handleSave}
-					disabled={rows.length === 0}
+					disabled={rows.length === 0 || action.pending || existingDay?.status === "approved"}
 					className="h-11 gap-2 rounded-md bg-slate-900 px-8 text-sm font-medium text-white hover:bg-slate-900/90"
 				>
 					<Save className="h-4 w-4" />

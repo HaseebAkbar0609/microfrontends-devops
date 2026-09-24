@@ -1,5 +1,4 @@
-import { OfferSeeProjectView } from "@/features/offer/components/OfferSeeProjectView";
-import { getArchivedProjectData } from "@/features/offer/utils/archivedProject";
+import { OfferProjectDetailClient } from "@/features/offer/components/OfferProjectDetailClient";
 
 export default async function OfferArchivedProjectWithOfferIdPage({
   params,
@@ -7,7 +6,5 @@ export default async function OfferArchivedProjectWithOfferIdPage({
   params: Promise<{ offerId: string; projectId: string }>;
 }) {
   const { offerId, projectId } = await params;
-  const projectData = getArchivedProjectData(projectId);
-
-  return <OfferSeeProjectView offerId={offerId} data={projectData} />;
+  return <OfferProjectDetailClient offerId={offerId} projectId={projectId} />;
 }

@@ -35,7 +35,7 @@ const CompanyLogo = ({ name, className, logoUrl }: CompanyLogoProps) => {
 				</div>
 			)}
 
-			<span className="text-base font-semibold text-slate-900 capitalize">
+			<span className="hidden text-base font-semibold capitalize text-slate-900 lg:inline">
 				{name}
 			</span>
 		</div>

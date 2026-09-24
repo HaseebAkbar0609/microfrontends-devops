@@ -2,7 +2,7 @@ import axiosInstance from "@/lib/axiosInstance";
 
 const PROFESSIONALS_ACCOUNTS_PATH = "/api/v1/teams/professionals/accounts";
 const DEFAULT_PAGE_SIZE = 10;
-const MOCK_ENABLE = true;
+const MOCK_ENABLE = false;
 
 export type ProfessionalStatus = "active" | "inactive" | "pending" | "archived";
 export type PendingProfessionalStatus = ProfessionalStatus;
@@ -45,8 +45,10 @@ interface ProfessionalCategoryInfo {
 	name: string;
 }
 
-interface ProfessionalAccountItem {
+export interface ProfessionalAccountItem {
 	company_id: string;
+	plan?: string | null;
+	license_pools?: Array<{ plan_key: string; purchased: number; allocated: number; available: number }>;
 	company_name?: string | null;
 	organization_number?: string | null;
 	category?: ProfessionalCategoryInfo | null;
@@ -68,7 +70,7 @@ interface ProfessionalsListApiResponse {
 	page_size: number;
 }
 
-function mapItemToRow(item: ProfessionalAccountItem): ProfessionalRow {
+export function mapItemToRow(item: ProfessionalAccountItem): ProfessionalRow {
 	return {
 		id: item.company_id,
 		contactUserId: item.contact_user_id ?? "",

@@ -8,6 +8,8 @@ export interface SaveProjectPayload {
 		client_no?: string;
 		category_ids?: string[];
 		project_address?: string;
+		project_contact_city?: string;
+		project_contact_postal_code?: string;
 		city?: string;
 		postal_code?: string;
 		directions?: string;

@@ -1,7 +1,8 @@
 import axiosInstance from "@/lib/axiosInstance";
+import type { AdminModuleCategory, AdminOption, AdminResponse, AdminUserDetail, AdminUsersParams, AdminUsersResponse, CreateAdminUserRequest, UpdateAdminUserRequest } from "../types/adminUsers.types";
 
-export const getAdminUsers = async (params: Record<string, unknown>) => {
-	const res = await axiosInstance.get("/api/v1/teams/admin/users", { params });
+export const getAdminUsers = async (params: AdminUsersParams) => {
+	const res = await axiosInstance.get<AdminUsersResponse>("/api/v1/teams/admin/users", { params });
 	return res.data;
 };
 
@@ -10,24 +11,29 @@ export const getAdminUsersSummary = async () => {
 	return res.data;
 };
 
-export const createAdminUser = async (data: unknown) => {
+export const createAdminUser = async (data: CreateAdminUserRequest) => {
 	const res = await axiosInstance.post("/api/v1/teams/admin/users", data);
 	return res.data;
 };
 
-export const updateAdminUser = async ({ userId, data }: { userId: string, data: unknown }) => {
+export const updateAdminUser = async ({ userId, data }: { userId: string, data: UpdateAdminUserRequest }) => {
 	const res = await axiosInstance.patch(`/api/v1/teams/admin/users/${userId}`, data);
 	return res.data;
 };
 
 export const getAdminRoleOptions = async () => {
-	const res = await axiosInstance.get("/api/v1/teams/admin/roles/options");
+	const res = await axiosInstance.get<AdminResponse<AdminOption[]>>("/api/v1/teams/admin/roles/options");
 	return res.data;
 };
 
 export const getAdminTypeOptions = async () => {
-	const res = await axiosInstance.get("/api/v1/teams/admin/positions/options");
+	const res = await axiosInstance.get<AdminResponse<AdminOption[]>>("/api/v1/teams/admin/positions/options");
 	return res.data;
+};
+
+export const getAdminAccessOptions = async () => {
+  const res = await axiosInstance.get<AdminResponse<AdminOption[]>>("/api/v1/teams/admin/types/options");
+  return res.data;
 };
 
 export const getAdminGroups = async (params: Record<string, unknown>) => {
@@ -51,7 +57,7 @@ export const getAdminGroupMembers = async ({ groupId, params }: { groupId: strin
 };
 
 export const getAdminModules = async () => {
-	const res = await axiosInstance.get(`/api/v1/teams/admin/modules`);
+	const res = await axiosInstance.get<AdminResponse<AdminModuleCategory[]>>(`/api/v1/teams/admin/modules`);
 	return res.data;
 };
 
@@ -61,7 +67,7 @@ export const getLicensesSummary = async () => {
 };
 
 export const getAdminUserDetail = async (userId: string) => {
-	const res = await axiosInstance.get(`/api/v1/teams/admin/users/${userId}`);
+	const res = await axiosInstance.get<AdminResponse<AdminUserDetail>>(`/api/v1/teams/admin/users/${userId}`);
 	return res.data;
 };
 

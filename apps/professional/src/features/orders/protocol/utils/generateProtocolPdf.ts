@@ -1,6 +1,6 @@
 import type { ProtocolItem } from "../types/protocol.types";
 import { PROTOCOL_CONSTANTS } from "../constants/protocol.constants";
-import { protocolsApi } from "../api/protocols.api";
+import { downloadProtocolAction, downloadAllProtocolsAction } from "@/api-actions/orders/protocols";
 
 const PAGE_WIDTH = 595;
 const PAGE_HEIGHT = 842;
@@ -406,9 +406,9 @@ export async function downloadProtocolPdf(
 ): Promise<boolean> {
 	try {
 		// 1. Try real backend download endpoint if available
-		const serverBlob = await protocolsApi.downloadProtocol(protocol.id, orderId);
-		if (serverBlob && serverBlob.size > 0) {
-			triggerBlobDownload(serverBlob, getProtocolFileName(protocol, orderId));
+		const result = await downloadProtocolAction(orderId, protocol.id);
+		if (result.success && result.data && result.data.size > 0) {
+			triggerBlobDownload(result.data, getProtocolFileName(protocol, orderId));
 			return true;
 		}
 
@@ -448,9 +448,9 @@ export async function downloadAllProtocolsPdf(
 
 	try {
 		// 1. Try real backend bulk download endpoint if available
-		const serverBlob = await protocolsApi.downloadAllProtocols(orderId);
-		if (serverBlob && serverBlob.size > 0) {
-			triggerBlobDownload(serverBlob, getAllProtocolsFileName(orderId));
+		const result = await downloadAllProtocolsAction(orderId);
+		if (result.success && result.data && result.data.size > 0) {
+			triggerBlobDownload(result.data, getAllProtocolsFileName(orderId));
 			return true;
 		}
 

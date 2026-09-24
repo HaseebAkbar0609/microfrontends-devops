@@ -22,7 +22,6 @@ import {
 	FileSignature,
 	Monitor,
 	FileStack,
-	Percent,
 } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 
@@ -55,7 +54,7 @@ export const APP_GROUPS: AppGroup[] = [
 			{
 				label: localizationConstants.calculation,
 				icon: Calculator,      // Calculator with + and =
-				href: "/module/business/calculation",
+				href: "/module/business/calculation/dashboard",
 			},
 		],
 	},
@@ -134,11 +133,6 @@ export const APP_GROUPS: AppGroup[] = [
 				label: localizationConstants.forecast,
 				icon: TrendingUp,      // Line graph with upward arrow
 				href: "/module/financial-management/forecast",
-			},
-			{
-				label: localizationConstants.rotRutNav,
-				icon: Percent,         // Percent icon for tax deductions
-				href: "/module/financial-management/rot-rut",
 			},
 			// Row 2: Personal, Juridik, Inkasso
 			{

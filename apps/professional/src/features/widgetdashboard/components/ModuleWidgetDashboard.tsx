@@ -23,7 +23,8 @@ import { DraggableGridCard } from "./DraggableGridCard";
 import { WidgetItem } from "./DraggableSidebarItem";
 import { SidebarWidgetList } from "./SidebarWidgetList";
 import { useWidgetToggle } from "../hooks/useWidgetToggle";
-import { PlacedWidgetEntry, WidgetProps } from "../types/dashboard";
+import { useWidgetSources } from "../hooks/useWidgetSources";
+import { PlacedWidgetEntry, WidgetCardVariant, WidgetProps } from "../types/dashboard";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
 
@@ -53,6 +54,9 @@ export interface ModuleWidgetDashboardProps {
 	className?: string;
 	storageKey?: string;
 	isRearranging?: boolean;
+	/** The cards' surface; `muted` is the grey card. Defaults to the white card. */
+	cardVariant?: WidgetCardVariant;
+	sourceLocation: string;
 }
 
 export function ModuleWidgetDashboard({
@@ -66,8 +70,11 @@ export function ModuleWidgetDashboard({
 	className,
 	storageKey,
 	isRearranging,
+	cardVariant = "default",
+	sourceLocation,
 }: ModuleWidgetDashboardProps) {
 	const t = useTranslate();
+	const sources = useWidgetSources(sourceLocation);
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [panelOpen, setPanelOpen] = useState(true);
 	const {
@@ -350,6 +357,7 @@ export function ModuleWidgetDashboard({
 									disabled={isRearranging !== undefined ? !isRearranging : false}
 									isSwapTarget={gridDragOverIndex === index}
 									isEmpty={entry.sidebarId === "emptyPage"}
+									variant={cardVariant}
 									isHighlighted={
 										highlightedWidgetUid === entry.uid
 									}
@@ -370,6 +378,17 @@ export function ModuleWidgetDashboard({
 										{...((entry.sidebarId ? widgetMap[entry.sidebarId] : undefined) ?? entry.widgetProps)}
 										isEmpty={
 											entry.sidebarId === "emptyPage"
+										}
+										sourceUnavailable={
+											entry.sidebarId !== "emptyPage" &&
+											!sources.liveWidgetIds.includes(entry.sidebarId ?? "")
+										}
+										isLoading={sources.loading && entry.sidebarId !== "emptyPage"}
+										sourceError={sources.error && entry.sidebarId !== "emptyPage"}
+										variant={
+											(entry.sidebarId
+												? widgetMap[entry.sidebarId]?.variant
+												: entry.widgetProps.variant) ?? cardVariant
 										}
 									/>
 								</DraggableGridCard>
@@ -458,17 +477,16 @@ export function ModuleWidgetDashboard({
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
-							Are you sure you want to replace this widget?
+							<Translate text={localizationConstants.replaceWidgetTitle} />
 						</AlertDialogTitle>
 						<AlertDialogDescription>
-							This action will remove the existing widget and
-							replace it with{" "}
+							<Translate text={localizationConstants.replaceWidgetDescription} />{" "}
 							<strong>
 								<Translate
 									text={pendingReplacement?.item.label ?? ""}
 								/>
 							</strong>
-							. This cannot be undone.
+							<Translate text={localizationConstants.replaceWidgetUndone} />
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -476,13 +494,13 @@ export function ModuleWidgetDashboard({
 							onClick={confirmReplacement}
 							className="bg-[#18181B] hover:bg-[#18181B]/90 cursor-pointer"
 						>
-							Save
+							<Translate text={localizationConstants.confirmSave} />
 						</AlertDialogAction>
 						<AlertDialogCancel
 							onClick={cancelDialog}
 							className="cursor-pointer border-none bg-[#1018280D] shadow-sm hover:bg-[#1018280D]"
 						>
-							Close
+							<Translate text={localizationConstants.confirmClose} />
 						</AlertDialogCancel>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -498,11 +516,10 @@ export function ModuleWidgetDashboard({
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>
-							Are you sure you want to remove this widget?
+							<Translate text={localizationConstants.removeWidgetTitle} />
 						</AlertDialogTitle>
 						<AlertDialogDescription>
-							This action will remove the widget from the grid and
-							replace it with an empty slot.
+							<Translate text={localizationConstants.removeWidgetDescription} />
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -510,13 +527,13 @@ export function ModuleWidgetDashboard({
 							onClick={confirmRemoval}
 							className="bg-[#18181B] hover:bg-[#18181B]/90 cursor-pointer"
 						>
-							Save
+							<Translate text={localizationConstants.confirmRemove} />
 						</AlertDialogAction>
 						<AlertDialogCancel
 							onClick={cancelDialog}
 							className="cursor-pointer border-none bg-[#1018280D] shadow-sm hover:bg-[#1018280D]"
 						>
-							Close
+							<Translate text={localizationConstants.confirmClose} />
 						</AlertDialogCancel>
 					</AlertDialogFooter>
 				</AlertDialogContent>

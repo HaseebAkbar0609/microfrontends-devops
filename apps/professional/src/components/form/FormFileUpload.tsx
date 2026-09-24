@@ -29,10 +29,13 @@ export interface FormFileUploadProps<
   label?: ReactNode;
   accept?: string;
   allowedTypes?: string[];
+  /** Rejects a picked file client-side instead of letting the upload round-trip and fail with a 413/400. */
+  maxSizeBytes?: number;
   buttonLabel?: ReactNode;
   placeholder?: ReactNode;
   helperText?: ReactNode;
   invalidTypeMessage?: ReactNode;
+  tooLargeMessage?: ReactNode;
   showPreview?: boolean;
   previewVariant?: "avatar" | "logo";
   previewLabel?: ReactNode;
@@ -49,6 +52,11 @@ export interface FormFileUploadProps<
   previewClassName?: string;
   previewContainerClassName?: string;
   helperClassName?: string;
+  /**
+   * Turns a schema's error into display text. zod messages in this app are
+   * translation keys, so without it the key itself would be shown.
+   */
+  translateError?: (message: string) => string;
 }
 
 export function FormFileUpload<
@@ -60,10 +68,12 @@ export function FormFileUpload<
   label,
   accept,
   allowedTypes,
+  maxSizeBytes,
   buttonLabel = localizationConstants.upload,
   placeholder = localizationConstants.noFileChosen,
   helperText,
   invalidTypeMessage = localizationConstants.unsupportedFileType,
+  tooLargeMessage = localizationConstants.fileTooLarge,
   showPreview = true,
   previewVariant = "avatar",
   previewLabel,
@@ -80,6 +90,7 @@ export function FormFileUpload<
   previewClassName,
   previewContainerClassName,
   helperClassName,
+  translateError,
 }: FormFileUploadProps<TFieldValues, TName>) {
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -111,6 +122,7 @@ export function FormFileUpload<
   const resolvedPlaceholder = resolveNode(placeholder);
   const resolvedHelperText = resolveNode(helperText);
   const resolvedInvalidTypeMessage = resolveNode(invalidTypeMessage);
+  const resolvedTooLargeMessage = resolveNode(tooLargeMessage);
   const resolvedPreviewLabel = resolveNode(previewLabel);
   const resolveText = (value?: ReactNode) => {
     if (value == null) {
@@ -219,6 +231,14 @@ export function FormFileUpload<
 
                   if (!isValidType) {
                     setLocalError(resolvedInvalidTypeMessage);
+                    if (inputRef.current) {
+                      inputRef.current.value = "";
+                    }
+                    return;
+                  }
+
+                  if (maxSizeBytes != null && file.size > maxSizeBytes) {
+                    setLocalError(resolvedTooLargeMessage);
                     if (inputRef.current) {
                       inputRef.current.value = "";
                     }
@@ -350,7 +370,7 @@ export function FormFileUpload<
             </p>
           )}
 
-          <FormMessage className={messageClassName} />
+          <FormMessage className={messageClassName} translate={translateError} />
         </FormItem>
       )}
     />

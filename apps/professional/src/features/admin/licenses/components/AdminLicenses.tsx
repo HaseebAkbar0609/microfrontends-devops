@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Search } from "lucide-react";
+import { ArrowLeft, ArrowRight, Loader2, RefreshCw, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,9 +19,9 @@ import {
 	LicenseCategoryId,
 	LicensePackage,
 	LicenseTabId,
-} from "../constants/mockData";
+} from "../constants/licenseCatalog.constants";
 import { useLicenseCart } from "../hooks/useLicenseCart";
-import { listLicensePackages } from "../services/licenseService";
+import { useLicenseCatalog } from "../hooks/useLicenseCatalog";
 import LicenseCartPanel from "./LicenseCartPanel";
 import LicensePackageCard from "./LicensePackageCard";
 
@@ -119,12 +119,13 @@ const AdminLicenses = () => {
 		});
 	};
 
+	const catalog = useLicenseCatalog();
 	const packages = useMemo(() => {
 		const term = search.trim().toLowerCase();
-		const all = listLicensePackages(activeTab);
+		const all = catalog.data?.[activeTab] ?? [];
 		if (!term) return all;
 		return all.filter((pkg) => pkg.name.toLowerCase().includes(term));
-	}, [activeTab, search]);
+	}, [catalog.data, activeTab, search]);
 
 	const handleAdd = (
 		pkg: LicensePackage,
@@ -214,36 +215,70 @@ const AdminLicenses = () => {
 							: "xl:col-span-8",
 					)}
 				>
-					{isSystemAddonTab
-						? visibleCategories.map((category) => (
-								<div
-									key={category.id}
-									className="flex flex-col gap-4"
-								>
-									<h3 className="text-base font-semibold text-slate-600">
-										<Translate text={category.label} />
-									</h3>
-									{packages
-										.filter(
-											(pkg) =>
-												pkg.categoryId === category.id,
-										)
-										.map((pkg) => (
-											<LicensePackageCard
-												key={pkg.id}
-												pkg={pkg}
-												onAdd={handleAdd}
-											/>
-										))}
-								</div>
-							))
-						: packages.map((pkg) => (
-								<LicensePackageCard
-									key={pkg.id}
-									pkg={pkg}
-									onAdd={handleAdd}
+					{catalog.isLoading ? (
+						<div
+							role="status"
+							className="flex flex-col items-center gap-3 rounded-md border border-slate-200 bg-white py-16 text-sm text-slate-500"
+						>
+							<Loader2 className="h-5 w-5 animate-spin" />
+							<Translate
+								text={localizationConstants.licensesCatalogLoading}
+							/>
+						</div>
+					) : catalog.isError ? (
+						<div className="flex flex-col items-center gap-3 rounded-md border border-slate-200 bg-white py-16 text-sm text-slate-500">
+							<p>
+								<Translate
+									text={localizationConstants.licensesCatalogError}
 								/>
-							))}
+							</p>
+							<Button
+								type="button"
+								variant="outline"
+								size="sm"
+								onClick={() => catalog.refetch()}
+								className="gap-1.5"
+							>
+								<RefreshCw className="h-3.5 w-3.5" />
+								<Translate
+									text={localizationConstants.licensesCatalogRetry}
+								/>
+							</Button>
+						</div>
+					) : packages.length === 0 ? (
+						<div className="rounded-md border border-slate-200 bg-white py-16 text-center text-sm text-slate-500">
+							<Translate
+								text={localizationConstants.licensesCatalogEmpty}
+							/>
+						</div>
+					) : isSystemAddonTab ? (
+						visibleCategories.map((category) => (
+							<div key={category.id} className="flex flex-col gap-4">
+								<h3 className="text-base font-semibold text-slate-600">
+									<Translate text={category.label} />
+								</h3>
+								{packages
+									.filter(
+										(pkg) => pkg.categoryId === category.id,
+									)
+									.map((pkg) => (
+										<LicensePackageCard
+											key={pkg.id}
+											pkg={pkg}
+											onAdd={handleAdd}
+										/>
+									))}
+							</div>
+						))
+					) : (
+						packages.map((pkg) => (
+							<LicensePackageCard
+								key={pkg.id}
+								pkg={pkg}
+								onAdd={handleAdd}
+							/>
+						))
+					)}
 				</div>
 
 				<div className="col-span-12 xl:col-span-4">

@@ -1,0 +1,14 @@
+export const ADMIN_USERS_PAGE_SIZE = 20;
+export const ADMIN_OPTIONS_PAGE_SIZE = 100;
+export const ADMIN_SEARCH_DELAY_MS = 300;
+export const ADMIN_OPTION_NONE = "__none__";
+export const ADMIN_NAME_MAX_LENGTH = 100;
+export const ADMIN_EMAIL_MAX_LENGTH = 254;
+export const ADMIN_PASSWORD_MIN_LENGTH = 8;
+export const ADMIN_PASSWORD_MAX_LENGTH = 72;
+export const ADMIN_LOGOUT_MAX_MINUTES = 1440;
+export const ADMIN_DEFAULT_LANGUAGE = "sv";
+export const ADMIN_DEFAULT_LOGOUT = "2h";
+export const ADMIN_DEFAULT_ROLE = "worker";
+export const MINUTES_PER_HOUR = 60;
+export const MILLISECONDS_PER_SECOND = 1000;

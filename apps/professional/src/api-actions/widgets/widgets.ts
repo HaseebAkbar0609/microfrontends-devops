@@ -19,6 +19,23 @@ export interface WidgetCompanyResponse {
 	location: string;
 }
 
+export interface WidgetSourcesResponse {
+	location: string;
+	live_widget_ids: string[];
+}
+
+export async function getWidgetSourcesAction(location: string): Promise<ActionResult<WidgetSourcesResponse>> {
+	try {
+		const response = await axiosInstance.get<ApiResponse<WidgetSourcesResponse>>(
+			`${WIDGETS_BASE_PATH}/sources/${encodeURIComponent(location)}`,
+		);
+		return { success: true, data: response.data.data, error: null };
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		return { success: false, data: null, error: apiError.response?.data?.message || "Failed to fetch widget sources" };
+	}
+}
+
 export async function getWidgetsAction(companyId: string, location: string): Promise<ActionResult<WidgetCompanyResponse[]>> {
 	try {
 		const response = await axiosInstance.get<ApiResponse<WidgetCompanyResponse[]>>(`${WIDGETS_BASE_PATH}/list/${companyId}?location=${location}`);

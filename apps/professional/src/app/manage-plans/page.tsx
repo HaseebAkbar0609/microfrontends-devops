@@ -1,10 +1,9 @@
 "use client";
 
 import { ShoppingCart } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
 	addSubscriptionToCartAction,
@@ -24,6 +23,8 @@ import {
 } from "@/features/manage-plans";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { SUBSCRIPTION_EDITOR_PATHS } from "@/features/admin/subscription/services/subscriptionSelection";
+import { getSubscriptionOverview } from "@/features/admin/subscription/services/subscriptionService";
 
 const STEP_PLAN_KEYS = {
 	[MANAGE_PLANS_STEPS.BASE]: [
@@ -64,6 +65,14 @@ function getPriceForPaymentOption(
 
 export default function ManagePlansPage() {
 	const router = useRouter();
+	const mainRef = useRef<HTMLElement>(null);
+	const [isPlanChange, setIsPlanChange] = useState(false);
+	const [isNewPurchase, setIsNewPurchase] = useState(false);
+	const cartHref = isPlanChange
+		? "/manage-cart?mode=change"
+		: isNewPurchase
+			? "/manage-cart?mode=new"
+			: "/manage-cart";
 	const [paymentOption, setPaymentOption] = useState<PaymentOption>("month");
 	const [currentStep, setCurrentStep] = useState<
 		(typeof MANAGE_PLANS_STEPS)[keyof typeof MANAGE_PLANS_STEPS]
@@ -108,14 +117,43 @@ export default function ManagePlansPage() {
 	}, []);
 
 	useEffect(() => {
-		fetchPlans();
-		syncStepFromCart();
-	}, [syncStepFromCart]);
+		const params = new URLSearchParams(window.location.search);
+		if (params.get("change") === "1") {
+			router.replace(SUBSCRIPTION_EDITOR_PATHS.subscription);
+			return;
+		}
+		setIsPlanChange(false);
+		setIsNewPurchase(params.get("mode") === "new");
+		void getSubscriptionOverview().then(overview => {
+			if (overview.sales_onboarding_pending) {
+				router.replace("/admin/subscription");
+				return;
+			}
+			if (
+				params.get("mode") === "new" &&
+				overview.has_subscription &&
+				overview.status?.access_state !== "DEMO"
+			) {
+				router.replace("/admin/subscription");
+				return;
+			}
+			void fetchPlans();
+			void syncStepFromCart();
+		}).catch(() => { void fetchPlans(); });
+	}, [router, syncStepFromCart]);
+
+	useEffect(() => {
+		mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+	}, [currentStep]);
 
 	const stepPlans = useMemo(() => {
 		const planKeys = STEP_PLAN_KEYS[currentStep] as readonly string[];
-		return plans.filter((plan) => planKeys.includes(plan.plan_key));
-	}, [currentStep, plans]);
+		return plans.filter(
+			(plan) =>
+				planKeys.includes(plan.plan_key) &&
+				(!isPlanChange || plan.plan_key !== MANAGE_PLANS_PLAN_IDS.FREE),
+		);
+	}, [currentStep, isPlanChange, plans]);
 
 	const handleChoosePlan = useCallback(
 		async (plan: SubscriptionPlan) => {
@@ -154,7 +192,7 @@ export default function ManagePlansPage() {
 				currentStep === MANAGE_PLANS_STEPS.BASE &&
 				plan.plan_key === MANAGE_PLANS_PLAN_IDS.FREE
 			) {
-				router.push("/manage-cart");
+				router.push(cartHref);
 				return;
 			}
 
@@ -166,104 +204,97 @@ export default function ManagePlansPage() {
 				return;
 			}
 		},
-		[currentStep, paymentOption, quantities, router],
+		[cartHref, currentStep, paymentOption, quantities, router],
 	);
 
 	return (
 		<>
-			<main className="p-6 md:p-8 md:px-12 h-[calc(100vh-72px)]  overflow-y-auto">
-				<div className="mx-auto space-y-8">
-					<div className="flex flex-col md:flex-row gap-8">
-						<div className="relative w-full md:w-1/3 max-w-md mx-auto md:mx-0">
-							<h2 className="text-2xl font-bold text-gray-700 mb-8">
-								Welcome to TimeFlow
-							</h2>
-							<Image
-								src="/manage-plans.png"
-								alt="TimeFlow plans overview"
-								width={600}
-								height={400}
-								className="w-full h-auto rounded-lg object-cover"
-								priority
-								sizes="(max-width: 768px) 100vw, 28rem"
-							/>
-						</div>
-
-						<div className="flex-1">
-							<div className="flex justify-between gap-4 items-center justify-between">
-								{currentStep === MANAGE_PLANS_STEPS.BASE && (
-									<PaymentOptionSelector
-										value={paymentOption}
-										onValueChange={setPaymentOption}
-									/>
-								)}
-
-								<div className="flex items-center justify-end flex-1">
-									<Button
-										variant="primary"
-										size="default"
-										asChild
-										className="w-fit"
-									>
-										<Link
-											href="/manage-cart"
-											className="inline-flex items-center gap-2"
-										>
-											<ShoppingCart
-												className="h-4 w-4"
-												aria-hidden
-											/>
-											<Translate
-												text={
-													localizationConstants.managePlansViewCartButton
-												}
-											/>
-										</Link>
-									</Button>
+			<main
+				ref={mainRef}
+				className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 md:py-8 lg:px-10"
+			>
+				<div className="mx-auto w-full max-w-6xl">
+					<header className="grid items-start justify-items-center gap-5 text-center lg:grid-cols-[1fr_minmax(0,40rem)_1fr]">
+						<div className="min-w-0 lg:col-start-2">
+							{currentStep === MANAGE_PLANS_STEPS.BASE ? (
+								<PaymentOptionSelector
+									value={paymentOption}
+									onValueChange={setPaymentOption}
+								/>
+							) : (
+								<div className="mx-auto max-w-2xl text-center">
+									<h1 className="text-2xl font-bold text-slate-800">
+										<Translate
+											text={
+												localizationConstants.managePlansLicensesTitle
+											}
+										/>
+									</h1>
+									<p className="mt-2 text-sm leading-6 text-slate-500">
+										<Translate
+											text={
+												localizationConstants.managePlansLicensesSubtitle
+											}
+										/>
+									</p>
 								</div>
-							</div>
-							<div className="flex flex-wrap justify-start gap-6 mt-4">
-								{stepPlans.map((plan) => {
-									const selectedPrice =
-										getPriceForPaymentOption(
-											plan,
-											paymentOption,
-										);
-									if (!selectedPrice) return null;
-
-									return (
-										<div
-											key={plan.id}
-											className="w-full max-w-sm"
-										>
-											<PlanCard
-												plan={plan}
-												currentPrice={
-													selectedPrice.price / 100
-												}
-												quantity={
-													quantities[plan.id] ?? 1
-												}
-												onQuantityChange={(delta) =>
-													handleQuantityChange(
-														plan.id,
-														delta,
-													)
-												}
-												showQuantitySelector={
-													currentStep !==
-													MANAGE_PLANS_STEPS.BASE
-												}
-												onChoosePlan={() =>
-													handleChoosePlan(plan)
-												}
-												isLoading={isAddingToCart}
-											/>
-										</div>
-									);
-								})}
-							</div>
+							)}
 						</div>
+
+						<div className="flex items-center lg:justify-self-end">
+							<Button
+								variant="primary"
+								size="default"
+								asChild
+								className="h-11 w-fit rounded-lg"
+							>
+								<Link
+									href={cartHref}
+									className="inline-flex items-center gap-2"
+								>
+									<ShoppingCart
+										className="h-4 w-4"
+										aria-hidden
+									/>
+									<Translate
+										text={
+											localizationConstants.managePlansViewCartButton
+										}
+									/>
+								</Link>
+							</Button>
+						</div>
+					</header>
+
+					<div className="mx-auto mt-8 flex w-full flex-wrap items-stretch justify-center gap-5 lg:gap-6">
+						{stepPlans.map((plan) => {
+							const selectedPrice = getPriceForPaymentOption(
+								plan,
+								paymentOption,
+							);
+							if (!selectedPrice) return null;
+
+							return (
+								<div
+									key={plan.id}
+									className="flex w-full min-w-0 max-w-[22rem] sm:w-[20rem]"
+								>
+									<PlanCard
+										plan={plan}
+										currentPrice={selectedPrice.price / 100}
+										quantity={quantities[plan.id] ?? 1}
+										onQuantityChange={(delta) =>
+											handleQuantityChange(plan.id, delta)
+										}
+										showQuantitySelector={
+											currentStep !== MANAGE_PLANS_STEPS.BASE
+										}
+										onChoosePlan={() => handleChoosePlan(plan)}
+										isLoading={isAddingToCart}
+									/>
+								</div>
+							);
+						})}
 					</div>
 				</div>
 			</main>

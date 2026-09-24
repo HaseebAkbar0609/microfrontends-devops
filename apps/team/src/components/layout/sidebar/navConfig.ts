@@ -26,6 +26,8 @@ export interface NavSubItem {
 	label: string;
 	href: string;
 	flyoutItems?: NavFlyoutItem[];
+	/** Its flyout items bring their own navigation, so never open the generic flyout sub-sidebar for them. */
+	hideSubSidebar?: boolean;
 }
 
 export interface NavGroup {
@@ -35,6 +37,26 @@ export interface NavGroup {
 	href?: string;
 	defaultOpen?: boolean;
 	items: NavSubItem[];
+}
+
+export function matchesNavHref(href: string, pathname: string) {
+	return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+/** True when `pathname` is the item's own route or one of its flyout routes. */
+export function navSubItemMatchesPath(item: NavSubItem, pathname: string) {
+	return (
+		matchesNavHref(item.href, pathname) ||
+		!!item.flyoutItems?.some((flyoutItem) => matchesNavHref(flyoutItem.href, pathname))
+	);
+}
+
+/** True when `pathname` is the group's own route or belongs to one of its items. */
+export function navGroupMatchesPath(group: NavGroup, pathname: string) {
+	return (
+		(!!group.href && matchesNavHref(group.href, pathname)) ||
+		group.items.some((item) => navSubItemMatchesPath(item, pathname))
+	);
 }
 
 export interface FlyoutSubSidebarItem {
@@ -49,11 +71,9 @@ export interface FlyoutSubSidebarConfig {
 }
 
 /**
- * Sales and Marketing navigate through their own tab rows
- * (`ModulePageHeader`), the way the professional app does. Keeping them out of
- * `flyoutItems` stops the flyout sub-sidebar from opening on top of that
- * navigation and reclaims the 256px it would otherwise take from the content
- * column.
+ * Sales and Marketing sit in the "Affär" flyout. Both bring their own
+ * navigation through their `ModulePageHeader` tab rows, so the Affär item sets
+ * `hideSubSidebar` to keep the generic flyout sub-sidebar from opening on top of it.
  */
 const moduleSalesItem: NavFlyoutItem = {
 	id: "module-business-sales",
@@ -230,14 +250,11 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			icon: LayoutGrid,
 			items: [
 				{
-					id: moduleSalesItem.id,
-					label: moduleSalesItem.label,
-					href: moduleSalesItem.href,
-				},
-				{
-					id: moduleMarketingItem.id,
-					label: moduleMarketingItem.label,
-					href: moduleMarketingItem.href,
+					id: "module-business",
+					label: localizationConstants.moduleBusiness,
+					href: "/module/business",
+					flyoutItems: [moduleSalesItem, moduleMarketingItem],
+					hideSubSidebar: true,
 				},
 				{
 					id: "module-operations",
@@ -290,28 +307,6 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 			items: [],
 		},
 		{
-			id: "timeflow-app",
-			label: localizationConstants.timeflowApp,
-			icon: Smartphone,
-			items: [
-				{
-					id: "timeflow-home",
-					label: localizationConstants.timeflowHome,
-					href: "/timeflow-app/home",
-				},
-				{
-					id: "timeflow-work",
-					label: localizationConstants.timeflowWork,
-					href: "/timeflow-app/work",
-				},
-				{
-					id: "timeflow-team",
-					label: localizationConstants.timeflowTeam,
-					href: "/timeflow-app/team",
-				},
-			],
-		},
-		{
 			id: "partners",
 			label: localizationConstants.partners,
 			icon: Handshake,
@@ -355,6 +350,28 @@ export function getNavConfig(favoriteItems: NavSubItem[] = []): NavGroup[] {
 				},
 			],
 		},
+		{
+			id: "settings",
+			label: localizationConstants.settings,
+			icon: Smartphone,
+			items: [
+				{
+					id: "timeflow-home",
+					label: localizationConstants.timeflowHome,
+					href: "/timeflow-app/home",
+				},
+				{
+					id: "timeflow-work",
+					label: localizationConstants.timeflowWork,
+					href: "/timeflow-app/work",
+				},
+				{
+					id: "timeflow-team",
+					label: localizationConstants.timeflowTeam,
+					href: "/timeflow-app/team",
+				},
+			],
+		},
 	];
 }
 
@@ -372,17 +389,13 @@ export function getFlyoutSubSidebarConfigByPath(
 
 	for (const group of groups) {
 		for (const item of group.items) {
-			if (!item.flyoutItems?.length) continue;
-
-			const isParentMatch =
-				pathname === item.href || pathname.startsWith(item.href + "/");
-			const isFlyoutMatch = item.flyoutItems.some(
-				(flyoutItem) =>
-					pathname === flyoutItem.href ||
-					pathname.startsWith(flyoutItem.href + "/"),
-			);
-
-			if (!isParentMatch && !isFlyoutMatch) continue;
+			if (
+				!item.flyoutItems?.length ||
+				item.hideSubSidebar ||
+				!navSubItemMatchesPath(item, pathname)
+			) {
+				continue;
+			}
 
 			return {
 				titleKey: item.label,

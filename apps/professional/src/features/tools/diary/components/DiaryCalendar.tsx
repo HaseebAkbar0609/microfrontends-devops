@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
-import { DiaryEntry, MONTH_KEYS } from "../constants/mockData";
+import { DiaryEntry, MONTH_KEYS } from "../constants/data";
 import { CalendarDay } from "../utils/calendar";
 
 interface DiaryCalendarProps {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ArrowUpDown, ArrowUp, ArrowDown, Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
@@ -12,9 +12,17 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { TablePagination } from "@/components/table/TablePagination";
-import { OfferList, OfferListColumn, OfferListTableProps } from "../types";
+import { JobRef, OfferList, OfferListColumn, OfferListTableProps } from "../types";
 import { OFFER_LIST_COLUMNS } from "../constants";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
@@ -25,6 +33,10 @@ import { BusinessRentModal } from "./BusinessRentModal";
 import { OfferConfirmationModal } from "./OfferConfirmationModal";
 import { MODAL_CONSTANTS, type ModalType } from "@/constants/constant";
 import useModal from "@/features/auth/hooks/useModal";
+import { toggleOfferFavoriteAPIAction } from "@/api-actions/offers";
+import { showToast } from "@/lib/toast";
+import { useAccountLifecycle } from "@/features/account-lifecycle";
+import { LIFECYCLE_UPGRADE_PATH } from "@/features/account-lifecycle/constants";
 
 const SortIconElement = ({
 	field,
@@ -70,6 +82,8 @@ function renderTypeBadge(type: string) {
 export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 	const { query, changeQueries } = useQueryParams();
 	const router = useRouter();
+	const { lifecycle, isLoading: isLifecycleLoading } = useAccountLifecycle();
+	const [upgradeDialogOpen, setUpgradeDialogOpen] = useState(false);
 	const [favoriteIds, setFavoriteIds] = useState<Set<string>>(
 		() =>
 			new Set(
@@ -80,10 +94,53 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 	const { isOpen, openModal, closeModal, type, modalId } =
 		useModal<ModalType>();
 
+	useEffect(() => {
+		setFavoriteIds(new Set(data.filter((item) => item.isFavorite).map((item) => item.id)));
+	}, [data]);
+
+	const handleFavorite = useCallback(async (quote: OfferList) => {
+		const wasFavorite = favoriteIds.has(quote.id);
+		setFavoriteIds((prev) => {
+			const next = new Set(prev);
+			if (wasFavorite) next.delete(quote.id);
+			else next.add(quote.id);
+			return next;
+		});
+		const result = await toggleOfferFavoriteAPIAction(quote.projectId || quote.id, !wasFavorite);
+		if (!result.success) {
+			setFavoriteIds((prev) => {
+				const next = new Set(prev);
+				if (wasFavorite) next.add(quote.id);
+				else next.delete(quote.id);
+				return next;
+			});
+			showToast("error", result.error || "Failed to update favorite");
+		}
+	}, [favoriteIds]);
+
 	const selectedBusinessQuote = useMemo(() => {
 		if (!modalId) return null;
 		return data.find((q) => q.id === modalId) ?? null;
 	}, [data, modalId]);
+	const handleTakeJobConfirmed = useCallback(
+		(quote: JobRef | null | undefined) => {
+			const selectedQuote = data.find((item) => item.id === quote?.id) ?? selectedBusinessQuote;
+			if (!selectedQuote) return;
+			const typeName = selectedQuote.type.toLowerCase();
+			const formType =
+				typeName.includes("rent") ||
+				typeName.includes("hyra") ||
+				typeName.includes("b2b")
+					? "rent"
+					: typeName.includes("express")
+						? "express"
+						: "b2c";
+			router.push(
+				`/module/business/offer/send/${selectedQuote.projectId || selectedQuote.id}?type=${formType}`,
+			);
+		},
+		[data, router, selectedBusinessQuote],
+	);
 
 	const sortBy = query.get("sort_by") || "";
 	const sortOrder = query.get("sort_order") || "";
@@ -160,6 +217,14 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 								variant="outline"
 								className="h-8 px-3 border border-slate-200 hover:bg-slate-50 text-xs font-medium text-slate-800 bg-white rounded-md cursor-pointer transition-colors"
 								onClick={() => {
+									if (lifecycle?.accountType === "demo" && lifecycle.lifecycleStatus === "active") {
+										setUpgradeDialogOpen(true);
+										return;
+									}
+									if (isLifecycleLoading || !lifecycle) {
+										router.push(`/module/business/offer/list/${quote.id}`);
+										return;
+									}
 									const typeStr = quote.type.toLowerCase();
 									const isExpress = typeStr.includes("express");
 									const isRent = typeStr.includes("rent") || typeStr.includes("hyra");
@@ -206,15 +271,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 								type="button"
 								className="p-1 text-slate-400 hover:text-slate-900 transition-colors cursor-pointer"
 								aria-label="Toggle favorite"
-								onClick={() =>
-									setFavoriteIds((prev) => {
-										const next = new Set(prev);
-										if (next.has(quote.id))
-											next.delete(quote.id);
-										else next.add(quote.id);
-										return next;
-									})
-								}
+								onClick={() => void handleFavorite(quote)}
 							>
 								<Heart
 									className={cn(
@@ -233,7 +290,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 					return null;
 			}
 		},
-		[favoriteIds, router, openModal],
+		[favoriteIds, router, openModal, handleFavorite, lifecycle, isLifecycleLoading],
 	);
 
 	const totalPages = useMemo(
@@ -319,6 +376,19 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 			/>
 
 			{/* Modal Dialogs */}
+			<Dialog open={upgradeDialogOpen} onOpenChange={setUpgradeDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle><Translate text={localizationConstants.demoLeadTitle} /></DialogTitle>
+						<DialogDescription><Translate text={localizationConstants.demoLeadDescription} /></DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button type="button" onClick={() => router.push(LIFECYCLE_UPGRADE_PATH)}>
+							<Translate text={localizationConstants.demoLeadUpgrade} />
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 			{isOpen && type === MODAL_CONSTANTS.BUSINESS_OFFER && (
 				<BusinessOfferModal
 					open={isOpen}
@@ -326,6 +396,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 						if (!openState) closeModal();
 					}}
 					quote={selectedBusinessQuote}
+					onConfirm={handleTakeJobConfirmed}
 				/>
 			)}
 			{isOpen && type === MODAL_CONSTANTS.BUSINESS_EXPRESS && (
@@ -335,6 +406,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 						if (!openState) closeModal();
 					}}
 					quote={selectedBusinessQuote}
+					onConfirm={handleTakeJobConfirmed}
 				/>
 			)}
 			{isOpen && type === MODAL_CONSTANTS.BUSINESS_RENT && (
@@ -344,6 +416,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 						if (!openState) closeModal();
 					}}
 					quote={selectedBusinessQuote}
+					onConfirm={handleTakeJobConfirmed}
 				/>
 			)}
 			{isOpen && type === MODAL_CONSTANTS.OFFER_CONFIRMATION && (
@@ -352,6 +425,7 @@ export function OfferListTable({ data, totalItems }: OfferListTableProps) {
 					onOpenChange={(openState) => {
 						if (!openState) closeModal();
 					}}
+					onConfirm={() => handleTakeJobConfirmed(selectedBusinessQuote)}
 				/>
 			)}
 		</div>

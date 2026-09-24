@@ -6,6 +6,6 @@ export default function ManagePlansLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col bg-background">{children}</div>
+    <div className="flex min-h-0 flex-1 flex-col overflow-hidden bg-background">{children}</div>
   );
 }

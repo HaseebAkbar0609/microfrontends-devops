@@ -99,7 +99,9 @@
         "heroTitle1": "Kogu töö ühes",
         "heroTitle2": "ainsas vaates.",
         "ctaTitle1": "Alusta lihtsalt.",
-        "ctaTitle2": "Kasva millal soovid."
+        "ctaTitle2": "Kasva millal soovid.",
+        "completeBusinessTitle":"Komplett affärssystem för",
+        "completeBusinessTitle2":"hantverkare och byggföretag"
     },
     "professional": {
         "heroLabel": "Ehitus- ja käsitööettevõtetele kõigis valdkondades",
@@ -179,7 +181,10 @@
         "startAccount": "Alusta kontot",
         "tryDemo": "Proovi demot",
         "workTag": "(valikuline)",
-        "managerTag": "(sisaldub Standard / PRO)."
+        "managerTag": "(sisaldub Standard / PRO).",
+        "professionalBusinessLabel":"TÄISLAHENDUS",
+        "professionalBusinessTitle":"Professionaalne ärisüsteem",
+        "professionalBusinessTitle2":"käsitöölistele ja ehitusettevõtetele"
     },
     "consumer": {
         "heroLabel": "Eraisikutele",
@@ -324,7 +329,10 @@
         "trustF5": "Projektiteave kättesaadav siis, kui seda vajad",
         "trustF6": "TimeFlow Home on eraisikutele alati tasuta",
         "finalCtaTitle": "Valmis alustama?",
-        "finalCtaDesc": "Kirjelda oma projekt juba täna ja saad kuni 5 pakkumist pädevatelt ettevõtetelt."
+        "finalCtaDesc": "Kirjelda oma projekt juba täna ja saad kuni 5 pakkumist pädevatelt ettevõtetelt.",
+        "businessManagementLabel": "ETTEVÕTETELE",
+        "businessManagementTitle": "Ettevõtlussüsteem, mis on loodud",
+        "businessManagementTitle2": "käsitöölistele ja väikestele ehitusettevõtetele"
     },
     "solutions": {
         "heroLabel": "Lahendused",
@@ -652,7 +660,10 @@
         "refTitle": "TimeFlow tuleb nüüd Rootsi turule.",
         "refDesc": "2026. aasta jooksul avaldame kinnitatud kliendilugusid ja intervjuusid ettevõtetega, kes platvormi igapäevaselt kasutavad. Võta ühendust — räägime hea meelega lähemalt.",
         "ctaDesc": "Proovi TimeFlow'd 30 päeva tasuta — ilma krediitkaardita. Ainult 3 kuu pikkune minimaalne kohustus.",
-        "startNow": "Alusta kohe"
+        "startNow": "Alusta kohe",
+        "successStoriesLabel": "PÄRIS TULEMUSED",
+        "successStoriesTitle": "Tõelised edulood:",
+        "successStoriesTitle2": "Kuidas ehitusettevõtted Timeflow abil kasvavad"
     },
     "pricing": {
         "heroLabel": "Hinnad",

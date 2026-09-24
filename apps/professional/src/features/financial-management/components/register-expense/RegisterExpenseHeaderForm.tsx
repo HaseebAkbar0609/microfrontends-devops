@@ -17,6 +17,8 @@ import {
 	RegisterExpenseFormData,
 	RegisterExpenseErrors,
 	ExpenseCategory,
+	ExpenseCurrency,
+	SupplierInfo,
 } from "../../types/expense.types";
 import {
 	EXPENSE_CATEGORIES,
@@ -24,6 +26,7 @@ import {
 	DEFAULT_COST_CENTERS_LIST,
 } from "../../constants/expense.constants";
 import { SupplierSearchableDropdown } from "./SupplierSearchableDropdown";
+import { CheckCircle2, Building, CreditCard, MapPin } from "lucide-react";
 
 interface RegisterExpenseHeaderFormProps {
 	formData: RegisterExpenseFormData;
@@ -32,15 +35,19 @@ interface RegisterExpenseHeaderFormProps {
 		value: RegisterExpenseFormData[K],
 	) => void;
 	suppliers: string[];
-	onAddSupplier: (name: string) => void;
+	selectedSupplierDetails?: SupplierInfo | null;
+	onAddSupplier: (name: string, details?: Partial<SupplierInfo>) => void;
 	onOpenAddSupplier: () => void;
 	errors: RegisterExpenseErrors;
 }
+
+const CURRENCY_OPTIONS: ExpenseCurrency[] = ["SEK", "EUR", "USD", "NOK", "DKK"];
 
 export function RegisterExpenseHeaderForm({
 	formData,
 	updateField,
 	suppliers,
+	selectedSupplierDetails,
 	onAddSupplier,
 	onOpenAddSupplier,
 	errors,
@@ -127,6 +134,40 @@ export function RegisterExpenseHeaderForm({
 					)}
 				</div>
 
+				{/* Supplier Verified Details Badge Strip (when supplier is selected) */}
+				{formData.supplier && selectedSupplierDetails && (
+					<div className="lg:col-span-12 -mt-2 bg-slate-50 border border-slate-200/80 rounded-lg p-3 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-slate-600">
+						<div className="flex items-center gap-1.5 font-medium text-slate-800">
+							<CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+							<Translate text={localizationConstants.registerExpenseSupplierVerified} />
+						</div>
+						{selectedSupplierDetails.orgNo && (
+							<div className="flex items-center gap-1">
+								<Building className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+								<span className="text-slate-500"><Translate text={localizationConstants.registerExpenseSupplierOrgNo} />:</span>
+								<span className="font-semibold text-slate-700">{selectedSupplierDetails.orgNo}</span>
+							</div>
+						)}
+						{selectedSupplierDetails.bankgiro && (
+							<div className="flex items-center gap-1">
+								<CreditCard className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+								<span className="text-slate-500"><Translate text={localizationConstants.registerExpenseSupplierBankgiro} />:</span>
+								<span className="font-semibold text-slate-700">{selectedSupplierDetails.bankgiro}</span>
+							</div>
+						)}
+						{selectedSupplierDetails.address && (
+							<div className="flex items-center gap-1">
+								<MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+								<span className="text-slate-500"><Translate text={localizationConstants.registerExpenseSupplierAddress} />:</span>
+								<span className="font-medium text-slate-700">
+									{selectedSupplierDetails.address}
+									{selectedSupplierDetails.postalCity ? `, ${selectedSupplierDetails.postalCity}` : ""}
+								</span>
+							</div>
+						)}
+					</div>
+				)}
+
 				{/* 4. Invoice Date */}
 				<div className="lg:col-span-3">
 					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
@@ -165,8 +206,44 @@ export function RegisterExpenseHeaderForm({
 					)}
 				</div>
 
-				{/* 6. Project (Optional) */}
+				{/* 6. Currency */}
 				<div className="lg:col-span-3">
+					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
+						<Translate text={localizationConstants.registerExpenseCurrencyLabel} />
+					</Label>
+					<Select
+						value={formData.currency}
+						onValueChange={(val) => updateField("currency", val as ExpenseCurrency)}
+					>
+						<SelectTrigger className="h-9 text-xs border-slate-200 bg-white rounded-md">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent className="bg-white">
+							{CURRENCY_OPTIONS.map((curr) => (
+								<SelectItem key={curr} value={curr} className="text-xs cursor-pointer">
+									{curr}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
+				</div>
+
+				{/* 7. Reference (Vår referens) */}
+				<div className="lg:col-span-3">
+					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
+						<Translate text={localizationConstants.registerExpenseReferenceLabel} />
+					</Label>
+					<Input
+						type="text"
+						value={formData.reference || ""}
+						onChange={(e) => updateField("reference", e.target.value)}
+						placeholder={t(localizationConstants.registerExpenseReferencePlaceholder)}
+						className="h-9 text-xs border-slate-200 bg-white rounded-md"
+					/>
+				</div>
+
+				{/* 8. Project (Optional) */}
+				<div className="lg:col-span-6">
 					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseProjectLabel} />
 					</Label>
@@ -189,8 +266,8 @@ export function RegisterExpenseHeaderForm({
 					</Select>
 				</div>
 
-				{/* 7. Cost Center (Optional) */}
-				<div className="lg:col-span-3">
+				{/* 9. Cost Center (Optional) */}
+				<div className="lg:col-span-6">
 					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseCostCenterLabel} />
 					</Label>
@@ -213,7 +290,7 @@ export function RegisterExpenseHeaderForm({
 					</Select>
 				</div>
 
-				{/* 8. Notes / Message (full width 12 cols, single-line input) */}
+				{/* 10. Notes / Message (full width 12 cols, single-line input) */}
 				<div className="lg:col-span-12">
 					<Label className="text-xs font-semibold text-slate-700 block mb-1.5 h-5 flex items-center">
 						<Translate text={localizationConstants.registerExpenseNotesLabel} />

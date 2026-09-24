@@ -17,28 +17,28 @@ export function PaymentOptionSelector({
   onValueChange,
 }: PaymentOptionSelectorProps) {
   return (
-    <div className="space-y-3">
-      <h2 className="text-xl font-semibold text-gray-500 !mb-1">
+    <div className="flex flex-col items-center gap-4 text-center">
+      <h2 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
         <Translate text={localizationConstants.managePlansSelectPaymentOption} />
       </h2>
       <RadioGroup
         value={value}
         onValueChange={(v) => onValueChange(v as PaymentOption)}
-        className="flex flex-row gap-6 !mb-1"
+        className="flex max-w-full flex-wrap justify-center gap-1 rounded-lg border border-slate-200 bg-white p-1"
       >
         {PAYMENT_OPTIONS.map((opt) => (
-          <div key={opt.value} className="flex items-center gap-2">
-            <RadioGroupItem value={opt.value} id={`payment-${opt.value}`} />
+          <div key={opt.value} className="relative flex">
+            <RadioGroupItem value={opt.value} id={`payment-${opt.value}`} className="peer sr-only" />
             <Label
               htmlFor={`payment-${opt.value}`}
-              className="cursor-pointer font-normal text-sm !mb-0"
+              className="!mb-0 flex min-h-10 cursor-pointer items-center justify-center rounded-md px-4 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 peer-data-[state=checked]:bg-primary/10 peer-data-[state=checked]:text-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary peer-focus-visible:ring-offset-2"
             >
               <Translate text={opt.labelKey} />
             </Label>
           </div>
         ))}
       </RadioGroup>
-      <p className="text-sm text-gray-700">
+      <p className="max-w-xl text-sm leading-6 text-slate-500">
         <Translate text={localizationConstants.managePlansPaymentDiscountText} />
       </p>
     </div>

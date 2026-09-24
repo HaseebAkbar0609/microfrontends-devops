@@ -46,6 +46,7 @@ export const DesignDashboard = () => {
 	return (
 		<div className="relative flex flex-1 flex-col min-h-0">
 			<ModuleWidgetDashboard
+				sourceLocation="design_dashboard"
 				widgetMap={widgetMap}
 				initialWidgets={initialWidgets}
 				sidebarItems={DESIGN_SIDEBAR_ITEMS}

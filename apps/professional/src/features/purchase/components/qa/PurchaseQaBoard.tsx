@@ -11,6 +11,7 @@ import {
 import { QAThreadColumn } from "@/components/common/QAThreadColumn";
 import { Button } from "@/components/ui/button";
 import { useAuthStatus } from "@/context/AuthContext";
+import { useCurrentUserName } from "@/hooks/useCurrentUserName";
 import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
@@ -23,7 +24,7 @@ import type {
 	PurchaseQaMessage,
 	PurchaseQaStatus,
 } from "../../types/purchase.types";
-import { ConfirmActionDialog } from "../shared/ConfirmActionDialog";
+import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 import { PurchaseQaCreateDialog } from "./PurchaseQaCreateDialog";
 import { PurchaseQaFilters } from "./PurchaseQaFilters";
 
@@ -49,17 +50,17 @@ const COLUMNS: {
 	{
 		status: "new",
 		labelKey: localizationConstants.purchaseQaColNew,
-		icon: <Mail size={18} className="text-slate-900" aria-hidden />,
+		icon: <Mail size={24} className="text-zinc-950" aria-hidden />,
 	},
 	{
 		status: "opened",
 		labelKey: localizationConstants.purchaseQaColOpened,
-		icon: <MailOpen size={18} className="text-slate-900" aria-hidden />,
+		icon: <MailOpen size={24} className="text-zinc-950" aria-hidden />,
 	},
 	{
 		status: "answered",
 		labelKey: localizationConstants.purchaseQaColAnswered,
-		icon: <CheckCheck size={18} className="text-slate-900" aria-hidden />,
+		icon: <CheckCheck size={24} className="text-zinc-950" aria-hidden />,
 		className: "md:col-span-2 xl:col-span-1",
 	},
 ];
@@ -86,17 +87,16 @@ export function PurchaseQaBoard({
 	archivedOnly = false,
 }: PurchaseQaBoardProps) {
 	const t = useTranslate();
-	const { user, company } = useAuthStatus();
+	const { company } = useAuthStatus();
+	const currentUserName = useCurrentUserName(
+		localizationConstants.purchaseComplaintQaYou,
+	);
 
 	const [creating, setCreating] = useState(false);
 	const [pendingDelete, setPendingDelete] = useState<PurchaseQaMessage | null>(
 		null,
 	);
 
-	const account = (user as { first_name?: string; last_name?: string }) ?? {};
-	const currentUserName =
-		[account.first_name, account.last_name].filter(Boolean).join(" ") ||
-		t(localizationConstants.purchaseComplaintQaYou);
 	const currentCompany = company?.company_name ?? "";
 
 	const handleCreate = (draft: PurchaseQaDraft) =>

@@ -81,7 +81,7 @@ export function EditAgreementPage({ agreement }: EditAgreementPageProps) {
 			slutdatum: agreement.slutdatum?.replace(/\//g, "-") || "",
 			aktionsdatum: agreement.aktionDatum?.replace(/\//g, "-") || "",
 			paminnelseDatum: agreement.paminnelseDatum?.replace(/\//g, "-") || "",
-			paminnelseText: "",
+			paminnelseText: agreement.paminnelseText || "",
 			avtalsprioritet: agreement.avtalsPrioritet || "",
 			fornamn: "",
 			efternamn: "",

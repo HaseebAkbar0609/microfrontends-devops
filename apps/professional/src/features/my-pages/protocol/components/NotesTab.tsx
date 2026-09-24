@@ -26,19 +26,14 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { TablePagination } from "@/components/table/TablePagination";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
-import { showToast } from "@/lib/toast";
+import { today, saveRecord, deleteRecord } from "@/features/my-pages/shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "@/features/my-pages/shared/feedback";
+import { ConfirmRecordDelete } from "../../shared/ConfirmRecordDelete";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { ProtocolNote } from "../constants/mockData";
+import { ProtocolNote } from "../constants/data";
 import { NoteSortField, useNoteFilters } from "../hooks/useNoteFilters";
 import { NoteValues } from "../schemas/protocol.schema";
-import {
-	addNote,
-	listNotes,
-	removeNote,
-	updateNote,
-} from "../services/protocolService";
 import AddNoteDialog from "./AddNoteDialog";
 
 const COLUMNS: { field: NoteSortField; labelKey: string }[] = [
@@ -48,10 +43,12 @@ const COLUMNS: { field: NoteSortField; labelKey: string }[] = [
 
 const NotesTab = () => {
 	const t = useTranslate();
-	const [notes, setNotes] = useState<ProtocolNote[]>(() => listNotes());
+	const filters = useNoteFilters();
+	const { queryResult, paged: notes } = filters;
+	const action = useMyPagesAction();
+	const [deletingNote, setDeletingNote] = useState<ProtocolNote | null>(null);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editingNote, setEditingNote] = useState<ProtocolNote | null>(null);
-	const filters = useNoteFilters(notes);
 
 	const openCreate = () => {
 		setEditingNote(null);
@@ -63,37 +60,20 @@ const NotesTab = () => {
 		setDialogOpen(true);
 	};
 
-	const handleSend = (values: NoteValues) => {
-		if (editingNote) {
-			setNotes(
-				updateNote(editingNote.id, {
-					description: values.description,
-				}),
-			);
-			showToast(
-				"success",
-				t(localizationConstants.protocolNoteSavedToast),
-			);
-			return;
-		}
-		setNotes(
-			addNote({
-				id: `temp-${crypto.randomUUID()}`,
-				date: mockDate(0),
-				name: "Möte med IT-team",
-				description: values.description,
-			}),
-		);
-		showToast("success", t(localizationConstants.protocolNoteSavedToast));
-	};
+	const handleSend = (values: NoteValues) => action.run(() => saveRecord("note", {
+		date: editingNote?.date ?? today(), name: values.description.trim().slice(0, 80), description: values.description,
+	}, editingNote ?? undefined), localizationConstants.protocolNoteSavedToast);
 
 	const handleDelete = (id: string) => {
-		setNotes(removeNote(id));
-		showToast("success", t(localizationConstants.protocolNoteDeletedToast));
+		setDeletingNote(notes.find((note) => note.id === id) ?? null);
 	};
 
 	return (
 		<div className="flex flex-col gap-5">
+			<MyPagesQueryState query={queryResult} />
+			<ConfirmRecordDelete open={!!deletingNote} pending={action.pending} onClose={() => setDeletingNote(null)} onConfirm={async () => {
+				if (deletingNote && await action.run(() => deleteRecord(deletingNote), localizationConstants.protocolNoteDeletedToast)) setDeletingNote(null);
+			}} />
 			<div className="flex flex-wrap items-center justify-between gap-4">
 				<div className="relative w-full max-w-xs">
 					<Search className="pointer-events-none absolute left-0 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />

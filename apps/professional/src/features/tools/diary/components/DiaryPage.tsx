@@ -32,20 +32,13 @@ import { DynamicBreadcrumb } from "@/components/common";
 import { cn } from "@/lib/utils";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { usePagination } from "@/hooks/usePagination";
-import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
-import { showToast } from "@/lib/toast";
+import { today, saveRecord, deleteRecord } from "@/features/my-pages/shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "@/features/my-pages/shared/feedback";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { DiaryEntry, MONTH_KEYS } from "../constants/mockData";
+import { DiaryEntry, MONTH_KEYS } from "../constants/data";
 import { useDiaryFilters } from "../hooks/useDiaryFilters";
 import { DiaryValues } from "../schemas/diary.schema";
-import {
-	createDiaryEntry,
-	listDiaryEntries,
-	markDiaryEntryRead,
-	removeDiaryEntry,
-	updateDiaryEntry,
-} from "../services/diaryService";
 import { buildDays } from "../utils/calendar";
 import DiaryCalendar from "./DiaryCalendar";
 import DiaryFormDialog from "./DiaryFormDialog";
@@ -56,7 +49,7 @@ const VIEW_OPTIONS = [
 	{ value: "calendar", labelKey: localizationConstants.diaryCalendarView },
 ] as const;
 
-const REF_YEAR = Number(mockDate(0).slice(0, 4));
+const REF_YEAR = Number(today().slice(0, 4));
 const YEAR_OPTIONS = [REF_YEAR - 1, REF_YEAR, REF_YEAR + 1];
 
 type DiaryView = (typeof VIEW_OPTIONS)[number]["value"];
@@ -69,13 +62,12 @@ const DiaryPage = () => {
 	const setView = (value: string) =>
 		changeQueries({ view: value === "table" ? null : value });
 
-	const [entries, setEntries] = useState<DiaryEntry[]>(() =>
-		listDiaryEntries(),
-	);
+	const filters = useDiaryFilters();
+	const { queryResult, entries } = filters;
+	const action = useMyPagesAction();
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editingEntry, setEditingEntry] = useState<DiaryEntry | null>(null);
 	const [deletingEntry, setDeletingEntry] = useState<DiaryEntry | null>(null);
-	const filters = useDiaryFilters(entries);
 
 	const projectOptions = useMemo(
 		() => [...new Set(entries.map((entry) => entry.projectName))],
@@ -93,36 +85,32 @@ const DiaryPage = () => {
 		setDialogOpen(true);
 	};
 
-	const openEntry = (entry: DiaryEntry) => {
-		if (!entry.read) setEntries(markDiaryEntryRead(entry.id));
-		setEditingEntry(entry);
-		setDialogOpen(true);
-	};
-
-	const handleSave = (values: DiaryValues) => {
-		if (editingEntry) {
-			setEntries(updateDiaryEntry(editingEntry.id, values));
-		} else {
-			setEntries(
-				createDiaryEntry({
-					id: `temp-${crypto.randomUUID()}`,
-					...values,
-					read: true,
-				}),
-			);
+	const openEntry = async (entry: DiaryEntry) => {
+		if (entry.read) {
+			setEditingEntry(entry);
+			setDialogOpen(true);
+			return;
 		}
-		showToast("success", t(localizationConstants.diarySavedToast));
+		await action.run(async () => {
+			const saved = await saveRecord("diary", { ...entry, read: true }, entry);
+			setEditingEntry(saved);
+			setDialogOpen(true);
+		});
 	};
 
-	const handleDelete = () => {
+	const handleSave = (values: DiaryValues) => action.run(
+		() => saveRecord("diary", { ...values, read: true }, editingEntry ?? undefined),
+		localizationConstants.diarySavedToast,
+	);
+
+	const handleDelete = async () => {
 		if (!deletingEntry) return;
-		setEntries(removeDiaryEntry(deletingEntry.id));
-		setDeletingEntry(null);
-		showToast("success", t(localizationConstants.diaryDeletedToast));
+		if (await action.run(() => deleteRecord(deletingEntry), localizationConstants.diaryDeletedToast)) setDeletingEntry(null);
 	};
 
 	return (
 		<div className="flex flex-col gap-5 p-6">
+			<MyPagesQueryState query={queryResult} />
 			<div>
 				<h1 className="text-2xl font-bold text-slate-900">
 					<Translate text={localizationConstants.diary} />
@@ -276,6 +264,7 @@ const DiaryPage = () => {
 				{view === "table" ? (
 					<DiaryTable
 						entries={filters.paged}
+                        showEmptyState={queryResult.isSuccess}
 						sortField={filters.sortField}
 						onToggleSort={() => filters.toggleSort("date")}
 						onOpen={openEntry}

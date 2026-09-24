@@ -1,20 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Info, Pencil, Save, Send, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { showToast } from "@/lib/toast";
+import { useMyPagesQuery } from "../../shared/api";
+import { MyPagesQueryState, useMyPagesAction } from "../../shared/feedback";
+import { ConfirmRecordDelete } from "../../shared/ConfirmRecordDelete";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate, useTranslate } from "@/utils/translation/translate";
-import { MeetingPoint, PointStatus, ProtocolType } from "../constants/mockData";
+import { Translate } from "@/utils/translation/translate";
+import { MeetingPoint, PointStatus, ProtocolType } from "../constants/data";
 import { PointValues } from "../schemas/protocol.schema";
 import {
 	addPoint,
 	getProtocol,
 	removePoint,
 	setPointStatus,
-	setProtocolStatus,
+	updateProtocol,
 	updatePoint,
 } from "../services/protocolService";
 import MeetingInfoCard from "./MeetingInfoCard";
@@ -29,19 +31,15 @@ const TYPE_SUBTITLE_KEY: Record<ProtocolType, string> = {
 const LIST_ROUTE = "/tools/my-pages/protocol";
 
 const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
-	const t = useTranslate();
 	const router = useRouter();
-	const [protocol, setProtocol] = useState(() => getProtocol(protocolId));
+	const queryResult = useMyPagesQuery(["protocol", protocolId], () => getProtocol(protocolId));
+	const protocol = queryResult.data;
+	const action = useMyPagesAction();
 	const [pointDialogOpen, setPointDialogOpen] = useState(false);
 	const [editingPoint, setEditingPoint] = useState<MeetingPoint | null>(null);
+	const [deletingPoint, setDeletingPoint] = useState<MeetingPoint | null>(null);
 
-	useEffect(() => {
-		if (!protocol) router.replace(LIST_ROUTE);
-	}, [protocol, router]);
-
-	if (!protocol) return null;
-
-	const refresh = () => setProtocol(getProtocol(protocolId));
+	if (!protocol) return <MyPagesQueryState query={queryResult} />;
 
 	const openCreatePoint = () => {
 		setEditingPoint(null);
@@ -53,9 +51,9 @@ const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
 		setPointDialogOpen(true);
 	};
 
-	const handleSavePoint = (values: PointValues) => {
+	const handleSavePoint = (values: PointValues) => action.run(async () => {
 		if (editingPoint) {
-			updatePoint(protocol.id, editingPoint.id, {
+			await updatePoint(protocol, editingPoint.id, {
 				nr: values.nr,
 				subject: values.title,
 				description: values.description,
@@ -63,8 +61,8 @@ const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
 				responsible: values.responsible,
 			});
 		} else {
-			addPoint(protocol.id, {
-				id: `temp-${crypto.randomUUID()}`,
+			await addPoint(protocol, {
+				id: crypto.randomUUID(),
 				nr: values.nr,
 				subject: values.title,
 				description: values.description,
@@ -73,36 +71,31 @@ const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
 				status: "notDone",
 			});
 		}
-		refresh();
-		showToast("success", t(localizationConstants.protocolPointSavedToast));
-	};
+	}, localizationConstants.protocolPointSavedToast);
 
 	const handleDeletePoint = (point: MeetingPoint) => {
-		removePoint(protocol.id, point.id);
-		refresh();
-		showToast(
-			"success",
-			t(localizationConstants.protocolPointDeletedToast),
-		);
+		setDeletingPoint(point);
 	};
 
 	const handlePointStatus = (point: MeetingPoint, status: PointStatus) => {
-		setPointStatus(protocol.id, point.id, status);
-		refresh();
+		void action.run(() => setPointStatus(protocol, point.id, status));
 	};
 
 	const handleSave = () => {
-		showToast("success", t(localizationConstants.protocolSavedToast));
+		void action.run(() => updateProtocol(protocol, {}), localizationConstants.protocolSavedToast);
 	};
 
-	const handleSend = () => {
-		setProtocolStatus(protocol.id, "sent");
-		showToast("success", t(localizationConstants.protocolSentToast));
-		router.push(LIST_ROUTE);
+	const handleSend = async () => {
+		if (await action.run(() => updateProtocol(protocol, { status: "sent" }), localizationConstants.protocolSentToast)) router.push(LIST_ROUTE);
 	};
 
 	return (
 		<div className="flex flex-col gap-5">
+			<MyPagesQueryState query={queryResult} />
+			{!protocol.canEdit && <p className="text-sm text-slate-500"><Translate text={localizationConstants.myPagesReadOnly} /></p>}
+			<ConfirmRecordDelete open={!!deletingPoint} pending={action.pending} onClose={() => setDeletingPoint(null)} onConfirm={async () => {
+				if (deletingPoint && await action.run(() => removePoint(protocol, deletingPoint.id), localizationConstants.protocolPointDeletedToast)) setDeletingPoint(null);
+			}} />
 			<div className="flex items-start gap-3">
 				<Button
 					type="button"
@@ -136,14 +129,14 @@ const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
 				details={protocol.nextMeeting}
 			/>
 
-			<PointsTable
+			<fieldset disabled={!protocol.canEdit || action.pending}><PointsTable
 				type={protocol.type}
 				points={protocol.points}
 				onCreate={openCreatePoint}
 				onEdit={openEditPoint}
 				onDelete={handleDeletePoint}
 				onStatusChange={handlePointStatus}
-			/>
+			/></fieldset>
 
 			<div className="flex flex-wrap items-center justify-between gap-3">
 				<div className="flex items-center gap-3">
@@ -174,6 +167,7 @@ const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
 						type="button"
 						variant="secondary"
 						onClick={handleSave}
+						disabled={!protocol.canEdit || action.pending}
 						className="h-11 gap-2 rounded-md bg-slate-100 px-6 text-sm font-medium text-slate-900 hover:bg-slate-200"
 					>
 						<Save className="h-4 w-4" />
@@ -181,7 +175,8 @@ const ProtocolViewPage = ({ protocolId }: { protocolId: string }) => {
 					</Button>
 					<Button
 						type="button"
-						onClick={handleSend}
+					onClick={handleSend}
+					disabled={!protocol.canEdit || action.pending}
 						className="h-11 gap-2 rounded-md bg-slate-900 px-6 text-sm font-medium text-white hover:bg-slate-900/90"
 					>
 						<Send className="h-4 w-4" />

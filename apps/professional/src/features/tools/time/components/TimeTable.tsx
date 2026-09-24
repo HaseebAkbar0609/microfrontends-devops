@@ -34,7 +34,7 @@ import {
 	WORK_DAY_STATUS_CLASS,
 	WORK_DAY_STATUS_KEY,
 	WorkDay,
-} from "../constants/mockData";
+} from "../constants/data";
 import { TimeSortField } from "../hooks/useTimeFilters";
 import {
 	diffMinutes,

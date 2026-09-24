@@ -20,6 +20,7 @@ import {
 	SALES_REGIONS,
 } from "../constants/salesTaxonomy";
 import { useCreateCompanyForm } from "../hooks/useCreateCompanyForm";
+import { SALES_PRIMARY_BUTTON_CLASS } from "../constants/salesTheme";
 
 type CreateCompanyDialogProps = {
 	open: boolean;
@@ -142,7 +143,7 @@ export function CreateCompanyDialog({
 							<Button
 								type="submit"
 								size="sm"
-								className="cursor-pointer bg-[#18181B] text-white hover:bg-[#18181B]/90"
+								className={`cursor-pointer ${SALES_PRIMARY_BUTTON_CLASS}`}
 							>
 								<Translate text={localizationConstants.salesSaveCompanyButton} />
 							</Button>

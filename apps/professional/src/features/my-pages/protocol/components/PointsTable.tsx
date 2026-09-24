@@ -29,7 +29,7 @@ import {
 	MeetingPoint,
 	PointStatus,
 	ProtocolType,
-} from "../constants/mockData";
+} from "../constants/data";
 import {
 	POINT_STATUS_ACTIVE_CLASS,
 	POINT_STATUS_INACTIVE_CLASS,

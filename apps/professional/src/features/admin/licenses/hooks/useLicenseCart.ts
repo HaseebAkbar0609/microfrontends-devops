@@ -8,9 +8,11 @@ import {
 	LicenseVersionOption,
 	PAYMENT_CYCLES,
 	PaymentCycleId,
-} from "../constants/mockData";
+} from "../constants/licenseCatalog.constants";
 import { getInitialCartItems } from "../services/licenseService";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { showToast } from "@/lib/toast";
 import { createCheckoutSession } from "../../users/api/adminUsers.api";
 
 export interface AddPackageSelection {
@@ -113,7 +115,13 @@ export function useLicenseCart() {
 			if (data?.data?.url) {
 				window.location.href = data.data.url;
 			}
-		}
+		},
+		onError: (error) => {
+			const message = axios.isAxiosError(error)
+				? (error.response?.data as { message?: string } | undefined)?.message
+				: undefined;
+			showToast("error", message || "Could not start checkout. Please try again.");
+		},
 	});
 
 	return {

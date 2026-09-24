@@ -26,10 +26,11 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import {
 	MeetingPoint,
-	PROTOCOL_PARTICIPANTS,
 	ProtocolType,
-} from "../constants/mockData";
+} from "../constants/data";
 import { PointValues, pointSchema } from "../schemas/protocol.schema";
+import { useParticipants } from "../../shared/api";
+import { MyPagesQueryState } from "../../shared/feedback";
 
 const EMPTY_VALUES: PointValues = {
 	nr: "",
@@ -49,7 +50,7 @@ interface PointFormDialogProps {
 	type: ProtocolType;
 	editingPoint: MeetingPoint | null;
 	onClose: () => void;
-	onSave: (values: PointValues) => void;
+	onSave: (values: PointValues) => Promise<boolean>;
 }
 
 const PointFormDialog = ({
@@ -60,6 +61,8 @@ const PointFormDialog = ({
 	onSave,
 }: PointFormDialogProps) => {
 	const t = useTranslate();
+	const participantQuery = useParticipants();
+	const PROTOCOL_PARTICIPANTS = participantQuery.data ?? [];
 	const form = useForm<PointValues>({
 		resolver: zodResolver(pointSchema),
 		defaultValues: EMPTY_VALUES,
@@ -80,14 +83,14 @@ const PointFormDialog = ({
 			);
 	}, [open, editingPoint, form]);
 
-	const handleSave = form.handleSubmit((values) => {
-		onSave(values);
-		onClose();
+	const handleSave = form.handleSubmit(async (values) => {
+		if (await onSave(values)) onClose();
 	});
 
 	return (
-		<Dialog open={open} onOpenChange={(value) => !value && onClose()}>
+		<Dialog open={open} onOpenChange={(value) => !value && !form.formState.isSubmitting && onClose()}>
 			<DialogContent className="max-h-[90vh] max-w-md overflow-y-auto rounded-lg bg-white p-6">
+				<MyPagesQueryState query={participantQuery} />
 				<div>
 					<DialogTitle className="text-lg font-bold text-slate-900">
 						<Translate
@@ -243,6 +246,7 @@ const PointFormDialog = ({
 							</Button>
 							<Button
 								type="submit"
+ disabled={form.formState.isSubmitting}
 								className="h-10 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 							>
 								<Translate text={localizationConstants.save} />

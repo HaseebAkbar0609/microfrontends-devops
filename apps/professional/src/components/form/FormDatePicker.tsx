@@ -37,6 +37,29 @@ export interface FormDatePickerProps<
 	inputClassName?: string;
 	messageClassName?: string;
 	translateError?: (message: string) => string;
+	/**
+	 * Earliest selectable day, as `yyyy-MM-dd`. Use it for a "to" field so the
+	 * range cannot be inverted in the picker — the value stays typeable through
+	 * the form, so pair it with a schema rule rather than relying on it alone.
+	 */
+	minDate?: string;
+	/**
+	 * Which side of the value the calendar icon sits. Defaults to `"end"`, as
+	 * every existing form draws it; the Tidsplan frames draw it at the start.
+	 */
+	iconPosition?: "start" | "end";
+	/**
+	 * Marks the field mandatory: draws the asterisk after the label and sets
+	 * `aria-required` on the trigger, as `FormInput` does. The asterisk alone is
+	 * decoration a screen reader never hears.
+	 */
+	required?: boolean;
+	/**
+	 * How a chosen day reads on the trigger. Defaults to `yyyy-MM-dd`; the
+	 * protocol frames prefix the weekday ("Tis 2024-12-17"). The field's value
+	 * stays `yyyy-MM-dd` either way.
+	 */
+	formatValue?: (isoDate: string) => string;
 }
 
 export function FormDatePicker<
@@ -53,12 +76,20 @@ export function FormDatePicker<
 	inputClassName,
 	messageClassName,
 	translateError,
+	minDate,
+	iconPosition = "end",
+	required = false,
+	formatValue,
 }: FormDatePickerProps<TFieldValues, TName>) {
 	const { t } = useTranslation();
 	const [open, setOpen] = React.useState(false);
 
 	const resolvedLabel =
 		typeof label === "string" ? <Translate text={label} /> : label;
+
+	const minimum =
+		minDate && minDate.trim().length > 0 ? parseISO(minDate) : undefined;
+	const validMinimum = minimum && isValid(minimum) ? minimum : undefined;
 
 	return (
 		<FormField
@@ -76,12 +107,18 @@ export function FormDatePicker<
 
 				const validDate =
 					selectedDate && isValid(selectedDate) ? selectedDate : undefined;
+				const shownDate = validDate ? format(validDate, "yyyy-MM-dd") : "";
 
 				return (
 					<FormItem className={cn("grid gap-1", className)}>
 						{label != null && (
 							<FormLabel className={labelClassName}>
 								{resolvedLabel}
+								{required && (
+									<span className="text-red-500" aria-hidden>
+										*
+									</span>
+								)}
 							</FormLabel>
 						)}
 						<FormControl>
@@ -91,20 +128,29 @@ export function FormDatePicker<
 										type="button"
 										variant="outline"
 										disabled={disabled}
+										aria-required={required || undefined}
 										className={cn(
 											"h-10 w-full justify-between text-left font-normal border-slate-200 bg-white px-3 shadow-2xs hover:bg-slate-50 focus:ring-1 focus:ring-slate-950 text-sm",
+											iconPosition === "start" && "justify-start gap-2",
 											!validDate && "text-slate-400",
 											inputClassName,
 										)}
 									>
-										<span>
-											{validDate
-												? format(validDate, "yyyy-MM-dd")
+										{iconPosition === "start" && (
+											<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										)}
+										<span className={cn(iconPosition === "start" && "flex-1")}>
+											{shownDate
+												? formatValue
+													? formatValue(shownDate)
+													: shownDate
 												: placeholder
 													? t(placeholder)
 													: "YYYY-MM-DD"}
 										</span>
-										<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										{iconPosition === "end" && (
+											<CalendarIcon className="h-4 w-4 text-slate-500 shrink-0" />
+										)}
 									</Button>
 								</PopoverTrigger>
 								<PopoverContent align="start" className="w-auto p-0 border-0 bg-transparent shadow-none">
@@ -114,6 +160,11 @@ export function FormDatePicker<
 										startMonth={new Date(2015, 0)}
 										endMonth={new Date(2035, 11)}
 										selected={validDate}
+										disabled={
+											validMinimum
+												? (date: Date) => date < validMinimum
+												: undefined
+										}
 										onSelect={(date: Date | undefined) => {
 											if (date) {
 												field.onChange(format(date, "yyyy-MM-dd"));

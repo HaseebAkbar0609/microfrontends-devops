@@ -5,7 +5,13 @@ import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { ProjectListItem } from "../data/projectsOverview.mock";
 
-export type ProjectSortField = keyof Omit<ProjectListItem, "id">;
+/**
+ * Every field a column can show and sort on.
+ *
+ * `archived` is excluded deliberately: this type also types `visibleColumns`
+ * and indexes the cell render, and a boolean has no column.
+ */
+export type ProjectSortField = keyof Omit<ProjectListItem, "id" | "archived" | "version">;
 
 export function useProjectOverviewFilters(projects: ProjectListItem[]) {
 	const [search, setSearchState] = useState("");

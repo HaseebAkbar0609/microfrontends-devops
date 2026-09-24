@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
@@ -19,6 +19,8 @@ import {
 	DEFAULT_VAT_RATE,
 	SWEDISH_VAT_RATES,
 	EXPENSE_LIST_ROUTE,
+	EXPENSE_INBOX_TAB,
+	EXPENSE_LIST_TAB_QUERY_PARAM,
 	MAX_ATTACHMENT_SIZE_BYTES,
 	ALLOWED_ATTACHMENT_TYPES,
 } from "../constants/expense.constants";
@@ -70,6 +72,8 @@ function getInitialFormData(): RegisterExpenseFormData {
 		date: getTodayString(),
 		dueDate: getDueDateString(30),
 		category: "material",
+		currency: "SEK",
+		reference: "",
 		project: "",
 		costCenter: "",
 		lineItems: [createEmptyLineItem()],
@@ -82,7 +86,12 @@ function getInitialFormData(): RegisterExpenseFormData {
 
 export function useRegisterExpense() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const { t } = useTranslation();
+	const isInboxSource = searchParams.get(EXPENSE_LIST_TAB_QUERY_PARAM) === EXPENSE_INBOX_TAB;
+	const returnRoute = isInboxSource
+		? `${EXPENSE_LIST_ROUTE}?${EXPENSE_LIST_TAB_QUERY_PARAM}=${EXPENSE_INBOX_TAB}`
+		: EXPENSE_LIST_ROUTE;
 
 	const [activeTab, setActiveTab] = useState<"oversikt" | "tidrapport" | "underlag">("oversikt");
 	const [previewOpen, setPreviewOpen] = useState<boolean>(false);
@@ -200,12 +209,15 @@ export function useRegisterExpense() {
 	const addAttachments = useCallback((files: FileList | File[]) => {
 		const fileArray = Array.from(files);
 		const newAttachments: ExpenseAttachment[] = [];
+		let rejectedFileCount = 0;
 
 		for (const file of fileArray) {
 			if (!ALLOWED_ATTACHMENT_TYPES.includes(file.type)) {
+				rejectedFileCount += 1;
 				continue;
 			}
 			if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+				rejectedFileCount += 1;
 				continue;
 			}
 
@@ -225,7 +237,10 @@ export function useRegisterExpense() {
 			}));
 			setIsDirty(true);
 		}
-	}, []);
+		if (rejectedFileCount > 0) {
+			showToast("error", t(localizationConstants.registerExpenseUploadFailed));
+		}
+	}, [t]);
 
 	const removeAttachment = useCallback((id: string) => {
 		setFormData((prev) => ({
@@ -236,10 +251,10 @@ export function useRegisterExpense() {
 	}, []);
 
 	// Supplier management
-	const handleAddSupplier = useCallback((name: string) => {
+	const handleAddSupplier = useCallback((name: string, details?: Partial<import("../types/expense.types").SupplierInfo>) => {
 		const trimmed = name.trim();
 		if (!trimmed) return;
-		expenseRepository.addSupplier(trimmed);
+		expenseRepository.addSupplier(trimmed, details);
 		setSuppliers(expenseRepository.getSuppliers());
 		setFormData((prev) => ({ ...prev, supplier: trimmed }));
 		setErrors((prev) => {
@@ -253,6 +268,11 @@ export function useRegisterExpense() {
 		setIsDirty(true);
 		setShowSupplierModal(false);
 	}, []);
+
+	// Active supplier details for verification card
+	const selectedSupplierDetails = useMemo(() => {
+		return expenseRepository.getSupplierDetails(formData.supplier);
+	}, [formData.supplier]);
 
 	// Time report totals memo
 	const timeReportTotals = useMemo(() => {
@@ -324,8 +344,9 @@ export function useRegisterExpense() {
 			vatBreakdown,
 			totalVat: Math.round(totalVat * 100) / 100,
 			grandTotal,
+			currency: formData.currency,
 		};
-	}, [formData.lineItems, formData.timeReportItems, lineItemsSubtotal, timeReportSubtotal]);
+	}, [formData.lineItems, formData.timeReportItems, formData.currency, lineItemsSubtotal, timeReportSubtotal]);
 
 	// Validation using Zod schema (Technology Stack standard)
 	const validate = useCallback((): { isValid: boolean; errorMessage: string } => {
@@ -375,16 +396,25 @@ export function useRegisterExpense() {
 	const buildExpensePayload = useCallback((): ExpenseItem => {
 		const nextId = generateSecureId("exp");
 		const expenseNo = generateSecureExpenseNo(100000, 999999);
+		const supplierInfo = expenseRepository.getSupplierDetails(formData.supplier);
 
 		return {
 			id: nextId,
 			expenseNo,
 			fakturaNo: formData.fakturaNo.trim(),
 			supplier: formData.supplier.trim(),
+			supplierOrgNo: supplierInfo?.orgNo,
+			supplierAddress: supplierInfo?.address,
+			supplierPostalCity: supplierInfo?.postalCity,
+			supplierPhone: supplierInfo?.phone,
+			supplierEmail: supplierInfo?.email,
+			bankgiro: supplierInfo?.bankgiro,
+			reference: formData.reference.trim() || undefined,
 			category: formData.category,
 			amount: calculations.grandTotal,
 			vatAmount: calculations.totalVat,
 			status: "klar",
+			isInboxItem: isInboxSource,
 			date: formData.date,
 			invoiceDate: formData.date,
 			dueDate: formData.dueDate,
@@ -410,7 +440,7 @@ export function useRegisterExpense() {
 							})),
 			attachments: [...formData.attachments],
 		};
-	}, [formData, calculations]);
+	}, [formData, calculations, isInboxSource]);
 
 	// Save and navigate to list
 	const handleSave = useCallback(async () => {
@@ -426,13 +456,13 @@ export function useRegisterExpense() {
 			await expenseRepository.addExpense(payload);
 			showToast("success", t(localizationConstants.registerExpenseSuccessSaved));
 			setIsDirty(false);
-			router.push(EXPENSE_LIST_ROUTE);
+			router.push(returnRoute);
 		} catch (e) {
 			console.error("Failed to register expense", e);
 		} finally {
 			setIsSaving(false);
 		}
-	}, [validate, buildExpensePayload, router, t]);
+	}, [validate, buildExpensePayload, returnRoute, router, t]);
 
 	// Save and reset form for next entry
 	const handleSaveAndAddAnother = useCallback(async () => {
@@ -462,15 +492,15 @@ export function useRegisterExpense() {
 		if (isDirty) {
 			setShowDiscardModal(true);
 		} else {
-			router.push(EXPENSE_LIST_ROUTE);
+			router.push(returnRoute);
 		}
-	}, [isDirty, router]);
+	}, [isDirty, returnRoute, router]);
 
 	const confirmDiscard = useCallback(() => {
 		setShowDiscardModal(false);
 		setIsDirty(false);
-		router.push(EXPENSE_LIST_ROUTE);
-	}, [router]);
+		router.push(returnRoute);
+	}, [returnRoute, router]);
 
 	return {
 		activeTab,
@@ -480,6 +510,7 @@ export function useRegisterExpense() {
 		formData,
 		updateField,
 		suppliers,
+		selectedSupplierDetails,
 		handleAddSupplier,
 		errors,
 		isDirty,

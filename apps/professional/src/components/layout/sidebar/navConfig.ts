@@ -172,6 +172,11 @@ export const navConfig: NavGroup[] = [
 				href: "/tools/templates",
 			},
 			{
+				id: "discount",
+				label: localizationConstants.discountsItem,
+				href: "/tools/discount",
+			},
+			{
 				id: "my-pages",
 				label: localizationConstants.myPages,
 				href: "/tools/my-pages",
@@ -227,7 +232,7 @@ export const navConfig: NavGroup[] = [
 					{
 						id: "calculation",
 						label: localizationConstants.calculation,
-						href: "/module/business/calculation",
+						href: "/module/business/calculation/dashboard",
 					},
 				],
 			},
@@ -302,11 +307,6 @@ export const navConfig: NavGroup[] = [
 						id: "forecast",
 						label: localizationConstants.forecast,
 						href: "/module/financial-management/forecast",
-					},
-					{
-						id: "rot-rut",
-						label: localizationConstants.rotRutNav,
-						href: "/module/financial-management/rot-rut",
 					},
 					{
 						id: "personnel",

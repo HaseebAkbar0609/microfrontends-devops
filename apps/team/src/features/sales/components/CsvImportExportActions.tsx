@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import { Download, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
@@ -10,13 +9,15 @@ import {
 	CSV_BYTE_ORDER_MARK,
 	CSV_FILE_NAME_PREFIX,
 } from "../constants/sales.constants";
+import { useCompanyCsvImport } from "../hooks/useCompanyCsvImport";
 import { useSalesCompanies } from "../hooks/useSalesCompanies";
-import { companiesToCsv, parseCompaniesCsv } from "../utils/salesCsv";
+import { toLocalDateKey } from "../utils/meetingBooker";
+import { companiesToCsv } from "../utils/salesCsv";
 
 /** CSV round-trip for the company list. */
 export function CsvImportExportActions() {
-	const { companies, addCompanies } = useSalesCompanies();
-	const fileInputRef = useRef<HTMLInputElement>(null);
+	const { companies } = useSalesCompanies();
+	const { fileInputRef, handleFileChange, openFilePicker } = useCompanyCsvImport();
 	const t = useTranslate();
 
 	const handleExport = () => {
@@ -26,29 +27,10 @@ export function CsvImportExportActions() {
 		const url = URL.createObjectURL(blob);
 		const link = document.createElement("a");
 		link.href = url;
-		link.download = `${CSV_FILE_NAME_PREFIX}-${new Date().toISOString().slice(0, 10)}.csv`;
+		link.download = `${CSV_FILE_NAME_PREFIX}-${toLocalDateKey(new Date())}.csv`;
 		link.click();
 		URL.revokeObjectURL(url);
 		showToast("success", t(localizationConstants.salesCsvExportedToast));
-	};
-
-	const handleImport = async (file: File) => {
-		try {
-			const rows = parseCompaniesCsv(await file.text()).filter((row) =>
-				(row.name ?? "").trim(),
-			);
-			if (rows.length > 0) {
-				addCompanies(rows);
-				showToast(
-					"success",
-					t(localizationConstants.salesCompaniesImportedToast),
-				);
-			}
-		} catch {
-			showToast("error", t(localizationConstants.salesCsvImportFailedToast));
-		} finally {
-			if (fileInputRef.current) fileInputRef.current.value = "";
-		}
 	};
 
 	return (
@@ -58,17 +40,14 @@ export function CsvImportExportActions() {
 				type="file"
 				accept=".csv,text/csv"
 				className="hidden"
-				onChange={(event) => {
-					const file = event.target.files?.[0];
-					if (file) void handleImport(file);
-				}}
+				onChange={handleFileChange}
 			/>
 			<Button
 				type="button"
 				variant="outline"
 				size="sm"
 				className="h-10 cursor-pointer gap-2"
-				onClick={() => fileInputRef.current?.click()}
+				onClick={openFilePicker}
 			>
 				<Upload className="h-4 w-4" />
 				<Translate text={localizationConstants.salesImportCsvButton} />

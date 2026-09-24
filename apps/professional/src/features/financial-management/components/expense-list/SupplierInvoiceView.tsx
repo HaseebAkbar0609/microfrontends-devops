@@ -18,13 +18,29 @@ import {
 	EXPENSE_SUB_TAB_CONTAINER_CLASS,
 	EXPENSE_SUB_TAB_ACTIVE_CLASS,
 	EXPENSE_SUB_TAB_INACTIVE_CLASS,
+	CREATE_EXPENSE_ROUTE,
+	EXPENSE_DETAIL_ROUTE,
+	EXPENSE_INBOX_TAB,
+	EXPENSE_LIST_TAB_QUERY_PARAM,
+	EXPENSE_SUPPLIER_LIST_TAB,
 } from "../../constants/expense.constants";
 import { ExpenseToolbar } from "./ExpenseToolbar";
 import { ExpenseListTable } from "./ExpenseListTable";
 
 export function SupplierInvoiceView() {
 	const router = useRouter();
-	const [activeSubTab, setActiveSubTab] = useState<ExpenseActiveSubTab>("supplier_list");
+	const [activeSubTab, setActiveSubTab] = useState<ExpenseActiveSubTab>(() => {
+		if (typeof window !== "undefined") {
+			return new URLSearchParams(window.location.search).get(EXPENSE_LIST_TAB_QUERY_PARAM) === EXPENSE_INBOX_TAB
+				? EXPENSE_INBOX_TAB
+				: EXPENSE_SUPPLIER_LIST_TAB;
+		}
+		return EXPENSE_SUPPLIER_LIST_TAB;
+	});
+	const createExpenseRoute =
+		activeSubTab === EXPENSE_INBOX_TAB
+			? `${CREATE_EXPENSE_ROUTE}?${EXPENSE_LIST_TAB_QUERY_PARAM}=${EXPENSE_INBOX_TAB}`
+			: CREATE_EXPENSE_ROUTE;
 
 	const {
 		expenses,
@@ -101,6 +117,7 @@ export function SupplierInvoiceView() {
 				projectFilter={projectFilter}
 				onProjectFilterChange={setProjectFilter}
 				availableProjects={availableProjects}
+				createRoute={createExpenseRoute}
 			/>
 
 			{/* Expense List Table matching Figma 1:1 */}
@@ -118,7 +135,7 @@ export function SupplierInvoiceView() {
 				onPageSizeChange={setPageSize}
 				totalPages={totalPages}
 				onPageChange={setCurrentPage}
-				onView={(item) => router.push(`/module/financial-management/economy/${item.id}`)}
+				onView={(item) => router.push(EXPENSE_DETAIL_ROUTE(item.id))}
 				onDelete={(id) => setConfirmDeleteId(id)}
 			/>
 

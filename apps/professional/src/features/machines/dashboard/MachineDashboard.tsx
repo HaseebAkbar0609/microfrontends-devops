@@ -46,6 +46,7 @@ export const MachineDashboard = () => {
 	return (
 		<div className="relative flex flex-1 flex-col min-h-0">
 			<ModuleWidgetDashboard
+				sourceLocation="machine_dashboard"
 				widgetMap={widgetMap}
 				initialWidgets={initialWidgets}
 				sidebarItems={MACHINE_SIDEBAR_ITEMS}

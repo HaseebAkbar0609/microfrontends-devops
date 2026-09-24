@@ -21,18 +21,22 @@ export const calculationNavItems: RouteTabItem[] = [
 	{
 		id: "overview",
 		labelKey: localizationConstants.calcOverview,
-		href: "/module/business/calculation",
+		href: "/module/business/calculation/dashboard",
 		exact: true,
 	},
 	{
 		id: "calc-overview",
 		labelKey: localizationConstants.calcOverviewPage,
 		href: "/module/business/calculation/overview",
+		matchSubPaths: [
+			"/module/business/calculation/overview",
+			"/module/business/calculation/new",
+		],
 	},
 	{
-		id: "kalkyl",
+		id: "standard-calculation",
 		labelKey: localizationConstants.calcKalkyl,
-		href: "/module/business/calculation/kalkyl",
+		href: "/module/business/calculation/standard-calculation",
 	},
 	{
 		id: "statistics",
@@ -114,3 +118,8 @@ export const CALCULATION_SIDEBAR_ITEMS: WidgetItem[] = [
 		icon: ImageIcon,
 	},
 ];
+
+export const TYPE_OPTIONS = ["Total", "General", "Löpande", "Samverkan"] as const;
+export const KATEGORI_OPTIONS = ["Bygg", "El", "VVS", "Mark"] as const;
+export const AVDELNING_OPTIONS = ["Avdelning 1", "Avdelning 2", "Avdelning 3"] as const;
+

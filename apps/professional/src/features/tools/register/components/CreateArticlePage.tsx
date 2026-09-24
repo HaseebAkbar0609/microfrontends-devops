@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { showToast } from "@/lib/toast";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { ApiError } from "@/types/api";
 import { ArticleBasicInfoStep } from "./steps/ArticleBasicInfoStep";
 import { ArticleStructuredInfoStep } from "./steps/ArticleStructuredInfoStep";
 import { cn } from "@/lib/utils";
@@ -61,6 +62,9 @@ const EMPTY_DEFAULTS: CreateArticleFormData = {
     kalkylkostnad: "",
     bestallningspunkt: "",
     iLager: "",
+    stock: "0",
+    reserved: "0",
+    status: "active",
     vikt: "",
     langd: "",
     bredd: "",
@@ -127,6 +131,9 @@ export function ArticleFormPage({ articleId: articleIdProp }: ArticleFormPagePro
                     kalkylkostnad: detail.kalkylkostnad,
                     bestallningspunkt: detail.bestallningspunkt,
                     iLager: detail.iLager,
+                    stock: detail.stock,
+                    reserved: detail.reserved,
+                    status: detail.status,
                     vikt: detail.vikt,
                     langd: detail.langd,
                     bredd: detail.bredd,
@@ -194,10 +201,12 @@ export function ArticleFormPage({ articleId: articleIdProp }: ArticleFormPagePro
                 showToast("success", t(localizationConstants.articleCreatedSuccess));
             }
             router.push("/tools/register?tab=artikel&subtab=artikel");
-        } catch {
+        } catch (error) {
+            const backendMessage = (error as ApiError).response?.data?.message;
             showToast(
                 "error",
-                t(isEdit ? localizationConstants.articleUpdateError : localizationConstants.articleCreateError),
+                backendMessage ||
+                    t(isEdit ? localizationConstants.articleUpdateError : localizationConstants.articleCreateError),
             );
         } finally {
             setIsSubmitting(false);

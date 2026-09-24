@@ -12,6 +12,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import localizationConstants from "@/utils/translation/constants";
+import { SALES_STICKY_ACTION_CELL_CLASS } from "../constants/salesTheme";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { SALES_STATUSES, getSalesStatusMeta } from "../constants/salesStatuses";
 import {
@@ -22,9 +23,7 @@ import type { SalesCompany, SalesCompanyStatus } from "../types";
 import {
 	EMPTY_VALUE_PLACEHOLDER,
 	formatCurrency,
-	getInvoicedAmount,
 } from "../utils/salesFormatters";
-import { TrialAccountBadge } from "./TrialAccountBadge";
 
 type SalesCompanyRowProps = {
 	company: SalesCompany;
@@ -46,11 +45,10 @@ export function SalesCompanyRow({
 }: SalesCompanyRowProps) {
 	const t = useTranslate();
 	const status = getSalesStatusMeta(company.status);
-	const invoiced = getInvoicedAmount(company);
 	const companyHref = `/module/sales/companies/${company.id}`;
 
 	return (
-		<TableRow className="hover:bg-slate-50/70">
+		<TableRow className="group hover:bg-slate-50/70">
 			<TableCell>
 				<Link
 					href={companyHref}
@@ -123,31 +121,7 @@ export function SalesCompanyRow({
 					</span>
 				)}
 			</TableCell>
-			<TableCell className="text-right tabular-nums">
-				{invoiced > 0 ? (
-					<>
-						<span className="font-medium">{formatCurrency(invoiced)}</span>
-						<span className="block text-xs text-slate-500">
-							<Translate
-								text={
-									company.payment?.status === "paid"
-										? localizationConstants.salesPaymentPaid
-										: localizationConstants.salesPaymentPending
-								}
-							/>
-						</span>
-					</>
-				) : (
-					<span className="text-slate-500">{EMPTY_VALUE_PLACEHOLDER}</span>
-				)}
-			</TableCell>
-			<TableCell>
-				<TrialAccountBadge accounts={company.demoAccounts} kind="demo" />
-			</TableCell>
-			<TableCell>
-				<TrialAccountBadge accounts={company.testAccounts} kind="test" />
-			</TableCell>
-			<TableCell className="text-right">
+			<TableCell className={`text-right ${SALES_STICKY_ACTION_CELL_CLASS}`}>
 				<Button asChild variant="outline" size="sm" className="cursor-pointer">
 					<Link href={companyHref}>
 						<Translate text={localizationConstants.salesOpenAction} />

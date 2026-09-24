@@ -248,6 +248,44 @@ export interface CheckoutResponse {
 	refreshToken?: string;
 }
 
+export interface ChangeSubscriptionResponse {
+	subscription_id: string;
+	change_type: "unchanged" | "upgrade_immediate" | "downgrade_scheduled";
+	status: string;
+	effective_at?: number;
+	client_secret?: string;
+}
+
+export async function changeSubscriptionFromCartAction(): Promise<
+	ActionResult<ChangeSubscriptionResponse>
+> {
+	try {
+		const response = await axiosInstance.post<
+			ApiResponse<ChangeSubscriptionResponse>
+		>(API_PATH.SUBSCRIPTIONS.CHANGE);
+		return {
+			success: true,
+			data: response.data.data,
+			error: null,
+		};
+	} catch (error: unknown) {
+		const apiError = error as ApiError;
+		const errorResponse = apiError.response?.data as
+			| { code?: string; message?: string }
+			| undefined;
+		const errorCode = errorResponse?.code;
+		const message =
+			errorResponse?.message ?? "Failed to update the subscription.";
+		showToast("error", message);
+		return {
+			success: false,
+			data: null,
+			error: message,
+			errorCode,
+		};
+	}
+}
+
 /** Persist access/refresh tokens from checkout envelope or nested `data` (API-dependent). */
 function persistTokensFromResponsePayload(payload: unknown): void {
 	if (!payload || typeof payload !== "object") return;
@@ -365,6 +403,11 @@ export interface CompleteSubscriptionResponse {
  */
 export type CompleteSubscriptionPayload = {
 	payment_token: string;
+	checkout_session_id?: string;
+};
+
+export type CompleteSubscriptionOptions = {
+	suppressErrorToast?: boolean;
 };
 
 function extractCompleteSubscriptionPayload(
@@ -396,6 +439,7 @@ function hasAccessToken(o: object): boolean {
 
 export async function completeSubscriptionAction(
 	payload: CompleteSubscriptionPayload,
+	options?: CompleteSubscriptionOptions,
 ): Promise<ActionResult<CompleteSubscriptionResponse>> {
 	try {
 		const response = await axiosInstance.post<
@@ -455,12 +499,12 @@ export async function completeSubscriptionAction(
 
 		if (errorCode) {
 			const msg = getErrorMessageByCode(String(errorCode));
-			showToast("error", msg);
+			if (!options?.suppressErrorToast) showToast("error", msg);
 			return { success: false, data: null, error: msg, errorCode };
 		}
 
 		const message = errorMessage ?? "Failed to complete subscription.";
-		showToast("error", message);
+		if (!options?.suppressErrorToast) showToast("error", message);
 		return { success: false, data: null, error: message };
 	}
 }

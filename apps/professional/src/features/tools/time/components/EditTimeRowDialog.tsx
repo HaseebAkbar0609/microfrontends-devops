@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { TimeRow } from "../constants/mockData";
+import { TimeRow } from "../constants/data";
 import { TimeRowValues, timeRowSchema } from "../schemas/time.schema";
 import TimeEntryFormFields from "./TimeEntryFormFields";
 
@@ -18,7 +18,7 @@ interface EditTimeRowDialogProps {
 	date: string;
 	editingRow: TimeRow | null;
 	onClose: () => void;
-	onSave: (values: TimeRowValues) => void;
+	onSave: (values: TimeRowValues) => boolean;
 }
 
 const EditTimeRowDialog = ({
@@ -51,8 +51,8 @@ const EditTimeRowDialog = ({
 	}, [open, editingRow, date, form]);
 
 	const handleSave = form.handleSubmit((values) => {
-		onSave(values);
-		onClose();
+		if (onSave(values)) onClose();
+		else form.setError("start", { message: localizationConstants.timeOverlapError });
 	});
 
 	return (
