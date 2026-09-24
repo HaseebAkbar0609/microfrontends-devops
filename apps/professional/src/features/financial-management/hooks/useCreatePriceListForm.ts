@@ -27,15 +27,15 @@ export function useCreatePriceListForm() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const initialFormData: CreatePriceListFormData = {
-		code: "",
-		name: "",
-		date: new Date().toISOString().split("T")[0],
+		code: "P001",
+		name: "Prislista B",
+		date: "2026-01-20",
 		createdBy: "Kalle Andersson",
-		comment: "",
+		comment: "info",
 		category: "Service",
 		unit: "Styck",
-		customer: "Kund 01",
-		supplier: "leverantörer 01",
+		customer: "Service",
+		supplier: "Styck",
 		selectedArticleIds: ["pla_100", "pla_101", "pla_102"],
 	};
 
@@ -44,7 +44,10 @@ export function useCreatePriceListForm() {
 
 	// Step 2 Article list state
 	const [articlesSearchQuery, setArticlesSearchQuery] = useState("");
-	const [masterArticles] = useState<PriceListArticleItem[]>(MOCK_PRICE_LIST_ARTICLES);
+	const [categoryFilter, setCategoryFilter] = useState<string>("all");
+	const [sortField, setSortField] = useState<keyof PriceListArticleItem | null>(null);
+	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
+	const [masterArticles, setMasterArticles] = useState<PriceListArticleItem[]>(MOCK_PRICE_LIST_ARTICLES);
 
 	const updateField = useCallback(<K extends keyof CreatePriceListFormData>(
 		field: K,
@@ -98,29 +101,59 @@ export function useCreatePriceListForm() {
 		});
 	}, [masterArticles]);
 
+	const handleSortArticles = useCallback((field: keyof PriceListArticleItem) => {
+		setSortField((prevField) => {
+			if (prevField === field) {
+				setSortDirection((prevDir) => (prevDir === "asc" ? "desc" : "asc"));
+				return field;
+			}
+			setSortDirection("asc");
+			return field;
+		});
+	}, []);
+
+	const handleImportArticles = useCallback(() => {
+		setMasterArticles([...MOCK_PRICE_LIST_ARTICLES]);
+		showToast("success", "Artiklar har importerats!");
+	}, []);
+
 	const filteredArticles = useMemo(() => {
-		if (!articlesSearchQuery.trim()) return masterArticles;
-		const q = articlesSearchQuery.toLowerCase();
-		return masterArticles.filter(
-			(a) =>
-				a.articleNo.toLowerCase().includes(q) ||
-				a.benamning.toLowerCase().includes(q),
-		);
-	}, [masterArticles, articlesSearchQuery]);
+		let list = [...masterArticles];
+		if (articlesSearchQuery.trim()) {
+			const q = articlesSearchQuery.toLowerCase();
+			list = list.filter(
+				(a) =>
+					a.articleNo.toLowerCase().includes(q) ||
+					a.benamning.toLowerCase().includes(q),
+			);
+		}
+		if (categoryFilter !== "all") {
+			// optional category filtering
+		}
+		if (sortField) {
+			list.sort((a, b) => {
+				const aVal = String(a[sortField] ?? "");
+				const bVal = String(b[sortField] ?? "");
+				const res = aVal.localeCompare(bVal, undefined, { numeric: true });
+				return sortDirection === "asc" ? res : -res;
+			});
+		}
+		return list;
+	}, [masterArticles, articlesSearchQuery, categoryFilter, sortField, sortDirection]);
 
 	const goToNextStep = useCallback(() => {
-		if (currentStep === 1) {
-			if (validateStep1()) {
-				setCurrentStep(2);
-			}
+		if (validateStep1()) {
+			setCurrentStep(2);
 		}
-	}, [currentStep, validateStep1]);
+	}, [validateStep1]);
 
 	const goToPrevStep = useCallback(() => {
-		if (currentStep === 2) {
-			setCurrentStep(1);
-		}
-	}, [currentStep]);
+		setCurrentStep(1);
+	}, []);
+
+	const setStep = useCallback((step: 1 | 2) => {
+		setCurrentStep(step);
+	}, []);
 
 	const submitForm = useCallback(async () => {
 		if (!validateStep1()) {
@@ -143,6 +176,7 @@ export function useCreatePriceListForm() {
 	return useMemo(
 		() => ({
 			currentStep,
+			setStep,
 			formData,
 			errors,
 			isSubmitting,
@@ -152,12 +186,17 @@ export function useCreatePriceListForm() {
 			submitForm,
 			articlesSearchQuery,
 			setArticlesSearchQuery,
+			categoryFilter,
+			setCategoryFilter,
 			filteredArticles,
 			toggleArticleSelection,
 			toggleSelectAllArticles,
+			handleSortArticles,
+			handleImportArticles,
 		}),
 		[
 			currentStep,
+			setStep,
 			formData,
 			errors,
 			isSubmitting,
@@ -166,9 +205,12 @@ export function useCreatePriceListForm() {
 			goToPrevStep,
 			submitForm,
 			articlesSearchQuery,
+			categoryFilter,
 			filteredArticles,
 			toggleArticleSelection,
 			toggleSelectAllArticles,
+			handleSortArticles,
+			handleImportArticles,
 		],
 	);
 }

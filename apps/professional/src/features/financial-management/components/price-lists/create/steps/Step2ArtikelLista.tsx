@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Download, ChevronDown, ArrowUpDown } from "lucide-react";
+import { Download, ChevronDown, ArrowUpDown, Check } from "lucide-react";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -19,18 +19,26 @@ interface Step2ArtikelListaProps {
 	readonly articles: PriceListArticleItem[];
 	readonly selectedArticleIds: string[];
 	readonly searchQuery: string;
+	readonly categoryFilter: string;
 	readonly onSearchChange: (val: string) => void;
+	readonly onCategoryChange: (cat: string) => void;
 	readonly onToggleArticle: (id: string) => void;
 	readonly onToggleSelectAll: () => void;
+	readonly onSortArticles: (field: keyof PriceListArticleItem) => void;
+	readonly onImportArticles: () => void;
 }
 
 export function Step2ArtikelLista({
 	articles,
 	selectedArticleIds,
 	searchQuery,
+	categoryFilter,
 	onSearchChange,
+	onCategoryChange,
 	onToggleArticle,
 	onToggleSelectAll,
+	onSortArticles,
+	onImportArticles,
 }: Step2ArtikelListaProps) {
 	const allSelected =
 		articles.length > 0 &&
@@ -60,11 +68,19 @@ export function Step2ArtikelLista({
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="start" className="w-40 bg-white border-slate-200 shadow-md">
-							<DropdownMenuItem className="text-xs cursor-pointer">
+							<DropdownMenuItem
+								onClick={() => onCategoryChange("all")}
+								className="text-xs cursor-pointer flex items-center justify-between"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterAll} />
+								{categoryFilter === "all" && <Check className="h-3.5 w-3.5" />}
 							</DropdownMenuItem>
-							<DropdownMenuItem className="text-xs cursor-pointer">
+							<DropdownMenuItem
+								onClick={() => onCategoryChange("Service")}
+								className="text-xs cursor-pointer flex items-center justify-between"
+							>
 								<Translate text={localizationConstants.priceListCategoryFilterService} />
+								{categoryFilter === "Service" && <Check className="h-3.5 w-3.5" />}
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -73,6 +89,7 @@ export function Step2ArtikelLista({
 				<div className="flex items-center gap-3">
 					<Button
 						type="button"
+						onClick={onImportArticles}
 						className="h-10 px-4 text-xs font-semibold bg-[#111721] hover:bg-slate-800 text-white gap-2 rounded-lg shadow-2xs cursor-pointer"
 					>
 						<Download className="h-4 w-4" />
@@ -94,37 +111,55 @@ export function Step2ArtikelLista({
 										aria-label="Select all articles"
 									/>
 								</th>
-								<th className="py-3 px-4">
+								<th
+									className="py-3 px-4 cursor-pointer hover:bg-slate-100/50 transition-colors"
+									onClick={() => onSortArticles("articleNo")}
+								>
 									<div className="flex items-center gap-1">
 										<Translate text={localizationConstants.priceListArticleNoHeader} />
 										<ArrowUpDown className="h-3 w-3 text-slate-400" />
 									</div>
 								</th>
-								<th className="py-3 px-4">
+								<th
+									className="py-3 px-4 cursor-pointer hover:bg-slate-100/50 transition-colors"
+									onClick={() => onSortArticles("benamning")}
+								>
 									<div className="flex items-center gap-1">
 										<Translate text={localizationConstants.priceListDescriptionHeader} />
 										<ArrowUpDown className="h-3 w-3 text-slate-400" />
 									</div>
 								</th>
-								<th className="py-3 px-4 text-right">
+								<th
+									className="py-3 px-4 text-right cursor-pointer hover:bg-slate-100/50 transition-colors"
+									onClick={() => onSortArticles("outPriceListA")}
+								>
 									<div className="flex items-center justify-end gap-1">
 										<Translate text={localizationConstants.priceListOutPriceListAHeader} />
 										<ArrowUpDown className="h-3 w-3 text-slate-400" />
 									</div>
 								</th>
-								<th className="py-3 px-4 text-right">
+								<th
+									className="py-3 px-4 text-right cursor-pointer hover:bg-slate-100/50 transition-colors"
+									onClick={() => onSortArticles("calculatedCost")}
+								>
 									<div className="flex items-center justify-end gap-1">
 										<Translate text={localizationConstants.priceListCalcCostHeader} />
 										<ArrowUpDown className="h-3 w-3 text-slate-400" />
 									</div>
 								</th>
-								<th className="py-3 px-4 text-center">
+								<th
+									className="py-3 px-4 text-center cursor-pointer hover:bg-slate-100/50 transition-colors"
+									onClick={() => onSortArticles("stock")}
+								>
 									<div className="flex items-center justify-center gap-1">
 										<Translate text={localizationConstants.priceListStockHeader} />
 										<ArrowUpDown className="h-3 w-3 text-slate-400" />
 									</div>
 								</th>
-								<th className="py-3 px-4 text-center">
+								<th
+									className="py-3 px-4 text-center cursor-pointer hover:bg-slate-100/50 transition-colors"
+									onClick={() => onSortArticles("reserved")}
+								>
 									<div className="flex items-center justify-center gap-1">
 										<Translate text={localizationConstants.priceListReservedHeader} />
 										<ArrowUpDown className="h-3 w-3 text-slate-400" />
