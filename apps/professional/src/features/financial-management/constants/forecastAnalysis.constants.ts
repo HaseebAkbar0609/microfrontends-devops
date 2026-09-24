@@ -16,6 +16,16 @@ export const FORECAST_ANALYSIS_STORAGE_KEY = "tfs_professional_forecast_analysis
  */
 export const FORECAST_ANALYSIS_SOURCE_LOCATION = "forecast_analysis_dashboard";
 
+/** Nyckeltal is its own board, so it keeps its own layout and its own source. */
+export const FORECAST_KEY_FIGURES_STORAGE_KEY = "tfs_professional_forecast_key_figures_layout_v1";
+export const FORECAST_KEY_FIGURES_SOURCE_LOCATION = "forecast_key_figures_dashboard";
+
+/** The debiteringsgrad the Nyckeltal bar measures against, in percent. */
+export const FORECAST_ANALYSIS_UTILIZATION_TARGET_PERCENT = 80;
+
+/** The cumulative curve's green, beside the trend chart's own colours. */
+export const FORECAST_CUMULATIVE_COLOR = "#0f766e";
+
 /** The mock runs January through September, as the frame's chart does. */
 export const FORECAST_ANALYSIS_MONTH_COUNT = 9;
 
@@ -109,6 +119,18 @@ export const FORECAST_ANALYSIS_CARD_TITLES = {
 } as const satisfies Record<string, TranslationKeys>;
 
 export type AnalysisCardId = keyof typeof FORECAST_ANALYSIS_CARD_TITLES;
+
+/** Nyckeltal's own cards, under the six figures it shares with Analys. */
+export const FORECAST_KEY_FIGURES_CARD_TITLES = {
+	forecastQuality: localizationConstants.forecastKeyFiguresCardQuality,
+	keyFigureRisks: localizationConstants.forecastKeyFiguresCardRisks,
+	cashFlow: localizationConstants.forecastKeyFiguresCardCashFlow,
+	projectProfitability: localizationConstants.forecastKeyFiguresCardProfitability,
+	utilizationRates: localizationConstants.forecastKeyFiguresCardUtilization,
+	cumulativeProfit: localizationConstants.forecastKeyFiguresCardCumulative,
+} as const satisfies Record<string, TranslationKeys>;
+
+export type KeyFiguresCardId = keyof typeof FORECAST_KEY_FIGURES_CARD_TITLES;
 
 /** Six across a full row, three beside the rail, two on a tablet, one on a phone. */
 export const FORECAST_ANALYSIS_KPI_SPAN = "col-span-12 sm:col-span-6 lg:col-span-4 2xl:col-span-2";

@@ -1,51 +1,18 @@
-import { AlertCircle, CircleCheck, Circle, TrendingDown, TrendingUp, type LucideIcon } from "lucide-react";
+import { AlertCircle, CircleCheck, TrendingUp } from "lucide-react";
 
 import type { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
-import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
 import {
 	FORECAST_ANALYSIS_ACCURACY_THRESHOLDS,
 	FORECAST_ANALYSIS_KPI_TITLES,
 	FORECAST_ANALYSIS_RISK_LABELS,
 } from "../../../../constants/forecastAnalysis.constants";
-import type { AnalysisKpiNote, AnalysisKpis, AnalysisTone } from "../../../../types/forecastAnalysis.types";
+import type { AnalysisKpiNote, AnalysisKpis } from "../../../../types/forecastAnalysis.types";
 import { formatPercent, formatSek } from "../../../../utils/economyFormatters";
+import { KpiCard, changeTone } from "./AnalysisCardParts";
 
-const TONE_CLASS: Record<AnalysisTone, string> = {
-	positive: "text-emerald-600",
-	negative: "text-red-600",
-	neutral: "text-amber-600",
-};
-
-/** A figure's footnote reads as good, poor or merely worth knowing. */
-function noteIcon(tone: AnalysisTone, rising: boolean | null): LucideIcon {
-	if (rising === true) return TrendingUp;
-	if (rising === false) return TrendingDown;
-	if (tone === "positive") return CircleCheck;
-	if (tone === "negative") return AlertCircle;
-	return Circle;
-}
-
-function KpiCard({ value, note, rising = null }: { value: string; note: AnalysisKpiNote; rising?: boolean | null }) {
-	const Icon = noteIcon(note.tone, rising);
-
-	return (
-		<div className="flex flex-1 flex-col justify-between gap-3">
-			<p className="text-2xl font-bold tracking-tight text-slate-900 tabular-nums">{value}</p>
-			<p className={cn("flex items-center gap-1.5 text-xs font-medium", TONE_CLASS[note.tone])}>
-				<Icon size={14} aria-hidden />
-				<Translate text={note.labelKey} values={note.values} />
-			</p>
-		</div>
-	);
-}
-
-/** A change reads as good when it is up, unless being up is the problem. */
-function changeTone(value: number, upIsGood = true): AnalysisTone {
-	if (value === 0) return "neutral";
-	return value > 0 === upIsGood ? "positive" : "negative";
-}
+/* The figure card and its tone helpers live beside this file, since Nyckeltal
+   reads the same shape. */
 
 function accuracyNote(accuracy: number): AnalysisKpiNote {
 	if (accuracy >= FORECAST_ANALYSIS_ACCURACY_THRESHOLDS.good)
