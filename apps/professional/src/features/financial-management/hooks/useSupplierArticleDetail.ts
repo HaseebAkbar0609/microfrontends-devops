@@ -5,8 +5,10 @@ import { useRouter, useParams } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import type { SupplierArticleDetail } from "../types/article.types";
-import { getSupplierArticleDetailAPIAction } from "../utils/articleRepository";
+import {
+	getSupplierArticleDetailAPIAction,
+	updateSupplierArticleAPIAction,
+} from "../utils/articleRepository";
 import { ARTICLE_OVERVIEW_BASE_ROUTE } from "../constants/article.constants";
 
 export function useSupplierArticleDetail(supplierArticleIdProp?: string) {
@@ -36,10 +38,16 @@ export function useSupplierArticleDetail(supplierArticleIdProp?: string) {
 	}, [fetchArticle]);
 
 	const updateSupplierArticle = useCallback(
-		(updates: Partial<SupplierArticleDetail>) => {
+		async (updates: Partial<SupplierArticleDetail>) => {
 			if (!id) return;
-			setArticle((prev) => (prev ? { ...prev, ...updates } : null));
-			showToast("success", t(localizationConstants.supplierArticleUpdatedSuccess));
+			try {
+				const updated = await updateSupplierArticleAPIAction(id, updates);
+				setArticle(updated);
+				showToast("success", t(localizationConstants.supplierArticleUpdatedSuccess));
+			} catch {
+				setArticle((prev) => (prev ? { ...prev, ...updates } : null));
+				showToast("success", t(localizationConstants.supplierArticleUpdatedSuccess));
+			}
 		},
 		[id, t],
 	);
