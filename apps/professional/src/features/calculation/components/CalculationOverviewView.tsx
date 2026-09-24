@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import {
   Archive,
+  Check,
   ChevronDown,
   FolderOpen,
   MoreVertical,
   Plus,
-  Search,
   Trash2,
 } from "lucide-react";
 import {
@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Search } from "@/components/search/Search";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,6 +84,7 @@ export function CalculationOverviewView({ items }: Props) {
     totalPages,
     search,
     setSearch,
+    filterStatus,
     setFilterStatus,
     activeFilterLabel,
     statusLabels,
@@ -127,29 +128,23 @@ export function CalculationOverviewView({ items }: Props) {
       {/* Toolbar */}
       <div className="flex flex-col gap-3 px-5 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
-          <div className="relative w-full min-w-0 sm:w-72">
-            <Search
-              size={16}
-              className="absolute left-0 top-1/2 -translate-y-1/2 text-slate-400"
-              aria-hidden={true}
-            />
-            <Input
-              placeholder={t(localizationConstants.search)}
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              className="h-10 w-full rounded-none border-0 border-b border-slate-200 pl-6 text-sm shadow-none focus-visible:border-slate-900 focus-visible:ring-0"
-            />
-          </div>
+          <Search
+            value={search}
+            onChange={(val) => {
+              setSearch(val);
+              setPage(1);
+            }}
+            placeholder={localizationConstants.search}
+            className="h-10 w-full"
+            wrapperClassName="w-full sm:w-72"
+          />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="sm"
-                className="h-10 w-full shrink-0 cursor-pointer justify-between gap-2 rounded-md border-slate-200 bg-transparent text-sm font-normal text-slate-700 hover:bg-slate-50 shadow-none sm:w-auto sm:justify-start"
+                className="h-10 w-full shrink-0 cursor-pointer justify-between gap-2 rounded-md border-slate-200 bg-white text-sm font-normal text-slate-700 hover:bg-slate-50 shadow-none sm:w-auto sm:justify-start"
               >
                 <span>{activeFilterLabel}</span>
                 <ChevronDown size={14} className="text-slate-500" aria-hidden={true} />
@@ -157,24 +152,26 @@ export function CalculationOverviewView({ items }: Props) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="w-44 bg-white shadow-md border-slate-200">
               <DropdownMenuItem
-                className="cursor-pointer text-sm"
+                className="cursor-pointer text-sm flex items-center justify-between"
                 onClick={() => {
                   setFilterStatus(null);
                   setPage(1);
                 }}
               >
-                {t(localizationConstants.adminUsersFilterAll)}
+                <Translate text={localizationConstants.adminUsersFilterAll} />
+                {!filterStatus && <Check size={14} className="text-slate-900" />}
               </DropdownMenuItem>
               {(Object.keys(statusLabels) as CalcOverviewStatus[]).map((status) => (
                 <DropdownMenuItem
                   key={status}
-                  className="cursor-pointer text-sm"
+                  className="cursor-pointer text-sm flex items-center justify-between"
                   onClick={() => {
                     setFilterStatus(status);
                     setPage(1);
                   }}
                 >
-                  {statusLabels[status]}
+                  <span>{statusLabels[status]}</span>
+                  {filterStatus === status && <Check size={14} className="text-slate-900" />}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
