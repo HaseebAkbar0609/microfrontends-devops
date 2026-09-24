@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import type { SupplierArticleDetail } from "../types/article.types";
 import {
 	getSupplierArticleDetailAPIAction,
 	updateSupplierArticleAPIAction,
