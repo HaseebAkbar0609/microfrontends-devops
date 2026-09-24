@@ -21,7 +21,7 @@ export function BookedMeetingsPanel({ meetings }: { meetings: ActivityRow[] }) {
 				<ul className="divide-y divide-slate-100">
 					{meetings.map((row) => (
 						<li
-							key={row.id}
+							key={row.rowKey}
 							className="flex items-center justify-between gap-4 px-5 py-3"
 						>
 							<div className="min-w-0">
