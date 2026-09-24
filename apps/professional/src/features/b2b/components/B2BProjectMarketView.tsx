@@ -52,7 +52,7 @@ import { showToast } from "@/lib/toast";
 import { BreadcrumbItem } from "@/types/common";
 import { formatCurrency } from "@/utils/formatCurrency";
 import {
-  getB2BProjectsAction,
+  getAllB2BProjectsAction,
   deleteB2BProjectAction,
   archiveB2BProjectAction,
 } from "@/api-actions/b2b";
@@ -72,7 +72,15 @@ type SortField = keyof Pick<
 >;
 
 const TABLE_COLUMNS_COUNT = 10;
-const ALL_STATUSES: ProjectMarketStatus[] = ["contract_signed", "waiting", "open", "closing_soon"];
+// Archived rows never reach this list (the Archive screen owns them), so the
+// filter offers every status a row here can actually have.
+const ALL_STATUSES: ProjectMarketStatus[] = [
+  "contract_signed",
+  "waiting",
+  "open",
+  "closing_soon",
+  "declined",
+];
 
 function SkeletonRows({ count }: { count: number }) {
   return (
@@ -90,18 +98,38 @@ function SkeletonRows({ count }: { count: number }) {
   );
 }
 
+/**
+ * Every status gets its own badge. Anything that falls through to the default
+ * would read as "Waiting", which is wrong for a settled row — a declined offer
+ * is not still waiting on anyone.
+ */
+const STATUS_BADGE_STYLES: Record<ProjectMarketStatus, string> = {
+  contract_signed: "bg-emerald-600 hover:bg-emerald-600",
+  waiting: "bg-amber-500 hover:bg-amber-500",
+  closing_soon: "bg-orange-600 hover:bg-orange-600",
+  open: "bg-slate-500 hover:bg-slate-500",
+  declined: "bg-red-600 hover:bg-red-600",
+  archived: "bg-slate-400 hover:bg-slate-400",
+};
+
 function StatusBadge({ status }: { status: ProjectMarketStatus }) {
   const t = useTranslate();
-  if (status === "contract_signed") {
-    return (
-      <Badge className="rounded-md bg-emerald-600 hover:bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
-        {t(localizationConstants.b2bPMStatusContractSigned)}
-      </Badge>
-    );
-  }
+  const labels: Record<ProjectMarketStatus, string> = {
+    contract_signed: t(localizationConstants.b2bPMStatusContractSigned),
+    waiting: t(localizationConstants.b2bPMStatusWaiting),
+    closing_soon: t(localizationConstants.closingSoon),
+    open: t(localizationConstants.open),
+    declined: t(localizationConstants.b2bPMStatusDeclined),
+    archived: t(localizationConstants.b2bPMStatusArchived),
+  };
+
   return (
-    <Badge className="rounded-md bg-amber-500 hover:bg-amber-500 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
-      {t(localizationConstants.b2bPMStatusWaiting)}
+    <Badge
+      className={`rounded-md px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0 ${
+        STATUS_BADGE_STYLES[status] ?? STATUS_BADGE_STYLES.open
+      }`}
+    >
+      {labels[status] ?? status}
     </Badge>
   );
 }
@@ -135,11 +163,9 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     setLoading(true);
     setLoadError(null);
     try {
-      const res = await getB2BProjectsAction({
-        page,
-        pageSize: rowsPerPage,
-        search: debouncedSearch,
-      });
+      // All pages, not just one: sorting, the status filter and pagination
+      // below all run in the browser over the full list.
+      const res = await getAllB2BProjectsAction(debouncedSearch);
       setProjectList(res.projects);
       if (res.error) {
         setLoadError(res.error);
@@ -147,7 +173,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, debouncedSearch]);
+  }, [debouncedSearch]);
 
   useEffect(() => {
     let isMounted = true;
@@ -227,6 +253,8 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     waiting: t(localizationConstants.b2bPMStatusWaiting),
     open: t(localizationConstants.open),
     closing_soon: t(localizationConstants.closingSoon),
+    declined: t(localizationConstants.b2bPMStatusDeclined),
+    archived: t(localizationConstants.b2bPMStatusArchived),
   };
 
   return (

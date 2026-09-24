@@ -52,6 +52,7 @@ import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { formatApiDate } from "@/utils/date";
 import { showToast } from "@/lib/toast";
 import { ProjectMarketDetail, OfferStatus, ProjectMarketOffer } from "../types/projectMarket";
 
@@ -146,7 +147,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                 </span>
               </div>
               <p className="mt-1 text-xs text-slate-500">
-                {t(localizationConstants.b2bPMLatestOfferDate)}: {data.latestOfferDate}
+                {t(localizationConstants.b2bPMLatestOfferDate)}: {formatApiDate(data.latestOfferDate)}
               </p>
             </div>
 
@@ -313,7 +314,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                         {offer.company}
                       </TableCell>
                       <TableCell className="whitespace-nowrap px-4 py-3.5 text-slate-800">
-                        {offer.date}
+                        {formatApiDate(offer.date)}
                       </TableCell>
                       <TableCell className="whitespace-nowrap px-4 py-3.5 text-slate-800">
                         {offer.contactPerson}

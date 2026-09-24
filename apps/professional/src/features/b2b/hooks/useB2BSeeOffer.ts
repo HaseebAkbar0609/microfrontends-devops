@@ -8,25 +8,37 @@ import {
   sendB2BOfferQAReplyAction,
 } from "@/api-actions/b2b/seeOffer";
 import { B2BSeeOfferDetail } from "../types/seeOffer";
-import { DUMMY_SEE_OFFER_DETAIL } from "../constants/seeOfferMock";
+import { markProjectMarketQuestionReadAction } from "@/api-actions/b2b/projectMarket";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useAuthStatus, type User } from "@/context/AuthContext";
 
+const EMPTY_SEE_OFFER_DETAIL: B2BSeeOfferDetail = {
+  id: "",
+  title: "",
+  refNr: "",
+  postedDate: "",
+  city: "",
+  municipality: "",
+  totalOffert: 0,
+  company: { id: "", name: "", email: "", telefon: "", adress: "", orgNr: "" },
+  contactPerson: { name: "", email: "", mobil: "" },
+  offert: { arbete: "", material: "", totalOffert: 0, betalningsvillkor: "" },
+  documents: { images: [], docs: [], drawings: [] },
+  qa: [],
+};
+
 export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1", offerId = "1") {
   const t = useTranslate();
   const { user } = useAuthStatus() as { user: User | null };
   const currentUserName =
-    [user?.first_name, user?.last_name].filter(Boolean).join(" ") ||
-    user?.email ||
-    "Stefan Eriksson";
+    [user?.first_name, user?.last_name].filter(Boolean).join(" ") || user?.email || "";
   const userInitials =
     ((user?.first_name?.[0] || "") + (user?.last_name?.[0] || "")).toUpperCase() ||
-    currentUserName.slice(0, 2).toUpperCase() ||
-    "SE";
+    currentUserName.slice(0, 2).toUpperCase();
 
-  const [data, setData] = useState<B2BSeeOfferDetail>(initialData || DUMMY_SEE_OFFER_DETAIL);
+  const [data, setData] = useState<B2BSeeOfferDetail>(initialData || EMPTY_SEE_OFFER_DETAIL);
   const [isLoading, setIsLoading] = useState<boolean>(!initialData);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submittingAction, setSubmittingAction] = useState<"accept" | "decline" | "reply" | null>(null);
@@ -40,12 +52,11 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
       if (res.success && res.data) {
         setData(res.data);
       } else {
-        setData(DUMMY_SEE_OFFER_DETAIL);
+        setError(res.error || "Failed to load offer details");
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "Failed to load offer details";
       setError(errorMsg);
-      setData(DUMMY_SEE_OFFER_DETAIL);
     } finally {
       setIsLoading(false);
     }
@@ -134,30 +145,29 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
     }
   };
 
-  const handleArchiveQAMessage = (messageId: string) => {
-    setData((prev) => ({
-      ...prev,
-      qa: prev.qa.filter((msg) => msg.id !== messageId),
-    }));
-    showToast("success", t(localizationConstants.b2bPMQAArkivera));
-  };
-
-  const handleDeleteQAMessage = (messageId: string) => {
-    setData((prev) => ({
-      ...prev,
-      qa: prev.qa.filter((msg) => msg.id !== messageId),
-    }));
-    showToast("success", t(localizationConstants.b2bPMQARadera));
-  };
-
-  const handleMarkQARead = (messageId: string) => {
-    setData((prev) => ({
-      ...prev,
-      qa: prev.qa.map((msg) =>
-        msg.id === messageId ? { ...msg, status: "opened" as const } : msg
-      ),
-    }));
-    showToast("success", t(localizationConstants.b2bPMQAMarkAsRead));
+  /**
+   * Mark a question as read (new → opened) in the project's shared thread.
+   *
+   * This used to only flip local state and toast success — nothing was saved,
+   * so the question was back in "New" after a reload. Archive / delete of a
+   * message had the same problem and have no backend at all, so they are gone.
+   * The thread is addressed by project: the response's own `projectId`, since
+   * the flat `/overview/offer/[offerId]` route has no project id of its own.
+   */
+  const handleMarkQARead = async (messageId: string) => {
+    const threadProjectId = data.projectId || projectId;
+    const res = await markProjectMarketQuestionReadAction(threadProjectId, messageId);
+    if (res.success) {
+      setData((prev) => ({
+        ...prev,
+        qa: prev.qa.map((msg) =>
+          msg.id === messageId && msg.status === "new" ? { ...msg, status: "opened" } : msg
+        ),
+      }));
+      showToast("success", t(localizationConstants.b2bPMQAMarkAsRead));
+    } else {
+      showToast("error", res.error || t(localizationConstants.genericError));
+    }
   };
 
   return {
@@ -172,8 +182,6 @@ export function useB2BSeeOffer(initialData?: B2BSeeOfferDetail, projectId = "1",
     handleAcceptOffer,
     handleDeclineOffer,
     handleSendQAReply,
-    handleArchiveQAMessage,
-    handleDeleteQAMessage,
     handleMarkQARead,
   };
 }

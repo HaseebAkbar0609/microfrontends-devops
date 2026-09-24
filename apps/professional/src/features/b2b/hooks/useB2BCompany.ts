@@ -2,7 +2,6 @@
 
 import { useState, useCallback, useEffect } from "react";
 import { CompanyDetail, companyValidationSchema } from "../types/company";
-import { DUMMY_COMPANY_DETAIL } from "../constants/companyMock";
 import {
   getB2BCompanyDetailAction,
   updateB2BCompanyDetailAction,
@@ -12,10 +11,30 @@ import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
+const EMPTY_COMPANY_DETAIL: CompanyDetail = {
+  id: "",
+  namn: "",
+  orgNr: "",
+  vatNr: "",
+  sniKod: "",
+  adress: {
+    postAdress: "", postNr: "", ort: "",
+    besoksAdress: "", besoksPostNr: "", besoksOrt: "",
+    leveransAdress: "", leveransPostNr: "", leveransOrt: "",
+    vaxelNr: "", epost: "", hemsida: "",
+  },
+  fakturaEmail: "",
+  presentationText: "",
+  team: [],
+  presentationFiles: [],
+  references: [],
+  reviews: [],
+};
+
 export function useB2BCompany(companyId = "1", initialData?: CompanyDetail) {
   const t = useTranslate();
-  const [data, setData] = useState<CompanyDetail>(initialData || DUMMY_COMPANY_DETAIL);
-  const [formData, setFormData] = useState<CompanyDetail>(initialData || DUMMY_COMPANY_DETAIL);
+  const [data, setData] = useState<CompanyDetail>(initialData || EMPTY_COMPANY_DETAIL);
+  const [formData, setFormData] = useState<CompanyDetail>(initialData || EMPTY_COMPANY_DETAIL);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(!initialData);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -31,14 +50,11 @@ export function useB2BCompany(companyId = "1", initialData?: CompanyDetail) {
         setData(res.data);
         setFormData(res.data);
       } else {
-        setData(DUMMY_COMPANY_DETAIL);
-        setFormData(DUMMY_COMPANY_DETAIL);
+        setError(res.error || "Failed to load company details");
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : "Failed to load company details";
       setError(errorMsg);
-      setData(DUMMY_COMPANY_DETAIL);
-      setFormData(DUMMY_COMPANY_DETAIL);
     } finally {
       setIsLoading(false);
     }
@@ -140,9 +156,12 @@ export function useB2BCompany(companyId = "1", initialData?: CompanyDetail) {
         setData((prev) => ({ ...prev, verificationStatus: "verified" }));
         setFormData((prev) => ({ ...prev, verificationStatus: "verified" }));
         showToast("success", t(localizationConstants.b2bCompanyVerified) || "Verified");
+      } else {
+        showToast("error", res.error || t(localizationConstants.genericError) || "Failed to verify business");
       }
-    } catch {
-      showToast("error", t(localizationConstants.genericError) || "Failed to verify business");
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Failed to verify business";
+      showToast("error", errorMsg);
     } finally {
       setIsSubmitting(false);
     }

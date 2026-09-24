@@ -362,19 +362,21 @@ export function B2BArchiveView() {
                   </TableCell>
                   <TableCell className="whitespace-nowrap px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      {/* First Button: View quote (bg color) */}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 px-3 text-xs font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors cursor-pointer"
-                        onClick={() =>
-                          router.push(
-                            `/module/business/b2b/archive/${row.id}/offer`
-                          )
-                        }
-                      >
-                        <Translate text={localizationConstants.b2bArchiveViewOffer} />
-                      </Button>
+                      {/* First Button: View quote — only when this company actually sent one */}
+                      {row.hasOffer && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-3 text-xs font-medium text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors cursor-pointer"
+                          onClick={() =>
+                            router.push(
+                              `/module/business/b2b/archive/${row.id}/offer`
+                            )
+                          }
+                        >
+                          <Translate text={localizationConstants.b2bArchiveViewOffer} />
+                        </Button>
+                      )}
 
                       {/* Second Button: View inquiry (border added, bg removed) */}
                       <Button

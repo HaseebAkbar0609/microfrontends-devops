@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Check, X, LayoutList, Layers, RotateCcw, Loader2 } from "lucide-react";
 import {
 	AlertDialog,
@@ -49,6 +49,7 @@ export function B2BDashboard() {
 	const [isRearranging, setIsRearranging] = useState(false);
 	const [kpiData, setKpiData] = useState<B2BDashboardKpis>(EMPTY_B2B_KPIS);
 	const [isLoadingKpis, setIsLoadingKpis] = useState(true);
+	const [kpiError, setKpiError] = useState<string | null>(null);
 
 	const {
 		placedWidgets,
@@ -74,24 +75,28 @@ export function B2BDashboard() {
 	const [gridDragOverIndex, setGridDragOverIndex] = useState<number | null>(null);
 
 	// Fetch real B2B KPIs from Backend API
-	useEffect(() => {
-		async function fetchKpis() {
-			setIsLoadingKpis(true);
-			const res = await getB2BDashboardKpisAction();
-			if (res.success && res.data) {
-				setKpiData(res.data);
-				const dynamicMap = buildB2BWidgetMap(res.data);
-				setPlacedWidgets((prev) =>
-					prev.map((w) => ({
-						...w,
-						widgetProps: dynamicMap[w.sidebarId || "emptyPage"] || dynamicMap.emptyPage,
-					}))
-				);
-			}
-			setIsLoadingKpis(false);
+	const fetchKpis = useCallback(async () => {
+		setIsLoadingKpis(true);
+		setKpiError(null);
+		const res = await getB2BDashboardKpisAction();
+		if (res.success && res.data) {
+			setKpiData(res.data);
+			const dynamicMap = buildB2BWidgetMap(res.data);
+			setPlacedWidgets((prev) =>
+				prev.map((w) => ({
+					...w,
+					widgetProps: dynamicMap[w.sidebarId || "emptyPage"] || dynamicMap.emptyPage,
+				}))
+			);
+		} else {
+			setKpiError(res.error || "Failed to load dashboard data");
 		}
-		fetchKpis();
+		setIsLoadingKpis(false);
 	}, [setPlacedWidgets]);
+
+	useEffect(() => {
+		fetchKpis();
+	}, [fetchKpis]);
 
 	// Load user's saved layout from Backend DB
 	useEffect(() => {
@@ -294,6 +299,20 @@ export function B2BDashboard() {
 				<div className="flex items-center gap-2 text-xs text-slate-400">
 					<Loader2 className="w-3.5 h-3.5 animate-spin" />
 					<span>Updating live KPIs...</span>
+				</div>
+			)}
+			{!isLoadingKpis && kpiError && (
+				<div className="flex items-center justify-between gap-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+					<span>{kpiError}</span>
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						className="h-6 cursor-pointer px-2 text-xs text-amber-900 hover:bg-amber-100"
+						onClick={() => fetchKpis()}
+					>
+						{t(localizationConstants.retry)}
+					</Button>
 				</div>
 			)}
 

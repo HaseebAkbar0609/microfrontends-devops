@@ -1,4 +1,10 @@
-export type ProjectMarketStatus = "contract_signed" | "waiting" | "open" | "closing_soon";
+export type ProjectMarketStatus =
+  | "contract_signed"
+  | "waiting"
+  | "open"
+  | "closing_soon"
+  | "declined"
+  | "archived";
 export type OfferStatus = "accepted" | "deny" | "waiting";
 export type QAStatus = "new" | "opened" | "answered";
 

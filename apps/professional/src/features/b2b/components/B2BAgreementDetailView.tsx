@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowDown,
@@ -15,6 +15,7 @@ import {
   File,
   Info,
   LayoutList,
+  Loader2,
   Map,
   MapPin,
   MoreVertical,
@@ -39,7 +40,8 @@ import localizationConstants from "@/utils/translation/constants";
 import { formatCurrency } from "@/utils/formatCurrency";
 import { B2BAgreementDetail } from "../types/agreement";
 import { useB2BAgreements } from "../hooks/useB2BAgreements";
-import { getAgreementDetailByContext } from "../constants/agreementMock";
+import { getB2BAgreementDetailAction } from "@/api-actions/b2b/agreements";
+import { EMPTY_AGREEMENT_DRAFT } from "../hooks/useAgreementDraftFromContext";
 
 function AccordionSection({
   title,
@@ -107,10 +109,11 @@ function DocTypeBadge({ type, label }: { type?: string; label?: string }) {
 }
 
 interface Props {
-  data: B2BAgreementDetail;
+  agreementId: string;
+  data?: B2BAgreementDetail;
 }
 
-export function B2BAgreementDetailView({ data: initialData }: Props) {
+export function B2BAgreementDetailView({ agreementId, data: initialData }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslate();
@@ -118,16 +121,51 @@ export function B2BAgreementDetailView({ data: initialData }: Props) {
   const queryProjectId = searchParams.get("projectId") || undefined;
   const queryOfferId = searchParams.get("offerId") || undefined;
 
-  const data = useMemo(() => {
-    if (queryProjectId || queryOfferId) {
-      return getAgreementDetailByContext(queryProjectId, queryOfferId);
+  const [data, setData] = useState<B2BAgreementDetail>(initialData || EMPTY_AGREEMENT_DRAFT);
+  const [isLoading, setIsLoading] = useState<boolean>(!initialData);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const fetchAgreement = async () => {
+    setIsLoading(true);
+    setLoadError(null);
+    const res = await getB2BAgreementDetailAction(agreementId);
+    if (res.success && res.data) {
+      setData(res.data);
+    } else {
+      setLoadError(res.error || "Failed to load agreement");
     }
-    return initialData;
-  }, [queryProjectId, queryOfferId, initialData]);
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    if (!initialData) {
+      fetchAgreement();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [agreementId]);
 
   const { isSubmitting, handleDownloadDoc, handleSendAgreement } = useB2BAgreements(data);
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-400" aria-hidden={true} />
+      </div>
+    );
+  }
+
+  if (loadError && !data.id) {
+    return (
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-slate-50 px-4 text-center">
+        <p className="text-sm text-slate-500">{loadError}</p>
+        <Button variant="outline" size="sm" onClick={() => fetchAgreement()} className="cursor-pointer">
+          {t(localizationConstants.retry)}
+        </Button>
+      </div>
+    );
+  }
 
   const handleBack = () => {
     if (queryProjectId || queryOfferId) {

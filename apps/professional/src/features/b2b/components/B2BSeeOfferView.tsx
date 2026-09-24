@@ -20,8 +20,6 @@ import {
   Map,
   MapPin,
   MoreVertical,
-  Trash2,
-  Archive,
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -37,6 +35,7 @@ import {
 import { useTranslate, Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { formatApiDate, formatApiDateTime } from "@/utils/date";
 import { B2BSeeOfferDetail, B2BOfferQAMessage } from "../types/seeOffer";
 import { useB2BSeeOffer } from "../hooks/useB2BSeeOffer";
 import { B2BDocumentPreviewModal, PreviewableDoc } from "./B2BDocumentPreviewModal";
@@ -146,16 +145,12 @@ function QACard({
   userInitials,
   onReply,
   onMarkRead,
-  onArchive,
-  onDelete,
 }: {
   message: B2BOfferQAMessage;
   currentUserName: string;
   userInitials: string;
   onReply: (messageId: string, reply: string) => void;
   onMarkRead: (messageId: string) => void;
-  onArchive: (messageId: string) => void;
-  onDelete: (messageId: string) => void;
 }) {
   const t = useTranslate();
   const [comment, setComment] = useState("");
@@ -196,51 +191,41 @@ function QACard({
           </div>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-800 hover:bg-slate-100 data-[state=open]:bg-slate-200 transition-colors p-0"
-              aria-label={t(localizationConstants.actions)}
-              title={t(localizationConstants.actions)}
+        {/*
+          "Mark as read" is the only message action with a backend, and it only
+          means something on a new question — so the menu appears only there.
+          Archive and Delete used to sit here too; they only hid the message
+          locally and toasted success, and it came back on reload.
+        */}
+        {message.status === "new" && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-slate-800 hover:bg-slate-100 data-[state=open]:bg-slate-200 transition-colors p-0"
+                aria-label={t(localizationConstants.actions)}
+                title={t(localizationConstants.actions)}
+              >
+                <MoreVertical size={16} className="text-slate-800" aria-hidden={true} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-44 rounded-lg border border-slate-200 bg-white p-1.5 shadow-xl"
             >
-              <MoreVertical size={16} className="text-slate-800" aria-hidden={true} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-44 rounded-lg border border-slate-200 bg-white p-1.5 shadow-xl"
-          >
-            <DropdownMenuItem
-              role="button"
-              aria-label={t(localizationConstants.b2bPMQAMarkAsRead)}
-              onClick={() => onMarkRead(message.id)}
-              className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
-            >
-              <CircleCheckBig size={16} className="text-slate-700 shrink-0" aria-hidden={true} />
-              <span>{t(localizationConstants.b2bPMQAMarkAsRead)}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              role="button"
-              aria-label={t(localizationConstants.b2bDealArchiveAction)}
-              onClick={() => onArchive(message.id)}
-              className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
-            >
-              <Archive size={16} className="text-slate-700 shrink-0" aria-hidden={true} />
-              <span>{t(localizationConstants.b2bDealArchiveAction)}</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              role="button"
-              aria-label={t(localizationConstants.b2bDealDelete)}
-              onClick={() => onDelete(message.id)}
-              className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
-            >
-              <Trash2 size={16} className="text-slate-700 shrink-0" aria-hidden={true} />
-              <span>{t(localizationConstants.b2bDealDelete)}</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+              <DropdownMenuItem
+                role="button"
+                aria-label={t(localizationConstants.b2bPMQAMarkAsRead)}
+                onClick={() => onMarkRead(message.id)}
+                className="flex cursor-pointer items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 transition-colors"
+              >
+                <CircleCheckBig size={16} className="text-slate-700 shrink-0" aria-hidden={true} />
+                <span>{t(localizationConstants.b2bPMQAMarkAsRead)}</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       {/* Message question content & date on right */}
@@ -249,7 +234,7 @@ function QACard({
           {message.message}
         </p>
         <span className="shrink-0 font-sans text-xs font-normal leading-4 tracking-normal text-slate-500 text-right">
-          {message.date}
+          {formatApiDateTime(message.date)}
         </span>
       </div>
 
@@ -279,7 +264,7 @@ function QACard({
                   {message.answerText || message.replyText || "—"}
                 </p>
                 <span className="shrink-0 font-sans text-xs font-normal leading-4 tracking-normal text-slate-500 text-right">
-                  {message.answerDate || message.date}
+                  {formatApiDateTime(message.answerDate || message.date)}
                 </span>
               </div>
             </div>
@@ -338,8 +323,49 @@ function QACard({
   );
 }
 
+/**
+ * The offer's own status, in the same four states and colours the Overview
+ * list uses — `contract_signed` / `closing_soon` / `waiting` / `open`.
+ */
+export function OfferStatusBadge({ status }: { status?: string }) {
+  const t = useTranslate();
+  if (!status) return null;
+
+  const styles: Record<string, string> = {
+    contract_signed: "border-emerald-200 bg-emerald-50 text-emerald-700",
+    closing_soon: "border-orange-200 bg-orange-50 text-orange-700",
+    waiting: "border-amber-200 bg-amber-50 text-amber-700",
+    open: "border-slate-200 bg-slate-50 text-slate-700",
+    declined: "border-red-200 bg-red-50 text-red-700",
+    archived: "border-slate-200 bg-slate-100 text-slate-600",
+  };
+  const labels: Record<string, string> = {
+    contract_signed: t(localizationConstants.b2bPMStatusContractSigned),
+    closing_soon: t(localizationConstants.closingSoon),
+    waiting: t(localizationConstants.b2bPMStatusWaiting),
+    open: t(localizationConstants.open),
+    declined: t(localizationConstants.b2bPMStatusDeclined),
+    archived: t(localizationConstants.b2bPMStatusArchived),
+  };
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-medium ${
+        styles[status] ?? styles.open
+      }`}
+    >
+      {labels[status] ?? status}
+    </span>
+  );
+}
+
 interface Props {
-  data: B2BSeeOfferDetail;
+  /**
+   * Optional. Left out by the routes, which pass ids only — the hook then
+   * fetches in the browser, where the access token actually lives. Fetching
+   * this on the server sends the request without an Authorization header.
+   */
+  data?: B2BSeeOfferDetail;
   projectId?: string;
   offerId?: string;
 }
@@ -351,24 +377,50 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
 
   const {
     data,
+    isLoading,
+    error,
     isSubmitting,
     submittingAction,
     currentUserName,
     userInitials,
+    refetch,
     handleAcceptOffer,
     handleDeclineOffer,
     handleSendQAReply,
-    handleArchiveQAMessage,
-    handleDeleteQAMessage,
     handleMarkQARead,
   } = useB2BSeeOffer(initialData, projectId, offerId);
   const [previewDoc, setPreviewDoc] = useState<PreviewableDoc | null>(null);
+
+  /** Declined, signed and archived offers are settled — nothing left to act on. */
+  const isOfferSettled =
+    data.statusBadge === "declined" ||
+    data.statusBadge === "contract_signed" ||
+    data.statusBadge === "archived";
 
   const onAccept = () => {
     handleAcceptOffer(() => {
       router.push(`/module/business/b2b/agreements/create?projectId=${projectId}&offerId=${offerId}`);
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-400" aria-hidden={true} />
+      </div>
+    );
+  }
+
+  if (error && !data.id) {
+    return (
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-slate-50 px-4 text-center">
+        <p className="text-sm text-slate-500">{error}</p>
+        <Button variant="outline" size="sm" onClick={() => refetch()} className="cursor-pointer">
+          {t(localizationConstants.retry)}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col bg-slate-50 min-h-full">
@@ -404,9 +456,10 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                     <span className="rounded border border-slate-200 bg-white px-2 py-0.5 text-xs font-medium text-slate-700">
                       {data.refNr}
                     </span>
+                    <OfferStatusBadge status={data.statusBadge} />
                   </div>
                   <p className="text-xs text-slate-500">
-                    {t(localizationConstants.b2bDealCreatedDate)}: {data.postedDate}
+                    {t(localizationConstants.b2bDealCreatedDate)}: {formatApiDate(data.postedDate)}
                   </p>
                   <div className="flex flex-wrap items-center gap-1.5 mt-1">
                     <span className="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
@@ -633,8 +686,11 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                 </span>
               </div>
               <p className="mt-2 text-xs text-slate-500">
-                {t(localizationConstants.b2bDealCreatedDate)}: {data.postedDate}
+                {t(localizationConstants.b2bDealCreatedDate)}: {formatApiDate(data.postedDate)}
               </p>
+              <div className="mt-2">
+                <OfferStatusBadge status={data.statusBadge} />
+              </div>
 
               <div className="mt-3 flex items-baseline justify-between">
                 <span className="text-xs font-medium text-slate-500">
@@ -648,36 +704,47 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
               {/* Separator line below price */}
               <div className="my-3.5 h-px bg-slate-100" />
 
-              {/* Action Buttons */}
-              <div className="flex flex-col gap-2">
-                <Button
-                  type="button"
-                  disabled={isSubmitting}
-                  className="h-10 w-full cursor-pointer gap-2 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs disabled:opacity-60 disabled:cursor-not-allowed"
-                  onClick={onAccept}
-                >
-                  {submittingAction === "accept" ? (
-                    <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden={true} />
-                  ) : (
-                    <Check size={16} strokeWidth={2} className="shrink-0" aria-hidden={true} />
-                  )}
-                  <span>{t(localizationConstants.b2bArchiveAcceptOffer)}</span>
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isSubmitting}
-                  className="h-10 w-full cursor-pointer gap-2 border-0 bg-zinc-100 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-colors rounded-lg shadow-none disabled:opacity-60 disabled:cursor-not-allowed"
-                  onClick={handleDeclineOffer}
-                >
-                  {submittingAction === "decline" ? (
-                    <Loader2 className="h-4 w-4 animate-spin shrink-0 text-slate-800" aria-hidden={true} />
-                  ) : (
-                    <X size={15} aria-hidden={true} />
-                  )}
-                  <span>{t(localizationConstants.b2bArchiveDecline)}</span>
-                </Button>
-              </div>
+              {/*
+                Action Buttons — only while the offer is still open. Once it is
+                declined, signed or archived the backend rejects both calls
+                (409 OFFER_NOT_OPEN_FOR_ACCEPTANCE), so offering the buttons
+                would only lead to an error the user can do nothing about.
+              */}
+              {isOfferSettled ? (
+                <p className="text-xs text-slate-500">
+                  {t(localizationConstants.b2bOfferClosedNote)}
+                </p>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Button
+                    type="button"
+                    disabled={isSubmitting}
+                    className="h-10 w-full cursor-pointer gap-2 bg-slate-900 text-sm font-medium text-white hover:bg-slate-800 transition-colors rounded-lg shadow-xs disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={onAccept}
+                  >
+                    {submittingAction === "accept" ? (
+                      <Loader2 className="h-4 w-4 animate-spin shrink-0" aria-hidden={true} />
+                    ) : (
+                      <Check size={16} strokeWidth={2} className="shrink-0" aria-hidden={true} />
+                    )}
+                    <span>{t(localizationConstants.b2bArchiveAcceptOffer)}</span>
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={isSubmitting}
+                    className="h-10 w-full cursor-pointer gap-2 border-0 bg-zinc-100 text-sm font-medium text-slate-900 hover:bg-slate-200 transition-colors rounded-lg shadow-none disabled:opacity-60 disabled:cursor-not-allowed"
+                    onClick={handleDeclineOffer}
+                  >
+                    {submittingAction === "decline" ? (
+                      <Loader2 className="h-4 w-4 animate-spin shrink-0 text-slate-800" aria-hidden={true} />
+                    ) : (
+                      <X size={15} aria-hidden={true} />
+                    )}
+                    <span>{t(localizationConstants.b2bArchiveDecline)}</span>
+                  </Button>
+                </div>
+              )}
             </div>
 
             {/* Collapsible Fråga/Svar Section matching QAColumn style */}
@@ -719,8 +786,6 @@ export function B2BSeeOfferView({ data: initialData, projectId = "1", offerId = 
                         userInitials={userInitials}
                         onReply={handleSendQAReply}
                         onMarkRead={handleMarkQARead}
-                        onArchive={handleArchiveQAMessage}
-                        onDelete={handleDeleteQAMessage}
                       />
                     ))}
                     {data.qa.length === 0 && (

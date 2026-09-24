@@ -5,9 +5,27 @@ import { ProjectMarket, ProjectMarketDetail } from "@/features/b2b/types/project
 
 const B2B_BASE_PATH = "/professionals/b2b";
 
-export const projectMarketStatusSchema = z.enum(["contract_signed", "waiting", "open", "closing_soon"]);
+export const projectMarketStatusSchema = z.enum([
+  "contract_signed",
+  "waiting",
+  "open",
+  "closing_soon",
+  "declined",
+  "archived",
+]);
 export const offerStatusSchema = z.enum(["accepted", "deny", "waiting"]);
 export const qaStatusSchema = z.enum(["new", "opened", "answered"]);
+
+/**
+ * An optional text field as the API actually sends it: absent, or an explicit
+ * `null` for "not answered yet". Plain `.optional()` rejects that `null` and
+ * fails the whole response — so unanswered questions are normalised to
+ * `undefined` here, which is what the view models expect.
+ */
+export const optionalApiText = z
+  .string()
+  .nullish()
+  .transform((value) => value ?? undefined);
 
 export const projectMarketItemSchema = z.object({
   id: z.string(),
@@ -36,19 +54,19 @@ export const qaMessageSchema = z.object({
   id: z.string(),
   sender: z.string(),
   role: z.string(),
-  company: z.string().optional(),
-  badge: z.string().optional(),
-  replyFrom: z.string().optional(),
-  replyText: z.string().optional(),
-  answerUser: z.string().optional(),
-  answerBadge: z.string().optional(),
-  answerRole: z.string().optional(),
-  answerDate: z.string().optional(),
-  answerText: z.string().optional(),
+  company: optionalApiText,
+  badge: optionalApiText,
+  replyFrom: optionalApiText,
+  replyText: optionalApiText,
+  answerUser: optionalApiText,
+  answerBadge: optionalApiText,
+  answerRole: optionalApiText,
+  answerDate: optionalApiText,
+  answerText: optionalApiText,
   message: z.string(),
   date: z.string(),
   status: qaStatusSchema,
-  avatar: z.string().optional(),
+  avatar: optionalApiText,
 });
 
 export const projectMarketDetailSchema = z.object({
@@ -106,6 +124,52 @@ export async function getProjectMarketListAction(): Promise<ActionResult<Project
       success: false,
       data: null,
       error: apiError.response?.data?.message || "Failed to load projects",
+    };
+  }
+}
+
+/**
+ * Post a new question into a project's shared Q&A thread.
+ *
+ * The same thread the Offer screen replies into — a question posted here is
+ * visible from both views, so the detail response is re-fetched afterwards
+ * rather than patched locally.
+ */
+export async function postProjectMarketQuestionAction(
+  projectId: string,
+  message: string,
+): Promise<ActionResult<null>> {
+  try {
+    await axiosInstance.post(`${B2B_BASE_PATH}/project-market/${projectId}/qa`, { message });
+    return { success: true, data: null, error: null };
+  } catch (error: unknown) {
+    const apiError = error as { response?: { data?: { message?: string } } };
+    return {
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to post question",
+    };
+  }
+}
+
+/**
+ * Mark a question in a project's shared Q&A thread as read (new → opened).
+ * The backend leaves an answered question as it is, so this is safe to call
+ * on any message; the screens only offer it on new ones.
+ */
+export async function markProjectMarketQuestionReadAction(
+  projectId: string,
+  messageId: string,
+): Promise<ActionResult<null>> {
+  try {
+    await axiosInstance.post(`${B2B_BASE_PATH}/project-market/${projectId}/qa/${messageId}/read`);
+    return { success: true, data: null, error: null };
+  } catch (error: unknown) {
+    const apiError = error as { response?: { data?: { message?: string } } };
+    return {
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to mark question as read",
     };
   }
 }

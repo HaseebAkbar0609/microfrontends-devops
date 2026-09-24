@@ -14,6 +14,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { formatApiDate } from "@/utils/date";
 import { ProjectMarketDetail } from "../types/projectMarket";
 
 function InfoField({ label, value }: { label: string; value?: string }) {
@@ -66,6 +67,48 @@ function SectionCard({
   );
 }
 
+function FileItem({ label, type }: { label: string; type?: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1.5">
+      <div className="flex h-12 w-12 items-center justify-center">
+        {type === "pdf" || type === "doc" ? (
+          <Image
+            src={type === "pdf" ? "/file-type-pdf.png" : "/file-type-doc.png"}
+            alt={label}
+            width={36}
+            height={36}
+            className="h-9 w-9 object-contain"
+          />
+        ) : (
+          <File size={36} className="text-slate-400" aria-hidden={true} />
+        )}
+      </div>
+      <span className="max-w-24 truncate text-xs font-medium text-slate-800">{label}</span>
+    </div>
+  );
+}
+
+function DocumentGroup({
+  title,
+  emptyLabel,
+  children,
+}: {
+  title: string;
+  emptyLabel: string;
+  children: React.ReactNode[];
+}) {
+  return (
+    <div className="space-y-3">
+      <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">{title}</h4>
+      {children.length > 0 ? (
+        <div className="flex flex-wrap items-start gap-6">{children}</div>
+      ) : (
+        <p className="text-xs text-slate-500">{emptyLabel}</p>
+      )}
+    </div>
+  );
+}
+
 export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
   const t = useTranslate();
 
@@ -75,7 +118,6 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
       <SectionCard
         title={t(localizationConstants.b2bPMCustomerInfo)}
         icon={<CircleUserRound size={24} className="h-6 w-6 text-slate-900 shrink-0 opacity-100" aria-hidden={true} />}
-        onEdit={() => {}}
       >
         <div className="grid grid-cols-1 gap-x-12 gap-y-4 sm:grid-cols-2">
           <InfoField
@@ -109,7 +151,6 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
       <SectionCard
         title={t(localizationConstants.b2bPMProjectDescription)}
         icon={<ClipboardList size={24} className="h-6 w-6 text-slate-900 shrink-0 opacity-100" aria-hidden={true} />}
-        onEdit={() => {}}
       >
         <div className="grid grid-cols-1 gap-x-12 gap-y-4 sm:grid-cols-2">
           <InfoField
@@ -130,11 +171,11 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
           />
           <InfoField
             label={t(localizationConstants.b2bPMStartDatum)}
-            value={data.projectInfo.startDate}
+            value={formatApiDate(data.projectInfo.startDate)}
           />
           <InfoField
             label={t(localizationConstants.b2bPMCalculatedEndDate)}
-            value={data.projectInfo.endDate}
+            value={formatApiDate(data.projectInfo.endDate)}
           />
           <div className="sm:col-span-2">
             <InfoField
@@ -145,164 +186,48 @@ export function ProjectMarketInfoTab({ data }: { data: ProjectMarketDetail }) {
         </div>
       </SectionCard>
 
-      {/* 3. Documents */}
+      {/*
+        3. Documents — the project's own files. This section used to be entirely
+        hardcoded ("Photo.img" x3, "+6 more", "Offert 1.doc", "Details.pdf",
+        "bild.1"...), so every project showed the same fake files and
+        data.documents was never read.
+      */}
       <SectionCard
         title={t(localizationConstants.b2bPMDocuments)}
         icon={<FilePlus size={24} className="h-6 w-6 text-slate-900 shrink-0 opacity-100" aria-hidden={true} />}
-        onEdit={() => {}}
       >
         <div className="space-y-6">
-          {/* Bilder */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
-              {t(localizationConstants.b2bPMBilder)}
-            </h4>
-            <div className="flex flex-wrap gap-4">
-              {/* 3 photo thumbnails */}
-              <div className="flex flex-col items-center">
-                <div className="h-24 w-24 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center shadow-2xs">
-                  <Image
-                    src="/offer-details.png"
-                    alt="Photo.img"
-                    width={96}
-                    height={96}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <span className="mt-1.5 text-xs text-slate-500">Photo.img</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="h-24 w-24 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center shadow-2xs">
-                  <Image
-                    src="/offer-details.png"
-                    alt="Photo.img"
-                    width={96}
-                    height={96}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <span className="mt-1.5 text-xs text-slate-500">Photo.img</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="h-24 w-24 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center shadow-2xs">
-                  <Image
-                    src="/offer-details.png"
-                    alt="Photo.img"
-                    width={96}
-                    height={96}
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-                <span className="mt-1.5 text-xs text-slate-500">Photo.img</span>
-              </div>
-
-              {/* 2 placeholder boxes */}
-              <div className="flex flex-col items-center">
-                <div className="flex h-24 w-24 items-center justify-center rounded-lg border border-slate-200 bg-slate-100/80 shadow-2xs">
-                  <ImageIcon size={24} className="text-slate-400" aria-hidden="true" />
-                </div>
-                <span className="mt-1.5 text-xs text-slate-500">Photo.img</span>
-              </div>
-              <div className="flex flex-col items-center">
+          <DocumentGroup
+            title={t(localizationConstants.b2bPMBilder)}
+            emptyLabel={t(localizationConstants.b2bPMNoFiles)}
+          >
+            {data.documents.images.map((img) => (
+              <div key={img.id} className="flex flex-col items-center">
                 <div className="flex h-24 w-24 items-center justify-center rounded-lg border border-slate-200 bg-slate-100/80 shadow-2xs">
                   <ImageIcon size={24} className="text-slate-400" aria-hidden={true} />
                 </div>
-                <span className="mt-1.5 text-xs text-slate-500">Photo.img</span>
+                <span className="mt-1.5 max-w-24 truncate text-xs text-slate-500">{img.label}</span>
               </div>
+            ))}
+          </DocumentGroup>
 
-              {/* +6 more placeholder */}
-              <div className="flex flex-col items-center">
-                <div className="flex h-24 w-24 items-center justify-center rounded-lg border border-slate-200 bg-slate-100/80 shadow-2xs">
-                  <ImageIcon size={24} className="text-slate-400" aria-hidden={true} />
-                </div>
-                <span className="mt-1.5 text-xs font-medium text-slate-600">+6 more</span>
-              </div>
-            </div>
-          </div>
+          <DocumentGroup
+            title={t(localizationConstants.b2bPMDocumentSection)}
+            emptyLabel={t(localizationConstants.b2bPMNoFiles)}
+          >
+            {data.documents.docs.map((doc) => (
+              <FileItem key={doc.id} label={doc.label} type={doc.type} />
+            ))}
+          </DocumentGroup>
 
-          {/* Document Section */}
-          <div className="space-y-3 pt-1">
-            <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
-              {t(localizationConstants.b2bPMDocumentSection)}
-            </h4>
-            <div className="flex flex-wrap items-center gap-6">
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="flex h-12 w-12 items-center justify-center">
-                  <Image
-                    src="/file-type-doc.png"
-                    alt="Offert 1.doc"
-                    width={36}
-                    height={36}
-                    className="h-9 w-9 object-contain"
-                  />
-                </div>
-                <span className="text-xs font-medium text-slate-800">Offert 1.doc</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="flex h-12 w-12 items-center justify-center">
-                  <Image
-                    src="/file-type-doc.png"
-                    alt="Offert 2.doc"
-                    width={36}
-                    height={36}
-                    className="h-9 w-9 object-contain"
-                  />
-                </div>
-                <span className="text-xs font-medium text-slate-800">Offert 2.doc</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="flex h-12 w-12 items-center justify-center">
-                  <Image
-                    src="/file-type-pdf.png"
-                    alt="Details.pdf"
-                    width={36}
-                    height={36}
-                    className="h-9 w-9 object-contain"
-                  />
-                </div>
-                <span className="text-xs font-medium text-slate-800">Details.pdf</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Drawing Section */}
-          <div className="space-y-3 pt-1">
-            <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">
-              {t(localizationConstants.b2bPMDrawingSection)}
-            </h4>
-            <div className="flex flex-wrap items-center gap-6">
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="flex h-12 w-12 items-center justify-center">
-                  <Image
-                    src="/file-type-pdf.png"
-                    alt="projekt.pdf"
-                    width={36}
-                    height={36}
-                    className="h-9 w-9 object-contain"
-                  />
-                </div>
-                <span className="text-xs font-medium text-slate-800">projekt.pdf</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="flex h-12 w-12 items-center justify-center">
-                  <File size={36} className="text-slate-400" aria-hidden={true} />
-                </div>
-                <span className="text-xs font-medium text-slate-800">bild.1</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="flex h-12 w-12 items-center justify-center">
-                  <File size={36} className="text-slate-400" aria-hidden={true} />
-                </div>
-                <span className="text-xs font-medium text-slate-800">bild.1</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="flex h-12 w-12 items-center justify-center">
-                  <File size={36} className="text-slate-400" aria-hidden={true} />
-                </div>
-                <span className="text-xs font-medium text-slate-800">bild.1</span>
-              </div>
-            </div>
-          </div>
+          <DocumentGroup
+            title={t(localizationConstants.b2bPMDrawingSection)}
+            emptyLabel={t(localizationConstants.b2bPMNoFiles)}
+          >
+            {data.documents.drawings.map((drawing) => (
+              <FileItem key={drawing.id} label={drawing.label} type={drawing.type} />
+            ))}
+          </DocumentGroup>
         </div>
       </SectionCard>
     </div>

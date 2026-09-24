@@ -1,33 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  Archive as ArchiveIcon,
   BadgeDollarSign,
   Building2,
   ChevronUp,
   FileText,
+  Loader2,
   Map,
   MapPin,
-  MoreVertical,
   CircleUserRound,
-  X,
 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { formatCurrency } from "@/utils/formatCurrency";
-import { B2BArchiveOfferDetail, B2BArchiveQAMessage } from "../types/archive";
+import { formatApiDate, formatApiDateTime } from "@/utils/date";
+import { getB2BArchiveOfferDetailAction } from "@/api-actions/b2b";
+import type { B2BOfferQAMessage, B2BSeeOfferDetail } from "../types/seeOffer";
+import { OfferStatusBadge } from "./B2BSeeOfferView";
 
 const BADGE_COLOR_MAP: Record<string, string> = {
   UE: "bg-blue-600",
@@ -53,7 +49,7 @@ function InfoField({ label, value }: { label: string; value?: string }) {
   );
 }
 
-function FileDocGrid({ files }: { files: { id: string; label: string; type: string }[] }) {
+function FileDocGrid({ files }: { files: { id: string; label: string; type?: string }[] }) {
   return (
     <div className="flex flex-wrap gap-4">
       {files.map((file) => (
@@ -110,7 +106,8 @@ function AccordionSection({
   );
 }
 
-function ProjectInfoCard({ data }: { data: B2BArchiveOfferDetail }) {
+function ProjectInfoCard({ data }: { data: B2BSeeOfferDetail }) {
+  const t = useTranslate();
   return (
     <div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
       <div className="flex items-stretch gap-5 p-4">
@@ -121,11 +118,11 @@ function ProjectInfoCard({ data }: { data: B2BArchiveOfferDetail }) {
               {data.refNr}
             </span>
           </div>
-          <p className="text-xs text-slate-500">Postad: {data.postedDate}</p>
+          <p className="text-xs text-slate-500">
+            {t(localizationConstants.b2bDealCreatedDate)}: {formatApiDate(data.postedDate)}
+          </p>
           <div className="flex flex-wrap gap-1.5">
-            <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
-              {data.statusBadge}
-            </span>
+            <OfferStatusBadge status={data.statusBadge} />
             <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
               <Map size={10} aria-hidden={true} />
               {data.city}
@@ -139,7 +136,7 @@ function ProjectInfoCard({ data }: { data: B2BArchiveOfferDetail }) {
         <div className="flex flex-col items-center justify-center rounded-lg bg-gray-800 px-6 py-3">
           <div className="flex items-center gap-1.5">
             <BadgeDollarSign size={14} className="text-slate-300" aria-hidden={true} />
-            <span className="text-xs text-slate-300">Total-offert</span>
+            <span className="text-xs text-slate-300">{t(localizationConstants.b2bArchiveTotalOffer)}</span>
           </div>
           <span className="mt-1 text-lg font-bold tabular-nums text-white">{formatCurrency(data.totalOffert)}</span>
         </div>
@@ -148,10 +145,19 @@ function ProjectInfoCard({ data }: { data: B2BArchiveOfferDetail }) {
   );
 }
 
-function QACard({ message }: { message: B2BArchiveQAMessage }) {
-  const t = useTranslate();
-  const [comment, setComment] = useState("");
+/** The fields a read-only card needs — met by both the offer and the project thread shapes. */
+type ReadOnlyQAMessage = Pick<
+  B2BOfferQAMessage,
+  "id" | "sender" | "role" | "badge" | "message" | "date" | "answerText" | "answerUser" | "answerDate"
+>;
 
+/**
+ * Read-only: an archived engagement's thread is history. The card used to carry
+ * a reply box, a Send button and a Mark-as-read / Archive / Delete menu, none of
+ * which was wired to anything — so they are gone rather than left as dead UI.
+ * Shared with the archive's inquiry view.
+ */
+export function ArchivedQACard({ message }: { message: ReadOnlyQAMessage }) {
   return (
     <div className="rounded-xl border border-slate-200 bg-white p-4">
       <div className="flex items-start justify-between gap-2">
@@ -171,86 +177,90 @@ function QACard({ message }: { message: B2BArchiveQAMessage }) {
             <span className="text-xs text-slate-500">{message.role}</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="shrink-0 text-xs text-slate-400">{message.date}</span>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-md text-zinc-500 hover:bg-zinc-100"
-              >
-                <MoreVertical size={14} aria-hidden={true} />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-40">
-              <DropdownMenuItem className="cursor-pointer text-xs">
-                {t(localizationConstants.b2bPMQAMarkAsRead)}
-              </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer text-xs">
-                {t(localizationConstants.b2bDealArchiveAction)}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer text-xs text-red-600 focus:text-red-600">
-                {t(localizationConstants.b2bDealDelete)}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+        <span className="shrink-0 text-xs text-slate-400">{formatApiDateTime(message.date)}</span>
       </div>
 
       <p className="mt-3 text-sm text-zinc-700">{message.message}</p>
 
-      {message.replyFrom && (
-        <div className="mt-3 flex items-center gap-2">
-          <Image
-            src="/assets/images/Avatar.svg"
-            alt={message.replyFrom}
-            width={24}
-            height={24}
-            className="h-6 w-6 shrink-0 rounded-full"
-          />
-          <span className="text-xs font-medium text-zinc-700">SE {message.replyFrom}</span>
+      {message.answerText && (
+        <div className="mt-3 border-t border-slate-100 pt-3">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-xs font-semibold text-zinc-900">{message.answerUser}</span>
+            <span className="shrink-0 text-xs text-slate-400">
+              {formatApiDateTime(message.answerDate || message.date)}
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-zinc-700">{message.answerText}</p>
         </div>
       )}
-
-      <div className="mt-3 flex flex-col gap-2">
-        <textarea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder={t(localizationConstants.b2bPMQALeaveComment)}
-          className="w-full resize-none rounded-lg border border-slate-200 px-3 py-2 text-sm text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-300"
-          rows={2}
-        />
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={() => setComment("")}
-            className="cursor-pointer rounded-lg bg-zinc-100 px-3 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-200"
-          >
-            {t(localizationConstants.cancel)}
-          </button>
-          <button
-            type="button"
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-              comment ? "bg-zinc-900 text-white hover:bg-zinc-800" : "bg-zinc-100 text-zinc-400"
-            }`}
-          >
-            {t(localizationConstants.b2bPMQASend)}
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
 
 interface Props {
-  data: B2BArchiveOfferDetail;
+  /** Fetched in the browser, where the access token lives — never on the server. */
+  projectId: string;
 }
 
-export function B2BArchiveOfferDetailView({ data }: Props) {
+export function B2BArchiveOfferDetailView({ projectId }: Props) {
   const t = useTranslate();
   const router = useRouter();
   const [qaOpen, setQaOpen] = useState(true);
+  const [data, setData] = useState<B2BSeeOfferDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const fetchDetail = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    const result = await getB2BArchiveOfferDetailAction(projectId);
+    if (result.success && result.data) {
+      setData(result.data);
+    } else {
+      setLoadError(result.error || t(localizationConstants.genericError));
+    }
+    setLoading(false);
+  }, [projectId, t]);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      if (isMounted) await fetchDetail();
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [fetchDetail]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
+        <Loader2 className="h-5 w-5 animate-spin text-slate-400" aria-hidden={true} />
+      </div>
+    );
+  }
+
+  if (loadError || !data) {
+    return (
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-slate-50 px-4 text-center">
+        <p className="text-sm text-slate-500">{loadError}</p>
+        <div className="flex gap-2">
+          <Button type="button" variant="outline" size="sm" onClick={() => fetchDetail()} className="cursor-pointer">
+            {t(localizationConstants.retry)}
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={() => router.push("/module/business/b2b/archive")}
+            className="cursor-pointer"
+          >
+            {t(localizationConstants.goBackButton)}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col bg-slate-50">
@@ -377,9 +387,7 @@ export function B2BArchiveOfferDetailView({ data }: Props) {
                 <span className="rounded border border-zinc-200 bg-white px-1.5 py-0.5 text-xs font-medium text-zinc-700">
                   {data.refNr}
                 </span>
-                <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
-                  {data.statusBadge}
-                </span>
+                <OfferStatusBadge status={data.statusBadge} />
                 <span className="inline-flex items-center gap-0.5 rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
                   <Map size={10} aria-hidden={true} />
                   {data.city}
@@ -389,26 +397,24 @@ export function B2BArchiveOfferDetailView({ data }: Props) {
                   {data.municipality}
                 </span>
               </div>
-              <p className="mt-2 text-xs text-slate-400">Postad: {data.postedDate}</p>
+              <p className="mt-2 text-xs text-slate-400">
+                {t(localizationConstants.b2bDealCreatedDate)}: {formatApiDate(data.postedDate)}
+              </p>
               <div className="mt-2 h-px bg-slate-100" />
-              <p className="mt-2 text-xs text-slate-500">Totalt offert</p>
+              <p className="mt-2 text-xs text-slate-500">{t(localizationConstants.b2bArchiveTotalOffer)}</p>
               <p className="text-base font-bold tabular-nums text-slate-900">{formatCurrency(data.totalOffert)}</p>
             </div>
 
-            {/* Action buttons */}
-            <Button
-              className="h-11 w-full cursor-pointer bg-zinc-950 text-sm font-medium text-white hover:bg-zinc-800"
-              onClick={() => router.push(`/module/business/b2b/agreements/create?projectId=${data.id}&offerId=${data.id}`)}
-            >
-              {t(localizationConstants.b2bArchiveAcceptOffer)}
-            </Button>
-            <Button
-              variant="outline"
-              className="h-10 w-full cursor-pointer gap-2 border-slate-300 text-sm font-medium text-slate-700 hover:bg-slate-50"
-            >
-              <X size={14} aria-hidden={true} />
-              {t(localizationConstants.b2bArchiveDecline)}
-            </Button>
+            {/*
+              No Accept / Decline here. This screen used to show both: Accept only
+              navigated to Create Agreement without accepting anything, Decline had
+              no handler, and the backend refuses either on an archived engagement
+              anyway. Restoring from the Archive list is what makes it actionable.
+            */}
+            <div className="flex items-start gap-2 rounded-lg border border-slate-200 bg-white p-3">
+              <ArchiveIcon size={16} className="mt-0.5 shrink-0 text-slate-500" aria-hidden={true} />
+              <p className="text-xs text-slate-600">{t(localizationConstants.b2bArchivedDetailNote)}</p>
+            </div>
 
             {/* Fråga / Svar */}
             <div className="flex flex-col gap-3">
@@ -432,7 +438,7 @@ export function B2BArchiveOfferDetailView({ data }: Props) {
                 </div>
               </button>
               {qaOpen && data.qa.map((msg) => (
-                <QACard key={msg.id} message={msg} />
+                <ArchivedQACard key={msg.id} message={msg} />
               ))}
             </div>
           </div>

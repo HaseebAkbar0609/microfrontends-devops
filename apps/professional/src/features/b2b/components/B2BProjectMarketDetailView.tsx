@@ -1,25 +1,76 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { ProjectMarketDetail } from "../types/projectMarket";
+import { getProjectMarketDetailAction } from "@/api-actions/b2b/projectMarket";
 import { ProjectMarketOfferTab } from "./ProjectMarketOfferTab";
 import { ProjectMarketInfoTab } from "./ProjectMarketInfoTab";
 import { ProjectMarketQATab } from "./ProjectMarketQATab";
 
 interface Props {
-  data: ProjectMarketDetail;
+  projectId: string;
 }
 
-export function B2BProjectMarketDetailView({ data }: Props) {
+export function B2BProjectMarketDetailView({ projectId }: Props) {
   const t = useTranslate();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"offers" | "project-info" | "qa">("offers");
+  const [data, setData] = useState<ProjectMarketDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const fetchDetail = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    const result = await getProjectMarketDetailAction(projectId);
+    if (result.success && result.data) {
+      setData(result.data);
+    } else {
+      setLoadError(result.error || t(localizationConstants.genericError));
+    }
+    setLoading(false);
+  }, [projectId, t]);
+
+  useEffect(() => {
+    let isMounted = true;
+    (async () => {
+      if (isMounted) await fetchDetail();
+    })();
+    return () => {
+      isMounted = false;
+    };
+  }, [fetchDetail]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen flex-1 items-center justify-center bg-white">
+        <Loader2 className="h-5 w-5 animate-spin text-slate-400" aria-hidden={true} />
+      </div>
+    );
+  }
+
+  if (loadError || !data) {
+    return (
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-white px-4 text-center">
+        <p className="text-sm text-slate-500">{loadError}</p>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => fetchDetail()}
+          className="cursor-pointer"
+        >
+          {t(localizationConstants.retry)}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-1 flex-col bg-slate-50 min-h-full">
@@ -89,7 +140,7 @@ export function B2BProjectMarketDetailView({ data }: Props) {
       <div className="flex-1 bg-slate-50">
         {activeTab === "offers" && <ProjectMarketOfferTab data={data} />}
         {activeTab === "project-info" && <ProjectMarketInfoTab data={data} />}
-        {activeTab === "qa" && <ProjectMarketQATab data={data} />}
+        {activeTab === "qa" && <ProjectMarketQATab data={data} onRefresh={fetchDetail} />}
       </div>
     </div>
   );

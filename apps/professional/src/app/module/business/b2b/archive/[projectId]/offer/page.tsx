@@ -1,6 +1,13 @@
 import { B2BArchiveOfferDetailView } from "@/features/b2b/components/B2BArchiveOfferDetailView";
-import { DUMMY_ARCHIVE_OFFER_DETAIL } from "@/features/b2b/constants/archiveMock";
 
-export default function B2BArchiveOfferDetailPage() {
-  return <B2BArchiveOfferDetailView data={DUMMY_ARCHIVE_OFFER_DETAIL} />;
+interface PageProps {
+  params: Promise<{
+    projectId: string;
+  }>;
+}
+
+export default async function B2BArchiveOfferDetailPage({ params }: PageProps) {
+  const { projectId } = await params;
+
+  return <B2BArchiveOfferDetailView projectId={projectId} />;
 }

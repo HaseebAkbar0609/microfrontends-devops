@@ -11,6 +11,13 @@ import {
 } from "lucide-react";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { useAuthStatus } from "@/context/AuthContext";
+import {
+  markProjectMarketQuestionReadAction,
+  postProjectMarketQuestionAction,
+} from "@/api-actions/b2b/projectMarket";
+import { formatApiDateTime } from "@/utils/date";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,32 +53,22 @@ const QA_LABELS: QAThreadLabels = {
   },
 };
 
-/** The card kept these as literals; they stay literal here, not in the shared component. */
-const QA_FALLBACK_USER = "Stefan Eriksson";
-const QA_FALLBACK_ANSWER = "Hej, jag skickar över den via KMA-modulen";
-
 function QAColumn({
   status,
   label,
   icon,
   messages,
-  badgeNumber,
   className,
-  onSendReply,
+  currentUserName,
   onMarkAsRead,
-  onArchive,
-  onDelete,
 }: {
   status: QAStatus;
   label: string;
   icon: React.ReactNode;
   messages: QAMessage[];
-  badgeNumber?: string;
   className?: string;
-  onSendReply: (id: string, text: string) => void;
+  currentUserName: string;
   onMarkAsRead: (id: string) => void;
-  onArchive: (id: string) => void;
-  onDelete: (id: string) => void;
 }) {
   const items = messages.filter((m) => m.status === status);
 
@@ -80,11 +77,8 @@ function QAColumn({
       label={label}
       icon={icon}
       className={className}
-      // This board only ever badged the New column, so the pill shows only
-      // where a badgeNumber was. The count itself is always the real one:
-      // passing 0 to hide the pill also hid every card in Opened and Answered.
       count={items.length}
-      showCount={Boolean(badgeNumber)}
+      showCount={true}
     >
       {items.map((msg) => (
         <QAThreadCard
@@ -96,83 +90,98 @@ function QAColumn({
             role: msg.role,
             badge: msg.badge,
             message: msg.message,
-            date: msg.date,
+            date: formatApiDateTime(msg.date),
             answered: msg.status === "answered",
-            answerUser: msg.answerUser || QA_FALLBACK_USER,
-            answerBadge: undefined,
-            answerText: msg.answerText || msg.replyText || QA_FALLBACK_ANSWER,
-            answerDate: msg.answerDate || msg.date,
+            answerUser: msg.answerUser,
+            answerBadge: msg.answerBadge,
+            answerText: msg.answerText || msg.replyText,
+            answerDate: formatApiDateTime(msg.answerDate || msg.date),
             replyText: msg.replyText,
           }}
           labels={QA_LABELS}
-          currentUserName={msg.replyFrom || QA_FALLBACK_USER}
-          onSendReply={onSendReply}
-          onMarkAsRead={onMarkAsRead}
-          onArchive={onArchive}
-          onDelete={onDelete}
+          currentUserName={currentUserName}
+          // Only "Mark as read" is offered, and only on a new question — that is
+          // the one move a question can make from here (new → opened). Answering
+          // is the Offers screen's job (M2), and archive / delete have no backend
+          // endpoint; the shared card renders only the actions a caller handles.
+          onMarkAsRead={msg.status === "new" ? onMarkAsRead : undefined}
         />
       ))}
     </QAThreadColumn>
   );
 }
 
-export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
+export function ProjectMarketQATab({
+  data,
+  onRefresh,
+}: {
+  data: ProjectMarketDetail;
+  onRefresh?: () => void | Promise<void>;
+}) {
   const t = useTranslate();
-  const [qaMessages, setQaMessages] = useState<QAMessage[]>(data.qa);
+  const { user } = useAuthStatus() as {
+    user: { first_name?: string; last_name?: string; email?: string } | null;
+  };
+  const currentUserName =
+    [user?.first_name, user?.last_name].filter(Boolean).join(" ") || user?.email || "";
+
+  const qaMessages = data.qa;
   const [qaSearch, setQaSearch] = useState("");
-  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([
-    "Fastighetsbolaget",
-    "Pelles Måleri",
-  ]);
-  const [selectedRoles, setSelectedRoles] = useState<string[]>(["UE", "Supplier"]);
+  const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [question, setQuestion] = useState("");
+  const [isPosting, setIsPosting] = useState(false);
 
-  function handleSendReply(messageId: string, replyText: string) {
-    setQaMessages((prev) =>
-      prev.map((msg) =>
-        msg.id === messageId
-          ? {
-              ...msg,
-              status: "answered" as const,
-              answerText: replyText,
-              answerUser: "Stefan Eriksson",
-              answerDate: "Idag",
-            }
-          : msg
-      )
-    );
-    showToast("success", t(localizationConstants.b2bPMQASend));
+  async function handleAskQuestion() {
+    const text = question.trim();
+    if (!text || isPosting) return;
+
+    setIsPosting(true);
+    const res = await postProjectMarketQuestionAction(data.id, text);
+    if (res.success) {
+      setQuestion("");
+      showToast("success", t(localizationConstants.b2bPMQAQuestionPosted));
+      await onRefresh?.();
+    } else {
+      showToast("error", res.error || t(localizationConstants.genericError));
+    }
+    setIsPosting(false);
   }
 
-  function handleMarkAsRead(messageId: string) {
-    setQaMessages((prev) =>
-      prev.map((msg) =>
-        msg.id === messageId ? { ...msg, status: "opened" as const } : msg
-      )
-    );
-    showToast("success", t(localizationConstants.b2bPMQAMarkAsRead));
-  }
-
-  function handleArchive(messageId: string) {
-    setQaMessages((prev) => prev.filter((msg) => msg.id !== messageId));
-    showToast("success", t(localizationConstants.b2bPMQAArkivera));
-  }
-
-  function handleDelete(messageId: string) {
-    setQaMessages((prev) => prev.filter((msg) => msg.id !== messageId));
-    showToast("success", t(localizationConstants.b2bPMQARadera));
+  async function handleMarkAsRead(messageId: string) {
+    const res = await markProjectMarketQuestionReadAction(data.id, messageId);
+    if (res.success) {
+      showToast("success", t(localizationConstants.b2bPMQAMarkAsRead));
+      await onRefresh?.();
+    } else {
+      showToast("error", res.error || t(localizationConstants.genericError));
+    }
   }
 
   const allCompanies = Array.from(
-    new Set(qaMessages.map((q) => (q.company ? q.company.split(":")[0].trim() : q.role)))
+    new Set(
+      qaMessages
+        .map((q) => (q.company ? q.company.split(":")[0].trim() : q.role))
+        .filter(Boolean)
+    )
   );
-  const allRoles = ["UE", "Supplier", "Beställare", "Fråga"];
+  const allRoles = Array.from(new Set(qaMessages.map((q) => q.badge || q.role).filter(Boolean)));
 
   const filteredQA = qaMessages.filter((q) => {
+    const needle = qaSearch.toLowerCase();
     const matchesSearch =
       !qaSearch ||
-      q.sender.toLowerCase().includes(qaSearch.toLowerCase()) ||
-      q.message.toLowerCase().includes(qaSearch.toLowerCase());
-    return matchesSearch;
+      q.sender.toLowerCase().includes(needle) ||
+      q.message.toLowerCase().includes(needle);
+
+    const company = q.company ? q.company.split(":")[0].trim() : q.role;
+    const matchesCompany =
+      selectedCompanies.length === 0 || selectedCompanies.includes(company);
+
+    const matchesRole =
+      selectedRoles.length === 0 || selectedRoles.includes(q.badge || q.role);
+
+    return matchesSearch && matchesCompany && matchesRole;
   });
 
   return (
@@ -345,6 +354,34 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
         </div>
       </div>
 
+      {/* Ask a question — posts into the project's shared Q&A thread */}
+      <div className="w-full max-w-[1160px] rounded-xl border border-slate-200 bg-white p-4">
+        <label
+          htmlFor="b2b-qa-question"
+          className="mb-2 block text-sm font-semibold text-zinc-950"
+        >
+          {t(localizationConstants.b2bPMQAAskQuestion)}
+        </label>
+        <Textarea
+          id="b2b-qa-question"
+          value={question}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setQuestion(e.target.value)}
+          placeholder={t(localizationConstants.b2bPMQAQuestionPlaceholder)}
+          rows={3}
+          className="resize-y text-sm"
+        />
+        <div className="mt-2.5 flex justify-end">
+          <Button
+            type="button"
+            onClick={handleAskQuestion}
+            disabled={!question.trim() || isPosting}
+            className="h-9 cursor-pointer bg-slate-900 px-5 text-xs font-semibold text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {t(localizationConstants.b2bPMQASend)}
+          </Button>
+        </div>
+      </div>
+
       {/* 3 Kanban Columns — responsive grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 w-full max-w-[1160px] pt-1">
         {/* Column 1: New */}
@@ -352,12 +389,9 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
           status="new"
           label={t(localizationConstants.b2bPMQANew)}
           icon={<Mail size={24} className="text-zinc-950" aria-hidden={true} />}
-          badgeNumber="02"
           messages={filteredQA}
-          onSendReply={handleSendReply}
+          currentUserName={currentUserName}
           onMarkAsRead={handleMarkAsRead}
-          onArchive={handleArchive}
-          onDelete={handleDelete}
         />
 
         {/* Column 2: Opened */}
@@ -366,10 +400,8 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
           label={t(localizationConstants.b2bPMQAOpened)}
           icon={<MailOpen size={24} className="text-zinc-950" aria-hidden={true} />}
           messages={filteredQA}
-          onSendReply={handleSendReply}
+          currentUserName={currentUserName}
           onMarkAsRead={handleMarkAsRead}
-          onArchive={handleArchive}
-          onDelete={handleDelete}
         />
 
         {/* Column 3: Answered — spans full width (2 cols) when in 2-column mode */}
@@ -379,10 +411,8 @@ export function ProjectMarketQATab({ data }: { data: ProjectMarketDetail }) {
           icon={<CheckCheck size={24} className="text-zinc-950" aria-hidden={true} />}
           messages={filteredQA}
           className="md:col-span-2 xl:col-span-1"
-          onSendReply={handleSendReply}
+          currentUserName={currentUserName}
           onMarkAsRead={handleMarkAsRead}
-          onArchive={handleArchive}
-          onDelete={handleDelete}
         />
       </div>
     </div>
