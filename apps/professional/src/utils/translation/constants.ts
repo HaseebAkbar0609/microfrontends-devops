@@ -6157,6 +6157,17 @@ export type RegisterTranslation = {
 	validationWageTypeCodeRequired: string;
 	validationWageTypeNameRequired: string;
 	validationWageTypeUnitRequired: string;
+	wageTypeDeleteConfirmTitle: string;
+	wageTypeDeleteConfirmDesc: string;
+	wageTypeDeletedSuccess: string;
+	wageTypeStatusActivatedSuccess: string;
+	wageTypeStatusDeactivatedSuccess: string;
+	wageTypeCreatePageHeaderTitle: string;
+	personalTypeDeltidLabel: string;
+	wageTypeTaxJa30: string;
+	wageTypeTaxJa3142: string;
+	wageTypeTaxNej0: string;
+	wageTypeTaxTabell: string;
 	// Wage Types create form additions (TFS-452)
 	wageTypeAccountDebitLabel: string;
 	wageTypeAccountCreditLabel: string;

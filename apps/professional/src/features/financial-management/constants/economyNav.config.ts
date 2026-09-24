@@ -40,7 +40,7 @@ export const ECONOMY_SECTIONS = [
 	{ id: "price-lists", labelKey: localizationConstants.priceList, href: ECONOMY_PRICE_LISTS_BASE_URL, implemented: true },
 	{ id: "account-plan", labelKey: localizationConstants.accountPlan, href: ECONOMY_ACCOUNT_PLAN_BASE_URL, implemented: true },
 	{ id: "cost-centers", labelKey: localizationConstants.costCentre, href: ECONOMY_COST_CENTERS_BASE_URL, implemented: true },
-	{ id: "wage-types", labelKey: localizationConstants.wageTypes, href: ECONOMY_WAGE_TYPES_BASE_URL, implemented: false },
+	{ id: "wage-types", labelKey: localizationConstants.wageTypes, href: ECONOMY_WAGE_TYPES_BASE_URL, implemented: true },
 ] as const;
 
 export const ECONOMY_NAV_ITEMS: RouteTabItem[] = [

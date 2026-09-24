@@ -12,7 +12,7 @@ export default function EconomyLayout({ children }: { children: React.ReactNode 
 		pathname.includes("/create") ||
 		pathname.includes("/edit") ||
 		pathname.includes("/import") ||
-		/\/(claims|certificates|budget|bank|authorities|cases|articles|supplier-articles|customers|suppliers)\/.+$/.test(pathname);
+		/\/(claims|certificates|budget|bank|authorities|cases|articles|supplier-articles|customers|suppliers|price-lists|account-plan|cost-centers|wage-types)\/.+$/.test(pathname);
 
 	return (
 		<div className="flex flex-1 flex-col overflow-hidden">
