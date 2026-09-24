@@ -1,4 +1,4 @@
-import { CreateCostCenterPage } from "@/features/tools/register/components/CreateCostCenterPage";
+import { CreateCostCenterPage } from "@/features/financial-management";
 
 export const dynamic = "force-dynamic";
 

@@ -1277,12 +1277,41 @@ export type OfferTranslation = {
 	calcNewSuccessCreate: string;
 	calcNewValidationNameRequired: string;
 	calcNewOffersLoadError: string;
+	calcNewPreviewTitle: string;
+	calcNewBackTo: string;
+	calcNewSkapaBtn: string;
+	calcNewDocumentsHeader: string;
+	calcNewSenasteOffertDatum: string;
+	calcNewCreateError: string;
+	calcNewGenericError: string;
 	// Calculation - Detail view
 	calcDetailProjekteringNr: string;
 	calcDetailProjekteringNamn: string;
 	calcDetailProjekteringAdress: string;
 	calcDetailSenasteDatumOffert: string;
 	calcDetailNewDocument: string;
+	calcDetailEditProject: string;
+	calcDetailEditProjectInfo: string;
+	calcDetailEditKunduppgifter: string;
+	calcDetailEditKontaktperson: string;
+	calcDetailEditEntreprenor: string;
+	calcDetailEditKalkylansvarig: string;
+	calcDetailAddDocument: string;
+	calcDetailDocName: string;
+	calcDetailDocType: string;
+	calcDetailDocDate: string;
+	calcDetailDocFile: string;
+	calcDetailUploadFile: string;
+	calcDetailDragDropFile: string;
+	calcDetailFileFormatNote: string;
+	calcDetailSaveSuccess: string;
+	calcDetailSaveError: string;
+	calcDetailDocAddSuccess: string;
+	calcDetailDocAddError: string;
+	calcDetailDocDeleteSuccess: string;
+	calcDetailDocDeleteError: string;
+	calcDetailDocDeleteConfirmTitle: string;
+	calcDetailDocDeleteConfirmDesc: string;
 	// Calculation - Detail layout sidebar
 	calcDetailSidebarHeader: string;
 	calcDetailSidebarForfragan: string;
@@ -2755,6 +2784,7 @@ export type OfferTranslation = {
 	widgetSourceUnavailableTitle: string;
 	widgetSourceUnavailableDescription: string;
 	widgetSourceLoadError: string;
+	widgetDataLoadError: string;
 	// Module dashboard rail (shared)
 	widgetRailMenuTitle: string;
 	widgetRailDiscard: string;
@@ -5496,7 +5526,7 @@ export type RegisterTranslation = {
 	documentSection: string;
 	editComingSoon: string;
 	documentNotAvailable: string;
-	// Supplier Article Detail Page (TFS-436)
+	// Supplier Article Detail Page (TFS-436 & TFS-1015)
 	articleDetailTitle: string;
 	grundInformationSection: string;
 	artikelInformationSection: string;
@@ -5508,6 +5538,24 @@ export type RegisterTranslation = {
 	linkedArticleLabel: string;
 	articleDescriptionLabel: string;
 	leadTimeLabel: string;
+	supplierArticleDetailTabBasic: string;
+	supplierArticleDetailTabList: string;
+	supplierArticleGrundInfoCard: string;
+	supplierArticleArtikelinfoCard: string;
+	supplierArticleBilderCard: string;
+	supplierArticleArtikelnr: string;
+	supplierArticleLeverantorNr: string;
+	supplierArticleLeverantorensNamn: string;
+	supplierArticleInkopskostnad: string;
+	supplierArticleKoppladTillArtikel: string;
+	supplierArticleBeskrivning: string;
+	supplierArticleVikt: string;
+	supplierArticleLangd: string;
+	supplierArticleBredd: string;
+	supplierArticleHojd: string;
+	supplierArticleMaterial: string;
+	supplierArticleEditBtn: string;
+	supplierArticlePhotoLabel: string;
 	// Import Article Translations (TFS-437)
 	importFileTitle: string;
 	yourFileSection: string;
@@ -5880,6 +5928,11 @@ export type RegisterTranslation = {
 	validationCostCenterCodeRequired: string;
 	validationCostCenterNameRequired: string;
 	costCenterCreatedSuccess: string;
+	costCenterUpdatedSuccess: string;
+	costCenterDeletedSuccess: string;
+	costCenterStatusUpdatedSuccess: string;
+	costCenterDeleteConfirmTitle: string;
+	costCenterDeleteConfirmDesc: string;
 	// Account Plan Translations (TFS-443)
 	accountPlanTab: string;
 	importAccountPlanTab: string;
@@ -10059,6 +10112,37 @@ export type ForecastDashboardTranslation = {
 	forecastAnalysisRiskModerate: string;
 	forecastAnalysisRiskHigh: string;
 	forecastAnalysisObjectsSelected: string;
+	forecastAnalysisCardFinancialSummary: string;
+	forecastAnalysisCardProjectPerformance: string;
+	forecastAnalysisCardTrends: string;
+	forecastAnalysisCardRisks: string;
+	forecastAnalysisCardOpportunities: string;
+	forecastAnalysisColBudget: string;
+	forecastAnalysisColActual: string;
+	forecastAnalysisColForecast: string;
+	forecastAnalysisRowRevenue: string;
+	forecastAnalysisRowCosts: string;
+	forecastAnalysisRowGrossProfit: string;
+	forecastAnalysisRowVariance: string;
+	forecastAnalysisActiveProjects: string;
+	forecastAnalysisOnBudget: string;
+	forecastAnalysisOverBudget: string;
+	forecastAnalysisTopOverruns: string;
+	forecastAnalysisAmountOverBudget: string;
+	forecastAnalysisNoOverruns: string;
+	forecastAnalysisNoActiveProjects: string;
+	forecastAnalysisTrendSubtitle: string;
+	forecastAnalysisTrendChartLabel: string;
+	forecastAnalysisTrendNote: string;
+	forecastAnalysisTrendCurrent: string;
+	forecastAnalysisTrendEmpty: string;
+	forecastAnalysisPotentialRisks: string;
+	forecastAnalysisRiskRegulation: string;
+	forecastAnalysisRiskDeliveries: string;
+	forecastAnalysisOpportunityUpside: string;
+	forecastAnalysisNetImpact: string;
+	forecastAnalysisOpportunityNewClient: string;
+	forecastAnalysisOpportunitySavings: string;
 };
 
 export type Translation = HeaderTranslation &
