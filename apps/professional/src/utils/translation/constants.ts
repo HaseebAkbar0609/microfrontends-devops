@@ -5880,6 +5880,11 @@ export type RegisterTranslation = {
 	validationCostCenterCodeRequired: string;
 	validationCostCenterNameRequired: string;
 	costCenterCreatedSuccess: string;
+	costCenterUpdatedSuccess: string;
+	costCenterDeletedSuccess: string;
+	costCenterStatusUpdatedSuccess: string;
+	costCenterDeleteConfirmTitle: string;
+	costCenterDeleteConfirmDesc: string;
 	// Account Plan Translations (TFS-443)
 	accountPlanTab: string;
 	importAccountPlanTab: string;
@@ -10104,36 +10109,7 @@ export type Translation = HeaderTranslation &
 	SupplierManagementTranslation &
 	SupplierDetailTranslation &
 	ToolsDiscountTranslation &
-	ForecastDashboardTranslation &
-	CostCentersTranslation;
-
-export type CostCentersTranslation = {
-	costCenterTitle: string;
-	costCenterSubTitle: string;
-	createCostCenterButtonText: string;
-	costCenterCodeHeader: string;
-	costCenterNameHeader: string;
-	costCenterNotesHeader: string;
-	inactivateButton: string;
-	activateButton: string;
-	markedCountText: string;
-	costCenterAllStatus: string;
-	costCenterActiveStatus: string;
-	costCenterInactiveStatus: string;
-	noCostCentersMessage: string;
-	createCostCenterHeaderTitle: string;
-	costCenterCodePlaceholder: string;
-	costCenterNamePlaceholder: string;
-	costCenterNotesPlaceholder: string;
-	validationCostCenterCodeRequired: string;
-	validationCostCenterNameRequired: string;
-	costCenterCreatedSuccess: string;
-	costCenterUpdatedSuccess: string;
-	costCenterDeletedSuccess: string;
-	costCenterStatusUpdatedSuccess: string;
-	costCenterDeleteConfirmTitle: string;
-	costCenterDeleteConfirmDesc: string;
-};
+	ForecastDashboardTranslation;
 
 export type TranslationKeys = keyof Translation;
 
