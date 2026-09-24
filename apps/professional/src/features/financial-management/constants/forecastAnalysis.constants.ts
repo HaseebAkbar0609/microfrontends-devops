@@ -19,6 +19,22 @@ export const FORECAST_ANALYSIS_SOURCE_LOCATION = "forecast_analysis_dashboard";
 /** The mock runs January through September, as the frame's chart does. */
 export const FORECAST_ANALYSIS_MONTH_COUNT = 9;
 
+/** Those months' names, so the chart's axis follows the language. */
+export const FORECAST_ANALYSIS_MONTH_KEYS: TranslationKeys[] = [
+	localizationConstants.monthJan,
+	localizationConstants.monthFeb,
+	localizationConstants.monthMar,
+	localizationConstants.monthApr,
+	localizationConstants.monthMay,
+	localizationConstants.monthJun,
+	localizationConstants.monthJul,
+	localizationConstants.monthAug,
+	localizationConstants.monthSep,
+];
+
+/** How many overruns the Projektutfall card names before it stops. */
+export const FORECAST_ANALYSIS_OVERRUN_LIMIT = 3;
+
 /** How many months back each period reads, counting from the last one. */
 export const FORECAST_ANALYSIS_PERIOD_MONTHS: Record<AnalysisPeriod, number> = {
 	yearToDate: FORECAST_ANALYSIS_MONTH_COUNT,
@@ -64,6 +80,13 @@ export const INITIAL_ANALYSIS_FILTERS: AnalysisFilters = {
 	status: null,
 };
 
+/** The trend chart's three lines. Raw hex, as the team app keeps its chart colours. */
+export const FORECAST_ANALYSIS_TREND_SERIES = [
+	{ id: "budget", key: "budget", labelKey: localizationConstants.forecastAnalysisColBudget, color: "#94a3b8" },
+	{ id: "actual", key: "actual", labelKey: localizationConstants.forecastAnalysisColActual, color: "#0f766e" },
+	{ id: "forecast", key: "forecast", labelKey: localizationConstants.forecastAnalysisColForecast, color: "#f97316" },
+] as const;
+
 /** The six figure cards of the frame, in its order. */
 export const FORECAST_ANALYSIS_KPI_TITLES = {
 	revenueYtd: localizationConstants.forecastAnalysisKpiRevenue,
@@ -76,5 +99,20 @@ export const FORECAST_ANALYSIS_KPI_TITLES = {
 
 export type AnalysisKpiId = keyof typeof FORECAST_ANALYSIS_KPI_TITLES;
 
+/** The frame's other five cards, below the figures. */
+export const FORECAST_ANALYSIS_CARD_TITLES = {
+	financialSummary: localizationConstants.forecastAnalysisCardFinancialSummary,
+	projectPerformance: localizationConstants.forecastAnalysisCardProjectPerformance,
+	forecastTrends: localizationConstants.forecastAnalysisCardTrends,
+	riskOpportunities: localizationConstants.forecastAnalysisCardRisks,
+	opportunities: localizationConstants.forecastAnalysisCardOpportunities,
+} as const satisfies Record<string, TranslationKeys>;
+
+export type AnalysisCardId = keyof typeof FORECAST_ANALYSIS_CARD_TITLES;
+
 /** Six across a full row, three beside the rail, two on a tablet, one on a phone. */
 export const FORECAST_ANALYSIS_KPI_SPAN = "col-span-12 sm:col-span-6 lg:col-span-4 2xl:col-span-2";
+
+/** The wide cards take half a row, the two banded ones a quarter each. */
+export const FORECAST_ANALYSIS_HALF_SPAN = "col-span-12 lg:col-span-6";
+export const FORECAST_ANALYSIS_QUARTER_SPAN = "col-span-12 sm:col-span-6 lg:col-span-3";

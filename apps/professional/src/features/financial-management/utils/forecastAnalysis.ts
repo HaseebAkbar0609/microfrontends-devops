@@ -1,4 +1,7 @@
+import localizationConstants from "@/utils/translation/constants";
 import {
+	FORECAST_ANALYSIS_MONTH_KEYS,
+	FORECAST_ANALYSIS_OVERRUN_LIMIT,
 	FORECAST_ANALYSIS_PERIOD_MONTHS,
 	FORECAST_ANALYSIS_RISK_THRESHOLDS,
 } from "../constants/forecastAnalysis.constants";
@@ -7,8 +10,13 @@ import type {
 	AnalysisKpis,
 	AnalysisMonth,
 	AnalysisObject,
+	AnalysisOpportunity,
+	AnalysisOpportunitySummary,
 	AnalysisPeriod,
+	AnalysisProjectPerformance,
 	AnalysisRiskLevel,
+	AnalysisSummaryRow,
+	AnalysisTrendPoint,
 } from "../types/forecastAnalysis.types";
 
 /** The months a period reads: the last three, the last one, or all of them. */
@@ -92,4 +100,76 @@ export function analysisKpis(objects: AnalysisObject[], period: AnalysisPeriod):
 		riskLevel: riskLevelOf(riskExposure),
 		objectCount: objects.length,
 	};
+}
+
+/** The months a period reads, as indexes into a full year of the mock. */
+function windowRange(period: AnalysisPeriod): { from: number; to: number } {
+	const count = FORECAST_ANALYSIS_PERIOD_MONTHS[period];
+	return { from: Math.max(0, FORECAST_ANALYSIS_MONTH_KEYS.length - count), to: FORECAST_ANALYSIS_MONTH_KEYS.length };
+}
+
+/**
+ * Financial Summary: intäkter, kostnader and what they leave, each read as
+ * budget, utfall and prognos. The variance is utfall against budget — a rise
+ * is good news for revenue and for the profit, and bad news for cost.
+ */
+export function analysisSummaryRows(objects: AnalysisObject[], period: AnalysisPeriod): AnalysisSummaryRow[] {
+	const months = objects.flatMap((object) => monthsInPeriod(object, period));
+	const revenue = { budget: sumMonths(months, "budgetRevenue"), actual: sumMonths(months, "revenue"), forecast: sumMonths(months, "forecastRevenue") };
+	const cost = { budget: sumMonths(months, "budgetCost"), actual: sumMonths(months, "cost"), forecast: sumMonths(months, "forecastCost") };
+
+	return [
+		{ labelKey: localizationConstants.forecastAnalysisRowRevenue, ...revenue, variance: revenue.actual - revenue.budget, riseIsGood: true },
+		{ labelKey: localizationConstants.forecastAnalysisRowCosts, ...cost, variance: cost.actual - cost.budget, riseIsGood: false },
+		{
+			labelKey: localizationConstants.forecastAnalysisRowGrossProfit,
+			budget: revenue.budget - cost.budget,
+			actual: revenue.actual - cost.actual,
+			forecast: revenue.forecast - cost.forecast,
+			variance: revenue.actual - cost.actual - (revenue.budget - cost.budget),
+			riseIsGood: true,
+		},
+	];
+}
+
+/**
+ * Project Performance, over the objects still running: how many hold their
+ * budget over the period, and which passed it by the most.
+ */
+export function analysisProjectPerformance(objects: AnalysisObject[], period: AnalysisPeriod): AnalysisProjectPerformance {
+	const active = objects.filter((object) => object.status === "active");
+	const withCost = active.map((object) => {
+		const months = monthsInPeriod(object, period);
+		return { id: object.id, name: object.name, amountOver: sumMonths(months, "cost") - sumMonths(months, "budgetCost") };
+	});
+	const overruns = withCost.filter((object) => object.amountOver > 0).sort((a, b) => b.amountOver - a.amountOver);
+
+	return {
+		activeCount: active.length,
+		onBudgetCount: withCost.length - overruns.length,
+		overBudgetCount: overruns.length,
+		overruns: overruns.slice(0, FORECAST_ANALYSIS_OVERRUN_LIMIT),
+	};
+}
+
+/** The trend chart: budget, utfall and prognos summed for each month the period reads. */
+export function analysisTrend(objects: AnalysisObject[], period: AnalysisPeriod): AnalysisTrendPoint[] {
+	const { from, to } = windowRange(period);
+	return FORECAST_ANALYSIS_MONTH_KEYS.slice(from, to).map((monthKey, index) => {
+		const month = from + index;
+		const cells = objects.map((object) => object.months[month]).filter((cell): cell is AnalysisMonth => Boolean(cell));
+		return {
+			monthKey,
+			budget: sumMonths(cells, "budgetRevenue"),
+			actual: sumMonths(cells, "revenue"),
+			forecast: sumMonths(cells, "forecastRevenue"),
+		};
+	});
+}
+
+/** The upside on offer, and what is left of it once it has been chased. */
+export function analysisOpportunities(items: AnalysisOpportunity[]): AnalysisOpportunitySummary {
+	const upside = items.reduce((sum, item) => sum + item.upside, 0);
+	const cost = items.reduce((sum, item) => sum + item.costToRealise, 0);
+	return { upside, netImpact: upside - cost, items };
 }

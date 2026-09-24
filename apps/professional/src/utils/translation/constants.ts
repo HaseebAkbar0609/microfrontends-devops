@@ -10052,6 +10052,37 @@ export type ForecastDashboardTranslation = {
 	forecastAnalysisRiskModerate: string;
 	forecastAnalysisRiskHigh: string;
 	forecastAnalysisObjectsSelected: string;
+	forecastAnalysisCardFinancialSummary: string;
+	forecastAnalysisCardProjectPerformance: string;
+	forecastAnalysisCardTrends: string;
+	forecastAnalysisCardRisks: string;
+	forecastAnalysisCardOpportunities: string;
+	forecastAnalysisColBudget: string;
+	forecastAnalysisColActual: string;
+	forecastAnalysisColForecast: string;
+	forecastAnalysisRowRevenue: string;
+	forecastAnalysisRowCosts: string;
+	forecastAnalysisRowGrossProfit: string;
+	forecastAnalysisRowVariance: string;
+	forecastAnalysisActiveProjects: string;
+	forecastAnalysisOnBudget: string;
+	forecastAnalysisOverBudget: string;
+	forecastAnalysisTopOverruns: string;
+	forecastAnalysisAmountOverBudget: string;
+	forecastAnalysisNoOverruns: string;
+	forecastAnalysisNoActiveProjects: string;
+	forecastAnalysisTrendSubtitle: string;
+	forecastAnalysisTrendChartLabel: string;
+	forecastAnalysisTrendNote: string;
+	forecastAnalysisTrendCurrent: string;
+	forecastAnalysisTrendEmpty: string;
+	forecastAnalysisPotentialRisks: string;
+	forecastAnalysisRiskRegulation: string;
+	forecastAnalysisRiskDeliveries: string;
+	forecastAnalysisOpportunityUpside: string;
+	forecastAnalysisNetImpact: string;
+	forecastAnalysisOpportunityNewClient: string;
+	forecastAnalysisOpportunitySavings: string;
 };
 
 export type Translation = HeaderTranslation &
