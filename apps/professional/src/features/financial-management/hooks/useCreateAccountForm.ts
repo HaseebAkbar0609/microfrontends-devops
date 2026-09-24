@@ -51,19 +51,19 @@ export function useCreateAccountForm() {
 		const newErrors: Record<string, string> = {};
 
 		if (!formData.kontoNr.trim()) {
-			newErrors.kontoNr = t(localizationConstants.fieldRequired);
+			newErrors.kontoNr = t(localizationConstants.validationAccountNumberRequired);
 		} else if (!/^\d+$/.test(formData.kontoNr.trim())) {
-			newErrors.kontoNr = t(localizationConstants.onlyDigitsAllowed);
+			newErrors.kontoNr = t(localizationConstants.validationAccountNumberRequired);
 		} else {
 			// Check uniqueness
 			const existing = accountPlanRepository.getById(formData.kontoNr.trim());
 			if (existing) {
-				newErrors.kontoNr = t(localizationConstants.accountNumberAlreadyExists);
+				newErrors.kontoNr = t(localizationConstants.validationAccountNumberUnique);
 			}
 		}
 
 		if (!formData.benamning.trim()) {
-			newErrors.benamning = t(localizationConstants.fieldRequired);
+			newErrors.benamning = t(localizationConstants.validationAccountNameRequired);
 		}
 
 		setErrors(newErrors);
@@ -72,14 +72,14 @@ export function useCreateAccountForm() {
 
 	const handleSubmit = useCallback(async () => {
 		if (!validate()) {
-			showToast("error", t(localizationConstants.fillRequiredFields));
+			showToast("error", t(localizationConstants.validationAccountNumberRequired));
 			return;
 		}
 
 		setIsSubmitting(true);
 		try {
 			accountPlanRepository.create(formData);
-			showToast("success", t(localizationConstants.saveSuccessMessage));
+			showToast("success", t(localizationConstants.accountCreatedSuccess));
 			router.push(ACCOUNT_PLAN_BASE_ROUTE);
 		} catch {
 			showToast("error", t(localizationConstants.genericError));

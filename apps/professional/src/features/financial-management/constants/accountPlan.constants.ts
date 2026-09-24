@@ -4,7 +4,7 @@ export const ACCOUNT_PLAN_BASE_ROUTE = "/module/financial-management/economy/acc
 export const ACCOUNT_PLAN_IMPORT_ROUTE = "/module/financial-management/economy/account-plan/import";
 export const ACCOUNT_PLAN_CREATE_ROUTE = "/module/financial-management/economy/account-plan/create";
 
-export const DEFAULT_PAGE_SIZE = 10;
+export const ACCOUNT_PLAN_DEFAULT_PAGE_SIZE = 10;
 
 export const MOMSKOD_OPTIONS = [
 	{ label: "-", value: "-" },

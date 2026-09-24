@@ -6100,11 +6100,9 @@ export const svRegister: RegisterTranslation = {
 	deleteAccountConfirmTitle: "Ta bort konto",
 	deleteAccountConfirmDesc: "Är du säker på att du vill ta bort detta konto? Denna åtgärd kan inte ångras.",
 	accountDeletedSuccess: "Konto raderat",
-	importFileTitle: "Import File",
 	importFileNow: "Import file now",
 	importButtonText: "importera",
 	grundlaggandeInfoTab: "Grundläggande info.",
-	grundInformationSection: "Grund information",
 
 	// Create Account Translations (TFS-444)
 	createAccountHeaderTitle: "Skapa ny konto",

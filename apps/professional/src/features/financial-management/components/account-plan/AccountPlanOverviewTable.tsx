@@ -143,13 +143,13 @@ export function AccountPlanOverviewTable() {
 							{isLoading ? (
 								<tr>
 									<td colSpan={9} className="py-12 text-center text-slate-500">
-										<Translate text={localizationConstants.loading} />...
+										<Translate text={localizationConstants.loadingLabel} />
 									</td>
 								</tr>
 							) : accounts.length === 0 ? (
 								<tr>
 									<td colSpan={9} className="py-12 text-center text-slate-500">
-										<Translate text={localizationConstants.noResults} />
+										<Translate text={localizationConstants.noRecordsFound} />
 									</td>
 								</tr>
 							) : (
@@ -274,7 +274,7 @@ export function AccountPlanOverviewTable() {
 								onClick={() => handlePageChange(page - 1)}
 								className="h-8 px-3 text-xs border-slate-200"
 							>
-								<Translate text={localizationConstants.previous} />
+								<Translate text={localizationConstants.previousPageLabel} />
 							</Button>
 							<span className="text-xs text-slate-600">
 								{page} / {totalPages}
@@ -286,7 +286,7 @@ export function AccountPlanOverviewTable() {
 								onClick={() => handlePageChange(page + 1)}
 								className="h-8 px-3 text-xs border-slate-200"
 							>
-								<Translate text={localizationConstants.next} />
+								<Translate text={localizationConstants.nextPageLabel} />
 							</Button>
 						</div>
 					)}

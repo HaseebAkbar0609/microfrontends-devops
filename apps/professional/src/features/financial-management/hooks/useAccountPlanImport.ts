@@ -48,7 +48,7 @@ export function useAccountPlanImport() {
 			setStep(2);
 			showToast(
 				"success",
-				`${file.name} ${t(localizationConstants.fileUploadedSuccess || localizationConstants.saveSuccessMessage)}`,
+				`${file.name} - ${t(localizationConstants.fileUploadSuccess)}`,
 			);
 		},
 		[t],

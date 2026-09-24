@@ -8,7 +8,7 @@ import localizationConstants from "@/utils/translation/constants";
 import type { AccountPlanItem, AccountStatus } from "../types/accountPlan.types";
 import { accountPlanRepository } from "../utils/accountPlanRepository";
 import {
-	DEFAULT_PAGE_SIZE,
+	ACCOUNT_PLAN_DEFAULT_PAGE_SIZE,
 	ACCOUNT_PLAN_BASE_ROUTE,
 	ACCOUNT_PLAN_CREATE_ROUTE,
 	ACCOUNT_PLAN_IMPORT_ROUTE,
@@ -20,7 +20,7 @@ export function useAccountPlanOverview() {
 	const searchParams = useSearchParams();
 
 	const page = Number(searchParams.get("page") || "1");
-	const pageSize = Number(searchParams.get("limit") || String(DEFAULT_PAGE_SIZE));
+	const pageSize = Number(searchParams.get("limit") || String(ACCOUNT_PLAN_DEFAULT_PAGE_SIZE));
 	const searchQuery = searchParams.get("search") || "";
 	const statusParam = searchParams.get("status") || "all";
 	const sortByParam = searchParams.get("sortBy") || "kontoNr";
@@ -163,8 +163,8 @@ export function useAccountPlanOverview() {
 			showToast(
 				"success",
 				newStatus === "active"
-					? t(localizationConstants.activatedSuccess)
-					: t(localizationConstants.inactivatedSuccess),
+					? t(localizationConstants.accountActivatedSuccess)
+					: t(localizationConstants.accountDeactivatedSuccess),
 			);
 		},
 		[selectedIds, t],

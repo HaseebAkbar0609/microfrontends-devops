@@ -91,8 +91,12 @@ export function useAccountDetail(id: string) {
 
 	const saveGrundInfo = useCallback(async () => {
 		if (!account) return;
-		if (!editFormData.kontoNr.trim() || !editFormData.benamning.trim()) {
-			showToast("error", t(localizationConstants.fillRequiredFields));
+		if (!editFormData.kontoNr.trim()) {
+			showToast("error", t(localizationConstants.validationAccountNumberRequired));
+			return;
+		}
+		if (!editFormData.benamning.trim()) {
+			showToast("error", t(localizationConstants.validationAccountNameRequired));
 			return;
 		}
 
@@ -106,7 +110,7 @@ export function useAccountDetail(id: string) {
 				status: editFormData.aktivt === "Inaktiv" ? "inactive" : "active",
 			});
 			setIsEditingGrundInfo(false);
-			showToast("success", t(localizationConstants.saveSuccessMessage));
+			showToast("success", t(localizationConstants.accountUpdatedSuccess));
 		} catch {
 			showToast("error", t(localizationConstants.genericError));
 		} finally {
@@ -128,7 +132,7 @@ export function useAccountDetail(id: string) {
 				foreslaProjekt: editFormData.foreslaProjekt,
 			});
 			setIsEditingAdditionalInfo(false);
-			showToast("success", t(localizationConstants.saveSuccessMessage));
+			showToast("success", t(localizationConstants.accountUpdatedSuccess));
 		} catch {
 			showToast("error", t(localizationConstants.genericError));
 		} finally {

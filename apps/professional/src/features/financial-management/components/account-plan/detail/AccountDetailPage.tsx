@@ -31,7 +31,7 @@ export function AccountDetailPage({ id }: AccountDetailPageProps) {
 	if (isLoading) {
 		return (
 			<div className="w-full flex items-center justify-center py-20 text-slate-500">
-				<Translate text={localizationConstants.loading} />...
+				<Translate text={localizationConstants.loadingLabel} />
 			</div>
 		);
 	}
@@ -40,14 +40,14 @@ export function AccountDetailPage({ id }: AccountDetailPageProps) {
 		return (
 			<div className="w-full flex flex-col items-center justify-center py-20 gap-4">
 				<p className="text-sm text-slate-600">
-					<Translate text={localizationConstants.accountNotFound} />
+					<Translate text={localizationConstants.noRecordsFound} />
 				</p>
 				<button
 					type="button"
 					onClick={handleBack}
 					className="text-xs font-semibold text-slate-900 underline"
 				>
-					<Translate text={localizationConstants.back} />
+					<Translate text={localizationConstants.goBackToAccountPlanLabel} />
 				</button>
 			</div>
 		);
