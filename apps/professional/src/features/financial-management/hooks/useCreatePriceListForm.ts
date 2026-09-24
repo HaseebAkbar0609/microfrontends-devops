@@ -27,16 +27,16 @@ export function useCreatePriceListForm() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const initialFormData: CreatePriceListFormData = {
-		code: "P001",
-		name: "Prislista B",
-		date: "2026-01-20",
-		createdBy: "Kalle Andersson",
-		comment: "info",
-		category: "Service",
-		unit: "Styck",
-		customer: "Service",
-		supplier: "Styck",
-		selectedArticleIds: ["pla_100", "pla_101", "pla_102"],
+		code: "",
+		name: "",
+		date: new Date().toISOString().split("T")[0],
+		createdBy: "",
+		comment: "",
+		category: "",
+		unit: "",
+		customer: "",
+		supplier: "",
+		selectedArticleIds: [],
 	};
 
 	const [formData, setFormData] = useState<CreatePriceListFormData>(initialFormData);
