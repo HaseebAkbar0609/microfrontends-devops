@@ -24,7 +24,7 @@ export interface TimeplanGanttRowProps {
 	totalCols: number;
 	expanded: boolean;
 	onToggle: (id: string) => void;
-	onAdd: (parentId: string) => void;
+	onAdd?: (parentId: string) => void;
 }
 
 /**
@@ -88,7 +88,7 @@ export function TimeplanGanttRow({
 				{formatStartDate(row.startDate)}
 			</td>
 			<td className={cn(sticky, "text-center")} style={{ left: ADD_COL_LEFT }}>
-				<Button
+				{onAdd && <Button
 					type="button"
 					variant="ghost"
 					size="icon"
@@ -97,7 +97,7 @@ export function TimeplanGanttRow({
 					className="h-8 w-8 cursor-pointer text-slate-600 hover:text-slate-900"
 				>
 					<Plus className="h-4 w-4" />
-				</Button>
+				</Button>}
 			</td>
 			<td
 				colSpan={totalCols}

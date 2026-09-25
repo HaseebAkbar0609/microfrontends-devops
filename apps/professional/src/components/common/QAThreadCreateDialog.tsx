@@ -31,7 +31,7 @@ export const QA_QUESTION_MAX_LENGTH = 2000;
 export interface QAThreadCreateDialogProps {
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	onSubmit: (draft: QAThreadDraft) => void;
+	onSubmit: (draft: QAThreadDraft) => void | Promise<void>;
 	/** The Typ radios. The first is selected when the dialog opens. */
 	typeOptions: readonly QAThreadOption[];
 	/** The select under Typ — Ämne on purchase, Funktion on a project. */
@@ -68,6 +68,7 @@ export function QAThreadCreateDialog({
 		description: "",
 	};
 	const [draft, setDraft] = useState<QAThreadDraft>(emptyDraft);
+	const [submitting, setSubmitting] = useState(false);
 	const description = draft.description.trim();
 
 	const close = () => {
@@ -75,11 +76,18 @@ export function QAThreadCreateDialog({
 		onOpenChange(false);
 	};
 
-	const submit = (event: React.FormEvent) => {
+	const submit = async (event: React.FormEvent) => {
 		event.preventDefault();
-		if (!description) return;
-		onSubmit({ ...draft, description });
-		close();
+		if (!description || submitting) return;
+		setSubmitting(true);
+		try {
+			await onSubmit({ ...draft, description });
+			close();
+		} catch {
+			// The caller displays its API error; retain the draft for a retry.
+		} finally {
+			setSubmitting(false);
+		}
 	};
 
 	return (
@@ -166,7 +174,7 @@ export function QAThreadCreateDialog({
 						</Button>
 						<Button
 							type="submit"
-							disabled={!description}
+							disabled={!description || submitting}
 							className="h-10 cursor-pointer gap-2 bg-zinc-900 px-5 text-sm font-medium text-white shadow-xs hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50"
 						>
 							{showSendIcon && <Send className="h-4 w-4" aria-hidden />}

@@ -110,6 +110,7 @@ export function forecastBreadcrumbs(section?: TranslationKeys): BreadcrumbItem[]
 export const ECONOMY_FORECAST_OVERVIEW_URL = `${ECONOMY_FORECAST_BASE_URL}/overview`;
 export const ECONOMY_FORECAST_ANALYSIS_URL = `${ECONOMY_FORECAST_BASE_URL}/analysis`;
 export const ECONOMY_FORECAST_BUDGET_URL = `${ECONOMY_FORECAST_BASE_URL}/budget`;
+export const ECONOMY_FORECAST_RISK_URL = `${ECONOMY_FORECAST_BASE_URL}/risk-management`;
 
 /**
  * The Prognos tab's own row: the pages built so far. The frame draws them as
@@ -137,6 +138,11 @@ export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
 		id: "budget",
 		labelKey: localizationConstants.budget,
 		href: ECONOMY_FORECAST_BUDGET_URL,
+	},
+	{
+		id: "risk",
+		labelKey: localizationConstants.forecastRiskTitle,
+		href: ECONOMY_FORECAST_RISK_URL,
 	},
 ];
 

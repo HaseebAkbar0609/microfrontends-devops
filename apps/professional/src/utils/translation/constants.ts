@@ -3807,6 +3807,7 @@ export type OfferTranslation = {
 
 	/* TFS-697 — Organisation (the project record's third section). */
 	projectOrgEmpty: string;
+	projectSectionDataUnavailable: string;
 	projectOrgNoMatches: string;
 	projectOrgDeleteConfirmTitle: string;
 	projectOrgDeleteConfirmDescription: string;
@@ -10200,6 +10201,73 @@ export type ForecastDashboardTranslation = {
 	forecastKeyFiguresCumulativeSeries: string;
 	forecastKeyFiguresCumulativeChartLabel: string;
 	forecastKeyFiguresNoProjects: string;
+
+	/* Riskhantering */
+	forecastRiskTitle: string;
+	forecastRiskListTab: string;
+	forecastRiskTabsLabel: string;
+	forecastRiskDetailTitle: string;
+	forecastRiskTabObjects: string;
+	forecastRiskTabSettings: string;
+	forecastRiskNotFound: string;
+	forecastRiskExposureTitle: string;
+	forecastRiskExposureCaption: string;
+	forecastRiskLimitTitle: string;
+	forecastRiskLimitCaption: string;
+	forecastRiskDistributionTitle: string;
+	forecastRiskDistributionRow: string;
+	forecastRiskDistributionChartLabel: string;
+	forecastRiskPendingTitle: string;
+	forecastRiskPendingCaption: string;
+	forecastRiskLevelLow: string;
+	forecastRiskLevelWatch: string;
+	forecastRiskLevelHigh: string;
+	forecastRiskStatusOngoing: string;
+	forecastRiskStatusPaused: string;
+	forecastRiskColClient: string;
+	forecastRiskColObjects: string;
+	forecastRiskColTotalCost: string;
+	forecastRiskColLimit: string;
+	forecastRiskColPaid: string;
+	forecastRiskColPending: string;
+	forecastRiskSpendBarLabel: string;
+	forecastRiskViewDetailsFor: string;
+	forecastRiskFilterLevel: string;
+	forecastRiskFilterStatus: string;
+	forecastRiskListEmpty: string;
+	forecastRiskNoMatches: string;
+	forecastRiskClientIdLabel: string;
+	forecastRiskActiveProjects: string;
+	forecastRiskProjectBudget: string;
+	forecastRiskProjectSpending: string;
+	forecastRiskProjectProgress: string;
+	forecastRiskProjectProgressLabel: string;
+	forecastRiskPaymentFullyPaid: string;
+	forecastRiskPaymentPartiallyPaid: string;
+	forecastRiskPaymentPending: string;
+	forecastRiskSummaryTitle: string;
+	forecastRiskOutstandingLabel: string;
+	forecastRiskOfLimit: string;
+	forecastRiskGaugeLabel: string;
+	forecastRiskLimitExceededTitle: string;
+	forecastRiskLimitExceededBody: string;
+	forecastRiskQuickStats: string;
+	forecastRiskTotalProjects: string;
+	forecastRiskTotalSpending: string;
+	forecastRiskSettingsTitle: string;
+	forecastRiskSettingsSubtitle: string;
+	forecastRiskThresholdLabel: string;
+	forecastRiskThresholdHelp: string;
+	forecastRiskCreditLabel: string;
+	forecastRiskCreditHelp: string;
+	forecastRiskAlertLabel: string;
+	forecastRiskAlertHelp: string;
+	forecastRiskAutoRedTitle: string;
+	forecastRiskAutoRedBody: string;
+	forecastRiskSaveSettings: string;
+	forecastRiskSettingsSaved: string;
+	forecastRiskUnitSek: string;
+	forecastRiskUnitPercent: string;
 };
 
 export type Translation = HeaderTranslation &

@@ -52,12 +52,14 @@ export function ProjectProductionInfoPage({
 		renameDocument,
 		removeDocument,
 		isLoading,
+		isMissing,
 		isError,
 		refresh,
 		isSaving,
 	} = useProjectRecordInfo(projectId);
 
 	if (isLoading) return <div className="p-6 text-sm text-slate-600"><Translate text={localizationConstants.genericLoading} /></div>;
+	if (isMissing) notFound();
 	if (isError) return <div className="flex items-center gap-3 p-6 text-sm text-red-700">
 		<Translate text={localizationConstants.genericError} />
 		<Button type="button" variant="outline" onClick={() => void refresh()}><Translate text={localizationConstants.retry} /></Button>
