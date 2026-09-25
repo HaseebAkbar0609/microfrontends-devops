@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -9,11 +8,9 @@ import { Button } from "@/components/ui/button";
 import { useAuthStatus } from "@/context/AuthContext";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { PROJECT_MODULE_BASE_URL } from "../data/projectNav.config";
 import { listProfessionalProjects } from "../services/professionalProjectService";
 import { flattenTree } from "../production/tidsplan/taskTree";
 import { buildTimeline, parseIsoDay } from "../production/tidsplan/timeline";
-import { timeplanUrls } from "../production/tidsplan/timeplanNav";
 import type { TimeplanTask } from "../production/tidsplan/types";
 import { TimeplanGantt } from "../production/tidsplan/view/TimeplanGantt";
 
@@ -30,7 +27,6 @@ function monthEnd(start: string): string {
 
 /** The overview shows project date spans; detailed activities live inside each timeplan. */
 export default function ProjectGanttSchedule() {
-	const router = useRouter();
 	const { company, isAuthenticated } = useAuthStatus();
 	const [monthOffset, setMonthOffset] = useState(0);
 	const query = useQuery({
@@ -70,13 +66,11 @@ export default function ProjectGanttSchedule() {
 				<Button type="button" size="icon" variant="outline" aria-label="Next month" title="Next month" onClick={() => setMonthOffset((value) => value + 1)}><ChevronRight className="h-4 w-4" /></Button>
 			</div>
 			<TimeplanGantt
+				readOnly
 				timeline={timeline}
 				rows={rows}
 				collapsed={new Set()}
 				onToggle={() => undefined}
-				onAdd={(projectId) => router.push(projectId
-					? timeplanUrls.create(projectId)
-					: `${PROJECT_MODULE_BASE_URL}/create`)}
 			/>
 		</div>
 	);
