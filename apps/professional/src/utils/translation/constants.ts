@@ -10268,6 +10268,51 @@ export type ForecastDashboardTranslation = {
 	forecastRiskSettingsSaved: string;
 	forecastRiskUnitSek: string;
 	forecastRiskUnitPercent: string;
+
+	/* Prognos › Personal */
+	forecastPersonnelTitle: string;
+	forecastPersonnelTabOverview: string;
+	forecastPersonnelTabMonthly: string;
+	forecastPersonnelTabsLabel: string;
+	forecastPersonnelFilterTitle: string;
+	forecastPersonnelSalaryFilterTitle: string;
+	forecastPersonnelEmpty: string;
+	forecastPersonnelNoMatches: string;
+	forecastPersonnelDepartmentLabel: string;
+	forecastPersonnelRoleLabel: string;
+	forecastPersonnelRolePlaceholder: string;
+	forecastPersonnelMonthlyCostTitle: string;
+	forecastPersonnelMonthlyCostCaption: string;
+	forecastPersonnelAnnualBudgetTitle: string;
+	forecastPersonnelAnnualBudgetCaption: string;
+	forecastPersonnelHeadcountTitle: string;
+	forecastPersonnelHeadcountValue: string;
+	forecastPersonnelHeadcountCaption: string;
+	forecastPersonnelCapTitle: string;
+	forecastPersonnelCapCaption: string;
+	forecastPersonnelTrendTitle: string;
+	forecastPersonnelTrendChartLabel: string;
+	forecastPersonnelDistributionTitle: string;
+	forecastPersonnelDistributionChartLabel: string;
+	forecastPersonnelDistributionRow: string;
+	forecastPersonnelManagers: string;
+	forecastPersonnelStaff: string;
+	forecastPersonnelStaffingTitle: string;
+	forecastPersonnelColName: string;
+	forecastPersonnelColRole: string;
+	forecastPersonnelColMonthlyCost: string;
+	forecastPersonnelColStartDate: string;
+	forecastPersonnelColEndDate: string;
+	forecastPersonnelPermanent: string;
+	forecastPersonnelChangesTitle: string;
+	forecastPersonnelChangesEmpty: string;
+	forecastPersonnelChangeNewHire: string;
+	forecastPersonnelChangeEnding: string;
+	forecastPersonnelColKategori: string;
+	forecastPersonnelKategoriService: string;
+	forecastPersonnelKategoriEntreprenad: string;
+	forecastPersonnelKategoriOverhead: string;
+	forecastPersonnelSummaryRow: string;
 };
 
 export type Translation = HeaderTranslation &

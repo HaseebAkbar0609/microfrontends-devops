@@ -7,10 +7,7 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { FORECAST_ANALYSIS_TREND_SERIES } from "../../../../constants/forecastAnalysis.constants";
 import type { AnalysisTrendPoint } from "../../../../types/forecastAnalysis.types";
 import { formatSek, formatSekCompact } from "../../../../utils/economyFormatters";
-
-/** The house axis tick, as the team app's charts set it. */
-const AXIS_TICK = { fill: "#64748b", fontSize: 12 };
-const TOOLTIP_STYLE = { backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 12, fontSize: 12 };
+import { AXIS_TICK, CHART_MARGIN, GRID_STROKE, TOOLTIP_STYLE } from "../../charts/chartStyle";
 
 export interface ForecastTrendsChartProps {
 	points: AnalysisTrendPoint[];
@@ -49,8 +46,8 @@ export function ForecastTrendsChart({ points }: ForecastTrendsChartProps) {
 			{/* Recharts draws no text a screen reader can follow, so the figure names itself. */}
 			<div className="h-64 w-full" role="img" aria-label={t(localizationConstants.forecastAnalysisTrendChartLabel)}>
 				<ResponsiveContainer width="100%" height="100%">
-					<LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
-						<CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+					<LineChart data={data} margin={CHART_MARGIN}>
+						<CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
 						<XAxis dataKey="label" tickLine={false} axisLine={false} tick={AXIS_TICK} />
 						<YAxis tickLine={false} axisLine={false} tick={AXIS_TICK} tickFormatter={formatSekCompact} width={80} />
 						<Tooltip contentStyle={TOOLTIP_STYLE} formatter={(value: number) => formatSek(value)} />
