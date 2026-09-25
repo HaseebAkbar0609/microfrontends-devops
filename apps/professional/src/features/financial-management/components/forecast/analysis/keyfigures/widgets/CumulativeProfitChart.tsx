@@ -7,10 +7,8 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { FORECAST_CUMULATIVE_COLOR } from "../../../../../constants/forecastAnalysis.constants";
 import type { AnalysisCumulativePoint } from "../../../../../types/forecastAnalysis.types";
 import { formatSek, formatSekCompact } from "../../../../../utils/economyFormatters";
+import { AXIS_TICK, CHART_MARGIN, GRID_STROKE, TOOLTIP_STYLE } from "../../../charts/chartStyle";
 
-/** The house axis tick, as the team app's charts set it. */
-const AXIS_TICK = { fill: "#64748b", fontSize: 12 };
-const TOOLTIP_STYLE = { backgroundColor: "#ffffff", border: "1px solid #e2e8f0", borderRadius: 12, fontSize: 12 };
 /* Its own gradient id: two dashboards share this page, and a shared id would bleed. */
 const GRADIENT_ID = "forecast-cumulative-fill";
 
@@ -44,14 +42,14 @@ export function CumulativeProfitChart({ points }: CumulativeProfitChartProps) {
 			aria-label={t(localizationConstants.forecastKeyFiguresCumulativeChartLabel)}
 		>
 			<ResponsiveContainer width="100%" height="100%">
-				<AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -8 }}>
+				<AreaChart data={data} margin={CHART_MARGIN}>
 					<defs>
 						<linearGradient id={GRADIENT_ID} x1="0" y1="0" x2="0" y2="1">
 							<stop offset="0%" stopColor={FORECAST_CUMULATIVE_COLOR} stopOpacity={0.35} />
 							<stop offset="100%" stopColor={FORECAST_CUMULATIVE_COLOR} stopOpacity={0} />
 						</linearGradient>
 					</defs>
-					<CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+					<CartesianGrid strokeDasharray="3 3" stroke={GRID_STROKE} vertical={false} />
 					<XAxis dataKey="label" tickLine={false} axisLine={false} tick={AXIS_TICK} />
 					<YAxis tickLine={false} axisLine={false} tick={AXIS_TICK} tickFormatter={formatSekCompact} width={80} />
 					<Tooltip contentStyle={TOOLTIP_STYLE} formatter={(value: number) => formatSek(value)} />
