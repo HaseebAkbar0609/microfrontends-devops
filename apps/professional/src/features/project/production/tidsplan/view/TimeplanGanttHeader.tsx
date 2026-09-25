@@ -15,7 +15,7 @@ import {
 
 export interface TimeplanGanttHeaderProps {
 	timeline: Timeline;
-	onAddPhase: () => void;
+	onAddPhase?: () => void;
 }
 
 const CORNER = "sticky z-30 border-b border-r border-slate-200 bg-white px-4 text-left text-sm font-medium text-slate-500";
@@ -45,7 +45,7 @@ export function TimeplanGanttHeader({ timeline, onAddPhase }: TimeplanGanttHeade
 					<Translate text={localizationConstants.projectDetailColStart} />
 				</th>
 				<th rowSpan={3} className={`${CORNER} text-center`} style={{ left: ADD_COL_LEFT }}>
-					<Button
+					{onAddPhase && <Button
 						type="button"
 						variant="ghost"
 						size="icon"
@@ -55,7 +55,7 @@ export function TimeplanGanttHeader({ timeline, onAddPhase }: TimeplanGanttHeade
 						className="h-8 w-8 cursor-pointer text-slate-600 hover:text-slate-900"
 					>
 						<Plus className="h-4 w-4" />
-					</Button>
+					</Button>}
 				</th>
 				{timeline.months.map((month) => (
 					<th key={month.key} colSpan={month.span} className={BAND}>

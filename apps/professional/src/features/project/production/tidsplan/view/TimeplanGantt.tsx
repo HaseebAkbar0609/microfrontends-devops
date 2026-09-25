@@ -13,7 +13,8 @@ export interface TimeplanGanttProps {
 	rows: TaskRow[];
 	collapsed: ReadonlySet<string>;
 	onToggle: (id: string) => void;
-	onAdd: (parentId: string | null) => void;
+	onAdd?: (parentId: string | null) => void;
+	readOnly?: boolean;
 }
 
 /**
@@ -25,7 +26,7 @@ export interface TimeplanGanttProps {
  * with a `<colgroup>` is what makes each row's single spanning timeline cell the
  * exact width of the header's day cells above it.
  */
-export function TimeplanGantt({ timeline, rows, collapsed, onToggle, onAdd }: TimeplanGanttProps) {
+export function TimeplanGantt({ timeline, rows, collapsed, onToggle, onAdd, readOnly = false }: TimeplanGanttProps) {
 	const totalCols = timeline.days.length;
 	const timelineStart = timeline.days[0]?.iso ?? "";
 
@@ -44,7 +45,7 @@ export function TimeplanGantt({ timeline, rows, collapsed, onToggle, onAdd }: Ti
 					))}
 				</colgroup>
 
-				<TimeplanGanttHeader timeline={timeline} onAddPhase={() => onAdd(null)} />
+				<TimeplanGanttHeader timeline={timeline} onAddPhase={readOnly || !onAdd ? undefined : () => onAdd(null)} />
 
 				<tbody>
 					{rows.length === 0 ? (
@@ -67,7 +68,7 @@ export function TimeplanGantt({ timeline, rows, collapsed, onToggle, onAdd }: Ti
 								totalCols={totalCols}
 								expanded={!collapsed.has(row.task.id)}
 								onToggle={onToggle}
-								onAdd={onAdd}
+								onAdd={readOnly ? undefined : onAdd}
 							/>
 						))
 					)}

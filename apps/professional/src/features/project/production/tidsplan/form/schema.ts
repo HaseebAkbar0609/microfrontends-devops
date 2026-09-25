@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import localizationConstants from "@/utils/translation/constants";
-import { TIMEPLAN_AUTHORS } from "../timeplan.config";
 
 /** The longest description the form accepts (rule 1: a named limit). */
 export const TIMEPLAN_DESCRIPTION_MAX_LENGTH = 1000;
@@ -24,12 +23,7 @@ export const timeplanDetailsSchema = z
 		endDate: z
 			.string()
 			.min(1, localizationConstants.planningValidationEndDateRequired),
-		createdById: z
-			.string()
-			.refine(
-				(id) => TIMEPLAN_AUTHORS.some((author) => author.id === id),
-				localizationConstants.projectTimeplanCreatedByRequired,
-			),
+		createdById: z.string().min(1, localizationConstants.projectTimeplanCreatedByRequired),
 		createdDate: z.string(),
 		revisedDate: z.string(),
 		description: z

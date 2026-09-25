@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
@@ -26,14 +26,17 @@ export interface DesignProtocolCreated {
 export function useDesignProtocols(projektId: string) {
 	const { t } = useTranslation();
 	const router = useRouter();
-	const projekt = getDesignProjektRecord(projektId);
+	const projekt = useMemo(() => getDesignProjektRecord(projektId), [projektId]);
 
-	const facts = projekt
-		? {
-				projectNo: projekt.projektNr,
-				projectName: projekt.projektering.projekteringNamn,
-			}
-		: null;
+	const facts = useMemo(
+		() => projekt
+			? {
+					projectNo: projekt.projektNr,
+					projectName: projekt.projektering.projekteringNamn,
+				}
+			: null,
+		[projekt],
+	);
 
 	const [protocols, setProtocols] = useState(() =>
 		store.listProtocols(projektId),

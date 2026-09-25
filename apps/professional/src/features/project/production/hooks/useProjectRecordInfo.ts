@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 
 import { useAuthStatus } from "@/context/AuthContext";
 import { showToast } from "@/lib/toast";
@@ -77,6 +78,7 @@ export function useProjectRecordInfo(projectId: string) {
 		renameDocument: unsupportedDocumentEdit,
 		removeDocument: unsupportedDocumentEdit,
 		isLoading: query.isLoading || !company,
+		isMissing: isAxiosError(query.error) && query.error.response?.status === 404,
 		isError: query.isError,
 		refresh: query.refetch,
 		isSaving,

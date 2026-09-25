@@ -14,10 +14,8 @@ import {
 import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
-import { ProjectEconomyItem } from "../data/projectEconomy.mock";
+import type { ProjectEconomyItem } from "../data/projectEconomy.types";
 import { ProjectEconomySortField } from "../hooks/useProjectEconomyFilters";
-
-const TB_AMOUNT_FORMAT = new Intl.NumberFormat("de-DE");
 
 interface ProjectEconomyColumn {
 	key: ProjectEconomySortField;
@@ -44,7 +42,7 @@ export const PROJECT_ECONOMY_COLUMNS: ProjectEconomyColumn[] = [
 	{
 		key: "tbContribution",
 		labelKey: localizationConstants.projectEconomyColTb,
-		renderCell: (row) => TB_AMOUNT_FORMAT.format(row.tbContribution),
+		renderCell: (row) => row.tbContribution,
 	},
 ];
 
@@ -116,6 +114,9 @@ const ProjectEconomyTable = ({
 					</TableRow>
 				</TableHeader>
 				<TableBody>
+					{rows.length === 0 && (
+						<TableRow><TableCell colSpan={PROJECT_ECONOMY_COLUMNS.length + 1} className="px-4 py-8 text-center text-sm text-slate-500"><Translate text={localizationConstants.noDataFound} /></TableCell></TableRow>
+					)}
 					{rows.map((row) => (
 						<TableRow
 							key={row.id}

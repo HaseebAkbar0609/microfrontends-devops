@@ -1,6 +1,6 @@
 import { parseRecordIdParam } from "@/lib/routeParams";
-
-import ProjectAtaListPage from "@/features/project/production/ata/list/ProjectAtaListPage";
+import localizationConstants from "@/utils/translation/constants";
+import { UnavailableProjectSectionPage } from "@/features/project/production/components/UnavailableProjectSectionPage";
 
 interface PageProps {
 	params: Promise<{ id: string }>;
@@ -8,6 +8,5 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
-
-	return <ProjectAtaListPage projectId={parseRecordIdParam(id)} />;
+	return <UnavailableProjectSectionPage projectId={parseRecordIdParam(id)} sectionKey={localizationConstants.ataTitle} />;
 }
