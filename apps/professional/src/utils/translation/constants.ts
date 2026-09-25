@@ -8384,6 +8384,7 @@ export type EconomyBudgetTranslation = {
 	colBudgetPercent: string;
 	sectionBudgetInfo: string;
 	sectionBudgetDetails: string;
+	ariaToggleBudgetSection: string;
 	fieldBudgetNr: string;
 	fieldBudgetName: string;
 	fieldBudgetDescription: string;
