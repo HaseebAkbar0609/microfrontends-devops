@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { generateTempId } from "@/lib/tempId";
 import { showToast } from "@/lib/toast";
@@ -35,14 +36,25 @@ export interface AddTarget {
 export function useTimeplanEditor(projectId: string, planId: string) {
 	const t = useTranslate();
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
-	const [plan] = useState(() => getPlan(projectId, planId));
-	const [saved, setSaved] = useState<TimeplanTask[]>(() => plan?.tasks ?? []);
-	const [draft, setDraft] = useState<TimeplanTask[]>(saved);
+	const queryKey = useMemo(
+		() => ["professional-project-timeplan", projectId, planId],
+		[projectId, planId],
+	);
+	const query = useQuery({ queryKey, queryFn: () => getPlan(projectId, planId), retry: false });
+	const plan = query.data;
+	const [saved, setSaved] = useState<TimeplanTask[]>([]);
+	const [draft, setDraft] = useState<TimeplanTask[]>([]);
 	const [collapsed, setCollapsed] = useState<ReadonlySet<string>>(() => new Set());
 	const [addTarget, setAddTarget] = useState<AddTarget | null>(null);
 	const [confirmingDiscard, setConfirmingDiscard] = useState(false);
 	const ganttRef = useRef<HTMLDivElement>(null);
+	useEffect(() => {
+		if (!plan) return;
+		setSaved(plan.tasks);
+		setDraft(plan.tasks);
+	}, [plan]);
 
 	const dirty = draft !== saved;
 
@@ -107,14 +119,18 @@ export function useTimeplanEditor(projectId: string, planId: string) {
 		[addTarget],
 	);
 
-	const save = useCallback(() => {
+	const save = useCallback(async () => {
 		if (!plan) return;
-		saveTasks(plan.id, draft);
-		setSaved(draft);
-		showToast("success", t(localizationConstants.projectTimeplanSavedToast));
-		/* The footer unmounts on save; keep focus on the chart, not on <body>. */
-		ganttRef.current?.focus();
-	}, [draft, plan, t]);
+		try {
+			const updated = await saveTasks(plan, draft);
+			queryClient.setQueryData(queryKey, updated);
+			setSaved(draft);
+			showToast("success", t(localizationConstants.projectTimeplanSavedToast));
+			ganttRef.current?.focus();
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
+		}
+	}, [draft, plan, queryClient, queryKey, t]);
 
 	const confirmDiscard = useCallback(() => {
 		setDraft(saved);
@@ -124,6 +140,8 @@ export function useTimeplanEditor(projectId: string, planId: string) {
 
 	return {
 		plan,
+		isLoading: query.isLoading,
+		isError: query.isError,
 		rows,
 		timeline,
 		collapsed,

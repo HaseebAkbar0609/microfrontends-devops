@@ -11,7 +11,6 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { TIMEPLAN_AUTHORS } from "../timeplan.config";
 import type { TimeplanDetails } from "../types";
 import { TIMEPLAN_DESCRIPTION_MAX_LENGTH } from "./schema";
 import { TimeplanSectionCard } from "./TimeplanSectionCard";
@@ -21,6 +20,7 @@ export interface TimeplanOtherInfoCardProps {
 	/** The project's own number, without the list's leading `#`. */
 	projectNo: string;
 	customer: string;
+	authorName: string;
 }
 
 /** A value shown for context, not edited — grey-filled, as the frame draws it. */
@@ -48,7 +48,7 @@ function ReadOnlyField({ id, labelKey, value }: { id: string; labelKey: Translat
  * project row so they cannot disagree with the record. "Skapat av" is written
  * Skapad av, matching the list column — *tidsplan* is an en-word.
  */
-export function TimeplanOtherInfoCard({ form, projectNo, customer }: TimeplanOtherInfoCardProps) {
+export function TimeplanOtherInfoCard({ form, projectNo, customer, authorName }: TimeplanOtherInfoCardProps) {
 	const t = useTranslate();
 	const translateError = (message: string) => t(message as TranslationKeys);
 
@@ -64,21 +64,20 @@ export function TimeplanOtherInfoCard({ form, projectNo, customer }: TimeplanOth
 				control={form.control}
 				name="createdById"
 				label={localizationConstants.lblSkapadAv}
-				options={TIMEPLAN_AUTHORS.map((author) => ({
-					value: author.id,
+				options={[{
+					value: authorName,
 					label: (
 						<span className="flex items-center gap-2">
 							<span
 								aria-hidden
 								className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-200 text-[10px] font-semibold text-slate-700"
 							>
-								{initialsOf(author.name)}
+								{initialsOf(authorName)}
 							</span>
-							<span className="text-slate-900">{author.name}</span>
-							<span className="text-slate-500">{author.handle}</span>
+							<span className="text-slate-900">{authorName}</span>
 						</span>
 					),
-				}))}
+				}]}
 				translateError={translateError}
 			/>
 			<span className="hidden sm:block" aria-hidden />

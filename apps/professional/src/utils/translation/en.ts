@@ -3864,6 +3864,7 @@ export const enOffer: OfferTranslation = {
 
 	/* TFS-697 — Organisation (the project record's third section). */
 	projectOrgEmpty: "No organisation has been registered for this project.",
+	projectSectionDataUnavailable: "Project data for this section is not connected yet.",
 	projectOrgNoMatches: "No organisations match the search.",
 	projectOrgDeleteConfirmTitle: "Delete organisation?",
 	projectOrgDeleteConfirmDescription:

@@ -3806,6 +3806,7 @@ export type OfferTranslation = {
 
 	/* TFS-697 — Organisation (the project record's third section). */
 	projectOrgEmpty: string;
+	projectSectionDataUnavailable: string;
 	projectOrgNoMatches: string;
 	projectOrgDeleteConfirmTitle: string;
 	projectOrgDeleteConfirmDescription: string;
