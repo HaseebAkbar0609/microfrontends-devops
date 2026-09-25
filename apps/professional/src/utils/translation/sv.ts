@@ -8470,6 +8470,7 @@ export const svEconomyBudget: EconomyBudgetTranslation = {
 	colBudgetPercent: "%",
 	sectionBudgetInfo: "Budget information",
 	sectionBudgetDetails: "Budget",
+	ariaToggleBudgetSection: "Visa eller dölj budgetraderna",
 	fieldBudgetNr: "Budget nr",
 	fieldBudgetName: "Budget name",
 	fieldBudgetDescription: "Beskrivning",

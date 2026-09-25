@@ -8449,6 +8449,7 @@ export const enEconomyBudget: EconomyBudgetTranslation = {
 	colBudgetPercent: "%",
 	sectionBudgetInfo: "Budget Information",
 	sectionBudgetDetails: "Budget",
+	ariaToggleBudgetSection: "Show or hide the budget rows",
 	fieldBudgetNr: "Budget No.",
 	fieldBudgetName: "Budget name",
 	fieldBudgetDescription: "Description",
