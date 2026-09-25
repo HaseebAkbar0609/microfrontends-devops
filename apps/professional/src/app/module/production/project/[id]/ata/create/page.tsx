@@ -1,14 +1,12 @@
 import { parseRecordIdParam } from "@/lib/routeParams";
-
-import ProjectAtaFormPage from "@/features/project/production/ata/form/ProjectAtaFormPage";
+import localizationConstants from "@/utils/translation/constants";
+import { UnavailableProjectSectionPage } from "@/features/project/production/components/UnavailableProjectSectionPage";
 
 interface PageProps {
 	params: Promise<{ id: string }>;
 }
 
-/** Skapa ÄTA. `create` is a static segment, so Next matches it before `[ataId]`. */
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
-
-	return <ProjectAtaFormPage projectId={parseRecordIdParam(id)} initialStep={1} />;
+	return <UnavailableProjectSectionPage projectId={parseRecordIdParam(id)} sectionKey={localizationConstants.ataTitle} />;
 }

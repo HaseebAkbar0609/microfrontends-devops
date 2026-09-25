@@ -3751,6 +3751,7 @@ export const svOffer: OfferTranslation = {
 
 	/* TFS-697 — Organisation (the project record's third section). */
 	projectOrgEmpty: "Ingen organisation är registrerad för projektet.",
+	projectSectionDataUnavailable: "Projektdata för den här sektionen är ännu inte ansluten.",
 	projectOrgNoMatches: "Inga organisationer matchar sökningen.",
 	projectOrgDeleteConfirmTitle: "Radera organisation?",
 	projectOrgDeleteConfirmDescription:

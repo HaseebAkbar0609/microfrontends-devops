@@ -15,8 +15,6 @@ import ProjectEconomyTable from "./ProjectEconomyTable";
 
 const PROJECT_ECONOMY_TAB_TB = "tb";
 
-const TOTAL_TB_FORMAT = new Intl.NumberFormat("en-US");
-
 const ProjectEconomyPage = () => {
 	const filters = useProjectEconomyFilters();
 
@@ -55,27 +53,27 @@ const ProjectEconomyPage = () => {
 									}
 								/>
 								{": "}
-								{TOTAL_TB_FORMAT.format(
-									filters.totalTbContribution,
-								)}
+								{filters.totalTbContribution}
 							</p>
 
-							<div className="rounded-md border border-slate-200 bg-white">
+							{filters.isLoading && <p role="status" className="text-sm text-slate-600"><Translate text={localizationConstants.genericLoading} /></p>}
+							{filters.isError && <p role="alert" className="text-sm text-red-700"><Translate text={localizationConstants.genericError} /></p>}
+							{!filters.isLoading && !filters.isError && <div className="rounded-md border border-slate-200 bg-white">
 								<ProjectEconomyTable
 									rows={filters.paged}
 									sortField={filters.sortField}
 									onToggleSort={filters.toggleSort}
 								/>
-							</div>
+							</div>}
 
-							<TablePagination
+							{!filters.isLoading && !filters.isError && <TablePagination
 								currentPage={filters.page}
 								totalPages={filters.totalPages}
 								pageSize={filters.pageSize}
 								onPageChange={filters.setPage}
 								onPageSizeChange={filters.setPageSize}
 								className="justify-center sm:justify-center"
-							/>
+							/>}
 						</div>
 					</TabsContent>
 				</Tabs>

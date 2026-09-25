@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
 
 import { ModulePageHeader, SectionTabs } from "@/components/layout/navigation";
 import { TabsContent } from "@/components/ui/tabs";
@@ -34,9 +33,12 @@ export function ProjectQaPage({ projectId }: ProjectQaPageProps) {
 	/* One instance for both tabs: archiving on Alla has to show under Arkiv. */
 	const board = useProjectQaBoard(projectId);
 
-	/* An id that matches no project is a 404. After the hooks: `notFound()`
-	   throws. */
-	if (!board.project) notFound();
+	if (board.isLoading) {
+		return <p role="status" className="p-6">{t(localizationConstants.genericLoading)}</p>;
+	}
+	if (!board.project || board.isError) {
+		return <p role="alert" className="p-6">{t(localizationConstants.genericError)}</p>;
+	}
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
