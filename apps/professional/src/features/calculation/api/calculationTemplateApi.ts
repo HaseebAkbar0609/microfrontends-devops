@@ -2,6 +2,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import type {
 	CalculationTemplateOption,
+	OverheadRow,
 	SupplierPriceListItem,
 	TemplateCostSection,
 } from "../types/templateCalculation";
@@ -13,9 +14,14 @@ import {
 
 export interface SaveTemplateCalculationPayload {
 	calcNo: string;
+	mode?: "mall" | "ny" | null;
 	templateId?: string;
 	sections: TemplateCostSection[];
+	overheadRows?: OverheadRow[];
+	vinstPct?: number;
 	totalSum: number;
+	finalOfferSum?: number;
+	saveAsTemplate?: boolean;
 }
 
 export async function getCalculationTemplatesAPIAction(): Promise<CalculationTemplateOption[]> {
