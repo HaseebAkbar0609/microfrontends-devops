@@ -29,7 +29,7 @@ export function CalculationStepSidebar({
 }: CalculationStepSidebarProps) {
 	return (
 		<div className={cn("w-full lg:w-72 shrink-0", className)}>
-			<Card className="rounded-lg border border-slate-200 bg-white p-4 sm:p-5 shadow-none">
+			<Card className="rounded-lg border border-slate-200 bg-white px-4 py-3 sm:px-5 sm:py-3.5 shadow-none">
 				<div className="flex flex-col gap-3">
 					{/* Step Progress */}
 					<div className="flex items-center justify-between text-sm font-medium text-slate-900">

@@ -20,6 +20,23 @@ export interface TemplateCostSection {
 	rows: TemplateSectionRow[];
 }
 
+export interface OverheadRow {
+	id: string;
+	artikel: string;
+	benamning: string;
+	antal: string;
+	enhet: string;
+	aPris: string;
+	paslagPct: string;
+	justering: string;
+}
+
+export interface SectionSummaryAdjustment {
+	sectionId: string;
+	markupPct: string;
+	adjustmentKr: string;
+}
+
 export interface CalculationTemplateOption {
 	id: string;
 	name: string;

@@ -75,7 +75,7 @@ export function CreateKalkylPage() {
 								onClick={handleBack}
 								className="h-8 w-8 cursor-pointer text-slate-700 hover:bg-slate-200"
 							>
-								<ArrowLeft className="h-5 w-5" />
+								<ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
 							</Button>
 
 							<h1 className="text-lg font-semibold text-slate-900 sm:text-xl">
@@ -96,7 +96,7 @@ export function CreateKalkylPage() {
 									onClick={handleCancel}
 									className="h-8 w-8 cursor-pointer text-slate-700 hover:bg-slate-200"
 								>
-									<ArrowLeft className="h-5 w-5" />
+									<ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
 								</Button>
 
 								<h1 className="text-lg font-semibold text-slate-900 sm:text-xl">

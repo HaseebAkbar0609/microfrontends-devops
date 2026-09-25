@@ -1389,6 +1389,7 @@ export type OfferTranslation = {
 	calcBerVinstProcent: string;
 	calcBerOffert: string;
 	calcBerSaveAsTemplate: string;
+	calcBerTotal: string;
 	// Calculation - Template (TFS-903A)
 	calcTemplateSupplierPriceLists: string;
 	calcTemplateLevArtikelCol: string;

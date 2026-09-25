@@ -12,7 +12,7 @@ import {
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
@@ -24,7 +24,7 @@ interface CostCategorySectionProps {
 	section: TemplateCostSection;
 	onToggle: () => void;
 	onAddRow: () => void;
-	onUpdateRow: (rowId: string, patch: Partial<TemplateSectionRow>) => void;
+	onUpdateRow?: (rowId: string, patch: Partial<TemplateSectionRow>) => void;
 	onDeleteRow: (rowId: string) => void;
 	onDeleteSection: () => void;
 }
@@ -35,12 +35,27 @@ export function CostCategorySection({
 	section,
 	onToggle,
 	onAddRow,
-	onUpdateRow: _onUpdateRow,
 	onDeleteRow,
 	onDeleteSection,
 }: CostCategorySectionProps) {
+	const t = useTranslate();
 	const [sortField, setSortField] = useState<SortField | null>(null);
 	const [sortDir, setSortDir] = useState<"asc" | "desc" | null>(null);
+
+	const localizedTitle = useMemo(() => {
+		switch (section.categoryType) {
+			case "konsulter":
+				return t(localizationConstants.calcTemplateKonsulter);
+			case "arbete":
+				return t(localizationConstants.calcTemplateArbete);
+			case "material":
+				return t(localizationConstants.calcTemplateMaterial);
+			case "uc":
+				return t(localizationConstants.calcTemplateUC);
+			default:
+				return section.title;
+		}
+	}, [section.categoryType, section.title, t]);
 
 	const toggleSort = (field: SortField) => {
 		if (sortField === field) {
@@ -77,14 +92,14 @@ export function CostCategorySection({
 		"whitespace-nowrap px-3 py-3 text-left text-xs font-semibold text-slate-700";
 
 	return (
-		<Card className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-none">
+		<Card className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-none gap-0 pb-0">
 			{/* Section Header */}
 			<div
-				className="flex h-12 cursor-pointer items-center justify-between border-b border-slate-200 bg-white px-5 transition-colors hover:bg-slate-50/50"
+				className="flex h-14 cursor-pointer items-center justify-between border-b border-slate-200 bg-white px-5 transition-colors hover:bg-slate-50/50"
 				onClick={onToggle}
 			>
 				<div className="flex items-center gap-2">
-					<span className="text-sm font-semibold text-slate-900">{section.title}</span>
+					<span className="text-sm font-semibold text-slate-900">{localizedTitle}</span>
 				</div>
 				<Button
 					type="button"
@@ -103,11 +118,11 @@ export function CostCategorySection({
 
 			{/* Section Content */}
 			{section.isOpen && (
-				<div className="p-4 sm:p-5">
+				<div className="px-4 sm:px-5 pt-2 pb-3 space-y-2.5">
 					<div className="overflow-x-auto scrollbar-thin">
 						<Table className="w-full min-w-[720px]">
 							<TableHeader>
-								<TableRow className="border-b border-slate-200 bg-white hover:bg-transparent">
+								<TableRow className="h-10 border-b border-slate-200 bg-white hover:bg-transparent">
 									<TableHead className={TH_SORTABLE} onClick={() => toggleSort("artikel")}>
 										<div className="flex items-center gap-1">
 											<Translate text={localizationConstants.calcItemCol} />
@@ -156,15 +171,15 @@ export function CostCategorySection({
 										<Translate text={localizationConstants.calcBerDelsummaCol} />
 									</TableHead>
 
-									<TableHead className="w-10 px-2 py-3" />
+									<TableHead className="w-10 px-2" />
 								</TableRow>
 							</TableHeader>
 							<TableBody className="[&_tr:last-child]:border-b [&_tr:last-child]:border-slate-200">
 								{sortedRows.length === 0 ? (
-									<TableRow>
+									<TableRow className="h-20">
 										<TableCell
 											colSpan={isMaterial ? 10 : 8}
-											className="h-20 text-center text-sm text-slate-400"
+											className="text-center text-sm text-slate-400"
 										>
 											<Translate text={localizationConstants.noDataFound} />
 										</TableCell>
@@ -175,67 +190,67 @@ export function CostCategorySection({
 										return (
 											<TableRow
 												key={row.id}
-												className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors"
+												className="h-12 border-b border-slate-100 hover:bg-slate-50/50 transition-colors"
 											>
 												{/* Artikel */}
-												<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-900">
+												<TableCell className="px-3 text-sm font-normal text-slate-900">
 													{row.artikel || "-"}
 												</TableCell>
 
 												{/* Lev.artikel (Material only) */}
 												{isMaterial && (
-													<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-800">
+													<TableCell className="px-3 text-sm font-normal text-slate-800">
 														{row.levArtikel || "-"}
 													</TableCell>
 												)}
 
 												{/* Leverantör (Material only) */}
 												{isMaterial && (
-													<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-800">
+													<TableCell className="px-3 text-sm font-normal text-slate-800">
 														{row.leverantor || "-"}
 													</TableCell>
 												)}
 
 												{/* Benämning */}
-												<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-900">
+												<TableCell className="px-3 text-sm font-normal text-slate-900">
 													{row.benamning || "-"}
 												</TableCell>
 
 												{/* Antal */}
-												<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-800 tabular-nums">
+												<TableCell className="px-3 text-sm font-normal text-slate-800 tabular-nums">
 													{row.antal || "0"}
 												</TableCell>
 
 												{/* Enhet */}
-												<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-800">
+												<TableCell className="px-3 text-sm font-normal text-slate-800">
 													{row.enhet || "tim"}
 												</TableCell>
 
 												{/* A-pris */}
-												<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-800 tabular-nums">
+												<TableCell className="px-3 text-sm font-normal text-slate-800 tabular-nums">
 													{row.aPris || "0"}
 												</TableCell>
 
 												{/* Påslag */}
-												<TableCell className="px-3 py-3.5 text-sm font-normal text-slate-800 tabular-nums">
+												<TableCell className="px-3 text-sm font-normal text-slate-800 tabular-nums">
 													{row.paslagPct ? `${row.paslagPct}%` : "0%"}
 												</TableCell>
 
 												{/* Delsumma */}
-												<TableCell className="px-3 py-3.5 text-sm font-semibold text-slate-950 tabular-nums whitespace-nowrap">
+												<TableCell className="px-3 text-sm font-semibold text-slate-950 tabular-nums whitespace-nowrap">
 													{formatCurrency(rowTotal)}
 												</TableCell>
 
 												{/* Delete Action */}
-												<TableCell className="px-2 py-3.5 text-right">
+												<TableCell className="px-2 text-right">
 													<Button
 														type="button"
 														variant="ghost"
 														size="icon"
 														onClick={() => onDeleteRow(row.id)}
-														className="h-7 w-7 text-slate-400 hover:text-slate-900 hover:bg-slate-100 cursor-pointer"
+														className="h-7 w-7 text-slate-900 hover:text-slate-700 hover:bg-slate-100 cursor-pointer"
 													>
-														<Trash2 className="h-4 w-4" />
+														<Trash2 className="h-4 w-4 text-slate-900" />
 													</Button>
 												</TableCell>
 											</TableRow>
@@ -247,7 +262,7 @@ export function CostCategorySection({
 					</div>
 
 					{/* Add row bar */}
-					<div className="mt-3">
+					<div>
 						<Button
 							type="button"
 							variant="outline"
@@ -260,11 +275,13 @@ export function CostCategorySection({
 					</div>
 
 					{/* Section Footer Bar: Summa and Delete Section */}
-					<div className="mt-4 flex items-center justify-between border-t border-slate-100 pt-3">
+					<div className="flex items-center justify-between border-t border-slate-100 pt-3">
 						<div className="flex w-[233px] items-center justify-between rounded-lg bg-slate-200 px-4 py-2 shadow-none">
 							<div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
 								<Sigma className="h-4 w-4 text-slate-800" />
-								<span>Summa</span>
+								<span>
+									<Translate text={localizationConstants.calcBerTotal} />
+								</span>
 							</div>
 							<span className="text-base font-semibold tabular-nums text-slate-950">
 								{formatCurrency(sectionTotal)}

@@ -14,6 +14,7 @@ import {
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn } from "@/lib/utils";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -94,7 +95,7 @@ export function KalkylFlowSelector({
 				{/* Right Sidebar Step Card (Top on small screens, right side on lg screens) */}
 				<div className="order-1 lg:order-2 shrink-0 px-4 pt-4 pb-1 sm:px-6 sm:pl-15 sm:pr-6 sm:pt-6 sm:pb-1 lg:p-6 lg:pl-0 lg:pb-6 lg:overflow-y-auto">
 					<div className="w-full lg:w-72">
-						<Card className="rounded-lg border border-slate-200 bg-white p-4 sm:p-5 shadow-none">
+						<Card className="rounded-lg border border-slate-200 bg-white px-4 py-3 sm:px-5 sm:py-3.5 shadow-none">
 							<div className="flex flex-col gap-3">
 								<div className="flex items-center justify-between text-sm font-semibold text-slate-900">
 									<span>
@@ -132,77 +133,71 @@ export function KalkylFlowSelector({
 				{/* Selection Options Area */}
 				<div className="order-2 lg:order-1 flex-1 px-4 pt-3 pb-6 sm:px-6 sm:pl-15 sm:pr-6 sm:pt-3 sm:pb-6 lg:p-6 lg:pl-15 lg:pr-6 lg:overflow-y-auto space-y-5">
 					{/* Flow Choice Cards */}
-					<Card className="rounded-lg border border-slate-200 bg-white p-5 sm:p-6 shadow-none">
-						<Label className="mb-0.5 block text-base font-semibold text-slate-900 leading-none">
+					<Card className="rounded-lg border border-slate-200 bg-white p-5 sm:p-6 shadow-none text-left">
+						<Label className="mb-4 block text-base font-semibold text-slate-900 leading-none text-left">
 							<Translate text={localizationConstants.calcBerSkapeNy} />
 						</Label>
-						<div role="radiogroup" aria-label="Kalkyltyp" className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+						<RadioGroup
+							value={selectedMode || ""}
+							onValueChange={(val) => onSelectMode(val as "mall" | "ny")}
+							className="grid grid-cols-1 gap-4 sm:grid-cols-2 text-left"
+						>
 							{/* Option 1: Kalkyl mall */}
-							<button
-								type="button"
-								role="radio"
-								aria-checked={selectedMode === "mall"}
+							<div
 								onClick={() => onSelectMode("mall")}
 								className={cn(
-									"flex cursor-pointer flex-col gap-1 rounded-lg border p-4 text-left transition-all",
+									"flex cursor-pointer flex-col items-start text-left gap-1 rounded-lg border p-4 transition-all",
 									selectedMode === "mall"
 										? "border-slate-300 bg-slate-100/70"
 										: "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/40",
 								)}
 							>
-								<div className="flex items-center gap-3">
-									<div
-										className={cn(
-											"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2",
-											selectedMode === "mall" ? "border-slate-900" : "border-slate-400",
-										)}
+								<div className="flex items-center gap-3 text-left">
+									<RadioGroupItem
+										value="mall"
+										id="mode-mall"
+										className="border-slate-400 data-[state=checked]:border-slate-900 data-[state=checked]:text-slate-900"
+									/>
+									<Label
+										htmlFor="mode-mall"
+										className="mb-0 text-sm font-semibold text-slate-900 cursor-pointer text-left"
 									>
-										{selectedMode === "mall" && (
-											<div className="h-2 w-2 rounded-full bg-slate-900" />
-										)}
-									</div>
-									<span className="text-sm font-semibold text-slate-900">
 										<Translate text={localizationConstants.calcBerKalkylMall} />
-									</span>
+									</Label>
 								</div>
-								<p className="pl-7 text-xs text-slate-500">
+								<p className="pl-7 text-xs font-normal text-slate-500 text-left">
 									<Translate text={localizationConstants.calcBerValjFranMallar} />
 								</p>
-							</button>
+							</div>
 
 							{/* Option 2: Ny kalkyl */}
-							<button
-								type="button"
-								role="radio"
-								aria-checked={selectedMode === "ny"}
+							<div
 								onClick={() => onSelectMode("ny")}
 								className={cn(
-									"flex cursor-pointer flex-col gap-1 rounded-lg border p-4 text-left transition-all",
+									"flex cursor-pointer flex-col items-start text-left gap-1 rounded-lg border p-4 transition-all",
 									selectedMode === "ny"
 										? "border-slate-300 bg-slate-100/70"
 										: "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/40",
 								)}
 							>
-								<div className="flex items-center gap-3">
-									<div
-										className={cn(
-											"flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2",
-											selectedMode === "ny" ? "border-slate-900" : "border-slate-400",
-										)}
+								<div className="flex items-center gap-3 text-left">
+									<RadioGroupItem
+										value="ny"
+										id="mode-ny"
+										className="border-slate-400 data-[state=checked]:border-slate-900 data-[state=checked]:text-slate-900"
+									/>
+									<Label
+										htmlFor="mode-ny"
+										className="mb-0 text-sm font-semibold text-slate-900 cursor-pointer text-left"
 									>
-										{selectedMode === "ny" && (
-											<div className="h-2 w-2 rounded-full bg-slate-900" />
-										)}
-									</div>
-									<span className="text-sm font-semibold text-slate-900">
 										<Translate text={localizationConstants.calcBerNyKalkyl} />
-									</span>
+									</Label>
 								</div>
-								<p className="pl-7 text-xs text-slate-500">
+								<p className="pl-7 text-xs font-normal text-slate-500 text-left">
 									<Translate text={localizationConstants.calcBerBorjaFranBorjan} />
 								</p>
-							</button>
-						</div>
+							</div>
+						</RadioGroup>
 					</Card>
 
 					{/* Template Selection Table — opens when "Kalkyl mall" is selected */}
