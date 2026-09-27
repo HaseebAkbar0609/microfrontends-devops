@@ -35,13 +35,15 @@ export function CreateBudgetInfoForm({
 				>
 					<Translate text={localizationConstants.fieldBudgetNr} />
 				</label>
+				{/* The number the budget will carry; the register assigns it, so the
+				    form shows it rather than asking for it. */}
 				<Input
 					id="budgetnr"
 					type="text"
 					value={formData.budgetnr}
-					onChange={(e) => onChange({ budgetnr: e.target.value })}
+					disabled
 					placeholder={t(localizationConstants.budgetNrPlaceholder)}
-					className="h-10 bg-slate-50/70 border-slate-200 text-sm rounded-lg"
+					className="h-10 rounded-lg border-slate-200 bg-slate-50/70 text-sm disabled:cursor-not-allowed disabled:text-slate-600 disabled:opacity-100"
 				/>
 			</div>
 

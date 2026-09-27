@@ -51,6 +51,11 @@ const stripePromise = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 	? loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 	: null;
 
+function checkoutReturnUrl(): string {
+	const mode = new URLSearchParams(window.location.search).get("mode");
+	return `${window.location.origin}/manage-cart${mode === "new" ? "?mode=new" : ""}`;
+}
+
 export function CheckoutPaymentDetails({
 	items,
 	subtotal,
@@ -313,7 +318,7 @@ export function CheckoutPaymentDetails({
 
 					if (!checkout.success || !checkout.data) return;
 
-					const returnUrl = `${window.location.origin}/manage-cart`;
+					const returnUrl = checkoutReturnUrl();
 					const needsStripeConfirm =
 						checkout.data.status === "incomplete" &&
 						Boolean(checkout.data.client_secret);
@@ -393,7 +398,7 @@ export function CheckoutPaymentDetails({
 				);
 				if (!checkout.success || !checkout.data) return;
 
-				const returnUrl = `${window.location.origin}/manage-cart`;
+				const returnUrl = checkoutReturnUrl();
 				const needsStripeConfirm =
 					checkout.data.status === "incomplete" &&
 					Boolean(checkout.data.client_secret);

@@ -1,14 +1,12 @@
 import { parseRecordIdParam } from "@/lib/routeParams";
-
-import ProjectProtocolEditPage from "@/features/project/production/protokoll/edit/ProjectProtocolEditPage";
+import localizationConstants from "@/utils/translation/constants";
+import { UnavailableProjectSectionPage } from "@/features/project/production/components/UnavailableProjectSectionPage";
 
 interface PageProps {
 	params: Promise<{ id: string; protocolId: string }>;
 }
 
-/** Ändra on a Standard protocol. Validates both ids; the client component resolves the protocol (see `[protocolId]`). */
 export default async function Page({ params }: PageProps) {
-	const { id, protocolId } = await params;
-
-	return <ProjectProtocolEditPage projectId={parseRecordIdParam(id)} protocolId={parseRecordIdParam(protocolId)} />;
+	const { id } = await params;
+	return <UnavailableProjectSectionPage projectId={parseRecordIdParam(id)} sectionKey={localizationConstants.projectProtocolTitle} />;
 }

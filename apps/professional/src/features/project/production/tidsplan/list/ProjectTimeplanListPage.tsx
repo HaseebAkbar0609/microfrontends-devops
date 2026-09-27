@@ -2,7 +2,8 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { Plus, Printer } from "lucide-react";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 
 import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 import { ModulePageHeader } from "@/components/layout/navigation";
@@ -17,8 +18,8 @@ import {
 	PROJECT_MODULE_TABS,
 	PROJECT_MODULE_TITLE,
 } from "../../../data/projectNav.config";
-import { PROJECT_LIST_ROWS } from "../../../data/projectsOverview.mock";
 import { ProjectRecordTitle } from "../../components/ProjectRecordTitle";
+import { useProjectIdentity } from "../../hooks/useProjectIdentity";
 import { projectProductionTabs } from "../../projectProductionNav.config";
 import { listPlans, removePlan } from "../services/timeplanService";
 import { kindLabelKey } from "../timeplan.config";
@@ -35,6 +36,8 @@ export interface ProjectTimeplanListPageProps {
 	projectId: string;
 }
 
+const EMPTY_PLANS: Timeplan[] = [];
+
 /**
  * Tidsplan — the project's timeplans.
  *
@@ -45,9 +48,16 @@ export interface ProjectTimeplanListPageProps {
 export function ProjectTimeplanListPage({ projectId }: ProjectTimeplanListPageProps) {
 	const t = useTranslate();
 	const router = useRouter();
-	const project = PROJECT_LIST_ROWS.find((row) => row.id === projectId);
+	const projectQuery = useProjectIdentity(projectId);
+	const project = projectQuery.data;
+	const plansQuery = useQuery({
+		queryKey: ["professional-project-timeplans", projectId],
+		queryFn: () => listPlans(projectId),
+		enabled: Boolean(project),
+		retry: false,
+	});
 
-	const [plans, setPlans] = useState(() => listPlans(projectId));
+	const plans = plansQuery.data ?? EMPTY_PLANS;
 	const [deleting, setDeleting] = useState<Timeplan | null>(null);
 	const [visibleColumns, setVisibleColumns] = useState<Set<TimeplanColumnKey>>(
 		() => new Set(TIMEPLAN_LIST_COLUMNS.map((column) => column.key)),
@@ -78,16 +88,24 @@ export function ProjectTimeplanListPage({ projectId }: ProjectTimeplanListPagePr
 		setTimeout(() => setDeleting(plan), 0);
 	}, []);
 
-	const confirmDelete = useCallback(() => {
+	const confirmDelete = useCallback(async () => {
 		if (!deleting) return;
-		removePlan(deleting.id);
-		setPlans(listPlans(projectId));
-		setDeleting(null);
-		showToast("success", t(localizationConstants.projectTimeplanDeletedToast));
-	}, [deleting, projectId, t]);
+		try {
+			await removePlan(deleting);
+			await plansQuery.refetch();
+			setDeleting(null);
+			showToast("success", t(localizationConstants.projectTimeplanDeletedToast));
+		} catch {
+			showToast("error", t(localizationConstants.genericError));
+		}
+	}, [deleting, plansQuery, t]);
 
-	/* An id that matches no project is a 404. After the hooks: it throws. */
-	if (!project) notFound();
+	if (projectQuery.isLoading || (project && plansQuery.isLoading)) {
+		return <p role="status" className="p-6">{t(localizationConstants.genericLoading)}</p>;
+	}
+	if (!project || projectQuery.isError || plansQuery.isError) {
+		return <p role="alert" className="p-6">{t(localizationConstants.genericError)}</p>;
+	}
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">

@@ -33,7 +33,8 @@ import { showToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { WidgetLoadingState } from "./WidgetContent";
+import type { WidgetCardVariant } from "../types/dashboard";
+import { WidgetErrorState, WidgetLoadingState, WidgetSourceUnavailable } from "./WidgetContent";
 
 export interface DashboardWidgetProps {
   title: string;
@@ -54,7 +55,12 @@ export interface DashboardWidgetProps {
   isDisabled?: boolean;
   /** Swap the content for a skeleton while the widget's data is being fetched. */
   isLoading?: boolean;
+  sourceUnavailable?: boolean;
+  sourceError?: boolean;
   onRefresh?: () => Promise<void> | void;
+  onExport?: () => void;
+  /** `muted`: the grey card — a larger icon tile and title, and a header of only the lock chip and ⋮. */
+  variant?: WidgetCardVariant;
 }
 
 export const DashboardWidget = ({
@@ -74,10 +80,18 @@ export const DashboardWidget = ({
   onEmptyAction,
   isDisabled,
   isLoading,
+  sourceUnavailable,
+  sourceError,
   onRefresh,
+  onExport,
+  variant = "default",
 }: DashboardWidgetProps) => {
   const t = useTranslate();
   const titleText = t(title) || title;
+  const isMuted = variant === "muted";
+  /* The Analys frame's figure card: the title labels the figure, and the header
+     keeps only the ⋮, so a KPI reads as one number rather than as a panel. */
+  const isKpi = variant === "kpi";
 
   // Interactive states for unified UX testing & control
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -88,15 +102,13 @@ export const DashboardWidget = ({
   const effectiveLoading = isLoading || localLoading;
   const effectiveEmpty = isEmpty || localEmpty;
   const effectiveDisabled = isDisabled || localDisabled;
+  const effectiveUnavailable = sourceUnavailable && !isEmpty;
 
   const handleRefresh = async () => {
+    if (!onRefresh) return;
     setLocalLoading(true);
     try {
-      if (onRefresh) {
-        await onRefresh();
-      } else {
-        await new Promise((resolve) => setTimeout(resolve, 900));
-      }
+      await onRefresh();
       setLocalEmpty(false);
       showToast("success", `${t(localizationConstants.wActionRefresh)}: ${titleText}`);
     } catch {
@@ -126,22 +138,32 @@ export const DashboardWidget = ({
             !effectiveDisabled &&
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-slate-100 focus-visible:ring-offset-2",
           effectiveDisabled && "opacity-50 grayscale bg-slate-100/80 dark:bg-slate-800/80 select-none",
+          isMuted && "rounded-sm",
           className
         )}
         style={{
-          minHeight: "220px",
+          minHeight: isKpi ? "120px" : "220px",
         }}
       >
         {/* Top Header Row: Icon (left), Admin Lock + Active Dot + Quick Actions (right) */}
         <div className="flex items-center justify-between gap-2">
           {/* Left: Icon inside rounded white square matching Figma */}
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-white border border-slate-200/80 shadow-xs dark:bg-slate-800 dark:border-slate-700">
-            <Icon size={18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
-          </div>
+          {!isKpi && (
+            <div
+              className={cn(
+                "flex shrink-0 items-center justify-center bg-white dark:bg-slate-800",
+                isMuted
+                  ? "h-10 w-10 rounded-sm"
+                  : "h-9 w-9 rounded-md border border-slate-200/80 shadow-xs dark:border-slate-700"
+              )}
+            >
+              <Icon size={isMuted ? 20 : 18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
+            </div>
+          )}
 
           {/* Right: Badges & Actions */}
           {!effectiveEmpty && (
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-1.5 shrink-0 ml-auto">
               {/* Admin Lock Chip matching Figma node 13315:492241 */}
               {isLocked && (
                 <span
@@ -153,45 +175,50 @@ export const DashboardWidget = ({
                 </span>
               )}
 
-              {/* Active / Inactive Status Dot */}
-              {!effectiveDisabled && (
+              {/* Active / Inactive Status Dot, and the quick buttons — the muted
+                  card leaves them to the ⋮ menu */}
+              {!isMuted && !effectiveDisabled && !effectiveUnavailable && !sourceError && (
                 <span
                   className="h-2 w-2 rounded-full bg-emerald-500 shrink-0"
                   title={t(localizationConstants.wStateActive)}
                 />
               )}
-              {effectiveDisabled && (
+              {!isMuted && effectiveDisabled && !effectiveUnavailable && (
                 <span className="inline-flex items-center rounded-full bg-slate-200 dark:bg-slate-700 px-1.5 py-0.5 text-[9px] font-medium text-slate-500">
                   <Translate text={localizationConstants.wStateInactive} />
                 </span>
               )}
 
-              {/* Quick Expand Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
-                title={t(localizationConstants.wActionExpand)}
-                aria-label={t(localizationConstants.wActionExpand)}
-              >
-                <Maximize2 size={13} />
-              </Button>
+              {!isMuted && !isKpi && (
+                <>
+                  {/* Quick Expand Button */}
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
+                    title={t(localizationConstants.wActionExpand)}
+                    aria-label={t(localizationConstants.wActionExpand)}
+                  >
+                    <Maximize2 size={13} />
+                  </Button>
 
-              {/* Quick Refresh Button */}
-              <Button
-                variant="ghost"
-                size="icon"
-                type="button"
-                onClick={handleRefresh}
-                disabled={effectiveLoading}
-                className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
-                title={t(localizationConstants.wActionRefresh)}
-                aria-label={t(localizationConstants.wActionRefresh)}
-              >
-                <RotateCw size={13} className={effectiveLoading ? "animate-spin text-blue-600" : ""} />
-              </Button>
+                  {/* Quick Refresh Button */}
+                  {onRefresh && !effectiveUnavailable && !sourceError && <Button
+                    variant="ghost"
+                    size="icon"
+                    type="button"
+                    onClick={handleRefresh}
+                    disabled={effectiveLoading}
+                    className="flex h-7 w-7 items-center justify-center rounded-sm text-slate-400 hover:bg-slate-200/70 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors cursor-pointer shadow-none"
+                    title={t(localizationConstants.wActionRefresh)}
+                    aria-label={t(localizationConstants.wActionRefresh)}
+                  >
+                    <RotateCw size={13} className={effectiveLoading ? "animate-spin text-blue-600" : ""} />
+                  </Button>}
+                </>
+              )}
 
               {/* Action Dropdown Menu */}
               <DropdownMenu>
@@ -216,15 +243,15 @@ export const DashboardWidget = ({
                     <span><Translate text={localizationConstants.wActionExpand} /></span>
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem
+                  {onRefresh && !effectiveUnavailable && !sourceError && <DropdownMenuItem
                     onClick={handleRefresh}
                     className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer"
                   >
                     <RotateCw size={14} />
                     <span><Translate text={localizationConstants.wActionRefresh} /></span>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem>}
 
-                  <DropdownMenuItem
+                  {!effectiveUnavailable && !sourceError && <DropdownMenuItem
                     onClick={handleToggleEmpty}
                     className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer"
                   >
@@ -236,15 +263,15 @@ export const DashboardWidget = ({
                         <Translate text={localizationConstants.wActionToggleEmpty} />
                       )}
                     </span>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem>}
 
-                  <DropdownMenuItem
+                  {!effectiveUnavailable && !sourceError && <DropdownMenuItem
                     onClick={handleToggleDisabled}
                     className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-300 cursor-pointer"
                   >
                     {effectiveDisabled ? <Eye size={14} /> : <EyeOff size={14} />}
                     <span><Translate text={localizationConstants.wActionToggleActive} /></span>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem>}
 
                   {onRemove && (
                     <>
@@ -265,11 +292,19 @@ export const DashboardWidget = ({
         </div>
 
         {/* Title Row: Full width so title never truncates */}
-        <div className="mt-2.5">
-          <h3 className="font-semibold text-sm leading-snug tracking-tight text-slate-900 dark:text-slate-100 truncate" title={titleText}>
+        <div className={isKpi ? "mt-1" : "mt-2.5"}>
+          <h3
+            className={cn(
+              "leading-snug tracking-tight truncate",
+              isKpi
+                ? "text-sm font-medium text-slate-500 dark:text-slate-400"
+                : cn("font-semibold text-slate-900 dark:text-slate-100", isMuted ? "text-base" : "text-sm")
+            )}
+            title={titleText}
+          >
             <Translate text={title} />
           </h3>
-          {subtitle && !effectiveLoading && !effectiveEmpty && (
+          {subtitle && !effectiveLoading && !effectiveEmpty && !effectiveUnavailable && !sourceError && (
             <div className="text-xs text-slate-500 mt-0.5 truncate">{subtitle}</div>
           )}
         </div>
@@ -278,7 +313,7 @@ export const DashboardWidget = ({
         <div className="mt-2 flex-1 flex flex-col justify-between">
 
           {/* 1. Loading State */}
-          {effectiveLoading && (
+          {effectiveLoading && !sourceError && (
             <div className="py-2 space-y-2">
               <div className="flex items-center gap-2 text-xs text-slate-400">
                 <RotateCw size={12} className="animate-spin text-blue-600" />
@@ -289,7 +324,7 @@ export const DashboardWidget = ({
           )}
 
           {/* 2. Empty State */}
-          {!effectiveLoading && effectiveEmpty && (
+          {!effectiveLoading && !sourceError && !effectiveUnavailable && effectiveEmpty && (
             <div className="flex flex-col items-center justify-center text-center py-5 px-3 rounded bg-slate-50/60 dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-700 h-full min-h-[120px]">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-200/70 text-slate-500 mb-2">
                 <Inbox size={18} />
@@ -316,7 +351,7 @@ export const DashboardWidget = ({
           )}
 
           {/* 3. Inactive / Disabled Overlay */}
-          {!effectiveLoading && !effectiveEmpty && effectiveDisabled && (
+          {!effectiveLoading && !sourceError && !effectiveUnavailable && !effectiveEmpty && effectiveDisabled && (
             <div className="flex flex-col items-center justify-center text-center py-4 px-2">
               <p className="text-xs font-medium text-slate-500 mb-2">
                 <Translate text={localizationConstants.wStateInactive} />
@@ -334,7 +369,9 @@ export const DashboardWidget = ({
           )}
 
           {/* 4. Default / Active Data State */}
-          {!effectiveLoading && !effectiveEmpty && !effectiveDisabled && content && (
+          {sourceError ? <WidgetErrorState message={localizationConstants.widgetSourceLoadError} /> : !effectiveLoading && effectiveUnavailable && <WidgetSourceUnavailable />}
+
+          {!effectiveLoading && !sourceError && !effectiveUnavailable && !effectiveEmpty && !effectiveDisabled && content && (
             <div className="flex-1 flex flex-col justify-between h-full">{content}</div>
           )}
         </div>
@@ -359,12 +396,12 @@ export const DashboardWidget = ({
                       <Translate text={localizationConstants.wChipLocked} />
                     </span>
                   )}
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-xs font-semibold text-emerald-700">
+                  {!effectiveUnavailable && !sourceError && <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-xs font-semibold text-emerald-700">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     <Translate text={localizationConstants.wStateActive} />
-                  </span>
+                  </span>}
                 </div>
-                {subtitle && (
+                {subtitle && !effectiveUnavailable && !sourceError && (
                   <DialogDescription className="text-sm text-slate-500 mt-0.5">
                     {subtitle}
                   </DialogDescription>
@@ -375,7 +412,11 @@ export const DashboardWidget = ({
 
           {/* Modal Expanded Content Body */}
           <div className="py-4">
-            {expandedContent ? (
+            {sourceError ? (
+              <WidgetErrorState message={localizationConstants.widgetSourceLoadError} />
+            ) : effectiveUnavailable ? (
+              <WidgetSourceUnavailable />
+            ) : expandedContent ? (
               <div className="space-y-4">{expandedContent}</div>
             ) : (
               <div className="p-4 rounded-lg bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
@@ -386,17 +427,17 @@ export const DashboardWidget = ({
 
           <DialogFooter className="border-t border-slate-100 dark:border-slate-800 pt-4 flex items-center justify-between sm:justify-between">
             <div className="flex items-center gap-2">
-              <Button
+              {onExport && !effectiveUnavailable && !sourceError && <Button
                 variant="outline"
                 size="sm"
                 type="button"
-                onClick={() => showToast("info", `${t(localizationConstants.wModalExport)}: ${titleText}`)}
+                onClick={onExport}
                 className="gap-1.5 text-xs"
               >
                 <Download size={14} />
                 <Translate text={localizationConstants.wModalExport} />
-              </Button>
-              <Button
+              </Button>}
+              {onRefresh && !effectiveUnavailable && !sourceError && <Button
                 variant="outline"
                 size="sm"
                 type="button"
@@ -405,7 +446,7 @@ export const DashboardWidget = ({
               >
                 <RotateCw size={14} />
                 <Translate text={localizationConstants.wActionRefresh} />
-              </Button>
+              </Button>}
             </div>
             <Button
               type="button"

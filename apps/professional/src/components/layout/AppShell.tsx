@@ -61,14 +61,14 @@ export function AppShell({ children }: AppShellProps) {
 	useEffect(() => {
 		if (!isReady) return;
 		const searchParams = new URLSearchParams(window.location.search);
-		const isPlanChange =
+		const isExplicitFunnel =
 			searchParams.get("change") === "1" ||
-			searchParams.get("mode") === "change";
+			["change", "new"].includes(searchParams.get("mode") ?? "");
 
 		if (
 			isAuthenticated &&
 			isPublicPage &&
-			!isPlanChange &&
+			!isExplicitFunnel &&
 			!getRequiresSubscriptionFromBrowserCookie()
 		) {
 			router.replace("/home");

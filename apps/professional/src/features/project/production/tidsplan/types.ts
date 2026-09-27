@@ -25,13 +25,14 @@ export interface TimeplanTask {
 export interface Timeplan {
 	id: string;
 	projectId: string;
+	version: number;
 	kind: TimeplanKind;
 	type: TimeplanType;
 	/** ISO `yyyy-MM-dd`. */
 	startDate: string;
 	/** ISO `yyyy-MM-dd`. */
 	endDate: string;
-	/** An id from `TIMEPLAN_AUTHORS`. */
+	/** Stored creator name from the authenticated account. */
 	createdById: string;
 	/** ISO `yyyy-MM-dd` — the list's "Datum". */
 	createdDate: string;
@@ -42,4 +43,4 @@ export interface Timeplan {
 }
 
 /** What the create and edit form collects — everything but the tasks. */
-export type TimeplanDetails = Omit<Timeplan, "id" | "projectId" | "tasks">;
+export type TimeplanDetails = Omit<Timeplan, "id" | "projectId" | "version" | "tasks">;

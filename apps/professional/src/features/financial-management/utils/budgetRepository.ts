@@ -255,12 +255,23 @@ class BudgetRepository {
 		return this.items.find((item) => item.id === id || item.budgetnr === id);
 	}
 
+	/**
+	 * The number the next budget will get, so the form can show it while it is
+	 * still disabled rather than leaving the field blank.
+	 */
+	nextBudgetNr(): string {
+		this.init();
+		const highest = this.items.reduce((max, item) => {
+			const parsed = Number(item.budgetnr);
+			return Number.isFinite(parsed) && parsed > max ? parsed : max;
+		}, 0);
+		return String(highest + 1);
+	}
+
 	create(data: BudgetFormData): EconomyBudgetItem {
 		this.init();
 		const newId = String(Date.now());
-		const nextBudgetNr = data.budgetnr.trim()
-			? data.budgetnr
-			: String(this.items.length + 1);
+		const nextBudgetNr = data.budgetnr.trim() ? data.budgetnr : this.nextBudgetNr();
 
 		// Calculate totalKostnad & totalInkomst from rows
 		let totalKostnad = 0;
@@ -286,8 +297,9 @@ class BudgetRepository {
 			comment: data.comment || "",
 			tags: data.tags || "",
 			datum: new Date().toISOString().slice(0, 10),
-			totalKostnad: totalKostnad || 200000,
-			totalInkomst: totalInkomst || 50000,
+			/* A budget with no rows totals nothing; it must not invent figures. */
+			totalKostnad,
+			totalInkomst,
 			status: data.status || "active",
 			isFavorite: false,
 			isOverhead: data.isOverhead || false,

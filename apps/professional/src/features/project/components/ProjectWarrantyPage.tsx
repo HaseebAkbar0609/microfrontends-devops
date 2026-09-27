@@ -6,8 +6,8 @@ import {
 	PROJECT_MODULE_TITLE,
 	projectBreadcrumbs,
 } from "@/features/project/data/projectNav.config";
-import { WarrantyFeature } from "@/features/warranty/WarrantyFeature";
 import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
 
 export interface ProjectWarrantyPageProps {
 	/** Present on `/project/warranty/[id]`, which opens the detail directly. */
@@ -15,15 +15,10 @@ export interface ProjectWarrantyPageProps {
 }
 
 /**
- * The Project module's Garantiåtaganden screen, replacing the Coming Soon stub.
- *
- * The frames draw a record-scoped left sidebar with a "Gå till" section. That
- * sidebar existed as `ProjectSubSidebar` and was deleted by TFS-910, whose
- * commit records the reason — record shortcuts "have no place in a tab row,
- * those records are reached by drilling into the list". Navigation stays on
- * `ModulePageHeader`; flagged on the ticket.
+ * This section has no connected project warranty source yet. Keep its
+ * navigation, but do not expose the former seeded warranty records as live data.
  */
-export function ProjectWarrantyPage({ recordId }: ProjectWarrantyPageProps) {
+export function ProjectWarrantyPage({ recordId: _recordId }: ProjectWarrantyPageProps) {
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
 			<ModulePageHeader
@@ -34,11 +29,11 @@ export function ProjectWarrantyPage({ recordId }: ProjectWarrantyPageProps) {
 				)}
 			/>
 
-			<WarrantyFeature
-				scope="project"
-				recordId={recordId}
-				initialView={recordId ? "detail" : "table"}
-			/>
+			<div className="flex-1 px-6 py-8">
+				<div className="border border-slate-200 bg-white px-6 py-10 text-center text-sm text-slate-600">
+					<Translate text={localizationConstants.projectSectionDataUnavailable} />
+				</div>
+			</div>
 		</div>
 	);
 }

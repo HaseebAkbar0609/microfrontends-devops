@@ -40,9 +40,9 @@ export function SalesBillingPanel({ companyId }: { companyId: string }) {
   </div>;
   const data = billing.data;
   if (!data) return null;
-  return <div className="max-w-4xl space-y-6">
+  return <div className="w-full min-w-0 max-w-4xl space-y-6">
     <div className="flex flex-wrap items-center gap-3">
-      <p className="min-w-0 flex-1 break-all">{data.payer_email}</p>
+      <p className="w-full min-w-0 break-all lg:w-auto lg:flex-1">{data.payer_email}</p>
       {data.needs_activation && <Button disabled={busy} variant="outline" onClick={() => void act(() => sendActivation(companyId), t(c.billingActivationSent))}><Mail size={16} />{t(c.billingActivate)}</Button>}
       <Button variant="outline" disabled={busy} onClick={() => void billing.refetch()}><RefreshCw size={16} />{t(c.billingRefresh)}</Button>
     </div>
@@ -65,7 +65,7 @@ export function SalesBillingPanel({ companyId }: { companyId: string }) {
             {bases.flatMap(p => p.prices.filter(v => v.is_active && v.price > 0).map(v => <option key={v.id} value={v.id}>{p.plan_key} · {v.interval} · {money(v.price)}</option>))}
           </select>
         </label>
-        <label className="grid gap-1">{t(c.billingStartDate)}<input className="h-11 rounded border px-3" type="date" min={today()} value={startDate} onChange={e => setStartDate(e.target.value)} required /></label>
+        <label className="grid min-w-0 gap-1">{t(c.billingStartDate)}<input className="h-11 min-w-0 rounded border px-3" type="date" min={today()} value={startDate} onChange={e => setStartDate(e.target.value)} required /></label>
       </div>
       {!bases.length && <p>{t(c.billingNoCatalog)}</p>}
       {addons.map(a => <label key={a.price.id} className="flex flex-wrap items-center justify-between gap-2 border-b py-2">

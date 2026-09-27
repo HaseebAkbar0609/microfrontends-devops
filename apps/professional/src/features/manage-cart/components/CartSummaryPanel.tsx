@@ -57,6 +57,8 @@ export function CartSummaryPanel({
             router.push(
               new URLSearchParams(window.location.search).get("mode") === "change"
                 ? "/manage-plans?change=1"
+                : new URLSearchParams(window.location.search).get("mode") === "new"
+                  ? "/manage-plans?mode=new"
                 : "/manage-plans",
             )
           }

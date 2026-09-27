@@ -402,7 +402,7 @@ export const enLeads: LeadsTranslation = {
 	discountPercentLabel: "Discount (%)",
 	startDateLabel: "Start date",
 	sendInvoiceLabel: "Send invoice",
-	invoiceNoteText: "An invoice will be generated and sent to the contact person. The customer will get status \"Pending\" until payment is confirmed.",
+	invoiceNoteText: "No invoice is generated for Demo or Trial access. Configure billing separately after creating the account.",
 };
 
 export const enAppLauncher: AppLauncherTranslation = {
@@ -612,7 +612,11 @@ export const enProfessional: ProfessionalTranslation = {
 	invoicesTab: "Invoices",
 	supportTab: "Support",
 	sendInvoiceButton: "Send Invoice",
-	activeSeatsLabel: "Active Seats",
+	activeSeatsLabel: "Allocated Seats",
+	licenseNoSeats: "No license seats purchased.",
+	licensePurchased: "Purchased",
+	licenseAllocated: "Allocated",
+	licenseAvailable: "Available",
 	recentActivityTitle: "Recent Activity",
 	kundNrLabel: "Customer No.",
 	activityCustomerLoggedIn: "Customer logged in",

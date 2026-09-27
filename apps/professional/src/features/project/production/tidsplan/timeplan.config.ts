@@ -29,22 +29,9 @@ export const TIMEPLAN_TYPES: { value: TimeplanType; labelKey: TranslationKeys }[
 		},
 	];
 
-/**
- * Who can be named as a plan's author.
- *
- * The same cast the project's Personal-liggare and Organisation tabs seed, so
- * the record's people-shaped sections describe one project. The frame's
- * "Rachel Meyers @rachel" is Figma placeholder copy.
- */
-export const TIMEPLAN_AUTHORS: { id: string; name: string; handle: string }[] = [
-	{ id: "author-kalle", name: "Kalle Svensson", handle: "@kalle" },
-	{ id: "author-stefan", name: "Stefan Eriksson", handle: "@stefan" },
-	{ id: "author-stina", name: "Stina Larsson", handle: "@stina" },
-];
-
-/** Looks an author up by id; an unknown id renders as its raw value. */
+/** Existing plans keep their stored author name. */
 export function authorName(id: string): string {
-	return TIMEPLAN_AUTHORS.find((author) => author.id === id)?.name ?? id;
+	return id;
 }
 
 /**

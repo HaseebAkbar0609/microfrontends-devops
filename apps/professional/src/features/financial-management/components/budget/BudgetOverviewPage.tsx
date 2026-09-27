@@ -2,21 +2,25 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+
+import localizationConstants from "@/utils/translation/constants";
+import { Translate } from "@/utils/translation/translate";
+import { budgetRoutes } from "../../constants/budget.constants";
 import { useBudgets } from "../../hooks/useBudgets";
-import {
-	BUDGETS_BASE_ROUTE,
-	CREATE_BUDGET_ROUTE,
-} from "../../constants/budget.constants";
-import { BudgetToolbar } from "./BudgetToolbar";
-import { BudgetTable } from "./BudgetTable";
+import type { EconomyBudgetItem } from "../../types/budget.types";
 import { BudgetBulkActionBar } from "./BudgetBulkActionBar";
 import { BudgetDeleteDialog } from "./BudgetDeleteDialog";
-import type { EconomyBudgetItem } from "../../types/budget.types";
-import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import { BudgetTable } from "./BudgetTable";
+import { BudgetToolbar } from "./BudgetToolbar";
 
-export function BudgetOverviewPage() {
+export interface BudgetOverviewPageProps {
+	/** Which module the register is mounted in; every link is built from it. */
+	basePath?: string;
+}
+
+export function BudgetOverviewPage({ basePath }: BudgetOverviewPageProps) {
 	const router = useRouter();
+	const routes = budgetRoutes(basePath);
 	const {
 		items,
 		totalCount,
@@ -43,25 +47,17 @@ export function BudgetOverviewPage() {
 
 	const [budgetToDelete, setBudgetToDelete] = useState<EconomyBudgetItem | null>(null);
 
-	const handleView = (item: EconomyBudgetItem) => {
-		router.push(`${BUDGETS_BASE_ROUTE}/${item.id}`);
-	};
-
-	const handleEdit = (item: EconomyBudgetItem) => {
-		router.push(`${CREATE_BUDGET_ROUTE}?id=${item.id}`);
-	};
-
-	const handleCreate = () => {
-		router.push(CREATE_BUDGET_ROUTE);
-	};
+	const handleView = (item: EconomyBudgetItem) => router.push(routes.detail(item.id));
+	const handleEdit = (item: EconomyBudgetItem) => router.push(routes.edit(item.id));
+	const handleCreate = () => router.push(routes.create);
 
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50/50 px-6 pt-4 pb-8 min-h-screen">
+		<div className="flex min-h-screen min-w-0 flex-1 flex-col bg-slate-50/50 px-6 pt-4 pb-8">
 			{/* Sub-navigation Tabs: Budgetlista */}
-			<div className="flex items-center gap-6 border-b border-slate-200 mb-5">
+			<div className="mb-5 flex items-center gap-6 border-b border-slate-200">
 				<button
 					type="button"
-					className="pb-3 border-b-2 border-slate-900 font-semibold text-sm text-slate-900 cursor-pointer"
+					className="cursor-pointer border-b-2 border-slate-900 pb-3 text-sm font-semibold text-slate-900"
 				>
 					<Translate text={localizationConstants.tabBudgetList} />
 				</button>

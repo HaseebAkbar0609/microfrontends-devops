@@ -1,7 +1,12 @@
-import { CostCenterDetailPage } from "@/features/tools/register/components/CostCenterDetailPage";
+import { CostCenterDetailPage } from "@/features/financial-management";
 
 export const dynamic = "force-dynamic";
 
-export default function CostCenterDetailRoute() {
-	return <CostCenterDetailPage />;
+interface PageProps {
+	params: Promise<{ id: string }>;
+}
+
+export default async function CostCenterDetailRoute({ params }: PageProps) {
+	const { id } = await params;
+	return <CostCenterDetailPage id={id} />;
 }

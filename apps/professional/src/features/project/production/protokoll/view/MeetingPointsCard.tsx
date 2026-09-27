@@ -9,28 +9,34 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { ProjectSectionCard } from "../../components/ProjectSectionCard";
 import { SortableHead } from "../../components/SortableHead";
-import type { MeetingPoint } from "../types";
+import type { MeetingKind, MeetingPoint, PointStatus } from "../types";
 import { MeetingPointRow } from "./MeetingPointRow";
+import { PointStatusHead } from "./PointStatusHead";
 import type { PointsPage } from "./usePointsPage";
 
 const M = localizationConstants;
 const HEAD = "px-3 lg:px-4";
 
 export interface MeetingPointsCardProps {
+	kind: MeetingKind;
 	page: PointsPage;
 	onAdd: () => void;
 	onEdit: (point: MeetingPoint) => void;
 	onDelete: (point: MeetingPoint) => void;
+	onSetStatus: (point: MeetingPoint, status: PointStatus) => void;
+	onCycleStatus: (point: MeetingPoint) => void;
 }
 
 /**
  * The agenda, under the frame's tinted bar with "Skapa ny punkt": Nr, Ämne,
  * Beslut and Ansvarig, paged inside the card. The frame's bar reads "Title",
  * placeholder copy, so it says Mötespunkter; the "+" it draws in the last
- * header does nothing the button doesn't, and is left out. The table scrolls
- * inside the card on a phone.
+ * header does nothing the button doesn't, and is left out. An Action
+ * protocol adds "Välj status". The table scrolls inside the card on a phone.
  */
-export function MeetingPointsCard({ page, onAdd, onEdit, onDelete }: MeetingPointsCardProps) {
+export function MeetingPointsCard({ kind, page, onAdd, onEdit, onDelete, onSetStatus, onCycleStatus }: MeetingPointsCardProps) {
+	const action = kind === "action";
+
 	return (
 		<ProjectSectionCard
 			titleKey={M.projectProtocolPointsTitle}
@@ -49,26 +55,35 @@ export function MeetingPointsCard({ page, onAdd, onEdit, onDelete }: MeetingPoin
 			}
 		>
 			<div className="w-full overflow-x-auto">
-				<Table className="min-w-[40rem]">
+				<Table className={action ? "min-w-[48rem]" : "min-w-[40rem]"}>
 					<TableHeader>
 						<TableRow className="hover:bg-transparent">
 							<SortableHead labelKey={M.protocolPointColNr} className={HEAD} />
 							<SortableHead labelKey={M.protocolPointSubject} className={HEAD} />
 							<SortableHead labelKey={M.protocolPointColDecision} className={HEAD} />
 							<SortableHead labelKey={M.protocolFieldResponsible} className={HEAD} />
+							{action && <PointStatusHead />}
 							<TableHead className="w-12" />
 						</TableRow>
 					</TableHeader>
 					<TableBody>
 						{page.rows.length === 0 ? (
 							<TableRow className="hover:bg-transparent">
-								<TableCell colSpan={5} className="py-10 text-center text-sm text-slate-500">
+								<TableCell colSpan={action ? 6 : 5} className="py-10 text-center text-sm text-slate-500">
 									<Translate text={M.protocolEmptyPoints} />
 								</TableCell>
 							</TableRow>
 						) : (
 							page.rows.map((point) => (
-								<MeetingPointRow key={point.id} point={point} onEdit={() => onEdit(point)} onDelete={() => onDelete(point)} />
+								<MeetingPointRow
+									key={point.id}
+									kind={kind}
+									point={point}
+									onEdit={() => onEdit(point)}
+									onDelete={() => onDelete(point)}
+									onSetStatus={(status) => onSetStatus(point, status)}
+									onCycleStatus={() => onCycleStatus(point)}
+								/>
 							))
 						)}
 					</TableBody>

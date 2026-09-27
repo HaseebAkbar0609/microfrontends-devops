@@ -36,11 +36,11 @@ export const ECONOMY_SECTIONS = [
 	{ id: "cases", labelKey: localizationConstants.cases, href: ECONOMY_CASES_BASE_URL, implemented: true },
 	{ id: "customers", labelKey: localizationConstants.customerRegister, href: ECONOMY_CUSTOMERS_BASE_URL, implemented: true },
 	{ id: "suppliers", labelKey: localizationConstants.supplierRegister, href: ECONOMY_SUPPLIERS_BASE_URL, implemented: true },
-	{ id: "articles", labelKey: localizationConstants.registerArtiklar, href: ECONOMY_ARTICLES_BASE_URL, implemented: false },
-	{ id: "price-lists", labelKey: localizationConstants.priceList, href: ECONOMY_PRICE_LISTS_BASE_URL, implemented: false },
-	{ id: "account-plan", labelKey: localizationConstants.accountPlan, href: ECONOMY_ACCOUNT_PLAN_BASE_URL, implemented: false },
-	{ id: "cost-centers", labelKey: localizationConstants.costCentre, href: ECONOMY_COST_CENTERS_BASE_URL, implemented: false },
-	{ id: "wage-types", labelKey: localizationConstants.wageTypes, href: ECONOMY_WAGE_TYPES_BASE_URL, implemented: false },
+	{ id: "articles", labelKey: localizationConstants.registerArtiklar, href: ECONOMY_ARTICLES_BASE_URL, implemented: true },
+	{ id: "price-lists", labelKey: localizationConstants.priceList, href: ECONOMY_PRICE_LISTS_BASE_URL, implemented: true },
+	{ id: "account-plan", labelKey: localizationConstants.accountPlan, href: ECONOMY_ACCOUNT_PLAN_BASE_URL, implemented: true },
+	{ id: "cost-centers", labelKey: localizationConstants.costCentre, href: ECONOMY_COST_CENTERS_BASE_URL, implemented: true },
+	{ id: "wage-types", labelKey: localizationConstants.wageTypes, href: ECONOMY_WAGE_TYPES_BASE_URL, implemented: true },
 ] as const;
 
 export const ECONOMY_NAV_ITEMS: RouteTabItem[] = [
@@ -90,6 +90,69 @@ export function economyBreadcrumbs(section: TranslationKeys): BreadcrumbItem[] {
 		{ label: section },
 	];
 }
+
+/**
+ * `Home > Modul > Prognos > Section` breadcrumb for the Prognos tab's pages;
+ * with no section it ends on Prognos dashboard.
+ */
+export function forecastBreadcrumbs(section?: TranslationKeys): BreadcrumbItem[] {
+	return [
+		{ label: localizationConstants.home, href: "/dashboard" },
+		{ label: localizationConstants.moduleItem },
+		{
+			label: localizationConstants.forecast,
+			href: ECONOMY_FORECAST_BASE_URL,
+		},
+		{ label: section ?? localizationConstants.forecastDashboardTitle },
+	];
+}
+
+export const ECONOMY_FORECAST_OVERVIEW_URL = `${ECONOMY_FORECAST_BASE_URL}/overview`;
+export const ECONOMY_FORECAST_ANALYSIS_URL = `${ECONOMY_FORECAST_BASE_URL}/analysis`;
+export const ECONOMY_FORECAST_BUDGET_URL = `${ECONOMY_FORECAST_BASE_URL}/budget`;
+export const ECONOMY_FORECAST_RISK_URL = `${ECONOMY_FORECAST_BASE_URL}/risk-management`;
+/* Prognos forecasts the people the Personal module manages; a different
+   screen from ECONOMY_PERSONNEL_BASE_URL, at its own address. */
+export const ECONOMY_FORECAST_PERSONNEL_URL = `${ECONOMY_FORECAST_BASE_URL}/personnel`;
+
+/**
+ * The Prognos tab's own row: the pages built so far. The frame draws them as
+ * a left sidebar of fourteen; each joins the row as it is built.
+ */
+export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
+	{
+		id: "dashboard",
+		labelKey: localizationConstants.forecastDashboardTitle,
+		href: ECONOMY_FORECAST_BASE_URL,
+		exact: true,
+	},
+	{
+		id: "overview",
+		labelKey: localizationConstants.forecastOverviewTitle,
+		href: ECONOMY_FORECAST_OVERVIEW_URL,
+	},
+	{
+		id: "analysis",
+		labelKey: localizationConstants.forecastAnalysisTitle,
+		href: ECONOMY_FORECAST_ANALYSIS_URL,
+	},
+	{
+		/* The same register Ekonomi shows, under Prognos's own chrome. */
+		id: "budget",
+		labelKey: localizationConstants.budget,
+		href: ECONOMY_FORECAST_BUDGET_URL,
+	},
+	{
+		id: "risk",
+		labelKey: localizationConstants.forecastRiskTitle,
+		href: ECONOMY_FORECAST_RISK_URL,
+	},
+	{
+		id: "forecast-personnel",
+		labelKey: localizationConstants.forecastPersonnelTitle,
+		href: ECONOMY_FORECAST_PERSONNEL_URL,
+	},
+];
 
 /** Primary tab row for the Economi (Financial Management) module (Rule 1). */
 export const ECONOMY_MODULE_TABS: RouteTabItem[] = [

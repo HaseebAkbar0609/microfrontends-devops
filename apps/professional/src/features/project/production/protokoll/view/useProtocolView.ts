@@ -12,9 +12,10 @@ import { useBeforeUnloadWarning } from "../../hooks/useBeforeUnloadWarning";
 import { storedNamesOf } from "../form/meetingValues";
 import { useMeetingPeople } from "../hooks/useMeetingPeople";
 import { nextPointNr, upsertPoint } from "../meetingPoints";
+import { nextPointStatus } from "../pointStatus";
 import { protocolUrls } from "../protocolNav";
 import * as store from "../services/projectProtocolService";
-import type { MeetingPoint, ProjectProtocol } from "../types";
+import type { MeetingKind, MeetingPoint, PointStatus, ProjectProtocol } from "../types";
 import type { PointValues } from "./meetingPointSchema";
 import type { ProtocolLeaveTarget } from "./useProtocolViewDialogs";
 
@@ -36,6 +37,8 @@ export function useProtocolView(projectId: string, protocolId: string) {
 
 	const [saved, setSaved] = useState(() => store.getProtocol(projectId, protocolId));
 	const meeting = saved?.meeting;
+	/** Standard or Action — only a meeting has a page here, so an upload never reaches it. */
+	const kind: MeetingKind | undefined = saved && saved.kind !== "upload" ? saved.kind : undefined;
 	const savedPoints = meeting?.points ?? NO_POINTS;
 	const [points, setPoints] = useState(savedPoints);
 
@@ -45,7 +48,11 @@ export function useProtocolView(projectId: string, protocolId: string) {
 	const storedNames = useMemo(() => (meeting ? storedNamesOf(meeting, points) : NO_NAMES), [meeting, points]);
 	const people = useMeetingPeople(projectId, storedNames);
 
-	/** Adds or replaces a point; returns its id and the new list, so the table can turn to it. */
+	/**
+	 * Adds or replaces a point; returns its id and the new list, so the table can
+	 * turn to it. The dialog has no status field, so an edited point keeps its
+	 * own and a new one starts with none.
+	 */
 	const savePoint = useCallback(
 		(values: PointValues, id?: string) => {
 			/* The id is made here, in the handler — never inside a state updater,
@@ -57,6 +64,7 @@ export function useProtocolView(projectId: string, protocolId: string) {
 				title: values.title.trim(),
 				description: values.description.trim(),
 				decision: values.decision.trim(),
+				status: id ? (points.find((item) => item.id === id)?.status ?? null) : null,
 			};
 			const next = upsertPoint(points, point);
 			setPoints(next);
@@ -67,6 +75,18 @@ export function useProtocolView(projectId: string, protocolId: string) {
 
 	const removePoint = useCallback((id: string) => {
 		setPoints((current) => current.filter((point) => point.id !== id));
+	}, []);
+
+	/** An Action point's toggle: sets the status, or clears it when it is already the one set. Unsaved until Spara. */
+	const setPointStatus = useCallback((id: string, status: PointStatus) => {
+		setPoints((current) =>
+			current.map((point) => (point.id === id ? { ...point, status: point.status === status ? null : status } : point)),
+		);
+	}, []);
+
+	/** ⋮ Ändra status: the next status in the toggles' order. Unsaved until Spara. */
+	const cyclePointStatus = useCallback((id: string) => {
+		setPoints((current) => current.map((point) => (point.id === id ? { ...point, status: nextPointStatus(point.status) } : point)));
 	}, []);
 
 	/** Stores the points when they changed; the stored protocol, or `undefined` when the store refused. */
@@ -103,6 +123,7 @@ export function useProtocolView(projectId: string, protocolId: string) {
 	);
 
 	return {
+		kind,
 		meeting,
 		points,
 		dirty,
@@ -110,6 +131,8 @@ export function useProtocolView(projectId: string, protocolId: string) {
 		nextPointNr: nextPointNr(points),
 		savePoint,
 		removePoint,
+		setPointStatus,
+		cyclePointStatus,
 		save,
 		send,
 		leave,

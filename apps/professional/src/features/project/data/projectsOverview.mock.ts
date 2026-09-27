@@ -2,6 +2,11 @@ import { mockDate } from "@/features/widgetdashboard/utils/mockDates";
 
 export interface ProjectListItem {
 	id: string;
+	version?: number;
+	ownerUserId?: string | null;
+	assigneeUserId?: string | null;
+	status?: "draft" | "active" | "archived";
+	progress?: number | null;
 	projectNr: string;
 	name: string;
 	category: string;

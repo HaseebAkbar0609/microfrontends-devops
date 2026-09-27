@@ -16,6 +16,7 @@ import useModal from "@/features/auth/hooks/useModal";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { DashboardWidget } from "@/features/widgetdashboard/components/DashboardWidget";
+import { WidgetErrorState } from "@/features/widgetdashboard/components/WidgetContent";
 import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import { useWidgetToggle } from "@/features/widgetdashboard/hooks/useWidgetToggle";
@@ -23,6 +24,7 @@ import { AGREEMENT_INITIAL_WIDGETS, AGREEMENT_SIDEBAR_WIDGET_MAP } from "./Agree
 import { AGREEMENT_SIDEBAR_ITEMS } from "../constants/agreementDashboardSidebarItems";
 import { getAgreementDashboardKpisAction } from "@/api-actions/agreements/agreements";
 import { getWidgetsAction, syncWidgetsAction } from "@/api-actions/widgets/widgets";
+import { useWidgetSources } from "@/features/widgetdashboard/hooks/useWidgetSources";
 import { useAuthStatus } from "@/context/AuthContext";
 import { Loader2 } from "lucide-react";
 import { PlacedWidgetEntry } from "@/features/widgetdashboard/types/dashboard";
@@ -56,6 +58,7 @@ export function AgreementDashboard() {
 
 	const [kpis, setKpis] = useState<AgreementKpis | null>(null);
 	const [isLoadingKpis, setIsLoadingKpis] = useState(true);
+	const sources = useWidgetSources("agreement_dashboard");
 	
 	const { company } = useAuthStatus();
 	const [isSavingLayout, setIsSavingLayout] = useState(false);
@@ -96,18 +99,23 @@ export function AgreementDashboard() {
 	}, [company, setPlacedWidgets]);
 
 	useEffect(() => {
+		if (!company?.id) return;
+		let cancelled = false;
+		setIsLoadingKpis(true);
+		setKpis(null);
 		async function fetchKpis() {
 			try {
 				const res = await getAgreementDashboardKpisAction();
-				if (res.success && res.data) {
+				if (!cancelled && res.success && res.data) {
 					setKpis(res.data as AgreementKpis);
 				}
 			} finally {
-				setIsLoadingKpis(false);
+				if (!cancelled) setIsLoadingKpis(false);
 			}
 		}
 		fetchKpis();
-	}, []);
+		return () => { cancelled = true; };
+	}, [company?.id]);
 
 	const handleSaveLayout = async () => {
 		if (!company) return;
@@ -345,6 +353,9 @@ export function AgreementDashboard() {
 								isEmpty={
 									entry.sidebarId === "emptyPage"
 								}
+								isLoading={sources.loading && entry.sidebarId !== "emptyPage"}
+								sourceError={sources.error && entry.sidebarId !== "emptyPage"}
+								sourceUnavailable={entry.sidebarId !== "emptyPage" && !sources.liveWidgetIds.includes(entry.sidebarId ?? "")}
 								content={
 									entry.sidebarId !== "emptyPage" ? (
 										isLoadingKpis ? (
@@ -370,7 +381,7 @@ export function AgreementDashboard() {
 												}
 												return null;
 											})()
-										) : null
+										) : <WidgetErrorState message={localizationConstants.widgetDataLoadError} />
 									) : null
 								}
 							/>

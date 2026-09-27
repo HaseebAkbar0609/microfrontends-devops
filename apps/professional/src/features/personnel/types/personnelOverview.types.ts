@@ -1,3 +1,5 @@
+import type { Role } from "@/constants/roles";
+
 export type EmployeeStatus =
 	| "active"
 	| "probation"
@@ -16,10 +18,16 @@ export interface EmployeeOverviewItem {
 	status: EmployeeStatus;
 	employmentType: EmploymentType;
 	startDate: string;
+	/** ISO date; absent while the employment runs on. */
+	endDate?: string;
 	location: string;
 	email: string;
 	phone: string;
 	department: string;
+	/** Whether the employee leads or is led; Prognos splits its ring on it. */
+	level: Role;
+	/** What the employee costs a month, in SEK. */
+	monthlyCost: number;
 }
 
 export type SortField =

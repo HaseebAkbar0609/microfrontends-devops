@@ -176,6 +176,7 @@ export async function getOfferDetailByIdAPIAction(
 				success: true,
 				data: {
 					id: item.project_id || item.id || offerId,
+					contactMasked: Boolean(item.contact_masked),
 					mappingId: item.mapping_id,
 					quoteId: item.quote_id,
 					agreementId: item.agreement_id,
@@ -188,7 +189,7 @@ export async function getOfferDetailByIdAPIAction(
 						name: [item.contact_details?.first_name, item.contact_details?.last_name].filter(Boolean).join(" ") || "—",
 						email: item.contact_details?.email || "—",
 						phone: item.contact_details?.phone || "—",
-						address: item.contact_details?.address || item.address || "—",
+						address: item.contact_masked ? "—" : item.contact_details?.address || item.address || "—",
 					},
 					description: item.project_description || "—",
 					images: (item.media ?? []).filter((file) => file.content_type?.startsWith("image/") && file.url).map((file) => ({ id: file.media_id || file.url || "", label: file.file_name || "Image", src: file.url })),

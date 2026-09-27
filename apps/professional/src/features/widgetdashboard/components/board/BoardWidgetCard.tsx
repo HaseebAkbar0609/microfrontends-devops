@@ -15,6 +15,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
+import { WidgetErrorState, WidgetLoadingState, WidgetSourceUnavailable } from "../WidgetContent";
 import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
@@ -25,6 +26,9 @@ interface BoardWidgetCardProps {
 	editMode?: boolean;
 	onMove?: () => void;
 	onRemove?: () => void;
+	sourceUnavailable?: boolean;
+	sourceLoading?: boolean;
+	sourceError?: boolean;
 }
 
 const BoardWidgetCard = ({
@@ -33,10 +37,14 @@ const BoardWidgetCard = ({
 	editMode,
 	onMove,
 	onRemove,
+	sourceUnavailable,
+	sourceLoading,
+	sourceError,
 }: BoardWidgetCardProps) => {
 	const t = useTranslate();
 	const [fullscreenOpen, setFullscreenOpen] = useState(false);
 	const Icon = widget.icon;
+	const unavailable = sourceUnavailable || widget.sourceUnavailable;
 
 	return (
 		<div
@@ -130,12 +138,20 @@ const BoardWidgetCard = ({
 				<h3 className="text-base font-semibold text-slate-900">
 					<Translate text={widget.title} />
 				</h3>
-				{widget.subtitle && (
+				{widget.subtitle && !unavailable && !sourceLoading && !sourceError && (
 					<div className="mt-1 text-sm text-slate-500">
 						{widget.subtitle}
 					</div>
 				)}
-				{widget.content && <div className="mt-1">{widget.content}</div>}
+				{sourceLoading ? (
+					<WidgetLoadingState />
+				) : sourceError ? (
+					<WidgetErrorState message={localizationConstants.widgetSourceLoadError} />
+				) : unavailable ? (
+					<WidgetSourceUnavailable />
+				) : widget.content ? (
+					<div className="mt-1">{widget.content}</div>
+				) : null}
 			</div>
 
 			<Dialog open={fullscreenOpen} onOpenChange={setFullscreenOpen}>
@@ -146,9 +162,15 @@ const BoardWidgetCard = ({
 							<Translate text={widget.title} />
 						</DialogTitle>
 					</DialogHeader>
-					{widget.content && (
+					{sourceLoading ? (
+						<WidgetLoadingState />
+					) : sourceError ? (
+						<WidgetErrorState message={localizationConstants.widgetSourceLoadError} />
+					) : unavailable ? (
+						<WidgetSourceUnavailable />
+					) : widget.content ? (
 						<div className="mt-2">{widget.content}</div>
-					)}
+					) : null}
 				</DialogContent>
 			</Dialog>
 		</div>

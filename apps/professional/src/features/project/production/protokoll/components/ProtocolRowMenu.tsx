@@ -10,7 +10,7 @@ export interface ProtocolRowMenuProps {
 	/** The protocol's Benämning, so a screen reader knows which row the ⋮ is for. */
 	label: string;
 	archived: boolean;
-	/** Öppna opens a stored file or a Standard meeting; a seeded file or an Action protocol has neither. */
+	/** Öppna opens a stored file or a meeting; a seeded upload has neither. */
 	canOpen: boolean;
 	/** Skriv ut prints a stored file only. */
 	canPrint: boolean;

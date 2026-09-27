@@ -7,9 +7,9 @@ import localizationConstants from "@/utils/translation/constants";
 import { CalculationMarkupSection } from "./CalculationMarkupSection";
 import { CalculationLaborSection } from "./CalculationLaborSection";
 import { CalculationProContent } from "./CalculationProContent";
+import { CalculationQuickAiContent } from "./CalculationQuickAiContent";
 import { CalculationAPriceContent } from "./CalculationAPriceContent";
 import { CalculationSkallKravContent } from "./CalculationSkallKravContent";
-import { DUMMY_APRICE_LIST } from "../constants/apriceMock";
 import { useStandardCalculation } from "../hooks/useStandardCalculation";
 
 const TABS = [
@@ -147,24 +147,24 @@ export function CalculationKalkylView() {
 				{/* Other Calculation Tabs */}
 				<TabsContent
 					value="pro"
-					className="flex flex-1 flex-col bg-white p-5"
+					className="flex flex-1 flex-col bg-white p-4 sm:p-5"
 				>
 					<CalculationProContent />
 				</TabsContent>
 
+				<TabsContent
+					value="quick-ai"
+					className="flex flex-1 flex-col bg-white p-4 sm:p-5"
+				>
+					<CalculationQuickAiContent />
+				</TabsContent>
+
 				<TabsContent value="a-price" className="flex flex-1 flex-col">
-					<CalculationAPriceContent items={DUMMY_APRICE_LIST} />
+					<CalculationAPriceContent />
 				</TabsContent>
 
 				<TabsContent value="required" className="flex flex-1 flex-col">
 					<CalculationSkallKravContent />
-				</TabsContent>
-
-				<TabsContent
-					value="quick-ai"
-					className="flex flex-1 items-center justify-center text-sm text-slate-400"
-				>
-					<Translate text={localizationConstants.comingSoon} />
 				</TabsContent>
 			</Tabs>
 		</div>

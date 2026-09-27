@@ -20,6 +20,7 @@ import { DashboardWidget } from "@/features/widgetdashboard/components/Dashboard
 import { DraggableGridCard } from "@/features/widgetdashboard/components/DraggableGridCard";
 import { WidgetItem } from "@/features/widgetdashboard/components/DraggableSidebarItem";
 import { useWidgetToggle } from "@/features/widgetdashboard/hooks/useWidgetToggle";
+import { useWidgetSources } from "@/features/widgetdashboard/hooks/useWidgetSources";
 import { showToast } from "@/lib/toast";
 import { useAuthStatus } from "@/context/AuthContext";
 import {
@@ -50,6 +51,7 @@ export function B2BDashboard() {
 	const [kpiData, setKpiData] = useState<B2BDashboardKpis>(EMPTY_B2B_KPIS);
 	const [isLoadingKpis, setIsLoadingKpis] = useState(true);
 	const [kpiError, setKpiError] = useState<string | null>(null);
+	const currentWidgetMap = buildB2BWidgetMap(kpiData);
 
 	const {
 		placedWidgets,
@@ -65,6 +67,7 @@ export function B2BDashboard() {
 	} | null>(null);
 
 	const { company } = useAuthStatus();
+	const sources = useWidgetSources("b2b_dashboard");
 	const [isSavingLayout, setIsSavingLayout] = useState(false);
 	const persistedLayoutRef = useRef<PlacedWidgetEntry[]>(B2B_INITIAL_WIDGETS);
 
@@ -106,15 +109,13 @@ export function B2BDashboard() {
 			if (res.success && res.data && res.data.length > 0) {
 				const sorted = [...res.data].sort((a, b) => a.order - b.order);
 				const ordered: PlacedWidgetEntry[] = [];
-				const dynamicMap = buildB2BWidgetMap(kpiData);
-
 				sorted.forEach((w, idx) => {
 					const defaultSlot = B2B_INITIAL_WIDGETS[idx];
 					if (defaultSlot) {
 						ordered.push({
 							...defaultSlot,
 							sidebarId: w.key,
-							widgetProps: dynamicMap[w.key] || dynamicMap.emptyPage,
+							widgetProps: currentWidgetMap[w.key] || currentWidgetMap.emptyPage,
 						});
 					}
 				});
@@ -130,9 +131,7 @@ export function B2BDashboard() {
 			}
 		}
 		fetchLayout();
-	}, [company, kpiData, setPlacedWidgets]);
-
-	const currentWidgetMap = buildB2BWidgetMap(kpiData);
+	}, [company, currentWidgetMap, setPlacedWidgets]);
 
 	const handleSidebarItemClick = (id: string) => {
 		setSelectedItem(id);
@@ -340,6 +339,9 @@ export function B2BDashboard() {
 									{...entry.widgetProps}
 									className={entry.colSpanClass}
 									isEmpty={entry.sidebarId === "emptyPage"}
+									sourceUnavailable={entry.sidebarId !== "emptyPage" && !sources.liveWidgetIds.includes(entry.sidebarId ?? "")}
+									isLoading={sources.loading && entry.sidebarId !== "emptyPage"}
+									sourceError={sources.error && entry.sidebarId !== "emptyPage"}
 									onRemove={() => {
 										setPendingReplacement({
 											item: { id: "emptyPage", label: localizationConstants.emptyPageLabel, icon: Layers },

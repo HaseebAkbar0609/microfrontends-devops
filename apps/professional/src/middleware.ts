@@ -65,9 +65,9 @@ function isSubscriptionFunnelPath(pathname: string): boolean {
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
-	const isPlanChange =
+	const isExplicitFunnel =
 		request.nextUrl.searchParams.get("change") === "1" ||
-		request.nextUrl.searchParams.get("mode") === "change";
+		["change", "new"].includes(request.nextUrl.searchParams.get("mode") ?? "");
 
 	if (
 		pathname.startsWith("/_next") ||
@@ -91,7 +91,7 @@ export function middleware(request: NextRequest) {
 
 	// Full access (cookie "0", cleared, or never set as "1"): no subscription funnel.
 	// Logged-in users → dashboard; others → login (avoid dashboard → login bounce for guests).
-	if (isSubscriptionFunnelPath(pathname) && !isPlanChange) {
+	if (isSubscriptionFunnelPath(pathname) && !isExplicitFunnel) {
 		const hasSession = request.cookies.get(SESSION_HINT_COOKIE)?.value === "1";
 		const url = request.nextUrl.clone();
 		url.pathname = hasSession ? "/home" : "/login";

@@ -26,6 +26,7 @@ export function PersonnelDashboard() {
 
 	return (
 		<ModuleWidgetDashboard
+			sourceLocation="personnel_dashboard"
 			widgetMap={widgetMap}
 			initialWidgets={initialWidgets}
 			sidebarItems={PERSONNEL_SIDEBAR_ITEMS}
