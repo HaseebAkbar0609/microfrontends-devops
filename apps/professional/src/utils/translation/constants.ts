@@ -1387,6 +1387,28 @@ export type OfferTranslation = {
 	calcInquiryWizEmailErr: string;
 	calcInquiryWizPhoneErr: string;
 	calcInquiryWizRequiredErr: string;
+	calcInquiryWizKalkylNr: string;
+	calcInquiryWizPlaceholderKalkylNr: string;
+	calcInquiryWizPlaceholderAngeOrt: string;
+	calcInquiryWizInbjudnaLeverantorer: string;
+	calcInquiryWizLaggTillLeverantor: string;
+	calcInquiryWizInbjudnaLeverantorerLabel: string;
+	calcInquiryWizSkickaErbjudande: string;
+	calcInquiryWizValjLeverantor: string;
+	calcInquiryWizSokLeverantor: string;
+	calcInquiryWizSkrivLeverantorsnamn: string;
+	calcInquiryWizBifogadeDokument: string;
+	calcInquiryWizDocDate: string;
+	calcInquiryWizDocName: string;
+	calcInquiryWizDocType: string;
+	calcInquiryWizDocFile: string;
+	calcInquiryWizViewFile: string;
+	calcInquiryWizDeleteDocConfirm: string;
+	calcInquiryWizSuccessTitle: string;
+	calcInquiryWizSuccessDesc: string;
+	calcInquiryWizViewEnquiryBtn: string;
+	calcInquiryWizReturnDashboardBtn: string;
+	calcInquiryWizPreviewPlaceholder: string;
 	// Calculation - Kalkylberäkning wizard
 	calcBerPageTitle: string;
 	calcBerSkapeNy: string;

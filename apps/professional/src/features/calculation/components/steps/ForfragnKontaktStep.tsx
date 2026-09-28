@@ -1,5 +1,10 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import { CircleUserRound } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Select,
 	SelectContent,
@@ -7,168 +12,289 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { UserRound } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { KONTAKTPERSON_OPTIONS } from "../../constants/createForfragnOptions";
-
-// ── Types ──────────────────────────────────────────────────────────────────
+import { PhoneInput } from "@/components/form/PhoneInput";
+import {
+	getCustomersForEnquiryAction,
+	MOCK_CUSTOMERS_LIST,
+	type CustomerDropdownOption,
+} from "../../api/createEnquiryApi";
 
 export interface ForfragnKontaktData {
+	kontaktperson: string;
 	fornamn: string;
 	efternamn: string;
+	address: string;
+	postnummer: string;
 	email: string;
 	telefon: string;
-	kontaktperson: string;
+	ort: string;
 	roll: string;
 }
 
 export const DEFAULT_KONTAKT: ForfragnKontaktData = {
+	kontaktperson: "",
 	fornamn: "",
 	efternamn: "",
+	address: "",
+	postnummer: "",
 	email: "",
 	telefon: "",
-	kontaktperson: "",
+	ort: "",
 	roll: "",
 };
 
-// ── Sub-components ─────────────────────────────────────────────────────────
-
-interface StepFormFieldProps {
-	label: string;
-	value: string;
-	onChange: (v: string) => void;
-	placeholder?: string;
-	required?: boolean;
-	type?: string;
-	hasError?: boolean;
-	errorMsg?: string;
-}
-
-function StepFormField({
+function FormField({
 	label,
 	value,
 	onChange,
 	placeholder,
 	required,
+	error,
+	errorMessage,
 	type = "text",
-	hasError,
-	errorMsg,
-}: StepFormFieldProps) {
+	disabled,
+	className,
+}: {
+	label: string;
+	value: string;
+	onChange: (v: string) => void;
+	placeholder?: string;
+	required?: boolean;
+	error?: boolean;
+	errorMessage?: string;
+	type?: string;
+	disabled?: boolean;
+	className?: string;
+}) {
 	return (
-		<div className="grid gap-1.5">
-			<label className="text-sm font-medium text-slate-900">
+		<div className={cn("flex flex-col gap-1.5", className)}>
+			<Label className="text-sm font-medium text-slate-900 mb-0">
 				{label}
-				{required && <span className="ml-0.5 text-red-500">*</span>}
-			</label>
-			<input
+				{required && <span className="ml-1 text-red-500">*</span>}
+			</Label>
+			<Input
 				type={type}
 				value={value}
+				disabled={disabled}
 				onChange={(e) => onChange(e.target.value)}
 				placeholder={placeholder}
-				className={`h-10 w-full rounded-md border bg-white px-3 text-sm focus-visible:border-slate-400 focus-visible:outline-none ${
-					hasError ? "border-red-400 focus-visible:border-red-400" : "border-slate-200"
-				}`}
+				className={cn(
+					"h-10 w-full rounded-md border bg-white px-3 text-sm text-slate-900 placeholder:text-slate-400 focus-visible:border-slate-400 focus-visible:ring-0",
+					error ? "border-red-500 ring-1 ring-red-500" : "border-slate-200",
+					disabled && "cursor-not-allowed bg-slate-50 text-slate-500",
+				)}
 			/>
-			{hasError && errorMsg && (
-				<p className="text-xs text-red-500">{errorMsg}</p>
+			{error && errorMessage && (
+				<p className="text-xs text-red-500 leading-tight">{errorMessage}</p>
 			)}
 		</div>
 	);
 }
 
-// ── Main component ─────────────────────────────────────────────────────────
+function PhoneFormField({
+	label,
+	value,
+	onChange,
+	placeholder,
+	required,
+	error,
+	errorMessage,
+}: {
+	label: string;
+	value: string;
+	onChange: (v: string) => void;
+	placeholder?: string;
+	required?: boolean;
+	error?: boolean;
+	errorMessage?: string;
+}) {
+	return (
+		<div className="flex flex-col gap-1.5">
+			<Label className="text-sm font-medium text-slate-900 mb-0">
+				{label}
+				{required && <span className="ml-1 text-red-500">*</span>}
+			</Label>
+			<PhoneInput
+				value={value}
+				onChange={onChange}
+				placeholder={placeholder}
+				hasError={error}
+			/>
+			{error && errorMessage && (
+				<p className="text-xs text-red-500 leading-tight">{errorMessage}</p>
+			)}
+		</div>
+	);
+}
 
 export interface ForfragnKontaktStepProps {
 	data: ForfragnKontaktData;
+	showErrors?: boolean;
 	onChange: (patch: Partial<ForfragnKontaktData>) => void;
-	emailError?: boolean;
-	phoneError?: boolean;
 }
 
 export function ForfragnKontaktStep({
 	data,
+	showErrors,
 	onChange,
-	emailError,
-	phoneError,
 }: ForfragnKontaktStepProps) {
 	const t = useTranslate();
+	const [customerList, setCustomerList] = useState<CustomerDropdownOption[]>(MOCK_CUSTOMERS_LIST);
+
+	useEffect(() => {
+		let isMounted = true;
+		async function loadCustomers() {
+			try {
+				const customers = await getCustomersForEnquiryAction();
+				if (isMounted && customers.length > 0) {
+					setCustomerList(customers);
+				}
+			} catch {
+				// Fallback to MOCK_CUSTOMERS_LIST
+			}
+		}
+		loadCustomers();
+		return () => {
+			isMounted = false;
+		};
+	}, []);
+
+	const handleCustomerSelect = (value: string) => {
+		onChange({ kontaktperson: value });
+		const selected = customerList.find(
+			(c) => (c.name || c.contactPerson) === value || c.id === value,
+		);
+		if (selected) {
+			onChange({
+				kontaktperson: selected.name || selected.contactPerson,
+				fornamn: selected.firstName || data.fornamn,
+				efternamn: selected.lastName || data.efternamn,
+				address: selected.address || data.address,
+				postnummer: selected.postalCode || data.postnummer,
+				email: selected.email || data.email,
+				telefon: selected.phone || data.telefon,
+				ort: selected.city || data.ort,
+				roll: selected.role || data.roll || "Beställare",
+			});
+		}
+	};
+
+	const emailInvalid = Boolean(
+		data.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim()),
+	);
 
 	return (
 		<div className="flex flex-col gap-4">
-			<Card>
-				<CardHeader className="h-14 flex flex-row items-center border-b border-slate-200 px-6 py-0 [.border-b]:pb-0">
-					<CardTitle className="flex items-center gap-2 text-base font-medium">
-						<UserRound className="h-5 w-5 text-slate-700" />
-						<Translate text={localizationConstants.calcInquiryWizStep2} />
+			<Card className="gap-0 overflow-hidden rounded-lg border border-slate-200 bg-white py-0 pb-0 shadow-none">
+				<CardHeader className="h-14 flex flex-row items-center border-b border-slate-200 px-4 sm:px-6 py-0 [.border-b]:pb-0">
+					<CardTitle className="flex items-center gap-2 text-base font-medium text-slate-900">
+						<CircleUserRound className="h-5 w-5 text-slate-700" />
+						<Translate text={localizationConstants.calcNewKontaktInfoSection} />
 					</CardTitle>
 				</CardHeader>
-				<CardContent className="p-6">
-					<div className="mb-5 grid gap-1.5">
-						<label className="text-sm font-medium text-slate-900">
-							<Translate text={localizationConstants.calcInquiryWizContactPerson} />
-						</label>
-						<Select
-							value={data.kontaktperson}
-							onValueChange={(v) => onChange({ kontaktperson: v })}
-						>
-							<SelectTrigger className="h-10 border-slate-200 bg-white text-sm focus:ring-0">
-								<SelectValue
-									placeholder={t(localizationConstants.calcInquiryWizContactPerson)}
-								/>
-							</SelectTrigger>
-							<SelectContent>
-								{KONTAKTPERSON_OPTIONS.map((o) => (
-									<SelectItem key={o} value={o}>
-										{o}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					</div>
 
-					<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-						<StepFormField
-							label={t(localizationConstants.agreementDetailFornamn)}
-							value={data.fornamn}
-							onChange={(v) => onChange({ fornamn: v })}
-							placeholder={t(localizationConstants.agreementDetailFornamn)}
-							required
-						/>
-						<StepFormField
-							label={t(localizationConstants.agreementDetailEfternamn)}
-							value={data.efternamn}
-							onChange={(v) => onChange({ efternamn: v })}
-							placeholder={t(localizationConstants.agreementDetailEfternamn)}
-							required
-						/>
-						<StepFormField
-							label={t(localizationConstants.agreementDetailMail)}
-							value={data.email}
-							onChange={(v) => onChange({ email: v })}
-							placeholder="name@example.test"
-							required
-							type="email"
-							hasError={emailError}
-							errorMsg={t(localizationConstants.calcInquiryWizEmailErr)}
-						/>
-						<StepFormField
-							label={t(localizationConstants.calcNewTelefon)}
-							value={data.telefon}
-							onChange={(v) => onChange({ telefon: v })}
-							placeholder="+46 70 000 00 00"
-							required
-							type="tel"
-							hasError={phoneError}
-							errorMsg={t(localizationConstants.calcInquiryWizPhoneErr)}
-						/>
-						<StepFormField
-							label={t(localizationConstants.agreementDetailRoll)}
-							value={data.roll}
-							onChange={(v) => onChange({ roll: v })}
-							placeholder={t(localizationConstants.agreementDetailRoll)}
-						/>
+				<CardContent className="px-4 py-4 sm:px-6 sm:py-5">
+					<div className="flex flex-col gap-3">
+						{/* Kontaktperson Selector */}
+						<div className="flex flex-col gap-1.5">
+							<Label className="text-sm font-medium text-slate-900 mb-0">
+								<Translate text={localizationConstants.calcNewKontaktperson} />
+							</Label>
+							<Select
+								value={data.kontaktperson || ""}
+								onValueChange={handleCustomerSelect}
+							>
+								<SelectTrigger className="h-10 w-full rounded-md border-slate-200 bg-white text-sm text-slate-900 focus:ring-0 [&_svg]:text-slate-900 [&_svg]:opacity-100">
+									<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderKontaktperson)} />
+								</SelectTrigger>
+								<SelectContent>
+									{customerList.map((cust) => {
+										const displayName = cust.name || cust.contactPerson;
+										return (
+											<SelectItem key={cust.id} value={displayName} className="text-sm">
+												{displayName} {cust.companyName ? `(${cust.companyName})` : ""}
+											</SelectItem>
+										);
+									})}
+								</SelectContent>
+							</Select>
+						</div>
+
+						{/* Contact Form Fields Grid */}
+						<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+							{/* Förnamn */}
+							<FormField
+								label={t(localizationConstants.agreementDetailFornamn)}
+								value={data.fornamn}
+								onChange={(v) => onChange({ fornamn: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderDittFornamn)}
+								required
+								error={showErrors && !data.fornamn.trim()}
+								errorMessage={t(localizationConstants.calcNewValidationNameRequired)}
+							/>
+
+							{/* Efternamn */}
+							<FormField
+								label={t(localizationConstants.agreementDetailEfternamn)}
+								value={data.efternamn}
+								onChange={(v) => onChange({ efternamn: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderDittEfternamn)}
+							/>
+
+							{/* Adress */}
+							<FormField
+								label={t(localizationConstants.calcNewAddressLabel)}
+								value={data.address}
+								onChange={(v) => onChange({ address: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderDinAdress)}
+							/>
+
+							{/* Postnummer */}
+							<FormField
+								label={t(localizationConstants.calcNewPostNr)}
+								value={data.postnummer}
+								onChange={(v) => onChange({ postnummer: v.replace(/[^0-9 ]/g, "") })}
+								placeholder={t(localizationConstants.calcNewPlaceholderPostnummer)}
+							/>
+
+							{/* Mail */}
+							<FormField
+								label={t(localizationConstants.agreementDetailMail)}
+								value={data.email}
+								onChange={(v) => onChange({ email: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderDinMail)}
+								type="email"
+								error={emailInvalid}
+								errorMessage={t(localizationConstants.calcInquiryWizEmailErr)}
+							/>
+
+							{/* Telefon */}
+							<PhoneFormField
+								label={t(localizationConstants.calcNewTelefon)}
+								value={data.telefon}
+								onChange={(v) => onChange({ telefon: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderAngeTelefon)}
+							/>
+
+							{/* Ort */}
+							<FormField
+								label={t(localizationConstants.calcNewOrt)}
+								value={data.ort}
+								onChange={(v) => onChange({ ort: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderDinOrt)}
+							/>
+
+							{/* Roll */}
+							<FormField
+								label={t(localizationConstants.agreementDetailRoll)}
+								value={data.roll || "Beställare"}
+								onChange={(v) => onChange({ roll: v })}
+								placeholder={t(localizationConstants.calcNewPlaceholderBestallareRoll)}
+							/>
+						</div>
 					</div>
 				</CardContent>
 			</Card>

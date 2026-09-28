@@ -305,39 +305,27 @@ export function KalkylDokumentStep({
 
 					{/* GDPR checkbox with divider line */}
 					<div className="mb-6 border-b border-slate-200 pb-5">
-						<div className="flex items-start gap-3">
+						<div className="flex items-start gap-2.5 sm:gap-3">
 							<Checkbox
 								id="gdpr-accept"
 								checked={gdprAccepted}
 								onCheckedChange={(c) => onGdprChange(Boolean(c))}
 								className="mt-0.5 shrink-0 border-slate-300 data-[state=checked]:bg-slate-900 data-[state=checked]:text-white data-[state=checked]:border-slate-900"
 							/>
-							<Label
+							<label
 								htmlFor="gdpr-accept"
-								className="block cursor-pointer text-xs sm:text-sm font-normal text-slate-600 leading-relaxed"
+								className="block min-w-0 flex-1 cursor-pointer text-xs font-normal leading-relaxed text-slate-600 sm:text-sm select-none"
 							>
-								<span>
-									<Translate text={localizationConstants.calcNewGdprText} />{" "}
-								</span>
-								<span
-									role="link"
-									tabIndex={0}
-									onClick={(e) => {
-										e.stopPropagation();
-									}}
-									onKeyDown={(e) => {
-										if (e.key === "Enter" || e.key === " ") {
-											e.stopPropagation();
-										}
-									}}
-									className="inline text-orange-500 underline hover:text-orange-600 font-medium cursor-pointer"
+								<Translate text={localizationConstants.calcNewGdprText} />{" "}
+								<a
+									href="#privacy"
+									onClick={(e) => e.preventDefault()}
+									className="inline font-medium text-orange-500 underline hover:text-orange-600"
 								>
 									<Translate text={localizationConstants.calcNewGdprLink} />
-								</span>{" "}
-								<span>
-									<Translate text={localizationConstants.calcNewGdprSuffix} />
-								</span>
-							</Label>
+								</a>{" "}
+								<Translate text={localizationConstants.calcNewGdprSuffix} />
+							</label>
 						</div>
 					</div>
 
@@ -347,10 +335,10 @@ export function KalkylDokumentStep({
 							<Translate text={localizationConstants.agreementCreateBifogadeDokument} />
 						</p>
 						<div className="overflow-x-auto rounded border border-slate-200">
-							<Table>
+							<Table className="w-full min-w-[640px] table-fixed">
 								<TableHeader>
 									<TableRow className="h-11 border-b border-slate-200">
-										<TableHead className="px-4 text-left font-medium text-slate-500">
+										<TableHead className="w-32 px-4 text-left font-medium text-slate-500">
 											<div className="flex items-center gap-1">
 												<Translate text={localizationConstants.agreementDetailDatum} />
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
@@ -364,13 +352,13 @@ export function KalkylDokumentStep({
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 											</div>
 										</TableHead>
-										<TableHead className="px-4 text-left font-medium text-slate-500">
+										<TableHead className="w-28 px-4 text-left font-medium text-slate-500">
 											<div className="flex items-center gap-1">
 												<Translate text={localizationConstants.calcProType} />
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 											</div>
 										</TableHead>
-										<TableHead className="px-4 text-left font-medium text-slate-500">
+										<TableHead className="w-24 px-4 text-left font-medium text-slate-500">
 											<div className="flex items-center gap-1">
 												<Translate text={localizationConstants.agreementDetailFil} />
 												<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
@@ -402,26 +390,26 @@ export function KalkylDokumentStep({
 													key={doc.id}
 													className="border-b border-slate-100 last:border-b-0 hover:bg-slate-50/50 transition-colors"
 												>
-													<TableCell className="px-4 py-3 text-sm text-slate-900 font-normal">
+													<TableCell className="w-32 whitespace-nowrap px-4 py-3 text-sm font-normal text-slate-900">
 														{doc.datum}
 													</TableCell>
-													<TableCell className="px-4 py-3">
-														<div className="inline-flex items-center gap-3 text-slate-900 font-normal text-sm">
+													<TableCell className="min-w-0 px-4 py-3">
+														<div className="flex w-full min-w-0 items-center gap-3 overflow-hidden text-sm font-normal text-slate-900">
 															<KalkylDocIcon
 																fileType={doc.fileType}
 																fileName={doc.namn}
 																className="h-10 w-8 shrink-0"
 															/>
-															<span className="truncate">{doc.namn}</span>
+															<span className="truncate" title={doc.namn}>{doc.namn}</span>
 														</div>
 													</TableCell>
-													<TableCell className="px-4 py-3 text-sm text-slate-900 font-normal">
+													<TableCell className="w-28 whitespace-nowrap px-4 py-3 text-sm font-normal text-slate-900">
 														{doc.typ}
 													</TableCell>
-													<TableCell className="px-4 py-3 text-sm text-slate-900 font-normal uppercase">
+													<TableCell className="w-24 whitespace-nowrap px-4 py-3 text-sm font-normal uppercase text-slate-900">
 														{fileExt}
 													</TableCell>
-													<TableCell className="border-l border-slate-200 px-4 py-3 text-right">
+													<TableCell className="w-36 shrink-0 border-l border-slate-200 px-4 py-3 text-right">
 														<div className="flex items-center justify-end gap-3">
 															<Button
 																type="button"
