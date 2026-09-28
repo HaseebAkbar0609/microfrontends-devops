@@ -1342,6 +1342,25 @@ export type OfferTranslation = {
 	calcForfragnNamn: string;
 	calcForfragnKalkylNo: string;
 	calcForfragnKontakt: string;
+	calcForfragnConvertToCalc: string;
+	calcForfragnDecline: string;
+	calcForfragnDeclineReason: string;
+	calcForfragnDeclineReasonPlaceholder: string;
+	calcForfragnAssign: string;
+	calcForfragnGdprNotice: string;
+	calcForfragnLaddaUppFiler: string;
+	calcForfragnAllowedFileTypes: string;
+	calcForfragnBifogadeDokument: string;
+	calcForfragnSeFil: string;
+	calcForfragnUploadBtn: string;
+	calcForfragnAddSupplier: string;
+	calcForfragnCompanyPlaceholder: string;
+	calcForfragnAmountPlaceholder: string;
+	calcForfragnConvertedToast: string;
+	calcForfragnDeclinedToast: string;
+	calcForfragnSupplierAdded: string;
+	calcForfragnDokumentTyp: string;
+	calcForfragnDokumentFil: string;
 	// Calculation - Create Inquiry wizard (TFS-619)
 	calcInquiryWizTitle: string;
 	calcInquiryWizStep1: string;
