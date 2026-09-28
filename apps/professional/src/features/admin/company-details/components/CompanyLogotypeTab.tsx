@@ -22,11 +22,23 @@ export function CompanyLogotypeTab({
   onSubmit,
   lastSavedRef,
 }: CompanyLogotypeTabProps) {
-  const { handleSubmit, control } = form;
+  const { control, getValues } = form;
+
+  // Deliberately not form.handleSubmit(onSubmit): that runs the *whole*
+  // shared schema (companyInformationSchema), including outgoingEmail,
+  // which is required on the Company Information tab but isn't shown here.
+  // On a company that hasn't set one yet, handleSubmit would fail that
+  // validation silently -- no error renders on this tab -- and Save would
+  // look like it does nothing. Saving just the logo only needs the current
+  // field values, not that whole-form validation.
+  const handleLogoSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    void onSubmit(getValues());
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 ">
+      <form onSubmit={handleLogoSubmit} className="flex flex-col gap-6 ">
         <CollapsibleSection
           className="rounded-md border border-slate-200 bg-white py-4 shadow-sm max-w-[790px]"
           contentClassName="px-5"
