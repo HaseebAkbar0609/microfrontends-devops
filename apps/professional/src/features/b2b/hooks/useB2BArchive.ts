@@ -43,6 +43,9 @@ export function useB2BArchive() {
         type: selectedTyps.length === 1 ? selectedTyps[0] : undefined,
       });
       setItems(res.items);
+      if (res.error) {
+        setError(res.error);
+      }
     } catch (err) {
       const errorMsg =
         err instanceof Error ? err.message : "Failed to load archived projects";

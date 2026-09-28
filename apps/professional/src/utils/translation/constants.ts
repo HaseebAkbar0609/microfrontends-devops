@@ -874,6 +874,11 @@ export type OfferTranslation = {
 	b2bPMLowestOffer: string;
 	b2bPMStatusContractSigned: string;
 	b2bPMStatusWaiting: string;
+	b2bPMStatusDeclined: string;
+	b2bPMStatusArchived: string;
+	b2bOfferClosedNote: string;
+	b2bArchivedDetailNote: string;
+	b2bPMNoFiles: string;
 	b2bPMAddProject: string;
 	b2bPMViewProject: string;
 	b2bPMEmpty: string;
@@ -928,6 +933,9 @@ export type OfferTranslation = {
 	b2bPMQARadera: string;
 	b2bPMQABestallare: string;
 	b2bPMQAFraga: string;
+	b2bPMQAAskQuestion: string;
+	b2bPMQAQuestionPlaceholder: string;
+	b2bPMQAQuestionPosted: string;
 	// B2B - Avtal (Agreements)
 	b2bAvtal: string;
 	b2bAvtalListTitle: string;
@@ -6371,6 +6379,20 @@ export type CommonTranslation = {
 	b2bArchiveConfirmDesc: string;
 	b2bArchiveSuccessToast: string;
 	b2bArchiveErrorToast: string;
+	b2bErrorNoPermission: string;
+	b2bErrorContractSignedRemove: string;
+	b2bErrorProjectGone: string;
+	b2bPMQAOwnCompany: string;
+	b2bPMQAOtherCompanies: string;
+	b2bPMDocOpen: string;
+	b2bPMDocDownload: string;
+	b2bPMDocLoadError: string;
+	b2bOfferAcceptConfirmTitle: string;
+	b2bOfferAcceptConfirmDesc: string;
+	b2bOfferDeclineConfirmTitle: string;
+	b2bOfferDeclineConfirmDesc: string;
+	b2bErrorOfferNoPermission: string;
+	b2bErrorOfferSettled: string;
 	b2bRestoreConfirmTitle: string;
 	b2bRestoreConfirmDesc: string;
 	b2bDeletePermanentConfirmTitle: string;

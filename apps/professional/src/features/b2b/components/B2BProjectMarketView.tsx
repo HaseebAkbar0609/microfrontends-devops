@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   Search,
@@ -52,7 +52,7 @@ import { showToast } from "@/lib/toast";
 import { BreadcrumbItem } from "@/types/common";
 import { formatCurrency } from "@/utils/formatCurrency";
 import {
-  getB2BProjectsAction,
+  getAllB2BProjectsAction,
   deleteB2BProjectAction,
   archiveB2BProjectAction,
 } from "@/api-actions/b2b";
@@ -72,7 +72,15 @@ type SortField = keyof Pick<
 >;
 
 const TABLE_COLUMNS_COUNT = 10;
-const ALL_STATUSES: ProjectMarketStatus[] = ["contract_signed", "waiting", "open", "closing_soon"];
+// Archived rows never reach this list (the Archive screen owns them), so the
+// filter offers every status a row here can actually have.
+const ALL_STATUSES: ProjectMarketStatus[] = [
+  "contract_signed",
+  "waiting",
+  "open",
+  "closing_soon",
+  "declined",
+];
 
 function SkeletonRows({ count }: { count: number }) {
   return (
@@ -90,18 +98,38 @@ function SkeletonRows({ count }: { count: number }) {
   );
 }
 
+/**
+ * Every status gets its own badge. Anything that falls through to the default
+ * would read as "Waiting", which is wrong for a settled row — a declined offer
+ * is not still waiting on anyone.
+ */
+const STATUS_BADGE_STYLES: Record<ProjectMarketStatus, string> = {
+  contract_signed: "bg-emerald-600 hover:bg-emerald-600",
+  waiting: "bg-amber-500 hover:bg-amber-500",
+  closing_soon: "bg-orange-600 hover:bg-orange-600",
+  open: "bg-slate-500 hover:bg-slate-500",
+  declined: "bg-red-600 hover:bg-red-600",
+  archived: "bg-slate-400 hover:bg-slate-400",
+};
+
 function StatusBadge({ status }: { status: ProjectMarketStatus }) {
   const t = useTranslate();
-  if (status === "contract_signed") {
-    return (
-      <Badge className="rounded-md bg-emerald-600 hover:bg-emerald-600 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
-        {t(localizationConstants.b2bPMStatusContractSigned)}
-      </Badge>
-    );
-  }
+  const labels: Record<ProjectMarketStatus, string> = {
+    contract_signed: t(localizationConstants.b2bPMStatusContractSigned),
+    waiting: t(localizationConstants.b2bPMStatusWaiting),
+    closing_soon: t(localizationConstants.closingSoon),
+    open: t(localizationConstants.open),
+    declined: t(localizationConstants.b2bPMStatusDeclined),
+    archived: t(localizationConstants.b2bPMStatusArchived),
+  };
+
   return (
-    <Badge className="rounded-md bg-amber-500 hover:bg-amber-500 px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0">
-      {t(localizationConstants.b2bPMStatusWaiting)}
+    <Badge
+      className={`rounded-md px-2.5 py-1 text-xs font-medium text-white shadow-2xs border-0 ${
+        STATUS_BADGE_STYLES[status] ?? STATUS_BADGE_STYLES.open
+      }`}
+    >
+      {labels[status] ?? status}
     </Badge>
   );
 }
@@ -117,6 +145,7 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
 
   const [projectList, setProjectList] = useState<ProjectMarket[]>(projects);
   const [loading, setLoading] = useState(isLoading || projects.length === 0);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [selectedStatuses, setSelectedStatuses] = useState<ProjectMarketStatus[]>([]);
   const [projectToRemove, setProjectToRemove] = useState<ProjectMarket | null>(null);
@@ -130,28 +159,43 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
   const debouncedSearch = useDebounce(search, 300);
   const activeFilterCount = selectedStatuses.length;
 
+  const fetchProjects = useCallback(async () => {
+    setLoading(true);
+    setLoadError(null);
+    try {
+      // All pages, not just one: sorting, the status filter and pagination
+      // below all run in the browser over the full list.
+      const res = await getAllB2BProjectsAction(debouncedSearch);
+      setProjectList(res.projects);
+      if (res.error) {
+        setLoadError(res.error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [debouncedSearch]);
+
   useEffect(() => {
     let isMounted = true;
-    async function fetchProjects() {
-      setLoading(true);
-      try {
-        const res = await getB2BProjectsAction({
-          page,
-          pageSize: rowsPerPage,
-          search: debouncedSearch,
-        });
-        if (isMounted && res && res.projects) {
-          setProjectList(res.projects);
-        }
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    }
-    fetchProjects();
+    (async () => {
+      if (isMounted) await fetchProjects();
+    })();
     return () => {
       isMounted = false;
     };
-  }, [page, rowsPerPage, debouncedSearch]);
+  }, [fetchProjects]);
+
+  /**
+   * What to tell the user when archive / remove is refused. Worded from the
+   * HTTP status, because the API's own message can be a raw code such as
+   * ACCEPTED_OFFER_CANNOT_BE_DELETED.
+   */
+  const mutationErrorMessage = (code: string | undefined, fallback: string) => {
+    if (code === "forbidden") return t(localizationConstants.b2bErrorNoPermission);
+    if (code === "conflict") return t(localizationConstants.b2bErrorContractSignedRemove);
+    if (code === "not_found") return t(localizationConstants.b2bErrorProjectGone);
+    return fallback;
+  };
 
   const handleConfirmRemove = async () => {
     if (!projectToRemove) return;
@@ -162,7 +206,10 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
         setProjectList((prev) => prev.filter((p) => p.id !== projectToRemove.id));
         showToast("success", t(localizationConstants.b2bRemoveSuccessToast));
       } else {
-        showToast("error", res.error || t(localizationConstants.b2bRemoveErrorToast));
+        showToast(
+          "error",
+          mutationErrorMessage(res.errorCode, t(localizationConstants.b2bRemoveErrorToast)),
+        );
       }
     } catch {
       showToast("error", t(localizationConstants.b2bRemoveErrorToast));
@@ -181,7 +228,10 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
         setProjectList((prev) => prev.filter((p) => p.id !== projectToArchive.id));
         showToast("success", t(localizationConstants.b2bArchiveSuccessToast));
       } else {
-        showToast("error", res.error || t(localizationConstants.b2bArchiveErrorToast));
+        showToast(
+          "error",
+          mutationErrorMessage(res.errorCode, t(localizationConstants.b2bArchiveErrorToast)),
+        );
       }
     } catch {
       showToast("error", t(localizationConstants.b2bArchiveErrorToast));
@@ -221,6 +271,8 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
     waiting: t(localizationConstants.b2bPMStatusWaiting),
     open: t(localizationConstants.open),
     closing_soon: t(localizationConstants.closingSoon),
+    declined: t(localizationConstants.b2bPMStatusDeclined),
+    archived: t(localizationConstants.b2bPMStatusArchived),
   };
 
   return (
@@ -404,6 +456,20 @@ export function B2BProjectMarketView({ projects = [], isLoading = false }: Props
           <TableBody>
             {loading ? (
               <SkeletonRows count={rowsPerPage} />
+            ) : loadError ? (
+              <TableRow>
+                <TableCell colSpan={TABLE_COLUMNS_COUNT} className="px-4 py-12 text-center">
+                  <p className="mb-3 text-sm text-slate-500">{t(localizationConstants.genericError)}</p>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => fetchProjects()}
+                    className="cursor-pointer"
+                  >
+                    {t(localizationConstants.retry)}
+                  </Button>
+                </TableCell>
+              </TableRow>
             ) : (
               <>
                 {paginated.map((row) => (

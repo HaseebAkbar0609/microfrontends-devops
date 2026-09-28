@@ -1,4 +1,10 @@
-export type ProjectMarketStatus = "contract_signed" | "waiting" | "open" | "closing_soon";
+export type ProjectMarketStatus =
+  | "contract_signed"
+  | "waiting"
+  | "open"
+  | "closing_soon"
+  | "declined"
+  | "archived";
 export type OfferStatus = "accepted" | "deny" | "waiting";
 export type QAStatus = "new" | "opened" | "answered";
 
@@ -29,6 +35,8 @@ export type QAMessage = {
   id: string;
   sender: string;
   role: string;
+  /** True when the viewer's own company asked it. Other companies stay anonymous. */
+  ownCompany?: boolean;
   company?: string;
   badge?: string;
   replyFrom?: string;
@@ -42,6 +50,14 @@ export type QAMessage = {
   date: string;
   status: QAStatus;
   avatar?: string;
+};
+
+/** A project file. `type` is its MIME type; `url` a short-lived signed link. */
+export type ProjectDocument = {
+  id: string;
+  label: string;
+  type: string;
+  url: string;
 };
 
 export type ProjectMarketDetail = {
@@ -74,9 +90,9 @@ export type ProjectMarketDetail = {
     address: string;
   };
   documents: {
-    images: { id: string; label: string }[];
-    docs: { id: string; label: string; type: string }[];
-    drawings: { id: string; label: string; type: string }[];
+    images: ProjectDocument[];
+    docs: ProjectDocument[];
+    drawings: ProjectDocument[];
   };
   qa: QAMessage[];
 };

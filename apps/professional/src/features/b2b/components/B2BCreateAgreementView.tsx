@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
@@ -11,6 +11,7 @@ import {
   Glasses,
   Info,
   LayoutList,
+  Loader2,
   Map,
   MapPin,
   PenTool,
@@ -35,10 +36,13 @@ import { formatCurrency } from "@/utils/formatCurrency";
 import { B2BAgreementDetail } from "../types/agreement";
 import { useB2BAgreements } from "../hooks/useB2BAgreements";
 import {
+  useAgreementDraftFromContext,
+  EMPTY_AGREEMENT_DRAFT,
+} from "../hooks/useAgreementDraftFromContext";
+import {
   B2B_AVAILABLE_TEMPLATES,
   B2B_STANDARD_ATTACHMENTS,
-  getAgreementDetailByContext,
-} from "../constants/agreementMock";
+} from "../constants/agreementOptions";
 
 function AccordionSection({
   title,
@@ -149,10 +153,10 @@ function DocTag({ label, onRemove }: { label: string; onRemove: () => void }) {
 }
 
 interface Props {
-  data: B2BAgreementDetail;
+  data?: B2BAgreementDetail;
 }
 
-export function B2BCreateAgreementView({ data: initialData }: Props) {
+export function B2BCreateAgreementView({ data: initialData = EMPTY_AGREEMENT_DRAFT }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const t = useTranslate();
@@ -166,12 +170,11 @@ export function B2BCreateAgreementView({ data: initialData }: Props) {
   const queryProjectId = searchParams.get("projectId") || undefined;
   const queryOfferId = searchParams.get("offerId") || undefined;
 
-  const resolvedData = useMemo(() => {
-    if (queryProjectId || queryOfferId) {
-      return getAgreementDetailByContext(queryProjectId, queryOfferId);
-    }
-    return initialData;
-  }, [queryProjectId, queryOfferId, initialData]);
+  const { draft, isLoading: isDraftLoading } = useAgreementDraftFromContext(
+    queryProjectId,
+    queryOfferId
+  );
+  const resolvedData = queryProjectId || queryOfferId ? draft : initialData;
 
   const addTemplateTag = (tag: string) => {
     if (!selectedTemplates.includes(tag)) {
@@ -200,7 +203,7 @@ export function B2BCreateAgreementView({ data: initialData }: Props) {
     handleFileUpload,
     handleDownloadTemplates,
     handleCreateAgreement,
-  } = useB2BAgreements(resolvedData);
+  } = useB2BAgreements(resolvedData, queryProjectId);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -230,6 +233,14 @@ export function B2BCreateAgreementView({ data: initialData }: Props) {
       );
     });
   };
+
+  if (isDraftLoading) {
+    return (
+      <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-400" aria-hidden={true} />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-full w-full bg-slate-50 flex flex-1 flex-col">

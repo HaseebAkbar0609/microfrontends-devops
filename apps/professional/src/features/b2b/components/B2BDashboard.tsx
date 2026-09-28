@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Check, X, LayoutList, Layers, RotateCcw, Loader2 } from "lucide-react";
 import {
 	AlertDialog,
@@ -28,12 +28,18 @@ import {
 	syncWidgetsAction,
 	type WidgetSyncItem,
 } from "@/api-actions/widgets/widgets";
+import {
+	getB2BDashboardKpisAction,
+	EMPTY_B2B_KPIS,
+	type B2BDashboardKpis,
+} from "@/api-actions/b2b/b2b";
 import { PlacedWidgetEntry } from "@/features/widgetdashboard/types/dashboard";
 import { cn } from "@/lib/utils";
 import {
 	B2B_INITIAL_WIDGETS,
 	B2B_SIDEBAR_WIDGET_MAP,
 	B2B_DASHBOARD_SIDEBAR_ITEMS,
+	buildB2BWidgetMap,
 } from "./B2BDashboardConfig";
 
 type DashboardModalType = "REPLACE_WIDGET" | "REMOVE_WIDGET";
@@ -42,7 +48,10 @@ export function B2BDashboard() {
 	const t = useTranslate();
 	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
 	const [isRearranging, setIsRearranging] = useState(false);
-	const currentWidgetMap = B2B_SIDEBAR_WIDGET_MAP;
+	const [kpiData, setKpiData] = useState<B2BDashboardKpis>(EMPTY_B2B_KPIS);
+	const [isLoadingKpis, setIsLoadingKpis] = useState(true);
+	const [kpiError, setKpiError] = useState<string | null>(null);
+	const currentWidgetMap = buildB2BWidgetMap(kpiData);
 
 	const {
 		placedWidgets,
@@ -67,6 +76,30 @@ export function B2BDashboard() {
 	const dropZoneRef = useRef<HTMLDivElement>(null);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 	const [gridDragOverIndex, setGridDragOverIndex] = useState<number | null>(null);
+
+	// Fetch real B2B KPIs from Backend API
+	const fetchKpis = useCallback(async () => {
+		setIsLoadingKpis(true);
+		setKpiError(null);
+		const res = await getB2BDashboardKpisAction();
+		if (res.success && res.data) {
+			setKpiData(res.data);
+			const dynamicMap = buildB2BWidgetMap(res.data);
+			setPlacedWidgets((prev) =>
+				prev.map((w) => ({
+					...w,
+					widgetProps: dynamicMap[w.sidebarId || "emptyPage"] || dynamicMap.emptyPage,
+				}))
+			);
+		} else {
+			setKpiError(res.error || "Failed to load dashboard data");
+		}
+		setIsLoadingKpis(false);
+	}, [setPlacedWidgets]);
+
+	useEffect(() => {
+		fetchKpis();
+	}, [fetchKpis]);
 
 	// Load user's saved layout from Backend DB
 	useEffect(() => {
@@ -261,6 +294,27 @@ export function B2BDashboard() {
 
 	return (
 		<div className="flex flex-col gap-6">
+			{isLoadingKpis && (
+				<div className="flex items-center gap-2 text-xs text-slate-400">
+					<Loader2 className="w-3.5 h-3.5 animate-spin" />
+					<span>Updating live KPIs...</span>
+				</div>
+			)}
+			{!isLoadingKpis && kpiError && (
+				<div className="flex items-center justify-between gap-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-800">
+					<span>{kpiError}</span>
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						className="h-6 cursor-pointer px-2 text-xs text-amber-900 hover:bg-amber-100"
+						onClick={() => fetchKpis()}
+					>
+						{t(localizationConstants.retry)}
+					</Button>
+				</div>
+			)}
+
 			{/* Main Layout: Widgets Grid (Left) & Control Sidebar (Right) */}
 			<div className="flex flex-col gap-4 xl:flex-row xl:gap-5 lg:pr-44">
 				{/* Left Grid */}
