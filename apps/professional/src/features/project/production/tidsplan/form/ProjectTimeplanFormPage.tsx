@@ -1,7 +1,5 @@
 "use client";
 
-import { notFound } from "next/navigation";
-
 import { Form } from "@/components/form";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import localizationConstants from "@/utils/translation/constants";
@@ -10,7 +8,7 @@ import {
 	PROJECT_MODULE_TABS,
 	PROJECT_MODULE_TITLE,
 } from "../../../data/projectNav.config";
-import { PROJECT_LIST_ROWS } from "../../../data/projectsOverview.mock";
+import { useProjectIdentity } from "../../hooks/useProjectIdentity";
 import { projectProductionTabs } from "../../projectProductionNav.config";
 import { timeplanUrls } from "../timeplanNav";
 import { TimeplanDetailsCard } from "./TimeplanDetailsCard";
@@ -32,12 +30,16 @@ export interface ProjectTimeplanFormPageProps {
  */
 export function ProjectTimeplanFormPage({ projectId, planId }: ProjectTimeplanFormPageProps) {
 	const t = useTranslate();
-	const project = PROJECT_LIST_ROWS.find((row) => row.id === projectId);
-	const { form, isEdit, missing, save, cancel } = useTimeplanForm(projectId, planId);
+	const projectQuery = useProjectIdentity(projectId);
+	const project = projectQuery.data;
+	const { form, isEdit, missing, isLoading, isError, authorName, save, cancel } = useTimeplanForm(projectId, planId);
 
-	/* An unknown project, or an edit link to a plan that is gone, is a 404.
-	   After the hooks: `notFound()` throws. */
-	if (!project || missing) notFound();
+	if (projectQuery.isLoading || isLoading) {
+		return <p role="status" className="p-6">{t(localizationConstants.genericLoading)}</p>;
+	}
+	if (!project || missing || isError || projectQuery.isError) {
+		return <p role="alert" className="p-6">{t(localizationConstants.genericError)}</p>;
+	}
 
 	return (
 		<div className="flex flex-1 flex-col bg-blue-gray-50">
@@ -70,6 +72,7 @@ export function ProjectTimeplanFormPage({ projectId, planId }: ProjectTimeplanFo
 							form={form}
 							projectNo={project.projectNr.replace(/^#/, "")}
 							customer={project.customer}
+							authorName={authorName}
 						/>
 					</div>
 

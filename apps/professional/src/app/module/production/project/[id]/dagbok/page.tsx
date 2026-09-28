@@ -1,14 +1,12 @@
 import { parseRecordIdParam } from "@/lib/routeParams";
-
-import ProjectDiaryPage from "@/features/project/production/dagbok/ProjectDiaryPage";
+import localizationConstants from "@/utils/translation/constants";
+import { UnavailableProjectSectionPage } from "@/features/project/production/components/UnavailableProjectSectionPage";
 
 interface PageProps {
 	params: Promise<{ id: string }>;
 }
 
-/** Dagbok — the project's construction diary. The id is validated here; the day comes from `?datum=`. */
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
-
-	return <ProjectDiaryPage projectId={parseRecordIdParam(id)} />;
+	return <UnavailableProjectSectionPage projectId={parseRecordIdParam(id)} sectionKey={localizationConstants.projectDiaryTitle} />;
 }

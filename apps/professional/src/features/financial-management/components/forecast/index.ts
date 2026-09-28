@@ -5,3 +5,8 @@ export * from "./overview/ForecastOverviewPage";
 export * from "./ForecastToolbar";
 export * from "./overview/result/ForecastResultPanel";
 export * from "./analysis/AnalysisPage";
+export * from "./budget/ForecastBudgetPage";
+export * from "./risk/ForecastRiskPage";
+export * from "./risk/RiskListPanel";
+export * from "./risk/routes/RiskDetailRoute";
+export * from "./personnel/ForecastPersonnelPage";

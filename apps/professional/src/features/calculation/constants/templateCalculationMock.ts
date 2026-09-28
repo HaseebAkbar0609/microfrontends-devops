@@ -1,4 +1,52 @@
-import type { CalculationTemplateOption, SupplierPriceListItem, TemplateCostSection } from "../types/templateCalculation";
+import type {
+	CalculationTemplateOption,
+	OverheadRow,
+	SupplierPriceListItem,
+	TemplateCostSection,
+} from "../types/templateCalculation";
+
+export const DEFAULT_BLANK_SECTIONS: TemplateCostSection[] = [
+	{
+		id: "sec-konsulter",
+		categoryType: "konsulter",
+		title: "Konsulter",
+		isOpen: true,
+		rows: [
+			{
+				id: "row-k-blank-1",
+				artikel: "0",
+				benamning: "0",
+				antal: "0",
+				enhet: "0",
+				aPris: "0",
+				paslagPct: "0",
+			},
+		],
+	},
+];
+
+export const DEFAULT_OVERHEAD_ROWS: OverheadRow[] = [
+	{
+		id: "ov-1",
+		artikel: "1005",
+		benamning: "Arbetsledning",
+		antal: "1",
+		enhet: "tim",
+		aPris: "150000",
+		paslagPct: "10",
+		justering: "0",
+	},
+	{
+		id: "ov-2",
+		artikel: "850",
+		benamning: "Etablering",
+		antal: "1",
+		enhet: "tim",
+		aPris: "25000",
+		paslagPct: "10",
+		justering: "0",
+	},
+];
 
 export const DEFAULT_TEMPLATE_SECTIONS: TemplateCostSection[] = [
 	{

@@ -9,7 +9,6 @@ import localizationConstants, {
 	type TranslationKeys,
 } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { ORGANISATION_OPTIONS } from "../data/projectCreateOptions.mock";
 import type { CreateProjectFormData } from "../types";
 
 export interface OrganisationDetailsCardProps {
@@ -71,7 +70,7 @@ export function OrganisationDetailsCard({
 							<SearchableSelect
 								value={field.value}
 								onChange={field.onChange}
-								options={ORGANISATION_OPTIONS}
+								options={[]}
 								placeholder={t(
 									localizationConstants.orderOrganisationTab,
 								)}

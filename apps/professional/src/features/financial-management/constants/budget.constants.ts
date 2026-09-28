@@ -3,7 +3,23 @@ import localizationConstants, {
 } from "@/utils/translation/constants";
 
 export const BUDGETS_BASE_ROUTE = "/module/financial-management/economy/budget";
-export const CREATE_BUDGET_ROUTE = `${BUDGETS_BASE_ROUTE}/create`;
+
+/** Prognos shows the same register under its own tab. */
+export const FORECAST_BUDGET_BASE_ROUTE = "/module/financial-management/forecast/budget";
+
+/**
+ * Every budget URL, built from whichever module the screen is mounted in, so
+ * no component writes a path of its own.
+ */
+export function budgetRoutes(basePath: string = BUDGETS_BASE_ROUTE) {
+	return {
+		list: basePath,
+		create: `${basePath}/create`,
+		detail: (id: string) => `${basePath}/${id}`,
+		/** Editing reuses the create screen, told which budget to load. */
+		edit: (id: string) => `${basePath}/create?id=${id}`,
+	};
+}
 
 export const BUDGET_STORAGE_KEY = "tfs_economy_budgets";
 

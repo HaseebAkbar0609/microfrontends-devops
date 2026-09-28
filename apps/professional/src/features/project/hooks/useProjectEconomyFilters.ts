@@ -1,9 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useAuthStatus } from "@/context/AuthContext";
 import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
-import { ProjectEconomyItem } from "../data/projectEconomy.mock";
+import type { ProjectEconomyItem } from "../data/projectEconomy.types";
+import { listProfessionalProjects } from "../services/professionalProjectService";
 import {
 	getTotalTbContribution,
 	listEconomyRows,
@@ -12,7 +15,14 @@ import {
 export type ProjectEconomySortField = keyof Omit<ProjectEconomyItem, "id">;
 
 export function useProjectEconomyFilters() {
-	const [rows] = useState<ProjectEconomyItem[]>(() => listEconomyRows());
+	const { company, isAuthenticated } = useAuthStatus();
+	const query = useQuery({
+		queryKey: ["professional-projects", company?.id, false],
+		queryFn: () => listProfessionalProjects(false),
+		enabled: Boolean(company?.id && isAuthenticated),
+		retry: false,
+	});
+	const rows = useMemo(() => listEconomyRows(query.data ?? []), [query.data]);
 	const { sortField, sortDir, toggleSort } =
 		useTableSort<ProjectEconomySortField>();
 	const [page, setPage] = useState(1);
@@ -41,6 +51,9 @@ export function useProjectEconomyFilters() {
 	};
 
 	return {
+		isLoading: query.isLoading,
+		isError: query.isError,
+		refresh: query.refetch,
 		totalTbContribution: getTotalTbContribution(),
 		sortField,
 		sortDir,

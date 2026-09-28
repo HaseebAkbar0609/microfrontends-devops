@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback, useEffect, useMemo, useRef } from "react";
+import { useState, useCallback, useEffect, useMemo } from "react";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
 import type {
 	CalculationTemplateOption,
+	OverheadRow,
+	SectionSummaryAdjustment,
 	SupplierPriceListItem,
 	TemplateCostSection,
 	TemplateSectionRow,
@@ -15,7 +17,11 @@ import {
 	getTemplateDetailsAPIAction,
 	saveTemplateCalculationAPIAction,
 } from "../api/calculationTemplateApi";
-import { DEFAULT_TEMPLATE_SECTIONS } from "../constants/templateCalculationMock";
+import {
+	DEFAULT_BLANK_SECTIONS,
+	DEFAULT_OVERHEAD_ROWS,
+	DEFAULT_TEMPLATE_SECTIONS,
+} from "../constants/templateCalculationMock";
 
 export function parseCalculationNumber(value: string | number | undefined): number {
 	if (typeof value === "number") return isNaN(value) ? 0 : value;
@@ -32,9 +38,25 @@ export function computeRowDelsumma(row: TemplateSectionRow): number {
 	return antal * aPris * (1 + paslagPct / 100);
 }
 
+export interface SectionSummaryComputedRow {
+	id: string;
+	categoryType?: string;
+	title: string;
+	calculation: number;
+	markupPct: string;
+	markupKr: number;
+	subtotal: number;
+	adjustment: string;
+}
+
+export interface OverheadComputedRow extends OverheadRow {
+	summering: number;
+	paslagKr: number;
+	delsumma: number;
+}
+
 export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 	const t = useTranslate();
-	const idCounter = useRef(Date.now());
 
 	// Navigation & flow states
 	const [flowState, setFlowState] = useState<"choose" | "workspace">("choose");
@@ -45,6 +67,13 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 	const [templates, setTemplates] = useState<CalculationTemplateOption[]>([]);
 	const [selectedTemplateId, setSelectedTemplateId] = useState<string>("");
 	const [sections, setSections] = useState<TemplateCostSection[]>(DEFAULT_TEMPLATE_SECTIONS);
+	const [overheadRows, setOverheadRows] = useState<OverheadRow[]>(DEFAULT_OVERHEAD_ROWS);
+	const [sectionAdjustments, setSectionAdjustments] = useState<
+		Record<string, SectionSummaryAdjustment>
+	>({});
+	const [vinstPct, setVinstPct] = useState<string>("10");
+	const [saveAsTemplate, setSaveAsTemplate] = useState<boolean>(false);
+
 	const [isLoading, setIsLoading] = useState(false);
 	const [isSaving, setIsSaving] = useState(false);
 
@@ -81,31 +110,16 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		[],
 	);
 
-	// Start template workspace
+	// Start workspace flow based on mode
 	const handleStartWorkspace = useCallback(() => {
 		if (selectedMode === "mall") {
 			void handleSelectTemplate(selectedTemplateId || "mall-standard-bygg");
+			setOverheadRows(DEFAULT_OVERHEAD_ROWS);
 		} else if (selectedMode === "ny") {
-			// Initialize with single default section
-			setSections([
-				{
-					id: "sec-konsulter",
-					categoryType: "konsulter",
-					title: "Konsulter",
-					isOpen: true,
-					rows: [
-						{
-							id: `row-${++idCounter.current}`,
-							artikel: "0",
-							benamning: "0",
-							antal: "0",
-							enhet: "0",
-							aPris: "0",
-							paslagPct: "0",
-						},
-					],
-				},
-			]);
+			// Initialize with single clean default section
+			setSections(JSON.parse(JSON.stringify(DEFAULT_BLANK_SECTIONS)));
+			setOverheadRows(JSON.parse(JSON.stringify(DEFAULT_OVERHEAD_ROWS)));
+			setSelectedTemplateId("");
 		}
 		setFlowState("workspace");
 		setActiveTab("kalkyl");
@@ -123,16 +137,15 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		setSections((prev) =>
 			prev.map((sec) => {
 				if (sec.id !== sectionId) return sec;
-				const isMaterial = sec.categoryType === "material";
 				const newRow: TemplateSectionRow = {
-					id: `row-${++idCounter.current}`,
+					id: `row_${Date.now()}_${sec.rows.length}`,
 					artikel: "",
 					benamning: "",
-					antal: "0",
-					enhet: isMaterial ? "kr" : "tim",
+					antal: "1",
+					enhet: "tim",
 					aPris: "0",
 					paslagPct: "10",
-					...(isMaterial ? { levArtikel: "", leverantor: "" } : {}),
+					...(sec.categoryType === "material" ? { levArtikel: "", leverantor: "" } : {}),
 				};
 				return { ...sec, rows: [...sec.rows, newRow] };
 			}),
@@ -168,18 +181,17 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 
 	// Section Mutations
 	const handleAddSection = useCallback(() => {
-		const newId = `sec-custom-${++idCounter.current}`;
 		const newSection: TemplateCostSection = {
-			id: newId,
+			id: `sec_${Date.now()}`,
 			categoryType: "custom",
-			title: `Sektion ${sections.length + 1}`,
+			title: "Ny sektion",
 			isOpen: true,
 			rows: [
 				{
-					id: `row-${++idCounter.current}`,
+					id: `row_${Date.now()}_0`,
 					artikel: "",
 					benamning: "",
-					antal: "0",
+					antal: "1",
 					enhet: "tim",
 					aPris: "0",
 					paslagPct: "10",
@@ -187,7 +199,7 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 			],
 		};
 		setSections((prev) => [...prev, newSection]);
-	}, [sections.length]);
+	}, []);
 
 	const handleConfirmDeleteSection = useCallback(() => {
 		if (!deleteSectionTarget) return;
@@ -196,11 +208,51 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		showToast("info", t(localizationConstants.deleteConfirmationTitle));
 	}, [deleteSectionTarget, t]);
 
-	const handleUpdateSectionTitle = useCallback((sectionId: string, title: string) => {
-		setSections((prev) =>
-			prev.map((sec) => (sec.id === sectionId ? { ...sec, title } : sec)),
-		);
+	// Overhead Row Mutations
+	const handleAddOverheadRow = useCallback(() => {
+		const newRow: OverheadRow = {
+			id: `oh_${Date.now()}`,
+			artikel: "",
+			benamning: "",
+			antal: "1",
+			enhet: "st",
+			aPris: "0",
+			paslagPct: "10",
+			justering: "0",
+		};
+		setOverheadRows((prev) => [...prev, newRow]);
 	}, []);
+
+	const handleUpdateOverheadRow = useCallback(
+		(rowId: string, patch: Partial<OverheadRow>) => {
+			setOverheadRows((prev) =>
+				prev.map((row) => (row.id === rowId ? { ...row, ...patch } : row)),
+			);
+		},
+		[],
+	);
+
+	const handleDeleteOverheadRow = useCallback((rowId: string) => {
+		setOverheadRows((prev) => prev.filter((row) => row.id !== rowId));
+	}, []);
+
+	// Summary section adjustments
+	const handleUpdateSectionAdjustment = useCallback(
+		(sectionId: string, patch: Partial<SectionSummaryAdjustment>) => {
+			setSectionAdjustments((prev) => {
+				const current = prev[sectionId] || {
+					sectionId,
+					markupPct: "10",
+					adjustmentKr: "0",
+				};
+				return {
+					...prev,
+					[sectionId]: { ...current, ...patch },
+				};
+			});
+		},
+		[],
+	);
 
 	// Import from supplier price lists
 	const handleImportPriceListItem = useCallback(
@@ -228,7 +280,7 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		[t],
 	);
 
-	// Total calculations
+	// Section base totals
 	const sectionTotals = useMemo(() => {
 		const map: Record<string, number> = {};
 		for (const sec of sections) {
@@ -241,15 +293,99 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		return Object.values(sectionTotals).reduce((sum, val) => sum + val, 0);
 	}, [sectionTotals]);
 
-	// Save calculation
+	// Summary tab computed rows
+	const summaryComputedRows = useMemo<SectionSummaryComputedRow[]>(() => {
+		return sections.map((sec) => {
+			const baseCalc = sectionTotals[sec.id] || 0;
+			const adj = sectionAdjustments[sec.id];
+			const markupPct = adj?.markupPct ?? "10";
+			const markupPctNum = parseCalculationNumber(markupPct);
+			const markupKr = baseCalc * (markupPctNum / 100);
+			const adjustmentVal = adj?.adjustmentKr ?? "0";
+			const adjustmentNum = parseCalculationNumber(adjustmentVal);
+			const subtotal = baseCalc + markupKr + adjustmentNum;
+
+			return {
+				id: sec.id,
+				categoryType: sec.categoryType,
+				title: sec.title,
+				calculation: baseCalc,
+				markupPct,
+				markupKr,
+				subtotal,
+				adjustment: adjustmentVal,
+			};
+		});
+	}, [sections, sectionTotals, sectionAdjustments]);
+
+	const calculationSummaryTotals = useMemo(() => {
+		return summaryComputedRows.reduce(
+			(acc, row) => ({
+				totalCalculation: acc.totalCalculation + row.calculation,
+				totalMarkupKr: acc.totalMarkupKr + row.markupKr,
+				totalSubtotal: acc.totalSubtotal + row.subtotal,
+				totalAdjustment: acc.totalAdjustment + parseCalculationNumber(row.adjustment),
+			}),
+			{ totalCalculation: 0, totalMarkupKr: 0, totalSubtotal: 0, totalAdjustment: 0 },
+		);
+	}, [summaryComputedRows]);
+
+	// Overhead computed rows
+	const overheadComputedRows = useMemo<OverheadComputedRow[]>(() => {
+		return overheadRows.map((row) => {
+			const antal = parseCalculationNumber(row.antal);
+			const aPris = parseCalculationNumber(row.aPris);
+			const paslagPct = parseCalculationNumber(row.paslagPct);
+			const justering = parseCalculationNumber(row.justering);
+
+			const summering = antal * aPris;
+			const paslagKr = summering * (paslagPct / 100);
+			const delsumma = summering + paslagKr + justering;
+
+			return {
+				...row,
+				summering,
+				paslagKr,
+				delsumma,
+			};
+		});
+	}, [overheadRows]);
+
+	const overheadTotals = useMemo(() => {
+		return overheadComputedRows.reduce(
+			(acc, row) => ({
+				totalSummering: acc.totalSummering + row.summering,
+				totalPaslagKr: acc.totalPaslagKr + row.paslagKr,
+				totalDelsumma: acc.totalDelsumma + row.delsumma,
+			}),
+			{ totalSummering: 0, totalPaslagKr: 0, totalDelsumma: 0 },
+		);
+	}, [overheadComputedRows]);
+
+	// Combined summary and offer totals
+	const totalCombinedDelsumma = useMemo(() => {
+		return calculationSummaryTotals.totalSubtotal + overheadTotals.totalDelsumma;
+	}, [calculationSummaryTotals.totalSubtotal, overheadTotals.totalDelsumma]);
+
+	const finalOfferSum = useMemo(() => {
+		const vinstNum = parseCalculationNumber(vinstPct);
+		return totalCombinedDelsumma * (1 + vinstNum / 100);
+	}, [totalCombinedDelsumma, vinstPct]);
+
+	// Save calculation action
 	const handleSave = useCallback(async () => {
 		setIsSaving(true);
 		try {
 			const res = await saveTemplateCalculationAPIAction({
 				calcNo,
+				mode: selectedMode,
 				templateId: selectedTemplateId,
 				sections,
-				totalSum: totalCalculationSum,
+				overheadRows,
+				vinstPct: parseCalculationNumber(vinstPct),
+				totalSum: totalCombinedDelsumma,
+				finalOfferSum,
+				saveAsTemplate,
 			});
 			if (res.success) {
 				showToast("success", t(localizationConstants.calcTemplateSavedSuccessfully));
@@ -261,7 +397,18 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		} finally {
 			setIsSaving(false);
 		}
-	}, [calcNo, selectedTemplateId, sections, totalCalculationSum, t]);
+	}, [
+		calcNo,
+		selectedMode,
+		selectedTemplateId,
+		sections,
+		overheadRows,
+		vinstPct,
+		totalCombinedDelsumma,
+		finalOfferSum,
+		saveAsTemplate,
+		t,
+	]);
 
 	return {
 		calcNo,
@@ -275,6 +422,11 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		selectedTemplateId,
 		setSelectedTemplateId,
 		sections,
+		overheadRows,
+		vinstPct,
+		setVinstPct,
+		saveAsTemplate,
+		setSaveAsTemplate,
 		isLoading,
 		isSaving,
 		isPriceListOpen,
@@ -283,6 +435,12 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		setDeleteSectionTarget,
 		sectionTotals,
 		totalCalculationSum,
+		summaryComputedRows,
+		calculationSummaryTotals,
+		overheadComputedRows,
+		overheadTotals,
+		totalCombinedDelsumma,
+		finalOfferSum,
 		handleStartWorkspace,
 		handleSelectTemplate,
 		handleToggleSection,
@@ -291,7 +449,10 @@ export function useTemplateCalculation(calcNo: string = "Kalkyl 3001") {
 		handleDeleteRow,
 		handleAddSection,
 		handleConfirmDeleteSection,
-		handleUpdateSectionTitle,
+		handleAddOverheadRow,
+		handleUpdateOverheadRow,
+		handleDeleteOverheadRow,
+		handleUpdateSectionAdjustment,
 		handleImportPriceListItem,
 		handleSave,
 	};

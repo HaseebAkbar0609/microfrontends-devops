@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
+import { employeeLevelOf } from "../constants/personnelOverview.constants";
 import {
 	CreateEmployeeStep,
 	CreateEmployeeFormData,
@@ -317,6 +318,9 @@ export function useCreateEmployee() {
 				email: workEmail.trim(),
 				phone: phone.trim() || "070-123 45 67",
 				department: department || "Allmänt",
+				level: employeeLevelOf(role),
+				/* Step 3 collects the gross salary; it is what the employee costs. */
+				monthlyCost: Number(formData.salaryCompensation.grossSalary.replace(/\D/g, "")) || 0,
 			};
 
 			await personnelRepository.addEmployee(newEmployee);

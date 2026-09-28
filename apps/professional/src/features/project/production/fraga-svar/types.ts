@@ -22,6 +22,7 @@ export type ProjectQaRole = "UE" | "Beställare" | "Fråga" | "Supplier";
 export interface ProjectQuestion {
 	id: string;
 	projectId: string;
+	version?: number;
 	sender: string;
 	company: string;
 	badge: ProjectQaRole;

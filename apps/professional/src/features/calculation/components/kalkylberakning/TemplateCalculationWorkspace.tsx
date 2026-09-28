@@ -83,7 +83,7 @@ export function TemplateCalculationWorkspace({
 					{/* Template Picker Card - only visible when mode is 'mall' */}
 					{calcHook.selectedMode === "mall" && (
 						<Card className="rounded-lg border border-slate-200 bg-white shadow-none">
-							<CardContent className="p-4 sm:p-5">
+							<CardContent className="px-4 py-3 sm:px-5 sm:py-3.5">
 								<div className="flex flex-col gap-1.5 w-full sm:w-80">
 									<Label className="text-sm font-medium text-slate-700">
 										<Translate text={localizationConstants.calcTemplateSelectMall} />
