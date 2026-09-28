@@ -97,8 +97,34 @@ export const CASES_PAGE_SIZE_OPTIONS = [10, 25, 50] as const;
 
 export const DEFAULT_CREATOR_ROLE = "Arbetsledare";
 
-export const ALLOWED_CASE_FILE_EXTENSIONS = ".png, .jpg, .jpeg, .pdf, .docx, .xlsx";
-export const ALLOWED_CASE_IMAGE_EXTENSIONS = ".png, .jpg, .jpeg, .webp";
+/**
+ * What a case may carry. The documents card tells the reader "PNG-, JPG- och
+ * PDF-filer är tillåtna", so that is what the picker accepts — the two used to
+ * disagree.
+ */
+export const CASE_DOCUMENT_FILE_RULES: RecordFileRules = {
+	types: {
+		".pdf": "application/pdf",
+		".png": "image/png",
+		".jpg": "image/jpeg",
+		".jpeg": "image/jpeg",
+	},
+	maxBytes: 10 * 1024 * 1024,
+	maxCount: 10,
+};
+
+export const CASE_IMAGE_FILE_RULES: RecordFileRules = {
+	types: {
+		".png": "image/png",
+		".jpg": "image/jpeg",
+		".jpeg": "image/jpeg",
+	},
+	maxBytes: 10 * 1024 * 1024,
+	maxCount: 10,
+};
+
+export const CASE_DOCUMENT_FILE_ACCEPT = acceptAttribute(CASE_DOCUMENT_FILE_RULES.types);
+export const CASE_IMAGE_FILE_ACCEPT = acceptAttribute(CASE_IMAGE_FILE_RULES.types);
 
 export const CASE_CATEGORIES: readonly CaseCategory[] = [
 	"info",
