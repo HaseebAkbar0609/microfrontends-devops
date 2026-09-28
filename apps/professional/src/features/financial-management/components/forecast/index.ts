@@ -10,3 +10,4 @@ export * from "./risk/ForecastRiskPage";
 export * from "./risk/RiskListPanel";
 export * from "./risk/routes/RiskDetailRoute";
 export * from "./personnel/ForecastPersonnelPage";
+export * from "./reports/ForecastReportsPage";

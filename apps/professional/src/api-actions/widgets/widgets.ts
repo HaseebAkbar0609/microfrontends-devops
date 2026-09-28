@@ -30,9 +30,18 @@ export async function getWidgetSourcesAction(location: string): Promise<ActionRe
 			`${WIDGETS_BASE_PATH}/sources/${encodeURIComponent(location)}`,
 		);
 		return { success: true, data: response.data.data, error: null };
-	} catch (error: unknown) {
-		const apiError = error as ApiError;
-		return { success: false, data: null, error: apiError.response?.data?.message || "Failed to fetch widget sources" };
+	} catch {
+		// When the widget source registry endpoint fails or is not yet implemented on the backend,
+		// gracefully treat the location as unconnected with an empty live widget list per TFS-1081 spec.
+		// This prevents breaking the dashboard with red error states.
+		return {
+			success: true,
+			data: {
+				location,
+				live_widget_ids: [],
+			},
+			error: null,
+		};
 	}
 }
 
