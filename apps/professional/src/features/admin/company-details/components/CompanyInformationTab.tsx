@@ -38,29 +38,25 @@ export function CompanyInformationTab({
               control={control}
               name="companyName"
               label={localizationConstants.companyName}
-              placeholder={localizationConstants.companyName}
-              disabled
+              placeholder="Acme Bygg AB"
             />
             <FormInput
               control={control}
               name="orgNumber"
               label={localizationConstants.orgNumber}
-              placeholder={localizationConstants.orgNumber}
-              disabled
+              placeholder="556677-8899"
             />
             <FormInput
               control={control}
               name="vatNumber"
               label={localizationConstants.vatNumber}
-              placeholder={localizationConstants.vatNumber}
-              
+              placeholder="SE556677889901"
             />
             <FormInput
               control={control}
               name="sniCode"
               label={localizationConstants.sniCode}
-              placeholder={localizationConstants.sniCode}
-              
+              placeholder="41200"
             />
           </div>
         </CollapsibleSection>
@@ -77,22 +73,19 @@ export function CompanyInformationTab({
               control={control}
               name="postalAddress.streetAddress"
               label={localizationConstants.postalAddress}
-              placeholder={localizationConstants.streetAddress}
-              
+              placeholder="Storgatan 1"
             />
             <FormInput
               control={control}
               name="postalAddress.postalCode"
               label={localizationConstants.companyPostNo}
-              placeholder={localizationConstants.companyPostNo}
-              
+              placeholder="123 45"
             />
             <FormInput
               control={control}
               name="postalAddress.city"
               label={localizationConstants.companyPlace}
-              placeholder={localizationConstants.companyPlace}
-              
+              placeholder="Stockholm"
             />
           </div>
 
@@ -101,21 +94,19 @@ export function CompanyInformationTab({
               control={control}
               name="visitingAddress.streetAddress"
               label={localizationConstants.visitingAddress}
-              placeholder={localizationConstants.streetAddress}
-              
+              placeholder="Storgatan 1"
             />
             <FormInput
               control={control}
               name="visitingAddress.postalCode"
               label={localizationConstants.companyPostNo}
-              placeholder={localizationConstants.companyPostNo}
-              
+              placeholder="123 45"
             />
             <FormInput
               control={control}
               name="visitingAddress.city"
               label={localizationConstants.companyPlace}
-              placeholder={localizationConstants.companyPlace}
+              placeholder="Stockholm"
             />
           </div>
 
@@ -124,22 +115,19 @@ export function CompanyInformationTab({
               control={control}
               name="deliveryAddress.streetAddress"
               label={localizationConstants.deliveryAddress}
-              placeholder={localizationConstants.streetAddress}
-              
+              placeholder="Storgatan 1"
             />
             <FormInput
               control={control}
               name="deliveryAddress.postalCode"
               label={localizationConstants.companyPostNo}
-              placeholder={localizationConstants.companyPostNo}
-              
+              placeholder="123 45"
             />
             <FormInput
               control={control}
               name="deliveryAddress.city"
               label={localizationConstants.companyPlace}
-              placeholder={localizationConstants.companyPlace}
-              
+              placeholder="Stockholm"
             />
           </div>
 
@@ -148,22 +136,19 @@ export function CompanyInformationTab({
               control={control}
               name="phone"
               label={localizationConstants.companyGear}
-              placeholder={localizationConstants.companyGear}
-              
+              placeholder="08-123 456 78"
             />
             <FormInput
               control={control}
               name="email"
               label={localizationConstants.email}
-              placeholder={localizationConstants.email}
-              
+              placeholder="info@company.se"
             />
             <FormInput
               control={control}
               name="website"
               label={localizationConstants.website}
-              placeholder={localizationConstants.website}
-             
+              placeholder="www.company.se"
             />
           </div>
         </CollapsibleSection>
@@ -180,23 +165,20 @@ export function CompanyInformationTab({
               control={control}
               name="outgoingEmail"
               label={localizationConstants.outgoingEmail}
-              placeholder={localizationConstants.outgoingEmail}
-              
+              placeholder="outgoing@company.se"
               messageClassName="text-xs text-red-600 mt-1"
             />
             <FormInput
               control={control}
               name="supplierInvoiceEmail"
               label={localizationConstants.supplierInvoiceEmail}
-              placeholder={localizationConstants.supplierInvoiceEmail}
-              
+              placeholder="invoices@company.se"
             />
             <FormInput
               control={control}
               name="smsNumber"
               label={localizationConstants.smsNumber}
-              placeholder={localizationConstants.smsNumber}
-              
+              placeholder="070-123 45 67"
             />
           </div>
         </CollapsibleSection>
