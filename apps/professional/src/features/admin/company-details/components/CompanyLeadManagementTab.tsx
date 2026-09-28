@@ -1,6 +1,7 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState, KeyboardEvent } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Contact, Plus, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,20 +9,16 @@ import { CollapsibleSection } from "@/components/common/CollapsibleSection";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { getAdminUserOptions } from "@/features/admin/users/api/adminUsers.api";
 import {
 	useLeadManagement,
 	useUpdateLeadManagement,
 } from "../hooks/useCompanyInformation";
+import {
+	getCities,
+	getProfessionalCategoriesHierarchical,
+} from "../api/referenceData.api";
 import LeadMultiSelect from "./LeadMultiSelect";
-
-// Builds the next option name ("Städ 1", "Städ 2", …) without colliding with
-// existing entries when the admin adds a new tag.
-const nextOptionName = (options: string[]): string => {
-	const base = options[0] ?? "Ny";
-	let counter = 1;
-	while (options.includes(`${base} ${counter}`)) counter += 1;
-	return `${base} ${counter}`;
-};
 
 const toggleIn = (list: string[], value: string): string[] =>
 	list.includes(value)
@@ -30,31 +27,78 @@ const toggleIn = (list: string[], value: string): string[] =>
 
 const LeadField = ({
 	labelKey,
-	onAdd,
 	children,
+	addTag,
+	onAddRow,
 }: {
 	labelKey: string;
-	onAdd: () => void;
 	children: ReactNode;
-}) => (
-	<div className="flex flex-col gap-2">
-		<label className="text-sm font-medium text-slate-900">
-			<Translate text={labelKey} />{" "}
-			<span aria-hidden className="text-red-500">
-				*
-			</span>
-		</label>
-		{children}
-		<Button
-			type="button"
-			onClick={onAdd}
-			className="h-10 w-fit gap-2 rounded-md bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-900/90"
-		>
-			<Plus className="h-4 w-4" />
-			<Translate text={localizationConstants.companyLeadsAddNew} />
-		</Button>
-	</div>
-);
+	// Present only for ad-hoc tag fields (mail, district) -- category/city
+	// options come from a real catalog, so there's nothing to type in here.
+	addTag?: {
+		onAdd: (value: string) => void;
+		placeholder: string;
+	};
+	// Phone only: appends another blank input row below, which the admin
+	// then types straight into -- there's no separate value to "add" first.
+	onAddRow?: () => void;
+}) => {
+	const [draft, setDraft] = useState("");
+
+	const commit = () => {
+		const value = draft.trim();
+		if (!value || !addTag) return;
+		addTag.onAdd(value);
+		setDraft("");
+	};
+
+	return (
+		<div className="flex flex-col gap-2">
+			<label className="text-sm font-medium text-slate-900">
+				<Translate text={labelKey} />{" "}
+				<span aria-hidden className="text-red-500">
+					*
+				</span>
+			</label>
+			{children}
+			{addTag && (
+				<div className="flex items-center gap-2">
+					<Input
+						value={draft}
+						onChange={(event) => setDraft(event.target.value)}
+						onKeyDown={(event: KeyboardEvent<HTMLInputElement>) => {
+							if (event.key === "Enter") {
+								event.preventDefault();
+								commit();
+							}
+						}}
+						placeholder={addTag.placeholder}
+						className="h-10 border-slate-200 text-sm"
+					/>
+					<Button
+						type="button"
+						onClick={commit}
+						disabled={!draft.trim()}
+						className="h-10 w-fit shrink-0 gap-2 rounded-md bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-900/90"
+					>
+						<Plus className="h-4 w-4" />
+						<Translate text={localizationConstants.companyLeadsAddNew} />
+					</Button>
+				</div>
+			)}
+			{onAddRow && (
+				<Button
+					type="button"
+					onClick={onAddRow}
+					className="h-10 w-fit gap-2 rounded-md bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-900/90"
+				>
+					<Plus className="h-4 w-4" />
+					<Translate text={localizationConstants.companyLeadsAddNew} />
+				</Button>
+			)}
+		</div>
+	);
+};
 
 interface LeadManagementState {
 	phones: string[];
@@ -79,7 +123,63 @@ export function CompanyLeadManagementTab() {
 	const leadManagementQuery = useLeadManagement();
 	const updateLeadManagement = useUpdateLeadManagement();
 
+	const categoriesQuery = useQuery({
+		queryKey: ["professional-categories", "hierarchical"],
+		queryFn: getProfessionalCategoriesHierarchical,
+		staleTime: 5 * 60 * 1000,
+	});
+	const citiesQuery = useQuery({
+		queryKey: ["cities"],
+		queryFn: getCities,
+		staleTime: 5 * 60 * 1000,
+	});
+	const staffQuery = useQuery({
+		queryKey: ["admin-users", "options"],
+		queryFn: () => getAdminUserOptions({ limit: 100 }),
+	});
+
+	const categories = useMemo(
+		() => categoriesQuery.data ?? [],
+		[categoriesQuery.data],
+	);
+	const mainCategoryOptions = useMemo(
+		() => categories.map((category) => category.name),
+		[categories],
+	);
+	const cityOptions = useMemo(
+		() => (citiesQuery.data ?? []).map((city) => city.name),
+		[citiesQuery.data],
+	);
+	const staffEmailOptions: string[] = useMemo(
+		() =>
+			(staffQuery.data?.data ?? []).map(
+				(user: { email: string }) => user.email,
+			),
+		[staffQuery.data],
+	);
+
 	const [state, setState] = useState<LeadManagementState>(EMPTY_STATE);
+
+	// Only offer subcategories that belong to a currently selected main
+	// category -- picking from all of them regardless would defeat the point
+	// of narrowing by main category first.
+	const subCategoryOptions = useMemo(() => {
+		const names = new Set<string>();
+		for (const category of categories) {
+			if (state.mainCategories.includes(category.name)) {
+				for (const sub of category.subcategories) names.add(sub.name);
+			}
+		}
+		return Array.from(names);
+	}, [categories, state.mainCategories]);
+
+	// Mail's own options are a mix of the company's real staff emails and any
+	// manually added addresses (e.g. a shared inbox) -- the multi-select's
+	// option list must include both, not just whichever the admin toggled.
+	const emailOptions = useMemo(
+		() => Array.from(new Set([...staffEmailOptions, ...state.emails])),
+		[staffEmailOptions, state.emails],
+	);
 
 	useEffect(() => {
 		if (!leadManagementQuery.data) return;
@@ -122,12 +222,15 @@ export function CompanyLeadManagementTab() {
 		}
 	};
 
-	const addOptionTo = (key: keyof LeadManagementState) => () =>
-		setState((current) => {
-			const values = current[key];
-			const name = nextOptionName(values);
-			return { ...current, [key]: [...values, name] };
-		});
+	// Adds a real, admin-typed value -- both selected and, via emailOptions
+	// above (which unions in state.emails), part of that field's own option
+	// list from then on.
+	const addTagTo = (key: "emails" | "districts") => (value: string) =>
+		setState((current) =>
+			current[key].includes(value)
+				? current
+				: { ...current, [key]: [...current[key], value] },
+		);
 
 	return (
 		<div className="flex min-h-[calc(100vh-320px)] flex-col gap-6">
@@ -141,7 +244,7 @@ export function CompanyLeadManagementTab() {
 				<div className="grid grid-cols-1 gap-x-8 gap-y-6 lg:grid-cols-2">
 					<LeadField
 						labelKey={localizationConstants.companyLeadsPhone}
-						onAdd={() =>
+						onAddRow={() =>
 							setState((current) => ({
 								...current,
 								phones: [...current.phones, ""],
@@ -174,10 +277,13 @@ export function CompanyLeadManagementTab() {
 
 					<LeadField
 						labelKey={localizationConstants.companyLeadsMail}
-						onAdd={addOptionTo("emails")}
+						addTag={{
+							onAdd: addTagTo("emails"),
+							placeholder: "name@company.se",
+						}}
 					>
 						<LeadMultiSelect
-							options={state.emails}
+							options={emailOptions}
 							selected={state.emails}
 							onToggle={(option) =>
 								setState((current) => ({
@@ -192,10 +298,9 @@ export function CompanyLeadManagementTab() {
 						labelKey={
 							localizationConstants.companyLeadsMainCategory
 						}
-						onAdd={addOptionTo("mainCategories")}
 					>
 						<LeadMultiSelect
-							options={state.mainCategories}
+							options={mainCategoryOptions}
 							selected={state.mainCategories}
 							onToggle={(option) =>
 								setState((current) => ({
@@ -210,12 +315,9 @@ export function CompanyLeadManagementTab() {
 						/>
 					</LeadField>
 
-					<LeadField
-						labelKey={localizationConstants.companyLeadsCity}
-						onAdd={addOptionTo("cities")}
-					>
+					<LeadField labelKey={localizationConstants.companyLeadsCity}>
 						<LeadMultiSelect
-							options={state.cities}
+							options={cityOptions}
 							selected={state.cities}
 							onToggle={(option) =>
 								setState((current) => ({
@@ -230,10 +332,9 @@ export function CompanyLeadManagementTab() {
 						labelKey={
 							localizationConstants.companyLeadsSubCategory
 						}
-						onAdd={addOptionTo("subCategories")}
 					>
 						<LeadMultiSelect
-							options={state.subCategories}
+							options={subCategoryOptions}
 							selected={state.subCategories}
 							onToggle={(option) =>
 								setState((current) => ({
@@ -250,7 +351,10 @@ export function CompanyLeadManagementTab() {
 
 					<LeadField
 						labelKey={localizationConstants.companyLeadsDistrict}
-						onAdd={addOptionTo("districts")}
+						addTag={{
+							onAdd: addTagTo("districts"),
+							placeholder: "Södermalm",
+						}}
 					>
 						<LeadMultiSelect
 							options={state.districts}
