@@ -10483,7 +10483,108 @@ export type ForecastDashboardTranslation = {
 	forecastCustomReportsSheetName: string;
 };
 
-export type Translation = DocumentWorkflowsTranslation & HeaderTranslation &
+export type PersonnelEquipmentTranslation = {
+	personalkortTitle: string;
+	equipmentAndVehiclesTab: string;
+	personalkortTabInformation: string;
+	personalkortTabCompetence: string;
+	personalkortTabEquipmentVehicles: string;
+	personalkortTabWorktime: string;
+	personalkortTabSalary: string;
+	personalkortTabHealth: string;
+	personalkortTabPersonalProcess: string;
+	personalkortTabCases: string;
+	personalkortTabDocuments: string;
+
+	cardWorkToolsTitle: string;
+	cardWorkClothesTitle: string;
+	cardKeysCardsTitle: string;
+	cardVehiclesTitle: string;
+	colObject: string;
+	colDesignation: string;
+	colMarkingId: string;
+	colVehicle: string;
+	colRegNo: string;
+	clothesShoes: string;
+	clothesJacket: string;
+	clothesSweater: string;
+	clothesPants: string;
+	clothesHelmet: string;
+	ggrPerYearUnit: string;
+
+	btnEditCard: string;
+	btnSaveCard: string;
+	btnCancelCard: string;
+	btnDeleteCardItem: string;
+	btnAddCardItem: string;
+	btnBackToPersonnelOverview: string;
+	modalEditWorkToolsTitle: string;
+	modalEditClothesTitle: string;
+	modalEditKeysCardsTitle: string;
+	modalEditVehicleTitle: string;
+	toastEquipmentUpdated: string;
+	equipmentCategoryFilterAll: string;
+	equipmentCategoryWorkTools: string;
+	equipmentCategoryClothes: string;
+	equipmentCategoryKeysCards: string;
+	equipmentCategoryVehicles: string;
+
+	equipmentInventoryTitle: string;
+	equipmentInventorySubtitle: string;
+	tabCompanyInventory: string;
+	tabEmployeeEquipment: string;
+	searchEquipmentPlaceholder: string;
+	btnAddEquipment: string;
+	colAssetNameModel: string;
+	colCategory: string;
+	colIdRegNumber: string;
+	colAssignedTo: string;
+	colLastInspection: string;
+	colNextInspection: string;
+	colDepartment: string;
+	statusActiveInUse: string;
+	statusInStock: string;
+	statusMaintenance: string;
+	statusOutOfService: string;
+	statusOverdueBadge: string;
+	categoryVehicle: string;
+	categoryIT: string;
+	categoryPowerTools: string;
+	categoryClothes: string;
+	categoryKeysCards: string;
+	categorySafety: string;
+	filterCategoryLabel: string;
+	filterCategoryAll: string;
+	filterStatusAll: string;
+	filterDepartmentAll: string;
+	unassignedLabel: string;
+	viewHistoryBtn: string;
+	modalAddAssetTitle: string;
+	modalEditAssetTitle: string;
+	modalAssetHistoryTitle: string;
+	confirmDeleteAssetTitle: string;
+	confirmDeleteAssetDesc: string;
+	toastAssetSaved: string;
+	toastAssetDeleted: string;
+	noAssetsFound: string;
+	fieldAssetName: string;
+	fieldAssetCategory: string;
+	fieldAssetIdNumber: string;
+	fieldAssignedEmployee: string;
+	fieldAssetStatus: string;
+	fieldLastInspectionDate: string;
+	fieldNextInspectionDate: string;
+	fieldAssetDepartment: string;
+	fieldAssetNotes: string;
+	historyDateLabel: string;
+	historyTypeLabel: string;
+	historyDescLabel: string;
+	historyUserLabel: string;
+	noHistoryLogsFound: string;
+};
+
+export type Translation = DocumentWorkflowsTranslation &
+	HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
 	AuthTranslation &
@@ -10510,6 +10611,7 @@ export type Translation = DocumentWorkflowsTranslation & HeaderTranslation &
 	OrderProtocolTranslation &
 	PersonnelOverviewTranslation &
 	CreateEmployeeTranslation &
+	PersonnelEquipmentTranslation &
 	AccountLifecycleTranslation &
 	CertificatesTranslation &
 	EconomyBudgetTranslation &
@@ -10544,6 +10646,7 @@ for (const key in sv) {
 }
 
 export default localizationConstants;
+
 
 
 
