@@ -24,6 +24,7 @@ export interface MultiFileUploadFieldProps {
 	onUpload?: () => void;
 	accept?: string;
 	isUploading?: boolean;
+	hasPendingUploads?: boolean;
 	buttonLabel?: TranslationKeys;
 	placeholder?: TranslationKeys;
 	className?: string;
@@ -43,6 +44,7 @@ export function MultiFileUploadField({
 	onUpload,
 	accept = ".png,.jpg,.jpeg,.pdf",
 	isUploading = false,
+	hasPendingUploads = false,
 	buttonLabel = localizationConstants.agreementUpload,
 	placeholder = localizationConstants.agreementNoFile,
 	className,
@@ -60,7 +62,7 @@ export function MultiFileUploadField({
 	};
 
 	const handleAction = () => {
-		if (pendingFiles.length > 0 && onUpload) {
+		if ((pendingFiles.length > 0 || hasPendingUploads) && onUpload) {
 			onUpload();
 			return;
 		}
@@ -68,13 +70,14 @@ export function MultiFileUploadField({
 	};
 
 	return (
-		<div className={cn("flex items-center gap-3", className)}>
+		<div className={cn("flex min-w-0 flex-col items-stretch gap-3 sm:flex-row sm:items-center", className)}>
 			<button
 				type="button"
 				onClick={() => inputRef.current?.click()}
-				className="flex flex-1 cursor-pointer items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-left focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none"
+				disabled={isUploading}
+				className="flex min-w-0 flex-1 cursor-pointer items-center justify-between rounded-md border border-slate-200 bg-white px-3 py-2 text-left focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none"
 			>
-				<span className="flex flex-1 flex-wrap items-center gap-2">
+				<span className="flex min-w-0 flex-1 flex-wrap items-center gap-2">
 					{pendingFiles.length === 0 ? (
 						<span className="text-sm text-slate-400">
 							<Translate text={placeholder} />
@@ -83,9 +86,9 @@ export function MultiFileUploadField({
 						pendingFiles.map((pending) => (
 							<span
 								key={pending.name}
-								className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-700"
+								className="inline-flex min-w-0 max-w-full items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2 py-1 text-sm text-slate-700"
 							>
-								{pending.name}
+								<span className="min-w-0 break-all">{pending.name}</span>
 								<span
 									role="button"
 									tabIndex={0}

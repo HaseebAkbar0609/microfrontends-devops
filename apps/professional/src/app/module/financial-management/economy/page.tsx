@@ -1,5 +1,10 @@
-import { EconomySectionHub } from "@/features/financial-management";
+import { EconomyDashboard } from "@/features/financial-management";
 
 export default function EconomyPage() {
-	return <EconomySectionHub />;
+	return (
+		<div className="flex-1 px-6 pt-2 pb-8">
+			<EconomyDashboard />
+		</div>
+	);
 }
+

@@ -19,12 +19,14 @@ export function createEconomyHealthWidgets(
 		financialHealthScore: {
 			title: localizationConstants.financialHealthScoreTitle,
 			icon: Activity,
+			isLocked: true,
 		},
 
 		// 2) Ekonomiöversikt
 		economyOverview: {
 			title: localizationConstants.economyOverviewWidgetTitle,
 			icon: Coins,
+			isLocked: true,
 		},
 
 		// 3) KPI Dashboard

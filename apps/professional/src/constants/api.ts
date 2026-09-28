@@ -3,7 +3,7 @@
 // "/api/v1" — the backend's auth-exclusion allowlist matches paths by exact
 // string, so "//api/v1/..." silently falls through to "auth required" for
 // otherwise-public endpoints instead of erroring loudly.
-const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
+export const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
 export const BASE_API_VERSION = `${BASE_URL}/api/v1`;
 
 const PROFESSIONALS_BASE_PATH = "/professionals";
@@ -214,6 +214,21 @@ export const API_PATH = {
 		TEMPLATE_DETAILS: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/templates/${id}`,
 		SAVE_TEMPLATE: `${PROFESSIONALS_BASE_PATH}/calculations/cost-calculation`,
 		SUPPLIER_PRICE_LISTS: `${PROFESSIONALS_BASE_PATH}/calculations/supplier-price-lists`,
+		QA: {
+			BASE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa`,
+			LIST: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa`,
+			CREATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa`,
+			GET: (id: string, qaId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa/${qaId}`,
+			UPDATE: (id: string, qaId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa/${qaId}`,
+			DELETE: (id: string, qaId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa/${qaId}`,
+			REPLY: (id: string, qaId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa/${qaId}/replies`,
+		},
+		INQUIRIES: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries`,
+		INQUIRY_DETAILS: (id: string, requestId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}`,
+		INQUIRY_CREATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries`,
+		INQUIRY_SUPPLIER_QUOTE: (id: string, requestId: string, supplierId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}/suppliers/${supplierId}`,
+		INQUIRY_CONVERT: (id: string, requestId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}/convert`,
+		INQUIRY_DECLINE: (id: string, requestId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}/decline`,
 	},
 	CALCULATION: {
 		PRO: `${PROFESSIONALS_BASE_PATH}/calculation/pro`,

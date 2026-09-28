@@ -2,7 +2,7 @@ import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError, ApiResponse } from "@/types/api";
 import { B2BSeeOfferDetail } from "@/features/b2b/types/seeOffer";
-import { getMockSeeOfferDetail } from "@/features/b2b/constants/seeOfferMock";
+import { b2bMutationErrorCode, optionalApiText } from "./projectMarket";
 
 const B2B_BASE_PATH = "/professionals/b2b";
 
@@ -23,17 +23,17 @@ export const b2bOfferQAMessageSchema = z.object({
   id: z.string(),
   sender: z.string(),
   role: z.string(),
-  badge: z.string().optional(),
-  company: z.string().optional(),
-  replyFrom: z.string().optional(),
-  replyText: z.string().optional(),
+  badge: optionalApiText,
+  company: optionalApiText,
+  replyFrom: optionalApiText,
+  replyText: optionalApiText,
   message: z.string(),
   date: z.string(),
-  avatar: z.string().optional(),
-  status: z.string().optional(),
-  answerUser: z.string().optional(),
-  answerText: z.string().optional(),
-  answerDate: z.string().optional(),
+  avatar: optionalApiText,
+  status: optionalApiText,
+  answerUser: optionalApiText,
+  answerText: optionalApiText,
+  answerDate: optionalApiText,
 });
 
 export const b2bSeeOfferDetailSchema = z.object({
@@ -49,21 +49,21 @@ export const b2bSeeOfferDetailSchema = z.object({
   company: z.object({
     id: z.string(),
     name: z.string(),
-    email: z.string(),
-    telefon: z.string(),
-    adress: z.string(),
-    orgNr: z.string(),
+    email: optionalApiText.pipe(z.string().default("")).catch(""),
+    telefon: optionalApiText.pipe(z.string().default("")).catch(""),
+    adress: optionalApiText.pipe(z.string().default("")).catch(""),
+    orgNr: optionalApiText.pipe(z.string().default("")).catch(""),
   }),
   contactPerson: z.object({
-    name: z.string(),
-    email: z.string(),
-    mobil: z.string(),
+    name: optionalApiText.pipe(z.string().default("")).catch(""),
+    email: optionalApiText.pipe(z.string().default("")).catch(""),
+    mobil: optionalApiText.pipe(z.string().default("")).catch(""),
   }),
   offert: z.object({
-    arbete: z.string(),
-    material: z.string(),
+    arbete: optionalApiText.pipe(z.string().default("")).catch(""),
+    material: optionalApiText.pipe(z.string().default("")).catch(""),
     totalOffert: z.number().default(0),
-    betalningsvillkor: z.string(),
+    betalningsvillkor: optionalApiText.pipe(z.string().default("")).catch(""),
   }),
   documents: z.object({
     images: z.array(b2bOfferImageSchema).default([]),
@@ -75,7 +75,6 @@ export const b2bSeeOfferDetailSchema = z.object({
 
 /**
  * Fetch B2B Offer Detail for See Offer view.
- * Gracefully falls back to mock data when backend endpoint is not ready.
  */
 export async function getB2BOfferDetailAction(
   _projectId: string,
@@ -90,9 +89,14 @@ export async function getB2BOfferDetailAction(
     if (parsed.success) {
       return { success: true, data: parsed.data, error: null };
     }
-    return { success: true, data: getMockSeeOfferDetail(_projectId, _offerId), error: null };
-  } catch (_error: unknown) {
-    return { success: true, data: getMockSeeOfferDetail(_projectId, _offerId), error: null };
+    return { success: false, data: null, error: "Unexpected response from server" };
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    return {
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to load offer",
+    };
   }
 }
 
@@ -116,17 +120,11 @@ export async function acceptB2BOfferAction(
     };
   } catch (error: unknown) {
     const apiError = error as ApiError;
-    const errorMessage = apiError.response?.data?.message;
-    if (process.env.NODE_ENV === "development") {
-      console.warn("B2B Accept Offer API fallback:", errorMessage);
-    }
     return {
-      success: true,
-      data: {
-        success: true,
-        message: "Offer accepted successfully",
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to accept offer",
+      errorCode: b2bMutationErrorCode(error),
     };
   }
 }
@@ -151,17 +149,11 @@ export async function declineB2BOfferAction(
     };
   } catch (error: unknown) {
     const apiError = error as ApiError;
-    const errorMessage = apiError.response?.data?.message;
-    if (process.env.NODE_ENV === "development") {
-      console.warn("B2B Decline Offer API fallback:", errorMessage);
-    }
     return {
-      success: true,
-      data: {
-        success: true,
-        message: "Offer declined successfully",
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to decline offer",
+      errorCode: b2bMutationErrorCode(error),
     };
   }
 }
