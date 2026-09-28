@@ -9626,6 +9626,11 @@ const enCases: CasesTranslation = {
 	casesActivityCaseCreated: "Case created",
 	casesActivityMessageAdded: "New message added",
 	casesActivityFileUploaded: "File uploaded",
+	casesImportButton: "Import cases",
+	casesAttachmentTypeError: "That file type is not supported.",
+	casesAttachmentSizeError: "The file is too large. At most 10 MB.",
+	casesAttachmentRemove: "Remove {{name}}",
+	casesAttachmentNotHeld: "The file is no longer held in this session.",
 };
 
 export const enOrderDagbok: OrderDagbokTranslation = {

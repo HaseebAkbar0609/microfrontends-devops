@@ -9592,7 +9592,7 @@ const svCases: CasesTranslation = {
 	casesFieldYourMessage: "ditt meddelande",
 	casesPlaceholderWriteHere: "skriv här",
 	casesConversationReplyPlaceholder: "Min laptop startar inte. Den visar bara en svart skärm när jag trycker på strömknappen.",
-	casesBtnAttach: "Attach",
+	casesBtnAttach: "Bifoga",
 	casesBtnSend: "Skicka",
 	casesBtnCancel: "Avbryt",
 	casesBtnSave: "Spara",
@@ -9647,6 +9647,11 @@ const svCases: CasesTranslation = {
 	casesActivityCaseCreated: "Ärende skapades",
 	casesActivityMessageAdded: "Nytt meddelande lades till",
 	casesActivityFileUploaded: "Fil laddades upp",
+	casesImportButton: "Importera fall",
+	casesAttachmentTypeError: "Filtypen stöds inte.",
+	casesAttachmentSizeError: "Filen är för stor. Högst 10 MB.",
+	casesAttachmentRemove: "Ta bort {{name}}",
+	casesAttachmentNotHeld: "Filen finns inte kvar i den här sessionen.",
 };
 
 export const svOrderDagbok: OrderDagbokTranslation = {

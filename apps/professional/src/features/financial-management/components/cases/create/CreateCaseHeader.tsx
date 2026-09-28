@@ -3,16 +3,19 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { CASES_BASE_ROUTE } from "../../../constants/cases.constants";
+import { casesRoutes } from "../../../constants/cases.constants";
 
 interface CreateCaseHeaderProps {
 	title: string;
 	onBack?: () => void;
+	/** Which module the screen is mounted in; the way back is built from it. */
+	basePath?: string;
 }
 
 export function CreateCaseHeader({
 	title,
 	onBack,
+	basePath,
 }: CreateCaseHeaderProps) {
 	const router = useRouter();
 
@@ -20,7 +23,7 @@ export function CreateCaseHeader({
 		if (onBack) {
 			onBack();
 		} else {
-			router.push(CASES_BASE_ROUTE);
+			router.push(casesRoutes(basePath).list);
 		}
 	};
 

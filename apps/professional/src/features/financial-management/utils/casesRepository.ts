@@ -5,8 +5,11 @@ import type {
 	CaseDocument,
 	CaseStatus,
 } from "../types/cases.types";
+import { revokeUrls } from "@/features/project/shared/recordFiles";
+import { readEncodedSession, writeEncodedSession } from "@/lib/encodedSession";
 import {
 	STORAGE_KEY_CASES,
+	STORAGE_KEY_CASE_THREADS,
 	SEED_CASES,
 	DEFAULT_CREATOR_ROLE,
 } from "../constants/cases.constants";
@@ -17,6 +20,37 @@ interface InMemoryCaseData {
 	description: string;
 	messages: CaseMessage[];
 	createdBy: string;
+}
+
+/**
+ * The same three fields as they are kept for the tab: encoded in
+ * `sessionStorage`, so a reply survives a reload.
+ *
+ * An attachment's `blob:` URL is dropped on the way in — it would be dead by
+ * the time anything read it back, and a chip without a URL says so rather than
+ * offering a broken link.
+ */
+function threadSnapshot(store: Map<string, InMemoryCaseData>): Record<string, InMemoryCaseData> {
+	const snapshot: Record<string, InMemoryCaseData> = {};
+	for (const [id, data] of store) {
+		snapshot[id] = {
+			description: data.description,
+			createdBy: data.createdBy,
+			messages: data.messages.map((message) =>
+				message.attachments
+					? {
+							...message,
+							attachments: message.attachments.map((file) => ({
+								id: file.id,
+								name: file.name,
+								size: file.size,
+							})),
+						}
+					: message,
+			),
+		};
+	}
+	return snapshot;
 }
 
 class CasesRepository {
@@ -98,6 +132,20 @@ class CasesRepository {
 			});
 		}
 
+		/* What this tab wrote earlier outranks the seed, so a reply written
+		   before a reload is still there after it. */
+		const stored = readEncodedSession<Record<string, InMemoryCaseData>>(STORAGE_KEY_CASE_THREADS);
+		if (stored) {
+			for (const [id, data] of Object.entries(stored)) {
+				if (!data || !Array.isArray(data.messages)) continue;
+				this.inMemoryStore.set(id, {
+					description: typeof data.description === "string" ? data.description : "",
+					createdBy: typeof data.createdBy === "string" ? data.createdBy : "",
+					messages: data.messages,
+				});
+			}
+		}
+
 		if (typeof window !== "undefined") {
 			try {
 				[
@@ -139,6 +187,10 @@ class CasesRepository {
 				createdBy: item.createdBy,
 			});
 		}
+
+		/* The record's own fields go to localStorage below; the three that name
+		   people or carry their words go to the session store, encoded. */
+		writeEncodedSession(STORAGE_KEY_CASE_THREADS, threadSnapshot(this.inMemoryStore));
 
 		if (typeof window !== "undefined") {
 			try {
@@ -300,6 +352,11 @@ class CasesRepository {
 	public delete(id: string): boolean {
 		this.init();
 		const prevLen = this.items.length;
+		/* The files its replies carried go with it. */
+		const target = this.items.find((c) => c.id === id);
+		if (target) {
+			for (const message of target.messages || []) revokeUrls(message.attachments ?? []);
+		}
 		this.items = this.items.filter((c) => c.id !== id);
 		this.inMemoryStore.delete(id);
 		if (this.items.length !== prevLen) {

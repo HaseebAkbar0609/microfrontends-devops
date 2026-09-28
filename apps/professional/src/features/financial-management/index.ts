@@ -152,6 +152,8 @@ export * from "./components/cases";
 export * from "./types/cases.types";
 export * from "./constants/cases.constants";
 export * from "./utils/casesRepository";
+export * from "./hooks/useCasesList";
+export * from "./utils/cases";
 export * from "./hooks/useCases";
 export * from "./components/customers";
 export * from "./types/createCustomer.types";

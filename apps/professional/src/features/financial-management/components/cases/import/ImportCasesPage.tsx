@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import { showToast } from "@/lib/toast";
 import { casesRepository } from "../../../utils/casesRepository";
-import { CASES_BASE_ROUTE } from "../../../constants/cases.constants";
+import { casesRoutes } from "../../../constants/cases.constants";
 
 interface ParsedCaseData {
 	columns: string[];
@@ -30,8 +30,14 @@ const CASE_MAPPING_FIELDS = [
 	{ key: "date", label: "Datum (ÅÅÅÅ-MM-DD)", required: false },
 ];
 
-export function ImportCasesPage() {
+export interface ImportCasesPageProps {
+	/** Which module the screen is mounted in; the way back is built from it. */
+	basePath?: string;
+}
+
+export function ImportCasesPage({ basePath }: ImportCasesPageProps = {}) {
 	const router = useRouter();
+	const routes = casesRoutes(basePath);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -121,7 +127,7 @@ export function ImportCasesPage() {
 			if (result.successCount > 0) {
 				showToast("success", `${result.successCount} ärenden har importerats!`);
 				setTimeout(() => {
-					router.push(CASES_BASE_ROUTE);
+					router.push(routes.list);
 				}, 1000);
 			} else {
 				showToast("error", "Inga ärenden kunde importeras. Kontrollera kolumnmatchningen.");
@@ -166,7 +172,7 @@ export function ImportCasesPage() {
 					type="button"
 					variant="ghost"
 					size="icon"
-					onClick={() => router.push(CASES_BASE_ROUTE)}
+					onClick={() => router.push(routes.list)}
 					className="h-8 w-8 shrink-0 cursor-pointer"
 				>
 					<ArrowLeft className="h-5 w-5 text-slate-700" />
@@ -376,7 +382,7 @@ export function ImportCasesPage() {
 				<Button
 					type="button"
 					variant="outline"
-					onClick={() => router.push(CASES_BASE_ROUTE)}
+					onClick={() => router.push(routes.list)}
 					className="border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
 				>
 					Avbryt

@@ -6,10 +6,7 @@ import { useTranslation } from "react-i18next";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useCases } from "../../../hooks/useCases";
-import {
-	CASES_BASE_ROUTE,
-	CREATE_CASE_ROUTE,
-} from "../../../constants/cases.constants";
+import { casesRoutes } from "../../../constants/cases.constants";
 import type { CaseStatus } from "../../../types/cases.types";
 import { CaseDetailHeader } from "./CaseDetailHeader";
 import { CaseDetailTabs, type CaseDetailTab } from "./CaseDetailTabs";
@@ -18,10 +15,13 @@ import { CaseDocumentsView } from "./CaseDocumentsView";
 
 interface CaseDetailPageProps {
 	id: string;
+	/** Which module the case is being read in; every link is built from it. */
+	basePath?: string;
 }
 
-export function CaseDetailPage({ id }: CaseDetailPageProps) {
+export function CaseDetailPage({ id, basePath }: CaseDetailPageProps) {
 	const router = useRouter();
+	const routes = casesRoutes(basePath);
 	const searchParams = useSearchParams();
 	const tabParam = searchParams.get("tab") as CaseDetailTab | null;
 	const { t } = useTranslation();
@@ -58,7 +58,7 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 				</p>
 				<button
 					type="button"
-					onClick={() => router.push(CASES_BASE_ROUTE)}
+					onClick={() => router.push(routes.list)}
 					className="h-8 px-4 bg-slate-900 text-white rounded-lg text-xs cursor-pointer hover:bg-slate-800 transition-colors"
 				>
 					{t(localizationConstants.casesBtnBackToOverview)}
@@ -78,6 +78,7 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 			<CaseDetailHeader
 				caseItem={caseItem}
 				onStatusChange={handleStatusChange}
+				basePath={basePath}
 			/>
 
 			{/* Sub Tabs matching Figma Image 5: Grundläggande info | Dokuments */}
@@ -87,7 +88,7 @@ export function CaseDetailPage({ id }: CaseDetailPageProps) {
 			{activeTab === "grundlaggande_info" && (
 				<CaseBasicInfoView
 					caseItem={caseItem}
-					onEdit={() => router.push(`${CREATE_CASE_ROUTE}?edit=${caseItem.id}`)}
+					onEdit={() => router.push(routes.edit(caseItem.id))}
 				/>
 			)}
 
