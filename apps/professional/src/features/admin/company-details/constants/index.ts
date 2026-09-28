@@ -36,3 +36,13 @@ export const LOGOTYPE_ALLOWED_TYPES = [
 ] as const;
 
 export const LOGOTYPE_ACCEPT = LOGOTYPE_ALLOWED_TYPES.join(",");
+
+export const PRESENTATION_ALLOWED_TYPES = [
+	".ppt",
+	".pptx",
+	".doc",
+	".docx",
+	".pdf",
+];
+
+export const REFERENCE_ALLOWED_TYPES = [".png", ".jpg", ".jpeg", ".pdf"];

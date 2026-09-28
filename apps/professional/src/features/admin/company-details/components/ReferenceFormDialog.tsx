@@ -15,12 +15,12 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import {
-	CompanyReference,
-	REFERENCE_ALLOWED_TYPES,
-} from "../constants/referencesMock";
+import { REFERENCE_ALLOWED_TYPES } from "../constants";
+import { CompanyReference } from "../types";
+import { uploadCompanyMedia } from "../api/companyInformation.api";
 import {
 	CompanyReferenceValues,
 	companyReferenceSchema,
@@ -38,7 +38,8 @@ interface ReferenceFormDialogProps {
 	open: boolean;
 	editingReference: CompanyReference | null;
 	onClose: () => void;
-	onSave: (values: CompanyReferenceValues, fileName: string) => void;
+	onSave: (values: CompanyReferenceValues & { fileMediaId: string | null }) => void;
+	isSaving?: boolean;
 }
 
 const ReferenceFormDialog = ({
@@ -46,11 +47,14 @@ const ReferenceFormDialog = ({
 	editingReference,
 	onClose,
 	onSave,
+	isSaving,
 }: ReferenceFormDialogProps) => {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const fileInputId = useId();
 	const [fileName, setFileName] = useState("");
+	const [fileMediaId, setFileMediaId] = useState<string | null>(null);
+	const [uploading, setUploading] = useState(false);
 	const form = useForm<CompanyReferenceValues>({
 		resolver: zodResolver(companyReferenceSchema),
 		defaultValues: EMPTY_VALUES,
@@ -69,12 +73,27 @@ const ReferenceFormDialog = ({
 					}
 				: EMPTY_VALUES,
 		);
-		setFileName(editingReference?.fileName ?? "");
+		setFileName(editingReference?.file?.fileName ?? "");
+		setFileMediaId(editingReference?.file?.mediaId ?? null);
 	}, [open, editingReference, form]);
 
+	const handleFileChange = async (file: File | undefined) => {
+		if (!file) return;
+		setFileName(file.name);
+		setUploading(true);
+		try {
+			const uploaded = await uploadCompanyMedia(file);
+			setFileMediaId(uploaded.mediaId);
+		} catch (_error) {
+			showToast("error", t(localizationConstants.profileUpdateFailed));
+			setFileName(editingReference?.file?.fileName ?? "");
+		} finally {
+			setUploading(false);
+		}
+	};
+
 	const handleSave = form.handleSubmit((values) => {
-		onSave(values, fileName);
-		onClose();
+		onSave({ ...values, fileMediaId });
 	});
 
 	return (
@@ -241,20 +260,23 @@ const ReferenceFormDialog = ({
 										)}
 										className="hidden"
 										onChange={(event) => {
-											setFileName(
-												event.target.files?.[0]
-													?.name ?? "",
+											void handleFileChange(
+												event.target.files?.[0],
 											);
 											event.target.value = "";
 										}}
 									/>
 									<span className="text-slate-500">
-										{fileName || (
-											<Translate
-												text={
-													localizationConstants.noFileChosen
-												}
-											/>
+										{uploading ? (
+											"..."
+										) : (
+											fileName || (
+												<Translate
+													text={
+														localizationConstants.noFileChosen
+													}
+												/>
+											)
 										)}
 									</span>
 								</label>
@@ -263,6 +285,7 @@ const ReferenceFormDialog = ({
 									onClick={() =>
 										fileInputRef.current?.click()
 									}
+									disabled={uploading}
 									className="h-11 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-900/90"
 								>
 									<Translate
@@ -290,6 +313,7 @@ const ReferenceFormDialog = ({
 							</Button>
 							<Button
 								type="submit"
+								disabled={uploading || isSaving}
 								className="h-11 gap-2 rounded-md bg-slate-900 px-6 text-sm font-medium text-white hover:bg-slate-900/90"
 							>
 								{editingReference ? (

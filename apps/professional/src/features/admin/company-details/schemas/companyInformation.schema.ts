@@ -5,7 +5,7 @@ const optionalEmail = z.string().email().optional().or(z.literal(""));
 
 export const companyInformationSchema = z.object({
 	companyLogotype: z.any().nullable().optional(),
-	companyName: optionalString,
+	companyName: z.string().min(1),
 	orgNumber: optionalString,
 	vatNumber: optionalString,
 	sniCode: optionalString,
