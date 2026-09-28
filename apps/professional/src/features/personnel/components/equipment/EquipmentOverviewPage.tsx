@@ -1,27 +1,35 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import Link from "next/link";
+import { Clock, Layers, UserPlus, Users, Wrench } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import {
+	PERSONNEL_NAV_ITEMS,
+	PERSONNEL_MODULE_BASE_URL,
+	personnelBreadcrumbs,
+} from "../../constants/personnelNav.config";
 import { useCompanyEquipment } from "../../hooks/useCompanyEquipment";
 import { EquipmentToolbar } from "./EquipmentToolbar";
 import { EquipmentTable } from "./EquipmentTable";
 import { EquipmentTablePagination } from "./EquipmentTablePagination";
-import { EquipmentCardsGrid } from "./EquipmentCardsGrid";
-import { PersonalkortHeader } from "./PersonalkortHeader";
 import { AddEditAssetModal } from "./modals/AddEditAssetModal";
 import { AssetHistoryModal } from "./modals/AssetHistoryModal";
 import { DeleteAssetDialog } from "./modals/DeleteAssetDialog";
-import { personnelBreadcrumbs } from "../../constants/personnelNav.config";
-import { CompanyAssetItem, PersonalkortTabType } from "../../types/equipment.types";
+import { CompanyAssetItem } from "../../types/equipment.types";
+
+const TAB_ICON_MAP: Record<string, React.ElementType> = {
+	dashboard: Layers,
+	overview: Users,
+	equipment: Wrench,
+	create: UserPlus,
+	worktime: Clock,
+};
 
 export function EquipmentOverviewPage() {
-	const [activeView, setActiveView] = useState<"inventory" | "personalkort">("inventory");
-	const [personalkortTab, setPersonalkortTab] = useState<PersonalkortTabType>("utrustning_fordon");
-	const [selectedEmployeeName] = useState<string>("Anna Svensson");
-
 	const {
 		paginatedAssets,
 		searchTerm,
@@ -64,92 +72,59 @@ export function EquipmentOverviewPage() {
 			/>
 
 			{/* Main Content Area */}
-			<div className="flex flex-1 flex-col px-6 py-4 space-y-6">
-				{/* Top View Selector Tabs (Företagsinventarier vs Personalkort) */}
-				<div className="flex items-center justify-between border-b border-slate-200 pb-3">
-					<Tabs
-						value={activeView}
-						onValueChange={(val) => setActiveView(val as "inventory" | "personalkort")}
-					>
-						<TabsList className="bg-slate-200/70 p-0.5 rounded-lg">
-							<TabsTrigger
-								value="inventory"
-								className="text-xs font-medium px-4 py-1.5 rounded-md cursor-pointer data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs"
-							>
-								<Translate text={localizationConstants.tabCompanyInventory} />
-							</TabsTrigger>
-							<TabsTrigger
-								value="personalkort"
-								className="text-xs font-medium px-4 py-1.5 rounded-md cursor-pointer data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-xs"
-							>
-								<Translate text={localizationConstants.tabEmployeeEquipment} />
-							</TabsTrigger>
+			<div className="flex flex-1 flex-col px-6 pt-2 pb-8 overflow-y-auto space-y-4">
+				{/* Level 2 Sub-Module Navigation Tabs — same pattern as Dashboard & Overview pages */}
+				<div className="flex items-center border-b border-slate-200 bg-white px-4 rounded-t-lg h-[44px] shadow-xs">
+					<Tabs defaultValue="equipment" className="w-full">
+						<TabsList variant="line" className="h-[36px] overflow-x-auto">
+							{PERSONNEL_NAV_ITEMS.map((item) => {
+								const Icon = TAB_ICON_MAP[item.id] || Users;
+								return (
+									<TabsTrigger key={item.id} value={item.id} className="cursor-pointer gap-1.5" asChild>
+										<Link href={item.href || PERSONNEL_MODULE_BASE_URL}>
+											<Icon className="w-3.5 h-3.5 shrink-0" />
+											<Translate text={item.labelKey || ""} />
+										</Link>
+									</TabsTrigger>
+								);
+							})}
 						</TabsList>
 					</Tabs>
 				</div>
 
-				{/* View 1: Company-Wide Inventory Table View */}
-				{activeView === "inventory" && (
-					<div className="space-y-4">
-						<EquipmentToolbar
-							searchTerm={searchTerm}
-							onSearchChange={setSearchTerm}
-							categoryFilter={categoryFilter}
-							onCategoryChange={setCategoryFilter}
-							statusFilter={statusFilter}
-							onStatusChange={setStatusFilter}
-							departmentFilter={departmentFilter}
-							onDepartmentChange={setDepartmentFilter}
-							onResetFilters={handleResetFilters}
-							onAddAsset={() => setIsAddAssetModalOpen(true)}
-						/>
+				{/* Company-Wide Equipment & Vehicles Inventory Table */}
+				<div className="flex-1 flex flex-col bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
+					<EquipmentToolbar
+						searchTerm={searchTerm}
+						onSearchChange={setSearchTerm}
+						categoryFilter={categoryFilter}
+						onCategoryChange={setCategoryFilter}
+						statusFilter={statusFilter}
+						onStatusChange={setStatusFilter}
+						departmentFilter={departmentFilter}
+						onDepartmentChange={setDepartmentFilter}
+						onResetFilters={handleResetFilters}
+						onAddAsset={() => setIsAddAssetModalOpen(true)}
+					/>
 
-						<EquipmentTable
-							assets={paginatedAssets}
-							sortField={sortField}
-							sortOrder={sortOrder}
-							onSort={handleSort}
-							onViewHistory={(asset: CompanyAssetItem) => setSelectedAssetForHistory(asset)}
-							onEdit={(asset: CompanyAssetItem) => setAssetToEdit(asset)}
-							onDelete={(asset: CompanyAssetItem) => setAssetToDelete(asset)}
-						/>
+					<EquipmentTable
+						assets={paginatedAssets}
+						sortField={sortField}
+						sortOrder={sortOrder}
+						onSort={handleSort}
+						onViewHistory={(asset: CompanyAssetItem) => setSelectedAssetForHistory(asset)}
+						onEdit={(asset: CompanyAssetItem) => setAssetToEdit(asset)}
+						onDelete={(asset: CompanyAssetItem) => setAssetToDelete(asset)}
+					/>
 
-						<EquipmentTablePagination
-							currentPage={currentPage}
-							totalPages={totalPages}
-							pageSize={pageSize}
-							onPageChange={setCurrentPage}
-							onPageSizeChange={setPageSize}
-						/>
-					</div>
-				)}
-
-				{/* View 2: Personalkort (Employee Card) Equipment & Vehicles View (1:1 Figma Design) */}
-				{activeView === "personalkort" && (
-					<div className="space-y-6">
-						<PersonalkortHeader
-							employeeName={selectedEmployeeName}
-							activeTab={personalkortTab}
-							onTabChange={setPersonalkortTab}
-							onBack={() => setActiveView("inventory")}
-						/>
-
-						{personalkortTab === "utrustning_fordon" && (
-							<EquipmentCardsGrid
-								employeeName={selectedEmployeeName}
-							/>
-						)}
-
-						{personalkortTab !== "utrustning_fordon" && (
-							<div className="rounded-xl border border-slate-200 bg-white p-8 text-center text-slate-500 shadow-xs">
-								<p className="text-sm">
-									<Translate text={localizationConstants.tabEmployeeEquipment} /> —{" "}
-									<span className="font-semibold text-slate-700">{personalkortTab}</span>
-								</p>
-							</div>
-						)}
-					</div>
-				)}
+					<EquipmentTablePagination
+						currentPage={currentPage}
+						totalPages={totalPages}
+						pageSize={pageSize}
+						onPageChange={setCurrentPage}
+						onPageSizeChange={setPageSize}
+					/>
+				</div>
 			</div>
 
 			{/* Asset Creation & Editing Modal */}
