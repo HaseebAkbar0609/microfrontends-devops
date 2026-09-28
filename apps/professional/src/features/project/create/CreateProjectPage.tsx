@@ -43,9 +43,10 @@ export function CreateProjectPage() {
 		goNext,
 		documents,
 		pendingFiles,
+		hasPendingUploads,
 		selectFiles,
 		removePendingFile,
-		commitPendingFiles,
+		uploadPendingFiles,
 		renameDocument,
 		removeDocument,
 		setContacts,
@@ -130,7 +131,9 @@ export function CreateProjectPage() {
 							pendingFiles={pendingFiles}
 							onSelectFiles={selectFiles}
 							onRemovePending={removePendingFile}
-							onUpload={commitPendingFiles}
+							onUpload={() => void uploadPendingFiles()}
+							isUploading={isSubmitting}
+							hasPendingUploads={hasPendingUploads}
 							onRename={renameDocument}
 							onRemove={removeDocument}
 						/>
@@ -165,6 +168,7 @@ export function CreateProjectPage() {
 							<Button
 								type="button"
 								onClick={() => void goNext()}
+								disabled={isSubmitting}
 								className="h-11 w-full cursor-pointer gap-2 rounded-lg bg-slate-900 px-6 text-sm font-medium text-white shadow-none hover:bg-slate-800 sm:w-auto"
 							>
 								<Translate text={localizationConstants.nextButton} />

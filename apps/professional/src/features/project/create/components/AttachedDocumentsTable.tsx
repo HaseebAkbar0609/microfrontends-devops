@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useMemo, useRef, useState } from "react";
-import { ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, FileImage } from "lucide-react";
 
 import { ConfirmActionDialog } from "@/components/dialog/ConfirmActionDialog";
 import { DocFileIcon } from "@/components/ui/DocFileIcon";
@@ -110,14 +110,14 @@ export function AttachedDocumentsTable({
 			</div>
 
 			<div className="w-full overflow-x-auto bg-white">
-				<Table className="w-full min-w-[560px]">
+				<Table className="w-full min-w-[560px] table-fixed">
 					<TableHeader>
 						<TableRow className="border-b border-slate-200 bg-white hover:bg-white">
 							{HEADERS.map(({ field, label }) => (
 								<TableHead
 									key={field}
 									aria-sort={ariaSort(field === sortField, sortOrder)}
-									className="px-4 py-3 text-sm font-medium text-slate-500"
+									className={`${field === "date" ? "w-32 " : ""}px-4 py-3 text-sm font-medium text-slate-500`}
 								>
 									<button
 										type="button"
@@ -170,13 +170,15 @@ export function AttachedDocumentsTable({
 										/>
 									</TableCell>
 									<TableCell className="px-4 py-3">
-										<div className="flex items-center gap-2">
-											{doc.fileType === "doc" ? (
+											<div className="flex min-w-0 items-center gap-2">
+												{doc.fileType === "png" || doc.fileType === "jpg" ? (
+													<FileImage className="h-8 w-6 shrink-0" aria-hidden />
+												) : doc.fileType === "doc" ? (
 												<DocFileIcon className="h-8 w-6 shrink-0" />
 											) : (
 												<PdfFileIcon className="h-8 w-6 shrink-0" />
 											)}
-											<span className="truncate text-sm text-slate-900">
+												<span className="min-w-0 whitespace-normal break-all text-sm text-slate-900">
 												{doc.fileName}
 											</span>
 										</div>
