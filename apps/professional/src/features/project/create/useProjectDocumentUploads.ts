@@ -34,5 +34,7 @@ export function useProjectDocumentUploads() {
 		}
 		return prepared;
 	}, []);
-	return { registerFile, discardFile, prepareDocuments };
+	const hasPendingUploads = (documents: ProjectDocumentItem[]) =>
+		documents.some((document) => files.current.has(document.id));
+	return { registerFile, discardFile, prepareDocuments, hasPendingUploads };
 }

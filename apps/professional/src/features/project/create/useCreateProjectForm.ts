@@ -108,7 +108,7 @@ function fileTypeOf(name: string): ProjectDocumentItem["fileType"] {
 export function useCreateProjectForm() {
 	const t = useTranslate();
 	const router = useRouter();
-	const { registerFile, discardFile, prepareDocuments } = useProjectDocumentUploads();
+	const { registerFile, discardFile, prepareDocuments, hasPendingUploads } = useProjectDocumentUploads();
 
 	const [currentStep, setCurrentStep] = useState<ProjectCreateStep>(1);
 	const [documents, setDocuments] = useState<ProjectDocumentItem[]>([]);
@@ -342,6 +342,7 @@ export function useCreateProjectForm() {
 		goNext,
 		documents,
 		pendingFiles,
+		hasPendingUploads: hasPendingUploads(documents),
 		selectFiles,
 		removePendingFile,
 		commitPendingFiles,

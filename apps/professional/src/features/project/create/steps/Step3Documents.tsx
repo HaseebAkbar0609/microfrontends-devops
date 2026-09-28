@@ -17,6 +17,7 @@ export interface Step3DocumentsProps {
 	onRename: (id: string, name: string) => void;
 	onRemove: (id: string) => void;
 	isUploading: boolean;
+	hasPendingUploads: boolean;
 }
 
 /**
@@ -35,6 +36,7 @@ export function Step3Documents({
 	onRename,
 	onRemove,
 	isUploading,
+	hasPendingUploads,
 }: Step3DocumentsProps) {
 	return (
 		<Card className="rounded-lg border border-slate-200 bg-white shadow-none">
@@ -59,6 +61,7 @@ export function Step3Documents({
 						onUpload={onUpload}
 						accept={PROJECT_CREATE_CONSTANTS.ALLOWED_FILE_TYPES}
 						isUploading={isUploading}
+						hasPendingUploads={hasPendingUploads}
 						buttonLabel={localizationConstants.orderUploadButton}
 					/>
 					<p className="text-sm text-slate-500">

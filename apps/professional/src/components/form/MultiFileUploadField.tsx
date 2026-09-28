@@ -24,6 +24,7 @@ export interface MultiFileUploadFieldProps {
 	onUpload?: () => void;
 	accept?: string;
 	isUploading?: boolean;
+	hasPendingUploads?: boolean;
 	buttonLabel?: TranslationKeys;
 	placeholder?: TranslationKeys;
 	className?: string;
@@ -43,6 +44,7 @@ export function MultiFileUploadField({
 	onUpload,
 	accept = ".png,.jpg,.jpeg,.pdf",
 	isUploading = false,
+	hasPendingUploads = false,
 	buttonLabel = localizationConstants.agreementUpload,
 	placeholder = localizationConstants.agreementNoFile,
 	className,
@@ -60,7 +62,7 @@ export function MultiFileUploadField({
 	};
 
 	const handleAction = () => {
-		if (pendingFiles.length > 0 && onUpload) {
+		if ((pendingFiles.length > 0 || hasPendingUploads) && onUpload) {
 			onUpload();
 			return;
 		}

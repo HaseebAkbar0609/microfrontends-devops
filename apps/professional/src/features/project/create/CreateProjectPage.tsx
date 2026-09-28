@@ -43,6 +43,7 @@ export function CreateProjectPage() {
 		goNext,
 		documents,
 		pendingFiles,
+		hasPendingUploads,
 		selectFiles,
 		removePendingFile,
 		uploadPendingFiles,
@@ -132,6 +133,7 @@ export function CreateProjectPage() {
 							onRemovePending={removePendingFile}
 							onUpload={() => void uploadPendingFiles()}
 							isUploading={isSubmitting}
+							hasPendingUploads={hasPendingUploads}
 							onRename={renameDocument}
 							onRemove={removeDocument}
 						/>
