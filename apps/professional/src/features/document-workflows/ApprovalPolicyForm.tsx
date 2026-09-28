@@ -42,7 +42,7 @@ export function ApprovalPolicyForm({ context, busy, run }: { context: WorkflowCo
       <label className="flex min-h-11 items-center gap-3"><Checkbox aria-label={t("dwAllowSelf")} checked={draft.allow_self_approval} onCheckedChange={checked => setDraft(value => ({ ...value, allow_self_approval: checked === true }))} />
         <span className="text-sm">{t("dwAllowSelf")}</span></label>
       {invalid && <p role="alert" className="text-sm text-red-700">{t("dwReviewersRequired")}</p>}
-      <Button type="submit"><Save aria-hidden />{t("proAdminSave")}</Button>
+      <Button className="min-h-11" type="submit"><Save aria-hidden />{t("proAdminSave")}</Button>
     </fieldset>
   </form>;
 }

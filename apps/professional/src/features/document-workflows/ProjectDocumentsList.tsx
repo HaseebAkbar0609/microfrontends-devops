@@ -45,13 +45,13 @@ export function ProjectDocumentsList({ documents, projectId, refresh, refreshing
       <TabsTrigger className="h-11" value="active">{t("dwActiveDocuments")}</TabsTrigger><TabsTrigger className="h-11" value="archived">{t("dwArchivedDocuments")}</TabsTrigger><TabsTrigger className="h-11" value="all">{t("dwAllDocuments")}</TabsTrigger>
     </TabsList></Tabs>
     <DocumentsToolbar search={search} setSearch={setSearch} sort={sort} setSort={setSort} desc={desc} setDesc={setDesc} refresh={refresh} refreshing={refreshing} />
-    <div className="hidden overflow-x-auto border border-slate-200 bg-white md:block">
+    <div className="hidden overflow-x-auto border border-slate-200 bg-white lg:block">
       <Table className="w-full table-fixed"><TableHeader>{table.getHeaderGroups().map(group => <TableRow key={group.id}>{group.headers.map(header => <TableHead key={header.id}
-        className="px-3" style={{ width: header.id === "documentName" ? undefined : header.getSize() }}>{flexRender(header.column.columnDef.header, header.getContext())}</TableHead>)}</TableRow>)}</TableHeader>
+        className="px-3 whitespace-normal" style={{ width: header.id === "documentName" ? undefined : header.getSize() }}>{flexRender(header.column.columnDef.header, header.getContext())}</TableHead>)}</TableRow>)}</TableHeader>
         <TableBody>{rows.length ? rows.map(row => <TableRow key={row.id}>{row.getVisibleCells().map(cell => <TableCell key={cell.id} className="px-3 py-4 align-top whitespace-normal">{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>)}</TableRow>) : <TableRow><TableCell colSpan={columns.length} className="p-8 text-center">{t("noRecordsFound")}</TableCell></TableRow>}</TableBody>
       </Table>
     </div>
-    <ul className="divide-y divide-slate-200 border-y border-slate-200 bg-white md:hidden">
+    <ul className="divide-y divide-slate-200 border-y border-slate-200 bg-white lg:hidden">
       {rows.length ? rows.map(row => <li key={row.id} className="min-w-0 space-y-3 px-3 py-4">
         <div className="flex min-w-0 items-start justify-between gap-2"><div className="min-w-0 flex-1"><p className="break-all text-sm font-medium">{row.original.documentName}</p><p className="mt-1 break-all text-xs text-slate-500">{row.original.date}</p></div><DocumentActions document={row.original} open={() => setSelected(row.original)} /></div>
         <div className="flex flex-wrap gap-4"><div className="min-w-0 space-y-1"><p className="text-xs text-slate-500">{t("dwApproval")}</p><WorkflowStatus state={row.original.approvalState} /></div><div className="min-w-0 space-y-1"><p className="text-xs text-slate-500">{t("dwArchive")}</p><WorkflowStatus state={row.original.archiveState} /></div></div>

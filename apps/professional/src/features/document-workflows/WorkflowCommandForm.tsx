@@ -28,8 +28,8 @@ export function WorkflowCommandForm({ flow, command, busy, cancel, run }: {
       {invalid && <p role="alert" className="text-sm text-red-700">{t(reason.length > REASON_LIMIT ? "dwReasonTooLong" : "dwReasonRequired")}</p>}
     </div>
     <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-      <Button type="button" variant="outline" disabled={busy} onClick={cancel}><X aria-hidden />{t("closeButton")}</Button>
-      <Button type="submit" disabled={busy}>{busy ? <Loader2 className="animate-spin" aria-hidden /> : <Check aria-hidden />}{t("dwConfirm")}</Button>
+      <Button className="min-h-11" type="button" variant="outline" disabled={busy} onClick={cancel}><X aria-hidden />{t("closeButton")}</Button>
+      <Button className="min-h-11" type="submit" disabled={busy}>{busy ? <Loader2 className="animate-spin" aria-hidden /> : <Check aria-hidden />}{t("dwConfirm")}</Button>
     </div>
   </form>;
 }

@@ -20,7 +20,7 @@ export function WorkflowHistory({ target, context }: { target: Target; context: 
     queryFn: () => getHistory(target, flow, page), enabled: !!context[flow], retry: false });
   return <div className="space-y-4">
     <Tabs value={flow} onValueChange={value => { setFlow(value as Flow); setPage(1); }}>
-      <TabsList><TabsTrigger value="approval">{t("dwApproval")}</TabsTrigger><TabsTrigger value="archive">{t("dwArchive")}</TabsTrigger></TabsList>
+      <TabsList className="h-11"><TabsTrigger className="h-11" value="approval">{t("dwApproval")}</TabsTrigger><TabsTrigger className="h-11" value="archive">{t("dwArchive")}</TabsTrigger></TabsList>
     </Tabs>
     {query.isFetching ? <p role="status" className="text-sm">{t("genericLoading")}</p> : query.isError ? <div role="alert" className="space-y-2">
       <p className="text-sm text-red-700">{t("dwLoadError")}</p><Button variant="outline" onClick={() => void query.refetch()}><RefreshCw aria-hidden />{t("retry")}</Button>
@@ -36,9 +36,9 @@ export function WorkflowHistory({ target, context }: { target: Target; context: 
       </li>)}
     </ol>}
     {(query.data?.total || 0) > WORKFLOW_PAGE_SIZE && <div className="flex items-center justify-between border-t pt-3">
-      <Button variant="outline" size="icon" aria-label={t("proAdminPrevious")} disabled={page === 1 || query.isFetching} onClick={() => setPage(value => value-1)}><ChevronLeft /></Button>
+      <Button className="h-11 w-11" variant="outline" size="icon" aria-label={t("proAdminPrevious")} disabled={page === 1 || query.isFetching} onClick={() => setPage(value => value-1)}><ChevronLeft /></Button>
       <span className="text-sm">{page} / {Math.ceil((query.data?.total || 0) / WORKFLOW_PAGE_SIZE)}</span>
-      <Button variant="outline" size="icon" aria-label={t("proAdminNext")} disabled={page * WORKFLOW_PAGE_SIZE >= (query.data?.total || 0) || query.isFetching} onClick={() => setPage(value => value+1)}><ChevronRight /></Button>
+      <Button className="h-11 w-11" variant="outline" size="icon" aria-label={t("proAdminNext")} disabled={page * WORKFLOW_PAGE_SIZE >= (query.data?.total || 0) || query.isFetching} onClick={() => setPage(value => value+1)}><ChevronRight /></Button>
     </div>}
   </div>;
 }

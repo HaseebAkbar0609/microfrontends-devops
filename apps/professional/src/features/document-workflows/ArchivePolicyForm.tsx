@@ -38,7 +38,7 @@ export function ArchivePolicyForm({ context, busy, run }: { context: WorkflowCon
         </div>)}
       </div>
       {invalid && <p role="alert" className="text-sm text-red-700">{t("dwWindowInvalid")}</p>}
-      <Button type="submit"><Save aria-hidden />{t("proAdminSave")}</Button>
+      <Button className="min-h-11" type="submit"><Save aria-hidden />{t("proAdminSave")}</Button>
     </fieldset>
   </form>;
 }
