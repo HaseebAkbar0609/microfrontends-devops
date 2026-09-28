@@ -132,34 +132,6 @@ export function useCreateProjectForm() {
 	);
 
 	/**
-	 * Jumping forward validates every step in between and stops on the first
-	 * that fails, so the tab row cannot be used to skip past a required field.
-	 * Going back is always free.
-	 */
-	const goToStep = useCallback(
-		async (target: ProjectCreateStep) => {
-			if (isSubmitting) return;
-			if (target > currentStep) {
-				for (let step = currentStep; step < target; step++) {
-					if (!(await validateStep(step))) {
-						setCurrentStep(step as ProjectCreateStep);
-						return;
-					}
-				}
-			}
-			setCurrentStep(target);
-		},
-		[currentStep, isSubmitting, validateStep],
-	);
-
-	const goNext = useCallback(async () => {
-		if (isSubmitting) return;
-		if (currentStep >= PROJECT_CREATE_CONSTANTS.TOTAL_STEPS) return;
-		if (!(await validateStep(currentStep))) return;
-		setCurrentStep((step) => (step + 1) as ProjectCreateStep);
-	}, [currentStep, isSubmitting, validateStep]);
-
-	/**
 	 * Re-checks each file against the rules the `accept` attribute only
 	 * advertises — it filters the OS dialog and nothing else.
 	 */
@@ -228,6 +200,28 @@ export function useCreateProjectForm() {
 		setPendingFiles([]);
 		return rows;
 	}, [pendingFiles, registerFile]);
+
+	/** Forward jumps validate intermediate steps; leaving Documents retains pending files. */
+	const goToStep = useCallback(async (target: ProjectCreateStep) => {
+		if (isSubmitting) return;
+		if (target > currentStep) {
+			for (let step = currentStep; step < target; step++) {
+				if (!(await validateStep(step))) {
+					setCurrentStep(step as ProjectCreateStep);
+					return;
+				}
+			}
+			if (currentStep <= 3 && target > 3) commitPendingFiles();
+		}
+		setCurrentStep(target);
+	}, [commitPendingFiles, currentStep, isSubmitting, validateStep]);
+
+	const goNext = useCallback(async () => {
+		if (isSubmitting || currentStep >= PROJECT_CREATE_CONSTANTS.TOTAL_STEPS) return;
+		if (!(await validateStep(currentStep))) return;
+		if (currentStep === 3) commitPendingFiles();
+		setCurrentStep((step) => (step + 1) as ProjectCreateStep);
+	}, [commitPendingFiles, currentStep, isSubmitting, validateStep]);
 
 	/**
 	 * The name cell is free text that reaches the payload, so it is bounded
