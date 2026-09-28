@@ -1,12 +1,11 @@
 import axiosInstance from "@/lib/axiosInstance";
 import type { ActionResult, ApiError, ApiResponse } from "@/types/api";
 import { CompanyDetail } from "@/features/b2b/types/company";
-import { DUMMY_COMPANY_DETAIL, COMPANIES_MOCK_MAP } from "@/features/b2b/constants/companyMock";
 
 const B2B_COMPANY_PATH = "/professionals/b2b/companies";
 
 /**
- * Fetch B2B Company Detail by ID with fallback to mock data
+ * Fetch B2B Company Detail by ID (always the caller's own company).
  */
 export async function getB2BCompanyDetailAction(
   companyId: string
@@ -17,31 +16,17 @@ export async function getB2BCompanyDetailAction(
     );
     const data = response.data?.data ?? response.data;
     if (data && typeof data === "object" && "namn" in data) {
-      return {
-        success: true,
-        data: data as CompanyDetail,
-        error: null,
-      };
+      return { success: true, data: data as CompanyDetail, error: null };
     }
+    return { success: false, data: null, error: "Unexpected response from server" };
   } catch (error: unknown) {
     const apiError = error as ApiError;
-    const msg = apiError.response?.data?.message;
-    // Log or fall through to mock
-    if (process.env.NODE_ENV === "development") {
-      console.warn("B2B Company API unreachable or unseeded, using fallback mock:", msg);
-    }
+    return {
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to load business information",
+    };
   }
-
-  const mockCompany = COMPANIES_MOCK_MAP[companyId] || {
-    ...DUMMY_COMPANY_DETAIL,
-    id: companyId || DUMMY_COMPANY_DETAIL.id,
-  };
-
-  return {
-    success: true,
-    data: mockCompany,
-    error: null,
-  };
 }
 
 /**
@@ -58,26 +43,17 @@ export async function updateB2BCompanyDetailAction(
     );
     const data = response.data?.data ?? response.data;
     if (data) {
-      return {
-        success: true,
-        data: data as CompanyDetail,
-        error: null,
-      };
+      return { success: true, data: data as CompanyDetail, error: null };
     }
-  } catch {
-    // For development fallback
+    return { success: false, data: null, error: "Unexpected response from server" };
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
     return {
-      success: true,
-      data: { ...DUMMY_COMPANY_DETAIL, ...payload, id: companyId },
-      error: null,
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to save business information",
     };
   }
-
-  return {
-    success: true,
-    data: { ...DUMMY_COMPANY_DETAIL, ...payload, id: companyId },
-    error: null,
-  };
 }
 
 /**
@@ -95,11 +71,12 @@ export async function verifyB2BCompanyAction(
       data: { success: true, status: "verified" },
       error: null,
     };
-  } catch {
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
     return {
-      success: true,
-      data: { success: true, status: "verified" },
-      error: null,
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to verify business",
     };
   }
 }

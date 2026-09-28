@@ -46,7 +46,11 @@ export interface QAThreadCardProps {
 	labels: QAThreadLabels;
 	/** The signed-in user, shown against the compose box and any reply. */
 	currentUserName: string;
-	onSendReply: (id: string, text: string) => void;
+	/**
+	 * Omit where the caller has no way to answer — the reply box is then left
+	 * off entirely rather than offering a send that goes nowhere.
+	 */
+	onSendReply?: (id: string, text: string) => void;
 	onMarkAsRead?: (id: string) => void;
 	onArchive?: (id: string) => void;
 	onDelete?: (id: string) => void;
@@ -58,8 +62,8 @@ export interface QAThreadCardProps {
  * question and the answer or the reply box.
  *
  * Extracted from `ProjectMarketQATab`, which had it module-private while three
- * other features re-implemented the same card. The row menu only renders the
- * actions a caller actually handles.
+ * other features re-implemented the same card. The row menu and the reply box
+ * only render where a caller actually handles them.
  */
 export function QAThreadCard({
 	message,
@@ -119,23 +123,27 @@ export function QAThreadCard({
 				</div>
 			</div>
 
-			<hr className="w-full border-slate-200" />
-
 			{message.answered ? (
-				<QAThreadAnswer
-					message={message}
-					labels={labels}
-					currentUserName={currentUserName}
-				/>
-			) : (
-				<QAThreadCompose
-					id={message.id}
-					labels={labels}
-					currentUserName={currentUserName}
-					initialText={message.replyText}
-					onSendReply={onSendReply}
-				/>
-			)}
+				<>
+					<hr className="w-full border-slate-200" />
+					<QAThreadAnswer
+						message={message}
+						labels={labels}
+						currentUserName={currentUserName}
+					/>
+				</>
+			) : onSendReply ? (
+				<>
+					<hr className="w-full border-slate-200" />
+					<QAThreadCompose
+						id={message.id}
+						labels={labels}
+						currentUserName={currentUserName}
+						initialText={message.replyText}
+						onSendReply={onSendReply}
+					/>
+				</>
+			) : null}
 		</article>
 	);
 }

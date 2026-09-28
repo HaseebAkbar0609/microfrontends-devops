@@ -3,7 +3,7 @@
 // "/api/v1" — the backend's auth-exclusion allowlist matches paths by exact
 // string, so "//api/v1/..." silently falls through to "auth required" for
 // otherwise-public endpoints instead of erroring loudly.
-const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
+export const BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/+$/, "");
 export const BASE_API_VERSION = `${BASE_URL}/api/v1`;
 
 const PROFESSIONALS_BASE_PATH = "/professionals";

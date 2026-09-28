@@ -1,8 +1,7 @@
 import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
-import type { ActionResult, ApiResponse } from "@/types/api";
+import type { ActionResult, ApiError, ApiResponse } from "@/types/api";
 import { B2BAgreementDetail, B2BCreateAgreementPayload } from "@/features/b2b/types/agreement";
-import { getAgreementDetailByContext } from "@/features/b2b/constants/agreementMock";
 
 const B2B_AGREEMENTS_BASE_PATH = "/professionals/b2b/agreements";
 
@@ -84,7 +83,6 @@ export const b2bAgreementDetailSchema = z.object({
 
 /**
  * Fetch Agreement Detail.
- * Gracefully falls back to mock data if backend endpoint is unavailable.
  */
 export async function getB2BAgreementDetailAction(
   agreementId: string
@@ -98,9 +96,14 @@ export async function getB2BAgreementDetailAction(
     if (parsed.success) {
       return { success: true, data: parsed.data, error: null };
     }
-    return { success: true, data: getAgreementDetailByContext(agreementId), error: null };
-  } catch {
-    return { success: true, data: getAgreementDetailByContext(agreementId), error: null };
+    return { success: false, data: null, error: "Unexpected response from server" };
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
+    return {
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to load agreement",
+    };
   }
 }
 
@@ -115,24 +118,25 @@ export async function createB2BAgreementAction(
       B2B_AGREEMENTS_BASE_PATH,
       payload
     );
+    const id = response.data?.data?.id;
+    if (!id) {
+      return { success: false, data: null, error: "Unexpected response from server" };
+    }
     return {
       success: true,
       data: {
         success: true,
-        id: response.data?.data?.id || "AGR-2025-001",
+        id,
         message: response.data?.message || "Agreement created successfully",
       },
       error: null,
     };
-  } catch {
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
     return {
-      success: true,
-      data: {
-        success: true,
-        id: "AGR-2025-001",
-        message: "Agreement created successfully",
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to create agreement",
     };
   }
 }
@@ -155,20 +159,18 @@ export async function sendB2BAgreementAction(
       },
       error: null,
     };
-  } catch {
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
     return {
-      success: true,
-      data: {
-        success: true,
-        message: "Agreement sent successfully",
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to send agreement",
     };
   }
 }
 
 /**
- * Upload document / attachment for B2B Agreement via backend media service
+ * Upload document / attachment for B2B Agreement via the generic media service
  */
 export async function uploadB2BAgreementFileAction(
   file: File
@@ -188,25 +190,25 @@ export async function uploadB2BAgreementFileAction(
       }
     );
 
+    const id = response.data?.data?.id;
+    if (!id) {
+      return { success: false, data: null, error: "Unexpected response from server" };
+    }
     return {
       success: true,
       data: {
-        id: response.data?.data?.id || `file-${Date.now()}`,
+        id,
         file_url_path: response.data?.data?.file_url_path,
         name: file.name,
       },
       error: null,
     };
-  } catch {
-    // Non-blocking fallback for offline/mock environments
+  } catch (error: unknown) {
+    const apiError = error as ApiError;
     return {
-      success: true,
-      data: {
-        id: `file-${Date.now()}`,
-        file_url_path: `/mock-files/${file.name}`,
-        name: file.name,
-      },
-      error: null,
+      success: false,
+      data: null,
+      error: apiError.response?.data?.message || "Failed to upload file",
     };
   }
 }

@@ -32,6 +32,16 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -52,8 +62,13 @@ import { useTableSort } from "@/hooks/useTableSort";
 import { sortItems } from "@/utils/tableSort";
 import { renderSortIcon } from "@/utils/renderSortIcon";
 import { formatCurrency } from "@/utils/formatCurrency";
+import { formatApiDate } from "@/utils/date";
 import { showToast } from "@/lib/toast";
+import { archiveB2BProjectAction } from "@/api-actions/b2b";
+import { acceptB2BOfferAction, declineB2BOfferAction } from "@/api-actions/b2b/seeOffer";
 import { ProjectMarketDetail, OfferStatus, ProjectMarketOffer } from "../types/projectMarket";
+
+type OfferAction = "accept" | "decline" | "archive";
 
 type OfferSortField =
   | "company"
@@ -90,10 +105,16 @@ function OfferStatusBadge({ status }: { status: OfferStatus }) {
   );
 }
 
-export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
+export function ProjectMarketOfferTab({
+  data,
+  onRefresh,
+}: {
+  data: ProjectMarketDetail;
+  onRefresh?: () => void | Promise<void>;
+}) {
   const t = useTranslate();
   const router = useRouter();
-  const [offers, setOffers] = useState<ProjectMarketOffer[]>(data.offers);
+  const offers = data.offers;
   const [offerListOpen, setOfferListOpen] = useState(true);
   const [contractModalOpen, setContractModalOpen] = useState(false);
   const [selectedOfferId, setSelectedOfferId] = useState<string>(
@@ -101,24 +122,83 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
   );
   const { sortField, sortDir, toggleSort } = useTableSort<OfferSortField>();
 
-  function handleAcceptOffer(offerId: string) {
-    setOffers((prev) =>
-      prev.map((o) => (o.id === offerId ? { ...o, status: "accepted" as const } : o))
-    );
-    showToast("success", t(localizationConstants.b2bPMAcceptOffer));
+  // Accept / decline / archive each ask first, then call the API. They used to
+  // change only this screen's copy of the row, so a reload undid them.
+  const [pendingAction, setPendingAction] = useState<{ action: OfferAction; offerId: string } | null>(
+    null
+  );
+  const [isActing, setIsActing] = useState(false);
+
+  /** Worded from the HTTP status — the API message can be a raw error code. */
+  function actionErrorMessage(action: OfferAction, code: string | undefined, fallback: string) {
+    if (code === "forbidden") {
+      return t(
+        action === "archive"
+          ? localizationConstants.b2bErrorNoPermission
+          : localizationConstants.b2bErrorOfferNoPermission
+      );
+    }
+    if (code === "conflict") return t(localizationConstants.b2bErrorOfferSettled);
+    if (code === "not_found") return t(localizationConstants.b2bErrorProjectGone);
+    return fallback || t(localizationConstants.genericError);
   }
 
-  function handleDeclineOffer(offerId: string) {
-    setOffers((prev) =>
-      prev.map((o) => (o.id === offerId ? { ...o, status: "deny" as const } : o))
-    );
-    showToast("info", t(localizationConstants.b2bPMDeclineOffer));
+  async function handleConfirmAction() {
+    if (!pendingAction) return;
+    const { action, offerId } = pendingAction;
+    setIsActing(true);
+    try {
+      if (action === "accept") {
+        const res = await acceptB2BOfferAction(offerId);
+        if (!res.success) {
+          showToast("error", actionErrorMessage(action, res.errorCode, res.error || ""));
+          return;
+        }
+        showToast("success", t(localizationConstants.b2bPMAcceptOffer));
+        // Same next step as accepting from the See offer screen.
+        router.push(`/module/business/b2b/agreements/create?projectId=${data.id}&offerId=${offerId}`);
+      } else if (action === "decline") {
+        const res = await declineB2BOfferAction(offerId);
+        if (!res.success) {
+          showToast("error", actionErrorMessage(action, res.errorCode, res.error || ""));
+          return;
+        }
+        showToast("info", t(localizationConstants.b2bPMDeclineOffer));
+        await onRefresh?.();
+      } else {
+        // Archiving is per project: it moves this company's whole engagement to
+        // the Archive screen, so there is nothing left to show here.
+        const res = await archiveB2BProjectAction(data.id);
+        if (!res.success) {
+          showToast("error", actionErrorMessage(action, res.errorCode, res.error || ""));
+          return;
+        }
+        showToast("success", t(localizationConstants.b2bArchiveSuccessToast));
+        router.push("/module/business/b2b/overview");
+      }
+    } finally {
+      setIsActing(false);
+      setPendingAction(null);
+    }
   }
 
-  function handleArchiveOffer(offerId: string) {
-    setOffers((prev) => prev.filter((o) => o.id !== offerId));
-    showToast("success", t(localizationConstants.b2bPMQAArchive));
-  }
+  const confirmCopy: Record<OfferAction, { title: string; description: string; confirm: string }> = {
+    accept: {
+      title: t(localizationConstants.b2bOfferAcceptConfirmTitle),
+      description: t(localizationConstants.b2bOfferAcceptConfirmDesc),
+      confirm: t(localizationConstants.b2bPMAcceptOffer),
+    },
+    decline: {
+      title: t(localizationConstants.b2bOfferDeclineConfirmTitle),
+      description: t(localizationConstants.b2bOfferDeclineConfirmDesc),
+      confirm: t(localizationConstants.b2bPMDeclineOffer),
+    },
+    archive: {
+      title: t(localizationConstants.b2bArchiveConfirmTitle),
+      description: t(localizationConstants.b2bArchiveConfirmDesc),
+      confirm: t(localizationConstants.b2bPMQAArchive),
+    },
+  };
 
   const sortedOffers = useMemo(
     () =>
@@ -146,7 +226,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                 </span>
               </div>
               <p className="mt-1 text-xs text-slate-500">
-                {t(localizationConstants.b2bPMLatestOfferDate)}: {data.latestOfferDate}
+                {t(localizationConstants.b2bPMLatestOfferDate)}: {formatApiDate(data.latestOfferDate)}
               </p>
             </div>
 
@@ -313,7 +393,7 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                         {offer.company}
                       </TableCell>
                       <TableCell className="whitespace-nowrap px-4 py-3.5 text-slate-800">
-                        {offer.date}
+                        {formatApiDate(offer.date)}
                       </TableCell>
                       <TableCell className="whitespace-nowrap px-4 py-3.5 text-slate-800">
                         {offer.contactPerson}
@@ -365,31 +445,35 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
                             align="end"
                             className="w-40 bg-white p-1.5 shadow-lg border border-slate-200 rounded-lg"
                           >
+                            {offer.status === "waiting" && (
+                              <DropdownMenuItem
+                                onClick={() => setPendingAction({ action: "accept", offerId: offer.id })}
+                                className="flex cursor-pointer items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 rounded-md"
+                              >
+                                <Check
+                                  size={16}
+                                  className="h-4 w-4 text-slate-700 stroke-[2.25]"
+                                  aria-hidden={true}
+                                />
+                                <span>{t(localizationConstants.b2bPMAcceptOffer)}</span>
+                              </DropdownMenuItem>
+                            )}
                             <DropdownMenuItem
-                              onClick={() => handleAcceptOffer(offer.id)}
-                              className="flex cursor-pointer items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 rounded-md"
-                            >
-                              <Check
-                                size={16}
-                                className="h-4 w-4 text-slate-700 stroke-[2.25]"
-                                aria-hidden={true}
-                              />
-                              <span>{t(localizationConstants.b2bPMAcceptOffer)}</span>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleArchiveOffer(offer.id)}
+                              onClick={() => setPendingAction({ action: "archive", offerId: offer.id })}
                               className="flex cursor-pointer items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 rounded-md"
                             >
                               <Archive size={16} className="h-4 w-4 text-slate-700" aria-hidden={true} />
                               <span>{t(localizationConstants.b2bPMQAArchive)}</span>
                             </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() => handleDeclineOffer(offer.id)}
-                              className="flex cursor-pointer items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 rounded-md"
-                            >
-                              <X size={16} className="h-4 w-4 text-slate-700" aria-hidden={true} />
-                              <span>{t(localizationConstants.b2bPMDeclineOffer)}</span>
-                            </DropdownMenuItem>
+                            {offer.status === "waiting" && (
+                              <DropdownMenuItem
+                                onClick={() => setPendingAction({ action: "decline", offerId: offer.id })}
+                                className="flex cursor-pointer items-center gap-2.5 px-3 py-2 text-xs font-medium text-slate-800 hover:bg-slate-50 rounded-md"
+                              >
+                                <X size={16} className="h-4 w-4 text-slate-700" aria-hidden={true} />
+                                <span>{t(localizationConstants.b2bPMDeclineOffer)}</span>
+                              </DropdownMenuItem>
+                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
@@ -458,6 +542,43 @@ export function ProjectMarketOfferTab({ data }: { data: ProjectMarketDetail }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog
+        open={!!pendingAction}
+        onOpenChange={(open) => !open && !isActing && setPendingAction(null)}
+      >
+        <AlertDialogContent>
+          {pendingAction && (
+            <>
+              <AlertDialogHeader>
+                <AlertDialogTitle>{confirmCopy[pendingAction.action].title}</AlertDialogTitle>
+                <AlertDialogDescription>
+                  {confirmCopy[pendingAction.action].description}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel disabled={isActing} className="cursor-pointer">
+                  {t(localizationConstants.cancel)}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={(e) => {
+                    e.preventDefault();
+                    void handleConfirmAction();
+                  }}
+                  disabled={isActing}
+                  className={`cursor-pointer text-white ${
+                    pendingAction.action === "decline"
+                      ? "bg-red-600 hover:bg-red-700"
+                      : "bg-slate-900 hover:bg-slate-800"
+                  }`}
+                >
+                  {confirmCopy[pendingAction.action].confirm}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </>
+          )}
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
