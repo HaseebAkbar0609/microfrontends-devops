@@ -37,6 +37,7 @@ export function ProjectDocumentsList({ documents, projectId, refresh, refreshing
     getSortedRowModel: getSortedRowModel(), getPaginationRowModel: getPaginationRowModel(), initialState: { pagination: { pageSize: WORKFLOW_PAGE_SIZE } },
   });
   const rows = table.getRowModel().rows;
+  const selectedDocument = documents.find(document => document.id === selected?.id) || selected;
   return <TooltipProvider><div className="min-w-0">
     <Tabs value={view} onValueChange={setView}><TabsList variant="line" className="max-w-full">
       <TabsTrigger value="active">{t("dwActiveDocuments")}</TabsTrigger><TabsTrigger value="archived">{t("dwArchivedDocuments")}</TabsTrigger><TabsTrigger value="all">{t("dwAllDocuments")}</TabsTrigger>
@@ -59,6 +60,6 @@ export function ProjectDocumentsList({ documents, projectId, refresh, refreshing
       <span>{table.getState().pagination.pageIndex + 1} / {Math.max(1, table.getPageCount())}</span>
       <div className="flex gap-2"><Button size="icon" variant="outline" aria-label={t("proAdminPrevious")} disabled={!table.getCanPreviousPage()} onClick={() => table.previousPage()}><ChevronLeft /></Button><Button size="icon" variant="outline" aria-label={t("proAdminNext")} disabled={!table.getCanNextPage()} onClick={() => table.nextPage()}><ChevronRight /></Button></div>
     </div>
-    {selected && <DocumentWorkflowDialog key={selected.id} target={{ id: selected.id, projectId, name: selected.documentName, fileUrl: selected.fileUrl }} close={() => setSelected(null)} />}
+    {selectedDocument && <DocumentWorkflowDialog key={selectedDocument.id} target={{ id: selectedDocument.id, projectId, name: selectedDocument.documentName, fileUrl: selectedDocument.fileUrl }} close={() => setSelected(null)} />}
   </div></TooltipProvider>;
 }
