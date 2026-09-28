@@ -1,4 +1,5 @@
 import { svAdminLive } from "./adminLive";
+import { svDocumentWorkflows } from "./documentWorkflows";
 import { svMyPagesLive } from "./myPagesLive";
 import {
 	HeaderTranslation,
@@ -10546,6 +10547,7 @@ const svForecastDashboard: ForecastDashboardTranslation = {
 };
 
 export const sv: Translation = {
+  ...svDocumentWorkflows,
 	...svHeader,
 	...svAppLauncher,
 	...svSidebar,

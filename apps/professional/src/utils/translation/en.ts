@@ -1,4 +1,5 @@
 import { enAdminLive } from "./adminLive";
+import { enDocumentWorkflows } from "./documentWorkflows";
 import { enMyPagesLive } from "./myPagesLive";
 import {
 	HeaderTranslation,
@@ -10525,6 +10526,7 @@ const enForecastDashboard: ForecastDashboardTranslation = {
 };
 
 export const en: Translation = {
+  ...enDocumentWorkflows,
 	...enHeader,
 	...enAppLauncher,
 	...enSidebar,
