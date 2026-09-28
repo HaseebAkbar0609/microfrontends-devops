@@ -9561,6 +9561,11 @@ export type CasesTranslation = {
 	casesActivityCaseCreated: string;
 	casesActivityMessageAdded: string;
 	casesActivityFileUploaded: string;
+	casesImportButton: string;
+	casesAttachmentTypeError: string;
+	casesAttachmentSizeError: string;
+	casesAttachmentRemove: string;
+	casesAttachmentNotHeld: string;
 };
 
 export type OrderDagbokTranslation = {

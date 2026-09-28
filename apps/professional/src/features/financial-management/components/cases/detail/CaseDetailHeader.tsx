@@ -5,7 +5,7 @@ import { ArrowLeft, ChevronDown, MessageSquare, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { CASES_BASE_ROUTE } from "../../../constants/cases.constants";
+import { CASE_STATUS_META, casesRoutes } from "../../../constants/cases.constants";
 import type { CaseItem, CaseStatus } from "../../../types/cases.types";
 import { CaseStatusBadge, CaseStatusConfirmDialog } from "../shared";
 
@@ -15,6 +15,8 @@ interface CaseDetailHeaderProps {
 	showConversationLink?: boolean;
 	showDetailsLink?: boolean;
 	onBack?: () => void;
+	/** Which module the case is being read in; every link is built from it. */
+	basePath?: string;
 }
 
 export function CaseDetailHeader({
@@ -23,10 +25,13 @@ export function CaseDetailHeader({
 	showConversationLink = true,
 	showDetailsLink = false,
 	onBack,
+	basePath,
 }: CaseDetailHeaderProps) {
 	const router = useRouter();
 	const [pendingStatus, setPendingStatus] = useState<CaseStatus | null>(null);
 	const [showMenu, setShowMenu] = useState(false);
+	const status = CASE_STATUS_META[caseItem.status] ?? CASE_STATUS_META.not_started;
+	const routes = casesRoutes(basePath);
 
 	const handleConfirmStatus = () => {
 		if (pendingStatus) {
@@ -39,7 +44,7 @@ export function CaseDetailHeader({
 		if (onBack) {
 			onBack();
 		} else {
-			router.push(CASES_BASE_ROUTE);
+			router.push(routes.list);
 		}
 	};
 
@@ -75,7 +80,7 @@ export function CaseDetailHeader({
 					<button
 						type="button"
 						onClick={() =>
-							router.push(`${CASES_BASE_ROUTE}/${caseItem.id}/conversation`)
+							router.push(routes.conversation(caseItem.id))
 						}
 						className="h-9 px-3.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
 					>
@@ -90,7 +95,7 @@ export function CaseDetailHeader({
 					<button
 						type="button"
 						onClick={() =>
-							router.push(`${CASES_BASE_ROUTE}/${caseItem.id}`)
+							router.push(routes.detail(caseItem.id))
 						}
 						className="h-9 px-3.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
 					>
@@ -102,21 +107,15 @@ export function CaseDetailHeader({
 				)}
 
 				<div className="relative">
+				{/* The pill wears the status's own colour and says its own name —
+				    the row's badge and this control read one map. */}
 				<button
 					type="button"
 					onClick={() => setShowMenu((prev) => !prev)}
-					className="h-9 px-4 bg-sky-400 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg flex items-center gap-2 shadow-2xs cursor-pointer transition-colors"
+					className={`h-9 px-4 ${status.bgClass} ${status.hoverClass} ${status.textClass} text-xs font-semibold rounded-lg flex items-center gap-2 shadow-2xs cursor-pointer transition-colors`}
 				>
 					<span>
-						<Translate
-							text={
-								caseItem.status === "completed"
-									? localizationConstants.casesStatusCompleted
-									: caseItem.status === "ongoing"
-									? localizationConstants.casesStatusOngoing
-									: localizationConstants.casesStatusNotStarted
-							}
-						/>
+						<Translate text={status.labelKey} />
 					</span>
 					<ChevronDown className="w-3.5 h-3.5" />
 				</button>

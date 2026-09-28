@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { initialsOf } from "@/components/common/qaThread";
 import { Paperclip } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -28,14 +28,10 @@ export function CaseInfoSidebar({ caseItem }: CaseInfoSidebarProps) {
 					<Translate text={localizationConstants.casesFieldCreatedBy} />
 				</p>
 				<div className="p-3 bg-white border border-slate-200 rounded-xl flex items-center gap-3 shadow-2xs">
-					<div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs shrink-0 overflow-hidden relative">
-						<Image
-							src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60"
-							alt={caseItem.createdBy}
-							fill
-							unoptimized
-							className="object-cover"
-						/>
+					<div className="w-10 h-10 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 font-bold text-xs shrink-0">
+						{/* The creator's own initials, rather than one stock photograph
+						    standing in for every person on every case. */}
+						{initialsOf(caseItem.createdBy)}
 					</div>
 					<div className="min-w-0">
 						<p className="text-xs font-bold text-slate-900 truncate">

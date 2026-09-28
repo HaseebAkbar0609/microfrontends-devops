@@ -6,7 +6,8 @@ import { useTranslation } from "react-i18next";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useCases } from "../../../hooks/useCases";
-import { CASES_BASE_ROUTE } from "../../../constants/cases.constants";
+import { mintTypedUrl } from "@/features/project/shared/recordFiles";
+import { CASE_MESSAGE_FILE_RULES, casesRoutes } from "../../../constants/cases.constants";
 import type { CaseStatus } from "../../../types/cases.types";
 import { CaseDetailHeader } from "../detail/CaseDetailHeader";
 import { CaseInfoSidebar } from "../detail/CaseInfoSidebar";
@@ -14,10 +15,13 @@ import { CaseConversation } from "../detail/CaseConversation";
 
 interface CaseConversationPageProps {
 	id: string;
+	/** Which module the case is being read in; every link is built from it. */
+	basePath?: string;
 }
 
-export function CaseConversationPage({ id }: CaseConversationPageProps) {
+export function CaseConversationPage({ id, basePath }: CaseConversationPageProps) {
 	const router = useRouter();
+	const routes = casesRoutes(basePath);
 	const { t } = useTranslation();
 	const { getCaseById, updateCaseStatus, addMessage, isLoading } = useCases();
 
@@ -39,7 +43,7 @@ export function CaseConversationPage({ id }: CaseConversationPageProps) {
 				</p>
 				<button
 					type="button"
-					onClick={() => router.push(CASES_BASE_ROUTE)}
+					onClick={() => router.push(routes.list)}
 					className="h-8 px-4 bg-slate-900 text-white rounded-lg text-xs cursor-pointer hover:bg-slate-800 transition-colors"
 				>
 					{t(localizationConstants.casesBtnBackToOverview)}
@@ -53,11 +57,21 @@ export function CaseConversationPage({ id }: CaseConversationPageProps) {
 		showToast("success", t(localizationConstants.casesToastStatusChanged));
 	};
 
-	const handleSendMessage = (content: string) => {
+	const handleSendMessage = (content: string, files: File[]) => {
+		/* The file is served from the tab's own memory — there is no upload
+		   endpoint — so its URL lives as long as the tab and is not stored. */
+		const attachments = files.map((file, index) => ({
+			id: `att-${Date.now()}-${index}`,
+			name: file.name,
+			size: file.size,
+			url: mintTypedUrl(file, CASE_MESSAGE_FILE_RULES.types),
+		}));
+
 		addMessage(caseItem.id, {
 			author: "Stefan Eriksson",
 			authorRole: "SE",
 			content,
+			...(attachments.length > 0 ? { attachments } : {}),
 		});
 		showToast("success", t(localizationConstants.casesToastMessageSent));
 	};
@@ -70,7 +84,8 @@ export function CaseConversationPage({ id }: CaseConversationPageProps) {
 				onStatusChange={handleStatusChange}
 				showConversationLink={false}
 				showDetailsLink={true}
-				onBack={() => router.push(`${CASES_BASE_ROUTE}/${caseItem.id}`)}
+				basePath={basePath}
+				onBack={() => router.push(routes.detail(caseItem.id))}
 			/>
 
 			{/* Full-width 2-column split matching Figma Image 2 (Node 15813-186836) */}
