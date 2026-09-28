@@ -89,6 +89,8 @@ export function useForecastList() {
 
 	return {
 		pageRows: shown.slice((currentPage - 1) * pageSize, currentPage * pageSize),
+		/** Every row the search and filters leave, not just the page in view. */
+		allRows: shown,
 		currentPage,
 		totalPages,
 		pageSize,

@@ -69,8 +69,16 @@ export function formatForecastField(row: ForecastListRow, field: ForecastListSor
 	}
 }
 
-/** Amounts sort as numbers; everything else as the text the reader sees. */
-function sortValue(row: ForecastListRow, field: ForecastListSortField, label: ForecastLabel): string | number {
+/**
+ * A field as a value rather than as text: amounts as numbers, everything else
+ * as the text the reader sees. Sorting compares these, and a spreadsheet
+ * written from them can add its money columns up.
+ */
+export function forecastFieldValue(
+	row: ForecastListRow,
+	field: ForecastListSortField,
+	label: ForecastLabel,
+): string | number {
 	switch (field) {
 		case "revenue":
 		case "costs":
@@ -99,8 +107,8 @@ export function sortForecasts(
 
 	const factor = dir === "asc" ? 1 : -1;
 	return [...rows].sort((a, b) => {
-		const left = sortValue(a, field, label);
-		const right = sortValue(b, field, label);
+		const left = forecastFieldValue(a, field, label);
+		const right = forecastFieldValue(b, field, label);
 		if (typeof left === "number" && typeof right === "number") return factor * (left - right);
 		return factor * String(left).localeCompare(String(right), locale, { sensitivity: "base", numeric: true });
 	});
