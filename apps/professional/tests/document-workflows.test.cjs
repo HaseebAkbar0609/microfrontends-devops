@@ -67,3 +67,10 @@ test("context and history retain document identity and server pagination", async
   assert.equal(api.calls[0].args[0], "/document-workflows/professional_project_document/doc/context");
   assert.deepEqual(plain(api.calls[1].args[1]), { params: { parent_id: "project", page: 2, page_size: 10 } });
 });
+
+test("controlled table sorting is memoized so pagination does not reset on every render", () => {
+  const source = fs.readFileSync(path.join(root, "features/document-workflows/ProjectDocumentsList.tsx"), "utf8");
+  assert.match(source, /const sorting = useMemo\(\(\) => \[\{ id: sort, desc \}\], \[sort, desc\]\)/);
+  assert.match(source, /state: \{ globalFilter: search, sorting \}/);
+  assert.doesNotMatch(source, /sorting: \[\{/);
+});

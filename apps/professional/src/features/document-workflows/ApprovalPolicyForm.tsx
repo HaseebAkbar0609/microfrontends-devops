@@ -41,8 +41,6 @@ export function ApprovalPolicyForm({ context, busy, run }: { context: WorkflowCo
       </div>
       <label className="flex min-h-11 items-center gap-3"><Checkbox aria-label={t("dwAllowSelf")} checked={draft.allow_self_approval} onCheckedChange={checked => setDraft(value => ({ ...value, allow_self_approval: checked === true }))} />
         <span className="text-sm">{t("dwAllowSelf")}</span></label>
-      <label className="flex min-h-11 items-center gap-3"><Checkbox aria-label={t("dwPublish")} checked={draft.publish_on_approval} onCheckedChange={checked => setDraft(value => ({ ...value, publish_on_approval: checked === true }))} />
-        <span className="text-sm">{t("dwPublish")}</span></label>
       {invalid && <p role="alert" className="text-sm text-red-700">{t("dwReviewersRequired")}</p>}
       <Button type="submit"><Save aria-hidden />{t("proAdminSave")}</Button>
     </fieldset>
