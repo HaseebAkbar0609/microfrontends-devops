@@ -87,7 +87,7 @@ export function ProjectRowsToolbar({
 						<Button
 							type="button"
 							variant="outline"
-							className="h-10 cursor-pointer gap-2 rounded-md border-slate-200 text-sm font-normal text-slate-700"
+							className="h-10 cursor-pointer gap-2 rounded-md border-slate-200 bg-white text-sm font-normal text-slate-700 shadow-none hover:bg-slate-50"
 						>
 							{selected ? (
 								optionLabel(selected)

@@ -11,6 +11,18 @@ export const FORECAST_LIST_PAGE_SIZE = 10;
 /** The eye and ⋮ stay in view while the table scrolls sideways, set off by a rule. */
 export const FORECAST_ACTION_COLUMN = "sticky right-0 bg-white shadow-[inset_1px_0_0_0_#e2e8f0]";
 
+/** One cell of a forecast row, in Prognoslista and in a custom report alike. */
+export const FORECAST_CELL_CLASS = "px-4 py-3.5 text-sm whitespace-nowrap text-slate-900";
+
+/** Fields that read as figures, and line up on the digit. */
+export const FORECAST_NUMERIC_FIELDS = new Set<ForecastListSortField>([
+	"startDate",
+	"endDate",
+	"revenue",
+	"costs",
+	"contribution",
+]);
+
 /** Prognoslista's columns in the frame's order; every one sorts. */
 export const FORECAST_LIST_COLUMNS: { key: ForecastListSortField; labelKey: TranslationKeys }[] = [
 	{ key: "objectNo", labelKey: localizationConstants.forecastColObject },

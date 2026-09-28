@@ -38,6 +38,13 @@ export interface FormFileUploadProps<
   tooLargeMessage?: ReactNode;
   showPreview?: boolean;
   previewVariant?: "avatar" | "logo";
+  /**
+   * The original upload name for an already-saved remote file (the field's
+   * value is just its signed URL, whose path ends in a UUID-based storage
+   * key, not this name). Shown instead of that key while no new file has
+   * been picked locally.
+   */
+  remoteFileName?: string;
   previewLabel?: ReactNode;
   previewLabelClassName?: string;
   allowClear?: boolean;
@@ -76,6 +83,7 @@ export function FormFileUpload<
   tooLargeMessage = localizationConstants.fileTooLarge,
   showPreview = true,
   previewVariant = "avatar",
+  remoteFileName,
   previewLabel,
   previewLabelClassName,
   allowClear = false,
@@ -180,10 +188,16 @@ export function FormFileUpload<
       return "";
     }
 
+    // The URL's last path segment is the UUID-based storage key, not the
+    // name the file was uploaded under -- prefer the real name when given.
+    if (remoteFileName) {
+      return remoteFileName;
+    }
+
     const cleaned = remoteUrl.split("?")[0];
     const name = cleaned.split("/").pop();
     return name ?? "";
-  }, [remoteUrl, selectedFile]);
+  }, [remoteUrl, remoteFileName, selectedFile]);
 
   const isImagePreview = useMemo(() => {
     if (selectedFile) {

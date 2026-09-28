@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Landmark, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,7 @@ import { CollapsibleSection } from "@/components/common/CollapsibleSection";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
+import { useBankDetails, useUpdateBankDetails } from "../hooks/useCompanyInformation";
 
 const BANK_FIELDS = [
 	{
@@ -47,15 +48,30 @@ const BANK_FIELDS = [
 	},
 ] as const;
 
+const EMPTY_VALUES: Record<string, string> = {};
+
 export function CompanyBankTab() {
 	const t = useTranslate();
-	const [values, setValues] = useState<Record<string, string>>({});
+	const bankQuery = useBankDetails();
+	const updateBankDetails = useUpdateBankDetails();
+	const [values, setValues] = useState<Record<string, string>>(EMPTY_VALUES);
 
-	// Static phase: the backend has no bank-details endpoint yet, so Spara
-	// only confirms the local UI state. When the API lands, replace this with
-	// a mutation + error toast following the CompanyDetail.onSubmit pattern.
-	const handleSave = () => {
-		showToast("success", t(localizationConstants.profileUpdated));
+	useEffect(() => {
+		if (!bankQuery.data) return;
+		const loaded: Record<string, string> = {};
+		for (const field of BANK_FIELDS) {
+			loaded[field.id] = bankQuery.data[field.id] ?? "";
+		}
+		setValues(loaded);
+	}, [bankQuery.data]);
+
+	const handleSave = async () => {
+		try {
+			await updateBankDetails.mutateAsync(values);
+			showToast("success", t(localizationConstants.profileUpdated));
+		} catch (_error) {
+			showToast("error", t(localizationConstants.profileUpdateFailed));
+		}
 	};
 
 	return (
@@ -94,7 +110,13 @@ export function CompanyBankTab() {
 					<Button
 						type="button"
 						variant="outline"
-						onClick={() => setValues({})}
+						onClick={() => {
+							const loaded: Record<string, string> = {};
+							for (const field of BANK_FIELDS) {
+								loaded[field.id] = bankQuery.data?.[field.id] ?? "";
+							}
+							setValues(loaded);
+						}}
 						className="w-[204px] border border-slate-200 bg-[var(--color-bg-secondary)] hover:bg-[var(--color-bg-secondary)]"
 					>
 						<Translate text={localizationConstants.cancel} />
@@ -102,6 +124,7 @@ export function CompanyBankTab() {
 					<Button
 						type="button"
 						onClick={handleSave}
+						disabled={updateBankDetails.isPending}
 						className="w-[204px] bg-[var(--color-primary-black)] text-white hover:bg-[var(--color-primary-black)]"
 					>
 						<Save size={16} />

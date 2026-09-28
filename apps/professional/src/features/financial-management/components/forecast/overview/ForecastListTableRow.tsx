@@ -9,21 +9,23 @@ import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import {
 	FORECAST_ACTION_COLUMN,
+	FORECAST_CELL_CLASS,
 	FORECAST_LIST_COLUMNS,
 	FORECAST_LIST_STATUSES,
+	FORECAST_NUMERIC_FIELDS,
 } from "../../../constants/forecastList.constants";
 import type { ForecastListRow, ForecastListSortField } from "../../../types/forecastList.types";
 import { formatForecastField } from "../../../utils/forecastList";
 import { ForecastRowMenu } from "./ForecastRowMenu";
 
-const CELL = "px-4 py-3.5 text-sm whitespace-nowrap text-slate-900";
+const CELL = FORECAST_CELL_CLASS;
 
 /** Every column but Status, which is a tag; the actions follow it. */
 const TEXT_FIELDS = FORECAST_LIST_COLUMNS.map((column) => column.key).filter((key) => key !== "status");
 
 /** Kostnadsställe is cut short, as the frame draws it, with the whole value in its tooltip. */
 const TRUNCATED: Partial<Record<ForecastListSortField, string>> = { costCentre: "max-w-24" };
-const NUMERIC = new Set<ForecastListSortField>(["startDate", "endDate", "revenue", "costs", "contribution"]);
+const NUMERIC = FORECAST_NUMERIC_FIELDS;
 
 export interface ForecastListTableRowProps {
 	row: ForecastListRow;

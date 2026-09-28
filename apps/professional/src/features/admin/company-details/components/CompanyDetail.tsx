@@ -26,6 +26,7 @@ import {
 	useCompanyInformation,
 	useUpdateCompanyInformation,
 } from "../hooks/useCompanyInformation";
+import { uploadCompanyMedia } from "../api/companyInformation.api";
 import { DynamicBreadcrumb } from "@/components/common";
 
 const tabs = [
@@ -103,7 +104,22 @@ export default function CompanyDetail() {
 
 	const onSubmit = async (data: CompanyInformationFormValues) => {
 		try {
-			await updateCompanyInformation.mutateAsync(data);
+			const { companyLogotype, ...rest } = data;
+			const payload: Record<string, unknown> = { ...rest };
+
+			if (companyLogotype instanceof File) {
+				// A new file was picked -- upload it first, then send only the
+				// resulting media id (the backend never accepts raw uploads).
+				const uploaded = await uploadCompanyMedia(companyLogotype);
+				payload.logoMediaId = uploaded.mediaId;
+			} else if (companyLogotype === null) {
+				// Explicitly cleared via the "remove logo" button.
+				payload.logoMediaId = null;
+			}
+			// Otherwise companyLogotype is still the existing remote URL --
+			// leave logoMediaId out entirely so the stored logo is untouched.
+
+			await updateCompanyInformation.mutateAsync(payload);
 			await queryClient.invalidateQueries({
 				queryKey: ["company-information"],
 			});
@@ -119,11 +135,16 @@ export default function CompanyDetail() {
 			return;
 		}
 
-		const incoming =
-			companyInformationQuery.data as Partial<CompanyInformationFormValues>;
+		const incoming = companyInformationQuery.data as Partial<
+			Omit<CompanyInformationFormValues, "companyLogotype">
+		> & { companyLogotype?: { url?: string | null } | null };
 		const merged: CompanyInformationFormValues = {
 			...DEFAULT_VALUES,
 			...incoming,
+			// The API returns {mediaId, url, fileName} for the logo; the form
+			// field only ever holds a File (new pick), a remote URL string
+			// (existing logo) or null (no logo), matching FormFileUpload.
+			companyLogotype: incoming.companyLogotype?.url ?? null,
 			postalAddress: {
 				...DEFAULT_VALUES.postalAddress,
 				...incoming.postalAddress,
@@ -210,6 +231,10 @@ export default function CompanyDetail() {
 								form={form}
 								onSubmit={onSubmit}
 								lastSavedRef={lastSavedRef}
+								remoteFileName={
+									companyInformationQuery.data?.companyLogotype
+										?.fileName ?? undefined
+								}
 							/>
 						</TabsContent>
 					) : tab.value === "bank" ? (
