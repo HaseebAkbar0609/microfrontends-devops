@@ -180,7 +180,7 @@ export function CompanyReferencesTab() {
 												href={reference.file.url ?? undefined}
 												target="_blank"
 												rel="noopener noreferrer"
-												className="flex items-center gap-2 text-sm text-slate-700 hover:underline"
+												className="group flex items-center gap-2 text-sm text-slate-700"
 											>
 												<span className="flex h-8 w-7 items-center justify-center rounded-sm border border-slate-200 bg-white">
 													<span className="rounded-sm bg-red-600 px-0.5 text-[8px] font-bold text-white">
@@ -190,7 +190,9 @@ export function CompanyReferencesTab() {
 															?.toUpperCase() || "FILE"}
 													</span>
 												</span>
-												{reference.file.fileName}
+												<span className="group-hover:underline">
+													{reference.file.fileName}
+												</span>
 											</a>
 										) : (
 											<span className="text-sm text-slate-400">
