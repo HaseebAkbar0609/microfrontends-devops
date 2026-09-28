@@ -9,15 +9,15 @@ import { EconomyDashboard } from "./EconomyDashboard";
 
 export function EconomyDashboardPage() {
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50/50">
+		<div className="p-6 w-full space-y-6">
 			<PageHeader
 				title={localizationConstants.economyDashboardTitle}
 				breadcrumbs={economyBreadcrumbs(
 					localizationConstants.dashboard,
 				)}
-				className="border-b-0 px-6 pt-5 pb-2"
+				className="border-b-0 p-0"
 			/>
-			<div className="flex-1 p-5">
+			<div>
 				<EconomyDashboard />
 			</div>
 		</div>

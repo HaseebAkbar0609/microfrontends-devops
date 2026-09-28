@@ -1,4 +1,4 @@
-import { PriceListsOverviewPage } from "@/features/financial-management";
+import { PriceListsOverviewPage } from "@/features/financial-management/components/price-lists/PriceListsOverviewPage";
 
 export const dynamic = "force-dynamic";
 

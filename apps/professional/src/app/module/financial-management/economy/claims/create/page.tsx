@@ -2,7 +2,7 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { CreateClaimPage } from "@/features/financial-management";
+import { CreateClaimPage } from "@/features/financial-management/components/claims/create/CreateClaimPage";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 

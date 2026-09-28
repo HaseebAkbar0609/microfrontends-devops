@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import localizationConstants from "@/utils/translation/constants";
+import { EconomySubTabs } from "../common/EconomySubTabs";
 import { useWageTypesOverview } from "../../hooks/useWageTypesOverview";
 import { WageTypesOverviewToolbar } from "./WageTypesOverviewToolbar";
 import { WageTypesOverviewTable } from "./WageTypesOverviewTable";
@@ -39,9 +40,16 @@ export function WageTypesOverviewPage() {
 		updateQueryParams,
 	} = useWageTypesOverview();
 
+	const subTabs = [
+		{ value: "loneartlista", label: localizationConstants.wageTypeListTab },
+	];
+
 	return (
 		<div className="p-6 w-full space-y-6">
-			{/* Toolbar (Subtabs, Search, Filters, Create Button) */}
+			{/* Sub Tabs Bar */}
+			<EconomySubTabs value="loneartlista" tabs={subTabs} />
+
+			{/* Toolbar (Search, Filters, Create Button) */}
 			<WageTypesOverviewToolbar
 				searchQuery={searchQuery}
 				statusFilter={statusFilter}

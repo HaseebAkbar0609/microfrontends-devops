@@ -2,8 +2,8 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { ClaimsOverviewPage } from "@/features/financial-management";
-import type { ClaimTabType } from "@/features/financial-management";
+import { ClaimsOverviewPage } from "@/features/financial-management/components/claims/ClaimsOverviewPage";
+import type { ClaimTabType } from "@/features/financial-management/types/claims.types";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 

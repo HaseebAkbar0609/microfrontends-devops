@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { EconomyStatusBadge } from "../common/EconomyStatusBadge";
 import { RotRutItem } from "../../types/rotRut.types";
 import { formatCurrency } from "../../utils/rotRutFormatters";
 
@@ -88,29 +89,18 @@ export function RotRutTableRow({
 			</td>
 			<td className="py-3 px-4 text-center">
 				<div className="flex flex-col items-center justify-center gap-0.5">
-					<span
-						className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${
+					<EconomyStatusBadge
+						status={item.status}
+						labelKey={
 							item.status === "approved"
-								? "bg-emerald-50 text-emerald-700 border-emerald-200"
+								? localizationConstants.rotRutFilterStatusApproved
 								: item.status === "submitted"
-									? "bg-blue-50 text-blue-700 border-blue-200"
+									? localizationConstants.rotRutFilterStatusSubmitted
 									: item.status === "rejected"
-										? "bg-rose-50 text-rose-700 border-rose-200"
-										: "bg-amber-50 text-amber-700 border-amber-200"
-						}`}
-					>
-						<Translate
-							text={
-								item.status === "approved"
-									? localizationConstants.rotRutFilterStatusApproved
-									: item.status === "submitted"
-										? localizationConstants.rotRutFilterStatusSubmitted
-										: item.status === "rejected"
-											? localizationConstants.rotRutFilterStatusRejected
-											: localizationConstants.rotRutFilterStatusPending
-							}
-						/>
-					</span>
+										? localizationConstants.rotRutFilterStatusRejected
+										: localizationConstants.rotRutFilterStatusPending
+						}
+					/>
 					{item.skatteverketReference && (
 						<span className="text-[10px] text-slate-500 font-mono" title={item.skatteverketReference}>
 							{item.skatteverketReference}

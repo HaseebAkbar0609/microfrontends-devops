@@ -4,7 +4,6 @@ import React, { useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, Trash2 } from "lucide-react";
 import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useSupplierOverview } from "../../hooks/useSupplierOverview";
 import type { SupplierOverviewRow } from "../../types/supplierOverview.types";
@@ -14,6 +13,7 @@ import {
 } from "../../constants/supplierOverview.constants";
 import { SuppliersOverviewToolbar } from "./SuppliersOverviewToolbar";
 import { SupplierDeleteDialog } from "./SupplierDeleteDialog";
+import { EconomyStatusBadge } from "../common/EconomyStatusBadge";
 
 export function SuppliersOverviewTable() {
 	const router = useRouter();
@@ -115,23 +115,16 @@ export function SuppliersOverviewTable() {
 				label: localizationConstants.supplierColStatus,
 				sortable: true,
 				render: (row) => (
-					<span
-						className={`inline-flex items-center justify-center rounded-md px-3 py-1 text-xs font-semibold text-white ${
+					<EconomyStatusBadge
+						status={row.status}
+						label={
 							row.status === "active"
-								? "bg-[#16A34A]"
+								? localizationConstants.supplierStatusActive
 								: row.status === "prospect"
-									? "bg-amber-500"
-									: "bg-slate-400"
-						}`}
-					>
-						{row.status === "active" ? (
-							<Translate text={localizationConstants.supplierStatusActive} />
-						) : row.status === "prospect" ? (
-							<Translate text={localizationConstants.supplierStatusProspect} />
-						) : (
-							<Translate text={localizationConstants.supplierStatusInactive} />
-						)}
-					</span>
+									? localizationConstants.supplierStatusProspect
+									: localizationConstants.supplierStatusInactive
+						}
+					/>
 				),
 			},
 		],

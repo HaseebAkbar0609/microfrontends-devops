@@ -15,9 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { useExpenseList, ExpenseActiveSubTab } from "../../hooks/useExpenseList";
 import {
-	EXPENSE_SUB_TAB_CONTAINER_CLASS,
-	EXPENSE_SUB_TAB_ACTIVE_CLASS,
-	EXPENSE_SUB_TAB_INACTIVE_CLASS,
 	CREATE_EXPENSE_ROUTE,
 	EXPENSE_DETAIL_ROUTE,
 	EXPENSE_INBOX_TAB,
@@ -26,6 +23,13 @@ import {
 } from "../../constants/expense.constants";
 import { ExpenseToolbar } from "./ExpenseToolbar";
 import { ExpenseListTable } from "./ExpenseListTable";
+
+import { EconomySubTabs, type EconomySubTabItem } from "../common/EconomySubTabs";
+
+const SUPPLIER_INVOICE_SUB_TABS: EconomySubTabItem<ExpenseActiveSubTab>[] = [
+	{ id: "supplier_list", labelKey: localizationConstants.expenseSubTabSupplierList },
+	{ id: "inbox", labelKey: localizationConstants.expenseSubTabInbox },
+];
 
 export function SupplierInvoiceView() {
 	const router = useRouter();
@@ -73,38 +77,14 @@ export function SupplierInvoiceView() {
 	return (
 		<>
 			{/* Sub-tabs: Leverantörs lista / Inbox */}
-			<div className="mb-4">
-				<div className={EXPENSE_SUB_TAB_CONTAINER_CLASS}>
-					<button
-						type="button"
-						onClick={() => {
-							setActiveSubTab("supplier_list");
-							setCurrentPage(1);
-						}}
-						className={
-							activeSubTab === "supplier_list"
-								? EXPENSE_SUB_TAB_ACTIVE_CLASS
-								: EXPENSE_SUB_TAB_INACTIVE_CLASS
-						}
-					>
-						<Translate text={localizationConstants.expenseSubTabSupplierList} />
-					</button>
-					<button
-						type="button"
-						onClick={() => {
-							setActiveSubTab("inbox");
-							setCurrentPage(1);
-						}}
-						className={
-							activeSubTab === "inbox"
-								? EXPENSE_SUB_TAB_ACTIVE_CLASS
-								: EXPENSE_SUB_TAB_INACTIVE_CLASS
-						}
-					>
-						<Translate text={localizationConstants.expenseSubTabInbox} />
-					</button>
-				</div>
-			</div>
+			<EconomySubTabs
+				tabs={SUPPLIER_INVOICE_SUB_TABS}
+				activeTab={activeSubTab}
+				onTabChange={(tab) => {
+					setActiveSubTab(tab);
+					setCurrentPage(1);
+				}}
+			/>
 
 			{/* Search & Filters Toolbar */}
 			<ExpenseToolbar

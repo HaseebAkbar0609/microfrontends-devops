@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { EconomyStatusBadge } from "../common/EconomyStatusBadge";
 import type { WageTypeItem, WageTypeStatus } from "../../types/wageTypes.types";
 import {
 	WAGE_TYPES_BASE_ROUTE,
@@ -99,7 +100,7 @@ export function WageTypesOverviewTable({
 				<div className="overflow-x-auto">
 					<table className="w-full text-left text-xs border-collapse min-w-[1100px]">
 						<thead>
-							<tr className="border-b border-slate-200 bg-slate-50/50 text-[11px] font-semibold text-slate-600 tracking-tight">
+							<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 								<th className="w-10 px-3 py-3.5 text-center">
 									<input
 										type="checkbox"
@@ -304,15 +305,7 @@ export function WageTypesOverviewTable({
 												{item.konto}
 											</td>
 											<td className="px-3 py-3">
-												{item.status === "active" ? (
-													<span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-700 border border-emerald-200">
-														<Translate text={localizationConstants.activeStatus} />
-													</span>
-												) : (
-													<span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600 border border-slate-200">
-														<Translate text={localizationConstants.inactiveStatus} />
-													</span>
-												)}
+												<EconomyStatusBadge status={item.status === "active" ? "active" : "inactive"} />
 											</td>
 											<td className="px-3 py-3 text-right">
 												<div className="flex items-center justify-end gap-1">
@@ -384,7 +377,7 @@ export function WageTypesOverviewTable({
 						size="sm"
 						disabled={selectedIds.length === 0}
 						onClick={() => onBatchToggleStatus("inactive")}
-						className="h-8 px-3 text-xs border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-2xs"
+						className="h-9 px-3.5 text-xs font-medium border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-40 cursor-pointer shadow-2xs rounded-lg"
 					>
 						<Translate text={localizationConstants.deactivateButton} />
 					</Button>
@@ -393,7 +386,7 @@ export function WageTypesOverviewTable({
 						size="sm"
 						disabled={selectedIds.length === 0}
 						onClick={() => onBatchToggleStatus("active")}
-						className="h-8 px-3 text-xs bg-[#111721] text-white hover:bg-slate-800 disabled:opacity-40 cursor-pointer shadow-2xs"
+						className="h-9 px-3.5 text-xs font-medium bg-[#111721] text-white hover:bg-slate-800 disabled:opacity-40 cursor-pointer shadow-2xs rounded-lg"
 					>
 						<Translate text={localizationConstants.activateButton} />
 					</Button>

@@ -102,7 +102,7 @@ export function ExpenseListTable({
 			<div className="overflow-x-auto min-h-[350px]">
 				<table className="w-full text-left border-collapse text-xs">
 					<thead>
-						<tr className="border-b border-slate-200/80 bg-white text-slate-600 font-medium select-none">
+						<tr className="border-b border-slate-200 bg-white text-slate-600 font-semibold select-none text-xs">
 							{/* Checkbox Column */}
 							<th className="py-3.5 px-4 w-12 text-center">
 								<Checkbox
@@ -270,70 +270,86 @@ export function ExpenseListTable({
 				</table>
 			</div>
 
-			{/* Pagination Footer matching Figma */}
-			<div className="border-t border-slate-200/80 px-4 py-3 bg-white flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+			{/* Pagination Footer */}
+			<div className="border-t border-slate-200 px-6 py-2 bg-white flex items-center gap-6 text-sm text-slate-600 flex-wrap justify-center sm:justify-end">
 				{/* Rows per page selector */}
 				<div className="flex items-center gap-2">
-					<span>
-						<Translate text={localizationConstants.expenseRowsPerPage} />
+					<span className="text-sm font-medium text-slate-700">
+						<Translate text={localizationConstants.rowsPerPageLabel} />
 					</span>
 					<Select
 						value={String(pageSize)}
-						onValueChange={(val) => onPageSizeChange(Number(val))}
+						onValueChange={(val) => {
+							onPageSizeChange(Number(val));
+							onPageChange(1);
+						}}
 					>
-						<SelectTrigger className="h-7 w-16 text-xs bg-white border-slate-200 rounded">
-							<SelectValue />
+						<SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0">
+							<SelectValue placeholder={String(pageSize)} />
 						</SelectTrigger>
-						<SelectContent className="bg-white border-slate-200">
-							<SelectItem value="5" className="text-xs">5</SelectItem>
-							<SelectItem value="10" className="text-xs">10</SelectItem>
-							<SelectItem value="25" className="text-xs">25</SelectItem>
-							<SelectItem value="50" className="text-xs">50</SelectItem>
+						<SelectContent>
+							{[5, 10, 20, 30, 50].map((size) => (
+								<SelectItem key={size} value={String(size)}>
+									{size}
+								</SelectItem>
+							))}
 						</SelectContent>
 					</Select>
 				</div>
 
 				{/* Page Navigation Controls */}
-				<div className="flex items-center gap-1.5">
-					<span className="mr-3 text-slate-600">
-						<Translate text={localizationConstants.expensePaginationPage} /> {currentPage} <Translate text={localizationConstants.expensePaginationOf} /> {totalPages}
-					</span>
+				<div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+					<Translate text={localizationConstants.pageLabel} />
+					<span>{currentPage}</span>
+					<Translate text={localizationConstants.ofLabel} />
+					<span>{totalPages}</span>
+				</div>
 
+				{/* Navigation Buttons: « < > » */}
+				<div className="flex items-center gap-1">
 					<Button
+						type="button"
 						variant="outline"
 						size="icon"
 						disabled={currentPage <= 1}
 						onClick={() => onPageChange(1)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
+						className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+						aria-label="First page"
 					>
-						<ChevronsLeft className="h-3.5 w-3.5 text-slate-600" />
+						<ChevronsLeft className="w-4 h-4" />
 					</Button>
 					<Button
+						type="button"
 						variant="outline"
 						size="icon"
 						disabled={currentPage <= 1}
 						onClick={() => onPageChange(currentPage - 1)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
+						className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+						aria-label="Previous page"
 					>
-						<ChevronLeft className="h-3.5 w-3.5 text-slate-600" />
+						<ChevronLeft className="w-4 h-4" />
 					</Button>
 					<Button
+						type="button"
 						variant="outline"
 						size="icon"
 						disabled={currentPage >= totalPages}
 						onClick={() => onPageChange(currentPage + 1)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
+						className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+						aria-label="Next page"
 					>
-						<ChevronRight className="h-3.5 w-3.5 text-slate-600" />
+						<ChevronRight className="w-4 h-4" />
 					</Button>
 					<Button
+						type="button"
 						variant="outline"
 						size="icon"
 						disabled={currentPage >= totalPages}
 						onClick={() => onPageChange(totalPages)}
-						className="h-7 w-7 text-xs border-slate-200 disabled:opacity-30 cursor-pointer bg-white rounded"
+						className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+						aria-label="Last page"
 					>
-						<ChevronsRight className="h-3.5 w-3.5 text-slate-600" />
+						<ChevronsRight className="w-4 h-4" />
 					</Button>
 				</div>
 			</div>

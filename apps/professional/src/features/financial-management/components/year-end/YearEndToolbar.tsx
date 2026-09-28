@@ -1,9 +1,7 @@
-"use client";
-
 import React from "react";
-import { Search, Filter, Plus } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Plus, Filter, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Search } from "@/components/search/Search";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -17,6 +15,7 @@ import {
 	YEAR_END_CATEGORY_OPTIONS,
 	getYearEndCategoryLabel,
 } from "../../utils/yearEndLocalization";
+import { AVAILABLE_FISCAL_YEARS } from "../../constants/yearEnd.constants";
 import type { YearEndCategory } from "../../types/yearEnd.types";
 
 interface YearEndToolbarProps {
@@ -24,6 +23,8 @@ interface YearEndToolbarProps {
 	onSearchChange: (q: string) => void;
 	categoryFilter: string;
 	onCategoryFilterChange: (cat: string) => void;
+	selectedYear: number;
+	onYearChange: (year: number) => void;
 	onCreateClick: () => void;
 }
 
@@ -32,6 +33,8 @@ export function YearEndToolbar({
 	onSearchChange,
 	categoryFilter,
 	onCategoryFilterChange,
+	selectedYear,
+	onYearChange,
 	onCreateClick,
 }: YearEndToolbarProps) {
 	const { t } = useTranslation();
@@ -42,37 +45,33 @@ export function YearEndToolbar({
 			: t(localizationConstants.filter);
 
 	return (
-		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
-			{/* Left: Search & Filter */}
-			<div className="flex items-center gap-3 flex-1 max-w-md">
+		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
+			{/* Left: Search & Filters */}
+			<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto flex-1">
 				{/* Search */}
-				<div className="relative flex-1">
-					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-					<Input
-						type="text"
-						value={searchQuery}
-						onChange={(e) => onSearchChange(e.target.value)}
-						placeholder={t(localizationConstants.searchPlaceholderYearEnd)}
-						className="pl-9 h-9 bg-white border-slate-200 text-xs rounded-lg shadow-2xs focus-visible:ring-1 focus-visible:ring-slate-400"
-					/>
-				</div>
+				<Search
+					value={searchQuery}
+					onChange={onSearchChange}
+					placeholder={t(localizationConstants.searchPlaceholderYearEnd)}
+					className="h-10 w-full"
+					wrapperClassName="w-full sm:w-[240px] md:w-[260px] lg:w-[300px]"
+				/>
 
 				{/* Filter Dropdown */}
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button
 							variant="outline"
-							size="sm"
-							className="h-9 gap-1.5 border-slate-200 bg-white text-xs text-slate-700 shadow-2xs hover:bg-slate-50 cursor-pointer"
+							className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-normal rounded-lg shadow-2xs gap-1.5 cursor-pointer justify-between sm:justify-start"
 						>
-							<Filter className="h-3.5 w-3.5 text-slate-500" />
+							<Filter className="w-3.5 h-3.5 text-slate-500" />
 							<span>{filterDisplayLabel}</span>
 						</Button>
 					</DropdownMenuTrigger>
-					<DropdownMenuContent align="start" className="w-48">
+					<DropdownMenuContent align="start" className="w-48 bg-white border-slate-200 shadow-md">
 						<DropdownMenuItem
 							onClick={() => onCategoryFilterChange("all")}
-							className="cursor-pointer text-xs"
+							className="cursor-pointer text-xs focus:bg-slate-100"
 						>
 							<Translate text={localizationConstants.filterAllCategoriesYearEnd} />
 						</DropdownMenuItem>
@@ -80,30 +79,45 @@ export function YearEndToolbar({
 							<DropdownMenuItem
 								key={opt.value}
 								onClick={() => onCategoryFilterChange(opt.value)}
-								className="cursor-pointer text-xs"
+								className="cursor-pointer text-xs focus:bg-slate-100"
 							>
 								{getYearEndCategoryLabel(opt.value, t)}
 							</DropdownMenuItem>
 						))}
 					</DropdownMenuContent>
 				</DropdownMenu>
+
+				{/* Inline Year Selector */}
+				<div className="relative inline-block w-full sm:w-32">
+					<select
+						value={selectedYear}
+						onChange={(e) => onYearChange(Number(e.target.value))}
+						aria-label={t(localizationConstants.labelYear)}
+						className="w-full h-10 appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-8 text-xs font-semibold text-slate-800 shadow-2xs focus:outline-none focus:ring-1 focus:ring-slate-400 cursor-pointer"
+					>
+						{AVAILABLE_FISCAL_YEARS.map((year) => (
+							<option key={year} value={year}>
+								{year}
+							</option>
+						))}
+					</select>
+					<ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+				</div>
 			</div>
 
 			{/* Right: + Add new */}
-			<div>
+			<div className="flex items-center justify-end">
 				<Button
 					onClick={onCreateClick}
-					size="sm"
-					className="h-9 px-4 bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 rounded-lg shadow-2xs gap-1.5 cursor-pointer"
+					className="h-10 px-4 bg-[#111721] hover:bg-slate-800 text-white font-medium text-sm rounded-lg shadow-2xs gap-2 cursor-pointer transition-colors w-full sm:w-auto justify-center"
 				>
-					<Plus className="h-4 w-4" />
-					<span>
-						<Translate text={localizationConstants.btnAddYearEnd} />
-					</span>
+					<Plus className="w-4 h-4" />
+					<Translate text={localizationConstants.btnAddYearEnd} />
 				</Button>
 			</div>
 		</div>
 	);
 }
+
 
 export default YearEndToolbar;

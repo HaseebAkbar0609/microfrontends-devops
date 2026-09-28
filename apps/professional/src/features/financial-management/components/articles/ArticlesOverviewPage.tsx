@@ -2,11 +2,17 @@
 
 import React, { Suspense, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { ArticlesOverviewTable } from "./ArticlesOverviewTable";
 import { SupplierArticlesOverviewTable } from "./SupplierArticlesOverviewTable";
+
+import { EconomySubTabs, type EconomySubTabItem } from "../common/EconomySubTabs";
+
+const ARTICLES_SUB_TABS: EconomySubTabItem<string>[] = [
+	{ id: "artikel", labelKey: localizationConstants.articleListTab },
+	{ id: "leverantorsArtiklar", labelKey: localizationConstants.supplierArticlesTab },
+];
 
 export function ArticlesOverviewPage() {
 	const router = useRouter();
@@ -25,19 +31,12 @@ export function ArticlesOverviewPage() {
 
 	return (
 		<div className="p-6 w-full space-y-6">
-			{/* Sub Tabs Bar matching Figma & Customer/Supplier pattern */}
-			<div className="border-b border-slate-200">
-				<Tabs value={activeSubTab} onValueChange={handleSubTabChange}>
-					<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
-						<TabsTrigger value="artikel" className="pb-3 pt-1 text-sm font-semibold">
-							<Translate text={localizationConstants.articleListTab} />
-						</TabsTrigger>
-						<TabsTrigger value="leverantorsArtiklar" className="pb-3 pt-1 text-sm font-semibold">
-							<Translate text={localizationConstants.supplierArticlesTab} />
-						</TabsTrigger>
-					</TabsList>
-				</Tabs>
-			</div>
+			{/* Sub Tabs Bar */}
+			<EconomySubTabs
+				tabs={ARTICLES_SUB_TABS}
+				activeTab={activeSubTab}
+				onTabChange={handleSubTabChange}
+			/>
 
 			{/* Table Content */}
 			{activeSubTab === "artikel" ? (

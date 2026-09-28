@@ -74,10 +74,10 @@ export function RotRutTable({
 	};
 
 	return (
-		<div className="bg-white rounded-xl border border-slate-200/80 shadow-xs overflow-hidden">
+		<div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
 			<div className="overflow-x-auto">
 				<table className="w-full text-xs text-left">
-					<thead className="bg-slate-50 border-b border-slate-200/80 text-slate-500 font-medium">
+					<thead className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 						<tr>
 							<th className="py-3 px-4 w-10">
 								<Checkbox

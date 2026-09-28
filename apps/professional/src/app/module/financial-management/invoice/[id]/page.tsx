@@ -1,5 +1,5 @@
 import React from "react";
-import { InvoiceDetailPage } from "@/features/financial-management";
+import { InvoiceDetailPage } from "@/features/financial-management/components/invoice-detail/InvoiceDetailPage";
 
 interface PageProps {
 	params: Promise<{

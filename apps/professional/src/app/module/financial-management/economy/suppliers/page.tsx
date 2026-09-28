@@ -1,4 +1,4 @@
-import { SuppliersOverviewPage } from "@/features/financial-management";
+import { SuppliersOverviewPage } from "@/features/financial-management/components/suppliers/SuppliersOverviewPage";
 
 export const dynamic = "force-dynamic";
 

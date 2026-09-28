@@ -5,7 +5,6 @@ import { Plus, Check, ChevronDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Search } from "@/components/search/Search";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -70,45 +69,29 @@ export function WageTypesOverviewToolbar({
 	};
 
 	return (
-		<div className="flex flex-col gap-6">
-			{/* Sub Navigation Tab */}
-			<div className="border-b border-slate-200">
-				<Tabs defaultValue="loneartlista">
-					<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
-						<TabsTrigger
-							value="loneartlista"
-							className="pb-3 pt-1 text-sm font-semibold cursor-pointer"
+		<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+			<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+				<Search
+					value={searchQuery}
+					onChange={onSearchChange}
+					placeholder={localizationConstants.search}
+					className="h-10 w-full"
+					wrapperClassName="w-full sm:w-[240px] md:w-[260px] lg:w-[300px]"
+				/>
+
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							variant="outline"
+							className={`h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-xs font-normal rounded-lg shadow-2xs gap-1.5 justify-between cursor-pointer ${
+								hasActiveFilters ? "text-slate-900 font-semibold border-slate-400" : "text-slate-700"
+							}`}
 						>
-							<Translate text={localizationConstants.wageTypeListTab} />
-						</TabsTrigger>
-					</TabsList>
-				</Tabs>
-			</div>
-
-			{/* Search, Filter & Create Action */}
-			<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-				<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
-					<Search
-						value={searchQuery}
-						onChange={onSearchChange}
-						placeholder={localizationConstants.search}
-						className="h-10 w-full"
-						wrapperClassName="w-full sm:w-[240px] md:w-[260px] lg:w-[300px]"
-					/>
-
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								variant="outline"
-								className={`h-10 w-full sm:w-28 border-slate-200 font-normal bg-white hover:bg-slate-50 gap-1.5 px-3 text-xs shadow-2xs justify-between cursor-pointer ${
-									hasActiveFilters ? "text-slate-900 font-semibold border-slate-400" : "text-slate-700"
-								}`}
-							>
-								<Translate text={localizationConstants.filter} />
-								<ChevronDown className="h-3.5 w-3.5 opacity-50" />
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="start" className="w-56 bg-white border-slate-200 shadow-md p-1">
+							<Translate text={localizationConstants.filter} />
+							<ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="start" className="w-56 bg-white border-slate-200 shadow-md p-1">
 							{hasActiveFilters && (
 								<>
 									<DropdownMenuItem
@@ -221,13 +204,12 @@ export function WageTypesOverviewToolbar({
 				<div className="flex items-center justify-end">
 					<Button
 						onClick={() => router.push(WAGE_TYPES_CREATE_ROUTE)}
-						className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
+						className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-4 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
 					>
 						<Plus className="h-4 w-4" aria-hidden />
 						<Translate text={localizationConstants.createWageTypeButton} />
 					</Button>
 				</div>
 			</div>
-		</div>
 	);
 }

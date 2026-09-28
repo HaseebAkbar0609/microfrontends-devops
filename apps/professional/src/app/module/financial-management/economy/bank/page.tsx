@@ -2,8 +2,8 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { BankOverviewPage } from "@/features/financial-management";
-import type { BankTabType } from "@/features/financial-management";
+import { BankOverviewPage } from "@/features/financial-management/components/bank/BankOverviewPage";
+import type { BankTabType } from "@/features/financial-management/types/bank.types";
 
 function BankPageContent() {
 	const searchParams = useSearchParams();

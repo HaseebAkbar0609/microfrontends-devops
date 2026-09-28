@@ -1,10 +1,8 @@
 "use client";
 
 import React, { use } from "react";
-import {
-	BudgetDetailRoute,
-	FORECAST_BUDGET_BASE_ROUTE,
-} from "@/features/financial-management";
+import { BudgetDetailRoute } from "@/features/financial-management/components/budget/routes/BudgetDetailRoute";
+import { FORECAST_BUDGET_BASE_ROUTE } from "@/features/financial-management/constants/budget.constants";
 
 interface PageProps {
 	params: Promise<{ id: string }>;

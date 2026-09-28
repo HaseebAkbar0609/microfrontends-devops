@@ -1,4 +1,4 @@
-import { CustomerOverviewPage } from "@/features/financial-management";
+import { CustomerOverviewPage } from "@/features/financial-management/components/customers/CustomerOverviewPage";
 
 export const dynamic = "force-dynamic";
 

@@ -1,14 +1,20 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { CLAIMS_PAGE_SIZE_OPTIONS } from "../../constants/claims.constants";
@@ -32,69 +38,86 @@ export function ClaimsPagination({
 }: ClaimsPaginationProps) {
 	if (totalItems === 0) return null;
 
-	const startIdx = (currentPage - 1) * pageSize + 1;
-	const endIdx = Math.min(currentPage * pageSize, totalItems);
-
 	return (
-		<div className="flex flex-col sm:flex-row items-center justify-between gap-4 py-4 px-2 select-none">
-			<div className="flex items-center gap-4 text-xs text-slate-500">
-				<div className="flex items-center gap-1.5">
-					<Translate text={localizationConstants.rowsPerPageLabelYearEnd} />:
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button
-								type="button"
-								variant="outline"
-								size="sm"
-								className="h-8 px-2.5 bg-white border-slate-200 text-xs font-medium text-slate-700 rounded-md shadow-2xs cursor-pointer"
-							>
-								{pageSize}
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent align="start" className="min-w-16">
-							{CLAIMS_PAGE_SIZE_OPTIONS.map((opt) => (
-								<DropdownMenuItem
-									key={opt}
-									onClick={() => onPageSizeChange(opt)}
-									className="cursor-pointer text-xs"
-								>
-									{opt}
-								</DropdownMenuItem>
-							))}
-						</DropdownMenuContent>
-					</DropdownMenu>
-				</div>
-
-				<span>
-					{startIdx} - {endIdx} <Translate text={localizationConstants.pageOfLabelYearEnd} /> {totalItems}
+		<div className="flex items-center gap-6 text-sm text-slate-600 flex-wrap justify-center sm:justify-end py-2 px-1">
+			{/* Rows per page selector */}
+			<div className="flex items-center gap-2">
+				<span className="text-sm font-medium text-slate-700">
+					<Translate text={localizationConstants.rowsPerPageLabel} />
 				</span>
+				<Select
+					value={String(pageSize)}
+					onValueChange={(val) => {
+						onPageSizeChange(Number(val));
+						onPageChange(1);
+					}}
+				>
+					<SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0">
+						<SelectValue placeholder={String(pageSize)} />
+					</SelectTrigger>
+					<SelectContent>
+						{CLAIMS_PAGE_SIZE_OPTIONS.map((size) => (
+							<SelectItem key={size} value={String(size)}>
+								{size}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
 			</div>
 
-			<div className="flex items-center gap-1.5">
+			{/* Page X of Y */}
+			<div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+				<Translate text={localizationConstants.pageLabel} />
+				<span>{currentPage}</span>
+				<Translate text={localizationConstants.ofLabel} />
+				<span>{totalPages}</span>
+			</div>
+
+			{/* Chevrons Navigation Buttons */}
+			<div className="flex items-center gap-1">
 				<Button
 					type="button"
 					variant="outline"
-					size="sm"
-					onClick={() => onPageChange(currentPage - 1)}
+					size="icon"
 					disabled={currentPage <= 1}
-					className="h-8 w-8 p-0 bg-white border-slate-200 text-slate-700 disabled:opacity-40 rounded-md shadow-2xs cursor-pointer"
+					onClick={() => onPageChange(1)}
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="First page"
+				>
+					<ChevronsLeft className="w-4 h-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="outline"
+					size="icon"
+					disabled={currentPage <= 1}
+					onClick={() => onPageChange(currentPage - 1)}
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="Previous page"
 				>
 					<ChevronLeft className="w-4 h-4" />
 				</Button>
-
-				<span className="text-xs font-medium text-slate-700 px-2">
-					<Translate text={localizationConstants.pageLabelYearEnd} /> {currentPage} / {totalPages}
-				</span>
-
 				<Button
 					type="button"
 					variant="outline"
-					size="sm"
-					onClick={() => onPageChange(currentPage + 1)}
+					size="icon"
 					disabled={currentPage >= totalPages}
-					className="h-8 w-8 p-0 bg-white border-slate-200 text-slate-700 disabled:opacity-40 rounded-md shadow-2xs cursor-pointer"
+					onClick={() => onPageChange(currentPage + 1)}
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="Next page"
 				>
 					<ChevronRight className="w-4 h-4" />
+				</Button>
+				<Button
+					type="button"
+					variant="outline"
+					size="icon"
+					disabled={currentPage >= totalPages}
+					onClick={() => onPageChange(totalPages)}
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="Last page"
+				>
+					<ChevronsRight className="w-4 h-4" />
 				</Button>
 			</div>
 		</div>

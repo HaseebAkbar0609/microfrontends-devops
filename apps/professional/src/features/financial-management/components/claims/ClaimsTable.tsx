@@ -48,7 +48,7 @@ export function ClaimsTable({
 			<div className="overflow-x-auto">
 				<table className="w-full text-left border-collapse">
 					<thead>
-						<tr className="border-b border-slate-200 bg-white text-xs font-medium text-slate-500 select-none">
+						<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 							<th
 								className="px-4 py-3.5 cursor-pointer hover:text-slate-800 transition-colors"
 								onClick={() => onSort("id")}

@@ -51,31 +51,31 @@ export function CasesToolbar({
 
 	return (
 		<div className="flex items-center gap-3 w-full sm:w-auto">
-			{/* Search input matching Figma Image 1 */}
-			<div className="relative w-full sm:w-64">
+			{/* Search input */}
+			<div className="relative w-full sm:w-[240px] md:w-[260px] lg:w-[300px]">
 				<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
 				<Input
 					type="text"
 					value={searchQuery}
 					onChange={(e) => onSearchChange(e.target.value)}
 					placeholder={t(localizationConstants.casesSearchPlaceholder)}
-					className="pl-9 h-9 text-xs bg-white border-slate-200 rounded-lg text-slate-800 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-400"
+					className="pl-9 h-10 text-sm bg-white border-slate-200 rounded-lg text-slate-800 placeholder:text-slate-400 focus-visible:ring-1 focus-visible:ring-slate-400 shadow-2xs"
 				/>
 			</div>
 
-			{/* Filter dropdown button matching Figma Image 1 */}
+			{/* Filter dropdown button */}
 			<Popover>
 				<PopoverTrigger asChild>
 					<Button
 						type="button"
 						variant="outline"
-						className={`h-9 px-3.5 bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-medium text-slate-700 gap-2 cursor-pointer transition-colors ${
+						className={`h-10 px-3.5 bg-white hover:bg-slate-50 border-slate-200 rounded-lg text-xs font-normal text-slate-700 gap-1.5 cursor-pointer transition-colors shadow-2xs ${
 							hasActiveFilters ? "border-slate-800 text-slate-900 bg-slate-50" : ""
 						}`}
 					>
 						<Filter className="w-3.5 h-3.5 text-slate-500" />
 						<Translate text={localizationConstants.casesFilterBtn} />
-						<ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+						<ChevronDown className="w-3.5 h-3.5 text-slate-400 ml-0.5" />
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent align="start" className="w-64 p-4 space-y-3 bg-white border border-slate-200 rounded-xl shadow-lg">

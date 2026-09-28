@@ -49,7 +49,7 @@ export function ClaimTemplatesTable({
 			<div className="overflow-x-auto">
 				<table className="w-full text-left border-collapse">
 					<thead>
-						<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-500">
+						<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 							{/* ID */}
 							<th className="py-3.5 px-6">
 								<button

@@ -61,7 +61,7 @@ export function AccountPlanOverviewTable() {
 				<div className="overflow-x-auto">
 					<table className="w-full text-left text-sm border-collapse min-w-[800px]">
 						<thead>
-							<tr className="border-b border-slate-200 bg-slate-50/50 text-xs font-semibold text-slate-600 uppercase tracking-wider">
+							<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 								<th className="w-12 px-4 py-3.5 text-center">
 									<input
 										type="checkbox"

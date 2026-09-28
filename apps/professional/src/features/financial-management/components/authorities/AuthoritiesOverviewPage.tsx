@@ -36,7 +36,7 @@ export function AuthoritiesOverviewPage() {
 	};
 
 	return (
-		<div className="flex flex-1 flex-col bg-white px-6 pt-5 pb-8 min-h-screen space-y-4">
+		<div className="p-6 w-full space-y-6">
 			{/* Top Toolbar */}
 			<AuthoritiesToolbar
 				searchQuery={searchQuery}

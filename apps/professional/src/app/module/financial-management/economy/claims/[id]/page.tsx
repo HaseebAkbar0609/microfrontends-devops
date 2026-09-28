@@ -4,13 +4,13 @@ import React, { use } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ClaimDetailPage } from "@/features/financial-management/components/claims/detail/ClaimDetailPage";
+import { claimsRepository } from "@/features/financial-management/utils/claimsRepository";
 import {
-	ClaimDetailPage,
-	claimsRepository,
 	CLAIMS_BASE_ROUTE,
 	CREATE_CLAIM_ROUTE,
-} from "@/features/financial-management";
-import type { ClaimItem } from "@/features/financial-management";
+} from "@/features/financial-management/constants/claims.constants";
+import type { ClaimItem } from "@/features/financial-management/types/claims.types";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 

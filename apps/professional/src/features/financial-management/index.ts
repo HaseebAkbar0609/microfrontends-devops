@@ -219,3 +219,4 @@ export * from "./utils/wageTypesRepository";
 export * from "./hooks/useWageTypesOverview";
 export * from "./hooks/useCreateWageTypeForm";
 export * from "./hooks/useWageTypeDetail";
+export * from "./components/common";

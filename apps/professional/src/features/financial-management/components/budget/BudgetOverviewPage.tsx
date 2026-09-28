@@ -4,10 +4,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
 import { budgetRoutes } from "../../constants/budget.constants";
 import { useBudgets } from "../../hooks/useBudgets";
 import type { EconomyBudgetItem } from "../../types/budget.types";
+import { EconomySubTabs } from "../common/EconomySubTabs";
 import { BudgetBulkActionBar } from "./BudgetBulkActionBar";
 import { BudgetDeleteDialog } from "./BudgetDeleteDialog";
 import { BudgetTable } from "./BudgetTable";
@@ -51,17 +51,16 @@ export function BudgetOverviewPage({ basePath }: BudgetOverviewPageProps) {
 	const handleEdit = (item: EconomyBudgetItem) => router.push(routes.edit(item.id));
 	const handleCreate = () => router.push(routes.create);
 
+	const tabs = [{ id: "budgetlista", labelKey: localizationConstants.tabBudgetList }];
+
 	return (
-		<div className="flex min-h-screen min-w-0 flex-1 flex-col bg-slate-50/50 px-6 pt-4 pb-8">
+		<div className="p-6 w-full space-y-6">
 			{/* Sub-navigation Tabs: Budgetlista */}
-			<div className="mb-5 flex items-center gap-6 border-b border-slate-200">
-				<button
-					type="button"
-					className="cursor-pointer border-b-2 border-slate-900 pb-3 text-sm font-semibold text-slate-900"
-				>
-					<Translate text={localizationConstants.tabBudgetList} />
-				</button>
-			</div>
+			<EconomySubTabs
+				tabs={tabs}
+				activeTab="budgetlista"
+				onTabChange={() => {}}
+			/>
 
 			{/* Toolbar (Search, Filter, Create CTA) */}
 			<BudgetToolbar

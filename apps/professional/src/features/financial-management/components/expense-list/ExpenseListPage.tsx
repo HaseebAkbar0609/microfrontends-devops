@@ -5,7 +5,7 @@ import { SupplierInvoiceView } from "./SupplierInvoiceView";
 
 export function ExpenseListPage() {
 	return (
-		<div className="flex flex-1 flex-col bg-slate-50/50 px-6 pt-5 pb-8">
+		<div className="p-6 w-full space-y-6">
 			<SupplierInvoiceView />
 		</div>
 	);

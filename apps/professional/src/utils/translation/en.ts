@@ -9514,6 +9514,7 @@ const enCases: CasesTranslation = {
 	casesOverviewTabList: "Case list",
 	casesCreateButton: "Create case",
 	casesBtnCreateCase: "Create Case",
+	casesBtnImportCase: "Import Cases",
 	casesSearchPlaceholder: "Search",
 	casesFilterBtn: "Filter",
 	casesStatusAll: "All statuses",
