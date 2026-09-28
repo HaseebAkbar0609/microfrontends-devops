@@ -15,6 +15,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { PROJECT_MODULE_BASE_URL } from "../data/projectNav.config";
 import { createProjectApi } from "./api/projectCreateApi";
+import { useProjectDocumentUploads } from "./useProjectDocumentUploads";
 import { PROJECT_CREATE_CONSTANTS, type ProjectCreateStep } from "./constants";
 import { createProjectSchema } from "./schema";
 import type {
@@ -87,6 +88,7 @@ const EMPTY_FORM: CreateProjectFormData = {
 
 function fileTypeOf(name: string): ProjectDocumentItem["fileType"] {
 	const extension = name.split(".").pop()?.toLowerCase();
+	if (extension === "jpeg") return "jpg";
 	return extension === "png" || extension === "jpg" || extension === "doc"
 		? extension
 		: PROJECT_CREATE_CONSTANTS.DEFAULT_FILE_TYPE;
@@ -106,6 +108,7 @@ function fileTypeOf(name: string): ProjectDocumentItem["fileType"] {
 export function useCreateProjectForm() {
 	const t = useTranslate();
 	const router = useRouter();
+	const { registerFile, discardFile, prepareDocuments } = useProjectDocumentUploads();
 
 	const [currentStep, setCurrentStep] = useState<ProjectCreateStep>(1);
 	const [documents, setDocuments] = useState<ProjectDocumentItem[]>([]);
@@ -135,6 +138,7 @@ export function useCreateProjectForm() {
 	 */
 	const goToStep = useCallback(
 		async (target: ProjectCreateStep) => {
+			if (isSubmitting) return;
 			if (target > currentStep) {
 				for (let step = currentStep; step < target; step++) {
 					if (!(await validateStep(step))) {
@@ -145,14 +149,15 @@ export function useCreateProjectForm() {
 			}
 			setCurrentStep(target);
 		},
-		[currentStep, validateStep],
+		[currentStep, isSubmitting, validateStep],
 	);
 
 	const goNext = useCallback(async () => {
+		if (isSubmitting) return;
 		if (currentStep >= PROJECT_CREATE_CONSTANTS.TOTAL_STEPS) return;
 		if (!(await validateStep(currentStep))) return;
 		setCurrentStep((step) => (step + 1) as ProjectCreateStep);
-	}, [currentStep, validateStep]);
+	}, [currentStep, isSubmitting, validateStep]);
 
 	/**
 	 * Re-checks each file against the rules the `accept` attribute only
@@ -186,7 +191,7 @@ export function useCreateProjectForm() {
 			}
 
 			if (accepted.length > 0) {
-				setPendingFiles((previous) => [...previous, ...accepted]);
+				setPendingFiles((previous) => [...new Map([...previous, ...accepted].map((entry) => [entry.name, entry])).values()]);
 			}
 		},
 		[t],
@@ -206,19 +211,23 @@ export function useCreateProjectForm() {
 		   here — unlike in a mock evaluated while rendering. */
 		const today = new Date().toISOString().slice(0, 10);
 
-		const rows: ProjectDocumentItem[] = pendingFiles.map((entry, index) => ({
-			id: `doc-${Date.now()}-${index}`,
+		const rows: ProjectDocumentItem[] = pendingFiles.map((entry) => {
+			const id = crypto.randomUUID();
+			registerFile(id, entry.file);
+			return {
+			id,
 			date: today,
 			documentName: entry.name.replace(/\.[^.]+$/, ""),
 			fileName: entry.name,
 			fileType: fileTypeOf(entry.name),
 			fileSize: `${(entry.file.size / 1024).toFixed(1)} KB`,
-		}));
+			};
+		});
 
 		setDocuments((previous) => [...previous, ...rows]);
 		setPendingFiles([]);
 		return rows;
-	}, [pendingFiles]);
+	}, [pendingFiles, registerFile]);
 
 	/**
 	 * The name cell is free text that reaches the payload, so it is bounded
@@ -237,8 +246,9 @@ export function useCreateProjectForm() {
 	}, []);
 
 	const removeDocument = useCallback((id: string) => {
+		discardFile(id);
 		setDocuments((previous) => previous.filter((row) => row.id !== id));
-	}, []);
+	}, [discardFile]);
 
 	const setContacts = useCallback(
 		(contacts: ProjectContactPerson[]) =>
@@ -257,25 +267,42 @@ export function useCreateProjectForm() {
 		[commitPendingFiles, documents, form],
 	);
 
+	const uploadPendingFiles = useCallback(async () => {
+		if (isSubmitting) return;
+		setIsSubmitting(true);
+		try {
+			const data = collect();
+			setDocuments(await prepareDocuments(data.documents));
+		} catch {
+			showToast("error", t(localizationConstants.projectDocumentsUploadFailed));
+		} finally {
+			setIsSubmitting(false);
+		}
+	}, [collect, isSubmitting, prepareDocuments, t]);
+
 	/**
 	 * A draft is deliberately not validated — a half-filled project is the
 	 * whole point of saving one.
 	 */
 	const saveDraft = useCallback(async () => {
+		if (isSubmitting) return;
 		setIsSubmitting(true);
 		try {
-			const saved = await createProjectApi(collect(), { isDraft: true, existing: savedDraft ?? undefined });
+			const data = collect();
+			data.documents = await prepareDocuments(data.documents);
+			const saved = await createProjectApi(data, { isDraft: true, existing: savedDraft ?? undefined });
+			setDocuments(saved.data.documents);
 			setSavedDraft({ id: saved.id, version: saved.version });
 			showToast("success", t(localizationConstants.projectCreateDraftToast));
-		} catch (error) {
-			console.error("[CreateProject] Failed to save draft:", error);
+		} catch {
 			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsSubmitting(false);
 		}
-	}, [collect, savedDraft, t]);
+	}, [collect, isSubmitting, prepareDocuments, savedDraft, t]);
 
 	const submit = useCallback(async () => {
+		if (isSubmitting) return;
 		const valid = await form.trigger();
 
 		if (!valid) {
@@ -297,20 +324,21 @@ export function useCreateProjectForm() {
 
 		setIsSubmitting(true);
 		try {
-			await createProjectApi(collect(), { isDraft: false, existing: savedDraft ?? undefined });
+			const data = collect();
+			data.documents = await prepareDocuments(data.documents);
+			await createProjectApi(data, { isDraft: false, existing: savedDraft ?? undefined });
 			showToast("success", t(localizationConstants.projectCreateSuccessToast));
 			router.push(OVERVIEW_URL);
-		} catch (error) {
-			console.error("[CreateProject] Failed to create project:", error);
+		} catch {
 			showToast("error", t(localizationConstants.genericError));
 		} finally {
 			setIsSubmitting(false);
 		}
-	}, [collect, form, router, savedDraft, t]);
+	}, [collect, form, isSubmitting, prepareDocuments, router, savedDraft, t]);
 
 	const cancel = useCallback(
-		() => router.push(OVERVIEW_URL),
-		[router],
+		() => { if (!isSubmitting) router.push(OVERVIEW_URL); },
+		[isSubmitting, router],
 	);
 
 	return {
@@ -323,6 +351,7 @@ export function useCreateProjectForm() {
 		selectFiles,
 		removePendingFile,
 		commitPendingFiles,
+		uploadPendingFiles,
 		renameDocument,
 		removeDocument,
 		setContacts,

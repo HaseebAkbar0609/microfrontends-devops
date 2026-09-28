@@ -1,6 +1,5 @@
 import { parseRecordIdParam } from "@/lib/routeParams";
-import localizationConstants from "@/utils/translation/constants";
-import { UnavailableProjectSectionPage } from "@/features/project/production/components/UnavailableProjectSectionPage";
+import { UploadedProjectDocumentsPage } from "@/features/project/production/handlingar/UploadedProjectDocumentsPage";
 
 interface PageProps {
 	params: Promise<{ id: string }>;
@@ -8,5 +7,5 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
 	const { id } = await params;
-	return <UnavailableProjectSectionPage projectId={parseRecordIdParam(id)} sectionKey={localizationConstants.projectDocumentsTitle} />;
+	return <UploadedProjectDocumentsPage projectId={parseRecordIdParam(id)} />;
 }
