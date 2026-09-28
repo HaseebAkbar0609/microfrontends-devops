@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useCases } from "../../../hooks/useCases";
-import { CASES_BASE_ROUTE } from "../../../constants/cases.constants";
+import { casesRoutes } from "../../../constants/cases.constants";
 import type { CaseFormData } from "../../../types/cases.types";
 import { CreateCaseHeader } from "./CreateCaseHeader";
 import { CreateCaseTabs, type CreateCaseTab } from "./CreateCaseTabs";
@@ -15,8 +15,14 @@ import { MessageCard } from "./MessageCard";
 import { DocumentsTab } from "./DocumentsTab";
 import { FormActions } from "./FormActions";
 
-export function CreateCasePage() {
+export interface CreateCasePageProps {
+	/** Which module the screen is mounted in; every link is built from it. */
+	basePath?: string;
+}
+
+export function CreateCasePage({ basePath }: CreateCasePageProps = {}) {
 	const router = useRouter();
+	const routes = casesRoutes(basePath);
 	const searchParams = useSearchParams();
 	const editId = searchParams.get("edit") || searchParams.get("id");
 	const { t } = useTranslation();
@@ -142,9 +148,9 @@ export function CreateCasePage() {
 
 	const handleBack = () => {
 		if (editId) {
-			router.push(`${CASES_BASE_ROUTE}/${editId}`);
+			router.push(routes.detail(editId));
 		} else {
-			router.push(CASES_BASE_ROUTE);
+			router.push(routes.list);
 		}
 	};
 
@@ -166,7 +172,7 @@ export function CreateCasePage() {
 					images: formData.images,
 				});
 				showToast("success", t(localizationConstants.casesToastUpdated));
-				router.push(`${CASES_BASE_ROUTE}/${editId}`);
+				router.push(routes.detail(editId));
 			} else {
 				const newCase = addCase({
 					id: formData.id.replace("#", ""),
@@ -180,7 +186,7 @@ export function CreateCasePage() {
 					images: formData.images,
 				});
 				showToast("success", t(localizationConstants.casesToastCreated));
-				router.push(`${CASES_BASE_ROUTE}/${newCase.id}`);
+				router.push(routes.detail(newCase.id));
 			}
 		} finally {
 			setIsSubmitting(false);
@@ -206,7 +212,7 @@ export function CreateCasePage() {
 	return (
 		<div className="p-6 w-full space-y-6">
 			{/* Top Header with consistent back navigation */}
-			<CreateCaseHeader title={pageTitle} onBack={handleBack} />
+			<CreateCaseHeader title={pageTitle} onBack={handleBack} basePath={basePath} />
 
 			{/* Sub Tabs matching Figma */}
 			<CreateCaseTabs activeTab={activeTab} onTabChange={setActiveTab} />

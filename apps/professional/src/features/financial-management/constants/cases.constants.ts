@@ -1,10 +1,96 @@
-import type { CaseItem, CaseCategory } from "../types/cases.types";
+import type { RecordFileRules } from "@/features/project/shared/recordFiles";
+import { acceptAttribute } from "@/features/project/shared/recordFiles";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
+import type { CaseItem, CaseCategory, CaseStatus } from "../types/cases.types";
 
 export const CASES_BASE_ROUTE = "/module/financial-management/economy/cases";
-export const CREATE_CASE_ROUTE = `${CASES_BASE_ROUTE}/create`;
-export const CASES_IMPORT_ROUTE = `${CASES_BASE_ROUTE}/import`;
+/** Prognos shows the same register under its own tab. */
+export const FORECAST_CASES_BASE_ROUTE = "/module/financial-management/forecast/cases";
+
+/**
+ * Where the register's screens live, built in one place so no component writes
+ * a path. Ekonomi's call sites pass nothing; Prognos passes its own base.
+ */
+export function casesRoutes(basePath: string = CASES_BASE_ROUTE) {
+	return {
+		list: basePath,
+		create: `${basePath}/create`,
+		import: `${basePath}/import`,
+		detail: (id: string) => `${basePath}/${id}`,
+		conversation: (id: string) => `${basePath}/${id}/conversation`,
+		/** Editing reuses the create screen, told which case to load. */
+		edit: (id: string) => `${basePath}/create?edit=${id}`,
+	};
+}
 
 export const STORAGE_KEY_CASES = "tfs_economy_cases_data_v8";
+
+/**
+ * A case's description, its creator and its conversation — the parts that name
+ * people and carry their words. They are kept out of `localStorage` (AGENTS.md
+ * rule 6) and held here instead: encoded, in `sessionStorage`, so a reply
+ * survives a reload without leaving plain text on disk.
+ */
+export const STORAGE_KEY_CASE_THREADS = "tfs_economy_case_threads_v1";
+
+/** What a reply may carry. */
+export const CASE_MESSAGE_FILE_RULES: RecordFileRules = {
+	types: {
+		".pdf": "application/pdf",
+		".png": "image/png",
+		".jpg": "image/jpeg",
+		".jpeg": "image/jpeg",
+		".doc": "application/msword",
+		".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+		".xls": "application/vnd.ms-excel",
+		".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+	},
+	maxBytes: 10 * 1024 * 1024,
+	/** Files one reply may carry. */
+	maxCount: 5,
+};
+
+export const CASE_MESSAGE_FILE_ACCEPT = acceptAttribute(CASE_MESSAGE_FILE_RULES.types);
+
+/**
+ * Each status's label and the colours it wears. One map, so the row's badge,
+ * the detail header's pill and the register's sorting always agree.
+ */
+export const CASE_STATUS_META: Record<
+	CaseStatus,
+	{ labelKey: TranslationKeys; bgClass: string; textClass: string; hoverClass: string }
+> = {
+	not_started: {
+		labelKey: localizationConstants.casesStatusNotStarted,
+		bgClass: "bg-sky-400",
+		textClass: "text-white",
+		hoverClass: "hover:bg-sky-500",
+	},
+	ongoing: {
+		labelKey: localizationConstants.casesStatusOngoing,
+		bgClass: "bg-orange-500",
+		textClass: "text-white",
+		hoverClass: "hover:bg-orange-600",
+	},
+	completed: {
+		labelKey: localizationConstants.casesStatusCompleted,
+		bgClass: "bg-emerald-500",
+		textClass: "text-white",
+		hoverClass: "hover:bg-emerald-600",
+	},
+	closed: {
+		labelKey: localizationConstants.casesStatusClosed,
+		bgClass: "bg-slate-500",
+		textClass: "text-white",
+		hoverClass: "hover:bg-slate-600",
+	},
+	rejected: {
+		labelKey: localizationConstants.casesStatusRejected,
+		bgClass: "bg-rose-500",
+		textClass: "text-white",
+		hoverClass: "hover:bg-rose-600",
+	},
+};
 
 export const DEFAULT_CASES_PAGE_SIZE = 10;
 export const CASES_PAGE_SIZE_OPTIONS = [10, 25, 50] as const;

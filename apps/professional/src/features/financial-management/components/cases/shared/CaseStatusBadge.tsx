@@ -2,8 +2,7 @@
 
 import React from "react";
 import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
-import type { TranslationKeys } from "@/utils/translation/constants";
+import { CASE_STATUS_META } from "../../../constants/cases.constants";
 import type { CaseStatus } from "../../../types/cases.types";
 
 interface CaseStatusBadgeProps {
@@ -11,39 +10,8 @@ interface CaseStatusBadgeProps {
 	className?: string;
 }
 
-const STATUS_CONFIG: Record<
-	CaseStatus,
-	{ labelKey: TranslationKeys; bgClass: string; textClass: string }
-> = {
-	not_started: {
-		labelKey: localizationConstants.casesStatusNotStarted,
-		bgClass: "bg-sky-400",
-		textClass: "text-white",
-	},
-	ongoing: {
-		labelKey: localizationConstants.casesStatusOngoing,
-		bgClass: "bg-orange-500",
-		textClass: "text-white",
-	},
-	completed: {
-		labelKey: localizationConstants.casesStatusCompleted,
-		bgClass: "bg-emerald-500",
-		textClass: "text-white",
-	},
-	closed: {
-		labelKey: localizationConstants.casesStatusClosed,
-		bgClass: "bg-slate-500",
-		textClass: "text-white",
-	},
-	rejected: {
-		labelKey: localizationConstants.casesStatusRejected,
-		bgClass: "bg-rose-500",
-		textClass: "text-white",
-	},
-};
-
 export function CaseStatusBadge({ status, className = "" }: CaseStatusBadgeProps) {
-	const config = STATUS_CONFIG[status] || STATUS_CONFIG.not_started;
+	const config = CASE_STATUS_META[status] || CASE_STATUS_META.not_started;
 
 	return (
 		<span

@@ -52,7 +52,7 @@ function FormField({
 	className?: string;
 }) {
 	return (
-		<div className={cn("grid gap-1.5", className)}>
+		<div className={cn("flex flex-col gap-1.5", className)}>
 			<Label className="text-sm font-medium text-slate-900 mb-0">
 				{label}
 				{required && <span className="ml-1 text-red-500">*</span>}
@@ -70,7 +70,7 @@ function FormField({
 				)}
 			/>
 			{error && errorMessage && (
-				<p className="text-xs text-red-500">{errorMessage}</p>
+				<p className="text-xs text-red-500 leading-tight">{errorMessage}</p>
 			)}
 		</div>
 	);
@@ -98,7 +98,7 @@ function PhoneFormField({
 	className?: string;
 }) {
 	return (
-		<div className={cn("grid gap-1.5", className)}>
+		<div className={cn("flex flex-col gap-1.5", className)}>
 			<Label className="text-sm font-medium text-slate-900 mb-0">
 				{label}
 				{required && <span className="ml-1 text-red-500">*</span>}
@@ -110,7 +110,7 @@ function PhoneFormField({
 				hasError={error}
 			/>
 			{error && errorMessage && (
-				<p className="text-xs text-red-500">{errorMessage}</p>
+				<p className="text-xs text-red-500 leading-tight">{errorMessage}</p>
 			)}
 		</div>
 	);
@@ -241,7 +241,7 @@ export function KalkylKontaktStep({
 						</CardHeader>
 						<CardContent className="px-6 py-5">
 							<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-								<div className="grid gap-1.5">
+								<div className="flex flex-col gap-1.5">
 									<Label className="text-sm font-medium text-slate-900 mb-0">
 										<Translate text={localizationConstants.calcNewForetagLabel} />
 									</Label>
@@ -320,7 +320,7 @@ export function KalkylKontaktStep({
 						</CardHeader>
 						<CardContent className="px-6 py-5">
 							<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-								<div className="grid gap-1.5 lg:col-span-2">
+								<div className="flex flex-col gap-1.5 lg:col-span-2">
 									<Label className="text-sm font-medium text-slate-900 mb-0">
 										<Translate text={localizationConstants.calcNewKontaktperson} />
 									</Label>
@@ -507,7 +507,7 @@ export function KalkylKontaktStep({
 					</CardHeader>
 					<CardContent className="px-6 py-5">
 						<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-							<div className="grid gap-1.5 lg:col-span-2">
+							<div className="flex flex-col gap-1.5 lg:col-span-2">
 								<Label className="text-sm font-medium text-slate-900 mb-0">
 									<Translate text={localizationConstants.calcNewKontaktperson} />
 								</Label>
@@ -557,7 +557,7 @@ export function KalkylKontaktStep({
 								placeholder={t(localizationConstants.calcNewPlaceholderMobil)}
 							/>
 
-							<div className="grid gap-1.5">
+							<div className="flex flex-col gap-1.5">
 								<Label className="text-sm font-medium text-slate-900 mb-0">
 									<Translate text={localizationConstants.agreementDetailRoll} />
 								</Label>

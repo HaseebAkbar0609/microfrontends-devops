@@ -4,8 +4,8 @@ import React from "react";
 import { ArrowLeft, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { showToast } from "@/lib/toast";
-import { cn } from "@/lib/utils";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useCreateKalkylForm } from "../hooks/useCreateKalkylForm";
@@ -61,8 +61,8 @@ export function CreateKalkylPage() {
 	};
 
 	return (
-		<div className="flex min-h-screen flex-col bg-slate-50">
-			<div className="flex-1 overflow-y-auto overflow-x-hidden px-4 py-6 sm:px-8">
+		<div className="flex flex-1 flex-col bg-slate-50">
+			<div className="flex-1 px-4 py-6 sm:px-6">
 				{/* Header */}
 				{isPreview ? (
 					<div className="mb-6">
@@ -73,12 +73,12 @@ export function CreateKalkylPage() {
 								size="icon"
 								aria-label={t(localizationConstants.backButton)}
 								onClick={handleBack}
-								className="h-8 w-8 cursor-pointer text-slate-700 hover:bg-slate-200"
+								className="h-8 w-8 shrink-0 cursor-pointer p-0 text-slate-900 hover:bg-slate-200 hover:text-slate-900"
 							>
-								<ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
+								<ArrowLeft className="size-5 text-slate-900" />
 							</Button>
 
-							<h1 className="text-lg font-semibold text-slate-900 sm:text-xl">
+							<h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
 								<Translate text={localizationConstants.calcNewPreviewTitle} />
 							</h1>
 						</div>
@@ -94,53 +94,43 @@ export function CreateKalkylPage() {
 									size="icon"
 									aria-label={t(localizationConstants.backButton)}
 									onClick={handleCancel}
-									className="h-8 w-8 cursor-pointer text-slate-700 hover:bg-slate-200"
+									className="h-8 w-8 shrink-0 cursor-pointer p-0 text-slate-900 hover:bg-slate-200 hover:text-slate-900"
 								>
-									<ArrowLeft className="h-5 w-5" strokeWidth={2.5} />
+									<ArrowLeft className="size-5 text-slate-900" />
 								</Button>
 
-								<h1 className="text-lg font-semibold text-slate-900 sm:text-xl">
+								<h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl">
 									<Translate text={localizationConstants.calcNewTitle} />
 								</h1>
 							</div>
 
-							<p className="ml-9 text-xs text-slate-500 sm:text-sm">
+							<p className="ml-10 text-xs text-slate-500 sm:text-sm">
 								<Translate text={localizationConstants.stepLabel} /> {currentStep}/{wizardStepCount}
 							</p>
 						</div>
 
 						{/* Step Tabs Bar with full-width bottom divider line */}
-						<div className="mb-6 ml-9 border-b border-slate-200">
-							<nav
-								className="inline-flex items-center gap-1 sm:gap-2 -mb-[1px]"
-								aria-label={t(localizationConstants.calcNewTitle)}
+						<div className="mb-6 ml-0 sm:ml-10">
+							<Tabs
+								value={String(currentStep)}
+								onValueChange={(val) => handleTabClick(Number(val))}
+								className="w-full"
 							>
-								{TABS.map((tab) => {
-									const isActive = currentStep === tab.key;
-									return (
-										<button
+								<TabsList variant="line" className="w-full overflow-y-hidden">
+									{TABS.map((tab) => (
+										<TabsTrigger
 											key={tab.key}
-											type="button"
-											onClick={() => handleTabClick(tab.key)}
-											className={cn(
-												"relative inline-flex items-center justify-center h-[36px] px-3 sm:px-4.5 pb-2 pt-1 font-sans text-sm font-semibold leading-none tracking-normal text-center whitespace-nowrap transition-colors cursor-pointer",
-												isActive
-													? "text-slate-950 font-bold"
-													: "text-slate-600 hover:text-slate-900 font-medium",
-											)}
+											value={String(tab.key)}
 										>
 											<Translate text={tab.labelKey} />
-											{isActive && (
-												<span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-slate-950 z-10" />
-											)}
-										</button>
-									);
-								})}
-							</nav>
+										</TabsTrigger>
+									))}
+								</TabsList>
+							</Tabs>
 						</div>
 
 						{/* Progress card — small screens only */}
-						<div className="mb-6 ml-9 rounded-lg border border-slate-200 bg-white p-4 shadow-none lg:hidden">
+						<div className="mb-6 ml-0 rounded-lg border border-slate-200 bg-white p-4 shadow-none sm:ml-10 lg:hidden">
 							<div className="mb-2 flex items-center justify-between">
 								<p className="text-sm font-semibold text-slate-900">
 									<Translate text={localizationConstants.stepLabel} /> {currentStep}/{wizardStepCount}
@@ -159,7 +149,7 @@ export function CreateKalkylPage() {
 
 				{/* Main Layout */}
 				{isPreview ? (
-					<div className="ml-9 pb-10">
+					<div className="ml-0 pb-10 sm:ml-10">
 						<KalkylPreviewStep
 							kontakt={kontakt}
 							projekt={projekt}
@@ -168,7 +158,7 @@ export function CreateKalkylPage() {
 						/>
 					</div>
 				) : (
-					<div className="ml-9 flex flex-col items-start gap-6 lg:flex-row">
+					<div className="ml-0 flex flex-col items-start gap-6 sm:ml-10 lg:flex-row">
 						<div className="w-full flex-1">
 							{currentStep === 1 && (
 								<KalkylKontaktStep
@@ -254,13 +244,13 @@ export function CreateKalkylPage() {
 			</div>
 
 			{/* Sticky Bottom Navigation Bar */}
-			<div className="sticky bottom-0 z-10 border-t border-slate-200 bg-white px-6 py-4 sm:px-8">
-				<div className="flex items-center justify-end gap-3">
+			<div className="sticky bottom-0 z-10 border-t border-slate-200 bg-white px-4 py-3 sm:px-6 sm:py-4">
+				<div className="grid grid-cols-2 gap-2 sm:flex sm:flex-row sm:items-center sm:justify-end sm:gap-3">
 					<Button
 						type="button"
 						variant="ghost"
 						onClick={handleCancel}
-						className="h-10 min-w-24 cursor-pointer rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-50"
+						className="h-10 w-full cursor-pointer rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 hover:bg-slate-50 sm:h-10 sm:w-auto sm:min-w-24 sm:px-4 sm:text-sm"
 					>
 						<Translate text={localizationConstants.cancelButton} />
 					</Button>
@@ -270,7 +260,7 @@ export function CreateKalkylPage() {
 							type="button"
 							variant="ghost"
 							onClick={handleBack}
-							className="h-10 min-w-24 cursor-pointer gap-1.5 rounded-md border border-slate-300 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-50"
+							className="h-10 w-full cursor-pointer gap-1.5 rounded-md border border-slate-300 bg-white px-3 text-xs font-medium text-slate-700 hover:bg-slate-50 sm:h-10 sm:w-auto sm:min-w-24 sm:px-4 sm:text-sm"
 						>
 							<ArrowLeft className="h-4 w-4" />
 							<Translate
@@ -287,7 +277,9 @@ export function CreateKalkylPage() {
 						<Button
 							type="button"
 							onClick={handleNext}
-							className="h-10 min-w-24 cursor-pointer gap-1.5 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-800"
+							className={`h-10 w-full cursor-pointer gap-1.5 rounded-md bg-slate-900 px-4 text-xs font-medium text-white hover:bg-slate-800 sm:h-10 sm:w-auto sm:min-w-24 sm:px-5 sm:text-sm ${
+								currentStep === 1 ? "col-span-1" : "col-span-2 sm:col-span-1"
+							}`}
 						>
 							<Translate text={localizationConstants.nextButton} />
 							<ArrowRight className="h-4 w-4" />
@@ -297,7 +289,7 @@ export function CreateKalkylPage() {
 							type="button"
 							onClick={handleSubmit}
 							disabled={isSubmitting}
-							className="h-10 min-w-28 cursor-pointer gap-1.5 rounded-md bg-slate-900 px-5 text-sm font-medium text-white hover:bg-slate-800"
+							className="col-span-2 h-10 w-full cursor-pointer gap-1.5 rounded-md bg-slate-900 px-4 text-xs font-medium text-white hover:bg-slate-800 sm:col-span-1 sm:h-10 sm:w-auto sm:min-w-28 sm:px-5 sm:text-sm"
 						>
 							{isSubmitting ? (
 								<Loader2 className="h-4 w-4 animate-spin" />

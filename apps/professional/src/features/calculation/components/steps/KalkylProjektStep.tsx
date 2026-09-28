@@ -47,7 +47,7 @@ function FormField({
 	className?: string;
 }) {
 	return (
-		<div className={cn("grid gap-1.5", className)}>
+		<div className={cn("flex flex-col gap-1.5", className)}>
 			<Label className="text-sm font-medium text-slate-900 mb-0">
 				{label}
 				{required && <span className="ml-1 text-red-500">*</span>}
@@ -65,7 +65,7 @@ function FormField({
 				)}
 			/>
 			{error && errorMessage && (
-				<p className="text-xs text-red-500">{errorMessage}</p>
+				<p className="text-xs text-red-500 leading-tight">{errorMessage}</p>
 			)}
 		</div>
 	);
@@ -161,7 +161,7 @@ export function KalkylProjektStep({
 				<CardContent className="px-6 py-5">
 					<div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
 						{/* Type Dropdown */}
-						<div className="grid gap-1.5">
+						<div className="flex flex-col gap-1.5">
 							<Label className="text-sm font-medium text-slate-900 mb-0">
 								<Translate text={localizationConstants.calcProType} />
 							</Label>
@@ -180,7 +180,7 @@ export function KalkylProjektStep({
 						</div>
 
 						{/* Kategori Dropdown */}
-						<div className="grid gap-1.5">
+						<div className="flex flex-col gap-1.5">
 							<Label className="text-sm font-medium text-slate-900 mb-0">
 								<Translate text={localizationConstants.category} />
 							</Label>
@@ -199,7 +199,7 @@ export function KalkylProjektStep({
 						</div>
 
 						{/* Advelning Dropdown */}
-						<div className="grid gap-1.5">
+						<div className="flex flex-col gap-1.5">
 							<Label className="text-sm font-medium text-slate-900 mb-0">
 								<Translate text={localizationConstants.calcNewAvdelning} />
 							</Label>
