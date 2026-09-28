@@ -231,6 +231,10 @@ export default function CompanyDetail() {
 								form={form}
 								onSubmit={onSubmit}
 								lastSavedRef={lastSavedRef}
+								remoteFileName={
+									companyInformationQuery.data?.companyLogotype
+										?.fileName ?? undefined
+								}
 							/>
 						</TabsContent>
 					) : tab.value === "bank" ? (

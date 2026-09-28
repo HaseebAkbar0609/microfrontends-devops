@@ -15,12 +15,16 @@ type CompanyLogotypeTabProps = {
   form: UseFormReturn<CompanyInformationFormValues>;
   onSubmit: (data: CompanyInformationFormValues) => Promise<void>;
   lastSavedRef: { current: CompanyInformationFormValues | null };
+  /** The logo's real upload name, from GET /company-information -- the
+   * field's own value is just a signed URL ending in a UUID storage key. */
+  remoteFileName?: string;
 };
 
 export function CompanyLogotypeTab({
   form,
   onSubmit,
   lastSavedRef,
+  remoteFileName,
 }: CompanyLogotypeTabProps) {
   const { control, getValues } = form;
 
@@ -50,6 +54,7 @@ export function CompanyLogotypeTab({
           <FormFileUpload
             control={control}
             name="companyLogotype"
+            remoteFileName={remoteFileName}
             label={localizationConstants.uploadYourLogotype}
             buttonLabel={localizationConstants.upload}
             placeholder={localizationConstants.noFileChosen}
