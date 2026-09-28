@@ -12,14 +12,7 @@ import {
 	PERSONNEL_MODULE_BASE_URL,
 	personnelBreadcrumbs,
 } from "../../constants/personnelNav.config";
-import { useCompanyEquipment } from "../../hooks/useCompanyEquipment";
-import { EquipmentToolbar } from "./EquipmentToolbar";
-import { EquipmentTable } from "./EquipmentTable";
-import { EquipmentTablePagination } from "./EquipmentTablePagination";
-import { AddEditAssetModal } from "./modals/AddEditAssetModal";
-import { AssetHistoryModal } from "./modals/AssetHistoryModal";
-import { DeleteAssetDialog } from "./modals/DeleteAssetDialog";
-import { CompanyAssetItem } from "../../types/equipment.types";
+import { EquipmentCardsGrid } from "./EquipmentCardsGrid";
 
 const TAB_ICON_MAP: Record<string, React.ElementType> = {
 	dashboard: Layers,
@@ -30,38 +23,6 @@ const TAB_ICON_MAP: Record<string, React.ElementType> = {
 };
 
 export function EquipmentOverviewPage() {
-	const {
-		paginatedAssets,
-		searchTerm,
-		setSearchTerm,
-		categoryFilter,
-		setCategoryFilter,
-		statusFilter,
-		setStatusFilter,
-		departmentFilter,
-		setDepartmentFilter,
-		sortField,
-		sortOrder,
-		handleSort,
-		currentPage,
-		setCurrentPage,
-		pageSize,
-		setPageSize,
-		totalPages,
-		handleResetFilters,
-		selectedAssetForHistory,
-		setSelectedAssetForHistory,
-		assetToEdit,
-		setAssetToEdit,
-		isAddAssetModalOpen,
-		setIsAddAssetModalOpen,
-		assetToDelete,
-		setAssetToDelete,
-		handleCreateAsset,
-		handleUpdateAsset,
-		handleDeleteAsset,
-	} = useCompanyEquipment();
-
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
 			{/* Page Header with Breadcrumbs */}
@@ -80,7 +41,12 @@ export function EquipmentOverviewPage() {
 							{PERSONNEL_NAV_ITEMS.map((item) => {
 								const Icon = TAB_ICON_MAP[item.id] || Users;
 								return (
-									<TabsTrigger key={item.id} value={item.id} className="cursor-pointer gap-1.5" asChild>
+									<TabsTrigger
+										key={item.id}
+										value={item.id}
+										className="cursor-pointer gap-1.5"
+										asChild
+									>
 										<Link href={item.href || PERSONNEL_MODULE_BASE_URL}>
 											<Icon className="w-3.5 h-3.5 shrink-0" />
 											<Translate text={item.labelKey || ""} />
@@ -92,72 +58,9 @@ export function EquipmentOverviewPage() {
 					</Tabs>
 				</div>
 
-				{/* Company-Wide Equipment & Vehicles Inventory Table */}
-				<div className="flex-1 flex flex-col bg-white rounded-lg border border-slate-200 shadow-xs overflow-hidden">
-					<EquipmentToolbar
-						searchTerm={searchTerm}
-						onSearchChange={setSearchTerm}
-						categoryFilter={categoryFilter}
-						onCategoryChange={setCategoryFilter}
-						statusFilter={statusFilter}
-						onStatusChange={setStatusFilter}
-						departmentFilter={departmentFilter}
-						onDepartmentChange={setDepartmentFilter}
-						onResetFilters={handleResetFilters}
-						onAddAsset={() => setIsAddAssetModalOpen(true)}
-					/>
-
-					<EquipmentTable
-						assets={paginatedAssets}
-						sortField={sortField}
-						sortOrder={sortOrder}
-						onSort={handleSort}
-						onViewHistory={(asset: CompanyAssetItem) => setSelectedAssetForHistory(asset)}
-						onEdit={(asset: CompanyAssetItem) => setAssetToEdit(asset)}
-						onDelete={(asset: CompanyAssetItem) => setAssetToDelete(asset)}
-					/>
-
-					<EquipmentTablePagination
-						currentPage={currentPage}
-						totalPages={totalPages}
-						pageSize={pageSize}
-						onPageChange={setCurrentPage}
-						onPageSizeChange={setPageSize}
-					/>
-				</div>
+				{/* Equipment & Vehicles Cards — 4 category cards (Arbetsredskap, Kläder, Nycklar-Betakort, Fordon) */}
+				<EquipmentCardsGrid />
 			</div>
-
-			{/* Asset Creation & Editing Modal */}
-			<AddEditAssetModal
-				isOpen={isAddAssetModalOpen || !!assetToEdit}
-				assetToEdit={assetToEdit}
-				onClose={() => {
-					setIsAddAssetModalOpen(false);
-					setAssetToEdit(null);
-				}}
-				onSave={(data) => {
-					if (assetToEdit) {
-						handleUpdateAsset(assetToEdit.id, data);
-					} else {
-						handleCreateAsset(data);
-					}
-				}}
-			/>
-
-			{/* Asset History & Maintenance Logs Modal */}
-			<AssetHistoryModal
-				isOpen={!!selectedAssetForHistory}
-				asset={selectedAssetForHistory}
-				onClose={() => setSelectedAssetForHistory(null)}
-			/>
-
-			{/* Asset Deletion Confirmation Dialog */}
-			<DeleteAssetDialog
-				isOpen={!!assetToDelete}
-				asset={assetToDelete}
-				onClose={() => setAssetToDelete(null)}
-				onConfirm={handleDeleteAsset}
-			/>
 		</div>
 	);
 }
