@@ -35,10 +35,10 @@ export function DocumentWorkflowDialog({ target, close }: { target: Target; clos
         <DialogDescription className="break-all pr-2 text-sm">{target.name}</DialogDescription>
         {target.fileUrl && <a href={target.fileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 w-fit items-center gap-2 text-sm text-primary underline-offset-4 hover:underline"><ExternalLink className="h-4 w-4" aria-hidden />{t("projectListOpen")}</a>}
       </DialogHeader>
-      <Tabs value={tab} onValueChange={changeTab}><TabsList variant="line" className="h-11 max-w-full">
-        <TabsTrigger className="h-11" value="approval" disabled={busy}><ClipboardCheck className="mr-2 h-4 w-4" aria-hidden />{t("dwApproval")}</TabsTrigger>
-        <TabsTrigger className="h-11" value="archive" disabled={busy}><Archive className="mr-2 h-4 w-4" aria-hidden />{t("dwArchive")}</TabsTrigger>
-        <TabsTrigger className="h-11" value="history" disabled={busy}><History className="mr-2 h-4 w-4" aria-hidden />{t("dwHistory")}</TabsTrigger>
+      <Tabs className="min-w-0" value={tab} onValueChange={changeTab}><TabsList variant="line" className="h-11 min-w-0 max-w-full">
+        <TabsTrigger className="h-11 px-2 sm:px-4.5" value="approval" disabled={busy}><ClipboardCheck className="mr-2 h-4 w-4" aria-hidden />{t("dwApproval")}</TabsTrigger>
+        <TabsTrigger className="h-11 px-2 sm:px-4.5" value="archive" disabled={busy}><Archive className="mr-2 h-4 w-4" aria-hidden />{t("dwArchive")}</TabsTrigger>
+        <TabsTrigger className="h-11 px-2 sm:px-4.5" value="history" disabled={busy}><History className="mr-2 h-4 w-4" aria-hidden />{t("dwHistory")}</TabsTrigger>
       </TabsList></Tabs>
       {context.isLoading ? <p role="status" className="py-6 text-sm">{t("genericLoading")}</p> : context.isError || !current ? <div role="alert" className="space-y-3 py-4">
         <p className="text-sm text-red-700">{t("dwLoadError")}</p><Button variant="outline" onClick={() => void context.refetch()}><RefreshCw aria-hidden />{t("retry")}</Button>
