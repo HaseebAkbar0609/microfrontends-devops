@@ -7,6 +7,7 @@ import {
 	Layers,
 	UserPlus,
 	Users,
+	Wrench,
 } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -14,9 +15,18 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import {
 	PERSONNEL_NAV_ITEMS,
+	PERSONNEL_MODULE_BASE_URL,
 	personnelBreadcrumbs,
 } from "../../constants/personnelNav.config";
 import { PersonnelDashboard } from "./PersonnelDashboard";
+
+const TAB_ICON_MAP: Record<string, React.ElementType> = {
+	dashboard: Layers,
+	overview: Users,
+	equipment: Wrench,
+	create: UserPlus,
+	worktime: Clock,
+};
 
 export function PersonnelDashboardPage() {
 	return (
@@ -34,30 +44,17 @@ export function PersonnelDashboardPage() {
 				<div className="flex items-center border-b border-slate-200 bg-white px-4 rounded-t-lg h-[44px] shadow-xs">
 					<Tabs defaultValue="dashboard" className="w-full">
 						<TabsList variant="line" className="h-[36px] overflow-x-auto">
-							<TabsTrigger value="dashboard" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[0]?.href ?? "#"}>
-									<Layers className="w-3.5 h-3.5 shrink-0 text-blue-600" />
-									<Translate text={localizationConstants.personalDashboardTab} />
-								</Link>
-							</TabsTrigger>
-							<TabsTrigger value="overview" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[1]?.href ?? "#"}>
-									<Users className="w-3.5 h-3.5 shrink-0 text-slate-500" />
-									<Translate text={localizationConstants.personalOverviewTab} />
-								</Link>
-							</TabsTrigger>
-							<TabsTrigger value="create" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[2]?.href ?? "#"}>
-									<UserPlus className="w-3.5 h-3.5 shrink-0 text-slate-500" />
-									<Translate text={localizationConstants.createEmployeeTab} />
-								</Link>
-							</TabsTrigger>
-							<TabsTrigger value="worktime" className="cursor-pointer gap-1.5" asChild>
-								<Link href={PERSONNEL_NAV_ITEMS[3]?.href ?? "#"}>
-									<Clock className="w-3.5 h-3.5 shrink-0 text-slate-500" />
-									<Translate text={localizationConstants.worktimeTab} />
-								</Link>
-							</TabsTrigger>
+							{PERSONNEL_NAV_ITEMS.map((item) => {
+								const Icon = TAB_ICON_MAP[item.id] || Users;
+								return (
+									<TabsTrigger key={item.id} value={item.id} className="cursor-pointer gap-1.5" asChild>
+										<Link href={item.href || PERSONNEL_MODULE_BASE_URL}>
+											<Icon className="w-3.5 h-3.5 shrink-0" />
+											<Translate text={item.labelKey || ""} />
+										</Link>
+									</TabsTrigger>
+								);
+							})}
 						</TabsList>
 					</Tabs>
 				</div>

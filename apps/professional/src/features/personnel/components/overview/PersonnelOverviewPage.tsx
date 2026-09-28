@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Clock, Layers, UserPlus, Users } from "lucide-react";
+import { Clock, Layers, UserPlus, Users, Wrench } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import localizationConstants from "@/utils/translation/constants";
@@ -22,6 +22,7 @@ import { DeactivateEmployeeDialog } from "./modals/DeactivateEmployeeDialog";
 const TAB_ICON_MAP: Record<string, React.ElementType> = {
 	dashboard: Layers,
 	overview: Users,
+	equipment: Wrench,
 	create: UserPlus,
 	worktime: Clock,
 };

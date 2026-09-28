@@ -23,10 +23,12 @@ import { Step2Kontaktperson } from "./steps/Step2Kontaktperson";
 import { Step3Anstallningsvillkor } from "./steps/Step3Anstallningsvillkor";
 import { Step4Kompetens } from "./steps/Step4Kompetens";
 import { Step5Dokument } from "./steps/Step5Dokument";
+import { Wrench } from "lucide-react";
 
 const TAB_ICON_MAP: Record<string, React.ElementType> = {
 	dashboard: Layers,
 	overview: Users,
+	equipment: Wrench,
 	worktime: Clock,
 };
 
