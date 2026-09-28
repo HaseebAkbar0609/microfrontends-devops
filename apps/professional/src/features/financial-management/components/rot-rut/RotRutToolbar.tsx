@@ -51,28 +51,28 @@ export function RotRutToolbar({
 }: RotRutToolbarProps) {
 	const { t } = useTranslation();
 	return (
-		<div className="bg-white rounded-xl border border-slate-200/80 shadow-xs p-4 mb-4">
+		<div className="bg-white rounded-xl border border-slate-200 shadow-2xs p-4">
 			<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
 				{/* Left Side: Search & Filter Dropdowns */}
 				<div className="flex flex-wrap items-center gap-3 flex-1">
 					{/* Search Input */}
-					<div className="relative min-w-[240px] max-w-sm flex-1">
+					<div className="relative w-full sm:w-[240px] md:w-[260px] lg:w-[300px]">
 						<Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
 						<Input
 							type="text"
 							value={searchQuery}
 							onChange={(e) => onSearchChange(e.target.value)}
 							placeholder={t(localizationConstants.rotRutSearchPlaceholder)}
-							className="pl-9 h-9 text-xs bg-slate-50/50 border-slate-200 rounded-lg focus-visible:ring-1 focus-visible:ring-slate-400"
+							className="pl-9 h-10 text-xs bg-white border-slate-200 rounded-lg focus-visible:ring-1 focus-visible:ring-slate-400"
 						/>
 					</div>
 
 					{/* Type Filter Buttons */}
-					<div className="inline-flex p-0.5 bg-slate-100 rounded-lg border border-slate-200/80 text-xs">
+					<div className="inline-flex h-10 p-1 bg-slate-100 rounded-lg border border-slate-200 text-xs items-center">
 						<button
 							type="button"
 							onClick={() => onTypeFilterChange("all")}
-							className={`px-3 py-1 rounded-md font-medium transition-all cursor-pointer ${
+							className={`h-8 px-3 rounded-md font-medium transition-all cursor-pointer ${
 								typeFilter === "all"
 									? "bg-white text-slate-900 shadow-2xs font-semibold"
 									: "text-slate-600 hover:text-slate-900"
@@ -83,9 +83,9 @@ export function RotRutToolbar({
 						<button
 							type="button"
 							onClick={() => onTypeFilterChange("rot")}
-							className={`px-3 py-1 rounded-md font-medium transition-all cursor-pointer ${
+							className={`h-8 px-3 rounded-md font-medium transition-all cursor-pointer ${
 								typeFilter === "rot"
-									? "bg-indigo-600 text-white shadow-2xs font-semibold"
+									? "bg-[#111721] text-white shadow-2xs font-semibold"
 									: "text-slate-600 hover:text-slate-900"
 							}`}
 						>
@@ -94,9 +94,9 @@ export function RotRutToolbar({
 						<button
 							type="button"
 							onClick={() => onTypeFilterChange("rut")}
-							className={`px-3 py-1 rounded-md font-medium transition-all cursor-pointer ${
+							className={`h-8 px-3 rounded-md font-medium transition-all cursor-pointer ${
 								typeFilter === "rut"
-									? "bg-violet-600 text-white shadow-2xs font-semibold"
+									? "bg-[#111721] text-white shadow-2xs font-semibold"
 									: "text-slate-600 hover:text-slate-900"
 							}`}
 						>
@@ -109,7 +109,7 @@ export function RotRutToolbar({
 						value={statusFilter}
 						onValueChange={(val) => onStatusFilterChange(val as RotRutStatus | "all")}
 					>
-						<SelectTrigger className="w-[140px] h-9 text-xs bg-white border-slate-200">
+						<SelectTrigger className="w-[140px] h-10 text-xs bg-white border-slate-200 shadow-2xs rounded-lg">
 							<SelectValue placeholder={t(localizationConstants.rotRutFilterStatusAll)} />
 						</SelectTrigger>
 						<SelectContent>
@@ -136,7 +136,7 @@ export function RotRutToolbar({
 						value={periodFilter}
 						onValueChange={(val) => onPeriodFilterChange(val as RotRutPeriod)}
 					>
-						<SelectTrigger className="w-[140px] h-9 text-xs bg-white border-slate-200">
+						<SelectTrigger className="w-[140px] h-10 text-xs bg-white border-slate-200 shadow-2xs rounded-lg">
 							<SelectValue placeholder={t(localizationConstants.rotRutPeriodAll)} />
 						</SelectTrigger>
 						<SelectContent>
@@ -164,12 +164,12 @@ export function RotRutToolbar({
 						size="sm"
 						onClick={onSubmitSelected}
 						disabled={submittableCount === 0}
-						className="h-9 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white gap-1.5 shadow-2xs cursor-pointer disabled:opacity-50"
+						className="h-10 text-xs font-semibold bg-[#111721] hover:bg-slate-800 text-white gap-1.5 shadow-2xs cursor-pointer disabled:opacity-50 rounded-lg px-4"
 					>
 						<Send className="w-3.5 h-3.5" />
 						<Translate text={localizationConstants.rotRutBtnSubmitSelected} />
 						{submittableCount > 0 && (
-							<span className="ml-1 px-1.5 py-0.2 bg-blue-800 text-white rounded-full text-[10px]">
+							<span className="ml-1 px-1.5 py-0.2 bg-slate-700 text-white rounded-full text-[10px]">
 								{submittableCount}
 							</span>
 						)}
@@ -181,7 +181,7 @@ export function RotRutToolbar({
 						variant="outline"
 						size="icon"
 						onClick={onExportExcel}
-						className="h-9 w-9 border-slate-200 text-slate-600 hover:text-slate-900 cursor-pointer"
+						className="h-10 w-10 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-2xs rounded-lg cursor-pointer"
 						title={t(localizationConstants.rotRutBtnExport)}
 					>
 						<Download className="w-4 h-4" />
@@ -191,7 +191,7 @@ export function RotRutToolbar({
 						variant="outline"
 						size="icon"
 						onClick={onPrint}
-						className="h-9 w-9 border-slate-200 text-slate-600 hover:text-slate-900 cursor-pointer"
+						className="h-10 w-10 border-slate-200 bg-white hover:bg-slate-50 text-slate-700 shadow-2xs rounded-lg cursor-pointer"
 						title={t(localizationConstants.rotRutBtnPrint)}
 					>
 						<Printer className="w-4 h-4" />
@@ -202,7 +202,7 @@ export function RotRutToolbar({
 							variant="outline"
 							size="icon"
 							onClick={onResetDemoData}
-							className="h-9 w-9 border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-300 hover:bg-blue-50/50 cursor-pointer"
+							className="h-10 w-10 border-slate-200 bg-white hover:bg-slate-50 text-slate-500 hover:text-slate-900 shadow-2xs rounded-lg cursor-pointer"
 							title={t(localizationConstants.rotRutResetData)}
 						>
 							<RotateCcw className="w-4 h-4" />

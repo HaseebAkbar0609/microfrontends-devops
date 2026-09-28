@@ -48,7 +48,7 @@ export function BudgetTableHead({
 
 	return (
 		<thead>
-			<tr className="border-b border-slate-200 bg-slate-50/75 text-xs font-semibold tracking-wider text-slate-600 uppercase select-none">
+			<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 				<th className="w-10 px-3 py-3 text-center">
 					<span className="sr-only">
 						<Translate text={localizationConstants.ariaFavoriteBudget} />

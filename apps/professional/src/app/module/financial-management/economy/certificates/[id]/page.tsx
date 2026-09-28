@@ -2,13 +2,13 @@
 
 import React, { use } from "react";
 import { useRouter } from "next/navigation";
+import { CertificateDetailPage } from "@/features/financial-management/components/certificates/CertificateDetailPage";
+import { certificatesRepository } from "@/features/financial-management/utils/certificatesRepository";
 import {
-	CertificateDetailPage,
-	certificatesRepository,
 	CREATE_CERTIFICATE_ROUTE,
 	CERTIFICATES_BASE_ROUTE,
-} from "@/features/financial-management";
-import type { CertificateItem } from "@/features/financial-management";
+} from "@/features/financial-management/constants/certificates.constants";
+import type { CertificateItem } from "@/features/financial-management/types/certificates.types";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 

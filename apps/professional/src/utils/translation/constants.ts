@@ -9427,6 +9427,7 @@ export type CasesTranslation = {
 	casesOverviewTabList: string;
 	casesCreateButton: string;
 	casesBtnCreateCase: string;
+	casesBtnImportCase: string;
 	casesSearchPlaceholder: string;
 	casesFilterBtn: string;
 	casesStatusAll: string;

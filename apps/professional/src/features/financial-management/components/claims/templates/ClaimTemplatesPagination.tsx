@@ -7,6 +7,7 @@ import {
 	ChevronsLeft,
 	ChevronsRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
 	Select,
 	SelectContent,
@@ -34,22 +35,25 @@ export function ClaimTemplatesPagination({
 	onPageSizeChange,
 }: ClaimTemplatesPaginationProps) {
 	return (
-		<div className="flex flex-col sm:flex-row items-center justify-end gap-6 pt-4 text-xs text-slate-600">
-			{/* Rader per sida */}
+		<div className="flex items-center gap-6 text-sm text-slate-600 flex-wrap justify-center sm:justify-end py-2 px-1">
+			{/* Rows per page */}
 			<div className="flex items-center gap-2">
-				<span className="font-normal text-slate-700">
-					<Translate text={localizationConstants.claimTplRaderPerSida} />
+				<span className="text-sm font-medium text-slate-700">
+					<Translate text={localizationConstants.rowsPerPageLabel} />
 				</span>
 				<Select
 					value={String(pageSize)}
-					onValueChange={(val) => onPageSizeChange(Number(val))}
+					onValueChange={(val) => {
+						onPageSizeChange(Number(val));
+						onPageChange(1);
+					}}
 				>
-					<SelectTrigger className="h-8 w-16 bg-white border-slate-200 text-xs rounded-md shadow-2xs">
+					<SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0">
 						<SelectValue placeholder={String(pageSize)} />
 					</SelectTrigger>
-					<SelectContent className="bg-white border-slate-200 text-xs shadow-md">
+					<SelectContent>
 						{CLAIM_TEMPLATES_PAGE_SIZE_OPTIONS.map((size) => (
-							<SelectItem key={size} value={String(size)} className="text-xs">
+							<SelectItem key={size} value={String(size)}>
 								{size}
 							</SelectItem>
 						))}
@@ -58,55 +62,62 @@ export function ClaimTemplatesPagination({
 			</div>
 
 			{/* Page X of Y */}
-			<div className="text-xs font-medium text-slate-700 whitespace-nowrap">
-				Page {currentPage} of {totalPages}
+			<div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+				<Translate text={localizationConstants.pageLabel} />
+				<span>{currentPage}</span>
+				<Translate text={localizationConstants.ofLabel} />
+				<span>{totalPages}</span>
 			</div>
 
 			{/* Navigation Buttons: « ‹ › » */}
-			<div className="flex items-center gap-1.5">
-				{/* First page « */}
-				<button
+			<div className="flex items-center gap-1">
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
+					disabled={currentPage <= 1}
 					onClick={() => onPageChange(1)}
-					disabled={currentPage <= 1}
-					className="h-8 w-8 flex items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-2xs cursor-pointer"
-					title="Första sidan"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="First page"
 				>
-					<ChevronsLeft className="w-3.5 h-3.5" />
-				</button>
+					<ChevronsLeft className="w-4 h-4" />
+				</Button>
 
-				{/* Previous page ‹ */}
-				<button
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
+					disabled={currentPage <= 1}
 					onClick={() => onPageChange(currentPage - 1)}
-					disabled={currentPage <= 1}
-					className="h-8 w-8 flex items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-2xs cursor-pointer"
-					title="Föregående sida"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="Previous page"
 				>
-					<ChevronLeft className="w-3.5 h-3.5" />
-				</button>
+					<ChevronLeft className="w-4 h-4" />
+				</Button>
 
-				{/* Next page › */}
-				<button
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
+					disabled={currentPage >= totalPages}
 					onClick={() => onPageChange(currentPage + 1)}
-					disabled={currentPage >= totalPages}
-					className="h-8 w-8 flex items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-2xs cursor-pointer"
-					title="Nästa sida"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="Next page"
 				>
-					<ChevronRight className="w-3.5 h-3.5" />
-				</button>
+					<ChevronRight className="w-4 h-4" />
+				</Button>
 
-				{/* Last page » */}
-				<button
+				<Button
 					type="button"
-					onClick={() => onPageChange(totalPages)}
+					variant="outline"
+					size="icon"
 					disabled={currentPage >= totalPages}
-					className="h-8 w-8 flex items-center justify-center rounded-md border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:pointer-events-none transition-colors shadow-2xs cursor-pointer"
-					title="Sista sidan"
+					onClick={() => onPageChange(totalPages)}
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
+					aria-label="Last page"
 				>
-					<ChevronsRight className="w-3.5 h-3.5" />
-				</button>
+					<ChevronsRight className="w-4 h-4" />
+				</Button>
 			</div>
 		</div>
 	);

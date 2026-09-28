@@ -1,4 +1,4 @@
-import { ArticlesOverviewPage } from "@/features/financial-management";
+import { ArticlesOverviewPage } from "@/features/financial-management/components/articles/ArticlesOverviewPage";
 
 export const dynamic = "force-dynamic";
 

@@ -1,4 +1,4 @@
-import { ExpenseDetailPage } from "@/features/financial-management";
+import { ExpenseDetailPage } from "@/features/financial-management/components/expense-detail/ExpenseDetailPage";
 
 interface PageProps {
 	params: Promise<{ id: string }>;

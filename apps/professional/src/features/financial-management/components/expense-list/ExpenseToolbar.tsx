@@ -58,29 +58,29 @@ export function ExpenseToolbar({
 		<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
 			{/* Left: Search Bar & Filter Dropdown */}
 			<div className="flex items-center gap-2.5 flex-1">
-				{/* Search Bar matching Figma */}
-				<div className="relative w-72">
-					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+				{/* Search Bar */}
+				<div className="relative w-full sm:w-[240px] md:w-[260px] lg:w-[300px]">
+					<Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 pointer-events-none" />
 					<Input
 						type="text"
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
 						placeholder={t(localizationConstants.expenseSearchPlaceholder)}
-						className="pl-9 h-9 text-xs bg-white border-slate-200/80 rounded-md shadow-2xs focus-visible:ring-1 focus-visible:ring-slate-900"
+						className="pl-9 h-10 text-sm bg-white border-slate-200 rounded-lg shadow-2xs focus-visible:ring-1 focus-visible:ring-slate-400"
 					/>
 				</div>
 
-				{/* Single Filter Dropdown matching Figma "Filter ∨" */}
+				{/* Single Filter Dropdown */}
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button
 							variant="outline"
-							className={`h-9 px-3.5 text-xs font-normal border-slate-200/80 bg-white gap-2 rounded-md hover:bg-slate-50 cursor-pointer ${
-								isFiltered ? "border-slate-900 text-slate-900 font-medium" : "text-slate-700"
+							className={`h-10 px-3.5 text-xs font-normal border-slate-200 bg-white gap-1.5 rounded-lg hover:bg-slate-50 cursor-pointer shadow-2xs ${
+								isFiltered ? "border-slate-800 text-slate-900 font-medium bg-slate-50" : "text-slate-700"
 							}`}
 						>
 							<span>Filter</span>
-							<ChevronDown className="h-3 w-3 text-slate-500" />
+							<ChevronDown className="h-3.5 w-3.5 text-slate-400 ml-0.5" />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="start" className="w-56 bg-white border-slate-200 shadow-xl p-2">
@@ -151,15 +151,14 @@ export function ExpenseToolbar({
 				</DropdownMenu>
 			</div>
 
-			{/* Right: Primary CTA "+ Lägg till leverantörsfaktura" matching Figma */}
+			{/* Right: Primary CTA "+ Lägg till leverantörsfaktura" */}
 			<div className="flex items-center gap-2">
 				<Link href={createRoute}>
 					<Button
-						size="sm"
 						onClick={onRegisterClick}
-						className="h-9 px-4 text-xs font-medium bg-zinc-950 hover:bg-slate-800 text-white gap-1.5 shadow-xs cursor-pointer rounded-md shrink-0 transition-all"
+						className="h-10 px-4 text-sm font-medium bg-[#111721] hover:bg-slate-800 text-white gap-2 shadow-2xs cursor-pointer rounded-lg shrink-0 transition-all"
 					>
-						<Plus className="h-3.5 w-3.5" />
+						<Plus className="h-4 w-4" />
 						<span>
 							<Translate text={localizationConstants.expenseAddSupplierInvoiceBtn} />
 						</span>

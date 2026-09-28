@@ -1,9 +1,7 @@
 "use client";
 
-import React from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { EconomySubTabs } from "../common/EconomySubTabs";
 import { useCostCentersOverview } from "../../hooks/useCostCentersOverview";
 import { CostCentersOverviewToolbar } from "./CostCentersOverviewToolbar";
 import { CostCentersOverviewTable } from "./CostCentersOverviewTable";
@@ -35,22 +33,14 @@ export function CostCentersOverviewPage() {
 		updateQueryParams,
 	} = useCostCentersOverview();
 
+	const subTabs = [
+		{ value: "kostnadsstalle", label: localizationConstants.costCenterSubTitle },
+	];
+
 	return (
 		<div className="p-6 w-full space-y-6">
-
 			{/* Sub Tabs Bar */}
-			<div className="border-b border-slate-200">
-				<Tabs defaultValue="kostnadsstalle">
-					<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
-						<TabsTrigger
-							value="kostnadsstalle"
-							className="pb-3 pt-1 text-sm font-semibold cursor-pointer"
-						>
-							<Translate text={localizationConstants.costCenterSubTitle} />
-						</TabsTrigger>
-					</TabsList>
-				</Tabs>
-			</div>
+			<EconomySubTabs value="kostnadsstalle" tabs={subTabs} />
 
 			{/* Toolbar */}
 			<CostCentersOverviewToolbar

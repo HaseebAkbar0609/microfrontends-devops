@@ -1,4 +1,4 @@
-import { EconomyDashboard } from "@/features/financial-management";
+import { EconomyDashboard } from "@/features/financial-management/components/dashboard/EconomyDashboard";
 
 export default function EconomyPage() {
 	return (

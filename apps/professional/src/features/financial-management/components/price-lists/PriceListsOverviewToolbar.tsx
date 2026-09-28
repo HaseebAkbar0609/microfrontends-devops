@@ -45,10 +45,10 @@ export function PriceListsOverviewToolbar({
 					<DropdownMenuTrigger asChild>
 						<Button
 							variant="outline"
-							className="h-10 w-full sm:w-20 border-slate-200 text-slate-700 font-normal bg-transparent hover:bg-slate-50 gap-1.5 px-2.5 text-xs shadow-2xs justify-between cursor-pointer"
+							className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-normal rounded-lg shadow-2xs gap-1.5 justify-between cursor-pointer"
 						>
 							<Translate text={localizationConstants.filter} />
-							<ChevronDown className="h-3.5 w-3.5 opacity-50" />
+							<ChevronDown className="h-3.5 w-3.5 text-slate-400" />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="start" className="w-44 bg-white border-slate-200 shadow-md">
@@ -80,7 +80,7 @@ export function PriceListsOverviewToolbar({
 			<div className="flex items-center justify-end">
 				<Button
 					onClick={() => router.push(PRICE_LISTS_CREATE_ROUTE)}
-					className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
+					className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-4 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
 				>
 					<Plus className="h-4 w-4" aria-hidden />
 					<Translate text={localizationConstants.registerNew} />

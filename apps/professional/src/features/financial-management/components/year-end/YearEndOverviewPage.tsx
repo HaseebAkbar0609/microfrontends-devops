@@ -9,7 +9,6 @@ import {
 } from "../../constants/yearEnd.constants";
 import { YearEndHeader } from "./YearEndHeader";
 import { YearEndToolbar } from "./YearEndToolbar";
-import { YearEndYearSelector } from "./YearEndYearSelector";
 import { YearEndTable } from "./YearEndTable";
 import { YearEndPagination } from "./YearEndPagination";
 import { YearEndDeleteDialog } from "./YearEndDeleteDialog";
@@ -71,23 +70,19 @@ export function YearEndOverviewPage({
 	};
 
 	return (
-		<div className="flex flex-1 flex-col bg-white px-6 pt-5 pb-8 min-h-screen space-y-4">
-			{/* Header with Breadcrumbs & Tabs */}
+		<div className="p-6 w-full space-y-6">
+			{/* Header with Sub-Tabs */}
 			<YearEndHeader activeTab={activeTab} onTabChange={handleTabChange} />
 
-			{/* Search, Filter & Add New Screen Trigger */}
+			{/* Search, Filter, Year & Add New Toolbar */}
 			<YearEndToolbar
 				searchQuery={searchQuery}
 				onSearchChange={setSearchQuery}
 				categoryFilter={categoryFilter}
 				onCategoryFilterChange={setCategoryFilter}
-				onCreateClick={handleNavigateToCreate}
-			/>
-
-			{/* Year Selector */}
-			<YearEndYearSelector
 				selectedYear={selectedYear}
 				onYearChange={handleYearChange}
+				onCreateClick={handleNavigateToCreate}
 			/>
 
 			{/* Main Data Table */}
@@ -120,5 +115,6 @@ export function YearEndOverviewPage({
 		</div>
 	);
 }
+
 
 export default YearEndOverviewPage;

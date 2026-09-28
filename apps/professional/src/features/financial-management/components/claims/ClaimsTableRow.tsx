@@ -14,6 +14,8 @@ import { useTranslation } from "react-i18next";
 import localizationConstants from "@/utils/translation/constants";
 import type { ClaimItem, ClaimStatus } from "../../types/claims.types";
 
+import { EconomyStatusBadge } from "../common/EconomyStatusBadge";
+
 interface ClaimsTableRowProps {
 	item: ClaimItem;
 	onRowClick: (item: ClaimItem) => void;
@@ -33,40 +35,41 @@ export function ClaimsTableRow({
 		switch (status) {
 			case "sent":
 				return (
-					<span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-[#22C55E] text-white">
-						<Translate text={localizationConstants.claimsStatusSent} />
-					</span>
+					<EconomyStatusBadge
+						status="sent"
+						label={localizationConstants.claimsStatusSent}
+					/>
 				);
 			case "approved":
 				return (
-					<span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
-						<Translate text={localizationConstants.claimsStatusApproved} />
-					</span>
+					<EconomyStatusBadge
+						status="approved"
+						label={localizationConstants.claimsStatusApproved}
+					/>
 				);
 			case "draft":
 				return (
-					<span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-700 border border-slate-200">
-						<Translate text={localizationConstants.claimsStatusDraft} />
-					</span>
+					<EconomyStatusBadge
+						status="draft"
+						label={localizationConstants.claimsStatusDraft}
+					/>
 				);
 			case "paid":
 				return (
-					<span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
-						<Translate text={localizationConstants.claimsStatusPaid} />
-					</span>
+					<EconomyStatusBadge
+						status="paid"
+						label={localizationConstants.claimsStatusPaid}
+					/>
 				);
 			case "rejected":
 				return (
-					<span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
-						<Translate text={localizationConstants.claimsStatusRejected} />
-					</span>
+					<EconomyStatusBadge
+						status="rejected"
+						label={localizationConstants.claimsStatusRejected}
+					/>
 				);
 			default:
-				return (
-					<span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-semibold bg-slate-100 text-slate-600">
-						{status}
-					</span>
-				);
+				return <EconomyStatusBadge status={status} />;
 		}
 	};
 

@@ -2,7 +2,7 @@
 
 import React, { Suspense, useCallback } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EconomySubTabs } from "../common/EconomySubTabs";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { PriceListsOverviewTable } from "./PriceListsOverviewTable";
@@ -23,21 +23,15 @@ export function PriceListsOverviewPage() {
 		[pathname, router, searchParams],
 	);
 
+	const subTabs = [
+		{ value: "prislista", label: localizationConstants.priceListTab },
+		{ value: "uppdatera", label: localizationConstants.updatePriceListTab },
+	];
+
 	return (
 		<div className="p-6 w-full space-y-6">
-			{/* Sub Tabs Bar matching Figma */}
-			<div className="border-b border-slate-200">
-				<Tabs value={activeSubTab} onValueChange={handleSubTabChange}>
-					<TabsList variant="line" className="gap-8 bg-transparent p-0 -mb-px">
-						<TabsTrigger value="prislista" className="pb-3 pt-1 text-sm font-semibold cursor-pointer">
-							<Translate text={localizationConstants.priceListTab} />
-						</TabsTrigger>
-						<TabsTrigger value="uppdatera" className="pb-3 pt-1 text-sm font-semibold cursor-pointer">
-							<Translate text={localizationConstants.updatePriceListTab} />
-						</TabsTrigger>
-					</TabsList>
-				</Tabs>
-			</div>
+			{/* Sub Tabs Bar */}
+			<EconomySubTabs value={activeSubTab} onValueChange={handleSubTabChange} tabs={subTabs} />
 
 			{/* Subtab Content */}
 			{activeSubTab === "prislista" ? (

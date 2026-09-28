@@ -38,17 +38,17 @@ export function CostCentersOverviewToolbar({
 					onChange={onSearchChange}
 					placeholder={localizationConstants.search}
 					className="h-10 w-full"
-					wrapperClassName="w-full sm:w-[260px] lg:w-[280px]"
+					wrapperClassName="w-full sm:w-[240px] md:w-[260px] lg:w-[300px]"
 				/>
 
 				<DropdownMenu>
 					<DropdownMenuTrigger asChild>
 						<Button
 							variant="outline"
-							className="h-10 w-full sm:w-28 border-slate-200 text-slate-700 font-normal bg-white hover:bg-slate-50 gap-1.5 px-3 text-xs shadow-2xs justify-between cursor-pointer"
+							className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-normal rounded-lg shadow-2xs gap-1.5 justify-between cursor-pointer"
 						>
 							<Translate text={localizationConstants.filter} />
-							<ChevronDown className="h-3.5 w-3.5 text-slate-500 shrink-0" />
+							<ChevronDown className="h-3.5 w-3.5 text-slate-400 shrink-0" />
 						</Button>
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="start" className="w-36 border border-slate-200 bg-white shadow-md rounded-md p-1">
@@ -77,7 +77,7 @@ export function CostCentersOverviewToolbar({
 			{/* Right: + Skapa Kostnadsställe */}
 			<Button
 				onClick={() => router.push(`${COST_CENTERS_BASE_ROUTE}/create`)}
-				className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-5 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
+				className="h-10 w-full sm:w-auto gap-2 rounded-lg bg-[#111721] px-4 text-sm font-medium text-white shadow-2xs hover:bg-slate-800 justify-center cursor-pointer"
 			>
 				<Plus className="h-4 w-4" aria-hidden />
 				<Translate text={localizationConstants.createCostCenterButtonText} />

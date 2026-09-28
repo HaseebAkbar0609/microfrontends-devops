@@ -77,15 +77,15 @@ export function BankDocumentsTabView({
 		<div className="space-y-4">
 			{/* Top Toolbar */}
 			<div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
-				<div className="flex items-center gap-2.5 flex-1 max-w-xl">
-					<div className="relative flex-1">
-						<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+				<div className="flex items-center gap-2 flex-1 max-w-xl">
+					<div className="relative w-full sm:w-[240px] md:w-[260px] lg:w-[300px]">
+						<Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
 						<Input
 							type="text"
 							value={searchQuery}
 							onChange={(e) => onSearchChange(e.target.value)}
 							placeholder={t(localizationConstants.searchBankPlaceholder)}
-							className="pl-9 h-10 bg-white border-slate-200 text-sm placeholder:text-slate-400 rounded-lg shadow-2xs focus-visible:ring-slate-400"
+							className="pl-9 h-10 bg-white border-slate-200 text-sm placeholder:text-slate-400 rounded-lg shadow-2xs focus-visible:ring-1 focus-visible:ring-slate-400"
 						/>
 					</div>
 
@@ -94,9 +94,9 @@ export function BankDocumentsTabView({
 							<Button
 								type="button"
 								variant="outline"
-								className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium rounded-lg shadow-2xs gap-1.5 cursor-pointer"
+								className="h-10 px-3.5 bg-white border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-normal rounded-lg shadow-2xs gap-1.5 cursor-pointer"
 							>
-								<Filter className="w-4 h-4 text-slate-500" />
+								<Filter className="w-3.5 h-3.5 text-slate-500" />
 								<Translate
 									text={
 										fileTypeFilter === "PDF"
@@ -143,7 +143,7 @@ export function BankDocumentsTabView({
 					<Button
 						type="button"
 						onClick={onUploadClick}
-						className="h-10 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium text-sm rounded-lg shadow-sm gap-2 cursor-pointer transition-colors"
+						className="h-10 px-4 bg-[#111721] hover:bg-slate-800 text-white font-medium text-sm rounded-lg shadow-2xs gap-2 cursor-pointer transition-colors"
 					>
 						<Plus className="w-4 h-4" />
 						<Translate text={localizationConstants.btnCreateNew} />

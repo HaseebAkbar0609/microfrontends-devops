@@ -1,4 +1,4 @@
-import { CostCenterDetailPage } from "@/features/financial-management";
+import { CostCenterDetailPage } from "@/features/financial-management/components/cost-centers/detail/CostCenterDetailPage";
 
 export const dynamic = "force-dynamic";
 

@@ -38,7 +38,7 @@ export function YearEndTable({
 			<div className="overflow-x-auto">
 				<table className="w-full text-left text-xs border-collapse">
 					<thead>
-						<tr className="border-b border-slate-200 bg-slate-50/50 text-slate-500 font-semibold uppercase tracking-wider text-[11px]">
+						<tr className="border-b border-slate-200 bg-white text-slate-600 font-semibold text-xs">
 							{/* Sr. Nr */}
 							<th className="py-3 px-4">
 								<button

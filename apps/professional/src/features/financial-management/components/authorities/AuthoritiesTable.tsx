@@ -47,7 +47,7 @@ export function AuthoritiesTable({
 			<div className="overflow-x-auto">
 				<table className="w-full border-collapse text-left text-xs">
 					<thead>
-						<tr className="border-b border-slate-200 bg-slate-50/50 font-semibold text-slate-500 uppercase tracking-wider text-[11px] select-none">
+						<tr className="border-b border-slate-200 bg-white font-semibold text-slate-600 text-xs select-none">
 							{/* ID */}
 							<th className="px-4 py-3">
 								<button

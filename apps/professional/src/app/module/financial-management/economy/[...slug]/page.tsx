@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { ComingSoonPage } from "@/features/financial-management";
+import { ComingSoonPage } from "@/features/financial-management/components/economy/ComingSoonPage";
 import { ECONOMY_SECTIONS } from "@/features/financial-management/constants/economyNav.config";
 
 interface PageProps {

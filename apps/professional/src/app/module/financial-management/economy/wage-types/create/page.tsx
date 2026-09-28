@@ -1,4 +1,4 @@
-import { CreateWageTypePage } from "@/features/financial-management";
+import { CreateWageTypePage } from "@/features/financial-management/components/wage-types/create/CreateWageTypePage";
 
 export const dynamic = "force-dynamic";
 

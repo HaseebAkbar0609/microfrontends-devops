@@ -2,7 +2,8 @@
 
 import React, { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { CreateCertificatePage, certificatesRepository } from "@/features/financial-management";
+import { CreateCertificatePage } from "@/features/financial-management/components/certificates/CreateCertificatePage";
+import { certificatesRepository } from "@/features/financial-management/utils/certificatesRepository";
 
 function CreateCertificatePageContent() {
 	const searchParams = useSearchParams();

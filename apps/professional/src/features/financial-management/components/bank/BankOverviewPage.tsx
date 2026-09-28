@@ -65,7 +65,7 @@ export function BankOverviewPage({ initialTab = "bankkonton" }: BankOverviewPage
 	} = useBank(initialTab);
 
 	return (
-		<div className="flex flex-1 flex-col bg-[#F8FAFC] min-h-screen px-6 pt-4 pb-12">
+		<div className="p-6 w-full space-y-6">
 			<BankOverviewHeader
 				activeTab={activeTab}
 				onTabChange={setActiveTab}

@@ -18,6 +18,12 @@ import {
 	ACCOUNT_PLAN_IMPORT_ROUTE,
 } from "@/features/financial-management/constants/accountPlan.constants";
 
+import { EconomySubTabs } from "../common/EconomySubTabs";
+
+const ACCOUNT_PLAN_SUB_TABS = [
+	{ id: "account-plan", labelKey: localizationConstants.accountPlanTab },
+];
+
 interface AccountPlanOverviewToolbarProps {
 	readonly searchQuery: string;
 	readonly statusParam: string;
@@ -34,18 +40,13 @@ export function AccountPlanOverviewToolbar({
 	const router = useRouter();
 
 	return (
-		<div className="flex flex-col gap-6">
+		<div className="flex flex-col gap-4">
 			{/* Sub Navigation Tab */}
-			<div className="border-b border-slate-200">
-				<div className="inline-flex items-center gap-2 border-b-2 border-slate-900 pb-3 px-1 text-sm font-bold text-slate-900 tracking-tight">
-					<Translate text={localizationConstants.accountPlanTab} />
-				</div>
-			</div>
-
-			{/* Page Title */}
-			<h1 className="text-xl font-bold text-slate-900 tracking-tight">
-				<Translate text={localizationConstants.accountPlanTitle} />
-			</h1>
+			<EconomySubTabs
+				tabs={ACCOUNT_PLAN_SUB_TABS}
+				activeTab="account-plan"
+				onTabChange={() => {}}
+			/>
 
 			{/* Search, Filter & Actions Bar */}
 			<div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">

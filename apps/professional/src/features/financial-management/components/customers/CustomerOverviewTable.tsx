@@ -4,7 +4,6 @@ import React, { useMemo, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, Trash2 } from "lucide-react";
 import { DataTable, type DataTableColumn, type DataTableAction } from "@/components/table/DataTable";
-import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { useCustomerOverview } from "../../hooks/useCustomerOverview";
 import type { CustomerOverviewRow } from "../../types/customerOverview.types";
@@ -14,6 +13,7 @@ import {
 } from "../../constants/customerOverview.constants";
 import { CustomerOverviewToolbar } from "./CustomerOverviewToolbar";
 import { CustomerDeleteDialog } from "./CustomerDeleteDialog";
+import { EconomyStatusBadge } from "../common/EconomyStatusBadge";
 
 export function CustomerOverviewTable() {
 	const router = useRouter();
@@ -115,17 +115,14 @@ export function CustomerOverviewTable() {
 				label: localizationConstants.statusHeader,
 				sortable: true,
 				render: (row) => (
-					<span
-						className={`inline-flex items-center justify-center rounded-md px-3 py-1 text-xs font-semibold text-white ${
-							row.status === "active" ? "bg-[#16A34A]" : "bg-slate-400"
-						}`}
-					>
-						{row.status === "active" ? (
-							<Translate text={localizationConstants.activeStatus} />
-						) : (
-							<Translate text={localizationConstants.inactiveStatus} />
-						)}
-					</span>
+					<EconomyStatusBadge
+						status={row.status}
+						label={
+							row.status === "active"
+								? localizationConstants.activeStatus
+								: localizationConstants.inactiveStatus
+						}
+					/>
 				),
 			},
 		],

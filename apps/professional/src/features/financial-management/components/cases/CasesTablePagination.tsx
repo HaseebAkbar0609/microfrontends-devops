@@ -7,6 +7,7 @@ import {
 	ChevronsLeft,
 	ChevronsRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
 	Select,
 	SelectContent,
@@ -36,22 +37,25 @@ export function CasesTablePagination({
 	const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
 
 	return (
-		<div className="flex flex-wrap items-center justify-end gap-6 px-6 py-4 bg-white border-t border-slate-100 text-xs text-slate-600">
-			{/* Rader per sida */}
+		<div className="flex items-center gap-6 text-sm text-slate-600 flex-wrap justify-center sm:justify-end py-2 px-6 bg-white border-t border-slate-100">
+			{/* Rows per page */}
 			<div className="flex items-center gap-2">
-				<span>
-					<Translate text={localizationConstants.casesRowsPerPage} />
+				<span className="text-sm font-medium text-slate-700">
+					<Translate text={localizationConstants.rowsPerPageLabel} />
 				</span>
 				<Select
 					value={String(pageSize)}
-					onValueChange={(val) => onPageSizeChange(Number(val))}
+					onValueChange={(val) => {
+						onPageSizeChange(Number(val));
+						onPageChange(1);
+					}}
 				>
-					<SelectTrigger className="h-8 w-16 text-xs bg-white border-slate-200 rounded-md">
-						<SelectValue />
+					<SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0">
+						<SelectValue placeholder={String(pageSize)} />
 					</SelectTrigger>
 					<SelectContent>
 						{CASES_PAGE_SIZE_OPTIONS.map((opt) => (
-							<SelectItem key={opt} value={String(opt)} className="text-xs cursor-pointer">
+							<SelectItem key={opt} value={String(opt)}>
 								{opt}
 							</SelectItem>
 						))}
@@ -60,48 +64,59 @@ export function CasesTablePagination({
 			</div>
 
 			{/* Page X of Y */}
-			<div className="font-medium text-slate-700">
-				Page {page} of {totalPages}
+			<div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+				<Translate text={localizationConstants.pageLabel} />
+				<span>{page}</span>
+				<Translate text={localizationConstants.ofLabel} />
+				<span>{totalPages}</span>
 			</div>
 
-			{/* Navigation buttons: << < > >> matching Figma Image 1 */}
-			<div className="flex items-center gap-1.5">
-				<button
+			{/* Navigation buttons: « < > » */}
+			<div className="flex items-center gap-1">
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
 					disabled={page <= 1}
 					onClick={() => onPageChange(1)}
-					className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="First page"
 				>
-					<ChevronsLeft className="w-3.5 h-3.5" />
-				</button>
-				<button
+					<ChevronsLeft className="w-4 h-4" />
+				</Button>
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
 					disabled={page <= 1}
 					onClick={() => onPageChange(page - 1)}
-					className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="Previous page"
 				>
-					<ChevronLeft className="w-3.5 h-3.5" />
-				</button>
-				<button
+					<ChevronLeft className="w-4 h-4" />
+				</Button>
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
 					disabled={page >= totalPages}
 					onClick={() => onPageChange(page + 1)}
-					className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="Next page"
 				>
-					<ChevronRight className="w-3.5 h-3.5" />
-				</button>
-				<button
+					<ChevronRight className="w-4 h-4" />
+				</Button>
+				<Button
 					type="button"
+					variant="outline"
+					size="icon"
 					disabled={page >= totalPages}
 					onClick={() => onPageChange(totalPages)}
-					className="h-8 w-8 inline-flex items-center justify-center rounded-md border border-slate-200 bg-white hover:bg-slate-50 text-slate-500 disabled:opacity-40 disabled:pointer-events-none transition-colors cursor-pointer"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="Last page"
 				>
-					<ChevronsRight className="w-3.5 h-3.5" />
-				</button>
+					<ChevronsRight className="w-4 h-4" />
+				</Button>
 			</div>
 		</div>
 	);

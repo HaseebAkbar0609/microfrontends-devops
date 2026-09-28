@@ -9513,6 +9513,7 @@ const svCases: CasesTranslation = {
 	casesOverviewTabList: "Ärende lista",
 	casesCreateButton: "Skapa ärende",
 	casesBtnCreateCase: "Skapa Fall",
+	casesBtnImportCase: "Importera fall",
 	casesSearchPlaceholder: "Sök",
 	casesFilterBtn: "Filter",
 	casesStatusAll: "Alla statusar",

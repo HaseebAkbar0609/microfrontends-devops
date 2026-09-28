@@ -1,7 +1,7 @@
 "use client";
 
 import React, { use } from "react";
-import { RiskDetailRoute } from "@/features/financial-management";
+import { RiskDetailRoute } from "@/features/financial-management/components/forecast/risk/routes/RiskDetailRoute";
 
 interface PageProps {
 	params: Promise<{ id: string }>;

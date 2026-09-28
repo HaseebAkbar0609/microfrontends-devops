@@ -1,7 +1,12 @@
 "use client";
 
 import React from "react";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import {
+	ChevronLeft,
+	ChevronRight,
+	ChevronsLeft,
+	ChevronsRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
 	Select,
@@ -32,36 +37,41 @@ export function CertificatesTablePagination({
 	onPageSizeChange,
 }: CertificatesTablePaginationProps) {
 	return (
-		<div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4 bg-white border-t border-slate-100 text-xs text-slate-600">
-			{/* Left: Rows per page selector */}
+		<div className="flex items-center gap-6 text-sm text-slate-600 flex-wrap justify-center sm:justify-end py-2 px-1">
+			{/* Rows per page selector */}
 			<div className="flex items-center gap-2">
-				<span className="text-slate-700 font-medium">
+				<span className="text-sm font-medium text-slate-700">
 					<Translate text={localizationConstants.rowsPerPageLabel} />
 				</span>
 				<Select
 					value={String(pageSize)}
-					onValueChange={(val) => onPageSizeChange(Number(val))}
+					onValueChange={(val) => {
+						onPageSizeChange(Number(val));
+						onPageChange(1);
+					}}
 				>
-					<SelectTrigger className="w-[70px] h-8 text-xs bg-white border-slate-200">
-						<SelectValue />
+					<SelectTrigger className="h-9 w-18 border-slate-200 bg-transparent text-sm font-medium text-slate-700 hover:bg-slate-50 focus:ring-0">
+						<SelectValue placeholder={String(pageSize)} />
 					</SelectTrigger>
 					<SelectContent>
-						{CERTIFICATES_PAGE_SIZE_OPTIONS.map((opt) => (
-							<SelectItem key={opt} value={String(opt)}>
-								{opt}
+						{CERTIFICATES_PAGE_SIZE_OPTIONS.map((size) => (
+							<SelectItem key={size} value={String(size)}>
+								{size}
 							</SelectItem>
 						))}
 					</SelectContent>
 				</Select>
 			</div>
 
-			{/* Middle: Page X of Y */}
-			<div className="text-slate-700 font-medium text-xs">
-				<Translate text={localizationConstants.pageLabel} /> {currentPage}{" "}
-				<Translate text={localizationConstants.pageOfLabel} /> {totalPages}
+			{/* Page X of Y */}
+			<div className="text-sm font-medium text-slate-700 select-none flex items-center gap-1">
+				<Translate text={localizationConstants.pageLabel} />
+				<span>{currentPage}</span>
+				<Translate text={localizationConstants.ofLabel} />
+				<span>{totalPages}</span>
 			</div>
 
-			{/* Right: Pagination buttons (« < > ») */}
+			{/* Chevrons Navigation Buttons */}
 			<div className="flex items-center gap-1">
 				<Button
 					type="button"
@@ -69,7 +79,7 @@ export function CertificatesTablePagination({
 					size="icon"
 					disabled={currentPage <= 1}
 					onClick={() => onPageChange(1)}
-					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="First page"
 				>
 					<ChevronsLeft className="w-4 h-4" />
@@ -80,7 +90,7 @@ export function CertificatesTablePagination({
 					size="icon"
 					disabled={currentPage <= 1}
 					onClick={() => onPageChange(currentPage - 1)}
-					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="Previous page"
 				>
 					<ChevronLeft className="w-4 h-4" />
@@ -91,7 +101,7 @@ export function CertificatesTablePagination({
 					size="icon"
 					disabled={currentPage >= totalPages}
 					onClick={() => onPageChange(currentPage + 1)}
-					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="Next page"
 				>
 					<ChevronRight className="w-4 h-4" />
@@ -102,7 +112,7 @@ export function CertificatesTablePagination({
 					size="icon"
 					disabled={currentPage >= totalPages}
 					onClick={() => onPageChange(totalPages)}
-					className="h-8 w-8 border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40"
+					className="h-9 w-9 rounded-md border border-slate-200 bg-transparent text-slate-600 hover:bg-slate-50 disabled:opacity-40 cursor-pointer"
 					aria-label="Last page"
 				>
 					<ChevronsRight className="w-4 h-4" />
@@ -111,3 +121,5 @@ export function CertificatesTablePagination({
 		</div>
 	);
 }
+
+export default CertificatesTablePagination;

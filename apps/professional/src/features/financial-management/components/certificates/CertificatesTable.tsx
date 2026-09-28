@@ -49,7 +49,7 @@ export function CertificatesTable({
 			<div className="overflow-x-auto min-h-[300px]">
 				<table className="w-full text-left border-collapse">
 					<thead>
-						<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-500 uppercase tracking-wider">
+						<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 							{/* ID */}
 							<th
 								onClick={() => onSort("id")}

@@ -46,7 +46,7 @@ export function CasesTable({
 		<div className="overflow-x-auto">
 			<table className="w-full text-left text-xs">
 				<thead>
-					<tr className="border-b border-slate-200 text-slate-500 font-medium text-xs">
+					<tr className="border-b border-slate-200 bg-white text-xs font-semibold text-slate-600 select-none">
 						<th className="py-3.5 px-6 font-medium">
 							<div className="flex items-center gap-1">
 								<Translate text={localizationConstants.casesColCaseNumber} />

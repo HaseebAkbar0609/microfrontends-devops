@@ -1,4 +1,4 @@
-import { CreateArticleWizard } from "@/features/financial-management";
+import { CreateArticleWizard } from "@/features/financial-management/components/articles/create/CreateArticleWizard";
 
 export const dynamic = "force-dynamic";
 
