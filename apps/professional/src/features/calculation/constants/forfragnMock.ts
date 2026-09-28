@@ -1,4 +1,5 @@
-import type { ForfragnRow, InbjudnaRow, SupplierQuoteData } from "../types/forfragan";
+import type { ForfragnRow, InbjudnaRow, SupplierQuoteData, ForfragnKontaktData, SupplierDocument } from "../types/forfragan";
+import type { KalkylProjektData } from "../types/kalkyl";
 
 export const MOCK_FORFRAGNNINGAR: ForfragnRow[] = [
 	{ id: "k301-001", kalkylNr: "K301-001", datum: "2025-09-01", forfragan: "Kök", status: "pagar" },
@@ -16,12 +17,45 @@ export const MOCK_INBJUDNA: InbjudnaRow[] = [
 	{ id: "marbodal", datum: "2029-09-25", company: "Marbodal", amount: 205000, status: "received-price" },
 ];
 
+export const DEFAULT_PROJEKT_DATA: KalkylProjektData = {
+	projektNr: "ORD-0002",
+	projektNamn: "Renovation",
+	kvartersNamn: "-",
+	projektAdress: "Storgatan 16, 18880 Stockholm.",
+	postNr: "000892",
+	ort: "-",
+	type: "-",
+	kategori: "-",
+	avdelning: "-",
+	kontraktsumma: "-",
+	offertNr: "-",
+	startDatum: "12/10/2025",
+	slutDatum: "12/10/2025",
+	senasteDatum: "12/10/2025",
+};
+
+export const DEFAULT_KONTAKT_DATA: ForfragnKontaktData = {
+	kontaktperson: "-",
+	fornamn: "-",
+	efternamn: "-",
+	adress: "Storgatan 16, 18880 Stockholm.",
+	postNr: "000892",
+	mail: "info@example.test",
+	telefon: "0802418835",
+	ort: "Stockholm",
+};
+
+export const DEFAULT_DOCUMENTS: SupplierDocument[] = [
+	{ id: "doc-1", datum: "2024-05-10", namn: "offert.pdf", typ: "A500-10", fileType: "pdf" },
+	{ id: "doc-2", datum: "2024-05-10", namn: "offert.pdf", typ: "A500-11", fileType: "pdf" },
+];
+
 export const MOCK_SUPPLIER_QUOTE: SupplierQuoteData = {
 	id: "beijer",
 	company: "Beijer Bygg",
 	mail: "contact@example.test",
 	telefon: "0802418835",
-	address: "info",
+	address: "-",
 	postNr: "171 03",
 	kontaktSumma: "Sche",
 	kontaktNamn: "Kalle Andersson",

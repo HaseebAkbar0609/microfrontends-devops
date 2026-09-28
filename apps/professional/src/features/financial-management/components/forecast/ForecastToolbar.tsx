@@ -50,10 +50,12 @@ export interface ForecastToolbarProps {
 	onSearchChange: (value: string) => void;
 	/** Each group narrows the list on its own; Alla clears that one. */
 	groups: ForecastFilterGroup[];
+	/** A screen's own button, kept to the right of the row. */
+	action?: React.ReactNode;
 }
 
 /** Sök and Filter above a Prognos list: Prognoslista's and Resultat prognos's alike. */
-export function ForecastToolbar({ search, onSearchChange, groups }: ForecastToolbarProps) {
+export function ForecastToolbar({ search, onSearchChange, groups, action }: ForecastToolbarProps) {
 	const t = useTranslate();
 	const activeFilterCount = groups.filter((group) => group.value !== null).length;
 
@@ -112,6 +114,8 @@ export function ForecastToolbar({ search, onSearchChange, groups }: ForecastTool
 					))}
 				</DropdownMenuContent>
 			</DropdownMenu>
+
+			{action && <div className="sm:ml-auto">{action}</div>}
 		</div>
 	);
 }
