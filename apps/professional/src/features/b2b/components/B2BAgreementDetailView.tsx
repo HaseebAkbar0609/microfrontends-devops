@@ -148,6 +148,27 @@ export function B2BAgreementDetailView({ agreementId, data: initialData }: Props
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
 
+  const sortedDocuments = useMemo(() => {
+    const docs = [...data.documents.uploaded];
+    if (!sortField || !sortOrder) return docs;
+    return docs.sort((a, b) => {
+      let valA = "";
+      let valB = "";
+      if (sortField === "datum") {
+        valA = a.datum || "";
+        valB = b.datum || "";
+      } else if (sortField === "namn") {
+        valA = a.namn || a.label || "";
+        valB = b.namn || b.label || "";
+      } else if (sortField === "fil") {
+        valA = a.label || "";
+        valB = b.label || "";
+      }
+      const cmp = valA.localeCompare(valB, "sv", { numeric: true, sensitivity: "base" });
+      return sortOrder === "asc" ? cmp : -cmp;
+    });
+  }, [data.documents.uploaded, sortField, sortOrder]);
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
@@ -195,27 +216,6 @@ export function B2BAgreementDetailView({ agreementId, data: initialData }: Props
       setSortOrder("asc");
     }
   };
-
-  const sortedDocuments = useMemo(() => {
-    const docs = [...data.documents.uploaded];
-    if (!sortField || !sortOrder) return docs;
-    return docs.sort((a, b) => {
-      let valA = "";
-      let valB = "";
-      if (sortField === "datum") {
-        valA = a.datum || "";
-        valB = b.datum || "";
-      } else if (sortField === "namn") {
-        valA = a.namn || a.label || "";
-        valB = b.namn || b.label || "";
-      } else if (sortField === "fil") {
-        valA = a.label || "";
-        valB = b.label || "";
-      }
-      const cmp = valA.localeCompare(valB, "sv", { numeric: true, sensitivity: "base" });
-      return sortOrder === "asc" ? cmp : -cmp;
-    });
-  }, [data.documents.uploaded, sortField, sortOrder]);
 
   return (
     <div className="min-h-full w-full bg-slate-50 flex flex-1 flex-col">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   ArrowDown,
   ArrowLeft,
@@ -142,46 +142,8 @@ export function B2BContractDetailView({ agreementId, initialData }: Props) {
   }, [agreementId]);
 
   const { isSubmitting, handleDownloadDoc } = useB2BAgreements(data);
-
-  if (isLoading) {
-    return (
-      <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
-        <Loader2 className="h-6 w-6 animate-spin text-slate-400" aria-hidden={true} />
-      </div>
-    );
-  }
-
-  if (loadError && !data.id) {
-    return (
-      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-slate-50 px-4 text-center">
-        <p className="text-sm text-slate-500">{loadError}</p>
-        <Button variant="outline" size="sm" onClick={() => fetchAgreement()} className="cursor-pointer">
-          {t(localizationConstants.retry)}
-        </Button>
-      </div>
-    );
-  }
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
-
-  const handlePrintContract = () => {
-    if (typeof window !== "undefined") {
-      window.print();
-    }
-  };
-
-  const handleSort = (field: "datum" | "namn" | "fil") => {
-    if (sortField === field) {
-      if (sortOrder === "asc") setSortOrder("desc");
-      else if (sortOrder === "desc") {
-        setSortField(null);
-        setSortOrder(null);
-      }
-    } else {
-      setSortField(field);
-      setSortOrder("asc");
-    }
-  };
 
   const sortedDocuments = useMemo(() => {
     const docs = [...data.documents.uploaded];
@@ -203,6 +165,44 @@ export function B2BContractDetailView({ agreementId, initialData }: Props) {
       return sortOrder === "asc" ? cmp : -cmp;
     });
   }, [data.documents.uploaded, sortField, sortOrder]);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-400" aria-hidden={true} />
+      </div>
+    );
+  }
+
+  if (loadError && !data.id) {
+    return (
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-slate-50 px-4 text-center">
+        <p className="text-sm text-slate-500">{loadError}</p>
+        <Button variant="outline" size="sm" onClick={() => fetchAgreement()} className="cursor-pointer">
+          {t(localizationConstants.retry)}
+        </Button>
+      </div>
+    );
+  }
+
+  const handlePrintContract = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
+  const handleSort = (field: "datum" | "namn" | "fil") => {
+    if (sortField === field) {
+      if (sortOrder === "asc") setSortOrder("desc");
+      else if (sortOrder === "desc") {
+        setSortField(null);
+        setSortOrder(null);
+      }
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+  };
 
   return (
     <div className="min-h-full w-full bg-slate-50 flex flex-1 flex-col">
