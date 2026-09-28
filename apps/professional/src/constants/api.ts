@@ -223,6 +223,12 @@ export const API_PATH = {
 			DELETE: (id: string, qaId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa/${qaId}`,
 			REPLY: (id: string, qaId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/qa/${qaId}/replies`,
 		},
+		INQUIRIES: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries`,
+		INQUIRY_DETAILS: (id: string, requestId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}`,
+		INQUIRY_CREATE: (id: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries`,
+		INQUIRY_SUPPLIER_QUOTE: (id: string, requestId: string, supplierId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}/suppliers/${supplierId}`,
+		INQUIRY_CONVERT: (id: string, requestId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}/convert`,
+		INQUIRY_DECLINE: (id: string, requestId: string) => `${PROFESSIONALS_BASE_PATH}/calculations/${id}/inquiries/${requestId}/decline`,
 	},
 	CALCULATION: {
 		PRO: `${PROFESSIONALS_BASE_PATH}/calculation/pro`,
