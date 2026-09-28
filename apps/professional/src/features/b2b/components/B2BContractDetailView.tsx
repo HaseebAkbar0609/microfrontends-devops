@@ -142,28 +142,8 @@ export function B2BContractDetailView({ agreementId, initialData }: Props) {
   }, [agreementId]);
 
   const { isSubmitting, handleDownloadDoc } = useB2BAgreements(data);
-
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
-
-  const handlePrintContract = () => {
-    if (typeof window !== "undefined") {
-      window.print();
-    }
-  };
-
-  const handleSort = (field: "datum" | "namn" | "fil") => {
-    if (sortField === field) {
-      if (sortOrder === "asc") setSortOrder("desc");
-      else if (sortOrder === "desc") {
-        setSortField(null);
-        setSortOrder(null);
-      }
-    } else {
-      setSortField(field);
-      setSortOrder("asc");
-    }
-  };
 
   const sortedDocuments = useMemo(() => {
     const docs = [...data.documents.uploaded];
@@ -204,6 +184,25 @@ export function B2BContractDetailView({ agreementId, initialData }: Props) {
       </div>
     );
   }
+
+  const handlePrintContract = () => {
+    if (typeof window !== "undefined") {
+      window.print();
+    }
+  };
+
+  const handleSort = (field: "datum" | "namn" | "fil") => {
+    if (sortField === field) {
+      if (sortOrder === "asc") setSortOrder("desc");
+      else if (sortOrder === "desc") {
+        setSortField(null);
+        setSortOrder(null);
+      }
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+  };
 
   return (
     <div className="min-h-full w-full bg-slate-50 flex flex-1 flex-col">

@@ -148,35 +148,6 @@ export function B2BAgreementDetailView({ agreementId, data: initialData }: Props
   const [sortField, setSortField] = useState<"datum" | "namn" | "fil" | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc" | null>(null);
 
-  const handleBack = () => {
-    if (queryProjectId || queryOfferId) {
-      router.push(
-        `/module/business/b2b/agreements/create?projectId=${queryProjectId || "1"}&offerId=${queryOfferId || "1"}`
-      );
-    } else {
-      router.push(`/module/business/b2b/agreements/create`);
-    }
-  };
-
-  const handleSendContract = async () => {
-    await handleSendAgreement(data.id || "1", () => {
-      router.push("/module/business/b2b/overview");
-    });
-  };
-
-  const handleSort = (field: "datum" | "namn" | "fil") => {
-    if (sortField === field) {
-      if (sortOrder === "asc") setSortOrder("desc");
-      else if (sortOrder === "desc") {
-        setSortField(null);
-        setSortOrder(null);
-      }
-    } else {
-      setSortField(field);
-      setSortOrder("asc");
-    }
-  };
-
   const sortedDocuments = useMemo(() => {
     const docs = [...data.documents.uploaded];
     if (!sortField || !sortOrder) return docs;
@@ -216,6 +187,35 @@ export function B2BAgreementDetailView({ agreementId, data: initialData }: Props
       </div>
     );
   }
+
+  const handleBack = () => {
+    if (queryProjectId || queryOfferId) {
+      router.push(
+        `/module/business/b2b/agreements/create?projectId=${queryProjectId || "1"}&offerId=${queryOfferId || "1"}`
+      );
+    } else {
+      router.push(`/module/business/b2b/agreements/create`);
+    }
+  };
+
+  const handleSendContract = async () => {
+    await handleSendAgreement(data.id || "1", () => {
+      router.push("/module/business/b2b/overview");
+    });
+  };
+
+  const handleSort = (field: "datum" | "namn" | "fil") => {
+    if (sortField === field) {
+      if (sortOrder === "asc") setSortOrder("desc");
+      else if (sortOrder === "desc") {
+        setSortField(null);
+        setSortOrder(null);
+      }
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
+  };
 
   return (
     <div className="min-h-full w-full bg-slate-50 flex flex-1 flex-col">
