@@ -20,7 +20,7 @@ import {
 const ALLOWED_EXTENSIONS = [".pdf", ".doc", ".docx", ".jpg", ".jpeg", ".png"];
 const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15MB
 
-export function useB2BAgreements(initialData: B2BAgreementDetail) {
+export function useB2BAgreements(initialData: B2BAgreementDetail, projectId?: string) {
   const [data, setData] = useState<B2BAgreementDetail>(initialData);
   const [clientForm, setClientForm] = useState<B2BAgreementClient>(initialData.client);
   const [supplierForm, setSupplierForm] = useState<B2BAgreementSupplier>(initialData.supplier);
@@ -145,6 +145,11 @@ export function useB2BAgreements(initialData: B2BAgreementDetail) {
 
     try {
       const uploadRes = await uploadB2BAgreementFileAction(file);
+      if (!uploadRes.success || !uploadRes.data) {
+        showToast("error", uploadRes.error || "Kunde inte ladda upp filen");
+        return;
+      }
+
       const isDoc = file.name.endsWith(".doc") || file.name.endsWith(".docx");
       const isPdf = file.name.endsWith(".pdf");
       const type: "pdf" | "doc" | "other" = isPdf ? "pdf" : isDoc ? "doc" : "other";
@@ -152,12 +157,12 @@ export function useB2BAgreements(initialData: B2BAgreementDetail) {
       const sanitizedName = file.name.replace(/[/\\?%*:|"<>]/g, "");
 
       const newDocItem = {
-        id: uploadRes.data?.id || `up-${Date.now()}`,
+        id: uploadRes.data.id,
         label: sanitizedName,
         type,
         datum: new Date().toISOString().split("T")[0],
         namn: sanitizedName.replace(/\.[^/.]+$/, ""),
-        url: uploadRes.data?.file_url_path,
+        url: uploadRes.data.file_url_path,
       };
 
       setData((prev) => ({
@@ -170,8 +175,9 @@ export function useB2BAgreements(initialData: B2BAgreementDetail) {
 
       setUploadedFiles((prev) => [...prev, { id: newDocItem.id, name: sanitizedName }]);
       showToast("success", `Filen "${sanitizedName}" har laddats upp!`);
-    } catch {
-      showToast("error", "Kunde inte ladda upp filen");
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Kunde inte ladda upp filen";
+      showToast("error", errorMsg);
     }
   };
 
@@ -219,11 +225,13 @@ export function useB2BAgreements(initialData: B2BAgreementDetail) {
     setIsSubmitting(true);
     try {
       const result = await createB2BAgreementAction({
+        projectId,
         projectInfo: data.projectInfo,
         client: clientForm,
         supplier: supplierForm,
         attachedDocs,
         signature: signatureForm,
+        documentMediaIds: uploadedFiles.map((f) => f.id),
       });
 
       if (result.success && result.data) {

@@ -25,6 +25,7 @@ export function QAThreadAnswer({
 }: QAThreadAnswerProps) {
 	const t = useTranslate();
 	const author = message.answerUser ?? currentUserName;
+	const badge = message.answerBadge ?? (labels.answerBadge ? t(labels.answerBadge) : "");
 
 	return (
 		<div className="flex w-full flex-col gap-2">
@@ -37,13 +38,17 @@ export function QAThreadAnswer({
 						<span className="text-sm leading-5 font-semibold text-zinc-950">
 							{author}
 						</span>
-						<span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs leading-4 font-medium text-zinc-950 shadow-2xs">
-							{message.answerBadge ?? t(labels.answerBadge)}
-						</span>
+						{badge && (
+							<span className="rounded-md bg-zinc-100 px-2 py-0.5 text-xs leading-4 font-medium text-zinc-950 shadow-2xs">
+								{badge}
+							</span>
+						)}
 					</div>
-					<span className="text-xs leading-4 text-slate-500">
-						{t(labels.answerSubLabel)}
-					</span>
+					{labels.answerSubLabel && (
+						<span className="text-xs leading-4 text-slate-500">
+							{t(labels.answerSubLabel)}
+						</span>
+					)}
 				</div>
 			</div>
 

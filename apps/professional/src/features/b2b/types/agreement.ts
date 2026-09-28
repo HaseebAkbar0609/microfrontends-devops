@@ -83,6 +83,7 @@ export interface B2BCreateAgreementPayload {
   supplier: B2BAgreementSupplier;
   attachedDocs: string[];
   signature: B2BAgreementSignature;
+  documentMediaIds?: string[];
 }
 
 export const b2bSignaturePartyValidationSchema = z.object({

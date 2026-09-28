@@ -44,10 +44,13 @@ export interface QAThreadLabels {
 	leaveComment: TranslationKeys;
 	send: TranslationKeys;
 	cancel: TranslationKeys;
-	/** Chip beside the answering user's name. */
-	answerBadge: TranslationKeys;
-	/** Sub-label under the answering user, e.g. "You". */
-	answerSubLabel: TranslationKeys;
+	/**
+	 * Chip beside the answering user's name. Leave it out where the screen
+	 * cannot know the answerer's role — no chip is better than a wrong one.
+	 */
+	answerBadge?: TranslationKeys;
+	/** Sub-label under the answering user, e.g. "You". Left out, nothing shows. */
+	answerSubLabel?: TranslationKeys;
 	/** Role-chip wording, keyed by the badge value carried on a message. */
 	badges?: Record<string, TranslationKeys>;
 }

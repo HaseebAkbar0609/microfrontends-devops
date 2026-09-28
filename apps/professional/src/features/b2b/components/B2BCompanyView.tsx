@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
@@ -15,14 +16,33 @@ import { CompanyOmdomeTab } from "./CompanyOmdomeTab";
 
 interface Props {
   data?: CompanyDetail;
-  companyId?: string;
+  companyId: string;
 }
 
-export function B2BCompanyView({ data: initialData, companyId = "1" }: Props) {
+export function B2BCompanyView({ data: initialData, companyId }: Props) {
   const t = useTranslate();
   const router = useRouter();
 
-  const { data } = useB2BCompany(companyId, initialData);
+  const { data, isLoading, error, refetch } = useB2BCompany(companyId, initialData);
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen flex-1 items-center justify-center bg-slate-50">
+        <Loader2 className="h-6 w-6 animate-spin text-slate-400" aria-hidden={true} />
+      </div>
+    );
+  }
+
+  if (error && !data.id) {
+    return (
+      <div className="flex min-h-screen flex-1 flex-col items-center justify-center gap-3 bg-slate-50 px-4 text-center">
+        <p className="text-sm text-slate-500">{error}</p>
+        <Button variant="outline" size="sm" onClick={() => refetch()} className="cursor-pointer">
+          {t(localizationConstants.retry)}
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col bg-slate-50 w-full px-4 py-6">
