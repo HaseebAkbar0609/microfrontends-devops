@@ -6,18 +6,12 @@ import { TabsContent } from "@/components/ui/tabs";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { forecastBreadcrumbs } from "../../../constants/economyNav.config";
+import { CustomReportsPanel } from "./custom/CustomReportsPanel";
 import { ReportsListPanel } from "./ReportsListPanel";
 
 const REPORT_TABS: SectionTabItem[] = [
 	{ id: "list", labelKey: localizationConstants.forecastReportsListTab },
-	{
-		/* The frame names it but draws nothing behind it; it stays in the row,
-		   disabled, rather than opening on an empty screen. */
-		id: "custom",
-		labelKey: localizationConstants.reportTabCustomReports,
-		disabled: true,
-		disabledReasonKey: localizationConstants.forecastAnalysisTabUnavailable,
-	},
+	{ id: "custom", labelKey: localizationConstants.reportTabCustomReports },
 ];
 
 /** Prognos › Rapporter: the reports filed for the forecast, and what they hold. */
@@ -40,6 +34,9 @@ export function ForecastReportsPage() {
 				>
 					<TabsContent value="list" className="pt-5">
 						<ReportsListPanel />
+					</TabsContent>
+					<TabsContent value="custom" className="pt-5">
+						<CustomReportsPanel />
 					</TabsContent>
 				</SectionTabs>
 			</div>

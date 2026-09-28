@@ -48,7 +48,11 @@ export function forecastFilterGroup<T extends string>(
 export interface ForecastToolbarProps {
 	search: string;
 	onSearchChange: (value: string) => void;
-	/** Each group narrows the list on its own; Alla clears that one. */
+	/**
+	 * Each group narrows the list on its own; Alla clears that one. With none,
+	 * Filter itself steps aside rather than opening on an empty menu — a saved
+	 * custom report has nothing to filter by.
+	 */
 	groups: ForecastFilterGroup[];
 	/** A screen's own button, kept to the right of the row. */
 	action?: React.ReactNode;
@@ -70,50 +74,52 @@ export function ForecastToolbar({ search, onSearchChange, groups, action }: Fore
 				wrapperClassName="w-full sm:w-[260px]"
 			/>
 
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button
-						variant="outline"
-						className="h-10 cursor-pointer justify-between gap-1.5 self-start border-slate-200 bg-transparent px-3 text-sm font-normal text-slate-700 shadow-2xs hover:bg-slate-50"
-					>
-						<Translate text={localizationConstants.filter} />
-						{activeFilterCount > 0 && (
-							<>
-								<span aria-hidden className="rounded-sm bg-slate-900 px-1.5 text-[10px] font-semibold text-white">
-									{activeFilterCount}
-								</span>
-								<span className="sr-only">
-									{t(localizationConstants.forecastFilterActiveCount, { count: activeFilterCount })}
-								</span>
-							</>
-						)}
-						<ChevronDown className="h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden />
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="start" className="w-52 border border-slate-200 bg-white p-1 shadow-md">
-					{groups.map((group, index) => (
-						<div key={group.labelKey}>
-							{index > 0 && <DropdownMenuSeparator />}
-							<DropdownMenuLabel className="text-xs font-medium text-slate-500">
-								<Translate text={group.labelKey} />
-							</DropdownMenuLabel>
-							<DropdownMenuRadioGroup
-								value={group.value ?? ALL}
-								onValueChange={(next) => group.onChange(next === ALL ? null : next)}
-							>
-								<DropdownMenuRadioItem value={ALL} className={ITEM}>
-									<Translate text={localizationConstants.forecastFilterAll} />
-								</DropdownMenuRadioItem>
-								{group.options.map((option) => (
-									<DropdownMenuRadioItem key={option.value} value={option.value} className={ITEM}>
-										<Translate text={option.labelKey} />
+			{groups.length > 0 && (
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button
+							variant="outline"
+							className="h-10 cursor-pointer justify-between gap-1.5 self-start border-slate-200 bg-transparent px-3 text-sm font-normal text-slate-700 shadow-2xs hover:bg-slate-50"
+						>
+							<Translate text={localizationConstants.filter} />
+							{activeFilterCount > 0 && (
+								<>
+									<span aria-hidden className="rounded-sm bg-slate-900 px-1.5 text-[10px] font-semibold text-white">
+										{activeFilterCount}
+									</span>
+									<span className="sr-only">
+										{t(localizationConstants.forecastFilterActiveCount, { count: activeFilterCount })}
+									</span>
+								</>
+							)}
+							<ChevronDown className="h-3.5 w-3.5 shrink-0 text-slate-500" aria-hidden />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="start" className="w-52 border border-slate-200 bg-white p-1 shadow-md">
+						{groups.map((group, index) => (
+							<div key={group.labelKey}>
+								{index > 0 && <DropdownMenuSeparator />}
+								<DropdownMenuLabel className="text-xs font-medium text-slate-500">
+									<Translate text={group.labelKey} />
+								</DropdownMenuLabel>
+								<DropdownMenuRadioGroup
+									value={group.value ?? ALL}
+									onValueChange={(next) => group.onChange(next === ALL ? null : next)}
+								>
+									<DropdownMenuRadioItem value={ALL} className={ITEM}>
+										<Translate text={localizationConstants.forecastFilterAll} />
 									</DropdownMenuRadioItem>
-								))}
-							</DropdownMenuRadioGroup>
-						</div>
-					))}
-				</DropdownMenuContent>
-			</DropdownMenu>
+									{group.options.map((option) => (
+										<DropdownMenuRadioItem key={option.value} value={option.value} className={ITEM}>
+											<Translate text={option.labelKey} />
+										</DropdownMenuRadioItem>
+									))}
+								</DropdownMenuRadioGroup>
+							</div>
+						))}
+					</DropdownMenuContent>
+				</DropdownMenu>
+			)}
 
 			{action && <div className="sm:ml-auto">{action}</div>}
 		</div>

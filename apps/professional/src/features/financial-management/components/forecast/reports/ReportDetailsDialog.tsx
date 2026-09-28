@@ -6,23 +6,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { RecordFileIcon } from "@/features/project/production/components/RecordFileIcon";
-import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
+import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { REPORT_CATEGORY_LABELS, REPORT_FILE_RULES } from "../../../constants/forecastReports.constants";
 import type { ReportDocument } from "../../../types/forecastReports.types";
 import { formatFileSize } from "../../../utils/forecastReports";
-
-/** One labelled line of the record. */
-function DetailRow({ labelKey, children }: { labelKey: TranslationKeys; children: React.ReactNode }) {
-	return (
-		<div className="flex flex-col gap-1 border-b border-slate-100 py-2.5 last:border-b-0 sm:flex-row sm:items-center sm:gap-4">
-			<span className="text-xs font-medium text-slate-500 sm:w-32 sm:shrink-0">
-				<Translate text={labelKey} />
-			</span>
-			<div className="min-w-0 text-sm text-slate-900">{children}</div>
-		</div>
-	);
-}
+import { ReportDetailRow as DetailRow } from "./ReportDetailRow";
 
 export interface ReportDetailsDialogProps {
 	report: ReportDocument;
