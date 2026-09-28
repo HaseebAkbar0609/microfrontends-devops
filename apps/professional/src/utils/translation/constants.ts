@@ -1,6 +1,7 @@
 import { sv } from "./sv";
 import type { AdminLiveTranslation } from "./adminLive";
 import type { MyPagesLiveTranslation } from "./myPagesLive";
+import type { DocumentWorkflowsTranslation } from "./documentWorkflows";
 
 export type HeaderTranslation = {
 	home: string;
@@ -10372,7 +10373,7 @@ export type ForecastDashboardTranslation = {
 	forecastReportsSizeUnknown: string;
 };
 
-export type Translation = HeaderTranslation &
+export type Translation = DocumentWorkflowsTranslation & HeaderTranslation &
 	AppLauncherTranslation &
 	SidebarTranslation &
 	AuthTranslation &

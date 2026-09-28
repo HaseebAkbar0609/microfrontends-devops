@@ -12,6 +12,8 @@ interface UploadedMedia {
 
 export interface UploadedProjectDocument extends ProjectDocumentItem {
 	fileUrl: string | null;
+  archiveState?: string | null;
+  approvalState?: string | null;
 }
 
 export async function uploadProjectDocument(file: File): Promise<UploadedMedia> {
@@ -25,9 +27,10 @@ export async function uploadProjectDocument(file: File): Promise<UploadedMedia> 
 	return response.data.data;
 }
 
-export async function listProjectDocuments(projectId: string): Promise<UploadedProjectDocument[]> {
+export async function listProjectDocuments(projectId: string, includeArchived = false): Promise<UploadedProjectDocument[]> {
 	const response = await axiosInstance.get<ApiResponse<UploadedProjectDocument[]>>(
 		`/professionals/projects/${encodeURIComponent(projectId)}/documents`,
+    { params: { include_archived: includeArchived } },
 	);
 	if (!response.data.data) throw new Error("PROJECT_DOCUMENT_LIST_RESPONSE_INVALID");
 	return response.data.data.map((doc) => {
