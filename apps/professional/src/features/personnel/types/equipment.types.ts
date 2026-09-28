@@ -53,30 +53,6 @@ export interface EmployeeEquipmentProfile {
 	vehicles: VehicleItem[];
 }
 
-export interface AssetHistoryLog {
-	id: string;
-	date: string;
-	type: "assignment" | "maintenance" | "service" | "inspection" | "status_change";
-	description: string;
-	performedBy: string;
-}
-
-export interface CompanyAssetItem {
-	id: string;
-	name: string;
-	category: EquipmentCategory;
-	idNumber: string;
-	assignedEmployeeId: string | null;
-	assignedEmployeeName: string | null;
-	assignedEmployeeAvatar?: string | null;
-	status: AssetStatus;
-	lastInspectionDate: string;
-	nextInspectionDate: string;
-	department: string;
-	notes?: string;
-	history: AssetHistoryLog[];
-}
-
 export type PersonalkortTabType =
 	| "information"
 	| "kompetens"
@@ -87,12 +63,3 @@ export type PersonalkortTabType =
 	| "personal_process"
 	| "arende"
 	| "dokument";
-
-export type EquipmentMainTab = "inventory" | "personalkort";
-
-export interface EquipmentFilterState {
-	searchTerm: string;
-	category: string;
-	status: string;
-	department: string;
-}
