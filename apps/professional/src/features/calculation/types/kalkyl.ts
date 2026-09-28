@@ -97,6 +97,7 @@ export type CreateCalculationPayload = {
 
 export type KalkylProjektData = {
 	projektNr: string;
+	kalkylNr?: string;
 	projektNamn: string;
 	kvartersNamn: string;
 	projektAdress: string;
@@ -254,4 +255,9 @@ export type SkallKravDoc = {
 	fileUrl?: string;
 	fileSize?: string;
 };
+
+export type KalkylLeverantorData = {
+	suppliers: string[];
+};
+
 

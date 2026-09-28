@@ -89,14 +89,16 @@ function CollapsiblePreviewCard({
 						setIsOpen((prev) => !prev);
 					}
 				}}
-				className="flex h-14 cursor-pointer flex-row items-center justify-between border-b border-slate-200 px-6 py-0 [.border-b]:pb-0 select-none hover:bg-slate-50/50 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400"
+				className="flex h-14 cursor-pointer flex-row items-center justify-between border-b border-slate-200 px-4 sm:px-6 py-0 [.border-b]:pb-0 select-none hover:bg-slate-50/50 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-400"
 				onClick={() => setIsOpen((prev) => !prev)}
 			>
-				<CardTitle className="flex items-center gap-2 text-base font-medium text-slate-900">
-					<Icon className="h-5 w-5 text-slate-700" />
-					<Translate text={titleKey} />
+				<CardTitle className="flex items-center gap-2 text-base font-medium text-slate-900 min-w-0">
+					<Icon className="h-5 w-5 shrink-0 text-slate-700" />
+					<span className="truncate">
+						<Translate text={titleKey} />
+					</span>
 				</CardTitle>
-				<div className="flex h-7 w-7 items-center justify-center text-slate-500" aria-hidden="true">
+				<div className="flex h-7 w-7 shrink-0 items-center justify-center text-slate-500" aria-hidden="true">
 					{isOpen ? (
 						<ChevronUp className="h-4 w-4" />
 					) : (
@@ -104,7 +106,7 @@ function CollapsiblePreviewCard({
 					)}
 				</div>
 			</CardHeader>
-			{isOpen && <CardContent className="px-6 py-5">{children}</CardContent>}
+			{isOpen && <CardContent className="px-4 py-4 sm:px-6 sm:py-5">{children}</CardContent>}
 		</Card>
 	);
 }
@@ -381,11 +383,11 @@ export function KalkylPreviewStep({
 					titleKey={localizationConstants.calcNewDocumentsHeader}
 					icon={Folders}
 				>
-					<div className="overflow-x-auto rounded border border-slate-200">
-						<Table>
+					<div className="overflow-x-auto rounded-lg border border-slate-200">
+						<Table className="w-full min-w-[640px] table-fixed">
 							<TableHeader>
 								<TableRow className="h-11 border-b border-slate-200">
-									<TableHead className="px-4 text-left font-medium text-slate-500">
+									<TableHead className="w-32 px-4 text-left font-medium text-slate-500">
 										<div className="flex items-center gap-1">
 											<Translate text={localizationConstants.agreementDetailDatum} />
 											<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
@@ -399,13 +401,13 @@ export function KalkylPreviewStep({
 											<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 										</div>
 									</TableHead>
-									<TableHead className="px-4 text-left font-medium text-slate-500">
+									<TableHead className="w-28 px-4 text-left font-medium text-slate-500">
 										<div className="flex items-center gap-1">
 											<Translate text={localizationConstants.calcProType} />
 											<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
 										</div>
 									</TableHead>
-									<TableHead className="px-4 text-left font-medium text-slate-500">
+									<TableHead className="w-24 px-4 text-left font-medium text-slate-500">
 										<div className="flex items-center gap-1">
 											<Translate text={localizationConstants.agreementDetailFil} />
 											<ArrowUpDown className="h-3.5 w-3.5 text-slate-400" />
@@ -441,7 +443,7 @@ export function KalkylPreviewStep({
 													{doc.datum}
 												</TableCell>
 												<TableCell className="px-4 py-3">
-													<div className="inline-flex items-center gap-3 text-slate-900 font-normal text-sm">
+													<div className="flex min-w-0 items-center gap-3 overflow-hidden text-sm font-normal text-slate-900">
 														<KalkylDocIcon
 															fileType={doc.fileType}
 															fileName={doc.namn}
@@ -457,12 +459,12 @@ export function KalkylPreviewStep({
 													{fileExt}
 												</TableCell>
 												<TableCell className="border-l border-slate-200 px-4 py-3 text-right">
-													<div className="flex items-center justify-end gap-3">
+													<div className="flex items-center justify-end gap-2 sm:gap-3">
 														<Button
 															type="button"
 															variant="outline"
 															size="sm"
-															className="h-8 rounded-md border-slate-200 bg-white px-3 text-xs font-normal text-slate-900 hover:bg-slate-50 shadow-none cursor-pointer"
+															className="h-8 rounded-md border-slate-200 bg-white px-2.5 sm:px-3 text-xs font-normal text-slate-900 hover:bg-slate-50 shadow-none cursor-pointer"
 														>
 															<Translate text={localizationConstants.agreementCreateSeFil} />
 														</Button>
