@@ -47,7 +47,7 @@ export default function CalculationDetailLayout({ children, params }: Props) {
 	];
 
 	return (
-		<div className="flex flex-1 flex-col overflow-hidden">
+		<div className="flex flex-1 flex-col overflow-hidden bg-slate-50">
 			<div className="shrink-0 border-b border-slate-200 bg-white px-4 sm:px-6 pt-4">
 				<RecordNavRow
 					title={`${t(localizationConstants.calculation)} ${calcId}`}
@@ -88,7 +88,7 @@ export default function CalculationDetailLayout({ children, params }: Props) {
 					</nav>
 				</div>
 			</div>
-			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+			<div className="flex min-h-0 flex-1 flex-col overflow-y-auto bg-slate-50">
 				{children}
 			</div>
 		</div>
