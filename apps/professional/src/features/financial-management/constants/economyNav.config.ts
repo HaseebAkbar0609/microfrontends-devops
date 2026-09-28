@@ -114,6 +114,7 @@ export const ECONOMY_FORECAST_RISK_URL = `${ECONOMY_FORECAST_BASE_URL}/risk-mana
 /* Prognos forecasts the people the Personal module manages; a different
    screen from ECONOMY_PERSONNEL_BASE_URL, at its own address. */
 export const ECONOMY_FORECAST_PERSONNEL_URL = `${ECONOMY_FORECAST_BASE_URL}/personnel`;
+export const ECONOMY_FORECAST_REPORTS_URL = `${ECONOMY_FORECAST_BASE_URL}/reports`;
 
 /**
  * The Prognos tab's own row: the pages built so far. The frame draws them as
@@ -151,6 +152,11 @@ export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
 		id: "forecast-personnel",
 		labelKey: localizationConstants.forecastPersonnelTitle,
 		href: ECONOMY_FORECAST_PERSONNEL_URL,
+	},
+	{
+		id: "forecast-reports",
+		labelKey: localizationConstants.forecastReportsTitle,
+		href: ECONOMY_FORECAST_REPORTS_URL,
 	},
 ];
 
