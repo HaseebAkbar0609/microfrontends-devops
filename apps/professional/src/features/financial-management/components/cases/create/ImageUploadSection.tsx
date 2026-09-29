@@ -7,7 +7,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { CASE_IMAGE_FILE_ACCEPT, CASE_IMAGE_FILE_RULES } from "../../../constants/cases.constants";
 import { useCaseAttachments } from "../../../hooks/useCaseAttachments";
 import type { CaseDocument } from "../../../types/cases.types";
-import { CaseImageGrid } from "./CaseImageGrid";
+import { CaseImageGrid } from "../shared/CaseImageGrid";
 import { CaseUploadCard } from "./CaseUploadCard";
 
 interface ImageUploadSectionProps {

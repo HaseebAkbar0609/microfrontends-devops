@@ -5,3 +5,4 @@ export * from "./CaseConversation";
 export * from "./CaseBasicInfoView";
 export * from "./CaseDocumentsView";
 export * from "./CaseDetailPage";
+export * from "./CaseStatusMenu";

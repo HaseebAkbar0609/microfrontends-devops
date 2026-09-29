@@ -8,5 +8,3 @@ export * from "./DocumentsTab";
 export * from "./FormActions";
 export * from "./CreateCasePage";
 export * from "./CaseUploadCard";
-export * from "./CaseDocumentsTable";
-export * from "./CaseImageGrid";

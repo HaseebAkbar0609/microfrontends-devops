@@ -28,7 +28,8 @@ function fileLabel(document: CaseDocument): string {
 
 export interface CaseDocumentsTableProps {
 	documents: CaseDocument[];
-	onRemove: (id: string) => void;
+	/** Omitted where the case is only being read; the column goes with it. */
+	onRemove?: (id: string) => void;
 }
 
 /** What has been added: the frame's three sortable columns, then the actions. */
@@ -80,7 +81,7 @@ export function CaseDocumentsTable({ documents, onRemove }: CaseDocumentsTablePr
 								</th>
 							);
 						})}
-						<th className="py-3 px-4 w-32" />
+						<th className={onRemove ? "py-3 px-4 w-32" : "py-3 px-4 w-24"} />
 					</tr>
 				</thead>
 				<tbody className="divide-y divide-slate-100">
@@ -108,14 +109,16 @@ export function CaseDocumentsTable({ documents, onRemove }: CaseDocumentsTablePr
 									>
 										<Translate text={localizationConstants.casesBtnViewFile} />
 									</button>
-									<button
-										type="button"
-										onClick={() => onRemove(document.id)}
-										aria-label={t(localizationConstants.casesRemoveDocument, { name: document.name })}
-										className="cursor-pointer p-1.5 text-slate-400 hover:text-rose-600"
-									>
-										<Trash2 className="h-4 w-4" aria-hidden />
-									</button>
+									{onRemove && (
+										<button
+											type="button"
+											onClick={() => onRemove(document.id)}
+											aria-label={t(localizationConstants.casesRemoveDocument, { name: document.name })}
+											className="cursor-pointer p-1.5 text-slate-400 hover:text-rose-600"
+										>
+											<Trash2 className="h-4 w-4" aria-hidden />
+										</button>
+									)}
 								</div>
 							</td>
 						</tr>
