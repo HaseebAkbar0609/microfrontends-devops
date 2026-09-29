@@ -2,11 +2,11 @@
 
 import type { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 
 type AnalyticsPanelProps = {
-  titleKey: string;
+  titleKey: TranslationKeys;
   isLoading?: boolean;
   isError?: boolean;
   onRetry?: () => void;

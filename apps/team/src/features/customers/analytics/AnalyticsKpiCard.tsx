@@ -1,16 +1,16 @@
 "use client";
 
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { useAnalyticsLocale } from "./useAnalyticsLocale";
 
 type AnalyticsKpiCardProps = {
-  labelKey: string;
+  labelKey: TranslationKeys;
   /** `null` marks a figure the API does not provide yet; it is never guessed. */
   value: number | null;
   accentClassName: string;
   isLoading?: boolean;
-  hintKey?: string;
+  hintKey?: TranslationKeys;
 };
 
 /** One headline figure, styled like the sales KPI cards. */
