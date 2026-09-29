@@ -143,14 +143,24 @@ test.fail("SALES-07: the list asks the server to filter, search and sort", async
 
 test.fail("TFS-1136: an order confirmation survives being saved", () => {
 	// SalesCompanyData has no `order` field, so companyInput deletes it on the
-	// way out. The API answers 200 and the confirmation is gone on reload.
+	// way out. The API answers 200 and the confirmation is gone on reload. An
+	// order date and number are not financial, so the client may send the order;
+	// the number itself should be allocated by the server (TFS-1138).
 	expect(salesCrmApi.companyInput(quotedCompany())).toHaveProperty("order");
 });
 
-test.fail("TFS-1136: a payment link survives being saved", () => {
-	// Same for `payment`: the link and invoice number the seller just sent to a
-	// customer are dropped, with no error.
-	expect(salesCrmApi.companyInput(quotedCompany())).toHaveProperty("payment");
+test.fixme("TFS-1136: a payment link survives a reload", () => {
+	// The link and invoice number a seller just sent are gone on reload. But the
+	// server strips `payment` on purpose: the CRM schema is non-financial, and
+	// test_sales_records_reject_fake_financial_state refuses a client-written
+	// payment, because otherwise a seller could mark their own invoice paid.
+	//
+	// So the fix is not for the client to send `payment`. Payment state belongs
+	// in the payment_orders ledger that sales_billing_service already writes, and
+	// the CRM should read it from there. That is why this is fixme and not an
+	// assertion that companyInput keeps `payment`: such a marker would stay red
+	// for the right fix and turn green for the wrong one — the one that reopens
+	// the hole. Assert on the server-read payment once that endpoint exists.
 });
 
 test.fail("SALES-10: stored sales documents have somewhere to live", async () => {
