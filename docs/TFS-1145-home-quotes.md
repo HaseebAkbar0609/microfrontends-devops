@@ -2,7 +2,7 @@
 
 Verified Jira requirement: "Connect Quotes and Modules API to Widgets on the Professional Dashboard." The reference screenshot shows Home Quotes and Modules placeholders. Both are now connected; the existing header module launcher is unchanged.
 
-Home persistence location is `dashboard`; only `quotes` is registered as a live source. The five rows reuse available/requested/sent/accepted/archived Offer API totals (page 1, page size 1), not page lengths or fabricated aggregates. Home and Offer widgets share a bounded cache, separated by company and actor. Successful results expire after 60 seconds; failures remain unknown and are not cached as zero. Home provides explicit refresh and a link to the existing Offer dashboard. Other Home widgets remain unavailable.
+Home persistence location is `dashboard`; only `quotes` is registered as a live source. The five rows reuse available/requested/sent/accepted/archived Offer API totals (page 1, page size 1), not page lengths or fabricated aggregates. Home and Offer widgets share a TTL cache, separated by company and actor. Successful results expire after 60 seconds; failures remain unknown and are not cached as zero. Home provides explicit refresh and a link to the existing Offer dashboard. Other Home widgets remain unavailable.
 
 Deploy the backend registry change before the frontend. No migration or new environment variable is required. Existing authentication, selected-company headers, membership checks and Offer API authorization remain unchanged.
 

@@ -20,6 +20,7 @@ function service(data) {
 test("module catalog uses explicit company scope and preserves real entries", async () => {
   const rows = [{ category: "Production", modules: [{ id: "a", name: "Project", name_sv: "Projekt" }] }];
   const api = service(rows); assert.equal(await api.getHomeModules("company"), rows);
+  assert.equal(api.calls[0][0], "/widgets/modules");
   assert.equal(api.calls[0][1].headers["X-Company-ID"], "company");
 });
 test("empty catalog is distinct from missing or malformed responses", async () => {
