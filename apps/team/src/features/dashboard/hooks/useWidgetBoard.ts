@@ -12,7 +12,7 @@ import type { HomeWidgetId } from "../types";
 export type BoardSlot = { uid: string; widgetId: HomeWidgetId | null };
 
 let slotSequence = 0;
-const makeSlot = (widgetId: HomeWidgetId | null): BoardSlot => ({
+export const makeSlot = (widgetId: HomeWidgetId | null): BoardSlot => ({
 	uid: `slot-${slotSequence++}`,
 	widgetId,
 });
@@ -21,13 +21,21 @@ const isHomeWidgetId = (value: unknown): value is HomeWidgetId =>
 	typeof value === "string" &&
 	(HOME_WIDGET_IDS as readonly string[]).includes(value);
 
-const readLayout = (): HomeWidgetId[] => {
+/** The stored layout, or the default when nothing usable was stored. */
+export const parseLayout = (raw: string | null): HomeWidgetId[] => {
+	if (raw === null) return [...DEFAULT_HOME_WIDGET_IDS];
 	try {
-		const raw = window.localStorage.getItem(HOME_WIDGET_LAYOUT_STORAGE_KEY);
-		if (raw === null) return [...DEFAULT_HOME_WIDGET_IDS];
 		const parsed: unknown = JSON.parse(raw);
 		if (!Array.isArray(parsed)) return [...DEFAULT_HOME_WIDGET_IDS];
 		return [...new Set(parsed.filter(isHomeWidgetId))];
+	} catch {
+		return [...DEFAULT_HOME_WIDGET_IDS];
+	}
+};
+
+const readLayout = (): HomeWidgetId[] => {
+	try {
+		return parseLayout(window.localStorage.getItem(HOME_WIDGET_LAYOUT_STORAGE_KEY));
 	} catch {
 		return [...DEFAULT_HOME_WIDGET_IDS];
 	}
@@ -46,7 +54,7 @@ const writeLayout = (ids: HomeWidgetId[]) => {
 };
 
 /** Keeps at least one empty slot at the end and fills the last grid row. */
-const padDraft = (slots: BoardSlot[]): BoardSlot[] => {
+export const padDraft = (slots: BoardSlot[]): BoardSlot[] => {
 	const next = [...slots];
 	while (
 		next[next.length - 1]?.widgetId !== null ||
@@ -57,7 +65,7 @@ const padDraft = (slots: BoardSlot[]): BoardSlot[] => {
 	return next;
 };
 
-const placeInSlot = (
+export const placeInSlot = (
 	slots: BoardSlot[],
 	widgetId: HomeWidgetId,
 	targetUid?: string
@@ -74,12 +82,30 @@ const placeInSlot = (
 	);
 };
 
-const clearSlot = (slots: BoardSlot[], uid: string) =>
+export const clearSlot = (slots: BoardSlot[], uid: string) =>
 	padDraft(
 		slots.map((slot) =>
 			slot.uid === uid ? { ...slot, widgetId: null } : slot
 		)
 	);
+
+/** Swaps two slots' widgets; moving onto an empty slot leaves the old one empty. */
+export const swapSlots = (
+	slots: BoardSlot[],
+	fromUid: string,
+	targetUid: string
+) => {
+	const from = slots.find((slot) => slot.uid === fromUid);
+	const target = slots.find((slot) => slot.uid === targetUid);
+	if (!from || !target || from.widgetId === null) return slots;
+	return padDraft(
+		slots.map((slot) => {
+			if (slot.uid === fromUid) return { ...slot, widgetId: target.widgetId };
+			if (slot.uid === targetUid) return { ...slot, widgetId: from.widgetId };
+			return slot;
+		})
+	);
+};
 
 export function useWidgetBoard() {
 	const [mode, setMode] = useState<"view" | "edit">("view");
@@ -135,20 +161,7 @@ export function useWidgetBoard() {
 
 	const moveWidget = (fromUid: string, targetUid: string) => {
 		if (fromUid === targetUid) return;
-		updateDraft((prev) => {
-			const from = prev.find((slot) => slot.uid === fromUid);
-			const target = prev.find((slot) => slot.uid === targetUid);
-			if (!from || !target || from.widgetId === null) return prev;
-			return padDraft(
-				prev.map((slot) => {
-					if (slot.uid === fromUid)
-						return { ...slot, widgetId: target.widgetId };
-					if (slot.uid === targetUid)
-						return { ...slot, widgetId: from.widgetId };
-					return slot;
-				})
-			);
-		});
+		updateDraft((prev) => swapSlots(prev, fromUid, targetUid));
 	};
 
 	return {
