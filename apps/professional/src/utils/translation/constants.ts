@@ -5007,6 +5007,9 @@ export type OfferTranslation = {
 	homeStaffRoles: string;
 	homeStaffRolesValue: string;
 	homeQuotesTitle: string;
+	homeQuotesOpen: string;
+	homeQuotesRefresh: string;
+	homeModulesRefresh: string;
 	homeQuotesPending: string;
 	homeQuotesAccepted: string;
 	homeQuotesDrafts: string;
@@ -5298,6 +5301,12 @@ export type OfferTranslation = {
 	agreementCancel: string;
 	agreementViewAgreement: string;
 	agreementSendAgreement: string;
+	agreementDocUploadSuccess: string;
+	agreementDocUploadError: string;
+	agreementDocDeleteSuccess: string;
+	agreementDocDeleteError: string;
+	agreementDocUploading: string;
+	agreementDocCenterTitle: string;
 	offerArchivedDelete: string;
 	offerArchivedUnarchive: string;
 	offerArchivedCommentAction: string;

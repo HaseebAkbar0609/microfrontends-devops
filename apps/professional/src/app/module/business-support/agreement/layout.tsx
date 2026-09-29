@@ -10,12 +10,13 @@ export default function AgreementLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-1 flex-col overflow-hidden">
+		<div className="flex flex-1 flex-col">
 			<ModuleHeader
 				titleKey={localizationConstants.agreement}
 				items={agreementNavItems}
+				className="[&_.font-bold]:font-semibold [&_.h-\[3px\]]:h-[2.5px]"
 			/>
-			<div className="flex flex-1 flex-col overflow-y-auto">
+			<div className="flex flex-1 flex-col">
 				{children}
 			</div>
 		</div>

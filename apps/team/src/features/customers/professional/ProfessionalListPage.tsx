@@ -11,6 +11,7 @@ import { listProfessionalsAPIAction, listPendingProfessionalsAPIAction } from "@
 import type { ProfessionalRow, PendingProfessionalRow, PendingSortField } from "@/api-actions/customers/professionals/list";
 import { ActiveProfessionalsTab } from "./ActiveProfessionalsTab";
 import { PendingProfessionalsTab } from "./PendingProfessionalsTab";
+import { ProfessionalAnalyticsTab } from "./ProfessionalAnalyticsTab";
 import { CreateAccountWizard } from "@/features/customers/CreateAccountWizard";
 
 type ProfessionalTab = "active" | "pending" | "analytics" | "archived";
@@ -192,6 +193,10 @@ function ProfessionalListPageInner() {
 						onOpenClick={(id) => router.push(`/customers/professional/${id}`)}
 						{...paginationProps}
 					/>
+				</TabsContent>
+
+				<TabsContent value="analytics" className="pt-4">
+					<ProfessionalAnalyticsTab />
 				</TabsContent>
 			</Tabs>
 

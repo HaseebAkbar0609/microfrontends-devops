@@ -44,7 +44,7 @@ export const agreementNavItems: RouteTabItem[] = [
 	},
 	{
 		id: "documents",
-		labelKey: localizationConstants.agreementDocuments,
+		labelKey: localizationConstants.documentCenterItem,
 		href: "/module/business-support/agreement/documents",
 	},
 	{

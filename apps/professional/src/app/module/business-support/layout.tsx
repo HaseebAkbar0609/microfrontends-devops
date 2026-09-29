@@ -10,13 +10,13 @@ export default function BusinessSupportLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<div className="flex flex-1 flex-col overflow-hidden">
+		<div className="flex flex-1 flex-col overflow-y-auto">
 			<ModuleHeader
 				titleKey={localizationConstants.businessSupport}
 				items={businessSupportNavItems}
 				autoHideOnSubRoutes={false}
 			/>
-			<div className="flex flex-1 flex-col overflow-y-auto">
+			<div className="flex flex-1 flex-col">
 				{children}
 			</div>
 		</div>
