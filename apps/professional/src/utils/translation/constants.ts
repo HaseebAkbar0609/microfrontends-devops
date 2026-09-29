@@ -6662,6 +6662,111 @@ export type MachineDashboardTranslation = {
 	machineModalBookingSubmit: string;
 };
 
+export type VehicleDashboardTranslation = {
+	vehicleDashboardTitle: string;
+	vehicleTabDashboard: string;
+	vehicleTabFleet: string;
+	vehicleTabDrive: string;
+	vehicleTabRoutes: string;
+	vehicleTabArchive: string;
+
+	vehicleKpiOverviewTitle: string;
+	vehicleKpiInOperation: string;
+	vehicleKpiServicePending: string;
+	vehicleKpiOutOfService: string;
+	vehicleKpiUpcomingService: string;
+	vehicleKpiLogbookNotCompleted: string;
+	vehicleKpiInOperationLabel: string;
+	vehicleKpiServicePendingLabel: string;
+	vehicleKpiOutOfServiceLabel: string;
+	vehicleKpiUpcomingServiceLabel: string;
+	vehicleKpiLogbookNotCompletedLabel: string;
+	vehicleKpiTotalVehicles: string;
+	vehicleKpiOperationalRate: string;
+
+	vehicleUpcomingServiceTitle: string;
+	vehicleUpcomingServiceTop5Title: string;
+	vehicleServicePrefix: string;
+	vehicleServiceItem1: string;
+	vehicleServiceItem2: string;
+	vehicleServiceItem3: string;
+	vehicleServiceItem4: string;
+	vehicleServiceItem5: string;
+	vehicleServiceStatusInProgress: string;
+	vehicleServiceStatusScheduled: string;
+	vehicleServiceStatusPending: string;
+	vehicleServiceStatusCompleted: string;
+
+	vehicleDriveOverviewTitle: string;
+	vehicleDriveMapActive: string;
+	vehicleDriveNoGps: string;
+	vehicleDriveUnapprovedLogbooks: string;
+	vehicleDriveActiveVehiclesLabel: string;
+	vehicleDriveActiveVehiclesSuffix: string;
+	vehicleDriveNoGpsSuffix: string;
+	vehicleDriveUnapprovedLogbooksSuffix: string;
+	vehicleDriveLiveTracking: string;
+	vehicleDriveViewMap: string;
+	vehicleDriveApproveLogbooks: string;
+
+	vehicleQuickActionsTitle: string;
+	vehicleActionAddMachine: string;
+	vehicleActionRegisterService: string;
+	vehicleActionAddVehicle: string;
+	vehicleActionVehicleMap: string;
+	vehicleActionLogbook: string;
+	vehicleActionNewKey: string;
+
+	vehicleModalAddVehicleTitle: string;
+	vehicleModalAddVehicleDesc: string;
+	vehicleModalRegisterServiceTitle: string;
+	vehicleModalRegisterServiceDesc: string;
+	vehicleModalMapTitle: string;
+	vehicleModalMapDesc: string;
+	vehicleModalLogbookTitle: string;
+	vehicleModalLogbookDesc: string;
+	vehicleModalNewKeyTitle: string;
+	vehicleModalNewKeyDesc: string;
+
+	vehicleFieldRegNumber: string;
+	vehicleFieldBrandModel: string;
+	vehicleFieldDriver: string;
+	vehicleFieldServiceType: string;
+	vehicleFieldDate: string;
+	vehicleFieldCost: string;
+	vehicleFieldKeyNumber: string;
+	vehicleFieldNotes: string;
+
+	vehiclePlaceholderRegNumber: string;
+	vehiclePlaceholderBrandModel: string;
+	vehiclePlaceholderDriver: string;
+	vehiclePlaceholderNotes: string;
+	vehiclePlaceholderServiceTitle: string;
+	vehiclePlaceholderKeyNumber: string;
+	vehicleValidationRequired: string;
+
+	vehicleLogbookTrip1Title: string;
+	vehicleLogbookTrip1Route: string;
+	vehicleLogbookTrip2Title: string;
+	vehicleLogbookTrip2Route: string;
+	vehicleMapZoneTitle: string;
+	vehicleMapGeofenceStatus: string;
+	vehicleMapStatusOnline: string;
+	vehicleMapStatusOffline: string;
+
+	vehicleSuccessAdded: string;
+	vehicleSuccessServiceSaved: string;
+	vehicleSuccessKeyAssigned: string;
+	vehicleSuccessLogbookSaved: string;
+
+	vehicleEmptyKpiTitle: string;
+	vehicleEmptyKpiDesc: string;
+	vehicleEmptyServicesTitle: string;
+	vehicleEmptyServicesDesc: string;
+	vehicleEmptyDriveTitle: string;
+	vehicleEmptyDriveDesc: string;
+};
+
 export type InvoiceTranslation = {
 	invoiceOverviewTitle: string;
 	invoiceTabList: string;
@@ -10680,6 +10785,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	CommonTranslation &
 	MachinePurchaseTranslation &
 	MachineDashboardTranslation &
+	VehicleDashboardTranslation &
 	InvoiceTranslation &
 	ExpenseTranslation &
 	FinancialReportsTranslation &

@@ -46,13 +46,13 @@ export function DashboardRearrangeRail({
 	onDiscard,
 	discardLabel = localizationConstants.widgetRailDiscard,
 	isSaving = false,
-	placedItemIds = [],
+	placedItemIds: _placedItemIds = [],
 	className,
 }: DashboardRearrangeRailProps) {
 	return (
 		<div className={cn("w-full shrink-0 space-y-4 xl:w-90", className)}>
 			{showToggle && (
-				<div className="flex justify-end">
+				<div className="flex justify-end mb-3">
 					<Button
 						type="button"
 						variant={isRearranging ? "default" : "secondary"}
@@ -114,7 +114,6 @@ export function DashboardRearrangeRail({
 				</div>
 				<div className="space-y-0.5">
 					{items.map((item) => {
-						const isPlaced = placedItemIds.includes(item.id);
 						const ItemIcon = item.icon;
 
 						return (
@@ -127,15 +126,19 @@ export function DashboardRearrangeRail({
 									"flex w-full cursor-pointer items-center gap-2 rounded-sm px-3 py-2 text-left transition-colors",
 									"focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:ring-offset-1 focus-visible:outline-none",
 									selectedItem === item.id
-										? "bg-[#1E293B] text-white"
-										: "text-slate-800 hover:bg-slate-100",
-									isPlaced &&
-										selectedItem !== item.id &&
-										"text-slate-400",
+										? "bg-[#111827] text-white"
+										: "text-slate-950 hover:bg-slate-200/70",
 								)}
 							>
-								<ItemIcon size={16} />
-								<span className="text-sm leading-5 font-medium tracking-normal">
+								<ItemIcon size={16} className={selectedItem === item.id ? "text-white" : "text-black"} />
+								<span
+									className={cn(
+										"text-sm leading-5 font-medium tracking-normal",
+										selectedItem === item.id
+											? "text-white"
+											: "text-slate-950",
+									)}
+								>
 									<Translate text={item.label} />
 								</span>
 							</button>
