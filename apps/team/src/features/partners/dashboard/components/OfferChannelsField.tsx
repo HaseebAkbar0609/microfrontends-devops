@@ -5,14 +5,9 @@ import { useTranslation } from "react-i18next";
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
-import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
-import { OFFER_CHANNELS, type OfferChannel } from "../constants/offers";
+import localizationConstants from "@/utils/translation/constants";
+import { OFFER_CHANNEL_LABELS, OFFER_CHANNELS } from "../constants/offers";
 import type { NewOfferValues } from "../schemas/newOffer.schema";
-
-const CHANNEL_LABELS: Record<OfferChannel, TranslationKeys> = {
-	b2c: localizationConstants.b2cColumnLabel,
-	b2b: localizationConstants.b2b,
-};
 
 /** Checkboxes for the channels a new offer is sent for approval in. */
 export function OfferChannelsField({ control }: { control: Control<NewOfferValues> }) {
@@ -39,7 +34,7 @@ export function OfferChannelsField({ control }: { control: Control<NewOfferValue
 									}
 									onBlur={field.onBlur}
 								/>
-								{t(CHANNEL_LABELS[channel])}
+								{t(OFFER_CHANNEL_LABELS[channel])}
 							</label>
 						))}
 					</div>

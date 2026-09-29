@@ -892,7 +892,7 @@ export const enAdmin: AdminTranslation = {
 	actionColumnLabel: "Action",
 	offerApprovedLabel: "Approved",
 	offerPendingLabel: "Pending",
-	offerCancelLabel: "Cancelled",
+	offerCancelLabel: "Declined",
 	notApplicableLabel: "N/A",
 	partnersAdminTitle: "Partners - admin",
 	partnersRegisterTab: "Partners - register",
@@ -941,6 +941,14 @@ export const enAdmin: AdminTranslation = {
 	partnerOfferChannelRequired: "Choose at least one channel.",
 	partnerOfferImageRequired: "Choose a picture from the image bank.",
 	partnerOfferAddedToast: "Offer added",
+	partnerReviewDescription: "Review the partner's offers and approve or decline them per channel.",
+	partnerOffersHeading: "Offers",
+	partnerNoOffers: "This partner has no offers yet.",
+	partnerDeclineButton: "Decline",
+	partnerDeclineConfirmTitle: "Decline this partner?",
+	partnerArchiveConfirmTitle: "Archive this partner?",
+	partnerOfferDeclineConfirmTitle: "Decline the offer for this channel?",
+	partnerApprovalUpdatedToast: "Status updated",
 };
 
 export const enSales: SalesTranslation = {

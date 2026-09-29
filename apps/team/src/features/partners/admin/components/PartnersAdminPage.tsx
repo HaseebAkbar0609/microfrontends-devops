@@ -10,7 +10,12 @@ import localizationConstants from "@/utils/translation/constants";
 import { PartnersRegisterTab } from "./PartnersRegisterTab";
 import { ApprovalCenterTab } from "./ApprovalCenterTab";
 import { KategoriTab } from "./KategoriTab";
-import { DUMMY_PARTNER_CATEGORIES } from "../constants/partners";
+import {
+	DUMMY_PARTNER_CATEGORIES,
+	DUMMY_PARTNER_REGISTER,
+	type PartnerApprovalStatus,
+} from "../constants/partners";
+import { DUMMY_OFFERS_BY_PARTNER, type OfferChannel, type OfferDecision } from "../constants/partnerOffers";
 
 const MAIN_TABS = [
 	{ value: "register", label: localizationConstants.partnersRegisterTab },
@@ -20,8 +25,25 @@ const MAIN_TABS = [
 
 export default function PartnersAdminPage() {
 	const [activeTab, setActiveTab] = useState("register");
-	// Held here because inactive tab panels unmount, which would drop added categories.
+	// Held here because inactive tab panels unmount, which would drop added categories and approval decisions.
 	const [categories, setCategories] = useState(DUMMY_PARTNER_CATEGORIES);
+	const [partners, setPartners] = useState(DUMMY_PARTNER_REGISTER);
+	const [offersByPartner, setOffersByPartner] = useState(DUMMY_OFFERS_BY_PARTNER);
+
+	function changeApprovalStatus(partnerId: string, approvalStatus: PartnerApprovalStatus) {
+		setPartners((previous) =>
+			previous.map((partner) => (partner.id === partnerId ? { ...partner, approvalStatus } : partner)),
+		);
+	}
+
+	function decideOffer(partnerId: string, offerId: string, channel: OfferChannel, decision: OfferDecision) {
+		setOffersByPartner((previous) => ({
+			...previous,
+			[partnerId]: (previous[partnerId] ?? []).map((offer) =>
+				offer.id === offerId ? { ...offer, [channel]: decision } : offer,
+			),
+		}));
+	}
 
 	return (
 		<div className="flex flex-col gap-0 px-6 pt-6 pb-10">
@@ -57,7 +79,12 @@ export default function PartnersAdminPage() {
 					<PartnersRegisterTab />
 				</TabsContent>
 				<TabsContent value="approval-center" className="mt-6">
-					<ApprovalCenterTab />
+					<ApprovalCenterTab
+						partners={partners}
+						offersByPartner={offersByPartner}
+						onApprovalStatusChange={changeApprovalStatus}
+						onOfferDecision={decideOffer}
+					/>
 				</TabsContent>
 				<TabsContent value="category" className="mt-6">
 					<KategoriTab

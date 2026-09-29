@@ -888,9 +888,9 @@ export const sweAdmin: AdminTranslation = {
 	b2cColumnLabel: "B2C",
 	discountLabel: "Rabatt",
 	actionColumnLabel: "Action",
-	offerApprovedLabel: "Approved",
-	offerPendingLabel: "Pending",
-	offerCancelLabel: "Cancelled",
+	offerApprovedLabel: "Godkänd",
+	offerPendingLabel: "Väntar",
+	offerCancelLabel: "Avböjd",
 	notApplicableLabel: "N/A",
 	partnersAdminTitle: "Partners - admin",
 	partnersRegisterTab: "Partners - register",
@@ -939,6 +939,14 @@ export const sweAdmin: AdminTranslation = {
 	partnerOfferChannelRequired: "Välj minst en kanal.",
 	partnerOfferImageRequired: "Välj en bild från bildbanken.",
 	partnerOfferAddedToast: "Erbjudandet har lagts till",
+	partnerReviewDescription: "Granska partnerns erbjudanden och godkänn eller avböj dem per kanal.",
+	partnerOffersHeading: "Erbjudanden",
+	partnerNoOffers: "Partnern har inga erbjudanden ännu.",
+	partnerDeclineButton: "Avböj",
+	partnerDeclineConfirmTitle: "Avböja partnern?",
+	partnerArchiveConfirmTitle: "Arkivera partnern?",
+	partnerOfferDeclineConfirmTitle: "Avböja erbjudandet för den här kanalen?",
+	partnerApprovalUpdatedToast: "Statusen har uppdaterats",
 };
 
 export const sweSales: SalesTranslation = {
