@@ -915,6 +915,16 @@ export const sweAdmin: AdminTranslation = {
 	partnerCategoryNameRequired: "Ange ett kategorinamn.",
 	partnerCategoryNameTaken: "Kategorin finns redan.",
 	partnerCategoryAddedToast: "Kategorin har lagts till",
+	imageBankDropPrompt: "Dra och släpp bilder här",
+	imageBankChooseImages: "Välj bilder",
+	imageBankFileRules: "JPG, PNG, WEBP eller GIF, högst {{max}} MB per bild.",
+	imageBankInvalidType: "{{name}} är inte en tillåten bildtyp. Använd JPG, PNG, WEBP eller GIF.",
+	imageBankFileTooLarge: "{{name}} är större än {{max}} MB.",
+	imageBankEmptyTitle: "Inga bilder ännu",
+	imageBankEmptyDescription: "Ladda upp bilder som du kan använda i dina erbjudanden.",
+	imageBankRemoveImage: "Ta bort {{name}}",
+	imageBankRemoveTitle: "Ta bort bilden?",
+	imageBankRemoveDescription: "{{name}} tas bort från bildbanken.",
 };
 
 export const sweSales: SalesTranslation = {
