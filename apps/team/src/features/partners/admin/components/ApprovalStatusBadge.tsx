@@ -1,8 +1,8 @@
 import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import type { PartnerApprovalStatus } from "../constants/partners";
 
-const APPROVAL_STATUS_STYLES: Record<PartnerApprovalStatus, { className: string; labelKey: string }> = {
+const APPROVAL_STATUS_STYLES: Record<PartnerApprovalStatus, { className: string; labelKey: TranslationKeys }> = {
 	approved: { className: "bg-green-500", labelKey: localizationConstants.approvalStatusApproved },
 	declined: { className: "bg-red-500", labelKey: localizationConstants.approvalStatusDeclined },
 	pending: { className: "bg-orange-500", labelKey: localizationConstants.approvalStatusPending },
