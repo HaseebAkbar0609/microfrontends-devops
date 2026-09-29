@@ -13,11 +13,14 @@ import { showToast } from "@/lib/toast";
 import { CompanyProfileDetailsTab } from "./CompanyProfileDetailsTab";
 import { LogotypeTab } from "./LogotypeTab";
 import { OfferTab } from "./OfferTab";
+import { ImageBankTab } from "./ImageBankTab";
 import {
 	partnerCompanyProfileSchema,
 	type PartnerCompanyProfileFormValues,
 } from "../schemas/companyProfile.schema";
 import { DEFAULT_VALUES } from "../constants";
+import type { PartnerImage } from "../constants/imageBank";
+import { DUMMY_PARTNER_OFFERS } from "../constants/offers";
 
 const MAIN_TABS = [
 	{ value: "company-profile", label: localizationConstants.companyProfileTab },
@@ -30,19 +33,15 @@ const PROFILE_SUB_TABS = [
 	{ value: "logotype", label: localizationConstants.logotypeTab },
 ];
 
-function ComingSoonPanel() {
-	return (
-		<div className="flex items-center justify-center rounded-md border border-slate-200 bg-white px-5 py-16 text-sm text-slate-500 shadow-sm">
-			<Translate text={localizationConstants.comingSoon} />
-		</div>
-	);
-}
-
 export default function PartnerDashboard() {
 	const t = useTranslate();
 	const lastSavedRef = useRef<PartnerCompanyProfileFormValues | null>(DEFAULT_VALUES);
 	const [activeMainTab, setActiveMainTab] = useState("company-profile");
 	const [activeProfileTab, setActiveProfileTab] = useState("company-details");
+	// Held here because inactive tab panels unmount, which would drop uploaded images and added offers.
+	const [images, setImages] = useState<PartnerImage[]>([]);
+	const addImages = (added: PartnerImage[]) => setImages((previous) => [...previous, ...added]);
+	const [offers, setOffers] = useState(DUMMY_PARTNER_OFFERS);
 
 	const form = useForm<PartnerCompanyProfileFormValues>({
 		resolver: zodResolver(partnerCompanyProfileSchema),
@@ -114,10 +113,19 @@ export default function PartnerDashboard() {
 				</TabsContent>
 
 				<TabsContent value="offer" className="mt-6 min-h-0 flex-1">
-					<OfferTab />
+					<OfferTab
+						offers={offers}
+						images={images}
+						onOfferCreated={(offer) => setOffers((previous) => [...previous, offer])}
+						onAddImages={addImages}
+					/>
 				</TabsContent>
 				<TabsContent value="image-bank" className="mt-6 min-h-0 flex-1">
-					<ComingSoonPanel />
+					<ImageBankTab
+						images={images}
+						onAdd={addImages}
+						onRemove={(id) => setImages((previous) => previous.filter((image) => image.id !== id))}
+					/>
 				</TabsContent>
 			</Tabs>
 		</div>

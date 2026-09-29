@@ -1,7 +1,9 @@
 "use client";
 
+import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
 import { CONTENT_GROUPS } from "../constants/contentGroups";
+import { CONTENT_BASE_HREF } from "../constants/content.constants";
 import type { ContentGroupId } from "../types";
 import { ContentModuleShell } from "./ContentModuleShell";
 import { ContentSectionCard } from "./ContentSectionCard";
@@ -17,7 +19,12 @@ export function ContentGroupPage({ groupId }: { groupId: ContentGroupId }) {
 	if (!group) return null;
 
 	return (
-		<ContentModuleShell>
+		<ContentModuleShell
+			titleKey={group.titleKey}
+			parents={[
+				{ label: localizationConstants.settings, href: CONTENT_BASE_HREF },
+			]}
+		>
 			<p className="max-w-2xl text-sm text-slate-500">
 				<Translate text={group.summaryKey} />
 			</p>

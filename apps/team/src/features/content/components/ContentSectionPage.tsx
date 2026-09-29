@@ -1,7 +1,8 @@
 "use client";
 
-import { useTranslate } from "@/utils/translation/translate";
+import localizationConstants from "@/utils/translation/constants";
 import { getContentGroupHref } from "../constants/contentNav";
+import { CONTENT_BASE_HREF } from "../constants/content.constants";
 import {
 	findContentGroup,
 	findContentSection,
@@ -18,14 +19,12 @@ type ContentSectionPageProps = {
 };
 
 /**
- * One content section. The section name sits in the back-navigation row rather
- * than the H1, so the module title is the same on every page of the console.
+ * One content section. The sub-sidebar selects it; the header names it.
  */
 export function ContentSectionPage({
 	groupId,
 	sectionSlug,
 }: ContentSectionPageProps) {
-	const t = useTranslate();
 	const group = findContentGroup(groupId);
 	const section = group ? findContentSection(group, sectionSlug) : null;
 	if (!group || !section) return null;
@@ -34,11 +33,11 @@ export function ContentSectionPage({
 
 	return (
 		<ContentModuleShell
-			record={{
-				title: t(section.titleKey),
-				description: t(section.summaryKey),
-				backHref: getContentGroupHref(group.id),
-			}}
+			titleKey={section.titleKey}
+			parents={[
+				{ label: localizationConstants.settings, href: CONTENT_BASE_HREF },
+				{ label: group.titleKey, href: getContentGroupHref(group.id) },
+			]}
 		>
 			{section.variant === "support" ? (
 				<SupportWorkbench groupId={group.id} section={section} />
