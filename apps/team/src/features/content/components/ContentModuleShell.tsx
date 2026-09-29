@@ -1,48 +1,34 @@
 "use client";
 
 import type { ReactNode } from "react";
-import {
-	ModulePageHeader,
-	type RecordNavRowProps,
-} from "@/components/layout/navigation";
-import {
-	CONTENT_BREADCRUMBS,
-	CONTENT_MODULE_TABS,
-	CONTENT_MODULE_TITLE_KEY,
-} from "../constants/contentNav";
+import { PageHeader } from "@/components/layout/PageHeader";
+import type { BreadcrumbItem } from "@/types/common";
+import type { TranslationKeys } from "@/utils/translation/constants";
+import { getContentBreadcrumbs } from "../constants/contentNav";
 
 type ContentModuleShellProps = {
+	/** The page's own name; the console's navigation lives in the sub-sidebar. */
+	titleKey: TranslationKeys;
+	/** Crumbs between the dashboard link and this page. */
+	parents?: BreadcrumbItem[];
 	children: ReactNode;
-	/** Present on section pages; the section name replaces the breadcrumb. */
-	record?: RecordNavRowProps;
 };
 
 /**
- * Shell for every page in the content console.
- *
- * The prototype had three navigation levels — a landing page, a group index and
- * a section page. The title stays constant here and the group tabs carry the
- * first level, so drilling into a section costs one click instead of two.
+ * Shell for every page in the settings console. The sub-sidebar says where you
+ * can go, so the header only has to say where you are.
  */
 export function ContentModuleShell({
+	titleKey,
+	parents,
 	children,
-	record,
 }: ContentModuleShellProps) {
 	return (
 		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
-			{record ? (
-				<ModulePageHeader
-					title={CONTENT_MODULE_TITLE_KEY}
-					tabs={CONTENT_MODULE_TABS}
-					record={record}
-				/>
-			) : (
-				<ModulePageHeader
-					title={CONTENT_MODULE_TITLE_KEY}
-					tabs={CONTENT_MODULE_TABS}
-					breadcrumbs={CONTENT_BREADCRUMBS}
-				/>
-			)}
+			<PageHeader
+				title={titleKey}
+				breadcrumbs={getContentBreadcrumbs(titleKey, parents)}
+			/>
 			<div className="flex flex-col gap-5 px-5 py-5">{children}</div>
 		</div>
 	);

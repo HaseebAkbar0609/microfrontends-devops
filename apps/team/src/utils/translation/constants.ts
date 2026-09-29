@@ -99,9 +99,10 @@ export type SidebarTranslation = {
 	private: string;
 	leadsManagement: string;
 	settings: string;
-	timeflowHome: string;
-	timeflowWork: string;
-	timeflowTeam: string;
+	costCalculatorItem: string;
+	faqItem: string;
+	tipsInspirationItem: string;
+	supportContactItem: string;
 	employment: string;
 	companyItem: string;
 	timeItem: string;
@@ -1523,6 +1524,9 @@ export type SupportTranslation = {
 
 export type ContentTranslation = {
 	contentModuleTitle: string;
+	contentConsoleOpen: string;
+	contentConsoleSubtitle: string;
+	contentConsoleSummary: string;
 	contentGroupKundTitle: string;
 	contentGroupKundSummary: string;
 	contentGroupWorkspaceTitle: string;
