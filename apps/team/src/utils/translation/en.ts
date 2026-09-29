@@ -891,7 +891,7 @@ export const enAdmin: AdminTranslation = {
 	actionColumnLabel: "Action",
 	offerApprovedLabel: "Approved",
 	offerPendingLabel: "Pending",
-	offerCancelLabel: "Cancelled",
+	offerCancelLabel: "Declined",
 	notApplicableLabel: "N/A",
 	partnersAdminTitle: "Partners - admin",
 	partnersRegisterTab: "Partners - register",
