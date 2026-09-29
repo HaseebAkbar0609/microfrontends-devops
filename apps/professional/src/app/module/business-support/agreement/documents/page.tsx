@@ -1,17 +1,20 @@
-import { Translate } from "@/utils/translation/translate";
+import { PageHeader } from "@/components/layout/PageHeader";
+import { AgreementDocumentCenter } from "@/features/agreement/components/documents/AgreementDocumentCenter";
+import { AGREEMENT_DOCUMENTS_BREADCRUMBS } from "@/features/agreement/constants/agreementDocuments";
 import localizationConstants from "@/utils/translation/constants";
 
 export const dynamic = "force-dynamic";
 
 export default function DocumentsPage() {
 	return (
-		<div className="flex h-full flex-1 flex-col items-center justify-center p-8 text-center bg-slate-50">
-			<h1 className="text-2xl font-bold text-slate-900 mb-2">
-				<Translate text={localizationConstants.agreementDocuments} />
-			</h1>
-			<p className="text-sm text-slate-500">
-				<Translate text={localizationConstants.comingSoonMessage} />
-			</p>
+		<div className="flex flex-1 flex-col bg-blue-gray-50">
+			<PageHeader
+				title={localizationConstants.documentCenterItem}
+				breadcrumbs={AGREEMENT_DOCUMENTS_BREADCRUMBS}
+			/>
+			<div className="p-3 sm:p-5 flex-1">
+				<AgreementDocumentCenter />
+			</div>
 		</div>
 	);
 }
