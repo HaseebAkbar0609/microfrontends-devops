@@ -2,6 +2,7 @@
 
 import { Eye, ExternalLink, Trash2 } from "lucide-react";
 
+import { RecordFileNameCell } from "@/components/table/RecordFileNameCell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -10,9 +11,8 @@ import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { FORECAST_ACTION_COLUMN } from "../../../constants/forecastList.constants";
-import { REPORT_CATEGORY_LABELS } from "../../../constants/forecastReports.constants";
+import { REPORT_CATEGORY_LABELS, REPORT_FILE_RULES } from "../../../constants/forecastReports.constants";
 import type { ReportDocument } from "../../../types/forecastReports.types";
-import { ReportFileCell } from "./ReportFileCell";
 
 const CELL = "px-4 py-3.5 text-sm whitespace-nowrap text-slate-900";
 
@@ -36,7 +36,7 @@ export function ReportsTableRow({ report, onView, onOpenFile, onDelete }: Report
 			</TableCell>
 
 			<TableCell className="max-w-[20rem] px-4 py-2">
-				<ReportFileCell fileName={report.fileName} />
+				<RecordFileNameCell fileName={report.fileName} types={REPORT_FILE_RULES.types} />
 			</TableCell>
 
 			<TableCell className={cn(CELL, "tabular-nums")}>{report.date}</TableCell>

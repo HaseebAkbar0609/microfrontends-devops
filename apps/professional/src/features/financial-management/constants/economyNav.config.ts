@@ -117,6 +117,7 @@ export const ECONOMY_FORECAST_PERSONNEL_URL = `${ECONOMY_FORECAST_BASE_URL}/pers
 export const ECONOMY_FORECAST_REPORTS_URL = `${ECONOMY_FORECAST_BASE_URL}/reports`;
 /* The same register Ekonomi shows, under Prognos's own chrome. */
 export const ECONOMY_FORECAST_CASES_URL = `${ECONOMY_FORECAST_BASE_URL}/cases`;
+export const ECONOMY_FORECAST_TEMPLATES_URL = `${ECONOMY_FORECAST_BASE_URL}/templates`;
 
 /**
  * The Prognos tab's own row: the pages built so far. The frame draws them as
@@ -164,6 +165,11 @@ export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
 		id: "forecast-cases",
 		labelKey: localizationConstants.cases,
 		href: ECONOMY_FORECAST_CASES_URL,
+	},
+	{
+		id: "forecast-templates",
+		labelKey: localizationConstants.forecastTemplatesTitle,
+		href: ECONOMY_FORECAST_TEMPLATES_URL,
 	},
 ];
 
