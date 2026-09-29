@@ -10,11 +10,19 @@
  * implements one of these the suite says so and the marker has to come off. A
  * plain skip would rot silently; a red suite would be ignored.
  *
+ * Two kinds of gap cannot be detected that way, and are `test.fixme` instead:
+ * the logic sits inline in a hook or provider callback, so there is no function
+ * a test can call without rendering React. Each says what extraction would make
+ * it self-checking.
+ *
+ * The API module and function names in the "no backend yet" markers are the
+ * contract to build against. Choose a different name and update the marker with
+ * it; otherwise the gap closes and the marker never notices.
+ *
  * Run: pnpm --filter @tfs/team test:e2e -- sales-module-contract
  */
 import { expect, test } from "@playwright/test";
 
-import { companyInput } from "../src/features/sales/api/salesCrmApi";
 import * as salesCrmApi from "../src/features/sales/api/salesCrmApi";
 import {
 	createEmptyCompany,
@@ -24,6 +32,7 @@ import {
 	createQuoteNumber,
 } from "../src/features/sales/utils/salesFactories";
 import { calculateQuoteTotals } from "../src/features/sales/utils/quoteCalculations";
+import axiosInstance from "../src/lib/axiosInstance";
 import type { QuoteModuleRow, SalesCompany } from "../src/features/sales/types";
 
 function quotedCompany(): SalesCompany {
@@ -46,7 +55,6 @@ function quotedCompany(): SalesCompany {
 	};
 	company.order = createOrder(company);
 	company.payment = createPendingPayment(company);
-	company.version = 4;
 	return company;
 }
 
@@ -57,10 +65,11 @@ const moduleRow: QuoteModuleRow = {
 
 // ───────────────────────── what is implemented ─────────────────────────
 
-test("the CRM record round-trips through a real API module", () => {
-	// Everything below is a gap. This one is the baseline: prospects, their
-	// contact details, activities and the quote do reach the server.
-	const body = companyInput(quotedCompany());
+test("the CRM has an API module, and a prospect's fields survive the create body", () => {
+	// The baseline everything below is measured against. companyInput builds the
+	// body for create and bulk import; these fields are kept, so they reach the
+	// server. What it strips is the subject of the TFS-1136 markers.
+	const body = salesCrmApi.companyInput(quotedCompany());
 	expect(body.name).toBe("Contract AB");
 	expect(body.organisationNumber).toBe("5561234567");
 	expect(body.quote?.monthlyNet).toBe(500);
@@ -74,7 +83,8 @@ test("the CRM record round-trips through a real API module", () => {
 
 test("quote totals follow the documented discount order", () => {
 	// Term discount off the gross first, then the extra discount off what is
-	// left. TFS-1137 mirrors exactly this arithmetic on the server.
+	// left. TFS-1137 mirrors exactly this arithmetic on the server, so changing a
+	// discount here without the server fails this test first.
 	const yearly = calculateQuoteTotals([moduleRow], "yearly", 10);
 	expect(yearly.monthlyNet).toBeCloseTo(382.5, 2);
 	expect(yearly.firstInvoice).toBeCloseTo(4590, 2);
@@ -86,27 +96,47 @@ test.fail("SALES-11: the settings screen reads and writes the settings API", asy
 	// The backend shipped and merged (PR 82, /api/v1/teams/sales/settings), but
 	// SalesSettingsProvider still holds the Calendly link and the email templates
 	// in useState seeded from salesSettings.mock, so a seller's settings are gone
-	// on reload. Only the server half of the ticket was done.
+	// on reload. Confirmed in a browser against local dev: no request on edit,
+	// value reverts on reload.
 	const api = await import("../src/features/sales/api/salesSettingsApi");
 	expect(Object.keys(api)).toEqual(
 		expect.arrayContaining(["getSalesSettings", "patchSalesSettings"]),
 	);
 });
 
-test.fail("SALES-03: a patch asserts the version it read, so a 409 can happen", () => {
+test.fixme("SALES-03: a patch asserts the version it read, so a 409 can happen", () => {
 	// The server compares `version` and answers SALES_COMPANY_VERSION_CONFLICT,
-	// but both companyInput and SalesCrmProvider strip the field before sending,
-	// so two sellers editing one prospect still overwrite each other silently.
-	expect(companyInput(quotedCompany())).toHaveProperty("version", 4);
+	// but SalesCrmProvider.updateCompany destructures `version` out of every patch
+	// before sending, so two sellers editing one prospect overwrite each other.
+	//
+	// fixme, not fail: the stripping is inline in a useCallback. Asserting on
+	// companyInput would never flip, because that is the create path and a
+	// correct fix belongs on PATCH. Extract the patch-body builder into a pure
+	// function and assert that it keeps `version`.
 });
 
-test.fail("SALES-07: the list asks the server to filter, search and sort", () => {
+test.fail("SALES-07: the list asks the server to filter, search and sort", async () => {
 	// The server took over filtering, search and sorting, but
-	// listSalesCompanies() still walks every page 100 at a time and hands the
-	// whole table to the browser, which is what it did before. Function.length is
-	// its declared arity: zero parameters means there is nowhere to pass a
-	// filter, a search term, a sort or a page.
-	expect(salesCrmApi.listSalesCompanies).toHaveLength(1);
+	// listSalesCompanies() takes no arguments and requests every page, so the
+	// browser does it. Confirmed against local dev: typing in the search box and
+	// sorting a column fire no request.
+	//
+	// Asserted by behaviour, not arity: a default parameter would give
+	// Function.length 0 and hide a real fix.
+	const original = axiosInstance.get;
+	const sent: unknown[] = [];
+	axiosInstance.get = (async (_url: string, config?: { params?: unknown }) => {
+		sent.push(config?.params);
+		return { data: { data: [], total_pages: 1 } };
+	}) as typeof axiosInstance.get;
+	try {
+		await (salesCrmApi.listSalesCompanies as (query?: object) => Promise<unknown>)({
+			search: "Nordisk",
+		});
+	} finally {
+		axiosInstance.get = original;
+	}
+	expect(sent[0]).toHaveProperty("search", "Nordisk");
 });
 
 // ──────────────────────── no backend at all yet ────────────────────────
@@ -114,13 +144,13 @@ test.fail("SALES-07: the list asks the server to filter, search and sort", () =>
 test.fail("TFS-1136: an order confirmation survives being saved", () => {
 	// SalesCompanyData has no `order` field, so companyInput deletes it on the
 	// way out. The API answers 200 and the confirmation is gone on reload.
-	expect(companyInput(quotedCompany())).toHaveProperty("order");
+	expect(salesCrmApi.companyInput(quotedCompany())).toHaveProperty("order");
 });
 
 test.fail("TFS-1136: a payment link survives being saved", () => {
 	// Same for `payment`: the link and invoice number the seller just sent to a
 	// customer are dropped, with no error.
-	expect(companyInput(quotedCompany())).toHaveProperty("payment");
+	expect(salesCrmApi.companyInput(quotedCompany())).toHaveProperty("payment");
 });
 
 test.fail("SALES-10: stored sales documents have somewhere to live", async () => {
@@ -132,7 +162,8 @@ test.fail("SALES-10: stored sales documents have somewhere to live", async () =>
 
 test.fail("Sales organisation: the team roster is not a mock seed", async () => {
 	// SalesTeamProvider seeds from salesTeam.mock and keeps edits in useState, so
-	// the sales organisation resets on reload.
+	// the sales organisation resets on reload. Against an empty local database it
+	// still shows five people, all from the mock.
 	const api = await import("../src/features/sales/api/salesTeamApi");
 	expect(Object.keys(api)).toEqual(expect.arrayContaining(["listSalesTeam"]));
 });
@@ -156,13 +187,16 @@ test.fail("TFS-1138: document numbers are issued by the server, not the browser"
 	expect(Object.keys(api)).toEqual(expect.arrayContaining(["allocateDocumentNumber"]));
 });
 
-test.fail("TFS-1137: a saved quote carries the discount that explains its net", () => {
-	// The quote draft holds extraDiscountPercent and drops it on save, so nothing
-	// stored explains a net below the term price. The server now accepts the
-	// field; the client has to start sending it before monthlyNet can be checked
-	// exactly rather than merely bounded.
-	const quote = quotedCompany().quote;
-	expect(quote).toHaveProperty("extraDiscountPercent");
+test.fixme("TFS-1137: a saved quote carries the discount that explains its net", () => {
+	// useQuoteBuilderForm.save builds the SalesQuote from the draft and leaves out
+	// draft.extraDiscountPercent, so the server (PR 92) can only bound monthlyNet
+	// instead of checking it: 50 000 kr of lines invoiced for 1 kr still passes,
+	// because it could be a 99.998 percent discount.
+	//
+	// fixme, not fail: the quote is assembled inline in that callback, so there is
+	// nothing to call. Asserting on a fixture built in this file would never flip.
+	// Extract a pure buildSalesQuote(draft, totals) and assert that it keeps the
+	// percentage.
 });
 
 test.fail("Trials: the Sales screens use the durations the trials API offers", async () => {
