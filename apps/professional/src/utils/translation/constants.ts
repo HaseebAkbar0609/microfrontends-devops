@@ -5009,6 +5009,7 @@ export type OfferTranslation = {
 	homeQuotesTitle: string;
 	homeQuotesOpen: string;
 	homeQuotesRefresh: string;
+	homeModulesRefresh: string;
 	homeQuotesPending: string;
 	homeQuotesAccepted: string;
 	homeQuotesDrafts: string;

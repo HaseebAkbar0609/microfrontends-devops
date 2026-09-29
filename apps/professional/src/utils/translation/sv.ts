@@ -4957,6 +4957,7 @@ export const svOffer: OfferTranslation = {
 	homeQuotesTitle: "Offerter",
 	homeQuotesOpen: "Visa offerter",
 	homeQuotesRefresh: "Uppdatera offertantal",
+	homeModulesRefresh: "Uppdatera moduler",
 	homeQuotesPending: "Väntande",
 	homeQuotesAccepted: "Accepterade",
 	homeQuotesDrafts: "Utkast",

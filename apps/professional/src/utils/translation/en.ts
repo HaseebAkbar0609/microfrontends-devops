@@ -5071,6 +5071,7 @@ export const enOffer: OfferTranslation = {
 	homeQuotesTitle: "Quotes",
 	homeQuotesOpen: "View quotes",
 	homeQuotesRefresh: "Refresh quote counts",
+	homeModulesRefresh: "Refresh modules",
 	homeQuotesPending: "Pending",
 	homeQuotesAccepted: "Accepted",
 	homeQuotesDrafts: "Drafts",
