@@ -519,6 +519,24 @@ export type CustomersTranslation = {
 	customerCreatedSuccess: string;
 	customerCreateError: string;
 	waitingLabel: string;
+	analyticsLoading: string;
+	analyticsLoadFailed: string;
+	analyticsRetry: string;
+	analyticsNoData: string;
+	analyticsNotAvailable: string;
+	analyticsSample: string;
+	analyticsOther: string;
+	analyticsUnknownCity: string;
+	analyticsUncategorised: string;
+	analyticsWeekLabel: string;
+	analyticsLeadsPerWeek: string;
+	analyticsLeadsPerMonth: string;
+	analyticsLeadsByCategory: string;
+	analyticsCategoryNote: string;
+	analyticsTotalPrivateCustomers: string;
+	analyticsActiveCustomersByCity: string;
+	analyticsDaysLeadToAccepted: string;
+	analyticsDaysLeadToAcceptedHint: string;
 };
 export type ProfessionalTranslation = {
 	professionalTabActive: string;
