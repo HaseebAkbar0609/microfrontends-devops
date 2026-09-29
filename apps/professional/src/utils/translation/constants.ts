@@ -10587,12 +10587,18 @@ export type PersonnelEquipmentTranslation = {
 };
 
 export type PersonnelProfileTranslation = {
+	personnelProfileTabPersonalInfo: string;
 	personnelProfileTabBasicInfo: string;
 	personnelProfileTabContactPerson: string;
 	personnelProfileTabEmploymentTerms: string;
 	personnelProfileTabCompetence: string;
 	personnelProfileTabDocuments: string;
 	personnelProfileTabEquipment: string;
+	personnelProfileTabWorktime: string;
+	personnelProfileTabWellness: string;
+	personnelProfileTabProcess: string;
+	emptyTabUpcomingTitle: string;
+	emptyTabUpcomingDesc: string;
 
 	employmentContractTitle: string;
 	signedDateLabel: string;

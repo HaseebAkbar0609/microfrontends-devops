@@ -16,11 +16,6 @@ export const PERSONNEL_NAV_ITEMS: RouteTabItem[] = [
 		href: `${PERSONNEL_MODULE_BASE_URL}/overview`,
 	},
 	{
-		id: "equipment",
-		labelKey: localizationConstants.equipmentAndVehiclesTab,
-		href: `${PERSONNEL_MODULE_BASE_URL}/equipment`,
-	},
-	{
 		id: "worktime",
 		labelKey: localizationConstants.worktimeTab,
 		href: `${PERSONNEL_MODULE_BASE_URL}/worktime`,

@@ -63,5 +63,6 @@ export type PersonalkortTabType =
 	| "arbetstid"
 	| "lon"
 	| "halsa"
+	| "friskvard"
 	| "personal_process"
 	| "arende";

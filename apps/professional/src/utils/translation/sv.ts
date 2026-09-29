@@ -10680,12 +10680,18 @@ export const svPersonnelEquipment: PersonnelEquipmentTranslation = {
 };
 
 export const svPersonnelProfile: PersonnelProfileTranslation = {
+	personnelProfileTabPersonalInfo: "Personlig information",
 	personnelProfileTabBasicInfo: "Grundinformation",
 	personnelProfileTabContactPerson: "Kontaktperson",
 	personnelProfileTabEmploymentTerms: "Anställningsvillkor",
 	personnelProfileTabCompetence: "Kompetens",
 	personnelProfileTabDocuments: "Dokument",
 	personnelProfileTabEquipment: "Utrustning / Fordon",
+	personnelProfileTabWorktime: "Arbetstid",
+	personnelProfileTabWellness: "Friskvård",
+	personnelProfileTabProcess: "Personlig process",
+	emptyTabUpcomingTitle: "Denna sektion är under utveckling",
+	emptyTabUpcomingDesc: "Funktionaliteten för denna flik implementeras i nästa steg enligt plan.",
 
 	employmentContractTitle: "Anställningsavtal",
 	signedDateLabel: "Undertecknat den",

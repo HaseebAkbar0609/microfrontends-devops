@@ -10659,12 +10659,18 @@ export const enPersonnelEquipment: PersonnelEquipmentTranslation = {
 };
 
 export const enPersonnelProfile: PersonnelProfileTranslation = {
+	personnelProfileTabPersonalInfo: "Personal Information",
 	personnelProfileTabBasicInfo: "Basic Information",
 	personnelProfileTabContactPerson: "Emergency Contact",
 	personnelProfileTabEmploymentTerms: "Employment Terms",
 	personnelProfileTabCompetence: "Competence",
 	personnelProfileTabDocuments: "Documents",
 	personnelProfileTabEquipment: "Equipment / Vehicles",
+	personnelProfileTabWorktime: "Worktime",
+	personnelProfileTabWellness: "Wellness",
+	personnelProfileTabProcess: "Personal Process",
+	emptyTabUpcomingTitle: "This section is in development",
+	emptyTabUpcomingDesc: "Functionality for this tab is scheduled for implementation in the next phase.",
 
 	employmentContractTitle: "Employment Contract",
 	signedDateLabel: "Signed on",

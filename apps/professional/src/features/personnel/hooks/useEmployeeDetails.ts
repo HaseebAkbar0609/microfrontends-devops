@@ -74,11 +74,12 @@ export function useEmployeeDetails(employeeIdProp?: string) {
 		tabParam &&
 			[
 				"information",
-				"kontaktperson",
-				"anstallningsvillkor",
 				"kompetens",
-				"dokument",
 				"utrustning_fordon",
+				"arbetstid",
+				"friskvard",
+				"personal_process",
+				"dokument",
 			].includes(tabParam)
 			? tabParam
 			: "information"

@@ -22,7 +22,6 @@ export * from "./hooks/useEmployeeDetails";
 export * from "./utils/employeeEquipmentRepository";
 export * from "./utils/personnelRepository";
 export * from "./utils/employeeProfileDefaults";
-export * from "./components/equipment/EquipmentOverviewPage";
 export * from "./components/equipment/PersonalkortHeader";
 export * from "./components/equipment/EquipmentCardsGrid";
 export * from "./components/details/EmployeeDetailsPage";

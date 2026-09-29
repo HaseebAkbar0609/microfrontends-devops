@@ -2,6 +2,9 @@
 
 import React, { Suspense } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { Button } from "@/components/ui/button";
+import { Translate } from "@/utils/translation/translate";
+import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { personnelBreadcrumbs } from "../../constants/personnelNav.config";
 import { PersonalkortHeader } from "../equipment/PersonalkortHeader";
@@ -61,6 +64,10 @@ function EmployeeDetailsContent() {
 		handleDeleteContract,
 	} = useEmployeeDetails();
 
+	const [personalInfoSubTab, setPersonalInfoSubTab] = React.useState<
+		"grundinfo" | "kontaktperson" | "anstallningsvillkor"
+	>("grundinfo");
+
 	const employeeName = currentEmployee?.name || "Johan Andersson";
 
 	return (
@@ -80,43 +87,93 @@ function EmployeeDetailsContent() {
 					onTabChange={handleTabChange}
 				/>
 
-				{/* 5 View Profile Tabs matching employee creation flow */}
+				{/* 7 Personalkort Tabs matching Jira TFS-972 Epic tickets */}
 				{activeTab === "information" && (
-					<GrundinformationTab
-						profileData={profileData}
-						onEditSection={(section) => setActiveEditModal(section)}
-					/>
-				)}
+					<div className="space-y-6">
+						{/* Sub-Tabs within Personal Information (TFS-976) */}
+						<div className="flex items-center gap-2 border-b border-slate-200 pb-3">
+							<Button
+								type="button"
+								variant={personalInfoSubTab === "grundinfo" ? "default" : "outline"}
+								size="sm"
+								onClick={() => setPersonalInfoSubTab("grundinfo")}
+								className={cn(
+									"text-xs h-8 font-medium cursor-pointer rounded-lg",
+									personalInfoSubTab === "grundinfo"
+										? "bg-[#111721] text-white hover:bg-slate-800"
+										: "text-slate-600 hover:text-slate-900 bg-white border-slate-200"
+								)}
+							>
+								<Translate text={localizationConstants.personnelProfileTabBasicInfo} />
+							</Button>
+							<Button
+								type="button"
+								variant={personalInfoSubTab === "kontaktperson" ? "default" : "outline"}
+								size="sm"
+								onClick={() => setPersonalInfoSubTab("kontaktperson")}
+								className={cn(
+									"text-xs h-8 font-medium cursor-pointer rounded-lg",
+									personalInfoSubTab === "kontaktperson"
+										? "bg-[#111721] text-white hover:bg-slate-800"
+										: "text-slate-600 hover:text-slate-900 bg-white border-slate-200"
+								)}
+							>
+								<Translate text={localizationConstants.personnelProfileTabContactPerson} />
+							</Button>
+							<Button
+								type="button"
+								variant={personalInfoSubTab === "anstallningsvillkor" ? "default" : "outline"}
+								size="sm"
+								onClick={() => setPersonalInfoSubTab("anstallningsvillkor")}
+								className={cn(
+									"text-xs h-8 font-medium cursor-pointer rounded-lg",
+									personalInfoSubTab === "anstallningsvillkor"
+										? "bg-[#111721] text-white hover:bg-slate-800"
+										: "text-slate-600 hover:text-slate-900 bg-white border-slate-200"
+								)}
+							>
+								<Translate text={localizationConstants.personnelProfileTabEmploymentTerms} />
+							</Button>
+						</div>
 
-				{activeTab === "kontaktperson" && (
-					<KontaktpersonTab
-						contacts={profileData.emergencyContacts}
-						onAddContact={() => setActiveEditModal("addContact")}
-						onEditContact={(contact) => {
-							setSelectedContactForEdit(contact);
-							setActiveEditModal("editContact");
-						}}
-						onDeleteContact={handleDeleteEmergencyContact}
-					/>
-				)}
+						{personalInfoSubTab === "grundinfo" && (
+							<GrundinformationTab
+								profileData={profileData}
+								onEditSection={(section) => setActiveEditModal(section)}
+							/>
+						)}
 
-				{activeTab === "anstallningsvillkor" && (
-					<AnstallningsvillkorTab
-						profileData={profileData}
-						signedContract={signedContract}
-						onPreviewContract={(name) => setPreviewDocumentName(name)}
-						onDownloadContract={(name) => setPreviewDocumentName(name)}
-						onArchiveContract={handleArchiveContract}
-						onDeleteContract={handleDeleteContract}
-						onUploadContract={(tags) =>
-							handleAddAttachedDoc({
-								name: tags[0] || "Anställningsavtal",
-								date: new Date().toISOString().split("T")[0],
-								fileFormat: "pdf",
-							})
-						}
-						onEditSection={(section) => setActiveEditModal(section)}
-					/>
+						{personalInfoSubTab === "kontaktperson" && (
+							<KontaktpersonTab
+								contacts={profileData.emergencyContacts}
+								onAddContact={() => setActiveEditModal("addContact")}
+								onEditContact={(contact) => {
+									setSelectedContactForEdit(contact);
+									setActiveEditModal("editContact");
+								}}
+								onDeleteContact={handleDeleteEmergencyContact}
+							/>
+						)}
+
+						{personalInfoSubTab === "anstallningsvillkor" && (
+							<AnstallningsvillkorTab
+								profileData={profileData}
+								signedContract={signedContract}
+								onPreviewContract={(name) => setPreviewDocumentName(name)}
+								onDownloadContract={(name) => setPreviewDocumentName(name)}
+								onArchiveContract={handleArchiveContract}
+								onDeleteContract={handleDeleteContract}
+								onUploadContract={(tags) =>
+									handleAddAttachedDoc({
+										name: tags[0] || "Anställningsavtal",
+										date: new Date().toISOString().split("T")[0],
+										fileFormat: "pdf",
+									})
+								}
+								onEditSection={(section) => setActiveEditModal(section)}
+							/>
+						)}
+					</div>
 				)}
 
 				{activeTab === "kompetens" && (
@@ -137,6 +194,23 @@ function EmployeeDetailsContent() {
 					/>
 				)}
 
+				{activeTab === "utrustning_fordon" && (
+					<EquipmentCardsGrid employeeName={employeeName} />
+				)}
+
+				{(activeTab === "arbetstid" ||
+					activeTab === "friskvard" ||
+					activeTab === "personal_process") && (
+					<div className="bg-white rounded-xl border border-slate-200 p-12 text-center space-y-3 shadow-2xs">
+						<h3 className="text-sm font-semibold text-slate-900">
+							<Translate text={localizationConstants.emptyTabUpcomingTitle} />
+						</h3>
+						<p className="text-xs text-slate-500 max-w-md mx-auto">
+							<Translate text={localizationConstants.emptyTabUpcomingDesc} />
+						</p>
+					</div>
+				)}
+
 				{activeTab === "dokument" && (
 					<DokumentTab
 						profileData={profileData}
@@ -150,10 +224,6 @@ function EmployeeDetailsContent() {
 						}
 						onPreviewDoc={(name) => setPreviewDocumentName(name)}
 					/>
-				)}
-
-				{activeTab === "utrustning_fordon" && (
-					<EquipmentCardsGrid employeeName={employeeName} />
 				)}
 			</div>
 
