@@ -42,9 +42,10 @@ export const enSidebar: SidebarTranslation = {
 	private: "Private",
 	leadsManagement: "Leads management",
 	settings: "Settings",
-	timeflowHome: "Timeflow Home",
-	timeflowWork: "Timeflow Work",
-	timeflowTeam: "Timeflow Team",
+	costCalculatorItem: "Cost calculator",
+	faqItem: "FAQ",
+	tipsInspirationItem: "Tips & inspiration",
+	supportContactItem: "Support (phone + email)",
 	employment: "Employment",
 	companyItem: "Company",
 	timeItem: "Time",
@@ -1566,6 +1567,9 @@ export const enSupport: SupportTranslation = {
 
 export const enContent: ContentTranslation = {
 	contentModuleTitle: "Content",
+	contentConsoleOpen: "Open",
+	contentConsoleSubtitle: "Administration",
+	contentConsoleSummary: "Choose which dashboard to administer. Everything customers and tradespeople see is controlled from here.",
 	contentGroupKundTitle: "Customer dashboard",
 	contentGroupKundSummary: "Content and settings that shape the customer experience.",
 	contentGroupWorkspaceTitle: "Workspace dashboard",

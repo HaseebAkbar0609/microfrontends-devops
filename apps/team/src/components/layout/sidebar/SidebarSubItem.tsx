@@ -65,8 +65,10 @@ export function SidebarSubItem({ item, flyoutOpen, onFlyoutOpenChange }: Sidebar
 		};
 	}, []);
 
+	// `text-left` because the flyout variant is a <button>, which the browser
+	// centres by default; a label that wraps would otherwise sit off-axis.
 	const sharedClassName = cn(
-		"flex w-full items-center justify-between rounded-md px-2 py-2 text-sm font-medium transition-colors duration-150",
+		"flex w-full items-center justify-between gap-2 rounded-md px-2 py-2 text-left text-sm font-medium transition-colors duration-150",
 		isActive
 			? "bg-slate-700 text-slate-200"
 			: "text-slate-300 hover:bg-slate-700/60 hover:text-slate-200",
