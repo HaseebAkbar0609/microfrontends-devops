@@ -19,7 +19,7 @@ export function homeModuleApp(module: HomeModule, translate: (key: string) => st
 
 export async function getHomeModules(companyId: string): Promise<HomeModuleGroup[]> {
   if (!companyId) throw new Error("HOME_MODULES_COMPANY_REQUIRED");
-  const response = await client.get("/professionals/widgets/modules", { headers: { "X-Company-ID": companyId } });
+  const response = await client.get("/widgets/modules", { headers: { "X-Company-ID": companyId } });
   const groups = response.data?.data;
   if (!Array.isArray(groups) || groups.some(group => !group || typeof group.category !== "string" ||
     !Array.isArray(group.modules) || group.modules.some((module: HomeModule) => !module ||
