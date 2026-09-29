@@ -37,6 +37,13 @@ export interface AvailableDocOption {
 
 export const CALCULATION_DOCUMENT_OPTIONS: AvailableDocOption[] = [];
 
+// Existing inquiry screens still import these names; none contain sample data.
+export const MOCK_OFFER_OPTIONS: OfferDropdownOption[] = [];
+export const MOCK_BESTALLARE_COMPANIES = CALCULATION_COMPANY_OPTIONS;
+export const MOCK_RESPONSIBLE_PERSONS = CALCULATION_RESPONSIBLE_OPTIONS;
+export const MOCK_CALCULATION_ROLES = CALCULATION_ROLES;
+export const MOCK_AVAILABLE_DOCUMENTS = CALCULATION_DOCUMENT_OPTIONS;
+
 export async function getCalculationAvailableDocumentsAPIAction(): Promise<AvailableDocOption[]> {
 	// Calculation attachments have no persisted source yet.
 	return [];
