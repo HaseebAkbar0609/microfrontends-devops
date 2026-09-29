@@ -37,10 +37,10 @@ type OfferTabProps = {
 	offers: PartnerOfferRow[];
 	images: PartnerImage[];
 	onOfferCreated: (offer: PartnerOfferRow) => void;
-	onGoToImageBank: () => void;
+	onAddImages: (images: PartnerImage[]) => void;
 };
 
-export function OfferTab({ offers, images, onOfferCreated, onGoToImageBank }: OfferTabProps) {
+export function OfferTab({ offers, images, onOfferCreated, onAddImages }: OfferTabProps) {
 	const t = useTranslate();
 	const router = useRouter();
 	const [isAddOpen, setIsAddOpen] = useState(false);
@@ -195,7 +195,7 @@ export function OfferTab({ offers, images, onOfferCreated, onGoToImageBank }: Of
 				existingNames={offers.map((offer) => offer.offerName)}
 				images={images}
 				onCreated={onOfferCreated}
-				onGoToImageBank={onGoToImageBank}
+				onAddImages={onAddImages}
 			/>
 		</div>
 	);

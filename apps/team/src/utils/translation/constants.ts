@@ -902,7 +902,6 @@ export type AdminTranslation = {
 	partnerOfferChannelsLabel: string;
 	partnerOfferImageLabel: string;
 	partnerOfferImageBankEmpty: string;
-	partnerOfferGoToImageBank: string;
 	partnerOfferNameRequired: string;
 	partnerOfferNameTaken: string;
 	partnerOfferStartDateRequired: string;

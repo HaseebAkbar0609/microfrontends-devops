@@ -40,6 +40,7 @@ export default function PartnerDashboard() {
 	const [activeProfileTab, setActiveProfileTab] = useState("company-details");
 	// Held here because inactive tab panels unmount, which would drop uploaded images and added offers.
 	const [images, setImages] = useState<PartnerImage[]>([]);
+	const addImages = (added: PartnerImage[]) => setImages((previous) => [...previous, ...added]);
 	const [offers, setOffers] = useState(DUMMY_PARTNER_OFFERS);
 
 	const form = useForm<PartnerCompanyProfileFormValues>({
@@ -116,13 +117,13 @@ export default function PartnerDashboard() {
 						offers={offers}
 						images={images}
 						onOfferCreated={(offer) => setOffers((previous) => [...previous, offer])}
-						onGoToImageBank={() => setActiveMainTab("image-bank")}
+						onAddImages={addImages}
 					/>
 				</TabsContent>
 				<TabsContent value="image-bank" className="mt-6 min-h-0 flex-1">
 					<ImageBankTab
 						images={images}
-						onAdd={(added) => setImages((previous) => [...previous, ...added])}
+						onAdd={addImages}
 						onRemove={(id) => setImages((previous) => previous.filter((image) => image.id !== id))}
 					/>
 				</TabsContent>

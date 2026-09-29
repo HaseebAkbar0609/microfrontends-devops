@@ -32,7 +32,7 @@ type AddOfferDialogProps = {
 	existingNames: string[];
 	images: PartnerImage[];
 	onCreated: (offer: PartnerOfferRow) => void;
-	onGoToImageBank: () => void;
+	onAddImages: (images: PartnerImage[]) => void;
 };
 
 /** Creates an offer. Each chosen channel starts as pending until an admin approves it. */
@@ -42,7 +42,7 @@ export function AddOfferDialog({
 	existingNames,
 	images,
 	onCreated,
-	onGoToImageBank,
+	onAddImages,
 }: AddOfferDialogProps) {
 	const { t } = useTranslation();
 	const form = useForm<NewOfferValues>({
@@ -120,14 +120,7 @@ export function AddOfferDialog({
 						</div>
 
 						<OfferChannelsField control={form.control} />
-						<OfferImagePicker
-							control={form.control}
-							images={images}
-							onGoToImageBank={() => {
-								handleOpenChange(false);
-								onGoToImageBank();
-							}}
-						/>
+						<OfferImagePicker control={form.control} images={images} onAddImages={onAddImages} />
 
 						<DialogFooter className="gap-2 sm:gap-2">
 							<Button

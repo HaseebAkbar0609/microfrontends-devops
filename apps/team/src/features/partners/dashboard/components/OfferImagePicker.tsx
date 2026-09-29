@@ -3,21 +3,25 @@
 import type { Control } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { Button } from "@/components/ui/button";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import localizationConstants from "@/utils/translation/constants";
 import type { PartnerImage } from "../constants/imageBank";
 import type { NewOfferValues } from "../schemas/newOffer.schema";
+import { ImageBankDropzone } from "./ImageBankDropzone";
 import { PartnerImageThumbnail } from "./PartnerImageThumbnail";
 
 type OfferImagePickerProps = {
 	control: Control<NewOfferValues>;
 	images: PartnerImage[];
-	onGoToImageBank: () => void;
+	onAddImages: (images: PartnerImage[]) => void;
 };
 
-/** Lets the partner pick one image bank picture for an offer. */
-export function OfferImagePicker({ control, images, onGoToImageBank }: OfferImagePickerProps) {
+/**
+ * Lets the partner pick one image bank picture for an offer. With an empty bank it
+ * takes the upload in place: leaving for the image bank tab would unmount this
+ * dialog and lose everything already typed into the offer.
+ */
+export function OfferImagePicker({ control, images, onAddImages }: OfferImagePickerProps) {
 	const { t } = useTranslation();
 
 	return (
@@ -28,11 +32,9 @@ export function OfferImagePicker({ control, images, onGoToImageBank }: OfferImag
 				<FormItem className="grid gap-2">
 					<p className="text-sm font-medium leading-none">{t(localizationConstants.partnerOfferImageLabel)}</p>
 					{images.length === 0 ? (
-						<div className="flex flex-col items-start gap-2 rounded-md border border-dashed border-slate-200 p-4 text-sm text-slate-500">
-							<p>{t(localizationConstants.partnerOfferImageBankEmpty)}</p>
-							<Button type="button" variant="outline" className="h-8 cursor-pointer" onClick={onGoToImageBank}>
-								{t(localizationConstants.partnerOfferGoToImageBank)}
-							</Button>
+						<div className="flex flex-col gap-2">
+							<p className="text-sm text-slate-500">{t(localizationConstants.partnerOfferImageBankEmpty)}</p>
+							<ImageBankDropzone onAdd={onAddImages} />
 						</div>
 					) : (
 						<div
