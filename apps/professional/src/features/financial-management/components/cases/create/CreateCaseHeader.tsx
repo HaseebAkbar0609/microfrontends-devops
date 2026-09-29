@@ -3,6 +3,8 @@
 import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import localizationConstants from "@/utils/translation/constants";
+import { useTranslate } from "@/utils/translation/translate";
 import { casesRoutes } from "../../../constants/cases.constants";
 
 interface CreateCaseHeaderProps {
@@ -17,6 +19,7 @@ export function CreateCaseHeader({
 	onBack,
 	basePath,
 }: CreateCaseHeaderProps) {
+	const t = useTranslate();
 	const router = useRouter();
 
 	const handleBack = () => {
@@ -33,7 +36,7 @@ export function CreateCaseHeader({
 				type="button"
 				onClick={handleBack}
 				className="p-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md cursor-pointer transition-colors"
-				aria-label="Back"
+				aria-label={t(localizationConstants.backAriaLabel)}
 			>
 				<ArrowLeft className="w-5 h-5" />
 			</button>

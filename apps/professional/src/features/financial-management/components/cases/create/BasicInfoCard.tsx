@@ -3,13 +3,14 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { CASE_CATEGORIES } from "../../../constants/cases.constants";
 import type { CaseCategory, CaseFormData } from "../../../types/cases.types";
+import { getCategoryLabelKey } from "../shared/getCategoryLabel";
 
 interface BasicInfoCardProps {
 	formData: CaseFormData;
-	errors: Partial<Record<keyof CaseFormData, string>>;
+	errors: Partial<Record<keyof CaseFormData, TranslationKeys>>;
 	onChange: (field: keyof CaseFormData, value: string) => void;
 }
 
@@ -50,14 +51,17 @@ export function BasicInfoCard({
 						onChange={(e) => onChange("category", e.target.value as CaseCategory)}
 						className="w-full h-9 px-3 bg-white border border-slate-200 rounded-lg text-slate-800 text-xs focus:outline-none focus:ring-1 focus:ring-slate-400 cursor-pointer"
 					>
+						{/* The words the rest of the app shows for a category, not its code. */}
 						{CASE_CATEGORIES.map((cat) => (
 							<option key={cat} value={cat}>
-								{cat}
+								{t(getCategoryLabelKey(cat))}
 							</option>
 						))}
 					</select>
 					{errors.category && (
-						<p className="text-[11px] text-rose-600">{errors.category}</p>
+						<p className="text-[11px] text-rose-600">
+							<Translate text={errors.category} />
+						</p>
 					)}
 				</div>
 
@@ -77,7 +81,9 @@ export function BasicInfoCard({
 						}`}
 					/>
 					{errors.title && (
-						<p className="text-[11px] text-rose-600">{errors.title}</p>
+						<p className="text-[11px] text-rose-600">
+							<Translate text={errors.title} />
+						</p>
 					)}
 				</div>
 
@@ -97,7 +103,9 @@ export function BasicInfoCard({
 						}`}
 					/>
 					{errors.createdBy && (
-						<p className="text-[11px] text-rose-600">{errors.createdBy}</p>
+						<p className="text-[11px] text-rose-600">
+							<Translate text={errors.createdBy} />
+						</p>
 					)}
 				</div>
 
@@ -117,7 +125,9 @@ export function BasicInfoCard({
 						}`}
 					/>
 					{errors.description && (
-						<p className="text-[11px] text-rose-600">{errors.description}</p>
+						<p className="text-[11px] text-rose-600">
+							<Translate text={errors.description} />
+						</p>
 					)}
 				</div>
 

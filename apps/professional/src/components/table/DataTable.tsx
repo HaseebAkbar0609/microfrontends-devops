@@ -10,7 +10,7 @@ import {
 	ChevronsRight,
 	MoreVertical,
 } from "lucide-react";
-import { ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 
 import {
 	Table,
@@ -24,6 +24,7 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
+	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
@@ -71,6 +72,8 @@ export interface DataTableAction<TData> {
 	onClick: (row: TData) => void;
 	/** Whether the item should render in a destructive (red) style. */
 	destructive?: boolean;
+	/** Draws a divider above this item, to start a new group in the menu. */
+	separatorBefore?: boolean;
 }
 
 // ─── Pagination ───────────────────────────────────────────────────────────────
@@ -350,35 +353,37 @@ export function DataTable<TData>({
 															</DropdownMenuTrigger>
 															<DropdownMenuContent
 																align="end"
-																className="w-40 border border-slate-200 bg-white shadow-md rounded-md p-1"
+																className="min-w-40 border border-slate-200 bg-white shadow-md rounded-md p-1"
 															>
 																{actions.map(
 																	(act) => (
-																		<DropdownMenuItem
-																			key={
-																				act.label
-																			}
-																			onClick={() =>
-																				act.onClick(
-																					row,
-																				)
-																			}
-																			className={cn(
-																				"gap-2 text-sm cursor-pointer px-3 py-2 rounded-md transition-colors",
-																				act.destructive
-																					? "text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-700"
-																					: "text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:text-slate-900",
+																		<Fragment key={act.label}>
+																			{act.separatorBefore && (
+																				<DropdownMenuSeparator className="my-1 bg-slate-200" />
 																			)}
-																		>
-																			{
-																				act.icon
-																			}
-																			<Translate
-																				text={
-																					act.label
+																			<DropdownMenuItem
+																				onClick={() =>
+																					act.onClick(
+																						row,
+																					)
 																				}
-																			/>
-																		</DropdownMenuItem>
+																				className={cn(
+																					"gap-2 text-sm cursor-pointer px-3 py-2 rounded-md transition-colors",
+																					act.destructive
+																						? "text-red-600 hover:bg-red-50 focus:bg-red-50 focus:text-red-700"
+																						: "text-slate-700 hover:bg-slate-50 focus:bg-slate-50 focus:text-slate-900",
+																				)}
+																			>
+																				{
+																					act.icon
+																				}
+																				<Translate
+																					text={
+																						act.label
+																					}
+																				/>
+																			</DropdownMenuItem>
+																		</Fragment>
 																	),
 																)}
 															</DropdownMenuContent>
