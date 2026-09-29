@@ -10583,6 +10583,60 @@ export type PersonnelEquipmentTranslation = {
 	noHistoryLogsFound: string;
 };
 
+export type PersonnelProfileTranslation = {
+	personnelProfileTabBasicInfo: string;
+	personnelProfileTabContactPerson: string;
+	personnelProfileTabEmploymentTerms: string;
+	personnelProfileTabCompetence: string;
+	personnelProfileTabDocuments: string;
+	personnelProfileTabEquipment: string;
+
+	employmentContractTitle: string;
+	signedDateLabel: string;
+	uploadContractTitle: string;
+	jobDescriptionTitle: string;
+	actionSeeFile: string;
+	actionDownload: string;
+	actionArchive: string;
+	actionDelete: string;
+
+	modalEditPersonalInfoTitle: string;
+	modalEditBankInfoTitle: string;
+	modalEditTaxUnionTitle: string;
+	modalEditWorkDutiesTitle: string;
+	modalEditContactPersonTitle: string;
+	modalEditWorkInfoTitle: string;
+	modalEditSalaryTitle: string;
+	modalEditWorkingHoursTitle: string;
+	modalEditHealthSupportTitle: string;
+	modalAddEmergencyContactTitle: string;
+
+	toastProfileUpdated: string;
+	toastContractArchived: string;
+	toastContractDeleted: string;
+	toastDocumentUploaded: string;
+	toastCompetenceAdded: string;
+	toastCompetenceDeleted: string;
+	toastContactAdded: string;
+	toastContactUpdated: string;
+	toastContactDeleted: string;
+
+	emptyContactsTitle: string;
+	emptyContactsDesc: string;
+	emptyDocumentsTitle: string;
+	emptyDocumentsDesc: string;
+	emptyCompetenceTitle: string;
+	emptyCompetenceDesc: string;
+
+	btnSaveChanges: string;
+	btnUpload: string;
+	deleteConfirmTitle: string;
+	deleteConfirmDesc: string;
+	btnConfirmDelete: string;
+	employeeNotFound: string;
+	employeeNotFoundDesc: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -10612,6 +10666,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	PersonnelOverviewTranslation &
 	CreateEmployeeTranslation &
 	PersonnelEquipmentTranslation &
+	PersonnelProfileTranslation &
 	AccountLifecycleTranslation &
 	CertificatesTranslation &
 	EconomyBudgetTranslation &
