@@ -8,7 +8,8 @@ export type CalcOverviewItem = {
   client: string;
   offertDatum: string;
   typ: string;
-  offertSumma: number;
+  offertSumma: number | null;
+  currency?: string;
   kategori: string;
   status: CalcOverviewStatus;
 };

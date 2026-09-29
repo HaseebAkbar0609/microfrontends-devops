@@ -195,6 +195,7 @@ export const API_PATH = {
 		COMPANY_VERIFY: (id: string) => `${PROFESSIONALS_BASE_PATH}/b2b/companies/${id}/verify`,
 	},
 	CALCULATIONS: {
+		DASHBOARD: `${PROFESSIONALS_BASE_PATH}/calculations/dashboard`,
 		BASE: `${PROFESSIONALS_BASE_PATH}/calculations`,
 		LIST: `${PROFESSIONALS_BASE_PATH}/calculations`,
 		CREATE: `${PROFESSIONALS_BASE_PATH}/calculations`,

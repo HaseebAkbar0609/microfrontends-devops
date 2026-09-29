@@ -2771,6 +2771,10 @@ export const svOffer: OfferTranslation = {
 		"Platshållarbanner för B2B-modulen – byt till egen media senare.",
 	// Calculation - Dashboard widgets
 	calcWidgetOverviewTitle: "Kalkylöversikt",
+	calcDashboardNotStarted: "Inte påbörjad",
+	calcDashboardMissingValue: "Utan registrerat värde",
+	calcDashboardRefresh: "Uppdatera kalkyler",
+	calcDashboardUnsupportedCreate: "Kopplade offerter och bilagor stöds inte ännu. Skapa en manuell kalkyl utan dessa objekt.",
 	calcWidgetOverviewTotal: "Total kalkyler",
 	calcWidgetOverviewOngoing: "Pågående",
 	calcWidgetOverviewCompleted: "Slutförda",

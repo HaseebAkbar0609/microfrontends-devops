@@ -30,7 +30,7 @@ import localizationConstants from "@/utils/translation/constants";
 import type { KalkylDocItem } from "../../types/kalkyl";
 import {
 	getCalculationAvailableDocumentsAPIAction,
-	MOCK_AVAILABLE_DOCUMENTS,
+	CALCULATION_DOCUMENT_OPTIONS,
 	type AvailableDocOption,
 } from "../../api/createCalculation";
 import { KalkylDocIcon } from "../KalkylDocIcon";
@@ -105,7 +105,7 @@ export function KalkylDokumentStep({
 }: KalkylDokumentStepProps) {
 	const t = useTranslate();
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const [availableDocs, setAvailableDocs] = useState<AvailableDocOption[]>(MOCK_AVAILABLE_DOCUMENTS);
+	const [availableDocs, setAvailableDocs] = useState<AvailableDocOption[]>(CALCULATION_DOCUMENT_OPTIONS);
 
 	useEffect(() => {
 		let isMounted = true;
@@ -116,7 +116,7 @@ export function KalkylDokumentStep({
 					setAvailableDocs(docs);
 				}
 			} catch {
-				// Fallback to MOCK_AVAILABLE_DOCUMENTS
+					setAvailableDocs([]);
 			}
 		}
 		fetchAvailableDocs();

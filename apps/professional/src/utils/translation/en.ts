@@ -2886,6 +2886,10 @@ export const enOffer: OfferTranslation = {
 		"Placeholder banner for the B2B module â€” replace with your own media later.",
 	// Calculation - Dashboard widgets
 	calcWidgetOverviewTitle: "Calculation overview",
+	calcDashboardNotStarted: "Not started",
+	calcDashboardMissingValue: "Without a recorded value",
+	calcDashboardRefresh: "Refresh calculations",
+	calcDashboardUnsupportedCreate: "Linked offers and attachments are not supported yet. Create a manual calculation without these items.",
 	calcWidgetOverviewTotal: "Total calculations",
 	calcWidgetOverviewOngoing: "Ongoing",
 	calcWidgetOverviewCompleted: "Completed",
