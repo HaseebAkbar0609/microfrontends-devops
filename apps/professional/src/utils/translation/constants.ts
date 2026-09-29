@@ -5007,6 +5007,9 @@ export type OfferTranslation = {
 	homeStaffRoles: string;
 	homeStaffRolesValue: string;
 	homeQuotesTitle: string;
+	homeQuotesOpen: string;
+	homeQuotesRefresh: string;
+	homeModulesRefresh: string;
 	homeQuotesPending: string;
 	homeQuotesAccepted: string;
 	homeQuotesDrafts: string;
