@@ -42,9 +42,9 @@ import { TablePagination } from "@/components/table/TablePagination";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { renderSortIcon } from "@/utils/renderSortIcon";
-import { formatCurrency } from "@/utils/formatCurrency";
+import { CALCULATION_DEFAULT_CURRENCY } from "../api/calculationDashboard";
 import { useCalculationOverview } from "../hooks/useCalculationOverview";
-import type { CalcOverviewItem, CalcOverviewStatus } from "../types/overview";
+import type { CalcOverviewStatus } from "../types/overview";
 
 const TH_SORTABLE =
   "cursor-pointer select-none whitespace-nowrap px-4 py-3.5 text-left text-xs font-semibold text-slate-600 transition-colors hover:text-slate-900";
@@ -71,11 +71,7 @@ function StatusBadge({ status }: { status: CalcOverviewStatus }) {
   );
 }
 
-interface Props {
-  items?: CalcOverviewItem[];
-}
-
-export function CalculationOverviewView({ items }: Props) {
+export function CalculationOverviewView() {
   const router = useRouter();
   const t = useTranslate();
 
@@ -99,7 +95,10 @@ export function CalculationOverviewView({ items }: Props) {
     setDeleteTargetId,
     handleArchive,
     handleDeleteConfirm,
-  } = useCalculationOverview({ initialItems: items });
+    isLoading,
+    loadError,
+    refetch,
+  } = useCalculationOverview();
 
   return (
     <div className="flex flex-1 flex-col bg-white">
@@ -281,13 +280,16 @@ export function CalculationOverviewView({ items }: Props) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginated.length === 0 ? (
+            {isLoading || loadError || paginated.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={11}
                   className="px-4 py-12 text-center text-sm text-slate-400"
                 >
-                  {t(localizationConstants.calcOverviewEmpty)}
+                  {loadError ? <div role="alert" className="space-y-3 text-red-700">
+                    <p>{t(localizationConstants.widgetSourceLoadError)}</p>
+                    <Button variant="outline" onClick={() => void refetch()}>{t(localizationConstants.retry)}</Button>
+                  </div> : isLoading ? <span aria-busy="true">{t(localizationConstants.genericLoading)}</span> : t(localizationConstants.calcOverviewEmpty)}
                 </TableCell>
               </TableRow>
             ) : (
@@ -330,8 +332,8 @@ export function CalculationOverviewView({ items }: Props) {
                   <TableCell className="whitespace-nowrap px-4 py-3">
                     <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 text-xs font-medium text-slate-900 tabular-nums">
                       {typeof item.offertSumma === "number"
-                        ? formatCurrency(item.offertSumma)
-                        : item.offertSumma}
+                        ? new Intl.NumberFormat(undefined, { style: "currency", currency: item.currency || CALCULATION_DEFAULT_CURRENCY }).format(item.offertSumma)
+                        : "-"}
                     </span>
                   </TableCell>
                   <TableCell className="whitespace-nowrap px-4 py-3">

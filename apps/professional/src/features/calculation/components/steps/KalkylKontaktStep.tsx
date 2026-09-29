@@ -21,9 +21,9 @@ import { PhoneInput } from "@/components/form/PhoneInput";
 import type { KalkylKontaktData } from "../../types/kalkyl";
 import {
 	type OfferDropdownOption,
-	MOCK_BESTALLARE_COMPANIES,
-	MOCK_RESPONSIBLE_PERSONS,
-	MOCK_CALCULATION_ROLES,
+	CALCULATION_COMPANY_OPTIONS,
+	CALCULATION_RESPONSIBLE_OPTIONS,
+	CALCULATION_ROLES,
 } from "../../api/createCalculation";
 
 // ── Shadcn Form Field Component ───────────────────────────────────────────
@@ -253,7 +253,7 @@ export function KalkylKontaktStep({
 											<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderForetag)} />
 										</SelectTrigger>
 										<SelectContent>
-											{MOCK_BESTALLARE_COMPANIES.map((company) => (
+											{CALCULATION_COMPANY_OPTIONS.map((company) => (
 												<SelectItem key={company} value={company} className="text-sm">
 													{company}
 												</SelectItem>
@@ -332,7 +332,7 @@ export function KalkylKontaktStep({
 											<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderKontaktperson)} />
 										</SelectTrigger>
 										<SelectContent>
-											{MOCK_RESPONSIBLE_PERSONS.map((person) => (
+											{CALCULATION_RESPONSIBLE_OPTIONS.map((person) => (
 												<SelectItem key={person} value={person} className="text-sm">
 													{person}
 												</SelectItem>
@@ -519,7 +519,7 @@ export function KalkylKontaktStep({
 										<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderKontaktperson)} />
 									</SelectTrigger>
 									<SelectContent>
-										{MOCK_RESPONSIBLE_PERSONS.map((person) => (
+										{CALCULATION_RESPONSIBLE_OPTIONS.map((person) => (
 											<SelectItem key={person} value={person} className="text-sm">
 												{person}
 											</SelectItem>
@@ -569,7 +569,7 @@ export function KalkylKontaktStep({
 										<SelectValue placeholder={t(localizationConstants.calcNewPlaceholderRoll)} />
 									</SelectTrigger>
 									<SelectContent>
-										{MOCK_CALCULATION_ROLES.map((r) => (
+										{CALCULATION_ROLES.map((r) => (
 											<SelectItem key={r} value={r} className="text-sm">
 												{r}
 											</SelectItem>

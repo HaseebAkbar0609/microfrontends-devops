@@ -2827,6 +2827,10 @@ export type OfferTranslation = {
 	b2bWidgetImageDescription: string;
 	// Calculation - Dashboard widgets
 	calcWidgetOverviewTitle: string;
+	calcDashboardNotStarted: string;
+	calcDashboardMissingValue: string;
+	calcDashboardRefresh: string;
+	calcDashboardUnsupportedCreate: string;
 	calcWidgetOverviewTotal: string;
 	calcWidgetOverviewOngoing: string;
 	calcWidgetOverviewCompleted: string;
