@@ -1,5 +1,15 @@
+import type { PartnerImage } from "./imageBank";
+
 export type OfferPartyStatus = "approved" | "pending" | "cancelled" | "n/a";
 export type OfferActionStatus = "active" | "closed";
+
+/** Channels an offer can be published to; each is approved separately. */
+export const OFFER_CHANNELS = ["b2c", "b2b"] as const;
+export type OfferChannel = (typeof OFFER_CHANNELS)[number];
+
+/** Allowed discount range for a new offer, in whole percent. */
+export const OFFER_DISCOUNT_MIN_PERCENT = 1;
+export const OFFER_DISCOUNT_MAX_PERCENT = 100;
 
 export interface PartnerOfferRow {
 	id: string;
@@ -10,6 +20,8 @@ export interface PartnerOfferRow {
 	b2b: OfferPartyStatus;
 	discount: string;
 	status: OfferActionStatus;
+	/** Picture chosen from the image bank. Kept on the offer so removing it from the bank does not break the offer. */
+	image?: PartnerImage;
 }
 
 export const DUMMY_PARTNER_OFFERS: PartnerOfferRow[] = [

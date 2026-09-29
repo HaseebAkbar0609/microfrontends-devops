@@ -17,18 +17,10 @@ import { ActionsToolbar } from "@/components/table/ActionsToolbar";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import { showToast } from "@/lib/toast";
-import {
-	DUMMY_PARTNER_OFFERS,
-	type OfferPartyStatus,
-	type PartnerOfferRow,
-} from "../constants/offers";
-
-const PARTY_STATUS_CONFIG: Record<OfferPartyStatus, { labelKey: string; className: string } | null> = {
-	approved: { labelKey: localizationConstants.offerApprovedLabel, className: "bg-[#DCFCE7] text-[#16A34A]" },
-	pending: { labelKey: localizationConstants.offerPendingLabel, className: "bg-[#FEF3C7] text-[#D97706]" },
-	cancelled: { labelKey: localizationConstants.offerCancelLabel, className: "bg-[#FEE2E2] text-[#DC2626]" },
-	"n/a": null,
-};
+import type { PartnerOfferRow } from "../constants/offers";
+import type { PartnerImage } from "../constants/imageBank";
+import { PartyStatusCell } from "./PartyStatusCell";
+import { AddOfferDialog } from "./AddOfferDialog";
 
 const COLUMNS = [
 	{ key: "startDate", labelKey: localizationConstants.startDateLabel, width: "w-32" },
@@ -41,22 +33,17 @@ const COLUMNS = [
 
 type SortKey = (typeof COLUMNS)[number]["key"];
 
-function PartyStatusCell({ status }: { status: OfferPartyStatus }) {
-	const config = PARTY_STATUS_CONFIG[status];
-	if (!config) {
-		return <Translate text={localizationConstants.notApplicableLabel} />;
-	}
-	return (
-		<span className={`inline-flex items-center rounded-[6px] px-2.5 py-1 text-xs font-semibold ${config.className}`}>
-			<Translate text={config.labelKey} />
-		</span>
-	);
-}
+type OfferTabProps = {
+	offers: PartnerOfferRow[];
+	images: PartnerImage[];
+	onOfferCreated: (offer: PartnerOfferRow) => void;
+	onAddImages: (images: PartnerImage[]) => void;
+};
 
-export function OfferTab() {
+export function OfferTab({ offers, images, onOfferCreated, onAddImages }: OfferTabProps) {
 	const t = useTranslate();
 	const router = useRouter();
-	const [offers] = useState<PartnerOfferRow[]>(DUMMY_PARTNER_OFFERS);
+	const [isAddOpen, setIsAddOpen] = useState(false);
 	const [search, setSearch] = useState("");
 	const [statusFilter, setStatusFilter] = useState("");
 	const [sortKey, setSortKey] = useState<SortKey | null>(null);
@@ -99,7 +86,10 @@ export function OfferTab() {
 				<h2 className="text-base font-medium text-[#09090B]">
 					<Translate text={localizationConstants.partnerOfferTab} />
 				</h2>
-				<Button className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90">
+				<Button
+					className="h-9 gap-2 rounded-md bg-[#18181B] px-4 text-sm font-medium text-white shadow-sm hover:bg-[#18181B]/90"
+					onClick={() => setIsAddOpen(true)}
+				>
 					<Plus className="h-4 w-4" />
 					<Translate text={localizationConstants.addOfferButton} />
 				</Button>
@@ -198,6 +188,15 @@ export function OfferTab() {
 					))}
 				</TableBody>
 			</Table>
+
+			<AddOfferDialog
+				open={isAddOpen}
+				onOpenChange={setIsAddOpen}
+				existingNames={offers.map((offer) => offer.offerName)}
+				images={images}
+				onCreated={onOfferCreated}
+				onAddImages={onAddImages}
+			/>
 		</div>
 	);
 }
