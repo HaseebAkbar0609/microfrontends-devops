@@ -34,11 +34,11 @@ export const ModulesSection = () => {
       </header>
       {!isReady || query.isLoading ? <WidgetLoadingState rows={3} /> : query.isError || !query.data ?
         <WidgetErrorState message={localizationConstants.widgetDataLoadError} /> : !query.data.length ? <WidgetEmptyState /> : (
-          <div className="grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+          <div className={query.data.length === 1 ? "min-w-0" : "grid min-w-0 grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"}>
             {query.data.map(group => (
               <div key={group.category} className="min-w-0">
-                <h3 className="mb-2 break-words text-xs font-semibold text-slate-500">{group.category}</h3>
-                <ul className="space-y-1">
+                {group.category !== "modulesTitle" && <h3 className="mb-2 break-words text-xs font-semibold text-slate-500"><Translate text={group.category} /></h3>}
+                <ul className={query.data.length === 1 ? "grid min-w-0 grid-cols-1 gap-x-6 gap-y-1 sm:grid-cols-2 xl:grid-cols-4" : "space-y-1"}>
                   {group.modules.map(module => {
                     const app = homeModuleApp(module, t);
                     const label = i18n.language.startsWith("sv") ? module.name_sv || module.name : module.name;
