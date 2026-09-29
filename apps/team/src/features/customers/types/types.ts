@@ -48,3 +48,14 @@ export interface CreateCustomerFormData {
   city?: string;
   postalCode?: string;
 }
+
+/** `GlobalAnalyticsResponse` from GET /api/v1/teams/private/analytics. */
+export interface PrivateCustomersAnalytics {
+  total_private_customers: number;
+  active_customers: number;
+  pending_customers: number;
+  archived_customers: number;
+  total_inquiries: number;
+  open_support_tickets: number;
+  total_revenue_sek: number;
+}

@@ -8,6 +8,7 @@ import { customerTabs, type CustomerTabValue } from "@/features/customers/consta
 import { useQueryParams } from "@/components/hooks/useQueryParams";
 import { ActiveCustomersTab } from "./ActiveCustomersTab";
 import { PendingCustomersTab } from "./PendingCustomersTab";
+import { PrivateAnalyticsTab } from "./PrivateAnalyticsTab";
 
 export default function PrivateCustomersFeature() {
   return (
@@ -54,10 +55,8 @@ function PrivateCustomersContent() {
           <PendingCustomersTab />
         </TabsContent>
 
-        <TabsContent value="analytics" className="mt-0 px-5 py-10">
-          <p className="text-sm text-slate-500">
-            <Translate text={localizationConstants.comingSoon} />
-          </p>
+        <TabsContent value="analytics" className="mt-0">
+          <PrivateAnalyticsTab />
         </TabsContent>
 
         <TabsContent value="archived" className="mt-0 px-5 py-10">
