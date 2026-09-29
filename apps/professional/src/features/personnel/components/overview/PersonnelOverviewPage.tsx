@@ -2,11 +2,12 @@
 
 import React from "react";
 import Link from "next/link";
-import { Clock, Layers, UserPlus, Users, Wrench } from "lucide-react";
+import { Clock, Layers, Users } from "lucide-react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import { useRouter } from "next/navigation";
 import {
 	PERSONNEL_NAV_ITEMS,
 	PERSONNEL_MODULE_BASE_URL,
@@ -18,16 +19,16 @@ import { PersonnelTable } from "./table/PersonnelTable";
 import { PersonnelTablePagination } from "./table/PersonnelTablePagination";
 import { EmployeeProfileModal } from "./modals/EmployeeProfileModal";
 import { DeactivateEmployeeDialog } from "./modals/DeactivateEmployeeDialog";
+import { EmployeeOverviewItem } from "../../types/personnelOverview.types";
 
 const TAB_ICON_MAP: Record<string, React.ElementType> = {
 	dashboard: Layers,
 	overview: Users,
-	equipment: Wrench,
-	create: UserPlus,
 	worktime: Clock,
 };
 
 export function PersonnelOverviewPage() {
+	const router = useRouter();
 	const {
 		searchTerm,
 		setSearchTerm,
@@ -55,6 +56,13 @@ export function PersonnelOverviewPage() {
 		setEmployeeToDeactivate,
 		handleConfirmDeactivate,
 	} = usePersonnelOverview();
+
+	const handleViewProfile = React.useCallback(
+		(employee: EmployeeOverviewItem) => {
+			router.push(`${PERSONNEL_MODULE_BASE_URL}/details?id=${employee.id}`);
+		},
+		[router]
+	);
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50/50 min-h-screen">
@@ -108,7 +116,7 @@ export function PersonnelOverviewPage() {
 						sortField={sortField}
 						sortOrder={sortOrder}
 						onSort={handleSort}
-						onViewProfile={setSelectedEmployee}
+						onViewProfile={handleViewProfile}
 						onDeactivate={setEmployeeToDeactivate}
 					/>
 

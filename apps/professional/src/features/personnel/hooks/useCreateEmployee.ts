@@ -321,6 +321,12 @@ export function useCreateEmployee() {
 				level: employeeLevelOf(role),
 				/* Step 3 collects the gross salary; it is what the employee costs. */
 				monthlyCost: Number(formData.salaryCompensation.grossSalary.replace(/\D/g, "")) || 0,
+				details: JSON.parse(JSON.stringify(formData)),
+				signedContract: {
+					signedDate: startDate || new Date().toISOString().split("T")[0],
+					fileName: `${firstName.trim()}-${lastName.trim()}-Kontrakt.pdf`,
+					fileSize: "1.2 MB",
+				},
 			};
 
 			await personnelRepository.addEmployee(newEmployee);
