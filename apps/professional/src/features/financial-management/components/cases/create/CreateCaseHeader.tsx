@@ -36,7 +36,7 @@ export function CreateCaseHeader({
 				type="button"
 				onClick={handleBack}
 				className="p-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md cursor-pointer transition-colors"
-				aria-label={t(localizationConstants.backAriaLabel)}
+				aria-label={t(localizationConstants.casesBackToList)}
 			>
 				<ArrowLeft className="w-5 h-5" />
 			</button>

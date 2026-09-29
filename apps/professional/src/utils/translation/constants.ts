@@ -9575,11 +9575,13 @@ export type CasesTranslation = {
 	casesActivityCaseCreated: string;
 	casesActivityMessageAdded: string;
 	casesActivityFileUploaded: string;
-	casesImportButton: string;
 	casesAttachmentTypeError: string;
 	casesAttachmentSizeError: string;
 	casesAttachmentRemove: string;
 	casesAttachmentNotHeld: string;
+	casesBackToList: string;
+	casesNoMessageYet: string;
+	casesOpenImage: string;
 	casesNoDocumentsYet: string;
 	casesNoImagesYet: string;
 	casesAttachmentDuplicate: string;

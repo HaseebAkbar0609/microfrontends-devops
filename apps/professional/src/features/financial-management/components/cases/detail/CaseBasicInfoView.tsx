@@ -16,8 +16,7 @@ export function CaseBasicInfoView({
 	caseItem,
 	onEdit,
 }: CaseBasicInfoViewProps) {
-	const initialMsg =
-		caseItem.messages[0]?.content || caseItem.description || "-";
+	const message = caseItem.messages[0]?.content?.trim() ?? "";
 
 	return (
 		<div className="space-y-6">
@@ -94,13 +93,13 @@ export function CaseBasicInfoView({
 				</div>
 			</div>
 
-			{/* Card 2: Innehåll/meddelande matching Figma Image 5 Left */}
+			{/* Card 2: the case's own message */}
 			<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-4">
 				<div className="flex items-center justify-between border-b border-slate-100 pb-3">
 					<div className="flex items-center gap-2">
 						<MessageSquare className="w-4 h-4 text-slate-700" />
 						<h2 className="text-sm font-bold text-slate-900">
-							<Translate text={localizationConstants.casesCardContentMessage} />
+							<Translate text={localizationConstants.casesCardMessages} />
 						</h2>
 					</div>
 
@@ -120,8 +119,14 @@ export function CaseBasicInfoView({
 					<p className="font-medium text-slate-500">
 						<Translate text={localizationConstants.casesFieldYourMessage} />
 					</p>
-					<div className="p-3 bg-slate-50/70 border border-slate-200 rounded-lg text-slate-800 leading-relaxed text-xs">
-						{initialMsg}
+					<div className="p-3 bg-slate-50/70 border border-slate-200 rounded-lg leading-relaxed text-xs">
+						{message ? (
+							<span className="text-slate-800">{message}</span>
+						) : (
+							<span className="text-slate-400 italic">
+								<Translate text={localizationConstants.casesNoMessageYet} />
+							</span>
+						)}
 					</div>
 				</div>
 			</div>
