@@ -32,6 +32,15 @@ function load(pages) {
 
 const country = (id, name = id) => ({ id, name, code: id });
 
+test('the registration image is only sticky on side-by-side desktop layouts', () => {
+  const source = fs.readFileSync(path.resolve(__dirname, '../src/app/(auth)/register/page.tsx'), 'utf8');
+  const imageContainer = source.split('alt="TimeFlow Business Account"')[0].split('className="').slice(-2, -1)[0].split('"')[0];
+  assert.ok(imageContainer.includes('md:sticky'));
+  assert.ok(!imageContainer.split(/\s+/).includes('sticky'));
+  assert.ok(imageContainer.includes('h-[280px]'));
+  assert.ok(imageContainer.includes('md:h-[calc(100vh-72px)]'));
+});
+
 test('loads every country page so Sweden is not omitted after the first page', async () => {
   const { api, calls } = load([
     { data: [country('AU'), country('DE')], total_pages: 2 },
