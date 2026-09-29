@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { PlacedWidgetEntry, WidgetProps } from "../types/dashboard";
+import { HomeQuotesWidget } from "./HomeQuotesWidget";
 
 export const SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 	emptyPage: { title: localizationConstants.emptyPageLabel, icon: Layers },
@@ -57,6 +58,7 @@ export const SIDEBAR_WIDGET_MAP: Record<string, WidgetProps> = {
 	quotes: {
 		title: localizationConstants.homeQuotesTitle,
 		icon: CircleDollarSign,
+		content: <HomeQuotesWidget />,
 	},
 
 	orders: {
