@@ -9,6 +9,8 @@ import { useAuthStatus } from "@/context/AuthContext";
 import { getFlyoutSubSidebarConfigByPath } from "./sidebar/navConfig";
 import { SalesMobileNav, SalesSubSidebar } from "@/features/sales/components/layout/SalesSubSidebar";
 import { isSalesModulePath } from "@/features/sales/constants/salesNav";
+import { ContentSubSidebar } from "@/features/content/components/layout/ContentSubSidebar";
+import { isContentConsolePath } from "@/features/content/constants/contentNav";
 interface AppShellProps {
 	children: React.ReactNode;
 }
@@ -26,7 +28,9 @@ export function AppShell({ children }: AppShellProps) {
 	const flyoutSubSidebarConfig = getFlyoutSubSidebarConfigByPath(pathname);
 	const hasFlyoutSubSidebar = !!flyoutSubSidebarConfig;
 	const isSalesModule = isSalesModulePath(pathname);
-	const hasSubSidebar = hasFlyoutSubSidebar || isSalesModule;
+	const isContentConsole = isContentConsolePath(pathname);
+	const hasSubSidebar =
+		hasFlyoutSubSidebar || isSalesModule || isContentConsole;
 
 	useEffect(() => {
 		if (!isReady || didRedirect.current) return;
@@ -67,6 +71,7 @@ export function AppShell({ children }: AppShellProps) {
 						</div>
 					)}
 					{isSalesModule && <SalesSubSidebar />}
+					{isContentConsole && <ContentSubSidebar />}
 					{flyoutSubSidebarConfig && (
 						<MyPagesSubSidebar
 							titleKey={flyoutSubSidebarConfig.titleKey}
