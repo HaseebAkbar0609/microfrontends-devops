@@ -4955,6 +4955,8 @@ export const svOffer: OfferTranslation = {
 	homeStaffRoles: "Roller",
 	homeStaffRolesValue: "4 snickare, 2 elektriker",
 	homeQuotesTitle: "Offerter",
+	homeQuotesOpen: "Visa offerter",
+	homeQuotesRefresh: "Uppdatera offertantal",
 	homeQuotesPending: "Väntande",
 	homeQuotesAccepted: "Accepterade",
 	homeQuotesDrafts: "Utkast",

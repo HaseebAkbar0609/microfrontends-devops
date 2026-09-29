@@ -5069,6 +5069,8 @@ export const enOffer: OfferTranslation = {
 	homeStaffRoles: "Roles",
 	homeStaffRolesValue: "4 carpenters, 2 electricians",
 	homeQuotesTitle: "Quotes",
+	homeQuotesOpen: "View quotes",
+	homeQuotesRefresh: "Refresh quote counts",
 	homeQuotesPending: "Pending",
 	homeQuotesAccepted: "Accepted",
 	homeQuotesDrafts: "Drafts",
