@@ -927,6 +927,20 @@ export const enAdmin: AdminTranslation = {
 	imageBankRemoveImage: "Remove {{name}}",
 	imageBankRemoveTitle: "Remove image?",
 	imageBankRemoveDescription: "{{name}} will be removed from the image bank.",
+	partnerAddOfferDescription: "The offer is sent for approval in the channels you choose.",
+	partnerOfferDiscountPercentLabel: "Discount (%)",
+	partnerOfferChannelsLabel: "Channels",
+	partnerOfferImageLabel: "Picture",
+	partnerOfferImageBankEmpty: "The image bank is empty. Add a picture here — it is saved to the image bank.",
+	partnerOfferNameRequired: "Enter an offer name.",
+	partnerOfferNameTaken: "An offer with that name already exists.",
+	partnerOfferStartDateRequired: "Choose a start date.",
+	partnerOfferEndDateRequired: "Choose an end date.",
+	partnerOfferEndBeforeStart: "The end date cannot be before the start date.",
+	partnerOfferDiscountInvalid: "Enter a discount in whole percent between {{min}} and {{max}}.",
+	partnerOfferChannelRequired: "Choose at least one channel.",
+	partnerOfferImageRequired: "Choose a picture from the image bank.",
+	partnerOfferAddedToast: "Offer added",
 };
 
 export const enSales: SalesTranslation = {
