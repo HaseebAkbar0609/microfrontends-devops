@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { matchesNavHref, type NavFlyoutItem } from "./navConfig";
+import { isActiveNavHref, type NavFlyoutItem } from "./navConfig";
 import { Translate } from "@/utils/translation/translate";
 
 interface SidebarFlyoutProps {
@@ -95,7 +95,7 @@ export function SidebarFlyout({
 			style={{ top: position.top, left: position.left }}
 		>
 			{items.map((item) => {
-				const isActive = matchesNavHref(item.href, pathname);
+				const isActive = isActiveNavHref(item.href, pathname);
 				return (
 					<Link
 						key={item.id}

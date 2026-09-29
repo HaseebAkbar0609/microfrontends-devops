@@ -169,9 +169,10 @@ export const sweSidebar: SidebarTranslation = {
 	private: "Privat",
 	leadsManagement: "Leadshantering",
 	settings: "Inställningar",
-	timeflowHome: "Timeflow Hem",
-	timeflowWork: "Timeflow Arbete",
-	timeflowTeam: "Timeflow Team",
+	costCalculatorItem: "Kostnadskalkylator",
+	faqItem: "FAQ",
+	tipsInspirationItem: "Råd och tips & inspiration",
+	supportContactItem: "Support (telefon + e-post)",
 	employment: "Anställning",
 	companyItem: "Företaget",
 	timeItem: "Arbetstid",
@@ -1540,6 +1541,9 @@ export const sweSupport: SupportTranslation = {
 
 export const sweContent: ContentTranslation = {
 	contentModuleTitle: "Innehåll",
+	contentConsoleOpen: "Öppna",
+	contentConsoleSubtitle: "Administration",
+	contentConsoleSummary: "Välj vilken dashboard du vill administrera. Allt innehåll som kunder och hantverkare ser styrs härifrån.",
 	contentGroupKundTitle: "Kund-dashboard",
 	contentGroupKundSummary: "Innehåll och inställningar som styr kundens upplevelse.",
 	contentGroupWorkspaceTitle: "Workspace-dashboard",
