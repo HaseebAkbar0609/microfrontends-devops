@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import {
 	BarChart3,
 	Bot,
@@ -17,13 +16,8 @@ import {
 	Send,
 	Zap,
 } from "lucide-react";
-import {
-	listAvailableOffersAPIAction,
-	listOffersAPIAction,
-	OFFER_API_STATUS,
-	type OffersListResult,
-} from "@/api-actions/offers";
-import { useAuthStatus } from "@/context/AuthContext";
+import { useOfferDashboardCounts } from "../hooks/useOfferDashboardCounts";
+import type { OfferCountKey } from "../services/offerDashboardCounts";
 import localizationConstants from "@/utils/translation/constants";
 import type { WidgetProps } from "@/features/widgetdashboard/types/dashboard";
 import {
@@ -32,73 +26,10 @@ import {
 	WidgetRow as Row,
 } from "@/features/widgetdashboard/components/WidgetContent";
 
-type OfferDashboardCounts = {
-	available: number | null;
-	requested: number | null;
-	offered: number | null;
-	accepted: number | null;
-	archived: number | null;
-};
-
-const cachedCounts = new Map<string, { value: OfferDashboardCounts; expiresAt: number }>();
-const pendingCounts = new Map<string, Promise<OfferDashboardCounts>>();
-
-const loadCounts = (companyId: string): Promise<OfferDashboardCounts> => {
-	const cached = cachedCounts.get(companyId);
-	if (cached && cached.expiresAt > Date.now()) return Promise.resolve(cached.value);
-	const pending = pendingCounts.get(companyId);
-	if (pending) return pending;
-	const request = Promise.allSettled([
-		listAvailableOffersAPIAction({ companyId, page: 1, pageSize: 1 }),
-		listOffersAPIAction({ status: OFFER_API_STATUS.REQUESTED, companyId, page: 1, pageSize: 1 }),
-		listOffersAPIAction({ status: OFFER_API_STATUS.OFFERED, companyId, page: 1, pageSize: 1 }),
-		listOffersAPIAction({ status: OFFER_API_STATUS.ACCEPTED, companyId, page: 1, pageSize: 1 }),
-		listOffersAPIAction({ status: OFFER_API_STATUS.ARCHIVED, companyId, page: 1, pageSize: 1 }),
-	]).then(([available, requested, offered, accepted, archived]) => {
-		const total = (result: PromiseSettledResult<OffersListResult>) =>
-			result.status === "fulfilled" ? result.value.totalItems : null;
-		const counts = {
-			available: total(available),
-			requested: total(requested),
-			offered: total(offered),
-			accepted: total(accepted),
-			archived: total(archived),
-		};
-		if (Object.values(counts).every((count) => count !== null)) {
-			cachedCounts.set(companyId, { value: counts, expiresAt: Date.now() + 60_000 });
-		}
-		return counts;
-	}).finally(() => pendingCounts.delete(companyId));
-	pendingCounts.set(companyId, request);
-	return request;
-};
-
-const LiveOfferWidget = ({ focus }: { focus: keyof OfferDashboardCounts }) => {
-	const { company } = useAuthStatus();
-	const [counts, setCounts] = useState<OfferDashboardCounts | null>(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
-
-	useEffect(() => {
-		let cancelled = false;
-		if (!company?.id) {
-			setError(true);
-			setLoading(false);
-			return;
-		}
-		setLoading(true);
-		setError(false);
-		loadCounts(company.id)
-			.then((data) => !cancelled && setCounts(data))
-			.catch(() => !cancelled && setError(true))
-			.finally(() => !cancelled && setLoading(false));
-		return () => {
-			cancelled = true;
-		};
-	}, [company?.id, focus]);
-
+const LiveOfferWidget = ({ focus }: { focus: OfferCountKey }) => {
+	const { counts, loading } = useOfferDashboardCounts();
 	if (loading) return <div className="my-4 h-20 animate-pulse rounded-lg bg-white/70" />;
-	if (error || !counts || counts[focus] === null) {
+	if (!counts || counts[focus] === null) {
 		return <WidgetErrorState message={localizationConstants.widgetDataLoadError} />;
 	}
 
