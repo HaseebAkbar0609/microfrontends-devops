@@ -8,7 +8,7 @@ const plain = value => JSON.parse(JSON.stringify(value));
 
 function load(file, response, fail = false) {
   const calls = [];
-  const axios = Object.fromEntries(['get', 'post'].map(method => [method, async (...args) => {
+  const axios = Object.fromEntries(['get', 'post', 'put', 'delete'].map(method => [method, async (...args) => {
     calls.push({ method, args }); if (fail) throw new Error('network'); return { data: response };
   }]));
   const exports = {};
@@ -16,7 +16,7 @@ function load(file, response, fail = false) {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true },
   }).outputText, { exports, require(name) {
     if (name === '@/lib/axiosInstance') return { __esModule: true, default: axios };
-    if (name === '@/constants/api') return { API_PATH: { CALCULATIONS: { DASHBOARD: '/professionals/calculations/dashboard', CREATE: '/professionals/calculations', LIST: '/professionals/calculations' } } };
+    if (name === '@/constants/api') return { API_PATH: { CALCULATIONS: { DASHBOARD: '/professionals/calculations/dashboard', CREATE: '/professionals/calculations', LIST: '/professionals/calculations', BASE: '/professionals/calculations', GET: id => '/professionals/calculations/'+id, UPDATE: id => '/professionals/calculations/'+id } } };
     if (name === '@/api-actions/offers') return {};
     if (name === 'zod') return require('zod');
     throw new Error(name);
@@ -37,6 +37,19 @@ test('aggregate uses one current-company request, forwards cancellation and acce
   assert.equal(calls[0].args[0], '/professionals/calculations/dashboard');
   assert.equal(calls[0].args[1].headers['X-Company-ID'], 'company-a');
   assert.equal(calls[0].args[1].signal, signal);
+});
+
+test('saved detail has no fabricated contacts and failed reads/writes never report success', async () => {
+  const { api } = load('api/calculationDetailApi.ts', { success: true, data: { id: 'record', calc_no: 'K-REAL', project_name: 'Saved' } });
+  const detail = await api.getCalculationDetailAPIAction('record');
+  assert.equal(detail.projekteringNamn, 'Saved');
+  assert.equal(detail.bestellareMail, '');
+  assert.equal(detail.kontaktFornamn, '');
+  assert.equal(detail.documents.length, 0);
+  const failed = load('api/calculationDetailApi.ts', {}, true).api;
+  await assert.rejects(failed.getCalculationDetailAPIAction('record'));
+  await assert.rejects(failed.updateCalculationDetailAPIAction('record', {}));
+  await assert.rejects(failed.deleteCalculationDocumentAPIAction('record', 'doc'));
 });
 
 for (const [label, mutate] of [
