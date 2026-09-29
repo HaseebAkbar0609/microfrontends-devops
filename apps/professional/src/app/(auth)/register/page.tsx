@@ -68,8 +68,8 @@ export default function RegisterPage() {
 	return (
 		<div className="w-full bg-background rounded-[10px] shadow-sm overflow-auto h-[calc(100vh-72px)]">
 			<div className="flex flex-col md:flex-row flex-1">
-				<div className="w-full md:w-1/2 p-12 py-16 sticky top-0 self-start h-[calc(100vh-72px)]">
-					<div className="relative w-full h-full min-h-[400px] overflow-hidden bg-white rounded-lg border border-border shadow-lg">
+				<div className="w-full md:w-1/2 p-6 md:p-12 md:py-16 md:sticky md:top-0 self-start h-[280px] md:h-[calc(100vh-72px)]">
+					<div className="relative w-full h-full md:min-h-[400px] overflow-hidden bg-white rounded-lg border border-border shadow-lg">
 						<Image
 							src="/create-companies.png"
 							alt="TimeFlow Business Account"

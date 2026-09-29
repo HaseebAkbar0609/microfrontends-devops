@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
+import { Textarea } from "@/components/ui/textarea";
 import { Translate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { useTranslation } from "react-i18next";
 
 interface MessageCardProps {
 	message: string;
-	error?: string;
+	error?: TranslationKeys;
 	onChange: (value: string) => void;
 }
 
@@ -25,16 +26,20 @@ export function MessageCard({ message, error, onChange }: MessageCardProps) {
 					<Translate text={localizationConstants.casesFieldYourMessage} />
 					<span className="text-rose-500 ml-0.5">*</span>
 				</label>
-				<textarea
+				<Textarea
 					rows={4}
 					value={message}
 					onChange={(e) => onChange(e.target.value)}
 					placeholder={t(localizationConstants.casesPlaceholderWriteHere)}
-					className={`w-full p-3 bg-white border rounded-lg text-slate-800 text-xs placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-400 resize-none ${
+					className={`resize-none bg-white text-xs text-slate-800 ${
 						error ? "border-rose-400 bg-rose-50/20" : "border-slate-200"
 					}`}
 				/>
-				{error && <p className="text-[11px] text-rose-600">{error}</p>}
+				{error && (
+					<p className="text-[11px] text-rose-600">
+						<Translate text={error} />
+					</p>
+				)}
 			</div>
 		</div>
 	);

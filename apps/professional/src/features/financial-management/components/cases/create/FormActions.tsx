@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Save, ArrowRight, ArrowLeft } from "lucide-react";
+import { Save, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import { Translate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 
@@ -58,7 +58,7 @@ export function FormActions({
 							disabled={isSubmitting}
 							className="h-9 px-4 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center gap-2 cursor-pointer transition-colors disabled:opacity-50"
 						>
-							<Save className="w-3.5 h-3.5" />
+							{isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
 							<Translate text={localizationConstants.casesBtnSave} />
 						</button>
 
@@ -81,7 +81,7 @@ export function FormActions({
 						disabled={isSubmitting}
 						className="h-9 px-5 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white text-xs font-semibold rounded-lg flex items-center gap-2 cursor-pointer transition-colors shadow-2xs"
 					>
-						<Save className="w-3.5 h-3.5" />
+						{isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />}
 						<span>
 							{isEditMode ? (
 								<Translate text={localizationConstants.casesBtnSaveChanges} />

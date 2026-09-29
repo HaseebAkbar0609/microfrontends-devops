@@ -88,11 +88,33 @@ function normalizeCategoriesPage(
 
 export async function getCountriesAction(): Promise<ActionResult<Country[]>> {
   try {
-    const response = await axiosInstance.get<ApiResponse<Country[]>>(
-      API_PATH.LOCATION.COUNTRIES
-    );
+    const countries = new Map<string, Country>();
+    const pageSize = 100;
+    const maxPages = 20;
+    let totalPages = 1;
 
-    return { success: true, data: response.data?.data ?? [], error: null };
+    // Registration needs the complete reference list, not the API's first ten countries.
+    for (let page = 1; page <= totalPages; page += 1) {
+      const response = await axiosInstance.get<
+        ApiResponse<Country[]> & { total_pages?: number }
+      >(API_PATH.LOCATION.COUNTRIES, { params: { page, page_size: pageSize } });
+      const payload = response.data;
+      if (!Array.isArray(payload?.data)) {
+        throw new Error("Invalid country list response.");
+      }
+      if (page === 1 && payload.total_pages !== undefined) {
+        if (!Number.isInteger(payload.total_pages) || payload.total_pages < 0 || payload.total_pages > maxPages) {
+          throw new Error("Invalid country list pagination.");
+        }
+        totalPages = payload.total_pages;
+      }
+      if (payload.data.length === 0 && totalPages > 0 && (page > 1 || payload.total_pages !== undefined)) {
+        throw new Error("Incomplete country list response.");
+      }
+      for (const country of payload.data) countries.set(country.id, country);
+    }
+
+    return { success: true, data: [...countries.values()], error: null };
   } catch (error: unknown) {
     const apiError = error as ApiError;
     const errorResponse = apiError.response?.data as
@@ -130,7 +152,7 @@ export async function getCategoriesAction(
     const response = await axiosInstance.get<
       ApiResponse<Category[] | Record<string, unknown>>
     >(API_PATH.TEAMS.PROFESSIONAL_CATEGORIES_LIST, {
-      params: { page, limit },
+      params: { page, page_size: limit },
     });
 
     const normalized = normalizeCategoriesPage(

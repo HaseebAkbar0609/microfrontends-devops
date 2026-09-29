@@ -1,16 +1,11 @@
-import { ComingSoonPage } from "@/components/common/ComingSoonPage";
-import { ModulePageHeader } from "@/components/layout/navigation";
-import { productionBreadcrumbs } from "@/features/production/constants";
-import localizationConstants from "@/utils/translation/constants";
+import { Suspense } from "react";
+import { MaterialOverviewPage } from "@/features/material-storage/components/overview/MaterialOverviewPage";
 
 export default function Page() {
+	// The overview keeps its filters in the URL (useSearchParams), which needs a Suspense boundary.
 	return (
-		<div className="flex flex-1 flex-col bg-blue-gray-50">
-			<ModulePageHeader
-				title={localizationConstants.materialStorage}
-				breadcrumbs={productionBreadcrumbs(localizationConstants.materialStorage)}
-			/>
-			<ComingSoonPage hideTitle />
-		</div>
+		<Suspense>
+			<MaterialOverviewPage />
+		</Suspense>
 	);
 }

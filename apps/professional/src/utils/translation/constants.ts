@@ -5301,6 +5301,12 @@ export type OfferTranslation = {
 	agreementCancel: string;
 	agreementViewAgreement: string;
 	agreementSendAgreement: string;
+	agreementDocUploadSuccess: string;
+	agreementDocUploadError: string;
+	agreementDocDeleteSuccess: string;
+	agreementDocDeleteError: string;
+	agreementDocUploading: string;
+	agreementDocCenterTitle: string;
 	offerArchivedDelete: string;
 	offerArchivedUnarchive: string;
 	offerArchivedCommentAction: string;
@@ -9570,6 +9576,13 @@ export type CasesTranslation = {
 	casesAttachmentSizeError: string;
 	casesAttachmentRemove: string;
 	casesAttachmentNotHeld: string;
+	casesNoDocumentsYet: string;
+	casesNoImagesYet: string;
+	casesAttachmentDuplicate: string;
+	casesAttachmentCount: string;
+	casesRemoveDocument: string;
+	casesRemoveImage: string;
+	casesValidationRequiredFields: string;
 };
 
 export type OrderDagbokTranslation = {
@@ -10646,6 +10659,72 @@ export type PersonnelProfileTranslation = {
 	employeeNotFoundDesc: string;
 };
 
+// Material storage – overview (TFS-1072)
+export type MaterialStorageTranslation = {
+	materialDepotLabel: string;
+	materialDepotPlaceholder: string;
+	materialManageDepots: string;
+	materialTransactionHistory: string;
+	materialNewMaterial: string;
+	materialReceiveMaterial: string;
+	materialWithdrawMaterial: string;
+	materialKpiStockValue: string;
+	materialKpiArticlesInStock: string;
+	materialKpiLowStock: string;
+	materialKpiReorderPoint: string;
+	materialKpiReserved: string;
+	materialSearchPlaceholder: string;
+	materialAllCategories: string;
+	materialCategoryFilterLabel: string;
+	materialStockFilterLabel: string;
+	materialFilterAll: string;
+	materialFilterLowStock: string;
+	materialFilterReserved: string;
+	materialColArticleNo: string;
+	materialColName: string;
+	materialColCategory: string;
+	materialColDepot: string;
+	materialColInStock: string;
+	materialColReserved: string;
+	materialColAvailable: string;
+	materialColPurchasePrice: string;
+	materialColSalesPrice: string;
+	materialColStockValue: string;
+	materialColStatus: string;
+	materialStatusInStock: string;
+	materialStatusLowStock: string;
+	materialStatusOutOfStock: string;
+	materialActionView: string;
+	materialActionEdit: string;
+	materialActionReceive: string;
+	materialActionWithdraw: string;
+	materialActionAddToOffer: string;
+	materialActionAddToOrder: string;
+	materialActionAddToProject: string;
+	materialActionAddToInvoice: string;
+	materialRowActionsLabel: string;
+	materialCategoryBoards: string;
+	materialCategoryTimber: string;
+	materialCategoryPipes: string;
+	materialCategoryElectrical: string;
+	materialCategoryPaint: string;
+	materialCategoryFasteners: string;
+	materialCategoryInsulation: string;
+	materialUnitPcs: string;
+	materialUnitMeter: string;
+	materialUnitSquareMeter: string;
+	materialUnitKg: string;
+	materialUnitLiter: string;
+	materialUnitPackage: string;
+	materialStockEmpty: string;
+	materialStockLoadError: string;
+	materialPaginationLabel: string;
+	materialFirstPage: string;
+	materialPreviousPage: string;
+	materialNextPage: string;
+	materialLastPage: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -10699,7 +10778,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	SupplierManagementTranslation &
 	SupplierDetailTranslation &
 	ToolsDiscountTranslation &
-	ForecastDashboardTranslation;
+	ForecastDashboardTranslation &
+	MaterialStorageTranslation;
 
 export type TranslationKeys = keyof Translation;
 
