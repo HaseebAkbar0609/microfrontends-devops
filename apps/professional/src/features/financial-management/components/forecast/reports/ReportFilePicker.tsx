@@ -10,7 +10,7 @@ import { fileRejection } from "@/features/project/shared/recordFiles";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { REPORT_FILE_ACCEPT, REPORT_FILE_RULES } from "../../../constants/forecastReports.constants";
-import { formatFileSize } from "../../../utils/forecastReports";
+import { formatFileSize } from "@/utils/formatFileSize";
 
 export interface ReportFilePickerProps {
 	file: File | null;

@@ -9614,7 +9614,7 @@ const svCases: CasesTranslation = {
 	casesBtnSaveChanges: "Spara ändringar",
 	casesBtnEdit: "Edit",
 	casesBtnDelete: "Ta bort",
-	casesBtnUpload: "Upload",
+	casesBtnUpload: "Ladda upp",
 	casesBtnViewFile: "Se fil",
 	casesDocumentsSectionTitle: "Dokument",
 	casesUploadYourFiles: "Ladda upp dina filer",
@@ -9646,7 +9646,7 @@ const svCases: CasesTranslation = {
 	casesNoMessagesYet: "Inga meddelanden ännu",
 	casesNoAttachments: "Inga bilagor bifogade",
 	casesSelectFiles: "Välj filer...",
-	casesSelectImages: "Välj bild...",
+	casesSelectImages: "Välj bilder...",
 	casesToastCreated: "Ärendet har skapats",
 	casesToastUpdated: "Ärendet har uppdaterats",
 	casesToastDeleted: "Ärendet har tagits bort",
@@ -9664,6 +9664,13 @@ const svCases: CasesTranslation = {
 	casesAttachmentSizeError: "Filen är för stor. Högst 10 MB.",
 	casesAttachmentRemove: "Ta bort {{name}}",
 	casesAttachmentNotHeld: "Filen finns inte kvar i den här sessionen.",
+	casesNoDocumentsYet: "Inga dokument tillagda",
+	casesNoImagesYet: "Inga bilder tillagda",
+	casesAttachmentDuplicate: "{{name}} är redan tillagd.",
+	casesAttachmentCount: "Högst {{max}} filer kan bifogas.",
+	casesRemoveDocument: "Ta bort {{name}}",
+	casesRemoveImage: "Ta bort bilden {{name}}",
+	casesValidationRequiredFields: "Fyll i alla obligatoriska fält",
 };
 
 export const svOrderDagbok: OrderDagbokTranslation = {

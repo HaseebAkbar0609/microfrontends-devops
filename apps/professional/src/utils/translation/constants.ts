@@ -9576,6 +9576,13 @@ export type CasesTranslation = {
 	casesAttachmentSizeError: string;
 	casesAttachmentRemove: string;
 	casesAttachmentNotHeld: string;
+	casesNoDocumentsYet: string;
+	casesNoImagesYet: string;
+	casesAttachmentDuplicate: string;
+	casesAttachmentCount: string;
+	casesRemoveDocument: string;
+	casesRemoveImage: string;
+	casesValidationRequiredFields: string;
 };
 
 export type OrderDagbokTranslation = {

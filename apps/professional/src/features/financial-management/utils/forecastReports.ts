@@ -61,17 +61,3 @@ export function sortReports(
 			}),
 	);
 }
-
-const SIZE_UNITS = ["B", "kB", "MB", "GB"];
-
-/**
- * A file's size as the dialogs show it, to one decimal from kB up. Binary
- * steps, as the size ceiling in the rules is written.
- */
-export function formatFileSize(bytes: number): string {
-	if (bytes <= 0) return `0 ${SIZE_UNITS[0]}`;
-
-	const step = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), SIZE_UNITS.length - 1);
-	const value = bytes / 1024 ** step;
-	return `${step === 0 ? value : Number(value.toFixed(1))} ${SIZE_UNITS[step]}`;
-}

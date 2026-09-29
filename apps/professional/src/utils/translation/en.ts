@@ -9625,7 +9625,7 @@ const enCases: CasesTranslation = {
 	casesNoMessagesYet: "No messages yet",
 	casesNoAttachments: "No attachments",
 	casesSelectFiles: "Select files...",
-	casesSelectImages: "Select image...",
+	casesSelectImages: "Select images...",
 	casesToastCreated: "Case created successfully",
 	casesToastUpdated: "Case updated successfully",
 	casesToastDeleted: "Case deleted successfully",
@@ -9643,6 +9643,13 @@ const enCases: CasesTranslation = {
 	casesAttachmentSizeError: "The file is too large. At most 10 MB.",
 	casesAttachmentRemove: "Remove {{name}}",
 	casesAttachmentNotHeld: "The file is no longer held in this session.",
+	casesNoDocumentsYet: "No documents added",
+	casesNoImagesYet: "No images added",
+	casesAttachmentDuplicate: "{{name}} has already been added.",
+	casesAttachmentCount: "At most {{max}} files can be attached.",
+	casesRemoveDocument: "Remove {{name}}",
+	casesRemoveImage: "Remove the image {{name}}",
+	casesValidationRequiredFields: "Fill in all required fields",
 };
 
 export const enOrderDagbok: OrderDagbokTranslation = {

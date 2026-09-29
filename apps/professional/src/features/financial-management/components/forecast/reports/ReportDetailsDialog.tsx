@@ -10,7 +10,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { REPORT_CATEGORY_LABELS, REPORT_FILE_RULES } from "../../../constants/forecastReports.constants";
 import type { ReportDocument } from "../../../types/forecastReports.types";
-import { formatFileSize } from "../../../utils/forecastReports";
+import { formatFileSize } from "@/utils/formatFileSize";
 import { ReportDetailRow as DetailRow } from "./ReportDetailRow";
 
 export interface ReportDetailsDialogProps {

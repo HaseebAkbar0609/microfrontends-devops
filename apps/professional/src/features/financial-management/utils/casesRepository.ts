@@ -201,8 +201,10 @@ class CasesRepository {
 					category: item.category,
 					date: item.date,
 					status: item.status,
-					documents: item.documents,
-					images: item.images,
+					/* A `blob:` URL is dead by the time this is read back, so it is
+					   dropped here rather than stored as a link that cannot work. */
+					documents: item.documents.map(({ url: _url, ...rest }) => rest),
+					images: item.images.map(({ url: _url, ...rest }) => rest),
 					createdAt: item.createdAt,
 					updatedAt: item.updatedAt,
 				}));
