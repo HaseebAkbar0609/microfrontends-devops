@@ -1,3 +1,4 @@
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import type { PartnerImage } from "./imageBank";
 
 export type OfferPartyStatus = "approved" | "pending" | "cancelled" | "n/a";
@@ -6,6 +7,12 @@ export type OfferActionStatus = "active" | "closed";
 /** Channels an offer can be published to; each is approved separately. */
 export const OFFER_CHANNELS = ["b2c", "b2b"] as const;
 export type OfferChannel = (typeof OFFER_CHANNELS)[number];
+
+/** One label per channel, shared by the partner's offer form and the admin's review. */
+export const OFFER_CHANNEL_LABELS: Record<OfferChannel, TranslationKeys> = {
+	b2c: localizationConstants.b2cColumnLabel,
+	b2b: localizationConstants.b2b,
+};
 
 /** Allowed discount range for a new offer, in whole percent. */
 export const OFFER_DISCOUNT_MIN_PERCENT = 1;
