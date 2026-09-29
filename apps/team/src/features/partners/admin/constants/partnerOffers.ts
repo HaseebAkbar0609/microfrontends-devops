@@ -1,7 +1,7 @@
 import type { OfferPartyStatus, PartnerOfferRow } from "@/features/partners/dashboard/constants/offers";
 
-/** Sales channels an offer is approved for separately. */
-export type OfferChannel = Extract<keyof PartnerOfferRow, "b2c" | "b2b">;
+/** Sales channels an offer is approved for separately. Defined once, with the channels themselves. */
+export type { OfferChannel } from "@/features/partners/dashboard/constants/offers";
 /** Decisions a reviewer can make on one channel of an offer. */
 export type OfferDecision = Extract<OfferPartyStatus, "approved" | "cancelled">;
 

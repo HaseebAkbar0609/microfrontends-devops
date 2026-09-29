@@ -3,17 +3,17 @@
 import { Button } from "@/components/ui/button";
 import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import localizationConstants from "@/utils/translation/constants";
+import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { PartyStatusCell } from "@/features/partners/dashboard/components/PartyStatusCell";
-import type { OfferActionStatus, PartnerOfferRow } from "@/features/partners/dashboard/constants/offers";
+import {
+	OFFER_CHANNEL_LABELS,
+	OFFER_CHANNELS,
+	type OfferActionStatus,
+	type PartnerOfferRow,
+} from "@/features/partners/dashboard/constants/offers";
 import type { OfferChannel, OfferDecision } from "../constants/partnerOffers";
 
-const OFFER_CHANNELS: { key: OfferChannel; labelKey: string }[] = [
-	{ key: "b2c", labelKey: localizationConstants.b2cColumnLabel },
-	{ key: "b2b", labelKey: localizationConstants.b2b },
-];
-
-const OFFER_STATUS_LABELS: Record<OfferActionStatus, string> = {
+const OFFER_STATUS_LABELS: Record<OfferActionStatus, TranslationKeys> = {
 	active: localizationConstants.activeLabel,
 	closed: localizationConstants.adminStatusClosed,
 };
@@ -49,12 +49,12 @@ export function OfferReviewCard({ offer, onDecision }: OfferReviewCardProps) {
 
 			<div className="mt-4 divide-y divide-slate-100 border-t border-slate-100">
 				{OFFER_CHANNELS.map((channel) => {
-					const channelStatus = offer[channel.key];
+					const channelStatus = offer[channel];
 
 					return (
-						<div key={channel.key} className="flex min-h-11 items-center gap-3 pt-2">
+						<div key={channel} className="flex min-h-11 items-center gap-3 pt-2">
 							<span className="w-10 text-sm font-medium text-slate-900">
-								<Translate text={channel.labelKey} />
+								<Translate text={OFFER_CHANNEL_LABELS[channel]} />
 							</span>
 							<span className="text-sm text-slate-600">
 								<PartyStatusCell status={channelStatus} />
@@ -65,7 +65,7 @@ export function OfferReviewCard({ offer, onDecision }: OfferReviewCardProps) {
 										size="sm"
 										variant="outline"
 										disabled={channelStatus === "approved"}
-										onClick={() => onDecision(channel.key, "approved")}
+										onClick={() => onDecision(channel, "approved")}
 									>
 										<Translate text={localizationConstants.approveLabel} />
 									</Button>
@@ -74,7 +74,7 @@ export function OfferReviewCard({ offer, onDecision }: OfferReviewCardProps) {
 										confirmText={t(localizationConstants.partnerDeclineButton)}
 										cancelText={t(localizationConstants.cancelLabel)}
 										confirmClassName="bg-red-600 hover:bg-red-700"
-										onConfirm={() => onDecision(channel.key, "cancelled")}
+										onConfirm={() => onDecision(channel, "cancelled")}
 										trigger={
 											<Button size="sm" variant="outline" disabled={channelStatus === "cancelled"}>
 												<Translate text={localizationConstants.partnerDeclineButton} />
