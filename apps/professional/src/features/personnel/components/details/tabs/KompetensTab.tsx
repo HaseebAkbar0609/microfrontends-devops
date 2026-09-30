@@ -1,52 +1,123 @@
 "use client";
 
-import React, { useMemo } from "react";
-import { CreateEmployeeFormData } from "../../../types/createEmployee.types";
-import { ViewJobDescriptionCard, JobDescriptionItem } from "../cards/ViewJobDescriptionCard";
-import { ViewCompetenceListCard } from "../cards/ViewCompetenceListCard";
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useKompetenser } from "../../../hooks/useKompetenser";
+import { KompetensListView } from "./kompetens/KompetensListView";
+import { KompetensDetailView } from "./kompetens/KompetensDetailView";
+import { AddKompetensModal } from "./kompetens/modals/AddKompetensModal";
+import { MedarbetarsamtalTab } from "./MedarbetarsamtalTab";
 
 interface KompetensTabProps {
-	profileData: CreateEmployeeFormData;
-	onAddCompetence: () => void;
-	onDeleteCompetence: (id: string) => void;
-	onUploadJobDescription: (tags: string[]) => void;
 	onPreviewDoc?: (name: string) => void;
 }
 
-export function KompetensTab({
-	profileData,
-	onAddCompetence,
-	onDeleteCompetence,
-	onUploadJobDescription,
-	onPreviewDoc,
-}: KompetensTabProps) {
-	// Derive job description table items matching Screenshot 4
-	const jobDescriptionItems: JobDescriptionItem[] = useMemo(() => {
-		return profileData.competenceDocs.map((doc) => ({
-			id: doc.id,
-			date: doc.date,
-			name: doc.name,
-			fileType: doc.fileType === "doc" ? "doc" : "pdf",
-		}));
-	}, [profileData.competenceDocs]);
+export function KompetensTab({ onPreviewDoc }: KompetensTabProps) {
+	const searchParams = useSearchParams();
+	const router = useRouter();
+	const subTabParam = searchParams.get("subTab");
+
+	const [subSection, setSubSection] = useState<"kompetens" | "medarbetarsamtal">(() => {
+		if (subTabParam === "medarbetarsamtal") return "medarbetarsamtal";
+		return "kompetens";
+	});
+
+	useEffect(() => {
+		if (subTabParam === "medarbetarsamtal") {
+			setSubSection("medarbetarsamtal");
+		} else if (subTabParam === "kompetens") {
+			setSubSection("kompetens");
+		}
+	}, [subTabParam]);
+
+	const handleSwitchSubSection = (newSection: "kompetens" | "medarbetarsamtal") => {
+		setSubSection(newSection);
+		const params = new URLSearchParams(searchParams.toString());
+		if (newSection === "medarbetarsamtal") {
+			params.set("subTab", "medarbetarsamtal");
+		} else {
+			params.delete("subTab");
+		}
+		router.replace(`?${params.toString()}`, { scroll: false });
+	};
+
+	const {
+		filteredCompetences,
+		searchQuery,
+		setSearchQuery,
+		selectedFilter,
+		setSelectedFilter,
+		selectedCompetence,
+		isAddModalOpen,
+		setIsAddModalOpen,
+		editingItem,
+		setEditingItem,
+		deleteConfirmItem,
+		setDeleteConfirmItem,
+		handleAddCompetence,
+		handleUpdateCompetence,
+		handleArchiveCompetence,
+		handleDeleteCompetence,
+		handleOpenDetail,
+		handleBackToList,
+		handleOpenEdit,
+	} = useKompetenser();
+
+	if (subSection === "medarbetarsamtal") {
+		return (
+			<MedarbetarsamtalTab
+				onPreviewDoc={onPreviewDoc}
+				onSwitchToKompetens={() => handleSwitchSubSection("kompetens")}
+			/>
+		);
+	}
 
 	return (
 		<div className="space-y-6">
-			{/* Arbetsbeskrivning Card matching Screenshot 4 1:1 */}
-			<ViewJobDescriptionCard
-				items={jobDescriptionItems}
-				onDelete={onDeleteCompetence}
-				onUpload={onUploadJobDescription}
-				onPreview={onPreviewDoc}
-			/>
+			{selectedCompetence ? (
+				<KompetensDetailView
+					competence={selectedCompetence}
+					onBack={handleBackToList}
+					onEdit={handleOpenEdit}
+					onPreviewDoc={onPreviewDoc}
+				/>
+			) : (
+				<KompetensListView
+					competences={filteredCompetences}
+					searchQuery={searchQuery}
+					onSearchChange={setSearchQuery}
+					selectedFilter={selectedFilter}
+					onFilterChange={setSelectedFilter}
+					onAddClick={() => setIsAddModalOpen(true)}
+					onOpenDetail={handleOpenDetail}
+					onArchiveClick={handleArchiveCompetence}
+					onDeleteClick={(item) => setDeleteConfirmItem(item)}
+					deleteConfirmItem={deleteConfirmItem}
+					onConfirmDelete={handleDeleteCompetence}
+					onCancelDelete={() => setDeleteConfirmItem(null)}
+					onPreviewDoc={onPreviewDoc}
+					onSwitchToMedarbetarsamtal={() => handleSwitchSubSection("medarbetarsamtal")}
+				/>
+			)}
 
-			{/* Detailed Competence & Certificates Table */}
-			<ViewCompetenceListCard
-				items={profileData.competenceDocs}
-				onAdd={onAddCompetence}
-				onDelete={onDeleteCompetence}
-				onPreview={onPreviewDoc}
+			{/* Add / Edit Modal */}
+			<AddKompetensModal
+				isOpen={isAddModalOpen || Boolean(editingItem)}
+				onClose={() => {
+					setIsAddModalOpen(false);
+					setEditingItem(null);
+				}}
+				initialData={editingItem}
+				onSave={(data) => {
+					if (editingItem) {
+						handleUpdateCompetence(editingItem.id, data);
+					} else {
+						handleAddCompetence(data);
+					}
+				}}
 			/>
 		</div>
 	);
 }
+
+export default KompetensTab;
