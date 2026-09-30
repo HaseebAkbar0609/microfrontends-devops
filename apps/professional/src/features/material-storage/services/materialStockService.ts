@@ -41,6 +41,16 @@ export const materialStockService = {
 		return respondWith(() => queryStockPage(store.stockRows(), query));
 	},
 
+	/** The articles a depot carries, even with none left: what "Ta ut material" can choose from. */
+	getDepotArticleIds(depotId: string): Promise<string[]> {
+		return respondWith(() =>
+			store
+				.stockEntries()
+				.filter((entry) => entry.depotId === depotId)
+				.map((entry) => entry.articleId),
+		);
+	},
+
 	/** One article's stock in one depot; all zero when the depot does not carry it. */
 	getStockLevel(articleId: string, depotId: string): Promise<MaterialStockLevel> {
 		return respondWith(() => {

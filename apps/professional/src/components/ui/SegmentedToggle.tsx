@@ -21,6 +21,8 @@ export interface SegmentedToggleProps<T extends string> {
 	 */
 	variant?: "pill" | "boxed";
 	className?: string;
+	/** Added to every option, e.g. to let options share a full-width group. */
+	buttonClassName?: string;
 }
 
 const VARIANT_CLASSES = {
@@ -44,7 +46,7 @@ const VARIANT_CLASSES = {
  * pressed, so the group reads as a set of choices rather than as unrelated
  * buttons.
  */
-export function SegmentedToggle<T extends string>({ options, value, onChange, ariaLabel, variant = "pill", className }: SegmentedToggleProps<T>) {
+export function SegmentedToggle<T extends string>({ options, value, onChange, ariaLabel, variant = "pill", className, buttonClassName }: SegmentedToggleProps<T>) {
 	const t = useTranslate();
 	const styles = VARIANT_CLASSES[variant];
 
@@ -62,6 +64,7 @@ export function SegmentedToggle<T extends string>({ options, value, onChange, ar
 							"cursor-pointer font-medium transition-colors focus-visible:ring-2 focus-visible:ring-slate-900 focus-visible:outline-none",
 							styles.button,
 							active ? styles.active : styles.inactive,
+							buttonClassName,
 						)}
 					>
 						{t(option.labelKey)}

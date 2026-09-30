@@ -9,6 +9,11 @@ import type {
 	StockFilter,
 	StockStatus,
 } from "../types/materialStorage.types";
+import type {
+	MaterialTransactionType,
+	WithdrawalLinkType,
+	WithdrawalTargetType,
+} from "../types/materialTransaction.types";
 
 /** Simulated round trip of the mock service, so loading states show as they will against the API. */
 export const MATERIAL_MOCK_LATENCY_MS = 300;
@@ -33,6 +38,9 @@ export const MATERIAL_QUERY_KEYS = {
 	kpis: ["material-storage", "stock-kpis"],
 	stock: ["material-storage", "stock"],
 	stockLevel: ["material-storage", "stock-level"],
+	depotArticles: ["material-storage", "depot-articles"],
+	linkTargets: ["material-storage", "link-targets"],
+	workSteps: ["material-storage", "work-steps"],
 } as const;
 
 /** Counted units: a quantity in these must be a whole number. */
@@ -43,8 +51,48 @@ export const MATERIAL_TEXT_LIMITS = {
 	comment: 500,
 } as const;
 
-/** Prefix of a receipt's reference, e.g. INL-2026-0001 (Inleverans). */
-export const MATERIAL_RECEIPT_REFERENCE_PREFIX = "INL";
+/** Prefix of a transaction's reference: INL-2026-0001 (Inleverans), UTT-2026-0001 (Uttag). */
+export const MATERIAL_TRANSACTION_PREFIXES: Record<MaterialTransactionType, string> = {
+	receipt: "INL",
+	withdrawal: "UTT",
+};
+
+/** "Koppla till" in "Ta ut material", in the Figma order. Projekt is chosen when the dialog opens. */
+export const WITHDRAWAL_LINK_OPTIONS: SegmentedToggleOption<WithdrawalLinkType>[] = [
+	{ id: "order", labelKey: localizationConstants.materialLinkOrder },
+	{ id: "project", labelKey: localizationConstants.materialLinkProject },
+	{ id: "invoice", labelKey: localizationConstants.materialLinkInvoice },
+	{ id: "internal", labelKey: localizationConstants.materialLinkInternal },
+];
+
+export const WITHDRAWAL_LINK_TYPES = WITHDRAWAL_LINK_OPTIONS.map((option) => option.id) as [
+	WithdrawalLinkType,
+	...WithdrawalLinkType[],
+];
+
+export const WITHDRAWAL_DEFAULT_LINK_TYPE: WithdrawalLinkType = "project";
+
+/** The record field under "Koppla till": its label, placeholder and the error when it is left empty. */
+export const WITHDRAWAL_TARGET_TEXT: Record<
+	WithdrawalTargetType,
+	{ label: TranslationKeys; placeholder: TranslationKeys; required: TranslationKeys }
+> = {
+	order: {
+		label: localizationConstants.materialFieldOrder,
+		placeholder: localizationConstants.materialOrderPlaceholder,
+		required: localizationConstants.materialErrorOrderRequired,
+	},
+	project: {
+		label: localizationConstants.materialFieldProject,
+		placeholder: localizationConstants.materialProjectPlaceholder,
+		required: localizationConstants.materialErrorProjectRequired,
+	},
+	invoice: {
+		label: localizationConstants.materialFieldInvoice,
+		placeholder: localizationConstants.materialInvoicePlaceholder,
+		required: localizationConstants.materialErrorInvoiceRequired,
+	},
+};
 
 /** URL query parameter names for the overview's filter, sort and paging state. */
 export const MATERIAL_OVERVIEW_PARAMS = {

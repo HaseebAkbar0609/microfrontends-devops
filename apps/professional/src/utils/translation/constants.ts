@@ -10873,6 +10873,38 @@ export type MaterialStorageTranslation = {
 	materialDiscardTitle: string;
 	materialDiscardDescription: string;
 	materialDiscardConfirm: string;
+	// Ta ut material (TFS-1074)
+	materialWithdrawSubtitle: string;
+	materialClearMaterial: string;
+	materialAvailableBalance: string;
+	materialFieldLinkTo: string;
+	materialLinkOrder: string;
+	materialLinkProject: string;
+	materialLinkInvoice: string;
+	materialLinkInternal: string;
+	materialFieldOrder: string;
+	materialFieldProject: string;
+	materialFieldInvoice: string;
+	materialOrderPlaceholder: string;
+	materialProjectPlaceholder: string;
+	materialInvoicePlaceholder: string;
+	materialFieldWorkStep: string;
+	materialWorkStepPlaceholder: string;
+	materialFieldSalesPrice: string;
+	materialBalanceAfterWithdrawal: string;
+	materialValue: string;
+	materialChargedToCustomer: string;
+	materialAddAsInvoiceLine: string;
+	materialReservedWarning: string;
+	materialWithdrawCommentPlaceholder: string;
+	materialWithdrawSubmit: string;
+	materialErrorQuantityExceedsAvailable: string;
+	materialErrorOrderRequired: string;
+	materialErrorProjectRequired: string;
+	materialErrorInvoiceRequired: string;
+	materialWithdrawSuccess: string;
+	materialWithdrawDraftSaved: string;
+	materialWithdrawError: string;
 };
 
 export type Translation = DocumentWorkflowsTranslation &

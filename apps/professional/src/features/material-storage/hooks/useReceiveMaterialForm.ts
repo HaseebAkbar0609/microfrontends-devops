@@ -19,13 +19,13 @@ import type { MaterialArticle, MaterialDepot } from "../types/materialStorage.ty
 import type {
 	MaterialTransaction,
 	ReceiveMaterialInput,
-	ReceiveMaterialPreset,
+	MaterialDialogPreset,
 } from "../types/materialTransaction.types";
 import { todayIso } from "../utils/materialDates";
 import { useMaterialFormatters } from "./useMaterialFormatters";
 
 interface UseReceiveMaterialFormOptions {
-	preset: ReceiveMaterialPreset;
+	preset: MaterialDialogPreset;
 	articles: MaterialArticle[];
 	depots: MaterialDepot[];
 	/** Called after a successful receipt or draft, to close the dialog. */
