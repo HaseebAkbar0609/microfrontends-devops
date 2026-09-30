@@ -18,6 +18,7 @@ export type LeadRow = {
 	status: LeadStatus;
 	email: string;
 	phone: string;
+	reviewed?: boolean;
 };
 
 export type LeadApiCategory = {
@@ -121,6 +122,7 @@ export type LeadProjectDetailsApiData = {
 		is_express?: boolean;
 		client_no?: string;
 		categories?: LeadProjectCategory[];
+		subcategories?: LeadProjectCategory[];
 		project_address?: string;
 		city?: string;
 		city_name?: string;
