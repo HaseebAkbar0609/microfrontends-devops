@@ -32,6 +32,7 @@ import {
 	createQuoteNumber,
 } from "../src/features/sales/utils/salesFactories";
 import { calculateQuoteTotals } from "../src/features/sales/utils/quoteCalculations";
+import { buildSalesQuote, createQuoteDraft } from "../src/features/sales/utils/quoteDraft";
 import axiosInstance from "../src/lib/axiosInstance";
 import type { QuoteModuleRow, SalesCompany } from "../src/features/sales/types";
 
@@ -197,16 +198,19 @@ test.fail("TFS-1138: document numbers are issued by the server, not the browser"
 	expect(Object.keys(api)).toEqual(expect.arrayContaining(["allocateDocumentNumber"]));
 });
 
-test.fixme("TFS-1137: a saved quote carries the discount that explains its net", () => {
-	// useQuoteBuilderForm.save builds the SalesQuote from the draft and leaves out
-	// draft.extraDiscountPercent, so the server (PR 92) can only bound monthlyNet
-	// instead of checking it: 50 000 kr of lines invoiced for 1 kr still passes,
-	// because it could be a 99.998 percent discount.
-	//
-	// fixme, not fail: the quote is assembled inline in that callback, so there is
-	// nothing to call. Asserting on a fixture built in this file would never flip.
-	// Extract a pure buildSalesQuote(draft, totals) and assert that it keeps the
-	// percentage.
+test("TFS-1137: a saved quote carries the discount that explains its net", () => {
+	// Without the percentage the server (PR 92) can only bound monthlyNet: 50 000 kr
+	// of lines invoiced for 1 kr would pass as a 99.998 percent discount. And a
+	// reopened quote must start from its own discount, or saving it again raises
+	// the price without anyone touching it.
+	const company = quotedCompany();
+	company.quote = { ...company.quote!, extraDiscountPercent: 12.5 };
+	const draft = createQuoteDraft(company, (key) => key, "");
+	expect(draft.extraDiscountPercent).toBe(12.5);
+	const totals = calculateQuoteTotals(draft.modules, draft.term, draft.extraDiscountPercent);
+	const quote = buildSalesQuote(draft, totals, "Q-1");
+	expect(quote.extraDiscountPercent).toBe(12.5);
+	expect(quote.monthlyNet).toBe(totals.monthlyNet);
 });
 
 test.fail("Trials: the Sales screens use the durations the trials API offers", async () => {

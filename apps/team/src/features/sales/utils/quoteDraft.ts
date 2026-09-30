@@ -7,7 +7,10 @@ import type {
 	QuoteModuleRow,
 	QuoteTermId,
 	SalesCompany,
+	SalesQuote,
 } from "../types";
+import type { calculateQuoteTotals } from "./quoteCalculations";
+import { createQuoteValidUntil } from "./salesFactories";
 
 export type QuoteDraft = {
 	/** Issue date shown on the sheet; stable for a saved quote. */
@@ -108,10 +111,35 @@ export function createQuoteDraft(
 		sellerEmail: "",
 		sellerMobile: "",
 		users: quote?.users ?? (company.employees || DEFAULT_QUOTE_USERS),
-		extraDiscountPercent: 0,
+		// Restored, so reopening a quote and saving it does not quietly raise the price.
+		extraDiscountPercent: quote?.extraDiscountPercent ?? 0,
 		validDays: DEFAULT_QUOTE_VALID_DAYS,
 		term: quote?.term ?? "yearly",
 		notes: quote?.notes || defaultNotes,
 		modules: modulesFor(company, descriptionOf),
+	};
+}
+
+/**
+ * The quote as it is saved: the draft's terms plus the totals worked out from
+ * them. It carries the extra discount, because monthlyNet cannot be checked
+ * without it.
+ */
+export function buildSalesQuote(
+	draft: QuoteDraft,
+	totals: ReturnType<typeof calculateQuoteTotals>,
+	quoteNumber: string,
+): SalesQuote {
+	return {
+		quoteNumber,
+		createdAt: draft.createdAt,
+		validUntil: createQuoteValidUntil(draft.validDays),
+		users: draft.users,
+		term: draft.term,
+		monthlyNet: totals.monthlyNet,
+		firstInvoice: totals.firstInvoice,
+		lines: totals.lines,
+		notes: draft.notes,
+		extraDiscountPercent: draft.extraDiscountPercent,
 	};
 }

@@ -70,6 +70,12 @@ export type SalesQuote = {
 	firstInvoice: number;
 	lines: QuoteLine[];
 	notes: string;
+	/**
+	 * The discount typed on top of the term discount. It is what explains
+	 * monthlyNet, so the server checks the net exactly when it is sent. Absent on
+	 * quotes saved before it was.
+	 */
+	extraDiscountPercent?: number;
 };
 
 export type SalesOrder = {
