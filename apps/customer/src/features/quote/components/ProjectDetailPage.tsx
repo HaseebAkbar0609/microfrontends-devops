@@ -35,7 +35,7 @@ export default function ProjectDetailPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [projectData, setProjectData] = useState<
-		Partial<CreateOfferFormValues> & { refNo?: string }
+		Partial<CreateOfferFormValues> & { refNo?: string; categoryNames?: string[] }
 	>({});
 
 	const activeTab = useMemo(() => {
@@ -58,6 +58,8 @@ export default function ProjectDetailPage() {
 		const res = await getProjectByIdAPIAction(id);
 		if (res.success && res.data) {
 			const hydration = mapProjectDetailToFormHydration(res.data);
+			const details = res.data.project_details as { subcategories?: { name?: string }[] } | undefined;
+			const categoryNames = details?.subcategories?.map((item) => item.name || "").filter(Boolean) || [];
 			const rawRefNo =
 				(res.data.client_no as string) ||
 				(res.data.ref_no as string) ||
@@ -66,6 +68,7 @@ export default function ProjectDetailPage() {
 			setProjectData({
 				...hydration.values,
 				refNo: rawRefNo,
+				categoryNames,
 			});
 		} else {
 			setError(res.error || "Failed to load quote project detail");
@@ -147,7 +150,7 @@ export default function ProjectDetailPage() {
 							</TabsContent>
 
 							<TabsContent value="quote-list" className="mt-0">
-								<QuoteListTab suppliers={projectData.invitedSuppliers} />
+								<QuoteListTab projectId={id} />
 							</TabsContent>
 
 							<TabsContent value="documents" className="mt-0">

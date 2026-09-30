@@ -50,37 +50,41 @@ const statusKeyMap: Record<string, keyof Translation> = {
 	Invited: localizationConstants.statusInvited,
 	Estimated: localizationConstants.statusEstimated,
 	"Waiting for Quote": localizationConstants.statusWaitingForQuote,
+	Rejected: localizationConstants.statusRejected,
 };
 
 interface QuoteListTableProps {
 	quotes: readonly QuoteItem[];
+	onChanged?: () => void;
 }
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { approveQuoteAPIAction } from "@/api-actions";
+import { rejectQuoteAPIAction } from "@/api-actions/quote/reject";
 import { Loader2 } from "lucide-react";
 import {
 	AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 
-export function QuoteListTable({ quotes }: QuoteListTableProps) {
+export function QuoteListTable({ quotes, onChanged }: QuoteListTableProps) {
 	const params = useParams();
-	const router = useRouter();
 	const id = params.id as string;
-	const { isOpen, openModal, closeModal, modalId } = useModal<ModalType>();
+	const { isOpen, openModal, closeModal, modalId, type } = useModal<ModalType>();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	const handleConfirmApprove = async () => {
+	const handleConfirmAction = async () => {
 		if (!modalId) return;
 		setIsSubmitting(true);
-		const res = await approveQuoteAPIAction(modalId);
+		const res = type === MODAL_CONSTANTS.REJECT
+			? await rejectQuoteAPIAction(modalId)
+			: await approveQuoteAPIAction(modalId);
 		setIsSubmitting(false);
 		closeModal();
 		if (res.success) {
-			router.push("/projects");
+			onChanged?.();
 		}
 	};
+	const isReject = type === MODAL_CONSTANTS.REJECT;
 
 	return (
 		<div className="bg-white rounded-lg border border-slate-200 overflow-hidden mt-2">
@@ -166,7 +170,7 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 								</Badge>
 							</TableCell>
 							<TableCell className="py-4 text-right">
-								<DropdownMenu>
+								{item.quoteId && <DropdownMenu>
 									<DropdownMenuTrigger asChild>
 										<Button
 											variant="ghost"
@@ -198,7 +202,7 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 												</span>
 											</Link>
 										</DropdownMenuItem>
-										<DropdownMenuItem
+										{item.status === "Received Quote" && <DropdownMenuItem
 											className="gap-2 cursor-pointer py-2 text-emerald-600 focus:text-emerald-700 focus:bg-emerald-50"
 											onClick={() =>
 												openModal(
@@ -215,8 +219,8 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 													}
 												/>
 											</span>
-										</DropdownMenuItem>
-										<DropdownMenuItem
+										</DropdownMenuItem>}
+										{item.status === "Received Quote" && <DropdownMenuItem
 											className="gap-2 cursor-pointer py-2 text-red-500 focus:text-red-600 focus:bg-red-50"
 											onClick={() =>
 												openModal(
@@ -233,9 +237,9 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 													}
 												/>
 											</span>
-										</DropdownMenuItem>
+										</DropdownMenuItem>}
 									</DropdownMenuContent>
-								</DropdownMenu>
+								</DropdownMenu>}
 							</TableCell>
 						</TableRow>
 					))
@@ -258,14 +262,14 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 			>
 				<AlertDialogContent className="max-w-sm text-center">
 					<AlertDialogHeader className="items-center">
-						<div className="mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-							<Check className="h-6 w-6" />
+						<div className={`mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-full ${isReject ? "bg-red-50 text-red-600" : "bg-emerald-50 text-emerald-600"}`}>
+							{isReject ? <X className="h-6 w-6" /> : <Check className="h-6 w-6" />}
 						</div>
 						<AlertDialogTitle className="text-center text-lg font-semibold text-slate-800">
-							<Translate text={localizationConstants.approveLabel} />
+							<Translate text={isReject ? localizationConstants.rejectLabel : localizationConstants.approveLabel} />
 						</AlertDialogTitle>
 						<AlertDialogDescription className="text-center text-sm text-slate-500">
-							Are you sure you want to approve this quote? Approving will move this project directly to Active Projects.
+							{isReject ? "Are you sure you want to reject this quote?" : "Are you sure you want to approve this quote?"}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter className="justify-center sm:justify-center gap-2">
@@ -277,14 +281,14 @@ export function QuoteListTable({ quotes }: QuoteListTableProps) {
 							<Translate text={localizationConstants.cancel} />
 						</AlertDialogCancel>
 						<AlertDialogAction
-							onClick={handleConfirmApprove}
+							onClick={handleConfirmAction}
 							disabled={isSubmitting}
-							className="min-w-24 bg-emerald-600 hover:bg-emerald-700 text-white"
+							className={`min-w-24 text-white ${isReject ? "bg-red-600 hover:bg-red-700" : "bg-emerald-600 hover:bg-emerald-700"}`}
 						>
 							{isSubmitting ? (
 								<Loader2 className="h-4 w-4 animate-spin" />
 							) : (
-								<Translate text={localizationConstants.approveLabel} />
+								<Translate text={isReject ? localizationConstants.rejectLabel : localizationConstants.approveLabel} />
 							)}
 						</AlertDialogAction>
 					</AlertDialogFooter>

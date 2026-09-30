@@ -82,6 +82,8 @@ export const API_PATH = {
 			`${BASE_PATHS.PROJECT}/${encodeURIComponent(projectId)}/org-plan`,
 	},
 	QUOTE: {
+		project: (projectId: string) =>
+			`/api/v1/quote/project/${encodeURIComponent(projectId)}`,
 		approve: (quoteId: string) =>
 			`/api/v1/quote/${encodeURIComponent(quoteId)}/approve`,
 		reject: (quoteId: string) =>

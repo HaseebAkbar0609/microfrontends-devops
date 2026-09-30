@@ -28,12 +28,14 @@ export function SupplierQuoteDetail({
 	supplierId,
 	documents = [],
 	quoteId,
+	projectId,
 }: {
 	projectName: string;
 	supplier?: QuoteSupplier | null;
 	supplierId?: string;
 	documents?: QuoteDocument[];
 	quoteId?: string;
+	projectId?: string;
 }) {
 	const searchParams = useSearchParams();
 	const { changeQueries, replaceQueries } = useQueryParams();
@@ -127,7 +129,7 @@ export function SupplierQuoteDetail({
 
 			<div className="px-5 py-6 mx-auto w-full">
 				<Tabs value={activeTab} className="w-full">
-					<QuoteTab supplier={supplier} documents={documents} quoteId={quoteId} />
+					<QuoteTab supplier={supplier} documents={documents} quoteId={quoteId} projectId={projectId} />
 					<CompanyInfoTab supplier={supplier} />
 					<ReferenceTab />
 					<DiscussionsTab

@@ -11,9 +11,10 @@ interface QuoteTabProps {
 	supplier?: QuoteSupplier | null;
 	documents?: QuoteDocument[];
 	quoteId?: string;
+	projectId?: string;
 }
 
-export function QuoteTab({ supplier, documents = [], quoteId }: QuoteTabProps) {
+export function QuoteTab({ supplier, documents = [], quoteId, projectId }: QuoteTabProps) {
 	const [quoteDetails, setQuoteDetails] = useState<Record<string, unknown> | null>(null);
 	const [loadedQuoteId, setLoadedQuoteId] = useState<string | undefined>(undefined);
 	const [loading, setLoading] = useState(false);
@@ -108,6 +109,7 @@ export function QuoteTab({ supplier, documents = [], quoteId }: QuoteTabProps) {
 
 			<QuoteItemsTable
 				quoteId={effectiveQuoteId}
+				projectId={projectId}
 				items={items}
 				quoteTotal={quoteTotal}
 				vat={vat}

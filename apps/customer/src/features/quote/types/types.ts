@@ -49,10 +49,12 @@ export type QuoteStatus =
 	| "Received Quote"
 	| "Invited"
 	| "Estimated"
-	| "Waiting for Quote";
+	| "Waiting for Quote"
+	| "Rejected";
 
 export interface QuoteItem {
 	id: string;
+	quoteId?: string;
 	isStarred: boolean;
 	company: string;
 	contact: string;

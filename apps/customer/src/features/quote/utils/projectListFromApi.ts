@@ -101,7 +101,8 @@ export function mapProjectRowToQuote(row: Record<string, unknown>): Quote | null
 			s(row.received_quotes) ||
 			s(row.quotes_received) ||
 			s(row.quotes_summary) ||
-			"0/0",
+			s(row.received_quote_count) ||
+			"0",
 		lowestPrice: priceSEK(
 			row.lowest_price ?? row.lowest_price_formatted ?? row.min_price,
 		),
