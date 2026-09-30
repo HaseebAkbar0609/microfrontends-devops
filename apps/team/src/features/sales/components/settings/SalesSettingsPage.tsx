@@ -19,6 +19,8 @@ export default function SalesSettingsPage() {
 		addTemplate,
 		updateTemplate,
 		removeTemplate,
+		isLoading,
+		isError,
 	} = useSalesSettings();
 	const t = useTranslate();
 	const linkIsValid = isValidLink(calendlyLink);
@@ -48,6 +50,15 @@ export default function SalesSettingsPage() {
 			</header>
 
 			<div className="p-6">
+				{isLoading || isError ? (
+					<p className="text-sm text-slate-600">
+						<Translate
+							text={isLoading
+								? localizationConstants.salesSettingsLoading
+								: localizationConstants.salesSettingsLoadFailed}
+						/>
+					</p>
+				) : (
 				<section className="rounded-xl border border-slate-200 bg-white shadow-2xs">
 					<div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 px-5 py-4">
 						<h2 className="inline-flex items-center gap-2 text-base font-semibold text-slate-900">
@@ -129,6 +140,7 @@ export default function SalesSettingsPage() {
 						</div>
 					</div>
 				</section>
+				)}
 			</div>
 		</div>
 	);

@@ -22,6 +22,8 @@ export function EmailTemplateCard({
 	onRemove,
 }: EmailTemplateCardProps) {
 	const t = useTranslate();
+	// A template is only saved once it has a name, so say why nothing is saved yet.
+	const nameMissing = !template.name.trim();
 
 	return (
 		<article className="rounded-xl border border-slate-200 bg-white p-5">
@@ -36,8 +38,15 @@ export function EmailTemplateCard({
 					<Input
 						id={`template-name-${template.id}`}
 						value={template.name}
+						aria-invalid={nameMissing || undefined}
+						aria-describedby={nameMissing ? `template-name-error-${template.id}` : undefined}
 						onChange={(event) => onChange({ name: event.target.value })}
 					/>
+					{nameMissing && (
+						<p id={`template-name-error-${template.id}`} className="text-sm text-red-600">
+							<Translate text={localizationConstants.salesSettingsTemplateNameRequired} />
+						</p>
+					)}
 				</div>
 
 				<div className="flex flex-col gap-1.5">

@@ -1396,6 +1396,10 @@ export type SalesTranslation = {
 	salesSettingsTemplatesTitle: string;
 	salesSettingsTagsHint: string;
 	salesSettingsTemplateName: string;
+	salesSettingsLoading: string;
+	salesSettingsLoadFailed: string;
+	salesSettingsSaveFailed: string;
+	salesSettingsTemplateNameRequired: string;
 	salesSettingsTemplateSubject: string;
 	salesSettingsTemplateBody: string;
 	salesSettingsRemoveTemplate: string;
