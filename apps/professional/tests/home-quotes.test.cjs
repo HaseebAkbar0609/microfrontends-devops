@@ -59,7 +59,7 @@ test("missing identity makes no requests", async () => {
   const api = service(); await assert.rejects(api.loadOfferCounts("", "a")); await assert.rejects(api.loadOfferCounts("a", ""));
   assert.equal(api.calls.length, 0);
 });
-test("home connects Modules catalog and Quotes without modifying the header launcher", () => {
+test("home keeps Modules placeholder and Quotes without modifying the header launcher", () => {
   assert.match(source("features/widgetdashboard/components/Dashboard.tsx"), /belowGrid={<ModulesSection \/>}/);
   const config = source("features/widgetdashboard/components/DashboardConfig.tsx");
   assert.match(config, /content: <HomeQuotesWidget \/>/); assert.equal((config.match(/content:/g) || []).length, 1);
