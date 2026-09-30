@@ -17,9 +17,13 @@ import type {
 	StockFilter,
 } from "../types/materialStorage.types";
 
-/** The table's query as read from the URL. The depot stays null until the user picks one. */
+/**
+ * The table's query as read from the URL. The depot stays null until the user
+ * picks one. articleId is the article "Visa artikel" shows, if it is open.
+ */
 export type MaterialOverviewParams = Omit<MaterialStockQuery, "depotId"> & {
 	depotId: string | null;
+	articleId: string | null;
 };
 
 function parseOption<T extends string>(value: string | null, allowed: readonly T[]): T | null {
@@ -34,7 +38,7 @@ function parsePositiveInt(value: string | null): number | null {
 /**
  * Keeps the overview's depot, search, filters, sort and page in the URL, so a
  * reload or a Back from another page lands on the same view. Defaults are left
- * out of the URL.
+ * out of the URL. The open article is there too, so a link can open it.
  */
 export function useMaterialOverviewParams() {
 	const router = useRouter();
@@ -55,6 +59,7 @@ export function useMaterialOverviewParams() {
 				pageSize !== null && (MATERIAL_PAGE_SIZE_OPTIONS as readonly number[]).includes(pageSize)
 					? pageSize
 					: MATERIAL_DEFAULT_PAGE_SIZE,
+			articleId: searchParams.get(PARAM.article),
 		};
 	}, [searchParams]);
 
@@ -88,6 +93,8 @@ export function useMaterialOverviewParams() {
 			setPage: (page: number) => update({ [PARAM.page]: page > 1 ? String(page) : null }),
 			setPageSize: (size: number) =>
 				updateFilter(PARAM.pageSize, size === MATERIAL_DEFAULT_PAGE_SIZE ? null : String(size)),
+			/** Opens "Visa artikel" for this article, or closes it with null. The table stays as it is. */
+			setArticle: (articleId: string | null) => update({ [PARAM.article]: articleId }),
 		};
 	}, [update]);
 

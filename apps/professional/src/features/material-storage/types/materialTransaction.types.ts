@@ -1,7 +1,10 @@
 import type { MaterialArticle, MaterialUnit } from "./materialStorage.types";
 
-/** More types (transfer, reservation, adjustment, return) arrive with TFS-1077. */
-export type MaterialTransactionType = "receipt" | "withdrawal";
+/**
+ * More types (transfer, reservation, return) arrive with TFS-1077. Adjustments
+ * (inventory counts) cannot be registered yet, but appear in the seeded history.
+ */
+export type MaterialTransactionType = "receipt" | "withdrawal" | "adjustment";
 
 /** A draft is saved but has not changed any stock yet. */
 export type MaterialTransactionStatus = "draft" | "completed";
@@ -66,6 +69,8 @@ interface MaterialTransactionBase {
 	unit: MaterialUnit;
 	/** ISO timestamp */
 	createdAt: string;
+	/** Who registered it; null when not known. */
+	createdBy: string | null;
 }
 
 export interface MaterialReceiptTransaction extends MaterialTransactionBase, ReceiveMaterialInput {
@@ -78,7 +83,21 @@ export interface MaterialWithdrawalTransaction extends MaterialTransactionBase, 
 	availableBefore: number;
 }
 
-export type MaterialTransaction = MaterialReceiptTransaction | MaterialWithdrawalTransaction;
+/** A stock count or correction, e.g. −2 st after an inventory. */
+export interface MaterialAdjustmentTransaction extends MaterialTransactionBase {
+	type: "adjustment";
+	depotId: string;
+	articleId: string;
+	/** Signed: positive adds to stock, negative removes. */
+	quantity: number;
+	/** E.g. "Inventering". */
+	reason: string;
+}
+
+export type MaterialTransaction =
+	| MaterialReceiptTransaction
+	| MaterialWithdrawalTransaction
+	| MaterialAdjustmentTransaction;
 
 export interface MaterialStockLevel {
 	inStock: number;

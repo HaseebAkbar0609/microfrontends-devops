@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { DataTable } from "@/components/table/DataTable";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
@@ -38,7 +38,8 @@ export function MaterialStockTable({
 	onRowAction,
 }: MaterialStockTableProps) {
 	const t = useTranslate();
-	const columns = useMaterialStockColumns();
+	const openArticle = useCallback((row: MaterialStockRow) => onRowAction("view", row), [onRowAction]);
+	const columns = useMaterialStockColumns(openArticle);
 	const actions = useMemo(() => buildMaterialRowActions(onRowAction), [onRowAction]);
 
 	if (error) {

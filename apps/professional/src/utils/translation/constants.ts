@@ -10905,6 +10905,39 @@ export type MaterialStorageTranslation = {
 	materialWithdrawSuccess: string;
 	materialWithdrawDraftSaved: string;
 	materialWithdrawError: string;
+	// Visa artikel (TFS-1075)
+	materialArticleNumber: string;
+	materialTabOverview: string;
+	materialTabDepotStock: string;
+	materialTabTransactions: string;
+	materialTabPriceHistory: string;
+	materialTabDocuments: string;
+	materialArticleInfo: string;
+	materialFieldDescription: string;
+	materialFieldSupplierArticleNo: string;
+	materialFieldEan: string;
+	materialFieldDefaultDepot: string;
+	materialPriceCard: string;
+	materialMarkup: string;
+	materialGrossMargin: string;
+	materialPricePerUnit: string;
+	materialRecentEvents: string;
+	materialEventReceipt: string;
+	materialEventWithdrawalOrder: string;
+	materialEventWithdrawalProject: string;
+	materialEventWithdrawalInvoice: string;
+	materialEventAdjustment: string;
+	materialNoEvents: string;
+	materialColDate: string;
+	materialColEvent: string;
+	materialColReference: string;
+	materialColPerformedBy: string;
+	materialColChangedBy: string;
+	materialNoPriceHistory: string;
+	materialNoDocuments: string;
+	materialArticleLoadError: string;
+	materialArticleNotFound: string;
+	materialCurrentUserFallback: string;
 };
 
 export type Translation = DocumentWorkflowsTranslation &

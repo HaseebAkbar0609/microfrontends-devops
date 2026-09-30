@@ -3,6 +3,7 @@ import type {
 	MaterialDepot,
 	MaterialStockEntry,
 } from "../types/materialStorage.types";
+import { withArticleDetails, type MaterialArticleBase } from "./materialArticleDetails.mock";
 
 /**
  * Mock data for Materialhantering until the backend has depots and stock per depot.
@@ -16,7 +17,7 @@ export const MOCK_MATERIAL_DEPOTS: MaterialDepot[] = [
 	{ id: "dep-004", name: "Servicebil 07", isDefault: false },
 ];
 
-export const MOCK_MATERIAL_ARTICLES: MaterialArticle[] = [
+const BASE_ARTICLES: MaterialArticleBase[] = [
 	{ id: "art-100245", articleNo: "100245", name: "Gipsskiva 13 mm", supplierName: "Beijer Byggmaterial", categoryId: "boards", unit: "pcs", purchasePrice: 85, salesPrice: 129, minStockLevel: 50, reorderPoint: 100 },
 	{ id: "art-200118", articleNo: "200118", name: "Konstruktionsvirke 45×95", supplierName: "Moelven", categoryId: "timber", unit: "m", purchasePrice: 32.5, salesPrice: 54.9, minStockLevel: 300, reorderPoint: 500 },
 	{ id: "art-310042", articleNo: "310042", name: "Kopparrör 15 mm", supplierName: "Ahlsell", categoryId: "pipes", unit: "m", purchasePrice: 68, salesPrice: 109, minStockLevel: 200, reorderPoint: 250 },
@@ -44,6 +45,8 @@ export const MOCK_MATERIAL_ARTICLES: MaterialArticle[] = [
 	{ id: "art-710025", articleNo: "710025", name: "Mineralull 95 mm", supplierName: "Isover", categoryId: "insulation", unit: "m2", purchasePrice: 58, salesPrice: 95, minStockLevel: 60, reorderPoint: 120 },
 	{ id: "art-710040", articleNo: "710040", name: "Cellplast 100 mm", supplierName: "Isover", categoryId: "insulation", unit: "m2", purchasePrice: 74, salesPrice: 125, minStockLevel: 30, reorderPoint: 60 },
 ];
+
+export const MOCK_MATERIAL_ARTICLES: MaterialArticle[] = BASE_ARTICLES.map(withArticleDetails);
 
 /** [in stock, reserved] per depot. An article a depot does not carry has no entry. */
 const STOCK_BY_ARTICLE: Record<string, Record<string, [number, number]>> = {

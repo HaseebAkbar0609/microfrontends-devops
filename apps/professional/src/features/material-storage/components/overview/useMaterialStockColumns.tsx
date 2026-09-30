@@ -9,15 +9,32 @@ import { useMaterialFormatters } from "../../hooks/useMaterialFormatters";
 import type { MaterialStockRow } from "../../types/materialStorage.types";
 import { StockStatusBadge } from "../common/StockStatusBadge";
 
-/** Columns of the Figma stock table. Every one sorts; keys match MaterialStockSortField. */
-export function useMaterialStockColumns(): DataTableColumn<MaterialStockRow>[] {
+/**
+ * Columns of the Figma stock table. Every one sorts; keys match
+ * MaterialStockSortField. The material name opens "Visa artikel", like the row menu does.
+ */
+export function useMaterialStockColumns(onOpenArticle: (row: MaterialStockRow) => void): DataTableColumn<MaterialStockRow>[] {
 	const t = useTranslate();
 	const { formatPrice, formatAmount, formatQuantity } = useMaterialFormatters();
 
 	return useMemo(
 		() => [
 			{ key: "articleNo", label: localizationConstants.materialColArticleNo, sortable: true, cellClassName: "text-slate-900" },
-			{ key: "name", label: localizationConstants.materialColName, sortable: true, cellClassName: "text-slate-900" },
+			{
+				key: "name",
+				label: localizationConstants.materialColName,
+				sortable: true,
+				cellClassName: "text-slate-900",
+				render: (row) => (
+					<button
+						type="button"
+						onClick={() => onOpenArticle(row)}
+						className="cursor-pointer text-left hover:underline focus-visible:underline focus-visible:outline-none"
+					>
+						{row.name}
+					</button>
+				),
+			},
 			{
 				key: "categoryId",
 				label: localizationConstants.materialColCategory,
@@ -68,6 +85,6 @@ export function useMaterialStockColumns(): DataTableColumn<MaterialStockRow>[] {
 				render: (row) => <StockStatusBadge status={row.status} />,
 			},
 		],
-		[t, formatPrice, formatAmount, formatQuantity],
+		[t, formatPrice, formatAmount, formatQuantity, onOpenArticle],
 	);
 }

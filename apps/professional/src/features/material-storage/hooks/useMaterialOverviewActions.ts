@@ -41,11 +41,12 @@ const isStockDialogAction = (action: string): action is MaterialStockDialogKind 
 	action === "receive" || action === "withdraw";
 
 /**
- * What the overview's buttons and row menu do. "Ta in material" (TFS-1073) and
- * "Ta ut material" (TFS-1074) are live; the rest come with later tickets
- * (TFS-1075 to TFS-1078) and until then say so instead of silently doing nothing.
+ * What the overview's buttons and row menu do. "Ta in material" (TFS-1073),
+ * "Ta ut material" (TFS-1074) and "Visa artikel" (TFS-1075) are live; the rest
+ * come with later tickets (TFS-1076 to TFS-1078) and until then say so instead
+ * of silently doing nothing.
  */
-export function useMaterialOverviewActions(depotId: string | null) {
+export function useMaterialOverviewActions(depotId: string | null, openArticle: (articleId: string) => void) {
 	const t = useTranslate();
 	const [stockDialog, setStockDialog] = useState<StockDialogState>({
 		kind: "receive",
@@ -78,7 +79,8 @@ export function useMaterialOverviewActions(depotId: string | null) {
 
 	const onRowAction = useCallback(
 		(action: MaterialRowAction, row: MaterialStockRow) => {
-			if (isStockDialogAction(action))
+			if (action === "view") openArticle(row.articleId);
+			else if (isStockDialogAction(action))
 				openStockDialog(action, {
 					depotId: row.depotId,
 					article: {
@@ -90,8 +92,8 @@ export function useMaterialOverviewActions(depotId: string | null) {
 				});
 			else showComingSoon();
 		},
-		[openStockDialog, showComingSoon],
+		[openArticle, openStockDialog, showComingSoon],
 	);
 
-	return { onPageAction, onRowAction, stockDialog, closeStockDialog };
+	return { onPageAction, onRowAction, openStockDialog, stockDialog, closeStockDialog, showComingSoon };
 }
