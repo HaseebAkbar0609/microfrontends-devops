@@ -10834,6 +10834,45 @@ export type MaterialStorageTranslation = {
 	materialPreviousPage: string;
 	materialNextPage: string;
 	materialLastPage: string;
+	// Ta in material (TFS-1073)
+	materialCloseDialog: string;
+	materialReceiveSubtitle: string;
+	materialFieldMaterial: string;
+	materialFieldQuantity: string;
+	materialFieldUnit: string;
+	materialFieldSupplier: string;
+	materialFieldUnitPrice: string;
+	materialFieldDeliveryDate: string;
+	materialFieldSupplierOrderNo: string;
+	materialFieldComment: string;
+	materialPickerPlaceholder: string;
+	materialPickerSearchPlaceholder: string;
+	materialPickerEmpty: string;
+	materialSupplierPlaceholder: string;
+	materialQuantityPlaceholder: string;
+	materialOrderNoPlaceholder: string;
+	materialReceiveCommentPlaceholder: string;
+	materialCurrencySuffix: string;
+	materialPreviousBalance: string;
+	materialNewBalance: string;
+	materialPurchaseValue: string;
+	materialSaveDraft: string;
+	materialReceiveSubmit: string;
+	materialErrorDepotRequired: string;
+	materialErrorMaterialRequired: string;
+	materialErrorQuantityRequired: string;
+	materialErrorQuantityInvalid: string;
+	materialErrorQuantityWhole: string;
+	materialErrorPriceInvalid: string;
+	materialErrorDateRequired: string;
+	materialErrorDateFuture: string;
+	materialErrorTooLong: string;
+	materialReceiveSuccess: string;
+	materialReceiveDraftSaved: string;
+	materialReceiveError: string;
+	materialDiscardTitle: string;
+	materialDiscardDescription: string;
+	materialDiscardConfirm: string;
 };
 
 export type Translation = DocumentWorkflowsTranslation &

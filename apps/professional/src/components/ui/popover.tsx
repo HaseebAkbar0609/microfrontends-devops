@@ -1,7 +1,11 @@
 "use client";
 
 import * as React from "react";
-import * as PopoverPrimitive from "@radix-ui/react-popover";
+// From the same "radix-ui" bundle as ui/dialog and ui/sheet: Radix only sees a popover as a
+// layer above a dialog when both share one copy of its layer code. With separate packages, a
+// popover in a dialog (date pickers, comboboxes) got no pointer events or focus, and Escape
+// closed the whole dialog.
+import { Popover as PopoverPrimitive } from "radix-ui";
 import { cn } from "@/lib/utils";
 
 const Popover = PopoverPrimitive.Root;

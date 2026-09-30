@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { ModulePageHeader } from "@/components/layout/navigation";
 import { productionBreadcrumbs } from "@/features/production/constants";
 import localizationConstants from "@/utils/translation/constants";
@@ -12,12 +13,18 @@ import { MaterialKpiCards } from "./MaterialKpiCards";
 import { MaterialStockTable } from "./MaterialStockTable";
 import { MaterialStockToolbar } from "./MaterialStockToolbar";
 
-/** Materialhantering overview (TFS-1072): stock per depot with KPIs, filters and row actions. */
+// The form, date picker and validation it brings are loaded on first opening, not with the overview.
+const ReceiveMaterialDialog = dynamic(
+	() => import("../receive/ReceiveMaterialDialog").then((loaded) => loaded.ReceiveMaterialDialog),
+	{ ssr: false },
+);
+
+/** Materialhantering overview (TFS-1072): stock per depot with KPIs, filters and row actions; opens "Ta in material" (TFS-1073). */
 export function MaterialOverviewPage() {
 	const { params, setDepot, setSearch, setCategory, setStockFilter, setSort, setPage, setPageSize } =
 		useMaterialOverviewParams();
 	const overview = useMaterialStockOverview(params);
-	const { onPageAction, onRowAction } = useMaterialOverviewActions();
+	const { onPageAction, onRowAction, receiveDialog, closeReceive } = useMaterialOverviewActions(overview.depotId);
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50">
@@ -67,6 +74,16 @@ export function MaterialOverviewPage() {
 					)}
 				</section>
 			</div>
+
+			{/* Not mounted before the first opening, so its lists only load when needed. */}
+			{receiveDialog.key > 0 && (
+				<ReceiveMaterialDialog
+					key={receiveDialog.key}
+					open={receiveDialog.open}
+					preset={receiveDialog.preset}
+					onClose={closeReceive}
+				/>
+			)}
 		</div>
 	);
 }
