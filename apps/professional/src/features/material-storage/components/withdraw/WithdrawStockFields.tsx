@@ -6,6 +6,7 @@ import { FormSelect } from "@/components/form";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { MATERIAL_UNIT_LABELS } from "../../constants/materialStorage.constants";
@@ -13,6 +14,7 @@ import { useDepotArticles } from "../../hooks/useDepotArticles";
 import { useMaterialFormatters } from "../../hooks/useMaterialFormatters";
 import { useMaterialStockLevel } from "../../hooks/useMaterialStockLevel";
 import type { MaterialArticle, MaterialDepot } from "../../types/materialStorage.types";
+import { FIT_FIELD_CLASS, FIT_SELECT_TRIGGER_CLASS, fitOptionLabel } from "../common/materialFieldFit";
 import { MaterialNumberField } from "../common/MaterialNumberField";
 import { MaterialPicker } from "../common/MaterialPicker";
 import type { WithdrawMaterialFormValues } from "./withdrawMaterial.schema";
@@ -44,15 +46,17 @@ export function WithdrawStockFields({ form, depots, articles, onSelectArticle, o
 				name="depotId"
 				label={localizationConstants.materialDepotLabel}
 				placeholder={localizationConstants.materialDepotPlaceholder}
-				options={depots.map((depot) => ({ value: depot.id, label: depot.name }))}
+				options={depots.map((depot) => ({ value: depot.id, label: fitOptionLabel(depot.name) }))}
 				required
+				className={FIT_FIELD_CLASS}
+				triggerClassName={FIT_SELECT_TRIGGER_CLASS}
 			/>
 
 			<FormField
 				control={form.control}
 				name="articleId"
 				render={({ fieldState }) => (
-					<FormItem className="grid gap-1">
+					<FormItem className={cn("grid gap-1", FIT_FIELD_CLASS)}>
 						<FormLabel>
 							{t(localizationConstants.materialFieldMaterial)}
 							<span className="text-red-500" aria-hidden>

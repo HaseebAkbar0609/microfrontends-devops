@@ -9,6 +9,7 @@ import { useTranslate } from "@/utils/translation/translate";
 import { WITHDRAWAL_LINK_OPTIONS, WITHDRAWAL_TARGET_TEXT } from "../../constants/materialStorage.constants";
 import { useWithdrawalLinkOptions } from "../../hooks/useWithdrawalLinkOptions";
 import { WITHDRAWAL_LINK_RULES } from "../../utils/materialWithdrawal";
+import { FIT_FIELD_CLASS, FIT_SELECT_TRIGGER_CLASS, fitOptionLabel } from "../common/materialFieldFit";
 import { MaterialNumberField } from "../common/MaterialNumberField";
 import type { WithdrawMaterialFormValues } from "./withdrawMaterial.schema";
 
@@ -57,8 +58,13 @@ export function WithdrawLinkFields({ form }: WithdrawLinkFieldsProps) {
 					name="linkId"
 					label={WITHDRAWAL_TARGET_TEXT[linkType].label}
 					placeholder={WITHDRAWAL_TARGET_TEXT[linkType].placeholder}
-					options={targets.map((target) => ({ value: target.id, label: `${target.reference} – ${target.name}` }))}
+					options={targets.map((target) => ({
+						value: target.id,
+						label: fitOptionLabel(`${target.reference} – ${target.name}`),
+					}))}
 					required
+					className={FIT_FIELD_CLASS}
+					triggerClassName={FIT_SELECT_TRIGGER_CLASS}
 				/>
 			)}
 
@@ -68,8 +74,10 @@ export function WithdrawLinkFields({ form }: WithdrawLinkFieldsProps) {
 					name="workStepId"
 					label={localizationConstants.materialFieldWorkStep}
 					placeholder={localizationConstants.materialWorkStepPlaceholder}
-					options={workSteps.map((step) => ({ value: step.id, label: step.name }))}
+					options={workSteps.map((step) => ({ value: step.id, label: fitOptionLabel(step.name) }))}
 					disabled={!linkId}
+					className={FIT_FIELD_CLASS}
+					triggerClassName={FIT_SELECT_TRIGGER_CLASS}
 				/>
 			)}
 
