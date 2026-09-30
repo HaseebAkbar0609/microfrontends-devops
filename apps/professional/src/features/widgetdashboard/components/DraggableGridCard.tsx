@@ -90,7 +90,7 @@ export const DraggableGridCard = ({
             : isEmpty
             ? `bg-transparent border-2 border-dashed border-slate-200 hover:border-slate-300 rounded-lg ${disabled ? "cursor-default" : "cursor-grab"}`
             : isMuted
-            ? `bg-slate-100 rounded-sm transition-all ${disabled ? "cursor-default" : "cursor-grab"}`
+            ? `bg-[#F1F5F9] dark:bg-slate-800/80 rounded-md transition-all ${disabled ? "cursor-default" : "cursor-grab"}`
             : `bg-white border border-slate-200/80 rounded-lg shadow-xs hover:shadow-md hover:border-slate-300 transition-all ${disabled ? "cursor-default" : "cursor-grab"}`
         }`}
         style={{

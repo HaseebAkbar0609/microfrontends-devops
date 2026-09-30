@@ -211,5 +211,18 @@ export {
 	type GetCalculationArchiveResponse,
 } from "@/features/calculation/api/calculationArchiveApi";
 
+export {
+	getVehicleDashboardKpisAction,
+	createVehicleAction as createVehicleAPIAction,
+	createVehicleServiceAction as createVehicleServiceAPIAction,
+	type VehicleDashboardData,
+	type VehicleKpiData,
+	type VehicleServiceItem,
+	type VehicleDriveData,
+	type CreateVehiclePayload,
+	type CreateVehicleServicePayload,
+} from "./vehicles/vehicles";
+
+
 
 
