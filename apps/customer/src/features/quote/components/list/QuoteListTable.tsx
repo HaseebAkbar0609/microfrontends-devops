@@ -87,8 +87,8 @@ export function QuoteListTable({ quotes, onChanged }: QuoteListTableProps) {
 	const isReject = type === MODAL_CONSTANTS.REJECT;
 
 	return (
-		<div className="bg-white rounded-lg border border-slate-200 overflow-hidden mt-2">
-			<Table>
+		<div className="bg-white rounded-lg border border-slate-200 overflow-x-auto mt-2">
+			<Table className="min-w-[760px]">
 				<TableHeader>
 					<TableRow className="hover:bg-transparent border-b border-slate-100">
 						<TableHead className="w-16 text-center text-xs font-semibold text-muted-foreground py-3 h-auto">

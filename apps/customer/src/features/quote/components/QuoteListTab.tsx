@@ -15,11 +15,11 @@ const statusLabels: Record<string, QuoteStatus> = {
 	recieved_quote: "Received Quote",
 	under_review: "Received Quote",
 	rejected: "Rejected",
-	waiting_for_quote: "Waiting for Quote",
 };
 
 export function QuoteListTab({ projectId }: QuoteListTabProps) {
 	const [searchTerm, setSearchTerm] = useState("");
+	const [statusFilter, setStatusFilter] = useState<QuoteStatus | "all">("all");
 	const [items, setItems] = useState<ProjectQuoteItem[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
@@ -58,21 +58,23 @@ export function QuoteListTab({ projectId }: QuoteListTabProps) {
 	}, [items]);
 
 	const filteredQuotes = useMemo(() => {
-		if (!searchTerm.trim()) return quotes;
-		const term = searchTerm.toLowerCase();
+		const term = searchTerm.trim().toLowerCase();
 		return quotes.filter(
 			(q) =>
-				q.company.toLowerCase().includes(term) ||
+				(statusFilter === "all" || q.status === statusFilter) &&
+				(q.company.toLowerCase().includes(term) ||
 				q.contact.toLowerCase().includes(term) ||
-				q.orgNo.toLowerCase().includes(term),
+				q.orgNo.toLowerCase().includes(term)),
 		);
-	}, [quotes, searchTerm]);
+	}, [quotes, searchTerm, statusFilter]);
 
 	return (
 		<div className="flex flex-col gap-4">
 			<QuoteListToolbar
 				searchTerm={searchTerm}
 				onSearchChange={setSearchTerm}
+				statusFilter={statusFilter}
+				onStatusFilterChange={setStatusFilter}
 			/>
 			{loading ? (
 				<div role="status" className="flex justify-center py-12">

@@ -341,6 +341,7 @@ export const enOfferModule: OfferModule = {
 	statusAccepted: "Accepted",
 	statusUnderReview: "Under review",
 	statusRejected: "Rejected",
+	allStatuses: "All statuses",
 	createNewOfferTitle: "Create New",
 	createNewOfferSubtitle: "Add detailed information",
 	personalInformationSection: "Personal Information",

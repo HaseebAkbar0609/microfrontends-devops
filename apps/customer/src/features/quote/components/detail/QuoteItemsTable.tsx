@@ -33,6 +33,7 @@ interface QuoteItemsTableProps {
 	finalTotal: string;
 	quoteId?: string;
 	projectId?: string;
+	quoteStatus?: string;
 	onApprove?: () => void;
 }
 
@@ -44,6 +45,7 @@ export function QuoteItemsTable({
 	finalTotal,
 	quoteId,
 	projectId,
+	quoteStatus,
 	onApprove,
 }: QuoteItemsTableProps) {
 	const router = useRouter();
@@ -176,7 +178,7 @@ export function QuoteItemsTable({
 					</div>
 				</div>
 			</div>
-			<div className="flex justify-end gap-3 mt-4">
+			{(quoteStatus === "recieved_quote" || quoteStatus === "under_review") && <div className="flex justify-end gap-3 mt-4">
 				<Button
 					variant="ghost"
 					onClick={handleReject}
@@ -198,6 +200,7 @@ export function QuoteItemsTable({
 					)}
 				</Button>
 			</div>
+			}
 		</DetailCard>
 	);
 }

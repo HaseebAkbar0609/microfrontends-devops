@@ -110,6 +110,7 @@ export default function SupplierQuotePage() {
 			supplierId={supplierId}
 			projectId={id}
 			quoteId={selectedQuote?.quote_id || undefined}
+			quoteStatus={selectedQuote?.status}
 			documents={projectData.documents}
 		/>
 	);
