@@ -69,6 +69,8 @@ export default function MeetingBookerPage() {
 						onLogCall={booker.logCall}
 						onBookMeeting={booker.bookMeeting}
 						onSaveReminder={booker.saveReminder}
+						templates={booker.templates}
+						onSendPresentation={booker.sendPresentation}
 					/>
 				</div>
 

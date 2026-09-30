@@ -9,13 +9,16 @@ import { Textarea } from "@/components/ui/textarea";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { getSalesCompanyHref } from "../../constants/salesNav";
-import type { SalesCompany } from "../../types";
+import type { SalesCompany, SalesEmailTemplate } from "../../types";
+import { PresentationEmailSection } from "./PresentationEmailSection";
 
 type CustomerCardPanelProps = {
 	company: SalesCompany | null;
 	onLogCall: (company: SalesCompany, text: string) => void;
 	onBookMeeting: (company: SalesCompany, meetingAt: string, text: string) => void;
 	onSaveReminder: (company: SalesCompany, followUpAt: string, text: string) => void;
+	templates: SalesEmailTemplate[];
+	onSendPresentation: (company: SalesCompany, template: SalesEmailTemplate) => void;
 };
 
 /** Everything the booker does while the customer is on the phone. */
@@ -24,6 +27,8 @@ export function CustomerCardPanel({
 	onLogCall,
 	onBookMeeting,
 	onSaveReminder,
+	templates,
+	onSendPresentation,
 }: CustomerCardPanelProps) {
 	const t = useTranslate();
 	const [note, setNote] = useState("");
@@ -164,6 +169,12 @@ export function CustomerCardPanel({
 					<Translate text={error} />
 				</p>
 			)}
+
+			<PresentationEmailSection
+				company={company}
+				templates={templates}
+				onSend={onSendPresentation}
+			/>
 
 			<Link
 				href={getSalesCompanyHref(company.id)}
