@@ -7,7 +7,7 @@ import { Translate } from "@/utils/translation/translate";
 import { useMaterialFormatters } from "../../hooks/useMaterialFormatters";
 import { useMaterialStockLevel } from "../../hooks/useMaterialStockLevel";
 import type { MaterialArticle } from "../../types/materialStorage.types";
-import { parseDecimalInput } from "../../utils/materialReceipt";
+import { parseDecimalInput } from "../../utils/materialStockChanges";
 import type { ReceiveMaterialFormValues } from "./receiveMaterial.schema";
 
 /** Shown until there is something to calculate. */

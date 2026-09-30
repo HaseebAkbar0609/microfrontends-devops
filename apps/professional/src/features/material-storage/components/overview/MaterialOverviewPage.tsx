@@ -13,18 +13,26 @@ import { MaterialKpiCards } from "./MaterialKpiCards";
 import { MaterialStockTable } from "./MaterialStockTable";
 import { MaterialStockToolbar } from "./MaterialStockToolbar";
 
-// The form, date picker and validation it brings are loaded on first opening, not with the overview.
+// The forms, date picker and validation they bring are loaded on first opening, not with the overview.
 const ReceiveMaterialDialog = dynamic(
 	() => import("../receive/ReceiveMaterialDialog").then((loaded) => loaded.ReceiveMaterialDialog),
 	{ ssr: false },
 );
+const WithdrawMaterialDialog = dynamic(
+	() => import("../withdraw/WithdrawMaterialDialog").then((loaded) => loaded.WithdrawMaterialDialog),
+	{ ssr: false },
+);
 
-/** Materialhantering overview (TFS-1072): stock per depot with KPIs, filters and row actions; opens "Ta in material" (TFS-1073). */
+/**
+ * Materialhantering overview (TFS-1072): stock per depot with KPIs, filters and
+ * row actions; opens "Ta in material" (TFS-1073) and "Ta ut material" (TFS-1074).
+ */
 export function MaterialOverviewPage() {
 	const { params, setDepot, setSearch, setCategory, setStockFilter, setSort, setPage, setPageSize } =
 		useMaterialOverviewParams();
 	const overview = useMaterialStockOverview(params);
-	const { onPageAction, onRowAction, receiveDialog, closeReceive } = useMaterialOverviewActions(overview.depotId);
+	const { onPageAction, onRowAction, stockDialog, closeStockDialog } = useMaterialOverviewActions(overview.depotId);
+	const StockDialog = stockDialog.kind === "receive" ? ReceiveMaterialDialog : WithdrawMaterialDialog;
 
 	return (
 		<div className="flex flex-1 flex-col bg-slate-50">
@@ -76,12 +84,12 @@ export function MaterialOverviewPage() {
 			</div>
 
 			{/* Not mounted before the first opening, so its lists only load when needed. */}
-			{receiveDialog.key > 0 && (
-				<ReceiveMaterialDialog
-					key={receiveDialog.key}
-					open={receiveDialog.open}
-					preset={receiveDialog.preset}
-					onClose={closeReceive}
+			{stockDialog.key > 0 && (
+				<StockDialog
+					key={stockDialog.key}
+					open={stockDialog.open}
+					preset={stockDialog.preset}
+					onClose={closeStockDialog}
 				/>
 			)}
 		</div>

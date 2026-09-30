@@ -5,7 +5,7 @@ import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import type { MaterialStockRow } from "../types/materialStorage.types";
-import type { ReceiveMaterialPreset } from "../types/materialTransaction.types";
+import type { MaterialDialogPreset } from "../types/materialTransaction.types";
 
 /** The buttons above the KPI cards. */
 export type MaterialPageAction =
@@ -26,21 +26,29 @@ export type MaterialRowAction =
 	| "addToProject"
 	| "addToInvoice";
 
-interface ReceiveDialogState {
+/** The stock dialogs the overview opens: "Ta in material" and "Ta ut material". */
+export type MaterialStockDialogKind = "receive" | "withdraw";
+
+interface StockDialogState {
+	kind: MaterialStockDialogKind;
 	open: boolean;
 	/** Bumped on every opening so the dialog remounts with a clean form. */
 	key: number;
-	preset: ReceiveMaterialPreset;
+	preset: MaterialDialogPreset;
 }
 
+const isStockDialogAction = (action: string): action is MaterialStockDialogKind =>
+	action === "receive" || action === "withdraw";
+
 /**
- * What the overview's buttons and row menu do. "Ta in material" is live
- * (TFS-1073); the rest come with later tickets (TFS-1074 to TFS-1078) and until
- * then say so instead of silently doing nothing.
+ * What the overview's buttons and row menu do. "Ta in material" (TFS-1073) and
+ * "Ta ut material" (TFS-1074) are live; the rest come with later tickets
+ * (TFS-1075 to TFS-1078) and until then say so instead of silently doing nothing.
  */
 export function useMaterialOverviewActions(depotId: string | null) {
 	const t = useTranslate();
-	const [receiveDialog, setReceiveDialog] = useState<ReceiveDialogState>({
+	const [stockDialog, setStockDialog] = useState<StockDialogState>({
+		kind: "receive",
 		open: false,
 		key: 0,
 		preset: { depotId: null, article: null },
@@ -51,33 +59,39 @@ export function useMaterialOverviewActions(depotId: string | null) {
 		[t],
 	);
 
-	const openReceive = useCallback(
-		(preset: ReceiveMaterialPreset) =>
-			setReceiveDialog((current) => ({ open: true, key: current.key + 1, preset })),
+	const openStockDialog = useCallback(
+		(kind: MaterialStockDialogKind, preset: MaterialDialogPreset) =>
+			setStockDialog((current) => ({ kind, open: true, key: current.key + 1, preset })),
 		[],
 	);
 
-	const closeReceive = useCallback(() => setReceiveDialog((current) => ({ ...current, open: false })), []);
+	// Only open goes false, so the closing dialog keeps its content while it animates out.
+	const closeStockDialog = useCallback(() => setStockDialog((current) => ({ ...current, open: false })), []);
 
 	const onPageAction = useCallback(
 		(action: MaterialPageAction) => {
-			if (action === "receive") openReceive({ depotId, article: null });
+			if (isStockDialogAction(action)) openStockDialog(action, { depotId, article: null });
 			else showComingSoon();
 		},
-		[depotId, openReceive, showComingSoon],
+		[depotId, openStockDialog, showComingSoon],
 	);
 
 	const onRowAction = useCallback(
 		(action: MaterialRowAction, row: MaterialStockRow) => {
-			if (action === "receive")
-				openReceive({
+			if (isStockDialogAction(action))
+				openStockDialog(action, {
 					depotId: row.depotId,
-					article: { id: row.articleId, supplierName: row.supplierName, purchasePrice: row.purchasePrice },
+					article: {
+						id: row.articleId,
+						supplierName: row.supplierName,
+						purchasePrice: row.purchasePrice,
+						salesPrice: row.salesPrice,
+					},
 				});
 			else showComingSoon();
 		},
-		[openReceive, showComingSoon],
+		[openStockDialog, showComingSoon],
 	);
 
-	return { onPageAction, onRowAction, receiveDialog, closeReceive };
+	return { onPageAction, onRowAction, stockDialog, closeStockDialog };
 }

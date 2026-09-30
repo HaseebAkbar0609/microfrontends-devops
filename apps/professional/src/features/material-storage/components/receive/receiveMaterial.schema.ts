@@ -1,12 +1,10 @@
 import { z } from "zod";
 import localizationConstants from "@/utils/translation/constants";
-import {
-	MATERIAL_DISCRETE_UNITS,
-	MATERIAL_TEXT_LIMITS,
-} from "../../constants/materialStorage.constants";
+import { MATERIAL_TEXT_LIMITS } from "../../constants/materialStorage.constants";
 import type { MaterialUnit } from "../../types/materialStorage.types";
 import type { ReceiveMaterialInput } from "../../types/materialTransaction.types";
-import { parseDecimalInput } from "../../utils/materialReceipt";
+import { quantityInputError } from "../../utils/materialQuantityInput";
+import { parseDecimalInput } from "../../utils/materialStockChanges";
 
 /** Number fields stay strings while typed, so "82,5" is not mangled before it is complete. */
 export interface ReceiveMaterialFormValues {
@@ -52,16 +50,8 @@ export function createReceiveMaterialSchema({ intent, today, unitOf }: SchemaCon
 			const issue = (path: keyof ReceiveMaterialFormValues, message: string) =>
 				ctx.addIssue({ code: z.ZodIssueCode.custom, path: [path], message });
 
-			if (values.quantity.trim()) {
-				const quantity = parseDecimalInput(values.quantity);
-				const unit = unitOf(values.articleId);
-				if (quantity === null || quantity <= 0)
-					issue("quantity", localizationConstants.materialErrorQuantityInvalid);
-				else if (unit && MATERIAL_DISCRETE_UNITS.includes(unit) && !Number.isInteger(quantity))
-					issue("quantity", localizationConstants.materialErrorQuantityWhole);
-			} else if (intent === "receive") {
-				issue("quantity", localizationConstants.materialErrorQuantityRequired);
-			}
+			const quantityError = quantityInputError(values.quantity, unitOf(values.articleId), intent === "receive");
+			if (quantityError) issue("quantity", quantityError);
 
 			if (values.unitPrice.trim() && parseDecimalInput(values.unitPrice) === null)
 				issue("unitPrice", localizationConstants.materialErrorPriceInvalid);
