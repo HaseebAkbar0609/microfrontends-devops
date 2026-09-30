@@ -29,7 +29,6 @@ import { EditWorkInfoModal } from "./modals/EditWorkInfoModal";
 import { EditSalaryModal } from "./modals/EditSalaryModal";
 import { EditWorkingHoursModal } from "./modals/EditWorkingHoursModal";
 import { EditHealthSupportModal } from "./modals/EditHealthSupportModal";
-import { AddDetailCompetenceModal } from "./modals/AddDetailCompetenceModal";
 import { DocumentPreviewModal } from "./modals/DocumentPreviewModal";
 
 function EmployeeDetailsContent() {
@@ -56,8 +55,6 @@ function EmployeeDetailsContent() {
 		handleAddEmergencyContact,
 		handleUpdateEmergencyContact,
 		handleDeleteEmergencyContact,
-		handleAddCompetenceDoc,
-		handleDeleteCompetenceDoc,
 		handleAddAttachedDoc,
 		handleDeleteAttachedDoc,
 		handleArchiveContract,
@@ -159,18 +156,18 @@ function EmployeeDetailsContent() {
 							<AnstallningsvillkorTab
 								profileData={profileData}
 								signedContract={signedContract}
-								onPreviewContract={(name) => setPreviewDocumentName(name)}
-								onDownloadContract={(name) => setPreviewDocumentName(name)}
+								onPreviewContract={(name: string) => setPreviewDocumentName(name)}
+								onDownloadContract={(name: string) => setPreviewDocumentName(name)}
 								onArchiveContract={handleArchiveContract}
 								onDeleteContract={handleDeleteContract}
-								onUploadContract={(tags) =>
+								onUploadContract={(tags: string[]) =>
 									handleAddAttachedDoc({
 										name: tags[0] || "Anställningsavtal",
 										date: new Date().toISOString().split("T")[0],
 										fileFormat: "pdf",
 									})
 								}
-								onEditSection={(section) => setActiveEditModal(section)}
+								onEditSection={(section: string) => setActiveEditModal(section)}
 							/>
 						)}
 					</div>
@@ -178,18 +175,6 @@ function EmployeeDetailsContent() {
 
 				{activeTab === "kompetens" && (
 					<KompetensTab
-						profileData={profileData}
-						onAddCompetence={() => setActiveEditModal("addCompetence")}
-						onDeleteCompetence={handleDeleteCompetenceDoc}
-						onUploadJobDescription={(tags) =>
-							handleAddCompetenceDoc({
-								name: tags[0] || "Arbetsbeskrivning",
-								date: new Date().toISOString().split("T")[0],
-								validity: "Tillsvidare",
-								fileName: `${tags[0] || "Arbetsbeskrivning"}.pdf`,
-								fileType: "pdf",
-							})
-						}
 						onPreviewDoc={(name) => setPreviewDocumentName(name)}
 					/>
 				)}
@@ -199,8 +184,11 @@ function EmployeeDetailsContent() {
 				)}
 
 				{(activeTab === "arbetstid" ||
+					activeTab === "halsa" ||
 					activeTab === "friskvard" ||
-					activeTab === "personal_process") && (
+					activeTab === "personal_process" ||
+					activeTab === "lon" ||
+					activeTab === "arende") && (
 					<div className="bg-white rounded-xl border border-slate-200 p-12 text-center space-y-3 shadow-2xs">
 						<h3 className="text-sm font-semibold text-slate-900">
 							<Translate text={localizationConstants.emptyTabUpcomingTitle} />
@@ -298,12 +286,6 @@ function EmployeeDetailsContent() {
 				onClose={() => setActiveEditModal(null)}
 				initialData={profileData.healthSupport}
 				onSave={handleSaveHealthSupport}
-			/>
-
-			<AddDetailCompetenceModal
-				isOpen={activeEditModal === "addCompetence"}
-				onClose={() => setActiveEditModal(null)}
-				onAdd={handleAddCompetenceDoc}
 			/>
 
 			<DocumentPreviewModal
