@@ -25,10 +25,26 @@ export const MATERIAL_DEFAULT_PAGE_SIZE = 10;
 export const MATERIAL_PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 50] as const;
 
 export const MATERIAL_QUERY_KEYS = {
+	/** Prefix of every key below: invalidate it after anything that changes stock. */
+	all: ["material-storage"],
 	depots: ["material-storage", "depots"],
+	articles: ["material-storage", "articles"],
+	suppliers: ["material-storage", "suppliers"],
 	kpis: ["material-storage", "stock-kpis"],
 	stock: ["material-storage", "stock"],
+	stockLevel: ["material-storage", "stock-level"],
 } as const;
+
+/** Counted units: a quantity in these must be a whole number. */
+export const MATERIAL_DISCRETE_UNITS: readonly MaterialUnit[] = ["pcs", "pkg"];
+
+export const MATERIAL_TEXT_LIMITS = {
+	supplierOrderNo: 50,
+	comment: 500,
+} as const;
+
+/** Prefix of a receipt's reference, e.g. INL-2026-0001 (Inleverans). */
+export const MATERIAL_RECEIPT_REFERENCE_PREFIX = "INL";
 
 /** URL query parameter names for the overview's filter, sort and paging state. */
 export const MATERIAL_OVERVIEW_PARAMS = {

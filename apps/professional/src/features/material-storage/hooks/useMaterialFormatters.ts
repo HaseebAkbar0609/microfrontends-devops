@@ -36,11 +36,21 @@ export function useMaterialFormatters() {
 			maximumFractionDigits: 0,
 		});
 		const count = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
+		const decimalInput = new Intl.NumberFormat(locale, {
+			minimumFractionDigits: 2,
+			maximumFractionDigits: 2,
+			useGrouping: false,
+		});
 
 		return {
 			formatPrice: (value: number) => price.format(value),
 			formatAmount: (value: number) => amount.format(value),
+			/** Whole kronor stay whole ("9 900 kr"); öre are kept when there are any ("2,55 kr"). */
+			formatMoney: (value: number) =>
+				Number.isInteger(value) ? amount.format(value) : price.format(value),
 			formatCount: (value: number) => count.format(value),
+			/** A value to put in a number input: "85,00" / "85.00", no grouping, so parseDecimalInput reads it back. */
+			formatDecimalInput: (value: number) => decimalInput.format(value),
 			formatQuantity: (value: number, unit: MaterialUnit) =>
 				`${count.format(value)} ${t(MATERIAL_UNIT_LABELS[unit])}`,
 		};
