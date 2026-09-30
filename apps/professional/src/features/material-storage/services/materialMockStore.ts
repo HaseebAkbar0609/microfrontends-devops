@@ -7,6 +7,7 @@ import {
 	MOCK_MATERIAL_DEPOTS,
 	MOCK_MATERIAL_STOCK,
 } from "../data/materialStorage.mock";
+import { MOCK_MATERIAL_HISTORY, MOCK_MATERIAL_PRICE_HISTORY } from "../data/materialHistory.mock";
 import { MOCK_MATERIAL_LINK_TARGETS, MOCK_MATERIAL_WORK_STEPS } from "../data/materialWithdrawal.mock";
 import type { MaterialStockEntry } from "../types/materialStorage.types";
 import type {
@@ -23,13 +24,15 @@ import { formatTransactionReference } from "../utils/materialStockChanges";
  * other mock-backed modules, and goes away with the services once the API exists.
  */
 let stockEntries: MaterialStockEntry[] = [...MOCK_MATERIAL_STOCK];
-let transactions: MaterialTransaction[] = [];
+/** Newest first. Starts with a made-up history, so "Visa artikel" has events to show. */
+let transactions: MaterialTransaction[] = [...MOCK_MATERIAL_HISTORY];
 
 export const materialMockStore = {
 	depots: () => MOCK_MATERIAL_DEPOTS,
 	articles: () => MOCK_MATERIAL_ARTICLES,
 	linkTargets: () => MOCK_MATERIAL_LINK_TARGETS,
 	workSteps: () => MOCK_MATERIAL_WORK_STEPS,
+	priceHistory: () => MOCK_MATERIAL_PRICE_HISTORY,
 	stockEntries: () => stockEntries,
 	stockRows: () => buildStockRows(MOCK_MATERIAL_ARTICLES, MOCK_MATERIAL_DEPOTS, stockEntries),
 	setStockEntries(next: MaterialStockEntry[]) {
@@ -40,11 +43,12 @@ export const materialMockStore = {
 		transactions = [transaction, ...transactions];
 	},
 
-	/** The fields every new transaction gets: id, the next reference of its type, the article's unit and a timestamp. */
+	/** The fields every new transaction gets: id, the next reference of its type, the article's unit, a timestamp and who. */
 	newTransaction<TType extends MaterialTransactionType>(
 		type: TType,
 		{ articleId, depotId }: { articleId: string; depotId: string },
 		status: MaterialTransactionStatus,
+		createdBy: string,
 	) {
 		const article = MOCK_MATERIAL_ARTICLES.find((candidate) => candidate.id === articleId);
 		const depot = MOCK_MATERIAL_DEPOTS.find((candidate) => candidate.id === depotId);
@@ -59,6 +63,7 @@ export const materialMockStore = {
 			status,
 			unit: article.unit,
 			createdAt: now.toISOString(),
+			createdBy,
 		};
 	},
 };

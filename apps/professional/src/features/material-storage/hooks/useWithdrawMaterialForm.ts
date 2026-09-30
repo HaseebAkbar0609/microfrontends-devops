@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type BaseSyntheticEvent } fro
 import { useForm, useWatch, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUserName } from "@/hooks/useCurrentUserName";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
@@ -45,6 +46,7 @@ interface UseWithdrawMaterialFormOptions {
 export function useWithdrawMaterialForm({ preset, articles, depots, onDone }: UseWithdrawMaterialFormOptions) {
 	const t = useTranslate();
 	const queryClient = useQueryClient();
+	const userName = useCurrentUserName(localizationConstants.materialCurrentUserFallback);
 	const { formatCount, formatDecimalInput } = useMaterialFormatters();
 
 	// The resolver is created once; it reads the current intent, articles and balance through refs.
@@ -122,7 +124,7 @@ export function useWithdrawMaterialForm({ preset, articles, depots, onDone }: Us
 
 	const mutation = useMutation({
 		mutationFn: ({ intent, input }: { intent: WithdrawIntent; input: WithdrawMaterialInput }) =>
-			intent === "draft" ? materialWithdrawalService.saveDraft(input) : materialWithdrawalService.withdraw(input),
+			intent === "draft" ? materialWithdrawalService.saveDraft(input, userName) : materialWithdrawalService.withdraw(input, userName),
 		onSuccess: (transaction, { intent }) => {
 			void queryClient.invalidateQueries({ queryKey: MATERIAL_QUERY_KEYS.all });
 			showToast(

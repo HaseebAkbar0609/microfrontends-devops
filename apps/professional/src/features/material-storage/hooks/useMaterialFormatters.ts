@@ -36,6 +36,12 @@ export function useMaterialFormatters() {
 			maximumFractionDigits: 0,
 		});
 		const count = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
+		const signedCount = new Intl.NumberFormat(locale, { maximumFractionDigits: 2, signDisplay: "exceptZero" });
+		const percent = new Intl.NumberFormat(locale, {
+			style: "percent",
+			minimumFractionDigits: 1,
+			maximumFractionDigits: 1,
+		});
 		const decimalInput = new Intl.NumberFormat(locale, {
 			minimumFractionDigits: 2,
 			maximumFractionDigits: 2,
@@ -53,6 +59,11 @@ export function useMaterialFormatters() {
 			formatDecimalInput: (value: number) => decimalInput.format(value),
 			formatQuantity: (value: number, unit: MaterialUnit) =>
 				`${count.format(value)} ${t(MATERIAL_UNIT_LABELS[unit])}`,
+			/** A stock change with its sign: "+120 st", "−40 st". */
+			formatQuantityChange: (value: number, unit: MaterialUnit) =>
+				`${signedCount.format(value)} ${t(MATERIAL_UNIT_LABELS[unit])}`,
+			/** 51.8 → "51,8 %" */
+			formatPercent: (value: number) => percent.format(value / 100),
 		};
 	}, [locale, t]);
 }

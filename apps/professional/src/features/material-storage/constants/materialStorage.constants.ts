@@ -41,6 +41,9 @@ export const MATERIAL_QUERY_KEYS = {
 	depotArticles: ["material-storage", "depot-articles"],
 	linkTargets: ["material-storage", "link-targets"],
 	workSteps: ["material-storage", "work-steps"],
+	article: ["material-storage", "article"],
+	articleEvents: ["material-storage", "article-events"],
+	priceHistory: ["material-storage", "price-history"],
 } as const;
 
 /** Counted units: a quantity in these must be a whole number. */
@@ -51,10 +54,11 @@ export const MATERIAL_TEXT_LIMITS = {
 	comment: 500,
 } as const;
 
-/** Prefix of a transaction's reference: INL-2026-0001 (Inleverans), UTT-2026-0001 (Uttag). */
+/** Prefix of a transaction's reference: INL-2026-0001 (Inleverans), UTT-2026-0001 (Uttag), JUS-2026-0001 (Justering). */
 export const MATERIAL_TRANSACTION_PREFIXES: Record<MaterialTransactionType, string> = {
 	receipt: "INL",
 	withdrawal: "UTT",
+	adjustment: "JUS",
 };
 
 /** "Koppla till" in "Ta ut material", in the Figma order. Projekt is chosen when the dialog opens. */
@@ -104,6 +108,8 @@ export const MATERIAL_OVERVIEW_PARAMS = {
 	sortOrder: "sortOrder",
 	page: "page",
 	pageSize: "limit",
+	/** The article "Visa artikel" shows; its figures are for the depot above. */
+	article: "article",
 } as const;
 
 export const MATERIAL_CATEGORY_LABELS: Record<MaterialCategoryId, TranslationKeys> = {

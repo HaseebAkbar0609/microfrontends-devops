@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState, type BaseSyntheticEvent } fro
 import { useForm, type Resolver } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useCurrentUserName } from "@/hooks/useCurrentUserName";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
@@ -40,6 +41,7 @@ interface UseReceiveMaterialFormOptions {
 export function useReceiveMaterialForm({ preset, articles, depots, onDone }: UseReceiveMaterialFormOptions) {
 	const t = useTranslate();
 	const queryClient = useQueryClient();
+	const userName = useCurrentUserName(localizationConstants.materialCurrentUserFallback);
 	const { formatCount, formatDecimalInput } = useMaterialFormatters();
 
 	// The resolver is created once; it reads the current intent and articles through refs.
@@ -98,7 +100,7 @@ export function useReceiveMaterialForm({ preset, articles, depots, onDone }: Use
 
 	const mutation = useMutation({
 		mutationFn: ({ intent, input }: { intent: ReceiveIntent; input: ReceiveMaterialInput }) =>
-			intent === "draft" ? materialReceiptService.saveDraft(input) : materialReceiptService.receive(input),
+			intent === "draft" ? materialReceiptService.saveDraft(input, userName) : materialReceiptService.receive(input, userName),
 		onSuccess: (transaction, { intent }) => {
 			void queryClient.invalidateQueries({ queryKey: MATERIAL_QUERY_KEYS.all });
 			showToast(

@@ -17,10 +17,14 @@ function availableNow({ articleId, depotId }: WithdrawMaterialInput): number {
 	return entry ? availableStock(entry) : 0;
 }
 
-function recordWithdrawal(input: WithdrawMaterialInput, status: MaterialTransactionStatus): MaterialWithdrawalTransaction {
+function recordWithdrawal(
+	input: WithdrawMaterialInput,
+	status: MaterialTransactionStatus,
+	createdBy: string,
+): MaterialWithdrawalTransaction {
 	const transaction: MaterialWithdrawalTransaction = {
 		...input,
-		...store.newTransaction("withdrawal", input, status),
+		...store.newTransaction("withdrawal", input, status, createdBy),
 		availableBefore: availableNow(input),
 	};
 	store.addTransaction(transaction);
@@ -31,24 +35,25 @@ function recordWithdrawal(input: WithdrawMaterialInput, status: MaterialTransact
  * "Ta ut material" (TFS-1074): take material out of a depot, linked to an
  * order, project or invoice or as internal use, or keep it as a draft. Only
  * the link is recorded; the Project and Invoice modules are not written to.
+ * `createdBy` is the signed-in user's name, which the API will take from the session instead.
  */
 export const materialWithdrawalService = {
-	withdraw(input: WithdrawMaterialInput): Promise<MaterialWithdrawalTransaction> {
+	withdraw(input: WithdrawMaterialInput, createdBy: string): Promise<MaterialWithdrawalTransaction> {
 		return respondWith(() => {
 			if (input.quantity === null || input.quantity <= 0) throw new Error("A withdrawal needs a quantity");
 			if (WITHDRAWAL_LINK_RULES[input.linkType].hasTarget && !input.linkId)
 				throw new Error("A withdrawal needs something to link to");
 			// Worked out first: it throws when the depot does not have enough available.
 			const nextStock = applyWithdrawal(store.stockEntries(), input.articleId, input.depotId, input.quantity);
-			const transaction = recordWithdrawal(input, "completed");
+			const transaction = recordWithdrawal(input, "completed", createdBy);
 			store.setStockEntries(nextStock);
 			return transaction;
 		});
 	},
 
 	/** Saves the withdrawal without touching stock. */
-	saveDraft(input: WithdrawMaterialInput): Promise<MaterialWithdrawalTransaction> {
-		return respondWith(() => recordWithdrawal(input, "draft"));
+	saveDraft(input: WithdrawMaterialInput, createdBy: string): Promise<MaterialWithdrawalTransaction> {
+		return respondWith(() => recordWithdrawal(input, "draft", createdBy));
 	},
 
 	/** The orders, projects or invoices a withdrawal can be linked to. */
