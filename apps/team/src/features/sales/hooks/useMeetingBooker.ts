@@ -18,7 +18,7 @@ import { useTodayKey } from "./useTodayKey";
  * up in the counters, the reminders and the statistics at once.
  */
 export function useMeetingBooker() {
-	const { companies, updateCompany } = useSalesCompanies();
+	const { companies, addActivity: appendActivity, updateActivity } = useSalesCompanies();
 	const t = useTranslate();
 	const bookerNames = useMeetingBookerNames();
 	const [selectedBooker, setBooker] = useState("");
@@ -58,11 +58,9 @@ export function useMeetingBooker() {
 				booker,
 				...patch,
 			};
-			updateCompany(company.id, {
-				activities: [activity, ...company.activities],
-			});
+			void appendActivity(company.id, activity);
 		},
-		[booker, updateCompany],
+		[appendActivity, booker],
 	);
 
 	const logCall = useCallback(
@@ -95,15 +93,9 @@ export function useMeetingBooker() {
 
 	const completeReminder = useCallback(
 		(companyId: string, activityId: string) => {
-			const company = companies.find((item) => item.id === companyId);
-			if (!company) return;
-			updateCompany(companyId, {
-				activities: company.activities.map((activity) =>
-					activity.id === activityId ? { ...activity, done: true } : activity,
-				),
-			});
+			void updateActivity(companyId, activityId, { done: true });
 		},
-		[companies, updateCompany],
+		[updateActivity],
 	);
 
 	return {

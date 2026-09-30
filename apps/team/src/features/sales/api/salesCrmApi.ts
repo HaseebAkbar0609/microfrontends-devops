@@ -1,5 +1,5 @@
 import axios from "@/lib/axiosInstance";
-import type { SalesCompany } from "../types";
+import type { SalesActivity, SalesCompany } from "../types";
 
 const ROOT = "/api/v1/teams/sales/crm";
 
@@ -53,6 +53,22 @@ export async function patchSalesCompany(id: string, patch: Partial<SalesCompanyI
 
 export async function archiveSalesCompany(id: string) {
 	await axios.delete(`${ROOT}/${id}`);
+}
+
+/** Appends one activity. Unlike a PATCH of the whole list, it cannot erase a colleague's. */
+export async function addSalesActivity(recordId: string, activity: SalesActivity) {
+	return (await axios.post<{ data: SalesActivity }>(`${ROOT}/${recordId}/activities`, activity)).data.data;
+}
+
+export async function patchSalesActivity(
+	recordId: string,
+	activityId: string,
+	changes: Partial<Omit<SalesActivity, "id">>,
+) {
+	return (await axios.patch<{ data: SalesActivity }>(
+		`${ROOT}/${recordId}/activities/${activityId}`,
+		changes,
+	)).data.data;
 }
 
 export async function linkProfessionalAccount(recordId: string, companyId: string) {

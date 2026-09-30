@@ -115,7 +115,7 @@ export default function CompanyDetailPage({
 				<div className="flex flex-col gap-5">
 					<CompanyDetailsCard company={company} onChange={handleChange} />
 					<CompanyKeyFiguresCard company={company} onChange={handleChange} />
-					<CompanyActivityLogCard company={company} onChange={handleChange} />
+					<CompanyActivityLogCard company={company} />
 					<CompanyOwnersCard company={company} onChange={handleChange} />
 					<CompanyNotesCard company={company} onChange={handleChange} />
 				</div>
