@@ -12,7 +12,7 @@ import {
 import type { QuoteModuleRow, SalesCompany } from "../types";
 import { calculateQuoteTotals } from "../utils/quoteCalculations";
 import { buildSalesQuote, createQuoteDraft, type QuoteDraft } from "../utils/quoteDraft";
-import { createId, createQuoteNumber } from "../utils/salesFactories";
+import { createId } from "../utils/salesFactories";
 
 function clampDiscount(value: number): number {
 	return Math.min(
@@ -50,10 +50,8 @@ export function useQuoteBuilderForm(
 		[draft.modules, draft.term, draft.extraDiscountPercent],
 	);
 
-	const quoteNumber = useMemo(
-		() => company.quote?.quoteNumber ?? createQuoteNumber(),
-		[company.quote?.quoteNumber],
-	);
+	// The server issues the number on the first save; until then there is none.
+	const quoteNumber = company.quote?.quoteNumber ?? "";
 
 	const update = useCallback((patch: Partial<QuoteDraft>) => {
 		setDraft((previous) => ({ ...previous, ...patch }));

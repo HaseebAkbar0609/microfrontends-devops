@@ -1231,6 +1231,7 @@ export const sweSales: SalesTranslation = {
 	salesQuotePriceUnitLabel: "Prisenhet",
 	salesQuotePriceLabel: "Pris",
 	salesQuoteSaveButton: "Spara offert",
+	salesQuoteNumberPending: "Tilldelas när offerten sparas",
 	salesPrintButton: "Skriv ut eller spara som PDF",
 	salesQuoteSavedToast: "Offerten har sparats",
 	salesQuoteSingleUnitLabel: "1 st",

@@ -1233,6 +1233,7 @@ export const enSales: SalesTranslation = {
 	salesQuotePriceUnitLabel: "Price unit",
 	salesQuotePriceLabel: "Price",
 	salesQuoteSaveButton: "Save quote",
+	salesQuoteNumberPending: "Assigned when the quote is saved",
 	salesPrintButton: "Print or save as PDF",
 	salesQuoteSavedToast: "Quote saved",
 	salesQuoteSingleUnitLabel: "1 pc",

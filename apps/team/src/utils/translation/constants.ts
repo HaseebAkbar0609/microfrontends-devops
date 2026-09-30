@@ -1206,6 +1206,7 @@ export type SalesTranslation = {
 	salesQuotePriceUnitLabel: string;
 	salesQuotePriceLabel: string;
 	salesQuoteSaveButton: string;
+	salesQuoteNumberPending: string;
 	salesPrintButton: string;
 	salesQuoteSavedToast: string;
 	salesQuoteSingleUnitLabel: string;
