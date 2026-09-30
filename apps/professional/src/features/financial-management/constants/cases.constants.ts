@@ -1,3 +1,4 @@
+import type { RecordDocumentsTableCopy } from "@/components/table/RecordDocumentsTable";
 import type { RecordFileRules } from "@/features/project/shared/recordFiles";
 import { acceptAttribute } from "@/features/project/shared/recordFiles";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
@@ -124,6 +125,17 @@ export const CASE_IMAGE_FILE_RULES: RecordFileRules = {
 };
 
 export const CASE_DOCUMENT_FILE_ACCEPT = acceptAttribute(CASE_DOCUMENT_FILE_RULES.types);
+
+/** What the shared documents table calls a case's files. */
+export const CASE_DOCUMENT_TABLE_COPY: RecordDocumentsTableCopy = {
+	dateKey: localizationConstants.casesColDocDate,
+	nameKey: localizationConstants.casesColDocName,
+	fileKey: localizationConstants.casesColDocFile,
+	viewFileKey: localizationConstants.casesBtnViewFile,
+	emptyKey: localizationConstants.casesNoDocumentsYet,
+	notHeldKey: localizationConstants.casesAttachmentNotHeld,
+	removeKey: localizationConstants.casesRemoveDocument,
+};
 export const CASE_IMAGE_FILE_ACCEPT = acceptAttribute(CASE_IMAGE_FILE_RULES.types);
 
 export const CASE_CATEGORIES: readonly CaseCategory[] = [

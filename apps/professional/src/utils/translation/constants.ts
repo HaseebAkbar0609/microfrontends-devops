@@ -10653,6 +10653,58 @@ export type ForecastDashboardTranslation = {
 	forecastTemplatesCreated: string;
 	forecastTemplatesCreateFailed: string;
 	forecastTemplatesDeleted: string;
+
+	/* Prognos › Dokumentcenter: the register of forecast documents (TFS-1065). */
+	forecastDocumentsTitle: string;
+	forecastDocumentsColId: string;
+	forecastDocumentsColCategory: string;
+	forecastDocumentsColFile: string;
+	forecastDocumentsColDate: string;
+	forecastDocumentsColDocName: string;
+	forecastDocumentsCategoryAgreement: string;
+	forecastDocumentsCategoryReport: string;
+	forecastDocumentsCategoryInvoice: string;
+	forecastDocumentsCategoryBudget: string;
+	forecastDocumentsCategoryOther: string;
+	forecastDocumentsFilterCategory: string;
+	forecastDocumentsUploadNew: string;
+	forecastDocumentsEmpty: string;
+	forecastDocumentsNoMatches: string;
+	forecastDocumentsCreateTitle: string;
+	forecastDocumentsBackToList: string;
+	forecastDocumentsCardTitle: string;
+	forecastDocumentsUploadYourFiles: string;
+	forecastDocumentsAllowedFiles: string;
+	forecastDocumentsCategoryPlaceholder: string;
+	forecastDocumentsSelectFiles: string;
+	forecastDocumentsBtnUpload: string;
+	forecastDocumentsCategoryRequired: string;
+	forecastDocumentsFilesRequired: string;
+	forecastDocumentsFileSizeError: string;
+	forecastDocumentsFileTypeError: string;
+	forecastDocumentsFileDuplicate: string;
+	forecastDocumentsFileCount: string;
+	forecastDocumentsMoreRefused: string;
+	forecastDocumentsLeaveTitle: string;
+	forecastDocumentsLeaveBody: string;
+	forecastDocumentsLeaveConfirm: string;
+	forecastDocumentsBtnViewFile: string;
+	forecastDocumentsNoFilesYet: string;
+	forecastDocumentsRemoveFile: string;
+	forecastDocumentsFileNotHeld: string;
+	forecastDocumentsDetailsTitle: string;
+	forecastDocumentsDetailSize: string;
+	forecastDocumentsSizeUnknown: string;
+	forecastDocumentsNoFile: string;
+	forecastDocumentsOpenFile: string;
+	forecastDocumentsViewDetailsFor: string;
+	forecastDocumentsRowActionsFor: string;
+	forecastDocumentsDelete: string;
+	forecastDocumentsDeleteTitle: string;
+	forecastDocumentsDeleteDescription: string;
+	forecastDocumentsUploaded: string;
+	forecastDocumentsUploadFailed: string;
+	forecastDocumentsDeleted: string;
 };
 
 export type PersonnelEquipmentTranslation = {
