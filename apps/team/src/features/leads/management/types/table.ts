@@ -29,4 +29,8 @@ export type LeadTableCell =
 	| {
 			kind: "status";
 			valueKey: TranslationKeys;
+	  }
+	| {
+			kind: "payment";
+			value: string;
 	  };

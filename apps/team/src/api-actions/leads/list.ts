@@ -51,3 +51,27 @@ export async function listLeadItemsAPIAction(
 	const items = response.data.data ?? [];
 	return { items, totalItems: response.data.total_items ?? items.length };
 }
+
+export type AcceptedLeadApiItem = {
+	lead_id: string;
+	lead_number: string;
+	project_name: string;
+	project_type: string;
+	contact_name: string;
+	city: string;
+	accepted_at: number | null;
+	accepted_company_name: string | null;
+	total_quote_amount: number;
+	commission_amount: number;
+	commission_status: string;
+	payment_date: number | null;
+	categories: { id: string; name: string }[];
+};
+
+export async function listAcceptedLeadsAPIAction(): Promise<AcceptedLeadApiItem[]> {
+	const response = await axiosInstance.get<{ data: AcceptedLeadApiItem[] }>(LEADS_LIST_PATH, {
+		params: { page: 1, page_size: 10000, status: ["accepted"] },
+		paramsSerializer: { indexes: null },
+	});
+	return response.data.data ?? [];
+}
