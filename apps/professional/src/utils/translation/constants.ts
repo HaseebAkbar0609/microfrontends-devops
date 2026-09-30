@@ -10608,6 +10608,51 @@ export type ForecastDashboardTranslation = {
 	forecastCustomReportsSaveFailed: string;
 	forecastCustomReportsExportFailed: string;
 	forecastCustomReportsSheetName: string;
+
+	/* Prognos › Mallar: the register of template documents (TFS-1064). */
+	forecastTemplatesTitle: string;
+	forecastTemplatesColId: string;
+	forecastTemplatesColCategory: string;
+	forecastTemplatesColDate: string;
+	forecastTemplatesColName: string;
+	forecastTemplatesColFile: string;
+	forecastTemplatesCategoryBudget: string;
+	forecastTemplatesCategoryForecast: string;
+	forecastTemplatesCategoryReport: string;
+	forecastTemplatesCategoryCalculation: string;
+	forecastTemplatesCategoryOther: string;
+	forecastTemplatesFilterCategory: string;
+	forecastTemplatesCreateNew: string;
+	forecastTemplatesColumnPicker: string;
+	forecastTemplatesEmpty: string;
+	forecastTemplatesNoMatches: string;
+	forecastTemplatesCreateTitle: string;
+	forecastTemplatesCategoryPlaceholder: string;
+	forecastTemplatesNamePlaceholder: string;
+	forecastTemplatesFieldDescription: string;
+	forecastTemplatesDescriptionPlaceholder: string;
+	forecastTemplatesCategoryRequired: string;
+	forecastTemplatesNameRequired: string;
+	forecastTemplatesFileRequired: string;
+	forecastTemplatesChooseFile: string;
+	forecastTemplatesAllowedFiles: string;
+	forecastTemplatesFileSizeError: string;
+	forecastTemplatesFileTypeError: string;
+	forecastTemplatesRemoveFile: string;
+	forecastTemplatesDetailsTitle: string;
+	forecastTemplatesDetailSize: string;
+	forecastTemplatesSizeUnknown: string;
+	forecastTemplatesNoDescription: string;
+	forecastTemplatesNoFile: string;
+	forecastTemplatesOpenFile: string;
+	forecastTemplatesViewDetailsFor: string;
+	forecastTemplatesRowActionsFor: string;
+	forecastTemplatesDelete: string;
+	forecastTemplatesDeleteTitle: string;
+	forecastTemplatesDeleteDescription: string;
+	forecastTemplatesCreated: string;
+	forecastTemplatesCreateFailed: string;
+	forecastTemplatesDeleted: string;
 };
 
 export type PersonnelEquipmentTranslation = {

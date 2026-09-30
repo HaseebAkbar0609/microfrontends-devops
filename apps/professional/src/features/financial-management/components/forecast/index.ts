@@ -14,3 +14,4 @@ export * from "./reports/ForecastReportsPage";
 export * from "./reports/custom/CustomReportsPanel";
 export * from "./reports/custom/routes/CustomReportCreateRoute";
 export * from "./cases/ForecastCasesPage";
+export * from "./templates/ForecastTemplatesPage";
