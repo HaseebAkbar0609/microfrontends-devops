@@ -22,6 +22,7 @@ export function mapLeadStatus(status: string) {
 	const normalizedStatus = (status ?? "").trim().toLowerCase();
 	switch (normalizedStatus) {
 		case "review":
+		case "mark_as_reviewed":
 			return "granskning" as const;
 		case "monitoring":
 		case "watch":
@@ -120,6 +121,7 @@ export function mapLeadListItemToRow(item: LeadApiItem): LeadRow {
 		status: mapLeadStatus(item.status ?? "review"),
 		email: "-",
 		phone: "-",
+		reviewed: item.status?.toLowerCase() === "mark_as_reviewed",
 	};
 }
 
@@ -136,6 +138,7 @@ export function mapLeadDetailToRow(item: LeadDetailApiData): LeadRow {
 		status: mapLeadStatus(item.status),
 		email: item.customer_details.personal_email || "-",
 		phone: item.customer_details.mobile_number || "-",
+		reviewed: item.status?.toLowerCase() === "mark_as_reviewed",
 	};
 }
 
