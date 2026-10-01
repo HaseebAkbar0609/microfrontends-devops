@@ -786,3 +786,24 @@ export function findModule(slug: string) {
   }
   return null;
 }
+
+// Module slugs that already have a hand-built page under src/pages/professional,
+// so the dynamic /professional/[slug] route must not generate them.
+const MODULE_SLUGS_WITH_STATIC_PAGES = new Set([
+  "smart-access", "avtal", "b2b", "kalkyl", "inkasso", "prognos", "projekt",
+  "order", "kma", "material", "personal", "projektering", "inkop", "faktura",
+  "juridik", "maskin", "marknad-salj", "data-it", "fordon", "erbjudande",
+  "ledningsstod", "appwork", "cleaning_maintenance", "coating",
+  "construction_concrete", "consultant_architect", "goods", "installations",
+  "land_excavation", "special_company", "yes_fasad", "about-us", "book_a_demo",
+  "comparison", "cookie", "faq", "howitworks", "kunskap", "newsroom",
+  "offer", "on_demand_webinar", "pricing", "roi_calculator", "support",
+  "system-overview", "terms", "vehicle", "webinar", "whytimeflow"
+]);
+
+/** Module items rendered by the dynamic /professional/[slug] page. */
+export function getDynamicModuleItems(): ModuleItem[] {
+  return moduleSections.flatMap((s) =>
+    s.items.filter((item) => item.slug && !MODULE_SLUGS_WITH_STATIC_PAGES.has(item.slug.toLowerCase()))
+  );
+}
