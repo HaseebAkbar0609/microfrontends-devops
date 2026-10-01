@@ -1136,6 +1136,7 @@ export const enSales: SalesTranslation = {
 	salesValidationOrgNumberInvalid: "Enter the organisation number as 556000-0000.",
 	salesCompanyCreatedToast: "Company registered",
 	salesRecordSaveFailed: "Could not save the Sales record. Please retry.",
+	salesRecordConflict: "Someone else changed this company in the meantime. The latest version is loaded. Check your change.",
 	salesRecordArchiveFailed: "Could not archive the Sales record. Please retry.",
 	salesRecordLoading: "Loading Sales records...",
 	salesRecordLoadFailed: "Could not load Sales records. Please retry.",
