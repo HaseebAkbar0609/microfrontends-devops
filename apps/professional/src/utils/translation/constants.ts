@@ -46,6 +46,7 @@ export type AppLauncherTranslation = {
 	managementSupport: string;
 	vehicle: string;
 	access: string;
+	accessManagement: string;
 	economy: string;
 };
 

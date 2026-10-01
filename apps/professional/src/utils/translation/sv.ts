@@ -103,6 +103,7 @@ export const svAppLauncher: AppLauncherTranslation = {
 	managementSupport: "Ledning",
 	vehicle: "Fordon",
 	access: "Smart Access",
+	accessManagement: "Åtkomsthantering",
 	economy: "Ekonomi",
 };
 
