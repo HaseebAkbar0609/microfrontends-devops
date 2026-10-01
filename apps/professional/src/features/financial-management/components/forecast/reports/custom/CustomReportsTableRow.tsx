@@ -2,6 +2,7 @@
 
 import { Download, Eye, Trash2 } from "lucide-react";
 
+import { RecordFileNameCell } from "@/components/table/RecordFileNameCell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -10,9 +11,9 @@ import { cn } from "@/lib/utils";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { FORECAST_ACTION_COLUMN, FORECAST_CELL_CLASS } from "../../../../constants/forecastList.constants";
+import { REPORT_FILE_RULES } from "../../../../constants/forecastReports.constants";
 import type { CustomReport } from "../../../../types/forecastCustomReports.types";
 import { customReportFileName } from "../../../../utils/forecastCustomReports";
-import { ReportFileCell } from "../ReportFileCell";
 
 export interface CustomReportsTableRowProps {
 	report: CustomReport;
@@ -34,7 +35,7 @@ export function CustomReportsTableRow({ report, onView, onDownload, onDelete }: 
 			</TableCell>
 
 			<TableCell className="max-w-[20rem] px-4 py-2">
-				<ReportFileCell fileName={customReportFileName(report)} />
+				<RecordFileNameCell fileName={customReportFileName(report)} types={REPORT_FILE_RULES.types} />
 			</TableCell>
 
 			<TableCell className={cn(FORECAST_CELL_CLASS, "tabular-nums")}>{report.date}</TableCell>

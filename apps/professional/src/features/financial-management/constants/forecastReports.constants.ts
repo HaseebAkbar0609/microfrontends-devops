@@ -1,3 +1,4 @@
+import type { RecordFilePickerCopy } from "@/components/form/RecordFilePicker";
 import type { RecordFileRules } from "@/features/project/shared/recordFiles";
 import { acceptAttribute } from "@/features/project/shared/recordFiles";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
@@ -43,3 +44,13 @@ export const REPORT_FILE_RULES: RecordFileRules = {
 };
 
 export const REPORT_FILE_ACCEPT = acceptAttribute(REPORT_FILE_RULES.types);
+
+/** What the file row on the upload dialog calls a report and its file. */
+export const REPORT_FILE_PICKER_COPY: RecordFilePickerCopy = {
+	labelKey: localizationConstants.forecastReportsColFile,
+	chooseKey: localizationConstants.forecastReportsChooseFile,
+	hintKey: localizationConstants.forecastReportsAllowedFiles,
+	removeKey: localizationConstants.forecastReportsRemoveFile,
+	sizeErrorKey: localizationConstants.forecastReportsFileSizeError,
+	typeErrorKey: localizationConstants.forecastReportsFileTypeError,
+};

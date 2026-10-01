@@ -438,6 +438,9 @@ export function CalculationDetailView({ id, data: initialData }: Props) {
 		setDeleteDocTarget,
 		isDeletingDoc,
 		handleDeleteDocument,
+		isLoading,
+		loadError,
+		refresh,
 	} = useCalculationDetail(id, initialData);
 
 	const handleActionComingSoon = () => {
@@ -448,14 +451,19 @@ export function CalculationDetailView({ id, data: initialData }: Props) {
 		showToast("info", t(localizationConstants.editComingSoon));
 	};
 
+	if (isLoading || loadError) return <div className="space-y-3 p-6" role={loadError ? "alert" : "status"}>
+		<p>{t(loadError ? localizationConstants.widgetSourceLoadError : localizationConstants.genericLoading)}</p>
+		{loadError && <Button variant="outline" onClick={() => void refresh()}>{t(localizationConstants.retry)}</Button>}
+	</div>;
+
 	return (
 		<div className="flex flex-1 flex-col bg-white">
 			{/* Page header */}
 			<div className="shrink-0 border-b border-slate-200 bg-white">
 				{/* Title row */}
 				<div className="px-6 pt-5 pb-3.5 sm:pl-15">
-					<h1 className="text-2xl font-semibold">
-						<span className="text-slate-400">{data.calcNo} / </span>
+					<h1 className="break-words text-2xl font-semibold">
+						<span className="break-all text-slate-400">{data.calcNo} / </span>
 						<Translate text={localizationConstants.protocolFieldInformation} />
 					</h1>
 				</div>

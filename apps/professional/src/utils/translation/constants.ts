@@ -2827,6 +2827,10 @@ export type OfferTranslation = {
 	b2bWidgetImageDescription: string;
 	// Calculation - Dashboard widgets
 	calcWidgetOverviewTitle: string;
+	calcDashboardNotStarted: string;
+	calcDashboardMissingValue: string;
+	calcDashboardRefresh: string;
+	calcDashboardUnsupportedCreate: string;
 	calcWidgetOverviewTotal: string;
 	calcWidgetOverviewOngoing: string;
 	calcWidgetOverviewCompleted: string;
@@ -6662,6 +6666,111 @@ export type MachineDashboardTranslation = {
 	machineModalBookingSubmit: string;
 };
 
+export type VehicleDashboardTranslation = {
+	vehicleDashboardTitle: string;
+	vehicleTabDashboard: string;
+	vehicleTabFleet: string;
+	vehicleTabDrive: string;
+	vehicleTabRoutes: string;
+	vehicleTabArchive: string;
+
+	vehicleKpiOverviewTitle: string;
+	vehicleKpiInOperation: string;
+	vehicleKpiServicePending: string;
+	vehicleKpiOutOfService: string;
+	vehicleKpiUpcomingService: string;
+	vehicleKpiLogbookNotCompleted: string;
+	vehicleKpiInOperationLabel: string;
+	vehicleKpiServicePendingLabel: string;
+	vehicleKpiOutOfServiceLabel: string;
+	vehicleKpiUpcomingServiceLabel: string;
+	vehicleKpiLogbookNotCompletedLabel: string;
+	vehicleKpiTotalVehicles: string;
+	vehicleKpiOperationalRate: string;
+
+	vehicleUpcomingServiceTitle: string;
+	vehicleUpcomingServiceTop5Title: string;
+	vehicleServicePrefix: string;
+	vehicleServiceItem1: string;
+	vehicleServiceItem2: string;
+	vehicleServiceItem3: string;
+	vehicleServiceItem4: string;
+	vehicleServiceItem5: string;
+	vehicleServiceStatusInProgress: string;
+	vehicleServiceStatusScheduled: string;
+	vehicleServiceStatusPending: string;
+	vehicleServiceStatusCompleted: string;
+
+	vehicleDriveOverviewTitle: string;
+	vehicleDriveMapActive: string;
+	vehicleDriveNoGps: string;
+	vehicleDriveUnapprovedLogbooks: string;
+	vehicleDriveActiveVehiclesLabel: string;
+	vehicleDriveActiveVehiclesSuffix: string;
+	vehicleDriveNoGpsSuffix: string;
+	vehicleDriveUnapprovedLogbooksSuffix: string;
+	vehicleDriveLiveTracking: string;
+	vehicleDriveViewMap: string;
+	vehicleDriveApproveLogbooks: string;
+
+	vehicleQuickActionsTitle: string;
+	vehicleActionAddMachine: string;
+	vehicleActionRegisterService: string;
+	vehicleActionAddVehicle: string;
+	vehicleActionVehicleMap: string;
+	vehicleActionLogbook: string;
+	vehicleActionNewKey: string;
+
+	vehicleModalAddVehicleTitle: string;
+	vehicleModalAddVehicleDesc: string;
+	vehicleModalRegisterServiceTitle: string;
+	vehicleModalRegisterServiceDesc: string;
+	vehicleModalMapTitle: string;
+	vehicleModalMapDesc: string;
+	vehicleModalLogbookTitle: string;
+	vehicleModalLogbookDesc: string;
+	vehicleModalNewKeyTitle: string;
+	vehicleModalNewKeyDesc: string;
+
+	vehicleFieldRegNumber: string;
+	vehicleFieldBrandModel: string;
+	vehicleFieldDriver: string;
+	vehicleFieldServiceType: string;
+	vehicleFieldDate: string;
+	vehicleFieldCost: string;
+	vehicleFieldKeyNumber: string;
+	vehicleFieldNotes: string;
+
+	vehiclePlaceholderRegNumber: string;
+	vehiclePlaceholderBrandModel: string;
+	vehiclePlaceholderDriver: string;
+	vehiclePlaceholderNotes: string;
+	vehiclePlaceholderServiceTitle: string;
+	vehiclePlaceholderKeyNumber: string;
+	vehicleValidationRequired: string;
+
+	vehicleLogbookTrip1Title: string;
+	vehicleLogbookTrip1Route: string;
+	vehicleLogbookTrip2Title: string;
+	vehicleLogbookTrip2Route: string;
+	vehicleMapZoneTitle: string;
+	vehicleMapGeofenceStatus: string;
+	vehicleMapStatusOnline: string;
+	vehicleMapStatusOffline: string;
+
+	vehicleSuccessAdded: string;
+	vehicleSuccessServiceSaved: string;
+	vehicleSuccessKeyAssigned: string;
+	vehicleSuccessLogbookSaved: string;
+
+	vehicleEmptyKpiTitle: string;
+	vehicleEmptyKpiDesc: string;
+	vehicleEmptyServicesTitle: string;
+	vehicleEmptyServicesDesc: string;
+	vehicleEmptyDriveTitle: string;
+	vehicleEmptyDriveDesc: string;
+};
+
 export type InvoiceTranslation = {
 	invoiceOverviewTitle: string;
 	invoiceTabList: string;
@@ -9571,11 +9680,13 @@ export type CasesTranslation = {
 	casesActivityCaseCreated: string;
 	casesActivityMessageAdded: string;
 	casesActivityFileUploaded: string;
-	casesImportButton: string;
 	casesAttachmentTypeError: string;
 	casesAttachmentSizeError: string;
 	casesAttachmentRemove: string;
 	casesAttachmentNotHeld: string;
+	casesBackToList: string;
+	casesNoMessageYet: string;
+	casesOpenImage: string;
 	casesNoDocumentsYet: string;
 	casesNoImagesYet: string;
 	casesAttachmentDuplicate: string;
@@ -10497,6 +10608,51 @@ export type ForecastDashboardTranslation = {
 	forecastCustomReportsSaveFailed: string;
 	forecastCustomReportsExportFailed: string;
 	forecastCustomReportsSheetName: string;
+
+	/* Prognos › Mallar: the register of template documents (TFS-1064). */
+	forecastTemplatesTitle: string;
+	forecastTemplatesColId: string;
+	forecastTemplatesColCategory: string;
+	forecastTemplatesColDate: string;
+	forecastTemplatesColName: string;
+	forecastTemplatesColFile: string;
+	forecastTemplatesCategoryBudget: string;
+	forecastTemplatesCategoryForecast: string;
+	forecastTemplatesCategoryReport: string;
+	forecastTemplatesCategoryCalculation: string;
+	forecastTemplatesCategoryOther: string;
+	forecastTemplatesFilterCategory: string;
+	forecastTemplatesCreateNew: string;
+	forecastTemplatesColumnPicker: string;
+	forecastTemplatesEmpty: string;
+	forecastTemplatesNoMatches: string;
+	forecastTemplatesCreateTitle: string;
+	forecastTemplatesCategoryPlaceholder: string;
+	forecastTemplatesNamePlaceholder: string;
+	forecastTemplatesFieldDescription: string;
+	forecastTemplatesDescriptionPlaceholder: string;
+	forecastTemplatesCategoryRequired: string;
+	forecastTemplatesNameRequired: string;
+	forecastTemplatesFileRequired: string;
+	forecastTemplatesChooseFile: string;
+	forecastTemplatesAllowedFiles: string;
+	forecastTemplatesFileSizeError: string;
+	forecastTemplatesFileTypeError: string;
+	forecastTemplatesRemoveFile: string;
+	forecastTemplatesDetailsTitle: string;
+	forecastTemplatesDetailSize: string;
+	forecastTemplatesSizeUnknown: string;
+	forecastTemplatesNoDescription: string;
+	forecastTemplatesNoFile: string;
+	forecastTemplatesOpenFile: string;
+	forecastTemplatesViewDetailsFor: string;
+	forecastTemplatesRowActionsFor: string;
+	forecastTemplatesDelete: string;
+	forecastTemplatesDeleteTitle: string;
+	forecastTemplatesDeleteDescription: string;
+	forecastTemplatesCreated: string;
+	forecastTemplatesCreateFailed: string;
+	forecastTemplatesDeleted: string;
 };
 
 export type PersonnelEquipmentTranslation = {
@@ -10599,6 +10755,205 @@ export type PersonnelEquipmentTranslation = {
 	noHistoryLogsFound: string;
 };
 
+export type PersonnelProfileTranslation = {
+	personnelProfileTabPersonalInfo: string;
+	personnelProfileTabBasicInfo: string;
+	personnelProfileTabContactPerson: string;
+	personnelProfileTabEmploymentTerms: string;
+	personnelProfileTabCompetence: string;
+	personnelProfileTabDocuments: string;
+	personnelProfileTabEquipment: string;
+	personnelProfileTabWorktime: string;
+	personnelProfileTabWellness: string;
+	personnelProfileTabProcess: string;
+	emptyTabUpcomingTitle: string;
+	emptyTabUpcomingDesc: string;
+
+	employmentContractTitle: string;
+	signedDateLabel: string;
+	uploadContractTitle: string;
+	jobDescriptionTitle: string;
+	actionSeeFile: string;
+	actionDownload: string;
+	actionArchive: string;
+	actionDelete: string;
+
+	modalEditPersonalInfoTitle: string;
+	modalEditBankInfoTitle: string;
+	modalEditTaxUnionTitle: string;
+	modalEditWorkDutiesTitle: string;
+	modalEditContactPersonTitle: string;
+	modalEditWorkInfoTitle: string;
+	modalEditSalaryTitle: string;
+	modalEditWorkingHoursTitle: string;
+	modalEditHealthSupportTitle: string;
+	modalAddEmergencyContactTitle: string;
+
+	toastProfileUpdated: string;
+	toastContractArchived: string;
+	toastContractDeleted: string;
+	toastDocumentUploaded: string;
+	toastCompetenceAdded: string;
+	toastCompetenceDeleted: string;
+	toastContactAdded: string;
+	toastContactUpdated: string;
+	toastContactDeleted: string;
+
+	emptyContactsTitle: string;
+	emptyContactsDesc: string;
+	emptyDocumentsTitle: string;
+	emptyDocumentsDesc: string;
+	emptyCompetenceTitle: string;
+	emptyCompetenceDesc: string;
+
+	btnSaveChanges: string;
+	btnUpload: string;
+	deleteConfirmTitle: string;
+	deleteConfirmDesc: string;
+	btnConfirmDelete: string;
+	employeeNotFound: string;
+	employeeNotFoundDesc: string;
+};
+
+// TFS-977 & TFS-978 Competences & Medarbetarsamtal
+export type PersonnelCompetenceAndReviewTranslation = {
+	kompetensDropdownLabel: string;
+	kompetensListTitle: string;
+	kompetensBtnAdd: string;
+	kompetensColNr: string;
+	kompetensColName: string;
+	kompetensColTraining: string;
+	kompetensColCertNo: string;
+	kompetensColExpiry: string;
+	kompetensColStatus: string;
+	kompetensColFile: string;
+	kompetensStatusActive: string;
+	kompetensStatusExpireSoon: string;
+	kompetensActionOpen: string;
+	kompetensActionDownload: string;
+	kompetensActionArchive: string;
+	kompetensActionDelete: string;
+	kompetensDetailSpecification: string;
+	kompetensDetailSeeFile: string;
+	kompetensDetailEdit: string;
+	kompetensDetailBack: string;
+	kompetensModalTitle: string;
+	kompetensModalNameLabel: string;
+	kompetensModalNamePlaceholder: string;
+	kompetensModalCertLabel: string;
+	kompetensModalCertPlaceholder: string;
+	kompetensModalTrainingLabel: string;
+	kompetensModalTrainingSelect: string;
+	kompetensModalExpiryLabel: string;
+	kompetensModalUploadLabel: string;
+	kompetensModalUploadHint: string;
+	kompetensModalUploadBtn: string;
+	kompetensDocColDate: string;
+	kompetensDocColDocName: string;
+	kompetensDocColFile: string;
+	kompetensConfirmDeleteTitle: string;
+	kompetensConfirmDeleteDesc: string;
+	kompetensValidationRequired: string;
+
+	medarbetarsamtalTab: string;
+	medarbetarsamtalDropdownLabel: string;
+	medarbetarsamtalUpcomingTitle: string;
+	medarbetarsamtalKpiLatest: string;
+	medarbetarsamtalKpiLatestSub: string;
+	medarbetarsamtalKpiNext: string;
+	medarbetarsamtalKpiNextSub: string;
+	medarbetarsamtalKpiFeeling: string;
+	medarbetarsamtalKpiOpen: string;
+	medarbetarsamtalKpiOpenSub: string;
+	medarbetarsamtalBtnSchedule: string;
+	medarbetarsamtalBtnNew: string;
+	medarbetarsamtalColDate: string;
+	medarbetarsamtalColProtocol: string;
+	medarbetarsamtalColPerson: string;
+	medarbetarsamtalColFeeling: string;
+	medarbetarsamtalColFile: string;
+	medarbetarsamtalFeelingPos: string;
+	medarbetarsamtalFeelingNeut: string;
+	medarbetarsamtalFeelingWarn: string;
+	medarbetarsamtalConfirmDeleteTitle: string;
+	medarbetarsamtalConfirmDeleteDesc: string;
+
+	nyIncheckningTitle: string;
+	nyIncheckningSubtitle: string;
+	nyIncheckningSectionFeeling: string;
+	nyIncheckningSectionWork: string;
+	nyIncheckningSectionGoals: string;
+	nyIncheckningSectionWellbeing: string;
+	nyIncheckningSectionFeedback: string;
+	nyIncheckningSectionActions: string;
+	nyIncheckningSectionProtocol: string;
+	nyIncheckningBtnSave: string;
+	nyIncheckningBtnCancel: string;
+
+	nyIncheckningDateLabel: string;
+	nyIncheckningTypeLabel: string;
+	nyIncheckningManagerLabel: string;
+	nyIncheckningEmployeeLabel: string;
+
+	nyIncheckningJobTitleLabel: string;
+	nyIncheckningCurrentStateLabel: string;
+	nyIncheckningWhatWorksWellLabel: string;
+	nyIncheckningWhatIsChallengingLabel: string;
+
+	nyIncheckningRightPlaceQuestion: string;
+	nyIncheckningProgressLabel: string;
+	nyIncheckningSkillsToDevelopLabel: string;
+	nyIncheckningSupportTrainingLabel: string;
+
+	nyIncheckningOverallFeelingLabel: string;
+	nyIncheckningFeelingLastChangedLabel: string;
+	nyIncheckningNegativeImpactQuestion: string;
+
+	nyIncheckningManagerFeedbackLabel: string;
+	nyIncheckningEmployeeFeedbackLabel: string;
+	nyIncheckningAdditionalNotesLabel: string;
+
+	nyIncheckningFollowupsLabel: string;
+	nyIncheckningAddActionBtn: string;
+	nyIncheckningScheduleNextLabel: string;
+
+	nyIncheckningAutoGenerateDoc: string;
+	nyIncheckningUploadDocHint: string;
+	nyIncheckningDetailCardInfo: string;
+	nyIncheckningYes: string;
+	nyIncheckningNo: string;
+
+	kompetensFilterAll: string;
+	kompetensFilterActive: string;
+	kompetensFilterExpireSoon: string;
+	kompetensFilterExpired: string;
+	kompetensFilterArchived: string;
+
+	medarbetarsamtalFilterAll: string;
+	medarbetarsamtalFilterPositiv: string;
+	medarbetarsamtalFilterNeutral: string;
+	medarbetarsamtalFilterAttention: string;
+	medarbetarsamtalFilterArchived: string;
+
+	scheduleReviewModalTitle: string;
+	scheduleReviewModalDate: string;
+	scheduleReviewModalType: string;
+	scheduleReviewModalManager: string;
+	scheduleReviewModalNotes: string;
+	scheduleReviewModalBtnSubmit: string;
+	scheduleReviewModalBtnCancel: string;
+
+	toastReviewScheduled: string;
+	toastReviewArchived: string;
+	toastCompetenceArchived: string;
+
+	kompetensEmptyList: string;
+	kompetensEmptySpecs: string;
+	medarbetarsamtalEmptyList: string;
+	medarbetarsamtalEmptyActions: string;
+	medarbetarsamtalEmptyDocs: string;
+};
+
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
 	materialDepotLabel: string;
@@ -10663,6 +11018,110 @@ export type MaterialStorageTranslation = {
 	materialPreviousPage: string;
 	materialNextPage: string;
 	materialLastPage: string;
+	// Ta in material (TFS-1073)
+	materialCloseDialog: string;
+	materialReceiveSubtitle: string;
+	materialFieldMaterial: string;
+	materialFieldQuantity: string;
+	materialFieldUnit: string;
+	materialFieldSupplier: string;
+	materialFieldUnitPrice: string;
+	materialFieldDeliveryDate: string;
+	materialFieldSupplierOrderNo: string;
+	materialFieldComment: string;
+	materialPickerPlaceholder: string;
+	materialPickerSearchPlaceholder: string;
+	materialPickerEmpty: string;
+	materialSupplierPlaceholder: string;
+	materialQuantityPlaceholder: string;
+	materialOrderNoPlaceholder: string;
+	materialReceiveCommentPlaceholder: string;
+	materialCurrencySuffix: string;
+	materialPreviousBalance: string;
+	materialNewBalance: string;
+	materialPurchaseValue: string;
+	materialSaveDraft: string;
+	materialReceiveSubmit: string;
+	materialErrorDepotRequired: string;
+	materialErrorMaterialRequired: string;
+	materialErrorQuantityRequired: string;
+	materialErrorQuantityInvalid: string;
+	materialErrorQuantityWhole: string;
+	materialErrorPriceInvalid: string;
+	materialErrorDateRequired: string;
+	materialErrorDateFuture: string;
+	materialErrorTooLong: string;
+	materialReceiveSuccess: string;
+	materialReceiveDraftSaved: string;
+	materialReceiveError: string;
+	materialDiscardTitle: string;
+	materialDiscardDescription: string;
+	materialDiscardConfirm: string;
+	// Ta ut material (TFS-1074)
+	materialWithdrawSubtitle: string;
+	materialClearMaterial: string;
+	materialAvailableBalance: string;
+	materialFieldLinkTo: string;
+	materialLinkOrder: string;
+	materialLinkProject: string;
+	materialLinkInvoice: string;
+	materialLinkInternal: string;
+	materialFieldOrder: string;
+	materialFieldProject: string;
+	materialFieldInvoice: string;
+	materialOrderPlaceholder: string;
+	materialProjectPlaceholder: string;
+	materialInvoicePlaceholder: string;
+	materialFieldWorkStep: string;
+	materialWorkStepPlaceholder: string;
+	materialFieldSalesPrice: string;
+	materialBalanceAfterWithdrawal: string;
+	materialValue: string;
+	materialChargedToCustomer: string;
+	materialAddAsInvoiceLine: string;
+	materialReservedWarning: string;
+	materialWithdrawCommentPlaceholder: string;
+	materialWithdrawSubmit: string;
+	materialErrorQuantityExceedsAvailable: string;
+	materialErrorOrderRequired: string;
+	materialErrorProjectRequired: string;
+	materialErrorInvoiceRequired: string;
+	materialWithdrawSuccess: string;
+	materialWithdrawDraftSaved: string;
+	materialWithdrawError: string;
+	// Visa artikel (TFS-1075)
+	materialArticleNumber: string;
+	materialTabOverview: string;
+	materialTabDepotStock: string;
+	materialTabTransactions: string;
+	materialTabPriceHistory: string;
+	materialTabDocuments: string;
+	materialArticleInfo: string;
+	materialFieldDescription: string;
+	materialFieldSupplierArticleNo: string;
+	materialFieldEan: string;
+	materialFieldDefaultDepot: string;
+	materialPriceCard: string;
+	materialMarkup: string;
+	materialGrossMargin: string;
+	materialPricePerUnit: string;
+	materialRecentEvents: string;
+	materialEventReceipt: string;
+	materialEventWithdrawalOrder: string;
+	materialEventWithdrawalProject: string;
+	materialEventWithdrawalInvoice: string;
+	materialEventAdjustment: string;
+	materialNoEvents: string;
+	materialColDate: string;
+	materialColEvent: string;
+	materialColReference: string;
+	materialColPerformedBy: string;
+	materialColChangedBy: string;
+	materialNoPriceHistory: string;
+	materialNoDocuments: string;
+	materialArticleLoadError: string;
+	materialArticleNotFound: string;
+	materialCurrentUserFallback: string;
 };
 
 export type Translation = DocumentWorkflowsTranslation &
@@ -10680,6 +11139,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	CommonTranslation &
 	MachinePurchaseTranslation &
 	MachineDashboardTranslation &
+	VehicleDashboardTranslation &
 	InvoiceTranslation &
 	ExpenseTranslation &
 	FinancialReportsTranslation &
@@ -10694,6 +11154,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	PersonnelOverviewTranslation &
 	CreateEmployeeTranslation &
 	PersonnelEquipmentTranslation &
+	PersonnelProfileTranslation &
 	AccountLifecycleTranslation &
 	CertificatesTranslation &
 	EconomyBudgetTranslation &
@@ -10718,7 +11179,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	SupplierDetailTranslation &
 	ToolsDiscountTranslation &
 	ForecastDashboardTranslation &
-	MaterialStorageTranslation;
+	MaterialStorageTranslation &
+	PersonnelCompetenceAndReviewTranslation;
 
 export type TranslationKeys = keyof Translation;
 

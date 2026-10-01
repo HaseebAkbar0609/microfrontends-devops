@@ -1,4 +1,5 @@
 import type { Role } from "@/constants/roles";
+import type { CreateEmployeeFormData } from "./createEmployee.types";
 
 export type EmployeeStatus =
 	| "active"
@@ -8,6 +9,12 @@ export type EmployeeStatus =
 	| "not_started";
 
 export type EmploymentType = "full_time" | "part_time";
+
+export interface ContractInfo {
+	signedDate: string;
+	fileName: string;
+	fileSize?: string;
+}
 
 export interface EmployeeOverviewItem {
 	id: string;
@@ -28,6 +35,9 @@ export interface EmployeeOverviewItem {
 	level: Role;
 	/** What the employee costs a month, in SEK. */
 	monthlyCost: number;
+	/** Complete 5-step form profile data for Personalkort / View Profile */
+	details?: CreateEmployeeFormData;
+	signedContract?: ContractInfo;
 }
 
 export type SortField =

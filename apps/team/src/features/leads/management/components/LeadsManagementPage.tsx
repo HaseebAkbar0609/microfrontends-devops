@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import {
   ArrowUpDown,
   ChevronLeft,
@@ -59,7 +58,6 @@ import { useDebounce } from "@/components/hooks/useDebounce";
 import { useQueryParams } from "@/components/hooks/useQueryParams";
 import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import { showToast } from "@/lib/toast";
-import { fetchLeadSettings } from "@/features/leads/settings/api/leadSettings";
 import { useLeadsList } from "@/features/leads/queries/useLeadsList";
 import { useDeleteLead } from "@/features/leads/queries/useDeleteLead";
 
@@ -89,12 +87,8 @@ export function LeadsManagementPage() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [pageSize, setPageSize] = useState(10);
   const [pageIndex, setPageIndex] = useState(0);
+  const [sort, setSort] = useState<{ column: number; direction: "asc" | "desc" } | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [reviewedAtByLeadId, setReviewedAtByLeadId] = useState<Record<string, string>>({});
-  const lastAutoMoveRef = useRef<{ review?: string; monitor?: string }>({});
-  const autoMovedToMonitoringRef = useRef<Record<string, Set<string>>>({});
-  const isAutoMoveRunningRef = useRef(false);
-  const isManualMoveRunningRef = useRef(false);
   const isReviewTab = activeTab === "granskning";
   const { mutate: deleteLeadMutation } = useDeleteLead();
   const debouncedSearch = useDebounce(searchInput, 400);
@@ -103,11 +97,6 @@ export function LeadsManagementPage() {
     pageSize: 10000,
   });
 
-  const { data: leadSettings } = useQuery({
-    queryKey: ["lead-settings"],
-    queryFn: fetchLeadSettings,
-    staleTime: 5 * 60 * 1000,
-  });
 
   useEffect(() => {
     setSearchInput(searchParam);
@@ -131,7 +120,6 @@ export function LeadsManagementPage() {
     if (!leadsListQuery.data) return;
     const items = leadsListQuery.data.items;
     const reviewItems = items.filter((item) => item.status === "granskning");
-    const reviewLeadIdSet = new Set(reviewItems.map((item) => item.id));
 
     setRows(reviewItems);
     const monitoringItems = items
@@ -191,10 +179,6 @@ export function LeadsManagementPage() {
       }));
     setPaidRows(paidItems);
 
-    setReviewedAtByLeadId((prev) =>
-      Object.fromEntries(
-        Object.entries(prev).filter(([leadId]) => reviewLeadIdSet.has(leadId))
-      ))
   }, [leadsListQuery.data]);
 
   useEffect(() => {
@@ -206,8 +190,6 @@ export function LeadsManagementPage() {
 
   const isMonitoring = activeTab === "bevakning";
   const isAccepted = activeTab === "accepterad";
-  const isReviewManualMode =
-    (leadSettings?.review_mode ?? "").toLowerCase() === "manual";
   const leadTypeFilter = useMemo<FilterConfig>(
     () => ({
       label: localizationConstants.filterLabel,
@@ -256,8 +238,22 @@ export function LeadsManagementPage() {
   }, [activeTab, rows, monitoringRows, handlingRows, acceptedRows, paidRows, archiveRows]);
 
   const filteredRows = useMemo(() => {
-    return filterLeadRows(baseRows, debouncedSearch, typeFilter);
-  }, [baseRows, debouncedSearch, typeFilter]);
+    const filtered = filterLeadRows(baseRows, debouncedSearch, typeFilter);
+    if (!sort || activeTab === "settings") return filtered;
+    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: "base" });
+    const getSortValue = (row: (typeof filtered)[number]) => {
+      if (activeTab === "granskning" && sort.column === 0) {
+        return (row as LeadRow).reviewed ? "1" : "0";
+      }
+      const index = sort.column - (activeTab === "granskning" ? 1 : 0);
+      const cell = getLeadRowCells(activeTab, row)[index];
+      return cell && "value" in cell ? cell.value : cell?.valueKey ?? "";
+    };
+    return filtered.map((row, index) => ({ row, index })).sort((a, b) => {
+      const comparison = collator.compare(getSortValue(a.row), getSortValue(b.row));
+      return (sort.direction === "asc" ? comparison : -comparison) || a.index - b.index;
+    }).map(({ row }) => row);
+  }, [baseRows, debouncedSearch, typeFilter, sort, activeTab]);
 
   const deleteRowByTab = useMemo(
     () => ({
@@ -340,13 +336,14 @@ export function LeadsManagementPage() {
     });
   };
 
-  const markLeadAsReviewed = (leadId: string) => {
-    const reviewedAt = new Date().toISOString();
-    setReviewedAtByLeadId((prev) => ({
-      ...prev,
-      [leadId]: reviewedAt,
-    }));
-    showToast("success", t(localizationConstants.markReviewedToast));
+  const markLeadAsReviewed = async (leadId: string) => {
+    try {
+      await updateLeadStatusAPIAction(leadId, { status: "mark_as_reviewed" });
+      await leadsListQuery.refetch();
+      showToast("success", t(localizationConstants.markReviewedToast));
+    } catch {
+      showToast("error", t(localizationConstants.serverError));
+    }
   };
 
   const moveMonitoringToHandling = async (
@@ -363,238 +360,6 @@ export function LeadsManagementPage() {
       showToast("success", t(localizationConstants.movedToHandlingToast));
     }
   };
-
-  const isAutomaticMode = (value?: string) =>
-    value?.toLowerCase() === "automatic";
-
-  const getScheduleTimeForToday = (schedule?: Record<string, unknown>) => {
-    if (!schedule) return null;
-    const root =
-      "additionalProp1" in schedule &&
-        typeof schedule.additionalProp1 === "object" &&
-        schedule.additionalProp1
-        ? (schedule.additionalProp1 as Record<string, unknown>)
-        : (schedule as Record<string, unknown>);
-    const dayNames = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
-    const todayLabel = dayNames[new Date().getDay()];
-    const value = root[todayLabel];
-    if (typeof value === "string" && value.trim()) {
-      return value.trim();
-    }
-    return null;
-  };
-
-  const isTimePassed = (time: string) => {
-    const match = time.match(/^(\d{1,2}):(\d{2})$/);
-    if (!match) return false;
-    const hours = Number(match[1]);
-    const minutes = Number(match[2]);
-    const now = new Date();
-    const target = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      hours,
-      minutes,
-      0,
-      0
-    );
-    return now.getTime() >= target.getTime();
-  };
-
-  const getLocalDateKey = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-
-  const hasReachedNextDayEightAm = (reviewedAtIso: string) => {
-    const reviewedAt = new Date(reviewedAtIso);
-    if (Number.isNaN(reviewedAt.getTime())) return false;
-
-    const target = new Date(
-      reviewedAt.getFullYear(),
-      reviewedAt.getMonth(),
-      reviewedAt.getDate() + 1,
-      8,
-      0,
-      0,
-      0
-    );
-
-    return Date.now() >= target.getTime();
-  };
-
-  useEffect(() => {
-    const runAutoMoves = () => {
-      const syncAutomaticMoves = async () => {
-        if (!leadSettings || isAutoMoveRunningRef.current) return;
-
-        isAutoMoveRunningRef.current = true;
-
-        try {
-          const todayKey = getLocalDateKey();
-          const movedToMonitoringToday =
-            autoMovedToMonitoringRef.current[todayKey] ??
-            (autoMovedToMonitoringRef.current[todayKey] = new Set<string>());
-
-          if (isAutomaticMode(leadSettings.review_mode)) {
-            const reviewTime = getScheduleTimeForToday(leadSettings.review_schedule);
-            if (
-              reviewTime &&
-              isTimePassed(reviewTime) &&
-              lastAutoMoveRef.current.review !== todayKey
-            ) {
-              lastAutoMoveRef.current.review = todayKey;
-              const reviewLeads = [...rows];
-              const results = await Promise.allSettled(
-                reviewLeads.map((lead) => persistLeadStatusChange(lead.id, "bevakning"))
-              );
-              const succeededLeadIds = new Set(
-                reviewLeads
-                  .filter((_, index) => results[index]?.status === "fulfilled")
-                  .map((lead) => lead.id)
-              );
-
-              if (succeededLeadIds.size > 0) {
-                succeededLeadIds.forEach((leadId) => movedToMonitoringToday.add(leadId));
-                setRows((prev) => prev.filter((lead) => !succeededLeadIds.has(lead.id)));
-                setMonitoringRows((monitorPrev) => [
-                  ...monitorPrev,
-                  ...reviewLeads
-                    .filter((lead) => succeededLeadIds.has(lead.id))
-                    .map((lead) => ({
-                      ...lead,
-                      status: "bevakning" as const,
-                      tags: "0",
-                    })),
-                ]);
-              }
-            }
-          }
-
-          if (isAutomaticMode(leadSettings.monitor_mode)) {
-            const monitorTime = getScheduleTimeForToday(leadSettings.monitor_schedule);
-            if (
-              monitorTime &&
-              isTimePassed(monitorTime) &&
-              lastAutoMoveRef.current.monitor !== todayKey
-            ) {
-              lastAutoMoveRef.current.monitor = todayKey;
-              const monitoringLeads = monitoringRows.filter(
-                (lead) => !movedToMonitoringToday.has(lead.id)
-              );
-              const results = await Promise.allSettled(
-                monitoringLeads.map((lead) => persistLeadStatusChange(lead.id, "hantering"))
-              );
-              const succeededLeadIds = new Set(
-                monitoringLeads
-                  .filter((_, index) => results[index]?.status === "fulfilled")
-                  .map((lead) => lead.id)
-              );
-
-              if (succeededLeadIds.size > 0) {
-                setMonitoringRows((prev) =>
-                  prev.filter((lead) => !succeededLeadIds.has(lead.id))
-                );
-                setHandlingRows((handlingPrev) => [
-                  ...handlingPrev,
-                  ...monitoringLeads
-                    .filter((lead) => succeededLeadIds.has(lead.id))
-                    .map((lead) => ({
-                      ...lead,
-                      status: "hantering" as const,
-                      taken: "0",
-                      repeat: "1",
-                    })),
-                ]);
-              }
-            }
-          }
-        } finally {
-          isAutoMoveRunningRef.current = false;
-        }
-      };
-
-      void syncAutomaticMoves();
-    };
-
-    runAutoMoves();
-    const interval = setInterval(runAutoMoves, 60 * 1000);
-
-    return () => clearInterval(interval);
-  }, [leadSettings, monitoringRows, rows]);
-
-  useEffect(() => {
-    const runManualMoves = () => {
-      const syncManualMoves = async () => {
-        if (!isReviewManualMode || isManualMoveRunningRef.current) return;
-
-        const dueReviewLeads = rows.filter((lead) => {
-          const reviewedAt = reviewedAtByLeadId[lead.id];
-          return reviewedAt && hasReachedNextDayEightAm(reviewedAt);
-        });
-
-        if (dueReviewLeads.length === 0) return;
-
-        isManualMoveRunningRef.current = true;
-        try {
-          const results = await Promise.allSettled(
-            dueReviewLeads.map((lead) =>
-              persistLeadStatusChange(lead.id, "bevakning")
-            )
-          );
-
-          const succeededLeadIds = new Set(
-            dueReviewLeads
-              .filter((_, index) => results[index]?.status === "fulfilled")
-              .map((lead) => lead.id)
-          );
-
-          if (succeededLeadIds.size > 0) {
-            setRows((prev) =>
-              prev.filter((lead) => !succeededLeadIds.has(lead.id))
-            );
-            setMonitoringRows((prev) => [
-              ...prev,
-              ...dueReviewLeads
-                .filter((lead) => succeededLeadIds.has(lead.id))
-                .map((lead) => ({
-                  ...lead,
-                  status: "bevakning" as const,
-                  tags: "0",
-                })),
-            ]);
-            setReviewedAtByLeadId((prev) =>
-              Object.fromEntries(
-                Object.entries(prev).filter(
-                  ([leadId]) => !succeededLeadIds.has(leadId)
-                )
-              )
-            );
-          }
-        } finally {
-          isManualMoveRunningRef.current = false;
-        }
-      };
-
-      void syncManualMoves();
-    };
-
-    runManualMoves();
-    const interval = setInterval(runManualMoves, 60 * 1000);
-    return () => clearInterval(interval);
-  }, [isReviewManualMode, reviewedAtByLeadId, rows]);
 
   return (
     <div className="flex h-full flex-col gap-6 px-8 pt-6 pb-8 ">
@@ -614,6 +379,7 @@ export function LeadsManagementPage() {
           setSelectedIds(new Set());
           setSearchInput("");
           setTypeFilter("all");
+          setSort(null);
           if (searchParam || page !== 1) {
             changeQueries({ search: null, page: "1" });
           }
@@ -682,12 +448,12 @@ export function LeadsManagementPage() {
                       {/* Empty head cell for selection column */}
                     </TableHead>
                   )}
-                  {tableConfig.headers.map((header) => (
-                    <TableHead key={header} className="text-sm font-medium capitalize tracking-wide text-slate-500">
-                      <span className="inline-flex items-center gap-1">
+                  {tableConfig.headers.map((header, index) => (
+                    <TableHead key={header} className="text-sm font-medium capitalize tracking-wide text-slate-500" aria-sort={sort?.column === index ? (sort.direction === "asc" ? "ascending" : "descending") : "none"}>
+                      <button type="button" className="inline-flex items-center gap-1" aria-label={`Sort by ${header}`} onClick={() => { setSort((previous) => ({ column: index, direction: previous?.column === index && previous.direction === "asc" ? "desc" : "asc" })); goToPage(0); }}>
                         {header}
                         <ArrowUpDown className="size-4 text-slate-400" />
-                      </span>
+                      </button>
                     </TableHead>
                   ))}
                   <TableHead className="items-center text-center text-slate-500 flex justify-center"><Plus size={20} /></TableHead>
@@ -709,7 +475,7 @@ export function LeadsManagementPage() {
 
                     {activeTab === "granskning" && (
                       <TableCell className="text-center text-sm font-medium text-slate-700">
-                        {reviewedAtByLeadId[row.id] ? (
+                        {(row as LeadRow).reviewed ? (
                           <Star className="mx-auto size-4 text-slate-700" />
                         ) : (
                           "-"

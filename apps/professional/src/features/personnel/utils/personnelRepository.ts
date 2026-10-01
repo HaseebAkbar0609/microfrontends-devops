@@ -146,6 +146,82 @@ export const personnelRepository = {
 	},
 
 	/**
+	 * Update detailed 5-step profile data of an employee
+	 */
+	async updateEmployeeProfile(
+		id: string,
+		profileUpdates: Partial<import("../types/createEmployee.types").CreateEmployeeFormData>
+	): Promise<EmployeeOverviewItem | null> {
+		const index = inMemoryEmployees.findIndex((e) => e.id === id);
+		if (index === -1) return null;
+
+		const current = inMemoryEmployees[index];
+		const currentDetails = current.details || (await import("./employeeProfileDefaults")).getOrCreateEmployeeProfile(current).formData;
+
+		const updatedDetails = {
+			...currentDetails,
+			...profileUpdates,
+		};
+
+		// If personal info or work duties changed, also synchronize overview summary fields
+		const updatedOverview: EmployeeOverviewItem = {
+			...current,
+			details: updatedDetails,
+			name: profileUpdates.personalInfo
+				? `${profileUpdates.personalInfo.firstName} ${profileUpdates.personalInfo.lastName}`.trim() || current.name
+				: current.name,
+			role: profileUpdates.workDuties?.role || current.role,
+			department: profileUpdates.workDuties?.department || current.department,
+			location: profileUpdates.workDuties?.location || current.location,
+			email: profileUpdates.personalInfo?.workEmail || current.email,
+			phone: profileUpdates.personalInfo?.phone || current.phone,
+			idNumber: profileUpdates.personalInfo?.personalId || current.idNumber,
+		};
+
+		inMemoryEmployees = [
+			...inMemoryEmployees.slice(0, index),
+			updatedOverview,
+			...inMemoryEmployees.slice(index + 1),
+		];
+
+		notifyListeners();
+		return updatedOverview;
+	},
+
+	/**
+	 * Update contract info of an employee
+	 */
+	async updateEmployeeContract(
+		id: string,
+		contractUpdates: Partial<import("../types/personnelOverview.types").ContractInfo>
+	): Promise<EmployeeOverviewItem | null> {
+		const index = inMemoryEmployees.findIndex((e) => e.id === id);
+		if (index === -1) return null;
+
+		const current = inMemoryEmployees[index];
+		const currentContract = current.signedContract || (await import("./employeeProfileDefaults")).getOrCreateEmployeeProfile(current).signedContract;
+
+		const updatedContract = {
+			...currentContract,
+			...contractUpdates,
+		};
+
+		const updatedOverview: EmployeeOverviewItem = {
+			...current,
+			signedContract: updatedContract,
+		};
+
+		inMemoryEmployees = [
+			...inMemoryEmployees.slice(0, index),
+			updatedOverview,
+			...inMemoryEmployees.slice(index + 1),
+		];
+
+		notifyListeners();
+		return updatedOverview;
+	},
+
+	/**
 	 * Delete an employee record with async API contract
 	 */
 	async deleteEmployee(id: string): Promise<boolean> {

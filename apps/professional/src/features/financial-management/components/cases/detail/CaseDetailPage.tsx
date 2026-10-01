@@ -19,6 +19,14 @@ interface CaseDetailPageProps {
 	basePath?: string;
 }
 
+const DEFAULT_TAB: CaseDetailTab = "grundlaggande_info";
+const TABS: CaseDetailTab[] = [DEFAULT_TAB, "dokument"];
+
+/** The tab a URL asks for, or the one a case opens on. */
+function asTab(value: string | null): CaseDetailTab {
+	return TABS.find((tab) => tab === value) ?? DEFAULT_TAB;
+}
+
 export function CaseDetailPage({ id, basePath }: CaseDetailPageProps) {
 	const router = useRouter();
 	const routes = casesRoutes(basePath);
@@ -29,18 +37,22 @@ export function CaseDetailPage({ id, basePath }: CaseDetailPageProps) {
 
 	const caseItem = getCaseById(id);
 
-	const [activeTab, setActiveTab] = useState<CaseDetailTab>(() => {
-		if (tabParam && ["grundlaggande_info", "dokument"].includes(tabParam)) {
-			return tabParam;
-		}
-		return "grundlaggande_info";
-	});
+	const [activeTab, setActiveTab] = useState<CaseDetailTab>(() => asTab(tabParam));
 
 	useEffect(() => {
-		if (tabParam && ["grundlaggande_info", "dokument"].includes(tabParam)) {
-			setActiveTab(tabParam);
-		}
+		if (tabParam) setActiveTab(asTab(tabParam));
 	}, [tabParam]);
+
+	/* Keep the tab in the URL, so the strip and the address bar agree and a
+	   link to the documents of a case still opens on them. */
+	const changeTab = (tab: CaseDetailTab) => {
+		setActiveTab(tab);
+		const query = new URLSearchParams(searchParams.toString());
+		if (tab === DEFAULT_TAB) query.delete("tab");
+		else query.set("tab", tab);
+		const search = query.toString();
+		router.replace(search ? `${routes.detail(id)}?${search}` : routes.detail(id), { scroll: false });
+	};
 
 	if (isLoading) {
 		return (
@@ -82,7 +94,7 @@ export function CaseDetailPage({ id, basePath }: CaseDetailPageProps) {
 			/>
 
 			{/* Sub Tabs matching Figma Image 5: Grundläggande info | Dokuments */}
-			<CaseDetailTabs activeTab={activeTab} onTabChange={setActiveTab} />
+			<CaseDetailTabs activeTab={activeTab} onTabChange={changeTab} />
 
 			{/* Tab 1: Grundläggande info matching Figma Image 5 Left */}
 			{activeTab === "grundlaggande_info" && (

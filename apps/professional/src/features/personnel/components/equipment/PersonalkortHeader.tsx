@@ -18,15 +18,13 @@ interface PersonalkortHeaderProps {
 }
 
 const PERSONALKORT_TABS: { id: PersonalkortTabType; labelKey: string }[] = [
-	{ id: "information", labelKey: localizationConstants.personalkortTabInformation },
-	{ id: "kompetens", labelKey: localizationConstants.personalkortTabCompetence },
-	{ id: "utrustning_fordon", labelKey: localizationConstants.personalkortTabEquipmentVehicles },
-	{ id: "arbetstid", labelKey: localizationConstants.personalkortTabWorktime },
-	{ id: "lon", labelKey: localizationConstants.personalkortTabSalary },
+	{ id: "information", labelKey: localizationConstants.personnelProfileTabPersonalInfo },
+	{ id: "kompetens", labelKey: localizationConstants.personnelProfileTabCompetence },
+	{ id: "utrustning_fordon", labelKey: localizationConstants.personnelProfileTabEquipment },
+	{ id: "arbetstid", labelKey: localizationConstants.personnelProfileTabWorktime },
 	{ id: "halsa", labelKey: localizationConstants.personalkortTabHealth },
-	{ id: "personal_process", labelKey: localizationConstants.personalkortTabPersonalProcess },
-	{ id: "arende", labelKey: localizationConstants.personalkortTabCases },
-	{ id: "dokument", labelKey: localizationConstants.personalkortTabDocuments },
+	{ id: "personal_process", labelKey: localizationConstants.personnelProfileTabProcess },
+	{ id: "dokument", labelKey: localizationConstants.personnelProfileTabDocuments },
 ];
 
 export function PersonalkortHeader({

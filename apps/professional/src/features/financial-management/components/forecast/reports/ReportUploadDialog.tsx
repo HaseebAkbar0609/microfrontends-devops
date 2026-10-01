@@ -3,15 +3,21 @@
 import { useState } from "react";
 import { Save } from "lucide-react";
 
+import { RecordFilePicker } from "@/components/form/RecordFilePicker";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { REPORT_CATEGORIES, REPORT_CATEGORY_LABELS } from "../../../constants/forecastReports.constants";
+import {
+	REPORT_CATEGORIES,
+	REPORT_CATEGORY_LABELS,
+	REPORT_FILE_ACCEPT,
+	REPORT_FILE_PICKER_COPY,
+	REPORT_FILE_RULES,
+} from "../../../constants/forecastReports.constants";
 import type { ReportCategory, ReportUploadInput } from "../../../types/forecastReports.types";
-import { ReportFilePicker } from "./ReportFilePicker";
 
 export interface ReportUploadDialogProps {
 	/** Stores the report, or refuses it; the dialog closes only on a yes. */
@@ -79,7 +85,15 @@ export function ReportUploadDialog({ onUpload, onClose }: ReportUploadDialogProp
 						)}
 					</div>
 
-					<ReportFilePicker file={file} onChange={setFile} error={fileError} onError={setFileError} />
+					<RecordFilePicker
+						file={file}
+						onChange={setFile}
+						error={fileError}
+						onError={setFileError}
+						rules={REPORT_FILE_RULES}
+						accept={REPORT_FILE_ACCEPT}
+						copy={REPORT_FILE_PICKER_COPY}
+					/>
 
 					<DialogFooter className="gap-2 sm:gap-3">
 						<Button type="button" variant="outline" onClick={onClose} className="cursor-pointer border-slate-200">

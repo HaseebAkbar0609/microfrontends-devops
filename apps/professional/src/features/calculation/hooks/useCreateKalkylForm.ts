@@ -1,15 +1,17 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { CALCULATION_DASHBOARD_QUERY_KEY, CALCULATION_OVERVIEW_QUERY_KEY } from "../api/calculationDashboard";
 import { useRouter, useSearchParams } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
+import { parseCalculationContractSum } from "../utils/calculationAmount";
 import { getOfferDetailByIdAPIAction } from "@/api-actions/offers";
 import {
 	createCalculationAPIAction,
 	getOffersForKalkylAction,
-	MOCK_OFFER_OPTIONS,
 	type OfferDropdownOption,
 } from "../api/createCalculation";
 import type {
@@ -79,6 +81,7 @@ export const DEFAULT_PROJEKT: KalkylProjektData = {
 };
 
 export function useCreateKalkylForm() {
+    const queryClient = useQueryClient();
 	const t = useTranslate();
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -87,7 +90,7 @@ export function useCreateKalkylForm() {
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoadingOffers, setIsLoadingOffers] = useState(false);
-	const [offerOptions, setOfferOptions] = useState<OfferDropdownOption[]>(MOCK_OFFER_OPTIONS);
+	const [offerOptions, setOfferOptions] = useState<OfferDropdownOption[]>([]);
 	const [showErrors, setShowErrors] = useState(false);
 
 	const [kontakt, setKontakt] = useState<KalkylKontaktData>(DEFAULT_KONTAKT);
@@ -104,11 +107,11 @@ export function useCreateKalkylForm() {
 			setIsLoadingOffers(true);
 			try {
 				const offers = await getOffersForKalkylAction();
-				if (isMounted && offers.length > 0) {
+				if (isMounted) {
 					setOfferOptions(offers);
 				}
 			} catch {
-				// Keep fallback mock offers
+				if (isMounted) setOfferOptions([]);
 			} finally {
 				if (isMounted) setIsLoadingOffers(false);
 			}
@@ -127,7 +130,7 @@ export function useCreateKalkylForm() {
 				const res = await getOfferDetailByIdAPIAction(offerIdParam as string);
 				if (res.success && res.data) {
 					const o = res.data;
-					const clientName = o.customer?.name || "Fastighetsbolaget AB";
+					const clientName = o.customer?.name || "";
 					const nameParts = clientName.trim().split(" ");
 					setKontakt((prev) => ({
 						...prev,
@@ -249,13 +252,18 @@ export function useCreateKalkylForm() {
 	}
 
 	async function handleSubmit() {
-		if (!validateStep(currentStep)) return;
+		if (![1, 2, 3, 4].every(validateStep)) return;
+		if (documents.length || kontakt.offert) {
+			showToast("error", t(localizationConstants.calcDashboardUnsupportedCreate));
+			return;
+		}
 		setIsSubmitting(true);
 		try {
 			const payload: CreateCalculationPayload = {
 				mode: kontakt.mode,
 				offer_id: kontakt.offert || undefined,
-				project_name: projekt.projektNamn || "Ny Kalkyl",
+				project_name: projekt.projektNamn.trim(),
+				contract_sum: parseCalculationContractSum(projekt.kontraktsumma),
 				project_number: projekt.projektNr || undefined,
 				block_name: projekt.kvartersNamn || undefined,
 				project_address: projekt.projektAdress || undefined,
@@ -312,6 +320,8 @@ export function useCreateKalkylForm() {
 
 			const res = await createCalculationAPIAction(payload);
 			if (res.success) {
+				await queryClient.invalidateQueries({ queryKey: [CALCULATION_DASHBOARD_QUERY_KEY] });
+				await queryClient.invalidateQueries({ queryKey: [CALCULATION_OVERVIEW_QUERY_KEY] });
 				showToast("success", t(localizationConstants.calcNewSuccessCreate));
 				router.push("/module/business/calculation/overview");
 			} else {

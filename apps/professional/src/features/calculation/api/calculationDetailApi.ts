@@ -1,7 +1,6 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { API_PATH } from "@/constants/api";
 import type { KalkylDetailData, KalkylDocItem } from "../types/kalkyl";
-import { DUMMY_KALKYL_DETAIL } from "../constants/detailMock";
 
 export type UpdateCalculationDetailPayload = Partial<KalkylDetailData>;
 
@@ -13,32 +12,33 @@ export type AddCalculationDocPayload = {
 	file?: File;
 };
 
-// In-memory / session store for optimistic updates during local dev & offline fallback
-const localDetailStore: Record<string, KalkylDetailData> = {};
-
-function getFallbackDetail(id: string): KalkylDetailData {
-	if (!localDetailStore[id]) {
-		localDetailStore[id] = {
-			...DUMMY_KALKYL_DETAIL,
-			calcNo: id.startsWith("Kalkyl") ? id : `Kalkyl ${id}`,
-			documents: [...DUMMY_KALKYL_DETAIL.documents],
-		};
-	}
-	return localDetailStore[id];
+export function emptyCalculationDetail(): KalkylDetailData {
+	return {
+		calcNo: "", bestellareForetag: "", bestellareAddress: "", bestellarePostNr: "",
+		bestellareOrt: "", bestellareMail: "", bestellareTelefon: "", bestellareOrgNr: "",
+		kontaktFornamn: "", kontaktEfternamn: "", kontaktAddress: "", kontaktPostnummer: "",
+		kontaktMail: "", kontaktMobil: "", kontaktRoll: "", kontaktOrt: "",
+		entreprenorForetag: "", entreprenorAddress: "", entreprenorPostNr: "", entreprenorOrt: "",
+		entreprenorMail: "", entreprenorTelefon: "", entreprenorOrgNr: "",
+		kalkylFornamn: "", kalkylEfternamn: "", kalkylMail: "", kalkylMobil: "", kalkylRoll: "",
+		projekteringNr: "", projekteringNamn: "", kvartersNamn: "", projekteringAdress: "",
+		postNr: "", ort: "", type: "", kategori: "", avdelning: "", kontraktsumma: "",
+		offertNr: "", startDatum: "", slutDatum: "", senatsDatumOffert: "", documents: [],
+	};
 }
 
 export function mapCalculationDetailFromApi(
 	item: Record<string, unknown>,
 	id: string,
 ): KalkylDetailData {
-	const fallback = getFallbackDetail(id);
+	const fallback = emptyCalculationDetail();
 	const contractor = (item.contractor as Record<string, unknown>) || {};
 	const contractorResp = (contractor.responsible as Record<string, unknown>) || {};
 	const client = (item.client as Record<string, unknown>) || {};
 	const clientContact = (client.contact as Record<string, unknown>) || {};
 
 	return {
-		calcNo: String(item.calc_no ?? item.calcNo ?? item.code ?? fallback.calcNo),
+		calcNo: String(item.calc_no ?? item.calcNo ?? item.code ?? id),
 		bestellareForetag: String(client.company_name ?? item.client_company ?? fallback.bestellareForetag),
 		bestellareAddress: String(client.address ?? item.client_address ?? fallback.bestellareAddress),
 		bestellarePostNr: String(client.postal_code ?? item.client_post_nr ?? fallback.bestellarePostNr),
@@ -93,80 +93,37 @@ export function mapCalculationDetailFromApi(
 }
 
 export async function getCalculationDetailAPIAction(id: string): Promise<KalkylDetailData> {
-	try {
-		const res = await axiosInstance.get(API_PATH.CALCULATIONS.GET(id));
-		if (res.data?.data) {
-			const mapped = mapCalculationDetailFromApi(res.data.data, id);
-			localDetailStore[id] = mapped;
-			return mapped;
-		}
-	} catch {
-		// Fallback cleanly to local store
-	}
-	return getFallbackDetail(id);
+	const res = await axiosInstance.get(API_PATH.CALCULATIONS.GET(id));
+	if (!res.data?.success || res.data.data?.id !== id) throw new Error("INVALID_CALCULATION_RESPONSE");
+	return mapCalculationDetailFromApi(res.data.data, id);
 }
 
 export async function updateCalculationDetailAPIAction(
 	id: string,
 	data: UpdateCalculationDetailPayload,
 ): Promise<KalkylDetailData> {
-	// Optimistically update local store
-	const current = getFallbackDetail(id);
-	const updated = { ...current, ...data };
-	localDetailStore[id] = updated;
-
-	try {
-		await axiosInstance.put(API_PATH.CALCULATIONS.UPDATE(id), data);
-	} catch {
-		// Keep optimistic update in fallback mode
-	}
-	return updated;
+	await axiosInstance.put(API_PATH.CALCULATIONS.UPDATE(id), data);
+	return getCalculationDetailAPIAction(id);
 }
 
 export async function addCalculationDocumentAPIAction(
 	id: string,
 	doc: AddCalculationDocPayload,
 ): Promise<KalkylDocItem> {
-	const newDoc: KalkylDocItem = {
-		id: `doc_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
-		datum: doc.datum || new Date().toISOString().split("T")[0],
-		namn: doc.namn,
-		typ: doc.typ,
-		fileType: doc.fileType,
-	};
-
-	const current = getFallbackDetail(id);
-	current.documents = [newDoc, ...current.documents];
-	localDetailStore[id] = current;
-
-	try {
-		const formData = new FormData();
-		if (doc.file) {
-			formData.append("file", doc.file);
-		}
-		formData.append("name", doc.namn);
-		formData.append("type", doc.typ);
-		formData.append("date", doc.datum);
-		await axiosInstance.post(`${API_PATH.CALCULATIONS.BASE}/${id}/documents`, formData);
-	} catch {
-		// Keep optimistic document in fallback mode
-	}
-
-	return newDoc;
+	const formData = new FormData();
+	if (doc.file) formData.append("file", doc.file);
+	formData.append("name", doc.namn);
+	formData.append("type", doc.typ);
+	formData.append("date", doc.datum);
+	const res = await axiosInstance.post(`${API_PATH.CALCULATIONS.BASE}/${id}/documents`, formData);
+	if (!res.data?.success || !res.data.data?.id) throw new Error("INVALID_CALCULATION_DOCUMENT_RESPONSE");
+	return { id: res.data.data.id, datum: doc.datum, namn: doc.namn, typ: doc.typ, fileType: doc.fileType };
 }
 
 export async function deleteCalculationDocumentAPIAction(
 	id: string,
 	docId: string,
 ): Promise<boolean> {
-	const current = getFallbackDetail(id);
-	current.documents = current.documents.filter((d) => d.id !== docId);
-	localDetailStore[id] = current;
-
-	try {
-		await axiosInstance.delete(`${API_PATH.CALCULATIONS.BASE}/${id}/documents/${docId}`);
-		return true;
-	} catch {
-		return true;
-	}
+	await axiosInstance.delete(`${API_PATH.CALCULATIONS.BASE}/${id}/documents/${docId}`);
+	return true;
 }

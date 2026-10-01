@@ -5,11 +5,11 @@ import { showToast } from "@/lib/toast";
 import { useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
 import type { KalkylDetailData, KalkylDocItem } from "../types/kalkyl";
-import { DUMMY_KALKYL_DETAIL } from "../constants/detailMock";
 import {
 	getCalculationDetailAPIAction,
 	updateCalculationDetailAPIAction,
 	deleteCalculationDocumentAPIAction,
+	emptyCalculationDetail,
 } from "../api/calculationDetailApi";
 
 export type DetailTab = "kontakt" | "projekt" | "dokument";
@@ -19,13 +19,11 @@ export function useCalculationDetail(initialId?: string, initialData?: KalkylDet
 	const calcId = initialId || "3001";
 
 	const [data, setData] = useState<KalkylDetailData>(
-		initialData || {
-			...DUMMY_KALKYL_DETAIL,
-			calcNo: calcId.startsWith("Kalkyl") ? calcId : `Kalkyl ${calcId}`,
-		},
+		initialData || emptyCalculationDetail(),
 	);
 	const [activeTab, setActiveTab] = useState<DetailTab>("projekt");
 	const [isLoading, setIsLoading] = useState(false);
+	const [loadError, setLoadError] = useState(false);
 
 	// Modals state
 	const [deleteDocTarget, setDeleteDocTarget] = useState<KalkylDocItem | null>(null);
@@ -34,11 +32,13 @@ export function useCalculationDetail(initialId?: string, initialData?: KalkylDet
 	// Fetch detail
 	const fetchDetail = useCallback(async () => {
 		setIsLoading(true);
+		setLoadError(false);
 		try {
 			const res = await getCalculationDetailAPIAction(calcId);
 			setData(res);
 		} catch {
-			// fallback data is already set
+			setData(emptyCalculationDetail());
+			setLoadError(true);
 		} finally {
 			setIsLoading(false);
 		}
@@ -83,6 +83,7 @@ export function useCalculationDetail(initialId?: string, initialData?: KalkylDet
 		activeTab,
 		setActiveTab,
 		isLoading,
+		loadError,
 		// Modals
 		deleteDocTarget,
 		setDeleteDocTarget,

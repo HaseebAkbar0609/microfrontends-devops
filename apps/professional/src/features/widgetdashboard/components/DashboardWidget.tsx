@@ -138,7 +138,7 @@ export const DashboardWidget = ({
             !effectiveDisabled &&
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 dark:focus-visible:ring-slate-100 focus-visible:ring-offset-2",
           effectiveDisabled && "opacity-50 grayscale bg-slate-100/80 dark:bg-slate-800/80 select-none",
-          isMuted && "rounded-sm",
+          isMuted && "rounded-md",
           className
         )}
         style={{
@@ -153,11 +153,11 @@ export const DashboardWidget = ({
               className={cn(
                 "flex shrink-0 items-center justify-center bg-white dark:bg-slate-800",
                 isMuted
-                  ? "h-10 w-10 rounded-sm"
+                  ? "h-9 w-9 rounded-md border border-slate-200/60 shadow-2xs"
                   : "h-9 w-9 rounded-md border border-slate-200/80 shadow-xs dark:border-slate-700"
               )}
             >
-              <Icon size={isMuted ? 20 : 18} strokeWidth={2} className="text-slate-700 dark:text-slate-200" />
+              <Icon size={18} strokeWidth={2} className="text-black dark:text-white" />
             </div>
           )}
 

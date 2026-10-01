@@ -46,9 +46,6 @@ export function RoutingRulesSection({
       showToast("success", "Routing rule added successfully");
       queryClient.invalidateQueries({ queryKey: ["routing-rules"] });
     },
-    onError: () => {
-      showToast("error", "Failed to add routing rule");
-    },
   });
 
   const updateMutation = useMutation({
@@ -79,7 +76,7 @@ export function RoutingRulesSection({
         titleKey={localizationConstants.matchingLogicTitle}
         action={
           <AddRoutingRuleModal
-            onAdd={(name, description) => createMutation.mutate({ name, description, is_active: true, order_index: rules.length })}
+            onAdd={(name, description) => createMutation.mutateAsync({ name, description, is_active: true, order_index: rules.length })}
             isLoading={createMutation.isPending}
           />
         }

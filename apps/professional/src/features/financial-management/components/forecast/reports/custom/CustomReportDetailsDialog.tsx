@@ -12,7 +12,7 @@ import { FORECAST_LIST_COLUMNS } from "../../../../constants/forecastList.consta
 import { REPORT_FILE_RULES } from "../../../../constants/forecastReports.constants";
 import type { CustomReport } from "../../../../types/forecastCustomReports.types";
 import { customReportFileName } from "../../../../utils/forecastCustomReports";
-import { ReportDetailRow } from "../ReportDetailRow";
+import { DetailRow } from "@/components/dialog/DetailRow";
 
 export interface CustomReportDetailsDialogProps {
 	report: CustomReport;
@@ -36,28 +36,28 @@ export function CustomReportDetailsDialog({ report, onDownload, onClose }: Custo
 				</DialogHeader>
 
 				<div className="flex flex-col">
-					<ReportDetailRow labelKey={localizationConstants.forecastReportsColId}>
+					<DetailRow labelKey={localizationConstants.forecastReportsColId}>
 						<span className="tabular-nums">{report.reportNo}</span>
-					</ReportDetailRow>
+					</DetailRow>
 
-					<ReportDetailRow labelKey={localizationConstants.forecastCustomReportsColName}>
+					<DetailRow labelKey={localizationConstants.forecastCustomReportsColName}>
 						<Badge variant="category">{report.name}</Badge>
-					</ReportDetailRow>
+					</DetailRow>
 
-					<ReportDetailRow labelKey={localizationConstants.forecastReportsColFile}>
+					<DetailRow labelKey={localizationConstants.forecastReportsColFile}>
 						<div className="flex items-center gap-2.5">
 							<RecordFileIcon fileName={fileName} types={REPORT_FILE_RULES.types} />
 							<span className="truncate" title={fileName}>
 								{fileName}
 							</span>
 						</div>
-					</ReportDetailRow>
+					</DetailRow>
 
-					<ReportDetailRow labelKey={localizationConstants.forecastReportsColDate}>
+					<DetailRow labelKey={localizationConstants.forecastReportsColDate}>
 						<span className="tabular-nums">{report.date}</span>
-					</ReportDetailRow>
+					</DetailRow>
 
-					<ReportDetailRow labelKey={localizationConstants.forecastCustomReportsColumns}>
+					<DetailRow labelKey={localizationConstants.forecastCustomReportsColumns}>
 						<div className="flex flex-wrap gap-1.5">
 							{columns.map((column) => (
 								<Badge key={column.key} variant="category">
@@ -68,7 +68,7 @@ export function CustomReportDetailsDialog({ report, onDownload, onClose }: Custo
 						<p className="mt-1.5 text-xs text-slate-500">
 							{t(localizationConstants.forecastCustomReportsColumnCount, { count: columns.length })}
 						</p>
-					</ReportDetailRow>
+					</DetailRow>
 				</div>
 
 				<DialogFooter className="gap-2 sm:gap-3">

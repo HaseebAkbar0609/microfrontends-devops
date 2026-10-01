@@ -75,7 +75,7 @@ export function ModuleWidgetDashboard({
 }: ModuleWidgetDashboardProps) {
 	const t = useTranslate();
 	const sources = useWidgetSources(sourceLocation);
-	const [selectedItem, setSelectedItem] = useState<string>("emptyPage");
+	const [selectedItem, setSelectedItem] = useState<string>("");
 	const [panelOpen, setPanelOpen] = useState(true);
 	const {
 		placedWidgets,
@@ -173,7 +173,7 @@ export function ModuleWidgetDashboard({
 	};
 
 	const handleSidebarItemClick = (id: string) => {
-		setSelectedItem(id);
+		setSelectedItem((prev) => (prev === id ? "" : id));
 		const existing = placedWidgets.find((w) => w.sidebarId === id);
 		if (existing) {
 			setHighlightedWidgetUid(existing.uid);
@@ -347,7 +347,13 @@ export function ModuleWidgetDashboard({
 
 			<div className="mx-auto flex flex-col gap-6 lg:flex-row">
 				<div className="flex-1 space-y-6 mb-6">
-					<Card className="p-4 gap-2.5">
+					<Card
+						className={cn(
+							cardVariant === "muted"
+								? "border-0 shadow-none bg-transparent p-0 gap-0"
+								: "p-4 gap-2.5",
+						)}
+					>
 						{gridHeader}
 						<div className="grid grid-cols-12 gap-2.5 mb-2.5">
 							{placedWidgets.map((entry, index) => (

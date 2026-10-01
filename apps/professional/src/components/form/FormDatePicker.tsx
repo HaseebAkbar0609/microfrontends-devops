@@ -44,6 +44,11 @@ export interface FormDatePickerProps<
 	 */
 	minDate?: string;
 	/**
+	 * Latest selectable day, as `yyyy-MM-dd` (e.g. today, for a date that cannot
+	 * be in the future). Like `minDate`, pair it with a schema rule.
+	 */
+	maxDate?: string;
+	/**
 	 * Which side of the value the calendar icon sits. Defaults to `"end"`, as
 	 * every existing form draws it; the Tidsplan frames draw it at the start.
 	 */
@@ -77,6 +82,7 @@ export function FormDatePicker<
 	messageClassName,
 	translateError,
 	minDate,
+	maxDate,
 	iconPosition = "end",
 	required = false,
 	formatValue,
@@ -87,9 +93,12 @@ export function FormDatePicker<
 	const resolvedLabel =
 		typeof label === "string" ? <Translate text={label} /> : label;
 
-	const minimum =
-		minDate && minDate.trim().length > 0 ? parseISO(minDate) : undefined;
-	const validMinimum = minimum && isValid(minimum) ? minimum : undefined;
+	const parseDay = (value?: string) => {
+		const day = value && value.trim().length > 0 ? parseISO(value) : undefined;
+		return day && isValid(day) ? day : undefined;
+	};
+	const validMinimum = parseDay(minDate);
+	const validMaximum = parseDay(maxDate);
 
 	return (
 		<FormField
@@ -161,8 +170,10 @@ export function FormDatePicker<
 										endMonth={new Date(2035, 11)}
 										selected={validDate}
 										disabled={
-											validMinimum
-												? (date: Date) => date < validMinimum
+											validMinimum || validMaximum
+												? (date: Date) =>
+														(validMinimum !== undefined && date < validMinimum) ||
+														(validMaximum !== undefined && date > validMaximum)
 												: undefined
 										}
 										onSelect={(date: Date | undefined) => {

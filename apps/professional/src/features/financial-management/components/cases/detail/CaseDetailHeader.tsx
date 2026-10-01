@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
-import { ArrowLeft, ChevronDown, MessageSquare, FileText } from "lucide-react";
+import React from "react";
+import { ArrowLeft, MessageSquare, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import localizationConstants from "@/utils/translation/constants";
-import { CASE_STATUS_META, casesRoutes } from "../../../constants/cases.constants";
+import { casesRoutes } from "../../../constants/cases.constants";
 import type { CaseItem, CaseStatus } from "../../../types/cases.types";
-import { CaseStatusBadge, CaseStatusConfirmDialog } from "../shared";
+import { CaseStatusBadge } from "../shared";
+import { CaseStatusMenu } from "./CaseStatusMenu";
 
 interface CaseDetailHeaderProps {
 	caseItem: CaseItem;
@@ -28,17 +29,8 @@ export function CaseDetailHeader({
 	basePath,
 }: CaseDetailHeaderProps) {
 	const router = useRouter();
-	const [pendingStatus, setPendingStatus] = useState<CaseStatus | null>(null);
-	const [showMenu, setShowMenu] = useState(false);
-	const status = CASE_STATUS_META[caseItem.status] ?? CASE_STATUS_META.not_started;
+	const t = useTranslate();
 	const routes = casesRoutes(basePath);
-
-	const handleConfirmStatus = () => {
-		if (pendingStatus) {
-			onStatusChange(pendingStatus);
-			setPendingStatus(null);
-		}
-	};
 
 	const handleBack = () => {
 		if (onBack) {
@@ -56,7 +48,7 @@ export function CaseDetailHeader({
 					type="button"
 					onClick={handleBack}
 					className="p-1 text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-md cursor-pointer transition-colors"
-					aria-label="Back"
+					aria-label={t(localizationConstants.casesBackToList)}
 				>
 					<ArrowLeft className="w-5 h-5" />
 				</button>
@@ -106,57 +98,9 @@ export function CaseDetailHeader({
 					</button>
 				)}
 
-				<div className="relative">
-				{/* The pill wears the status's own colour and says its own name —
-				    the row's badge and this control read one map. */}
-				<button
-					type="button"
-					onClick={() => setShowMenu((prev) => !prev)}
-					className={`h-9 px-4 ${status.bgClass} ${status.hoverClass} ${status.textClass} text-xs font-semibold rounded-lg flex items-center gap-2 shadow-2xs cursor-pointer transition-colors`}
-				>
-					<span>
-						<Translate text={status.labelKey} />
-					</span>
-					<ChevronDown className="w-3.5 h-3.5" />
-				</button>
-
-				{showMenu && (
-					<div className="absolute right-0 mt-1.5 w-44 bg-white border border-slate-200 rounded-xl shadow-lg z-20 py-1.5 text-xs">
-						<div className="px-3 py-1 font-semibold text-slate-400 text-[10px] uppercase">
-							<Translate text={localizationConstants.casesDetailChangeStatus} />
-						</div>
-						{(["not_started", "ongoing", "completed", "closed", "rejected"] as CaseStatus[]).map(
-							(st) => (
-								<button
-									key={st}
-									type="button"
-									onClick={() => {
-										setShowMenu(false);
-										if (st !== caseItem.status) {
-											setPendingStatus(st);
-										}
-									}}
-									className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center justify-between cursor-pointer transition-colors"
-								>
-									<CaseStatusBadge status={st} />
-									{caseItem.status === st && (
-										<span className="text-[10px] text-slate-500 font-bold">✓</span>
-									)}
-								</button>
-							)
-						)}
-					</div>
-				)}
-				</div>
+				<CaseStatusMenu status={caseItem.status} onStatusChange={onStatusChange} />
 			</div>
 
-			{/* Status change confirmation dialog */}
-			<CaseStatusConfirmDialog
-				isOpen={pendingStatus !== null}
-				newStatus={pendingStatus}
-				onClose={() => setPendingStatus(null)}
-				onConfirm={handleConfirmStatus}
-			/>
 		</div>
 	);
 }

@@ -55,11 +55,15 @@ export interface EmployeeEquipmentProfile {
 
 export type PersonalkortTabType =
 	| "information"
+	| "kontaktperson"
+	| "anstallningsvillkor"
 	| "kompetens"
+	| "dokument"
 	| "utrustning_fordon"
 	| "arbetstid"
 	| "lon"
 	| "halsa"
+	| "medarbetarsamtal"
+	| "friskvard"
 	| "personal_process"
-	| "arende"
-	| "dokument";
+	| "arende";

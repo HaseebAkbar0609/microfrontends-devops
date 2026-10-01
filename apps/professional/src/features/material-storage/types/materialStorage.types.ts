@@ -36,6 +36,11 @@ export interface MaterialArticle {
 	minStockLevel: number;
 	/** Available stock at or below this means it is time to order. */
 	reorderPoint: number;
+	description: string;
+	supplierArticleNo: string;
+	ean: string;
+	/** Standarddepå: where the article is normally kept. */
+	defaultDepotId: string;
 }
 
 /** What one depot holds of one article: quantity on the shelf and how much of it is reserved. */

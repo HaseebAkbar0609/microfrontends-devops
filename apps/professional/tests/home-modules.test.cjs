@@ -37,8 +37,9 @@ test("known names and legacy catalog aliases reuse existing launcher routes", ()
   assert.equal(api.homeModuleApp({ name: "Offered" }, t).href, "/module/business/offer/dashboard");
   assert.equal(api.homeModuleApp({ name: "Unimplemented" }, t), undefined);
 });
-test("modules cache is separated by company and actor and no mock catalog is imported", () => {
+test("Home keeps the Modules section without module entry points", () => {
   const component = source("features/widgetdashboard/components/ModulesSection.tsx");
-  assert.match(component, /queryKey: \["home-modules", companyId, actorId\]/);
-  assert.doesNotMatch(component, /WidgetSourceUnavailable|mock|Card/);
+  assert.match(component, /WidgetSourceUnavailable/);
+  assert.match(component, /modulesTitle/);
+  assert.doesNotMatch(component, /<Link|homeModuleApp|getHomeModules|useQuery/);
 });

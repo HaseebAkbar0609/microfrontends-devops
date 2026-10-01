@@ -9,7 +9,7 @@ import {
 } from "../../../constants/cases.constants";
 import { useCaseAttachments } from "../../../hooks/useCaseAttachments";
 import type { CaseDocument } from "../../../types/cases.types";
-import { CaseDocumentsTable } from "./CaseDocumentsTable";
+import { CaseDocumentsTable } from "../shared/CaseDocumentsTable";
 import { CaseUploadCard } from "./CaseUploadCard";
 
 interface DocumentUploadSectionProps {
