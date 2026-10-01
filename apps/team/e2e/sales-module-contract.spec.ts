@@ -90,19 +90,16 @@ test("quote totals follow the documented discount order", () => {
 	expect(yearly.firstInvoice).toBeCloseTo(4590, 2);
 });
 
-// ──────────────── backend exists, frontend never calls it ────────────────
-
-test.fail("SALES-11: the settings screen reads and writes the settings API", async () => {
-	// The backend shipped and merged (PR 82, /api/v1/teams/sales/settings), but
-	// SalesSettingsProvider still holds the Calendly link and the email templates
-	// in useState seeded from salesSettings.mock, so a seller's settings are gone
-	// on reload. Confirmed in a browser against local dev: no request on edit,
-	// value reverts on reload.
+test("SALES-11: the settings screen reads and writes the settings API", async () => {
+	// /api/v1/teams/sales/settings (PR 82) holds the Calendly link and the email
+	// templates; SalesSettingsProvider reads them and saves each change.
 	const api = await import("../src/features/sales/api/salesSettingsApi");
 	expect(Object.keys(api)).toEqual(
 		expect.arrayContaining(["getSalesSettings", "patchSalesSettings"]),
 	);
 });
+
+// ──────────────── backend exists, frontend never calls it ────────────────
 
 test.fixme("SALES-03: a patch asserts the version it read, so a 409 can happen", () => {
 	// The server compares `version` and answers SALES_COMPANY_VERSION_CONFLICT,

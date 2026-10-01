@@ -124,6 +124,12 @@ export type SalesEmailTemplate = {
 	body: string;
 };
 
+/** The team's shared Sales settings, as `/teams/sales/settings` returns them. */
+export type SalesSettings = {
+	calendlyLink: string;
+	emailTemplates: SalesEmailTemplate[];
+};
+
 /** A document added by hand, as opposed to one the CRM produced. */
 export type SalesCustomDocument = {
 	id: string;
