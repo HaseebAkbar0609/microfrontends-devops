@@ -308,6 +308,8 @@ const AdminLicenses = () => {
 						<Button
 							type="button"
 							variant="secondary"
+							onClick={handleCheckout}
+							disabled={checkoutMutation.isPending}
 							className="h-10 rounded-md bg-slate-100 px-5 text-sm font-medium text-slate-900 hover:bg-slate-200"
 						>
 							<Translate
