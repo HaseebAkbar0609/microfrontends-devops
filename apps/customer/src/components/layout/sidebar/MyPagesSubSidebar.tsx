@@ -42,15 +42,16 @@ const items = [
 	},
 ];
 
-export default function MyPagesSubSidebar() {
+export default function MyPagesSubSidebar({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
 	const pathname = usePathname();
 	const backLabelId = useId();
 
 	return (
-		<aside className="sticky top-0 flex h-full w-64 shrink-0 flex-col border-r border-slate-200 bg-slate-100/80">
+		<aside className={`sticky top-0 flex h-full shrink-0 flex-col border-r border-slate-200 bg-slate-100/80 ${mobile ? "w-full" : "w-64"}`}>
 			<div className="flex h-16 w-full items-center border-b border-slate-200 gap-3 px-3 sm:px-5">
 				<Link
 					href="/"
+					onClick={onNavigate}
 					className="flex h-9 w-9 items-center justify-center rounded-md bg-slate-900 text-white shadow-sm"
 					aria-labelledby={backLabelId}
 				>
@@ -73,6 +74,7 @@ export default function MyPagesSubSidebar() {
 						<Link
 							key={item.id}
 							href={item.href}
+							onClick={onNavigate}
 							className={cn(
 								"flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition-colors",
 								isActive
@@ -90,6 +92,7 @@ export default function MyPagesSubSidebar() {
 			<div className="border-t border-slate-200 px-4 py-3">
 				<Link
 					href="/"
+					onClick={onNavigate}
 					className="flex items-center gap-2 text-sm text-slate-700 hover:text-slate-900"
 				>
 					<ArrowLeft size={16} />

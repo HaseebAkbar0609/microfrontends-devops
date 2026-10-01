@@ -7,12 +7,12 @@ import { SidebarNavGroup } from "./SidebarNavGroup";
 import { DashboardLogo } from "./DashboardLogo";
 import { SLATE } from "@/constants/colors";
 
-export default function Sidebar() {
+export default function Sidebar({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
 	const [collapsed, setCollapsed] = useState(false);
 
 	return (
 		<aside
-			className={`flex h-full shrink-0 flex-col bg-slate-800 pb-3 p-2.5 transition-all duration-300 ${collapsed ? "w-16" : "w-64"}`}
+			className={`flex h-full shrink-0 flex-col bg-slate-800 pb-3 p-2.5 transition-all duration-300 ${mobile ? "w-full" : collapsed ? "w-16" : "w-64"}`}
 		>
 			{/* Inner container with rounded corners */}
 			<div className="flex h-full flex-col rounded-lg bg-gray-800">
@@ -24,7 +24,7 @@ export default function Sidebar() {
 					>
 						{/* Logo */}
 						<DashboardLogo collapsed={collapsed} />
-						<button
+						{!mobile && <button
 							type="button"
 							onClick={() => setCollapsed((prev) => !prev)}
 							className="flex h-9 w-9 items-center justify-center rounded-md bg-slate-700 text-slate-300 transition-colors cursor-pointer hover:bg-slate-600 hover:text-white"
@@ -39,7 +39,7 @@ export default function Sidebar() {
 							) : (
 								<PanelLeftClose size={18} />
 							)}
-						</button>
+						</button>}
 
 						{/* <hr className="w-full border-t border-gray-800" /> */}
 
@@ -60,6 +60,7 @@ export default function Sidebar() {
 								key={group.id}
 								group={group}
 								collapsed={collapsed}
+								onNavigate={onNavigate}
 							/>
 						))}
 					</div>
