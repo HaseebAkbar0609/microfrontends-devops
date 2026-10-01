@@ -11184,6 +11184,40 @@ export type MaterialStorageTranslation = {
 	materialCurrentUserFallback: string;
 };
 
+export type SmartAccessTranslation = {
+	accessNewButton: string;
+	accessColIdNo: string;
+	accessColObject: string;
+	accessColName: string;
+	accessColType: string;
+	accessColCity: string;
+	accessColAssignedTo: string;
+	accessColLastAssigned: string;
+	accessColStatus: string;
+	accessTypeAccessCard: string;
+	accessTypeKeys: string;
+	accessTypePassCard: string;
+	accessTypeTag: string;
+	accessStatusActive: string;
+	accessStatusScheduled: string;
+	accessStatusInProgress: string;
+	accessUnassigned: string;
+	accessActionOpen: string;
+	accessActionArchive: string;
+	accessActionDelete: string;
+	accessViewLabel: string;
+	accessRowActionsLabel: string;
+	accessEmpty: string;
+	accessFilterStatusLabel: string;
+	accessFilterTypeLabel: string;
+	accessAllStatuses: string;
+	accessAllTypes: string;
+	accessDeleteTitle: string;
+	accessDeleteDescription: string;
+	accessArchivedToast: string;
+	accessDeletedToast: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -11240,6 +11274,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	ToolsDiscountTranslation &
 	ForecastDashboardTranslation &
 	MaterialStorageTranslation &
+	SmartAccessTranslation &
 	PersonnelCompetenceAndReviewTranslation;
 
 export type TranslationKeys = keyof Translation;
