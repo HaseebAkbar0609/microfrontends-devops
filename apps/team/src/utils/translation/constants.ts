@@ -331,6 +331,13 @@ export type LeadsTranslation = {
 	inviteSuppliers: string;
 	quoteListTab: string;
 	activityLogsTab: string;
+	leadInquiryLoading: string;
+	leadInquiryEmpty: string;
+	leadActivityLoading: string;
+	leadActivityEmpty: string;
+	leadActivityCreated: string;
+	leadActivityOfferSent: string;
+	leadActivityOfferAccepted: string;
 	monitorLabel: string;
 	activeLabel: string;
 	archiveLabel: string;
