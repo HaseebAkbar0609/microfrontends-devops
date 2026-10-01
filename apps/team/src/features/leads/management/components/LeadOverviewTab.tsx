@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { PencilLine } from "lucide-react";
 import type { LeadRow } from "@/features/leads/types";
-import {
-	leadDetailCategoryOptions,
-	leadDetailRegionOptions,
-} from "@/features/leads/management/constants";
+import { leadDetailRegionOptions } from "@/features/leads/management/constants";
+import { fetchCustomerCategories } from "@/features/leads/settings/api/categoriesApi";
 import TagSelector from "@/features/leads/management/components/TagSelector";
 import { useUpdateLeadDetails } from "@/features/leads/queries/useUpdateLeadDetails";
 import { showToast } from "@/lib/toast";
@@ -37,15 +36,31 @@ export default function LeadOverviewTab({
 	const [isEditingSummary, setIsEditingSummary] = useState(false);
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const [isRegionOpen, setIsRegionOpen] = useState(false);
-	const [selectedCategories, setSelectedCategories] = useState<string[]>([
-		lead.category,
-	]);
+	const [selectedCategories, setSelectedCategories] = useState<string[]>(
+		() => parseCategories(lead.category),
+	);
 	const [selectedRegions, setSelectedRegions] = useState<string[]>([lead.city]);
-	const [draftCategories, setDraftCategories] = useState<string[]>([
-		lead.category,
-	]);
+	const [draftCategories, setDraftCategories] = useState<string[]>(
+		() => parseCategories(lead.category),
+	);
 	const [draftRegions, setDraftRegions] = useState<string[]>([lead.city]);
 	const { mutate: updateLeadDetails, isPending } = useUpdateLeadDetails();
+	const categoryQuery = useQuery({
+		queryKey: ["customer-categories"],
+		queryFn: fetchCustomerCategories,
+	});
+	const categoryOptions = useMemo(
+		() => Array.from(new Set((categoryQuery.data ?? []).flatMap((group) =>
+			(group.subcategories ?? []).filter((subcategory) => subcategory.is_active !== false).map((subcategory) => subcategory.name)
+		))),
+		[categoryQuery.data],
+	);
+
+	useEffect(() => {
+		const categories = parseCategories(lead.category);
+		setSelectedCategories(categories);
+		setDraftCategories(categories);
+	}, [lead.category]);
 
 	const beginEditingSummary = () => {
 		setDraftCategories(selectedCategories);
@@ -62,6 +77,10 @@ export default function LeadOverviewTab({
 	};
 
 	const saveSummaryChanges = () => {
+		if (categoryQuery.isError || categoryQuery.isPending) {
+			showToast("error", "Categories are not available. Please try again.");
+			return;
+		}
 		updateLeadDetails(
 			{
 				leadId: lead.id,
@@ -132,7 +151,7 @@ export default function LeadOverviewTab({
 										type="button"
 										className="cursor-pointer bg-black h-8 text-sm hover:bg-slate-700"
 										onClick={saveSummaryChanges}
-										disabled={isPending}
+									disabled={isPending || categoryQuery.isPending}
 									>
 										{isPending ? "..." : <Translate text={localizationConstants.save} />}
 									</Button>
@@ -174,7 +193,7 @@ export default function LeadOverviewTab({
 						<div className="mt-6 space-y-5">
 							<TagSelector
 								label={t(localizationConstants.categoryLabel)}
-								options={leadDetailCategoryOptions}
+								options={categoryOptions}
 								selected={isEditingSummary ? draftCategories : selectedCategories}
 								onToggle={(value) =>
 									setDraftCategories((prev) => toggleSelection(prev, value))
@@ -238,4 +257,8 @@ function toggleSelection(values: string[], value: string) {
 	return values.includes(value)
 		? values.filter((item) => item !== value)
 		: [...values, value];
+}
+
+function parseCategories(value: string): string[] {
+	return value.split(",").map((category) => category.trim()).filter((category) => category && category !== "-");
 }

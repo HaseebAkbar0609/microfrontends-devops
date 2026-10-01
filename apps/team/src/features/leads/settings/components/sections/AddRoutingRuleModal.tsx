@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isAxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 
 interface AddRoutingRuleModalProps {
-  onAdd: (name: string, description: string) => void;
+  onAdd: (name: string, description: string) => Promise<unknown>;
   isLoading: boolean;
 }
 
@@ -19,13 +20,22 @@ export function AddRoutingRuleModal({ onAdd, isLoading }: AddRoutingRuleModalPro
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [error, setError] = useState("");
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (!name.trim()) return;
-    onAdd(name.trim(), description.trim());
-    setOpen(false);
-    setName("");
-    setDescription("");
+    setError("");
+    try {
+      await onAdd(name.trim(), description.trim());
+      setOpen(false);
+      setName("");
+      setDescription("");
+    } catch (cause) {
+      const code = isAxiosError(cause) ? cause.response?.data?.message : null;
+      setError(code === "ROUTING_RULE_NAME_ALREADY_EXISTS"
+        ? "A rule with this name already exists."
+        : "Could not add the routing rule. Please try again.");
+    }
   };
 
   return (
@@ -52,10 +62,13 @@ export function AddRoutingRuleModal({ onAdd, isLoading }: AddRoutingRuleModalPro
             </label>
             <Input
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => { setName(e.target.value); setError(""); }}
               placeholder="e.g. Priority Leads"
               className="border-slate-900 text-slate-900"
+              aria-invalid={Boolean(error)}
+              aria-describedby={error ? "routing-rule-error" : undefined}
             />
+            {error && <p id="routing-rule-error" role="alert" className="text-sm text-red-600">{error}</p>}
           </div>
           <div className="space-y-2">
             <label className="text-xs font-semibold uppercase text-slate-500">

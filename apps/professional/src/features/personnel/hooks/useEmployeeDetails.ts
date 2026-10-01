@@ -16,7 +16,6 @@ import {
 	SalaryCompensationForm,
 	WorkingHoursForm,
 	HealthSupportForm,
-	CompetenceDocItem,
 	AttachedDocItem,
 } from "../types/createEmployee.types";
 import { PersonalkortTabType } from "../types/equipment.types";
@@ -70,20 +69,48 @@ export function useEmployeeDetails(employeeIdProp?: string) {
 		return getOrCreateEmployeeProfile(currentEmployee);
 	}, [currentEmployee]);
 
-	const [activeTab, setActiveTab] = useState<PersonalkortTabType>(
-		tabParam &&
+	const [activeTab, setActiveTab] = useState<PersonalkortTabType>(() => {
+		if (tabParam === "medarbetarsamtal") {
+			return "kompetens";
+		}
+		if (
+			tabParam &&
 			[
 				"information",
 				"kompetens",
 				"utrustning_fordon",
 				"arbetstid",
+				"halsa",
 				"friskvard",
 				"personal_process",
 				"dokument",
 			].includes(tabParam)
-			? tabParam
-			: "information"
-	);
+		) {
+			return tabParam as PersonalkortTabType;
+		}
+		return "information";
+	});
+
+	// Synchronize activeTab when tabParam in URL query string changes
+	useEffect(() => {
+		if (!tabParam) return;
+		if (tabParam === "medarbetarsamtal") {
+			setActiveTab("kompetens");
+		} else if (
+			[
+				"information",
+				"kompetens",
+				"utrustning_fordon",
+				"arbetstid",
+				"halsa",
+				"friskvard",
+				"personal_process",
+				"dokument",
+			].includes(tabParam)
+		) {
+			setActiveTab(tabParam as PersonalkortTabType);
+		}
+	}, [tabParam]);
 
 	// Modal states
 	const [activeEditModal, setActiveEditModal] = useState<string | null>(null);
@@ -234,38 +261,6 @@ export function useEmployeeDetails(employeeIdProp?: string) {
 		[currentEmployee, profileData.emergencyContacts, t]
 	);
 
-	// Competence operations
-	const handleAddCompetenceDoc = useCallback(
-		async (doc: Omit<CompetenceDocItem, "id">) => {
-			if (!currentEmployee) return;
-			const newDoc: CompetenceDocItem = {
-				...doc,
-				id: `cmp_${Date.now()}`,
-			};
-			const updatedDocs = [...profileData.competenceDocs, newDoc];
-			await personnelRepository.updateEmployeeProfile(currentEmployee.id, {
-				competenceDocs: updatedDocs,
-			});
-			toast.success(t(localizationConstants.toastCompetenceAdded));
-			setActiveEditModal(null);
-		},
-		[currentEmployee, profileData.competenceDocs, t]
-	);
-
-	const handleDeleteCompetenceDoc = useCallback(
-		async (id: string) => {
-			if (!currentEmployee) return;
-			const updatedDocs = profileData.competenceDocs.filter(
-				(d: CompetenceDocItem) => d.id !== id
-			);
-			await personnelRepository.updateEmployeeProfile(currentEmployee.id, {
-				competenceDocs: updatedDocs,
-			});
-			toast.success(t(localizationConstants.toastCompetenceDeleted));
-		},
-		[currentEmployee, profileData.competenceDocs, t]
-	);
-
 	// Documents operations
 	const handleAddAttachedDoc = useCallback(
 		async (doc: Omit<AttachedDocItem, "id">) => {
@@ -330,8 +325,6 @@ export function useEmployeeDetails(employeeIdProp?: string) {
 		handleAddEmergencyContact,
 		handleUpdateEmergencyContact,
 		handleDeleteEmergencyContact,
-		handleAddCompetenceDoc,
-		handleDeleteCompetenceDoc,
 		handleAddAttachedDoc,
 		handleDeleteAttachedDoc,
 		handleArchiveContract,

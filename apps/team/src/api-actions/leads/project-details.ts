@@ -26,7 +26,7 @@ export async function getLeadProjectDetailsAPIAction(
 		isExpress: Boolean(projectDetails?.is_express),
 		orderNumber: projectDetails?.client_no || "-",
 		category:
-			(projectDetails?.categories ?? [])
+			(projectDetails?.subcategories ?? projectDetails?.categories ?? [])
 				.map((category) => category.name)
 				.filter(Boolean)
 				.join(", ") || "-",

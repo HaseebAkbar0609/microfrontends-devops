@@ -15,6 +15,7 @@ export function useUpdateLeadDetails() {
 		}) => updateLeadDetailsAPIAction(leadId, payload),
 		onSuccess: (_, { leadId }) => {
 			queryClient.invalidateQueries({ queryKey: ["lead-by-id", leadId] });
+			queryClient.invalidateQueries({ queryKey: ["lead-request-details", leadId] });
 			queryClient.invalidateQueries({ queryKey: ["leads-list"] });
 		},
 	});

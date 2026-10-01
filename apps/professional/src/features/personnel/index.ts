@@ -29,4 +29,16 @@ export * from "./components/details/tabs/GrundinformationTab";
 export * from "./components/details/tabs/KontaktpersonTab";
 export * from "./components/details/tabs/AnstallningsvillkorTab";
 export * from "./components/details/tabs/KompetensTab";
+export * from "./components/details/tabs/MedarbetarsamtalTab";
 export * from "./components/details/tabs/DokumentTab";
+export type {
+	CompetenceStatus,
+	CompetenceSpecDoc,
+	EmployeeCompetenceItem,
+	CreateCompetenceFormData,
+} from "./types/competence.types";
+export * from "./mock/competence.mock";
+export * from "./hooks/useKompetenser";
+export * from "./types/medarbetarsamtal.types";
+export * from "./mock/medarbetarsamtal.mock";
+export * from "./hooks/useMedarbetarsamtal";
