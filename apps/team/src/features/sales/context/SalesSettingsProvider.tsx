@@ -82,7 +82,8 @@ export function SalesSettingsProvider({ children }: { children: ReactNode }) {
 		draftRef.current = next;
 		setDraft(next);
 		if (next.calendlyLink !== current.calendlyLink && isValidLink(next.calendlyLink)) {
-			save("calendlyLink", next.calendlyLink);
+			// Trimmed: the link check ignores surrounding spaces, the server does not.
+			save("calendlyLink", next.calendlyLink.trim());
 		}
 		if (next.emailTemplates !== current.emailTemplates
 			&& next.emailTemplates.every((template) => template.name.trim())) {
