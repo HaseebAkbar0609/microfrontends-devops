@@ -14,8 +14,9 @@ import {
 	linkProfessionalAccount,
 	patchSalesCompany,
 } from "../api/salesCrmApi";
-import type { SalesCompany } from "../types";
+import type { SalesActivity, SalesCompany } from "../types";
 import { createEmptyCompany } from "../utils/salesFactories";
+import { useSalesActivityMutations } from "../hooks/useSalesActivityMutations";
 
 const QUERY_KEY = ["team-sales-crm-companies"] as const;
 const EMPTY_COMPANIES: SalesCompany[] = [];
@@ -29,6 +30,12 @@ export type SalesCrmContextValue = {
 	addCompanies: (rows: Partial<SalesCompany>[]) => Promise<number>;
 	updateCompany: (companyId: string, patch: Partial<SalesCompany>) => Promise<boolean>;
 	removeCompany: (companyId: string) => Promise<boolean>;
+	addActivity: (companyId: string, activity: SalesActivity) => Promise<boolean>;
+	updateActivity: (
+		companyId: string,
+		activityId: string,
+		changes: Partial<Omit<SalesActivity, "id">>,
+	) => Promise<boolean>;
 	linkProfessional: (recordId: string, companyId: string) => Promise<boolean>;
 };
 
@@ -119,6 +126,8 @@ export function SalesCrmProvider({ children }: { children: ReactNode }) {
 		}
 	}, [client, t]);
 
+	const { addActivity, updateActivity } = useSalesActivityMutations(QUERY_KEY);
+
 	const linkProfessional = useCallback(async (recordId: string, companyId: string) => {
 		try {
 			const updated = await linkProfessionalAccount(recordId, companyId);
@@ -142,8 +151,10 @@ export function SalesCrmProvider({ children }: { children: ReactNode }) {
 		addCompanies,
 		updateCompany,
 		removeCompany,
+		addActivity,
+		updateActivity,
 		linkProfessional,
-	}), [companies, query.isPending, query.isError, getCompany, addCompany, addCompanies, updateCompany, removeCompany, linkProfessional]);
+	}), [companies, query.isPending, query.isError, getCompany, addCompany, addCompanies, updateCompany, removeCompany, addActivity, updateActivity, linkProfessional]);
 
 	return <SalesCrmContext.Provider value={value}>{children}</SalesCrmContext.Provider>;
 }

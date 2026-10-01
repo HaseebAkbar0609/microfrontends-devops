@@ -6,6 +6,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import type { SalesActivity, SalesActivityType, SalesCompany } from "../types";
 import { createId } from "../utils/salesFactories";
+import { useSalesCompanies } from "./useSalesCompanies";
 
 type ActivityDraft = {
 	type: SalesActivityType;
@@ -18,10 +19,8 @@ const EMPTY_DRAFT: ActivityDraft = { type: "call", text: "", followUpAt: "" };
 /**
  * Draft, validation and submit for the company diary. The card stays layout.
  */
-export function useActivityLogForm(
-	company: SalesCompany,
-	onChange: (patch: Partial<SalesCompany>) => void,
-) {
+export function useActivityLogForm(company: SalesCompany) {
+	const { addActivity, updateActivity } = useSalesCompanies();
 	const [draft, setDraft] = useState<ActivityDraft>(EMPTY_DRAFT);
 	const [error, setError] = useState<string | null>(null);
 	const t = useTranslate();
@@ -46,23 +45,18 @@ export function useActivityLogForm(
 			done: false,
 		};
 
-		onChange({ activities: [activity, ...company.activities] });
+		void addActivity(company.id, activity);
 		setDraft({ ...EMPTY_DRAFT, type: draft.type });
 		setError(null);
 		showToast("success", t(localizationConstants.salesActivityAddedToast));
-	}, [company.activities, draft, onChange, t]);
+	}, [addActivity, company.id, draft, t]);
 
 	const toggleDone = useCallback(
 		(activityId: string) => {
-			onChange({
-				activities: company.activities.map((activity) =>
-					activity.id === activityId
-						? { ...activity, done: !activity.done }
-						: activity,
-				),
-			});
+			const activity = company.activities.find((item) => item.id === activityId);
+			if (activity) void updateActivity(company.id, activityId, { done: !activity.done });
 		},
-		[company.activities, onChange],
+		[company.activities, company.id, updateActivity],
 	);
 
 	return { draft, error, update, submit, toggleDone };
