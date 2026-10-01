@@ -62,7 +62,7 @@ const LeadField = ({
 			</label>
 			{children}
 			{addTag && (
-				<div className="flex items-center gap-2">
+				<div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
 					<Input
 						value={draft}
 						onChange={(event) => setDraft(event.target.value)}
@@ -73,13 +73,13 @@ const LeadField = ({
 							}
 						}}
 						placeholder={addTag.placeholder}
-						className="h-10 border-slate-200 text-sm"
+						className="h-10 min-w-0 flex-1 border-slate-200 text-sm"
 					/>
 					<Button
 						type="button"
 						onClick={commit}
 						disabled={!draft.trim()}
-						className="h-10 w-fit shrink-0 gap-2 rounded-md bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-900/90"
+						className="h-10 w-full shrink-0 gap-2 rounded-md bg-slate-900 px-4 text-sm font-medium text-white hover:bg-slate-900/90 sm:w-fit"
 					>
 						<Plus className="h-4 w-4" />
 						<Translate text={localizationConstants.companyLeadsAddNew} />
@@ -237,6 +237,8 @@ export function CompanyLeadManagementTab() {
 			<CollapsibleSection
 				className="rounded-md border border-slate-200 bg-white py-4"
 				contentClassName="px-5"
+				headerClassName="h-auto min-h-10 whitespace-normal text-left"
+				titleClassName="min-w-0 flex-1 [&_svg]:shrink-0"
 				icon={<Contact size={24} className="text-slate-700" />}
 				title={<Translate text={localizationConstants.companyLeadsTitle} />}
 				defaultOpen
@@ -374,7 +376,7 @@ export function CompanyLeadManagementTab() {
 			</CollapsibleSection>
 
 			<div className="sticky bottom-0 mt-auto -mx-6 border-t border-slate-200 bg-slate-50 px-6 py-4">
-				<div className="flex justify-end gap-2">
+				<div className="flex flex-col gap-2 sm:flex-row sm:justify-end">
 					<Button
 						type="button"
 						variant="outline"
