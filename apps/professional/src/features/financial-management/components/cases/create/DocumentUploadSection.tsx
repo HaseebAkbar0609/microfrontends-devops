@@ -2,14 +2,15 @@
 
 import React from "react";
 
+import { RecordDocumentsTable } from "@/components/table/RecordDocumentsTable";
 import localizationConstants from "@/utils/translation/constants";
 import {
 	CASE_DOCUMENT_FILE_ACCEPT,
 	CASE_DOCUMENT_FILE_RULES,
+	CASE_DOCUMENT_TABLE_COPY,
 } from "../../../constants/cases.constants";
 import { useCaseAttachments } from "../../../hooks/useCaseAttachments";
 import type { CaseDocument } from "../../../types/cases.types";
-import { CaseDocumentsTable } from "../shared/CaseDocumentsTable";
 import { CaseUploadCard } from "./CaseUploadCard";
 
 interface DocumentUploadSectionProps {
@@ -46,7 +47,12 @@ export function DocumentUploadSection({
 			onUpload={attachments.upload}
 			rejection={attachments.rejection}
 		>
-			<CaseDocumentsTable documents={documents} onRemove={attachments.remove} />
+			<RecordDocumentsTable
+				documents={documents}
+				types={CASE_DOCUMENT_FILE_RULES.types}
+				copy={CASE_DOCUMENT_TABLE_COPY}
+				onRemove={attachments.remove}
+			/>
 		</CaseUploadCard>
 	);
 }
