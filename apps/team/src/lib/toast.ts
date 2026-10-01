@@ -4,16 +4,18 @@ import { toast as sonnerToast } from "sonner";
 
 export type ToastType = "success" | "error" | "info";
 
-export const showToast = (type: ToastType, message: string) => {
+/** A toast shown again with the same `id` replaces the one on screen instead of stacking. */
+export const showToast = (type: ToastType, message: string, id?: string) => {
+  const options = { richColors: true, id };
   if (type === "success") {
-    sonnerToast.success(message, { richColors: true });
+    sonnerToast.success(message, options);
     return;
   }
 
   if (type === "error") {
-    sonnerToast.error(message, { richColors: true });
+    sonnerToast.error(message, options);
     return;
   }
 
-  sonnerToast(message, { richColors: true });
+  sonnerToast(message, options);
 };

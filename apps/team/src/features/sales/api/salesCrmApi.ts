@@ -11,7 +11,8 @@ export type SalesCompanyInput = Omit<
 	"id" | "createdAt" | "order" | "payment" | "version" | "professionalCompanyId"
 >;
 
-export function companyInput(company: SalesCompany): SalesCompanyInput {
+/** Drops the fields the server owns, which no create or update may send. */
+function withoutServerFields<T extends Partial<SalesCompany>>(company: T) {
 	const {
 		id: _id,
 		createdAt: _createdAt,
@@ -22,6 +23,20 @@ export function companyInput(company: SalesCompany): SalesCompanyInput {
 		...body
 	} = company;
 	return body;
+}
+
+export function companyInput(company: SalesCompany): SalesCompanyInput {
+	return withoutServerFields(company);
+}
+
+/**
+ * The body of a company PATCH: the changes, minus the fields the server owns,
+ * plus the version this tab last read. The server refuses a stale version with
+ * 409, so two sellers editing one prospect cannot overwrite each other.
+ */
+export function companyPatchBody(patch: Partial<SalesCompany>, version: number | undefined) {
+	const body = withoutServerFields(patch);
+	return version === undefined ? body : { ...body, version };
 }
 
 export async function listSalesCompanies(): Promise<SalesCompany[]> {
@@ -47,7 +62,7 @@ export async function createSalesCompanies(companies: SalesCompanyInput[]) {
 	return (await axios.post<{ data: SalesCompany[] }>(`${ROOT}/bulk`, { companies })).data.data;
 }
 
-export async function patchSalesCompany(id: string, patch: Partial<SalesCompanyInput>) {
+export async function patchSalesCompany(id: string, patch: Partial<SalesCompanyInput> & { version?: number }) {
 	return (await axios.patch<Single>(`${ROOT}/${id}`, patch)).data.data;
 }
 

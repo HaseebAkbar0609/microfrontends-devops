@@ -102,17 +102,6 @@ test("SALES-11: the settings screen reads and writes the settings API", async ()
 
 // ──────────────── backend exists, frontend never calls it ────────────────
 
-test.fixme("SALES-03: a patch asserts the version it read, so a 409 can happen", () => {
-	// The server compares `version` and answers SALES_COMPANY_VERSION_CONFLICT,
-	// but SalesCrmProvider.updateCompany destructures `version` out of every patch
-	// before sending, so two sellers editing one prospect overwrite each other.
-	//
-	// fixme, not fail: the stripping is inline in a useCallback. Asserting on
-	// companyInput would never flip, because that is the create path and a
-	// correct fix belongs on PATCH. Extract the patch-body builder into a pure
-	// function and assert that it keeps `version`.
-});
-
 test.fail("SALES-07: the list asks the server to filter, search and sort", async () => {
 	// The server took over filtering, search and sorting, but
 	// listSalesCompanies() takes no arguments and requests every page, so the
