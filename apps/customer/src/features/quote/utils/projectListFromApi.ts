@@ -39,6 +39,7 @@ function categoryLabelsFromRow(row: Record<string, unknown>): string[] {
  * Normalizes API `quote_status` (or legacy `status`) to a PROJECT_STATUS_FILTER_OPTIONS value.
  */
 function normalizeQuoteStatus(row: Record<string, unknown>): string {
+	if (s(row.status).toLowerCase() === "draft") return "draft";
 	const raw = s(row.quote_status) || s(row.status);
 	if (!raw) return "waiting_for_quote";
 
