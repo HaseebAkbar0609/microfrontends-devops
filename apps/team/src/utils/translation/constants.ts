@@ -1305,6 +1305,11 @@ export type SalesTranslation = {
 	salesBookerMeetingAtLabel: string;
 	salesBookerReminderAtLabel: string;
 	salesBookerOpenFullCardLink: string;
+	salesBookerPresentationLabel: string;
+	salesBookerPresentationSend: string;
+	salesBookerPresentationNoEmail: string;
+	salesBookerPresentationNoTemplates: string;
+	salesBookerPresentationLogged: string;
 	salesBookerCallLoggedToast: string;
 	salesBookerMeetingBookedToast: string;
 	salesBookerReminderSavedToast: string;
