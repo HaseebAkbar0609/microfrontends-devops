@@ -10705,6 +10705,13 @@ export type ForecastDashboardTranslation = {
 	forecastDocumentsUploaded: string;
 	forecastDocumentsUploadFailed: string;
 	forecastDocumentsDeleted: string;
+
+	/* Prognos › Protokoll: what the details dialog adds (TFS-1066). */
+	forecastProtocolsDetailsTitle: string;
+	forecastProtocolsDetailSize: string;
+	forecastProtocolsSizeUnknown: string;
+	forecastProtocolsOpenFile: string;
+	forecastProtocolsChooseFile: string;
 };
 
 export type PersonnelEquipmentTranslation = {

@@ -10780,6 +10780,13 @@ const enForecastDashboard: ForecastDashboardTranslation = {
 	forecastDocumentsUploaded: "{{count}} documents were uploaded.",
 	forecastDocumentsUploadFailed: "The documents could not be uploaded.",
 	forecastDocumentsDeleted: "{{name}} was removed.",
+
+	/* Prognos › Protokoll: what the details dialog adds (TFS-1066). */
+	forecastProtocolsDetailsTitle: "Protocol details",
+	forecastProtocolsDetailSize: "Size",
+	forecastProtocolsSizeUnknown: "Unknown",
+	forecastProtocolsOpenFile: "Open file",
+	forecastProtocolsChooseFile: "Choose file",
 };
 
 // Material storage – overview (TFS-1072)
