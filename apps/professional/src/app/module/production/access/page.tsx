@@ -1,5 +1,5 @@
-import { ComingSoonPage } from "@/components/common/ComingSoonPage";
 import { ModulePageHeader } from "@/components/layout/navigation";
+import { AccessOverviewPage } from "@/features/access/components/AccessOverviewPage";
 import {
 	ACCESS_MODULE_TABS,
 	ACCESS_MODULE_TITLE,
@@ -15,7 +15,7 @@ export default function Page() {
 				tabs={ACCESS_MODULE_TABS}
 				breadcrumbs={accessBreadcrumbs(localizationConstants.accessManagement)}
 			/>
-			<ComingSoonPage hideTitle />
+			<AccessOverviewPage />
 		</div>
 	);
 }
