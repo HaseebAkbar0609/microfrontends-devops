@@ -1134,6 +1134,7 @@ export const sweSales: SalesTranslation = {
 	salesValidationOrgNumberInvalid: "Ange organisationsnumret som 556000-0000.",
 	salesCompanyCreatedToast: "Företaget har registrerats",
 	salesRecordSaveFailed: "Kunde inte spara säljposten. Försök igen.",
+	salesRecordConflict: "Någon annan har ändrat företaget under tiden. Den senaste versionen är inläst. Kontrollera din ändring.",
 	salesRecordArchiveFailed: "Kunde inte arkivera säljposten. Försök igen.",
 	salesRecordLoading: "Laddar säljposter...",
 	salesRecordLoadFailed: "Kunde inte ladda säljposter. Försök igen.",

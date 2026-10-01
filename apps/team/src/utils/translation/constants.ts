@@ -1109,6 +1109,7 @@ export type SalesTranslation = {
 	salesValidationOrgNumberInvalid: string;
 	salesCompanyCreatedToast: string;
 	salesRecordSaveFailed: string;
+	salesRecordConflict: string;
 	salesRecordArchiveFailed: string;
 	salesRecordLoading: string;
 	salesRecordLoadFailed: string;
