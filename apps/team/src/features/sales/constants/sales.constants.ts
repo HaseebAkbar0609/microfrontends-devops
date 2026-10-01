@@ -36,7 +36,6 @@ export const MIN_EXTRA_DISCOUNT_PERCENT = 0;
 export const MAX_EXTRA_DISCOUNT_PERCENT = 100;
 
 /** Document number prefixes. */
-export const QUOTE_NUMBER_PREFIX = "TF";
 export const ORDER_NUMBER_PREFIX = "OB";
 export const INVOICE_NUMBER_PREFIX = "F";
 
