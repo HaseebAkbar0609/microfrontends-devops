@@ -24,12 +24,11 @@
 import { expect, test } from "@playwright/test";
 
 import * as salesCrmApi from "../src/features/sales/api/salesCrmApi";
+import * as salesFactories from "../src/features/sales/utils/salesFactories";
 import {
 	createEmptyCompany,
-	createId,
 	createOrder,
 	createPendingPayment,
-	createQuoteNumber,
 } from "../src/features/sales/utils/salesFactories";
 import { calculateQuoteTotals } from "../src/features/sales/utils/quoteCalculations";
 import { buildSalesQuote, createQuoteDraft } from "../src/features/sales/utils/quoteDraft";
@@ -102,17 +101,6 @@ test("SALES-11: the settings screen reads and writes the settings API", async ()
 
 // ──────────────── backend exists, frontend never calls it ────────────────
 
-test.fixme("SALES-03: a patch asserts the version it read, so a 409 can happen", () => {
-	// The server compares `version` and answers SALES_COMPANY_VERSION_CONFLICT,
-	// but SalesCrmProvider.updateCompany destructures `version` out of every patch
-	// before sending, so two sellers editing one prospect overwrite each other.
-	//
-	// fixme, not fail: the stripping is inline in a useCallback. Asserting on
-	// companyInput would never flip, because that is the create path and a
-	// correct fix belongs on PATCH. Extract the patch-body builder into a pure
-	// function and assert that it keeps `version`.
-});
-
 test.fail("SALES-07: the list asks the server to filter, search and sort", async () => {
 	// The server took over filtering, search and sorting, but
 	// listSalesCompanies() takes no arguments and requests every page, so the
@@ -178,21 +166,24 @@ test.fail("Sales organisation: the team roster is not a mock seed", async () => 
 
 // ──────────────────────── numbering and money ────────────────────────
 
-test.fail("TFS-1138: a quote number does not depend on unrelated factory calls", () => {
-	// createQuoteNumber shares one module-level counter with createId and
-	// createTrialAccount, so the serial depends on how many unrelated things were
-	// created first. Creating the prospect already consumed 001.
-	createId("sc");
-	expect(createQuoteNumber()).toMatch(/-001$/);
+test("TFS-1138: the browser no longer makes quote numbers", () => {
+	// A counter in the browser restarted on reload and ran per tab. The server now
+	// issues TF-<year>-<serial> on a quote's first save and keeps it after that
+	// (sales_crm_service._number_documents), so a new quote goes out without one.
+	expect(salesFactories).not.toHaveProperty("createQuoteNumber");
+	const company = quotedCompany();
+	company.quote = null;
+	const draft = createQuoteDraft(company, (key) => key, "");
+	const totals = calculateQuoteTotals(draft.modules, draft.term, draft.extraDiscountPercent);
+	expect(buildSalesQuote(draft, totals, "").quoteNumber).toBe("");
 });
 
-test.fail("TFS-1138: document numbers are issued by the server, not the browser", async () => {
-	// The counter resets on reload and runs per tab, so two tabs produce the same
-	// quote number. Order and invoice numbers are worse: they are built from the
-	// last four characters of the company id, so they are neither sequential nor
-	// unique — and Swedish bookkeeping rules require invoice numbers to be both.
-	const api = await import("../src/features/sales/api/salesNumbersApi");
-	expect(Object.keys(api)).toEqual(expect.arrayContaining(["allocateDocumentNumber"]));
+test.fail("TFS-1138: order numbers are issued by the server, not the browser", () => {
+	// Quote numbers are done (above). Order numbers are still built from the last
+	// characters of the company id, so they are neither sequential nor unique, and
+	// the order itself is dropped on save (TFS-1136). The fix sends the order
+	// without a number and the server issues OB-<year>-<serial>.
+	expect(createOrder(quotedCompany()).orderNumber).toBe("");
 });
 
 test("TFS-1137: a saved quote carries the discount that explains its net", () => {

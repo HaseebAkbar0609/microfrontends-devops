@@ -39,7 +39,7 @@ export function QuotePreviewSheet({
 					<>
 						<p className="font-medium text-slate-900">
 							<Translate text={localizationConstants.salesQuoteNumberLabel} />{" "}
-							{quoteNumber}
+							{quoteNumber || <Translate text={localizationConstants.salesQuoteNumberPending} />}
 						</p>
 						<p suppressHydrationWarning>{formatDate(draft.createdAt)}</p>
 						<p suppressHydrationWarning>

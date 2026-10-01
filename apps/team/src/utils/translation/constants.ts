@@ -1109,6 +1109,7 @@ export type SalesTranslation = {
 	salesValidationOrgNumberInvalid: string;
 	salesCompanyCreatedToast: string;
 	salesRecordSaveFailed: string;
+	salesRecordConflict: string;
 	salesRecordArchiveFailed: string;
 	salesRecordLoading: string;
 	salesRecordLoadFailed: string;
@@ -1206,7 +1207,9 @@ export type SalesTranslation = {
 	salesQuotePriceUnitLabel: string;
 	salesQuotePriceLabel: string;
 	salesQuoteSaveButton: string;
+	salesQuoteNumberPending: string;
 	salesPrintButton: string;
+	salesPrintNeedsSaveHint: string;
 	salesQuoteSavedToast: string;
 	salesQuoteSingleUnitLabel: string;
 	salesSellerTagline: string;
@@ -1304,6 +1307,11 @@ export type SalesTranslation = {
 	salesBookerMeetingAtLabel: string;
 	salesBookerReminderAtLabel: string;
 	salesBookerOpenFullCardLink: string;
+	salesBookerPresentationLabel: string;
+	salesBookerPresentationSend: string;
+	salesBookerPresentationNoEmail: string;
+	salesBookerPresentationNoTemplates: string;
+	salesBookerPresentationLogged: string;
 	salesBookerCallLoggedToast: string;
 	salesBookerMeetingBookedToast: string;
 	salesBookerReminderSavedToast: string;
