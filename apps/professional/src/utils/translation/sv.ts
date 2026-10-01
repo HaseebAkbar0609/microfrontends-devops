@@ -10801,6 +10801,13 @@ const svForecastDashboard: ForecastDashboardTranslation = {
 	forecastDocumentsUploaded: "{{count}} dokument har laddats upp.",
 	forecastDocumentsUploadFailed: "Dokumenten kunde inte laddas upp.",
 	forecastDocumentsDeleted: "{{name}} har tagits bort.",
+
+	/* Prognos › Protokoll: what the details dialog adds (TFS-1066). */
+	forecastProtocolsDetailsTitle: "Protokollets uppgifter",
+	forecastProtocolsDetailSize: "Storlek",
+	forecastProtocolsSizeUnknown: "Okänd",
+	forecastProtocolsOpenFile: "Öppna fil",
+	forecastProtocolsChooseFile: "Välj fil",
 };
 
 // Material storage – overview (TFS-1072)
