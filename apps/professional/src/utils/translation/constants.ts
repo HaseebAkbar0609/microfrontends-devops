@@ -10713,6 +10713,47 @@ export type ForecastDashboardTranslation = {
 	forecastProtocolsSizeUnknown: string;
 	forecastProtocolsOpenFile: string;
 	forecastProtocolsChooseFile: string;
+
+	/* Prognos › Statistik: the dashboard's own words (TFS-1067). */
+	forecastStatisticsTitle: string;
+	forecastStatisticsKpiObjects: string;
+	forecastStatisticsKpiOpenCases: string;
+	forecastStatisticsNoteChange: string;
+	forecastStatisticsKpiWarning: string;
+	forecastStatisticsProfitTitle: string;
+	forecastStatisticsSeriesProfit: string;
+	forecastStatisticsSeriesCost: string;
+	forecastStatisticsProfitChartLabel: string;
+	forecastStatisticsProfitEmpty: string;
+	forecastStatisticsDistributionRow: string;
+	forecastStatisticsObjectsTitle: string;
+	forecastStatisticsObjectsChartLabel: string;
+	forecastStatisticsObjectsEmpty: string;
+	forecastStatisticsObjectsOnBudget: string;
+	forecastStatisticsObjectsOver: string;
+	forecastStatisticsObjectsOther: string;
+	forecastStatisticsHealthTitle: string;
+	forecastStatisticsHealthChartLabel: string;
+	forecastStatisticsHealthEmpty: string;
+	forecastStatisticsSystemEventsTitle: string;
+	forecastStatisticsFinancialEventsTitle: string;
+	forecastStatisticsEventsEmpty: string;
+	forecastStatisticsEventBudget: string;
+	forecastStatisticsEventForecast: string;
+	forecastStatisticsEventReport: string;
+	forecastStatisticsEventInvoice: string;
+	forecastStatisticsEventMargin: string;
+	forecastStatisticsEventRisk: string;
+	forecastStatisticsActivityTitle: string;
+	forecastStatisticsColProject: string;
+	forecastStatisticsColModule: string;
+	forecastStatisticsColVolume: string;
+	forecastStatisticsColRisk: string;
+	forecastStatisticsColExposure: string;
+	forecastStatisticsActivityEmpty: string;
+	forecastStatisticsExport: string;
+	forecastStatisticsExportFailed: string;
+	forecastStatisticsSheetName: string;
 };
 
 export type PersonnelEquipmentTranslation = {

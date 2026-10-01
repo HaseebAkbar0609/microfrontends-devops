@@ -120,6 +120,7 @@ export const ECONOMY_FORECAST_CASES_URL = `${ECONOMY_FORECAST_BASE_URL}/cases`;
 export const ECONOMY_FORECAST_TEMPLATES_URL = `${ECONOMY_FORECAST_BASE_URL}/templates`;
 export const ECONOMY_FORECAST_DOCUMENTS_URL = `${ECONOMY_FORECAST_BASE_URL}/document-center`;
 export const ECONOMY_FORECAST_PROTOCOLS_URL = `${ECONOMY_FORECAST_BASE_URL}/protocols`;
+export const ECONOMY_FORECAST_STATISTICS_URL = `${ECONOMY_FORECAST_BASE_URL}/statistics`;
 
 /**
  * The Prognos tab's own row: the pages built so far. The frame draws them as
@@ -183,6 +184,11 @@ export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
 		id: "forecast-protocols",
 		labelKey: localizationConstants.projectProtocolTitle,
 		href: ECONOMY_FORECAST_PROTOCOLS_URL,
+	},
+	{
+		id: "forecast-statistics",
+		labelKey: localizationConstants.forecastStatisticsTitle,
+		href: ECONOMY_FORECAST_STATISTICS_URL,
 	},
 ];
 
