@@ -1235,6 +1235,7 @@ export const enSales: SalesTranslation = {
 	salesQuoteSaveButton: "Save quote",
 	salesQuoteNumberPending: "Assigned when the quote is saved",
 	salesPrintButton: "Print or save as PDF",
+	salesPrintNeedsSaveHint: "Save the quote first, so it gets a number.",
 	salesQuoteSavedToast: "Quote saved",
 	salesQuoteSingleUnitLabel: "1 pc",
 	salesSellerTagline: "Smart time management for Swedish companies",

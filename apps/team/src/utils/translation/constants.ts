@@ -1208,6 +1208,7 @@ export type SalesTranslation = {
 	salesQuoteSaveButton: string;
 	salesQuoteNumberPending: string;
 	salesPrintButton: string;
+	salesPrintNeedsSaveHint: string;
 	salesQuoteSavedToast: string;
 	salesQuoteSingleUnitLabel: string;
 	salesSellerTagline: string;

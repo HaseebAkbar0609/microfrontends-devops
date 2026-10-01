@@ -1233,6 +1233,7 @@ export const sweSales: SalesTranslation = {
 	salesQuoteSaveButton: "Spara offert",
 	salesQuoteNumberPending: "Tilldelas när offerten sparas",
 	salesPrintButton: "Skriv ut eller spara som PDF",
+	salesPrintNeedsSaveHint: "Spara offerten först, så får den ett nummer.",
 	salesQuoteSavedToast: "Offerten har sparats",
 	salesQuoteSingleUnitLabel: "1 st",
 	salesSellerTagline: "Smart tidhantering för svenska företag",

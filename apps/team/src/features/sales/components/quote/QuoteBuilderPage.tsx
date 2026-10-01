@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { Printer, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import localizationConstants from "@/utils/translation/constants";
-import { Translate } from "@/utils/translation/translate";
+import { Translate, useTranslate } from "@/utils/translation/translate";
 import { useQuoteBuilderForm } from "../../hooks/useQuoteBuilderForm";
 import { useSalesCompanies } from "../../hooks/useSalesCompanies";
 import type { SalesCompany } from "../../types";
@@ -45,6 +45,7 @@ function QuoteBuilder({ company }: { company: SalesCompany }) {
 		removeModule,
 		save,
 	} = useQuoteBuilderForm(company, handleChange);
+	const t = useTranslate();
 
 	return (
 		<div className="@container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white">
@@ -62,6 +63,9 @@ function QuoteBuilder({ company }: { company: SalesCompany }) {
 								type="button"
 								variant="outline"
 								className="h-9 cursor-pointer gap-2"
+								// Until its first save the quote has no number, so a print would go out without one.
+								disabled={!quoteNumber}
+								title={quoteNumber ? undefined : t(localizationConstants.salesPrintNeedsSaveHint)}
 								onClick={() => window.print()}
 							>
 								<Printer className="h-4 w-4" />
