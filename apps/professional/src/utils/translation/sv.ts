@@ -35,6 +35,7 @@ import {
 	PersonnelProfileTranslation,
 	AccountLifecycleTranslation,
 	SmartAccessTranslation,
+	SmartAccessDetailsTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -11314,6 +11315,21 @@ export const svSmartAccess: SmartAccessTranslation = {
 	accessDeletedToast: "{{name}} togs bort.",
 };
 
+export const svSmartAccessDetails: SmartAccessDetailsTranslation = {
+	accessDetailsTitle: "Åtkomsthantering – detaljer",
+	accessTabInformation: "Åtkomstinformation",
+	accessTabAccess: "Åtkomst",
+	accessSectionObject: "Objekt",
+	accessSectionInformation: "Åtkomstinformation",
+	accessSectionContact: "Kontaktperson",
+	accessFieldProjectOrder: "Projekt (Order)",
+	accessFieldAccessName: "Åtkomstnamn",
+	accessContactResponsible: "Ansvarig",
+	accessContactMobile: "Mobil",
+	accessContactsEmpty: "Inga kontaktpersoner.",
+	accessEditSectionLabel: "Redigera {{section}}",
+};
+
 export const sv: Translation = {
   ...svDocumentWorkflows,
 	...svHeader,
@@ -11374,4 +11390,5 @@ export const sv: Translation = {
 	...svForecastDashboard,
 	...svMaterialStorage,
 	...svSmartAccess,
+	...svSmartAccessDetails,
 };

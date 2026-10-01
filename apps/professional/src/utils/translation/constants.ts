@@ -11218,6 +11218,21 @@ export type SmartAccessTranslation = {
 	accessDeletedToast: string;
 };
 
+export type SmartAccessDetailsTranslation = {
+	accessDetailsTitle: string;
+	accessTabInformation: string;
+	accessTabAccess: string;
+	accessSectionObject: string;
+	accessSectionInformation: string;
+	accessSectionContact: string;
+	accessFieldProjectOrder: string;
+	accessFieldAccessName: string;
+	accessContactResponsible: string;
+	accessContactMobile: string;
+	accessContactsEmpty: string;
+	accessEditSectionLabel: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -11275,6 +11290,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	ForecastDashboardTranslation &
 	MaterialStorageTranslation &
 	SmartAccessTranslation &
+	SmartAccessDetailsTranslation &
 	PersonnelCompetenceAndReviewTranslation;
 
 export type TranslationKeys = keyof Translation;
