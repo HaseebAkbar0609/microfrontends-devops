@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getLeadByIdAPIAction, listLeadsAPIAction } from "@/api-actions";
+import { listAcceptedLeadsAPIAction } from "@/api-actions/leads/list";
 import type { LeadsListQueryParams } from "@/features/leads/types";
 
 export function useLeadsList(
@@ -25,5 +26,15 @@ export function useLeadById(leadId: string) {
 		refetchOnWindowFocus: false,
 		staleTime: 5 * 60 * 1000,
 		gcTime: 30 * 60 * 1000,
+	});
+}
+
+export function useAcceptedLeadsList(enabled = true) {
+	return useQuery({
+		queryKey: ["leads-accepted-enriched"],
+		queryFn: listAcceptedLeadsAPIAction,
+		enabled,
+		refetchOnWindowFocus: false,
+		staleTime: 0,
 	});
 }

@@ -393,6 +393,20 @@ export default function CreateOfferPage() {
 							activeStep as keyof typeof CREATE_OFFER_STEP_VALIDATION_FIELDS
 						] ?? [],
 					);
+		if (!isValid) {
+			const fields =
+				activeStep === 5
+					? (Object.keys(form.getValues()) as (keyof CreateOfferFormValues)[])
+					: CREATE_OFFER_STEP_VALIDATION_FIELDS[activeStep] ?? [];
+			const message = fields
+				.map((field) => form.getFieldState(field).error?.message)
+				.find(Boolean);
+			showToast(
+				"error",
+				message || "Please review the required fields.",
+			);
+			return;
+		}
 
 		if (isValid) {
 			if (activeStep < totalSteps) {
@@ -468,7 +482,9 @@ export default function CreateOfferPage() {
 					setIsNextLoading(false);
 				}
 			} else {
-				form.handleSubmit(onSubmit)();
+				void form.handleSubmit(onSubmit, () => {
+					showToast("error", "Please review the required fields.");
+				})();
 			}
 		}
 	};

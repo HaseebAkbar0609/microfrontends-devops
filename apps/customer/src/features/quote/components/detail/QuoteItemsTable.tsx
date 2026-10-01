@@ -22,6 +22,7 @@ interface QuoteItem {
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { approveQuoteAPIAction } from "@/api-actions";
+import { rejectQuoteAPIAction } from "@/api-actions/quote/reject";
 import { Loader2 } from "lucide-react";
 
 interface QuoteItemsTableProps {
@@ -31,6 +32,8 @@ interface QuoteItemsTableProps {
 	rotDeduction: boolean | string;
 	finalTotal: string;
 	quoteId?: string;
+	projectId?: string;
+	quoteStatus?: string;
 	onApprove?: () => void;
 }
 
@@ -41,10 +44,13 @@ export function QuoteItemsTable({
 	rotDeduction,
 	finalTotal,
 	quoteId,
+	projectId,
+	quoteStatus,
 	onApprove,
 }: QuoteItemsTableProps) {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [status, setStatus] = useState<"approved" | "rejected" | null>(null);
 
 	/**
 	 * Handles quote approval. If a custom `onApprove` callback prop is passed,
@@ -61,7 +67,18 @@ export function QuoteItemsTable({
 		const res = await approveQuoteAPIAction(quoteId);
 		setIsSubmitting(false);
 		if (res.success) {
-			router.push("/projects");
+			setStatus("approved");
+			if (projectId) router.push(`/business/offer/${projectId}?tab=quote-list`);
+		}
+	};
+	const handleReject = async () => {
+		if (!quoteId) return;
+		setIsSubmitting(true);
+		const res = await rejectQuoteAPIAction(quoteId);
+		setIsSubmitting(false);
+		if (res.success) {
+			setStatus("rejected");
+			if (projectId) router.push(`/business/offer/${projectId}?tab=quote-list`);
 		}
 	};
 	return (
@@ -161,9 +178,11 @@ export function QuoteItemsTable({
 					</div>
 				</div>
 			</div>
-			<div className="flex justify-end gap-3 mt-4">
+			{(quoteStatus === "recieved_quote" || quoteStatus === "under_review") && <div className="flex justify-end gap-3 mt-4">
 				<Button
 					variant="ghost"
+					onClick={handleReject}
+					disabled={isSubmitting || !quoteId || status !== null}
 					className="bg-red-500 hover:bg-red-600 text-white font-semibold px-8 h-10 rounded-md"
 				>
 					<Translate text={localizationConstants.rejectLabel} />
@@ -171,7 +190,7 @@ export function QuoteItemsTable({
 				<Button
 					variant="ghost"
 					onClick={handleApprove}
-					disabled={isSubmitting || (!onApprove && !quoteId)}
+					disabled={isSubmitting || status !== null || (!onApprove && !quoteId)}
 					className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold px-8 h-10 rounded-md"
 				>
 					{isSubmitting ? (
@@ -181,6 +200,7 @@ export function QuoteItemsTable({
 					)}
 				</Button>
 			</div>
+			}
 		</DetailCard>
 	);
 }

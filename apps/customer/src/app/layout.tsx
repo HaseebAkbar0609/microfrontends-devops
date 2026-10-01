@@ -28,7 +28,7 @@ export default function RootLayout({
 					<Providers>
 						<AppShell>{children}</AppShell>
 					</Providers>
-					<Toaster />
+					<Toaster position="top-center" offset="72px" />
 				</ErrorBoundary>
 			</body>
 		</html>

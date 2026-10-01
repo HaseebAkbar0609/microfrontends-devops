@@ -195,6 +195,8 @@ export const getStatusVariant = (status: QuoteStatus) => {
 			return "info";
 		case "Waiting for Quote":
 			return "warning";
+		case "Rejected":
+			return "destructive";
 		default:
 			return "outline";
 	}

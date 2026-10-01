@@ -335,6 +335,7 @@ export const svOfferModule: OfferModule = {
 	statusAccepted: "Accepterad",
 	statusUnderReview: "Under granskning",
 	statusRejected: "Avvisad",
+	allStatuses: "Alla statusar",
 	createNewOfferTitle: "Skapa ny",
 	createNewOfferSubtitle: "Lägg till detaljerad information",
 	personalInformationSection: "Personlig information",

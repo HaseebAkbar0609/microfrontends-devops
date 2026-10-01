@@ -9,11 +9,14 @@ interface ProjectOverviewTabProps {
 	project: Partial<CreateOfferFormValues> & {
 		refNo?: string;
 		status?: string;
+		categoryNames?: string[];
 	};
 }
 
 export function ProjectOverviewTab({ project }: ProjectOverviewTabProps) {
-	const categoryDisplay = Array.isArray(project.category)
+	const categoryDisplay = project.categoryNames?.length
+		? project.categoryNames.join(", ")
+		: Array.isArray(project.category)
 		? project.category.join(", ")
 		: typeof project.category === "string"
 			? project.category

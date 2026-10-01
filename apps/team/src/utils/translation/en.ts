@@ -202,6 +202,7 @@ export const enLeads: LeadsTranslation = {
 	settingsSaveErrorToast: "Could not save lead settings.",
 	serverError: "A server error occurred. Please try again later.",
 	unpaidLabel: "Unpaid",
+	paidLabel: "Paid",
 	noLeadsFound: "No leads match your search.",
 	rowsPerPage: "Rows per page",
 	pageLabel: "Page",

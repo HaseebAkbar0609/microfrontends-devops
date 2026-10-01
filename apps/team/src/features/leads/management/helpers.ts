@@ -214,7 +214,7 @@ export function getLeadRowCells(
 				{ kind: "text", value: acceptedRow.offer },
 				{ kind: "text", value: acceptedRow.commission },
 				{ kind: "text", value: acceptedRow.reminder },
-				{ kind: "status", valueKey: localizationConstants.unpaidLabel },
+				{ kind: "payment", value: acceptedRow.status },
 			];
 		}
 		case "betalda": {

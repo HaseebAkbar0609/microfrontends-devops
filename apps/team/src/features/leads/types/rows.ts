@@ -25,7 +25,7 @@ export type AcceptedLeadRow = {
 	offer: string;
 	commission: string;
 	reminder: string;
-	status: "unpaid" | "paid";
+	status: string;
 };
 
 export type PaidLeadRow = {

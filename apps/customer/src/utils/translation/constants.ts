@@ -311,6 +311,7 @@ export type OfferModule = {
 	statusAccepted: string;
 	statusUnderReview: string;
 	statusRejected: string;
+	allStatuses: string;
 	createNewOfferTitle: string;
 	createNewOfferSubtitle: string;
 	personalInformationSection: string;

@@ -43,6 +43,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import localizationConstants from "@/utils/translation/constants";
 import { updateLeadStatusAPIAction } from "@/api-actions";
 import { mapLeadStatusToApiStatus } from "@/api-actions/leads/shared";
+import { formatLeadCategory, formatLeadDate, mapProjectType } from "@/api-actions/leads/shared";
 import { filterOptions, leadTabs } from "@/features/leads/management/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import type {
@@ -58,7 +59,7 @@ import { useDebounce } from "@/components/hooks/useDebounce";
 import { useQueryParams } from "@/components/hooks/useQueryParams";
 import { ConfirmDialog } from "@/components/dialog/ConfirmDialog";
 import { showToast } from "@/lib/toast";
-import { useLeadsList } from "@/features/leads/queries/useLeadsList";
+import { useAcceptedLeadsList, useLeadsList } from "@/features/leads/queries/useLeadsList";
 import { useDeleteLead } from "@/features/leads/queries/useDeleteLead";
 
 import {
@@ -96,6 +97,7 @@ export function LeadsManagementPage() {
     page: 1,
     pageSize: 10000,
   });
+  const acceptedQuery = useAcceptedLeadsList(activeTab === "accepterad" || activeTab === "betalda");
 
 
   useEffect(() => {
@@ -147,39 +149,36 @@ export function LeadsManagementPage() {
       }));
     setArchiveRows(archiveItems);
 
-    const acceptedItems = items
-      .filter((item) => item.status === "accepterad")
-      .map((item) => ({
-        id: item.id,
-        acceptedDate: item.date,
-        leadId: item.leadId,
-        customer: item.customer,
-        supplier: "-",
-        type: item.type,
-        category: item.category,
-        city: item.city,
-        offer: "-",
-        commission: "-",
-        reminder: "-",
-        status: "unpaid" as const,
-      }));
-    setAcceptedRows(acceptedItems);
-
-    const paidItems = items
-      .filter((item) => item.status === "betalda")
-      .map((item) => ({
-        id: item.id,
-        acceptedDate: item.date,
-        leadId: item.leadId,
-        customer: item.customer,
-        supplier: "-",
-        city: item.city,
-        commission: "-",
-        paymentDate: "-",
-      }));
-    setPaidRows(paidItems);
-
   }, [leadsListQuery.data]);
+
+  useEffect(() => {
+    if (!acceptedQuery.data) return;
+    const acceptedItems: AcceptedLeadRow[] = acceptedQuery.data.map((item) => ({
+      id: item.lead_id,
+      acceptedDate: formatLeadDate(item.accepted_at ?? ""),
+      leadId: item.lead_number,
+      customer: item.contact_name || "-",
+      supplier: item.accepted_company_name || "-",
+      type: mapProjectType(item.project_type),
+      category: formatLeadCategory(item.categories),
+      city: item.city || "-",
+      offer: `${Number(item.total_quote_amount).toLocaleString("sv-SE")} SEK`,
+      commission: `${Number(item.commission_amount).toLocaleString("sv-SE")} SEK`,
+      reminder: "-",
+      status: item.commission_status || "unpaid",
+    }));
+    setAcceptedRows(acceptedItems);
+    setPaidRows(acceptedQuery.data.filter((item) => item.commission_status === "paid").map((item) => ({
+      id: item.lead_id,
+      acceptedDate: formatLeadDate(item.accepted_at ?? ""),
+      leadId: item.lead_number,
+      customer: item.contact_name || "-",
+      supplier: item.accepted_company_name || "-",
+      city: item.city || "-",
+      commission: `${Number(item.commission_amount).toLocaleString("sv-SE")} SEK`,
+      paymentDate: formatLeadDate(item.payment_date ?? ""),
+    })));
+  }, [acceptedQuery.data]);
 
   useEffect(() => {
     setSearchInput("");
@@ -653,6 +652,16 @@ export function LeadsManagementPage() {
 }
 
 function LeadRowCell({ cell, onClick }: { cell: LeadTableCell; onClick?: () => void }) {
+  if (cell.kind === "payment") {
+    const paid = cell.value === "paid";
+    return (
+      <TableCell>
+        <span className={`inline-flex items-center rounded-sm px-2.5 py-0.5 text-xs font-medium ${paid ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700"}`}>
+          {paid ? <Translate text={localizationConstants.paidLabel} /> : cell.value === "unpaid" ? <Translate text={localizationConstants.unpaidLabel} /> : cell.value.replaceAll("_", " ")}
+        </span>
+      </TableCell>
+    );
+  }
   if (cell.kind === "status") {
     return (
       <TableCell>

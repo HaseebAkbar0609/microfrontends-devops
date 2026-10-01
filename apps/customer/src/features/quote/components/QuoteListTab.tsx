@@ -1,50 +1,93 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getProjectQuotesAPIAction, type ProjectQuoteItem } from "@/api-actions/quote/list";
 import { QuoteListToolbar } from "./list/QuoteListToolbar";
 import { QuoteListTable } from "./list/QuoteListTable";
-import type { QuoteSupplier } from "../types/form";
-import type { QuoteItem } from "../types/types";
+import type { QuoteItem, QuoteStatus } from "../types/types";
 
 interface QuoteListTabProps {
-	suppliers?: QuoteSupplier[];
+	projectId: string;
 }
 
-export function QuoteListTab({ suppliers = [] }: QuoteListTabProps) {
+const statusLabels: Record<string, QuoteStatus> = {
+	approved: "Approved",
+	recieved_quote: "Received Quote",
+	under_review: "Received Quote",
+	rejected: "Rejected",
+};
+
+export function QuoteListTab({ projectId }: QuoteListTabProps) {
 	const [searchTerm, setSearchTerm] = useState("");
+	const [statusFilter, setStatusFilter] = useState<QuoteStatus | "all">("all");
+	const [items, setItems] = useState<ProjectQuoteItem[]>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
+	const loadQuotes = useCallback(async () => {
+		setLoading(true);
+		const result = await getProjectQuotesAPIAction(projectId);
+		setLoading(false);
+		if (result.success) {
+			setItems(result.data ?? []);
+			setError(null);
+		} else {
+			setError(result.error || "Failed to load project offers");
+		}
+	}, [projectId]);
+
+	useEffect(() => {
+		void loadQuotes();
+	}, [loadQuotes]);
 
 	const quotes: QuoteItem[] = useMemo(() => {
-		if (!suppliers.length) return [];
-		return suppliers.map((supplier, idx) => {
-			const contact = `${supplier.contactFirstName || ""} ${supplier.contactLastName || ""}`.trim() || "-";
+		return items.map((item) => {
+			const published = Boolean(item.quote_id);
 			return {
-				id: supplier.id || String(idx),
-				isStarred: true,
-				company: supplier.companyName || "-",
-				contact,
-				orgNo: supplier.orgNumber || "-",
-				price: "0 SEK",
-				status: "Invited" as const,
+				id: item.id || item.company_id,
+				quoteId: item.quote_id || undefined,
+				isStarred: item.is_invited,
+				company: item.company_name || "-",
+				contact: item.contact_person || "-",
+				orgNo: item.organization_number || "-",
+				price: published
+					? `${new Intl.NumberFormat("sv-SE").format(item.price)} ${item.currency || "SEK"}`
+					: "-",
+				status: statusLabels[item.status] || (item.is_invited ? "Invited" : "Waiting for Quote"),
 			};
 		});
-	}, [suppliers]);
+	}, [items]);
 
 	const filteredQuotes = useMemo(() => {
-		if (!searchTerm.trim()) return quotes;
-		const term = searchTerm.toLowerCase();
+		const term = searchTerm.trim().toLowerCase();
 		return quotes.filter(
 			(q) =>
-				q.company.toLowerCase().includes(term) ||
+				(statusFilter === "all" || q.status === statusFilter) &&
+				(q.company.toLowerCase().includes(term) ||
 				q.contact.toLowerCase().includes(term) ||
-				q.orgNo.toLowerCase().includes(term),
+				q.orgNo.toLowerCase().includes(term)),
 		);
-	}, [quotes, searchTerm]);
+	}, [quotes, searchTerm, statusFilter]);
 
 	return (
 		<div className="flex flex-col gap-4">
 			<QuoteListToolbar
 				searchTerm={searchTerm}
 				onSearchChange={setSearchTerm}
+				statusFilter={statusFilter}
+				onStatusFilterChange={setStatusFilter}
 			/>
-			<QuoteListTable quotes={filteredQuotes} />
+			{loading ? (
+				<div role="status" className="flex justify-center py-12">
+					<Loader2 className="h-5 w-5 animate-spin" />
+				</div>
+			) : error ? (
+				<div role="alert" className="flex items-center gap-3 py-8 text-sm text-red-700">
+					{error}
+					<Button variant="outline" onClick={() => void loadQuotes()}>Retry</Button>
+				</div>
+			) : (
+				<QuoteListTable quotes={filteredQuotes} onChanged={() => void loadQuotes()} />
+			)}
 		</div>
 	);
 }

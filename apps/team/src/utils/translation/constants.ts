@@ -310,6 +310,7 @@ export type LeadsTranslation = {
 	settingsSaveErrorToast: string;
 	serverError: string;
 	unpaidLabel: string;
+	paidLabel: string;
 	noLeadsFound: string;
 	rowsPerPage: string;
 	pageLabel: string;
