@@ -3,11 +3,15 @@
 import React from "react";
 import { ImageIcon } from "lucide-react";
 
+import { RecordDocumentsTable } from "@/components/table/RecordDocumentsTable";
 import { openSafeUrl } from "@/lib/safeUrl";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate } from "@/utils/translation/translate";
+import {
+	CASE_DOCUMENT_FILE_RULES,
+	CASE_DOCUMENT_TABLE_COPY,
+} from "../../../constants/cases.constants";
 import type { CaseDocument } from "../../../types/cases.types";
-import { CaseDocumentsTable } from "../shared/CaseDocumentsTable";
 import { CaseImageGrid } from "../shared/CaseImageGrid";
 
 interface CaseDocumentsViewProps {
@@ -30,7 +34,11 @@ export function CaseDocumentsView({ documents, images }: CaseDocumentsViewProps)
 					<Translate text={localizationConstants.casesDocumentsSectionTitle} />
 				</h2>
 				<div className="px-6 py-5">
-					<CaseDocumentsTable documents={documents} />
+					<RecordDocumentsTable
+						documents={documents}
+						types={CASE_DOCUMENT_FILE_RULES.types}
+						copy={CASE_DOCUMENT_TABLE_COPY}
+					/>
 				</div>
 			</div>
 
