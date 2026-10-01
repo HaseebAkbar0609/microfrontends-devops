@@ -103,6 +103,7 @@ export const enAppLauncher: AppLauncherTranslation = {
 	dataIT: "Data-IT",
 	managementSupport: "Management Support",
 	access: "Smart Access",
+	accessManagement: "Access Management",
 	economy: "Economy",
 };
 
