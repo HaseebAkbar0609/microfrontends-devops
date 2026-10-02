@@ -38,6 +38,11 @@ export function accessDetailsUrl(id: string): string {
   return `${ACCESS_MODULE_BASE_URL}/${encodeURIComponent(id)}`;
 }
 
+/** Address of one access item's details page (TFS-1104), under the Access tab. */
+export function accessItemUrl(recordId: string, itemId: string): string {
+  return `${accessDetailsUrl(recordId)}/access/${encodeURIComponent(itemId)}`;
+}
+
 /**
  * Secondary tab row of a record page (guideline pattern 3): the record's own
  * sections, on their own routes. "Access" is TFS-1103 and still a placeholder.

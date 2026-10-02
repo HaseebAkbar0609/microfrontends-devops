@@ -37,6 +37,7 @@ import {
 	SmartAccessTranslation,
 	SmartAccessDetailsTranslation,
 	SmartAccessAccessTabTranslation,
+	SmartAccessItemDetailsTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -11330,6 +11331,33 @@ export const enSmartAccessAccessTab: SmartAccessAccessTabTranslation = {
 	accessHolderDeletedToast: "All access for {{name}} was deleted.",
 };
 
+export const enSmartAccessItemDetails: SmartAccessItemDetailsTranslation = {
+	accessItemFieldKeyId: "Key ID",
+	accessItemFieldReturnDate: "Return Date",
+	accessItemSectionObject: "Access Object",
+	accessItemSectionAssigned: "Assigned Access",
+	accessItemSectionDocuments: "Documents",
+	accessItemSectionImages: "Images",
+	accessAssignedCompany: "Company",
+	accessAssignedPerson: "Person",
+	accessAssignedDocument: "Document",
+	accessItemStatusLabel: "Status of {{id}}",
+	accessDocColDate: "Date",
+	accessDocColName: "Document Name",
+	accessDocColFile: "File",
+	accessDocumentsEmpty: "No documents.",
+	accessImagesUploadLabel: "Upload images",
+	accessImagesHint: "PNG, JPG",
+	accessImagesSelectPlaceholder: "Select images",
+	accessImagesUploadButton: "Upload",
+	accessImagesEmpty: "No images.",
+	accessImageRemoveLabel: "Remove {{name}}",
+	accessImageDeleteTitle: "Delete image?",
+	accessImageDeleteDescription: "{{name}} will be removed. This action cannot be undone.",
+	accessImageDeletedToast: "{{name}} was deleted.",
+	accessItemNotFound: "This access item was not found.",
+};
+
 export const en: Translation = {
   ...enDocumentWorkflows,
 	...enHeader,
@@ -11392,4 +11420,5 @@ export const en: Translation = {
 	...enSmartAccess,
 	...enSmartAccessDetails,
 	...enSmartAccessAccessTab,
+	...enSmartAccessItemDetails,
 };

@@ -11253,6 +11253,33 @@ export type SmartAccessAccessTabTranslation = {
 	accessHolderDeletedToast: string;
 };
 
+export type SmartAccessItemDetailsTranslation = {
+	accessItemFieldKeyId: string;
+	accessItemFieldReturnDate: string;
+	accessItemSectionObject: string;
+	accessItemSectionAssigned: string;
+	accessItemSectionDocuments: string;
+	accessItemSectionImages: string;
+	accessAssignedCompany: string;
+	accessAssignedPerson: string;
+	accessAssignedDocument: string;
+	accessItemStatusLabel: string;
+	accessDocColDate: string;
+	accessDocColName: string;
+	accessDocColFile: string;
+	accessDocumentsEmpty: string;
+	accessImagesUploadLabel: string;
+	accessImagesHint: string;
+	accessImagesSelectPlaceholder: string;
+	accessImagesUploadButton: string;
+	accessImagesEmpty: string;
+	accessImageRemoveLabel: string;
+	accessImageDeleteTitle: string;
+	accessImageDeleteDescription: string;
+	accessImageDeletedToast: string;
+	accessItemNotFound: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -11312,6 +11339,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	SmartAccessTranslation &
 	SmartAccessDetailsTranslation &
 	SmartAccessAccessTabTranslation &
+	SmartAccessItemDetailsTranslation &
 	PersonnelCompetenceAndReviewTranslation;
 
 export type TranslationKeys = keyof Translation;
