@@ -32,6 +32,7 @@ export function HalsaTab({ employeeName: _employeeName = "Anna Svensson" }: Hals
 		handleDeleteDoc,
 		handlePreviewDoc,
 		handleClosePreviewDoc,
+		handleDownloadDoc,
 	} = useHalsa();
 
 	return (
@@ -53,6 +54,7 @@ export function HalsaTab({ employeeName: _employeeName = "Anna Svensson" }: Hals
 					data={rehabData}
 					onEdit={handleOpenEditRehab}
 					onPreviewDoc={handlePreviewDoc}
+					onDownloadDoc={handleDownloadDoc}
 				/>
 			)}
 

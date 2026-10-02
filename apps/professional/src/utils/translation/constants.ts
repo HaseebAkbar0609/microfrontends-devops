@@ -11105,6 +11105,7 @@ export type PersonnelWorktimeAndHalsaTranslation = {
 	friskvardAddProviderPlaceholder: string;
 	friskvardBtnAddProvider: string;
 	friskvardToastSaved: string;
+	friskvardPopularProviders: string;
 
 	rehabCardTitle: string;
 	rehabStatusActive: string;
@@ -11136,6 +11137,7 @@ export type PersonnelWorktimeAndHalsaTranslation = {
 	rehabToastSaved: string;
 	rehabToastDocUploaded: string;
 	rehabToastDocDeleted: string;
+	rehabToastDocDownloaded: string;
 };
 
 // Material storage – overview (TFS-1072)

@@ -10,11 +10,13 @@ import { RehabDocumentItem } from "@/features/personnel/types/halsa.types";
 interface RehabDocumentTableProps {
 	documents: RehabDocumentItem[];
 	onPreviewDoc: (name: string) => void;
+	onDownloadDoc?: (name: string) => void;
 }
 
 export function RehabDocumentTable({
 	documents,
 	onPreviewDoc,
+	onDownloadDoc,
 }: RehabDocumentTableProps) {
 	if (documents.length === 0) return null;
 
@@ -57,7 +59,7 @@ export function RehabDocumentTable({
 								type="button"
 								variant="ghost"
 								size="icon"
-								onClick={() => onPreviewDoc(doc.name)}
+								onClick={() => (onDownloadDoc ? onDownloadDoc(doc.name) : onPreviewDoc(doc.name))}
 								className="h-8 w-8 text-slate-400 hover:text-slate-700 cursor-pointer"
 							>
 								<Download className="w-3.5 h-3.5" />

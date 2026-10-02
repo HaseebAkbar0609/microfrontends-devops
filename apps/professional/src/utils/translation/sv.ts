@@ -11405,6 +11405,7 @@ export const svPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation =
 	friskvardAddProviderPlaceholder: "Lägg till leverantör...",
 	friskvardBtnAddProvider: "Lägg till",
 	friskvardToastSaved: "Friskvård har sparats",
+	friskvardPopularProviders: "Vanliga leverantörer",
 
 	rehabCardTitle: "Rehab",
 	rehabStatusActive: "Aktiv",
@@ -11436,6 +11437,7 @@ export const svPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation =
 	rehabToastSaved: "Rehabuppgifter har sparats",
 	rehabToastDocUploaded: "Dokument har laddats upp",
 	rehabToastDocDeleted: "Dokument har tagits bort",
+	rehabToastDocDownloaded: "Dokument laddas ner",
 };
 
 export const sv: Translation = {

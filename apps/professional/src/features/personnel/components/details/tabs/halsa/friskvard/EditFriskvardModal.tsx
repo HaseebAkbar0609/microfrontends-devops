@@ -19,6 +19,8 @@ interface EditFriskvardModalProps {
 	onSave: (data: FriskvardData) => void;
 }
 
+const POPULAR_PROVIDERS = ["SATS", "Nordic Wellness", "Friskis & Svettis", "Actic", "Gym", "Massage"] as const;
+
 export function EditFriskvardModal({
 	isOpen,
 	onClose,
@@ -42,14 +44,15 @@ export function EditFriskvardModal({
 		}
 	}, [isOpen, initialData]);
 
-	const handleAddProvider = () => {
-		const trimmed = newProvider.trim();
+	const handleAddProviderValue = (val: string) => {
+		const trimmed = val.trim();
 		if (trimmed && !providers.includes(trimmed)) {
 			setProviders((prev) => [...prev, trimmed]);
 			setNewProvider("");
 		}
 	};
 
+	const handleAddProvider = () => handleAddProviderValue(newProvider);
 	const handleRemoveProvider = (p: string) => setProviders((prev) => prev.filter((item) => item !== p));
 
 	const handleSubmit = (e: React.FormEvent) => {
@@ -146,6 +149,23 @@ export function EditFriskvardModal({
 								<Plus className="w-3.5 h-3.5 mr-1" />
 								<Translate text={localizationConstants.friskvardBtnAddProvider} />
 							</Button>
+						</div>
+
+						{/* Quick suggestions */}
+						<div className="pt-1 flex items-center gap-1.5 flex-wrap">
+							<span className="text-[11px] text-slate-400 font-medium">
+								<Translate text={localizationConstants.friskvardPopularProviders} />:
+							</span>
+							{POPULAR_PROVIDERS.filter((s) => !providers.includes(s)).slice(0, 4).map((s) => (
+								<button
+									key={s}
+									type="button"
+									onClick={() => handleAddProviderValue(s)}
+									className="text-[11px] px-2 py-0.5 rounded-full border border-dashed border-slate-300 text-slate-600 hover:border-slate-500 hover:bg-slate-100 cursor-pointer transition-colors"
+								>
+									+ {s}
+								</button>
+							))}
 						</div>
 					</div>
 
