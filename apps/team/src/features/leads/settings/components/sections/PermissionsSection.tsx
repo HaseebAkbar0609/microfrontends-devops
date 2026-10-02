@@ -43,7 +43,34 @@ export function PermissionsSection() {
 
   const permissions = data && data.length > 0 ? data : permissionRoles;
   return (
-    <div className="text-sm border border-slate-300 rounded-2xl overflow-hidden bg-white">
+    <div className="text-sm border border-slate-300 rounded-lg overflow-hidden bg-white">
+      <div className="lg:hidden divide-y divide-slate-200">
+        {permissions.map((role) => (
+          <div key={role.id} className="px-4 py-4">
+            <div className="font-semibold text-slate-800 mb-3">
+              <Translate text={role.labelKey} />
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {([
+                ["canView", localizationConstants.viewLeadsLabel],
+                ["canEdit", localizationConstants.editLeadsLabel],
+                ["canDelete", localizationConstants.deleteLeadsLabel],
+              ] as const).map(([field, label]) => (
+                <label key={field} className="flex min-w-0 flex-col items-start gap-2 text-xs text-slate-600">
+                  <Translate text={label} />
+                  <Checkbox
+                    checked={role[field]}
+                    onCheckedChange={(checked) => handlePermissionChange(role.id, field, Boolean(checked))}
+                    disabled={updateMutation.isPending}
+                    className="border-slate-300 data-[state=checked]:bg-slate-900 data-[state=checked]:border-slate-900 data-[state=checked]:text-white"
+                  />
+                </label>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="hidden lg:block">
       <Table >
         <TableHeader>
           <TableRow className="border-b border-slate-300 bg-white">
@@ -98,6 +125,7 @@ export function PermissionsSection() {
           })}
         </TableBody>
       </Table>
+      </div>
       </div>
   );
 }
