@@ -13,9 +13,10 @@ interface RehabCardViewProps {
 	data: RehabData;
 	onEdit: () => void;
 	onPreviewDoc: (name: string) => void;
+	onDownloadDoc?: (name: string) => void;
 }
 
-export function RehabCardView({ data, onEdit, onPreviewDoc }: RehabCardViewProps) {
+export function RehabCardView({ data, onEdit, onPreviewDoc, onDownloadDoc }: RehabCardViewProps) {
 	return (
 		<div className="bg-white border border-slate-200 rounded-xl p-6 shadow-2xs space-y-6">
 			{/* Header */}
@@ -66,11 +67,21 @@ export function RehabCardView({ data, onEdit, onPreviewDoc }: RehabCardViewProps
 						<p className="text-sm font-bold text-slate-900">{data.startDate}</p>
 					</div>
 
-					<div className="space-y-1">
+					<div className="space-y-1.5">
 						<p className="text-xs text-slate-500 font-medium">
 							<Translate text={localizationConstants.rehabFieldCapacity} />
 						</p>
-						<p className="text-sm font-bold text-slate-900">{data.capacityReturnWork}</p>
+						<div className="space-y-1">
+							<p className="text-sm font-bold text-slate-900">{data.capacityReturnWork}</p>
+							{data.capacityReturnWork.includes("%") && (
+								<div className="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden max-w-xs">
+									<div
+										className="bg-emerald-500 h-1.5 rounded-full transition-all duration-300"
+										style={{ width: data.capacityReturnWork.trim() }}
+									/>
+								</div>
+							)}
+						</div>
 					</div>
 
 					<div className="space-y-1">
@@ -117,7 +128,11 @@ export function RehabCardView({ data, onEdit, onPreviewDoc }: RehabCardViewProps
 			</div>
 
 			{/* Attached Documents Table */}
-			<RehabDocumentTable documents={data.documents} onPreviewDoc={onPreviewDoc} />
+			<RehabDocumentTable
+				documents={data.documents}
+				onPreviewDoc={onPreviewDoc}
+				onDownloadDoc={onDownloadDoc}
+			/>
 		</div>
 	);
 }

@@ -85,6 +85,10 @@ export function useHalsa() {
 		setPreviewDocName(null);
 	}, []);
 
+	const handleDownloadDoc = useCallback((_docName: string) => {
+		toast.success(localizationConstants.rehabToastDocDownloaded);
+	}, []);
+
 	return {
 		subView,
 		friskvardData,
@@ -103,5 +107,6 @@ export function useHalsa() {
 		handleDeleteDoc,
 		handlePreviewDoc,
 		handleClosePreviewDoc,
+		handleDownloadDoc,
 	};
 }

@@ -11384,6 +11384,7 @@ export const enPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation =
 	friskvardAddProviderPlaceholder: "Add provider...",
 	friskvardBtnAddProvider: "Add",
 	friskvardToastSaved: "Wellness allowance saved",
+	friskvardPopularProviders: "Popular providers",
 
 	rehabCardTitle: "Rehabilitation",
 	rehabStatusActive: "Active",
@@ -11415,6 +11416,7 @@ export const enPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation =
 	rehabToastSaved: "Rehabilitation details saved",
 	rehabToastDocUploaded: "Document uploaded successfully",
 	rehabToastDocDeleted: "Document deleted successfully",
+	rehabToastDocDownloaded: "Document downloading",
 };
 
 export const en: Translation = {
