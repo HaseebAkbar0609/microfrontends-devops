@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Plus, Check, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,6 +25,8 @@ export function ProcessChecklistCard({
 	onAddRow,
 	onDeleteRow,
 }: ProcessChecklistCardProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs space-y-4">
 			<h3 className="text-xs font-bold text-slate-900">
@@ -70,7 +73,7 @@ export function ProcessChecklistCard({
 							) : (
 								<Input
 									autoFocus
-									placeholder={localizationConstants.processChecklistPlaceholder}
+									placeholder={t(localizationConstants.processChecklistPlaceholder)}
 									value={item.title}
 									onChange={(e) => onUpdateTitle(item.id, e.target.value)}
 									className="h-7 text-xs border-0 border-b border-dashed border-slate-300 focus-visible:ring-0 px-1 rounded-none"
@@ -80,8 +83,8 @@ export function ProcessChecklistCard({
 
 						<div className="flex items-center gap-2 shrink-0">
 							{item.completedDate && (
-								<span className="text-[11px] font-mono text-slate-400">
-									{item.completedDate}
+								<span className="text-[11px] font-medium text-slate-400">
+									<Translate text={localizationConstants.processChecklistCompletedPrefix} /> {item.completedDate}
 								</span>
 							)}
 							<button

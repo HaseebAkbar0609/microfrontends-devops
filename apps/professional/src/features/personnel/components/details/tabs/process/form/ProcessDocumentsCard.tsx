@@ -11,21 +11,65 @@ interface ProcessDocumentsCardProps {
 	documents: ProcessDocumentItem[];
 	uploadTags: string[];
 	onRemoveTag: (tag: string) => void;
+	onFilesSelected?: (files: FileList) => void;
 	onUpload: () => void;
 	onDeleteDoc: (docId: string) => void;
 	onPreviewDoc: (name: string) => void;
+}
+
+function getFormatBadgeStyle(format: string) {
+	const f = format.toLowerCase();
+	if (f === "pdf") {
+		return "bg-rose-100 text-rose-700";
+	}
+	if (f === "doc" || f === "docx") {
+		return "bg-blue-100 text-blue-700";
+	}
+	if (f === "xls" || f === "xlsx") {
+		return "bg-emerald-100 text-emerald-700";
+	}
+	if (f === "png" || f === "jpg" || f === "jpeg") {
+		return "bg-amber-100 text-amber-700";
+	}
+	return "bg-slate-100 text-slate-700";
 }
 
 export function ProcessDocumentsCard({
 	documents,
 	uploadTags,
 	onRemoveTag,
+	onFilesSelected,
 	onUpload,
 	onDeleteDoc,
 	onPreviewDoc,
 }: ProcessDocumentsCardProps) {
+	const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+	const handleBoxClick = () => {
+		fileInputRef.current?.click();
+	};
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0 && onFilesSelected) {
+			onFilesSelected(e.target.files);
+		}
+		if (fileInputRef.current) {
+			fileInputRef.current.value = "";
+		}
+	};
+
 	return (
 		<div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs space-y-5">
+			{/* Hidden file picker input */}
+			<input
+				type="file"
+				ref={fileInputRef}
+				multiple
+				onChange={handleFileChange}
+				className="hidden"
+				accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx"
+			/>
+
 			{/* Header */}
 			<div className="flex items-center gap-2">
 				<Folder className="w-4 h-4 text-slate-700" />
@@ -46,17 +90,24 @@ export function ProcessDocumentsCard({
 				</div>
 
 				<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-					<div className="flex-1 flex flex-wrap items-center gap-1.5 p-1.5 rounded-lg border border-slate-200 bg-slate-50/50 min-h-[38px]">
+					<div
+						onClick={handleBoxClick}
+						className="flex-1 flex flex-wrap items-center gap-1.5 p-1.5 rounded-lg border border-slate-200 bg-slate-50/50 min-h-[38px] cursor-pointer hover:border-slate-300 transition-colors"
+					>
 						{uploadTags.map((tag) => (
 							<span
 								key={tag}
 								className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-white border border-slate-200 text-xs text-slate-800 shadow-2xs"
+								onClick={(e) => e.stopPropagation()}
 							>
 								<FileText className="w-3 h-3 text-slate-400" />
 								{tag}
 								<button
 									type="button"
-									onClick={() => onRemoveTag(tag)}
+									onClick={(e) => {
+										e.stopPropagation();
+										onRemoveTag(tag);
+									}}
 									className="text-slate-400 hover:text-slate-700 ml-0.5 cursor-pointer"
 								>
 									<X className="w-3 h-3" />
@@ -64,7 +115,9 @@ export function ProcessDocumentsCard({
 							</span>
 						))}
 						{uploadTags.length === 0 && (
-							<span className="text-xs text-slate-400 pl-2">Inga valda filer</span>
+							<span className="text-xs text-slate-400 pl-2">
+								<Translate text={localizationConstants.processNoFilesSelected} />
+							</span>
 						)}
 					</div>
 
@@ -99,7 +152,9 @@ export function ProcessDocumentsCard({
 									<Translate text={localizationConstants.processDocsColFormat} />
 								</th>
 								<th className="py-2.5 px-4 text-right">
-									<span className="sr-only">Actions</span>
+									<span className="sr-only">
+										<Translate text={localizationConstants.processColActions} />
+									</span>
 								</th>
 							</tr>
 						</thead>
@@ -109,8 +164,8 @@ export function ProcessDocumentsCard({
 									<td className="py-2.5 px-4 font-mono text-slate-600">{doc.date}</td>
 									<td className="py-2.5 px-4">
 										<div className="flex items-center gap-2">
-											<span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">
-												PDF
+											<span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${getFormatBadgeStyle(doc.fileFormat)}`}>
+												{doc.fileFormat.toUpperCase()}
 											</span>
 											<span
 												onClick={() => onPreviewDoc(doc.name)}

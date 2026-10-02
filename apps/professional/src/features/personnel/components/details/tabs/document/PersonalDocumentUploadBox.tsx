@@ -9,16 +9,44 @@ import localizationConstants from "@/utils/translation/constants";
 interface PersonalDocumentUploadBoxProps {
 	tags: string[];
 	onRemoveTag: (tag: string) => void;
+	onFilesSelected?: (files: FileList) => void;
 	onUpload: () => void;
 }
 
 export function PersonalDocumentUploadBox({
 	tags,
 	onRemoveTag,
+	onFilesSelected,
 	onUpload,
 }: PersonalDocumentUploadBoxProps) {
+	const fileInputRef = React.useRef<HTMLInputElement>(null);
+
+	const handleBoxClick = () => {
+		fileInputRef.current?.click();
+	};
+
+	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		if (e.target.files && e.target.files.length > 0 && onFilesSelected) {
+			onFilesSelected(e.target.files);
+		}
+		// Reset input value so the same file can be re-selected if deleted
+		if (fileInputRef.current) {
+			fileInputRef.current.value = "";
+		}
+	};
+
 	return (
 		<div className="space-y-4">
+			{/* Hidden file picker input */}
+			<input
+				type="file"
+				ref={fileInputRef}
+				multiple
+				onChange={handleFileChange}
+				className="hidden"
+				accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.xlsx"
+			/>
+
 			{/* Card Title */}
 			<div className="flex items-center gap-2">
 				<Folder className="w-4 h-4 text-slate-700" />
@@ -39,18 +67,25 @@ export function PersonalDocumentUploadBox({
 
 			{/* Upload Input & Button */}
 			<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
-				<div className="flex-1 flex items-center justify-between p-1.5 rounded-lg border border-slate-200 bg-white min-h-[38px] shadow-2xs">
+				<div
+					onClick={handleBoxClick}
+					className="flex-1 flex items-center justify-between p-1.5 rounded-lg border border-slate-200 bg-white min-h-[38px] shadow-2xs cursor-pointer hover:border-slate-300 transition-colors"
+				>
 					<div className="flex flex-wrap items-center gap-1.5">
 						{tags.map((tag) => (
 							<span
 								key={tag}
 								className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-xs text-slate-800"
+								onClick={(e) => e.stopPropagation()}
 							>
 								<FileText className="w-3 h-3 text-slate-400" />
 								{tag}
 								<button
 									type="button"
-									onClick={() => onRemoveTag(tag)}
+									onClick={(e) => {
+										e.stopPropagation();
+										onRemoveTag(tag);
+									}}
 									className="text-slate-400 hover:text-slate-700 ml-0.5 cursor-pointer"
 								>
 									<X className="w-3 h-3" />
@@ -58,7 +93,9 @@ export function PersonalDocumentUploadBox({
 							</span>
 						))}
 						{tags.length === 0 && (
-							<span className="text-xs text-slate-400 pl-2">Inga valda filer</span>
+							<span className="text-xs text-slate-400 pl-2">
+								<Translate text={localizationConstants.processNoFilesSelected} />
+							</span>
 						)}
 					</div>
 

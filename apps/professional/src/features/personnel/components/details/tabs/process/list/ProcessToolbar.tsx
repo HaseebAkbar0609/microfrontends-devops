@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Search, Plus, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ export function ProcessToolbar({
 	onCategoryChange,
 	onCreateNew,
 }: ProcessToolbarProps) {
+	const { t } = useTranslation();
 	const currentCat = CATEGORIES.find((c) => c.id === selectedCategory) || CATEGORIES[0];
 
 	return (
@@ -47,7 +49,7 @@ export function ProcessToolbar({
 					<Input
 						value={searchQuery}
 						onChange={(e) => onSearchChange(e.target.value)}
-						placeholder={localizationConstants.processSearchPlaceholder}
+						placeholder={t(localizationConstants.processSearchPlaceholder)}
 						className="pl-9 h-9 text-xs bg-white border-slate-200 shadow-2xs rounded-lg"
 					/>
 				</div>

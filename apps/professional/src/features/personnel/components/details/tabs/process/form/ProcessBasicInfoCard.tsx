@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Translate } from "@/utils/translation/translate";
@@ -21,6 +22,8 @@ export function ProcessBasicInfoCard({
 	date,
 	onDateChange,
 }: ProcessBasicInfoCardProps) {
+	const { t } = useTranslation();
+
 	return (
 		<div className="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs space-y-4">
 			<h3 className="text-xs font-bold text-slate-900">
@@ -50,7 +53,7 @@ export function ProcessBasicInfoCard({
 						<Input
 							value={title}
 							onChange={(e) => onTitleChange(e.target.value)}
-							placeholder={localizationConstants.processFieldTitlePlaceholder}
+							placeholder={t(localizationConstants.processFieldTitlePlaceholder)}
 							className="h-9 text-xs bg-white border-slate-200 text-slate-900"
 							required
 						/>

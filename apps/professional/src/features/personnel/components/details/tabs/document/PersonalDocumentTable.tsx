@@ -13,6 +13,23 @@ interface PersonalDocumentTableProps {
 	onPromptDelete: (doc: PersonalDocumentFileItem) => void;
 }
 
+function getFormatBadgeStyle(format: string) {
+	const f = format.toLowerCase();
+	if (f === "pdf") {
+		return "bg-rose-100 text-rose-700";
+	}
+	if (f === "doc" || f === "docx") {
+		return "bg-blue-100 text-blue-700";
+	}
+	if (f === "xls" || f === "xlsx") {
+		return "bg-emerald-100 text-emerald-700";
+	}
+	if (f === "png" || f === "jpg" || f === "jpeg") {
+		return "bg-amber-100 text-amber-700";
+	}
+	return "bg-slate-100 text-slate-700";
+}
+
 export function PersonalDocumentTable({
 	documents,
 	onPreviewDoc,
@@ -47,7 +64,9 @@ export function PersonalDocumentTable({
 								</div>
 							</th>
 							<th className="py-2.5 px-4 text-right w-36">
-								<span className="sr-only">Actions</span>
+								<span className="sr-only">
+									<Translate text={localizationConstants.processColActions} />
+								</span>
 							</th>
 						</tr>
 					</thead>
@@ -60,8 +79,8 @@ export function PersonalDocumentTable({
 								{/* Name */}
 								<td className="py-3 px-4">
 									<div className="flex items-center gap-2.5">
-										<span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-700">
-											PDF
+										<span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${getFormatBadgeStyle(doc.fileFormat)}`}>
+											{doc.fileFormat.toUpperCase()}
 										</span>
 										<span
 											onClick={() => onPreviewDoc(doc.name)}
@@ -107,7 +126,7 @@ export function PersonalDocumentTable({
 						{documents.length === 0 && (
 							<tr>
 								<td colSpan={4} className="py-8 text-center text-slate-400 text-xs">
-									Inga dokument uppladdade
+									<Translate text={localizationConstants.personalDocEmptyTable} />
 								</td>
 							</tr>
 						)}

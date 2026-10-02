@@ -11486,6 +11486,11 @@ export const svPersonnelProcessAndDocument: PersonnelProcessAndDocumentTranslati
 	processToastDeleted: "Processen har tagits bort",
 	processEmptyTitle: "Inga processer hittades",
 	processEmptyDesc: "Det finns inga processer som matchar dina sökkriterier.",
+	processChecklistCompletedPrefix: "Slutfördes den",
+	processNoFilesSelected: "Inga valda filer",
+	processActionView: "Visa",
+	processActionMenu: "Meny",
+	processChooseFile: "Välj fil",
 
 	personalDocOverviewTitle: "Personal dokument",
 	personalDocFieldHandbook: "Personal handbok",
@@ -11503,6 +11508,7 @@ export const svPersonnelProcessAndDocument: PersonnelProcessAndDocumentTranslati
 	personalDocToastDeleted: "Dokument har tagits bort",
 	personalDocConfirmDeleteTitle: "Ta bort dokument",
 	personalDocConfirmDeleteDesc: "Är du säker på att du vill ta bort detta dokument?",
+	personalDocEmptyTable: "Inga dokument uppladdade",
 };
 
 export const sv: Translation = {

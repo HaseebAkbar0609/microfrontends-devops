@@ -11465,6 +11465,11 @@ export const enPersonnelProcessAndDocument: PersonnelProcessAndDocumentTranslati
 	processToastDeleted: "Process deleted successfully",
 	processEmptyTitle: "No processes found",
 	processEmptyDesc: "There are no processes matching your search criteria.",
+	processChecklistCompletedPrefix: "Completed on",
+	processNoFilesSelected: "No files selected",
+	processActionView: "View",
+	processActionMenu: "Menu",
+	processChooseFile: "Choose file",
 
 	personalDocOverviewTitle: "Personal Documents",
 	personalDocFieldHandbook: "Employee handbook",
@@ -11482,6 +11487,7 @@ export const enPersonnelProcessAndDocument: PersonnelProcessAndDocumentTranslati
 	personalDocToastDeleted: "Document deleted successfully",
 	personalDocConfirmDeleteTitle: "Delete Document",
 	personalDocConfirmDeleteDesc: "Are you sure you want to delete this document?",
+	personalDocEmptyTable: "No documents uploaded",
 };
 
 export const en: Translation = {

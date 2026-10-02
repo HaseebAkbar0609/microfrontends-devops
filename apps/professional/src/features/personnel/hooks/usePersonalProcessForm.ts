@@ -93,6 +93,18 @@ export function usePersonalProcessForm({
 		setUploadTags((prev) => prev.filter((t) => t !== tag));
 	}, []);
 
+	const handleAddFiles = useCallback((files: FileList | File[]) => {
+		const newNames: string[] = [];
+		Array.from(files).forEach((file) => {
+			if (file.name && !uploadTags.includes(file.name)) {
+				newNames.push(file.name);
+			}
+		});
+		if (newNames.length > 0) {
+			setUploadTags((prev) => [...prev, ...newNames]);
+		}
+	}, [uploadTags]);
+
 	const handleUploadDocuments = useCallback(() => {
 		if (uploadTags.length === 0) return;
 		const today = new Date().toISOString().split("T")[0];
@@ -115,7 +127,7 @@ export function usePersonalProcessForm({
 		e.preventDefault();
 		onSave({
 			id,
-			title: title.trim() || "Onboarding - start",
+			title: title.trim(),
 			date,
 			category,
 			checklist,
@@ -140,6 +152,7 @@ export function usePersonalProcessForm({
 		handleAddChecklistRow,
 		handleDeleteChecklistRow,
 		handleRemoveUploadTag,
+		handleAddFiles,
 		handleUploadDocuments,
 		handleDeleteDocument,
 		handleSubmit,

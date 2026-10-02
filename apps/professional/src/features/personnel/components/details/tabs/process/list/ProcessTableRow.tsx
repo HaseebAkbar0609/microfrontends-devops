@@ -21,12 +21,40 @@ interface ProcessTableRowProps {
 	onDelete: (proc: PersonalProcessItem) => void;
 }
 
+function getStatusBadgeConfig(status: PersonalProcessItem["status"]) {
+	switch (status) {
+		case "completed":
+			return {
+				className: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50",
+				labelKey: localizationConstants.processStatusCompleted,
+			};
+		case "pending":
+			return {
+				className: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50",
+				labelKey: localizationConstants.processStatusPending,
+			};
+		case "overdue":
+			return {
+				className: "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-50",
+				labelKey: localizationConstants.processStatusOverdue,
+			};
+		case "active":
+		default:
+			return {
+				className: "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50",
+				labelKey: localizationConstants.processStatusActive,
+			};
+	}
+}
+
 export function ProcessTableRow({
 	process,
 	onView,
 	onEdit,
 	onDelete,
 }: ProcessTableRowProps) {
+	const statusConfig = getStatusBadgeConfig(process.status);
+
 	return (
 		<tr className="border-b border-slate-100 hover:bg-slate-50/70 transition-colors text-xs text-slate-700">
 			{/* ID */}
@@ -49,8 +77,8 @@ export function ProcessTableRow({
 
 			{/* Status */}
 			<td className="py-3.5 px-4">
-				<Badge className="bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50 text-[11px] font-semibold px-2 py-0.5 shadow-2xs">
-					<Translate text={localizationConstants.processStatusActive} />
+				<Badge className={`${statusConfig.className} text-[11px] font-semibold px-2 py-0.5 shadow-2xs`}>
+					<Translate text={statusConfig.labelKey} />
 				</Badge>
 			</td>
 
@@ -65,7 +93,9 @@ export function ProcessTableRow({
 						className="h-7 w-7 text-slate-400 hover:text-slate-800 cursor-pointer"
 					>
 						<Eye className="w-4 h-4" />
-						<span className="sr-only">View</span>
+						<span className="sr-only">
+							<Translate text={localizationConstants.processActionView} />
+						</span>
 					</Button>
 
 					<DropdownMenu>
@@ -77,7 +107,9 @@ export function ProcessTableRow({
 								className="h-7 w-7 text-slate-400 hover:text-slate-800 cursor-pointer"
 							>
 								<MoreVertical className="w-4 h-4" />
-								<span className="sr-only">Menu</span>
+								<span className="sr-only">
+									<Translate text={localizationConstants.processActionMenu} />
+								</span>
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent align="end" className="w-36">

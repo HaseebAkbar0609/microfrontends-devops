@@ -19,6 +19,18 @@ export function usePersonalDocuments() {
 		setUploadTags((prev) => prev.filter((t) => t !== tag));
 	}, []);
 
+	const handleAddFiles = useCallback((files: FileList | File[]) => {
+		const newNames: string[] = [];
+		Array.from(files).forEach((file) => {
+			if (file.name && !uploadTags.includes(file.name)) {
+				newNames.push(file.name);
+			}
+		});
+		if (newNames.length > 0) {
+			setUploadTags((prev) => [...prev, ...newNames]);
+		}
+	}, [uploadTags]);
+
 	const handleUpload = useCallback((tagsToUpload?: string[]) => {
 		const targetTags = tagsToUpload || uploadTags;
 		if (targetTags.length === 0) return;
@@ -67,6 +79,7 @@ export function usePersonalDocuments() {
 		previewDocName,
 		setDocToDelete,
 		handleRemoveUploadTag,
+		handleAddFiles,
 		handleUpload,
 		handleConfirmDelete,
 		handlePreviewDoc,

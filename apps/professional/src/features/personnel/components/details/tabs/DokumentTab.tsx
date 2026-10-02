@@ -30,6 +30,7 @@ export function DokumentTab({
 		previewDocName,
 		setDocToDelete,
 		handleRemoveUploadTag,
+		handleAddFiles,
 		handleUpload,
 		handleConfirmDelete,
 		handlePreviewDoc,
@@ -54,6 +55,7 @@ export function DokumentTab({
 				<PersonalDocumentUploadBox
 					tags={uploadTags}
 					onRemoveTag={handleRemoveUploadTag}
+					onFilesSelected={handleAddFiles}
 					onUpload={handleUpload}
 				/>
 

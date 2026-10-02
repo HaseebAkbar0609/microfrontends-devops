@@ -11186,6 +11186,11 @@ export type PersonnelProcessAndDocumentTranslation = {
 	processToastDeleted: string;
 	processEmptyTitle: string;
 	processEmptyDesc: string;
+	processChecklistCompletedPrefix: string;
+	processNoFilesSelected: string;
+	processActionView: string;
+	processActionMenu: string;
+	processChooseFile: string;
 
 	personalDocOverviewTitle: string;
 	personalDocFieldHandbook: string;
@@ -11203,6 +11208,7 @@ export type PersonnelProcessAndDocumentTranslation = {
 	personalDocToastDeleted: string;
 	personalDocConfirmDeleteTitle: string;
 	personalDocConfirmDeleteDesc: string;
+	personalDocEmptyTable: string;
 };
 
 // Material storage – overview (TFS-1072)

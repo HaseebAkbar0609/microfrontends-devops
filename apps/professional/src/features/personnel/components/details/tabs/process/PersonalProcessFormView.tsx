@@ -43,6 +43,7 @@ export function PersonalProcessFormView({
 		handleAddChecklistRow,
 		handleDeleteChecklistRow,
 		handleRemoveUploadTag,
+		handleAddFiles,
 		handleUploadDocuments,
 		handleDeleteDocument,
 		handleSubmit,
@@ -99,6 +100,7 @@ export function PersonalProcessFormView({
 					documents={documents}
 					uploadTags={uploadTags}
 					onRemoveTag={handleRemoveUploadTag}
+					onFilesSelected={handleAddFiles}
 					onUpload={handleUploadDocuments}
 					onDeleteDoc={handleDeleteDocument}
 					onPreviewDoc={onPreviewDoc}
