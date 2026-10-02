@@ -10860,6 +10860,12 @@ const svForecastDashboard: ForecastDashboardTranslation = {
 	forecastStatisticsExport: "Exportera",
 	forecastStatisticsExportFailed: "Statistiken kunde inte exporteras.",
 	forecastStatisticsSheetName: "Statistik",
+
+	/* Prognos › Arkiv: the archived forecasts' own words (TFS-1068). */
+	forecastArchiveTitle: "Arkiv",
+	forecastArchiveEmpty: "Det finns inga arkiverade prognoser",
+	forecastArchivedToast: "Prognosen för {object} arkiverades",
+	forecastRestoredToast: "Prognosen för {object} återställdes",
 };
 
 // Material storage – overview (TFS-1072)

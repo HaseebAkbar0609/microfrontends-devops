@@ -10839,6 +10839,12 @@ const enForecastDashboard: ForecastDashboardTranslation = {
 	forecastStatisticsExport: "Export",
 	forecastStatisticsExportFailed: "The statistics could not be exported.",
 	forecastStatisticsSheetName: "Statistics",
+
+	/* Prognos › Arkiv: the archived forecasts' own words (TFS-1068). */
+	forecastArchiveTitle: "Archive",
+	forecastArchiveEmpty: "There are no archived forecasts",
+	forecastArchivedToast: "The forecast for {object} was archived",
+	forecastRestoredToast: "The forecast for {object} was restored",
 };
 
 // Material storage – overview (TFS-1072)

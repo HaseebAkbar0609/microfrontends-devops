@@ -13,9 +13,19 @@ import { ForecastDeleteDialog } from "./ForecastDeleteDialog";
 import { ForecastDetailsDialog } from "./ForecastDetailsDialog";
 import { ForecastListTable } from "./ForecastListTable";
 
-/** Prognoslista: Sök and Filter, the table, and the frame's centred pagination. */
-export function ForecastListPanel() {
-	const list = useForecastList();
+export interface ForecastListPanelProps {
+	/** Arkiv's side of the register; Prognoslista's by default. */
+	archived?: boolean;
+}
+
+/**
+ * Sök and Filter, the table, and the frame's centred pagination.
+ *
+ * Prognoslista and Arkiv are the same panel over the two sides of one
+ * register, which is what lets a row archived here turn up there unchanged.
+ */
+export function ForecastListPanel({ archived = false }: ForecastListPanelProps) {
+	const list = useForecastList(archived);
 	const dialogs = useForecastListDialogs();
 
 	return (
@@ -46,6 +56,7 @@ export function ForecastListPanel() {
 				onSort={list.onSort}
 				emptyKey={list.emptyKey}
 				onView={(row) => dialogs.open("details", row)}
+				onToggleArchive={list.toggleArchive}
 				onDelete={(row) => dialogs.open("delete", row)}
 			/>
 

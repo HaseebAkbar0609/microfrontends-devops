@@ -30,10 +30,11 @@ const NUMERIC = FORECAST_NUMERIC_FIELDS;
 export interface ForecastListTableRowProps {
 	row: ForecastListRow;
 	onView: () => void;
+	onToggleArchive: () => void;
 	onDelete: () => void;
 }
 
-export function ForecastListTableRow({ row, onView, onDelete }: ForecastListTableRowProps) {
+export function ForecastListTableRow({ row, onView, onToggleArchive, onDelete }: ForecastListTableRowProps) {
 	const t = useTranslate();
 	const status = FORECAST_LIST_STATUSES[row.status];
 
@@ -71,7 +72,13 @@ export function ForecastListTableRow({ row, onView, onDelete }: ForecastListTabl
 					>
 						<Eye className="h-4 w-4" aria-hidden />
 					</Button>
-					<ForecastRowMenu objectNo={row.objectNo} onView={onView} onDelete={onDelete} />
+					<ForecastRowMenu
+						objectNo={row.objectNo}
+						archived={row.archived}
+						onView={onView}
+						onToggleArchive={onToggleArchive}
+						onDelete={onDelete}
+					/>
 				</div>
 			</TableCell>
 		</TableRow>

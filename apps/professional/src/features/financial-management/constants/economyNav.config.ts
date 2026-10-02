@@ -121,6 +121,8 @@ export const ECONOMY_FORECAST_TEMPLATES_URL = `${ECONOMY_FORECAST_BASE_URL}/temp
 export const ECONOMY_FORECAST_DOCUMENTS_URL = `${ECONOMY_FORECAST_BASE_URL}/document-center`;
 export const ECONOMY_FORECAST_PROTOCOLS_URL = `${ECONOMY_FORECAST_BASE_URL}/protocols`;
 export const ECONOMY_FORECAST_STATISTICS_URL = `${ECONOMY_FORECAST_BASE_URL}/statistics`;
+/* The forecasts put away rather than deleted; Prognoslista's table over them. */
+export const ECONOMY_FORECAST_ARCHIVE_URL = `${ECONOMY_FORECAST_BASE_URL}/archive`;
 
 /**
  * The Prognos tab's own row: the pages built so far. The frame draws them as
@@ -189,6 +191,11 @@ export const FORECAST_NAV_ITEMS: RouteTabItem[] = [
 		id: "forecast-statistics",
 		labelKey: localizationConstants.forecastStatisticsTitle,
 		href: ECONOMY_FORECAST_STATISTICS_URL,
+	},
+	{
+		id: "forecast-archive",
+		labelKey: localizationConstants.forecastArchiveTitle,
+		href: ECONOMY_FORECAST_ARCHIVE_URL,
 	},
 ];
 

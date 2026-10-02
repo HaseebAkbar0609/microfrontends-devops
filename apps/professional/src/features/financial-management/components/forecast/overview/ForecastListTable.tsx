@@ -17,6 +17,7 @@ export interface ForecastListTableProps {
 	onSort: (field: ForecastListSortField) => void;
 	emptyKey: TranslationKeys;
 	onView: (row: ForecastListRow) => void;
+	onToggleArchive: (row: ForecastListRow) => void;
 	onDelete: (row: ForecastListRow) => void;
 }
 
@@ -25,7 +26,16 @@ export interface ForecastListTableProps {
  * column pinned to the right. The table scrolls sideways inside itself, so
  * the page never does.
  */
-export function ForecastListTable({ rows, sortField, sortDir, onSort, emptyKey, onView, onDelete }: ForecastListTableProps) {
+export function ForecastListTable({
+	rows,
+	sortField,
+	sortDir,
+	onSort,
+	emptyKey,
+	onView,
+	onToggleArchive,
+	onDelete,
+}: ForecastListTableProps) {
 	return (
 		<div className="w-full overflow-x-auto">
 			<Table className="min-w-[80rem]">
@@ -56,7 +66,13 @@ export function ForecastListTable({ rows, sortField, sortDir, onSort, emptyKey, 
 						</TableRow>
 					) : (
 						rows.map((row) => (
-							<ForecastListTableRow key={row.id} row={row} onView={() => onView(row)} onDelete={() => onDelete(row)} />
+							<ForecastListTableRow
+								key={row.id}
+								row={row}
+								onView={() => onView(row)}
+								onToggleArchive={() => onToggleArchive(row)}
+								onDelete={() => onDelete(row)}
+							/>
 						))
 					)}
 				</TableBody>

@@ -8,9 +8,9 @@ import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import { FORECAST_LIST_PAGE_SIZE } from "../constants/forecastList.constants";
-import { INITIAL_FORECAST_LIST } from "../mock/forecastList.mock";
 import type { ForecastListFilters, ForecastListRow, ForecastListSortField } from "../types/forecastList.types";
 import { matchesForecast, sortForecasts, type ForecastLabel } from "../utils/forecastList";
+import { listForecasts, removeForecast, setForecastArchived } from "../utils/forecastListService";
 
 const NO_FILTERS: ForecastListFilters = { category: null, customerType: null };
 
@@ -18,14 +18,19 @@ const NO_FILTERS: ForecastListFilters = { category: null, customerType: null };
  * Prognoslista's rows and the table's view of them: search, filter, sort and
  * paging. Changing what is shown returns to page 1, and the page is clamped,
  * so removing the last row of the last page never leaves the reader past the
- * end. Rows come from mock data until a forecast API exists.
+ * end.
+ *
+ * `archived` picks the side of the register: Prognoslista's rows, or Arkiv's.
+ * The register lives in the service, so `rows` is re-read after every change
+ * rather than kept in step by hand — archiving on one screen has to show on
+ * the other.
  */
-export function useForecastList() {
+export function useForecastList(archived = false) {
 	const { i18n } = useTranslation();
 	const t = useTranslate();
 	const label: ForecastLabel = t;
 
-	const [rows, setRows] = useState<ForecastListRow[]>(INITIAL_FORECAST_LIST);
+	const [rows, setRows] = useState<ForecastListRow[]>(() => listForecasts(archived));
 	const [search, setSearchValue] = useState("");
 	const [filters, setFiltersValue] = useState<ForecastListFilters>(NO_FILTERS);
 	const [page, setPage] = useState(1);
@@ -73,18 +78,37 @@ export function useForecastList() {
 		setPage(1);
 	}, []);
 
+	/* Reversible, so it asks nothing first — as the project module's registers
+	   archive. The row leaves this list for the other one. */
+	const toggleArchive = useCallback(
+		(row: ForecastListRow) => {
+			setForecastArchived(row.id, !row.archived);
+			setRows(listForecasts(archived));
+			showToast(
+				"success",
+				t(
+					row.archived ? localizationConstants.forecastRestoredToast : localizationConstants.forecastArchivedToast,
+					{ object: row.objectNo },
+				),
+			);
+		},
+		[archived, t],
+	);
+
 	const remove = useCallback(
 		(row: ForecastListRow) => {
-			setRows((prev) => prev.filter((item) => item.id !== row.id));
+			removeForecast(row.id);
+			setRows(listForecasts(archived));
 			showToast("success", t(localizationConstants.forecastDeletedToast, { object: row.objectNo }));
 		},
-		[t],
+		[archived, t],
 	);
 
 	const narrowed = Boolean(search.trim()) || filters.category !== null || filters.customerType !== null;
-	const emptyKey =
-		narrowed
-			? localizationConstants.forecastListNoMatches
+	const emptyKey = narrowed
+		? localizationConstants.forecastListNoMatches
+		: archived
+			? localizationConstants.forecastArchiveEmpty
 			: localizationConstants.forecastListEmpty;
 
 	return {
@@ -103,6 +127,7 @@ export function useForecastList() {
 		sortField,
 		sortDir,
 		onSort,
+		toggleArchive,
 		remove,
 		emptyKey,
 	};
