@@ -44,7 +44,7 @@ export function PermissionsSection() {
   const permissions = data && data.length > 0 ? data : permissionRoles;
   return (
     <div className="text-sm border border-slate-300 rounded-lg overflow-hidden bg-white">
-      <div className="md:hidden divide-y divide-slate-200">
+      <div className="lg:hidden divide-y divide-slate-200">
         {permissions.map((role) => (
           <div key={role.id} className="px-4 py-4">
             <div className="font-semibold text-slate-800 mb-3">
@@ -70,7 +70,7 @@ export function PermissionsSection() {
           </div>
         ))}
       </div>
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
       <Table >
         <TableHeader>
           <TableRow className="border-b border-slate-300 bg-white">
