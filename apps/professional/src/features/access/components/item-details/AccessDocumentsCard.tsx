@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Eye, Folders } from "lucide-react";
 import { DataTable, type DataTableColumn } from "@/components/table/DataTable";
 import { Button } from "@/components/ui/button";
@@ -20,8 +20,15 @@ function isSortField(value: string): value is AccessDocumentSortField {
 	return (SORT_FIELDS as string[]).includes(value);
 }
 
+interface AccessDocumentsCardProps {
+	documents: AccessDocument[];
+	onView: (document: AccessDocument) => void;
+	/** An upload row shown above the table (the new-access wizard). */
+	uploadSlot?: ReactNode;
+}
+
 /** "Documents" card: date, document name and file type, sortable, with an eye icon per row. */
-export function AccessDocumentsCard({ documents, onView }: { documents: AccessDocument[]; onView: (document: AccessDocument) => void }) {
+export function AccessDocumentsCard({ documents, onView, uploadSlot }: AccessDocumentsCardProps) {
 	const t = useTranslate();
 	const [sort, setSort] = useState<{ field: AccessDocumentSortField | null; order: SortOrder }>({ field: null, order: "asc" });
 	const rows = useMemo(() => sortAccessDocuments(documents, sort.field, sort.order), [documents, sort]);
@@ -54,7 +61,8 @@ export function AccessDocumentsCard({ documents, onView }: { documents: AccessDo
 
 	return (
 		<AccessSectionCard icon={<Folders className="h-5 w-5" aria-hidden />} title={localizationConstants.accessItemSectionDocuments}>
-			<div className="p-4">
+			<div className="flex flex-col gap-4 p-4">
+				{uploadSlot}
 				<DataTable
 					data={rows}
 					columns={columns}

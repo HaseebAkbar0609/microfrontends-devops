@@ -1,46 +1,28 @@
 "use client";
 
-import { ChevronDown, ImageIcon, ImageUp, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ImageIcon, ImageUp, X } from "lucide-react";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
-import { useComingSoonToast } from "../../hooks/useComingSoonToast";
 import type { AccessImage } from "../../types/accessItemDetails.types";
 import { AccessSectionCard } from "../details/AccessSectionCard";
+import { AccessUploadRow } from "./AccessUploadRow";
 
 /**
- * "Images" card. The Figma shows an upload field with a dark Upload button and a
- * gallery with an x on each picture, but not how choosing and uploading files works,
- * so the field and Upload show the coming-soon toast. Removing a picture asks first.
+ * "Images" card: the upload row (coming-soon toast, since the Figma does not show how
+ * choosing and uploading files works) and a gallery with an x on each picture.
+ * Removing a picture asks first.
  */
 export function AccessImagesCard({ images, onRemove }: { images: AccessImage[]; onRemove: (image: AccessImage) => void }) {
 	const t = useTranslate();
-	const showComingSoon = useComingSoonToast();
 
 	return (
 		<AccessSectionCard icon={<ImageUp className="h-5 w-5" aria-hidden />} title={localizationConstants.accessItemSectionImages}>
 			<div className="flex flex-col gap-6 p-4">
-				<div>
-					<p className="text-sm font-medium text-slate-950">
-						<Translate text={localizationConstants.accessImagesUploadLabel} />
-					</p>
-					<p className="text-sm text-slate-500">
-						<Translate text={localizationConstants.accessImagesHint} />
-					</p>
-					<div className="mt-1 flex items-center gap-3">
-						<button
-							type="button"
-							onClick={showComingSoon}
-							className="flex min-h-9 flex-1 cursor-pointer items-center justify-between rounded-md border border-slate-200 bg-white px-3 text-left text-sm text-slate-500 shadow-xs"
-						>
-							<Translate text={localizationConstants.accessImagesSelectPlaceholder} />
-							<ChevronDown className="h-5 w-5" aria-hidden />
-						</button>
-						<Button type="button" className="h-9 cursor-pointer bg-zinc-900 px-4 text-white hover:bg-zinc-800" onClick={showComingSoon}>
-							<Translate text={localizationConstants.accessImagesUploadButton} />
-						</Button>
-					</div>
-				</div>
+				<AccessUploadRow
+					label={localizationConstants.accessImagesUploadLabel}
+					hint={localizationConstants.accessImagesHint}
+					placeholder={localizationConstants.accessImagesSelectPlaceholder}
+				/>
 
 				<div>
 					<p className="mb-2 text-sm font-medium text-slate-950">

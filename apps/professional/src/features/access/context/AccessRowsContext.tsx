@@ -8,6 +8,8 @@ interface AccessRowsValue {
 	rows: AccessPoint[];
 	archive: (id: string) => void;
 	remove: (id: string) => void;
+	/** Puts a new access at the top of the list (the new-access wizard). */
+	add: (point: AccessPoint) => void;
 }
 
 const AccessRowsContext = createContext<AccessRowsValue | null>(null);
@@ -25,7 +27,8 @@ export function AccessRowsProvider({ children }: { children: ReactNode }) {
 		[],
 	);
 	const remove = useCallback((id: string) => setRows((current) => current.filter((row) => row.id !== id)), []);
-	const value = useMemo(() => ({ rows, archive, remove }), [rows, archive, remove]);
+	const add = useCallback((point: AccessPoint) => setRows((current) => [point, ...current]), []);
+	const value = useMemo(() => ({ rows, archive, remove, add }), [rows, archive, remove, add]);
 
 	return <AccessRowsContext.Provider value={value}>{children}</AccessRowsContext.Provider>;
 }

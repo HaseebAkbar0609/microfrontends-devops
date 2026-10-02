@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import { accessDetailsUrl } from "../data/accessNav.config";
+import { ACCESS_NEW_BASE_URL, accessDetailsUrl } from "../data/accessNav.config";
 import { useAccessList } from "../hooks/useAccessList";
-import { useComingSoonToast } from "../hooks/useComingSoonToast";
 import type { AccessPoint } from "../types/access.types";
 import { AccessDeleteDialog } from "./AccessDeleteDialog";
 import { AccessTable, type AccessRowAction } from "./AccessTable";
@@ -16,8 +15,8 @@ import { AccessToolbar } from "./AccessToolbar";
 /**
  * Smart Access overview (TFS-1101): the Åtkomsthantering list with search,
  * filter, sorting, paging and the Öppna / Arkiv / Ta bort row menu. Öppna and
- * the eye icon open the details page (TFS-1102); "new" (TFS-1105) does not exist
- * yet, so it shows the coming-soon toast.
+ * the eye icon open the details page (TFS-1102); "New access management" opens the
+ * new-access wizard (TFS-1105).
  */
 export function AccessOverviewPage() {
 	const t = useTranslate();
@@ -26,7 +25,6 @@ export function AccessOverviewPage() {
 	const [deleteTarget, setDeleteTarget] = useState<AccessPoint | null>(null);
 
 	const router = useRouter();
-	const showComingSoon = useComingSoonToast();
 
 	const onRowAction = useCallback(
 		(action: AccessRowAction, row: AccessPoint) => {
@@ -59,7 +57,7 @@ export function AccessOverviewPage() {
 						onStatusChange={list.setStatus}
 						onTypeChange={list.setType}
 						onClearFilters={list.clearFilters}
-						onNew={showComingSoon}
+						onNew={() => router.push(ACCESS_NEW_BASE_URL)}
 					/>
 				</div>
 				<AccessTable
