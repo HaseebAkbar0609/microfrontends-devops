@@ -114,31 +114,24 @@ export const professionalCategoryGroups: CategoryGroup[] = [
 
 export const permissionRoles: PermissionRole[] = [
   {
-    id: "support",
-    labelKey: localizationConstants.roleSupport,
+    id: "marketing",
+    labelKey: localizationConstants.roleMarketing,
     canView: true,
     canEdit: true,
-    canDelete: true,
+    canDelete: false,
   },
   {
     id: "sales",
     labelKey: localizationConstants.roleSales,
     canView: true,
     canEdit: true,
-    canDelete: true,
-  },
-  {
-    id: "manager",
-    labelKey: localizationConstants.roleManager,
-    canView: true,
-    canEdit: true,
-    canDelete: true,
+    canDelete: false,
   },
   {
     id: "admin",
     labelKey: localizationConstants.roleAdmin,
-    canView: false,
-    canEdit: false,
-    canDelete: false,
+    canView: true,
+    canEdit: true,
+    canDelete: true,
   },
 ];

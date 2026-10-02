@@ -10,7 +10,7 @@ import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { SettingsCard } from "@/features/leads/settings/components/common/SettingsCard";
 import { reshipmentOptions } from "@/features/leads/settings/constants";
-import { Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Trash2 } from "lucide-react";
 import { fetchPipelines, updateStage, deleteStage } from "@/features/leads/settings/api/pipelineApi";
 import type { PipelineStageApiData, StageMode } from "@/features/leads/settings/types/pipelineApi";
 import { showToast } from "@/lib/toast";
@@ -99,6 +99,17 @@ export function PipelineStagesSection() {
     });
   };
 
+  const handleProbabilityChange = (stage: PipelineStageApiData, value: string) => {
+    const probability = Number(value);
+    if (!Number.isInteger(probability) || probability < 0 || probability > 100) {
+      showToast("error", "Probability must be between 0 and 100");
+      return;
+    }
+    if (probability !== stage.probability) {
+      mutation.mutate({ pipelineId: pipeline!.id, stageId: stage.id, payload: { probability } });
+    }
+  };
+
   const handleDayToggle = (stage: PipelineStageApiData, dayId: string, checked: boolean) => {
     const label = labelNameById[dayId];
     const currentSchedule = (stage.schedule_config?.additionalProp1 || {}) as Record<string, string>;
@@ -144,6 +155,36 @@ export function PipelineStagesSection() {
                     <div>
                       <div className="text-sm font-semibold text-slate-900">
                         {stage.name} {stage.is_default && "(Default)"}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-end gap-4">
+                      <label className="space-y-1 text-xs font-semibold text-slate-600">
+                        <span>Probability (%)</span>
+                        <Input
+                          key={`${stage.id}-${stage.probability}`}
+                          type="number"
+                          min={0}
+                          max={100}
+                          step={1}
+                          defaultValue={stage.probability}
+                          onBlur={(event) => handleProbabilityChange(stage, event.target.value)}
+                          onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); }}
+                          className="h-9 w-24 border-slate-300"
+                          aria-label={`Probability for ${stage.name}`}
+                        />
+                      </label>
+                      <div className="flex items-center gap-1">
+                        <Button type="button" variant="outline" size="icon" title="Move stage up" aria-label={`Move ${stage.name} up`}
+                          disabled={index === 0 || mutation.isPending}
+                          onClick={() => mutation.mutate({ pipelineId: pipeline!.id, stageId: stage.id, payload: { order_index: index - 1 } })}>
+                          <ArrowUp className="h-4 w-4" />
+                        </Button>
+                        <Button type="button" variant="outline" size="icon" title="Move stage down" aria-label={`Move ${stage.name} down`}
+                          disabled={index === stages.length - 1 || mutation.isPending}
+                          onClick={() => mutation.mutate({ pipelineId: pipeline!.id, stageId: stage.id, payload: { order_index: index + 1 } })}>
+                          <ArrowDown className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
 

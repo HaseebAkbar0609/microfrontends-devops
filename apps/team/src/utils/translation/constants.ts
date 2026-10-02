@@ -331,6 +331,13 @@ export type LeadsTranslation = {
 	inviteSuppliers: string;
 	quoteListTab: string;
 	activityLogsTab: string;
+	leadInquiryLoading: string;
+	leadInquiryEmpty: string;
+	leadActivityLoading: string;
+	leadActivityEmpty: string;
+	leadActivityCreated: string;
+	leadActivityOfferSent: string;
+	leadActivityOfferAccepted: string;
 	monitorLabel: string;
 	activeLabel: string;
 	archiveLabel: string;
@@ -470,6 +477,10 @@ export type LeadsTranslation = {
 	defaultOwnerAssignmentTitle: string;
 	reminderRulesTitle: string;
 	reminderWatch48Hours: string;
+	leadReminderAfterLabel: string;
+	leadEscalateAfterLabel: string;
+	leadHoursLabel: string;
+	leadHoursError: string;
 	notifyOwnerNewLead: string;
 	slaEscalationTitle: string;
 	escalateManagerReview24h: string;
@@ -479,6 +490,7 @@ export type LeadsTranslation = {
 	permissionsTitle: string;
 	roleLabel: string;
 	roleSupport: string;
+	roleMarketing: string;
 	roleSales: string;
 	roleManager: string;
 	roleAdmin: string;

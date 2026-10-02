@@ -8,6 +8,8 @@ import { Loader } from "@/components/ui/loader";
 import Header from "./header/Header";
 import Sidebar from "./sidebar/Sidebar";
 import MyPagesSubSidebar from "./sidebar/MyPagesSubSidebar";
+import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { X } from "lucide-react";
 
 interface AppShellProps {
 	children: React.ReactNode;
@@ -34,6 +36,11 @@ export function AppShell({ children }: AppShellProps) {
 	const isAuthPage = AUTH_PAGES.includes(pathname);
 	const isPublicPage = PUBLIC_PAGES.includes(pathname);
 	const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+	const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+	useEffect(() => {
+		setMobileNavOpen(false);
+	}, [pathname]);
 
 	useEffect(() => {
 		if (!isReady) return;
@@ -77,10 +84,24 @@ export function AppShell({ children }: AppShellProps) {
 
 	return (
 		<div className="flex h-screen overflow-hidden">
-			{!isMyPages && <Sidebar />}
-			{isMyPages && <MyPagesSubSidebar />}
-			<div className="flex flex-1 flex-col overflow-hidden">
-				<Header />
+			<div className="hidden h-full md:block">
+				{isMyPages ? <MyPagesSubSidebar /> : <Sidebar />}
+			</div>
+			<Sheet open={mobileNavOpen} onOpenChange={setMobileNavOpen}>
+				<SheetContent side="left" showCloseButton={false} className="w-[min(20rem,85vw)] gap-0 border-0 p-0 md:hidden">
+					<SheetTitle className="sr-only">Navigation</SheetTitle>
+					<SheetClose className="absolute right-3 top-3 z-10 flex size-10 items-center justify-center rounded-md text-white hover:bg-white/15" aria-label="Close navigation">
+						<X className="size-5" />
+					</SheetClose>
+					{isMyPages ? (
+						<MyPagesSubSidebar mobile onNavigate={() => setMobileNavOpen(false)} />
+					) : (
+						<Sidebar mobile onNavigate={() => setMobileNavOpen(false)} />
+					)}
+				</SheetContent>
+			</Sheet>
+			<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+				<Header onOpenNavigation={() => setMobileNavOpen(true)} />
 				<main
 					className={`flex flex-1 flex-col bg-white ${isMyPages ? "overflow-hidden" : "overflow-auto"}`}
 				>

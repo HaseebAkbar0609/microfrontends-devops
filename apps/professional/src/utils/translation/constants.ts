@@ -11014,6 +11014,132 @@ export type PersonnelCompetenceAndReviewTranslation = {
 	medarbetarsamtalEmptyDocs: string;
 };
 
+// TFS-980 Worktime (Arbetstid) & TFS-981 Hälsa (Friskvård & Rehab)
+export type PersonnelWorktimeAndHalsaTranslation = {
+	worktimeDropdownArbetstid: string;
+	worktimeViewCalendar: string;
+	worktimeViewTable: string;
+	worktimeWeeklyTimesheet: string;
+	worktimeWeekPrefix: string;
+	worktimeStatusSubmitted: string;
+	worktimeStatusApproved: string;
+	worktimeStatusReturned: string;
+	worktimeBtnThisWeek: string;
+	worktimeBtnPrevWeek: string;
+	worktimeBtnNextWeek: string;
+	worktimeBtnApprove: string;
+	worktimeBtnReturn: string;
+	worktimeConfirmApproveTitle: string;
+	worktimeConfirmApproveDesc: string;
+	worktimeConfirmReturnTitle: string;
+	worktimeConfirmReturnDesc: string;
+	worktimeKpiLoggedTitle: string;
+	worktimeKpiFinalTitle: string;
+	worktimeKpiTotal: string;
+	worktimeKpiOt: string;
+	worktimeKpiAta: string;
+	worktimeKpiTravel: string;
+	worktimeSectionDayBreakdown: string;
+	worktimeToggleComparison: string;
+	worktimeBadgeModified: string;
+	worktimeSubcardCostCenter: string;
+	worktimeBtnAddObject: string;
+	worktimeColObject: string;
+	worktimeColNormal: string;
+	worktimeColOt: string;
+	worktimeColAtaNr: string;
+	worktimeColAtaHours: string;
+	worktimeColTravel: string;
+	worktimeColAction: string;
+	worktimeDailyCheck: string;
+	worktimeFieldLogTitle: string;
+	worktimeBillingAllocationTitle: string;
+	worktimeFieldLogTime: string;
+	worktimeFieldLogDuration: string;
+	worktimeFieldLogOt: string;
+	worktimeFieldLogAta: string;
+	worktimeFieldLogTravel: string;
+	worktimeModalAddObjectTitle: string;
+	worktimeModalObjectLabel: string;
+	worktimeModalObjectPlaceholder: string;
+	worktimeModalNormalLabel: string;
+	worktimeModalOtLabel: string;
+	worktimeModalAtaNrLabel: string;
+	worktimeModalAtaNrPlaceholder: string;
+	worktimeModalAtaHoursLabel: string;
+	worktimeModalTravelLabel: string;
+	worktimeValidationRequired: string;
+	worktimeToastApproved: string;
+	worktimeToastReturned: string;
+	worktimeToastObjectAdded: string;
+	worktimeToastObjectDeleted: string;
+	worktimeLabelOriginal: string;
+	worktimeLabelFinal: string;
+	worktimeLabelTotal: string;
+	worktimeLabelAta: string;
+	worktimeDayMonday: string;
+	worktimeDayTuesday: string;
+	worktimeDayWednesday: string;
+	worktimeDayThursday: string;
+	worktimeDayFriday: string;
+	worktimeDaySaturday: string;
+	worktimeDaySunday: string;
+	worktimeDropdownTimesheet: string;
+
+	// TFS-981 Hälsa: Friskvård & Rehab
+	halsaDropdownFriskvard: string;
+	halsaDropdownRehab: string;
+	friskvardCardTitle: string;
+	friskvardStatusActive: string;
+	friskvardBtnEdit: string;
+	friskvardFieldEligible: string;
+	friskvardFieldAmount: string;
+	friskvardFieldProviders: string;
+	friskvardAmountUnitMonth: string;
+	friskvardAmountUnitYear: string;
+	friskvardOptionMonth: string;
+	friskvardOptionYear: string;
+	friskvardModalTitle: string;
+	friskvardRadioYes: string;
+	friskvardRadioNo: string;
+	friskvardAddProviderPlaceholder: string;
+	friskvardBtnAddProvider: string;
+	friskvardToastSaved: string;
+	friskvardPopularProviders: string;
+
+	rehabCardTitle: string;
+	rehabStatusActive: string;
+	rehabBtnEdit: string;
+	rehabFieldCenter: string;
+	rehabFieldImprovement: string;
+	rehabFieldStartDate: string;
+	rehabFieldReturnDate: string;
+	rehabFieldCapacity: string;
+	rehabFieldFrequency: string;
+	rehabFieldNextFollowup: string;
+	rehabFrequencyPlaceholder: string;
+	rehabFrequencyEveryWeek: string;
+	rehabFrequencyEveryTwoWeeks: string;
+	rehabFrequencyMonthly: string;
+	rehabAttachedDocsTitle: string;
+	rehabBtnViewFile: string;
+	rehabModalTitle: string;
+	rehabUploadTitle: string;
+	rehabUploadHint: string;
+	rehabUploadBtn: string;
+	rehabSpecsTitle: string;
+	rehabSpecsColDate: string;
+	rehabSpecsColDocName: string;
+	rehabSpecsColFile: string;
+	rehabSpecsColAction: string;
+	rehabConfirmDeleteDocTitle: string;
+	rehabConfirmDeleteDocDesc: string;
+	rehabToastSaved: string;
+	rehabToastDocUploaded: string;
+	rehabToastDocDeleted: string;
+	rehabToastDocDownloaded: string;
+};
+
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
 	materialDepotLabel: string;
@@ -11312,7 +11438,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	SmartAccessTranslation &
 	SmartAccessDetailsTranslation &
 	SmartAccessAccessTabTranslation &
-	PersonnelCompetenceAndReviewTranslation;
+	PersonnelCompetenceAndReviewTranslation &
+	PersonnelWorktimeAndHalsaTranslation;
 
 export type TranslationKeys = keyof Translation;
 

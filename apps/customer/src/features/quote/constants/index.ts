@@ -58,9 +58,12 @@ export const PROJECT_STATUS_FILTER_OPTIONS = [
 
 /** Map API `quote_status` value → translation key (same labels as the status filter) */
 export const PROJECT_STATUS_VALUE_TO_LABEL_KEY: Record<string, string> =
-	Object.fromEntries(
-		PROJECT_STATUS_FILTER_OPTIONS.map((o) => [o.value, o.label]),
-	);
+	{
+		...Object.fromEntries(
+			PROJECT_STATUS_FILTER_OPTIONS.map((o) => [o.value, o.label]),
+		),
+		draft: localizationConstants.statusDraft,
+	};
 
 export const QUOTE_COLUMNS = [
 	{ label: localizationConstants.refNo, field: "refNo" },
