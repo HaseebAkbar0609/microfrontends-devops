@@ -19,6 +19,9 @@ export function NotificationsSection() {
 
   const [localEmail, setLocalEmail] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [reminderHours, setReminderHours] = useState("48");
+  const [escalationHours, setEscalationHours] = useState("24");
+  const [hoursError, setHoursError] = useState<"reminder" | "escalation" | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["notifications-sla"],
@@ -30,6 +33,13 @@ export function NotificationsSection() {
       setLocalEmail(data.escalation_email);
     }
   }, [data?.escalation_email]);
+
+  useEffect(() => {
+    if (data) {
+      setReminderHours(String(data.reminder_after_hours ?? 48));
+      setEscalationHours(String(data.escalate_after_hours ?? 24));
+    }
+  }, [data]);
 
   const updateMutation = useMutation({
     mutationFn: updateNotificationsSla,
@@ -51,6 +61,20 @@ export function NotificationsSection() {
 
   const handleEscalateToggle = (checked: boolean) => {
     updateMutation.mutate({ escalate: checked });
+  };
+
+  const saveHours = (field: "reminder" | "escalation") => {
+    const value = field === "reminder" ? reminderHours : escalationHours;
+    const hours = Number(value);
+    if (!Number.isInteger(hours) || hours < 1 || hours > 8760) {
+      setHoursError(field);
+      return;
+    }
+    setHoursError(null);
+    const key = field === "reminder" ? "reminder_after_hours" : "escalate_after_hours";
+    if (hours !== (field === "reminder" ? data?.reminder_after_hours : data?.escalate_after_hours)) {
+      updateMutation.mutate({ [key]: hours });
+    }
   };
 
   const handleEmailBlur = () => {
@@ -90,6 +114,24 @@ export function NotificationsSection() {
               <Translate text={rule.labelKey} />
             </label>
           ))}
+          <div className="flex flex-wrap items-center gap-3 pl-8 text-sm text-slate-700">
+            <Translate text={localizationConstants.leadReminderAfterLabel} />
+            <Input
+              type="number"
+              min={1}
+              max={8760}
+              step={1}
+              value={reminderHours}
+              onChange={(event) => { setReminderHours(event.target.value); setHoursError(null); }}
+              onBlur={() => saveHours("reminder")}
+              onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); }}
+              disabled={!data?.send_reminder || updateMutation.isPending}
+              aria-invalid={hoursError === "reminder"}
+              className="h-10 w-24 border-slate-300"
+            />
+            <Translate text={localizationConstants.leadHoursLabel} />
+            {hoursError === "reminder" && <span role="alert" className="text-red-600"><Translate text={localizationConstants.leadHoursError} /></span>}
+          </div>
         </div>
       </SettingsCard>
 
@@ -103,6 +145,24 @@ export function NotificationsSection() {
             />
             <Translate text={localizationConstants.escalateManagerReview24h} />
           </label>
+          <div className="flex flex-wrap items-center gap-3 pl-8 text-sm text-slate-700">
+            <Translate text={localizationConstants.leadEscalateAfterLabel} />
+            <Input
+              type="number"
+              min={1}
+              max={8760}
+              step={1}
+              value={escalationHours}
+              onChange={(event) => { setEscalationHours(event.target.value); setHoursError(null); }}
+              onBlur={() => saveHours("escalation")}
+              onKeyDown={(event) => { if (event.key === "Enter") event.currentTarget.blur(); }}
+              disabled={!escalate || updateMutation.isPending}
+              aria-invalid={hoursError === "escalation"}
+              className="h-10 w-24 border-slate-300"
+            />
+            <Translate text={localizationConstants.leadHoursLabel} />
+            {hoursError === "escalation" && <span role="alert" className="text-red-600"><Translate text={localizationConstants.leadHoursError} /></span>}
+          </div>
 
           <div className="space-y-2">
             <div className="text-xs font-semibold uppercase text-slate-500">

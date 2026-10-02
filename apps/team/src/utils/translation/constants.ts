@@ -477,6 +477,10 @@ export type LeadsTranslation = {
 	defaultOwnerAssignmentTitle: string;
 	reminderRulesTitle: string;
 	reminderWatch48Hours: string;
+	leadReminderAfterLabel: string;
+	leadEscalateAfterLabel: string;
+	leadHoursLabel: string;
+	leadHoursError: string;
 	notifyOwnerNewLead: string;
 	slaEscalationTitle: string;
 	escalateManagerReview24h: string;
@@ -486,6 +490,7 @@ export type LeadsTranslation = {
 	permissionsTitle: string;
 	roleLabel: string;
 	roleSupport: string;
+	roleMarketing: string;
 	roleSales: string;
 	roleManager: string;
 	roleAdmin: string;

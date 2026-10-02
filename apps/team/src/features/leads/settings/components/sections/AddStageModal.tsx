@@ -17,12 +17,13 @@ export function AddStageModal({ pipelineId }: AddStageModalProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [mode, setMode] = useState<StageMode>("manual");
+  const [probability, setProbability] = useState("0");
   
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
     mutationFn: async () => {
-      return createStage(pipelineId, { name, mode });
+      return createStage(pipelineId, { name: name.trim(), mode, probability: Number(probability) });
     },
     onSuccess: () => {
       showToast("success", "Stage created successfully");
@@ -30,6 +31,7 @@ export function AddStageModal({ pipelineId }: AddStageModalProps) {
       setOpen(false);
       setName("");
       setMode("manual");
+      setProbability("0");
     },
     onError: (error: unknown) => {
       const msg = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || "Failed to create stage";
@@ -40,6 +42,10 @@ export function AddStageModal({ pipelineId }: AddStageModalProps) {
   const handleSave = () => {
     if (!name.trim()) {
       showToast("error", "Stage name is required");
+      return;
+    }
+    if (!Number.isInteger(Number(probability)) || Number(probability) < 0 || Number(probability) > 100) {
+      showToast("error", "Probability must be between 0 and 100");
       return;
     }
     mutation.mutate();
@@ -92,6 +98,11 @@ export function AddStageModal({ pipelineId }: AddStageModalProps) {
                 <span className="text-sm text-slate-700">Manual</span>
               </label>
             </RadioGroup>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="stage-probability">Probability (%)</Label>
+            <Input id="stage-probability" type="number" min={0} max={100} step={1}
+              value={probability} onChange={(event) => setProbability(event.target.value)} />
           </div>
         </div>
         <DialogFooter>

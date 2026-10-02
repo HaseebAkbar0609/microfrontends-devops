@@ -12,6 +12,7 @@ export const StageApiSchema = z.object({
   name: z.string(),
   mode: z.enum(["automatic", "manual"]).optional().default("manual"),
   order_index: z.number().optional().default(0),
+  probability: z.number().min(0).max(100).optional().default(0),
   is_default: z.boolean().optional().default(false),
   is_active: z.boolean().optional().default(true),
   schedule_config: z.record(z.any()).optional().nullable(),
