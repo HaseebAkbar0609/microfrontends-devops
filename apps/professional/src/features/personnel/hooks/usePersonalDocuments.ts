@@ -9,9 +9,20 @@ import {
 import { INITIAL_PERSONAL_DOCUMENTS } from "../constants/personalDocument.mock";
 import localizationConstants from "@/utils/translation/constants";
 
-export function usePersonalDocuments() {
-	const [state, setState] = useState<PersonalDocumentsState>(INITIAL_PERSONAL_DOCUMENTS);
-	const [uploadTags, setUploadTags] = useState<string[]>(["Document 1.pdf", "Document 2.doc"]);
+interface UsePersonalDocumentsOptions {
+	initialDocs?: PersonalDocumentFileItem[];
+	onUploadCallback?: (tags: string[]) => void;
+	onDeleteCallback?: (id: string) => void;
+}
+
+export function usePersonalDocuments(options?: UsePersonalDocumentsOptions) {
+	const [state, setState] = useState<PersonalDocumentsState>(() => ({
+		metadata: INITIAL_PERSONAL_DOCUMENTS.metadata,
+		documents: options?.initialDocs && options.initialDocs.length > 0
+			? options.initialDocs
+			: INITIAL_PERSONAL_DOCUMENTS.documents,
+	}));
+	const [uploadTags, setUploadTags] = useState<string[]>([]);
 	const [docToDelete, setDocToDelete] = useState<PersonalDocumentFileItem | null>(null);
 	const [previewDocName, setPreviewDocName] = useState<string | null>(null);
 
@@ -40,7 +51,7 @@ export function usePersonalDocuments() {
 			id: `pdoc_${Date.now()}_${idx}`,
 			date: today,
 			name: name.replace(/\.[^/.]+$/, ""),
-			fileFormat: name.toLowerCase().endsWith(".doc") ? "DOC" : "PDF",
+			fileFormat: name.toLowerCase().endsWith(".doc") || name.toLowerCase().endsWith(".docx") ? "DOC" : "PDF",
 			fileSize: "1.0 MB",
 		}));
 
@@ -48,9 +59,10 @@ export function usePersonalDocuments() {
 			...prev,
 			documents: [...newDocs, ...prev.documents],
 		}));
+		options?.onUploadCallback?.(targetTags);
 		setUploadTags([]);
 		toast.success(localizationConstants.personalDocToastUploaded);
-	}, [uploadTags]);
+	}, [uploadTags, options]);
 
 	const handleConfirmDelete = useCallback(() => {
 		if (docToDelete) {
@@ -58,10 +70,11 @@ export function usePersonalDocuments() {
 				...prev,
 				documents: prev.documents.filter((doc) => doc.id !== docToDelete.id),
 			}));
+			options?.onDeleteCallback?.(docToDelete.id);
 			toast.success(localizationConstants.personalDocToastDeleted);
 			setDocToDelete(null);
 		}
-	}, [docToDelete]);
+	}, [docToDelete, options]);
 
 	const handlePreviewDoc = useCallback((name: string) => {
 		setPreviewDocName(name);

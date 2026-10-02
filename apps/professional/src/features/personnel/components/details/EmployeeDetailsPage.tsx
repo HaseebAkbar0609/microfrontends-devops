@@ -213,13 +213,15 @@ function EmployeeDetailsContent() {
 					<DokumentTab
 						profileData={profileData}
 						onDeleteDocument={handleDeleteAttachedDoc}
-						onUploadDocument={(tags) =>
-							handleAddAttachedDoc({
-								name: tags[0] || "Dokument",
-								date: new Date().toISOString().split("T")[0],
-								fileFormat: "pdf",
-							})
-						}
+						onUploadDocument={(tags) => {
+							tags.forEach((tag) => {
+								handleAddAttachedDoc({
+									name: tag.replace(/\.[^/.]+$/, ""),
+									date: new Date().toISOString().split("T")[0],
+									fileFormat: tag.toLowerCase().endsWith(".doc") || tag.toLowerCase().endsWith(".docx") ? "DOC" : "PDF",
+								});
+							});
+						}}
 						onPreviewDoc={(name) => setPreviewDocumentName(name)}
 					/>
 				)}
