@@ -32,3 +32,20 @@ export const ACCESS_MODULE_TABS: ModuleTabItem[] = [
     href: ACCESS_MODULE_BASE_URL,
   },
 ];
+
+/** Address of one access record's details page (TFS-1102). */
+export function accessDetailsUrl(id: string): string {
+  return `${ACCESS_MODULE_BASE_URL}/${encodeURIComponent(id)}`;
+}
+
+/**
+ * Secondary tab row of a record page (guideline pattern 3): the record's own
+ * sections, on their own routes. "Access" is TFS-1103 and still a placeholder.
+ */
+export function accessDetailsTabs(id: string): ModuleTabItem[] {
+  const base = accessDetailsUrl(id);
+  return [
+    { id: "information", labelKey: localizationConstants.accessTabInformation, href: base, exact: true },
+    { id: "access", labelKey: localizationConstants.accessTabAccess, href: `${base}/access` },
+  ];
+}

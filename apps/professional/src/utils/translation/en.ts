@@ -35,6 +35,7 @@ import {
 	PersonnelProfileTranslation,
 	AccountLifecycleTranslation,
 	SmartAccessTranslation,
+	SmartAccessDetailsTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -11294,6 +11295,21 @@ export const enSmartAccess: SmartAccessTranslation = {
 	accessDeletedToast: "{{name}} was deleted.",
 };
 
+export const enSmartAccessDetails: SmartAccessDetailsTranslation = {
+	accessDetailsTitle: "Access Management Details",
+	accessTabInformation: "Access Information",
+	accessTabAccess: "Access",
+	accessSectionObject: "Object",
+	accessSectionInformation: "Access Information",
+	accessSectionContact: "Contact Person",
+	accessFieldProjectOrder: "Project (Order)",
+	accessFieldAccessName: "Access Name",
+	accessContactResponsible: "Responsible",
+	accessContactMobile: "Mobile",
+	accessContactsEmpty: "No contact persons.",
+	accessEditSectionLabel: "Edit {{section}}",
+};
+
 export const enPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation = {
 	worktimeDropdownArbetstid: "Worktime",
 	worktimeViewCalendar: "Calendar",
@@ -11480,4 +11496,5 @@ export const en: Translation = {
 	...enForecastDashboard,
 	...enMaterialStorage,
 	...enSmartAccess,
+	...enSmartAccessDetails,
 };

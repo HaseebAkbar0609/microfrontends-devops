@@ -2,10 +2,9 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { ACCESS_DEFAULT_PAGE_SIZE } from "../constants/access.constants";
-import { ACCESS_POINTS_MOCK } from "../data/accessPoints.mock";
+import { useAccessRows } from "../context/AccessRowsContext";
 import type {
 	AccessListParams,
-	AccessPoint,
 	AccessSortField,
 	AccessStatusId,
 	AccessTypeId,
@@ -24,12 +23,13 @@ const INITIAL_PARAMS: AccessListParams = {
 };
 
 /**
- * The overview's data and list state. Rows live in memory and archive/delete
- * only change that copy, until a backend exists. When it does, only this hook
- * changes: the table keeps reading `page` and calling the same setters.
+ * The overview's data and list state. Rows come from the shared in-memory
+ * provider and archive/delete only change that copy, until a backend exists.
+ * When it does, only this hook and the provider change: the table keeps
+ * reading `page` and calling the same setters.
  */
 export function useAccessList() {
-	const [rows, setRows] = useState<AccessPoint[]>(ACCESS_POINTS_MOCK);
+	const { rows, archive, remove } = useAccessRows();
 	const [params, setParams] = useState<AccessListParams>(INITIAL_PARAMS);
 
 	const page = useMemo(() => selectAccessPoints(rows, params), [rows, params]);
@@ -57,16 +57,6 @@ export function useAccessList() {
 	const setPage = useCallback((next: number) => setParams((current) => ({ ...current, page: next })), []);
 	const setPageSize = useCallback(
 		(pageSize: number) => setParams((current) => ({ ...current, pageSize, page: 1 })),
-		[],
-	);
-
-	const archive = useCallback(
-		(id: string) =>
-			setRows((current) => current.map((row) => (row.id === id ? { ...row, archived: true } : row))),
-		[],
-	);
-	const remove = useCallback(
-		(id: string) => setRows((current) => current.filter((row) => row.id !== id)),
 		[],
 	);
 
