@@ -25,16 +25,13 @@ import { SALES_PRIMARY_BUTTON_CLASS } from "../../constants/salesTheme";
 
 type CompanyActivityLogCardProps = {
 	company: SalesCompany;
-	onChange: (patch: Partial<SalesCompany>) => void;
 };
 
 export function CompanyActivityLogCard({
 	company,
-	onChange,
 }: CompanyActivityLogCardProps) {
 	const { draft, error, update, submit, toggleDone } = useActivityLogForm(
 		company,
-		onChange,
 	);
 	const t = useTranslate();
 

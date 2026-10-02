@@ -34,6 +34,7 @@ import {
 	PersonnelEquipmentTranslation,
 	PersonnelProfileTranslation,
 	AccountLifecycleTranslation,
+	SmartAccessTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -103,6 +104,7 @@ export const svAppLauncher: AppLauncherTranslation = {
 	managementSupport: "Ledning",
 	vehicle: "Fordon",
 	access: "Smart Access",
+	accessManagement: "Åtkomsthantering",
 	economy: "Ekonomi",
 };
 
@@ -10801,6 +10803,13 @@ const svForecastDashboard: ForecastDashboardTranslation = {
 	forecastDocumentsUploaded: "{{count}} dokument har laddats upp.",
 	forecastDocumentsUploadFailed: "Dokumenten kunde inte laddas upp.",
 	forecastDocumentsDeleted: "{{name}} har tagits bort.",
+
+	/* Prognos › Protokoll: what the details dialog adds (TFS-1066). */
+	forecastProtocolsDetailsTitle: "Protokollets uppgifter",
+	forecastProtocolsDetailSize: "Storlek",
+	forecastProtocolsSizeUnknown: "Okänd",
+	forecastProtocolsOpenFile: "Öppna fil",
+	forecastProtocolsChooseFile: "Välj fil",
 };
 
 // Material storage – overview (TFS-1072)
@@ -11271,6 +11280,40 @@ export const svPersonnelCompetenceAndReview: PersonnelCompetenceAndReviewTransla
 	medarbetarsamtalEmptyDocs: "Inga dokument bifogade",
 };
 
+export const svSmartAccess: SmartAccessTranslation = {
+	accessNewButton: "Ny åtkomsthantering",
+	accessColIdNo: "ID-nr",
+	accessColObject: "Objekt",
+	accessColName: "Åtkomst namn",
+	accessColType: "Typ",
+	accessColCity: "Ort",
+	accessColAssignedTo: "Tilldelad till",
+	accessColLastAssigned: "Senast tilldelad",
+	accessColStatus: "Status",
+	accessTypeAccessCard: "Accesskort",
+	accessTypeKeys: "Nycklar",
+	accessTypePassCard: "Passerkort",
+	accessTypeTag: "Tagg",
+	accessStatusActive: "Aktiv",
+	accessStatusScheduled: "Schemalagd",
+	accessStatusInProgress: "Pågående",
+	accessUnassigned: "Ej tilldelad",
+	accessActionOpen: "Öppna",
+	accessActionArchive: "Arkiv",
+	accessActionDelete: "Ta bort",
+	accessViewLabel: "Visa {{name}}",
+	accessRowActionsLabel: "Åtgärder för {{name}}",
+	accessEmpty: "Ingen åtkomsthantering hittades.",
+	accessFilterStatusLabel: "Status",
+	accessFilterTypeLabel: "Typ",
+	accessAllStatuses: "Alla statusar",
+	accessAllTypes: "Alla typer",
+	accessDeleteTitle: "Ta bort åtkomsthantering?",
+	accessDeleteDescription: "{{name}} tas bort permanent. Det går inte att ångra.",
+	accessArchivedToast: "{{name}} arkiverades.",
+	accessDeletedToast: "{{name}} togs bort.",
+};
+
 export const sv: Translation = {
   ...svDocumentWorkflows,
 	...svHeader,
@@ -11330,4 +11373,5 @@ export const sv: Translation = {
 	...svToolsDiscount,
 	...svForecastDashboard,
 	...svMaterialStorage,
+	...svSmartAccess,
 };

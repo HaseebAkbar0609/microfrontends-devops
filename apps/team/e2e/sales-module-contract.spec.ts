@@ -24,14 +24,14 @@
 import { expect, test } from "@playwright/test";
 
 import * as salesCrmApi from "../src/features/sales/api/salesCrmApi";
+import * as salesFactories from "../src/features/sales/utils/salesFactories";
 import {
 	createEmptyCompany,
-	createId,
 	createOrder,
 	createPendingPayment,
-	createQuoteNumber,
 } from "../src/features/sales/utils/salesFactories";
 import { calculateQuoteTotals } from "../src/features/sales/utils/quoteCalculations";
+import { buildSalesQuote, createQuoteDraft } from "../src/features/sales/utils/quoteDraft";
 import axiosInstance from "../src/lib/axiosInstance";
 import type { QuoteModuleRow, SalesCompany } from "../src/features/sales/types";
 
@@ -90,30 +90,16 @@ test("quote totals follow the documented discount order", () => {
 	expect(yearly.firstInvoice).toBeCloseTo(4590, 2);
 });
 
-// ──────────────── backend exists, frontend never calls it ────────────────
-
-test.fail("SALES-11: the settings screen reads and writes the settings API", async () => {
-	// The backend shipped and merged (PR 82, /api/v1/teams/sales/settings), but
-	// SalesSettingsProvider still holds the Calendly link and the email templates
-	// in useState seeded from salesSettings.mock, so a seller's settings are gone
-	// on reload. Confirmed in a browser against local dev: no request on edit,
-	// value reverts on reload.
+test("SALES-11: the settings screen reads and writes the settings API", async () => {
+	// /api/v1/teams/sales/settings (PR 82) holds the Calendly link and the email
+	// templates; SalesSettingsProvider reads them and saves each change.
 	const api = await import("../src/features/sales/api/salesSettingsApi");
 	expect(Object.keys(api)).toEqual(
 		expect.arrayContaining(["getSalesSettings", "patchSalesSettings"]),
 	);
 });
 
-test.fixme("SALES-03: a patch asserts the version it read, so a 409 can happen", () => {
-	// The server compares `version` and answers SALES_COMPANY_VERSION_CONFLICT,
-	// but SalesCrmProvider.updateCompany destructures `version` out of every patch
-	// before sending, so two sellers editing one prospect overwrite each other.
-	//
-	// fixme, not fail: the stripping is inline in a useCallback. Asserting on
-	// companyInput would never flip, because that is the create path and a
-	// correct fix belongs on PATCH. Extract the patch-body builder into a pure
-	// function and assert that it keeps `version`.
-});
+// ──────────────── backend exists, frontend never calls it ────────────────
 
 test.fail("SALES-07: the list asks the server to filter, search and sort", async () => {
 	// The server took over filtering, search and sorting, but
@@ -180,33 +166,39 @@ test.fail("Sales organisation: the team roster is not a mock seed", async () => 
 
 // ──────────────────────── numbering and money ────────────────────────
 
-test.fail("TFS-1138: a quote number does not depend on unrelated factory calls", () => {
-	// createQuoteNumber shares one module-level counter with createId and
-	// createTrialAccount, so the serial depends on how many unrelated things were
-	// created first. Creating the prospect already consumed 001.
-	createId("sc");
-	expect(createQuoteNumber()).toMatch(/-001$/);
+test("TFS-1138: the browser no longer makes quote numbers", () => {
+	// A counter in the browser restarted on reload and ran per tab. The server now
+	// issues TF-<year>-<serial> on a quote's first save and keeps it after that
+	// (sales_crm_service._number_documents), so a new quote goes out without one.
+	expect(salesFactories).not.toHaveProperty("createQuoteNumber");
+	const company = quotedCompany();
+	company.quote = null;
+	const draft = createQuoteDraft(company, (key) => key, "");
+	const totals = calculateQuoteTotals(draft.modules, draft.term, draft.extraDiscountPercent);
+	expect(buildSalesQuote(draft, totals, "").quoteNumber).toBe("");
 });
 
-test.fail("TFS-1138: document numbers are issued by the server, not the browser", async () => {
-	// The counter resets on reload and runs per tab, so two tabs produce the same
-	// quote number. Order and invoice numbers are worse: they are built from the
-	// last four characters of the company id, so they are neither sequential nor
-	// unique — and Swedish bookkeeping rules require invoice numbers to be both.
-	const api = await import("../src/features/sales/api/salesNumbersApi");
-	expect(Object.keys(api)).toEqual(expect.arrayContaining(["allocateDocumentNumber"]));
+test.fail("TFS-1138: order numbers are issued by the server, not the browser", () => {
+	// Quote numbers are done (above). Order numbers are still built from the last
+	// characters of the company id, so they are neither sequential nor unique, and
+	// the order itself is dropped on save (TFS-1136). The fix sends the order
+	// without a number and the server issues OB-<year>-<serial>.
+	expect(createOrder(quotedCompany()).orderNumber).toBe("");
 });
 
-test.fixme("TFS-1137: a saved quote carries the discount that explains its net", () => {
-	// useQuoteBuilderForm.save builds the SalesQuote from the draft and leaves out
-	// draft.extraDiscountPercent, so the server (PR 92) can only bound monthlyNet
-	// instead of checking it: 50 000 kr of lines invoiced for 1 kr still passes,
-	// because it could be a 99.998 percent discount.
-	//
-	// fixme, not fail: the quote is assembled inline in that callback, so there is
-	// nothing to call. Asserting on a fixture built in this file would never flip.
-	// Extract a pure buildSalesQuote(draft, totals) and assert that it keeps the
-	// percentage.
+test("TFS-1137: a saved quote carries the discount that explains its net", () => {
+	// Without the percentage the server (PR 92) can only bound monthlyNet: 50 000 kr
+	// of lines invoiced for 1 kr would pass as a 99.998 percent discount. And a
+	// reopened quote must start from its own discount, or saving it again raises
+	// the price without anyone touching it.
+	const company = quotedCompany();
+	company.quote = { ...company.quote!, extraDiscountPercent: 12.5 };
+	const draft = createQuoteDraft(company, (key) => key, "");
+	expect(draft.extraDiscountPercent).toBe(12.5);
+	const totals = calculateQuoteTotals(draft.modules, draft.term, draft.extraDiscountPercent);
+	const quote = buildSalesQuote(draft, totals, "Q-1");
+	expect(quote.extraDiscountPercent).toBe(12.5);
+	expect(quote.monthlyNet).toBe(totals.monthlyNet);
 });
 
 test.fail("Trials: the Sales screens use the durations the trials API offers", async () => {

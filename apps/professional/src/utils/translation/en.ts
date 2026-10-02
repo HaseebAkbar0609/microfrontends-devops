@@ -34,6 +34,7 @@ import {
 	PersonnelEquipmentTranslation,
 	PersonnelProfileTranslation,
 	AccountLifecycleTranslation,
+	SmartAccessTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -103,6 +104,7 @@ export const enAppLauncher: AppLauncherTranslation = {
 	dataIT: "Data-IT",
 	managementSupport: "Management Support",
 	access: "Smart Access",
+	accessManagement: "Access Management",
 	economy: "Economy",
 };
 
@@ -10780,6 +10782,13 @@ const enForecastDashboard: ForecastDashboardTranslation = {
 	forecastDocumentsUploaded: "{{count}} documents were uploaded.",
 	forecastDocumentsUploadFailed: "The documents could not be uploaded.",
 	forecastDocumentsDeleted: "{{name}} was removed.",
+
+	/* Prognos › Protokoll: what the details dialog adds (TFS-1066). */
+	forecastProtocolsDetailsTitle: "Protocol details",
+	forecastProtocolsDetailSize: "Size",
+	forecastProtocolsSizeUnknown: "Unknown",
+	forecastProtocolsOpenFile: "Open file",
+	forecastProtocolsChooseFile: "Choose file",
 };
 
 // Material storage – overview (TFS-1072)
@@ -11250,6 +11259,40 @@ export const enPersonnelCompetenceAndReview: PersonnelCompetenceAndReviewTransla
 	medarbetarsamtalEmptyDocs: "No documents attached",
 };
 
+export const enSmartAccess: SmartAccessTranslation = {
+	accessNewButton: "New access management",
+	accessColIdNo: "ID no.",
+	accessColObject: "Object",
+	accessColName: "Access name",
+	accessColType: "Type",
+	accessColCity: "City",
+	accessColAssignedTo: "Assigned to",
+	accessColLastAssigned: "Last assigned",
+	accessColStatus: "Status",
+	accessTypeAccessCard: "Access card",
+	accessTypeKeys: "Keys",
+	accessTypePassCard: "Pass card",
+	accessTypeTag: "Tag",
+	accessStatusActive: "Active",
+	accessStatusScheduled: "Scheduled",
+	accessStatusInProgress: "In progress",
+	accessUnassigned: "Unassigned",
+	accessActionOpen: "Open",
+	accessActionArchive: "Archive",
+	accessActionDelete: "Delete",
+	accessViewLabel: "View {{name}}",
+	accessRowActionsLabel: "Actions for {{name}}",
+	accessEmpty: "No access management found.",
+	accessFilterStatusLabel: "Status",
+	accessFilterTypeLabel: "Type",
+	accessAllStatuses: "All statuses",
+	accessAllTypes: "All types",
+	accessDeleteTitle: "Delete access management?",
+	accessDeleteDescription: "{{name}} will be permanently removed. This action cannot be undone.",
+	accessArchivedToast: "{{name}} was archived.",
+	accessDeletedToast: "{{name}} was deleted.",
+};
+
 export const en: Translation = {
   ...enDocumentWorkflows,
 	...enHeader,
@@ -11309,4 +11352,5 @@ export const en: Translation = {
 	...enToolsDiscount,
 	...enForecastDashboard,
 	...enMaterialStorage,
+	...enSmartAccess,
 };

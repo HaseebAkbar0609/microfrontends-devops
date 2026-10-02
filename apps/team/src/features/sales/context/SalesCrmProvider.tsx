@@ -2,20 +2,23 @@
 
 import { createContext, useCallback, useMemo, useRef, type ReactNode } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { isAxiosError } from "axios";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
 import {
 	archiveSalesCompany,
 	companyInput,
+	companyPatchBody,
 	createSalesCompanies,
 	createSalesCompany,
 	listSalesCompanies,
 	linkProfessionalAccount,
 	patchSalesCompany,
 } from "../api/salesCrmApi";
-import type { SalesCompany } from "../types";
+import type { SalesActivity, SalesCompany } from "../types";
 import { createEmptyCompany } from "../utils/salesFactories";
+import { useSalesActivityMutations } from "../hooks/useSalesActivityMutations";
 
 const QUERY_KEY = ["team-sales-crm-companies"] as const;
 const EMPTY_COMPANIES: SalesCompany[] = [];
@@ -29,10 +32,18 @@ export type SalesCrmContextValue = {
 	addCompanies: (rows: Partial<SalesCompany>[]) => Promise<number>;
 	updateCompany: (companyId: string, patch: Partial<SalesCompany>) => Promise<boolean>;
 	removeCompany: (companyId: string) => Promise<boolean>;
+	addActivity: (companyId: string, activity: SalesActivity) => Promise<boolean>;
+	updateActivity: (
+		companyId: string,
+		activityId: string,
+		changes: Partial<Omit<SalesActivity, "id">>,
+	) => Promise<boolean>;
 	linkProfessional: (recordId: string, companyId: string) => Promise<boolean>;
 };
 
 export const SalesCrmContext = createContext<SalesCrmContextValue | null>(null);
+
+const isConflict = (error: unknown) => isAxiosError(error) && error.response?.status === 409;
 
 function normalise(patch: Partial<SalesCompany>): SalesCompany {
 	return { ...createEmptyCompany(), ...patch };
@@ -75,27 +86,44 @@ export function SalesCrmProvider({ children }: { children: ReactNode }) {
 	const updateCompany = useCallback(async (companyId: string, patch: Partial<SalesCompany>) => {
 		const previous = pendingUpdates.current.get(companyId) ?? Promise.resolve();
 		client.setQueryData<SalesCompany[]>(QUERY_KEY, (current = []) =>
-			current.map((company) => company.id === companyId ? { ...company, ...patch } : company),
+			// The cached version stays: only the server moves it, and a caller holding
+			// an older copy of the company must not rewind it.
+			current.map((company) => company.id === companyId
+				? { ...company, ...patch, version: company.version }
+				: company),
 		);
 		const operation = previous.catch(() => undefined).then(async () => {
-			const {
-				id: _id, createdAt: _createdAt, order: _order, payment: _payment,
-				version: _version, professionalCompanyId: _professionalCompanyId, ...body
-			} = patch;
-			const updated = await patchSalesCompany(companyId, body);
-			if (pendingUpdates.current.get(companyId) === operation) {
-				client.setQueryData<SalesCompany[]>(QUERY_KEY, (current = []) =>
-					current.map((company) => company.id === companyId ? updated : company),
-				);
+			// Read the version when this save runs, not when it was queued: the save
+			// before it in this tab has moved the version on.
+			const version = client.getQueryData<SalesCompany[]>(QUERY_KEY)
+				?.find((company) => company.id === companyId)?.version;
+			let updated: SalesCompany;
+			try {
+				updated = await patchSalesCompany(companyId, companyPatchBody(patch, version));
+			} catch (error) {
+				// Reload before the next queued save runs, so it sends the new version.
+				// Saves are per field, so that one then applies on top of the other change.
+				if (isConflict(error)) await client.invalidateQueries({ queryKey: QUERY_KEY });
+				throw error;
 			}
+			const isLatest = pendingUpdates.current.get(companyId) === operation;
+			// A later save is still pending: keep its optimistic fields, take only the version.
+			client.setQueryData<SalesCompany[]>(QUERY_KEY, (current = []) =>
+				current.map((company) => company.id !== companyId
+					? company
+					: isLatest ? updated : { ...company, version: updated.version }),
+			);
 			return true;
 		});
 		pendingUpdates.current.set(companyId, operation);
 		try {
 			return await operation;
-		} catch {
-			showToast("error", t(localizationConstants.salesRecordSaveFailed));
-			if (pendingUpdates.current.get(companyId) === operation) {
+		} catch (error) {
+			const conflict = isConflict(error);
+			showToast("error", t(conflict
+				? localizationConstants.salesRecordConflict
+				: localizationConstants.salesRecordSaveFailed), `sales-save-${companyId}`);
+			if (!conflict && pendingUpdates.current.get(companyId) === operation) {
 				await client.invalidateQueries({ queryKey: QUERY_KEY });
 			}
 			return false;
@@ -118,6 +146,8 @@ export function SalesCrmProvider({ children }: { children: ReactNode }) {
 			return false;
 		}
 	}, [client, t]);
+
+	const { addActivity, updateActivity } = useSalesActivityMutations(QUERY_KEY);
 
 	const linkProfessional = useCallback(async (recordId: string, companyId: string) => {
 		try {
@@ -142,8 +172,10 @@ export function SalesCrmProvider({ children }: { children: ReactNode }) {
 		addCompanies,
 		updateCompany,
 		removeCompany,
+		addActivity,
+		updateActivity,
 		linkProfessional,
-	}), [companies, query.isPending, query.isError, getCompany, addCompany, addCompanies, updateCompany, removeCompany, linkProfessional]);
+	}), [companies, query.isPending, query.isError, getCompany, addCompany, addCompanies, updateCompany, removeCompany, addActivity, updateActivity, linkProfessional]);
 
 	return <SalesCrmContext.Provider value={value}>{children}</SalesCrmContext.Provider>;
 }

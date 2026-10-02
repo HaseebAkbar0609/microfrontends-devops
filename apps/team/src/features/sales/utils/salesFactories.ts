@@ -4,7 +4,6 @@ import {
 	MS_PER_DAY,
 	ORDER_NUMBER_PREFIX,
 	PAYMENT_LINK_BASE_URL,
-	QUOTE_NUMBER_PREFIX,
 	TRIAL_ACCOUNT_DOMAIN,
 } from "../constants/sales.constants";
 import type {
@@ -94,13 +93,6 @@ export function createTrialAccount(
 		startedAt: startedAt.toISOString(),
 		expiresAt: expiresAt.toISOString(),
 	};
-}
-
-export function createQuoteNumber(): string {
-	const now = new Date();
-	const month = String(now.getMonth() + 1).padStart(2, "0");
-	const serial = String(nextSequence()).padStart(3, "0");
-	return `${QUOTE_NUMBER_PREFIX}-${now.getFullYear()}${month}-${serial}`;
 }
 
 export function createQuoteValidUntil(days = DEFAULT_QUOTE_VALID_DAYS): string {

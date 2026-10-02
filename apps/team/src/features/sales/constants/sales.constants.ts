@@ -9,6 +9,9 @@ export const DEMO_TRIAL_DAYS = 14;
 /** Length in days of a generated test account. */
 export const TEST_TRIAL_DAYS = 30;
 
+/** Pause after the last keystroke before a settings change is saved. */
+export const SALES_SETTINGS_SAVE_DELAY_MS = 600;
+
 /** Default number of days a new quote stays valid. */
 export const DEFAULT_QUOTE_VALID_DAYS = 30;
 
@@ -33,7 +36,6 @@ export const MIN_EXTRA_DISCOUNT_PERCENT = 0;
 export const MAX_EXTRA_DISCOUNT_PERCENT = 100;
 
 /** Document number prefixes. */
-export const QUOTE_NUMBER_PREFIX = "TF";
 export const ORDER_NUMBER_PREFIX = "OB";
 export const INVOICE_NUMBER_PREFIX = "F";
 

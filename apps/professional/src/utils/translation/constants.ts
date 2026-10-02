@@ -46,6 +46,7 @@ export type AppLauncherTranslation = {
 	managementSupport: string;
 	vehicle: string;
 	access: string;
+	accessManagement: string;
 	economy: string;
 };
 
@@ -10705,6 +10706,13 @@ export type ForecastDashboardTranslation = {
 	forecastDocumentsUploaded: string;
 	forecastDocumentsUploadFailed: string;
 	forecastDocumentsDeleted: string;
+
+	/* Prognos › Protokoll: what the details dialog adds (TFS-1066). */
+	forecastProtocolsDetailsTitle: string;
+	forecastProtocolsDetailSize: string;
+	forecastProtocolsSizeUnknown: string;
+	forecastProtocolsOpenFile: string;
+	forecastProtocolsChooseFile: string;
 };
 
 export type PersonnelEquipmentTranslation = {
@@ -11176,6 +11184,40 @@ export type MaterialStorageTranslation = {
 	materialCurrentUserFallback: string;
 };
 
+export type SmartAccessTranslation = {
+	accessNewButton: string;
+	accessColIdNo: string;
+	accessColObject: string;
+	accessColName: string;
+	accessColType: string;
+	accessColCity: string;
+	accessColAssignedTo: string;
+	accessColLastAssigned: string;
+	accessColStatus: string;
+	accessTypeAccessCard: string;
+	accessTypeKeys: string;
+	accessTypePassCard: string;
+	accessTypeTag: string;
+	accessStatusActive: string;
+	accessStatusScheduled: string;
+	accessStatusInProgress: string;
+	accessUnassigned: string;
+	accessActionOpen: string;
+	accessActionArchive: string;
+	accessActionDelete: string;
+	accessViewLabel: string;
+	accessRowActionsLabel: string;
+	accessEmpty: string;
+	accessFilterStatusLabel: string;
+	accessFilterTypeLabel: string;
+	accessAllStatuses: string;
+	accessAllTypes: string;
+	accessDeleteTitle: string;
+	accessDeleteDescription: string;
+	accessArchivedToast: string;
+	accessDeletedToast: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -11232,6 +11274,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	ToolsDiscountTranslation &
 	ForecastDashboardTranslation &
 	MaterialStorageTranslation &
+	SmartAccessTranslation &
 	PersonnelCompetenceAndReviewTranslation;
 
 export type TranslationKeys = keyof Translation;

@@ -4,9 +4,11 @@ import { useCallback, useMemo, useState } from "react";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { useTranslate } from "@/utils/translation/translate";
-import type { SalesActivity, SalesCompany } from "../types";
+import type { SalesActivity, SalesCompany, SalesEmailTemplate } from "../types";
 import { createId } from "../utils/salesFactories";
 import { getCallList, getMeetingBookerStats } from "../utils/meetingBooker";
+import { buildMailtoLink, renderTemplate } from "../utils/salesTemplates";
+import { useSalesSettings } from "./useSalesSettings";
 import { useSalesCompanies } from "./useSalesCompanies";
 import { useMeetingBookerNames } from "./useSalesTeam";
 import { useTodayKey } from "./useTodayKey";
@@ -18,9 +20,10 @@ import { useTodayKey } from "./useTodayKey";
  * up in the counters, the reminders and the statistics at once.
  */
 export function useMeetingBooker() {
-	const { companies, updateCompany } = useSalesCompanies();
+	const { companies, addActivity: appendActivity, updateActivity } = useSalesCompanies();
 	const t = useTranslate();
 	const bookerNames = useMeetingBookerNames();
+	const { calendlyLink, templates } = useSalesSettings();
 	const [selectedBooker, setBooker] = useState("");
 	// Falls back to the first booker when none is picked yet, or when the picked
 	// one is removed or given another role on the sales organisation page.
@@ -58,11 +61,9 @@ export function useMeetingBooker() {
 				booker,
 				...patch,
 			};
-			updateCompany(company.id, {
-				activities: [activity, ...company.activities],
-			});
+			void appendActivity(company.id, activity);
 		},
-		[booker, updateCompany],
+		[appendActivity, booker],
 	);
 
 	const logCall = useCallback(
@@ -93,17 +94,23 @@ export function useMeetingBooker() {
 		[addActivity, t],
 	);
 
-	const completeReminder = useCallback(
-		(companyId: string, activityId: string) => {
-			const company = companies.find((item) => item.id === companyId);
-			if (!company) return;
-			updateCompany(companyId, {
-				activities: company.activities.map((activity) =>
-					activity.id === activityId ? { ...activity, done: true } : activity,
-				),
+	const sendPresentation = useCallback(
+		(company: SalesCompany, template: SalesEmailTemplate) => {
+			const { subject, body } = renderTemplate(template, company, calendlyLink, booker);
+			window.location.href = buildMailtoLink(company.email, subject, body);
+			addActivity(company, {
+				type: "email",
+				text: t(localizationConstants.salesBookerPresentationLogged).replace("{name}", template.name),
 			});
 		},
-		[companies, updateCompany],
+		[addActivity, booker, calendlyLink, t],
+	);
+
+	const completeReminder = useCallback(
+		(companyId: string, activityId: string) => {
+			void updateActivity(companyId, activityId, { done: true });
+		},
+		[updateActivity],
 	);
 
 	return {
@@ -123,5 +130,7 @@ export function useMeetingBooker() {
 		bookMeeting,
 		saveReminder,
 		completeReminder,
+		templates,
+		sendPresentation,
 	};
 }

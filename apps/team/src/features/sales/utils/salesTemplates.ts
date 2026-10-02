@@ -19,16 +19,20 @@ export function fillTemplateTags(text: string, values: TemplateValues): string {
 		.replaceAll("{calendly}", values.calendly || "{calendly}");
 }
 
-/** A template with its tags resolved against one company. */
+/**
+ * A template with its tags resolved against one company. `seller` is whoever
+ * sends it, which in the meeting booker is the booker, not the account's seller.
+ */
 export function renderTemplate(
 	template: SalesEmailTemplate,
 	company: SalesCompany,
 	calendlyLink: string,
+	seller: string = company.seller,
 ): { subject: string; body: string } {
 	const values: TemplateValues = {
 		company: company.name,
 		contact: company.contactPerson,
-		seller: company.seller,
+		seller,
 		calendly: calendlyLink,
 	};
 
@@ -36,6 +40,16 @@ export function renderTemplate(
 		subject: fillTemplateTags(template.subject, values),
 		body: fillTemplateTags(template.body, values),
 	};
+}
+
+/**
+ * Opens the seller's own mail program with the email written, as the Lovable
+ * prototype did. Only the address's `@` stays literal; everything else is
+ * encoded, so a stray `?` or `&` in the address cannot add recipients.
+ */
+export function buildMailtoLink(to: string, subject: string, body: string): string {
+	const address = encodeURIComponent(to.trim()).replaceAll("%40", "@");
+	return `mailto:${address}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 /** True for an empty value or an https link. */

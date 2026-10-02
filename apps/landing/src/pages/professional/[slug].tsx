@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useTranslation } from "react-i18next";
 import { Nav } from "@/components/site/Nav";
 import { Footer } from "@/components/site/Footer";
-import { findModule, moduleSections, ModuleSection, ModuleItem } from "@/lib/modules";
+import { findModule, getDynamicModuleItems, moduleSections, ModuleSection, ModuleItem } from "@/lib/modules";
 import {
   moduleContent,
   ModuleRichContent,
@@ -1345,30 +1345,8 @@ export default function DynamicModulePage({ slug, item, section }: PageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const existingStaticDirs = new Set([
-    "smart-access", "avtal", "b2b", "kalkyl", "inkasso", "prognos", "projekt",
-    "order", "kma", "material", "personal", "projektering", "inkop", "faktura",
-    "juridik", "maskin", "marknad-salj", "data-it", "fordon", "erbjudande",
-    "ledningsstod", "appwork", "cleaning_maintenance", "coating",
-    "construction_concrete", "consultant_architect", "goods", "installations",
-    "land_excavation", "special_company", "yes_fasad", "about-us", "book_a_demo",
-    "comparison", "cookie", "faq", "howitworks", "kunskap", "newsroom",
-    "offer", "on_demand_webinar", "pricing", "roi_calculator", "support",
-    "system-overview", "terms", "vehicle", "webinar", "whytimeflow"
-  ]);
-
-  const paths: Array<{ params: { slug: string } }> = [];
-
-  for (const s of moduleSections) {
-    for (const item of s.items) {
-      if (item.slug && !existingStaticDirs.has(item.slug.toLowerCase())) {
-        paths.push({ params: { slug: item.slug } });
-      }
-    }
-  }
-
   return {
-    paths,
+    paths: getDynamicModuleItems().map((item) => ({ params: { slug: item.slug } })),
     fallback: "blocking",
   };
 };

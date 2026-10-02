@@ -9,14 +9,10 @@ import {
 	MAX_EXTRA_DISCOUNT_PERCENT,
 	MIN_EXTRA_DISCOUNT_PERCENT,
 } from "../constants/sales.constants";
-import type { QuoteModuleRow, SalesCompany, SalesQuote } from "../types";
+import type { QuoteModuleRow, SalesCompany } from "../types";
 import { calculateQuoteTotals } from "../utils/quoteCalculations";
-import { createQuoteDraft, type QuoteDraft } from "../utils/quoteDraft";
-import {
-	createId,
-	createQuoteNumber,
-	createQuoteValidUntil,
-} from "../utils/salesFactories";
+import { buildSalesQuote, createQuoteDraft, type QuoteDraft } from "../utils/quoteDraft";
+import { createId } from "../utils/salesFactories";
 
 function clampDiscount(value: number): number {
 	return Math.min(
@@ -54,10 +50,8 @@ export function useQuoteBuilderForm(
 		[draft.modules, draft.term, draft.extraDiscountPercent],
 	);
 
-	const quoteNumber = useMemo(
-		() => company.quote?.quoteNumber ?? createQuoteNumber(),
-		[company.quote?.quoteNumber],
-	);
+	// The server issues the number on the first save; until then there is none.
+	const quoteNumber = company.quote?.quoteNumber ?? "";
 
 	const update = useCallback((patch: Partial<QuoteDraft>) => {
 		setDraft((previous) => ({ ...previous, ...patch }));
@@ -109,17 +103,7 @@ export function useQuoteBuilderForm(
 	}, []);
 
 	const save = useCallback(async () => {
-		const quote: SalesQuote = {
-			quoteNumber,
-			createdAt: draft.createdAt,
-			validUntil: createQuoteValidUntil(draft.validDays),
-			users: draft.users,
-			term: draft.term,
-			monthlyNet: totals.monthlyNet,
-			firstInvoice: totals.firstInvoice,
-			lines: totals.lines,
-			notes: draft.notes,
-		};
+		const quote = buildSalesQuote(draft, totals, quoteNumber);
 
 		const saved = await onChange({
 			name: draft.customerName || company.name,
