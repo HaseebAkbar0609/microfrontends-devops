@@ -310,6 +310,7 @@ export type OfferModule = {
 	statusOpened: string;
 	statusAccepted: string;
 	statusUnderReview: string;
+	statusDraft: string;
 	statusRejected: string;
 	allStatuses: string;
 	createNewOfferTitle: string;
@@ -365,6 +366,7 @@ export type OfferModule = {
 	upload: string;
 	inviteSupplierSection: string;
 	selectedSuppliersLabel: string;
+	noSelectedSuppliers: string;
 	availableSuppliersLabel: string;
 	searchSuppliersPlaceholder: string;
 	supplierSelectionTotalRecipientsLabel: string;

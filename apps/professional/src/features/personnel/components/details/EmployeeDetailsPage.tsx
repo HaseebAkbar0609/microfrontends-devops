@@ -16,6 +16,8 @@ import { GrundinformationTab } from "./tabs/GrundinformationTab";
 import { KontaktpersonTab } from "./tabs/KontaktpersonTab";
 import { AnstallningsvillkorTab } from "./tabs/AnstallningsvillkorTab";
 import { KompetensTab } from "./tabs/KompetensTab";
+import { ArbetstidTab } from "./tabs/ArbetstidTab";
+import { WellnessTab } from "./tabs/WellnessTab";
 import { DokumentTab } from "./tabs/DokumentTab";
 
 // Modals
@@ -183,10 +185,15 @@ function EmployeeDetailsContent() {
 					<EquipmentCardsGrid employeeName={employeeName} />
 				)}
 
-				{(activeTab === "arbetstid" ||
-					activeTab === "halsa" ||
-					activeTab === "friskvard" ||
-					activeTab === "personal_process" ||
+				{activeTab === "arbetstid" && (
+					<ArbetstidTab employeeName={employeeName} />
+				)}
+
+				{(activeTab === "friskvard" || activeTab === "halsa") && (
+					<WellnessTab employeeName={employeeName} />
+				)}
+
+				{(activeTab === "personal_process" ||
 					activeTab === "lon" ||
 					activeTab === "arende") && (
 					<div className="bg-white rounded-xl border border-slate-200 p-12 text-center space-y-3 shadow-2xs">
