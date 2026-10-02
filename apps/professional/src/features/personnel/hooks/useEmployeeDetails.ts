@@ -27,7 +27,7 @@ export function useEmployeeDetails(employeeIdProp?: string) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const queryId = searchParams.get("id");
-	const tabParam = searchParams.get("tab") as PersonalkortTabType | null;
+	const tabParam = searchParams.get("tab");
 
 	const targetId = employeeIdProp || queryId || "emp-001";
 
@@ -73,6 +73,12 @@ export function useEmployeeDetails(employeeIdProp?: string) {
 		if (tabParam === "medarbetarsamtal") {
 			return "kompetens";
 		}
+		if (tabParam === "worktime") {
+			return "arbetstid";
+		}
+		if (tabParam === "wellness" || tabParam === "halsa") {
+			return "friskvard";
+		}
 		if (
 			tabParam &&
 			[
@@ -96,6 +102,10 @@ export function useEmployeeDetails(employeeIdProp?: string) {
 		if (!tabParam) return;
 		if (tabParam === "medarbetarsamtal") {
 			setActiveTab("kompetens");
+		} else if (tabParam === "worktime") {
+			setActiveTab("arbetstid");
+		} else if (tabParam === "wellness" || tabParam === "halsa") {
+			setActiveTab("friskvard");
 		} else if (
 			[
 				"information",
