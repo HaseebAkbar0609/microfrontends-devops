@@ -10,11 +10,10 @@ import {
 	ACCESS_MODULE_TITLE,
 	ACCESS_NEW_TABS,
 } from "../../data/accessNav.config";
-import { nextAccessIds } from "../../utils/accessNew";
 
 /** Header of the wizard: the title, the number the new access will get, and its two steps as tabs. */
 export function AccessNewHeader() {
-	const { rows } = useAccessRows();
+	const { nextIds } = useAccessRows();
 
 	return (
 		<ModulePageHeader
@@ -22,7 +21,7 @@ export function AccessNewHeader() {
 			tabs={ACCESS_MODULE_TABS}
 			record={{
 				title: <Translate text={localizationConstants.accessNewButton} />,
-				description: nextAccessIds(rows).idNumber,
+				description: nextIds.idNumber,
 				backHref: ACCESS_MODULE_BASE_URL,
 			}}
 			secondaryTabs={ACCESS_NEW_TABS}

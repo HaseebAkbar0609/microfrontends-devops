@@ -95,13 +95,20 @@ export function nextKeyId(keys: { keyId: string }[]): string {
 	return `${ACCESS_KEY_ID_PREFIX}${pad(highestNumber(keys.map((key) => key.keyId)) + 1)}`;
 }
 
-/** The row id and the number shown to people for the next access, continuing the list. */
-export function nextAccessIds(rows: { id: string; idNumber: string }[]): { id: string; idNumber: string } {
-	const numbers = rows.map((row) => row.idNumber);
+type AccessIds = { id: string; idNumber: string };
+
+/**
+ * The row id and the number shown to people for the next access, continuing the list.
+ * `reserved` are ids that exist elsewhere (the mock records) and must not be handed out
+ * again even if their row was deleted, or a new access would open an old record.
+ */
+export function nextAccessIds(rows: AccessIds[], reserved: AccessIds[] = []): AccessIds {
+	const known = [...reserved, ...rows];
+	const numbers = known.map((row) => row.idNumber);
 	const highest = numbers.reduce((best, current) => (highestNumber([current]) >= highestNumber([best]) ? current : best), "");
 	const prefix = highest ? highest.replace(/\d+$/, "") : ACCESS_ID_DEFAULT_PREFIX;
 	return {
-		id: `${ACCESS_ROW_ID_PREFIX}${pad(highestNumber(rows.map((row) => row.id)) + 1)}`,
+		id: `${ACCESS_ROW_ID_PREFIX}${pad(highestNumber(known.map((row) => row.id)) + 1)}`,
 		idNumber: `${prefix}${pad(highestNumber(numbers) + 1)}`,
 	};
 }

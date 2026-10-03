@@ -8,7 +8,6 @@ import { Translate, useTranslate } from "@/utils/translation/translate";
 import { ACCESS_TYPE_IDS, ACCESS_TYPE_LABELS } from "../../constants/access.constants";
 import { ACCESS_NEW_LIMITS } from "../../constants/accessNewLimits.constants";
 import type { AccessNewKeyFormState } from "../../hooks/useAccessNewKeyForm";
-import type { AccessTypeId } from "../../types/access.types";
 import { AccessSectionCard } from "../details/AccessSectionCard";
 import { AccessFormField, AccessSelectField } from "./AccessFormField";
 
@@ -34,7 +33,7 @@ export function AccessNewKeyCard({ keyForm }: { keyForm: AccessNewKeyFormState }
 					label={localizationConstants.accessColType}
 					placeholder={localizationConstants.accessNewSelectPlaceholder}
 					value={form.type}
-					onChange={(value) => setField("type", value as AccessTypeId | "")}
+					onChange={(value) => setField("type", ACCESS_TYPE_IDS.find((id) => id === value) ?? "")}
 					options={typeOptions}
 					error={errors.type}
 				/>

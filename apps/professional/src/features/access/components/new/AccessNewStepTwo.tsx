@@ -12,7 +12,7 @@ import { useAccessRows } from "../../context/AccessRowsContext";
 import { ACCESS_MODULE_BASE_URL, ACCESS_NEW_BASE_URL } from "../../data/accessNav.config";
 import { useAccessNewKeyForm } from "../../hooks/useAccessNewKeyForm";
 import { useComingSoonToast } from "../../hooks/useComingSoonToast";
-import { buildAccessPoint, formatLocalIso, nextAccessIds, validateInfo } from "../../utils/accessNew";
+import { buildAccessPoint, formatLocalIso, validateInfo } from "../../utils/accessNew";
 import { AccessConfirmDialog } from "../AccessConfirmDialog";
 import { AccessDocumentsCard } from "../item-details/AccessDocumentsCard";
 import { AccessImagesCard } from "../item-details/AccessImagesCard";
@@ -34,7 +34,7 @@ export function AccessNewStepTwo() {
 	const router = useRouter();
 	const t = useTranslate();
 	const { info, keys, removeKey, reset, setShowInfoErrors } = useAccessNewDraft();
-	const { rows, add } = useAccessRows();
+	const { nextIds, add } = useAccessRows();
 	const showComingSoon = useComingSoonToast();
 	const keyForm = useAccessNewKeyForm();
 	const [confirm, setConfirm] = useState<AccessNewConfirmTarget | null>(null);
@@ -58,7 +58,7 @@ export function AccessNewStepTwo() {
 			setShowKeysError(true);
 			return;
 		}
-		const point = buildAccessPoint(info, keys, nextAccessIds(rows), formatLocalIso(new Date()));
+		const point = buildAccessPoint(info, keys, nextIds, formatLocalIso(new Date()));
 		add(point);
 		showToast("success", t(localizationConstants.accessNewCreatedToast, { id: point.idNumber }));
 		reset();

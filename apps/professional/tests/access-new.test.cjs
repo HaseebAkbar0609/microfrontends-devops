@@ -82,6 +82,14 @@ test("the next access continues the list's numbers and keeps its prefix", () => 
   assert.deepEqual(plain(nextAccessIds([])), { id: "ap-001", idNumber: "NYK-2026-001" });
 });
 
+test("a deleted record's number is not handed out again while its mock record still exists", () => {
+  const all = [{ id: "ap-011", idNumber: "NYK-2025-011" }, { id: "ap-012", idNumber: "NYK-2025-012" }];
+  const afterDelete = all.slice(0, 1); // ap-012 was deleted from the list
+  assert.deepEqual(plain(nextAccessIds(afterDelete)), { id: "ap-012", idNumber: "NYK-2025-012" }); // alone it would be reused
+  assert.deepEqual(plain(nextAccessIds(afterDelete, all)), { id: "ap-013", idNumber: "NYK-2025-013" });
+  assert.deepEqual(plain(nextAccessIds([], [])), { id: "ap-001", idNumber: "NYK-2026-001" });
+});
+
 test("a local date-time is written without an offset", () => {
   assert.equal(formatLocalIso(new Date(2026, 9, 2, 9, 5, 7)), "2026-10-02T09:05:07");
   assert.equal(formatLocalIso(new Date(2026, 0, 1, 0, 0, 0)), "2026-01-01T00:00:00");
