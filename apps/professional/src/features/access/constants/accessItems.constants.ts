@@ -1,5 +1,11 @@
 import localizationConstants, { type TranslationKeys } from "@/utils/translation/constants";
+import type { AccessDocumentFileType } from "../types/accessItemDetails.types";
 import type { AccessItemSortField, AccessItemStatusId } from "../types/accessItems.types";
+
+export const ACCESS_ITEM_STATUS_IDS: AccessItemStatusId[] = ["active", "returned"];
+
+/** File format names are not translated. */
+export const ACCESS_DOCUMENT_TYPE_LABELS: Record<AccessDocumentFileType, string> = { pdf: "PDF" };
 
 export const ACCESS_ITEM_STATUS_LABELS: Record<AccessItemStatusId, TranslationKeys> = {
 	active: localizationConstants.accessStatusActive,

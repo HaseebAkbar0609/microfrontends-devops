@@ -1,5 +1,5 @@
 import type { SortOrder } from "../types/access.types";
-import type { AccessHolder, AccessItem, AccessItemSortField } from "../types/accessItems.types";
+import type { AccessHolder, AccessItem, AccessItemSortField, AccessItemStatusId } from "../types/accessItems.types";
 
 /**
  * Sorting and removal for the Access tab. Pure and free of runtime imports, so
@@ -34,4 +34,28 @@ export function removeAccessItem(holders: AccessHolder[], itemId: string): Acces
 /** Removes a person and all their items. */
 export function removeAccessHolder(holders: AccessHolder[], holderId: string): AccessHolder[] {
 	return holders.filter((holder) => holder.id !== holderId);
+}
+
+/** An item with the person who holds it, or null when the id matches nothing. */
+export function findAccessItem(
+	holders: AccessHolder[],
+	itemId: string,
+): { holder: AccessHolder; item: AccessItem } | null {
+	for (const holder of holders) {
+		const item = holder.items.find((candidate) => candidate.id === itemId);
+		if (item) return { holder, item };
+	}
+	return null;
+}
+
+/** Sets the status of one item; everything else is returned as it was. */
+export function setAccessItemStatus(
+	holders: AccessHolder[],
+	itemId: string,
+	status: AccessItemStatusId,
+): AccessHolder[] {
+	return holders.map((holder) => ({
+		...holder,
+		items: holder.items.map((item) => (item.id === itemId ? { ...item, status } : item)),
+	}));
 }

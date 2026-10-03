@@ -37,6 +37,7 @@ import {
 	SmartAccessTranslation,
 	SmartAccessDetailsTranslation,
 	SmartAccessAccessTabTranslation,
+	SmartAccessItemDetailsTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -11353,6 +11354,33 @@ export const svSmartAccessAccessTab: SmartAccessAccessTabTranslation = {
 	accessHolderDeletedToast: "All åtkomst för {{name}} togs bort.",
 };
 
+export const svSmartAccessItemDetails: SmartAccessItemDetailsTranslation = {
+	accessItemFieldKeyId: "Nyckel-ID",
+	accessItemFieldReturnDate: "Återlämningsdatum",
+	accessItemSectionObject: "Åtkomstobjekt",
+	accessItemSectionAssigned: "Tilldelad åtkomst",
+	accessItemSectionDocuments: "Dokument",
+	accessItemSectionImages: "Bilder",
+	accessAssignedCompany: "Företag",
+	accessAssignedPerson: "Person",
+	accessAssignedDocument: "Dokument",
+	accessItemStatusLabel: "Status för {{id}}",
+	accessDocColDate: "Datum",
+	accessDocColName: "Dokumentnamn",
+	accessDocColFile: "Fil",
+	accessDocumentsEmpty: "Inga dokument.",
+	accessImagesUploadLabel: "Ladda upp bilder",
+	accessImagesHint: "PNG, JPG",
+	accessImagesSelectPlaceholder: "Välj bilder",
+	accessImagesUploadButton: "Ladda upp",
+	accessImagesEmpty: "Inga bilder.",
+	accessImageRemoveLabel: "Ta bort {{name}}",
+	accessImageDeleteTitle: "Ta bort bilden?",
+	accessImageDeleteDescription: "{{name}} tas bort. Det går inte att ångra.",
+	accessImageDeletedToast: "{{name}} togs bort.",
+	accessItemNotFound: "Åtkomsten hittades inte.",
+};
+
 export const svPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation = {
 	worktimeDropdownArbetstid: "Arbetstid",
 	worktimeViewCalendar: "Kalender",
@@ -11612,4 +11640,5 @@ export const sv: Translation = {
 	...svSmartAccess,
 	...svSmartAccessDetails,
 	...svSmartAccessAccessTab,
+	...svSmartAccessItemDetails,
 };

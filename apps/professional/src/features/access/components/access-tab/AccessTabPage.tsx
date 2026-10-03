@@ -1,23 +1,23 @@
 "use client";
 
 import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
 import { showToast } from "@/lib/toast";
 import localizationConstants from "@/utils/translation/constants";
 import { Translate, useTranslate } from "@/utils/translation/translate";
 import { useAccessHolders } from "../../context/AccessHoldersContext";
-import { useComingSoonToast } from "../../hooks/useComingSoonToast";
+import { accessItemUrl } from "../../data/accessNav.config";
 import { AccessHolderSection } from "./AccessHolderSection";
 import { AccessItemDeleteDialog, type AccessDeleteTarget } from "./AccessItemDeleteDialog";
 
 /**
  * "Access" tab of the details page (TFS-1103): an accordion per person with
- * their items. The eye icon opens the item's details (TFS-1104), which does not
- * exist yet, so it shows the coming-soon toast.
+ * their items. The eye icon opens the item's details page (TFS-1104).
  */
 export function AccessTabPage({ recordId }: { recordId: string }) {
 	const t = useTranslate();
 	const { holdersFor, deleteItem, deleteHolder } = useAccessHolders();
-	const showComingSoon = useComingSoonToast();
+	const router = useRouter();
 	const [target, setTarget] = useState<AccessDeleteTarget | null>(null);
 	const holders = holdersFor(recordId);
 
@@ -47,7 +47,7 @@ export function AccessTabPage({ recordId }: { recordId: string }) {
 						key={holder.id}
 						holder={holder}
 						defaultOpen={index === 0}
-						onViewItem={showComingSoon}
+						onViewItem={(item) => router.push(accessItemUrl(recordId, item.id))}
 						onDeleteItem={(item) => setTarget({ kind: "item", holder, item })}
 						onDeleteAll={() => setTarget({ kind: "holder", holder })}
 					/>
