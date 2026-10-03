@@ -18,6 +18,7 @@ import { AnstallningsvillkorTab } from "./tabs/AnstallningsvillkorTab";
 import { KompetensTab } from "./tabs/KompetensTab";
 import { ArbetstidTab } from "./tabs/ArbetstidTab";
 import { WellnessTab } from "./tabs/WellnessTab";
+import { PersonalProcessTab } from "./tabs/PersonalProcessTab";
 import { DokumentTab } from "./tabs/DokumentTab";
 
 // Modals
@@ -193,9 +194,11 @@ function EmployeeDetailsContent() {
 					<WellnessTab employeeName={employeeName} />
 				)}
 
-				{(activeTab === "personal_process" ||
-					activeTab === "lon" ||
-					activeTab === "arende") && (
+				{activeTab === "personal_process" && (
+					<PersonalProcessTab employeeName={employeeName} />
+				)}
+
+				{(activeTab === "lon" || activeTab === "arende") && (
 					<div className="bg-white rounded-xl border border-slate-200 p-12 text-center space-y-3 shadow-2xs">
 						<h3 className="text-sm font-semibold text-slate-900">
 							<Translate text={localizationConstants.emptyTabUpcomingTitle} />

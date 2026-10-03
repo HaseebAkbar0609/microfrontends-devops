@@ -11140,6 +11140,77 @@ export type PersonnelWorktimeAndHalsaTranslation = {
 	rehabToastDocDownloaded: string;
 };
 
+// Personal Process & Documents (TFS-982)
+export type PersonnelProcessAndDocumentTranslation = {
+	processTabTitle: string;
+	processBtnCreate: string;
+	processSearchPlaceholder: string;
+	processFilterLabel: string;
+	processCategoryAll: string;
+	processCategoryOnboarding: string;
+	processCategoryAnnualReview: string;
+	processCategoryCertification: string;
+	processColId: string;
+	processColTitle: string;
+	processColDate: string;
+	processColStatus: string;
+	processColActions: string;
+	processStatusActive: string;
+	processStatusCompleted: string;
+	processStatusPending: string;
+	processStatusOverdue: string;
+	processHeaderBackCreate: string;
+	processHeaderBackEdit: string;
+	processSectionBasicInfo: string;
+	processFieldId: string;
+	processFieldTitle: string;
+	processFieldTitlePlaceholder: string;
+	processFieldDate: string;
+	processSectionChecklist: string;
+	processBtnAddRow: string;
+	processChecklistPlaceholder: string;
+	processSectionDocs: string;
+	processDocsUploadHint: string;
+	processDocsUploadBtn: string;
+	processDocsSpecTitle: string;
+	processDocsColDate: string;
+	processDocsColName: string;
+	processDocsColFormat: string;
+	processBtnViewFile: string;
+	processBtnCancel: string;
+	processBtnSave: string;
+	processConfirmDeleteTitle: string;
+	processConfirmDeleteDesc: string;
+	processToastCreated: string;
+	processToastUpdated: string;
+	processToastDeleted: string;
+	processEmptyTitle: string;
+	processEmptyDesc: string;
+	processChecklistCompletedPrefix: string;
+	processNoFilesSelected: string;
+	processActionView: string;
+	processActionMenu: string;
+	processChooseFile: string;
+
+	personalDocOverviewTitle: string;
+	personalDocFieldHandbook: string;
+	personalDocFieldPolicy: string;
+	personalDocFieldJobDesc: string;
+	personalDocUploadTitle: string;
+	personalDocUploadHint: string;
+	personalDocUploadBtn: string;
+	personalDocSpecsTitle: string;
+	personalDocColDate: string;
+	personalDocColName: string;
+	personalDocColFormat: string;
+	personalDocBtnViewFile: string;
+	personalDocToastUploaded: string;
+	personalDocToastDeleted: string;
+	personalDocConfirmDeleteTitle: string;
+	personalDocConfirmDeleteDesc: string;
+	personalDocEmptyTable: string;
+};
+
 // Material storage – overview (TFS-1072)
 export type MaterialStorageTranslation = {
 	materialDepotLabel: string;
@@ -11418,7 +11489,8 @@ export type Translation = DocumentWorkflowsTranslation &
 	SmartAccessTranslation &
 	SmartAccessDetailsTranslation &
 	PersonnelCompetenceAndReviewTranslation &
-	PersonnelWorktimeAndHalsaTranslation;
+	PersonnelWorktimeAndHalsaTranslation &
+	PersonnelProcessAndDocumentTranslation;
 
 export type TranslationKeys = keyof Translation;
 
