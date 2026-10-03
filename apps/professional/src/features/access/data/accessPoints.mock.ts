@@ -18,7 +18,7 @@ export const ACCESS_POINTS_MOCK: AccessPoint[] = [
 		name: "Förråd",
 		type: "accessCard",
 		city: "Järfälla",
-		assignees: [],
+		assignees: ["Kalle Andersson", "Stefan Larsson", "Stina Johansson", "Vera Isaksson", "Sture Svensson"],
 		lastAssignedAt: "2025-12-12T08:30:00",
 		status: "active",
 		archived: false,

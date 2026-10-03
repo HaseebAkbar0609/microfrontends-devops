@@ -36,6 +36,7 @@ import {
 	AccountLifecycleTranslation,
 	SmartAccessTranslation,
 	SmartAccessDetailsTranslation,
+	SmartAccessAccessTabTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -11311,6 +11312,26 @@ export const enSmartAccessDetails: SmartAccessDetailsTranslation = {
 	accessEditSectionLabel: "Edit {{section}}",
 };
 
+export const enSmartAccessAccessTab: SmartAccessAccessTabTranslation = {
+	accessItemColNycId: "NYC-ID",
+	accessItemColRegNo: "Reg No",
+	accessItemColAccessTo: "Access to",
+	accessItemColStartDate: "Start Date",
+	accessItemColEndDate: "End Date",
+	accessItemStatusReturned: "Returned",
+	accessItemViewLabel: "View {{id}}",
+	accessItemDeleteLabel: "Delete {{id}}",
+	accessHolderDeleteLabel: "Delete all access for {{name}}",
+	accessItemsEmpty: "No access items.",
+	accessHoldersEmpty: "No one has access yet.",
+	accessItemDeleteTitle: "Delete access?",
+	accessItemDeleteDescription: "{{id}} will be removed from {{name}}. This action cannot be undone.",
+	accessHolderDeleteTitle: "Delete all access for {{name}}?",
+	accessHolderDeleteDescription: "All {{count}} access items for {{name}} will be removed. This action cannot be undone.",
+	accessItemDeletedToast: "{{id}} was deleted.",
+	accessHolderDeletedToast: "All access for {{name}} was deleted.",
+};
+
 export const enPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation = {
 	worktimeDropdownArbetstid: "Worktime",
 	worktimeViewCalendar: "Calendar",
@@ -11569,4 +11590,5 @@ export const en: Translation = {
 	...enMaterialStorage,
 	...enSmartAccess,
 	...enSmartAccessDetails,
+	...enSmartAccessAccessTab,
 };

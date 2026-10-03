@@ -36,6 +36,7 @@ import {
 	AccountLifecycleTranslation,
 	SmartAccessTranslation,
 	SmartAccessDetailsTranslation,
+	SmartAccessAccessTabTranslation,
 	CertificatesTranslation,
 	EconomyBudgetTranslation,
 	EconomyBankTranslation,
@@ -11332,6 +11333,26 @@ export const svSmartAccessDetails: SmartAccessDetailsTranslation = {
 	accessEditSectionLabel: "Redigera {{section}}",
 };
 
+export const svSmartAccessAccessTab: SmartAccessAccessTabTranslation = {
+	accessItemColNycId: "NYC-ID",
+	accessItemColRegNo: "Reg.nr",
+	accessItemColAccessTo: "Åtkomst till",
+	accessItemColStartDate: "Startdatum",
+	accessItemColEndDate: "Slutdatum",
+	accessItemStatusReturned: "Återlämnad",
+	accessItemViewLabel: "Visa {{id}}",
+	accessItemDeleteLabel: "Ta bort {{id}}",
+	accessHolderDeleteLabel: "Ta bort all åtkomst för {{name}}",
+	accessItemsEmpty: "Ingen åtkomst.",
+	accessHoldersEmpty: "Ingen har åtkomst ännu.",
+	accessItemDeleteTitle: "Ta bort åtkomst?",
+	accessItemDeleteDescription: "{{id}} tas bort från {{name}}. Det går inte att ångra.",
+	accessHolderDeleteTitle: "Ta bort all åtkomst för {{name}}?",
+	accessHolderDeleteDescription: "Alla {{count}} åtkomster för {{name}} tas bort. Det går inte att ångra.",
+	accessItemDeletedToast: "{{id}} togs bort.",
+	accessHolderDeletedToast: "All åtkomst för {{name}} togs bort.",
+};
+
 export const svPersonnelWorktimeAndHalsa: PersonnelWorktimeAndHalsaTranslation = {
 	worktimeDropdownArbetstid: "Arbetstid",
 	worktimeViewCalendar: "Kalender",
@@ -11590,4 +11611,5 @@ export const sv: Translation = {
 	...svMaterialStorage,
 	...svSmartAccess,
 	...svSmartAccessDetails,
+	...svSmartAccessAccessTab,
 };

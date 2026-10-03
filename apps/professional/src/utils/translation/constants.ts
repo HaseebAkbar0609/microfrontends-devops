@@ -11430,6 +11430,26 @@ export type SmartAccessDetailsTranslation = {
 	accessEditSectionLabel: string;
 };
 
+export type SmartAccessAccessTabTranslation = {
+	accessItemColNycId: string;
+	accessItemColRegNo: string;
+	accessItemColAccessTo: string;
+	accessItemColStartDate: string;
+	accessItemColEndDate: string;
+	accessItemStatusReturned: string;
+	accessItemViewLabel: string;
+	accessItemDeleteLabel: string;
+	accessHolderDeleteLabel: string;
+	accessItemsEmpty: string;
+	accessHoldersEmpty: string;
+	accessItemDeleteTitle: string;
+	accessItemDeleteDescription: string;
+	accessHolderDeleteTitle: string;
+	accessHolderDeleteDescription: string;
+	accessItemDeletedToast: string;
+	accessHolderDeletedToast: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -11488,6 +11508,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	MaterialStorageTranslation &
 	SmartAccessTranslation &
 	SmartAccessDetailsTranslation &
+	SmartAccessAccessTabTranslation &
 	PersonnelCompetenceAndReviewTranslation &
 	PersonnelWorktimeAndHalsaTranslation &
 	PersonnelProcessAndDocumentTranslation;
