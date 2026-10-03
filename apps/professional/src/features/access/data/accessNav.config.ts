@@ -38,6 +38,15 @@ export function accessDetailsUrl(id: string): string {
   return `${ACCESS_MODULE_BASE_URL}/${encodeURIComponent(id)}`;
 }
 
+/** The new-access wizard (TFS-1105): step 1 here, step 2 under /access. */
+export const ACCESS_NEW_BASE_URL = `${ACCESS_MODULE_BASE_URL}/new`;
+
+/** Tab row of the wizard: its two steps. */
+export const ACCESS_NEW_TABS: ModuleTabItem[] = [
+  { id: "information", labelKey: localizationConstants.accessTabInformation, href: ACCESS_NEW_BASE_URL, exact: true },
+  { id: "access", labelKey: localizationConstants.accessTabAccess, href: `${ACCESS_NEW_BASE_URL}/access` },
+];
+
 /** Address of one access item's details page (TFS-1104), under the Access tab. */
 export function accessItemUrl(recordId: string, itemId: string): string {
   return `${accessDetailsUrl(recordId)}/access/${encodeURIComponent(itemId)}`;

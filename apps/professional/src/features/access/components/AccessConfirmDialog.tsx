@@ -19,6 +19,8 @@ export interface AccessConfirmText {
 	description: TranslationKeys;
 	/** Fills the {{placeholders}} of both texts. */
 	values: Record<string, string | number>;
+	/** The confirm button's label; defaults to Delete. */
+	confirmLabel?: TranslationKeys;
 }
 
 interface AccessConfirmDialogProps<T> {
@@ -30,7 +32,7 @@ interface AccessConfirmDialogProps<T> {
 	onCancel: () => void;
 }
 
-/** Asks before something is deleted for good: Cancel, or a red Delete. */
+/** Asks before something is lost for good: Cancel, or a red confirm button (Delete unless told otherwise). */
 export function AccessConfirmDialog<T>({ target, describe, onConfirm, onCancel }: AccessConfirmDialogProps<T>) {
 	// Kept after the dialog closes, so it fades out with its own text instead of an empty one.
 	const [shown, setShown] = useState(target);
@@ -54,7 +56,7 @@ export function AccessConfirmDialog<T>({ target, describe, onConfirm, onCancel }
 						className="cursor-pointer bg-destructive text-white hover:bg-destructive/90"
 						onClick={() => target && onConfirm(target)}
 					>
-						<Translate text={localizationConstants.accessActionDelete} />
+						<Translate text={text?.confirmLabel ?? localizationConstants.accessActionDelete} />
 					</AlertDialogAction>
 				</AlertDialogFooter>
 			</AlertDialogContent>

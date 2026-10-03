@@ -11477,6 +11477,52 @@ export type SmartAccessItemDetailsTranslation = {
 	accessItemNotFound: string;
 };
 
+export type SmartAccessNewTranslation = {
+	accessNewStepLabel: string;
+	accessNewNext: string;
+	accessNewPreview: string;
+	accessNewSendForSignature: string;
+	accessNewSaveAndAddMore: string;
+	accessNewSectionObject: string;
+	accessNewFieldObject: string;
+	accessNewObjectPlaceholder: string;
+	accessNewLinkButton: string;
+	accessNewSelectPlaceholder: string;
+	accessNewAddedContacts: string;
+	accessNewContactsEmpty: string;
+	accessNewRemoveLabel: string;
+	accessNewAccessToPlaceholder: string;
+	accessNewAddTag: string;
+	accessNewSectionAssign: string;
+	accessNewUploadFilesLabel: string;
+	accessNewUploadFilesHint: string;
+	accessNewSelectFilesPlaceholder: string;
+	accessNewSavedKeys: string;
+	accessNewKeyDetails: string;
+	accessNewColUnitPrice: string;
+	accessNewColSubtotal: string;
+	accessNewKeysEmpty: string;
+	accessNewContactAddedToast: string;
+	accessNewKeySavedToast: string;
+	accessNewCreatedToast: string;
+	accessNewStepOneInvalidToast: string;
+	accessNewDiscardTitle: string;
+	accessNewDiscardDescription: string;
+	accessNewDiscardConfirm: string;
+	accessNewRemoveContactTitle: string;
+	accessNewRemoveContactDescription: string;
+	accessNewRemoveKeyTitle: string;
+	accessNewRemoveKeyDescription: string;
+	accessErrorRequired: string;
+	accessErrorTooLong: string;
+	accessErrorPostalCode: string;
+	accessErrorEmail: string;
+	accessErrorDateOrder: string;
+	accessErrorDuplicate: string;
+	accessErrorNoTags: string;
+	accessErrorNoKeys: string;
+};
+
 export type Translation = DocumentWorkflowsTranslation &
 	HeaderTranslation &
 	AppLauncherTranslation &
@@ -11537,6 +11583,7 @@ export type Translation = DocumentWorkflowsTranslation &
 	SmartAccessDetailsTranslation &
 	SmartAccessAccessTabTranslation &
 	SmartAccessItemDetailsTranslation &
+	SmartAccessNewTranslation &
 	PersonnelCompetenceAndReviewTranslation &
 	PersonnelWorktimeAndHalsaTranslation &
 	PersonnelProcessAndDocumentTranslation;

@@ -3,11 +3,16 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { ACCESS_POINTS_MOCK } from "../data/accessPoints.mock";
 import type { AccessPoint } from "../types/access.types";
+import { nextAccessIds } from "../utils/accessNew";
 
 interface AccessRowsValue {
 	rows: AccessPoint[];
+	/** Row id and number of the next access; never reuses one of a deleted mock record. */
+	nextIds: { id: string; idNumber: string };
 	archive: (id: string) => void;
 	remove: (id: string) => void;
+	/** Puts a new access at the top of the list (the new-access wizard). */
+	add: (point: AccessPoint) => void;
 }
 
 const AccessRowsContext = createContext<AccessRowsValue | null>(null);
@@ -25,7 +30,9 @@ export function AccessRowsProvider({ children }: { children: ReactNode }) {
 		[],
 	);
 	const remove = useCallback((id: string) => setRows((current) => current.filter((row) => row.id !== id)), []);
-	const value = useMemo(() => ({ rows, archive, remove }), [rows, archive, remove]);
+	const add = useCallback((point: AccessPoint) => setRows((current) => [point, ...current]), []);
+	const nextIds = useMemo(() => nextAccessIds(rows, ACCESS_POINTS_MOCK), [rows]);
+	const value = useMemo(() => ({ rows, nextIds, archive, remove, add }), [rows, nextIds, archive, remove, add]);
 
 	return <AccessRowsContext.Provider value={value}>{children}</AccessRowsContext.Provider>;
 }
