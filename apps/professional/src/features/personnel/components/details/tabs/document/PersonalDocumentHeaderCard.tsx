@@ -33,7 +33,7 @@ export function PersonalDocumentHeaderCard({
 						<Translate text={localizationConstants.personalDocFieldHandbook} />
 					</p>
 					<p className="text-xs font-bold text-slate-800">
-						{metadata.employeeHandbook || "Personal bok 1"}
+						{metadata.employeeHandbook || "-"}
 					</p>
 				</div>
 
@@ -43,7 +43,7 @@ export function PersonalDocumentHeaderCard({
 						<Translate text={localizationConstants.personalDocFieldPolicy} />
 					</p>
 					<p className="text-xs font-bold text-slate-800">
-						{metadata.policy || "Bil-policy"}
+						{metadata.policy || "-"}
 					</p>
 				</div>
 
@@ -53,7 +53,7 @@ export function PersonalDocumentHeaderCard({
 						<Translate text={localizationConstants.personalDocFieldJobDesc} />
 					</p>
 					<p className="text-xs font-bold text-slate-800">
-						{metadata.jobDescription || "Projektledare"}
+						{metadata.jobDescription || "-"}
 					</p>
 				</div>
 			</div>

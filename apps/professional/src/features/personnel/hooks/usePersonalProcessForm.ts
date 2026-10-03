@@ -8,7 +8,6 @@ import {
 	ProcessDocumentItem,
 	ProcessCategory,
 } from "../types/personalProcess.types";
-import { DEFAULT_CHECKLIST_TEMPLATE } from "../constants/personalProcess.mock";
 
 interface UsePersonalProcessFormProps {
 	initialProcess: PersonalProcessItem | null;
@@ -29,7 +28,7 @@ export function usePersonalProcessForm({
 	const [category, setCategory] = useState<ProcessCategory>("onboarding");
 	const [checklist, setChecklist] = useState<ProcessChecklistItem[]>([]);
 	const [documents, setDocuments] = useState<ProcessDocumentItem[]>([]);
-	const [uploadTags, setUploadTags] = useState<string[]>(["Document 1.pdf", "Document 2.doc"]);
+	const [uploadTags, setUploadTags] = useState<string[]>([]);
 
 	useEffect(() => {
 		if (initialProcess) {
@@ -45,14 +44,10 @@ export function usePersonalProcessForm({
 			setTitle("");
 			setDate(new Date().toISOString().split("T")[0]);
 			setCategory("onboarding");
-			setChecklist(DEFAULT_CHECKLIST_TEMPLATE.map((item) => ({ ...item })));
-			setDocuments([
-				{ id: `pdoc_${Date.now()}_1`, date: "2024-05-10", name: "Arbetsbeskrivning", fileFormat: "PDF", fileSize: "1.2 MB" },
-				{ id: `pdoc_${Date.now()}_2`, date: "2024-05-10", name: "Policy", fileFormat: "PDF", fileSize: "850 KB" },
-				{ id: `pdoc_${Date.now()}_3`, date: "2024-05-10", name: "Policy", fileFormat: "PDF", fileSize: "920 KB" },
-			]);
+			setChecklist([]);
+			setDocuments([]);
 		}
-		setUploadTags(["Document 1.pdf", "Document 2.doc"]);
+		setUploadTags([]);
 	}, [initialProcess]);
 
 	const handleToggleChecklist = useCallback((itemId: string) => {

@@ -18,10 +18,23 @@ interface DokumentTabProps {
 
 export function DokumentTab({
 	profileData,
-	onDeleteDocument: _onDeleteDocument,
-	onUploadDocument: _onUploadDocument,
-	onPreviewDoc: _onPreviewDoc,
+	onDeleteDocument,
+	onUploadDocument,
+	onPreviewDoc,
 }: DokumentTabProps) {
+	const initialDocs = React.useMemo(() => {
+		if (profileData?.attachedDocs && profileData.attachedDocs.length > 0) {
+			return profileData.attachedDocs.map((doc) => ({
+				id: doc.id,
+				date: doc.date,
+				name: doc.name,
+				fileFormat: doc.fileFormat,
+				fileUrl: doc.fileUrl,
+			}));
+		}
+		return undefined;
+	}, [profileData?.attachedDocs]);
+
 	const {
 		metadata,
 		documents,
@@ -35,7 +48,11 @@ export function DokumentTab({
 		handleConfirmDelete,
 		handlePreviewDoc,
 		handleClosePreviewDoc,
-	} = usePersonalDocuments();
+	} = usePersonalDocuments({
+		initialDocs,
+		onUploadCallback: onUploadDocument,
+		onDeleteCallback: onDeleteDocument,
+	});
 
 	const activeMetadata = profileData?.documentsConfig
 		? {
@@ -44,6 +61,17 @@ export function DokumentTab({
 				jobDescription: profileData.documentsConfig.jobDescription,
 		  }
 		: metadata;
+
+	const onDocClick = React.useCallback(
+		(name: string) => {
+			if (onPreviewDoc) {
+				onPreviewDoc(name);
+			} else {
+				handlePreviewDoc(name);
+			}
+		},
+		[onPreviewDoc, handlePreviewDoc]
+	);
 
 	return (
 		<div className="space-y-6">
@@ -61,7 +89,7 @@ export function DokumentTab({
 
 				<PersonalDocumentTable
 					documents={documents}
-					onPreviewDoc={handlePreviewDoc}
+					onPreviewDoc={onDocClick}
 					onPromptDelete={setDocToDelete}
 				/>
 			</div>

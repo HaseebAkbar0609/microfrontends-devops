@@ -104,7 +104,13 @@ export function PersonalDocumentUploadBox({
 
 				<Button
 					type="button"
-					onClick={onUpload}
+					onClick={() => {
+						if (tags.length === 0) {
+							fileInputRef.current?.click();
+						} else {
+							onUpload();
+						}
+					}}
 					className="h-9 px-5 text-xs font-medium bg-[#111721] hover:bg-slate-800 text-white rounded-lg cursor-pointer shadow-2xs gap-1.5 shrink-0"
 				>
 					<UploadCloud className="w-4 h-4" />
