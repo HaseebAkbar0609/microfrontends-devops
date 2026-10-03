@@ -45,7 +45,7 @@ export function accessItemUrl(recordId: string, itemId: string): string {
 
 /**
  * Secondary tab row of a record page (guideline pattern 3): the record's own
- * sections, on their own routes. "Access" is TFS-1103 and still a placeholder.
+ * sections, on their own routes.
  */
 export function accessDetailsTabs(id: string): ModuleTabItem[] {
   const base = accessDetailsUrl(id);
