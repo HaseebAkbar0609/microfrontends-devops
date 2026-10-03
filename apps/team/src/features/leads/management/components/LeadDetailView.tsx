@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import DynamicBreadcrumb from "@/components/common/DynamicBreadcrumb";
 import localizationConstants from "@/utils/translation/constants";
@@ -9,12 +10,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { LeadRow } from "@/features/leads/types";
 import { leadDetailTabs } from "@/features/leads/management/constants";
 import { useLeadRequestDetails } from "@/features/leads/queries/useLeadRequestDetails";
-import { previewRequestDetails } from "@/features/leads/management/constants/previewRequestDetails";
 import { useLeadQuoteList } from "@/features/leads/queries/useLeadQuoteList";
 import LeadDetailHeaderActions from "@/features/leads/management/components/LeadDetailHeaderActions";
 import LeadOverviewTab from "@/features/leads/management/components/LeadOverviewTab";
 import LeadQuoteListTab from "@/features/leads/management/components/LeadQuoteListTab";
 import LeadRequestTab from "@/features/leads/management/components/LeadRequestTab";
+import { getLeadActivityAPIAction } from "@/api-actions/leads/activity";
 
 type LeadDetailViewProps = {
 	lead: LeadRow;
@@ -26,11 +27,18 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 	const [activeTab, setActiveTab] = useState(() => searchParams.get("tab") ?? "overview");
 	const [monitorStatus, setMonitorStatus] = useState("monitor");
 
-	const title = `${lead.customer} - ${lead.category}`;
+	const title = lead.category && lead.category !== "-"
+		? `${lead.customer} - ${lead.category}`
+		: lead.customer;
 	const requestDetailsQuery = useLeadRequestDetails(lead.id);
 	const quoteListQuery = useLeadQuoteList(lead.id);
-	const requestDetails = requestDetailsQuery.data ?? previewRequestDetails;
+	const requestDetails = requestDetailsQuery.data ?? null;
 	const quoteRows = quoteListQuery.data ?? [];
+	const activityQuery = useQuery({
+		queryKey: ["lead-activity", lead.id],
+		queryFn: () => getLeadActivityAPIAction(lead.id),
+		enabled: activeTab === "activity" && Boolean(lead.id),
+	});
 	const isMonitoringView = searchParams.get("source") === "monitoring";
 	const showArchiveAction =
 		isMonitoringView && (activeTab === "request" || activeTab === "quote-list");
@@ -77,15 +85,20 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 			<Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
 				<TabsList
 					variant="line"
-					className="w-full justify-start gap-3 border-b border-slate-200 p-0"
+					className="w-full min-h-12 justify-start gap-1 overflow-x-auto overflow-y-hidden border-b border-slate-200 p-0 sm:gap-3"
 				>
 					{detailTabs.map((tab) => (
 						<TabsTrigger
 							key={tab.value}
 							value={tab.value}
-							className="w-fit flex-none px-6 py-3 text-sm"
+							className="w-fit flex-none px-3 py-3 text-sm sm:px-6"
 						>
-							<Translate text={tab.labelKey} />
+							{tab.value === "activity" ? (
+								<>
+									<span className="sm:hidden"><Translate text={localizationConstants.activityTab} /></span>
+									<span className="hidden sm:inline"><Translate text={tab.labelKey} /></span>
+								</>
+							) : <Translate text={tab.labelKey} />}
 						</TabsTrigger>
 					))}
 				</TabsList>
@@ -98,7 +111,15 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 				</TabsContent>
 
 				<TabsContent value="request" className="pt-6">
-					<LeadRequestTab requestDetails={requestDetails} />
+					{requestDetailsQuery.isPending ? (
+						<p className="text-sm text-slate-500"><Translate text={localizationConstants.leadInquiryLoading} /></p>
+					) : requestDetailsQuery.isError ? (
+						<p className="text-sm text-red-600"><Translate text={localizationConstants.serverError} /></p>
+					) : requestDetails ? (
+						<LeadRequestTab requestDetails={requestDetails} />
+					) : (
+						<p className="text-sm text-slate-500"><Translate text={localizationConstants.leadInquiryEmpty} /></p>
+					)}
 				</TabsContent>
 
 				<TabsContent value="quote-list" className="pt-6">
@@ -109,13 +130,32 @@ export default function LeadDetailView({ lead }: LeadDetailViewProps) {
 					/>
 				</TabsContent>
 
-				{["notes", "activity"].map((tabValue) => (
-					<TabsContent key={tabValue} value={tabValue} className="pt-6">
-						<div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500 ">
-							<Translate text={localizationConstants.comingSoon} />
-						</div>
-					</TabsContent>
-				))}
+				<TabsContent value="activity" className="pt-6">
+					{activityQuery.isPending ? (
+						<p className="text-sm text-slate-500"><Translate text={localizationConstants.leadActivityLoading} /></p>
+					) : activityQuery.isError ? (
+						<p className="text-sm text-red-600"><Translate text={localizationConstants.serverError} /></p>
+					) : activityQuery.data.length === 0 ? (
+						<p className="text-sm text-slate-500"><Translate text={localizationConstants.leadActivityEmpty} /></p>
+					) : (
+						<ol className="divide-y divide-slate-200 border-y border-slate-200">
+							{activityQuery.data.map((item, index) => (
+								<li key={`${item.event}-${item.quote_id ?? "lead"}-${index}`} className="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-4 text-sm">
+									<div className="min-w-0 text-slate-900">
+										<Translate text={item.event === "lead_created" ? localizationConstants.leadActivityCreated : item.event === "offer_sent" ? localizationConstants.leadActivityOfferSent : localizationConstants.leadActivityOfferAccepted} />
+										{item.company_name && <span className="text-slate-500">{" - "}{item.company_name}</span>}
+									</div>
+									<time dateTime={item.at} className="shrink-0 text-slate-500">{new Date(item.at).toLocaleString()}</time>
+								</li>
+							))}
+						</ol>
+					)}
+				</TabsContent>
+				<TabsContent value="notes" className="pt-6">
+					<div className="rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-500">
+						<Translate text={localizationConstants.comingSoon} />
+					</div>
+				</TabsContent>
 			</Tabs>
 		</div>
 	);

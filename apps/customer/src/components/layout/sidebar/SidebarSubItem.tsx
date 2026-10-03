@@ -12,11 +12,13 @@ import { Translate } from "@/utils/translation/translate";
 interface SidebarSubItemProps {
 	item: NavSubItem;
 	isActive?: boolean;
+	onNavigate?: () => void;
 }
 
 export function SidebarSubItem({
 	item,
 	isActive: isActiveProp,
+	onNavigate,
 }: SidebarSubItemProps) {
 	const pathname = usePathname();
 	const [flyoutOpen, setFlyoutOpen] = useState(false);
@@ -76,7 +78,7 @@ export function SidebarSubItem({
 	}
 
 	return (
-		<Link href={item.href} className={sharedClassName}>
+		<Link href={item.href} onClick={onNavigate} className={sharedClassName}>
 			<Translate text={item.label} />
 		</Link>
 	);

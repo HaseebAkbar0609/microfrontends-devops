@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
 import {
   ArrowUpDown,
   ChevronLeft,
@@ -72,6 +74,16 @@ import {
 import type { LeadTableCell } from "@/features/leads/management/types";
 import { ActionsToolbar, type FilterConfig } from "@/components/table/ActionsToolbar";
 import { LeadSettingsTab } from "@/features/leads/settings/components/LeadSettingsTab";
+import axiosInstance from "@/lib/axiosInstance";
+
+const leadsAccessSchema = z.object({
+  data: z.object({
+    canView: z.boolean(),
+    canEdit: z.boolean(),
+    canDelete: z.boolean(),
+    canManageSettings: z.boolean(),
+  }),
+});
 
 export function LeadsManagementPage() {
   const t = useTranslate();
@@ -98,6 +110,16 @@ export function LeadsManagementPage() {
     pageSize: 10000,
   });
   const acceptedQuery = useAcceptedLeadsList(activeTab === "accepterad" || activeTab === "betalda");
+  const accessQuery = useQuery({
+    queryKey: ["leads-access"],
+    queryFn: async () => {
+      const response = await axiosInstance.get("/api/v1/teams/leads/access");
+      return leadsAccessSchema.parse(response.data).data;
+    },
+  });
+  const canEditLeads = accessQuery.data?.canEdit === true;
+  const canDeleteLeads = accessQuery.data?.canDelete === true;
+  const canManageSettings = accessQuery.data?.canManageSettings === true;
 
 
   useEffect(() => {
@@ -374,6 +396,9 @@ export function LeadsManagementPage() {
         value={activeTab}
         onValueChange={(value) => {
           setActiveTab(value as LeadStatus | "settings");
+          if (value !== "settings") {
+            void leadsListQuery.refetch();
+          }
           setPageIndex(0);
           setSelectedIds(new Set());
           setSearchInput("");
@@ -386,16 +411,16 @@ export function LeadsManagementPage() {
         className="w-full"
       >
         <TabsList variant="line" className="w-full justify-start gap-1 p-0 border-b border-slate-200">
-          {leadTabs.map((tab) => (
+          {leadTabs.filter((tab) => tab.value !== "settings" || canManageSettings).map((tab) => (
             <TabsTrigger key={tab.value} className="w-fit flex-none px-4" value={tab.value}>
               <Translate text={tab.labelKey} />
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value="settings" className="-mx-8">
+        {canManageSettings && <TabsContent value="settings" className="-mx-8">
           <LeadSettingsTab />
-        </TabsContent>
+        </TabsContent>}
 
         {activeTab !== "settings" && <TabsContent value={activeTab} className="pt-6">
           {isAccepted && (
@@ -414,12 +439,12 @@ export function LeadsManagementPage() {
                 searchValue={searchInput}
                 onSearchChange={setSearchInput}
                 filters={[leadTypeFilter]}
-                onCreateClick={tableConfig.showCreateButton ? () => { } : undefined}
+                onCreateClick={tableConfig.showCreateButton && canEditLeads ? () => { } : undefined}
                 createButtonLabel={localizationConstants.createLabel}
                 className="px-0 py-0"
               />
             </div>
-            {tableConfig.showResendButton && (
+            {tableConfig.showResendButton && canEditLeads && (
               <Button
                 type="button"
                 className={`h-11 gap-2 rounded-xl px-5 text-base font-medium shadow-none ${selectedCount === 0
@@ -514,7 +539,7 @@ export function LeadsManagementPage() {
                             <Eye className="size-4" />
                             <Translate text={localizationConstants.open} />
                           </DropdownMenuItem>
-                          {isMonitoring && (
+                          {isMonitoring && canEditLeads && (
                             <DropdownMenuItem
                               onClick={async () => {
                                 const movedItem = row as MonitoringLeadRow;
@@ -531,7 +556,7 @@ export function LeadsManagementPage() {
                               <Translate text={localizationConstants.moveToHandling} />
                             </DropdownMenuItem>
                           )}
-                          <ConfirmDialog
+                          {canDeleteLeads && <ConfirmDialog
                             title="Delete lead?"
                             description="This will remove the lead from the list."
                             confirmText={t(localizationConstants.delete)}
@@ -546,8 +571,8 @@ export function LeadsManagementPage() {
                                 <Translate text={localizationConstants.delete} />
                               </DropdownMenuItem>
                             }
-                          />
-                          {activeTab === "granskning" && (
+                          />}
+                          {activeTab === "granskning" && canEditLeads && (
                             <DropdownMenuItem
                               onClick={() => {
                                 markLeadAsReviewed(row.id);
