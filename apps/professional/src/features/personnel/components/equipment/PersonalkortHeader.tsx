@@ -22,7 +22,7 @@ const PERSONALKORT_TABS: { id: PersonalkortTabType; labelKey: string }[] = [
 	{ id: "kompetens", labelKey: localizationConstants.personnelProfileTabCompetence },
 	{ id: "utrustning_fordon", labelKey: localizationConstants.personnelProfileTabEquipment },
 	{ id: "arbetstid", labelKey: localizationConstants.personnelProfileTabWorktime },
-	{ id: "halsa", labelKey: localizationConstants.personalkortTabHealth },
+	{ id: "friskvard", labelKey: localizationConstants.personnelProfileTabWellness },
 	{ id: "personal_process", labelKey: localizationConstants.personnelProfileTabProcess },
 	{ id: "dokument", labelKey: localizationConstants.personnelProfileTabDocuments },
 ];

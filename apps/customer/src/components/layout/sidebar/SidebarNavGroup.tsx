@@ -11,11 +11,13 @@ import { Translate } from "@/utils/translation/translate";
 interface SidebarNavGroupProps {
 	group: NavGroup;
 	collapsed?: boolean;
+	onNavigate?: () => void;
 }
 
 export function SidebarNavGroup({
 	group,
 	collapsed = false,
+	onNavigate,
 }: SidebarNavGroupProps) {
 	const router = useRouter();
 	const pathname = usePathname();
@@ -51,6 +53,7 @@ export function SidebarNavGroup({
 				group.href || (hasItems ? group.items[0].href : null);
 			if (targetHref) {
 				router.push(targetHref);
+				onNavigate?.();
 			}
 			return;
 		}
@@ -58,6 +61,7 @@ export function SidebarNavGroup({
 		if (!hasItems && group.href) {
 			// Navigate for leaf nodes
 			router.push(group.href);
+			onNavigate?.();
 		} else if (hasItems) {
 			// Toggle expansion for groups
 			setIsOpen((prev) => !prev);
@@ -118,8 +122,9 @@ export function SidebarNavGroup({
 						{group.items.map((item) => (
 							<SidebarSubItem
 								key={item.id}
-								item={item}
-								isActive={item.id === activeSubItemId}
+							item={item}
+							isActive={item.id === activeSubItemId}
+							onNavigate={onNavigate}
 							/>
 						))}
 					</div>

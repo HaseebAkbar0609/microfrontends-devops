@@ -62,7 +62,7 @@ export function mapLeadStatusToApiStatus(status: LeadStatus) {
 
 export function formatLeadDate(value: string | number) {
 	if (value === null || value === undefined || value === "") return "-";
-	const date = new Date(value);
+	const date = new Date(typeof value === "number" && value > 0 && value < 1e12 ? value * 1000 : value);
 	if (Number.isNaN(date.getTime())) {
 		return String(value).slice(0, 10) || "-";
 	}

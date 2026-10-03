@@ -71,6 +71,7 @@ const getStatusVariant = (quoteStatus: string) => {
 		case "rejected":
 			return "destructive";
 		case "not_reviewd":
+		case "draft":
 			return "outline";
 		default:
 			return "outline";

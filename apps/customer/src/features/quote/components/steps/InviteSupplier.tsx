@@ -360,7 +360,7 @@ export function Step4InviteSupplier({ form }: Step4Props) {
 									<p className="mt-4 text-sm">
 										<Translate
 											text={
-												localizationConstants.noSuppliersFound
+												localizationConstants.noSelectedSuppliers
 											}
 										/>
 									</p>

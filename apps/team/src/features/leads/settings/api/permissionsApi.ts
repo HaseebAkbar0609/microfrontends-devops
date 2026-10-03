@@ -1,6 +1,7 @@
 import { z } from "zod";
 import axiosInstance from "@/lib/axiosInstance";
 import type { PermissionRole } from "@/features/leads/settings/types";
+import { permissionRoles } from "@/features/leads/settings/constants";
 
 export const PermissionRoleSchema = z.object({
   id: z.string().optional(),
@@ -24,14 +25,29 @@ export type PermissionsApiData = {
   permissions_matrix?: PermissionRole[];
 };
 
+const normalizePermissions = (rows: PermissionRole[]): PermissionRole[] =>
+  permissionRoles.map((defaultRole) => {
+    const saved = rows.find((row) => row.id?.toLowerCase() === defaultRole.id);
+    return {
+      ...defaultRole,
+      canView: saved?.canView ?? defaultRole.canView,
+      canEdit: saved?.canEdit ?? defaultRole.canEdit,
+      canDelete: saved?.canDelete ?? defaultRole.canDelete,
+    };
+  });
+
 export const fetchPermissions = async (): Promise<PermissionRole[]> => {
   const { data } = await axiosInstance.get("/api/v1/teams/leads/permissions");
   const parsed = PermissionsResponseSchema.parse(data);
-  return (parsed.data?.permissions_matrix || []) as PermissionRole[];
+  return normalizePermissions((parsed.data?.permissions_matrix || []) as PermissionRole[]);
 };
 
 export const updatePermissions = async (payload: { permissions_matrix: PermissionRole[] }): Promise<PermissionRole[]> => {
-  const { data } = await axiosInstance.patch("/api/v1/teams/leads/permissions", payload);
+  const { data } = await axiosInstance.patch("/api/v1/teams/leads/permissions", {
+    permissions_matrix: payload.permissions_matrix.map(({ id, canView, canEdit, canDelete }) => ({
+      id, canView, canEdit, canDelete,
+    })),
+  });
   const parsed = PermissionsResponseSchema.parse(data);
-  return (parsed.data?.permissions_matrix || []) as PermissionRole[];
+  return normalizePermissions((parsed.data?.permissions_matrix || []) as PermissionRole[]);
 };
