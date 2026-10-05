@@ -17,3 +17,4 @@ export * from "./cases/ForecastCasesPage";
 export * from "./templates/ForecastTemplatesPage";
 export * from "./documents/ForecastDocumentsPage";
 export * from "./protocols/ForecastProtocolsPage";
+export * from "./statistics/ForecastStatisticsPage";
